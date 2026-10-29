@@ -418,3 +418,11 @@ The jets' cannon and the Apache's chain gun on their strike runs (world events),
 |---|---|---|---|
 | world.strike.cannon | Automatic Cannon - MK44 - 03 - Single Shot with Report 03 (Fascinated Sound - The Gun Locker SFX Pack), laid down 52 rounds a second | Sonniss GameAudioGDC 2016 | Sonniss royalty-free |
 | world.strike.chaingun | Automatic Cannon - MK44 - 03 - Single Shot with Report 03 (Fascinated Sound - The Gun Locker SFX Pack), laid down 10.4 rounds a second | Sonniss GameAudioGDC 2016 | Sonniss royalty-free |
+
+## Bought gun models
+
+Real gun meshes bought by Josiah under the stores' Royalty Free licences, toon-painted and packed by tools/meshguns/pack.py into scrambled assets/zomboidcraft/meshes/*.zmesh files. The original models and textures are not included.
+
+| Mesh | Model | From | Licence |
+|---|---|---|---|
+| pbr_assault_rifle (the assault rifle) | Automatic Rifle 03, recoloured black (PBR Weapons Pack) | CGTrader | Royalty Free |

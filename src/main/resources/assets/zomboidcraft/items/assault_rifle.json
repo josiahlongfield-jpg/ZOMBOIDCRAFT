@@ -13,8 +13,13 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/assault_rifle/raised_mag_out/body"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/assault_rifle/raised_mag_out/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_assault_rifle",
+         "part": "body"
+        }
        },
        {
         "type": "minecraft:select",
@@ -28,8 +33,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/assault_rifle/raised_mag_out/charging_handle"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/assault_rifle/raised_mag_out/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_assault_rifle",
+          "part": "handle"
+         }
         }
        },
        {
@@ -270,8 +280,13 @@
          {
           "when": "stock",
           "model": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/assault_rifle/raised_mag_out/stock"
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/assault_rifle/raised_mag_out/stock",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "pbr_assault_rifle",
+            "part": "stock"
+           }
           }
          },
          {
@@ -282,8 +297,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/assault_rifle/raised_mag_out/stock"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/assault_rifle/raised_mag_out/stock",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_assault_rifle",
+          "part": "stock"
+         }
         }
        },
        {
@@ -315,8 +335,13 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/assault_rifle/mag_out/body"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/assault_rifle/mag_out/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_assault_rifle",
+         "part": "body"
+        }
        },
        {
         "type": "minecraft:select",
@@ -330,8 +355,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/assault_rifle/mag_out/charging_handle"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/assault_rifle/mag_out/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_assault_rifle",
+          "part": "handle"
+         }
         }
        },
        {
@@ -572,8 +602,13 @@
          {
           "when": "stock",
           "model": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/assault_rifle/mag_out/stock"
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/assault_rifle/mag_out/stock",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "pbr_assault_rifle",
+            "part": "stock"
+           }
           }
          },
          {
@@ -584,8 +619,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/assault_rifle/mag_out/stock"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/assault_rifle/mag_out/stock",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_assault_rifle",
+          "part": "stock"
+         }
         }
        },
        {
@@ -624,8 +664,13 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/assault_rifle/raised_mag_in/body"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/assault_rifle/raised_mag_in/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_assault_rifle",
+         "part": "body"
+        }
        },
        {
         "type": "minecraft:select",
@@ -639,8 +684,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/assault_rifle/raised_mag_in/charging_handle"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/assault_rifle/raised_mag_in/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_assault_rifle",
+          "part": "handle"
+         }
         }
        },
        {
@@ -881,8 +931,13 @@
          {
           "when": "stock",
           "model": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/assault_rifle/raised_mag_in/stock"
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/assault_rifle/raised_mag_in/stock",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "pbr_assault_rifle",
+            "part": "stock"
+           }
           }
          },
          {
@@ -893,8 +948,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/assault_rifle/raised_mag_in/stock"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/assault_rifle/raised_mag_in/stock",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_assault_rifle",
+          "part": "stock"
+         }
         }
        },
        {
@@ -905,8 +965,13 @@
          {
           "when": "mag",
           "model": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/assault_rifle/raised_mag_in/mag"
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/assault_rifle/raised_mag_in/mag",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "pbr_assault_rifle",
+            "part": "mag"
+           }
           }
          },
          {
@@ -917,8 +982,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/assault_rifle/raised_mag_in/mag"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/assault_rifle/raised_mag_in/mag",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_assault_rifle",
+          "part": "mag"
+         }
         }
        },
        {
@@ -950,8 +1020,13 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/assault_rifle/mag_in/body"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/assault_rifle/mag_in/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_assault_rifle",
+         "part": "body"
+        }
        },
        {
         "type": "minecraft:select",
@@ -965,8 +1040,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/assault_rifle/mag_in/charging_handle"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/assault_rifle/mag_in/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_assault_rifle",
+          "part": "handle"
+         }
         }
        },
        {
@@ -1207,8 +1287,13 @@
          {
           "when": "stock",
           "model": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/assault_rifle/mag_in/stock"
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/assault_rifle/mag_in/stock",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "pbr_assault_rifle",
+            "part": "stock"
+           }
           }
          },
          {
@@ -1219,8 +1304,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/assault_rifle/mag_in/stock"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/assault_rifle/mag_in/stock",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_assault_rifle",
+          "part": "stock"
+         }
         }
        },
        {
@@ -1231,8 +1321,13 @@
          {
           "when": "mag",
           "model": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/assault_rifle/mag_in/mag"
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/assault_rifle/mag_in/mag",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "pbr_assault_rifle",
+            "part": "mag"
+           }
           }
          },
          {
@@ -1243,8 +1338,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/assault_rifle/mag_in/mag"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/assault_rifle/mag_in/mag",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_assault_rifle",
+          "part": "mag"
+         }
         }
        },
        {
@@ -1283,8 +1383,13 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/assault_rifle/raised_charge/body"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/assault_rifle/raised_charge/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_assault_rifle",
+         "part": "body"
+        }
        },
        {
         "type": "minecraft:select",
@@ -1298,8 +1403,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/assault_rifle/raised_charge/charging_handle"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/assault_rifle/raised_charge/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_assault_rifle",
+          "part": "handle"
+         }
         }
        },
        {
@@ -1540,8 +1650,13 @@
          {
           "when": "stock",
           "model": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/assault_rifle/raised_charge/stock"
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/assault_rifle/raised_charge/stock",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "pbr_assault_rifle",
+            "part": "stock"
+           }
           }
          },
          {
@@ -1552,8 +1667,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/assault_rifle/raised_charge/stock"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/assault_rifle/raised_charge/stock",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_assault_rifle",
+          "part": "stock"
+         }
         }
        },
        {
@@ -1564,8 +1684,13 @@
          {
           "when": "mag",
           "model": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/assault_rifle/raised_charge/mag"
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/assault_rifle/raised_charge/mag",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "pbr_assault_rifle",
+            "part": "mag"
+           }
           }
          },
          {
@@ -1576,8 +1701,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/assault_rifle/raised_charge/mag"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/assault_rifle/raised_charge/mag",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_assault_rifle",
+          "part": "mag"
+         }
         }
        },
        {
@@ -1609,8 +1739,13 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/assault_rifle/charge/body"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/assault_rifle/charge/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_assault_rifle",
+         "part": "body"
+        }
        },
        {
         "type": "minecraft:select",
@@ -1624,8 +1759,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/assault_rifle/charge/charging_handle"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/assault_rifle/charge/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_assault_rifle",
+          "part": "handle"
+         }
         }
        },
        {
@@ -1866,8 +2006,13 @@
          {
           "when": "stock",
           "model": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/assault_rifle/charge/stock"
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/assault_rifle/charge/stock",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "pbr_assault_rifle",
+            "part": "stock"
+           }
           }
          },
          {
@@ -1878,8 +2023,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/assault_rifle/charge/stock"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/assault_rifle/charge/stock",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_assault_rifle",
+          "part": "stock"
+         }
         }
        },
        {
@@ -1890,8 +2040,13 @@
          {
           "when": "mag",
           "model": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/assault_rifle/charge/mag"
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/assault_rifle/charge/mag",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "pbr_assault_rifle",
+            "part": "mag"
+           }
           }
          },
          {
@@ -1902,8 +2057,13 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/assault_rifle/charge/mag"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/assault_rifle/charge/mag",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_assault_rifle",
+          "part": "mag"
+         }
         }
        },
        {
@@ -1948,8 +2108,13 @@
        "type": "minecraft:composite",
        "models": [
         {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/assault_rifle/ads_red_dot/body"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/assault_rifle/ads_red_dot/body",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_assault_rifle",
+          "part": "body"
+         }
         },
         {
          "type": "minecraft:select",
@@ -1963,8 +2128,13 @@
           }
          ],
          "fallback": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/assault_rifle/ads_red_dot/charging_handle"
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/assault_rifle/ads_red_dot/charging_handle",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_assault_rifle",
+           "part": "handle"
+          }
          }
         },
         {
@@ -2152,8 +2322,13 @@
           {
            "when": "stock",
            "model": {
-            "type": "minecraft:model",
-            "model": "zomboidcraft:item/weapon/assault_rifle/ads_red_dot/stock"
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/assault_rifle/ads_red_dot/stock",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "pbr_assault_rifle",
+             "part": "stock"
+            }
            }
           },
           {
@@ -2164,8 +2339,13 @@
           }
          ],
          "fallback": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/assault_rifle/ads_red_dot/stock"
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/assault_rifle/ads_red_dot/stock",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_assault_rifle",
+           "part": "stock"
+          }
          }
         },
         {
@@ -2176,8 +2356,13 @@
           {
            "when": "mag",
            "model": {
-            "type": "minecraft:model",
-            "model": "zomboidcraft:item/weapon/assault_rifle/ads_red_dot/mag"
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/assault_rifle/ads_red_dot/mag",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "pbr_assault_rifle",
+             "part": "mag"
+            }
            }
           },
           {
@@ -2188,8 +2373,13 @@
           }
          ],
          "fallback": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/assault_rifle/ads_red_dot/mag"
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/assault_rifle/ads_red_dot/mag",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_assault_rifle",
+           "part": "mag"
+          }
          }
         },
         {
@@ -2224,8 +2414,13 @@
        "type": "minecraft:composite",
        "models": [
         {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/assault_rifle/ads_holo/body"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/assault_rifle/ads_holo/body",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_assault_rifle",
+          "part": "body"
+         }
         },
         {
          "type": "minecraft:select",
@@ -2239,8 +2434,13 @@
           }
          ],
          "fallback": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/assault_rifle/ads_holo/charging_handle"
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/assault_rifle/ads_holo/charging_handle",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_assault_rifle",
+           "part": "handle"
+          }
          }
         },
         {
@@ -2428,8 +2628,13 @@
           {
            "when": "stock",
            "model": {
-            "type": "minecraft:model",
-            "model": "zomboidcraft:item/weapon/assault_rifle/ads_holo/stock"
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/assault_rifle/ads_holo/stock",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "pbr_assault_rifle",
+             "part": "stock"
+            }
            }
           },
           {
@@ -2440,8 +2645,13 @@
           }
          ],
          "fallback": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/assault_rifle/ads_holo/stock"
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/assault_rifle/ads_holo/stock",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_assault_rifle",
+           "part": "stock"
+          }
          }
         },
         {
@@ -2452,8 +2662,13 @@
           {
            "when": "mag",
            "model": {
-            "type": "minecraft:model",
-            "model": "zomboidcraft:item/weapon/assault_rifle/ads_holo/mag"
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/assault_rifle/ads_holo/mag",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "pbr_assault_rifle",
+             "part": "mag"
+            }
            }
           },
           {
@@ -2464,8 +2679,13 @@
           }
          ],
          "fallback": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/assault_rifle/ads_holo/mag"
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/assault_rifle/ads_holo/mag",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_assault_rifle",
+           "part": "mag"
+          }
          }
         },
         {
@@ -2500,8 +2720,13 @@
        "type": "minecraft:composite",
        "models": [
         {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/assault_rifle/ads_scope_4x/body"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/assault_rifle/ads_scope_4x/body",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_assault_rifle",
+          "part": "body"
+         }
         },
         {
          "type": "minecraft:select",
@@ -2515,8 +2740,13 @@
           }
          ],
          "fallback": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/assault_rifle/ads_scope_4x/charging_handle"
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/assault_rifle/ads_scope_4x/charging_handle",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_assault_rifle",
+           "part": "handle"
+          }
          }
         },
         {
@@ -2704,8 +2934,13 @@
           {
            "when": "stock",
            "model": {
-            "type": "minecraft:model",
-            "model": "zomboidcraft:item/weapon/assault_rifle/ads_scope_4x/stock"
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/assault_rifle/ads_scope_4x/stock",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "pbr_assault_rifle",
+             "part": "stock"
+            }
            }
           },
           {
@@ -2716,8 +2951,13 @@
           }
          ],
          "fallback": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/assault_rifle/ads_scope_4x/stock"
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/assault_rifle/ads_scope_4x/stock",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_assault_rifle",
+           "part": "stock"
+          }
          }
         },
         {
@@ -2728,8 +2968,13 @@
           {
            "when": "mag",
            "model": {
-            "type": "minecraft:model",
-            "model": "zomboidcraft:item/weapon/assault_rifle/ads_scope_4x/mag"
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/assault_rifle/ads_scope_4x/mag",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "pbr_assault_rifle",
+             "part": "mag"
+            }
            }
           },
           {
@@ -2740,8 +2985,13 @@
           }
          ],
          "fallback": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/assault_rifle/ads_scope_4x/mag"
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/assault_rifle/ads_scope_4x/mag",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_assault_rifle",
+           "part": "mag"
+          }
          }
         },
         {
@@ -2775,8 +3025,13 @@
      "type": "minecraft:composite",
      "models": [
       {
-       "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/assault_rifle/ads/body"
+       "type": "minecraft:special",
+       "base": "zomboidcraft:item/weapon/assault_rifle/ads/body",
+       "model": {
+        "type": "zomboidcraft:mesh",
+        "id": "pbr_assault_rifle",
+        "part": "body"
+       }
       },
       {
        "type": "minecraft:select",
@@ -2790,8 +3045,13 @@
         }
        ],
        "fallback": {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/assault_rifle/ads/charging_handle"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/assault_rifle/ads/charging_handle",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_assault_rifle",
+         "part": "handle"
+        }
        }
       },
       {
@@ -3032,8 +3292,13 @@
         {
          "when": "stock",
          "model": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/assault_rifle/ads/stock"
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/assault_rifle/ads/stock",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_assault_rifle",
+           "part": "stock"
+          }
          }
         },
         {
@@ -3044,8 +3309,13 @@
         }
        ],
        "fallback": {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/assault_rifle/ads/stock"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/assault_rifle/ads/stock",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_assault_rifle",
+         "part": "stock"
+        }
        }
       },
       {
@@ -3056,8 +3326,13 @@
         {
          "when": "mag",
          "model": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/assault_rifle/ads/mag"
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/assault_rifle/ads/mag",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_assault_rifle",
+           "part": "mag"
+          }
          }
         },
         {
@@ -3068,8 +3343,13 @@
         }
        ],
        "fallback": {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/assault_rifle/ads/mag"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/assault_rifle/ads/mag",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_assault_rifle",
+         "part": "mag"
+        }
        }
       },
       {
@@ -3105,8 +3385,13 @@
      "type": "minecraft:composite",
      "models": [
       {
-       "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/assault_rifle/raised_hip/body"
+       "type": "minecraft:special",
+       "base": "zomboidcraft:item/weapon/assault_rifle/raised_hip/body",
+       "model": {
+        "type": "zomboidcraft:mesh",
+        "id": "pbr_assault_rifle",
+        "part": "body"
+       }
       },
       {
        "type": "minecraft:select",
@@ -3120,8 +3405,13 @@
         }
        ],
        "fallback": {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/assault_rifle/raised_hip/charging_handle"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/assault_rifle/raised_hip/charging_handle",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_assault_rifle",
+         "part": "handle"
+        }
        }
       },
       {
@@ -3362,8 +3652,13 @@
         {
          "when": "stock",
          "model": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/assault_rifle/raised_hip/stock"
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/assault_rifle/raised_hip/stock",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_assault_rifle",
+           "part": "stock"
+          }
          }
         },
         {
@@ -3374,8 +3669,13 @@
         }
        ],
        "fallback": {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/assault_rifle/raised_hip/stock"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/assault_rifle/raised_hip/stock",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_assault_rifle",
+         "part": "stock"
+        }
        }
       },
       {
@@ -3386,8 +3686,13 @@
         {
          "when": "mag",
          "model": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/assault_rifle/raised_hip/mag"
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/assault_rifle/raised_hip/mag",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_assault_rifle",
+           "part": "mag"
+          }
          }
         },
         {
@@ -3398,8 +3703,13 @@
         }
        ],
        "fallback": {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/assault_rifle/raised_hip/mag"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/assault_rifle/raised_hip/mag",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_assault_rifle",
+         "part": "mag"
+        }
        }
       },
       {
@@ -3431,8 +3741,13 @@
      "type": "minecraft:composite",
      "models": [
       {
-       "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/assault_rifle/hip/body"
+       "type": "minecraft:special",
+       "base": "zomboidcraft:item/weapon/assault_rifle/hip/body",
+       "model": {
+        "type": "zomboidcraft:mesh",
+        "id": "pbr_assault_rifle",
+        "part": "body"
+       }
       },
       {
        "type": "minecraft:select",
@@ -3446,8 +3761,13 @@
         }
        ],
        "fallback": {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/assault_rifle/hip/charging_handle"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/assault_rifle/hip/charging_handle",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_assault_rifle",
+         "part": "handle"
+        }
        }
       },
       {
@@ -3688,8 +4008,13 @@
         {
          "when": "stock",
          "model": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/assault_rifle/hip/stock"
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/assault_rifle/hip/stock",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_assault_rifle",
+           "part": "stock"
+          }
          }
         },
         {
@@ -3700,8 +4025,13 @@
         }
        ],
        "fallback": {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/assault_rifle/hip/stock"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/assault_rifle/hip/stock",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_assault_rifle",
+         "part": "stock"
+        }
        }
       },
       {
@@ -3712,8 +4042,13 @@
         {
          "when": "mag",
          "model": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/assault_rifle/hip/mag"
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/assault_rifle/hip/mag",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_assault_rifle",
+           "part": "mag"
+          }
          }
         },
         {
@@ -3724,8 +4059,13 @@
         }
        ],
        "fallback": {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/assault_rifle/hip/mag"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/assault_rifle/hip/mag",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_assault_rifle",
+         "part": "mag"
+        }
        }
       },
       {

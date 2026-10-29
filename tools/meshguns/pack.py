@@ -33,8 +33,10 @@ import trimesh
 from PIL import Image
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-sys.path.insert(0, os.path.join(ROOT, 'tools', 'cars'))
-from pack import scramble  # noqa: E402  same stream as the cars
+import importlib.util  # noqa: E402
+_cars = importlib.util.spec_from_file_location('cars_pack', os.path.join(ROOT, 'tools', 'cars', 'pack.py'))
+_cars_pack = importlib.util.module_from_spec(_cars); _cars.loader.exec_module(_cars_pack)
+scramble = _cars_pack.scramble      # same stream as the cars
 
 WEAPONS = os.path.join(ROOT, 'src/main/resources/assets/zomboidcraft/models/item/weapon')
 AXES = {'x': 0, 'y': 1, 'z': 2}
