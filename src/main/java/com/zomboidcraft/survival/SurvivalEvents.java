@@ -130,16 +130,24 @@ public final class SurvivalEvents {
         float roll = random.nextFloat();
         if (roll < config.biteChance) {
             Body.Region where = Injuries.zombieWound(player, true);
-            if (!stats.infected() && config.infection) {
-                stats = stats.withInfection(0);
+            if (where == null) {
+                player.sendOverlayMessage(Component.literal("Your clothes stopped a bite.").withStyle(ChatFormatting.GRAY));
+            } else {
+                if (!stats.infected() && config.infection) {
+                    stats = stats.withInfection(0);
+                }
+                player.sendOverlayMessage(Component.literal("You've been bitten on the " + where.label + ".").withStyle(ChatFormatting.DARK_RED));
             }
-            player.sendOverlayMessage(Component.literal("You've been bitten on the " + where.label + ".").withStyle(ChatFormatting.DARK_RED));
         } else if (roll < config.biteChance + config.scratchChance) {
             Body.Region where = Injuries.zombieWound(player, false);
-            if (!stats.infected() && config.infection && random.nextFloat() < config.scratchInfectionChance) {
-                stats = stats.withInfection(0);
+            if (where == null) {
+                player.sendOverlayMessage(Component.literal("Your clothes took the scratch.").withStyle(ChatFormatting.GRAY));
+            } else {
+                if (!stats.infected() && config.infection && random.nextFloat() < config.scratchInfectionChance) {
+                    stats = stats.withInfection(0);
+                }
+                player.sendOverlayMessage(Component.literal("You've been hurt on the " + where.label + ".").withStyle(ChatFormatting.RED));
             }
-            player.sendOverlayMessage(Component.literal("You've been hurt on the " + where.label + ".").withStyle(ChatFormatting.RED));
         }
         SurvivalStats.set(player, stats);
     }

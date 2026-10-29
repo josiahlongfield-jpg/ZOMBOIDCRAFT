@@ -238,9 +238,11 @@ public final class MoodleHud {
         // a newer world's clock can be behind the last one's
         long ticks = wetTick < 0 || tick < wetTick ? 1 : Math.min(20, tick - wetTick);
         wetTick = tick;
+        // a raincoat or poncho keeps most of the rain off (clothing/Clothes water)
+        float rain = 0.0015f * (1 - com.zomboidcraft.clothing.Clothes.totals(player).water());
         for (long i = 0; i < ticks; i++) {
             if (player.isInWater()) wet = Math.min(1, wet + 0.02f);
-            else if (player.isInWaterOrRain()) wet = Math.min(1, wet + 0.0015f);
+            else if (player.isInWaterOrRain()) wet = Math.min(1, wet + rain);
             else wet = Math.max(0, wet - 0.0006f);
         }
     }

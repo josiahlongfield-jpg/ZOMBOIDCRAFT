@@ -106,12 +106,16 @@ public class WornGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
         }
         // the belt, holster and sheath are built at body scale round the waist (tools/items/gen_belts.py,
         // gen_holsters.py): they only need moving down to it
+        // over trousers or a shirt tail the belt sits out on the cloth (clothing/ClothingLayer's waistband)
+        float[] out = com.zomboidcraft.client.clothing.ClothingLayer.beltOut(player);
         for (int i = GearStore.BELT; i <= GearStore.SHEATH && i < worn.size(); i++) {
             if (!BODY_SCALE.contains(worn.get(i).getItem())) continue;
+            boolean thigh = worn.get(i).is(com.zomboidcraft.ModItems.THIGH_HOLSTER);
             pose.pushPose();
-            onPart(pose, worn.get(i).is(com.zomboidcraft.ModItems.THIGH_HOLSTER));
+            onPart(pose, thigh);
             pose.translate(0, BELT_DOWN / 16f, 0);
             pose.scale(1f, -1f, -1f);
+            if (!thigh) pose.scale(out[0], 1f, out[1]);
             items.updateForLiving(item, worn.get(i), ItemDisplayContext.NONE, player);
             item.submit(pose, collector, light, OverlayTexture.NO_OVERLAY, state.outlineColor);
             pose.popPose();

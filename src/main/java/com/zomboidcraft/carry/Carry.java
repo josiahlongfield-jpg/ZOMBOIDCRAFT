@@ -256,6 +256,7 @@ public final class Carry {
                 continue;
             }
             kit(player);
+            com.zomboidcraft.clothing.Clothes.tick(player);
             // a gun case or ammo can found shut is filled the first time someone has it; a found gun's finish is
             // rolled, and a weapon that didn't come out of a loot table gets its tier
             Inventory inventory = player.getInventory();

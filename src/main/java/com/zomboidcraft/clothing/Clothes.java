@@ -227,6 +227,30 @@ public final class Clothes {
         return new Totals(Map.copyOf(bite), Map.copyOf(scratch), warmth, 1 - dry, armour);
     }
 
+    private static final Identifier ARMOUR = ZomboidCraft.id("clothing_armor");
+
+    /**
+     * Gives armour for the clothes kept in the gear store (vests, gloves, masks); pieces in the armour slots carry
+     * their own on the item. Run every so often from the carry tick.
+     */
+    public static void tick(net.minecraft.server.level.ServerPlayer player) {
+        int points = 0;
+        for (ClothingSlot slot : ClothingSlot.ALL) {
+            if (slot.armour != null) continue;
+            Garment g = of(slot.worn(player));
+            if (g != null) points += g.armour();
+        }
+        var armor = player.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.ARMOR);
+        if (armor == null) return;
+        var current = armor.getModifier(ARMOUR);
+        if (points == 0) {
+            if (current != null) armor.removeModifier(ARMOUR);
+        } else if (current == null || current.amount() != points) {
+            armor.addOrUpdateTransientModifier(new net.minecraft.world.entity.ai.attributes.AttributeModifier(ARMOUR, points,
+                    net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_VALUE));
+        }
+    }
+
     private Clothes() {
     }
 }
