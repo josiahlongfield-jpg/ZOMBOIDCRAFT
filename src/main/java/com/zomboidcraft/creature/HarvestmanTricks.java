@@ -635,12 +635,25 @@ final class HarvestmanTricks {
         double closing = to.lengthSqr() > 1e-4 ? trackVel.dot(to.normalize()) : 0;
         boolean chased = d < 14 || d < shownD - 6 || closing > 0.12 && d < shownD - 2;
         if (chased || m.phaseTicks > 20 * 75 || d > 80) {
-            displayAt = level.getGameTime() + (chased ? 20 * 75 : 0);
-            Vec3 away = m.hideFrom(level, t);
-            m.end();
-            if (away != null) {
-                m.start(HarvestmanMind.HIDE, away, HarvestmanMind.SPRINT);
-            }
+            vanish(level, t, chased);
+        }
+    }
+
+    /** A gunshot (from) while it's out to be seen: true if it went (lights out, scurrying off out of sight). */
+    boolean shotAt(ServerLevel level, Vec3 from) {
+        if (m.plan != HarvestmanMind.DISPLAY || !(m.quarry instanceof ServerPlayer t) || from.distanceToSqr(h.centre()) > 80 * 80) {
+            return false;
+        }
+        vanish(level, t, true);
+        return true;
+    }
+
+    private void vanish(ServerLevel level, ServerPlayer t, boolean chased) {
+        displayAt = level.getGameTime() + (chased ? 20 * 75 : 0);
+        Vec3 away = m.hideFrom(level, t);
+        m.end();
+        if (away != null) {
+            m.start(HarvestmanMind.HIDE, away, HarvestmanMind.SPRINT);
         }
     }
 
