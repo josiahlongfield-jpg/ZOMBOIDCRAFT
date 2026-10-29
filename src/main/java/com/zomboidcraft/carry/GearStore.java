@@ -6,8 +6,9 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 
 /**
- * What a survivor wears beyond armour: a pack, a vest and a waist bag, and the belt, holster, sheath and watch that
- * open quick slots (see {@link QuickSlots}). Lives on the player.
+ * What a survivor wears beyond armour: a pack, a vest and a waist bag, the belt, holster, sheath and watch that
+ * open quick slots (see {@link QuickSlots}), and the clothing layers the armour slots don't hold (glasses, mask,
+ * neck, shirt and gloves). Lives on the player.
  */
 public final class GearStore {
     public static final int BACK = 0;
@@ -17,7 +18,13 @@ public final class GearStore {
     public static final int HOLSTER = 4;
     public static final int SHEATH = 5;
     public static final int WRIST = 6;
-    public static final int SIZE = 7;
+    /** Clothing layers beyond the armour slots (see clothing/ClothingSlot). */
+    public static final int EYES = 7;
+    public static final int FACE = 8;
+    public static final int NECK = 9;
+    public static final int SHIRT = 10;
+    public static final int HANDS = 11;
+    public static final int SIZE = 12;
 
     public static final Codec<GearStore> CODEC = ItemStack.OPTIONAL_CODEC.listOf().xmap(GearStore::new, GearStore::list);
 
