@@ -72,7 +72,12 @@ class Garment:
         return self.m.box(a, b, mat, part=part, **kw)
 
     def shell(self, part, y0, y1, d, mat, box=None, **kw):
-        """A sleeve of cloth d out from the part, from y0 down to y1."""
+        """A sleeve of cloth d out from the part, from y0 down to y1.
+
+        Started at the top of an arm or the torso, it closes over the shoulder d above the skin, as vanilla armour
+        does: flush with the skin, the skin's outer layer (0.25 out) would show through on top of the shoulders."""
+        if box is None and y0 <= BOXES[part][0][1] and part in ARMS + ('body',):
+            y0 = BOXES[part][0][1] - d
         (bx0, _, bz0), (bx1, _, bz1) = box or BOXES[part]
         return self.box(part, (bx0 - d, y0, bz0 - d), (bx1 + d, y1, bz1 + d), mat, **kw)
 
