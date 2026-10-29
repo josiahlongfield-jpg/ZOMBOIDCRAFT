@@ -1,0 +1,183 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bark_top": "zomboidcraft:block/city/bark_top",
+    "hk_chink": "zomboidcraft:block/city/hk_chink",
+    "hk_log": "zomboidcraft:block/city/hk_log",
+    "particle": "zomboidcraft:block/city/hk_log"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0.8,
+        1
+      ],
+      "to": [
+        16,
+        7.2,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hk_log"
+        },
+        "south": {
+          "texture": "#hk_log"
+        },
+        "east": {
+          "texture": "#bark_top",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#bark_top",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#hk_log"
+        },
+        "down": {
+          "texture": "#hk_log"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        2,
+        0
+      ],
+      "to": [
+        16,
+        6,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hk_log",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#hk_log",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#bark_top",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#bark_top",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#hk_log"
+        },
+        "down": {
+          "texture": "#hk_log"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        8.8,
+        0
+      ],
+      "to": [
+        15,
+        15.2,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bark_top",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#bark_top",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#hk_log"
+        },
+        "west": {
+          "texture": "#hk_log"
+        },
+        "up": {
+          "texture": "#hk_log"
+        },
+        "down": {
+          "texture": "#hk_log"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        10,
+        0
+      ],
+      "to": [
+        16,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bark_top",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#bark_top",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#hk_log",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#hk_log",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#hk_log"
+        },
+        "down": {
+          "texture": "#hk_log"
+        }
+      }
+    },
+    {
+      "from": [
+        1.6,
+        7,
+        1.6
+      ],
+      "to": [
+        14.4,
+        9,
+        14.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hk_chink"
+        },
+        "south": {
+          "texture": "#hk_chink"
+        },
+        "east": {
+          "texture": "#hk_chink"
+        },
+        "west": {
+          "texture": "#hk_chink"
+        },
+        "up": {
+          "texture": "#hk_chink"
+        },
+        "down": {
+          "texture": "#hk_chink"
+        }
+      }
+    }
+  ]
+}

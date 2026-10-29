@@ -1,0 +1,76 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ext_galv": "zomboidcraft:block/city/ext_galv",
+    "hk_timber": "zomboidcraft:block/city/hk_timber",
+    "particle": "zomboidcraft:block/city/hk_timber"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        5,
+        0
+      ],
+      "to": [
+        11,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hk_timber",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#hk_timber",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#hk_timber"
+        },
+        "west": {
+          "texture": "#hk_timber"
+        },
+        "up": {
+          "texture": "#hk_timber"
+        },
+        "down": {
+          "texture": "#hk_timber"
+        }
+      }
+    },
+    {
+      "from": [
+        4.6,
+        4.6,
+        7
+      ],
+      "to": [
+        11.4,
+        14.4,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_galv"
+        },
+        "south": {
+          "texture": "#ext_galv"
+        },
+        "east": {
+          "texture": "#ext_galv"
+        },
+        "west": {
+          "texture": "#ext_galv"
+        },
+        "up": {
+          "texture": "#ext_galv"
+        },
+        "down": {
+          "texture": "#ext_galv"
+        }
+      }
+    }
+  ]
+}

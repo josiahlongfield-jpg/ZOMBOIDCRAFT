@@ -11227,5 +11227,10 @@ final class CitySpecs extends CityBlocks.Specs {
         s("yd_firering", PLAIN, 0, 0, SoundType.STONE, 2f, 1, 0, 1, 15, 2, 15);
         s("yd_compost", FACING, 0, 0, SoundType.STONE, 2f, 3, 0, 3, 13, 15, 13);
         s("yd_shed_door", DOOR, 0, 0, SoundType.WOOD, 3f);
+        s("hk_cabin_log", AXIS, 0, 0, SoundType.WOOD, 1f, 1, 0.8, 0, 15, 7.2, 16, 0, 2, 0, 16, 6, 16, 1, 8.8, 0, 15, 15.2, 16, 0, 10, 0, 16, 14, 16, 2.2, 0, 0, 13.8, 0.8, 16, 2.2, 7, 0, 13.8, 9, 16, 2.2, 15.2, 0, 13.8, 16, 16);
+        s("hk_cabin_log_soot", AXIS, 0, 0, SoundType.WOOD, 1f, 1, 0.8, 0, 15, 7.2, 16, 0, 2, 0, 16, 6, 16, 1, 8.8, 0, 15, 15.2, 16, 0, 10, 0, 16, 14, 16, 2.2, 0, 0, 13.8, 0.8, 16, 2.2, 7, 0, 13.8, 9, 16, 2.2, 15.2, 0, 13.8, 16, 16);
+        s("hk_cabin_corner", PLAIN, 0, 0, SoundType.WOOD, 1f, 0, 0.8, 1, 16, 7.2, 15, 0, 2, 0, 16, 6, 16, 1, 8.8, 0, 15, 15.2, 16, 0, 10, 0, 16, 14, 16, 1.6, 7, 1.6, 14.4, 9, 14.4);
+        s("hk_ridge_beam", AXIS, 0, 0, SoundType.WOOD, 1f, 5, 5, 0, 11, 14, 16);
+        s("hk_pot", PLAIN, DECOR, 0, SoundType.PACKED_MUD, 0f, 4.5, 0, 4.5, 11.5, 7.2, 11.5);
     }
 }
