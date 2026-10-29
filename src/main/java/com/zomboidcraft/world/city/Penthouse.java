@@ -1538,7 +1538,8 @@ final class Penthouse {
                         }
                         boolean alongX = ez;
                         int len = alongX ? x1 - x0 + 1 : z1 - z0 + 1, a = alongX ? x - x0 : z - z0;
-                        p.set(x, yy, z, sunburst(a, len, yy - y, h, alongX));
+                        String face = z == z0 ? "north" : z == z1 ? "south" : x == x0 ? "west" : "east";
+                        p.set(x, yy, z, panel(a, len, yy - y, h, face) + "[facing=" + face + "]");
                     }
                 }
             }
@@ -1572,20 +1573,20 @@ final class Penthouse {
     }
 
     /**
-     * One cell of a tier's face: a half-round arch on the face's base, its rim in steel, inside it
-     * rays fanning out, steel and lit glass by turns; steel above the arch's shoulders.
+     * One cell of a tier's face: sunburst modules (4 wide, 3 high, an arch of raised rim with
+     * rays and lit glass) along the middle of the face over a base row, fluted cladding round them.
      */
-    private String sunburst(int a, int len, int row, int h, boolean alongX) {
-        double cx = (len - 1) / 2.0, dx = a - cx, dy = row - 0.5;
-        double r = Math.hypot(dx, dy), outer = Math.min(len / 2.0, h - 0.5);
-        if (r > outer || row == h - 1) {
-            return clad;
+    private String panel(int a, int len, int row, int h, String face) {
+        String mat = clad.equals("of_deco_brass") ? "brass" : clad.equals("stone_trim") ? "stone" : "steel";
+        int n = len - 2, m = n / 4, o = (n - 4 * m) / 2, i = a - 1;
+        if (h >= 5 && row >= 1 && row <= 3 && i >= o && i < o + 4 * m) {
+            int col = (i - o) % 4;
+            // the module reads left to right as seen from outside
+            if (face.equals("north") || face.equals("east")) {
+                col = 3 - col;
+            }
+            return "of_burst_" + mat + "_" + col + (row - 1);
         }
-        if (r > outer - 1.0) {
-            return "stone_trim";
-        }
-        double ang = Math.atan2(dy, dx);
-        int ray = (int) Math.floor(ang / (Math.PI / 9));
-        return ray % 2 == 0 ? Placer.inWall("window_lit", alongX) : clad;
+        return "of_flute_" + mat;
     }
 }

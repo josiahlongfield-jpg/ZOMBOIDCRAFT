@@ -603,6 +603,41 @@ def blocks():
     add("of_spire_c", [[6, 0, 6, 10, 16, 10, chrome], [5.5, 7, 5.5, 10.5, 8, 10.5, chrome]], "Spire", "METAL", rotate=None)
     add("of_spire_tip", [[6.5, 0, 6.5, 9.5, 6, 9.5, chrome], [7, 6, 7, 9, 11, 9, chrome], [7.5, 11, 7.5, 8.5, 16, 8.5, chrome]], "Spire", "METAL",
         rotate=None)
+    # the crown's sunburst: a module 4 blocks wide by 3 high, a half-round arch of raised rim
+    # with rays fanning out from its hub and lit glass between them, cut into twelve blocks; each
+    # has a solid back and the relief on its north face. In steel, brass or stone.
+    import math
+
+    def burst(px, py):
+        dx, r = px - 32, math.hypot(px - 32, py)
+        if r >= 34:
+            return "bg"
+        if r >= 30 or r < 5:
+            return "rim"
+        a = math.atan2(py, dx)
+        return "ray" if int(a / (math.pi / 9)) % 2 == 0 else "glass"
+
+    depth = {"bg": 1.5, "rim": 4, "ray": 3, "glass": 0.5}
+    for mat, clad in (("steel", chrome), ("brass", brass), ("stone", "stone_trim")):
+        for col in range(4):
+            for row in range(3):
+                boxes = [[0, 0, 4, 16, 16, 16, clad]]
+                for ly in range(16):
+                    runs, cur, start = [], None, 0
+                    for lx in range(17):
+                        c = burst(col * 16 + lx + 0.5, row * 16 + ly + 0.5) if lx < 16 else None
+                        if c != cur:
+                            if cur is not None:
+                                runs.append((start, lx, cur))
+                            cur, start = c, lx
+                    for x0, x1, c in runs:
+                        tex = "window_lit" if c == "glass" else clad
+                        # seen from the north the block's left is +x: mirror so col runs left to right
+                        boxes.append([16 - x1, ly, 4 - depth[c], 16 - x0, ly + 1, 4, tex])
+                add(f"of_burst_{mat}_{col}{row}", boxes, "Sunburst Panel", "METAL", light=6)
+        # fluted cladding between the bursts: three ribs on a plate
+        add(f"of_flute_{mat}", [[0, 0, 3, 16, 16, 16, clad], [1, 0, 1, 4, 16, 3, clad], [6.5, 0, 1, 9.5, 16, 3, clad], [12, 0, 1, 15, 16, 3, clad]],
+            "Fluted Cladding", "METAL")
     add("of_finial", [[2, 0, 2, 14, 4, 14, "stone_trim"], [3, 4, 3, 13, 8, 13, "stone_trim"], [4.5, 8, 4.5, 11.5, 12, 11.5, "stone_trim"],
                       [6, 12, 6, 10, 15, 10, "stone_trim"], [7, 15, 7, 9, 16, 9, chrome]], "Finial", "STONE", rotate=None)
     return out
