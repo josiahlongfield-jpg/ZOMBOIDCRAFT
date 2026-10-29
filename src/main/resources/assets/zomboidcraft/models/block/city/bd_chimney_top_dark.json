@@ -1,0 +1,268 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bd_pot": "zomboidcraft:block/city/bd_pot",
+    "brick_dark": "zomboidcraft:block/city/brick_dark",
+    "concrete_dark": "zomboidcraft:block/city/concrete_dark",
+    "particle": "zomboidcraft:block/city/brick_dark"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        2
+      ],
+      "to": [
+        14,
+        6,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#brick_dark"
+        },
+        "south": {
+          "texture": "#brick_dark"
+        },
+        "east": {
+          "texture": "#brick_dark"
+        },
+        "west": {
+          "texture": "#brick_dark"
+        },
+        "up": {
+          "texture": "#brick_dark"
+        },
+        "down": {
+          "texture": "#brick_dark",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        6,
+        1
+      ],
+      "to": [
+        15,
+        8,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#brick_dark"
+        },
+        "south": {
+          "texture": "#brick_dark"
+        },
+        "east": {
+          "texture": "#brick_dark"
+        },
+        "west": {
+          "texture": "#brick_dark"
+        },
+        "up": {
+          "texture": "#brick_dark"
+        },
+        "down": {
+          "texture": "#brick_dark"
+        }
+      }
+    },
+    {
+      "from": [
+        1.5,
+        8,
+        1.5
+      ],
+      "to": [
+        14.5,
+        9.5,
+        14.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#brick_dark"
+        },
+        "south": {
+          "texture": "#brick_dark"
+        },
+        "east": {
+          "texture": "#brick_dark"
+        },
+        "west": {
+          "texture": "#brick_dark"
+        },
+        "up": {
+          "texture": "#concrete_dark"
+        },
+        "down": {
+          "texture": "#brick_dark"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        9.5,
+        3
+      ],
+      "to": [
+        7,
+        15,
+        7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bd_pot"
+        },
+        "south": {
+          "texture": "#bd_pot"
+        },
+        "east": {
+          "texture": "#bd_pot"
+        },
+        "west": {
+          "texture": "#bd_pot"
+        },
+        "up": {
+          "texture": "#bd_pot"
+        },
+        "down": {
+          "texture": "#bd_pot"
+        }
+      }
+    },
+    {
+      "from": [
+        3.5,
+        15,
+        3.5
+      ],
+      "to": [
+        6.5,
+        15.5,
+        6.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bd_pot"
+        },
+        "south": {
+          "texture": "#bd_pot"
+        },
+        "east": {
+          "texture": "#bd_pot"
+        },
+        "west": {
+          "texture": "#bd_pot"
+        },
+        "up": {
+          "texture": "#bd_pot"
+        },
+        "down": {
+          "texture": "#bd_pot"
+        }
+      }
+    },
+    {
+      "from": [
+        8.5,
+        9.5,
+        8.5
+      ],
+      "to": [
+        12.5,
+        13.5,
+        12.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bd_pot"
+        },
+        "south": {
+          "texture": "#bd_pot"
+        },
+        "east": {
+          "texture": "#bd_pot"
+        },
+        "west": {
+          "texture": "#bd_pot"
+        },
+        "up": {
+          "texture": "#bd_pot"
+        },
+        "down": {
+          "texture": "#bd_pot"
+        }
+      }
+    },
+    {
+      "from": [
+        9,
+        13.5,
+        9
+      ],
+      "to": [
+        12,
+        14,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bd_pot"
+        },
+        "south": {
+          "texture": "#bd_pot"
+        },
+        "east": {
+          "texture": "#bd_pot"
+        },
+        "west": {
+          "texture": "#bd_pot"
+        },
+        "up": {
+          "texture": "#bd_pot"
+        },
+        "down": {
+          "texture": "#bd_pot"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        9.5,
+        2
+      ],
+      "to": [
+        10,
+        10.5,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#concrete_dark"
+        },
+        "south": {
+          "texture": "#concrete_dark"
+        },
+        "east": {
+          "texture": "#concrete_dark"
+        },
+        "west": {
+          "texture": "#concrete_dark"
+        },
+        "up": {
+          "texture": "#concrete_dark"
+        },
+        "down": {
+          "texture": "#concrete_dark"
+        }
+      }
+    }
+  ]
+}

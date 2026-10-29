@@ -1139,6 +1139,8 @@ import clutter  # noqa: E402
 clutter.register(sys.modules[__name__])
 import camp  # noqa: E402
 camp.register(sys.modules[__name__])
+import dress  # noqa: E402
+dress.register(sys.modules[__name__])
 
 
 
