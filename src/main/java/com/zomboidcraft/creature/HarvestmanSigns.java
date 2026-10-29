@@ -92,7 +92,9 @@ final class HarvestmanSigns {
         return plan == HarvestmanMind.STALK || plan == HarvestmanMind.AMBUSH || plan == HarvestmanMind.HIDE
                 || plan == HarvestmanMind.SHADOW || plan == HarvestmanMind.SPLIT || plan == HarvestmanMind.HORDE
                 || plan == HarvestmanMind.PERCH || plan == HarvestmanMind.CEILING || plan == HarvestmanMind.WANDER
-                || plan == HarvestmanMind.INVESTIGATE || plan == HarvestmanMind.LISTEN || plan == HarvestmanMind.IDLE;
+                || plan == HarvestmanMind.INVESTIGATE || plan == HarvestmanMind.LISTEN || plan == HarvestmanMind.IDLE
+                || plan == HarvestmanMind.PATROL || plan == HarvestmanMind.FORAGE || plan == HarvestmanMind.OBSERVE
+                || plan == HarvestmanMind.LIE_IN_WAIT || plan == HarvestmanMind.SHELTER;
     }
 
     // ------------------------------------------------------------------------------------------------ heard first
@@ -203,6 +205,11 @@ final class HarvestmanSigns {
     }
 
     /** Scores in a doorframe it squeezes through: a plate of gouges on the wall beside its way. */
+    /** Scores its mark on a wall where it stands (the edge of its ground: HarvestmanGoals). */
+    void mark(ServerLevel level) {
+        gouge(level);
+    }
+
     private void gouge(ServerLevel level) {
         if (h.up().y < 0.5) {
             return;
