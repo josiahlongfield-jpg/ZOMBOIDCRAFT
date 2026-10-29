@@ -9,9 +9,9 @@ import java.util.SplittableRandom;
  * quay's top (y = 0), so the water's top block is {@link #SEA} and the basin's bed {@link #BED}.
  * The ocean-going ships are {@link BigShip}'s.
  * <ul>
- * <li>a harbour tug, a barge of coal or scrap;</li>
- * <li>the fishing boats, vehicle models like the marina's (tools/cars/boats.py): trawlers, lobster
- * boats, sloops, jon boats, and the ones that sank at their moorings.</li>
+ * <li>a barge of coal or scrap;</li>
+ * <li>the harbour tug and the fishing boats, vehicle models like the marina's (tools/cars/boats.py):
+ * trawlers, lobster boats, sloops, jon boats, and the ones that sank at their moorings.</li>
  * </ul>
  */
 final class Ships {
@@ -116,91 +116,14 @@ final class Ships {
         }
     }
 
-    /** A deckhouse from (x0, z0) to (x1, z1), floors of 3 from y up to n of them, windows round each. */
-    private int house(int x0, int z0, int x1, int z1, int y, int floors, String wall, double broken) {
-        for (int f = 0; f < floors; f++) {
-            int fy = y + f * 3;
-            for (int x = x0; x <= x1; x++) {
-                for (int z = z0; z <= z1; z++) {
-                    boolean side = x == x0 || x == x1 || z == z0 || z == z1;
-                    for (int k = 0; k < 3; k++) {
-                        int yy = fy + k;
-                        if (!side) {
-                            p.set(x, yy, z, k == 0 ? "floor_lino" : "air");
-                            continue;
-                        }
-                        boolean corner = (x == x0 || x == x1) && (z == z0 || z == z1);
-                        boolean pane = k == 1 && !corner && ((x == x1 && (z - z0) % 2 == 1) || ((z == z0 || z == z1) && (x - x0) % 3 == 1)
-                                || (x == x0 && (z - z0) % 4 == 2));
-                        if (pane) {
-                            String axis = x == x0 || x == x1 ? "z" : "x";
-                            p.set(x, yy, z, chance() < broken ? "window_broken[axis=" + axis + "]" : "window[axis=" + axis + "]");
-                        } else {
-                            p.set(x, yy, z, chance() < 0.04 + hit * 0.08 ? "rust" : wall);
-                        }
-                    }
-                }
-            }
-        }
-        int roof = y + floors * 3;
-        for (int x = x0; x <= x1; x++) {
-            for (int z = z0; z <= z1; z++) {
-                p.set(x, roof, z, "deck_steel");
-            }
-        }
-        return roof;
-    }
-
-    /** A funnel from (x, z), w x d, standing from y to top, banded in a line's colour, sooted black at the top. */
-    private void funnel(int x, int z, int w, int d, int y, int top, String band) {
-        for (int yy = y; yy <= top; yy++) {
-            for (int i = 0; i < w; i++) {
-                for (int k = 0; k < d; k++) {
-                    boolean edge = i == 0 || k == 0 || i == w - 1 || k == d - 1;
-                    String m = yy > top - 2 ? "minecraft:black_concrete" : yy > top - 5 && yy <= top - 3 ? band : "minecraft:white_concrete";
-                    p.set(x + i, yy, z + k, edge ? m : yy == top ? "minecraft:coal_block" : "air");
-                }
-            }
-        }
-    }
-
-    /** A mast from (x, y, z) h high with a light on top. */
-    private void mast(int x, int y, int z, int h) {
-        for (int yy = y; yy < y + h; yy++) {
-            p.set(x, yy, z, "minecraft:iron_bars");
-        }
-        p.set(x, y + h, z, chance() < 0.5 + hit * 0.3 ? "minecraft:redstone_lamp" : "aviation_light");
-    }
-
-
-
     // ------------------------------------------------------------------ harbour craft
 
-    /** A harbour tug len long: tyre fenders all round, the tall wheelhouse, a funnel, the towing winch aft. */
-    Hull tug(int len) {
-        Hull h = new Hull(len, 8, SEA - 5, SEA + 3, 0.32, 0.3);
-        String skin = any("hull_red", "minecraft:black_concrete", "minecraft:blue_concrete");
-        hull(h, skin, "hull_black", "deck_steel", SEA, false);
-        int hb = 4;
-        for (int x = 0; x < len; x++) {
-            for (int z = -hb - 1; z <= hb; z++) {
-                if (h.in(x, h.deck() - 1, z) && (!h.in(x, h.deck() - 1, z + 1) || !h.in(x, h.deck() - 1, z - 1) || !h.in(x + 1, h.deck() - 1, z)
-                        || !h.in(x - 1, h.deck() - 1, z))) {
-                    p.set(x, h.deck() - 1, z, "tire[axis=" + (h.in(x, h.deck() - 1, z + 1) && h.in(x, h.deck() - 1, z - 1) ? "z" : "x") + "]");
-                }
-                if (h.in(x, h.deck(), z) && (!h.in(x, h.deck(), z + 1) || !h.in(x, h.deck(), z - 1) || !h.in(x + 1, h.deck(), z))) {
-                    p.set(x, h.deck() + 1, z, skin);
-                }
-            }
-        }
-        int wx = len / 2 - 2;
-        int roof = house(wx, -2, wx + 5, 1, h.deck() + 1, 2, "minecraft:white_concrete", 0.15 + hit * 0.4);
-        mast(wx + 3, roof + 1, -1, 4);
-        funnel(wx - 3, -1, 2, 2, h.deck() + 1, h.deck() + 7, any("minecraft:yellow_concrete", "minecraft:red_concrete"));
-        p.set(2, h.deck() + 1, -1, "steel_olive");
-        p.set(2, h.deck() + 1, 0, "steel_olive");
-        p.set(3, h.deck() + 1, 0, "minecraft:iron_chain[axis=x]");
-        return h;
+    /**
+     * A 72-foot harbour tug (boat_tug): tyres hung all round her and the bow fender, the wheelhouse
+     * glazed all round on its deckhouse, twin stacks, the towing winch and H-bitts aft.
+     */
+    void tug(boolean sunk) {
+        boat("boat_tug", 23.6, sunk);
     }
 
     /** A barge len long, a box of a hull with its hold open, heaped with coal, gravel or scrap. */
