@@ -380,7 +380,7 @@ final class Homes {
 
     /** Iron railings between brick piers along the street, and a turning circle with a fountain. */
     private void grandFront(Placer p, int lw, int sb, int sx, int hw, int doorX, int dx0, int dx1, House.Style style) {
-        String pier = pick("minecraft:bricks", "minecraft:stone_bricks", "brick_buff");
+        String pier = pick("brick_red", "stone_trim", "brick_buff");
         for (int x = 0; x < lw; x++) {
             boolean gate = dx0 >= 0 && x >= dx0 - 1 && x <= dx1 + 1 || x == doorX;
             if (gate) {
@@ -389,11 +389,11 @@ final class Homes {
             if (x % 6 == 0 || x == lw - 1 || x == dx0 - 2 || x == dx1 + 2) {
                 p.set(x, 1, 0, pier);
                 p.set(x, 2, 0, pier);
-                p.set(x, 3, 0, rng.nextDouble() < 0.25 ? "minecraft:lantern" : "minecraft:stone_brick_slab[type=bottom]");
+                p.set(x, 3, 0, rng.nextDouble() < 0.25 ? "hk_pier_lamp" : "hk_pier_cap");
             } else if (rng.nextDouble() > 0.06) {
-                p.set(x, 1, 0, "minecraft:iron_bars");
+                p.set(x, 1, 0, "cv_iron_fence[axis=x]");
                 if (rng.nextDouble() > 0.1) {
-                    p.set(x, 2, 0, "minecraft:iron_bars");
+                    p.set(x, 2, 0, "cv_iron_fence[axis=x]");
                 }
             }
         }
@@ -413,16 +413,17 @@ final class Homes {
             }
             for (int i = -2; i <= 2; i++) {
                 for (int j = -2; j <= 2; j++) {
-                    boolean rim = Math.abs(i) == 2 || Math.abs(j) == 2;
-                    p.set(cx + i, 0, cz + j, "minecraft:stone_bricks");
-                    p.set(cx + i, 1, cz + j, rim ? "minecraft:stone_brick_slab[type=bottom]" : "minecraft:water");
+                    p.set(cx + i, 0, cz + j, "hk_basin");
+                    String side = j == -2 ? i == -2 ? "hk_basin_corner[facing=north]" : i == 2 ? "hk_basin_corner[facing=east]" : "hk_basin_rim[facing=north]"
+                            : j == 2 ? i == 2 ? "hk_basin_corner[facing=south]" : i == -2 ? "hk_basin_corner[facing=west]" : "hk_basin_rim[facing=south]"
+                            : i == -2 ? "hk_basin_rim[facing=west]" : i == 2 ? "hk_basin_rim[facing=east]" : null;
+                    if (side != null) {
+                        p.set(cx + i, 1, cz + j, side);
+                    }
                 }
             }
-            p.set(cx, 1, cz, "minecraft:stone_brick_wall");
-            p.set(cx, 2, cz, "minecraft:stone_brick_wall");
-            p.set(cx, 3, cz, "minecraft:chiseled_stone_bricks");
-            p.set(cx + 1, 2, cz, "minecraft:lily_pad");
-            p.set(cx - 1, 2, cz + 1, "minecraft:lily_pad");
+            p.set(cx, 1, cz, "hk_fountain_base");
+            p.set(cx, 2, cz, "hk_fountain_top");
             for (int z = cz + 5; z < sb; z++) {
                 p.set(doorX, 0, z, "minecraft:gravel");
             }
@@ -455,7 +456,7 @@ final class Homes {
                     if (deep) {
                         p.set(x, -2, z, "minecraft:water");
                     }
-                    p.set(x, deep ? -3 : -2, z, "minecraft:prismarine_bricks");
+                    p.set(x, deep ? -3 : -2, z, "of_pool_tile");
                     if (rng.nextDouble() < 0.08) {
                         p.set(x, 1, z, "minecraft:lily_pad");
                     }
@@ -463,18 +464,18 @@ final class Homes {
             }
             for (int x = px - 1; x <= px + pw; x++) {
                 for (int y = -3; y <= -1; y++) {
-                    p.set(x, y, pz - 1, "minecraft:prismarine_bricks");
-                    p.set(x, y, pz + pd, "minecraft:prismarine_bricks");
+                    p.set(x, y, pz - 1, "of_pool_tile");
+                    p.set(x, y, pz + pd, "of_pool_tile");
                 }
             }
             for (int z = pz - 1; z <= pz + pd; z++) {
                 for (int y = -3; y <= -1; y++) {
-                    p.set(px - 1, y, z, "minecraft:prismarine_bricks");
-                    p.set(px + pw, y, z, "minecraft:prismarine_bricks");
+                    p.set(px - 1, y, z, "of_pool_tile");
+                    p.set(px + pw, y, z, "of_pool_tile");
                 }
             }
-            p.set(px + pw / 2, 1, pz + pd, "minecraft:smooth_quartz_slab[type=bottom]");
-            p.set(px + pw / 2, 1, pz + pd - 1, "minecraft:smooth_quartz_slab[type=bottom]");
+            p.set(px + pw / 2, 1, pz + pd, "hk_diving_board[facing=north]");
+            p.set(px + 1, 1, pz - 1, "hk_pool_ladder[facing=south]");
             for (int z = pz; z < pz + pd; z += 3) {
                 p.setIfAir(px + pw + 1, 1, z, "store_chair[facing=west]");
             }
@@ -488,11 +489,11 @@ final class Homes {
                         for (int y = 1; y <= 3; y++) {
                             p.set(x, y, z, edge ? (y == 2 && x == hx && z == pz + 2 ? "window[axis=z]" : pal.wall()) : "air");
                         }
-                        p.set(x, 4, z, "minecraft:deepslate_tile_slab[type=bottom]");
                     }
                 }
+                tinRoof(p, hx, pz, hx + 5, pz + 4, 4);
                 p.set(hx, 1, pz + 2, "minecraft:air");
-                p.set(hx + 4, 1, pz + 3, "minecraft:barrel[facing=up,loot=storage]");
+                p.set(hx + 4, 1, pz + 3, "fm_drum");
             }
         }
         // a tennis court further back if there's room, otherwise a formal garden
@@ -501,10 +502,12 @@ final class Homes {
             int tx = (lw - 13) / 2;
             for (int x = tx; x < tx + 13; x++) {
                 for (int z = tz; z < tz + 22; z++) {
-                    boolean line = x == tx + 1 || x == tx + 11 || z == tz + 1 || z == tz + 20 || (x == tx + 6 && z > tz + 5 && z < tz + 16);
-                    p.set(x, 0, z, line ? "minecraft:white_concrete" : rng.nextDouble() < 0.06 ? "minecraft:moss_block" : "minecraft:green_terracotta");
+                    boolean alongZ = x == tx + 1 || x == tx + 11 || x == tx + 6 && z >= tz + 6 && z <= tz + 16;
+                    boolean alongX = z == tz + 1 || z == tz + 20 || (z == tz + 6 || z == tz + 16) && x > tx + 1 && x < tx + 11;
+                    p.set(x, 0, z, alongZ && alongX ? "hk_court_cross" : alongZ ? "hk_court_line[axis=z]" : alongX ? "hk_court_line[axis=x]"
+                            : rng.nextDouble() < 0.08 ? "hk_court_moss" : "hk_court");
                 }
-                p.set(x, 1, tz + 11, rng.nextDouble() < 0.15 ? "air" : "chainlink[axis=x]");
+                p.set(x, 1, tz + 11, x == tx || x == tx + 12 ? "hk_net_post" : rng.nextDouble() < 0.12 ? "air" : "hk_tennis_net[axis=x]");
             }
             Kit.chainlink(p, rng, tx - 1, tz - 1, tx + 13, tz - 1, 3);
             Kit.chainlink(p, rng, tx - 1, tz + 22, tx + 13, tz + 22, 3);
@@ -524,8 +527,8 @@ final class Homes {
                     }
                 }
             }
-            p.set(gx + 4, 1, tz + 4, "minecraft:stone_brick_wall");
-            p.set(gx + 4, 2, tz + 4, "minecraft:cauldron");
+            p.set(gx + 4, 0, tz + 4, "pt_stone_flags");
+            p.set(gx + 4, 1, tz + 4, "hk_birdbath");
         }
     }
 

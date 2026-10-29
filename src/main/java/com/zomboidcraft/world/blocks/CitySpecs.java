@@ -11363,5 +11363,21 @@ final class CitySpecs extends CityBlocks.Specs {
         s("hk_cabin_corner", PLAIN, 0, 0, SoundType.WOOD, 1f, 0, 0.8, 1, 16, 7.2, 15, 0, 2, 0, 16, 6, 16, 1, 8.8, 0, 15, 15.2, 16, 0, 10, 0, 16, 14, 16, 1.6, 7, 1.6, 14.4, 9, 14.4);
         s("hk_ridge_beam", AXIS, 0, 0, SoundType.WOOD, 1f, 5, 5, 0, 11, 14, 16);
         s("hk_pot", PLAIN, DECOR, 0, SoundType.PACKED_MUD, 0f, 4.5, 0, 4.5, 11.5, 7.2, 11.5);
+        s("hk_pier_cap", PLAIN, 0, 0, SoundType.STONE, 2f, -1, 0, -1, 17, 12, 17);
+        s("hk_pier_lamp", PLAIN, 0, 0, SoundType.STONE, 2f, -1, 0, -1, 17, 16, 17);
+        s("hk_basin", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("hk_basin_rim", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 8.4, 5);
+        s("hk_basin_corner", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 8.4, 5, 0, 0, 0, 5, 8.4, 16);
+        s("hk_fountain_base", PLAIN, 0, 0, SoundType.STONE, 2f, 2.5, 0, 2.5, 13.5, 16, 13.5);
+        s("hk_fountain_top", PLAIN, 0, 0, SoundType.STONE, 2f, 1, 0, 1, 15, 12, 15);
+        s("hk_diving_board", FACING, 0, 0, SoundType.METAL, 2f, 4.5, 0, 9, 11.5, 6.8, 16);
+        s("hk_pool_ladder", FACING, DECOR, 0, SoundType.METAL, 0f, 3.5, 0, 6, 4.5, 11, 7, 3.5, 10, -2.5, 4.5, 11, 7, 3.5, -15, -3.5, 4.5, 11, -2.5, 3, 0, 5.5, 5, 0.6, 7.5, 11.5, 0, 6, 12.5, 11, 7, 11.5, 10, -2.5, 12.5, 11, 7, 11.5, -15, -3.5, 12.5, 11, -2.5, 11, 0, 5.5, 13, 0.6, 7.5, 4.5, -3.5, -4.5, 11.5, -2.7, -2, 4.5, -8.5, -4.5, 11.5, -7.7, -2, 4.5, -13.5, -4.5, 11.5, -12.7, -2);
+        s("hk_court", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("hk_court_moss", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("hk_court_line", AXIS, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("hk_court_cross", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("hk_tennis_net", AXIS, SEE_THROUGH, 0, SoundType.WOOL, 1f, 7.7, 0, 0, 8.3, 14.6, 16);
+        s("hk_net_post", PLAIN, 0, 0, SoundType.METAL, 2f, 6.5, 0, 6.5, 9.5, 17, 9.5);
+        s("hk_birdbath", PLAIN, 0, 0, SoundType.STONE, 2f, 1.5, 0, 1.5, 14.5, 12.4, 14.5);
     }
 }

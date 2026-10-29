@@ -1,0 +1,203 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hk_basin": "zomboidcraft:block/city/hk_basin",
+    "stone_trim": "zomboidcraft:block/city/stone_trim",
+    "particle": "zomboidcraft:block/city/stone_trim"
+  },
+  "elements": [
+    {
+      "from": [
+        4.5,
+        0,
+        4.5
+      ],
+      "to": [
+        11.5,
+        1.5,
+        11.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#stone_trim"
+        },
+        "south": {
+          "texture": "#stone_trim"
+        },
+        "east": {
+          "texture": "#stone_trim"
+        },
+        "west": {
+          "texture": "#stone_trim"
+        },
+        "up": {
+          "texture": "#stone_trim"
+        },
+        "down": {
+          "texture": "#stone_trim",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        6.3,
+        1.5,
+        6.3
+      ],
+      "to": [
+        9.7,
+        9,
+        9.7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#stone_trim"
+        },
+        "south": {
+          "texture": "#stone_trim"
+        },
+        "east": {
+          "texture": "#stone_trim"
+        },
+        "west": {
+          "texture": "#stone_trim"
+        },
+        "up": {
+          "texture": "#stone_trim"
+        },
+        "down": {
+          "texture": "#stone_trim"
+        }
+      }
+    },
+    {
+      "from": [
+        5.5,
+        9,
+        5.5
+      ],
+      "to": [
+        10.5,
+        10,
+        10.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#stone_trim"
+        },
+        "south": {
+          "texture": "#stone_trim"
+        },
+        "east": {
+          "texture": "#stone_trim"
+        },
+        "west": {
+          "texture": "#stone_trim"
+        },
+        "up": {
+          "texture": "#stone_trim"
+        },
+        "down": {
+          "texture": "#stone_trim"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        10,
+        2
+      ],
+      "to": [
+        14,
+        11,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#stone_trim"
+        },
+        "south": {
+          "texture": "#stone_trim"
+        },
+        "east": {
+          "texture": "#stone_trim"
+        },
+        "west": {
+          "texture": "#stone_trim"
+        },
+        "up": {
+          "texture": "#stone_trim"
+        },
+        "down": {
+          "texture": "#stone_trim"
+        }
+      }
+    },
+    {
+      "from": [
+        1.5,
+        11,
+        1.5
+      ],
+      "to": [
+        14.5,
+        12.4,
+        14.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#stone_trim"
+        },
+        "south": {
+          "texture": "#stone_trim"
+        },
+        "east": {
+          "texture": "#stone_trim"
+        },
+        "west": {
+          "texture": "#stone_trim"
+        },
+        "up": {
+          "texture": "#stone_trim"
+        },
+        "down": {
+          "texture": "#stone_trim"
+        }
+      }
+    },
+    {
+      "from": [
+        2.5,
+        12.1,
+        2.5
+      ],
+      "to": [
+        13.5,
+        12.3,
+        13.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hk_basin"
+        },
+        "south": {
+          "texture": "#hk_basin"
+        },
+        "east": {
+          "texture": "#hk_basin"
+        },
+        "west": {
+          "texture": "#hk_basin"
+        },
+        "up": {
+          "texture": "#hk_basin"
+        },
+        "down": {
+          "texture": "#hk_basin"
+        }
+      }
+    }
+  ]
+}

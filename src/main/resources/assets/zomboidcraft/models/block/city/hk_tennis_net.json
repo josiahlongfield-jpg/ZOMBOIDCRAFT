@@ -1,0 +1,114 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ext_galv": "zomboidcraft:block/city/ext_galv",
+    "hk_net": "zomboidcraft:block/city/hk_net",
+    "hk_net_tape": "zomboidcraft:block/city/hk_net_tape",
+    "particle": "zomboidcraft:block/city/hk_net"
+  },
+  "elements": [
+    {
+      "from": [
+        7.9,
+        0,
+        0
+      ],
+      "to": [
+        8.1,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hk_net",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#hk_net",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#hk_net"
+        },
+        "west": {
+          "texture": "#hk_net"
+        },
+        "up": {
+          "texture": "#hk_net"
+        },
+        "down": {
+          "texture": "#hk_net",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        7.7,
+        13,
+        0
+      ],
+      "to": [
+        8.3,
+        14.6,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hk_net_tape",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#hk_net_tape",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#hk_net_tape"
+        },
+        "west": {
+          "texture": "#hk_net_tape"
+        },
+        "up": {
+          "texture": "#hk_net_tape"
+        },
+        "down": {
+          "texture": "#hk_net_tape"
+        }
+      }
+    },
+    {
+      "from": [
+        7.85,
+        14.2,
+        0
+      ],
+      "to": [
+        8.15,
+        14.5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_galv",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ext_galv",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ext_galv"
+        },
+        "west": {
+          "texture": "#ext_galv"
+        },
+        "up": {
+          "texture": "#ext_galv"
+        },
+        "down": {
+          "texture": "#ext_galv"
+        }
+      }
+    }
+  ]
+}
