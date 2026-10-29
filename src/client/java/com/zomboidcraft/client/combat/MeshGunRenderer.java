@@ -39,11 +39,15 @@ public final class MeshGunRenderer implements NoDataSpecialModelRenderer {
         MeshGuns.draw(id, part, pose, out, light);
     }
 
-    /** Where the gun reaches: our guns run from about -8 to 25 pixels along z, round the middle of the block. */
+    /** Where the mesh reaches, from its file; a gun-sized box round the middle of the block if it can't be read. */
     @Override
     public void getExtents(Consumer<Vector3fc> out) {
+        float[] b = MeshGuns.bounds(id);
+        if (b == null) {
+            b = new float[] {0.2f, -0.1f, -0.6f, 0.8f, 1.0f, 1.6f};
+        }
         for (int i = 0; i < 8; i++) {
-            out.accept(new Vector3f((i & 1) == 0 ? 0.2f : 0.8f, (i & 2) == 0 ? -0.1f : 1.0f, (i & 4) == 0 ? -0.6f : 1.6f));
+            out.accept(new Vector3f(b[(i & 1) * 3], b[1 + (i >> 1 & 1) * 3], b[2 + (i >> 2 & 1) * 3]));
         }
     }
 

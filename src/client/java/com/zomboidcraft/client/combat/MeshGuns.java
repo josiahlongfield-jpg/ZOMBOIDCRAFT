@@ -37,6 +37,7 @@ public final class MeshGuns {
     private static final int INK = 0xFF141414;
     private static final Map<String, Gun> GUNS = new HashMap<>();
     private static final Set<String> MISSING = new HashSet<>();
+    private static final Map<String, float[]> BOUNDS = new java.util.concurrent.ConcurrentHashMap<>();
 
     /** The gun, or null if it can't be loaded. Render thread only. */
     static Gun get(String id) {
@@ -106,7 +107,30 @@ public final class MeshGuns {
         }
     }
 
+    /**
+     * Where a mesh reaches, in blocks from the item model's corner ({lo x, y, z, hi x, y, z}), for the item's extents;
+     * read without making its texture, since models bake while resources reload. Null if it can't be read.
+     */
+    static float[] bounds(String id) {
+        float[] b = BOUNDS.get(id);
+        if (b == null) {
+            b = new float[0];      // unreadable: remembered as empty
+            try {
+                Gun g = read(id, false);
+                b = new float[] {g.lo()[0] / 16, g.lo()[1] / 16, g.lo()[2] / 16, g.hi()[0] / 16, g.hi()[1] / 16, g.hi()[2] / 16};
+            } catch (Exception e) {
+                ZomboidCraft.LOGGER.warn("Couldn't read the size of mesh {}", id, e);
+            }
+            BOUNDS.put(id, b);
+        }
+        return b.length == 0 ? null : b;
+    }
+
     private static Gun read(String id) throws IOException {
+        return read(id, true);
+    }
+
+    private static Gun read(String id, boolean texture) throws IOException {
         byte[] data;
         try (InputStream in = Minecraft.getInstance().getResourceManager().open(ZomboidCraft.id("meshes/" + id + ".zmesh"))) {
             data = in.readAllBytes();
@@ -155,10 +179,13 @@ public final class MeshGuns {
                 }
                 parts.put(name, new Part(tris, pos, uv, normal, smooth));
             }
-            Identifier texture = ZomboidCraft.id("dynamic/mesh/" + id);
+            if (!texture) {
+                return new Gun(parts, null, outline, lo, hi);
+            }
+            Identifier name = ZomboidCraft.id("dynamic/mesh/" + id);
             NativeImage image = NativeImage.read(new ByteArrayInputStream(png));
-            Minecraft.getInstance().getTextureManager().register(texture, new DynamicTexture(() -> "ZomboidCraft gun " + id, image));
-            return new Gun(parts, texture, outline, lo, hi);
+            Minecraft.getInstance().getTextureManager().register(name, new DynamicTexture(() -> "ZomboidCraft mesh " + id, image));
+            return new Gun(parts, name, outline, lo, hi);
         }
     }
 
