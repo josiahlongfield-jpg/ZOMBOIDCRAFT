@@ -132,7 +132,7 @@ public class WornGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
             boolean machete = sheath.is(com.zomboidcraft.ModItems.MACHETE_SHEATH);
             // a knife cross-draw on the front of the left hip, a machete behind it (gen_holsters.py)
             hip(pose, collector, light, state, player, worn.get(Carry.WORN_SHEATH), 1, false, machete ? 2.6f : 2.8f,
-                    machete ? 12.6f : 11.5f, machete ? 2.9f : -2.9f, machete ? 10f : 7.5f);
+                    machete ? 12.6f : 12.7f, machete ? 2.9f : -2.9f, machete ? 10f : 7.5f);
         }
     }
 
