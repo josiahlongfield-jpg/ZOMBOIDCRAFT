@@ -19,7 +19,9 @@ def seg_dist(P, a, b):
 def weights(P, bones):
     D = np.empty((len(P), len(bones)))
     for i, b in enumerate(bones):
-        d = seg_dist(P, *b['seg'])
+        # 'seg' is a line, or a bent line through several points (a forearm running on into the hand)
+        pts = b['seg']
+        d = np.min([seg_dist(P, pts[k], pts[k + 1]) for k in range(len(pts) - 1)], axis=0)
         only = b.get('only', {})
         bad = np.zeros(len(P), bool)
         if 'xmin' in only:
@@ -31,6 +33,9 @@ def weights(P, bones):
             bad |= P[:, 1] > only['ymax']
         if 'ymin' in only:
             bad |= P[:, 1] < only['ymin']
+        if 'rmax' in only:
+            # flesh only this close to the bone (keeps a loose skirt off a hand that hangs beside it)
+            bad |= d > only['rmax']
         if b['name'].startswith(('l_thigh', 'l_shin')):
             bad |= P[:, 0] < -0.02
         if b['name'].startswith(('r_thigh', 'r_shin')):
