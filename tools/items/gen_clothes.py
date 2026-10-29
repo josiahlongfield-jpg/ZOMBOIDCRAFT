@@ -265,6 +265,9 @@ def worn(wear=0.3, low=None):
 # ================================================================== the garments
 # Inflation over the skin, so layers sit over each other: shirt, then jacket, then vest.
 SHIRT, JACKET, PANTS, BOOT = 0.35, 0.75, 0.4, 0.55
+# A skin's eyes are the head's fifth row of pixels. RULE (Josiah 2026-10-29): face pieces (bandanas, masks, scarves)
+# rest below EYES_LOW and headwear above EYES_HIGH, so the eyes always show; only eyewear goes over them.
+EYES_HIGH, EYES_LOW = -4.0, -3.0
 
 
 def collar_flaps(g, d, mat, back=True):
@@ -472,7 +475,7 @@ def build_baseball_cap(g):
 def build_beanie(g):
     d = 0.55
     g.box('head', (-4 - d, -8 - d - 0.4, -4 - d), (4 + d, -4.4, 4 + d), 'knit')
-    g.box('head', (-4 - d - 0.25, -5.9, -4 - d - 0.25), (4 + d + 0.25, -4.1, 4 + d + 0.25), 'rib')   # turned-up cuff
+    g.box('head', (-4 - d - 0.25, -5.9, -4 - d - 0.25), (4 + d + 0.25, EYES_HIGH - 0.15, 4 + d + 0.25), 'rib')   # turned-up cuff
     g.box('head', (-3.0, -8 - d - 1.0, -3.0), (3.0, -8 - d - 0.4, 3.0), 'knit')
 
 
@@ -498,17 +501,18 @@ def build_sunglasses(g):
 
 
 def build_bandana(g):
+    # face pieces sit below the eyes (a skin's eyes are the head's fifth row, y -4 to -3): RULE from Josiah
     z = -4.32
-    g.box('head', (-4.35, -4.3, z - 0.18), (4.35, -1.0, z), 'cloth')        # over the nose and mouth
+    g.box('head', (-4.35, EYES_LOW + 0.15, z - 0.18), (4.35, -0.6, z), 'cloth')    # over the nose and mouth
     for s in (-1, 1):
         x = -4.35 if s < 0 else 4.2
-        g.box('head', (x, -4.3, z), (x + 0.15, -2.4, 4.3), 'cloth')        # round the sides
-    g.box('head', (-3.2, -1.0, z - 0.18), (3.2, 0.5, z - 0.02), 'cloth')    # the hanging point
-    g.box('head', (-1.9, 0.5, z - 0.18), (1.9, 1.4, z - 0.02), 'cloth')
-    g.box('head', (-0.7, 1.4, z - 0.18), (0.7, 2.1, z - 0.02), 'cloth')
-    g.box('head', (-0.8, -4.2, 4.3), (0.8, -3.0, 4.75), 'knot')             # the knot and its tails
-    g.box('head', (-0.9, -3.0, 4.35), (-0.3, -1.0, 4.6), 'knot')
-    g.box('head', (0.3, -3.0, 4.35), (0.9, -1.6, 4.6), 'knot')
+        g.box('head', (x, EYES_LOW + 0.15, z), (x + 0.15, -1.5, 4.3), 'cloth')    # round the sides
+    g.box('head', (-3.2, -0.6, z - 0.18), (3.2, 0.6, z - 0.02), 'cloth')          # the hanging point
+    g.box('head', (-1.9, 0.6, z - 0.18), (1.9, 1.4, z - 0.02), 'cloth')
+    g.box('head', (-0.7, 1.4, z - 0.18), (0.7, 2.0, z - 0.02), 'cloth')
+    g.box('head', (-0.8, -2.75, 4.3), (0.8, -1.8, 4.75), 'knot')                  # the knot and its tails
+    g.box('head', (-0.9, -1.8, 4.35), (-0.3, 0.0, 4.6), 'knot')
+    g.box('head', (0.3, -1.8, 4.35), (0.9, -0.6, 4.6), 'knot')
 
 
 # id: (builder, materials, wear)
