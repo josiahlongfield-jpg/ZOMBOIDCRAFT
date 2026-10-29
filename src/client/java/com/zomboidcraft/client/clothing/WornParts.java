@@ -80,7 +80,23 @@ final class WornParts {
             Map.entry("rubber_gloves", List.of("left_arm", "right_arm")),
             Map.entry("tactical_gloves", List.of("left_arm", "right_arm")),
             Map.entry("scarf", List.of("body")),
-            Map.entry("necktie", List.of("body")));
+            Map.entry("necktie", List.of("body")),
+            Map.entry("flight_deck_jersey", List.of("body", "left_arm", "right_arm")),
+            Map.entry("police_jacket", List.of("body", "left_arm", "right_arm")),
+            Map.entry("fire_coat", List.of("body", "left_arm", "left_leg", "right_arm", "right_leg")),
+            Map.entry("field_jacket", List.of("body", "left_arm", "left_leg", "right_arm", "right_leg")),
+            Map.entry("ghillie_suit", List.of("body", "left_arm", "left_leg", "right_arm", "right_leg")),
+            Map.entry("ww2_flight_jacket", List.of("body", "left_arm", "right_arm")),
+            Map.entry("fur_coat", List.of("body", "left_arm", "left_leg", "right_arm", "right_leg")),
+            Map.entry("bespoke_suit", List.of("body", "left_arm", "left_leg", "right_arm", "right_leg")),
+            Map.entry("poncho", List.of("body")),
+            Map.entry("flak_vest", List.of("body")),
+            Map.entry("police_vest", List.of("body")),
+            Map.entry("plate_carrier", List.of("body")),
+            Map.entry("survival_vest", List.of("body")),
+            Map.entry("fire_gloves", List.of("left_arm", "right_arm")),
+            Map.entry("fire_pants", List.of("body", "left_leg", "right_leg")),
+            Map.entry("g_suit", List.of("body", "left_leg", "right_leg")));
 
     private WornParts() {
     }
