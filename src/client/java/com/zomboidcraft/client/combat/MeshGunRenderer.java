@@ -5,15 +5,13 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.zomboidcraft.ZomboidCraft;
+import com.zomboidcraft.mixin.client.SpecialModelRenderersAccessor;
 import java.util.function.Consumer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.special.NoDataSpecialModelRenderer;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
-import net.minecraft.client.renderer.special.SpecialModelRenderers;
-import net.minecraft.world.item.ItemDisplayContext;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * The "zomboidcraft:mesh" special item model: draws a part of a packed mesh ({@link MeshGuns}: the bought guns, and
@@ -33,12 +31,11 @@ public final class MeshGunRenderer implements NoDataSpecialModelRenderer {
     }
 
     public static void register() {
-        SpecialModelRenderers.ID_MAPPER.put(ZomboidCraft.id("mesh"), Unbaked.MAP_CODEC);
+        SpecialModelRenderersAccessor.zomboidcraft$types().put(ZomboidCraft.id("mesh"), Unbaked.MAP_CODEC);
     }
 
     @Override
-    public void submit(ItemDisplayContext context, PoseStack pose, SubmitNodeCollector out, int light, int overlay,
-                       boolean foil, int outline) {
+    public void submit(PoseStack pose, SubmitNodeCollector out, int light, int overlay, boolean foil, int outline) {
         MeshGuns.draw(id, part, pose, out, light);
     }
 
@@ -50,7 +47,7 @@ public final class MeshGunRenderer implements NoDataSpecialModelRenderer {
         }
     }
 
-    public record Unbaked(String id, String part) implements SpecialModelRenderer.Unbaked {
+    public record Unbaked(String id, String part) implements SpecialModelRenderer.Unbaked<Void> {
         public static final MapCodec<Unbaked> MAP_CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
                 Codec.STRING.fieldOf("id").forGetter(Unbaked::id),
                 Codec.STRING.optionalFieldOf("part", "body").forGetter(Unbaked::part)
@@ -62,7 +59,7 @@ public final class MeshGunRenderer implements NoDataSpecialModelRenderer {
         }
 
         @Override
-        public @Nullable SpecialModelRenderer<?> bake(SpecialModelRenderer.BakingContext context) {
+        public SpecialModelRenderer<Void> bake(SpecialModelRenderer.BakingContext context) {
             return new MeshGunRenderer(id, part);
         }
     }
