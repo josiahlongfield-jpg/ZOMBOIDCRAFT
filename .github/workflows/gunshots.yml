@@ -25,7 +25,9 @@ jobs:
       - uses: gradle/actions/setup-gradle@v5
       - run: sudo apt-get update -q && sudo apt-get install -y -q xvfb xserver-xorg-core xserver-xorg-video-dummy mesa-utils libgl1-mesa-dri libglx-mesa0 libegl-mesa0 mesa-vulkan-drivers > /dev/null
       # only this test: the kit test takes its own run
-      - run: sed -i 's/"fabric-client-gametest": \[[^]]*\]/"fabric-client-gametest": ["com.zomboidcraft.client.combat.GunLookTest"]/' src/gametest/resources/fabric.mod.json
+      - name: Only the gun test
+        run: |
+          sed -i 's/"fabric-client-gametest": \[[^]]*\]/"fabric-client-gametest": ["com.zomboidcraft.client.combat.GunLookTest"]/' src/gametest/resources/fabric.mod.json
       - name: Shrink block textures for the software renderer
         run: |
           pip install -q pillow
