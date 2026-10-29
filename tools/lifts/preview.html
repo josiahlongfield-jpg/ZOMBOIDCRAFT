@@ -56,7 +56,8 @@ function box(bx, by, bz, b, faces, r = 0, opts = {}) {
     down: [[x0, y0, z0], [x1, y0, z0], [x1, y0, z1], [x0, y0, z1]],
   };
   for (const dir in F) {
-    const t = faceTex(faces, dir); if (!t) continue;
+    let t = faceTex(faces, dir); if (!t) continue;
+    let ov = null; if (typeof t === 'object') { ov = t.uv; t = t.t; }
     if (opts.skip && opts.skip.includes(DIRS[(DIRS.indexOf(dir) + r) % 4] || dir)) continue;
     const fr = FRAMES[t] || 1;
     const uvs = F[dir].map(([x, y, z]) => {
@@ -66,6 +67,11 @@ function box(bx, by, bz, b, faces, r = 0, opts = {}) {
       else if (dir === 'up') { u = x; v = z; } else { u = x; v = 16 - z; }
       return [u / 16, v / 16 / fr];
     });
+    if (ov) { // explicit uv: the face's corners in the order above map to the uv box's corners
+      const [a0, b0, a1, b1] = ov.map(x => x / 16);
+      uvs.splice(0, 4, [a1, b1], [a0, b1], [a0, b0], [a1, b0]);
+      if (dir === 'south' || dir === 'west' || dir === 'up' || dir === 'down') { uvs.splice(0, 4, [a0, b1], [a1, b1], [a1, b0], [a0, b0]); }
+    }
     const ps = F[dir].map(([x, y, z]) => { const [rx, rz] = rot(x, z, r); return [bx + rx / 16, by + y / 16, bz + rz / 16]; });
     quad(bucket(texPath(t), opts.glow, opts.alpha || /glass/.test(t)), ps, uvs);
   }
@@ -79,11 +85,20 @@ function spec(name, x, y, z, r = 0) {
 }
 // ---------------- the lift car, as LiftRenderer draws it (frame: u = x, v = z, y up)
 const ATLAS = '@entity/lift/atlas';
-const T = { WALL: 0, WOOD: 1, FLOOR: 2, CEIL: 3, LIGHT: 4, DOOR: 5, ROOF: 6, RAIL: 7, PANEL: 8, BTN_OFF: 9, BTN_ON: 10, SEG_ON: 11, SEG_OFF: 12, BEZEL: 13, CABLE: 14, BEAM: 15, KICK: 16, SILL: 17, FRAME: 18 };
+const T = { WALL: 0, WOOD: 1, FLOOR: 2, CEIL: 3, LIGHT: 4, DOOR: 5, ROOF: 6, RAIL: 7, PANEL: 8, BTN_OFF: 9, BTN_ON: 10, SEG_ON: 11, SEG_OFF: 12, BEZEL: 13, CABLE: 14, BEAM: 15, KICK: 16, SILL: 17, FRAME: 18, LABEL: 19, NUMERAL: 20, BTN_OPEN: 21, BTN_CLOSE: 22, BTN_ALARM: 23 };
+const TILED = new Set([0, 1, 2, 3, 6, 16, 14, 15, 7, 17, 18]);
 const DIGITS = [0x3F, 0x06, 0x5B, 0x4F, 0x66, 0x6D, 0x7D, 0x07, 0x7F, 0x6F];
 let GLOW = false;
 function aq(c, tile) {
-  const tu = (tile % 8) * 32 / 256, tv = Math.floor(tile / 8) * 32 / 256, ts = 32 / 256, e = 0.5 / 256;
+  const d = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
+  const na = TILED.has(tile) ? Math.max(1, Math.round(d(c[0], c[1]))) : 1, nb = TILED.has(tile) ? Math.max(1, Math.round(d(c[0], c[3]))) : 1;
+  if (na > 1 || nb > 1) {
+    const L = (s, t) => [0, 1, 2].map(k => c[0][k] + (c[1][k] - c[0][k]) * s + (c[3][k] - c[0][k]) * t);
+    for (let i = 0; i < na; i++) for (let j = 0; j < nb; j++) aq1([L(i / na, j / nb), L((i + 1) / na, j / nb), L((i + 1) / na, (j + 1) / nb), L(i / na, (j + 1) / nb)], tile);
+  } else aq1(c, tile);
+}
+function aq1(c, tile) {
+  const tu = (tile % 8) / 8, tv = Math.floor(tile / 8) / 8, ts = 1 / 8, e = 0.5 / 512;
   const uv = [[tu + e, tv + ts - e], [tu + ts - e, tv + ts - e], [tu + ts - e, tv + e], [tu + e, tv + e]];
   quad(bucket(texPath(ATLAS), GLOW), c.map(([u, y, v]) => [u, y, v]), uv);
 }
@@ -104,14 +119,12 @@ function car(st) {
   wallV(0.15, 0.04, w - 0.04, c + DOOR, c + CEILING, T.WALL);
   zone(0.04, 0.04, c + CEILING, w - 0.04, d - 0.04, c + CEILING, T.CEIL);
   GLOW = true; zone(w / 2 - 0.45, d / 2 - 0.55, c + CEILING - 0.01, w / 2 + 0.45, d / 2 + 0.55, 0, T.LIGHT); GLOW = false;
-  const pu = w - 0.11, n = st.n, rows = Math.ceil(n / 2), py0 = c + 0.85, py1 = c + 1.75, pv0 = 0.3, pv1 = 0.7;
-  wallU(pu, pv0, pv1, py0, py1, T.PANEL);
-  const cell = Math.min((py1 - py0 - 0.06) / rows, 0.12), bs = cell * 0.7;
-  for (let i = 0; i < n; i++) {
-    const col = i % 2, row = Math.floor(i / 2), bv = pv0 + 0.1 + col * 0.18, by = py0 + 0.04 + row * cell, on = st.called.includes(i);
-    GLOW = on; wallU(pu - 0.005, bv, bv + bs, by, by + bs, on ? T.BTN_ON : T.BTN_OFF); GLOW = false;
+  for (let side = 0; side < 2; side++) {
+    const u = side === 0 ? 0.2 : w - 0.2, wall = side === 0 ? 0.1 : w - 0.1, v0 = side === 1 ? 0.8 : 0.4;
+    zone(Math.min(u, wall), v0, c + 0.95, Math.max(u, wall), d - 0.3, 0, T.RAIL); wallU(u, v0, d - 0.3, c + 0.88, c + 0.95, T.RAIL);
   }
-  indicator(st, w / 2 - 0.3, w / 2 + 0.3, 0.155, c + 2.22, c + 2.62, true);
+  panel(st, w - 0.11, c);
+  indicator(st, w / 2 - 0.24, w / 2 + 0.24, 0.155, c + 2.24, c + 2.54, true);
   const open = st.doors * (w / 2 - 0.05);
   leaves(0.1, 0.15, c, w, open, true);
   zone(0, 0, c - 0.15, w, d, 0, T.ROOF); zone(0.02, 0.02, c + ROOF, w - 0.02, d - 0.02, 0, T.ROOF);
@@ -120,41 +133,64 @@ function car(st) {
   if (st.ropeTop > top) for (const k of [-1, 1]) wallU(w / 2 + k * 0.1, d / 2 - 0.02, d / 2 + 0.02, top, st.ropeTop, T.CABLE);
   if (st.landingOpen != null) leaves(-1 + 0.0625, -1 + 0.1875, st.landingOpen, w, open, false);
   for (const ly of st.indicators) {
-    if (st.pitch >= 4) indicator(st, w / 2 - 0.38, w / 2 + 0.38, -1.012, ly + 2.25, ly + 2.75, false);
-    else indicator(st, w + 0.15, w + 0.85, -1.012, ly + 1.66, ly + 1.98, false);
+    const fv = -1.02;
+    abox(-0.1, fv, ly, 0, -1, ly + DOOR + 0.1, T.FRAME); abox(w, fv, ly, w + 0.1, -1, ly + DOOR + 0.1, T.FRAME); abox(0, fv, ly + DOOR, w, -1, ly + DOOR + 0.1, T.FRAME);
+    if (st.pitch >= 4) indicator(st, w / 2 - 0.28, w / 2 + 0.28, -1.025, ly + 2.3, ly + 2.62, false);
+    else indicator(st, w + 0.2, w + 0.7, -1.025, ly + 1.68, ly + 1.96, false);
   }
 }
 function leaves(v0, v1, y, w, open, isCar) {
   const half = w / 2, x0 = isCar ? 0.1 : 0, x1 = isCar ? w - 0.1 : w;
   abox(x0 - open, v0, y, half - open, v1, y + DOOR, T.DOOR); abox(half + open, v0, y, x1 + open, v1, y + DOOR, T.DOOR);
 }
-function slot(u0, u1, from, width, intoCar) { return intoCar ? [u0 + from, u0 + from + width] : [u1 - from - width, u1 - from]; }
+function faceV(v, u0, u1, intoCar) { return (a0, a1, y0, y1, tile) => intoCar ? wallV(v, u0 + a0, u0 + a1, y0, y1, tile) : wallV(v, u1 - a1, u1 - a0, y0, y1, tile); }
 function indicator(st, u0, u1, v, y0, y1, intoCar) {
   wallV(v, u0 - 0.03, u1 + 0.03, y0 - 0.03, y1 + 0.03, T.FRAME);
   wallV(v + (intoCar ? 0.004 : -0.004), u0, u1, y0, y1, T.BEZEL);
-  const vs = v + (intoCar ? 0.008 : -0.008), label = st.label;
-  const h = (y1 - y0) * 0.72, cy = y0 + (y1 - y0) * 0.14, cw = h * 0.55, gap = cw * 0.3, width = u1 - u0, arrowW = cw * 0.9;
-  const total = arrowW + gap + 2 * cw + gap, start = (width - total) / 2;
-  arrow(st, slot(u0, u1, start, arrowW, intoCar), vs, cy, h, arrowW);
-  const two = label.length >= 2 ? label.slice(-2) : ' ' + label;
-  for (let k = 0; k < 2; k++) digit(two[k], slot(u0, u1, start + arrowW + gap + k * (cw + gap * 0.5), cw, intoCar), vs, cy, h, intoCar);
+  display(faceV(v + (intoCar ? 0.008 : -0.008), u0, u1, intoCar), st, u1 - u0, y0, y1);
 }
-function arrow(st, at, v, y0, h, w) {
-  if (!st.dir) return;
-  const mid = (at[0] + at[1]) / 2; GLOW = true;
-  for (let k = 0; k < 4; k++) { const bw = w * (k + 1) / 4, by = st.dir > 0 ? y0 + h * (0.75 - k * 0.18) : y0 + h * (0.1 + k * 0.18); wallV(v, mid - bw / 2, mid + bw / 2, by, by + h * 0.14, T.SEG_ON); }
+function display(f, st, width, y0, y1) {
+  const h = (y1 - y0) * 0.72, cy = y0 + (y1 - y0) * 0.14, cw = h * 0.55, gap = cw * 0.3, arrowW = cw * 0.9;
+  const total = arrowW + gap + 2 * cw + gap, start = (width - total) / 2;
+  arrow(f, st.dir, start, cy, h, arrowW);
+  digits(f, st.label, start + arrowW + gap, cy, h, cw, T.SEG_ON, T.SEG_OFF);
+}
+function arrow(f, dir, a0, y0, h, w) {
+  if (!dir) return;
+  const mid = a0 + w / 2; GLOW = true;
+  for (let k = 0; k < 4; k++) { const bw = w * (k + 1) / 4, by = dir > 0 ? y0 + h * (0.75 - k * 0.18) : y0 + h * (0.1 + k * 0.18); f(mid - bw / 2, mid + bw / 2, by, by + h * 0.14, T.SEG_ON); }
   GLOW = false;
 }
-function digit(ch, at, v, y0, h, intoCar) {
+function digits(f, label, a0, y0, h, cw, on, off) {
+  const two = label.length >= 2 ? label.slice(-2) : ' ' + label, gap = cw * 0.15;
+  for (let k = 0; k < 2; k++) digit(f, two[k], a0 + k * (cw + gap), y0, h, cw, on, off);
+}
+function digit(f, ch, x0, y0, h, wd, onT, offT) {
   const mask = ch >= '0' && ch <= '9' ? DIGITS[+ch] : ch === 'B' ? 0x7C : 0;
-  const [x0, x1] = at, wd = x1 - x0, t = wd * 0.2, ym = y0 + h / 2, y1 = y0 + h;
+  const t = wd * 0.2, ym = y0 + h / 2, y1 = y0 + h;
   const seg = [[t, wd - t, y1 - t, y1], [wd - t, wd, ym, y1 - t], [wd - t, wd, y0 + t, ym], [t, wd - t, y0, y0 + t], [0, t, y0 + t, ym], [0, t, ym, y1 - t], [t, wd - t, ym - t / 2, ym + t / 2]];
   for (let i = 0; i < 7; i++) {
-    const on = (mask >> i & 1) !== 0, [a, b] = seg[i];
-    const ua = intoCar ? x0 + a : x1 - b, ub = intoCar ? x0 + b : x1 - a;
-    GLOW = on; wallV(v, ua, ub, seg[i][2], seg[i][3], on ? T.SEG_ON : T.SEG_OFF);
+    const on = (mask >> i & 1) !== 0; if (!on && offT < 0) continue;
+    GLOW = on && onT === T.SEG_ON; f(x0 + seg[i][0], x0 + seg[i][1], seg[i][2], seg[i][3], on ? onT : offT);
   }
   GLOW = false;
+}
+function panel(st, pu, c) {
+  const n = st.n, rows = Math.ceil(n / 2), v0 = 0.28, v1 = 0.62, y0 = c + 0.8, y1 = c + 1.95, width = v1 - v0;
+  wallU(pu, v0, v1, y0, y1, T.PANEL);
+  const f = (a0, a1, b0, b1, tile) => wallU(pu - 0.006, v0 + a0, v0 + a1, b0, b1, tile);
+  const top = (a0, a1, b0, b1, tile) => wallU(pu - 0.009, v0 + a0, v0 + a1, b0, b1, tile);
+  f(0.06, width - 0.06, y1 - 0.15, y1 - 0.04, T.BEZEL);
+  display(top, st, width, y1 - 0.14, y1 - 0.05);
+  const fy1 = y1 - 0.2, fy0 = y0 + 0.2, cell = Math.min((fy1 - fy0) / rows, 0.09), bs = cell * 0.62;
+  for (let i = 0; i < n; i++) {
+    const col = i % 2, row = Math.floor(i / 2), a = 0.03 + col * (width / 2), b = fy0 + row * cell + (cell - bs) / 2, lw = width / 2 - 0.06 - bs;
+    f(a, a + lw, b + bs * 0.1, b + bs * 0.9, T.LABEL);
+    digits(top, String(i + 1), a + lw * 0.1, b + bs * 0.22, bs * 0.56, lw * 0.32, T.NUMERAL, -1);
+    const on = st.called.includes(i); GLOW = on; f(a + lw + 0.01, a + lw + 0.01 + bs, b, b + bs, on ? T.BTN_ON : T.BTN_OFF); GLOW = false;
+  }
+  const bb = 0.055, by = y0 + 0.07;
+  f(0.05, 0.05 + bb, by, by + bb, T.BTN_OPEN); f(width / 2 - bb / 2, width / 2 + bb / 2, by, by + bb, T.BTN_CLOSE); f(width - 0.05 - bb, width - 0.05, by, by + bb, T.BTN_ALARM);
 }
 // ---------------- the building around a 2 x 3 shaft (u 0..2, v 0..3), doors at v -1, floors 4 apart
 const FLOOR_T = 'cv_terrazzo', WALL_T = 'drywall_stain', CEIL_T = 'ceiling_tile', CORE_T = 'concrete_dark';
@@ -168,9 +204,10 @@ function liftDoors(fy, open) {
       box(a, fy + 1 + k, -1, [0, 0, 1, 16, 16, 3], { north: t, south: '@block/lift_door_edge', east: '@block/lift_door_edge', west: '@block/lift_door_edge', up: '@block/lift_door_edge', down: '@block/lift_door_edge' });
     }
   }
-  // the call button on the wall right of the doors (from the lobby: at u = 2, one block up)
-  const lit = !!Q.get('lit');
-  box(2, fy + 2, -2, [5, 1, 15, 11, 10, 16], lit ? '@block/lift_button_lit' : '@block/lift_button', 0, { glow: lit });
+  // the call plate on the wall right of the doors, its two buttons
+  const lit = !!Q.get('lit'), bt = lit ? '@block/lift_button_lit' : '@block/lift_button';
+  box(2, fy + 2, -2, [5.5, 0, 15, 10.5, 13, 16], { north: bt, south: bt, east: bt, west: bt, up: bt, down: bt });
+  [[8.4, 10.6], [2.9, 5.1]].forEach(([y0, y1], k) => box(2, fy + 2, -2, [6.9, y0, 14.4, 9.1, y1, 15], { north: { t: bt, uv: [11, k * 4, 15, k * 4 + 4] }, east: { t: bt, uv: [11, k * 4, 11.25, k * 4 + 4] }, west: { t: bt, uv: [11, k * 4, 11.25, k * 4 + 4] }, up: { t: bt, uv: [11, k * 4, 15, k * 4 + 0.25] }, down: { t: bt, uv: [11, k * 4 + 3.75, 15, k * 4 + 4] } }, 0, { glow: lit }));
 }
 function floorSlab(fy, x0, x1, z0, z1, hole) {
   for (let x = x0; x <= x1; x++) for (let z = z0; z <= z1; z++) {
@@ -243,6 +280,14 @@ if (SHOT === 'landing' || SHOT === 'opening') {
   lamp(1, 3.6, 1.5, 1.6, 5); lamp(1, 3.6, -4, 1.0);
   cam.position.set(0.55, 1 + 1.62, 2.65); cam.lookAt(1.9, 1.95, 0.4);
   cam.fov = 80; cam.updateProjectionMatrix();
+} else if (SHOT === 'panel' || SHOT === 'button') {
+  lobby(0, { open: SHOT === 'panel' });
+  shaftWalls(1, 4);
+  car({ w: 2, d: 3, car: 1, n: 14, called: [0, 6, 11], doors: SHOT === 'panel' ? 1 : 0, ropeTop: 9, label: '7', dir: 1, pitch: 4, indicators: [1], landingOpen: null });
+  lamp(1, 3.6, 1.5, 1.6, 5); lamp(1, 3.6, -4, 1.0);
+  if (SHOT === 'panel') { cam.position.set(0.9, 2.55, 1.6); cam.lookAt(1.89, 2.2, 0.45); cam.fov = 55; }
+  else { cam.position.set(1.6, 2.7, -2.6); cam.lookAt(2.5, 2.4, -1.0); cam.fov = 60; }
+  cam.updateProjectionMatrix();
 } else if (SHOT === 'shaft') {
   // a cutaway from the side: three floors, the shaft's near side wall and the rooms left off
   for (const fy of [0, 4, 8]) {
