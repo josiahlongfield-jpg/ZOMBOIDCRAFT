@@ -54,7 +54,7 @@ public final class EnemyBars {
 
     private static void draw(LevelRenderContext context) {
         Minecraft mc = Minecraft.getInstance();
-        if (mc.level == null || mc.player == null || mc.options.hideGui || com.zomboidcraft.client.camera.CinematicView.clean()
+        if (mc.level == null || mc.player == null || com.zomboidcraft.client.camera.CinematicView.clean()
                 || context.levelState().cameraRenderState == null) {
             return;
         }
