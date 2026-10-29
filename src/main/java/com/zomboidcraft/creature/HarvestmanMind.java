@@ -38,7 +38,7 @@ public final class HarvestmanMind {
     public static final int IDLE = 0, WANDER = 1, PERCH = 2, CEILING = 3, HIDE = 4, LISTEN = 5, INVESTIGATE = 6,
             STALK = 7, AMBUSH = 8, STRIKE = 9, DRAG = 10, FEED = 11, FLEE = 12, LAIR = 13, REST = 14, ZOMBIE = 15,
             GLIMPSE = 16, LEAVE_BODY = 17, TRAVEL = 18, FEINT = 19, DOOR = 20, HERD = 21, RETREAT = 22, HORDE = 23,
-            SHADOW = 24, SPLIT = 25;
+            SHADOW = 24, SPLIT = 25, DISPLAY = 26;
     /**
      * How fast it can go when it wants to (blocks a second): closing on prey, vanishing once seen, getting away hurt;
      * faster than a sprinting player when the prey runs; the lunge itself. It creeps everywhere else.
@@ -47,7 +47,7 @@ public final class HarvestmanMind {
 
     public static final String[] PLANS = {"idle", "wander", "perch", "ceiling", "hide", "listen", "investigate", "stalk",
             "ambush", "strike", "drag", "feed", "flee", "lair", "rest", "zombie", "glimpse", "leave_body", "travel", "feint",
-            "door", "herd", "retreat", "horde", "shadow", "split"};
+            "door", "herd", "retreat", "horde", "shadow", "split", "display"};
     /** What a plan is, said plainly (/zc harvestman info). */
     private static final String[] SAY = {"waiting", "wandering", "perching high on a wall", "crossing the ceiling",
             "hiding in the dark", "listening", "going to see what it heard", "stalking %s", "waiting above where %s passes",
@@ -55,7 +55,7 @@ public final class HarvestmanMind {
             "resting in its lair", "hunting a zombie to eat", "letting %s glimpse it", "leaving a body for %s to find",
             "travelling toward %s", "drawing %s off with a noise", "waiting outside the door %s is behind",
             "herding %s toward where it waits", "pretending to flee from %s", "calling the dead down on %s",
-            "following %s along the rooftops", "drawing %s's friends away"};
+            "following %s along the rooftops", "drawing %s's friends away", "standing lit up where %s can see it"};
 
     /** Every direction it feels along: the 26 neighbours of a cube. */
     static final Vec3[] DIRS;
@@ -183,7 +183,7 @@ public final class HarvestmanMind {
                     return "it only drags and feeds once a strike has caught someone (try do strike)";
                 }
             }
-            case STRIKE, STALK, AMBUSH, GLIMPSE, FEINT, DOOR, HERD, RETREAT, HORDE, SHADOW, SPLIT -> {
+            case STRIKE, STALK, AMBUSH, GLIMPSE, FEINT, DOOR, HERD, RETREAT, HORDE, SHADOW, SPLIT, DISPLAY -> {
                 if (near == null) {
                     return "there's no player within 48 blocks";
                 }
@@ -219,6 +219,7 @@ public final class HarvestmanMind {
             case HORDE -> "it needs somewhere near them to make its noise";
             case SHADOW -> "they need to be out under the sky with rooftops round them it can see them from";
             case SPLIT -> "they need someone else with them (within 16 blocks)";
+            case DISPLAY -> "it needs somewhere 22-40 blocks off, in front of them, that they can see from where they are";
             case INVESTIGATE, LISTEN -> "there's nobody near for it to hear";
             default -> "it can't find anywhere to do that from here";
         };
@@ -267,7 +268,7 @@ public final class HarvestmanMind {
      * the red comes up when it rears to strike, while it holds and feeds (it lights up), and a little at rest in its den.
      */
     public double camo() {
-        if (plan == FEED || plan == DRAG) {
+        if (plan == FEED || plan == DRAG || tricks.showing()) {
             return 0;
         }
         if (plan == STRIKE && phase >= 1 || plan == ZOMBIE && phase >= 1) {
@@ -330,7 +331,7 @@ public final class HarvestmanMind {
     private boolean done() {
         return switch (plan) {
             case STALK, AMBUSH, STRIKE, DRAG, FEED, LISTEN, REST, GLIMPSE, ZOMBIE, LEAVE_BODY, TRAVEL, FEINT, DOOR, HERD,
-                 RETREAT, HORDE, SHADOW, SPLIT -> false;
+                 RETREAT, HORDE, SHADOW, SPLIT, DISPLAY -> false;
             default -> true;
         };
     }
@@ -469,7 +470,7 @@ public final class HarvestmanMind {
             case GLIMPSE -> startGlimpse(level, target);
             case LEAVE_BODY -> startLeaveBody(level, target);
             case FEINT -> startFeint(level, target);
-            case DOOR, HERD, RETREAT, HORDE, SHADOW, SPLIT -> tricks.begin(level, next, target);
+            case DOOR, HERD, RETREAT, HORDE, SHADOW, SPLIT, DISPLAY -> tricks.begin(level, next, target);
             case TRAVEL -> start(TRAVEL, target != null ? target.position().add(0, 2, 0) : null, 3.2);
             case ZOMBIE -> startZombie(level);
             case FLEE, LAIR -> {
@@ -542,8 +543,9 @@ public final class HarvestmanMind {
                 w[AMBUSH] = 0.5 * ambushBias + (d > 20 ? 0.2 : 0);
                 tricks.weigh(level, target, d, alone, w);
                 if (HarvestmanNights.patient(level)) {
-                    // a night it only watches: nothing that ends in a strike
-                    w[STRIKE] = w[FEINT] = w[HERD] = w[HORDE] = w[SPLIT] = 0;
+                    // a night it only watches: nothing that ends in a strike, and it doesn't hide to do it (it shows
+                    // itself, lit up, now and then: tricks.weigh)
+                    w[STRIKE] = w[FEINT] = w[HERD] = w[HORDE] = w[SPLIT] = w[AMBUSH] = w[DOOR] = 0;
                 }
                 if (level.getGameTime() - glimpseAt > 20 * 90) {
                     w[GLIMPSE] = 0.25;
@@ -648,7 +650,7 @@ public final class HarvestmanMind {
             case GLIMPSE -> glimpse(level);
             case LEAVE_BODY -> leaveBody(level);
             case FEINT -> feint(level);
-            case DOOR, HERD, RETREAT, HORDE, SHADOW, SPLIT -> tricks.act(level);
+            case DOOR, HERD, RETREAT, HORDE, SHADOW, SPLIT, DISPLAY -> tricks.act(level);
             default -> {
             }
         }

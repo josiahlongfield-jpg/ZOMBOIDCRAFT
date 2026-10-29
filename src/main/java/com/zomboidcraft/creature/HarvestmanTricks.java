@@ -34,6 +34,8 @@ import net.minecraft.world.phys.Vec3;
  * <li>HORDE: it makes a din near them to bring the dead down on them, and comes in while they're busy.</li>
  * <li>SHADOW: out in the open, a shape on the rooftops keeping pace with them, never closer.</li>
  * <li>SPLIT: with others round them, it makes noises out past their friends to draw them off.</li>
+ * <li>DISPLAY: on its patient nights, it stands out in plain sight of them with its red lit, just to let them know it's
+ * watching. Come for it and the red goes out and it's gone.</li>
  * </ul>
  *
  * Each learns from how it goes (herding and fake retreats have a bias of their own, saved with the mind).
@@ -45,7 +47,9 @@ final class HarvestmanTricks {
     double herdBias = 0.3, retreatBias = 0.3;
     /** When each was last tried (game time). */
     private long doorAt = -100_000, herdAt = -100_000, retreatAt = -100_000, hordeAt = -100_000, shadowAt = -100_000,
-            splitAt = -100_000;
+            splitAt = -100_000, displayAt = -100_000;
+    /** DISPLAY: how far off they were when it lit up. */
+    private double shownD;
     /** The door it waits behind (lower half), and the open state it found it in. */
     private BlockPos door;
     /** Herding: where it shows itself, and the way out it waits over. */
@@ -67,13 +71,15 @@ final class HarvestmanTricks {
 
     static boolean hunting(int plan) {
         return plan == HarvestmanMind.DOOR || plan == HarvestmanMind.HERD || plan == HarvestmanMind.RETREAT
-                || plan == HarvestmanMind.HORDE || plan == HarvestmanMind.SHADOW || plan == HarvestmanMind.SPLIT;
+                || plan == HarvestmanMind.HORDE || plan == HarvestmanMind.SHADOW || plan == HarvestmanMind.SPLIT
+                || plan == HarvestmanMind.DISPLAY;
     }
 
     boolean sneaking() {
         int p = m.plan;
         return p == HarvestmanMind.DOOR || p == HarvestmanMind.SHADOW || p == HarvestmanMind.SPLIT || p == HarvestmanMind.HORDE
-                || p == HarvestmanMind.HERD && m.phase >= 2 || p == HarvestmanMind.RETREAT && m.phase >= 1;
+                || p == HarvestmanMind.HERD && m.phase >= 2 || p == HarvestmanMind.RETREAT && m.phase >= 1
+                || p == HarvestmanMind.DISPLAY && m.phase == 0;
     }
 
     /** A noise it made itself (it doesn't turn to its own din). */
@@ -113,6 +119,9 @@ final class HarvestmanTricks {
         if (!indoors && d < 48 && now - shadowAt > 20 * 60 * 4 && trackVel.lengthSqr() > 0.002) {
             w[HarvestmanMind.SHADOW] = 0.35;
         }
+        if (HarvestmanNights.patient(level) && d < 64 && now - displayAt > 20 * 45) {
+            w[HarvestmanMind.DISPLAY] = 2.5;
+        }
         if (!alone && d < 32 && now - splitAt > 20 * 60 * 3) {
             w[HarvestmanMind.SPLIT] = 0.45;
         }
@@ -130,6 +139,7 @@ final class HarvestmanTricks {
             case HarvestmanMind.HORDE -> beginHorde(level, t);
             case HarvestmanMind.SHADOW -> beginShadow(level, t);
             case HarvestmanMind.SPLIT -> beginSplit(level, t);
+            case HarvestmanMind.DISPLAY -> beginDisplay(level, t);
             default -> {
             }
         }
@@ -150,6 +160,7 @@ final class HarvestmanTricks {
             case HarvestmanMind.HORDE -> horde(level, t);
             case HarvestmanMind.SHADOW -> shadow(level, t);
             case HarvestmanMind.SPLIT -> split(level, t);
+            case HarvestmanMind.DISPLAY -> display(level, t);
             default -> m.end();
         }
     }
@@ -550,6 +561,86 @@ final class HarvestmanTricks {
         }
         if (!indoors) {
             m.phaseTicks = 0;
+        }
+    }
+
+    // ------------------------------------------------------------------------------------------------ DISPLAY
+
+    /** Standing lit up for them to see (its red on). */
+    boolean showing() {
+        return m.plan == HarvestmanMind.DISPLAY && m.phase == 1;
+    }
+
+    private void beginDisplay(ServerLevel level, ServerPlayer t) {
+        Vec3 p = showSpot(level, t);
+        if (p == null) {
+            return;
+        }
+        displayAt = level.getGameTime();
+        m.start(HarvestmanMind.DISPLAY, p, HarvestmanMind.BURST);
+    }
+
+    /**
+     * Somewhere 22-40 blocks off, in front of where they're facing and in plain sight of them, high up for choice (a
+     * rooftop, a ledge, a rise), or null.
+     */
+    private Vec3 showSpot(ServerLevel level, ServerPlayer t) {
+        Vec3 eye = t.getEyePosition(), look = t.getLookAngle().multiply(1, 0, 1);
+        look = look.lengthSqr() > 1e-4 ? look.normalize() : new Vec3(1, 0, 0);
+        Vec3 best = null;
+        double bestScore = -1e9;
+        for (int k = 0; k < 32; k++) {
+            double a = (h.getRandom().nextDouble() - 0.5) * Math.toRadians(100), r = 22 + h.getRandom().nextDouble() * 18;
+            Vec3 d = new Vec3(look.x * Math.cos(a) - look.z * Math.sin(a), 0, look.x * Math.sin(a) + look.z * Math.cos(a));
+            Vec3 col = t.position().add(d.scale(r));
+            BlockHitResult top = m.cast(level, new Vec3(col.x, eye.y + 30, col.z), new Vec3(col.x, t.getY() - 8, col.z));
+            if (top.getType() == HitResult.Type.MISS || top.getDirection() != Direction.UP) {
+                continue;
+            }
+            Vec3 stand = top.getLocation().add(0, HarvestmanEntity.STAND, 0);
+            if (m.cast(level, eye, stand).getType() != HitResult.Type.MISS) {
+                continue;
+            }
+            double score = Math.min(12, stand.y - t.getY()) * 0.25 - Math.abs(a) * 0.8 - stand.distanceTo(h.centre()) * 0.01
+                    + h.getRandom().nextDouble() * 0.5;
+            if (score > bestScore) {
+                bestScore = score;
+                best = stand;
+            }
+        }
+        return best;
+    }
+
+    private void display(ServerLevel level, ServerPlayer t) {
+        Vec3 c = h.centre();
+        double d = t.position().distanceTo(c);
+        h.look = t.getEyePosition();
+        if (m.phase == 0) {
+            // getting there dark; once it's there (or near enough, and they can see it), the red comes up
+            boolean seen = m.cast(level, t.getEyePosition(), c).getType() == HitResult.Type.MISS;
+            if (h.goal == null || m.near(h.goal, 2) || m.planTicks > 20 * 25 && seen) {
+                m.phase = 1;
+                m.phaseTicks = 0;
+                h.goal = null;
+                h.rearWant = 0.6;
+                shownD = d;
+                level.playSound(null, c.x, c.y, c.z, HarvestmanSounds.CALL, SoundSource.HOSTILE, 1.2f, 0.8f);
+            } else if (m.planTicks > 20 * 40 || d > 72) {
+                m.end();
+            }
+            return;
+        }
+        // lit up and still, facing them. Come for it and the red goes out and it's gone, fast
+        Vec3 to = c.subtract(t.position()).multiply(1, 0, 1);
+        double closing = to.lengthSqr() > 1e-4 ? trackVel.dot(to.normalize()) : 0;
+        boolean chased = d < 14 || d < shownD - 6 || closing > 0.12 && d < shownD - 2;
+        if (chased || m.phaseTicks > 20 * 75 || d > 80) {
+            displayAt = level.getGameTime() + (chased ? 20 * 75 : 0);
+            Vec3 away = m.hideFrom(level, t);
+            m.end();
+            if (away != null) {
+                m.start(HarvestmanMind.HIDE, away, HarvestmanMind.SPRINT);
+            }
         }
     }
 
