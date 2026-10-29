@@ -8,6 +8,7 @@ plus OUT_DIR/manifest.json (title, author, page, licence, tags, downloads) for p
 """
 import json
 import re
+import socket
 import sys
 import time
 import urllib.parse
@@ -180,6 +181,8 @@ QUERIES = {
     "thr_fire": ["fire burning", "fire crackle", "burning fire loop", "flames burning", "gasoline fire", "bonfire crackle"],
 }
 PER_QUERY = 6
+# a stalled download once hung a whole runner until the job timed out; no single read may wait longer than this
+socket.setdefaulttimeout(30)
 UA = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) ZomboidCraft-sound-collector"}
 
 

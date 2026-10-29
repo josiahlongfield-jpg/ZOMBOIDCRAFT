@@ -20,12 +20,13 @@ jobs:
       fail-fast: false
       matrix:
         group:
-          - thr_pin
           - thr_ring2
     steps:
       - uses: actions/checkout@v5
       - run: python3 -u tools/audio/fetch_freesound.py raw ${{ matrix.group }}
+        timeout-minutes: 24
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: sounds-${{ strategy.job-index }}
           path: raw
