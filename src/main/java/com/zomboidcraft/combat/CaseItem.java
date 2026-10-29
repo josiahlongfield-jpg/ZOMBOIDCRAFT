@@ -54,9 +54,10 @@ public class CaseItem extends BagItem {
             List<ItemStack> load = switch (item.kind) {
                 case RIFLE -> gunCase(random, cfg, pick(random, new GunType[] {GunType.ASSAULT_RIFLE,
                         GunType.HUNTING_RIFLE, GunType.SHOTGUN, GunType.DOUBLE_BARREL, GunType.RIMFIRE, GunType.SMG,
-                        GunType.SAWN_OFF, GunType.LEVER_ACTION, GunType.CROSSBOW}, new int[] {cfg.assaultRifleWeight,
-                        cfg.huntingRifleWeight, cfg.shotgunWeight, cfg.doubleBarrelWeight, cfg.rimfireWeight, cfg.smgWeight,
-                        cfg.sawnOffWeight, cfg.leverActionWeight, cfg.crossbowWeight}));
+                        GunType.SAWN_OFF, GunType.LEVER_ACTION, GunType.CROSSBOW, GunType.BATTLE_RIFLE}, new int[] {
+                        cfg.assaultRifleWeight, cfg.huntingRifleWeight, cfg.shotgunWeight, cfg.doubleBarrelWeight,
+                        cfg.rimfireWeight, cfg.smgWeight, cfg.sawnOffWeight, cfg.leverActionWeight, cfg.crossbowWeight,
+                        cfg.battleRifleWeight}));
                 case PISTOL -> gunCase(random, cfg, pick(random, new GunType[] {GunType.PISTOL, GunType.REVOLVER,
                         GunType.MAGNUM}, new int[] {cfg.pistolWeight, cfg.revolverWeight, cfg.magnumWeight}));
                 case AMMO -> ammoCan(random, cfg);
@@ -78,7 +79,7 @@ public class CaseItem extends BagItem {
         // now and then someone left a part on it
         Item part = switch (type) {
             case HUNTING_RIFLE -> random.nextDouble() < cfg.scopeChance ? ModItems.SCOPE_4X : null;
-            case ASSAULT_RIFLE -> random.nextDouble() < cfg.redDotChance ? ModItems.RED_DOT_SIGHT : null;
+            case ASSAULT_RIFLE, BATTLE_RIFLE -> random.nextDouble() < cfg.redDotChance ? ModItems.RED_DOT_SIGHT : null;
             case PISTOL -> random.nextDouble() < cfg.lightChance ? ModItems.WEAPON_LIGHT : null;
             default -> null;
         };

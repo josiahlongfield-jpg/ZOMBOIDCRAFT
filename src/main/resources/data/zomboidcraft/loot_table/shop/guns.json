@@ -628,6 +628,26 @@
           "type": "minecraft:item",
           "name": "zomboidcraft:shoulder_holster",
           "weight": 6
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:battle_rifle",
+          "weight": 1,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "type": "minecraft:uniform",
+                "min": 0.1,
+                "max": 0.6
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:battle_rifle_magazine",
+          "weight": 2
         }
       ]
     },
@@ -693,6 +713,11 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:thigh_holster",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:battle_rifle",
           "weight": 1
         }
       ]

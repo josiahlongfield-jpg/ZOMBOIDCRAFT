@@ -441,3 +441,4 @@ Real gun meshes bought by Josiah under the stores' Royalty Free licences, toon-p
 | pbr_crossbow (the crossbow) | Crossbow, scope left off (PBR Weapons Pack) | CGTrader | Royalty Free |
 | pbr_crossbow_bolt, pbr_bolt (crossbow bolts) | Arrow (PBR Weapons Pack) | CGTrader | Royalty Free |
 | pbr_machete (the machete) | Knife (PBR Weapons Pack) | CGTrader | Royalty Free |
+| pbr_battle_rifle (the battle rifle) | Automatic Rifle 01, scope and grip left off (PBR Weapons Pack) | CGTrader | Royalty Free |

@@ -46,7 +46,15 @@ public final class GunSlotData {
         Map.entry("lever_action", Map.ofEntries(
 )),
         Map.entry("crossbow", Map.ofEntries(
-                Map.entry(Attachments.Slot.MAGAZINE, List.of("crossbow_bolt")))));
+                Map.entry(Attachments.Slot.MAGAZINE, List.of("crossbow_bolt")))),
+        Map.entry("battle_rifle", Map.ofEntries(
+                Map.entry(Attachments.Slot.OPTIC, List.of("red_dot_sight", "holo_sight", "scope_4x")),
+                Map.entry(Attachments.Slot.MUZZLE, List.of("rifle_suppressor")),
+                Map.entry(Attachments.Slot.UNDERBARREL, List.of("foregrip")),
+                Map.entry(Attachments.Slot.SIDE_RAIL, List.of("weapon_light")),
+                Map.entry(Attachments.Slot.STOCK, List.of("rifle_stock")),
+                Map.entry(Attachments.Slot.MAGAZINE, List.of("battle_rifle_magazine")),
+                Map.entry(Attachments.Slot.RIGHT_RAIL, List.of("laser_sight")))));
 
     public static final Map<String, Map<Attachments.Slot, String>> DEFAULTS = Map.ofEntries(
         Map.entry("assault_rifle", Map.ofEntries(Map.entry(Attachments.Slot.STOCK, "rifle_stock"))),
@@ -60,7 +68,8 @@ public final class GunSlotData {
         Map.entry("sawn_off", Map.ofEntries()),
         Map.entry("magnum", Map.ofEntries()),
         Map.entry("lever_action", Map.ofEntries()),
-        Map.entry("crossbow", Map.ofEntries()));
+        Map.entry("crossbow", Map.ofEntries()),
+        Map.entry("battle_rifle", Map.ofEntries(Map.entry(Attachments.Slot.STOCK, "rifle_stock"))));
 
     public static final Map<String, String> MODEL_KEYS = Map.ofEntries(
         Map.entry("red_dot_sight", "red_dot"),
@@ -77,7 +86,8 @@ public final class GunSlotData {
         Map.entry("hunting_rifle_magazine", "mag"),
         Map.entry("rimfire_magazine", "mag"),
         Map.entry("smg_magazine", "mag"),
-        Map.entry("crossbow_bolt", "bolt"));
+        Map.entry("crossbow_bolt", "bolt"),
+        Map.entry("battle_rifle_magazine", "mag"));
 
     private GunSlotData() {
     }

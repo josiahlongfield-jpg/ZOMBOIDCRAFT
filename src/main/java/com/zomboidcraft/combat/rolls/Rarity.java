@@ -48,7 +48,7 @@ public enum Rarity {
         return switch (type) {
             case PISTOL, SHOTGUN, RIMFIRE, LEVER_ACTION -> COMMON;
             case REVOLVER, DOUBLE_BARREL, HUNTING_RIFLE, SAWN_OFF, CROSSBOW -> SCARCE;
-            case ASSAULT_RIFLE, MAGNUM -> RARE;
+            case ASSAULT_RIFLE, MAGNUM, BATTLE_RIFLE -> RARE;
             case SMG -> PRIZED;
         };
     }

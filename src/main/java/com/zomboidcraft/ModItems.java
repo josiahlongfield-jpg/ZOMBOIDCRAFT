@@ -131,6 +131,9 @@ public final class ModItems {
     public static final Item LEVER_AMMO = register("lever_ammo", Item::new, new Item.Properties().stacksTo(50));
     public static final Item CROSSBOW = gun("crossbow", GunType.CROSSBOW, 1400);
     public static final Item CROSSBOW_BOLT = register("crossbow_bolt", Item::new, new Item.Properties().stacksTo(12));
+    // the .308 battle rifle (Josiah 10-29: "slower firing but hard hitting"), fed the hunting rifle's rounds
+    public static final Item BATTLE_RIFLE = gun("battle_rifle", GunType.BATTLE_RIFLE, 1700);
+    public static final Item BATTLE_RIFLE_MAGAZINE = magazine("battle_rifle_magazine", GunType.BATTLE_RIFLE);
 
     // Things to throw (combat/throwing): lures, fire and smoke, and blasts. The tin can and the alarm clock are
     // thrown too (see TIN_CAN and ALARM_CLOCK).

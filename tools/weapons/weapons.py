@@ -785,6 +785,17 @@ def assault_rifle():
                    aperture=fp(0, RF.SIGHT, 6.21), flash=flash, handle=RF.charging_handle)
 
 
+def battle_rifle():
+    """The battle rifle (Josiah 2026-10-29: the bought pack's heavier rifle, slower firing but hard hitting, .308): built
+    on the assault rifle's frame so its hands, rails and slots line up, drawn as its own bought mesh
+    (tools/meshguns/skins.json), with its own 20-round .308 magazine."""
+    gun = assault_rifle()
+    gun.name, gun.title, gun.seed = 'battle_rifle', 'Battle Rifle', 557
+    gun.parts['mag'] = kit.Part('mag', 'battle_rifle_magazine', 'Battle Rifle Magazine', 'magazine', RF.magazine,
+                                gun.parts['mag'].look)
+    return gun
+
+
 def pistol():
     """The M9-style pistol: fixed sights, a threaded barrel for its suppressor, a rail under the dust cover
     for the light or laser (drawn compact on a pistol), and its 15-round magazine."""
@@ -1431,6 +1442,10 @@ def main():
     holds = rifle_holds()
     line, _ = kit.write_gun(rifle, ASSETS, g - rifle.hand, gun_displays(g, holds, RIFLE_FP), lang, ads_eyes(rifle, RIFLE_FP))
     summary.append(line)
+    br = battle_rifle()
+    aimed(br, g, RIFLE_FP)
+    line, _ = kit.write_gun(br, ASSETS, g - br.hand, gun_displays(g, holds, RIFLE_FP), lang, ads_eyes(br, RIFLE_FP))
+    summary.append(line)
     pistol_gun = pistol()
     gp = centred_grip(pistol_gun)
     pistol_hold = pistol_holds()
@@ -1518,12 +1533,12 @@ def main():
     own = [p for p in pistol_gun.parts.values() if p.item not in {q.item for q in rifle.parts.values()}]
     kit.write_part_items(own, ASSETS, part_display, lang, file=lambda p: p.item)
     kit.write_part_items([hr.parts['mag']], ASSETS, part_display, lang, file=lambda p: p.item)
-    kit.write_part_items([rm.parts['mag'], sm.parts['mag'], xb.parts['bolt']], ASSETS, part_display, lang, file=lambda p: p.item)
+    kit.write_part_items([rm.parts['mag'], sm.parts['mag'], xb.parts['bolt'], br.parts['mag']], ASSETS, part_display, lang, file=lambda p: p.item)
     kit.write_ghost_texture(ASSETS)
     kit.write_flash_texture(ASSETS)
     kit.write_glow_texture(ASSETS)
     AT.scope_overlay(ASSETS / 'textures/gui/scope_4x.png')
-    write_slot_java([rifle, pistol_gun, sg, hr, db, rv, rm, sm, so, mg, la, xb])
+    write_slot_java([rifle, pistol_gun, sg, hr, db, rv, rm, sm, so, mg, la, xb, br])
     rigs = [(rifle, g, holds, RIFLE_FP, rifle_points(rifle, g)),
             (pistol_gun, gp, pistol_hold, PISTOL_FP, pistol_points(pistol_gun, gp)),
             (sg, gs, sg_hold, SHOTGUN_FP, shotgun_points(sg, gs)),
@@ -1535,11 +1550,12 @@ def main():
             (so, gw, so_hold, SAWN_FP, sawn_points(so, gw)),
             (mg, gn, mg_hold, MAGNUM_FP, magnum_points(mg, gn)),
             (la, gl, la_hold, LEVER_FP, lever_points(la, gl)),
-            (xb, gx, xb_hold, CROSSBOW_FP, crossbow_points(xb, gx))]
+            (xb, gx, xb_hold, CROSSBOW_FP, crossbow_points(xb, gx)),
+            (br, g, holds, RIFLE_FP, rifle_points(br, g))]
     write_rigs_java(rigs)
     # the laser's and light's lenses in each gun's build frame, so other players see the beams leave the gun
     lens_names = ['rifle', 'pistol', 'shotgun', 'hunting', 'double_barrel', 'revolver', 'rimfire', 'smg',
-                  'sawn_off', 'magnum', 'lever_action', 'crossbow']
+                  'sawn_off', 'magnum', 'lever_action', 'crossbow', 'battle_rifle']
     lenses = {name: [pts['laser'] - (gg - gun.hand), pts['light'] - (gg - gun.hand)]
               for name, (gun, gg, _h, _fp, pts) in zip(lens_names, rigs)}
     # where the off hand goes in a reload, so other players see it: the magazine's foot (a tube gun's port, the

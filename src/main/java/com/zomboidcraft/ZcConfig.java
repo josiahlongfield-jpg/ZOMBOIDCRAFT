@@ -58,6 +58,8 @@ public final class ZcConfig {
     public GunStats leverAction = GunStats.leverAction();
     /** The crossbow's own numbers, and how often its bolts break. */
     public CrossbowStats crossbow = new CrossbowStats();
+    /** The .308 battle rifle's own numbers (it has full auto, slower than the assault rifle's). */
+    public GunStats battleRifle = GunStats.battleRifle();
     /** The Warthog's mounted minigun: its rounds, rate, spin-up and belt. */
     public MinigunStats minigun = new MinigunStats();
     /** How often a found gun comes in each of its finishes. */
@@ -294,6 +296,7 @@ public final class ZcConfig {
         public int sawnOffWeight = 2;
         public int leverActionWeight = 3;
         public int crossbowWeight = 1;
+        public int battleRifleWeight = 2;
         /** How often a pistol case holds each handgun, against the others. */
         public int pistolWeight = 3;
         public int revolverWeight = 2;
@@ -1111,6 +1114,30 @@ public final class ZcConfig {
             s.autoRpm = 950.0;      // an SMG's light bolt cycles faster than the rifle's 600
             s.autoBloomPerShot = 0.3;     // lighter round, but nearly sixteen a second
             s.autoBloomMax = 4.0;
+            return s;
+        }
+
+        /**
+         * The .308 battle rifle: the hunting rifle's round from a self-loader, twenty to a magazine, semi or a slow full
+         * auto; it hits far harder than the assault rifle and kicks and blooms harder for it.
+         */
+        static GunStats battleRifle() {
+            GunStats s = new GunStats();
+            s.damage = 20.0;
+            s.hipSpread = 2.4;
+            s.aimSpread = 0.3;
+            s.recoil = 1.8;
+            s.shotNoise = 125.0;
+            s.aimZoom = 0.80;
+            s.range = 160.0;
+            s.fireDelayTicks = 4;
+            s.magazineSize = 20;
+            s.selectFire = true;
+            s.autoRpm = 480.0;
+            s.autoRecoil = 0.85;
+            s.shotBloom = 0.8;
+            s.autoBloomPerShot = 0.8;
+            s.autoBloomMax = 5.0;
             return s;
         }
 

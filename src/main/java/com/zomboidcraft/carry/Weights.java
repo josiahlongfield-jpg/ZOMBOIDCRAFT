@@ -91,6 +91,8 @@ public final class Weights {
         mod("lever_ammo", 0.025);
         mod("crossbow", 3.2);
         mod("crossbow_bolt", 0.031);
+        mod("battle_rifle", 3.9);
+        mod("battle_rifle_magazine", 0.35);
         vanilla("stick", 0.1);
         vanilla("arrow", 0.03);
         vanilla("bow", 0.8);

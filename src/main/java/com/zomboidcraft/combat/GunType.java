@@ -40,7 +40,9 @@ public enum GunType {
     LEVER_ACTION("lever_action", ".30-30", 6, 11, 6, 3),
     // tipped down and the string drawn back to the latch (the raise, timed to the cock recording: see COCK_AT), then a
     // bolt laid on the rail and slid back into it
-    CROSSBOW("crossbow", "crossbow", 40, 10, 0, 0);
+    CROSSBOW("crossbow", "crossbow", 40, 10, 0, 0),
+    // the assault rifle's reload with a heavier twenty-round .308 magazine
+    BATTLE_RIFLE("battle_rifle", ".308", 16, 22, 25, 34, 18);
 
     private final String id;
     private final String caliber;
@@ -163,6 +165,7 @@ public enum GunType {
             case MAGNUM -> ModItems.MAGNUM;
             case LEVER_ACTION -> ModItems.LEVER_ACTION;
             case CROSSBOW -> ModItems.CROSSBOW;
+            case BATTLE_RIFLE -> ModItems.BATTLE_RIFLE;
         };
     }
 
@@ -175,6 +178,7 @@ public enum GunType {
             case HUNTING_RIFLE -> ModItems.HUNTING_RIFLE_MAGAZINE;
             case RIMFIRE -> ModItems.RIMFIRE_MAGAZINE;
             case SMG -> ModItems.SMG_MAGAZINE;
+            case BATTLE_RIFLE -> ModItems.BATTLE_RIFLE_MAGAZINE;
         };
     }
 
@@ -189,6 +193,7 @@ public enum GunType {
             case MAGNUM -> ModItems.MAGNUM_AMMO;
             case LEVER_ACTION -> ModItems.LEVER_AMMO;
             case CROSSBOW -> ModItems.CROSSBOW_BOLT;
+            case BATTLE_RIFLE -> ModItems.HUNTING_RIFLE_AMMO;
         };
     }
 
@@ -211,6 +216,7 @@ public enum GunType {
             case MAGNUM -> ZcConfig.get().magnum;
             case LEVER_ACTION -> ZcConfig.get().leverAction;
             case CROSSBOW -> ZcConfig.get().crossbow;
+            case BATTLE_RIFLE -> ZcConfig.get().battleRifle;
         };
     }
 
@@ -241,6 +247,9 @@ public enum GunType {
             case MAGNUM -> distant ? ModSounds.MAGNUM_SHOT_DISTANT : ModSounds.MAGNUM_SHOT;
             case LEVER_ACTION -> distant ? ModSounds.LEVER_ACTION_SHOT_DISTANT : ModSounds.LEVER_ACTION_SHOT;
             case CROSSBOW -> ModSounds.CROSSBOW_SHOT;
+            // the hunting rifle's .308 recordings: the same round, heavier than the 5.56
+            case BATTLE_RIFLE -> suppressed ? (distant ? ModSounds.HUNTING_RIFLE_SHOT_SUPPRESSED_DISTANT : ModSounds.HUNTING_RIFLE_SHOT_SUPPRESSED)
+                    : distant ? ModSounds.HUNTING_RIFLE_SHOT_DISTANT : ModSounds.HUNTING_RIFLE_SHOT;
         };
     }
 
@@ -258,6 +267,7 @@ public enum GunType {
             case MAGNUM -> ModSounds.MAGNUM_DRY;
             case LEVER_ACTION -> ModSounds.LEVER_ACTION_DRY;
             case CROSSBOW -> ModSounds.CROSSBOW_DRY;        // the trigger of an uncocked bow, just a click
+            case BATTLE_RIFLE -> ModSounds.RIFLE_DRY;
         };
     }
 
@@ -292,6 +302,7 @@ public enum GunType {
             case MAGNUM -> ModSounds.MAGNUM_ROUND_IN;
             case LEVER_ACTION -> ModSounds.LEVER_ACTION_ROUND_IN;
             case CROSSBOW -> ModSounds.CROSSBOW_LOAD;        // the bolt slid back into the latch
+            case BATTLE_RIFLE -> ModSounds.RIFLE_MAG_IN;
         };
     }
 
@@ -313,6 +324,7 @@ public enum GunType {
             case MAGNUM -> ModSounds.MAGNUM_CLOSE;
             case LEVER_ACTION -> ModSounds.LEVER_ACTION_LEVER;
             case CROSSBOW -> ModSounds.CROSSBOW_COCK;
+            case BATTLE_RIFLE -> ModSounds.RIFLE_BOLT;
         };
     }
 

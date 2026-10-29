@@ -366,6 +366,16 @@ for _name, _extra in {"guns": [(f"{ZC}:smg", 1), (f"{ZC}:magnum", 1)], "pawn": [
                       "farm": [(f"{ZC}:rimfire", 3), (f"{ZC}:sawn_off", 1), (f"{ZC}:lever_action", 2), (f"{ZC}:crossbow", 1)]}.items():
     RARE[_name] = RARE.get(_name, []) + _extra
 
+# weapons wave two (the bought guns, Josiah 2026-10-29): the .308 battle rifle where rifles are sold or hoarded
+WAVE_TWO = {
+    "guns": [(f"{ZC}:battle_rifle", 1, 1, 1, worn(.1, .6)), (f"{ZC}:battle_rifle_magazine", 2, 1, 1)],
+    "basement_guns": [(f"{ZC}:battle_rifle", 1, 1, 1, worn(.05, .5)), (f"{ZC}:battle_rifle_magazine", 1, 1, 1, rounds(20))],
+}
+for _name, _extra in WAVE_TWO.items():
+    TABLES[_name] = (TABLES[_name][0], TABLES[_name][1] + _extra)
+for _name, _extra in {"guns": [(f"{ZC}:battle_rifle", 1)], "basement_guns": [(f"{ZC}:battle_rifle", 1)]}.items():
+    RARE[_name] = RARE.get(_name, []) + _extra
+
 def entry(item, weight, lo, hi, *functions):
     if item == "-":
         return {"type": "minecraft:empty", "weight": weight}

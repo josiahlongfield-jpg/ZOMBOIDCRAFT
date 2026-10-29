@@ -1,0 +1,4099 @@
+{
+ "model": {
+  "type": "minecraft:range_dispatch",
+  "property": "minecraft:custom_model_data",
+  "index": 0,
+  "entries": [
+   {
+    "threshold": 1,
+    "model": {
+     "type": "minecraft:condition",
+     "property": "zomboidcraft:raised",
+     "on_true": {
+      "type": "minecraft:composite",
+      "models": [
+       {
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/battle_rifle/raised_mag_out/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_battle_rifle",
+         "part": "body"
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:display_context",
+        "cases": [
+         {
+          "when": "firstperson_righthand",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/battle_rifle/raised_mag_out/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_battle_rifle",
+          "part": "handle"
+         }
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 0,
+        "cases": [
+         {
+          "when": "red_dot",
+          "model": {
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/raised_mag_out/irons_folded"
+            },
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/raised_mag_out/red_dot"
+            }
+           ]
+          }
+         },
+         {
+          "when": "holo",
+          "model": {
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/raised_mag_out/irons_folded"
+            },
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/raised_mag_out/holo"
+            }
+           ]
+          }
+         },
+         {
+          "when": "scope_4x",
+          "model": {
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/raised_mag_out/irons_folded"
+            },
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/raised_mag_out/scope_4x"
+            }
+           ]
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/battle_rifle/raised_mag_out/irons_up"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/battle_rifle/raised_mag_out/irons_up"
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 1,
+        "cases": [
+         {
+          "when": "suppressor",
+          "model": {
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/raised_mag_out/suppressor"
+            },
+            {
+             "type": "minecraft:range_dispatch",
+             "property": "minecraft:custom_model_data",
+             "index": 1,
+             "entries": [
+              {
+               "threshold": 1,
+               "model": {
+                "type": "minecraft:select",
+                "property": "minecraft:display_context",
+                "cases": [
+                 {
+                  "when": [
+                   "firstperson_righthand",
+                   "firstperson_lefthand"
+                  ],
+                  "model": {
+                   "type": "minecraft:empty"
+                  }
+                 }
+                ],
+                "fallback": {
+                 "type": "minecraft:model",
+                 "model": "zomboidcraft:item/weapon/battle_rifle/raised_mag_out/muzzle_flash_quiet"
+                }
+               }
+              }
+             ],
+             "fallback": {
+              "type": "minecraft:empty"
+             }
+            }
+           ]
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:range_dispatch",
+           "property": "minecraft:custom_model_data",
+           "index": 1,
+           "entries": [
+            {
+             "threshold": 1,
+             "model": {
+              "type": "minecraft:select",
+              "property": "minecraft:display_context",
+              "cases": [
+               {
+                "when": [
+                 "firstperson_righthand",
+                 "firstperson_lefthand"
+                ],
+                "model": {
+                 "type": "minecraft:empty"
+                }
+               }
+              ],
+              "fallback": {
+               "type": "minecraft:model",
+               "model": "zomboidcraft:item/weapon/battle_rifle/raised_mag_out/muzzle_flash"
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:empty"
+           }
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:range_dispatch",
+         "property": "minecraft:custom_model_data",
+         "index": 1,
+         "entries": [
+          {
+           "threshold": 1,
+           "model": {
+            "type": "minecraft:select",
+            "property": "minecraft:display_context",
+            "cases": [
+             {
+              "when": [
+               "firstperson_righthand",
+               "firstperson_lefthand"
+              ],
+              "model": {
+               "type": "minecraft:empty"
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/raised_mag_out/muzzle_flash"
+            }
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:empty"
+         }
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 2,
+        "cases": [
+         {
+          "when": "foregrip",
+          "model": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/battle_rifle/raised_mag_out/foregrip"
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:empty"
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 3,
+        "cases": [
+         {
+          "when": "light",
+          "model": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/battle_rifle/raised_mag_out/light"
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:empty"
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 4,
+        "cases": [
+         {
+          "when": "stock",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/battle_rifle/raised_mag_out/stock",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "pbr_battle_rifle",
+            "part": "stock"
+           }
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/battle_rifle/raised_mag_out/stock",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_battle_rifle",
+          "part": "stock"
+         }
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 7,
+        "cases": [
+         {
+          "when": "laser",
+          "model": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/battle_rifle/raised_mag_out/laser"
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:empty"
+        }
+       }
+      ]
+     },
+     "on_false": {
+      "type": "minecraft:composite",
+      "models": [
+       {
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/battle_rifle/mag_out/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_battle_rifle",
+         "part": "body"
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:display_context",
+        "cases": [
+         {
+          "when": "firstperson_righthand",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/battle_rifle/mag_out/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_battle_rifle",
+          "part": "handle"
+         }
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 0,
+        "cases": [
+         {
+          "when": "red_dot",
+          "model": {
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/mag_out/irons_folded"
+            },
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/mag_out/red_dot"
+            }
+           ]
+          }
+         },
+         {
+          "when": "holo",
+          "model": {
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/mag_out/irons_folded"
+            },
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/mag_out/holo"
+            }
+           ]
+          }
+         },
+         {
+          "when": "scope_4x",
+          "model": {
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/mag_out/irons_folded"
+            },
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/mag_out/scope_4x"
+            }
+           ]
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/battle_rifle/mag_out/irons_up"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/battle_rifle/mag_out/irons_up"
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 1,
+        "cases": [
+         {
+          "when": "suppressor",
+          "model": {
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/mag_out/suppressor"
+            },
+            {
+             "type": "minecraft:range_dispatch",
+             "property": "minecraft:custom_model_data",
+             "index": 1,
+             "entries": [
+              {
+               "threshold": 1,
+               "model": {
+                "type": "minecraft:select",
+                "property": "minecraft:display_context",
+                "cases": [
+                 {
+                  "when": [
+                   "firstperson_righthand",
+                   "firstperson_lefthand"
+                  ],
+                  "model": {
+                   "type": "minecraft:empty"
+                  }
+                 }
+                ],
+                "fallback": {
+                 "type": "minecraft:model",
+                 "model": "zomboidcraft:item/weapon/battle_rifle/mag_out/muzzle_flash_quiet"
+                }
+               }
+              }
+             ],
+             "fallback": {
+              "type": "minecraft:empty"
+             }
+            }
+           ]
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:range_dispatch",
+           "property": "minecraft:custom_model_data",
+           "index": 1,
+           "entries": [
+            {
+             "threshold": 1,
+             "model": {
+              "type": "minecraft:select",
+              "property": "minecraft:display_context",
+              "cases": [
+               {
+                "when": [
+                 "firstperson_righthand",
+                 "firstperson_lefthand"
+                ],
+                "model": {
+                 "type": "minecraft:empty"
+                }
+               }
+              ],
+              "fallback": {
+               "type": "minecraft:model",
+               "model": "zomboidcraft:item/weapon/battle_rifle/mag_out/muzzle_flash"
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:empty"
+           }
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:range_dispatch",
+         "property": "minecraft:custom_model_data",
+         "index": 1,
+         "entries": [
+          {
+           "threshold": 1,
+           "model": {
+            "type": "minecraft:select",
+            "property": "minecraft:display_context",
+            "cases": [
+             {
+              "when": [
+               "firstperson_righthand",
+               "firstperson_lefthand"
+              ],
+              "model": {
+               "type": "minecraft:empty"
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/mag_out/muzzle_flash"
+            }
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:empty"
+         }
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 2,
+        "cases": [
+         {
+          "when": "foregrip",
+          "model": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/battle_rifle/mag_out/foregrip"
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:empty"
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 3,
+        "cases": [
+         {
+          "when": "light",
+          "model": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/battle_rifle/mag_out/light"
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:empty"
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 4,
+        "cases": [
+         {
+          "when": "stock",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/battle_rifle/mag_out/stock",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "pbr_battle_rifle",
+            "part": "stock"
+           }
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/battle_rifle/mag_out/stock",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_battle_rifle",
+          "part": "stock"
+         }
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 7,
+        "cases": [
+         {
+          "when": "laser",
+          "model": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/battle_rifle/mag_out/laser"
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:empty"
+        }
+       }
+      ]
+     }
+    }
+   },
+   {
+    "threshold": 2,
+    "model": {
+     "type": "minecraft:condition",
+     "property": "zomboidcraft:raised",
+     "on_true": {
+      "type": "minecraft:composite",
+      "models": [
+       {
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/battle_rifle/raised_mag_in/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_battle_rifle",
+         "part": "body"
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:display_context",
+        "cases": [
+         {
+          "when": "firstperson_righthand",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/battle_rifle/raised_mag_in/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_battle_rifle",
+          "part": "handle"
+         }
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 0,
+        "cases": [
+         {
+          "when": "red_dot",
+          "model": {
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/raised_mag_in/irons_folded"
+            },
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/raised_mag_in/red_dot"
+            }
+           ]
+          }
+         },
+         {
+          "when": "holo",
+          "model": {
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/raised_mag_in/irons_folded"
+            },
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/raised_mag_in/holo"
+            }
+           ]
+          }
+         },
+         {
+          "when": "scope_4x",
+          "model": {
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/raised_mag_in/irons_folded"
+            },
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/raised_mag_in/scope_4x"
+            }
+           ]
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/battle_rifle/raised_mag_in/irons_up"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/battle_rifle/raised_mag_in/irons_up"
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 1,
+        "cases": [
+         {
+          "when": "suppressor",
+          "model": {
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/raised_mag_in/suppressor"
+            },
+            {
+             "type": "minecraft:range_dispatch",
+             "property": "minecraft:custom_model_data",
+             "index": 1,
+             "entries": [
+              {
+               "threshold": 1,
+               "model": {
+                "type": "minecraft:select",
+                "property": "minecraft:display_context",
+                "cases": [
+                 {
+                  "when": [
+                   "firstperson_righthand",
+                   "firstperson_lefthand"
+                  ],
+                  "model": {
+                   "type": "minecraft:empty"
+                  }
+                 }
+                ],
+                "fallback": {
+                 "type": "minecraft:model",
+                 "model": "zomboidcraft:item/weapon/battle_rifle/raised_mag_in/muzzle_flash_quiet"
+                }
+               }
+              }
+             ],
+             "fallback": {
+              "type": "minecraft:empty"
+             }
+            }
+           ]
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:range_dispatch",
+           "property": "minecraft:custom_model_data",
+           "index": 1,
+           "entries": [
+            {
+             "threshold": 1,
+             "model": {
+              "type": "minecraft:select",
+              "property": "minecraft:display_context",
+              "cases": [
+               {
+                "when": [
+                 "firstperson_righthand",
+                 "firstperson_lefthand"
+                ],
+                "model": {
+                 "type": "minecraft:empty"
+                }
+               }
+              ],
+              "fallback": {
+               "type": "minecraft:model",
+               "model": "zomboidcraft:item/weapon/battle_rifle/raised_mag_in/muzzle_flash"
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:empty"
+           }
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:range_dispatch",
+         "property": "minecraft:custom_model_data",
+         "index": 1,
+         "entries": [
+          {
+           "threshold": 1,
+           "model": {
+            "type": "minecraft:select",
+            "property": "minecraft:display_context",
+            "cases": [
+             {
+              "when": [
+               "firstperson_righthand",
+               "firstperson_lefthand"
+              ],
+              "model": {
+               "type": "minecraft:empty"
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/raised_mag_in/muzzle_flash"
+            }
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:empty"
+         }
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 2,
+        "cases": [
+         {
+          "when": "foregrip",
+          "model": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/battle_rifle/raised_mag_in/foregrip"
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:empty"
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 3,
+        "cases": [
+         {
+          "when": "light",
+          "model": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/battle_rifle/raised_mag_in/light"
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:empty"
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 4,
+        "cases": [
+         {
+          "when": "stock",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/battle_rifle/raised_mag_in/stock",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "pbr_battle_rifle",
+            "part": "stock"
+           }
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/battle_rifle/raised_mag_in/stock",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_battle_rifle",
+          "part": "stock"
+         }
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 5,
+        "cases": [
+         {
+          "when": "mag",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/battle_rifle/raised_mag_in/mag",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "pbr_battle_rifle",
+            "part": "mag"
+           }
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/battle_rifle/raised_mag_in/mag",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_battle_rifle",
+          "part": "mag"
+         }
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 7,
+        "cases": [
+         {
+          "when": "laser",
+          "model": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/battle_rifle/raised_mag_in/laser"
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:empty"
+        }
+       }
+      ]
+     },
+     "on_false": {
+      "type": "minecraft:composite",
+      "models": [
+       {
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/battle_rifle/mag_in/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_battle_rifle",
+         "part": "body"
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:display_context",
+        "cases": [
+         {
+          "when": "firstperson_righthand",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/battle_rifle/mag_in/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_battle_rifle",
+          "part": "handle"
+         }
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 0,
+        "cases": [
+         {
+          "when": "red_dot",
+          "model": {
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/mag_in/irons_folded"
+            },
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/mag_in/red_dot"
+            }
+           ]
+          }
+         },
+         {
+          "when": "holo",
+          "model": {
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/mag_in/irons_folded"
+            },
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/mag_in/holo"
+            }
+           ]
+          }
+         },
+         {
+          "when": "scope_4x",
+          "model": {
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/mag_in/irons_folded"
+            },
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/mag_in/scope_4x"
+            }
+           ]
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/battle_rifle/mag_in/irons_up"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/battle_rifle/mag_in/irons_up"
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 1,
+        "cases": [
+         {
+          "when": "suppressor",
+          "model": {
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/mag_in/suppressor"
+            },
+            {
+             "type": "minecraft:range_dispatch",
+             "property": "minecraft:custom_model_data",
+             "index": 1,
+             "entries": [
+              {
+               "threshold": 1,
+               "model": {
+                "type": "minecraft:select",
+                "property": "minecraft:display_context",
+                "cases": [
+                 {
+                  "when": [
+                   "firstperson_righthand",
+                   "firstperson_lefthand"
+                  ],
+                  "model": {
+                   "type": "minecraft:empty"
+                  }
+                 }
+                ],
+                "fallback": {
+                 "type": "minecraft:model",
+                 "model": "zomboidcraft:item/weapon/battle_rifle/mag_in/muzzle_flash_quiet"
+                }
+               }
+              }
+             ],
+             "fallback": {
+              "type": "minecraft:empty"
+             }
+            }
+           ]
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:range_dispatch",
+           "property": "minecraft:custom_model_data",
+           "index": 1,
+           "entries": [
+            {
+             "threshold": 1,
+             "model": {
+              "type": "minecraft:select",
+              "property": "minecraft:display_context",
+              "cases": [
+               {
+                "when": [
+                 "firstperson_righthand",
+                 "firstperson_lefthand"
+                ],
+                "model": {
+                 "type": "minecraft:empty"
+                }
+               }
+              ],
+              "fallback": {
+               "type": "minecraft:model",
+               "model": "zomboidcraft:item/weapon/battle_rifle/mag_in/muzzle_flash"
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:empty"
+           }
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:range_dispatch",
+         "property": "minecraft:custom_model_data",
+         "index": 1,
+         "entries": [
+          {
+           "threshold": 1,
+           "model": {
+            "type": "minecraft:select",
+            "property": "minecraft:display_context",
+            "cases": [
+             {
+              "when": [
+               "firstperson_righthand",
+               "firstperson_lefthand"
+              ],
+              "model": {
+               "type": "minecraft:empty"
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/mag_in/muzzle_flash"
+            }
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:empty"
+         }
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 2,
+        "cases": [
+         {
+          "when": "foregrip",
+          "model": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/battle_rifle/mag_in/foregrip"
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:empty"
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 3,
+        "cases": [
+         {
+          "when": "light",
+          "model": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/battle_rifle/mag_in/light"
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:empty"
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 4,
+        "cases": [
+         {
+          "when": "stock",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/battle_rifle/mag_in/stock",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "pbr_battle_rifle",
+            "part": "stock"
+           }
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/battle_rifle/mag_in/stock",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_battle_rifle",
+          "part": "stock"
+         }
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 5,
+        "cases": [
+         {
+          "when": "mag",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/battle_rifle/mag_in/mag",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "pbr_battle_rifle",
+            "part": "mag"
+           }
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/battle_rifle/mag_in/mag",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_battle_rifle",
+          "part": "mag"
+         }
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 7,
+        "cases": [
+         {
+          "when": "laser",
+          "model": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/battle_rifle/mag_in/laser"
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:empty"
+        }
+       }
+      ]
+     }
+    }
+   },
+   {
+    "threshold": 3,
+    "model": {
+     "type": "minecraft:condition",
+     "property": "zomboidcraft:raised",
+     "on_true": {
+      "type": "minecraft:composite",
+      "models": [
+       {
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/battle_rifle/raised_charge/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_battle_rifle",
+         "part": "body"
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:display_context",
+        "cases": [
+         {
+          "when": "firstperson_righthand",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/battle_rifle/raised_charge/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_battle_rifle",
+          "part": "handle"
+         }
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 0,
+        "cases": [
+         {
+          "when": "red_dot",
+          "model": {
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/raised_charge/irons_folded"
+            },
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/raised_charge/red_dot"
+            }
+           ]
+          }
+         },
+         {
+          "when": "holo",
+          "model": {
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/raised_charge/irons_folded"
+            },
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/raised_charge/holo"
+            }
+           ]
+          }
+         },
+         {
+          "when": "scope_4x",
+          "model": {
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/raised_charge/irons_folded"
+            },
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/raised_charge/scope_4x"
+            }
+           ]
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/battle_rifle/raised_charge/irons_up"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/battle_rifle/raised_charge/irons_up"
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 1,
+        "cases": [
+         {
+          "when": "suppressor",
+          "model": {
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/raised_charge/suppressor"
+            },
+            {
+             "type": "minecraft:range_dispatch",
+             "property": "minecraft:custom_model_data",
+             "index": 1,
+             "entries": [
+              {
+               "threshold": 1,
+               "model": {
+                "type": "minecraft:select",
+                "property": "minecraft:display_context",
+                "cases": [
+                 {
+                  "when": [
+                   "firstperson_righthand",
+                   "firstperson_lefthand"
+                  ],
+                  "model": {
+                   "type": "minecraft:empty"
+                  }
+                 }
+                ],
+                "fallback": {
+                 "type": "minecraft:model",
+                 "model": "zomboidcraft:item/weapon/battle_rifle/raised_charge/muzzle_flash_quiet"
+                }
+               }
+              }
+             ],
+             "fallback": {
+              "type": "minecraft:empty"
+             }
+            }
+           ]
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:range_dispatch",
+           "property": "minecraft:custom_model_data",
+           "index": 1,
+           "entries": [
+            {
+             "threshold": 1,
+             "model": {
+              "type": "minecraft:select",
+              "property": "minecraft:display_context",
+              "cases": [
+               {
+                "when": [
+                 "firstperson_righthand",
+                 "firstperson_lefthand"
+                ],
+                "model": {
+                 "type": "minecraft:empty"
+                }
+               }
+              ],
+              "fallback": {
+               "type": "minecraft:model",
+               "model": "zomboidcraft:item/weapon/battle_rifle/raised_charge/muzzle_flash"
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:empty"
+           }
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:range_dispatch",
+         "property": "minecraft:custom_model_data",
+         "index": 1,
+         "entries": [
+          {
+           "threshold": 1,
+           "model": {
+            "type": "minecraft:select",
+            "property": "minecraft:display_context",
+            "cases": [
+             {
+              "when": [
+               "firstperson_righthand",
+               "firstperson_lefthand"
+              ],
+              "model": {
+               "type": "minecraft:empty"
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/raised_charge/muzzle_flash"
+            }
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:empty"
+         }
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 2,
+        "cases": [
+         {
+          "when": "foregrip",
+          "model": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/battle_rifle/raised_charge/foregrip"
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:empty"
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 3,
+        "cases": [
+         {
+          "when": "light",
+          "model": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/battle_rifle/raised_charge/light"
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:empty"
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 4,
+        "cases": [
+         {
+          "when": "stock",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/battle_rifle/raised_charge/stock",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "pbr_battle_rifle",
+            "part": "stock"
+           }
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/battle_rifle/raised_charge/stock",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_battle_rifle",
+          "part": "stock"
+         }
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 5,
+        "cases": [
+         {
+          "when": "mag",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/battle_rifle/raised_charge/mag",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "pbr_battle_rifle",
+            "part": "mag"
+           }
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/battle_rifle/raised_charge/mag",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_battle_rifle",
+          "part": "mag"
+         }
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 7,
+        "cases": [
+         {
+          "when": "laser",
+          "model": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/battle_rifle/raised_charge/laser"
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:empty"
+        }
+       }
+      ]
+     },
+     "on_false": {
+      "type": "minecraft:composite",
+      "models": [
+       {
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/battle_rifle/charge/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_battle_rifle",
+         "part": "body"
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:display_context",
+        "cases": [
+         {
+          "when": "firstperson_righthand",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/battle_rifle/charge/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_battle_rifle",
+          "part": "handle"
+         }
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 0,
+        "cases": [
+         {
+          "when": "red_dot",
+          "model": {
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/charge/irons_folded"
+            },
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/charge/red_dot"
+            }
+           ]
+          }
+         },
+         {
+          "when": "holo",
+          "model": {
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/charge/irons_folded"
+            },
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/charge/holo"
+            }
+           ]
+          }
+         },
+         {
+          "when": "scope_4x",
+          "model": {
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/charge/irons_folded"
+            },
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/charge/scope_4x"
+            }
+           ]
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/battle_rifle/charge/irons_up"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/battle_rifle/charge/irons_up"
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 1,
+        "cases": [
+         {
+          "when": "suppressor",
+          "model": {
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/charge/suppressor"
+            },
+            {
+             "type": "minecraft:range_dispatch",
+             "property": "minecraft:custom_model_data",
+             "index": 1,
+             "entries": [
+              {
+               "threshold": 1,
+               "model": {
+                "type": "minecraft:select",
+                "property": "minecraft:display_context",
+                "cases": [
+                 {
+                  "when": [
+                   "firstperson_righthand",
+                   "firstperson_lefthand"
+                  ],
+                  "model": {
+                   "type": "minecraft:empty"
+                  }
+                 }
+                ],
+                "fallback": {
+                 "type": "minecraft:model",
+                 "model": "zomboidcraft:item/weapon/battle_rifle/charge/muzzle_flash_quiet"
+                }
+               }
+              }
+             ],
+             "fallback": {
+              "type": "minecraft:empty"
+             }
+            }
+           ]
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:range_dispatch",
+           "property": "minecraft:custom_model_data",
+           "index": 1,
+           "entries": [
+            {
+             "threshold": 1,
+             "model": {
+              "type": "minecraft:select",
+              "property": "minecraft:display_context",
+              "cases": [
+               {
+                "when": [
+                 "firstperson_righthand",
+                 "firstperson_lefthand"
+                ],
+                "model": {
+                 "type": "minecraft:empty"
+                }
+               }
+              ],
+              "fallback": {
+               "type": "minecraft:model",
+               "model": "zomboidcraft:item/weapon/battle_rifle/charge/muzzle_flash"
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:empty"
+           }
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:range_dispatch",
+         "property": "minecraft:custom_model_data",
+         "index": 1,
+         "entries": [
+          {
+           "threshold": 1,
+           "model": {
+            "type": "minecraft:select",
+            "property": "minecraft:display_context",
+            "cases": [
+             {
+              "when": [
+               "firstperson_righthand",
+               "firstperson_lefthand"
+              ],
+              "model": {
+               "type": "minecraft:empty"
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:model",
+             "model": "zomboidcraft:item/weapon/battle_rifle/charge/muzzle_flash"
+            }
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:empty"
+         }
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 2,
+        "cases": [
+         {
+          "when": "foregrip",
+          "model": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/battle_rifle/charge/foregrip"
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:empty"
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 3,
+        "cases": [
+         {
+          "when": "light",
+          "model": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/battle_rifle/charge/light"
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:empty"
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 4,
+        "cases": [
+         {
+          "when": "stock",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/battle_rifle/charge/stock",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "pbr_battle_rifle",
+            "part": "stock"
+           }
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/battle_rifle/charge/stock",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_battle_rifle",
+          "part": "stock"
+         }
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 5,
+        "cases": [
+         {
+          "when": "mag",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/battle_rifle/charge/mag",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "pbr_battle_rifle",
+            "part": "mag"
+           }
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/battle_rifle/charge/mag",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_battle_rifle",
+          "part": "mag"
+         }
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 7,
+        "cases": [
+         {
+          "when": "laser",
+          "model": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/battle_rifle/charge/laser"
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:empty"
+        }
+       }
+      ]
+     }
+    }
+   }
+  ],
+  "fallback": {
+   "type": "minecraft:condition",
+   "property": "minecraft:using_item",
+   "on_true": {
+    "type": "minecraft:select",
+    "property": "minecraft:custom_model_data",
+    "index": 0,
+    "cases": [
+     {
+      "when": "red_dot",
+      "model": {
+       "type": "minecraft:composite",
+       "models": [
+        {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/battle_rifle/ads_red_dot/body",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_battle_rifle",
+          "part": "body"
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:display_context",
+         "cases": [
+          {
+           "when": "firstperson_righthand",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/battle_rifle/ads_red_dot/charging_handle",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_battle_rifle",
+           "part": "handle"
+          }
+         }
+        },
+        {
+         "type": "minecraft:composite",
+         "models": [
+          {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/battle_rifle/ads_red_dot/irons_folded"
+          },
+          {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/battle_rifle/ads_red_dot/red_dot"
+          }
+         ]
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 1,
+         "cases": [
+          {
+           "when": "suppressor",
+           "model": {
+            "type": "minecraft:composite",
+            "models": [
+             {
+              "type": "minecraft:model",
+              "model": "zomboidcraft:item/weapon/battle_rifle/ads_red_dot/suppressor"
+             },
+             {
+              "type": "minecraft:range_dispatch",
+              "property": "minecraft:custom_model_data",
+              "index": 1,
+              "entries": [
+               {
+                "threshold": 1,
+                "model": {
+                 "type": "minecraft:select",
+                 "property": "minecraft:display_context",
+                 "cases": [
+                  {
+                   "when": [
+                    "firstperson_righthand",
+                    "firstperson_lefthand"
+                   ],
+                   "model": {
+                    "type": "minecraft:empty"
+                   }
+                  }
+                 ],
+                 "fallback": {
+                  "type": "minecraft:model",
+                  "model": "zomboidcraft:item/weapon/battle_rifle/ads_red_dot/muzzle_flash_quiet"
+                 }
+                }
+               }
+              ],
+              "fallback": {
+               "type": "minecraft:empty"
+              }
+             }
+            ]
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:range_dispatch",
+            "property": "minecraft:custom_model_data",
+            "index": 1,
+            "entries": [
+             {
+              "threshold": 1,
+              "model": {
+               "type": "minecraft:select",
+               "property": "minecraft:display_context",
+               "cases": [
+                {
+                 "when": [
+                  "firstperson_righthand",
+                  "firstperson_lefthand"
+                 ],
+                 "model": {
+                  "type": "minecraft:empty"
+                 }
+                }
+               ],
+               "fallback": {
+                "type": "minecraft:model",
+                "model": "zomboidcraft:item/weapon/battle_rifle/ads_red_dot/muzzle_flash"
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:empty"
+            }
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:range_dispatch",
+          "property": "minecraft:custom_model_data",
+          "index": 1,
+          "entries": [
+           {
+            "threshold": 1,
+            "model": {
+             "type": "minecraft:select",
+             "property": "minecraft:display_context",
+             "cases": [
+              {
+               "when": [
+                "firstperson_righthand",
+                "firstperson_lefthand"
+               ],
+               "model": {
+                "type": "minecraft:empty"
+               }
+              }
+             ],
+             "fallback": {
+              "type": "minecraft:model",
+              "model": "zomboidcraft:item/weapon/battle_rifle/ads_red_dot/muzzle_flash"
+             }
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:empty"
+          }
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 2,
+         "cases": [
+          {
+           "when": "foregrip",
+           "model": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/battle_rifle/ads_red_dot/foregrip"
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:empty"
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 3,
+         "cases": [
+          {
+           "when": "light",
+           "model": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/battle_rifle/ads_red_dot/light"
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:empty"
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 4,
+         "cases": [
+          {
+           "when": "stock",
+           "model": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/battle_rifle/ads_red_dot/stock",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "pbr_battle_rifle",
+             "part": "stock"
+            }
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/battle_rifle/ads_red_dot/stock",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_battle_rifle",
+           "part": "stock"
+          }
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 5,
+         "cases": [
+          {
+           "when": "mag",
+           "model": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/battle_rifle/ads_red_dot/mag",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "pbr_battle_rifle",
+             "part": "mag"
+            }
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/battle_rifle/ads_red_dot/mag",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_battle_rifle",
+           "part": "mag"
+          }
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 7,
+         "cases": [
+          {
+           "when": "laser",
+           "model": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/battle_rifle/ads_red_dot/laser"
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:empty"
+         }
+        }
+       ]
+      }
+     },
+     {
+      "when": "holo",
+      "model": {
+       "type": "minecraft:composite",
+       "models": [
+        {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/battle_rifle/ads_holo/body",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_battle_rifle",
+          "part": "body"
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:display_context",
+         "cases": [
+          {
+           "when": "firstperson_righthand",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/battle_rifle/ads_holo/charging_handle",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_battle_rifle",
+           "part": "handle"
+          }
+         }
+        },
+        {
+         "type": "minecraft:composite",
+         "models": [
+          {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/battle_rifle/ads_holo/irons_folded"
+          },
+          {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/battle_rifle/ads_holo/holo"
+          }
+         ]
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 1,
+         "cases": [
+          {
+           "when": "suppressor",
+           "model": {
+            "type": "minecraft:composite",
+            "models": [
+             {
+              "type": "minecraft:model",
+              "model": "zomboidcraft:item/weapon/battle_rifle/ads_holo/suppressor"
+             },
+             {
+              "type": "minecraft:range_dispatch",
+              "property": "minecraft:custom_model_data",
+              "index": 1,
+              "entries": [
+               {
+                "threshold": 1,
+                "model": {
+                 "type": "minecraft:select",
+                 "property": "minecraft:display_context",
+                 "cases": [
+                  {
+                   "when": [
+                    "firstperson_righthand",
+                    "firstperson_lefthand"
+                   ],
+                   "model": {
+                    "type": "minecraft:empty"
+                   }
+                  }
+                 ],
+                 "fallback": {
+                  "type": "minecraft:model",
+                  "model": "zomboidcraft:item/weapon/battle_rifle/ads_holo/muzzle_flash_quiet"
+                 }
+                }
+               }
+              ],
+              "fallback": {
+               "type": "minecraft:empty"
+              }
+             }
+            ]
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:range_dispatch",
+            "property": "minecraft:custom_model_data",
+            "index": 1,
+            "entries": [
+             {
+              "threshold": 1,
+              "model": {
+               "type": "minecraft:select",
+               "property": "minecraft:display_context",
+               "cases": [
+                {
+                 "when": [
+                  "firstperson_righthand",
+                  "firstperson_lefthand"
+                 ],
+                 "model": {
+                  "type": "minecraft:empty"
+                 }
+                }
+               ],
+               "fallback": {
+                "type": "minecraft:model",
+                "model": "zomboidcraft:item/weapon/battle_rifle/ads_holo/muzzle_flash"
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:empty"
+            }
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:range_dispatch",
+          "property": "minecraft:custom_model_data",
+          "index": 1,
+          "entries": [
+           {
+            "threshold": 1,
+            "model": {
+             "type": "minecraft:select",
+             "property": "minecraft:display_context",
+             "cases": [
+              {
+               "when": [
+                "firstperson_righthand",
+                "firstperson_lefthand"
+               ],
+               "model": {
+                "type": "minecraft:empty"
+               }
+              }
+             ],
+             "fallback": {
+              "type": "minecraft:model",
+              "model": "zomboidcraft:item/weapon/battle_rifle/ads_holo/muzzle_flash"
+             }
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:empty"
+          }
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 2,
+         "cases": [
+          {
+           "when": "foregrip",
+           "model": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/battle_rifle/ads_holo/foregrip"
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:empty"
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 3,
+         "cases": [
+          {
+           "when": "light",
+           "model": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/battle_rifle/ads_holo/light"
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:empty"
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 4,
+         "cases": [
+          {
+           "when": "stock",
+           "model": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/battle_rifle/ads_holo/stock",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "pbr_battle_rifle",
+             "part": "stock"
+            }
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/battle_rifle/ads_holo/stock",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_battle_rifle",
+           "part": "stock"
+          }
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 5,
+         "cases": [
+          {
+           "when": "mag",
+           "model": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/battle_rifle/ads_holo/mag",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "pbr_battle_rifle",
+             "part": "mag"
+            }
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/battle_rifle/ads_holo/mag",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_battle_rifle",
+           "part": "mag"
+          }
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 7,
+         "cases": [
+          {
+           "when": "laser",
+           "model": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/battle_rifle/ads_holo/laser"
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:empty"
+         }
+        }
+       ]
+      }
+     },
+     {
+      "when": "scope_4x",
+      "model": {
+       "type": "minecraft:composite",
+       "models": [
+        {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/battle_rifle/ads_scope_4x/body",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_battle_rifle",
+          "part": "body"
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:display_context",
+         "cases": [
+          {
+           "when": "firstperson_righthand",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/battle_rifle/ads_scope_4x/charging_handle",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_battle_rifle",
+           "part": "handle"
+          }
+         }
+        },
+        {
+         "type": "minecraft:composite",
+         "models": [
+          {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/battle_rifle/ads_scope_4x/irons_folded"
+          },
+          {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/battle_rifle/ads_scope_4x/scope_4x"
+          }
+         ]
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 1,
+         "cases": [
+          {
+           "when": "suppressor",
+           "model": {
+            "type": "minecraft:composite",
+            "models": [
+             {
+              "type": "minecraft:model",
+              "model": "zomboidcraft:item/weapon/battle_rifle/ads_scope_4x/suppressor"
+             },
+             {
+              "type": "minecraft:range_dispatch",
+              "property": "minecraft:custom_model_data",
+              "index": 1,
+              "entries": [
+               {
+                "threshold": 1,
+                "model": {
+                 "type": "minecraft:select",
+                 "property": "minecraft:display_context",
+                 "cases": [
+                  {
+                   "when": [
+                    "firstperson_righthand",
+                    "firstperson_lefthand"
+                   ],
+                   "model": {
+                    "type": "minecraft:empty"
+                   }
+                  }
+                 ],
+                 "fallback": {
+                  "type": "minecraft:model",
+                  "model": "zomboidcraft:item/weapon/battle_rifle/ads_scope_4x/muzzle_flash_quiet"
+                 }
+                }
+               }
+              ],
+              "fallback": {
+               "type": "minecraft:empty"
+              }
+             }
+            ]
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:range_dispatch",
+            "property": "minecraft:custom_model_data",
+            "index": 1,
+            "entries": [
+             {
+              "threshold": 1,
+              "model": {
+               "type": "minecraft:select",
+               "property": "minecraft:display_context",
+               "cases": [
+                {
+                 "when": [
+                  "firstperson_righthand",
+                  "firstperson_lefthand"
+                 ],
+                 "model": {
+                  "type": "minecraft:empty"
+                 }
+                }
+               ],
+               "fallback": {
+                "type": "minecraft:model",
+                "model": "zomboidcraft:item/weapon/battle_rifle/ads_scope_4x/muzzle_flash"
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:empty"
+            }
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:range_dispatch",
+          "property": "minecraft:custom_model_data",
+          "index": 1,
+          "entries": [
+           {
+            "threshold": 1,
+            "model": {
+             "type": "minecraft:select",
+             "property": "minecraft:display_context",
+             "cases": [
+              {
+               "when": [
+                "firstperson_righthand",
+                "firstperson_lefthand"
+               ],
+               "model": {
+                "type": "minecraft:empty"
+               }
+              }
+             ],
+             "fallback": {
+              "type": "minecraft:model",
+              "model": "zomboidcraft:item/weapon/battle_rifle/ads_scope_4x/muzzle_flash"
+             }
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:empty"
+          }
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 2,
+         "cases": [
+          {
+           "when": "foregrip",
+           "model": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/battle_rifle/ads_scope_4x/foregrip"
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:empty"
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 3,
+         "cases": [
+          {
+           "when": "light",
+           "model": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/battle_rifle/ads_scope_4x/light"
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:empty"
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 4,
+         "cases": [
+          {
+           "when": "stock",
+           "model": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/battle_rifle/ads_scope_4x/stock",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "pbr_battle_rifle",
+             "part": "stock"
+            }
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/battle_rifle/ads_scope_4x/stock",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_battle_rifle",
+           "part": "stock"
+          }
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 5,
+         "cases": [
+          {
+           "when": "mag",
+           "model": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/battle_rifle/ads_scope_4x/mag",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "pbr_battle_rifle",
+             "part": "mag"
+            }
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/battle_rifle/ads_scope_4x/mag",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_battle_rifle",
+           "part": "mag"
+          }
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 7,
+         "cases": [
+          {
+           "when": "laser",
+           "model": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/battle_rifle/ads_scope_4x/laser"
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:empty"
+         }
+        }
+       ]
+      }
+     }
+    ],
+    "fallback": {
+     "type": "minecraft:composite",
+     "models": [
+      {
+       "type": "minecraft:special",
+       "base": "zomboidcraft:item/weapon/battle_rifle/ads/body",
+       "model": {
+        "type": "zomboidcraft:mesh",
+        "id": "pbr_battle_rifle",
+        "part": "body"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:display_context",
+       "cases": [
+        {
+         "when": "firstperson_righthand",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/battle_rifle/ads/charging_handle",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_battle_rifle",
+         "part": "handle"
+        }
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 0,
+       "cases": [
+        {
+         "when": "red_dot",
+         "model": {
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/battle_rifle/ads/irons_folded"
+           },
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/battle_rifle/ads/red_dot"
+           }
+          ]
+         }
+        },
+        {
+         "when": "holo",
+         "model": {
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/battle_rifle/ads/irons_folded"
+           },
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/battle_rifle/ads/holo"
+           }
+          ]
+         }
+        },
+        {
+         "when": "scope_4x",
+         "model": {
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/battle_rifle/ads/irons_folded"
+           },
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/battle_rifle/ads/scope_4x"
+           }
+          ]
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/battle_rifle/ads/irons_up"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/battle_rifle/ads/irons_up"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 1,
+       "cases": [
+        {
+         "when": "suppressor",
+         "model": {
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/battle_rifle/ads/suppressor"
+           },
+           {
+            "type": "minecraft:range_dispatch",
+            "property": "minecraft:custom_model_data",
+            "index": 1,
+            "entries": [
+             {
+              "threshold": 1,
+              "model": {
+               "type": "minecraft:select",
+               "property": "minecraft:display_context",
+               "cases": [
+                {
+                 "when": [
+                  "firstperson_righthand",
+                  "firstperson_lefthand"
+                 ],
+                 "model": {
+                  "type": "minecraft:empty"
+                 }
+                }
+               ],
+               "fallback": {
+                "type": "minecraft:model",
+                "model": "zomboidcraft:item/weapon/battle_rifle/ads/muzzle_flash_quiet"
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:empty"
+            }
+           }
+          ]
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:range_dispatch",
+          "property": "minecraft:custom_model_data",
+          "index": 1,
+          "entries": [
+           {
+            "threshold": 1,
+            "model": {
+             "type": "minecraft:select",
+             "property": "minecraft:display_context",
+             "cases": [
+              {
+               "when": [
+                "firstperson_righthand",
+                "firstperson_lefthand"
+               ],
+               "model": {
+                "type": "minecraft:empty"
+               }
+              }
+             ],
+             "fallback": {
+              "type": "minecraft:model",
+              "model": "zomboidcraft:item/weapon/battle_rifle/ads/muzzle_flash"
+             }
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:empty"
+          }
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:range_dispatch",
+        "property": "minecraft:custom_model_data",
+        "index": 1,
+        "entries": [
+         {
+          "threshold": 1,
+          "model": {
+           "type": "minecraft:select",
+           "property": "minecraft:display_context",
+           "cases": [
+            {
+             "when": [
+              "firstperson_righthand",
+              "firstperson_lefthand"
+             ],
+             "model": {
+              "type": "minecraft:empty"
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/battle_rifle/ads/muzzle_flash"
+           }
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:empty"
+        }
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 2,
+       "cases": [
+        {
+         "when": "foregrip",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/battle_rifle/ads/foregrip"
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:empty"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 3,
+       "cases": [
+        {
+         "when": "light",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/battle_rifle/ads/light"
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:empty"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 4,
+       "cases": [
+        {
+         "when": "stock",
+         "model": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/battle_rifle/ads/stock",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_battle_rifle",
+           "part": "stock"
+          }
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/battle_rifle/ads/stock",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_battle_rifle",
+         "part": "stock"
+        }
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 5,
+       "cases": [
+        {
+         "when": "mag",
+         "model": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/battle_rifle/ads/mag",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_battle_rifle",
+           "part": "mag"
+          }
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/battle_rifle/ads/mag",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_battle_rifle",
+         "part": "mag"
+        }
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 7,
+       "cases": [
+        {
+         "when": "laser",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/battle_rifle/ads/laser"
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:empty"
+       }
+      }
+     ]
+    }
+   },
+   "on_false": {
+    "type": "minecraft:condition",
+    "property": "zomboidcraft:raised",
+    "on_true": {
+     "type": "minecraft:composite",
+     "models": [
+      {
+       "type": "minecraft:special",
+       "base": "zomboidcraft:item/weapon/battle_rifle/raised_hip/body",
+       "model": {
+        "type": "zomboidcraft:mesh",
+        "id": "pbr_battle_rifle",
+        "part": "body"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:display_context",
+       "cases": [
+        {
+         "when": "firstperson_righthand",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/battle_rifle/raised_hip/charging_handle",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_battle_rifle",
+         "part": "handle"
+        }
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 0,
+       "cases": [
+        {
+         "when": "red_dot",
+         "model": {
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/battle_rifle/raised_hip/irons_folded"
+           },
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/battle_rifle/raised_hip/red_dot"
+           }
+          ]
+         }
+        },
+        {
+         "when": "holo",
+         "model": {
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/battle_rifle/raised_hip/irons_folded"
+           },
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/battle_rifle/raised_hip/holo"
+           }
+          ]
+         }
+        },
+        {
+         "when": "scope_4x",
+         "model": {
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/battle_rifle/raised_hip/irons_folded"
+           },
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/battle_rifle/raised_hip/scope_4x"
+           }
+          ]
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/battle_rifle/raised_hip/irons_up"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/battle_rifle/raised_hip/irons_up"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 1,
+       "cases": [
+        {
+         "when": "suppressor",
+         "model": {
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/battle_rifle/raised_hip/suppressor"
+           },
+           {
+            "type": "minecraft:range_dispatch",
+            "property": "minecraft:custom_model_data",
+            "index": 1,
+            "entries": [
+             {
+              "threshold": 1,
+              "model": {
+               "type": "minecraft:select",
+               "property": "minecraft:display_context",
+               "cases": [
+                {
+                 "when": [
+                  "firstperson_righthand",
+                  "firstperson_lefthand"
+                 ],
+                 "model": {
+                  "type": "minecraft:empty"
+                 }
+                }
+               ],
+               "fallback": {
+                "type": "minecraft:model",
+                "model": "zomboidcraft:item/weapon/battle_rifle/raised_hip/muzzle_flash_quiet"
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:empty"
+            }
+           }
+          ]
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:range_dispatch",
+          "property": "minecraft:custom_model_data",
+          "index": 1,
+          "entries": [
+           {
+            "threshold": 1,
+            "model": {
+             "type": "minecraft:select",
+             "property": "minecraft:display_context",
+             "cases": [
+              {
+               "when": [
+                "firstperson_righthand",
+                "firstperson_lefthand"
+               ],
+               "model": {
+                "type": "minecraft:empty"
+               }
+              }
+             ],
+             "fallback": {
+              "type": "minecraft:model",
+              "model": "zomboidcraft:item/weapon/battle_rifle/raised_hip/muzzle_flash"
+             }
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:empty"
+          }
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:range_dispatch",
+        "property": "minecraft:custom_model_data",
+        "index": 1,
+        "entries": [
+         {
+          "threshold": 1,
+          "model": {
+           "type": "minecraft:select",
+           "property": "minecraft:display_context",
+           "cases": [
+            {
+             "when": [
+              "firstperson_righthand",
+              "firstperson_lefthand"
+             ],
+             "model": {
+              "type": "minecraft:empty"
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/battle_rifle/raised_hip/muzzle_flash"
+           }
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:empty"
+        }
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 2,
+       "cases": [
+        {
+         "when": "foregrip",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/battle_rifle/raised_hip/foregrip"
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:empty"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 3,
+       "cases": [
+        {
+         "when": "light",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/battle_rifle/raised_hip/light"
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:empty"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 4,
+       "cases": [
+        {
+         "when": "stock",
+         "model": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/battle_rifle/raised_hip/stock",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_battle_rifle",
+           "part": "stock"
+          }
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/battle_rifle/raised_hip/stock",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_battle_rifle",
+         "part": "stock"
+        }
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 5,
+       "cases": [
+        {
+         "when": "mag",
+         "model": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/battle_rifle/raised_hip/mag",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_battle_rifle",
+           "part": "mag"
+          }
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/battle_rifle/raised_hip/mag",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_battle_rifle",
+         "part": "mag"
+        }
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 7,
+       "cases": [
+        {
+         "when": "laser",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/battle_rifle/raised_hip/laser"
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:empty"
+       }
+      }
+     ]
+    },
+    "on_false": {
+     "type": "minecraft:composite",
+     "models": [
+      {
+       "type": "minecraft:special",
+       "base": "zomboidcraft:item/weapon/battle_rifle/hip/body",
+       "model": {
+        "type": "zomboidcraft:mesh",
+        "id": "pbr_battle_rifle",
+        "part": "body"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:display_context",
+       "cases": [
+        {
+         "when": "firstperson_righthand",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/battle_rifle/hip/charging_handle",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_battle_rifle",
+         "part": "handle"
+        }
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 0,
+       "cases": [
+        {
+         "when": "red_dot",
+         "model": {
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/battle_rifle/hip/irons_folded"
+           },
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/battle_rifle/hip/red_dot"
+           }
+          ]
+         }
+        },
+        {
+         "when": "holo",
+         "model": {
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/battle_rifle/hip/irons_folded"
+           },
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/battle_rifle/hip/holo"
+           }
+          ]
+         }
+        },
+        {
+         "when": "scope_4x",
+         "model": {
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/battle_rifle/hip/irons_folded"
+           },
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/battle_rifle/hip/scope_4x"
+           }
+          ]
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/battle_rifle/hip/irons_up"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/battle_rifle/hip/irons_up"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 1,
+       "cases": [
+        {
+         "when": "suppressor",
+         "model": {
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/battle_rifle/hip/suppressor"
+           },
+           {
+            "type": "minecraft:range_dispatch",
+            "property": "minecraft:custom_model_data",
+            "index": 1,
+            "entries": [
+             {
+              "threshold": 1,
+              "model": {
+               "type": "minecraft:select",
+               "property": "minecraft:display_context",
+               "cases": [
+                {
+                 "when": [
+                  "firstperson_righthand",
+                  "firstperson_lefthand"
+                 ],
+                 "model": {
+                  "type": "minecraft:empty"
+                 }
+                }
+               ],
+               "fallback": {
+                "type": "minecraft:model",
+                "model": "zomboidcraft:item/weapon/battle_rifle/hip/muzzle_flash_quiet"
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:empty"
+            }
+           }
+          ]
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:range_dispatch",
+          "property": "minecraft:custom_model_data",
+          "index": 1,
+          "entries": [
+           {
+            "threshold": 1,
+            "model": {
+             "type": "minecraft:select",
+             "property": "minecraft:display_context",
+             "cases": [
+              {
+               "when": [
+                "firstperson_righthand",
+                "firstperson_lefthand"
+               ],
+               "model": {
+                "type": "minecraft:empty"
+               }
+              }
+             ],
+             "fallback": {
+              "type": "minecraft:model",
+              "model": "zomboidcraft:item/weapon/battle_rifle/hip/muzzle_flash"
+             }
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:empty"
+          }
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:range_dispatch",
+        "property": "minecraft:custom_model_data",
+        "index": 1,
+        "entries": [
+         {
+          "threshold": 1,
+          "model": {
+           "type": "minecraft:select",
+           "property": "minecraft:display_context",
+           "cases": [
+            {
+             "when": [
+              "firstperson_righthand",
+              "firstperson_lefthand"
+             ],
+             "model": {
+              "type": "minecraft:empty"
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/battle_rifle/hip/muzzle_flash"
+           }
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:empty"
+        }
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 2,
+       "cases": [
+        {
+         "when": "foregrip",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/battle_rifle/hip/foregrip"
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:empty"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 3,
+       "cases": [
+        {
+         "when": "light",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/battle_rifle/hip/light"
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:empty"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 4,
+       "cases": [
+        {
+         "when": "stock",
+         "model": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/battle_rifle/hip/stock",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_battle_rifle",
+           "part": "stock"
+          }
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/battle_rifle/hip/stock",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_battle_rifle",
+         "part": "stock"
+        }
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 5,
+       "cases": [
+        {
+         "when": "mag",
+         "model": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/battle_rifle/hip/mag",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_battle_rifle",
+           "part": "mag"
+          }
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/battle_rifle/hip/mag",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_battle_rifle",
+         "part": "mag"
+        }
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 7,
+       "cases": [
+        {
+         "when": "laser",
+         "model": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/battle_rifle/hip/laser"
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:empty"
+       }
+      }
+     ]
+    }
+   }
+  }
+ }
+}

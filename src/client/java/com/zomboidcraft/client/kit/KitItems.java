@@ -213,6 +213,7 @@ final class KitItems {
                 case MAGNUM -> "Magnum revolver";
                 case LEVER_ACTION -> "Lever-action carbine";
                 case CROSSBOW -> "Compound crossbow";
+                case BATTLE_RIFLE -> "Battle rifle";
             };
             return what + ", " + t.caliber();
         }
