@@ -1210,7 +1210,204 @@ SPECS = {
     'boat_skiff': dict(build=skiff, weight=4, name='', port='', reg='GH 6022 JB', hull=(84, 92, 62), stripes=[],
                        boot=(84, 92, 62), bottom=(84, 92, 62), riveted=True, cowl=(40, 42, 46), engine='TIDEMARK', hp='25',
                        reg_col=(236, 234, 226), deck_col=(176, 180, 182)),
+    'boat_lobster': dict(build=lambda spec: lobster(spec), weight=3, name='SALT HOLLOW', port='GRAYHAVEN',
+                         reg='GH 5126 LB', hull=(150, 38, 30), stripes=[(0.04, 0.08, (236, 234, 226))],
+                         boot=(236, 234, 226), bottom=(40, 40, 42), vinyl=(214, 206, 186), accent=(150, 38, 30),
+                         deck_col=(222, 222, 212), trap=(214, 192, 44), name_h=0.18, name_col=(236, 234, 226),
+                         reg_col=(236, 234, 226)),
 }
+
+
+def lobster(spec):
+    """A 35-foot Downeast lobster boat (refs/port/marina-boats/lobster-fishing-boat): the high flared bow
+    and long keel, the wheelhouse forward with its hardtop reaching aft, the open working deck behind
+    it piled with traps, the hauler and its davit to starboard, bait barrels, buoys on their sticks."""
+    g = Geo()
+    h = Hull(10.6, 3.5, kind='round', bilge=WL + 0.2,
+             sheer=[(0, 1.78), (0.45, 1.86), (0.8, 2.2), (1, 2.62)],
+             keel=[(0, 0.5), (0.3, 0.26), (0.6, 0.28), (0.85, 0.85), (1, 2.3)],
+             plan=[(0, 0.84), (0.3, 1.0), (0.55, 1.0), (0.78, 0.84), (0.92, 0.5), (1, 0.0)])
+    sole = WL + 0.42
+    zw0, zw1 = 0.2, 2.7          # the wheelhouse, open at its back
+    zones = [(h.z0, zw1, 'cockpit', {'sole': sole, 'side': 0.1, 'liner': 'gelcoat', 'upper': 'gelcoat', 'pad': 0.16,
+                                      'sole_mat': 'nonskid'}),
+             (zw1, h.z1, 'deck', {'camber': 0.07})]
+    zs = stations(h, [zw0, zw1])
+    hull_shell(g, h, zs)
+    decks(g, h, zs, zones)
+    rubrail(g, h, zs, r=0.045, mat='wood')
+    # the long keel, the rudder on its skeg, the wheel between them
+    fin(g, [(v3(0, h.yk(-0.6) + 0.05, -0.6), 6.4, 0.07), (v3(0, h.yk(-0.6) - 0.3, -1.0), 5.6, 0.06),
+            (v3(0, h.yk(-0.6) - 0.5, -1.4), 4.6, 0.05)], 'antifoul')
+    fin(g, [(v3(0, WL - 0.25, h.z0 + 0.25), 0.55, 0.12), (v3(0, h.yk(-0.6) - 0.48, h.z0 + 0.22), 0.5, 0.12)], 'antifoul')
+    lathe(g, v3(0, h.yk(-0.6) - 0.2, h.z0 + 0.62), [(0, 0), (0.07, 0), (0.07, 0.16), (0, 0.2)], 'prop', n=8,
+          axis=v3(0, 0, 1))
+    for k in range(4):
+        a = k * math.pi / 2 + 0.4
+        blob(g, v3(0.18 * math.cos(a), h.yk(-0.6) - 0.2 + 0.18 * math.sin(a), h.z0 + 0.7),
+             v3(0.13, 0.015, 0.06), 'prop', e=(0.6, 0.6), nu=8, nv=4, R=rot_z(a))
+
+    # the wheelhouse: sides from the sheer up, windows above the waist, the windshield raked aft
+    yr = sole + 2.0
+    def wx(z):
+        return h.xs(z) - 0.12
+    ywin = h.ys(1.4) + 0.5
+    for side in (1, -1):
+        za, zb = zw0, zw1 - 0.05
+        lo = [v3(side * wx(za), h.ys(za), za), v3(side * wx(zb), h.ys(zb), zb),
+              v3(side * wx(zb), ywin, zb), v3(side * wx(za), ywin, za)]
+        g.quad(*lo, 'gelcoat', v3(side, 0, 0), both=True)
+        g.quad(v3(side * wx(za), yr - 0.18, za), v3(side * wx(zb), yr - 0.18, zb), v3(side * wx(zb), yr, zb),
+               v3(side * wx(za), yr, za), 'gelcoat', v3(side, 0, 0), both=True)
+        for z in (za, 1.2, zb):
+            box(g, v3(side * wx(z), (ywin + yr - 0.18) / 2, z), v3(0.035, (yr - 0.18 - ywin) / 2, 0.05), 'gelcoat')
+        with grouped(g, 'glass_side%d' % side):
+            for z0, z1 in ((za + 0.05, 1.15), (1.25, zb - 0.05)):
+                g.quad(v3(side * (wx(z0) + 0.01), ywin, z0), v3(side * (wx(z1) + 0.01), ywin, z1),
+                       v3(side * (wx(z1) + 0.01), yr - 0.18, z1), v3(side * (wx(z0) + 0.01), yr - 0.18, z0),
+                       'glass', v3(side, 0, 0), both=True)
+        # the sill trim along the window bottoms
+        tube(g, [v3(side * (wx(za) + 0.02), ywin, za), v3(side * (wx(zb) + 0.02), ywin, zb)], 1.0, 'alu',
+             prof=rect(0.015, 0.012), up=UP)
+    # the front: the bulkhead up off the foredeck, then the three-pane windshield raked aft
+    zf = zw1
+    w0 = wx(zf)
+    ydeck = deck_y(h, zf, 0)
+    ysill = ydeck + 0.4
+    g.quad(v3(w0, h.ys(zf), zf), v3(-w0, h.ys(zf), zf), v3(-w0, ysill, zf), v3(w0, ysill, zf), 'gelcoat',
+           v3(0, 0, 1), both=True)
+    ztop = zf - 0.35
+    wt = wx(ztop)
+    g.quad(v3(w0, ysill, zf), v3(-w0, ysill, zf), v3(-wt, yr, ztop), v3(wt, yr, ztop), 'gelcoat', v3(0, 0.3, 1))
+    for k, (a, b) in enumerate(((-1, -0.36), (-0.33, 0.33), (0.36, 1))):
+        with grouped(g, 'glass_front%d' % k):
+            q = [v3(w0 * a, ysill + 0.06, zf + 0.012), v3(w0 * b, ysill + 0.06, zf + 0.012),
+                 v3(wt * b, yr - 0.1, ztop + 0.012), v3(wt * a, yr - 0.1, ztop + 0.012)]
+            q = [qq + v3(0, 0, 0.0) for qq in q]
+            g.quad(*q, 'glass', v3(0, 0.3, 1), both=True)
+    for a in (-1, -0.345, 0.345, 1):
+        tube(g, [v3(w0 * a, ysill, zf + 0.02), v3(wt * a, yr, ztop + 0.02)], 0.022, 'gelcoat', n=4)
+    # a wiper on each outer pane
+    for a in (-0.68, 0.68):
+        tube(g, [v3(w0 * a, ysill + 0.1, zf + 0.04), v3(w0 * a * 0.8, ysill + 0.55, zf - 0.03)], 0.008, 'black', n=4)
+    # the hardtop: over the house and on aft over the hauler, on two posts, the drip edge round it
+    zt0 = -0.9
+    ztf = ztop - 0.08
+    ra, rf = wx(zt0) + 0.08, wt + 0.1
+    corners = [v3(ra, 0, zt0), v3(rf, 0, ztf), v3(-rf, 0, ztf), v3(-ra, 0, zt0)]
+    top = [c + v3(0, yr + 0.1, 0) for c in corners]
+    bot = [c + v3(0, yr - 0.01, 0) for c in corners]
+    g.poly(top, 'gelcoat', UP)
+    g.poly(bot, 'gelcoat', -UP)
+    for i in range(4):
+        j = (i + 1) % 4
+        g.quad(bot[i], bot[j], top[j], top[i], 'gelcoat', (top[i] + top[j]) / 2 - v3(0, yr, (zt0 + ztf) / 2))
+    tube(g, [v3(ra, yr - 0.02, zt0), v3(-ra, yr - 0.02, zt0)], 1.0, 'gelcoat', prof=rect(0.02, 0.05), up=v3(0, 0, 1))
+    for side in (1, -1):
+        x = side * (h.xs(zt0 + 0.1) - 0.16)
+        tube(g, [v3(x, h.ys(zt0 + 0.1), zt0 + 0.1), v3(x, yr - 0.01, zt0 + 0.1)], 0.035, 'alu', n=8)
+    # on the roof: the radar on its pedestal, the mast with the whips, work lights looking aft, horn
+    lathe(g, v3(0.2, yr + 0.09, 1.3), [(0, 0), (0.12, 0), (0.1, 0.12), (0.32, 0.14), (0.32, 0.3), (0.26, 0.36),
+                                        (0, 0.38)], 'antenna', n=14)
+    tube(g, [v3(-0.5, yr + 0.09, 1.6), v3(-0.5, yr + 1.3, 1.6)], 0.035, 'alu', n=6)
+    tube(g, [v3(-0.75, yr + 1.0, 1.6), v3(-0.25, yr + 1.0, 1.6)], 0.02, 'alu', n=4)
+    blob(g, v3(-0.5, yr + 1.34, 1.6), v3(0.04, 0.04, 0.04), 'lens', e=(1, 1), nu=6, nv=4)
+    antenna(g, v3(-0.75, yr + 1.02, 1.6), 1.6)
+    antenna(g, v3(-0.25, yr + 1.02, 1.6), 1.2)
+    for x in (-0.9, 0, 0.9):
+        box(g, v3(x, yr - 0.08, zt0 - 0.04), v3(0.1, 0.06, 0.04), 'black')
+        box(g, v3(x, yr - 0.08, zt0 - 0.085), v3(0.08, 0.045, 0.005), 'lens')
+    lathe(g, v3(0.8, yr + 0.09, 2.0), [(0, 0), (0.03, 0), (0.06, 0.18), (0, 0.2)], 'steel', n=8, axis=v3(0, 0.3, 1))
+    navlights(g, v3(0, yr + 0.12, zf - 0.4))
+    # the helm to starboard: the console, its dash, the wheel, the seat; a bench to port
+    xh = -(wx(1.8) - 0.45)
+    box(g, v3(xh, sole + 0.5, zf - 0.38), v3(0.42, 0.5, 0.22), 'gelcoat')
+    dd = [v3(xh + 0.4, sole + 0.98, zf - 0.6), v3(xh - 0.4, sole + 0.98, zf - 0.6), v3(xh - 0.4, sole + 1.12, zf - 0.2),
+          v3(xh + 0.4, sole + 1.12, zf - 0.2)]
+    g.quad(*dd, 'dash', v3(0, 0.6, -1), uv=[(1, 1), (0, 1), (0, 0), (1, 0)])
+    wheel(g, v3(xh, sole + 1.0, zf - 0.72), v3(0, 0.45, -0.9), r=0.24, mat='wood')
+    seat(g, v3(xh, sole + 0.7, zf - 1.35), v3(0, 0, 1), sole=sole, mat='vinyl')
+    bench(g, 0.35, wx(1.6) - 0.08, sole + 0.48, 1.6, 0.42, back=1)
+    box(g, v3((0.35 + wx(1.6) - 0.08) / 2, sole + 0.22, 1.6), v3((wx(1.6) - 0.43) / 2, 0.22, 0.2), 'gelcoat')
+    # the hauler: the davit off the house's starboard corner, the sheave block at its head, the hauler
+    # head on its bracket at the rail, the line down from the block over the side
+    xs0 = -(h.xs(zw0 - 0.1) - 0.1)
+    dav = [v3(xs0, h.ys(zw0), zw0 - 0.1), v3(xs0, yr - 0.15, zw0 - 0.1), v3(xs0 - 0.5, yr + 0.05, zw0 - 0.3)]
+    tube(g, dav, 0.04, 'alu', n=8)
+    lathe(g, v3(xs0 - 0.5, yr - 0.08, zw0 - 0.3), [(0, -0.03), (0.12, -0.03), (0.12, 0.03), (0, 0.03)], 'steel', n=10,
+          axis=v3(0, 0, 1))
+    box(g, v3(xs0 - 0.5, yr - 0.02, zw0 - 0.3), v3(0.03, 0.08, 0.05), 'steel')
+    hy = h.ys(-0.2) + 0.3
+    tube(g, [v3(xs0 + 0.05, h.ys(-0.2) - 0.05, -0.2), v3(xs0 + 0.05, hy, -0.2)], 0.05, 'steel', n=8)
+    lathe(g, v3(xs0 - 0.02, hy, -0.2), [(0, 0), (0.2, 0), (0.22, 0.03), (0.08, 0.1), (0.22, 0.17), (0.2, 0.2), (0, 0.2)],
+          'steel', n=14, axis=v3(-1, 0, 0))
+    box(g, v3(xs0 + 0.2, hy - 0.08, -0.2), v3(0.12, 0.12, 0.14), 'engine_metal')
+    with grouped(g, 'loose'):
+        tube(g, [v3(xs0 - 0.5, yr - 0.2, zw0 - 0.3), v3(xs0 - 0.62, WL + 0.4, zw0 - 0.45), v3(xs0 - 0.66, WL - 0.1, zw0 - 0.5)],
+             0.01, 'rope', n=4)
+    # the traps, stacked to port and across the stern: mesh boxes with their runners, bridles, a buoy
+    # on each line; the stack lashed with a strap
+    tw, tl, th = 0.29, 0.6, 0.19
+    stacks = [(h.x_at(-1.4, sole + 0.3) - tw - 0.08, -1.4, 3), (h.x_at(-2.7, sole + 0.3) - tw - 0.08, -2.7, 3),
+              (h.x_at(-2.7, sole + 0.3) - 3 * tw - 0.14, -2.7, 2), (h.x_at(-4.0, sole + 0.3) - tw - 0.1, -4.0, 2),
+              (h.x_at(-4.0, sole + 0.3) - 3 * tw - 0.16, -4.0, 1)]
+    for sx, sz, n in stacks:
+        for k in range(n):
+            yc = sole + th + k * (2 * th + 0.01)
+            with grouped(g, 'loose' if k == n - 1 else 'body'):
+                box(g, v3(sx, yc, sz), v3(tw, th, tl), 'cooler')
+                for ex in (-1, 1):
+                    tube(g, [v3(sx + ex * (tw - 0.02), yc - th + 0.012, sz - tl), v3(sx + ex * (tw - 0.02), yc - th + 0.012, sz + tl)],
+                         0.014, 'wood', n=4)
+                tube(g, [v3(sx - tw, yc + th, sz), v3(sx, yc + th + 0.12, sz), v3(sx + tw, yc + th, sz)], 0.006, 'rope', n=3)
+        with grouped(g, 'loose'):
+            top = sole + n * (2 * th + 0.01)
+            tube(g, [v3(sx - tw - 0.01, sole, sz - 0.3), v3(sx - tw - 0.01, top + 0.01, sz - 0.3),
+                     v3(sx + tw + 0.01, top + 0.01, sz - 0.3), v3(sx + tw + 0.01, sole, sz - 0.3)], 1.0, 'strap',
+                 prof=rect(0.004, 0.02), up=v3(0, 0, 1))
+    # the buoys: foam bodies on their sticks, racked along the port side of the house and lying loose
+    for k in range(6):
+        z = 0.4 + k * 0.32
+        x = wx(z) - 0.08
+        with grouped(g, 'loose'):
+            lathe(g, v3(x, ywin - 0.55, z), [(0, 0), (0.07, 0.02), (0.08, 0.2), (0.06, 0.32), (0, 0.34)],
+                  'lifevest' if k % 2 else 'fender', n=8)
+            tube(g, [v3(x, ywin - 0.7, z), v3(x, ywin + 0.25, z)], 0.012, 'wood', n=4)
+    with grouped(g, 'loose'):
+        for k, (x, z) in enumerate(((-0.5, -3.3), (-0.2, -3.6))):
+            R = rot_y(0.6 + k) @ rot_z(math.pi / 2)
+            lathe(g, v3(x, sole + 0.08, z), [(0, 0), (0.07, 0.02), (0.08, 0.2), (0.06, 0.32), (0, 0.34)], 'lifevest', n=8,
+                  axis=R @ UP)
+    # the bait barrels and a tote of rope at the stern, the washdown hose coiled, the pot warp in a heap
+    for x, z in ((-0.95, -4.55), (-0.35, -4.62)):
+        lathe(g, v3(x, sole, z), [(0, 0), (0.27, 0), (0.29, 0.1), (0.29, 0.78), (0.27, 0.86), (0.24, 0.86),
+                                  (0.24, 0.84), (0, 0.84)], 'fender', n=12)
+    box(g, v3(0.85, sole + 0.2, -4.4), v3(0.35, 0.2, 0.28), 'gascan')
+    coil(g, v3(0.85, sole + 0.4, -4.4), 0.2, turns=4)
+    coil(g, v3(-0.9, sole, -2.0), 0.24, mat='black', turns=3)
+    coil(g, v3(0.2, sole, -0.6), 0.3, turns=5)
+    # the bow: stem fitting and anchor on the roller, the samson post, cleats, the rail round the foredeck
+    box(g, v3(0, h.ys(5.1) + 0.06, 5.1), v3(0.06, 0.05, 0.22), 'steel')
+    tube(g, [v3(0, h.ys(5.0) + 0.1, 4.85), v3(0, h.ys(5.2) + 0.05, 5.3)], 0.035, 'steel', n=6)
+    blob(g, v3(0, h.ys(5.2) - 0.06, 5.33), v3(0.16, 0.1, 0.06), 'steel', e=(0.5, 0.5), nu=8, nv=4)
+    box(g, v3(0, deck_y(h, 4.3, 0) + 0.2, 4.3), v3(0.07, 0.2, 0.07), 'wood')
+    tube(g, [v3(-0.12, deck_y(h, 4.3, 0) + 0.3, 4.3), v3(0.12, deck_y(h, 4.3, 0) + 0.3, 4.3)], 0.02, 'steel', n=4)
+    pts = [v3(h.xs(z) - 0.06, deck_y(h, z, h.xs(z)) + 0.5, z) for z in np.linspace(zf + 0.1, 4.9, 6)]
+    pts = pts + [v3(0, h.ys(5.15) + 0.5, 5.15)] + [v3(-q[0], q[1], q[2]) for q in reversed(pts)]
+    rail(g, pts, [(i, v3(pts[i][0], deck_y(h, pts[i][2], pts[i][0]) + 0.01, pts[i][2])) for i in (0, 2, 4, 6, 8, 10, 12)])
+    hatch(g, v3(0, 0, 3.6), 0.3, 0.3, deck_y(h, 3.6, 0), smoked=False)
+    for side in (1, -1):
+        for z in (-4.9, -1.5, 3.2):
+            x = side * (h.xs(z) - 0.08)
+            cleat(g, v3(x, deck_y(h, z, abs(x)) if z > zf else h.ys(z), z), v3(0, 0, 1))
+    # the exhaust stack up the house's port back corner, the life ring on the bulkhead
+    xe = wx(zw0) - 0.12
+    tube(g, [v3(xe, sole + 0.6, zw0 + 0.08), v3(xe, yr + 0.7, zw0 + 0.08)], 0.06, 'black', n=8)
+    lathe(g, v3(0.0, sole + 1.35, zw0 - 0.01), [(0.16, -0.03), (0.26, -0.03), (0.26, 0.03), (0.16, 0.03)], 'lifevest',
+          n=12, axis=v3(0, 0, -1))
+    for side, z in ((1, -2.0), (-1, -3.2), (1, 1.0)):
+        fender(g, v3(side * (h.xs(z) - 0.04), h.ys(z) + 0.03, z), v3(side * (h.xs(z) + 0.15), h.ys(z) - 0.3, z))
+    return g, h
 
 
 # ---------------------------------------------------------------- textures
@@ -1337,6 +1534,8 @@ def pattern(mat, spec, rng):
         'antenna': (232, 232, 228), 'wood': (126, 70, 34), 'sail': (236, 236, 228), 'mast': (190, 194, 198),
         'antifoul': spec.get('bottom', (38, 52, 92)), 'gascan': (178, 34, 28),
     }[mat]
+    if mat == 'cooler' and 'trap' in spec:
+        col = spec['trap']
     base = np.ones((n, n, 3)) * np.array(col, float)
     k = 1 + noise[..., None] * 0.02 + fine[..., None] * 0.015
     if mat == 'nonskid':
@@ -1362,6 +1561,10 @@ def pattern(mat, spec, rng):
         k = 1 + (yy / n * 0.15 - 0.05)[..., None]
     elif mat == 'carpet':
         pass
+    if mat == 'cooler' and 'trap' in spec:
+        # the trap mesh: the wire's grid lit, the holes dark with what's inside
+        wire = ((xx % 3) == 0) | ((yy % 3) == 0)
+        k = np.where(wire[..., None], 1.0 + fine[..., None] * 0.05, 0.32)
     return np.clip(base * k, 0, 255)
 
 

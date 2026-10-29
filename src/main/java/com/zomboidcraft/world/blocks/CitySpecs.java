@@ -10228,6 +10228,26 @@ final class CitySpecs extends CityBlocks.Specs {
         s("cp_pad", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("cp_pad_yellow", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("cp_pad_white", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("cp_gb_wall", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 2);
+        s("cp_gb_wall_c", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 2, 0, 0, 0, 2, 16, 16);
+        s("cp_gb_win", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 16, 16, 2);
+        s("cp_gb_win_c", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 16, 16, 2, 0, 0, 0, 2, 16, 16);
+        s("cp_gb_win_broken", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 16, 16, 2);
+        s("cp_gb_win_c_broken", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 16, 16, 2, 0, 0, 0, 2, 16, 16);
+        s("cp_gb_head", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 12.6, 2, 0, 12.6, 0, 16, 14.6, 16);
+        s("cp_gb_head_c", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 12.6, 2, 0, 0, 0, 2, 12.6, 16, 0, 12.6, 0, 16, 14.6, 16);
+        s("cp_gb_roof", FACING, 0, 0, SoundType.METAL, 2f, 0, 12.6, 0, 16, 14.6, 16);
+        s("cp_lt_rear_olive", FACING, SEE_THROUGH, 0, SoundType.METAL, 2f, 1, 0, 4, 15, 16, 16);
+        s("cp_lt_front_olive", FACING, LOOT, 0, SoundType.METAL, 2f, 1, 0, 0, 15, 16, 16);
+        loot("cp_lt_front_olive", "basement_supplies");
+        s("cp_lt_rear_white", FACING, SEE_THROUGH, 0, SoundType.METAL, 2f, 1, 0, 4, 15, 16, 16);
+        s("cp_lt_front_white", FACING, LOOT, 0, SoundType.METAL, 2f, 1, 0, 0, 15, 16, 16);
+        loot("cp_lt_front_white", "basement_supplies");
+        s("cp_lt_cap_rear", FACING, 0, 0, SoundType.METAL, 2f, 1, 0, 4, 15, 7, 16, 6.25, 0, 0.3, 9.75, 16, 3.7);
+        s("cp_lt_cap_front", FACING, 0, 0, SoundType.METAL, 2f, 1, 0, 0, 15, 7, 16);
+        s("cp_lt_mast", FACING, 0, 0, SoundType.METAL, 2f, 6.1, 0, 0.1, 9.9, 16, 3.9);
+        s("cp_lt_head", FACING, 0, 0, SoundType.METAL, 2f, 6.25, 0, 0.3, 9.75, 3, 3.7);
+        s("cp_lt_head_lit", FACING, 0, 15, SoundType.METAL, 2f, 6.25, 0, 0.3, 9.75, 3, 3.7);
         s("rd_stave_0_0", FACING, 0, 0, SoundType.STONE, 2f, -0.25, 0, 16, 16.25, 16, 19);
         s("rd_blue_0_0", FACING, 0, 0, SoundType.METAL, 2f, -0.25, 0, 16, 16.25, 16, 19);
         s("rd_bin_0_0", FACING, 0, 0, SoundType.METAL, 2f, -0.25, 0, 16, 16.25, 16, 19);
@@ -10362,6 +10382,9 @@ final class CitySpecs extends CityBlocks.Specs {
         s("rd_galv_s_0_4", FACING, 0, 0, SoundType.METAL, 2f, -0.25, 0, 8, 16.25, 4, 30, -0.25, 4, 10, 16.25, 8, 30, -0.25, 8, 12, 16.25, 12, 30, -0.25, 12, 14, 16.25, 16, 30);
         s("rd_galv_m_0_4", FACING, 0, 0, SoundType.METAL, 2f, -0.25, 0, 8, 16.25, 4, 30, -0.25, 4, 12, 16.25, 8, 30, -0.25, 8, 16, 16.25, 12, 30, -0.25, 12, 20, 16.25, 16, 30);
         s("rd_blue_s_0_4", FACING, 0, 0, SoundType.METAL, 2f, -0.25, 0, 8, 16.25, 4, 30, -0.25, 4, 10, 16.25, 8, 30, -0.25, 8, 12, 16.25, 12, 30, -0.25, 12, 14, 16.25, 16, 30);
+    }
+
+    private void part57() {
         s("rd_blue_m_0_4", FACING, 0, 0, SoundType.METAL, 2f, -0.25, 0, 8, 16.25, 4, 30, -0.25, 4, 12, 16.25, 8, 30, -0.25, 8, 16, 16.25, 12, 30, -0.25, 12, 20, 16.25, 16, 30);
         s("rd_tinred_s_0_4", FACING, 0, 0, SoundType.METAL, 2f, -0.25, 0, 8, 16.25, 4, 30, -0.25, 4, 10, 16.25, 8, 30, -0.25, 8, 12, 16.25, 12, 30, -0.25, 12, 14, 16.25, 16, 30);
         s("rd_tinred_m_0_4", FACING, 0, 0, SoundType.METAL, 2f, -0.25, 0, 8, 16.25, 4, 30, -0.25, 4, 12, 16.25, 8, 30, -0.25, 8, 16, 16.25, 12, 30, -0.25, 12, 20, 16.25, 16, 30);
@@ -10374,9 +10397,6 @@ final class CitySpecs extends CityBlocks.Specs {
         s("rd_galv_m_0_5", FACING, 0, 0, SoundType.METAL, 2f, -0.25, 0, 6, 16.25, 4, 30, -0.25, 4, 10, 16.25, 8, 30, -0.25, 8, 14, 16.25, 12, 30, -0.25, 12, 18, 16.25, 16, 30);
         s("rd_blue_s_0_5", FACING, 0, 0, SoundType.METAL, 2f, -0.25, 0, 6, 16.25, 4, 30, -0.25, 4, 8, 16.25, 8, 30, -0.25, 8, 10, 16.25, 12, 30, -0.25, 12, 12, 16.25, 16, 30);
         s("rd_blue_m_0_5", FACING, 0, 0, SoundType.METAL, 2f, -0.25, 0, 6, 16.25, 4, 30, -0.25, 4, 10, 16.25, 8, 30, -0.25, 8, 14, 16.25, 12, 30, -0.25, 12, 18, 16.25, 16, 30);
-    }
-
-    private void part57() {
         s("rd_tinred_s_0_5", FACING, 0, 0, SoundType.METAL, 2f, -0.25, 0, 6, 16.25, 4, 30, -0.25, 4, 8, 16.25, 8, 30, -0.25, 8, 10, 16.25, 12, 30, -0.25, 12, 12, 16.25, 16, 30);
         s("rd_tinred_m_0_5", FACING, 0, 0, SoundType.METAL, 2f, -0.25, 0, 6, 16.25, 4, 30, -0.25, 4, 10, 16.25, 8, 30, -0.25, 8, 14, 16.25, 12, 30, -0.25, 12, 18, 16.25, 16, 30);
         s("rd_stave_0_6", FACING, 0, 0, SoundType.STONE, 2f, -0.25, 0, 4, 16.25, 16, 7);
@@ -10504,6 +10524,9 @@ final class CitySpecs extends CityBlocks.Specs {
         s("rd_blue_m_p22_2", FACING, 0, 0, SoundType.METAL, 2f, -1.469, 0, 11.696, 20.531, 4, 30, -1.469, 4, 15.696, 20.531, 8, 30, -1.469, 8, 19.696, 20.531, 12, 30, -1.469, 12, 23.696, 20.531, 16, 30);
         s("rd_tinred_s_p22_2", FACING, 0, 0, SoundType.METAL, 2f, -1.469, 0, 11.696, 20.531, 4, 30, -1.469, 4, 13.696, 20.531, 8, 30, -1.469, 8, 15.696, 20.531, 12, 30, -1.469, 12, 17.696, 20.531, 16, 30);
         s("rd_tinred_m_p22_2", FACING, 0, 0, SoundType.METAL, 2f, -1.469, 0, 11.696, 20.531, 4, 30, -1.469, 4, 15.696, 20.531, 8, 30, -1.469, 8, 19.696, 20.531, 12, 30, -1.469, 12, 23.696, 20.531, 16, 30);
+    }
+
+    private void part58() {
         s("rd_galv_s_p22_3", FACING, 0, 0, SoundType.METAL, 2f, -2.235, 0, 9.848, 19.765, 4, 30, -2.235, 4, 11.848, 19.765, 8, 30, -2.235, 8, 13.848, 19.765, 12, 30, -2.235, 12, 15.848, 19.765, 16, 30);
         s("rd_galv_m_p22_3", FACING, 0, 0, SoundType.METAL, 2f, -2.235, 0, 9.848, 19.765, 4, 30, -2.235, 4, 13.848, 19.765, 8, 30, -2.235, 8, 17.848, 19.765, 12, 30, -2.235, 12, 21.848, 19.765, 16, 30);
         s("rd_blue_s_p22_3", FACING, 0, 0, SoundType.METAL, 2f, -2.235, 0, 9.848, 19.765, 4, 30, -2.235, 4, 11.848, 19.765, 8, 30, -2.235, 8, 13.848, 19.765, 12, 30, -2.235, 12, 15.848, 19.765, 16, 30);
@@ -10514,9 +10537,6 @@ final class CitySpecs extends CityBlocks.Specs {
         s("rd_galv_m_p22_4", FACING, 0, 0, SoundType.METAL, 2f, -3, 0, 8, 19, 4, 30, -3, 4, 12, 19, 8, 30, -3, 8, 16, 19, 12, 30, -3, 12, 20, 19, 16, 30);
         s("rd_blue_s_p22_4", FACING, 0, 0, SoundType.METAL, 2f, -3, 0, 8, 19, 4, 30, -3, 4, 10, 19, 8, 30, -3, 8, 12, 19, 12, 30, -3, 12, 14, 19, 16, 30);
         s("rd_blue_m_p22_4", FACING, 0, 0, SoundType.METAL, 2f, -3, 0, 8, 19, 4, 30, -3, 4, 12, 19, 8, 30, -3, 8, 16, 19, 12, 30, -3, 12, 20, 19, 16, 30);
-    }
-
-    private void part58() {
         s("rd_tinred_s_p22_4", FACING, 0, 0, SoundType.METAL, 2f, -3, 0, 8, 19, 4, 30, -3, 4, 10, 19, 8, 30, -3, 8, 12, 19, 12, 30, -3, 12, 14, 19, 16, 30);
         s("rd_tinred_m_p22_4", FACING, 0, 0, SoundType.METAL, 2f, -3, 0, 8, 19, 4, 30, -3, 4, 12, 19, 8, 30, -3, 8, 16, 19, 12, 30, -3, 12, 20, 19, 16, 30);
         s("rd_stave_p22_5", FACING, 0, 0, SoundType.STONE, 2f, -3.765, 0, 6.152, 18.235, 16, 9.152);
@@ -10657,6 +10677,9 @@ final class CitySpecs extends CityBlocks.Specs {
         s("rd_crib_0_5", FACING, SEE_THROUGH, 0, SoundType.METAL, 2f, -0.25, 0, 6, 16.25, 16, 7);
         s("rd_field_0_6", FACING, 0, 0, SoundType.STONE, 2f, -0.25, 0, 4, 16.25, 16, 7);
         s("rd_tank_0_6", FACING, 0, 0, SoundType.METAL, 2f, -0.25, 0, 4, 16.25, 16, 5);
+    }
+
+    private void part59() {
         s("rd_crib_0_6", FACING, SEE_THROUGH, 0, SoundType.METAL, 2f, -0.25, 0, 4, 16.25, 16, 5);
         s("rd_field_0_7", FACING, 0, 0, SoundType.STONE, 2f, -0.25, 0, 2, 16.25, 16, 5);
         s("rd_tank_0_7", FACING, 0, 0, SoundType.METAL, 2f, -0.25, 0, 2, 16.25, 16, 3);
@@ -10679,9 +10702,6 @@ final class CitySpecs extends CityBlocks.Specs {
         s("rd_field_m22_4", FACING, 0, 0, SoundType.STONE, 2f, -3, 0, 8, 19, 16, 11);
         s("rd_tank_m22_4", FACING, 0, 0, SoundType.METAL, 2f, -3, 0, 8, 19, 16, 9);
         s("rd_crib_m22_4", FACING, SEE_THROUGH, 0, SoundType.METAL, 2f, -3, 0, 8, 19, 16, 9);
-    }
-
-    private void part59() {
         s("rd_field_m22_5", FACING, 0, 0, SoundType.STONE, 2f, -2.235, 0, 6.152, 19.765, 16, 9.152);
         s("rd_tank_m22_5", FACING, 0, 0, SoundType.METAL, 2f, -2.235, 0, 6.152, 19.765, 16, 7.152);
         s("rd_crib_m22_5", FACING, SEE_THROUGH, 0, SoundType.METAL, 2f, -2.235, 0, 6.152, 19.765, 16, 7.152);
@@ -10805,13 +10825,13 @@ final class CitySpecs extends CityBlocks.Specs {
         s("fm_gam_slate_low", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 12, 16, 2, 16, 0, 0, 8, 16, 4, 12, 0, 0, 4, 16, 6, 8, 0, 0, 0, 16, 8, 4);
         s("fm_gam_slate_high", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 12, 16, 10, 16, 0, 0, 8, 16, 12, 12, 0, 0, 4, 16, 14, 8, 0, 0, 0, 16, 16, 4);
         s("fm_gam_slate_low_crest", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 12, 16, 2, 16, 0, 0, 8, 16, 4, 12, 0, 0, 4, 16, 6, 8, 0, 0, 0, 16, 8, 4, 0, 7.5, 0, 16, 9, 1.8, 0, 7, 1.8, 16, 8.2, 2.6);
+    }
+
+    private void part60() {
         s("fm_gam_slate_high_crest", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 12, 16, 10, 16, 0, 0, 8, 16, 12, 12, 0, 0, 4, 16, 14, 8, 0, 0, 0, 16, 16, 4, 0, 15.5, 0, 16, 17, 1.8, 0, 15, 1.8, 16, 16.2, 2.6);
         s("fm_gam_slate_ridge_low", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 2, 4, 0, 0, 12, 16, 2, 16, 0, 0, 4, 16, 4, 8, 0, 0, 8, 16, 4, 12, 0, 4, 6, 16, 5.5, 10, 0, 3.5, 5.5, 16, 4.5, 10.5);
         s("fm_gam_slate_ridge_high", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 10, 4, 0, 0, 12, 16, 10, 16, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 12, 12, 0, 12, 6, 16, 13.5, 10, 0, 11.5, 5.5, 16, 12.5, 10.5);
         s("fm_cupola_slate", PLAIN, 0, 0, SoundType.WOOD, 1f, -11, -6, -3, 11, 2, 19, -10, 2, -2, 10, 13, 18, -10.6, 2, -2.6, -8.6, 13, -0.6, -10.6, 2, 16.6, -8.6, 13, 18.6, 8.6, 2, -2.6, 10.6, 13, -0.6, 8.6, 2, 16.6, 10.6, 13, 18.6, -11.5, 13, -3.5, 11.5, 14.5, 19.5, -12.5, 14.5, -4.5, 12.5, 16.5, 20.5, -9.5, 16.5, -1.5, 9.5, 18.5, 17.5, -6.5, 18.5, 1.5, 6.5, 20.5, 14.5, -3.5, 20.5, 4.5, 3.5, 22.5, 11.5, -1, 22.5, 7, 1, 24, 9, -0.4, 24, 7.6, 0.4, 32, 8.4, -5, 27.5, 7.7, 5, 28.1, 8.3, -0.3, 27.5, 3, 0.3, 28.1, 13, -7, 29.5, 7.8, 6, 30.3, 8.2, -7.5, 28.5, 7.85, -5, 31.3, 8.15, 5, 29.2, 7.7, 7, 30.6, 8.3);
-    }
-
-    private void part60() {
         s("fm_cupola_slate_high", PLAIN, 0, 0, SoundType.WOOD, 1f, -11, -14, -3, 11, -6, 19, -10, -6, -2, 10, 5, 18, -10.6, -6, -2.6, -8.6, 5, -0.6, -10.6, -6, 16.6, -8.6, 5, 18.6, 8.6, -6, -2.6, 10.6, 5, -0.6, 8.6, -6, 16.6, 10.6, 5, 18.6, -11.5, 5, -3.5, 11.5, 6.5, 19.5, -12.5, 6.5, -4.5, 12.5, 8.5, 20.5, -9.5, 8.5, -1.5, 9.5, 10.5, 17.5, -6.5, 10.5, 1.5, 6.5, 12.5, 14.5, -3.5, 12.5, 4.5, 3.5, 14.5, 11.5, -1, 14.5, 7, 1, 16, 9, -0.4, 16, 7.6, 0.4, 24, 8.4, -5, 19.5, 7.7, 5, 20.1, 8.3, -0.3, 19.5, 3, 0.3, 20.1, 13, -7, 21.5, 7.8, 6, 22.3, 8.2, -7.5, 20.5, 7.85, -5, 23.3, 8.15, 5, 21.2, 7.7, 7, 22.6, 8.3);
         s("fm_gam_brown_steep_lo", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 14, 16, 4, 16, 0, 0, 12, 16, 8, 14, 0, 0, 10, 16, 12, 12, 0, 0, 8, 16, 16, 10, 0, 0, 0, 16, 16, 8);
         s("fm_gam_brown_steep_hi", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 6, 16, 4, 8, 0, 0, 4, 16, 8, 6, 0, 0, 2, 16, 12, 4, 0, 0, 0, 16, 16, 2);
@@ -10882,13 +10902,13 @@ final class CitySpecs extends CityBlocks.Specs {
         s("fm_scarecrow_hi", FACING, 0, 0, SoundType.GRASS, 1f, 7, 0, 7, 9, 13, 9, -6, 8, 7.2, 22, 9.6, 8.8, 4.5, 0, 5.5, 11.5, 9, 10.5, -5, 6.5, 6, 4.5, 10.5, 10, 11.5, 6.5, 6, 21, 10.5, 10, -6.5, 6, 6.5, -5, 9, 9.5, 21, 5.5, 6.5, 22.5, 9, 9.5, 5, 9, 5, 11, 15, 11, 6, 11, 4.8, 7.5, 12.2, 5, 8.5, 11, 4.8, 10, 12.2, 5, 2, 14.5, 1, 14, 15.3, 15, 5, 15.3, 4.5, 11, 18.5, 11.5);
         s("fm_firewood", AXIS, 0, 0, SoundType.WOOD, 1f, 0.21, 0, 0.5, 4.01, 3.4, 15.5, 3.8, 0, 0.5, 7.6, 3.4, 15.5, 8.03, 0, 0.5, 11.83, 3.4, 15.5, 11.92, 0, 0.5, 15.72, 3.4, 15.5, -0.17, 3.6, 0.5, 3.63, 7, 15.5, 3.93, 3.6, 0.5, 7.73, 7, 15.5, 7.96, 3.6, 0.5, 11.76, 7, 15.5, 12.07, 3.6, 0.5, 15.87, 7, 15.5, 0.14, 7.2, 0.5, 3.94, 10.6, 15.5, 3.71, 7.2, 0.5, 7.51, 10.6, 15.5, 7.85, 7.2, 0.5, 11.65, 10.6, 15.5, 12.06, 7.2, 0.5, 15.86, 10.6, 15.5, -0.25, 10.8, 0.5, 3.55, 14.2, 15.5, 8.04, 10.8, 0.5, 11.84, 14.2, 15.5);
         s("fm_chop_block", FACING, 0, 0, SoundType.WOOD, 1f, 3, 0, 3, 13, 9, 13, 7.5, 9, 5, 8.5, 21, 6.5, 6, 7, 4.5, 10, 10, 7, 1, 0, 1, 4, 0.4, 3, 12, 0, 11, 15, 0.4, 14);
+    }
+
+    private void part61() {
         s("fm_well", FACING, 0, 0, SoundType.WOOD, 1f, -8, -16, 6, -5, 18, 10, 21, -16, 6, 24, 18, 10, -5, 8, 6.5, 21, 11, 9.5, 24, 8.5, 7.5, 26, 9.5, 8.5, 25.5, 4, 7.5, 26.5, 9, 8.5, 25.5, 3, 6.5, 26.5, 4, 10, 7.6, -8, 7.6, 8.4, 8, 8.4, 5, -14, 5, 11, -8, 11, 4.8, -12, 4.8, 11.2, -11, 11.2, 7.6, -8, 4.8, 8.4, -6, 11.2, -9, 18, 6, 25, 20, 10, -10, 18, -6, 26, 20.5, 8, -10, 18, 8, 26, 20.5, 22, -10, 20.5, -3, 26, 23, 8, -10, 20.5, 8, 26, 23, 19, -10, 23, 0, 26, 25.5, 8, -10, 23, 8, 26, 25.5, 16, -10, 25.5, 3, 26, 28, 8, -10, 25.5, 8, 26, 28, 13, -10, 28, 6, 26, 29.5, 10);
         s("fm_outhouse_lo", FACING, 0, 0, SoundType.WOOD, 1f, 0, 0, 0, 16, 16, 16, 2, 0, -0.6, 14, 16, 0, 3, 2, -1, 13, 3.5, -0.6, 3, 12, -1, 13, 13.5, -0.6, 3, 3.5, -1, 4.5, 12, -0.6, 12, 7, -1.1, 13, 8.5, -0.6);
         s("fm_outhouse_hi", FACING, 0, 0, SoundType.WOOD, 1f, 0, 0, 0, 16, 9, 16, 2, 0, -0.6, 14, 4, 0, 6, 4, -0.7, 10, 8, 0, 7, 5, -0.8, 9, 7, -0.6, -1, 9, -2, 17, 11, 18, -1, 11, -2, 17, 12, 6, 11, 12, 10, 13, 15, 12);
         s("fm_girt", AXIS, DECOR, 0, SoundType.METAL, 0f, 7.6, 7.4, -3.815, 8.4, 8.6, 19.815, 7.6, 7.4, -3.815, 8.4, 8.6, 19.815, 7.5, 7.4, 7.4, 8.5, 8.6, 8.6);
-    }
-
-    private void part61() {
         s("fm_pump", FACING, 0, 0, SoundType.METAL, 2f, 5, 0, 5, 11, 1, 11, 6.5, 1, 6.5, 9.5, 9, 9.5, 6, 9, 6, 10, 11, 10, 9.5, 6, 7.2, 15, 7.6, 8.8, 14, 4.5, 7.2, 15.4, 7.6, 8.8, 7.5, 11, 7.5, 8.5, 16, 8.5);
         s("fm_pump_rod", PLAIN, DECOR, 0, SoundType.METAL, 0f, 7.6, 0, 7.6, 8.4, 16, 8.4, 7.2, 7, 7.2, 8.8, 8.5, 8.8);
         s("fm_pipe", AXIS, 0, 0, SoundType.METAL, 2f, 7, 4, 0, 9, 6, 16, 6.6, 3.6, 7, 9.4, 6.4, 9, 7.6, 0, 7.6, 8.4, 3.6, 8.4);
@@ -11040,6 +11060,9 @@ final class CitySpecs extends CityBlocks.Specs {
         s("tn_tan_roofend_2_b", FACING, 0, 0, SoundType.WOOL, 1f, 0, 13.2548, 0, 16, 15.7117, 8, 0, 15, 8, 16, 16, 16);
         s("tn_tan_roofend_2r_a", FACING, 0, 0, SoundType.WOOL, 1f, 0, 13.2548, 0, 16, 15.7117, 8, 0, 15, 8, 16, 16, 16);
         s("tn_tan_roofend_2r_b", FACING, 0, 0, SoundType.WOOL, 1f, 0, 13.2548, 0, 16, 15.7117, 8, 0, 15, 8, 16, 16, 16);
+    }
+
+    private void part62() {
         s("tn_tan_roof_3", FACING, 0, 0, SoundType.WOOL, 1f, 0, 3.88225, 0, 16, 6.33911, 8, 0, 7.19596, 8, 16, 9.65281, 16);
         s("tn_tan_roof_3f", FACING, 0, 0, SoundType.WOOL, 1f, 0, 3.88225, 0, 16, 6.33911, 8, 0, 7.19596, 8, 16, 9.65281, 16);
         s("tn_tan_roofend_3_a", FACING, 0, 0, SoundType.WOOL, 1f, 0, 3.88225, 0, 16, 6.33911, 8, 0, 7.19596, 8, 16, 9.65281, 16);
@@ -11051,9 +11074,6 @@ final class CitySpecs extends CityBlocks.Specs {
         s("tn_tan_roofend_4_a", FACING, 0, 0, SoundType.WOOL, 1f, 0, 10.5097, 0, 16, 12.9665, 8, 0, 13.8234, 8, 16, 16, 16);
         s("tn_tan_roofend_4_b", FACING, 0, 0, SoundType.WOOL, 1f, 0, 10.5097, 0, 16, 12.9665, 8, 0, 13.8234, 8, 16, 16, 16);
         s("tn_tan_roofend_4r_a", FACING, 0, 0, SoundType.WOOL, 1f, 0, 10.5097, 0, 16, 12.9665, 8, 0, 13.8234, 8, 16, 16, 16);
-    }
-
-    private void part62() {
         s("tn_tan_roofend_4r_b", FACING, 0, 0, SoundType.WOOL, 1f, 0, 10.5097, 0, 16, 12.9665, 8, 0, 13.8234, 8, 16, 16, 16);
         s("tn_tan_sheet", FACING, DECOR, 0, SoundType.WOOL, 0f, 0, 0, 0, 16, 0.4, 16, 0, 0.4, 3.5, 16, 0.9, 5.5, 2, 0.4, 10, 13, 0.7, 12);
         s("tn_tan_heap", FACING, 0, 0, SoundType.WOOL, 1f, 0, 0, 1, 16, 4, 15, 0, 4, 4, 16, 8, 12);
