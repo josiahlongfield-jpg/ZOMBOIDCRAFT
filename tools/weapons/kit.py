@@ -18,7 +18,9 @@ glass texture), and gun_slots/<gun>.json saying where each slot's mount point is
 """
 import json
 import math
+import sys
 import zlib
+from pathlib import Path
 
 import numpy as np
 
@@ -679,6 +681,10 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
         else:
             model = ref(f'{base}/{loose_flash.get(key, key)}')      # the flash has no finish
         M.dump({'model': model}, assets / f'items/{gun.name}_loose_{name}.json')
+    # a bought mesh in place of the block gun (tools/meshguns/skins.json)
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent / 'meshguns'))
+    import skin as meshskin
+    meshskin.apply(gun.name, str(assets / 'items'))
 
     # ghosts and the weapon screen's slot data
     slot_data = []

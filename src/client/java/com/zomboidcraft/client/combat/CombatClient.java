@@ -97,6 +97,7 @@ public final class CombatClient {
         ClientTickEvents.END_CLIENT_TICK.register(CombatClient::tick);
         ClientTickEvents.END_CLIENT_TICK.register(HoldPoses::faceLook);
         RaisedProperty.register();
+        MeshGunRenderer.register();
         LevelRenderEvents.COLLECT_SUBMITS.register(context -> autoFire(Minecraft.getInstance()));
     }
 

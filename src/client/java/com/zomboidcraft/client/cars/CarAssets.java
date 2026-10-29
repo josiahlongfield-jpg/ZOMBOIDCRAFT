@@ -319,7 +319,7 @@ public final class CarAssets {
     }
 
     /** Undoes pack.py's xorshift32 scramble (seeded from the model id). */
-    static void unscramble(byte[] data, String model) {
+    public static void unscramble(byte[] data, String model) {
         int x = 0x5A0C4A55 ^ model.hashCode();
         if (x == 0) {
             x = 1;
