@@ -1,0 +1,109 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cp_timber_h": "zomboidcraft:block/city/cp_timber_h",
+    "particle": "zomboidcraft:block/city/cp_timber_h"
+  },
+  "elements": [
+    {
+      "from": [
+        -4.715,
+        6.6,
+        13.2
+      ],
+      "to": [
+        20.715,
+        9.4,
+        14.799999999999999
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cp_timber_h",
+          "uv": [
+            0,
+            6.6,
+            16,
+            9.4
+          ]
+        },
+        "south": {
+          "texture": "#cp_timber_h",
+          "uv": [
+            0,
+            6.6,
+            16,
+            9.4
+          ]
+        },
+        "east": {
+          "texture": "#cp_timber_h"
+        },
+        "west": {
+          "texture": "#cp_timber_h"
+        },
+        "up": {
+          "texture": "#cp_timber_h",
+          "uv": [
+            0,
+            13.2,
+            16,
+            14.799999999999999
+          ]
+        },
+        "down": {
+          "texture": "#cp_timber_h",
+          "uv": [
+            0,
+            1.200000000000001,
+            16,
+            2.8000000000000007
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          14.0
+        ],
+        "axis": "z",
+        "angle": -45
+      }
+    },
+    {
+      "from": [
+        0,
+        13,
+        12.6
+      ],
+      "to": [
+        16,
+        16,
+        15.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cp_timber_h"
+        },
+        "south": {
+          "texture": "#cp_timber_h"
+        },
+        "east": {
+          "texture": "#cp_timber_h",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cp_timber_h",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cp_timber_h",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cp_timber_h"
+        }
+      }
+    }
+  ]
+}

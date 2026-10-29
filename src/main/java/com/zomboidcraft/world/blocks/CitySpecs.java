@@ -64,6 +64,7 @@ final class CitySpecs extends CityBlocks.Specs {
         part56();
         part57();
         part58();
+        part59();
     }
 
     private void part0() {
@@ -163,7 +164,7 @@ final class CitySpecs extends CityBlocks.Specs {
         s("car_red", PLAIN, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
         s("car_white", PLAIN, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
         s("car_blue", PLAIN, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
-        s("tire", AXIS, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("tire", AXIS, 0, 0, SoundType.WOOL, 1f, 0.5, 0, 4.5, 15.5, 15.5, 11.5);
         s("rust", PLAIN, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
         s("rubble", PLAIN, 0, 0, SoundType.GRAVEL, 1f, 0, 0, 0, 16, 16, 16);
         s("rubble_pile", PLAIN, 0, 0, SoundType.GRAVEL, 1f, 0, 0, 0, 16, 3, 16, 3, 3, 3, 13, 6, 13);
@@ -10422,5 +10423,77 @@ final class CitySpecs extends CityBlocks.Specs {
         s("tn_stand_triage", FACING, 0, 0, SoundType.METAL, 2f, 1.5, 0, 6.6, 14.5, 16, 8);
         s("tn_stand_shelter", FACING, 0, 0, SoundType.METAL, 2f, 1.5, 0, 6.6, 14.5, 16, 8);
         s("tn_stand_supply", FACING, 0, 0, SoundType.METAL, 2f, 1.5, 0, 6.6, 14.5, 16, 8);
+        s("tire_flat", PLAIN, 0, 0, SoundType.WOOL, 1f, 1.5, 0, 1.5, 14.5, 3.4, 14.5);
+        s("tire_stack", PLAIN, 0, 0, SoundType.WOOL, 1f, 1.5, 0, 1.5, 14.5, 13.8, 14.5);
+        s("cp_tw_leg", FACING, 0, 0, SoundType.WOOD, 1f, 12, 0, 12, 16, 16, 16);
+        s("cp_tw_brace_a", FACING, DECOR, 0, SoundType.WOOD, 0f, -4.715, 6.6, 13.2, 20.715, 9.4, 14.8);
+        s("cp_tw_brace_b", FACING, DECOR, 0, SoundType.WOOD, 0f, -4.715, 6.6, 13.2, 20.715, 9.4, 14.8);
+        s("cp_tw_brace_x", FACING, DECOR, 0, SoundType.WOOD, 0f, -4.715, 6.6, 13.2, 20.715, 9.4, 14.8, -4.715, 6.6, 12, 20.715, 9.4, 13.6);
+        s("cp_tw_brace_a_g", FACING, 0, 0, SoundType.WOOD, 1f, 0, 13, 12.6, 16, 16, 15.4);
+        s("cp_tw_brace_b_g", FACING, 0, 0, SoundType.WOOD, 1f, 0, 13, 12.6, 16, 16, 15.4);
+        s("cp_tw_girt", FACING, 0, 0, SoundType.WOOD, 1f, 0, 13, 12.6, 16, 16, 15.4);
+        s("cp_tw_deck", PLAIN, 0, 0, SoundType.WOOD, 1f, 0, 9, 0, 16, 16, 16);
+        s("cp_tw_deck_post", FACING, 0, 0, SoundType.WOOD, 1f, 0, 9, 0, 16, 16, 16);
+        s("cp_tw_roof", PLAIN, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 1.6, 16);
+        s("cp_tw_roof_n", PLAIN, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 1.6, 16);
+        s("cp_tw_roof_e", PLAIN, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 1.6, 16);
+        s("cp_tw_roof_s", PLAIN, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 1.6, 16);
+        s("cp_tw_roof_w", PLAIN, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 1.6, 16);
+        s("cp_tw_roof_nw", PLAIN, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 1.6, 16);
+        s("cp_tw_roof_ne", PLAIN, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 1.6, 16);
+        s("cp_tw_roof_se", PLAIN, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 1.6, 16);
+        s("cp_tw_roof_sw", PLAIN, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 1.6, 16);
+        s("cp_flood", FACING, DECOR, 0, SoundType.METAL, 0f, 4.5, 3.2, 4, 11.5, 9.2, 8, 5, 3.7, 8, 11, 8.7, 9.4, 4.1, 8.8, 2.8, 11.9, 9.4, 4, 5.5, 3.5, 9.4, 6.1, 8.9, 10.6, 7.7, 3.5, 9.4, 8.3, 8.9, 10.6, 9.9, 3.5, 9.4, 10.5, 8.9, 10.6, 3.3, 4.7, 5.4, 4.3, 6.2, 6.6, 11.7, 4.7, 5.4, 12.7, 6.2, 6.6, 2.8, 0, 3, 13.2, 1, 16, 2.8, 0, 15, 13.2, 7, 16, 3.3, 1, 5.4, 4.3, 5.2, 6.6, 11.7, 1, 5.4, 12.7, 5.2, 6.6, 5, 1, 8, 11, 2.4, 13);
+        s("cp_flood_hang", FACING, DECOR, 0, SoundType.METAL, 0f, 4.5, 4, 4, 11.5, 10, 8, 5, 4.5, 8, 11, 9.5, 9.4, 4.1, 9.6, 2.8, 11.9, 10.2, 4, 5.5, 4.3, 9.4, 6.1, 9.7, 10.6, 7.7, 4.3, 9.4, 8.3, 9.7, 10.6, 9.9, 4.3, 9.4, 10.5, 9.7, 10.6, 3.3, 5.5, 5.4, 4.3, 7, 6.6, 11.7, 5.5, 5.4, 12.7, 7, 6.6, 7.2, 10, 6.2, 8.8, 16, 7.8, 3.3, 9.2, 5.6, 12.7, 10.2, 7.2, 3.3, 5.2, 5.6, 4.3, 10.2, 7.2, 11.7, 5.2, 5.6, 12.7, 10.2, 7.2, 6, 15, 4, 10, 16, 10);
+        s("cp_flood_bar", FACING, DECOR, 0, SoundType.METAL, 0f, -6, 0, 7, 22, 1.6, 9, 6, 0, 6.5, 10, 4, 9.5, 7, -4, 7, 9, 0, 9, -5.5, 1.6, 4, 1.5, 7.6, 8, -5, 2.1, 8, 1, 7.1, 9.4, -5.9, 7.2, 2.8, 1.9, 7.8, 4, -4.5, 1.9, 9.4, -3.9, 7.3, 10.6, -2.3, 1.9, 9.4, -1.7, 7.3, 10.6, -0.1, 1.9, 9.4, 0.5, 7.3, 10.6, -6.7, 3.1, 5.4, -5.7, 4.6, 6.6, 1.7, 3.1, 5.4, 2.7, 4.6, 6.6, 14.5, 1.6, 4, 21.5, 7.6, 8, 15, 2.1, 8, 21, 7.1, 9.4, 14.1, 7.2, 2.8, 21.9, 7.8, 4, 15.5, 1.9, 9.4, 16.1, 7.3, 10.6, 17.7, 1.9, 9.4, 18.3, 7.3, 10.6, 19.9, 1.9, 9.4, 20.5, 7.3, 10.6, 13.3, 3.1, 5.4, 14.3, 4.6, 6.6, 21.7, 3.1, 5.4, 22.7, 4.6, 6.6);
+        s("cp_flood_lit", FACING, DECOR, 15, SoundType.METAL, 0f, 4.5, 3.2, 4, 11.5, 9.2, 8, 5, 3.7, 8, 11, 8.7, 9.4, 4.1, 8.8, 2.8, 11.9, 9.4, 4, 5.5, 3.5, 9.4, 6.1, 8.9, 10.6, 7.7, 3.5, 9.4, 8.3, 8.9, 10.6, 9.9, 3.5, 9.4, 10.5, 8.9, 10.6, 3.3, 4.7, 5.4, 4.3, 6.2, 6.6, 11.7, 4.7, 5.4, 12.7, 6.2, 6.6, 2.8, 0, 3, 13.2, 1, 16, 2.8, 0, 15, 13.2, 7, 16, 3.3, 1, 5.4, 4.3, 5.2, 6.6, 11.7, 1, 5.4, 12.7, 5.2, 6.6, 5, 1, 8, 11, 2.4, 13);
+        s("cp_flood_hang_lit", FACING, DECOR, 15, SoundType.METAL, 0f, 4.5, 4, 4, 11.5, 10, 8, 5, 4.5, 8, 11, 9.5, 9.4, 4.1, 9.6, 2.8, 11.9, 10.2, 4, 5.5, 4.3, 9.4, 6.1, 9.7, 10.6, 7.7, 4.3, 9.4, 8.3, 9.7, 10.6, 9.9, 4.3, 9.4, 10.5, 9.7, 10.6, 3.3, 5.5, 5.4, 4.3, 7, 6.6, 11.7, 5.5, 5.4, 12.7, 7, 6.6, 7.2, 10, 6.2, 8.8, 16, 7.8, 3.3, 9.2, 5.6, 12.7, 10.2, 7.2, 3.3, 5.2, 5.6, 4.3, 10.2, 7.2, 11.7, 5.2, 5.6, 12.7, 10.2, 7.2, 6, 15, 4, 10, 16, 10);
+        s("cp_flood_bar_lit", FACING, DECOR, 15, SoundType.METAL, 0f, -6, 0, 7, 22, 1.6, 9, 6, 0, 6.5, 10, 4, 9.5, 7, -4, 7, 9, 0, 9, -5.5, 1.6, 4, 1.5, 7.6, 8, -5, 2.1, 8, 1, 7.1, 9.4, -5.9, 7.2, 2.8, 1.9, 7.8, 4, -4.5, 1.9, 9.4, -3.9, 7.3, 10.6, -2.3, 1.9, 9.4, -1.7, 7.3, 10.6, -0.1, 1.9, 9.4, 0.5, 7.3, 10.6, -6.7, 3.1, 5.4, -5.7, 4.6, 6.6, 1.7, 3.1, 5.4, 2.7, 4.6, 6.6, 14.5, 1.6, 4, 21.5, 7.6, 8, 15, 2.1, 8, 21, 7.1, 9.4, 14.1, 7.2, 2.8, 21.9, 7.8, 4, 15.5, 1.9, 9.4, 16.1, 7.3, 10.6, 17.7, 1.9, 9.4, 18.3, 7.3, 10.6, 19.9, 1.9, 9.4, 20.5, 7.3, 10.6, 13.3, 3.1, 5.4, 14.3, 4.6, 6.6, 21.7, 3.1, 5.4, 22.7, 4.6, 6.6);
+        s("cp_boom_post", FACING, 0, 0, SoundType.METAL, 2f, 3.5, 0, 4.5, 11.5, 15, 11.5);
+        s("cp_boom_arm", FACING, 0, 0, SoundType.METAL, 2f, 0, 10, 6, 16, 14, 10);
+        s("cp_boom_tip", FACING, 0, 0, SoundType.METAL, 2f, 0, 10, 6, 13, 14, 10, 9, 0, 6.5, 11, 10, 9.5);
+        s("cp_boom_up", FACING, 0, 0, SoundType.METAL, 2f, 10.5, 0, 6, 14.5, 16, 10);
+        s("cp_boom_cap", FACING, 0, 0, SoundType.METAL, 2f, 10.5, 0, 6, 14.5, 11, 10);
+        s("cp_target_lo", FACING, 0, 0, SoundType.WOOD, 1f, 1, 0, 7.2, 15, 16, 10);
+        s("cp_target_hi", FACING, 0, 0, SoundType.WOOD, 1f, 1, 0, 7.2, 15, 15, 10);
+        s("cp_target_hi_shot", FACING, SEE_THROUGH, 0, SoundType.WOOD, 1f, 1, 0, 7.2, 15, 13, 10);
+        s("cp_target_down", FACING, DECOR, 0, SoundType.WOOD, 0f, 1, 0, 2, 15, 0.8, 16, 1.5, 0, 0, 3.5, 2, 6, 12.5, 0, 0, 14.5, 2, 4.5, 1.5, 0, 14, 3.5, 3, 16, 12.5, 0, 13, 14.5, 4, 15);
+        s("cp_flagpole", PLAIN, 0, 0, SoundType.METAL, 2f, 7, 0, 7, 9, 16, 9);
+        s("cp_flag", FACING, 0, 0, SoundType.WOOL, 1f, 7, 0, 7, 9, 16, 9);
+        s("cp_lane_post", FACING, 0, 0, SoundType.WOOD, 1f, 6.5, 0, 6.5, 9.5, 12, 9.5);
+        s("cp_mast_r", PLAIN, 0, 0, SoundType.METAL, 2f, 3, 0, 3, 13, 16, 13);
+        s("cp_mast_w", PLAIN, 0, 0, SoundType.METAL, 2f, 3, 0, 3, 13, 16, 13);
+        s("cp_mast_top", FACING, 0, 0, SoundType.METAL, 2f, 2, 0, 2, 14, 4, 14);
+        s("cp_cabinet", FACING, LOOT, 0, SoundType.METAL, 2f, 2, 0, 3, 14, 16, 13);
+        loot("cp_cabinet", "basement_supplies");
+        s("cp_bladder", PLAIN, 0, 0, SoundType.WOOL, 1f, 0, 0, 0, 16, 9.5, 16);
+        s("cp_bladder_ring", PLAIN, 0, 0, SoundType.WOOL, 1f, 0, 0, 0, 16, 8.36, 16);
+        s("cp_bladder_valve", FACING, 0, 0, SoundType.WOOL, 1f, 0, 0, 0, 16, 9.5, 16);
+        s("cp_bladder_e", FACING, 0, 0, SoundType.WOOL, 1f, 0, 0, 3, 16, 6.65, 16);
+        s("cp_bladder_c", FACING, 0, 0, SoundType.WOOL, 1f, 3, 0, 3, 16, 6.65, 16);
+        s("cp_bladder_slack", PLAIN, 0, 0, SoundType.WOOL, 1f, 0, 0, 0, 16, 3, 16);
+        s("cp_bladder_ring_slack", PLAIN, 0, 0, SoundType.WOOL, 1f, 0, 0, 0, 16, 2.64, 16);
+        s("cp_bladder_valve_slack", FACING, 0, 0, SoundType.WOOL, 1f, 0, 0, 0, 16, 3, 16);
+        s("cp_bladder_e_slack", FACING, 0, 0, SoundType.WOOL, 1f, 0, 0, 3, 16, 2.1, 16);
+        s("cp_bladder_c_slack", FACING, 0, 0, SoundType.WOOL, 1f, 3, 0, 3, 16, 2.1, 16);
+        s("cp_porta_down", FACING, 0, 0, SoundType.WOOD, 1f, 1, 0, 0, 15, 14, 16);
+        s("cp_grave_cross", FACING, 0, 0, SoundType.WOOD, 1f, 6.5, 0, 6.5, 9.5, 15, 9);
+        s("cp_grave_helmet", FACING, 0, 0, SoundType.WOOD, 1f, 6.5, 0, 6.5, 9.5, 15, 9);
+        s("cp_stake", FACING, DECOR, 0, SoundType.WOOD, 0f, 7.2, 0, 7.2, 8.8, 9, 8.8, 7.1, 6.6, 7.1, 8.9, 7.8, 8.9, 8.8, 5, 7.6, 12, 7.6, 8);
+        s("cp_post", PLAIN, 0, 0, SoundType.WOOD, 1f, 5.5, 0, 5.5, 10.5, 16, 10.5);
+        s("cp_log", FACING, 0, 0, SoundType.WOOD, 1f, 0, 0, 3.6, 16, 9.6, 12.4);
+        s("cp_wall", FACING, 0, 0, SoundType.WOOD, 1f, 0, 0, 6, 16, 16, 9);
+        s("cp_wall_top", FACING, 0, 0, SoundType.WOOD, 1f, 0, 0, 6, 16, 16, 9.5);
+        s("cp_step", FACING, 0, 0, SoundType.WOOD, 1f, 0, 0, 0, 16, 8, 16);
+        s("cp_bars", FACING, DECOR, 0, SoundType.METAL, 0f, 0, 13, 1, 16, 15, 3, 0, 13, 13, 16, 15, 15, 2, 13.4, 3, 3, 14.4, 13, 6, 13.4, 3, 7, 14.4, 13, 10, 13.4, 3, 11, 14.4, 13, 14, 13.4, 3, 15, 14.4, 13);
+        s("cp_bars_end", FACING, 0, 0, SoundType.METAL, 2f, 6, 11, 0, 10, 15, 16);
+    }
+
+    private void part59() {
+        s("cp_rope", PLAIN, DECOR, 0, SoundType.WOOL, 0f, 7.4, 0, 7.4, 8.6, 16, 8.6);
+        s("cp_rope_end", PLAIN, DECOR, 0, SoundType.WOOL, 0f, 7.4, 4, 7.4, 8.6, 16, 8.6, 6.6, 2, 6.6, 9.4, 4.6, 9.4);
+        s("cp_pad", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("cp_pad_yellow", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("cp_pad_white", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
     }
 }
