@@ -761,11 +761,34 @@ final class Harbour {
         for (int dx = -r; dx <= r; dx++) {
             for (int dz = -r; dz <= r; dz++) {
                 double d = Math.hypot(dx, dz * 1.3) / r;
-                int top = (int) Math.round(h * (1 - d) + (chance() - 0.5));
-                for (int y = 1; y <= top; y++) {
-                    p.set(cx + dx, y, cz + dz, stuff);
-                }
+                pile(cx + dx, 1, cz + dz, h * (1 - d) + (chance() - 0.5) * 0.6, stuff);
             }
+        }
+    }
+
+    /**
+     * A column of a heap from y, height blocks deep: whole blocks, then its top a quarter, half or
+     * three quarters deep (bulk_ layers), so the heap slopes instead of stepping; stuff is coal, gravel,
+     * sand or dirt (or a block of anything else, stepped as it was).
+     */
+    void pile(int x, int y, int z, double height, String stuff) {
+        if (height <= 0) {
+            return;
+        }
+        boolean bulk = stuff.equals("coal") || stuff.equals("gravel") || stuff.equals("sand") || stuff.equals("dirt");
+        int whole = (int) Math.floor(height), part = (int) Math.round((height - whole) * 4);
+        if (!bulk) {
+            whole = (int) Math.round(height);
+            part = 0;
+        } else if (part == 4) {
+            whole++;
+            part = 0;
+        }
+        for (int k = 0; k < whole; k++) {
+            p.set(x, y + k, z, bulk ? "bulk_" + stuff : stuff);
+        }
+        if (part > 0) {
+            p.set(x, y + whole, z, "bulk_" + stuff + "_" + part);
         }
     }
 

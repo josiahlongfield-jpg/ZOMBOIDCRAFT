@@ -12872,5 +12872,23 @@ final class CitySpecs extends CityBlocks.Specs {
         s("bw_tetrapod", FACING, 0, 0, SoundType.STONE, 2f, 1, 0, 1, 15, 16, 15);
         s("bw_core", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("bw_crest", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("bulk_coal", PLAIN, 0, 0, SoundType.GRAVEL, 1f, 0, 0, 0, 16, 16, 16);
+        s("bulk_coal_1", PLAIN, 0, 0, SoundType.GRAVEL, 1f, 0, 0, 0, 16, 4, 16);
+        s("bulk_coal_2", PLAIN, 0, 0, SoundType.GRAVEL, 1f, 0, 0, 0, 16, 8, 16);
+        s("bulk_coal_3", PLAIN, 0, 0, SoundType.GRAVEL, 1f, 0, 0, 0, 16, 12, 16);
+        s("bulk_gravel", PLAIN, 0, 0, SoundType.GRAVEL, 1f, 0, 0, 0, 16, 16, 16);
+        s("bulk_gravel_1", PLAIN, 0, 0, SoundType.GRAVEL, 1f, 0, 0, 0, 16, 4, 16);
+        s("bulk_gravel_2", PLAIN, 0, 0, SoundType.GRAVEL, 1f, 0, 0, 0, 16, 8, 16);
+        s("bulk_gravel_3", PLAIN, 0, 0, SoundType.GRAVEL, 1f, 0, 0, 0, 16, 12, 16);
+        s("bulk_sand", PLAIN, 0, 0, SoundType.SAND, 2f, 0, 0, 0, 16, 16, 16);
+        s("bulk_sand_1", PLAIN, 0, 0, SoundType.SAND, 2f, 0, 0, 0, 16, 4, 16);
+        s("bulk_sand_2", PLAIN, 0, 0, SoundType.SAND, 2f, 0, 0, 0, 16, 8, 16);
+        s("bulk_sand_3", PLAIN, 0, 0, SoundType.SAND, 2f, 0, 0, 0, 16, 12, 16);
+        s("bulk_dirt", PLAIN, 0, 0, SoundType.GRAVEL, 1f, 0, 0, 0, 16, 16, 16);
+        s("bulk_dirt_1", PLAIN, 0, 0, SoundType.GRAVEL, 1f, 0, 0, 0, 16, 4, 16);
+        s("bulk_dirt_2", PLAIN, 0, 0, SoundType.GRAVEL, 1f, 0, 0, 0, 16, 8, 16);
+        s("bulk_dirt_3", PLAIN, 0, 0, SoundType.GRAVEL, 1f, 0, 0, 0, 16, 12, 16);
+        s("by_stand", FACING, 0, 0, SoundType.METAL, 2f, 6, 0, 1, 10, 16, 10);
+        s("by_keel", AXIS, 0, 0, SoundType.WOOD, 1f, 1, 0, 1, 15, 13, 15);
     }
 }

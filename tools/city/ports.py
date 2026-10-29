@@ -218,6 +218,18 @@ def rock(seed, rgb, weed):
     return t
 
 
+BULK = {"coal": ("Gravel041", (30, 30, 32), "GRAVEL"), "gravel": ("Gravel023", None, "GRAVEL"),
+        "sand": ("damp_sand", None, "SAND"), "dirt": ("stony_dirt_path", None, "GRAVEL")}
+
+
+def bulk(seed, material, rgb):
+    """A bulk heap's stuff: coal glinting, washed gravel, damp sand, spoil."""
+    t = F.mat(material, rgb, 1.2 if rgb else 1.0, span=2, seed=seed)
+    if material == "Gravel041":
+        t.speckle(0.03, (120, 124, 130), 0.6, 0.2)
+    return t
+
+
 def textures():
     out = {"ct_casting": lambda: casting(49300), "cr_steel_white": lambda: white_steel(49330),
            "cr_lattice_yellow": lambda: lattice(49331), "tk_oil": lambda: oil(49360, (198, 196, 186), False),
@@ -227,6 +239,8 @@ def textures():
            "lh_prism": lambda: prism(49373, False), "lh_prism_lit": lambda: prism(49374, True),
            "bw_rock": lambda: rock(49380, (108, 106, 100), False), "bw_rock_weed": lambda: rock(49381, (86, 84, 78), True),
            "bw_concrete": lambda: slip(49382)}
+    for i, (m, (mat_, rgb, _)) in enumerate(BULK.items()):
+        out["bulk_" + m] = lambda mat_=mat_, rgb=rgb, i=i: bulk(49390 + i, mat_, rgb)
     for i, (c, rgb) in enumerate(PLATES.items()):
         out["cr_plate_" + c] = lambda rgb=rgb, i=i: plate(49340 + i, rgb)
         out["cr_plate_" + c + "_seam"] = lambda rgb=rgb, i=i: plate(49340 + i, rgb, True)
@@ -556,6 +570,25 @@ def tetrapod():
             [7, 0, 6, 15, 7, 10, c, None, {"axis": "z", "angle": -45, "origin": [8, 7, 8]}]]
 
 
+def stand():
+    """A boat stand beside a hull laid up (the hull to its north): the tripod's legs splayed, the
+    screw post leaning in, its rubber pad on the hull; the chain to its partner across the keel."""
+    t = "painted_steel"
+    o = [8, 0, 9]
+    return [[7.3, 0, 8.3, 8.7, 13, 9.7, t, None, {"axis": "x", "angle": -22.5, "origin": o}],
+            [7.4, 0, 8.4, 8.6, 9, 9.6, t, None, {"axis": "z", "angle": 33.75, "origin": o}],
+            [7.4, 0, 8.4, 8.6, 9, 9.6, t, None, {"axis": "z", "angle": -33.75, "origin": o}],
+            [7.4, 0, 8.4, 8.6, 9, 9.6, t, None, {"axis": "x", "angle": 33.75, "origin": o}],
+            [6.5, 12, 1.5, 9.5, 13, 5.5, GALV], [4.5, 12.8, 1, 11.5, 16, 2.4, "wf_rubber", None, {"axis": "x", "angle": 22.5, "origin": [8, 13, 2]}],
+            [7.6, 0.4, 0, 8.4, 1, 8, GALV]]
+
+
+def keel_blocks():
+    """Timber keel blocks stacked crosswise under a laid-up hull (drawn along z: the keel's line)."""
+    t = "hk_timber"
+    return [[1, 0, 3, 15, 4, 13, t], [3, 4, 1, 13, 8, 15, t], [1, 8, 3, 15, 12, 13, t], [5, 12, 2, 11, 13, 14, "wf_rubber"]]
+
+
 def blocks():
     out = {}
 
@@ -602,7 +635,15 @@ def blocks():
     fit("bw_tetrapod", tetrapod(), "Tetrapod", "facing", [[1, 0, 1, 15, 16, 15]])
     out["bw_tetrapod"]["sound"] = "STONE"
     out["bw_core"] = {"tex": "bw_rock", "title": "Rubble Core", "sound": "STONE"}
+    for m, (_, _, snd) in BULK.items():  # a heap's stuff, and its top a quarter, half or three quarters deep
+        out["bulk_" + m] = {"tex": "bulk_" + m, "title": m.title(), "sound": snd}
+        for n in (1, 2, 3):
+            out[f"bulk_{m}_{n}"] = {"model": "boxes", "boxes": [[0, 0, 0, 16, 4 * n, 16, "bulk_" + m]], "title": m.title(), "sound": snd,
+                                  "shape": [[0, 0, 0, 16, 4 * n, 16]]}
     out["bw_crest"] = {"tex": {"up": "bw_concrete", "side": "bw_concrete", "down": "bw_rock"}, "title": "Crown Wall", "sound": "STONE"}
+    fit("by_stand", stand(), "Boat Stand", "facing", [[6, 0, 1, 10, 16, 10]])
+    fit("by_keel", keel_blocks(), "Keel Blocks", "axis", [[1, 0, 1, 15, 13, 15]])
+    out["by_keel"]["sound"] = "WOOD"
     fit("tk_pipe", tank_pipe(), "Pipe", "axis", [[4, 0, 0, 12, 9, 16]])
     fit("tk_valve", tank_valve(), "Gate Valve", "axis", [[3, 0, 0, 13, 15, 16]])
     fit("tk_pipes_a", rack_pipes("a"), "Pipe Rack", "axis", [[0, 0, 0, 16, 8, 16]])
@@ -621,7 +662,7 @@ def blocks():
 def main():
     path = HERE / "blocks.json"
     data = json.loads(path.read_text())
-    kept = {k: v for k, v in data["blocks"].items() if not k.startswith(("ct_", "cr_", "tk_", "bw_")) and k not in {"container_" + c for c in COLOURS}}
+    kept = {k: v for k, v in data["blocks"].items() if not k.startswith(("ct_", "cr_", "tk_", "bw_", "bulk_", "by_")) and k not in {"container_" + c for c in COLOURS}}
     made = blocks()
     kept.update(made)
     data["blocks"] = kept

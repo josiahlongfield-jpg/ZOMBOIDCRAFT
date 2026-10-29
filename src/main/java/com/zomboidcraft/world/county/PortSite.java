@@ -901,7 +901,7 @@ final class PortSite extends Site {
     /** Heaps of coal, gravel and sand, the conveyor that fed them, a loader left by them. */
     private void bulkYard(int x0, int z0, int x1, int z1) {
         slab(x0, z0, x1, z1, false);
-        String[] stuff = {"minecraft:coal_block", "minecraft:gravel", "minecraft:sand", "minecraft:coarse_dirt", "rubble_pile"};
+        String[] stuff = {"coal", "gravel", "sand", "dirt", "rubble_pile"};
         int cz = z0 + 18;
         for (int x = x0 + 12; x + 12 < x1; x += 24) {
             hb.heap(x, cz, 10, 7 + rng.nextInt(5), stuff[rng.nextInt(stuff.length)]);
@@ -1094,8 +1094,11 @@ final class PortSite extends Site {
             }
             // the cradle and the boat up on it, drawn as if afloat but lifted clear
             for (int k : new int[] {3, 7, 11}) {
-                f.set(bx + 2, 1, z0 + k, "minecraft:spruce_fence");
-                f.set(bx + 5, 1, z0 + k, "minecraft:spruce_fence");
+                f.set(bx + 2, 1, z0 + k, "by_stand[facing=east]");
+                f.set(bx + 5, 1, z0 + k, "by_stand[facing=west]");
+            }
+            for (int k : new int[] {5, 9}) {
+                f.set(bx + 3, 1, z0 + k, "by_keel[axis=z]");
             }
             if (chance() < 0.5) {
                 at(bx + 4, z0 + 2, 1).vehicle(5.35, 2, 0.0, -90, "=boat_lobster@" + (chance() < 0.5 ? "abandoned" : "usable"),
@@ -1109,13 +1112,27 @@ final class PortSite extends Site {
         int tx = x0 + bw - 8;
         for (int[] c : new int[][] {{0, 0}, {6, 0}, {0, bd - 4}, {6, bd - 4}}) {
             for (int y = 1; y <= 9; y++) {
-                f.set(tx + c[0], y, z0 + 2 + c[1], "steel_olive");
+                f.set(tx + c[0], y, z0 + 2 + c[1], y % 5 == 0 ? "cr_plate_white_seam" : "cr_plate_white");
             }
             f.set(tx + c[0], 1, z0 + 2 + c[1], "tire[axis=z]");
+            f.set(tx + c[0], 9, z0 + 2 + c[1], "cr_plate_grey");
         }
         for (int z = z0 + 2; z <= z0 + bd - 2; z++) {
-            f.set(tx, 10, z, "steel_olive");
-            f.set(tx + 6, 10, z, "steel_olive");
+            f.set(tx, 10, z, "cr_plate_white");
+            f.set(tx + 6, 10, z, "cr_plate_white");
+        }
+        // the slings hanging off the hoist's winches, a caged ladder up one leg
+        for (int z : new int[] {z0 + 4, z0 + bd - 5}) {
+            for (int x = tx + 1; x <= tx + 5; x++) {
+                f.set(x, 10, z, "cr_plate_white");
+            }
+            for (int y = 4; y <= 9; y++) {
+                f.set(tx + 2, y, z, "vessel_rope_v");
+                f.set(tx + 4, y, z, "vessel_rope_v");
+            }
+        }
+        for (int y = 2; y <= 9; y++) {
+            f.set(tx - 1, y, z0 + 2, "cr_cage_ladder[facing=west]");
         }
     }
 

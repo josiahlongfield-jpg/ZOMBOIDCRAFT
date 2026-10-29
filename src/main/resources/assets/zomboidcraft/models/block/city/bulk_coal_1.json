@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bulk_coal": "zomboidcraft:block/city/bulk_coal",
+    "particle": "zomboidcraft:block/city/bulk_coal"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        4,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bulk_coal",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#bulk_coal",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#bulk_coal",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#bulk_coal",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#bulk_coal"
+        },
+        "down": {
+          "texture": "#bulk_coal",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

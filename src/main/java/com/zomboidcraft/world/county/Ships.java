@@ -103,10 +103,11 @@ final class Ships {
                     if (y == h.deck() && !edge) {
                         p.set(x, y, z, deck);
                     } else if (edge) {
-                        p.set(x, y, z, y <= boot ? bottom : y == boot + 1 && skin.startsWith("hull") ? "minecraft:black_concrete"
+                        p.set(x, y, z, y <= boot ? bottom : y == boot + 1 && skin.startsWith("hull") ? "hull_black"
                                 : chance() < rust && y > boot + 1 ? "rust" : skin);
                         if (rail && y == h.deck()) {
-                            p.set(x, y + 1, z, chance() < 0.04 + hit * 0.1 ? "air" : "minecraft:iron_bars");
+                            boolean side = !h.in(x, y, z + 1) || !h.in(x, y, z - 1);
+                            p.set(x, y + 1, z, chance() < 0.04 + hit * 0.1 ? "air" : "cv_iron_fence[axis=" + (side ? "x" : "z") + "]");
                         }
                     } else {
                         p.set(x, y, z, "air");
@@ -126,19 +127,52 @@ final class Ships {
         boat("boat_tug", 23.6, sunk);
     }
 
-    /** A barge len long, a box of a hull with its hold open, heaped with coal, gravel or scrap. */
+    /**
+     * A barge len long: a box of a hull with its hold open, the hatch coaming round it, bitts at her
+     * ends and tyres hung down her sides, heaped with coal, gravel or sand (sloping, not stepped),
+     * rubble or scrap.
+     */
     Hull barge(int len, int beam) {
         Hull h = new Hull(len, beam, SEA - 4, SEA + 2, 0.05, 0.04);
         hull(h, chance() < 0.6 ? "rust" : "hull_black", "rust", "deck_steel", SEA, false);
-        String load = any("minecraft:coal_block", "minecraft:gravel", "minecraft:sand", "rubble_pile", "debris_chunk");
-        int hb = beam / 2;
+        String load = any("coal", "gravel", "sand", "rubble_pile", "debris_chunk");
+        Harbour hb = new Harbour(p, rng, hit);
+        int half = beam / 2;
         for (int x = 2; x < len - 2; x++) {
-            for (int z = -hb + 1; z < hb - 1; z++) {
+            for (int z = -half + 1; z < half - 1; z++) {
                 p.set(x, h.deck(), z, "air");
-                double heap = 3 - Math.abs(x - len / 2.0) / (len / 2.0) * 2 - Math.abs(z + 0.5) / hb * 1.5 + chance() * 0.6;
-                for (int y = h.keel() + 1; y < h.keel() + 1 + Math.max(1, (int) heap + 2); y++) {
-                    p.set(x, y, z, load.equals("debris_chunk") && y > h.keel() + 1 ? "rust" : load);
+                double heap = 3 - Math.abs(x - len / 2.0) / (len / 2.0) * 2 - Math.abs(z + 0.5) / half * 1.5 + chance() * 0.6;
+                if (load.equals("debris_chunk")) {
+                    for (int y = h.keel() + 1; y < h.keel() + 1 + Math.max(1, (int) heap + 2); y++) {
+                        p.set(x, y, z, y > h.keel() + 1 ? "rust" : load);
+                    }
+                } else {
+                    hb.pile(x, h.keel() + 1, z, Math.max(1, heap + 2), load);
                 }
+            }
+        }
+        for (int x = 1; x <= len - 2; x++) {
+            for (int z = -half; z <= half - 1; z++) {
+                boolean ring = x == 1 || x == len - 2 || z == -half || z == half - 1;
+                if (ring && h.in(x, h.deck(), z)) {
+                    p.set(x, h.deck() + 1, z, chance() < 0.05 + hit * 0.1 ? "rust" : "vessel_coaming_grey");
+                }
+            }
+        }
+        for (int z : new int[] {-half + 1, half - 2}) {
+            if (h.in(0, h.deck(), z)) {
+                p.set(0, h.deck() + 1, z, "vessel_bollard[axis=z]");
+            }
+            if (h.in(len - 1, h.deck(), z)) {
+                p.set(len - 1, h.deck() + 1, z, "vessel_bollard[axis=z]");
+            }
+        }
+        for (int x = 3; x < len - 3; x += 4) {
+            if (h.in(x, h.deck() - 1, -half - 1) && !h.in(x, h.deck() - 1, -half - 2)) {
+                p.set(x, h.deck() - 1, -half - 2, "wf_fender[facing=north]");
+            }
+            if (h.in(x, h.deck() - 1, half) && !h.in(x, h.deck() - 1, half + 1)) {
+                p.set(x, h.deck() - 1, half + 1, "wf_fender[facing=south]");
             }
         }
         return h;
