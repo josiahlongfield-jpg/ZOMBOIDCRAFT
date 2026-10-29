@@ -463,9 +463,9 @@ public final class CountyAtlas {
             if (name.equals("air") || name.equals("minecraft:air")) return NO_COLOUR;
             Identifier id = Identifier.tryParse(name.contains(":") ? name : ZomboidCraft.MOD_ID + ":" + name);
             if (id == null) return 0xFF7A7670;
-            Block block = BuiltInRegistries.BLOCK.getOptional(id).orElse(null);
-            if (block == null) return 0xFF7A7670;
-            MapColor map = block.defaultMapColor();
+            Block found = BuiltInRegistries.BLOCK.getOptional(id).orElse(null);
+            if (found == null) return 0xFF7A7670;
+            MapColor map = found.defaultMapColor();
             return map == MapColor.NONE ? NO_COLOUR : 0xFF000000 | map.col;
         });
     }
