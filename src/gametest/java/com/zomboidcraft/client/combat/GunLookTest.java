@@ -54,8 +54,8 @@ public class GunLookTest implements FabricClientGameTest {
                 int pick = n++;
                 sp.getServer().runOnServer(server -> {
                     for (var player : server.getPlayerList().getPlayers()) {
-                        ItemStack held = player.getMainHandItem();
-                        String id = Attachments.gunId(held);
+                        ItemStack gunStack = player.getMainHandItem();
+                        String id = Attachments.gunId(gunStack);
                         if (id == null) {
                             continue;
                         }
@@ -64,10 +64,10 @@ public class GunLookTest implements FabricClientGameTest {
                             String comes = GunSlotData.DEFAULTS.get(id).get(e.getKey());
                             List<String> others = e.getValue().stream().filter(x -> !x.equals(comes)).toList();
                             if (e.getKey() != Attachments.Slot.MAGAZINE && !others.isEmpty()) {
-                                Attachments.mount(held, new ItemStack(BuiltInRegistries.ITEM.getValue(ZomboidCraft.id(others.get((pick + k++) % others.size())))));
+                                Attachments.mount(gunStack, new ItemStack(BuiltInRegistries.ITEM.getValue(ZomboidCraft.id(others.get((pick + k++) % others.size())))));
                             }
                         }
-                        LOG.info("ZCGUN kitted {} {}", id, Attachments.of(held).mounted());
+                        LOG.info("ZCGUN kitted {} {}", id, Attachments.of(gunStack).mounted());
                     }
                 });
                 sp.getServer().runCommand("tp @a ~ ~ ~ 0 10");
