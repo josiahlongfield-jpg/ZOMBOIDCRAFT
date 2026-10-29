@@ -204,6 +204,136 @@ BOTTLE_LOOK = {'amber': amber, 'beer_label': beer_label}
 BRICK_LOOK = {'brick': brick_paint, 'hole': lambda f: P.plain(f, '#2a1610', 0.05)}
 
 
+# ---------------------------------------------------------------- the grenade fuze (smoke, flashbang)
+
+def fuze_top(m, top, neck_r, ring=1.05 * CM, second=False):
+    """The fuze screwed into the top of a can grenade: a short neck and square head, the spoon over the head
+    and down the -x side, the pin through the head with its round pull ring off +x, and (second) the flashbang's
+    triangle ring above it."""
+    neck = top + 0.9 * CM
+    rod_y(m, top - 0.3, neck, neck_r, 'fuze')
+    head = neck + 1.3 * CM
+    m.box((-0.95 * CM, neck, -0.75 * CM), (0.85 * CM, head, 0.75 * CM), 'fuze')
+    w = 0.95 * CM
+    m.box((-1.2 * CM, head, -w / 2), (0.55 * CM, head + 0.18 * CM, w / 2), 'spoon')
+    m.box((-1.2 * CM, top - 4.5 * CM, -w / 2), (-1.02 * CM, head + 0.18 * CM, w / 2), 'spoon')
+    py = neck + 0.7 * CM
+    rod_x(m, -1.35 * CM, 1.2 * CM, 0.12 * CM, 'pin', py, 0.25 * CM)
+    m.arc((1.2 * CM + ring, py - 0.45 * CM), ring, 0, 360, 0.16 * CM, 0.16 * CM, 'pin', steps=16, z=0.25 * CM)
+    if second:
+        # the triangle ring, standing up over the head
+        a, b, c = (-0.9 * CM, head + 0.3 * CM), (0.9 * CM, head + 0.3 * CM), (0.0, head + 2.2 * CM)
+        for p0, p1 in ((a, b), (b, c), (c, a)):
+            m.seg(p0, p1, 0.16 * CM, 0.16 * CM, 'pin', z=-0.2 * CM, over=0.08)
+    return head
+
+
+FUZE_LOOK = {
+    'fuze': lambda f: P.parkerised(f, '#3f423a'),
+    'spoon': lambda f: P.polymer(f, '#555b3d', 0.05),
+    'pin': lambda f: P.steel(f, 0.62, tint='#a9adb0', spread=0.1),
+}
+
+
+# ---------------------------------------------------------------- smoke grenade
+
+def smoke_grenade(m):
+    """An M18 coloured smoke grenade (photos 01-03): a plain olive drab steel can 6.4 cm across with a rolled rim
+    top and bottom, its colour band and stencilled lettering near the top, and the fuze on top."""
+    r, body = 3.2 * CM, 11.5 * CM
+    rod_y(m, 0.0, 0.5 * CM, r + 0.08, 'can')
+    rod_y(m, 0.5 * CM, body - 0.5 * CM, r, 'can')
+    rod_y(m, body - 0.5 * CM, body, r + 0.08, 'can')
+    rod_y(m, body - 3.2 * CM, body - 1.4 * CM, r + 0.03, 'smoke_band')
+    rod_y(m, body, body + 0.4 * CM, r * 0.75, 'can')
+    fuze_top(m, body + 0.4 * CM, 0.75 * CM)
+
+
+def smoke_can(f):
+    c = P.polymer(f, '#4a4d36', 0.06)
+    v = f.uv[..., 1] / max(f.uv[..., 1].max(), 1e-3)
+    print_ = (np.abs(((v - 0.35) * 9) % 1 - 0.5) < 0.1) & (v > 0.3) & (v < 0.62) & (f.n[1] == 0)
+    return np.where(print_[..., None], P.mix(c, P.col('#d8d3b8'), 0.75), c)
+
+
+SMOKE_LOOK = dict(FUZE_LOOK, can=smoke_can, smoke_band=lambda f: P.polymer(f, '#7d5aa0', 0.05))
+
+
+# ---------------------------------------------------------------- flashbang
+
+def flashbang(m):
+    """An M84 stun grenade (photos 01-02): a steel tube 13.3 cm tall with all its fuze, three rows of big oval
+    ports cut round it, a hexagon foot, a pale green band near the top and a brown one below, and the fuze with
+    both pull rings."""
+    r, body = 2.2 * CM, 9.2 * CM
+    m.box((-r * 1.05, 0.0, -r * 0.6), (r * 1.05, 1.2 * CM, r * 0.6), 'steel')     # the hexagon foot
+    m.box((-r * 0.6, 0.0, -r * 1.05), (r * 0.6, 1.2 * CM, r * 1.05), 'steel')
+    rod_y(m, 1.2 * CM, body, r, 'steel')
+    for row in range(3):
+        y = 2.0 * CM + row * 2.2 * CM
+        for x, z, w, d in ((0, r, 1.0 * CM, 0.04), (0, -r, 1.0 * CM, 0.04), (r, 0, 0.04, 1.0 * CM), (-r, 0, 0.04, 1.0 * CM)):
+            lo = (x - w / 2 if x == 0 else x - 0.02 * math.copysign(1, x), y, z - d / 2 if z == 0 else z - 0.02 * math.copysign(1, z))
+            hi = (x + w / 2 if x == 0 else x + 0.02 * math.copysign(1, x), y + 1.5 * CM, z + d / 2 if z == 0 else z + 0.02 * math.copysign(1, z))
+            m.box(lo, hi, 'port')
+    rod_y(m, body - 1.6 * CM, body - 1.0 * CM, r + 0.04, 'green_band')
+    rod_y(m, 1.2 * CM, 1.7 * CM, r + 0.04, 'brown_band')
+    fuze_top(m, body, 0.7 * CM, ring=1.15 * CM, second=True)
+
+
+FLASH_LOOK = dict(FUZE_LOOK, steel=lambda f: P.parkerised(f, '#4b4f3e'),
+                  port=lambda f: P.plain(f, '#141511', 0.05),
+                  green_band=lambda f: P.plain(f, '#9fc79a', 0.05),
+                  brown_band=lambda f: P.plain(f, '#6b4a2c', 0.05))
+
+
+# ---------------------------------------------------------------- road flare
+
+def road_flare(m):
+    """A road flare (fusee, photos 01 and 05): a red waxed-paper tube 3 cm across and about 30 cm long, the
+    striker end on top under its brown paper cap, and the print down the side."""
+    r, L = 1.5 * CM, 27.0 * CM
+    rod_y(m, 0.0, 0.4 * CM, r - 0.08, 'flare_end')                  # the plugged bottom
+    rod_y(m, 0.4 * CM, L, r, 'flare_tube')
+    rod_y(m, L - 4.5 * CM, L + 0.2 * CM, r + 0.1, 'cap')            # the striker cap over the top
+    rod_y(m, L + 0.2 * CM, L + 0.35 * CM, r * 0.8, 'cap')
+
+
+def flare_tube(f):
+    c = P.plain(f, '#c2302a', 0.08)
+    v = f.uv[..., 1] / max(f.uv[..., 1].max(), 1e-3)
+    print_ = (np.abs(((v - 0.2) * 7) % 1 - 0.5) < 0.12) & (v > 0.18) & (v < 0.75) & (f.n[1] == 0)
+    return np.where(print_[..., None], P.mix(c, P.col('#f1e3c4'), 0.7), c)
+
+
+FLARE_LOOK = {'flare_tube': flare_tube, 'cap': lambda f: P.plain(f, '#7a5232', 0.1),
+              'flare_end': lambda f: P.plain(f, '#8f231f', 0.06)}
+
+
+# ---------------------------------------------------------------- firecrackers
+
+def firecrackers(m):
+    """A string of firecrackers (photos 02, 09): little red paper tubes plaited in pairs down a centre fuse,
+    each pair angled down and out like a fishbone, the long fuse hanging out of the top."""
+    pairs, step = 10, 1.3 * CM
+    top = pairs * step + 1.0 * CM
+    rod_y(m, 0.0, top, 0.25 * CM, 'braid')
+    for i in range(pairs):
+        y = 0.6 * CM + i * step
+        z = 0.35 * CM if i % 2 else -0.35 * CM
+        for s in (1, -1):
+            m.seg((s * 0.2 * CM, y + 1.4 * CM), (s * 3.6 * CM, y), 0.6 * CM, 0.6 * CM, 'cracker', z=z, over=0.05)
+    m.seg((0.0, top), (0.6 * CM, top + 4.0 * CM), 0.15 * CM, 0.15 * CM, 'wick', z=0.0)
+
+
+def cracker(f):
+    c = P.plain(f, '#d0283a', 0.1)
+    return P.mix(c, P.col('#f0c23a'), np.clip((f.noise(3.0, 51, 2) - 0.72) * 4, 0, 1) * 0.6)
+
+
+CRACKER_LOOK = {'cracker': cracker, 'braid': lambda f: P.plain(f, '#a3203a', 0.08),
+                'wick': lambda f: P.plain(f, '#5b4a35', 0.1)}
+
+
 # ---------------------------------------------------------------- the list, and writing them
 
 class Throwable:
@@ -217,6 +347,10 @@ THROWABLES = [
     Throwable('molotov', molotov, MOLOTOV_LOOK, 1102, 34.0),
     Throwable('glass_bottle', glass_bottle, BOTTLE_LOOK, 1103, 23.0),
     Throwable('brick', brick, BRICK_LOOK, 1104, 20.3),
+    Throwable('smoke_grenade', smoke_grenade, SMOKE_LOOK, 1105, 15.0),
+    Throwable('flashbang', flashbang, FLASH_LOOK, 1106, 13.3),
+    Throwable('road_flare', road_flare, FLARE_LOOK, 1107, 30.0),
+    Throwable('firecrackers', firecrackers, CRACKER_LOOK, 1108, 18.0),
 ]
 
 
