@@ -114,11 +114,18 @@ public final class Lifts {
         ServerPlayNetworking.registerGlobalReceiver(Pick.TYPE, (payload, context) -> {
             ServerPlayer player = context.player();
             player.level().getServer().execute(() -> {
-                if (!player.isSpectator() && player.level().getEntity(payload.car()) instanceof LiftCar car && car.machine != null
+                if (player.isSpectator()) {
+                    return;
+                }
+                if (player.level().getEntity(payload.car()) instanceof LiftCar car && car.machine != null
                         && car.machine.shaft() != null && car.machine.shaft().over(player.getX(), player.getZ(), -0.5)
                         && Math.abs(player.getY() - car.carY()) < 2.5) {
                     car.machine.carCall((ServerLevel) player.level(), payload.landing());
                     player.level().playSound(null, player.getX(), player.getY() + 1, player.getZ(), BUTTON_SOUND, SoundSource.BLOCKS, 0.6f, 1.2f);
+                } else {
+                    ZomboidCraft.LOGGER.info("Lift panel press from {} refused: car {} {}", player.getName().getString(), payload.car(),
+                            player.level().getEntity(payload.car()) instanceof LiftCar c ? (c.machine == null ? "has no machine" : "is out of reach at y " + c.carY() + ", player at " + player.position()) : "not found");
+                    player.sendOverlayMessage(Component.literal("Nothing happens.").withStyle(net.minecraft.ChatFormatting.GRAY));
                 }
             });
         });
