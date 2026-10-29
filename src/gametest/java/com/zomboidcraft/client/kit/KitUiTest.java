@@ -734,6 +734,9 @@ public class KitUiTest implements FabricClientGameTest {
      */
     private static void mapTest(ClientGameTestContext ctx) {
         ctx.runOnClient(mc -> com.zomboidcraft.client.map.CountyAtlas.open(12345L, true));
+        ctx.runOnClient(mc -> com.zomboidcraft.client.map.MapPlayers.pretend(java.util.List.of(
+                new com.zomboidcraft.world.map.MapNet.Spot(java.util.UUID.nameUUIDFromBytes(new byte[] {1}), "Rowan", "minecraft:overworld", 3296, -1248, 0),
+                new com.zomboidcraft.world.map.MapNet.Spot(java.util.UUID.nameUUIDFromBytes(new byte[] {2}), "Mags", "minecraft:overworld", 3424, -1312, 0))));
         ctx.runOnClient(mc -> mc.gui.setScreen(null));
         ctx.getInput().pressKey(InputConstants.KEY_E);
         ctx.waitTicks(10);
@@ -759,6 +762,7 @@ public class KitUiTest implements FabricClientGameTest {
                     ctx.computeOnClient(mc -> com.zomboidcraft.client.map.CountyAtlas.made()));
             ctx.takeScreenshot("map-" + names[v]);
         }
+        ctx.runOnClient(mc -> com.zomboidcraft.client.map.MapPlayers.pretend(java.util.List.of()));
         ctx.runOnClient(mc -> mc.gui.setScreen(null));
     }
 

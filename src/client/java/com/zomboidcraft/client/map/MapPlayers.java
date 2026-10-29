@@ -13,8 +13,18 @@ public final class MapPlayers {
         net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> spots = List.of());
     }
 
+    /** Survivors the UI test adds, since its world has only the one player. */
+    private static volatile List<MapNet.Spot> pretend = List.of();
+
     public static List<MapNet.Spot> spots() {
-        return spots;
+        if (pretend.isEmpty()) return spots;
+        List<MapNet.Spot> all = new java.util.ArrayList<>(spots);
+        all.addAll(pretend);
+        return all;
+    }
+
+    public static void pretend(List<MapNet.Spot> extra) {
+        pretend = List.copyOf(extra);
     }
 
     /** A colour of its own for each survivor, the same every time. */
