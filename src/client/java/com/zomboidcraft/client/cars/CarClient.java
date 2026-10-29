@@ -100,6 +100,8 @@ public final class CarClient {
                 // a lift's call button, or the floor panel inside a car
             } else if (com.zomboidcraft.client.trains.TrainClient.interact(client, hit)) {
                 // a station's call button: the train's on its way
+            } else if (com.zomboidcraft.client.npc.NpcClient.interact(client, hit)) {
+                // a companion: follow me, or wait here
             } else if (player.getMainHandItem().is(com.zomboidcraft.ModItems.CAR_KEY)) {
                 // not at a car, key in hand: its panic button
                 ClientPlayNetworking.send(new CarNet.Use(CarNet.FOB, 0, 0, 0));

@@ -6,23 +6,33 @@ import com.mojang.math.Axis;
 import com.zomboidcraft.npc.NpcEntity;
 import com.zomboidcraft.npc.Npcs;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemDisplayContext;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 /**
- * Draws an NPC's mesh (NpcAssets) turned to its body's facing, breathing a little. Both sides of every triangle are drawn,
- * since bought clothes are often single sheets. The "raw" look is lit like any mob. The "toon" look, on its painted
- * texture, is lit in three flat bands from one fixed light (as the gun renders are) and gets an ink outline: the mesh
- * pushed out a few millimetres along its normals, then back away from the eye further than that, drawn in near-black.
- * Where the body faces you the shell ends up behind it; only round the edges, where nothing covers it, does it show.
- * (It doesn't lean on back-face culling, which shader packs may turn off: drawn inside out, it hid the whole body.)
+ * Draws an NPC's mesh (NpcAssets) turned to its body's facing. A rigged model is posed by NpcPose (walk and run from how
+ * fast it's moving, its head turned where it looks, its gun up while it shoots) and skinned here each frame; one
+ * without bones only breathes. Whatever's in its main hand is drawn in its right hand. Both sides of every triangle
+ * are drawn, since bought clothes are often single sheets. The "raw" look is lit like any mob. The "toon" look, on its
+ * painted texture, is lit in three flat bands from one fixed light (as the gun renders are) and gets an ink outline:
+ * the mesh pushed out a few millimetres along its normals, then back away from the eye further than that, drawn in
+ * near-black. Where the body faces you the shell ends up behind it; only round the edges, where nothing covers it,
+ * does it show. (It doesn't lean on back-face culling, which shader packs may turn off: drawn inside out, it hid the
+ * whole body.)
  */
 public class NpcRenderer extends EntityRenderer<NpcEntity, NpcRenderer.State> {
     /** How far the outline shell stands off the body, in blocks. */
@@ -33,6 +43,8 @@ public class NpcRenderer extends EntityRenderer<NpcEntity, NpcRenderer.State> {
     /** The toon light (world space, normalised below) and its three bands. */
     private static final float LX, LY, LZ;
     private static final float LIT = 1.06f, MID = 0.86f, SHADE = 0.68f;
+    /** Where the right wrist is on the rest pose (the dark elf's), and which way her forearm runs from the elbow. */
+    private static final Vector3f WRIST = new Vector3f(-0.57f, 0.98f, 0f), FOREARM = new Vector3f(-0.24f, -0.23f, 0f).normalize();
 
     static {
         float x = -0.4f, y = 0.8f, z = 0.45f, len = (float) Math.sqrt(x * x + y * y + z * z);
@@ -43,6 +55,7 @@ public class NpcRenderer extends EntityRenderer<NpcEntity, NpcRenderer.State> {
 
     public static void register() {
         EntityRendererRegistry.register(Npcs.NPC, NpcRenderer::new);
+        NpcClient.register();
         try {
             // made up front so it's there to drop local model files into
             java.nio.file.Files.createDirectories(Npcs.localFolder());
@@ -55,6 +68,8 @@ public class NpcRenderer extends EntityRenderer<NpcEntity, NpcRenderer.State> {
         String model = "", look = "raw";
         float bodyYaw;
         boolean hurt;
+        final NpcPose.Input pose = new NpcPose.Input();
+        final ItemStackRenderState held = new ItemStackRenderState();
     }
 
     public NpcRenderer(EntityRendererProvider.Context context) {
@@ -74,6 +89,18 @@ public class NpcRenderer extends EntityRenderer<NpcEntity, NpcRenderer.State> {
         state.look = entity.look();
         state.bodyYaw = Mth.rotLerp(partialTick, entity.yBodyRotO, entity.yBodyRot);
         state.hurt = entity.hurtTime > 0 && entity.isAlive();
+        NpcPose.Input in = state.pose;
+        float speed = entity.walkAnimation.speed(partialTick);
+        in.move = Mth.clamp(speed * 2.2f, 0f, 1f);
+        in.run = Mth.clamp((speed - 0.55f) / 0.35f, 0f, 1f);
+        in.phase = entity.walkAnimation.position(partialTick) * 0.6662f;
+        in.t = entity.tickCount + partialTick;
+        in.aim = Mth.lerp(partialTick, entity.aimAnimO, entity.aimAnim);
+        in.kick = Mth.lerp(partialTick, entity.kickO, entity.kick);
+        in.headYaw = Mth.clamp(Mth.wrapDegrees(Mth.rotLerp(partialTick, entity.yHeadRotO, entity.yHeadRot) - state.bodyYaw), -70f, 70f);
+        in.headPitch = entity.getXRot(partialTick);
+        Minecraft.getInstance().getItemModelResolver().updateForTopItem(state.held, entity.getMainHandItem(),
+                ItemDisplayContext.THIRD_PERSON_RIGHT_HAND, entity.level(), entity, entity.getId());
     }
 
     @Override
@@ -91,23 +118,99 @@ public class NpcRenderer extends EntityRenderer<NpcEntity, NpcRenderer.State> {
         float ex = (float) (dx * Math.cos(r) + dz * Math.sin(r)), ey = (float) dy, ez = (float) (-dx * Math.sin(r) + dz * Math.cos(r));
         poseStack.pushPose();
         poseStack.rotateDegrees(Axis.YP, -yaw);
-        // a slow breath: the chest rises a few millimetres and the body sways a touch
-        float breath = Mth.sin(state.ageInTicks * 0.09f);
-        poseStack.scale(1f, 1f + breath * 0.004f, 1f);
-        poseStack.rotateDegrees(Axis.ZP, Mth.sin(state.ageInTicks * 0.031f) * 0.6f);
-        int[] shade = toon ? bands(mesh, yaw) : null;
-        collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(texture), (pose, out) -> body(mesh, shade, pose, out, light, overlay));
+        Skinned posed;
+        Matrix4f[] bones = null;
+        if (mesh.bones() != null) {
+            bones = new Matrix4f[mesh.bones().length];
+            for (int i = 0; i < bones.length; i++) {
+                bones[i] = new Matrix4f();
+            }
+            NpcPose.pose(mesh.bones(), state.pose, bones);
+            posed = skin(mesh, bones);
+        } else {
+            // not rigged: a slow breath, the chest rising a few millimetres and the body swaying a touch
+            float breath = Mth.sin(state.pose.t * 0.09f);
+            poseStack.scale(1f, 1f + breath * 0.004f, 1f);
+            poseStack.rotateDegrees(Axis.ZP, Mth.sin(state.pose.t * 0.031f) * 0.6f);
+            posed = new Skinned(mesh.pos(), mesh.normal());
+        }
+        int[] shade = toon ? bands(mesh, posed.normal, yaw) : null;
+        collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(texture), (pose, out) -> body(mesh, posed, shade, pose, out, light, overlay));
         if (toon) {
-            collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(texture), (pose, out) -> ink(mesh, ex, ey, ez, pose, out, light));
+            collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(texture), (pose, out) -> ink(mesh, posed, ex, ey, ez, pose, out, light));
+        }
+        if (bones != null && !state.held.isEmpty()) {
+            held(mesh, bones, state, poseStack, collector, light);
         }
         poseStack.popPose();
         super.submit(state, poseStack, collector, camera);
     }
 
+    /**
+     * The held item in the right hand, placed the way the game places one in a player's hand: as if the forearm hung
+     * straight down, then turned to where the forearm really points.
+     */
+    private static void held(NpcAssets.Mesh mesh, Matrix4f[] bones, State state, PoseStack poseStack, SubmitNodeCollector collector, int light) {
+        int fore = NpcPose.find(mesh.bones(), "r_forearm");
+        if (fore < 0) {
+            return;
+        }
+        Matrix4f m = bones[fore];
+        Vector3f wrist = m.transformPosition(new Vector3f(WRIST));
+        // the forearm's turn: from hanging (-y) to its rest direction, then as posed
+        Quaternionf rest = new Quaternionf().rotationTo(new Vector3f(0, -1, 0), FOREARM);
+        Quaternionf posed = m.getNormalizedRotation(new Quaternionf()).mul(rest);
+        poseStack.pushPose();
+        poseStack.translate(wrist.x, wrist.y, wrist.z);
+        poseStack.mulPose(new Matrix4f().rotation(posed));
+        // into the player model's own frame (y down, facing -z), then the game's hand-to-item turn
+        poseStack.mulPose(new Matrix4f().rotationX((float) Math.PI));
+        poseStack.translate(-1f / 16f, -0.02f, -2f / 16f);
+        poseStack.mulPose(new Matrix4f().rotationX((float) (-Math.PI / 2)));
+        poseStack.mulPose(new Matrix4f().rotationY((float) Math.PI));
+        state.held.submit(poseStack, collector, light, OverlayTexture.NO_OVERLAY, 0);
+        poseStack.popPose();
+    }
+
+    /** A posed copy of the mesh's positions and normals. */
+    private record Skinned(float[] pos, float[] normal) {
+    }
+
+    /** Each vertex moved by its two bones, blended. */
+    private static Skinned skin(NpcAssets.Mesh mesh, Matrix4f[] bones) {
+        float[] p = mesh.pos(), n = mesh.normal(), w = mesh.weight();
+        byte[] b0 = mesh.bone0(), b1 = mesh.bone1();
+        float[] op = new float[p.length], on = new float[n.length];
+        Vector3f a = new Vector3f(), b = new Vector3f(), na = new Vector3f(), nb = new Vector3f();
+        Matrix3f[] rot = new Matrix3f[bones.length];
+        for (int i = 0; i < bones.length; i++) {
+            rot[i] = bones[i].get3x3(new Matrix3f());
+        }
+        for (int v = 0, i = 0; v < mesh.vertices(); v++, i += 3) {
+            int i0 = b0[v], i1 = b1[v];
+            float k = w[v];
+            bones[i0].transformPosition(p[i], p[i + 1], p[i + 2], a);
+            rot[i0].transform(n[i], n[i + 1], n[i + 2], na);
+            if (k < 0.999f) {
+                bones[i1].transformPosition(p[i], p[i + 1], p[i + 2], b);
+                rot[i1].transform(n[i], n[i + 1], n[i + 2], nb);
+                a.mul(k).add(b.mul(1 - k));
+                na.mul(k).add(nb.mul(1 - k));
+                na.normalize();
+            }
+            op[i] = a.x;
+            op[i + 1] = a.y;
+            op[i + 2] = a.z;
+            on[i] = na.x;
+            on[i + 1] = na.y;
+            on[i + 2] = na.z;
+        }
+        return new Skinned(op, on);
+    }
+
     /** Each vertex's toon colour: which band its normal falls in, turned to the body's facing, under the fixed light. */
-    private static int[] bands(NpcAssets.Mesh mesh, float yawDegrees) {
+    private static int[] bands(NpcAssets.Mesh mesh, float[] n, float yawDegrees) {
         float a = (float) Math.toRadians(-yawDegrees), c = Mth.cos(a), s = Mth.sin(a);
-        float[] n = mesh.normal();
         int[] out = new int[mesh.vertices()];
         for (int v = 0; v < out.length; v++) {
             float nx = n[v * 3], ny = n[v * 3 + 1], nz = n[v * 3 + 2];
@@ -122,8 +225,8 @@ public class NpcRenderer extends EntityRenderer<NpcEntity, NpcRenderer.State> {
     }
 
     /** Every triangle twice, front and back (each as a quad with its last corner repeated). */
-    private static void body(NpcAssets.Mesh mesh, int[] shade, PoseStack.Pose pose, VertexConsumer out, int light, int overlay) {
-        float[] p = mesh.pos(), uv = mesh.uv(), n = mesh.normal();
+    private static void body(NpcAssets.Mesh mesh, Skinned posed, int[] shade, PoseStack.Pose pose, VertexConsumer out, int light, int overlay) {
+        float[] p = posed.pos(), uv = mesh.uv(), n = posed.normal();
         int[] tris = mesh.tris();
         for (int t = 0; t < tris.length; t += 3) {
             for (int side = 0; side < 2; side++) {
@@ -149,8 +252,8 @@ public class NpcRenderer extends EntityRenderer<NpcEntity, NpcRenderer.State> {
     }
 
     /** The outline: the mesh pushed out along its normals and back from the eye (ex, ey, ez, model space), so only its rim shows. */
-    private static void ink(NpcAssets.Mesh mesh, float ex, float ey, float ez, PoseStack.Pose pose, VertexConsumer out, int light) {
-        float[] p = mesh.pos(), uv = mesh.uv(), n = mesh.normal();
+    private static void ink(NpcAssets.Mesh mesh, Skinned posed, float ex, float ey, float ez, PoseStack.Pose pose, VertexConsumer out, int light) {
+        float[] p = posed.pos(), uv = mesh.uv(), n = posed.normal();
         int[] tris = mesh.tris();
         float[] moved = new float[p.length];
         for (int v = 0, i = 0; v < mesh.vertices(); v++, i += 3) {
