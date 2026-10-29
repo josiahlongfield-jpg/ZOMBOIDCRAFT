@@ -161,7 +161,21 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
 
     /** Whether the part can be fitted now: attachments are on in settings and it fits the gun. */
     public static boolean canMount(ItemStack gun, ItemStack part) {
-        return ZcConfig.get().guns.attachments && !part.isEmpty() && fits(gun, part.getItem());
+        return ZcConfig.get().guns.attachments && !part.isEmpty() && fits(gun, part.getItem()) && goesWith(gun, part);
+    }
+
+    /** The magnifier only sits behind a red dot or holo sight (or open rails): never with a scope in front of it. */
+    private static boolean goesWith(ItemStack gun, ItemStack part) {
+        Slot slot = slotOf(part);
+        if (slot == Slot.MAGNIFIER) {
+            Optic optic = optic(gun);
+            return optic == null || optic.zoom() >= 1 && !optic.overlay();
+        }
+        if (slot == Slot.OPTIC && magnified(gun) && part.getItem() instanceof AttachmentItem item) {
+            Optic optic = optic(item.modelKey());
+            return optic.zoom() >= 1 && !optic.overlay();
+        }
+        return true;
     }
 
     // ---- helpers on gun stacks ----

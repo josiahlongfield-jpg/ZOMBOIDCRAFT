@@ -18,7 +18,7 @@ final class GunRigs {
                     0.8500f /* hip scale */,
                     new float[] {28.0000f, 0.0600f} /* magazine steps: cant (degrees), drop (blocks) */,
                     new float[] {-14.0000f, 0.0300f} /* charging step: cant, drop */,
-                    Map.of("irons", new float[] {-8.8950f, 7.0820f, 2.0640f, 0.7200f}, "red_dot", new float[] {-8.8520f, 5.2460f, 3.0180f, 1.2000f}, "holo", new float[] {-8.8520f, 5.1900f, 3.6190f, 1.2000f}, "mini_dot", new float[] {-8.8520f, 6.2380f, 4.3190f, 1.2000f}, "compact_dot", new float[] {-8.8520f, 6.0470f, 3.6140f, 1.2000f}, "combat_scope", new float[] {-8.8520f, 5.0450f, 2.9650f, 1.2000f}, "rifle_optic", new float[] {-8.8520f, 5.8250f, 2.2680f, 1.2000f}) /* aiming: translation (pixels), scale and any tip up (degrees), by sight */,
+                    Map.of("irons", new float[] {-8.8950f, 7.0820f, 2.0640f, 0.7200f}, "red_dot", new float[] {-8.8520f, 5.2460f, 3.5590f, 1.2000f}, "holo", new float[] {-8.8520f, 5.1900f, 4.1600f, 1.2000f}, "mini_dot", new float[] {-8.8520f, 6.2380f, 4.8600f, 1.2000f}, "compact_dot", new float[] {-8.8520f, 6.0470f, 4.1560f, 1.2000f}, "combat_scope", new float[] {-8.8520f, 5.0450f, 3.5060f, 1.2000f}, "rifle_optic", new float[] {-8.8520f, 5.8250f, 2.8090f, 1.2000f}) /* aiming: translation (pixels), scale and any tip up (degrees), by sight */,
                     2.2942f /* how far the handle or slide comes back (pixels) */,
                     new float[] {20.0000f, 25.0000f, 0.0000f} /* worked: turned about the grip (degrees) */,
                     new float[] {-0.0800f, 0.1000f, -0.3000f} /* worked: pushed (blocks) */,
