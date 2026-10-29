@@ -1045,8 +1045,227 @@
    "tex": "car_blue"
   },
   "tire": {
-   "tex": "tire",
-   "rotate": "axis"
+   "rotate": "axis",
+   "model": "boxes",
+   "boxes": [
+    [
+     4.602,
+     12.4,
+     4.5,
+     11.398,
+     15.6,
+     11.5,
+     {
+      "north": "tire_wall",
+      "south": "tire_wall",
+      "east": "tire_tread",
+      "west": "tire_tread",
+      "up": "tire_tread",
+      "down": "tire_tread"
+     }
+    ],
+    [
+     4.602,
+     12.4,
+     4.5,
+     11.398,
+     15.6,
+     11.5,
+     {
+      "north": "tire_wall",
+      "south": "tire_wall",
+      "east": "tire_tread",
+      "west": "tire_tread",
+      "up": "tire_tread",
+      "down": "tire_tread"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 45,
+      "origin": [
+       8,
+       8,
+       8.0
+      ]
+     }
+    ],
+    [
+     4.602,
+     12.4,
+     4.5,
+     11.398,
+     15.6,
+     11.5,
+     {
+      "north": "tire_wall",
+      "south": "tire_wall",
+      "east": "tire_tread",
+      "west": "tire_tread",
+      "up": "tire_tread",
+      "down": "tire_tread"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -45,
+      "origin": [
+       8,
+       8,
+       8.0
+      ]
+     }
+    ],
+    [
+     4.602,
+     0.4,
+     4.5,
+     11.398,
+     3.6,
+     11.5,
+     {
+      "north": "tire_wall",
+      "south": "tire_wall",
+      "east": "tire_tread",
+      "west": "tire_tread",
+      "up": "tire_tread",
+      "down": "tire_tread"
+     }
+    ],
+    [
+     4.602,
+     0.4,
+     4.5,
+     11.398,
+     3.6,
+     11.5,
+     {
+      "north": "tire_wall",
+      "south": "tire_wall",
+      "east": "tire_tread",
+      "west": "tire_tread",
+      "up": "tire_tread",
+      "down": "tire_tread"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 45,
+      "origin": [
+       8,
+       8,
+       8.0
+      ]
+     }
+    ],
+    [
+     4.602,
+     0.4,
+     4.5,
+     11.398,
+     3.6,
+     11.5,
+     {
+      "north": "tire_wall",
+      "south": "tire_wall",
+      "east": "tire_tread",
+      "west": "tire_tread",
+      "up": "tire_tread",
+      "down": "tire_tread"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -45,
+      "origin": [
+       8,
+       8,
+       8.0
+      ]
+     }
+    ],
+    [
+     12.4,
+     4.602,
+     4.5,
+     15.6,
+     11.398,
+     11.5,
+     {
+      "north": "tire_wall",
+      "south": "tire_wall",
+      "east": "tire_tread",
+      "west": "tire_tread",
+      "up": "tire_tread",
+      "down": "tire_tread"
+     }
+    ],
+    [
+     0.4,
+     4.602,
+     4.5,
+     3.6,
+     11.398,
+     11.5,
+     {
+      "north": "tire_wall",
+      "south": "tire_wall",
+      "east": "tire_tread",
+      "west": "tire_tread",
+      "up": "tire_tread",
+      "down": "tire_tread"
+     }
+    ],
+    [
+     3.3,
+     3.3,
+     6,
+     12.7,
+     12.7,
+     10,
+     "rust"
+    ],
+    [
+     3.3,
+     3.3,
+     6,
+     12.7,
+     12.7,
+     10,
+     "rust",
+     null,
+     {
+      "axis": "z",
+      "angle": 45,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     6.5,
+     6.5,
+     5.6,
+     9.5,
+     9.5,
+     10.4,
+     "st_galv"
+    ]
+   ],
+   "shape": [
+    [
+     0.5,
+     0,
+     4.5,
+     15.5,
+     15.5,
+     11.5
+    ]
+   ],
+   "title": "Tyre",
+   "sound": "WOOL"
   },
   "rust": {
    "tex": "rust"
@@ -403837,6 +404056,6547 @@
      8.0
     ]
    ]
+  },
+  "tire_flat": {
+   "model": "boxes",
+   "boxes": [
+    [
+     5.016,
+     0.0,
+     12.0,
+     10.984,
+     3.4,
+     14.6,
+     {
+      "up": "tire_wall",
+      "down": "tire_wall",
+      "north": "tire_tread",
+      "south": "tire_tread",
+      "east": "tire_tread",
+      "west": "tire_tread"
+     }
+    ],
+    [
+     5.016,
+     0.0,
+     12.0,
+     10.984,
+     3.4,
+     14.6,
+     {
+      "up": "tire_wall",
+      "down": "tire_wall",
+      "north": "tire_tread",
+      "south": "tire_tread",
+      "east": "tire_tread",
+      "west": "tire_tread"
+     },
+     null,
+     {
+      "axis": "y",
+      "angle": 45,
+      "origin": [
+       8.0,
+       1.7,
+       8
+      ]
+     }
+    ],
+    [
+     5.016,
+     0.0,
+     12.0,
+     10.984,
+     3.4,
+     14.6,
+     {
+      "up": "tire_wall",
+      "down": "tire_wall",
+      "north": "tire_tread",
+      "south": "tire_tread",
+      "east": "tire_tread",
+      "west": "tire_tread"
+     },
+     null,
+     {
+      "axis": "y",
+      "angle": -45,
+      "origin": [
+       8.0,
+       1.7,
+       8
+      ]
+     }
+    ],
+    [
+     5.016,
+     0.0,
+     1.4,
+     10.984,
+     3.4,
+     4.0,
+     {
+      "up": "tire_wall",
+      "down": "tire_wall",
+      "north": "tire_tread",
+      "south": "tire_tread",
+      "east": "tire_tread",
+      "west": "tire_tread"
+     }
+    ],
+    [
+     5.016,
+     0.0,
+     1.4,
+     10.984,
+     3.4,
+     4.0,
+     {
+      "up": "tire_wall",
+      "down": "tire_wall",
+      "north": "tire_tread",
+      "south": "tire_tread",
+      "east": "tire_tread",
+      "west": "tire_tread"
+     },
+     null,
+     {
+      "axis": "y",
+      "angle": 45,
+      "origin": [
+       8.0,
+       1.7,
+       8
+      ]
+     }
+    ],
+    [
+     5.016,
+     0.0,
+     1.4,
+     10.984,
+     3.4,
+     4.0,
+     {
+      "up": "tire_wall",
+      "down": "tire_wall",
+      "north": "tire_tread",
+      "south": "tire_tread",
+      "east": "tire_tread",
+      "west": "tire_tread"
+     },
+     null,
+     {
+      "axis": "y",
+      "angle": -45,
+      "origin": [
+       8.0,
+       1.7,
+       8
+      ]
+     }
+    ],
+    [
+     12.0,
+     0.0,
+     5.016,
+     14.6,
+     3.4,
+     10.984,
+     {
+      "up": "tire_wall",
+      "down": "tire_wall",
+      "north": "tire_tread",
+      "south": "tire_tread",
+      "east": "tire_tread",
+      "west": "tire_tread"
+     }
+    ],
+    [
+     1.4,
+     0.0,
+     5.016,
+     4.0,
+     3.4,
+     10.984,
+     {
+      "up": "tire_wall",
+      "down": "tire_wall",
+      "north": "tire_tread",
+      "south": "tire_tread",
+      "east": "tire_tread",
+      "west": "tire_tread"
+     }
+    ]
+   ],
+   "title": "Tyre",
+   "sound": "WOOL",
+   "shape": [
+    [
+     1.5,
+     0,
+     1.5,
+     14.5,
+     3.4,
+     14.5
+    ]
+   ]
+  },
+  "tire_stack": {
+   "model": "boxes",
+   "boxes": [
+    [
+     5.616,
+     0.0,
+     12.0,
+     11.584,
+     3.4,
+     14.6,
+     {
+      "up": "tire_wall",
+      "down": "tire_wall",
+      "north": "tire_tread",
+      "south": "tire_tread",
+      "east": "tire_tread",
+      "west": "tire_tread"
+     }
+    ],
+    [
+     5.616,
+     0.0,
+     12.0,
+     11.584,
+     3.4,
+     14.6,
+     {
+      "up": "tire_wall",
+      "down": "tire_wall",
+      "north": "tire_tread",
+      "south": "tire_tread",
+      "east": "tire_tread",
+      "west": "tire_tread"
+     },
+     null,
+     {
+      "axis": "y",
+      "angle": 45,
+      "origin": [
+       8.6,
+       1.7,
+       8
+      ]
+     }
+    ],
+    [
+     5.616,
+     0.0,
+     12.0,
+     11.584,
+     3.4,
+     14.6,
+     {
+      "up": "tire_wall",
+      "down": "tire_wall",
+      "north": "tire_tread",
+      "south": "tire_tread",
+      "east": "tire_tread",
+      "west": "tire_tread"
+     },
+     null,
+     {
+      "axis": "y",
+      "angle": -45,
+      "origin": [
+       8.6,
+       1.7,
+       8
+      ]
+     }
+    ],
+    [
+     5.616,
+     0.0,
+     1.4,
+     11.584,
+     3.4,
+     4.0,
+     {
+      "up": "tire_wall",
+      "down": "tire_wall",
+      "north": "tire_tread",
+      "south": "tire_tread",
+      "east": "tire_tread",
+      "west": "tire_tread"
+     }
+    ],
+    [
+     5.616,
+     0.0,
+     1.4,
+     11.584,
+     3.4,
+     4.0,
+     {
+      "up": "tire_wall",
+      "down": "tire_wall",
+      "north": "tire_tread",
+      "south": "tire_tread",
+      "east": "tire_tread",
+      "west": "tire_tread"
+     },
+     null,
+     {
+      "axis": "y",
+      "angle": 45,
+      "origin": [
+       8.6,
+       1.7,
+       8
+      ]
+     }
+    ],
+    [
+     5.616,
+     0.0,
+     1.4,
+     11.584,
+     3.4,
+     4.0,
+     {
+      "up": "tire_wall",
+      "down": "tire_wall",
+      "north": "tire_tread",
+      "south": "tire_tread",
+      "east": "tire_tread",
+      "west": "tire_tread"
+     },
+     null,
+     {
+      "axis": "y",
+      "angle": -45,
+      "origin": [
+       8.6,
+       1.7,
+       8
+      ]
+     }
+    ],
+    [
+     12.6,
+     0.0,
+     5.016,
+     15.2,
+     3.4,
+     10.984,
+     {
+      "up": "tire_wall",
+      "down": "tire_wall",
+      "north": "tire_tread",
+      "south": "tire_tread",
+      "east": "tire_tread",
+      "west": "tire_tread"
+     }
+    ],
+    [
+     2.0,
+     0.0,
+     5.016,
+     4.6,
+     3.4,
+     10.984,
+     {
+      "up": "tire_wall",
+      "down": "tire_wall",
+      "north": "tire_tread",
+      "south": "tire_tread",
+      "east": "tire_tread",
+      "west": "tire_tread"
+     }
+    ],
+    [
+     4.616,
+     3.45,
+     12.0,
+     10.584,
+     6.85,
+     14.6,
+     {
+      "up": "tire_wall",
+      "down": "tire_wall",
+      "north": "tire_tread",
+      "south": "tire_tread",
+      "east": "tire_tread",
+      "west": "tire_tread"
+     }
+    ],
+    [
+     4.616,
+     3.45,
+     12.0,
+     10.584,
+     6.85,
+     14.6,
+     {
+      "up": "tire_wall",
+      "down": "tire_wall",
+      "north": "tire_tread",
+      "south": "tire_tread",
+      "east": "tire_tread",
+      "west": "tire_tread"
+     },
+     null,
+     {
+      "axis": "y",
+      "angle": 45,
+      "origin": [
+       7.6,
+       5.15,
+       8
+      ]
+     }
+    ],
+    [
+     4.616,
+     3.45,
+     12.0,
+     10.584,
+     6.85,
+     14.6,
+     {
+      "up": "tire_wall",
+      "down": "tire_wall",
+      "north": "tire_tread",
+      "south": "tire_tread",
+      "east": "tire_tread",
+      "west": "tire_tread"
+     },
+     null,
+     {
+      "axis": "y",
+      "angle": -45,
+      "origin": [
+       7.6,
+       5.15,
+       8
+      ]
+     }
+    ],
+    [
+     4.616,
+     3.45,
+     1.4,
+     10.584,
+     6.85,
+     4.0,
+     {
+      "up": "tire_wall",
+      "down": "tire_wall",
+      "north": "tire_tread",
+      "south": "tire_tread",
+      "east": "tire_tread",
+      "west": "tire_tread"
+     }
+    ],
+    [
+     4.616,
+     3.45,
+     1.4,
+     10.584,
+     6.85,
+     4.0,
+     {
+      "up": "tire_wall",
+      "down": "tire_wall",
+      "north": "tire_tread",
+      "south": "tire_tread",
+      "east": "tire_tread",
+      "west": "tire_tread"
+     },
+     null,
+     {
+      "axis": "y",
+      "angle": 45,
+      "origin": [
+       7.6,
+       5.15,
+       8
+      ]
+     }
+    ],
+    [
+     4.616,
+     3.45,
+     1.4,
+     10.584,
+     6.85,
+     4.0,
+     {
+      "up": "tire_wall",
+      "down": "tire_wall",
+      "north": "tire_tread",
+      "south": "tire_tread",
+      "east": "tire_tread",
+      "west": "tire_tread"
+     },
+     null,
+     {
+      "axis": "y",
+      "angle": -45,
+      "origin": [
+       7.6,
+       5.15,
+       8
+      ]
+     }
+    ],
+    [
+     11.6,
+     3.45,
+     5.016,
+     14.2,
+     6.85,
+     10.984,
+     {
+      "up": "tire_wall",
+      "down": "tire_wall",
+      "north": "tire_tread",
+      "south": "tire_tread",
+      "east": "tire_tread",
+      "west": "tire_tread"
+     }
+    ],
+    [
+     1.0,
+     3.45,
+     5.016,
+     3.6,
+     6.85,
+     10.984,
+     {
+      "up": "tire_wall",
+      "down": "tire_wall",
+      "north": "tire_tread",
+      "south": "tire_tread",
+      "east": "tire_tread",
+      "west": "tire_tread"
+     }
+    ],
+    [
+     5.316,
+     6.9,
+     12.0,
+     11.284,
+     10.3,
+     14.6,
+     {
+      "up": "tire_wall",
+      "down": "tire_wall",
+      "north": "tire_tread",
+      "south": "tire_tread",
+      "east": "tire_tread",
+      "west": "tire_tread"
+     }
+    ],
+    [
+     5.316,
+     6.9,
+     12.0,
+     11.284,
+     10.3,
+     14.6,
+     {
+      "up": "tire_wall",
+      "down": "tire_wall",
+      "north": "tire_tread",
+      "south": "tire_tread",
+      "east": "tire_tread",
+      "west": "tire_tread"
+     },
+     null,
+     {
+      "axis": "y",
+      "angle": 45,
+      "origin": [
+       8.3,
+       8.6,
+       8
+      ]
+     }
+    ],
+    [
+     5.316,
+     6.9,
+     12.0,
+     11.284,
+     10.3,
+     14.6,
+     {
+      "up": "tire_wall",
+      "down": "tire_wall",
+      "north": "tire_tread",
+      "south": "tire_tread",
+      "east": "tire_tread",
+      "west": "tire_tread"
+     },
+     null,
+     {
+      "axis": "y",
+      "angle": -45,
+      "origin": [
+       8.3,
+       8.6,
+       8
+      ]
+     }
+    ],
+    [
+     5.316,
+     6.9,
+     1.4,
+     11.284,
+     10.3,
+     4.0,
+     {
+      "up": "tire_wall",
+      "down": "tire_wall",
+      "north": "tire_tread",
+      "south": "tire_tread",
+      "east": "tire_tread",
+      "west": "tire_tread"
+     }
+    ],
+    [
+     5.316,
+     6.9,
+     1.4,
+     11.284,
+     10.3,
+     4.0,
+     {
+      "up": "tire_wall",
+      "down": "tire_wall",
+      "north": "tire_tread",
+      "south": "tire_tread",
+      "east": "tire_tread",
+      "west": "tire_tread"
+     },
+     null,
+     {
+      "axis": "y",
+      "angle": 45,
+      "origin": [
+       8.3,
+       8.6,
+       8
+      ]
+     }
+    ],
+    [
+     5.316,
+     6.9,
+     1.4,
+     11.284,
+     10.3,
+     4.0,
+     {
+      "up": "tire_wall",
+      "down": "tire_wall",
+      "north": "tire_tread",
+      "south": "tire_tread",
+      "east": "tire_tread",
+      "west": "tire_tread"
+     },
+     null,
+     {
+      "axis": "y",
+      "angle": -45,
+      "origin": [
+       8.3,
+       8.6,
+       8
+      ]
+     }
+    ],
+    [
+     12.3,
+     6.9,
+     5.016,
+     14.9,
+     10.3,
+     10.984,
+     {
+      "up": "tire_wall",
+      "down": "tire_wall",
+      "north": "tire_tread",
+      "south": "tire_tread",
+      "east": "tire_tread",
+      "west": "tire_tread"
+     }
+    ],
+    [
+     1.7,
+     6.9,
+     5.016,
+     4.3,
+     10.3,
+     10.984,
+     {
+      "up": "tire_wall",
+      "down": "tire_wall",
+      "north": "tire_tread",
+      "south": "tire_tread",
+      "east": "tire_tread",
+      "west": "tire_tread"
+     }
+    ],
+    [
+     4.516,
+     10.35,
+     12.0,
+     10.484,
+     13.75,
+     14.6,
+     {
+      "up": "tire_wall",
+      "down": "tire_wall",
+      "north": "tire_tread",
+      "south": "tire_tread",
+      "east": "tire_tread",
+      "west": "tire_tread"
+     }
+    ],
+    [
+     4.516,
+     10.35,
+     12.0,
+     10.484,
+     13.75,
+     14.6,
+     {
+      "up": "tire_wall",
+      "down": "tire_wall",
+      "north": "tire_tread",
+      "south": "tire_tread",
+      "east": "tire_tread",
+      "west": "tire_tread"
+     },
+     null,
+     {
+      "axis": "y",
+      "angle": 45,
+      "origin": [
+       7.5,
+       12.05,
+       8
+      ]
+     }
+    ],
+    [
+     4.516,
+     10.35,
+     12.0,
+     10.484,
+     13.75,
+     14.6,
+     {
+      "up": "tire_wall",
+      "down": "tire_wall",
+      "north": "tire_tread",
+      "south": "tire_tread",
+      "east": "tire_tread",
+      "west": "tire_tread"
+     },
+     null,
+     {
+      "axis": "y",
+      "angle": -45,
+      "origin": [
+       7.5,
+       12.05,
+       8
+      ]
+     }
+    ],
+    [
+     4.516,
+     10.35,
+     1.4,
+     10.484,
+     13.75,
+     4.0,
+     {
+      "up": "tire_wall",
+      "down": "tire_wall",
+      "north": "tire_tread",
+      "south": "tire_tread",
+      "east": "tire_tread",
+      "west": "tire_tread"
+     }
+    ],
+    [
+     4.516,
+     10.35,
+     1.4,
+     10.484,
+     13.75,
+     4.0,
+     {
+      "up": "tire_wall",
+      "down": "tire_wall",
+      "north": "tire_tread",
+      "south": "tire_tread",
+      "east": "tire_tread",
+      "west": "tire_tread"
+     },
+     null,
+     {
+      "axis": "y",
+      "angle": 45,
+      "origin": [
+       7.5,
+       12.05,
+       8
+      ]
+     }
+    ],
+    [
+     4.516,
+     10.35,
+     1.4,
+     10.484,
+     13.75,
+     4.0,
+     {
+      "up": "tire_wall",
+      "down": "tire_wall",
+      "north": "tire_tread",
+      "south": "tire_tread",
+      "east": "tire_tread",
+      "west": "tire_tread"
+     },
+     null,
+     {
+      "axis": "y",
+      "angle": -45,
+      "origin": [
+       7.5,
+       12.05,
+       8
+      ]
+     }
+    ],
+    [
+     11.5,
+     10.35,
+     5.016,
+     14.1,
+     13.75,
+     10.984,
+     {
+      "up": "tire_wall",
+      "down": "tire_wall",
+      "north": "tire_tread",
+      "south": "tire_tread",
+      "east": "tire_tread",
+      "west": "tire_tread"
+     }
+    ],
+    [
+     0.9,
+     10.35,
+     5.016,
+     3.5,
+     13.75,
+     10.984,
+     {
+      "up": "tire_wall",
+      "down": "tire_wall",
+      "north": "tire_tread",
+      "south": "tire_tread",
+      "east": "tire_tread",
+      "west": "tire_tread"
+     }
+    ]
+   ],
+   "title": "Tyres",
+   "sound": "WOOL",
+   "shape": [
+    [
+     1.5,
+     0,
+     1.5,
+     14.5,
+     13.8,
+     14.5
+    ]
+   ]
+  },
+  "cp_tw_leg": {
+   "model": "boxes",
+   "boxes": [
+    [
+     12,
+     0,
+     12,
+     16,
+     16,
+     16,
+     "cp_timber"
+    ],
+    [
+     11.8,
+     5,
+     11.8,
+     16.2,
+     6.4,
+     16.2,
+     "st_galv"
+    ],
+    [
+     11.6,
+     5.4,
+     13.6,
+     11.8,
+     6.0,
+     14.4,
+     "st_galv"
+    ]
+   ],
+   "title": "Tower Leg",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "shape": [
+    [
+     12,
+     0,
+     12,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "cp_tw_brace_a": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4.715,
+     6.6,
+     13.2,
+     20.715,
+     9.4,
+     14.799999999999999,
+     "cp_timber_h",
+     null,
+     {
+      "axis": "z",
+      "angle": 45,
+      "origin": [
+       8,
+       8,
+       14.0
+      ]
+     }
+    ]
+   ],
+   "title": "Tower Brace",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cp_tw_brace_b": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4.715,
+     6.6,
+     13.2,
+     20.715,
+     9.4,
+     14.799999999999999,
+     "cp_timber_h",
+     null,
+     {
+      "axis": "z",
+      "angle": -45,
+      "origin": [
+       8,
+       8,
+       14.0
+      ]
+     }
+    ]
+   ],
+   "title": "Tower Brace",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cp_tw_brace_x": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4.715,
+     6.6,
+     13.2,
+     20.715,
+     9.4,
+     14.799999999999999,
+     "cp_timber_h",
+     null,
+     {
+      "axis": "z",
+      "angle": 45,
+      "origin": [
+       8,
+       8,
+       14.0
+      ]
+     }
+    ],
+    [
+     -4.715,
+     6.6,
+     12.0,
+     20.715,
+     9.4,
+     13.6,
+     "cp_timber_h",
+     null,
+     {
+      "axis": "z",
+      "angle": -45,
+      "origin": [
+       8,
+       8,
+       12.8
+      ]
+     }
+    ]
+   ],
+   "title": "Tower Brace",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cp_tw_brace_a_g": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4.715,
+     6.6,
+     13.2,
+     20.715,
+     9.4,
+     14.799999999999999,
+     "cp_timber_h",
+     null,
+     {
+      "axis": "z",
+      "angle": 45,
+      "origin": [
+       8,
+       8,
+       14.0
+      ]
+     }
+    ],
+    [
+     0,
+     13,
+     12.6,
+     16,
+     16,
+     15.4,
+     "cp_timber_h"
+    ]
+   ],
+   "title": "Tower Brace",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     13,
+     12.6,
+     16,
+     16,
+     15.4
+    ]
+   ]
+  },
+  "cp_tw_brace_b_g": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4.715,
+     6.6,
+     13.2,
+     20.715,
+     9.4,
+     14.799999999999999,
+     "cp_timber_h",
+     null,
+     {
+      "axis": "z",
+      "angle": -45,
+      "origin": [
+       8,
+       8,
+       14.0
+      ]
+     }
+    ],
+    [
+     0,
+     13,
+     12.6,
+     16,
+     16,
+     15.4,
+     "cp_timber_h"
+    ]
+   ],
+   "title": "Tower Brace",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     13,
+     12.6,
+     16,
+     16,
+     15.4
+    ]
+   ]
+  },
+  "cp_tw_girt": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     13,
+     12.6,
+     16,
+     16,
+     15.4,
+     "cp_timber_h"
+    ]
+   ],
+   "title": "Tower Girt",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     13,
+     12.6,
+     16,
+     16,
+     15.4
+    ]
+   ]
+  },
+  "cp_tw_deck": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     14,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "cp_timber_h",
+      "south": "cp_timber_h",
+      "east": "cp_timber_h",
+      "west": "cp_timber_h",
+      "up": "cp_boards",
+      "down": "cp_boards"
+     }
+    ],
+    [
+     0,
+     9,
+     2,
+     16,
+     14,
+     5,
+     "cp_timber_h"
+    ],
+    [
+     0,
+     9,
+     10,
+     16,
+     14,
+     13,
+     "cp_timber_h"
+    ]
+   ],
+   "title": "Tower Deck",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     9,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "cp_tw_deck_post": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     14,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "cp_timber_h",
+      "south": "cp_timber_h",
+      "east": "cp_timber_h",
+      "west": "cp_timber_h",
+      "up": "cp_boards",
+      "down": "cp_boards"
+     }
+    ],
+    [
+     0,
+     9,
+     2,
+     16,
+     14,
+     5,
+     "cp_timber_h"
+    ],
+    [
+     0,
+     9,
+     10,
+     16,
+     14,
+     13,
+     "cp_timber_h"
+    ],
+    [
+     12,
+     0,
+     12,
+     16,
+     16,
+     16,
+     "cp_timber"
+    ],
+    [
+     11.8,
+     5,
+     11.8,
+     16.2,
+     6.4,
+     16.2,
+     "st_galv"
+    ],
+    [
+     11.6,
+     5.4,
+     13.6,
+     11.8,
+     6.0,
+     14.4,
+     "st_galv"
+    ]
+   ],
+   "title": "Tower Deck",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     9,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "cp_tw_roof": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0.2,
+     0,
+     16,
+     1.0,
+     16,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     1.5,
+     1.0,
+     0,
+     2.7,
+     1.6,
+     16,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     5.5,
+     1.0,
+     0,
+     6.7,
+     1.6,
+     16,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     9.5,
+     1.0,
+     0,
+     10.7,
+     1.6,
+     16,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     13.5,
+     1.0,
+     0,
+     14.7,
+     1.6,
+     16,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     0,
+     -1.6,
+     3,
+     16,
+     0.2,
+     5,
+     "cp_timber_h"
+    ],
+    [
+     0,
+     -1.6,
+     11,
+     16,
+     0.2,
+     13,
+     "cp_timber_h"
+    ]
+   ],
+   "title": "Tin Roof",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     1.6,
+     16
+    ]
+   ]
+  },
+  "cp_tw_roof_n": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0.2,
+     -4,
+     16,
+     1.0,
+     16,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     1.5,
+     1.0,
+     -4,
+     2.7,
+     1.6,
+     16,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     5.5,
+     1.0,
+     -4,
+     6.7,
+     1.6,
+     16,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     9.5,
+     1.0,
+     -4,
+     10.7,
+     1.6,
+     16,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     13.5,
+     1.0,
+     -4,
+     14.7,
+     1.6,
+     16,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     0,
+     -1.6,
+     3,
+     16,
+     0.2,
+     5,
+     "cp_timber_h"
+    ],
+    [
+     0,
+     -1.6,
+     11,
+     16,
+     0.2,
+     13,
+     "cp_timber_h"
+    ],
+    [
+     0,
+     -1.2,
+     -4.6,
+     16,
+     1.6,
+     -4,
+     "cp_timber_h"
+    ]
+   ],
+   "title": "Tin Roof",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     1.6,
+     16
+    ]
+   ]
+  },
+  "cp_tw_roof_e": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0.2,
+     0,
+     20,
+     1.0,
+     16,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     1.5,
+     1.0,
+     0,
+     2.7,
+     1.6,
+     16,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     5.5,
+     1.0,
+     0,
+     6.7,
+     1.6,
+     16,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     9.5,
+     1.0,
+     0,
+     10.7,
+     1.6,
+     16,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     13.5,
+     1.0,
+     0,
+     14.7,
+     1.6,
+     16,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     17.5,
+     1.0,
+     0,
+     18.7,
+     1.6,
+     16,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     0,
+     -1.6,
+     3,
+     20,
+     0.2,
+     5,
+     "cp_timber_h"
+    ],
+    [
+     0,
+     -1.6,
+     11,
+     20,
+     0.2,
+     13,
+     "cp_timber_h"
+    ],
+    [
+     20,
+     -1.2,
+     0,
+     20.6,
+     1.6,
+     16,
+     "cp_timber_h"
+    ]
+   ],
+   "title": "Tin Roof",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     1.6,
+     16
+    ]
+   ]
+  },
+  "cp_tw_roof_s": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0.2,
+     0,
+     16,
+     1.0,
+     20,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     1.5,
+     1.0,
+     0,
+     2.7,
+     1.6,
+     20,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     5.5,
+     1.0,
+     0,
+     6.7,
+     1.6,
+     20,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     9.5,
+     1.0,
+     0,
+     10.7,
+     1.6,
+     20,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     13.5,
+     1.0,
+     0,
+     14.7,
+     1.6,
+     20,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     0,
+     -1.6,
+     3,
+     16,
+     0.2,
+     5,
+     "cp_timber_h"
+    ],
+    [
+     0,
+     -1.6,
+     11,
+     16,
+     0.2,
+     13,
+     "cp_timber_h"
+    ],
+    [
+     0,
+     -1.2,
+     20,
+     16,
+     1.6,
+     20.6,
+     "cp_timber_h"
+    ]
+   ],
+   "title": "Tin Roof",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     1.6,
+     16
+    ]
+   ]
+  },
+  "cp_tw_roof_w": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4,
+     0.2,
+     0,
+     16,
+     1.0,
+     16,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     -2.5,
+     1.0,
+     0,
+     -1.3,
+     1.6,
+     16,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     1.5,
+     1.0,
+     0,
+     2.7,
+     1.6,
+     16,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     5.5,
+     1.0,
+     0,
+     6.7,
+     1.6,
+     16,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     9.5,
+     1.0,
+     0,
+     10.7,
+     1.6,
+     16,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     13.5,
+     1.0,
+     0,
+     14.7,
+     1.6,
+     16,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     -4,
+     -1.6,
+     3,
+     16,
+     0.2,
+     5,
+     "cp_timber_h"
+    ],
+    [
+     -4,
+     -1.6,
+     11,
+     16,
+     0.2,
+     13,
+     "cp_timber_h"
+    ],
+    [
+     -4.6,
+     -1.2,
+     0,
+     -4,
+     1.6,
+     16,
+     "cp_timber_h"
+    ]
+   ],
+   "title": "Tin Roof",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     1.6,
+     16
+    ]
+   ]
+  },
+  "cp_tw_roof_nw": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4,
+     0.2,
+     -4,
+     16,
+     1.0,
+     16,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     -2.5,
+     1.0,
+     -4,
+     -1.3,
+     1.6,
+     16,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     1.5,
+     1.0,
+     -4,
+     2.7,
+     1.6,
+     16,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     5.5,
+     1.0,
+     -4,
+     6.7,
+     1.6,
+     16,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     9.5,
+     1.0,
+     -4,
+     10.7,
+     1.6,
+     16,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     13.5,
+     1.0,
+     -4,
+     14.7,
+     1.6,
+     16,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     -4,
+     -1.6,
+     3,
+     16,
+     0.2,
+     5,
+     "cp_timber_h"
+    ],
+    [
+     -4,
+     -1.6,
+     11,
+     16,
+     0.2,
+     13,
+     "cp_timber_h"
+    ],
+    [
+     -4,
+     -1.2,
+     -4.6,
+     16,
+     1.6,
+     -4,
+     "cp_timber_h"
+    ],
+    [
+     -4.6,
+     -1.2,
+     -4,
+     -4,
+     1.6,
+     16,
+     "cp_timber_h"
+    ]
+   ],
+   "title": "Tin Roof",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     1.6,
+     16
+    ]
+   ]
+  },
+  "cp_tw_roof_ne": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0.2,
+     -4,
+     20,
+     1.0,
+     16,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     1.5,
+     1.0,
+     -4,
+     2.7,
+     1.6,
+     16,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     5.5,
+     1.0,
+     -4,
+     6.7,
+     1.6,
+     16,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     9.5,
+     1.0,
+     -4,
+     10.7,
+     1.6,
+     16,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     13.5,
+     1.0,
+     -4,
+     14.7,
+     1.6,
+     16,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     17.5,
+     1.0,
+     -4,
+     18.7,
+     1.6,
+     16,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     0,
+     -1.6,
+     3,
+     20,
+     0.2,
+     5,
+     "cp_timber_h"
+    ],
+    [
+     0,
+     -1.6,
+     11,
+     20,
+     0.2,
+     13,
+     "cp_timber_h"
+    ],
+    [
+     0,
+     -1.2,
+     -4.6,
+     20,
+     1.6,
+     -4,
+     "cp_timber_h"
+    ],
+    [
+     20,
+     -1.2,
+     -4,
+     20.6,
+     1.6,
+     16,
+     "cp_timber_h"
+    ]
+   ],
+   "title": "Tin Roof",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     1.6,
+     16
+    ]
+   ]
+  },
+  "cp_tw_roof_se": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0.2,
+     0,
+     20,
+     1.0,
+     20,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     1.5,
+     1.0,
+     0,
+     2.7,
+     1.6,
+     20,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     5.5,
+     1.0,
+     0,
+     6.7,
+     1.6,
+     20,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     9.5,
+     1.0,
+     0,
+     10.7,
+     1.6,
+     20,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     13.5,
+     1.0,
+     0,
+     14.7,
+     1.6,
+     20,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     17.5,
+     1.0,
+     0,
+     18.7,
+     1.6,
+     20,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     0,
+     -1.6,
+     3,
+     20,
+     0.2,
+     5,
+     "cp_timber_h"
+    ],
+    [
+     0,
+     -1.6,
+     11,
+     20,
+     0.2,
+     13,
+     "cp_timber_h"
+    ],
+    [
+     0,
+     -1.2,
+     20,
+     20,
+     1.6,
+     20.6,
+     "cp_timber_h"
+    ],
+    [
+     20,
+     -1.2,
+     0,
+     20.6,
+     1.6,
+     20,
+     "cp_timber_h"
+    ]
+   ],
+   "title": "Tin Roof",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     1.6,
+     16
+    ]
+   ]
+  },
+  "cp_tw_roof_sw": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4,
+     0.2,
+     0,
+     16,
+     1.0,
+     20,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     -2.5,
+     1.0,
+     0,
+     -1.3,
+     1.6,
+     20,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     1.5,
+     1.0,
+     0,
+     2.7,
+     1.6,
+     20,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     5.5,
+     1.0,
+     0,
+     6.7,
+     1.6,
+     20,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     9.5,
+     1.0,
+     0,
+     10.7,
+     1.6,
+     20,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     13.5,
+     1.0,
+     0,
+     14.7,
+     1.6,
+     20,
+     {
+      "north": "corrugated_grey",
+      "south": "corrugated_grey",
+      "east": "corrugated_grey",
+      "west": "corrugated_grey",
+      "up": "corrugated_grey",
+      "down": "corrugated_grey"
+     }
+    ],
+    [
+     -4,
+     -1.6,
+     3,
+     16,
+     0.2,
+     5,
+     "cp_timber_h"
+    ],
+    [
+     -4,
+     -1.6,
+     11,
+     16,
+     0.2,
+     13,
+     "cp_timber_h"
+    ],
+    [
+     -4,
+     -1.2,
+     20,
+     16,
+     1.6,
+     20.6,
+     "cp_timber_h"
+    ],
+    [
+     -4.6,
+     -1.2,
+     0,
+     -4,
+     1.6,
+     20,
+     "cp_timber_h"
+    ]
+   ],
+   "title": "Tin Roof",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     1.6,
+     16
+    ]
+   ]
+  },
+  "cp_flood": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4.5,
+     3.2,
+     4,
+     11.5,
+     9.2,
+     8,
+     {
+      "north": "cp_lens",
+      "south": "cp_lamp",
+      "east": "cp_lamp",
+      "west": "cp_lamp",
+      "up": "cp_lamp",
+      "down": "cp_lamp"
+     },
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       6.2,
+       6
+      ]
+     }
+    ],
+    [
+     5.0,
+     3.7,
+     8,
+     11.0,
+     8.7,
+     9.4,
+     "cp_lamp",
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       6.2,
+       6
+      ]
+     }
+    ],
+    [
+     4.1,
+     8.799999999999999,
+     2.8,
+     11.9,
+     9.399999999999999,
+     4,
+     "cp_lamp",
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       6.2,
+       6
+      ]
+     }
+    ],
+    [
+     5.5,
+     3.5,
+     9.4,
+     6.1,
+     8.899999999999999,
+     10.6,
+     "cp_lamp",
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       6.2,
+       6
+      ]
+     }
+    ],
+    [
+     7.7,
+     3.5,
+     9.4,
+     8.3,
+     8.899999999999999,
+     10.6,
+     "cp_lamp",
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       6.2,
+       6
+      ]
+     }
+    ],
+    [
+     9.9,
+     3.5,
+     9.4,
+     10.5,
+     8.899999999999999,
+     10.6,
+     "cp_lamp",
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       6.2,
+       6
+      ]
+     }
+    ],
+    [
+     3.3,
+     4.7,
+     5.4,
+     4.3,
+     6.2,
+     6.6,
+     "st_galv"
+    ],
+    [
+     11.7,
+     4.7,
+     5.4,
+     12.7,
+     6.2,
+     6.6,
+     "st_galv"
+    ],
+    [
+     2.8,
+     0,
+     3,
+     13.2,
+     1,
+     16,
+     "st_galv"
+    ],
+    [
+     2.8,
+     0,
+     15,
+     13.2,
+     7,
+     16,
+     "st_galv"
+    ],
+    [
+     3.3,
+     1,
+     5.4,
+     4.3,
+     5.2,
+     6.6,
+     "st_galv"
+    ],
+    [
+     11.7,
+     1,
+     5.4,
+     12.7,
+     5.2,
+     6.6,
+     "st_galv"
+    ],
+    [
+     5,
+     1,
+     8,
+     11,
+     2.4,
+     13,
+     "cp_lamp"
+    ]
+   ],
+   "title": "Floodlight",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cp_flood_hang": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4.5,
+     4,
+     4,
+     11.5,
+     10,
+     8,
+     {
+      "north": "cp_lens",
+      "south": "cp_lamp",
+      "east": "cp_lamp",
+      "west": "cp_lamp",
+      "up": "cp_lamp",
+      "down": "cp_lamp"
+     },
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       7.0,
+       6
+      ]
+     }
+    ],
+    [
+     5.0,
+     4.5,
+     8,
+     11.0,
+     9.5,
+     9.4,
+     "cp_lamp",
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       7.0,
+       6
+      ]
+     }
+    ],
+    [
+     4.1,
+     9.6,
+     2.8,
+     11.9,
+     10.2,
+     4,
+     "cp_lamp",
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       7.0,
+       6
+      ]
+     }
+    ],
+    [
+     5.5,
+     4.3,
+     9.4,
+     6.1,
+     9.7,
+     10.6,
+     "cp_lamp",
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       7.0,
+       6
+      ]
+     }
+    ],
+    [
+     7.7,
+     4.3,
+     9.4,
+     8.3,
+     9.7,
+     10.6,
+     "cp_lamp",
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       7.0,
+       6
+      ]
+     }
+    ],
+    [
+     9.9,
+     4.3,
+     9.4,
+     10.5,
+     9.7,
+     10.6,
+     "cp_lamp",
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       7.0,
+       6
+      ]
+     }
+    ],
+    [
+     3.3,
+     5.5,
+     5.4,
+     4.3,
+     7,
+     6.6,
+     "st_galv"
+    ],
+    [
+     11.7,
+     5.5,
+     5.4,
+     12.7,
+     7,
+     6.6,
+     "st_galv"
+    ],
+    [
+     7.2,
+     10,
+     6.2,
+     8.8,
+     16,
+     7.8,
+     "st_galv"
+    ],
+    [
+     3.3,
+     9.2,
+     5.6,
+     12.7,
+     10.2,
+     7.2,
+     "st_galv"
+    ],
+    [
+     3.3,
+     5.2,
+     5.6,
+     4.3,
+     10.2,
+     7.2,
+     "st_galv"
+    ],
+    [
+     11.7,
+     5.2,
+     5.6,
+     12.7,
+     10.2,
+     7.2,
+     "st_galv"
+    ],
+    [
+     6,
+     15,
+     4,
+     10,
+     16,
+     10,
+     "st_galv"
+    ]
+   ],
+   "title": "Floodlight",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cp_flood_bar": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -6,
+     0,
+     7,
+     22,
+     1.6,
+     9,
+     "st_galv"
+    ],
+    [
+     6,
+     0,
+     6.5,
+     10,
+     4,
+     9.5,
+     "cp_cabinet"
+    ],
+    [
+     7,
+     -4,
+     7,
+     9,
+     0,
+     9,
+     "st_galv"
+    ],
+    [
+     -5.5,
+     1.6,
+     4,
+     1.5,
+     7.6,
+     8,
+     {
+      "north": "cp_lens",
+      "south": "cp_lamp",
+      "east": "cp_lamp",
+      "west": "cp_lamp",
+      "up": "cp_lamp",
+      "down": "cp_lamp"
+     },
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       4.6,
+       6
+      ]
+     }
+    ],
+    [
+     -5.0,
+     2.1,
+     8,
+     1.0,
+     7.1,
+     9.4,
+     "cp_lamp",
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       4.6,
+       6
+      ]
+     }
+    ],
+    [
+     -5.9,
+     7.199999999999999,
+     2.8,
+     1.9,
+     7.8,
+     4,
+     "cp_lamp",
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       4.6,
+       6
+      ]
+     }
+    ],
+    [
+     -4.5,
+     1.9000000000000001,
+     9.4,
+     -3.9,
+     7.3,
+     10.6,
+     "cp_lamp",
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       4.6,
+       6
+      ]
+     }
+    ],
+    [
+     -2.3,
+     1.9000000000000001,
+     9.4,
+     -1.6999999999999997,
+     7.3,
+     10.6,
+     "cp_lamp",
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       4.6,
+       6
+      ]
+     }
+    ],
+    [
+     -0.09999999999999964,
+     1.9000000000000001,
+     9.4,
+     0.5000000000000004,
+     7.3,
+     10.6,
+     "cp_lamp",
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       4.6,
+       6
+      ]
+     }
+    ],
+    [
+     -6.7,
+     3.1,
+     5.4,
+     -5.7,
+     4.6,
+     6.6,
+     "st_galv"
+    ],
+    [
+     1.7,
+     3.1,
+     5.4,
+     2.7,
+     4.6,
+     6.6,
+     "st_galv"
+    ],
+    [
+     14.5,
+     1.6,
+     4,
+     21.5,
+     7.6,
+     8,
+     {
+      "north": "cp_lens",
+      "south": "cp_lamp",
+      "east": "cp_lamp",
+      "west": "cp_lamp",
+      "up": "cp_lamp",
+      "down": "cp_lamp"
+     },
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       4.6,
+       6
+      ]
+     }
+    ],
+    [
+     15.0,
+     2.1,
+     8,
+     21.0,
+     7.1,
+     9.4,
+     "cp_lamp",
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       4.6,
+       6
+      ]
+     }
+    ],
+    [
+     14.1,
+     7.199999999999999,
+     2.8,
+     21.9,
+     7.8,
+     4,
+     "cp_lamp",
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       4.6,
+       6
+      ]
+     }
+    ],
+    [
+     15.5,
+     1.9000000000000001,
+     9.4,
+     16.1,
+     7.3,
+     10.6,
+     "cp_lamp",
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       4.6,
+       6
+      ]
+     }
+    ],
+    [
+     17.7,
+     1.9000000000000001,
+     9.4,
+     18.3,
+     7.3,
+     10.6,
+     "cp_lamp",
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       4.6,
+       6
+      ]
+     }
+    ],
+    [
+     19.9,
+     1.9000000000000001,
+     9.4,
+     20.5,
+     7.3,
+     10.6,
+     "cp_lamp",
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       4.6,
+       6
+      ]
+     }
+    ],
+    [
+     13.3,
+     3.1,
+     5.4,
+     14.3,
+     4.6,
+     6.6,
+     "st_galv"
+    ],
+    [
+     21.7,
+     3.1,
+     5.4,
+     22.7,
+     4.6,
+     6.6,
+     "st_galv"
+    ]
+   ],
+   "title": "Floodlights",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cp_flood_lit": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4.5,
+     3.2,
+     4,
+     11.5,
+     9.2,
+     8,
+     {
+      "north": "cp_lens_lit",
+      "south": "cp_lamp",
+      "east": "cp_lamp",
+      "west": "cp_lamp",
+      "up": "cp_lamp",
+      "down": "cp_lamp"
+     },
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       6.2,
+       6
+      ]
+     }
+    ],
+    [
+     5.0,
+     3.7,
+     8,
+     11.0,
+     8.7,
+     9.4,
+     "cp_lamp",
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       6.2,
+       6
+      ]
+     }
+    ],
+    [
+     4.1,
+     8.799999999999999,
+     2.8,
+     11.9,
+     9.399999999999999,
+     4,
+     "cp_lamp",
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       6.2,
+       6
+      ]
+     }
+    ],
+    [
+     5.5,
+     3.5,
+     9.4,
+     6.1,
+     8.899999999999999,
+     10.6,
+     "cp_lamp",
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       6.2,
+       6
+      ]
+     }
+    ],
+    [
+     7.7,
+     3.5,
+     9.4,
+     8.3,
+     8.899999999999999,
+     10.6,
+     "cp_lamp",
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       6.2,
+       6
+      ]
+     }
+    ],
+    [
+     9.9,
+     3.5,
+     9.4,
+     10.5,
+     8.899999999999999,
+     10.6,
+     "cp_lamp",
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       6.2,
+       6
+      ]
+     }
+    ],
+    [
+     3.3,
+     4.7,
+     5.4,
+     4.3,
+     6.2,
+     6.6,
+     "st_galv"
+    ],
+    [
+     11.7,
+     4.7,
+     5.4,
+     12.7,
+     6.2,
+     6.6,
+     "st_galv"
+    ],
+    [
+     2.8,
+     0,
+     3,
+     13.2,
+     1,
+     16,
+     "st_galv"
+    ],
+    [
+     2.8,
+     0,
+     15,
+     13.2,
+     7,
+     16,
+     "st_galv"
+    ],
+    [
+     3.3,
+     1,
+     5.4,
+     4.3,
+     5.2,
+     6.6,
+     "st_galv"
+    ],
+    [
+     11.7,
+     1,
+     5.4,
+     12.7,
+     5.2,
+     6.6,
+     "st_galv"
+    ],
+    [
+     5,
+     1,
+     8,
+     11,
+     2.4,
+     13,
+     "cp_lamp"
+    ]
+   ],
+   "title": "Floodlight",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "light": 15
+  },
+  "cp_flood_hang_lit": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4.5,
+     4,
+     4,
+     11.5,
+     10,
+     8,
+     {
+      "north": "cp_lens_lit",
+      "south": "cp_lamp",
+      "east": "cp_lamp",
+      "west": "cp_lamp",
+      "up": "cp_lamp",
+      "down": "cp_lamp"
+     },
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       7.0,
+       6
+      ]
+     }
+    ],
+    [
+     5.0,
+     4.5,
+     8,
+     11.0,
+     9.5,
+     9.4,
+     "cp_lamp",
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       7.0,
+       6
+      ]
+     }
+    ],
+    [
+     4.1,
+     9.6,
+     2.8,
+     11.9,
+     10.2,
+     4,
+     "cp_lamp",
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       7.0,
+       6
+      ]
+     }
+    ],
+    [
+     5.5,
+     4.3,
+     9.4,
+     6.1,
+     9.7,
+     10.6,
+     "cp_lamp",
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       7.0,
+       6
+      ]
+     }
+    ],
+    [
+     7.7,
+     4.3,
+     9.4,
+     8.3,
+     9.7,
+     10.6,
+     "cp_lamp",
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       7.0,
+       6
+      ]
+     }
+    ],
+    [
+     9.9,
+     4.3,
+     9.4,
+     10.5,
+     9.7,
+     10.6,
+     "cp_lamp",
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       7.0,
+       6
+      ]
+     }
+    ],
+    [
+     3.3,
+     5.5,
+     5.4,
+     4.3,
+     7,
+     6.6,
+     "st_galv"
+    ],
+    [
+     11.7,
+     5.5,
+     5.4,
+     12.7,
+     7,
+     6.6,
+     "st_galv"
+    ],
+    [
+     7.2,
+     10,
+     6.2,
+     8.8,
+     16,
+     7.8,
+     "st_galv"
+    ],
+    [
+     3.3,
+     9.2,
+     5.6,
+     12.7,
+     10.2,
+     7.2,
+     "st_galv"
+    ],
+    [
+     3.3,
+     5.2,
+     5.6,
+     4.3,
+     10.2,
+     7.2,
+     "st_galv"
+    ],
+    [
+     11.7,
+     5.2,
+     5.6,
+     12.7,
+     10.2,
+     7.2,
+     "st_galv"
+    ],
+    [
+     6,
+     15,
+     4,
+     10,
+     16,
+     10,
+     "st_galv"
+    ]
+   ],
+   "title": "Floodlight",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "light": 15
+  },
+  "cp_flood_bar_lit": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -6,
+     0,
+     7,
+     22,
+     1.6,
+     9,
+     "st_galv"
+    ],
+    [
+     6,
+     0,
+     6.5,
+     10,
+     4,
+     9.5,
+     "cp_cabinet"
+    ],
+    [
+     7,
+     -4,
+     7,
+     9,
+     0,
+     9,
+     "st_galv"
+    ],
+    [
+     -5.5,
+     1.6,
+     4,
+     1.5,
+     7.6,
+     8,
+     {
+      "north": "cp_lens_lit",
+      "south": "cp_lamp",
+      "east": "cp_lamp",
+      "west": "cp_lamp",
+      "up": "cp_lamp",
+      "down": "cp_lamp"
+     },
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       4.6,
+       6
+      ]
+     }
+    ],
+    [
+     -5.0,
+     2.1,
+     8,
+     1.0,
+     7.1,
+     9.4,
+     "cp_lamp",
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       4.6,
+       6
+      ]
+     }
+    ],
+    [
+     -5.9,
+     7.199999999999999,
+     2.8,
+     1.9,
+     7.8,
+     4,
+     "cp_lamp",
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       4.6,
+       6
+      ]
+     }
+    ],
+    [
+     -4.5,
+     1.9000000000000001,
+     9.4,
+     -3.9,
+     7.3,
+     10.6,
+     "cp_lamp",
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       4.6,
+       6
+      ]
+     }
+    ],
+    [
+     -2.3,
+     1.9000000000000001,
+     9.4,
+     -1.6999999999999997,
+     7.3,
+     10.6,
+     "cp_lamp",
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       4.6,
+       6
+      ]
+     }
+    ],
+    [
+     -0.09999999999999964,
+     1.9000000000000001,
+     9.4,
+     0.5000000000000004,
+     7.3,
+     10.6,
+     "cp_lamp",
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       4.6,
+       6
+      ]
+     }
+    ],
+    [
+     -6.7,
+     3.1,
+     5.4,
+     -5.7,
+     4.6,
+     6.6,
+     "st_galv"
+    ],
+    [
+     1.7,
+     3.1,
+     5.4,
+     2.7,
+     4.6,
+     6.6,
+     "st_galv"
+    ],
+    [
+     14.5,
+     1.6,
+     4,
+     21.5,
+     7.6,
+     8,
+     {
+      "north": "cp_lens_lit",
+      "south": "cp_lamp",
+      "east": "cp_lamp",
+      "west": "cp_lamp",
+      "up": "cp_lamp",
+      "down": "cp_lamp"
+     },
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       4.6,
+       6
+      ]
+     }
+    ],
+    [
+     15.0,
+     2.1,
+     8,
+     21.0,
+     7.1,
+     9.4,
+     "cp_lamp",
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       4.6,
+       6
+      ]
+     }
+    ],
+    [
+     14.1,
+     7.199999999999999,
+     2.8,
+     21.9,
+     7.8,
+     4,
+     "cp_lamp",
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       4.6,
+       6
+      ]
+     }
+    ],
+    [
+     15.5,
+     1.9000000000000001,
+     9.4,
+     16.1,
+     7.3,
+     10.6,
+     "cp_lamp",
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       4.6,
+       6
+      ]
+     }
+    ],
+    [
+     17.7,
+     1.9000000000000001,
+     9.4,
+     18.3,
+     7.3,
+     10.6,
+     "cp_lamp",
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       4.6,
+       6
+      ]
+     }
+    ],
+    [
+     19.9,
+     1.9000000000000001,
+     9.4,
+     20.5,
+     7.3,
+     10.6,
+     "cp_lamp",
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       4.6,
+       6
+      ]
+     }
+    ],
+    [
+     13.3,
+     3.1,
+     5.4,
+     14.3,
+     4.6,
+     6.6,
+     "st_galv"
+    ],
+    [
+     21.7,
+     3.1,
+     5.4,
+     22.7,
+     4.6,
+     6.6,
+     "st_galv"
+    ]
+   ],
+   "title": "Floodlights",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "light": 15
+  },
+  "cp_boom_post": {
+   "model": "boxes",
+   "boxes": [
+    [
+     2,
+     0,
+     3,
+     14,
+     1.2,
+     13,
+     "concrete_panel"
+    ],
+    [
+     3.5,
+     1.2,
+     4.5,
+     11.5,
+     14,
+     11.5,
+     {
+      "north": "cp_yellow",
+      "south": "cp_yellow",
+      "east": "cp_yellow",
+      "west": "cp_yellow",
+      "up": "cp_yellow",
+      "down": "cp_yellow"
+     }
+    ],
+    [
+     3.5,
+     1.2,
+     4.4,
+     11.5,
+     4,
+     4.5,
+     "cp_hazard"
+    ],
+    [
+     3.2,
+     14,
+     4.2,
+     11.8,
+     15,
+     11.8,
+     "cp_yellow"
+    ],
+    [
+     11.5,
+     10,
+     6.5,
+     13.5,
+     14,
+     9.5,
+     "st_galv"
+    ],
+    [
+     0.5,
+     9.5,
+     6,
+     3.5,
+     14.5,
+     10,
+     "cp_lamp"
+    ],
+    [
+     6,
+     6,
+     4.2,
+     9,
+     9,
+     4.5,
+     "cp_lamp"
+    ]
+   ],
+   "title": "Barrier",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     3.5,
+     0,
+     4.5,
+     11.5,
+     15,
+     11.5
+    ]
+   ]
+  },
+  "cp_boom_arm": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     10.4,
+     6.4,
+     16,
+     13.6,
+     9.6,
+     {
+      "north": "cp_boom_v",
+      "south": "cp_boom_v",
+      "east": "cp_boom_v",
+      "west": "cp_boom_v",
+      "up": "cp_boom",
+      "down": "cp_boom"
+     }
+    ],
+    [
+     0,
+     10.4,
+     6.4,
+     16,
+     13.6,
+     9.6,
+     {
+      "north": "cp_boom_v",
+      "south": "cp_boom_v",
+      "east": "cp_boom_v",
+      "west": "cp_boom_v",
+      "up": "cp_boom",
+      "down": "cp_boom"
+     },
+     null,
+     {
+      "axis": "x",
+      "angle": 45,
+      "origin": [
+       8,
+       12,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Barrier Arm",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     10,
+     6,
+     16,
+     14,
+     10
+    ]
+   ]
+  },
+  "cp_boom_tip": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     10.4,
+     6.4,
+     12,
+     13.6,
+     9.6,
+     {
+      "north": "cp_boom_v",
+      "south": "cp_boom_v",
+      "east": "cp_boom_v",
+      "west": "cp_boom_v",
+      "up": "cp_boom",
+      "down": "cp_boom"
+     }
+    ],
+    [
+     0,
+     10.4,
+     6.4,
+     12,
+     13.6,
+     9.6,
+     {
+      "north": "cp_boom_v",
+      "south": "cp_boom_v",
+      "east": "cp_boom_v",
+      "west": "cp_boom_v",
+      "up": "cp_boom",
+      "down": "cp_boom"
+     },
+     null,
+     {
+      "axis": "x",
+      "angle": 45,
+      "origin": [
+       8,
+       12,
+       8
+      ]
+     }
+    ],
+    [
+     12,
+     10,
+     6,
+     13,
+     14,
+     10,
+     "home_plastic_black"
+    ],
+    [
+     9,
+     0,
+     6.5,
+     11,
+     10.4,
+     9.5,
+     "cp_yellow"
+    ],
+    [
+     8.5,
+     9.6,
+     5.5,
+     11.5,
+     10.4,
+     10.5,
+     "st_galv"
+    ],
+    [
+     8,
+     0,
+     5.5,
+     12,
+     0.8,
+     10.5,
+     "concrete_panel"
+    ]
+   ],
+   "title": "Barrier Arm",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     10,
+     6,
+     13,
+     14,
+     10
+    ],
+    [
+     9,
+     0,
+     6.5,
+     11,
+     10,
+     9.5
+    ]
+   ]
+  },
+  "cp_boom_up": {
+   "model": "boxes",
+   "boxes": [
+    [
+     10.9,
+     0,
+     6.4,
+     14.1,
+     16,
+     9.6,
+     {
+      "north": "cp_boom",
+      "south": "cp_boom",
+      "east": "cp_boom",
+      "west": "cp_boom"
+     }
+    ],
+    [
+     10.9,
+     0,
+     6.4,
+     14.1,
+     16,
+     9.6,
+     {
+      "north": "cp_boom",
+      "south": "cp_boom",
+      "east": "cp_boom",
+      "west": "cp_boom"
+     },
+     null,
+     {
+      "axis": "y",
+      "angle": 45,
+      "origin": [
+       12.5,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Barrier Arm",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     10.5,
+     0,
+     6,
+     14.5,
+     16,
+     10
+    ]
+   ]
+  },
+  "cp_boom_cap": {
+   "model": "boxes",
+   "boxes": [
+    [
+     10.9,
+     0,
+     6.4,
+     14.1,
+     10,
+     9.6,
+     {
+      "north": "cp_boom",
+      "south": "cp_boom",
+      "east": "cp_boom",
+      "west": "cp_boom",
+      "up": "cp_boom",
+      "down": "cp_boom"
+     }
+    ],
+    [
+     10.9,
+     0,
+     6.4,
+     14.1,
+     10,
+     9.6,
+     {
+      "north": "cp_boom",
+      "south": "cp_boom",
+      "east": "cp_boom",
+      "west": "cp_boom",
+      "up": "cp_boom",
+      "down": "cp_boom"
+     },
+     null,
+     {
+      "axis": "y",
+      "angle": 45,
+      "origin": [
+       12.5,
+       5,
+       8
+      ]
+     }
+    ],
+    [
+     10.5,
+     10,
+     6,
+     14.5,
+     11,
+     10,
+     "home_plastic_black"
+    ]
+   ],
+   "title": "Barrier Arm",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     10.5,
+     0,
+     6,
+     14.5,
+     11,
+     10
+    ]
+   ]
+  },
+  "cp_target_lo": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1.5,
+     0,
+     8,
+     3.5,
+     16,
+     10,
+     "cp_timber"
+    ],
+    [
+     12.5,
+     0,
+     8,
+     14.5,
+     16,
+     10,
+     "cp_timber"
+    ],
+    [
+     1,
+     10,
+     7.2,
+     15,
+     16,
+     8,
+     {
+      "north": "cp_target_lo",
+      "south": "tn_ply",
+      "east": "tn_ply",
+      "west": "tn_ply",
+      "up": "tn_ply",
+      "down": "tn_ply"
+     }
+    ],
+    [
+     0.5,
+     0,
+     7.5,
+     4.5,
+     1.2,
+     10.5,
+     "rubble"
+    ],
+    [
+     11.5,
+     0,
+     7.5,
+     15.5,
+     1.2,
+     10.5,
+     "rubble"
+    ]
+   ],
+   "title": "Target",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "shape": [
+    [
+     1,
+     0,
+     7.2,
+     15,
+     16,
+     10
+    ]
+   ]
+  },
+  "cp_target_hi": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1.5,
+     0,
+     8,
+     3.5,
+     14,
+     10,
+     "cp_timber"
+    ],
+    [
+     12.5,
+     0,
+     8,
+     14.5,
+     14,
+     10,
+     "cp_timber"
+    ],
+    [
+     1,
+     0,
+     7.2,
+     15,
+     15,
+     8,
+     {
+      "north": "cp_target_hi",
+      "south": "tn_ply",
+      "east": "tn_ply",
+      "west": "tn_ply",
+      "up": "tn_ply",
+      "down": "tn_ply"
+     }
+    ]
+   ],
+   "title": "Target",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "shape": [
+    [
+     1,
+     0,
+     7.2,
+     15,
+     15,
+     10
+    ]
+   ]
+  },
+  "cp_target_hi_shot": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1.5,
+     0,
+     8,
+     3.5,
+     14,
+     10,
+     "cp_timber"
+    ],
+    [
+     12.5,
+     0,
+     8,
+     14.5,
+     14,
+     10,
+     "cp_timber"
+    ],
+    [
+     1,
+     0,
+     7.2,
+     15,
+     11,
+     8,
+     {
+      "north": "cp_target_hi_shot",
+      "south": "tn_ply",
+      "east": "tn_ply",
+      "west": "tn_ply",
+      "up": "tn_ply",
+      "down": "tn_ply"
+     }
+    ],
+    [
+     7,
+     11,
+     7.2,
+     15,
+     13,
+     8,
+     {
+      "north": "cp_target_hi_shot",
+      "south": "tn_ply",
+      "east": "tn_ply",
+      "west": "tn_ply",
+      "up": "tn_ply",
+      "down": "tn_ply"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       7,
+       11,
+       7.6
+      ]
+     }
+    ]
+   ],
+   "title": "Target",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "shape": [
+    [
+     1,
+     0,
+     7.2,
+     15,
+     13,
+     10
+    ]
+   ]
+  },
+  "cp_target_down": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     2,
+     15,
+     0.8,
+     16,
+     {
+      "north": "tn_ply",
+      "south": "tn_ply",
+      "east": "tn_ply",
+      "west": "tn_ply",
+      "up": "cp_target_lo",
+      "down": "cp_target_lo"
+     }
+    ],
+    [
+     1.5,
+     0,
+     0,
+     3.5,
+     2,
+     6,
+     "cp_timber"
+    ],
+    [
+     12.5,
+     0,
+     0,
+     14.5,
+     2,
+     4.5,
+     "cp_timber"
+    ],
+    [
+     1.5,
+     0,
+     14,
+     3.5,
+     3,
+     16,
+     "cp_timber"
+    ],
+    [
+     12.5,
+     0,
+     13,
+     14.5,
+     4,
+     15,
+     "cp_timber"
+    ]
+   ],
+   "title": "Target",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cp_flagpole": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.3,
+     0,
+     7.3,
+     8.7,
+     16,
+     8.7,
+     "st_galv"
+    ]
+   ],
+   "title": "Flagpole",
+   "sound": "METAL",
+   "shape": [
+    [
+     7,
+     0,
+     7,
+     9,
+     16,
+     9
+    ]
+   ]
+  },
+  "cp_flag": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.3,
+     0,
+     7.3,
+     8.7,
+     16,
+     8.7,
+     "st_galv"
+    ],
+    [
+     7,
+     15,
+     7,
+     9,
+     16,
+     9,
+     "st_galv"
+    ],
+    [
+     8.7,
+     6,
+     7.7,
+     16.7,
+     15,
+     8.3,
+     {
+      "north": "cp_flag",
+      "south": "cp_flag",
+      "east": "cp_flag",
+      "west": "cp_flag",
+      "up": "cp_flag",
+      "down": "cp_flag"
+     },
+     null,
+     {
+      "axis": "y",
+      "angle": -22.5,
+      "origin": [
+       8.7,
+       10,
+       8
+      ]
+     }
+    ],
+    [
+     16,
+     6,
+     10,
+     24,
+     15,
+     10.6,
+     {
+      "north": "cp_flag",
+      "south": "cp_flag",
+      "east": "cp_flag",
+      "west": "cp_flag",
+      "up": "cp_flag",
+      "down": "cp_flag"
+     },
+     null,
+     {
+      "axis": "y",
+      "angle": 22.5,
+      "origin": [
+       16,
+       10,
+       10.3
+      ]
+     }
+    ]
+   ],
+   "title": "Range Flag",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "shape": [
+    [
+     7,
+     0,
+     7,
+     9,
+     16,
+     9
+    ]
+   ]
+  },
+  "cp_lane_post": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7,
+     0,
+     7,
+     9,
+     12,
+     9,
+     "cp_timber"
+    ],
+    [
+     4,
+     8,
+     6.4,
+     12,
+     12,
+     7,
+     "cp_mast_w"
+    ],
+    [
+     4,
+     8,
+     6.3,
+     12,
+     9,
+     6.4,
+     "cp_mast_r"
+    ]
+   ],
+   "title": "Lane Marker",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "shape": [
+    [
+     6.5,
+     0,
+     6.5,
+     9.5,
+     12,
+     9.5
+    ]
+   ]
+  },
+  "cp_mast_r": {
+   "model": "boxes",
+   "boxes": [
+    [
+     3,
+     0,
+     3,
+     4,
+     16,
+     4,
+     "cp_mast_r"
+    ],
+    [
+     12,
+     0,
+     3,
+     13,
+     16,
+     4,
+     "cp_mast_r"
+    ],
+    [
+     3,
+     0,
+     12,
+     4,
+     16,
+     13,
+     "cp_mast_r"
+    ],
+    [
+     12,
+     0,
+     12,
+     13,
+     16,
+     13,
+     "cp_mast_r"
+    ],
+    [
+     3,
+     0,
+     3,
+     13,
+     0.8,
+     3.8,
+     "cp_mast_r"
+    ],
+    [
+     3,
+     0,
+     12.2,
+     13,
+     0.8,
+     13,
+     "cp_mast_r"
+    ],
+    [
+     3,
+     0,
+     3,
+     3.8,
+     0.8,
+     13,
+     "cp_mast_r"
+    ],
+    [
+     12.2,
+     0,
+     3,
+     13,
+     0.8,
+     13,
+     "cp_mast_r"
+    ],
+    [
+     0.33000000000000007,
+     7.6,
+     3,
+     15.67,
+     8.4,
+     3.6,
+     "cp_mast_r",
+     null,
+     {
+      "axis": "z",
+      "angle": 45,
+      "origin": [
+       8,
+       8,
+       3.3
+      ]
+     }
+    ],
+    [
+     0.33000000000000007,
+     7.6,
+     12.4,
+     15.67,
+     8.4,
+     13,
+     "cp_mast_r",
+     null,
+     {
+      "axis": "z",
+      "angle": -45,
+      "origin": [
+       8,
+       8,
+       12.7
+      ]
+     }
+    ],
+    [
+     3,
+     7.6,
+     0.33000000000000007,
+     3.6,
+     8.4,
+     15.67,
+     "cp_mast_r",
+     null,
+     {
+      "axis": "x",
+      "angle": -45,
+      "origin": [
+       3.3,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     12.4,
+     7.6,
+     0.33000000000000007,
+     13,
+     8.4,
+     15.67,
+     "cp_mast_r",
+     null,
+     {
+      "axis": "x",
+      "angle": 45,
+      "origin": [
+       12.7,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Radio Mast",
+   "sound": "METAL",
+   "shape": [
+    [
+     3,
+     0,
+     3,
+     13,
+     16,
+     13
+    ]
+   ]
+  },
+  "cp_mast_w": {
+   "model": "boxes",
+   "boxes": [
+    [
+     3,
+     0,
+     3,
+     4,
+     16,
+     4,
+     "cp_mast_w"
+    ],
+    [
+     12,
+     0,
+     3,
+     13,
+     16,
+     4,
+     "cp_mast_w"
+    ],
+    [
+     3,
+     0,
+     12,
+     4,
+     16,
+     13,
+     "cp_mast_w"
+    ],
+    [
+     12,
+     0,
+     12,
+     13,
+     16,
+     13,
+     "cp_mast_w"
+    ],
+    [
+     3,
+     0,
+     3,
+     13,
+     0.8,
+     3.8,
+     "cp_mast_w"
+    ],
+    [
+     3,
+     0,
+     12.2,
+     13,
+     0.8,
+     13,
+     "cp_mast_w"
+    ],
+    [
+     3,
+     0,
+     3,
+     3.8,
+     0.8,
+     13,
+     "cp_mast_w"
+    ],
+    [
+     12.2,
+     0,
+     3,
+     13,
+     0.8,
+     13,
+     "cp_mast_w"
+    ],
+    [
+     0.33000000000000007,
+     7.6,
+     3,
+     15.67,
+     8.4,
+     3.6,
+     "cp_mast_w",
+     null,
+     {
+      "axis": "z",
+      "angle": 45,
+      "origin": [
+       8,
+       8,
+       3.3
+      ]
+     }
+    ],
+    [
+     0.33000000000000007,
+     7.6,
+     12.4,
+     15.67,
+     8.4,
+     13,
+     "cp_mast_w",
+     null,
+     {
+      "axis": "z",
+      "angle": -45,
+      "origin": [
+       8,
+       8,
+       12.7
+      ]
+     }
+    ],
+    [
+     3,
+     7.6,
+     0.33000000000000007,
+     3.6,
+     8.4,
+     15.67,
+     "cp_mast_w",
+     null,
+     {
+      "axis": "x",
+      "angle": -45,
+      "origin": [
+       3.3,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     12.4,
+     7.6,
+     0.33000000000000007,
+     13,
+     8.4,
+     15.67,
+     "cp_mast_w",
+     null,
+     {
+      "axis": "x",
+      "angle": 45,
+      "origin": [
+       12.7,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Radio Mast",
+   "sound": "METAL",
+   "shape": [
+    [
+     3,
+     0,
+     3,
+     13,
+     16,
+     13
+    ]
+   ]
+  },
+  "cp_mast_top": {
+   "model": "boxes",
+   "boxes": [
+    [
+     2,
+     0,
+     2,
+     14,
+     1,
+     14,
+     "st_galv"
+    ],
+    [
+     2,
+     1,
+     2,
+     2.6,
+     4,
+     14,
+     "st_galv"
+    ],
+    [
+     13.4,
+     1,
+     2,
+     14,
+     4,
+     14,
+     "st_galv"
+    ],
+    [
+     2,
+     1,
+     2,
+     14,
+     4,
+     2.6,
+     "st_galv"
+    ],
+    [
+     2,
+     1,
+     13.4,
+     14,
+     4,
+     14,
+     "st_galv"
+    ],
+    [
+     7.5,
+     1,
+     7.5,
+     8.5,
+     16,
+     8.5,
+     "cp_mast_w"
+    ],
+    [
+     3.2,
+     1,
+     3.2,
+     3.8,
+     28,
+     3.8,
+     "st_galv"
+    ],
+    [
+     12.2,
+     1,
+     12.2,
+     12.8,
+     24,
+     12.8,
+     "st_galv"
+    ],
+    [
+     7.6,
+     11,
+     -6,
+     8.4,
+     11.8,
+     8,
+     "st_galv"
+    ],
+    [
+     5,
+     11,
+     -5,
+     11,
+     11.8,
+     -4.2,
+     "st_galv"
+    ],
+    [
+     5,
+     11,
+     -2,
+     11,
+     11.8,
+     -1.2,
+     "st_galv"
+    ],
+    [
+     5,
+     11,
+     1,
+     11,
+     11.8,
+     1.8,
+     "st_galv"
+    ],
+    [
+     5,
+     11,
+     4,
+     11,
+     11.8,
+     4.8,
+     "st_galv"
+    ]
+   ],
+   "title": "Mast Head",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     2,
+     0,
+     2,
+     14,
+     4,
+     14
+    ]
+   ]
+  },
+  "cp_cabinet": {
+   "model": "boxes",
+   "boxes": [
+    [
+     2,
+     0,
+     3,
+     14,
+     15,
+     13,
+     {
+      "north": "cp_cabinet",
+      "south": "cp_mast_w",
+      "east": "cp_mast_w",
+      "west": "cp_mast_w",
+      "up": "cp_mast_w",
+      "down": "cp_mast_w"
+     }
+    ],
+    [
+     1.5,
+     15,
+     2.5,
+     14.5,
+     16,
+     13.5,
+     "st_galv"
+    ],
+    [
+     3,
+     0,
+     2,
+     13,
+     1,
+     14,
+     "concrete_panel"
+    ]
+   ],
+   "title": "Equipment Cabinet",
+   "sound": "METAL",
+   "loot": "basement_supplies",
+   "rotate": "facing",
+   "shape": [
+    [
+     2,
+     0,
+     3,
+     14,
+     16,
+     13
+    ]
+   ]
+  },
+  "cp_bladder": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     9.5,
+     16,
+     {
+      "north": "cp_bladder",
+      "south": "cp_bladder",
+      "east": "cp_bladder",
+      "west": "cp_bladder",
+      "up": "cp_bladder_top",
+      "down": "cp_bladder_top"
+     }
+    ]
+   ],
+   "title": "Fuel Bladder",
+   "sound": "WOOL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     9.5,
+     16
+    ]
+   ]
+  },
+  "cp_bladder_ring": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     8.36,
+     16,
+     {
+      "north": "cp_bladder",
+      "south": "cp_bladder",
+      "east": "cp_bladder",
+      "west": "cp_bladder",
+      "up": "cp_bladder_top",
+      "down": "cp_bladder_top"
+     }
+    ]
+   ],
+   "title": "Fuel Bladder",
+   "sound": "WOOL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     8.36,
+     16
+    ]
+   ]
+  },
+  "cp_bladder_valve": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     9.5,
+     16,
+     {
+      "north": "cp_bladder",
+      "south": "cp_bladder",
+      "east": "cp_bladder",
+      "west": "cp_bladder",
+      "up": "cp_bladder_top",
+      "down": "cp_bladder_top"
+     }
+    ],
+    [
+     6,
+     9.5,
+     6,
+     10,
+     11.0,
+     10,
+     "st_galv"
+    ],
+    [
+     6.5,
+     11.0,
+     6.5,
+     9.5,
+     12.7,
+     9.5,
+     "cp_yellow"
+    ],
+    [
+     7.2,
+     9.5,
+     9.5,
+     8.8,
+     10.9,
+     16,
+     "home_plastic_black"
+    ]
+   ],
+   "title": "Fuel Bladder",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     9.5,
+     16
+    ]
+   ]
+  },
+  "cp_bladder_e": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     4.5,
+     16,
+     6.69,
+     16,
+     {
+      "north": "cp_bladder",
+      "south": "cp_bladder",
+      "east": "cp_bladder",
+      "west": "cp_bladder",
+      "up": "cp_bladder_top",
+      "down": "cp_bladder_top"
+     }
+    ],
+    [
+     0,
+     0,
+     2.8,
+     16,
+     5.18,
+     4.5,
+     {
+      "north": "cp_bladder",
+      "south": "cp_bladder",
+      "east": "cp_bladder",
+      "west": "cp_bladder",
+      "up": "cp_bladder_top",
+      "down": "cp_bladder_top"
+     }
+    ],
+    [
+     0,
+     0,
+     1.4,
+     16,
+     3.51,
+     2.8,
+     {
+      "north": "cp_bladder",
+      "south": "cp_bladder",
+      "east": "cp_bladder",
+      "west": "cp_bladder",
+      "up": "cp_bladder_top",
+      "down": "cp_bladder_top"
+     }
+    ],
+    [
+     0,
+     0,
+     0.4,
+     16,
+     1.67,
+     1.4,
+     {
+      "north": "cp_bladder",
+      "south": "cp_bladder",
+      "east": "cp_bladder",
+      "west": "cp_bladder",
+      "up": "cp_bladder_top",
+      "down": "cp_bladder_top"
+     }
+    ]
+   ],
+   "title": "Fuel Bladder",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     3,
+     16,
+     6.6499999999999995,
+     16
+    ]
+   ]
+  },
+  "cp_bladder_c": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4.5,
+     0,
+     4.5,
+     16,
+     6.69,
+     16,
+     {
+      "north": "cp_bladder",
+      "south": "cp_bladder",
+      "east": "cp_bladder",
+      "west": "cp_bladder",
+      "up": "cp_bladder_top",
+      "down": "cp_bladder_top"
+     }
+    ],
+    [
+     2.8,
+     0,
+     2.8,
+     16,
+     5.18,
+     16,
+     {
+      "north": "cp_bladder",
+      "south": "cp_bladder",
+      "east": "cp_bladder",
+      "west": "cp_bladder",
+      "up": "cp_bladder_top",
+      "down": "cp_bladder_top"
+     }
+    ],
+    [
+     1.4,
+     0,
+     1.4,
+     16,
+     3.51,
+     16,
+     {
+      "north": "cp_bladder",
+      "south": "cp_bladder",
+      "east": "cp_bladder",
+      "west": "cp_bladder",
+      "up": "cp_bladder_top",
+      "down": "cp_bladder_top"
+     }
+    ],
+    [
+     0.4,
+     0,
+     0.4,
+     16,
+     1.67,
+     16,
+     {
+      "north": "cp_bladder",
+      "south": "cp_bladder",
+      "east": "cp_bladder",
+      "west": "cp_bladder",
+      "up": "cp_bladder_top",
+      "down": "cp_bladder_top"
+     }
+    ]
+   ],
+   "title": "Fuel Bladder",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "shape": [
+    [
+     3,
+     0,
+     3,
+     16,
+     6.6499999999999995,
+     16
+    ]
+   ]
+  },
+  "cp_bladder_slack": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     3.0,
+     16,
+     {
+      "north": "cp_bladder",
+      "south": "cp_bladder",
+      "east": "cp_bladder",
+      "west": "cp_bladder",
+      "up": "cp_bladder_top",
+      "down": "cp_bladder_top"
+     }
+    ]
+   ],
+   "title": "Fuel Bladder",
+   "sound": "WOOL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     3.0,
+     16
+    ]
+   ]
+  },
+  "cp_bladder_ring_slack": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     2.64,
+     16,
+     {
+      "north": "cp_bladder",
+      "south": "cp_bladder",
+      "east": "cp_bladder",
+      "west": "cp_bladder",
+      "up": "cp_bladder_top",
+      "down": "cp_bladder_top"
+     }
+    ]
+   ],
+   "title": "Fuel Bladder",
+   "sound": "WOOL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     2.64,
+     16
+    ]
+   ]
+  },
+  "cp_bladder_valve_slack": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     3.0,
+     16,
+     {
+      "north": "cp_bladder",
+      "south": "cp_bladder",
+      "east": "cp_bladder",
+      "west": "cp_bladder",
+      "up": "cp_bladder_top",
+      "down": "cp_bladder_top"
+     }
+    ],
+    [
+     6,
+     3.0,
+     6,
+     10,
+     4.5,
+     10,
+     "st_galv"
+    ],
+    [
+     6.5,
+     4.5,
+     6.5,
+     9.5,
+     6.2,
+     9.5,
+     "cp_yellow"
+    ],
+    [
+     7.2,
+     3.0,
+     9.5,
+     8.8,
+     4.4,
+     16,
+     "home_plastic_black"
+    ]
+   ],
+   "title": "Fuel Bladder",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     3.0,
+     16
+    ]
+   ]
+  },
+  "cp_bladder_e_slack": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     4.5,
+     16,
+     2.11,
+     16,
+     {
+      "north": "cp_bladder",
+      "south": "cp_bladder",
+      "east": "cp_bladder",
+      "west": "cp_bladder",
+      "up": "cp_bladder_top",
+      "down": "cp_bladder_top"
+     }
+    ],
+    [
+     0,
+     0,
+     2.8,
+     16,
+     1.64,
+     4.5,
+     {
+      "north": "cp_bladder",
+      "south": "cp_bladder",
+      "east": "cp_bladder",
+      "west": "cp_bladder",
+      "up": "cp_bladder_top",
+      "down": "cp_bladder_top"
+     }
+    ],
+    [
+     0,
+     0,
+     1.4,
+     16,
+     1.11,
+     2.8,
+     {
+      "north": "cp_bladder",
+      "south": "cp_bladder",
+      "east": "cp_bladder",
+      "west": "cp_bladder",
+      "up": "cp_bladder_top",
+      "down": "cp_bladder_top"
+     }
+    ],
+    [
+     0,
+     0,
+     0.4,
+     16,
+     0.53,
+     1.4,
+     {
+      "north": "cp_bladder",
+      "south": "cp_bladder",
+      "east": "cp_bladder",
+      "west": "cp_bladder",
+      "up": "cp_bladder_top",
+      "down": "cp_bladder_top"
+     }
+    ]
+   ],
+   "title": "Fuel Bladder",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     3,
+     16,
+     2.0999999999999996,
+     16
+    ]
+   ]
+  },
+  "cp_bladder_c_slack": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4.5,
+     0,
+     4.5,
+     16,
+     2.11,
+     16,
+     {
+      "north": "cp_bladder",
+      "south": "cp_bladder",
+      "east": "cp_bladder",
+      "west": "cp_bladder",
+      "up": "cp_bladder_top",
+      "down": "cp_bladder_top"
+     }
+    ],
+    [
+     2.8,
+     0,
+     2.8,
+     16,
+     1.64,
+     16,
+     {
+      "north": "cp_bladder",
+      "south": "cp_bladder",
+      "east": "cp_bladder",
+      "west": "cp_bladder",
+      "up": "cp_bladder_top",
+      "down": "cp_bladder_top"
+     }
+    ],
+    [
+     1.4,
+     0,
+     1.4,
+     16,
+     1.11,
+     16,
+     {
+      "north": "cp_bladder",
+      "south": "cp_bladder",
+      "east": "cp_bladder",
+      "west": "cp_bladder",
+      "up": "cp_bladder_top",
+      "down": "cp_bladder_top"
+     }
+    ],
+    [
+     0.4,
+     0,
+     0.4,
+     16,
+     0.53,
+     16,
+     {
+      "north": "cp_bladder",
+      "south": "cp_bladder",
+      "east": "cp_bladder",
+      "west": "cp_bladder",
+      "up": "cp_bladder_top",
+      "down": "cp_bladder_top"
+     }
+    ]
+   ],
+   "title": "Fuel Bladder",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "shape": [
+    [
+     3,
+     0,
+     3,
+     16,
+     2.0999999999999996,
+     16
+    ]
+   ]
+  },
+  "cp_porta_down": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     0,
+     15,
+     14,
+     15,
+     {
+      "north": "st_porta",
+      "south": "st_porta",
+      "east": "st_porta",
+      "west": "st_porta",
+      "down": "st_porta",
+      "up": "st_porta_hi"
+     }
+    ],
+    [
+     1,
+     0,
+     15,
+     15,
+     14,
+     30,
+     {
+      "north": "st_porta",
+      "south": "st_porta",
+      "east": "st_porta",
+      "west": "st_porta",
+      "down": "st_porta",
+      "up": "st_porta_lo"
+     }
+    ],
+    [
+     0.5,
+     0.5,
+     -1.5,
+     15.5,
+     14.5,
+     0,
+     "cp_mast_w"
+    ],
+    [
+     3,
+     3,
+     -2.5,
+     13,
+     12,
+     -1.5,
+     "cp_mast_w"
+    ],
+    [
+     0.5,
+     0,
+     30,
+     15.5,
+     14.5,
+     30.6,
+     "st_porta"
+    ]
+   ],
+   "title": "Portable Toilet",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "shape": [
+    [
+     1,
+     0,
+     0,
+     15,
+     14,
+     16
+    ]
+   ]
+  },
+  "cp_grave_cross": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7,
+     0,
+     7,
+     9,
+     15,
+     8.6,
+     "cp_timber"
+    ],
+    [
+     3.5,
+     9.5,
+     6.4,
+     12.5,
+     11.3,
+     7,
+     "cp_timber_h"
+    ],
+    [
+     6.8,
+     9,
+     6.2,
+     9.2,
+     11.8,
+     6.5,
+     "tn_cord"
+    ],
+    [
+     5,
+     0,
+     5,
+     11,
+     0.8,
+     11,
+     "rubble"
+    ]
+   ],
+   "title": "Grave Marker",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "shape": [
+    [
+     6.5,
+     0,
+     6.5,
+     9.5,
+     15,
+     9
+    ]
+   ]
+  },
+  "cp_grave_helmet": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7,
+     0,
+     7,
+     9,
+     15,
+     8.6,
+     "cp_timber"
+    ],
+    [
+     3.5,
+     9.5,
+     6.4,
+     12.5,
+     11.3,
+     7,
+     "cp_timber_h"
+    ],
+    [
+     6.8,
+     9,
+     6.2,
+     9.2,
+     11.8,
+     6.5,
+     "tn_cord"
+    ],
+    [
+     5,
+     0,
+     5,
+     11,
+     0.8,
+     11,
+     "rubble"
+    ],
+    [
+     4.6,
+     14.6,
+     4.6,
+     11.4,
+     17.6,
+     11.4,
+     "bunk_olive"
+    ],
+    [
+     5.4,
+     17.6,
+     5.4,
+     10.6,
+     18.8,
+     10.6,
+     "bunk_olive"
+    ],
+    [
+     4.2,
+     14.4,
+     4.2,
+     11.8,
+     15,
+     11.8,
+     "bunk_olive"
+    ],
+    [
+     7.6,
+     13,
+     4.2,
+     8.4,
+     14.6,
+     4.6,
+     "tn_cord"
+    ]
+   ],
+   "title": "Grave Marker",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "shape": [
+    [
+     6.5,
+     0,
+     6.5,
+     9.5,
+     15,
+     9
+    ]
+   ]
+  },
+  "cp_stake": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.2,
+     0,
+     7.2,
+     8.8,
+     9,
+     8.8,
+     "cp_timber"
+    ],
+    [
+     7.1,
+     6.6,
+     7.1,
+     8.9,
+     7.8,
+     8.9,
+     "cp_tape"
+    ],
+    [
+     8.8,
+     5,
+     7.6,
+     12,
+     7.6,
+     8,
+     "cp_tape",
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8.8,
+       7.6,
+       7.8
+      ]
+     }
+    ]
+   ],
+   "title": "Marker Stake",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cp_post": {
+   "model": "boxes",
+   "boxes": [
+    [
+     5.5,
+     0,
+     6,
+     10.5,
+     16,
+     10,
+     "cp_timber"
+    ],
+    [
+     6,
+     0,
+     5.5,
+     10,
+     16,
+     10.5,
+     "cp_timber"
+    ]
+   ],
+   "title": "Post",
+   "sound": "WOOD",
+   "shape": [
+    [
+     5.5,
+     0,
+     5.5,
+     10.5,
+     16,
+     10.5
+    ]
+   ]
+  },
+  "cp_log": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0.4,
+     3.6,
+     16,
+     9.6,
+     12.4,
+     {
+      "north": "cp_timber_h",
+      "south": "cp_timber_h",
+      "east": "cp_timber_h",
+      "west": "cp_timber_h",
+      "up": "cp_timber_h",
+      "down": "cp_timber_h"
+     }
+    ],
+    [
+     0,
+     0.4,
+     3.6,
+     16,
+     9.6,
+     12.4,
+     {
+      "north": "cp_timber_h",
+      "south": "cp_timber_h",
+      "east": "cp_timber_h",
+      "west": "cp_timber_h",
+      "up": "cp_timber_h",
+      "down": "cp_timber_h"
+     },
+     null,
+     {
+      "axis": "x",
+      "angle": 45,
+      "origin": [
+       8,
+       5,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Log",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     3.6,
+     16,
+     9.6,
+     12.4
+    ]
+   ]
+  },
+  "cp_wall": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     7,
+     16,
+     16,
+     9,
+     {
+      "north": "cp_timber_h",
+      "south": "cp_timber_h",
+      "east": "cp_timber_h",
+      "west": "cp_timber_h",
+      "up": "cp_timber_h",
+      "down": "cp_timber_h"
+     }
+    ],
+    [
+     0,
+     3,
+     6,
+     16,
+     4.4,
+     7,
+     "cp_timber_h"
+    ],
+    [
+     0,
+     8,
+     6,
+     16,
+     9.4,
+     7,
+     "cp_timber_h"
+    ],
+    [
+     0,
+     13,
+     6,
+     16,
+     14.4,
+     7,
+     "cp_timber_h"
+    ]
+   ],
+   "title": "Climbing Wall",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     6,
+     16,
+     16,
+     9
+    ]
+   ]
+  },
+  "cp_wall_top": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     7,
+     16,
+     14,
+     9,
+     {
+      "north": "cp_timber_h",
+      "south": "cp_timber_h",
+      "east": "cp_timber_h",
+      "west": "cp_timber_h",
+      "up": "cp_timber_h",
+      "down": "cp_timber_h"
+     }
+    ],
+    [
+     0,
+     3,
+     6,
+     16,
+     4.4,
+     7,
+     "cp_timber_h"
+    ],
+    [
+     0,
+     8,
+     6,
+     16,
+     9.4,
+     7,
+     "cp_timber_h"
+    ],
+    [
+     0,
+     14,
+     6.5,
+     16,
+     16,
+     9.5,
+     "cp_timber_h"
+    ]
+   ],
+   "title": "Climbing Wall",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     6,
+     16,
+     16,
+     9.5
+    ]
+   ]
+  },
+  "cp_step": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     6,
+     0,
+     16,
+     8,
+     16,
+     {
+      "north": "cp_timber_h",
+      "south": "cp_timber_h",
+      "east": "cp_timber_h",
+      "west": "cp_timber_h",
+      "up": "cp_boards",
+      "down": "cp_boards"
+     }
+    ],
+    [
+     1,
+     0,
+     1,
+     3,
+     6,
+     3,
+     "cp_timber"
+    ],
+    [
+     13,
+     0,
+     1,
+     15,
+     6,
+     3,
+     "cp_timber"
+    ],
+    [
+     1,
+     0,
+     13,
+     3,
+     6,
+     15,
+     "cp_timber"
+    ],
+    [
+     13,
+     0,
+     13,
+     15,
+     6,
+     15,
+     "cp_timber"
+    ]
+   ],
+   "title": "Platform",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     8,
+     16
+    ]
+   ]
+  },
+  "cp_bars": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     13,
+     1,
+     16,
+     15,
+     3,
+     "st_galv"
+    ],
+    [
+     0,
+     13,
+     13,
+     16,
+     15,
+     15,
+     "st_galv"
+    ],
+    [
+     2,
+     13.4,
+     3,
+     3,
+     14.4,
+     13,
+     "st_galv"
+    ],
+    [
+     6,
+     13.4,
+     3,
+     7,
+     14.4,
+     13,
+     "st_galv"
+    ],
+    [
+     10,
+     13.4,
+     3,
+     11,
+     14.4,
+     13,
+     "st_galv"
+    ],
+    [
+     14,
+     13.4,
+     3,
+     15,
+     14.4,
+     13,
+     "st_galv"
+    ]
+   ],
+   "title": "Monkey Bars",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cp_bars_end": {
+   "model": "boxes",
+   "boxes": [
+    [
+     6,
+     11,
+     -8,
+     10,
+     15,
+     24,
+     "cp_timber_h"
+    ],
+    [
+     8,
+     13,
+     1,
+     16,
+     15,
+     3,
+     "st_galv"
+    ],
+    [
+     8,
+     13,
+     13,
+     16,
+     15,
+     15,
+     "st_galv"
+    ],
+    [
+     12,
+     13.4,
+     3,
+     13,
+     14.4,
+     13,
+     "st_galv"
+    ]
+   ],
+   "title": "Monkey Bars",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     6,
+     11,
+     0,
+     10,
+     15,
+     16
+    ]
+   ]
+  },
+  "cp_rope": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.4,
+     0,
+     7.4,
+     8.6,
+     16,
+     8.6,
+     "tn_cord"
+    ]
+   ],
+   "title": "Rope",
+   "sound": "WOOL",
+   "decor": true,
+   "climb": true
+  },
+  "cp_rope_end": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.4,
+     4,
+     7.4,
+     8.6,
+     16,
+     8.6,
+     "tn_cord"
+    ],
+    [
+     6.6,
+     2,
+     6.6,
+     9.4,
+     4.6,
+     9.4,
+     "tn_cord"
+    ]
+   ],
+   "title": "Rope",
+   "sound": "WOOL",
+   "decor": true,
+   "climb": true
+  },
+  "cp_pad": {
+   "title": "Helipad",
+   "sound": "STONE",
+   "tex": "cp_pad"
+  },
+  "cp_pad_yellow": {
+   "title": "Helipad",
+   "sound": "STONE",
+   "tex": "cp_pad_yellow"
+  },
+  "cp_pad_white": {
+   "title": "Helipad",
+   "sound": "STONE",
+   "tex": "cp_pad_white"
   }
  }
 }

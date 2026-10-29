@@ -1,0 +1,116 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cp_boom": "zomboidcraft:block/city/cp_boom",
+    "home_plastic_black": "zomboidcraft:block/city/home_plastic_black",
+    "particle": "zomboidcraft:block/city/cp_boom"
+  },
+  "elements": [
+    {
+      "from": [
+        10.9,
+        0,
+        6.4
+      ],
+      "to": [
+        14.1,
+        10,
+        9.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cp_boom"
+        },
+        "south": {
+          "texture": "#cp_boom"
+        },
+        "east": {
+          "texture": "#cp_boom"
+        },
+        "west": {
+          "texture": "#cp_boom"
+        },
+        "up": {
+          "texture": "#cp_boom"
+        },
+        "down": {
+          "texture": "#cp_boom",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        10.9,
+        0,
+        6.4
+      ],
+      "to": [
+        14.1,
+        10,
+        9.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cp_boom"
+        },
+        "south": {
+          "texture": "#cp_boom"
+        },
+        "east": {
+          "texture": "#cp_boom"
+        },
+        "west": {
+          "texture": "#cp_boom"
+        },
+        "up": {
+          "texture": "#cp_boom"
+        },
+        "down": {
+          "texture": "#cp_boom"
+        }
+      },
+      "rotation": {
+        "origin": [
+          12.5,
+          5,
+          8
+        ],
+        "axis": "y",
+        "angle": 45
+      }
+    },
+    {
+      "from": [
+        10.5,
+        10,
+        6
+      ],
+      "to": [
+        14.5,
+        11,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_plastic_black"
+        },
+        "south": {
+          "texture": "#home_plastic_black"
+        },
+        "east": {
+          "texture": "#home_plastic_black"
+        },
+        "west": {
+          "texture": "#home_plastic_black"
+        },
+        "up": {
+          "texture": "#home_plastic_black"
+        },
+        "down": {
+          "texture": "#home_plastic_black"
+        }
+      }
+    }
+  ]
+}

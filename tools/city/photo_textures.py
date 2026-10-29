@@ -1137,6 +1137,8 @@ import tents  # noqa: E402
 tents.register(sys.modules[__name__])
 import clutter  # noqa: E402
 clutter.register(sys.modules[__name__])
+import camp  # noqa: E402
+camp.register(sys.modules[__name__])
 
 
 
