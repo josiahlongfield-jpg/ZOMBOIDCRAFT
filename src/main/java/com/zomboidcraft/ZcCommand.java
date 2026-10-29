@@ -201,7 +201,7 @@ public final class ZcCommand {
     private static int car(CommandContext<CommandSourceStack> ctx, String model, String variant) throws CommandSyntaxException {
         ServerPlayer player = ctx.getSource().getPlayerOrException();
         java.util.Random rng = new java.util.Random();
-        CarModels.Model m = model == null ? CarModels.pick(rng, c -> true) : CarModels.get(model);
+        CarModels.Model m = model == null ? CarModels.pick(rng, c -> !c.boat()) : CarModels.get(model);
         if (m == null || (variant != null && !CarModels.variants().contains(variant))) {
             ctx.getSource().sendFailure(Component.literal("Unknown car: " + model + (variant == null ? "" : " " + variant)));
             return 0;

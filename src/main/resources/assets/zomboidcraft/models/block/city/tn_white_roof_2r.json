@@ -1,0 +1,224 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ext_alu": "zomboidcraft:block/city/ext_alu",
+    "tn_white_liner": "zomboidcraft:block/city/tn_white_liner",
+    "tn_white_roof": "zomboidcraft:block/city/tn_white_roof",
+    "particle": "zomboidcraft:block/city/tn_white_roof"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        16.2185424949238,
+        -0.8091376023391526
+      ],
+      "to": [
+        16,
+        16.918542494923802,
+        16.809137602339153
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tn_white_roof",
+          "uv": [
+            0,
+            0,
+            16,
+            0.7000000000000028
+          ]
+        },
+        "south": {
+          "texture": "#tn_white_roof",
+          "uv": [
+            0,
+            0,
+            16,
+            0.7000000000000028
+          ]
+        },
+        "east": {
+          "texture": "#tn_white_roof",
+          "uv": [
+            0,
+            0,
+            16,
+            0.7000000000000028
+          ]
+        },
+        "west": {
+          "texture": "#tn_white_roof",
+          "uv": [
+            0,
+            0,
+            16,
+            0.7000000000000028
+          ]
+        },
+        "up": {
+          "texture": "#tn_white_roof",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#tn_white_liner",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          16.569,
+          8
+        ],
+        "axis": "x",
+        "angle": -22.5
+      }
+    },
+    {
+      "from": [
+        0,
+        16.918542494923802,
+        13.409137602339152
+      ],
+      "to": [
+        16,
+        17.5185424949238,
+        17.109137602339153
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tn_white_roof",
+          "uv": [
+            0,
+            0,
+            16,
+            0.5999999999999979
+          ]
+        },
+        "south": {
+          "texture": "#tn_white_roof",
+          "uv": [
+            0,
+            0,
+            16,
+            0.5999999999999979
+          ]
+        },
+        "east": {
+          "texture": "#tn_white_roof",
+          "uv": [
+            0,
+            0,
+            3.700000000000001,
+            0.5999999999999979
+          ]
+        },
+        "west": {
+          "texture": "#tn_white_roof",
+          "uv": [
+            12.299999999999999,
+            0,
+            16,
+            0.5999999999999979
+          ]
+        },
+        "up": {
+          "texture": "#tn_white_roof",
+          "uv": [
+            0,
+            12.299999999999999,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#tn_white_liner",
+          "uv": [
+            0,
+            0,
+            16,
+            3.700000000000001
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          16.569,
+          8
+        ],
+        "axis": "x",
+        "angle": -22.5
+      }
+    },
+    {
+      "from": [
+        0,
+        17.082250993908563,
+        14.6
+      ],
+      "to": [
+        16,
+        18.482250993908565,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_alu",
+          "uv": [
+            0,
+            0,
+            16,
+            1.4000000000000021
+          ]
+        },
+        "south": {
+          "texture": "#ext_alu",
+          "uv": [
+            0,
+            0,
+            16,
+            1.4000000000000021
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ext_alu",
+          "uv": [
+            0,
+            0,
+            1.4000000000000004,
+            1.4000000000000021
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ext_alu",
+          "uv": [
+            14.6,
+            0,
+            16,
+            1.4000000000000021
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ext_alu"
+        },
+        "down": {
+          "texture": "#ext_alu"
+        }
+      }
+    }
+  ]
+}

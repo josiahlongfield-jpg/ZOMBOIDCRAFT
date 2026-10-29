@@ -1,0 +1,230 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ext_alu": "zomboidcraft:block/city/ext_alu",
+    "home_plastic_black": "zomboidcraft:block/city/home_plastic_black",
+    "tn_bulb": "zomboidcraft:block/city/tn_bulb",
+    "tn_shade": "zomboidcraft:block/city/tn_shade",
+    "particle": "zomboidcraft:block/city/ext_alu"
+  },
+  "elements": [
+    {
+      "from": [
+        7.4,
+        15.0,
+        0
+      ],
+      "to": [
+        8.6,
+        16.2,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_alu",
+          "uv": [
+            7.4,
+            0,
+            8.6,
+            1.1999999999999993
+          ],
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ext_alu",
+          "uv": [
+            7.4,
+            0,
+            8.6,
+            1.1999999999999993
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ext_alu",
+          "uv": [
+            0,
+            0,
+            16,
+            1.1999999999999993
+          ]
+        },
+        "west": {
+          "texture": "#ext_alu",
+          "uv": [
+            0,
+            0,
+            16,
+            1.1999999999999993
+          ]
+        },
+        "up": {
+          "texture": "#ext_alu"
+        },
+        "down": {
+          "texture": "#ext_alu"
+        }
+      }
+    },
+    {
+      "from": [
+        7.9,
+        11.6,
+        7.9
+      ],
+      "to": [
+        8.1,
+        15.0,
+        8.1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_plastic_black"
+        },
+        "south": {
+          "texture": "#home_plastic_black"
+        },
+        "east": {
+          "texture": "#home_plastic_black"
+        },
+        "west": {
+          "texture": "#home_plastic_black"
+        },
+        "up": {
+          "texture": "#home_plastic_black"
+        },
+        "down": {
+          "texture": "#home_plastic_black"
+        }
+      }
+    },
+    {
+      "from": [
+        7.3,
+        11.0,
+        7.3
+      ],
+      "to": [
+        8.7,
+        11.6,
+        8.7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tn_shade"
+        },
+        "south": {
+          "texture": "#tn_shade"
+        },
+        "east": {
+          "texture": "#tn_shade"
+        },
+        "west": {
+          "texture": "#tn_shade"
+        },
+        "up": {
+          "texture": "#tn_shade"
+        },
+        "down": {
+          "texture": "#tn_shade"
+        }
+      }
+    },
+    {
+      "from": [
+        6.6,
+        10.4,
+        6.6
+      ],
+      "to": [
+        9.4,
+        11.0,
+        9.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tn_shade"
+        },
+        "south": {
+          "texture": "#tn_shade"
+        },
+        "east": {
+          "texture": "#tn_shade"
+        },
+        "west": {
+          "texture": "#tn_shade"
+        },
+        "up": {
+          "texture": "#tn_shade"
+        },
+        "down": {
+          "texture": "#tn_shade"
+        }
+      }
+    },
+    {
+      "from": [
+        6.0,
+        9.8,
+        6.0
+      ],
+      "to": [
+        10.0,
+        10.4,
+        10.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tn_shade"
+        },
+        "south": {
+          "texture": "#tn_shade"
+        },
+        "east": {
+          "texture": "#tn_shade"
+        },
+        "west": {
+          "texture": "#tn_shade"
+        },
+        "up": {
+          "texture": "#tn_shade"
+        },
+        "down": {
+          "texture": "#tn_shade"
+        }
+      }
+    },
+    {
+      "from": [
+        7.4,
+        9.0,
+        7.4
+      ],
+      "to": [
+        8.6,
+        9.8,
+        8.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tn_bulb"
+        },
+        "south": {
+          "texture": "#tn_bulb"
+        },
+        "east": {
+          "texture": "#tn_bulb"
+        },
+        "west": {
+          "texture": "#tn_bulb"
+        },
+        "up": {
+          "texture": "#tn_bulb"
+        },
+        "down": {
+          "texture": "#tn_bulb"
+        }
+      }
+    }
+  ]
+}

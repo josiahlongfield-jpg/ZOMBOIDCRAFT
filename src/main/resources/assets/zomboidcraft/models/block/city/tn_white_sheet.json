@@ -1,0 +1,112 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tn_white_fold": "zomboidcraft:block/city/tn_white_fold",
+    "particle": "zomboidcraft:block/city/tn_white_fold"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        0.4,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tn_white_fold",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#tn_white_fold",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#tn_white_fold",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tn_white_fold",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tn_white_fold"
+        },
+        "down": {
+          "texture": "#tn_white_fold",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0.4,
+        3.5
+      ],
+      "to": [
+        16,
+        0.9,
+        5.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tn_white_fold"
+        },
+        "south": {
+          "texture": "#tn_white_fold"
+        },
+        "east": {
+          "texture": "#tn_white_fold",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tn_white_fold",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tn_white_fold"
+        },
+        "down": {
+          "texture": "#tn_white_fold"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        0.4,
+        10
+      ],
+      "to": [
+        13,
+        0.7,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tn_white_fold"
+        },
+        "south": {
+          "texture": "#tn_white_fold"
+        },
+        "east": {
+          "texture": "#tn_white_fold"
+        },
+        "west": {
+          "texture": "#tn_white_fold"
+        },
+        "up": {
+          "texture": "#tn_white_fold"
+        },
+        "down": {
+          "texture": "#tn_white_fold"
+        }
+      }
+    }
+  ]
+}

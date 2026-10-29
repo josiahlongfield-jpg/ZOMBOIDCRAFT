@@ -1,0 +1,253 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ext_alu": "zomboidcraft:block/city/ext_alu",
+    "tn_cord": "zomboidcraft:block/city/tn_cord",
+    "tn_olive_liner": "zomboidcraft:block/city/tn_olive_liner",
+    "tn_olive_wall": "zomboidcraft:block/city/tn_olive_wall",
+    "particle": "zomboidcraft:block/city/ext_alu"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0.3
+      ],
+      "to": [
+        1.4,
+        16,
+        1.7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_alu"
+        },
+        "south": {
+          "texture": "#ext_alu"
+        },
+        "east": {
+          "texture": "#ext_alu"
+        },
+        "west": {
+          "texture": "#ext_alu",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ext_alu",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ext_alu",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        1.4,
+        0,
+        -0.6
+      ],
+      "to": [
+        3.8,
+        11.4,
+        0.9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tn_olive_wall"
+        },
+        "south": {
+          "texture": "#tn_olive_wall"
+        },
+        "east": {
+          "texture": "#tn_olive_wall",
+          "uv": [
+            14.499999999999998,
+            4.6,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#tn_olive_wall",
+          "uv": [
+            0,
+            4.6,
+            1.5,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#tn_olive_wall",
+          "uv": [
+            1.4,
+            0,
+            3.8,
+            1.5
+          ]
+        },
+        "down": {
+          "texture": "#tn_olive_wall",
+          "uv": [
+            1.4,
+            14.499999999999998,
+            3.8,
+            16
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3.6,
+        8.6,
+        -0.8
+      ],
+      "to": [
+        4.0,
+        9.4,
+        1.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tn_cord"
+        },
+        "south": {
+          "texture": "#tn_cord"
+        },
+        "east": {
+          "texture": "#tn_cord",
+          "uv": [
+            14.2,
+            6.6,
+            16,
+            7.4
+          ]
+        },
+        "west": {
+          "texture": "#tn_cord",
+          "uv": [
+            0,
+            6.6,
+            1.8,
+            7.4
+          ]
+        },
+        "up": {
+          "texture": "#tn_cord",
+          "uv": [
+            3.6,
+            0,
+            4.0,
+            1.8
+          ]
+        },
+        "down": {
+          "texture": "#tn_cord",
+          "uv": [
+            3.6,
+            14.2,
+            4.0,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        11.4,
+        0.3
+      ],
+      "to": [
+        16,
+        16,
+        0.9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tn_olive_wall"
+        },
+        "south": {
+          "texture": "#tn_olive_liner"
+        },
+        "east": {
+          "texture": "#tn_olive_wall",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tn_olive_wall",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tn_olive_wall",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tn_olive_wall"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        9.4,
+        -1.6
+      ],
+      "to": [
+        16,
+        11.6,
+        0.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tn_olive_wall"
+        },
+        "south": {
+          "texture": "#tn_olive_wall"
+        },
+        "east": {
+          "texture": "#tn_olive_wall",
+          "uv": [
+            13.799999999999999,
+            4.4,
+            16,
+            6.6
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tn_olive_wall",
+          "uv": [
+            0,
+            4.4,
+            2.2,
+            6.6
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tn_olive_wall",
+          "uv": [
+            0,
+            0,
+            16,
+            2.2
+          ]
+        },
+        "down": {
+          "texture": "#tn_olive_wall",
+          "uv": [
+            0,
+            13.799999999999999,
+            16,
+            16
+          ]
+        }
+      }
+    }
+  ]
+}

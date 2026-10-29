@@ -1,0 +1,75 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tn_white_liner": "zomboidcraft:block/city/tn_white_liner",
+    "tn_white_roof": "zomboidcraft:block/city/tn_white_roof",
+    "particle": "zomboidcraft:block/city/tn_white_roof"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        7.983044482740924,
+        -0.8091376023391526
+      ],
+      "to": [
+        16,
+        8.683044482740923,
+        16.809137602339153
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tn_white_roof"
+        },
+        "south": {
+          "texture": "#tn_white_roof"
+        },
+        "east": {
+          "texture": "#tn_white_roof",
+          "uv": [
+            0,
+            7.316955517259077,
+            16,
+            8.016955517259076
+          ]
+        },
+        "west": {
+          "texture": "#tn_white_roof",
+          "uv": [
+            0,
+            7.316955517259077,
+            16,
+            8.016955517259076
+          ]
+        },
+        "up": {
+          "texture": "#tn_white_roof",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#tn_white_liner",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8.333,
+          8
+        ],
+        "axis": "x",
+        "angle": -22.5
+      }
+    }
+  ]
+}

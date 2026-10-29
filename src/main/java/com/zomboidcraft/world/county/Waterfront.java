@@ -289,9 +289,20 @@ final class Waterfront extends Grounds {
             }
             for (int z = z0 + 3; z + 6 < z1; z += 9) {
                 for (int x : new int[] {x0 + 2, x0 + 13}) {
+                    if (level > 0) {
+                        // the arms across the bay the hull's bunks sit on
+                        for (int xx = x - 1; xx <= x + 6; xx++) {
+                            set(xx, y - 1, z + 1, "wf_rack[axis=x]");
+                            set(xx, y - 1, z + 6, "wf_rack[axis=x]");
+                        }
+                        for (int zz = z + 2; zz <= z + 5; zz++) {
+                            set(x + 3, y - 1, zz, "wf_rack[axis=z]");   // the keel's rest, which she's stood on
+                        }
+                    }
                     if (chance() < 0.75) {
-                        Placer q = p.turned(x + 3, y, z, 1);
-                        new Boats(q, rng, b.damage).hull(any("run", "run", "cruiser", "skiff"), 7 + rng.nextInt(2), 1, false);
+                        int k = new int[] {0, 0, 1, 4}[rng.nextInt(4)];
+                        String st = state(false);
+                        p.vehicle(x + 3.5, y, z + 4, 0, "=" + BOATS[k] + "@" + (st.equals("burnt") ? "abandoned" : st), rng.nextLong());
                     }
                 }
             }
@@ -366,8 +377,22 @@ final class Waterfront extends Grounds {
 
     // ------------------------------------------------------------------ the boats
 
-    /** In the slips between the fingers: runabouts, cruisers, sailboats, a few sunk at their lines. */
+    /**
+     * The boats' models (tools/cars/boats.py) and their lengths overall in metres, so each lies with her
+     * bow a step short of the walk; boats are vehicles, afloat in the top water block at their lines.
+     */
+    private static final String[] BOATS = {"boat_bowrider", "boat_console", "boat_cruiser", "boat_sloop", "boat_skiff"};
+    private static final double[] BOAT_LENGTH = {7.1, 7.7, 10.6, 9.7, 5.1};
+
+    /** How a boat's been left: most of them abandoned at their lines, some smashed, a few burnt out. */
+    private String state(boolean sunk) {
+        double r = chance() - b.damage * 0.25;
+        return sunk ? "wrecked" : r < 0.1 ? "burnt" : r < 0.25 ? "wrecked" : r < 0.75 ? "abandoned" : "usable";
+    }
+
+    /** In the slips between the fingers: runabouts, centre consoles, cruisers, sailboats, a few sunk at their lines. */
     private void boats() {
+        int[] pick = {0, 0, 1, 1, 2, 3, 3, 4};
         for (int z : new int[] {MA, MB}) {
             for (int x = SEAWALL + 14; x <= MX1 - 4; x += 8) {
                 for (int side = 0; side < 2; side++) {
@@ -375,12 +400,12 @@ final class Waterfront extends Grounds {
                         continue;  // the slip's boat taken
                     }
                     boolean north = side == 0;
-                    int len = 6 + rng.nextInt(4);
+                    int k = pick[rng.nextInt(pick.length)];
                     // the bow toward the main walk, the stern out in the slip
-                    Placer q = p.turned(x, 0, north ? z - 1 - len : z + 1 + len, north ? 1 : 3);
-                    boolean sunk = chance() < 0.18 + b.damage * 0.2;
-                    String kind = any("run", "run", "cruiser", "sail", "sail", "skiff");
-                    new Boats(q, rng, b.damage).hull(kind, len, SEA + 1, sunk);
+                    double zc = north ? z - 0.6 - BOAT_LENGTH[k] / 2 : z + 2.6 + BOAT_LENGTH[k] / 2;
+                    boolean sunk = chance() < 0.12 + b.damage * 0.15;
+                    p.vehicle(x + 0.5, sunk ? SEA - 1 - rng.nextInt(2) : SEA, zc, north ? 0 : 180,
+                            "=" + BOATS[k] + "@" + state(sunk), rng.nextLong());
                 }
             }
         }
@@ -388,9 +413,8 @@ final class Waterfront extends Grounds {
         for (int z = 10; z < d - 6; z += 26) {
             set(w - 6, SEA + 1, z, (z / 26) % 2 == 0 ? "wf_buoy_red" : "wf_buoy_green");
         }
-        // one that got away, run aground on the pier's piles and half sunk
-        Placer q = p.turned(PX1 - 14, 0, PZ1 + 6, 0);
-        new Boats(q, rng, 1.0).hull("cruiser", 10, SEA + 1, true);
+        // one that got away, run aground on the pier's piles and half sunk, listing
+        p.vehicle(PX1 - 8.7, SEA - 2, PZ1 + 6.5, 270, "=boat_cruiser@wrecked", rng.nextLong());
     }
 
     // ------------------------------------------------------------------ what happened

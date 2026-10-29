@@ -1135,6 +1135,8 @@ import harvestman_den  # noqa: E402
 harvestman_den.register(sys.modules[__name__])
 import waterfront  # noqa: E402
 waterfront.register(sys.modules[__name__])
+import tents  # noqa: E402
+tents.register(sys.modules[__name__])
 
 
 

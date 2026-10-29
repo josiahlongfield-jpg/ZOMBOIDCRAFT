@@ -293,7 +293,10 @@ public class CarProp extends Entity {
         return InteractionResult.PASS;
     }
 
-    /** The interact key on this car, at location relative to it: the back end searches the boot, elsewhere gets in. */
+    /**
+     * The interact key on this car, at location relative to it: the back end searches the boot, elsewhere gets in.
+     * A boat has nowhere to sit: anywhere on her searches her lockers.
+     */
     public void use(Player player, Vec3 location) {
         if (!(level() instanceof ServerLevel server) || flyby) {
             return;
@@ -303,7 +306,7 @@ public class CarProp extends Entity {
                 && AirReadiness.service(this, sp)) {
             return;     // fuel, a battery or parts in hand: service it rather than climb in
         }
-        if (m != null && m.jet() || !player.isSecondaryUseActive() && !atBoot(location)) {
+        if (m != null && m.jet() || !(m != null && m.boat()) && !player.isSecondaryUseActive() && !atBoot(location)) {
             getIn(player);
             return;
         }
@@ -318,7 +321,7 @@ public class CarProp extends Entity {
                 table.fill(boot, params, getUUID().getLeastSignificantBits());
             }
         }
-        String title = switch (lootTable()) {
+        String title = m != null && m.boat() ? "Lockers" : switch (lootTable()) {
             case "swat", "ambulance", "work", "fire" -> "Back of the " + (model().contains("truck") ? "truck" : "van");
             case "bus" -> "Luggage rack";
             default -> "Boot";

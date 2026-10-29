@@ -113,11 +113,12 @@ def pick(entry, index, variants=('usable', 'abandoned', 'wrecked', 'burnt')):
     h = java_hash(f'{x:.2f},{y},{z:.2f}')
     names = entry[6].split(',') if len(entry) > 6 and entry[6] else None
     if names and len(names) == 1 and '@' in names[0]:
-        return tuple(names[0].split('@'))
+        return tuple(names[0].lstrip('=').split('@'))
+    names = [n.lstrip('=') for n in names] if names else None
     if names:
         cands = [m for m in index if m['id'] in names or m['kind'] in names]
     else:
-        cands = [m for m in index if m['kind'] != 'jet' and entry[4] <= m['size'][2] <= entry[5]]
+        cands = [m for m in index if m['kind'] not in ('jet', 'boat') and entry[4] <= m['size'][2] <= entry[5]]
     if not cands:
         return None, None
     m = cands[h % len(cands)]
