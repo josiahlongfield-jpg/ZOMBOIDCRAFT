@@ -32,6 +32,8 @@ public final class Tower {
     /** What the tower is for, and so each floor above the lobby ({@link Floors}). */
     private final Floors.Type[] program;
     private final Floors.Purpose purpose;
+    /** The top three floors are one penthouse ({@link Penthouse}). */
+    private final boolean triplex;
 
     /** furnished = false leaves the office floors empty (distant towers nobody will reach soon). */
     public Tower(Placer p, SplittableRandom rng, int w, int d, int floors, boolean furnished) {
@@ -59,8 +61,16 @@ public final class Tower {
         }
         this.purpose = Floors.officePurpose(rng, floors);
         this.program = Floors.program(purpose, floors, rng);
+        // a tall hotel's top three floors are one penthouse; a tower too small round its core for it keeps suites there
+        boolean three = floors >= 12 && program[floors - 1] == Floors.Type.PENTHOUSE && program[floors - 2] == Floors.Type.PENTHOUSE;
+        if (three && !Penthouse.fits(w, d)) {
+            program[floors - 1] = Floors.Type.HOTEL_SUITES;
+            program[floors - 2] = Floors.Type.HOTEL_SUITES;
+            three = false;
+        }
+        this.triplex = three;
         // a hotel's penthouse steps in from the outer walls all round: a terrace on every side
-        this.setbackFloor = penthouseTop() && cx0 >= 6 && cz0 >= 6 ? floors : setback;
+        this.setbackFloor = triplex ? Integer.MAX_VALUE : penthouseTop() && cx0 >= 6 && cz0 >= 6 ? floors : setback;
     }
 
     /** The top floor is the hotel's penthouse. */
@@ -70,7 +80,7 @@ public final class Tower {
 
     /** The penthouse has the terrace the tower steps in for. */
     private boolean penthouseTerrace() {
-        return penthouseTop() && setbackFloor == floors;
+        return penthouseTop() && setbackFloor == floors && !triplex;
     }
 
     public boolean hotel() {
@@ -97,12 +107,16 @@ public final class Tower {
 
     public void build() {
         lobby();
-        for (int k = 1; k <= floors; k++) {
+        for (int k = 1; k <= (triplex ? floors - 3 : floors); k++) {
             officeFloor(k, floorY(k));
         }
         int roofY = floorY(floors + 1);
         facade(roofY);
         core(roofY);
+        if (triplex) {
+            new Penthouse(p, rng, w, d, floorY(floors - 2), coreX0(), cz0, trim(), furnished, powered[floors] ? 0.6 : 0.05).build();
+            return;
+        }
         roof(roofY);
         if (penthouseTerrace()) {
             terrace(floorY(floors));
@@ -134,7 +148,9 @@ public final class Tower {
     // ------------------------------------------------------------------ outside
 
     private void facade(int roofY) {
-        for (int y = 0; y <= roofY; y++) {
+        // the penthouse builds its own walls from its first slab up
+        int topY = triplex ? floorY(floors - 2) - 1 : roofY;
+        for (int y = 0; y <= topY; y++) {
             int k = floorOf(y);
             int in = inset(Math.min(k, floors));
             boolean slab = y >= LOBBY && (y - LOBBY) % FLOOR == 0;
@@ -172,7 +188,7 @@ public final class Tower {
             }
         }
         int in = inset(floors);
-        for (int x = in; x < w - in; x++) {
+        for (int x = in; x < w - in && !triplex; x++) {
             for (int z = in; z < d - in; z++) {
                 if (x == in || z == in || x == w - 1 - in || z == d - 1 - in) {
                     p.set(x, roofY + 1, z, wallMaterial());

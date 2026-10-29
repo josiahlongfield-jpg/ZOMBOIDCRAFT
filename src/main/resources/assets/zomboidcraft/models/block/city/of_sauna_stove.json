@@ -1,0 +1,108 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_steel": "zomboidcraft:block/city/home_steel",
+    "of_ember": "zomboidcraft:block/city/of_ember",
+    "pt_stone_rough": "zomboidcraft:block/city/pt_stone_rough",
+    "particle": "zomboidcraft:block/city/home_steel"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        2
+      ],
+      "to": [
+        14,
+        9,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_steel"
+        },
+        "south": {
+          "texture": "#home_steel"
+        },
+        "east": {
+          "texture": "#home_steel"
+        },
+        "west": {
+          "texture": "#home_steel"
+        },
+        "up": {
+          "texture": "#home_steel"
+        },
+        "down": {
+          "texture": "#home_steel",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        9,
+        3
+      ],
+      "to": [
+        13,
+        12,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pt_stone_rough"
+        },
+        "south": {
+          "texture": "#pt_stone_rough"
+        },
+        "east": {
+          "texture": "#pt_stone_rough"
+        },
+        "west": {
+          "texture": "#pt_stone_rough"
+        },
+        "up": {
+          "texture": "#pt_stone_rough"
+        },
+        "down": {
+          "texture": "#pt_stone_rough"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        12,
+        5
+      ],
+      "to": [
+        11,
+        13,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#of_ember"
+        },
+        "south": {
+          "texture": "#of_ember"
+        },
+        "east": {
+          "texture": "#of_ember"
+        },
+        "west": {
+          "texture": "#of_ember"
+        },
+        "up": {
+          "texture": "#of_ember"
+        },
+        "down": {
+          "texture": "#of_ember"
+        }
+      }
+    }
+  ]
+}
