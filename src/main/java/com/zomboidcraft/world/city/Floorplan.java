@@ -46,6 +46,8 @@ public final class Floorplan {
     /** The open floor the floor's type fills (cells not in a room, not corridor). */
     final List<int[]> open = new ArrayList<>();
     int band;
+    /** Shell cells that are not the outside (a stair hall, a void's rail): rooms still wall themselves off from them. */
+    boolean[] inner;
 
     public Floorplan(Placer p, SplittableRandom rng, int w, int d, int y, int rows, Site s, double lit) {
         this.p = p;
@@ -382,7 +384,7 @@ public final class Floorplan {
                         continue;
                     }
                     byte v = at(xx, zz);
-                    if (v != SHELL && v != CORE && v != WALL) {
+                    if (v != SHELL && v != CORE && v != WALL || v == SHELL && inner != null && in(xx, zz) && inner[zz * w + xx]) {
                         edge = true;
                     }
                 }

@@ -1,0 +1,79 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "of_neon_blue": "zomboidcraft:block/city/of_neon_blue",
+    "particle": "zomboidcraft:block/city/of_neon_blue"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        6,
+        15
+      ],
+      "to": [
+        16,
+        8,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#of_neon_blue"
+        },
+        "south": {
+          "texture": "#of_neon_blue",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#of_neon_blue",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#of_neon_blue",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#of_neon_blue"
+        },
+        "down": {
+          "texture": "#of_neon_blue"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        12,
+        15
+      ],
+      "to": [
+        16,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#of_neon_blue"
+        },
+        "south": {
+          "texture": "#of_neon_blue",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#of_neon_blue",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#of_neon_blue",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#of_neon_blue"
+        },
+        "down": {
+          "texture": "#of_neon_blue"
+        }
+      }
+    }
+  ]
+}
