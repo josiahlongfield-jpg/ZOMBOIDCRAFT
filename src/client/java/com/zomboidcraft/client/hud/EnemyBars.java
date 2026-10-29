@@ -23,7 +23,8 @@ import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
 /**
- * A little health bar over every enemy you can see near you (zombies, the Harvestman, any monster): a thin red bar in
+ * A little health bar over every enemy you can see near you (the Harvestman, any monster; not zombies, which only a
+ * head shot kills): a thin red bar in
  * a dark frame, in the kit screen's colours, turned to face you. What a hit takes off shows pale a moment, then drains
  * away. It fades out with distance and isn't shown through walls, on an apparition, or while filming.
  */
@@ -68,6 +69,9 @@ public final class EnemyBars {
             if (!(entity instanceof LivingEntity e) || !(e instanceof Enemy || e instanceof HarvestmanEntity)
                     || e.getId() < 0 || !e.isAlive() || e.isInvisible()) {
                 continue;   // a negative id is an apparition only you see (HarvestmanPhantoms)
+            }
+            if (e instanceof net.minecraft.world.entity.monster.zombie.Zombie) {
+                continue;   // only a shot to the head puts a zombie down, so there's nothing for a bar to count down
             }
             if (e instanceof HarvestmanEntity h && h.pose() == HarvestmanEntity.DEAD) {
                 continue;
