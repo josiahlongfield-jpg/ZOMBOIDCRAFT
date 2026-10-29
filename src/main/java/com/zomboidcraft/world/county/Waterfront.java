@@ -381,8 +381,9 @@ final class Waterfront extends Grounds {
      * The boats' models (tools/cars/boats.py) and their lengths overall in metres, so each lies with her
      * bow a step short of the walk; boats are vehicles, afloat in the top water block at their lines.
      */
-    private static final String[] BOATS = {"boat_bowrider", "boat_console", "boat_cruiser", "boat_sloop", "boat_skiff"};
-    private static final double[] BOAT_LENGTH = {7.1, 7.7, 10.6, 9.7, 5.1};
+    private static final String[] BOATS = {"boat_bowrider", "boat_console", "boat_cruiser", "boat_sloop", "boat_skiff",
+            "boat_lobster"};
+    private static final double[] BOAT_LENGTH = {7.1, 7.7, 10.6, 9.7, 5.1, 10.7};
 
     /** How a boat's been left: most of them abandoned at their lines, some smashed, a few burnt out. */
     private String state(boolean sunk) {
@@ -390,9 +391,12 @@ final class Waterfront extends Grounds {
         return sunk ? "wrecked" : r < 0.1 ? "burnt" : r < 0.25 ? "wrecked" : r < 0.75 ? "abandoned" : "usable";
     }
 
-    /** In the slips between the fingers: runabouts, centre consoles, cruisers, sailboats, a few sunk at their lines. */
+    /**
+     * In the slips between the fingers: runabouts, centre consoles, cruisers, sailboats, a lobster boat
+     * or two in from the grounds, a few sunk at their lines.
+     */
     private void boats() {
-        int[] pick = {0, 0, 1, 1, 2, 3, 3, 4};
+        int[] pick = {0, 0, 1, 1, 2, 3, 3, 4, 5};
         for (int z : new int[] {MA, MB}) {
             for (int x = SEAWALL + 14; x <= MX1 - 4; x += 8) {
                 for (int side = 0; side < 2; side++) {

@@ -108,8 +108,10 @@ final class Harbour {
     }
 
     /**
-     * A wooden jetty from (x, z) out along -z for len, w wide, its deck at y on spruce piles down
-     * to the bed: planks gone here and there, cleats, a lamp at the end.
+     * A timber jetty from (x, z) out along -z for len, w wide, its deck at y: the pier's decking on
+     * stringers along its edges and middle, a cross beam and a bent of creosoted piles down to the bed
+     * every four, a planks gone here and there; cleats along the edges, a pile standing up through the
+     * deck at the corners of every eighth bent, the light on its pile at the end, the gear left there.
      */
     void jetty(int x, int z, int len, int w, int y) {
         for (int k = 0; k < len; k++) {
@@ -117,25 +119,35 @@ final class Harbour {
                 if (chance() < 0.03 + hit * 0.06 && k > 2) {
                     continue;  // a rotten plank gone
                 }
-                p.set(x + i, y, z - k, chance() < 0.2 ? "minecraft:stripped_spruce_wood" : "minecraft:spruce_planks");
+                p.set(x + i, y, z - k, chance() < 0.08 ? "wf_deck_b" : "wf_deck");
+            }
+            for (int i : new int[] {0, w / 2, w - 1}) {
+                p.set(x + i, y - 1, z - k, "wf_stringer[axis=z]");
             }
             if (k % 4 == 0 || k == len - 1) {
+                for (int i = 0; i < w; i++) {
+                    p.set(x + i, y - 2, z - k, "wf_stringer[axis=x]");
+                }
                 for (int i : new int[] {0, w - 1}) {
-                    for (int yy = Ships.BED; yy < y; yy++) {
-                        p.set(x + i, yy, z - k, "minecraft:stripped_spruce_log[axis=y]");
+                    for (int yy = Ships.BED; yy < y - 2; yy++) {
+                        p.set(x + i, yy, z - k, "wf_pile");
                     }
-                    if (k % 8 == 0) {
-                        p.set(x + i, y + 1, z - k, "minecraft:spruce_fence");
+                    if (k % 8 == 0 && k > 0) {
+                        p.set(x + i, y + 1, z - k, "wf_pile_top");
                     }
+                }
+            } else if (k % 4 == 2) {
+                for (int i : new int[] {0, w - 1}) {
+                    p.set(x + i, y + 1, z - k, "wf_cleat[axis=z]");
                 }
             }
         }
         int ex = x + w / 2, ez = z - len + 1;
-        for (int yy = y + 1; yy <= y + 4; yy++) {
-            p.set(x, yy, ez, "minecraft:spruce_fence");
-        }
-        p.set(x, y + 5, ez, lamp(0.5));
-        p.set(ex, y + 1, ez, chance() < 0.5 ? "minecraft:barrel[facing=up,loot=storage]" : "crate");
+        p.set(x, y + 1, ez, "wf_pile");
+        p.set(x, y + 2, ez, "wf_pile");
+        p.set(x, y + 3, ez, "wf_pile_top");
+        p.set(x, y + 4, ez, Camp.lamp(rng, 0.5, "cp_flood", "north"));
+        p.set(ex, y + 1, ez, chance() < 0.5 ? "wf_pots[facing=" + any("north", "east", "south", "west") + "]" : "wf_coil");
     }
 
     /** A rubble breakwater along x from x0 to x1, centred on z, wide at the bed and up to y = top. */

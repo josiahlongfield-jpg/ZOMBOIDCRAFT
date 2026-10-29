@@ -6160,8 +6160,8 @@ final class CitySpecs extends CityBlocks.Specs {
         s("st_fema_14", FACING, DECOR, 0, SoundType.WOOL, 0f, 0, 0, 15.4, 16, 16, 16);
         s("st_fema_15", FACING, DECOR, 0, SoundType.WOOL, 0f, 0, 0, 15.4, 16, 16, 16);
         s("st_cone", PLAIN, DECOR, 0, SoundType.WOOL, 0f, 4, 0, 4, 12, 1, 12, 5.5, 1, 5.5, 10.5, 5, 10.5, 6.3, 5, 6.3, 9.7, 9, 9.7, 7, 9, 7, 9, 12, 9);
-        s("st_porta_lo", FACING, 0, 0, SoundType.WOOD, 1f, 1, 0, 1, 15, 16, 15, 0.5, 0, 0.5, 15.5, 0.6, 15.5);
-        s("st_porta_hi", FACING, 0, 0, SoundType.WOOD, 1f, 1, 0, 1, 15, 14, 15, 0.5, 14, 0.5, 15.5, 16, 15.5);
+        s("st_porta_lo", FACING, 0, 0, SoundType.WOOD, 1f, 1, 0, 1, 15, 16, 15, 0.5, 0, 0.5, 15.5, 0.6, 15.5, 11.6, 9, 0.3, 12.6, 14, 1, 11.6, 13, 0.3, 13.6, 14, 1, 0.5, 0, 0.5, 1.3, 16, 1.3, 14.7, 0, 0.5, 15.5, 16, 1.3, 0.5, 0, 14.7, 1.3, 16, 15.5, 14.7, 0, 14.7, 15.5, 16, 15.5);
+        s("st_porta_hi", FACING, 0, 0, SoundType.WOOD, 1f, 1, 0, 1, 15, 13, 15, 0.5, 12.6, 0.5, 15.5, 13.8, 15.5, 1, 13.8, 1, 15, 15, 15, 2.2, 15, 2.2, 13.8, 16.2, 13.8, 4, 16.2, 4, 12, 17, 12, 12.4, 13.8, 12.4, 13.8, 19.5, 13.8, 12, 19.5, 12, 14.2, 20.2, 14.2, 0.5, 0, 0.5, 1.3, 13, 1.3, 14.7, 0, 0.5, 15.5, 13, 1.3, 0.5, 0, 14.7, 1.3, 13, 15.5, 14.7, 0, 14.7, 15.5, 13, 15.5);
         s("st_razor", PLAIN, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 2, 0, 2, 14, 13, 14);
         s("st_lot_base", PLAIN, 0, 0, SoundType.STONE, 2f, 4, 0, 4, 12, 10, 12, 6.5, 10, 6.5, 9.5, 16, 9.5);
         s("st_lot_pole", PLAIN, 0, 0, SoundType.METAL, 2f, 6.5, 0, 6.5, 9.5, 16, 9.5);
@@ -6298,14 +6298,14 @@ final class CitySpecs extends CityBlocks.Specs {
         s("rw_name_dunmore_2", FACING, SEE_THROUGH, 0, SoundType.WOOD, 1f, 0, 3, 7, 16, 13, 9);
         s("rw_name_dunmore_3", FACING, SEE_THROUGH, 0, SoundType.WOOD, 1f, 0, 3, 7, 16, 13, 9);
         s("rw_name_fairview_0", FACING, SEE_THROUGH, 0, SoundType.WOOD, 1f, 0, 3, 7, 16, 13, 9);
+    }
+
+    private void part36() {
         s("rw_name_fairview_1", FACING, SEE_THROUGH, 0, SoundType.WOOD, 1f, 0, 3, 7, 16, 13, 9);
         s("rw_name_fairview_2", FACING, SEE_THROUGH, 0, SoundType.WOOD, 1f, 0, 3, 7, 16, 13, 9);
         s("rw_name_fairview_3", FACING, SEE_THROUGH, 0, SoundType.WOOD, 1f, 0, 3, 7, 16, 13, 9);
         s("rw_name_ashby_0", FACING, SEE_THROUGH, 0, SoundType.WOOD, 1f, 0, 3, 7, 16, 13, 9);
         s("rw_name_ashby_1", FACING, SEE_THROUGH, 0, SoundType.WOOD, 1f, 0, 3, 7, 16, 13, 9);
-    }
-
-    private void part36() {
         s("rw_name_ashby_2", FACING, SEE_THROUGH, 0, SoundType.WOOD, 1f, 0, 3, 7, 16, 13, 9);
         s("rw_name_ashby_3", FACING, SEE_THROUGH, 0, SoundType.WOOD, 1f, 0, 3, 7, 16, 13, 9);
         s("rw_name_hollow_0", FACING, SEE_THROUGH, 0, SoundType.WOOD, 1f, 0, 3, 7, 16, 13, 9);
@@ -6490,14 +6490,14 @@ final class CitySpecs extends CityBlocks.Specs {
         s("tx_name_union_7", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
         s("tx_panel", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("tx_panel_b", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+    }
+
+    private void part37() {
         s("tx_wall", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("tx_granite", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("tx_terrazzo", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("tx_terrazzo_b", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("tx_terrazzo_d", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
-    }
-
-    private void part37() {
         s("tx_panel_hi", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("tx_panel_hi_s", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("tx_panel_mid", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
@@ -6663,14 +6663,14 @@ final class CitySpecs extends CityBlocks.Specs {
         s("ml_sign_fashion_0", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 14.5, 16, 16, 16);
         s("ml_sign_fashion_0_on", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 14.5, 16, 16, 16);
         s("ml_sign_fashion_1", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 14.5, 16, 16, 16);
+    }
+
+    private void part38() {
         s("ml_sign_fashion_1_on", FACING, SEE_THROUGH | DECOR, 10, SoundType.METAL, 0f, 0, 0, 14.5, 16, 16, 16);
         s("ml_sign_fashion_2", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 14.5, 16, 16, 16);
         s("ml_sign_fashion_2_on", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 14.5, 16, 16, 16);
         s("ml_sign_fashion_3", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 14.5, 16, 16, 16);
         s("ml_sign_fashion_3_on", FACING, SEE_THROUGH | DECOR, 10, SoundType.METAL, 0f, 0, 0, 14.5, 16, 16, 16);
-    }
-
-    private void part38() {
         s("ml_sign_jeans_0", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 14.5, 16, 16, 16);
         s("ml_sign_jeans_0_on", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 14.5, 16, 16, 16);
         s("ml_sign_jeans_1", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 14.5, 16, 16, 16);
@@ -6924,14 +6924,14 @@ final class CitySpecs extends CityBlocks.Specs {
         s("ml_name_bellmont_1", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 14.5, 16, 16, 16);
         s("ml_name_bellmont_1_on", FACING, SEE_THROUGH | DECOR, 12, SoundType.METAL, 0f, 0, 0, 14.5, 16, 16, 16);
         s("ml_name_bellmont_2", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 14.5, 16, 16, 16);
+    }
+
+    private void part39() {
         s("ml_name_bellmont_2_on", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 14.5, 16, 16, 16);
         s("ml_name_bellmont_3", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 14.5, 16, 16, 16);
         s("ml_name_bellmont_3_on", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 14.5, 16, 16, 16);
         s("ml_name_bellmont_4", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 14.5, 16, 16, 16);
         s("ml_name_bellmont_4_on", FACING, SEE_THROUGH | DECOR, 12, SoundType.METAL, 0f, 0, 0, 14.5, 16, 16, 16);
-    }
-
-    private void part39() {
         s("ml_name_bellmont_5", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 14.5, 16, 16, 16);
         s("ml_name_bellmont_5_on", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 14.5, 16, 16, 16);
         s("ml_name_bellmont_6", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 14.5, 16, 16, 16);
@@ -7177,11 +7177,11 @@ final class CitySpecs extends CityBlocks.Specs {
         s("hs_roof", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("hs_roof_lamp", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("hs_roof_lamp_on", PLAIN, 0, 13, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
-        s("hs_bed_head", FACING, LOOT, 0, SoundType.WOOL, 1f, 1, 2.5, 0, 15, 3.5, 16, 1.5, 0, 1, 2.5, 2.5, 2, 13.5, 0, 1, 14.5, 2.5, 2, 0.4, 7, 3, 1.2, 10, 12, 14.8, 7, 3, 15.6, 10, 12, 1, 3.5, 0, 15, 7, 16, 1, 3.5, 0, 15, 16, 1.4, 3, 7, 1.5, 13, 9, 6, 1, 7, 1.4, 15, 12, 2.2);
-        loot("hs_bed_head", "home_medicine");
     }
 
     private void part40() {
+        s("hs_bed_head", FACING, LOOT, 0, SoundType.WOOL, 1f, 1, 2.5, 0, 15, 3.5, 16, 1.5, 0, 1, 2.5, 2.5, 2, 13.5, 0, 1, 14.5, 2.5, 2, 0.4, 7, 3, 1.2, 10, 12, 14.8, 7, 3, 15.6, 10, 12, 1, 3.5, 0, 15, 7, 16, 1, 3.5, 0, 15, 16, 1.4, 3, 7, 1.5, 13, 9, 6, 1, 7, 1.4, 15, 12, 2.2);
+        loot("hs_bed_head", "home_medicine");
         s("hs_bed_foot", FACING, 0, 0, SoundType.WOOL, 1f, 1, 2.5, 0, 15, 3.5, 16, 1.5, 0, 1, 2.5, 2.5, 2, 13.5, 0, 1, 14.5, 2.5, 2, 1.2, 0, 13.5, 2.8, 1.6, 15, 13.2, 0, 13.5, 14.8, 1.6, 15, 1, 3.5, 0, 15, 7, 16, 1, 3.5, 14.6, 15, 10, 16, 5, 8, 15.6, 11, 10.5, 16.4);
         s("hs_bed_head_blood", FACING, LOOT, 0, SoundType.WOOL, 1f, 1, 2.5, 0, 15, 3.5, 16, 1.5, 0, 1, 2.5, 2.5, 2, 13.5, 0, 1, 14.5, 2.5, 2, 0.4, 7, 3, 1.2, 10, 12, 14.8, 7, 3, 15.6, 10, 12, 1, 3.5, 0, 15, 7, 16, 1, 3.5, 0, 15, 16, 1.4, 3, 7, 1.5, 13, 9, 6, 1, 7, 1.4, 15, 12, 2.2);
         loot("hs_bed_head_blood", "home_medicine");
@@ -7387,13 +7387,13 @@ final class CitySpecs extends CityBlocks.Specs {
         s("hs_name_mercy_37_on", FACING, SEE_THROUGH | DECOR, 12, SoundType.METAL, 0f, 0, 0, 14.5, 16, 16, 16);
         s("hs_name_mercy_38", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 14.5, 16, 16, 16);
         s("hs_name_mercy_38_on", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 14.5, 16, 16, 16);
+    }
+
+    private void part41() {
         s("hs_name_mercy_39", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 14.5, 16, 16, 16);
         s("hs_name_mercy_39_on", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 14.5, 16, 16, 16);
         s("hs_name_er_0", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 14.5, 16, 16, 16);
         s("hs_name_er_0_on", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 14.5, 16, 16, 16);
-    }
-
-    private void part41() {
         s("hs_name_er_1", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 14.5, 16, 16, 16);
         s("hs_name_er_1_on", FACING, SEE_THROUGH | DECOR, 12, SoundType.METAL, 0f, 0, 0, 14.5, 16, 16, 16);
         s("hs_name_er_2", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 14.5, 16, 16, 16);
@@ -7631,13 +7631,13 @@ final class CitySpecs extends CityBlocks.Specs {
         s("un_name_library_11", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 14.6, 16, 16, 16);
         s("un_name_science_0", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 14.6, 16, 16, 16);
         s("un_name_science_1", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 14.6, 16, 16, 16);
+    }
+
+    private void part42() {
         s("un_name_science_2", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 14.6, 16, 16, 16);
         s("un_name_science_3", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 14.6, 16, 16, 16);
         s("un_name_science_4", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 14.6, 16, 16, 16);
         s("un_name_science_5", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 14.6, 16, 16, 16);
-    }
-
-    private void part42() {
         s("un_name_science_6", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 14.6, 16, 16, 16);
         s("un_name_science_7", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 14.6, 16, 16, 16);
         s("un_name_science_8", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 14.6, 16, 16, 16);
@@ -7881,13 +7881,13 @@ final class CitySpecs extends CityBlocks.Specs {
         s("cc_vote_6", FACING, DECOR, 4, SoundType.METAL, 0f, 0, 0, 14.6, 16, 16, 16);
         s("cc_missing_6", FACING, DECOR, 0, SoundType.WOOL, 0f, 0, 0, 15.6, 16, 16, 16);
         s("cc_vote_7", FACING, DECOR, 4, SoundType.METAL, 0f, 0, 0, 14.6, 16, 16, 16);
+    }
+
+    private void part43() {
         s("cc_missing_7", FACING, DECOR, 0, SoundType.WOOL, 0f, 0, 0, 15.6, 16, 16, 16);
         s("cc_qmap_0", FACING, DECOR, 0, SoundType.WOOL, 0f, 0, 0, 15.4, 16, 16, 16);
         s("cc_qmap_1", FACING, DECOR, 0, SoundType.WOOL, 0f, 0, 0, 15.4, 16, 16, 16);
         s("cc_qmap_2", FACING, DECOR, 0, SoundType.WOOL, 0f, 0, 0, 15.4, 16, 16, 16);
-    }
-
-    private void part43() {
         s("cc_qmap_3", FACING, DECOR, 0, SoundType.WOOL, 0f, 0, 0, 15.4, 16, 16, 16);
         s("cc_qmap_4", FACING, DECOR, 0, SoundType.WOOL, 0f, 0, 0, 15.4, 16, 16, 16);
         s("cc_qmap_5", FACING, DECOR, 0, SoundType.WOOL, 0f, 0, 0, 15.4, 16, 16, 16);
@@ -8142,13 +8142,13 @@ final class CitySpecs extends CityBlocks.Specs {
         s("mu_board_burial_0", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOD, 0f, 0, 0, 15, 16, 16, 16);
         s("mu_board_burial_1", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOD, 0f, 0, 0, 15, 16, 16, 16);
         s("mu_board_burial_2", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOD, 0f, 0, 0, 15, 16, 16, 16);
+    }
+
+    private void part44() {
         s("mu_board_camp_0", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOD, 0f, 0, 0, 15, 16, 16, 16);
         s("mu_board_camp_1", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOD, 0f, 0, 0, 15, 16, 16, 16);
         s("mu_board_camp_2", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOD, 0f, 0, 0, 15, 16, 16, 16);
         s("mu_board_crates_0", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOD, 0f, 0, 0, 15, 16, 16, 16);
-    }
-
-    private void part44() {
         s("mu_board_crates_1", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOD, 0f, 0, 0, 15, 16, 16, 16);
         s("mu_board_crates_2", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOD, 0f, 0, 0, 15, 16, 16, 16);
         s("mu_label", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOL, 0f, 4, 4, 15.4, 12, 12, 16);
@@ -11275,5 +11275,37 @@ final class CitySpecs extends CityBlocks.Specs {
         s("fm_gam_grey_eave", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 4, 0, 0, 4, 16, 12, 8, 0, 0, 8, 16, 8, 12, 0, 0, 12, 16, 4, 14, 0, 3.5, 12, 16, 4.5, 15.5, 0, 1, 14, 16, 4, 17.5);
         s("fm_ladder", FACING, 0, 0, SoundType.WOOD, 1f, 2, 0, 13, 4, 16, 15.5, 12, 0, 13, 14, 16, 15.5, 4, 1.5, 13.4, 12, 3, 14.6, 2.7, 1.9, 12.7, 3.3, 2.6, 13, 12.7, 1.9, 12.7, 13.3, 2.6, 13, 4, 5.5, 13.4, 12, 7, 14.6, 2.7, 5.9, 12.7, 3.3, 6.6, 13, 12.7, 5.9, 12.7, 13.3, 6.6, 13, 4, 9.5, 13.4, 12, 11, 14.6, 2.7, 9.9, 12.7, 3.3, 10.6, 13, 12.7, 9.9, 12.7, 13.3, 10.6, 13, 4, 13.5, 13.4, 12, 15, 14.6, 2.7, 13.9, 12.7, 3.3, 14.6, 13, 12.7, 13.9, 12.7, 13.3, 14.6, 13);
         s("fm_ladder_broken", FACING, 0, 0, SoundType.WOOD, 1f, 2, 0, 13, 4, 16, 15.5, 12, 0, 13, 14, 16, 15.5, 4, 1.5, 13.4, 12, 3, 14.6, 2.7, 1.9, 12.7, 3.3, 2.6, 13, 12.7, 1.9, 12.7, 13.3, 2.6, 13, 4, 5.5, 13.4, 12, 7, 14.6, 2.7, 5.9, 12.7, 3.3, 6.6, 13, 12.7, 5.9, 12.7, 13.3, 6.6, 13, 4, 9.5, 13.4, 7, 11, 14.6, 10.5, 8.9, 13.4, 12, 10.5, 14.6, 4, 13.5, 13.4, 12, 15, 14.6, 2.7, 13.9, 12.7, 3.3, 14.6, 13, 12.7, 13.9, 12.7, 13.3, 14.6, 13);
+        s("cp_gb_wall", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 2);
+        s("cp_gb_win", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 16, 16, 2);
+        s("cp_gb_win_broken", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 16, 16, 2);
+        s("cp_gb_head", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 12.6, 2, 0, 12.6, 0, 16, 14.6, 16);
+        s("cp_gb_roof", FACING, 0, 0, SoundType.METAL, 2f, 0, 12.6, 0, 16, 14.6, 16);
+        s("cp_lt_rear_olive", FACING, SEE_THROUGH, 0, SoundType.METAL, 2f, 1, 0, 4, 15, 16, 16);
+        s("cp_lt_front_olive", FACING, LOOT, 0, SoundType.METAL, 2f, 1, 0, 0, 15, 16, 16);
+        loot("cp_lt_front_olive", "basement_supplies");
+        s("cp_lt_rear_white", FACING, SEE_THROUGH, 0, SoundType.METAL, 2f, 1, 0, 4, 15, 16, 16);
+        s("cp_lt_front_white", FACING, LOOT, 0, SoundType.METAL, 2f, 1, 0, 0, 15, 16, 16);
+        loot("cp_lt_front_white", "basement_supplies");
+        s("cp_lt_cap_rear", FACING, 0, 0, SoundType.METAL, 2f, 1, 0, 4, 15, 7, 16, 6.25, 0, 0.3, 9.75, 16, 3.7);
+        s("cp_lt_cap_front", FACING, 0, 0, SoundType.METAL, 2f, 1, 0, 0, 15, 7, 16);
+        s("cp_lt_mast", FACING, 0, 0, SoundType.METAL, 2f, 6.1, 0, 0.1, 9.9, 16, 3.9);
+        s("cp_lt_head", FACING, 0, 0, SoundType.METAL, 2f, 6.25, 0, 0.3, 9.75, 3, 3.7);
+        s("cp_lt_head_lit", FACING, 0, 15, SoundType.METAL, 2f, 6.25, 0, 0.3, 9.75, 3, 3.7);
+        s("cp_gb_wall_corner", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 2, 0, 0, 0, 2, 16, 16);
+        s("cp_gb_win_corner", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 16, 16, 2, 0, 0, 0, 2, 16, 16);
+        s("cp_gb_win_corner_broken", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 16, 16, 2, 0, 0, 0, 2, 16, 16);
+        s("cp_gb_head_corner", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 12.6, 2, 0, 0, 0, 2, 12.6, 16, 0, 12.6, 0, 16, 14.6, 16);
+        s("tn_olive_roof_1r", FACING, 0, 0, SoundType.WOOL, 1f, 0, 6.62742, 0, 16, 9.08427, 8, 0, 9.94113, 8, 16, 12.398, 16);
+        s("tn_olive_roof_1fr", FACING, 0, 0, SoundType.WOOL, 1f, 0, 6.62742, 0, 16, 9.08427, 8, 0, 9.94113, 8, 16, 12.398, 16);
+        s("tn_olive_roofend_1r_a", FACING, 0, 0, SoundType.WOOL, 1f, 0, 6.62742, 0, 16, 9.08427, 8, 0, 9.94113, 8, 16, 12.398, 16);
+        s("tn_olive_roofend_1r_b", FACING, 0, 0, SoundType.WOOL, 1f, 0, 6.62742, 0, 16, 9.08427, 8, 0, 9.94113, 8, 16, 12.398, 16);
+        s("tn_tan_roof_1r", FACING, 0, 0, SoundType.WOOL, 1f, 0, 6.62742, 0, 16, 9.08427, 8, 0, 9.94113, 8, 16, 12.398, 16);
+        s("tn_tan_roof_1fr", FACING, 0, 0, SoundType.WOOL, 1f, 0, 6.62742, 0, 16, 9.08427, 8, 0, 9.94113, 8, 16, 12.398, 16);
+        s("tn_tan_roofend_1r_a", FACING, 0, 0, SoundType.WOOL, 1f, 0, 6.62742, 0, 16, 9.08427, 8, 0, 9.94113, 8, 16, 12.398, 16);
+        s("tn_tan_roofend_1r_b", FACING, 0, 0, SoundType.WOOL, 1f, 0, 6.62742, 0, 16, 9.08427, 8, 0, 9.94113, 8, 16, 12.398, 16);
+        s("tn_white_roof_1r", FACING, 0, 0, SoundType.WOOL, 1f, 0, 6.62742, 0, 16, 9.08427, 8, 0, 9.94113, 8, 16, 12.398, 16);
+        s("tn_white_roof_1fr", FACING, 0, 0, SoundType.WOOL, 1f, 0, 6.62742, 0, 16, 9.08427, 8, 0, 9.94113, 8, 16, 12.398, 16);
+        s("tn_white_roofend_1r_a", FACING, 0, 0, SoundType.WOOL, 1f, 0, 6.62742, 0, 16, 9.08427, 8, 0, 9.94113, 8, 16, 12.398, 16);
+        s("tn_white_roofend_1r_b", FACING, 0, 0, SoundType.WOOL, 1f, 0, 6.62742, 0, 16, 9.08427, 8, 0, 9.94113, 8, 16, 12.398, 16);
     }
 }

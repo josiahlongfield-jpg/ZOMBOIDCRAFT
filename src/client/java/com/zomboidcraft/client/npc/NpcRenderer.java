@@ -20,12 +20,15 @@ import net.minecraft.util.Mth;
  * Draws an NPC's mesh (NpcAssets) turned to its body's facing, breathing a little. Both sides of every triangle are drawn,
  * since bought clothes are often single sheets. The "raw" look is lit like any mob. The "toon" look, on its painted
  * texture, is lit in three flat bands from one fixed light (as the gun renders are) and gets an ink outline: the mesh
- * pushed out a few millimetres along its normals and drawn inside out in near-black, so only its rim shows round the
- * edges.
+ * pushed out a few millimetres along its normals, then back away from the eye further than that, drawn in near-black.
+ * Where the body faces you the shell ends up behind it; only round the edges, where nothing covers it, does it show.
+ * (It doesn't lean on back-face culling, which shader packs may turn off: drawn inside out, it hid the whole body.)
  */
 public class NpcRenderer extends EntityRenderer<NpcEntity, NpcRenderer.State> {
     /** How far the outline shell stands off the body, in blocks. */
     private static final float INK = 0.0065f;
+    /** How far the shell is pushed back from the eye, so its front sits behind the body. */
+    private static final float BACK = INK * 2.5f;
     private static final int INK_COLOUR = 0xFF14110F;
     /** The toon light (world space, normalised below) and its three bands. */
     private static final float LX, LY, LZ;
@@ -40,6 +43,12 @@ public class NpcRenderer extends EntityRenderer<NpcEntity, NpcRenderer.State> {
 
     public static void register() {
         EntityRendererRegistry.register(Npcs.NPC, NpcRenderer::new);
+        try {
+            // made up front so it's there to drop local model files into
+            java.nio.file.Files.createDirectories(Npcs.localFolder());
+        } catch (java.io.IOException e) {
+            // the folder is only a convenience
+        }
     }
 
     public static class State extends EntityRenderState {
@@ -77,6 +86,9 @@ public class NpcRenderer extends EntityRenderer<NpcEntity, NpcRenderer.State> {
         boolean toon = state.look.equals("toon");
         int light = state.lightCoords, overlay = OverlayTexture.pack(0, state.hurt ? 3 : 10);
         float yaw = state.bodyYaw;
+        // the eye in the model's own frame (undoing the turn below), for the outline
+        double dx = camera.pos.x - state.x, dy = camera.pos.y - state.y, dz = camera.pos.z - state.z, r = Math.toRadians(yaw);
+        float ex = (float) (dx * Math.cos(r) + dz * Math.sin(r)), ey = (float) dy, ez = (float) (-dx * Math.sin(r) + dz * Math.cos(r));
         poseStack.pushPose();
         poseStack.rotateDegrees(Axis.YP, -yaw);
         // a slow breath: the chest rises a few millimetres and the body sways a touch
@@ -86,7 +98,7 @@ public class NpcRenderer extends EntityRenderer<NpcEntity, NpcRenderer.State> {
         int[] shade = toon ? bands(mesh, yaw) : null;
         collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(texture), (pose, out) -> body(mesh, shade, pose, out, light, overlay));
         if (toon) {
-            collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(texture), (pose, out) -> ink(mesh, pose, out, light));
+            collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(texture), (pose, out) -> ink(mesh, ex, ey, ez, pose, out, light));
         }
         poseStack.popPose();
         super.submit(state, poseStack, collector, camera);
@@ -136,15 +148,24 @@ public class NpcRenderer extends EntityRenderer<NpcEntity, NpcRenderer.State> {
         }
     }
 
-    /** The outline: the mesh pushed out along its normals, wound backwards so only its far side (round the rim) shows. */
-    private static void ink(NpcAssets.Mesh mesh, PoseStack.Pose pose, VertexConsumer out, int light) {
+    /** The outline: the mesh pushed out along its normals and back from the eye (ex, ey, ez, model space), so only its rim shows. */
+    private static void ink(NpcAssets.Mesh mesh, float ex, float ey, float ez, PoseStack.Pose pose, VertexConsumer out, int light) {
         float[] p = mesh.pos(), uv = mesh.uv(), n = mesh.normal();
         int[] tris = mesh.tris();
+        float[] moved = new float[p.length];
+        for (int v = 0, i = 0; v < mesh.vertices(); v++, i += 3) {
+            float vx = ex - p[i], vy = ey - p[i + 1], vz = ez - p[i + 2];
+            float len = (float) Math.sqrt(vx * vx + vy * vy + vz * vz);
+            float back = len > 1e-4f ? BACK / len : 0f;
+            moved[i] = p[i] + n[i] * INK - vx * back;
+            moved[i + 1] = p[i + 1] + n[i + 1] * INK - vy * back;
+            moved[i + 2] = p[i + 2] + n[i + 2] * INK - vz * back;
+        }
         for (int t = 0; t < tris.length; t += 3) {
             for (int k = 0; k < 4; k++) {
-                int v = tris[t + 2 - Math.min(k, 2)];
+                int v = tris[t + Math.min(k, 2)];
                 int i = v * 3;
-                out.addVertex(pose, p[i] + n[i] * INK, p[i + 1] + n[i + 1] * INK, p[i + 2] + n[i + 2] * INK)
+                out.addVertex(pose, moved[i], moved[i + 1], moved[i + 2])
                         .setColor(INK_COLOUR)
                         .setUv(uv[v * 2], uv[v * 2 + 1])
                         .setOverlay(OverlayTexture.NO_OVERLAY)

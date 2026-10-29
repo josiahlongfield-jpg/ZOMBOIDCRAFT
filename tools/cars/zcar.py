@@ -6,7 +6,8 @@
 
 T is (n, 3, 3) triangles in model space (metres, nose toward +z, wheels on y = 0), UV (n, 3, 2)
 atlas coordinates (v down), glass a flag per triangle, image the state's texture (PIL). Lids and
-wheels are folded into the body, shut and straight.
+wheels are folded into the body, shut and straight, and a turret (version 4) at rest; its parts are also
+kept as turret: [(kind, pivot, axis, T, UV, glass)].
 """
 import io
 import json
@@ -56,10 +57,11 @@ def _mesh(b, at):
     return (T, UV, g), at
 
 
-def read(model_id):
-    with open(os.path.join(CARS, model_id + '.zcar'), 'rb') as f:
+def read(model_id, path=None):
+    with open(path or os.path.join(CARS, model_id + '.zcar'), 'rb') as f:
         b = zlib.decompress(unscramble(f.read(), model_id))
-    assert b[:4] == b'ZCAR' and struct.unpack_from('>i', b, 4)[0] == 3
+    version = struct.unpack_from('>i', b, 4)[0]
+    assert b[:4] == b'ZCAR' and version in (3, 4)
     count = struct.unpack_from('>i', b, 8)[0]
     at = 12
     out = {}
@@ -85,10 +87,21 @@ def read(model_id):
             at += 16 + 1
             m, at = _mesh(b, at)
             parts.append(m)
+        turret = []
+        if version >= 4:
+            n = struct.unpack_from('>i', b, at)[0]
+            at += 4
+            for _ in range(n):
+                kind = struct.unpack_from('>b', b, at)[0]
+                f = struct.unpack_from('>6f', b, at + 1)
+                at += 1 + 24
+                m, at = _mesh(b, at)
+                parts.append(m)
+                turret.append((kind, np.array(f[:3]), np.array(f[3:]), *m))
         T = np.concatenate([p[0] for p in parts])
         UV = np.concatenate([p[1] for p in parts])
         G = np.concatenate([p[2] for p in parts])
-        out[name] = dict(T=T, UV=UV, glass=G, image=image)
+        out[name] = dict(T=T, UV=UV, glass=G, image=image, turret=turret)
     return out
 
 
@@ -118,7 +131,7 @@ def pick(entry, index, variants=('usable', 'abandoned', 'wrecked', 'burnt')):
     if names:
         cands = [m for m in index if m['id'] in names or m['kind'] in names]
     else:
-        cands = [m for m in index if m['kind'] not in ('jet', 'boat', 'farm') and entry[4] <= m['size'][2] <= entry[5]]
+        cands = [m for m in index if m['kind'] not in ('jet', 'boat', 'farm', 'military') and entry[4] <= m['size'][2] <= entry[5]]
     if not cands:
         return None, None
     m = cands[h % len(cands)]

@@ -1,8 +1,10 @@
 {
   "parent": "minecraft:block/block",
   "textures": {
+    "home_plastic_black": "zomboidcraft:block/city/home_plastic_black",
     "st_porta": "zomboidcraft:block/city/st_porta",
     "st_porta_hi": "zomboidcraft:block/city/st_porta_hi",
+    "st_porta_roof": "zomboidcraft:block/city/st_porta_roof",
     "particle": "zomboidcraft:block/city/st_porta_hi"
   },
   "elements": [
@@ -14,7 +16,7 @@
       ],
       "to": [
         15,
-        14,
+        13,
         15
       ],
       "faces": {
@@ -42,12 +44,12 @@
     {
       "from": [
         0.5,
-        14,
+        12.6,
         0.5
       ],
       "to": [
         15.5,
-        16,
+        13.8,
         15.5
       ],
       "faces": {
@@ -64,11 +66,398 @@
           "texture": "#st_porta"
         },
         "up": {
-          "texture": "#st_porta",
-          "cullface": "up"
+          "texture": "#st_porta"
         },
         "down": {
           "texture": "#st_porta"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        13.8,
+        1
+      ],
+      "to": [
+        15,
+        15,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_porta_roof"
+        },
+        "south": {
+          "texture": "#st_porta_roof"
+        },
+        "east": {
+          "texture": "#st_porta_roof"
+        },
+        "west": {
+          "texture": "#st_porta_roof"
+        },
+        "up": {
+          "texture": "#st_porta_roof"
+        },
+        "down": {
+          "texture": "#st_porta_roof"
+        }
+      }
+    },
+    {
+      "from": [
+        2.2,
+        15,
+        2.2
+      ],
+      "to": [
+        13.8,
+        16.2,
+        13.8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_porta_roof",
+          "uv": [
+            2.1999999999999993,
+            0,
+            13.8,
+            1.1999999999999993
+          ]
+        },
+        "south": {
+          "texture": "#st_porta_roof",
+          "uv": [
+            2.2,
+            0,
+            13.8,
+            1.1999999999999993
+          ]
+        },
+        "east": {
+          "texture": "#st_porta_roof",
+          "uv": [
+            2.1999999999999993,
+            0,
+            13.8,
+            1.1999999999999993
+          ]
+        },
+        "west": {
+          "texture": "#st_porta_roof",
+          "uv": [
+            2.2,
+            0,
+            13.8,
+            1.1999999999999993
+          ]
+        },
+        "up": {
+          "texture": "#st_porta_roof"
+        },
+        "down": {
+          "texture": "#st_porta_roof"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        16.2,
+        4
+      ],
+      "to": [
+        12,
+        17,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_porta_roof",
+          "uv": [
+            4,
+            0,
+            12,
+            0.8000000000000007
+          ]
+        },
+        "south": {
+          "texture": "#st_porta_roof",
+          "uv": [
+            4,
+            0,
+            12,
+            0.8000000000000007
+          ]
+        },
+        "east": {
+          "texture": "#st_porta_roof",
+          "uv": [
+            4,
+            0,
+            12,
+            0.8000000000000007
+          ]
+        },
+        "west": {
+          "texture": "#st_porta_roof",
+          "uv": [
+            4,
+            0,
+            12,
+            0.8000000000000007
+          ]
+        },
+        "up": {
+          "texture": "#st_porta_roof"
+        },
+        "down": {
+          "texture": "#st_porta_roof"
+        }
+      }
+    },
+    {
+      "from": [
+        12.4,
+        13.8,
+        12.4
+      ],
+      "to": [
+        13.8,
+        19.5,
+        13.8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_plastic_black",
+          "uv": [
+            2.1999999999999993,
+            0,
+            3.5999999999999996,
+            5.699999999999999
+          ]
+        },
+        "south": {
+          "texture": "#home_plastic_black",
+          "uv": [
+            12.4,
+            0,
+            13.8,
+            5.699999999999999
+          ]
+        },
+        "east": {
+          "texture": "#home_plastic_black",
+          "uv": [
+            2.1999999999999993,
+            0,
+            3.5999999999999996,
+            5.699999999999999
+          ]
+        },
+        "west": {
+          "texture": "#home_plastic_black",
+          "uv": [
+            12.4,
+            0,
+            13.8,
+            5.699999999999999
+          ]
+        },
+        "up": {
+          "texture": "#home_plastic_black"
+        },
+        "down": {
+          "texture": "#home_plastic_black"
+        }
+      }
+    },
+    {
+      "from": [
+        12,
+        19.5,
+        12
+      ],
+      "to": [
+        14.2,
+        20.2,
+        14.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_plastic_black",
+          "uv": [
+            1.8000000000000007,
+            0,
+            4,
+            0.6999999999999993
+          ]
+        },
+        "south": {
+          "texture": "#home_plastic_black",
+          "uv": [
+            12,
+            0,
+            14.2,
+            0.6999999999999993
+          ]
+        },
+        "east": {
+          "texture": "#home_plastic_black",
+          "uv": [
+            1.8000000000000007,
+            0,
+            4,
+            0.6999999999999993
+          ]
+        },
+        "west": {
+          "texture": "#home_plastic_black",
+          "uv": [
+            12,
+            0,
+            14.2,
+            0.6999999999999993
+          ]
+        },
+        "up": {
+          "texture": "#home_plastic_black"
+        },
+        "down": {
+          "texture": "#home_plastic_black"
+        }
+      }
+    },
+    {
+      "from": [
+        0.5,
+        0,
+        0.5
+      ],
+      "to": [
+        1.3,
+        13,
+        1.3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_porta"
+        },
+        "south": {
+          "texture": "#st_porta"
+        },
+        "east": {
+          "texture": "#st_porta"
+        },
+        "west": {
+          "texture": "#st_porta"
+        },
+        "up": {
+          "texture": "#st_porta"
+        },
+        "down": {
+          "texture": "#st_porta",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        14.7,
+        0,
+        0.5
+      ],
+      "to": [
+        15.5,
+        13,
+        1.3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_porta"
+        },
+        "south": {
+          "texture": "#st_porta"
+        },
+        "east": {
+          "texture": "#st_porta"
+        },
+        "west": {
+          "texture": "#st_porta"
+        },
+        "up": {
+          "texture": "#st_porta"
+        },
+        "down": {
+          "texture": "#st_porta",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0.5,
+        0,
+        14.7
+      ],
+      "to": [
+        1.3,
+        13,
+        15.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_porta"
+        },
+        "south": {
+          "texture": "#st_porta"
+        },
+        "east": {
+          "texture": "#st_porta"
+        },
+        "west": {
+          "texture": "#st_porta"
+        },
+        "up": {
+          "texture": "#st_porta"
+        },
+        "down": {
+          "texture": "#st_porta",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        14.7,
+        0,
+        14.7
+      ],
+      "to": [
+        15.5,
+        13,
+        15.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_porta"
+        },
+        "south": {
+          "texture": "#st_porta"
+        },
+        "east": {
+          "texture": "#st_porta"
+        },
+        "west": {
+          "texture": "#st_porta"
+        },
+        "up": {
+          "texture": "#st_porta"
+        },
+        "down": {
+          "texture": "#st_porta",
+          "cullface": "down"
         }
       }
     }

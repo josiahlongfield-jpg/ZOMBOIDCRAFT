@@ -85,6 +85,16 @@ public class CarProp extends Entity {
     private static final EntityDataAccessor<Integer> CONDITION = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.INT);
     /** The driver has the headlights switched on. */
     private static final EntityDataAccessor<Boolean> LIGHTS = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.BOOLEAN);
+    /** A mounted gun's barrels spun up (0 to 1), whether it's firing, and the rounds on its belt (see Turret). */
+    private static final EntityDataAccessor<Float> TURRET_SPIN = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Boolean> TURRET_FIRING = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer> BELT = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.INT);
+    /** Server: the gunner holds the trigger; rounds due by the rate; ticks till the belt's loaded; rounds fired. */
+    boolean turretTrigger;
+    double turretOwed;
+    int beltBusy, turretShots;
+    /** How far the gun's barrels have turned (radians), last tick and this one (client side). */
+    public float barrels, barrelsO;
 
     private final SimpleContainer boot = new SimpleContainer(27) {
         @Override
@@ -188,6 +198,9 @@ public class CarProp extends Entity {
         builder.define(BATTERY, true);
         builder.define(CONDITION, 100);
         builder.define(LIGHTS, false);
+        builder.define(TURRET_SPIN, 0f);
+        builder.define(TURRET_FIRING, false);
+        builder.define(BELT, 0);
     }
 
     @Override
@@ -230,6 +243,7 @@ public class CarProp extends Entity {
         hotwired = input.getIntOr("hotwired", 0) != 0;
         worn = input.getIntOr("worn", 0) != 0;
         entityData.set(LIGHTS, input.getIntOr("lights", 0) != 0);
+        entityData.set(BELT, input.getIntOr("belt", 0));
         gloveSearched = input.getIntOr("glove_searched", 0) != 0;
         NonNullList<ItemStack> glove = NonNullList.withSize(glovebox.getContainerSize(), ItemStack.EMPTY);
         ContainerHelper.loadAllItems(input.childOrEmpty("glovebox"), glove);
@@ -249,6 +263,7 @@ public class CarProp extends Entity {
         output.putInt("battery", battery() ? 1 : 0);
         output.putInt("condition", condition());
         output.putFloat("windows", windows);
+        output.putInt("belt", belt());
         output.putString("glass", entityData.get(GLASS));
         if (glassLeft != null) {
             StringBuilder left = new StringBuilder();
@@ -425,6 +440,31 @@ public class CarProp extends Entity {
             return position().add(v.x, v.y + pivot(), v.z);
         }
         return position().add(world(p[0], p[1], p[2]));
+    }
+
+    public float turretSpin() {
+        return entityData.get(TURRET_SPIN);
+    }
+
+    void setTurretSpin(float spin) {
+        entityData.set(TURRET_SPIN, spin);
+    }
+
+    public boolean turretFiring() {
+        return entityData.get(TURRET_FIRING);
+    }
+
+    void setTurretFiring(boolean firing) {
+        entityData.set(TURRET_FIRING, firing);
+    }
+
+    /** Rounds on a mounted gun's belt. */
+    public int belt() {
+        return entityData.get(BELT);
+    }
+
+    public void setBelt(int rounds) {
+        entityData.set(BELT, Math.max(0, rounds));
     }
 
     /** Where a seat's occupant's eyes are, in the world. */
@@ -1121,6 +1161,10 @@ public class CarProp extends Entity {
             return super.getPassengerAttachmentPoint(passenger, dimensions, scale);
         }
         float[] seat = m.seats[Math.min(i, m.seats.length - 1)];
+        if (m.turret != null && i == m.gunner) {
+            // the gunner stands behind the gun and goes round with it
+            seat = Turret.turn(m.turret, seat, Turret.yaw(passenger.getYRot(), getYRot()));
+        }
         if (aircraft()) {
             // the seat turns with the airframe about its middle, the eyes staying upright above it
             float pivot = pivot();
@@ -1155,6 +1199,14 @@ public class CarProp extends Entity {
     }
 
     private void clampLook(Entity passenger) {
+        CarModels.Model m = CarModels.get(model());
+        if (m != null && m.turret != null && seatOf(passenger) == m.gunner) {
+            // the gun goes all the way round; it tilts only so far
+            float pitch = Mth.clamp(passenger.getXRot(), -m.turret.up, m.turret.down);
+            passenger.xRotO += pitch - passenger.getXRot();
+            passenger.setXRot(pitch);
+            return;
+        }
         float rel = Mth.wrapDegrees(passenger.getYRot() - getYRot());
         float clamped = Mth.clamp(rel, -130f, 130f);
         passenger.yRotO += clamped - rel;
@@ -1323,6 +1375,9 @@ public class CarProp extends Entity {
         steerO = steer;
         if (level().isClientSide()) {
             wind();
+            barrelsO = barrels;
+            // about seven turns a second flat out
+            barrels = (barrels + turretSpin() * 2.2f) % (float) (Math.PI * 2000);
         }
         if (isLocalInstanceAuthoritative() && getControllingPassenger() instanceof Player driver) {
             getInterpolation().cancel();
@@ -1354,6 +1409,7 @@ public class CarProp extends Entity {
             lastPos = position();
             engine(server, getControllingPassenger());
             alarm(server);
+            Turret.tick(this, server);
             CarModels.Model model = CarModels.get(model());
             if (isVehicle() && model != null) {
                 keepOut(model);

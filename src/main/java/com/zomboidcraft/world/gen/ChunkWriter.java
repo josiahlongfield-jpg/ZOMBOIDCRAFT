@@ -123,7 +123,7 @@ public final class ChunkWriter implements ChunkSink {
      */
     static java.util.function.Predicate<CarModels.Model> filter(double minLength, double maxLength, String models) {
         if (models == null) {
-            return m -> !m.jet() && !m.boat() && !m.farm() && m.length() >= minLength && m.length() <= maxLength;
+            return m -> !m.jet() && !m.boat() && !m.farm() && !m.military() && m.length() >= minLength && m.length() <= maxLength;
         }
         if (models.startsWith("=")) {
             String id = models.substring(1);
