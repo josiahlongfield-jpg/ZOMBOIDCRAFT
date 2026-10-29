@@ -81,7 +81,8 @@ final class Harbour {
             int cz = (int) Math.round(pz), cy = (int) Math.round(py);
             int o = (int) Math.round(((pz - cz) * nz + (py - cy) * ny) * 16 / step);
             o = Math.max(-lim, Math.min(lim, o));
-            p.set(x, cy, cz, family + "_" + k + (o > 0 ? "_p" + o : o < 0 ? "_m" + (-o) : ""));
+            // drawn facing north; a turned placer turns the member's plane with it
+            p.set(x, cy, cz, family + "_" + k + (o > 0 ? "_p" + o : o < 0 ? "_m" + (-o) : "") + "[facing=north]");
         }
     }
 

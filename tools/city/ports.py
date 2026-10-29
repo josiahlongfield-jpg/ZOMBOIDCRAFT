@@ -230,6 +230,34 @@ def bulk(seed, material, rgb):
     return t
 
 
+def staves(seed):
+    """A wooden water tank's staves: upright boards of weathered redwood gone grey, four a block,
+    the joints dark between them, each board its own tone, rain-dark down from the hoops."""
+    t = F.mat("Wood065", (112, 92, 76), 0.6, rot=True, seed=seed)
+    w = N // 4
+    for i in range(4):
+        t.c[:, i * w:(i + 1) * w] *= 0.9 + 0.2 * t.rng.random()
+        t.c[:, i * w] = (40, 34, 30)
+        t.h[:, i * w] = 0.3
+    t.streaks(0.9, 0.7)
+    t.grime(0.2, (54, 50, 42))
+    return t
+
+
+def tank_roof(seed):
+    """A wooden tank's cone: board courses lapped down the slope, the joints staggered."""
+    t = F.mat("Wood049", (98, 90, 82), 0.55, seed=seed)
+    w = N // 4
+    for j in range(4):
+        y = j * w
+        t.c[y:y + 2] *= 0.55
+        t.h[y:y + 2] = 0.35
+        for x in range((j % 2) * w // 2, N, w):
+            t.c[y:y + w, x] *= 0.6
+    t.grime(0.25, (60, 66, 46))
+    return t
+
+
 def textures():
     out = {"ct_casting": lambda: casting(49300), "cr_steel_white": lambda: white_steel(49330),
            "cr_lattice_yellow": lambda: lattice(49331), "tk_oil": lambda: oil(49360, (198, 196, 186), False),
@@ -238,7 +266,7 @@ def textures():
            "lh_red": lambda: lh_paint(49371, (164, 46, 38)), "lh_cap": lambda: paint(49372, (40, 44, 42)),
            "lh_prism": lambda: prism(49373, False), "lh_prism_lit": lambda: prism(49374, True),
            "bw_rock": lambda: rock(49380, (108, 106, 100), False), "bw_rock_weed": lambda: rock(49381, (86, 84, 78), True),
-           "bw_concrete": lambda: slip(49382)}
+           "bw_concrete": lambda: slip(49382), "wt_stave": lambda: staves(49396), "wt_roof": lambda: tank_roof(49397)}
     for i, (m, (mat_, rgb, _)) in enumerate(BULK.items()):
         out["bulk_" + m] = lambda mat_=mat_, rgb=rgb, i=i: bulk(49390 + i, mat_, rgb)
     for i, (c, rgb) in enumerate(PLATES.items()):
@@ -651,7 +679,7 @@ def blocks():
     for fam, (half, tex) in MEMBERS.items():
         for k in range(STEPS):
             for sfx, o in (FINE if fam == "cr_stay" else OFFSETS):
-                spec = {"model": "boxes", "boxes": member(k, half, tex, o), "title": "Steel Member", "sound": "METAL",
+                spec = {"model": "boxes", "boxes": member(k, half, tex, o), "title": "Steel Member", "sound": "METAL", "rotate": "facing",
                         "shape": [[8 - min(half, 4), 8 - min(half, 4), 8 - min(half, 4), 8 + min(half, 4), 8 + min(half, 4), 8 + min(half, 4)]]}
                 if "lattice" in fam:
                     spec["render"] = "cutout"

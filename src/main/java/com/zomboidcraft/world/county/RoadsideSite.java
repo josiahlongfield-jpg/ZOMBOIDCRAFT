@@ -1,6 +1,7 @@
 package com.zomboidcraft.world.county;
 
 import com.zomboidcraft.world.city.BlockSink;
+import com.zomboidcraft.world.city.Doors;
 import com.zomboidcraft.world.city.Placer;
 import com.zomboidcraft.world.city.ShopLights;
 
@@ -227,7 +228,7 @@ final class RoadsideSite extends Site {
             q.set(x + 2, 2, z + 1, chance() < 0.5 ? "tire[axis=x]" : "air");
         }
         if (chance() < 0.4) {
-            q.set(x - 1, 1, z + 1, "minecraft:barrel[facing=up,loot=scraps]");
+            q.set(x - 1, 1, z + 1, "fm_drum");
         }
     }
 
@@ -312,7 +313,7 @@ final class RoadsideSite extends Site {
             int bx1 = 2 + n * 5;
             walkway(q, 1, bx1, bz - 2, 4);
             for (int x = 1; x <= bx1; x++) {
-                q.set(x, 8, bz - 1, "minecraft:smooth_stone_slab[type=bottom]");
+                q.set(x, 8, bz - 1, "front_coping_metal");
                 for (int z = bz; z < bz + 10; z++) {
                     q.set(x, 8, z, Bldg.full(roof));
                 }
@@ -331,7 +332,7 @@ final class RoadsideSite extends Site {
             for (int x = bx1 + 1; x <= bx1 + 2; x++) {
                 q.set(x, 4, bz - 2, "deck_steel");
                 q.set(x, 4, bz - 1, "deck_steel");
-                q.set(x, 5, bz - 2, "railing[axis=x]");
+                q.set(x, 5, bz - 2, "railing[facing=north]");
             }
             // and from the landing on up beside the rooms to a hut on the roof, its doors out onto it
             RoofHut.flight(q.turned(bx1 + 2, 0, bz - 1, 1), rng, 0, 0, 4, 8, wall, "steel_stairs", "south",
@@ -396,18 +397,18 @@ final class RoadsideSite extends Site {
             b.door(1, 1, 0, "flat_door", "north");
         }
         r.set(3, 2, 0, chance() < 0.3 + hit * 0.4 ? "window_broken[axis=x]" : chance() < 0.2 ? "boarded_window[axis=x]" : "window[axis=x]");
-        String bed = any("red", "blue", "white", "brown", "green");
-        r.set(2, 1, 4, "minecraft:" + bed + "_bed[facing=north,part=head]");
-        r.set(2, 1, 5, "minecraft:" + bed + "_bed[facing=north,part=foot]");
-        r.set(3, 1, 3, "minecraft:spruce_slab[type=top]");
-        r.set(1, 1, 6, "minecraft:dark_oak_planks");
-        r.set(1, 2, 6, chance() < 0.5 ? "minecraft:black_carpet" : "air");
+        String bed = any("home_bed_quilt", "home_bed_blue", "home_bed_rose", "home_bed_quilt", "home_bed_bloody");
+        r.set(2, 1, 4, bed + "_head[facing=south]");
+        r.set(2, 1, 5, bed + "_foot[facing=south]");
+        r.set(3, 1, 4, "pk_nightstand[facing=west]");
+        r.set(1, 1, 6, "home_dresser[facing=east]");
+        r.set(1, 2, 6, chance() < 0.7 ? "pk_tv_crt[facing=east]" : "air");
         for (int x = 1; x <= 3; x++) {
             r.set(x, 1, 7, x == 2 ? "air" : "drywall");
             r.set(x, 2, 7, x == 2 ? "air" : "drywall");
             r.set(x, 3, 7, "drywall");
         }
-        r.set(1, 1, 8, "minecraft:cauldron");
+        r.set(1, 1, 8, "home_toilet[facing=east]");
         r.set(3, 1, 8, "store_spill");
         if (chance() < 0.35) {
             r.set(2, 0, 4, "blood_splat");
@@ -416,7 +417,7 @@ final class RoadsideSite extends Site {
             r.set(2, 3, -1, ShopLights.lamp(rng, 0.25 + hit * 0.2));
         }
         if (chance() < 0.3) {
-            r.set(1 + rng.nextInt(3), 1, 1 + rng.nextInt(5), "minecraft:barrel[facing=up,loot=scraps]");
+            r.setIfAir(1 + rng.nextInt(3), 1, 1 + rng.nextInt(3), "cardboard_box");
         }
     }
 
@@ -426,15 +427,15 @@ final class RoadsideSite extends Site {
             q.set(x, y, z, y == 0 ? "sidewalk" : "deck_steel");
             q.set(x, y, z + 1, y == 0 ? "sidewalk" : "deck_steel");
             if (y > 0) {
-                q.set(x, y + 1, z, "railing[axis=x]");
+                q.set(x, y + 1, z, "railing[facing=north]");
             }
             if ((x - x0) % 5 == 0) {
                 for (int k = 1; k <= 3; k++) {
                     q.set(x, y + k, z, "streetlight_pole");
                 }
             }
-            q.set(x, y + 4, z, "minecraft:smooth_stone_slab[type=bottom]");
-            q.set(x, y + 4, z + 1, "minecraft:smooth_stone_slab[type=bottom]");
+            q.set(x, y + 4, z, "front_coping_metal");
+            q.set(x, y + 4, z + 1, "front_coping_metal");
         }
     }
 
@@ -496,14 +497,14 @@ final class RoadsideSite extends Site {
                 }
                 boolean rim = i == 0 || j == 0 || i == pw - 1 || j == pd - 1;
                 if (rim) {
-                    q.set(x + i, 0, z + j, "minecraft:smooth_quartz");
+                    q.set(x + i, 0, z + j, "of_coping");
                     continue;
                 }
                 int depth = i < pw / 2 ? 2 : 3;
                 for (int k = 0; k < depth; k++) {
                     q.set(x + i, -k, z + j, "air");
                 }
-                q.set(x + i, -depth, z + j, "minecraft:light_blue_terracotta");
+                q.set(x + i, -depth, z + j, "of_pool_tile");
                 double r = chance();
                 if (depth == 3 && r < 0.35) {
                     q.set(x + i, -2, z + j, r < 0.15 ? "leaf_litter" : r < 0.25 ? "trash_bag[facing=north]" : "minecraft:water");
@@ -512,8 +513,8 @@ final class RoadsideSite extends Site {
         }
         for (int j = 1; j < pd - 1; j++) {
             for (int k = 1; k <= 3; k++) {
-                q.set(x, -k, z + j, "minecraft:cyan_terracotta");
-                q.set(x + pw - 1, -k, z + j, "minecraft:cyan_terracotta");
+                q.set(x, -k, z + j, "of_pool_tile");
+                q.set(x + pw - 1, -k, z + j, "of_pool_tile");
             }
         }
         q.set(x + 1, -1, z + 1, "ladder[facing=east]");
@@ -768,14 +769,14 @@ final class RoadsideSite extends Site {
         if (style == 1) {
             b.gable(0, bw - 1, 0, bd - 1, 8, "minecraft:polished_andesite", false, clad, 1);  // the feed store's barn roof
         } else {
-            b.flat(0, 0, bw - 1, bd - 1, 8, clad, 1, "minecraft:smooth_stone_slab[type=bottom]");
+            b.flat(0, 0, bw - 1, bd - 1, 8, clad, 1, "front_coping_metal");
         }
         // racks of crates and boxes inside, aisles between
         for (int x = 3; x < bw - 3; x += 4) {
             for (int z = 4; z < bd - 2; z++) {
                 for (int y = 1; y <= 3; y++) {
                     double r = chance();
-                    s.set(x, y, z, r < 0.35 ? "crate" : r < 0.6 ? "cardboard_box" : r < 0.7 ? "minecraft:barrel[facing=up,loot=storage]" : "air");
+                    s.set(x, y, z, r < 0.35 ? "crate" : r < 0.6 ? "cardboard_box" : r < 0.7 ? "fm_drum" : "air");
                 }
                 s.set(x, 4, z, "steel_yellow");
             }
@@ -815,8 +816,8 @@ final class RoadsideSite extends Site {
                 }
             }
             for (int i = 0; i < 4; i++) {
-                q.set(14 + i, 1, ld - 5, "minecraft:hay_block");
-                q.set(14 + i, 2, ld - 5, chance() < 0.6 ? "minecraft:hay_block" : "air");
+                q.set(14 + i, 1, ld - 5, "fm_bales[axis=x]");
+                q.set(14 + i, 2, ld - 5, chance() < 0.6 ? "fm_bale_one[facing=" + any("north", "east", "south", "west") + "]" : "air");
             }
         } else if (style == 2) {
             // the lumber yard: stacks of boards under a lean-to, a tarp blown half off
@@ -925,7 +926,7 @@ final class RoadsideSite extends Site {
             Kit.lawn(f, rng, 0, 0, fw - 1, fd - 1, 1.0);
             seedHeads(f, fw, fd);
         }
-        fieldFence(f, fw, fd, corn ? "minecraft:spruce_fence" : "barbed_wire");
+        fieldFence(f, fw, fd, corn ? "fm_rail" : "barbed_wire");
         if (chance() < 0.6 && fw >= 22) {
             billboard(f, 4 + rng.nextInt(fw - 21), 3 + rng.nextInt(3));
         }
@@ -1011,7 +1012,7 @@ final class RoadsideSite extends Site {
     private void fieldPost(Placer f, int x, int z, String rail, String axis, boolean post, boolean gate) {
         if (gate) {
             if (chance() < 0.5) {
-                f.set(x, 1, z, "minecraft:spruce_fence_gate[facing=north,open=" + (chance() < 0.6) + "]");
+                Doors.place(f, x, 1, z, "fm_gate", "north", x % 2 == 0 ? "left" : "right", chance() < 0.6);
             }
             return;
         }
@@ -1019,42 +1020,45 @@ final class RoadsideSite extends Site {
         if (r < 0.06) {
             return;
         }
+        boolean wire = rail.equals("barbed_wire");
         if (post || r < 0.1) {
-            f.set(x, 1, z, "minecraft:spruce_fence");
+            f.set(x, 1, z, wire ? "fm_post" : "fm_rail_post[axis=" + axis + "]");
         } else {
-            f.set(x, 1, z, rail.equals("barbed_wire") ? rail + "[axis=" + axis + "]" : rail);
+            f.set(x, 1, z, (wire || r > 0.16 ? rail : "fm_rail_broken") + "[axis=" + axis + "]");
         }
     }
 
     /**
-     * A billboard on three timber legs facing the road: a frame of weathered boards, the paper
-     * peeling off in sheets, the old ad still across it, a catwalk and two lamps that hang dead.
+     * A billboard on three timber legs facing the road (rs_ kit, tools/city/roadside.py): a timber
+     * frame, the poster sheets peeling off the ply, the old ad still across it, battens and kickers
+     * behind, a grating catwalk and gooseneck lamps, most of them dead.
      */
     private void billboard(Placer f, int x0, int z) {
         int bw = 15, base = 6, top = base + 5;
         String id = any("motel", "joes", "route9", "hollowcreek", "riverside", "kessler", "bait", "produce");
         boolean torn = chance() < 0.4;
+        String ground = any("a", "b", "c", "d", "e", "e");
+        int[] legX = {x0 + 1, x0 + bw / 2, x0 + bw - 2};
         for (int x = x0; x < x0 + bw; x++) {
             for (int y = base; y <= top; y++) {
                 boolean frame = x == x0 || x == x0 + bw - 1 || y == base || y == top;
                 if (frame) {
-                    f.set(x, y, z + 1, chance() < 0.85 ? "minecraft:stripped_dark_oak_wood" : "minecraft:dark_oak_planks");
+                    f.set(x, y, z + 1, "rs_frame[facing=north]");
                     continue;
                 }
                 if (torn && x > x0 + bw / 2 && chance() < 0.55) {
-                    f.set(x, y, z + 1, chance() < 0.5 ? "minecraft:spruce_planks" : "minecraft:air");
+                    f.set(x, y, z + 1, chance() < 0.5 ? "rs_ply" : "air");
                     continue;  // the face blew off: boards and sky behind
                 }
-                double r = chance();
-                f.set(x, y, z + 1, r < 0.42 ? "minecraft:white_concrete" : r < 0.62 ? "minecraft:light_gray_concrete"
-                        : r < 0.74 ? "minecraft:white_terracotta" : r < 0.84 ? "minecraft:light_blue_terracotta"
-                        : r < 0.92 ? "minecraft:red_terracotta" : "minecraft:smooth_quartz");
+                // one ad's sheets over the whole face, the odd one gone to the ad pasted under it
+                String sheet = (chance() < 0.9 ? ground : any("a", "b", "c", "d", "e")) + rng.nextInt(3);
+                f.set(x, y, z + 1, chance() < 0.08 ? "rs_paper_curl_" + (chance() < 0.5 ? "a" : "b") + "[facing=north]"
+                        : "rs_paper_" + sheet + "[facing=north]");
             }
-            // the back: battens and the timber that holds it up
-            if ((x - x0) % 2 == 0) {
-                for (int y = base; y <= top; y++) {
-                    f.set(x, y, z + 2, "minecraft:spruce_fence");
-                }
+            // the back: an upright every other block, the rails between, the legs running up to the top
+            boolean leg = x == legX[0] || x == legX[1] || x == legX[2];
+            for (int y = base; y <= top; y++) {
+                f.set(x, y, z + 2, leg ? "pole_wood" : (x - x0) % 2 == 0 ? "rs_batten[facing=north]" : "rs_stringer[facing=north]");
             }
         }
         int k = Boards.WIDTH.getOrDefault(id, 4);
@@ -1062,23 +1066,22 @@ final class RoadsideSite extends Site {
         for (int i = 0; i < k; i++) {
             f.set(sx + k - 1 - i, base + 3, z, "sign_" + id + "_" + i + "[facing=south]");
         }
-        for (int leg : new int[] {x0 + 1, x0 + bw / 2, x0 + bw - 2}) {
+        for (int leg : legX) {
             for (int y = 1; y < base; y++) {
                 f.set(leg, y, z + 2, "pole_wood");
             }
-            f.set(leg, 1, z + 3, "minecraft:spruce_fence");
+            f.set(leg, 1, z + 3, "rs_brace[facing=north]");
         }
-        // the catwalk along the foot, and its lamps on arms over the face
+        // the catwalk along the foot, and its gooseneck lamps out over the road turned back on the face
         for (int x = x0; x < x0 + bw; x++) {
-            if (chance() < 0.85) {
-                f.set(x, base - 1, z, "minecraft:spruce_trapdoor[half=top,facing=south]");
+            if (chance() < 0.92) {
+                f.set(x, base - 1, z, "rs_walk[facing=north]");
             }
         }
-        for (int lx : new int[] {x0 + 3, x0 + bw - 4}) {
-            f.set(lx, top + 1, z + 1, "minecraft:iron_chain[axis=y]");
-            f.set(lx, top + 1, z, "minecraft:iron_bars");
-            f.set(lx, top + 1, z - 1, "minecraft:iron_bars");
-            f.set(lx, top, z - 1, chance() < 0.25 ? ShopLights.lamp(rng, 0) : "minecraft:smooth_quartz");
+        for (int lx : new int[] {x0 + 3, x0 + bw / 2 + 1, x0 + bw - 4}) {
+            if (chance() < 0.85) {
+                f.set(lx, base - 1, z - 1, chance() < 0.25 ? "rs_lamp_lit[facing=north]" : "rs_lamp[facing=north]");
+            }
         }
         // weeds grown up round the legs
         for (int x = x0; x < x0 + bw; x++) {

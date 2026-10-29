@@ -1151,6 +1151,12 @@ import housekit  # noqa: E402
 housekit.register(sys.modules[__name__])
 import ports  # noqa: E402
 ports.register(sys.modules[__name__])
+import roadside  # noqa: E402
+roadside.register(sys.modules[__name__])
+import scaffold  # noqa: E402
+scaffold.register(sys.modules[__name__])
+import trackbed  # noqa: E402
+trackbed.register(sys.modules[__name__])
 
 
 

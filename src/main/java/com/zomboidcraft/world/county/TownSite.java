@@ -1002,7 +1002,7 @@ final class TownSite extends Site {
         kit.overgrow(0.8);
     }
 
-    /** A railroad across the place at z: ballast, ties, two rails, a boxcar or three left on it. */
+    /** A railroad across the place at z: ballast, the track on it (tb_ kit), a boxcar or three left on it. */
     private void railroad(int z) {
         for (int x = 0; x < w; x++) {
             for (int dz = -3; dz <= 3; dz++) {
@@ -1012,20 +1012,21 @@ final class TownSite extends Site {
                 }
                 byte u = kit.use(x, zz);
                 if (u == Kit.ROAD) {
-                    // a level crossing: planks between the rails
+                    // a level crossing: planks between the rails, the heads standing through them
                     if (Math.abs(dz) <= 1) {
-                        out.set(x, 0, zz, "minecraft:spruce_planks");
+                        out.set(x, 0, zz, "tb_crossing");
+                        if (dz != 0) {
+                            out.set(x, 1, zz, "rail[axis=x]");
+                        }
                     }
                     continue;
                 }
                 kit.claim(x, zz, x, zz, Kit.BUILT);
-                out.set(x, 0, zz, Math.abs(dz) <= 1 && x % 2 == 0 ? "minecraft:stripped_dark_oak_log[axis=z]" : "minecraft:gravel");
-                out.set(x, -1, zz, "minecraft:gravel");
-            }
-            for (int dz : new int[] {-1, 1}) {
-                if (inside(x, z + dz)) {
-                    out.set(x, 1, z + dz, "rail[axis=x]");
+                out.set(x, 0, zz, Math.abs(dz) <= 1 ? "rw_ballast" : "minecraft:gravel");
+                if (Math.abs(dz) <= 1) {
+                    out.set(x, 1, zz, dz == 0 ? "tb_sleeper[axis=x]" : "tb_rail[axis=x]");
                 }
+                out.set(x, -1, zz, "minecraft:gravel");
             }
         }
         // boxcars standing on the line, one off the rails on its side

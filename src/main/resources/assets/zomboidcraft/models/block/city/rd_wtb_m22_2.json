@@ -1,0 +1,75 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "concrete_dark": "zomboidcraft:block/city/concrete_dark",
+    "tank_blue": "zomboidcraft:block/city/tank_blue",
+    "particle": "zomboidcraft:block/city/tank_blue"
+  },
+  "elements": [
+    {
+      "from": [
+        -4.531,
+        0,
+        11.696
+      ],
+      "to": [
+        17.469,
+        16,
+        12.696
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tank_blue",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#concrete_dark",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#tank_blue"
+        },
+        "west": {
+          "texture": "#tank_blue"
+        },
+        "up": {
+          "texture": "#concrete_dark",
+          "uv": [
+            0,
+            11.696,
+            16,
+            12.696
+          ]
+        },
+        "down": {
+          "texture": "#concrete_dark",
+          "uv": [
+            0,
+            3.3040000000000003,
+            16,
+            4.304
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          6.469,
+          8,
+          11.696
+        ],
+        "axis": "y",
+        "angle": -22.5
+      }
+    }
+  ]
+}

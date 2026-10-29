@@ -1,0 +1,111 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sf_primer": "zomboidcraft:block/city/sf_primer",
+    "particle": "zomboidcraft:block/city/sf_primer"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        3
+      ],
+      "to": [
+        13,
+        16,
+        4.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sf_primer"
+        },
+        "south": {
+          "texture": "#sf_primer"
+        },
+        "east": {
+          "texture": "#sf_primer"
+        },
+        "west": {
+          "texture": "#sf_primer"
+        },
+        "up": {
+          "texture": "#sf_primer",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sf_primer",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        0,
+        11.5
+      ],
+      "to": [
+        13,
+        16,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sf_primer"
+        },
+        "south": {
+          "texture": "#sf_primer"
+        },
+        "east": {
+          "texture": "#sf_primer"
+        },
+        "west": {
+          "texture": "#sf_primer"
+        },
+        "up": {
+          "texture": "#sf_primer",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sf_primer",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        7.25,
+        0,
+        4.5
+      ],
+      "to": [
+        8.75,
+        16,
+        11.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sf_primer"
+        },
+        "south": {
+          "texture": "#sf_primer"
+        },
+        "east": {
+          "texture": "#sf_primer"
+        },
+        "west": {
+          "texture": "#sf_primer"
+        },
+        "up": {
+          "texture": "#sf_primer",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sf_primer",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

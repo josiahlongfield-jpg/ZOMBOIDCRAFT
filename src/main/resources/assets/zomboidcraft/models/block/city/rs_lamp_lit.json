@@ -1,0 +1,199 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cp_lamp": "zomboidcraft:block/city/cp_lamp",
+    "cp_lens_lit": "zomboidcraft:block/city/cp_lens_lit",
+    "st_galv": "zomboidcraft:block/city/st_galv",
+    "particle": "zomboidcraft:block/city/st_galv"
+  },
+  "elements": [
+    {
+      "from": [
+        7,
+        1,
+        9
+      ],
+      "to": [
+        9,
+        3,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_galv"
+        },
+        "south": {
+          "texture": "#st_galv",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#st_galv"
+        },
+        "west": {
+          "texture": "#st_galv"
+        },
+        "up": {
+          "texture": "#st_galv"
+        },
+        "down": {
+          "texture": "#st_galv"
+        }
+      }
+    },
+    {
+      "from": [
+        7.2,
+        1,
+        7
+      ],
+      "to": [
+        8.8,
+        12,
+        8.8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_galv"
+        },
+        "south": {
+          "texture": "#st_galv"
+        },
+        "east": {
+          "texture": "#st_galv"
+        },
+        "west": {
+          "texture": "#st_galv"
+        },
+        "up": {
+          "texture": "#st_galv"
+        },
+        "down": {
+          "texture": "#st_galv"
+        }
+      }
+    },
+    {
+      "from": [
+        7.2,
+        10,
+        7.4
+      ],
+      "to": [
+        8.8,
+        11.6,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_galv"
+        },
+        "south": {
+          "texture": "#st_galv"
+        },
+        "east": {
+          "texture": "#st_galv"
+        },
+        "west": {
+          "texture": "#st_galv"
+        },
+        "up": {
+          "texture": "#st_galv"
+        },
+        "down": {
+          "texture": "#st_galv"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          11,
+          8
+        ],
+        "axis": "x",
+        "angle": 45
+      }
+    },
+    {
+      "from": [
+        5,
+        11,
+        2.5
+      ],
+      "to": [
+        11,
+        14,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cp_lamp"
+        },
+        "south": {
+          "texture": "#cp_lamp"
+        },
+        "east": {
+          "texture": "#cp_lamp"
+        },
+        "west": {
+          "texture": "#cp_lamp"
+        },
+        "up": {
+          "texture": "#cp_lamp"
+        },
+        "down": {
+          "texture": "#cp_lamp"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          13,
+          6
+        ],
+        "axis": "x",
+        "angle": 22.5
+      }
+    },
+    {
+      "from": [
+        5.5,
+        10.4,
+        3
+      ],
+      "to": [
+        10.5,
+        11,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cp_lamp"
+        },
+        "south": {
+          "texture": "#cp_lamp"
+        },
+        "east": {
+          "texture": "#cp_lamp"
+        },
+        "west": {
+          "texture": "#cp_lamp"
+        },
+        "up": {
+          "texture": "#cp_lamp"
+        },
+        "down": {
+          "texture": "#cp_lens_lit"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          13,
+          6
+        ],
+        "axis": "x",
+        "angle": 22.5
+      }
+    }
+  ]
+}

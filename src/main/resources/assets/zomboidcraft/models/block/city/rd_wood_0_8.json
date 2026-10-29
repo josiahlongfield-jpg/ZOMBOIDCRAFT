@@ -1,0 +1,68 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "wt_stave": "zomboidcraft:block/city/wt_stave",
+    "particle": "zomboidcraft:block/city/wt_stave"
+  },
+  "elements": [
+    {
+      "from": [
+        -0.25,
+        0,
+        0.0
+      ],
+      "to": [
+        16.25,
+        16,
+        3.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wt_stave",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#wt_stave",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#wt_stave"
+        },
+        "west": {
+          "texture": "#wt_stave"
+        },
+        "up": {
+          "texture": "#wt_stave",
+          "uv": [
+            0,
+            0.0,
+            16,
+            3.0
+          ],
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#wt_stave",
+          "uv": [
+            0,
+            13.0,
+            16,
+            16.0
+          ],
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
