@@ -1,0 +1,128 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bw_rock_weed": "zomboidcraft:block/city/bw_rock_weed",
+    "particle": "zomboidcraft:block/city/bw_rock_weed"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        9,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bw_rock_weed",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#bw_rock_weed",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#bw_rock_weed",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#bw_rock_weed",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#bw_rock_weed"
+        },
+        "down": {
+          "texture": "#bw_rock_weed",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        6,
+        1
+      ],
+      "to": [
+        10,
+        14,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bw_rock_weed"
+        },
+        "south": {
+          "texture": "#bw_rock_weed"
+        },
+        "east": {
+          "texture": "#bw_rock_weed"
+        },
+        "west": {
+          "texture": "#bw_rock_weed"
+        },
+        "up": {
+          "texture": "#bw_rock_weed"
+        },
+        "down": {
+          "texture": "#bw_rock_weed"
+        }
+      },
+      "rotation": {
+        "origin": [
+          5.5,
+          10,
+          5.5
+        ],
+        "axis": "y",
+        "angle": 22.5
+      }
+    },
+    {
+      "from": [
+        8,
+        5,
+        7
+      ],
+      "to": [
+        15.5,
+        12,
+        15.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bw_rock_weed"
+        },
+        "south": {
+          "texture": "#bw_rock_weed"
+        },
+        "east": {
+          "texture": "#bw_rock_weed"
+        },
+        "west": {
+          "texture": "#bw_rock_weed"
+        },
+        "up": {
+          "texture": "#bw_rock_weed"
+        },
+        "down": {
+          "texture": "#bw_rock_weed"
+        }
+      },
+      "rotation": {
+        "origin": [
+          11.5,
+          8,
+          11
+        ],
+        "axis": "x",
+        "angle": -22.5
+      }
+    }
+  ]
+}

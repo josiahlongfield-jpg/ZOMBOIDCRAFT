@@ -176,71 +176,70 @@ final class Harbour {
         p.set(ex, y + 1, ez, chance() < 0.5 ? "wf_pots[facing=" + any("north", "east", "south", "west") + "]" : "wf_coil");
     }
 
-    /** A rubble breakwater along x from x0 to x1, centred on z, wide at the bed and up to y = top. */
+    /**
+     * A breakwater along x from x0 to x1, centred on z, wide at the bed and up to y = top: a rubble
+     * core faced with tumbled armour stone (weed on it below the tide line), a concrete crown along
+     * the top, tetrapods dumped on its slopes.
+     */
     void breakwater(int x0, int x1, int z, int width, int top) {
+        String[] dirs = {"north", "east", "south", "west"};
         for (int x = x0; x <= x1; x++) {
             for (int dz = -width; dz <= width; dz++) {
                 double crest = top - Math.max(0, Math.abs(dz) - 2) * 1.6 + (chance() - 0.5) * 1.2;
-                for (int y = Ships.BED; y <= Math.min(top + 1, (int) Math.round(crest)); y++) {
-                    p.set(x, y, z + dz, any("minecraft:stone", "minecraft:andesite", "minecraft:cobblestone", "minecraft:mossy_cobblestone",
-                            "minecraft:polished_andesite"));
+                int y1 = Math.abs(dz) <= 1 ? top : Math.min(top, (int) Math.round(crest));
+                for (int y = Ships.BED; y <= y1; y++) {
+                    String b;
+                    if (y < y1) {
+                        b = "bw_core";
+                    } else if (Math.abs(dz) <= 1 && y >= top) {
+                        b = "bw_crest";
+                    } else {
+                        b = "bw_armour_" + any("a", "b", "c") + (y < top - 1 ? "_weed" : "") + "[facing=" + any(dirs) + "]";
+                    }
+                    p.set(x, y, z + dz, b);
+                }
+                if (Math.abs(dz) >= 3 && chance() < 0.07) {
+                    p.set(x, y1 + 1, z + dz, "bw_tetrapod[facing=" + any(dirs) + "]");
                 }
             }
         }
     }
 
     /**
-     * The lighthouse on (cx, cz) from y up: a round tower striped white and red, its gallery
-     * railed round, the lantern room glazed with its light (or dead), a dark cap.
+     * The lighthouse on (cx, cz) from y up: a round tower tapering as it climbs, banded white and red,
+     * the newel and its ladder up the middle; the gallery on top with its ring of railing, the
+     * lantern's glazing round the lens (lit, or dead), the domed cap and its vent and rod.
      */
     void lighthouse(int cx, int cz, int y, int h) {
-        int r = 3;
+        double ox = cx + 0.5, oz = cz + 0.5, top = 2.8;
         for (int yy = y; yy < y + h; yy++) {
-            boolean red = ((yy - y) / 4) % 2 == 1;
-            for (int dx = -r; dx <= r; dx++) {
-                for (int dz = -r; dz <= r; dz++) {
-                    double d = Math.hypot(dx, dz);
-                    if (d <= r + 0.3) {
-                        boolean wall = d > r - 0.8;
-                        p.set(cx + dx, yy, cz + dz, wall ? (red ? "minecraft:red_concrete" : "minecraft:white_concrete") : "air");
-                    }
-                }
+            double r = 3.6 - (3.6 - top) * (yy - y) / Math.max(1, h - 1);
+            Round.wall(p, ox, oz, r, yy, yy, ((yy - y) / 4) % 2 == 1 ? "lhr" : "lhw", 0);
+            p.set(cx, yy, cz, "streetlight_pole");
+            p.set(cx, yy, cz - 1, "ladder[facing=north]");
+        }
+        // the door in the north side at the foot
+        int dz = cz;
+        for (Round.Cell c : Round.ring(ox, oz, 3.6)) {
+            if (c.x() == cx) {
+                dz = Math.min(dz, c.z());
             }
         }
-        for (int yy = y; yy < y + h; yy++) {
-            p.set(cx, yy, cz, "minecraft:spruce_planks");
-        }
-        p.set(cx, y, cz - r, "flat_door[facing=north,half=lower,hinge=left,open=false]");
-        p.set(cx, y + 1, cz - r, "flat_door[facing=north,half=upper,hinge=left,open=false]");
+        p.set(cx, y, dz, "flat_door[facing=north,half=lower,hinge=left,open=false]");
+        p.set(cx, y + 1, dz, "flat_door[facing=north,half=upper,hinge=left,open=false]");
         int g = y + h;
-        for (int dx = -r - 1; dx <= r + 1; dx++) {
-            for (int dz = -r - 1; dz <= r + 1; dz++) {
-                double d = Math.hypot(dx, dz);
-                if (d <= r + 1.3) {
-                    p.set(cx + dx, g, cz + dz, "deck_steel");
-                    if (d > r + 0.4) {
-                        p.set(cx + dx, g + 1, cz + dz, "minecraft:iron_bars");
-                    }
+        for (int dx = -4; dx <= 4; dx++) {
+            for (int dzz = -4; dzz <= 4; dzz++) {
+                if (Math.hypot(dx, dzz) <= top + 1.2) {
+                    p.set(cx + dx, g, cz + dzz, dx == 0 && dzz == -1 ? "air" : "deck_steel");
                 }
             }
         }
-        for (int yy = g + 1; yy <= g + 3; yy++) {
-            for (int dx = -2; dx <= 2; dx++) {
-                for (int dz = -2; dz <= 2; dz++) {
-                    if (Math.abs(dx) == 2 || Math.abs(dz) == 2) {
-                        boolean corner = Math.abs(dx) == 2 && Math.abs(dz) == 2;
-                        p.set(cx + dx, yy, cz + dz, corner ? "minecraft:black_concrete" : "minecraft:glass_pane");
-                    }
-                }
-            }
-        }
-        p.set(cx, g + 2, cz, chance() < 0.4 + hit * 0.3 ? "minecraft:redstone_lamp" : "minecraft:ochre_froglight");
-        for (int dx = -2; dx <= 2; dx++) {
-            for (int dz = -2; dz <= 2; dz++) {
-                p.set(cx + dx, g + 4, cz + dz, Math.abs(dx) + Math.abs(dz) > 3 ? "air" : "minecraft:black_concrete");
-            }
-        }
-        p.set(cx, g + 5, cz, "minecraft:lightning_rod");
+        Round.wall(p, ox, oz, top + 1.4, g + 1, g + 1, "rail", 0);
+        Round.wall(p, ox, oz, 1.9, g + 1, g + 2, "glaze", 0);
+        p.set(cx, g + 1, cz, chance() < 0.4 + hit * 0.3 ? "rd_lens" : "rd_lens_lit");
+        int cap = Round.roof(p, ox, oz, 2.3, "mm", g + 3, "lhcap");
+        p.set(cx, cap, cz, "rd_finial");
     }
 
     // ------------------------------------------------------------------ cranes
@@ -762,11 +761,34 @@ final class Harbour {
         for (int dx = -r; dx <= r; dx++) {
             for (int dz = -r; dz <= r; dz++) {
                 double d = Math.hypot(dx, dz * 1.3) / r;
-                int top = (int) Math.round(h * (1 - d) + (chance() - 0.5));
-                for (int y = 1; y <= top; y++) {
-                    p.set(cx + dx, y, cz + dz, stuff);
-                }
+                pile(cx + dx, 1, cz + dz, h * (1 - d) + (chance() - 0.5) * 0.6, stuff);
             }
+        }
+    }
+
+    /**
+     * A column of a heap from y, height blocks deep: whole blocks, then its top a quarter, half or
+     * three quarters deep (bulk_ layers), so the heap slopes instead of stepping; stuff is coal, gravel,
+     * sand or dirt (or a block of anything else, stepped as it was).
+     */
+    void pile(int x, int y, int z, double height, String stuff) {
+        if (height <= 0) {
+            return;
+        }
+        boolean bulk = stuff.equals("coal") || stuff.equals("gravel") || stuff.equals("sand") || stuff.equals("dirt");
+        int whole = (int) Math.floor(height), part = (int) Math.round((height - whole) * 4);
+        if (!bulk) {
+            whole = (int) Math.round(height);
+            part = 0;
+        } else if (part == 4) {
+            whole++;
+            part = 0;
+        }
+        for (int k = 0; k < whole; k++) {
+            p.set(x, y + k, z, bulk ? "bulk_" + stuff : stuff);
+        }
+        if (part > 0) {
+            p.set(x, y + whole, z, "bulk_" + stuff + "_" + part);
         }
     }
 

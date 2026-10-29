@@ -29,13 +29,13 @@ DEPTHS = [-8, -6, -4, -2, 0, 2, 4, 6, 8]
 INSIDE = "concrete_dark"
 WALLS = {"stave": "silo_stave", "blue": "silo_blue", "bin": "bin_ribbed", "brick": "brick_red",
          "field": "fm_fieldstone", "tank": "ext_galv", "crib": "fm_mesh", "paddock": "fm_ring_boards",
-         "oil": "tk_oil", "oilrust": "tk_oil_rust", "slip": "tk_slip"}
+         "oil": "tk_oil", "oilrust": "tk_oil_rust", "slip": "tk_slip", "lhw": "lh_white", "lhr": "lh_red"}
 # what each wall shows inside (a stock tank and a corn crib's mesh are the same both sides)
 INNER = {"tank": "ext_galv", "crib": "fm_mesh", "field": "fm_fieldstone", "paddock": "fm_ring_boards"}
 TITLES = {"stave": "Stave Silo", "blue": "Silo", "bin": "Grain Bin", "brick": "Brick Silo", "field": "Stone Curb",
           "tank": "Stock Tank", "crib": "Corn Crib", "paddock": "Round Pen", "oil": "Fuel Tank", "oilrust": "Fuel Tank",
-          "slip": "Grain Silo"}
-TIERS = {"galv": "ext_galv", "blue": "silo_blue", "tinred": "ext_tin_red_tread", "oil": "tk_oil_roof"}
+          "slip": "Grain Silo", "lhw": "Lighthouse", "lhr": "Lighthouse"}
+TIERS = {"galv": "ext_galv", "blue": "silo_blue", "tinred": "ext_tin_red_tread", "oil": "tk_oil_roof", "lhcap": "lh_cap"}
 GALV = "ext_galv"
 
 
@@ -101,6 +101,42 @@ def tier(turn, depth, tex, inset, rail=False):
     return out
 
 
+def rail(turn, depth):
+    """A ring railing (a lighthouse gallery's): toe plate, posts, a knee rail and a hand rail on
+    the circle, nothing behind."""
+    L = length(turn)
+    cx, cz = centre(turn, depth)
+    r = rot(turn, cx, cz)
+    out = [box(cx - L / 2, 0, cz, cx + L / 2, 1.5, cz + 0.6, GALV, r), box(cx - L / 2, 14, cz, cx + L / 2, 15.2, cz + 1.2, "lh_cap", r),
+           box(cx - L / 2, 7.5, cz + 0.2, cx + L / 2, 8.3, cz + 1, "lh_cap", r)]
+    x = cx - L / 2 + 2
+    while x < cx + L / 2 - 1:
+        out.append(box(x, 0, cz + 0.2, x + 1, 14, cz + 1, "lh_cap", r))
+        x += 6
+    return out
+
+
+def glaze(turn, depth):
+    """A lantern's glazing on the circle: the panes in their astragals, a bar across the middle,
+    the sill and the head."""
+    L = length(turn)
+    cx, cz = centre(turn, depth)
+    r = rot(turn, cx, cz)
+    return [box(cx - L / 2, 1, cz + 0.6, cx + L / 2, 15, cz + 1, "lamp_glass", r),
+            box(cx - L / 2, 0, cz, cx + L / 2, 1.2, cz + 1.6, "lh_cap", r), box(cx - L / 2, 14.8, cz, cx + L / 2, 16, cz + 1.6, "lh_cap", r),
+            box(cx - L / 2, 7.6, cz + 0.2, cx + L / 2, 8.4, cz + 1.4, "lh_cap", r),
+            box(cx - 0.6, 0, cz + 0.1, cx + 0.6, 16, cz + 1.5, "lh_cap", r)]
+
+
+def lens(lit):
+    """The light: a Fresnel lens's drum of glass prisms on its pedestal, the bull's-eye, a cap."""
+    pr = "lh_prism_lit" if lit else "lh_prism"
+    c = [8, 8, 8]
+    return [[5, 0, 5, 11, 3, 11, "lh_cap"], [6.5, 3, 6.5, 9.5, 4, 9.5, GALV],
+            [3, 4, 3, 13, 14, 13, pr], [3, 4, 3, 13, 14, 13, pr, None, {"axis": "y", "angle": 45, "origin": c}],
+            [4, 14, 4, 12, 15.5, 12, "lh_cap"], [6, 15.5, 6, 10, 16, 10, "lh_cap"]]
+
+
 def cage():
     """A ladder up a silo in its cage: two stiles and rungs against the wall (the model's south), the
     hoop round the climber and the straps up its sides."""
@@ -162,6 +198,12 @@ def blocks():
             add(f"rd_oil_r_{k}_{i}", tier(t, d, TIERS["oil"], 8, rail=True), "Tank Roof", "METAL", render="cutout")
     for mat, tex in TIERS.items():
         out[f"rd_{mat}_flat"] = {"tex": {"up": tex, "side": tex, "down": INSIDE}, "title": "Silo Roof", "sound": "METAL"}
+    for k, t in TURNS.items():
+        for i, d in enumerate(DEPTHS):
+            add(f"rd_rail_{k}_{i}", rail(t, d), "Gallery Rail", "METAL", render="cutout")
+            add(f"rd_glaze_{k}_{i}", glaze(t, d), "Lantern Glazing", "GLASS", render="cutout")
+    add("rd_lens", lens(False), "Lighthouse Lens", "GLASS", rotate=None)
+    add("rd_lens_lit", lens(True), "Lighthouse Lens", "GLASS", rotate=None, light=15)
     add("rd_cage", cage(), "Caged Ladder", "METAL", climb=True)
     add("rd_finial", finial(), "Silo Cap", "METAL", rotate=None)
     add("rd_bin_cap", bin_cap(), "Bin Cap", "METAL", rotate=None)

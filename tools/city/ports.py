@@ -183,11 +183,64 @@ def slip(seed):
     return t
 
 
+def lh_paint(seed, rgb):
+    """A lighthouse's painted render: limewash over the stone courses, flaking, salt-stained."""
+    t = F.mat("Concrete034", rgb, 0.35, seed=seed)
+    for y in range(0, N, 16):
+        t.rect(0, y, N, y + 1, col=tuple(int(v * 0.86) for v in rgb), h=0.6)
+    t.streaks(0.9, 0.74)
+    t.speckle(0.02, tuple(int(v * 0.7) for v in rgb), 0.4)
+    t.grime(0.12, (80, 76, 66))
+    return t
+
+
+def prism(seed, lit):
+    """A Fresnel lens: rings of glass prisms, each with its bright edge; lit, the lamp burns through."""
+    t = F.plain(seed, (200, 228, 220) if lit else (120, 150, 146), 0.04, 0.95)
+    for y in range(0, N, 6):
+        t.rect(0, y, N, y + 1, col=(255, 252, 230) if lit else (190, 210, 206), h=1.0)
+        t.rect(0, y + 4, N, y + 6, col=(170, 200, 192) if lit else (84, 108, 104), h=0.5)
+    t.rect(N // 2 - 6, N // 2 - 6, N // 2 + 6, N // 2 + 6, col=(255, 250, 220) if lit else (150, 176, 170), h=1.0)
+    return t
+
+
+def rock(seed, rgb, weed):
+    """Armour stone: quarried granite, grey, lichen high up and weed and barnacles at the tide line."""
+    t = F.mat("Rock036", rgb, 1.0, span=2, seed=seed)
+    t.grime(0.25, (52, 50, 46))
+    if weed:
+        n = P.fbm(t.rng, ((4, 1.0), (8, 0.6), (16, 0.4)))
+        m = (n > 0.1)[..., None]
+        t.c = np.where(m, t.c * 0.5 + np.array((52, 64, 40), np.float32) * 0.5, t.c)
+        t.speckle(0.03, (196, 192, 180), 0.6, 0.3)
+    else:
+        t.speckle(0.02, (170, 168, 120), 0.4)
+    return t
+
+
+BULK = {"coal": ("Gravel041", (30, 30, 32), "GRAVEL"), "gravel": ("Gravel023", None, "GRAVEL"),
+        "sand": ("damp_sand", None, "SAND"), "dirt": ("stony_dirt_path", None, "GRAVEL")}
+
+
+def bulk(seed, material, rgb):
+    """A bulk heap's stuff: coal glinting, washed gravel, damp sand, spoil."""
+    t = F.mat(material, rgb, 1.2 if rgb else 1.0, span=2, seed=seed)
+    if material == "Gravel041":
+        t.speckle(0.03, (120, 124, 130), 0.6, 0.2)
+    return t
+
+
 def textures():
     out = {"ct_casting": lambda: casting(49300), "cr_steel_white": lambda: white_steel(49330),
            "cr_lattice_yellow": lambda: lattice(49331), "tk_oil": lambda: oil(49360, (198, 196, 186), False),
            "tk_oil_rust": lambda: oil(49361, (132, 82, 58), True), "tk_oil_roof": lambda: oil_roof(49362),
-           "tk_slip": lambda: slip(49363)}
+           "tk_slip": lambda: slip(49363), "lh_white": lambda: lh_paint(49370, (222, 220, 210)),
+           "lh_red": lambda: lh_paint(49371, (164, 46, 38)), "lh_cap": lambda: paint(49372, (40, 44, 42)),
+           "lh_prism": lambda: prism(49373, False), "lh_prism_lit": lambda: prism(49374, True),
+           "bw_rock": lambda: rock(49380, (108, 106, 100), False), "bw_rock_weed": lambda: rock(49381, (86, 84, 78), True),
+           "bw_concrete": lambda: slip(49382)}
+    for i, (m, (mat_, rgb, _)) in enumerate(BULK.items()):
+        out["bulk_" + m] = lambda mat_=mat_, rgb=rgb, i=i: bulk(49390 + i, mat_, rgb)
     for i, (c, rgb) in enumerate(PLATES.items()):
         out["cr_plate_" + c] = lambda rgb=rgb, i=i: plate(49340 + i, rgb)
         out["cr_plate_" + c + "_seam"] = lambda rgb=rgb, i=i: plate(49340 + i, rgb, True)
@@ -493,6 +546,49 @@ def rack_pipes(kind):
     return b
 
 
+def armour(kind, tex):
+    """Armour stone: the block's fill under two or three boulders tipped at odd angles out of it."""
+    def turn(axis, a, o):
+        return {"axis": axis, "angle": a, "origin": o}
+    base = [[0, 0, 0, 16, 9, 16, tex]]
+    if kind == "a":
+        return base + [[1, 6, 1, 10, 14, 10, tex, None, turn("y", 22.5, [5.5, 10, 5.5])],
+                       [8, 5, 7, 15.5, 12, 15.5, tex, None, turn("x", -22.5, [11.5, 8, 11])]]
+    if kind == "b":
+        return base + [[2, 5, 6, 14, 13, 14, tex, None, turn("z", 22.5, [8, 9, 10])],
+                       [0.5, 7, 0.5, 7, 12, 7, tex, None, turn("y", -22.5, [3.75, 9, 3.75])]]
+    return base + [[3, 6, 3, 13, 15, 13, tex, None, turn("y", 45, [8, 10, 8])],
+                   [0, 4, 9, 6, 10, 16, tex, None, turn("x", 22.5, [3, 7, 12.5])]]
+
+
+def tetrapod():
+    """A concrete tetrapod tumbled on the slope: the knot and four stubby legs."""
+    c = "bw_concrete"
+    return [[5, 4, 5, 11, 10, 11, c], [6, 9, 6, 10, 16, 10, c],
+            [6, 0, 6, 10, 7, 14, c, None, {"axis": "x", "angle": -45, "origin": [8, 7, 8]}],
+            [1, 0, 6, 9, 7, 10, c, None, {"axis": "z", "angle": 45, "origin": [8, 7, 8]}],
+            [7, 0, 6, 15, 7, 10, c, None, {"axis": "z", "angle": -45, "origin": [8, 7, 8]}]]
+
+
+def stand():
+    """A boat stand beside a hull laid up (the hull to its north): the tripod's legs splayed, the
+    screw post leaning in, its rubber pad on the hull; the chain to its partner across the keel."""
+    t = "painted_steel"
+    o = [8, 0, 9]
+    return [[7.3, 0, 8.3, 8.7, 13, 9.7, t, None, {"axis": "x", "angle": -22.5, "origin": o}],
+            [7.4, 0, 8.4, 8.6, 9, 9.6, t, None, {"axis": "z", "angle": 33.75, "origin": o}],
+            [7.4, 0, 8.4, 8.6, 9, 9.6, t, None, {"axis": "z", "angle": -33.75, "origin": o}],
+            [7.4, 0, 8.4, 8.6, 9, 9.6, t, None, {"axis": "x", "angle": 33.75, "origin": o}],
+            [6.5, 12, 1.5, 9.5, 13, 5.5, GALV], [4.5, 12.8, 1, 11.5, 16, 2.4, "wf_rubber", None, {"axis": "x", "angle": 22.5, "origin": [8, 13, 2]}],
+            [7.6, 0.4, 0, 8.4, 1, 8, GALV]]
+
+
+def keel_blocks():
+    """Timber keel blocks stacked crosswise under a laid-up hull (drawn along z: the keel's line)."""
+    t = "hk_timber"
+    return [[1, 0, 3, 15, 4, 13, t], [3, 4, 1, 13, 8, 15, t], [1, 8, 3, 15, 12, 13, t], [5, 12, 2, 11, 13, 14, "wf_rubber"]]
+
+
 def blocks():
     out = {}
 
@@ -531,6 +627,23 @@ def blocks():
     fit("cr_headblock", headblock(), "Hook Block", "axis", [[4, 0, 2, 12, 16, 14]])
     fit("cr_pad", pad(), "Outrigger Jack", "facing", [[0, 0, 0, 16, 16, 16]])
     fit("cr_outrigger", outrigger(), "Outrigger", "axis", [[3, 4, 0, 13, 12, 16]])
+    for k in "abc":
+        fit(f"bw_armour_{k}", armour(k, "bw_rock"), "Armour Stone", "facing", [[0, 0, 0, 16, 12, 16]])
+        fit(f"bw_armour_{k}_weed", armour(k, "bw_rock_weed"), "Armour Stone", "facing", [[0, 0, 0, 16, 12, 16]])
+    for n in ("bw_armour_a", "bw_armour_b", "bw_armour_c", "bw_armour_a_weed", "bw_armour_b_weed", "bw_armour_c_weed"):
+        out[n]["sound"] = "STONE"
+    fit("bw_tetrapod", tetrapod(), "Tetrapod", "facing", [[1, 0, 1, 15, 16, 15]])
+    out["bw_tetrapod"]["sound"] = "STONE"
+    out["bw_core"] = {"tex": "bw_rock", "title": "Rubble Core", "sound": "STONE"}
+    for m, (_, _, snd) in BULK.items():  # a heap's stuff, and its top a quarter, half or three quarters deep
+        out["bulk_" + m] = {"tex": "bulk_" + m, "title": m.title(), "sound": snd}
+        for n in (1, 2, 3):
+            out[f"bulk_{m}_{n}"] = {"model": "boxes", "boxes": [[0, 0, 0, 16, 4 * n, 16, "bulk_" + m]], "title": m.title(), "sound": snd,
+                                  "shape": [[0, 0, 0, 16, 4 * n, 16]]}
+    out["bw_crest"] = {"tex": {"up": "bw_concrete", "side": "bw_concrete", "down": "bw_rock"}, "title": "Crown Wall", "sound": "STONE"}
+    fit("by_stand", stand(), "Boat Stand", "facing", [[6, 0, 1, 10, 16, 10]])
+    fit("by_keel", keel_blocks(), "Keel Blocks", "axis", [[1, 0, 1, 15, 13, 15]])
+    out["by_keel"]["sound"] = "WOOD"
     fit("tk_pipe", tank_pipe(), "Pipe", "axis", [[4, 0, 0, 12, 9, 16]])
     fit("tk_valve", tank_valve(), "Gate Valve", "axis", [[3, 0, 0, 13, 15, 16]])
     fit("tk_pipes_a", rack_pipes("a"), "Pipe Rack", "axis", [[0, 0, 0, 16, 8, 16]])
@@ -549,7 +662,7 @@ def blocks():
 def main():
     path = HERE / "blocks.json"
     data = json.loads(path.read_text())
-    kept = {k: v for k, v in data["blocks"].items() if not k.startswith(("ct_", "cr_", "tk_")) and k not in {"container_" + c for c in COLOURS}}
+    kept = {k: v for k, v in data["blocks"].items() if not k.startswith(("ct_", "cr_", "tk_", "bw_", "bulk_", "by_")) and k not in {"container_" + c for c in COLOURS}}
     made = blocks()
     kept.update(made)
     data["blocks"] = kept
