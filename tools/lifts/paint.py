@@ -2,7 +2,7 @@
 
 python3 tools/lifts/paint.py   (writes into src/main/resources/assets/zomboidcraft/)
 
-- entity/lift/atlas.png: the car, 8 x 8 tiles of 32 px; LiftRenderer.java names each tile by
+- entity/lift/atlas.png: the car, 8 x 8 tiles of 64 px; LiftRenderer.java names each tile by
   index (row-major); keep the two in step.
 - block/lift_door_{left,right}_{lower,upper}: a 2 x 2 block picture of worn stainless landing doors
   (seen from the landing), lift_door_edge for the leaf's edges and back.
@@ -175,32 +175,47 @@ def doors():
 # ------------------------------------------------------------------ call button and machine
 
 def button():
-    S = 32
+    """The call plate, as in the photos (refs/city/lifts/call-buttons-indicators): a tall brushed
+    steel plate with two round black buttons, up over down, their arrows white (lit: the rings and
+    arrows glow). 64 px; the plate's front reads the texture's window under its model box (cols
+    22..42, rows 12..64, 4 px a sixteenth), the buttons' faces the 16 px squares at cols 44..60, rows 0..32."""
+    S = 64
+    yy, xx = np.mgrid[0:S, 0:S]
     for lit in (False, True):
-        rgb = brushed(S, S, 201, (160, 162, 164), vertical=False, grain=16)
-        rgb = scratches(rgb, 202, 6, 30)
-        rgb = grime(rgb, 203, low=0.4, strength=45)
-        # the bevelled edge
-        rgb[0, :] += 30
-        rgb[:, 0] += 20
-        rgb[-1, :] -= 40
-        rgb[:, -1] -= 30
-        yy, xx = np.mgrid[0:S, 0:S]
-        d = np.hypot(xx - S / 2 + 0.5, yy - S / 2 + 0.5)
-        ring = (d > 8) & (d < 10.5)
-        rgb[ring] = [55, 56, 58]
-        face = d <= 8
-        if lit:
-            glow = np.clip(1 - d / 8, 0, 1)
-            rgb[face] = (np.array([255, 170, 60]) * 0.75 + np.array([255, 235, 170]) * 0.25)
-            rgb[face] = rgb[face] * (0.85 + 0.15 * glow[face][:, None])
-        else:
-            rgb[face] = [92, 94, 98]
-            rgb[face & (yy < S / 2 - 2)] += 18
-        # the arrows engraved over and under the button
-        for k in range(3):
-            rgb[2 + k, S // 2 - k:S // 2 + k + 1] = [40, 40, 42]
-            rgb[S - 3 - k, S // 2 - k:S // 2 + k + 1] = [40, 40, 42]
+        rgb = brushed(S, S, 201, (168, 170, 172), vertical=True, grain=18)
+        rgb = scratches(rgb, 202, 8, 24)
+        rgb = grime(rgb, 203, low=0.35, strength=40)
+        x0, x1, y0, y1 = 22, 42, 12, 64
+        # the plate's bevel and its four screws
+        rgb[y0, x0:x1] += 34
+        rgb[y0:y1, x0] += 22
+        rgb[y1 - 1, x0:x1] -= 44
+        rgb[y0:y1, x1 - 1] -= 34
+        for sx, sy in ((x0 + 3, y0 + 3), (x1 - 4, y0 + 3), (x0 + 3, y1 - 4), (x1 - 4, y1 - 4)):
+            rgb[sy - 1:sy + 1, sx - 1:sx + 1] = [96, 96, 98]
+            rgb[sy - 1, sx - 1] = [200, 200, 204]
+        # dark rings behind the two buttons (the buttons themselves are the model's nubs)
+        for cy in (25, 47):
+            d = np.hypot(xx - 31.5, yy - cy)
+            rgb[(d < 7.5) & (d >= 5.5)] = [44, 45, 47]
+            rgb[(d < 8.5) & (d >= 7.5)] += 30
+        # a fire notice etched under them, small
+        rgb[57:58, 26:38] = [70, 40, 36]
+        rgb[59:60, 27:37] = [70, 70, 72]
+        # the button faces: black, a white arrow, a ring that glows when called
+        for k, up in ((0, True), (1, False)):
+            ox, oy = 44, k * 16
+            dd = np.hypot(xx[:16, :16] - 7.5, yy[:16, :16] - 7.5)
+            f = np.ones((16, 16, 3)) * [26, 26, 28]
+            f[dd < 6] = [38, 38, 40]
+            ring = (dd >= 6) & (dd < 8)
+            f[ring] = [255, 196, 90] if lit else [120, 122, 126]
+            for r in range(5):
+                row = (4 + r) if up else (11 - r)
+                f[row, 8 - r - 1:8 + r] = [255, 238, 200] if lit else [222, 222, 222]
+            if not lit:
+                f[2:5, 3:12] += 18  # the face's sheen
+            rgb[oy:oy + 16, ox:ox + 16] = f
         save(to_img(rgb), 'block', 'lift_button_lit.png' if lit else 'lift_button.png')
 
 
@@ -258,88 +273,140 @@ def escalators():
 
 # ------------------------------------------------------------------ the car's atlas
 
-T = 32
+T = 64
 
 
 def car_atlas():
+    """The car, from the photos (refs/city/lifts/car-interior, car-panel): brushed stainless side
+    panels with seams, a walnut laminate back wall with a steel strip, tube handrails, a dark
+    ceiling with a diffuser, a stud rubber floor, and the car's own operating panel: round chrome
+    buttons on black number labels, door open/close and a yellow alarm button. Tiles are 64 px; the
+    renderer lays the walls, floor and doors a tile to about a block, so they stay sharp."""
     atlas = np.zeros((T * 8, T * 8, 3))
+    yy, xx = np.mgrid[0:T, 0:T]
 
     def put(i, rgb):
         atlas[(i // 8) * T:(i // 8 + 1) * T, (i % 8) * T:(i % 8 + 1) * T] = rgb
 
-    # 0 wall: brushed steel panel with seams
-    w = brushed(T, T, 401, (140, 143, 146), vertical=True)
-    w[:, 0] *= 0.55
-    w[:, -1] *= 0.75
-    put(0, grime(scratches(w, 402, 6, 14), 403, low=0.3, strength=40))
-    # 1 wood-grain laminate
-    yy, xx = np.mgrid[0:T, 0:T]
-    g = np.sin(xx * 0.9 + fbm(T, T, 404) * 9) * 0.5 + 0.5
-    wood = np.stack([95 + g * 30, 62 + g * 18, 38 + g * 10], 2) + (fbm(T, T, 405) - 0.5)[..., None] * 20
-    put(1, grime(wood, 406, low=0.2, strength=30))
-    # 2 rubber floor: raised studs, scuffed, grit
-    fl = np.ones((T, T, 3)) * [46, 46, 48] + (fbm(T, T, 407) - 0.5)[..., None] * 18
-    studs = ((xx % 8 - 4) ** 2 + (yy % 8 - 4) ** 2) < 5
-    fl[studs] += 16
-    fl = grime(fl, 408, low=1.0, strength=35, tint=(70, 60, 48))
-    put(2, fl)
-    # 3 ceiling: perforated grey
-    ce = np.ones((T, T, 3)) * [120, 120, 118] + (fbm(T, T, 409) - 0.5)[..., None] * 16
-    ce[(xx % 4 == 1) & (yy % 4 == 1)] = [60, 60, 60]
+    # 0 wall: a brushed stainless panel, seams at its edges, a sheen band, finger smears at rail height
+    w = brushed(T, T, 401, (150, 153, 157), vertical=True, grain=22)
+    w += (np.exp(-((xx - T * 0.3) / (T * 0.16)) ** 2) * 16)[..., None]
+    w[:, :2] = w[:, :2] * 0.45
+    w[:, -2:] = w[:, -2:] * 0.7
+    w = scratches(w, 402, 9, 16)
+    w = dent(w, 40, 50, 5, 16)
+    put(0, grime(w, 403, low=0.25, strength=45))
+    # 1 walnut laminate with a steel strip down one edge
+    g = np.sin(xx * 0.55 + fbm(T, T, 404) * 12 + yy * 0.04) * 0.5 + 0.5
+    wood = np.stack([88 + g * 34, 54 + g * 20, 32 + g * 12], 2) + (fbm(T, T, 405) - 0.5)[..., None] * 18
+    wood[:, -3:] = [150, 152, 155]
+    wood[:, -4] = [60, 50, 40]
+    wood = scratches(wood, 424, 6, 18)
+    put(1, grime(wood, 406, low=0.2, strength=35))
+    # 2 stud rubber floor, worn grey where people stand, grit
+    fl = np.ones((T, T, 3)) * [44, 44, 46] + (fbm(T, T, 407) - 0.5)[..., None] * 16
+    studs = ((xx % 10 - 5) ** 2 + (yy % 10 - 5) ** 2) < 7
+    fl[studs] += 18
+    fl[studs & ((xx % 10 - 5) + (yy % 10 - 5) < -1)] += 10
+    put(2, grime(fl, 408, low=1.0, strength=38, tint=(74, 64, 50)))
+    # 3 ceiling: dark brushed with a row of small downlight rings
+    ce = brushed(T, T, 409, (64, 64, 66), vertical=False, grain=10)
+    for cx in (16, 48):
+        d = np.hypot(xx - cx, yy - 32)
+        ce[(d < 5) & (d >= 3.5)] = [140, 140, 142]
+        ce[d < 3.5] = [210, 200, 180]
     put(3, ce)
-    # 4 the light panel: warm white diffuser, a dead tube's shadow at one end
+    # 4 the light panel: a warm diffuser behind an egg-crate grille, one tube dimmer
     li = np.ones((T, T, 3)) * [255, 244, 215]
-    li[:, :3] = [200, 195, 180]
-    li[:, -3:] = [200, 195, 180]
-    li[(yy % 8) == 0] = [215, 205, 180]
-    li[:, 22:30] *= 0.82
+    li[(yy % 8) == 0] = [190, 182, 160]
+    li[(xx % 8) == 0] = [190, 182, 160]
+    li[:, 40:56] *= 0.8
+    li[:2] = li[-2:] = li[:, :2] = li[:, -2:] = [150, 150, 150]
     put(4, li)
-    # 5 door leaf: brushed stainless, vertical
-    d = brushed(T, T, 410, (150, 153, 156), vertical=True)
-    put(5, grime(scratches(d, 411, 5, 14), 412, low=0.25, strength=60))
-    # 6 car roof: greasy galvanised steel
+    # 5 door leaf (the car's and the landing's while they slide): brushed stainless, vertical
+    d = brushed(T, T, 410, (152, 155, 158), vertical=True, grain=24)
+    d += (np.exp(-((xx - T * 0.35) / (T * 0.18)) ** 2) * 18)[..., None]
+    d = scratches(d, 411, 8, 14)
+    put(5, grime(d, 412, low=0.25, strength=60))
+    # 6 car roof: greasy galvanised steel, a bolted seam
     ro = np.ones((T, T, 3)) * [96, 98, 96] + (fbm(T, T, 413, 5) - 0.5)[..., None] * 40
     ro[fbm(T, T, 414) > 0.6] *= 0.55
+    ro[31:33] *= 0.5
+    ro[29, ::8] = [150, 150, 140]
     put(6, ro)
     # 7 rail: polished steel tube
     ra = np.ones((T, T, 3)) * [170, 172, 175]
-    ra += np.sin(np.linspace(0, math.pi, T))[:, None, None] * 50 - 25
+    ra += np.sin(np.linspace(0, math.pi, T))[:, None, None] * 55 - 28
+    ra = scratches(ra, 425, 4, 20)
     put(7, ra)
-    # 8 the button panel: dark brushed
-    put(8, brushed(T, T, 415, (58, 60, 63), vertical=False, grain=12))
-    # 9 / 10 floor buttons, off and lit
-    dd = np.hypot(xx - 15.5, yy - 15.5)
-    b = np.ones((T, T, 3)) * [70, 72, 75]
-    b[dd < 13] = [130, 132, 136]
-    b[dd < 10] = [105, 107, 110]
+    # 8 the operating panel: brushed stainless strip, a darker inset edge, Braille-ish dots and the capacity plate
+    pa = brushed(T, T, 415, (168, 170, 174), vertical=True, grain=16)
+    pa[:3] *= 0.6
+    pa[-3:] *= 0.6
+    pa[:, :3] *= 0.6
+    pa[:, -3:] *= 0.6
+    pa[6:12, 10:54] = [190, 186, 170]
+    pa[8, 14:50] = [70, 70, 72]
+    pa[10, 14:40] = [70, 70, 72]
+    put(8, grime(scratches(pa, 426, 10, 20), 427, low=0.3, strength=30))
+    # 9 / 10 floor buttons, off and lit: domed chrome, a halo ring
+    dd = np.hypot(xx - 31.5, yy - 31.5)
+    b = np.ones((T, T, 3)) * [150, 152, 156]
+    b[dd < 30] = [96, 98, 102]
+    b[dd < 25] = [190, 192, 196]
+    b[(dd < 25) & (yy < 28)] += 30
+    b[dd < 8] = [150, 152, 156]
     put(9, b)
-    b2 = np.ones((T, T, 3)) * [70, 72, 75]
-    b2[dd < 13] = [130, 132, 136]
-    b2[dd < 10] = [255, 175, 70]
-    b2[dd < 5] = [255, 225, 160]
+    b2 = b.copy()
+    b2[(dd < 30) & (dd >= 25)] = [255, 180, 70]
+    b2[dd < 25] = b2[dd < 25] * 0.6 + np.array([255, 200, 110]) * 0.4
     put(10, b2)
-    # 11 / 12 display segments, lit amber-red and dark
-    put(11, np.ones((T, T, 3)) * [255, 120, 40])
-    put(12, np.ones((T, T, 3)) * [42, 16, 12])
+    # 11 / 12 display segments, lit amber and dark
+    put(11, np.ones((T, T, 3)) * [255, 128, 40])
+    put(12, np.ones((T, T, 3)) * [40, 16, 12])
     # 13 display glass: black with a faint reflection
     gl = np.ones((T, T, 3)) * [10, 10, 12]
-    gl[(xx + yy) % 23 < 2] += 14
+    gl[(xx + yy) % 46 < 3] += 14
     put(13, gl)
-    # 14 the ropes: oily dark steel
-    put(14, np.ones((T, T, 3)) * [42, 40, 36] + ((yy + xx) % 4 == 0)[..., None] * 25)
+    # 14 the ropes: oily dark steel, laid strands
+    put(14, np.ones((T, T, 3)) * [42, 40, 36] + ((yy + xx) % 8 < 2)[..., None] * 25)
     # 15 crosshead: yellow-painted steel, chipped
     be = np.ones((T, T, 3)) * [190, 150, 40] + (fbm(T, T, 416) - 0.5)[..., None] * 30
     be[fbm(T, T, 417, 5) > 0.68] = [90, 88, 84]
     put(15, grime(be, 418, low=0.5, strength=45))
-    # 16 kick plate: scuffed steel
-    k = brushed(T, T, 419, (120, 122, 125), vertical=False, grain=20)
-    put(16, grime(scratches(k, 420, 14, 45), 421, low=1.0, strength=40))
+    # 16 kick plate: diamond-plate steel, scuffed
+    k = np.ones((T, T, 3)) * [112, 114, 117] + (fbm(T, T, 419) - 0.5)[..., None] * 20
+    dia = (((xx + yy) % 12 < 2) & ((xx // 6 + yy // 6) % 2 == 0)) | (((xx - yy) % 12 < 2) & ((xx // 6 + yy // 6) % 2 == 1))
+    k[dia] += 40
+    put(16, grime(scratches(k, 420, 14, 40), 421, low=1.0, strength=40))
     # 17 sill: grooved aluminium
     si = np.ones((T, T, 3)) * [150, 150, 145]
-    si[(yy % 4) < 1] = [70, 70, 68]
+    si[(yy % 6) < 2] = [70, 70, 68]
     put(17, grime(si, 422, low=1.0, strength=35))
-    # 18 display frame: chrome
-    put(18, np.ones((T, T, 3)) * [175, 178, 182] + (fbm(T, T, 423) - 0.5)[..., None] * 30)
+    # 18 display frame and landing door frame: brushed stainless
+    put(18, grime(brushed(T, T, 423, (172, 175, 179), vertical=True, grain=18), 428, low=0.3, strength=35))
+    # 19 number label: black
+    put(19, np.ones((T, T, 3)) * [20, 20, 22] + (fbm(T, T, 429) - 0.5)[..., None] * 8)
+    # 20 label numerals: white
+    put(20, np.ones((T, T, 3)) * [235, 235, 230])
+    # 21 / 22 door open (arrows out) and door close (arrows in) buttons
+    for i, out in ((21, True), (22, False)):
+        bb = b.copy()
+        for r in range(8):
+            for side in (-1, 1):
+                tip = 31.5 + side * (18 if out else 4)
+                x = int(tip - side * r * (1 if out else -1))
+                bb[31 - r // 1:33 + r // 1, x:x + 1] = [30, 30, 32]
+        bb[31:33, 22:42] = [30, 30, 32] if not out else bb[31:33, 22:42]
+        put(i, bb)
+    # 23 alarm: a yellow button with a bell
+    al = b.copy()
+    al[dd < 25] = [220, 180, 40]
+    al[(dd < 25) & (yy < 28)] += 20
+    bell = (np.hypot(xx - 31.5, (yy - 34) * 1.3) < 11) & (yy < 38) & (yy > 20)
+    al[bell] = [40, 34, 20]
+    al[40:43, 22:42] = [40, 34, 20]
+    put(23, al)
     save(to_img(atlas), 'entity', 'lift', 'atlas.png')
 
 
@@ -388,22 +455,27 @@ def models():
                         v['y'] = rot
                     variants[f'facing={facing},open={op},part={part},side={side}'] = v
     write('blockstates/lift_door.json', {'variants': variants})
-    # the call plate, its button proud of it (lit: it glows)
+    # the call plate (a sixteenth proud of the wall), its two buttons proud of it (lit: they glow)
     for lit in (False, True):
         name = 'lift_button_lit' if lit else 'lift_button'
-        nub = {'from': [6.5, 4, 14.4], 'to': [9.5, 7, 15], 'faces': {
-            'north': face('#face', [5, 5, 11, 11]), 'east': face('#face', [5, 5, 6, 11]), 'west': face('#face', [5, 5, 6, 11]),
-            'up': face('#face', [5, 5, 11, 6]), 'down': face('#face', [5, 5, 11, 6])}}
-        if lit:
-            nub['light_emission'] = 15
+        nubs = []
+        for k, (y0, y1) in enumerate(((8.4, 10.6), (2.9, 5.1))):
+            nub = {'from': [6.9, y0, 14.4], 'to': [9.1, y1, 15], 'faces': {
+                'north': face('#plate', [11, k * 4, 15, k * 4 + 4]), 'east': face('#plate', [11, k * 4, 11.25, k * 4 + 4]),
+                'west': face('#plate', [11, k * 4, 11.25, k * 4 + 4]), 'up': face('#plate', [11, k * 4, 15, k * 4 + 0.25]),
+                'down': face('#plate', [11, k * 4 + 3.75, 15, k * 4 + 4])}}
+            if lit:
+                nub['light_emission'] = 15
+            nubs.append(nub)
         write(f'models/block/{name}.json', {
             'parent': 'minecraft:block/block',
-            'textures': {'particle': f'{NS}:block/{name}', 'face': f'{NS}:block/{name}', 'plate': f'{NS}:block/lift_button'},
+            'textures': {'particle': f'{NS}:block/{name}', 'plate': f'{NS}:block/{name}'},
             'elements': [
-                {'from': [5, 1, 15], 'to': [11, 10, 16], 'faces': {
-                    'north': face('#plate'), 'south': face('#plate', cull='south'), 'east': face('#plate', [0, 0, 2, 16]),
-                    'west': face('#plate', [0, 0, 2, 16]), 'up': face('#plate', [0, 0, 16, 2]), 'down': face('#plate', [0, 0, 16, 2])}},
-                nub]})
+                {'from': [5.5, 0, 15], 'to': [10.5, 13, 16], 'faces': {
+                    'north': face('#plate'), 'south': face('#plate', [5.5, 3, 10.5, 16], cull='south'),
+                    'east': face('#plate', [5.5, 3, 6.5, 16]), 'west': face('#plate', [9.5, 3, 10.5, 16]),
+                    'up': face('#plate', [5.5, 3, 10.5, 4]), 'down': face('#plate', [5.5, 15, 10.5, 16])}},
+                *nubs]})
     variants = {}
     for facing, rot in ROT.items():
         for lit in ('false', 'true'):

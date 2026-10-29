@@ -28,7 +28,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 public class LiftButtonBlock extends Block {
     public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
-    private static final Map<Direction, VoxelShape> SHAPES = Shapes.rotateHorizontal(Block.box(5, 1, 15, 11, 10, 16));
+    private static final Map<Direction, VoxelShape> SHAPES = Shapes.rotateHorizontal(Block.box(5.5, 0, 15, 10.5, 13, 16));
 
     public LiftButtonBlock(Properties properties) {
         super(properties);
