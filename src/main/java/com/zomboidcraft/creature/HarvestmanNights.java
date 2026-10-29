@@ -70,7 +70,7 @@ public final class HarvestmanNights {
 
     /** Which night it is (counting from the world's first dusk), or -1 by day. */
     static long night(ServerLevel level) {
-        long t = level.getDayTime();
+        long t = level.getDefaultClockTime();
         long inDay = Math.floorMod(t, 24_000L);
         if (inDay < DUSK || inDay >= DAWN) {
             return -1;
@@ -83,7 +83,7 @@ public final class HarvestmanNights {
      * world's seed and which night it is.
      */
     static boolean patient(ServerLevel level) {
-        long n = Math.floorDiv(level.getDayTime() - DUSK, 24_000L);
+        long n = Math.floorDiv(level.getDefaultClockTime() - DUSK, 24_000L);
         return patientNight(level.getSeed(), n) && !patientNight(level.getSeed(), n - 1);
     }
 
