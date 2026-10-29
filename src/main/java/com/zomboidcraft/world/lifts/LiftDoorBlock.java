@@ -4,7 +4,12 @@ import java.util.Map;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -62,5 +67,17 @@ public class LiftDoorBlock extends Block {
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return state.getValue(OPEN) ? Shapes.empty() : SHAPES.get(state.getValue(FACING));
+    }
+
+    /** Using the landing doors calls the lift, as the button beside them does. */
+    @Override
+    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
+        if (state.getValue(OPEN)) {
+            return InteractionResult.PASS;
+        }
+        if (level instanceof ServerLevel server && !player.isSpectator()) {
+            Lifts.pressDoor(server, pos, player);
+        }
+        return InteractionResult.SUCCESS;
     }
 }
