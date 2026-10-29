@@ -678,6 +678,10 @@ public final class ZcConfig {
         public boolean endlessNight = true;
         /** Daylight under endless night, as a share of vanilla's; nights sit a little under 0.30. */
         public double endlessDaylight = 0.30;
+        /** Daytime keeps one look whatever the weather: the same light and the same distance haze (rain, fog and storms show at night). */
+        public boolean steadyDay = true;
+        /** The day's haze under steadyDay, 0..1: 0.2 is a light haze you can see a fair way through. */
+        public double dayFog = 0.2;
         /** Night darkness as a share of vanilla's night light; lower is darker. */
         public double nightLight = 0.8;
         /** The moon breaks through gaps in the clouds now and then at night. */
