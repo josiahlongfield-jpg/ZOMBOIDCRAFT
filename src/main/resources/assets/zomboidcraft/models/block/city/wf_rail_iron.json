@@ -1,0 +1,230 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "wf_iron": "zomboidcraft:block/city/wf_iron",
+    "particle": "zomboidcraft:block/city/wf_iron"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        14,
+        1
+      ],
+      "to": [
+        16,
+        15,
+        3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wf_iron"
+        },
+        "south": {
+          "texture": "#wf_iron"
+        },
+        "east": {
+          "texture": "#wf_iron",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#wf_iron",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#wf_iron"
+        },
+        "down": {
+          "texture": "#wf_iron"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        3,
+        1.5
+      ],
+      "to": [
+        16,
+        4,
+        2.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wf_iron"
+        },
+        "south": {
+          "texture": "#wf_iron"
+        },
+        "east": {
+          "texture": "#wf_iron",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#wf_iron",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#wf_iron"
+        },
+        "down": {
+          "texture": "#wf_iron"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        0,
+        0.5
+      ],
+      "to": [
+        9,
+        15,
+        3.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wf_iron"
+        },
+        "south": {
+          "texture": "#wf_iron"
+        },
+        "east": {
+          "texture": "#wf_iron"
+        },
+        "west": {
+          "texture": "#wf_iron"
+        },
+        "up": {
+          "texture": "#wf_iron"
+        },
+        "down": {
+          "texture": "#wf_iron",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        7.2,
+        15,
+        1.2
+      ],
+      "to": [
+        8.8,
+        16.5,
+        2.8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wf_iron",
+          "uv": [
+            7.199999999999999,
+            0,
+            8.8,
+            1.5
+          ]
+        },
+        "south": {
+          "texture": "#wf_iron",
+          "uv": [
+            7.2,
+            0,
+            8.8,
+            1.5
+          ]
+        },
+        "east": {
+          "texture": "#wf_iron",
+          "uv": [
+            13.2,
+            0,
+            14.8,
+            1.5
+          ]
+        },
+        "west": {
+          "texture": "#wf_iron",
+          "uv": [
+            1.2,
+            0,
+            2.8,
+            1.5
+          ]
+        },
+        "up": {
+          "texture": "#wf_iron"
+        },
+        "down": {
+          "texture": "#wf_iron"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        4,
+        1.6
+      ],
+      "to": [
+        3.8,
+        14,
+        2.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wf_iron"
+        },
+        "south": {
+          "texture": "#wf_iron"
+        },
+        "east": {
+          "texture": "#wf_iron"
+        },
+        "west": {
+          "texture": "#wf_iron"
+        },
+        "up": {
+          "texture": "#wf_iron"
+        },
+        "down": {
+          "texture": "#wf_iron"
+        }
+      }
+    },
+    {
+      "from": [
+        12,
+        4,
+        1.6
+      ],
+      "to": [
+        12.8,
+        14,
+        2.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wf_iron"
+        },
+        "south": {
+          "texture": "#wf_iron"
+        },
+        "east": {
+          "texture": "#wf_iron"
+        },
+        "west": {
+          "texture": "#wf_iron"
+        },
+        "up": {
+          "texture": "#wf_iron"
+        },
+        "down": {
+          "texture": "#wf_iron"
+        }
+      }
+    }
+  ]
+}

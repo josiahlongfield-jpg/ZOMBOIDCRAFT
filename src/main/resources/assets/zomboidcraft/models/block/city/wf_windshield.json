@@ -1,0 +1,82 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cc_glass": {
+      "sprite": "zomboidcraft:block/city/cc_glass",
+      "force_translucent": true
+    },
+    "home_chrome": "zomboidcraft:block/city/home_chrome",
+    "particle": "zomboidcraft:block/city/cc_glass"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        7
+      ],
+      "to": [
+        16,
+        8,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cc_glass"
+        },
+        "south": {
+          "texture": "#cc_glass"
+        },
+        "east": {
+          "texture": "#cc_glass",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cc_glass",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cc_glass"
+        },
+        "down": {
+          "texture": "#cc_glass",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        8,
+        7
+      ],
+      "to": [
+        16,
+        9,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_chrome"
+        },
+        "south": {
+          "texture": "#home_chrome"
+        },
+        "east": {
+          "texture": "#home_chrome",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_chrome",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_chrome"
+        },
+        "down": {
+          "texture": "#home_chrome"
+        }
+      }
+    }
+  ]
+}

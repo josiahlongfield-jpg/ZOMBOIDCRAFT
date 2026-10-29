@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "wf_gilt": "zomboidcraft:block/city/wf_gilt",
+    "particle": "zomboidcraft:block/city/wf_gilt"
+  },
+  "elements": [
+    {
+      "from": [
+        7,
+        0,
+        7
+      ],
+      "to": [
+        9,
+        16,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wf_gilt"
+        },
+        "south": {
+          "texture": "#wf_gilt"
+        },
+        "east": {
+          "texture": "#wf_gilt"
+        },
+        "west": {
+          "texture": "#wf_gilt"
+        },
+        "up": {
+          "texture": "#wf_gilt",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#wf_gilt",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

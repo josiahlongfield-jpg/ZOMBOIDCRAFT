@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "wf_evac_3": "zomboidcraft:block/city/wf_evac_3",
+    "particle": "zomboidcraft:block/city/wf_evac_3"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.6
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wf_evac_3"
+        },
+        "south": {
+          "texture": "#wf_evac_3",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#wf_evac_3",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#wf_evac_3",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#wf_evac_3",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#wf_evac_3",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

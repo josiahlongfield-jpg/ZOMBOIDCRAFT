@@ -1,0 +1,131 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "wf_buoy_green": "zomboidcraft:block/city/wf_buoy_green",
+    "wf_iron": "zomboidcraft:block/city/wf_iron",
+    "particle": "zomboidcraft:block/city/wf_buoy_green"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        0,
+        4
+      ],
+      "to": [
+        12,
+        9,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wf_buoy_green"
+        },
+        "south": {
+          "texture": "#wf_buoy_green"
+        },
+        "east": {
+          "texture": "#wf_buoy_green"
+        },
+        "west": {
+          "texture": "#wf_buoy_green"
+        },
+        "up": {
+          "texture": "#wf_buoy_green"
+        },
+        "down": {
+          "texture": "#wf_buoy_green",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        9,
+        5
+      ],
+      "to": [
+        11,
+        15,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wf_buoy_green"
+        },
+        "south": {
+          "texture": "#wf_buoy_green"
+        },
+        "east": {
+          "texture": "#wf_buoy_green"
+        },
+        "west": {
+          "texture": "#wf_buoy_green"
+        },
+        "up": {
+          "texture": "#wf_buoy_green"
+        },
+        "down": {
+          "texture": "#wf_buoy_green"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        15,
+        7
+      ],
+      "to": [
+        9,
+        18,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wf_iron",
+          "uv": [
+            7,
+            0,
+            9,
+            3
+          ]
+        },
+        "south": {
+          "texture": "#wf_iron",
+          "uv": [
+            7,
+            0,
+            9,
+            3
+          ]
+        },
+        "east": {
+          "texture": "#wf_iron",
+          "uv": [
+            7,
+            0,
+            9,
+            3
+          ]
+        },
+        "west": {
+          "texture": "#wf_iron",
+          "uv": [
+            7,
+            0,
+            9,
+            3
+          ]
+        },
+        "up": {
+          "texture": "#wf_iron"
+        },
+        "down": {
+          "texture": "#wf_iron"
+        }
+      }
+    }
+  ]
+}

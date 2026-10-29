@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "wf_ferry_2": "zomboidcraft:block/city/wf_ferry_2",
+    "particle": "zomboidcraft:block/city/wf_ferry_2"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.2
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wf_ferry_2"
+        },
+        "south": {
+          "texture": "#wf_ferry_2",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#wf_ferry_2",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#wf_ferry_2",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#wf_ferry_2",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#wf_ferry_2",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
