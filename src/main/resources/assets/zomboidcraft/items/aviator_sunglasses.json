@@ -11,8 +11,13 @@
    }
   ],
   "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/clothing/aviator_sunglasses"
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/aviator_sunglasses",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/aviator_sunglasses",
+    "part": "loot"
+   }
   }
  }
 }

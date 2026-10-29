@@ -116,12 +116,12 @@ final class Cellar {
         double r = rng.nextDouble();
         boolean stone = style == House.Style.CABIN || (style == House.Style.FARMHOUSE || style == House.Style.COLONIAL) && r < 0.5;
         if (stone) {
-            wall = "minecraft:cobblestone";
-            damp = "minecraft:mossy_cobblestone";
+            wall = "fm_fieldstone";
+            damp = "fm_fieldstone_moss";
             floor = style == House.Style.CABIN || rng.nextBoolean() ? "minecraft:packed_mud" : "floor_concrete";
         } else if (style == House.Style.MANSION && r < 0.5) {
-            wall = "minecraft:stone_bricks";
-            damp = "minecraft:mossy_stone_bricks";
+            wall = "ch_ashlar";
+            damp = "ch_ashlar_moss";
             floor = "floor_concrete";
         } else {
             wall = "cellar_wall";
@@ -274,7 +274,7 @@ final class Cellar {
         } else {
             String facing = DIRS[(s + 2) & 3];
             for (int y = -3; y <= -1; y++) {
-                p.set(wx, y, wz, "minecraft:ladder[facing=" + facing + "]");
+                p.set(wx, y, wz, "fm_ladder[facing=" + facing + "]");
             }
             int bx = wx + STEP[s][0], bz = wz + STEP[s][1];
             if (in(bx, bz)) {
@@ -336,7 +336,7 @@ final class Cellar {
             against("home_freezer");
         }
         for (int i = 0, k = rng.nextInt(2 + size); i < k; i++) {
-            against("minecraft:barrel[facing=up,loot=basement_food]");
+            against("cellar_barrel[loot=basement_food]");
         }
     }
 
@@ -432,7 +432,7 @@ final class Cellar {
             }
         }
         for (int i = 0, n = 1 + rng.nextInt(2); i < n; i++) {
-            against("minecraft:barrel[loot=liquor]");  // on its side, the bung toward the room
+            against("cellar_barrel_side[loot=liquor]");  // on its side, the tap toward the room
         }
     }
 
@@ -445,7 +445,7 @@ final class Cellar {
         against("home_gun_cabinet", "home_gun_cabinet_top");
         against(withLoot("home_workbench", "basement_supplies"));
         for (int i = 0, n = 1 + rng.nextInt(2); i < n; i++) {
-            against("minecraft:barrel[facing=up,loot=basement_supplies]");
+            against("cellar_barrel[loot=basement_supplies]");
         }
         tallOrLow("cellar_shelf_cans");
         against("cellar_jugs");
@@ -521,13 +521,13 @@ final class Cellar {
         if (r < 0.32) {
             return rng.nextDouble() < 0.45 ? new String[] {loot("home_boxes"), loot("home_boxes")} : new String[] {loot("home_boxes")};
         }
-        String[] one = {"home_bin_bags", "cellar_jugs", "minecraft:barrel[facing=up,loot=home_boxes]", "home_chair",
+        String[] one = {"home_bin_bags", "cellar_jugs", "cellar_barrel[loot=home_boxes]", "home_chair",
                 "home_armchair_brown", "home_dresser", "home_table", "home_garage_shelf", "home_garage_shelf", "home_vacuum",
                 "home_fan", "home_ironing_board", "home_tool_chest", "home_trash_can", "home_toy_chest", "home_crib",
                 "home_freezer", "home_bookcase"};
         String b = one[rng.nextInt(one.length)];
         if (style == House.Style.CABIN && !b.startsWith("home_boxes") && rng.nextBoolean()) {
-            b = rng.nextBoolean() ? "minecraft:barrel[facing=up,loot=basement_food]" : "cellar_jugs";
+            b = rng.nextBoolean() ? "cellar_barrel[loot=basement_food]" : "cellar_jugs";
         }
         return new String[] {loot(b)};
     }
@@ -598,7 +598,11 @@ final class Cellar {
                     continue;
                 }
                 boolean corner = (x == bx0 || x == bx1) && (z == bz0 || z == bz1);
-                p.set(x, -1, z, corner && rng.nextDouble() < webs ? "minecraft:cobweb" : "cellar_joists[axis=" + axis + "]");
+                p.set(x, -1, z, "cellar_joists[axis=" + axis + "]");
+                if (corner && rng.nextDouble() < webs) {
+                    // a web strung in the corner under the joists, on the north or south wall
+                    p.setIfAir(x, -2, z, "bunk_cobweb[facing=" + (z == bz0 ? "south" : "north") + "]");
+                }
             }
         }
     }

@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "vessel_hull_maroon": "zomboidcraft:block/city/vessel_hull_maroon",
+    "particle": "zomboidcraft:block/city/vessel_hull_maroon"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        12
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#vessel_hull_maroon"
+        },
+        "south": {
+          "texture": "#vessel_hull_maroon",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#vessel_hull_maroon",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#vessel_hull_maroon",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#vessel_hull_maroon",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#vessel_hull_maroon",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

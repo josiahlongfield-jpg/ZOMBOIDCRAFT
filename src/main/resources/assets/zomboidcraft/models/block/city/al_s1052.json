@@ -1,0 +1,150 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_flap": "zomboidcraft:block/city/al_flap",
+    "al_wing_under": "zomboidcraft:block/city/al_wing_under",
+    "particle": "zomboidcraft:block/city/al_wing_under"
+  },
+  "elements": [
+    {
+      "from": [
+        8.0,
+        7.095,
+        0.0
+      ],
+      "to": [
+        16.0,
+        8.109,
+        1.16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_wing_under",
+          "uv": [
+            0.0,
+            7.891,
+            8.0,
+            8.905
+          ],
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#al_wing_under",
+          "uv": [
+            8.0,
+            7.891,
+            16.0,
+            8.905
+          ]
+        },
+        "east": {
+          "texture": "#al_wing_under",
+          "uv": [
+            14.84,
+            7.891,
+            16.0,
+            8.905
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#al_wing_under",
+          "uv": [
+            0.0,
+            7.891,
+            1.16,
+            8.905
+          ]
+        },
+        "up": {
+          "texture": "#al_flap",
+          "uv": [
+            8.0,
+            0.0,
+            16.0,
+            1.16
+          ]
+        },
+        "down": {
+          "texture": "#al_wing_under",
+          "uv": [
+            8.0,
+            14.84,
+            16.0,
+            16.0
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        0.0,
+        7.897,
+        0.0
+      ],
+      "to": [
+        8.0,
+        9.017,
+        2.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_wing_under",
+          "uv": [
+            8.0,
+            6.983,
+            16.0,
+            8.103
+          ],
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#al_wing_under",
+          "uv": [
+            0.0,
+            6.983,
+            8.0,
+            8.103
+          ]
+        },
+        "east": {
+          "texture": "#al_wing_under",
+          "uv": [
+            13.8,
+            6.983,
+            16.0,
+            8.103
+          ]
+        },
+        "west": {
+          "texture": "#al_wing_under",
+          "uv": [
+            0.0,
+            6.983,
+            2.2,
+            8.103
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#al_flap",
+          "uv": [
+            0.0,
+            0.0,
+            8.0,
+            2.2
+          ]
+        },
+        "down": {
+          "texture": "#al_wing_under",
+          "uv": [
+            0.0,
+            13.8,
+            8.0,
+            16.0
+          ]
+        }
+      }
+    }
+  ]
+}

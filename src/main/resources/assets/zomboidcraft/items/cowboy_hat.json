@@ -11,8 +11,13 @@
    }
   ],
   "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/clothing/cowboy_hat"
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/cowboy_hat",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/cowboy_hat",
+    "part": "loot"
+   }
   }
  }
 }

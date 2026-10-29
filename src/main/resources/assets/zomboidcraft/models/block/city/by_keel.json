@@ -1,0 +1,139 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hk_timber": "zomboidcraft:block/city/hk_timber",
+    "wf_rubber": "zomboidcraft:block/city/wf_rubber",
+    "particle": "zomboidcraft:block/city/hk_timber"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        3
+      ],
+      "to": [
+        15,
+        4,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hk_timber"
+        },
+        "south": {
+          "texture": "#hk_timber"
+        },
+        "east": {
+          "texture": "#hk_timber"
+        },
+        "west": {
+          "texture": "#hk_timber"
+        },
+        "up": {
+          "texture": "#hk_timber"
+        },
+        "down": {
+          "texture": "#hk_timber",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        4,
+        1
+      ],
+      "to": [
+        13,
+        8,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hk_timber"
+        },
+        "south": {
+          "texture": "#hk_timber"
+        },
+        "east": {
+          "texture": "#hk_timber"
+        },
+        "west": {
+          "texture": "#hk_timber"
+        },
+        "up": {
+          "texture": "#hk_timber"
+        },
+        "down": {
+          "texture": "#hk_timber"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        8,
+        3
+      ],
+      "to": [
+        15,
+        12,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hk_timber"
+        },
+        "south": {
+          "texture": "#hk_timber"
+        },
+        "east": {
+          "texture": "#hk_timber"
+        },
+        "west": {
+          "texture": "#hk_timber"
+        },
+        "up": {
+          "texture": "#hk_timber"
+        },
+        "down": {
+          "texture": "#hk_timber"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        12,
+        2
+      ],
+      "to": [
+        11,
+        13,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wf_rubber"
+        },
+        "south": {
+          "texture": "#wf_rubber"
+        },
+        "east": {
+          "texture": "#wf_rubber"
+        },
+        "west": {
+          "texture": "#wf_rubber"
+        },
+        "up": {
+          "texture": "#wf_rubber"
+        },
+        "down": {
+          "texture": "#wf_rubber"
+        }
+      }
+    }
+  ]
+}

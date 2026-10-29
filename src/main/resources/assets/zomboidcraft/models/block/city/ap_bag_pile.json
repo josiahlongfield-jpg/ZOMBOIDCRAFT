@@ -1,0 +1,142 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ap_bag_green": "zomboidcraft:block/city/ap_bag_green",
+    "ap_bag_grey": "zomboidcraft:block/city/ap_bag_grey",
+    "ap_bag_navy": "zomboidcraft:block/city/ap_bag_navy",
+    "home_plastic_black": "zomboidcraft:block/city/home_plastic_black",
+    "particle": "zomboidcraft:block/city/ap_bag_grey"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        2
+      ],
+      "to": [
+        13,
+        4,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ap_bag_grey"
+        },
+        "south": {
+          "texture": "#ap_bag_grey"
+        },
+        "east": {
+          "texture": "#ap_bag_grey"
+        },
+        "west": {
+          "texture": "#ap_bag_grey"
+        },
+        "up": {
+          "texture": "#ap_bag_grey"
+        },
+        "down": {
+          "texture": "#ap_bag_grey",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2.5,
+        4,
+        3
+      ],
+      "to": [
+        12,
+        7.5,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ap_bag_navy"
+        },
+        "south": {
+          "texture": "#ap_bag_navy"
+        },
+        "east": {
+          "texture": "#ap_bag_navy"
+        },
+        "west": {
+          "texture": "#ap_bag_navy"
+        },
+        "up": {
+          "texture": "#ap_bag_navy"
+        },
+        "down": {
+          "texture": "#ap_bag_navy"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        0,
+        11
+      ],
+      "to": [
+        15,
+        4.5,
+        15.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ap_bag_green"
+        },
+        "south": {
+          "texture": "#ap_bag_green"
+        },
+        "east": {
+          "texture": "#ap_bag_green"
+        },
+        "west": {
+          "texture": "#ap_bag_green"
+        },
+        "up": {
+          "texture": "#ap_bag_green"
+        },
+        "down": {
+          "texture": "#ap_bag_green",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        7.5,
+        6
+      ],
+      "to": [
+        9,
+        8.2,
+        7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_plastic_black"
+        },
+        "south": {
+          "texture": "#home_plastic_black"
+        },
+        "east": {
+          "texture": "#home_plastic_black"
+        },
+        "west": {
+          "texture": "#home_plastic_black"
+        },
+        "up": {
+          "texture": "#home_plastic_black"
+        },
+        "down": {
+          "texture": "#home_plastic_black"
+        }
+      }
+    }
+  ]
+}

@@ -202,18 +202,17 @@ final class TownSite extends Site {
                 }
                 double r = rng.nextDouble();
                 if (r < 0.18) {
-                    out.set(x, 1, z, "minecraft:red_nether_brick_wall");  // a hydrant
+                    out.set(x, 1, z, "fs_hydrant[facing=" + facing(-nx, -nz) + "]");
                 } else if (r < 0.4) {
-                    out.set(x, 1, z, "minecraft:dark_oak_stairs[facing=" + facing(-nx, -nz) + "]");  // a bench
+                    out.set(x, 1, z, "mu_bench[facing=" + facing(-nx, -nz) + "]");  // facing the street
                 } else if (r < 0.55) {
-                    out.set(x, 1, z, "minecraft:cauldron");  // a bin
+                    out.set(x, 1, z, rng.nextDouble() < 0.2 ? "ext_trash_can_tipped[facing=" + facing(nx, nz) + "]" : "ext_trash_can");
                 } else if (r < 0.68) {
                     out.set(x, 1, z, "planter");
                 } else if (r < 0.8) {
                     out.set(x, 1, z, "trash_bag[facing=" + facing(nx, nz) + "]");
                 } else if (r < 0.88) {
-                    out.set(x, 1, z, "fence_post");  // a parking meter
-                    out.set(x, 2, z, "minecraft:polished_blackstone_button[face=floor,facing=north]");
+                    out.set(x, 1, z, (rng.nextDouble() < 0.15 ? "rs_meter_bent" : "rs_meter") + "[facing=" + facing(-nx, -nz) + "]");
                 }
             }
         }
@@ -352,7 +351,7 @@ final class TownSite extends Site {
     /** Old gas pumps (now and then a brand's) on a concrete island in front of a country store. */
     private void pumps(Placer pl, int x, int z) {
         new GasStation(pl, rng, 0.4).storePumps(x, z);
-        pl.set(x + 1, 1, z + 1, "minecraft:barrel[facing=up,loot=hardware]");
+        pl.set(x + 1, 1, z + 1, "fm_drum[loot=hardware]");
     }
 
     // ------------------------------------------------------------------ the hamlet
@@ -833,26 +832,34 @@ final class TownSite extends Site {
             for (int z = z0 - 3; z <= z1 + 3; z++) {
                 boolean field = x >= x0 && x <= x1 && z >= z0 && z <= z1;
                 if (!field) {
-                    pl.set(x, 0, z, rng.nextDouble() < 0.2 ? "minecraft:coarse_dirt" : "minecraft:red_terracotta");
+                    pl.set(x, 0, z, rng.nextDouble() < 0.2 ? "minecraft:coarse_dirt" : "rw_cinder");
                 } else {
-                    boolean line = x == x0 || x == x1 || z == z0 || z == z1 || (x - x0) % 5 == 0;
+                    boolean side = z == z0 || z == z1, yard = x == x0 || x == x1 || (x - x0) % 5 == 0;
                     boolean endZone = x < x0 + 5 || x > x1 - 5;
-                    pl.set(x, 0, z, line && rng.nextDouble() < 0.75 ? "minecraft:white_concrete"
-                            : endZone && rng.nextDouble() < 0.6 ? "minecraft:moss_block" : "minecraft:grass_block");
+                    double wild = Math.sin(x * 0.31 + z * 0.17) + Math.sin(z * 0.43 - x * 0.12);
+                    boolean rough = wild + rng.nextDouble() * 0.8 > 1.1 || endZone && rng.nextDouble() < 0.3;
+                    String turf = rough ? "sc_turf_rough" : rng.nextDouble() < 0.1 ? "sc_turf_mud" : (x - x0) / 3 % 2 == 0 ? "sc_turf" : "sc_turf_d";
+                    pl.set(x, 0, z, rough && rng.nextDouble() < 0.5 ? turf : side ? "sc_turf_line[axis=x]" : yard ? "sc_turf_line[axis=z]" : turf);
+                    if (rough && rng.nextDouble() < 0.6) {
+                        pl.set(x, 1, z, rng.nextDouble() < 0.4 ? "gc_grass_dry_" + (1 + rng.nextInt(6)) : "gc_grass_" + (1 + rng.nextInt(12)));
+                    }
                 }
             }
         }
-        // goalposts at both ends
+        // goalposts at both ends: the padded post, the crossbar, the uprights
         for (int gx : new int[] {x0 - 1, x1 + 1}) {
-            for (int y = 1; y <= 4; y++) {
-                pl.set(gx, y, mz, "minecraft:iron_bars");
-            }
-            for (int z = mz - 3; z <= mz + 3; z++) {
-                pl.set(gx, 5, z, "minecraft:iron_bars");
-            }
-            for (int y = 6; y <= 10; y++) {
-                pl.set(gx, y, mz - 3, "minecraft:iron_bars");
-                pl.set(gx, y, mz + 3, "minecraft:iron_bars");
+            pl.set(gx, 1, mz, "sc_goal_pad");
+            pl.set(gx, 2, mz, "sc_goal_post");
+            pl.set(gx, 3, mz, "sc_goal_mid[axis=z]");
+            pl.set(gx, 3, mz - 1, "sc_goal_bar[axis=z]");
+            pl.set(gx, 3, mz + 1, "sc_goal_bar[axis=z]");
+            pl.set(gx, 3, mz - 2, "sc_goal_end[facing=north]");
+            pl.set(gx, 3, mz + 2, "sc_goal_end[facing=south]");
+            for (int z : new int[] {mz - 2, mz + 2}) {
+                for (int y = 4; y <= 6; y++) {
+                    pl.set(gx, y, z, "sc_goal_post");
+                }
+                pl.set(gx, 7, z, "sc_goal_top");
             }
         }
         // the home bleachers along the far side, the press box on top
@@ -862,11 +869,9 @@ final class TownSite extends Site {
                 if (rng.nextDouble() < 0.04) {
                     continue;
                 }
-                pl.set(x, 1 + i, bz + i, "minecraft:spruce_stairs[facing=south]");
-                if ((x - x0) % 6 == 0) {
-                    for (int y = 1; y <= i; y++) {
-                        pl.set(x, y, bz + i, "minecraft:iron_bars");
-                    }
+                pl.set(x, 1 + i, bz + i, "sc_bleacher[facing=north]");
+                for (int y = 1; y <= i; y++) {
+                    pl.set(x, y, bz + i, "sc_bleacher_frame[facing=north]");
                 }
             }
         }
@@ -874,27 +879,25 @@ final class TownSite extends Site {
         Bldg box = new Bldg(pl, rng);
         box.walls(px, bz + 4, px + 8, bz + 7, 6, 8, "corrugated_grey");
         box.clear(px + 1, 6, bz + 5, px + 7, 8, bz + 6);
-        box.floor(px, bz + 4, px + 8, bz + 7, 9, "minecraft:smooth_stone_slab[type=bottom]");
+        box.floor(px, bz + 4, px + 8, bz + 7, 9, "deck_steel");
         for (int x = px + 1; x <= px + 7; x++) {
             pl.set(x, 7, bz + 4, box.glass("x"));
         }
         // the scoreboard past the end zone, the floodlights on the corners
         int sx = x1 + 3;
-        for (int y = 1; y <= 5; y++) {
-            pl.set(sx + 1, y, mz - 3, "pole_wood");
-            pl.set(sx + 1, y, mz + 3, "pole_wood");
+        for (int y = 1; y <= 4; y++) {
+            pl.set(sx + 1, y, mz - 1, "truss_grey");
+            pl.set(sx + 1, y, mz + 1, "truss_grey");
         }
-        for (int z = mz - 4; z <= mz + 4; z++) {
-            for (int y = 6; y <= 8; y++) {
-                pl.set(sx + 1, y, z, "concrete_dark");
-            }
+        for (int i = 0; i < 3; i++) {
+            pl.set(sx + 1, 5, mz - 1 + i, "sc_score_" + i + "[facing=west]");
         }
         for (int[] c : new int[][] {{x0 - 5, z0 - 5}, {x1 + 5, z0 - 5}, {x0 - 5, z1 + 2}, {x1 + 5, z1 + 2}}) {
             for (int y = 1; y <= 13; y++) {
-                pl.set(c[0], y, c[1], "streetlight_pole");
+                pl.set(c[0], y, c[1], "truss_grey");
             }
             for (int dx = -1; dx <= 1; dx++) {
-                pl.set(c[0] + dx, 14, c[1], "streetlight_head_off");
+                pl.set(c[0] + dx, 14, c[1], "st_floods[facing=" + (c[1] < z0 ? "south" : "north") + "]");
             }
         }
         // the fence round it all, the rest gone to grass
@@ -1002,7 +1005,7 @@ final class TownSite extends Site {
         kit.overgrow(0.8);
     }
 
-    /** A railroad across the place at z: ballast, ties, two rails, a boxcar or three left on it. */
+    /** A railroad across the place at z: ballast, the track on it (tb_ kit), a boxcar or three left on it. */
     private void railroad(int z) {
         for (int x = 0; x < w; x++) {
             for (int dz = -3; dz <= 3; dz++) {
@@ -1012,53 +1015,39 @@ final class TownSite extends Site {
                 }
                 byte u = kit.use(x, zz);
                 if (u == Kit.ROAD) {
-                    // a level crossing: planks between the rails
+                    // a level crossing: planks between the rails, the heads standing through them
                     if (Math.abs(dz) <= 1) {
-                        out.set(x, 0, zz, "minecraft:spruce_planks");
+                        out.set(x, 0, zz, "tb_crossing");
+                        if (dz != 0) {
+                            out.set(x, 1, zz, "rail[axis=x]");
+                        }
                     }
                     continue;
                 }
                 kit.claim(x, zz, x, zz, Kit.BUILT);
-                out.set(x, 0, zz, Math.abs(dz) <= 1 && x % 2 == 0 ? "minecraft:stripped_dark_oak_log[axis=z]" : "minecraft:gravel");
+                out.set(x, 0, zz, Math.abs(dz) <= 1 ? "rw_ballast" : "minecraft:gravel");
+                if (Math.abs(dz) <= 1) {
+                    out.set(x, 1, zz, dz == 0 ? "tb_sleeper[axis=x]" : "tb_rail[axis=x]");
+                }
                 out.set(x, -1, zz, "minecraft:gravel");
             }
-            for (int dz : new int[] {-1, 1}) {
-                if (inside(x, z + dz)) {
-                    out.set(x, 1, z + dz, "rail[axis=x]");
-                }
-            }
         }
-        // boxcars standing on the line, one off the rails on its side
+        // boxcars standing on the line (fw_ kit), their doors rolled back on some, straw inside
         int cars = 2 + rng.nextInt(3);
         int x = 10 + rng.nextInt(20);
-        String[] bodies = {"barn_red", "corrugated_red", "container_orange", "corrugated_rust", "container_blue"};
-        for (int i = 0; i < cars && x + 12 < w; i++) {
-            if (kit.use(x, z) == Kit.ROAD || kit.use(x + 11, z) == Kit.ROAD) {
+        Placer pl = new Placer(out, 0, 0, 0, 0);
+        for (int i = 0; i < cars && x + Freight.LEN + 1 < w; i++) {
+            if (kit.use(x - 1, z) == Kit.ROAD || kit.use(x + Freight.LEN, z) == Kit.ROAD) {
                 x += 16;
                 continue;
             }
-            String body = bodies[rng.nextInt(bodies.length)];
-            for (int bx = x; bx < x + 12; bx++) {
-                out.set(bx, 1, z, "minecraft:polished_blackstone_slab[type=top]");
-                for (int dz = -1; dz <= 1; dz++) {
-                    for (int y = 2; y <= 5; y++) {
-                        out.set(bx, y, z + dz, y == 5 ? "minecraft:smooth_stone_slab[type=bottom]" : body);
-                    }
-                }
+            boolean open = rng.nextBoolean();
+            Freight.boxcar(pl, rng, x, 1, z, Freight.paint(rng), open);
+            if (open) {
+                out.set(x + 5, 3, z, rng.nextBoolean() ? "fm_bale_one[facing=east]" : "fm_bales_low[axis=x]");
+                out.set(x + 7, 3, z - 1, "leaf_litter");
             }
-            for (int bx : new int[] {x + 1, x + 2, x + 9, x + 10}) {
-                out.set(bx, 1, z - 1, "tire[axis=x]");
-                out.set(bx, 1, z + 1, "tire[axis=x]");
-            }
-            // the sliding door open, the inside empty but for straw
-            if (rng.nextBoolean()) {
-                for (int y = 2; y <= 4; y++) {
-                    out.set(x + 5, y, z - 1, "air");
-                    out.set(x + 6, y, z - 1, "air");
-                }
-                out.set(x + 5, 2, z, "minecraft:hay_block");
-            }
-            x += 13 + rng.nextInt(10);
+            x += Freight.LEN + 2 + rng.nextInt(10);
         }
     }
 
@@ -1075,31 +1064,31 @@ final class TownSite extends Site {
         b.shell(0, 0, 13, 6, 1, 5, "brick_red", "floor_boards", "floor_boards");
         b.windowRow(2, 11, 3, 6, 2, "south", 2, null);
         b.windowRow(2, 11, 3, 0, 2, "north", 2, null);
-        b.door(6, 1, 6, "minecraft:dark_oak_door", "south");
-        b.door(6, 1, 0, "minecraft:dark_oak_door", "north");
+        b.door(6, 1, 6, "ext_door_green", "south");
+        b.door(6, 1, 0, "ext_door_green", "north");
         b.hip(0, 13, 0, 6, 6, "minecraft:deepslate_tile", 1);
         // the platform and its canopy
         for (int x = -2; x <= 24; x++) {
             for (int z = 7; z <= 10; z++) {
                 pl.set(x, 0, z, z == 10 ? "curb" : "sidewalk");
                 if (x > 13 && z <= 9) {
-                    pl.set(x, 4, z, "minecraft:spruce_slab[type=top]");
+                    pl.set(x, 4, z, z == 9 ? "rw_canopy_fascia[facing=south]" : "rw_canopy");
                 }
             }
             if (x > 13 && x % 4 == 0) {
-                for (int y = 1; y <= 3; y++) {
-                    pl.set(x, y, 9, "minecraft:spruce_fence");
-                }
+                pl.set(x, 1, 9, "rw_column_base");
+                pl.set(x, 2, 9, "rw_column");
+                pl.set(x, 3, 9, "rw_column_cap");
             }
         }
-        pl.set(16, 1, 7, "minecraft:spruce_stairs[facing=north]");
-        pl.set(17, 1, 7, "minecraft:spruce_stairs[facing=north]");
-        pl.set(20, 1, 7, "minecraft:cauldron");
+        pl.set(16, 1, 7, "rw_bench[facing=south]");
+        pl.set(17, 1, 7, "rw_bench[facing=south]");
+        pl.set(20, 1, 7, "ext_trash_can");
         for (int x = 1; x <= 12; x++) {
             pl.set(x, 1, 2, x % 4 == 0 ? "reception_desk[facing=south]" : "air");
         }
         for (int x = 2; x <= 11; x += 3) {
-            pl.set(x, 1, 4, "minecraft:dark_oak_stairs[facing=north]");
+            pl.set(x, 1, 4, "rw_bench[facing=south]");
         }
         Kit.lawn(pl, rng, -2, -1, 24, -1, 0.8);
     }

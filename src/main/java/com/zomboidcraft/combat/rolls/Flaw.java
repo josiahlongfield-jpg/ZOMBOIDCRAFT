@@ -60,7 +60,7 @@ public enum Flaw {
 
     private static boolean handgun(ItemStack stack) {
         GunType type = GunType.of(stack);
-        return type == GunType.PISTOL || type == GunType.REVOLVER || type == GunType.MAGNUM;
+        return type != null && type.handgun();
     }
 
     private static boolean melee(ItemStack stack, boolean blade) {

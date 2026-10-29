@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tb_crossing": "zomboidcraft:block/city/tb_crossing",
+    "tb_sleeper": "zomboidcraft:block/city/tb_sleeper",
+    "particle": "zomboidcraft:block/city/tb_sleeper"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tb_sleeper",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#tb_sleeper",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#tb_sleeper",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tb_sleeper",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tb_crossing",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tb_sleeper",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

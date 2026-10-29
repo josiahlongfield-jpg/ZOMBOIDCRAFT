@@ -100,6 +100,7 @@ public final class ModItems {
     public static final Item SPIKED_BAT = weapon("spiked_bat", MeleeWeaponItem::new);
     public static final Item SHOVEL = weapon("shovel", MeleeWeaponItem::new);
     public static final Item MACHETE = weapon("machete", MeleeWeaponItem::new);
+    public static final Item TOMAHAWK = weapon("tomahawk", MeleeWeaponItem::new);
     public static final Item KATANA = weapon("katana", MeleeWeaponItem::new);
     public static final Item FIRE_AXE = weapon("fire_axe", MeleeWeaponItem::new);
     public static final Item SLEDGEHAMMER = weapon("sledgehammer", MeleeWeaponItem::new);
@@ -131,6 +132,23 @@ public final class ModItems {
     public static final Item LEVER_AMMO = register("lever_ammo", Item::new, new Item.Properties().stacksTo(50));
     public static final Item CROSSBOW = gun("crossbow", GunType.CROSSBOW, 1400);
     public static final Item CROSSBOW_BOLT = register("crossbow_bolt", Item::new, new Item.Properties().stacksTo(12));
+    // the .308 battle rifle (Josiah 10-29: "slower firing but hard hitting"), fed the hunting rifle's rounds
+    public static final Item BATTLE_RIFLE = gun("battle_rifle", GunType.BATTLE_RIFLE, 1700);
+    public static final Item BATTLE_RIFLE_MAGAZINE = magazine("battle_rifle_magazine", GunType.BATTLE_RIFLE);
+    // the rest of the bought guns (Josiah 2026-10-29: "i want all of the pbr weapons in the game")
+    public static final Item POCKET_PISTOL = gun("pocket_pistol", GunType.POCKET_PISTOL, 1000);
+    public static final Item POCKET_PISTOL_MAGAZINE = magazine("pocket_pistol_magazine", GunType.POCKET_PISTOL);
+    public static final Item POCKET_AMMO = register("pocket_ammo", Item::new, new Item.Properties().stacksTo(60));
+    public static final Item MACHINE_PISTOL = gun("machine_pistol", GunType.MACHINE_PISTOL, 1200);
+    public static final Item MACHINE_PISTOL_MAGAZINE = magazine("machine_pistol_magazine", GunType.MACHINE_PISTOL);
+    public static final Item SUPPRESSED_RIFLE = gun("suppressed_rifle", GunType.SUPPRESSED_RIFLE, 1600);
+    public static final Item PRECISION_RIFLE = gun("precision_rifle", GunType.PRECISION_RIFLE, 1800);
+    public static final Item PRECISION_RIFLE_MAGAZINE = magazine("precision_rifle_magazine", GunType.PRECISION_RIFLE);
+    public static final Item HEAVY_SNIPER = gun("heavy_sniper", GunType.HEAVY_SNIPER, 2000);
+    public static final Item HEAVY_SNIPER_MAGAZINE = magazine("heavy_sniper_magazine", GunType.HEAVY_SNIPER);
+    public static final Item HEAVY_AMMO = register("heavy_ammo", Item::new, new Item.Properties().stacksTo(20));
+    public static final Item GRENADE_LAUNCHER = gun("grenade_launcher", GunType.GRENADE_LAUNCHER, 900);
+    public static final Item GRENADE_ROUND = register("grenade_round", Item::new, new Item.Properties().stacksTo(12));
 
     // Things to throw (combat/throwing): lures, fire and smoke, and blasts. The tin can and the alarm clock are
     // thrown too (see TIN_CAN and ALARM_CLOCK).
@@ -170,9 +188,27 @@ public final class ModItems {
     public static final Item RIFLE_SUPPRESSOR = part("rifle_suppressor", Attachments.Slot.MUZZLE);
     public static final Item PISTOL_SUPPRESSOR = part("pistol_suppressor", Attachments.Slot.MUZZLE);
     public static final Item FOREGRIP = part("foregrip", Attachments.Slot.UNDERBARREL);
+    public static final Item UNDERBARREL_LAUNCHER = part("underbarrel_launcher", Attachments.Slot.UNDERBARREL);
     public static final Item WEAPON_LIGHT = part("weapon_light", Attachments.Slot.SIDE_RAIL);
     public static final Item LASER_SIGHT = part("laser_sight", Attachments.Slot.RIGHT_RAIL);
     public static final Item RIFLE_STOCK = part("rifle_stock", Attachments.Slot.STOCK);
+    public static final Item MINI_RED_DOT = part("mini_red_dot", Attachments.Slot.OPTIC);
+    public static final Item COMPACT_RED_DOT = part("compact_red_dot", Attachments.Slot.OPTIC);
+    public static final Item COMBAT_SCOPE = part("combat_scope", Attachments.Slot.OPTIC);
+    public static final Item RIFLE_SCOPE = part("rifle_scope", Attachments.Slot.OPTIC);
+    public static final Item PISTOL_SCOPE = part("pistol_scope", Attachments.Slot.OPTIC);
+    public static final Item PRECISION_SCOPE = part("precision_scope", Attachments.Slot.OPTIC);
+    public static final Item HUNTING_SCOPE = part("hunting_scope", Attachments.Slot.OPTIC);
+    public static final Item LONG_RANGE_SCOPE = part("long_range_scope", Attachments.Slot.OPTIC);
+    public static final Item CROSSBOW_SCOPE = part("crossbow_scope", Attachments.Slot.OPTIC);
+    public static final Item MAGNIFIER = part("magnifier", Attachments.Slot.MAGNIFIER);
+    public static final Item ANGLED_GRIP = part("angled_grip", Attachments.Slot.UNDERBARREL);
+    public static final Item STUBBY_GRIP = part("stubby_grip", Attachments.Slot.UNDERBARREL);
+    public static final Item SKELETON_GRIP = part("skeleton_grip", Attachments.Slot.UNDERBARREL);
+    public static final Item TACTICAL_GRIP = part("tactical_grip", Attachments.Slot.UNDERBARREL);
+    public static final Item COMPACT_LIGHT = part("compact_light", Attachments.Slot.SIDE_RAIL);
+    public static final Item SNIPER_SUPPRESSOR = part("sniper_suppressor", Attachments.Slot.MUZZLE);
+    public static final Item BIPOD = part("bipod", Attachments.Slot.BIPOD);
 
     private static Item part(String name, Attachments.Slot slot) {
         String key = GunSlotData.MODEL_KEYS.get(name);
@@ -284,10 +320,11 @@ public final class ModItems {
                 mag.set(GunState.MAG_ROUNDS, type.capacity());
                 output.accept(mag);
                 ItemStack kitted = gun.copy();
-                for (Item part : type == GunType.PISTOL ? List.of(PISTOL_SUPPRESSOR, WEAPON_LIGHT)
+                for (Item part : type == GunType.PISTOL || type == GunType.MACHINE_PISTOL ? List.of(PISTOL_SUPPRESSOR, WEAPON_LIGHT)
                         : type == GunType.RIMFIRE || type == GunType.SMG ? List.of(PISTOL_SUPPRESSOR)
-                        : type == GunType.HUNTING_RIFLE ? List.of(SCOPE_4X, RIFLE_SUPPRESSOR)
-                        : List.of(HOLO_SIGHT, RIFLE_SUPPRESSOR, FOREGRIP, WEAPON_LIGHT)) {
+                        : type == GunType.HUNTING_RIFLE || type == GunType.PRECISION_RIFLE || type == GunType.HEAVY_SNIPER
+                        ? List.of(LONG_RANGE_SCOPE, SNIPER_SUPPRESSOR, BIPOD)
+                        : List.of(HOLO_SIGHT, MAGNIFIER, RIFLE_SUPPRESSOR, ANGLED_GRIP, WEAPON_LIGHT)) {
                     Attachments.mount(kitted, new ItemStack(part));
                 }
                 if (!ItemStack.matches(kitted, gun)) {      // a gun with no rails or threads has nothing to put on

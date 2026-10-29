@@ -1,0 +1,240 @@
+{
+ "red_dot": {
+  "mesh": "att_red_dot",
+  "item": "red_dot_sight",
+  "title": "Red Dot Sight",
+  "slot": "optic",
+  "note": "Steadier aim",
+  "reticle": "dot"
+ },
+ "holo": {
+  "mesh": "att_holo",
+  "item": "holo_sight",
+  "title": "Holographic Sight",
+  "slot": "optic",
+  "note": "Steadier aim, quick to pick up",
+  "reticle": "ring"
+ },
+ "mini_dot": {
+  "mesh": "att_mini_dot",
+  "item": "mini_red_dot",
+  "title": "Mini Red Dot",
+  "slot": "optic",
+  "note": "Steadier aim, low and light",
+  "reticle": "dot"
+ },
+ "compact_dot": {
+  "mesh": "own_compact_dot",
+  "item": "compact_red_dot",
+  "title": "Compact Red Dot",
+  "slot": "optic",
+  "note": "Steadier aim",
+  "reticle": "dot"
+ },
+ "scope_4x": {
+  "mesh": "att_prism_4x",
+  "item": "scope_4x",
+  "title": "4x Prism Scope",
+  "slot": "optic",
+  "note": "Four times zoom when aiming",
+  "zoom": 4,
+  "hidden": true
+ },
+ "combat_scope": {
+  "mesh": "own_combat_scope",
+  "item": "combat_scope",
+  "title": "3x Combat Scope",
+  "slot": "optic",
+  "note": "Three times zoom when aiming",
+  "zoom": 3,
+  "reticle": "dot"
+ },
+ "rifle_optic": {
+  "mesh": "own_rifle_optic",
+  "item": "rifle_scope",
+  "title": "2x Rifle Scope",
+  "slot": "optic",
+  "note": "Twice the zoom when aiming",
+  "zoom": 2,
+  "reticle": "dot"
+ },
+ "pistol_scope": {
+  "mesh": "own_pistol_scope",
+  "item": "pistol_scope",
+  "title": "2x Pistol Scope",
+  "slot": "optic",
+  "note": "Twice the zoom when aiming",
+  "zoom": 2,
+  "reticle": "cross"
+ },
+ "precision_scope": {
+  "mesh": "own_precision_scope",
+  "item": "precision_scope",
+  "title": "8x Precision Scope",
+  "slot": "optic",
+  "note": "Eight times zoom when aiming",
+  "zoom": 8,
+  "hidden": true
+ },
+ "hunting_scope": {
+  "mesh": "own_hunting_scope",
+  "item": "hunting_scope",
+  "title": "6x Hunting Scope",
+  "slot": "optic",
+  "note": "Six times zoom when aiming",
+  "zoom": 6,
+  "hidden": true
+ },
+ "long_scope": {
+  "mesh": "own_long_scope",
+  "item": "long_range_scope",
+  "title": "10x Long Range Scope",
+  "slot": "optic",
+  "note": "Ten times zoom when aiming",
+  "zoom": 10,
+  "hidden": true
+ },
+ "crossbow_scope": {
+  "mesh": "own_crossbow_scope",
+  "item": "crossbow_scope",
+  "title": "3x Crossbow Scope",
+  "slot": "optic",
+  "note": "Three times zoom when aiming",
+  "zoom": 3,
+  "hidden": true
+ },
+ "magnifier": {
+  "mesh": "att_magnifier",
+  "item": "magnifier",
+  "title": "3x Magnifier",
+  "slot": "magnifier",
+  "note": "Three times zoom behind a red dot or holo sight; not with a scope",
+  "zoom": 3,
+  "hidden": true
+ },
+ "foregrip": {
+  "mesh": "att_foregrip",
+  "item": "foregrip",
+  "title": "Vertical Foregrip",
+  "slot": "underbarrel",
+  "note": "Less recoil"
+ },
+ "angled_grip": {
+  "mesh": "att_angled_grip",
+  "item": "angled_grip",
+  "title": "Angled Grip",
+  "slot": "underbarrel",
+  "note": "Less recoil, quicker to aim"
+ },
+ "stubby_grip": {
+  "mesh": "att_stubby_grip",
+  "item": "stubby_grip",
+  "title": "Stubby Grip",
+  "slot": "underbarrel",
+  "note": "Less recoil"
+ },
+ "combat_grip": {
+  "mesh": "own_combat_grip",
+  "item": "skeleton_grip",
+  "title": "Skeleton Angled Grip",
+  "slot": "underbarrel",
+  "note": "Less recoil, quicker to aim"
+ },
+ "vertical_grip": {
+  "mesh": "own_launcher_grip",
+  "item": "tactical_grip",
+  "title": "Tactical Vertical Grip",
+  "slot": "underbarrel",
+  "note": "Less recoil",
+  "guns": {
+   "assault_rifle": {
+    "scale": 0.6
+   },
+   "battle_rifle": {
+    "scale": 0.6
+   },
+   "suppressed_rifle": {
+    "scale": 0.6
+   }
+  }
+ },
+ "launcher": {
+  "mesh": "own_launcher",
+  "item": "underbarrel_launcher",
+  "title": "Underbarrel Grenade Launcher",
+  "slot": "underbarrel",
+  "note": "Fires 40mm grenades: fire mode key to switch to it, R to load"
+ },
+ "light": {
+  "mesh": "att_light",
+  "item": "weapon_light",
+  "title": "Weapon Light",
+  "slot": "side_rail",
+  "note": "Lights the way ahead"
+ },
+ "rail_light": {
+  "mesh": "own_rail_light",
+  "item": "compact_light",
+  "title": "Compact Weapon Light",
+  "slot": "side_rail",
+  "note": "Lights the way ahead"
+ },
+ "laser": {
+  "mesh": null,
+  "item": "laser_sight",
+  "title": "Laser Sight",
+  "slot": "right_rail",
+  "note": "Tighter shots from the hip"
+ },
+ "suppressor": {
+  "mesh": "own_rifle_suppressor",
+  "item": "rifle_suppressor",
+  "title": "Rifle Suppressor",
+  "slot": "muzzle",
+  "note": "Much quieter shots",
+  "guns": {
+   "pistol": {
+    "mesh": "own_compact_suppressor",
+    "scale": 0.6
+   },
+   "smg": {
+    "mesh": "own_compact_suppressor",
+    "scale": 0.6
+   },
+   "machine_pistol": {
+    "mesh": "own_compact_suppressor",
+    "scale": 0.6
+   },
+   "revolver": {
+    "mesh": "own_compact_suppressor",
+    "scale": 0.6
+   },
+   "rimfire": {
+    "mesh": "own_compact_suppressor",
+    "scale": 0.6
+   }
+  }
+ },
+ "sniper_suppressor": {
+  "mesh": "own_sniper_suppressor",
+  "item": "sniper_suppressor",
+  "title": "Sniper Suppressor",
+  "slot": "muzzle",
+  "note": "Much quieter shots"
+ },
+ "bipod": {
+  "mesh": "own_precision_bipod",
+  "item": "bipod",
+  "title": "Bipod",
+  "slot": "bipod",
+  "note": "Steady aim and less recoil while crouching",
+  "guns": {
+   "hunting_rifle": {
+    "mesh": "own_hunting_bipod"
+   },
+   "heavy_sniper": {
+    "mesh": "own_long_bipod"
+   }
+  }
+ }
+}

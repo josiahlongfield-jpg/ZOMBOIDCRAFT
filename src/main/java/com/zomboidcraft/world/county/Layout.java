@@ -199,6 +199,15 @@ final class Layout {
 
     private void fixed() {
         for (Plan.Spot s : plan.spots) {
+            if (s.id().equals("airport")) {
+                // Grayhaven International: too big to build whole, so it comes as a row of tiles
+                List<Place> tiles = Airport.places(s, county, Noise.hash(seed ^ 0x9A1AL, s.x(), s.z()));
+                for (int i = 0; i < tiles.size(); i++) {
+                    places.add(tiles.get(i));
+                    named.put(i == 0 ? s.id() : s.id() + "#" + i, tiles.get(i));
+                }
+                continue;
+            }
             Place p = fixedPlace(s);
             if (p != null) {
                 places.add(p);

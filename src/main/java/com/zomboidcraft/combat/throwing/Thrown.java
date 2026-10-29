@@ -96,6 +96,19 @@ public class Thrown extends Entity {
         return t;
     }
 
+    /** A 40mm round fired from a launcher's muzzle along dir: nose first, no tumble, at the launchers' speed. */
+    public static Thrown fire(ServerLevel level, LivingEntity shooter, ItemStack round, Vec3 muzzle, Vec3 dir) {
+        Thrown t = launch(level, shooter, round, 0, -1);
+        if (t != null) {
+            t.snapTo(muzzle.x, muzzle.y, muzzle.z, shooter.getYRot(), 0);
+            t.setDeltaMovement(dir.scale(ZcConfig.get().throwing.launcherSpeed));
+            t.tumble.zero();
+            t.turn.rotationTo(new org.joml.Vector3f(0, 0, 1), new org.joml.Vector3f((float) dir.x, (float) dir.y, (float) dir.z));
+            t.entityData.set(TURN, new Quaternionf(t.turn));
+        }
+        return t;
+    }
+
     /** One from stack let fall at the thrower's feet, still live with fuse ticks to go (a wind-up abandoned). */
     public static void drop(ServerLevel level, LivingEntity thrower, ItemStack stack, int fuse) {
         Thrown t = launch(level, thrower, stack, 0, fuse);
@@ -111,6 +124,9 @@ public class Thrown extends Entity {
     }
 
     public ThrowKind kind() {
+        if (item().is(com.zomboidcraft.ModItems.GRENADE_ROUND)) {
+            return ThrowKind.GRENADE_ROUND;
+        }
         return item().getItem() instanceof ThrowableItem t ? t.kind() : ThrowKind.BOTTLE;
     }
 
@@ -163,6 +179,10 @@ public class Thrown extends Entity {
         Entity thrower = owner();
         EntityHitResult hit = ProjectileUtil.getEntityHitResult(this, from, from.add(v), getBoundingBox().expandTowards(v).inflate(0.3),
                 e -> e instanceof LivingEntity && e.isAlive() && !e.isSpectator() && (e != thrower || age > 6), v.lengthSqr() + 1);
+        if (hit != null && kind() == ThrowKind.GRENADE_ROUND) {
+            impact(level);
+            return;
+        }
         if (hit != null) {
             strike(level, (LivingEntity) hit.getEntity(), v);
             if (isRemoved()) {
@@ -176,6 +196,10 @@ public class Thrown extends Entity {
         boolean bumpX = v.x != 0 && after.x == 0, bumpZ = v.z != 0 && after.z == 0, bumpY = v.y < 0 && onGround() || v.y > 0 && after.y == 0;
         if (bumpX || bumpY || bumpZ) {
             double speed = v.length();
+            if (kind() == ThrowKind.GRENADE_ROUND) {
+                impact(level);
+                return;
+            }
             if (kind().shatters()) {
                 shatter(level);
                 return;
@@ -373,12 +397,23 @@ public class Thrown extends Entity {
         return c.smokeRadius * Math.max(0, Math.min(grow, fade));
     }
 
+    /** A launcher's round hits something: it bursts if it has flown far enough to arm, or thuds down a dud. */
+    private void impact(ServerLevel level) {
+        if (age >= ZcConfig.get().throwing.launcherArmTicks) {
+            detonate(level);
+        } else {
+            level.playSound(null, getX(), getY(), getZ(), ModSounds.BRICK_THUD, SoundSource.PLAYERS, 0.9f, 0.8f);
+            discard();
+        }
+    }
+
     /** The fuse ran out: the bang. */
     private void detonate(ServerLevel level) {
         ZcConfig.Throwing c = ZcConfig.get().throwing;
         switch (kind()) {
             case FLASHBANG -> flash(level, c);
             case FRAG -> blast(level, c.fragRadius, c.fragDamage, c.fragShrapnel, c.shrapnelDamage);
+            case GRENADE_ROUND -> blast(level, c.launcherRadius, c.launcherDamage, c.launcherShrapnel, c.shrapnelDamage);
             default -> {
             }
         }

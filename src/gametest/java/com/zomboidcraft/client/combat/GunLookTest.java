@@ -3,7 +3,14 @@ package com.zomboidcraft.client.combat;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestSingleplayerContext;
+import com.zomboidcraft.ZomboidCraft;
+import com.zomboidcraft.combat.Attachments;
+import com.zomboidcraft.combat.GunSlotData;
+import java.util.List;
+import java.util.Map;
 import net.minecraft.client.CameraType;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.item.ItemStack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,7 +20,7 @@ import org.slf4j.LoggerFactory;
  */
 public class GunLookTest implements FabricClientGameTest {
     private static final Logger LOG = LoggerFactory.getLogger("ZCGUN");
-    private static final String[] GUNS = System.getProperty("zc.gun", "assault_rifle,smg,pistol,magnum,shotgun,hunting_rifle,crossbow,machete").split(",");
+    private static final String[] GUNS = System.getProperty("zc.gun", "assault_rifle,battle_rifle,suppressed_rifle,hunting_rifle,precision_rifle,heavy_sniper,crossbow,grenade_launcher,magnum,pistol,machine_pistol,pocket_pistol,smg,shotgun").split(",");
 
     @Override
     public void runTest(ClientGameTestContext ctx) {
@@ -23,6 +30,7 @@ public class GunLookTest implements FabricClientGameTest {
                 sp.getServer().runCommand(c);
             }
             ctx.getInput().resizeWindow(1280, 720);
+            int n = 0;
             for (String gun : GUNS) {
                 for (String c : new String[] {"kill @e[type=item]", "clear @a", "give @a zomboidcraft:" + gun, "tp @a ~ ~ ~ 0 10"}) {
                     sp.getServer().runCommand(c);
@@ -42,24 +50,34 @@ public class GunLookTest implements FabricClientGameTest {
                 sp.getServer().runCommand("tp @a ~ ~ ~ 0 60");
                 ctx.waitTicks(30);
                 ctx.takeScreenshot(gun + "-ground");
+                // and again with other parts fitted, one per slot, to check where they sit
+                int pick = n++;
+                sp.getServer().runOnServer(server -> {
+                    for (var player : server.getPlayerList().getPlayers()) {
+                        ItemStack gunStack = player.getMainHandItem();
+                        String id = Attachments.gunId(gunStack);
+                        if (id == null) {
+                            continue;
+                        }
+                        int k = 0;
+                        for (Map.Entry<Attachments.Slot, List<String>> e : GunSlotData.FITS.get(id).entrySet()) {
+                            String comes = GunSlotData.DEFAULTS.get(id).get(e.getKey());
+                            List<String> others = e.getValue().stream().filter(x -> !x.equals(comes)).toList();
+                            if (e.getKey() != Attachments.Slot.MAGAZINE && !others.isEmpty()) {
+                                Attachments.mount(gunStack, new ItemStack(BuiltInRegistries.ITEM.getValue(ZomboidCraft.id(others.get((pick + k++) % others.size())))));
+                            }
+                        }
+                        LOG.info("ZCGUN kitted {} {}", id, Attachments.of(gunStack).mounted());
+                    }
+                });
+                sp.getServer().runCommand("tp @a ~ ~ ~ 0 10");
+                ctx.waitTicks(20);
+                ctx.takeScreenshot(gun + "-kit-fp-hip");
+                ctx.runOnClient(mc -> mc.options.setCameraType(CameraType.THIRD_PERSON_FRONT));
+                ctx.waitTicks(10);
+                ctx.takeScreenshot(gun + "-kit-tp-front");
+                ctx.runOnClient(mc -> mc.options.setCameraType(CameraType.FIRST_PERSON));
             }
-            // which way the meshes face: the magnum with no outline, then wound the other way
-            for (String c : new String[] {"kill @e[type=item]", "clear @a", "give @a zomboidcraft:magnum", "tp @a ~ ~ ~ 0 10"}) {
-                sp.getServer().runCommand(c);
-            }
-            ctx.waitTicks(20);
-            MeshGuns.inkOn = false;
-            ctx.waitTicks(5);
-            ctx.takeScreenshot("magnum-no-ink");
-            MeshGuns.inkOn = true;
-            MeshGuns.flipped = true;
-            ctx.waitTicks(5);
-            ctx.takeScreenshot("magnum-flipped");
-            MeshGuns.inkOn = false;
-            ctx.waitTicks(5);
-            ctx.takeScreenshot("magnum-flipped-no-ink");
-            MeshGuns.inkOn = true;
-            MeshGuns.flipped = false;
         }
     }
 }

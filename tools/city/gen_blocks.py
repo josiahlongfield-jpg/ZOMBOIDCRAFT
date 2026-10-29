@@ -398,7 +398,7 @@ def title(name):
 # drawn along x). These were drawn along x before the rule and every placement turned to suit;
 # anything else drawn along x stops the build.
 AXIS_DRAWN_X = {"fit_beam", "fit_girder", "fit_beam_duct", "fit_beam_sprinkler", "fit_troffer", "fit_troffer_on",
-                "fit_troffer_flicker", "vessel_lash", "vessel_lash_open", "bunk_tripwire"}
+                "fit_troffer_flicker", "vessel_lash", "vessel_lash_open", "bunk_tripwire", "yd_line_post"}
 
 
 def axis_rule(blocks):

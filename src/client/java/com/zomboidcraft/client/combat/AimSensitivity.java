@@ -66,7 +66,7 @@ public final class AimSensitivity {
             return 1;
         }
         double look = speed(mc.options.sensitivity().get());
-        return look <= 0 ? 1 : speed(Attachments.scoped(player.getUseItem()) ? scope : sights) / look;
+        return look <= 0 ? 1 : speed(Attachments.aimZoom(player.getUseItem()) > 0 ? scope : sights) / look;
     }
 
     /** How the game turns a Sensitivity slider value into turning speed. */

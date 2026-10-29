@@ -573,6 +573,13 @@ def blocks():
             cube(n, n, "Hull Plating")
     for n in ("vessel_bottom", "vessel_bottom_seam", "vessel_bottom_weed"):
         cube(n, n, "Hull Plating")
+    # the fairing plates: her plating eased out over the blocks' steps where she rounds at the bow and
+    # the stern, a quarter, a half or three quarters of a block proud, the face on the north
+    for c in list(HULLS) + ["bottom"]:
+        for seam in ("", "_seam"):
+            tex = ("vessel_bottom" if c == "bottom" else f"vessel_hull_{c}") + seam
+            for k in (1, 2, 3):
+                add(f"vessel_fair_{c}{seam}_{k}", [[0, 0, 16 - 4 * k, 16, 16, 16, tex]], "Hull Plating")
     for n in ("vessel_house", "vessel_house_seam", "vessel_house_rust", "vessel_house_soot"):
         cube(n, n, "Superstructure")
     for n, title in (("vessel_window", "Cabin Window"), ("vessel_window_broken", "Broken Cabin Window"),

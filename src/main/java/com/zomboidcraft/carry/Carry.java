@@ -118,8 +118,7 @@ public final class Carry {
     /** What the sling (the Back quick slot) takes across your back: every gun bar a handgun, and melee weapons. */
     public static boolean slings(ItemStack stack) {
         com.zomboidcraft.combat.GunType type = com.zomboidcraft.combat.GunType.of(stack);
-        return weapon(stack) && type != com.zomboidcraft.combat.GunType.PISTOL && type != com.zomboidcraft.combat.GunType.REVOLVER
-                && type != com.zomboidcraft.combat.GunType.MAGNUM;
+        return weapon(stack) && (type == null || !type.handgun());
     }
 
     /** Whether a slot of the player's inventory is a pocket (the main rows, locked or not), where weapons never go. */
@@ -264,7 +263,8 @@ public final class Carry {
                 if (CaseItem.unpack(inventory.getItem(i), player.getRandom())
                         | com.zomboidcraft.combat.rolls.Rolls.roll(inventory.getItem(i),
                                 com.zomboidcraft.combat.rolls.Rolls.UNKNOWN, player.getRandom())
-                        | com.zomboidcraft.combat.GunFinish.roll(inventory.getItem(i), player.getRandom())) {
+                        | com.zomboidcraft.combat.GunFinish.roll(inventory.getItem(i), player.getRandom())
+                        | com.zomboidcraft.combat.Attachments.ensureModel(inventory.getItem(i))) {
                     inventory.setChanged();
                 }
             }

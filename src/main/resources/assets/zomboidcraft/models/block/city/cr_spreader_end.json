@@ -1,0 +1,371 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cr_plate_grey": "zomboidcraft:block/city/cr_plate_grey",
+    "cr_plate_yellow": "zomboidcraft:block/city/cr_plate_yellow",
+    "ct_casting": "zomboidcraft:block/city/ct_casting",
+    "painted_steel": "zomboidcraft:block/city/painted_steel",
+    "particle": "zomboidcraft:block/city/cr_plate_yellow"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        6,
+        2
+      ],
+      "to": [
+        16,
+        12,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cr_plate_yellow"
+        },
+        "south": {
+          "texture": "#cr_plate_yellow"
+        },
+        "east": {
+          "texture": "#cr_plate_yellow",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cr_plate_yellow",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cr_plate_yellow"
+        },
+        "down": {
+          "texture": "#cr_plate_yellow"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        6,
+        8
+      ],
+      "to": [
+        11,
+        12,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cr_plate_yellow"
+        },
+        "south": {
+          "texture": "#cr_plate_yellow",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cr_plate_yellow"
+        },
+        "west": {
+          "texture": "#cr_plate_yellow"
+        },
+        "up": {
+          "texture": "#cr_plate_yellow"
+        },
+        "down": {
+          "texture": "#cr_plate_yellow"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        3,
+        1
+      ],
+      "to": [
+        4,
+        6,
+        7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cr_plate_grey"
+        },
+        "south": {
+          "texture": "#cr_plate_grey"
+        },
+        "east": {
+          "texture": "#cr_plate_grey"
+        },
+        "west": {
+          "texture": "#cr_plate_grey",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cr_plate_grey"
+        },
+        "down": {
+          "texture": "#cr_plate_grey"
+        }
+      }
+    },
+    {
+      "from": [
+        1.5,
+        1.6,
+        3
+      ],
+      "to": [
+        2.5,
+        3,
+        4.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ct_casting"
+        },
+        "south": {
+          "texture": "#ct_casting"
+        },
+        "east": {
+          "texture": "#ct_casting"
+        },
+        "west": {
+          "texture": "#ct_casting"
+        },
+        "up": {
+          "texture": "#ct_casting"
+        },
+        "down": {
+          "texture": "#ct_casting"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        -4,
+        0
+      ],
+      "to": [
+        4,
+        3,
+        1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cr_plate_yellow",
+          "uv": [
+            12,
+            9,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#cr_plate_yellow",
+          "uv": [
+            0,
+            9,
+            4,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#cr_plate_yellow",
+          "uv": [
+            15,
+            9,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#cr_plate_yellow",
+          "uv": [
+            0,
+            9,
+            1,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#cr_plate_yellow"
+        },
+        "down": {
+          "texture": "#cr_plate_yellow"
+        }
+      },
+      "rotation": {
+        "origin": [
+          2,
+          3,
+          1
+        ],
+        "axis": "x",
+        "angle": -22.5
+      }
+    },
+    {
+      "from": [
+        12,
+        3,
+        1
+      ],
+      "to": [
+        16,
+        6,
+        7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cr_plate_grey"
+        },
+        "south": {
+          "texture": "#cr_plate_grey"
+        },
+        "east": {
+          "texture": "#cr_plate_grey",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cr_plate_grey"
+        },
+        "up": {
+          "texture": "#cr_plate_grey"
+        },
+        "down": {
+          "texture": "#cr_plate_grey"
+        }
+      }
+    },
+    {
+      "from": [
+        13.5,
+        1.6,
+        3
+      ],
+      "to": [
+        14.5,
+        3,
+        4.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ct_casting"
+        },
+        "south": {
+          "texture": "#ct_casting"
+        },
+        "east": {
+          "texture": "#ct_casting"
+        },
+        "west": {
+          "texture": "#ct_casting"
+        },
+        "up": {
+          "texture": "#ct_casting"
+        },
+        "down": {
+          "texture": "#ct_casting"
+        }
+      }
+    },
+    {
+      "from": [
+        12,
+        -4,
+        0
+      ],
+      "to": [
+        16,
+        3,
+        1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cr_plate_yellow",
+          "uv": [
+            0,
+            9,
+            4,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#cr_plate_yellow",
+          "uv": [
+            12,
+            9,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#cr_plate_yellow",
+          "uv": [
+            15,
+            9,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#cr_plate_yellow",
+          "uv": [
+            0,
+            9,
+            1,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#cr_plate_yellow"
+        },
+        "down": {
+          "texture": "#cr_plate_yellow"
+        }
+      },
+      "rotation": {
+        "origin": [
+          14,
+          3,
+          1
+        ],
+        "axis": "x",
+        "angle": -22.5
+      }
+    },
+    {
+      "from": [
+        6.5,
+        12,
+        1.6
+      ],
+      "to": [
+        9.5,
+        14,
+        3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#painted_steel"
+        },
+        "south": {
+          "texture": "#painted_steel"
+        },
+        "east": {
+          "texture": "#painted_steel"
+        },
+        "west": {
+          "texture": "#painted_steel"
+        },
+        "up": {
+          "texture": "#painted_steel"
+        },
+        "down": {
+          "texture": "#painted_steel"
+        }
+      }
+    }
+  ]
+}

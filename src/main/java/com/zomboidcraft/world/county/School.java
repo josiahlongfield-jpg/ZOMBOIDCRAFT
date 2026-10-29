@@ -760,7 +760,7 @@ final class School {
             }
         }
         for (int x = 1; x < ST; x++) {
-            p.set(x, ST + 1, z + 1, "railing[axis=x]");
+            p.set(x, ST + 1, z + 1, "railing[facing=north]");
         }
     }
 

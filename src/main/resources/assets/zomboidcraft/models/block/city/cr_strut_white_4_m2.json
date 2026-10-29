@@ -1,0 +1,86 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cr_plate_white": "zomboidcraft:block/city/cr_plate_white",
+    "particle": "zomboidcraft:block/city/cr_plate_white"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        -2.0,
+        -6
+      ],
+      "to": [
+        12,
+        6.0,
+        22
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cr_plate_white",
+          "uv": [
+            4,
+            8.0,
+            12,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#cr_plate_white",
+          "uv": [
+            4,
+            8.0,
+            12,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#cr_plate_white",
+          "uv": [
+            0,
+            8.0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#cr_plate_white",
+          "uv": [
+            0,
+            8.0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#cr_plate_white",
+          "uv": [
+            4,
+            0,
+            12,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#cr_plate_white",
+          "uv": [
+            4,
+            0,
+            12,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "x",
+        "angle": -45.0
+      }
+    }
+  ]
+}

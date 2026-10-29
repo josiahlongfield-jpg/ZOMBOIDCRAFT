@@ -58,6 +58,20 @@ public final class ZcConfig {
     public GunStats leverAction = GunStats.leverAction();
     /** The crossbow's own numbers, and how often its bolts break. */
     public CrossbowStats crossbow = new CrossbowStats();
+    /** The .308 battle rifle's own numbers (it has full auto, slower than the assault rifle's). */
+    public GunStats battleRifle = GunStats.battleRifle();
+    /** The .380 pocket pistol's own numbers. */
+    public GunStats pocketPistol = GunStats.pocketPistol();
+    /** The 9mm machine pistol's own numbers (it has full auto, very fast). */
+    public GunStats machinePistol = GunStats.machinePistol();
+    /** The suppressed rifle's own numbers (its can is built in, so every shot is quiet). */
+    public GunStats suppressedRifle = GunStats.suppressedRifle();
+    /** The .308 bolt-action precision rifle's own numbers. */
+    public GunStats precisionRifle = GunStats.precisionRifle();
+    /** The .50 heavy sniper's own numbers. */
+    public GunStats heavySniper = GunStats.heavySniper();
+    /** The six-shot 40mm grenade launcher's own numbers (its blast is in throwing.launcher*). */
+    public GunStats grenadeLauncher = GunStats.grenadeLauncher();
     /** The Warthog's mounted minigun: its rounds, rate, spin-up and belt. */
     public MinigunStats minigun = new MinigunStats();
     /** How often a found gun comes in each of its finishes. */
@@ -144,6 +158,15 @@ public final class ZcConfig {
         public double fragDamage = 50;
         public double fragShrapnel = 10;
         public double shrapnelDamage = 8;
+        /**
+         * The grenade launchers' 40mm rounds: how fast they leave the barrel (blocks a tick), how many ticks they fly
+         * before they're armed (one that hits something sooner thuds and doesn't go off), and their blast.
+         */
+        public double launcherSpeed = 2.4;
+        public int launcherArmTicks = 3;
+        public double launcherRadius = 4;
+        public double launcherDamage = 45;
+        public double launcherShrapnel = 8;
 
         /**
          * Fires from blasts, molotovs and flares never break blocks themselves and never run away across the world:
@@ -296,8 +319,15 @@ public final class ZcConfig {
         public int sawnOffWeight = 2;
         public int leverActionWeight = 3;
         public int crossbowWeight = 1;
+        public int battleRifleWeight = 2;
+        public int suppressedRifleWeight = 1;
+        public int precisionRifleWeight = 2;
+        public int heavySniperWeight = 1;
+        public int grenadeLauncherWeight = 1;
         /** How often a pistol case holds each handgun, against the others. */
         public int pistolWeight = 3;
+        public int pocketPistolWeight = 2;
+        public int machinePistolWeight = 1;
         public int revolverWeight = 2;
         public int magnumWeight = 1;
         /** Most of a packed gun's durability that's already worn off, as a fraction. */
@@ -1116,6 +1146,125 @@ public final class ZcConfig {
             return s;
         }
 
+        /**
+         * The .308 battle rifle: the hunting rifle's round from a self-loader, twenty to a magazine, semi or a slow full
+         * auto; it hits far harder than the assault rifle and kicks and blooms harder for it.
+         */
+        static GunStats battleRifle() {
+            GunStats s = new GunStats();
+            s.damage = 20.0;
+            s.hipSpread = 2.4;
+            s.aimSpread = 0.3;
+            s.recoil = 1.8;
+            s.shotNoise = 125.0;
+            s.aimZoom = 0.80;
+            s.range = 160.0;
+            s.fireDelayTicks = 4;
+            s.magazineSize = 20;
+            s.selectFire = true;
+            s.autoRpm = 480.0;
+            s.autoRecoil = 0.85;
+            s.shotBloom = 0.8;
+            s.autoBloomPerShot = 0.8;
+            s.autoBloomMax = 5.0;
+            return s;
+        }
+
+        /** The .380 pocket pistol: a light round that needs a good hit, seven in the magazine, short reach. */
+        static GunStats pocketPistol() {
+            GunStats s = new GunStats();
+            s.damage = 5.5;
+            s.hipSpread = 1.8;
+            s.aimSpread = 0.85;
+            s.recoil = 0.75;
+            s.shotNoise = 55.0;
+            s.aimZoom = 0.9;
+            s.range = 45.0;
+            s.magazineSize = 7;
+            return s;
+        }
+
+        /** The 9mm machine pistol: the pistol's round on full auto, very fast and hard to hold on target. */
+        static GunStats machinePistol() {
+            GunStats s = new GunStats();
+            s.damage = 6.5;
+            s.hipSpread = 1.6;
+            s.aimSpread = 0.8;
+            s.recoil = 0.6;
+            s.shotNoise = 70.0;
+            s.aimZoom = 0.88;
+            s.range = 55.0;
+            s.magazineSize = 20;
+            s.selectFire = true;
+            s.autoRpm = 1100.0;
+            s.autoRecoil = 0.8;
+            s.autoBloomPerShot = 0.45;
+            s.autoBloomMax = 5.0;
+            return s;
+        }
+
+        /** The suppressed rifle: the assault rifle's round through a built-in can, a little less punch, always quiet. */
+        static GunStats suppressedRifle() {
+            GunStats s = new GunStats();
+            s.damage = 11.0;
+            s.hipSpread = 1.8;
+            s.aimSpread = 0.4;
+            s.shotNoise = 90.0;      // the suppressor multiplier (guns.suppressedNoise) still applies
+            s.range = 100.0;
+            s.magazineSize = 30;
+            s.selectFire = true;
+            s.autoRpm = 700.0;
+            s.suppressedPitch = 0.92;
+            return s;
+        }
+
+        /**
+         * The .308 bolt-action precision rifle: the hunting rifle's round from a heavier barrel, ten to a magazine, the
+         * tightest aimed spread of any gun, and a long reach.
+         */
+        static GunStats precisionRifle() {
+            GunStats s = new GunStats();
+            s.damage = 34.0;
+            s.hipSpread = 4.0;
+            s.aimSpread = 0.06;
+            s.recoil = 2.3;
+            s.shotNoise = 145.0;
+            s.aimZoom = 0.80;
+            s.range = 260.0;
+            s.fireDelayTicks = 25;     // never less than the bolt takes to work (GunType.fireDelay)
+            s.magazineSize = 10;
+            return s;
+        }
+
+        /** The .50 heavy sniper: a huge round that stops anything it hits, a brutal kick, heard across the map. */
+        static GunStats heavySniper() {
+            GunStats s = new GunStats();
+            s.damage = 80.0;
+            s.hipSpread = 6.0;
+            s.aimSpread = 0.05;
+            s.recoil = 4.5;
+            s.shotNoise = 220.0;
+            s.aimZoom = 0.80;
+            s.range = 320.0;
+            s.fireDelayTicks = 30;
+            s.magazineSize = 7;
+            return s;
+        }
+
+        /** The six-shot grenade launcher: each pull lobs a 40mm round that bursts where it lands (see throwing). */
+        static GunStats grenadeLauncher() {
+            GunStats s = new GunStats();
+            s.damage = 0.0;            // the round's blast does the work
+            s.hipSpread = 2.0;
+            s.aimSpread = 0.6;
+            s.recoil = 2.2;
+            s.shotNoise = 60.0;        // the thump; the burst is heard much further
+            s.aimZoom = 0.85;
+            s.fireDelayTicks = 10;
+            s.magazineSize = 6;
+            return s;
+        }
+
         /** The .44 magnum: a heavy, hard-kicking round that stops most things it hits, six of them, heard far off. */
         static GunStats magnum() {
             GunStats s = new GunStats();
@@ -1284,6 +1433,9 @@ public final class ZcConfig {
         public double foregripRecoil = 0.75;
         public double noStockRecoil = 1.5;
         public double noStockSpread = 1.6;
+        /** A bipod, crouched on the sights, multiplies the spread and the kick. */
+        public double bipodSpread = 0.6;
+        public double bipodRecoil = 0.5;
         /** A laser multiplies spread from the hip. */
         public double laserHipSpread = 0.6;
         /** Smoke and a spark at the muzzle after each shot (off by default: they hid the sights). */

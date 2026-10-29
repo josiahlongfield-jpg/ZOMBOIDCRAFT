@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bulk_sand": "zomboidcraft:block/city/bulk_sand",
+    "particle": "zomboidcraft:block/city/bulk_sand"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        8,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bulk_sand",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#bulk_sand",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#bulk_sand",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#bulk_sand",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#bulk_sand"
+        },
+        "down": {
+          "texture": "#bulk_sand",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

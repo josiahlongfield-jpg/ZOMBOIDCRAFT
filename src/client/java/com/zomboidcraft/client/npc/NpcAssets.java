@@ -24,8 +24,16 @@ import net.minecraft.resources.Identifier;
  * it unscrambles and inflates it, and turns each look's texture into a GPU texture once something wears it.
  */
 public final class NpcAssets {
-    /** Vertices in model space (blocks, feet at y=0, facing +z), their uvs and smooth normals, and triangles over them. */
-    public record Mesh(int vertices, float[] pos, float[] uv, float[] normal, int[] tris) {
+    /**
+     * Vertices in model space (blocks, feet at y=0, facing +z), their uvs and smooth normals, and triangles over them. A
+     * rigged model also has its bones (null if not) and each vertex's two bones and how much of the first it follows.
+     */
+    public record Mesh(int vertices, float[] pos, float[] uv, float[] normal, int[] tris, Bone[] bones, byte[] bone0, byte[] bone1,
+                       float[] weight) {
+    }
+
+    /** A bone: its parent's index (-1 for the root) and the point it turns about. */
+    public record Bone(String name, int parent, float px, float py, float pz) {
     }
 
     private static final class Model {
@@ -103,7 +111,8 @@ public final class NpcAssets {
         Model out = new Model();
         try (DataInputStream in = new DataInputStream(new InflaterInputStream(new ByteArrayInputStream(data)))) {
             byte[] magic = in.readNBytes(4);
-            if (magic[0] != 'Z' || magic[1] != 'N' || magic[2] != 'P' || magic[3] != 'C' || in.readInt() != 1) {
+            int version;
+            if (magic[0] != 'Z' || magic[1] != 'N' || magic[2] != 'P' || magic[3] != 'C' || (version = in.readInt()) < 1 || version > 2) {
                 throw new IOException("not an NPC file");
             }
             int verts = in.readInt();
@@ -128,12 +137,30 @@ public final class NpcAssets {
             for (int i = 0; i < idx.length; i++) {
                 idx[i] = in.readChar();
             }
-            out.mesh = new Mesh(verts, pos, uv, normal, idx);
             int looks = in.readInt();
             for (int i = 0; i < looks; i++) {
                 String name = in.readUTF();
                 out.jpegs.put(name, in.readNBytes(in.readInt()));
             }
+            Bone[] bones = null;
+            byte[] b0 = null, b1 = null;
+            float[] w = null;
+            int count = version >= 2 ? in.readInt() : 0;
+            if (count > 0) {
+                bones = new Bone[count];
+                for (int i = 0; i < count; i++) {
+                    bones[i] = new Bone(in.readUTF(), in.readByte(), in.readFloat(), in.readFloat(), in.readFloat());
+                }
+                b0 = new byte[verts];
+                b1 = new byte[verts];
+                w = new float[verts];
+                for (int v = 0; v < verts; v++) {
+                    b0[v] = in.readByte();
+                    b1[v] = in.readByte();
+                    w[v] = (in.readByte() & 255) / 255f;
+                }
+            }
+            out.mesh = new Mesh(verts, pos, uv, normal, idx, bones, b0, b1, w);
         }
         return out;
     }
@@ -154,7 +181,7 @@ public final class NpcAssets {
     }
 
     /** Undoes pack.py's xorshift32 scramble (seeded from the model id). */
-    private static void unscramble(byte[] data, String model) {
+    static void unscramble(byte[] data, String model) {
         int x = 0x3C6EF372 ^ model.hashCode();
         if (x == 0) {
             x = 1;

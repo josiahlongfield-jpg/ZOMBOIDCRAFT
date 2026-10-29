@@ -285,32 +285,38 @@ final class SuburbSite extends Site {
         kit.overgrow(0.55);
     }
 
-    /** Brick gate piers with lamps, iron gates pushed open, a guard booth with its window smashed. */
+    /**
+     * Brick gate piers with their stone caps and lamps, the iron gates pushed open, low brick walls
+     * with railings on them running off along the boundary, a guard booth with its window smashed.
+     */
     private void gatehouse(int x, int z) {
+        String[] brick = {"brick_red", "brick_red", "brick_red_b", "brick_red_stain", "brick_red_crack", "brick_red_moss"};
         for (int side = -1; side <= 1; side += 2) {
             int px = x + side * 9;
-            for (int dx = 0; dx < 2; dx++) {
-                for (int dz = 0; dz < 2; dz++) {
-                    for (int y = 1; y <= 4; y++) {
-                        out.set(px + dx * side, y, z + dz, "minecraft:bricks");
-                    }
-                    out.set(px + dx * side, 5, z + dz, "minecraft:stone_brick_slab[type=bottom]");
+            for (int y = 1; y <= 4; y++) {
+                out.set(px, y, z, brick[rng.nextInt(brick.length)]);
+            }
+            out.set(px, 5, z, "hk_pier_lamp");
+            // the gate leaf, swung back in against the drive
+            for (int k = 1; k <= 3; k++) {
+                if (rng.nextDouble() < 0.9) {
+                    out.set(px - side, 1, z + k, "cv_iron_fence[axis=z]");
+                    out.set(px - side, 2, z + k, "cv_iron_fence[axis=z]");
                 }
             }
-            out.set(px, 6, z, "minecraft:lantern");
-            // the gate leaf, swung back against the wall
-            for (int k = 1; k <= 3; k++) {
-                out.set(px + side * 2 + (side > 0 ? k - 1 : 1 - k), 1, z + 2 + k, "minecraft:iron_bars");
-                out.set(px + side * 2 + (side > 0 ? k - 1 : 1 - k), 2, z + 2 + k, "minecraft:iron_bars");
-            }
-            // brick walls running off along the boundary
-            for (int k = 2; k < 22; k++) {
+            // the walls running off along the boundary, the railings on them, a pier every six
+            for (int k = 1; k < 22; k++) {
                 int wx = px + side * k;
                 if (wx < 1 || wx > w - 2 || kit.use(wx, z) == Kit.ROAD) {
                     continue;
                 }
-                out.set(wx, 1, z, "minecraft:bricks");
-                out.set(wx, 2, z, rng.nextDouble() < 0.9 ? "minecraft:brick_wall" : "air");
+                out.set(wx, 1, z, brick[rng.nextInt(brick.length)]);
+                if (k % 6 == 0) {
+                    out.set(wx, 2, z, brick[rng.nextInt(brick.length)]);
+                    out.set(wx, 3, z, "hk_pier_cap");
+                } else if (rng.nextDouble() < 0.9) {
+                    out.set(wx, 2, z, "cv_iron_fence[axis=x]");
+                }
             }
         }
         // the guard booth beside the in lane
@@ -319,18 +325,17 @@ final class SuburbSite extends Site {
         b.fill(0, 0, 0, 2, 0, 2, "floor_concrete");
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
+                b.set(i, 3, j, "front_coping_metal");
                 boolean edge = i != 1 || j != 1;
                 if (!edge) {
                     continue;
                 }
                 b.set(i, 1, j, "siding_white");
                 b.set(i, 2, j, i == 1 || j == 1 ? (rng.nextBoolean() ? "window_broken[axis=" + (i == 1 ? "x" : "z") + "]" : "window_empty[axis=" + (i == 1 ? "x" : "z") + "]") : "siding_white");
-                b.set(i, 3, j, "minecraft:smooth_stone_slab[type=bottom]");
             }
         }
-        b.set(1, 3, 1, "minecraft:smooth_stone_slab[type=bottom]");
         b.set(0, 1, 1, "air");
-        b.set(1, 1, 1, "minecraft:barrel[facing=up,loot=police]");
+        b.set(1, 1, 1, "filing_cabinet[facing=east,loot=police]");
     }
 
     // ------------------------------------------------------------------ the trailer park
@@ -413,7 +418,7 @@ final class SuburbSite extends Site {
             if (!kit.inside(x + i, z) || kit.use(x + i, z) == Kit.ROAD) {
                 continue;
             }
-            out.set(x + i, 1, z, rng.nextDouble() < 0.15 ? "minecraft:spruce_fence" : "mailbox[facing=south]");
+            out.set(x + i, 1, z, rng.nextDouble() < 0.15 ? "fm_post" : "mailbox[facing=south]");
             kit.claim(x + i, z, x + i, z, Kit.BUILT);
         }
     }

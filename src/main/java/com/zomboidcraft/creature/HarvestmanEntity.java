@@ -84,6 +84,12 @@ public class HarvestmanEntity extends Mob {
     private static final EntityDataAccessor<Integer> STUMBLE = SynchedEntityData.defineId(HarvestmanEntity.class, EntityDataSerializers.INT);
     /** Counts up each time it's shot in the eyes (the client throws it back). */
     private static final EntityDataAccessor<Integer> RECOIL = SynchedEntityData.defineId(HarvestmanEntity.class, EntityDataSerializers.INT);
+    /** Counts up each time it rages at someone (the client plays its rage). */
+    private static final EntityDataAccessor<Integer> RAGE = SynchedEntityData.defineId(HarvestmanEntity.class, EntityDataSerializers.INT);
+    /** Its arms and scythe claws shot off (bits 0-5: arm L, arm R, long scythe L, R, short claw L, R). */
+    private static final EntityDataAccessor<Integer> CUT = SynchedEntityData.defineId(HarvestmanEntity.class, EntityDataSerializers.INT);
+    /** It's about harming someone (HarvestmanMind.menace): its glow burns red, not blue. */
+    private static final EntityDataAccessor<Boolean> MENACE = SynchedEntityData.defineId(HarvestmanEntity.class, EntityDataSerializers.BOOLEAN);
     private static final List<EntityDataAccessor<org.joml.Vector3fc>> FEET = List.of(FOOT0, FOOT1, FOOT2, FOOT3);
 
     public static final int HUNT = 0, HOLD = 1, FEED = 2, DEAD = 3;
@@ -92,7 +98,8 @@ public class HarvestmanEntity extends Mob {
     public static final double MID = 0.4;
     /** Body height off a floor; off a wall or ceiling; the least it crouches to; feeding; lying dead. */
     public static final double STAND = 2.5, CLING = 2.05, CROUCH = 0.9, FEEDING = 2.41, LYING = 0.45;
-    public static final double MAX_HEALTH = 1200, LEG_HEALTH = 250;
+    public static final double MAX_HEALTH = 1200, LEG_HEALTH = 250, LIMB_HEALTH = 90;
+    public static final int LIMBS = 6;
     /** What a shot does to it: through its plates, into the red core (a leg takes it all). */
     public static final double PLATES = 0.1, CORE = 2.0;
     /** How long a feed takes to kill; jumps it takes to struggle free; damage that makes it drop what it holds. */
@@ -105,6 +112,8 @@ public class HarvestmanEntity extends Mob {
     /** Client only: the turn last tick and now, eased toward the synced one; and the legs it draws (HarvestmanRig). */
     public final Quaternionf turn = new Quaternionf(), turnO = new Quaternionf();
     public Object rig;
+    /** Client only: its Spider 7 body and the animations it's playing (SpiderDraw). */
+    public Object body;
     /** Client only: the feet as they came in, the last few ticks (the body's drawn position runs a little behind). */
     public final Vec3[][] feetSeen = new Vec3[4][4];
     public int feetSeenAt;
@@ -144,6 +153,9 @@ public class HarvestmanEntity extends Mob {
 
     // its legs' health, and the shots that struck it this tick (zone and leg, and where)
     final double[] legHealth = {LEG_HEALTH, LEG_HEALTH, LEG_HEALTH, LEG_HEALTH};
+    final double[] limbHealth = {LIMB_HEALTH, LIMB_HEALTH, LIMB_HEALTH, LIMB_HEALTH, LIMB_HEALTH, LIMB_HEALTH};
+    /** Server: its body as posed this tick, the same as it's drawn, so a shot strikes it where it's seen (SpiderPose). */
+    private com.zomboidcraft.creature.spider.SpiderPose pose;
     private final List<int[]> struck = new ArrayList<>();
     private final List<Vec3> struckAt = new ArrayList<>();
 
@@ -195,6 +207,14 @@ public class HarvestmanEntity extends Mob {
         return entityData.get(POSE);
     }
 
+    public int cut() {
+        return entityData.get(CUT);
+    }
+
+    public boolean menace() {
+        return entityData.get(MENACE);
+    }
+
     public float rear() {
         return entityData.get(REAR);
     }
@@ -233,6 +253,9 @@ public class HarvestmanEntity extends Mob {
         builder.define(WATCH, -1);
         builder.define(STUMBLE, 0);
         builder.define(RECOIL, 0);
+        builder.define(RAGE, 0);
+        builder.define(CUT, 0);
+        builder.define(MENACE, false);
     }
 
     /** Where it's looking, or null. */
@@ -251,6 +274,38 @@ public class HarvestmanEntity extends Mob {
 
     public int stumbles() {
         return entityData.get(STUMBLE);
+    }
+
+    public int rages() {
+        return entityData.get(RAGE);
+    }
+
+    /** How long a rage holds it still (its rage played a little quick), and the least time between two. */
+    public static final int RAGE_TICKS = 86, RAGE_GAP = 20 * 75;
+    private long rageAt = -RAGE_GAP;
+
+    /** Still raging at someone. */
+    public boolean raging() {
+        return level().getGameTime() - rageAt < RAGE_TICKS;
+    }
+
+    /**
+     * It stops, faces at, and rages: rears, screams, thrashes its arms (the client plays it). Not if it raged at
+     * someone only a little while ago (unless forced), nor while it holds something or is dead.
+     */
+    public boolean rage(Vec3 at, boolean force) {
+        long now = level().getGameTime();
+        if (!isAlive() || held != null || dropping || pose() == DEAD || raging() || !force && now - rageAt < RAGE_GAP) {
+            return false;
+        }
+        rageAt = now;
+        entityData.set(RAGE, rages() + 1);
+        pause = RAGE_TICKS;
+        pauseLook = at;
+        if (level() instanceof ServerLevel sl) {
+            playSound(sl, centre(), HarvestmanSounds.SCREECH, 1.8f, 0.8f);
+        }
+        return true;
     }
 
     public int recoils() {
@@ -287,10 +342,12 @@ public class HarvestmanEntity extends Mob {
             entityData.set(LOOK_AT, new Vector3f((float) look.x, (float) look.y, (float) look.z));
         }
         entityData.set(WATCH, mind.watchingId(level));
+        entityData.set(MENACE, mind.menace());
         struck.clear();
         struckAt.clear();
         stepLegs(level, false);
         signs.tick(level);
+        posed();
     }
 
     /**
@@ -849,18 +906,33 @@ public class HarvestmanEntity extends Mob {
         struckAt.add(s.at());
     }
 
-    /** Where a shot strikes it now: the hull, the core under its belly, or a leg as it stands. */
+    /** Where a shot strikes it now: its plates, the core under its tail, its skull (its eyes), or a leg. */
     public HarvestmanBody.Strike strike(Vec3 eye, Vec3 dir, double range) {
         if (!isAlive()) {
             return null;
         }
-        HarvestmanBody.Frame body = frame();
-        HarvestmanBody.Bent[] bent = new HarvestmanBody.Bent[4];
-        for (int i = 0; i < 4; i++) {
-            Vec3 fn = legs.footN[i] == null ? up : legs.footN[i];
-            bent[i] = (lost() >> i & 1) != 0 ? dangle(body, up, i) : HarvestmanBody.bend(body, up, i, foot(i), fn);
+        // its shape is the Spider 7 creature's, as it's posed this tick (the same as it's drawn)
+        if (posed() != null) {
+            return com.zomboidcraft.creature.spider.SpiderHits.strike(pose, position(), eye, dir, range);
         }
-        return HarvestmanBody.strike(body, bent, lost(), eye, dir, range);
+        double lift = pose() == DEAD ? MID : lift();
+        return SpiderShape.strike(frame(), lift, lost(), eye, dir, range);
+    }
+
+    /** Server: its body posed for this tick (once a tick, however often it's asked); null if its model can't load. */
+    private com.zomboidcraft.creature.spider.SpiderPose posed() {
+        if (level().isClientSide()) {
+            return null;
+        }
+        if (pose == null) {
+            com.zomboidcraft.creature.spider.SpiderModel m = com.zomboidcraft.creature.spider.SpiderModel.get();
+            if (m == null) {
+                return null;
+            }
+            pose = new com.zomboidcraft.creature.spider.SpiderPose(m);
+        }
+        pose.update(this, position(), new Quaternionf(entityData.get(TURN)), tickCount, 0.05f);
+        return pose;
     }
 
     /** A leg shot off at the knee: the thigh hangs out and down from its hip. */
@@ -891,6 +963,8 @@ public class HarvestmanEntity extends Mob {
                 Vec3 at = struckAt.get(k);
                 if (zone == HarvestmanBody.LEG && leg >= 0) {
                     hurtLeg(level, leg, each, at);
+                } else if (zone == HarvestmanBody.LIMB && leg >= 0) {
+                    hurtLimb(level, leg, each, at);
                 } else if (zone == HarvestmanBody.EYES_ZONE) {
                     // in the eyes: it takes it hard, and throws itself back
                     toHealth += each * CORE;
@@ -941,6 +1015,28 @@ public class HarvestmanEntity extends Mob {
         if (legHealth[leg] <= 0) {
             loseLeg(level, leg);
         }
+    }
+
+    private void hurtLimb(ServerLevel level, int limb, double dmg, Vec3 at) {
+        if ((cut() >> limb & 1) != 0) {
+            return;
+        }
+        limbHealth[limb] -= dmg;
+        heldDamage += dmg * 0.3;
+        level.sendParticles(ParticleTypes.CRIT, at.x, at.y, at.z, 4, 0.04, 0.04, 0.04, 0.2);
+        playSound(level, at, HarvestmanSounds.CLANG, 0.5f, 1.35f + random.nextFloat() * 0.2f);
+        if (limbHealth[limb] <= 0) {
+            entityData.set(CUT, cut() | 1 << limb);
+            limbHealth[limb] = 0;
+            playSound(level, at, HarvestmanSounds.LEG_OFF, 1.1f, 1.15f + random.nextFloat() * 0.2f);
+            level.sendParticles(new DustParticleOptions(0x900808, 1.2f), at.x, at.y, at.z, 12, 0.25, 0.2, 0.25, 0.1);
+        }
+    }
+
+    /** An arm or scythe grows back (resting in its lair). */
+    void regrowLimb(int limb) {
+        entityData.set(CUT, cut() & ~(1 << limb));
+        limbHealth[limb] = LIMB_HEALTH;
     }
 
     /** A leg shot off at the knee. */
@@ -1190,6 +1286,10 @@ public class HarvestmanEntity extends Mob {
         for (int i = 0; i < 4; i++) {
             output.putDouble("hmLeg" + i, legHealth[i]);
         }
+        output.putInt("hmCut", cut());
+        for (int i = 0; i < LIMBS; i++) {
+            output.putDouble("hmLimb" + i, limbHealth[i]);
+        }
         mind.save(output);
     }
 
@@ -1199,6 +1299,10 @@ public class HarvestmanEntity extends Mob {
         entityData.set(LOST, input.getIntOr("hmLost", 0));
         for (int i = 0; i < 4; i++) {
             legHealth[i] = input.getDoubleOr("hmLeg" + i, LEG_HEALTH);
+        }
+        entityData.set(CUT, input.getIntOr("hmCut", 0));
+        for (int i = 0; i < LIMBS; i++) {
+            limbHealth[i] = input.getDoubleOr("hmLimb" + i, LIMB_HEALTH);
         }
         mind.load(input);
     }

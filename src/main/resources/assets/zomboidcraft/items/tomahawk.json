@@ -1,0 +1,27 @@
+{
+ "model": {
+  "type": "minecraft:range_dispatch",
+  "property": "minecraft:damage",
+  "entries": [
+   {
+    "threshold": 0.5,
+    "model": {
+     "type": "minecraft:special",
+     "base": "zomboidcraft:item/weapon/tomahawk_worn",
+     "model": {
+      "type": "zomboidcraft:mesh",
+      "id": "pbr_tomahawk"
+     }
+    }
+   }
+  ],
+  "fallback": {
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/weapon/tomahawk",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "pbr_tomahawk"
+   }
+  }
+ }
+}

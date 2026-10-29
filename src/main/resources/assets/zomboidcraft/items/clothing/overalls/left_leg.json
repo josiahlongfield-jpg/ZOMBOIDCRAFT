@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/clothing/overalls/left_leg"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/clothing/overalls/left_leg",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "clothing/overalls",
+   "part": "left_leg"
+  }
  }
 }

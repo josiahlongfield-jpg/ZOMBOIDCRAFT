@@ -38,8 +38,8 @@ import org.jetbrains.annotations.Nullable;
  */
 public record Attachments(Map<Slot, ItemStack> mounted) {
     public enum Slot implements StringRepresentable {
-        // RIGHT_RAIL came later: it goes last so the model data's key order stays as it was
-        OPTIC, MUZZLE, UNDERBARREL, SIDE_RAIL, STOCK, MAGAZINE, BIPOD, RIGHT_RAIL;
+        // RIGHT_RAIL and MAGNIFIER came later: they go last so the model data's key order stays as it was
+        OPTIC, MUZZLE, UNDERBARREL, SIDE_RAIL, STOCK, MAGAZINE, BIPOD, RIGHT_RAIL, MAGNIFIER;
 
         public static final Codec<Slot> CODEC = StringRepresentable.fromEnum(Slot::values);
         public static final StreamCodec<io.netty.buffer.ByteBuf, Slot> STREAM_CODEC =
@@ -161,7 +161,21 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
 
     /** Whether the part can be fitted now: attachments are on in settings and it fits the gun. */
     public static boolean canMount(ItemStack gun, ItemStack part) {
-        return ZcConfig.get().guns.attachments && !part.isEmpty() && fits(gun, part.getItem());
+        return ZcConfig.get().guns.attachments && !part.isEmpty() && fits(gun, part.getItem()) && goesWith(gun, part);
+    }
+
+    /** The magnifier only sits behind a red dot or holo sight (or open rails): never with a scope in front of it. */
+    private static boolean goesWith(ItemStack gun, ItemStack part) {
+        Slot slot = slotOf(part);
+        if (slot == Slot.MAGNIFIER) {
+            Optic optic = optic(gun);
+            return optic == null || optic.zoom() >= 1 && !optic.overlay();
+        }
+        if (slot == Slot.OPTIC && magnified(gun) && part.getItem() instanceof AttachmentItem item) {
+            Optic optic = optic(item.modelKey());
+            return optic.zoom() >= 1 && !optic.overlay();
+        }
+        return true;
     }
 
     // ---- helpers on gun stacks ----
@@ -285,16 +299,58 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
 
     // ---- what the parts do ----
 
+    /** The reticle drawn in the middle of the view on a sight the gun stays drawn behind. */
+    public enum Reticle { NONE, DOT, RING, CROSS }
+
+    /**
+     * What an optic does on the sights: multiplies aimed spread, narrows the view to this share of normal (1: the
+     * gun's own), puts a reticle in the middle, and whether looking through it shows the scope picture in place of
+     * the gun. Keyed by model key, as tools/meshguns/attachments.json lists them.
+     */
+    public record Optic(double spread, double zoom, Reticle reticle, boolean overlay) {
+    }
+
+    private static Optic optic(String key) {
+        ZcConfig.Guns cfg = ZcConfig.get().guns;
+        return switch (key) {
+            case "red_dot", "mini_dot", "compact_dot" -> new Optic(cfg.redDotAimSpread, 1, Reticle.DOT, false);
+            case "holo" -> new Optic(cfg.holoAimSpread, 1, Reticle.RING, false);
+            case "scope_4x" -> new Optic(cfg.scopeAimSpread, cfg.scopeZoom, Reticle.NONE, true);
+            case "rifle_optic" -> new Optic(cfg.scopeAimSpread, 1 / 2.0, Reticle.DOT, false);
+            case "combat_scope" -> new Optic(cfg.scopeAimSpread, 1 / 3.0, Reticle.DOT, false);
+            case "pistol_scope" -> new Optic(cfg.scopeAimSpread, 1 / 2.0, Reticle.CROSS, false);
+            case "crossbow_scope" -> new Optic(cfg.scopeAimSpread, 1 / 3.0, Reticle.NONE, true);
+            case "hunting_scope" -> new Optic(cfg.scopeAimSpread * 0.8, 1 / 6.0, Reticle.NONE, true);
+            case "precision_scope" -> new Optic(cfg.scopeAimSpread * 0.7, 1 / 8.0, Reticle.NONE, true);
+            case "long_scope" -> new Optic(cfg.scopeAimSpread * 0.6, 1 / 10.0, Reticle.NONE, true);
+            default -> new Optic(1, 1, Reticle.NONE, false);
+        };
+    }
+
+    /** Whether looking through this optic (by model key) shows the scope picture in place of the gun. */
+    public static boolean overlay(String key) {
+        return optic(key).overlay();
+    }
+
+    /** The optic on the gun, or null on its own sights. */
+    public static @Nullable Optic optic(ItemStack gun) {
+        String key = key(gun, Slot.OPTIC);
+        return key == null ? null : optic(key);
+    }
+
+    /** A 3x magnifier sits behind the optic: flipped in, it's looked through like a scope. */
+    public static boolean magnified(ItemStack gun) {
+        return key(gun, Slot.MAGNIFIER) != null;
+    }
+
     /** Multiplies aimed spread: optics settle the aim, a gun with no stock wanders. */
     public static double aimSpreadFactor(ItemStack gun) {
         ZcConfig.Guns cfg = ZcConfig.get().guns;
-        String optic = key(gun, Slot.OPTIC);
-        double f = optic == null ? 1.0 : switch (optic) {
-            case "red_dot" -> cfg.redDotAimSpread;
-            case "holo" -> cfg.holoAimSpread;
-            case "scope_4x" -> cfg.scopeAimSpread;
-            default -> 1.0;
-        };
+        Optic optic = optic(gun);
+        double f = optic == null ? 1.0 : optic.spread();
+        if (magnified(gun)) {
+            f = Math.min(f, cfg.scopeAimSpread);
+        }
         return f * (stockless(gun) ? cfg.noStockSpread : 1.0);
     }
 
@@ -313,25 +369,55 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
     }
 
     public static boolean hasLight(ItemStack gun) {
-        return has(gun, Slot.SIDE_RAIL, "light");
+        return key(gun, Slot.SIDE_RAIL) != null;        // the weapon light or the compact one
     }
 
     public static boolean hasLaser(ItemStack gun) {
         return has(gun, Slot.RIGHT_RAIL, "laser");
     }
 
-    /** Multiplies the kick: a foregrip tames it, no stock makes it worse. */
+    /** Multiplies the kick: any grip tames it, no stock makes it worse. */
     public static double recoilFactor(ItemStack gun) {
         ZcConfig.Guns cfg = ZcConfig.get().guns;
-        return (key(gun, Slot.UNDERBARREL) != null ? cfg.foregripRecoil : 1.0) * (stockless(gun) ? cfg.noStockRecoil : 1.0);
+        String under = key(gun, Slot.UNDERBARREL);
+        boolean grip = under != null && !under.equals("launcher");
+        return (grip ? cfg.foregripRecoil : 1.0) * (stockless(gun) ? cfg.noStockRecoil : 1.0);
+    }
+
+    /** A bipod is folded down on the gun: crouched, it steadies the aim and soaks up the kick. */
+    public static boolean hasBipod(ItemStack gun) {
+        return key(gun, Slot.BIPOD) != null;
+    }
+
+    /** An underbarrel grenade launcher is mounted. */
+    public static boolean hasLauncher(ItemStack gun) {
+        return has(gun, Slot.UNDERBARREL, "launcher");
     }
 
     public static boolean suppressed(ItemStack gun) {
-        return has(gun, Slot.MUZZLE, "suppressor");
+        return key(gun, Slot.MUZZLE) != null || GunType.of(gun) == GunType.SUPPRESSED_RIFLE;     // its can is built in
     }
 
+    /** Looking down the sights shows the scope picture, not the gun: a scope you look into, or the magnifier. */
     public static boolean scoped(ItemStack gun) {
-        return has(gun, Slot.OPTIC, "scope_4x");
+        Optic optic = optic(gun);
+        return magnified(gun) || optic != null && optic.overlay();
+    }
+
+    /** The field of view on the sights, as a share of normal, or a negative number for the gun's own. */
+    public static double aimZoom(ItemStack gun) {
+        Optic optic = optic(gun);
+        double zoom = optic == null ? 1 : optic.zoom();
+        if (magnified(gun)) {
+            zoom = Math.min(zoom, 1 / 3.0);
+        }
+        return zoom < 1 ? zoom : -1;
+    }
+
+    /** The reticle drawn over a sight the gun stays drawn behind, NONE when there's no such sight. */
+    public static Reticle reticle(ItemStack gun) {
+        Optic optic = optic(gun);
+        return optic == null || scoped(gun) ? Reticle.NONE : optic.reticle();
     }
 
     private static boolean stockless(ItemStack gun) {
@@ -339,6 +425,16 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
     }
 
     // ---- the item model's view ----
+
+    /** Writes the model data of a gun that has none yet (straight from a command or the creative tab), so it's
+     * drawn with what it comes with. Returns true if it did. */
+    public static boolean ensureModel(ItemStack gun) {
+        if (!isModular(gun) || gun.has(DataComponents.CUSTOM_MODEL_DATA)) {
+            return false;
+        }
+        refreshModel(gun);
+        return true;
+    }
 
     /** Rewrites the part keys in the gun's model data, keeping the reload step and flash numbers. */
     public static void refreshModel(ItemStack gun) {

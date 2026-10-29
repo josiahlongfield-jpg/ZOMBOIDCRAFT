@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/clothing/flight_deck_jersey/body"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/clothing/flight_deck_jersey/body",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "clothing/flight_deck_jersey",
+   "part": "body"
+  }
  }
 }

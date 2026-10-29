@@ -10,7 +10,8 @@ middle, every 2) put it on the circle. Names: rd_{mat}_{turn}_{depth} with turn 
 and depth 0..8.
 
 - walls: stave (concrete staves), stave_hoop (with its steel hoop), blue (glass-lined), bin
-  (corrugated grain bin), brick;
+  (corrugated grain bin), brick; wood (a water tower's timber staves, wood_hoop with its iron hoop),
+  wtw / wtb (a steel water tower's white or blue shell); soot (a smokestack's blackened lip);
 - a roof's tiers: rd_{galv,blue,tinred}_{s,m}_{turn}_{depth}, a block-high ring of four courses
   stepping in 2 px (s, steep) or 4 px (m, 45 degrees) each, filled flat behind; the top of the roof
   is rd_{galv,blue,tinred}_flat;
@@ -28,12 +29,17 @@ TURNS = {"0": 0.0, "m22": -22.5, "p22": 22.5, "p45": 45.0}
 DEPTHS = [-8, -6, -4, -2, 0, 2, 4, 6, 8]
 INSIDE = "concrete_dark"
 WALLS = {"stave": "silo_stave", "blue": "silo_blue", "bin": "bin_ribbed", "brick": "brick_red",
-         "field": "fm_fieldstone", "tank": "ext_galv", "crib": "fm_mesh", "paddock": "fm_ring_boards"}
+         "field": "fm_fieldstone", "tank": "ext_galv", "crib": "fm_mesh", "paddock": "fm_ring_boards",
+         "oil": "tk_oil", "oilrust": "tk_oil_rust", "slip": "tk_slip", "lhw": "lh_white", "lhr": "lh_red",
+         "wood": "wt_stave", "wtw": "tank_white", "wtb": "tank_blue", "soot": "brick_dark_soot"}
 # what each wall shows inside (a stock tank and a corn crib's mesh are the same both sides)
-INNER = {"tank": "ext_galv", "crib": "fm_mesh", "field": "fm_fieldstone", "paddock": "fm_ring_boards"}
+INNER = {"wood": "wt_stave", "tank": "ext_galv", "crib": "fm_mesh", "field": "fm_fieldstone", "paddock": "fm_ring_boards"}
 TITLES = {"stave": "Stave Silo", "blue": "Silo", "bin": "Grain Bin", "brick": "Brick Silo", "field": "Stone Curb",
-          "tank": "Stock Tank", "crib": "Corn Crib", "paddock": "Round Pen"}
-TIERS = {"galv": "ext_galv", "blue": "silo_blue", "tinred": "ext_tin_red_tread"}
+          "tank": "Stock Tank", "crib": "Corn Crib", "paddock": "Round Pen", "oil": "Fuel Tank", "oilrust": "Fuel Tank",
+          "slip": "Grain Silo", "lhw": "Lighthouse", "lhr": "Lighthouse", "wood": "Water Tank",
+          "wtw": "Water Tank", "wtb": "Water Tank", "soot": "Smokestack"}
+TIERS = {"galv": "ext_galv", "blue": "silo_blue", "tinred": "ext_tin_red_tread", "oil": "tk_oil_roof", "lhcap": "lh_cap",
+         "wood": "wt_roof", "wtw": "tank_white", "wtb": "tank_blue"}
 GALV = "ext_galv"
 
 
@@ -61,8 +67,9 @@ def box(x0, y0, z0, x1, y1, z1, tex, r):
     return b
 
 
-def panel(turn, depth, tex, inner=INSIDE, hoop=False, thick=3):
-    """The panel 3 px thick, its outside face on the circle; a hoop band proud of it."""
+def panel(turn, depth, tex, inner=INSIDE, hoop=False, thick=3, girder=None):
+    """The panel 3 px thick, its outside face on the circle; a hoop band proud of it, or a fuel
+    tank's wind girder (an angle ring standing out, its lip turned down)."""
     L = length(turn)
     cx, cz = centre(turn, depth)
     r = rot(turn, cx, cz)
@@ -70,12 +77,16 @@ def panel(turn, depth, tex, inner=INSIDE, hoop=False, thick=3):
     out = [box(cx - L / 2, 0, cz, cx + L / 2, 16, cz + thick, faces, r)]
     if hoop:
         out.append(box(cx - L / 2, 7, cz - 0.6, cx + L / 2, 8, cz, GALV, r))
+    if girder:
+        out += [box(cx - L / 2, 12, cz - 2.4, cx + L / 2, 12.8, cz, girder, r),
+                box(cx - L / 2, 10.6, cz - 2.4, cx + L / 2, 12, cz - 1.8, girder, r)]
     return out
 
 
-def tier(turn, depth, tex, inset):
+def tier(turn, depth, tex, inset, rail=False):
     """A ring of roof a block high: four courses, each `inset` px in from the one below, solid back
-    past the block's inner edge so the next ring up sits on it."""
+    past the block's inner edge so the next ring up sits on it. A railed ring (a fuel tank's eave)
+    has the handrail round its outer course: posts, knee rail and hand rail."""
     L = length(turn)
     cx, cz = centre(turn, depth)
     r = rot(turn, cx, cz)
@@ -83,8 +94,51 @@ def tier(turn, depth, tex, inset):
     out = []
     for j in range(4):
         f = {"north": tex, "up": tex, "east": tex, "west": tex, "south": INSIDE, "down": INSIDE}
-        out.append(box(cx - L / 2, 4 * j, cz + j * inset, cx + L / 2, 4 * j + 4, cz + reach, f, r))
+        out.append(box(cx - L / 2, 4 * j, cz + min(j * inset, reach - 2), cx + L / 2, 4 * j + 4, cz + reach, f, r))
+    if rail:
+        out += [box(cx - L / 2, 14, cz + 0.4, cx + L / 2, 15, cz + 1.4, GALV, r),
+                box(cx - L / 2, 9.4, cz + 0.4, cx + L / 2, 10.2, cz + 1.2, GALV, r)]
+        x = cx - L / 2 + 1
+        while x < cx + L / 2 - 1:
+            out.append(box(x, 4, cz + 0.4, x + 1, 14, cz + 1.4, GALV, r))
+            x += 8
     return out
+
+
+def rail(turn, depth):
+    """A ring railing (a lighthouse gallery's): toe plate, posts, a knee rail and a hand rail on
+    the circle, nothing behind."""
+    L = length(turn)
+    cx, cz = centre(turn, depth)
+    r = rot(turn, cx, cz)
+    out = [box(cx - L / 2, 0, cz, cx + L / 2, 1.5, cz + 0.6, GALV, r), box(cx - L / 2, 14, cz, cx + L / 2, 15.2, cz + 1.2, "lh_cap", r),
+           box(cx - L / 2, 7.5, cz + 0.2, cx + L / 2, 8.3, cz + 1, "lh_cap", r)]
+    x = cx - L / 2 + 2
+    while x < cx + L / 2 - 1:
+        out.append(box(x, 0, cz + 0.2, x + 1, 14, cz + 1, "lh_cap", r))
+        x += 6
+    return out
+
+
+def glaze(turn, depth):
+    """A lantern's glazing on the circle: the panes in their astragals, a bar across the middle,
+    the sill and the head."""
+    L = length(turn)
+    cx, cz = centre(turn, depth)
+    r = rot(turn, cx, cz)
+    return [box(cx - L / 2, 1, cz + 0.6, cx + L / 2, 15, cz + 1, "lamp_glass", r),
+            box(cx - L / 2, 0, cz, cx + L / 2, 1.2, cz + 1.6, "lh_cap", r), box(cx - L / 2, 14.8, cz, cx + L / 2, 16, cz + 1.6, "lh_cap", r),
+            box(cx - L / 2, 7.6, cz + 0.2, cx + L / 2, 8.4, cz + 1.4, "lh_cap", r),
+            box(cx - 0.6, 0, cz + 0.1, cx + 0.6, 16, cz + 1.5, "lh_cap", r)]
+
+
+def lens(lit):
+    """The light: a Fresnel lens's drum of glass prisms on its pedestal, the bull's-eye, a cap."""
+    pr = "lh_prism_lit" if lit else "lh_prism"
+    c = [8, 8, 8]
+    return [[5, 0, 5, 11, 3, 11, "lh_cap"], [6.5, 3, 6.5, 9.5, 4, 9.5, GALV],
+            [3, 4, 3, 13, 14, 13, pr], [3, 4, 3, 13, 14, 13, pr, None, {"axis": "y", "angle": 45, "origin": c}],
+            [4, 14, 4, 12, 15.5, 12, "lh_cap"], [6, 15.5, 6, 10, 16, 10, "lh_cap"]]
 
 
 def cage():
@@ -135,14 +189,27 @@ def blocks():
         for i, d in enumerate(DEPTHS):
             for mat, tex in WALLS.items():
                 extra = {"render": "cutout"} if mat in ("crib", "paddock") else {}
-                add(f"rd_{mat}_{k}_{i}", panel(t, d, tex, INNER.get(mat, INSIDE), thick=1 if mat in ("tank", "crib", "paddock") else 3),
-                    TITLES[mat], "METAL" if mat in ("blue", "bin", "tank", "crib") else "WOOD" if mat == "paddock" else "STONE", **extra)
+                add(f"rd_{mat}_{k}_{i}", panel(t, d, tex, INNER.get(mat, INSIDE), thick=1 if mat in ("tank", "crib", "paddock", "oil", "oilrust", "wtw", "wtb") else 3),
+                    TITLES[mat], "METAL" if mat in ("blue", "bin", "tank", "crib", "oil", "oilrust", "wtw", "wtb")
+                    else "WOOD" if mat in ("paddock", "wood") else "STONE", **extra)
             add(f"rd_stave_hoop_{k}_{i}", panel(t, d, WALLS["stave"], hoop=True), "Stave Silo", "STONE")
+            add(f"rd_wood_hoop_{k}_{i}", panel(t, d, WALLS["wood"], INNER.get("wood", INSIDE), hoop=True), "Water Tank", "WOOD")
+            for mat in ("oil", "oilrust"):
+                add(f"rd_{mat}_hoop_{k}_{i}", panel(t, d, WALLS[mat], thick=1, girder=WALLS[mat]), "Fuel Tank", "METAL")
             for mat, tex in TIERS.items():
                 for slope, inset in (("s", 2), ("m", 4)):
                     add(f"rd_{mat}_{slope}_{k}_{i}", tier(t, d, tex, inset), "Silo Roof", "METAL")
+            # a fuel tank's low cone: half a block in a course, the eave ring railed
+            add(f"rd_oil_l_{k}_{i}", tier(t, d, TIERS["oil"], 8), "Tank Roof", "METAL")
+            add(f"rd_oil_r_{k}_{i}", tier(t, d, TIERS["oil"], 8, rail=True), "Tank Roof", "METAL", render="cutout")
     for mat, tex in TIERS.items():
         out[f"rd_{mat}_flat"] = {"tex": {"up": tex, "side": tex, "down": INSIDE}, "title": "Silo Roof", "sound": "METAL"}
+    for k, t in TURNS.items():
+        for i, d in enumerate(DEPTHS):
+            add(f"rd_rail_{k}_{i}", rail(t, d), "Gallery Rail", "METAL", render="cutout")
+            add(f"rd_glaze_{k}_{i}", glaze(t, d), "Lantern Glazing", "GLASS", render="cutout")
+    add("rd_lens", lens(False), "Lighthouse Lens", "GLASS", rotate=None)
+    add("rd_lens_lit", lens(True), "Lighthouse Lens", "GLASS", rotate=None, light=15)
     add("rd_cage", cage(), "Caged Ladder", "METAL", climb=True)
     add("rd_finial", finial(), "Silo Cap", "METAL", rotate=None)
     add("rd_bin_cap", bin_cap(), "Bin Cap", "METAL", rotate=None)

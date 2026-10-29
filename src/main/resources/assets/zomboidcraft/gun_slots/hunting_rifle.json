@@ -5,43 +5,64 @@
   {
    "slot": "optic",
    "mount": [
-    8.0,
-    8.809,
-    9.743
+    8.009,
+    8.141,
+    13.54
    ],
    "ghost": "zomboidcraft:weapon/ghost/hunting_rifle_optic",
    "fits": [
     "zomboidcraft:red_dot_sight",
     "zomboidcraft:holo_sight",
-    "zomboidcraft:scope_4x"
+    "zomboidcraft:mini_red_dot",
+    "zomboidcraft:compact_red_dot",
+    "zomboidcraft:scope_4x",
+    "zomboidcraft:combat_scope",
+    "zomboidcraft:rifle_scope",
+    "zomboidcraft:precision_scope",
+    "zomboidcraft:hunting_scope",
+    "zomboidcraft:long_range_scope"
    ],
-   "default": null
+   "default": "zomboidcraft:hunting_scope"
   },
   {
    "slot": "muzzle",
    "mount": [
-    8.0,
-    7.998,
-    -9.963
+    7.986,
+    7.978,
+    -3.448
    ],
    "ghost": "zomboidcraft:weapon/ghost/hunting_rifle_muzzle",
    "fits": [
+    "zomboidcraft:sniper_suppressor",
     "zomboidcraft:rifle_suppressor"
    ],
-   "default": null
+   "default": "zomboidcraft:sniper_suppressor"
   },
   {
    "slot": "magazine",
    "mount": [
     8.0,
-    6.195,
-    8.432
+    6.5,
+    13.35
    ],
    "ghost": "zomboidcraft:weapon/ghost/hunting_rifle_magazine",
    "fits": [
     "zomboidcraft:hunting_rifle_magazine"
    ],
    "default": "zomboidcraft:hunting_rifle_magazine"
+  },
+  {
+   "slot": "bipod",
+   "mount": [
+    8.0,
+    7.693,
+    3.475
+   ],
+   "ghost": "zomboidcraft:weapon/ghost/hunting_rifle_bipod",
+   "fits": [
+    "zomboidcraft:bipod"
+   ],
+   "default": "zomboidcraft:bipod"
   }
  ]
 }

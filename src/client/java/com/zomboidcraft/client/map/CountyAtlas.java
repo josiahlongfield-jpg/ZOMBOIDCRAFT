@@ -41,10 +41,11 @@ import org.jetbrains.annotations.Nullable;
  * sends its seed, {@link MapNet.Atlas}), so it shows every street, roof and wood without anyone having been there.
  *
  * <p>Four levels of 256-pixel tiles: a block a pixel, then 4, 16 and 64 blocks a pixel (the last is the whole county
- * in one tile). The two far-out levels are a sketch of land, water, roads and built-up areas, made in seconds when
- * you join; the two close levels read every place's buildings column by column, the colour of the top block as a
- * Minecraft map would show it, shaded for height. Those are made as you look at them, nearest first, then in the
- * background around you, and kept on disk per county and mod version.
+ * in one tile). The two close levels read every place's buildings column by column, the colour of the top block as a
+ * Minecraft map would show it, shaded for height. The two far-out levels are shrunk from the second (Josiah
+ * 2026-10-29: as much detail zoomed out as in), a quick sketch of land, water and roads standing in for whatever
+ * isn't drawn yet. The second level fills in for the whole county in the background, nearest you first, and every
+ * finished tile is kept on disk per county and mod version.
  */
 public final class CountyAtlas {
     public static final int PX = 256;
@@ -97,6 +98,10 @@ public final class CountyAtlas {
         /** Background work once nothing's been asked for: the sketch levels, then the county near you. */
         final Deque<Long> fill = new ArrayDeque<>();
         final AtomicLong done = new AtomicLong();
+        /** Each finished second-level tile shrunk to a quarter, for the far-out levels to be built from. */
+        final Map<Long, int[]> small = new ConcurrentHashMap<>();
+        /** The far-out levels' sketches, kept while their detail fills in. */
+        final Map<Long, int[]> sketches = new ConcurrentHashMap<>();
         volatile boolean stop;
 
         State(long seed, boolean planned, Path folder) {
@@ -369,6 +374,23 @@ public final class CountyAtlas {
                     }
                 }
             }
+            if (s.fill.isEmpty()) {
+                // then the rest of the county at the second level, nearest first: the far-out levels are made of it
+                lv = 1;
+                n = across(lv);
+                span = PX * SCALE[lv];
+                cx = (int) Math.floor((x + HALF) / span);
+                cz = (int) Math.floor((z + HALF) / span);
+                for (int r = 4; r < 2 * n; r++) {
+                    for (int tz = cz - r; tz <= cz + r; tz++) {
+                        for (int tx = cx - r; tx <= cx + r; tx++) {
+                            if (Math.max(Math.abs(tx - cx), Math.abs(tz - cz)) != r || tx < 0 || tz < 0 || tx >= n || tz >= n) continue;
+                            long k = key(lv, tx, tz);
+                            if (!s.onDisk.contains(k)) s.fill.add(k);
+                        }
+                    }
+                }
+            }
             s.notifyAll();
         }
     }
@@ -418,7 +440,16 @@ public final class CountyAtlas {
                 NativeImage image = null;
                 Path file = s.folder.resolve(file(k));
                 if (s.onDisk.contains(k)) image = read(file);
-                if (image == null) {
+                if (image == null && level(k) >= 2) {
+                    // far out: shrunk from the second level where it's drawn, the sketch where it isn't yet
+                    boolean[] whole = new boolean[1];
+                    image = compose(s, k, whole);
+                    if (whole[0] && !s.stop) {
+                        image.writeToFile(file);
+                        s.onDisk.add(k);
+                        s.sketches.remove(k);
+                    }
+                } else if (image == null) {
                     image = draw(s, k);
                     if (s.stop) {
                         image.close();
@@ -427,6 +458,18 @@ public final class CountyAtlas {
                     image.writeToFile(file);
                     s.onDisk.add(k);
                     s.done.incrementAndGet();
+                }
+                if (level(k) == 1 && s.small.get(k) == null) {
+                    s.small.put(k, shrink(image, 4));
+                    // the far-out tiles over it take it in
+                    synchronized (s) {
+                        for (int lv = 2; lv < LEVELS; lv++) {
+                            int f = SCALE[lv] / SCALE[1];
+                            long up = key(lv, tx(k) / f, tz(k) / f);
+                            if (!s.onDisk.contains(up) && !s.fill.contains(up)) s.fill.addFirst(up);
+                        }
+                        s.notifyAll();
+                    }
                 }
                 if (wanted || level(k) >= 2) {
                     ready.add(new Ready(k, image));
@@ -439,6 +482,100 @@ public final class CountyAtlas {
                 s.working.remove(k);
             }
         }
+    }
+
+    /** A tile shrunk by a factor, each pixel the average of the square it stands for. */
+    private static int[] shrink(NativeImage image, int f) {
+        int n = PX / f;
+        int[] out = new int[n * n];
+        for (int j = 0; j < n; j++) {
+            for (int i = 0; i < n; i++) {
+                int a = 0, r = 0, g = 0, b = 0;
+                for (int y = 0; y < f; y++) {
+                    for (int x = 0; x < f; x++) {
+                        int c = image.getPixel(i * f + x, j * f + y);
+                        a += c >>> 24;
+                        r += c >> 16 & 0xFF;
+                        g += c >> 8 & 0xFF;
+                        b += c & 0xFF;
+                    }
+                }
+                int q = f * f;
+                out[j * n + i] = (a / q) << 24 | (r / q) << 16 | (g / q) << 8 | b / q;
+            }
+        }
+        return out;
+    }
+
+    /** A second-level tile shrunk to a quarter, from memory or from disk; null if it isn't drawn yet. */
+    private static int @Nullable [] small(State s, long k) {
+        int[] got = s.small.get(k);
+        if (got != null || !s.onDisk.contains(k)) return got;
+        NativeImage image = read(s.folder.resolve(file(k)));
+        if (image == null) return null;
+        try {
+            got = shrink(image, 4);
+        } finally {
+            image.close();
+        }
+        s.small.put(k, got);
+        return got;
+    }
+
+    /**
+     * A far-out tile made of the second level's tiles under it, shrunk; the sketch shows where they aren't drawn yet.
+     * {@code whole[0]} says whether every one was there (only then is it kept on disk).
+     */
+    private static NativeImage compose(State s, long k, boolean[] whole) {
+        int lv = level(k), f = SCALE[lv] / SCALE[1], cell = PX / f;
+        int[] base = s.sketches.get(k);
+        if (base == null) {
+            NativeImage sk = draw(s, k);
+            base = new int[PX * PX];
+            for (int j = 0; j < PX; j++) for (int i = 0; i < PX; i++) base[j * PX + i] = sk.getPixel(i, j);
+            sk.close();
+            s.sketches.put(k, base);
+        }
+        NativeImage image = new NativeImage(PX, PX, false);
+        for (int j = 0; j < PX; j++) for (int i = 0; i < PX; i++) image.setPixel(i, j, base[j * PX + i]);
+        whole[0] = true;
+        int n1 = across(1);
+        for (int cz = 0; cz < f; cz++) {
+            for (int cx = 0; cx < f; cx++) {
+                int tx = tx(k) * f + cx, tz = tz(k) * f + cz;
+                if (tx >= n1 || tz >= n1) continue;
+                int[] sm = small(s, key(1, tx, tz));
+                if (sm == null) {
+                    whole[0] = false;
+                    continue;
+                }
+                // the quarter-size tile is 64 across; it goes into a cell 64 (level 2) or 16 (level 3) across
+                int step = 64 / cell;
+                for (int j = 0; j < cell; j++) {
+                    for (int i = 0; i < cell; i++) {
+                        int c;
+                        if (step == 1) {
+                            c = sm[j * 64 + i];
+                        } else {
+                            int a = 0, r = 0, g = 0, b = 0;
+                            for (int y = 0; y < step; y++) {
+                                for (int x = 0; x < step; x++) {
+                                    int p = sm[(j * step + y) * 64 + i * step + x];
+                                    a += p >>> 24;
+                                    r += p >> 16 & 0xFF;
+                                    g += p >> 8 & 0xFF;
+                                    b += p & 0xFF;
+                                }
+                            }
+                            int q = step * step;
+                            c = (a / q) << 24 | (r / q) << 16 | (g / q) << 8 | b / q;
+                        }
+                        image.setPixel(cx * cell + i, cz * cell + j, c);
+                    }
+                }
+            }
+        }
+        return image;
     }
 
     private static CountyGen gen(State s) {

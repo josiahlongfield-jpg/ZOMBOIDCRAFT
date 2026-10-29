@@ -106,6 +106,7 @@ final class BigShip {
         stairs(x0 + 2);
         funnel(burnt);
         lifeboats();
+        fair();
         paint();
         if (side != 0) {
             moor();
@@ -151,6 +152,7 @@ final class BigShip {
         stairs(x0 + 2);
         funnel(burnt);
         lifeboats();
+        fair();
         paint();
         if (side != 0) {
             moor();
@@ -230,6 +232,64 @@ final class BigShip {
         return seam ? c + "_seam" : x % 12 == 0 ? c + "_butt" : c;
     }
 
+    /**
+     * Eases her plating over the blocks' steps where she rounds at the bow and the stern: on each
+     * row above the water a plate a quarter, a half or three quarters of a block proud of the last
+     * block (vessel_fair_), out to where her lines really run, along her sides and forward at the
+     * stem, the forecastle's sides the same. The parallel body is flat already.
+     */
+    private void fair() {
+        for (int y = Ships.SEA + 1; y <= fcTop + 1; y++) {
+            int yy = Math.min(y, deck);
+            int from = y > deck ? fc : 0;
+            for (int x = from; x < len + 2; x++) {
+                double hh = h.half(x, yy);
+                if (hh <= 0 || hh > hb - 0.01) {
+                    continue;
+                }
+                for (int s : new int[] {-1, 1}) {
+                    int ze = edgeZ(x, yy, s);
+                    if (ze != Integer.MIN_VALUE) {
+                        plate(x, y, ze + s, hh - (s > 0 ? ze + 1 : -ze), s > 0 ? "south" : "north");
+                    }
+                }
+            }
+            // forward at the stem: each row's end out to where the bow's line crosses it
+            for (int z = -hb - 1; z <= hb; z++) {
+                int xe = -1;
+                for (int x = len + 1; x >= h.bowStart() - 4; x--) {
+                    if (h.in(x, yy, z)) {
+                        xe = x;
+                        break;
+                    }
+                }
+                if (xe < h.bowStart() - 3) {
+                    continue;
+                }
+                double target = Math.abs(z + 0.5), lo = xe + 0.5, hi = xe + 1.5;
+                for (int i = 0; i < 12; i++) {
+                    double m = (lo + hi) / 2;
+                    if (h.halfAt(m, yy) > target) {
+                        lo = m;
+                    } else {
+                        hi = m;
+                    }
+                }
+                plate(xe + 1, y, z, lo - (xe + 1), "east");
+            }
+        }
+    }
+
+    /** A fairing plate g of a block thick against the hull, in the paint of the plating at y. */
+    private void plate(int x, int y, int z, double g, String facing) {
+        int k = Math.min(3, (int) Math.round(g * 4));
+        if (k < 1) {
+            return;
+        }
+        String c = (y <= lwl ? "bottom" : y <= lwl + 2 ? "black" : hull) + ((y - h.keel()) % 3 == 0 ? "_seam" : "");
+        p.setIfAir(x, y, z, "vessel_fair_" + c + "_" + k + "[facing=" + facing + "]");
+    }
+
     /** The rail round the deck's edge from x0 to x1: along her sides, across the stern, crossed at the turns. */
     private void rails(int from, int to) {
         for (int x = from; x < to; x++) {
@@ -285,7 +345,7 @@ final class BigShip {
     private void paint() {
         int n = name.length();
         int nameY = deck - 2;
-        int xEnd = h.bowStart() + 3;
+        int xEnd = Math.min(h.bowStart() + 3, len - 16);  // clear of the hawse on a short hull
         for (int i = 0; i < n; i++) {
             char c = name.charAt(i);
             if (c == ' ') {
@@ -523,13 +583,7 @@ final class BigShip {
 
     /** A box 12 long along x and 3 x 3 from (x, y, z), its doors on the aft end. */
     private void box(int x, int y, int z, String colour) {
-        for (int i = 0; i < 12; i++) {
-            for (int k = 0; k < 3; k++) {
-                for (int j = 0; j < 3; j++) {
-                    p.set(x + i, y + j, z + k, i == 0 && k == 1 && j < 2 ? colour + "_door[facing=west]" : colour);
-                }
-            }
-        }
+        Boxes.place(p, x, y, z, 12, colour, true, true, false);
     }
 
     /** The bulker's deck from x to end: hatch covers over the holds, a deck crane between every other pair. */

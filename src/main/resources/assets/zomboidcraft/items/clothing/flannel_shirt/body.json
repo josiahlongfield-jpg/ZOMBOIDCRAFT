@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/clothing/flannel_shirt/body"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/clothing/flannel_shirt/body",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "clothing/flannel_shirt",
+   "part": "body"
+  }
  }
 }

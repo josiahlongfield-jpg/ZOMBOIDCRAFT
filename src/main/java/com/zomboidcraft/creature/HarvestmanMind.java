@@ -280,6 +280,21 @@ public final class HarvestmanMind {
         return 1;
     }
 
+    /**
+     * Whether it's about harming someone (stalking, lying in wait, striking, holding or feeding, its tricks) or feeding
+     * on the dead: its skull and plates burn red then, blue the rest of the time.
+     */
+    public boolean menace() {
+        if (h.held != null) {
+            return true;
+        }
+        return switch (plan) {
+            case STALK, AMBUSH, STRIKE, DRAG, FEED, ZOMBIE, DOOR, HERD, HORDE, SHADOW, SPLIT, FEINT, RETREAT, GLIMPSE,
+                 DISPLAY -> true;
+            default -> false;
+        };
+    }
+
     public double speedScale() {
         double s = 1 + 0.04 * (stage - 1);
         if (hunger > 0.95) {
@@ -382,6 +397,7 @@ public final class HarvestmanMind {
             seen++;
             wary = Math.min(1, wary + 0.08);
         }
+        rages(level, c, was);
         if (quarry instanceof Player p && p.isAlive()) {
             quarrySeen = p.position();
         }
@@ -422,6 +438,38 @@ public final class HarvestmanMind {
             }
         }
         return best != null ? best : spot(HIDE, range);
+    }
+
+    /** When it last let the one it hunts know it had seen them. */
+    private long spottedAt = -100_000;
+
+    /**
+     * Its rage, where they can see it: when it has the one it hunts in sight again after a while (to let them know
+     * it's seen them); and now and then, for no reason it gives.
+     */
+    private void rages(ServerLevel level, Vec3 c, boolean was) {
+        if (h.held() != null || plan == FLEE || plan == DRAG || plan == FEED || plan == LAIR || plan == REST || plan == HIDE
+                || plan == STRIKE && phase >= 1) {
+            return;
+        }
+        ServerPlayer t = target(level);
+        if (t == null) {
+            return;
+        }
+        double d = t.position().distanceTo(c);
+        if (d > 40 || !lookingAt(t, c)) {
+            return;
+        }
+        long now = level.getGameTime();
+        if (now - spottedAt > 20 * 90) {
+            spottedAt = now;
+            if (h.getRandom().nextFloat() < 0.4f && h.rage(t.getEyePosition(), false)) {
+                return;
+            }
+        }
+        if (d < 32 && h.getRandom().nextFloat() < 0.0015f) {
+            h.rage(t.getEyePosition(), false);
+        }
     }
 
     /** Is this player looking right at it, and could they make it out (in the light, or close)? */
@@ -608,7 +656,8 @@ public final class HarvestmanMind {
                         curious = Math.max(0, curious - 0.3);
                         heard = null;
                     }
-                    wait = 20 * (plan == HIDE ? 6 + h.getRandom().nextInt(10) : 2 + h.getRandom().nextInt(5));
+                    // it settles where it's got to and stands a good while (its idles), rather than turning straight round again
+                    wait = 20 * (plan == HIDE ? 8 + h.getRandom().nextInt(12) : 6 + h.getRandom().nextInt(10));
                     h.goal = null;
                     h.look = heard;
                 }
@@ -1196,6 +1245,9 @@ public final class HarvestmanMind {
         if (lost != 0) {
             workScrap(level);
         }
+        if (h.cut() != 0 && planTicks > 0 && planTicks % 12000 == 0) {
+            h.regrowLimb(Integer.numberOfTrailingZeros(h.cut()));
+        }
         if (lost != 0 && planTicks > 0 && planTicks % 24000 == 0) {
             h.regrow(Integer.numberOfTrailingZeros(lost));
             if (heap != null) {
@@ -1319,6 +1371,10 @@ public final class HarvestmanMind {
         }
         // hit while it stands lit up for them: it doesn't stay to be shot at
         if (tricks.shotAt(level, by != null ? by.position() : h.centre())) {
+            return;
+        }
+        // hurt: now and then it stands its ground and rages at them, to scare them off
+        if (by instanceof ServerPlayer p && plan != STRIKE && h.getRandom().nextFloat() < 0.2f && h.rage(p.getEyePosition(), false)) {
             return;
         }
         // hurt, but not badly: now and then it only pretends to run, back to somewhere it can wait over them

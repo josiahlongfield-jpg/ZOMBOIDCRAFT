@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "concrete_dark": "zomboidcraft:block/city/concrete_dark",
+    "wt_roof": "zomboidcraft:block/city/wt_roof",
+    "particle": "zomboidcraft:block/city/wt_roof"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wt_roof",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#wt_roof",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#wt_roof",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#wt_roof",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#wt_roof",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#concrete_dark",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

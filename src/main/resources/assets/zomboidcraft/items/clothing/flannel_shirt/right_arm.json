@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/clothing/flannel_shirt/right_arm"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/clothing/flannel_shirt/right_arm",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "clothing/flannel_shirt",
+   "part": "right_arm"
+  }
  }
 }

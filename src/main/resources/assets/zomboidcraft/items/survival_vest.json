@@ -11,8 +11,13 @@
    }
   ],
   "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/clothing/survival_vest"
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/survival_vest",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/survival_vest",
+    "part": "loot"
+   }
   }
  }
 }

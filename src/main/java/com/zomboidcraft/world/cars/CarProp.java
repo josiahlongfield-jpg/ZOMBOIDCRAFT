@@ -493,8 +493,7 @@ public class CarProp extends Entity {
             return true;
         }
         com.zomboidcraft.combat.GunType gun = com.zomboidcraft.combat.GunType.of(stack);
-        return gun == com.zomboidcraft.combat.GunType.PISTOL || gun == com.zomboidcraft.combat.GunType.REVOLVER
-                || gun == com.zomboidcraft.combat.GunType.MAGNUM;
+        return gun != null && gun.handgun();
     }
 
     /** The seat a rider has (0 the driver's), or -1 if they aren't riding. */

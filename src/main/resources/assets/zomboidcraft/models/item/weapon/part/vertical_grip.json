@@ -1,0 +1,164 @@
+{
+ "gui_light": "front",
+ "textures": {
+  "0": "zomboidcraft:item/weapon/part/vertical_grip",
+  "particle": "zomboidcraft:item/weapon/part/vertical_grip"
+ },
+ "elements": [
+  {
+   "from": [
+    6.705,
+    5.023,
+    6.713
+   ],
+   "to": [
+    9.295,
+    10.977,
+    9.287
+   ],
+   "faces": {
+    "north": {
+     "uv": [
+      0.0625,
+      0.0625,
+      2.625,
+      6.0
+     ],
+     "texture": "#0"
+    },
+    "south": {
+     "uv": [
+      2.75,
+      0.0625,
+      5.3125,
+      6.0
+     ],
+     "texture": "#0"
+    },
+    "east": {
+     "uv": [
+      5.4375,
+      0.0625,
+      8.0,
+      6.0
+     ],
+     "texture": "#0"
+    },
+    "west": {
+     "uv": [
+      8.125,
+      0.0625,
+      10.6875,
+      6.0
+     ],
+     "texture": "#0"
+    },
+    "up": {
+     "uv": [
+      10.8125,
+      0.0625,
+      13.375,
+      2.625
+     ],
+     "texture": "#0"
+    },
+    "down": {
+     "uv": [
+      0.0625,
+      6.125,
+      2.625,
+      8.6875
+     ],
+     "texture": "#0"
+    }
+   }
+  }
+ ],
+ "display": {
+  "gui": {
+   "rotation": [
+    20,
+    60,
+    0
+   ],
+   "translation": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "scale": [
+    1.9846,
+    1.9846,
+    1.9846
+   ]
+  },
+  "firstperson_righthand": {
+   "rotation": [
+    0,
+    -90,
+    25
+   ],
+   "translation": [
+    1.13,
+    3.2,
+    1.13
+   ],
+   "scale": [
+    1.3866,
+    1.3866,
+    1.3866
+   ]
+  },
+  "thirdperson_righthand": {
+   "rotation": [
+    0,
+    -90,
+    55
+   ],
+   "translation": [
+    0.0,
+    4.0,
+    0.5
+   ],
+   "scale": [
+    1.6255,
+    1.6255,
+    1.6255
+   ]
+  },
+  "ground": {
+   "rotation": [
+    0,
+    0,
+    0
+   ],
+   "translation": [
+    0.0,
+    2.0,
+    0.0
+   ],
+   "scale": [
+    0.496,
+    0.496,
+    0.496
+   ]
+  },
+  "fixed": {
+   "rotation": [
+    0,
+    180,
+    0
+   ],
+   "translation": [
+    0.0,
+    0.0,
+    -0.0
+   ],
+   "scale": [
+    0.8432,
+    0.8432,
+    0.8432
+   ]
+  }
+ }
+}

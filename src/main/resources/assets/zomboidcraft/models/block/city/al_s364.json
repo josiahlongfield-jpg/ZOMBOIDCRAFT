@@ -1,0 +1,102 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_bin_open": "zomboidcraft:block/city/al_bin_open",
+    "al_psu": "zomboidcraft:block/city/al_psu",
+    "ap_bag_red": "zomboidcraft:block/city/ap_bag_red",
+    "particle": "zomboidcraft:block/city/al_bin_open"
+  },
+  "elements": [
+    {
+      "from": [
+        0.0,
+        8.0,
+        0
+      ],
+      "to": [
+        3.2,
+        16.0,
+        16
+      ],
+      "faces": {
+        "east": {
+          "texture": "#al_bin_open",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#al_psu",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        0.0,
+        8.8,
+        4.0
+      ],
+      "to": [
+        2.4,
+        15.2,
+        12.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ap_bag_red",
+          "uv": [
+            13.6,
+            0.8,
+            16.0,
+            7.2
+          ]
+        },
+        "south": {
+          "texture": "#ap_bag_red",
+          "uv": [
+            0.0,
+            0.8,
+            2.4,
+            7.2
+          ]
+        },
+        "east": {
+          "texture": "#ap_bag_red",
+          "uv": [
+            4.0,
+            0.8,
+            12.0,
+            7.2
+          ]
+        },
+        "up": {
+          "texture": "#ap_bag_red",
+          "uv": [
+            0.0,
+            4.0,
+            2.4,
+            12.0
+          ]
+        },
+        "down": {
+          "texture": "#ap_bag_red",
+          "uv": [
+            0.0,
+            4.0,
+            2.4,
+            12.0
+          ]
+        }
+      }
+    }
+  ]
+}

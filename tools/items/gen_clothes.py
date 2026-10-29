@@ -36,6 +36,12 @@ import model as M  # noqa: E402
 import paint as P  # noqa: E402
 import gen_bags as B  # noqa: E402
 import toon as T  # noqa: E402
+import importlib.util  # noqa: E402
+import io  # noqa: E402
+import struct  # noqa: E402
+_cars = importlib.util.spec_from_file_location('cars_pack', ROOT / 'tools/cars/pack.py')
+_cars_pack = importlib.util.module_from_spec(_cars)
+_cars.loader.exec_module(_cars_pack)
 
 ASSETS = ROOT / 'src/main/resources/assets/zomboidcraft'
 NS = 'zomboidcraft'
@@ -712,13 +718,14 @@ def build_motorcycle_helmet(g):
 
 def build_police_cap(g):
     g.box('head', (-4.45, -6.4, -4.45), (4.45, EYES_HIGH - 0.25, 4.45), 'cloth')     # band
-    g.box('head', (-5.3, -7.6, -5.6), (5.3, -6.4, 5.0), 'cloth')                    # the wide flat top
-    g.box('head', (-4.9, -7.9, -5.2), (4.9, -7.6, 4.6), 'cloth')
+    # the wide flat top, its crown clear of the skin's hat layer (0.25 over the head), or hair shows through it
+    g.box('head', (-5.3, -8.4, -5.6), (5.3, -6.4, 5.0), 'cloth')
+    g.box('head', (-4.9, -8.7, -5.2), (4.9, -8.4, 4.6), 'cloth')
     g.box('head', (-3.8, EYES_HIGH - 0.55, -7.0), (3.8, EYES_HIGH - 0.2, -4.45), 'visor')
     g.box('head', (-3.9, -5.2, -4.62), (3.9, -4.95, -4.45), 'cord')                 # gold chin cord
     for s in (-1, 1):
         g.box('head', (s * 3.9 - 0.2, -5.3, -4.7), (s * 3.9 + 0.2, -4.85, -4.5), 'button')
-    g.box('head', (-0.9, -7.2, -5.7), (0.9, -5.4, -5.55), 'badge')
+    g.box('head', (-0.9, -7.8, -5.7), (0.9, -5.8, -5.55), 'badge')
     g.box('head', (-4.5, -5.0, -4.5), (4.5, EYES_HIGH - 0.25, 4.5), 'checker')      # chequered band
 
 
@@ -2090,6 +2097,15 @@ def paint(m, look, wear, seed):
     piece = T.pieces(m.parts)
     rng = np.random.default_rng(seed)
     patches = []
+    ink_min, T.INK_MIN = T.INK_MIN, float('inf')        # no painted outline: the mesh's ink hull draws it in game
+    try:
+        _paint_faces(m, look, wear, seed, piece, rng, patches)
+    finally:
+        T.INK_MIN = ink_min
+    return patches
+
+
+def _paint_faces(m, look, wear, seed, piece, rng, patches):
     for i, p in enumerate(m.parts):
         mates = [q for j, q in enumerate(m.parts) if j != i and piece[j] == piece[i]]
         for name, (_ax, _sgn, ua, _ud, va, _vd) in M.FACES.items():
@@ -2107,7 +2123,75 @@ def paint(m, look, wear, seed):
             lu, lv = p['hi'][ua] - p['lo'][ua], p['hi'][va] - p['lo'][va]
             rgb, _ink = T.style(f, rgb, p['mat'], M.PX, n[1], lu, lv)
             patches.append((i, name, np.clip(rgb, 0, 1)))
-    return patches
+
+
+OUTLINE = 0.04          # the ink hull round each garment, in pixels
+FACE_CORNERS = {        # a face's corners at uv (u0,v0), (u1,v0), (u0,v1), as Minecraft maps a block model's faces
+    'north': lambda a, b: ((b[0], b[1], a[2]), (a[0], b[1], a[2]), (b[0], a[1], a[2])),
+    'south': lambda a, b: ((a[0], b[1], b[2]), (b[0], b[1], b[2]), (a[0], a[1], b[2])),
+    'east': lambda a, b: ((b[0], b[1], b[2]), (b[0], b[1], a[2]), (b[0], a[1], b[2])),
+    'west': lambda a, b: ((a[0], b[1], a[2]), (a[0], b[1], b[2]), (a[0], a[1], a[2])),
+    'up': lambda a, b: ((a[0], b[1], a[2]), (b[0], b[1], a[2]), (a[0], b[1], b[2])),
+    'down': lambda a, b: ((a[0], a[1], b[2]), (b[0], a[1], b[2]), (a[0], a[1], a[2])),
+}
+NORMALS = {'north': (0, 0, -1), 'south': (0, 0, 1), 'east': (1, 0, 0), 'west': (-1, 0, 0), 'up': (0, 1, 0), 'down': (0, -1, 0)}
+
+
+def mesh_triangles(model):
+    """A block model's faces as triangles wound counter-clockwise from outside (the renderer culls), each corner
+    with its uv (0..1) and the direction the ink hull pushes it: straight out of every face of its box, so the
+    outline is the same width all round."""
+    rows = []
+    for e in model['elements']:
+        a, b = np.array(e['from'], float), np.array(e['to'], float)
+        mid = (a + b) / 2
+        for face, d in e['faces'].items():
+            c0, c1, c3 = (np.array(c, float) for c in FACE_CORNERS[face](a, b))
+            c2 = c1 + c3 - c0
+            u0, v0, u1, v1 = (x / 16 for x in d['uv'])
+            corner = {0: (c0, u0, v0), 1: (c1, u1, v0), 2: (c2, u1, v1), 3: (c3, u0, v1)}
+            n = np.array(NORMALS[face], float)
+            for tri in ((0, 3, 2), (0, 2, 1)):
+                pts = [corner[k][0] for k in tri]
+                if np.dot(np.cross(pts[1] - pts[0], pts[2] - pts[0]), n) < 0:
+                    tri = (tri[0], tri[2], tri[1])
+                for k in tri:
+                    pos, u, v = corner[k]
+                    push = np.sign(np.round(pos - mid, 4))
+                    rows.append((pos, u, v, push))
+    return rows
+
+
+def write_mesh(mesh_id, parts, png):
+    """Packs parts ({name: block model json}) and the garment's texture into meshes/<id>.zmesh, the format the
+    weapons thread's renderer reads (tools/meshguns/pack.py has it): drawn toon-style with an ink hull."""
+    buf = io.BytesIO()
+    png_bytes = png.read_bytes()
+    buf.write(b'ZMSH')
+    buf.write(struct.pack('>i', 3))
+    buf.write(struct.pack('>f', OUTLINE))
+    buf.write(struct.pack('>i', len(png_bytes)))
+    buf.write(png_bytes)
+    buf.write(struct.pack('>i', len(parts)))
+    for name, model in parts.items():
+        rows = mesh_triangles(model)
+        b = name.encode()
+        buf.write(struct.pack('>H', len(b)))
+        buf.write(b)
+        buf.write(struct.pack('>i', len(rows) // 3))
+        for pos, u, v, push in rows:
+            q = np.clip(np.round(pos * 1000), -32768, 32767).astype(int)
+            buf.write(struct.pack('>hhhHHbbb', *q, int(round(u * 65535)), int(round(v * 65535)),
+                                  *(int(x) * 127 for x in push)))
+    data = _cars_pack.scramble(zlib.compress(buf.getvalue(), 9), mesh_id)
+    dest = ASSETS / f'meshes/{mesh_id}.zmesh'
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    dest.write_bytes(data)
+
+
+def mesh_item(base, mesh_id, part):
+    """An item definition drawn by the shared mesh renderer, the block model still giving its display transforms."""
+    return {'type': 'minecraft:special', 'base': base, 'model': {'type': f'{NS}:mesh', 'id': mesh_id, 'part': part}}
 
 
 def main(only):
@@ -2136,17 +2220,23 @@ def main(only):
         blo, bhi = whole.bounds()
         shift = B.C - (blo + bhi) / 2
         whole.shift(shift)
-        M.dump(M.model_json(whole, uvs, ref, display(whole), gui_light='side'), ASSETS / f'models/item/clothing/{gid}.json')
+        whole_json = M.model_json(whole, uvs, ref, display(whole), gui_light='side')
+        M.dump(whole_json, ASSETS / f'models/item/clothing/{gid}.json')
+        mesh_id = f'clothing/{gid}'
         # worn in the head slot, ClothingLayer draws it: vanilla's own head layer gets nothing
         M.dump({'model': {'type': 'minecraft:select', 'property': 'minecraft:display_context',
                           'cases': [{'when': 'head', 'model': {'type': 'minecraft:empty'}}],
-                          'fallback': {'type': 'minecraft:model', 'model': ref}}}, ASSETS / f'items/{gid}.json')
+                          'fallback': mesh_item(ref, mesh_id, 'loot')}}, ASSETS / f'items/{gid}.json')
         parts = sorted({p['part'] for p in m.parts})
+        meshes = {'loot': whole_json}
         for part in parts:
             pm, idx = part_model(m, part, gid)
             puvs = {(k, f): uvs[(i, f)] for k, i in enumerate(idx) for f in M.FACES if (i, f) in uvs}
-            M.dump(M.model_json(pm, puvs, ref, {}, gui_light='side'), ASSETS / f'models/item/clothing/{gid}/{part}.json')
-            M.dump({'model': {'type': 'minecraft:model', 'model': f'{ref}/{part}'}}, ASSETS / f'items/clothing/{gid}/{part}.json')
+            pj = M.model_json(pm, puvs, ref, {}, gui_light='side')
+            M.dump(pj, ASSETS / f'models/item/clothing/{gid}/{part}.json')
+            M.dump({'model': mesh_item(f'{ref}/{part}', mesh_id, part)}, ASSETS / f'items/clothing/{gid}/{part}.json')
+            meshes[part] = pj
+        write_mesh(mesh_id, meshes, tex)
         lang[f'item.{NS}.{gid}'] = titles.get(gid, gid.replace('_', ' ').title())
         print(f'{gid}: {len(m.parts)} boxes on {", ".join(parts)}, {T}px')
     lang_path.write_text(json.dumps(lang, indent=2, ensure_ascii=False) + '\n')

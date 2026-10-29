@@ -136,7 +136,7 @@ public final class HarvestmanBody {
 
     // ------------------------------------------------------------------------------------------------ being shot
 
-    public static final int HULL = 0, CORE = 1, LEG = 2, EYES_ZONE = 3;
+    public static final int HULL = 0, CORE = 1, LEG = 2, EYES_ZONE = 3, LIMB = 4;
 
     /** Where a shot struck: how far along it, what (HULL, CORE, LEG or EYES_ZONE) and which leg. */
     public record Strike(double distance, int zone, int leg, Vec3 at) {
@@ -198,7 +198,7 @@ public final class HarvestmanBody {
     }
 
     /** How far along a ray it first comes within r of segment a-b, or infinity. */
-    private static double capsule(Vec3 eye, Vec3 dir, Vec3 a, Vec3 b, double r) {
+    public static double capsule(Vec3 eye, Vec3 dir, Vec3 a, Vec3 b, double r) {
         Vec3 ab = b.subtract(a), ao = eye.subtract(a);
         double abab = ab.dot(ab), abd = ab.dot(dir), abao = ab.dot(ao), dao = dir.dot(ao);
         double denom = abab - abd * abd;
