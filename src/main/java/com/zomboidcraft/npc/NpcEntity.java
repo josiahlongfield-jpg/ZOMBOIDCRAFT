@@ -33,10 +33,19 @@ public class NpcEntity extends PathfinderMob {
     /** Holding her gun up to shoot, and how many shots she's fired (each one kicks her shoulders back on the client). */
     private static final EntityDataAccessor<Boolean> AIMING = SynchedEntityData.defineId(NpcEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Integer> SHOTS = SynchedEntityData.defineId(NpcEntity.class, EntityDataSerializers.INT);
+    /** Clothes she has off (piece names, comma separated: NpcPieces), and ticks left of what she's saying. */
+    private static final EntityDataAccessor<String> HIDDEN = SynchedEntityData.defineId(NpcEntity.class, EntityDataSerializers.STRING);
+    private static final EntityDataAccessor<Integer> TALK = SynchedEntityData.defineId(NpcEntity.class, EntityDataSerializers.INT);
+    /** How long she lies where she fell before she's gone (her death clip runs about six seconds). */
+    private static final int DEATH_TICKS = 20 * 8;
 
     /** Client only: how far her gun is up (0..1) and a shot's kick fading, this tick and last, for the animator. */
     public float aimAnim, aimAnimO, kick, kickO;
     private int shotsSeen;
+    /** Client only: the skinned animator's state for her (client NpcSkinAnimator), kept with her. */
+    public Object clientAnim;
+
+    final NpcLines lines = new NpcLines();
 
     boolean following = true;
     UUID leader;
@@ -73,6 +82,37 @@ public class NpcEntity extends PathfinderMob {
         builder.define(LOOK, "raw");
         builder.define(AIMING, false);
         builder.define(SHOTS, 0);
+        builder.define(HIDDEN, "");
+        builder.define(TALK, 0);
+    }
+
+    /** The clothes she has off. */
+    public java.util.Set<String> hidden() {
+        String h = entityData.get(HIDDEN);
+        return h.isEmpty() ? java.util.Set.of() : java.util.Set.of(h.split(","));
+    }
+
+    void setHidden(java.util.Set<String> pieces) {
+        entityData.set(HIDDEN, String.join(",", new java.util.TreeSet<>(pieces)));
+    }
+
+    /** Ticks left of the line she's saying (her mouth moves while it's above 0). */
+    public int talking() {
+        return entityData.get(TALK);
+    }
+
+    void talk(int ticks) {
+        entityData.set(TALK, ticks);
+    }
+
+    /** Says a line of this kind, unless she's said one too lately. */
+    void say(NpcLines.Kind kind) {
+        lines.say(this, kind);
+    }
+
+    /** The name her lines go out under: her name tag's, or "Companion". */
+    String speakerName() {
+        return hasCustomName() ? getCustomName().getString() : "Companion";
     }
 
     public String model() {
@@ -113,6 +153,7 @@ public class NpcEntity extends PathfinderMob {
             following = true;
             leader = by.getUUID();
         }
+        say(following ? NpcLines.Kind.FOLLOW : NpcLines.Kind.WAIT);
         return following;
     }
 
@@ -131,6 +172,9 @@ public class NpcEntity extends PathfinderMob {
     @Override
     public void tick() {
         super.tick();
+        if (!level().isClientSide() && talking() > 0) {
+            talk(talking() - 1);
+        }
         if (level().isClientSide()) {
             aimAnimO = aimAnim;
             kickO = kick;
@@ -138,6 +182,25 @@ public class NpcEntity extends PathfinderMob {
             int shots = shots();
             kick = shots != shotsSeen ? 1f : kick * 0.55f;
             shotsSeen = shots;
+        }
+    }
+
+    @Override
+    public boolean hurtServer(ServerLevel level, net.minecraft.world.damagesource.DamageSource source, float amount) {
+        boolean hurt = super.hurtServer(level, source, amount);
+        if (hurt && isAlive()) {
+            say(NpcLines.Kind.HURT);
+        }
+        return hurt;
+    }
+
+    /** She lies where she fell while her death plays out, then she's gone. */
+    @Override
+    protected void tickDeath() {
+        deathTime = Math.min(deathTime + 1, DEATH_TICKS + 1);
+        if (deathTime >= DEATH_TICKS && !level().isClientSide() && !isRemoved()) {
+            level().broadcastEntityEvent(this, (byte) 60);
+            remove(RemovalReason.KILLED);
         }
     }
 
@@ -163,6 +226,7 @@ public class NpcEntity extends PathfinderMob {
         output.putString("npcModel", model());
         output.putString("npcLook", look());
         output.putInt("npcFollowing", following ? 1 : 0);
+        output.putString("npcHidden", entityData.get(HIDDEN));
         if (leader != null) {
             output.putString("npcLeader", leader.toString());
         }
@@ -173,6 +237,7 @@ public class NpcEntity extends PathfinderMob {
         super.readAdditionalSaveData(input);
         setModel(input.getStringOr("npcModel", Npcs.MODELS.get(0)), input.getStringOr("npcLook", "raw"));
         following = input.getIntOr("npcFollowing", 1) == 1;
+        entityData.set(HIDDEN, input.getStringOr("npcHidden", ""));
         String id = input.getStringOr("npcLeader", "");
         try {
             leader = id.isEmpty() ? null : UUID.fromString(id);
