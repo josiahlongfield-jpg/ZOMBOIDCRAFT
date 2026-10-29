@@ -80,6 +80,9 @@ LINES = {
         ["Employee of the month. Every month. Because everyone else is fucking dead."],
         ["You know what I wanted to be? A toaster. Simple life. Bread in, bread out. Nobody bleeds on a toaster."],
     ],
+    'GREET': [
+        ["What's up, fuckers?"],
+    ],
     'BOARD': [
         ["Oh great. More meat."],
         ["Welcome aboard, dipshit. Sit down and shut up."],
