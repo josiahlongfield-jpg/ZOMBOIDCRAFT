@@ -438,7 +438,7 @@ ITEMS = {
     'lettuce': it(S(sh.head_veg, r=2.6), base='#8ab84a', leaf=A.skin('#6aa03a')),
     'tomato': it(sh.tomato, base='#c8321f'),
     'potato': it(sh.potato, base='#b0885a', skin=A.skin('#b0885a', '#6a4a2a')),
-    'onion': it(sh.onion, base='#b8763a'),
+    'onion': it(sh.onion, base='#a47a44'),
     'carrot': it(sh.carrot, base='#e0782a'),
     'cabbage': it(S(sh.head_veg, r=3.0), base='#a8c87a', leaf=A.skin('#7aa05a')),
     'eggs_carton': it(egg_carton, 'EGGS', '#d8d0bc', band=BLUE, word_ink='#f0e8d8', side=A.flat('#d8d0bc')),

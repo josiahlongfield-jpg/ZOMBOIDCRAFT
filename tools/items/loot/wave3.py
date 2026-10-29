@@ -329,12 +329,13 @@ def pocket_watch(m):
 
 
 def ring(r=0.45, w=0.18, stone=None, mat='gold'):
+    # stood up on its edge: the band all the way round, the stone on top
     def build(m):
-        for s in (-1, 1):
-            m.box([s * r - w / 2, 0, -r], [s * r + w / 2, 0.15, r], mat)
-            m.box([-r, 0, s * r - w / 2], [r, 0.15, s * r + w / 2], mat)
+        sh.torus(m, (0, r + w / 2), r + w / 4, w / 2, w * 1.4, mat)
         if stone:
-            m.box([-stone, 0.15, r - stone], [stone, 0.15 + stone * 1.4, r + stone], 'gem')
+            top = 2 * r + w / 2
+            m.box([-stone * 0.7, top - 0.08, -stone * 0.7], [stone * 0.7, top + 0.06, stone * 0.7], mat)
+            sh.blob(m, (0, top + stone * 0.6, 0), (stone, stone * 0.75, stone), 'gem')
     return build
 
 
@@ -507,19 +508,17 @@ def chalice(m):
 
 
 def teddy(m):
-    m.box([-1.6, 0, -1.2], [1.6, 3.4, 1.2], 'fur')
-    m.box([-1.3, 3.4, -1.1], [1.3, 5.6, 1.1], 'fur')
-    m.box([-0.6, 3.8, 1.1], [0.6, 4.6, 1.7], 'felt')
-    m.box([-0.2, 4.4, 1.7], [0.2, 4.6, 1.75], 'dark')
+    # soft round body and head, ears, stubby arms and sat-down legs, felt muzzle, red ribbon at the neck
+    sh.blob(m, (0, 2.0, 0), (1.6, 1.9, 1.3), 'fur')
+    sh.blob(m, (0, 3.55, 0), (1.05, 0.2, 0.88), 'red')
+    sh.blob(m, (0, 4.6, 0.1), (1.4, 1.3, 1.2), 'fur')
+    sh.blob(m, (0, 4.3, 1.2), (0.6, 0.45, 0.38), 'felt')
+    m.box([-0.2, 4.4, 1.48], [0.2, 4.62, 1.62], 'dark')
     for s in (-1, 1):
-        m.box([s * 0.55 - 0.15, 4.9, 1.1], [s * 0.55 + 0.15, 5.15, 1.15], 'dark')
-        x0, x1 = sorted((s * 0.6, s * 1.4))
-        m.box([x0, 5.4, -0.4], [x1, 6.2, 0.4], 'fur')
-        x0, x1 = sorted((s * 1.6, s * 2.4))
-        m.box([x0, 1.8, -0.6], [x1, 3.2, 0.6], 'fur')
-        x0, x1 = sorted((s * 0.3, s * 1.5))
-        m.box([x0, 0, 1.2], [x1, 1.1, 3.0], 'fur')
-    m.box([-1.65, 3.2, -1.25], [1.65, 3.5, 1.25], 'red')
+        sh.blob(m, (s * 1.0, 5.7, 0), (0.45, 0.45, 0.28), 'fur')
+        m.box([s * 0.5 - 0.13, 4.85, 1.12], [s * 0.5 + 0.13, 5.1, 1.32], 'dark')
+        sh.blob(m, (s * 1.75, 2.6, 0.3), (0.5, 1.0, 0.55), 'fur')
+        sh.blob(m, (s * 0.9, 0.55, 1.1), (0.6, 0.55, 0.95), 'fur')
 
 
 def figure(h=4.5, mat='body', skin='skin'):
@@ -618,10 +617,11 @@ def glove(m):
 
 
 def football(m):
-    m.rod(-2.4, 2.4, 1.2, 'leather', axis=0)
-    m.rod(-3.4, 3.4, 0.7, 'leather', axis=0)
-    m.box([-1.2, 1.18, -0.08], [1.2, 1.24, 0.08], 'white')
-    sh.shift_up(m, 1.2)
+    # the long leather ball lying down, a white lace stitched along the top
+    sh.blob(m, (0, 1.3, 0), (3.3, 1.3, 1.3), 'leather', axis=0)
+    m.box([-1.1, 2.52, -0.07], [1.1, 2.64, 0.07], 'white')
+    for x in (-0.8, -0.27, 0.27, 0.8):
+        m.box([x - 0.06, 2.5, -0.3], [x + 0.06, 2.62, 0.3], 'white')
 
 
 def racket(m):
