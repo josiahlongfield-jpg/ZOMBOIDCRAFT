@@ -166,9 +166,11 @@ public final class CarClient {
                 if (h == null || car.seatTaken(s)) {
                     continue;
                 }
-                // outside the car on the handle's side, within arm's reach of the door, level with it
-                double out = Math.signum(h[0]) * at.x - Math.abs(h[0]);
-                if (out < -0.15 || out > 1.3 || Math.abs(at.z - h[2]) > 1.1) {
+                // outside the car on the handle's side, within arm's reach of the door, level with it; a handle
+                // on the middle line is climbed to from behind (the Warthog's gun)
+                boolean back = Math.abs(h[0]) < 0.05f;
+                double out = back ? h[2] - at.z : Math.signum(h[0]) * at.x - Math.abs(h[0]);
+                if (out < -0.15 || out > (back ? 1.6 : 1.3) || (back ? Math.abs(at.x) > 1.3 : Math.abs(at.z - h[2]) > 1.1)) {
                     continue;
                 }
                 Vec3 to = car.toWorld(h).subtract(eye);
@@ -220,6 +222,9 @@ public final class CarClient {
     private static String seatName(CarModels.Model m, int s) {
         if (s == 0) {
             return "Drive";
+        }
+        if (s == m.gunner) {
+            return "Gun";
         }
         return m.seats[s][2] < m.seats[0][2] - 0.5f ? "Back seat" : "Front seat";
     }
