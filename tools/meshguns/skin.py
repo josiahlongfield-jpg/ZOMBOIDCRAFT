@@ -1,5 +1,5 @@
 """Puts a bought gun's mesh (pack.py) on one of our guns: rewrites the gun's item definitions so every block body,
-handle, slide and magazine becomes the "zomboidcraft:mesh_gun" special model (MeshGunRenderer) under the same
+handle, slide and magazine becomes the "zomboidcraft:mesh" special model (MeshGunRenderer) under the same
 base model, so its display transforms, the reload pieces and the attachments all stay where they were.
 
 skins.json maps our gun to the packed mesh: {"shotgun": "pbr_shotgun"}. kit.py applies it every time it writes a
@@ -28,7 +28,7 @@ def swap(node, gun, mesh):
         m = re.fullmatch(rf'zomboidcraft:item/weapon/{gun}/(?:.+/)?([a-z_]+)', node['model'])
         if m and m.group(1) in PARTS:
             return {'type': 'minecraft:special', 'base': node['model'],
-                    'model': {'type': 'zomboidcraft:mesh_gun', 'id': mesh, 'part': PARTS[m.group(1)]}}
+                    'model': {'type': 'zomboidcraft:mesh', 'id': mesh, 'part': PARTS[m.group(1)]}}
         if m and m.group(1) in DROP:
             return {'type': 'minecraft:empty'}
         return node

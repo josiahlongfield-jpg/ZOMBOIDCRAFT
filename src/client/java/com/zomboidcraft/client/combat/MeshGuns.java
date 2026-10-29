@@ -23,7 +23,7 @@ import net.minecraft.resources.Identifier;
 
 /**
  * The bought guns (Josiah 2026-10-29: real meshes, toon-painted, in place of the block guns). Loads a packed
- * assets/zomboidcraft/guns/ID.zgun (tools/meshguns/pack.py) the first time it's drawn and draws its parts in item
+ * assets/zomboidcraft/meshes/ID.zmesh (tools/meshguns/pack.py) the first time it's drawn and draws its parts in item
  * model space, so a gun's item model can swap its block body for {@link MeshGunRenderer} and keep everything else.
  */
 public final class MeshGuns {
@@ -31,11 +31,9 @@ public final class MeshGuns {
     record Part(int triangles, float[] pos, float[] uv, float[] normal, float[] smooth) {
     }
 
-    record Gun(Map<String, Part> parts, Identifier texture, float[] lo, float[] hi) {
+    record Gun(Map<String, Part> parts, Identifier texture, float outline, float[] lo, float[] hi) {
     }
 
-    /** The ink outline: the mesh pushed out this far (pixels) along its smooth normals, drawn inside out in black. */
-    private static final float OUTLINE = 0.03f;
     private static final int INK = 0xFF141414;
     private static final Map<String, Gun> GUNS = new HashMap<>();
     private static final Set<String> MISSING = new HashSet<>();
@@ -69,7 +67,7 @@ public final class MeshGuns {
         pose.pushPose();
         pose.scale(1 / 16f, 1 / 16f, 1 / 16f);
         out.submitCustomGeometry(pose, RenderTypes.entityCutout(gun.texture()), (at, buffer) -> solid(p, at, buffer, light));
-        out.submitCustomGeometry(pose, RenderTypes.entityCutout(gun.texture()), (at, buffer) -> ink(p, at, buffer, light));
+        out.submitCustomGeometry(pose, RenderTypes.entityCutout(gun.texture()), (at, buffer) -> ink(p, gun.outline(), at, buffer, light));
         pose.popPose();
     }
 
@@ -88,14 +86,17 @@ public final class MeshGuns {
         }
     }
 
-    /** The outline shell: wound the other way, so culling keeps only its far side, a black rim round the gun. */
-    private static void ink(Part p, PoseStack.Pose pose, VertexConsumer out, int light) {
+    /**
+     * The ink outline: the mesh pushed out by outline pixels along its smooth normals (the file says how far) and
+     * wound the other way, so culling keeps only its far side, a black rim round the gun.
+     */
+    private static void ink(Part p, float outline, PoseStack.Pose pose, VertexConsumer out, int light) {
         float[] pos = p.pos(), uv = p.uv(), s = p.smooth(), n = p.normal();
         for (int t = 0; t < p.triangles(); t++) {
             for (int c = 0; c < 4; c++) {
                 int i = t * 3 + 2 - Math.min(c, 2);
-                out.addVertex(pose, pos[i * 3] + s[i * 3] * OUTLINE, pos[i * 3 + 1] + s[i * 3 + 1] * OUTLINE,
-                                pos[i * 3 + 2] + s[i * 3 + 2] * OUTLINE)
+                out.addVertex(pose, pos[i * 3] + s[i * 3] * outline, pos[i * 3 + 1] + s[i * 3 + 1] * outline,
+                                pos[i * 3 + 2] + s[i * 3 + 2] * outline)
                         .setColor(INK)
                         .setUv(uv[i * 2], uv[i * 2 + 1])
                         .setOverlay(OverlayTexture.NO_OVERLAY)
@@ -107,15 +108,16 @@ public final class MeshGuns {
 
     private static Gun read(String id) throws IOException {
         byte[] data;
-        try (InputStream in = Minecraft.getInstance().getResourceManager().open(ZomboidCraft.id("guns/" + id + ".zgun"))) {
+        try (InputStream in = Minecraft.getInstance().getResourceManager().open(ZomboidCraft.id("meshes/" + id + ".zmesh"))) {
             data = in.readAllBytes();
         }
         CarAssets.unscramble(data, id);
         try (DataInputStream in = new DataInputStream(new InflaterInputStream(new ByteArrayInputStream(data)))) {
             byte[] magic = in.readNBytes(4);
-            if (magic[0] != 'Z' || magic[1] != 'G' || magic[2] != 'U' || magic[3] != 'N' || in.readInt() != 2) {
-                throw new IOException("not a gun file");
+            if (magic[0] != 'Z' || magic[1] != 'M' || magic[2] != 'S' || magic[3] != 'H' || in.readInt() != 3) {
+                throw new IOException("not a mesh file");
             }
+            float outline = in.readFloat();
             byte[] png = in.readNBytes(in.readInt());
             Map<String, Part> parts = new HashMap<>();
             float[] lo = {Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE}, hi = {-Float.MAX_VALUE, -Float.MAX_VALUE, -Float.MAX_VALUE};
@@ -153,10 +155,10 @@ public final class MeshGuns {
                 }
                 parts.put(name, new Part(tris, pos, uv, normal, smooth));
             }
-            Identifier texture = ZomboidCraft.id("dynamic/gun/" + id);
+            Identifier texture = ZomboidCraft.id("dynamic/mesh/" + id);
             NativeImage image = NativeImage.read(new ByteArrayInputStream(png));
             Minecraft.getInstance().getTextureManager().register(texture, new DynamicTexture(() -> "ZomboidCraft gun " + id, image));
-            return new Gun(parts, texture, lo, hi);
+            return new Gun(parts, texture, outline, lo, hi);
         }
     }
 

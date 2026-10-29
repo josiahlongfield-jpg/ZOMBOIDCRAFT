@@ -16,12 +16,12 @@ import org.joml.Vector3fc;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * The "zomboidcraft:mesh_gun" special item model: draws a part of a bought gun ({@link MeshGuns}) where the block
- * model was, under the same "base" model's display transforms, so first person, third person, the ground, item
- * frames and the inventory all show the real mesh.
+ * The "zomboidcraft:mesh" special item model: draws a part of a packed mesh ({@link MeshGuns}: the bought guns, and
+ * the loot) where the block model was, under the same "base" model's display transforms, so first person, third
+ * person, the ground, item frames and the inventory all show the real mesh.
  *
  * <pre>{"type": "minecraft:special", "base": "zomboidcraft:item/weapon/shotgun/hip/body",
- *  "model": {"type": "zomboidcraft:mesh_gun", "id": "pbr_shotgun", "part": "body"}}</pre>
+ *  "model": {"type": "zomboidcraft:mesh", "id": "pbr_shotgun", "part": "body"}}</pre>
  */
 public final class MeshGunRenderer implements NoDataSpecialModelRenderer {
     private final String id;
@@ -33,7 +33,7 @@ public final class MeshGunRenderer implements NoDataSpecialModelRenderer {
     }
 
     public static void register() {
-        SpecialModelRenderers.ID_MAPPER.put(ZomboidCraft.id("mesh_gun"), Unbaked.MAP_CODEC);
+        SpecialModelRenderers.ID_MAPPER.put(ZomboidCraft.id("mesh"), Unbaked.MAP_CODEC);
     }
 
     @Override

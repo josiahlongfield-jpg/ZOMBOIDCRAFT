@@ -18,11 +18,11 @@ SPEC (paths may be relative to the spec file):
                our scale of 31 mm a pixel, still muzzle on muzzle: for a bought gun shorter or longer than ours
     pieces     {name: {"z": [from, to], "y": [from, to]}}: triangles whose centre is in that box (item pixels after
                fitting; y optional) are cut out into their own part, e.g. the pump as "handle"
-    outline    outline thickness in item pixels (default 0.03)
+    outline    outline thickness in item pixels (default 0.03; small things want less)
 
-Writes src/main/resources/assets/zomboidcraft/guns/<id>.zgun: zlib-deflated, then XORed with the same xorshift32
+Writes src/main/resources/assets/zomboidcraft/meshes/<id>.zmesh (the id may hold a folder, e.g. loot/coin): zlib-deflated, then XORed with the same xorshift32
 stream the cars use (seeded from the id), so the jar holds no usable model. Deflated payload, big-endian:
-    "ZGUN" int version (2), int pngLength, png (the toon-painted textures stacked top to bottom), int parts,
+    "ZMSH" int version (3), float outline, int pngLength, png (the toon-painted textures stacked top to bottom), int parts,
     per part: UTF name, int triangles, then triangles * 3 * (short x,y,z in thousandths of an item pixel,
     char u,v, byte nx,ny,nz: the corner's smooth normal, which the outline shell is pushed out along)
 in item model space (pixels, muzzle toward -z), the same space as the block gun it stands in for.
@@ -136,7 +136,7 @@ def main(spec_path):
         atlas.paste(t, (0, k * size))
     png = io.BytesIO(); atlas.save(png, 'PNG', optimize=True)
     out = io.BytesIO()
-    out.write(b'ZGUN'); out.write(struct.pack('>i', 2))
+    out.write(b'ZMSH'); out.write(struct.pack('>i', 3)); out.write(struct.pack('>f', spec.get('outline', 0.03)))
     out.write(struct.pack('>i', len(png.getvalue()))); out.write(png.getvalue())
     out.write(struct.pack('>i', len(parts)))
     rec = np.zeros(len(v), dtype=[('x', '>i2'), ('y', '>i2'), ('z', '>i2'), ('u', '>u2'), ('v', '>u2'),
@@ -152,7 +152,7 @@ def main(spec_path):
         out.write(rec[pf.reshape(-1)].tobytes())
         print(f"  {name}: {len(pf)} triangles")
     data = scramble(zlib.compress(out.getvalue(), 9), spec['id'])
-    dest = os.path.join(ROOT, 'src/main/resources/assets/zomboidcraft/guns', spec['id'] + '.zgun')
+    dest = os.path.join(ROOT, 'src/main/resources/assets/zomboidcraft/meshes', spec['id'] + '.zmesh')
     os.makedirs(os.path.dirname(dest), exist_ok=True)
     open(dest, 'wb').write(data)
     lo, hi = v.min(0), v.max(0)
