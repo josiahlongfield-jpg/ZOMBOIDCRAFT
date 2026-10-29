@@ -236,9 +236,9 @@ final class PortSite extends Site {
         new BigShip(bowEast ? at(sx, zc, 0) : at(sx + len - 1, zc - 1, 2), rng, hit, bowEast ? hbm + 2 : -hbm - 3)
                 .container(len, beam, state);
         // a tug still made fast at her bow, a feeder ship riding at anchor out in the basin
-        int bowX = bowEast ? sx + len + 3 : sx - 25;
-        if (bowX > 2 && bowX + 22 < lw - 2) {
-            new Ships(at(bowX, quay - 4 - hbm - rng.nextInt(4), 0), rng, hit).tug(20 + rng.nextInt(4));
+        int bowX = bowEast ? sx + len + 3 : sx - 27;
+        if (bowX > 2 && bowX + 25 < lw - 2) {
+            new Ships(at(bowX, quay - 4 - hbm - rng.nextInt(4), 0), rng, hit).tug(false);
         }
         int fbeam = 26 + 2 * rng.nextInt(2);
         int outZ = zc - hbm - 16 - fbeam / 2;
@@ -719,8 +719,8 @@ final class PortSite extends Site {
             new Ships(at(bx, quay - 9, 0), rng, hit).barge(30, 12);
             bx += 34;
         }
-        if (bx + 20 < lw - 2) {
-            new Ships(at(bx, quay - 6, 0), rng, hit).tug(20);
+        if (bx + 25 < lw - 2) {
+            new Ships(at(bx, quay - 6, 0), rng, hit).tug(chance() < 0.1 + hit * 0.2);
         }
         // the harbour cranes along the quay
         int nc = 1 + rng.nextInt(2);
