@@ -969,9 +969,11 @@ final class Penthouse {
                 }
                 boolean ring = x == x0 || x == x1 || z == z0 || z == z1 || !resAt(k, x - 1, z) || !resAt(k, x + 1, z) || !resAt(k, x, z - 1)
                         || !resAt(k, x, z + 1);
+                // an infinity edge where the pool meets the outside wall: a glass lip the water runs to
+                boolean edge = ring && (at(per[k], x - 1, z) || at(per[k], x + 1, z) || at(per[k], x, z - 1) || at(per[k], x, z + 1));
                 p.set(x, y - 1, z, "of_pool_glass");
-                p.set(x, y, z, ring ? "of_pool_tile" : "minecraft:water");
-                p.set(x, y + 1, z, ring ? "of_coping" : "minecraft:water");
+                p.set(x, y, z, ring ? lightAt(k, x, z, x0, z0) : "minecraft:water");
+                p.set(x, y + 1, z, ring ? edge ? "of_pool_glass" : "of_coping" : "minecraft:water");
             }
         }
         if (!columns) {
@@ -993,6 +995,22 @@ final class Penthouse {
                 }
             }
         }
+    }
+
+    /** A pool wall cell: every third along the wall a light facing into the water, plain tile otherwise. */
+    private String lightAt(int k, int x, int z, int x0, int z0) {
+        if (Math.floorMod(x - x0 + z - z0, 3) != 1) {
+            return "of_pool_tile";
+        }
+        for (int s = 0; s < 4; s++) {
+            int[] o = Floorplan.step(x, z, s);
+            boolean water = resAt(k, o[0], o[1]) && resAt(k, o[0] - 1, o[1]) && resAt(k, o[0] + 1, o[1]) && resAt(k, o[0], o[1] - 1)
+                    && resAt(k, o[0], o[1] + 1);
+            if (water) {
+                return "of_pool_light[facing=" + Floorplan.face(s) + "]";
+            }
+        }
+        return "of_pool_tile";
     }
 
     /** The winter garden: grass and stone paths, palms up into the void, ferns, benches, a fountain. */
@@ -1090,7 +1108,12 @@ final class Penthouse {
         for (int x = r[0]; x <= r[2]; x++) {
             for (int z = r[1]; z <= r[3]; z++) {
                 if (resAt(k, x, z) && !at(per[k], x, z)) {
-                    p.set(x, y, z, "of_car_lift");
+                    // the platform inside a band of hazard stripes, a lift post at each corner
+                    boolean ex = x == r[0] || x == r[2], ez = z == r[1] || z == r[3];
+                    p.set(x, y, z, ex || ez ? "hazard_stripes" : "of_car_lift");
+                    if (ex && ez) {
+                        p.fill(x, y + 1, z, x, y + 3, z, "gs_lift_post");
+                    }
                 }
             }
         }
@@ -1150,16 +1173,27 @@ final class Penthouse {
                     continue;
                 }
                 boolean rib = x == cx || z == cz || Math.abs(x - cx) == Math.abs(z - cz);
-                p.set(x, y, z, rr > rad - 0.5 ? trim : "air");
+                boolean ring = rr > rad - 0.5;
+                p.set(x, y, z, ring ? trim : "air");
+                // the drum: a stone ring with lit slit windows between the ribs
+                if (ring) {
+                    p.set(x, y + 1, z, "stone_trim");
+                    p.set(x, y + 2, z, rib ? "stone_trim" : Placer.inWall("window_lit", Math.abs(x - cx) < Math.abs(z - cz)));
+                }
+                // the dome over it: glass between verdigris copper ribs, a copper cap at the crown
                 for (int h = 1; h <= rad + 1; h++) {
                     double sr = Math.sqrt((x - cx) * (x - cx) + (z - cz) * (z - cz) + (double) h * h);
                     if (Math.abs(sr - rad) < 0.55) {
-                        p.set(x, y + h, z, rib ? "steel_mullion" : "of_pool_glass");
+                        p.set(x, y + 2 + h, z, h >= rad ? "cv_copper" : rib ? "of_copper_rib" : "of_pool_glass");
                     }
                 }
             }
         }
-        p.set(cx, y + rad + 1, cz, "aviation_light");
+        // the lantern on top, after the Woolworth's: glass under a copper cap and a finial
+        int top = y + 3 + rad;
+        p.set(cx, top, cz, "of_pool_glass");
+        p.set(cx, top + 1, cz, "cv_copper");
+        p.set(cx, top + 2, cz, "of_finial");
         p.set(cx, y(2) + 1, cz, "of_telescope[facing=north]");
     }
 
@@ -1524,8 +1558,16 @@ final class Penthouse {
                     for (int z = z0; z <= z1; z++) {
                         boolean ex = x == x0 || x == x1, ez = z == z0 || z == z1;
                         if (yy == y) {
-                            // the tier's floor: a steel soffit under the overhang, stone over the core
-                            p.set(x, yy, z, ex || ez ? "stone_trim" : t == 0 && !inCore(x, z) ? clad : "air");
+                            // the tier's foot: a chevron band round its faces, a steel soffit under
+                            // the overhang, stone over the core
+                            if (ex && ez) {
+                                p.set(x, yy, z, "of_chevron_corner_" + mat());
+                            } else if (ex || ez) {
+                                String face = z == z0 ? "north" : z == z1 ? "south" : x == x0 ? "west" : "east";
+                                p.set(x, yy, z, "of_chevron_" + mat() + "[facing=" + face + "]");
+                            } else {
+                                p.set(x, yy, z, t == 0 && !inCore(x, z) ? clad : "air");
+                            }
                             continue;
                         }
                         if (!ex && !ez) {
@@ -1576,8 +1618,12 @@ final class Penthouse {
      * One cell of a tier's face: sunburst modules (4 wide, 3 high, an arch of raised rim with
      * rays and lit glass) along the middle of the face over a base row, fluted cladding round them.
      */
+    private String mat() {
+        return clad.equals("of_deco_brass") ? "brass" : clad.equals("stone_trim") ? "stone" : "steel";
+    }
+
     private String panel(int a, int len, int row, int h, String face) {
-        String mat = clad.equals("of_deco_brass") ? "brass" : clad.equals("stone_trim") ? "stone" : "steel";
+        String mat = mat();
         int n = len - 2, m = n / 4, o = (n - 4 * m) / 2, i = a - 1;
         if (h >= 5 && row >= 1 && row <= 3 && i >= o && i < o + 4 * m) {
             int col = (i - o) % 4;

@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cv_copper": "zomboidcraft:block/city/cv_copper",
+    "cv_copper_seam": "zomboidcraft:block/city/cv_copper_seam",
+    "particle": "zomboidcraft:block/city/cv_copper_seam"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_copper_seam",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#cv_copper_seam",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cv_copper_seam",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cv_copper_seam",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cv_copper_seam",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cv_copper",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
