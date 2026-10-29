@@ -15,7 +15,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:rag",
-          "weight": 24,
+          "weight": 20,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -30,7 +30,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:ripped_sheet",
-          "weight": 24,
+          "weight": 20,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -45,22 +45,22 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:bleach",
-          "weight": 72
+          "weight": 60
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:detergent",
-          "weight": 72
+          "weight": 60
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:sewing_kit",
-          "weight": 12
+          "weight": 10
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:thread_spool",
-          "weight": 24,
+          "weight": 20,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -75,7 +75,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:safety_pins",
-          "weight": 24,
+          "weight": 20,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -90,7 +90,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:t_shirt",
-          "weight": 24,
+          "weight": 20,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -105,7 +105,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:scrubs_top",
-          "weight": 24,
+          "weight": 20,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -120,7 +120,37 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:jeans",
-          "weight": 24,
+          "weight": 20,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:scrubs_pants",
+          "weight": 20,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:rubber_gloves",
+          "weight": 20,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -135,7 +165,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:coin_roll",
-          "weight": 24,
+          "weight": 20,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -150,7 +180,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:coat_hanger",
-          "weight": 24,
+          "weight": 20,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -165,7 +195,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:leather_belt",
-          "weight": 48
+          "weight": 40
         }
       ]
     }
