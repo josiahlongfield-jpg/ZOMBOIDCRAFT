@@ -1,0 +1,84 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cp_timber_h": "zomboidcraft:block/city/cp_timber_h",
+    "particle": "zomboidcraft:block/city/cp_timber_h"
+  },
+  "elements": [
+    {
+      "from": [
+        7.25,
+        12.5,
+        0
+      ],
+      "to": [
+        8.75,
+        15.5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cp_timber_h",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#cp_timber_h",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cp_timber_h"
+        },
+        "west": {
+          "texture": "#cp_timber_h"
+        },
+        "up": {
+          "texture": "#cp_timber_h"
+        },
+        "down": {
+          "texture": "#cp_timber_h"
+        }
+      }
+    },
+    {
+      "from": [
+        7.25,
+        3.5,
+        0
+      ],
+      "to": [
+        8.75,
+        6.5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cp_timber_h"
+        },
+        "south": {
+          "texture": "#cp_timber_h"
+        },
+        "east": {
+          "texture": "#cp_timber_h"
+        },
+        "west": {
+          "texture": "#cp_timber_h"
+        },
+        "up": {
+          "texture": "#cp_timber_h"
+        },
+        "down": {
+          "texture": "#cp_timber_h"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          5,
+          0
+        ],
+        "axis": "x",
+        "angle": -22.5
+      }
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fm_ring_boards": "zomboidcraft:block/city/fm_ring_boards",
+    "particle": "zomboidcraft:block/city/fm_ring_boards"
+  },
+  "elements": [
+    {
+      "from": [
+        -4.531,
+        0,
+        4.304
+      ],
+      "to": [
+        17.469,
+        16,
+        5.304
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fm_ring_boards",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#fm_ring_boards",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#fm_ring_boards"
+        },
+        "west": {
+          "texture": "#fm_ring_boards"
+        },
+        "up": {
+          "texture": "#fm_ring_boards",
+          "uv": [
+            0,
+            4.304,
+            16,
+            5.304
+          ]
+        },
+        "down": {
+          "texture": "#fm_ring_boards",
+          "uv": [
+            0,
+            10.696,
+            16,
+            11.696
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          6.469,
+          8,
+          4.304
+        ],
+        "axis": "y",
+        "angle": 22.5
+      }
+    }
+  ]
+}

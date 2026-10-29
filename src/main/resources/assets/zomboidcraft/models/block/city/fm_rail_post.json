@@ -1,0 +1,225 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cp_timber": "zomboidcraft:block/city/cp_timber",
+    "cp_timber_h": "zomboidcraft:block/city/cp_timber_h",
+    "particle": "zomboidcraft:block/city/cp_timber"
+  },
+  "elements": [
+    {
+      "from": [
+        5.75,
+        0,
+        5.75
+      ],
+      "to": [
+        10.25,
+        17,
+        10.25
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cp_timber",
+          "uv": [
+            5.75,
+            0,
+            10.25,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#cp_timber",
+          "uv": [
+            5.75,
+            0,
+            10.25,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#cp_timber",
+          "uv": [
+            5.75,
+            0,
+            10.25,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#cp_timber",
+          "uv": [
+            5.75,
+            0,
+            10.25,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#cp_timber"
+        },
+        "down": {
+          "texture": "#cp_timber",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        6.5,
+        17,
+        6.5
+      ],
+      "to": [
+        9.5,
+        17.8,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cp_timber",
+          "uv": [
+            6.5,
+            0,
+            9.5,
+            0.8000000000000007
+          ]
+        },
+        "south": {
+          "texture": "#cp_timber",
+          "uv": [
+            6.5,
+            0,
+            9.5,
+            0.8000000000000007
+          ]
+        },
+        "east": {
+          "texture": "#cp_timber",
+          "uv": [
+            6.5,
+            0,
+            9.5,
+            0.8000000000000007
+          ]
+        },
+        "west": {
+          "texture": "#cp_timber",
+          "uv": [
+            6.5,
+            0,
+            9.5,
+            0.8000000000000007
+          ]
+        },
+        "up": {
+          "texture": "#cp_timber"
+        },
+        "down": {
+          "texture": "#cp_timber"
+        }
+      }
+    },
+    {
+      "from": [
+        7.25,
+        3.5,
+        0
+      ],
+      "to": [
+        8.75,
+        6.5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cp_timber_h",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#cp_timber_h",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cp_timber_h"
+        },
+        "west": {
+          "texture": "#cp_timber_h"
+        },
+        "up": {
+          "texture": "#cp_timber_h"
+        },
+        "down": {
+          "texture": "#cp_timber_h"
+        }
+      }
+    },
+    {
+      "from": [
+        7.25,
+        8,
+        0
+      ],
+      "to": [
+        8.75,
+        11.0,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cp_timber_h",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#cp_timber_h",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cp_timber_h"
+        },
+        "west": {
+          "texture": "#cp_timber_h"
+        },
+        "up": {
+          "texture": "#cp_timber_h"
+        },
+        "down": {
+          "texture": "#cp_timber_h"
+        }
+      }
+    },
+    {
+      "from": [
+        7.25,
+        12.5,
+        0
+      ],
+      "to": [
+        8.75,
+        15.5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cp_timber_h",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#cp_timber_h",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cp_timber_h"
+        },
+        "west": {
+          "texture": "#cp_timber_h"
+        },
+        "up": {
+          "texture": "#cp_timber_h"
+        },
+        "down": {
+          "texture": "#cp_timber_h"
+        }
+      }
+    }
+  ]
+}

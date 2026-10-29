@@ -1,0 +1,75 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "concrete_dark": "zomboidcraft:block/city/concrete_dark",
+    "silo_blue": "zomboidcraft:block/city/silo_blue",
+    "particle": "zomboidcraft:block/city/silo_blue"
+  },
+  "elements": [
+    {
+      "from": [
+        -3.0,
+        0,
+        8.0
+      ],
+      "to": [
+        19.0,
+        16,
+        11.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#silo_blue",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#concrete_dark",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#silo_blue"
+        },
+        "west": {
+          "texture": "#silo_blue"
+        },
+        "up": {
+          "texture": "#concrete_dark",
+          "uv": [
+            0,
+            8.0,
+            16,
+            11.0
+          ]
+        },
+        "down": {
+          "texture": "#concrete_dark",
+          "uv": [
+            0,
+            5.0,
+            16,
+            8.0
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8.0,
+          8,
+          8.0
+        ],
+        "axis": "y",
+        "angle": -22.5
+      }
+    }
+  ]
+}

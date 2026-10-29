@@ -1,0 +1,264 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cp_timber_h": "zomboidcraft:block/city/cp_timber_h",
+    "painted_steel": "zomboidcraft:block/city/painted_steel",
+    "rust": "zomboidcraft:block/city/rust",
+    "tree_oak_bark": "zomboidcraft:block/city/tree_oak_bark",
+    "tree_oak_rings": "zomboidcraft:block/city/tree_oak_rings",
+    "particle": "zomboidcraft:block/city/tree_oak_bark"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        3
+      ],
+      "to": [
+        13,
+        8,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tree_oak_bark"
+        },
+        "south": {
+          "texture": "#tree_oak_bark"
+        },
+        "east": {
+          "texture": "#tree_oak_bark"
+        },
+        "west": {
+          "texture": "#tree_oak_bark"
+        },
+        "up": {
+          "texture": "#tree_oak_rings"
+        },
+        "down": {
+          "texture": "#tree_oak_bark",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        8,
+        4
+      ],
+      "to": [
+        11,
+        10,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rust"
+        },
+        "south": {
+          "texture": "#rust"
+        },
+        "east": {
+          "texture": "#rust"
+        },
+        "west": {
+          "texture": "#rust"
+        },
+        "up": {
+          "texture": "#rust"
+        },
+        "down": {
+          "texture": "#rust"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        10,
+        5
+      ],
+      "to": [
+        10,
+        12,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rust"
+        },
+        "south": {
+          "texture": "#rust"
+        },
+        "east": {
+          "texture": "#rust"
+        },
+        "west": {
+          "texture": "#rust"
+        },
+        "up": {
+          "texture": "#rust"
+        },
+        "down": {
+          "texture": "#rust"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        12,
+        2
+      ],
+      "to": [
+        12,
+        15,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rust"
+        },
+        "south": {
+          "texture": "#rust"
+        },
+        "east": {
+          "texture": "#rust"
+        },
+        "west": {
+          "texture": "#rust"
+        },
+        "up": {
+          "texture": "#rust"
+        },
+        "down": {
+          "texture": "#rust"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        12,
+        0
+      ],
+      "to": [
+        10,
+        14.5,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rust",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#rust"
+        },
+        "east": {
+          "texture": "#rust"
+        },
+        "west": {
+          "texture": "#rust"
+        },
+        "up": {
+          "texture": "#rust"
+        },
+        "down": {
+          "texture": "#rust"
+        }
+      }
+    },
+    {
+      "from": [
+        8,
+        15,
+        4
+      ],
+      "to": [
+        9,
+        16,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cp_timber_h"
+        },
+        "south": {
+          "texture": "#cp_timber_h"
+        },
+        "east": {
+          "texture": "#cp_timber_h"
+        },
+        "west": {
+          "texture": "#cp_timber_h"
+        },
+        "up": {
+          "texture": "#cp_timber_h",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cp_timber_h"
+        }
+      }
+    },
+    {
+      "from": [
+        7.5,
+        15,
+        10
+      ],
+      "to": [
+        9.5,
+        17,
+        12.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#painted_steel",
+          "uv": [
+            6.5,
+            0,
+            8.5,
+            2
+          ]
+        },
+        "south": {
+          "texture": "#painted_steel",
+          "uv": [
+            7.5,
+            0,
+            9.5,
+            2
+          ]
+        },
+        "east": {
+          "texture": "#painted_steel",
+          "uv": [
+            3.5,
+            0,
+            6,
+            2
+          ]
+        },
+        "west": {
+          "texture": "#painted_steel",
+          "uv": [
+            10,
+            0,
+            12.5,
+            2
+          ]
+        },
+        "up": {
+          "texture": "#painted_steel"
+        },
+        "down": {
+          "texture": "#painted_steel"
+        }
+      }
+    }
+  ]
+}
