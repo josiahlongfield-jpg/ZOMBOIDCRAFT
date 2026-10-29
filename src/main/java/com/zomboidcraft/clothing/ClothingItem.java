@@ -33,7 +33,10 @@ public class ClothingItem extends Item {
             gear.setItem(index, held.copyWithCount(1));
             held.shrink(1);
             if (!was.isEmpty() && !player.getInventory().add(was)) {
-                player.drop(was, false);
+                net.minecraft.world.entity.item.ItemEntity dropped = new net.minecraft.world.entity.item.ItemEntity(level,
+                        player.getX(), player.getEyeY() - 0.3, player.getZ(), was);
+                dropped.setPickUpDelay(40);
+                level.addFreshEntity(dropped);
             }
             level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ARMOR_EQUIP_LEATHER.value(),
                     SoundSource.PLAYERS, 1f, 1f);
