@@ -1,0 +1,79 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "om_flowers": "zomboidcraft:block/city/om_flowers",
+    "om_granite": "zomboidcraft:block/city/om_granite",
+    "particle": "zomboidcraft:block/city/om_granite"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        10,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_granite",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#om_granite",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#om_granite",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#om_granite",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#om_granite"
+        },
+        "down": {
+          "texture": "#om_granite",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        10,
+        1
+      ],
+      "to": [
+        15,
+        11,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_flowers"
+        },
+        "south": {
+          "texture": "#om_flowers"
+        },
+        "east": {
+          "texture": "#om_flowers"
+        },
+        "west": {
+          "texture": "#om_flowers"
+        },
+        "up": {
+          "texture": "#om_flowers"
+        },
+        "down": {
+          "texture": "#om_flowers"
+        }
+      }
+    }
+  ]
+}

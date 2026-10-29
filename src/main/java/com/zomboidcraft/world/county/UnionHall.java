@@ -16,7 +16,7 @@ import java.util.SplittableRandom;
  * <p>Under the platforms the ticket hall: long and low under a metal ceiling with its strip
  * lights, glass to the street at both ends and on the bus side, the ticket office and the ticket
  * machines, a kiosk at each end, the gates across it either side of the paid middle where the four
- * banks of stairs climb to the platforms, an escalator beside each, stopped since the power went.
+ * banks of stairs climb to the platforms, an escalator beside each, still running (one lane up, one down).
  * Doors through to the head house (the subway's wing, the concourse) and out to the bus and taxi
  * terminal under its glass canopies on the hall's far side, the buses that were the evacuation's
  * last way out still in their bays.
@@ -445,7 +445,10 @@ final class UnionHall {
                     continue;
                 }
                 boolean esc = x == e0 || x == e0 + 1;
-                set(x, k, z, (esc ? "tx_esc_step" : "tx_step") + "[facing=" + up + "]");
+                // the escalator's two lanes: up on the right as you climb, down on the left
+                boolean upLane = (x == e0) == (s > 0);
+                set(x, k, z, esc ? "zomboidcraft:escalator[facing=" + up + ",run=" + (upLane ? "up" : "down") + "]"
+                        : "tx_step[facing=" + up + "]");
                 for (int y = Math.max(k + 1, CEIL); y <= PLAT; y++) {
                     set(x, y, z, "air");
                 }
@@ -460,9 +463,10 @@ final class UnionHall {
             // the closed end at the platform's level, over the foot
             set(x, PLAT + 1, foot, "tx_glass_rail[axis=x]");
             if (x == e0 || x == e0 + 1) {
-                String hand = (x == e0 + 1) == (s > 0) ? "l" : "r";
+                String hand = (x == e0 + 1) == (s > 0) ? "l" : "r", footHand = hand.equals("l") ? "r" : "l";
                 set(x, 0, foot, "tx_esc_plate[facing=" + up + "]");
-                set(x, 1, foot, "tx_esc_newel_" + hand + "[facing=" + down + "]");
+                // turned to face down the hall, so the other hand keeps it on the outside edge
+                set(x, 1, foot, "tx_esc_newel_" + footHand + "[facing=" + down + "]");
                 set(x, PLAT, top, "tx_esc_plate[facing=" + down + "]");
                 set(x, PLAT + 1, top, "tx_esc_newel_" + hand + "[facing=" + up + "]");
             }

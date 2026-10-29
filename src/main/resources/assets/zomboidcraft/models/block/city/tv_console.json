@@ -1,0 +1,81 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sc_beige": "zomboidcraft:block/city/sc_beige",
+    "tv_console": "zomboidcraft:block/city/tv_console",
+    "particle": "zomboidcraft:block/city/sc_beige"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        3
+      ],
+      "to": [
+        16,
+        9,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_beige"
+        },
+        "south": {
+          "texture": "#sc_beige",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#sc_beige",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#sc_beige",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tv_console"
+        },
+        "down": {
+          "texture": "#sc_beige",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        9,
+        10
+      ],
+      "to": [
+        16,
+        13,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sc_beige"
+        },
+        "south": {
+          "texture": "#sc_beige",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#sc_beige",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#sc_beige",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#sc_beige"
+        },
+        "down": {
+          "texture": "#sc_beige"
+        }
+      }
+    }
+  ]
+}

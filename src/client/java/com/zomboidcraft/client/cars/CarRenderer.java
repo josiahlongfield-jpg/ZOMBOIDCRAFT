@@ -42,6 +42,14 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         // from the driver's seat the windows are left out: shaders fog see-through glass right in front of you
         Minecraft mc = Minecraft.getInstance();
         state.smashed = car.smashed();
+        state.look = car.variantIndex();
+        state.panes = car.aircraft() ? null : car.panes();
+        if (state.wound.length != car.wound.length) {
+            state.wound = new float[car.wound.length];
+        }
+        for (int i = 0; i < state.wound.length && i < car.woundO.length; i++) {
+            state.wound[i] = car.woundO[i] + (car.wound[i] - car.woundO[i]) * partialTick;
+        }
         state.inside = mc.player != null && car.hasPassenger(mc.player) && mc.options.getCameraType().isFirstPerson();
         Entity eye = mc.getCameraEntity();
         // a jet with its engines running is drawn whole three times further off, so its moving surfaces show
@@ -79,6 +87,12 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
             state.pivot = car.pivot();
             state.rotor = car.rotorO + (car.rotor - car.rotorO) * partialTick;
         }
+    }
+
+    /** A flyby still drawn from far off (FarFlybys) hides the real one there, which trails a little behind it. */
+    @Override
+    public boolean shouldRender(CarProp car, net.minecraft.client.renderer.culling.Frustum frustum, double x, double y, double z, float partialTick) {
+        return !FarFlybys.covers(car) && super.shouldRender(car, frustum, x, y, z, partialTick);
     }
 
     /** The whole car, not the entity's small box, decides whether it's on screen. */
@@ -168,10 +182,23 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
                 }
             });
         });
+        // close up each window's its own: shattered ones gone, wound-down ones in the door, and their marks on them,
+        // drawn from inside too (the dust on the glass says it's there)
+        CarGlassDraw.Set windows = CarGlassDraw.of(state, car, model);
         if (!state.inside && !state.smashed && !solidGlass) {
             collector.submitCustomGeometry(poseStack, RenderTypes.entityTranslucent(car.texture()), (pose, out) -> {
-                each(car, lids, wheels, rotors, (mesh, turn) -> draw(mesh, mesh.opaque(), mesh.triangles(), turn, pose, out, light, GLASS, null));
+                each(car, lids, wheels, rotors, (mesh, turn) -> {
+                    if (windows != null) {
+                        CarGlassDraw.glass(windows, mesh, turn, pose, out, light, GLASS);
+                    } else {
+                        draw(mesh, mesh.opaque(), mesh.triangles(), turn, pose, out, light, GLASS, null);
+                    }
+                });
             });
+        }
+        if (windows != null && !state.smashed) {
+            collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(CarGlassDraw.MARKS), (pose, out) ->
+                    each(car, lids, wheels, rotors, (mesh, turn) -> CarGlassDraw.marks(windows, mesh, turn, pose, out, light)));
         }
         // the instrument panel drawn sharp over a blurred one, in the aircraft you're in, powered or not
         CockpitPanel.Panel facePanel = state.liveCockpit != null && state.lod == 0

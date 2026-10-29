@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bp_gate_21": "zomboidcraft:block/city/bp_gate_21",
+    "bp_green": "zomboidcraft:block/city/bp_green",
+    "particle": "zomboidcraft:block/city/bp_gate_21"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        13
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bp_gate_21"
+        },
+        "south": {
+          "texture": "#bp_green",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#bp_green",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#bp_green",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#bp_green",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#bp_green",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

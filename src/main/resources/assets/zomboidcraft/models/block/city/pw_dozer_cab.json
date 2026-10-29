@@ -1,0 +1,83 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "pw_dozer": "zomboidcraft:block/city/pw_dozer",
+    "pw_sash_broken": {
+      "sprite": "zomboidcraft:block/city/pw_sash_broken",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/pw_sash_broken"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        1
+      ],
+      "to": [
+        15,
+        14,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pw_sash_broken"
+        },
+        "south": {
+          "texture": "#pw_sash_broken"
+        },
+        "east": {
+          "texture": "#pw_sash_broken"
+        },
+        "west": {
+          "texture": "#pw_sash_broken"
+        },
+        "up": {
+          "texture": "#pw_dozer"
+        },
+        "down": {
+          "texture": "#pw_dozer",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        14,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pw_dozer",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#pw_dozer",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#pw_dozer",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#pw_dozer",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#pw_dozer",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#pw_dozer"
+        }
+      }
+    }
+  ]
+}

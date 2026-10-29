@@ -1,0 +1,49 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hd_debris_b": {
+      "sprite": "zomboidcraft:block/city/hd_debris_b",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/hd_debris_b"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        0.25,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hd_debris_b",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#hd_debris_b",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#hd_debris_b",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#hd_debris_b",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#hd_debris_b"
+        },
+        "down": {
+          "texture": "#hd_debris_b",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

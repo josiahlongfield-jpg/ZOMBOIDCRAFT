@@ -1,0 +1,171 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ml_dress": "zomboidcraft:block/city/ml_dress",
+    "ml_skin": "zomboidcraft:block/city/ml_skin",
+    "particle": "zomboidcraft:block/city/ml_dress"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        0,
+        6
+      ],
+      "to": [
+        11,
+        10,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ml_dress"
+        },
+        "south": {
+          "texture": "#ml_dress"
+        },
+        "east": {
+          "texture": "#ml_dress"
+        },
+        "west": {
+          "texture": "#ml_dress"
+        },
+        "up": {
+          "texture": "#ml_dress"
+        },
+        "down": {
+          "texture": "#ml_dress",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3.5,
+        3,
+        7
+      ],
+      "to": [
+        5,
+        10,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ml_skin"
+        },
+        "south": {
+          "texture": "#ml_skin"
+        },
+        "east": {
+          "texture": "#ml_skin"
+        },
+        "west": {
+          "texture": "#ml_skin"
+        },
+        "up": {
+          "texture": "#ml_skin"
+        },
+        "down": {
+          "texture": "#ml_skin"
+        }
+      }
+    },
+    {
+      "from": [
+        11,
+        3,
+        7
+      ],
+      "to": [
+        12.5,
+        10,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ml_skin"
+        },
+        "south": {
+          "texture": "#ml_skin"
+        },
+        "east": {
+          "texture": "#ml_skin"
+        },
+        "west": {
+          "texture": "#ml_skin"
+        },
+        "up": {
+          "texture": "#ml_skin"
+        },
+        "down": {
+          "texture": "#ml_skin"
+        }
+      }
+    },
+    {
+      "from": [
+        7.3,
+        10,
+        7.3
+      ],
+      "to": [
+        8.7,
+        11.5,
+        8.7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ml_skin"
+        },
+        "south": {
+          "texture": "#ml_skin"
+        },
+        "east": {
+          "texture": "#ml_skin"
+        },
+        "west": {
+          "texture": "#ml_skin"
+        },
+        "up": {
+          "texture": "#ml_skin"
+        },
+        "down": {
+          "texture": "#ml_skin"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        11.5,
+        6
+      ],
+      "to": [
+        10,
+        15.5,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ml_skin"
+        },
+        "south": {
+          "texture": "#ml_skin"
+        },
+        "east": {
+          "texture": "#ml_skin"
+        },
+        "west": {
+          "texture": "#ml_skin"
+        },
+        "up": {
+          "texture": "#ml_skin"
+        },
+        "down": {
+          "texture": "#ml_skin"
+        }
+      }
+    }
+  ]
+}

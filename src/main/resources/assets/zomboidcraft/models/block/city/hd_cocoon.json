@@ -1,0 +1,75 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hd_plastic": "zomboidcraft:block/city/hd_plastic",
+    "particle": "zomboidcraft:block/city/hd_plastic"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        0,
+        5
+      ],
+      "to": [
+        11,
+        4,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hd_plastic"
+        },
+        "south": {
+          "texture": "#hd_plastic"
+        },
+        "east": {
+          "texture": "#hd_plastic"
+        },
+        "west": {
+          "texture": "#hd_plastic"
+        },
+        "up": {
+          "texture": "#hd_plastic"
+        },
+        "down": {
+          "texture": "#hd_plastic",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        4,
+        4.5
+      ],
+      "to": [
+        12,
+        16,
+        11.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hd_plastic"
+        },
+        "south": {
+          "texture": "#hd_plastic"
+        },
+        "east": {
+          "texture": "#hd_plastic"
+        },
+        "west": {
+          "texture": "#hd_plastic"
+        },
+        "up": {
+          "texture": "#hd_plastic",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#hd_plastic"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hs_curtain_blood": "zomboidcraft:block/city/hs_curtain_blood",
+    "particle": "zomboidcraft:block/city/hs_curtain_blood"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        1.5,
+        7.6
+      ],
+      "to": [
+        16,
+        16,
+        8.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hs_curtain_blood"
+        },
+        "south": {
+          "texture": "#hs_curtain_blood"
+        },
+        "east": {
+          "texture": "#hs_curtain_blood",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#hs_curtain_blood",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#hs_curtain_blood",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#hs_curtain_blood"
+        }
+      }
+    }
+  ]
+}

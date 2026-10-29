@@ -38,12 +38,15 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.world.events.WorldEvents.register();
         com.zomboidcraft.world.trains.Trains.register();
         com.zomboidcraft.world.trains.TrainCommand.register();
+        com.zomboidcraft.world.lifts.Lifts.register();
         com.zomboidcraft.combat.GunState.register();
         com.zomboidcraft.combat.Attachments.register();
         com.zomboidcraft.combat.GunFinish.register();
         com.zomboidcraft.combat.Repairs.register();
         com.zomboidcraft.combat.ModSounds.register();
         ModItems.register();
+        com.zomboidcraft.loot.items.LootItems.register();
+        com.zomboidcraft.loot.items.LootHooks.register();
         com.zomboidcraft.carry.Carry.register();
         com.zomboidcraft.spawn.SpawnPicker.register();
         com.zomboidcraft.gear.Headgear.register();
@@ -66,6 +69,7 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.zombie.population.Population.register();
         com.zomboidcraft.zombie.Hordes.register();
         ZcCommand.register();
+        Cinematic.register();
         com.zomboidcraft.combat.CombatNet.register();
         com.zomboidcraft.combat.Impacts.register();
         com.zomboidcraft.world.map.MapNet.register();
@@ -74,6 +78,7 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.combat.Dismember.register();
         com.zomboidcraft.combat.Deaths.register();
         com.zomboidcraft.zombie.Corpses.register();
+        com.zomboidcraft.creature.Harvestmen.register();
         com.zomboidcraft.combat.StuckBolts.register();
         com.zomboidcraft.combat.Stamina.register();
         com.zomboidcraft.combat.GunRaise.register();

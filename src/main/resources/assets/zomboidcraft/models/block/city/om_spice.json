@@ -1,0 +1,144 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "om_beans": "zomboidcraft:block/city/om_beans",
+    "om_burlap": "zomboidcraft:block/city/om_burlap",
+    "om_spice_gold": "zomboidcraft:block/city/om_spice_gold",
+    "om_spice_red": "zomboidcraft:block/city/om_spice_red",
+    "particle": "zomboidcraft:block/city/om_burlap"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        1
+      ],
+      "to": [
+        7,
+        10,
+        7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_burlap"
+        },
+        "south": {
+          "texture": "#om_burlap"
+        },
+        "east": {
+          "texture": "#om_burlap"
+        },
+        "west": {
+          "texture": "#om_burlap"
+        },
+        "up": {
+          "texture": "#om_spice_red"
+        },
+        "down": {
+          "texture": "#om_burlap",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        9,
+        0,
+        1
+      ],
+      "to": [
+        15,
+        11,
+        7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_burlap"
+        },
+        "south": {
+          "texture": "#om_burlap"
+        },
+        "east": {
+          "texture": "#om_burlap"
+        },
+        "west": {
+          "texture": "#om_burlap"
+        },
+        "up": {
+          "texture": "#om_spice_gold"
+        },
+        "down": {
+          "texture": "#om_burlap",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        0,
+        9
+      ],
+      "to": [
+        7,
+        12,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_burlap"
+        },
+        "south": {
+          "texture": "#om_burlap"
+        },
+        "east": {
+          "texture": "#om_burlap"
+        },
+        "west": {
+          "texture": "#om_burlap"
+        },
+        "up": {
+          "texture": "#om_beans"
+        },
+        "down": {
+          "texture": "#om_burlap",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        9,
+        0,
+        9
+      ],
+      "to": [
+        15,
+        10,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_burlap"
+        },
+        "south": {
+          "texture": "#om_burlap"
+        },
+        "east": {
+          "texture": "#om_burlap"
+        },
+        "west": {
+          "texture": "#om_burlap"
+        },
+        "up": {
+          "texture": "#om_spice_red"
+        },
+        "down": {
+          "texture": "#om_burlap",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -38,7 +38,8 @@ import net.minecraft.world.phys.Vec3;
  * over, and its engines are heard up close as any aircraft's are.
  */
 public final class WorldEvents {
-    public enum Kind { JET, HELI, SIREN, EXPLOSION }
+    /** STRAFE, BOMB and HUNT are the air strikes ({@link AirStrikes}): flybys on a path of their own, at a crowd of zombies. */
+    public enum Kind { JET, HELI, SIREN, EXPLOSION, STRAFE, BOMB, HUNT }
 
     /** Sound travels this many blocks a second. */
     public static final double SOUND_SPEED = 343;
@@ -56,9 +57,17 @@ public final class WorldEvents {
      * it starts on and how long it lasts. The aircraft's model and sound are only for a flyby: sound is which of
      * the whole flyby recordings everyone hears it as (world.flyby.jet.N / heli.N, from 1), or 0 for the far-off
      * loop bent by the Doppler shift in game until the aircraft is near and its own engines take over.
+     * An air strike flies a path instead of the line: where it is and how it's flying every {@link #STEP}
+     * seconds (x, y, z, yaw, nose, bank, over and over; the yaw carried on round rather than wrapped, the nose NaN
+     * where it's left to the way it's going), smoothed between; a line's path is empty.
      */
     public record Event(Kind kind, double x, double y, double z, double vx, double vy, double vz, long start, int ticks,
-            String model, int sound) implements CustomPacketPayload {
+            String model, int sound, float[] path) implements CustomPacketPayload {
+        /** Seconds between a path's points. */
+        public static final double STEP = 0.25;
+        /** Numbers a path's point takes. */
+        public static final int STRIDE = 6;
+        public static final float[] LINE = new float[0];
         public static final Type<Event> TYPE = new Type<>(ZomboidCraft.id("world_event"));
         public static final StreamCodec<RegistryFriendlyByteBuf, Event> CODEC = StreamCodec.of((buf, e) -> {
             buf.writeByte(e.kind.ordinal());
@@ -72,20 +81,105 @@ public final class WorldEvents {
             buf.writeVarInt(e.ticks);
             buf.writeUtf(e.model);
             buf.writeVarInt(e.sound);
-        }, buf -> new Event(Kind.values()[buf.readByte()], buf.readDouble(), buf.readDouble(), buf.readDouble(), buf.readDouble(),
-                buf.readDouble(), buf.readDouble(), buf.readLong(), buf.readVarInt(), buf.readUtf(), buf.readVarInt()));
+            buf.writeVarInt(e.path.length);
+            for (float f : e.path) {
+                buf.writeFloat(f);
+            }
+        }, buf -> {
+            Kind kind = Kind.values()[buf.readByte()];
+            double x = buf.readDouble(), y = buf.readDouble(), z = buf.readDouble(), vx = buf.readDouble(), vy = buf.readDouble(),
+                    vz = buf.readDouble();
+            long start = buf.readLong();
+            int ticks = buf.readVarInt();
+            String model = buf.readUtf();
+            int sound = buf.readVarInt();
+            float[] path = new float[buf.readVarInt()];
+            for (int i = 0; i < path.length; i++) {
+                path[i] = buf.readFloat();
+            }
+            return new Event(kind, x, y, z, vx, vy, vz, start, ticks, model, sound, path);
+        });
 
         /** Where it is t seconds after it started. */
         public Vec3 at(double t) {
-            return new Vec3(x + vx * t, y + vy * t, z + vz * t);
+            if (path.length == 0) {
+                return new Vec3(x + vx * t, y + vy * t, z + vz * t);
+            }
+            return new Vec3(spline(t, 0, false), spline(t, 1, false), spline(t, 2, false));
         }
 
-        public Vec3 velocity() {
-            return new Vec3(vx, vy, vz);
+        /** How it's moving t seconds in, blocks a second. */
+        public Vec3 velocity(double t) {
+            if (path.length == 0) {
+                return new Vec3(vx, vy, vz);
+            }
+            return new Vec3(spline(t, 0, true), spline(t, 1, true), spline(t, 2, true));
+        }
+
+        /** The path's value c (x y z yaw nose bank) at t, through its points (Catmull-Rom), or how fast it's changing. */
+        private double spline(double t, int c, boolean rate) {
+            int n = path.length / STRIDE;
+            double s = Math.clamp(t / STEP, 0, n - 1);
+            int i = Math.min((int) s, n - 2);
+            double f = s - i;
+            double a = path[Math.max(i - 1, 0) * STRIDE + c], b = path[i * STRIDE + c], d = path[(i + 1) * STRIDE + c],
+                    e = path[Math.min(i + 2, n - 1) * STRIDE + c];
+            if (rate) {
+                return 0.5 * ((d - a) + 2 * (2 * a - 5 * b + 4 * d - e) * f + 3 * (-a + 3 * b - 3 * d + e) * f * f) / STEP;
+            }
+            return 0.5 * (2 * b + (d - a) * f + (2 * a - 5 * b + 4 * d - e) * f * f + (-a + 3 * b - 3 * d + e) * f * f * f);
+        }
+
+        /** Which way its nose points t seconds in (Minecraft's yaw): along the line, or as its path says. */
+        public float yaw(double t) {
+            if (path.length == 0) {
+                return (float) Math.toDegrees(Math.atan2(-vx, vz));
+            }
+            return (float) spline(t, 3, false);
         }
 
         public boolean flyby() {
-            return kind == Kind.JET || kind == Kind.HELI;
+            return kind != Kind.SIREN && kind != Kind.EXPLOSION;
+        }
+
+        /** A jet's flyby or strike (otherwise a helicopter's, for a flyby). */
+        public boolean jet() {
+            return kind == Kind.JET || kind == Kind.STRAFE || kind == Kind.BOMB;
+        }
+
+        public boolean afterburner() {
+            return jet() && (kind == Kind.STRAFE || (start & 3) == 0);
+        }
+
+        /**
+         * Puts a flyby's aircraft where it is t seconds in, flying: nose along the way it's going, banked into its
+         * turns; the helicopter's nose dips as it speeds up and lifts as it hovers, turned the way its path says.
+         */
+        public void place(CarProp car, double t) {
+            Vec3 at = at(t), v = velocity(t);
+            if (path.length == 0) {
+                car.flyby(at, v, afterburner());
+                return;
+            }
+            float yaw = yaw(t);
+            if (!Float.isNaN(path[4])) {
+                // a jet's strike: flown, so how it's flying is in the path
+                car.flyby(at, v, yaw, (float) spline(t, 4, false), (float) spline(t, 5, false), afterburner());
+                return;
+            }
+            Vec3 a = velocity(t + 0.25).subtract(velocity(t - 0.25)).scale(2);
+            double rad = Math.toRadians(yaw), h = Math.sqrt(v.x * v.x + v.z * v.z);
+            Vec3 ahead = new Vec3(-Math.sin(rad), 0, Math.cos(rad)), right = new Vec3(-Math.cos(rad), 0, -Math.sin(rad));
+            float bank = (float) Math.clamp(Math.toDegrees(Math.atan2(a.dot(right), 9.81)), -70, 70);
+            float nose;
+            if (jet()) {
+                nose = (float) Math.toDegrees(Math.atan2(v.y, Math.max(h, 1)));
+            } else {
+                // a helicopter tips its nose down to speed up, up to slow, and leans into a sidestep
+                nose = (float) Math.clamp(-3 - 0.1 * v.dot(ahead) - 0.6 * a.dot(ahead), -16, 9);
+                bank = Math.clamp(bank * 0.7f, -25, 25);
+            }
+            car.flyby(at, v, yaw, nose, bank, afterburner());
         }
 
         @Override
@@ -98,6 +192,8 @@ public final class WorldEvents {
     private static final class Running {
         final Event event;
         CarProp aircraft;
+        /** An air strike's targets and guns, server side. */
+        AirStrikes.Run strike;
 
         Running(Event event) {
             this.event = event;
@@ -116,6 +212,7 @@ public final class WorldEvents {
 
     public static void register() {
         PayloadTypeRegistry.clientboundPlay().register(Event.TYPE, Event.CODEC);
+        AirStrikes.register();
         ServerTickEvents.END_SERVER_TICK.register(WorldEvents::tick);
         // someone joining mid-event still hears the rest of it
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> server.execute(() -> {
@@ -135,7 +232,7 @@ public final class WorldEvents {
         }
         if (cfg.worldEvents && now >= next && !level.players().isEmpty()) {
             next = now + gap(cfg, random);
-            Kind kind = pick(random);
+            Kind kind = pick(random, cfg);
             if (kind == Kind.SIREN && now - lastSiren < SIREN_GAP) {
                 kind = Kind.EXPLOSION;
             }
@@ -156,6 +253,9 @@ public final class WorldEvents {
             }
             if (r.event.flyby()) {
                 fly(level, r, t);
+                if (r.strike != null) {
+                    r.strike.tick(level, t);
+                }
             } else if (r.event.kind == Kind.EXPLOSION) {
                 smoke(level, r.event, now - r.event.start);
             }
@@ -168,8 +268,12 @@ public final class WorldEvents {
         return (int) (minutes * 60 * 20);
     }
 
-    private static Kind pick(RandomSource random) {
+    private static Kind pick(RandomSource random, ZcConfig.World cfg) {
         int r = random.nextInt(100);
+        // Josiah 09:27 2026-10-28: now and then the jets and the helicopter come in to strafe, bomb or hunt the dead
+        if (cfg.airStrikes && random.nextDouble() < cfg.airStrikeShare) {
+            return r < 35 ? Kind.STRAFE : r < 65 ? Kind.BOMB : Kind.HUNT;
+        }
         // Josiah: the siren is rare (and an hour apart at least, see tick)
         return r < 40 ? Kind.JET : r < 70 ? Kind.HELI : r < 94 ? Kind.EXPLOSION : Kind.SIREN;
     }
@@ -180,7 +284,34 @@ public final class WorldEvents {
      * blocks away.
      */
     public static Event start(ServerLevel level, Kind kind, ServerPlayer near) {
+        return start(level, kind, near, false);
+    }
+
+    /**
+     * The same; an air strike with no crowd of zombies near enough to hit is a plain flyby instead, unless forced
+     * (the test command), when it makes its run at the ground ahead of the player.
+     */
+    public static Event start(ServerLevel level, Kind kind, ServerPlayer near, boolean force) {
         RandomSource random = level.getRandom();
+        if (kind == Kind.STRAFE || kind == Kind.BOMB || kind == Kind.HUNT) {
+            List<AirStrikes.Run> runs = AirStrikes.plan(level, kind, near, force);
+            if (runs.isEmpty()) {
+                kind = kind == Kind.HUNT ? Kind.HELI : Kind.JET;
+            } else {
+                for (AirStrikes.Run run : runs) {
+                    Running r = new Running(run.event);
+                    r.strike = run;
+                    RUNNING.add(r);
+                    for (ServerPlayer player : level.players()) {
+                        ServerPlayNetworking.send(player, run.event);
+                    }
+                }
+                Event e = runs.get(0).event;
+                ZomboidCraft.LOGGER.info("World event {} at {} {} {}", kind.name().toLowerCase(Locale.ROOT), (int) runs.get(0).target.x,
+                        (int) runs.get(0).target.y, (int) runs.get(0).target.z);
+                return e;
+            }
+        }
         Vec3 p = near.position();
         double ground = surface(level, p.x, p.z, p.y);
         Event e;
@@ -202,7 +333,7 @@ public final class WorldEvents {
             y = Math.min(level.getMaxY() - 8, y);
             String model = jet ? JETS[random.nextInt(JETS.length)] : HELI;
             e = new Event(kind, cx - dx * reach, y, cz - dz * reach, dx * speed, 0, dz * speed, level.getGameTime(),
-                    (int) (2 * reach / speed * 20), model, sound(kind, random));
+                    (int) (2 * reach / speed * 20), model, sound(kind, random), Event.LINE);
             // often a few together, same type, each 3 to 5 seconds behind the one before (Josiah: far enough
             // back that every pass is its own Doppler sweep), a little out to one side and higher
             // Josiah 11:37: 2 or 3 jets in a row most of the time, and a couple of helicopters together often too
@@ -212,7 +343,7 @@ public final class WorldEvents {
                 back += speed * (3 + random.nextDouble() * 2);
                 double out = (i % 2 == 1 ? 1 : -1) * 22 * ((i + 1) / 2);
                 wingmen.add(new Event(kind, e.x() - dx * back - dz * out, y + 4 * i, e.z() - dz * back + dx * out, e.vx(), 0, e.vz(),
-                        e.start(), e.ticks() + (int) (back / speed * 20) + 1, model, sound(kind, random)));
+                        e.start(), e.ticks() + (int) (back / speed * 20) + 1, model, sound(kind, random), Event.LINE));
             }
         } else {
             double angle = random.nextDouble() * Math.PI * 2;
@@ -220,7 +351,7 @@ public final class WorldEvents {
             double x = p.x + Math.cos(angle) * d, z = p.z + Math.sin(angle) * d;
             double y = surface(level, x, z, ground) + (kind == Kind.SIREN ? 14 : 1);
             // a siren winds up and down for 40 seconds; an explosion's smoke hangs for a minute and a half
-            e = new Event(kind, x, y, z, 0, 0, 0, level.getGameTime(), kind == Kind.SIREN ? 44 * 20 : 90 * 20, "", 0);
+            e = new Event(kind, x, y, z, 0, 0, 0, level.getGameTime(), kind == Kind.SIREN ? 44 * 20 : 90 * 20, "", 0, Event.LINE);
             if (kind == Kind.EXPLOSION && level.isLoaded(BlockPos.containing(x, y, z))) {
                 level.sendParticles(ParticleTypes.EXPLOSION_EMITTER, true, true, x, y + 2, z, 2, 2, 1, 2, 0);
                 level.sendParticles(ParticleTypes.LAVA, true, true, x, y + 1, z, 30, 2, 1, 2, 0);
@@ -249,8 +380,12 @@ public final class WorldEvents {
         return 1 + random.nextInt(FLYBY_HELI.length);
     }
 
+    static String jet(RandomSource random) {
+        return JETS[random.nextInt(JETS.length)];
+    }
+
     /** Ground height here if the chunk is loaded, otherwise the fallback. */
-    private static double surface(ServerLevel level, double x, double z, double fallback) {
+    static double surface(ServerLevel level, double x, double z, double fallback) {
         BlockPos pos = BlockPos.containing(x, fallback, z);
         if (!level.isLoaded(pos)) {
             return fallback;
@@ -279,12 +414,12 @@ public final class WorldEvents {
                 return;
             }
             car.setLook(r.event.model(), "usable");
-            car.flyby(at, r.event.velocity(), r.event.kind() == Kind.JET && (r.event.start() & 3) == 0);
+            r.event.place(car, t);
             level.addFreshEntity(car);
             r.aircraft = car;
             return;
         }
-        r.aircraft.flyby(at, r.event.velocity(), r.event.kind() == Kind.JET && (r.event.start() & 3) == 0);
+        r.event.place(r.aircraft, t);
     }
 
     /** Smoke climbing from where it went off, thinning out over its minute and a half. */
@@ -299,7 +434,7 @@ public final class WorldEvents {
         }
     }
 
-    private static double sqr(double v) {
+    static double sqr(double v) {
         return v * v;
     }
 
@@ -312,7 +447,7 @@ public final class WorldEvents {
         return out;
     }
 
-    private static SoundEvent register(String name, float range) {
+    static SoundEvent register(String name, float range) {
         Identifier id = ZomboidCraft.id(name);
         return Registry.register(BuiltInRegistries.SOUND_EVENT, id, SoundEvent.createFixedRangeEvent(id, range));
     }

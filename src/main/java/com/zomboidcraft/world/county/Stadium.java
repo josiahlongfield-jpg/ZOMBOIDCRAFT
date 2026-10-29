@@ -2821,8 +2821,8 @@ final class Stadium {
                             set(c[0], y, c[1], worn("st_precast_plain", c[0], y, c[1]));
                         }
                         set(c[0], top + 1 + i, c[1], STAIR + "[facing=east]");
-                        // three clear over each step, and up through the roof into the hut
-                        for (int y = top + 2 + i; y <= (i > 5 ? deck + 2 : top + 4 + i); y++) {
+                        // four clear over each step, and up through the roof into the hut
+                        for (int y = top + 2 + i; y <= (i > 5 ? deck + 3 : top + 5 + i); y++) {
                             set(c[0], y, c[1], "air");
                         }
                     }
@@ -2833,16 +2833,16 @@ final class Stadium {
                     boolean inside = flight && i > 5 && i < 11;
                     if (inside && i == 10) {
                         set(c[0], ROOF, c[1], SLAB);
-                        for (int y = deck; y < deck + 3; y++) {
+                        for (int y = deck; y < deck + 4; y++) {
                             set(c[0], y, c[1], "air");
                         }
                     }
                     if (!inside) {
-                        for (int y = b == FACADE ? deck + 1 : deck; y < deck + 3; y++) {
+                        for (int y = b == FACADE ? deck + 1 : deck; y < deck + 4; y++) {
                             set(c[0], y, c[1], "st_cmu");
                         }
                     }
-                    set(c[0], deck + 3, c[1], "concrete_panel");
+                    set(c[0], deck + 4, c[1], "concrete_panel");
                 }
             }
             int[] d = cell(s, t0 + 11, UP_LAST - 1);

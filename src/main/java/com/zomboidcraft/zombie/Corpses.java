@@ -92,6 +92,26 @@ public final class Corpses {
         level.addFreshEntity(corpse);
     }
 
+    /**
+     * Lays a body that never walked here (a Harvestman's den), in a given outfit, missing what's in limbs. Kept bodies
+     * count as laid far in the future, so they're never the oldest to go and never time out.
+     */
+    public static Corpse lay(ServerLevel level, net.minecraft.world.phys.Vec3 at, float yaw, String outfit, int limbs,
+                             boolean kept) {
+        Corpse corpse = CORPSE.create(level, EntitySpawnReason.EVENT);
+        if (corpse == null) {
+            return null;
+        }
+        var r = level.getRandom();
+        // a plain fall (standing, shambling or running), any heading, no shot behind it
+        long death = r.nextInt(3) | (long) r.nextInt(256) << 3 | (long) r.nextInt(256) << 18 | (long) r.nextInt(65536) << 32;
+        corpse.dress(outfit, limbs, death, r.nextInt());
+        corpse.snapTo(at.x, at.y, at.z, yaw, 0f);
+        corpse.laidAt = level.getGameTime() + (kept ? 1_000_000_000L : 0);
+        level.addFreshEntity(corpse);
+        return corpse;
+    }
+
     /** Past the most bodies a world keeps loaded, the oldest go. */
     private static void trim(List<Corpse> bodies) {
         int max = Math.max(0, ZcConfig.get().corpses.maxBodies);

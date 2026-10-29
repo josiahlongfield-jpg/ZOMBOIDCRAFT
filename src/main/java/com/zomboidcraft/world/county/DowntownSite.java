@@ -565,7 +565,7 @@ final class DowntownSite extends Site {
             return;
         }
         Placer pl = lotOn(b, side, along, tw, td);
-        Tower t = new Tower(pl, rng, tw, td, floors, chance() < 0.85, towerStyle(), rng.nextInt(4));
+        Tower t = new Tower(pl, rng, tw, td, floors, true, towerStyle(), rng.nextInt(4));
         t.build();
         garage(pl, t, tw, td, boxOn(b, side, along, tw, td));
         civic.chandeliers(pl, tw, td, Tower.LOBBY);
@@ -588,7 +588,7 @@ final class DowntownSite extends Site {
             return false;
         }
         Placer pl = set > 0 ? lotOnSet(b, side, at, t.w(), t.d(), set) : lotOn(b, side, at, t.w(), t.d());
-        new PackTower(pl, rng, t, chance() < 0.85).build();
+        new PackTower(pl, rng, t, true).build();
         ruin(box, t.height() + 8);
         return true;
     }
@@ -783,7 +783,7 @@ final class DowntownSite extends Site {
             forecourt(boxOn(b, front, 0, len, set), front);
             Placer pl = lotOnSet(b, front, (len - tw) / 2, tw, td, set);
             int floors = Math.min(maxFloors, floors(b.t) + 6);
-            Tower t = new Tower(pl, rng, tw, td, floors, chance() < 0.85, towerStyle(), rng.nextInt(4));
+            Tower t = new Tower(pl, rng, tw, td, floors, true, towerStyle(), rng.nextInt(4));
             t.build();
             garage(pl, t, tw, td, boxOn(b, front, (len - tw) / 2, tw, td + set));
             civic.chandeliers(pl, tw, td, Tower.LOBBY);

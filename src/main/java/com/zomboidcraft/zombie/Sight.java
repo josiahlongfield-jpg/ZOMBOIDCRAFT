@@ -14,7 +14,8 @@ import net.minecraft.world.phys.Vec3;
  */
 public final class Sight {
     public static boolean canSee(Mob zombie, Player player) {
-        if (!player.isAlive() || player.isSpectator() || player.isCreative()) {
+        if (!player.isAlive() || player.isSpectator() || player.isCreative()
+                || com.zomboidcraft.Cinematic.ghost(player)) {
             return false;
         }
         ZcConfig.Senses config = ZcConfig.get().senses;

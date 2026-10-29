@@ -149,16 +149,14 @@ public final class Grabs {
 
     /** Once a second per player: a zombie in reach may grab, one a few steps off may lunge. */
     private static void closeIn(ServerPlayer player, ZcConfig.Combat config) {
-        if (com.zomboidcraft.world.cars.CarProp.shielded(player)) {
-            return;     // no grabbing through a car's glass
-        }
         ServerLevel level = (ServerLevel) player.level();
         Long freed = FREED_AT.get(player);
         boolean canGrab = config.grabs && (freed == null || level.getGameTime() - freed > COOLDOWN);
         for (Zombie zombie : level.getEntitiesOfClass(Zombie.class, player.getBoundingBox().inflate(5))) {
             if (!ZombieTypes.isWalker(zombie) || !zombie.isAlive() || zombie.getTarget() != player
-                    || Downed.isLow(zombie) || Downed.isHeld(zombie)) {
-                continue;
+                    || Downed.isLow(zombie) || Downed.isHeld(zombie)
+                    || com.zomboidcraft.world.cars.CarProp.shielded(player, zombie)) {
+                continue;   // no grabbing through a car's glass, only in at a window that's open or gone
             }
             double dist = zombie.distanceTo(player);
             if (canGrab && dist < 1.4 && Dismember.hasHands(zombie) && zombie.getRandom().nextFloat() < config.grabChance) {

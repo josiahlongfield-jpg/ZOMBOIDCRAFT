@@ -1,0 +1,464 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_plastic_black": "zomboidcraft:block/city/home_plastic_black",
+    "mu_fur_wolf": "zomboidcraft:block/city/mu_fur_wolf",
+    "particle": "zomboidcraft:block/city/mu_fur_wolf"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        0,
+        3
+      ],
+      "to": [
+        6.5,
+        6,
+        4.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_fur_wolf"
+        },
+        "south": {
+          "texture": "#mu_fur_wolf"
+        },
+        "east": {
+          "texture": "#mu_fur_wolf"
+        },
+        "west": {
+          "texture": "#mu_fur_wolf"
+        },
+        "up": {
+          "texture": "#mu_fur_wolf"
+        },
+        "down": {
+          "texture": "#mu_fur_wolf",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        9.5,
+        0,
+        3
+      ],
+      "to": [
+        11,
+        6,
+        4.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_fur_wolf"
+        },
+        "south": {
+          "texture": "#mu_fur_wolf"
+        },
+        "east": {
+          "texture": "#mu_fur_wolf"
+        },
+        "west": {
+          "texture": "#mu_fur_wolf"
+        },
+        "up": {
+          "texture": "#mu_fur_wolf"
+        },
+        "down": {
+          "texture": "#mu_fur_wolf",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        0,
+        12
+      ],
+      "to": [
+        6.5,
+        6,
+        13.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_fur_wolf"
+        },
+        "south": {
+          "texture": "#mu_fur_wolf"
+        },
+        "east": {
+          "texture": "#mu_fur_wolf"
+        },
+        "west": {
+          "texture": "#mu_fur_wolf"
+        },
+        "up": {
+          "texture": "#mu_fur_wolf"
+        },
+        "down": {
+          "texture": "#mu_fur_wolf",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        9.5,
+        0,
+        12
+      ],
+      "to": [
+        11,
+        6,
+        13.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_fur_wolf"
+        },
+        "south": {
+          "texture": "#mu_fur_wolf"
+        },
+        "east": {
+          "texture": "#mu_fur_wolf"
+        },
+        "west": {
+          "texture": "#mu_fur_wolf"
+        },
+        "up": {
+          "texture": "#mu_fur_wolf"
+        },
+        "down": {
+          "texture": "#mu_fur_wolf",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4.5,
+        5,
+        2.5
+      ],
+      "to": [
+        11.5,
+        11,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_fur_wolf"
+        },
+        "south": {
+          "texture": "#mu_fur_wolf"
+        },
+        "east": {
+          "texture": "#mu_fur_wolf"
+        },
+        "west": {
+          "texture": "#mu_fur_wolf"
+        },
+        "up": {
+          "texture": "#mu_fur_wolf"
+        },
+        "down": {
+          "texture": "#mu_fur_wolf"
+        }
+      }
+    },
+    {
+      "from": [
+        5.5,
+        8,
+        -1
+      ],
+      "to": [
+        10.5,
+        13,
+        3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_fur_wolf"
+        },
+        "south": {
+          "texture": "#mu_fur_wolf"
+        },
+        "east": {
+          "texture": "#mu_fur_wolf",
+          "uv": [
+            12,
+            3,
+            16,
+            8
+          ]
+        },
+        "west": {
+          "texture": "#mu_fur_wolf",
+          "uv": [
+            0,
+            3,
+            4,
+            8
+          ]
+        },
+        "up": {
+          "texture": "#mu_fur_wolf",
+          "uv": [
+            5.5,
+            0,
+            10.5,
+            4
+          ]
+        },
+        "down": {
+          "texture": "#mu_fur_wolf",
+          "uv": [
+            5.5,
+            12,
+            10.5,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        6.5,
+        8,
+        -4
+      ],
+      "to": [
+        9.5,
+        11,
+        -1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_fur_wolf"
+        },
+        "south": {
+          "texture": "#mu_fur_wolf"
+        },
+        "east": {
+          "texture": "#mu_fur_wolf",
+          "uv": [
+            13,
+            5,
+            16,
+            8
+          ]
+        },
+        "west": {
+          "texture": "#mu_fur_wolf",
+          "uv": [
+            0,
+            5,
+            3,
+            8
+          ]
+        },
+        "up": {
+          "texture": "#mu_fur_wolf",
+          "uv": [
+            6.5,
+            0,
+            9.5,
+            3
+          ]
+        },
+        "down": {
+          "texture": "#mu_fur_wolf",
+          "uv": [
+            6.5,
+            13,
+            9.5,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        8,
+        -4.5
+      ],
+      "to": [
+        9,
+        9,
+        -4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_plastic_black"
+        },
+        "south": {
+          "texture": "#home_plastic_black"
+        },
+        "east": {
+          "texture": "#home_plastic_black",
+          "uv": [
+            15.5,
+            7,
+            16,
+            8
+          ]
+        },
+        "west": {
+          "texture": "#home_plastic_black",
+          "uv": [
+            0,
+            7,
+            0.5,
+            8
+          ]
+        },
+        "up": {
+          "texture": "#home_plastic_black",
+          "uv": [
+            7,
+            0,
+            9,
+            0.5
+          ]
+        },
+        "down": {
+          "texture": "#home_plastic_black",
+          "uv": [
+            7,
+            15.5,
+            9,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        5.5,
+        12.5,
+        0
+      ],
+      "to": [
+        7,
+        15,
+        1.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_fur_wolf",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#mu_fur_wolf"
+        },
+        "east": {
+          "texture": "#mu_fur_wolf"
+        },
+        "west": {
+          "texture": "#mu_fur_wolf"
+        },
+        "up": {
+          "texture": "#mu_fur_wolf"
+        },
+        "down": {
+          "texture": "#mu_fur_wolf"
+        }
+      }
+    },
+    {
+      "from": [
+        9,
+        12.5,
+        0
+      ],
+      "to": [
+        10.5,
+        15,
+        1.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_fur_wolf",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#mu_fur_wolf"
+        },
+        "east": {
+          "texture": "#mu_fur_wolf"
+        },
+        "west": {
+          "texture": "#mu_fur_wolf"
+        },
+        "up": {
+          "texture": "#mu_fur_wolf"
+        },
+        "down": {
+          "texture": "#mu_fur_wolf"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        7,
+        14
+      ],
+      "to": [
+        9,
+        9,
+        19
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_fur_wolf"
+        },
+        "south": {
+          "texture": "#mu_fur_wolf"
+        },
+        "east": {
+          "texture": "#mu_fur_wolf",
+          "uv": [
+            0,
+            7,
+            5,
+            9
+          ]
+        },
+        "west": {
+          "texture": "#mu_fur_wolf",
+          "uv": [
+            11,
+            7,
+            16,
+            9
+          ]
+        },
+        "up": {
+          "texture": "#mu_fur_wolf",
+          "uv": [
+            7,
+            11,
+            9,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#mu_fur_wolf",
+          "uv": [
+            7,
+            0,
+            9,
+            5
+          ]
+        }
+      }
+    }
+  ]
+}

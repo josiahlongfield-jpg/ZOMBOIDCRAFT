@@ -129,6 +129,10 @@ public final class Weights {
         if (exact != null) {
             return exact;
         }
+        double loot = com.zomboidcraft.loot.items.ItemInfo.kg(stack);
+        if (loot >= 0) {
+            return loot;
+        }
         if (stack.is(ItemTags.SWORDS)) return 1.2;
         if (stack.is(ItemTags.AXES)) return 1.8;
         if (stack.is(ItemTags.PICKAXES)) return 2.2;

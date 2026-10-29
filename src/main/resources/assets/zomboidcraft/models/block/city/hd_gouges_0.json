@@ -1,0 +1,49 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hd_gouges_0": {
+      "sprite": "zomboidcraft:block/city/hd_gouges_0",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/hd_gouges_0"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.8
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hd_gouges_0"
+        },
+        "south": {
+          "texture": "#hd_gouges_0",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#hd_gouges_0",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#hd_gouges_0",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#hd_gouges_0",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#hd_gouges_0",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

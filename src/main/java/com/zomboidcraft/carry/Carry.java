@@ -267,6 +267,7 @@ public final class Carry {
                     inventory.setChanged();
                 }
             }
+            com.zomboidcraft.loot.items.LootHooks.tick(player);
             boolean on = ZcConfig.get().carry.weight && !player.isCreative() && !player.isSpectator();
             float ratio = on ? Math.round(load(player) / capacity() * 100f) / 100f : 0f;
             if (player.getAttachedOrElse(LOAD, 0f) != ratio) {

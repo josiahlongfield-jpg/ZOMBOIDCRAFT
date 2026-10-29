@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "gl_keel": "zomboidcraft:block/city/gl_keel",
+    "gl_keel_top": "zomboidcraft:block/city/gl_keel_top",
+    "particle": "zomboidcraft:block/city/gl_keel"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gl_keel",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#gl_keel",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#gl_keel",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#gl_keel",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#gl_keel_top",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#gl_keel_top",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

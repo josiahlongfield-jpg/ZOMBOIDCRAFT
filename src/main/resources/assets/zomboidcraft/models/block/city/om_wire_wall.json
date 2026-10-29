@@ -1,0 +1,45 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "om_wire": "zomboidcraft:block/city/om_wire",
+    "particle": "zomboidcraft:block/city/om_wire"
+  },
+  "elements": [
+    {
+      "from": [
+        7.5,
+        0,
+        0
+      ],
+      "to": [
+        8.5,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_wire",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#om_wire",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#om_wire"
+        },
+        "west": {
+          "texture": "#om_wire"
+        },
+        "up": {
+          "texture": "#om_wire",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#om_wire",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

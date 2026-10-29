@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ml_sign_electronics_3_on": "zomboidcraft:block/city/ml_sign_electronics_3_on",
+    "particle": "zomboidcraft:block/city/ml_sign_electronics_3_on"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        14.5
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ml_sign_electronics_3_on"
+        },
+        "south": {
+          "texture": "#ml_sign_electronics_3_on",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ml_sign_electronics_3_on",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ml_sign_electronics_3_on",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ml_sign_electronics_3_on",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ml_sign_electronics_3_on",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

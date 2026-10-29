@@ -8,8 +8,10 @@ import com.zomboidcraft.world.county.Track;
 import com.zomboidcraft.world.trains.Line;
 import com.zomboidcraft.world.trains.Trains;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.commands.CommandSourceStack;
@@ -65,14 +67,22 @@ public final class CountyRails {
         ZomboidCraft.LOGGER.info("County lines laid for the trains in {} ms", System.currentTimeMillis() - t0);
     }
 
-    /** A stop's command name: its plan key without the "st-" ("union", "uptown"), subway stops after "subway_". */
+    /**
+     * A stop's command name: its plan key without the "st-" ("union", "uptown"), subway stops
+     * after "subway_", the Glass Line's after "glass_" (it stops at both sides of its island
+     * platforms: one name for the pair).
+     */
     private static String name(Track t, Track.Stop st) {
         String k = st.spot().startsWith("st-") ? st.spot().substring(3) : st.spot();
-        return (t.kind == Track.Kind.SUBWAY ? "subway_" : "") + k.toLowerCase(Locale.ROOT).replace('-', '_');
+        String line = GLASS.equals(t.id) ? "glass_" : t.kind == Track.Kind.SUBWAY ? "subway_" : "";
+        return line + k.toLowerCase(Locale.ROOT).replace('-', '_');
     }
 
+    /** The Glass Line's id (world/county/GlassLine). */
+    private static final String GLASS = "glass";
+
     private static List<String> names(County county) {
-        List<String> out = new ArrayList<>();
+        Set<String> out = new LinkedHashSet<>();
         if (county != null) {
             for (Track t : county.tracks()) {
                 for (Track.Stop st : t.stops) {
@@ -80,7 +90,7 @@ public final class CountyRails {
                 }
             }
         }
-        return out;
+        return new ArrayList<>(out);
     }
 
     /** Teleports to the platform of the named stop, or the nearest one. */
@@ -118,7 +128,7 @@ public final class CountyRails {
         // the platform's top is a block above the bed's
         double y = best.bedTop(stop) + 1.05;
         src.getServer().getCommands().performPrefixedCommand(src, String.format(Locale.ROOT, "tp @s %.1f %.2f %.1f", p[0], y, p[1]));
-        String said = stop.name() + (best.kind == Track.Kind.SUBWAY ? " (subway)" : "");
+        String said = stop.name() + (GLASS.equals(best.id) ? " (Glass Line)" : best.kind == Track.Kind.SUBWAY ? " (subway)" : "");
         src.sendSuccess(() -> Component.literal("On the platform at " + said), false);
         return 1;
     }

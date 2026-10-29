@@ -1,0 +1,75 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bp_ball": "zomboidcraft:block/city/bp_ball",
+    "steel_red": "zomboidcraft:block/city/steel_red",
+    "particle": "zomboidcraft:block/city/steel_red"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        3
+      ],
+      "to": [
+        13,
+        9,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#steel_red"
+        },
+        "south": {
+          "texture": "#steel_red"
+        },
+        "east": {
+          "texture": "#steel_red"
+        },
+        "west": {
+          "texture": "#steel_red"
+        },
+        "up": {
+          "texture": "#steel_red"
+        },
+        "down": {
+          "texture": "#steel_red",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3.6,
+        9,
+        3.6
+      ],
+      "to": [
+        12.4,
+        10,
+        12.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bp_ball"
+        },
+        "south": {
+          "texture": "#bp_ball"
+        },
+        "east": {
+          "texture": "#bp_ball"
+        },
+        "west": {
+          "texture": "#bp_ball"
+        },
+        "up": {
+          "texture": "#bp_ball"
+        },
+        "down": {
+          "texture": "#bp_ball"
+        }
+      }
+    }
+  ]
+}

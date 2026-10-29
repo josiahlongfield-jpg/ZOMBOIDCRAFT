@@ -1,4 +1,145 @@
 {
+  "creature.harvestman.tap": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:creature/harvestman/tap/1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "zomboidcraft:creature/harvestman/tap/2",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "zomboidcraft:creature/harvestman/tap/3",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "zomboidcraft:creature/harvestman/tap/4",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "creature.harvestman.scrape": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:creature/harvestman/scrape/1",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "creature.harvestman.click": {
+    "sounds": []
+  },
+  "creature.harvestman.hiss": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:creature/harvestman/hiss/1",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "zomboidcraft:creature/harvestman/hiss/2",
+        "attenuation_distance": 24
+      },
+      {
+        "name": "zomboidcraft:creature/harvestman/hiss/3",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "creature.harvestman.screech": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:creature/harvestman/screech/1"
+      }
+    ]
+  },
+  "creature.harvestman.feed": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:creature/harvestman/feed/1",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "creature.harvestman.clang": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:creature/harvestman/clang/1",
+        "attenuation_distance": 32
+      },
+      {
+        "name": "zomboidcraft:creature/harvestman/clang/2",
+        "attenuation_distance": 32
+      },
+      {
+        "name": "zomboidcraft:creature/harvestman/clang/3",
+        "attenuation_distance": 32
+      },
+      {
+        "name": "zomboidcraft:creature/harvestman/clang/4",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "creature.harvestman.hurt": {
+    "sounds": []
+  },
+  "creature.harvestman.leg_off": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:creature/harvestman/leg_off/1"
+      }
+    ]
+  },
+  "creature.harvestman.death": {
+    "sounds": []
+  },
+  "creature.harvestman.call": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:creature/harvestman/call/1"
+      }
+    ]
+  },
+  "creature.harvestman.chitter": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:creature/harvestman/chitter/1",
+        "attenuation_distance": 40
+      },
+      {
+        "name": "zomboidcraft:creature/harvestman/chitter/2",
+        "attenuation_distance": 40
+      },
+      {
+        "name": "zomboidcraft:creature/harvestman/chitter/3",
+        "attenuation_distance": 40
+      }
+    ]
+  },
+  "creature.harvestman.creak": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:creature/harvestman/creak/1",
+        "attenuation_distance": 20
+      },
+      {
+        "name": "zomboidcraft:creature/harvestman/creak/2",
+        "attenuation_distance": 20
+      },
+      {
+        "name": "zomboidcraft:creature/harvestman/creak/3",
+        "attenuation_distance": 20
+      }
+    ]
+  },
+  "creature.harvestman.hum": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:creature/harvestman/hum/1"
+      }
+    ]
+  },
   "weapon.rifle.shot": {
     "sounds": [
       {
@@ -783,12 +924,7 @@
     ]
   },
   "car.stall": {
-    "sounds": [
-      {
-        "name": "zomboidcraft:car/stall/1",
-        "attenuation_distance": 32
-      }
-    ]
+    "sounds": []
   },
   "car.idle": {
     "sounds": [
@@ -1781,10 +1917,6 @@
       {
         "name": "zomboidcraft:weapon/bullet/impact/nearby/5",
         "attenuation_distance": 24
-      },
-      {
-        "name": "zomboidcraft:weapon/bullet/impact/nearby/6",
-        "attenuation_distance": 24
       }
     ]
   },
@@ -1807,7 +1939,11 @@
   "world.explosion": {
     "sounds": [
       {
-        "name": "zomboidcraft:aircraft/crash",
+        "name": "zomboidcraft:world/explosion/near/1",
+        "attenuation_distance": 192
+      },
+      {
+        "name": "zomboidcraft:world/explosion/near/2",
         "attenuation_distance": 192
       }
     ]
@@ -1815,7 +1951,15 @@
   "world.explosion.far": {
     "sounds": [
       {
-        "name": "zomboidcraft:amb/distant/1",
+        "name": "zomboidcraft:world/explosion/far/1",
+        "attenuation_distance": 640
+      },
+      {
+        "name": "zomboidcraft:world/explosion/far/2",
+        "attenuation_distance": 640
+      },
+      {
+        "name": "zomboidcraft:world/explosion/far/3",
         "attenuation_distance": 640
       }
     ]
@@ -1872,10 +2016,6 @@
       },
       {
         "name": "zomboidcraft:weapon/bullet/impact/nearby/5",
-        "attenuation_distance": 48
-      },
-      {
-        "name": "zomboidcraft:weapon/bullet/impact/nearby/6",
         "attenuation_distance": 48
       }
     ]
@@ -3043,6 +3183,42 @@
     ],
     "subtitle": "subtitles.zomboidcraft.otto"
   },
+  "otto.doors_shut_0": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/doors_shut_0",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.doors_shut_1": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/doors_shut_1",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.doors_shut_2": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/doors_shut_2",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
+  "otto.doors_shut_3": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:otto/doors_shut_3",
+        "attenuation_distance": 48
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.otto"
+  },
   "weapon.bullet.head_burst": {
     "sounds": [
       {
@@ -3072,6 +3248,527 @@
       {
         "name": "zomboidcraft:world/flyby/jet/5",
         "attenuation_distance": 800
+      }
+    ]
+  },
+  "lift.ding": {
+    "sounds": [
+      {
+        "name": "minecraft:block.note_block.bell",
+        "type": "event",
+        "pitch": 1.2,
+        "attenuation_distance": 24
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.lift.ding"
+  },
+  "lift.doors": {
+    "sounds": [
+      {
+        "name": "minecraft:block.piston.contract",
+        "type": "event",
+        "pitch": 1.3,
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.lift.doors"
+  },
+  "lift.motor": {
+    "sounds": [
+      {
+        "name": "minecraft:block.beacon.ambient",
+        "type": "event",
+        "pitch": 0.6,
+        "attenuation_distance": 16
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.lift.motor"
+  },
+  "lift.button": {
+    "sounds": [
+      {
+        "name": "minecraft:block.stone_button.click_on",
+        "type": "event",
+        "pitch": 1.4,
+        "attenuation_distance": 12
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.lift.button"
+  },
+  "weapon.throw.swing": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:weapon/throw/swing/1",
+        "attenuation_distance": 12
+      }
+    ]
+  },
+  "weapon.throw.bottle_smash": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:weapon/throw/bottle/1",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "weapon.throw.can_clatter": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:weapon/throw/can/1",
+        "attenuation_distance": 20
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/can/2",
+        "attenuation_distance": 20
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/can/3",
+        "attenuation_distance": 20
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/can/4",
+        "attenuation_distance": 20
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/can/5",
+        "attenuation_distance": 20
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/can/6",
+        "attenuation_distance": 20
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/can/7",
+        "attenuation_distance": 20
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/can/8",
+        "attenuation_distance": 20
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/can/9",
+        "attenuation_distance": 20
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/can/10",
+        "attenuation_distance": 20
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/can/11",
+        "attenuation_distance": 20
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/can/12",
+        "attenuation_distance": 20
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/can/13",
+        "attenuation_distance": 20
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/can/14",
+        "attenuation_distance": 20
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/can/15",
+        "attenuation_distance": 20
+      }
+    ]
+  },
+  "weapon.throw.brick_thud": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:weapon/throw/brick/1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/brick/2",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/brick/3",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "weapon.throw.firecracker": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:weapon/throw/firecracker/1",
+        "attenuation_distance": 64
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/firecracker/2",
+        "attenuation_distance": 64
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/firecracker/3",
+        "attenuation_distance": 64
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/firecracker/4",
+        "attenuation_distance": 64
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/firecracker/5",
+        "attenuation_distance": 64
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/firecracker/6",
+        "attenuation_distance": 64
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/firecracker/7",
+        "attenuation_distance": 64
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/firecracker/8",
+        "attenuation_distance": 64
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/firecracker/9",
+        "attenuation_distance": 64
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/firecracker/10",
+        "attenuation_distance": 64
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/firecracker/11",
+        "attenuation_distance": 64
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/firecracker/12",
+        "attenuation_distance": 64
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/firecracker/13",
+        "attenuation_distance": 64
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/firecracker/14",
+        "attenuation_distance": 64
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/firecracker/15",
+        "attenuation_distance": 64
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/firecracker/16",
+        "attenuation_distance": 64
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/firecracker/17",
+        "attenuation_distance": 64
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/firecracker/18",
+        "attenuation_distance": 64
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/firecracker/19",
+        "attenuation_distance": 64
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/firecracker/20",
+        "attenuation_distance": 64
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/firecracker/21",
+        "attenuation_distance": 64
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/firecracker/22",
+        "attenuation_distance": 64
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/firecracker/23",
+        "attenuation_distance": 64
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/firecracker/24",
+        "attenuation_distance": 64
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/firecracker/25",
+        "attenuation_distance": 64
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/firecracker/26",
+        "attenuation_distance": 64
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/firecracker/27",
+        "attenuation_distance": 64
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/firecracker/28",
+        "attenuation_distance": 64
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/firecracker/29",
+        "attenuation_distance": 64
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/firecracker/30",
+        "attenuation_distance": 64
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/firecracker/31",
+        "attenuation_distance": 64
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/firecracker/32",
+        "attenuation_distance": 64
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/firecracker/33",
+        "attenuation_distance": 64
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/firecracker/34",
+        "attenuation_distance": 64
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/firecracker/35",
+        "attenuation_distance": 64
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/firecracker/36",
+        "attenuation_distance": 64
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/firecracker/37",
+        "attenuation_distance": 64
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/firecracker/38",
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "weapon.throw.fuse": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:weapon/throw/fuse/1",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/fuse/2",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/fuse/3",
+        "attenuation_distance": 12
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/fuse/4",
+        "attenuation_distance": 12
+      }
+    ]
+  },
+  "weapon.throw.flare_strike": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:weapon/throw/flare_strike/1",
+        "attenuation_distance": 12
+      }
+    ]
+  },
+  "weapon.throw.flare_hiss": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:weapon/throw/flare_hiss/1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/flare_hiss/2",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "weapon.throw.alarm_tick": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:weapon/throw/alarm_tick/1",
+        "attenuation_distance": 6
+      }
+    ]
+  },
+  "weapon.throw.alarm_ring": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:weapon/throw/alarm_ring/1",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/alarm_ring/2",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/alarm_ring/3",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/alarm_ring/4",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/alarm_ring/5",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/alarm_ring/6",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/alarm_ring/7",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/alarm_ring/8",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/alarm_ring/9",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/alarm_ring/10",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/alarm_ring/11",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/alarm_ring/12",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/alarm_ring/13",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/alarm_ring/14",
+        "attenuation_distance": 48
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/alarm_ring/15",
+        "attenuation_distance": 48
+      }
+    ]
+  },
+  "weapon.throw.molotov_burst": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:weapon/throw/molotov/1",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "weapon.throw.smoke_pop": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:weapon/throw/smoke/1",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "weapon.throw.flashbang": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:weapon/throw/flashbang/1",
+        "attenuation_distance": 96
+      }
+    ]
+  },
+  "weapon.throw.blast": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:weapon/throw/blast/1",
+        "attenuation_distance": 128
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/blast/2",
+        "attenuation_distance": 128
+      }
+    ]
+  },
+  "weapon.throw.blast_far": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:weapon/throw/blast_far/1",
+        "attenuation_distance": 256
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/blast_far/2",
+        "attenuation_distance": 256
+      }
+    ]
+  },
+  "weapon.throw.fire_burn": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:weapon/throw/fire/1",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/fire/2",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/fire/3",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/fire/4",
+        "attenuation_distance": 16
+      },
+      {
+        "name": "zomboidcraft:weapon/throw/fire/5",
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "train.buzzer": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:train/buzzer",
+        "attenuation_distance": 64
+      }
+    ],
+    "subtitle": "subtitles.zomboidcraft.train.buzzer"
+  },
+  "world.strike.cannon": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:world/strike/cannon/1",
+        "attenuation_distance": 640
+      },
+      {
+        "name": "zomboidcraft:world/strike/cannon/2",
+        "attenuation_distance": 640
+      },
+      {
+        "name": "zomboidcraft:world/strike/cannon/3",
+        "attenuation_distance": 640
+      }
+    ]
+  },
+  "world.strike.chaingun": {
+    "sounds": [
+      {
+        "name": "zomboidcraft:world/strike/chaingun/1",
+        "attenuation_distance": 480
+      },
+      {
+        "name": "zomboidcraft:world/strike/chaingun/2",
+        "attenuation_distance": 480
+      },
+      {
+        "name": "zomboidcraft:world/strike/chaingun/3",
+        "attenuation_distance": 480
       }
     ]
   }

@@ -150,7 +150,12 @@ public final class CombatClient {
             }
         }
         while (SHOVE.consumeClick()) {
-            ClientPlayNetworking.send(new CombatNet.Action(CombatNet.Action.SHOVE));
+            if (player.getVehicle() instanceof com.zomboidcraft.world.cars.CarProp car && !car.aircraft()) {
+                // sat in a car there's no shoving anyone: the key winds your window down or up
+                ClientPlayNetworking.send(new com.zomboidcraft.world.cars.CarNet.Use(com.zomboidcraft.world.cars.CarNet.WINDOW, 0, 0, 0));
+            } else {
+                ClientPlayNetworking.send(new CombatNet.Action(CombatNet.Action.SHOVE));
+            }
         }
         while (RAIL.consumeClick()) {
             if (com.zomboidcraft.client.cars.CarClient.driving(player)) {

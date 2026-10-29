@@ -119,6 +119,34 @@ public final class ZombieSpawner {
     }
 
     /**
+     * A horde for filming (/zc cinematic horde): this many zombies in a wedge up ahead, where the player is looking,
+     * between 0.7 and 1.3 times the distance away and dressed for where they stand. Returns how many found room.
+     */
+    public static int spawnAhead(ServerLevel level, ServerPlayer player, int count, int distance) {
+        RandomSource random = player.getRandom();
+        double facing = Math.toRadians(player.getYRot());
+        int made = 0;
+        for (int i = 0; i < count; i++) {
+            BlockPos pos = null;
+            for (int tries = 0; tries < 6 && pos == null; tries++) {
+                double angle = facing + (random.nextDouble() - 0.5) * Math.toRadians(50);
+                double r = distance * (0.7 + random.nextDouble() * 0.6);
+                pos = findSpot(level, player.getBlockX() - (int) Math.round(Math.sin(angle) * r),
+                        player.getBlockZ() + (int) Math.round(Math.cos(angle) * r), player.getBlockY());
+            }
+            Zombie zombie = pos == null ? null : EntityTypes.ZOMBIE.spawn(level, pos, EntitySpawnReason.EVENT);
+            if (zombie != null) {
+                String uniform = uniform(level, pos, random);
+                if (uniform != null) {
+                    zombie.setAttached(ZombieLook.OUTFIT, uniform);
+                }
+                made++;
+            }
+        }
+        return made;
+    }
+
+    /**
      * The dead dressed for where they died: most of the crew aboard the carrier and on the naval
      * wharf are soldiers, so are the army base and depot, and the quarantine camp is soldiers and
      * patients; the stadium shelter fell with its guards and the sick it took in, and Union

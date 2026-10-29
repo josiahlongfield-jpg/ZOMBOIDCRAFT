@@ -56,6 +56,8 @@ public final class WeatherDirector {
     private static float bank;
     private static long ticks;
     private static boolean running;
+    /** Holds the weather where it is, for filming (/zc cinematic weather): it doesn't move on until let go. */
+    public static boolean hold;
 
     public static void register() {
         Weather.register();
@@ -128,7 +130,7 @@ public final class WeatherDirector {
             if (--warning == 0) {
                 start(queued);
             }
-        } else if (--ticksLeft <= 0) {
+        } else if (!hold && --ticksLeft <= 0) {
             WeatherKind next = pick(level);
             if (next.isDangerous()) {
                 queued = next;

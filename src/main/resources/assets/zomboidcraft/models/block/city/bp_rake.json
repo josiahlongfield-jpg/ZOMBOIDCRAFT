@@ -1,0 +1,84 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bp_ash": "zomboidcraft:block/city/bp_ash",
+    "fit_stainless": "zomboidcraft:block/city/fit_stainless",
+    "particle": "zomboidcraft:block/city/bp_ash"
+  },
+  "elements": [
+    {
+      "from": [
+        7.4,
+        0,
+        12
+      ],
+      "to": [
+        8.6,
+        15,
+        13.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bp_ash"
+        },
+        "south": {
+          "texture": "#bp_ash"
+        },
+        "east": {
+          "texture": "#bp_ash"
+        },
+        "west": {
+          "texture": "#bp_ash"
+        },
+        "up": {
+          "texture": "#bp_ash"
+        },
+        "down": {
+          "texture": "#bp_ash"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          0,
+          13
+        ],
+        "axis": "x",
+        "angle": -22.5
+      }
+    },
+    {
+      "from": [
+        2,
+        14,
+        7.5
+      ],
+      "to": [
+        14,
+        16,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_stainless"
+        },
+        "south": {
+          "texture": "#fit_stainless"
+        },
+        "east": {
+          "texture": "#fit_stainless"
+        },
+        "west": {
+          "texture": "#fit_stainless"
+        },
+        "up": {
+          "texture": "#fit_stainless",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#fit_stainless"
+        }
+      }
+    }
+  ]
+}

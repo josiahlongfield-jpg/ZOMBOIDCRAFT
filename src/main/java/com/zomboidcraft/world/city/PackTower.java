@@ -20,7 +20,7 @@ import java.util.zip.GZIPInputStream;
  *
  * Here the shell is laid and fitted out: shops along the street behind the shop windows, a
  * lobby where it's an office block, open-plan office floors or flats off a corridor upstairs,
- * a stairwell (with two lifts in the big towers) from the street to a hut on the roof. A few
+ * a stairwell (with one working lift beside it in anything over 10 floors) from the street to a hut on the roof. A few
  * floors still have power from a generator somewhere and glow.
  *
  * Same conventions as {@link Tower}: front along local z = 0 facing north, a storey 4 blocks.
@@ -137,6 +137,13 @@ public final class PackTower {
     private final boolean[] powered;
     /** Cells the stair cores and corridors keep clear: [level][z * w + x]. */
     private final boolean[][] kept;
+    /** The cells the cores (and lifts beside them) stand on: [level][z * w + x]. */
+    private final boolean[][] coreCell;
+    /** What the building is for, and so what each floor above the street is ({@link Floors}). */
+    private final Floors.Purpose purpose;
+    private final Floors.Type[] program;
+    /** Per core: the first cell of the lift shaft added beside a single stair core (-1 for none; see {@link #liftBeside}). */
+    private final int[] sideLift;
 
     public PackTower(Placer p, SplittableRandom rng, Template t, boolean furnished) {
         this.p = p;
@@ -148,27 +155,46 @@ public final class PackTower {
             powered[k] = rng.nextDouble() < 0.12;
         }
         this.kept = new boolean[t.levels.length][t.w * t.d];
+        this.coreCell = new boolean[t.levels.length][t.w * t.d];
+        int upper = t.levels.length - 1;
+        this.purpose = t.kind.equals("office") ? Floors.officePurpose(rng, upper)
+                : t.kind.equals("shop") ? (rng.nextBoolean() ? Floors.Purpose.OFFICES_TO_LET : Floors.Purpose.APARTMENTS) : Floors.flatsPurpose(rng);
+        this.program = Floors.program(purpose, upper, rng);
+        this.sideLift = new int[t.cores.length];
+        java.util.Arrays.fill(sideLift, -1);
+    }
+
+    /** What the building turned out to be, floor by floor (previews print it). */
+    public String describe() {
+        return purpose + " " + java.util.Arrays.toString(program);
     }
 
     public void build() {
         shell();
         for (int[] c : t.cores) {
+            freed(c);
             reserve(c);
+        }
+        for (int i = 0; i < t.cores.length; i++) {
+            sideLift[i] = liftBeside(t.cores[i]);
         }
         for (int k = 0; k < t.levels.length; k++) {
             lights(k);
             if (k == 0) {
                 groundFloor();
             } else if (furnished) {
-                if (t.kind.equals("office")) {
-                    officeFloor(k);
-                } else {
+                if (purpose == Floors.Purpose.APARTMENTS) {
                     flatsFloor(k);
+                } else {
+                    fitFloor(k, program[k]);
                 }
             }
         }
-        for (int[] c : t.cores) {
-            core(c);
+        for (int i = 0; i < t.cores.length; i++) {
+            core(t.cores[i]);
+            if (sideLift[i] >= 0) {
+                sideShaft(t.cores[i], sideLift[i]);
+            }
         }
     }
 
@@ -276,18 +302,55 @@ public final class PackTower {
 
     // ------------------------------------------------------------------ cores
 
+    /**
+     * The core's slim part, what stands on its footprint: a double core (cut where the pack's model
+     * had two stairs and lifts) keeps one stair and one lift in the middle, the rest is floor space.
+     */
+    private int coreX(int[] c) {
+        return c[0] == DOUBLE ? c[1] + 3 : c[1];
+    }
+
     private int coreW(int[] c) {
-        return c[0] == DOUBLE ? 14 : 5;
+        return c[0] == DOUBLE ? 8 : 5;
     }
 
     /** Keeps a core and the two rows in front of its doors clear on every level it serves. */
     private void reserve(int[] c) {
-        int cw = coreW(c);
+        int cx = coreX(c), cw = coreW(c);
         for (int k = c[3]; k <= c[4]; k++) {
             for (int z = c[2] - 2; z < c[2] + 10; z++) {
-                for (int x = c[1]; x < c[1] + cw; x++) {
+                for (int x = cx; x < cx + cw; x++) {
                     if (x >= 0 && z >= 0 && x < t.w && z < t.d) {
                         kept[k][z * t.w + x] = true;
+                        coreCell[k][z * t.w + x] |= z >= c[2];
+                    }
+                }
+            }
+            // the way into the janitor's closet behind the lift
+            int jx = cx + 5, jz = c[2] + 10;
+            if (c[0] == DOUBLE && jz < t.d) {
+                kept[k][jz * t.w + jx] = true;
+            }
+        }
+    }
+
+    /** The double core's footprint the slim core doesn't need, floored over on every level it served. */
+    private void freed(int[] c) {
+        if (c[0] != DOUBLE) {
+            return;
+        }
+        for (int k = c[3]; k <= c[4]; k++) {
+            int y = level(k);
+            for (int z = c[2]; z < c[2] + 10; z++) {
+                for (int x = c[1]; x < c[1] + 14; x++) {
+                    if (x >= coreX(c) && x < coreX(c) + coreW(c) || x < 1 || z < 1 || x >= t.w - 1 || z >= t.d - 1) {
+                        continue;
+                    }
+                    if (k > 0) {
+                        p.set(x, y, z, "office_floor");
+                    }
+                    for (int yy = y + 1; yy <= top(k); yy++) {
+                        p.set(x, yy, z, "air");
                     }
                 }
             }
@@ -302,28 +365,28 @@ public final class PackTower {
 
     /**
      * A stair core from level c[3] to c[4] (and on to the roof when it's flat over the core):
-     * concrete walls, a switchback stair in each stairwell, lifts between the two of a double core.
+     * concrete walls, a switchback stair, and in a double core one lift beside it with a janitor's
+     * closet behind.
      */
     private void core(int[] c) {
-        int cx0 = c[1], cz0 = c[2], cw = coreW(c);
+        int cx0 = coreX(c), cz0 = c[2], cw = coreW(c);
         int y0 = level(c[3]), yTop = level(c[4]);
         // the roof over the top floor: a hut on it for the stairs when there's room
         int roofY = yTop + 1;
         while (roofY < t.h && t.inside(cx0 + 2, roofY, cz0 + 4)) {
             roofY++;
         }
-        boolean hut = c[4] == t.levels.length - 1 && (roofY - yTop) % 2 == 0 && roofY - yTop >= 4 && roofY + 4 < 320
+        boolean hut = c[4] == t.levels.length - 1 && roofY - yTop >= 3 && roofY + 5 < 320
                 && clearAbove(cx0, cz0, cw, roofY);
-        int last = hut ? roofY : yTop;
-        int wallTop = hut ? roofY + 3 : top(c[4]);
+        int wallTop = hut ? roofY + 4 : top(c[4]);
+        int st = cx0 + 4, back = cz0 + 4;
         for (int y = y0; y <= wallTop; y++) {
             boolean ground = y < t.ground;
             for (int x = cx0; x < cx0 + cw; x++) {
                 for (int z = cz0; z < cz0 + 10; z++) {
                     boolean edge = x == cx0 || x == cx0 + cw - 1 || z == cz0 || z == cz0 + 9;
                     if (c[0] == DOUBLE) {
-                        int sa = cx0 + 4, lift = cx0 + 5, sb = cx0 + 9, back = cz0 + 4;
-                        edge |= x == sa || x == sb || x >= lift && x <= lift + 3 && z == back || x == lift + 1 && z < back;
+                        edge |= x == st || x > st && z == back;
                     }
                     if (edge) {
                         p.set(x, y, z, y > (hut ? roofY : 1 << 20) ? "concrete_dark" : ground ? "wood_panel" : "concrete_dark");
@@ -336,7 +399,7 @@ public final class PackTower {
             }
         }
         if (hut) {
-            p.fill(cx0, roofY + 4, cz0, cx0 + cw - 1, roofY + 4, cz0 + 9, "roof");
+            p.fill(cx0, roofY + 5, cz0, cx0 + cw - 1, roofY + 5, cz0 + 9, "roof");
         }
         List<Integer> ys = new ArrayList<>();
         for (int k = c[3]; k <= c[4]; k++) {
@@ -345,18 +408,18 @@ public final class PackTower {
         if (hut) {
             ys.add(roofY);
         }
+        int[] tread = stairwell(cx0 + 1, cz0, ys);
+        if (!hut) {
+            Stairwell.capTop(p, tread);
+        }
         if (c[0] == DOUBLE) {
-            stairwell(cx0 + 1, cz0, ys);
-            stairwell(cx0 + 10, cz0, ys);
-            lifts(cx0 + 5, cz0, ys);
-        } else {
-            stairwell(cx0 + 1, cz0, ys);
+            lift(st + 1, cz0, ys, c[3]);
         }
     }
 
     /** Nothing of the building in the way of a stair hut on the roof. */
     private boolean clearAbove(int cx0, int cz0, int cw, int roofY) {
-        for (int y = roofY + 1; y <= roofY + 4; y++) {
+        for (int y = roofY + 1; y <= roofY + 5; y++) {
             for (int x = cx0 - 1; x <= cx0 + cw; x++) {
                 for (int z = cz0 - 1; z <= cz0 + 10; z++) {
                     if (t.at(x, y, z) != 0) {
@@ -375,68 +438,95 @@ public final class PackTower {
         return true;
     }
 
-    /**
-     * A 3-wide switchback stairwell, inner x0..x0+2, its door in the core's north wall at z = cz0,
-     * landing by the door (cz0+1..2), flights over cz0+3..4 and the far landing (cz0+5..8).
-     * Flights climb two steps at a time, so every rise must be even; where one ends at the far
-     * landing, a bridge over the well leads back to the door.
-     */
-    private void stairwell(int x0, int cz0, List<Integer> ys) {
-        int land = cz0 + 1, flight = cz0 + 3, far = cz0 + 5;
-        boolean atFar = false;
-        int side = 0;
-        for (int i = 0; i < ys.size(); i++) {
-            int y = ys.get(i);
-            p.fill(x0, y, land, x0 + 2, y, land + 1, "floor_concrete");
-            if (atFar) {
-                p.fill(x0, y, far, x0 + 2, y, far + 3, "floor_concrete");
-                p.set(x0 + 1, y, flight, "floor_concrete");
-                p.set(x0 + 1, y, flight + 1, "floor_concrete");
-            }
-            Doors.abandoned(p, rng, x0 + 1, y + 1, cz0, Doors.STEEL, "south", Doors.hinge(rng));
-            p.set(x0 + 1, y + 3, land + 1, rng.nextDouble() < 0.1 ? "ceiling_light" : "ceiling_light_off");
-            if (i == ys.size() - 1) {
-                break;
-            }
-            int next = ys.get(i + 1);
-            int h = y;
-            while (h < next) {
-                boolean south = !atFar;
-                int x = side == 0 ? x0 : x0 + 2;
-                for (int s = 0; s < 2 && h < next; s++) {
-                    h++;
-                    int z = south ? flight + s : flight + 1 - s;
-                    p.set(x, h, z, "stairs_concrete[facing=" + (south ? "south" : "north") + "]");
-                    p.set(x, h + 1, z, "air");
-                    p.set(x, h + 2, z, "air");
-                }
-                atFar = !atFar;
-                if (h < next) {
-                    if (atFar) {
-                        p.fill(x0, h, far, x0 + 2, h, far + 3, "floor_concrete");
-                    } else {
-                        p.fill(x0, h, land, x0 + 2, h, land + 1, "floor_concrete");
-                    }
-                }
-                side ^= 1;
-            }
-            for (int yy = y + 1; yy < next; yy++) {
-                if (rng.nextDouble() < 0.9) {
-                    p.set(x0 + 1, yy + 1, flight, "railing[facing=west]");
-                }
-            }
-        }
+    /** The fire stair ({@link Stairwell}), inner x0..x0+2, its door in the core's north wall at z = cz0. */
+    private int[] stairwell(int x0, int cz0, List<Integer> ys) {
+        return Stairwell.build(p, rng, x0, cz0, ys.stream().mapToInt(Integer::intValue).toArray(), false, 0, 0.1);
     }
 
-    /** Two lift shafts (x0..x0+3, doors in the north wall), a plant floor behind them on every level. */
-    private void lifts(int x0, int cz0, List<Integer> ys) {
-        for (int y : ys) {
-            for (int yy = y + 1; yy <= y + 2; yy++) {
-                p.set(x0, yy, cz0, "elevator_door[facing=north]");
-                p.set(x0 + 2, yy, cz0, "elevator_door[facing=north]");
+    /**
+     * The working lift in its 2 x 3 shaft x0..x0+1 (doors in the core's north wall) and the
+     * janitor's closet behind it, its door onto the back of the floor. first is the level the
+     * core starts on (the street's is the lobby, numbered 1).
+     */
+    private void lift(int x0, int cz0, List<Integer> ys, int first) {
+        int[] floors = new int[ys.size()];
+        for (int i = 0; i < floors.length; i++) {
+            int y = floors[i] = ys.get(i);
+            p.fill(x0, y, cz0 + 5, x0 + 1, y, cz0 + 8, "floor_concrete");
+            if (y > level(t.levels.length - 1)) {
+                continue;  // the roof hut: no closet up there
             }
-            p.fill(x0, y, cz0 + 5, x0 + 3, y, cz0 + 8, "floor_concrete");
+            Doors.abandoned(p, rng, x0, y + 1, cz0 + 9, Doors.FLAT, "north", Doors.hinge(rng));
+            if (furnished) {
+                p.set(x0 + 1, y + 1, cz0 + 5, "bunk_sink[facing=south]");
+                p.set(x0 + 1, y + 1, cz0 + 6, "home_garage_shelf[facing=west]");
+                p.set(x0 + 1, y + 1, cz0 + 7, rng.nextBoolean() ? "dn_mop" : "cardboard_box[facing=west]");
+            }
         }
+        LiftBuild.shaft(p::set, x0, cz0 + 1, 2, 3, floors, first == 0 ? 0 : -1, first, floors[floors.length - 1] + 4);
+    }
+
+    /**
+     * Where a lift can go beside a single stair core in a building over 10 floors: a shaft two wide
+     * and three deep with its doors beside the stair door, east of the core or else west, on every
+     * level the core serves, with room in front. Reserves it and returns its first cell's x, or -1.
+     */
+    private int liftBeside(int[] c) {
+        if (c[0] != SINGLE || t.levels.length <= 10 || c[4] - c[3] < 2) {
+            return -1;
+        }
+        int cx0 = c[1], cz0 = c[2];
+        for (int x0 : new int[] {cx0 + 5, cx0 - 2}) {
+            int wall = x0 > cx0 ? x0 + 2 : x0 - 1;
+            int lo = Math.min(x0, wall), hi = Math.max(x0 + 1, wall);
+            boolean fits = lo >= 1 && hi < t.w - 1;
+            for (int k = c[3]; k <= c[4] && fits; k++) {
+                int y = level(k);
+                for (int x = lo; x <= hi && fits; x++) {
+                    for (int z = cz0 - 2; z <= cz0 + 4 && fits; z++) {
+                        fits = z >= 1 && z < t.d - 1 && !kept[k][z * t.w + x] && t.at(x, y, z) >= 2
+                                && t.inside(x, y + 1, z) && t.inside(x, y + 2, z);
+                    }
+                }
+            }
+            if (!fits) {
+                continue;
+            }
+            for (int k = c[3]; k <= c[4]; k++) {
+                for (int x = lo; x <= hi; x++) {
+                    for (int z = cz0 - 2; z <= cz0 + 4; z++) {
+                        kept[k][z * t.w + x] = true;
+                        coreCell[k][z * t.w + x] |= z >= cz0;
+                    }
+                }
+            }
+            return x0;
+        }
+        return -1;
+    }
+
+    /** The lift beside a single stair core: concrete walls round its shaft (sharing the core's), the lift in it. */
+    private void sideShaft(int[] c, int x0) {
+        int cz0 = c[2], wall = x0 > c[1] ? x0 + 2 : x0 - 1;
+        int y0 = level(c[3]), last = level(c[4]), top = last + 4;
+        for (int y = y0; y <= top; y++) {
+            for (int z = cz0; z <= cz0 + 4; z++) {
+                p.set(wall, y, z, "concrete_dark");
+            }
+            for (int x = x0; x <= x0 + 1; x++) {
+                p.set(x, y, cz0, "concrete_dark");
+                p.set(x, y, cz0 + 4, "concrete_dark");
+            }
+            for (int z = cz0; z <= cz0 + 4; z++) {
+                // the core's wall it shares, carried up as high as the shaft goes
+                p.set(x0 > c[1] ? x0 - 1 : x0 + 2, y, z, "concrete_dark");
+            }
+        }
+        int[] floors = new int[c[4] - c[3] + 1];
+        for (int k = c[3]; k <= c[4]; k++) {
+            floors[k - c[3]] = level(k);
+        }
+        LiftBuild.shaft(p::set, x0, cz0 + 1, 2, 3, floors, c[3] == 0 ? 0 : -1, c[3], top);
     }
 
     // ------------------------------------------------------------------ the ground floor
@@ -464,7 +554,7 @@ public final class PackTower {
         }
         boolean shops = furnished && r[2] - r[0] >= 8 && (!office || doors.size() >= 3);
         // the hall: from the door nearest the core straight back to it
-        int coreMid = t.cores.length > 0 ? t.cores[0][1] + coreW(t.cores[0]) / 2 : (r[0] + r[2]) / 2;
+        int coreMid = t.cores.length > 0 ? coreX(t.cores[0]) + coreW(t.cores[0]) / 2 : (r[0] + r[2]) / 2;
         int hallX = doors.isEmpty() ? coreMid : doors.get(0);
         for (int dx : doors) {
             if (Math.abs(dx - coreMid) < Math.abs(hallX - coreMid)) {
@@ -668,6 +758,35 @@ public final class PackTower {
 
     // ------------------------------------------------------------------ offices
 
+    /**
+     * An upper floor fitted out for what the building is ({@link Floors}): planned round the
+     * cores, the landings in front of their doors kept clear.
+     */
+    private void fitFloor(int k, Floors.Type type) {
+        if (type == null || t.rects[k][2] < t.rects[k][0]) {
+            return;
+        }
+        int y = level(k);
+        Floorplan fp = new Floorplan(p, rng, t.w, t.d, y, top(k) - y, new Floorplan.Site() {
+            @Override
+            public boolean open(int x, int z) {
+                return free(k, x, z);
+            }
+
+            @Override
+            public boolean core(int x, int z) {
+                return coreCell[k][z * t.w + x];
+            }
+
+            @Override
+            public boolean keep(int x, int z) {
+                return kept[k][z * t.w + x] && !coreCell[k][z * t.w + x] && t.inside(x, y + 1, z) && t.inside(x, y + 2, z);
+            }
+        }, powered[k] ? 0.6 : 0.03);
+        Floors.fit(fp, type, rng);
+    }
+
+
     /** Desk pods in rows round the core, filing cabinets along a wall, a meeting room behind glass. */
     private void officeFloor(int k) {
         int[] r = t.rects[k];
@@ -756,7 +875,7 @@ public final class PackTower {
             return;
         }
         int y = level(k);
-        int cx0 = c[1], cz0 = c[2], cw = coreW(c);
+        int cx0 = coreX(c), cz0 = c[2], cw = coreW(c);
         int hall0 = cz0 - 2, hall1 = cz0 - 1;
         String paper = rng.nextBoolean() ? "home_wall_cream" : rng.nextBoolean() ? "home_wall_sage" : "home_wall_stripe";
         // the corridor
@@ -938,9 +1057,9 @@ public final class PackTower {
         for (int z = 2; z < zb - 1; z++) {
             for (int x : new int[] {1, w - 2}) {
                 if (rng.nextDouble() < 0.5 && empty(q.get(x, 1, z))) {
-                    q.set(x, 1, z, rng.nextDouble() < 0.6 ? "cardboard_box" : "crate");
+                    q.set(x, 1, z, rng.nextDouble() < 0.6 ? "cardboard_box[facing=north]" : "crate");
                     if (rng.nextDouble() < 0.4) {
-                        q.set(x, 2, z, "cardboard_box");
+                        q.set(x, 2, z, "cardboard_box[facing=north]");
                     }
                 }
             }
@@ -948,7 +1067,7 @@ public final class PackTower {
         for (int i = 0; i < 4; i++) {
             int x = 2 + rng.nextInt(Math.max(1, w - 4)), z = 2 + rng.nextInt(Math.max(1, zb - 3));
             if (z != zb - 1 && empty(q.get(x, 1, z))) {
-                q.set(x, 1, z, rng.nextBoolean() ? "trash_bag" : "cardboard_box");
+                q.set(x, 1, z, rng.nextBoolean() ? "trash_bag[facing=north]" : "cardboard_box[facing=north]");
             }
         }
         return door;

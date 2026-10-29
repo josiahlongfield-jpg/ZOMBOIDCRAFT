@@ -1,0 +1,275 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cv_brass": "zomboidcraft:block/city/cv_brass",
+    "cv_oak": "zomboidcraft:block/city/cv_oak",
+    "mu_case_glass": {
+      "sprite": "zomboidcraft:block/city/mu_case_glass",
+      "force_translucent": true
+    },
+    "mu_top_gems": "zomboidcraft:block/city/mu_top_gems",
+    "mu_top_jewels": "zomboidcraft:block/city/mu_top_jewels",
+    "particle": "zomboidcraft:block/city/cv_oak"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        1
+      ],
+      "to": [
+        15,
+        8,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_oak"
+        },
+        "south": {
+          "texture": "#cv_oak"
+        },
+        "east": {
+          "texture": "#cv_oak"
+        },
+        "west": {
+          "texture": "#cv_oak"
+        },
+        "up": {
+          "texture": "#cv_oak"
+        },
+        "down": {
+          "texture": "#cv_oak",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0.5,
+        8,
+        0.5
+      ],
+      "to": [
+        15.5,
+        9,
+        15.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_oak"
+        },
+        "south": {
+          "texture": "#cv_oak"
+        },
+        "east": {
+          "texture": "#cv_oak"
+        },
+        "west": {
+          "texture": "#cv_oak"
+        },
+        "up": {
+          "texture": "#cv_oak"
+        },
+        "down": {
+          "texture": "#cv_oak"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        9,
+        1
+      ],
+      "to": [
+        15,
+        16,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_case_glass"
+        },
+        "south": {
+          "texture": "#mu_case_glass"
+        },
+        "east": {
+          "texture": "#mu_case_glass"
+        },
+        "west": {
+          "texture": "#mu_case_glass"
+        },
+        "up": {
+          "texture": "#mu_case_glass",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#mu_case_glass"
+        }
+      }
+    },
+    {
+      "from": [
+        0.8,
+        15.6,
+        0.8
+      ],
+      "to": [
+        15.2,
+        16,
+        15.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_brass"
+        },
+        "south": {
+          "texture": "#cv_brass"
+        },
+        "east": {
+          "texture": "#cv_brass"
+        },
+        "west": {
+          "texture": "#cv_brass"
+        },
+        "up": {
+          "texture": "#cv_brass",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cv_brass"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        9,
+        5
+      ],
+      "to": [
+        6,
+        11,
+        7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_top_gems"
+        },
+        "south": {
+          "texture": "#mu_top_gems"
+        },
+        "east": {
+          "texture": "#mu_top_gems"
+        },
+        "west": {
+          "texture": "#mu_top_gems"
+        },
+        "up": {
+          "texture": "#mu_top_gems"
+        },
+        "down": {
+          "texture": "#mu_top_gems"
+        }
+      }
+    },
+    {
+      "from": [
+        8,
+        9,
+        4
+      ],
+      "to": [
+        10,
+        10.5,
+        6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_top_gems"
+        },
+        "south": {
+          "texture": "#mu_top_gems"
+        },
+        "east": {
+          "texture": "#mu_top_gems"
+        },
+        "west": {
+          "texture": "#mu_top_gems"
+        },
+        "up": {
+          "texture": "#mu_top_gems"
+        },
+        "down": {
+          "texture": "#mu_top_gems"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        9,
+        9
+      ],
+      "to": [
+        9,
+        12,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_top_gems"
+        },
+        "south": {
+          "texture": "#mu_top_gems"
+        },
+        "east": {
+          "texture": "#mu_top_gems"
+        },
+        "west": {
+          "texture": "#mu_top_gems"
+        },
+        "up": {
+          "texture": "#mu_top_gems"
+        },
+        "down": {
+          "texture": "#mu_top_gems"
+        }
+      }
+    },
+    {
+      "from": [
+        10,
+        9,
+        9
+      ],
+      "to": [
+        12,
+        10,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_top_jewels"
+        },
+        "south": {
+          "texture": "#mu_top_jewels"
+        },
+        "east": {
+          "texture": "#mu_top_jewels"
+        },
+        "west": {
+          "texture": "#mu_top_jewels"
+        },
+        "up": {
+          "texture": "#mu_top_jewels"
+        },
+        "down": {
+          "texture": "#mu_top_jewels"
+        }
+      }
+    }
+  ]
+}

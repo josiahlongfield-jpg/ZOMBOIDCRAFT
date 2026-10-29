@@ -1,0 +1,222 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tx_glass": {
+      "sprite": "zomboidcraft:block/city/tx_glass",
+      "force_translucent": true
+    },
+    "un_brut": "zomboidcraft:block/city/un_brut",
+    "un_brut_b": "zomboidcraft:block/city/un_brut_b",
+    "particle": "zomboidcraft:block/city/un_brut"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        5,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#un_brut",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#un_brut",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#un_brut"
+        },
+        "west": {
+          "texture": "#un_brut",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#un_brut",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#un_brut",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        11,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#un_brut",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#un_brut",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#un_brut",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#un_brut"
+        },
+        "up": {
+          "texture": "#un_brut",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#un_brut",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        0,
+        10
+      ],
+      "to": [
+        11,
+        1,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#un_brut"
+        },
+        "south": {
+          "texture": "#un_brut",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#un_brut"
+        },
+        "west": {
+          "texture": "#un_brut"
+        },
+        "up": {
+          "texture": "#un_brut"
+        },
+        "down": {
+          "texture": "#un_brut",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        15,
+        10
+      ],
+      "to": [
+        11,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#un_brut"
+        },
+        "south": {
+          "texture": "#un_brut",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#un_brut"
+        },
+        "west": {
+          "texture": "#un_brut"
+        },
+        "up": {
+          "texture": "#un_brut",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#un_brut"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        1,
+        11.4
+      ],
+      "to": [
+        11,
+        15,
+        11.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_glass"
+        },
+        "south": {
+          "texture": "#tx_glass"
+        },
+        "east": {
+          "texture": "#tx_glass"
+        },
+        "west": {
+          "texture": "#tx_glass"
+        },
+        "up": {
+          "texture": "#tx_glass"
+        },
+        "down": {
+          "texture": "#tx_glass"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        0,
+        0
+      ],
+      "to": [
+        11,
+        1,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#un_brut_b",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#un_brut_b"
+        },
+        "east": {
+          "texture": "#un_brut_b"
+        },
+        "west": {
+          "texture": "#un_brut_b"
+        },
+        "up": {
+          "texture": "#un_brut_b"
+        },
+        "down": {
+          "texture": "#un_brut_b",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

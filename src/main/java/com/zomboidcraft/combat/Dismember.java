@@ -56,6 +56,9 @@ import net.minecraft.world.phys.Vec3;
  *
  * A big enough hit to the head bursts it: a hunting rifle headshot, or most of a blast of buckshot up close. Most of
  * a blast of buckshot in the chest from point-blank range blows a hole right through it.
+ *
+ * A pipe bomb or grenade going off tears at every limb at once, the ones facing it and nearest it most ({@link #blast}),
+ * and right on top of one the head sometimes goes too.
  */
 public final class Dismember {
     /** Limbs gone, one bit each (forearm at the elbow, whole arm at the shoulder, shin at the knee, leg at the hip). */
@@ -205,6 +208,9 @@ public final class Dismember {
         BodyHit best = null;
         double nearest = range;
         for (Entity e : shooter.level().getEntities(shooter, new AABB(eye, stop).inflate(REACH + MOVED), canHit)) {
+            if (e instanceof com.zomboidcraft.creature.HarvestmanEntity) {
+                continue;   // its own pass, below
+            }
             if (shooter.isPassenger() && e.getRootVehicle() == shooter.getRootVehicle()) {
                 continue;   // not whoever's riding with you
             }
@@ -237,6 +243,22 @@ public final class Dismember {
                     best = new BodyHit(e, at.get(), -1);
                 }
             }
+        }
+        // a Harvestman is hit where its hull, belly and legs are (they reach well past its box)
+        com.zomboidcraft.creature.HarvestmanEntity hm = null;
+        com.zomboidcraft.creature.HarvestmanBody.Strike hs = null;
+        for (com.zomboidcraft.creature.HarvestmanEntity h : shooter.level().getEntitiesOfClass(
+                com.zomboidcraft.creature.HarvestmanEntity.class, new AABB(eye, stop).inflate(6), canHit::test)) {
+            com.zomboidcraft.creature.HarvestmanBody.Strike s = h.strike(eye, dir, nearest);
+            if (s != null && s.distance() < nearest) {
+                nearest = s.distance();
+                hm = h;
+                hs = s;
+            }
+        }
+        if (hm != null) {
+            hm.struck(hs);
+            return new BodyHit(hm, hs.at(), -1);
         }
         return best;
     }
@@ -421,9 +443,12 @@ public final class Dismember {
      * the zombie drops dead where it stood.
      */
     private static void burst(Zombie zombie, Wounds w) {
-        Vec3 dir = w.headDir;
+        burst(zombie, w.headDir, force(w.headGun), w.shooter);
+    }
+
+    private static void burst(Zombie zombie, Vec3 dir, int force, ServerPlayer shooter) {
         int heading = Math.floorMod(Math.round((float) Math.toDegrees(Math.atan2(-dir.x, dir.z)) / 360f * 256f), 256);
-        zombie.setAttached(LIMBS, limbs(zombie) & (CUTS | MARKS) | HEAD_GONE | heading << 8 | force(w.headGun) << 16);
+        zombie.setAttached(LIMBS, limbs(zombie) & (CUTS | MARKS) | HEAD_GONE | heading << 8 | force << 16);
         ServerLevel level = (ServerLevel) zombie.level();
         Vec3 at = joint(zombie, HEAD);
         BlockParticleOption blood = new BlockParticleOption(ParticleTypes.BLOCK, Blocks.REDSTONE_BLOCK.defaultBlockState());
@@ -442,7 +467,7 @@ public final class Dismember {
         BLEEDING.add(new Bleed(zombie, HEAD, level.getGameTime() + 80));
         StuckBolts.shed(zombie, at);    // a bolt in the head goes with it
         if (zombie.isAlive()) {
-            zombie.hurtServer(level, w.shooter != null ? ModDamageTypes.source(level, ModDamageTypes.BULLET, w.shooter)
+            zombie.hurtServer(level, shooter != null ? ModDamageTypes.source(level, ModDamageTypes.BULLET, shooter)
                     : level.damageSources().generic(), 1e6f);
         }
     }
@@ -539,9 +564,13 @@ public final class Dismember {
 
     /** Takes the limb off: it flies along the shot, the stump bleeds, and the zombie copes with what it has left. */
     private static void sever(Zombie zombie, int cut, int part, Vec3 dir, GunType gun) {
+        sever(zombie, cut, part, dir, force(gun));
+    }
+
+    private static void sever(Zombie zombie, int cut, int part, Vec3 dir, int force) {
         int before = cuts(zombie), cuts = before | cut;
         int heading = Math.floorMod(Math.round((float) Math.toDegrees(Math.atan2(-dir.x, dir.z)) / 360f * 256f), 256);
-        zombie.setAttached(LIMBS, cuts | limbs(zombie) & MARKS | heading << 8 | force(gun) << 16);
+        zombie.setAttached(LIMBS, cuts | limbs(zombie) & MARKS | heading << 8 | force << 16);
         ServerLevel level = (ServerLevel) zombie.level();
         Vec3 joint = joint(zombie, part);
         level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, Blocks.REDSTONE_BLOCK.defaultBlockState()),
@@ -595,6 +624,99 @@ public final class Dismember {
     /** Takes a limb off with no shot (the test command's hopper), as if blown off from behind. */
     public static void cut(Zombie zombie, int cut) {
         sever(zombie, cut, partOf(cut), zombie.getLookAngle().reverse(), GunType.PISTOL);
+    }
+
+    /** A blast with nobody to credit: see {@link #blast(Zombie, Vec3, double, ServerPlayer)}. */
+    public static void blast(Zombie zombie, Vec3 centre, double strength) {
+        blast(zombie, centre, strength, null);
+    }
+
+    /**
+     * A pipe bomb or grenade going off near a walker: it tears at every limb at once, adding to what shots have done
+     * to them, and the limbs facing the blast and nearest it take the most (one stood over a grenade on the floor
+     * loses its legs first; its arms may go too, and the side turned away mostly keeps them). Whatever passes its
+     * toughness comes off and flies away from the blast as hard as buckshot throws it; legs lost, it hops or falls
+     * as from a shot. Right on top of the blast the head bursts now and then.
+     *
+     * Only the limbs: the blast's own damage, push and knockdown are the thrower's. Call it once per blast for each
+     * walker the blast can see, before or after its damage (a body still falling keeps what it loses).
+     *
+     * @param centre where it went off
+     * @param strength how close: 1 right on top of it, 0 at the edge of its reach
+     * @param thrower who threw it, for a kill by head burst and the hits readout; may be null
+     */
+    public static void blast(Zombie zombie, Vec3 centre, double strength, ServerPlayer thrower) {
+        ZcConfig.Limbs config = ZcConfig.get().limbs;
+        if (!config.enabled || !config.blasts || strength <= 0 || zombie.isRemoved() || !ZombieTypes.isWalker(zombie)
+                || !(zombie.level() instanceof ServerLevel)) {
+            return;
+        }
+        strength = Math.min(1, strength);
+        Vec3 body = chest(zombie), toBlast = centre.subtract(body);
+        double far = toBlast.length();
+        Vec3 facing = far > 0.05 ? toBlast.scale(1 / far) : null;
+        // limbs fly away from the blast; from right underneath, out behind it
+        Vec3 away = new Vec3(-toBlast.x, 0, -toBlast.z);
+        away = away.lengthSqr() > 0.01 ? away.normalize() : zombie.getLookAngle().reverse();
+        Wounds w = WOUNDS.computeIfAbsent(zombie, z -> new Wounds());
+        int gone = goneParts(zombie, cuts(zombie));
+        for (int k = 4; k < PARTS; k++) {
+            if ((gone >> k & 1) != 0) {
+                continue;
+            }
+            w.dealt[Integer.numberOfTrailingZeros(CUT_OF[k])] += (float) (config.blastTearing * strength
+                    * exposure(at(zombie, k, true), body, facing, far, centre)
+                    * (0.75 + zombie.getRandom().nextDouble() * 0.5));
+        }
+        int severed = 0;
+        for (int cut : ORDER) {
+            int i = Integer.numberOfTrailingZeros(cut);
+            if ((cuts(zombie) & (cut | above(cut))) != 0) {
+                w.dealt[i] = 0f;
+            } else if (w.dealt[i] >= toughness(cut, config)) {
+                w.dealt[i] = 0f;
+                severed |= cut;
+                sever(zombie, cut, partOf(cut), away, 3);
+            }
+        }
+        boolean burst = false;
+        if (config.headBursts && !headGone(zombie) && (gone & 1 << HEAD) == 0) {
+            double close = Math.clamp((strength - config.blastHeadBurstFrom) / Math.max(0.01, 1 - config.blastHeadBurstFrom), 0, 1);
+            Vec3 head = joint(zombie, HEAD), up = head.subtract(body);
+            double faced = facing == null || up.lengthSqr() < 1e-6 ? 1 : Math.max(0, up.normalize().dot(facing));
+            burst = zombie.getRandom().nextDouble() < config.blastHeadBurst * close * (0.6 + 0.4 * faced);
+            if (burst) {
+                Vec3 out = head.subtract(centre);
+                burst(zombie, out.lengthSqr() > 1e-4 ? out.normalize() : away, 3, thrower);
+            }
+        }
+        if (config.showHits && thrower != null && (severed != 0 || burst)) {
+            List<String> parts = new ArrayList<>();
+            if (burst) {
+                parts.add("head BURST");
+            }
+            for (int cut : ORDER) {
+                if ((severed & cut) != 0) {
+                    parts.add(cutName(cut) + " OFF");
+                }
+            }
+            thrower.sendOverlayMessage(Component.literal(String.format("Blast %.0f%%: %s", strength * 100,
+                    String.join(", ", parts))).withStyle(ChatFormatting.GRAY));
+        }
+    }
+
+    /**
+     * How much of a blast a limb at mid takes, 0.1 to 1: all of it from one going off inside the body; otherwise
+     * more as it faces the blast from the chest, and more again as it's nearer the blast than the chest is.
+     */
+    private static double exposure(Vec3 mid, Vec3 body, Vec3 facing, double far, Vec3 centre) {
+        if (facing == null) {
+            return 1;
+        }
+        Vec3 out = mid.subtract(body);
+        double face = out.lengthSqr() > 1e-6 ? out.normalize().dot(facing) : 0;
+        double near = Math.clamp((far - mid.distanceTo(centre)) / 0.5, -1, 1);
+        return Math.clamp(0.45 + 0.35 * face + 0.2 * near, 0.1, 1);
     }
 
     private static int partOf(int cut) {

@@ -1,0 +1,286 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "of_cushion": "zomboidcraft:block/city/of_cushion",
+    "of_cushion_navy": "zomboidcraft:block/city/of_cushion_navy",
+    "of_teak": "zomboidcraft:block/city/of_teak",
+    "particle": "zomboidcraft:block/city/of_teak"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        4,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#of_teak",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#of_teak",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#of_teak",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#of_teak",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#of_teak"
+        },
+        "down": {
+          "texture": "#of_teak",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0.5,
+        4,
+        0.5
+      ],
+      "to": [
+        15.5,
+        7,
+        15.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#of_cushion"
+        },
+        "south": {
+          "texture": "#of_cushion"
+        },
+        "east": {
+          "texture": "#of_cushion"
+        },
+        "west": {
+          "texture": "#of_cushion"
+        },
+        "up": {
+          "texture": "#of_cushion"
+        },
+        "down": {
+          "texture": "#of_cushion"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        4,
+        14
+      ],
+      "to": [
+        16,
+        13,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#of_teak"
+        },
+        "south": {
+          "texture": "#of_teak",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#of_teak",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#of_teak",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#of_teak"
+        },
+        "down": {
+          "texture": "#of_teak"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        7,
+        11
+      ],
+      "to": [
+        7,
+        10,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#of_cushion_navy"
+        },
+        "south": {
+          "texture": "#of_cushion_navy"
+        },
+        "east": {
+          "texture": "#of_cushion_navy"
+        },
+        "west": {
+          "texture": "#of_cushion_navy"
+        },
+        "up": {
+          "texture": "#of_cushion_navy"
+        },
+        "down": {
+          "texture": "#of_cushion_navy"
+        }
+      }
+    },
+    {
+      "from": [
+        9,
+        7,
+        11
+      ],
+      "to": [
+        14,
+        10,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#of_cushion_navy"
+        },
+        "south": {
+          "texture": "#of_cushion_navy"
+        },
+        "east": {
+          "texture": "#of_cushion_navy"
+        },
+        "west": {
+          "texture": "#of_cushion_navy"
+        },
+        "up": {
+          "texture": "#of_cushion_navy"
+        },
+        "down": {
+          "texture": "#of_cushion_navy"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        13,
+        0
+      ],
+      "to": [
+        1,
+        16,
+        1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#of_teak",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#of_teak"
+        },
+        "east": {
+          "texture": "#of_teak"
+        },
+        "west": {
+          "texture": "#of_teak",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#of_teak",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#of_teak"
+        }
+      }
+    },
+    {
+      "from": [
+        15,
+        13,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#of_teak",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#of_teak"
+        },
+        "east": {
+          "texture": "#of_teak",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#of_teak"
+        },
+        "up": {
+          "texture": "#of_teak",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#of_teak"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        15,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#of_cushion",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#of_cushion",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#of_cushion",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#of_cushion",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#of_cushion",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#of_cushion"
+        }
+      }
+    }
+  ]
+}

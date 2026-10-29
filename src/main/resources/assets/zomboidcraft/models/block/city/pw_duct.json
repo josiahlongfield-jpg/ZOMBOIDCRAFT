@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "pw_duct": "zomboidcraft:block/city/pw_duct",
+    "particle": "zomboidcraft:block/city/pw_duct"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pw_duct",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#pw_duct",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#pw_duct",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#pw_duct",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#pw_duct",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#pw_duct",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

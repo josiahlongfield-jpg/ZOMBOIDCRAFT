@@ -1,0 +1,261 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cv_books_a": "zomboidcraft:block/city/cv_books_a",
+    "dn_enamel_green": "zomboidcraft:block/city/dn_enamel_green",
+    "home_oak": "zomboidcraft:block/city/home_oak",
+    "hs_steel": "zomboidcraft:block/city/hs_steel",
+    "particle": "zomboidcraft:block/city/home_oak"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        11,
+        4
+      ],
+      "to": [
+        16,
+        12.5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_oak"
+        },
+        "south": {
+          "texture": "#home_oak",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#home_oak",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_oak",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_oak"
+        },
+        "down": {
+          "texture": "#home_oak"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        4
+      ],
+      "to": [
+        5,
+        11,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_oak"
+        },
+        "south": {
+          "texture": "#home_oak",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#home_oak"
+        },
+        "west": {
+          "texture": "#home_oak",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_oak"
+        },
+        "down": {
+          "texture": "#home_oak",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        14,
+        0,
+        4
+      ],
+      "to": [
+        16,
+        11,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_oak"
+        },
+        "south": {
+          "texture": "#home_oak",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#home_oak",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_oak"
+        },
+        "up": {
+          "texture": "#home_oak"
+        },
+        "down": {
+          "texture": "#home_oak",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        12.5,
+        10
+      ],
+      "to": [
+        12,
+        14,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_books_a"
+        },
+        "south": {
+          "texture": "#cv_books_a"
+        },
+        "east": {
+          "texture": "#cv_books_a"
+        },
+        "west": {
+          "texture": "#cv_books_a"
+        },
+        "up": {
+          "texture": "#cv_books_a"
+        },
+        "down": {
+          "texture": "#cv_books_a"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        12.5,
+        12
+      ],
+      "to": [
+        3,
+        17,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hs_steel",
+          "uv": [
+            13,
+            0,
+            14,
+            4.5
+          ]
+        },
+        "south": {
+          "texture": "#hs_steel",
+          "uv": [
+            2,
+            0,
+            3,
+            4.5
+          ]
+        },
+        "east": {
+          "texture": "#hs_steel",
+          "uv": [
+            3,
+            0,
+            4,
+            4.5
+          ]
+        },
+        "west": {
+          "texture": "#hs_steel",
+          "uv": [
+            12,
+            0,
+            13,
+            4.5
+          ]
+        },
+        "up": {
+          "texture": "#hs_steel"
+        },
+        "down": {
+          "texture": "#hs_steel"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        17,
+        11
+      ],
+      "to": [
+        4.5,
+        19,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dn_enamel_green",
+          "uv": [
+            11.5,
+            0,
+            15,
+            2
+          ]
+        },
+        "south": {
+          "texture": "#dn_enamel_green",
+          "uv": [
+            1,
+            0,
+            4.5,
+            2
+          ]
+        },
+        "east": {
+          "texture": "#dn_enamel_green",
+          "uv": [
+            2,
+            0,
+            5,
+            2
+          ]
+        },
+        "west": {
+          "texture": "#dn_enamel_green",
+          "uv": [
+            11,
+            0,
+            14,
+            2
+          ]
+        },
+        "up": {
+          "texture": "#dn_enamel_green"
+        },
+        "down": {
+          "texture": "#dn_enamel_green"
+        }
+      }
+    }
+  ]
+}

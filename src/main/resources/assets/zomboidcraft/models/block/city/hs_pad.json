@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hs_pad": "zomboidcraft:block/city/hs_pad",
+    "particle": "zomboidcraft:block/city/hs_pad"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hs_pad",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#hs_pad",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#hs_pad",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#hs_pad",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#hs_pad",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#hs_pad",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

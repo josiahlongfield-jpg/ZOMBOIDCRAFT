@@ -1,0 +1,44 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "of_mat": "zomboidcraft:block/city/of_mat",
+    "particle": "zomboidcraft:block/city/of_mat"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        0
+      ],
+      "to": [
+        15,
+        0.8,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#of_mat",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#of_mat",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#of_mat"
+        },
+        "west": {
+          "texture": "#of_mat"
+        },
+        "up": {
+          "texture": "#of_mat"
+        },
+        "down": {
+          "texture": "#of_mat",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

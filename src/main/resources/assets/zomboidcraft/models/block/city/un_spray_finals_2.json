@@ -1,0 +1,49 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "un_spray_finals_2": {
+      "sprite": "zomboidcraft:block/city/un_spray_finals_2",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/un_spray_finals_2"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.8
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#un_spray_finals_2"
+        },
+        "south": {
+          "texture": "#un_spray_finals_2",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#un_spray_finals_2",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#un_spray_finals_2",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#un_spray_finals_2",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#un_spray_finals_2",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,236 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "mu_fur_deer": "zomboidcraft:block/city/mu_fur_deer",
+    "mu_gold": "zomboidcraft:block/city/mu_gold",
+    "tree_oak_bark": "zomboidcraft:block/city/tree_oak_bark",
+    "particle": "zomboidcraft:block/city/tree_oak_bark"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        0,
+        6
+      ],
+      "to": [
+        12,
+        2,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tree_oak_bark"
+        },
+        "south": {
+          "texture": "#tree_oak_bark"
+        },
+        "east": {
+          "texture": "#tree_oak_bark"
+        },
+        "west": {
+          "texture": "#tree_oak_bark"
+        },
+        "up": {
+          "texture": "#tree_oak_bark"
+        },
+        "down": {
+          "texture": "#tree_oak_bark",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        2,
+        6
+      ],
+      "to": [
+        10,
+        9,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_fur_deer"
+        },
+        "south": {
+          "texture": "#mu_fur_deer"
+        },
+        "east": {
+          "texture": "#mu_fur_deer"
+        },
+        "west": {
+          "texture": "#mu_fur_deer"
+        },
+        "up": {
+          "texture": "#mu_fur_deer"
+        },
+        "down": {
+          "texture": "#mu_fur_deer"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        8,
+        5.5
+      ],
+      "to": [
+        10,
+        12,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_fur_deer"
+        },
+        "south": {
+          "texture": "#mu_fur_deer"
+        },
+        "east": {
+          "texture": "#mu_fur_deer"
+        },
+        "west": {
+          "texture": "#mu_fur_deer"
+        },
+        "up": {
+          "texture": "#mu_fur_deer"
+        },
+        "down": {
+          "texture": "#mu_fur_deer"
+        }
+      }
+    },
+    {
+      "from": [
+        6.5,
+        9.5,
+        5.3
+      ],
+      "to": [
+        7.8,
+        10.8,
+        5.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_gold"
+        },
+        "south": {
+          "texture": "#mu_gold"
+        },
+        "east": {
+          "texture": "#mu_gold"
+        },
+        "west": {
+          "texture": "#mu_gold"
+        },
+        "up": {
+          "texture": "#mu_gold"
+        },
+        "down": {
+          "texture": "#mu_gold"
+        }
+      }
+    },
+    {
+      "from": [
+        8.2,
+        9.5,
+        5.3
+      ],
+      "to": [
+        9.5,
+        10.8,
+        5.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_gold"
+        },
+        "south": {
+          "texture": "#mu_gold"
+        },
+        "east": {
+          "texture": "#mu_gold"
+        },
+        "west": {
+          "texture": "#mu_gold"
+        },
+        "up": {
+          "texture": "#mu_gold"
+        },
+        "down": {
+          "texture": "#mu_gold"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        12,
+        6
+      ],
+      "to": [
+        7,
+        13.5,
+        7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_fur_deer"
+        },
+        "south": {
+          "texture": "#mu_fur_deer"
+        },
+        "east": {
+          "texture": "#mu_fur_deer"
+        },
+        "west": {
+          "texture": "#mu_fur_deer"
+        },
+        "up": {
+          "texture": "#mu_fur_deer"
+        },
+        "down": {
+          "texture": "#mu_fur_deer"
+        }
+      }
+    },
+    {
+      "from": [
+        9,
+        12,
+        6
+      ],
+      "to": [
+        10,
+        13.5,
+        7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_fur_deer"
+        },
+        "south": {
+          "texture": "#mu_fur_deer"
+        },
+        "east": {
+          "texture": "#mu_fur_deer"
+        },
+        "west": {
+          "texture": "#mu_fur_deer"
+        },
+        "up": {
+          "texture": "#mu_fur_deer"
+        },
+        "down": {
+          "texture": "#mu_fur_deer"
+        }
+      }
+    }
+  ]
+}

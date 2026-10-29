@@ -1,0 +1,140 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "painted_steel": "zomboidcraft:block/city/painted_steel",
+    "pw_drum": "zomboidcraft:block/city/pw_drum",
+    "particle": "zomboidcraft:block/city/pw_drum"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        3,
+        4
+      ],
+      "to": [
+        15,
+        13,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pw_drum"
+        },
+        "south": {
+          "texture": "#pw_drum",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#pw_drum"
+        },
+        "west": {
+          "texture": "#pw_drum"
+        },
+        "up": {
+          "texture": "#pw_drum"
+        },
+        "down": {
+          "texture": "#pw_drum"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        1,
+        4
+      ],
+      "to": [
+        13,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pw_drum"
+        },
+        "south": {
+          "texture": "#pw_drum",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#pw_drum"
+        },
+        "west": {
+          "texture": "#pw_drum"
+        },
+        "up": {
+          "texture": "#pw_drum"
+        },
+        "down": {
+          "texture": "#pw_drum"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        4,
+        2
+      ],
+      "to": [
+        12,
+        12,
+        4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pw_drum"
+        },
+        "south": {
+          "texture": "#pw_drum"
+        },
+        "east": {
+          "texture": "#pw_drum"
+        },
+        "west": {
+          "texture": "#pw_drum"
+        },
+        "up": {
+          "texture": "#pw_drum"
+        },
+        "down": {
+          "texture": "#pw_drum"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        5,
+        1
+      ],
+      "to": [
+        11,
+        11,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#painted_steel"
+        },
+        "south": {
+          "texture": "#painted_steel"
+        },
+        "east": {
+          "texture": "#painted_steel"
+        },
+        "west": {
+          "texture": "#painted_steel"
+        },
+        "up": {
+          "texture": "#painted_steel"
+        },
+        "down": {
+          "texture": "#painted_steel"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,211 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_chrome": "zomboidcraft:block/city/home_chrome",
+    "mu_parasol": "zomboidcraft:block/city/mu_parasol",
+    "particle": "zomboidcraft:block/city/home_chrome"
+  },
+  "elements": [
+    {
+      "from": [
+        7.5,
+        0,
+        7.5
+      ],
+      "to": [
+        8.5,
+        12,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_chrome"
+        },
+        "south": {
+          "texture": "#home_chrome"
+        },
+        "east": {
+          "texture": "#home_chrome"
+        },
+        "west": {
+          "texture": "#home_chrome"
+        },
+        "up": {
+          "texture": "#home_chrome"
+        },
+        "down": {
+          "texture": "#home_chrome",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        -6,
+        12,
+        -6
+      ],
+      "to": [
+        22,
+        13,
+        22
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_parasol",
+          "uv": [
+            0,
+            3,
+            16,
+            4
+          ]
+        },
+        "south": {
+          "texture": "#mu_parasol",
+          "uv": [
+            0,
+            3,
+            16,
+            4
+          ]
+        },
+        "east": {
+          "texture": "#mu_parasol",
+          "uv": [
+            0,
+            3,
+            16,
+            4
+          ]
+        },
+        "west": {
+          "texture": "#mu_parasol",
+          "uv": [
+            0,
+            3,
+            16,
+            4
+          ]
+        },
+        "up": {
+          "texture": "#mu_parasol",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#mu_parasol",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        -2,
+        13,
+        -2
+      ],
+      "to": [
+        18,
+        14.5,
+        18
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_parasol",
+          "uv": [
+            0,
+            1.5,
+            16,
+            3
+          ]
+        },
+        "south": {
+          "texture": "#mu_parasol",
+          "uv": [
+            0,
+            1.5,
+            16,
+            3
+          ]
+        },
+        "east": {
+          "texture": "#mu_parasol",
+          "uv": [
+            0,
+            1.5,
+            16,
+            3
+          ]
+        },
+        "west": {
+          "texture": "#mu_parasol",
+          "uv": [
+            0,
+            1.5,
+            16,
+            3
+          ]
+        },
+        "up": {
+          "texture": "#mu_parasol",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#mu_parasol",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        14.5,
+        5
+      ],
+      "to": [
+        11,
+        15.5,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_parasol"
+        },
+        "south": {
+          "texture": "#mu_parasol"
+        },
+        "east": {
+          "texture": "#mu_parasol"
+        },
+        "west": {
+          "texture": "#mu_parasol"
+        },
+        "up": {
+          "texture": "#mu_parasol"
+        },
+        "down": {
+          "texture": "#mu_parasol"
+        }
+      }
+    }
+  ]
+}

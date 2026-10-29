@@ -42,11 +42,13 @@ final class GroundFog {
     private static final int[] LIGHT = new int[SIDE * SIDE];
     private static int originX, originZ, clock;
     private static boolean ready;
+    /** The mean height of the ground the mist lies on round you (NaN where there's none). */
+    private static float groundMean = Float.NaN;
     private static float thick;
     /** Each sheet's drift so far in blocks, the wind it's following, and the last frame's time. */
-    private static final double[] OFF_X = new double[8], OFF_Z = new double[8];
+    private static final double[] OFF_X = new double[14], OFF_Z = new double[14];
     /** How many times the speckle tile repeats across one quad (CELL blocks): about 4 texture pixels a block-sixteenth. */
-    private static final double SPECKLE = 1.5;
+    private static final double SPECKLE = 2.5;
     private static double windX, windZ = 1, drift = 0.25, lastT = Double.NaN;
 
     /** Every tick: follow the player, and every half second re-read the ground under the fog. */
@@ -60,6 +62,8 @@ final class GroundFog {
         originZ = Mth.floor(player.getZ() / CELL) * CELL - REACH;
         double feet = player.getY();
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+        double sum = 0;
+        int counted = 0;
         for (int i = 0; i < SIDE; i++) {
             for (int j = 0; j < SIDE; j++) {
                 int x = originX + i * CELL, z = originZ + j * CELL;
@@ -68,11 +72,16 @@ final class GroundFog {
                 // only on real ground: never over your head, and never on a roof, an awning or a car
                 // park deck (anything with open space under its top)
                 HEIGHT[i * SIDE + j] = top > feet + 6 || hollow(level, pos, x, top, z) ? Float.NaN : top;
+                if (!Float.isNaN(HEIGHT[i * SIDE + j])) {
+                    sum += top;
+                    counted++;
+                }
                 pos.set(x, top, z);
                 int block = level.getBrightness(LightLayer.BLOCK, pos), sky = level.getBrightness(LightLayer.SKY, pos);
-                LIGHT[i * SIDE + j] = sky << 20 | Math.max(block, 5) << 4;
+                LIGHT[i * SIDE + j] = sky << 20 | Mth.clamp(block, 5, 9) << 4;  // lamps tint it but don't light up every fleck
             }
         }
+        groundMean = counted == 0 ? Float.NaN : (float) (sum / counted);
         ready = true;
     }
 
@@ -114,14 +123,21 @@ final class GroundFog {
         drift += (0.25 + 0.9 * w.wind() - drift) * ease;
         float flash = WeatherView.flash();
         // many thin sheets, sparser the higher they lie, so the mist has depth and no top surface
-        int layers = Mth.clamp(4 + Math.round(thick * 3), 4, 8);
-        float strength = (float) Math.min(0.6, 0.42 * c.mistAmount * (0.8 + 0.4 * Math.min(thick, 1))) * (1 - 0.4f * flash);
-        // the speckle shifts to a fresh spot every frame: the shader pack's frame blending melts it into smooth haze
-        double jitterU = Math.random(), jitterV = Math.random();
+        // each sheet stays faint (its flecks barely over what the pack keeps, so none of them stands out
+        // as a dot); the thickness comes from stacking many of them, each speckled differently
+        int stack = Mth.clamp(8 + Math.round(thick * 4), 8, 13);
+        float each = (float) Math.min(0.22, 0.2 * c.mistAmount * (0.85 + 0.3 * Math.min(thick, 1))) * (1 - 0.4f * flash);
+        // high above it (a roof, a tower) the sheets all lie on top of each other as seen from up there, so a few
+        // stronger ones look the same; a dozen full-screen sheets under a shader pack is what cost the frame rate
+        boolean above = !Float.isNaN(groundMean) && eye.y - groundMean > 12;
+        int layers = above ? 4 : stack;
+        float strength = above ? Math.min(0.35f, each * stack / 4f) : each;
+        // every sheet's speckle shifts to a fresh spot every frame: the shader pack's frame blending melts it into haze
+        cabin = mc.player != null && mc.player.getVehicle() instanceof com.zomboidcraft.world.cars.CarProp car ? car : null;
         context.submitNodeCollector().submitCustomGeometry(context.poseStack(), RenderTypes.entityTranslucent(TEXTURE),
                 (pose, out) -> {
                     for (int layer = 0; layer < layers; layer++) {
-                        float lift = 0.08f + layer * 0.22f;
+                        float lift = 0.06f + layer * 0.13f;
                         // each sheet drifts its own way through the wind, so they shear past each other
                         double turn = (layer % 2 == 0 ? 1 : -1) * 0.3 * layer;
                         double dx = windX * Math.cos(turn) - windZ * Math.sin(turn), dz = windX * Math.sin(turn) + windZ * Math.cos(turn);
@@ -130,8 +146,8 @@ final class GroundFog {
                         OFF_X[layer] += dx * drift * dt * (1 + 0.12 * layer);
                         OFF_Z[layer] += dz * drift * dt * (1 + 0.12 * layer);
                         // sparser the higher it lies, fading out to nothing at the top
-                        float alpha = strength * (1 - layer / (float) (layers + 1));
-                        sheet(pose, out, eye, lift, layer, alpha, jitterU + layer * 0.29, jitterV + layer * 0.53);
+                        float alpha = strength * (1 - 0.6f * layer / (float) layers);
+                        sheet(pose, out, eye, lift, layer, alpha, Math.random(), Math.random());
                     }
                 });
     }
@@ -146,7 +162,7 @@ final class GroundFog {
                     continue;
                 }
                 float lo = Math.min(Math.min(ha, hb), Math.min(hc, hd)), hi = Math.max(Math.max(ha, hb), Math.max(hc, hd));
-                if (hi - lo > STEP) {
+                if (hi - lo > STEP || inCabin(originX + (i + 0.5) * CELL, originZ + (j + 0.5) * CELL)) {
                     continue;
                 }
                 corner(pose, out, eye, i, j, 0, 0, ha, lift, layer, alpha, ju, jv, LIGHT[a]);
@@ -155,6 +171,22 @@ final class GroundFog {
                 corner(pose, out, eye, i + 1, j, 1, 0, hb, lift, layer, alpha, ju, jv, LIGHT[b]);
             }
         }
+    }
+
+    /** The car you're riding in, if any: the mist that would drift through its cabin is left out. */
+    private static com.zomboidcraft.world.cars.CarProp cabin;
+
+    /** Whether a quad centred here would reach into that car's cabin: its footprint, plus half a quad's diagonal. */
+    private static boolean inCabin(double x, double z) {
+        com.zomboidcraft.world.cars.CarProp car = cabin;
+        com.zomboidcraft.world.cars.CarModels.Model m = car == null ? null : com.zomboidcraft.world.cars.CarModels.get(car.model());
+        if (m == null) {
+            return false;
+        }
+        double t = Math.toRadians(car.getYRot()), dx = x - car.getX(), dz = z - car.getZ();
+        double lx = dx * Math.cos(t) + dz * Math.sin(t), lz = dz * Math.cos(t) - dx * Math.sin(t);
+        double pad = CELL * 0.71;
+        return Math.abs(lx) < m.size[0] / 2 + pad && Math.abs(lz) < m.size[2] / 2 + pad;
     }
 
     /**

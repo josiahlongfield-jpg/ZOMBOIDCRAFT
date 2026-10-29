@@ -17,6 +17,8 @@ public final class ModDamageTypes {
     public static final ResourceKey<DamageType> STRAIN = key("strain");
     /** A rifle round. Ignores the hurt cooldown, so quick shots all land. */
     public static final ResourceKey<DamageType> BULLET = key("bullet");
+    /** A jet's cannon shells, the Apache's, or a bomb (WorldEvents' air strikes); counts as an explosion. */
+    public static final ResourceKey<DamageType> AIR_STRIKE = key("air_strike");
 
     private static ResourceKey<DamageType> key(String name) {
         return ResourceKey.create(Registries.DAMAGE_TYPE, ZomboidCraft.id(name));

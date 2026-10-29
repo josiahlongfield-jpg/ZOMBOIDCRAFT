@@ -40,6 +40,8 @@ public final class TrainRun {
     double haltAt;
     /** How long this stand at a stop (or a halt) is, all told. */
     int dwellTotal;
+    /** Zombies riding while nobody's near enough to see them (they're made real as players come close). */
+    public int passengers;
     /** Seconds the doors stay open after a stop button halt. */
     static final int HALT_SECONDS = 12;
 
@@ -76,6 +78,9 @@ public final class TrainRun {
         pickTarget();
         if (target >= 0 && target != was && express) {
             Otto.express(level, this, line.stops.get(target));
+        }
+        if (express) {
+            cruise = Math.max(cruise, Math.min(cruise * cfg.expressSpeed, 4.0));    // called: flat out to whoever rang, 80 b/s at most
         }
         double dist = target < 0 ? Double.MAX_VALUE : distTo(target);
         // a stop button: pull up short, braking harder than for a station
@@ -150,13 +155,47 @@ public final class TrainRun {
         return i == target && d > line.route.length() - 8 ? 0 : d;
     }
 
-    /** The stop to head for: the nearest call ahead if anyone's called, otherwise the next stop. */
+    /** Whether this is the train that answers a call at that stop: the one nearest behind it. The rest keep to their stops. */
+    boolean answers(int stop) {
+        TrainRun best = null;
+        double bestD = Double.MAX_VALUE;
+        for (TrainRun run : line.trains) {
+            double d = run.distTo(stop);
+            if (d < bestD) {
+                bestD = d;
+                best = run;
+            }
+        }
+        return best == this;
+    }
+
+    private boolean answersAny() {
+        for (int stop : line.calls) {
+            if (answers(stop)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** How far the next train ahead on the line is, nose to tail (MAX_VALUE alone on the line). */
+    private double gapAhead() {
+        double gap = Double.MAX_VALUE;
+        for (TrainRun other : line.trains) {
+            if (other != this) {
+                gap = Math.min(gap, line.route.ahead(s, other.s - other.tail()));
+            }
+        }
+        return gap;
+    }
+
+    /** The stop to head for: the nearest call ahead this train answers, otherwise the next stop. */
     private void pickTarget() {
         int best = -1;
         double bestD = Double.MAX_VALUE;
-        boolean calls = !line.calls.isEmpty();
+        boolean calls = answersAny();
         for (int i = 0; i < line.stops.size(); i++) {
-            if (calls && !line.calls.contains(i)) {
+            if (calls && !(line.calls.contains(i) && answers(i))) {
                 continue;
             }
             double d = distTo(i);
@@ -179,13 +218,18 @@ public final class TrainRun {
         doorSide = stop.side();
         halting = false;
         dwell = dwellTotal = cfg.doorSeconds * 20 + DOOR_OPEN + DOOR_CLOSE + LEAVE;
+        held = 0;
         boolean called = line.calls.remove(Integer.valueOf(atStop));
+        Zombies.stopped(level, this);
         Beacons.answered(line, atStop);
         Otto.arrived(level, this, stop, called);
         TrainSounds.chime(level, this);
     }
 
     static final int DOOR_OPEN = 20, DOOR_CLOSE = 30, LEAVE = 30;
+    /** The longest a train holds at a stop to let the one ahead get away (ticks), and how long it's held so far. */
+    static final int HOLD_MAX = 90 * 20;
+    private int held;
 
     /**
      * Somebody aboard pressed a stop button. On the move: pull up as soon as it can (hard braking)
@@ -210,6 +254,16 @@ public final class TrainRun {
         Otto.stopRequested(level, this, by);
     }
 
+    /** Somebody aboard pressed close doors: at a stop with the doors open, the closing warning now and away. */
+    void closeDoors(ServerLevel level, net.minecraft.server.level.ServerPlayer by) {
+        if (phase != Phase.DWELL || dwell <= DOOR_CLOSE + LEAVE + 71 || dwellTotal - dwell < DOOR_OPEN) {
+            return;
+        }
+        dwell = DOOR_CLOSE + LEAVE + 71;
+        held = HOLD_MAX;    // and no holding for the spacing either: they asked to go
+        Otto.doorsShut(level, this, by);
+    }
+
     /** Pulled up for a stop button, between stations: both sides open. */
     private void halt(ServerLevel level) {
         phase = Phase.DWELL;
@@ -225,9 +279,15 @@ public final class TrainRun {
 
     private void dwell(ServerLevel level, ZcConfig.Trains cfg) {
         // somebody's calling from up the line: cut the stop short
-        if (!line.calls.isEmpty() && !line.calls.contains(atStop) && dwell > DOOR_CLOSE + LEAVE + 100) {
+        if (!line.calls.contains(atStop) && answersAny() && dwell > DOOR_CLOSE + LEAVE + 100) {
             dwell = DOOR_CLOSE + LEAVE + 100;
             Otto.cutShort(level, this);
+        }
+        // too close behind the train ahead: hold the doors open a while, so the trains spread back out round the line
+        if (dwell == DOOR_CLOSE + LEAVE + 71 && atStop >= 0 && line.trains.size() > 1 && held < HOLD_MAX && !answersAny()
+                && gapAhead() < line.route.length() / line.trains.size() * 0.6) {
+            held++;
+            dwell++;
         }
         int elapsed = dwellTotal - dwell;
         if (elapsed == 2) {

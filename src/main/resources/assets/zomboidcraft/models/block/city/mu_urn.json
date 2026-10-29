@@ -1,0 +1,138 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "mu_blackfig": "zomboidcraft:block/city/mu_blackfig",
+    "particle": "zomboidcraft:block/city/mu_blackfig"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        0,
+        5
+      ],
+      "to": [
+        11,
+        1.5,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_blackfig"
+        },
+        "south": {
+          "texture": "#mu_blackfig"
+        },
+        "east": {
+          "texture": "#mu_blackfig"
+        },
+        "west": {
+          "texture": "#mu_blackfig"
+        },
+        "up": {
+          "texture": "#mu_blackfig"
+        },
+        "down": {
+          "texture": "#mu_blackfig",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3.5,
+        1.5,
+        3.5
+      ],
+      "to": [
+        12.5,
+        10,
+        12.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_blackfig"
+        },
+        "south": {
+          "texture": "#mu_blackfig"
+        },
+        "east": {
+          "texture": "#mu_blackfig"
+        },
+        "west": {
+          "texture": "#mu_blackfig"
+        },
+        "up": {
+          "texture": "#mu_blackfig"
+        },
+        "down": {
+          "texture": "#mu_blackfig"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        10,
+        5
+      ],
+      "to": [
+        11,
+        13,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_blackfig"
+        },
+        "south": {
+          "texture": "#mu_blackfig"
+        },
+        "east": {
+          "texture": "#mu_blackfig"
+        },
+        "west": {
+          "texture": "#mu_blackfig"
+        },
+        "up": {
+          "texture": "#mu_blackfig"
+        },
+        "down": {
+          "texture": "#mu_blackfig"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        13,
+        4
+      ],
+      "to": [
+        12,
+        14.5,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_blackfig"
+        },
+        "south": {
+          "texture": "#mu_blackfig"
+        },
+        "east": {
+          "texture": "#mu_blackfig"
+        },
+        "west": {
+          "texture": "#mu_blackfig"
+        },
+        "up": {
+          "texture": "#mu_blackfig"
+        },
+        "down": {
+          "texture": "#mu_blackfig"
+        }
+      }
+    }
+  ]
+}

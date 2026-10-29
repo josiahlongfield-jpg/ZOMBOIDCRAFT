@@ -151,10 +151,22 @@ public final class Trains {
 
     private static void startTrains(Line line, Line old) {
         ZcConfig.Trains cfg = ZcConfig.get().trains;
-        int n = Math.max(1, line.kind == Line.Kind.SUBWAY ? cfg.subwayTrains : cfg.railTrains);
+        boolean subway = line.kind == Line.Kind.SUBWAY;
+        int n = subway ? cfg.subwayTrains : cfg.railTrains;
+        if (n <= 0) {
+            // spread along the line: a long loop gets as many as keep the wait at a stop short
+            n = (int) Math.round(line.route.length() / Math.max(200, subway ? cfg.subwaySpacing : cfg.railSpacing));
+        }
+        n = Math.max(1, Math.min(n, (int) (line.route.length() / 150)));
         for (int i = 0; i < n; i++) {
             double s = old != null && i < old.trains.size() ? old.trains.get(i).s : line.route.length() * i / n;
-            line.trains.add(new TrainRun(line, i, s));
+            TrainRun run = new TrainRun(line, i, s);
+            if (old != null && i < old.trains.size()) {
+                run.passengers = old.trains.get(i).passengers;
+            } else if (Math.random() < cfg.zombieRiderChance) {
+                run.passengers = 1 + (int) (Math.random() * Math.max(1, cfg.zombieRidersMax));
+            }
+            line.trains.add(run);
         }
     }
 
@@ -181,15 +193,19 @@ public final class Trains {
         return seen != null && seen.ride.train() >= 0 && player.level().getGameTime() - seen.tick < 40;
     }
 
-    /** A rider pressed a stop button: the train they're on pulls up where it can and opens up. */
-    private static void requestStop(ServerLevel level, int trainId, ServerPlayer by) {
+    /** A rider pressed a stop button: the train they're on pulls up where it can and opens up (or, close, shuts its doors). */
+    private static void requestStop(ServerLevel level, int trainId, boolean close, ServerPlayer by) {
         if (by.isSpectator() || !(level.getEntity(trainId) instanceof TrainEntity train) || !riders(level, train).contains(by)) {
             return;
         }
         for (Line line : SERVER.values()) {
             for (TrainRun run : line.trains) {
                 if (train.getUUID().equals(run.entity)) {
-                    run.requestStop(level, by);
+                    if (close) {
+                        run.closeDoors(level, by);
+                    } else {
+                        run.requestStop(level, by);
+                    }
                     return;
                 }
             }
@@ -227,12 +243,13 @@ public final class Trains {
         PayloadTypeRegistry.clientboundPlay().register(TrainNet.Lines.TYPE, TrainNet.Lines.CODEC);
         PayloadTypeRegistry.clientboundPlay().register(TrainNet.Riders.TYPE, TrainNet.Riders.CODEC);
         PayloadTypeRegistry.clientboundPlay().register(TrainNet.OttoSay.TYPE, TrainNet.OttoSay.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(TrainNet.Positions.TYPE, TrainNet.Positions.CODEC);
         PayloadTypeRegistry.serverboundPlay().register(TrainNet.Ride.TYPE, TrainNet.Ride.CODEC);
         PayloadTypeRegistry.serverboundPlay().register(TrainNet.Call.TYPE, TrainNet.Call.CODEC);
         PayloadTypeRegistry.serverboundPlay().register(TrainNet.StopRequest.TYPE, TrainNet.StopRequest.CODEC);
         ServerPlayNetworking.registerGlobalReceiver(TrainNet.StopRequest.TYPE, (payload, context) -> {
             ServerPlayer player = context.player();
-            player.level().getServer().execute(() -> requestStop((ServerLevel) player.level(), payload.train(), player));
+            player.level().getServer().execute(() -> requestStop((ServerLevel) player.level(), payload.train(), payload.close(), player));
         });
         ServerPlayNetworking.registerGlobalReceiver(TrainNet.Ride.TYPE, (payload, context) -> {
             ServerPlayer player = context.player();
@@ -383,12 +400,31 @@ public final class Trains {
     private static void afterTick(MinecraftServer s) {
         ServerLevel level = s.overworld();
         Beacons.tick(level);
+        if (level.getGameTime() % 5 == 3 && !level.players().isEmpty()) {
+            // the station maps' live reading
+            for (Line line : SERVER.values()) {
+                double[] at = new double[line.trains.size()];
+                float[] speed = new float[at.length];
+                boolean[] called = new boolean[at.length];
+                for (int i = 0; i < at.length; i++) {
+                    TrainRun run = line.trains.get(i);
+                    at[i] = run.s;
+                    speed[i] = run.phase == TrainRun.Phase.DWELL ? 0 : (float) run.v;
+                    called[i] = run.express;
+                }
+                TrainNet.Positions p = new TrainNet.Positions(line.id, at, speed, called);
+                for (ServerPlayer player : level.players()) {
+                    ServerPlayNetworking.send(player, p);
+                }
+            }
+        }
         for (Line line : SERVER.values()) {
             for (TrainRun run : line.trains) {
                 Entity e = run.entity == null ? null : level.getEntity(run.entity);
                 if (e instanceof TrainEntity train) {
                     sendRiders(level, run, train);
                     Zombies.steer(level, run, train);
+                    Zombies.riders(level, run, train);
                 }
             }
         }
@@ -448,7 +484,10 @@ public final class Trains {
             int i = line.nearestStop(pos.getX() + 0.5, pos.getZ() + 0.5, 48);
             if (i >= 0) {
                 Line.Stop st = line.stops.get(i);
-                double d = Math.abs(line.route.distance(st.s(), pos.getX(), pos.getZ()));
+                // and the line on the button's own level: the Glass Line's island at Mercy General lies
+                // right under the subway's platform, the same distance from both lines' tracks
+                double d = Math.abs(line.route.distance(st.s(), pos.getX(), pos.getZ()))
+                        + Math.abs(pos.getY() - line.route.y(st.s()));
                 if (d < bestD) {
                     bestD = d;
                     best = line;
@@ -520,6 +559,9 @@ public final class Trains {
             JsonArray trains = new JsonArray();
             l.trains.forEach(t -> trains.add(t.s));
             o.add("trains", trains);
+            JsonArray passengers = new JsonArray();
+            l.trains.forEach(t -> passengers.add(t.passengers));
+            o.add("passengers", passengers);
             lines.add(o);
         }
         root.add("lines", lines);
@@ -562,6 +604,12 @@ public final class Trains {
                     JsonArray t = o.getAsJsonArray("trains");
                     for (int i = 0; i < Math.min(t.size(), line.trains.size()); i++) {
                         line.trains.get(i).s = line.route.wrapS(t.get(i).getAsDouble());
+                    }
+                }
+                if (o.has("passengers")) {
+                    JsonArray p = o.getAsJsonArray("passengers");
+                    for (int i = 0; i < Math.min(p.size(), line.trains.size()); i++) {
+                        line.trains.get(i).passengers = p.get(i).getAsInt();
                     }
                 }
                 SERVER.put(line.id, line);

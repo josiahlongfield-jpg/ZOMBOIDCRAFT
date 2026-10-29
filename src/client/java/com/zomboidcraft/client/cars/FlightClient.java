@@ -34,6 +34,9 @@ public final class FlightClient {
     private static float turnBuffer;
     private static CarProp riding;
 
+    /** How close (eye to seat) and how straight at it you have to be looking for the cockpit's dot. */
+    private static final double COCKPIT_REACH = 3.5, COCKPIT_CONE = 0.94;
+
     public static void register() {
         CarProp.flightInput = FlightClient::controls;
         CarProp.pilotReport = state -> ClientPlayNetworking.send(state);
@@ -42,7 +45,45 @@ public final class FlightClient {
         CameraRig.register(10, FlightClient::camera);
         ClientTickEvents.END_CLIENT_TICK.register(FlightClient::tick);
         FlightHud.register();
+        FarFlybys.register();     // before the lights, which light the far ones it draws
         AirLights.register();
+        AirStrikeFx.register();
+        com.zomboidcraft.client.interact.Interactables.finder(FlightClient::cockpitDot);
+    }
+
+    /**
+     * The cockpit's green dot: standing by an aircraft, close to the seat the interact key would put you in
+     * and looking at it (aircraft have no door handles for CarClient's dots). It sits on the cockpit's side
+     * toward you, so the canopy doesn't hide it.
+     */
+    private static com.zomboidcraft.client.interact.Interactables.Spot cockpitDot(Minecraft client, LocalPlayer player) {
+        if (player.isPassenger() || player.isSpectator()) {
+            return null;
+        }
+        Vec3 eye = player.getEyePosition(), look = player.getViewVector(1f);
+        for (CarProp car : client.level.getEntitiesOfClass(CarProp.class, player.getBoundingBox().inflate(12), CarProp::aircraft)) {
+            // only while the crosshair's on it, so the interact key gets you in (CarClient)
+            if ("burnt".equals(car.variant()) || car.isRemoved() || CarClient.lookedAt(client, client.hitResult) != car) {
+                continue;
+            }
+            int seat = car.nearestFreeSeat(player);
+            if (seat < 0) {
+                continue;
+            }
+            Vec3 at = car.seatEye(seat), to = at.subtract(eye);
+            double d = to.length();
+            if (d > COCKPIT_REACH || d > 1e-3 && to.dot(look) / d < COCKPIT_CONE) {
+                continue;
+            }
+            // out to the cockpit's side toward you
+            Vec3 back = eye.subtract(at);
+            back = new Vec3(back.x, 0, back.z);
+            double side = back.length();
+            return new com.zomboidcraft.client.interact.Interactables.Spot(
+                    side < 1e-3 ? at : at.add(back.scale(Math.min(0.75, side * 0.5) / side)),
+                    com.zomboidcraft.client.interact.Interactables.SIZE);
+        }
+        return null;
     }
 
     /** The aircraft the local player sits in, or null. */

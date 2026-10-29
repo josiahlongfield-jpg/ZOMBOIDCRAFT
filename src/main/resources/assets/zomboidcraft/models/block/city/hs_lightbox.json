@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hs_enamel_white": "zomboidcraft:block/city/hs_enamel_white",
+    "hs_lightbox": "zomboidcraft:block/city/hs_lightbox",
+    "particle": "zomboidcraft:block/city/hs_lightbox"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        2,
+        13
+      ],
+      "to": [
+        15,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hs_lightbox"
+        },
+        "south": {
+          "texture": "#hs_enamel_white",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#hs_enamel_white"
+        },
+        "west": {
+          "texture": "#hs_enamel_white"
+        },
+        "up": {
+          "texture": "#hs_enamel_white"
+        },
+        "down": {
+          "texture": "#hs_enamel_white"
+        }
+      }
+    }
+  ]
+}

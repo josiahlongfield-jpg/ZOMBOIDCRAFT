@@ -82,6 +82,30 @@ def rotate_pts(p, rot):
     return p
 
 
+def turn_box_faces(c, n, turn):
+    """A turned box's face corners and normal: Minecraft turns an element right-handed about the
+    named axis through its origin (in 16ths)."""
+    a = np.radians(turn["angle"])
+    ca, sa = np.cos(a), np.sin(a)
+    i, j = {"x": (1, 2), "y": (2, 0), "z": (0, 1)}[turn["axis"]]
+    o = np.array(turn.get("origin", [8, 8, 8]), float)
+    p = c - o
+    q = p.copy()
+    q[:, i], q[:, j] = p[:, i] * ca - p[:, j] * sa, p[:, i] * sa + p[:, j] * ca
+    m = np.array(n, float)
+    k = m.copy()
+    k[i], k[j] = m[i] * ca - m[j] * sa, m[i] * sa + m[j] * ca
+    return q + o, k
+
+
+def rotate_vec(n, rot):
+    """A vector turned by quarter turns clockwise seen from above, as rotate_pts turns points."""
+    n = np.array(n, float)
+    for _ in range(rot):
+        n = np.array([-n[2], n[1], n[0]])
+    return n
+
+
 def rotate_dir(d, rot):
     n = NORMALS[d].copy()
     for _ in range(rot):
@@ -204,6 +228,7 @@ class Palette:
         self.tex_names = []
         self.tex_index = {}
         self.tex_alpha = {}
+        self.tex_blend = set()                 # see-through glass and water: blended in the viewer, not cut out
         n = len(names)
         self.cube = np.zeros(n, bool)          # drawn as a (possibly lowered) cube
         self.opaque = np.zeros(n, bool)        # hides the faces of its neighbours
@@ -268,13 +293,21 @@ class Palette:
                 faces = []
                 for b in spec["boxes"]:
                     box, tname = b[:6], b[6]
+                    inked = b[7] if len(b) > 7 else None
+                    turn = b[8] if len(b) > 8 else None
                     for d in range(6):
-                        if len(b) > 7 and DIRS[d] not in b[7]:
+                        if inked and DIRS[d] not in inked:
                             continue  # a face the rest of the object covers (tools/props/props.py)
                         # one texture for the box, or a dict of faces (a roof step's shingled tread)
                         t = self.tex(tname if isinstance(tname, str) else self.tex_for(tname, DIRS[d]))
                         c, uv = face_quad(box, d)
-                        uv = fit_uv(uv) if len(b) < 8 else atlas_uv(uv, b[7][DIRS[d]])
+                        uv = fit_uv(uv) if not inked else atlas_uv(uv, inked[DIRS[d]])
+                        if turn:
+                            # a box turned about a point (gen_blocks' element rotation): its faces and
+                            # normal turn with it and never hide behind a neighbour
+                            c, n = turn_box_faces(c, NORMALS[d], turn)
+                            faces.append((rotate_pts(c, rot), uv, rotate_dir(d, rot), t, False, rotate_vec(n, rot)))
+                            continue
                         # a face on the block's boundary hides behind a solid neighbour
                         edge = box[[3, 0, 4, 1, 5, 2][d]] == (16 if d % 2 == 0 else 0)
                         faces.append((rotate_pts(c, rot), uv, rotate_dir(d, rot), t, edge))
@@ -319,6 +352,8 @@ class Palette:
             self.tex_names.append(name)
             a = np.array(Image.open(self.tex_dir / f"{name}.png").convert("RGBA"))[..., 3]
             self.tex_alpha[name] = bool((a < 250).any())
+            if ((a > 12) & (a < 236)).mean() > 0.3:
+                self.tex_blend.add(name)
         return self.tex_index[name]
 
 
@@ -337,7 +372,7 @@ class Out:
             m = tex == t
             self.parts[t].append((corners[m], normals[m], uvs[m], ao[m], light[m]))
 
-    def write(self, out_dir, names, alpha):
+    def write(self, out_dir, names, alpha, blend=()):
         index = []
         reach = max((np.abs(p[0]).max() for parts in self.parts for p in parts), default=0)
         self.unit = 64 if reach * 4 < 32000 else 16
@@ -366,6 +401,8 @@ class Out:
                 for a in (pos, nrm, uvs, aos, idx):
                     f.write(a.tobytes())
             index.append({"tex": names[t], "verts": len(pos), "indices": len(idx), "alpha": alpha[names[t]], "uvScale": scale})
+            if names[t] in blend:
+                index[-1]["blend"] = True
         return index
 
 
@@ -629,6 +666,14 @@ def main():
     blocks = json.load(open(HERE / "blocks.json"))["blocks"]
     for extra in a.extra:
         blocks.update(json.load(open(extra))["blocks"])
+    # water with water over it fills its block, as the game draws it: only the surface sits low
+    # (otherwise every layer under the surface draws a face, and the sea seen through glass is a stack of them)
+    wet = [i for i, n in enumerate(meta["palette"]) if n == "minecraft:water"]
+    if wet and "minecraft:water" in blocks:
+        blocks["minecraft:water_deep"] = dict(blocks["minecraft:water"], height=16)
+        meta["palette"].append("minecraft:water_deep")
+        w = np.isin(vox, wet)
+        vox[:-1][w[:-1] & w[1:]] = len(meta["palette"]) - 1
     meta["palette"] = connect(meta["palette"], vox, blocks)
     if a.flicker_on:
         meta["palette"] = [n if "flicker" not in blocks.get(parse(n)[0], {}) or "lit=" in n
@@ -752,7 +797,9 @@ def main():
         m = ids == i
         py, pz, px = ys[m], zs[m], xs[m]
         base = np.stack([(px + ox) * 16, py * 16, (pz + oz) * 16], 1)
-        for c, uv, d, t, edge in pal.models[i]:
+        for f in pal.models[i]:
+            c, uv, d, t, edge = f[:5]
+            nrm = f[5] if len(f) > 5 else NORMALS[d]
             sel = np.ones(len(py), bool)
             if edge:
                 n = NORMALS[d]
@@ -763,7 +810,7 @@ def main():
             corners = base[sel][:, None, :] + c[None]
             own = light[:, py[sel], pz[sel], px[sel]].T
             grow()
-            out.add(np.full(k, t), corners, np.repeat(NORMALS[d][None], k, 0), np.repeat(uv[None], k, 0), np.full((k, 4), 3),
+            out.add(np.full(k, t), corners, np.repeat(np.asarray(nrm, float)[None], k, 0), np.repeat(uv[None], k, 0), np.full((k, 4), 3),
                     np.repeat(own[:, None, :], 4, 1))
             nfaces += k
     if a.track:
@@ -774,7 +821,7 @@ def main():
     print("total quads", nfaces)
 
     a.out_dir.mkdir(parents=True, exist_ok=True)
-    index = out.write(a.out_dir, pal.tex_names, pal.tex_alpha)
+    index = out.write(a.out_dir, pal.tex_names, pal.tex_alpha, pal.tex_blend)
     emissive = {name: export_vehicle(a.out_dir, name, *car_tex[name]) if name in car_tex else export_maps(a.tex_dir, a.out_dir, name)
                 for name in pal.tex_names}
     for e in index:

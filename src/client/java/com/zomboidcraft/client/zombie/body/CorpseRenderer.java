@@ -29,8 +29,8 @@ public class CorpseRenderer extends EntityRenderer<Corpse, CorpseRenderer.State>
         Identifier skin, kit, lowSkin;
         final ZMove.Pose pose = new ZMove.Pose();
         int cuts, missingLimb, variant;
-        boolean legless, hidden;
-        float yaw, size = 1f;
+        boolean legless, hidden, hung;
+        float yaw, size = 1f, swing, twist;
     }
 
     private final ZDeath death = new ZDeath();
@@ -52,7 +52,9 @@ public class CorpseRenderer extends EntityRenderer<Corpse, CorpseRenderer.State>
     @Override
     protected AABB getBoundingBoxForCulling(Corpse corpse, float partialTick) {
         // it lies up to two blocks off its feet, any way round
-        return corpse.getBoundingBox().inflate(2.2, 0.6, 2.2);
+        AABB box = corpse.getBoundingBox().inflate(2.2, 0.6, 2.2);
+        // sat up or hung, it stands taller than one lying down
+        return corpse.pose() == Corpse.FALLEN ? box : box.expandTowards(0, 1.8, 0);
     }
 
     @Override
@@ -77,6 +79,16 @@ public class CorpseRenderer extends EntityRenderer<Corpse, CorpseRenderer.State>
         state.size = corpse.size();
         long d = corpse.death();
         state.yaw = Deaths.yaw(d);
+        state.hung = corpse.pose() == Corpse.HUNG;
+        if (corpse.pose() != Corpse.FALLEN) {
+            // set out by a Harvestman; a hung one turns slowly on its cable
+            ZPosed.pose(state.pose, corpse.pose(), state.variant);
+            state.yaw = corpse.getYRot();
+            float t = (corpse.tickCount + partialTick) / 20f + (state.variant & 255) * 0.1f;
+            state.swing = (float) Math.sin(t * 0.9f) * 2.5f;
+            state.twist = (float) Math.sin(t * 0.23f) * 14f;
+            return;
+        }
         ZDeath.Fall fall = falls.computeIfAbsent(corpse.getId(), id -> new ZDeath.Fall());
         fall.set(Deaths.kind(d), Deaths.heading(d), Deaths.force(d), Deaths.part(d), Deaths.seed(d),
                 (state.cuts & Dismember.RIGHT_LEG) != 0, state.legless, ZBodyLayer.stumps(state.cuts, state.missingLimb));
@@ -94,6 +106,12 @@ public class CorpseRenderer extends EntityRenderer<Corpse, CorpseRenderer.State>
         poseStack.pushPose();
         // as a living zombie is drawn: turned to its yaw, the model flipped upright, its feet on the ground
         poseStack.scale(state.size, state.size, state.size);
+        if (state.hung) {
+            poseStack.translate(0f, ZPosed.NECK, 0f);
+            poseStack.rotateDegrees(Axis.YP, state.twist);
+            poseStack.rotateDegrees(Axis.XP, state.swing);
+            poseStack.translate(0f, -ZPosed.NECK, 0f);
+        }
         poseStack.rotateDegrees(Axis.YP, 180f - state.yaw);
         poseStack.scale(-1f, -1f, 1f);
         poseStack.translate(0f, -1.501f, 0f);

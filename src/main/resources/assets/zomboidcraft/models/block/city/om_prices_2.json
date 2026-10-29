@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "om_prices_2": "zomboidcraft:block/city/om_prices_2",
+    "particle": "zomboidcraft:block/city/om_prices_2"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.3
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_prices_2"
+        },
+        "south": {
+          "texture": "#om_prices_2",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#om_prices_2",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#om_prices_2",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#om_prices_2",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#om_prices_2",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hs_cross_6_on": "zomboidcraft:block/city/hs_cross_6_on",
+    "hs_steel": "zomboidcraft:block/city/hs_steel",
+    "particle": "zomboidcraft:block/city/hs_cross_6_on"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        10
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hs_cross_6_on"
+        },
+        "south": {
+          "texture": "#hs_steel",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#hs_steel",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#hs_steel",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#hs_steel",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#hs_steel",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

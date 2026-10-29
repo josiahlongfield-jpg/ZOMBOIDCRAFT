@@ -1,0 +1,151 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cv_books_a": "zomboidcraft:block/city/cv_books_a",
+    "cv_books_b": "zomboidcraft:block/city/cv_books_b",
+    "cv_oak": "zomboidcraft:block/city/cv_oak",
+    "home_books": "zomboidcraft:block/city/home_books",
+    "particle": "zomboidcraft:block/city/cv_oak"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        12
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_oak"
+        },
+        "south": {
+          "texture": "#cv_oak",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cv_oak",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cv_oak",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cv_oak",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cv_oak",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        1,
+        9
+      ],
+      "to": [
+        16,
+        5,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_books_b"
+        },
+        "south": {
+          "texture": "#cv_books_b"
+        },
+        "east": {
+          "texture": "#cv_books_b",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cv_books_b",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cv_books_b"
+        },
+        "down": {
+          "texture": "#cv_books_b"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        6,
+        9
+      ],
+      "to": [
+        16,
+        10,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_books_a"
+        },
+        "south": {
+          "texture": "#cv_books_a"
+        },
+        "east": {
+          "texture": "#cv_books_a",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cv_books_a",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cv_books_a"
+        },
+        "down": {
+          "texture": "#cv_books_a"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        11,
+        10
+      ],
+      "to": [
+        16,
+        15,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_books"
+        },
+        "south": {
+          "texture": "#home_books"
+        },
+        "east": {
+          "texture": "#home_books",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_books",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_books"
+        },
+        "down": {
+          "texture": "#home_books"
+        }
+      }
+    }
+  ]
+}

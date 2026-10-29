@@ -2,6 +2,8 @@ package com.zomboidcraft.world.county;
 
 import com.zomboidcraft.world.city.Doors;
 import com.zomboidcraft.world.city.Placer;
+import com.zomboidcraft.world.city.Stairwell;
+import com.zomboidcraft.world.city.Tower;
 import java.util.SplittableRandom;
 
 /**
@@ -14,7 +16,7 @@ import java.util.SplittableRandom;
  * eight blocks in half-block steps: B1 to B2 in lane B, heading back toward the front, B2 to B3 in
  * lane A again. A wall runs between the lanes. Bays are painted along the walls and round the core,
  * a wheel stop at the head of each, columns on the bay lines, a few cars nobody came back for,
- * strip lights mostly dead. The fire stairs and the lifts carry on down from the lobby.
+ * strip lights mostly dead. The fire stairs and the lift carry on down from the lobby.
  *
  * The lowest level keeps the service corner at the back on the west side: the freight lift and the
  * electrical room, with a mesh cage in its corner. Under one tower in a city the cage floor has a
@@ -22,7 +24,8 @@ import java.util.SplittableRandom;
  */
 public final class Garage {
     static final int H = 4;
-    private static final int CORE_W = 14, CORE_D = 10;
+    /** The core's frame and how far in the tower's slim core sits ({@link com.zomboidcraft.world.city.Tower}). */
+    private static final int CORE_W = 14, CORE_D = 10, SLIM = 3;
     private static final String[] LEVEL = {"blue", "green", "orange"};
     private static final String[] DIRS = {"north", "east", "south", "west"};
 
@@ -73,8 +76,7 @@ public final class Garage {
         }
         lobbyFloor();
         core();
-        stairs(cx0 + 1);
-        stairs(cx0 + 10);
+        stairs(cx0 + SLIM + 1);
         for (int k = 0; k < levels; k++) {
             ramp(k);
         }
@@ -153,23 +155,24 @@ public final class Garage {
 
     // ------------------------------------------------------------------ the core, carried down
 
-    /** The core's walls, its lift shafts down to a pit, lift doors on every level. */
+    /**
+     * The core carried down: the tower's slim core (its stair, then its lift) in the middle of the
+     * 14 x 10 frame the levels are laid round, solid concrete either side, the shaft open to a pit.
+     */
     private void core() {
-        int sa = cx0 + 4, lift = cx0 + 5, sb = cx0 + 9, back = cz0 + 4;
+        int kx = cx0 + SLIM, st = kx + 4, lw = kx + 7, back = cz0 + 4, lift = st + 1;
         int pit = bottom();
         for (int y = pit; y < 0; y++) {
             for (int x = cx0; x < cx0 + CORE_W; x++) {
                 for (int z = cz0; z < cz0 + CORE_D; z++) {
-                    boolean edge = x == cx0 || x == cx0 + CORE_W - 1 || z == cz0 || z == cz0 + CORE_D - 1
-                            || x == sa || x == sb || (x >= lift && x <= lift + 3 && z == back);
-                    boolean shaft = x == lift + 1 && z < back;
-                    boolean plant = x >= lift && x <= lift + 3 && z > back;
+                    boolean well = x > kx && x < st && z > cz0 && z < cz0 + CORE_D - 1;
+                    boolean shaft = x > st && x < lw && z > cz0 && z < back;
                     boolean ring = x == cx0 || x == cx0 + CORE_W - 1 || z == cz0 || z == cz0 + CORE_D - 1;
                     if (ring && y > pit) {
                         // the outside of the core, painted like the walls round the level
                         int k = Math.floorDiv(-y + H - 1, H), row = y - floorY(k);
                         p.set(x, y, z, row == 0 ? "bunk_concrete" : row == 1 ? "park_band_" + LEVEL[(k - 1) % LEVEL.length] : "park_wall");
-                    } else if (edge || shaft || plant) {
+                    } else if (!well && !shaft) {
                         p.set(x, y, z, "concrete_dark");
                     } else {
                         p.set(x, y, z, y == pit ? "floor_concrete" : "air");
@@ -177,59 +180,40 @@ public final class Garage {
                 }
             }
         }
+        // the tower's lift carries on down: its shaft open through the lobby's floor to a pit on the lowest
+        // level, doors and a call button on every level (the tower's machine finds them; its lobby stays 1)
+        p.fill(lift, 0, cz0 + 1, lift + 1, 0, back - 1, "air");
+        int[] ys = new int[levels];
         for (int k = 1; k <= levels; k++) {
             int y = floorY(k);
-            for (int yy = y + 1; yy <= y + 2; yy++) {
-                p.set(lift, yy, cz0, "elevator_door[facing=north]");
-                p.set(lift + 2, yy, cz0, "elevator_door[facing=north]");
+            ys[levels - k] = y;
+            p.set(lift - 1, y + 2, cz0 - 1, "park_st_lifts[facing=north]");
+        }
+        for (int i = 0; i < levels; i++) {
+            int y = ys[i] + 1;
+            for (int a = 0; a < 2; a++) {
+                for (int k = 0; k < 2; k++) {
+                    p.set(lift + a, y + k, cz0, "zomboidcraft:lift_door[facing=north,part=" + (k == 0 ? "lower" : "upper")
+                            + ",side=" + (a == 0 ? "right" : "left") + ",open=false,lobby=false]");
+                }
             }
-            p.set(lift + 1, y + 2, cz0 - 1, "park_st_lifts[facing=north]");
+            p.set(lift + 2, y + 1, cz0 - 1, "zomboidcraft:lift_button[facing=north,lit=false]");
         }
     }
 
     /**
-     * The fire stair carried down below the lobby, as the tower builds it above: switchback
-     * flights in the 3-wide well whose inner x runs x0..x0 + 2, a landing by the door each level.
+     * The fire stair carried down below the lobby, as the tower builds it above
+     * ({@link Stairwell}): its last flight comes up the east lane so the lobby's first goes up the west.
      */
     private void stairs(int x0) {
-        int land = cz0 + 1, flight = cz0 + 3, far = cz0 + 5;
-        for (int k = levels; k >= 1; k--) {
-            int y = floorY(k), next = y + H;
-            p.fill(x0, y, land, x0 + 2, y, land + 1, "floor_concrete");
-            Doors.abandoned(p, rng, x0 + 1, y + 1, cz0, Doors.STEEL, "south", Doors.hinge(rng));
-            p.set(x0 + 1, y + 3, land + 1, "ceiling_light_off");
-            p.set(x0, y + 2, cz0 - 1, "bunk_st_b" + k + "[facing=north]");
-            int h = y;
-            int side = 0;
-            while (h < next) {
-                if (side == 0) {
-                    for (int z = flight; z <= flight + 1 && h < next; z++) {
-                        h++;
-                        p.set(x0, h, z, "stairs_concrete[facing=south]");
-                    }
-                    if (h < next) {
-                        p.fill(x0, h, far, x0 + 2, h, far + 3, "floor_concrete");
-                    }
-                } else {
-                    for (int z = flight + 1; z >= flight && h < next; z--) {
-                        h++;
-                        p.set(x0 + 2, h, z, "stairs_concrete[facing=north]");
-                    }
-                    if (h < next) {
-                        p.fill(x0, h, land, x0 + 2, h, land + 1, "floor_concrete");
-                    }
-                }
-                side ^= 1;
-            }
-            for (int yy = y + 2; yy < next; yy++) {
-                p.set(x0 + 1, yy, flight, "railing[facing=west]");
-            }
+        int[] ys = new int[levels + 1];
+        for (int k = levels; k >= 0; k--) {
+            ys[levels - k] = floorY(k);
         }
-        // headroom where the last flight comes up under the lobby's first one
-        for (int z = flight + 1; z <= far + 3; z++) {
-            for (int x = x0; x <= x0 + 2; x++) {
-                p.set(x, 0, z, "air");
-            }
+        boolean eastFirst = (Stairwell.count(ys) - 1) % 2 == 0;
+        Stairwell.build(p, rng, x0, cz0, ys, eastFirst, Stairwell.flights(Tower.LOBBY)[0], 0);
+        for (int k = levels; k >= 1; k--) {
+            p.set(x0, floorY(k) + 2, cz0 - 1, "bunk_st_b" + k + "[facing=north]");
         }
     }
 
@@ -438,8 +422,8 @@ public final class Garage {
                 p.set(1, y + 2, z, st + "[facing=east]");
             }
         }
-        if (clear(cx0 + 4, y + 2, cz0 - 1)) {
-            p.set(cx0 + 4, y + 2, cz0 - 1, "park_st_stairs[facing=north]");
+        if (clear(cx0 + SLIM, y + 2, cz0 - 1)) {
+            p.set(cx0 + SLIM, y + 2, cz0 - 1, "park_st_stairs[facing=north]");
         }
         for (int x = 8; x < w - 10; x += 14) {
             if (clear(x, y + 2, d - 2)) {

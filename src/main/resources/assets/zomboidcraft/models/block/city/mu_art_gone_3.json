@@ -1,0 +1,49 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "mu_art_gone_3": {
+      "sprite": "zomboidcraft:block/city/mu_art_gone_3",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/mu_art_gone_3"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.8
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_art_gone_3"
+        },
+        "south": {
+          "texture": "#mu_art_gone_3",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#mu_art_gone_3",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#mu_art_gone_3",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#mu_art_gone_3",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#mu_art_gone_3",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

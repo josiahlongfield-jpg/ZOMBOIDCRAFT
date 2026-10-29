@@ -1,0 +1,50 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ar_shield": {
+      "sprite": "zomboidcraft:block/city/ar_shield",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/ar_shield"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ar_shield",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ar_shield",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ar_shield",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ar_shield",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ar_shield",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ar_shield",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

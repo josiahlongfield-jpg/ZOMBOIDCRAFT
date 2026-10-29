@@ -16,8 +16,11 @@ import net.minecraft.world.phys.Vec3;
  * headlights. Keys of their own rather than right-click, which aims a gun.
  */
 public final class CarNet {
-    /** Stand-ins for a car id: get out of the car you're in, sound its horn, turn the key, switch the headlights. */
-    public static final int GET_OUT = -1, HORN = -2, ENGINE = -3, LIGHTS = -4, FOB = -5;
+    /**
+     * Stand-ins for a car id: get out of the car you're in, sound its horn, turn the key, switch the headlights,
+     * wind your window down or up.
+     */
+    public static final int GET_OUT = -1, HORN = -2, ENGINE = -3, LIGHTS = -4, FOB = -5, WINDOW = -6;
 
     /** Use car (its entity id) at a point relative to it, or GET_OUT or HORN for the car you're in. */
     public record Use(int car, float x, float y, float z) implements CustomPacketPayload {
@@ -86,6 +89,8 @@ public final class CarNet {
                             case HORN -> car.honk(player);
                             case ENGINE -> car.toggleEngine(player);
                             case LIGHTS -> car.toggleLights(player);
+                            case WINDOW -> car.windWindow(CarGlass.seatWindow(CarModels.get(car.model()), car.variantIndex(),
+                                    car.seatOf(player)));
                             default -> player.stopRiding();
                         }
                     }
