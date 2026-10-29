@@ -6,7 +6,14 @@ world/county/House.java puts them in.
   logs along the wall's row (rotate=axis); hk_cabin_corner: the corner where the walls cross, the
   lower log along x and the upper along z, their sawn ends showing;
 - hk_ridge_beam: the hewn ridge beam under an attic's roof, along its row;
-- hk_pot: a terracotta pot on its saucer by the front step, what was planted in it long dead.
+- hk_pot: a terracotta pot on its saucer by the front step, what was planted in it long dead;
+- the big houses' grounds: hk_pier_cap / hk_pier_lamp (the cast-stone cap and ball, or the dead
+  globe lamp, on a gate pier), the dry fountain (hk_basin under it all, hk_basin_rim along each
+  side and hk_basin_corner round the north-west corner, facing; hk_fountain_base and
+  hk_fountain_top the pedestal and its bowl), the in-ground pool's hk_diving_board and
+  hk_pool_ladder (facing = toward the water), the tennis court (hk_court, hk_court_moss,
+  hk_court_line along its row, hk_court_cross, hk_tennis_net along its row, hk_net_post) and the
+  formal garden's hk_birdbath.
 
     python3 tools/city/housekit.py      rewrites the hk_ entries in blocks.json
 
@@ -104,6 +111,56 @@ def porch_skirt(seed):
     return t
 
 
+def court(seed, moss):
+    """Acrylic court surfacing gone chalky and pale, the asphalt's cracks coming through it."""
+    t = F.mat("Asphalt031", (74, 112, 84), 0.55, seed=seed)
+    t.vary(0.06)
+    t.crack(6 if moss else 3, 0.25, (40, 46, 38))
+    if moss:
+        t.mix(np.clip(P.fbm(t.rng) * 1.6 - 0.3, 0, 1), (70, 96, 40), 0.8)
+        t.speckle(0.03, (110, 130, 60), 0.6, 0.05)
+    return t
+
+
+def line_paint(seed):
+    t = F.plain(seed, (222, 224, 214), 0.05, 0.25)
+    t.speckle(0.06, (120, 140, 120), 0.5)
+    return t
+
+
+def net(seed):
+    """Polyester netting, a square every four texels; the light shows through the rest."""
+    t = F.plain(seed, (34, 36, 34), 0.1, 0.1)
+    yy, xx = np.mgrid[0:N, 0:N]
+    t.alpha[:] = np.where((xx % 4 == 0) | (yy % 4 == 0), 255, 0)
+    torn = (np.abs(xx - 40) < 6) & (yy > 30)
+    t.alpha[torn & (t.rng.random((N, N)) < 0.8)] = 0
+    return t
+
+
+def tape(seed):
+    t = F.mat("hessian_230", (214, 210, 196), 0.6, seed=seed)
+    t.grime(0.3, (110, 104, 90))
+    return t
+
+
+def basin(seed):
+    """A fountain's bowl left dry: a black tide line, wet leaves rotting in the bottom."""
+    t = F.mat("Concrete031", (138, 134, 124), 0.9, seed=seed)
+    t.grime(0.5, (52, 50, 44))
+    for col in ((112, 70, 36), (140, 98, 44), (74, 52, 32)):
+        t.speckle(0.08, col, 0.85, 0.04)
+    return t
+
+
+def board(seed):
+    """A fibreglass diving board, the grit strip worn to the white."""
+    t = F.plain(seed, (196, 204, 200), 0.05, 0.4)
+    t.speckle(0.25, (150, 160, 160), 0.4, 0.02)
+    t.grime(0.2, (100, 110, 96))
+    return t
+
+
 def textures():
     return {
         "hk_log": lambda: log_side(49200),
@@ -114,6 +171,13 @@ def textures():
         "hk_soil": lambda: soil(49204),
         "hk_stalk": lambda: stalk(49205),
         "hk_porch_skirt": lambda: porch_skirt(49206),
+        "hk_court": lambda: court(49208, False),
+        "hk_court_moss": lambda: court(49209, True),
+        "hk_court_paint": lambda: line_paint(49210),
+        "hk_net": lambda: net(49211),
+        "hk_net_tape": lambda: tape(49212),
+        "hk_basin": lambda: basin(49213),
+        "hk_board": lambda: board(49214),
     }
 
 
@@ -173,6 +237,102 @@ def pot():
     return b
 
 
+STONE, IRON, GLOBE, CHROME = "stone_trim", "front_iron", "cv_globe", "home_chrome"
+
+
+def ball(y, r, tex, cx=8, cz=8):
+    """A ball finial of radius r from height y: three crossed boxes."""
+    return [[cx - r, y + r * 0.3, cz - r * 0.7, cx + r, y + r * 1.7, cz + r * 0.7, tex],
+            [cx - r * 0.7, y + r * 0.3, cz - r, cx + r * 0.7, y + r * 1.7, cz + r, tex],
+            [cx - r * 0.75, y, cz - r * 0.75, cx + r * 0.75, y + r * 2, cz + r * 0.75, tex]]
+
+
+def pier_cap(lamp):
+    """The cap on a gate pier: an overhanging weathered slab, a plinth, and a stone ball or a lamp."""
+    b = [[-1, 0, -1, 17, 2.2, 17, STONE], [0, 2.2, 0, 16, 3, 16, STONE], [2.5, 3, 2.5, 13.5, 4.6, 13.5, STONE]]
+    if lamp:
+        b += [[6, 4.6, 6, 10, 6, 10, IRON], [7, 6, 7, 9, 7, 9, IRON],
+              [4, 7, 5.2, 12, 14, 10.8, GLOBE], [5.2, 7, 4, 10.8, 14, 12, GLOBE],
+              [6.5, 14, 6.5, 9.5, 15.2, 9.5, IRON], [7.5, 15.2, 7.5, 8.5, 16.5, 8.5, IRON]]
+    else:
+        b += [[6.5, 4.6, 6.5, 9.5, 5.4, 9.5, STONE]] + ball(5.4, 3.6, STONE)
+    return b
+
+
+def basin_rim(corner=False):
+    """The kerb of a fountain's basin along its north side: the wall, the rounded coping on it."""
+    b = [[0, 0, 0, 16, 7, 4.5, STONE], [0, 7, -0.5, 16, 8.4, 5, STONE]]
+    if corner:
+        b += [[0, 0, 0, 4.5, 7, 16, STONE], [-0.5, 7, 0, 5, 8.4, 16, STONE]]
+    return b
+
+
+def fountain_base():
+    """The pedestal: a square plinth, a fluted shaft (four reeds), the collar under the bowl."""
+    b = [[2.5, 0, 2.5, 13.5, 2.5, 13.5, STONE], [4, 2.5, 4, 12, 3.5, 12, STONE], [5.5, 3.5, 5.5, 10.5, 14, 10.5, STONE]]
+    for x, z in ((5.1, 7.4), (10.1, 7.4), (7.4, 5.1), (7.4, 10.1)):
+        b.append([x, 3.5, z, x + 0.8, 14, z + 0.8, STONE])
+    b += [[4.5, 14, 4.5, 11.5, 16, 11.5, STONE]]
+    return b
+
+
+def fountain_top():
+    """The bowl, wide as the pedestal's cell, its lip over the edge; leaves in it, an urn on top."""
+    b = [[4, 0, 4, 12, 1, 12, STONE], [1, 1, 1, 15, 2.5, 15, STONE], [-1, 2.5, -1, 17, 4.6, 17, STONE],
+         [0, 4.4, 0, 16, 4.6, 16, "hk_basin"],
+         [6.5, 4.6, 6.5, 9.5, 6, 9.5, STONE], [5.5, 6, 5.5, 10.5, 10, 10.5, STONE], [5, 10, 5, 11, 11, 11, STONE],
+         [6.8, 11, 6.8, 9.2, 12, 9.2, STONE]]
+    return b
+
+
+def diving_board():
+    """A diving board on its stand, the board running out north over the water."""
+    b = [[4.5, 0, 9, 11.5, 1, 16, "ext_galv"], [5, 1, 10, 6, 6, 15, "ext_galv"], [10, 1, 10, 11, 6, 15, "ext_galv"],
+         [5, 5, 9.5, 11, 6, 15.5, "ext_galv"], [5, 6, -14, 11, 6.8, 16, "hk_board"]]
+    return b
+
+
+def pool_ladder():
+    """Two chrome rails arching over the coping and down into the water to the north, three treads."""
+    b = []
+    for x in (3.5, 11.5):
+        b += [[x, 0, 6, x + 1, 11, 7, CHROME], [x, 10, -2.5, x + 1, 11, 7, CHROME], [x, -15, -3.5, x + 1, 11, -2.5, CHROME],
+              [x - 0.5, 0, 5.5, x + 1.5, 0.6, 7.5, CHROME]]
+    for y in (-3.5, -8.5, -13.5):
+        b.append([4.5, y, -4.5, 11.5, y + 0.8, -2, "ext_galv"])
+    return b
+
+
+def court_line(cross=False):
+    """Court surfacing with a painted line along x through it (and one along z for a crossing), the
+    paint its own strip of the block so it lies flush."""
+    paint = {"up": "hk_court_paint", "down": "hk_court", "north": "hk_court", "south": "hk_court",
+             "east": "hk_court", "west": "hk_court"}
+    if not cross:
+        return [[0, 0, 0, 16, 16, 7.3, "hk_court"], [0, 0, 7.3, 16, 16, 8.7, paint], [0, 0, 8.7, 16, 16, 16, "hk_court"]]
+    b = [[0, 0, 7.3, 16, 16, 8.7, paint], [7.3, 0, 0, 8.7, 16, 7.3, paint], [7.3, 0, 8.7, 8.7, 16, 16, paint]]
+    for x0, x1 in ((0, 7.3), (8.7, 16)):
+        for z0, z1 in ((0, 7.3), (8.7, 16)):
+            b.append([x0, 0, z0, x1, 16, z1, "hk_court"])
+    return b
+
+
+def tennis_net():
+    """The net along x, its top a band of tape, the cable through it; a slash in one panel."""
+    return [[0, 0, 7.9, 16, 14, 8.1, "hk_net"], [0, 13, 7.7, 16, 14.6, 8.3, "hk_net_tape"],
+            [0, 14.2, 7.85, 16, 14.5, 8.15, "ext_galv"]]
+
+
+def net_post():
+    return [[6.5, 0, 6.5, 9.5, 17, 9.5, "painted_steel"], [6, 16.6, 6, 10, 17.4, 10, "painted_steel"],
+            [9.5, 8, 7.5, 12.5, 9, 8.5, "painted_steel"], [12, 6.5, 7.5, 12.6, 9, 8.5, "painted_steel"]]
+
+
+def birdbath():
+    return [[4.5, 0, 4.5, 11.5, 1.5, 11.5, STONE], [6.3, 1.5, 6.3, 9.7, 9, 9.7, STONE], [5.5, 9, 5.5, 10.5, 10, 10.5, STONE],
+            [2, 10, 2, 14, 11, 14, STONE], [1.5, 11, 1.5, 14.5, 12.4, 14.5, STONE], [2.5, 12.1, 2.5, 13.5, 12.3, 13.5, "hk_basin"]]
+
+
 def blocks():
     out = {}
 
@@ -194,6 +354,23 @@ def blocks():
     add("hk_cabin_corner", cabin_corner(), "Log Wall", "WOOD")
     add("hk_ridge_beam", ridge_beam(), "Ridge Beam", "WOOD", rotate="axis", shape=[[0, 5, 5, 16, 14, 11]])
     add("hk_pot", pot(), "Flower Pot", "PACKED_MUD", decor=True, shape=[[4.5, 0, 4.5, 11.5, 7.2, 11.5]])
+    add("hk_pier_cap", pier_cap(False), "Pier Cap", "STONE", shape=[[-1, 0, -1, 17, 12, 17]])
+    add("hk_pier_lamp", pier_cap(True), "Pier Lamp", "STONE", shape=[[-1, 0, -1, 17, 16, 17]])
+    out["hk_basin"] = {"tex": {"up": "hk_basin", "down": "stone_trim", "side": "stone_trim"}, "title": "Fountain Basin", "sound": "STONE"}
+    add("hk_basin_rim", basin_rim(), "Fountain Basin", "STONE", rotate="facing", shape=[[0, 0, 0, 16, 8.4, 5]])
+    add("hk_basin_corner", basin_rim(True), "Fountain Basin", "STONE", rotate="facing",
+        shape=[[0, 0, 0, 16, 8.4, 5], [0, 0, 0, 5, 8.4, 16]])
+    add("hk_fountain_base", fountain_base(), "Fountain", "STONE", shape=[[2.5, 0, 2.5, 13.5, 16, 13.5]])
+    add("hk_fountain_top", fountain_top(), "Fountain", "STONE", shape=[[1, 0, 1, 15, 12, 15]])
+    add("hk_diving_board", diving_board(), "Diving Board", "METAL", rotate="facing", shape=[[4.5, 0, 9, 11.5, 6.8, 16]])
+    add("hk_pool_ladder", pool_ladder(), "Pool Ladder", "METAL", rotate="facing", decor=True)
+    out["hk_court"] = {"tex": "hk_court", "title": "Court Surface", "sound": "STONE"}
+    out["hk_court_moss"] = {"tex": "hk_court_moss", "title": "Court Surface", "sound": "STONE"}
+    add("hk_court_line", court_line(), "Court Surface", "STONE", rotate="axis", shape=[[0, 0, 0, 16, 16, 16]])
+    add("hk_court_cross", court_line(True), "Court Surface", "STONE", shape=[[0, 0, 0, 16, 16, 16]])
+    add("hk_tennis_net", tennis_net(), "Tennis Net", "WOOL", rotate="axis", render="cutout", shape=[[0, 0, 7.7, 16, 14.6, 8.3]])
+    add("hk_net_post", net_post(), "Net Post", "METAL", shape=[[6.5, 0, 6.5, 9.5, 17, 9.5]])
+    add("hk_birdbath", birdbath(), "Birdbath", "STONE", shape=[[1.5, 0, 1.5, 14.5, 12.4, 14.5]])
     return out
 
 

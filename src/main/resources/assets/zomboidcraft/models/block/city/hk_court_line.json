@@ -1,0 +1,120 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hk_court": "zomboidcraft:block/city/hk_court",
+    "hk_court_paint": "zomboidcraft:block/city/hk_court_paint",
+    "particle": "zomboidcraft:block/city/hk_court"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        7.3,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hk_court",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#hk_court",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#hk_court"
+        },
+        "west": {
+          "texture": "#hk_court",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#hk_court",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#hk_court",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        7.3,
+        0,
+        0
+      ],
+      "to": [
+        8.7,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hk_court",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#hk_court",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#hk_court"
+        },
+        "west": {
+          "texture": "#hk_court"
+        },
+        "up": {
+          "texture": "#hk_court_paint",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#hk_court",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        8.7,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hk_court",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#hk_court",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#hk_court",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#hk_court"
+        },
+        "up": {
+          "texture": "#hk_court",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#hk_court",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
