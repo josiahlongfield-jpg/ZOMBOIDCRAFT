@@ -1,0 +1,129 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_ck_knee": "zomboidcraft:block/city/al_ck_knee",
+    "al_ck_lining": "zomboidcraft:block/city/al_ck_lining",
+    "al_ck_lower": "zomboidcraft:block/city/al_ck_lower",
+    "particle": "zomboidcraft:block/city/al_ck_lining"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        4
+      ],
+      "to": [
+        16,
+        16,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_ck_lining"
+        },
+        "south": {
+          "texture": "#al_ck_knee"
+        },
+        "east": {
+          "texture": "#al_ck_lining",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#al_ck_lining",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#al_ck_lining",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#al_ck_lining",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        0,
+        9
+      ],
+      "to": [
+        6,
+        4,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_ck_lower"
+        },
+        "south": {
+          "texture": "#al_ck_lower"
+        },
+        "east": {
+          "texture": "#al_ck_lower"
+        },
+        "west": {
+          "texture": "#al_ck_lower"
+        },
+        "up": {
+          "texture": "#al_ck_lower"
+        },
+        "down": {
+          "texture": "#al_ck_lower"
+        }
+      },
+      "rotation": {
+        "origin": [
+          4.5,
+          0,
+          9
+        ],
+        "axis": "x",
+        "angle": 30
+      }
+    },
+    {
+      "from": [
+        10,
+        0,
+        9
+      ],
+      "to": [
+        13,
+        4,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_ck_lower"
+        },
+        "south": {
+          "texture": "#al_ck_lower"
+        },
+        "east": {
+          "texture": "#al_ck_lower"
+        },
+        "west": {
+          "texture": "#al_ck_lower"
+        },
+        "up": {
+          "texture": "#al_ck_lower"
+        },
+        "down": {
+          "texture": "#al_ck_lower"
+        }
+      },
+      "rotation": {
+        "origin": [
+          11.5,
+          0,
+          9
+        ],
+        "axis": "x",
+        "angle": 30
+      }
+    }
+  ]
+}

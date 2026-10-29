@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "af_paint_y_half": "zomboidcraft:block/city/af_paint_y_half",
+    "particle": "zomboidcraft:block/city/af_paint_y_half"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#af_paint_y_half",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#af_paint_y_half",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#af_paint_y_half",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#af_paint_y_half",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#af_paint_y_half"
+        },
+        "down": {
+          "texture": "#af_paint_y_half",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ap_bag_navy": "zomboidcraft:block/city/ap_bag_navy",
+    "home_plastic_black": "zomboidcraft:block/city/home_plastic_black",
+    "particle": "zomboidcraft:block/city/ap_bag_navy"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        3
+      ],
+      "to": [
+        14,
+        4,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ap_bag_navy"
+        },
+        "south": {
+          "texture": "#ap_bag_navy"
+        },
+        "east": {
+          "texture": "#ap_bag_navy"
+        },
+        "west": {
+          "texture": "#ap_bag_navy"
+        },
+        "up": {
+          "texture": "#ap_bag_navy"
+        },
+        "down": {
+          "texture": "#ap_bag_navy",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        4,
+        7.5
+      ],
+      "to": [
+        10,
+        4.6,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_plastic_black"
+        },
+        "south": {
+          "texture": "#home_plastic_black"
+        },
+        "east": {
+          "texture": "#home_plastic_black"
+        },
+        "west": {
+          "texture": "#home_plastic_black"
+        },
+        "up": {
+          "texture": "#home_plastic_black"
+        },
+        "down": {
+          "texture": "#home_plastic_black"
+        }
+      }
+    }
+  ]
+}

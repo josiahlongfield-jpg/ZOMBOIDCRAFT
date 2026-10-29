@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rp_ceiling_lit": "zomboidcraft:block/city/rp_ceiling_lit",
+    "rp_clad": "zomboidcraft:block/city/rp_clad",
+    "rp_roof": "zomboidcraft:block/city/rp_roof",
+    "particle": "zomboidcraft:block/city/rp_clad"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        12,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rp_clad",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#rp_clad",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#rp_clad",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rp_clad",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rp_roof",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#rp_ceiling_lit"
+        }
+      }
+    }
+  ]
+}

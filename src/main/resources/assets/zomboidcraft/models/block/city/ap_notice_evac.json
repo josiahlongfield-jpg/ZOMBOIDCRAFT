@@ -1,0 +1,42 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ap_notice_evac": "zomboidcraft:block/city/ap_notice_evac",
+    "particle": "zomboidcraft:block/city/ap_notice_evac"
+  },
+  "elements": [
+    {
+      "from": [
+        0.5,
+        2,
+        15.6
+      ],
+      "to": [
+        15.5,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ap_notice_evac"
+        },
+        "south": {
+          "texture": "#ap_notice_evac",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ap_notice_evac"
+        },
+        "west": {
+          "texture": "#ap_notice_evac"
+        },
+        "up": {
+          "texture": "#ap_notice_evac"
+        },
+        "down": {
+          "texture": "#ap_notice_evac"
+        }
+      }
+    }
+  ]
+}

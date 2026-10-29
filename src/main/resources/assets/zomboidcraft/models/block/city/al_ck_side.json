@@ -1,0 +1,114 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_armrest": "zomboidcraft:block/city/al_armrest",
+    "al_ck_lining": "zomboidcraft:block/city/al_ck_lining",
+    "al_ck_mask_box": "zomboidcraft:block/city/al_ck_mask_box",
+    "al_ck_side": "zomboidcraft:block/city/al_ck_side",
+    "particle": "zomboidcraft:block/city/al_ck_lining"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        11,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_ck_lining",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#al_ck_lining",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#al_ck_lining",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#al_ck_lining",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#al_ck_side"
+        },
+        "down": {
+          "texture": "#al_ck_lining",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        11,
+        8
+      ],
+      "to": [
+        9,
+        13,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_armrest"
+        },
+        "south": {
+          "texture": "#al_armrest"
+        },
+        "east": {
+          "texture": "#al_armrest"
+        },
+        "west": {
+          "texture": "#al_armrest"
+        },
+        "up": {
+          "texture": "#al_armrest"
+        },
+        "down": {
+          "texture": "#al_armrest"
+        }
+      }
+    },
+    {
+      "from": [
+        10,
+        11,
+        2
+      ],
+      "to": [
+        15,
+        16,
+        7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_ck_mask_box"
+        },
+        "south": {
+          "texture": "#al_ck_mask_box"
+        },
+        "east": {
+          "texture": "#al_ck_mask_box"
+        },
+        "west": {
+          "texture": "#al_ck_mask_box"
+        },
+        "up": {
+          "texture": "#al_ck_mask_box",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#al_ck_mask_box"
+        }
+      }
+    }
+  ]
+}

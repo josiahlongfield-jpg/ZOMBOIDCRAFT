@@ -1,0 +1,141 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_lining": "zomboidcraft:block/city/al_lining",
+    "al_paint": "zomboidcraft:block/city/al_paint",
+    "al_win": {
+      "sprite": "zomboidcraft:block/city/al_win",
+      "force_translucent": true
+    },
+    "al_win_in": {
+      "sprite": "zomboidcraft:block/city/al_win_in",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/al_paint"
+  },
+  "elements": [
+    {
+      "from": [
+        0.515,
+        -0.545,
+        0
+      ],
+      "to": [
+        3.515,
+        0.705,
+        16
+      ],
+      "faces": {
+        "east": {
+          "texture": "#al_lining",
+          "uv": [
+            0,
+            14.75,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#al_paint",
+          "uv": [
+            0,
+            14.75,
+            16,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          0.515,
+          8.104,
+          8.0
+        ],
+        "axis": "z",
+        "angle": -7.275
+      }
+    },
+    {
+      "from": [
+        0.515,
+        0.705,
+        0
+      ],
+      "to": [
+        3.515,
+        10.205,
+        16
+      ],
+      "faces": {
+        "east": {
+          "texture": "#al_win_in",
+          "uv": [
+            0,
+            0.353,
+            16,
+            16.0
+          ]
+        },
+        "west": {
+          "texture": "#al_win",
+          "uv": [
+            0,
+            0.353,
+            16,
+            16.0
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          0.515,
+          8.104,
+          8.0
+        ],
+        "axis": "z",
+        "angle": -7.275
+      }
+    },
+    {
+      "from": [
+        0.515,
+        10.205,
+        0
+      ],
+      "to": [
+        3.515,
+        16.753,
+        16
+      ],
+      "faces": {
+        "east": {
+          "texture": "#al_lining",
+          "uv": [
+            0,
+            0,
+            16,
+            6.548
+          ]
+        },
+        "west": {
+          "texture": "#al_paint",
+          "uv": [
+            0,
+            0,
+            16,
+            6.548
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          0.515,
+          8.104,
+          8.0
+        ],
+        "axis": "z",
+        "angle": -7.275
+      }
+    }
+  ]
+}
