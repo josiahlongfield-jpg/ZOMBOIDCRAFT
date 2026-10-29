@@ -1239,7 +1239,8 @@ def build_hi_vis_vest(g):
         g.box('body', (x0, -0.3, -2 - d), (x1, 0.8, 2 + d), 'mesh')
         g.box('body', (x0 + 0.5, -0.4, -2 - d - 0.06), (x0 + 1.3, 10.6, -2 - d), 'tape')   # braces of tape
         g.box('body', (x0 + 0.5, -0.4, 2 + d), (x0 + 1.3, 10.6, 2 + d + 0.06), 'tape')
-    g.shell('body', 7.4, 8.4, d + 0.06, 'tape')                                    # the waist hoop
+    g.shell('body', 4.4, 5.4, d + 0.06, 'tape')                                    # two hoops, chest and waist
+    g.shell('body', 7.8, 8.8, d + 0.06, 'tape')
     g.front('body', d, -0.25, 0.8, 0.25, 10.6, 'zip', t=0.1)
     g.front('body', d, -3.6, 4.6, -1.4, 6.6, 'mesh', t=0.12)                         # ID window pocket
 
@@ -1309,7 +1310,7 @@ TOPS = {
                                             button=flat('#d8d4c8', ink=False)), 0.35),
     'polo_shirt': (build_polo_shirt, dict(cloth=cloth('#2f4a3c', weave=0.12), collar=rib('#2a4234'), placket=cloth('#2a4234'),
                                           button=flat('#d8d4c8', ink=False), logo=flat('#8a6a3a')), 0.35),
-    'hawaiian_shirt': (build_hawaiian_shirt, dict(cloth=flowers('#2c5560'), shellbutton=flat('#d8ccb4', ink=False)), 0.35),
+    'hawaiian_shirt': (build_hawaiian_shirt, dict(cloth=flowers('#7a2a26', petal='#c8b8a0', leaf='#4e1c1a'), shellbutton=flat('#d8ccb4', ink=False)), 0.35),
     'sweater': (build_sweater, dict(knit=knit('#6a5e48'), rib=rib('#5e533f'), band=knit('#4e4434'), cable=rib('#5e533f')), 0.35),
     'sweatshirt': (build_sweatshirt, dict(cloth=cloth('#5a5f66', weave=0.05), rib=rib('#50555b'), letters=cloth('#6e2a26'),
                                           stripe=flat('#6e2a26', ink=False)), 0.4),
@@ -1322,7 +1323,7 @@ TOPS = {
                                                 bead=flat('#e8e4da', ink=False)), 0.55),
     'leather_jacket': (build_leather_jacket, dict(leather=leather('#1e1c1b', gloss=0.2), zip=metal('steel'), buckle=metal('steel'),
                                                   snap=metal('steel')), 0.45),
-    'bomber_jacket': (build_bomber_jacket, dict(nylon=cloth('#3d4430', weave=0.02, stitch='#5a604a'), rib=rib('#2a2d24'),
+    'bomber_jacket': (build_bomber_jacket, dict(nylon=cloth('#5c6450', weave=0.02, stitch='#7a8068'), rib=rib('#3a3d32'),
                                                 zip=metal('brass'), patch=flat('#6e5a2a')), 0.4),
     'varsity_jacket': (build_varsity_jacket, dict(wool=cloth('#3e2228', weave=0.02), stripe_rib=stripes('#3e2228', '#a89c80', 0.45),
                                                   snapw=metal('steel'), letter=cloth('#a89c80', stitch='#3e2228'),
@@ -1330,13 +1331,13 @@ TOPS = {
     'windbreaker': (build_windbreaker, dict(nylon=cloth('#2d3e5a', weave=0.02), panel=cloth('#7a6a3a', weave=0.02),
                                             zip=metal('steel'), pull=flat('#1d1d1f')), 0.35),
     'raincoat': (build_raincoat, dict(pvc=plastic('#8a7a2a', 0.3), snap=metal('steel'), tape=glow_tape()), 0.45),
-    'trench_coat': (build_trench_coat, dict(gab=cloth('#7a6a4c', weave=0.06, stitch='#5a4c36'), horn=plastic('#2a2018'),
+    'trench_coat': (build_trench_coat, dict(gab=cloth('#8c7a56', weave=0.06, stitch='#64543a'), horn=plastic('#2a2018'),
                                             buckle=leather('#3a2a1c')), 0.45),
     'suit_jacket': (build_suit_jacket, dict(wool=cloth('#2c2f36', weave=0.03, stitch=None), lapel=cloth('#272a30', stitch=None),
                                             horn=plastic('#1a1714'), square=cloth('#7a2a26'), tie=cloth('#5a2228', stitch=None)), 0.35),
     'lab_coat': (build_lab_coat, dict(cotton=cloth('#b6b3aa', weave=0.04), button=flat('#d8d4c8', ink=False), pen=plastic('#1d2d5a'),
                                       pen2=plastic('#2a2a2a'), badge=flat('#4a6a8a')), 0.5),
-    'hi_vis_vest': (build_hi_vis_vest, dict(mesh=mesh('#b5b33a'), tape=glow_tape(), zip=metal('steel')), 0.55),
+    'hi_vis_vest': (build_hi_vis_vest, dict(mesh=mesh('#a6b83a'), tape=glow_tape('#c4c6bc'), zip=metal('steel')), 0.55),
 }
 
 
