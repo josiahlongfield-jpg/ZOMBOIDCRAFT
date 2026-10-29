@@ -15,6 +15,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.Identifier;
 import org.joml.Matrix4f;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 /**
  * The Harvestman's body (the bought "Spider 7" creature), from assets/zomboidcraft/creatures/spider.zsp, packed by
@@ -61,6 +63,22 @@ public final class SpiderModel {
     /** Each bone's inverse bind: model space at rest into the bone's own. */
     public final Matrix4f[] inverse;
     public final Map<String, Clip> clips = new HashMap<>();
+    /** Each bone at rest: where it is and how it's turned, in model space. */
+    public final Vector3f[] bindPos;
+    public final Quaternionf[] bindTurn;
+    /** Bone indices under each bone (not itself), for turning a limb or the body from a joint. */
+    public final int[][] below;
+    /**
+     * The four walking legs by the Harvestman's own numbering (0 left front, 1 left rear, 2 right front, 3 right rear):
+     * each one's hip, knee and ankle bones, and its point in the ankle bone's own frame.
+     */
+    public final int[][] legs = new int[4][3];
+    public final Vector3f[] tip = new Vector3f[4];
+    /** Per leg, the body's triangles below its knee (the piece that flies off when it's shot away). */
+    public final int[][] lower = new int[4][];
+    public final int pelvis, spine, neck, head;
+    /** The bones of its arms and claws (held round what it drags). */
+    public final boolean[] arm;
     private final Map<String, byte[]> jpegs = new HashMap<>();
 
     private static SpiderModel model;
@@ -185,6 +203,86 @@ public final class SpiderModel {
                 clips.put(name, new Clip(name, frames, fps, turn, at));
             }
         }
+        int n = boneNames.length;
+        bindPos = new Vector3f[n];
+        bindTurn = new Quaternionf[n];
+        for (int i = 0; i < n; i++) {
+            Matrix4f rest = new Matrix4f(inverse[i]).invert();
+            bindPos[i] = rest.getTranslation(new Vector3f());
+            bindTurn[i] = rest.getNormalizedRotation(new Quaternionf());
+        }
+        below = new int[n][];
+        for (int i = 0; i < n; i++) {
+            java.util.List<Integer> list = new java.util.ArrayList<>();
+            for (int j = 0; j < n; j++) {
+                for (int a = parent[j]; a >= 0; a = parent[a]) {
+                    if (a == i) {
+                        list.add(j);
+                        break;
+                    }
+                }
+            }
+            below[i] = list.stream().mapToInt(Integer::intValue).toArray();
+        }
+        pelvis = bone("def_pelvis");
+        spine = bone("def_spine_1");
+        neck = bone("def_neck");
+        head = bone("def_head");
+        arm = new boolean[n];
+        for (int i = 0; i < n; i++) {
+            String b = boneNames[i].toLowerCase(java.util.Locale.ROOT);
+            arm[i] = b.contains("sholder") || b.contains("arm") || b.contains("hand") || b.contains("claw");
+        }
+        String[] names = {"A_%dL", "B_%dL", "A_%dR", "B_%dR"};
+        Group body = groups[0];
+        for (int l = 0; l < 4; l++) {
+            for (int k = 0; k < 3; k++) {
+                legs[l][k] = bone("def_leg_" + String.format(names[l], k + 1));
+                if (legs[l][k] < 0) {
+                    throw new IOException("no leg bone " + names[l]);
+                }
+            }
+            // its point: the vertex furthest out of those the ankle bone carries
+            int ankle = legs[l][2], knee = legs[l][1];
+            Vector3f best = new Vector3f(bindPos[ankle]);
+            float far = -1;
+            java.util.List<Integer> piece = new java.util.ArrayList<>();
+            for (int v = 0; v < body.vertices; v++) {
+                int j = main(body, v);
+                if (j == ankle) {
+                    float d = bindPos[ankle].distanceSquared(body.pos[v * 3], body.pos[v * 3 + 1], body.pos[v * 3 + 2]);
+                    if (d > far) {
+                        far = d;
+                        best.set(body.pos[v * 3], body.pos[v * 3 + 1], body.pos[v * 3 + 2]);
+                    }
+                }
+            }
+            tip[l] = inverse[ankle].transformPosition(best, new Vector3f());
+            for (int t = 0; t < body.tris.length; t += 3) {
+                boolean all = true;
+                for (int c = 0; c < 3; c++) {
+                    int j = main(body, body.tris[t + c]);
+                    all &= j == knee || j == ankle;
+                }
+                if (all) {
+                    piece.add(body.tris[t]);
+                    piece.add(body.tris[t + 1]);
+                    piece.add(body.tris[t + 2]);
+                }
+            }
+            lower[l] = piece.stream().mapToInt(Integer::intValue).toArray();
+        }
+    }
+
+    /** The bone a vertex follows most. */
+    public static int main(Group g, int v) {
+        int best = 0;
+        for (int k = 1; k < 4; k++) {
+            if (g.weight[v * 4 + k] > g.weight[v * 4 + best]) {
+                best = k;
+            }
+        }
+        return g.joint[v * 4 + best] & 255;
     }
 
     /** Uploads each part's texture and glow map, and reads how far each vertex glows (so a hidden one can darken it). */

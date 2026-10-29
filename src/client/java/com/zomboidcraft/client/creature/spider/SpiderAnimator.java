@@ -24,6 +24,8 @@ public final class SpiderAnimator {
 
     private final SpiderModel model;
     private long lastNanos;
+    /** Seconds since the frame before (what SpiderIk eases by). */
+    float dt;
     private float time;
     private Vec3 lastAt;
     private Vector3f lastFwd;
@@ -32,7 +34,9 @@ public final class SpiderAnimator {
     private float yawRate;
     private float phase;
     /** What each base clip is weighted now (eased toward what's wanted). */
-    private float wIdle = 1, wWalk, wBack, wLeft, wRight, wRun, wTurnL, wTurnR, wFeed;
+    private float wIdle = 1, wWalk, wBack, wLeft, wRight, wRun, wTurnL, wTurnR, wFeed, wFall, wClutch;
+    /** How fast it's going along its up (falling, dropping off a ceiling, is fast and down). */
+    private float climb;
     private String idle = "Idle_1", idleOld;
     private float idleT, idleOldT, idleFade = 1, turnT, feedT;
     /** The move played over the top. */
@@ -46,8 +50,9 @@ public final class SpiderAnimator {
     /** The last frame posed (so the shadow pass doesn't pose it again), and each bone's skinning matrix from it. */
     private float posedAt = Float.NaN;
     public final Matrix4f[] skin;
-    private final Quaternionf[] q;
-    private final Vector3f[] p;
+    /** The pose this frame: each bone's turn and position in model space (SpiderIk works on these before bake). */
+    final Quaternionf[] q;
+    final Vector3f[] p;
     private final float[] sum;
 
     public SpiderAnimator(SpiderModel model) {
@@ -79,6 +84,7 @@ public final class SpiderAnimator {
         long now = System.nanoTime();
         float dt = lastNanos == 0 ? 0 : (float) Math.min(0.1, (now - lastNanos) / 1e9);
         lastNanos = now;
+        this.dt = dt;
         time += dt;
         Vector3f fwd = turn.transform(new Vector3f(0, 0, 1));
         Vector3f up = turn.transform(new Vector3f(0, 1, 0));
@@ -88,6 +94,8 @@ public final class SpiderAnimator {
             local.y = 0;
             float k = 1 - (float) Math.exp(-dt * 8);
             vel.lerp(local, k);
+            float rise = (float) (d.x * up.x + d.y * up.y + d.z * up.z);
+            climb = Mth.lerp(1 - (float) Math.exp(-dt * 10), climb, rise);
             float swing = (float) Math.atan2(new Vector3f(lastFwd).cross(fwd).dot(up), lastFwd.dot(fwd)) / dt;
             yawRate = Mth.lerp(1 - (float) Math.exp(-dt * 6), yawRate, swing);
         }
@@ -117,6 +125,11 @@ public final class SpiderAnimator {
         wTurnR = Mth.lerp(k, wTurnR, yawRate > 0 ? 0 : spin);
         wFeed = Mth.lerp(k, wFeed, feeding ? 1 : 0);
         wIdle = Mth.lerp(k, wIdle, feeding ? 0 : Math.max(0, still));
+        // dropping through the air: legs drawn in as for its leap
+        boolean falling = !dead && climb < -3.5f;
+        wFall = Mth.lerp(k, wFall, falling ? 1 : 0);
+        // holding something (dragging it off, feeding): its arms and claws close round it
+        wClutch = Mth.lerp(k, wClutch, pose == HarvestmanEntity.HOLD || feeding ? 1 : 0);
 
         // the feet in step with the ground: one stride a cycle, the walk's or the run's
         float stride = Mth.lerp(run, WALK_STRIDE, RUN_STRIDE);
@@ -160,6 +173,10 @@ public final class SpiderAnimator {
         add("Turn_Left", turnT, true, wTurnL);
         add("Turn_Right", turnT, true, wTurnR);
         add("Attack_2", feedT, true, wFeed);
+        SpiderModel.Clip jump = model.clips.get("Jump_1");
+        if (jump != null && wFall > 1e-3f) {
+            add(jump, jump.seconds() * 0.5f, wFall);
+        }
         for (int i = 0; i < sum.length; i++) {
             if (sum[i] < 1e-4f) {
                 add("Idle_1", idleT, true, 1);
@@ -169,6 +186,18 @@ public final class SpiderAnimator {
         for (int i = 0; i < sum.length; i++) {
             q[i].normalize();
             p[i].div(sum[i]);
+        }
+        SpiderModel.Clip clutch = model.clips.get("Attack_2");
+        if (clutch != null && wClutch > 1e-3f && wFeed < 0.99f) {
+            // its arms only: the feeding hold over whatever its legs are doing
+            float t = feedT % clutch.seconds();
+            for (int i = 0; i < sum.length; i++) {
+                if (model.arm[i]) {
+                    sample(clutch, t, i, qa, pa);
+                    q[i].slerp(qa, wClutch * 0.85f);
+                    p[i].lerp(pa, wClutch * 0.85f);
+                }
+            }
         }
 
         // the move over the top
@@ -188,10 +217,19 @@ public final class SpiderAnimator {
             }
         }
 
+        return true;
+    }
+
+    /** Whether it's in the air (its feet shouldn't look for the ground). */
+    public boolean airborne() {
+        return wFall > 0.5f;
+    }
+
+    /** Each bone's skinning matrix from the pose as it now stands. */
+    public void bake() {
         for (int i = 0; i < skin.length; i++) {
             skin[i].translationRotate(p[i].x, p[i].y, p[i].z, q[i]).mul(model.inverse[i]);
         }
-        return true;
     }
 
     /** Starts a move when its entity does something new. */
