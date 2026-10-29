@@ -1141,6 +1141,8 @@ import camp  # noqa: E402
 camp.register(sys.modules[__name__])
 import dress  # noqa: E402
 dress.register(sys.modules[__name__])
+import farm  # noqa: E402
+farm.register(sys.modules[__name__])
 
 
 

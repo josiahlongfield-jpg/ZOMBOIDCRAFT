@@ -1,0 +1,115 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cp_timber": "zomboidcraft:block/city/cp_timber",
+    "cp_timber_h": "zomboidcraft:block/city/cp_timber_h",
+    "fm_boards": "zomboidcraft:block/city/fm_boards",
+    "particle": "zomboidcraft:block/city/fm_boards"
+  },
+  "elements": [
+    {
+      "from": [
+        7,
+        0,
+        0
+      ],
+      "to": [
+        9,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fm_boards",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#fm_boards",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#fm_boards"
+        },
+        "west": {
+          "texture": "#fm_boards"
+        },
+        "up": {
+          "texture": "#fm_boards"
+        },
+        "down": {
+          "texture": "#fm_boards",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        6.5,
+        15,
+        0
+      ],
+      "to": [
+        9.5,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cp_timber_h",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#cp_timber_h",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cp_timber_h"
+        },
+        "west": {
+          "texture": "#cp_timber_h"
+        },
+        "up": {
+          "texture": "#cp_timber_h",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cp_timber_h"
+        }
+      }
+    },
+    {
+      "from": [
+        6.8,
+        0,
+        0
+      ],
+      "to": [
+        9.2,
+        15,
+        0.8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cp_timber",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#cp_timber"
+        },
+        "east": {
+          "texture": "#cp_timber"
+        },
+        "west": {
+          "texture": "#cp_timber"
+        },
+        "up": {
+          "texture": "#cp_timber"
+        },
+        "down": {
+          "texture": "#cp_timber",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

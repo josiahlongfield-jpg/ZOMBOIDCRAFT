@@ -1,0 +1,238 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ext_galv": "zomboidcraft:block/city/ext_galv",
+    "fm_water": "zomboidcraft:block/city/fm_water",
+    "rust": "zomboidcraft:block/city/rust",
+    "particle": "zomboidcraft:block/city/ext_galv"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        0
+      ],
+      "to": [
+        14,
+        9,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_galv",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ext_galv",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ext_galv"
+        },
+        "west": {
+          "texture": "#ext_galv"
+        },
+        "up": {
+          "texture": "#fm_water"
+        },
+        "down": {
+          "texture": "#ext_galv",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        1.5,
+        8.5,
+        0
+      ],
+      "to": [
+        2.5,
+        10,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_galv",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ext_galv",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ext_galv"
+        },
+        "west": {
+          "texture": "#ext_galv"
+        },
+        "up": {
+          "texture": "#ext_galv"
+        },
+        "down": {
+          "texture": "#ext_galv"
+        }
+      }
+    },
+    {
+      "from": [
+        13.5,
+        8.5,
+        0
+      ],
+      "to": [
+        14.5,
+        10,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_galv",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ext_galv",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ext_galv"
+        },
+        "west": {
+          "texture": "#ext_galv"
+        },
+        "up": {
+          "texture": "#ext_galv"
+        },
+        "down": {
+          "texture": "#ext_galv"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        0,
+        0
+      ],
+      "to": [
+        14,
+        10,
+        0.8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_galv",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ext_galv"
+        },
+        "east": {
+          "texture": "#ext_galv"
+        },
+        "west": {
+          "texture": "#ext_galv"
+        },
+        "up": {
+          "texture": "#ext_galv"
+        },
+        "down": {
+          "texture": "#ext_galv",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        0,
+        15.2
+      ],
+      "to": [
+        14,
+        10,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_galv"
+        },
+        "south": {
+          "texture": "#ext_galv",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ext_galv"
+        },
+        "west": {
+          "texture": "#ext_galv"
+        },
+        "up": {
+          "texture": "#ext_galv"
+        },
+        "down": {
+          "texture": "#ext_galv",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        7.2,
+        1,
+        -0.6
+      ],
+      "to": [
+        8.8,
+        2.6,
+        0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rust"
+        },
+        "south": {
+          "texture": "#rust"
+        },
+        "east": {
+          "texture": "#rust",
+          "uv": [
+            15.399999999999999,
+            13.4,
+            16,
+            15
+          ]
+        },
+        "west": {
+          "texture": "#rust",
+          "uv": [
+            0,
+            13.4,
+            0.6,
+            15
+          ]
+        },
+        "up": {
+          "texture": "#rust",
+          "uv": [
+            7.2,
+            0,
+            8.8,
+            0.6
+          ]
+        },
+        "down": {
+          "texture": "#rust",
+          "uv": [
+            7.2,
+            15.399999999999999,
+            8.8,
+            16
+          ]
+        }
+      }
+    }
+  ]
+}

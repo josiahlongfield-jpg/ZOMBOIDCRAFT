@@ -27,7 +27,12 @@ HERE = Path(__file__).parent
 TURNS = {"0": 0.0, "m22": -22.5, "p22": 22.5, "p45": 45.0}
 DEPTHS = [-8, -6, -4, -2, 0, 2, 4, 6, 8]
 INSIDE = "concrete_dark"
-WALLS = {"stave": "silo_stave", "blue": "silo_blue", "bin": "bin_ribbed", "brick": "brick_red"}
+WALLS = {"stave": "silo_stave", "blue": "silo_blue", "bin": "bin_ribbed", "brick": "brick_red",
+         "field": "fm_fieldstone", "tank": "ext_galv", "crib": "fm_mesh", "paddock": "fm_ring_boards"}
+# what each wall shows inside (a stock tank and a corn crib's mesh are the same both sides)
+INNER = {"tank": "ext_galv", "crib": "fm_mesh", "field": "fm_fieldstone", "paddock": "fm_ring_boards"}
+TITLES = {"stave": "Stave Silo", "blue": "Silo", "bin": "Grain Bin", "brick": "Brick Silo", "field": "Stone Curb",
+          "tank": "Stock Tank", "crib": "Corn Crib", "paddock": "Round Pen"}
 TIERS = {"galv": "ext_galv", "blue": "silo_blue", "tinred": "ext_tin_red_tread"}
 GALV = "ext_galv"
 
@@ -56,13 +61,13 @@ def box(x0, y0, z0, x1, y1, z1, tex, r):
     return b
 
 
-def panel(turn, depth, tex, inner=INSIDE, hoop=False):
+def panel(turn, depth, tex, inner=INSIDE, hoop=False, thick=3):
     """The panel 3 px thick, its outside face on the circle; a hoop band proud of it."""
     L = length(turn)
     cx, cz = centre(turn, depth)
     r = rot(turn, cx, cz)
     faces = {"north": tex, "south": inner, "east": tex, "west": tex, "up": inner, "down": inner}
-    out = [box(cx - L / 2, 0, cz, cx + L / 2, 16, cz + 3, faces, r)]
+    out = [box(cx - L / 2, 0, cz, cx + L / 2, 16, cz + thick, faces, r)]
     if hoop:
         out.append(box(cx - L / 2, 7, cz - 0.6, cx + L / 2, 8, cz, GALV, r))
     return out
@@ -129,8 +134,9 @@ def blocks():
     for k, t in TURNS.items():
         for i, d in enumerate(DEPTHS):
             for mat, tex in WALLS.items():
-                title = {"stave": "Stave Silo", "blue": "Silo", "bin": "Grain Bin", "brick": "Brick Silo"}[mat]
-                add(f"rd_{mat}_{k}_{i}", panel(t, d, tex), title, "METAL" if mat in ("blue", "bin") else "STONE")
+                extra = {"render": "cutout"} if mat in ("crib", "paddock") else {}
+                add(f"rd_{mat}_{k}_{i}", panel(t, d, tex, INNER.get(mat, INSIDE), thick=1 if mat in ("tank", "crib", "paddock") else 3),
+                    TITLES[mat], "METAL" if mat in ("blue", "bin", "tank", "crib") else "WOOD" if mat == "paddock" else "STONE", **extra)
             add(f"rd_stave_hoop_{k}_{i}", panel(t, d, WALLS["stave"], hoop=True), "Stave Silo", "STONE")
             for mat, tex in TIERS.items():
                 for slope, inset in (("s", 2), ("m", 4)):

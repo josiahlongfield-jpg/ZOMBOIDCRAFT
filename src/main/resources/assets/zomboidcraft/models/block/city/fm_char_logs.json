@@ -1,0 +1,228 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "burnt_ground": "zomboidcraft:block/city/burnt_ground",
+    "fm_char": "zomboidcraft:block/city/fm_char",
+    "mu_bone": "zomboidcraft:block/city/mu_bone",
+    "particle": "zomboidcraft:block/city/burnt_ground"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        0.4,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#burnt_ground",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#burnt_ground",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#burnt_ground",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#burnt_ground",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#burnt_ground"
+        },
+        "down": {
+          "texture": "#burnt_ground",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        0.4,
+        3
+      ],
+      "to": [
+        4,
+        3.4,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fm_char"
+        },
+        "south": {
+          "texture": "#fm_char"
+        },
+        "east": {
+          "texture": "#fm_char"
+        },
+        "west": {
+          "texture": "#fm_char"
+        },
+        "up": {
+          "texture": "#fm_char"
+        },
+        "down": {
+          "texture": "#fm_char"
+        }
+      },
+      "rotation": {
+        "origin": [
+          2.5,
+          2,
+          9
+        ],
+        "axis": "y",
+        "angle": 22.5
+      }
+    },
+    {
+      "from": [
+        11,
+        0.4,
+        0
+      ],
+      "to": [
+        14,
+        3.4,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fm_char"
+        },
+        "south": {
+          "texture": "#fm_char"
+        },
+        "east": {
+          "texture": "#fm_char"
+        },
+        "west": {
+          "texture": "#fm_char"
+        },
+        "up": {
+          "texture": "#fm_char"
+        },
+        "down": {
+          "texture": "#fm_char"
+        }
+      },
+      "rotation": {
+        "origin": [
+          12.5,
+          2,
+          6
+        ],
+        "axis": "y",
+        "angle": -22.5
+      }
+    },
+    {
+      "from": [
+        0,
+        3.4,
+        6
+      ],
+      "to": [
+        16,
+        6.4,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fm_char"
+        },
+        "south": {
+          "texture": "#fm_char"
+        },
+        "east": {
+          "texture": "#fm_char",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#fm_char",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#fm_char"
+        },
+        "down": {
+          "texture": "#fm_char"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        0.4,
+        5
+      ],
+      "to": [
+        9,
+        2.4,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_bone"
+        },
+        "south": {
+          "texture": "#mu_bone"
+        },
+        "east": {
+          "texture": "#mu_bone"
+        },
+        "west": {
+          "texture": "#mu_bone"
+        },
+        "up": {
+          "texture": "#mu_bone"
+        },
+        "down": {
+          "texture": "#mu_bone"
+        }
+      }
+    },
+    {
+      "from": [
+        9,
+        0.4,
+        10
+      ],
+      "to": [
+        13,
+        1.4,
+        11.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_bone"
+        },
+        "south": {
+          "texture": "#mu_bone"
+        },
+        "east": {
+          "texture": "#mu_bone"
+        },
+        "west": {
+          "texture": "#mu_bone"
+        },
+        "up": {
+          "texture": "#mu_bone"
+        },
+        "down": {
+          "texture": "#mu_bone"
+        }
+      }
+    }
+  ]
+}

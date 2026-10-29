@@ -1,0 +1,209 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cp_timber": "zomboidcraft:block/city/cp_timber",
+    "fm_split": "zomboidcraft:block/city/fm_split",
+    "painted_steel": "zomboidcraft:block/city/painted_steel",
+    "tree_oak_bark": "zomboidcraft:block/city/tree_oak_bark",
+    "tree_oak_rings": "zomboidcraft:block/city/tree_oak_rings",
+    "particle": "zomboidcraft:block/city/tree_oak_bark"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        3
+      ],
+      "to": [
+        13,
+        9,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tree_oak_bark"
+        },
+        "south": {
+          "texture": "#tree_oak_bark"
+        },
+        "east": {
+          "texture": "#tree_oak_bark"
+        },
+        "west": {
+          "texture": "#tree_oak_bark"
+        },
+        "up": {
+          "texture": "#tree_oak_rings"
+        },
+        "down": {
+          "texture": "#tree_oak_bark",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        7.5,
+        9,
+        5
+      ],
+      "to": [
+        8.5,
+        21,
+        6.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cp_timber",
+          "uv": [
+            7.5,
+            0,
+            8.5,
+            12
+          ]
+        },
+        "south": {
+          "texture": "#cp_timber",
+          "uv": [
+            7.5,
+            0,
+            8.5,
+            12
+          ]
+        },
+        "east": {
+          "texture": "#cp_timber",
+          "uv": [
+            9.5,
+            0,
+            11,
+            12
+          ]
+        },
+        "west": {
+          "texture": "#cp_timber",
+          "uv": [
+            5,
+            0,
+            6.5,
+            12
+          ]
+        },
+        "up": {
+          "texture": "#cp_timber"
+        },
+        "down": {
+          "texture": "#cp_timber"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          9,
+          6
+        ],
+        "axis": "x",
+        "angle": -22.5
+      }
+    },
+    {
+      "from": [
+        6,
+        7,
+        4.5
+      ],
+      "to": [
+        10,
+        10,
+        7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#painted_steel"
+        },
+        "south": {
+          "texture": "#painted_steel"
+        },
+        "east": {
+          "texture": "#painted_steel"
+        },
+        "west": {
+          "texture": "#painted_steel"
+        },
+        "up": {
+          "texture": "#painted_steel"
+        },
+        "down": {
+          "texture": "#painted_steel"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        0,
+        1
+      ],
+      "to": [
+        4,
+        0.4,
+        3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fm_split"
+        },
+        "south": {
+          "texture": "#fm_split"
+        },
+        "east": {
+          "texture": "#fm_split"
+        },
+        "west": {
+          "texture": "#fm_split"
+        },
+        "up": {
+          "texture": "#fm_split"
+        },
+        "down": {
+          "texture": "#fm_split",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        12,
+        0,
+        11
+      ],
+      "to": [
+        15,
+        0.4,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fm_split"
+        },
+        "south": {
+          "texture": "#fm_split"
+        },
+        "east": {
+          "texture": "#fm_split"
+        },
+        "west": {
+          "texture": "#fm_split"
+        },
+        "up": {
+          "texture": "#fm_split"
+        },
+        "down": {
+          "texture": "#fm_split",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,255 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "concrete_dark": "zomboidcraft:block/city/concrete_dark",
+    "crate_wood": "zomboidcraft:block/city/crate_wood",
+    "ext_galv": "zomboidcraft:block/city/ext_galv",
+    "fm_hive": "zomboidcraft:block/city/fm_hive",
+    "fm_hive_front": "zomboidcraft:block/city/fm_hive_front",
+    "particle": "zomboidcraft:block/city/concrete_dark"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        1
+      ],
+      "to": [
+        3,
+        3,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#concrete_dark"
+        },
+        "south": {
+          "texture": "#concrete_dark"
+        },
+        "east": {
+          "texture": "#concrete_dark"
+        },
+        "west": {
+          "texture": "#concrete_dark"
+        },
+        "up": {
+          "texture": "#concrete_dark"
+        },
+        "down": {
+          "texture": "#concrete_dark",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        13,
+        0,
+        1
+      ],
+      "to": [
+        15,
+        3,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#concrete_dark"
+        },
+        "south": {
+          "texture": "#concrete_dark"
+        },
+        "east": {
+          "texture": "#concrete_dark"
+        },
+        "west": {
+          "texture": "#concrete_dark"
+        },
+        "up": {
+          "texture": "#concrete_dark"
+        },
+        "down": {
+          "texture": "#concrete_dark",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        0,
+        2
+      ],
+      "to": [
+        13,
+        9,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fm_hive_front"
+        },
+        "south": {
+          "texture": "#fm_hive"
+        },
+        "east": {
+          "texture": "#fm_hive"
+        },
+        "west": {
+          "texture": "#fm_hive"
+        },
+        "up": {
+          "texture": "#crate_wood"
+        },
+        "down": {
+          "texture": "#crate_wood"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          4,
+          7
+        ],
+        "axis": "y",
+        "angle": 22.5
+      }
+    },
+    {
+      "from": [
+        4,
+        0,
+        9
+      ],
+      "to": [
+        13,
+        3,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#crate_wood"
+        },
+        "south": {
+          "texture": "#crate_wood",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#crate_wood"
+        },
+        "west": {
+          "texture": "#crate_wood"
+        },
+        "up": {
+          "texture": "#crate_wood"
+        },
+        "down": {
+          "texture": "#crate_wood",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        3,
+        10
+      ],
+      "to": [
+        6,
+        5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#crate_wood"
+        },
+        "south": {
+          "texture": "#crate_wood",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#crate_wood"
+        },
+        "west": {
+          "texture": "#crate_wood"
+        },
+        "up": {
+          "texture": "#crate_wood"
+        },
+        "down": {
+          "texture": "#crate_wood"
+        }
+      }
+    },
+    {
+      "from": [
+        8,
+        3,
+        10
+      ],
+      "to": [
+        9,
+        5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#crate_wood"
+        },
+        "south": {
+          "texture": "#crate_wood",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#crate_wood"
+        },
+        "west": {
+          "texture": "#crate_wood"
+        },
+        "up": {
+          "texture": "#crate_wood"
+        },
+        "down": {
+          "texture": "#crate_wood"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        11
+      ],
+      "to": [
+        6,
+        1.5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_galv"
+        },
+        "south": {
+          "texture": "#ext_galv",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ext_galv"
+        },
+        "west": {
+          "texture": "#ext_galv",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ext_galv"
+        },
+        "down": {
+          "texture": "#ext_galv",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
