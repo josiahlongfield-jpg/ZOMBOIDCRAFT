@@ -59,6 +59,9 @@ MUZZLE = tuple(np.array(SPIN[0]) + 0.30 * np.array(SPIN[1]))
 EYES = [(0.43, 1.62, -0.15), (-0.43, 1.62, -0.15), (0.0, 2.62, -2.08)]
 # the steering wheel's rim: centre, the normal toward the driver, radius
 STEERING = (0.426, 1.361, 0.389, 0.0, 0.223, -0.975, 0.168)
+# where each seat is got into, lit green: the open sides by the front seats, and the gunner's from the back, over
+# the tailgate (a handle at x = 0 is reached from behind)
+HANDLES = [(1.12, 1.25, -0.15), (-1.12, 1.25, -0.15), (0.0, 1.45, -2.45)]
 
 COCKPIT = ('_cp', 'mottled', 'digital_gauge', 'carbon_fiber3')
 TYRE = 'bump_plastic5'
@@ -245,6 +248,7 @@ def build(bake, out, preview=None):
            'seats': [[round(float(a - b), 3) for a, b in zip(e, centre)] for e in EYES],
            'wheelbase': round(WHEELS[0][0][2] - WHEELS[2][0][2], 3),
            'steering': [round(float(v - (centre[i] if i < 3 else 0)), 3) for i, v in enumerate(STEERING)],
+           'handles': [rel(h) for h in HANDLES],
            'gunner': 2,
            'turret': {'yaw': rel(YAW[0]), 'pitch': rel(PITCH[0]), 'muzzle': rel(MUZZLE),
                       'rest': round(float(np.degrees(np.arctan2(SPIN[1][1], SPIN[1][2]))), 2), 'up': 50, 'down': 22}}
