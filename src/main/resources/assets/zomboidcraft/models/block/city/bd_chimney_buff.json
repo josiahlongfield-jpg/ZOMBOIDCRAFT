@@ -1,0 +1,77 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bd_tar": "zomboidcraft:block/city/bd_tar",
+    "brick_buff": "zomboidcraft:block/city/brick_buff",
+    "particle": "zomboidcraft:block/city/brick_buff"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        2
+      ],
+      "to": [
+        14,
+        16,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#brick_buff"
+        },
+        "south": {
+          "texture": "#brick_buff"
+        },
+        "east": {
+          "texture": "#brick_buff"
+        },
+        "west": {
+          "texture": "#brick_buff"
+        },
+        "up": {
+          "texture": "#brick_buff",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#brick_buff",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        1.5,
+        0,
+        1.5
+      ],
+      "to": [
+        14.5,
+        1.5,
+        14.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bd_tar"
+        },
+        "south": {
+          "texture": "#bd_tar"
+        },
+        "east": {
+          "texture": "#bd_tar"
+        },
+        "west": {
+          "texture": "#bd_tar"
+        },
+        "up": {
+          "texture": "#bd_tar"
+        },
+        "down": {
+          "texture": "#bd_tar",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

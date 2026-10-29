@@ -193,6 +193,9 @@ final class Bldg {
         if (sill != null) {
             int[] o = step(out);
             p.set(x + o[0], y - 1, z + o[1], sill + "[facing=" + out + "]");
+            if (p.get(x, y + h, z) != null) {
+                p.setIfAir(x + o[0], y + h, z + o[1], "bd_lintel[facing=" + out + "]");
+            }
         }
     }
 
@@ -250,11 +253,37 @@ final class Bldg {
     }
 
     /**
+     * The house kit's roof (tools/city/exterior.py) for the vanilla stairs family an older builder
+     * names, so every pitched roof is laid in the kit's courses: slate for deepslate tile, shingle for
+     * the woods, galvanised or green tin for the andesites, tuff and the coppers; null for a family
+     * of the mod's own.
+     */
+    static String kitRoof(String family) {
+        return switch (family) {
+            case "minecraft:deepslate_tile", "minecraft:deepslate_brick", "minecraft:polished_deepslate" -> "slate";
+            case "minecraft:cobbled_deepslate", "minecraft:blackstone", "minecraft:polished_blackstone" -> "charcoal";
+            case "minecraft:dark_oak", "minecraft:spruce", "minecraft:oak", "minecraft:pale_oak", "minecraft:birch",
+                 "minecraft:mud_brick" -> "brown";
+            case "minecraft:waxed_weathered_cut_copper", "minecraft:waxed_exposed_cut_copper",
+                 "minecraft:waxed_oxidized_cut_copper", "minecraft:waxed_cut_copper" -> "tin_green";
+            case "minecraft:polished_andesite", "minecraft:andesite", "minecraft:stone", "minecraft:smooth_stone" -> "tin_galv";
+            case "minecraft:polished_tuff", "minecraft:tuff", "minecraft:tuff_brick" -> "tin_red";
+            case "minecraft:brick", "minecraft:granite", "minecraft:polished_granite" -> "red";
+            default -> family.startsWith("minecraft:") ? "grey" : null;
+        };
+    }
+
+    /**
      * A gable roof over x0..x1, z0..z1 sitting on y, its ridge along x (or along z), overhanging
      * by `over`, the gable ends filled with `gableWall`. family is a vanilla stairs family
-     * ("minecraft:deepslate_tile").
+     * ("minecraft:deepslate_tile"), laid in the house kit's roof ({@link #kitRoof}).
      */
     void gable(int x0, int x1, int z0, int z1, int y, String family, boolean ridgeAlongZ, String gableWall, int over) {
+        String kind = kitRoof(family);
+        if (kind != null) {
+            roofGable(x0, x1, z0, z1, y, kind, ridgeAlongZ, gableWall, over);
+            return;
+        }
         if (!ridgeAlongZ) {
             int b0 = z0 - over, b1 = z1 + over;
             int half = (b1 - b0 + 1) / 2;
@@ -343,26 +372,37 @@ final class Bldg {
         }
     }
 
-    /** A hipped roof (four slopes) over x0..x1, z0..z1 from y, rising one block per step in. */
+    /**
+     * A hipped roof (four slopes) over x0..x1, z0..z1 from y, rising one block per step in, in the
+     * house kit's courses ({@link #kitRoof}) or the family's own stairs.
+     */
     void hip(int x0, int x1, int z0, int z1, int y, String family, int over) {
+        String kind = kitRoof(family);
         int a0 = x0 - over, a1 = x1 + over, b0 = z0 - over, b1 = z1 + over;
         for (int i = 0; a0 + i <= a1 - i && b0 + i <= b1 - i; i++) {
             int lx = a0 + i, hx = a1 - i, lz = b0 + i, hz = b1 - i;
+            String k = kind == null ? null : "ext_roof_" + kind + (i == 0 ? "_eave" : "");
             if (lx == hx || lz == hz) {
                 for (int x = lx; x <= hx; x++) {
                     for (int z = lz; z <= hz; z++) {
-                        tile(x, y + i, z, family + "_slab[type=bottom]");
+                        tile(x, y + i, z, kind == null ? family + "_slab[type=bottom]"
+                                : "ext_roof_" + kind + "_ridge[facing=" + (lx == hx ? "east" : "north") + "]");
                     }
                 }
                 break;
             }
+            // the outer corners take the kit's hip piece, where two slopes meet on the hip line
+            String c = k == null ? null : "ext_roof_" + kind + (i == 0 ? "_hip_eave" : "_hip");
             for (int x = lx; x <= hx; x++) {
-                tile(x, y + i, lz, stairs(family, "south", false));
-                tile(x, y + i, hz, stairs(family, "north", false));
+                boolean end = c != null && (x == lx || x == hx);
+                tile(x, y + i, lz, k == null ? stairs(family, "south", false)
+                        : end ? c + (x == lx ? "[facing=east]" : "[facing=south]") : k + "[facing=south]");
+                tile(x, y + i, hz, k == null ? stairs(family, "north", false)
+                        : end ? c + (x == lx ? "[facing=north]" : "[facing=west]") : k + "[facing=north]");
             }
             for (int z = lz + 1; z < hz; z++) {
-                tile(lx, y + i, z, stairs(family, "east", false));
-                tile(hx, y + i, z, stairs(family, "west", false));
+                tile(lx, y + i, z, k == null ? stairs(family, "east", false) : k + "[facing=east]");
+                tile(hx, y + i, z, k == null ? stairs(family, "west", false) : k + "[facing=west]");
             }
         }
     }
@@ -402,7 +442,13 @@ final class Bldg {
         p.set(c, yy, cz, finial);
     }
 
-    /** A flat roof deck at y with a parapet h high round the edge of x0..x1, z0..z1. */
+    /**
+     * A flat roof deck at y with a parapet h high round the edge of x0..x1, z0..z1, capped with
+     * coping (stone_trim and the precasts become the kit's thin cap with its drip, see
+     * tools/city/dress.py; front_coping_metal stays the metal cap), and dressed like the town
+     * photos: chimney stacks on a brick parapet, rooftop units, vents, a hatch and drains on the
+     * deck, downpipes down the back corners.
+     */
     void flat(int x0, int z0, int x1, int z1, int y, String parapet, int h, String coping) {
         for (int x = x0 + 1; x < x1; x++) {
             for (int z = z0 + 1; z < z1; z++) {
@@ -410,16 +456,23 @@ final class Bldg {
             }
         }
         if (h > 0) {
-            walls(x0, z0, x1, z1, y + 1, y + h - (coping != null ? 1 : 0), parapet);
-            if (coping != null) {
-                for (int x = x0; x <= x1; x++) {
-                    p.set(x, y + h, z0, coping);
-                    p.set(x, y + h, z1, coping);
+            walls(x0, z0, x1, z1, y + 1, y + h, parapet);
+            String cap = capping(coping);
+            if (cap != null) {
+                int t = y + h + 1;
+                for (int x = x0 + 1; x < x1; x++) {
+                    p.setIfAir(x, t, z0, cap + "[facing=north]");
+                    p.setIfAir(x, t, z1, cap + "[facing=south]");
                 }
                 for (int z = z0 + 1; z < z1; z++) {
-                    p.set(x0, y + h, z, coping);
-                    p.set(x1, y + h, z, coping);
+                    p.setIfAir(x0, t, z, cap + "[facing=west]");
+                    p.setIfAir(x1, t, z, cap + "[facing=east]");
                 }
+                String corner = cap.equals("front_coping_metal") ? cap : cap + "_corner";
+                for (int[] c : new int[][] {{x0, z0}, {x1, z0}, {x0, z1}, {x1, z1}}) {
+                    p.setIfAir(c[0], t, c[1], corner + (corner.equals(cap) ? "[facing=north]" : ""));
+                }
+                chimneys(x0, z0, x1, z1, t, parapet);
             }
         }
         // a puddle or a patch of moss where the drains blocked
@@ -427,6 +480,109 @@ final class Bldg {
             int x = x0 + 1 + rng.nextInt(Math.max(1, x1 - x0 - 1)), z = z0 + 1 + rng.nextInt(Math.max(1, z1 - z0 - 1));
             p.setIfAir(x, y + 1, z, rng.nextBoolean() ? "moss_carpet" : rng.nextBoolean() ? "weeds" : "paper");
         }
+        if (h > 0) {
+            roofKit(x0, z0, x1, z1, y);
+            downpipe(x0, z1, y + h, "south");
+            downpipe(x1, z1, y + h, "south");
+        }
+    }
+
+    /** The kit's cap for a coping an older builder names (null: no coping). */
+    static String capping(String coping) {
+        if (coping == null) {
+            return null;
+        }
+        return switch (coping) {
+            case "stone_trim" -> "bd_coping";
+            case "front_coping_metal" -> "front_coping_metal";
+            default -> "bd_coping_pc";
+        };
+    }
+
+    /** Chimney stacks standing on a brick parapet's side walls, a couple of blocks over the coping. */
+    private void chimneys(int x0, int z0, int x1, int z1, int t, String parapet) {
+        String kind = parapet.startsWith("brick_dark") ? "dark" : parapet.startsWith("brick_buff") ? "buff"
+                : parapet.startsWith("brick_") ? "red" : null;
+        if (kind == null || z1 - z0 < 4) {
+            return;
+        }
+        int n = 1 + (z1 - z0) / 12;
+        for (int i = 0; i < n; i++) {
+            int x = rng.nextBoolean() ? x0 : x1, z = z0 + 2 + rng.nextInt(z1 - z0 - 3);
+            p.set(x, t, z, "bd_chimney_" + kind);
+            if (rng.nextDouble() < 0.6) {
+                p.set(x, t + 1, z, "bd_chimney_" + kind);
+                p.set(x, t + 2, z, "bd_chimney_top_" + kind);
+            } else {
+                p.set(x, t + 1, z, "bd_chimney_top_" + kind);
+            }
+        }
+    }
+
+    /** What stands on a flat roof: a hatch, rooftop units, mushroom vents, drains, now and then a dish. */
+    private void roofKit(int x0, int z0, int x1, int z1, int y) {
+        int area = (x1 - x0 - 1) * (z1 - z0 - 1);
+        if (x1 - x0 < 6 || z1 - z0 < 6) {
+            return;
+        }
+        int hvacs = area >= 40 ? Math.max(1, area / 90) : 0;
+        int vents = 1 + area / 50, drains = Math.max(1, area / 70);
+        roofPut(x0, z0, x1, z1, y, "bd_hatch[facing=" + DIRS[rng.nextInt(4)] + "]", null);
+        for (int i = 0; i < hvacs; i++) {
+            roofPut(x0, z0, x1, z1, y, "bd_hvac_a[facing=north]", "bd_hvac_b[facing=north]");
+        }
+        for (int i = 0; i < vents; i++) {
+            roofPut(x0, z0, x1, z1, y, rng.nextDouble() < 0.7 ? "bd_vent" : "bunk_vent_cap", null);
+        }
+        for (int i = 0; i < drains; i++) {
+            roofPut(x0, z0, x1, z1, y, "bd_drain", null);
+        }
+        if (rng.nextDouble() < 0.3) {
+            roofPut(x0, z0, x1, z1, y, "tv_dish_small[facing=" + DIRS[rng.nextInt(4)] + "]", null);
+        }
+    }
+
+    /** One piece (and its east half) on clear roof deck, a block in from the parapet. */
+    private void roofPut(int x0, int z0, int x1, int z1, int y, String block, String east) {
+        for (int tries = 0; tries < 12; tries++) {
+            int x = x0 + 2 + rng.nextInt(Math.max(1, x1 - x0 - 3 - (east != null ? 1 : 0)));
+            int z = z0 + 2 + rng.nextInt(Math.max(1, z1 - z0 - 3));
+            if (!deck(x, y, z) || (east != null && !deck(x + 1, y, z))) {
+                continue;
+            }
+            p.set(x, y + 1, z, block);
+            if (east != null) {
+                p.set(x + 1, y + 1, z, east);
+            }
+            return;
+        }
+    }
+
+    /** Clear roof deck at (x, y, z): roof underfoot, nothing on it. */
+    private boolean deck(int x, int y, int z) {
+        String under = p.get(x, y, z);
+        return under != null && under.startsWith("roof") && p.get(x, y + 1, z) == null;
+    }
+
+    /** A downpipe from the gooseneck at the parapet top down the outside of a wall to its shoe. */
+    private void downpipe(int x, int z, int top, String out) {
+        int[] o = step(out);
+        int ox = x + o[0], oz = z + o[1];
+        if (p.get(ox, top, oz) != null) {
+            return;
+        }
+        int yy = top;
+        while (yy > 1 && p.get(x, yy - 1, z) != null && p.get(ox, yy - 1, oz) == null) {
+            yy--;
+        }
+        if (top - yy < 2) {
+            return;
+        }
+        p.set(ox, top, oz, "ext_downspout_top[facing=" + out + "]");
+        for (int k = yy + 1; k < top; k++) {
+            p.set(ox, k, oz, "ext_downspout[facing=" + out + "]");
+        }
+        p.set(ox, yy, oz, "ext_downspout_shoe[facing=" + out + "]");
     }
 
     /**

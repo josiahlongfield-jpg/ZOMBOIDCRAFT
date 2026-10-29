@@ -1,0 +1,140 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bd_coil": "zomboidcraft:block/city/bd_coil",
+    "bd_tar": "zomboidcraft:block/city/bd_tar",
+    "bunk_rust_pipe": "zomboidcraft:block/city/bunk_rust_pipe",
+    "particle": "zomboidcraft:block/city/bd_tar"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        0,
+        4
+      ],
+      "to": [
+        12,
+        0.6,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bd_tar"
+        },
+        "south": {
+          "texture": "#bd_tar"
+        },
+        "east": {
+          "texture": "#bd_tar"
+        },
+        "west": {
+          "texture": "#bd_tar"
+        },
+        "up": {
+          "texture": "#bd_tar"
+        },
+        "down": {
+          "texture": "#bd_tar",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        0.6,
+        5
+      ],
+      "to": [
+        11,
+        1.4,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_rust_pipe"
+        },
+        "south": {
+          "texture": "#bunk_rust_pipe"
+        },
+        "east": {
+          "texture": "#bunk_rust_pipe"
+        },
+        "west": {
+          "texture": "#bunk_rust_pipe"
+        },
+        "up": {
+          "texture": "#bunk_rust_pipe"
+        },
+        "down": {
+          "texture": "#bunk_rust_pipe"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        1.4,
+        6
+      ],
+      "to": [
+        10,
+        3,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bd_coil"
+        },
+        "south": {
+          "texture": "#bd_coil"
+        },
+        "east": {
+          "texture": "#bd_coil"
+        },
+        "west": {
+          "texture": "#bd_coil"
+        },
+        "up": {
+          "texture": "#bd_coil"
+        },
+        "down": {
+          "texture": "#bd_coil"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        3,
+        7
+      ],
+      "to": [
+        9,
+        3.6,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_rust_pipe"
+        },
+        "south": {
+          "texture": "#bunk_rust_pipe"
+        },
+        "east": {
+          "texture": "#bunk_rust_pipe"
+        },
+        "west": {
+          "texture": "#bunk_rust_pipe"
+        },
+        "up": {
+          "texture": "#bunk_rust_pipe"
+        },
+        "down": {
+          "texture": "#bunk_rust_pipe"
+        }
+      }
+    }
+  ]
+}
