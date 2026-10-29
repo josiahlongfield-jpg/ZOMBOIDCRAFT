@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
  */
 public class GunLookTest implements FabricClientGameTest {
     private static final Logger LOG = LoggerFactory.getLogger("ZCGUN");
-    private static final String[] GUNS = System.getProperty("zc.gun", "assault_rifle,smg,pistol,magnum,shotgun,hunting_rifle,crossbow,machete").split(",");
+    private static final String[] GUNS = System.getProperty("zc.gun", "crossbow,machete").split(",");
 
     @Override
     public void runTest(ClientGameTestContext ctx) {
@@ -43,6 +43,23 @@ public class GunLookTest implements FabricClientGameTest {
                 ctx.waitTicks(30);
                 ctx.takeScreenshot(gun + "-ground");
             }
+            // which way the meshes face: the magnum with no outline, then wound the other way
+            for (String c : new String[] {"kill @e[type=item]", "clear @a", "give @a zomboidcraft:magnum", "tp @a ~ ~ ~ 0 10"}) {
+                sp.getServer().runCommand(c);
+            }
+            ctx.waitTicks(20);
+            MeshGuns.inkOn = false;
+            ctx.waitTicks(5);
+            ctx.takeScreenshot("magnum-no-ink");
+            MeshGuns.inkOn = true;
+            MeshGuns.flipped = true;
+            ctx.waitTicks(5);
+            ctx.takeScreenshot("magnum-flipped");
+            MeshGuns.inkOn = false;
+            ctx.waitTicks(5);
+            ctx.takeScreenshot("magnum-flipped-no-ink");
+            MeshGuns.inkOn = true;
+            MeshGuns.flipped = false;
         }
     }
 }
