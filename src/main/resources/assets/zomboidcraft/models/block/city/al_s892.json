@@ -1,117 +1,190 @@
 {
   "parent": "minecraft:block/block",
   "textures": {
-    "al_chrome": "zomboidcraft:block/city/al_chrome",
-    "al_strut": "zomboidcraft:block/city/al_strut",
-    "particle": "zomboidcraft:block/city/al_chrome"
+    "al_belly": "zomboidcraft:block/city/al_belly",
+    "al_dark": "zomboidcraft:block/city/al_dark",
+    "al_flap": "zomboidcraft:block/city/al_flap",
+    "al_wing_under": "zomboidcraft:block/city/al_wing_under",
+    "particle": "zomboidcraft:block/city/al_belly"
   },
   "elements": [
     {
       "from": [
-        4.64,
-        13.92,
-        4.64
+        -1.61,
+        12.027,
+        0
       ],
       "to": [
-        8.16,
-        16.0,
-        8.16
+        12.303,
+        15.027,
+        16
       ],
       "faces": {
-        "north": {
-          "texture": "#al_chrome",
+        "up": {
+          "texture": "#al_dark",
           "uv": [
-            7.84,
-            0.0,
-            11.36,
-            2.08
-          ]
-        },
-        "south": {
-          "texture": "#al_chrome",
-          "uv": [
-            4.64,
-            0.0,
-            8.16,
-            2.08
-          ]
-        },
-        "east": {
-          "texture": "#al_chrome",
-          "uv": [
-            7.84,
-            0.0,
-            11.36,
-            2.08
-          ]
-        },
-        "west": {
-          "texture": "#al_chrome",
-          "uv": [
-            4.64,
-            0.0,
-            8.16,
-            2.08
+            0,
+            0,
+            13.913,
+            16
           ]
         },
         "down": {
-          "texture": "#al_chrome",
+          "texture": "#al_belly",
           "uv": [
-            4.64,
-            7.84,
-            8.16,
-            11.36
+            0,
+            0,
+            13.913,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          5.347,
+          12.027,
+          8.0
+        ],
+        "axis": "z",
+        "angle": 35.7
+      }
+    },
+    {
+      "from": [
+        0.0,
+        9.593,
+        0.0
+      ],
+      "to": [
+        8.0,
+        10.778,
+        0.52
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_wing_under",
+          "uv": [
+            8.0,
+            5.222,
+            16.0,
+            6.407
+          ],
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#al_wing_under",
+          "uv": [
+            0.0,
+            5.222,
+            8.0,
+            6.407
+          ]
+        },
+        "east": {
+          "texture": "#al_wing_under",
+          "uv": [
+            15.48,
+            5.222,
+            16.0,
+            6.407
+          ]
+        },
+        "west": {
+          "texture": "#al_wing_under",
+          "uv": [
+            0.0,
+            5.222,
+            0.52,
+            6.407
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#al_flap",
+          "uv": [
+            0.0,
+            0.0,
+            8.0,
+            0.52
+          ]
+        },
+        "down": {
+          "texture": "#al_wing_under",
+          "uv": [
+            0.0,
+            15.48,
+            8.0,
+            16.0
           ]
         }
       }
     },
     {
       "from": [
-        0.0,
-        13.44,
-        5.12
+        8.0,
+        10.393,
+        0.0
       ],
       "to": [
         16.0,
-        16.0,
-        7.68
+        11.69,
+        1.56
       ],
       "faces": {
         "north": {
-          "texture": "#al_strut",
+          "texture": "#al_wing_under",
           "uv": [
             0.0,
-            0.0,
-            16.0,
-            2.56
-          ]
+            4.31,
+            8.0,
+            5.607
+          ],
+          "cullface": "north"
         },
         "south": {
-          "texture": "#al_strut",
+          "texture": "#al_wing_under",
+          "uv": [
+            8.0,
+            4.31,
+            16.0,
+            5.607
+          ]
+        },
+        "east": {
+          "texture": "#al_wing_under",
+          "uv": [
+            14.44,
+            4.31,
+            16.0,
+            5.607
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#al_wing_under",
           "uv": [
             0.0,
-            0.0,
-            16.0,
-            2.56
+            4.31,
+            1.56,
+            5.607
           ]
         },
         "up": {
-          "texture": "#al_strut",
+          "texture": "#al_flap",
           "uv": [
+            8.0,
             0.0,
-            5.12,
             16.0,
-            7.68
-          ],
-          "cullface": "up"
+            1.56
+          ]
         },
         "down": {
-          "texture": "#al_strut",
+          "texture": "#al_wing_under",
           "uv": [
-            0.0,
-            8.32,
+            8.0,
+            14.44,
             16.0,
-            10.88
+            16.0
           ]
         }
       }

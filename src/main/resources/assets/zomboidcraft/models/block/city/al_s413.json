@@ -1,212 +1,76 @@
 {
   "parent": "minecraft:block/block",
   "textures": {
-    "al_cowl": "zomboidcraft:block/city/al_cowl",
-    "al_intake": "zomboidcraft:block/city/al_intake",
-    "particle": "zomboidcraft:block/city/al_cowl"
+    "al_metal": "zomboidcraft:block/city/al_metal",
+    "particle": "zomboidcraft:block/city/al_metal"
   },
   "elements": [
     {
       "from": [
-        -1.411,
-        11.369,
-        0.0
+        0.0,
+        0.461,
+        15.688
       ],
       "to": [
-        16.6,
-        13.869,
-        4.0
-      ],
-      "faces": {
-        "up": {
-          "texture": "#al_cowl",
-          "uv": [
-            0,
-            0.0,
-            16,
-            4.0
-          ]
-        },
-        "down": {
-          "texture": "#al_intake",
-          "uv": [
-            0,
-            12.0,
-            16,
-            16.0
-          ]
-        }
-      },
-      "rotation": {
-        "origin": [
-          7.595,
-          13.869,
-          2.0
-        ],
-        "axis": "z",
-        "angle": 18.0
-      }
-    },
-    {
-      "from": [
-        -1.411,
-        11.369,
-        4.0
-      ],
-      "to": [
-        16.6,
-        13.869,
-        8.0
-      ],
-      "faces": {
-        "up": {
-          "texture": "#al_cowl",
-          "uv": [
-            0,
-            4.0,
-            16,
-            8.0
-          ]
-        },
-        "down": {
-          "texture": "#al_intake",
-          "uv": [
-            0,
-            8.0,
-            16,
-            12.0
-          ]
-        }
-      },
-      "rotation": {
-        "origin": [
-          7.595,
-          13.869,
-          6.0
-        ],
-        "axis": "z",
-        "angle": 18.0
-      }
-    },
-    {
-      "from": [
-        -1.411,
-        11.369,
-        8.0
-      ],
-      "to": [
-        16.6,
-        13.869,
-        12.0
-      ],
-      "faces": {
-        "up": {
-          "texture": "#al_cowl",
-          "uv": [
-            0,
-            8.0,
-            16,
-            12.0
-          ]
-        },
-        "down": {
-          "texture": "#al_intake",
-          "uv": [
-            0,
-            4.0,
-            16,
-            8.0
-          ]
-        }
-      },
-      "rotation": {
-        "origin": [
-          7.595,
-          13.869,
-          10.0
-        ],
-        "axis": "z",
-        "angle": 18.0
-      }
-    },
-    {
-      "from": [
-        -1.411,
-        11.369,
-        12.0
-      ],
-      "to": [
-        16.6,
-        13.869,
-        16.0
-      ],
-      "faces": {
-        "up": {
-          "texture": "#al_cowl",
-          "uv": [
-            0,
-            12.0,
-            16,
-            16.0
-          ]
-        },
-        "down": {
-          "texture": "#al_intake",
-          "uv": [
-            0,
-            0.0,
-            16,
-            4.0
-          ]
-        }
-      },
-      "rotation": {
-        "origin": [
-          7.595,
-          13.869,
-          14.0
-        ],
-        "axis": "z",
-        "angle": 18.0
-      }
-    },
-    {
-      "from": [
-        13.28,
-        12.8,
-        3.2
-      ],
-      "to": [
-        16.0,
-        16.0,
+        8.0,
+        1.236,
         16.0
       ],
       "faces": {
         "north": {
-          "texture": "#al_cowl",
+          "texture": "#al_metal",
+          "uv": [
+            8.0,
+            14.764,
+            16.0,
+            15.539
+          ]
+        },
+        "south": {
+          "texture": "#al_metal",
           "uv": [
             0.0,
+            14.764,
+            8.0,
+            15.539
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#al_metal",
+          "uv": [
             0.0,
-            2.72,
-            3.2
+            14.764,
+            0.312,
+            15.539
           ]
         },
         "west": {
-          "texture": "#al_cowl",
+          "texture": "#al_metal",
           "uv": [
-            3.2,
-            0.0,
+            15.688,
+            14.764,
             16.0,
-            3.2
+            15.539
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#al_metal",
+          "uv": [
+            0.0,
+            15.688,
+            8.0,
+            16.0
           ]
         },
         "down": {
-          "texture": "#al_cowl",
+          "texture": "#al_metal",
           "uv": [
-            13.28,
             0.0,
-            16.0,
-            12.8
+            0.0,
+            8.0,
+            0.312
           ]
         }
       }
