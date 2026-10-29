@@ -952,7 +952,396 @@ HEADWEAR = {
 }
 
 
+# ------------------------------------------------------------------ batch 3: tops and outerwear
+
+
+def sleeves(g, d, mat, end=8.0, cuff=None, cuff_d=0.15, short=None):
+    """Both sleeves: full to the wrist (end), with a cuff band, or short ones ending at `short`."""
+    def arm(p, s):
+        if short is not None:
+            g.shell(p, -2.0, short, d, mat)
+            if cuff:
+                g.shell(p, short - 0.6, short + 0.3, d + cuff_d, cuff)
+            return
+        g.shell(p, -2.0, end, d, mat)
+        if cuff:
+            g.shell(p, end - 0.4, end + 0.8, d + cuff_d, cuff)
+    g.both(ARMS, arm)
+
+
+def crew(g, d, mat):
+    """A round neck: a band round the opening on top of the torso."""
+    for s in (-1, 1):
+        g.box('body', (s * 1.6, -0.3, -2 - d + 0.1), (s * 2.5, 0.25, 1.4), mat)
+    g.box('body', (-2.5, -0.3, -2 - d - 0.05), (2.5, 0.25, -1.6), mat)
+    g.box('body', (-2.5, -0.3, 0.6), (2.5, 0.25, 1.4), mat)
+
+
+def skirt(g, y1, d, mat, flare=0.0, y0=-0.2):
+    """A skirt or coat tail on the legs, so it swings with them; flare widens it toward the hem."""
+    def leg(p, s):
+        g.shell(p, y0, (y0 + y1) / 2, d, mat)
+        g.shell(p, (y0 + y1) / 2, y1, d + flare, mat)
+    g.both(LEGS, leg)
+
+
+def lapels(g, d, mat, y1=5.0, width=1.8):
+    """Jacket lapels: the fronts folded back in a V down to y1."""
+    z = -2 - d
+    for s in (-1, 1):
+        g.box('body', (s * 0.4, -0.3, z - 0.3), (s * (0.4 + width), y1 * 0.45, z), mat)
+        g.box('body', (s * 0.4, y1 * 0.45, z - 0.3), (s * (0.4 + width * 0.55), y1, z), mat)
+    g.box('body', (-3.2, -0.8, 0.5), (3.2, 0.2, 2 + d + 0.3), mat)                 # collar round the back
+
+
+def build_band_tshirt(g):
+    build_t_shirt(g)
+    g.front('body', SHIRT, -2.6, 2.0, 2.6, 6.6, 'print', t=0.05)                    # the band's print on the chest
+    g.back('body', SHIRT, -2.4, 2.0, 2.4, 6.0, 'print2', t=0.05)                    # tour dates on the back
+
+
+def build_tank_top(g):
+    g.shell('body', 1.4, 12, SHIRT, 'cloth')
+    g.shell('body', 11.3, 12.25, SHIRT + 0.1, 'hem')
+    for s in (-1, 1):                                                               # the straps over the shoulders
+        x0, x1 = (-3.4, -1.6) if s < 0 else (1.6, 3.4)
+        g.box('body', (x0, -0.3, -2 - SHIRT), (x1, 1.5, 2 + SHIRT), 'cloth')
+    g.front('body', SHIRT, -1.6, 1.4, 1.6, 2.2, 'hem', t=0.08)                      # scooped neck edge
+
+
+def build_dress_shirt(g):
+    g.shell('body', 0, 12, SHIRT, 'cloth')
+    g.shell('body', 11.4, 12.5, SHIRT + 0.1, 'cloth')
+    g.front('body', SHIRT, -0.5, 0, 0.5, 12.5, 'placket')
+    buttons(g, 'body', SHIRT + 0.18, 0, (1.6, 3.8, 6.0, 8.2, 10.4))
+    collar_flaps(g, SHIRT, 'collar')
+    g.front('body', SHIRT, -3.3, 2.4, -1.2, 5.0, 'cloth', t=0.1)                    # one chest pocket
+    sleeves(g, SHIRT + 0.05, 'cloth', end=8.0, cuff='cuff', cuff_d=0.2)
+
+
+def build_polo_shirt(g):
+    g.shell('body', 0, 12, SHIRT, 'cloth')
+    g.shell('body', 11.4, 12.4, SHIRT + 0.1, 'cloth')
+    collar_flaps(g, SHIRT, 'collar')
+    g.front('body', SHIRT, -0.55, 0, 0.55, 3.4, 'placket', t=0.12)
+    buttons(g, 'body', SHIRT + 0.12, 0, (1.0, 2.4))
+    g.front('body', SHIRT, 1.6, 2.4, 2.6, 3.4, 'logo', t=0.06)
+    sleeves(g, SHIRT + 0.05, 'cloth', short=3.0, cuff='collar', cuff_d=0.12)
+
+
+def build_hawaiian_shirt(g):
+    g.shell('body', 0, 11.6, SHIRT + 0.05, 'cloth')
+    g.shell('body', 11.0, 11.9, SHIRT + 0.15, 'cloth')                              # boxy hem worn out
+    g.front('body', SHIRT + 0.05, -0.45, 0, 0.45, 11.9, 'cloth', t=0.1)
+    buttons(g, 'body', SHIRT + 0.15, 0, (3.0, 5.4, 7.8, 10.2), 'shellbutton')
+    collar_flaps(g, SHIRT + 0.05, 'cloth')
+    g.front('body', SHIRT + 0.05, -3.3, 2.6, -1.3, 5.0, 'cloth', t=0.1)
+    sleeves(g, SHIRT + 0.1, 'cloth', short=3.4, cuff='cloth', cuff_d=0.12)
+
+
+def build_sweater(g):
+    d = JACKET
+    g.shell('body', 0, 10.8, d, 'knit')
+    g.shell('body', 10.5, 12.2, d + 0.12, 'rib')
+    crew(g, d, 'rib')
+    g.front('body', d, -3.8, 2.6, 3.8, 3.4, 'band', t=0.08)                         # a cable band across the chest
+    g.front('body', d, -0.8, 3.4, 0.8, 10.4, 'cable', t=0.12)                       # and a cable down the front
+    sleeves(g, d, 'knit', end=7.6, cuff='rib', cuff_d=0.12)
+
+
+def build_sweatshirt(g):
+    d = JACKET
+    g.shell('body', 0, 10.8, d, 'cloth')
+    g.shell('body', 10.5, 12.2, d + 0.12, 'rib')
+    crew(g, d, 'rib')
+    g.front('body', d, -2.8, 2.2, 2.8, 5.6, 'letters', t=0.08)                      # the school's felt letters
+    g.front('body', d, -0.6, 0.2, 0.6, 1.2, 'rib', t=0.05)                          # the V insert under the neck
+    sleeves(g, d, 'cloth', end=7.6, cuff='rib', cuff_d=0.12)
+    g.both(ARMS, lambda p, s: g.side(p, d, s, -0.3, -1.0, 0.3, 7.4, 'stripe', t=0.05))
+
+
+def build_turtleneck(g):
+    g.shell('body', 0, 12, SHIRT, 'knit')
+    g.shell('body', 11.2, 12.3, SHIRT + 0.1, 'rib')
+    g.box('body', (-2.8, -1.8, -2.4), (2.8, 0.3, 2.0), 'rib')                       # the rolled neck up to the jaw
+    sleeves(g, SHIRT + 0.05, 'knit', end=8.0, cuff='rib', cuff_d=0.12)
+
+
+def build_scrubs_top(g):
+    g.shell('body', 0, 12, SHIRT, 'cloth')
+    g.shell('body', 11.3, 12.3, SHIRT + 0.1, 'cloth')
+    for s in (-1, 1):                                                               # V neck
+        g.front('body', SHIRT, s * 0.2, 0, s * 1.6, 0.8, 'trim', t=0.08)
+        g.front('body', SHIRT, s * 0.2, 0.8, s * 0.9, 2.4, 'trim', t=0.08)
+    g.front('body', SHIRT, -3.4, 2.4, -1.2, 5.0, 'cloth', t=0.12)                   # breast pocket with pens
+    g.front('body', SHIRT + 0.12, -3.0, 1.8, -2.75, 3.2, 'pen', t=0.12)
+    g.front('body', SHIRT + 0.12, -2.4, 1.6, -2.15, 3.0, 'pen2', t=0.12)
+    g.front('body', SHIRT, 0.8, 7.8, 3.4, 10.6, 'cloth', t=0.12)
+    sleeves(g, SHIRT + 0.05, 'cloth', short=3.2)
+
+
+def build_dress(g):
+    g.shell('body', 0, 8.6, SHIRT, 'cloth')
+    g.shell('body', 8.0, 9.0, SHIRT + 0.12, 'sash')                                 # the waist tie
+    g.shell('body', 9.0, 12, SHIRT + 0.3, 'cloth')
+    g.front('body', SHIRT, -1.4, 0, 1.4, 1.2, 'trim', t=0.08)
+    sleeves(g, SHIRT + 0.05, 'cloth', short=2.6, cuff='trim', cuff_d=0.12)
+    skirt(g, 6.5, SHIRT + 0.35, 'cloth', flare=0.35)
+    g.both(LEGS, lambda p, s: g.shell(p, 6.1, 6.7, SHIRT + 0.75, 'trim'))
+
+
+def build_wedding_dress(g):
+    g.shell('body', 0, 8.6, SHIRT, 'satin')
+    g.shell('body', 0, 4.6, SHIRT + 0.1, 'lace')                                    # lace bodice over it
+    g.shell('body', 8.0, 9.0, SHIRT + 0.12, 'sash')
+    g.shell('body', 9.0, 12, SHIRT + 0.45, 'satin')
+    for x in (-1.8, 0.0, 1.8):                                                      # beading
+        g.front('body', SHIRT + 0.1, x - 0.3, 5.2, x + 0.3, 7.6, 'bead', t=0.08)
+    sleeves(g, SHIRT + 0.05, 'lace', end=8.0, cuff='satin', cuff_d=0.1)
+    skirt(g, 11.6, SHIRT + 0.6, 'satin', flare=0.9)                                 # down to the shoes
+    g.both(LEGS, lambda p, s: g.shell(p, 11.0, 11.8, SHIRT + 1.6, 'lace'))
+    g.back('body', SHIRT + 0.45, -2.6, 9.0, 2.6, 12, 'satin', t=0.6)                 # a bustle bow at the back
+    g.box('body', (-2.0, 8.6, 2 + SHIRT + 0.4), (2.0, 9.6, 2 + SHIRT + 1.2), 'sash')
+
+
+def build_leather_jacket(g):
+    d = JACKET
+    g.shell('body', 0, 10.6, d, 'leather')
+    g.shell('body', 10.3, 11.6, d + 0.15, 'leather')                                # waist belt with its buckle
+    g.front('body', d + 0.15, 1.6, 10.4, 3.2, 11.5, 'buckle', t=0.15)
+    lapels(g, d, 'leather', y1=4.6, width=2.0)
+    for s in (-1, 1):                                                               # snap-down lapel points
+        g.front('body', d + 0.3, s * 2.0 - 0.2, 1.6, s * 2.0 + 0.2, 2.0, 'snap', t=0.1)
+    g.front('body', d, 1.0, 0.2, 1.3, 10.6, 'zip', t=0.15)                          # the off-centre zip
+    g.front('body', d, -3.6, 6.4, -1.4, 6.8, 'zip', t=0.12)                         # zip pockets
+    g.front('body', d, 1.6, 6.4, 3.6, 6.8, 'zip', t=0.12)
+    g.front('body', d, -3.4, 2.8, -1.8, 3.1, 'zip', t=0.12)
+    sleeves(g, d, 'leather', end=8.0, cuff='leather', cuff_d=0.1)
+    g.both(ARMS, lambda p, s: g.side(p, d + 0.1, s, -0.2, 6.4, 0.2, 8.6, 'zip', t=0.1))   # cuff zips
+    for s in (-1, 1):                                                               # epaulettes
+        x0, x1 = (-4 - d, -1.6) if s < 0 else (1.6, 4 + d)
+        g.box('body', (x0, -0.15, -0.6), (x1, 0.05, 0.6), 'leather')
+
+
+def build_bomber_jacket(g):
+    d = JACKET + 0.1
+    g.shell('body', 0, 10.6, d, 'nylon')
+    g.shell('body', 10.3, 12.0, d + 0.15, 'rib')
+    g.box('body', (-3.4, -1.2, -2 - d - 0.3), (3.4, 0.4, 2 + d + 0.3), 'rib')       # knit collar
+    g.front('body', d, -0.3, 0.2, 0.3, 10.6, 'zip', t=0.15)
+    for s in (-1, 1):                                                               # slash pockets
+        g.front('body', d, s * 1.4, 6.6, s * 3.4, 9.6, 'nylon', t=0.15)
+    g.both(ARMS, lambda p, s: (g.shell(p, -2.0, 7.6, d, 'nylon'), g.shell(p, 7.4, 8.9, d + 0.12, 'rib')))
+    g.side('left_arm', d, 1, -1.3, 0.6, 1.3, 3.4, 'nylon', t=0.18)                   # the pen pocket on the sleeve
+    g.side('left_arm', d + 0.18, 1, -1.0, 0.8, -0.5, 2.8, 'zip', t=0.08)
+    g.front('body', d, -3.5, 2.4, -1.4, 3.6, 'patch', t=0.06)
+
+
+def build_varsity_jacket(g):
+    d = JACKET
+    g.shell('body', 0, 10.6, d, 'wool')
+    g.shell('body', 10.3, 12.0, d + 0.15, 'stripe_rib')
+    g.box('body', (-3.4, -1.0, -2 - d - 0.3), (3.4, 0.4, 2 + d + 0.3), 'stripe_rib')
+    g.front('body', d, -0.45, 0.2, 0.45, 10.6, 'wool', t=0.12)
+    buttons(g, 'body', d + 0.12, 0, (1.4, 3.6, 5.8, 8.0, 10.0), 'snapw')
+    g.front('body', d, -3.6, 2.0, -1.0, 5.4, 'letter', t=0.12)                      # the chenille letter
+    for s in (-1, 1):
+        g.front('body', d, s * 1.3, 6.6, s * 3.4, 9.2, 'leatherwelt', t=0.1)
+    g.both(ARMS, lambda p, s: (g.shell(p, -2.0, 7.6, d, 'leather'), g.shell(p, 7.4, 8.9, d + 0.12, 'stripe_rib')))
+
+
+def build_windbreaker(g):
+    d = JACKET - 0.1
+    g.shell('body', 0, 11.2, d, 'nylon')
+    g.shell('body', 10.8, 12.0, d + 0.12, 'nylon')
+    g.front('body', d, -4 - d, 3.0, 4 + d, 5.2, 'panel', t=0.06)                     # a colour band across the chest
+    g.box('body', (-3.0, -1.4, -2 - d - 0.2), (3.0, 0.2, 2 + d + 0.2), 'nylon')    # stand collar, hood rolled in it
+    g.front('body', d, -0.25, -1.4, 0.25, 11.4, 'zip', t=0.14)
+    g.front('body', d + 0.14, -0.4, -1.3, 0.4, -0.6, 'pull', t=0.1)
+    g.front('body', d, 1.6, 6.8, 3.6, 7.2, 'zip', t=0.08)
+    g.front('body', d, -3.6, 6.8, -1.6, 7.2, 'zip', t=0.08)
+    sleeves(g, d, 'nylon', end=8.0, cuff='nylon', cuff_d=0.15)
+    g.both(ARMS, lambda p, s: g.side(p, d, s, -2.0 - d, 0.0, 2.0 + d, 1.6, 'panel', t=0.05))
+
+
+def build_raincoat(g):
+    d = JACKET + 0.15
+    g.shell('body', 0, 12, d, 'pvc')
+    skirt(g, 6.4, d + 0.1, 'pvc', flare=0.2)
+    g.box('body', (-3.8, -2.0, 0.2), (3.8, 1.2, 2 + d + 1.0), 'pvc')               # the hood down
+    g.front('body', d, -0.9, -0.2, 0.9, 12, 'pvc', t=0.2)                           # storm flap with press studs
+    buttons(g, 'body', d + 0.2, 0, (1.4, 4.0, 6.6, 9.2, 11.4), 'snap')
+    for s in (-1, 1):
+        g.front('body', d, s * 1.4, 7.0, s * 3.8, 10.8, 'pvc', t=0.2)
+        g.front('body', d + 0.2, s * 1.3, 6.8, s * 3.9, 7.6, 'pvc', t=0.12)
+    sleeves(g, d, 'pvc', end=8.0, cuff='pvc', cuff_d=0.12)
+    g.front('body', d, -4 - d, 9.4, 4 + d, 9.7, 'tape', t=0.04)                      # reflective band
+    g.both(LEGS, lambda p, s: g.shell(p, 3.6, 3.9, d + 0.12, 'tape'))
+
+
+def build_trench_coat(g):
+    d = JACKET + 0.15
+    g.shell('body', 0, 12, d, 'gab')
+    skirt(g, 9.0, d + 0.1, 'gab', flare=0.3)
+    lapels(g, d, 'gab', y1=5.4, width=2.4)
+    g.front('body', d, -3.6, 0.3, -0.4, 4.6, 'gab', t=0.2)                          # the gun flap on the chest
+    for x in (-1.2, 1.2):                                                           # double-breasted buttons
+        buttons(g, 'body', d, x, (5.6, 7.4, 9.2), 'horn')
+    g.shell('body', 8.8, 9.6, d + 0.25, 'gab')                                     # the belt
+    g.front('body', d + 0.25, -0.8, 8.6, 0.8, 9.8, 'buckle', t=0.15)
+    g.box('body', (-0.5, 9.6, -2 - d - 0.4), (0.0, 12.2, -2 - d - 0.25), 'gab')    # its loose end hanging
+    for s in (-1, 1):                                                               # epaulettes with buttons
+        x0, x1 = (-4 - d, -1.6) if s < 0 else (1.6, 4 + d)
+        g.box('body', (x0, -0.15, -0.7), (x1, 0.08, 0.7), 'gab')
+    g.back('body', d, -4 - d + 0.2, 0, 4 + d - 0.2, 3.6, 'gab', t=0.2)               # the storm yoke on the back
+    def arm(p, s):
+        g.shell(p, -2.0, 8.2, d, 'gab')
+        g.shell(p, 6.8, 7.4, d + 0.15, 'gab')                                       # sleeve straps
+        g.side(p, d + 0.15, s, -0.3, 6.8, 0.3, 7.4, 'buckle', t=0.1)
+    g.both(ARMS, arm)
+
+
+def build_suit_jacket(g):
+    d = JACKET - 0.15
+    g.shell('body', 0, 12, d, 'wool')
+    g.both(LEGS, lambda p, s: g.shell(p, -0.2, 1.4, d + 0.05, 'wool'))             # cut to cover the seat
+    lapels(g, d, 'lapel', y1=6.0, width=1.9)
+    buttons(g, 'body', d, 0.6, (7.0, 9.2), 'horn')
+    g.front('body', d, -3.4, 2.6, -1.6, 3.0, 'wool', t=0.1)                          # breast welt with a pocket square
+    g.front('body', d + 0.1, -3.0, 2.2, -2.2, 2.7, 'square', t=0.08)
+    for s in (-1, 1):
+        g.front('body', d, s * 1.4, 8.8, s * 3.6, 9.4, 'wool', t=0.18)               # flap pockets
+    g.front('body', -0.8 + SHIRT, -0.3, 0.3, 0.3, 5.6, 'tie', t=0.2)                 # the shirt and tie showing in the V
+    sleeves(g, d, 'wool', end=8.2)
+    g.both(ARMS, lambda p, s: [g.front(p, d, (-1.2 if p == 'right_arm' else 0.4) + i * 0.4, 7.3, (-1.0 if p == 'right_arm' else 0.6) + i * 0.4, 7.6, 'horn', t=0.1) for i in range(3)])
+
+
+def build_lab_coat(g):
+    d = JACKET
+    g.shell('body', 0, 12, d, 'cotton')
+    skirt(g, 7.4, d + 0.1, 'cotton', flare=0.15)
+    lapels(g, d, 'cotton', y1=4.4, width=1.8)
+    buttons(g, 'body', d, 0, (5.2, 7.4, 9.6, 11.6), 'button')
+    g.front('body', d, -3.6, 2.8, -1.4, 5.2, 'cotton', t=0.12)                       # breast pocket with pens and a badge
+    g.front('body', d + 0.12, -3.2, 2.0, -2.95, 3.4, 'pen', t=0.12)
+    g.front('body', d + 0.12, -2.6, 2.2, -2.35, 3.4, 'pen2', t=0.12)
+    g.front('body', d + 0.12, 1.6, 2.6, 3.4, 4.4, 'badge', t=0.06)
+    for s in (-1, 1):
+        g.front('body', d, s * 1.4, 8.4, s * 3.8, 11.6, 'cotton', t=0.15)
+    sleeves(g, d, 'cotton', end=8.0, cuff='cotton', cuff_d=0.12)
+
+
+def build_hi_vis_vest(g):
+    d = 1.0
+    g.shell('body', 0.8, 10.6, d, 'mesh')
+    for s in (-1, 1):                                                               # over the shoulders
+        x0, x1 = (-3.6, -1.6) if s < 0 else (1.6, 3.6)
+        g.box('body', (x0, -0.3, -2 - d), (x1, 0.8, 2 + d), 'mesh')
+        g.box('body', (x0 + 0.5, -0.4, -2 - d - 0.06), (x0 + 1.3, 10.6, -2 - d), 'tape')   # braces of tape
+        g.box('body', (x0 + 0.5, -0.4, 2 + d), (x0 + 1.3, 10.6, 2 + d + 0.06), 'tape')
+    g.shell('body', 7.4, 8.4, d + 0.06, 'tape')                                    # the waist hoop
+    g.front('body', d, -0.25, 0.8, 0.25, 10.6, 'zip', t=0.1)
+    g.front('body', d, -3.6, 4.6, -1.4, 6.6, 'mesh', t=0.12)                         # ID window pocket
+
+
+def satin(base):
+    def fn(f):
+        c = P.plain(f, base, 0.05)
+        sheen = np.clip(np.sin(f.P[..., 1] * 1.3 + f.P[..., 0] * 0.4) * 0.5 + 0.5, 0, 1)
+        c = c * (0.9 + 0.2 * sheen)[..., None]
+        return toon(f, grade(c, 0.35), stitch=None)
+    return fn
+
+
+def lace(base):
+    def fn(f):
+        c = P.plain(f, base, 0.04)
+        u, v = f.uv[..., 0], f.uv[..., 1]
+        holes = (np.abs(np.hypot((u % 0.8) - 0.4, (v % 0.8) - 0.4) - 0.22) < TX * 0.7)
+        c = np.where(holes[..., None], c * 0.7, c)
+        return toon(f, grade(c, 0.3))
+    return fn
+
+
+def flowers(base, petal='#a8574a', leaf='#3f5a3a'):
+    """A Hawaiian print: hibiscus blobs and leaves over the base."""
+    def pat(f, c):
+        n1 = f.noise(1.6, 301, 2)
+        n2 = f.noise(1.1, 302, 2)
+        c = np.where((n2 > 0.62)[..., None], P.col(leaf) * 1.1, c)
+        c = np.where((n1 > 0.66)[..., None], P.col(petal) * 1.15, c)
+        dot = (n1 > 0.75) & (n1 < 0.78)
+        return np.where(dot[..., None], P.col('#d8c6a0'), c)
+    return cloth(base, stitch=None, pattern=pat)
+
+
+def stripes(a, b, w=0.5):
+    def fn(f):
+        v = f.P[..., 1]
+        band = (np.floor(v / w) % 2) == 0
+        c = np.where(band[..., None], P.col(a), P.col(b)) * (1 + (P.white(f.shape, f.rng) - 0.5) * 0.08)[..., None]
+        return toon(f, grade(c))
+    return fn
+
+
+def printed(base, ink):
+    """A screen-printed graphic: blocky shapes and a band of lettering, cracked with age."""
+    def fn(f):
+        c = P.plain(f, base, 0.06)
+        u, v = f.uv[..., 0], f.uv[..., 1]
+        H = max(v.max(), 1e-3)
+        skull = (np.hypot(u - u.mean(), (v - H * 0.45) * 1.2) < H * 0.3)
+        eyes = (np.hypot(np.abs(u - u.mean()) - H * 0.12, v - H * 0.42) < H * 0.07)
+        letters = (v < H * 0.18) & ((np.floor(u / (2 * TX)) % 3) != 0)
+        mark = (skull & ~eyes) | letters
+        crack = P.white(f.shape, f.rng) > 0.8
+        c = np.where((mark & ~crack)[..., None], P.col(ink), c)
+        return toon(f, grade(c), ink=False)
+    return fn
+
+
+TOPS = {
+    'band_tshirt': (build_band_tshirt, dict(cloth=cloth('#24252a'), hem=cloth('#202126'), collar=rib('#202126'),
+                                            print=printed('#24252a', '#b9a77e'), print2=printed('#24252a', '#8a8778')), 0.45),
+    'tank_top': (build_tank_top, dict(cloth=rib('#a8a59a'), hem=rib('#9a978c')), 0.5),
+    'dress_shirt': (build_dress_shirt, dict(cloth=cloth('#9aa7b4', weave=0.04), placket=cloth('#93a0ad', weave=0.04),
+                                            collar=cloth('#93a0ad', weave=0.04), cuff=cloth('#93a0ad', weave=0.04),
+                                            button=flat('#d8d4c8', ink=False)), 0.35),
+    'polo_shirt': (build_polo_shirt, dict(cloth=cloth('#2f4a3c', weave=0.12), collar=rib('#2a4234'), placket=cloth('#2a4234'),
+                                          button=flat('#d8d4c8', ink=False), logo=flat('#8a6a3a')), 0.35),
+    'hawaiian_shirt': (build_hawaiian_shirt, dict(cloth=flowers('#2c5560'), shellbutton=flat('#d8ccb4', ink=False)), 0.35),
+    'sweater': (build_sweater, dict(knit=knit('#6a5e48'), rib=rib('#5e533f'), band=knit('#4e4434'), cable=rib('#5e533f')), 0.35),
+    'sweatshirt': (build_sweatshirt, dict(cloth=cloth('#5a5f66', weave=0.05), rib=rib('#50555b'), letters=cloth('#6e2a26'),
+                                          stripe=flat('#6e2a26', ink=False)), 0.4),
+    'turtleneck': (build_turtleneck, dict(knit=knit('#2a2b2e'), rib=rib('#262729')), 0.3),
+    'scrubs_top': (build_scrubs_top, dict(cloth=cloth('#3f6f6a', weave=0.04), trim=cloth('#386360'), pen=plastic('#1d2d5a'),
+                                          pen2=plastic('#7a2a24')), 0.45),
+    'dress': (build_dress, dict(cloth=cloth('#5a3a4a', pattern=plaid('#5a3a4a', '#3a2532', 2.2), stitch=None),
+                                sash=cloth('#3a2532'), trim=cloth('#3a2532')), 0.35),
+    'wedding_dress': (build_wedding_dress, dict(satin=satin('#cfc8b8'), lace=lace('#d8d2c4'), sash=satin('#b9b09c'),
+                                                bead=flat('#e8e4da', ink=False)), 0.55),
+    'leather_jacket': (build_leather_jacket, dict(leather=leather('#1e1c1b', gloss=0.2), zip=metal('steel'), buckle=metal('steel'),
+                                                  snap=metal('steel')), 0.45),
+    'bomber_jacket': (build_bomber_jacket, dict(nylon=cloth('#3d4430', weave=0.02, stitch='#5a604a'), rib=rib('#2a2d24'),
+                                                zip=metal('brass'), patch=flat('#6e5a2a')), 0.4),
+    'varsity_jacket': (build_varsity_jacket, dict(wool=cloth('#3e2228', weave=0.02), stripe_rib=stripes('#3e2228', '#a89c80', 0.45),
+                                                  snapw=metal('steel'), letter=cloth('#a89c80', stitch='#3e2228'),
+                                                  leatherwelt=leather('#c0b8a4'), leather=leather('#c0b8a4')), 0.4),
+    'windbreaker': (build_windbreaker, dict(nylon=cloth('#2d3e5a', weave=0.02), panel=cloth('#7a6a3a', weave=0.02),
+                                            zip=metal('steel'), pull=flat('#1d1d1f')), 0.35),
+    'raincoat': (build_raincoat, dict(pvc=plastic('#8a7a2a', 0.3), snap=metal('steel'), tape=glow_tape()), 0.45),
+    'trench_coat': (build_trench_coat, dict(gab=cloth('#7a6a4c', weave=0.06, stitch='#5a4c36'), horn=plastic('#2a2018'),
+                                            buckle=leather('#3a2a1c')), 0.45),
+    'suit_jacket': (build_suit_jacket, dict(wool=cloth('#2c2f36', weave=0.03, stitch=None), lapel=cloth('#272a30', stitch=None),
+                                            horn=plastic('#1a1714'), square=cloth('#7a2a26'), tie=cloth('#5a2228', stitch=None)), 0.35),
+    'lab_coat': (build_lab_coat, dict(cotton=cloth('#b6b3aa', weave=0.04), button=flat('#d8d4c8', ink=False), pen=plastic('#1d2d5a'),
+                                      pen2=plastic('#2a2a2a'), badge=flat('#4a6a8a')), 0.5),
+    'hi_vis_vest': (build_hi_vis_vest, dict(mesh=mesh('#b5b33a'), tape=glow_tape(), zip=metal('steel')), 0.55),
+}
+
+
 GARMENTS.update(HEADWEAR)
+GARMENTS.update(TOPS)
 
 
 # ================================================================== export
