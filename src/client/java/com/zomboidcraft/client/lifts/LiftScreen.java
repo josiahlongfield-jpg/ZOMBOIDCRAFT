@@ -8,6 +8,7 @@ import com.zomboidcraft.world.lifts.LiftShaft;
 import com.zomboidcraft.world.lifts.Lifts;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
@@ -17,13 +18,15 @@ import net.minecraft.world.entity.player.Player;
  * A lift car's floor panel, in the kit screen's dark glass and bone: a button for every floor, top
  * floor at the top, the ones called lit amber, with door open and door close under them and the
  * floor the car's at over them. Stays up while you ride; closes when you step out (or Esc, or the
- * interact key again).
+ * interact key again). Floors can be picked with the mouse, or with up/down (W/S) and Enter.
  */
 public class LiftScreen extends net.minecraft.client.gui.screens.Screen {
     private static final int PANEL = 0xF20C0D0F, EDGE = 0x29E8E4DA, LINE = 0x4DE8E4DA, TEXT = 0xFFE8E4DA, DIM = 0xA8E8E4DA;
     private static final int CELL = 24, GAP = 4;
 
     private final LiftCar car;
+    /** The floor picked out with the keys (up/down or W/S, then Enter or Space); -1 for none. */
+    private int sel = -1;
 
     public LiftScreen(LiftCar car) {
         super(Component.literal("Lift"));
@@ -76,7 +79,7 @@ public class LiftScreen extends net.minecraft.client.gui.screens.Screen {
         g.fill(b[0] + 12, b[1] + 24, b[0] + b[2] - 12, b[1] + 25, LINE);
         for (int i = 0; i < s.landings.length; i++) {
             int[] c = cell(s, b, i);
-            boolean lit = car.called(i), over = in(mouseX, mouseY, c[0], c[1], CELL, CELL);
+            boolean lit = car.called(i), over = i == sel || in(mouseX, mouseY, c[0], c[1], CELL, CELL);
             button(g, c[0], c[1], s.label(i), lit, over);
         }
         // door open and door close
@@ -137,6 +140,18 @@ public class LiftScreen extends net.minecraft.client.gui.screens.Screen {
     public boolean keyPressed(KeyEvent event) {
         if (CarClient.INTERACT.matches(event)) {
             onClose();
+            return true;
+        }
+        LiftShaft s = car.shaft();
+        int key = event.key();
+        if (s != null && (key == InputConstants.KEY_UP || key == InputConstants.KEY_W || key == InputConstants.KEY_DOWN || key == InputConstants.KEY_S)) {
+            int step = key == InputConstants.KEY_UP || key == InputConstants.KEY_W ? 1 : -1;
+            sel = sel < 0 ? Math.max(0, Math.min(s.landings.length - 1, s.landingAt((int) Math.round(car.carY())))) : sel + step;
+            sel = Math.max(0, Math.min(s.landings.length - 1, sel));
+            return true;
+        }
+        if (s != null && sel >= 0 && (key == InputConstants.KEY_RETURN || key == InputConstants.KEY_SPACE || key == InputConstants.KEY_NUMPADENTER)) {
+            ClientPlayNetworking.send(new Lifts.Pick(car.getId(), sel));
             return true;
         }
         return super.keyPressed(event);
