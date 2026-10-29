@@ -70,96 +70,6 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:leather",
-          "weight": 12,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 3
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:white_wool",
-          "weight": 9,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 3
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:gray_wool",
-          "weight": 9,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 3
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:brown_wool",
-          "weight": 9,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 3
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:red_carpet",
-          "weight": 6,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 2
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:painting",
-          "weight": 6
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:item_frame",
-          "weight": 6
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:flower_pot",
-          "weight": 6
-        },
-        {
-          "type": "minecraft:item",
           "name": "zomboidcraft:digital_watch",
           "weight": 6
         },
@@ -270,12 +180,12 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:sewing_kit",
-          "weight": 2
+          "weight": 4
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:thread_spool",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -290,12 +200,12 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:wall_phone",
-          "weight": 4
+          "weight": 8
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:transistor_radio",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -310,12 +220,12 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:cassette_player",
-          "weight": 2
+          "weight": 4
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:cassette_tape",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -330,7 +240,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:vhs_tape",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -345,17 +255,17 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:vcr",
-          "weight": 2
+          "weight": 4
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:instant_camera",
-          "weight": 2
+          "weight": 4
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:horseshoe",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -370,22 +280,22 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:board_game",
-          "weight": 4
+          "weight": 8
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:pipe_tobacco",
-          "weight": 2
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:art_print",
           "weight": 4
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:art_print",
+          "weight": 8
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:doll",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -400,7 +310,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:jigsaw_puzzle",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -415,12 +325,12 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:roller_skates",
-          "weight": 4
+          "weight": 8
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:harmonica",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -435,7 +345,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:snow_globe",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -450,7 +360,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:coat_hanger",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -465,12 +375,12 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:sheet_of_tin",
-          "weight": 4
+          "weight": 8
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:leather_belt",
-          "weight": 16
+          "weight": 32
         },
         {
           "type": "minecraft:item",

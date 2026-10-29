@@ -9,23 +9,12 @@
       },
       "entries": [
         {
-          "type": "minecraft:item",
-          "name": "minecraft:white_wool",
-          "weight": 84,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 3
-              }
-            }
-          ]
+          "type": "minecraft:empty",
+          "weight": 140
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:leather",
+          "name": "zomboidcraft:rag",
           "weight": 28,
           "functions": [
             {
@@ -40,47 +29,8 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:glass_bottle",
-          "weight": 56,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 2
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:bucket",
-          "weight": 14
-        },
-        {
-          "type": "minecraft:empty",
-          "weight": 140
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:rag",
-          "weight": 16,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 2
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
           "name": "zomboidcraft:ripped_sheet",
-          "weight": 16,
+          "weight": 28,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -95,22 +45,22 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:bleach",
-          "weight": 48
+          "weight": 84
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:detergent",
-          "weight": 48
+          "weight": 84
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:sewing_kit",
-          "weight": 8
+          "weight": 14
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:thread_spool",
-          "weight": 16,
+          "weight": 28,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -125,7 +75,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:safety_pins",
-          "weight": 16,
+          "weight": 28,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -140,7 +90,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:coin_roll",
-          "weight": 16,
+          "weight": 28,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -155,7 +105,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:coat_hanger",
-          "weight": 16,
+          "weight": 28,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -170,7 +120,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:leather_belt",
-          "weight": 32
+          "weight": 56
         }
       ]
     }

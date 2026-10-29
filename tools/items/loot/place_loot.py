@@ -67,12 +67,19 @@ REPLACED = {f'minecraft:{n}' for n in (
     'string', 'stick', 'oak_planks', 'coal', 'lead', 'candle', 'bowl',
     'paper', 'book', 'gold_nugget', 'iron_nugget', 'emerald', 'diamond', 'gold_ingot', 'amethyst_shard', 'ink_sac',
     'red_dye', 'blue_dye', 'yellow_dye', 'slime_ball',
-    'torch', 'lantern', 'soul_lantern', 'soul_torch', 'compass', 'clock', 'flint_and_steel')}
+    'torch', 'lantern', 'soul_lantern', 'soul_torch', 'compass', 'clock', 'flint_and_steel',
+    # no purpose here: fantasy, vanilla-only mechanics, building blocks dropped in as loot (Josiah 2026-10-29)
+    'totem_of_undying', 'name_tag', 'saddle', 'goat_horn', 'bone_meal', 'snowball', 'ice', 'flower_pot', 'red_carpet',
+    'iron_bars', 'oak_trapdoor', 'ladder', 'chest', 'item_frame',
+    # ours do these: bottles, rags/sheets/thread, maps, notebooks, seeds and produce, buckets, shears, binoculars...
+    'glass_bottle', 'white_wool', 'light_gray_wool', 'gray_wool', 'blue_wool', 'brown_wool', 'black_wool', 'map',
+    'writable_book', 'wheat', 'wheat_seeds', 'pumpkin_seeds', 'melon_seeds', 'beetroot_seeds', 'water_bucket',
+    'bucket', 'shears', 'spyglass', 'bone', 'painting', 'leather')}
 # an entry another thread customised (a named note, a marked map, a set count of something special) is theirs, not a
 # stand-in, even when it's a stand-in item
 CUSTOM = {'minecraft:set_components', 'minecraft:set_name', 'minecraft:set_lore', 'minecraft:set_custom_data',
           'minecraft:exploration_map', 'minecraft:copy_components'}
-KEEP_ON_FARM = {'minecraft:potato', 'minecraft:carrot', 'minecraft:beetroot', 'minecraft:egg', 'minecraft:apple'}
+KEEP_ON_FARM = set()   # the farm's produce is ours now too
 # tables whose main business is the live waves' stock: it gets at least this share of the main pool, not only the share
 # the stand-ins happened to have
 MIN_SHARE = {'shop/hardware': 0.7, 'shop/home_tools': 0.6, 'shop/home_garage': 0.5, 'car/work': 0.5,

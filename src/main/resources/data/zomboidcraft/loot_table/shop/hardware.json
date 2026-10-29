@@ -100,61 +100,6 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:shears",
-          "weight": 4
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:bucket",
-          "weight": 4
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:ladder",
-          "weight": 4,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 4
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:iron_bars",
-          "weight": 4,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 4
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:oak_trapdoor",
-          "weight": 2,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 2
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
           "name": "zomboidcraft:duffel_bag",
           "weight": 2
         },

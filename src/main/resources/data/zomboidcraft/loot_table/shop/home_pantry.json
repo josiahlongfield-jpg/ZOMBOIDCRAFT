@@ -9,36 +9,6 @@
       },
       "entries": [
         {
-          "type": "minecraft:item",
-          "name": "minecraft:wheat",
-          "weight": 21,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 4
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:glass_bottle",
-          "weight": 21,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 2
-              }
-            }
-          ]
-        },
-        {
           "type": "minecraft:empty",
           "weight": 84
         },
