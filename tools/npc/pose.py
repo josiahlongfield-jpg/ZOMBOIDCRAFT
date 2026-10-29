@@ -6,6 +6,8 @@ import numpy as np
 
 # rest pose fix: the bought model stands in an A-pose; arms come down to the sides
 ARM_DOWN = 40.0
+# and her feet, planted wide, come in under the hips
+LEG_IN = 11.0
 
 
 def pose(bones, mode, phase, t, aim=0.0, head_yaw=0.0, head_pitch=0.0, kick=0.0):
@@ -24,6 +26,10 @@ def pose(bones, mode, phase, t, aim=0.0, head_yaw=0.0, head_pitch=0.0, kick=0.0)
     B = 16 + 22 * run          # arm swing
     lift = 0.0
     # legs
+    R[idx['l_thigh']][2] = -LEG_IN
+    R[idx['r_thigh']][2] = LEG_IN
+    R[idx['l_shin']][2] = LEG_IN * 0.4
+    R[idx['r_shin']][2] = -LEG_IN * 0.4
     R[idx['l_thigh']][0] = -A * s * move
     R[idx['r_thigh']][0] = A * s * move
     R[idx['l_shin']][0] = K * max(0.0, s) * move + 4

@@ -10,6 +10,8 @@ import org.joml.Matrix4f;
 public final class NpcPose {
     /** The bought model stands in an A-pose; the arms come down to the sides by this much. */
     private static final float ARM_DOWN = 40f;
+    /** And her feet, planted wide, come in under the hips. */
+    private static final float LEG_IN = 11f;
 
     /** What drives a pose this frame. */
     public static final class Input {
@@ -33,6 +35,10 @@ public final class NpcPose {
         float move = in.move, run = in.run, t = in.t;
         float s = (float) Math.sin(in.phase);
         float a = 24 + 16 * run, k = 30 + 45 * run, b = 16 + 22 * run;
+        set(r, lThigh, 2, -LEG_IN);
+        set(r, rThigh, 2, LEG_IN);
+        set(r, lShin, 2, LEG_IN * 0.4f);
+        set(r, rShin, 2, -LEG_IN * 0.4f);
         set(r, lThigh, 0, -a * s * move);
         set(r, rThigh, 0, a * s * move);
         set(r, lShin, 0, k * Math.max(0f, s) * move + 4);
