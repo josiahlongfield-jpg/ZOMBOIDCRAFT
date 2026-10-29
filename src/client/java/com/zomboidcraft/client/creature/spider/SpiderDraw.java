@@ -106,6 +106,19 @@ public final class SpiderDraw {
         }
     }
 
+    /**
+     * Just over its skull as last drawn, from where the entity's drawn: off its back the way its body stands (so
+     * under it when it hangs from a ceiling). Null before it's first drawn.
+     */
+    public Vec3 overHead() {
+        if (lastNanos == 0 || model.head < 0) {
+            return null;
+        }
+        Vector3f at = pose.place.transformPosition(new Vector3f(pose.animator.p[model.head]));
+        Vector3f up = pose.place.transformDirection(new Vector3f(0, 1, 0)).normalize();
+        return new Vec3(at.x + up.x * 0.75f, at.y + up.y * 0.75f, at.z + up.z * 0.75f);
+    }
+
     /** A limb shot away: as it was posed when it went, and where it's got to since (falling, tumbling, then lying). */
     private final class Piece {
         final int limb;
