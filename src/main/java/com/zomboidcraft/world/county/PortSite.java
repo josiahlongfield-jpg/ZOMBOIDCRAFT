@@ -961,13 +961,12 @@ final class PortSite extends Site {
                     double r = chance();
                     boolean sunk = chance() < 0.1 + hit * 0.25;
                     if (r < 0.4) {
-                        int blen = 16 + rng.nextInt(7);
-                        int beam = blen > 18 ? 7 : 6;
-                        int cx = side < 0 ? jx - 2 - beam / 2 : jx + jw + 1 + beam / 2;
+                        int blen = 19 + rng.nextInt(3);
+                        int cx = side < 0 ? jx - 5 : jx + jw + 4;
                         if (bz - blen < quay - jlen - 2) {
                             break;
                         }
-                        new Ships(at(cx, bz, 3), rng, hit).trawler(blen, sunk);
+                        new Ships(at(cx, bz, 3), rng, hit).trawler(sunk);
                         bz -= blen + 3;
                     } else if (r < 0.62) {
                         // lobster boats, and sloops, lie their length along the jetty a step off it
@@ -1096,9 +1095,9 @@ final class PortSite extends Site {
                 f.set(bx + 2, 1, z0 + k, "minecraft:spruce_fence");
                 f.set(bx + 5, 1, z0 + k, "minecraft:spruce_fence");
             }
-            Placer up = at(bx + 4, z0 + 2, 1).shifted(0, 10, 0);
             if (chance() < 0.5) {
-                new Ships(up, rng, hit).trawler(14 + rng.nextInt(3), false);
+                at(bx + 4, z0 + 2, 1).vehicle(5.35, 2, 0.0, -90, "=boat_lobster@" + (chance() < 0.5 ? "abandoned" : "usable"),
+                        rng.nextLong());
             } else {
                 at(bx + 4, z0 + 2, 1).vehicle(4.85, 2, 0.0, -90, "=boat_sloop@" + (chance() < 0.5 ? "abandoned" : "usable"),
                         rng.nextLong());

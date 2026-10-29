@@ -10,9 +10,8 @@ import java.util.SplittableRandom;
  * The ocean-going ships are {@link BigShip}'s.
  * <ul>
  * <li>a harbour tug, a barge of coal or scrap;</li>
- * <li>the fishing boats: trawlers with their wheelhouses, gantries and nets; and the small boats, which
- * are vehicle models like the marina's (lobster boats, sloops, jon boats), and the ones that sank at
- * their moorings.</li>
+ * <li>the fishing boats, vehicle models like the marina's (tools/cars/boats.py): trawlers, lobster
+ * boats, sloops, jon boats, and the ones that sank at their moorings.</li>
  * </ul>
  */
 final class Ships {
@@ -112,25 +111,6 @@ final class Ships {
                     } else {
                         p.set(x, y, z, "air");
                     }
-                }
-            }
-        }
-    }
-
-    /** Raises the hull's sides by n over its fore part from x on: the forecastle, decked over. */
-    private void forecastle(Hull h, int from, int n, String skin, String deck) {
-        int hb = h.beam() / 2 + 1;
-        for (int x = from; x < h.len() + 2; x++) {
-            for (int z = -hb; z < hb; z++) {
-                if (!h.in(x, h.deck(), z)) {
-                    continue;
-                }
-                boolean edge = !h.in(x + 1, h.deck(), z) || !h.in(x, h.deck(), z + 1) || !h.in(x, h.deck(), z - 1) || x == from;
-                for (int y = h.deck() + 1; y <= h.deck() + n; y++) {
-                    p.set(x, y, z, edge ? skin : y == h.deck() + n ? deck : "air");
-                }
-                if (edge) {
-                    p.set(x, h.deck() + n + 1, z, "minecraft:iron_bars");
                 }
             }
         }
@@ -244,43 +224,12 @@ final class Ships {
     // ------------------------------------------------------------------ fishing boats
 
     /**
-     * A trawler len long: a painted hull with its high bow, the wheelhouse forward, the gantry
-     * over the stern, nets heaped on deck, fish boxes, outrigger booms up; sunk at her
-     * mooring, only the wheelhouse and the mast stand out of the water.
+     * A 60-foot stern trawler at her berth (boat_trawler): the wheelhouse forward, the gantry over the
+     * stern with the trawl doors hung on it, the net on its drum; or sunk at her mooring, her
+     * wheelhouse and mast standing out of the water.
      */
-    Hull trawler(int len, boolean sunk) {
-        int beam = len > 18 ? 7 : 6;
-        int drop = sunk ? 5 : 0;
-        Hull h = new Hull(len, beam, SEA - 4 - drop, SEA + 3 - drop, 0.3, 0.18);
-        String skin = any("minecraft:white_concrete", "minecraft:blue_concrete", "minecraft:red_concrete", "minecraft:cyan_concrete",
-                "minecraft:green_concrete", "minecraft:light_blue_concrete");
-        hull(h, chance() < 0.15 + hit * 0.2 ? "rust" : skin, "hull_red", "minecraft:spruce_planks", SEA - 1 - drop, true);
-        forecastle(h, h.bowStart() - 1, 2, skin, "minecraft:spruce_planks");
-        int wx = h.bowStart() - 6;
-        int roof = house(wx, -2, wx + 3, 1, h.deck() + 1, 1, "minecraft:white_concrete", 0.2 + hit * 0.5);
-        p.set(wx + 1, roof + 1, -1, "minecraft:iron_bars");
-        mast(wx + 1, roof + 1, 0, 5);
-        // outriggers raised either side of the mast
-        for (int k = 1; k <= 4; k++) {
-            p.set(wx + 1, roof + 1 + k, -1 - k, "minecraft:iron_bars");
-            p.set(wx + 1, roof + 1 + k, k, "minecraft:iron_bars");
-        }
-        // the gantry over the stern
-        int hb = beam / 2;
-        for (int y = h.deck() + 1; y <= h.deck() + 4; y++) {
-            p.set(1, y, -hb + 1, "steel_yellow");
-            p.set(1, y, hb - 2, "steel_yellow");
-        }
-        for (int z = -hb + 1; z <= hb - 2; z++) {
-            p.set(1, h.deck() + 5, z, "steel_yellow");
-        }
-        if (!sunk) {
-            for (int i = 0; i < 4; i++) {
-                p.setIfAir(2 + rng.nextInt(Math.max(1, wx - 3)), h.deck() + 1, -hb + 1 + rng.nextInt(Math.max(1, beam - 2)),
-                        any("minecraft:cobweb", "minecraft:cobweb", "minecraft:barrel[facing=up,loot=storage]", "crate", "minecraft:orange_concrete"));
-            }
-        }
-        return h;
+    void trawler(boolean sunk) {
+        boat("boat_trawler", 18.9, sunk);
     }
 
     /** How a small boat's been left at her mooring: most abandoned, some smashed, a few burnt out. */
