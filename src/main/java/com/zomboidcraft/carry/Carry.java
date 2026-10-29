@@ -263,7 +263,8 @@ public final class Carry {
                 if (CaseItem.unpack(inventory.getItem(i), player.getRandom())
                         | com.zomboidcraft.combat.rolls.Rolls.roll(inventory.getItem(i),
                                 com.zomboidcraft.combat.rolls.Rolls.UNKNOWN, player.getRandom())
-                        | com.zomboidcraft.combat.GunFinish.roll(inventory.getItem(i), player.getRandom())) {
+                        | com.zomboidcraft.combat.GunFinish.roll(inventory.getItem(i), player.getRandom())
+                        | com.zomboidcraft.combat.Attachments.ensureModel(inventory.getItem(i))) {
                     inventory.setChanged();
                 }
             }

@@ -638,30 +638,49 @@
          "type": "minecraft:composite",
          "models": [
           {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/hunting_rifle/raised_mag_out/irons_up",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_irons_front_up",
-            "part": "body",
-            "offset": [
-             8.0,
-             8.141,
-             7.6
-            ]
-           }
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/hunting_rifle/raised_mag_out/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_front_down",
+              "part": "body",
+              "offset": [
+               8.0,
+               8.141,
+               7.6
+              ]
+             }
+            },
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/hunting_rifle/raised_mag_out/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_rear_down",
+              "part": "body",
+              "offset": [
+               8.0,
+               8.141,
+               16.2
+              ]
+             }
+            }
+           ]
           },
           {
            "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/hunting_rifle/raised_mag_out/irons_up",
+           "base": "zomboidcraft:item/weapon/hunting_rifle/raised_mag_out/hunting_scope",
            "model": {
             "type": "zomboidcraft:mesh",
-            "id": "att_irons_rear_up",
+            "id": "own_hunting_scope",
             "part": "body",
             "offset": [
-             8.0,
+             8.009,
              8.141,
-             16.2
+             13.54
             ]
            }
           }
@@ -818,36 +837,55 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:range_dispatch",
-         "property": "minecraft:custom_model_data",
-         "index": 1,
-         "entries": [
+         "type": "minecraft:composite",
+         "models": [
           {
-           "threshold": 1,
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/hunting_rifle/raised_mag_out/sniper_suppressor",
            "model": {
-            "type": "minecraft:select",
-            "property": "minecraft:display_context",
-            "cases": [
-             {
-              "when": [
-               "firstperson_righthand",
-               "firstperson_lefthand"
+            "type": "zomboidcraft:mesh",
+            "id": "own_sniper_suppressor",
+            "part": "body",
+            "offset": [
+             7.986,
+             7.978,
+             -3.448
+            ]
+           }
+          },
+          {
+           "type": "minecraft:range_dispatch",
+           "property": "minecraft:custom_model_data",
+           "index": 1,
+           "entries": [
+            {
+             "threshold": 1,
+             "model": {
+              "type": "minecraft:select",
+              "property": "minecraft:display_context",
+              "cases": [
+               {
+                "when": [
+                 "firstperson_righthand",
+                 "firstperson_lefthand"
+                ],
+                "model": {
+                 "type": "minecraft:empty"
+                }
+               }
               ],
-              "model": {
-               "type": "minecraft:empty"
+              "fallback": {
+               "type": "minecraft:model",
+               "model": "zomboidcraft:item/weapon/hunting_rifle/raised_mag_out/muzzle_flash_quiet"
               }
              }
-            ],
-            "fallback": {
-             "type": "minecraft:model",
-             "model": "zomboidcraft:item/weapon/hunting_rifle/raised_mag_out/muzzle_flash"
             }
+           ],
+           "fallback": {
+            "type": "minecraft:empty"
            }
           }
-         ],
-         "fallback": {
-          "type": "minecraft:empty"
-         }
+         ]
         }
        },
        {
@@ -1527,30 +1565,49 @@
          "type": "minecraft:composite",
          "models": [
           {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/hunting_rifle/mag_out/irons_up",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_irons_front_up",
-            "part": "body",
-            "offset": [
-             8.0,
-             8.141,
-             7.6
-            ]
-           }
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/hunting_rifle/mag_out/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_front_down",
+              "part": "body",
+              "offset": [
+               8.0,
+               8.141,
+               7.6
+              ]
+             }
+            },
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/hunting_rifle/mag_out/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_rear_down",
+              "part": "body",
+              "offset": [
+               8.0,
+               8.141,
+               16.2
+              ]
+             }
+            }
+           ]
           },
           {
            "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/hunting_rifle/mag_out/irons_up",
+           "base": "zomboidcraft:item/weapon/hunting_rifle/mag_out/hunting_scope",
            "model": {
             "type": "zomboidcraft:mesh",
-            "id": "att_irons_rear_up",
+            "id": "own_hunting_scope",
             "part": "body",
             "offset": [
-             8.0,
+             8.009,
              8.141,
-             16.2
+             13.54
             ]
            }
           }
@@ -1707,36 +1764,55 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:range_dispatch",
-         "property": "minecraft:custom_model_data",
-         "index": 1,
-         "entries": [
+         "type": "minecraft:composite",
+         "models": [
           {
-           "threshold": 1,
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/hunting_rifle/mag_out/sniper_suppressor",
            "model": {
-            "type": "minecraft:select",
-            "property": "minecraft:display_context",
-            "cases": [
-             {
-              "when": [
-               "firstperson_righthand",
-               "firstperson_lefthand"
+            "type": "zomboidcraft:mesh",
+            "id": "own_sniper_suppressor",
+            "part": "body",
+            "offset": [
+             7.986,
+             7.978,
+             -3.448
+            ]
+           }
+          },
+          {
+           "type": "minecraft:range_dispatch",
+           "property": "minecraft:custom_model_data",
+           "index": 1,
+           "entries": [
+            {
+             "threshold": 1,
+             "model": {
+              "type": "minecraft:select",
+              "property": "minecraft:display_context",
+              "cases": [
+               {
+                "when": [
+                 "firstperson_righthand",
+                 "firstperson_lefthand"
+                ],
+                "model": {
+                 "type": "minecraft:empty"
+                }
+               }
               ],
-              "model": {
-               "type": "minecraft:empty"
+              "fallback": {
+               "type": "minecraft:model",
+               "model": "zomboidcraft:item/weapon/hunting_rifle/mag_out/muzzle_flash_quiet"
               }
              }
-            ],
-            "fallback": {
-             "type": "minecraft:model",
-             "model": "zomboidcraft:item/weapon/hunting_rifle/mag_out/muzzle_flash"
             }
+           ],
+           "fallback": {
+            "type": "minecraft:empty"
            }
           }
-         ],
-         "fallback": {
-          "type": "minecraft:empty"
-         }
+         ]
         }
        },
        {
@@ -2423,30 +2499,49 @@
          "type": "minecraft:composite",
          "models": [
           {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/hunting_rifle/raised_mag_in/irons_up",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_irons_front_up",
-            "part": "body",
-            "offset": [
-             8.0,
-             8.141,
-             7.6
-            ]
-           }
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/hunting_rifle/raised_mag_in/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_front_down",
+              "part": "body",
+              "offset": [
+               8.0,
+               8.141,
+               7.6
+              ]
+             }
+            },
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/hunting_rifle/raised_mag_in/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_rear_down",
+              "part": "body",
+              "offset": [
+               8.0,
+               8.141,
+               16.2
+              ]
+             }
+            }
+           ]
           },
           {
            "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/hunting_rifle/raised_mag_in/irons_up",
+           "base": "zomboidcraft:item/weapon/hunting_rifle/raised_mag_in/hunting_scope",
            "model": {
             "type": "zomboidcraft:mesh",
-            "id": "att_irons_rear_up",
+            "id": "own_hunting_scope",
             "part": "body",
             "offset": [
-             8.0,
+             8.009,
              8.141,
-             16.2
+             13.54
             ]
            }
           }
@@ -2603,36 +2698,55 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:range_dispatch",
-         "property": "minecraft:custom_model_data",
-         "index": 1,
-         "entries": [
+         "type": "minecraft:composite",
+         "models": [
           {
-           "threshold": 1,
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/hunting_rifle/raised_mag_in/sniper_suppressor",
            "model": {
-            "type": "minecraft:select",
-            "property": "minecraft:display_context",
-            "cases": [
-             {
-              "when": [
-               "firstperson_righthand",
-               "firstperson_lefthand"
+            "type": "zomboidcraft:mesh",
+            "id": "own_sniper_suppressor",
+            "part": "body",
+            "offset": [
+             7.986,
+             7.978,
+             -3.448
+            ]
+           }
+          },
+          {
+           "type": "minecraft:range_dispatch",
+           "property": "minecraft:custom_model_data",
+           "index": 1,
+           "entries": [
+            {
+             "threshold": 1,
+             "model": {
+              "type": "minecraft:select",
+              "property": "minecraft:display_context",
+              "cases": [
+               {
+                "when": [
+                 "firstperson_righthand",
+                 "firstperson_lefthand"
+                ],
+                "model": {
+                 "type": "minecraft:empty"
+                }
+               }
               ],
-              "model": {
-               "type": "minecraft:empty"
+              "fallback": {
+               "type": "minecraft:model",
+               "model": "zomboidcraft:item/weapon/hunting_rifle/raised_mag_in/muzzle_flash_quiet"
               }
              }
-            ],
-            "fallback": {
-             "type": "minecraft:model",
-             "model": "zomboidcraft:item/weapon/hunting_rifle/raised_mag_in/muzzle_flash"
             }
+           ],
+           "fallback": {
+            "type": "minecraft:empty"
            }
           }
-         ],
-         "fallback": {
-          "type": "minecraft:empty"
-         }
+         ]
         }
        },
        {
@@ -3346,30 +3460,49 @@
          "type": "minecraft:composite",
          "models": [
           {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/hunting_rifle/mag_in/irons_up",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_irons_front_up",
-            "part": "body",
-            "offset": [
-             8.0,
-             8.141,
-             7.6
-            ]
-           }
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/hunting_rifle/mag_in/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_front_down",
+              "part": "body",
+              "offset": [
+               8.0,
+               8.141,
+               7.6
+              ]
+             }
+            },
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/hunting_rifle/mag_in/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_rear_down",
+              "part": "body",
+              "offset": [
+               8.0,
+               8.141,
+               16.2
+              ]
+             }
+            }
+           ]
           },
           {
            "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/hunting_rifle/mag_in/irons_up",
+           "base": "zomboidcraft:item/weapon/hunting_rifle/mag_in/hunting_scope",
            "model": {
             "type": "zomboidcraft:mesh",
-            "id": "att_irons_rear_up",
+            "id": "own_hunting_scope",
             "part": "body",
             "offset": [
-             8.0,
+             8.009,
              8.141,
-             16.2
+             13.54
             ]
            }
           }
@@ -3526,36 +3659,55 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:range_dispatch",
-         "property": "minecraft:custom_model_data",
-         "index": 1,
-         "entries": [
+         "type": "minecraft:composite",
+         "models": [
           {
-           "threshold": 1,
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/hunting_rifle/mag_in/sniper_suppressor",
            "model": {
-            "type": "minecraft:select",
-            "property": "minecraft:display_context",
-            "cases": [
-             {
-              "when": [
-               "firstperson_righthand",
-               "firstperson_lefthand"
+            "type": "zomboidcraft:mesh",
+            "id": "own_sniper_suppressor",
+            "part": "body",
+            "offset": [
+             7.986,
+             7.978,
+             -3.448
+            ]
+           }
+          },
+          {
+           "type": "minecraft:range_dispatch",
+           "property": "minecraft:custom_model_data",
+           "index": 1,
+           "entries": [
+            {
+             "threshold": 1,
+             "model": {
+              "type": "minecraft:select",
+              "property": "minecraft:display_context",
+              "cases": [
+               {
+                "when": [
+                 "firstperson_righthand",
+                 "firstperson_lefthand"
+                ],
+                "model": {
+                 "type": "minecraft:empty"
+                }
+               }
               ],
-              "model": {
-               "type": "minecraft:empty"
+              "fallback": {
+               "type": "minecraft:model",
+               "model": "zomboidcraft:item/weapon/hunting_rifle/mag_in/muzzle_flash_quiet"
               }
              }
-            ],
-            "fallback": {
-             "type": "minecraft:model",
-             "model": "zomboidcraft:item/weapon/hunting_rifle/mag_in/muzzle_flash"
             }
+           ],
+           "fallback": {
+            "type": "minecraft:empty"
            }
           }
-         ],
-         "fallback": {
-          "type": "minecraft:empty"
-         }
+         ]
         }
        },
        {
@@ -4276,30 +4428,49 @@
          "type": "minecraft:composite",
          "models": [
           {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/hunting_rifle/raised_charge/irons_up",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_irons_front_up",
-            "part": "body",
-            "offset": [
-             8.0,
-             8.141,
-             7.6
-            ]
-           }
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/hunting_rifle/raised_charge/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_front_down",
+              "part": "body",
+              "offset": [
+               8.0,
+               8.141,
+               7.6
+              ]
+             }
+            },
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/hunting_rifle/raised_charge/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_rear_down",
+              "part": "body",
+              "offset": [
+               8.0,
+               8.141,
+               16.2
+              ]
+             }
+            }
+           ]
           },
           {
            "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/hunting_rifle/raised_charge/irons_up",
+           "base": "zomboidcraft:item/weapon/hunting_rifle/raised_charge/hunting_scope",
            "model": {
             "type": "zomboidcraft:mesh",
-            "id": "att_irons_rear_up",
+            "id": "own_hunting_scope",
             "part": "body",
             "offset": [
-             8.0,
+             8.009,
              8.141,
-             16.2
+             13.54
             ]
            }
           }
@@ -4456,36 +4627,55 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:range_dispatch",
-         "property": "minecraft:custom_model_data",
-         "index": 1,
-         "entries": [
+         "type": "minecraft:composite",
+         "models": [
           {
-           "threshold": 1,
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/hunting_rifle/raised_charge/sniper_suppressor",
            "model": {
-            "type": "minecraft:select",
-            "property": "minecraft:display_context",
-            "cases": [
-             {
-              "when": [
-               "firstperson_righthand",
-               "firstperson_lefthand"
+            "type": "zomboidcraft:mesh",
+            "id": "own_sniper_suppressor",
+            "part": "body",
+            "offset": [
+             7.986,
+             7.978,
+             -3.448
+            ]
+           }
+          },
+          {
+           "type": "minecraft:range_dispatch",
+           "property": "minecraft:custom_model_data",
+           "index": 1,
+           "entries": [
+            {
+             "threshold": 1,
+             "model": {
+              "type": "minecraft:select",
+              "property": "minecraft:display_context",
+              "cases": [
+               {
+                "when": [
+                 "firstperson_righthand",
+                 "firstperson_lefthand"
+                ],
+                "model": {
+                 "type": "minecraft:empty"
+                }
+               }
               ],
-              "model": {
-               "type": "minecraft:empty"
+              "fallback": {
+               "type": "minecraft:model",
+               "model": "zomboidcraft:item/weapon/hunting_rifle/raised_charge/muzzle_flash_quiet"
               }
              }
-            ],
-            "fallback": {
-             "type": "minecraft:model",
-             "model": "zomboidcraft:item/weapon/hunting_rifle/raised_charge/muzzle_flash"
             }
+           ],
+           "fallback": {
+            "type": "minecraft:empty"
            }
           }
-         ],
-         "fallback": {
-          "type": "minecraft:empty"
-         }
+         ]
         }
        },
        {
@@ -5199,30 +5389,49 @@
          "type": "minecraft:composite",
          "models": [
           {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/hunting_rifle/charge/irons_up",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_irons_front_up",
-            "part": "body",
-            "offset": [
-             8.0,
-             8.141,
-             7.6
-            ]
-           }
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/hunting_rifle/charge/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_front_down",
+              "part": "body",
+              "offset": [
+               8.0,
+               8.141,
+               7.6
+              ]
+             }
+            },
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/hunting_rifle/charge/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_rear_down",
+              "part": "body",
+              "offset": [
+               8.0,
+               8.141,
+               16.2
+              ]
+             }
+            }
+           ]
           },
           {
            "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/hunting_rifle/charge/irons_up",
+           "base": "zomboidcraft:item/weapon/hunting_rifle/charge/hunting_scope",
            "model": {
             "type": "zomboidcraft:mesh",
-            "id": "att_irons_rear_up",
+            "id": "own_hunting_scope",
             "part": "body",
             "offset": [
-             8.0,
+             8.009,
              8.141,
-             16.2
+             13.54
             ]
            }
           }
@@ -5379,36 +5588,55 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:range_dispatch",
-         "property": "minecraft:custom_model_data",
-         "index": 1,
-         "entries": [
+         "type": "minecraft:composite",
+         "models": [
           {
-           "threshold": 1,
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/hunting_rifle/charge/sniper_suppressor",
            "model": {
-            "type": "minecraft:select",
-            "property": "minecraft:display_context",
-            "cases": [
-             {
-              "when": [
-               "firstperson_righthand",
-               "firstperson_lefthand"
+            "type": "zomboidcraft:mesh",
+            "id": "own_sniper_suppressor",
+            "part": "body",
+            "offset": [
+             7.986,
+             7.978,
+             -3.448
+            ]
+           }
+          },
+          {
+           "type": "minecraft:range_dispatch",
+           "property": "minecraft:custom_model_data",
+           "index": 1,
+           "entries": [
+            {
+             "threshold": 1,
+             "model": {
+              "type": "minecraft:select",
+              "property": "minecraft:display_context",
+              "cases": [
+               {
+                "when": [
+                 "firstperson_righthand",
+                 "firstperson_lefthand"
+                ],
+                "model": {
+                 "type": "minecraft:empty"
+                }
+               }
               ],
-              "model": {
-               "type": "minecraft:empty"
+              "fallback": {
+               "type": "minecraft:model",
+               "model": "zomboidcraft:item/weapon/hunting_rifle/charge/muzzle_flash_quiet"
               }
              }
-            ],
-            "fallback": {
-             "type": "minecraft:model",
-             "model": "zomboidcraft:item/weapon/hunting_rifle/charge/muzzle_flash"
             }
+           ],
+           "fallback": {
+            "type": "minecraft:empty"
            }
           }
-         ],
-         "fallback": {
-          "type": "minecraft:empty"
-         }
+         ]
         }
        },
        {
@@ -5741,36 +5969,55 @@
           }
          ],
          "fallback": {
-          "type": "minecraft:range_dispatch",
-          "property": "minecraft:custom_model_data",
-          "index": 1,
-          "entries": [
+          "type": "minecraft:composite",
+          "models": [
            {
-            "threshold": 1,
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/hunting_rifle/ads_red_dot/sniper_suppressor",
             "model": {
-             "type": "minecraft:select",
-             "property": "minecraft:display_context",
-             "cases": [
-              {
-               "when": [
-                "firstperson_righthand",
-                "firstperson_lefthand"
+             "type": "zomboidcraft:mesh",
+             "id": "own_sniper_suppressor",
+             "part": "body",
+             "offset": [
+              7.986,
+              7.978,
+              -3.448
+             ]
+            }
+           },
+           {
+            "type": "minecraft:range_dispatch",
+            "property": "minecraft:custom_model_data",
+            "index": 1,
+            "entries": [
+             {
+              "threshold": 1,
+              "model": {
+               "type": "minecraft:select",
+               "property": "minecraft:display_context",
+               "cases": [
+                {
+                 "when": [
+                  "firstperson_righthand",
+                  "firstperson_lefthand"
+                 ],
+                 "model": {
+                  "type": "minecraft:empty"
+                 }
+                }
                ],
-               "model": {
-                "type": "minecraft:empty"
+               "fallback": {
+                "type": "minecraft:model",
+                "model": "zomboidcraft:item/weapon/hunting_rifle/ads_red_dot/muzzle_flash_quiet"
                }
               }
-             ],
-             "fallback": {
-              "type": "minecraft:model",
-              "model": "zomboidcraft:item/weapon/hunting_rifle/ads_red_dot/muzzle_flash"
              }
+            ],
+            "fallback": {
+             "type": "minecraft:empty"
             }
            }
-          ],
-          "fallback": {
-           "type": "minecraft:empty"
-          }
+          ]
          }
         },
         {
@@ -6093,36 +6340,55 @@
           }
          ],
          "fallback": {
-          "type": "minecraft:range_dispatch",
-          "property": "minecraft:custom_model_data",
-          "index": 1,
-          "entries": [
+          "type": "minecraft:composite",
+          "models": [
            {
-            "threshold": 1,
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/hunting_rifle/ads_holo/sniper_suppressor",
             "model": {
-             "type": "minecraft:select",
-             "property": "minecraft:display_context",
-             "cases": [
-              {
-               "when": [
-                "firstperson_righthand",
-                "firstperson_lefthand"
+             "type": "zomboidcraft:mesh",
+             "id": "own_sniper_suppressor",
+             "part": "body",
+             "offset": [
+              7.986,
+              7.978,
+              -3.448
+             ]
+            }
+           },
+           {
+            "type": "minecraft:range_dispatch",
+            "property": "minecraft:custom_model_data",
+            "index": 1,
+            "entries": [
+             {
+              "threshold": 1,
+              "model": {
+               "type": "minecraft:select",
+               "property": "minecraft:display_context",
+               "cases": [
+                {
+                 "when": [
+                  "firstperson_righthand",
+                  "firstperson_lefthand"
+                 ],
+                 "model": {
+                  "type": "minecraft:empty"
+                 }
+                }
                ],
-               "model": {
-                "type": "minecraft:empty"
+               "fallback": {
+                "type": "minecraft:model",
+                "model": "zomboidcraft:item/weapon/hunting_rifle/ads_holo/muzzle_flash_quiet"
                }
               }
-             ],
-             "fallback": {
-              "type": "minecraft:model",
-              "model": "zomboidcraft:item/weapon/hunting_rifle/ads_holo/muzzle_flash"
              }
+            ],
+            "fallback": {
+             "type": "minecraft:empty"
             }
            }
-          ],
-          "fallback": {
-           "type": "minecraft:empty"
-          }
+          ]
          }
         },
         {
@@ -6445,36 +6711,55 @@
           }
          ],
          "fallback": {
-          "type": "minecraft:range_dispatch",
-          "property": "minecraft:custom_model_data",
-          "index": 1,
-          "entries": [
+          "type": "minecraft:composite",
+          "models": [
            {
-            "threshold": 1,
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/hunting_rifle/ads_mini_dot/sniper_suppressor",
             "model": {
-             "type": "minecraft:select",
-             "property": "minecraft:display_context",
-             "cases": [
-              {
-               "when": [
-                "firstperson_righthand",
-                "firstperson_lefthand"
+             "type": "zomboidcraft:mesh",
+             "id": "own_sniper_suppressor",
+             "part": "body",
+             "offset": [
+              7.986,
+              7.978,
+              -3.448
+             ]
+            }
+           },
+           {
+            "type": "minecraft:range_dispatch",
+            "property": "minecraft:custom_model_data",
+            "index": 1,
+            "entries": [
+             {
+              "threshold": 1,
+              "model": {
+               "type": "minecraft:select",
+               "property": "minecraft:display_context",
+               "cases": [
+                {
+                 "when": [
+                  "firstperson_righthand",
+                  "firstperson_lefthand"
+                 ],
+                 "model": {
+                  "type": "minecraft:empty"
+                 }
+                }
                ],
-               "model": {
-                "type": "minecraft:empty"
+               "fallback": {
+                "type": "minecraft:model",
+                "model": "zomboidcraft:item/weapon/hunting_rifle/ads_mini_dot/muzzle_flash_quiet"
                }
               }
-             ],
-             "fallback": {
-              "type": "minecraft:model",
-              "model": "zomboidcraft:item/weapon/hunting_rifle/ads_mini_dot/muzzle_flash"
              }
+            ],
+            "fallback": {
+             "type": "minecraft:empty"
             }
            }
-          ],
-          "fallback": {
-           "type": "minecraft:empty"
-          }
+          ]
          }
         },
         {
@@ -6797,36 +7082,55 @@
           }
          ],
          "fallback": {
-          "type": "minecraft:range_dispatch",
-          "property": "minecraft:custom_model_data",
-          "index": 1,
-          "entries": [
+          "type": "minecraft:composite",
+          "models": [
            {
-            "threshold": 1,
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/hunting_rifle/ads_compact_dot/sniper_suppressor",
             "model": {
-             "type": "minecraft:select",
-             "property": "minecraft:display_context",
-             "cases": [
-              {
-               "when": [
-                "firstperson_righthand",
-                "firstperson_lefthand"
+             "type": "zomboidcraft:mesh",
+             "id": "own_sniper_suppressor",
+             "part": "body",
+             "offset": [
+              7.986,
+              7.978,
+              -3.448
+             ]
+            }
+           },
+           {
+            "type": "minecraft:range_dispatch",
+            "property": "minecraft:custom_model_data",
+            "index": 1,
+            "entries": [
+             {
+              "threshold": 1,
+              "model": {
+               "type": "minecraft:select",
+               "property": "minecraft:display_context",
+               "cases": [
+                {
+                 "when": [
+                  "firstperson_righthand",
+                  "firstperson_lefthand"
+                 ],
+                 "model": {
+                  "type": "minecraft:empty"
+                 }
+                }
                ],
-               "model": {
-                "type": "minecraft:empty"
+               "fallback": {
+                "type": "minecraft:model",
+                "model": "zomboidcraft:item/weapon/hunting_rifle/ads_compact_dot/muzzle_flash_quiet"
                }
               }
-             ],
-             "fallback": {
-              "type": "minecraft:model",
-              "model": "zomboidcraft:item/weapon/hunting_rifle/ads_compact_dot/muzzle_flash"
              }
+            ],
+            "fallback": {
+             "type": "minecraft:empty"
             }
            }
-          ],
-          "fallback": {
-           "type": "minecraft:empty"
-          }
+          ]
          }
         },
         {
@@ -7149,36 +7453,55 @@
           }
          ],
          "fallback": {
-          "type": "minecraft:range_dispatch",
-          "property": "minecraft:custom_model_data",
-          "index": 1,
-          "entries": [
+          "type": "minecraft:composite",
+          "models": [
            {
-            "threshold": 1,
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/hunting_rifle/ads_scope_4x/sniper_suppressor",
             "model": {
-             "type": "minecraft:select",
-             "property": "minecraft:display_context",
-             "cases": [
-              {
-               "when": [
-                "firstperson_righthand",
-                "firstperson_lefthand"
+             "type": "zomboidcraft:mesh",
+             "id": "own_sniper_suppressor",
+             "part": "body",
+             "offset": [
+              7.986,
+              7.978,
+              -3.448
+             ]
+            }
+           },
+           {
+            "type": "minecraft:range_dispatch",
+            "property": "minecraft:custom_model_data",
+            "index": 1,
+            "entries": [
+             {
+              "threshold": 1,
+              "model": {
+               "type": "minecraft:select",
+               "property": "minecraft:display_context",
+               "cases": [
+                {
+                 "when": [
+                  "firstperson_righthand",
+                  "firstperson_lefthand"
+                 ],
+                 "model": {
+                  "type": "minecraft:empty"
+                 }
+                }
                ],
-               "model": {
-                "type": "minecraft:empty"
+               "fallback": {
+                "type": "minecraft:model",
+                "model": "zomboidcraft:item/weapon/hunting_rifle/ads_scope_4x/muzzle_flash_quiet"
                }
               }
-             ],
-             "fallback": {
-              "type": "minecraft:model",
-              "model": "zomboidcraft:item/weapon/hunting_rifle/ads_scope_4x/muzzle_flash"
              }
+            ],
+            "fallback": {
+             "type": "minecraft:empty"
             }
            }
-          ],
-          "fallback": {
-           "type": "minecraft:empty"
-          }
+          ]
          }
         },
         {
@@ -7501,36 +7824,55 @@
           }
          ],
          "fallback": {
-          "type": "minecraft:range_dispatch",
-          "property": "minecraft:custom_model_data",
-          "index": 1,
-          "entries": [
+          "type": "minecraft:composite",
+          "models": [
            {
-            "threshold": 1,
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/hunting_rifle/ads_combat_scope/sniper_suppressor",
             "model": {
-             "type": "minecraft:select",
-             "property": "minecraft:display_context",
-             "cases": [
-              {
-               "when": [
-                "firstperson_righthand",
-                "firstperson_lefthand"
+             "type": "zomboidcraft:mesh",
+             "id": "own_sniper_suppressor",
+             "part": "body",
+             "offset": [
+              7.986,
+              7.978,
+              -3.448
+             ]
+            }
+           },
+           {
+            "type": "minecraft:range_dispatch",
+            "property": "minecraft:custom_model_data",
+            "index": 1,
+            "entries": [
+             {
+              "threshold": 1,
+              "model": {
+               "type": "minecraft:select",
+               "property": "minecraft:display_context",
+               "cases": [
+                {
+                 "when": [
+                  "firstperson_righthand",
+                  "firstperson_lefthand"
+                 ],
+                 "model": {
+                  "type": "minecraft:empty"
+                 }
+                }
                ],
-               "model": {
-                "type": "minecraft:empty"
+               "fallback": {
+                "type": "minecraft:model",
+                "model": "zomboidcraft:item/weapon/hunting_rifle/ads_combat_scope/muzzle_flash_quiet"
                }
               }
-             ],
-             "fallback": {
-              "type": "minecraft:model",
-              "model": "zomboidcraft:item/weapon/hunting_rifle/ads_combat_scope/muzzle_flash"
              }
+            ],
+            "fallback": {
+             "type": "minecraft:empty"
             }
            }
-          ],
-          "fallback": {
-           "type": "minecraft:empty"
-          }
+          ]
          }
         },
         {
@@ -7853,36 +8195,55 @@
           }
          ],
          "fallback": {
-          "type": "minecraft:range_dispatch",
-          "property": "minecraft:custom_model_data",
-          "index": 1,
-          "entries": [
+          "type": "minecraft:composite",
+          "models": [
            {
-            "threshold": 1,
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/hunting_rifle/ads_rifle_optic/sniper_suppressor",
             "model": {
-             "type": "minecraft:select",
-             "property": "minecraft:display_context",
-             "cases": [
-              {
-               "when": [
-                "firstperson_righthand",
-                "firstperson_lefthand"
+             "type": "zomboidcraft:mesh",
+             "id": "own_sniper_suppressor",
+             "part": "body",
+             "offset": [
+              7.986,
+              7.978,
+              -3.448
+             ]
+            }
+           },
+           {
+            "type": "minecraft:range_dispatch",
+            "property": "minecraft:custom_model_data",
+            "index": 1,
+            "entries": [
+             {
+              "threshold": 1,
+              "model": {
+               "type": "minecraft:select",
+               "property": "minecraft:display_context",
+               "cases": [
+                {
+                 "when": [
+                  "firstperson_righthand",
+                  "firstperson_lefthand"
+                 ],
+                 "model": {
+                  "type": "minecraft:empty"
+                 }
+                }
                ],
-               "model": {
-                "type": "minecraft:empty"
+               "fallback": {
+                "type": "minecraft:model",
+                "model": "zomboidcraft:item/weapon/hunting_rifle/ads_rifle_optic/muzzle_flash_quiet"
                }
               }
-             ],
-             "fallback": {
-              "type": "minecraft:model",
-              "model": "zomboidcraft:item/weapon/hunting_rifle/ads_rifle_optic/muzzle_flash"
              }
+            ],
+            "fallback": {
+             "type": "minecraft:empty"
             }
            }
-          ],
-          "fallback": {
-           "type": "minecraft:empty"
-          }
+          ]
          }
         },
         {
@@ -8205,36 +8566,55 @@
           }
          ],
          "fallback": {
-          "type": "minecraft:range_dispatch",
-          "property": "minecraft:custom_model_data",
-          "index": 1,
-          "entries": [
+          "type": "minecraft:composite",
+          "models": [
            {
-            "threshold": 1,
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/hunting_rifle/ads_precision_scope/sniper_suppressor",
             "model": {
-             "type": "minecraft:select",
-             "property": "minecraft:display_context",
-             "cases": [
-              {
-               "when": [
-                "firstperson_righthand",
-                "firstperson_lefthand"
+             "type": "zomboidcraft:mesh",
+             "id": "own_sniper_suppressor",
+             "part": "body",
+             "offset": [
+              7.986,
+              7.978,
+              -3.448
+             ]
+            }
+           },
+           {
+            "type": "minecraft:range_dispatch",
+            "property": "minecraft:custom_model_data",
+            "index": 1,
+            "entries": [
+             {
+              "threshold": 1,
+              "model": {
+               "type": "minecraft:select",
+               "property": "minecraft:display_context",
+               "cases": [
+                {
+                 "when": [
+                  "firstperson_righthand",
+                  "firstperson_lefthand"
+                 ],
+                 "model": {
+                  "type": "minecraft:empty"
+                 }
+                }
                ],
-               "model": {
-                "type": "minecraft:empty"
+               "fallback": {
+                "type": "minecraft:model",
+                "model": "zomboidcraft:item/weapon/hunting_rifle/ads_precision_scope/muzzle_flash_quiet"
                }
               }
-             ],
-             "fallback": {
-              "type": "minecraft:model",
-              "model": "zomboidcraft:item/weapon/hunting_rifle/ads_precision_scope/muzzle_flash"
              }
+            ],
+            "fallback": {
+             "type": "minecraft:empty"
             }
            }
-          ],
-          "fallback": {
-           "type": "minecraft:empty"
-          }
+          ]
          }
         },
         {
@@ -8557,36 +8937,55 @@
           }
          ],
          "fallback": {
-          "type": "minecraft:range_dispatch",
-          "property": "minecraft:custom_model_data",
-          "index": 1,
-          "entries": [
+          "type": "minecraft:composite",
+          "models": [
            {
-            "threshold": 1,
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/hunting_rifle/ads_hunting_scope/sniper_suppressor",
             "model": {
-             "type": "minecraft:select",
-             "property": "minecraft:display_context",
-             "cases": [
-              {
-               "when": [
-                "firstperson_righthand",
-                "firstperson_lefthand"
+             "type": "zomboidcraft:mesh",
+             "id": "own_sniper_suppressor",
+             "part": "body",
+             "offset": [
+              7.986,
+              7.978,
+              -3.448
+             ]
+            }
+           },
+           {
+            "type": "minecraft:range_dispatch",
+            "property": "minecraft:custom_model_data",
+            "index": 1,
+            "entries": [
+             {
+              "threshold": 1,
+              "model": {
+               "type": "minecraft:select",
+               "property": "minecraft:display_context",
+               "cases": [
+                {
+                 "when": [
+                  "firstperson_righthand",
+                  "firstperson_lefthand"
+                 ],
+                 "model": {
+                  "type": "minecraft:empty"
+                 }
+                }
                ],
-               "model": {
-                "type": "minecraft:empty"
+               "fallback": {
+                "type": "minecraft:model",
+                "model": "zomboidcraft:item/weapon/hunting_rifle/ads_hunting_scope/muzzle_flash_quiet"
                }
               }
-             ],
-             "fallback": {
-              "type": "minecraft:model",
-              "model": "zomboidcraft:item/weapon/hunting_rifle/ads_hunting_scope/muzzle_flash"
              }
+            ],
+            "fallback": {
+             "type": "minecraft:empty"
             }
            }
-          ],
-          "fallback": {
-           "type": "minecraft:empty"
-          }
+          ]
          }
         },
         {
@@ -8909,36 +9308,55 @@
           }
          ],
          "fallback": {
-          "type": "minecraft:range_dispatch",
-          "property": "minecraft:custom_model_data",
-          "index": 1,
-          "entries": [
+          "type": "minecraft:composite",
+          "models": [
            {
-            "threshold": 1,
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/hunting_rifle/ads_long_scope/sniper_suppressor",
             "model": {
-             "type": "minecraft:select",
-             "property": "minecraft:display_context",
-             "cases": [
-              {
-               "when": [
-                "firstperson_righthand",
-                "firstperson_lefthand"
+             "type": "zomboidcraft:mesh",
+             "id": "own_sniper_suppressor",
+             "part": "body",
+             "offset": [
+              7.986,
+              7.978,
+              -3.448
+             ]
+            }
+           },
+           {
+            "type": "minecraft:range_dispatch",
+            "property": "minecraft:custom_model_data",
+            "index": 1,
+            "entries": [
+             {
+              "threshold": 1,
+              "model": {
+               "type": "minecraft:select",
+               "property": "minecraft:display_context",
+               "cases": [
+                {
+                 "when": [
+                  "firstperson_righthand",
+                  "firstperson_lefthand"
+                 ],
+                 "model": {
+                  "type": "minecraft:empty"
+                 }
+                }
                ],
-               "model": {
-                "type": "minecraft:empty"
+               "fallback": {
+                "type": "minecraft:model",
+                "model": "zomboidcraft:item/weapon/hunting_rifle/ads_long_scope/muzzle_flash_quiet"
                }
               }
-             ],
-             "fallback": {
-              "type": "minecraft:model",
-              "model": "zomboidcraft:item/weapon/hunting_rifle/ads_long_scope/muzzle_flash"
              }
+            ],
+            "fallback": {
+             "type": "minecraft:empty"
             }
            }
-          ],
-          "fallback": {
-           "type": "minecraft:empty"
-          }
+          ]
          }
         },
         {
@@ -9654,30 +10072,49 @@
         "type": "minecraft:composite",
         "models": [
          {
-          "type": "minecraft:special",
-          "base": "zomboidcraft:item/weapon/hunting_rifle/ads/irons_up",
-          "model": {
-           "type": "zomboidcraft:mesh",
-           "id": "att_irons_front_up",
-           "part": "body",
-           "offset": [
-            8.0,
-            8.141,
-            7.6
-           ]
-          }
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/hunting_rifle/ads/irons_folded",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_irons_front_down",
+             "part": "body",
+             "offset": [
+              8.0,
+              8.141,
+              7.6
+             ]
+            }
+           },
+           {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/hunting_rifle/ads/irons_folded",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_irons_rear_down",
+             "part": "body",
+             "offset": [
+              8.0,
+              8.141,
+              16.2
+             ]
+            }
+           }
+          ]
          },
          {
           "type": "minecraft:special",
-          "base": "zomboidcraft:item/weapon/hunting_rifle/ads/irons_up",
+          "base": "zomboidcraft:item/weapon/hunting_rifle/ads/hunting_scope",
           "model": {
            "type": "zomboidcraft:mesh",
-           "id": "att_irons_rear_up",
+           "id": "own_hunting_scope",
            "part": "body",
            "offset": [
-            8.0,
+            8.009,
             8.141,
-            16.2
+            13.54
            ]
           }
          }
@@ -9834,36 +10271,55 @@
         }
        ],
        "fallback": {
-        "type": "minecraft:range_dispatch",
-        "property": "minecraft:custom_model_data",
-        "index": 1,
-        "entries": [
+        "type": "minecraft:composite",
+        "models": [
          {
-          "threshold": 1,
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/hunting_rifle/ads/sniper_suppressor",
           "model": {
-           "type": "minecraft:select",
-           "property": "minecraft:display_context",
-           "cases": [
-            {
-             "when": [
-              "firstperson_righthand",
-              "firstperson_lefthand"
+           "type": "zomboidcraft:mesh",
+           "id": "own_sniper_suppressor",
+           "part": "body",
+           "offset": [
+            7.986,
+            7.978,
+            -3.448
+           ]
+          }
+         },
+         {
+          "type": "minecraft:range_dispatch",
+          "property": "minecraft:custom_model_data",
+          "index": 1,
+          "entries": [
+           {
+            "threshold": 1,
+            "model": {
+             "type": "minecraft:select",
+             "property": "minecraft:display_context",
+             "cases": [
+              {
+               "when": [
+                "firstperson_righthand",
+                "firstperson_lefthand"
+               ],
+               "model": {
+                "type": "minecraft:empty"
+               }
+              }
              ],
-             "model": {
-              "type": "minecraft:empty"
+             "fallback": {
+              "type": "minecraft:model",
+              "model": "zomboidcraft:item/weapon/hunting_rifle/ads/muzzle_flash_quiet"
              }
             }
-           ],
-           "fallback": {
-            "type": "minecraft:model",
-            "model": "zomboidcraft:item/weapon/hunting_rifle/ads/muzzle_flash"
            }
+          ],
+          "fallback": {
+           "type": "minecraft:empty"
           }
          }
-        ],
-        "fallback": {
-         "type": "minecraft:empty"
-        }
+        ]
        }
       },
       {
@@ -10581,30 +11037,49 @@
         "type": "minecraft:composite",
         "models": [
          {
-          "type": "minecraft:special",
-          "base": "zomboidcraft:item/weapon/hunting_rifle/raised_hip/irons_up",
-          "model": {
-           "type": "zomboidcraft:mesh",
-           "id": "att_irons_front_up",
-           "part": "body",
-           "offset": [
-            8.0,
-            8.141,
-            7.6
-           ]
-          }
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/hunting_rifle/raised_hip/irons_folded",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_irons_front_down",
+             "part": "body",
+             "offset": [
+              8.0,
+              8.141,
+              7.6
+             ]
+            }
+           },
+           {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/hunting_rifle/raised_hip/irons_folded",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_irons_rear_down",
+             "part": "body",
+             "offset": [
+              8.0,
+              8.141,
+              16.2
+             ]
+            }
+           }
+          ]
          },
          {
           "type": "minecraft:special",
-          "base": "zomboidcraft:item/weapon/hunting_rifle/raised_hip/irons_up",
+          "base": "zomboidcraft:item/weapon/hunting_rifle/raised_hip/hunting_scope",
           "model": {
            "type": "zomboidcraft:mesh",
-           "id": "att_irons_rear_up",
+           "id": "own_hunting_scope",
            "part": "body",
            "offset": [
-            8.0,
+            8.009,
             8.141,
-            16.2
+            13.54
            ]
           }
          }
@@ -10761,36 +11236,55 @@
         }
        ],
        "fallback": {
-        "type": "minecraft:range_dispatch",
-        "property": "minecraft:custom_model_data",
-        "index": 1,
-        "entries": [
+        "type": "minecraft:composite",
+        "models": [
          {
-          "threshold": 1,
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/hunting_rifle/raised_hip/sniper_suppressor",
           "model": {
-           "type": "minecraft:select",
-           "property": "minecraft:display_context",
-           "cases": [
-            {
-             "when": [
-              "firstperson_righthand",
-              "firstperson_lefthand"
+           "type": "zomboidcraft:mesh",
+           "id": "own_sniper_suppressor",
+           "part": "body",
+           "offset": [
+            7.986,
+            7.978,
+            -3.448
+           ]
+          }
+         },
+         {
+          "type": "minecraft:range_dispatch",
+          "property": "minecraft:custom_model_data",
+          "index": 1,
+          "entries": [
+           {
+            "threshold": 1,
+            "model": {
+             "type": "minecraft:select",
+             "property": "minecraft:display_context",
+             "cases": [
+              {
+               "when": [
+                "firstperson_righthand",
+                "firstperson_lefthand"
+               ],
+               "model": {
+                "type": "minecraft:empty"
+               }
+              }
              ],
-             "model": {
-              "type": "minecraft:empty"
+             "fallback": {
+              "type": "minecraft:model",
+              "model": "zomboidcraft:item/weapon/hunting_rifle/raised_hip/muzzle_flash_quiet"
              }
             }
-           ],
-           "fallback": {
-            "type": "minecraft:model",
-            "model": "zomboidcraft:item/weapon/hunting_rifle/raised_hip/muzzle_flash"
            }
+          ],
+          "fallback": {
+           "type": "minecraft:empty"
           }
          }
-        ],
-        "fallback": {
-         "type": "minecraft:empty"
-        }
+        ]
        }
       },
       {
@@ -11504,30 +11998,49 @@
         "type": "minecraft:composite",
         "models": [
          {
-          "type": "minecraft:special",
-          "base": "zomboidcraft:item/weapon/hunting_rifle/hip/irons_up",
-          "model": {
-           "type": "zomboidcraft:mesh",
-           "id": "att_irons_front_up",
-           "part": "body",
-           "offset": [
-            8.0,
-            8.141,
-            7.6
-           ]
-          }
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/hunting_rifle/hip/irons_folded",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_irons_front_down",
+             "part": "body",
+             "offset": [
+              8.0,
+              8.141,
+              7.6
+             ]
+            }
+           },
+           {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/hunting_rifle/hip/irons_folded",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_irons_rear_down",
+             "part": "body",
+             "offset": [
+              8.0,
+              8.141,
+              16.2
+             ]
+            }
+           }
+          ]
          },
          {
           "type": "minecraft:special",
-          "base": "zomboidcraft:item/weapon/hunting_rifle/hip/irons_up",
+          "base": "zomboidcraft:item/weapon/hunting_rifle/hip/hunting_scope",
           "model": {
            "type": "zomboidcraft:mesh",
-           "id": "att_irons_rear_up",
+           "id": "own_hunting_scope",
            "part": "body",
            "offset": [
-            8.0,
+            8.009,
             8.141,
-            16.2
+            13.54
            ]
           }
          }
@@ -11684,36 +12197,55 @@
         }
        ],
        "fallback": {
-        "type": "minecraft:range_dispatch",
-        "property": "minecraft:custom_model_data",
-        "index": 1,
-        "entries": [
+        "type": "minecraft:composite",
+        "models": [
          {
-          "threshold": 1,
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/hunting_rifle/hip/sniper_suppressor",
           "model": {
-           "type": "minecraft:select",
-           "property": "minecraft:display_context",
-           "cases": [
-            {
-             "when": [
-              "firstperson_righthand",
-              "firstperson_lefthand"
+           "type": "zomboidcraft:mesh",
+           "id": "own_sniper_suppressor",
+           "part": "body",
+           "offset": [
+            7.986,
+            7.978,
+            -3.448
+           ]
+          }
+         },
+         {
+          "type": "minecraft:range_dispatch",
+          "property": "minecraft:custom_model_data",
+          "index": 1,
+          "entries": [
+           {
+            "threshold": 1,
+            "model": {
+             "type": "minecraft:select",
+             "property": "minecraft:display_context",
+             "cases": [
+              {
+               "when": [
+                "firstperson_righthand",
+                "firstperson_lefthand"
+               ],
+               "model": {
+                "type": "minecraft:empty"
+               }
+              }
              ],
-             "model": {
-              "type": "minecraft:empty"
+             "fallback": {
+              "type": "minecraft:model",
+              "model": "zomboidcraft:item/weapon/hunting_rifle/hip/muzzle_flash_quiet"
              }
             }
-           ],
-           "fallback": {
-            "type": "minecraft:model",
-            "model": "zomboidcraft:item/weapon/hunting_rifle/hip/muzzle_flash"
            }
+          ],
+          "fallback": {
+           "type": "minecraft:empty"
           }
          }
-        ],
-        "fallback": {
-         "type": "minecraft:empty"
-        }
+        ]
        }
       },
       {

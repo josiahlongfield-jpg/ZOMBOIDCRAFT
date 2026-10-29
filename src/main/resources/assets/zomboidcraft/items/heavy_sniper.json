@@ -632,30 +632,49 @@
          "type": "minecraft:composite",
          "models": [
           {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/heavy_sniper/raised_mag_out/irons_up",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_irons_front_up",
-            "part": "body",
-            "offset": [
-             8.0,
-             8.938,
-             4.0
-            ]
-           }
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/heavy_sniper/raised_mag_out/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_front_down",
+              "part": "body",
+              "offset": [
+               8.0,
+               8.938,
+               4.0
+              ]
+             }
+            },
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/heavy_sniper/raised_mag_out/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_rear_down",
+              "part": "body",
+              "offset": [
+               8.0,
+               8.938,
+               16.4
+              ]
+             }
+            }
+           ]
           },
           {
            "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/heavy_sniper/raised_mag_out/irons_up",
+           "base": "zomboidcraft:item/weapon/heavy_sniper/raised_mag_out/long_scope",
            "model": {
             "type": "zomboidcraft:mesh",
-            "id": "att_irons_rear_up",
+            "id": "own_long_scope",
             "part": "body",
             "offset": [
-             8.0,
+             8.002,
              8.938,
-             16.4
+             11.761
             ]
            }
           }
@@ -1515,30 +1534,49 @@
          "type": "minecraft:composite",
          "models": [
           {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/heavy_sniper/mag_out/irons_up",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_irons_front_up",
-            "part": "body",
-            "offset": [
-             8.0,
-             8.938,
-             4.0
-            ]
-           }
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/heavy_sniper/mag_out/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_front_down",
+              "part": "body",
+              "offset": [
+               8.0,
+               8.938,
+               4.0
+              ]
+             }
+            },
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/heavy_sniper/mag_out/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_rear_down",
+              "part": "body",
+              "offset": [
+               8.0,
+               8.938,
+               16.4
+              ]
+             }
+            }
+           ]
           },
           {
            "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/heavy_sniper/mag_out/irons_up",
+           "base": "zomboidcraft:item/weapon/heavy_sniper/mag_out/long_scope",
            "model": {
             "type": "zomboidcraft:mesh",
-            "id": "att_irons_rear_up",
+            "id": "own_long_scope",
             "part": "body",
             "offset": [
-             8.0,
+             8.002,
              8.938,
-             16.4
+             11.761
             ]
            }
           }
@@ -2405,30 +2443,49 @@
          "type": "minecraft:composite",
          "models": [
           {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/heavy_sniper/raised_mag_in/irons_up",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_irons_front_up",
-            "part": "body",
-            "offset": [
-             8.0,
-             8.938,
-             4.0
-            ]
-           }
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/heavy_sniper/raised_mag_in/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_front_down",
+              "part": "body",
+              "offset": [
+               8.0,
+               8.938,
+               4.0
+              ]
+             }
+            },
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/heavy_sniper/raised_mag_in/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_rear_down",
+              "part": "body",
+              "offset": [
+               8.0,
+               8.938,
+               16.4
+              ]
+             }
+            }
+           ]
           },
           {
            "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/heavy_sniper/raised_mag_in/irons_up",
+           "base": "zomboidcraft:item/weapon/heavy_sniper/raised_mag_in/long_scope",
            "model": {
             "type": "zomboidcraft:mesh",
-            "id": "att_irons_rear_up",
+            "id": "own_long_scope",
             "part": "body",
             "offset": [
-             8.0,
+             8.002,
              8.938,
-             16.4
+             11.761
             ]
            }
           }
@@ -3322,30 +3379,49 @@
          "type": "minecraft:composite",
          "models": [
           {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/heavy_sniper/mag_in/irons_up",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_irons_front_up",
-            "part": "body",
-            "offset": [
-             8.0,
-             8.938,
-             4.0
-            ]
-           }
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/heavy_sniper/mag_in/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_front_down",
+              "part": "body",
+              "offset": [
+               8.0,
+               8.938,
+               4.0
+              ]
+             }
+            },
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/heavy_sniper/mag_in/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_rear_down",
+              "part": "body",
+              "offset": [
+               8.0,
+               8.938,
+               16.4
+              ]
+             }
+            }
+           ]
           },
           {
            "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/heavy_sniper/mag_in/irons_up",
+           "base": "zomboidcraft:item/weapon/heavy_sniper/mag_in/long_scope",
            "model": {
             "type": "zomboidcraft:mesh",
-            "id": "att_irons_rear_up",
+            "id": "own_long_scope",
             "part": "body",
             "offset": [
-             8.0,
+             8.002,
              8.938,
-             16.4
+             11.761
             ]
            }
           }
@@ -4246,30 +4322,49 @@
          "type": "minecraft:composite",
          "models": [
           {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/heavy_sniper/raised_charge/irons_up",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_irons_front_up",
-            "part": "body",
-            "offset": [
-             8.0,
-             8.938,
-             4.0
-            ]
-           }
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/heavy_sniper/raised_charge/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_front_down",
+              "part": "body",
+              "offset": [
+               8.0,
+               8.938,
+               4.0
+              ]
+             }
+            },
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/heavy_sniper/raised_charge/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_rear_down",
+              "part": "body",
+              "offset": [
+               8.0,
+               8.938,
+               16.4
+              ]
+             }
+            }
+           ]
           },
           {
            "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/heavy_sniper/raised_charge/irons_up",
+           "base": "zomboidcraft:item/weapon/heavy_sniper/raised_charge/long_scope",
            "model": {
             "type": "zomboidcraft:mesh",
-            "id": "att_irons_rear_up",
+            "id": "own_long_scope",
             "part": "body",
             "offset": [
-             8.0,
+             8.002,
              8.938,
-             16.4
+             11.761
             ]
            }
           }
@@ -5163,30 +5258,49 @@
          "type": "minecraft:composite",
          "models": [
           {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/heavy_sniper/charge/irons_up",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_irons_front_up",
-            "part": "body",
-            "offset": [
-             8.0,
-             8.938,
-             4.0
-            ]
-           }
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/heavy_sniper/charge/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_front_down",
+              "part": "body",
+              "offset": [
+               8.0,
+               8.938,
+               4.0
+              ]
+             }
+            },
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/heavy_sniper/charge/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_rear_down",
+              "part": "body",
+              "offset": [
+               8.0,
+               8.938,
+               16.4
+              ]
+             }
+            }
+           ]
           },
           {
            "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/heavy_sniper/charge/irons_up",
+           "base": "zomboidcraft:item/weapon/heavy_sniper/charge/long_scope",
            "model": {
             "type": "zomboidcraft:mesh",
-            "id": "att_irons_rear_up",
+            "id": "own_long_scope",
             "part": "body",
             "offset": [
-             8.0,
+             8.002,
              8.938,
-             16.4
+             11.761
             ]
            }
           }
@@ -9552,30 +9666,49 @@
         "type": "minecraft:composite",
         "models": [
          {
-          "type": "minecraft:special",
-          "base": "zomboidcraft:item/weapon/heavy_sniper/ads/irons_up",
-          "model": {
-           "type": "zomboidcraft:mesh",
-           "id": "att_irons_front_up",
-           "part": "body",
-           "offset": [
-            8.0,
-            8.938,
-            4.0
-           ]
-          }
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/heavy_sniper/ads/irons_folded",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_irons_front_down",
+             "part": "body",
+             "offset": [
+              8.0,
+              8.938,
+              4.0
+             ]
+            }
+           },
+           {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/heavy_sniper/ads/irons_folded",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_irons_rear_down",
+             "part": "body",
+             "offset": [
+              8.0,
+              8.938,
+              16.4
+             ]
+            }
+           }
+          ]
          },
          {
           "type": "minecraft:special",
-          "base": "zomboidcraft:item/weapon/heavy_sniper/ads/irons_up",
+          "base": "zomboidcraft:item/weapon/heavy_sniper/ads/long_scope",
           "model": {
            "type": "zomboidcraft:mesh",
-           "id": "att_irons_rear_up",
+           "id": "own_long_scope",
            "part": "body",
            "offset": [
-            8.0,
+            8.002,
             8.938,
-            16.4
+            11.761
            ]
           }
          }
@@ -10473,30 +10606,49 @@
         "type": "minecraft:composite",
         "models": [
          {
-          "type": "minecraft:special",
-          "base": "zomboidcraft:item/weapon/heavy_sniper/raised_hip/irons_up",
-          "model": {
-           "type": "zomboidcraft:mesh",
-           "id": "att_irons_front_up",
-           "part": "body",
-           "offset": [
-            8.0,
-            8.938,
-            4.0
-           ]
-          }
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/heavy_sniper/raised_hip/irons_folded",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_irons_front_down",
+             "part": "body",
+             "offset": [
+              8.0,
+              8.938,
+              4.0
+             ]
+            }
+           },
+           {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/heavy_sniper/raised_hip/irons_folded",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_irons_rear_down",
+             "part": "body",
+             "offset": [
+              8.0,
+              8.938,
+              16.4
+             ]
+            }
+           }
+          ]
          },
          {
           "type": "minecraft:special",
-          "base": "zomboidcraft:item/weapon/heavy_sniper/raised_hip/irons_up",
+          "base": "zomboidcraft:item/weapon/heavy_sniper/raised_hip/long_scope",
           "model": {
            "type": "zomboidcraft:mesh",
-           "id": "att_irons_rear_up",
+           "id": "own_long_scope",
            "part": "body",
            "offset": [
-            8.0,
+            8.002,
             8.938,
-            16.4
+            11.761
            ]
           }
          }
@@ -11390,30 +11542,49 @@
         "type": "minecraft:composite",
         "models": [
          {
-          "type": "minecraft:special",
-          "base": "zomboidcraft:item/weapon/heavy_sniper/hip/irons_up",
-          "model": {
-           "type": "zomboidcraft:mesh",
-           "id": "att_irons_front_up",
-           "part": "body",
-           "offset": [
-            8.0,
-            8.938,
-            4.0
-           ]
-          }
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/heavy_sniper/hip/irons_folded",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_irons_front_down",
+             "part": "body",
+             "offset": [
+              8.0,
+              8.938,
+              4.0
+             ]
+            }
+           },
+           {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/heavy_sniper/hip/irons_folded",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_irons_rear_down",
+             "part": "body",
+             "offset": [
+              8.0,
+              8.938,
+              16.4
+             ]
+            }
+           }
+          ]
          },
          {
           "type": "minecraft:special",
-          "base": "zomboidcraft:item/weapon/heavy_sniper/hip/irons_up",
+          "base": "zomboidcraft:item/weapon/heavy_sniper/hip/long_scope",
           "model": {
            "type": "zomboidcraft:mesh",
-           "id": "att_irons_rear_up",
+           "id": "own_long_scope",
            "part": "body",
            "offset": [
-            8.0,
+            8.002,
             8.938,
-            16.4
+            11.761
            ]
           }
          }

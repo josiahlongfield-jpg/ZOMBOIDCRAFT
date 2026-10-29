@@ -682,14 +682,15 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
                 else:
                     cases = {k: composite([down, r(k)]) for k in s.fits}
                     cases['none'] = up
-                    entries.append(select('optic', cases, up))
+                    # a gun whose stack says nothing has what it came with
+                    entries.append(select('optic', cases, cases[s.default] if s.default else up))
             elif slot_name == 'muzzle':
                 # a suppressor shrinks the flash to a small one at the end of its can
                 cases = {k: composite([r(k), flash_entry(r('muzzle_flash_quiet' if 'suppressor' in k else 'muzzle_flash'))])
                          for k in s.fits}
                 bare = flash_entry(r('muzzle_flash'))
                 cases['none'] = bare
-                entries.append(select('muzzle', cases, bare))
+                entries.append(select('muzzle', cases, cases[s.default] if s.default else bare))
             elif slot_name == 'magazine':
                 if base_st == 'mag_out':
                     continue    # first person draws the old magazine falling away and the new one coming up

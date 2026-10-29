@@ -412,6 +412,16 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
 
     // ---- the item model's view ----
 
+    /** Writes the model data of a gun that has none yet (straight from a command or the creative tab), so it's
+     * drawn with what it comes with. Returns true if it did. */
+    public static boolean ensureModel(ItemStack gun) {
+        if (!isModular(gun) || gun.has(DataComponents.CUSTOM_MODEL_DATA)) {
+            return false;
+        }
+        refreshModel(gun);
+        return true;
+    }
+
     /** Rewrites the part keys in the gun's model data, keeping the reload step and flash numbers. */
     public static void refreshModel(ItemStack gun) {
         CustomModelData old = gun.get(DataComponents.CUSTOM_MODEL_DATA);

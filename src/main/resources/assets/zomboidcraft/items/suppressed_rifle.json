@@ -230,7 +230,26 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:empty"
+         "type": "minecraft:composite",
+         "models": [
+          {
+           "type": "minecraft:empty"
+          },
+          {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/suppressed_rifle/raised_mag_out/rifle_optic",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "own_rifle_optic",
+            "part": "body",
+            "offset": [
+             7.823,
+             8.961,
+             15.183
+            ]
+           }
+          }
+         ]
         }
        },
        {
@@ -324,7 +343,8 @@
              6.95,
              7.6
             ],
-            "roll": 180
+            "roll": 180,
+            "scale": 0.6
            }
           }
          },
@@ -688,7 +708,26 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:empty"
+         "type": "minecraft:composite",
+         "models": [
+          {
+           "type": "minecraft:empty"
+          },
+          {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/suppressed_rifle/mag_out/rifle_optic",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "own_rifle_optic",
+            "part": "body",
+            "offset": [
+             7.823,
+             8.961,
+             15.183
+            ]
+           }
+          }
+         ]
         }
        },
        {
@@ -782,7 +821,8 @@
              6.95,
              7.6
             ],
-            "roll": 180
+            "roll": 180,
+            "scale": 0.6
            }
           }
          },
@@ -1153,7 +1193,26 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:empty"
+         "type": "minecraft:composite",
+         "models": [
+          {
+           "type": "minecraft:empty"
+          },
+          {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/suppressed_rifle/raised_mag_in/rifle_optic",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "own_rifle_optic",
+            "part": "body",
+            "offset": [
+             7.823,
+             8.961,
+             15.183
+            ]
+           }
+          }
+         ]
         }
        },
        {
@@ -1247,7 +1306,8 @@
              6.95,
              7.6
             ],
-            "roll": 180
+            "roll": 180,
+            "scale": 0.6
            }
           }
          },
@@ -1645,7 +1705,26 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:empty"
+         "type": "minecraft:composite",
+         "models": [
+          {
+           "type": "minecraft:empty"
+          },
+          {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/suppressed_rifle/mag_in/rifle_optic",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "own_rifle_optic",
+            "part": "body",
+            "offset": [
+             7.823,
+             8.961,
+             15.183
+            ]
+           }
+          }
+         ]
         }
        },
        {
@@ -1739,7 +1818,8 @@
              6.95,
              7.6
             ],
-            "roll": 180
+            "roll": 180,
+            "scale": 0.6
            }
           }
          },
@@ -2144,7 +2224,26 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:empty"
+         "type": "minecraft:composite",
+         "models": [
+          {
+           "type": "minecraft:empty"
+          },
+          {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/suppressed_rifle/raised_charge/rifle_optic",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "own_rifle_optic",
+            "part": "body",
+            "offset": [
+             7.823,
+             8.961,
+             15.183
+            ]
+           }
+          }
+         ]
         }
        },
        {
@@ -2238,7 +2337,8 @@
              6.95,
              7.6
             ],
-            "roll": 180
+            "roll": 180,
+            "scale": 0.6
            }
           }
          },
@@ -2636,7 +2736,26 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:empty"
+         "type": "minecraft:composite",
+         "models": [
+          {
+           "type": "minecraft:empty"
+          },
+          {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/suppressed_rifle/charge/rifle_optic",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "own_rifle_optic",
+            "part": "body",
+            "offset": [
+             7.823,
+             8.961,
+             15.183
+            ]
+           }
+          }
+         ]
         }
        },
        {
@@ -2730,7 +2849,8 @@
              6.95,
              7.6
             ],
-            "roll": 180
+            "roll": 180,
+            "scale": 0.6
            }
           }
          },
@@ -3066,7 +3186,8 @@
               6.95,
               7.6
              ],
-             "roll": 180
+             "roll": 180,
+             "scale": 0.6
             }
            }
           },
@@ -3392,7 +3513,8 @@
               6.95,
               7.6
              ],
-             "roll": 180
+             "roll": 180,
+             "scale": 0.6
             }
            }
           },
@@ -3718,7 +3840,8 @@
               6.95,
               7.6
              ],
-             "roll": 180
+             "roll": 180,
+             "scale": 0.6
             }
            }
           },
@@ -4044,7 +4167,8 @@
               6.95,
               7.6
              ],
-             "roll": 180
+             "roll": 180,
+             "scale": 0.6
             }
            }
           },
@@ -4370,7 +4494,8 @@
               6.95,
               7.6
              ],
-             "roll": 180
+             "roll": 180,
+             "scale": 0.6
             }
            }
           },
@@ -4696,7 +4821,8 @@
               6.95,
               7.6
              ],
-             "roll": 180
+             "roll": 180,
+             "scale": 0.6
             }
            }
           },
@@ -5022,7 +5148,8 @@
               6.95,
               7.6
              ],
-             "roll": 180
+             "roll": 180,
+             "scale": 0.6
             }
            }
           },
@@ -5422,7 +5549,26 @@
         }
        ],
        "fallback": {
-        "type": "minecraft:empty"
+        "type": "minecraft:composite",
+        "models": [
+         {
+          "type": "minecraft:empty"
+         },
+         {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/suppressed_rifle/ads/rifle_optic",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "own_rifle_optic",
+           "part": "body",
+           "offset": [
+            7.823,
+            8.961,
+            15.183
+           ]
+          }
+         }
+        ]
        }
       },
       {
@@ -5516,7 +5662,8 @@
             6.95,
             7.6
            ],
-           "roll": 180
+           "roll": 180,
+           "scale": 0.6
           }
          }
         },
@@ -5918,7 +6065,26 @@
         }
        ],
        "fallback": {
-        "type": "minecraft:empty"
+        "type": "minecraft:composite",
+        "models": [
+         {
+          "type": "minecraft:empty"
+         },
+         {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/suppressed_rifle/raised_hip/rifle_optic",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "own_rifle_optic",
+           "part": "body",
+           "offset": [
+            7.823,
+            8.961,
+            15.183
+           ]
+          }
+         }
+        ]
        }
       },
       {
@@ -6012,7 +6178,8 @@
             6.95,
             7.6
            ],
-           "roll": 180
+           "roll": 180,
+           "scale": 0.6
           }
          }
         },
@@ -6410,7 +6577,26 @@
         }
        ],
        "fallback": {
-        "type": "minecraft:empty"
+        "type": "minecraft:composite",
+        "models": [
+         {
+          "type": "minecraft:empty"
+         },
+         {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/suppressed_rifle/hip/rifle_optic",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "own_rifle_optic",
+           "part": "body",
+           "offset": [
+            7.823,
+            8.961,
+            15.183
+           ]
+          }
+         }
+        ]
        }
       },
       {
@@ -6504,7 +6690,8 @@
             6.95,
             7.6
            ],
-           "roll": 180
+           "roll": 180,
+           "scale": 0.6
           }
          }
         },

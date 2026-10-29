@@ -638,30 +638,49 @@
          "type": "minecraft:composite",
          "models": [
           {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/precision_rifle/raised_mag_out/irons_up",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_irons_front_up",
-            "part": "body",
-            "offset": [
-             7.74,
-             8.626,
-             -1.5
-            ]
-           }
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/precision_rifle/raised_mag_out/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_front_down",
+              "part": "body",
+              "offset": [
+               7.74,
+               8.626,
+               -1.5
+              ]
+             }
+            },
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/precision_rifle/raised_mag_out/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_rear_down",
+              "part": "body",
+              "offset": [
+               7.74,
+               8.626,
+               14.5
+              ]
+             }
+            }
+           ]
           },
           {
            "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/precision_rifle/raised_mag_out/irons_up",
+           "base": "zomboidcraft:item/weapon/precision_rifle/raised_mag_out/precision_scope",
            "model": {
             "type": "zomboidcraft:mesh",
-            "id": "att_irons_rear_up",
+            "id": "own_precision_scope",
             "part": "body",
             "offset": [
-             7.74,
+             7.736,
              8.626,
-             14.5
+             11.844
             ]
            }
           }
@@ -1527,30 +1546,49 @@
          "type": "minecraft:composite",
          "models": [
           {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/precision_rifle/mag_out/irons_up",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_irons_front_up",
-            "part": "body",
-            "offset": [
-             7.74,
-             8.626,
-             -1.5
-            ]
-           }
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/precision_rifle/mag_out/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_front_down",
+              "part": "body",
+              "offset": [
+               7.74,
+               8.626,
+               -1.5
+              ]
+             }
+            },
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/precision_rifle/mag_out/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_rear_down",
+              "part": "body",
+              "offset": [
+               7.74,
+               8.626,
+               14.5
+              ]
+             }
+            }
+           ]
           },
           {
            "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/precision_rifle/mag_out/irons_up",
+           "base": "zomboidcraft:item/weapon/precision_rifle/mag_out/precision_scope",
            "model": {
             "type": "zomboidcraft:mesh",
-            "id": "att_irons_rear_up",
+            "id": "own_precision_scope",
             "part": "body",
             "offset": [
-             7.74,
+             7.736,
              8.626,
-             14.5
+             11.844
             ]
            }
           }
@@ -2423,30 +2461,49 @@
          "type": "minecraft:composite",
          "models": [
           {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/precision_rifle/raised_mag_in/irons_up",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_irons_front_up",
-            "part": "body",
-            "offset": [
-             7.74,
-             8.626,
-             -1.5
-            ]
-           }
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/precision_rifle/raised_mag_in/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_front_down",
+              "part": "body",
+              "offset": [
+               7.74,
+               8.626,
+               -1.5
+              ]
+             }
+            },
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/precision_rifle/raised_mag_in/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_rear_down",
+              "part": "body",
+              "offset": [
+               7.74,
+               8.626,
+               14.5
+              ]
+             }
+            }
+           ]
           },
           {
            "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/precision_rifle/raised_mag_in/irons_up",
+           "base": "zomboidcraft:item/weapon/precision_rifle/raised_mag_in/precision_scope",
            "model": {
             "type": "zomboidcraft:mesh",
-            "id": "att_irons_rear_up",
+            "id": "own_precision_scope",
             "part": "body",
             "offset": [
-             7.74,
+             7.736,
              8.626,
-             14.5
+             11.844
             ]
            }
           }
@@ -3346,30 +3403,49 @@
          "type": "minecraft:composite",
          "models": [
           {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/precision_rifle/mag_in/irons_up",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_irons_front_up",
-            "part": "body",
-            "offset": [
-             7.74,
-             8.626,
-             -1.5
-            ]
-           }
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/precision_rifle/mag_in/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_front_down",
+              "part": "body",
+              "offset": [
+               7.74,
+               8.626,
+               -1.5
+              ]
+             }
+            },
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/precision_rifle/mag_in/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_rear_down",
+              "part": "body",
+              "offset": [
+               7.74,
+               8.626,
+               14.5
+              ]
+             }
+            }
+           ]
           },
           {
            "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/precision_rifle/mag_in/irons_up",
+           "base": "zomboidcraft:item/weapon/precision_rifle/mag_in/precision_scope",
            "model": {
             "type": "zomboidcraft:mesh",
-            "id": "att_irons_rear_up",
+            "id": "own_precision_scope",
             "part": "body",
             "offset": [
-             7.74,
+             7.736,
              8.626,
-             14.5
+             11.844
             ]
            }
           }
@@ -4276,30 +4352,49 @@
          "type": "minecraft:composite",
          "models": [
           {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/precision_rifle/raised_charge/irons_up",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_irons_front_up",
-            "part": "body",
-            "offset": [
-             7.74,
-             8.626,
-             -1.5
-            ]
-           }
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/precision_rifle/raised_charge/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_front_down",
+              "part": "body",
+              "offset": [
+               7.74,
+               8.626,
+               -1.5
+              ]
+             }
+            },
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/precision_rifle/raised_charge/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_rear_down",
+              "part": "body",
+              "offset": [
+               7.74,
+               8.626,
+               14.5
+              ]
+             }
+            }
+           ]
           },
           {
            "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/precision_rifle/raised_charge/irons_up",
+           "base": "zomboidcraft:item/weapon/precision_rifle/raised_charge/precision_scope",
            "model": {
             "type": "zomboidcraft:mesh",
-            "id": "att_irons_rear_up",
+            "id": "own_precision_scope",
             "part": "body",
             "offset": [
-             7.74,
+             7.736,
              8.626,
-             14.5
+             11.844
             ]
            }
           }
@@ -5199,30 +5294,49 @@
          "type": "minecraft:composite",
          "models": [
           {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/precision_rifle/charge/irons_up",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_irons_front_up",
-            "part": "body",
-            "offset": [
-             7.74,
-             8.626,
-             -1.5
-            ]
-           }
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/precision_rifle/charge/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_front_down",
+              "part": "body",
+              "offset": [
+               7.74,
+               8.626,
+               -1.5
+              ]
+             }
+            },
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/precision_rifle/charge/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_rear_down",
+              "part": "body",
+              "offset": [
+               7.74,
+               8.626,
+               14.5
+              ]
+             }
+            }
+           ]
           },
           {
            "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/precision_rifle/charge/irons_up",
+           "base": "zomboidcraft:item/weapon/precision_rifle/charge/precision_scope",
            "model": {
             "type": "zomboidcraft:mesh",
-            "id": "att_irons_rear_up",
+            "id": "own_precision_scope",
             "part": "body",
             "offset": [
-             7.74,
+             7.736,
              8.626,
-             14.5
+             11.844
             ]
            }
           }
@@ -9654,30 +9768,49 @@
         "type": "minecraft:composite",
         "models": [
          {
-          "type": "minecraft:special",
-          "base": "zomboidcraft:item/weapon/precision_rifle/ads/irons_up",
-          "model": {
-           "type": "zomboidcraft:mesh",
-           "id": "att_irons_front_up",
-           "part": "body",
-           "offset": [
-            7.74,
-            8.626,
-            -1.5
-           ]
-          }
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/precision_rifle/ads/irons_folded",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_irons_front_down",
+             "part": "body",
+             "offset": [
+              7.74,
+              8.626,
+              -1.5
+             ]
+            }
+           },
+           {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/precision_rifle/ads/irons_folded",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_irons_rear_down",
+             "part": "body",
+             "offset": [
+              7.74,
+              8.626,
+              14.5
+             ]
+            }
+           }
+          ]
          },
          {
           "type": "minecraft:special",
-          "base": "zomboidcraft:item/weapon/precision_rifle/ads/irons_up",
+          "base": "zomboidcraft:item/weapon/precision_rifle/ads/precision_scope",
           "model": {
            "type": "zomboidcraft:mesh",
-           "id": "att_irons_rear_up",
+           "id": "own_precision_scope",
            "part": "body",
            "offset": [
-            7.74,
+            7.736,
             8.626,
-            14.5
+            11.844
            ]
           }
          }
@@ -10581,30 +10714,49 @@
         "type": "minecraft:composite",
         "models": [
          {
-          "type": "minecraft:special",
-          "base": "zomboidcraft:item/weapon/precision_rifle/raised_hip/irons_up",
-          "model": {
-           "type": "zomboidcraft:mesh",
-           "id": "att_irons_front_up",
-           "part": "body",
-           "offset": [
-            7.74,
-            8.626,
-            -1.5
-           ]
-          }
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/precision_rifle/raised_hip/irons_folded",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_irons_front_down",
+             "part": "body",
+             "offset": [
+              7.74,
+              8.626,
+              -1.5
+             ]
+            }
+           },
+           {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/precision_rifle/raised_hip/irons_folded",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_irons_rear_down",
+             "part": "body",
+             "offset": [
+              7.74,
+              8.626,
+              14.5
+             ]
+            }
+           }
+          ]
          },
          {
           "type": "minecraft:special",
-          "base": "zomboidcraft:item/weapon/precision_rifle/raised_hip/irons_up",
+          "base": "zomboidcraft:item/weapon/precision_rifle/raised_hip/precision_scope",
           "model": {
            "type": "zomboidcraft:mesh",
-           "id": "att_irons_rear_up",
+           "id": "own_precision_scope",
            "part": "body",
            "offset": [
-            7.74,
+            7.736,
             8.626,
-            14.5
+            11.844
            ]
           }
          }
@@ -11504,30 +11656,49 @@
         "type": "minecraft:composite",
         "models": [
          {
-          "type": "minecraft:special",
-          "base": "zomboidcraft:item/weapon/precision_rifle/hip/irons_up",
-          "model": {
-           "type": "zomboidcraft:mesh",
-           "id": "att_irons_front_up",
-           "part": "body",
-           "offset": [
-            7.74,
-            8.626,
-            -1.5
-           ]
-          }
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/precision_rifle/hip/irons_folded",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_irons_front_down",
+             "part": "body",
+             "offset": [
+              7.74,
+              8.626,
+              -1.5
+             ]
+            }
+           },
+           {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/precision_rifle/hip/irons_folded",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_irons_rear_down",
+             "part": "body",
+             "offset": [
+              7.74,
+              8.626,
+              14.5
+             ]
+            }
+           }
+          ]
          },
          {
           "type": "minecraft:special",
-          "base": "zomboidcraft:item/weapon/precision_rifle/hip/irons_up",
+          "base": "zomboidcraft:item/weapon/precision_rifle/hip/precision_scope",
           "model": {
            "type": "zomboidcraft:mesh",
-           "id": "att_irons_rear_up",
+           "id": "own_precision_scope",
            "part": "body",
            "offset": [
-            7.74,
+            7.736,
             8.626,
-            14.5
+            11.844
            ]
           }
          }

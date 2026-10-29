@@ -418,30 +418,49 @@
          "type": "minecraft:composite",
          "models": [
           {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/crossbow/raised_mag_out/irons_up",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_irons_front_up",
-            "part": "body",
-            "offset": [
-             8.0,
-             8.246,
-             4.0
-            ]
-           }
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/crossbow/raised_mag_out/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_front_down",
+              "part": "body",
+              "offset": [
+               8.0,
+               8.246,
+               4.0
+              ]
+             }
+            },
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/crossbow/raised_mag_out/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_rear_down",
+              "part": "body",
+              "offset": [
+               8.0,
+               8.246,
+               14.0
+              ]
+             }
+            }
+           ]
           },
           {
            "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/crossbow/raised_mag_out/irons_up",
+           "base": "zomboidcraft:item/weapon/crossbow/raised_mag_out/crossbow_scope",
            "model": {
             "type": "zomboidcraft:mesh",
-            "id": "att_irons_rear_up",
+            "id": "own_crossbow_scope",
             "part": "body",
             "offset": [
              8.0,
              8.246,
-             14.0
+             14.671
             ]
            }
           }
@@ -859,30 +878,49 @@
          "type": "minecraft:composite",
          "models": [
           {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/crossbow/mag_out/irons_up",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_irons_front_up",
-            "part": "body",
-            "offset": [
-             8.0,
-             8.246,
-             4.0
-            ]
-           }
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/crossbow/mag_out/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_front_down",
+              "part": "body",
+              "offset": [
+               8.0,
+               8.246,
+               4.0
+              ]
+             }
+            },
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/crossbow/mag_out/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_rear_down",
+              "part": "body",
+              "offset": [
+               8.0,
+               8.246,
+               14.0
+              ]
+             }
+            }
+           ]
           },
           {
            "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/crossbow/mag_out/irons_up",
+           "base": "zomboidcraft:item/weapon/crossbow/mag_out/crossbow_scope",
            "model": {
             "type": "zomboidcraft:mesh",
-            "id": "att_irons_rear_up",
+            "id": "own_crossbow_scope",
             "part": "body",
             "offset": [
              8.0,
              8.246,
-             14.0
+             14.671
             ]
            }
           }
@@ -1307,30 +1345,49 @@
          "type": "minecraft:composite",
          "models": [
           {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/crossbow/raised_mag_in/irons_up",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_irons_front_up",
-            "part": "body",
-            "offset": [
-             8.0,
-             8.246,
-             4.0
-            ]
-           }
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/crossbow/raised_mag_in/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_front_down",
+              "part": "body",
+              "offset": [
+               8.0,
+               8.246,
+               4.0
+              ]
+             }
+            },
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/crossbow/raised_mag_in/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_rear_down",
+              "part": "body",
+              "offset": [
+               8.0,
+               8.246,
+               14.0
+              ]
+             }
+            }
+           ]
           },
           {
            "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/crossbow/raised_mag_in/irons_up",
+           "base": "zomboidcraft:item/weapon/crossbow/raised_mag_in/crossbow_scope",
            "model": {
             "type": "zomboidcraft:mesh",
-            "id": "att_irons_rear_up",
+            "id": "own_crossbow_scope",
             "part": "body",
             "offset": [
              8.0,
              8.246,
-             14.0
+             14.671
             ]
            }
           }
@@ -1782,30 +1839,49 @@
          "type": "minecraft:composite",
          "models": [
           {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/crossbow/mag_in/irons_up",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_irons_front_up",
-            "part": "body",
-            "offset": [
-             8.0,
-             8.246,
-             4.0
-            ]
-           }
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/crossbow/mag_in/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_front_down",
+              "part": "body",
+              "offset": [
+               8.0,
+               8.246,
+               4.0
+              ]
+             }
+            },
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/crossbow/mag_in/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_rear_down",
+              "part": "body",
+              "offset": [
+               8.0,
+               8.246,
+               14.0
+              ]
+             }
+            }
+           ]
           },
           {
            "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/crossbow/mag_in/irons_up",
+           "base": "zomboidcraft:item/weapon/crossbow/mag_in/crossbow_scope",
            "model": {
             "type": "zomboidcraft:mesh",
-            "id": "att_irons_rear_up",
+            "id": "own_crossbow_scope",
             "part": "body",
             "offset": [
              8.0,
              8.246,
-             14.0
+             14.671
             ]
            }
           }
@@ -2264,30 +2340,49 @@
          "type": "minecraft:composite",
          "models": [
           {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/crossbow/raised_charge/irons_up",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_irons_front_up",
-            "part": "body",
-            "offset": [
-             8.0,
-             8.246,
-             4.0
-            ]
-           }
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/crossbow/raised_charge/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_front_down",
+              "part": "body",
+              "offset": [
+               8.0,
+               8.246,
+               4.0
+              ]
+             }
+            },
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/crossbow/raised_charge/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_rear_down",
+              "part": "body",
+              "offset": [
+               8.0,
+               8.246,
+               14.0
+              ]
+             }
+            }
+           ]
           },
           {
            "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/crossbow/raised_charge/irons_up",
+           "base": "zomboidcraft:item/weapon/crossbow/raised_charge/crossbow_scope",
            "model": {
             "type": "zomboidcraft:mesh",
-            "id": "att_irons_rear_up",
+            "id": "own_crossbow_scope",
             "part": "body",
             "offset": [
              8.0,
              8.246,
-             14.0
+             14.671
             ]
            }
           }
@@ -2739,30 +2834,49 @@
          "type": "minecraft:composite",
          "models": [
           {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/crossbow/charge/irons_up",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_irons_front_up",
-            "part": "body",
-            "offset": [
-             8.0,
-             8.246,
-             4.0
-            ]
-           }
+           "type": "minecraft:composite",
+           "models": [
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/crossbow/charge/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_front_down",
+              "part": "body",
+              "offset": [
+               8.0,
+               8.246,
+               4.0
+              ]
+             }
+            },
+            {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/crossbow/charge/irons_folded",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_irons_rear_down",
+              "part": "body",
+              "offset": [
+               8.0,
+               8.246,
+               14.0
+              ]
+             }
+            }
+           ]
           },
           {
            "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/crossbow/charge/irons_up",
+           "base": "zomboidcraft:item/weapon/crossbow/charge/crossbow_scope",
            "model": {
             "type": "zomboidcraft:mesh",
-            "id": "att_irons_rear_up",
+            "id": "own_crossbow_scope",
             "part": "body",
             "offset": [
              8.0,
              8.246,
-             14.0
+             14.671
             ]
            }
           }
@@ -3970,30 +4084,49 @@
         "type": "minecraft:composite",
         "models": [
          {
-          "type": "minecraft:special",
-          "base": "zomboidcraft:item/weapon/crossbow/ads/irons_up",
-          "model": {
-           "type": "zomboidcraft:mesh",
-           "id": "att_irons_front_up",
-           "part": "body",
-           "offset": [
-            8.0,
-            8.246,
-            4.0
-           ]
-          }
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/crossbow/ads/irons_folded",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_irons_front_down",
+             "part": "body",
+             "offset": [
+              8.0,
+              8.246,
+              4.0
+             ]
+            }
+           },
+           {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/crossbow/ads/irons_folded",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_irons_rear_down",
+             "part": "body",
+             "offset": [
+              8.0,
+              8.246,
+              14.0
+             ]
+            }
+           }
+          ]
          },
          {
           "type": "minecraft:special",
-          "base": "zomboidcraft:item/weapon/crossbow/ads/irons_up",
+          "base": "zomboidcraft:item/weapon/crossbow/ads/crossbow_scope",
           "model": {
            "type": "zomboidcraft:mesh",
-           "id": "att_irons_rear_up",
+           "id": "own_crossbow_scope",
            "part": "body",
            "offset": [
             8.0,
             8.246,
-            14.0
+            14.671
            ]
           }
          }
@@ -4449,30 +4582,49 @@
         "type": "minecraft:composite",
         "models": [
          {
-          "type": "minecraft:special",
-          "base": "zomboidcraft:item/weapon/crossbow/raised_hip/irons_up",
-          "model": {
-           "type": "zomboidcraft:mesh",
-           "id": "att_irons_front_up",
-           "part": "body",
-           "offset": [
-            8.0,
-            8.246,
-            4.0
-           ]
-          }
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/crossbow/raised_hip/irons_folded",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_irons_front_down",
+             "part": "body",
+             "offset": [
+              8.0,
+              8.246,
+              4.0
+             ]
+            }
+           },
+           {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/crossbow/raised_hip/irons_folded",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_irons_rear_down",
+             "part": "body",
+             "offset": [
+              8.0,
+              8.246,
+              14.0
+             ]
+            }
+           }
+          ]
          },
          {
           "type": "minecraft:special",
-          "base": "zomboidcraft:item/weapon/crossbow/raised_hip/irons_up",
+          "base": "zomboidcraft:item/weapon/crossbow/raised_hip/crossbow_scope",
           "model": {
            "type": "zomboidcraft:mesh",
-           "id": "att_irons_rear_up",
+           "id": "own_crossbow_scope",
            "part": "body",
            "offset": [
             8.0,
             8.246,
-            14.0
+            14.671
            ]
           }
          }
@@ -4924,30 +5076,49 @@
         "type": "minecraft:composite",
         "models": [
          {
-          "type": "minecraft:special",
-          "base": "zomboidcraft:item/weapon/crossbow/hip/irons_up",
-          "model": {
-           "type": "zomboidcraft:mesh",
-           "id": "att_irons_front_up",
-           "part": "body",
-           "offset": [
-            8.0,
-            8.246,
-            4.0
-           ]
-          }
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/crossbow/hip/irons_folded",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_irons_front_down",
+             "part": "body",
+             "offset": [
+              8.0,
+              8.246,
+              4.0
+             ]
+            }
+           },
+           {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/crossbow/hip/irons_folded",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_irons_rear_down",
+             "part": "body",
+             "offset": [
+              8.0,
+              8.246,
+              14.0
+             ]
+            }
+           }
+          ]
          },
          {
           "type": "minecraft:special",
-          "base": "zomboidcraft:item/weapon/crossbow/hip/irons_up",
+          "base": "zomboidcraft:item/weapon/crossbow/hip/crossbow_scope",
           "model": {
            "type": "zomboidcraft:mesh",
-           "id": "att_irons_rear_up",
+           "id": "own_crossbow_scope",
            "part": "body",
            "offset": [
             8.0,
             8.246,
-            14.0
+            14.671
            ]
           }
          }

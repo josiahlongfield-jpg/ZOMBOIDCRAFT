@@ -236,13 +236,26 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:special",
-         "base": "zomboidcraft:item/weapon/battle_rifle/raised_mag_out/irons_up",
-         "model": {
-          "type": "zomboidcraft:mesh",
-          "id": "pbr_battle_rifle",
-          "part": "rear_sight"
-         }
+         "type": "minecraft:composite",
+         "models": [
+          {
+           "type": "minecraft:empty"
+          },
+          {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/battle_rifle/raised_mag_out/combat_scope",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "own_combat_scope",
+            "part": "body",
+            "offset": [
+             7.936,
+             9.596,
+             11.958
+            ]
+           }
+          }
+         ]
         }
        },
        {
@@ -464,7 +477,8 @@
              7.55,
              4.6
             ],
-            "roll": 180
+            "roll": 180,
+            "scale": 0.6
            }
           }
          },
@@ -879,13 +893,26 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:special",
-         "base": "zomboidcraft:item/weapon/battle_rifle/mag_out/irons_up",
-         "model": {
-          "type": "zomboidcraft:mesh",
-          "id": "pbr_battle_rifle",
-          "part": "rear_sight"
-         }
+         "type": "minecraft:composite",
+         "models": [
+          {
+           "type": "minecraft:empty"
+          },
+          {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/battle_rifle/mag_out/combat_scope",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "own_combat_scope",
+            "part": "body",
+            "offset": [
+             7.936,
+             9.596,
+             11.958
+            ]
+           }
+          }
+         ]
         }
        },
        {
@@ -1107,7 +1134,8 @@
              7.55,
              4.6
             ],
-            "roll": 180
+            "roll": 180,
+            "scale": 0.6
            }
           }
          },
@@ -1529,13 +1557,26 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:special",
-         "base": "zomboidcraft:item/weapon/battle_rifle/raised_mag_in/irons_up",
-         "model": {
-          "type": "zomboidcraft:mesh",
-          "id": "pbr_battle_rifle",
-          "part": "rear_sight"
-         }
+         "type": "minecraft:composite",
+         "models": [
+          {
+           "type": "minecraft:empty"
+          },
+          {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/battle_rifle/raised_mag_in/combat_scope",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "own_combat_scope",
+            "part": "body",
+            "offset": [
+             7.936,
+             9.596,
+             11.958
+            ]
+           }
+          }
+         ]
         }
        },
        {
@@ -1757,7 +1798,8 @@
              7.55,
              4.6
             ],
-            "roll": 180
+            "roll": 180,
+            "scale": 0.6
            }
           }
          },
@@ -2206,13 +2248,26 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:special",
-         "base": "zomboidcraft:item/weapon/battle_rifle/mag_in/irons_up",
-         "model": {
-          "type": "zomboidcraft:mesh",
-          "id": "pbr_battle_rifle",
-          "part": "rear_sight"
-         }
+         "type": "minecraft:composite",
+         "models": [
+          {
+           "type": "minecraft:empty"
+          },
+          {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/battle_rifle/mag_in/combat_scope",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "own_combat_scope",
+            "part": "body",
+            "offset": [
+             7.936,
+             9.596,
+             11.958
+            ]
+           }
+          }
+         ]
         }
        },
        {
@@ -2434,7 +2489,8 @@
              7.55,
              4.6
             ],
-            "roll": 180
+            "roll": 180,
+            "scale": 0.6
            }
           }
          },
@@ -2890,13 +2946,26 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:special",
-         "base": "zomboidcraft:item/weapon/battle_rifle/raised_charge/irons_up",
-         "model": {
-          "type": "zomboidcraft:mesh",
-          "id": "pbr_battle_rifle",
-          "part": "rear_sight"
-         }
+         "type": "minecraft:composite",
+         "models": [
+          {
+           "type": "minecraft:empty"
+          },
+          {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/battle_rifle/raised_charge/combat_scope",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "own_combat_scope",
+            "part": "body",
+            "offset": [
+             7.936,
+             9.596,
+             11.958
+            ]
+           }
+          }
+         ]
         }
        },
        {
@@ -3118,7 +3187,8 @@
              7.55,
              4.6
             ],
-            "roll": 180
+            "roll": 180,
+            "scale": 0.6
            }
           }
          },
@@ -3567,13 +3637,26 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:special",
-         "base": "zomboidcraft:item/weapon/battle_rifle/charge/irons_up",
-         "model": {
-          "type": "zomboidcraft:mesh",
-          "id": "pbr_battle_rifle",
-          "part": "rear_sight"
-         }
+         "type": "minecraft:composite",
+         "models": [
+          {
+           "type": "minecraft:empty"
+          },
+          {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/battle_rifle/charge/combat_scope",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "own_combat_scope",
+            "part": "body",
+            "offset": [
+             7.936,
+             9.596,
+             11.958
+            ]
+           }
+          }
+         ]
         }
        },
        {
@@ -3795,7 +3878,8 @@
              7.55,
              4.6
             ],
-            "roll": 180
+            "roll": 180,
+            "scale": 0.6
            }
           }
          },
@@ -4257,13 +4341,26 @@
           }
          ],
          "fallback": {
-          "type": "minecraft:special",
-          "base": "zomboidcraft:item/weapon/battle_rifle/ads_magnified/irons_up",
-          "model": {
-           "type": "zomboidcraft:mesh",
-           "id": "pbr_battle_rifle",
-           "part": "rear_sight"
-          }
+          "type": "minecraft:composite",
+          "models": [
+           {
+            "type": "minecraft:empty"
+           },
+           {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/battle_rifle/ads_magnified/combat_scope",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "own_combat_scope",
+             "part": "body",
+             "offset": [
+              7.936,
+              9.596,
+              11.958
+             ]
+            }
+           }
+          ]
          }
         },
         {
@@ -4485,7 +4582,8 @@
               7.55,
               4.6
              ],
-             "roll": 180
+             "roll": 180,
+             "scale": 0.6
             }
            }
           },
@@ -4990,7 +5088,8 @@
                7.55,
                4.6
               ],
-              "roll": 180
+              "roll": 180,
+              "scale": 0.6
              }
             }
            },
@@ -5489,7 +5588,8 @@
                7.55,
                4.6
               ],
-              "roll": 180
+              "roll": 180,
+              "scale": 0.6
              }
             }
            },
@@ -5988,7 +6088,8 @@
                7.55,
                4.6
               ],
-              "roll": 180
+              "roll": 180,
+              "scale": 0.6
              }
             }
            },
@@ -6487,7 +6588,8 @@
                7.55,
                4.6
               ],
-              "roll": 180
+              "roll": 180,
+              "scale": 0.6
              }
             }
            },
@@ -6986,7 +7088,8 @@
                7.55,
                4.6
               ],
-              "roll": 180
+              "roll": 180,
+              "scale": 0.6
              }
             }
            },
@@ -7485,7 +7588,8 @@
                7.55,
                4.6
               ],
-              "roll": 180
+              "roll": 180,
+              "scale": 0.6
              }
             }
            },
@@ -7984,7 +8088,8 @@
                7.55,
                4.6
               ],
-              "roll": 180
+              "roll": 180,
+              "scale": 0.6
              }
             }
            },
@@ -8435,13 +8540,26 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:special",
-         "base": "zomboidcraft:item/weapon/battle_rifle/ads/irons_up",
-         "model": {
-          "type": "zomboidcraft:mesh",
-          "id": "pbr_battle_rifle",
-          "part": "rear_sight"
-         }
+         "type": "minecraft:composite",
+         "models": [
+          {
+           "type": "minecraft:empty"
+          },
+          {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/battle_rifle/ads/combat_scope",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "own_combat_scope",
+            "part": "body",
+            "offset": [
+             7.936,
+             9.596,
+             11.958
+            ]
+           }
+          }
+         ]
         }
        },
        {
@@ -8663,7 +8781,8 @@
              7.55,
              4.6
             ],
-            "roll": 180
+            "roll": 180,
+            "scale": 0.6
            }
           }
          },
@@ -9117,13 +9236,26 @@
         }
        ],
        "fallback": {
-        "type": "minecraft:special",
-        "base": "zomboidcraft:item/weapon/battle_rifle/raised_hip/irons_up",
-        "model": {
-         "type": "zomboidcraft:mesh",
-         "id": "pbr_battle_rifle",
-         "part": "rear_sight"
-        }
+        "type": "minecraft:composite",
+        "models": [
+         {
+          "type": "minecraft:empty"
+         },
+         {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/battle_rifle/raised_hip/combat_scope",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "own_combat_scope",
+           "part": "body",
+           "offset": [
+            7.936,
+            9.596,
+            11.958
+           ]
+          }
+         }
+        ]
        }
       },
       {
@@ -9345,7 +9477,8 @@
             7.55,
             4.6
            ],
-           "roll": 180
+           "roll": 180,
+           "scale": 0.6
           }
          }
         },
@@ -9794,13 +9927,26 @@
         }
        ],
        "fallback": {
-        "type": "minecraft:special",
-        "base": "zomboidcraft:item/weapon/battle_rifle/hip/irons_up",
-        "model": {
-         "type": "zomboidcraft:mesh",
-         "id": "pbr_battle_rifle",
-         "part": "rear_sight"
-        }
+        "type": "minecraft:composite",
+        "models": [
+         {
+          "type": "minecraft:empty"
+         },
+         {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/battle_rifle/hip/combat_scope",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "own_combat_scope",
+           "part": "body",
+           "offset": [
+            7.936,
+            9.596,
+            11.958
+           ]
+          }
+         }
+        ]
        }
       },
       {
@@ -10022,7 +10168,8 @@
             7.55,
             4.6
            ],
-           "roll": 180
+           "roll": 180,
+           "scale": 0.6
           }
          }
         },
