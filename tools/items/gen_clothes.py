@@ -547,6 +547,414 @@ GARMENTS = {
 }
 
 
+# ------------------------------------------------------------------ batch 2: headwear
+# Head pixels: the head is (-4,-8,-4)..(4,0,4), the front at -z. The eye row is y -4 to -3 (EYES_HIGH, EYES_LOW):
+# hats and helmets stop above it at the front, face pieces start below it, and anything that has to cross it
+# (a hockey mask, a gas mask, a full-face helmet) leaves the eyes open.
+HX = 4.0
+
+
+def ring(g, y0, y1, d, mat, t=0.4, part='head'):
+    """A band round the head, d out from it, t thick."""
+    a, b = HX + d, HX + d + t
+    g.box(part, (-b, y0, -b), (b, y1, -a), mat)
+    g.box(part, (-b, y0, a), (b, y1, b), mat)
+    g.box(part, (-b, y0, -a), (-a, y1, a), mat)
+    g.box(part, (a, y0, -a), (b, y1, a), mat)
+
+
+def dome(g, top, bottom, d, mat, steps=((0.0, 0.45), (0.55, 0.4), (1.3, 0.35))):
+    """A rounded shell: full width at the bottom, stepping in toward the top."""
+    y = bottom
+    rows = [(inset, h) for inset, h in steps]
+    body_top = top + sum(h for _, h in rows[1:])
+    g.box('head', (-HX - d, body_top, -HX - d), (HX + d, bottom, HX + d), mat)
+    y = body_top
+    for inset, h in rows[1:]:
+        g.box('head', (-HX - d + inset, y - h, -HX - d + inset), (HX + d - inset, y, HX + d - inset), mat)
+        y -= h
+
+
+def eye_open_front(g, z0, z1, y_top, y_bot, half, mat, port=(3.6, EYES_HIGH - 0.6, EYES_LOW + 0.4)):
+    """A face panel from y_top to y_bot across x -half..half at z0..z1, with a port left open over the eyes."""
+    px, py0, py1 = port
+    g.box('head', (-half, y_top, z0), (half, py0, z1), mat)
+    g.box('head', (-half, py1, z0), (half, y_bot, z1), mat)
+    g.box('head', (-half, py0, z0), (-px, py1, z1), mat)
+    g.box('head', (px, py0, z0), (half, py1, z1), mat)
+
+
+def build_trucker_cap(g):
+    d = 0.5
+    g.box('head', (-4 - d, -8 - d, -4 - d), (4 + d, -5.0, 0.4), 'foam')            # the foam front panels
+    g.box('head', (-4 - d, -8 - d, 0.4), (4 + d, -5.0, 4 + d), 'mesh')              # mesh back
+    g.box('head', (-3.6, -5.4, -8.4), (3.6, -4.95, -4 - d + 0.05), 'brim')
+    g.box('head', (-2.6, -5.5, -8.7), (2.6, -5.05, -8.3), 'brim')
+    g.box('head', (-0.55, -8 - d - 0.35, -0.55), (0.55, -8 - d, 0.55), 'mesh')
+    g.box('head', (-2.4, -7.9, -4 - d - 0.12), (2.4, -5.6, -4 - d), 'patch')
+    g.box('head', (-1.4, -6.4, 4 + d), (1.4, -5.0, 4 + d + 0.15), 'shadow')
+    g.box('head', (-1.6, -6.0, 4 + d + 0.08), (1.6, -5.6, 4 + d + 0.3), 'snap')
+
+
+def build_cowboy_hat(g):
+    d = 0.5
+    g.box('head', (-3.9, -10.6, -4.3), (3.9, -5.6, 4.3), 'felt')                    # the crown
+    g.box('head', (-0.5, -10.7, -3.6), (0.5, -9.8, 3.6), 'crease')                  # the centre crease
+    for s in (-1, 1):                                                               # front pinches
+        g.box('head', (s * 2.4 - 0.5, -10.4, -4.4), (s * 2.4 + 0.5, -8.6, -3.2), 'crease')
+    g.box('head', (-4.0, -6.6, -4.4), (4.0, -5.6, 4.4), 'band')                     # hat band
+    g.box('head', (-4.15, -6.5, -4.55), (-2.8, -5.7, -4.4), 'concho')
+    g.box('head', (-7.0, -5.6, -7.4), (7.0, -5.15, 7.4), 'felt')                    # wide brim
+    for s in (-1, 1):                                                               # rolled-up sides
+        g.box('head', (s * 6.2 - 0.8, -6.6, -6.4), (s * 6.2 + 0.8, -5.6, 6.4), 'felt')
+    g.box('head', (-5.6, -5.15, -7.5), (5.6, -4.95, -6.6), 'felt')                  # brim dips a touch at the front
+
+
+def build_bucket_hat(g):
+    d = 0.5
+    g.box('head', (-4 - d, -8 - d - 0.3, -4 - d), (4 + d, -5.2, 4 + d), 'cloth')
+    g.box('head', (-4 - d - 0.1, -6.2, -4 - d - 0.1), (4 + d + 0.1, -5.2, 4 + d + 0.1), 'band')
+    ring(g, -5.3, -4.8, d + 0.1, 'brim', t=1.4)                                    # the brim, sloping down
+    ring(g, -4.8, -4.25, d + 1.5, 'brim', t=0.5)
+    for s in (-1, 1):
+        g.box('head', (s * 2.6 - 0.25, -7.0, -4 - d - 0.08), (s * 2.6 + 0.25, -6.5, -4 - d), 'eyelet')
+
+
+def build_hard_hat(g):
+    d = 0.9
+    dome(g, -9.6, -5.3, d, 'shell', ((0, 0), (0.6, 0.5), (1.4, 0.4)))
+    g.box('head', (-0.6, -10.0, -4 - d - 0.2), (0.6, -9.0, 4 + d + 0.2), 'shell')    # the ridge front to back
+    ring(g, -5.6, -5.15, d, 'shell', t=0.45)                                        # rim
+    g.box('head', (-3.8, -5.6, -7.4), (3.8, -5.15, -4 - d), 'shell')                 # peak
+    g.box('head', (-2.2, -8.4, -4 - d - 0.1), (-0.8, -7.0, -4 - d), 'sticker')
+    g.box('head', (0.9, -8.0, -4 - d - 0.1), (2.4, -6.9, -4 - d), 'sticker2')
+    g.box('head', (-HX - 0.1, -5.3, -2.2), (HX + 0.1, -4.9, 2.2), 'harness')       # suspension band inside the rim
+
+
+def build_bike_helmet(g):
+    d = 0.8
+    g.box('head', (-4 - d, -9.0, -4 - d), (4 + d, -5.3, 4 + d + 0.6), 'shell')
+    g.box('head', (-3.8, -9.7, -3.6), (3.8, -9.0, 4.4), 'shell')
+    for x in (-2.4, -0.6, 1.2):                                                      # vents front to back
+        g.box('head', (x, -9.75, -3.0), (x + 1.0, -9.6, 3.8), 'vent')
+    for x in (-3.4, 2.6):
+        g.box('head', (x, -8.7, -4 - d - 0.05), (x + 0.8, -6.6, -4 - d + 0.1), 'vent')
+    g.box('head', (-3.4, -5.7, -6.4), (3.4, -5.35, -4 - d), 'visor')
+    g.box('head', (-4 - d, -5.6, -4 - d), (4 + d, -5.3, 4 + d + 0.6), 'trim')
+    for s in (-1, 1):                                                                # straps round the ears to the chin
+        x = s * (HX + 0.1) - (0.12 if s < 0 else 0)
+        g.box('head', (x, -5.3, -1.4), (x + 0.12, 0.2, -0.9), 'strap')
+        g.box('head', (x, -5.3, 1.0), (x + 0.12, -2.4, 1.5), 'strap')
+    g.box('head', (-1.2, 0.0, -1.4), (1.2, 0.3, -0.9), 'strap')
+    g.box('head', (-0.5, -0.05, -1.55), (0.5, 0.4, -0.75), 'buckle')
+
+
+def build_football_helmet(g):
+    d = 0.9
+    g.box('head', (-4 - d, -9.0, -4 - d), (4 + d, -4.15, 4 + d), 'shell')           # shell, its front edge over the eyes
+    g.box('head', (-3.8, -9.7, -3.8), (3.8, -9.0, 3.8), 'shell')
+    for s in (-1, 1):                                                                # sides down over the ears and jaw
+        x0, x1 = (-4 - d, -4 + 0.2) if s < 0 else (4 - 0.2, 4 + d)
+        g.box('head', (x0, -4.15, -2.6), (x1, -0.8, 4 + d), 'shell')
+        g.box('head', (x0 - 0.05, -4.0, -0.6), (x1 + 0.05, -2.4, 0.6), 'ear')        # ear hole
+    g.box('head', (-4 - d, -4.15, 2.6), (4 + d, -1.6, 4 + d), 'shell')              # back of the neck
+    g.box('head', (-0.6, -9.75, -4 - d - 0.05), (0.6, -4.2, 4 + d + 0.05), 'stripe')
+    # facemask: bars across below the eyes, two struts up to the shell
+    zf = -4 - d - 1.6
+    for y in (-2.7, -1.2, 0.2):
+        g.box('head', (-3.6, y, zf), (3.6, y + 0.35, zf + 0.35), 'cage')
+    for x in (-1.3, 1.0):
+        g.box('head', (x, -2.7, zf), (x + 0.3, 0.55, zf + 0.35), 'cage')
+    for s in (-1, 1):
+        x = s * 3.6 - (0.35 if s > 0 else 0)
+        g.box('head', (x, -4.4, zf), (x + 0.35, 0.55, zf + 0.35), 'cage')
+        g.box('head', (x, -4.4, zf), (x + 0.35, -4.05, -4 - d), 'cage')              # where the cage clips on
+    g.box('head', (-1.4, -0.8, -4 - d - 0.2), (1.4, 0.4, -4 - d + 0.2), 'chin')     # chin cup
+
+
+def build_hockey_mask(g):
+    z0, z1 = -4.58, -4.3
+    g.box('head', (-3.6, -7.8, z0), (3.6, EYES_HIGH - 0.15, z1), 'mask')             # forehead
+    g.box('head', (-3.6, EYES_HIGH - 0.15, z0), (-3.2, EYES_LOW + 0.15, z1), 'mask')  # round the eye holes
+    g.box('head', (-0.8, EYES_HIGH - 0.15, z0), (0.8, EYES_LOW + 0.15, z1), 'mask')
+    g.box('head', (3.2, EYES_HIGH - 0.15, z0), (3.6, EYES_LOW + 0.15, z1), 'mask')
+    g.box('head', (-3.6, EYES_LOW + 0.15, z0), (3.6, -0.6, z1), 'mask')             # cheeks and mouth
+    g.box('head', (-2.4, -0.6, z0), (2.4, 0.3, z1), 'mask')                         # chin
+    g.box('head', (-0.5, -5.9, z0 - 0.2), (0.5, -1.0, z0), 'mask')                  # the moulded nose ridge
+    for s in (-1, 1):                                                               # red chevrons on the brow
+        g.box('head', (s * 1.7 - 0.6, -7.2, z0 - 0.05), (s * 1.7 + 0.6, -6.6, z0 + 0.02), 'chevron')
+    for s in (-1, 1):                                                               # straps round the head
+        x = -4.32 if s < 0 else 4.2
+        g.box('head', (x, -6.4, z1), (x + 0.12, -5.8, 4.32), 'strap')
+        g.box('head', (x, -1.6, z1), (x + 0.12, -1.0, 4.32), 'strap')
+    g.box('head', (-4.32, -6.4, 4.2), (4.32, -5.8, 4.32), 'strap')
+    g.box('head', (-4.32, -1.6, 4.2), (4.32, -1.0, 4.32), 'strap')
+
+
+def build_motorcycle_helmet(g):
+    d = 1.1
+    g.box('head', (-4 - d, -9.2, -3.6), (4 + d, 0.8, 4 + d), 'shell')                # behind the face
+    g.box('head', (-3.9, -9.8, -3.6), (3.9, -9.2, 4.2), 'shell')
+    eye_open_front(g, -4 - d, -3.6, -9.2, 0.8, 4 + d, 'shell')                     # the front, its eye port open
+    g.box('head', (-2.4, -1.4, -4 - d - 0.3), (2.4, 0.6, -4 - d), 'shell')            # chin bar bulge
+    for x in (-1.6, -0.6, 0.4, 1.4):
+        g.box('head', (x, -0.9, -4 - d - 0.35), (x + 0.5, -0.4, -4 - d - 0.25), 'vent')
+    # the visor flipped up over the brow, with its pivots at the sides
+    g.box('head', (-4.0, -6.6, -4 - d - 0.5), (4.0, EYES_HIGH - 0.75, -4 - d - 0.15), 'visor')
+    for s in (-1, 1):
+        x = s * (HX + d) - (0.3 if s > 0 else 0)
+        g.box('head', (x, -4.9, -2.6), (x + 0.3, -3.6, -1.3), 'pivot')
+    g.box('head', (-0.5, -9.85, -3.6), (0.5, -9.2, 4.2), 'stripe')
+
+
+def build_police_cap(g):
+    g.box('head', (-4.45, -6.4, -4.45), (4.45, EYES_HIGH - 0.25, 4.45), 'cloth')     # band
+    g.box('head', (-5.3, -7.6, -5.6), (5.3, -6.4, 5.0), 'cloth')                    # the wide flat top
+    g.box('head', (-4.9, -7.9, -5.2), (4.9, -7.6, 4.6), 'cloth')
+    g.box('head', (-3.8, EYES_HIGH - 0.55, -7.0), (3.8, EYES_HIGH - 0.2, -4.45), 'visor')
+    g.box('head', (-3.9, -5.2, -4.62), (3.9, -4.95, -4.45), 'cord')                 # gold chin cord
+    for s in (-1, 1):
+        g.box('head', (s * 3.9 - 0.2, -5.3, -4.7), (s * 3.9 + 0.2, -4.85, -4.5), 'button')
+    g.box('head', (-0.9, -7.2, -5.7), (0.9, -5.4, -5.55), 'badge')
+    g.box('head', (-4.5, -5.0, -4.5), (4.5, EYES_HIGH - 0.25, 4.5), 'checker')      # chequered band
+
+
+def build_fire_helmet(g):
+    d = 1.0
+    dome(g, -10.0, -5.4, d, 'shell', ((0, 0), (0.6, 0.5), (1.5, 0.5)))
+    for x in (-2.6, -0.3, 2.0):                                                     # moulded ribs
+        g.box('head', (x, -10.1, -2.4), (x + 0.6, -5.4, 4 + d + 0.1), 'shell')
+    ring(g, -5.6, -5.15, d, 'shell', t=0.6)
+    g.box('head', (-3.6, -5.6, -6.6), (3.6, -5.15, -4 - d), 'shell')                 # short front brim
+    g.box('head', (-5.4, -5.4, 4 + d), (5.4, -4.9, 4 + d + 3.4), 'shell')            # long back brim (the tail)
+    g.box('head', (-4.6, -4.9, 4 + d + 2.0), (4.6, -4.4, 4 + d + 3.6), 'shell')
+    g.box('head', (-2.4, -9.6, -4 - d - 0.6), (2.4, -5.6, -4 - d - 0.2), 'front')   # leather front shield
+    g.box('head', (-1.2, -8.8, -4 - d - 0.75), (1.2, -6.6, -4 - d - 0.6), 'badge')
+    g.box('head', (-0.9, -10.6, -4 - d - 0.5), (0.9, -9.6, -4 - d - 0.2), 'eagle')  # the brass eagle holder
+    for s in (-1, 1):                                                               # reflective tape bands
+        g.box('head', (s * (HX + d) - (0.08 if s > 0 else 0), -7.2, -2.0), (s * (HX + d) + (0.08 if s < 0 else 0), -6.6, 2.4), 'tape')
+
+
+def build_riot_helmet(g):
+    d = 1.0
+    dome(g, -9.6, -4.4, d, 'shell', ((0, 0), (0.6, 0.45), (1.4, 0.45)))
+    g.box('head', (-4 - d, -4.4, -1.0), (4 + d, -1.2, 4 + d), 'shell')               # sides and back down to the neck
+    g.box('head', (-4.6, -1.2, 2.4), (4.6, 1.6, 4 + d + 0.6), 'guard')              # padded neck guard
+    # the visor down: a frame round a clear shield (left undrawn, so the face shows through it)
+    zf = -4 - d - 0.8
+    g.box('head', (-4.8, -6.0, zf), (4.8, -5.3, -4 - d), 'frame')
+    for s in (-1, 1):
+        x0 = s * 4.8 - (0.5 if s > 0 else 0)
+        g.box('head', (x0, -5.3, zf), (x0 + 0.5, 0.3, -1.0), 'frame')
+    g.box('head', (-4.8, 0.3, zf), (4.8, 0.6, zf + 0.5), 'frame')
+    for s in (-1, 1):
+        g.box('head', (s * 5.2 - 0.4, -5.6, -2.0), (s * 5.2 + 0.4, -4.2, -0.6), 'pivot')
+    g.box('head', (-1.6, -8.2, -4 - d - 0.08), (1.6, -7.2, -4 - d), 'tape')
+
+
+def build_gas_mask(g):
+    z0, z1 = -4.9, -4.3
+    g.box('head', (-3.9, -6.6, z0), (3.9, EYES_HIGH - 0.35, z1), 'rubber')
+    g.box('head', (-3.9, EYES_HIGH - 0.35, z0), (-3.4, EYES_LOW + 0.35, z1), 'rubber')
+    g.box('head', (-0.6, EYES_HIGH - 0.35, z0), (0.6, EYES_LOW + 0.35, z1), 'rubber')
+    g.box('head', (3.4, EYES_HIGH - 0.35, z0), (3.9, EYES_LOW + 0.35, z1), 'rubber')
+    g.box('head', (-3.9, EYES_LOW + 0.35, z0), (3.9, 0.5, z1), 'rubber')
+    for s in (-1, 1):                                                               # lens rims round the open eyes
+        x0, x1 = (-3.5, -0.5) if s < 0 else (0.5, 3.5)
+        g.box('head', (x0 - 0.1, EYES_HIGH - 0.45, z0 - 0.3), (x1 + 0.1, EYES_HIGH - 0.2, z0), 'rim')
+        g.box('head', (x0 - 0.1, EYES_LOW + 0.2, z0 - 0.3), (x1 + 0.1, EYES_LOW + 0.45, z0), 'rim')
+        g.box('head', (x0 - 0.1, EYES_HIGH - 0.2, z0 - 0.3), (x0 + 0.15, EYES_LOW + 0.2, z0), 'rim')
+        g.box('head', (x1 - 0.15, EYES_HIGH - 0.2, z0 - 0.3), (x1 + 0.1, EYES_LOW + 0.2, z0), 'rim')
+    g.box('head', (-1.3, -2.2, z0 - 0.7), (1.3, 0.2, z0), 'rubber')                  # the voicemitter snout
+    g.box('head', (-1.1, -1.9, z0 - 3.0), (1.1, 0.0, z0 - 0.7), 'canister')        # filter canister
+    g.box('head', (-1.25, -2.05, z0 - 3.2), (1.25, 0.15, z0 - 2.85), 'rim')
+    for s in (-1, 1):                                                               # the head harness
+        x = -4.3 if s < 0 else 4.18
+        for y0, y1 in ((-6.2, -5.7), (-2.0, -1.5)):
+            g.box('head', (x, y0, z1), (x + 0.12, y1, 2.4), 'strap')
+    g.box('head', (-2.6, -7.6, 2.0), (2.6, -1.4, 4.32), 'strap')                   # the spider pad at the back
+
+
+def build_welding_goggles(g):
+    z = -4.4
+    for s in (-1, 1):
+        x0, x1 = (-3.6, -0.6) if s < 0 else (0.6, 3.6)
+        g.box('head', (x0, EYES_HIGH - 0.6, z - 0.9), (x1, EYES_LOW + 0.6, z), 'cup')
+        g.box('head', (x0 + 0.3, EYES_HIGH - 0.3, z - 1.0), (x1 - 0.3, EYES_LOW + 0.3, z - 0.9), 'lens')
+        g.box('head', (x0 + 0.1, EYES_HIGH - 0.5, z - 1.1), (x1 - 0.1, EYES_HIGH - 0.3, z - 0.9), 'rim')
+    g.box('head', (-0.6, -4.0, z - 0.6), (0.6, -3.4, z - 0.2), 'cup')                 # bridge chain
+    for s in (-1, 1):
+        x = -4.32 if s < 0 else 4.2
+        g.box('head', (x, -4.4, z), (x + 0.12, -3.6, 4.32), 'strap')
+    g.box('head', (-4.32, -4.4, 4.2), (4.32, -3.6, 4.32), 'strap')
+
+
+def glasses(g, lens, frame, top=EYES_HIGH - 0.3, bot=EYES_LOW + 0.2, teardrop=False, thin=False):
+    z = -4.42
+    for s in (-1, 1):
+        x0, x1 = (-3.5, -0.5) if s < 0 else (0.5, 3.5)
+        if lens is not None:
+            g.box('head', (x0, top, z - 0.15), (x1, bot, z - 0.02), lens)
+            if teardrop:                                                            # aviators drop at the outer edge
+                xo0, xo1 = (x0, x0 + 1.4) if s < 0 else (x1 - 1.4, x1)
+                g.box('head', (xo0, bot, z - 0.15), (xo1, bot + 0.6, z - 0.02), lens)
+        t = 0.12 if thin else 0.2
+        g.box('head', (x0 - 0.1, top - t, z - 0.2), (x1 + 0.1, top, z), frame)
+        if thin or lens is None:
+            g.box('head', (x0 - 0.1, bot, z - 0.2), (x1 + 0.1, bot + t, z), frame)
+            g.box('head', (x0 - 0.1, top, z - 0.2), (x0 + t - 0.1, bot, z), frame)
+            g.box('head', (x1 - t + 0.1, top, z - 0.2), (x1 + 0.1, bot, z), frame)
+        xs = -4.45 if s < 0 else 4.3
+        g.box('head', (xs, top - 0.1, z), (xs + 0.15, top + 0.2, 0.6), frame)
+    g.box('head', (-0.5, top + 0.1, z - 0.2), (0.5, top + 0.35, z - 0.05), frame)
+    if teardrop:
+        g.box('head', (-0.5, top - 0.35, z - 0.2), (0.5, top - 0.15, z - 0.05), frame)   # the double bridge
+
+
+def build_aviator_sunglasses(g):
+    glasses(g, 'lens', 'gold', teardrop=True, thin=True)
+
+
+def build_reading_glasses(g):
+    # clear lenses: only the frames are drawn, so the eyes show
+    glasses(g, None, 'frame', top=EYES_HIGH - 0.1, bot=EYES_LOW + 0.05, thin=True)
+
+
+def build_balaclava(g):
+    d = 0.35
+    g.box('head', (-4 - d, -8 - d, -4 + 0.4), (4 + d, 0.6, 4 + d), 'knit')           # top, sides and back
+    eye_open_front(g, -4 - d, -4 + 0.4, -8 - d, 0.6, 4 + d, 'knit', port=(3.5, EYES_HIGH - 0.05, EYES_LOW + 0.05))
+    g.box('head', (-3.7, EYES_HIGH - 0.15, -4 - d - 0.08), (3.7, EYES_HIGH - 0.05, -4 - d), 'rib')
+    g.box('head', (-3.7, EYES_LOW + 0.05, -4 - d - 0.08), (3.7, EYES_LOW + 0.15, -4 - d), 'rib')
+    g.box('head', (-4 - d - 0.2, 0.0, -4 - d - 0.2), (4 + d + 0.2, 1.0, 4 + d + 0.2), 'rib')   # rolled neck
+
+
+def build_surgical_mask(g):
+    z = -4.3
+    g.box('head', (-3.3, EYES_LOW + 0.2, z - 0.25), (3.3, -0.3, z), 'mask')
+    for y in (-2.2, -1.5, -0.9):                                                    # pleats
+        g.box('head', (-3.3, y, z - 0.32), (3.3, y + 0.18, z - 0.25), 'pleat')
+    g.box('head', (-1.4, EYES_LOW + 0.2, z - 0.32), (1.4, EYES_LOW + 0.4, z - 0.25), 'wire')
+    for s in (-1, 1):                                                               # ear loops
+        x = -4.25 if s < 0 else 4.15
+        g.box('head', (x, -2.6, z), (x + 0.1, -2.4, 0.4), 'loop')
+        g.box('head', (x, -1.0, z), (x + 0.1, -0.8, 0.4), 'loop')
+        g.box('head', (x, -2.6, 0.2), (x + 0.1, -0.8, 0.4), 'loop')
+
+
+def build_cranial_helmet(g):
+    d = 0.5
+    g.box('head', (-4 - d, -8 - d, -4 - d), (4 + d, -5.0, 4 + d), 'cloth')           # the cloth cranial
+    g.box('head', (-3.2, -9.3, -2.2), (3.2, -8.5, 4.2), 'shell')                     # hard shells over it
+    g.box('head', (-4.7, -8.2, 0.6), (4.7, -5.4, 4.9), 'shell')
+    for s in (-1, 1):                                                               # big ear defenders
+        x0, x1 = (-4 - d - 1.2, -4 - d) if s < 0 else (4 + d, 4 + d + 1.2)
+        g.box('head', (x0, -5.6, -1.8), (x1, -1.4, 1.8), 'cup')
+        g.box('head', (x0 + (0.0 if s < 0 else 0.2), -5.2, -1.4), (x1 - (0.2 if s < 0 else 0.0), -1.8, 1.4), 'cup2')
+        g.box('head', (x0 + (0.2 if s < 0 else 0), -7.6, -0.4), (x1 - (0 if s < 0 else 0.2), -5.6, 0.4), 'strap')
+    g.box('head', (-1.6, -1.2, -1.2), (1.6, -0.9, -0.6), 'strap')                     # chin strap
+    for s in (-1, 1):                                                               # goggles pushed up on the cranial
+        x0, x1 = (-3.4, -0.5) if s < 0 else (0.5, 3.4)
+        g.box('head', (x0, -8.3, -4 - d - 0.8), (x1, -6.6, -4 - d), 'gogframe')
+        g.box('head', (x0 + 0.3, -8.0, -4 - d - 0.9), (x1 - 0.3, -6.9, -4 - d - 0.8), 'goglens')
+    g.box('head', (-4 - d - 0.05, -7.6, -4 - d), (4 + d + 0.05, -7.2, 4 + d), 'strap')
+    g.box('head', (-1.8, -7.0, 4 + d), (1.8, -5.6, 4 + d + 0.1), 'tape')             # reflective tape on the back
+
+
+def build_pilot_helmet(g):
+    d = 1.1
+    dome(g, -10.0, EYES_HIGH - 0.4, d, 'shell', ((0, 0), (0.6, 0.5), (1.5, 0.5)))    # its front edge over the brow
+    g.box('head', (-4 - d, EYES_HIGH - 0.4, -1.4), (4 + d, 1.0, 4 + d), 'shell')       # down round the ears and neck
+    g.box('head', (-4.6, -7.6, -4 - d - 0.7), (4.6, EYES_HIGH - 0.4, -4 - d), 'housing')   # visor housing, visor up
+    g.box('head', (-4.3, -7.3, -4 - d - 0.8), (4.3, -6.4, -4 - d - 0.7), 'knob')
+    g.box('head', (-0.4, -6.4, -4 - d - 1.0), (0.4, -5.8, -4 - d - 0.7), 'knob')
+    g.box('head', (-0.6, -10.05, -3.0), (0.6, -6.0, 4 + d + 0.05), 'stripe')
+    # the oxygen mask unclipped, hanging off the right bayonet with its hose
+    g.box('head', (-4 - d - 0.4, -2.6, -4.4), (-4 - d + 0.4, -1.8, -3.0), 'bayonet')
+    g.box('head', (-4 - d - 1.0, -2.2, -6.6), (-4 - d + 0.6, 0.6, -4.4), 'mask')
+    g.box('head', (-4 - d - 0.7, 0.6, -6.0), (-4 - d + 0.3, 2.6, -5.0), 'hose')
+    for s in (-1, 1):
+        g.box('head', (s * (HX + d) - (0.3 if s > 0 else 0), -4.4, -1.2), (s * (HX + d) + (0.3 if s < 0 else 0), -2.6, 1.2), 'ear')
+
+
+def plastic(base, gloss=0.18):
+    def fn(f):
+        c = P.plain(f, base, 0.06)
+        top = np.clip(f.n[1], 0, 1)
+        c = c * (1 + gloss * 0.6 * top) + gloss * 0.15 * np.clip(1 - f.edge / 0.4, 0, 1)[..., None]
+        return toon(f, grade(c, 0.35))
+    return fn
+
+
+def mesh(base):
+    def fn(f):
+        c = P.plain(f, base, 0.06)
+        u, v = f.uv[..., 0], f.uv[..., 1]
+        hole = ((np.floor(u / TX) % 2) == 0) & ((np.floor(v / TX) % 2) == 0)
+        c = np.where(hole[..., None], c * 0.35, c)
+        return toon(f, grade(c))
+    return fn
+
+
+def checker(a, b):
+    def fn(f):
+        h = f.P[..., 0] if abs(f.n[0]) < 0.5 else f.P[..., 2]
+        cell = ((np.floor(h / 0.7) + np.floor(f.P[..., 1] / 0.7)) % 2) == 0
+        c = np.where(cell[..., None], P.col(a), P.col(b)) * (1 + (P.white(f.shape, f.rng) - 0.5) * 0.08)[..., None]
+        return toon(f, grade(c, 0.35))
+    return fn
+
+
+def glow_tape(base='#a9a68e'):
+    def fn(f):
+        c = P.plain(f, base, 0.05)
+        return toon(f, grade(c, 0.2), ink=False)
+    return fn
+
+
+HEADWEAR = {
+    'trucker_cap': (build_trucker_cap, dict(foam=cloth('#8d8778', weave=0.03), mesh=mesh('#2d3a2c'), brim=cloth('#2d3a2c'),
+                                            patch=flat('#6e3a24'), shadow=flat('#0d0c0b', ink=False), snap=plastic('#1d1d1d')), 0.4),
+    'cowboy_hat': (build_cowboy_hat, dict(felt=cloth('#6b5236', weave=0.02, stitch=None), crease=cloth('#5e472e', weave=0.02, stitch=None),
+                                          band=leather('#2e2018'), concho=metal('steel')), 0.4),
+    'bucket_hat': (build_bucket_hat, dict(cloth=cloth('#5a5f45'), band=cloth('#4d513a'), brim=cloth('#55593f'), eyelet=metal('brass')), 0.35),
+    'hard_hat': (build_hard_hat, dict(shell=plastic('#a8852a'), sticker=flat('#6a2a24'), sticker2=flat('#3d5a7a'),
+                                      harness=plastic('#2a2a28')), 0.5),
+    'bike_helmet': (build_bike_helmet, dict(shell=plastic('#3d6a72'), vent=flat('#0e1012', ink=False), visor=plastic('#1e1f22'),
+                                            trim=plastic('#1e1f22'), strap=flat('#1d1d1f'), buckle=plastic('#111111')), 0.4),
+    'football_helmet': (build_football_helmet, dict(shell=plastic('#6e2a2a', 0.25), ear=flat('#0e0d0d', ink=False),
+                                                    stripe=plastic('#b8b2a0'), cage=plastic('#9a9890'), chin=plastic('#2a2a2a')), 0.45),
+    'hockey_mask': (build_hockey_mask, dict(mask=plastic('#c2bba8', 0.1), chevron=flat('#7a2a24'), strap=flat('#1d1c1a')), 0.55),
+    'motorcycle_helmet': (build_motorcycle_helmet, dict(shell=plastic('#1b1c1e', 0.35), vent=flat('#0a0a0b', ink=False),
+                                                        visor=plastic('#141619', 0.5), pivot=plastic('#3a3b3d'), stripe=plastic('#7a2a24')), 0.4),
+    'police_cap': (build_police_cap, dict(cloth=cloth('#1f2737', weave=0.05), visor=plastic('#0f0f10', 0.5), cord=metal('brass'),
+                                          button=metal('brass'), badge=metal('brass'), checker=checker('#1d2433', '#a9a69a')), 0.3),
+    'fire_helmet': (build_fire_helmet, dict(shell=plastic('#1d1c1b', 0.3), front=leather('#2a2622'), badge=flat('#7a2a22'),
+                                            eagle=metal('brass'), tape=glow_tape()), 0.55),
+    'riot_helmet': (build_riot_helmet, dict(shell=plastic('#1c1d1f', 0.3), guard=cloth('#1d1e20', stitch='#4a4a48'),
+                                            frame=plastic('#111213'), pivot=plastic('#3a3b3d'),
+                                            tape=flat('#a9a69a')), 0.4),
+    'gas_mask': (build_gas_mask, dict(rubber=rubber('#2b2d2a'), rim=metal('steel'), canister=plastic('#4a4f3e'),
+                                      strap=rubber('#1e1f1d')), 0.45),
+    'welding_goggles': (build_welding_goggles, dict(cup=plastic('#2a2a28'), lens=lens, rim=metal('steel'), strap=cloth('#3a3a36')), 0.5),
+    'aviator_sunglasses': (build_aviator_sunglasses, dict(lens=lens, gold=metal('brass')), 0.1),
+    'reading_glasses': (build_reading_glasses, dict(frame=plastic('#3b2a1e')), 0.1),
+    'balaclava': (build_balaclava, dict(knit=knit('#1e1f21'), rib=rib('#1b1c1e')), 0.35),
+    'surgical_mask_worn': (build_surgical_mask, dict(mask=cloth('#7d9aa6', weave=0.03, stitch=None), pleat=cloth('#6f8b97', stitch=None),
+                                                     wire=flat('#c8c4bb'), loop=flat('#d0ccc2')), 0.6),
+    'cranial_helmet': (build_cranial_helmet, dict(cloth=cloth('#3f5684'), shell=plastic('#b4b1a8'), cup=plastic('#b4b1a8'),
+                                                  cup2=plastic('#8d8a82'), strap=flat('#1f2023'), gogframe=rubber('#1d1e20'),
+                                                  goglens=lens, tape=glow_tape()), 0.5),
+    'pilot_helmet': (build_pilot_helmet, dict(shell=plastic('#5c6064', 0.3),
+                                              housing=plastic('#4a4e52'), knob=plastic('#1e1f21'), stripe=plastic('#7a6a2a'),
+                                              bayonet=metal('steel'), mask=rubber('#2e3034'), hose=rubber('#26282b'),
+                                              ear=plastic('#4a4e52')), 0.35),
+}
+
+
+GARMENTS.update(HEADWEAR)
+
+
 # ================================================================== export
 
 

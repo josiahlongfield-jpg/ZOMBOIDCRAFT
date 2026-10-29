@@ -28,7 +28,11 @@ public final class ClothingItems {
     public static final List<String> MADE = List.of(
             // batch 1: everyday basics
             "t_shirt", "flannel_shirt", "hoodie", "denim_jacket", "parka", "jeans", "work_pants", "sneakers", "work_boots",
-            "baseball_cap", "beanie", "work_gloves", "sunglasses", "bandana");
+            "baseball_cap", "beanie", "work_gloves", "sunglasses", "bandana",
+            // batch 2: headwear, masks and glasses
+            "trucker_cap", "cowboy_hat", "bucket_hat", "hard_hat", "bike_helmet", "football_helmet", "hockey_mask",
+            "motorcycle_helmet", "police_cap", "fire_helmet", "riot_helmet", "gas_mask", "welding_goggles",
+            "aviator_sunglasses", "reading_glasses", "balaclava", "surgical_mask_worn", "cranial_helmet", "pilot_helmet");
 
     private static final List<Item> ITEMS = new ArrayList<>();
 
