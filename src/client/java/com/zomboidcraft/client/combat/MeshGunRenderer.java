@@ -53,10 +53,10 @@ public final class MeshGunRenderer implements NoDataSpecialModelRenderer {
             pose.translate(offset.get(0) / 16, offset.get(1) / 16, offset.get(2) / 16);
         }
         if (roll != 0) {
-            pose.mulPose(Axis.ZP.rotationDegrees(roll));
+            pose.rotate(Axis.ZP.rotationDegrees(roll));
         }
         if (pitch != 0) {
-            pose.mulPose(Axis.XP.rotationDegrees(pitch));
+            pose.rotate(Axis.XP.rotationDegrees(pitch));
         }
         if (scale != 1) {
             pose.scale(scale, scale, scale);
