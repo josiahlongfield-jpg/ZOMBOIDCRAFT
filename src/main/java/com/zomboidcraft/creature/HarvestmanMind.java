@@ -280,6 +280,21 @@ public final class HarvestmanMind {
         return 1;
     }
 
+    /**
+     * Whether it's about harming someone (stalking, lying in wait, striking, holding or feeding, its tricks) or feeding
+     * on the dead: its skull and plates burn red then, blue the rest of the time.
+     */
+    public boolean menace() {
+        if (h.held != null) {
+            return true;
+        }
+        return switch (plan) {
+            case STALK, AMBUSH, STRIKE, DRAG, FEED, ZOMBIE, DOOR, HERD, HORDE, SHADOW, SPLIT, FEINT, RETREAT, GLIMPSE,
+                 DISPLAY -> true;
+            default -> false;
+        };
+    }
+
     public double speedScale() {
         double s = 1 + 0.04 * (stage - 1);
         if (hunger > 0.95) {
@@ -641,7 +656,8 @@ public final class HarvestmanMind {
                         curious = Math.max(0, curious - 0.3);
                         heard = null;
                     }
-                    wait = 20 * (plan == HIDE ? 6 + h.getRandom().nextInt(10) : 2 + h.getRandom().nextInt(5));
+                    // it settles where it's got to and stands a good while (its idles), rather than turning straight round again
+                    wait = 20 * (plan == HIDE ? 8 + h.getRandom().nextInt(12) : 6 + h.getRandom().nextInt(10));
                     h.goal = null;
                     h.look = heard;
                 }
@@ -1228,6 +1244,9 @@ public final class HarvestmanMind {
         int lost = h.lost();
         if (lost != 0) {
             workScrap(level);
+        }
+        if (h.cut() != 0 && planTicks > 0 && planTicks % 12000 == 0) {
+            h.regrowLimb(Integer.numberOfTrailingZeros(h.cut()));
         }
         if (lost != 0 && planTicks > 0 && planTicks % 24000 == 0) {
             h.regrow(Integer.numberOfTrailingZeros(lost));
