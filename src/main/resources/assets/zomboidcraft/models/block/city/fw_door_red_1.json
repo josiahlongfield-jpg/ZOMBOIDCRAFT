@@ -1,0 +1,238 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fw_door_red": "zomboidcraft:block/city/fw_door_red",
+    "fw_lining": "zomboidcraft:block/city/fw_lining",
+    "fw_side_red": "zomboidcraft:block/city/fw_side_red",
+    "fw_steel": "zomboidcraft:block/city/fw_steel",
+    "particle": "zomboidcraft:block/city/fw_side_red"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        1.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fw_side_red",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#fw_lining"
+        },
+        "east": {
+          "texture": "#fw_side_red",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#fw_side_red",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#fw_side_red",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#fw_side_red",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        -0.8
+      ],
+      "to": [
+        1.4,
+        16,
+        0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fw_side_red"
+        },
+        "south": {
+          "texture": "#fw_side_red"
+        },
+        "east": {
+          "texture": "#fw_side_red",
+          "uv": [
+            15.2,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#fw_side_red",
+          "uv": [
+            0,
+            0,
+            0.8,
+            16
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#fw_side_red",
+          "uv": [
+            0,
+            0,
+            1.4,
+            0.8
+          ],
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#fw_side_red",
+          "uv": [
+            0,
+            15.2,
+            1.4,
+            16
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        -1.6
+      ],
+      "to": [
+        16,
+        16,
+        0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fw_door_red"
+        },
+        "south": {
+          "texture": "#fw_door_red"
+        },
+        "east": {
+          "texture": "#fw_door_red",
+          "uv": [
+            14.399999999999999,
+            0,
+            16,
+            16
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#fw_door_red",
+          "uv": [
+            0,
+            0,
+            1.6,
+            16
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#fw_door_red",
+          "uv": [
+            0,
+            0,
+            16,
+            1.6
+          ],
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#fw_door_red",
+          "uv": [
+            0,
+            14.399999999999999,
+            16,
+            16
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        -0.8,
+        -2
+      ],
+      "to": [
+        16,
+        0.4,
+        0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fw_steel",
+          "uv": [
+            0,
+            14.799999999999999,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#fw_steel",
+          "uv": [
+            0,
+            14.799999999999999,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#fw_steel",
+          "uv": [
+            14,
+            14.799999999999999,
+            16,
+            16
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#fw_steel",
+          "uv": [
+            0,
+            14.799999999999999,
+            2,
+            16
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#fw_steel",
+          "uv": [
+            0,
+            0,
+            16,
+            2
+          ]
+        },
+        "down": {
+          "texture": "#fw_steel",
+          "uv": [
+            0,
+            14,
+            16,
+            16
+          ]
+        }
+      }
+    }
+  ]
+}

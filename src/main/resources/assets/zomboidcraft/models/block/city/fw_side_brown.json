@@ -1,0 +1,106 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fw_lining": "zomboidcraft:block/city/fw_lining",
+    "fw_side_brown": "zomboidcraft:block/city/fw_side_brown",
+    "particle": "zomboidcraft:block/city/fw_side_brown"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        1.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fw_side_brown",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#fw_lining"
+        },
+        "east": {
+          "texture": "#fw_side_brown",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#fw_side_brown",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#fw_side_brown",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#fw_side_brown",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        -0.8
+      ],
+      "to": [
+        1.4,
+        16,
+        0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fw_side_brown"
+        },
+        "south": {
+          "texture": "#fw_side_brown"
+        },
+        "east": {
+          "texture": "#fw_side_brown",
+          "uv": [
+            15.2,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#fw_side_brown",
+          "uv": [
+            0,
+            0,
+            0.8,
+            16
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#fw_side_brown",
+          "uv": [
+            0,
+            0,
+            1.4,
+            0.8
+          ],
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#fw_side_brown",
+          "uv": [
+            0,
+            15.2,
+            1.4,
+            16
+          ],
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

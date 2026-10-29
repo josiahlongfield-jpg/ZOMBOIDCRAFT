@@ -97,7 +97,7 @@ def blocks():
 def main():
     path = HERE / "blocks.json"
     data = json.loads(path.read_text())
-    data["blocks"] = {k: v for k, v in data["blocks"].items() if not k.startswith("tb_")}
+    data["blocks"] = {k: v for k, v in data["blocks"].items() if not k.startswith("tb_") or k.startswith("tb_buffer")}  # freight.py's
     made = blocks()
     data["blocks"].update(made)
     path.write_text(json.dumps(data, indent=1) + "\n")

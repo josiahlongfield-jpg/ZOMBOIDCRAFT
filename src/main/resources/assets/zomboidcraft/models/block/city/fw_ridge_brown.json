@@ -1,0 +1,210 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fw_lining": "zomboidcraft:block/city/fw_lining",
+    "fw_side_brown": "zomboidcraft:block/city/fw_side_brown",
+    "fw_steel": "zomboidcraft:block/city/fw_steel",
+    "particle": "zomboidcraft:block/city/fw_side_brown"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        10.2,
+        0
+      ],
+      "to": [
+        16,
+        11,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fw_side_brown",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#fw_side_brown",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#fw_side_brown",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#fw_side_brown",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#fw_side_brown"
+        },
+        "down": {
+          "texture": "#fw_side_brown"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        11,
+        3
+      ],
+      "to": [
+        1,
+        11.6,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fw_side_brown"
+        },
+        "south": {
+          "texture": "#fw_side_brown"
+        },
+        "east": {
+          "texture": "#fw_side_brown"
+        },
+        "west": {
+          "texture": "#fw_side_brown",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#fw_side_brown"
+        },
+        "down": {
+          "texture": "#fw_side_brown"
+        }
+      }
+    },
+    {
+      "from": [
+        8,
+        11,
+        3
+      ],
+      "to": [
+        9,
+        11.6,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fw_side_brown"
+        },
+        "south": {
+          "texture": "#fw_side_brown"
+        },
+        "east": {
+          "texture": "#fw_side_brown"
+        },
+        "west": {
+          "texture": "#fw_side_brown"
+        },
+        "up": {
+          "texture": "#fw_side_brown"
+        },
+        "down": {
+          "texture": "#fw_side_brown"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        11.6,
+        0
+      ],
+      "to": [
+        11,
+        12.6,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fw_lining",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#fw_lining",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#fw_lining"
+        },
+        "west": {
+          "texture": "#fw_lining"
+        },
+        "up": {
+          "texture": "#fw_lining"
+        },
+        "down": {
+          "texture": "#fw_lining"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        11,
+        2
+      ],
+      "to": [
+        11,
+        11.6,
+        3.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fw_steel"
+        },
+        "south": {
+          "texture": "#fw_steel"
+        },
+        "east": {
+          "texture": "#fw_steel"
+        },
+        "west": {
+          "texture": "#fw_steel"
+        },
+        "up": {
+          "texture": "#fw_steel"
+        },
+        "down": {
+          "texture": "#fw_steel"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        11,
+        10
+      ],
+      "to": [
+        11,
+        11.6,
+        11.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fw_steel"
+        },
+        "south": {
+          "texture": "#fw_steel"
+        },
+        "east": {
+          "texture": "#fw_steel"
+        },
+        "west": {
+          "texture": "#fw_steel"
+        },
+        "up": {
+          "texture": "#fw_steel"
+        },
+        "down": {
+          "texture": "#fw_steel"
+        }
+      }
+    }
+  ]
+}

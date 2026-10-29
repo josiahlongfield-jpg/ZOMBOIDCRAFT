@@ -673,86 +673,50 @@ final class Harbour {
         member(x, y1, z1 - 2, y1 - 6, z1 - 7, "cr_strut_yellow");
     }
 
-    /** A siding along x from x0 to x1 on row z: ballast three wide, the rails, a buffer stop at each end. */
+    /**
+     * A siding along x from x0 to x1 on row z: ballast three wide, the track on it (tb_ kit), a
+     * sleeper gone here and there to weeds, a buffer stop across each end.
+     */
     void railSpur(int x0, int x1, int z) {
         for (int x = x0; x <= x1; x++) {
+            boolean lost = chance() < 0.02 + hit * 0.04;
             for (int k = -1; k <= 1; k++) {
-                p.set(x, 0, z + k, chance() < 0.75 ? "minecraft:gravel" : chance() < 0.5 ? "minecraft:coarse_dirt" : "minecraft:andesite");
-            }
-            if (chance() > 0.02 + hit * 0.04) {
-                p.set(x, 1, z, "rail[axis=x]");
-            } else if (chance() < 0.5) {
-                p.set(x, 1, z, "minecraft:short_grass");
+                p.set(x, 0, z + k, chance() < 0.85 ? "rw_ballast" : "minecraft:coarse_dirt");
+                p.set(x, 1, z + k, lost ? (chance() < 0.5 ? "gc_grass_" + (1 + rng.nextInt(12)) : "air")
+                        : k == 0 ? "tb_sleeper[axis=x]" : "tb_rail[axis=x]");
             }
         }
         for (int x : new int[] {x0, x1}) {
-            p.set(x, 1, z, "steel_yellow");
-            p.set(x, 2, z, "hazard_stripes");
+            String f = x == x0 ? "east" : "west";
+            for (int k = -1; k <= 1; k++) {
+                p.set(x, 1, z + k, (k == 0 ? "tb_buffer_mid" : "tb_buffer") + "[facing=" + f + "]");
+            }
         }
     }
 
     /**
-     * A freight wagon 14 long along x from x on the rails at row z: a boxcar you can climb into,
-     * an ore hopper, a tank car or a flat with a box on it.
+     * A freight wagon (fw_ kit, {@link Freight}) 13 long along x from x on the siding at row z: a
+     * boxcar you can climb into, or a flat with a box on it, or one loaded with steel beams.
      */
     void wagon(int x, int z) {
-        for (int i = 0; i < 14; i++) {
-            for (int k = -1; k <= 1; k++) {
-                p.set(x + i, 2, z + k, "deck_steel");
+        double r = chance();
+        if (r < 0.5) {
+            boolean open = chance() < 0.6;
+            Freight.boxcar(p, rng, x, 1, z, Freight.paint(rng), open);
+            if (open && chance() < 0.5) {
+                p.set(x + 4, 3, z, chance() < 0.5 ? "crate" : "fm_drum");
             }
+            return;
         }
-        for (int i : new int[] {1, 2, 11, 12}) {
-            p.set(x + i, 1, z - 1, "steel_girder");
-            p.set(x + i, 1, z + 1, "steel_girder");
-        }
-        p.set(x - 1, 2, z, "steel_girder");
-        p.set(x + 14, 2, z, "steel_girder");
-        switch (rng.nextInt(4)) {
-            case 0 -> {
-                String clad = any("corrugated_rust", "corrugated_red", "corrugated_green", "corrugated_grey_stain");
-                boolean open = chance() < 0.6;
-                for (int i = 0; i < 14; i++) {
-                    for (int y = 3; y <= 5; y++) {
-                        for (int k = -1; k <= 1; k++) {
-                            boolean wall = k != 0 || i == 0 || i == 13 || y == 5;
-                            boolean door = open && k == 1 && y < 5 && (i == 6 || i == 7);
-                            p.set(x + i, y, z + k, wall && !door ? (y == 5 && chance() < hit * 0.15 ? "rust" : clad) : "air");
-                        }
-                    }
+        Freight.chassis(p, x, 1, z);
+        if (r < 0.85) {
+            box(x + 1, 3, z - 1, boxColour(), true);
+        } else {
+            for (int i = 1; i < Freight.LEN - 1; i++) {
+                for (int k = -1; k <= 1; k++) {
+                    p.set(x + i, 3, z + k, "sf_beam[axis=x]");
                 }
-                if (open && chance() < 0.5) {
-                    p.set(x + 4, 3, z, chance() < 0.5 ? "crate" : "fm_drum");
-                }
-            }
-            case 1 -> {
-                String stuff = any("minecraft:coal_block", "minecraft:gravel", "minecraft:sand", "rubble_pile");
-                for (int i = 0; i < 14; i++) {
-                    for (int k = -1; k <= 1; k++) {
-                        boolean end = i == 0 || i == 13;
-                        p.set(x + i, 3, z + k, i % 4 == 2 ? "air" : "rust");
-                        p.set(x + i, 4, z + k, k == 0 && !end ? stuff : chance() < 0.3 ? "rust" : "hull_black");
-                        if (k == 0 && !end && chance() < 0.6) {
-                            p.set(x + i, 5, z + k, stuff);
-                        }
-                    }
-                }
-            }
-            case 2 -> {
-                String skin = any("tank_white", "hull_black", "hull_black", "tank_blue");
-                for (int i = 1; i < 13; i++) {
-                    p.set(x + i, 3, z, skin);
-                    p.set(x + i, 5, z, skin);
-                    for (int k = -1; k <= 1; k++) {
-                        p.set(x + i, 4, z + k, skin);
-                    }
-                }
-                p.set(x + 7, 6, z, "steel_girder");
-                p.set(x + 7, 5, z - 1, "wf_mast");
-            }
-            default -> {
-                if (chance() < 0.75) {
-                    box(x + 1, 3, z - 1, boxColour(), true);
-                }
+                p.set(x + i, 4, z, "sf_beam[axis=x]");
             }
         }
     }
