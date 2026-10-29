@@ -788,14 +788,25 @@ def blocks():
 def main():
     path = HERE / "blocks.json"
     data = json.loads(path.read_text())
-    kept = {k: v for k, v in data["blocks"].items() if not k.startswith("ext_")}
     made = blocks()
-    kept.update(made)
+    # keep everyone's order: rewritten pieces stay where they were, new ones go after their family
+    kept, pending = {}, dict(made)
+    for k, v in data["blocks"].items():
+        if k.startswith("ext_"):
+            if k in made:
+                kept[k] = pending.pop(k)
+            continue
+        kept[k] = v
+    for k, v in pending.items():
+        base = next((b for b in reversed(list(kept)) if b.startswith(k.rsplit("_", 1)[0])), None)
+        if base is None:
+            kept[k] = v
+            continue
+        items = list(kept.items())
+        i = [a for a, _ in items].index(base) + 1
+        kept = dict(items[:i] + [(k, v)] + items[i:])
     data["blocks"] = kept
-    lines = ",\n".join(f"    {json.dumps(k)}: {json.dumps(v)}" for k, v in kept.items())
-    rest = {k: v for k, v in data.items() if k != "blocks"}
-    head = "".join(f'  {json.dumps(k)}: {json.dumps(v)},\n' for k, v in rest.items())
-    path.write_text("{\n" + head + '  "blocks": {\n' + lines + "\n  }\n}\n")
+    path.write_text(json.dumps(data, indent=1) + "\n")
     print(f"{len(made)} exterior blocks in {path}")
 
 
