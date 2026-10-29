@@ -613,7 +613,6 @@ final class Farmstead {
      * its cage, the unloader's shed at the foot.
      */
     void silo(int cx, int cz, int r, int h, Silo kind) {
-        String brick = pick("brick_red", "brick_buff", "brick_orange");
         for (int dx = -r - 1; dx <= r + 1; dx++) {
             for (int dz = -r - 1; dz <= r + 1; dz++) {
                 if (disc(dx, dz, r + 0.5)) {
@@ -621,66 +620,22 @@ final class Farmstead {
                 }
             }
         }
-        for (int y = 1; y <= h; y++) {
-            for (int dx = -r; dx <= r; dx++) {
-                for (int dz = -r; dz <= r; dz++) {
-                    if (ring(dx, dz, r + 0.5)) {
-                        String m = switch (kind) {
-                            case STAVE -> y % 7 == 0 && chance() < 0.3 ? "rust" : "silo_stave";
-                            case BRICK -> b.wall(brick, y);
-                            case BLUE -> "silo_blue";
-                        };
-                        p.set(cx + dx, y, cz + dz, m);
-                    }
-                }
-            }
+        // the drum: concrete staves with a steel hoop every other block, brick, or glass-lined steel,
+        // smooth round (Round); then the dome (the brick one's tin cone) and its cap
+        double ox = cx + 0.5, oz = cz + 0.5, R = r + 0.3;
+        switch (kind) {
+            case STAVE -> Round.wall(p, ox, oz, R, 1, h, "stave", 2);
+            case BRICK -> Round.wall(p, ox, oz, R, 1, h, "brick", 0);
+            case BLUE -> Round.wall(p, ox, oz, R, 1, h, "blue", 0);
         }
-        // the roof
-        if (kind == Silo.BRICK) {
-            String tin = pick(TIN);
-            int y = h + 1;
-            for (double rr = r + 1.5; rr > 0.4; rr -= 1, y++) {
-                for (int dx = -r - 1; dx <= r + 1; dx++) {
-                    for (int dz = -r - 1; dz <= r + 1; dz++) {
-                        if (ring(dx, dz, rr)) {
-                            tile(cx + dx, y, cz + dz, stairs(tin, inward(dx, dz), false));
-                        } else if (disc(dx, dz, rr - 1.2)) {
-                            p.set(cx + dx, y, cz + dz, tin);
-                        }
-                    }
-                }
-            }
-            p.set(cx, y, cz, "minecraft:lightning_rod");
-        } else {
-            String m = kind == Silo.BLUE ? "silo_blue" : pick(GALV, TIN[0]);
-            double R = r + 0.5;
-            for (int dx = -r; dx <= r; dx++) {
-                for (int dz = -r; dz <= r; dz++) {
-                    double dd = Math.hypot(dx, dz);
-                    if (dd > R) {
-                        continue;
-                    }
-                    double hgt = Math.sqrt(R * R - dd * dd) * 0.8;
-                    int full = (int) hgt;
-                    for (int y = 1; y <= full; y++) {
-                        p.set(cx + dx, h + y, cz + dz, m);
-                    }
-                    if (hgt - full > 0.45 && kind != Silo.BLUE) {
-                        p.set(cx + dx, h + full + 1, cz + dz, m + "_slab[type=bottom]");
-                    }
-                }
-            }
-            p.set(cx, h + (int) (R * 0.8) + 1, cz, "minecraft:lightning_rod");
-        }
-        // the caged ladder up the north side, the chute cap over the dome
+        int top = kind == Silo.BRICK
+                ? Round.roof(p, ox, oz, R + 0.4, Round.cone(R + 0.4), h + 1, "tinred")
+                : Round.roof(p, ox, oz, R + 0.1, Round.dome(R), h + 1, kind == Silo.BLUE ? "blue" : "galv");
+        p.set(cx, top, cz, "rd_finial");
+        // the ladder up the north side, caged from head height, onto the dome
         int lz = cz - r - 1;
         for (int y = 1; y <= h + 1; y++) {
-            p.set(cx, y, lz, "ladder[facing=north]");
-            if (y >= 4) {
-                p.set(cx - 1, y, lz, y % 2 == 0 ? "minecraft:iron_bars" : "air");
-                p.set(cx + 1, y, lz, y % 2 == 0 ? "minecraft:iron_bars" : "air");
-                p.set(cx, y, lz - 1, "minecraft:iron_bars");
-            }
+            p.set(cx, y, lz, y >= 4 && y <= h ? "rd_cage[facing=north]" : "ladder[facing=north]");
         }
         // the unloader shed at the foot
         for (int y = 1; y <= 3; y++) {
@@ -695,13 +650,13 @@ final class Farmstead {
         }
         for (int dx = -3; dx <= 3; dx++) {
             for (int dz = -4; dz <= 0; dz++) {
-                p.set(cx + dx + r + 3, 4, cz + dz + 2, TIN[1] + "_slab[type=bottom]");
+                p.set(cx + dx + r + 3, 4, cz + dz + 2, dz == -4 ? "ext_porch_roof_tin_red_edge[facing=north]" : "ext_porch_roof_tin_red");
             }
         }
         if (chance() < 0.4) {
             // a pile of old silage spilling out
             for (int i = 0; i < 5; i++) {
-                p.setIfAir(cx + r + 1 + rng.nextInt(4), 1, cz - 3 + rng.nextInt(6), pick("minecraft:moss_carpet", "minecraft:hay_block", "straw_floor"));
+                p.setIfAir(cx + r + 1 + rng.nextInt(4), 1, cz - 3 + rng.nextInt(6), pick("minecraft:moss_carpet", "straw_floor", "straw_floor"));
             }
         }
     }
@@ -718,48 +673,26 @@ final class Farmstead {
                 }
             }
         }
-        for (int y = 1; y <= h; y++) {
-            for (int dx = -r; dx <= r; dx++) {
-                for (int dz = -r; dz <= r; dz++) {
-                    if (ring(dx, dz, r + 0.5)) {
-                        p.set(cx + dx, y, cz + dz, "bin_ribbed");
-                    }
-                }
-            }
-        }
+        double ox = cx + 0.5, oz = cz + 0.5, R = r + 0.3;
+        Round.wall(p, ox, oz, R, 1, h, "bin", 0);
         // what's left of last year's corn, a slope of it inside
         for (int dx = -r + 1; dx <= r - 1; dx++) {
             for (int dz = -r + 1; dz <= r - 1; dz++) {
                 if (disc(dx, dz, r - 0.5)) {
                     int fill = (int) (h * 0.4 - Math.hypot(dx, dz) * 0.4);
                     for (int y = 1; y <= fill; y++) {
-                        p.set(cx + dx, y, cz + dz, "minecraft:honeycomb_block");
+                        p.set(cx + dx, y, cz + dz, "straw_floor");
                     }
                 }
             }
         }
-        // the cone: rings of slabs stepping in a block every half block up
-        int k = 0;
-        int y = h + 1;
-        for (double rr = r + 1.5; rr > 0.5; rr -= 1, k++) {
-            boolean upper = (k & 1) == 1;
-            int yy = y + k / 2;
-            for (int dx = -r - 1; dx <= r + 1; dx++) {
-                for (int dz = -r - 1; dz <= r + 1; dz++) {
-                    if (disc(dx, dz, rr) && !disc(dx, dz, rr - 1)) {
-                        tile(cx + dx, yy, cz + dz, GALV + "_slab[type=" + (upper ? "top" : "bottom") + "]");
-                    }
-                }
-            }
-        }
-        int capY = y + k / 2;
-        p.set(cx, capY, cz, GALV);
-        p.set(cx, capY + 1, cz, "minecraft:lightning_rod");
+        // the shallow cone, its eave a little out over the wall, the cap and vent at the peak
+        int capY = Round.roof(p, ox, oz, R + 0.4, Round.cone(R + 0.4), h + 1, "galv");
+        p.set(cx, capY, cz, "rd_bin_cap");
         for (int yy = 1; yy <= h; yy++) {
             p.set(cx, yy, cz - r - 1, "ladder[facing=north]");
         }
-        p.set(cx + r + 1, 1, cz, "hvac");
-        p.set(cx + r + 1, 2, cz, "minecraft:iron_bars");
+        p.set(cx + r + 1, 1, cz, "rd_fan[facing=east]");
         p.set(cx, 1, cz + r, chance() < 0.5 ? "air" : "flat_door[facing=north,half=lower,hinge=left,open=false]");
         if (p.get(cx, 1, cz + r) == null) {
             p.set(cx, 2, cz + r, "air");
