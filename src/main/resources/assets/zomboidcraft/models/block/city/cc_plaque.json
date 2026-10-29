@@ -1,0 +1,42 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cc_plaque": "zomboidcraft:block/city/cc_plaque",
+    "particle": "zomboidcraft:block/city/cc_plaque"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        3,
+        14.6
+      ],
+      "to": [
+        13,
+        13,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cc_plaque"
+        },
+        "south": {
+          "texture": "#cc_plaque",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cc_plaque"
+        },
+        "west": {
+          "texture": "#cc_plaque"
+        },
+        "up": {
+          "texture": "#cc_plaque"
+        },
+        "down": {
+          "texture": "#cc_plaque"
+        }
+      }
+    }
+  ]
+}

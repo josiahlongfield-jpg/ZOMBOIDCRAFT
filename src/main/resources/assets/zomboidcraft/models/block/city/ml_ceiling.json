@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ml_ceiling": "zomboidcraft:block/city/ml_ceiling",
+    "particle": "zomboidcraft:block/city/ml_ceiling"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ml_ceiling",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ml_ceiling",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ml_ceiling",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ml_ceiling",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ml_ceiling",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ml_ceiling",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

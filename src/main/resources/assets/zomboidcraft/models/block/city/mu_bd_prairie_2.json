@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "mu_bd_prairie_2": "zomboidcraft:block/city/mu_bd_prairie_2",
+    "particle": "zomboidcraft:block/city/mu_bd_prairie_2"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.6
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_bd_prairie_2"
+        },
+        "south": {
+          "texture": "#mu_bd_prairie_2",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#mu_bd_prairie_2",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#mu_bd_prairie_2",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#mu_bd_prairie_2",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#mu_bd_prairie_2",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

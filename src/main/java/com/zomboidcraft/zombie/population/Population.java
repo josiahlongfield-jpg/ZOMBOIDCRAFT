@@ -106,6 +106,7 @@ public final class Population {
             cap = -1;
             islandPlaces = null;
             islandCount = null;
+            islandSeen = -1;
             Census.clear();
         });
     }
@@ -183,7 +184,10 @@ public final class Population {
             for (int i = 0; i < places.size(); i++) {
                 Place p = places.get(i);
                 boolean isle = county.island(p.x0 + p.width() / 2, p.z0 + p.depth() / 2);
-                Census.Count c = isle ? island(county, gen, minY, maxY) : Census.get(gen, p, minY, maxY);
+                Census.Count c = Census.get(gen, p, minY, maxY);
+                if (c != null && isle) {
+                    c = island(county);
+                }
                 if (c == null) {
                     return false;
                 }
@@ -404,34 +408,37 @@ public final class Population {
     // ---- Grayhaven island: one pool over every place on it
 
     private static List<Place> islandPlaces;
+    private static double islandArea;
     private static Census.Count islandCount;
+    private static int islandSeen = -1;
 
-    /** Every island place's floor space added up (null while any is still being counted). */
-    private static Census.Count island(County county, CountyGen gen, int minY, int maxY) {
-        if (islandCount != null) {
-            return islandCount;
-        }
+    /**
+     * The whole island's floor space, worked out from the island places counted so far (each counted as players
+     * come near it, like any other place) and scaled up by ground area to every place on the island. Counting
+     * every island building up front built the whole city at once, which held up the world's own building and
+     * made the game stall round Union Station; this way the estimate just gets better as more is counted.
+     */
+    private static Census.Count island(County county) {
         if (islandPlaces == null) {
             islandPlaces = county.allPlaces().stream()
                     .filter(p -> county.island(p.x0 + p.width() / 2, p.z0 + p.depth() / 2)).toList();
+            islandArea = islandPlaces.stream().mapToDouble(p -> (double) p.width() * p.depth()).sum();
         }
-        double in = 0, out = 0;
-        boolean all = true;
+        if (islandCount != null && islandSeen == Census.done()) {
+            return islandCount;
+        }
+        double in = 0, out = 0, area = 0;
         for (Place p : islandPlaces) {
-            Census.Count c = Census.get(gen, p, minY, maxY);   // asks for every one at once, so they're counted together
-            if (c == null) {
-                all = false;
-            } else {
+            Census.Count c = Census.peek(p);
+            if (c != null) {
                 in += c.indoor();
                 out += c.outdoor();
+                area += (double) p.width() * p.depth();
             }
         }
-        if (!all) {
-            return null;
-        }
-        islandCount = new Census.Count(in, out);
-        ZomboidCraft.LOGGER.info("Grayhaven island: {} places, {} indoor and {} outdoor spots for its {} dead",
-                islandPlaces.size(), (long) in, (long) out, Budgets.ISLAND.total());
+        double scale = area <= 0 ? 1 : Math.max(1, islandArea / area);
+        islandCount = new Census.Count(in * scale, out * scale);
+        islandSeen = Census.done();
         return islandCount;
     }
 

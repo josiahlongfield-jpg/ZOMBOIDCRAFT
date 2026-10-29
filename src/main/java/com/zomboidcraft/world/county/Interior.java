@@ -1926,8 +1926,9 @@ final class Interior {
             int fc = rng.nextInt(4);
             int[] ft = STEP[fc];
             int fx = x + ft[0], fz = z + ft[1];
+            // never on the way through a door: a body there lifts you into the lintel
             if (inRoom(f, r, x, z) && inRoom(f, r, fx, fz) && occ[x - x0][z - z0][1] == 0 && occ[fx - x0][fz - z0][1] == 0
-                    && cellAt(f, x, z) == ROOM && cellAt(f, fx, fz) == ROOM) {
+                    && cellAt(f, x, z) == ROOM && cellAt(f, fx, fz) == ROOM && !path[x - x0][z - z0] && !path[fx - x0][fz - z0]) {
                 put(f, x, 1, z, "home_corpse_head" + face(fc));
                 put(f, fx, 1, fz, "home_corpse_foot" + face(fc));
                 int[] sv = side(fc);

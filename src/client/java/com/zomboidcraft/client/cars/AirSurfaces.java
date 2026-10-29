@@ -169,7 +169,11 @@ final class AirSurfaces {
             return new float[3];
         }
         axis.normalize().mul((float) Math.toDegrees(angle) / Flight.DT);   // degrees a second about each body axis
-        return new float[]{Mth.clamp(-axis.x / 28, -1, 1), Mth.clamp(axis.z / 190, -1, 1), Mth.clamp(-axis.y / 8, -1, 1)};
+        // a banked turn yaws the body on its own; only the yaw beyond that is rudder (plus a touch into a roll)
+        float speed = Math.max(20, (float) f.vel.length()), bank = (float) Math.toRadians(f.bank());
+        float turning = (float) Math.toDegrees(9.81f / speed * Math.sin(bank) * Math.cos(Math.toRadians(f.noseUp())));
+        float roll = Mth.clamp(axis.z / 190, -1, 1);
+        return new float[]{Mth.clamp(-axis.x / 28, -1, 1), roll, Mth.clamp((-axis.y - turning) / 8 + 0.15f * roll, -1, 1)};
     }
 
     /** A surface turned by angle radians about its hinge (Rodrigues' rotation). */

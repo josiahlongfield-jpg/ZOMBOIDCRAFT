@@ -1,0 +1,49 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "un_name_science_6": {
+      "sprite": "zomboidcraft:block/city/un_name_science_6",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/un_name_science_6"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        14.6
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#un_name_science_6"
+        },
+        "south": {
+          "texture": "#un_name_science_6",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#un_name_science_6",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#un_name_science_6",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#un_name_science_6",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#un_name_science_6",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

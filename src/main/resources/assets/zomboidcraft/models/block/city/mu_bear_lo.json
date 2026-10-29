@@ -1,0 +1,108 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "mu_fur_bear": "zomboidcraft:block/city/mu_fur_bear",
+    "particle": "zomboidcraft:block/city/mu_fur_bear"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        0,
+        6
+      ],
+      "to": [
+        7,
+        10,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_fur_bear"
+        },
+        "south": {
+          "texture": "#mu_fur_bear"
+        },
+        "east": {
+          "texture": "#mu_fur_bear"
+        },
+        "west": {
+          "texture": "#mu_fur_bear"
+        },
+        "up": {
+          "texture": "#mu_fur_bear"
+        },
+        "down": {
+          "texture": "#mu_fur_bear",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        9,
+        0,
+        6
+      ],
+      "to": [
+        12,
+        10,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_fur_bear"
+        },
+        "south": {
+          "texture": "#mu_fur_bear"
+        },
+        "east": {
+          "texture": "#mu_fur_bear"
+        },
+        "west": {
+          "texture": "#mu_fur_bear"
+        },
+        "up": {
+          "texture": "#mu_fur_bear"
+        },
+        "down": {
+          "texture": "#mu_fur_bear",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        8,
+        4
+      ],
+      "to": [
+        13,
+        16,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_fur_bear"
+        },
+        "south": {
+          "texture": "#mu_fur_bear"
+        },
+        "east": {
+          "texture": "#mu_fur_bear"
+        },
+        "west": {
+          "texture": "#mu_fur_bear"
+        },
+        "up": {
+          "texture": "#mu_fur_bear",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#mu_fur_bear"
+        }
+      }
+    }
+  ]
+}

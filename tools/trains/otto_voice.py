@@ -142,6 +142,12 @@ LINES = {
         ["Holding the doors. For you. Because apparently I'm a fucking doorman now."],
         ["Fine. Doors open. Hurry your ass up."],
     ],
+    'DOORS_SHUT': [
+        ["Close the doors? Fucking finally, somebody with somewhere to be."],
+        ["Doors closing. Anyone still on the platform can go fuck themselves."],
+        ["In a hurry, are we? Fine. Doors shut, keep your fingers out."],
+        ["Oh, look who's the conductor now. Doors closing, your majesty."],
+    ],
     'BUMP': [
         ["Bump. Ha."],
         ["Splat. Should've bought a ticket, shithead."],

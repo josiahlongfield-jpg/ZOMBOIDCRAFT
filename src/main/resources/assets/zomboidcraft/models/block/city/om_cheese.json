@@ -1,0 +1,144 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "om_cheese": "zomboidcraft:block/city/om_cheese",
+    "om_front_cream": "zomboidcraft:block/city/om_front_cream",
+    "om_marble": "zomboidcraft:block/city/om_marble",
+    "particle": "zomboidcraft:block/city/om_front_cream"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        1
+      ],
+      "to": [
+        16,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_front_cream"
+        },
+        "south": {
+          "texture": "#om_front_cream",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#om_front_cream",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#om_front_cream",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#om_marble"
+        },
+        "down": {
+          "texture": "#om_front_cream",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        14,
+        3
+      ],
+      "to": [
+        8,
+        16,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_cheese"
+        },
+        "south": {
+          "texture": "#om_cheese"
+        },
+        "east": {
+          "texture": "#om_cheese"
+        },
+        "west": {
+          "texture": "#om_cheese"
+        },
+        "up": {
+          "texture": "#om_cheese",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#om_cheese"
+        }
+      }
+    },
+    {
+      "from": [
+        9,
+        14,
+        4
+      ],
+      "to": [
+        14,
+        15.5,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_cheese"
+        },
+        "south": {
+          "texture": "#om_cheese"
+        },
+        "east": {
+          "texture": "#om_cheese"
+        },
+        "west": {
+          "texture": "#om_cheese"
+        },
+        "up": {
+          "texture": "#om_cheese"
+        },
+        "down": {
+          "texture": "#om_cheese"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        14,
+        10
+      ],
+      "to": [
+        12,
+        15,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_cheese"
+        },
+        "south": {
+          "texture": "#om_cheese"
+        },
+        "east": {
+          "texture": "#om_cheese"
+        },
+        "west": {
+          "texture": "#om_cheese"
+        },
+        "up": {
+          "texture": "#om_cheese"
+        },
+        "down": {
+          "texture": "#om_cheese"
+        }
+      }
+    }
+  ]
+}

@@ -24,7 +24,7 @@ import net.minecraft.world.phys.AABB;
 /**
  * Draws a lift: the car where the client's running of it has it this frame (an 80s car: brushed
  * steel sides, a wood-grain back wall over a scuffed kick plate, rubber floor, a lit ceiling panel,
- * a handrail and the floor buttons by the doors, its doors sliding), the crosshead and ropes over
+ * handrails and the operating panel by the doors, its doors sliding; see refs/city/lifts), the crosshead and ropes over
  * it, the landing doors sliding at the floor it's opening on, and the amber floor indicator over
  * every landing's doors (and inside the car) counting the floors as it goes.
  *
@@ -34,10 +34,12 @@ import net.minecraft.world.phys.AABB;
 public class LiftRenderer extends EntityRenderer<LiftCar, LiftRenderer.State> {
     static final Identifier ATLAS = ZomboidCraft.id("textures/entity/lift/atlas.png");
     private static final int FULL = 0xF000F0;
-    /** Tiles in the atlas (8 x 8 of 32 px; see tools/lifts/paint.py). */
+    /** Tiles in the atlas (8 x 8 of 64 px; see tools/lifts/paint.py). */
     static final int WALL = 0, WOOD = 1, FLOOR = 2, CEIL = 3, LIGHT = 4, DOOR = 5, ROOF = 6, RAIL = 7, PANEL = 8,
             BTN_OFF = 9, BTN_ON = 10, SEG_ON = 11, SEG_OFF = 12, BEZEL = 13, CABLE = 14, BEAM = 15, KICK = 16, SILL = 17,
-            FRAME = 18;
+            FRAME = 18, LABEL = 19, NUMERAL = 20, BTN_OPEN = 21, BTN_CLOSE = 22, BTN_ALARM = 23;
+    /** Tiles laid about one to a block on big faces (walls, floor, rails), so they stay sharp. */
+    private static final java.util.Set<Integer> TILED = java.util.Set.of(WALL, WOOD, FLOOR, CEIL, ROOF, KICK, CABLE, BEAM, RAIL, SILL, FRAME);
     /** Segments a to g lit for each character. */
     private static final int[] DIGITS = {0x3F, 0x06, 0x5B, 0x4F, 0x66, 0x6D, 0x7D, 0x07, 0x7F, 0x6F};
 
@@ -157,21 +159,16 @@ public class LiftRenderer extends EntityRenderer<LiftCar, LiftRenderer.State> {
         p.zone(w / 2.0 - 0.45, d / 2.0 - 0.55, c + LiftShaft.CEILING - 0.01, w / 2.0 + 0.45, d / 2.0 + 0.55,
                 c + LiftShaft.CEILING - 0.01, LIGHT, 'y');
         p.glow = false;
-        // the floor buttons on the right-hand wall by the doors, lit where called
-        double pu = w - 0.11, n = s.landings.length;
-        int rows = (int) Math.ceil(n / 2.0);
-        double py0 = c + 0.85, py1 = c + 1.75, pv0 = 0.3, pv1 = 0.7;
-        p.wallU(pu, pv0, pv1, py0, py1, PANEL);
-        double cell = Math.min((py1 - py0 - 0.06) / rows, 0.12), bs = cell * 0.7;
-        for (int i = 0; i < n; i++) {
-            int col = i % 2, row = i / 2;
-            double bv = pv0 + 0.1 + col * 0.18, by = py0 + 0.04 + row * cell;
-            p.glow = st.called[i];
-            p.wallU(pu - 0.005, bv, bv + bs, by, by + bs, st.called[i] ? BTN_ON : BTN_OFF);
-            p.glow = false;
+        // handrails along both sides as well, on their brackets
+        for (int side = 0; side < 2; side++) {
+            double u = side == 0 ? 0.2 : w - 0.2, wall = side == 0 ? 0.1 : w - 0.1;
+            double v0 = side == 1 ? 0.8 : 0.4;
+            p.zone(Math.min(u, wall), v0, c + 0.95, Math.max(u, wall), d - 0.3, c + 0.95, RAIL, 'y');
+            p.wallU(u, v0, d - 0.3, c + 0.88, c + 0.95, RAIL);
         }
+        panel(p, st, w - 0.11, c);
         // the car's indicator over the doors, inside
-        indicator(p, st, w / 2.0 - 0.3, w / 2.0 + 0.3, 0.155, c + 2.22, c + 2.62, true);
+        indicator(p, st, w / 2.0 - 0.24, w / 2.0 + 0.24, 0.155, c + 2.24, c + 2.54, true);
         // ---- outside the car: its doors, roof, crosshead and ropes
         double open = st.doors * (w / 2.0 - 0.05);
         leaves(p, 0.1, 0.15, c, w, open, true);
@@ -194,10 +191,15 @@ public class LiftRenderer extends EntityRenderer<LiftCar, LiftRenderer.State> {
         for (int i = st.lo; i <= st.hi; i++) {
             double ly = s.landings[i] - st.y;
             p.light = st.outside;
+            // the doorway's stainless frame, standing just proud of the wall
+            double fv = -1.02;
+            p.box(-0.1, fv, ly, 0.0, -1.0, ly + LiftShaft.DOOR + 0.1, FRAME);
+            p.box(w, fv, ly, w + 0.1, -1.0, ly + LiftShaft.DOOR + 0.1, FRAME);
+            p.box(0.0, fv, ly + LiftShaft.DOOR, w, -1.0, ly + LiftShaft.DOOR + 0.1, FRAME);
             if (s.pitch(i) >= 4 || i == s.landings.length - 1) {
-                indicator(p, st, w / 2.0 - 0.38, w / 2.0 + 0.38, -1.012, ly + 2.25, ly + 2.75, false);
+                indicator(p, st, w / 2.0 - 0.28, w / 2.0 + 0.28, -1.025, ly + 2.3, ly + 2.62, false);
             } else {
-                indicator(p, st, w + 0.15, w + 0.85, -1.012, ly + 1.66, ly + 1.98, false);
+                indicator(p, st, w + 0.2, w + 0.7, -1.025, ly + 1.68, ly + 1.96, false);
             }
         }
     }
@@ -210,57 +212,71 @@ public class LiftRenderer extends EntityRenderer<LiftCar, LiftRenderer.State> {
         p.box(half + open, v0, y, x1 + open, v1, y + LiftShaft.DOOR, DOOR);
     }
 
+    /** A flat face to draw on: a rectangle from a0 to a1 along it (from the viewer's left) and y0 to y1 up it. */
+    private interface Face {
+        void rect(double a0, double a1, double y0, double y1, int tile);
+    }
+
+    /** The plane v, seen from inside the car (+u on the viewer's right) or from a landing (+u on the left). */
+    private static Face faceV(Painter p, double v, double u0, double u1, boolean intoCar) {
+        return (a0, a1, y0, y1, tile) -> {
+            if (intoCar) {
+                p.wallV(v, u0 + a0, u0 + a1, y0, y1, tile);
+            } else {
+                p.wallV(v, u1 - a1, u1 - a0, y0, y1, tile);
+            }
+        };
+    }
+
     /**
      * An amber seven-segment display: the floor the car's at (or passing) and an arrow the way it's
      * going, on a black glass face across u0 .. u1, y0 .. y1, in the plane v (facing out of the
      * shaft at a landing, or into the car).
      */
     private static void indicator(Painter p, State st, double u0, double u1, double v, double y0, double y1, boolean intoCar) {
-        LiftShaft s = st.shaft;
         p.wallV(v, u0 - 0.03, u1 + 0.03, y0 - 0.03, y1 + 0.03, FRAME);
-        double vf = v + (intoCar ? 0.004 : -0.004);
-        p.wallV(vf, u0, u1, y0, y1, BEZEL);
-        double vs = v + (intoCar ? 0.008 : -0.008);
-        String label = s.label(st.showing);
+        p.wallV(v + (intoCar ? 0.004 : -0.004), u0, u1, y0, y1, BEZEL);
+        Face f = faceV(p, v + (intoCar ? 0.008 : -0.008), u0, u1, intoCar);
+        display(p, f, st, u1 - u0, y0, y1);
+    }
+
+    /** The arrow and two digits centred on a face width wide, between y0 and y1. */
+    private static void display(Painter p, Face f, State st, double width, double y0, double y1) {
         double h = (y1 - y0) * 0.72, cy = y0 + (y1 - y0) * 0.14, cw = h * 0.55, gap = cw * 0.3;
-        // seen from in front: from inside the car u runs left to right; from the landing, right to left
-        double width = (u1 - u0);
         double arrowW = cw * 0.9;
         double total = arrowW + gap + 2 * cw + gap;
         double start = (width - total) / 2;
-        // positions along the face from the viewer's left
-        arrow(p, st, slot(u0, u1, start, arrowW, intoCar), vs, cy, h, arrowW);
-        String two = label.length() >= 2 ? label.substring(label.length() - 2) : " " + label;
-        for (int k = 0; k < 2; k++) {
-            double[] at = slot(u0, u1, start + arrowW + gap + k * (cw + gap * 0.5), cw, intoCar);
-            digit(p, two.charAt(k), at, vs, cy, h, intoCar);
-        }
+        arrow(p, f, st.dir, start, cy, h, arrowW);
+        digits(p, f, st.shaft.label(st.showing), start + arrowW + gap, cy, h, cw, SEG_ON, SEG_OFF);
     }
 
-    /** Where a piece starts (from the viewer's left) along the face, as u0 .. u1. */
-    private static double[] slot(double u0, double u1, double from, double width, boolean intoCar) {
-        // inside the car you look out along -v, with +u on your right; at a landing you look along +v, +u on your left
-        return intoCar ? new double[] {u0 + from, u0 + from + width} : new double[] {u1 - from - width, u1 - from};
-    }
-
-    private static void arrow(Painter p, State st, double[] at, double v, double y0, double h, double w) {
-        if (st.dir == 0) {
+    private static void arrow(Painter p, Face f, int dir, double a0, double y0, double h, double w) {
+        if (dir == 0) {
             return;
         }
-        double mid = (at[0] + at[1]) / 2;
+        double mid = a0 + w / 2;
         p.glow = true;
         for (int k = 0; k < 4; k++) {
             // a stack of bars, widest at the arrow's foot
-            double bw = w * (k + 1) / 4.0, by = st.dir > 0 ? y0 + h * (0.75 - k * 0.18) : y0 + h * (0.1 + k * 0.18);
-            p.wallV(v, mid - bw / 2, mid + bw / 2, by, by + h * 0.14, SEG_ON);
+            double bw = w * (k + 1) / 4.0, by = dir > 0 ? y0 + h * (0.75 - k * 0.18) : y0 + h * (0.1 + k * 0.18);
+            f.rect(mid - bw / 2, mid + bw / 2, by, by + h * 0.14, SEG_ON);
         }
         p.glow = false;
     }
 
-    private static void digit(Painter p, char ch, double[] at, double v, double y0, double h, boolean intoCar) {
+    /** Two characters (the last two of label) from a0, each cw wide; off segments drawn with off (or not, if off < 0). */
+    private static void digits(Painter p, Face f, String label, double a0, double y0, double h, double cw, int on, int off) {
+        String two = label.length() >= 2 ? label.substring(label.length() - 2) : " " + label;
+        double gap = cw * 0.15;
+        for (int k = 0; k < 2; k++) {
+            digit(p, f, two.charAt(k), a0 + k * (cw + gap), y0, h, cw, on, off);
+        }
+    }
+
+    private static void digit(Painter p, Face f, char ch, double x0, double y0, double h, double wd, int onTile, int offTile) {
         int mask = ch >= '0' && ch <= '9' ? DIGITS[ch - '0'] : ch == 'B' ? 0x7C : ch == '-' ? 0x40 : 0;
-        double x0 = at[0], x1 = at[1], wd = x1 - x0, t = wd * 0.2, ym = y0 + h / 2, y1 = y0 + h;
-        // segment boxes from the viewer's left (lx0, lx1 as fractions of the width)
+        double t = wd * 0.2, ym = y0 + h / 2, y1 = y0 + h;
+        // segment boxes from the viewer's left
         double[][] seg = {
                 {t, wd - t, y1 - t, y1},            // a
                 {wd - t, wd, ym, y1 - t},           // b
@@ -272,13 +288,50 @@ public class LiftRenderer extends EntityRenderer<LiftCar, LiftRenderer.State> {
         };
         for (int i = 0; i < 7; i++) {
             boolean on = (mask >> i & 1) != 0;
-            double a = seg[i][0], b = seg[i][1];
-            // to u: inside the car the viewer's left is low u, at a landing high u
-            double ua = intoCar ? x0 + a : x1 - b, ub = intoCar ? x0 + b : x1 - a;
-            p.glow = on;
-            p.wallV(v, ua, ub, seg[i][2], seg[i][3], on ? SEG_ON : SEG_OFF);
+            if (!on && offTile < 0) {
+                continue;
+            }
+            p.glow = on && onTile == SEG_ON;
+            f.rect(x0 + seg[i][0], x0 + seg[i][1], seg[i][2], seg[i][3], on ? onTile : offTile);
         }
         p.glow = false;
+    }
+
+    /**
+     * The car operating panel on the right-hand wall by the doors, as in the photos: a tall
+     * stainless strip with its own floor display at the top, the floor buttons in two columns each
+     * on a black number label, then door open, door close and the yellow alarm button.
+     */
+    private static void panel(Painter p, State st, double pu, double c) {
+        LiftShaft s = st.shaft;
+        int n = s.landings.length, rows = (n + 1) / 2;
+        double v0 = 0.28, v1 = 0.62, y0 = c + 0.8, y1 = c + 1.95;
+        p.wallU(pu, v0, v1, y0, y1, PANEL);
+        // looking at the right-hand wall from inside, the doors (low v) are on the left
+        Face f = (a0, a1, b0, b1, tile) -> p.wallU(pu - 0.006, v0 + a0, v0 + a1, b0, b1, tile);
+        Face top = (a0, a1, b0, b1, tile) -> p.wallU(pu - 0.009, v0 + a0, v0 + a1, b0, b1, tile);
+        double width = v1 - v0;
+        // the display at the top
+        f.rect(0.06, width - 0.06, y1 - 0.15, y1 - 0.04, BEZEL);
+        display(p, top, st, width, y1 - 0.14, y1 - 0.05);
+        // the floor buttons
+        double fy1 = y1 - 0.2, fy0 = y0 + 0.2;
+        double cell = Math.min((fy1 - fy0) / rows, 0.09), bs = cell * 0.62;
+        for (int i = 0; i < n; i++) {
+            int col = i % 2, row = i / 2;
+            double a = 0.03 + col * (width / 2), b = fy0 + row * cell + (cell - bs) / 2;
+            double lw = width / 2 - 0.06 - bs;
+            f.rect(a, a + lw, b + bs * 0.1, b + bs * 0.9, LABEL);
+            digits(p, top, s.label(i), a + lw * 0.1, b + bs * 0.22, bs * 0.56, lw * 0.32, NUMERAL, -1);
+            p.glow = st.called[i];
+            f.rect(a + lw + 0.01, a + lw + 0.01 + bs, b, b + bs, st.called[i] ? BTN_ON : BTN_OFF);
+            p.glow = false;
+        }
+        // door open, door close, alarm
+        double bb = 0.055, by = y0 + 0.07;
+        f.rect(0.05, 0.05 + bb, by, by + bb, BTN_OPEN);
+        f.rect(width / 2 - bb / 2, width / 2 + bb / 2, by, by + bb, BTN_CLOSE);
+        f.rect(width - 0.05 - bb, width - 0.05, by, by + bb, BTN_ALARM);
     }
 
     // ------------------------------------------------------------------ quads
@@ -343,9 +396,38 @@ public class LiftRenderer extends EntityRenderer<LiftCar, LiftRenderer.State> {
             wallV(v1, u0, u1, y0, y1, tile);
         }
 
-        /** Four corners {u, y, v} in order round the face, its normal in the frame (nu, ny, nv). */
+        /** Four corners {u, y, v} in order round the face, its normal in the frame (nu, ny, nv); a tiled face is laid a tile to about a block. */
         private void quad(double[][] c, int tile, double nu, double ny, double nv) {
-            float tu = (tile % 8) * 32 / 256f, tv = (tile / 8) * 32 / 256f, ts = 32 / 256f, e = 0.5f / 256f;
+            int na = TILED.contains(tile) ? (int) Math.max(1, Math.round(dist(c[0], c[1]))) : 1;
+            int nb = TILED.contains(tile) ? (int) Math.max(1, Math.round(dist(c[0], c[3]))) : 1;
+            if (na == 1 && nb == 1) {
+                piece(c, tile, nu, ny, nv);
+                return;
+            }
+            for (int i = 0; i < na; i++) {
+                for (int j = 0; j < nb; j++) {
+                    piece(new double[][] {lerp(c, (double) i / na, (double) j / nb), lerp(c, (double) (i + 1) / na, (double) j / nb),
+                            lerp(c, (double) (i + 1) / na, (double) (j + 1) / nb), lerp(c, (double) i / na, (double) (j + 1) / nb)},
+                            tile, nu, ny, nv);
+                }
+            }
+        }
+
+        private static double dist(double[] a, double[] b) {
+            return Math.sqrt((a[0] - b[0]) * (a[0] - b[0]) + (a[1] - b[1]) * (a[1] - b[1]) + (a[2] - b[2]) * (a[2] - b[2]));
+        }
+
+        /** A point on the face: s along corner 0 to 1, t along corner 0 to 3 (it's a parallelogram). */
+        private static double[] lerp(double[][] c, double s, double t) {
+            double[] r = new double[3];
+            for (int k = 0; k < 3; k++) {
+                r[k] = c[0][k] + (c[1][k] - c[0][k]) * s + (c[3][k] - c[0][k]) * t;
+            }
+            return r;
+        }
+
+        private void piece(double[][] c, int tile, double nu, double ny, double nv) {
+            float tu = (tile % 8) / 8f, tv = (tile / 8) / 8f, ts = 1 / 8f, e = 0.5f / 512f;
             float[][] uv = {{tu + e, tv + ts - e}, {tu + ts - e, tv + ts - e}, {tu + ts - e, tv + e}, {tu + e, tv + e}};
             int lit = glow ? FULL : light;
             // the frame's normal in the world

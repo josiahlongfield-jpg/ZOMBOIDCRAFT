@@ -1,0 +1,74 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tv_red": "zomboidcraft:block/city/tv_red",
+    "particle": "zomboidcraft:block/city/tv_red"
+  },
+  "elements": [
+    {
+      "from": [
+        -3.3,
+        7.25,
+        7.25
+      ],
+      "to": [
+        19.3,
+        8.75,
+        8.75
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tv_red",
+          "uv": [
+            0,
+            7.25,
+            16,
+            8.75
+          ]
+        },
+        "south": {
+          "texture": "#tv_red",
+          "uv": [
+            0,
+            7.25,
+            16,
+            8.75
+          ]
+        },
+        "east": {
+          "texture": "#tv_red"
+        },
+        "west": {
+          "texture": "#tv_red"
+        },
+        "up": {
+          "texture": "#tv_red",
+          "uv": [
+            0,
+            7.25,
+            16,
+            8.75
+          ]
+        },
+        "down": {
+          "texture": "#tv_red",
+          "uv": [
+            0,
+            7.25,
+            16,
+            8.75
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "z",
+        "angle": 45
+      }
+    }
+  ]
+}

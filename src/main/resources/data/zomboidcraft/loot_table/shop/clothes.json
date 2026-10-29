@@ -11,7 +11,7 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:leather_helmet",
-          "weight": 3,
+          "weight": 12,
           "functions": [
             {
               "function": "minecraft:set_damage",
@@ -26,7 +26,7 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:leather_chestplate",
-          "weight": 3,
+          "weight": 12,
           "functions": [
             {
               "function": "minecraft:set_damage",
@@ -41,7 +41,7 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:leather_leggings",
-          "weight": 3,
+          "weight": 12,
           "functions": [
             {
               "function": "minecraft:set_damage",
@@ -56,7 +56,7 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:leather_boots",
-          "weight": 3,
+          "weight": 12,
           "functions": [
             {
               "function": "minecraft:set_damage",
@@ -71,7 +71,7 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:white_wool",
-          "weight": 4,
+          "weight": 16,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -86,7 +86,7 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:light_gray_wool",
-          "weight": 3,
+          "weight": 12,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -101,7 +101,7 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:blue_wool",
-          "weight": 2,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -116,7 +116,7 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:leather",
-          "weight": 3,
+          "weight": 12,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -131,31 +131,31 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:school_backpack",
-          "weight": 2
+          "weight": 8
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:fanny_pack",
-          "weight": 2
+          "weight": 8
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:hiking_backpack",
-          "weight": 1
+          "weight": 4
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:duffel_bag",
-          "weight": 1
+          "weight": 4
         },
         {
           "type": "minecraft:empty",
-          "weight": 10
+          "weight": 40
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:thread_spool",
-          "weight": 6,
+          "weight": 2,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -166,6 +166,11 @@
               }
             }
           ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:leather_belt",
+          "weight": 24
         }
       ]
     }

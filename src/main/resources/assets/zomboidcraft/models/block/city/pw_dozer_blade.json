@@ -1,0 +1,113 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "painted_steel": "zomboidcraft:block/city/painted_steel",
+    "pw_dozer": "zomboidcraft:block/city/pw_dozer",
+    "particle": "zomboidcraft:block/city/painted_steel"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        2
+      ],
+      "to": [
+        16,
+        12,
+        6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#painted_steel"
+        },
+        "south": {
+          "texture": "#pw_dozer"
+        },
+        "east": {
+          "texture": "#pw_dozer",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#pw_dozer",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#pw_dozer"
+        },
+        "down": {
+          "texture": "#pw_dozer",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        1
+      ],
+      "to": [
+        16,
+        2,
+        3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#painted_steel"
+        },
+        "south": {
+          "texture": "#painted_steel"
+        },
+        "east": {
+          "texture": "#painted_steel",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#painted_steel",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#painted_steel"
+        },
+        "down": {
+          "texture": "#painted_steel",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        4,
+        6
+      ],
+      "to": [
+        10,
+        8,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pw_dozer"
+        },
+        "south": {
+          "texture": "#pw_dozer",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#pw_dozer"
+        },
+        "west": {
+          "texture": "#pw_dozer"
+        },
+        "up": {
+          "texture": "#pw_dozer"
+        },
+        "down": {
+          "texture": "#pw_dozer"
+        }
+      }
+    }
+  ]
+}

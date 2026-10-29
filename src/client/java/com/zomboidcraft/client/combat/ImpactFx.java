@@ -40,7 +40,7 @@ import net.minecraft.world.phys.Vec3;
 public final class ImpactFx {
     private static final Identifier TEXTURE = ZomboidCraft.id("textures/effect/impacts.png");
     /** The texture's cells: two holes, two splashes, solid blood. */
-    private static final int CELLS = 5, HOLE = 0, SPLASH = 2, SOLID = 4;
+    private static final int CELLS = 7, HOLE = 0, SPLASH = 2, SOLID = 4, GLASS_HOLE = 5;
     private static final float GRAVITY = 24f, DRAG = 0.6f;
     private static final int MAX_DROPS = 400;
     private static final Random RANDOM = new Random();
@@ -101,6 +101,16 @@ public final class ImpactFx {
                         lvl.addParticle(ParticleTypes.ELECTRIC_SPARK, p.x, p.y, p.z, v.x, v.y, v.z);
                     }
                     lvl.addParticle(ParticleTypes.SMOKE, p.x + n.x * 0.05, p.y + n.y * 0.05, p.z + n.z * 0.05, 0, 0.01, 0);
+                    return;
+                }
+                if (surface == com.zomboidcraft.combat.Surface.GLASS) {
+                    // through the glass: a glitter of it both ways, and a cracked hole left in it
+                    for (int i = 0; i < 5; i++) {
+                        Vec3 v = n.scale((i % 2 == 0 ? 1 : -1) * (0.05 + RANDOM.nextDouble() * 0.1)).add(jitter(0.1));
+                        lvl.addParticle(new BlockParticleOption(ParticleTypes.BLOCK, state), p.x, p.y, p.z, v.x, v.y, v.z);
+                    }
+                    decal(lvl, p, face, state, 0.11f * (0.85f + RANDOM.nextFloat() * 0.3f), GLASS_HOLE + RANDOM.nextInt(2),
+                            (float) Math.max(config.bulletHoleSeconds, 600));
                     return;
                 }
                 // chips of the block thrown back out, a puff of its dust hanging there, sparks off metal

@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "gl_coal": "zomboidcraft:block/city/gl_coal",
+    "gl_coal_top": "zomboidcraft:block/city/gl_coal_top",
+    "particle": "zomboidcraft:block/city/gl_coal"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        8,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gl_coal",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#gl_coal",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#gl_coal",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#gl_coal",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#gl_coal_top"
+        },
+        "down": {
+          "texture": "#gl_coal",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -172,26 +172,30 @@ public final class ZcConfig {
     }
 
     public static class Trains {
-        /** Cruising speeds in blocks a second; a little slow, so the view from the ride is enjoyed. */
-        public double railSpeed = 10;
-        public double subwaySpeed = 9;
+        /** Cruising speeds in blocks a second (60 is about 216 km/h). */
+        public double railSpeed = 60;
+        public double subwaySpeed = 56;
         /** Speeding up and braking, blocks a second per second: gradual, never sudden. */
-        public double acceleration = 0.6;
-        public double braking = 0.75;
+        public double acceleration = 3;
+        public double braking = 3.5;
         /** How hard a curve may be taken (sideways blocks/s/s): lower slows trains more on bends. */
-        public double curveGrip = 1.1;
+        public double curveGrip = 4.0;
         /** Seconds the doors stay open at a stop before they close by themselves. */
         public int doorSeconds = 30;
         /** Cars in each train. */
         public int railCars = 3;
         public int subwayCars = 3;
-        /** Trains running each line. */
-        public int railTrains = 1;
-        public int subwayTrains = 1;
-        /** Earshot of the flare (railway) and the siren (subway) a call button sets off, for zombies. */
+        /** Trains running each line; 0 spreads them along it, one every railSpacing / subwaySpacing blocks of track. */
+        public int railTrains = 0;
+        public int subwayTrains = 0;
+        public double railSpacing = 1500;
+        /** How much faster a train runs on its way to a call button (curves still slow it), never past 80 blocks a second. */
+        public double expressSpeed = 1.3;
+        public double subwaySpacing = 900;
+        /** Earshot of the flare (railway) and the buzzer (subway) a call button sets off, once, for zombies. */
         public double flareNoise = 72;
         public double sirenNoise = 64;
-        /** How long one flare burns, in seconds; another goes up if the train still hasn't come. */
+        /** How long the flare burns, in seconds. */
         public int flareSeconds = 45;
         /** Damage a moving train does to a zombie it hits, and to a player per block-a-second of speed. */
         public float hitZombie = 40;
@@ -200,6 +204,9 @@ public final class ZcConfig {
         public boolean ottoTalks = true;
         /** Seconds between OTTO's remarks while running between stops. */
         public int ottoChatter = 45;
+        /** Zombies ride the trains: share of trains that start with some aboard, and most a train carries. */
+        public double zombieRiderChance = 0.6;
+        public int zombieRidersMax = 6;
     }
 
     public static class Performance {
@@ -624,6 +631,21 @@ public final class ZcConfig {
         /** About how many minutes between those events. */
         public double worldEventMinutes = 10;
         /**
+         * Air strikes among those events (Josiah 2026-10-28): a jet strafing or bombing a crowd of zombies, or the
+         * Apache circling a horde shooting them; zombies caught die, players right there are hurt, blocks never.
+         */
+        public boolean airStrikes = true;
+        /** The share of the events that are air strikes, when there's a crowd of at least airStrikeCrowd zombies near. */
+        public double airStrikeShare = 0.35;
+        public int airStrikeCrowd = 4;
+        /** Shells a second: the jets' rotary cannon and the Apache's chain gun. */
+        public double strikeCannonRate = 50;
+        public double strikeChainGunRate = 10;
+        /** A bomb kills zombies within strikeBombKill blocks and hurts players within strikeBombHurt, up to strikeBombDamage. */
+        public double strikeBombKill = 9;
+        public double strikeBombHurt = 7;
+        public double strikeBombDamage = 30;
+        /**
          * Where a car's key is, as shares: left in the ignition, in the glovebox, on a zombie that dies near the car
          * (each death nearby has carKeyDrop of being the one); the rest are lost, and the car has to be hotwired.
          */
@@ -669,7 +691,7 @@ public final class ZcConfig {
         /** Fog rolling in and out on its own over any weather, from clear to a thick bank; 0 turns it off, 0.5 halves it. */
         public double rollingFog = 1.0;
         /** Mist you can see under shader packs: banks drifting with the wind in fog, low ground mist at night. Client side. */
-        public boolean mist = true;
+        public boolean mist = false;
         /** How thick the mist gets, as a share; 0.5 halves it. Client side. */
         public double mistAmount = 1.0;
         /** Lightning flickering over the skyline in storms, the odd bolt between the towers, thunder after. Client side. */
@@ -1247,6 +1269,15 @@ public final class ZcConfig {
         public double bloodSeconds = 120.0;
         /** How many holes and splashes stay at once; the oldest go first. Client side. */
         public int maxDecals = 300;
+        /**
+         * Bullets go through glass (a little spent) and leave holes in it; this many holes and it shatters: small
+         * and leaded panes, a house window, big panes (ship, roof), shop and office plate glass, glass bricks.
+         */
+        public int glassHolesSmall = 2;
+        public int glassHolesWindow = 3;
+        public int glassHolesLarge = 4;
+        public int glassHolesShop = 5;
+        public int glassHolesBlock = 6;
         /** A short, soft flash at the muzzle with each shot (a smaller one at the end of a suppressor). */
         public boolean muzzleFlash = true;
         /** How much the gun bobs and sways on the sights: 1 = as much as at the hip, 0 = dead still. Client side. */
@@ -1300,7 +1331,7 @@ public final class ZcConfig {
      * are left alone).
      */
     public int defaultsVersion = 0;
-    private static final int DEFAULTS = 10;
+    private static final int DEFAULTS = 14;
 
     private static void upgrade(ZcConfig c) {
         if (c.defaultsVersion < 1) {
@@ -1413,6 +1444,59 @@ public final class ZcConfig {
             // 2026-10-27 (Josiah): shorter railway trains, three cars with OTTO's
             if (c.trains.railCars == 4) {
                 c.trains.railCars = 3;
+            }
+        }
+        if (c.defaultsVersion < 11) {
+            // 2026-10-28 (Josiah waited ages at a stop): one train on the long county loop came round about every
+            // half hour; now a train every 1500 blocks of railway (900 of subway)
+            if (c.trains.railTrains == 1) {
+                c.trains.railTrains = 0;
+            }
+            if (c.trains.subwayTrains == 1) {
+                c.trains.subwayTrains = 0;
+            }
+        }
+        if (c.defaultsVersion < 12) {
+            // 2026-10-28 (Josiah): the trips between stops took far too long; both lines about three times faster
+            if (c.trains.railSpeed == 10) {
+                c.trains.railSpeed = 30;
+            }
+            if (c.trains.subwaySpeed == 9) {
+                c.trains.subwaySpeed = 28;
+            }
+            if (c.trains.acceleration == 0.6) {
+                c.trains.acceleration = 1.5;
+            }
+            if (c.trains.braking == 0.75) {
+                c.trains.braking = 1.8;
+            }
+            if (c.trains.curveGrip == 1.1) {
+                c.trains.curveGrip = 2.0;
+            }
+            if (c.trains.expressSpeed == 2.5) {
+                c.trains.expressSpeed = 1.3;
+            }
+        }
+        if (c.defaultsVersion < 13) {
+            // 2026-10-28 (Josiah): the ground mist cost too much under Photon in heavy fog; off unless turned back on
+            c.weather.mist = false;
+        }
+        if (c.defaultsVersion < 14) {
+            // 2026-10-28 (Josiah): double the train speed again
+            if (c.trains.railSpeed == 30) {
+                c.trains.railSpeed = 60;
+            }
+            if (c.trains.subwaySpeed == 28) {
+                c.trains.subwaySpeed = 56;
+            }
+            if (c.trains.acceleration == 1.5) {
+                c.trains.acceleration = 3;
+            }
+            if (c.trains.braking == 1.8) {
+                c.trains.braking = 3.5;
+            }
+            if (c.trains.curveGrip == 2.0) {
+                c.trains.curveGrip = 4.0;
             }
         }
         c.defaultsVersion = DEFAULTS;

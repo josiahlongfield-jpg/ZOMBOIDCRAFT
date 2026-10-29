@@ -1,0 +1,133 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cv_brass": "zomboidcraft:block/city/cv_brass",
+    "cv_flag_state": "zomboidcraft:block/city/cv_flag_state",
+    "ext_trim_white": "zomboidcraft:block/city/ext_trim_white",
+    "particle": "zomboidcraft:block/city/ext_trim_white"
+  },
+  "elements": [
+    {
+      "from": [
+        7.25,
+        0,
+        7.25
+      ],
+      "to": [
+        8.75,
+        13,
+        8.75
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_trim_white"
+        },
+        "south": {
+          "texture": "#ext_trim_white"
+        },
+        "east": {
+          "texture": "#ext_trim_white"
+        },
+        "west": {
+          "texture": "#ext_trim_white"
+        },
+        "up": {
+          "texture": "#ext_trim_white"
+        },
+        "down": {
+          "texture": "#ext_trim_white",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        6.5,
+        13,
+        6.5
+      ],
+      "to": [
+        9.5,
+        16,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_brass"
+        },
+        "south": {
+          "texture": "#cv_brass"
+        },
+        "east": {
+          "texture": "#cv_brass"
+        },
+        "west": {
+          "texture": "#cv_brass"
+        },
+        "up": {
+          "texture": "#cv_brass",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cv_brass"
+        }
+      }
+    },
+    {
+      "from": [
+        8.75,
+        1,
+        7.6
+      ],
+      "to": [
+        32,
+        12.5,
+        8.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_flag_state",
+          "uv": [
+            0,
+            3.5,
+            16,
+            15
+          ]
+        },
+        "south": {
+          "texture": "#cv_flag_state",
+          "uv": [
+            0,
+            3.5,
+            16,
+            15
+          ]
+        },
+        "east": {
+          "texture": "#cv_flag_state"
+        },
+        "west": {
+          "texture": "#cv_flag_state"
+        },
+        "up": {
+          "texture": "#cv_flag_state",
+          "uv": [
+            0,
+            7.6,
+            16,
+            8.4
+          ]
+        },
+        "down": {
+          "texture": "#cv_flag_state",
+          "uv": [
+            0,
+            7.6,
+            16,
+            8.4
+          ]
+        }
+      }
+    }
+  ]
+}

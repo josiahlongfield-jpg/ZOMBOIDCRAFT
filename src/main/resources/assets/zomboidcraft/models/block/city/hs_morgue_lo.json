@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hs_morgue": "zomboidcraft:block/city/hs_morgue",
+    "particle": "zomboidcraft:block/city/hs_morgue"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        2
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hs_morgue"
+        },
+        "south": {
+          "texture": "#hs_morgue",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#hs_morgue",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#hs_morgue",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#hs_morgue",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#hs_morgue",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

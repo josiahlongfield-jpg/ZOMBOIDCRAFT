@@ -1,0 +1,743 @@
+[
+ {
+  "path": "aircraft/canopy",
+  "events": [
+   "aircraft.canopy"
+  ],
+  "start": 6.098089615718485,
+  "end": 7,
+  "loop": false,
+  "xfade": 0,
+  "fadeIn": 0,
+  "fadeOut": 0,
+  "gainDb": 7,
+  "duration": 7,
+  "saved": "2026-10-28T22:41:47.657Z"
+ },
+ {
+  "path": "aircraft/heli/distant",
+  "events": [
+   "aircraft.heli.distant"
+  ],
+  "start": 0,
+  "end": 9,
+  "loop": true,
+  "xfade": 0,
+  "fadeIn": 0,
+  "fadeOut": 0,
+  "gainDb": 0.5,
+  "duration": 9,
+  "saved": "2026-10-28T22:44:36.813Z"
+ },
+ {
+  "path": "aircraft/heli/rotor",
+  "events": [
+   "aircraft.heli.rotor"
+  ],
+  "start": 0.05104286120305899,
+  "end": 0.8188733973213408,
+  "loop": true,
+  "xfade": 0.13,
+  "fadeIn": 0,
+  "fadeOut": 0,
+  "gainDb": 0,
+  "duration": 0.857,
+  "saved": "2026-10-28T22:47:28.194Z"
+ },
+ {
+  "path": "aircraft/heli/shutdown",
+  "events": [
+   "aircraft.heli.shutdown"
+  ],
+  "start": 6.8364423965464285,
+  "end": 32,
+  "loop": false,
+  "xfade": 0,
+  "fadeIn": 0,
+  "fadeOut": 0,
+  "gainDb": 0,
+  "duration": 32,
+  "saved": "2026-10-28T22:48:17.008Z"
+ },
+ {
+  "path": "aircraft/hook",
+  "events": [
+   "aircraft.hook"
+  ],
+  "start": 0,
+  "end": 6.034270833333333,
+  "loop": false,
+  "xfade": 0,
+  "fadeIn": 0,
+  "fadeOut": 0,
+  "gainDb": 0,
+  "duration": 6,
+  "saved": "2026-10-28T22:49:29.060Z"
+ },
+ {
+  "path": "aircraft/jet/distant",
+  "events": [
+   "aircraft.jet.distant"
+  ],
+  "start": 0,
+  "end": 2.9793020833333337,
+  "loop": false,
+  "xfade": 0,
+  "fadeIn": 0.41,
+  "fadeOut": 1.17,
+  "gainDb": 0,
+  "duration": 3.5,
+  "saved": "2026-10-28T22:51:55.075Z"
+ },
+ {
+  "path": "car/stall/1",
+  "events": [
+   "car.stall"
+  ],
+  "start": 0.7881773399014779,
+  "end": 1.25,
+  "loop": false,
+  "xfade": 0,
+  "fadeIn": 0.64,
+  "fadeOut": 0.55,
+  "gainDb": -18,
+  "duration": 1.25,
+  "saved": "2026-10-28T22:56:04.649Z"
+ },
+ {
+  "path": "creature/harvestman/click/1",
+  "events": [
+   "creature.harvestman.click"
+  ],
+  "start": 0,
+  "end": 0.7,
+  "loop": false,
+  "xfade": 0,
+  "fadeIn": 0,
+  "fadeOut": 0,
+  "gainDb": -18,
+  "duration": 0.7,
+  "saved": "2026-10-28T22:56:42.577Z"
+ },
+ {
+  "path": "creature/harvestman/click/2",
+  "events": [
+   "creature.harvestman.click"
+  ],
+  "start": 0,
+  "end": 0.7,
+  "loop": false,
+  "xfade": 0,
+  "fadeIn": 0,
+  "fadeOut": 0,
+  "gainDb": -18,
+  "duration": 0.7,
+  "saved": "2026-10-28T22:56:54.933Z"
+ },
+ {
+  "path": "creature/harvestman/click/3",
+  "events": [
+   "creature.harvestman.click"
+  ],
+  "start": 0,
+  "end": 0.7,
+  "loop": false,
+  "xfade": 0,
+  "fadeIn": 0,
+  "fadeOut": 0,
+  "gainDb": -18,
+  "duration": 0.7,
+  "saved": "2026-10-28T22:57:02.651Z"
+ },
+ {
+  "path": "creature/harvestman/death/1",
+  "events": [
+   "creature.harvestman.death"
+  ],
+  "start": 0,
+  "end": 4.5,
+  "loop": false,
+  "xfade": 0,
+  "fadeIn": 0,
+  "fadeOut": 0,
+  "gainDb": -18,
+  "duration": 4.5,
+  "saved": "2026-10-28T22:57:13.852Z"
+ },
+ {
+  "path": "creature/harvestman/feed/1",
+  "events": [
+   "creature.harvestman.feed"
+  ],
+  "start": 0,
+  "end": 3.6,
+  "loop": false,
+  "xfade": 0,
+  "fadeIn": 0,
+  "fadeOut": 0,
+  "gainDb": 0,
+  "duration": 3.6,
+  "saved": "2026-10-28T22:57:24.935Z"
+ },
+ {
+  "path": "creature/harvestman/hurt/1",
+  "events": [
+   "creature.harvestman.hurt"
+  ],
+  "start": 0,
+  "end": 0.55,
+  "loop": false,
+  "xfade": 0,
+  "fadeIn": 0,
+  "fadeOut": 0,
+  "gainDb": -18,
+  "duration": 0.55,
+  "saved": "2026-10-28T22:58:27.458Z"
+ },
+ {
+  "path": "creature/harvestman/hurt/2",
+  "events": [
+   "creature.harvestman.hurt"
+  ],
+  "start": 0,
+  "end": 0.45,
+  "loop": false,
+  "xfade": 0,
+  "fadeIn": 0,
+  "fadeOut": 0,
+  "gainDb": -18,
+  "duration": 0.45,
+  "saved": "2026-10-28T22:58:22.312Z"
+ },
+ {
+  "path": "creature/harvestman/hurt/3",
+  "events": [
+   "creature.harvestman.hurt"
+  ],
+  "start": 0,
+  "end": 0.55,
+  "loop": false,
+  "xfade": 0,
+  "fadeIn": 0,
+  "fadeOut": 0,
+  "gainDb": -18,
+  "duration": 0.55,
+  "saved": "2026-10-28T22:58:18.661Z"
+ },
+ {
+  "path": "creature/harvestman/screech/1",
+  "events": [
+   "creature.harvestman.screech"
+  ],
+  "start": 0,
+  "end": 1,
+  "loop": false,
+  "xfade": 0,
+  "fadeIn": 0,
+  "fadeOut": 0,
+  "gainDb": -4,
+  "duration": 1,
+  "saved": "2026-10-28T22:59:10.149Z"
+ },
+ {
+  "path": "creature/harvestman/screech/2",
+  "events": [
+   "creature.harvestman.screech"
+  ],
+  "start": 0,
+  "end": 1.15,
+  "loop": false,
+  "xfade": 0,
+  "fadeIn": 0,
+  "fadeOut": 0,
+  "gainDb": -18,
+  "duration": 1.15,
+  "saved": "2026-10-28T22:59:18.867Z"
+ },
+ {
+  "path": "door/bash/2",
+  "events": [
+   "entity.zombie.attack_wooden_door"
+  ],
+  "start": 1.01734934318555,
+  "end": 1.5,
+  "loop": false,
+  "xfade": 0,
+  "fadeIn": 0,
+  "fadeOut": 0,
+  "gainDb": 0,
+  "duration": 1.5,
+  "saved": "2026-10-28T23:00:04.511Z"
+ },
+ {
+  "path": "door/bash_metal/3",
+  "events": [
+   "entity.zombie.attack_iron_door"
+  ],
+  "start": 0,
+  "end": 1.47,
+  "loop": false,
+  "xfade": 0,
+  "fadeIn": 0,
+  "fadeOut": 0,
+  "gainDb": -18,
+  "duration": 1.47,
+  "saved": "2026-10-28T23:00:26.019Z"
+ },
+ {
+  "path": "music/bed/1",
+  "events": [
+   "music.bed"
+  ],
+  "start": 0,
+  "end": 56.75,
+  "loop": true,
+  "xfade": 0,
+  "fadeIn": 0,
+  "fadeOut": 0,
+  "gainDb": 2.5,
+  "duration": 56.75,
+  "saved": "2026-10-28T23:01:44.352Z"
+ },
+ {
+  "path": "music/chase/1",
+  "events": [
+   "music.chase"
+  ],
+  "start": 0,
+  "end": 19.5,
+  "loop": true,
+  "xfade": 0,
+  "fadeIn": 0,
+  "fadeOut": 0,
+  "gainDb": 2,
+  "duration": 19.5,
+  "saved": "2026-10-28T23:01:57.556Z"
+ },
+ {
+  "path": "music/night/1",
+  "events": [
+   "music.night"
+  ],
+  "start": 0,
+  "end": 204.928,
+  "loop": true,
+  "xfade": 0,
+  "fadeIn": 0,
+  "fadeOut": 0,
+  "gainDb": 2,
+  "duration": 204.928,
+  "saved": "2026-10-28T23:02:37.609Z"
+ },
+ {
+  "path": "weapon/bullet/impact/nearby/1",
+  "events": [
+   "weapon.bullet.impact.nearby",
+   "weapon.bullet.whizz"
+  ],
+  "start": 0,
+  "end": 0.16734375,
+  "loop": false,
+  "xfade": 0,
+  "fadeIn": 0,
+  "fadeOut": 0,
+  "gainDb": 0,
+  "duration": 0.404,
+  "saved": "2026-10-28T23:04:15.660Z"
+ },
+ {
+  "path": "weapon/bullet/impact/nearby/2",
+  "events": [
+   "weapon.bullet.impact.nearby",
+   "weapon.bullet.whizz"
+  ],
+  "start": 0.18630207777023317,
+  "end": 0.404,
+  "loop": false,
+  "xfade": 0,
+  "fadeIn": 0,
+  "fadeOut": 0,
+  "gainDb": 0,
+  "duration": 0.404,
+  "saved": "2026-10-28T23:04:28.060Z"
+ },
+ {
+  "path": "weapon/bullet/impact/nearby/3",
+  "events": [
+   "weapon.bullet.impact.nearby",
+   "weapon.bullet.whizz"
+  ],
+  "start": 0.14463828630282963,
+  "end": 0.4591365099610954,
+  "loop": false,
+  "xfade": 0,
+  "fadeIn": 0,
+  "fadeOut": 0,
+  "gainDb": 0,
+  "duration": 0.589,
+  "saved": "2026-10-28T23:04:45.729Z"
+ },
+ {
+  "path": "weapon/bullet/impact/nearby/4",
+  "events": [
+   "weapon.bullet.impact.nearby",
+   "weapon.bullet.whizz"
+  ],
+  "start": 0,
+  "end": 0.19104167222976687,
+  "loop": false,
+  "xfade": 0,
+  "fadeIn": 0,
+  "fadeOut": 0,
+  "gainDb": 0,
+  "duration": 0.404,
+  "saved": "2026-10-28T23:04:54.179Z"
+ },
+ {
+  "path": "weapon/bullet/impact/nearby/5",
+  "events": [
+   "weapon.bullet.impact.nearby",
+   "weapon.bullet.whizz"
+  ],
+  "start": 0.16187500000000002,
+  "end": 0.404,
+  "loop": false,
+  "xfade": 0,
+  "fadeIn": 0,
+  "fadeOut": 0,
+  "gainDb": 0,
+  "duration": 0.404,
+  "saved": "2026-10-28T23:03:52.749Z"
+ },
+ {
+  "path": "weapon/bullet/impact/nearby/6",
+  "events": [
+   "weapon.bullet.impact.nearby",
+   "weapon.bullet.whizz"
+  ],
+  "start": 0,
+  "end": 0.161,
+  "loop": false,
+  "xfade": 0,
+  "fadeIn": 0,
+  "fadeOut": 0,
+  "gainDb": -18,
+  "duration": 0.161,
+  "saved": "2026-10-28T23:05:02.629Z"
+ },
+ {
+  "path": "weapon/bullet/ricochet/1",
+  "events": [
+   "weapon.bullet.ricochet"
+  ],
+  "start": 0.018001250624527475,
+  "end": 0.32772834065238443,
+  "loop": false,
+  "xfade": 0,
+  "fadeIn": 0,
+  "fadeOut": 0.57,
+  "gainDb": 0,
+  "duration": 0.938,
+  "saved": "2026-10-28T23:05:43.737Z"
+ },
+ {
+  "path": "weapon/bullet/ricochet/2",
+  "events": [
+   "weapon.bullet.ricochet"
+  ],
+  "start": 0.025478515589569983,
+  "end": 0.40244476116192945,
+  "loop": false,
+  "xfade": 0,
+  "fadeIn": 0,
+  "fadeOut": 0.68,
+  "gainDb": 0,
+  "duration": 0.639,
+  "saved": "2026-10-28T23:06:02.439Z"
+ },
+ {
+  "path": "weapon/bullet/ricochet/3",
+  "events": [
+   "weapon.bullet.ricochet"
+  ],
+  "start": 0.019302134646962232,
+  "end": 0.42722057036852407,
+  "loop": false,
+  "xfade": 0,
+  "fadeIn": 0,
+  "fadeOut": 0.72,
+  "gainDb": 0,
+  "duration": 0.735,
+  "saved": "2026-10-28T23:06:16.461Z"
+ },
+ {
+  "path": "weapon/double_barrel/shot_distant/1",
+  "events": [
+   "weapon.double_barrel.shot_distant"
+  ],
+  "start": 0,
+  "end": 1.872707974137931,
+  "loop": false,
+  "xfade": 0,
+  "fadeIn": 0,
+  "fadeOut": 0.54,
+  "gainDb": 0,
+  "duration": 3.971,
+  "saved": "2026-10-28T23:07:28.810Z"
+ },
+ {
+  "path": "weapon/hunting_rifle/bolt/1",
+  "events": [
+   "weapon.hunting_rifle.bolt"
+  ],
+  "start": 0,
+  "end": 1.008,
+  "loop": false,
+  "xfade": 0,
+  "fadeIn": 0,
+  "fadeOut": 0,
+  "gainDb": 1.5,
+  "duration": 1.008,
+  "saved": "2026-10-28T23:07:42.410Z"
+ },
+ {
+  "path": "weapon/hunting_rifle/shot/1",
+  "events": [
+   "weapon.hunting_rifle.shot"
+  ],
+  "start": 0,
+  "end": 1.3253102123107035,
+  "loop": false,
+  "xfade": 0,
+  "fadeIn": 0,
+  "fadeOut": 0.68,
+  "gainDb": 0,
+  "duration": 2.192,
+  "saved": "2026-10-28T23:08:08.796Z"
+ },
+ {
+  "path": "weapon/hunting_rifle/shot_distant/1",
+  "events": [
+   "weapon.hunting_rifle.shot_distant"
+  ],
+  "start": 0,
+  "end": 1.916857918386976,
+  "loop": false,
+  "xfade": 0,
+  "fadeIn": 0,
+  "fadeOut": 0.55,
+  "gainDb": 0,
+  "duration": 3.602,
+  "saved": "2026-10-28T23:08:20.181Z"
+ },
+ {
+  "path": "weapon/hunting_rifle/shot_suppressed/1",
+  "events": [
+   "weapon.hunting_rifle.shot_suppressed"
+  ],
+  "start": 0,
+  "end": 0.657,
+  "loop": false,
+  "xfade": 0,
+  "fadeIn": 0,
+  "fadeOut": 0,
+  "gainDb": 1,
+  "duration": 0.657,
+  "saved": "2026-10-28T23:08:39.111Z"
+ },
+ {
+  "path": "weapon/hunting_rifle/shot_suppressed_distant/1",
+  "events": [
+   "weapon.hunting_rifle.shot_suppressed_distant"
+  ],
+  "start": 0.6392917615924953,
+  "end": 1.2855322403618072,
+  "loop": false,
+  "xfade": 0,
+  "fadeIn": 0,
+  "fadeOut": 0,
+  "gainDb": 9,
+  "duration": 2.067,
+  "saved": "2026-10-28T23:09:07.304Z"
+ },
+ {
+  "path": "weapon/lever_action/shot_distant/1",
+  "events": [
+   "weapon.lever_action.shot_distant"
+  ],
+  "start": 0.05383665144232108,
+  "end": 0.5238641728243021,
+  "loop": false,
+  "xfade": 0,
+  "fadeIn": 0,
+  "fadeOut": 1.87,
+  "gainDb": 0,
+  "duration": 3.577,
+  "saved": "2026-10-28T23:10:14.149Z"
+ },
+ {
+  "path": "weapon/magnum/shot_distant/1",
+  "events": [
+   "weapon.magnum.shot_distant"
+  ],
+  "start": 0,
+  "end": 0.605318989079574,
+  "loop": false,
+  "xfade": 0,
+  "fadeIn": 0,
+  "fadeOut": 3,
+  "gainDb": 0,
+  "duration": 3.73,
+  "saved": "2026-10-28T23:11:07.804Z"
+ },
+ {
+  "path": "weapon/pistol/shot_distant/1",
+  "events": [
+   "weapon.pistol.shot_distant"
+  ],
+  "start": 0,
+  "end": 0.46312638546798024,
+  "loop": false,
+  "xfade": 0,
+  "fadeIn": 0,
+  "fadeOut": 3,
+  "gainDb": 0,
+  "duration": 3.146,
+  "saved": "2026-10-28T23:11:34.763Z"
+ },
+ {
+  "path": "weapon/pistol/slide/1",
+  "events": [
+   "weapon.pistol.slide"
+  ],
+  "start": 0,
+  "end": 0.567,
+  "loop": false,
+  "xfade": 0,
+  "fadeIn": 0,
+  "fadeOut": 0,
+  "gainDb": 5,
+  "duration": 0.567,
+  "saved": "2026-10-28T23:11:54.450Z"
+ },
+ {
+  "path": "weapon/revolver/shot_distant/1",
+  "events": [
+   "weapon.revolver.shot_distant"
+  ],
+  "start": 0,
+  "end": 0.756646551724138,
+  "loop": false,
+  "xfade": 0,
+  "fadeIn": 0,
+  "fadeOut": 3,
+  "gainDb": 0,
+  "duration": 3.61,
+  "saved": "2026-10-28T23:12:14.321Z"
+ },
+ {
+  "path": "weapon/rifle/shot/1",
+  "events": [
+   "weapon.rifle.shot"
+  ],
+  "start": 0,
+  "end": 1.0427474963441858,
+  "loop": false,
+  "xfade": 0,
+  "fadeIn": 0,
+  "fadeOut": 2.18,
+  "gainDb": 0,
+  "duration": 2.192,
+  "saved": "2026-10-28T23:12:29.074Z"
+ },
+ {
+  "path": "weapon/rifle/shot_distant/1",
+  "events": [
+   "weapon.rifle.shot_distant"
+  ],
+  "start": 0,
+  "end": 0.8883727649444428,
+  "loop": false,
+  "xfade": 0,
+  "fadeIn": 0,
+  "fadeOut": 3,
+  "gainDb": 0,
+  "duration": 3.602,
+  "saved": "2026-10-28T23:12:41.508Z"
+ },
+ {
+  "path": "weapon/rifle/shot_suppressed/1",
+  "events": [
+   "weapon.rifle.shot_suppressed"
+  ],
+  "start": 0,
+  "end": 0.6442666689006762,
+  "loop": false,
+  "xfade": 0,
+  "fadeIn": 0,
+  "fadeOut": 2.45,
+  "gainDb": -5.5,
+  "duration": 1,
+  "saved": "2026-10-28T23:13:01.431Z"
+ },
+ {
+  "path": "weapon/rifle/shot_suppressed_distant/1",
+  "events": [
+   "weapon.rifle.shot_suppressed_distant"
+  ],
+  "start": 0,
+  "end": 0.8040024630541872,
+  "loop": false,
+  "xfade": 0,
+  "fadeIn": 0,
+  "fadeOut": 3,
+  "gainDb": 0,
+  "duration": 1.81,
+  "saved": "2026-10-28T23:13:19.249Z"
+ },
+ {
+  "path": "weapon/rimfire/shot_distant/1",
+  "events": [
+   "weapon.rimfire.shot_distant"
+  ],
+  "start": 0,
+  "end": 0.1499571235796501,
+  "loop": false,
+  "xfade": 0,
+  "fadeIn": 0,
+  "fadeOut": 2.05,
+  "gainDb": 0,
+  "duration": 3.942,
+  "saved": "2026-10-28T23:13:49.431Z"
+ },
+ {
+  "path": "weapon/sawn_off/shot_distant/1",
+  "events": [
+   "weapon.sawn_off.shot_distant"
+  ],
+  "start": 0,
+  "end": 0.8497481296379579,
+  "loop": false,
+  "xfade": 0,
+  "fadeIn": 0,
+  "fadeOut": 3,
+  "gainDb": 0,
+  "duration": 3.637,
+  "saved": "2026-10-28T23:14:06.510Z"
+ },
+ {
+  "path": "weapon/smg/shot_distant/1",
+  "events": [
+   "weapon.smg.shot_distant"
+  ],
+  "start": 0,
+  "end": 0.26692865023706935,
+  "loop": false,
+  "xfade": 0,
+  "fadeIn": 0,
+  "fadeOut": 3,
+  "gainDb": 0,
+  "duration": 3.269,
+  "saved": "2026-10-28T23:14:30.343Z"
+ }
+]

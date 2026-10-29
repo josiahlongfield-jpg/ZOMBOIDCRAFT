@@ -40,6 +40,14 @@ public final class CarModels {
          * of the deck, so its hull leaves the room under them open to walk through.
          */
         public int[] floors;
+        /**
+         * Per look (variants order), each window's pane: centre, outward normal, two half axes, kind, holes it
+         * takes, then its outline; null where that look has it broken out. See {@link CarGlass}.
+         */
+        public float[][][] windows;
+        /** Per look, per mesh (the body, then each lid), the window each of its glass triangles belongs to. */
+        public int[][][] glassTris;
+        transient CarGlass.Window[][] parsedWindows;
 
         public float length() {
             return size[2];

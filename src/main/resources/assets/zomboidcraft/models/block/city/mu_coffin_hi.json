@@ -1,0 +1,76 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "mu_coffin_hi": "zomboidcraft:block/city/mu_coffin_hi",
+    "mu_gold": "zomboidcraft:block/city/mu_gold",
+    "mu_lapis": "zomboidcraft:block/city/mu_lapis",
+    "particle": "zomboidcraft:block/city/mu_coffin_hi"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        5
+      ],
+      "to": [
+        13,
+        10,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_coffin_hi"
+        },
+        "south": {
+          "texture": "#mu_lapis"
+        },
+        "east": {
+          "texture": "#mu_lapis"
+        },
+        "west": {
+          "texture": "#mu_lapis"
+        },
+        "up": {
+          "texture": "#mu_lapis"
+        },
+        "down": {
+          "texture": "#mu_lapis",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        10,
+        5.5
+      ],
+      "to": [
+        12,
+        14,
+        11.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_coffin_hi"
+        },
+        "south": {
+          "texture": "#mu_lapis"
+        },
+        "east": {
+          "texture": "#mu_lapis"
+        },
+        "west": {
+          "texture": "#mu_lapis"
+        },
+        "up": {
+          "texture": "#mu_gold"
+        },
+        "down": {
+          "texture": "#mu_lapis"
+        }
+      }
+    }
+  ]
+}

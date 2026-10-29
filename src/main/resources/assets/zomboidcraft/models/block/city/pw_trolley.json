@@ -1,0 +1,137 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_grey": "zomboidcraft:block/city/bunk_grey",
+    "fit_louvre": "zomboidcraft:block/city/fit_louvre",
+    "pw_crane": "zomboidcraft:block/city/pw_crane",
+    "particle": "zomboidcraft:block/city/pw_crane"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        10,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pw_crane",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#pw_crane",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#pw_crane",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#pw_crane",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#pw_crane"
+        },
+        "down": {
+          "texture": "#pw_crane",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        10,
+        3
+      ],
+      "to": [
+        14,
+        15,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_louvre"
+        },
+        "south": {
+          "texture": "#bunk_grey"
+        },
+        "east": {
+          "texture": "#bunk_grey"
+        },
+        "west": {
+          "texture": "#bunk_grey"
+        },
+        "up": {
+          "texture": "#bunk_grey"
+        },
+        "down": {
+          "texture": "#bunk_grey"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        0,
+        -2
+      ],
+      "to": [
+        12,
+        8,
+        0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pw_crane"
+        },
+        "south": {
+          "texture": "#pw_crane"
+        },
+        "east": {
+          "texture": "#pw_crane",
+          "uv": [
+            14,
+            8,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#pw_crane",
+          "uv": [
+            0,
+            8,
+            2,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#pw_crane",
+          "uv": [
+            4,
+            0,
+            12,
+            2
+          ]
+        },
+        "down": {
+          "texture": "#pw_crane",
+          "uv": [
+            4,
+            14,
+            12,
+            16
+          ],
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

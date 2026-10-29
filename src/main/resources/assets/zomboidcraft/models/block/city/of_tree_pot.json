@@ -1,0 +1,109 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_terracotta": "zomboidcraft:block/city/home_terracotta",
+    "leaf_litter": "zomboidcraft:block/city/leaf_litter",
+    "pole_wood": "zomboidcraft:block/city/pole_wood",
+    "particle": "zomboidcraft:block/city/home_terracotta"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        3
+      ],
+      "to": [
+        13,
+        9,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_terracotta"
+        },
+        "south": {
+          "texture": "#home_terracotta"
+        },
+        "east": {
+          "texture": "#home_terracotta"
+        },
+        "west": {
+          "texture": "#home_terracotta"
+        },
+        "up": {
+          "texture": "#home_terracotta"
+        },
+        "down": {
+          "texture": "#home_terracotta",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3.5,
+        8.6,
+        3.5
+      ],
+      "to": [
+        12.5,
+        9,
+        12.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#leaf_litter"
+        },
+        "south": {
+          "texture": "#leaf_litter"
+        },
+        "east": {
+          "texture": "#leaf_litter"
+        },
+        "west": {
+          "texture": "#leaf_litter"
+        },
+        "up": {
+          "texture": "#leaf_litter"
+        },
+        "down": {
+          "texture": "#leaf_litter"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        9,
+        7
+      ],
+      "to": [
+        9,
+        16,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pole_wood"
+        },
+        "south": {
+          "texture": "#pole_wood"
+        },
+        "east": {
+          "texture": "#pole_wood"
+        },
+        "west": {
+          "texture": "#pole_wood"
+        },
+        "up": {
+          "texture": "#pole_wood",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#pole_wood"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tv_carts": "zomboidcraft:block/city/tv_carts",
+    "tv_panel": "zomboidcraft:block/city/tv_panel",
+    "particle": "zomboidcraft:block/city/tv_carts"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        2
+      ],
+      "to": [
+        15,
+        16,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tv_carts"
+        },
+        "south": {
+          "texture": "#tv_panel"
+        },
+        "east": {
+          "texture": "#tv_panel"
+        },
+        "west": {
+          "texture": "#tv_panel"
+        },
+        "up": {
+          "texture": "#tv_panel",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tv_panel",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,219 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cubicle_fabric": "zomboidcraft:block/city/cubicle_fabric",
+    "cv_books_a": "zomboidcraft:block/city/cv_books_a",
+    "cv_oak": "zomboidcraft:block/city/cv_oak",
+    "particle": "zomboidcraft:block/city/cv_oak"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        10,
+        4
+      ],
+      "to": [
+        16,
+        11,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_oak"
+        },
+        "south": {
+          "texture": "#cv_oak",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cv_oak",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cv_oak",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cv_oak"
+        },
+        "down": {
+          "texture": "#cv_oak"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        4
+      ],
+      "to": [
+        1.5,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cubicle_fabric"
+        },
+        "south": {
+          "texture": "#cubicle_fabric",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cubicle_fabric"
+        },
+        "west": {
+          "texture": "#cubicle_fabric",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cubicle_fabric",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cubicle_fabric",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        14.5,
+        0,
+        4
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cubicle_fabric"
+        },
+        "south": {
+          "texture": "#cubicle_fabric",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cubicle_fabric",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cubicle_fabric"
+        },
+        "up": {
+          "texture": "#cubicle_fabric",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cubicle_fabric",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        14.5
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cubicle_fabric"
+        },
+        "south": {
+          "texture": "#cubicle_fabric",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cubicle_fabric",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cubicle_fabric",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cubicle_fabric",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cubicle_fabric",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        1.5,
+        13,
+        12
+      ],
+      "to": [
+        14.5,
+        14,
+        14.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_oak"
+        },
+        "south": {
+          "texture": "#cv_oak"
+        },
+        "east": {
+          "texture": "#cv_oak"
+        },
+        "west": {
+          "texture": "#cv_oak"
+        },
+        "up": {
+          "texture": "#cv_oak"
+        },
+        "down": {
+          "texture": "#cv_oak"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        11,
+        8
+      ],
+      "to": [
+        9,
+        11.6,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_books_a"
+        },
+        "south": {
+          "texture": "#cv_books_a"
+        },
+        "east": {
+          "texture": "#cv_books_a"
+        },
+        "west": {
+          "texture": "#cv_books_a"
+        },
+        "up": {
+          "texture": "#cv_books_a"
+        },
+        "down": {
+          "texture": "#cv_books_a"
+        }
+      }
+    }
+  ]
+}

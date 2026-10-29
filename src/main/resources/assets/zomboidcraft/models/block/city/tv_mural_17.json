@@ -1,0 +1,49 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tv_mural_17": {
+      "sprite": "zomboidcraft:block/city/tv_mural_17",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/tv_mural_17"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.3
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tv_mural_17"
+        },
+        "south": {
+          "texture": "#tv_mural_17",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#tv_mural_17",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tv_mural_17",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tv_mural_17",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tv_mural_17",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

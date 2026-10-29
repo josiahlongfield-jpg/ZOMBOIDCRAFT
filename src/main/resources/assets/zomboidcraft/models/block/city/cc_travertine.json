@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cc_travertine": "zomboidcraft:block/city/cc_travertine",
+    "particle": "zomboidcraft:block/city/cc_travertine"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cc_travertine",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#cc_travertine",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#cc_travertine",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#cc_travertine",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#cc_travertine",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#cc_travertine",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

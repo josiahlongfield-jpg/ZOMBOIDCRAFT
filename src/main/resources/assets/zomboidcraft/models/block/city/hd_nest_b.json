@@ -1,0 +1,193 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hd_nest_b": "zomboidcraft:block/city/hd_nest_b",
+    "hd_tangle_b": "zomboidcraft:block/city/hd_tangle_b",
+    "particle": "zomboidcraft:block/city/hd_nest_b"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        3,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hd_nest_b",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#hd_nest_b",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#hd_nest_b",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#hd_nest_b",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#hd_nest_b"
+        },
+        "down": {
+          "texture": "#hd_nest_b",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        3,
+        1
+      ],
+      "to": [
+        14,
+        5,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hd_nest_b"
+        },
+        "south": {
+          "texture": "#hd_nest_b"
+        },
+        "east": {
+          "texture": "#hd_nest_b"
+        },
+        "west": {
+          "texture": "#hd_nest_b"
+        },
+        "up": {
+          "texture": "#hd_nest_b"
+        },
+        "down": {
+          "texture": "#hd_nest_b"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        5,
+        4
+      ],
+      "to": [
+        12,
+        6,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hd_nest_b"
+        },
+        "south": {
+          "texture": "#hd_nest_b"
+        },
+        "east": {
+          "texture": "#hd_nest_b"
+        },
+        "west": {
+          "texture": "#hd_nest_b"
+        },
+        "up": {
+          "texture": "#hd_nest_b"
+        },
+        "down": {
+          "texture": "#hd_nest_b"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        1,
+        8
+      ],
+      "to": [
+        16,
+        9,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hd_tangle_b"
+        },
+        "south": {
+          "texture": "#hd_tangle_b"
+        },
+        "east": {
+          "texture": "#hd_tangle_b"
+        },
+        "west": {
+          "texture": "#hd_tangle_b"
+        },
+        "up": {
+          "texture": "#hd_tangle_b"
+        },
+        "down": {
+          "texture": "#hd_tangle_b"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "y",
+        "angle": 45
+      }
+    },
+    {
+      "from": [
+        0,
+        1,
+        8
+      ],
+      "to": [
+        16,
+        8,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hd_tangle_b"
+        },
+        "south": {
+          "texture": "#hd_tangle_b"
+        },
+        "east": {
+          "texture": "#hd_tangle_b"
+        },
+        "west": {
+          "texture": "#hd_tangle_b"
+        },
+        "up": {
+          "texture": "#hd_tangle_b"
+        },
+        "down": {
+          "texture": "#hd_tangle_b"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "y",
+        "angle": -45
+      }
+    }
+  ]
+}

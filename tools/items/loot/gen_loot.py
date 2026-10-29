@@ -32,6 +32,7 @@ import art as A  # noqa: E402
 import shapes as sh  # noqa: E402
 import gen_java  # noqa: E402
 import wave2  # noqa: E402
+import wave3  # noqa: E402
 
 NS = 'zomboidcraft'
 ASSETS = ROOT / 'src/main/resources/assets/zomboidcraft'
@@ -327,6 +328,10 @@ DEF_LOOK = {
     'wax': A.flat('#efe6d0', 0.04), 'dial': A.flat('#efe6d0'), 'wire': A.steel, 'leather': lambda f: P.leather(f),
     'stone': A.flat('#8a8a84', 0.12), 'wicker': A.flat('#a8804a', 0.15), 'white': A.flat('#efeae0'),
     'head': A.flat('#2f6a3e'), 'bill': A.flat('#d8a020'), 'cardboard': A.cardboard,
+    # wave 3 parts
+    'gold': wave3.GOLD, 'silver': wave3.SILVER, 'gem': A.flat('#e8f0f0', 0.05), 'felt': A.flat('#7a1a2a'),
+    'fur': A.fabric('#9a6a3a'), 'hair': A.flat('#5a3a1a'), 'pearl': A.flat('#f2eee4', 0.04), 'cash': A.flat('#9ab08a'),
+    'mould': A.flat('#8aa86a'),
 }
 
 
@@ -631,6 +636,7 @@ ITEMS = {
     'can_opener': it(can_opener, handle=A.plastic('#a8281f'), metal=A.steel),
 }
 ITEMS.update(wave2.table(it))
+ITEMS.update(wave3.table(it))
 
 
 # ================================================================== output
@@ -693,7 +699,9 @@ def tab_of(rows):
              'Drinks': 'drinks', 'Medical': 'medical', 'Hygiene & household': 'hygiene',
              'Kitchen & cooking': 'kitchen', 'Hand tools': 'tools', 'Building & materials': 'materials',
              'Electrical & electronics': 'electrical', 'Light & fire': 'light', 'Outdoors, camping & farm': 'camping',
-             'Vehicle & fuel': 'car'}
+             'Vehicle & fuel': 'car', 'Books, magazines & papers': 'books', 'Keys, cards & documents': 'keys',
+             'Valuables & trade goods': 'valuables', 'Toys, hobbies & personal': 'toys', 'Military & service': 'service',
+             'Junk & scrap': 'junk'}
     return {r['id']: short.get(r['cat'], 'misc') for r in rows}
 
 

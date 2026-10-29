@@ -1,0 +1,50 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "mu_gh_glass_broken": {
+      "sprite": "zomboidcraft:block/city/mu_gh_glass_broken",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/mu_gh_glass_broken"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_gh_glass_broken",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#mu_gh_glass_broken",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#mu_gh_glass_broken",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#mu_gh_glass_broken",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#mu_gh_glass_broken",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#mu_gh_glass_broken",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

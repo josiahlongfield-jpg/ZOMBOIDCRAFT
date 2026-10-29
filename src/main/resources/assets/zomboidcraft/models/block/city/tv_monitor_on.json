@@ -1,0 +1,75 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tv_panel": "zomboidcraft:block/city/tv_panel",
+    "tv_screen_on": "zomboidcraft:block/city/tv_screen_on",
+    "particle": "zomboidcraft:block/city/tv_screen_on"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        2
+      ],
+      "to": [
+        15,
+        12,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tv_screen_on"
+        },
+        "south": {
+          "texture": "#tv_panel"
+        },
+        "east": {
+          "texture": "#tv_panel"
+        },
+        "west": {
+          "texture": "#tv_panel"
+        },
+        "up": {
+          "texture": "#tv_panel"
+        },
+        "down": {
+          "texture": "#tv_panel",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        12,
+        4
+      ],
+      "to": [
+        13,
+        13,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tv_panel"
+        },
+        "south": {
+          "texture": "#tv_panel"
+        },
+        "east": {
+          "texture": "#tv_panel"
+        },
+        "west": {
+          "texture": "#tv_panel"
+        },
+        "up": {
+          "texture": "#tv_panel"
+        },
+        "down": {
+          "texture": "#tv_panel"
+        }
+      }
+    }
+  ]
+}

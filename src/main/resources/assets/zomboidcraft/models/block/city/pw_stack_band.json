@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "brick_red_soot": "zomboidcraft:block/city/brick_red_soot",
+    "pw_stack_band": "zomboidcraft:block/city/pw_stack_band",
+    "particle": "zomboidcraft:block/city/pw_stack_band"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pw_stack_band",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#pw_stack_band",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#pw_stack_band",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#pw_stack_band",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#brick_red_soot",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#brick_red_soot",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

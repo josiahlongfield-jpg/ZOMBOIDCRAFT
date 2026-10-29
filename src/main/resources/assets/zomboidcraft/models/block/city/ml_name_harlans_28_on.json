@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ml_name_harlans_28_on": "zomboidcraft:block/city/ml_name_harlans_28_on",
+    "particle": "zomboidcraft:block/city/ml_name_harlans_28_on"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        14.5
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ml_name_harlans_28_on"
+        },
+        "south": {
+          "texture": "#ml_name_harlans_28_on",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ml_name_harlans_28_on",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ml_name_harlans_28_on",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ml_name_harlans_28_on",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ml_name_harlans_28_on",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

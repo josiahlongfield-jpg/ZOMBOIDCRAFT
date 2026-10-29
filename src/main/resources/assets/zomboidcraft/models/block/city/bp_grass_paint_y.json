@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bp_clay": "zomboidcraft:block/city/bp_clay",
+    "bp_grass_paint_y": "zomboidcraft:block/city/bp_grass_paint_y",
+    "particle": "zomboidcraft:block/city/bp_clay"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bp_clay",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#bp_clay",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#bp_clay",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#bp_clay",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#bp_grass_paint_y",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#bp_clay",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "mu_dio_ground": "zomboidcraft:block/city/mu_dio_ground",
+    "mu_dio_rock": "zomboidcraft:block/city/mu_dio_rock",
+    "particle": "zomboidcraft:block/city/mu_dio_rock"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_dio_rock",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#mu_dio_rock",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#mu_dio_rock",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#mu_dio_rock",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#mu_dio_ground",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#mu_dio_rock",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

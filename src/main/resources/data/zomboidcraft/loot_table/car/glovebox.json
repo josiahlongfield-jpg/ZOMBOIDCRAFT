@@ -14,21 +14,6 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:paper",
-          "weight": 216,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 3
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
           "name": "zomboidcraft:street_map",
           "weight": 108
         },
@@ -65,12 +50,12 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:beef_jerky",
-          "weight": 2
+          "weight": 6
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:chocolate_bar",
-          "weight": 4,
+          "weight": 12,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -85,7 +70,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:peanut_candy_bar",
-          "weight": 4,
+          "weight": 12,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -100,7 +85,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:gum_pack",
-          "weight": 4,
+          "weight": 12,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -115,7 +100,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:beef_stick",
-          "weight": 4,
+          "weight": 12,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -130,12 +115,12 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:hip_flask",
-          "weight": 2
+          "weight": 6
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:adhesive_bandages",
-          "weight": 4,
+          "weight": 12,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -150,7 +135,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:antiseptic_wipes",
-          "weight": 4,
+          "weight": 12,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -165,7 +150,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:air_freshener",
-          "weight": 4,
+          "weight": 12,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -180,7 +165,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:sunscreen",
-          "weight": 4,
+          "weight": 12,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -195,12 +180,12 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:pocket_knife",
-          "weight": 2
+          "weight": 6
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:cassette_tape",
-          "weight": 4,
+          "weight": 12,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -215,12 +200,12 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:mixtape",
-          "weight": 2
+          "weight": 6
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:flashlight",
-          "weight": 4,
+          "weight": 12,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -235,7 +220,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:lighter",
-          "weight": 4,
+          "weight": 12,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -250,17 +235,17 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:brass_lighter",
-          "weight": 2
+          "weight": 6
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:compass",
-          "weight": 2
+          "weight": 6
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:hand_warmers",
-          "weight": 4,
+          "weight": 12,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -274,8 +259,93 @@
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:county_map",
+          "weight": 6
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:house_key",
+          "weight": 12,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:drivers_license",
+          "weight": 12,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:registration",
+          "weight": 36,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:cigarettes",
+          "weight": 12,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:lucky_rabbit_foot",
+          "weight": 6
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:headlight_bulb",
-          "weight": 4,
+          "weight": 12,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:fast_food_wrapper",
+          "weight": 12,
           "functions": [
             {
               "function": "minecraft:set_count",

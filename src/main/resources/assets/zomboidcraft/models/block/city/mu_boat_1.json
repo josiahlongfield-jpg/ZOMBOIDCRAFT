@@ -1,0 +1,270 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "mu_boards": "zomboidcraft:block/city/mu_boards",
+    "mu_boat_green": "zomboidcraft:block/city/mu_boat_green",
+    "particle": "zomboidcraft:block/city/mu_boat_green"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        -3,
+        0
+      ],
+      "to": [
+        14,
+        4,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_boat_green",
+          "uv": [
+            2,
+            9,
+            14,
+            16
+          ],
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#mu_boat_green",
+          "uv": [
+            2,
+            9,
+            14,
+            16
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#mu_boat_green",
+          "uv": [
+            0,
+            9,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#mu_boat_green",
+          "uv": [
+            0,
+            9,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#mu_boards"
+        },
+        "down": {
+          "texture": "#mu_boat_green"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        2,
+        0
+      ],
+      "to": [
+        2.5,
+        6,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_boat_green",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#mu_boat_green",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#mu_boat_green"
+        },
+        "west": {
+          "texture": "#mu_boat_green"
+        },
+        "up": {
+          "texture": "#mu_boat_green"
+        },
+        "down": {
+          "texture": "#mu_boat_green"
+        }
+      }
+    },
+    {
+      "from": [
+        13.5,
+        2,
+        0
+      ],
+      "to": [
+        15,
+        6,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_boat_green",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#mu_boat_green",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#mu_boat_green"
+        },
+        "west": {
+          "texture": "#mu_boat_green"
+        },
+        "up": {
+          "texture": "#mu_boat_green"
+        },
+        "down": {
+          "texture": "#mu_boat_green"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        2,
+        4
+      ],
+      "to": [
+        14,
+        4.5,
+        7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_boards"
+        },
+        "south": {
+          "texture": "#mu_boards"
+        },
+        "east": {
+          "texture": "#mu_boards"
+        },
+        "west": {
+          "texture": "#mu_boards"
+        },
+        "up": {
+          "texture": "#mu_boards"
+        },
+        "down": {
+          "texture": "#mu_boards"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        -3,
+        16
+      ],
+      "to": [
+        13,
+        6,
+        18
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_boat_green",
+          "uv": [
+            3,
+            7,
+            13,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#mu_boat_green",
+          "uv": [
+            3,
+            7,
+            13,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#mu_boat_green",
+          "uv": [
+            0,
+            7,
+            2,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#mu_boat_green",
+          "uv": [
+            14,
+            7,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#mu_boat_green",
+          "uv": [
+            3,
+            14,
+            13,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#mu_boat_green",
+          "uv": [
+            3,
+            0,
+            13,
+            2
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        5,
+        6
+      ],
+      "to": [
+        16,
+        5.6,
+        6.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_boards"
+        },
+        "south": {
+          "texture": "#mu_boards"
+        },
+        "east": {
+          "texture": "#mu_boards",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#mu_boards",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#mu_boards"
+        },
+        "down": {
+          "texture": "#mu_boards"
+        }
+      }
+    }
+  ]
+}

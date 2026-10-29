@@ -62,7 +62,7 @@ public final class LootItems {
         if (Packs.has(spec.id())) {
             item = new PackItem(props, spec.id());
         } else if (food == null) {
-            item = new Item(props);
+            item = new LootItem(props);
         } else if (food.is(LootSpec.Food.CAN)) {
             // a sealed can: nothing to eat until it's opened (SealedCanItem gives the opened stack its food)
             item = new SealedCanItem(props);
@@ -73,7 +73,7 @@ public final class LootItems {
             if (left != null) {
                 props.usingConvertsTo(left);
             }
-            item = new Item(props);
+            item = new LootItem(props);
         }
         Registry.register(BuiltInRegistries.ITEM, key, item);
         ITEMS.put(spec.id(), item);

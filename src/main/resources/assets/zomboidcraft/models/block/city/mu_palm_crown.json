@@ -1,0 +1,380 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "mu_frond": "zomboidcraft:block/city/mu_frond",
+    "mu_palm_bark": "zomboidcraft:block/city/mu_palm_bark",
+    "particle": "zomboidcraft:block/city/mu_palm_bark"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        0,
+        5
+      ],
+      "to": [
+        11,
+        4,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_palm_bark"
+        },
+        "south": {
+          "texture": "#mu_palm_bark"
+        },
+        "east": {
+          "texture": "#mu_palm_bark"
+        },
+        "west": {
+          "texture": "#mu_palm_bark"
+        },
+        "up": {
+          "texture": "#mu_palm_bark"
+        },
+        "down": {
+          "texture": "#mu_palm_bark",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        -16,
+        2,
+        0
+      ],
+      "to": [
+        8,
+        2.5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_frond",
+          "uv": [
+            0,
+            13.5,
+            16,
+            14
+          ]
+        },
+        "south": {
+          "texture": "#mu_frond",
+          "uv": [
+            0,
+            13.5,
+            16,
+            14
+          ]
+        },
+        "east": {
+          "texture": "#mu_frond"
+        },
+        "west": {
+          "texture": "#mu_frond"
+        },
+        "up": {
+          "texture": "#mu_frond",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#mu_frond",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          4,
+          8
+        ],
+        "axis": "z",
+        "angle": -22.5
+      }
+    },
+    {
+      "from": [
+        8,
+        2,
+        0
+      ],
+      "to": [
+        32,
+        2.5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_frond",
+          "uv": [
+            0,
+            13.5,
+            16,
+            14
+          ]
+        },
+        "south": {
+          "texture": "#mu_frond",
+          "uv": [
+            0,
+            13.5,
+            16,
+            14
+          ]
+        },
+        "east": {
+          "texture": "#mu_frond"
+        },
+        "west": {
+          "texture": "#mu_frond"
+        },
+        "up": {
+          "texture": "#mu_frond",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#mu_frond",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          4,
+          8
+        ],
+        "axis": "z",
+        "angle": 22.5
+      }
+    },
+    {
+      "from": [
+        0,
+        2,
+        -16
+      ],
+      "to": [
+        16,
+        2.5,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_frond"
+        },
+        "south": {
+          "texture": "#mu_frond"
+        },
+        "east": {
+          "texture": "#mu_frond",
+          "uv": [
+            0,
+            13.5,
+            16,
+            14
+          ]
+        },
+        "west": {
+          "texture": "#mu_frond",
+          "uv": [
+            0,
+            13.5,
+            16,
+            14
+          ]
+        },
+        "up": {
+          "texture": "#mu_frond",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#mu_frond",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          4,
+          8
+        ],
+        "axis": "x",
+        "angle": 22.5
+      }
+    },
+    {
+      "from": [
+        0,
+        2,
+        8
+      ],
+      "to": [
+        16,
+        2.5,
+        32
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_frond"
+        },
+        "south": {
+          "texture": "#mu_frond"
+        },
+        "east": {
+          "texture": "#mu_frond",
+          "uv": [
+            0,
+            13.5,
+            16,
+            14
+          ]
+        },
+        "west": {
+          "texture": "#mu_frond",
+          "uv": [
+            0,
+            13.5,
+            16,
+            14
+          ]
+        },
+        "up": {
+          "texture": "#mu_frond",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#mu_frond",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          4,
+          8
+        ],
+        "axis": "x",
+        "angle": -22.5
+      }
+    },
+    {
+      "from": [
+        -8,
+        6,
+        -8
+      ],
+      "to": [
+        24,
+        6.5,
+        24
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_frond",
+          "uv": [
+            0,
+            9.5,
+            16,
+            10
+          ]
+        },
+        "south": {
+          "texture": "#mu_frond",
+          "uv": [
+            0,
+            9.5,
+            16,
+            10
+          ]
+        },
+        "east": {
+          "texture": "#mu_frond",
+          "uv": [
+            0,
+            9.5,
+            16,
+            10
+          ]
+        },
+        "west": {
+          "texture": "#mu_frond",
+          "uv": [
+            0,
+            9.5,
+            16,
+            10
+          ]
+        },
+        "up": {
+          "texture": "#mu_frond",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#mu_frond",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "y",
+        "angle": 45
+      }
+    }
+  ]
+}

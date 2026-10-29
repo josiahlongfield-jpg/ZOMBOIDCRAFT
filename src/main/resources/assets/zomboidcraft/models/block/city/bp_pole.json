@@ -1,0 +1,78 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bp_pole": "zomboidcraft:block/city/bp_pole",
+    "particle": "zomboidcraft:block/city/bp_pole"
+  },
+  "elements": [
+    {
+      "from": [
+        6,
+        0,
+        6
+      ],
+      "to": [
+        10,
+        16,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bp_pole"
+        },
+        "south": {
+          "texture": "#bp_pole"
+        },
+        "east": {
+          "texture": "#bp_pole"
+        },
+        "west": {
+          "texture": "#bp_pole"
+        },
+        "up": {
+          "texture": "#bp_pole",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#bp_pole",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        10,
+        0,
+        7.6
+      ],
+      "to": [
+        16,
+        16,
+        8.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bp_pole"
+        },
+        "south": {
+          "texture": "#bp_pole"
+        },
+        "east": {
+          "texture": "#bp_pole",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#bp_pole"
+        },
+        "up": {
+          "texture": "#bp_pole",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#bp_pole",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -42,6 +42,8 @@ final class GroundFog {
     private static final int[] LIGHT = new int[SIDE * SIDE];
     private static int originX, originZ, clock;
     private static boolean ready;
+    /** The mean height of the ground the mist lies on round you (NaN where there's none). */
+    private static float groundMean = Float.NaN;
     private static float thick;
     /** Each sheet's drift so far in blocks, the wind it's following, and the last frame's time. */
     private static final double[] OFF_X = new double[14], OFF_Z = new double[14];
@@ -60,6 +62,8 @@ final class GroundFog {
         originZ = Mth.floor(player.getZ() / CELL) * CELL - REACH;
         double feet = player.getY();
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+        double sum = 0;
+        int counted = 0;
         for (int i = 0; i < SIDE; i++) {
             for (int j = 0; j < SIDE; j++) {
                 int x = originX + i * CELL, z = originZ + j * CELL;
@@ -68,11 +72,16 @@ final class GroundFog {
                 // only on real ground: never over your head, and never on a roof, an awning or a car
                 // park deck (anything with open space under its top)
                 HEIGHT[i * SIDE + j] = top > feet + 6 || hollow(level, pos, x, top, z) ? Float.NaN : top;
+                if (!Float.isNaN(HEIGHT[i * SIDE + j])) {
+                    sum += top;
+                    counted++;
+                }
                 pos.set(x, top, z);
                 int block = level.getBrightness(LightLayer.BLOCK, pos), sky = level.getBrightness(LightLayer.SKY, pos);
                 LIGHT[i * SIDE + j] = sky << 20 | Mth.clamp(block, 5, 9) << 4;  // lamps tint it but don't light up every fleck
             }
         }
+        groundMean = counted == 0 ? Float.NaN : (float) (sum / counted);
         ready = true;
     }
 
@@ -116,8 +125,13 @@ final class GroundFog {
         // many thin sheets, sparser the higher they lie, so the mist has depth and no top surface
         // each sheet stays faint (its flecks barely over what the pack keeps, so none of them stands out
         // as a dot); the thickness comes from stacking many of them, each speckled differently
-        int layers = Mth.clamp(8 + Math.round(thick * 4), 8, 13);
-        float strength = (float) Math.min(0.22, 0.2 * c.mistAmount * (0.85 + 0.3 * Math.min(thick, 1))) * (1 - 0.4f * flash);
+        int stack = Mth.clamp(8 + Math.round(thick * 4), 8, 13);
+        float each = (float) Math.min(0.22, 0.2 * c.mistAmount * (0.85 + 0.3 * Math.min(thick, 1))) * (1 - 0.4f * flash);
+        // high above it (a roof, a tower) the sheets all lie on top of each other as seen from up there, so a few
+        // stronger ones look the same; a dozen full-screen sheets under a shader pack is what cost the frame rate
+        boolean above = !Float.isNaN(groundMean) && eye.y - groundMean > 12;
+        int layers = above ? 4 : stack;
+        float strength = above ? Math.min(0.35f, each * stack / 4f) : each;
         // every sheet's speckle shifts to a fresh spot every frame: the shader pack's frame blending melts it into haze
         cabin = mc.player != null && mc.player.getVehicle() instanceof com.zomboidcraft.world.cars.CarProp car ? car : null;
         context.submitNodeCollector().submitCustomGeometry(context.poseStack(), RenderTypes.entityTranslucent(TEXTURE),

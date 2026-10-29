@@ -1,0 +1,143 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ch_marble": "zomboidcraft:block/city/ch_marble",
+    "mu_coffin_hi": "zomboidcraft:block/city/mu_coffin_hi",
+    "mu_gold": "zomboidcraft:block/city/mu_gold",
+    "particle": "zomboidcraft:block/city/ch_marble"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        0
+      ],
+      "to": [
+        15,
+        9,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ch_marble",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ch_marble",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ch_marble"
+        },
+        "west": {
+          "texture": "#ch_marble"
+        },
+        "up": {
+          "texture": "#mu_coffin_hi"
+        },
+        "down": {
+          "texture": "#ch_marble",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        9,
+        2
+      ],
+      "to": [
+        14,
+        11,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_gold"
+        },
+        "south": {
+          "texture": "#mu_gold",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#mu_gold"
+        },
+        "west": {
+          "texture": "#mu_gold"
+        },
+        "up": {
+          "texture": "#mu_coffin_hi"
+        },
+        "down": {
+          "texture": "#mu_gold"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        11,
+        3
+      ],
+      "to": [
+        12,
+        13,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_gold"
+        },
+        "south": {
+          "texture": "#mu_gold"
+        },
+        "east": {
+          "texture": "#mu_gold"
+        },
+        "west": {
+          "texture": "#mu_gold"
+        },
+        "up": {
+          "texture": "#mu_gold"
+        },
+        "down": {
+          "texture": "#mu_gold"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        13,
+        3.5
+      ],
+      "to": [
+        11,
+        13.5,
+        7.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_coffin_hi"
+        },
+        "south": {
+          "texture": "#mu_coffin_hi"
+        },
+        "east": {
+          "texture": "#mu_coffin_hi"
+        },
+        "west": {
+          "texture": "#mu_coffin_hi"
+        },
+        "up": {
+          "texture": "#mu_coffin_hi"
+        },
+        "down": {
+          "texture": "#mu_coffin_hi"
+        }
+      }
+    }
+  ]
+}

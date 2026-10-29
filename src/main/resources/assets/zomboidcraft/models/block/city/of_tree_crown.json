@@ -1,0 +1,174 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "gc_leaves_2": "zomboidcraft:block/city/gc_leaves_2",
+    "gc_leaves_3": "zomboidcraft:block/city/gc_leaves_3",
+    "pole_wood": "zomboidcraft:block/city/pole_wood",
+    "particle": "zomboidcraft:block/city/pole_wood"
+  },
+  "elements": [
+    {
+      "from": [
+        7,
+        0,
+        7
+      ],
+      "to": [
+        9,
+        5,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pole_wood"
+        },
+        "south": {
+          "texture": "#pole_wood"
+        },
+        "east": {
+          "texture": "#pole_wood"
+        },
+        "west": {
+          "texture": "#pole_wood"
+        },
+        "up": {
+          "texture": "#pole_wood"
+        },
+        "down": {
+          "texture": "#pole_wood",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        3,
+        2
+      ],
+      "to": [
+        14,
+        12,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gc_leaves_2"
+        },
+        "south": {
+          "texture": "#gc_leaves_2"
+        },
+        "east": {
+          "texture": "#gc_leaves_2"
+        },
+        "west": {
+          "texture": "#gc_leaves_2"
+        },
+        "up": {
+          "texture": "#gc_leaves_2"
+        },
+        "down": {
+          "texture": "#gc_leaves_2"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        12,
+        4
+      ],
+      "to": [
+        12,
+        15,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gc_leaves_2"
+        },
+        "south": {
+          "texture": "#gc_leaves_2"
+        },
+        "east": {
+          "texture": "#gc_leaves_2"
+        },
+        "west": {
+          "texture": "#gc_leaves_2"
+        },
+        "up": {
+          "texture": "#gc_leaves_2"
+        },
+        "down": {
+          "texture": "#gc_leaves_2"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        5,
+        4
+      ],
+      "to": [
+        3,
+        10,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gc_leaves_3"
+        },
+        "south": {
+          "texture": "#gc_leaves_3"
+        },
+        "east": {
+          "texture": "#gc_leaves_3"
+        },
+        "west": {
+          "texture": "#gc_leaves_3",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#gc_leaves_3"
+        },
+        "down": {
+          "texture": "#gc_leaves_3"
+        }
+      }
+    },
+    {
+      "from": [
+        13,
+        5,
+        5
+      ],
+      "to": [
+        16,
+        10,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gc_leaves_3"
+        },
+        "south": {
+          "texture": "#gc_leaves_3"
+        },
+        "east": {
+          "texture": "#gc_leaves_3",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#gc_leaves_3"
+        },
+        "up": {
+          "texture": "#gc_leaves_3"
+        },
+        "down": {
+          "texture": "#gc_leaves_3"
+        }
+      }
+    }
+  ]
+}

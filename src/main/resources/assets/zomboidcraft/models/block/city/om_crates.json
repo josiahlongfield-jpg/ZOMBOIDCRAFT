@@ -1,0 +1,80 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "om_crate": "zomboidcraft:block/city/om_crate",
+    "om_fruit_rot": "zomboidcraft:block/city/om_fruit_rot",
+    "particle": "zomboidcraft:block/city/om_crate"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        8,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_crate",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#om_crate",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#om_crate",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#om_crate",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#om_crate"
+        },
+        "down": {
+          "texture": "#om_crate",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        8,
+        1
+      ],
+      "to": [
+        15,
+        16,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#om_crate"
+        },
+        "south": {
+          "texture": "#om_crate"
+        },
+        "east": {
+          "texture": "#om_crate"
+        },
+        "west": {
+          "texture": "#om_crate"
+        },
+        "up": {
+          "texture": "#om_fruit_rot",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#om_crate"
+        }
+      }
+    }
+  ]
+}

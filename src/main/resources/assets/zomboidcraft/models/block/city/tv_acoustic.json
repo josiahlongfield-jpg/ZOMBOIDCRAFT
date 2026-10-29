@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tv_acoustic": "zomboidcraft:block/city/tv_acoustic",
+    "particle": "zomboidcraft:block/city/tv_acoustic"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tv_acoustic",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#tv_acoustic",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#tv_acoustic",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tv_acoustic",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tv_acoustic",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tv_acoustic",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,119 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tv_galv": "zomboidcraft:block/city/tv_galv",
+    "tv_grate": "zomboidcraft:block/city/tv_grate",
+    "particle": "zomboidcraft:block/city/tv_grate"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        1,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tv_grate",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#tv_grate",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#tv_grate",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tv_grate",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tv_grate"
+        },
+        "down": {
+          "texture": "#tv_grate",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        1,
+        1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tv_galv",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#tv_galv"
+        },
+        "east": {
+          "texture": "#tv_galv",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tv_galv",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tv_galv"
+        },
+        "down": {
+          "texture": "#tv_galv",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        15
+      ],
+      "to": [
+        16,
+        1,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tv_galv"
+        },
+        "south": {
+          "texture": "#tv_galv",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#tv_galv",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tv_galv",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tv_galv"
+        },
+        "down": {
+          "texture": "#tv_galv",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

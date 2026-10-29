@@ -15,6 +15,27 @@ import com.zomboidcraft.world.city.Placer;
  * passage to the subway's platform, RailGen's, coming in to it), the train hall ({@link UnionHall})
  * beside it over the el's old street, the el running through its top floor, and the bus and taxi
  * terminal past that.</li>
+ * <li>mall: Grayhaven Mall ({@link Mall}), the island's galleria between its two department
+ * stores, with its car park and parking decks.</li>
+ * <li>mercy: Mercy General Hospital ({@link Hospital}), the brick podium with the ER and its
+ * ambulance bay, the white ward tower over it, the service wing and the staff lot behind.</li>
+ * <li>university: Grayhaven State University ({@link University}), its halls round the quad
+ * behind the gate, Old Main's clock tower closing the south end, the dorm tower by the gate.</li>
+ * <li>civic: the Grayhaven Civic Center ({@link CivicCentre}), City Hall's tower behind its plaza
+ * and reflecting pool, the council chamber's drum beside it, the relief station's tents.</li>
+ * <li>park: Grayhaven City Park ({@link CityPark}) with the Grayhaven Museum ({@link Museum}) along
+ * its north side: the lake and its island, the boathouse, the bandstand and the camp round it, the
+ * palm house, the trenches in the far corner.</li>
+ * <li>arena: Harbor Arena ({@link Arena}), the Gulls' hockey arena, its floor sunk under the
+ * street, the shelter's cots on the plywood over the ice, the plazas at the ends.</li>
+ * <li>ballpark: Grayhaven Ballpark ({@link Ballpark}), the Skippers' brick park, home in the
+ * north-east corner and the outfield toward the water, the field the Guard's landing zone.</li>
+ * <li>tower: the Grayhaven Broadcast Center ({@link Broadcast}), WGHV Channel 6's studios and its
+ * lattice tower, the front to the south street the subway runs under.</li>
+ * <li>power: Harbor Point Generating Station ({@link PowerStation}), Grayhaven Light &amp; Power's
+ * coal plant, the turbine hall's front to the west street the subway runs under.</li>
+ * <li>market: the Old Market ({@link Market}), the granite market house with its dome between two
+ * cobbled lanes and the brick rows of shops either side.</li>
  * </ul>
  */
 final class LandmarkSite extends Site {
@@ -35,8 +56,62 @@ final class LandmarkSite extends Site {
             new UnionHall(q, rng, w, d, head.power()).build();
             return;
         }
+        if (variant("mall")) {
+            mall();
+            return;
+        }
+        if (variant("mercy")) {
+            new Hospital(lot(0, 0, w, d, 0), rng, w, d).build();
+            return;
+        }
+        if (variant("university")) {
+            new University(lot(0, 0, w, d, 0), rng, w, d).build();
+            return;
+        }
+        if (variant("civic")) {
+            new CivicCentre(lot(0, 0, w, d, 0), rng, w, d).build();
+            return;
+        }
         kit = new Kit(out, rng, w, d);
+        if (variant("park")) {
+            new CityPark(lot(0, 0, w, d, 0), rng, w, d, kit).build();
+            return;
+        }
+        if (variant("arena")) {
+            new Arena(lot(0, 0, w, d, 0), rng, w, d, kit).build();
+            return;
+        }
+        if (variant("ballpark")) {
+            new Ballpark(lot(0, 0, w, d, 0), rng, w, d, kit).build();
+            return;
+        }
+        if (variant("power")) {
+            // drawn with its front to the west street, where the subway's stop comes up: the lot's
+            // frame turned a quarter, its width the lot's depth
+            new PowerStation(lot(0, 0, d, w, 3), rng, d, w).build();
+            return;
+        }
+        if (variant("market")) {
+            new Market(lot(0, 0, w, d, 0), rng, w, d).build();
+            return;
+        }
+        if (variant("tower")) {
+            // drawn with its front to the south street, where the subway's stop comes up
+            new Broadcast(lot(0, 0, w, d, 2), rng, w, d).build();
+            return;
+        }
         stadium();
+    }
+
+    /** Grayhaven Mall ({@link Mall}) on its lot, the ground round it paved. */
+    private void mall() {
+        for (int x = 0; x < w; x++) {
+            for (int z = 0; z < d; z++) {
+                boolean walk = x < 4 || z < 4 || x >= w - 4 || z >= d - 4;
+                out.set(x, 0, z, walk ? (chance() < 0.1 ? "sidewalk_cracked" : "sidewalk") : chance() < 0.2 ? "asphalt_crack" : "asphalt");
+            }
+        }
+        new Mall(lot(0, 0, w, d, 0), rng, w, d).build();
     }
 
     /** The parking rows: twenty from aisle to aisle, a band of stalls six deep each side of it, three wide. */

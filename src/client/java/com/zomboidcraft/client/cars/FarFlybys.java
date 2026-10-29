@@ -46,6 +46,11 @@ public final class FarFlybys {
 
     private static final List<Far> FLYING = new ArrayList<>();
     private static ClientLevel in;
+    /**
+     * Ids for the stand-ins, counting down from far above anything the server hands out (26.3 counts a negative
+     * id as never assigned, and throws when it's asked for one).
+     */
+    private static int nextId = Integer.MAX_VALUE - 1;
 
     private FarFlybys() {
     }
@@ -113,10 +118,15 @@ public final class FarFlybys {
                 if (f.car == null) {
                     continue;
                 }
+                // never added to the level, so it has no id; the per-aircraft maps (cockpit lights, surfaces...) hash by it
+                f.car.setId(nextId--);
                 f.car.setLook(e.model(), "usable");
             }
             CarProp car = f.car;
-            car.flyby(at, e.velocity(), e.kind() == WorldEvents.Kind.JET && (e.start() & 3) == 0);
+            // keep last tick's attitude to turn smoothly from (an air strike banks and dives)
+            org.joml.Quaternionf was = new org.joml.Quaternionf(car.flight().q);
+            e.place(car, (now - e.start()) / 20.0);
+            car.flight().qO.set(was);
             car.rotorO = car.rotor;
             car.rotor += car.flight().rotorTurns() * Math.PI * 2 * 0.05;
             // past PROXY anything solid in the loaded world between here and there hides it (closer, the depth test does)

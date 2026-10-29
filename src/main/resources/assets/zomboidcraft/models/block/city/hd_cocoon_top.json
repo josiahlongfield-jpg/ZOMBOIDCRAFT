@@ -1,0 +1,140 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hd_cable": "zomboidcraft:block/city/hd_cable",
+    "hd_plastic": "zomboidcraft:block/city/hd_plastic",
+    "particle": "zomboidcraft:block/city/hd_plastic"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        0,
+        4.5
+      ],
+      "to": [
+        12,
+        9,
+        11.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hd_plastic"
+        },
+        "south": {
+          "texture": "#hd_plastic"
+        },
+        "east": {
+          "texture": "#hd_plastic"
+        },
+        "west": {
+          "texture": "#hd_plastic"
+        },
+        "up": {
+          "texture": "#hd_plastic"
+        },
+        "down": {
+          "texture": "#hd_plastic",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        9,
+        5
+      ],
+      "to": [
+        11,
+        14,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hd_plastic"
+        },
+        "south": {
+          "texture": "#hd_plastic"
+        },
+        "east": {
+          "texture": "#hd_plastic"
+        },
+        "west": {
+          "texture": "#hd_plastic"
+        },
+        "up": {
+          "texture": "#hd_plastic"
+        },
+        "down": {
+          "texture": "#hd_plastic"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        14,
+        6
+      ],
+      "to": [
+        10,
+        15,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hd_plastic"
+        },
+        "south": {
+          "texture": "#hd_plastic"
+        },
+        "east": {
+          "texture": "#hd_plastic"
+        },
+        "west": {
+          "texture": "#hd_plastic"
+        },
+        "up": {
+          "texture": "#hd_plastic"
+        },
+        "down": {
+          "texture": "#hd_plastic"
+        }
+      }
+    },
+    {
+      "from": [
+        7.5,
+        15,
+        7.5
+      ],
+      "to": [
+        8.5,
+        16,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hd_cable"
+        },
+        "south": {
+          "texture": "#hd_cable"
+        },
+        "east": {
+          "texture": "#hd_cable"
+        },
+        "west": {
+          "texture": "#hd_cable"
+        },
+        "up": {
+          "texture": "#hd_cable",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#hd_cable"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,156 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "mu_fern": "zomboidcraft:block/city/mu_fern",
+    "particle": "zomboidcraft:block/city/mu_fern"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        7.9
+      ],
+      "to": [
+        16,
+        12,
+        8.1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_fern"
+        },
+        "south": {
+          "texture": "#mu_fern"
+        },
+        "east": {
+          "texture": "#mu_fern"
+        },
+        "west": {
+          "texture": "#mu_fern"
+        },
+        "up": {
+          "texture": "#mu_fern"
+        },
+        "down": {
+          "texture": "#mu_fern"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "y",
+        "angle": 45
+      }
+    },
+    {
+      "from": [
+        7.9,
+        0,
+        0
+      ],
+      "to": [
+        8.1,
+        12,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_fern"
+        },
+        "south": {
+          "texture": "#mu_fern"
+        },
+        "east": {
+          "texture": "#mu_fern"
+        },
+        "west": {
+          "texture": "#mu_fern"
+        },
+        "up": {
+          "texture": "#mu_fern"
+        },
+        "down": {
+          "texture": "#mu_fern"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "y",
+        "angle": 45
+      }
+    },
+    {
+      "from": [
+        -2,
+        4,
+        0
+      ],
+      "to": [
+        18,
+        4.5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_fern",
+          "uv": [
+            0,
+            11.5,
+            16,
+            12
+          ]
+        },
+        "south": {
+          "texture": "#mu_fern",
+          "uv": [
+            0,
+            11.5,
+            16,
+            12
+          ]
+        },
+        "east": {
+          "texture": "#mu_fern"
+        },
+        "west": {
+          "texture": "#mu_fern"
+        },
+        "up": {
+          "texture": "#mu_fern",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#mu_fern",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          4,
+          8
+        ],
+        "axis": "z",
+        "angle": 22.5
+      }
+    }
+  ]
+}

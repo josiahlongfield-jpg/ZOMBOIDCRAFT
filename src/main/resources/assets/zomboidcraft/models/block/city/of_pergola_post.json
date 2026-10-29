@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "of_teak": "zomboidcraft:block/city/of_teak",
+    "particle": "zomboidcraft:block/city/of_teak"
+  },
+  "elements": [
+    {
+      "from": [
+        6,
+        0,
+        6
+      ],
+      "to": [
+        10,
+        16,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#of_teak"
+        },
+        "south": {
+          "texture": "#of_teak"
+        },
+        "east": {
+          "texture": "#of_teak"
+        },
+        "west": {
+          "texture": "#of_teak"
+        },
+        "up": {
+          "texture": "#of_teak",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#of_teak",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

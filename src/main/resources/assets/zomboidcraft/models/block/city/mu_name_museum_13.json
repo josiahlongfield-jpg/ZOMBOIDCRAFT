@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "mu_name_museum_13": "zomboidcraft:block/city/mu_name_museum_13",
+    "particle": "zomboidcraft:block/city/mu_name_museum_13"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mu_name_museum_13"
+        },
+        "south": {
+          "texture": "#mu_name_museum_13",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#mu_name_museum_13",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#mu_name_museum_13",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#mu_name_museum_13",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#mu_name_museum_13",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

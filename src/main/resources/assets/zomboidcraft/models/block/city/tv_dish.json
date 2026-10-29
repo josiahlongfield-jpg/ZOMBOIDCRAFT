@@ -1,0 +1,76 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tv_dish": "zomboidcraft:block/city/tv_dish",
+    "tv_dish_back": "zomboidcraft:block/city/tv_dish_back",
+    "tv_galv": "zomboidcraft:block/city/tv_galv",
+    "particle": "zomboidcraft:block/city/tv_galv"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        7.4,
+        -3.4
+      ],
+      "to": [
+        16,
+        8.6,
+        19.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tv_galv"
+        },
+        "south": {
+          "texture": "#tv_galv"
+        },
+        "east": {
+          "texture": "#tv_galv",
+          "uv": [
+            0,
+            7.4,
+            16,
+            8.6
+          ]
+        },
+        "west": {
+          "texture": "#tv_galv",
+          "uv": [
+            0,
+            7.4,
+            16,
+            8.6
+          ]
+        },
+        "up": {
+          "texture": "#tv_dish",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#tv_dish_back",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "x",
+        "angle": 45
+      }
+    }
+  ]
+}

@@ -43,6 +43,8 @@ public final class ZSprites {
 
     private static final Map<String, Sheet> SHEETS = new HashMap<>();
     private static final Map<String, Boolean> FAILED = new HashMap<>();
+    private static final long MAKE_GAP_NANOS = 150_000_000L;
+    private static long lastMade;
 
     /** The outfit's sheet, made now if this is the first time (null if it can't be). */
     public static Sheet get(String outfit, ZBodyMesh low, Identifier skin, Identifier kit) {
@@ -50,6 +52,13 @@ public final class ZSprites {
         if (s != null || FAILED.containsKey(outfit) || low == null || skin == null || kit == null) {
             return s;
         }
+        // one new sheet at a time, so walking into a crowd of new outfits doesn't stall a frame on them all;
+        // until its turn the zombie is drawn as a body (or, in the crowd, waits a moment)
+        long now = System.nanoTime();
+        if (now - lastMade < MAKE_GAP_NANOS) {
+            return null;
+        }
+        lastMade = now;
         try {
             s = make(outfit, low, skin, kit);
             SHEETS.put(outfit, s);
