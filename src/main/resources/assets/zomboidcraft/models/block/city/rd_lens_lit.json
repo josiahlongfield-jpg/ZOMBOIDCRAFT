@@ -1,0 +1,214 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ext_galv": "zomboidcraft:block/city/ext_galv",
+    "lh_cap": "zomboidcraft:block/city/lh_cap",
+    "lh_prism_lit": "zomboidcraft:block/city/lh_prism_lit",
+    "particle": "zomboidcraft:block/city/lh_cap"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        0,
+        5
+      ],
+      "to": [
+        11,
+        3,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#lh_cap"
+        },
+        "south": {
+          "texture": "#lh_cap"
+        },
+        "east": {
+          "texture": "#lh_cap"
+        },
+        "west": {
+          "texture": "#lh_cap"
+        },
+        "up": {
+          "texture": "#lh_cap"
+        },
+        "down": {
+          "texture": "#lh_cap",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        6.5,
+        3,
+        6.5
+      ],
+      "to": [
+        9.5,
+        4,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_galv"
+        },
+        "south": {
+          "texture": "#ext_galv"
+        },
+        "east": {
+          "texture": "#ext_galv"
+        },
+        "west": {
+          "texture": "#ext_galv"
+        },
+        "up": {
+          "texture": "#ext_galv"
+        },
+        "down": {
+          "texture": "#ext_galv"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        4,
+        3
+      ],
+      "to": [
+        13,
+        14,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#lh_prism_lit"
+        },
+        "south": {
+          "texture": "#lh_prism_lit"
+        },
+        "east": {
+          "texture": "#lh_prism_lit"
+        },
+        "west": {
+          "texture": "#lh_prism_lit"
+        },
+        "up": {
+          "texture": "#lh_prism_lit"
+        },
+        "down": {
+          "texture": "#lh_prism_lit"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        4,
+        3
+      ],
+      "to": [
+        13,
+        14,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#lh_prism_lit"
+        },
+        "south": {
+          "texture": "#lh_prism_lit"
+        },
+        "east": {
+          "texture": "#lh_prism_lit"
+        },
+        "west": {
+          "texture": "#lh_prism_lit"
+        },
+        "up": {
+          "texture": "#lh_prism_lit"
+        },
+        "down": {
+          "texture": "#lh_prism_lit"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "y",
+        "angle": 45
+      }
+    },
+    {
+      "from": [
+        4,
+        14,
+        4
+      ],
+      "to": [
+        12,
+        15.5,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#lh_cap"
+        },
+        "south": {
+          "texture": "#lh_cap"
+        },
+        "east": {
+          "texture": "#lh_cap"
+        },
+        "west": {
+          "texture": "#lh_cap"
+        },
+        "up": {
+          "texture": "#lh_cap"
+        },
+        "down": {
+          "texture": "#lh_cap"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        15.5,
+        6
+      ],
+      "to": [
+        10,
+        16,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#lh_cap"
+        },
+        "south": {
+          "texture": "#lh_cap"
+        },
+        "east": {
+          "texture": "#lh_cap"
+        },
+        "west": {
+          "texture": "#lh_cap"
+        },
+        "up": {
+          "texture": "#lh_cap",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#lh_cap"
+        }
+      }
+    }
+  ]
+}
