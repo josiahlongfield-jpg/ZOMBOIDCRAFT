@@ -105,6 +105,8 @@ public class HarvestmanEntity extends Mob {
     /** Client only: the turn last tick and now, eased toward the synced one; and the legs it draws (HarvestmanRig). */
     public final Quaternionf turn = new Quaternionf(), turnO = new Quaternionf();
     public Object rig;
+    /** Client only: its Spider 7 body and the animations it's playing (SpiderDraw). */
+    public Object body;
     /** Client only: the feet as they came in, the last few ticks (the body's drawn position runs a little behind). */
     public final Vec3[][] feetSeen = new Vec3[4][4];
     public int feetSeenAt;

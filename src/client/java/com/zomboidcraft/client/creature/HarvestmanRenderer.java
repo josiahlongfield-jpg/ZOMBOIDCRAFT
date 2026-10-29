@@ -3,6 +3,7 @@ package com.zomboidcraft.client.creature;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.zomboidcraft.ZomboidCraft;
+import com.zomboidcraft.client.creature.spider.SpiderDraw;
 import com.zomboidcraft.creature.HarvestmanEntity;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +40,9 @@ public class HarvestmanRenderer extends EntityRenderer<HarvestmanEntity, Harvest
     private static final int DARK_R = 14, DARK_G = 12, DARK_B = 12;
 
     public static class State extends EntityRenderState {
-        boolean ready, feedArms, hurt;
+        boolean ready, feedArms, hurt, shaders;
+        /** Its Spider 7 body, posed this frame; null if that model's missing (the old one's drawn). */
+        SpiderDraw spider;
         int lod;
         int lost;
         float camo, pulse, eyeShine;
@@ -84,6 +87,14 @@ public class HarvestmanRenderer extends EntityRenderer<HarvestmanEntity, Harvest
         Vec3 drawnAt = entity.getPosition(partialTick);
         Quaternionf q = new Quaternionf(entity.turnO).slerp(entity.turn, partialTick);
         rig.update(entity, entity.level(), drawnAt.add(0, HarvestmanEntity.MID, 0), drawnAt, q, partialTick);
+        // its body now is the Spider 7 creature, playing its own animations; the old rig still works out its hiding
+        state.spider = SpiderDraw.of(entity);
+        if (state.spider != null) {
+            state.spider.update(entity, drawnAt, q, rig.camo, rig.glowPulse, partialTick);
+            state.shaders = com.zomboidcraft.client.cars.CarLights.shaderPackOn();
+            state.hurt = entity.hurtTime > 0 && entity.isAlive();
+            return;
+        }
         state.parts[0].set(rig.body);
         for (int li = 0; li < 4; li++) {
             state.parts[1 + li * 2].set(rig.thigh[li]);
@@ -107,6 +118,10 @@ public class HarvestmanRenderer extends EntityRenderer<HarvestmanEntity, Harvest
     @Override
     public void submit(State state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState camera) {
         if (!state.ready) {
+            return;
+        }
+        if (state.spider != null) {
+            state.spider.submit(poseStack, collector, state.lightCoords, state.shaders);
             return;
         }
         HarvestmanModel.Part[][] levels = HarvestmanModel.get().levels;
