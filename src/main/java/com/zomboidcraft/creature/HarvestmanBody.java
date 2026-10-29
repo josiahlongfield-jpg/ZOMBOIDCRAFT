@@ -136,9 +136,9 @@ public final class HarvestmanBody {
 
     // ------------------------------------------------------------------------------------------------ being shot
 
-    public static final int HULL = 0, CORE = 1, LEG = 2;
+    public static final int HULL = 0, CORE = 1, LEG = 2, EYES_ZONE = 3;
 
-    /** Where a shot struck: how far along it, what (HULL, CORE or LEG) and which leg. */
+    /** Where a shot struck: how far along it, what (HULL, CORE, LEG or EYES_ZONE) and which leg. */
     public record Strike(double distance, int zone, int leg, Vec3 at) {
     }
 
@@ -166,6 +166,14 @@ public final class HarvestmanBody {
                 // the red core shows between the plates under its belly
                 int zone = l.y < HCY - 0.12 && Math.abs(l.x) < 0.4 ? CORE : HULL;
                 best = new Strike(t, zone, -1, at);
+            }
+        }
+        // its eyes: a shot that comes this close to one, at the front of the hull, is in the eye
+        for (float[] e : EYES) {
+            Vec3 at = body.at(e[0], e[1], e[2]);
+            double t = capsule(eye, dir, at, at, 0.13);
+            if (t <= range && (best == null || t < best.distance() + 0.3)) {
+                best = new Strike(t, EYES_ZONE, -1, at);
             }
         }
         for (int li = 0; li < 4; li++) {
@@ -210,6 +218,51 @@ public final class HarvestmanBody {
         }
         // back off along the ray to where it enters the tube
         return Math.max(0, t - Math.sqrt(r * r - gap * gap));
+    }
+
+    // ------------------------------------------------------------------------------------------------ its eyes
+
+    /** Three small red eyes down each side of its front, in the body's frame: centre and size. */
+    public static final float[][] EYES;
+
+    static {
+        double[][] row = {{0.83, 1.22, 0.032}, {0.875, 1.02, 0.026}, {0.915, 1.18, 0.021}};
+        EYES = new float[6][];
+        int k = 0;
+        for (int side = -1; side <= 1; side += 2) {
+            for (double[] r : row) {
+                double[] p = shell(side * r[1], r[0], 0.075);
+                EYES[k++] = new float[] {(float) p[0], (float) p[1], (float) p[2], (float) r[2]};
+            }
+        }
+    }
+
+    /** A point on the hull (the preview's b7Pt), off it along its normal by off. */
+    private static double[] shell(double a, double s, double off) {
+        double[] p = b7(a, s), e1 = b7(a, s + 1e-3), e0 = b7(a, s - 1e-3), a1 = b7(a + 1e-3, s), a0 = b7(a - 1e-3, s);
+        double[] ds = {e1[0] - e0[0], e1[1] - e0[1], e1[2] - e0[2]}, da = {a1[0] - a0[0], a1[1] - a0[1], a1[2] - a0[2]};
+        double[] n = {ds[1] * da[2] - ds[2] * da[1], ds[2] * da[0] - ds[0] * da[2], ds[0] * da[1] - ds[1] * da[0]};
+        double l = Math.sqrt(n[0] * n[0] + n[1] * n[1] + n[2] * n[2]);
+        double cy = centreLine(s), cz = -1.55 + 2.5 * s;
+        if ((p[0]) * n[0] + (p[1] - cy) * n[1] + (p[2] - cz) * n[2] < 0) {
+            l = -l;
+        }
+        return new double[] {p[0] + n[0] / l * off, p[1] + n[1] / l * off, p[2] + n[2] / l * off};
+    }
+
+    private static double centreLine(double s) {
+        double k = Mth.clamp((s - 0.42) / 0.58, 0, 1);
+        return 0.1 + 0.55 * Math.pow(1 - s, 2.2) - 0.5 * k * k * (3 - 2 * k);
+    }
+
+    private static double[] b7(double a, double s) {
+        s = Mth.clamp(s, 0, 1);
+        double e = s < 0.5 ? Math.pow(Math.max(0, s / 0.5), 0.7) : Math.pow(Math.max(0, 1 - (s - 0.5) / 0.5), 0.85);
+        double W = 0.52 * e, T = 0.26 * e, Bt = 0.22 * e, c = centreLine(s), z = -1.55 + 2.5 * s, sa = Math.sin(a), ca = Math.cos(a);
+        if (ca >= 0) {
+            return new double[] {W * Math.signum(sa) * Math.pow(Math.abs(sa), 0.75), c + T * Math.pow(ca, 0.7), z};
+        }
+        return new double[] {W * Math.signum(sa) * Math.pow(Math.abs(sa), 0.8), c - Bt * Math.pow(-ca, 0.85), z};
     }
 
     private HarvestmanBody() {

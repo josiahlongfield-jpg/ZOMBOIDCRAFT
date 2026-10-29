@@ -29,6 +29,8 @@ public final class HarvestmanRig {
     public final Matrix4f[] thigh = new Matrix4f[4], shin = new Matrix4f[4];
     public int lost;
     public float camo = 1, glowPulse;
+    /** How hard its eyes catch the light (a beam swung across them flares them, then they settle), 0..1. */
+    public float eyeShine;
     public boolean feedArms;
 
     /** A lower leg shot off: where it is, how it's moving, and how long it has lain. */
@@ -50,7 +52,17 @@ public final class HarvestmanRig {
     public final List<Flying> flying = new ArrayList<>();
 
     private double t, jolt, rear, pitch = 0.1, deadRoll;
-    private int flinchesSeen = -1, lostSeen = -1;
+    private int flinchesSeen = -1, lostSeen = -1, stumblesSeen = -1, recoilsSeen = -1;
+    /** Alive at rest: its weight shifting from leg to leg, and small sharp twitches (toward a noise, or at nothing). */
+    private double shiftRoll, shiftPitch, shiftWantRoll, shiftWantPitch, nextShift, twitchYaw, twitchPitch,
+            twitchWantYaw, twitchWantPitch, twitchHold, nextTwitch = 2, lookYaw, lookPitch;
+    /** A foot slipping (which leg), and a shot in the eyes throwing it back: each 1 when it happens, easing to 0. */
+    private double stumble, recoil;
+    private int stumbleLeg;
+    /** Its legs gone, as drawn: the lean toward the missing side. */
+    private double limpRoll, limpPitch;
+    private double flare;
+    private boolean litSeen;
     private long lastNanos;
 
     public HarvestmanRig() {
@@ -89,8 +101,31 @@ public final class HarvestmanRig {
         flinchesSeen = e.flinches();
         jolt = Math.max(0, jolt - dt * 2.4);
         double j = Math.sin(Math.min(1, jolt) * Math.PI);
+        // a foot skidding: it lurches down toward that leg; a shot in the eyes: it throws its front up and back
+        if (stumblesSeen >= 0 && e.stumbles() != stumblesSeen) {
+            stumble = 1;
+            stumbleLeg = e.stumbles() & 3;
+        }
+        stumblesSeen = e.stumbles();
+        if (recoilsSeen >= 0 && e.recoils() != recoilsSeen) {
+            recoil = 1;
+        }
+        recoilsSeen = e.recoils();
+        stumble = Math.max(0, stumble - dt * 3);
+        recoil = Math.max(0, recoil - dt * 1.6);
+        double sk = Math.sin(stumble * Math.PI), rk = Math.sin(Math.min(1, recoil * 1.4) * Math.PI) * (recoil > 0 ? 1 : 0);
         rear = Mth.lerp(1 - Math.exp(-dt * 10), rear, e.rear());
-        double pitchWant = dead ? 0.05 : feedArms ? 0.0 : 0.1 - 0.42 * rear - 0.14 * j;
+        // legs gone: it leans toward the side that's missing one, nose down without a front leg
+        double lr = 0, lp = 0;
+        for (int li = 0; li < 4; li++) {
+            if ((e.lost() >> li & 1) != 0) {
+                lr -= HarvestmanBody.side(li) * 0.1;
+                lp += (li & 1) == 0 ? 0.08 : -0.05;
+            }
+        }
+        limpRoll = Mth.lerp(1 - Math.exp(-dt * 3), limpRoll, dead ? 0 : lr);
+        limpPitch = Mth.lerp(1 - Math.exp(-dt * 3), limpPitch, dead ? 0 : lp);
+        double pitchWant = dead ? 0.05 : feedArms ? 0.0 : 0.1 - 0.42 * rear - 0.14 * j + limpPitch - 0.5 * rk;
         pitch = Mth.lerp(1 - Math.exp(-dt * 8), pitch, pitchWant);
         deadRoll = Mth.lerp(1 - Math.exp(-dt * 1.5), deadRoll, dead ? 0.22 : 0);
         camo = (float) Mth.lerp(1 - Math.exp(-dt * 6), camo, e.camo());
@@ -104,10 +139,18 @@ public final class HarvestmanRig {
         }
         // the body: risen as it rears, dipped by a jolt, bobbing as it walks or works at what it holds
         boolean walking = !dead && e.position().distanceToSqr(new Vec3(e.xo, e.yo, e.zo)) > 0.0004;
-        double bob = dead ? 0 : feeding ? 0.02 * Math.sin(t * 7.5) : walking ? 0.05 * Math.sin(t * 3.4) : 0.03 * Math.sin(t * 1.2);
+        boolean limping = walking && e.lost() != 0;
+        double hitch = limping ? Math.pow(Math.abs(Math.sin(t * 2.6)), 4) : 0;
+        double bob = dead ? 0 : feeding ? 0.02 * Math.sin(t * 7.5) : limping ? 0.03 * Math.sin(t * 2.6) - 0.09 * hitch
+                : walking ? 0.05 * Math.sin(t * 3.4) : 0.035 * Math.sin(t * 1.15);
         double sway = dead ? 0 : 0.02 * Math.sin(t * 0.8);
-        Vec3 o = centre.add(up.scale(bob + 0.28 * rear - 0.28 * j));
-        Vec3[] ax = axes(fx, up, fz, pitch + (walking ? 0.025 * Math.sin(t * 1.7) : 0), sway * 0.5, sway + deadRoll);
+        idle(e, dt, !dead && !walking && !feedArms, fx, up, fz, centre);
+        double sideways = stumbleLeg < 2 ? -1 : 1;
+        Vec3 o = centre.add(up.scale(bob + 0.28 * rear - 0.28 * j - 0.15 * sk - 0.1 * rk)).add(fz.scale(-0.35 * rk))
+                .add(fx.scale(sideways * 0.08 * sk - 0.05 * shiftRoll));
+        double yaw = sway * 0.5 + twitchYaw + lookYaw + 0.12 * rk * Math.sin(t * 38);
+        double roll = sway + deadRoll + shiftRoll + limpRoll - sideways * 0.2 * sk + (limping ? limpRoll * 0.6 * hitch : 0);
+        Vec3[] ax = axes(fx, up, fz, pitch + shiftPitch + twitchPitch + lookPitch + (walking ? 0.025 * Math.sin(t * 1.7) : 0), yaw, roll);
         HarvestmanBody.Frame frame = new HarvestmanBody.Frame(o, ax[0], ax[1], ax[2]);
         set(body, o, ax[0], ax[1], ax[2], drawnAt);
 
@@ -148,6 +191,77 @@ public final class HarvestmanRig {
         lostSeen = nowLost;
         lost = nowLost;
         fly(level, e, dt, drawnAt);
+        shine(e, level, frame, dt, partialTick, dead);
+    }
+
+    /**
+     * At rest it's never quite still: its weight shifts from leg to leg every few seconds, and now and then it gives a
+     * small sharp twitch, held a moment, then eases back. Something it's looking at (a noise it heard) it snaps toward,
+     * as far as its body will turn without stepping.
+     */
+    private void idle(HarvestmanEntity e, double dt, boolean still, Vec3 fx, Vec3 up, Vec3 fz, Vec3 centre) {
+        var rnd = e.getRandom();
+        nextShift -= dt;
+        if (nextShift <= 0) {
+            nextShift = 2.5 + rnd.nextDouble() * 3;
+            shiftWantRoll = still ? (rnd.nextDouble() - 0.5) * 0.12 : 0;
+            shiftWantPitch = still ? (rnd.nextDouble() - 0.5) * 0.07 : 0;
+        }
+        if (!still) {
+            shiftWantRoll = shiftWantPitch = 0;
+        }
+        shiftRoll = Mth.lerp(1 - Math.exp(-dt * 1.4), shiftRoll, shiftWantRoll);
+        shiftPitch = Mth.lerp(1 - Math.exp(-dt * 1.4), shiftPitch, shiftWantPitch);
+        // twitches: a snap, held, and back
+        nextTwitch -= dt;
+        if (still && nextTwitch <= 0) {
+            nextTwitch = 2 + rnd.nextDouble() * 5;
+            twitchWantYaw = (rnd.nextBoolean() ? 1 : -1) * (0.05 + rnd.nextDouble() * 0.1);
+            twitchWantPitch = (rnd.nextDouble() - 0.5) * 0.1;
+            twitchHold = 0.3 + rnd.nextDouble() * 0.9;
+        }
+        if (twitchHold > 0) {
+            twitchHold -= dt;
+        } else {
+            twitchWantYaw = twitchWantPitch = 0;
+        }
+        double snap = twitchHold > 0 ? 28 : 5;
+        twitchYaw = Mth.lerp(1 - Math.exp(-dt * snap), twitchYaw, still ? twitchWantYaw : 0);
+        twitchPitch = Mth.lerp(1 - Math.exp(-dt * snap), twitchPitch, still ? twitchWantPitch : 0);
+        // toward what it's looking at
+        Vec3 look = e.lookingAt();
+        double wy = 0, wp = 0;
+        if (still && look != null) {
+            Vec3 to = look.subtract(centre);
+            double ahead = to.dot(fz), across = to.dot(fx), high = to.dot(up);
+            wy = Mth.clamp(Math.atan2(-across, Math.max(0.1, ahead)), -0.35, 0.35);
+            wp = Mth.clamp(-Math.atan2(high, Math.max(0.5, Math.hypot(ahead, across))) * 0.5, -0.2, 0.15);
+        }
+        lookYaw = Mth.lerp(1 - Math.exp(-dt * 14), lookYaw, wy);
+        lookPitch = Mth.lerp(1 - Math.exp(-dt * 8), lookPitch, wp);
+    }
+
+    /** Its eyes catching the light: a beam swung across them (or a lit room) as you look at it flares them, briefly. */
+    private void shine(HarvestmanEntity e, Level level, HarvestmanBody.Frame frame, double dt, float partialTick, boolean dead) {
+        net.minecraft.client.Minecraft mc = net.minecraft.client.Minecraft.getInstance();
+        boolean lit = false;
+        if (!dead && mc.player != null) {
+            Vec3 eyes = frame.at(0, EYES[0][1], EYES[0][2]), cam = mc.player.getEyePosition(partialTick);
+            Vec3 to = eyes.subtract(cam);
+            double d = to.length();
+            if (d > 1 && d < 32 && mc.player.getViewVector(partialTick).dot(to.scale(1 / d)) > Math.cos(Math.toRadians(11))
+                    && level.getMaxLocalRawBrightness(net.minecraft.core.BlockPos.containing(eyes)) >= 8) {
+                lit = level.clip(new ClipContext(cam, eyes, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, mc.player))
+                        .getType() == HitResult.Type.MISS;
+            }
+        }
+        if (lit && !litSeen) {
+            flare = 1;
+        }
+        litSeen = lit;
+        flare = Math.max(0, flare - dt * 1.4);
+        float want = lit ? (float) Math.max(0.3, flare) : 0f;
+        eyeShine = (float) Mth.lerp(1 - Math.exp(-dt * (want > eyeShine ? 20 : 4)), eyeShine, want);
     }
 
     /** The flying lower legs fall, tumble, land, lie a minute and fade. */
@@ -214,46 +328,6 @@ public final class HarvestmanRig {
 
     // ------------------------------------------------------------------------------------------------ its eyes
 
-    /** Three small red eyes down each side of its front, in the body's frame: centre and size. */
-    public static final float[][] EYES;
-
-    static {
-        double[][] row = {{0.83, 1.22, 0.032}, {0.875, 1.02, 0.026}, {0.915, 1.18, 0.021}};
-        EYES = new float[6][];
-        int k = 0;
-        for (int side = -1; side <= 1; side += 2) {
-            for (double[] r : row) {
-                double[] p = shell(side * r[1], r[0], 0.075);
-                EYES[k++] = new float[] {(float) p[0], (float) p[1], (float) p[2], (float) r[2]};
-            }
-        }
-    }
-
-    /** A point on the hull (the preview's b7Pt), off it along its normal by off. */
-    private static double[] shell(double a, double s, double off) {
-        double[] p = b7(a, s), e1 = b7(a, s + 1e-3), e0 = b7(a, s - 1e-3), a1 = b7(a + 1e-3, s), a0 = b7(a - 1e-3, s);
-        double[] ds = {e1[0] - e0[0], e1[1] - e0[1], e1[2] - e0[2]}, da = {a1[0] - a0[0], a1[1] - a0[1], a1[2] - a0[2]};
-        double[] n = {ds[1] * da[2] - ds[2] * da[1], ds[2] * da[0] - ds[0] * da[2], ds[0] * da[1] - ds[1] * da[0]};
-        double l = Math.sqrt(n[0] * n[0] + n[1] * n[1] + n[2] * n[2]);
-        double cy = centreLine(s), cz = -1.55 + 2.5 * s;
-        if ((p[0]) * n[0] + (p[1] - cy) * n[1] + (p[2] - cz) * n[2] < 0) {
-            l = -l;
-        }
-        return new double[] {p[0] + n[0] / l * off, p[1] + n[1] / l * off, p[2] + n[2] / l * off};
-    }
-
-    private static double centreLine(double s) {
-        double k = Mth.clamp((s - 0.42) / 0.58, 0, 1);
-        return 0.1 + 0.55 * Math.pow(1 - s, 2.2) - 0.5 * k * k * (3 - 2 * k);
-    }
-
-    private static double[] b7(double a, double s) {
-        s = Mth.clamp(s, 0, 1);
-        double e = s < 0.5 ? Math.pow(Math.max(0, s / 0.5), 0.7) : Math.pow(Math.max(0, 1 - (s - 0.5) / 0.5), 0.85);
-        double W = 0.52 * e, T = 0.26 * e, Bt = 0.22 * e, c = centreLine(s), z = -1.55 + 2.5 * s, sa = Math.sin(a), ca = Math.cos(a);
-        if (ca >= 0) {
-            return new double[] {W * Math.signum(sa) * Math.pow(Math.abs(sa), 0.75), c + T * Math.pow(ca, 0.7), z};
-        }
-        return new double[] {W * Math.signum(sa) * Math.pow(Math.abs(sa), 0.8), c - Bt * Math.pow(-ca, 0.85), z};
-    }
+    /** Three small red eyes down each side of its front, in the body's frame: centre and size (HarvestmanBody). */
+    public static final float[][] EYES = HarvestmanBody.EYES;
 }

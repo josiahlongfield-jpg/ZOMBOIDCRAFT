@@ -37,7 +37,7 @@ import net.minecraft.world.phys.Vec3;
 public final class HarvestmanMind {
     public static final int IDLE = 0, WANDER = 1, PERCH = 2, CEILING = 3, HIDE = 4, LISTEN = 5, INVESTIGATE = 6,
             STALK = 7, AMBUSH = 8, STRIKE = 9, DRAG = 10, FEED = 11, FLEE = 12, LAIR = 13, REST = 14, ZOMBIE = 15,
-            GLIMPSE = 16, LEAVE_BODY = 17, TRAVEL = 18;
+            GLIMPSE = 16, LEAVE_BODY = 17, TRAVEL = 18, FEINT = 19;
     /**
      * How fast it can go when it wants to (blocks a second): closing on prey, vanishing once seen, getting away hurt;
      * faster than a sprinting player when the prey runs; the lunge itself. It creeps everywhere else.
@@ -45,13 +45,13 @@ public final class HarvestmanMind {
     static final double BURST = 7.5, SPRINT = 9.5, LUNGE = 11;
 
     public static final String[] PLANS = {"idle", "wander", "perch", "ceiling", "hide", "listen", "investigate", "stalk",
-            "ambush", "strike", "drag", "feed", "flee", "lair", "rest", "zombie", "glimpse", "leave_body", "travel"};
+            "ambush", "strike", "drag", "feed", "flee", "lair", "rest", "zombie", "glimpse", "leave_body", "travel", "feint"};
     /** What a plan is, said plainly (/zc harvestman info). */
     private static final String[] SAY = {"waiting", "wandering", "perching high on a wall", "crossing the ceiling",
             "hiding in the dark", "listening", "going to see what it heard", "stalking %s", "waiting above where %s passes",
             "striking at %s", "dragging its catch into the dark", "feeding", "fleeing, hurt", "going back to its lair",
             "resting in its lair", "hunting a zombie to eat", "letting %s glimpse it", "leaving a body for %s to find",
-            "travelling toward %s"};
+            "travelling toward %s", "drawing %s off with a noise"};
 
     /** Every direction it feels along: the 26 neighbours of a cube. */
     static final Vec3[] DIRS;
@@ -78,6 +78,11 @@ public final class HarvestmanMind {
     double bold = 0.5, patience = 0.5;
     // learned
     double stalkDist = 10, ceilingBias = 0.35, ambushBias = 0.3;
+    /**
+     * How used it is to light and to gunfire (0 it backs off from both, 1 they don't turn it), and how well its feints
+     * have worked: it learns these as it goes.
+     */
+    double lightNerve, gunNerve, feintBias = 0.3;
     int seen, grabs, escapes, feeds, stage = 1;
     /** Its den; where it was made. */
     BlockPos lair;
@@ -100,6 +105,15 @@ public final class HarvestmanMind {
     private long glimpseAt, bodyAt;
     private boolean forcedHunt;
     private double hurtRecent;
+    /** Ticks it has stood in bright light; when it may next back off from a gunshot. */
+    private int litTicks;
+    private long gunShyUntil;
+    /** Peeking round a corner: where its body waits, the leg it reaches round with, and until when. */
+    private Vec3 peekAt;
+    private int peekLeg = -1, peekTicks;
+    /** A feint: where the decoy noise was made, and the way they were looking when it was. */
+    private Vec3 decoy, decoyLook;
+    private long feintAt, doorAt;
 
     HarvestmanMind(HarvestmanEntity h) {
         this.h = h;
@@ -123,6 +137,16 @@ public final class HarvestmanMind {
         return forcedHunt;
     }
 
+    /** Is someone looking right at it now? */
+    boolean watched() {
+        return watched;
+    }
+
+    /** Is it carrying a body somewhere (to leave it for someone)? */
+    boolean carrying() {
+        return carried != null;
+    }
+
     /** Makes it take up a plan next (a /zc harvestman test); hunting plans go after the nearest player. */
     /** Has it take up a plan next (the director: back to its den, rest, go after its target). */
     void queue(int plan) {
@@ -137,7 +161,7 @@ public final class HarvestmanMind {
      */
     public String force(ServerLevel level, int plan) {
         forcedHunt = plan == STRIKE || plan == STALK || plan == AMBUSH || plan == GLIMPSE || plan == LEAVE_BODY
-                || plan == TRAVEL;
+                || plan == TRAVEL || plan == FEINT;
         h.goal = null;
         wait = 0;
         end();
@@ -151,7 +175,7 @@ public final class HarvestmanMind {
                     return "it only drags and feeds once a strike has caught someone (try do strike)";
                 }
             }
-            case STRIKE, STALK, AMBUSH, GLIMPSE -> {
+            case STRIKE, STALK, AMBUSH, GLIMPSE, FEINT -> {
                 if (near == null) {
                     return "there's no player within 48 blocks";
                 }
@@ -180,6 +204,7 @@ public final class HarvestmanMind {
             case PERCH -> "there's no wall rising above it nearby";
             case ZOMBIE -> "there's no zombie within 32 blocks";
             case LEAVE_BODY -> "it needs a body (corpse) within 24 blocks and someone to leave it for";
+            case FEINT -> "it needs somewhere off to the far side of them to make its noise";
             case INVESTIGATE, LISTEN -> "there's nobody near for it to hear";
             default -> "it can't find anywhere to do that from here";
         };
@@ -188,12 +213,33 @@ public final class HarvestmanMind {
     // ------------------------------------------------------------------------------------------------ how it moves now
 
     public boolean sneaking() {
-        return plan == STALK || plan == AMBUSH || plan == HIDE || plan == GLIMPSE || plan == LEAVE_BODY
+        return plan == STALK || plan == AMBUSH || plan == HIDE || plan == GLIMPSE || plan == LEAVE_BODY || plan == FEINT
                 || plan == STRIKE && phase == 0 && !watched;
     }
 
     public boolean watching() {
-        return h.look != null && (plan == STALK || plan == GLIMPSE || plan == LISTEN || plan == AMBUSH || plan == STRIKE);
+        return h.look != null && (plan == STALK || plan == GLIMPSE || plan == LISTEN || plan == AMBUSH || plan == STRIKE
+                || plan == FEINT);
+    }
+
+    /**
+     * The player it has its attention on from out of the way (stalking them, waiting above them, hiding and watching
+     * them pass), as an entity id for their game's unease; -1 for none.
+     */
+    int watchingId(ServerLevel level) {
+        if (plan == STRIKE || plan == DRAG || plan == FEED || plan == FLEE || plan == REST) {
+            return -1;
+        }
+        if ((plan == STALK || plan == AMBUSH || plan == GLIMPSE || plan == FEINT) && quarry instanceof ServerPlayer p && p.isAlive()) {
+            return p.distanceToSqr(h) < 40 * 40 ? p.getId() : -1;
+        }
+        if (plan == HIDE || plan == PERCH || plan == CEILING || plan == IDLE || plan == LISTEN) {
+            ServerPlayer t = target(level);
+            if (t != null && t.distanceToSqr(h) < 24 * 24 && h.canSee(t.getEyePosition())) {
+                return t.getId();
+            }
+        }
+        return -1;
     }
 
     /** How low it crouches (stalking, hiding), 0..1. */
@@ -268,12 +314,13 @@ public final class HarvestmanMind {
     /** Does the current plan end once its goal is reached? (the ones that wait there end on their own) */
     private boolean done() {
         return switch (plan) {
-            case STALK, AMBUSH, STRIKE, DRAG, FEED, LISTEN, REST, GLIMPSE, ZOMBIE, LEAVE_BODY, TRAVEL -> false;
+            case STALK, AMBUSH, STRIKE, DRAG, FEED, LISTEN, REST, GLIMPSE, ZOMBIE, LEAVE_BODY, TRAVEL, FEINT -> false;
             default -> true;
         };
     }
 
     private void end() {
+        stopPeek();
         plan = IDLE;
         phase = 0;
         phaseTicks = 0;
@@ -284,6 +331,7 @@ public final class HarvestmanMind {
     }
 
     private void start(int p, Vec3 goal, double speed) {
+        stopPeek();
         plan = p;
         phase = 0;
         phaseTicks = 0;
@@ -318,6 +366,42 @@ public final class HarvestmanMind {
         if (quarry instanceof Player p && p.isAlive()) {
             quarrySeen = p.position();
         }
+        // bright lamplight: at first it won't stay in it (worse when it's being looked at there); it learns to bear it
+        int light = level.getBrightness(net.minecraft.world.level.LightLayer.BLOCK, BlockPos.containing(c));
+        boolean roaming = plan == STALK || plan == WANDER || plan == INVESTIGATE || plan == AMBUSH || plan == PERCH
+                || plan == CEILING || plan == FEINT || plan == IDLE;
+        litTicks = light >= 11 && roaming ? litTicks + 5 : 0;
+        if (litTicks >= (watched ? 10 : 30) && h.held() == null) {
+            litTicks = 0;
+            if (h.getRandom().nextDouble() > lightNerve) {
+                lightNerve = Math.min(1, lightNerve + 0.06);
+                end();
+                start(HIDE, darkSpot(level, 18), 2.8);
+                level.playSound(null, c.x, c.y, c.z, HarvestmanSounds.HISS, SoundSource.HOSTILE, 0.5f, 1.2f);
+            } else {
+                lightNerve = Math.min(1, lightNerve + 0.01);
+            }
+        }
+    }
+
+    /** The darkest place it can see round it, for getting out of the light. */
+    private Vec3 darkSpot(ServerLevel level, double range) {
+        Vec3 c = h.centre(), best = null;
+        double bestScore = -1e9;
+        for (int k = 0; k < 30; k++) {
+            Vec3 d = randomDir();
+            BlockHitResult hit = cast(level, c, c.add(d.scale(range)));
+            if (hit.getType() == HitResult.Type.MISS) {
+                continue;
+            }
+            Vec3 p = hit.getLocation().add(normal(hit).scale(1.1));
+            double score = -level.getMaxLocalRawBrightness(BlockPos.containing(p)) - p.distanceTo(c) * 0.05 + h.getRandom().nextDouble() * 0.5;
+            if (score > bestScore) {
+                bestScore = score;
+                best = p;
+            }
+        }
+        return best != null ? best : spot(HIDE, range);
     }
 
     /** Is this player looking right at it, and could they make it out (in the light, or close)? */
@@ -365,6 +449,7 @@ public final class HarvestmanMind {
             case AMBUSH -> startAmbush(level, target);
             case GLIMPSE -> startGlimpse(level, target);
             case LEAVE_BODY -> startLeaveBody(level, target);
+            case FEINT -> startFeint(level, target);
             case TRAVEL -> start(TRAVEL, target != null ? target.position().add(0, 2, 0) : null, 3.2);
             case ZOMBIE -> startZombie(level);
             case FLEE, LAIR -> {
@@ -403,13 +488,16 @@ public final class HarvestmanMind {
         double health = h.getHealth() / h.getMaxHealth();
         int legsGone = Integer.bitCount(h.lost());
         double[] w = new double[PLANS.length];
-        // hurt badly, it goes to ground in its lair
-        if (health < 0.35 || legsGone >= 2) {
-            w[FLEE] = 3;
-        }
         boolean atLair = lair != null && c.distanceToSqr(Vec3.atCenterOf(lair)) < 10 * 10;
+        // hurt badly, it doesn't fight on: it goes to ground in its lair and stays there till it has mended
+        if (health < 0.35 || legsGone >= 2) {
+            if (atLair) {
+                return REST;
+            }
+            return lair != null ? FLEE : HIDE;
+        }
         if (atLair && (legsGone > 0 || health < 0.9 || hunger < 0.3 && target == null)) {
-            w[REST] = 2 + legsGone;
+            w[REST] = 2 + legsGone + (health < 0.6 ? 4 : 0);
         }
         if (target != null) {
             double d = target.position().distanceTo(c);
@@ -419,8 +507,12 @@ public final class HarvestmanMind {
                 boolean alone = level.getEntitiesOfClass(Player.class, target.getBoundingBox().inflate(12), p -> p != target && !p.isSpectator()).isEmpty();
                 boolean backTurned = target.getLookAngle().dot(c.subtract(target.getEyePosition()).normalize()) < 0.2;
                 boolean unaware = !lookingAt(target, c);
-                if (d < 12 && unaware && (backTurned || d < 6) && (alone || bold > 0.7) && h.canSee(target.getEyePosition())) {
+                if (d < 12 && unaware && (backTurned || d < 6) && (alone || bold > 0.7) && h.canSee(target.getEyePosition())
+                        && health > 0.6) {
                     w[STRIKE] = 1.5 + bold;
+                }
+                if (d > 8 && d < 26 && unaware && level.getGameTime() - feintAt > 20 * 120) {
+                    w[FEINT] = 0.25 + 0.5 * feintBias;
                 }
                 w[STALK] = 1.0;
                 w[AMBUSH] = 0.5 * ambushBias + (d > 20 ? 0.2 : 0);
@@ -526,6 +618,7 @@ public final class HarvestmanMind {
             case ZOMBIE -> strike(level);
             case GLIMPSE -> glimpse(level);
             case LEAVE_BODY -> leaveBody(level);
+            case FEINT -> feint(level);
             default -> {
             }
         }
@@ -555,6 +648,13 @@ public final class HarvestmanMind {
         Vec3 c = h.centre();
         double d = t.position().distanceTo(c);
         h.look = t.getEyePosition();
+        if (watched && peekAt != null && peekTicks > 8) {
+            // caught looking round the corner: it draws back out of sight
+            wary = Math.min(1, wary + 0.05);
+            end();
+            start(HIDE, hideFrom(level, t), 2.6);
+            return;
+        }
         if (watched) {
             h.goal = null;      // dead still while it's being looked at
             if (watchedTicks > 20 * 3 && d < 18) {
@@ -567,8 +667,22 @@ public final class HarvestmanMind {
             }
             return;
         }
+        if (peekAt != null) {
+            peek(level, t);
+            return;
+        }
         if (planTicks % 30 == 0 || h.goal == null) {
             h.goal = stalkSpot(level, t);
+        }
+        // they're out of its sight round a corner: it creeps to the edge and looks round it, one leg showing
+        if (planTicks % 40 == 20 && d < 22 && !h.canSee(t.getEyePosition()) && h.getRandom().nextFloat() < 0.5f) {
+            startPeek(level, t);
+        }
+        // a door they shut, somewhere behind them: it quietly leaves it standing open
+        if (planTicks % 60 == 0 && level.getGameTime() - doorAt > 20 * 90 && h.getRandom().nextFloat() < 0.35f) {
+            if (HarvestmanSigns.openDoorBehind(level, h, t)) {
+                doorAt = level.getGameTime();
+            }
         }
         // a chance: close, alone, not looking
         if (planTicks % 10 == 0 && d < 10 && unseenTicks > 40 && h.getRandom().nextDouble() < 0.12 + 0.2 * bold) {
@@ -578,6 +692,154 @@ public final class HarvestmanMind {
         if (d > 56 || planTicks > 20 * 60 * (1 + patience)) {
             end();
         }
+    }
+
+    /**
+     * Looking round a corner: a point off to one side (along its surface) from which they'd be in sight. Its body waits
+     * just short of it, behind the edge, and the front leg on that side reaches round on to the corner.
+     */
+    private void startPeek(ServerLevel level, ServerPlayer t) {
+        Vec3 c = h.centre(), up = h.up(), eye = t.getEyePosition();
+        Vec3 to = eye.subtract(c);
+        to = to.subtract(up.scale(to.dot(up)));
+        if (to.lengthSqr() < 1e-4) {
+            return;
+        }
+        Vec3 side = up.cross(to.normalize());
+        for (double s : new double[] {1, -1, 1.6, -1.6, 2.3, -2.3, 3, -3}) {
+            Vec3 p = c.add(side.scale(s));
+            if (cast(level, c, p).getType() != HitResult.Type.MISS || cast(level, p, eye).getType() != HitResult.Type.MISS) {
+                continue;
+            }
+            // where they'd come into sight: it stops a body's width short of there
+            double back = Math.max(0, Math.abs(s) - 0.9) * Math.signum(s);
+            peekAt = c.add(side.scale(back));
+            Vec3 right = up.cross(h.forward());
+            peekLeg = side.scale(s).dot(right) >= 0 ? 2 : 0;
+            if ((h.lost() >> peekLeg & 1) != 0) {
+                peekLeg = 2 - peekLeg;
+            }
+            peekTicks = 0;
+            h.goal = peekAt;
+            h.goalSpeed = 0.9;
+            return;
+        }
+    }
+
+    private void peek(ServerLevel level, ServerPlayer t) {
+        Vec3 c = h.centre(), up = h.up();
+        peekTicks++;
+        h.look = t.getEyePosition();
+        if (near(peekAt, 0.6) || peekTicks > 60) {
+            h.goal = null;
+            // the point set on the corner, round toward them
+            Vec3 to = t.getEyePosition().subtract(c);
+            to = to.subtract(up.scale(to.dot(up)));
+            Vec3 tip = c.add(to.lengthSqr() > 1e-4 ? to.normalize().scale(2.2) : h.forward().scale(2.2));
+            BlockHitResult down = cast(level, tip.add(up.scale(0.5)), tip.subtract(up.scale(HarvestmanEntity.STAND + 1)));
+            if (down.getType() != HitResult.Type.MISS && (h.lost() >> peekLeg & 1) == 0) {
+                h.legs.reach(peekLeg, down.getLocation());
+            }
+        }
+        // seen peeking, it draws back out of sight; otherwise it holds there a while, then carries on
+        if (watched && peekTicks > 8) {
+            stopPeek();
+            wary = Math.min(1, wary + 0.05);
+            end();
+            start(HIDE, hideFrom(level, t), 2.6);
+            return;
+        }
+        if (peekTicks > 60 + 60 * patience) {
+            stopPeek();
+            h.goal = stalkSpot(level, t);
+        }
+    }
+
+    private void stopPeek() {
+        if (peekLeg >= 0) {
+            h.legs.reach(peekLeg, null);
+        }
+        peekAt = null;
+        peekLeg = -1;
+    }
+
+    /**
+     * A feint: a noise made off to the far side of them (a knock, a scrape, a clatter of what's there) to turn them that
+     * way, while it comes in from its own side. If they turn to the noise, it closes in (striking when it's near enough);
+     * if they don't, it learns that it didn't work.
+     */
+    private void startFeint(ServerLevel level, ServerPlayer target) {
+        if (target == null) {
+            return;
+        }
+        Vec3 eye = target.getEyePosition(), c = h.centre();
+        Vec3 away = eye.subtract(c).multiply(1, 0, 1);
+        away = away.lengthSqr() < 1e-4 ? target.getLookAngle().multiply(-1, 0, -1) : away.normalize();
+        Vec3 best = null;
+        for (int k = 0; k < 16 && best == null; k++) {
+            Vec3 d = away.add(randomDir().multiply(0.6, 0.2, 0.6)).normalize();
+            BlockHitResult hit = cast(level, eye, eye.add(d.scale(14)));
+            double dist = hit.getLocation().distanceTo(eye);
+            if (hit.getType() != HitResult.Type.MISS && dist > 5) {
+                best = hit.getLocation().add(normal(hit).scale(0.3));
+            }
+        }
+        if (best == null) {
+            return;
+        }
+        start(FEINT, null, 0);
+        quarry = target;
+        decoy = best;
+        decoyLook = target.getLookAngle();
+        feintAt = level.getGameTime();
+        HarvestmanSigns.decoyNoise(level, h, best);
+    }
+
+    private void feint(ServerLevel level) {
+        if (!(quarry instanceof ServerPlayer t) || !t.isAlive() || decoy == null) {
+            end();
+            return;
+        }
+        h.look = t.getEyePosition();
+        Vec3 toDecoy = decoy.subtract(t.getEyePosition()).normalize();
+        boolean turned = t.getLookAngle().dot(toDecoy) > 0.75 && decoyLook.dot(toDecoy) < 0.6;
+        if (phase == 0 && turned) {
+            // it worked: they're looking the other way
+            phase = 1;
+            phaseTicks = 0;
+            feintBias = Math.min(1, feintBias + 0.08);
+        }
+        if (phase == 1) {
+            double d = t.position().distanceTo(h.centre());
+            if (d < 10 && !lookingAt(t, h.centre())) {
+                startStrike(level, t);
+                return;
+            }
+            h.goal = t.position().add(0, 2, 0);
+            h.goalSpeed = 3.6;
+            if (phaseTicks > 20 * 6 || watched) {
+                end();
+            }
+        } else if (planTicks > 20 * 4) {
+            // they didn't bite
+            feintBias = Math.max(0.05, feintBias - 0.05);
+            end();
+        }
+    }
+
+    /** Shot in the eyes: it throws itself back with a shriek, drops what it holds and backs off out of the line. */
+    void eyeHit(ServerLevel level, Entity by) {
+        Vec3 c = h.centre();
+        level.playSound(null, c.x, c.y, c.z, HarvestmanSounds.HISS, SoundSource.HOSTILE, 1.6f, 1.35f);
+        wary = Math.min(1, wary + 0.15);
+        if (plan == FEED || plan == DRAG) {
+            return;     // it won't let go of a meal for that alone
+        }
+        end();
+        h.rearWant = 0;
+        Vec3 away = by instanceof Player p ? hideFrom(level, p) : spot(HIDE, 12);
+        start(HIDE, away, BURST);
+        wait = 0;
     }
 
     /** Somewhere a stalking distance from them, out of their sight, dark, and high when it likes the ceilings. */
@@ -953,6 +1215,20 @@ public final class HarvestmanMind {
         heard = pos;
         heardAt = level.getGameTime();
         heardLoud = loud;
+        // a gunshot close by: early on it shies off from it; as it gets used to them they stop turning it
+        Vec3 c = h.centre();
+        if (loud >= 24 && pos.distanceToSqr(c) < 22 * 22 && h.held() == null && plan != FLEE && plan != REST
+                && level.getGameTime() > gunShyUntil) {
+            gunShyUntil = level.getGameTime() + 20 * 4;
+            if (h.getRandom().nextDouble() > gunNerve) {
+                gunNerve = Math.min(1, gunNerve + 0.07);
+                wary = Math.min(1, wary + 0.1);
+                end();
+                start(HIDE, awayFrom(level, pos), BURST * 0.6);
+                return;
+            }
+            gunNerve = Math.min(1, gunNerve + 0.01);
+        }
         alert = Math.min(1, alert + loud / 30);
         // a loud noise while it's idling or roaming breaks off what it's doing
         if (plan == IDLE || plan == WANDER || plan == PERCH || plan == CEILING || plan == REST && loud > 20) {
@@ -962,12 +1238,40 @@ public final class HarvestmanMind {
         }
     }
 
+    /** Somewhere out of the line of a point (a shot), away from it. */
+    private Vec3 awayFrom(ServerLevel level, Vec3 from) {
+        Vec3 c = h.centre(), best = null;
+        double bestScore = -1e9;
+        for (int k = 0; k < 20; k++) {
+            Vec3 d = randomDir();
+            BlockHitResult hit = cast(level, c, c.add(d.scale(12)));
+            if (hit.getType() == HitResult.Type.MISS) {
+                continue;
+            }
+            Vec3 p = hit.getLocation().add(normal(hit).scale(1.2));
+            boolean hidden = cast(level, from, p).getType() != HitResult.Type.MISS;
+            double score = (hidden ? 2 : 0) + p.distanceTo(from) * 0.1 + h.getRandom().nextDouble() * 0.3;
+            if (score > bestScore) {
+                bestScore = score;
+                best = p;
+            }
+        }
+        return best != null ? best : spot(HIDE, 12);
+    }
+
     void hurt(ServerLevel level, Entity by, double amount) {
         hurtRecent += amount;
         wary = Math.min(1, wary + amount / 200);
         alert = 1;
         if (by instanceof ServerPlayer p) {
             HarvestmanDirector.grudge(level, h, p, amount);
+        }
+        // badly hurt, it breaks off whatever it was doing and limps home to mend (it won't fight to the end)
+        if (h.held() == null && h.getHealth() - amount < h.getMaxHealth() * 0.3 && plan != FLEE && plan != REST) {
+            end();
+            start(FLEE, lair != null ? Vec3.atCenterOf(lair) : by instanceof Player p ? hideFrom(level, p) : spot(HIDE, 20), SPRINT);
+            level.playSound(null, h.getX(), h.getY(), h.getZ(), HarvestmanSounds.HISS, SoundSource.HOSTILE, 1.4f, 0.8f);
+            return;
         }
         // a hard burst while it isn't holding anything sends it off
         if (h.held() == null && hurtRecent > 60 && plan != FLEE && plan != STRIKE) {
@@ -1100,6 +1404,9 @@ public final class HarvestmanMind {
         o.putDouble("hmStalk", stalkDist);
         o.putDouble("hmCeiling", ceilingBias);
         o.putDouble("hmAmbush", ambushBias);
+        o.putDouble("hmLightNerve", lightNerve);
+        o.putDouble("hmGunNerve", gunNerve);
+        o.putDouble("hmFeint", feintBias);
         o.putInt("hmSeen", seen);
         o.putInt("hmGrabs", grabs);
         o.putInt("hmEscapes", escapes);
@@ -1119,6 +1426,9 @@ public final class HarvestmanMind {
         stalkDist = in.getDoubleOr("hmStalk", stalkDist);
         ceilingBias = in.getDoubleOr("hmCeiling", ceilingBias);
         ambushBias = in.getDoubleOr("hmAmbush", ambushBias);
+        lightNerve = in.getDoubleOr("hmLightNerve", 0);
+        gunNerve = in.getDoubleOr("hmGunNerve", 0);
+        feintBias = in.getDoubleOr("hmFeint", 0.3);
         seen = in.getIntOr("hmSeen", 0);
         grabs = in.getIntOr("hmGrabs", 0);
         escapes = in.getIntOr("hmEscapes", 0);

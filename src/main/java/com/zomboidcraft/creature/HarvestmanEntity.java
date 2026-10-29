@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
@@ -29,6 +30,8 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
@@ -72,6 +75,15 @@ public class HarvestmanEntity extends Mob {
     private static final EntityDataAccessor<Integer> FLINCH = SynchedEntityData.defineId(HarvestmanEntity.class, EntityDataSerializers.INT);
     /** How far it has darkened its red to hide, 0 (red showing) .. 1 (all black but its eyes). */
     private static final EntityDataAccessor<Float> CAMO = SynchedEntityData.defineId(HarvestmanEntity.class, EntityDataSerializers.FLOAT);
+    /** What it's looking at (its head snaps toward a noise), and whether it's looking at anything. */
+    private static final EntityDataAccessor<org.joml.Vector3fc> LOOK_AT = SynchedEntityData.defineId(HarvestmanEntity.class, EntityDataSerializers.VECTOR3);
+    private static final EntityDataAccessor<Boolean> LOOKING = SynchedEntityData.defineId(HarvestmanEntity.class, EntityDataSerializers.BOOLEAN);
+    /** The player it's watching from where it waits (that player's game grows uneasy), or -1. */
+    private static final EntityDataAccessor<Integer> WATCH = SynchedEntityData.defineId(HarvestmanEntity.class, EntityDataSerializers.INT);
+    /** Counts up (times 4, plus the leg) each time a foot slips; the client lurches it toward that leg. */
+    private static final EntityDataAccessor<Integer> STUMBLE = SynchedEntityData.defineId(HarvestmanEntity.class, EntityDataSerializers.INT);
+    /** Counts up each time it's shot in the eyes (the client throws it back). */
+    private static final EntityDataAccessor<Integer> RECOIL = SynchedEntityData.defineId(HarvestmanEntity.class, EntityDataSerializers.INT);
     private static final List<EntityDataAccessor<org.joml.Vector3fc>> FEET = List.of(FOOT0, FOOT1, FOOT2, FOOT3);
 
     public static final int HUNT = 0, HOLD = 1, FEED = 2, DEAD = 3;
@@ -124,6 +136,11 @@ public class HarvestmanEntity extends Mob {
     private Vec3 aim;
     private int stuck;
     int stuckTicks;
+    /** A pause in its crawl (testing a ledge, peering through a doorway) and what it looks at meanwhile. */
+    private int pause;
+    private Vec3 pauseLook, lastProbe;
+    /** The marks it leaves (HarvestmanSigns). */
+    final HarvestmanSigns signs = new HarvestmanSigns(this);
 
     // its legs' health, and the shots that struck it this tick (zone and leg, and where)
     final double[] legHealth = {LEG_HEALTH, LEG_HEALTH, LEG_HEALTH, LEG_HEALTH};
@@ -211,6 +228,33 @@ public class HarvestmanEntity extends Mob {
         builder.define(REAR, 0f);
         builder.define(FLINCH, 0);
         builder.define(CAMO, 1f);
+        builder.define(LOOK_AT, new Vector3f());
+        builder.define(LOOKING, false);
+        builder.define(WATCH, -1);
+        builder.define(STUMBLE, 0);
+        builder.define(RECOIL, 0);
+    }
+
+    /** Where it's looking, or null. */
+    public Vec3 lookingAt() {
+        if (!entityData.get(LOOKING)) {
+            return null;
+        }
+        org.joml.Vector3fc v = entityData.get(LOOK_AT);
+        return new Vec3(v.x(), v.y(), v.z());
+    }
+
+    /** The entity id of the player it's watching, or -1. */
+    public int watchingId() {
+        return entityData.get(WATCH);
+    }
+
+    public int stumbles() {
+        return entityData.get(STUMBLE);
+    }
+
+    public int recoils() {
+        return entityData.get(RECOIL);
     }
 
     // ------------------------------------------------------------------------------------------------ each tick
@@ -238,9 +282,20 @@ public class HarvestmanEntity extends Mob {
         entityData.set(REAR, (float) rear);
         // it governs its colour: black to roam and hunt unseen, the red let up to feed or to frighten
         entityData.set(CAMO, Mth.approach(camo(), (float) mind.camo(), 0.06f));
+        entityData.set(LOOKING, look != null);
+        if (look != null && dist2(look, entityData.get(LOOK_AT)) > 0.09) {
+            entityData.set(LOOK_AT, new Vector3f((float) look.x, (float) look.y, (float) look.z));
+        }
+        entityData.set(WATCH, mind.watchingId(level));
         struck.clear();
         struckAt.clear();
         stepLegs(level, false);
+        signs.tick(level);
+    }
+
+    private static double dist2(Vec3 a, org.joml.Vector3fc b) {
+        double dx = a.x - b.x(), dy = a.y - b.y(), dz = a.z - b.z();
+        return dx * dx + dy * dy + dz * dz;
     }
 
     @Override
@@ -257,14 +312,59 @@ public class HarvestmanEntity extends Mob {
         for (int i = 0; i < 4; i++) {
             Vec3 f = legs.feet[i];
             entityData.set(FEET.get(i), new Vector3f((float) f.x, (float) f.y, (float) f.z));
-            // a point coming down taps on what it lands on, louder on hard floors
-            if (!dead && (lost() >> i & 1) == 0 && legs.landed(i, before[i]) && random.nextFloat() < 0.8f) {
-                BlockPos on = BlockPos.containing(f.subtract(legs.footN[i].scale(0.1)));
-                float hard = level.getBlockState(on).getDestroySpeed(level, on) > 1.2f ? 1f : 0.45f;
-                level.playSound(null, f.x, f.y, f.z, HarvestmanSounds.TAP, SoundSource.HOSTILE,
-                        (mind.sneaking() ? 0.25f : 0.6f) * hard, 0.85f + random.nextFloat() * 0.3f);
+            if (!dead && (lost() >> i & 1) == 0 && legs.landed(i, before[i])) {
+                footfall(level, i, f);
             }
         }
+    }
+
+    /**
+     * A point coming down: it taps on what it lands on (louder on hard floors), and the block answers in its own voice
+     * (metal rings, boards creak, glass and gravel crunch), with a puff of its dust. Ice, or a wet floor out in the rain,
+     * can skid out from under it: the point slides, it lurches toward that leg and loses its speed.
+     */
+    private void footfall(ServerLevel level, int i, Vec3 f) {
+        Vec3 n = legs.footN[i] == null ? up : legs.footN[i];
+        BlockPos on = BlockPos.containing(f.subtract(n.scale(0.1)));
+        BlockState st = level.getBlockState(on);
+        if (st.isAir()) {
+            return;
+        }
+        boolean sneak = mind.sneaking();
+        double spd = legs.speed();
+        float hard = st.getDestroySpeed(level, on) > 1.2f ? 1f : 0.45f;
+        if (random.nextFloat() < 0.8f) {
+            level.playSound(null, f.x, f.y, f.z, HarvestmanSounds.TAP, SoundSource.HOSTILE,
+                    (sneak ? 0.25f : 0.6f) * hard, 0.85f + random.nextFloat() * 0.3f);
+        }
+        // its weight on the block: the block's own step, low and heavy, louder at a run
+        SoundType type = st.getSoundType();
+        float weight = (sneak ? 0.16f : 0.38f) * (spd > 5 ? 1.7f : 1f);
+        level.playSound(null, f.x, f.y, f.z, type.getStepSound(), SoundSource.HOSTILE, type.getVolume() * weight,
+                type.getPitch() * (0.6f + random.nextFloat() * 0.12f));
+        int puff = spd > 5 ? 6 : sneak ? 1 : 3;
+        level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, st), f.x + n.x * 0.05, f.y + n.y * 0.05, f.z + n.z * 0.05,
+                puff, 0.12, 0.04, 0.12, 0.02);
+        // footing that gives
+        boolean ice = st.getBlock().getFriction() > 0.9f;
+        boolean wet = n.y > 0.5 && level.isRainingAt(on.above());
+        float chance = ice ? 0.12f : wet ? 0.012f : 0f;
+        if (chance > 0 && random.nextFloat() < chance * (spd > 3 ? 1.5f : 1f)) {
+            Vec3 out = f.subtract(centre());
+            out = out.subtract(up.scale(out.dot(up)));
+            out = out.lengthSqr() < 1e-4 ? fwd : out.normalize();
+            legs.slip(i, out.scale(0.35 + random.nextDouble() * 0.2));
+            speed *= 0.4;
+            entityData.set(STUMBLE, ((stumbles() >> 2) + 1) << 2 | i);
+            level.playSound(null, f.x, f.y, f.z, HarvestmanSounds.SCRAPE, SoundSource.HOSTILE, 0.35f, 1.5f + random.nextFloat() * 0.2f);
+        }
+    }
+
+    /** Is it moving with care (not rushing, striking, fleeing or carrying)? Then it tests ledges and doorways first. */
+    private boolean careful() {
+        int plan = mind.plan;
+        return goalSpeed <= 3 && held == null && plan != HarvestmanMind.STRIKE && plan != HarvestmanMind.FLEE
+                && plan != HarvestmanMind.ZOMBIE && plan != HarvestmanMind.DRAG;
     }
 
     // ------------------------------------------------------------------------------------------------ moving
@@ -308,6 +408,7 @@ public class HarvestmanEntity extends Mob {
             return;
         }
         // the way round what's in between: where it makes for now along its route (the goal itself when it's in the clear)
+        boolean wasSlow = route.slow;
         aim = route.aim(level, c.subtract(surf.scale(height(c, fwd) - 0.5)), surf, goal, stuck);
         Vec3 dir = fwd;
         double dist = 0;
@@ -338,6 +439,40 @@ public class HarvestmanEntity extends Mob {
         dir = dir.lengthSqr() < 1e-6 ? fwd : dir.normalize();
         double want = height(c, dir);
         entityData.set(LIFT, (float) want);
+        // coming up to a doorway, it stops short and peers through before it goes in (less the bolder it has grown)
+        if (route.slow && !wasSlow && pivotT < 0 && aim != null && careful() && random.nextFloat() < 0.8f - 0.45f * (float) mind.bold) {
+            pause = 14 + random.nextInt(28);
+            pauseLook = c.add(dir.scale(5));
+        }
+        // a drop coming up on a floor: it stops and reaches a point out over the lip to test it before it trusts it
+        if (pause <= 0 && pivotT < 0 && surf.y > 0.5 && aim != null && dist > 1.2 && careful()
+                && (lastProbe == null || lastProbe.distanceToSqr(c) > 25)) {
+            Vec3 p = c.add(dir.scale(1.5));
+            BlockHitResult under = cast(p.add(surf.scale(0.4)), p.subtract(surf.scale(want + 1.6)));
+            boolean drop = under.getType() == HitResult.Type.MISS || c.y - want - under.getLocation().y > 1.1;
+            if (drop) {
+                lastProbe = c;
+                pause = 20;
+                pauseLook = p.subtract(0, want, 0);
+                Vec3 right = up.cross(fwd);
+                int leg = dir.dot(right) >= 0 ? 2 : 0;
+                Vec3 hip = frame().hip(leg);
+                Vec3 lip = c.add(dir.scale(1.25)).subtract(surf.scale(want + 0.35));
+                Vec3 touch = under.getType() != HitResult.Type.MISS && under.getLocation().distanceTo(hip) < 3.2 ? under.getLocation() : lip;
+                if ((lost() >> leg & 1) == 0) {
+                    legs.probe(leg, touch);
+                }
+            }
+        }
+        if (pause > 0) {
+            pause--;
+            speed = 0;
+            up = slerp(up, surf, 8 * dt);
+            face(dt, look != null ? look.subtract(c) : pauseLook != null ? pauseLook.subtract(c) : dir);
+            stuck = 0;
+            lastPos = position();
+            return;
+        }
         // at a burst it gets up to speed and stops again in a few strides, its points biting in
         boolean burst = goal != null && goalSpeed > 5 || speed > 5;
         double stop = burst ? 12 : 3;
@@ -615,6 +750,15 @@ public class HarvestmanEntity extends Mob {
                 up = surf;
                 pivotT = -1;
                 level.playSound(null, c.x, c.y, c.z, HarvestmanSounds.TAP, SoundSource.HOSTILE, 1f, 0.6f);
+                // its weight coming down: the floor's own thud, and a ring of its dust kicked out
+                BlockPos on = BlockPos.containing(floor.getLocation().subtract(0, 0.1, 0));
+                BlockState st = level.getBlockState(on);
+                if (!st.isAir()) {
+                    SoundType type = st.getSoundType();
+                    level.playSound(null, c.x, c.y, c.z, type.getFallSound(), SoundSource.HOSTILE, type.getVolume() * 1.2f, type.getPitch() * 0.55f);
+                    Vec3 g = floor.getLocation();
+                    level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, st), g.x, g.y + 0.1, g.z, 28, 1.1, 0.05, 1.1, 0.08);
+                }
             }
         }
         setPos(position().add(step));
@@ -707,6 +851,7 @@ public class HarvestmanEntity extends Mob {
             return false;
         }
         double toHealth = 0;
+        boolean eyes = false;
         if (!struck.isEmpty()) {
             // a gunshot's pellets, summed: what each was before the gun took some off a low hit, then what each did
             double factors = 0;
@@ -719,6 +864,11 @@ public class HarvestmanEntity extends Mob {
                 Vec3 at = struckAt.get(k);
                 if (zone == HarvestmanBody.LEG && leg >= 0) {
                     hurtLeg(level, leg, each, at);
+                } else if (zone == HarvestmanBody.EYES_ZONE) {
+                    // in the eyes: it takes it hard, and throws itself back
+                    toHealth += each * CORE;
+                    eyes = true;
+                    level.sendParticles(new DustParticleOptions(0xFF2414, 0.8f), at.x, at.y, at.z, 5, 0.03, 0.03, 0.03, 0.1);
                 } else if (zone == HarvestmanBody.CORE) {
                     toHealth += each * CORE;
                     level.sendParticles(new DustParticleOptions(0xB01010, 1.2f), at.x, at.y, at.z, 6, 0.05, 0.05, 0.05, 0.1);
@@ -742,6 +892,10 @@ public class HarvestmanEntity extends Mob {
         toHealth *= mind.toughnessScale();
         entityData.set(FLINCH, flinches() + 1);
         heldDamage += toHealth;
+        if (eyes) {
+            entityData.set(RECOIL, recoils() + 1);
+            mind.eyeHit(level, source.getEntity());
+        }
         mind.hurt(level, source.getEntity(), toHealth);
         if (toHealth <= 0) {
             return true;
