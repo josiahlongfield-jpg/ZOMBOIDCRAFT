@@ -20,12 +20,8 @@ jobs:
       fail-fast: false
       matrix:
         group:
-          - thr_throw,thr_bottle,thr_can
-          - thr_brick,thr_firecracker,thr_fuse
-          - thr_flare,thr_alarm,thr_molotov
-          - thr_grenade,thr_ring
-          - thr_blast
-          - thr_fire
+          - thr_pin
+          - thr_ring2
     steps:
       - uses: actions/checkout@v5
       - run: python3 -u tools/audio/fetch_freesound.py raw ${{ matrix.group }}
