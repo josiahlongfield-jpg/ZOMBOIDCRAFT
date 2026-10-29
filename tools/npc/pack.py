@@ -3,7 +3,7 @@
 The source models must never be committed (the repo is public and their licences forbid
 redistributing them). Keep them in the project's files (zomboid-mod/assets/<pack>/) and run
 
-    python3 tools/npc/pack.py ID SOURCE.glb|SOURCE.obj [--height M] [--out DIR]
+    python3 tools/npc/pack.py ID SOURCE.glb|SOURCE.obj [--height M] [--out DIR] [--rig RIG.json]
 
 which writes src/main/resources/assets/zomboidcraft/npc/<ID>.znpc (or DIR/<ID>.znpc) with two looks of
 the one mesh:
@@ -15,18 +15,23 @@ An OBJ's materials (one map_Kd each, looked up by file name under the OBJ's fold
 texture atlas. Models of characters someone else owns go out with --out to a folder outside the repo; the
 player copies the file into config/zomboidcraft/npc/ and the game loads it from there (NpcAssets).
 
+--rig skins the mesh to a bone list (tools/npc/rigs/<id>.json, rig.py) so the game can move it (NpcPose).
+
 A .znpc is zlib-deflated, then XORed with an xorshift32 stream seeded from the id (like a .zcar),
 so the file in the jar isn't a usable model on its own. Deflated payload, big-endian:
-    "ZNPC" int version (1), int vertices, then per vertex
+    "ZNPC" int version (2), int vertices, then per vertex
         short x,y,z (mm; feet at y=0, facing +z), char u,v (0-65535), byte nx,ny,nz (-127..127)
     int triangles, then 3 * char vertex index each (counter-clockwise seen from outside)
     int looks, then per look: UTF name, int jpegLength, jpeg bytes
+    int bones (0: not rigged), then per bone: UTF name, byte parent (-1 for the root), float pivot x,y,z (m);
+        then per vertex: byte first bone, byte second bone, byte how much of the first (0-255)
 """
 import io, json, os, struct, sys, zlib
 import numpy as np
 from PIL import Image, ImageFilter
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 HEIGHT = 1.85  # metres, top of the head (or hair) to the soles, unless --height says otherwise
 TEX = 1024  # glb textures; OBJ atlases stay 2048 (many materials share them)
 
@@ -176,7 +181,7 @@ def jpeg(img):
 def main():
     args = sys.argv[1:]
     opts = {}
-    for flag in ('--height', '--out'):
+    for flag in ('--height', '--out', '--rig'):
         if flag in args:
             k = args.index(flag)
             opts[flag] = args[k + 1]
@@ -198,7 +203,7 @@ def main():
     looks = [('raw', jpeg(base)), ('toon', jpeg(toon(base)))]
 
     out = io.BytesIO()
-    out.write(b'ZNPC'); out.write(struct.pack('>ii', 1, len(P)))
+    out.write(b'ZNPC'); out.write(struct.pack('>ii', 2, len(P)))
     verts = np.zeros(len(P), dtype=[('p', '>i2', 3), ('uv', '>u2', 2), ('n', 'i1', 3)])
     verts['p'] = np.round(P * 1000).astype(np.int16)
     verts['uv'] = np.round(UV.clip(0, 1) * 65535).astype(np.uint16)
@@ -209,6 +214,17 @@ def main():
     for name, data in looks:
         nb = name.encode()
         out.write(struct.pack('>H', len(nb)) + nb + struct.pack('>i', len(data)) + data)
+    if '--rig' in opts:
+        import rig
+        bones = rig.load(opts['--rig'])
+        b0, b1, w = rig.weights(P, bones)
+        out.write(struct.pack('>i', len(bones)))
+        for b in bones:
+            nb = b['name'].encode()
+            out.write(struct.pack('>H', len(nb)) + nb + struct.pack('>b3f', b['parent'], *b['pivot']))
+        out.write(np.stack([b0, b1, np.round(w * 255)], 1).astype(np.uint8).tobytes())
+    else:
+        out.write(struct.pack('>i', 0))
     packed = scramble(zlib.compress(out.getvalue(), 9), model_id)
     dest = os.path.join(opts.get('--out') or os.path.join(ROOT, 'src/main/resources/assets/zomboidcraft/npc'), model_id + '.znpc')
     os.makedirs(os.path.dirname(dest), exist_ok=True)

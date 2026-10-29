@@ -26,7 +26,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 /**
- * Characters from bought models, spawned by command to see how they look in game:
+ * Characters from bought models, companions with a brain of their own (NpcBrain), spawned by command:
  * {@code /zc npc <model> [raw|toon|both]} puts one (or one of each look, side by side) a few blocks ahead, facing you;
  * {@code /zc npc clear} removes them all. A model from a player's local folder ({@link #localFolder}) can be spawned by name
  * on a server too; players without the file just don't see it.
@@ -64,6 +64,7 @@ public final class Npcs {
 
     public static void register() {
         FabricDefaultAttributeRegistry.register(NPC, NpcEntity.attributes());
+        NpcNet.register();
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> dispatcher.register(
                 Commands.literal("zc")
                         .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
@@ -106,13 +107,15 @@ public final class Npcs {
             npc.snapTo(p.x, p.y, p.z, face, 0f);
             npc.setYHeadRot(face);
             npc.setYBodyRot(face);
+            npc.toggleFollow(player);
             level.addFreshEntity(npc);
             made++;
         }
         int count = made;
         ctx.getSource().sendSuccess(() -> Component.literal(count == 2
-                ? "Spawned " + model + ": as bought on your left, toon-painted on your right. /zc npc clear removes them"
-                : "Spawned " + model + " (" + look + "). /zc npc clear removes them"), false);
+                ? "Spawned " + model + ": as bought on your left, toon-painted on your right. They follow you; interact with one "
+                + "to make her wait. /zc npc clear removes them"
+                : "Spawned " + model + " (" + look + "). She follows you; interact with her to make her wait. /zc npc clear removes them"), false);
         return count;
     }
 
