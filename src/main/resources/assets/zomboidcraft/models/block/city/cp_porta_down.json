@@ -1,10 +1,11 @@
 {
   "parent": "minecraft:block/block",
   "textures": {
-    "cp_mast_w": "zomboidcraft:block/city/cp_mast_w",
+    "home_plastic_black": "zomboidcraft:block/city/home_plastic_black",
     "st_porta": "zomboidcraft:block/city/st_porta",
     "st_porta_hi": "zomboidcraft:block/city/st_porta_hi",
     "st_porta_lo": "zomboidcraft:block/city/st_porta_lo",
+    "st_porta_roof": "zomboidcraft:block/city/st_porta_roof",
     "particle": "zomboidcraft:block/city/st_porta"
   },
   "elements": [
@@ -103,7 +104,7 @@
       "from": [
         0.5,
         0.5,
-        -1.5
+        -1.2
       ],
       "to": [
         15.5,
@@ -112,43 +113,43 @@
       ],
       "faces": {
         "north": {
-          "texture": "#cp_mast_w"
+          "texture": "#st_porta"
         },
         "south": {
-          "texture": "#cp_mast_w"
+          "texture": "#st_porta"
         },
         "east": {
-          "texture": "#cp_mast_w",
+          "texture": "#st_porta",
           "uv": [
-            14.5,
+            14.8,
             1.5,
             16,
             15.5
           ]
         },
         "west": {
-          "texture": "#cp_mast_w",
+          "texture": "#st_porta",
           "uv": [
             0,
             1.5,
-            1.5,
+            1.2,
             15.5
           ]
         },
         "up": {
-          "texture": "#cp_mast_w",
+          "texture": "#st_porta",
           "uv": [
             0.5,
             0,
             15.5,
-            1.5
+            1.2
           ]
         },
         "down": {
-          "texture": "#cp_mast_w",
+          "texture": "#st_porta",
           "uv": [
             0.5,
-            14.5,
+            14.8,
             15.5,
             16
           ]
@@ -157,55 +158,223 @@
     },
     {
       "from": [
-        3,
-        3,
-        -2.5
+        1,
+        1,
+        -2.4
       ],
       "to": [
-        13,
-        12,
-        -1.5
+        15,
+        14,
+        -1.2
       ],
       "faces": {
         "north": {
-          "texture": "#cp_mast_w"
+          "texture": "#st_porta_roof"
         },
         "south": {
-          "texture": "#cp_mast_w"
+          "texture": "#st_porta_roof"
         },
         "east": {
-          "texture": "#cp_mast_w",
+          "texture": "#st_porta_roof",
           "uv": [
-            15.0,
-            4,
+            14.8,
+            2,
             16,
-            13
+            15
           ]
         },
         "west": {
-          "texture": "#cp_mast_w",
+          "texture": "#st_porta_roof",
           "uv": [
             0,
-            4,
-            1.0,
-            13
+            2,
+            1.2,
+            15
           ]
         },
         "up": {
-          "texture": "#cp_mast_w",
+          "texture": "#st_porta_roof",
           "uv": [
-            3,
+            1,
             0,
-            13,
-            1.0
+            15,
+            1.2
           ]
         },
         "down": {
-          "texture": "#cp_mast_w",
+          "texture": "#st_porta_roof",
           "uv": [
-            3,
-            15.0,
-            13,
+            1,
+            14.8,
+            15,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        2.2,
+        2.2,
+        -3.6
+      ],
+      "to": [
+        13.8,
+        12.8,
+        -2.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_porta_roof"
+        },
+        "south": {
+          "texture": "#st_porta_roof"
+        },
+        "east": {
+          "texture": "#st_porta_roof",
+          "uv": [
+            14.799999999999997,
+            3.1999999999999993,
+            16,
+            13.8
+          ]
+        },
+        "west": {
+          "texture": "#st_porta_roof",
+          "uv": [
+            0,
+            3.1999999999999993,
+            1.2000000000000002,
+            13.8
+          ]
+        },
+        "up": {
+          "texture": "#st_porta_roof",
+          "uv": [
+            2.2,
+            0,
+            13.8,
+            1.2000000000000002
+          ]
+        },
+        "down": {
+          "texture": "#st_porta_roof",
+          "uv": [
+            2.2,
+            14.799999999999997,
+            13.8,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        4,
+        -4.4
+      ],
+      "to": [
+        12,
+        11,
+        -3.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_porta_roof"
+        },
+        "south": {
+          "texture": "#st_porta_roof"
+        },
+        "east": {
+          "texture": "#st_porta_roof",
+          "uv": [
+            15.200000000000003,
+            5,
+            16,
+            12
+          ]
+        },
+        "west": {
+          "texture": "#st_porta_roof",
+          "uv": [
+            0,
+            5,
+            0.8000000000000003,
+            12
+          ]
+        },
+        "up": {
+          "texture": "#st_porta_roof",
+          "uv": [
+            4,
+            0,
+            12,
+            0.8000000000000003
+          ]
+        },
+        "down": {
+          "texture": "#st_porta_roof",
+          "uv": [
+            4,
+            15.200000000000003,
+            12,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        12.4,
+        12.4,
+        -7.5
+      ],
+      "to": [
+        13.8,
+        13.8,
+        -1.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_plastic_black"
+        },
+        "south": {
+          "texture": "#home_plastic_black"
+        },
+        "east": {
+          "texture": "#home_plastic_black",
+          "uv": [
+            9.7,
+            2.1999999999999993,
+            16,
+            3.5999999999999996
+          ]
+        },
+        "west": {
+          "texture": "#home_plastic_black",
+          "uv": [
+            0,
+            2.1999999999999993,
+            6.3,
+            3.5999999999999996
+          ]
+        },
+        "up": {
+          "texture": "#home_plastic_black",
+          "uv": [
+            12.4,
+            0,
+            13.8,
+            6.3
+          ]
+        },
+        "down": {
+          "texture": "#home_plastic_black",
+          "uv": [
+            12.4,
+            9.7,
+            13.8,
             16
           ]
         }

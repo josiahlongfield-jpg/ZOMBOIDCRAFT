@@ -470,7 +470,9 @@ def porta_down():
     s = "st_porta"
     return [[1, 0, 0, 15, 14, 15, {"north": s, "south": s, "east": s, "west": s, "down": s, "up": "st_porta_hi"}],
             [1, 0, 15, 15, 14, 30, {"north": s, "south": s, "east": s, "west": s, "down": s, "up": "st_porta_lo"}],
-            [0.5, 0.5, -1.5, 15.5, 14.5, 0, "cp_mast_w"], [3, 3, -2.5, 13, 12, -1.5, "cp_mast_w"],
+            [0.5, 0.5, -1.2, 15.5, 14.5, 0, s], [1, 1, -2.4, 15, 14, -1.2, "st_porta_roof"],
+            [2.2, 2.2, -3.6, 13.8, 12.8, -2.4, "st_porta_roof"], [4, 4, -4.4, 12, 11, -3.6, "st_porta_roof"],
+            [12.4, 12.4, -7.5, 13.8, 13.8, -1.2, "home_plastic_black"],
             [0.5, 0, 30, 15.5, 14.5, 30.6, s]]
 
 
