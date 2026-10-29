@@ -398392,109 +398392,6 @@
     ]
    ]
   },
-  "cp_gb_wall_c": {
-   "model": "boxes",
-   "boxes": [
-    [
-     0,
-     0,
-     -1,
-     16,
-     2,
-     2.5,
-     "concrete_panel"
-    ],
-    [
-     0,
-     2,
-     0,
-     16,
-     16,
-     2,
-     {
-      "north": "cp_gb_clad",
-      "south": "cp_gb_inner",
-      "east": "cp_gb_clad",
-      "west": "cp_gb_clad",
-      "up": "cp_gb_trim",
-      "down": "cp_gb_trim"
-     }
-    ],
-    [
-     0,
-     2,
-     -0.4,
-     16,
-     3.2,
-     0,
-     "cp_gb_trim"
-    ],
-    [
-     -1,
-     0,
-     0,
-     2.5,
-     2,
-     16,
-     "concrete_panel"
-    ],
-    [
-     0,
-     2,
-     0,
-     2,
-     16,
-     16,
-     {
-      "west": "cp_gb_clad",
-      "east": "cp_gb_inner",
-      "north": "cp_gb_clad",
-      "south": "cp_gb_clad",
-      "up": "cp_gb_trim",
-      "down": "cp_gb_trim"
-     }
-    ],
-    [
-     -0.4,
-     2,
-     0,
-     0,
-     3.2,
-     16,
-     "cp_gb_trim"
-    ],
-    [
-     -0.8,
-     2,
-     -0.8,
-     1.6,
-     16,
-     1.6,
-     "cp_gb_trim"
-    ]
-   ],
-   "title": "Booth Wall",
-   "sound": "METAL",
-   "rotate": "facing",
-   "shape": [
-    [
-     0,
-     0,
-     0,
-     16,
-     16,
-     2
-    ],
-    [
-     0,
-     0,
-     0,
-     2,
-     16,
-     16
-    ]
-   ]
-  },
   "cp_gb_win": {
    "model": "boxes",
    "boxes": [
@@ -398573,167 +398470,6 @@
      16,
      16,
      2
-    ]
-   ]
-  },
-  "cp_gb_win_c": {
-   "model": "boxes",
-   "boxes": [
-    [
-     0,
-     0,
-     -1.2,
-     16,
-     1,
-     2,
-     "cp_gb_trim"
-    ],
-    [
-     0,
-     0,
-     0,
-     16,
-     1.4,
-     2,
-     "cp_gb_trim"
-    ],
-    [
-     0,
-     14.6,
-     0,
-     16,
-     16,
-     2,
-     "cp_gb_trim"
-    ],
-    [
-     7.4,
-     1.4,
-     0,
-     8.6,
-     14.6,
-     2,
-     "cp_gb_trim"
-    ],
-    [
-     15.2,
-     1.4,
-     0,
-     16,
-     14.6,
-     2,
-     "cp_gb_trim"
-    ],
-    [
-     0,
-     1.4,
-     0.8,
-     16,
-     14.6,
-     1.2,
-     "cc_glass"
-    ],
-    [
-     0,
-     0,
-     2,
-     16,
-     0.8,
-     6,
-     "desk_laminate"
-    ],
-    [
-     -1.2,
-     0,
-     0,
-     0,
-     1,
-     16,
-     "cp_gb_trim"
-    ],
-    [
-     0,
-     0,
-     0,
-     2,
-     1.4,
-     16,
-     "cp_gb_trim"
-    ],
-    [
-     0,
-     14.6,
-     0,
-     2,
-     16,
-     16,
-     "cp_gb_trim"
-    ],
-    [
-     0,
-     1.4,
-     7.4,
-     2,
-     14.6,
-     8.6,
-     "cp_gb_trim"
-    ],
-    [
-     0,
-     1.4,
-     15.2,
-     2,
-     14.6,
-     16,
-     "cp_gb_trim"
-    ],
-    [
-     0.8,
-     1.4,
-     0,
-     1.2,
-     14.6,
-     16,
-     "cc_glass"
-    ],
-    [
-     0,
-     1.4,
-     0,
-     1.6,
-     14.6,
-     1.6,
-     "cp_gb_trim"
-    ],
-    [
-     2,
-     0,
-     6,
-     6,
-     0.8,
-     16,
-     "desk_laminate"
-    ]
-   ],
-   "title": "Booth Window",
-   "sound": "GLASS",
-   "rotate": "facing",
-   "shape": [
-    [
-     0,
-     0,
-     0,
-     16,
-     16,
-     2
-    ],
-    [
-     0,
-     0,
-     0,
-     2,
-     16,
-     16
     ]
    ]
   },
@@ -398818,167 +398554,6 @@
     ]
    ]
   },
-  "cp_gb_win_c_broken": {
-   "model": "boxes",
-   "boxes": [
-    [
-     0,
-     0,
-     -1.2,
-     16,
-     1,
-     2,
-     "cp_gb_trim"
-    ],
-    [
-     0,
-     0,
-     0,
-     16,
-     1.4,
-     2,
-     "cp_gb_trim"
-    ],
-    [
-     0,
-     14.6,
-     0,
-     16,
-     16,
-     2,
-     "cp_gb_trim"
-    ],
-    [
-     7.4,
-     1.4,
-     0,
-     8.6,
-     14.6,
-     2,
-     "cp_gb_trim"
-    ],
-    [
-     15.2,
-     1.4,
-     0,
-     16,
-     14.6,
-     2,
-     "cp_gb_trim"
-    ],
-    [
-     0,
-     1.4,
-     0.8,
-     16,
-     14.6,
-     1.2,
-     "cc_glass_broken"
-    ],
-    [
-     0,
-     0,
-     2,
-     16,
-     0.8,
-     6,
-     "desk_laminate"
-    ],
-    [
-     -1.2,
-     0,
-     0,
-     0,
-     1,
-     16,
-     "cp_gb_trim"
-    ],
-    [
-     0,
-     0,
-     0,
-     2,
-     1.4,
-     16,
-     "cp_gb_trim"
-    ],
-    [
-     0,
-     14.6,
-     0,
-     2,
-     16,
-     16,
-     "cp_gb_trim"
-    ],
-    [
-     0,
-     1.4,
-     7.4,
-     2,
-     14.6,
-     8.6,
-     "cp_gb_trim"
-    ],
-    [
-     0,
-     1.4,
-     15.2,
-     2,
-     14.6,
-     16,
-     "cp_gb_trim"
-    ],
-    [
-     0.8,
-     1.4,
-     0,
-     1.2,
-     14.6,
-     16,
-     "cc_glass_broken"
-    ],
-    [
-     0,
-     1.4,
-     0,
-     1.6,
-     14.6,
-     1.6,
-     "cp_gb_trim"
-    ],
-    [
-     2,
-     0,
-     6,
-     6,
-     0.8,
-     16,
-     "desk_laminate"
-    ]
-   ],
-   "title": "Booth Window",
-   "sound": "GLASS",
-   "rotate": "facing",
-   "shape": [
-    [
-     0,
-     0,
-     0,
-     16,
-     16,
-     2
-    ],
-    [
-     0,
-     0,
-     0,
-     2,
-     16,
-     16
-    ]
-   ]
-  },
   "cp_gb_head": {
    "model": "boxes",
    "boxes": [
@@ -399044,133 +398619,6 @@
      16,
      12.6,
      2
-    ],
-    [
-     0,
-     12.6,
-     0,
-     16,
-     14.6,
-     16
-    ]
-   ]
-  },
-  "cp_gb_head_c": {
-   "model": "boxes",
-   "boxes": [
-    [
-     0,
-     0,
-     0,
-     16,
-     12.6,
-     2,
-     {
-      "north": "cp_gb_clad",
-      "south": "cp_gb_inner",
-      "east": "cp_gb_clad",
-      "west": "cp_gb_clad",
-      "up": "cp_gb_trim",
-      "down": "cp_gb_trim"
-     }
-    ],
-    [
-     -6,
-     12.6,
-     -6,
-     16,
-     14.6,
-     16,
-     {
-      "north": "cp_gb_trim",
-      "south": "cp_gb_roof",
-      "east": "cp_gb_roof",
-      "west": "cp_gb_roof",
-      "up": "cp_gb_roof",
-      "down": "cp_gb_roof"
-     }
-    ],
-    [
-     -6.6,
-     12,
-     -6.6,
-     16,
-     15.2,
-     -6,
-     "cp_gb_trim"
-    ],
-    [
-     -6,
-     12.4,
-     -6,
-     16,
-     12.6,
-     0,
-     "ext_soffit"
-    ],
-    [
-     0,
-     0,
-     0,
-     2,
-     12.6,
-     16,
-     {
-      "west": "cp_gb_clad",
-      "east": "cp_gb_inner",
-      "north": "cp_gb_clad",
-      "south": "cp_gb_clad",
-      "up": "cp_gb_trim",
-      "down": "cp_gb_trim"
-     }
-    ],
-    [
-     -6.6,
-     12,
-     -6.6,
-     -6,
-     15.2,
-     16,
-     "cp_gb_trim"
-    ],
-    [
-     -6,
-     12.4,
-     0,
-     0,
-     12.6,
-     16,
-     "ext_soffit"
-    ],
-    [
-     -0.8,
-     0,
-     -0.8,
-     1.6,
-     12.6,
-     1.6,
-     "cp_gb_trim"
-    ]
-   ],
-   "title": "Booth Roof",
-   "sound": "METAL",
-   "rotate": "facing",
-   "shape": [
-    [
-     0,
-     0,
-     0,
-     16,
-     12.6,
-     2
-    ],
-    [
-     0,
-     0,
-     0,
-     2,
-     12.6,
-     16
     ],
     [
      0,
@@ -402876,6 +402324,558 @@
      9.75,
      3,
      3.7
+    ]
+   ]
+  },
+  "cp_gb_wall_corner": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     -1,
+     16,
+     2,
+     2.5,
+     "concrete_panel"
+    ],
+    [
+     0,
+     2,
+     0,
+     16,
+     16,
+     2,
+     {
+      "north": "cp_gb_clad",
+      "south": "cp_gb_inner",
+      "east": "cp_gb_clad",
+      "west": "cp_gb_clad",
+      "up": "cp_gb_trim",
+      "down": "cp_gb_trim"
+     }
+    ],
+    [
+     0,
+     2,
+     -0.4,
+     16,
+     3.2,
+     0,
+     "cp_gb_trim"
+    ],
+    [
+     -1,
+     0,
+     0,
+     2.5,
+     2,
+     16,
+     "concrete_panel"
+    ],
+    [
+     0,
+     2,
+     0,
+     2,
+     16,
+     16,
+     {
+      "west": "cp_gb_clad",
+      "east": "cp_gb_inner",
+      "north": "cp_gb_clad",
+      "south": "cp_gb_clad",
+      "up": "cp_gb_trim",
+      "down": "cp_gb_trim"
+     }
+    ],
+    [
+     -0.4,
+     2,
+     0,
+     0,
+     3.2,
+     16,
+     "cp_gb_trim"
+    ],
+    [
+     -0.8,
+     2,
+     -0.8,
+     1.6,
+     16,
+     1.6,
+     "cp_gb_trim"
+    ]
+   ],
+   "title": "Booth Wall",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     2
+    ],
+    [
+     0,
+     0,
+     0,
+     2,
+     16,
+     16
+    ]
+   ]
+  },
+  "cp_gb_win_corner": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     -1.2,
+     16,
+     1,
+     2,
+     "cp_gb_trim"
+    ],
+    [
+     0,
+     0,
+     0,
+     16,
+     1.4,
+     2,
+     "cp_gb_trim"
+    ],
+    [
+     0,
+     14.6,
+     0,
+     16,
+     16,
+     2,
+     "cp_gb_trim"
+    ],
+    [
+     7.4,
+     1.4,
+     0,
+     8.6,
+     14.6,
+     2,
+     "cp_gb_trim"
+    ],
+    [
+     15.2,
+     1.4,
+     0,
+     16,
+     14.6,
+     2,
+     "cp_gb_trim"
+    ],
+    [
+     0,
+     1.4,
+     0.8,
+     16,
+     14.6,
+     1.2,
+     "cc_glass"
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     0.8,
+     6,
+     "desk_laminate"
+    ],
+    [
+     -1.2,
+     0,
+     0,
+     0,
+     1,
+     16,
+     "cp_gb_trim"
+    ],
+    [
+     0,
+     0,
+     0,
+     2,
+     1.4,
+     16,
+     "cp_gb_trim"
+    ],
+    [
+     0,
+     14.6,
+     0,
+     2,
+     16,
+     16,
+     "cp_gb_trim"
+    ],
+    [
+     0,
+     1.4,
+     7.4,
+     2,
+     14.6,
+     8.6,
+     "cp_gb_trim"
+    ],
+    [
+     0,
+     1.4,
+     15.2,
+     2,
+     14.6,
+     16,
+     "cp_gb_trim"
+    ],
+    [
+     0.8,
+     1.4,
+     0,
+     1.2,
+     14.6,
+     16,
+     "cc_glass"
+    ],
+    [
+     0,
+     1.4,
+     0,
+     1.6,
+     14.6,
+     1.6,
+     "cp_gb_trim"
+    ],
+    [
+     2,
+     0,
+     6,
+     6,
+     0.8,
+     16,
+     "desk_laminate"
+    ]
+   ],
+   "title": "Booth Window",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     2
+    ],
+    [
+     0,
+     0,
+     0,
+     2,
+     16,
+     16
+    ]
+   ]
+  },
+  "cp_gb_win_corner_broken": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     -1.2,
+     16,
+     1,
+     2,
+     "cp_gb_trim"
+    ],
+    [
+     0,
+     0,
+     0,
+     16,
+     1.4,
+     2,
+     "cp_gb_trim"
+    ],
+    [
+     0,
+     14.6,
+     0,
+     16,
+     16,
+     2,
+     "cp_gb_trim"
+    ],
+    [
+     7.4,
+     1.4,
+     0,
+     8.6,
+     14.6,
+     2,
+     "cp_gb_trim"
+    ],
+    [
+     15.2,
+     1.4,
+     0,
+     16,
+     14.6,
+     2,
+     "cp_gb_trim"
+    ],
+    [
+     0,
+     1.4,
+     0.8,
+     16,
+     14.6,
+     1.2,
+     "cc_glass_broken"
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     0.8,
+     6,
+     "desk_laminate"
+    ],
+    [
+     -1.2,
+     0,
+     0,
+     0,
+     1,
+     16,
+     "cp_gb_trim"
+    ],
+    [
+     0,
+     0,
+     0,
+     2,
+     1.4,
+     16,
+     "cp_gb_trim"
+    ],
+    [
+     0,
+     14.6,
+     0,
+     2,
+     16,
+     16,
+     "cp_gb_trim"
+    ],
+    [
+     0,
+     1.4,
+     7.4,
+     2,
+     14.6,
+     8.6,
+     "cp_gb_trim"
+    ],
+    [
+     0,
+     1.4,
+     15.2,
+     2,
+     14.6,
+     16,
+     "cp_gb_trim"
+    ],
+    [
+     0.8,
+     1.4,
+     0,
+     1.2,
+     14.6,
+     16,
+     "cc_glass_broken"
+    ],
+    [
+     0,
+     1.4,
+     0,
+     1.6,
+     14.6,
+     1.6,
+     "cp_gb_trim"
+    ],
+    [
+     2,
+     0,
+     6,
+     6,
+     0.8,
+     16,
+     "desk_laminate"
+    ]
+   ],
+   "title": "Booth Window",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     2
+    ],
+    [
+     0,
+     0,
+     0,
+     2,
+     16,
+     16
+    ]
+   ]
+  },
+  "cp_gb_head_corner": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     12.6,
+     2,
+     {
+      "north": "cp_gb_clad",
+      "south": "cp_gb_inner",
+      "east": "cp_gb_clad",
+      "west": "cp_gb_clad",
+      "up": "cp_gb_trim",
+      "down": "cp_gb_trim"
+     }
+    ],
+    [
+     -6,
+     12.6,
+     -6,
+     16,
+     14.6,
+     16,
+     {
+      "north": "cp_gb_trim",
+      "south": "cp_gb_roof",
+      "east": "cp_gb_roof",
+      "west": "cp_gb_roof",
+      "up": "cp_gb_roof",
+      "down": "cp_gb_roof"
+     }
+    ],
+    [
+     -6.6,
+     12,
+     -6.6,
+     16,
+     15.2,
+     -6,
+     "cp_gb_trim"
+    ],
+    [
+     -6,
+     12.4,
+     -6,
+     16,
+     12.6,
+     0,
+     "ext_soffit"
+    ],
+    [
+     0,
+     0,
+     0,
+     2,
+     12.6,
+     16,
+     {
+      "west": "cp_gb_clad",
+      "east": "cp_gb_inner",
+      "north": "cp_gb_clad",
+      "south": "cp_gb_clad",
+      "up": "cp_gb_trim",
+      "down": "cp_gb_trim"
+     }
+    ],
+    [
+     -6.6,
+     12,
+     -6.6,
+     -6,
+     15.2,
+     16,
+     "cp_gb_trim"
+    ],
+    [
+     -6,
+     12.4,
+     0,
+     0,
+     12.6,
+     16,
+     "ext_soffit"
+    ],
+    [
+     -0.8,
+     0,
+     -0.8,
+     1.6,
+     12.6,
+     1.6,
+     "cp_gb_trim"
+    ]
+   ],
+   "title": "Booth Roof",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     12.6,
+     2
+    ],
+    [
+     0,
+     0,
+     0,
+     2,
+     12.6,
+     16
+    ],
+    [
+     0,
+     12.6,
+     0,
+     16,
+     14.6,
+     16
     ]
    ]
   },

@@ -25,9 +25,9 @@ light-towers) refine it when they land.
 - fuel: the bladder in its berm (cp_bladder, _ring the cells inside its edge, _e the edge on the
   model's north, _c the north-west corner, _valve; each with a _slack twin, run dry);
 - cp_porta_down: a portable toilet blown over onto its back, two blocks long;
-- the gate booth, three by three (refs/military/gate-guard-booths): cp_gb_wall / cp_gb_wall_c (the
-  waist-high wall on the model's north, _c the corner with the west side too), cp_gb_win(_c)(_broken)
-  the glazing above it, cp_gb_head(_c) the band over the windows with the roof reaching over,
+- the gate booth, three by three (refs/military/gate-guard-booths): cp_gb_wall / cp_gb_wall_corner (the
+  waist-high wall on the model's north, _corner with the west side too), cp_gb_win(_corner)(_broken)
+  the glazing above it, cp_gb_head(_corner) the band over the windows with the roof reaching over,
   cp_gb_roof the middle with the ceiling light and the beacon;
 - the light tower trailer (refs/military/light-towers), its lamps looking north and the tow bar to
   the south: cp_lt_rear_{olive,white} (the mast end over the axle) with cp_lt_front_* in the cell
@@ -935,13 +935,13 @@ def blocks():
         add("cp_bladder_c" + v, bladder_boxes("c", top * 0.88), "Fuel Bladder", "WOOL", shape=[[3, 0, 3, 16, top * 0.7, 16]])
     add("cp_porta_down", porta_down(), "Portable Toilet", "WOOD", shape=[[1, 0, 0, 15, 14, 16]])
     add("cp_gb_wall", gb_panel(False), "Booth Wall", "METAL", shape=[[0, 0, 0, 16, 16, 2]])
-    add("cp_gb_wall_c", gb_panel(True), "Booth Wall", "METAL", shape=[[0, 0, 0, 16, 16, 2], [0, 0, 0, 2, 16, 16]])
+    add("cp_gb_wall_corner", gb_panel(True), "Booth Wall", "METAL", shape=[[0, 0, 0, 16, 16, 2], [0, 0, 0, 2, 16, 16]])
     for v, broken in (("", False), ("_broken", True)):
         add("cp_gb_win" + v, gb_window(False, broken), "Booth Window", "GLASS", shape=[[0, 0, 0, 16, 16, 2]])
-        add("cp_gb_win_c" + v, gb_window(True, broken), "Booth Window", "GLASS",
+        add("cp_gb_win_corner" + v, gb_window(True, broken), "Booth Window", "GLASS",
             shape=[[0, 0, 0, 16, 16, 2], [0, 0, 0, 2, 16, 16]])
     add("cp_gb_head", gb_head(False), "Booth Roof", "METAL", shape=[[0, 0, 0, 16, 12.6, 2], [0, 12.6, 0, 16, 14.6, 16]])
-    add("cp_gb_head_c", gb_head(True), "Booth Roof", "METAL",
+    add("cp_gb_head_corner", gb_head(True), "Booth Roof", "METAL",
         shape=[[0, 0, 0, 16, 12.6, 2], [0, 0, 0, 2, 12.6, 16], [0, 12.6, 0, 16, 14.6, 16]])
     add("cp_gb_roof", gb_roof_mid(), "Booth Roof", "METAL", shape=[[0, 12.6, 0, 16, 14.6, 16]])
     for c in LT:

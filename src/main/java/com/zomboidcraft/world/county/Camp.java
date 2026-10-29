@@ -290,7 +290,7 @@ final class Camp {
             {0, 1, 3, 0}};
         for (int[] c : ring) {
             int cx = x + c[0], cz = z + c[1];
-            String f = "[facing=" + faces[c[2]] + "]", k = c[3] == 1 ? "_c" : "";
+            String f = "[facing=" + faces[c[2]] + "]", k = c[3] == 1 ? "_corner" : "";
             p.set(cx, 0, cz, "floor_concrete");
             p.set(cx, 3, cz, "cp_gb_head" + k + f);
             if (c[0] == 1 && c[1] == 2) {

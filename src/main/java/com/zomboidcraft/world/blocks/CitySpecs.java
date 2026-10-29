@@ -10229,13 +10229,9 @@ final class CitySpecs extends CityBlocks.Specs {
         s("cp_pad_yellow", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("cp_pad_white", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("cp_gb_wall", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 2);
-        s("cp_gb_wall_c", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 2, 0, 0, 0, 2, 16, 16);
         s("cp_gb_win", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 16, 16, 2);
-        s("cp_gb_win_c", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 16, 16, 2, 0, 0, 0, 2, 16, 16);
         s("cp_gb_win_broken", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 16, 16, 2);
-        s("cp_gb_win_c_broken", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 16, 16, 2, 0, 0, 0, 2, 16, 16);
         s("cp_gb_head", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 12.6, 2, 0, 12.6, 0, 16, 14.6, 16);
-        s("cp_gb_head_c", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 12.6, 2, 0, 0, 0, 2, 12.6, 16, 0, 12.6, 0, 16, 14.6, 16);
         s("cp_gb_roof", FACING, 0, 0, SoundType.METAL, 2f, 0, 12.6, 0, 16, 14.6, 16);
         s("cp_lt_rear_olive", FACING, SEE_THROUGH, 0, SoundType.METAL, 2f, 1, 0, 4, 15, 16, 16);
         s("cp_lt_front_olive", FACING, LOOT, 0, SoundType.METAL, 2f, 1, 0, 0, 15, 16, 16);
@@ -10248,6 +10244,10 @@ final class CitySpecs extends CityBlocks.Specs {
         s("cp_lt_mast", FACING, 0, 0, SoundType.METAL, 2f, 6.1, 0, 0.1, 9.9, 16, 3.9);
         s("cp_lt_head", FACING, 0, 0, SoundType.METAL, 2f, 6.25, 0, 0.3, 9.75, 3, 3.7);
         s("cp_lt_head_lit", FACING, 0, 15, SoundType.METAL, 2f, 6.25, 0, 0.3, 9.75, 3, 3.7);
+        s("cp_gb_wall_corner", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 2, 0, 0, 0, 2, 16, 16);
+        s("cp_gb_win_corner", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 16, 16, 2, 0, 0, 0, 2, 16, 16);
+        s("cp_gb_win_corner_broken", FACING, SEE_THROUGH, 0, SoundType.GLASS, 0.3f, 0, 0, 0, 16, 16, 2, 0, 0, 0, 2, 16, 16);
+        s("cp_gb_head_corner", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 12.6, 2, 0, 0, 0, 2, 12.6, 16, 0, 12.6, 0, 16, 14.6, 16);
         s("rd_stave_0_0", FACING, 0, 0, SoundType.STONE, 2f, -0.25, 0, 16, 16.25, 16, 19);
         s("rd_blue_0_0", FACING, 0, 0, SoundType.METAL, 2f, -0.25, 0, 16, 16.25, 16, 19);
         s("rd_bin_0_0", FACING, 0, 0, SoundType.METAL, 2f, -0.25, 0, 16, 16.25, 16, 19);

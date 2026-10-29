@@ -950,14 +950,10 @@ final class PortSite extends Site {
             int jx = spacing * (j + 1) - 2 + rng.nextInt(5) - 2;
             int jw = 3 + rng.nextInt(2);
             hb.jetty(jx, quay - 1, jlen, jw, -2);
-            for (int y = -1; y <= 0; y++) {
-                for (int i = 0; i < jw; i++) {
-                    f.set(jx + i, y, quay, y == 0 ? "minecraft:spruce_planks" : "air");
-                }
-            }
+            // the gangway steps up from the jetty's head to the quay
             for (int i = 0; i < jw; i++) {
-                f.set(jx + i, -1, quay - 1, "minecraft:spruce_stairs[facing=south]");
-                f.set(jx + i, 0, quay, "minecraft:spruce_stairs[facing=south]");
+                f.set(jx + i, -1, quay - 1, "wf_gangway[facing=south]");
+                f.set(jx + i, 0, quay, "wf_gangway[facing=south]");
             }
             for (int side : new int[] {-1, 1}) {
                 int bz = quay - 4;
