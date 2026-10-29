@@ -162,12 +162,12 @@ public class NpcRenderer extends EntityRenderer<NpcEntity, NpcRenderer.State> {
         Quaternionf posed = m.getNormalizedRotation(new Quaternionf()).mul(rest);
         poseStack.pushPose();
         poseStack.translate(wrist.x, wrist.y, wrist.z);
-        poseStack.mulPose(posed);
+        poseStack.mulPose(new Matrix4f().rotation(posed));
         // into the player model's own frame (y down, facing -z), then the game's hand-to-item turn
-        poseStack.mulPose(Axis.XP.rotationDegrees(180f));
+        poseStack.mulPose(new Matrix4f().rotationX((float) Math.PI));
         poseStack.translate(-1f / 16f, -0.02f, -2f / 16f);
-        poseStack.mulPose(Axis.XP.rotationDegrees(-90f));
-        poseStack.mulPose(Axis.YP.rotationDegrees(180f));
+        poseStack.mulPose(new Matrix4f().rotationX((float) (-Math.PI / 2)));
+        poseStack.mulPose(new Matrix4f().rotationY((float) Math.PI));
         state.held.submit(poseStack, collector, light, OverlayTexture.NO_OVERLAY, 0);
         poseStack.popPose();
     }
