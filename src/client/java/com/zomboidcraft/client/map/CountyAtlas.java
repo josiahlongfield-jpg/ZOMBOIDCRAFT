@@ -148,13 +148,25 @@ public final class CountyAtlas {
 
     // ------------------------------------------------------------------ opening and closing
 
+    /** When this jar was made, in seconds; 0 when it can't be told. */
+    private static long built(net.fabricmc.loader.api.ModContainer mod) {
+        long sum = 0;
+        try {
+            for (Path p : mod.getOrigin().getPaths()) sum += Files.getLastModifiedTime(p).toMillis() / 1000;
+        } catch (IOException | RuntimeException e) {
+            return 0;
+        }
+        return sum;
+    }
+
     /** Opens a county's atlas (the server's {@link MapNet.Atlas} does this; the UI test opens one directly). */
     public static void open(long seed, boolean planned) {
         State old = state;
         if (old != null && old.seed == seed && old.planned == planned) return;
         close();
+        // every playtest jar shares one version number, so the jar's own date marks a new build as well
         String version = FabricLoader.getInstance().getModContainer(ZomboidCraft.MOD_ID)
-                .map(m -> m.getMetadata().getVersion().getFriendlyString()).orElse("dev");
+                .map(m -> m.getMetadata().getVersion().getFriendlyString() + "_" + built(m)).orElse("dev");
         Path root = FabricLoader.getInstance().getConfigDir().resolve("zomboidcraft").resolve("atlas");
         String name = Long.toHexString(seed) + (planned ? "_plan" : "_endless");
         Path folder = root.resolve(name + "_" + version.replaceAll("[^A-Za-z0-9._-]", "_"));
@@ -466,7 +478,10 @@ public final class CountyAtlas {
             Block found = BuiltInRegistries.BLOCK.getOptional(id).orElse(null);
             if (found == null) return 0xFF7A7670;
             MapColor map = found.defaultMapColor();
-            return map == MapColor.NONE ? NO_COLOUR : 0xFF000000 | map.col;
+            if (map == MapColor.NONE) return NO_COLOUR;
+            // small things on a roof or a floor (pots, signs, lamps, props) are not what a map shows; leaves are
+            if (!found.defaultBlockState().canOcclude() && !name.contains("leaves")) return NO_COLOUR;
+            return 0xFF000000 | map.col;
         });
     }
 
@@ -503,6 +518,7 @@ public final class CountyAtlas {
         int[] rgb = new int[n * n];
         float[] height = new float[n * n];
         boolean[] water = new boolean[n * n];
+        boolean[] built = new boolean[n * n];
         Terrain terrain = county.terrain;
         for (int j = 0; j < n; j++) {
             for (int i = 0; i < n; i++) {
@@ -538,6 +554,8 @@ public final class CountyAtlas {
                         rgb[idx] = c;
                         height[idx] = in.level + top;
                         water[idx] = wet;
+                        // three blocks over the lot is a building: its roof
+                        built[idx] = !wet && top >= 3;
                         continue;
                     }
                 }
@@ -579,6 +597,12 @@ public final class CountyAtlas {
                     float f = lift > 0.4f ? 1.12f : lift < -0.4f ? 0.84f : 1f;
                     if (lv >= 2) f = 1 + Math.max(-0.22f, Math.min(0.18f, lift * 0.12f));
                     c = shade(c, f);
+                }
+                if (detail) {
+                    // a building's edge is inked, and it throws a shadow to the south-east
+                    if (built[idx] != built[idx - 1] || built[idx] != built[idx - n]) c = shade(c, 0.62f);
+                    else if (!built[idx] && height[idx - n - 1] - height[idx] > 2) c = shade(c, 0.78f);
+                    else if (built[idx]) c = shade(c, 0.94f);
                 }
                 image.setPixel(i - 1, j - 1, paper(c));
             }
