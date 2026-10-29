@@ -198,7 +198,7 @@ public final class HarvestmanBody {
     }
 
     /** How far along a ray it first comes within r of segment a-b, or infinity. */
-    private static double capsule(Vec3 eye, Vec3 dir, Vec3 a, Vec3 b, double r) {
+    static double capsule(Vec3 eye, Vec3 dir, Vec3 a, Vec3 b, double r) {
         Vec3 ab = b.subtract(a), ao = eye.subtract(a);
         double abab = ab.dot(ab), abd = ab.dot(dir), abao = ab.dot(ao), dao = dir.dot(ao);
         double denom = abab - abd * abd;

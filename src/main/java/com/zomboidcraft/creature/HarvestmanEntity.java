@@ -886,18 +886,14 @@ public class HarvestmanEntity extends Mob {
         struckAt.add(s.at());
     }
 
-    /** Where a shot strikes it now: the hull, the core under its belly, or a leg as it stands. */
+    /** Where a shot strikes it now: its plates, the core under its tail, its skull (its eyes), or a leg. */
     public HarvestmanBody.Strike strike(Vec3 eye, Vec3 dir, double range) {
         if (!isAlive()) {
             return null;
         }
-        HarvestmanBody.Frame body = frame();
-        HarvestmanBody.Bent[] bent = new HarvestmanBody.Bent[4];
-        for (int i = 0; i < 4; i++) {
-            Vec3 fn = legs.footN[i] == null ? up : legs.footN[i];
-            bent[i] = (lost() >> i & 1) != 0 ? dangle(body, up, i) : HarvestmanBody.bend(body, up, i, foot(i), fn);
-        }
-        return HarvestmanBody.strike(body, bent, lost(), eye, dir, range);
+        // its shape is the Spider 7 creature's, as it's drawn
+        double lift = pose() == DEAD ? MID : lift();
+        return SpiderShape.strike(frame(), lift, lost(), eye, dir, range);
     }
 
     /** A leg shot off at the knee: the thigh hangs out and down from its hip. */
