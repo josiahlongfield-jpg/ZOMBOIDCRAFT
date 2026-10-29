@@ -4,6 +4,7 @@ import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.building.DigRules;
 import com.zomboidcraft.client.sound.UiSounds;
 import com.zomboidcraft.skills.Skill;
+import com.zomboidcraft.skills.SkillBooks;
 import com.zomboidcraft.skills.Skills;
 import com.zomboidcraft.survival.Treatment;
 import java.util.List;
@@ -164,6 +165,8 @@ final class SkillsPage {
         }
         KitDraw.capsRight(g, font, String.valueOf(level), x + w - 6, y + 3, KitDraw.BRIGHT, 1.1f);
         String next = level >= Skill.MAX_LEVEL ? "Mastered" : (Skill.xpForLevel(level + 1) - xp) + " xp to level " + (level + 1);
+        int boost = SkillBooks.boost(player, skill);
+        if (boost > 1) next += "  \u00b7  book x" + boost;
         KitDraw.text(g, font, next, x + 5, y + 14, KitDraw.DIM, 0.75f);
         screen.hot(x, y, w, ROW, () -> {
             if (selected != skill) UiSounds.play(UiSounds.CLICK);
@@ -190,7 +193,14 @@ final class SkillsPage {
         String count = level >= Skill.MAX_LEVEL ? xp + " xp" : xp + " / " + Skill.xpForLevel(level + 1) + " xp";
         KitDraw.textRight(g, font, count, bx + bw, cy + 5, KitDraw.DIM, 0.8f);
         KitDraw.bar(g, bx, cy + 16, bw, 2, part(xp, level), Float.NaN);
-        cy += 32;
+        if (level < Skill.MAX_LEVEL) {
+            int vol = SkillBooks.volume(level);
+            boolean read = SkillBooks.read(player, skill, vol);
+            String book = read ? "Book Vol " + vol + " read: x" + SkillBooks.multiplier(vol) + " xp up to level " + SkillBooks.lastLevel(vol)
+                    : "Book Vol " + vol + " not read: find it to earn x" + SkillBooks.multiplier(vol) + " xp";
+            KitDraw.text(g, font, book, bx, cy + 22, read ? KitDraw.LINK : KitDraw.DIM, 0.75f);
+        }
+        cy += 38;
 
         KitDraw.caps(g, font, "How it grows", cx, cy, KitDraw.FAINT, 0.65f);
         cy += 8;

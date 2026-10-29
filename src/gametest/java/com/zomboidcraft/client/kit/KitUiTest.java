@@ -227,6 +227,7 @@ public class KitUiTest implements FabricClientGameTest {
             swapSweep(ctx, sp);
             slingTest(ctx, sp);
             beltHudTest(ctx, sp);
+            bookTest(sp);
             spawnPickerTest(ctx, sp);
             pauseOptions(ctx, "after the kit");
         }
@@ -715,6 +716,23 @@ public class KitUiTest implements FabricClientGameTest {
             }
             ctx.runOnClient(mc -> mc.gui.setScreen(null));
         }
+    }
+
+    /** A skill book read for your band multiplies the XP you earn (SkillBooks). */
+    private static void bookTest(TestSingleplayerContext sp) {
+        sp.getServer().runOnServer(s -> {
+            ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+            var skill = com.zomboidcraft.skills.Skill.CARPENTRY;
+            var item = com.zomboidcraft.loot.items.LootItems.item("skillbook_carpentry");
+            int a = com.zomboidcraft.skills.Skills.xp(p, skill);
+            com.zomboidcraft.skills.Skills.addXp(p, skill, 10);
+            int b = com.zomboidcraft.skills.Skills.xp(p, skill);
+            new ItemStack(item).finishUsingItem(p.level(), p);
+            com.zomboidcraft.skills.Skills.addXp(p, skill, 10);
+            int c = com.zomboidcraft.skills.Skills.xp(p, skill);
+            LOG.info("ZCUI skill book: item {} plain +{} read +{} vol1 read {}", item == null ? "missing" : item.getClass().getSimpleName(),
+                    b - a, c - b, com.zomboidcraft.skills.SkillBooks.read(p, skill, 1));
+        });
     }
 
     private static void dragTest(ClientGameTestContext ctx, TestSingleplayerContext sp) {

@@ -59,7 +59,10 @@ public final class LootItems {
         Item.Properties props = new Item.Properties().stacksTo(spec.stack()).setId(key);
         LootSpec.Food food = spec.food();
         Item item;
-        if (Packs.has(spec.id())) {
+        if (spec.id().startsWith("skillbook_")) {
+            item = new SkillBookItem(props, com.zomboidcraft.skills.Skill.valueOf(
+                    spec.id().substring("skillbook_".length()).toUpperCase(java.util.Locale.ROOT)));
+        } else if (Packs.has(spec.id())) {
             item = new PackItem(props, spec.id());
         } else if (food == null) {
             item = new LootItem(props);
