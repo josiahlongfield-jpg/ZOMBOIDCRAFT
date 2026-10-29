@@ -58,7 +58,29 @@ final class WornParts {
             Map.entry("trench_coat", List.of("body", "left_arm", "left_leg", "right_arm", "right_leg")),
             Map.entry("suit_jacket", List.of("body", "left_arm", "left_leg", "right_arm", "right_leg")),
             Map.entry("lab_coat", List.of("body", "left_arm", "left_leg", "right_arm", "right_leg")),
-            Map.entry("hi_vis_vest", List.of("body")));
+            Map.entry("hi_vis_vest", List.of("body")),
+            Map.entry("cargo_pants", List.of("body", "left_leg", "right_leg")),
+            Map.entry("camo_pants", List.of("body", "left_leg", "right_leg")),
+            Map.entry("slacks", List.of("body", "left_leg", "right_leg")),
+            Map.entry("sweatpants", List.of("body", "left_leg", "right_leg")),
+            Map.entry("shorts", List.of("body", "left_leg", "right_leg")),
+            Map.entry("skirt", List.of("body", "left_leg", "right_leg")),
+            Map.entry("overalls", List.of("body", "left_leg", "right_leg")),
+            Map.entry("scrubs_pants", List.of("body", "left_leg", "right_leg")),
+            Map.entry("leather_chaps", List.of("body", "left_leg", "right_leg")),
+            Map.entry("running_shoes", List.of("left_leg", "right_leg")),
+            Map.entry("dress_shoes", List.of("left_leg", "right_leg")),
+            Map.entry("cowboy_boots", List.of("left_leg", "right_leg")),
+            Map.entry("hiking_boots", List.of("left_leg", "right_leg")),
+            Map.entry("rubber_boots", List.of("left_leg", "right_leg")),
+            Map.entry("combat_boots", List.of("left_leg", "right_leg")),
+            Map.entry("slippers", List.of("left_leg", "right_leg")),
+            Map.entry("leather_gloves", List.of("left_arm", "right_arm")),
+            Map.entry("winter_gloves", List.of("left_arm", "right_arm")),
+            Map.entry("rubber_gloves", List.of("left_arm", "right_arm")),
+            Map.entry("tactical_gloves", List.of("left_arm", "right_arm")),
+            Map.entry("scarf", List.of("body")),
+            Map.entry("necktie", List.of("body")));
 
     private WornParts() {
     }

@@ -36,7 +36,12 @@ public final class ClothingItems {
             // batch 3: tops and outerwear
             "band_tshirt", "tank_top", "dress_shirt", "polo_shirt", "hawaiian_shirt", "sweater", "sweatshirt",
             "turtleneck", "scrubs_top", "dress", "wedding_dress", "leather_jacket", "bomber_jacket", "varsity_jacket",
-            "windbreaker", "raincoat", "trench_coat", "suit_jacket", "lab_coat", "hi_vis_vest");
+            "windbreaker", "raincoat", "trench_coat", "suit_jacket", "lab_coat", "hi_vis_vest",
+            // batch 4: legs, feet, hands and the neck
+            "cargo_pants", "camo_pants", "slacks", "sweatpants", "shorts", "skirt", "overalls", "scrubs_pants",
+            "leather_chaps", "running_shoes", "dress_shoes", "cowboy_boots", "hiking_boots", "rubber_boots",
+            "combat_boots", "slippers", "leather_gloves", "winter_gloves", "rubber_gloves", "tactical_gloves",
+            "scarf", "necktie");
 
     private static final List<Item> ITEMS = new ArrayList<>();
 

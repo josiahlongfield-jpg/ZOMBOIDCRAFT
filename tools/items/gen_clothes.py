@@ -1340,8 +1340,358 @@ TOPS = {
 }
 
 
+# ------------------------------------------------------------------ batch 4: legs, feet, hands and the neck
+# Leg pixels: each leg is (-2,0,-2)..(2,12,2) from its hip pivot, the front at -z; trousers reach y 11, shoes sit 10 to 12.25.
+
+
+def camo(cols, size=1.3):
+    """Woodland blotches: a few overlapping waves, so they look torn rather than tiled."""
+    def pat(f, c):
+        x, y, z = f.P[..., 0], f.P[..., 1], f.P[..., 2]
+        out = c
+        for i, col in enumerate(cols):
+            k = 1.0 / (size * (1 + 0.35 * i))
+            w = np.sin(x * k * 2.1 + i * 1.7) + np.sin(y * k * 1.6 - z * k * 1.3 + i * 2.9) + np.sin((x + y) * k * 0.9 + i)
+            out = np.where((w > 1.15 - 0.2 * i)[..., None], P.col(col) * (1 + (P.white(f.shape, f.rng) - 0.5) * 0.1)[..., None], out)
+        return out
+    return pat
+
+
+def cargo_pocket(g, p, s, d, mat, flap, y0=4.4, y1=7.8):
+    g.side(p, d, s, -1.6, y0, 1.6, y1, mat, t=0.3)
+    g.side(p, d + 0.3, s, -1.75, y0 - 0.25, 1.75, y0 + 0.9, flap, t=0.12)
+    for y in (y0 + 1.6, y0 + 2.6):                                                  # the bellows pleat
+        g.side(p, d + 0.3, s, -0.08, y, 0.08, y1 - 0.3, flap, t=0.05)
+
+
+def build_cargo_pants(g):
+    d = PANTS
+    trouser_top(g, d, 'cloth')
+    def leg(p, s):
+        g.shell(p, 0, 11.0, d, 'cloth')
+        g.shell(p, 10.8, 12.0, d + 0.12, 'hem')
+        cargo_pocket(g, p, s, d, 'pocket', 'flap')
+        g.front(p, d, -1.8, 5.6, 1.8, 7.4, 'pocket', t=0.12)                        # knee panels
+        g.back(p, d, -1.5, 0.6, 1.5, 3.6, 'flap', t=0.14)
+    g.both(LEGS, leg)
+
+
+def build_camo_pants(g):
+    d = PANTS
+    trouser_top(g, d, 'cloth')
+    g.shell('body', 10.3, 11.1, d + 0.12, 'web')                                    # a rigger's belt through the loops
+    g.front('body', d + 0.12, -0.8, 10.1, 0.8, 11.3, 'buckle', t=0.2)
+    def leg(p, s):
+        g.shell(p, 0, 10.6, d, 'cloth')
+        g.shell(p, 10.0, 11.0, d + 0.2, 'blouse')                                   # bloused into the boots
+        cargo_pocket(g, p, s, d, 'cloth', 'pocket')
+        g.front(p, d, -1.8, 5.4, 1.8, 7.6, 'pocket', t=0.14)
+        g.back(p, d, -1.5, 0.6, 1.5, 3.6, 'pocket', t=0.14)
+    g.both(LEGS, leg)
+
+
+def build_slacks(g):
+    d = PANTS - 0.05
+    trouser_top(g, d, 'wool')
+    g.shell('body', 10.2, 11.0, d + 0.12, 'belt')
+    g.front('body', d + 0.12, -0.6, 10.15, 0.6, 11.05, 'buckle', t=0.16)
+    def leg(p, s):
+        g.shell(p, 0, 11.2, d, 'wool')
+        g.front(p, d, -0.08, 0.2, 0.08, 11.2, 'crease', t=0.06)                     # pressed creases
+        g.back(p, d, -0.08, 3.0, 0.08, 11.2, 'crease', t=0.06)
+        g.back(p, d, -1.3, 1.0, 1.3, 1.3, 'crease', t=0.04)                         # jetted back pocket
+        g.side(p, d, s, -0.06, 0.3, 0.06, 11.2, 'crease', t=0.04)
+    g.both(LEGS, leg)
+
+
+def build_sweatpants(g):
+    d = PANTS + 0.1
+    g.shell('body', 9.4, 12, d + 0.1, 'rib')                                         # elastic waist
+    for x in (-0.5, 0.5):                                                           # drawstrings
+        g.front('body', d + 0.1, x - 0.12, 10.4, x + 0.12, 12.6, 'string', t=0.14)
+    def leg(p, s):
+        g.shell(p, 0, 10.4, d, 'fleece')
+        g.shell(p, 10.4, 11.4, d - 0.05, 'rib')                                      # cuffed ankles
+        g.front(p, d, -1.8, 4.6, 1.8, 7.4, 'wear', t=0.06)                           # baggy, bobbled knees
+        g.side(p, d, s, -0.25, 0.2, 0.25, 10.4, 'stripe', t=0.06)
+    g.both(LEGS, leg)
+
+
+def build_shorts(g):
+    d = PANTS
+    trouser_top(g, d, 'cloth')
+    def leg(p, s):
+        g.shell(p, 0, 5.2, d + 0.1, 'cloth')
+        g.shell(p, 5.0, 5.8, d + 0.25, 'hem')                                       # rolled hem above the knee
+        g.side(p, d + 0.1, s, -1.4, 1.2, 1.4, 4.4, 'pocket', t=0.24)
+        g.side(p, d + 0.34, s, -1.5, 1.0, 1.5, 1.7, 'hem', t=0.1)
+    g.both(LEGS, leg)
+
+
+def build_skirt(g):
+    d = PANTS
+    g.shell('body', 9.6, 12, d + 0.15, 'band')
+    g.front('body', d + 0.15, 1.6, 9.6, 2.4, 12.0, 'button', t=0.1)
+    skirt(g, 7.4, d + 0.3, 'cloth', flare=0.35)
+    def leg(p, s):                                                                  # pleats on the front and back
+        for x in (-1.2, 0.0, 1.2):
+            g.front(p, d + 0.65, x - 0.15, 3.6, x + 0.15, 7.4, 'pleat', t=0.08)
+            g.back(p, d + 0.65, x - 0.15, 3.6, x + 0.15, 7.4, 'pleat', t=0.08)
+        g.shell(p, 7.0, 7.4, d + 0.7, 'pleat')
+    g.both(LEGS, leg)
+
+
+def build_overalls(g):
+    d = PANTS + 0.05
+    g.front('body', SHIRT + 0.05, -3.2, 2.2, 3.2, 10.0, 'denim', t=0.3)              # the bib
+    g.front('body', SHIRT + 0.35, -1.8, 3.0, 1.8, 5.8, 'denim', t=0.16)               # bib pocket
+    g.front('body', SHIRT + 0.51, -1.9, 2.8, 1.9, 3.2, 'seam', t=0.04)
+    g.front('body', SHIRT + 0.51, 0.4, 3.4, 0.7, 5.4, 'pencil', t=0.2)
+    for s in (-1, 1):
+        x0, x1 = (-3.5, -1.9) if s < 0 else (1.9, 3.5)
+        g.box('body', (x0, -0.35, -2 - SHIRT - 0.35), (x1, 2.4, 2 + SHIRT + 0.3), 'strap')    # straps over the shoulders
+        g.front('body', SHIRT + 0.35, x0 + 0.1, 2.0, x1 - 0.1, 3.2, 'clasp', t=0.22)
+        g.box('body', (s * 1.2, -0.35, 2 + SHIRT), (s * 3.5, 6.0, 2 + SHIRT + 0.3), 'strap')  # crossed at the back
+    g.shell('body', 9.0, 12, d + 0.05, 'denim')
+    for x in (-3.9, 3.7):
+        g.box('body', (x, 8.8, -1.0), (x + 0.2, 10.4, 1.0), 'clasp')                  # side buttons
+    def leg(p, s):
+        g.shell(p, 0, 11.0, d, 'denim')
+        g.shell(p, 10.6, 11.6, d + 0.15, 'cuff')
+        g.side(p, d, s, -0.9, 0.8, 0.3, 4.4, 'denim', t=0.14) if s < 0 else None    # hammer loop side
+        g.front(p, d, -1.8, 5.0, 1.8, 7.6, 'wear', t=0.06)
+    g.both(LEGS, leg)
+
+
+def build_scrubs_pants(g):
+    d = PANTS
+    g.shell('body', 9.6, 12, d + 0.08, 'cloth')
+    g.front('body', d + 0.08, -0.3, 10.0, 0.3, 12.8, 'string', t=0.12)               # the tie
+    def leg(p, s):
+        g.shell(p, 0, 11.0, d + 0.05, 'cloth')
+        g.shell(p, 10.8, 11.6, d + 0.12, 'trim')
+        g.side(p, d + 0.05, s, -1.3, 2.6, 1.3, 5.4, 'trim', t=0.16)
+    g.both(LEGS, leg)
+
+
+def build_leather_chaps(g):
+    d = PANTS + 0.35                                                                # worn over trousers
+    g.shell('body', 10.0, 11.2, d + 0.1, 'belt')
+    g.front('body', d + 0.1, -1.0, 9.8, 1.0, 11.4, 'buckle', t=0.22)
+    def leg(p, s):
+        # open at the back: front and outer side, a strap behind
+        lo, hi = BOXES[p]
+        g.box(p, (lo[0] - d, 0, lo[2] - d), (hi[0] + d, 11.0, lo[2] - d + 0.3), 'leather')
+        x = lo[0] - d if s < 0 else hi[0] + d - 0.3
+        g.box(p, (x, 0, lo[2] - d), (x + 0.3, 11.0, hi[2] + 0.2), 'leather')
+        for y in (1.2, 5.2, 9.2):
+            g.back(p, d - 0.2, -2.2, y, 2.2, y + 0.5, 'strap', t=0.14)
+        for y in (1.0 + 0.9 * i for i in range(11)):                                # fringe down the outseam
+            g.side(p, d, s, 1.5, y, 2.6, y + 0.35, 'fringe', t=0.12)
+        g.front(p, d + 0.3, -1.6, 1.0, 1.6, 3.4, 'tooling', t=0.08)
+    g.both(LEGS, leg)
+
+
+def build_running_shoes(g):
+    def foot(p, s):
+        shoe(g, p, s, 9.8, d=0.42, toe=2.9, sole='foam')
+        g.box(p, (-2.35, 11.7, -2 - 2.9), (2.35, 12.25, 2.4), 'tread')
+        laces(g, p, 0.42, 9.6, 10.6, 0.5)
+        g.side(p, 0.42, s, -2.4, 10.0, 1.6, 10.6, 'swoosh', t=0.08)
+        g.side(p, 0.42, s, -1.0, 10.6, 0.6, 11.2, 'swoosh', t=0.08)
+        g.box(p, (-0.6, 9.0, 2.3), (0.6, 10.1, 2.7), 'reflect')                    # heel pull and reflector
+    g.both(LEGS, foot)
+
+
+def build_dress_shoes(g):
+    def foot(p, s):
+        shoe(g, p, s, 10.2, d=0.4, toe=3.2, sole='sole')
+        g.box(p, (-1.9, 10.0, -5.3), (1.9, 10.7, -4.2), 'upper')                    # the rounded toe
+        g.box(p, (-2.3, 10.7, -5.0), (2.3, 10.9, -4.7), 'stitch')                   # cap-toe line
+        laces(g, p, 0.4, 10.0, 10.7, 0.35)
+        g.box(p, (-2.3, 11.0, 1.0), (2.3, 11.45, 2.35), 'heel')
+    g.both(LEGS, foot)
+
+
+def build_cowboy_boots(g):
+    def foot(p, s):
+        shoe(g, p, s, 4.6, d=0.6, toe=3.6, sole='sole')
+        g.box(p, (-1.4, 10.4, -5.9), (1.4, 11.4, -5.4), 'upper')                    # the pointed toe
+        g.shell(p, 4.2, 4.8, 0.85, 'upper')                                          # flared shaft top
+        for z0, z1 in ((-2.6, -2.1), (2.1, 2.6)):                                   # scalloped dip at the sides
+            g.side(p, 0.85, s, z0, 4.2, z1, 5.0, 'shadow', t=0.02)
+        g.box(p, (-2.2, 11.2, 0.6), (2.2, 12.6, 2.4), 'heel')                       # stacked riding heel
+        g.front(p, 0.6, -1.4, 5.4, 1.4, 9.6, 'stitch', t=0.08)                       # the stitched shaft
+        g.side(p, 0.6, s, -1.0, 5.6, 1.0, 9.2, 'stitch', t=0.08)
+        g.side(p, 0.6, s, -0.4, 10.6, 0.4, 11.2, 'spur', t=0.25)
+    g.both(LEGS, foot)
+
+
+def build_hiking_boots(g):
+    def foot(p, s):
+        shoe(g, p, s, 7.6, sole='lugsole', toe=3.0)
+        g.box(p, (-2.3, 9.9, -5.1), (2.3, 11.4, -3.8), 'rand')                      # rubber rand round the toe
+        g.shell(p, 7.3, 8.1, BOOT + 0.2, 'collar')
+        laces(g, p, BOOT, 8.2, 10.4, 0.7)
+        g.side(p, BOOT, s, -1.6, 8.6, 1.8, 10.2, 'panel', t=0.1)                    # suede panels
+        g.box(p, (-2.4, 11.6, -5.1), (2.4, 12.35, 2.45), 'lugsole')
+    g.both(LEGS, foot)
+
+
+def build_rubber_boots(g):
+    def foot(p, s):
+        shoe(g, p, s, 3.2, d=0.7, toe=3.0, upper='rubber', sole='lugsole')
+        g.shell(p, 2.8, 3.6, 0.95, 'band')                                           # the rolled top
+        g.shell(p, 10.4, 11.0, 0.78, 'band')                                         # foxing stripe
+        g.box(p, (-2.3, 10.4, -5.0), (2.3, 11.0, -2.6), 'band')
+        g.side(p, 0.7, s, -0.6, 3.6, 0.6, 4.6, 'band', t=0.18)                       # pull tab
+        g.box(p, (-2.45, 11.6, -5.1), (2.45, 12.35, 2.5), 'lugsole')
+    g.both(LEGS, foot)
+
+
+def build_combat_boots(g):
+    def foot(p, s):
+        shoe(g, p, s, 4.4, sole='lugsole', toe=3.0)
+        g.shell(p, 4.2, 5.0, BOOT + 0.18, 'collar')
+        g.side(p, BOOT, s, -1.8, 5.2, 1.8, 9.2, 'nylon', t=0.08)                    # nylon shaft panels
+        laces(g, p, BOOT, 5.2, 10.4, 0.8)
+        for y in (5.4, 6.4):
+            for x in (-1.15, 1.15):
+                g.front(p, BOOT, x - 0.15, y, x + 0.15, y + 0.3, 'hook', t=0.3)
+        g.side(p, BOOT, -s, -1.0, 9.6, 1.0, 10.4, 'vent', t=0.06)                    # drain vents, inner side
+        g.box(p, (-2.2, 10.2, -5.2), (2.2, 11.42, -3.8), 'toecap')
+        g.box(p, (-2.45, 11.6, -5.15), (2.45, 12.4, 2.5), 'lugsole')
+    g.both(LEGS, foot)
+
+
+def build_slippers(g):
+    def foot(p, s):
+        g.box(p, (-2.4, 11.4, -5.0), (2.4, 12.2, 2.4), 'sole')
+        g.box(p, (-2.25, 9.8, -5.0), (2.25, 11.4, -0.4), 'plush')                    # open-backed mule
+        g.box(p, (-2.45, 9.7, -2.2), (2.45, 10.3, -0.3), 'cuff')
+        g.box(p, (-2.2, 10.9, -0.4), (2.2, 11.4, 2.3), 'plush')
+    g.both(LEGS, foot)
+
+
+def glove(g, p, s, mat, d=0.45, cuff=None, cuff_y=(7.6, 8.9), cuff_d=0.9):
+    lo, hi = BOXES[p]
+    g.shell(p, 8.4, 10.35, d, mat)
+    g.box(p, (lo[0] - d, 10.35, lo[2] - d), (hi[0] + d, 10.6, hi[2] + d), mat)       # fingertips
+    if cuff:
+        g.shell(p, cuff_y[0], cuff_y[1], cuff_d, cuff)
+
+
+def build_leather_gloves(g):
+    def hand(p, s):
+        glove(g, p, s, 'leather', cuff='leather', cuff_y=(8.0, 8.9), cuff_d=0.6)
+        for z in (-1.0, 0.0, 1.0):                                                  # points on the back
+            g.side(p, 0.45, s, z - 0.06, 8.6, z + 0.06, 9.8, 'stitch', t=0.04)
+        g.side(p, 0.6, s, -1.2, 8.2, -0.4, 8.6, 'snap', t=0.12)
+    g.both(ARMS, hand)
+
+
+def build_winter_gloves(g):
+    def hand(p, s):
+        glove(g, p, s, 'shell', d=0.6, cuff='knit', cuff_y=(7.2, 8.8), cuff_d=0.85)
+        g.side(p, 0.6, s, -1.8, 8.6, 1.8, 10.1, 'quilt', t=0.12)                     # padded back
+        g.shell(p, 10.0, 10.6, 0.68, 'grip')
+    g.both(ARMS, hand)
+
+
+def build_rubber_gloves(g):
+    def hand(p, s):
+        glove(g, p, s, 'rubber', d=0.4, cuff='rubber', cuff_y=(5.8, 8.6), cuff_d=0.7)    # long dishwashing cuffs
+        g.shell(p, 5.8, 6.2, 0.78, 'rubber')
+        g.shell(p, 9.6, 10.35, 0.44, 'grip')
+    g.both(ARMS, hand)
+
+
+def build_tactical_gloves(g):
+    def hand(p, s):
+        glove(g, p, s, 'nylon', d=0.45, cuff='nylon', cuff_y=(7.8, 8.9), cuff_d=0.7)
+        g.side(p, 0.45, s, -1.8, 9.2, 1.8, 10.0, 'knuckle', t=0.32)                  # hard knuckles
+        g.side(p, 0.7, s, -1.4, 8.0, 0.6, 8.6, 'velcro', t=0.12)
+        g.shell(p, 10.0, 10.6, 0.5, 'palm')
+    g.both(ARMS, hand)
+
+
+def build_scarf(g):
+    d = SHIRT + 0.6
+    g.box('body', (-3.6, -1.2, -2 - d), (3.6, 1.2, 2 + d), 'knit')                  # wrapped round the neck
+    g.box('body', (-3.9, -0.4, -2 - d - 0.3), (3.9, 0.6, 2 + d + 0.3), 'knit')
+    g.box('body', (1.0, 0.8, -2 - d - 0.6), (2.6, 7.2, -2 - d - 0.2), 'knit')       # the ends down the front
+    g.box('body', (-2.2, 0.8, -2 - d - 0.4), (-0.8, 5.6, -2 - d), 'knit')
+    for x in (1.1, 1.5, 1.9, 2.3):                                                  # tassels
+        g.box('body', (x, 7.2, -2 - d - 0.5), (x + 0.22, 7.9, -2 - d - 0.3), 'fringe')
+    g.box('body', (-3.0, -0.6, -2 - d - 0.5), (3.0, 0.0, -2 - d - 0.25), 'stripe')
+    g.box('body', (1.0, 5.6, -2 - d - 0.66), (2.6, 6.1, -2 - d - 0.55), 'stripe')
+
+
+def build_necktie(g):
+    z = -2 - SHIRT - 0.34                                                        # clear of a shirt's buttons, under a jacket
+    g.box('body', (-0.8, -0.2, z - 0.35), (0.8, 1.0, z), 'silk')                   # knot
+    g.box('body', (-0.65, 1.0, z - 0.2), (0.65, 3.6, z), 'silk')
+    g.box('body', (-0.95, 3.6, z - 0.2), (0.95, 7.4, z), 'silk')                   # the blade
+    g.box('body', (-0.55, 7.4, z - 0.2), (0.55, 7.9, z), 'silk')
+    g.box('body', (-1.0, 4.4, z - 0.26), (1.0, 4.65, z - 0.2), 'bar')               # tie bar
+    g.box('body', (-3.0, -0.6, -2.3), (3.0, -0.1, 2.3), 'silk')                     # round the collar
+
+
+LOWER = {
+    'cargo_pants': (build_cargo_pants, dict(cloth=cloth('#5d5a48', weave=0.12), hem=cloth('#524f3f'), pocket=cloth('#565341'),
+                                            flap=cloth('#4c4a3a'), loop=cloth('#524f3f')), 0.45),
+    'camo_pants': (build_camo_pants, dict(cloth=cloth('#5b5a43', pattern=camo(['#3f4430', '#6e6247', '#28261f'])),
+                                          pocket=cloth('#56553f', pattern=camo(['#3f4430', '#6e6247', '#28261f'])),
+                                          blouse=cloth('#4f4e3a'), loop=cloth('#4f4e3a'), web=cloth('#3b3a2c'), buckle=metal()), 0.5),
+    'slacks': (build_slacks, dict(wool=cloth('#3a3b40', weave=0.04), crease=flat('#2c2d31', ink=False), loop=cloth('#34353a'),
+                                  belt=leather('#22180f'), buckle=metal('brass')), 0.25),
+    'sweatpants': (build_sweatpants, dict(fleece=cloth('#6a6c70', weave=0.03, stitch=None), rib=rib('#5c5e62'),
+                                          string=flat('#c9c3b5'), wear=cloth('#74767a', stitch=None), stripe=flat('#2f3135')), 0.4),
+    'shorts': (build_shorts, dict(cloth=cloth('#8a7a5a', weave=0.08), hem=cloth('#7c6d50'), pocket=cloth('#7c6d50'),
+                                  loop=cloth('#7c6d50')), 0.35),
+    'skirt': (build_skirt, dict(cloth=cloth('#3d4250', pattern=plaid('#3d4250', '#5a2a2a', 1.4), stitch=None),
+                                band=cloth('#343846'), pleat=cloth('#30343f', stitch=None), button=metal()), 0.3),
+    'overalls': (build_overalls, dict(denim=denim('#3a4e6a'), cuff=denim('#56709a'), seam=flat('#9a7a44', ink=False),
+                                      strap=denim('#34465e'), clasp=metal('brass'), pencil=flat('#b08a2a'),
+                                      wear=denim('#5a6e8a')), 0.5),
+    'scrubs_pants': (build_scrubs_pants, dict(cloth=cloth('#3f6f6a', weave=0.04), trim=cloth('#386360'),
+                                              string=flat('#c9c3b5')), 0.3),
+    'leather_chaps': (build_leather_chaps, dict(leather=leather('#4a3020', stitch='#a88458'), belt=leather('#3a2618'),
+                                                buckle=metal('steel'), strap=leather('#3a2618'), fringe=leather('#5a3b27'),
+                                                tooling=leather('#3e281a', stitch='#a88458')), 0.45),
+    'running_shoes': (build_running_shoes, dict(foam=rubber('#b4b0a6'), sole=rubber('#b4b0a6'), tread=rubber('#2b2a28'),
+                                                upper=mesh('#4a5866'), tongue=cloth('#3e4a56'), lace=flat('#c4beb2'),
+                                                swoosh=leather('#9a4a2a'), reflect=glow_tape()), 0.4),
+    'dress_shoes': (build_dress_shoes, dict(sole=rubber('#1a1614'), heel=rubber('#1a1614'), upper=leather('#2a1a12', gloss=0.3),
+                                            tongue=leather('#2a1a12'), lace=flat('#1c1410'), stitch=flat('#4a3424', ink=False)), 0.3),
+    'cowboy_boots': (build_cowboy_boots, dict(sole=rubber('#2a1e16'), heel=leather('#2e2018'), upper=leather('#6a4428', stitch='#d2b07a'),
+                                              stitch=leather('#80562e', stitch='#d8b47e'), shadow=flat('#120c08', ink=False),
+                                              spur=metal('steel')), 0.45),
+    'hiking_boots': (build_hiking_boots, dict(lugsole=rubber('#2a2522', stud=True), sole=rubber('#2a2522'), upper=leather('#5a4a38'),
+                                              rand=rubber('#3a332c'), collar=cloth('#7a3a2a'), tongue=cloth('#5a4a38'),
+                                              lace=flat('#a8442e'), panel=cloth('#6a5a46', weave=0.05)), 0.45),
+    'rubber_boots': (build_rubber_boots, dict(rubber=rubber('#3e4a34'), band=rubber('#2c3426'), lugsole=rubber('#1e1c1a', stud=True),
+                                              sole=rubber('#1e1c1a')), 0.45),
+    'combat_boots': (build_combat_boots, dict(lugsole=rubber('#1c1a18', stud=True), sole=rubber('#1c1a18'), upper=leather('#5e5040'),
+                                              collar=leather('#4a3f32'), nylon=cloth('#6a6048', weave=0.12), tongue=leather('#54483a'),
+                                              lace=flat('#3a352c'), hook=metal(), vent=metal(), toecap=leather('#54483a')), 0.5),
+    'slippers': (build_slippers, dict(sole=rubber('#3a2e26'), plush=fur('#6e5e50'), cuff=fur('#5e5044')), 0.4),
+    'leather_gloves': (build_leather_gloves, dict(leather=leather('#2e221a', gloss=0.2), stitch=flat('#4a3828', ink=False),
+                                                  snap=metal('brass')), 0.35),
+    'winter_gloves': (build_winter_gloves, dict(shell=cloth('#2f3a46', weave=0.04), knit=rib('#2a333d'), quilt=cloth('#38444f'),
+                                                grip=rubber('#1e1e1e')), 0.35),
+    'rubber_gloves': (build_rubber_gloves, dict(rubber=plastic('#a8862e', gloss=0.25), grip=rubber('#8e7228')), 0.35),
+    'tactical_gloves': (build_tactical_gloves, dict(nylon=cloth('#3e3c32', weave=0.1), knuckle=plastic('#2a2924'),
+                                                    velcro=cloth('#4a473a'), palm=leather('#5e5546')), 0.45),
+    'scarf': (build_scarf, dict(knit=knit('#6a2e2a'), fringe=flat('#5a2724'), stripe=knit('#b6a888')), 0.35),
+    'necktie': (build_necktie, dict(silk=stripes('#3a2a4a', '#6a5a3a', 0.6),
+                                    bar=metal('steel')), 0.2),
+}
+
+
 GARMENTS.update(HEADWEAR)
 GARMENTS.update(TOPS)
+GARMENTS.update(LOWER)
 
 
 # ================================================================== export
