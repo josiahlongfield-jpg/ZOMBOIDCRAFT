@@ -932,10 +932,11 @@ public final class Floors {
             if (slim) {
                 f.band = 3;
             }
-            List<Room> rs = new ArrayList<>(core(4, "ph_kitchen", "ph_wine", "wc", "linen"));
-            // the master suite takes the biggest stretch of glass, then the cinema, the library, guest rooms
-            rs.addAll(f.rooms(false, f.band, slim ? 4 : 6, slim ? 7 : 10, list("penthouse_bed", "ph_master", "ph_cinema", "library", "penthouse_bed"),
-                    wall, true, slim ? 4 : 6));
+            // open plan: the powder room and the wine store by the core, the master suite (and on a
+            // deep floor one guest room) on the glass, everything else one great room out to the view
+            f.airy = true;
+            List<Room> rs = new ArrayList<>(core(2, "wc", "ph_wine"));
+            rs.addAll(f.rooms(false, f.band, slim ? 4 : 6, slim ? 7 : 10, list("penthouse_bed", "ph_master"), wall, true, slim ? 1 : 2));
             furnish(rs);
             // the great room: sitting groups under chandeliers, the long dining table, the grand
             // piano by the glass, the bar, sculpture on plinths between
