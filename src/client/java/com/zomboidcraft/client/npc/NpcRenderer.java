@@ -3,6 +3,7 @@ package com.zomboidcraft.client.npc;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import com.zomboidcraft.combat.GunType;
 import com.zomboidcraft.npc.NpcEntity;
 import com.zomboidcraft.npc.Npcs;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
@@ -74,6 +75,8 @@ public class NpcRenderer extends EntityRenderer<NpcEntity, NpcRenderer.State> {
         Object[] buffers;
         float bodyYaw;
         boolean hurt;
+        /** A gun with a stock (not a handgun): held further forward so the stock sits against her shoulder. */
+        boolean longGun;
         final NpcPose.Input pose = new NpcPose.Input();
         final ItemStackRenderState held = new ItemStackRenderState();
     }
@@ -107,6 +110,8 @@ public class NpcRenderer extends EntityRenderer<NpcEntity, NpcRenderer.State> {
         in.headPitch = entity.getXRot(partialTick);
         Minecraft.getInstance().getItemModelResolver().updateForTopItem(state.held, entity.getMainHandItem(),
                 ItemDisplayContext.THIRD_PERSON_RIGHT_HAND, entity.level(), entity, entity.getId());
+        GunType gun = GunType.of(entity.getMainHandItem());
+        state.longGun = gun != null && !gun.handgun();
         state.skin = NpcSkin.get(state.model);
         state.skinned = null;
         if (state.skin != null) {
@@ -221,6 +226,9 @@ public class NpcRenderer extends EntityRenderer<NpcEntity, NpcRenderer.State> {
         poseStack.popPose();
     }
 
+    /** How far (blocks) a long gun slides forward along her hand from the palm, so its stock meets her shoulder, not passes through it. */
+    private static final float LONG_GUN_FORWARD = 0.13f;
+
     /**
      * The held item in a skinned model's right hand: at the palm (between the wrist and the middle finger's root), turned
      * as the hand's turned from its rest, which points along her arm (the T-pose), as if from a hand hanging straight down.
@@ -236,6 +244,10 @@ public class NpcRenderer extends EntityRenderer<NpcEntity, NpcRenderer.State> {
         Vector3f palm = skinned[hand].transformPosition(new Vector3f(wristRest).lerp(fingerRest, 0.45f));
         Quaternionf rest = new Quaternionf().rotationTo(new Vector3f(0, -1, 0), restDir);
         Quaternionf posed = skinned[hand].getNormalizedRotation(new Quaternionf()).mul(rest);
+        if (state.longGun) {
+            Vector3f along = skinned[hand].transformDirection(new Vector3f(restDir)).normalize();
+            palm.add(along.mul(LONG_GUN_FORWARD));
+        }
         poseStack.pushPose();
         poseStack.translate(palm.x, palm.y, palm.z);
         poseStack.mulPose(new Matrix4f().rotation(posed));
