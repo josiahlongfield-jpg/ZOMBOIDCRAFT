@@ -84,6 +84,7 @@ final class Layout {
         }
         planRoads();
         links();
+        airportRoad();
         railway.crossRoads(roads);
         for (Road r : roads) {
             index(r);
@@ -286,6 +287,10 @@ final class Layout {
             int x1 = (i0 + 2) * PITCH - EDGE - 1, z1 = (j0 + 3) * PITCH - EDGE - 1;
             return new Place(PlaceType.LANDMARK, "waterfront", x0, z0, x1, z1, Terrain.CITY, h, 1, x1 - x0 - Waterfront.SEAWALL);
         }
+        if (s.id().equals("lab")) {
+            // Ridgeview Labs and the ground zero round it: 300 square on the mountain, near its spot
+            return near(PlaceType.MILITARY, "ridgeview", s.x(), s.z(), h);
+        }
         if (s.id().equals("naval")) {
             // the page builds the naval station as a base; here it's the naval wharf, the carrier along it
             return port(new Plan.Spot(s.id(), s.kind(), PlaceType.PORT, "naval", s.x(), s.z(), s.flags(), s.name()), h);
@@ -324,6 +329,7 @@ final class Layout {
             case "MILITARY:quarantine" -> new int[] {210, 190};
             case "MILITARY:army_base" -> new int[] {280, 260};
             case "MILITARY:depot" -> new int[] {190, 170};
+            case "MILITARY:ridgeview" -> new int[] {300, 300};
             case "FARM:crop" -> new int[] {220, 200};
             case "FARM:dairy" -> new int[] {200, 180};
             case "FARM:horse_ranch" -> new int[] {220, 210};
@@ -1094,6 +1100,51 @@ final class Layout {
             if (p.tile == null && p.type != PlaceType.LANDMARK && !fill.contains(p) && !reached(p)) {
                 spur(p);
             }
+        }
+    }
+
+    /**
+     * Grayhaven International's road off I-95: its tiles are landmarks, which get no spur, so this
+     * runs from the gap in the airport's west fence where its access road comes out
+     * ({@link Airport#ACCESS_Z}) to the nearest point on the plan's roads.
+     */
+    private void airportRoad() {
+        Place tile = named.get("airport");
+        if (tile == null) {
+            return;
+        }
+        int[] o = Airport.origin(tile.variant);
+        double gx = o[0] + Airport.X0 - 1, gz = o[1] + Airport.ACCESS_Z + 0.5;
+        Road.Hit hit = new Road.Hit();
+        for (Road r : planRoads) {
+            for (int i = 0; i < r.xs.length; i++) {
+                double d = Math.hypot(r.xs[i] - gx, r.zs[i] - gz);
+                if (d < hit.distance) {
+                    hit.distance = d;
+                    hit.road = r;
+                    hit.along = i;
+                }
+            }
+        }
+        if (hit.road == null || hit.distance > 1800) {
+            return;
+        }
+        int i = (int) hit.along;
+        double[] target = {hit.road.xs[i], hit.road.zs[i]};
+        List<double[]> pts = new ArrayList<>();
+        pts.add(new double[] {gx, gz});
+        pts.add(new double[] {gx - 12, gz});
+        pts.add(new double[] {gx - 24, gz});
+        county.wander(pts, gx - 24, gz, target[0], target[1], Noise.hash(seed ^ 0xA1A0L, o[0], o[1]), 0, 0.1);
+        pts.add(target);
+        Road r = road(Road.Kind.COUNTY, pts, null, null, Noise.hash(seed ^ 0xA1A1L, o[0], o[1]));
+        if (r != null) {
+            int n = r.ys.length;
+            for (int k = 0; k < Math.min(8, n); k++) {
+                r.ys[n - 1 - k] = Terrain.lerp(r.ys[n - 1 - k], hit.road.ys[i], 1 - k / 8.0);
+                r.ys[k] = Terrain.lerp(r.ys[k], tile.level, 1 - k / 8.0);
+            }
+            roads.add(r);
         }
     }
 

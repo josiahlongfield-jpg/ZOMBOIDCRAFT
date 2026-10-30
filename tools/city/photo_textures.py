@@ -1175,6 +1175,12 @@ import airliner  # noqa: E402
 airliner.register(sys.modules[__name__])
 import ramp  # noqa: E402
 ramp.register(sys.modules[__name__])
+import lab  # noqa: E402
+lab.register(sys.modules[__name__])
+import spore  # noqa: E402
+spore.register(sys.modules[__name__])
+import airside  # noqa: E402
+airside.register(sys.modules[__name__])
 
 
 

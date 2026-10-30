@@ -73,6 +73,11 @@ public final class HarvestmanDirector {
         /** Where it's travelling to while away: its target, or home. */
         boolean homeward;
         String state = "";
+        /** What it's learned of its ground and the people on it (HarvestmanGoals). */
+        HarvestmanTerritory land = new HarvestmanTerritory();
+        /** What it had learned (HarvestmanMind.learned), and when it was last in reach (game time). */
+        double[] learned;
+        long leftAt;
     }
 
     private static final Map<String, Record> RECORDS = new LinkedHashMap<>();
@@ -88,6 +93,8 @@ public final class HarvestmanDirector {
     /** Its call, a few minutes after its target logs back in (it knows they're back); 0 for none due. */
     private static long loginCall;
     private static int population;
+    /** Harvestmen lost while enemy respawning is on, each waiting on the next breach surge to come through. */
+    private static int waiting;
     private static boolean loaded;
     private static int tick;
     private static MinecraftServer server;
@@ -118,6 +125,7 @@ public final class HarvestmanDirector {
                 if (r != null && h.isAlive() && entity.getRemovalReason() != null && !entity.getRemovalReason().shouldDestroy()) {
                     copy(h, r);
                     r.away = h.position();
+                    r.leftAt = level.getGameTime();
                 }
             }
         });
@@ -161,6 +169,11 @@ public final class HarvestmanDirector {
             server.execute(h::discard);
             return;
         }
+        // the time it spent out of reach: it's that much hungrier
+        if (r.leftAt > 0) {
+            h.mind.away((level.getGameTime() - r.leftAt) / 1000.0);
+            r.leftAt = 0;
+        }
         r.away = null;
         LOADED.put(id, h);
     }
@@ -171,6 +184,7 @@ public final class HarvestmanDirector {
         r.stage = h.mind.stage;
         r.lair = h.mind.lair;
         r.state = h.mind.doing();
+        r.learned = h.mind.learned();
     }
 
     /** Brings one out of the dark at a place, as the next copy of itself. */
@@ -184,6 +198,8 @@ public final class HarvestmanDirector {
         h.mind.gen = r.gen;
         h.mind.lair = r.lair;
         h.mind.stage = r.stage;
+        h.mind.learned(r.learned, r.leftAt > 0 ? (level.getGameTime() - r.leftAt) / 1000.0 : 0);
+        r.leftAt = 0;
         h.snapTo(at.x, at.y, at.z, level.getRandom().nextFloat() * 360f, 0f);
         h.setHealth((float) Math.max(1, r.health));
         for (int i = 0; i < 4; i++) {
@@ -209,8 +225,22 @@ public final class HarvestmanDirector {
         if (h.mind.hid.equals(hunter)) {
             endHunt(true);
         }
-        // the next one is a while coming
+        // the next one is a while coming: it comes through the breach on its next surge (world/Breach); with
+        // enemy respawning off nothing more comes through, and the world has one fewer for good
         nextLair = Math.max(nextLair, level.getGameTime() + 24_000);
+        if (com.zomboidcraft.ZcConfig.get().population.respawnDays > 0) {
+            waiting++;
+        } else {
+            population = Math.max(0, population - 1);
+        }
+    }
+
+    /** A surge of the breach: one lost Harvestman comes through and goes to make its den. */
+    public static void breachSurge(ServerLevel level) {
+        if (waiting > 0) {
+            waiting--;
+            nextLair = level.getGameTime();
+        }
     }
 
     static void killed(ServerLevel level, HarvestmanEntity h, ServerPlayer victim) {
@@ -239,6 +269,33 @@ public final class HarvestmanDirector {
         }
         ServerPlayer p = level.getServer().getPlayerList().getPlayer(target);
         return p != null && p.level() == level && !p.isSpectator() && !p.isCreative() && p.isAlive() ? p : null;
+    }
+
+    /** What this Harvestman knows of its ground: kept with its record, so it travels with it. */
+    static HarvestmanTerritory land(HarvestmanEntity h) {
+        Record r = RECORDS.get(h.mind.hid);
+        return r != null ? r.land : null;
+    }
+
+    /** The other Harvestmen's dens (their grounds are theirs: it keeps off them). */
+    static List<BlockPos> otherDens(HarvestmanEntity h) {
+        List<BlockPos> dens = new ArrayList<>();
+        for (Record r : RECORDS.values()) {
+            if (!r.id.equals(h.mind.hid) && r.lair != null) {
+                dens.add(r.lair);
+            }
+        }
+        return dens;
+    }
+
+    /** The quiet after a hunt, when the world is left alone. */
+    static boolean grace(ServerLevel level) {
+        return level.getGameTime() < graceUntil;
+    }
+
+    /** This one is the hunter (whether or not its target is about). */
+    static boolean isHunter(HarvestmanEntity h) {
+        return h.mind.hid.equals(hunter) && target != null;
     }
 
     /** A noise: every Harvestman in earshot hears it (they hear further than zombies). */
@@ -303,7 +360,7 @@ public final class HarvestmanDirector {
                 }
             }
         }
-        if (tick % 40 == 0 && RECORDS.size() < population && now >= nextLair) {
+        if (tick % 40 == 0 && RECORDS.size() + waiting < population && now >= nextLair) {
             List<ServerPlayer> players = s.getPlayerList().getPlayers();
             if (!players.isEmpty()) {
                 ServerPlayer p = players.get((tick / 40) % players.size());
@@ -387,6 +444,9 @@ public final class HarvestmanDirector {
         double bd = Double.MAX_VALUE;
         for (Record r : RECORDS.values()) {
             HarvestmanEntity h = LOADED.get(r.id);
+            if (h != null && h.mind.showcase) {
+                continue;   // the test room's never hunts
+            }
             Vec3 pos = h != null ? h.position() : r.away != null ? r.away : r.lair != null ? Vec3.atCenterOf(r.lair) : Vec3.ZERO;
             double d = pos.distanceToSqr(at);
             if (d < bd) {
@@ -704,6 +764,9 @@ public final class HarvestmanDirector {
         long now = s.overworld().getGameTime();
         StringBuilder b = new StringBuilder();
         b.append(RECORDS.size()).append(" of ").append(population).append(" Harvestmen in this world");
+        if (waiting > 0) {
+            b.append(", ").append(waiting).append(" waiting on the breach's next surge");
+        }
         if (target != null) {
             b.append("\nHunting ").append(NAMES.getOrDefault(target, target.toString()))
                     .append(s.getPlayerList().getPlayer(target) == null ? " (offline)" : "");
@@ -758,11 +821,13 @@ public final class HarvestmanDirector {
         hunter = null;
         target = null;
         population = 4 + s.overworld().getRandom().nextInt(3);
+        waiting = 0;
         try {
             Path f = file(s);
             if (Files.exists(f)) {
                 JsonObject root = JsonParser.parseString(Files.readString(f)).getAsJsonObject();
                 population = root.has("population") ? root.get("population").getAsInt() : population;
+                waiting = root.has("waiting") ? root.get("waiting").getAsInt() : 0;
                 graceUntil = root.has("graceUntil") ? root.get("graceUntil").getAsLong() : 0;
                 hunter = root.has("hunter") ? root.get("hunter").getAsString() : null;
                 target = root.has("target") ? UUID.fromString(root.get("target").getAsString()) : null;
@@ -779,6 +844,17 @@ public final class HarvestmanDirector {
                     r.away = o.has("ax") ? new Vec3(o.get("ax").getAsDouble(), o.get("ay").getAsDouble(), o.get("az").getAsDouble()) : null;
                     r.homeward = o.has("homeward") && o.get("homeward").getAsBoolean();
                     r.state = o.has("state") ? o.get("state").getAsString() : "";
+                    if (o.has("land")) {
+                        r.land = HarvestmanTerritory.load(o.getAsJsonObject("land"));
+                    }
+                    if (o.has("learned")) {
+                        JsonArray l = o.getAsJsonArray("learned");
+                        r.learned = new double[l.size()];
+                        for (int i = 0; i < l.size(); i++) {
+                            r.learned[i] = l.get(i).getAsDouble();
+                        }
+                    }
+                    r.leftAt = o.has("leftAt") ? o.get("leftAt").getAsLong() : 0;
                     RECORDS.put(r.id, r);
                 }
                 JsonObject players = root.getAsJsonObject("players");
@@ -824,6 +900,7 @@ public final class HarvestmanDirector {
         }
         JsonObject root = new JsonObject();
         root.addProperty("population", population);
+        root.addProperty("waiting", waiting);
         root.addProperty("graceUntil", graceUntil);
         if (hunter != null) {
             root.addProperty("hunter", hunter);
@@ -850,6 +927,15 @@ public final class HarvestmanDirector {
             }
             o.addProperty("homeward", r.homeward);
             o.addProperty("state", r.state);
+            o.add("land", r.land.save());
+            if (r.learned != null) {
+                JsonArray l = new JsonArray();
+                for (double v : r.learned) {
+                    l.add(v);
+                }
+                o.add("learned", l);
+            }
+            o.addProperty("leftAt", r.leftAt);
             records.add(o);
         }
         root.add("records", records);

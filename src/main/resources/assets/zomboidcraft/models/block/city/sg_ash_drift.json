@@ -1,0 +1,110 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sg_ash_full": "zomboidcraft:block/city/sg_ash_full",
+    "particle": "zomboidcraft:block/city/sg_ash_full"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        2,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sg_ash_full",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#sg_ash_full",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#sg_ash_full",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#sg_ash_full",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#sg_ash_full"
+        },
+        "down": {
+          "texture": "#sg_ash_full",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        2,
+        1
+      ],
+      "to": [
+        14,
+        3.5,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sg_ash_full"
+        },
+        "south": {
+          "texture": "#sg_ash_full"
+        },
+        "east": {
+          "texture": "#sg_ash_full"
+        },
+        "west": {
+          "texture": "#sg_ash_full"
+        },
+        "up": {
+          "texture": "#sg_ash_full"
+        },
+        "down": {
+          "texture": "#sg_ash_full"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        3.5,
+        3
+      ],
+      "to": [
+        11,
+        4.5,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sg_ash_full"
+        },
+        "south": {
+          "texture": "#sg_ash_full"
+        },
+        "east": {
+          "texture": "#sg_ash_full"
+        },
+        "west": {
+          "texture": "#sg_ash_full"
+        },
+        "up": {
+          "texture": "#sg_ash_full"
+        },
+        "down": {
+          "texture": "#sg_ash_full"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rl_fluid": {
+      "sprite": "zomboidcraft:block/city/rl_fluid",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/rl_fluid"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rl_fluid",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#rl_fluid",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#rl_fluid",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rl_fluid",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rl_fluid",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#rl_fluid",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

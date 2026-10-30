@@ -1,23 +1,30 @@
 {
   "parent": "minecraft:block/block",
   "textures": {
-    "al_dark": "zomboidcraft:block/city/al_dark",
     "al_lining": "zomboidcraft:block/city/al_lining",
+    "al_mask": "zomboidcraft:block/city/al_mask",
     "al_paint": "zomboidcraft:block/city/al_paint",
-    "al_psu": "zomboidcraft:block/city/al_psu",
-    "al_title_8": "zomboidcraft:block/city/al_title_8",
+    "al_tube": "zomboidcraft:block/city/al_tube",
+    "al_win": {
+      "sprite": "zomboidcraft:block/city/al_win",
+      "force_translucent": true
+    },
+    "al_win_in": {
+      "sprite": "zomboidcraft:block/city/al_win_in",
+      "force_translucent": true
+    },
     "particle": "zomboidcraft:block/city/al_paint"
   },
   "elements": [
     {
       "from": [
-        4.765,
-        -0.997,
+        0.515,
+        -0.545,
         0
       ],
       "to": [
-        7.765,
-        3.753,
+        3.515,
+        0.705,
         16
       ],
       "faces": {
@@ -25,7 +32,7 @@
           "texture": "#al_lining",
           "uv": [
             0,
-            11.25,
+            14.75,
             16,
             16
           ]
@@ -34,7 +41,7 @@
           "texture": "#al_paint",
           "uv": [
             0,
-            11.25,
+            14.75,
             16,
             16
           ]
@@ -42,23 +49,64 @@
       },
       "rotation": {
         "origin": [
-          4.765,
-          8.234,
+          0.515,
+          8.104,
           8.0
         ],
         "axis": "z",
-        "angle": -22.25
+        "angle": -7.275
       }
     },
     {
       "from": [
-        4.765,
-        3.753,
+        0.515,
+        0.705,
         0
       ],
       "to": [
-        7.765,
-        9.753,
+        3.515,
+        10.205,
+        16
+      ],
+      "faces": {
+        "east": {
+          "texture": "#al_win_in",
+          "uv": [
+            0,
+            0.353,
+            16,
+            16.0
+          ]
+        },
+        "west": {
+          "texture": "#al_win",
+          "uv": [
+            0,
+            0.353,
+            16,
+            16.0
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          0.515,
+          8.104,
+          8.0
+        ],
+        "axis": "z",
+        "angle": -7.275
+      }
+    },
+    {
+      "from": [
+        0.515,
+        10.205,
+        0
+      ],
+      "to": [
+        3.515,
+        16.753,
         16
       ],
       "faces": {
@@ -66,100 +114,145 @@
           "texture": "#al_lining",
           "uv": [
             0,
-            6.247,
+            0,
             16,
-            12.247
+            6.548
           ]
         },
         "west": {
-          "texture": "#al_title_8",
+          "texture": "#al_paint",
           "uv": [
             0,
-            11.662,
+            0,
             16,
-            15.933
+            6.548
           ]
         }
       },
       "rotation": {
         "origin": [
-          4.765,
-          8.234,
+          0.515,
+          8.104,
           8.0
         ],
         "axis": "z",
-        "angle": -22.25
+        "angle": -7.275
       }
     },
     {
       "from": [
-        4.765,
-        9.753,
-        0
+        15.008,
+        9.12,
+        4.608
       ],
       "to": [
-        7.765,
-        17.464,
-        16
+        15.392,
+        16.0,
+        4.992
       ],
       "faces": {
-        "east": {
-          "texture": "#al_dark",
+        "north": {
+          "texture": "#al_tube",
           "uv": [
-            0,
-            0,
-            16,
-            7.711
-          ]
-        },
-        "west": {
-          "texture": "#al_title_8",
-          "uv": [
-            0,
-            6.172,
-            16,
-            11.662
-          ]
-        }
-      },
-      "rotation": {
-        "origin": [
-          4.765,
-          8.234,
-          8.0
-        ],
-        "axis": "z",
-        "angle": -22.25
-      }
-    },
-    {
-      "from": [
-        11.2,
-        8.0,
-        0
-      ],
-      "to": [
-        16.0,
-        16.0,
-        16
-      ],
-      "faces": {
-        "west": {
-          "texture": "#al_dark",
-          "uv": [
-            0,
+            0.608,
             0.0,
-            16,
-            8.0
+            0.992,
+            6.88
+          ]
+        },
+        "south": {
+          "texture": "#al_tube",
+          "uv": [
+            15.008,
+            0.0,
+            15.392,
+            6.88
+          ]
+        },
+        "east": {
+          "texture": "#al_tube",
+          "uv": [
+            11.008,
+            0.0,
+            11.392,
+            6.88
+          ]
+        },
+        "west": {
+          "texture": "#al_tube",
+          "uv": [
+            4.608,
+            0.0,
+            4.992,
+            6.88
           ]
         },
         "down": {
-          "texture": "#al_psu",
+          "texture": "#al_tube",
           "uv": [
-            0,
-            0,
-            16,
-            16
+            15.008,
+            11.008,
+            15.392,
+            11.392
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        13.76,
+        7.2,
+        3.36
+      ],
+      "to": [
+        16.0,
+        9.12,
+        6.24
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_mask",
+          "uv": [
+            0.0,
+            6.88,
+            2.24,
+            8.8
+          ]
+        },
+        "south": {
+          "texture": "#al_mask",
+          "uv": [
+            13.76,
+            6.88,
+            16.0,
+            8.8
+          ]
+        },
+        "west": {
+          "texture": "#al_mask",
+          "uv": [
+            3.36,
+            6.88,
+            6.24,
+            8.8
+          ]
+        },
+        "up": {
+          "texture": "#al_mask",
+          "uv": [
+            13.76,
+            3.36,
+            16.0,
+            6.24
+          ]
+        },
+        "down": {
+          "texture": "#al_mask",
+          "uv": [
+            13.76,
+            9.76,
+            16.0,
+            12.64
           ]
         }
       }

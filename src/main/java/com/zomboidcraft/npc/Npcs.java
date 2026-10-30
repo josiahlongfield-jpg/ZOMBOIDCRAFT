@@ -1,5 +1,6 @@
 package com.zomboidcraft.npc;
 
+import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -33,7 +34,14 @@ import net.minecraft.world.phys.Vec3;
  * <p>
  * For the companion you're looking at (or the nearest): {@code /zc npc wear <piece>} and {@code /zc npc remove <piece>} put
  * her clothes on and take them off ({@link #PIECES}; her underwear always stays on), {@code /zc npc outfit} says what
- * she has on, and {@code /zc npc name <name>} names her (her chat lines go out under it).
+ * she has on, and {@code /zc npc name <name>} names her (her chat lines go out under it). {@code /zc npc mind} shows her
+ * mood, traits, needs and latest memories (NpcMind); {@code /zc npc trait <trait> <-1..1>} and
+ * {@code /zc npc feel <need> <0..100>} set one, for testing.
+ * <p>
+ * Her work (NpcWork): {@code /zc npc home} makes where you stand her home; {@code /zc npc job <job>} gives her a job there
+ * (guard, repair, farm, cook, scavenge, medic, haul, none); {@code /zc npc shift <day|night>} picks her hours; make her
+ * wait (G) and she gets on with it. {@code /zc npc skills} lists what she's good at; {@code /zc npc skill <skill> <0..10>}
+ * sets one, for testing.
  */
 public final class Npcs {
     /** Every model with a file in assets/zomboidcraft/npc/ (tools/npc/pack.py). */
@@ -83,6 +91,30 @@ public final class Npcs {
                                         .suggests((ctx, b) -> SharedSuggestionProvider.suggest(PIECES, b))
                                         .executes(ctx -> dress(ctx, StringArgumentType.getString(ctx, "piece"), false))))
                                 .then(Commands.literal("outfit").executes(Npcs::outfit))
+                                .then(Commands.literal("mind").executes(Npcs::mind))
+                                .then(Commands.literal("home").executes(Npcs::home))
+                                .then(Commands.literal("job").then(Commands.argument("job", StringArgumentType.word())
+                                        .suggests((ctx, b) -> SharedSuggestionProvider.suggest(names(NpcWork.Job.values()), b))
+                                        .executes(ctx -> job(ctx, StringArgumentType.getString(ctx, "job")))))
+                                .then(Commands.literal("shift").then(Commands.argument("shift", StringArgumentType.word())
+                                        .suggests((ctx, b) -> SharedSuggestionProvider.suggest(List.of("day", "night"), b))
+                                        .executes(ctx -> shift(ctx, StringArgumentType.getString(ctx, "shift")))))
+                                .then(Commands.literal("skills").executes(Npcs::skills))
+                                .then(Commands.literal("skill").then(Commands.argument("skill", StringArgumentType.word())
+                                        .suggests((ctx, b) -> SharedSuggestionProvider.suggest(names(NpcSkills.Skill.values()), b))
+                                        .then(Commands.argument("level", com.mojang.brigadier.arguments.IntegerArgumentType.integer(0, NpcSkills.MAX))
+                                                .executes(ctx -> skill(ctx, StringArgumentType.getString(ctx, "skill"),
+                                                        com.mojang.brigadier.arguments.IntegerArgumentType.getInteger(ctx, "level"))))))
+                                .then(Commands.literal("trait").then(Commands.argument("trait", StringArgumentType.word())
+                                        .suggests((ctx, b) -> SharedSuggestionProvider.suggest(names(NpcMind.Trait.values()), b))
+                                        .then(Commands.argument("value", FloatArgumentType.floatArg(-1f, 1f))
+                                                .executes(ctx -> trait(ctx, StringArgumentType.getString(ctx, "trait"),
+                                                        FloatArgumentType.getFloat(ctx, "value"))))))
+                                .then(Commands.literal("feel").then(Commands.argument("need", StringArgumentType.word())
+                                        .suggests((ctx, b) -> SharedSuggestionProvider.suggest(names(NpcMind.Need.values()), b))
+                                        .then(Commands.argument("value", FloatArgumentType.floatArg(0f, 100f))
+                                                .executes(ctx -> feel(ctx, StringArgumentType.getString(ctx, "need"),
+                                                        FloatArgumentType.getFloat(ctx, "value"))))))
                                 .then(Commands.literal("name").then(Commands.argument("name", StringArgumentType.greedyString())
                                         .executes(ctx -> name(ctx, StringArgumentType.getString(ctx, "name")))))
                                 .then(Commands.argument("model", StringArgumentType.word())
@@ -124,6 +156,7 @@ public final class Npcs {
             npc.snapTo(p.x, p.y, p.z, face, 0f);
             npc.setYHeadRot(face);
             npc.setYBodyRot(face);
+            npc.born(player);
             npc.toggleFollow(player);
             level.addFreshEntity(npc);
             made++;
@@ -179,6 +212,147 @@ public final class Npcs {
         List<String> off = PIECES.stream().filter(p -> npc.hidden().contains(p)).toList();
         ctx.getSource().sendSuccess(() -> Component.literal("Wearing: underwear" + (on.isEmpty() ? "" : ", " + String.join(", ", on))
                 + (off.isEmpty() ? "" : ". Off: " + String.join(", ", off))), false);
+        return 1;
+    }
+
+    private static List<String> names(Enum<?>[] values) {
+        return java.util.Arrays.stream(values).map(v -> v.name().toLowerCase(java.util.Locale.ROOT)).toList();
+    }
+
+    private static int mind(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        NpcEntity npc = target(ctx.getSource().getPlayerOrException());
+        if (npc == null) {
+            ctx.getSource().sendFailure(Component.literal("No companion near you"));
+            return 0;
+        }
+        NpcMind m = npc.mind;
+        StringBuilder b = new StringBuilder(npc.speakerName() + " is " + m.mood() + ". " + capital(m.traitWords()) + ".");
+        for (NpcMind.Need n : NpcMind.Need.values()) {
+            int v = Math.round(m.get(n));
+            b.append("\n ").append(n.label).append(' ').append("|".repeat(v / 5)).append(".".repeat(20 - v / 5)).append(' ').append(v);
+        }
+        long now = npc.level().getGameTime();
+        List<NpcMind.Memory> recent = m.diary.subList(Math.max(0, m.diary.size() - 5), m.diary.size());
+        if (!recent.isEmpty()) {
+            b.append("\nRemembers:");
+            for (int i = recent.size() - 1; i >= 0; i--) {
+                NpcMind.Memory mem = recent.get(i);
+                long mins = (now - mem.at()) / 1200;
+                b.append("\n - ").append(mem.what()).append(" (").append(mins < 1 ? "just now" : mins + " min ago")
+                        .append(", near ").append(mem.x()).append(", ").append(mem.z()).append(')');
+            }
+        }
+        b.append("\n").append(skillLines(npc));
+        ctx.getSource().sendSuccess(() -> Component.literal(b.toString()), false);
+        return 1;
+    }
+
+    private static int home(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        ServerPlayer player = ctx.getSource().getPlayerOrException();
+        NpcEntity npc = target(player);
+        if (npc == null) {
+            ctx.getSource().sendFailure(Component.literal("No companion near you"));
+            return 0;
+        }
+        npc.work.home = player.blockPosition();
+        int stores = npc.work.stores((ServerLevel) player.level()).size();
+        npc.mind.remember(npc, "Moved into a new home", 0.3f, 0.6f);
+        ctx.getSource().sendSuccess(() -> Component.literal(npc.speakerName() + "'s home is here now (" + NpcWork.HOME_RADIUS
+                + " blocks round). Stores she can use: " + stores + (stores == 0 ? ". Put a chest or barrel near here for her" : "")
+                + ". Give her a job with /zc npc job, then make her wait (G)."), false);
+        return 1;
+    }
+
+    private static int job(CommandContext<CommandSourceStack> ctx, String name) throws CommandSyntaxException {
+        NpcEntity npc = target(ctx.getSource().getPlayerOrException());
+        NpcWork.Job job = NpcWork.Job.of(name);
+        if (npc == null || job == null) {
+            ctx.getSource().sendFailure(Component.literal(npc == null ? "No companion near you" : "Jobs: " + NpcWork.jobsList()));
+            return 0;
+        }
+        if (npc.work.home == null && job != NpcWork.Job.NONE) {
+            ctx.getSource().sendFailure(Component.literal("Give her a home first: stand where it is and use /zc npc home"));
+            return 0;
+        }
+        npc.work.job = job;
+        boolean guardNights = job == NpcWork.Job.GUARD;
+        ctx.getSource().sendSuccess(() -> Component.literal(job == NpcWork.Job.NONE ? npc.speakerName() + " has no job now"
+                : npc.speakerName() + " is the " + job.label + " now" + (npc.following ? ". Make her wait (G) and she'll start" : "")
+                + (guardNights && !npc.work.nightShift ? ". Tip: /zc npc shift night for a night watch" : "")), false);
+        return 1;
+    }
+
+    private static int shift(CommandContext<CommandSourceStack> ctx, String name) throws CommandSyntaxException {
+        NpcEntity npc = target(ctx.getSource().getPlayerOrException());
+        if (npc == null || !name.equals("day") && !name.equals("night")) {
+            ctx.getSource().sendFailure(Component.literal(npc == null ? "No companion near you" : "Shift is day or night"));
+            return 0;
+        }
+        npc.work.nightShift = name.equals("night");
+        ctx.getSource().sendSuccess(() -> Component.literal(npc.work.nightShift
+                ? "Night shift: she works 19:00 to 05:00, unwinds till 09:00 and sleeps through the day"
+                : "Day shift: she works 06:00 to 17:00, unwinds till 21:00 and sleeps through the night"), false);
+        return 1;
+    }
+
+    private static int skills(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        NpcEntity npc = target(ctx.getSource().getPlayerOrException());
+        if (npc == null) {
+            ctx.getSource().sendFailure(Component.literal("No companion near you"));
+            return 0;
+        }
+        ctx.getSource().sendSuccess(() -> Component.literal(skillLines(npc)), false);
+        return 1;
+    }
+
+    static String skillLines(NpcEntity npc) {
+        StringBuilder b = new StringBuilder(npc.speakerName() + ": " + npc.work.job.label
+                + (npc.work.home == null ? ", no home" : ", " + (npc.work.nightShift ? "night" : "day") + " shift"));
+        for (NpcSkills.Skill sk : NpcSkills.Skill.values()) {
+            int l = npc.skills.level(sk);
+            b.append("\n ").append(sk.label).append(' ').append("#".repeat(l)).append("-".repeat(NpcSkills.MAX - l))
+                    .append(' ').append(l).append(" (").append(Math.round(npc.skills.progress(sk) * 100)).append("% to next)");
+        }
+        return b.toString();
+    }
+
+    private static int skill(CommandContext<CommandSourceStack> ctx, String name, int level) throws CommandSyntaxException {
+        NpcEntity npc = target(ctx.getSource().getPlayerOrException());
+        NpcSkills.Skill sk = java.util.Arrays.stream(NpcSkills.Skill.values()).filter(v -> v.name().equalsIgnoreCase(name)).findFirst().orElse(null);
+        if (npc == null || sk == null) {
+            ctx.getSource().sendFailure(Component.literal(npc == null ? "No companion near you" : "Skills: " + String.join(", ", names(NpcSkills.Skill.values()))));
+            return 0;
+        }
+        npc.skills.set(sk, level);
+        ctx.getSource().sendSuccess(() -> Component.literal("Her " + sk.label + " is " + level + " now"), false);
+        return 1;
+    }
+
+    private static String capital(String s) {
+        return s.isEmpty() ? s : Character.toUpperCase(s.charAt(0)) + s.substring(1);
+    }
+
+    private static int trait(CommandContext<CommandSourceStack> ctx, String name, float value) throws CommandSyntaxException {
+        NpcEntity npc = target(ctx.getSource().getPlayerOrException());
+        NpcMind.Trait t = java.util.Arrays.stream(NpcMind.Trait.values()).filter(v -> v.name().equalsIgnoreCase(name)).findFirst().orElse(null);
+        if (npc == null || t == null) {
+            ctx.getSource().sendFailure(Component.literal(npc == null ? "No companion near you" : "Traits: " + String.join(", ", names(NpcMind.Trait.values()))));
+            return 0;
+        }
+        npc.mind.setTrait(t, value);
+        ctx.getSource().sendSuccess(() -> Component.literal("She's " + npc.mind.traitWords() + " now"), false);
+        return 1;
+    }
+
+    private static int feel(CommandContext<CommandSourceStack> ctx, String name, float value) throws CommandSyntaxException {
+        NpcEntity npc = target(ctx.getSource().getPlayerOrException());
+        NpcMind.Need n = java.util.Arrays.stream(NpcMind.Need.values()).filter(v -> v.name().equalsIgnoreCase(name)).findFirst().orElse(null);
+        if (npc == null || n == null) {
+            ctx.getSource().sendFailure(Component.literal(npc == null ? "No companion near you" : "Needs: " + String.join(", ", names(NpcMind.Need.values()))));
+            return 0;
+        }
+        npc.mind.set(n, value);
+        ctx.getSource().sendSuccess(() -> Component.literal("Her " + n.label + " is " + Math.round(value) + "; she's " + npc.mind.mood()), false);
         return 1;
     }
 

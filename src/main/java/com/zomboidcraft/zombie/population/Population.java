@@ -339,7 +339,8 @@ public final class Population {
     }
 
     private static boolean respawnDue(ServerLevel level, Pop pop, ZcConfig.Population cfg) {
-        return cfg.respawnDays > 0 && day(level) - pop.day() >= cfg.respawnDays && pop.recs().length < pop.given();
+        // the refill comes with a breach surge: a place cleared before the last one fills again
+        return cfg.respawnDays > 0 && com.zomboidcraft.world.Breach.lastSurgeDay() > pop.day() && pop.recs().length < pop.given();
     }
 
     private static long day(ServerLevel level) {

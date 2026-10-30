@@ -26,7 +26,10 @@ Everything faces north (rotate=facing) unless said:
 - rp_bl_0..3: the belt loader rising north over four blocks (0 and 1 on the ground, 2 and 3 the
   block up): the chassis, the cab, the belt with its side rails;
 - rp_gpu: the ground power cart, its cable out north; rp_chocks: a pair of wheel chocks on a rope;
-  rp_wand: a marshaller's wands dropped.
+  rp_wand: a marshaller's wands dropped;
+- the escape slide off the plane's back door on the right, rising north as the stairs do (so set
+  facing south to come down northward): rp_slide (a length at 45 degrees), rp_slide_top (its head
+  on the sill, the door to the north of it), rp_slide_foot (the run-out on the apron).
 
     python3 tools/city/ramp.py          rewrites the rp_ entries in blocks.json
 
@@ -268,6 +271,19 @@ def hazard(seed):
     return t
 
 
+def slide_tex(seed, rgb, seams=True):
+    """The slide's coated fabric: a soft sheen, the welded seams across it, scuffs and grime."""
+    t = F.plain(seed, rgb, 0.03, 0.55)
+    if seams:
+        for k in range(0, N, N // 4):
+            area(t, 0, k, N, k + 2, tuple(int(c * 0.8) for c in rgb))
+    else:
+        for k in range(0, N, N // 2):
+            area(t, k, 0, k + 1, N, tuple(int(c * 0.85) for c in rgb))
+    t.grime(0.3, (70, 64, 54))
+    return t
+
+
 def textures():
     return {
         "rp_clad": lambda: clad(41001),
@@ -301,6 +317,8 @@ def textures():
         "rp_gpu": lambda: gpu_side(41029),
         "rp_hazard": lambda: hazard(41030),
         "rp_seat": lambda: F.plain(41031, (30, 30, 32), 0.05, 0.35),
+        "rp_slide": lambda: slide_tex(41032, (228, 128, 34)),
+        "rp_slide_bed": lambda: slide_tex(41033, (214, 200, 160), seams=False),
     }
 
 
@@ -607,6 +625,35 @@ def wand():
             [9, 0, 2, 14, 1.5, 3.5, "rp_orange"], [6, 0, 2, 9, 1.5, 3.5, BLACK]]
 
 
+# ---- the escape slide off the back door, falling north to south down to the apron (rotate=facing:
+# the model rises north, so it is set facing south to run down northward)
+
+def slide():
+    """A length of the slide at 45 degrees: the bed between the two fat tubes, the tube under it."""
+    t = turn("x", 45, (8, 8, 8))
+    L = 11.3
+    return [[2.5, 6.6, 8 - L, 13.5, 8, 8 + L, "rp_slide_bed", None, t],
+            [0, 6, 8 - L, 3.5, 11, 8 + L, "rp_slide", None, t], [12.5, 6, 8 - L, 16, 11, 8 + L, "rp_slide", None, t],
+            [4, 3.5, 8 - L, 12, 6.6, 8 + L, "rp_slide", None, t]]
+
+
+def slide_top():
+    """The head of the slide on the sill outside the door (the door to the north): the girt bar,
+    the flat head, the tubes rising round it, the arch over the doorway."""
+    return [[2.5, 0, 0, 13.5, 2, 16, faces("rp_slide", up="rp_slide_bed")],
+            [0, 0, 0, 3.5, 8, 16, "rp_slide"], [12.5, 0, 0, 16, 8, 16, "rp_slide"],
+            [0, 8, 0, 3.5, 30, 3.5, "rp_slide"], [12.5, 8, 0, 16, 30, 3.5, "rp_slide"],
+            [0, 30, 0, 16, 33.5, 3.5, "rp_slide"], [1, 1, -0.5, 15, 2.5, 0.5, "st_galv"]]
+
+
+def slide_foot():
+    """The run-out flat on the apron where the slide comes down (from the north), the bumper tube
+    across its end."""
+    return [[2.5, 0, 0, 13.5, 2, 16, faces("rp_slide", up="rp_slide_bed")],
+            [0, 0, 0, 3.5, 5, 16, "rp_slide"], [12.5, 0, 0, 16, 5, 16, "rp_slide"],
+            [0, 0, 12.5, 16, 6, 16, "rp_slide"]]
+
+
 # ---------------------------------------------------------------- the blocks
 
 def blocks():
@@ -665,6 +712,9 @@ def blocks():
     add("rp_gpu", gpu(), "Ground Power Unit", shape=[[0, 0, 1, 16, 15, 15]])
     add("rp_chocks", chocks(), "Wheel Chocks", decor=True)
     add("rp_wand", wand(), "Marshalling Wands", sound="WOOD", decor=True)
+    add("rp_slide", slide(), "Escape Slide", sound="WOOL", shape=[[0, 0, 8, 16, 8, 16], [0, 0, 0, 16, 16, 8]])
+    add("rp_slide_top", slide_top(), "Escape Slide", sound="WOOL", shape=[[0, 0, 0, 16, 2, 16]])
+    add("rp_slide_foot", slide_foot(), "Escape Slide", sound="WOOL", shape=[[0, 0, 0, 16, 2, 16]])
     return out
 
 

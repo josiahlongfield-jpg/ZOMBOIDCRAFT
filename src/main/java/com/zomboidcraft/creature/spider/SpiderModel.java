@@ -86,7 +86,7 @@ public final class SpiderModel {
     /** What each bone is (for the hit test): its limb, or -1. */
     public final int[] limbOf;
     public final Capsule[] capsules;
-    public final int pelvis, spine, neck, head;
+    public final int pelvis, spine, neck, head, tail;
     /** The bones of its arms and claws (held round what it drags). */
     public final boolean[] arm;
 
@@ -234,6 +234,7 @@ public final class SpiderModel {
         spine = bone("def_spine_1");
         neck = bone("def_neck");
         head = bone("def_head");
+        tail = bone("def_tail_1");
         arm = new boolean[n];
         for (int i = 0; i < n; i++) {
             String b = boneNames[i].toLowerCase(Locale.ROOT);

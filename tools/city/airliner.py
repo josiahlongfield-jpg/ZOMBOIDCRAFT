@@ -1,7 +1,8 @@
-"""The al_ kit: Gray Eagle flight 214, the twin-jet parked nose-in at gate 1 of Grayhaven
+"""The al_ kit: Gray Eagle flight 214, the trijet parked alongside gate 1 of Grayhaven
 International (Josiah, 2026-10-29: the airport after Modern Warfare 2's "Terminal", with the airliner
-you walk through from the jet bridge to the stairs at the back). Built after a 737-800 (refs/airport/
-apron-airliners, airliner-cabin) at about one and a half times its size, so the cabin keeps the
+you walk through from the jet bridge to the stairs at the back). Built after a 727-200, three engines at the tail
+under a T-tail as in the map's screenshots (refs/airport/apron-airliners, airliner-cabin), at about one
+and a half times its size, so the cabin keeps the
 mod's four clear blocks over the aisle: 56 blocks nose to tail, 54 across the wings, 8 through the
 fuselage. No real airline: the livery is the made-up Gray Eagle's, navy and silver.
 
@@ -17,7 +18,7 @@ Every distinct block of it is one generated block, al_s<n>; the plane faces nort
 z = 0 of the model, the tail at z = 56), x across with the captain's side to the west, y = 0 the
 apron's surface block (so the wheels stand on y = 1). Its own fittings are named blocks: the cabin
 seats, the galleys, the lavatories, the cockpit. The layout of the whole plane, block by block, is
-written to data/zomboidcraft/airliner/twinjet.txt for world/county/Airliner.java to stamp.
+written to data/zomboidcraft/airliner/trijet.txt for world/county/Airliner.java to stamp.
 
     python3 tools/city/airliner.py [--dump DIR]   rewrites the al_ entries in blocks.json and the
                                                   layout; --dump also writes a preview dump of it
@@ -43,7 +44,7 @@ from school import Pic  # noqa: E402
 N = P.N
 HERE = Path(__file__).parent
 ROOT = HERE.parent.parent
-LAYOUT = ROOT / "src/main/resources/data/zomboidcraft/airliner/twinjet.txt"
+LAYOUT = ROOT / "src/main/resources/data/zomboidcraft/airliner/trijet.txt"
 BOLD = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
 NS = None
 
@@ -64,7 +65,7 @@ BELLY_Y = 5.6
 TITLE_Y = (9.25, 10.55)
 TITLE_Z = (13, 23)
 # doors: (side -1 west / +1 east, first z, blocks wide, open)
-DOORS = [(-1, 10, 2, True), (1, 10, 2, False), (-1, 42, 2, True), (1, 42, 2, False)]
+DOORS = [(-1, 10, 2, True), (1, 10, 2, False), (-1, 42, 2, True), (1, 42, 2, True)]
 EXITS = [(-1, 27), (1, 27), (-1, 28), (1, 28)]
 WINDOWS_Z = (14, 40)
 REG_Y, REG_Z = (9.2, 9.9), (37, 40)
@@ -586,20 +587,6 @@ def wings(sh):
     th = lambda a: 1.0 - 0.7 * (a - 2) / 25  # noqa: E731
     for side in (-1, 1):
         planform(sh, 2.0, 27.0, le, te, ym, th, wing_mats, side, top_tex=walkway)
-        # the winglet, canted out and swept, navy: each piece of it turned about its own middle
-        a = -14 * side
-        for k in range(12):
-            hk = 0.32 + k * 0.25
-            ch = 2.3 - 0.12 * (k + 0.5)
-            za = le(27) + 0.25 + 0.18 * (k + 0.5)
-            cx = 27.0 * side - math.sin(math.radians(a)) * hk
-            cy = ym(27) + math.cos(math.radians(a)) * hk
-            z = za
-            while z < za + ch - 1e-6:
-                zb = min(za + ch, math.floor(z) + 1.0)
-                sh.add(Box([cx - 0.07, cy - 0.125, z], [cx + 0.07, cy + 0.125, zb], all_faces("al_navy"),
-                           ("z", a, [cx, cy, (z + zb) / 2])))
-                z = zb
         # the navigation light at the tip
         x = 27.0 * side
         sh.add(Box([x - 0.1, ym(27) - 0.1, le(27) + 0.6], [x + 0.1, ym(27) + 0.1, le(27) + 0.9],
@@ -610,34 +597,80 @@ def wings(sh):
             z0 = te(a) - 2.2
             sh.add(Box([x - 0.18, ym(a) - 0.75, z0], [x + 0.18, ym(a) - 0.2, te(a) + 0.9],
                        all_faces("al_wing_under")))
-        engine(sh, 11.0 * side, ym(11) - 0.36 * th(11))
     # the main gear under the wing roots
     for side in (-1, 1):
         gear(sh, 4.6 * side, 29.4, ym(4.6) - 0.36 * th(4.6), 0.92, 0.62)
     gear(sh, 0.0, 6.6, nose(6.6)[0] - nose(6.6)[1] + 0.2, 0.72, 0.4, nosegear=True)
 
 
-def engine(sh, xe, wing_under):
-    ye = 3.25
-    z0, z1 = 18.0, 26.0
-    prof = lambda z: 1.52 if z < 18.25 else 1.7 if z < 23.5 else 1.7 - 0.45 * (z - 23.5) / 2.5  # noqa: E731
-    for k in range(int((z1 - z0) * 4)):
+def engine(sh, xe, ye, z0, z1, rmax):
+    """A podded engine along z from z0 to z1 round (xe, ye): the metal lip, the cowl swelling to
+    rmax and closing in to the nozzle, the fan and spinner behind the lip, the exhaust plug."""
+    n = int((z1 - z0) * 4)
+    def prof(z):
+        f = (z - z0) / (z1 - z0)
+        return rmax * (0.9 if f < 0.04 else 1.0 if f < 0.66 else 1.0 - 0.27 * (f - 0.66) / 0.34)
+    for k in range(n):
         za, zb = z0 + k / 4, z0 + (k + 1) / 4
         r = prof((za + zb) / 2)
         lip = k == 0
         ring(sh, za, zb, xe, ye, r,
              lambda x, y, z, t, lip=lip: ("al_metal" if lip else "al_cowl", "al_intake", None, None, False),
-             thick=4.0 if lip else 2.5, ends=("north",) if lip else ("south",) if k == (z1 - z0) * 4 - 1 else ())
-    # the fan behind the lip, the spinner in front of it
-    discfill(sh, 18.55, 18.65, xe, ye, 1.45, lambda c: fan_tile(xe, ye, c), faces=("north",))
-    for k, r in enumerate((0.42, 0.34, 0.22, 0.1)):
-        discfill(sh, 18.55 - (k + 1) * 0.12, 18.55 - k * 0.12, xe, ye, r, "al_spinner", faces=("north", "up", "down", "east", "west"))
-    # the exhaust: the hot nozzle's soot, the plug tapering out of it
-    for k, r in enumerate((0.95, 0.82, 0.66, 0.48, 0.3, 0.14)):
-        discfill(sh, 25.7 + k * 0.33, 26.03 + k * 0.33, xe, ye, r, "al_exhaust_plug", faces=("south", "up", "down", "east", "west"))
-    # the pylon up to the wing
-    sh.add(Box([xe - 0.17, ye + 1.55, 19.2], [xe + 0.17, wing_under + 0.2, 26.6], all_faces("al_cowl")))
-    sh.add(Box([xe - 0.15, ye + 1.0, 25.5], [xe + 0.15, ye + 1.7, 27.6], all_faces("al_cowl")))
+             thick=4.0 if lip else 2.5, ends=("north",) if lip else ("south",) if k == n - 1 else ())
+    fz = z0 + 0.55
+    discfill(sh, fz, fz + 0.1, xe, ye, rmax - 0.25, lambda c: fan_tile(xe, ye, c), faces=("north",))
+    for k, r in enumerate((0.28, 0.22, 0.15, 0.07)):
+        discfill(sh, fz - (k + 1) * 0.1, fz - k * 0.1, xe, ye, r * rmax / 1.0, "al_spinner", faces=("north", "up", "down", "east", "west"))
+    for k, r in enumerate((0.56, 0.48, 0.38, 0.27, 0.16, 0.08)):
+        discfill(sh, z1 - 0.3 + k * 0.25, z1 - 0.05 + k * 0.25, xe, ye, r * rmax, "al_exhaust_plug",
+                 faces=("south", "up", "down", "east", "west"))
+
+
+def tail_engines(sh):
+    """The trijet's three: a pod either side of the tail cone on a stub pylon, the middle one
+    breathing through the intake on the fuselage's crown in front of the fin and blowing out of
+    the cone's tip."""
+    for side in (-1, 1):
+        xe = 5.1 * side
+        engine(sh, xe, 9.6, 44.4, 51.0, 1.3)
+        x0, x1 = sorted((3.1 * side, (5.1 - 1.15) * side))
+        sh.add(Box([x0, 9.42, 45.6], [x1, 9.78, 50.0], all_faces("al_cowl")))
+        sh.add(Box([x0, 9.5, 45.2], [x1, 9.7, 45.6], all_faces("al_metal")))
+    # the middle intake: an oval mouth on the crown, its metal lip, dark duct, and the body
+    # behind it narrowing into the fin's root
+    yi = C + R + 0.45
+    for k in range(22):
+        za, zb = 38.6 + k / 4, 38.6 + (k + 1) / 4
+        f = k / 21
+        rx, ry = 1.05 - 0.4 * max(0.0, f - 0.45) / 0.55, 0.78
+        tex = "al_metal" if k == 0 else "al_paint" if za < 41.4 else "al_navy"
+        oval(sh, za, zb, 0.0, yi, rx, ry, tex, hole=(rx - 0.2, ry - 0.2) if k < 2 else None,
+             faces=("north",) if k < 3 else ())
+    oval(sh, 39.05, 39.1, 0.0, yi, 0.86, 0.6, "al_intake", faces=("north",))
+
+
+def oval(sh, z0, z1, cx, cy, rx, ry, tex, hole=None, faces=(), dx=0.125):
+    """An oval slice (cx, cy, rx, ry) from z0 to z1, its lower half sunk into the crown, in strips
+    dx wide; hole=(hx, hy) leaves the inner oval open (an intake's mouth). faces: the slice's ends
+    to draw besides its sides."""
+    x = cx - rx
+    while x < cx + rx - 1e-6:
+        xa, xb = x, min(cx + rx, x + dx)
+        far = max(abs(xa - cx), abs(xb - cx))
+        h = ry * math.sqrt(max(0.0, 1 - (far / rx) ** 2))
+        if h > 0.02:
+            spans = [(cy - h, cy + h)]
+            if hole:
+                hx, hy = hole
+                if far < hx:
+                    g = hy * math.sqrt(1 - (far / hx) ** 2)
+                    spans = [(cy - h, cy - g), (cy + g, cy + h)]
+            for ya, yb in spans:
+                if yb - ya < 0.02:
+                    continue
+                fs = {e: (tex, None) for e in ("up", "down", "east", "west") + tuple(faces)}
+                sh.add(Box([xa, ya, z0], [xb, yb, z1], fs))
+        x = xb
 
 
 def fan_tile(xe, ye, cell):
@@ -705,21 +738,25 @@ def tail(sh):
         sh.add(Box([-th(my) * 0.33, my - span / 2, mz - 0.06], [th(my) * 0.33, my + span / 2, mz + 0.06],
                    all_faces("al_navy"), ("x", ang, [0.0, my, mz])))
         y = yb
-    # the dorsal fillet running into the fin's root
-    for k in range(10):
-        z0 = 38.0 + k * 0.35
-        top = nose(z0 + 0.2)[0] + nose(z0 + 0.2)[1] + 0.05 + 0.06 * k * k / 9
-        sh.add(Box([-0.22, top - 0.3, z0], [0.22, top, z0 + 0.35], all_faces("al_navy")))
     # the strobe on the cone's tip
     sh.add(Box([-0.08, nose(LEN - 0.2)[0] + 0.45, LEN - 0.4], [0.08, nose(LEN - 0.2)[0] + 0.6, LEN - 0.1],
                all_faces("al_nav_white")))
     # the tailplanes
-    le2 = lambda a: 47.6 + 0.6 * (a - 1.4)  # noqa: E731
-    te2 = lambda a: 53.4 + 0.15 * (a - 1.4)  # noqa: E731
-    ym2 = lambda a: 9.05 + 0.12 * (a - 1.4)  # noqa: E731
-    th2 = lambda a: 0.48 - 0.26 * (a - 1.4) / 9  # noqa: E731
+    # the tailplanes on top of the fin (a T-tail), the bullet fairing where they meet it
+    yt = y1 - 0.25
+    le2 = lambda a: le(yt) + 0.1 + 0.72 * a  # noqa: E731
+    te2 = lambda a: le2(a) + 4.0 - 2.5 * a / 9  # noqa: E731
+    ym2 = lambda a: yt - 0.03 * a  # noqa: E731
+    th2 = lambda a: 0.42 - 0.24 * a / 9  # noqa: E731
+    z = le(yt) - 0.6
+    while z < te(yt) + 1.4 - 1e-6:
+        zb = min(te(yt) + 1.4, math.floor(z) + 1.0)
+        f = (z - le(yt) + 0.6) / (te(yt) - le(yt) + 2.0)
+        w = 0.38 * (1 - (2 * f - 1) ** 4) + 0.06
+        sh.add(Box([-w, yt - w, z], [w, yt + w, zb], all_faces("al_navy")))
+        z = zb
     for side in (-1, 1):
-        planform(sh, 1.4, 10.4, le2, te2, ym2, th2,
+        planform(sh, 0.3, 9.0, le2, te2, ym2, th2,
                  lambda f: ("al_metal", "al_metal", "al_metal") if f < 0.07 else ("al_tailplane", "al_wing_under", "al_wing_under"),
                  side, dx=0.5)
 
@@ -752,6 +789,7 @@ def shell():
     fuselage(sh)
     cabin(sh, bin_rows())
     wings(sh)
+    tail_engines(sh)
     tail(sh)
     bulkheads(sh)
     return sh
@@ -1688,9 +1726,10 @@ def fittings():
         put(x, 7, 46, "al_galley_lo")
         put(x, 8, 46, "al_galley_mid")
         put(x, 9, 46, "al_galley_hi")
-    # the doors open: L1 forward of its opening, L2 the same
+    # the doors open: L1 forward of its opening, L2 the same, R2 across from it (its slide out)
     put(-5, 7, 9, "al_door_leaf", "west")
     put(-5, 7, 41, "al_door_leaf", "west")
+    put(4, 7, 41, "al_door_leaf", "east")
     return out
 
 

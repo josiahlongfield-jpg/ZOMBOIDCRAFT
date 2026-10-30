@@ -81,6 +81,11 @@ public final class County {
         }
     }
 
+    /** The place a named plan spot became ("lab", "stadium", ...), or null (not in this county). */
+    public Place named(String id) {
+        return planned() ? layout().named.get(id) : null;
+    }
+
     /** Called by the layout as it starts, so the roads it builds can already find its places. */
     void layingOut(Layout l) {
         layout = l;

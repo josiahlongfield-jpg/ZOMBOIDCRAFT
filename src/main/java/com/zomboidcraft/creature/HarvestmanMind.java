@@ -38,7 +38,9 @@ public final class HarvestmanMind {
     public static final int IDLE = 0, WANDER = 1, PERCH = 2, CEILING = 3, HIDE = 4, LISTEN = 5, INVESTIGATE = 6,
             STALK = 7, AMBUSH = 8, STRIKE = 9, DRAG = 10, FEED = 11, FLEE = 12, LAIR = 13, REST = 14, ZOMBIE = 15,
             GLIMPSE = 16, LEAVE_BODY = 17, TRAVEL = 18, FEINT = 19, DOOR = 20, HERD = 21, RETREAT = 22, HORDE = 23,
-            SHADOW = 24, SPLIT = 25, DISPLAY = 26;
+            SHADOW = 24, SPLIT = 25, DISPLAY = 26,
+            // its own life when it isn't hunting (HarvestmanGoals)
+            PATROL = 27, LIE_IN_WAIT = 28, FORAGE = 29, WARN = 30, OBSERVE = 31, SHELTER = 32, TEND = 33;
     /**
      * How fast it can go when it wants to (blocks a second): closing on prey, vanishing once seen, getting away hurt;
      * faster than a sprinting player when the prey runs; the lunge itself. It creeps everywhere else.
@@ -47,7 +49,8 @@ public final class HarvestmanMind {
 
     public static final String[] PLANS = {"idle", "wander", "perch", "ceiling", "hide", "listen", "investigate", "stalk",
             "ambush", "strike", "drag", "feed", "flee", "lair", "rest", "zombie", "glimpse", "leave_body", "travel", "feint",
-            "door", "herd", "retreat", "horde", "shadow", "split", "display"};
+            "door", "herd", "retreat", "horde", "shadow", "split", "display", "patrol", "lie_in_wait", "forage", "warn",
+            "observe", "shelter", "tend"};
     /** What a plan is, said plainly (/zc harvestman info). */
     private static final String[] SAY = {"waiting", "wandering", "perching high on a wall", "crossing the ceiling",
             "hiding in the dark", "listening", "going to see what it heard", "stalking %s", "waiting above where %s passes",
@@ -55,7 +58,10 @@ public final class HarvestmanMind {
             "resting in its lair", "hunting a zombie to eat", "letting %s glimpse it", "leaving a body for %s to find",
             "travelling toward %s", "drawing %s off with a noise", "waiting outside the door %s is behind",
             "herding %s toward where it waits", "pretending to flee from %s", "calling the dead down on %s",
-            "following %s along the rooftops", "drawing %s's friends away", "standing lit up where %s can see it"};
+            "following %s along the rooftops", "drawing %s's friends away", "standing lit up where %s can see it",
+            "patrolling its ground", "lying in wait over a way people pass", "searching its ground for the dead to eat",
+            "warning %s off its ground", "watching %s from the dark, learning them", "sheltering in the dark till nightfall",
+            "tending its den"};
 
     /** Every direction it feels along: the 26 neighbours of a cube. */
     static final Vec3[] DIRS;
@@ -77,6 +83,8 @@ public final class HarvestmanMind {
     final HarvestmanEntity h;
     /** The mind games (HarvestmanTricks): waiting at doors, herding, fake retreats, hordes, rooftops, splitting groups. */
     final HarvestmanTricks tricks;
+    /** What it's about when it isn't hunting: its goals, its ground, the people it meets (HarvestmanGoals). */
+    final HarvestmanGoals goals;
 
     // needs, 0..1
     double hunger = 0.4, restless = 0.3, curious = 0.4, wary = 0.15, alert;
@@ -101,14 +109,18 @@ public final class HarvestmanMind {
     int plan = IDLE, forced = -1;
     int planTicks, wait = 20, phase, phaseTicks;
     private int senseTicks;
-    private Vec3 heard;
-    private long heardAt = -10_000;
+    Vec3 heard;
+    long heardAt = -10_000;
     private double heardLoud;
     Entity quarry;
     private Vec3 quarrySeen;
     int watchedTicks, unseenTicks;
     boolean watched;
     private Entity carried;
+    /** The test room's Harvestman (HarvestmanTour): it shows what it does but never strikes a player. */
+    boolean showcase;
+    /** Taking what it caught back to its den. */
+    private boolean dragHome;
     private long glimpseAt, bodyAt;
     private boolean forcedHunt;
     private double hurtRecent;
@@ -125,6 +137,7 @@ public final class HarvestmanMind {
     HarvestmanMind(HarvestmanEntity h) {
         this.h = h;
         this.tricks = new HarvestmanTricks(this);
+        this.goals = new HarvestmanGoals(this);
     }
 
     public String planName() {
@@ -134,7 +147,9 @@ public final class HarvestmanMind {
     /** What it's doing, said plainly. */
     public String doing() {
         String who = quarry instanceof Player p ? p.getName().getString() : quarry != null ? "a zombie" : "someone";
-        return String.format(SAY[plan], who);
+        String now = String.format(SAY[plan], who);
+        // when it isn't hunting, what it's about and why
+        return quarry instanceof Player p && h.level() instanceof ServerLevel sl && p == target(sl) ? now : now + " (" + goals.describe() + ")";
     }
 
     public int stage() {
@@ -183,7 +198,7 @@ public final class HarvestmanMind {
                     return "it only drags and feeds once a strike has caught someone (try do strike)";
                 }
             }
-            case STRIKE, STALK, AMBUSH, GLIMPSE, FEINT, DOOR, HERD, RETREAT, HORDE, SHADOW, SPLIT, DISPLAY -> {
+            case STRIKE, STALK, AMBUSH, GLIMPSE, FEINT, DOOR, HERD, RETREAT, HORDE, SHADOW, SPLIT, DISPLAY, WARN, OBSERVE -> {
                 if (near == null) {
                     return "there's no player within 48 blocks";
                 }
@@ -221,6 +236,10 @@ public final class HarvestmanMind {
             case SPLIT -> "they need someone else with them (within 16 blocks)";
             case DISPLAY -> "it needs somewhere 22-40 blocks off, in front of them, that they can see from where they are";
             case INVESTIGATE, LISTEN -> "there's nobody near for it to hear";
+            case LIE_IN_WAIT -> "it can't find a way people pass, or anywhere dark over it, from here";
+            case SHELTER -> "there's nowhere covered and dark near it";
+            case TEND -> "it has no den";
+            case PATROL, FORAGE -> "it can't find ground to go to from here";
             default -> "it can't find anywhere to do that from here";
         };
     }
@@ -229,12 +248,14 @@ public final class HarvestmanMind {
 
     public boolean sneaking() {
         return plan == STALK || plan == AMBUSH || plan == HIDE || plan == GLIMPSE || plan == LEAVE_BODY || plan == FEINT
+                || plan == OBSERVE || plan == LIE_IN_WAIT || plan == SHELTER
                 || plan == STRIKE && phase == 0 && !watched || tricks.sneaking();
     }
 
     public boolean watching() {
         return h.look != null && (plan == STALK || plan == GLIMPSE || plan == LISTEN || plan == AMBUSH || plan == STRIKE
-                || plan == FEINT || HarvestmanTricks.hunting(plan));
+                || plan == FEINT || plan == WARN || plan == OBSERVE || plan == LIE_IN_WAIT || plan == PATROL
+                || HarvestmanTricks.hunting(plan));
     }
 
     /**
@@ -245,7 +266,7 @@ public final class HarvestmanMind {
         if (plan == STRIKE || plan == DRAG || plan == FEED || plan == FLEE || plan == REST) {
             return -1;
         }
-        if ((plan == STALK || plan == AMBUSH || plan == GLIMPSE || plan == FEINT || HarvestmanTricks.hunting(plan))
+        if ((plan == STALK || plan == AMBUSH || plan == GLIMPSE || plan == FEINT || plan == OBSERVE || HarvestmanTricks.hunting(plan))
                 && quarry instanceof ServerPlayer p && p.isAlive()) {
             return p.distanceToSqr(h) < 40 * 40 ? p.getId() : -1;
         }
@@ -260,7 +281,8 @@ public final class HarvestmanMind {
 
     /** How low it crouches (stalking, hiding), 0..1. */
     public double crouch() {
-        return plan == STALK || plan == HIDE || plan == AMBUSH ? 0.5 : plan == STRIKE && phase == 0 ? 0.3 : 0;
+        return plan == STALK || plan == HIDE || plan == AMBUSH || plan == OBSERVE || plan == LIE_IN_WAIT || plan == SHELTER ? 0.5
+                : plan == STRIKE && phase == 0 ? 0.3 : 0;
     }
 
     /**
@@ -268,13 +290,13 @@ public final class HarvestmanMind {
      * the red comes up when it rears to strike, while it holds and feeds (it lights up), and a little at rest in its den.
      */
     public double camo() {
-        if (plan == FEED || plan == DRAG || tricks.showing()) {
+        if (plan == FEED || plan == DRAG || tricks.showing() || plan == WARN && phase >= 1) {
             return 0;
         }
         if (plan == STRIKE && phase >= 1 || plan == ZOMBIE && phase >= 1) {
             return 0.15;
         }
-        if (plan == REST) {
+        if (plan == REST || plan == TEND) {
             return 0.55;
         }
         return 1;
@@ -290,8 +312,40 @@ public final class HarvestmanMind {
         }
         return switch (plan) {
             case STALK, AMBUSH, STRIKE, DRAG, FEED, ZOMBIE, DOOR, HERD, HORDE, SHADOW, SPLIT, FEINT, RETREAT, GLIMPSE,
-                 DISPLAY -> true;
+                 DISPLAY, LIE_IN_WAIT, FORAGE, WARN, OBSERVE -> true;
             default -> false;
+        };
+    }
+
+    /**
+     * Whether it puts its glow out altogether, skull and all: whenever it means not to be seen (hiding, stalking,
+     * watching, lying in wait, sheltering, its fake-outs, getting into place to strike). It lights up again to warn,
+     * to show itself, to strike and to feed.
+     */
+    public boolean dark() {
+        if (h.held != null) {
+            return false;
+        }
+        return switch (plan) {
+            case HIDE, STALK, OBSERVE, LIE_IN_WAIT, AMBUSH, SHELTER, CEILING, FEINT, RETREAT, SHADOW, SPLIT, DOOR, HERD,
+                 HORDE, LEAVE_BODY -> true;
+            case STRIKE, DISPLAY -> phase == 0;
+            default -> false;
+        };
+    }
+
+    /**
+     * How tight it draws itself in, 0..1 (SpiderIk): legs pulled in under it, body low, torso curled down, tail under.
+     * All the way when it's keeping still out of sight; a little while it creeps.
+     */
+    public double tuck() {
+        boolean still = h.speed < 0.25;
+        return switch (plan) {
+            case HIDE, SHELTER, CEILING -> still ? 1 : 0.35;
+            case LIE_IN_WAIT, AMBUSH, OBSERVE, DOOR -> still ? 0.85 : 0.2;
+            case STALK, SHADOW -> still ? 0.6 : 0.15;
+            case REST -> still ? 0.5 : 0;
+            default -> 0;
         };
     }
 
@@ -346,7 +400,7 @@ public final class HarvestmanMind {
     private boolean done() {
         return switch (plan) {
             case STALK, AMBUSH, STRIKE, DRAG, FEED, LISTEN, REST, GLIMPSE, ZOMBIE, LEAVE_BODY, TRAVEL, FEINT, DOOR, HERD,
-                 RETREAT, HORDE, SHADOW, SPLIT, DISPLAY -> false;
+                 RETREAT, HORDE, SHADOW, SPLIT, DISPLAY, PATROL, LIE_IN_WAIT, FORAGE, WARN, OBSERVE, SHELTER, TEND -> false;
             default -> true;
         };
     }
@@ -402,10 +456,12 @@ public final class HarvestmanMind {
             quarrySeen = p.position();
         }
         tricks.track(target(level));
+        goals.sense(level);
         // bright lamplight: at first it won't stay in it (worse when it's being looked at there); it learns to bear it
         int light = level.getBrightness(net.minecraft.world.level.LightLayer.BLOCK, BlockPos.containing(c));
         boolean roaming = plan == STALK || plan == WANDER || plan == INVESTIGATE || plan == AMBUSH || plan == PERCH
-                || plan == CEILING || plan == FEINT || plan == IDLE;
+                || plan == CEILING || plan == FEINT || plan == IDLE || plan == PATROL || plan == FORAGE || plan == OBSERVE
+                || plan == LIE_IN_WAIT;
         litTicks = light >= 11 && roaming ? litTicks + 5 : 0;
         if (litTicks >= (watched ? 10 : 30) && h.held() == null) {
             litTicks = 0;
@@ -538,6 +594,11 @@ public final class HarvestmanMind {
                 h.look = heard;
             }
             case INVESTIGATE -> start(INVESTIGATE, heard, 1.8);
+            case PATROL, LIE_IN_WAIT, FORAGE, WARN, OBSERVE, SHELTER, TEND -> {
+                if (!goals.begin(level, next)) {
+                    end();
+                }
+            }
             default -> {
                 Vec3 g = spot(next, wasForced ? 28 : 16);
                 if (g == null && wasForced) {
@@ -603,20 +664,11 @@ public final class HarvestmanMind {
                 w[LEAVE_BODY] = 0.3;
             }
         } else {
-            // not hunting: someone in its den is driven out; anyone close is watched from the dark
-            Player near = level.getNearestPlayer(h, 20);
-            if (near != null && !near.isSpectator() && !near.isCreative()) {
-                boolean inLair = lair != null && near.position().distanceToSqr(Vec3.atCenterOf(lair)) < 12 * 12;
-                if (inLair && near.position().distanceTo(c) < 12) {
-                    quarry = near;
-                    return STRIKE;
-                }
-                w[HIDE] += 1.2 * (0.5 + wary);
-                w[PERCH] += 0.4;
+            // not hunting: it gets on with its own life, toward a goal (anyone it meets, it deals with as it senses them)
+            if (lair != null && !atLair && c.distanceToSqr(Vec3.atCenterOf(lair)) > 96 * 96) {
+                return LAIR;    // a long way from home: it makes its way back to its ground first
             }
-            if (lair != null && !atLair && c.distanceToSqr(Vec3.atCenterOf(lair)) > 48 * 48) {
-                w[LAIR] = 1.2;
-            }
+            return goals.next(level, heard, heardAt);
         }
         if (hunger > 0.85 && nearestZombie(level, 32) != null) {
             w[ZOMBIE] = 2 * hunger;
@@ -626,8 +678,7 @@ public final class HarvestmanMind {
             w[INVESTIGATE] = curious * (1 - wary) * 1.5;
             w[HIDE] += wary * 1.2;
         }
-        w[WANDER] += 0.3 + restless;
-        w[PERCH] += 0.25 + 0.3 * ceilingBias;
+        // between its moves on the one it hunts: up out of reach over where they'll pass, or in the dark close by
         w[CEILING] += 0.15 + 0.4 * ceilingBias;
         w[HIDE] += 0.3 + wary + (level.getSkyDarken() < 4 ? 0.5 : 0);
         double total = 0;
@@ -641,7 +692,7 @@ public final class HarvestmanMind {
                 return i;
             }
         }
-        return WANDER;
+        return HIDE;
     }
 
     // ------------------------------------------------------------------------------------------------ acting
@@ -700,6 +751,7 @@ public final class HarvestmanMind {
             case LEAVE_BODY -> leaveBody(level);
             case FEINT -> feint(level);
             case DOOR, HERD, RETREAT, HORDE, SHADOW, SPLIT, DISPLAY -> tricks.act(level);
+            case PATROL, LIE_IN_WAIT, FORAGE, WARN, OBSERVE, SHELTER, TEND -> goals.act(level);
             default -> {
             }
         }
@@ -1026,7 +1078,7 @@ public final class HarvestmanMind {
 
     // striking: in fast, low; it rears up an arm's length off, and lunges
     void startStrike(ServerLevel level, Entity prey) {
-        if (prey == null) {
+        if (prey == null || showcase && prey instanceof Player) {
             return;
         }
         // on its patient nights it only watches the one it hunts (it still drives anyone out of its den)
@@ -1085,8 +1137,14 @@ public final class HarvestmanMind {
                     plan = DRAG;
                     planTicks = 0;
                     Vec3 dark = spot(HIDE, 18);
+                    // one of the dead, near home: it takes it back to its den to eat
+                    dragHome = le instanceof Zombie && lair != null && h.centre().distanceToSqr(Vec3.atCenterOf(lair)) < 64 * 64;
+                    if (dragHome) {
+                        Vec3 den = goals.surfaceNear(level, Vec3.atCenterOf(lair));
+                        dark = den != null ? den : Vec3.atCenterOf(lair);
+                    }
                     h.goal = dark;
-                    h.goalSpeed = 1.7;
+                    h.goalSpeed = dragHome ? 1.5 : 1.7;
                     h.wantFloor = true;
                 } else if (phaseTicks > 22) {
                     // missed: it backs off, hissing, and comes again later
@@ -1113,7 +1171,10 @@ public final class HarvestmanMind {
         }
         h.wantFloor = true;
         h.look = null;
-        if (h.goal == null || near(h.goal, 1.0) || planTicks > (h.held() instanceof Player ? 20 * 6 : 20 * 3)) {
+        boolean home = dragHome && lair != null && h.centre().distanceToSqr(Vec3.atCenterOf(lair)) < 5 * 5;
+        int most = dragHome ? 20 * 50 : h.held() instanceof Player ? 20 * 6 : 20 * 3;
+        if (h.goal == null || home || !dragHome && near(h.goal, 1.0) || planTicks > most) {
+            dragHome = false;
             h.goal = null;
             plan = FEED;
             planTicks = 0;
@@ -1327,10 +1388,13 @@ public final class HarvestmanMind {
         }
         alert = Math.min(1, alert + loud / 30);
         // a loud noise while it's idling or roaming breaks off what it's doing
-        if (plan == IDLE || plan == WANDER || plan == PERCH || plan == CEILING || plan == REST && loud > 20) {
+        if (plan == IDLE || plan == WANDER || plan == PERCH || plan == CEILING || plan == PATROL || plan == FORAGE
+                || plan == REST && loud > 20 || plan == TEND && loud > 20) {
             end();
             wait = 4 + h.getRandom().nextInt(10);
             h.look = pos;
+        } else if (plan == LIE_IN_WAIT || plan == SHELTER) {
+            h.look = pos;   // still where it is; its head turns to it
         }
     }
 
@@ -1356,6 +1420,7 @@ public final class HarvestmanMind {
     }
 
     void hurt(ServerLevel level, Entity by, double amount) {
+        goals.hurt(level, by, amount);
         hurtRecent += amount;
         wary = Math.min(1, wary + amount / 200);
         alert = 1;
@@ -1407,6 +1472,7 @@ public final class HarvestmanMind {
     }
 
     void fed(ServerLevel level, Entity what) {
+        goals.fed(level);
         feeds++;
         hunger = Math.max(0, hunger - (what instanceof Player ? 0.8 : 0.45));
         if (what instanceof Player && feeds % 2 == 0 && stage < 5) {
@@ -1550,6 +1616,44 @@ public final class HarvestmanMind {
         gen = in.getIntOr("hmGen", 0);
         long l = in.getLongOr("hmLair", Long.MIN_VALUE);
         lair = l == Long.MIN_VALUE ? null : BlockPos.of(l);
+    }
+
+    /** What it's learned and how it is, to carry over when it comes out of the dark again as a new copy of itself. */
+    double[] learned() {
+        return new double[] {hunger, bold, patience, stalkDist, ceilingBias, ambushBias, lightNerve, gunNerve, feintBias,
+                tricks.herdBias, tricks.retreatBias, wary, curious, restless};
+    }
+
+    void learned(double[] v, double hoursAway) {
+        if (v == null || v.length < 14) {
+            return;
+        }
+        hunger = v[0];
+        bold = v[1];
+        patience = v[2];
+        stalkDist = v[3];
+        ceilingBias = v[4];
+        ambushBias = v[5];
+        lightNerve = v[6];
+        gunNerve = v[7];
+        feintBias = v[8];
+        tricks.herdBias = v[9];
+        tricks.retreatBias = v[10];
+        wary = v[11];
+        curious = v[12];
+        restless = v[13];
+        away(hoursAway);
+    }
+
+    /** Time it spent out of reach (in-game hours): it got hungrier, and restless, as it would have. */
+    void away(double hours) {
+        if (hours <= 0) {
+            return;
+        }
+        double ticks = hours * 1000;
+        hunger = Math.min(1, hunger + ticks / (20 * 60 * 50));
+        restless = Math.min(1, restless + ticks / (20 * 60 * 3));
+        wary = Math.max(0.05, wary - ticks / (20 * 60 * 4));
     }
 
     /** Its identity for the director, made the first time it's asked for. */

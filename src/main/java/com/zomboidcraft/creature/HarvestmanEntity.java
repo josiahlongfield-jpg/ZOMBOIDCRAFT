@@ -90,6 +90,9 @@ public class HarvestmanEntity extends Mob {
     private static final EntityDataAccessor<Integer> CUT = SynchedEntityData.defineId(HarvestmanEntity.class, EntityDataSerializers.INT);
     /** It's about harming someone (HarvestmanMind.menace): its glow burns red, not blue. */
     private static final EntityDataAccessor<Boolean> MENACE = SynchedEntityData.defineId(HarvestmanEntity.class, EntityDataSerializers.BOOLEAN);
+    /** Its glow put out altogether, skull and all (HarvestmanMind.dark), and how tight it's drawn itself in (tuck). */
+    private static final EntityDataAccessor<Boolean> DARK = SynchedEntityData.defineId(HarvestmanEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Float> TUCK = SynchedEntityData.defineId(HarvestmanEntity.class, EntityDataSerializers.FLOAT);
     private static final List<EntityDataAccessor<org.joml.Vector3fc>> FEET = List.of(FOOT0, FOOT1, FOOT2, FOOT3);
 
     public static final int HUNT = 0, HOLD = 1, FEED = 2, DEAD = 3;
@@ -106,6 +109,8 @@ public class HarvestmanEntity extends Mob {
     public static final int FEED_TICKS = 200, STRUGGLE = 14;
     public static final double SHAKE_OFF = 120;
     private static final double TURN_RATE = 1.9, ACCEL = 1.8, BRAKE = 2.6;
+    /** How fast its body turns on to a new surface (a share a second): slow enough that it pours itself round (SpiderIk). */
+    private static final double TURN_SURF = 4.5;
     /** Where what it holds has its head: under the point of its body, gripped by the beard. */
     private static final Vec3 GRIP = new Vec3(0, -0.64, 0.74);
 
@@ -215,6 +220,14 @@ public class HarvestmanEntity extends Mob {
         return entityData.get(MENACE);
     }
 
+    public boolean dark() {
+        return entityData.get(DARK);
+    }
+
+    public float tuck() {
+        return entityData.get(TUCK);
+    }
+
     public float rear() {
         return entityData.get(REAR);
     }
@@ -256,6 +269,8 @@ public class HarvestmanEntity extends Mob {
         builder.define(RAGE, 0);
         builder.define(CUT, 0);
         builder.define(MENACE, false);
+        builder.define(DARK, false);
+        builder.define(TUCK, 0f);
     }
 
     /** Where it's looking, or null. */
@@ -343,6 +358,8 @@ public class HarvestmanEntity extends Mob {
         }
         entityData.set(WATCH, mind.watchingId(level));
         entityData.set(MENACE, mind.menace());
+        entityData.set(DARK, mind.dark());
+        entityData.set(TUCK, Mth.approach(tuck(), (float) mind.tuck(), 0.06f));
         struck.clear();
         struckAt.clear();
         stepLegs(level, false);
@@ -551,7 +568,7 @@ public class HarvestmanEntity extends Mob {
         if (pause > 0) {
             pause--;
             speed = 0;
-            up = slerp(up, surf, 8 * dt);
+            up = slerp(up, surf, TURN_SURF * dt);
             face(dt, look != null ? look.subtract(c) : pauseLook != null ? pauseLook.subtract(c) : dir);
             stuck = 0;
             lastPos = position();
@@ -644,7 +661,7 @@ public class HarvestmanEntity extends Mob {
             }
         }
         setPos(next.subtract(0, MID, 0));
-        up = slerp(up, pivotT >= 0 ? slerp(pivotFrom, pivotTo, pivotT) : surf, 8 * dt);
+        up = slerp(up, pivotT >= 0 ? slerp(pivotFrom, pivotTo, pivotT) : surf, TURN_SURF * dt);
         if (look != null && (speed < 0.3 || mind.watching())) {
             face(dt, look.subtract(c));
         } else if (speed > 0.05) {

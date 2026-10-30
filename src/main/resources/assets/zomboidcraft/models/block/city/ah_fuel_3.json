@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ah_fuel_3": "zomboidcraft:block/city/ah_fuel_3",
+    "ext_black_metal": "zomboidcraft:block/city/ext_black_metal",
+    "particle": "zomboidcraft:block/city/ah_fuel_3"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        14.5
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ah_fuel_3"
+        },
+        "south": {
+          "texture": "#ext_black_metal",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#ext_black_metal",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#ext_black_metal",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#ext_black_metal",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ext_black_metal",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

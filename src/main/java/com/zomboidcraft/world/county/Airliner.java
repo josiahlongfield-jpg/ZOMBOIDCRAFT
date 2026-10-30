@@ -10,15 +10,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Gray Eagle 214, the twin-jet parked at gate 1 (tools/city/airliner.py): its skin, wings, engines,
- * cabin and cockpit, block by block from data/zomboidcraft/airliner/twinjet.txt. In its own frame
- * the nose is at z = 0 pointing north, the tail at z = 55, the captain's side (and the doors used,
- * L1 at z 10..11 and L2 at z 42..43, on the cabin floor at y = 7) to the west, x = 0 down the
- * middle, y = 0 the apron's surface block, so the wheels stand on y = 1.
+ * Gray Eagle 214, the three-engined jet parked at gate 1 (tools/city/airliner.py): its skin,
+ * wings, engines, cabin and cockpit, block by block from data/zomboidcraft/airliner/trijet.txt. In
+ * its own frame the nose is at z = 0 pointing north, the tail at z = 55, the captain's side (and
+ * the doors used, L1 at z 10..11 and L2 at z 42..43, on the cabin floor at y = 7) to the west, R2
+ * across from L2 on the east (the slide's door), x = 0 down the middle, y = 0 the apron's surface
+ * block, so the wheels stand on y = 1.
  */
 final class Airliner {
-    /** The cabin floor's walking level, the doors' first z and the fuselage's west skin. */
-    static final int FLOOR = 7, L1 = 10, L2 = 42, WEST = -4, LENGTH = 56, SPAN = 28;
+    /** The cabin floor's walking level, the doors' first z and the fuselage's west and east skins. */
+    static final int FLOOR = 7, L1 = 10, L2 = 42, R2 = 42, WEST = -4, EAST = 3, LENGTH = 56, SPAN = 28;
 
     private record Cell(int x, int y, int z, String block) {}
 
@@ -33,9 +34,9 @@ final class Airliner {
                 c = cells;
                 if (c == null) {
                     c = new ArrayList<>();
-                    try (InputStream in = Airliner.class.getResourceAsStream("/data/zomboidcraft/airliner/twinjet.txt")) {
+                    try (InputStream in = Airliner.class.getResourceAsStream("/data/zomboidcraft/airliner/trijet.txt")) {
                         if (in == null) {
-                            throw new IllegalStateException("airliner/twinjet.txt is missing from the jar");
+                            throw new IllegalStateException("airliner/trijet.txt is missing from the jar");
                         }
                         BufferedReader r = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
                         for (String line; (line = r.readLine()) != null; ) {

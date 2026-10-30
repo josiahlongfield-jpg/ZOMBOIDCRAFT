@@ -487,7 +487,7 @@ public final class Floors {
 
         void cellular(boolean law) {
             f.corridor(4 + rng.nextInt(2), true);
-            List<Room> rs = new ArrayList<>(coreThen(16, law ? new String[] {"wc", "kitchen", "library", "files", "board", "store"}
+            List<Room> rs = new ArrayList<>(coreThen(16, law ? new String[] {"wc", "reception", "kitchen", "library", "files", "board"}
                     : new String[] {"wc", "kitchen", "files", "copy", "meeting", "store"}, law ? new String[] {"files", "meeting", "library", "copy"}
                     : new String[] {"meeting", "files", "office", "copy"}));
             rs.addAll(windows(60, 3, 4, law ? new String[] {"office", "office", "office", "exec"} : new String[] {"office", "office", "office", "meeting"}));
@@ -638,7 +638,7 @@ public final class Floors {
                 }
                 int s = facingOut(x, z);
                 int[] back = Floorplan.step(x, z, s + 2);
-                f.place(x, z, (Math.floorMod(x + z, 6) < 3 ? "of_treadmill" : "of_bike") + "[facing=" + Floorplan.face(s) + "]", back);
+                f.place(x, z, (Math.floorMod(x + z, 9) < 3 ? "of_treadmill" : Math.floorMod(x + z, 9) < 6 ? "of_elliptical" : "of_bike") + "[facing=" + Floorplan.face(s) + "]", back);
             }
         }
 
@@ -990,6 +990,7 @@ public final class Floors {
                     f.floors("lobby_floor_dark", "lobby_floor_dark");
                 }
                 case "velvet" -> {
+                    stool = "of_stool_velvet";
                     backBar();
                     booths("of_booth", "of_booth_purple");
                     highTables();
@@ -997,6 +998,7 @@ public final class Floors {
                     f.floors("lobby_floor_dark", "lobby_floor_dark");
                 }
                 case "bar" -> {
+                    stool = "of_stool_velvet";
                     backBar();
                     highTables();
                     groups(3, 5, 7, i -> 0, sofa);
@@ -1518,6 +1520,9 @@ public final class Floors {
          * The club's bar against a wall of the core rooms: the bottles on shelves against the wall,
          * a cell for the bartender, the counter, the stools on the floor side.
          */
+        /** The stool at a bar counter (green velvet in the lounges, after the pub photos). */
+        String stool = "pk_bar_chair";
+
         void backBar() {
             for (int[] c : f.openCells()) {
                 int x = c[0], z = c[1];
@@ -1554,7 +1559,11 @@ public final class Floors {
                         f.put(keep[0], keep[1], Floorplan.CLEAR);
                         if (f.place(counter[0], counter[1], (i == n / 2 ? "trade_bar_taps" : "trade_bar") + "[facing=" + Floorplan.face(s + 2) + "]", null)
                                 && rng.nextDouble() < 0.8) {
-                            f.place(stool[0], stool[1], "pk_bar_chair[facing=" + Floorplan.face(s) + "]", null);
+                            f.place(stool[0], stool[1], this.stool + (this.stool.equals("pk_bar_chair") ? "[facing=" + Floorplan.face(s) + "]" : ""), null);
+                        }
+                        // pendants over the counter
+                        if (i % 2 == 1) {
+                            f.set(counter[0], f.rows, counter[1], "tx_pendant");
                         }
                     }
                     return;
@@ -1931,7 +1940,22 @@ public final class Floors {
             }
 
             void reception() {
-                deskFacingDoor("cv_circ_desk");
+                // after the photos: a clinic's marble counter on its lit plinth; a firm's slatted
+                // oak wall behind the desk with its sign; a gym's drinking fountain by the door
+                boolean clinic = type == Type.MEDICAL || type == Type.DENTAL;
+                deskFacingDoor(clinic ? "of_reception_marble" : "cv_circ_desk");
+                if (type == Type.LAW || type == Type.EXECUTIVE) {
+                    for (int i = 0; i < 3; i++) {
+                        wall("of_slat_wall[facing=%s]", true);
+                    }
+                    hang("of_firm_sign[facing=%s]");
+                }
+                if (type == Type.GYM) {
+                    hang("of_drink_fountain[facing=%s]");
+                }
+                if (clinic) {
+                    wall("home_tv[facing=%s]", false);
+                }
                 several(2 + rng.nextInt(2), false, "home_sofa_blue_m[facing=%s]", "home_armchair_blue[facing=%s]", "pk_armchair_green[facing=%s]");
                 several(2, false, "pk_houseplant[facing=%s]", "trade_water_cooler[facing=%s]", "home_coffee_table[facing=%s]");
             }
@@ -1957,12 +1981,15 @@ public final class Floors {
                 wall("of_exam_table[facing=%s]", false);
                 several(2, false, "fit_medcab[facing=%s]", "fit_sink_cabin[facing=%s]", "bunk_medcab[facing=%s]");
                 wall("bunk_iv_stand", false);
+                wall("of_vitals_stand[facing=%s]", false);
+                hang("hs_sharps[facing=%s]");
                 hang("sc_eye_chart[facing=%s]");
                 deskFacingDoor("desk");
             }
 
             void dental() {
                 wall("of_dental_chair[facing=%s]", false);
+                wall("of_vitals_stand[facing=%s]", false);
                 several(2, false, "fit_medcab[facing=%s]", "fit_sink_cabin[facing=%s]", "fit_counter_steel[facing=%s]");
                 hang("fit_surgical");
             }
@@ -2102,6 +2129,8 @@ public final class Floors {
             /** The wine room: racks floor to ceiling all round, a tasting table. */
             void wine() {
                 several(Math.max(4, r.area() / 2), true, "cellar_wine_rack[facing=%s]");
+                // casks on their cradles down the middle, after the cellar photos
+                table("of_wine_cask[axis=" + (r.w() >= r.d() ? "x" : "z") + "]", "air", true);
                 table("pk_coffee_table[facing=north]", "pk_bar_chair[facing=%s]", false);
             }
 

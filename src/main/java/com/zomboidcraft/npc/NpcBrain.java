@@ -2,6 +2,7 @@ package com.zomboidcraft.npc;
 
 import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.combat.GunType;
+import com.zomboidcraft.survival.Drinks;
 import com.zomboidcraft.survival.ModDamageTypes;
 import com.zomboidcraft.zombie.Noise;
 import java.util.EnumSet;
@@ -61,7 +62,12 @@ final class NpcBrain {
 
         @Override
         public boolean canUse() {
-            from = nearestZombie(npc, gun(npc) != null ? FLEE_ARMED : FLEE_UNARMED, false);
+            // fear pushes the distance out; in a panic she runs even with a gun in her hands
+            if (npc.work.asleep) {
+                return false;
+            }
+            double range = (gun(npc) != null && !npc.mind.panicking() ? FLEE_ARMED : FLEE_UNARMED) * npc.mind.flightScale();
+            from = nearestZombie(npc, range, false);
             if (from == null) {
                 return false;
             }
@@ -69,8 +75,9 @@ final class NpcBrain {
             if (away == null || away.distanceToSqr(from.position()) < from.distanceToSqr(npc)) {
                 return false;
             }
-            npc.getNavigation().moveTo(away.x, away.y, away.z, 1.7);
-            npc.say(NpcLines.Kind.FLEE);
+            npc.getNavigation().moveTo(away.x, away.y, away.z, 1.7 * npc.mind.pace());
+            npc.mind.jolt(12f);
+            npc.say(npc.mind.panicking() ? NpcLines.Kind.PANIC : NpcLines.Kind.FLEE);
             return true;
         }
 
@@ -98,7 +105,8 @@ final class NpcBrain {
 
         @Override
         public boolean canUse() {
-            if (gun(npc) == null) {
+            // asleep she sees nothing; a zombie close by or her own alarm wakes her first
+            if (gun(npc) == null || npc.work.asleep) {
                 return false;
             }
             target = nearestZombie(npc, SHOOT_RANGE, true);
@@ -167,11 +175,12 @@ final class NpcBrain {
         private void fire(GunType type, ZcConfig.GunStats stats) {
             ServerLevel level = (ServerLevel) npc.level();
             Vec3 eye = npc.getEyePosition();
-            boolean head = npc.getRandom().nextFloat() < 0.2f;
+            boolean head = npc.getRandom().nextFloat() < 0.12f + 0.025f * npc.skills.level(NpcSkills.Skill.AIM);
             Vec3 aimAt = head ? target.getEyePosition() : target.position().add(0, target.getBbHeight() * 0.6, 0);
             Vec3 dir = aimAt.subtract(eye).normalize();
-            // about two degrees of wobble
-            dir = dir.add(npc.getRandom().nextGaussian() * 0.02, npc.getRandom().nextGaussian() * 0.02, npc.getRandom().nextGaussian() * 0.02).normalize();
+            // about two degrees of wobble when she's steady; pain, tiredness and fear shake it (NpcMind.wobble)
+            double wobble = 0.02 * npc.mind.wobble() * (1.25 - 0.06 * npc.skills.level(NpcSkills.Skill.AIM));
+            dir = dir.add(npc.getRandom().nextGaussian() * wobble, npc.getRandom().nextGaussian() * wobble, npc.getRandom().nextGaussian() * wobble).normalize();
             Vec3 muzzle = eye.add(dir.scale(0.8)).add(0, -0.15, 0);
             // never through a friend
             for (Player p : level.players()) {
@@ -180,6 +189,8 @@ final class NpcBrain {
                 }
             }
             npc.shot();
+            npc.mind.add(NpcMind.Need.ADRENALINE, 3f);
+            npc.work.practise(npc, NpcSkills.Skill.AIM, 1f);
             level.playSound(null, muzzle.x, muzzle.y, muzzle.z, type.shot(false, false), SoundSource.NEUTRAL, 1.4f,
                     0.95f + npc.getRandom().nextFloat() * 0.1f);
             level.sendParticles(ParticleTypes.SMOKE, muzzle.x, muzzle.y, muzzle.z, 2, 0.03, 0.03, 0.03, 0.01);
@@ -194,6 +205,10 @@ final class NpcBrain {
                 boolean headHit = through.get().y > target.getEyeY() - 0.25;
                 float damage = (float) (stats.damage * (headHit ? stats.headshotMultiplier : 1));
                 target.hurtServer(level, ModDamageTypes.source(level, ModDamageTypes.BULLET, npc), damage);
+                if (!target.isAlive()) {
+                    npc.mind.killed(npc);
+                    npc.work.practise(npc, NpcSkills.Skill.AIM, 3f);
+                }
             }
         }
     }
@@ -210,7 +225,7 @@ final class NpcBrain {
 
         @Override
         public boolean canUse() {
-            if (!npc.getMainHandItem().isEmpty()) {
+            if (!npc.getMainHandItem().isEmpty() || npc.work.asleep) {
                 return false;
             }
             item = null;
@@ -259,6 +274,86 @@ final class NpcBrain {
         }
     }
 
+    /**
+     * Goes for food or a drink she sees lying about when she needs it (hungry or thirsty past FORAGE_FROM), and has it
+     * there and then. Drop her something and she'll pick it up.
+     */
+    static final class Forage extends Goal {
+        private static final float FORAGE_FROM = 35f;
+        private final NpcEntity npc;
+        private ItemEntity item;
+
+        Forage(NpcEntity npc) {
+            this.npc = npc;
+            setFlags(EnumSet.of(Flag.MOVE));
+        }
+
+        /** What a stack does for her hunger and thirst (0, 0 if it's not food or drink). */
+        static float[] value(net.minecraft.world.item.ItemStack stack) {
+            var food = stack.get(net.minecraft.core.component.DataComponents.FOOD);
+            return new float[] {food == null ? 0f : food.nutrition() * 6f, Drinks.thirstValue(stack)};
+        }
+
+        @Override
+        public boolean canUse() {
+            float hunger = npc.mind.get(NpcMind.Need.HUNGER), thirst = npc.mind.get(NpcMind.Need.THIRST);
+            if (hunger < FORAGE_FROM && thirst < FORAGE_FROM || npc.work.asleep || npc.getRandom().nextInt(10) != 0) {
+                return false;
+            }
+            item = null;
+            double best = Double.MAX_VALUE;
+            for (ItemEntity e : npc.level().getEntitiesOfClass(ItemEntity.class, npc.getBoundingBox().inflate(GUN_RANGE), ItemEntity::isAlive)) {
+                float[] v = value(e.getItem());
+                boolean wanted = hunger >= FORAGE_FROM && v[0] > 0 || thirst >= FORAGE_FROM && v[1] > 0;
+                double d = e.distanceToSqr(npc);
+                if (wanted && d < best) {
+                    best = d;
+                    item = e;
+                }
+            }
+            return item != null;
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            return item != null && item.isAlive();
+        }
+
+        @Override
+        public void start() {
+            npc.getNavigation().moveTo(item, 1.1 * npc.mind.pace());
+        }
+
+        @Override
+        public void stop() {
+            item = null;
+        }
+
+        @Override
+        public void tick() {
+            if (item == null) {
+                return;
+            }
+            if (item.distanceToSqr(npc) < 1.8 * 1.8) {
+                net.minecraft.world.item.ItemStack stack = item.getItem();
+                float[] v = value(stack);
+                npc.mind.ate(npc, stack.getHoverName().getString(), v[0], v[1]);
+                npc.playSound(v[0] > 0 ? net.minecraft.sounds.SoundEvents.GENERIC_EAT.value() : net.minecraft.sounds.SoundEvents.GENERIC_DRINK.value(),
+                        0.8f, 0.9f + npc.getRandom().nextFloat() * 0.2f);
+                npc.say(NpcLines.Kind.EAT);
+                stack.shrink(1);
+                if (stack.isEmpty()) {
+                    item.discard();
+                } else {
+                    item.setItem(stack);
+                }
+                item = null;
+            } else if (npc.getNavigation().isDone()) {
+                npc.getNavigation().moveTo(item, 1.1 * npc.mind.pace());
+            }
+        }
+    }
+
     /** Keeps up with her leader: walks when they're a little way off, runs when they're far. */
     static final class Follow extends Goal {
         private final NpcEntity npc;
@@ -300,7 +395,7 @@ final class NpcBrain {
             npc.getLookControl().setLookAt(leader, 10f, npc.getMaxHeadXRot());
             if (--repath <= 0) {
                 repath = 10;
-                npc.getNavigation().moveTo(leader, leader.distanceToSqr(npc) > 10 * 10 ? 1.6 : 1.0);
+                npc.getNavigation().moveTo(leader, (leader.distanceToSqr(npc) > 10 * 10 ? 1.6 : 1.0) * npc.mind.pace());
             }
         }
     }

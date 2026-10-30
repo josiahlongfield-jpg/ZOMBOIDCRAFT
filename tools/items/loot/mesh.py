@@ -154,6 +154,11 @@ def add_cylinder(mesh, boxes, rects):
     c = {o[0]: (lo[o[0]] + hi[o[0]]) / 2, o[1]: (lo[o[1]] + hi[o[1]]) / 2}
     y0, y1 = lo[a], hi[a]
     T = rot_of(first)
+    # an oval bar takes its two radii from the boxes' outer extents; a plain one is round
+    if first.get('oval'):
+        rr = {k: max(b['hi'][k] - b['lo'][k] for b in boxes) / 2 for k in o}
+    else:
+        rr = {k: r for k in o}
 
     def wide(ax):        # the box whose face looking along ax is widest
         return max(boxes, key=lambda b: b['hi'][o[0] if ax == o[1] else o[1]] - b['lo'][o[0] if ax == o[1] else o[1]])
@@ -161,8 +166,8 @@ def add_cylinder(mesh, boxes, rects):
     def pt(theta, y):
         p = np.zeros(3)
         p[a] = y
-        p[o[0]] = c[o[0]] + r * math.cos(theta)
-        p[o[1]] = c[o[1]] + r * math.sin(theta)
+        p[o[0]] = c[o[0]] + rr[o[0]] * math.cos(theta)
+        p[o[1]] = c[o[1]] + rr[o[1]] * math.sin(theta)
         return p
 
     def apply(p):
@@ -185,8 +190,8 @@ def add_cylinder(mesh, boxes, rects):
         ns = []
         for th in (t0, t1, t1, t0):
             n = np.zeros(3)
-            n[o[0]], n[o[1]] = math.cos(th), math.sin(th)
-            ns.append(R3 @ n)
+            n[o[0]], n[o[1]] = math.cos(th) / rr[o[0]], math.sin(th) / rr[o[1]]
+            ns.append(R3 @ (n / np.linalg.norm(n)))
         w = [apply(p) for p in ps]
         # outward winding: the side seen from outside runs counter-clockwise
         if np.dot(np.cross(w[1] - w[0], w[2] - w[0]), ns[0] + ns[1]) < 0:
@@ -259,6 +264,36 @@ def add_sphere(mesh, boxes, rects):
                 mesh.tri([w[k] for k in order], [ts[k] for k in order], [ns[k] for k in order])
 
 
+def add_torus(mesh, tag, boxes, rects, shift):
+    """A ring from its arc of bars: a smooth tube round the circle in the x-y plane, painted the band's colour."""
+    _t, cx, cy, z, R, a, b = tag
+    C = np.array([cx, cy, z]) + shift
+    a, b = a / 2, b / 2
+    key = next((k for k in rects if k[1] == 'south'), next(iter(rects), None))
+    if key is None:
+        return
+    u0, v0, u1, v1 = rects[key]
+    uv = ((u0 + u1) / 32, (v0 + v1) / 32)
+    n_u, n_v = SEGS * 2, 12
+
+    def pt(i, j):
+        th, ph = 2 * math.pi * i / n_u, 2 * math.pi * j / n_v
+        rad = np.array([math.cos(th), math.sin(th), 0.0])
+        p = C + (R + a * math.cos(ph)) * rad + np.array([0, 0, b * math.sin(ph)])
+        n = math.cos(ph) / a * rad + np.array([0, 0, math.sin(ph) / b])
+        return p, n / np.linalg.norm(n)
+
+    for i in range(n_u):
+        for j in range(n_v):
+            cs = [pt(i, j), pt(i + 1, j), pt(i + 1, j + 1), pt(i, j + 1)]
+            for tri in ((0, 1, 2), (0, 2, 3)):
+                w = [cs[k][0] for k in tri]
+                ns = [cs[k][1] for k in tri]
+                if np.dot(np.cross(w[1] - w[0], w[2] - w[0]), sum(ns)) < 0:
+                    w, ns = w[::-1], ns[::-1]
+                mesh.tri(w, [uv] * 3, ns)
+
+
 def rod_groups(parts):
     """Runs of parts that one rod() call made: (start index, count)."""
     out, i = [], 0
@@ -295,6 +330,19 @@ def build(name):
         rects_of.setdefault(key[1], {})[face] = rect
     mesh = Mesh()
     done = set()
+    k = 0
+    while k < len(parts):          # rings: runs of arc bars carrying the same torus tag
+        tag = parts[k].get('torus')
+        if tag is None:
+            k += 1
+            continue
+        end = k
+        while end < len(parts) and parts[end].get('torus') == tag:
+            end += 1
+        rects = {(id(b), f): r for j, b in zip(range(k, end), parts[k:end]) for f, r in rects_of.get(j, {}).items()}
+        add_torus(mesh, tag, parts[k:end], rects, shift)
+        done.update(range(k, end))
+        k = end
     k = 0
     while k < len(parts):          # balls first: runs of rod boxes carrying the same ball tag
         tag = parts[k].get('ball')

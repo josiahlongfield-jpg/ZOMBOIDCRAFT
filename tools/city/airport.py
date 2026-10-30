@@ -27,16 +27,22 @@ world/county/AirportTerminal sets them out. Everything faces north (rotate=facin
   ap_claim_<1..3>: a carousel's number; ap_name_<0..15>: GRAYHAVEN INTERNATIONAL AIRPORT in
   channel letters over the kerb; ap_notice_<k>: the evacuation's paper notices.
 
-The west pier's shops (the Terminal homage, Josiah 19:51 "Main concourse + one pier"), made-up names:
+The homage's shops and fittings (the Terminal homage, Josiah 19:51 "Main concourse + one pier", laid
+out on the map's plan 22:54), made-up names:
 
 - ap_store_<k>_<0..2>: a shop's backlit name box over its front (grilltown the burger counter,
-  sakana the sushi bar, books the walk-through bookshop, coffee the coffee bar); ap_menu_<k>_<0..2>:
+  sakana the sushi bar, books the walk-through bookshop, coffee the coffee bar, reserve the
+  reservations desk, luggage the bag shop); ap_menu_<k>_<0..2>:
   the backlit menu boards behind a counter (grilltown, sakana, coffee);
 - ap_sushi_belt: the sushi bar's counter with the plates going round on its belt, along z
   (rotate=axis); ap_sushi_case: the glass case of fish on the chef's side, its front north;
 - ap_gondola / ap_gondola_top: a bookshop's double-sided shelf run, along z (rotate=axis), two
   high; ap_gondola_end: its end cap of books face out (north); ap_book_table: a table of new books
-  in stacks; ap_mag_rack: the magazine rack, the covers facing north; ap_tray_rack: the trays' trolley.
+  in stacks; ap_mag_rack: the magazine rack, the covers facing north; ap_tray_rack: the trays' trolley;
+- ap_ad_<k>_<0..5>: a backlit advert three by two on a wall (vista, a camera's); ap_paper_plane: a
+  folded paper plane as big as a man hung in the atrium, its nose north; ap_golf_front / ap_golf_rear:
+  the terminal's electric cart, its nose north; ap_fir_trunk / ap_fir_needles(_sparse): the
+  atrium's fir, in the forest's textures.
 
     python3 tools/city/airport.py      rewrites the ap_ entries in blocks.json
 
@@ -93,6 +99,13 @@ STORES = {
     "sakana": ("SAKANA", "SUSHI BAR", (22, 22, 24), (236, 234, 226)),
     "books": ("AIRSIDE BOOKS", "BOOKS  NEWS  GIFTS", (24, 68, 58), (238, 232, 212)),
     "coffee": ("HANGAR COFFEE", "ESPRESSO BAR", (66, 42, 30), (236, 220, 188)),
+    "reserve": ("RESERVATIONS", "TICKETS  CHANGES  STANDBY", (30, 48, 96), (236, 236, 230)),
+    "luggage": ("BAG & GO", "LUGGAGE  TRAVEL GEAR", (40, 40, 44), (240, 190, 60)),
+}
+
+# the backlit adverts on the food court's walls: key -> (headline, line, ground, ink), three by two tiles
+ADS = {
+    "vista": ("VISTA 35", "SEE MORE OF THE WORLD", (18, 30, 58), (240, 236, 226)),
 }
 
 # the menus: key -> rows of (item, price) over three boards
@@ -437,6 +450,17 @@ def store_pic(k):
     elif k == "books":
         p.poly([(10, 22), (28, 18), (28, 46), (10, 50)], fill=ink)
         p.poly([(30, 18), (48, 22), (48, 50), (30, 46)], fill=ink)
+    elif k == "reserve":
+        p.poly([(10, 34), (46, 30), (50, 32), (46, 34)], fill=ink)
+        p.poly([(24, 32), (34, 18), (38, 18), (32, 32)], fill=ink)
+        p.poly([(24, 33), (34, 46), (38, 46), (32, 33)], fill=ink)
+        p.poly([(12, 34), (10, 26), (14, 26), (18, 33)], fill=ink)
+    elif k == "luggage":
+        p.rect(14, 22, 44, 48, fill=ink)
+        p.rect(22, 16, 36, 22, outline=ink, width=3)
+        p.line([(14, 30), (44, 30)], ground, 2)
+        p.ellipse(16, 47, 21, 52, fill=ink)
+        p.ellipse(37, 47, 42, 52, fill=ink)
     else:
         p.rect(14, 22, 38, 46, fill=ink)
         p.ellipse(34, 26, 46, 38, outline=ink, width=3)
@@ -451,6 +475,40 @@ def store(k, i):
     t.alpha[56:] = 0
     t.emit[8:56] = 0.3
     weather(t, rust=0.0, streak=0.25, grime=0.1)
+    return t
+
+
+@lru_cache(maxsize=None)
+def ad_pic(k):
+    """A backlit advert three by two: the night sky over a coast, a camera big at the left, the
+    headline and the line beside it."""
+    head, line, ground, ink = ADS[k]
+    p = Pic(3, 2, ground, 31300 + sum(map(ord, k)))
+    W, H = p.W, p.H
+    for y in range(0, H, 4):
+        f = y / H
+        p.rect(0, y, W, y + 4, fill=tuple(int(c * (1 - f) + d * f) for c, d in zip(ground, (196, 120, 70))))
+    p.poly([(0, H - 30), (W * 0.3, H - 44), (W * 0.55, H - 34), (W, H - 50), (W, H), (0, H)], fill=(20, 22, 30))
+    p.ellipse(W - 52, 14, W - 30, 36, fill=(250, 236, 196))
+    # the camera: body, lens rings, the finder hump, the shutter
+    p.rect(14, 40, 78, 84, fill=(28, 28, 30))
+    p.rect(14, 40, 78, 48, fill=(170, 172, 176))
+    p.rect(30, 32, 52, 40, fill=(28, 28, 30))
+    p.rect(62, 34, 72, 40, fill=(170, 172, 176))
+    p.ellipse(30, 48, 62, 80, fill=(90, 92, 98))
+    p.ellipse(35, 53, 57, 75, fill=(20, 20, 24))
+    p.ellipse(41, 59, 51, 69, fill=(70, 110, 170))
+    size = civic.fit(head, BOLD, 30, W - 110)
+    p.text(96, 34, head, BOLD, size, ink)
+    p.text(97, 34 + size + 6, line, BOLD, 9, ink)
+    p.rect(96, 34 + size + 20, W - 16, 34 + size + 22, fill=(226, 160, 60))
+    return p
+
+
+def ad(k, i):
+    t = ad_pic(k).tile(i, 31320 + sum(map(ord, k)) * 6 + i, smooth=0.5, grime=0.12)
+    t.emit[:] = 0.35
+    weather(t, rust=0.0, streak=0.2, grime=0.08)
     return t
 
 
@@ -607,6 +665,9 @@ def textures():
     for k in MENUS:
         for i in range(3):
             out[f"ap_menu_{k}_{i}"] = lambda k=k, i=i: menu(k, i)
+    for k in ADS:
+        for i in range(6):
+            out[f"ap_ad_{k}_{i}"] = lambda k=k, i=i: ad(k, i)
     out.update({
         "ap_books_retail": lambda: books_retail(31401),
         "ap_books_face": lambda: books_face(31402),
@@ -615,6 +676,9 @@ def textures():
         "ap_fish": lambda: fish(31405),
         "ap_laminate": lambda: F.plain(31406, (226, 224, 218), 0.02, 0.5),
         "ap_wood": lambda: F.plain(31407, (150, 108, 70), 0.06, 0.4),
+        "ap_paper": lambda: F.plain(31408, (240, 238, 230), 0.02, 0.3),
+        "ap_cart_body": lambda: F.plain(31409, (226, 228, 224), 0.03, 0.55),
+        "ap_cart_seat": lambda: F.plain(31410, (40, 52, 84), 0.05, 0.4),
     })
     return out
 
@@ -941,6 +1005,55 @@ def tray_rack():
     return b
 
 
+def paper_plane():
+    """A folded paper plane the size of a man hung in the atrium, its nose north: the two wings as
+    thin sheets widening back to the tail in steps, the keel fold under them, the hanger on top."""
+    b = []
+    for k in range(6):
+        z0, z1 = -6 + k * 4.5, -6 + (k + 1) * 4.5
+        w = 0.8 + k * 2.4
+        y = 8 + k * 0.35
+        b.append([8 - w, y, z0, 8, y + 0.3, z1, "ap_paper"])
+        b.append([8, y, z0, 8 + w, y + 0.3, z1, "ap_paper"])
+        b.append([7.85, y - 0.6 - k * 0.55, z0, 8.15, y, z1, "ap_paper"])
+    b.append([7.9, 8.3, 4, 8.1, 16, 4.2, STEEL])
+    b.append([7.9, 9.5, 16, 8.1, 16, 16.2, STEEL])
+    return b
+
+
+def golf_wheel(x0, x1, z, r=3.2):
+    a = r * 0.4142
+    t = {"axis": "x", "angle": 45, "origin": [8, r, z]}
+    tyre = [[x0, 0, z - a, x1, 2 * r, z + a, "gs_tyre"], [x0, r - a, z - r, x1, r + a, z + r, "gs_tyre"]]
+    return tyre + [q + [None, t] for q in tyre] + [[x0 - 0.2, r - 1.4, z - 1.4, x1 + 0.2, r + 1.4, z + 1.4, CHROME]]
+
+
+def golf(front):
+    """The terminal's electric cart, two blocks, its nose north: the white body, the bench seats,
+    the canopy on its four posts, the bag rack at the back."""
+    body = "ap_cart_body"
+    b = [[1, 3, 0 if front else 0, 15, 5, 16, body]]
+    b += golf_wheel(0, 2, 5 if front else 10) + golf_wheel(14, 16, 5 if front else 10)
+    if front:
+        b += [[1.5, 5, 0, 14.5, 10, 6, body], [1, 4, -0.5, 15, 7, 0.5, PLASTIC_BLACK],
+              [3, 8, 1, 5, 9, 2, "ap_paper"], [11, 8, 1, 13, 9, 2, "ap_paper"],
+              [2, 10, 6, 14, 13, 7, PLASTIC_BLACK],
+              [6, 10, 9, 7, 15, 10, PLASTIC_BLACK], [4.5, 14.5, 8.5, 8.5, 15.2, 11.5, PLASTIC_BLACK],
+              [2, 5, 10, 14, 8, 16, "ap_cart_seat"], [1, 13, 6.5, 2, 26, 7.5, CHROME], [14, 13, 6.5, 15, 26, 7.5, CHROME],
+              [0.5, 26, 6, 15.5, 27, 16, body], [2, 13, 6.4, 14, 22, 6.6, "rp_glass"]]
+    else:
+        b += [[2, 5, 0, 14, 13, 2, "ap_cart_seat"], [2, 5, 2, 14, 8, 8, "ap_cart_seat"],
+              [2, 5, 8, 14, 13, 10, "ap_cart_seat"], [2, 5, 10, 14, 8, 15, "ap_cart_seat"],
+              [1, 13, 14, 2, 26, 15, CHROME], [14, 13, 14, 15, 26, 15, CHROME],
+              [0.5, 26, 0, 15.5, 27, 15, body], [1, 5, 15, 15, 6, 16.5, CHROME]]
+    return b
+
+
+def lightbox(face):
+    tex = {"north": face, "side": "home_chrome", "up": "home_chrome", "down": "home_chrome", "south": BLACK_METAL}
+    return [[0, 0, 13, 16, 16, 16, tex]]
+
+
 def blocks():
     out = {}
 
@@ -1022,6 +1135,19 @@ def blocks():
     add("ap_book_table", book_table(), "Book Table", [[0, 0, 0, 16, 15.5, 16]], sound="WOOD")
     add("ap_mag_rack", mag_rack(), "Magazine Rack", [[0, 0, 5, 16, 16, 16]])
     add("ap_tray_rack", tray_rack(), "Tray Trolley", [[1, 0, 1, 15, 16, 15]])
+    for k in ADS:
+        for i in range(6):
+            n = f"ap_ad_{k}_{i}"
+            add(n, lightbox(n), "Advert", [[0, 0, 13, 16, 16, 16]], light=8, decor=True)
+    add("ap_paper_plane", paper_plane(), "Paper Plane", [[0, 4, 0, 16, 12, 16]], sound="WOOL", decor=True)
+    add("ap_golf_front", golf(True), "Terminal Cart", [[0, 0, 0, 16, 16, 16]])
+    add("ap_golf_rear", golf(False), "Terminal Cart", [[0, 0, 0, 16, 16, 16]])
+    # the atrium's fir: the forest's bark and needles, but its own blocks, so the tidy-up that keeps
+    # trees out from under roofs leaves this one, planted under the lantern on purpose, standing
+    out["ap_fir_trunk"] = {"tex": {"side": "tree_fir_bark", "up": "tree_fir_rings", "down": "tree_fir_rings"},
+                           "title": "Atrium Fir", "sound": "WOOD"}
+    out["ap_fir_needles"] = {"tex": "tree_fir_leaves", "title": "Atrium Fir", "sound": "GRASS", "render": "cutout"}
+    out["ap_fir_needles_sparse"] = {"tex": "tree_fir_leaves_sparse", "title": "Atrium Fir", "sound": "GRASS", "render": "cutout"}
     return out
 
 
