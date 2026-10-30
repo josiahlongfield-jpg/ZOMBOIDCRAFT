@@ -1,0 +1,113 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "corrugated_grey": "zomboidcraft:block/city/corrugated_grey",
+    "mf_vault": "zomboidcraft:block/city/mf_vault",
+    "mf_vault_in": "zomboidcraft:block/city/mf_vault_in",
+    "particle": "zomboidcraft:block/city/mf_vault_in"
+  },
+  "elements": [
+    {
+      "from": [
+        4.304,
+        -1.469,
+        0
+      ],
+      "to": [
+        6.304,
+        20.531,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mf_vault_in",
+          "uv": [
+            9.696,
+            0,
+            11.696,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#mf_vault_in",
+          "uv": [
+            4.304,
+            0,
+            6.304,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#mf_vault_in",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#mf_vault",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#mf_vault_in"
+        },
+        "down": {
+          "texture": "#mf_vault_in"
+        }
+      },
+      "rotation": {
+        "origin": [
+          4.304,
+          9.531,
+          8
+        ],
+        "axis": "z",
+        "angle": -22.5
+      }
+    },
+    {
+      "from": [
+        9.618,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#corrugated_grey",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#corrugated_grey",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#corrugated_grey",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#corrugated_grey"
+        },
+        "up": {
+          "texture": "#corrugated_grey",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#corrugated_grey",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
