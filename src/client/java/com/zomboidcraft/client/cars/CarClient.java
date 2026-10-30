@@ -173,16 +173,16 @@ public final class CarClient {
                     continue;
                 }
                 // outside the car on the handle's side, within arm's reach of the door, level with it; a handle
-                // on the middle line is climbed to from behind (the Warthog's gun)
+                // on the middle line (the Warthog's gun, lit on its grips) is climbed to from behind the car
                 boolean back = Math.abs(h[0]) < 0.05f;
-                double out = back ? h[2] - at.z : Math.signum(h[0]) * at.x - Math.abs(h[0]);
+                double out = back ? -m.size[2] / 2 - at.z : Math.signum(h[0]) * at.x - Math.abs(h[0]);
                 if (out < -0.15 || out > (back ? 1.6 : 1.3) || (back ? Math.abs(at.x) > 1.3 : Math.abs(at.z - h[2]) > 1.1)) {
                     continue;
                 }
                 Vec3 to = car.toWorld(h).subtract(eye);
                 double d = to.length();
                 double cos = d < 1e-3 ? 1 : to.dot(look) / d;
-                if (d < DOOR_REACH && cos > bestCos) {
+                if (d < (back ? 3.2 : DOOR_REACH) && cos > bestCos) {
                     bestCos = cos;
                     best = new Target(car, s, h, com.zomboidcraft.client.interact.Interactables.SIZE, seatName(m, s));
                 }

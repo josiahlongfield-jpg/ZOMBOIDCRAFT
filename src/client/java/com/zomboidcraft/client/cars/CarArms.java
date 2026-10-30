@@ -96,6 +96,22 @@ final class CarArms {
         }
     }
 
+    /** Both arms from given shoulders to given grips (the gunner at a mounted gun, whose shoulders turn with it). */
+    static void grips(PoseStack pose, SubmitNodeCollector out, int light, Vector3f leftShoulder, Vector3f leftHand, Vector3f leftPalm,
+                      Vector3f rightShoulder, Vector3f rightHand, Vector3f rightPalm) {
+        Minecraft mc = Minecraft.getInstance();
+        LocalPlayer player = mc.player;
+        if (player == null || !(mc.getEntityRenderDispatcher().getRenderer(player) instanceof AvatarRenderer<?> avatar)) {
+            return;
+        }
+        PlayerSkin skin = player.getSkin();
+        PlayerModel model = avatar.getModel();
+        Identifier texture = skin.body().texturePath();
+        boolean slim = skin.model() == PlayerModelType.SLIM;
+        arm(pose, out, light, texture, model.leftArm, model.leftSleeve, slim ? 0.5f : 1f, leftHand, leftShoulder, leftPalm, SLIM);
+        arm(pose, out, light, texture, model.rightArm, model.rightSleeve, slim ? -0.5f : -1f, rightHand, rightShoulder, rightPalm, SLIM);
+    }
+
     /** A point on the rim, angle round from the top toward the driver's left. */
     private static Vector3f rim(Vector3f c, Vector3f up, Vector3f left, float r, float angle) {
         return new Vector3f(c).add(new Vector3f(up).mul((float) Math.cos(angle) * r)).add(new Vector3f(left).mul((float) Math.sin(angle) * r));

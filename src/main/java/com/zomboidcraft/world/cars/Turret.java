@@ -161,19 +161,38 @@ public final class Turret {
         boolean firing = held && spin >= 1f && car.belt() > 0;
         if (firing != car.turretFiring()) {
             car.setTurretFiring(firing);
+            if (!firing) {
+                stopLoop(car, level);
+            }
         }
         if (held && spin >= 1f && car.belt() <= 0 && level.getGameTime() % 8 == 0 && gunner != null) {
             level.playSound(null, gunner.getX(), gunner.getEyeY(), gunner.getZ(), GunType.ASSAULT_RIFLE.dry(), SoundSource.PLAYERS, 0.8f, 0.7f);
             gunner.sendOverlayMessage(Component.literal("The belt's empty. R loads it from your 5.56 rounds.").withStyle(ChatFormatting.RED));
         }
         if (!firing) {
-            car.turretOwed = 0;
+            car.fireTicks = 0;
             return;
         }
-        car.turretOwed += stats.autoRpm / 1200.0;
-        while (car.turretOwed >= 1 && car.belt() > 0) {
-            car.turretOwed -= 1;
+        // in step with the recording: its loop from the top every loopTicks, and each group of rounds half on the
+        // tick the group's first shot is heard, the rest on the next (the four shots are 45 ms apart)
+        int t = car.fireTicks++;
+        if (t % Math.max(1, stats.loopTicks) == 0) {
+            Vec3 at = car.toWorld(move(m.turret, m.turret.muzzle, yaw(gunner.getYRot(), car.getYRot()), pitch(m.turret, gunner.getXRot())));
+            level.playSound(null, at.x, at.y, at.z, ModSounds.MINIGUN_LOOP, SoundSource.PLAYERS, 1f, 1f);
+        }
+        int g = t % Math.max(1, stats.groupTicks);
+        int rounds = g == 0 ? (stats.groupRounds + 1) / 2 : g == 1 ? stats.groupRounds / 2 : 0;
+        for (int i = 0; i < rounds && car.belt() > 0; i++) {
             round(car, m, (ServerPlayer) gunner, stats, level);
+        }
+    }
+
+    /** The firing loop cut off where it is (the run-down plays over it), for everyone who could hear it. */
+    private static void stopLoop(CarProp car, ServerLevel level) {
+        var stop = new net.minecraft.network.protocol.game.ClientboundStopSoundPacket(
+                net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT.getKey(ModSounds.MINIGUN_LOOP), SoundSource.PLAYERS);
+        for (ServerPlayer p : PlayerLookup.around(level, car.position(), 160)) {
+            p.connection.send(stop);
         }
     }
 
@@ -194,9 +213,7 @@ public final class Turret {
         Vec3 up = right.cross(aim).normalize();
         Vec3 dir = aim.add(right.scale(Math.cos(a) * Math.tan(spread))).add(up.scale(Math.sin(a) * Math.tan(spread))).normalize();
         Vec3 stop = Guns.mountedRound(gunner, muzzle, dir, stats, car, n % 2 == 0);
-        // one take per round, heard by everyone, gunner included
-        level.playSound(null, muzzle.x, muzzle.y, muzzle.z, ModSounds.MINIGUN_SHOT, SoundSource.PLAYERS, 1f,
-                0.97f + gunner.getRandom().nextFloat() * 0.06f);
+        // the sound is the firing loop's (tick), each round in it
         if (n % 3 == 0) {
             level.playSound(null, muzzle.x, muzzle.y - 0.4, muzzle.z, Guns.casing(GunType.ASSAULT_RIFLE), SoundSource.PLAYERS, 0.35f,
                     0.9f + gunner.getRandom().nextFloat() * 0.25f);

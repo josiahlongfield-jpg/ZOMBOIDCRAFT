@@ -1387,8 +1387,17 @@ public final class ZcConfig {
             aimSpread = 1.2;
             shotNoise = 140.0;
             range = 160.0;
-            autoRpm = 1500.0;
+            autoRpm = 945.0;
         }
+
+        /**
+         * Its rhythm, matched to the recording (Josiah: the old steady 1500 rpm ran far ahead of it): rounds come in
+         * groups of groupRounds, a group every groupTicks ticks, and the sound's loop restarts every loopTicks.
+         * 4 every 5 ticks is about 945 rpm.
+         */
+        public int groupRounds = 4;
+        public int groupTicks = 5;
+        public int loopTicks = 25;
 
         /** Seconds the barrels take to spin up before it fires, and to run down after. */
         public double spinUpSeconds = 0.6;

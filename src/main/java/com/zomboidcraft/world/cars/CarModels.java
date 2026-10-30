@@ -115,6 +115,9 @@ public final class CarModels {
     public static final class Turret {
         public float[] yaw, pitch, muzzle;
         public float rest, up, down;
+        /** The gun's two grips at rest (left, right), where the gunner's hands go; and the view's narrowing on right-click. */
+        public float[][] grips;
+        public float zoom = 0.6f;
     }
 
     private static final class Index {
