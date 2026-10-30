@@ -1,0 +1,86 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "an_blade": "zomboidcraft:block/city/an_blade",
+    "particle": "zomboidcraft:block/city/an_blade"
+  },
+  "elements": [
+    {
+      "from": [
+        -6.191,
+        2.369,
+        7.68
+      ],
+      "to": [
+        6.823,
+        6.599,
+        8.96
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_blade",
+          "uv": [
+            2.986,
+            9.401,
+            16,
+            13.631
+          ]
+        },
+        "south": {
+          "texture": "#an_blade",
+          "uv": [
+            0,
+            9.401,
+            13.014,
+            13.631
+          ]
+        },
+        "east": {
+          "texture": "#an_blade",
+          "uv": [
+            7.04,
+            9.401,
+            8.32,
+            13.631
+          ]
+        },
+        "west": {
+          "texture": "#an_blade",
+          "uv": [
+            7.68,
+            9.401,
+            8.96,
+            13.631
+          ]
+        },
+        "up": {
+          "texture": "#an_blade",
+          "uv": [
+            0,
+            7.68,
+            13.014,
+            8.96
+          ]
+        },
+        "down": {
+          "texture": "#an_blade",
+          "uv": [
+            0,
+            7.04,
+            13.014,
+            8.32
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          0.316,
+          4.484,
+          8.32
+        ],
+        "axis": "z",
+        "angle": -45.0
+      }
+    }
+  ]
+}

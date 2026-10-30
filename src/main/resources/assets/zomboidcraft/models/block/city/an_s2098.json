@@ -1,0 +1,129 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_dark": "zomboidcraft:block/city/al_dark",
+    "al_paint": "zomboidcraft:block/city/al_paint",
+    "an_skyline_main": "zomboidcraft:block/city/an_skyline_main",
+    "particle": "zomboidcraft:block/city/al_dark"
+  },
+  "elements": [
+    {
+      "from": [
+        -0.814,
+        0.84,
+        12.0
+      ],
+      "to": [
+        -0.564,
+        3.84,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_dark",
+          "uv": [
+            15.75,
+            12.16,
+            16,
+            15.16
+          ]
+        },
+        "south": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            0,
+            12.16,
+            0.25,
+            15.16
+          ]
+        },
+        "up": {
+          "texture": "#al_dark",
+          "uv": [
+            0,
+            12.0,
+            0.25,
+            16.0
+          ]
+        },
+        "down": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            0,
+            0.0,
+            0.25,
+            4.0
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          2.335,
+          0.84,
+          14.0
+        ],
+        "axis": "z",
+        "angle": -21.1
+      }
+    },
+    {
+      "from": [
+        -0.564,
+        0.84,
+        12.0
+      ],
+      "to": [
+        5.484,
+        3.84,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_dark",
+          "uv": [
+            9.952,
+            12.16,
+            16,
+            15.16
+          ]
+        },
+        "south": {
+          "texture": "#al_paint",
+          "uv": [
+            0,
+            12.16,
+            6.048,
+            15.16
+          ]
+        },
+        "up": {
+          "texture": "#al_dark",
+          "uv": [
+            0,
+            12.0,
+            6.048,
+            16.0
+          ]
+        },
+        "down": {
+          "texture": "#al_paint",
+          "uv": [
+            0,
+            0.0,
+            6.048,
+            4.0
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          2.335,
+          0.84,
+          14.0
+        ],
+        "axis": "z",
+        "angle": -21.1
+      }
+    }
+  ]
+}

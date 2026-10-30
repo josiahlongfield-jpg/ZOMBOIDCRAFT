@@ -1,0 +1,59 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_chrome": "zomboidcraft:block/city/al_chrome",
+    "particle": "zomboidcraft:block/city/al_chrome"
+  },
+  "elements": [
+    {
+      "from": [
+        4.64,
+        14.4,
+        0.0
+      ],
+      "to": [
+        8.16,
+        16.0,
+        0.16
+      ],
+      "faces": {
+        "south": {
+          "texture": "#al_chrome",
+          "uv": [
+            4.64,
+            0.0,
+            8.16,
+            1.6
+          ]
+        },
+        "east": {
+          "texture": "#al_chrome",
+          "uv": [
+            15.84,
+            0.0,
+            16.0,
+            1.6
+          ]
+        },
+        "west": {
+          "texture": "#al_chrome",
+          "uv": [
+            0.0,
+            0.0,
+            0.16,
+            1.6
+          ]
+        },
+        "down": {
+          "texture": "#al_chrome",
+          "uv": [
+            4.64,
+            15.84,
+            8.16,
+            16.0
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_dark": "zomboidcraft:block/city/al_dark",
+    "al_paint": "zomboidcraft:block/city/al_paint",
+    "particle": "zomboidcraft:block/city/al_paint"
+  },
+  "elements": [
+    {
+      "from": [
+        1.802,
+        7.075,
+        0
+      ],
+      "to": [
+        4.802,
+        17.076,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_paint",
+          "uv": [
+            11.198,
+            0,
+            14.198,
+            10.001
+          ]
+        },
+        "east": {
+          "texture": "#al_dark",
+          "uv": [
+            0,
+            0,
+            16,
+            10.001
+          ]
+        },
+        "west": {
+          "texture": "#al_paint",
+          "uv": [
+            0,
+            0,
+            16,
+            10.001
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          1.802,
+          12.076,
+          8.0
+        ],
+        "axis": "z",
+        "angle": -25.075
+      }
+    }
+  ]
+}

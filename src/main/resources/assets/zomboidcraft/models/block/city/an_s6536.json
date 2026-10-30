@@ -1,0 +1,247 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "an_spinner": "zomboidcraft:block/city/an_spinner",
+    "particle": "zomboidcraft:block/city/an_spinner"
+  },
+  "elements": [
+    {
+      "from": [
+        8.0,
+        2.633,
+        13.92
+      ],
+      "to": [
+        12.0,
+        13.367,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_spinner",
+          "uv": [
+            4.0,
+            2.633,
+            8.0,
+            13.367
+          ]
+        },
+        "east": {
+          "texture": "#an_spinner",
+          "uv": [
+            0.0,
+            2.633,
+            2.08,
+            13.367
+          ]
+        },
+        "west": {
+          "texture": "#an_spinner",
+          "uv": [
+            13.92,
+            2.633,
+            16.0,
+            13.367
+          ]
+        },
+        "up": {
+          "texture": "#an_spinner",
+          "uv": [
+            8.0,
+            13.92,
+            12.0,
+            16.0
+          ]
+        },
+        "down": {
+          "texture": "#an_spinner",
+          "uv": [
+            8.0,
+            0.0,
+            12.0,
+            2.08
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        12.0,
+        1.55,
+        13.92
+      ],
+      "to": [
+        16.0,
+        14.45,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_spinner",
+          "uv": [
+            0.0,
+            1.55,
+            4.0,
+            14.45
+          ]
+        },
+        "east": {
+          "texture": "#an_spinner",
+          "uv": [
+            0.0,
+            1.55,
+            2.08,
+            14.45
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#an_spinner",
+          "uv": [
+            13.92,
+            1.55,
+            16.0,
+            14.45
+          ]
+        },
+        "up": {
+          "texture": "#an_spinner",
+          "uv": [
+            12.0,
+            13.92,
+            16.0,
+            16.0
+          ]
+        },
+        "down": {
+          "texture": "#an_spinner",
+          "uv": [
+            12.0,
+            0.0,
+            16.0,
+            2.08
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        8.0,
+        6.218,
+        11.04
+      ],
+      "to": [
+        12.0,
+        9.782,
+        13.92
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_spinner",
+          "uv": [
+            4.0,
+            6.218,
+            8.0,
+            9.782
+          ]
+        },
+        "east": {
+          "texture": "#an_spinner",
+          "uv": [
+            2.08,
+            6.218,
+            4.96,
+            9.782
+          ]
+        },
+        "west": {
+          "texture": "#an_spinner",
+          "uv": [
+            11.04,
+            6.218,
+            13.92,
+            9.782
+          ]
+        },
+        "up": {
+          "texture": "#an_spinner",
+          "uv": [
+            8.0,
+            11.04,
+            12.0,
+            13.92
+          ]
+        },
+        "down": {
+          "texture": "#an_spinner",
+          "uv": [
+            8.0,
+            2.08,
+            12.0,
+            4.96
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        12.0,
+        4.003,
+        11.04
+      ],
+      "to": [
+        16.0,
+        11.997,
+        13.92
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_spinner",
+          "uv": [
+            0.0,
+            4.003,
+            4.0,
+            11.997
+          ]
+        },
+        "east": {
+          "texture": "#an_spinner",
+          "uv": [
+            2.08,
+            4.003,
+            4.96,
+            11.997
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#an_spinner",
+          "uv": [
+            11.04,
+            4.003,
+            13.92,
+            11.997
+          ]
+        },
+        "up": {
+          "texture": "#an_spinner",
+          "uv": [
+            12.0,
+            11.04,
+            16.0,
+            13.92
+          ]
+        },
+        "down": {
+          "texture": "#an_spinner",
+          "uv": [
+            12.0,
+            2.08,
+            16.0,
+            4.96
+          ]
+        }
+      }
+    }
+  ]
+}

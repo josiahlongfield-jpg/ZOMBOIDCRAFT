@@ -1,0 +1,102 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_dark": "zomboidcraft:block/city/al_dark",
+    "al_psu": "zomboidcraft:block/city/al_psu",
+    "ap_bag_navy": "zomboidcraft:block/city/ap_bag_navy",
+    "particle": "zomboidcraft:block/city/al_psu"
+  },
+  "elements": [
+    {
+      "from": [
+        3.177,
+        8.0,
+        0
+      ],
+      "to": [
+        16.0,
+        16.0,
+        16
+      ],
+      "faces": {
+        "west": {
+          "texture": "#al_dark",
+          "uv": [
+            0,
+            0.0,
+            16,
+            8.0
+          ]
+        },
+        "down": {
+          "texture": "#al_psu",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        14.377,
+        8.8,
+        4.0
+      ],
+      "to": [
+        16.0,
+        15.2,
+        12.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ap_bag_navy",
+          "uv": [
+            0.0,
+            0.8,
+            1.623,
+            7.2
+          ]
+        },
+        "south": {
+          "texture": "#ap_bag_navy",
+          "uv": [
+            14.377,
+            0.8,
+            16.0,
+            7.2
+          ]
+        },
+        "west": {
+          "texture": "#ap_bag_navy",
+          "uv": [
+            4.0,
+            0.8,
+            12.0,
+            7.2
+          ]
+        },
+        "up": {
+          "texture": "#ap_bag_navy",
+          "uv": [
+            14.377,
+            4.0,
+            16.0,
+            12.0
+          ]
+        },
+        "down": {
+          "texture": "#ap_bag_navy",
+          "uv": [
+            14.377,
+            4.0,
+            16.0,
+            12.0
+          ]
+        }
+      }
+    }
+  ]
+}

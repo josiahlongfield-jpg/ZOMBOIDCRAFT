@@ -1,0 +1,123 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "an_charter_main": "zomboidcraft:block/city/an_charter_main",
+    "an_charter_rudder": "zomboidcraft:block/city/an_charter_rudder",
+    "particle": "zomboidcraft:block/city/an_charter_main"
+  },
+  "elements": [
+    {
+      "from": [
+        0.0,
+        8.0,
+        0.0
+      ],
+      "to": [
+        0.258,
+        16.0,
+        2.24
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_charter_main",
+          "uv": [
+            15.742,
+            0.0,
+            16.0,
+            8.0
+          ],
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#an_charter_main",
+          "uv": [
+            0.0,
+            0.0,
+            0.258,
+            8.0
+          ]
+        },
+        "east": {
+          "texture": "#an_charter_rudder",
+          "uv": [
+            2.24,
+            0.0,
+            0.0,
+            8.0
+          ]
+        },
+        "up": {
+          "texture": "#an_charter_main",
+          "uv": [
+            0.0,
+            0.0,
+            0.258,
+            2.24
+          ],
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#an_charter_main",
+          "uv": [
+            0.0,
+            13.76,
+            0.258,
+            16.0
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        0.0,
+        15.838,
+        0.0
+      ],
+      "to": [
+        6.562,
+        16.0,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_charter_main",
+          "uv": [
+            9.438,
+            0.0,
+            16.0,
+            0.162
+          ],
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#an_charter_main",
+          "uv": [
+            0.0,
+            0.0,
+            6.562,
+            0.162
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#an_charter_main",
+          "uv": [
+            0.0,
+            0.0,
+            16.0,
+            0.162
+          ]
+        },
+        "down": {
+          "texture": "#an_charter_main",
+          "uv": [
+            0.0,
+            0.0,
+            6.562,
+            16.0
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,147 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "an_charter_main": "zomboidcraft:block/city/an_charter_main",
+    "particle": "zomboidcraft:block/city/an_charter_main"
+  },
+  "elements": [
+    {
+      "from": [
+        0.0,
+        0.0,
+        14.6
+      ],
+      "to": [
+        0.423,
+        8.0,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_charter_main",
+          "uv": [
+            15.577,
+            8.0,
+            16.0,
+            16.0
+          ]
+        },
+        "south": {
+          "texture": "#an_charter_main",
+          "uv": [
+            0.0,
+            8.0,
+            0.423,
+            16.0
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#an_charter_main",
+          "uv": [
+            16.0,
+            8.0,
+            14.6,
+            16.0
+          ]
+        },
+        "up": {
+          "texture": "#an_charter_main",
+          "uv": [
+            0.0,
+            14.6,
+            0.423,
+            16.0
+          ]
+        },
+        "down": {
+          "texture": "#an_charter_main",
+          "uv": [
+            0.0,
+            0.0,
+            0.423,
+            1.4
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        -1.845,
+        -2.723,
+        14.44
+      ],
+      "to": [
+        1.845,
+        10.723,
+        16.36
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_charter_main",
+          "uv": [
+            12.31,
+            2.554,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#an_charter_main",
+          "uv": [
+            0,
+            2.554,
+            3.69,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#an_charter_main",
+          "uv": [
+            0,
+            2.554,
+            1.92,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#an_charter_main",
+          "uv": [
+            14.08,
+            2.554,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#an_charter_main",
+          "uv": [
+            0,
+            14.08,
+            3.69,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#an_charter_main",
+          "uv": [
+            0,
+            0,
+            3.69,
+            1.92
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          0.0,
+          4.0,
+          15.4
+        ],
+        "axis": "x",
+        "angle": 51.34
+      }
+    }
+  ]
+}

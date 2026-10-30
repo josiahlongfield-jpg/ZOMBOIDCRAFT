@@ -1,0 +1,93 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_dark": "zomboidcraft:block/city/al_dark",
+    "al_paint": "zomboidcraft:block/city/al_paint",
+    "an_coastal_door_1_0": "zomboidcraft:block/city/an_coastal_door_1_0",
+    "particle": "zomboidcraft:block/city/an_coastal_door_1_0"
+  },
+  "elements": [
+    {
+      "from": [
+        0.99,
+        -1.66,
+        0
+      ],
+      "to": [
+        3.99,
+        -1.41,
+        16
+      ],
+      "faces": {
+        "east": {
+          "texture": "#an_coastal_door_1_0",
+          "uv": [
+            0,
+            0.147,
+            16,
+            0.35
+          ]
+        },
+        "west": {
+          "texture": "#al_dark",
+          "uv": [
+            0,
+            15.75,
+            16,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          3.99,
+          5.324,
+          8.0
+        ],
+        "axis": "z",
+        "angle": 35.675
+      }
+    },
+    {
+      "from": [
+        0.99,
+        -1.41,
+        0
+      ],
+      "to": [
+        3.99,
+        12.308,
+        16
+      ],
+      "faces": {
+        "east": {
+          "texture": "#al_paint",
+          "uv": [
+            0,
+            2.282,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#al_dark",
+          "uv": [
+            0,
+            2.282,
+            16,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          3.99,
+          5.324,
+          8.0
+        ],
+        "axis": "z",
+        "angle": 35.675
+      }
+    }
+  ]
+}

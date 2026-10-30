@@ -1,0 +1,173 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "an_skyline_main": "zomboidcraft:block/city/an_skyline_main",
+    "particle": "zomboidcraft:block/city/an_skyline_main"
+  },
+  "elements": [
+    {
+      "from": [
+        13.429,
+        1.6,
+        0.0
+      ],
+      "to": [
+        16.0,
+        5.6,
+        16.0
+      ],
+      "faces": {
+        "west": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            0.0,
+            10.4,
+            16.0,
+            14.4
+          ]
+        },
+        "up": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            13.429,
+            0.0,
+            16.0,
+            16.0
+          ]
+        },
+        "down": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            13.429,
+            0.0,
+            16.0,
+            16.0
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        12.766,
+        5.6,
+        0.0
+      ],
+      "to": [
+        16.0,
+        9.6,
+        16.0
+      ],
+      "faces": {
+        "west": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            0.0,
+            6.4,
+            16.0,
+            10.4
+          ]
+        },
+        "up": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            12.766,
+            0.0,
+            16.0,
+            16.0
+          ]
+        },
+        "down": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            12.766,
+            0.0,
+            16.0,
+            16.0
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        12.104,
+        9.6,
+        0.0
+      ],
+      "to": [
+        16.0,
+        13.6,
+        16.0
+      ],
+      "faces": {
+        "west": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            0.0,
+            2.4,
+            16.0,
+            6.4
+          ]
+        },
+        "up": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            12.104,
+            0.0,
+            16.0,
+            16.0
+          ]
+        },
+        "down": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            12.104,
+            0.0,
+            16.0,
+            16.0
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        11.441,
+        13.6,
+        0.0
+      ],
+      "to": [
+        15.309,
+        16.0,
+        16.0
+      ],
+      "faces": {
+        "east": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            0.0,
+            0.0,
+            16.0,
+            2.4
+          ]
+        },
+        "west": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            0.0,
+            0.0,
+            16.0,
+            2.4
+          ]
+        },
+        "down": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            11.441,
+            0.0,
+            15.309,
+            16.0
+          ]
+        }
+      }
+    }
+  ]
+}

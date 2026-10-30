@@ -1,0 +1,161 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_dark": "zomboidcraft:block/city/al_dark",
+    "al_psu": "zomboidcraft:block/city/al_psu",
+    "al_tube": "zomboidcraft:block/city/al_tube",
+    "particle": "zomboidcraft:block/city/al_psu"
+  },
+  "elements": [
+    {
+      "from": [
+        0.0,
+        8.0,
+        0
+      ],
+      "to": [
+        12.823,
+        16.0,
+        16
+      ],
+      "faces": {
+        "east": {
+          "texture": "#al_dark",
+          "uv": [
+            0,
+            0.0,
+            16,
+            8.0
+          ]
+        },
+        "down": {
+          "texture": "#al_psu",
+          "uv": [
+            16,
+            0,
+            0,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        8.631,
+        0.0,
+        4.608
+      ],
+      "to": [
+        9.015,
+        8.0,
+        4.992
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_tube",
+          "uv": [
+            6.985,
+            8.0,
+            7.369,
+            16.0
+          ]
+        },
+        "south": {
+          "texture": "#al_tube",
+          "uv": [
+            8.631,
+            8.0,
+            9.015,
+            16.0
+          ]
+        },
+        "east": {
+          "texture": "#al_tube",
+          "uv": [
+            11.008,
+            8.0,
+            11.392,
+            16.0
+          ]
+        },
+        "west": {
+          "texture": "#al_tube",
+          "uv": [
+            4.608,
+            8.0,
+            4.992,
+            16.0
+          ]
+        },
+        "up": {
+          "texture": "#al_tube",
+          "uv": [
+            8.631,
+            4.608,
+            9.015,
+            4.992
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        1.431,
+        0.0,
+        7.808
+      ],
+      "to": [
+        1.815,
+        8.0,
+        8.192
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_tube",
+          "uv": [
+            14.185,
+            8.0,
+            14.569,
+            16.0
+          ]
+        },
+        "south": {
+          "texture": "#al_tube",
+          "uv": [
+            1.431,
+            8.0,
+            1.815,
+            16.0
+          ]
+        },
+        "east": {
+          "texture": "#al_tube",
+          "uv": [
+            7.808,
+            8.0,
+            8.192,
+            16.0
+          ]
+        },
+        "west": {
+          "texture": "#al_tube",
+          "uv": [
+            7.808,
+            8.0,
+            8.192,
+            16.0
+          ]
+        },
+        "up": {
+          "texture": "#al_tube",
+          "uv": [
+            1.431,
+            7.808,
+            1.815,
+            8.192
+          ]
+        }
+      }
+    }
+  ]
+}

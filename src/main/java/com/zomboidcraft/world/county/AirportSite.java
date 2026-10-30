@@ -97,6 +97,9 @@ final class AirportSite extends Site {
         if (ax1 >= AirportTerminal.BX0 && ax0 <= AirportTerminal.BX1 && az1 >= AirportTerminal.BZ0 && az0 <= AirportTerminal.BZ1) {
             copy(terminal());
         }
+        if (ax1 >= AirportGates.BX0 && ax0 <= AirportGates.BX1 && az1 >= AirportGates.BZ0 && az0 <= AirportGates.BZ1) {
+            copy(piece("gates", 0x6A7E5L, (q, r) -> new AirportGates(q, r).build()));
+        }
         if (ax1 >= AirportGrounds.BX0 && ax0 <= AirportGrounds.BX1 && az1 >= AirportGrounds.BZ0 && az0 <= AirportGrounds.BZ1) {
             copy(piece("grounds", 0x6A0D5L, (q, r) -> new AirportGrounds(q, r).build()));
         }
@@ -121,7 +124,7 @@ final class AirportSite extends Site {
     private static final Map<String, Voxels> PIECES = new LinkedHashMap<>(4, 0.75f, true) {
         @Override
         protected boolean removeEldestEntry(Map.Entry<String, Voxels> eldest) {
-            return size() > 6;
+            return size() > 8;
         }
     };
 

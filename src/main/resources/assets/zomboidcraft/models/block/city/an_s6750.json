@@ -1,0 +1,59 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_exhaust": "zomboidcraft:block/city/al_exhaust",
+    "particle": "zomboidcraft:block/city/al_exhaust"
+  },
+  "elements": [
+    {
+      "from": [
+        0.0,
+        5.6,
+        0.0
+      ],
+      "to": [
+        2.6,
+        10.4,
+        12.8
+      ],
+      "faces": {
+        "south": {
+          "texture": "#al_exhaust",
+          "uv": [
+            0.0,
+            5.6,
+            2.6,
+            10.4
+          ]
+        },
+        "east": {
+          "texture": "#al_exhaust",
+          "uv": [
+            3.2,
+            5.6,
+            16.0,
+            10.4
+          ]
+        },
+        "up": {
+          "texture": "#al_exhaust",
+          "uv": [
+            0.0,
+            0.0,
+            2.6,
+            12.8
+          ]
+        },
+        "down": {
+          "texture": "#al_exhaust",
+          "uv": [
+            0.0,
+            3.2,
+            2.6,
+            16.0
+          ]
+        }
+      }
+    }
+  ]
+}

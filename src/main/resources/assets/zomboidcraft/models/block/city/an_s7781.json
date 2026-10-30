@@ -1,0 +1,345 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_ceiling": "zomboidcraft:block/city/al_ceiling",
+    "al_dark": "zomboidcraft:block/city/al_dark",
+    "al_paint": "zomboidcraft:block/city/al_paint",
+    "an_private_main": "zomboidcraft:block/city/an_private_main",
+    "particle": "zomboidcraft:block/city/al_paint"
+  },
+  "elements": [
+    {
+      "from": [
+        -0.851,
+        9.057,
+        0
+      ],
+      "to": [
+        16.6,
+        12.057,
+        16
+      ],
+      "faces": {
+        "up": {
+          "texture": "#al_paint",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#al_dark",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          7.874,
+          12.057,
+          8.0
+        ],
+        "axis": "z",
+        "angle": 10.45
+      }
+    },
+    {
+      "from": [
+        0.0,
+        1.28,
+        0
+      ],
+      "to": [
+        16.0,
+        2.88,
+        16
+      ],
+      "faces": {
+        "up": {
+          "texture": "#al_dark",
+          "uv": [
+            0.0,
+            0,
+            16.0,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#al_ceiling",
+          "uv": [
+            0.0,
+            0,
+            16.0,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        13.12,
+        11.2,
+        0.0
+      ],
+      "to": [
+        16.0,
+        14.4,
+        1.6
+      ],
+      "faces": {
+        "south": {
+          "texture": "#an_private_main",
+          "uv": [
+            13.12,
+            1.6,
+            16.0,
+            4.8
+          ]
+        },
+        "west": {
+          "texture": "#an_private_main",
+          "uv": [
+            0.0,
+            1.6,
+            1.6,
+            4.8
+          ]
+        },
+        "up": {
+          "texture": "#an_private_main",
+          "uv": [
+            13.12,
+            0.0,
+            16.0,
+            1.6
+          ]
+        },
+        "down": {
+          "texture": "#an_private_main",
+          "uv": [
+            13.12,
+            14.4,
+            16.0,
+            16.0
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        13.12,
+        11.2,
+        1.6
+      ],
+      "to": [
+        16.0,
+        15.2,
+        5.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_private_main",
+          "uv": [
+            0.0,
+            0.8,
+            2.88,
+            4.8
+          ]
+        },
+        "south": {
+          "texture": "#an_private_main",
+          "uv": [
+            13.12,
+            0.8,
+            16.0,
+            4.8
+          ]
+        },
+        "west": {
+          "texture": "#an_private_main",
+          "uv": [
+            1.6,
+            0.8,
+            5.6,
+            4.8
+          ]
+        },
+        "up": {
+          "texture": "#an_private_main",
+          "uv": [
+            13.12,
+            1.6,
+            16.0,
+            5.6
+          ]
+        },
+        "down": {
+          "texture": "#an_private_main",
+          "uv": [
+            13.12,
+            10.4,
+            16.0,
+            14.4
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        13.12,
+        11.2,
+        5.6
+      ],
+      "to": [
+        16.0,
+        16.0,
+        9.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_private_main",
+          "uv": [
+            0.0,
+            0.0,
+            2.88,
+            4.8
+          ]
+        },
+        "south": {
+          "texture": "#an_private_main",
+          "uv": [
+            13.12,
+            0.0,
+            16.0,
+            4.8
+          ]
+        },
+        "west": {
+          "texture": "#an_private_main",
+          "uv": [
+            5.6,
+            0.0,
+            9.6,
+            4.8
+          ]
+        },
+        "up": {
+          "texture": "#an_private_main",
+          "uv": [
+            13.12,
+            5.6,
+            16.0,
+            9.6
+          ],
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#an_private_main",
+          "uv": [
+            13.12,
+            6.4,
+            16.0,
+            10.4
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        13.12,
+        11.2,
+        9.6
+      ],
+      "to": [
+        16.0,
+        16.0,
+        13.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_private_main",
+          "uv": [
+            0.0,
+            0.0,
+            2.88,
+            4.8
+          ]
+        },
+        "south": {
+          "texture": "#an_private_main",
+          "uv": [
+            13.12,
+            0.0,
+            16.0,
+            4.8
+          ]
+        },
+        "west": {
+          "texture": "#an_private_main",
+          "uv": [
+            9.6,
+            0.0,
+            13.6,
+            4.8
+          ]
+        },
+        "down": {
+          "texture": "#an_private_main",
+          "uv": [
+            13.12,
+            2.4,
+            16.0,
+            6.4
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        13.12,
+        11.2,
+        13.6
+      ],
+      "to": [
+        16.0,
+        16.0,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_private_main",
+          "uv": [
+            0.0,
+            0.0,
+            2.88,
+            4.8
+          ]
+        },
+        "west": {
+          "texture": "#an_private_main",
+          "uv": [
+            13.6,
+            0.0,
+            16.0,
+            4.8
+          ]
+        },
+        "down": {
+          "texture": "#an_private_main",
+          "uv": [
+            13.12,
+            0.0,
+            16.0,
+            2.4
+          ]
+        }
+      }
+    }
+  ]
+}

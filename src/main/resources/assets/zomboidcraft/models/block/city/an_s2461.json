@@ -1,0 +1,490 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_ck_glass": {
+      "sprite": "zomboidcraft:block/city/al_ck_glass",
+      "force_translucent": true
+    },
+    "al_ck_glass_in": {
+      "sprite": "zomboidcraft:block/city/al_ck_glass_in",
+      "force_translucent": true
+    },
+    "al_ck_lining": "zomboidcraft:block/city/al_ck_lining",
+    "al_paint": "zomboidcraft:block/city/al_paint",
+    "particle": "zomboidcraft:block/city/al_paint"
+  },
+  "elements": [
+    {
+      "from": [
+        9.555,
+        5.93,
+        0.0
+      ],
+      "to": [
+        12.555,
+        9.68,
+        2.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_paint",
+          "uv": [
+            3.445,
+            6.32,
+            6.445,
+            10.07
+          ]
+        },
+        "south": {
+          "texture": "#al_ck_lining",
+          "uv": [
+            9.555,
+            6.32,
+            12.555,
+            10.07
+          ]
+        },
+        "east": {
+          "texture": "#al_paint",
+          "uv": [
+            14.0,
+            6.32,
+            16.0,
+            10.07
+          ]
+        },
+        "west": {
+          "texture": "#al_ck_lining",
+          "uv": [
+            0.0,
+            6.32,
+            2.0,
+            10.07
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          12.555,
+          11.996,
+          1.0
+        ],
+        "axis": "z",
+        "angle": 41.525
+      }
+    },
+    {
+      "from": [
+        9.555,
+        9.68,
+        0.0
+      ],
+      "to": [
+        12.555,
+        18.062,
+        2.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_ck_glass",
+          "uv": [
+            3.445,
+            0,
+            6.445,
+            8.382
+          ]
+        },
+        "south": {
+          "texture": "#al_ck_glass_in",
+          "uv": [
+            9.555,
+            0,
+            12.555,
+            8.382
+          ]
+        },
+        "east": {
+          "texture": "#al_ck_glass",
+          "uv": [
+            14.0,
+            0,
+            16.0,
+            8.382
+          ]
+        },
+        "west": {
+          "texture": "#al_ck_glass_in",
+          "uv": [
+            0.0,
+            0,
+            2.0,
+            8.382
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          12.555,
+          11.996,
+          1.0
+        ],
+        "axis": "z",
+        "angle": 41.525
+      }
+    },
+    {
+      "from": [
+        10.27,
+        7.952,
+        2.0
+      ],
+      "to": [
+        13.27,
+        10.702,
+        4.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_paint",
+          "uv": [
+            2.73,
+            5.298,
+            5.73,
+            8.048
+          ]
+        },
+        "south": {
+          "texture": "#al_ck_lining",
+          "uv": [
+            10.27,
+            5.298,
+            13.27,
+            8.048
+          ]
+        },
+        "east": {
+          "texture": "#al_paint",
+          "uv": [
+            12.0,
+            5.298,
+            14.0,
+            8.048
+          ]
+        },
+        "west": {
+          "texture": "#al_ck_lining",
+          "uv": [
+            2.0,
+            5.298,
+            4.0,
+            8.048
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          13.27,
+          12.83,
+          3.0
+        ],
+        "axis": "z",
+        "angle": 41.45
+      }
+    },
+    {
+      "from": [
+        10.27,
+        10.702,
+        2.0
+      ],
+      "to": [
+        13.27,
+        17.708,
+        4.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_ck_glass",
+          "uv": [
+            2.73,
+            0,
+            5.73,
+            7.006
+          ]
+        },
+        "south": {
+          "texture": "#al_ck_glass_in",
+          "uv": [
+            10.27,
+            0,
+            13.27,
+            7.006
+          ]
+        },
+        "east": {
+          "texture": "#al_ck_glass",
+          "uv": [
+            12.0,
+            0,
+            14.0,
+            7.006
+          ]
+        },
+        "west": {
+          "texture": "#al_ck_glass_in",
+          "uv": [
+            2.0,
+            0,
+            4.0,
+            7.006
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          13.27,
+          12.83,
+          3.0
+        ],
+        "axis": "z",
+        "angle": 41.45
+      }
+    },
+    {
+      "from": [
+        10.973,
+        9.91,
+        4.0
+      ],
+      "to": [
+        13.973,
+        11.66,
+        6.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_paint",
+          "uv": [
+            2.027,
+            4.34,
+            5.027,
+            6.09
+          ]
+        },
+        "south": {
+          "texture": "#al_ck_lining",
+          "uv": [
+            10.973,
+            4.34,
+            13.973,
+            6.09
+          ]
+        },
+        "east": {
+          "texture": "#al_paint",
+          "uv": [
+            10.0,
+            4.34,
+            12.0,
+            6.09
+          ]
+        },
+        "west": {
+          "texture": "#al_ck_lining",
+          "uv": [
+            4.0,
+            4.34,
+            6.0,
+            6.09
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          13.973,
+          13.644,
+          5.0
+        ],
+        "axis": "z",
+        "angle": 41.375
+      }
+    },
+    {
+      "from": [
+        10.973,
+        11.66,
+        4.0
+      ],
+      "to": [
+        13.973,
+        17.379,
+        6.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_ck_glass",
+          "uv": [
+            2.027,
+            0,
+            5.027,
+            5.719
+          ]
+        },
+        "south": {
+          "texture": "#al_ck_glass_in",
+          "uv": [
+            10.973,
+            0,
+            13.973,
+            5.719
+          ]
+        },
+        "east": {
+          "texture": "#al_ck_glass",
+          "uv": [
+            10.0,
+            0,
+            12.0,
+            5.719
+          ]
+        },
+        "west": {
+          "texture": "#al_ck_glass_in",
+          "uv": [
+            4.0,
+            0,
+            6.0,
+            5.719
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          13.973,
+          13.644,
+          5.0
+        ],
+        "axis": "z",
+        "angle": 41.375
+      }
+    },
+    {
+      "from": [
+        11.688,
+        11.737,
+        6.0
+      ],
+      "to": [
+        14.688,
+        17.085,
+        8.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_paint",
+          "uv": [
+            1.312,
+            0,
+            4.312,
+            5.348
+          ]
+        },
+        "south": {
+          "texture": "#al_ck_lining",
+          "uv": [
+            11.688,
+            0,
+            14.688,
+            5.348
+          ]
+        },
+        "east": {
+          "texture": "#al_paint",
+          "uv": [
+            8.0,
+            0,
+            10.0,
+            5.348
+          ]
+        },
+        "west": {
+          "texture": "#al_ck_lining",
+          "uv": [
+            6.0,
+            0,
+            8.0,
+            5.348
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          14.688,
+          14.411,
+          7.0
+        ],
+        "axis": "z",
+        "angle": 41.275
+      }
+    },
+    {
+      "from": [
+        12.366,
+        13.556,
+        8.0
+      ],
+      "to": [
+        15.366,
+        16.814,
+        10.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_paint",
+          "uv": [
+            0.634,
+            0,
+            3.634,
+            3.258
+          ]
+        },
+        "south": {
+          "texture": "#al_ck_lining",
+          "uv": [
+            12.366,
+            0,
+            15.366,
+            3.258
+          ]
+        },
+        "east": {
+          "texture": "#al_paint",
+          "uv": [
+            6.0,
+            0,
+            8.0,
+            3.258
+          ]
+        },
+        "west": {
+          "texture": "#al_ck_lining",
+          "uv": [
+            8.0,
+            0,
+            10.0,
+            3.258
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          15.366,
+          15.185,
+          9.0
+        ],
+        "axis": "z",
+        "angle": 41.2
+      }
+    }
+  ]
+}
