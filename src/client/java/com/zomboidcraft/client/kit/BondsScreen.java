@@ -69,8 +69,12 @@ public class BondsScreen extends Screen {
             draw(g, list.get(i), Math.round(x), floor, tallPx, Math.round(15 - 9 * a));
             if (a > 0.05f) {
                 // the ones either side sit back, faded
-                int half = Math.round(tallPx * 0.4f), alpha = Math.round(150 * a);
-                g.fill(Math.round(x) - half, Math.round(floor - tallPx) - 12, Math.round(x) + half, floor + 6, alpha << 24 | 0x080A0C);
+                // in layers, thickest over her and thinning out to the edges, so the veil has no hard border
+                int half = Math.round(tallPx * 0.42f), top = Math.round(floor - tallPx) - 14, alpha = Math.round(26 * a);
+                for (int k = 0; k < 6; k++) {
+                    int in = half * k / 9, up = Math.round(tallPx * k / 40f);
+                    g.fill(Math.round(x) - half + in, top + up, Math.round(x) + half - in, floor + 8 - up / 3, alpha << 24 | 0x080A0C);
+                }
             }
         }
 
