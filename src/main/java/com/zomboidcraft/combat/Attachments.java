@@ -315,7 +315,7 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
             case "holo" -> new Optic(cfg.holoAimSpread, 1, 0.065, false);
             case "scope_4x" -> new Optic(cfg.scopeAimSpread, cfg.scopeZoom, 0, true);
             case "rifle_optic" -> new Optic(cfg.scopeAimSpread, 1 / 2.0, 0.35, false);
-            case "combat_scope" -> new Optic(cfg.scopeAimSpread, 1 / 3.0, 0.5, false);
+            case "combat_scope" -> new Optic(cfg.scopeAimSpread, 1 / 3.0, 0.45, false);     // 10% under the 0.5 its opening (hollow.py) reaches
             case "pistol_scope" -> new Optic(cfg.scopeAimSpread, 1 / 2.0, 0.2, false);     // only inside its small lens
             case "crossbow_scope" -> new Optic(cfg.scopeAimSpread, 1 / 3.0, 0, true);
             case "hunting_scope" -> new Optic(cfg.scopeAimSpread * 0.8, 1 / 6.0, 0, true);
@@ -401,11 +401,10 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
         return key(gun, Slot.MUZZLE) != null || GunType.of(gun) == GunType.SUPPRESSED_RIFLE;     // its can is built in
     }
 
-    /** Looking down the sights shows an eyepiece picture, not the gun: a scope you look into, or the magnifier swung
-     * in (its picture with the reticle of the sight in front three times bigger). */
+    /** Looking down the sights shows the scope's eyepiece picture, not the gun: a scope you look into. */
     public static boolean scoped(ItemStack gun) {
         Optic optic = optic(gun);
-        return optic != null && optic.overlay() || magnified(gun);
+        return optic != null && optic.overlay();
     }
 
     /** The field of view on the sights, as a share of normal, or a negative number for the gun's own. */

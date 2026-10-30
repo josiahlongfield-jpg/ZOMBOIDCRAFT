@@ -11,14 +11,13 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
 /**
- * The view through a scope you look into or the magnifier (the gun itself isn't drawn then: you're looking down the tube), and the lit
+ * The view through a scope you look into (the gun itself isn't drawn then: you're looking down the tube), and the lit
  * reticle of a sight the gun stays drawn behind, three times bigger through the magnifier. Each optic shows its own
  * (SightTextures: the pack's own where it came with one). The rounds left and the struggle prompt live in the
  * field-kit HUD (client/hud).
  */
 public final class CombatHud {
     private static final int BLACK = 0xFF050505;
-    private static final String MAGNIFIER = "magnifier";
 
     /** Drawn under the rest of the HUD, like the spyglass: the scope's eyepiece picture, or a sight's reticle. */
     public static void scope(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
@@ -44,14 +43,7 @@ public final class CombatHud {
             return;
         }
         int x = (w - h) / 2;
-        if (Attachments.magnified(gun) && !Attachments.overlay(key)) {
-            // the magnifier swung in: its eyepiece, and in it the reticle of the sight in front, three times bigger
-            graphics.blit(RenderPipelines.GUI_TEXTURED, SightTextures.get(MAGNIFIER), x, 0, 0, 0, h, h, h, h);
-            int size = Math.max((int) Math.round(Attachments.reticleSize(gun) * h), 2);
-            graphics.blit(RenderPipelines.GUI_TEXTURED, sight, (w - size) / 2, (h - size) / 2, 0, 0, size, size, size, size);
-        } else {
-            graphics.blit(RenderPipelines.GUI_TEXTURED, sight, x, 0, 0, 0, h, h, h, h);
-        }
+        graphics.blit(RenderPipelines.GUI_TEXTURED, sight, x, 0, 0, 0, h, h, h, h);
         graphics.fill(0, 0, x, h, BLACK);
         graphics.fill(x + h, 0, w, h, BLACK);
     }

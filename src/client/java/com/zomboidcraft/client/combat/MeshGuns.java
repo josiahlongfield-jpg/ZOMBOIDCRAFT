@@ -64,30 +64,19 @@ public final class MeshGuns {
     /** Draws one part of a gun with the pose at the item model's corner (one unit a block, as a block model draws). */
     public static void draw(String id, String part, PoseStack pose, SubmitNodeCollector out, int light) {
         Gun gun = get(id);
+        Part p = gun == null ? null : gun.parts().get(part);
         // no shadow from a mesh item: a gun or a tin casts next to none, and the profile showed the bought guns
         // (15,000-32,000 triangles each, twice over with the ink) costing as much again in the shadow pass
-        if (gun == null || com.zomboidcraft.client.zombie.body.ZDetail.shadowPass()) {
+        if (p == null || p.triangles() == 0 || com.zomboidcraft.client.zombie.body.ZDetail.shadowPass()) {
             return;
         }
         pose.pushPose();
         pose.scale(1 / 16f, 1 / 16f, 1 / 16f);
-        draw(gun, gun.parts().get(part), true, pose, out, light);
-        // a hollowed sight (tools/meshguns/hollow.py) keeps its tube walls in a part of their own that goes with the
-        // body, without the rim: through the tube, the rim of its far side would show as a black ring round the sight
-        if (part.equals("body")) {
-            draw(gun, gun.parts().get("tube"), false, pose, out, light);
-        }
-        pose.popPose();
-    }
-
-    private static void draw(Gun gun, Part p, boolean rim, PoseStack pose, SubmitNodeCollector out, int light) {
-        if (p == null || p.triangles() == 0) {
-            return;
-        }
         out.submitCustomGeometry(pose, RenderTypes.entityCutoutCull(gun.texture()), (at, buffer) -> solid(p, at, buffer, light));
-        if (inkOn && rim) {
+        if (inkOn) {
             out.submitCustomGeometry(pose, RenderTypes.entityCutoutCull(gun.texture()), (at, buffer) -> ink(p, gun.outline(), at, buffer, light));
         }
+        pose.popPose();
     }
 
     private static void solid(Part p, PoseStack.Pose pose, VertexConsumer out, int light) {

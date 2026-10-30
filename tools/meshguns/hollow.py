@@ -1,24 +1,23 @@
-"""Hollows a packed tube sight (Josiah 2026-10-30: "you can't have a blacked out sight, make sure everything that
-stretches out to where the crosshair ends can be seen through"). On the sights the eye is close behind the tube's
-back end, so its insides (lenses, their rings, the inside of the tube) fill the view round a small far opening.
+"""Opens up the view through a tube sight (Josiah 2026-10-30): from the eye on the sights, the lens rings and the inside
+of the tube make a dark filler round a small far opening. Everything wholly inside a cone from the eye, out to a
+given share of the screen's height, is left out, so the opening reaches that far and the sight's frame round it stays.
 
-Works on the packed .zmesh in place (after pack.py, and after any triangle cutting), on its "body" part, about the
-sight line in bounds.json:
-- left out: everything wholly inside the back opening (r_open, item pixels from the sight line), walls facing the
-  sight line, and faces across the tube ahead of its back end;
-- moved to a part of its own, "tube": the tube's outside walls, which MeshGuns draws without the ink rim (from the
-  eye the rim of the tube's far side would show black through it).
+- 3x combat scope: out to the tips of its crosshairs (reticles.py draws them to the edge of the reticle, which
+  CombatHud draws at the size the reticle had when this was set: half the screen's height, so a quarter from the
+  middle). The crosshairs were shrunk afterwards; the opening stays where it was set.
+- red dot: out to the inside of the black ring round its back end.
 
-    python3 tools/meshguns/hollow.py [MESH_ID R_OPEN R_WALL]
+Works on the packed .zmesh in place (after pack.py), on its "body" part, about the sight line in bounds.json, with
+the eye where tools/weapons/weapons.py puts it (1.6 inches behind the back end) and the first-person view's 70 degree
+height. Running it again changes nothing; rerun it after repacking any of these.
 
-Without arguments it does every sight in HOLLOW and WINDOWS. Running it again on a hollowed mesh changes nothing (the tube goes
-back in the body and is split off the same way), so rerun it after repacking any of these.
+    python3 tools/meshguns/hollow.py
 """
 import io
 import json
+import math
 import os
 import struct
-import sys
 import zlib
 import importlib.util
 
@@ -32,29 +31,12 @@ _cars_pack = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(_cars_pack)
 scramble = _cars_pack.scramble
 REC = np.dtype([('x', '>i2'), ('y', '>i2'), ('z', '>i2'), ('u', '>u2'), ('v', '>u2'), ('nx', 'i1'), ('ny', 'i1'), ('nz', 'i1')])
+IN = 25.4 / 31          # item pixels an inch
+RELIEF = 1.6            # inches from the back end to the eye
+FOV = 70                # the hand's view, degrees top to bottom
 
-
-# mesh: (r_open, r_wall), item pixels from the sight line, fitted to each tube's back opening and outside wall
-HOLLOW = {'att_red_dot': (0.5, 1.0), 'own_combat_scope': (0.55, 1.0), 'own_rifle_optic': (0.45, 0.9)}
-# the holo (Josiah 2026-10-30: "the holo needs a much bigger sight picture"): its window sits in a thick dark frame
-# well inside the hood, so everything in the hood's opening ahead of its back end is left out ({x0, x1, y0, y1}
-# item pixels about the sight line, z up to which): the hood and the thin front window frame are what's left round
-# the sight picture
-WINDOWS = {'att_holo': (-0.7, 0.72, -0.55, 0.6, 0.6)}
-# inches from the back end to the eye on the sights (tools/weapons/weapons.py EYE_RELIEF, 1.6 for the rest)
-RELIEF = {'att_holo': 1.0}
-IN = 25.4 / 31
-
-
-def away(T, eye):
-    """Faces turned away from the eye: culled, but their ink rim would show from there as black shards through the
-    sight, so these go in the tube part too (drawn without it)."""
-    n = np.cross(T[:, 1] - T[:, 0], T[:, 2] - T[:, 0])
-    return (n * (eye - T.mean(1))).sum(1) < 0
-
-
-def eye_of(mid, T, sight):
-    return np.array([sight[0], sight[1], T[:, :, 2].max() + RELIEF.get(mid, 1.6) * IN])
+# mesh: how far out from the middle the opening reaches, as a share of the screen's height
+OPENINGS = {'own_combat_scope': 0.25, 'att_red_dot': 0.18}
 
 
 def read(mid):
@@ -79,63 +61,59 @@ def write(mid, head, png, parts):
     for name, rec in parts.items():
         b = name.encode()
         out.write(struct.pack('>H', len(b))); out.write(b)
-        out.write(struct.pack('>i', len(rec))); out.write(rec.astype(REC).tobytes())    # concatenate makes it native-endian
+        out.write(struct.pack('>i', len(rec))); out.write(rec.astype(REC).tobytes())
     open(os.path.join(MESHES, mid + '.zmesh'), 'wb').write(scramble(zlib.compress(out.getvalue(), 9), mid))
 
 
-def split(T, sight, r_open, r_wall, rear_band=0.3):
-    """Which faces to leave out, and which are the tube's outside walls."""
-    c = T.mean(1)
-    n = np.cross(T[:, 1] - T[:, 0], T[:, 2] - T[:, 0])
-    n /= np.linalg.norm(n, axis=1, keepdims=True) + 1e-12
-    rad = c[:, :2] - sight[:2]
-    rc = np.linalg.norm(rad, axis=1)
-    radial = (n[:, :2] * rad / (rc[:, None] + 1e-9)).sum(1)
-    rmax = np.hypot(T[:, :, 0] - sight[0], T[:, :, 1] - sight[1]).max(1)
-    inside = rmax < r_open
-    walls = (radial < -0.3) & (rc < r_wall)
-    across = (np.abs(n[:, 2]) > 0.5) & (rmax < r_wall) & (c[:, 2] < T[:, :, 2].max() - rear_band)
-    drop = inside | walls | across
-    return drop, ~drop & (radial > 0.3) & (rc < r_wall)
+def cone(eye, reach):
+    """Whether points (..., 3) are inside the cone from the eye down the sight line that shows `reach` of the screen's
+    height out from the middle."""
+    tan = reach * 2 * math.tan(math.radians(FOV / 2))
+    return lambda P: (eye[2] - P[..., 2] > 0) & (np.hypot(P[..., 0] - eye[0], P[..., 1] - eye[1]) < tan * (eye[2] - P[..., 2]))
 
 
-def main(mid, r_open, r_wall):
+def cut(tri, ins, depth):
+    """A face (3 corners of x, y, z, u, v, nx, ny, nz) that crosses the cone's edge, split in four again and again
+    along it: the pieces wholly inside are left out, so the opening's edge is round rather than the face's own."""
+    k = ins(tri[:, :3])
+    if k.all() or depth == 0 and ins(tri[:, :3].mean(0)):
+        return []
+    if not k.any() and not ins(tri[:, :3].mean(0)) or depth == 0:
+        return [tri]
+    a, b, c = tri
+    ab, bc, ca = (a + b) / 2, (b + c) / 2, (c + a) / 2
+    out = []
+    for t in ((a, ab, ca), (ab, b, bc), (ca, bc, c), (ab, bc, ca)):
+        out += cut(np.array(t), ins, depth - 1)
+    return out
+
+
+def open_up(mid, reach, depth=3):
     head, png, parts = read(mid)
-    sight = np.array(json.load(open(BOUNDS))[mid][2])
-    body = np.concatenate([parts['body'], parts.pop('tube')]) if 'tube' in parts else parts['body']
-    T = np.stack([body['x'], body['y'], body['z']], -1).astype(float) / 1000
-    drop, tube = split(T, sight, r_open, r_wall)
-    rmax = np.hypot(T[:, :, 0] - sight[0], T[:, :, 1] - sight[1]).max(1)
-    tube |= ~drop & (rmax < 1.3 * r_wall) & away(T, eye_of(mid, T, sight))
-    parts['body'] = body[~drop & ~tube]
-    parts['tube'] = body[tube]
+    lo, hi, sight = json.load(open(BOUNDS))[mid]
+    body = parts['body']
+    F = np.stack([body[k].astype(float) for k in ('x', 'y', 'z', 'u', 'v', 'nx', 'ny', 'nz')], -1)
+    F[..., :3] /= 1000
+    ins = cone(np.array([sight[0], sight[1], hi[2] + RELIEF * IN]), reach)     # the eye where weapons.py _eye puts it
+    k = ins(F[..., :3])
+    whole, gone = ~k.any(1) & ~ins(F[..., :3].mean(1)), k.all(1)
+    if not gone.any():
+        print(f'{mid}: already open')      # only the cut edge's pieces reach into the cone
+        return
+    pieces = [p for f in F[~whole & ~gone] for p in cut(f, ins, depth)]
+    keep = np.concatenate([F[whole]] + ([np.array(pieces)] if pieces else []))
+    rec = np.zeros(keep.shape[:2], REC)
+    for i, key in enumerate(('x', 'y', 'z')):
+        rec[key] = np.round(keep[..., i] * 1000)
+    rec['u'], rec['v'] = np.round(keep[..., 3]), np.round(keep[..., 4])
+    n = keep[..., 5:8] / (np.linalg.norm(keep[..., 5:8], axis=-1, keepdims=True) + 1e-9) * 127
+    rec['nx'], rec['ny'], rec['nz'] = np.round(n[..., 0]), np.round(n[..., 1]), np.round(n[..., 2])
+    parts['body'] = rec
     write(mid, head, png, parts)
-    print(f'{mid}: {drop.sum()} faces left out, {tube.sum()} in the tube, {len(parts["body"])} in the body')
-
-
-def window(mid, box):
-    head, png, parts = read(mid)
-    sight = np.array(json.load(open(BOUNDS))[mid][2])
-    body = np.concatenate([parts['body'], parts.pop('tube')]) if 'tube' in parts else parts['body']
-    T = np.stack([body['x'], body['y'], body['z']], -1).astype(float) / 1000
-    c = T.mean(1)
-    x0, x1, y0, y1, z1 = box
-    opening = (c[:, 0] > x0) & (c[:, 0] < x1) & (c[:, 1] - sight[1] > y0) & (c[:, 1] - sight[1] < y1)
-    drop = opening & (c[:, 2] < z1)
-    # round the opening, out to the hood, the faces turned away from the eye lose their rim too
-    hood = (np.abs(c[:, 0]) < 1.1) & (c[:, 1] - sight[1] > y0 - 0.1) & (c[:, 1] - sight[1] < y1 + 0.4)
-    tube = ~drop & hood & away(T, eye_of(mid, T, sight))
-    parts['body'] = body[~drop & ~tube]
-    parts['tube'] = body[tube]
-    write(mid, head, png, parts)
-    print(f'{mid}: {drop.sum()} faces in its window left out, {tube.sum()} in the tube')
+    print(f'{mid}: {gone.sum()} faces in the opening left out, {(~whole & ~gone).sum()} on its edge cut into '
+          f'{len(pieces)} pieces, {len(rec)} faces now')
 
 
 if __name__ == '__main__':
-    if len(sys.argv) > 1:
-        main(sys.argv[1], float(sys.argv[2]), float(sys.argv[3]))
-    else:
-        for mid, (r_open, r_wall) in HOLLOW.items():
-            main(mid, r_open, r_wall)
-        for mid, box in WINDOWS.items():
-            window(mid, box)
+    for mid, reach in OPENINGS.items():
+        open_up(mid, reach)

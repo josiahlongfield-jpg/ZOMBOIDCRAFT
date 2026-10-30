@@ -646,12 +646,10 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
         fit_parts.append(models[gun.slots['muzzle'].fits[0]])
     fit = shifted_model(fit_parts, shift)
     states = ['hip', 'ads'] + [f'ads_{k}' for k in gun.optics()] + ['mag_out', 'mag_in', 'charge']
-    if 'magnifier' in gun.slots:
-        states.append('ads_magnified')      # through the magnifier the game draws its picture over the screen
     states += ['raised_' + st for st in ('hip', 'mag_out', 'mag_in', 'charge')]     # the same, gun up in third person
     shown = {}
     for st in states:
-        optic = st[4:] if st.startswith('ads_') and st != 'ads_magnified' else None
+        optic = st[4:] if st.startswith('ads_') else None
         disp = displays(st, fit, gun.sight_point(optic) + shift)
         shown[st] = disp
         for n in names_posed:
@@ -681,7 +679,7 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
             if slot_name == 'optic':
                 down = r('irons_folded') if gun.irons else EMPTY
                 up = r('irons_up') if gun.irons else EMPTY
-                if st.startswith('ads_') and st != 'ads_magnified':
+                if st.startswith('ads_'):
                     entries.append(composite([down, r(st[4:])]))
                 else:
                     cases = {k: composite([down, r(k)]) for k in s.fits}
@@ -716,11 +714,8 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
                 'on_true': pose('raised_' + st, key), 'on_false': pose(st, key)}
 
     def tree(key):
+        # through the magnifier the sight line is the optic's in front of it: the same pose
         aim = select('optic', {k: pose(f'ads_{k}', key) for k in gun.optics()}, pose('ads', key)) if gun.optics() else pose('ads', key)
-        if 'magnifier' in gun.slots:
-            # swung in, the magnifier is looked into like a scope (Josiah 2026-10-30: it magnifies the sight in front,
-            # not the whole of it): the game draws its picture; swung aside (its _aside key) the optic's own pose
-            aim = select('magnifier', {k: pose('ads_magnified', key) for k in gun.slots['magnifier'].fits}, aim)
         return {'type': 'minecraft:range_dispatch', 'property': 'minecraft:custom_model_data', 'index': 0,
                 'entries': [{'threshold': 1, 'model': held('mag_out', key)}, {'threshold': 2, 'model': held('mag_in', key)},
                             {'threshold': 3, 'model': held('charge', key)}],
