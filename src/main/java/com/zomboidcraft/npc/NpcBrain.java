@@ -371,12 +371,14 @@ final class NpcBrain {
                 return false;
             }
             leader = npc.leader();
-            return leader != null && leader.distanceToSqr(npc) > 5 * 5;
+            if (leader == null) return false;
+            // hand in hand she keeps right at your side
+            return leader.distanceToSqr(npc) > (npc.bond.holding ? 1.3 * 1.3 : 5 * 5);
         }
 
         @Override
         public boolean canContinueToUse() {
-            return npc.following && leader != null && leader.isAlive() && leader.distanceToSqr(npc) > 2.5 * 2.5;
+            return npc.following && leader != null && leader.isAlive() && leader.distanceToSqr(npc) > (npc.bond.holding ? 0.9 * 0.9 : 2.5 * 2.5);
         }
 
         @Override
@@ -393,6 +395,16 @@ final class NpcBrain {
         @Override
         public void tick() {
             npc.getLookControl().setLookAt(leader, 10f, npc.getMaxHeadXRot());
+            if (npc.bond.holding) {
+                if (--repath <= 0) {
+                    repath = 4;
+                    // a step to your right, matching your pace
+                    double yaw = Math.toRadians(leader.getYRot());
+                    double x = leader.getX() - Math.cos(yaw) * 0.7, z = leader.getZ() - Math.sin(yaw) * 0.7;
+                    npc.getNavigation().moveTo(x, leader.getY(), z, leader.isSprinting() ? 1.6 : 1.1);
+                }
+                return;
+            }
             if (--repath <= 0) {
                 repath = 10;
                 npc.getNavigation().moveTo(leader, (leader.distanceToSqr(npc) > 10 * 10 ? 1.6 : 1.0) * npc.mind.pace());

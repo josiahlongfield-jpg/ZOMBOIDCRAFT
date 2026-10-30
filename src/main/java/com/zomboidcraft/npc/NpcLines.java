@@ -41,7 +41,19 @@ public final class NpcLines {
         GOOD(20 * 400, "You know, we might actually make it.", "Not a bad day, all things considered.", "I'm glad I'm not doing this alone."),
         EAT(20 * 20, "Oh, thank god.", "Mm. Better.", "That hit the spot.", "Don't tell me what's in it."),
         // her work and her day (NpcWork): the words come with the call (sayLine)
-        WORK(20 * 20), WORK_DONE(20 * 25), LEVEL(0), ALARM(0), SLEEPY(20 * 60), WAKE(20 * 60), NIGHTMARE(0);
+        WORK(20 * 20), WORK_DONE(20 * 25), LEVEL(0), ALARM(0), SLEEPY(20 * 60), WAKE(20 * 60), NIGHTMARE(0),
+        // her feelings about you (NpcBond)
+        FLIRT(20 * 150, "You keep looking at me like that, we'll never get anything done.", "Admit it, you like having me around.",
+                "If we survive this, you owe me a proper date.", "You're cute when you're concentrating.",
+                "Is it weird that this is the best time I've had in months?"),
+        ROMANCE(20 * 200, "I'm glad it's you I'm stuck with.", "Whatever happens, I'm with you.", "Stay close tonight?",
+                "You make all this feel almost normal.", "I used to think nothing good could happen anymore."),
+        JEALOUS(20 * 120, "Who's your new friend?", "Don't mind me. I'll just be over here.", "She seems... nice.",
+                "You two look cosy."),
+        SAVED(20 * 60, "Thanks. That one was close.", "My hero. Don't let it go to your head.", "I owe you one.",
+                "That was too close. Thank you."),
+        // her answer when you talk to her (NpcBond.act): always heard, the words come with the call
+        REPLY(0);
 
         final int wait;
         final List<String> lines;
@@ -72,7 +84,7 @@ public final class NpcLines {
         }
         long now = level.getGameTime();
         Long prev = last.get(kind);
-        if (kind != Kind.ALARM && now - lastAny < QUIET || prev != null && now - prev < kind.wait) {
+        if (kind != Kind.ALARM && kind != Kind.REPLY && now - lastAny < QUIET || prev != null && now - prev < kind.wait) {
             return false;
         }
         String line = said != null ? said : kind.lines.get(npc.getRandom().nextInt(kind.lines.size()));

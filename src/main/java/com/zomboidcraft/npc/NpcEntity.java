@@ -30,7 +30,7 @@ import net.minecraft.world.level.storage.ValueOutput;
  * Her mind (NpcMind) gives her needs, feelings, traits and a diary: hungry, tired, hurt or frightened she keeps up slower,
  * aims shakier and runs sooner, goes for food and drink she sees lying about, and says how she's doing now and then.
  * Her skills (NpcSkills) grow with practice; given a home and a job (NpcWork) she keeps the place going on her own,
- * by the clock, and sleeps when her day's done.
+ * by the clock, and sleeps when her day's done. How she feels about you (NpcBond) grows or sours with how you treat her.
  */
 public class NpcEntity extends PathfinderMob {
     private static final EntityDataAccessor<String> MODEL = SynchedEntityData.defineId(NpcEntity.class, EntityDataSerializers.STRING);
@@ -44,6 +44,8 @@ public class NpcEntity extends PathfinderMob {
     /** What her body's doing (NpcWork.SLEEP, SIT, KNEEL...), and her fear, morale, tiredness and pain (4 bits each), for her poses. */
     private static final EntityDataAccessor<Integer> ACTION = SynchedEntityData.defineId(NpcEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> MOOD = SynchedEntityData.defineId(NpcEntity.class, EntityDataSerializers.INT);
+    /** How she feels about the player she's with (NpcBond.packed): trust, affection, attraction and the moods they bring. */
+    private static final EntityDataAccessor<Integer> BOND = SynchedEntityData.defineId(NpcEntity.class, EntityDataSerializers.INT);
     /** How long she lies where she fell before she's gone (her death clip runs about six seconds). */
     private static final int DEATH_TICKS = 20 * 8;
 
@@ -57,6 +59,7 @@ public class NpcEntity extends PathfinderMob {
     public final NpcMind mind = new NpcMind();
     public final NpcSkills skills = new NpcSkills();
     public final NpcWork work = new NpcWork();
+    public final NpcBond bond = new NpcBond();
     private boolean mindLoaded;
 
     boolean following = true;
@@ -102,6 +105,7 @@ public class NpcEntity extends PathfinderMob {
         builder.define(TALK, 0);
         builder.define(ACTION, 0);
         builder.define(MOOD, 0);
+        builder.define(BOND, 0);
     }
 
     /** The clothes she has off. */
@@ -122,6 +126,16 @@ public class NpcEntity extends PathfinderMob {
     /** Her fear, morale, tiredness and pain, each 0..15, for her posture on the client. */
     public int moodBits() {
         return entityData.get(MOOD);
+    }
+
+    /** How she feels about the player she's with, packed (NpcBond.packed). */
+    public int bondBits() {
+        return entityData.get(BOND);
+    }
+
+    /** Her mood in a word or two, with how she feels about you in it. */
+    public String mood() {
+        return bond.mood(this, level().getGameTime());
     }
 
     /** Ticks left of the line she's saying (her mouth moves while it's above 0). */
@@ -177,6 +191,8 @@ public class NpcEntity extends PathfinderMob {
         mind.roll(getRandom());
         skills.roll(getRandom());
         mindLoaded = true;
+        bond.roll(getRandom(), mind);
+        bond.meet(by);
         mind.remember(this, "Met " + by.getName().getString(), 0.3f, 0.9f);
     }
 
@@ -221,6 +237,7 @@ public class NpcEntity extends PathfinderMob {
                 // an older companion, from before she had a mind
                 mind.roll(getRandom());
                 skills.roll(getRandom());
+                bond.roll(getRandom(), mind);
                 mindLoaded = true;
             }
             boolean wasLonely = mind.get(NpcMind.Need.LONELY) > 50;
@@ -229,14 +246,26 @@ public class NpcEntity extends PathfinderMob {
                 speakMind(wasLonely);
             }
             work.watch(this, server);
+            bond.tick(this, server);
+            entityData.set(BOND, bond.packed(this, server.getGameTime()));
             int q = 0, k = 0;
             for (NpcMind.Need n : new NpcMind.Need[] {NpcMind.Need.FEAR, NpcMind.Need.MORALE, NpcMind.Need.TIRED, NpcMind.Need.PAIN}) {
                 q |= Math.min(15, Math.round(mind.get(n) * 15f / 100f)) << (4 * k++);
             }
             entityData.set(MOOD, q);
         }
+        if (level() instanceof ServerLevel server && bond.poseTicks > 0) {
+            // a hug or a kiss: she stays with you, facing you, until it's done
+            bond.poseTicks--;
+            Player p = bond.player(server);
+            if (p != null && isAlive()) {
+                getLookControl().setLookAt(p, 30f, 30f);
+                if (p.distanceTo(this) > 0.9) getNavigation().moveTo(p, 1.0);
+                else getNavigation().stop();
+            }
+        }
         if (!level().isClientSide()) {
-            entityData.set(ACTION, isAlive() ? (work.asleep ? NpcWork.SLEEP : work.action) : 0);
+            entityData.set(ACTION, isAlive() ? (work.asleep ? NpcWork.SLEEP : bond.poseTicks > 0 ? bond.pose : work.action) : 0);
         }
         if (level().isClientSide()) {
             aimAnimO = aimAnim;
@@ -254,6 +283,9 @@ public class NpcEntity extends PathfinderMob {
         if (hurt && isAlive()) {
             // pain wakes her
             work.asleep = false;
+            if (source.getEntity() instanceof Player p && bond.about(p)) {
+                bond.hurtBy(this);
+            }
             say(NpcLines.Kind.HURT);
             mind.jolt(25f);
             if (amount >= 6f || getHealth() < getMaxHealth() * 0.35f) {
@@ -351,6 +383,7 @@ public class NpcEntity extends PathfinderMob {
         output.putString("npcHidden", entityData.get(HIDDEN));
         output.putString("npcMind", mind.save());
         output.putString("npcSkills", skills.save());
+        output.putString("npcBond", bond.save());
         output.putString("npcJob", work.job.name());
         output.putInt("npcNightShift", work.nightShift ? 1 : 0);
         output.putString("npcSearched", work.saveSearched());
@@ -372,6 +405,9 @@ public class NpcEntity extends PathfinderMob {
         mindLoaded = mind.load(input.getStringOr("npcMind", ""));
         if (!skills.load(input.getStringOr("npcSkills", "")) && mindLoaded) {
             skills.roll(getRandom());
+        }
+        if (!bond.load(input.getStringOr("npcBond", "")) && mindLoaded) {
+            bond.roll(getRandom(), mind);
         }
         NpcWork.Job job = NpcWork.Job.of(input.getStringOr("npcJob", "NONE"));
         work.job = job == null ? NpcWork.Job.NONE : job;

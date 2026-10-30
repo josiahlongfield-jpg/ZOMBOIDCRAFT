@@ -79,6 +79,17 @@ public final class Npcs {
     public static void register() {
         FabricDefaultAttributeRegistry.register(NPC, NpcEntity.attributes());
         NpcNet.register();
+        net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents.AFTER_DEATH.register((entity, source) -> {
+            if (!(entity instanceof net.minecraft.world.entity.monster.zombie.Zombie) || !(source.getEntity() instanceof ServerPlayer killer)) {
+                return;
+            }
+            for (NpcEntity npc : entity.level().getEntitiesOfClass(NpcEntity.class, entity.getBoundingBox().inflate(10))) {
+                if (npc.isAlive() && npc.bond.about(killer)
+                        && (npc.mind.get(NpcMind.Need.FEAR) > 30 || npc.distanceTo(entity) < 4)) {
+                    npc.bond.saved(npc);
+                }
+            }
+        });
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> dispatcher.register(
                 Commands.literal("zc")
                         .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
@@ -100,6 +111,13 @@ public final class Npcs {
                                         .suggests((ctx, b) -> SharedSuggestionProvider.suggest(List.of("day", "night"), b))
                                         .executes(ctx -> shift(ctx, StringArgumentType.getString(ctx, "shift")))))
                                 .then(Commands.literal("skills").executes(Npcs::skills))
+                                .then(Commands.literal("bond").executes(Npcs::bond)
+                                        .then(Commands.argument("feeling", StringArgumentType.word())
+                                                .suggests((ctx, b) -> SharedSuggestionProvider.suggest(List.of("trust", "affection", "attraction", "together", "apart"), b))
+                                                .executes(ctx -> bond(ctx, StringArgumentType.getString(ctx, "feeling"), -1))
+                                                .then(Commands.argument("value", FloatArgumentType.floatArg(0f, 100f))
+                                                        .executes(ctx -> bond(ctx, StringArgumentType.getString(ctx, "feeling"),
+                                                                FloatArgumentType.getFloat(ctx, "value"))))))
                                 .then(Commands.literal("skill").then(Commands.argument("skill", StringArgumentType.word())
                                         .suggests((ctx, b) -> SharedSuggestionProvider.suggest(names(NpcSkills.Skill.values()), b))
                                         .then(Commands.argument("level", com.mojang.brigadier.arguments.IntegerArgumentType.integer(0, NpcSkills.MAX))
@@ -226,7 +244,8 @@ public final class Npcs {
             return 0;
         }
         NpcMind m = npc.mind;
-        StringBuilder b = new StringBuilder(npc.speakerName() + " is " + m.mood() + ". " + capital(m.traitWords()) + ".");
+        StringBuilder b = new StringBuilder(npc.speakerName() + " is " + npc.mood() + ". " + capital(m.traitWords()) + ".");
+        b.append('\n').append(bondLine(npc));
         for (NpcMind.Need n : NpcMind.Need.values()) {
             int v = Math.round(m.get(n));
             b.append("\n ").append(n.label).append(' ').append("|".repeat(v / 5)).append(".".repeat(20 - v / 5)).append(' ').append(v);
@@ -295,6 +314,40 @@ public final class Npcs {
         return 1;
     }
 
+    private static int bond(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        NpcEntity npc = target(ctx.getSource().getPlayerOrException());
+        if (npc == null) {
+            ctx.getSource().sendFailure(Component.literal("No companion near you"));
+            return 0;
+        }
+        ctx.getSource().sendSuccess(() -> Component.literal(bondLine(npc)), false);
+        return 1;
+    }
+
+    /** Sets how she feels about the player she's with (for trying things out), or puts the two of you together or apart. */
+    private static int bond(CommandContext<CommandSourceStack> ctx, String feeling, float value) throws CommandSyntaxException {
+        NpcEntity npc = target(ctx.getSource().getPlayerOrException());
+        boolean known = List.of("trust", "affection", "attraction").contains(feeling);
+        if (npc == null || !known && !feeling.equals("together") && !feeling.equals("apart") || known && value < 0) {
+            ctx.getSource().sendFailure(Component.literal(npc == null ? "No companion near you"
+                    : "Use trust, affection or attraction with a value 0 to 100, or together, or apart"));
+            return 0;
+        }
+        npc.bond.meet(ctx.getSource().getPlayerOrException());
+        if (known) npc.bond.set(feeling, value);
+        else npc.bond.together = feeling.equals("together");
+        ctx.getSource().sendSuccess(() -> Component.literal(bondLine(npc)), false);
+        return 1;
+    }
+
+    static String bondLine(NpcEntity npc) {
+        NpcBond b = npc.bond;
+        if (b.with == null) return "She hasn't got to know anyone yet.";
+        return "About " + b.withName + ": trust " + Math.round(b.trust) + ", affection " + Math.round(b.affection) + ", attraction "
+                + Math.round(b.attraction) + (b.together ? ", together" : "") + ". "
+                + NpcBond.words(b.trust, b.affection, b.attraction, b.together);
+    }
+
     private static int skills(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         NpcEntity npc = target(ctx.getSource().getPlayerOrException());
         if (npc == null) {
@@ -352,7 +405,7 @@ public final class Npcs {
             return 0;
         }
         npc.mind.set(n, value);
-        ctx.getSource().sendSuccess(() -> Component.literal("Her " + n.label + " is " + Math.round(value) + "; she's " + npc.mind.mood()), false);
+        ctx.getSource().sendSuccess(() -> Component.literal("Her " + n.label + " is " + Math.round(value) + "; she's " + npc.mood()), false);
         return 1;
     }
 

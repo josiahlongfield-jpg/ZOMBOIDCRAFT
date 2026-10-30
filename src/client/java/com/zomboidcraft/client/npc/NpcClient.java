@@ -9,7 +9,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
-/** The interact key on an NPC (follow or wait), and the green dot on her chest when you're close enough to use it. */
+/** The interact key on an NPC (follow or wait; sneaking, talk to her), and the green dot on her chest when you're close enough to use it. */
 public final class NpcClient {
     private static final double REACH = 3.0;
 
@@ -25,6 +25,11 @@ public final class NpcClient {
         NpcEntity npc = lookedAt(client);
         if (npc == null) {
             return false;
+        }
+        if (client.player.isShiftKeyDown()) {
+            // sneaking: talk to her instead
+            client.gui.setScreen(new TalkScreen(npc));
+            return true;
         }
         ClientPlayNetworking.send(new NpcNet.Toggle(npc.getId()));
         return true;
