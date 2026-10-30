@@ -39,7 +39,10 @@ public final class SitePreview {
         // the Waterfront's harbour is east of its seawall (Waterfront.SEAWALL, x = 36), as Layout lays it out
         boolean harbour = variant.equals("waterfront");
         int basin = type == PlaceType.PORT ? d * 2 / 5 : harbour ? w - 1 - 36 : -1;
-        Place p = new Place(type, variant, 0, 0, w - 1, d - 1, 64, seed, type == PlaceType.PORT ? 0 : harbour ? 1 : -1, basin);
+        // -Dwside=3 -Dquay=N: a site whose sea is on its west side, N wide (Ravenrock's landing); -Dplevel: its ground's y
+        int wside = Integer.getInteger("wside", type == PlaceType.PORT ? 0 : harbour ? 1 : -1);
+        basin = Integer.getInteger("quay", basin);
+        Place p = new Place(type, variant, 0, 0, w - 1, d - 1, Integer.getInteger("plevel", 64), seed, wside, basin);
         Voxels v = new Voxels();
         long t = System.currentTimeMillis();
         Builders.build(p, new County(seed), v);
@@ -68,11 +71,11 @@ public final class SitePreview {
             vox[(y * sz + z) * sx + x] = id;
         };
         // the land: soil to the ground, grass on top, the basin flooded; roads from the gates
-        int water = LEVEL - 4;
+        int water = Integer.getInteger("plevel") != null ? LEVEL + 62 - p.level : LEVEL - 4;
         for (int x = -m; x < w + m; x++) {
             for (int z = -m; z < d + m; z++) {
-                boolean basinHere = basin > 0 && (p.waterSide == 1 ? x > w - 1 - basin : z < basin && x >= -m);
-                int top = basinHere ? LEVEL - 13 : LEVEL;
+                boolean basinHere = basin > 0 && (p.waterSide == 1 ? x > w - 1 - basin : p.waterSide == 3 ? x < basin : z < basin && x >= -m);
+                int top = basinHere ? Math.min(LEVEL - 13, water - 9) : LEVEL;
                 for (int y = 0; y < top; y++) {
                     set.set(x, y, z, y < top - 3 ? "minecraft:stone" : "minecraft:dirt");
                 }

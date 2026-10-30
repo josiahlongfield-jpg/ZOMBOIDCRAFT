@@ -33,6 +33,10 @@ final class Waterfront extends Grounds {
     static final int MA = 136, MB = 176, MX1 = 110;
     /** The gangway down to the ferry. */
     static final int GZ = 36;
+    /** The prison slip: its jetty from the seawall out to JX1, z JZ0 .. JZ0 + 2; the prison ferry's middle at FZ. */
+    static final int JZ0 = 66, JX1 = 90, FX = 52, FZ = 76;
+    /** The ferry bell at the jetty's root, and where the ferry puts people ashore (y on the paving). */
+    static final int[] BELL = {38, 1, 66}, LANDING = {41, 1, 67};
 
     Waterfront(Placer p, SplittableRandom rng, int w, int d) {
         super(p, rng, w, d, 0.3, 0.3, 0.25);
@@ -49,6 +53,7 @@ final class Waterfront extends Grounds {
         new WaterfrontTerminal(this).build();
         new WaterfrontPier(this).build();
         plaza();
+        slip();
         marinaLand();
         floats(MA);
         floats(MB);
@@ -100,7 +105,7 @@ final class Waterfront extends Grounds {
 
     /** Whether the seawall's rail has a gap at z: the ferry's gangway, the pier's root, the floats'. */
     private boolean gap(int z) {
-        return z >= GZ - 1 && z <= GZ + 2 || z >= PZ0 && z <= PZ1 || z >= MA - 1 && z <= MA + 2 || z >= MB - 1 && z <= MB + 2
+        return z >= GZ - 1 && z <= GZ + 2 || z >= JZ0 - 3 && z <= JZ0 + 4 || z >= PZ0 && z <= PZ1 || z >= MA - 1 && z <= MA + 2 || z >= MB - 1 && z <= MB + 2
                 || z % 30 == 17;
     }
 
@@ -171,6 +176,105 @@ final class Waterfront extends Grounds {
         }
         sign("family", 12, 3, TZ1 + 1, "south");
         mess(10, TZ1 + 1, SEAWALL - 2, PZ0 - 1, 0, 0.03);
+    }
+
+    // ------------------------------------------------------------------ the prison slip
+
+    /**
+     * Ravenrock's mainland landing, between the terminal and the plaza: a concrete jetty on piles out
+     * from the seawall, the prison ferry tied up along its south side, the bell at its root to call
+     * her across; across the promenade the corrections officers' pen, chain link and razor wire,
+     * the booth, the boom, the signs, the Guard's sandbags funnelling the line to the gate.
+     */
+    private void slip() {
+        int z0 = JZ0, z1 = JZ0 + 2;
+        for (int x = SEAWALL + 1; x <= JX1; x++) {
+            for (int z = z0; z <= z1; z++) {
+                set(x, 0, z, chance() < 0.08 ? "floor_concrete_crack" : "floor_concrete");
+                set(x, -1, z, "concrete_dark");
+            }
+            if ((x - SEAWALL) % 6 == 3 || x == JX1) {
+                for (int z : new int[] {z0, z1}) {
+                    for (int y = BED; y <= -2; y++) {
+                        set(x, y, z, y < SEA + 2 ? "wf_wall_slime" : "wf_wall");
+                    }
+                }
+            }
+            boolean gangway = x >= FX + PrisonFerry.DOOR - 1 && x <= FX + PrisonFerry.DOOR + 2;
+            if (x != BELL[0]) {
+                set(x, 1, z0, "wf_rail_iron[facing=north]");
+            }
+            if (!gangway) {
+                set(x, 1, z1, x % 8 == 4 ? "vessel_bollard" : "wf_rail_iron[facing=south]");
+            }
+            if (x % 4 == 1 && !gangway && x > FX - 2) {
+                for (int y = SEA + 1; y <= -1; y++) {
+                    set(x, y, z1 + 1, "wf_fender[facing=south]");
+                }
+            }
+        }
+        for (int z = z0; z <= z1; z++) {
+            set(JX1, 1, z, "wf_rail_iron[facing=east]");
+        }
+        lampPost(JX1 - 1, z0 + 1);
+        lampPost(FX + 4, z0 + 1);
+        // the ferry alongside, her bow out east; the gangway down to her side door
+        PrisonFerry ferry = new PrisonFerry(this, p.turned(FX, 0, FZ, 0), SEA);
+        ferry.build("RAVENROCK I");
+        for (int x = FX + PrisonFerry.DOOR; x <= FX + PrisonFerry.DOOR + 1; x++) {
+            set(x, -1, z1 + 1, "wf_gangway[facing=north]");
+            set(x, -2, z1 + 2, "wf_gangway[facing=north]");
+            set(x, 0, z1 + 1, "air");
+            set(x, -1, z1 + 2, "air");
+        }
+        // the bell on its post at the root
+        set(BELL[0], BELL[1], BELL[2], "zomboidcraft:ferry_bell[facing=south]");
+        // the pen across the promenade: chain link on posts, razor on top, the gate on the plaza side
+        int px0 = 29, px1 = SEAWALL - 1, pz0 = z0 - 3, pz1 = z1 + 3;
+        for (int x = px0; x <= px1; x++) {
+            for (int z = pz0; z <= pz1; z++) {
+                boolean edgeX = z == pz0 || z == pz1, edgeZ = x == px0;
+                set(x, 0, z, chance() < 0.1 ? "floor_concrete_crack" : "floor_concrete");
+                if (!edgeX && !edgeZ) {
+                    continue;
+                }
+                if (edgeZ && z >= z0 && z <= z1) {
+                    continue;  // the gate, swung back
+                }
+                boolean post = edgeX ? (x - px0) % 3 == 0 || x == px1 : (z - pz0) % 3 == 0 || z == z0 - 1 || z == z1 + 1;
+                for (int y = 1; y <= 3; y++) {
+                    set(x, y, z, post ? "pn_post" : "chainlink[axis=" + (edgeX ? "x" : "z") + "]");
+                }
+                set(x, 4, z, post ? "pn_post" : "st_razor");
+            }
+        }
+        for (int y = 1; y <= 2; y++) {
+            set(px0 + 1, y, z0 - 1, "pn_gate[axis=x]");
+            set(px0 + 1, y, z1 + 1, "pn_gate[axis=x]");
+        }
+        set(px0 + 1, 3, z0 - 1, "pn_gate_top[axis=x]");
+        set(px0 + 1, 3, z1 + 1, "pn_gate_top[axis=x]");
+        Camp camp = new Camp(p, rng, 0.5);
+        camp.booth(px0 + 2, pz0 + 1);
+        camp.boom(px0 - 1, z0 - 1, 4, false);
+        camp.floodMast(px1, pz0 + 1, 6);
+        for (int c = 0; c < 2; c++) {
+            int[] a = MallSigns.at(px0 - 1, z0 - 3, 2, c, "west"), b2 = MallSigns.at(px0 - 1, z1 + 2, 2, c, "west");
+            set(a[0], 3, a[1], "pn_sgn_ferry_" + c + "[facing=west]");
+            set(b2[0], 3, b2[1], "pn_sgn_warn_" + c + "[facing=west]");
+            int[] bs = MallSigns.at(px1 - 2, pz1 - 1, 2, c, "north");
+            set(bs[0], 2, bs[1], "pn_sgn_bell_" + c + "[facing=north]");
+        }
+        // the line they kept: sandbags and barriers in a funnel to the gate, what was dropped in it
+        for (int k = 2; k <= 7; k++) {
+            if (chance() < 0.85) {
+                set(px0 - k, 1, z0 - 1 - k / 2, k % 2 == 0 ? "sandbags[facing=south]" : "jersey_barrier[facing=north]");
+            }
+            if (chance() < 0.85) {
+                set(px0 - k, 1, z1 + 1 + k / 2, k % 2 == 0 ? "sandbags[facing=north]" : "jersey_barrier[facing=north]");
+            }
+        }
+        mess(px0 - 6, z0 - 2, px1, z1 + 2, 0, 0.05);
     }
 
     // ------------------------------------------------------------------ the marina, ashore

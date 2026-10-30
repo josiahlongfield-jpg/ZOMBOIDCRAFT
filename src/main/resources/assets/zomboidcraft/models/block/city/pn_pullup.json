@@ -1,0 +1,144 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "concrete_panel": "zomboidcraft:block/city/concrete_panel",
+    "st_galv": "zomboidcraft:block/city/st_galv",
+    "particle": "zomboidcraft:block/city/st_galv"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        7
+      ],
+      "to": [
+        2.6,
+        16,
+        8.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_galv"
+        },
+        "south": {
+          "texture": "#st_galv"
+        },
+        "east": {
+          "texture": "#st_galv"
+        },
+        "west": {
+          "texture": "#st_galv"
+        },
+        "up": {
+          "texture": "#st_galv",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#st_galv",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        13.4,
+        0,
+        7
+      ],
+      "to": [
+        15,
+        16,
+        8.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_galv"
+        },
+        "south": {
+          "texture": "#st_galv"
+        },
+        "east": {
+          "texture": "#st_galv"
+        },
+        "west": {
+          "texture": "#st_galv"
+        },
+        "up": {
+          "texture": "#st_galv",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#st_galv",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0.4,
+        0,
+        6.4
+      ],
+      "to": [
+        3.2,
+        0.8,
+        9.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#concrete_panel"
+        },
+        "south": {
+          "texture": "#concrete_panel"
+        },
+        "east": {
+          "texture": "#concrete_panel"
+        },
+        "west": {
+          "texture": "#concrete_panel"
+        },
+        "up": {
+          "texture": "#concrete_panel"
+        },
+        "down": {
+          "texture": "#concrete_panel",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        12.8,
+        0,
+        6.4
+      ],
+      "to": [
+        15.6,
+        0.8,
+        9.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#concrete_panel"
+        },
+        "south": {
+          "texture": "#concrete_panel"
+        },
+        "east": {
+          "texture": "#concrete_panel"
+        },
+        "west": {
+          "texture": "#concrete_panel"
+        },
+        "up": {
+          "texture": "#concrete_panel"
+        },
+        "down": {
+          "texture": "#concrete_panel",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

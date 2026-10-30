@@ -54,6 +54,10 @@ final class LandmarkSite extends Site {
             new CampBlackPine(p, out).build();
             return;
         }
+        if (p.variant.startsWith("ravenrock@")) {
+            new Ravenrock(p, out).build();
+            return;
+        }
         if (p.variant.startsWith("ranges@")) {
             new TankRanges(p, out).build();
             return;
