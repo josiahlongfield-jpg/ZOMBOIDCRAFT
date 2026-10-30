@@ -462,3 +462,22 @@ Real gun meshes bought by Josiah under the stores' Royalty Free licences, toon-p
 | att_holo, att_red_dot, att_prism_4x, att_mini_dot, att_magnifier (sights) | holographic sight, tube red dot, 4x prism, mini red dot and 3x magnifier from the gun attachments pack, maker logos painted out | bought by Josiah | Royalty Free |
 | att_foregrip, att_angled_grip, att_stubby_grip, att_light (grips and the weapon light) | vertical, angled and stubby grips and the weapon light from the gun attachments pack, maker logos painted out | bought by Josiah | Royalty Free |
 | att_irons_front_up/down, att_irons_rear_up/down (flip-up iron sights) | flip-up iron sights from the gun attachments pack | bought by Josiah | Royalty Free |
+
+## Wave-two guns
+
+Picked by Josiah Longfield on the Dead Air New Guns Two page, cut by tools/audio/build_gun3_sounds.py (far-off shots are made from the near ones). The Sonniss and Gamemaster originals are not included.
+
+| Sound | Recording | By | Licence |
+|---|---|---|---|
+| weapon.heavy_sniper.shot | [M1 Garand Rifle by nioczkus](https://freesound.org/people/nioczkus/sounds/386842/) | nioczkus | Freesound, CC0 1.0 |
+| weapon.heavy_sniper.shot_distant | Lynx 50 - FIRING - Take 1 - 65m Behind - ORTF - CM3 (Pole Position - Lynx 50 Cal Sniper Rifle) | Sonniss GameAudioGDC 2024 | Sonniss royalty-free |
+| weapon.heavy_sniper.shot_suppressed | Sako_TRG_22_TRG_1m_left_off_axis_MKH416_clean_Single_shots_x_5 (Pole Position Production - Sako TRG 22) | Sonniss GameAudioGDC 2016 | Sonniss royalty-free |
+| weapon.battle_rifle.shot | Automatic Cannon - MK44 - 03 - Single Shot with Report 03 (Fascinated Sound - The Gun Locker SFX Pack) | Sonniss GameAudioGDC 2016 | Sonniss royalty-free |
+| weapon.battle_rifle.shot_suppressed | [SIG Sauer P226 (Suppressed) by areniporgen](https://freesound.org/people/areniporgen/sounds/828790/) | areniporgen | Freesound, CC0 1.0 |
+| weapon.machine_pistol.shot | Glock_18_75m_behind_Ehrlund_R2_clean_Six_shots_x_1 (Pole Position Production - Glock 18c) | Sonniss GameAudioGDC 2016 | Sonniss royalty-free |
+| weapon.machine_pistol.shot_distant | HK_VP70_9mm_1m_in_front_RE20_clean_Double_shots_x_1 (Pole Position Production -  Heckler & Koch VP70 9mm) | Sonniss GameAudioGDC 2016 | Sonniss royalty-free |
+| weapon.machine_pistol.shot_suppressed | [suppressed-submachinegun.wav by mnslugger20](https://freesound.org/people/mnslugger20/sounds/242846/) | mnslugger20 | Freesound, CC0 1.0 |
+| weapon.machine_pistol.shot_suppressed | [A silenced/suppressed handgun being shot once w/ phaser sounding trail // pretty metallic sounding by serøutōnin--deprivəd](https://freesound.org/people/ser%C3%B8ut%C5%8Dnin--depriv%C9%99d/sounds/855656/) | ser%C3%B8ut%C5%8Dnin--depriv%C9%99d | Freesound, CC0 1.0 |
+| weapon.pocket_pistol.shot | [Desert Eagle Gunshot by elliotlp](https://freesound.org/people/elliotlp/sounds/330634/) | elliotlp | Freesound, CC0 1.0 |
+| weapon.grenade_launcher.shot | gun_grenade_launcher_shot_01 (Gamemaster gun packs, bonus sounds) | Gamemaster Audio | Gamemaster Audio licence (bought) |
+| weapon.minigun.shot, weapon.minigun.spin_down | [Slowfiringheavyweapon.wav by SuperPhat](https://freesound.org/people/SuperPhat/sounds/417148/) | SuperPhat | Freesound, CC0 1.0 |
