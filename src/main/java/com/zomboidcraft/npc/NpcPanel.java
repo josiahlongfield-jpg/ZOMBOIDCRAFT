@@ -417,7 +417,8 @@ public final class NpcPanel {
 
     /**
      * Which of her model's own pieces (a model in whole outfits, like "top.jacket" or "gloves") a found piece of
-     * clothing is, by name: the piece's last word in the item's id ("jacket", "glove"), shoes taking any footwear.
+     * clothing is, by name: the piece's last word in the item's id ("jacket", "glove"), shoes taking any footwear and pants
+     * any trousers.
      */
     public static String part(List<String> pieces, ItemStack stack) {
         if (Clothes.of(stack) == null) return null;
@@ -427,6 +428,7 @@ public final class NpcPanel {
             String one = word.endsWith("s") ? word.substring(0, word.length() - 1) : word;
             if (one.length() >= 3 && id.contains(one)) return p;
             if (one.equals("shoe") && (id.contains("boot") || id.contains("sneaker") || id.contains("trainer"))) return p;
+            if (one.equals("pant") && (id.contains("jeans") || id.contains("trouser") || id.contains("slacks"))) return p;
         }
         return null;
     }
