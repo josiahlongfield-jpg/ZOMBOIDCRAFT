@@ -244,16 +244,17 @@ public final class Npcs {
         return 1;
     }
 
-    /** Puts her in one of her outfits, as if you'd picked it for her (she keeps it a while, and says what she thinks). */
+    /** Puts her in one of her outfits, no questions (for testing; she keeps it a while, then dresses as she likes). */
     private static int outfit(CommandContext<CommandSourceStack> ctx, String name) throws CommandSyntaxException {
         ServerPlayer player = ctx.getSource().getPlayerOrException();
         NpcEntity npc = target(player);
         NpcWardrobe.Outfit o = NpcWardrobe.Outfit.named(name);
-        if (npc == null || o == null || o == NpcWardrobe.Outfit.SLEEP) {
+        if (npc == null || o == null) {
             ctx.getSource().sendFailure(Component.literal(npc == null ? "No companion near you" : "Outfits: work, skirt, dress, dress_boots, date"));
             return 0;
         }
-        npc.wardrobe.answer(npc, player, NpcWardrobe.DRESS + o.ordinal());
+        npc.wardrobe.force(npc, o);
+        ctx.getSource().sendSuccess(() -> Component.literal("She's changing into " + o.label), false);
         return 1;
     }
 

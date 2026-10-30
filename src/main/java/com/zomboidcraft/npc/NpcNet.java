@@ -14,7 +14,7 @@ import net.minecraft.server.level.ServerPlayer;
 /**
  * The interact key pressed on an NPC: she follows the player who pressed it, or waits where she is. Sneaking, it opens
  * the talk panel instead (client), whose picks come back as Talk: a compliment, a flirt, a gift, a hug, her hand, a kiss,
- * or about her clothes (NpcWardrobe's LIKE, DISLIKE, SUGGEST + outfit, and DRESS + outfit from the wardrobe panel).
+ * or about her clothes (NpcWardrobe: LIKE, DISLIKE, SUGGEST + outfit, PUT_ON or TAKE_OFF + piece).
  */
 public final class NpcNet {
     public record Toggle(int npc) implements CustomPacketPayload {
