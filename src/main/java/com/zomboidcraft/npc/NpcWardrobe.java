@@ -23,11 +23,10 @@ public final class NpcWardrobe {
     public enum Outfit {
         WORK("work clothes", 1.0f, 0.2f, 0.6f, "sweater", "shorts", "stockings", "boots"),
         SKIRT("sweater and skirt", 0.6f, 0.6f, 0.6f, "sweater", "skirt", "stockings", "boots"),
-        RED("sweater and red shorts", 0.7f, 0.4f, 0.5f, "sweater", "redshorts", "boots"),
-        DRESS("the white dress", 0.0f, 1.0f, 0.1f, "dress", "heels"),
-        DRESS_BOOTS("the dress and boots", 0.4f, 0.7f, 0.2f, "dress", "stockings", "boots"),
+        DRESS("the slip dress", 0.0f, 1.0f, 0.1f, "dress", "heels"),
+        DRESS_BOOTS("the slip dress and boots", 0.4f, 0.7f, 0.2f, "dress", "stockings", "boots"),
         DATE("skirt and heels", 0.1f, 0.9f, 0.5f, "sweater", "skirt", "stockings", "heels"),
-        SLEEP("her sleepwear", 0f, 0f, 0f, "dress");
+        SLEEP("her slip, for bed", 0f, 0f, 0f, "dress");
 
         public final String label;
         final float practical, pretty, cosy;

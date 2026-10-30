@@ -68,7 +68,7 @@ public final class Npcs {
     }
     public static final List<String> LOOKS = List.of("raw", "toon", "both");
     /** Clothes a skinned companion can put on and take off (the pieces in her .zsk). */
-    public static final List<String> PIECES = List.of("bra", "stockings", "heels", "hair", "sweater", "shorts", "redshorts", "skirt",
+    public static final List<String> PIECES = List.of("bra", "stockings", "heels", "hair", "sweater", "shorts", "skirt",
             "dress", "boots");
 
     /** Whether this model is a skinned one in pieces she can dress in (a .zsk in the local folder or the jar), so she has a wardrobe. */
@@ -250,7 +250,7 @@ public final class Npcs {
         NpcEntity npc = target(player);
         NpcWardrobe.Outfit o = NpcWardrobe.Outfit.named(name);
         if (npc == null || o == null || o == NpcWardrobe.Outfit.SLEEP) {
-            ctx.getSource().sendFailure(Component.literal(npc == null ? "No companion near you" : "Outfits: work, skirt, red, dress, dress_boots, date"));
+            ctx.getSource().sendFailure(Component.literal(npc == null ? "No companion near you" : "Outfits: work, skirt, dress, dress_boots, date"));
             return 0;
         }
         npc.wardrobe.answer(npc, player, NpcWardrobe.DRESS + o.ordinal());
