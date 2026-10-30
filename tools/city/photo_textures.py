@@ -1193,6 +1193,8 @@ import dam  # noqa: E402
 dam.register(sys.modules[__name__])
 import shipyard  # noqa: E402
 shipyard.register(sys.modules[__name__])
+import cape  # noqa: E402
+cape.register(sys.modules[__name__])
 
 
 
