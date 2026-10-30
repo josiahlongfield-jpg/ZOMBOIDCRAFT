@@ -54,6 +54,8 @@ public final class NpcPanel {
     // the wardrobe's own acts (NpcWardrobe.LIKE ... TAKE_OFF + piece) pass straight through
     /** For a model in whole outfits (Npcs.dresses false): wear look n of its list. */
     public static final int LOOK = 600;
+    /** For a model in whole outfits: put on or take off piece n of {@link State#wears()} (her .zsk's own pieces). */
+    public static final int WEAR_ON = 700, WEAR_OFF = 800;
 
     /** What you can do with things: hand her one from your inventory, take one from her bag, or her weapon. */
     public static final int GIVE = 0, TAKE = 1, TAKE_WEAPON = 2;
@@ -95,7 +97,8 @@ public final class NpcPanel {
     /** Everything her page shows that the client doesn't already know. */
     public record State(int npc, float health, float maxHealth, boolean following, boolean home, int job, boolean night,
                         float[] needs, float[] traits, int[] skills, float[] progress, float trust, float affection,
-                        String feelings, String mood, ItemStack weapon, List<ItemStack> pack, List<String> diary)
+                        String feelings, String mood, ItemStack weapon, List<ItemStack> pack, List<String> diary,
+                        List<String> wears)
             implements CustomPacketPayload {
         public static final Type<State> TYPE = new Type<>(ZomboidCraft.id("npc_state"));
         public static final StreamCodec<RegistryFriendlyByteBuf, State> CODEC = StreamCodec.of(State::write, State::read);
@@ -138,6 +141,8 @@ public final class NpcPanel {
             for (ItemStack st : s.pack) ItemStack.OPTIONAL_STREAM_CODEC.encode(buf, st);
             buf.writeVarInt(s.diary.size());
             for (String d : s.diary) buf.writeUtf(d);
+            buf.writeVarInt(s.wears.size());
+            for (String w : s.wears) buf.writeUtf(w);
         }
 
         private static State read(RegistryFriendlyByteBuf buf) {
@@ -157,8 +162,10 @@ public final class NpcPanel {
             for (int i = buf.readVarInt(); i > 0; i--) pack.add(ItemStack.OPTIONAL_STREAM_CODEC.decode(buf));
             List<String> diary = new ArrayList<>();
             for (int i = buf.readVarInt(); i > 0; i--) diary.add(buf.readUtf());
+            List<String> wears = new ArrayList<>();
+            for (int i = buf.readVarInt(); i > 0; i--) wears.add(buf.readUtf());
             return new State(npc, health, max, following, home, job, night, needs, traits, skills, progress, trust, affection,
-                    feelings, mood, weapon, pack, diary);
+                    feelings, mood, weapon, pack, diary, wears);
         }
     }
 
@@ -242,7 +249,8 @@ public final class NpcPanel {
         }
         return new State(npc.getId(), npc.getHealth(), npc.getMaxHealth(), npc.following, npc.work.home != null,
                 npc.work.job.ordinal(), npc.work.nightShift, needs, traits, skills, progress, b.trust, b.affection,
-                NpcBond.words(b.trust, b.affection, b.attraction, b.together), npc.mood(), npc.getMainHandItem().copy(), pack, diary);
+                NpcBond.words(b.trust, b.affection, b.attraction, b.together), npc.mood(), npc.getMainHandItem().copy(), pack, diary,
+                Npcs.dresses(npc.model()) ? List.of() : Npcs.pieces(npc));
     }
 
     // ------------------------------------------------------------------ doing what's asked
@@ -300,6 +308,11 @@ public final class NpcPanel {
             hidden.removeIf(h -> h.startsWith("look="));
             hidden.add("look=" + looks.get(i));
             npc.setHidden(hidden);
+        } else if (code >= WEAR_ON && code < WEAR_OFF + 100) {
+            List<String> wears = Npcs.pieces(npc);
+            int i = (code - WEAR_ON) % 100;
+            if (Npcs.dresses(npc.model()) || i >= wears.size()) return;
+            Npcs.wear(npc, wears.get(i), code < WEAR_OFF);
         } else if (code >= NpcWardrobe.LIKE) {
             npc.wardrobe.answer(npc, p, code);
         }
@@ -338,7 +351,20 @@ public final class NpcPanel {
                 npc.wardrobe.answer(npc, p, NpcWardrobe.PUT_ON + piece.ordinal());
                 return;
             }
-            if (Clothes.of(stack) != null && piece == null) {
+            String own = Npcs.dresses(npc.model()) ? null : part(Npcs.pieces(npc), stack);
+            if (own != null) {
+                // one of her model's own pieces: she keeps it and puts it on
+                ItemStack left = npc.work.pack.addItem(stack.copy());
+                if (left.getCount() == stack.getCount()) {
+                    npc.lines.sayLine(npc, NpcLines.Kind.REPLY, "My bag's full.");
+                    return;
+                }
+                inv.setItem(slot, left);
+                Npcs.wear(npc, own, true);
+                npc.lines.sayLine(npc, NpcLines.Kind.REPLY, "Oh, that fits. Thank you.");
+                return;
+            }
+            if (Clothes.of(stack) != null && (piece == null || !Npcs.dresses(npc.model()))) {
                 npc.lines.sayLine(npc, NpcLines.Kind.REPLY, "I can't wear that one. Not yet, anyway.");
                 return;
             }
@@ -387,6 +413,22 @@ public final class NpcPanel {
         return stack.getItem() instanceof com.zomboidcraft.combat.RifleItem || stack.is(net.minecraft.tags.ItemTags.SWORDS)
                 || stack.is(net.minecraft.tags.ItemTags.AXES) || id.contains("knife") || id.contains("machete") || id.contains("bat")
                 || id.contains("pipe") || id.contains("crowbar") || id.contains("hammer");
+    }
+
+    /**
+     * Which of her model's own pieces (a model in whole outfits, like "top.jacket" or "gloves") a found piece of
+     * clothing is, by name: the piece's last word in the item's id ("jacket", "glove"), shoes taking any footwear.
+     */
+    public static String part(List<String> pieces, ItemStack stack) {
+        if (Clothes.of(stack) == null) return null;
+        String id = BuiltInRegistries.ITEM.getKey(stack.getItem()).getPath().toLowerCase(Locale.ROOT);
+        for (String p : pieces) {
+            String word = p.substring(p.lastIndexOf('.') + 1).toLowerCase(Locale.ROOT);
+            String one = word.endsWith("s") ? word.substring(0, word.length() - 1) : word;
+            if (one.length() >= 3 && id.contains(one)) return p;
+            if (one.equals("shoe") && (id.contains("boot") || id.contains("sneaker") || id.contains("trainer"))) return p;
+        }
+        return null;
     }
 
     /**

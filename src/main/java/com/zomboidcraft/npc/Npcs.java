@@ -159,7 +159,7 @@ public final class Npcs {
     }
 
     /** The pieces she can put on and take off: the wardrobe's, or her own model's. */
-    private static List<String> pieces(NpcEntity npc) {
+    static List<String> pieces(NpcEntity npc) {
         return npc == null || dresses(npc.model()) ? PIECES : List.copyOf(dress(npc.model()).pieces());
     }
 
@@ -333,6 +333,19 @@ public final class Npcs {
                     + (dresses(npc.model()) ? " (her underwear always stays on; she puts her outfit back together after a while)" : "")));
             return 0;
         }
+        if (!wear(npc, piece, on)) {
+            ctx.getSource().sendSuccess(() -> Component.literal(on ? "She already has her " + piece + " on" : "Her " + piece + " is already off"), false);
+            return 0;
+        }
+        ctx.getSource().sendSuccess(() -> Component.literal((on ? "Put on: " : "Took off: ") + piece), false);
+        return 1;
+    }
+
+    /**
+     * Puts one of her model's pieces on or takes it off; returns false if it already was. Putting one on takes off
+     * whatever shares its slot ("top.jacket", "top.hoodie") and whatever clashes with it (CLASH).
+     */
+    static boolean wear(NpcEntity npc, String piece, boolean on) {
         java.util.Set<String> hidden = new java.util.HashSet<>(npc.hidden());
         if (on && piece.contains(".")) {
             // pieces sharing a slot ("top.jacket", "top.hoodie") are worn one at a time
@@ -347,12 +360,10 @@ public final class Npcs {
             }
         }
         if (on ? !hidden.remove(piece) : !hidden.add(piece)) {
-            ctx.getSource().sendSuccess(() -> Component.literal(on ? "She already has her " + piece + " on" : "Her " + piece + " is already off"), false);
-            return 0;
+            return false;
         }
         npc.setHidden(hidden);
-        ctx.getSource().sendSuccess(() -> Component.literal((on ? "Put on: " : "Took off: ") + piece), false);
-        return 1;
+        return true;
     }
 
     private static int outfit(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {

@@ -333,22 +333,29 @@ public class CompanionScreen extends Screen {
         boolean dresses = com.zomboidcraft.client.npc.NpcClient.dresses(npc);
         List<String> looks = dresses ? List.of() : com.zomboidcraft.client.npc.NpcClient.looks(npc);
         if (!dresses) {
-            // a model in whole outfits: pick one
+            // a model in whole outfits: pick one, and put her own pieces (her .zsk's, Npcs.wear) on or off
             String current = null;
             for (String h : npc.hidden()) if (h.startsWith("look=")) current = h.substring(5);
             if (current == null && !looks.isEmpty()) current = looks.get(0);
-            if (looks.isEmpty()) KitDraw.text(g, font, "She has just the one outfit.", lx, ly + 3, KitDraw.FAINT, 0.8f);
-            for (int i = 0; i < looks.size() && i < 7; i++) {
-                boolean worn = looks.get(i).equals(current), over = KitDraw.in(mx, my, lx, ly, lw, 13);
-                if (over) g.fill(lx, ly, lx + lw, ly + 13, 0x1AE8E4DA);
-                KitDraw.diamond(g, lx + 4, ly + 6, 3, worn ? KitDraw.GOOD : 0x4DE8E4DA);
-                KitDraw.text(g, font, cap(looks.get(i).replace('_', ' ')), lx + 11, ly + 3, worn ? KitDraw.BRIGHT : KitDraw.DIM, 0.85f);
-                if (!worn) KitDraw.capsRight(g, font, "Change into", lx + lw, ly + 3, over ? KitDraw.LINK : KitDraw.FAINT, 0.55f);
-                int code = NpcPanel.LOOK + i;
-                hot(lx, ly, lw, 13, () -> order(code), null, null);
-                ly += 14;
+            List<String> wears = s == null ? List.of() : s.wears();
+            int n = looks.size() + wears.size(), cols = Math.max(1, (n + 6) / 7), cw = (lw - (cols - 1) * 4) / cols;
+            if (n == 0) KitDraw.text(g, font, "She has just the one outfit.", lx, ly + 3, KitDraw.FAINT, 0.8f);
+            for (int i = 0; i < n && i < cols * 7; i++) {
+                int ex = lx + (i / 7) * (cw + 4), ey = ly + (i % 7) * 14;
+                boolean look = i < looks.size();
+                String name = look ? looks.get(i) : wears.get(i - looks.size());
+                boolean worn = look ? name.equals(current) : !npc.hidden().contains(name);
+                boolean over = KitDraw.in(mx, my, ex, ey, cw, 13);
+                if (over) g.fill(ex, ey, ex + cw, ey + 13, 0x1AE8E4DA);
+                KitDraw.diamond(g, ex + 4, ey + 6, 3, worn ? KitDraw.GOOD : 0x4DE8E4DA);
+                String label = look ? cap(name.replace('_', ' ')) + " (outfit)" : pieceName(name);
+                KitDraw.text(g, font, label, ex + 11, ey + 3, worn ? KitDraw.BRIGHT : KitDraw.DIM, 0.85f);
+                String act = look ? (worn ? null : "Change into") : worn ? "Take off" : "Put on";
+                if (act != null && cols == 1) KitDraw.capsRight(g, font, act, ex + cw, ey + 3, over ? KitDraw.LINK : KitDraw.FAINT, 0.55f);
+                int code = look ? NpcPanel.LOOK + i : (worn ? NpcPanel.WEAR_OFF : NpcPanel.WEAR_ON) + i - looks.size();
+                hot(ex, ey, cw, 13, () -> order(code), null, act == null ? null : act + ": " + label);
             }
-            ly += 7 * 14 - Math.min(7, Math.max(1, looks.size())) * 14;
+            ly += 7 * 14;
         }
         for (NpcWardrobe.Piece p : dresses ? NpcWardrobe.Piece.values() : new NpcWardrobe.Piece[0]) {
             boolean worn = !npc.hidden().contains(p.id);
@@ -395,11 +402,13 @@ public class CompanionScreen extends Screen {
             boolean over = KitDraw.in(mx, my, tx, ty, 18, 18);
             KitDraw.tile(g, font, st, tx, ty, 18, 18, over);
             NpcWardrobe.Piece wear = st.isEmpty() || !com.zomboidcraft.client.npc.NpcClient.dresses(npc) ? null : NpcPanel.piece(st);
-            if (wear != null) KitDraw.frame(g, tx, ty, 18, 18, KitDraw.LINK);
+            String own = st.isEmpty() || s == null || s.wears().isEmpty() ? null : NpcPanel.part(s.wears(), st);
+            if (wear != null || own != null) KitDraw.frame(g, tx, ty, 18, 18, KitDraw.LINK);
             int slot = i;
             if (!st.isEmpty()) {
                 hot(tx, ty, 18, 18, () -> gear(NpcPanel.GIVE, slot), null, st.getHoverName().getString()
-                        + (wear != null ? ": offer it to wear (her " + wear.label + ")" : ": hand it to her"));
+                        + (wear != null ? ": offer it to wear (her " + wear.label + ")"
+                        : own != null ? ": offer it to wear (her " + pieceName(own).toLowerCase(java.util.Locale.ROOT) + ")" : ": hand it to her"));
             }
         }
         ry += 4 * 20 + 6;
@@ -440,6 +449,11 @@ public class CompanionScreen extends Screen {
         int hx = x + 37, hy = y + H - 14;
         hx += KitDraw.hint(g, font, "Q/R", "Pages", hx, hy);
         KitDraw.hint(g, font, "G", "Close", hx, hy);
+    }
+
+    /** "top.jacket" reads "Jacket", "gloves" reads "Gloves". */
+    private static String pieceName(String piece) {
+        return cap(piece.substring(piece.lastIndexOf('.') + 1).replace('_', ' '));
     }
 
     private static String cap(String s) {
