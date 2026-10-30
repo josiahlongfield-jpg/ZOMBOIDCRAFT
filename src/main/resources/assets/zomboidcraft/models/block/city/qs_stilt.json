@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "qs_stilt": "zomboidcraft:block/city/qs_stilt",
+    "particle": "zomboidcraft:block/city/qs_stilt"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        0,
+        4
+      ],
+      "to": [
+        12,
+        16,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#qs_stilt"
+        },
+        "south": {
+          "texture": "#qs_stilt"
+        },
+        "east": {
+          "texture": "#qs_stilt"
+        },
+        "west": {
+          "texture": "#qs_stilt"
+        },
+        "up": {
+          "texture": "#qs_stilt",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#qs_stilt",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
