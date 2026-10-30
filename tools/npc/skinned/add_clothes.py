@@ -81,10 +81,14 @@ for m in cl:
     top = np.argsort(-W, 1)[:, :4]
     tw = np.take_along_axis(W, top, 1); tw /= np.maximum(tw.sum(1, keepdims=True), 1e-9)
     name = m['name'].replace(' ', '_')
+    if any(x['name'] == name and not x.get('added') for x in raw['meshes']):
+        # a piece Mixamo rigged itself (hair, face, bra...) that came along in the export: keep Mixamo's skin
+        print(f'{name}: already rigged by Mixamo, skipped')
+        continue
     raw['meshes'] = [x for x in raw['meshes'] if x['name'] != name]
     raw['meshes'].append({'name': name, 'n': n, 'pos': enc(pos.astype(np.float32)), 'normal': enc(normals(pos, ix).astype(np.float32)),
                           'uv': enc(dec(m['uv'], np.float32)), 'si': enc(top.astype(np.uint8)), 'sw': enc(tw.astype(np.float32)),
-                          'ix': enc(ix.astype(np.uint32))})
+                          'ix': enc(ix.astype(np.uint32)), 'added': True})
     print(f'{name}: {n} verts, {len(ix)} tris, {d[:, 0].max() * 100:.1f} cm from the body at most')
 json.dump(raw, open(out_path, 'w'))
 print('wrote', out_path)
