@@ -61,6 +61,26 @@ public final class NpcSkin {
             joint = new byte[vertices * 4];
             weight = new float[vertices * 4];
         }
+
+        /**
+         * Turns every triangle to face the way its corners' normals point, so drawing front faces only never drops one that
+         * was wound backwards (her body is drawn culled; see NpcSkinDraw).
+         */
+        void orient() {
+            for (int t = 0; t < tris.length; t += 3) {
+                int a = tris[t] * 3, b = tris[t + 1] * 3, c = tris[t + 2] * 3;
+                float ux = pos[b] - pos[a], uy = pos[b + 1] - pos[a + 1], uz = pos[b + 2] - pos[a + 2];
+                float vx = pos[c] - pos[a], vy = pos[c + 1] - pos[a + 1], vz = pos[c + 2] - pos[a + 2];
+                float fx = uy * vz - uz * vy, fy = uz * vx - ux * vz, fz = ux * vy - uy * vx;
+                float nx = normal[a] + normal[b] + normal[c], ny = normal[a + 1] + normal[b + 1] + normal[c + 1],
+                        nz = normal[a + 2] + normal[b + 2] + normal[c + 2];
+                if (fx * nx + fy * ny + fz * nz < 0) {
+                    int swap = tris[t + 1];
+                    tris[t + 1] = tris[t + 2];
+                    tris[t + 2] = swap;
+                }
+            }
+        }
     }
 
     /** A clip: per frame, per bone (the first `bones`), its turn (x, y, z, w) and position in model space. */
@@ -210,6 +230,7 @@ public final class NpcSkin {
                 for (int i = 0; i < gr.tris.length; i++) {
                     gr.tris[i] = in.readInt();
                 }
+                gr.orient();
                 groups[g] = gr;
             }
             int texCount = in.readInt();
