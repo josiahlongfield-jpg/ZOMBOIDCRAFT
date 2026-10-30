@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
@@ -17,6 +18,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -34,7 +36,8 @@ import org.jetbrains.annotations.Nullable;
  * says nothing has what it comes with (its stock), so found guns and guns from before attachments are whole.
  *
  * Fitting also tells the gun's item model what to draw: the custom model data strings hold one model key per
- * slot, in {@link Slot} order, "none" for an empty slot. A fitted optic folds the iron sights down.
+ * slot, in {@link Slot} order, "none" for an empty slot, then the gun's finish, then each slot's part's colour in
+ * the same order and last the flip-up irons' colour ("none": the plain look). A fitted optic folds the irons down.
  */
 public record Attachments(Map<Slot, ItemStack> mounted) {
     public enum Slot implements StringRepresentable {
@@ -433,6 +436,61 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
         return slots(gun).contains(Slot.STOCK) && key(gun, Slot.STOCK) == null;
     }
 
+    // ---- colours ----
+
+    /**
+     * The colours the bought attachments also came in besides the plain black one, by model key, and the flip-up
+     * irons' besides grey (tools/meshguns packs each as its mesh with "_colour" on the end). Loot picks the plain look
+     * or one of these, evenly, so found parts and guns vary (Josiah 2026-10-30).
+     */
+    private static final Map<String, List<String>> COLOURS = Map.of(
+            "holo", List.of("tan"), "magnifier", List.of("tan"), "stubby_grip", List.of("tan"), "light", List.of("tan"));
+    private static final List<String> IRONS_COLOURS = List.of("dark", "camo", "green");
+    /** The guns whose irons are the flip-up pair (tools/meshguns/guns.json "flip"). */
+    private static final Set<String> FLIP_IRONS = Set.of("assault_rifle", "hunting_rifle", "precision_rifle", "heavy_sniper", "crossbow");
+
+    /** The colour a part came in, or the colour of a gun's irons, for tooltips: null for the plain look. */
+    public static @Nullable String colour(ItemStack stack) {
+        return stack.get(GunState.COLOUR);
+    }
+
+    /** Gives a found part one of the colours it came in, or a found gun's irons and fitted parts theirs. Returns
+     * true if anything changed. */
+    public static boolean paint(ItemStack stack, RandomSource random) {
+        if (stack.getItem() instanceof AttachmentItem item) {
+            return pick(stack, COLOURS.get(item.modelKey()), random);
+        }
+        if (!isModular(stack)) {
+            return false;
+        }
+        boolean irons = FLIP_IRONS.contains(gunId(stack)) && pick(stack, IRONS_COLOURS, random);
+        Map<Slot, ItemStack> next = new EnumMap<>(Slot.class);
+        boolean parts = false;
+        for (Map.Entry<Slot, ItemStack> e : of(stack).mounted().entrySet()) {
+            ItemStack part = e.getValue().copy();
+            parts |= paint(part, random);
+            next.put(e.getKey(), part);
+        }
+        if (parts) {
+            set(stack, new Attachments(next));
+        } else if (irons) {
+            refreshModel(stack);
+        }
+        return irons || parts;
+    }
+
+    private static boolean pick(ItemStack stack, @Nullable List<String> colours, RandomSource random) {
+        if (colours == null) {
+            return false;
+        }
+        int i = random.nextInt(colours.size() + 1);
+        if (i == colours.size()) {
+            return false;       // the plain look
+        }
+        stack.set(GunState.COLOUR, colours.get(i));
+        return true;
+    }
+
     // ---- the item model's view ----
 
     /** Writes the model data of a gun that has none yet (straight from a command or the creative tab), so it's
@@ -452,7 +510,8 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
         writeModelData(gun, floats.isEmpty() ? 0 : floats.get(0), floats.size() < 2 ? 0 : floats.get(1));
     }
 
-    /** Writes the gun's model data: [floats] reload step and flash, [strings] one model key per slot, then its finish. */
+    /** Writes the gun's model data: [floats] reload step and flash, [strings] one model key per slot, its finish,
+     * one colour per slot, its irons' colour. */
     static void writeModelData(ItemStack gun, float step, float flash) {
         List<String> keys = new ArrayList<>();
         for (Slot slot : Slot.values()) {
@@ -464,6 +523,13 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
         }
         String finish = GunFinish.key(gun);
         keys.add(finish == null ? EMPTY_KEY : finish);
+        Map<Slot, ItemStack> mounted = of(gun).mounted();
+        for (Slot slot : Slot.values()) {
+            String colour = mounted.containsKey(slot) ? mounted.get(slot).get(GunState.COLOUR) : null;
+            keys.add(colour == null ? EMPTY_KEY : colour);
+        }
+        String irons = gun.get(GunState.COLOUR);
+        keys.add(irons == null ? EMPTY_KEY : irons);
         gun.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(List.of(step, flash), List.of(), keys, List.of()));
     }
 

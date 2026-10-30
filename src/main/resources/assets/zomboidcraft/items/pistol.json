@@ -200,18 +200,43 @@
          {
           "when": "light",
           "model": {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/pistol/raised_mag_out/light",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_light",
-            "part": "body",
-            "offset": [
-             8.0,
-             8.98,
-             5.9
-            ],
-            "roll": 180
+           "type": "minecraft:select",
+           "property": "minecraft:custom_model_data",
+           "index": 13,
+           "cases": [
+            {
+             "when": "tan",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/pistol/raised_mag_out/light",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_light_tan",
+               "part": "body",
+               "offset": [
+                8.0,
+                8.98,
+                5.9
+               ],
+               "roll": 180
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/pistol/raised_mag_out/light",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_light",
+             "part": "body",
+             "offset": [
+              8.0,
+              8.98,
+              5.9
+             ],
+             "roll": 180
+            }
            }
           }
          },
@@ -459,18 +484,43 @@
          {
           "when": "light",
           "model": {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/pistol/mag_out/light",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_light",
-            "part": "body",
-            "offset": [
-             8.0,
-             8.98,
-             5.9
-            ],
-            "roll": 180
+           "type": "minecraft:select",
+           "property": "minecraft:custom_model_data",
+           "index": 13,
+           "cases": [
+            {
+             "when": "tan",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/pistol/mag_out/light",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_light_tan",
+               "part": "body",
+               "offset": [
+                8.0,
+                8.98,
+                5.9
+               ],
+               "roll": 180
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/pistol/mag_out/light",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_light",
+             "part": "body",
+             "offset": [
+              8.0,
+              8.98,
+              5.9
+             ],
+             "roll": 180
+            }
            }
           }
          },
@@ -725,18 +775,43 @@
          {
           "when": "light",
           "model": {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/pistol/raised_mag_in/light",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_light",
-            "part": "body",
-            "offset": [
-             8.0,
-             8.98,
-             5.9
-            ],
-            "roll": 180
+           "type": "minecraft:select",
+           "property": "minecraft:custom_model_data",
+           "index": 13,
+           "cases": [
+            {
+             "when": "tan",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/pistol/raised_mag_in/light",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_light_tan",
+               "part": "body",
+               "offset": [
+                8.0,
+                8.98,
+                5.9
+               ],
+               "roll": 180
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/pistol/raised_mag_in/light",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_light",
+             "part": "body",
+             "offset": [
+              8.0,
+              8.98,
+              5.9
+             ],
+             "roll": 180
+            }
            }
           }
          },
@@ -1018,18 +1093,43 @@
          {
           "when": "light",
           "model": {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/pistol/mag_in/light",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_light",
-            "part": "body",
-            "offset": [
-             8.0,
-             8.98,
-             5.9
-            ],
-            "roll": 180
+           "type": "minecraft:select",
+           "property": "minecraft:custom_model_data",
+           "index": 13,
+           "cases": [
+            {
+             "when": "tan",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/pistol/mag_in/light",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_light_tan",
+               "part": "body",
+               "offset": [
+                8.0,
+                8.98,
+                5.9
+               ],
+               "roll": 180
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/pistol/mag_in/light",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_light",
+             "part": "body",
+             "offset": [
+              8.0,
+              8.98,
+              5.9
+             ],
+             "roll": 180
+            }
            }
           }
          },
@@ -1318,18 +1418,43 @@
          {
           "when": "light",
           "model": {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/pistol/raised_charge/light",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_light",
-            "part": "body",
-            "offset": [
-             8.0,
-             8.98,
-             5.9
-            ],
-            "roll": 180
+           "type": "minecraft:select",
+           "property": "minecraft:custom_model_data",
+           "index": 13,
+           "cases": [
+            {
+             "when": "tan",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/pistol/raised_charge/light",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_light_tan",
+               "part": "body",
+               "offset": [
+                8.0,
+                8.98,
+                5.9
+               ],
+               "roll": 180
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/pistol/raised_charge/light",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_light",
+             "part": "body",
+             "offset": [
+              8.0,
+              8.98,
+              5.9
+             ],
+             "roll": 180
+            }
            }
           }
          },
@@ -1611,18 +1736,43 @@
          {
           "when": "light",
           "model": {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/pistol/charge/light",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_light",
-            "part": "body",
-            "offset": [
-             8.0,
-             8.98,
-             5.9
-            ],
-            "roll": 180
+           "type": "minecraft:select",
+           "property": "minecraft:custom_model_data",
+           "index": 13,
+           "cases": [
+            {
+             "when": "tan",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/pistol/charge/light",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_light_tan",
+               "part": "body",
+               "offset": [
+                8.0,
+                8.98,
+                5.9
+               ],
+               "roll": 180
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/pistol/charge/light",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_light",
+             "part": "body",
+             "offset": [
+              8.0,
+              8.98,
+              5.9
+             ],
+             "roll": 180
+            }
            }
           }
          },
@@ -1910,18 +2060,43 @@
        {
         "when": "light",
         "model": {
-         "type": "minecraft:special",
-         "base": "zomboidcraft:item/weapon/pistol/ads/light",
-         "model": {
-          "type": "zomboidcraft:mesh",
-          "id": "att_light",
-          "part": "body",
-          "offset": [
-           8.0,
-           8.98,
-           5.9
-          ],
-          "roll": 180
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 13,
+         "cases": [
+          {
+           "when": "tan",
+           "model": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/pistol/ads/light",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_light_tan",
+             "part": "body",
+             "offset": [
+              8.0,
+              8.98,
+              5.9
+             ],
+             "roll": 180
+            }
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/pistol/ads/light",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "att_light",
+           "part": "body",
+           "offset": [
+            8.0,
+            8.98,
+            5.9
+           ],
+           "roll": 180
+          }
          }
         }
        },
@@ -2206,18 +2381,43 @@
         {
          "when": "light",
          "model": {
-          "type": "minecraft:special",
-          "base": "zomboidcraft:item/weapon/pistol/raised_hip/light",
-          "model": {
-           "type": "zomboidcraft:mesh",
-           "id": "att_light",
-           "part": "body",
-           "offset": [
-            8.0,
-            8.98,
-            5.9
-           ],
-           "roll": 180
+          "type": "minecraft:select",
+          "property": "minecraft:custom_model_data",
+          "index": 13,
+          "cases": [
+           {
+            "when": "tan",
+            "model": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/pistol/raised_hip/light",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_light_tan",
+              "part": "body",
+              "offset": [
+               8.0,
+               8.98,
+               5.9
+              ],
+              "roll": 180
+             }
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/pistol/raised_hip/light",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "att_light",
+            "part": "body",
+            "offset": [
+             8.0,
+             8.98,
+             5.9
+            ],
+            "roll": 180
+           }
           }
          }
         },
@@ -2499,18 +2699,43 @@
         {
          "when": "light",
          "model": {
-          "type": "minecraft:special",
-          "base": "zomboidcraft:item/weapon/pistol/hip/light",
-          "model": {
-           "type": "zomboidcraft:mesh",
-           "id": "att_light",
-           "part": "body",
-           "offset": [
-            8.0,
-            8.98,
-            5.9
-           ],
-           "roll": 180
+          "type": "minecraft:select",
+          "property": "minecraft:custom_model_data",
+          "index": 13,
+          "cases": [
+           {
+            "when": "tan",
+            "model": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/pistol/hip/light",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_light_tan",
+              "part": "body",
+              "offset": [
+               8.0,
+               8.98,
+               5.9
+              ],
+              "roll": 180
+             }
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/pistol/hip/light",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "att_light",
+            "part": "body",
+            "offset": [
+             8.0,
+             8.98,
+             5.9
+            ],
+            "roll": 180
+           }
           }
          }
         },
