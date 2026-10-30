@@ -870,8 +870,9 @@ public class KitUiTest implements FabricClientGameTest {
                     .forEach(n -> n.bonds.add(p.getUUID()));
         });
         ctx.waitTicks(50);
-        LOG.info("ZCUI bonds: {}", ctx.computeOnClient(mc -> Bonds.companions(mc).size()));
-        ctx.runOnClient(Bonds::open);
+        String bonded = ctx.computeOnClient(mc -> String.valueOf(Bonds.companions(mc).size()));
+        LOG.info("ZCUI bonds: {}", bonded);
+        ctx.runOnClient(mc -> Bonds.open(mc));
         BondsScreen[] sel = new BondsScreen[1];
         ctx.runOnClient(mc -> sel[0] = mc.gui.screen() instanceof BondsScreen b ? b : null);
         for (int f = 0; f < 30 && sel[0] != null; f++) {
