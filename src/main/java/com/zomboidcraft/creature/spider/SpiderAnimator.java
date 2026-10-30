@@ -12,7 +12,8 @@ import org.joml.Vector3f;
  * its moving: standing (a calm idle, now and then another one; a risen, alert one while it listens to something), its
  * walk forward, back and to either side and its run, blended by which way and how fast its body is really going, their
  * feet kept in step and played as fast as the ground goes past; turning on the spot when it swings round without
- * walking; a slow working loop while it feeds. Over that, one move played through and faded out: a strike when it
+ * walking; dragging something it always walks it on ahead (SpiderIk closes its arms round it and bends it over it to
+ * feed). Over that, one move played through and faded out: a strike when it
  * rears to lunge, its rage whenever it rages at someone, a flinch when it's hit, being thrown back
  * when it's shot in the eyes, and its death, held at the end.
  */
@@ -35,13 +36,13 @@ public final class SpiderAnimator {
     private float yawRate;
     private float phase;
     /** What each base clip is weighted now (eased toward what's wanted). */
-    private float wIdle = 1, wWalk, wBack, wLeft, wRight, wRun, wTurnL, wTurnR, wFeed, wFall, wClutch;
+    private float wIdle = 1, wWalk, wBack, wLeft, wRight, wRun, wTurnL, wTurnR, wFall;
     /** How fast it's going along its up (falling, dropping off a ceiling, is fast and down). */
     private float climb;
     private float hz = 0.6f;
     private boolean walking, turning;
     private String idle = "Idle_1", idleOld;
-    private float idleT, idleOldT, idleFade = 1, turnT, feedT;
+    private float idleT, idleOldT, idleFade = 1, turnT;
     /** The move played over the top. */
     private String act;
     private float actT, actRate = 1, actPeak = 1;
@@ -120,6 +121,11 @@ public final class SpiderAnimator {
         // which way: mostly one clip (the walks' feet fall at different times, so an even mix shuffles)
         float f = (float) Math.pow(Math.max(0, c), 4), b = (float) Math.pow(Math.max(0, -c), 4);
         float l = (float) Math.pow(Math.max(0, s), 4), r = (float) Math.pow(Math.max(0, -s), 4);
+        if (pose == HarvestmanEntity.HOLD) {
+            // dragging something it walks it on ahead of it (it goes the way it faces), never backing or sidling
+            f = 1;
+            b = l = r = 0;
+        }
         float all = Math.max(1e-4f, f + b + l + r);
         f /= all;
         b /= all;
@@ -136,13 +142,11 @@ public final class SpiderAnimator {
         wRight = Mth.lerp(k, wRight, move * r);
         wTurnL = Mth.lerp(k, wTurnL, yawRate > 0 ? spin : 0);
         wTurnR = Mth.lerp(k, wTurnR, yawRate > 0 ? 0 : spin);
-        wFeed = Mth.lerp(k, wFeed, feeding ? 1 : 0);
-        wIdle = Mth.lerp(k, wIdle, feeding ? 0 : Math.max(0, still));
+        // feeding it stands over what it feeds on (SpiderIk bends it down to it), breathing in its idle
+        wIdle = Mth.lerp(k, wIdle, feeding ? 1 : Math.max(0, still));
         // dropping through the air: legs drawn in as for its leap
         boolean falling = !dead && climb < -3.5f;
         wFall = Mth.lerp(k, wFall, falling ? 1 : 0);
-        // holding something (dragging it off, feeding): its arms and claws close round it
-        wClutch = Mth.lerp(k, wClutch, pose == HarvestmanEntity.HOLD || feeding ? 1 : 0);
 
         // the feet in step with the ground: one stride a cycle, the walk's or the run's
         float stride = Mth.lerp(run, WALK_STRIDE, RUN_STRIDE);
@@ -150,7 +154,6 @@ public final class SpiderAnimator {
         hz = Mth.lerp(1 - (float) Math.exp(-dt * 3), hz, hzWant);
         phase = (phase + dt * hz) % 1f;
         turnT += dt * Mth.clamp(Math.abs(yawRate) / 1.2f, 0.6f, 2f);
-        feedT += dt * 0.45f;
         idleT += dt;
         idleOldT += dt;
         idleFade = Math.min(1, idleFade + dt / 0.5f);
@@ -186,7 +189,6 @@ public final class SpiderAnimator {
         addPhase("Walk_Right", wRight);
         add("Turn_Left", turnT, true, wTurnL);
         add("Turn_Right", turnT, true, wTurnR);
-        add("Attack_2", feedT, true, wFeed);
         SpiderModel.Clip jump = model.clips.get("Jump_1");
         if (jump != null && wFall > 1e-3f) {
             add(jump, jump.seconds() * 0.5f, wFall);
@@ -201,19 +203,6 @@ public final class SpiderAnimator {
             q[i].normalize();
             p[i].div(sum[i]);
         }
-        SpiderModel.Clip clutch = model.clips.get("Attack_2");
-        if (clutch != null && wClutch > 1e-3f && wFeed < 0.99f) {
-            // its arms only: the feeding hold over whatever its legs are doing
-            float t = feedT % clutch.seconds();
-            for (int i = 0; i < sum.length; i++) {
-                if (model.arm[i]) {
-                    sample(clutch, t, i, qa, pa);
-                    q[i].slerp(qa, wClutch * 0.85f);
-                    p[i].lerp(pa, wClutch * 0.85f);
-                }
-            }
-        }
-
         // the move over the top
         if (act != null) {
             SpiderModel.Clip clip = model.clips.get(act);
