@@ -174,6 +174,7 @@ CUBE = {
     "mud_bricks": city("brick_buff", (140, 112, 84)),
     "tuff_bricks": city("brick_buff", (104, 108, 100)),
     "tuff": ph("Rock059", (104, 108, 100), span=2),
+    "calcite": ph("Rock059", (214, 212, 204), span=2, offset=(0.3, 0.5)), "diorite": ph("Rock059", (188, 186, 182), span=2, offset=(0.1, 0.8)),
     "blackstone": ph("Rock064", (44, 40, 46), span=2),
     "polished_blackstone_bricks": ph("stone_brick_wall_001", (46, 42, 48)),
     "exposed_cut_copper": grid((160, 116, 92), (110, 76, 60)),
