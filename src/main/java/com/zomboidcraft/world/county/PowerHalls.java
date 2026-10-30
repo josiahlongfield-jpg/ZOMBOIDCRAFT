@@ -984,41 +984,41 @@ final class PowerHalls {
     }
 
     /**
-     * The four stacks on the boiler house roof over the flues: brick in iron bands, the cap sooted
-     * black, the obstruction lights round the top; a ladder up the first.
+     * The four stacks on the boiler house roof over the flues, round the way the photos have them:
+     * smooth brick drums tapering as they rise, a sooted band every twelve, the top sooted black,
+     * the obstruction lights round the rim.
      */
     private void stacks() {
         int top = BROOF + 66;
         for (int k = 0; k < 4; k++) {
             int xc = BOIL_X[k] + 6;
+            double ox = xc + 0.5, oz = STACK_Z + 0.5;
             for (int dx = -6; dx <= 6; dx++) {
                 for (int dz = -6; dz <= 6; dz++) {
-                    double r = Math.sqrt(dx * dx + dz * dz);
-                    int x = xc + dx, z = STACK_Z + dz;
-                    if (r <= 5.6) {
-                        set(x, BROOF + 1, z, "concrete_dark");
+                    if (Math.hypot(dx, dz) <= 5.6) {
+                        set(xc + dx, BROOF + 1, STACK_Z + dz, "concrete_dark");
                     }
-                    if (r <= 4.6) {
-                        for (int y = BROOF + 2; y <= top; y++) {
-                            boolean ring = r > 3.4;
-                            String b;
-                            if (ring) {
-                                b = y >= top - 1 ? "pw_cap" : (y - BROOF) % 12 == 0 ? "pw_stack_band" : c.brick(x, y, z);
-                            } else {
-                                b = y >= top ? "air" : "pw_soot";
-                            }
-                            set(x, y, z, b);
-                        }
-                        if (r > 3.4 && (dx == 0 || dz == 0) && Math.abs(dx + dz) >= 4) {
-                            set(x, top + 1, z, c.power && chance() < 0.7 ? "tv_beacon_lit" : "tv_beacon");
+                }
+            }
+            for (int y = BROOF + 2; y <= top; y++) {
+                double r = 4.9 - (y - BROOF - 2) * 1.1 / (top - BROOF - 2);
+                java.util.Set<Long> rim = new java.util.HashSet<>();
+                String m = y >= top - 2 || (y - BROOF) % 12 == 0 ? "soot" : "brick";
+                for (Round.Cell cell : Round.ring(ox, oz, r)) {
+                    set(cell.x(), y, cell.z(), "rd_" + m + "_" + cell.suffix() + "[facing=" + cell.facing() + "]");
+                    rim.add(((long) cell.x() << 32) ^ (cell.z() & 0xffffffffL));
+                }
+                for (int dx = -5; dx <= 5; dx++) {
+                    for (int dz = -5; dz <= 5; dz++) {
+                        int x = xc + dx, z = STACK_Z + dz;
+                        if (!rim.contains(((long) x << 32) ^ (z & 0xffffffffL)) && Math.hypot(x + 0.5 - ox, z + 0.5 - oz) < r - 0.4) {
+                            set(x, y, z, y >= top - 1 ? "air" : "pw_soot");
                         }
                     }
                 }
             }
-            if (k == 0) {
-                for (int y = BROOF + 2; y < top; y++) {
-                    set(xc, y, STACK_Z - 5, "ladder[facing=north]");
-                }
+            for (int[] o : new int[][] {{0, -4}, {0, 4}, {-4, 0}, {4, 0}}) {
+                set(xc + o[0], top + 1, STACK_Z + o[1], c.power && chance() < 0.7 ? "tv_beacon_lit" : "tv_beacon");
             }
         }
     }
