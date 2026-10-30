@@ -97,9 +97,9 @@ public final class NpcWork {
     private long lastAlarm = -1_000_000, lastOut = -1_000_000;
     private final Map<String, Long> grumbled = new java.util.HashMap<>();
 
-    /** Where she is in her day, by the clock (06:00 is tick 0). */
+    /** Where she is in her day, by the same clock the wristwatch shows (game tick 0 is 09:00; here 06:00 is 0). */
     Phase phase(ServerLevel level) {
-        long t = Math.floorMod(level.getDayTime(), 24000L);
+        long t = Math.floorMod(level.getGameTime() + 3000L, 24000L);
         if (!nightShift) {
             return t < 11000 ? Phase.WORK : t < 15000 ? Phase.FREE : Phase.SLEEP;
         }
