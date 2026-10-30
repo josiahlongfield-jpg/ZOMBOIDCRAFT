@@ -82,7 +82,7 @@ public final class NpcWork {
 
     /** What her body's doing, for the client's clips and poses (synced through NpcEntity.ACTION). */
     public static final int NONE = 0, SLEEP = 1, SIT = 2, KNEEL = 3, HAMMER = 4, DIG = 5, SEARCH = 6, LOOKOUT = 7, COOKING = 8,
-            HUG = 9, KISS = 10, SEARCH_LOW = 11;
+            HUG = 9, KISS = 10, SEARCH_LOW = 11, POSE = 12, FIDGET = 13;
 
     /** How far from home her jobs reach, where the stores are, and where a scavenger goes looking. */
     static final int HOME_RADIUS = 20, STORE_RADIUS = 12, SCAVENGE_MIN = 20, SCAVENGE_MAX = 64;

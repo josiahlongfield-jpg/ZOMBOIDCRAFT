@@ -238,6 +238,7 @@ public class KitUiTest implements FabricClientGameTest {
             beltHudTest(ctx, sp);
             mapTest(ctx);
             bookTest(sp);
+            companionTest(ctx, sp);
             spawnPickerTest(ctx, sp);
             pauseOptions(ctx, "after the kit");
         }
@@ -778,6 +779,41 @@ public class KitUiTest implements FabricClientGameTest {
     }
 
     /** A skill book read for your band multiplies the XP you earn (SkillBooks). */
+    /** A companion's page, gear and diary, and the middle-click order wheel (kit/CompanionScreen, kit/OrderWheel). */
+    private static void companionTest(ClientGameTestContext ctx, TestSingleplayerContext sp) {
+        sp.getServer().runCommand("give @a zomboidcraft:hoodie");
+        sp.getServer().runCommand("give @a zomboidcraft:work_boots");
+        sp.getServer().runCommand("give @a zomboidcraft:jeans");
+        sp.getServer().runOnServer(s -> {
+            ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+            var level = (net.minecraft.server.level.ServerLevel) p.level();
+            var npc = com.zomboidcraft.npc.Npcs.NPC.create(level, net.minecraft.world.entity.EntitySpawnReason.COMMAND);
+            var look = p.getLookAngle().multiply(1, 0, 1).normalize().scale(2.2);
+            npc.setModel("dark_elf", "raw");
+            npc.snapTo(p.getX() + look.x, p.getY(), p.getZ() + look.z, p.getYRot() + 180f, 0f);
+            npc.born(p);
+            level.addFreshEntity(npc);
+        });
+        ctx.waitTicks(30);
+        for (com.zomboidcraft.client.kit.CompanionScreen.Tab tab : com.zomboidcraft.client.kit.CompanionScreen.Tab.values()) {
+            ctx.runOnClient(mc -> {
+                var npcs = mc.level.getEntitiesOfClass(com.zomboidcraft.npc.NpcEntity.class, mc.player.getBoundingBox().inflate(8));
+                if (!npcs.isEmpty()) mc.gui.setScreen(new com.zomboidcraft.client.kit.CompanionScreen(npcs.get(0), tab));
+            });
+            ctx.waitTicks(30);
+            LOG.info("ZCUI companion {}: screen {}", tab, ctx.computeOnClient(mc -> mc.gui.screen() == null ? "none" : mc.gui.screen().getClass().getSimpleName()));
+            ctx.takeScreenshot("companion-" + tab.name().toLowerCase(java.util.Locale.ROOT));
+        }
+        ctx.runOnClient(mc -> {
+            var npcs = mc.level.getEntitiesOfClass(com.zomboidcraft.npc.NpcEntity.class, mc.player.getBoundingBox().inflate(8));
+            if (!npcs.isEmpty()) mc.gui.setScreen(new com.zomboidcraft.client.kit.OrderWheel(npcs.get(0)));
+        });
+        ctx.waitTicks(10);
+        ctx.takeScreenshot("companion-wheel");
+        ctx.runOnClient(mc -> mc.gui.setScreen(null));
+        sp.getServer().runCommand("zc npc clear");
+    }
+
     private static void bookTest(TestSingleplayerContext sp) {
         sp.getServer().runOnServer(s -> {
             ServerPlayer p = s.getPlayerList().getPlayers().get(0);

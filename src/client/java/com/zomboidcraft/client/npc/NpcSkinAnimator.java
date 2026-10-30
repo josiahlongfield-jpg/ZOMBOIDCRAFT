@@ -166,7 +166,7 @@ final class NpcSkinAnimator {
     }
 
     /** NpcWork's actions, as the client knows them. */
-    private static final int SLEEP = 1, SIT = 2, KNEEL = 3, HAMMER = 4, DIG = 5, SEARCH = 6, LOOKOUT = 7, COOKING = 8, HUG = 9, KISS = 10, SEARCH_LOW = 11;
+    private static final int SLEEP = 1, SIT = 2, KNEEL = 3, HAMMER = 4, DIG = 5, SEARCH = 6, LOOKOUT = 7, COOKING = 8, HUG = 9, KISS = 10, SEARCH_LOW = 11, POSE = 12, FIDGET = 13;
 
     private static String actionClip(int action) {
         return switch (action) {
@@ -178,6 +178,8 @@ final class NpcSkinAnimator {
             case SEARCH -> "search";
             case SEARCH_LOW -> "search_low";
             case LOOKOUT -> "lookout";
+            case POSE -> "pose";
+            case FIDGET -> "fidget";
             case HUG -> "hug";
             case KISS -> "kiss";
             default -> null;
