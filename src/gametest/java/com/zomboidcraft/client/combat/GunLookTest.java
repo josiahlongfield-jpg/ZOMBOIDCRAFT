@@ -109,7 +109,7 @@ public class GunLookTest implements FabricClientGameTest {
             });
             String name = "sight-" + look[0] + "-" + String.join("-", List.of(look).subList(1, look.length));
             ctx.waitTicks(10);
-            ctx.getInput().holdMouse(1);
+            ctx.getInput().holdKey(options -> options.keyUse);      // a mouse click would only grab the mouse
             ctx.waitTicks(30);
             ctx.takeScreenshot(name);
             if (look.length > 2) {
@@ -121,7 +121,7 @@ public class GunLookTest implements FabricClientGameTest {
                 ctx.waitTicks(20);
                 ctx.takeScreenshot(name + "-aside");
             }
-            ctx.getInput().releaseMouse(1);
+            ctx.getInput().releaseKey(options -> options.keyUse);
             ctx.waitTicks(10);
         }
     }
