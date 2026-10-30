@@ -44,6 +44,8 @@ public final class SpiderDraw {
     public float camo = 1, pulse = 1;
     /** How red its glow is (0 blue, 1 red), eased. */
     private float red = -1;
+    /** How far its glow's put out, skull and all (HarvestmanEntity.dark), eased. */
+    private float dark = -1;
     private boolean hurt;
 
     private SpiderDraw(SpiderModel model, SpiderLooks looks) {
@@ -96,6 +98,8 @@ public final class SpiderDraw {
             dt = Math.max(dt, 0);
             float want = e.menace() ? 1 : 0;
             red = red < 0 ? want : Mth.lerp(1 - (float) Math.exp(-dt * 2.5f), red, want);
+            float off = e.dark() ? 1 : 0;
+            dark = dark < 0 ? off : Mth.lerp(1 - (float) Math.exp(-dt * 3f), dark, off);
             for (int c = 0; c < SpiderModel.LIMBS; c++) {
                 if ((pose.justGone >> c & 1) != 0) {
                     pieces.add(new Piece(e, c, drawnAt));
@@ -223,12 +227,15 @@ public final class SpiderDraw {
         for (int g = 0; g < model.groups.length; g++) {
             SpiderModel.Group gr = model.groups[g];
             int gi = g;
-            // its skull always glows, lit however dark it is round it; the rest of its glow goes dark as it hides
+            // its skull glows, lit however dark it is round it, and the rest of its glow goes dark as it hides; put out
+            // altogether, skull and all, when it means not to be seen
             boolean isSkull = g == skull;
-            float hide = isSkull ? 0 : camo, lit = isSkull ? 1 : show;
+            float out = Math.max(0, dark);
+            float hide = isSkull ? out : Math.max(camo, out), lit = (isSkull ? 1 : show) * (1 - out);
+            int skullLight = brighten(light, 1 - out);
             float[] vg = looks.glow[g];
             collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(looks.texture[g]),
-                    (p, out) -> body(gr, gr.tris, vg, pos[gi], normal[gi], p, out, isSkull ? FULL_BRIGHT : light, overlay, hide));
+                    (p, out) -> body(gr, gr.tris, vg, pos[gi], normal[gi], p, out, isSkull ? skullLight : light, overlay, hide));
             // red and blue glow, as far as it's turned to each
             glowPass(poseStack, collector, gr, g, looks.red[g], looks.redTris[g], lit * r, shaders);
             glowPass(poseStack, collector, gr, g, looks.blue[g], looks.blueTris[g], lit * (1 - r), shaders);
@@ -262,6 +269,12 @@ public final class SpiderDraw {
                         (p, out) -> piece(gr, tris, bones, at, p, out, light));
             }
         }
+    }
+
+    /** Light (block and sky, packed) taken toward full brightness by a share. */
+    private static int brighten(int light, float k) {
+        int block = light & 0xFFFF, sky = light >>> 16 & 0xFFFF;
+        return (int) Mth.lerp(k, block, 240) | (int) Mth.lerp(k, sky, 240) << 16;
     }
 
     private void glowPass(PoseStack poseStack, SubmitNodeCollector collector, SpiderModel.Group gr, int g, Identifier tex, int[] tris,
