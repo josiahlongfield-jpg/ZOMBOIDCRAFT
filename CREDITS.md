@@ -481,7 +481,7 @@ Picked by Josiah Longfield on the Dead Air New Guns Two page, cut by tools/audio
 | weapon.machine_pistol.shot_suppressed | [A silenced/suppressed handgun being shot once w/ phaser sounding trail // pretty metallic sounding by serøutōnin--deprivəd](https://freesound.org/people/ser%C3%B8ut%C5%8Dnin--depriv%C9%99d/sounds/855656/) | ser%C3%B8ut%C5%8Dnin--depriv%C9%99d | Freesound, CC0 1.0 |
 | weapon.pocket_pistol.shot | [Desert Eagle Gunshot by elliotlp](https://freesound.org/people/elliotlp/sounds/330634/) | elliotlp | Freesound, CC0 1.0 |
 | weapon.grenade_launcher.shot | gun_grenade_launcher_shot_01 (Gamemaster gun packs, bonus sounds) | Gamemaster Audio | Gamemaster Audio licence (bought) |
-| weapon.minigun.shot, weapon.minigun.spin_down | [Slowfiringheavyweapon.wav by SuperPhat](https://freesound.org/people/SuperPhat/sounds/417148/) | SuperPhat | Freesound, CC0 1.0 |
+| weapon.minigun.shot, weapon.minigun.loop, weapon.minigun.spin_down | [Slowfiringheavyweapon.wav by SuperPhat](https://freesound.org/people/SuperPhat/sounds/417148/) | SuperPhat | Freesound, CC0 1.0 |
 
 ## Harvestman rage
 
