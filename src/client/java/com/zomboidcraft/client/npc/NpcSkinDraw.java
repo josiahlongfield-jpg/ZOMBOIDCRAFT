@@ -31,7 +31,8 @@ final class NpcSkinDraw {
             m[o + 8] = x.m02(); m[o + 9] = x.m12(); m[o + 10] = x.m22(); m[o + 11] = x.m32();
         }
         poseStack.pushPose();
-        if (hidden.contains("heels")) {
+        // she's modelled on tiptoe for heels: barefoot (no heels, no boots) she comes down to the ground
+        if (hidden.contains("heels") && hidden.contains("boots")) {
             poseStack.translate(0, -skin.heel, 0);
         }
         for (int g = 0; g < skin.groups.length; g++) {

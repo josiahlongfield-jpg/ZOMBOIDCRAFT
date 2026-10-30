@@ -80,6 +80,11 @@ public final class NpcBond {
         this.attraction = Mth.clamp(this.attraction + attraction, 0, 100);
     }
 
+    /** A small change from something outside the bond (her clothes, say). */
+    void nudge(float trust, float affection, float attraction) {
+        add(trust, affection, attraction);
+    }
+
     void set(String which, float v) {
         v = Mth.clamp(v, 0, 100);
         switch (which) {

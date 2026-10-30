@@ -68,7 +68,16 @@ public final class Npcs {
     }
     public static final List<String> LOOKS = List.of("raw", "toon", "both");
     /** Clothes a skinned companion can put on and take off (the pieces in her .zsk). */
-    public static final List<String> PIECES = List.of("bra", "stockings", "heels", "hair");
+    public static final List<String> PIECES = List.of("bra", "stockings", "heels", "hair", "sweater", "shorts", "skirt",
+            "dress", "boots");
+
+    /** Whether this model is a skinned one in pieces she can dress in (a .zsk in the local folder or the jar), so she has a wardrobe. */
+    public static boolean skinned(String model) {
+        return SKINNED.computeIfAbsent(model, m -> java.nio.file.Files.exists(localFolder().resolve(m + ".zsk"))
+                || Npcs.class.getResource("/assets/zomboidcraft/npc/" + m + ".zsk") != null);
+    }
+
+    private static final java.util.Map<String, Boolean> SKINNED = new java.util.concurrent.ConcurrentHashMap<>();
 
     private static final ResourceKey<EntityType<?>> KEY = ResourceKey.create(Registries.ENTITY_TYPE, ZomboidCraft.id("npc"));
     public static final EntityType<NpcEntity> NPC = Registry.register(BuiltInRegistries.ENTITY_TYPE, KEY,
@@ -101,7 +110,10 @@ public final class Npcs {
                                 .then(Commands.literal("remove").then(Commands.argument("piece", StringArgumentType.word())
                                         .suggests((ctx, b) -> SharedSuggestionProvider.suggest(PIECES, b))
                                         .executes(ctx -> dress(ctx, StringArgumentType.getString(ctx, "piece"), false))))
-                                .then(Commands.literal("outfit").executes(Npcs::outfit))
+                                .then(Commands.literal("outfit").executes(Npcs::outfit)
+                                        .then(Commands.argument("outfit", StringArgumentType.word())
+                                                .suggests((ctx, b) -> SharedSuggestionProvider.suggest(names(NpcWardrobe.Outfit.values()), b))
+                                                .executes(ctx -> outfit(ctx, StringArgumentType.getString(ctx, "outfit")))))
                                 .then(Commands.literal("mind").executes(Npcs::mind))
                                 .then(Commands.literal("home").executes(Npcs::home))
                                 .then(Commands.literal("job").then(Commands.argument("job", StringArgumentType.word())
@@ -202,7 +214,7 @@ public final class Npcs {
 
     private static int dress(CommandContext<CommandSourceStack> ctx, String piece, boolean on) throws CommandSyntaxException {
         if (!PIECES.contains(piece)) {
-            ctx.getSource().sendFailure(Component.literal("Pieces: " + String.join(", ", PIECES) + " (her underwear always stays on)"));
+            ctx.getSource().sendFailure(Component.literal("Pieces: " + String.join(", ", PIECES) + " (her underwear always stays on; she puts her outfit back together after a while)"));
             return 0;
         }
         NpcEntity npc = target(ctx.getSource().getPlayerOrException());
@@ -227,9 +239,21 @@ public final class Npcs {
             return 0;
         }
         List<String> on = PIECES.stream().filter(p -> !npc.hidden().contains(p)).toList();
-        List<String> off = PIECES.stream().filter(p -> npc.hidden().contains(p)).toList();
-        ctx.getSource().sendSuccess(() -> Component.literal("Wearing: underwear" + (on.isEmpty() ? "" : ", " + String.join(", ", on))
-                + (off.isEmpty() ? "" : ". Off: " + String.join(", ", off))), false);
+        String pieces = "underwear" + (on.isEmpty() ? "" : ", " + String.join(", ", on));
+        ctx.getSource().sendSuccess(() -> Component.literal(skinned(npc.model()) ? npc.wardrobe.line() + ": " + pieces : "Wearing: " + pieces), false);
+        return 1;
+    }
+
+    /** Puts her in one of her outfits, as if you'd picked it for her (she keeps it a while, and says what she thinks). */
+    private static int outfit(CommandContext<CommandSourceStack> ctx, String name) throws CommandSyntaxException {
+        ServerPlayer player = ctx.getSource().getPlayerOrException();
+        NpcEntity npc = target(player);
+        NpcWardrobe.Outfit o = NpcWardrobe.Outfit.named(name);
+        if (npc == null || o == null || o == NpcWardrobe.Outfit.SLEEP) {
+            ctx.getSource().sendFailure(Component.literal(npc == null ? "No companion near you" : "Outfits: work, skirt, dress, dress_boots, date"));
+            return 0;
+        }
+        npc.wardrobe.answer(npc, player, NpcWardrobe.DRESS + o.ordinal());
         return 1;
     }
 
@@ -246,6 +270,9 @@ public final class Npcs {
         NpcMind m = npc.mind;
         StringBuilder b = new StringBuilder(npc.speakerName() + " is " + npc.mood() + ". " + capital(m.traitWords()) + ".");
         b.append('\n').append(bondLine(npc));
+        if (skinned(npc.model())) {
+            b.append('\n').append(npc.wardrobe.line()).append('.');
+        }
         for (NpcMind.Need n : NpcMind.Need.values()) {
             int v = Math.round(m.get(n));
             b.append("\n ").append(n.label).append(' ').append("|".repeat(v / 5)).append(".".repeat(20 - v / 5)).append(' ').append(v);

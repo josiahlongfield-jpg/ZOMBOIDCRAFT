@@ -78,6 +78,14 @@ public final class NpcSkin {
 
     private static final Map<String, CompletableFuture<NpcSkin>> LOADING = new HashMap<>();
 
+    /** Whether any of her meshes belongs to this piece (older models have fewer clothes). */
+    public boolean has(String piece) {
+        for (Group g : groups) {
+            if (g.piece.equals(piece)) return true;
+        }
+        return false;
+    }
+
     /** The skinned model with this id, or null while it loads or if there isn't one. Render thread. */
     public static NpcSkin get(String model) {
         CompletableFuture<NpcSkin> f = LOADING.computeIfAbsent(model, m -> {
