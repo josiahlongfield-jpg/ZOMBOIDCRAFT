@@ -131,6 +131,9 @@ public class NpcRenderer extends EntityRenderer<NpcEntity, NpcRenderer.State> {
             a.headPitch = in.headPitch;
             a.bodyYaw = state.bodyYaw;
             a.blasted = entity.blasted();
+            a.y = (float) net.minecraft.util.Mth.lerp(partialTick, entity.yo, entity.getY());
+            a.onGround = entity.onGround();
+            a.hurt = state.hurt;
             a.dead = entity.deathTime > 0 ? (entity.deathTime + partialTick) / 20f : 0;
             a.talking = entity.talking() > 0;
             a.id = entity.getId();
