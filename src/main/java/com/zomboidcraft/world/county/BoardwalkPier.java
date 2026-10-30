@@ -415,6 +415,11 @@ final class BoardwalkPier {
         set(bx0, 2, -3, "wf_window[facing=west]");
         set(bx0, 2, 3, "wf_window[facing=west]");
         c.sign("bait", bx0 - 1, 4, -1, "west");
+        // the Hollis ferry's bell at the T's south-east corner, the board over it on the rail
+        set(Boardwalk.BELL[0], Boardwalk.BELL[1], Boardwalk.BELL[2], "zomboidcraft:ferry_bell[facing=west]");
+        set(Boardwalk.FPX1 - 1, 1, 15, "pn_post");
+        set(Boardwalk.FPX1 - 2, 1, 15, "pn_post");
+        c.sign("ferry", Boardwalk.FPX1 - 2, 2, 15, "north");
         for (int z = bz0 + 1; z < bz1; z++) {
             set(bx1 - 1, 1, z, "store_shelf_hardware[facing=west]");
         }
