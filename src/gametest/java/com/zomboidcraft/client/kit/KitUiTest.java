@@ -804,6 +804,30 @@ public class KitUiTest implements FabricClientGameTest {
             LOG.info("ZCUI companion {}: screen {}", tab, ctx.computeOnClient(mc -> mc.gui.screen() == null ? "none" : mc.gui.screen().getClass().getSimpleName()));
             ctx.takeScreenshot("companion-" + tab.name().toLowerCase(java.util.Locale.ROOT));
         }
+        // a clip of her portrait: she walks off in the world while her page keeps her in her idle facing you; turned
+        // round by a drag, zoomed in and out, then asked to sit
+        com.zomboidcraft.client.kit.CompanionScreen[] page = new com.zomboidcraft.client.kit.CompanionScreen[1];
+        ctx.runOnClient(mc -> {
+            var npcs = mc.level.getEntitiesOfClass(com.zomboidcraft.npc.NpcEntity.class, mc.player.getBoundingBox().inflate(8));
+            if (!npcs.isEmpty()) mc.gui.setScreen(page[0] = new com.zomboidcraft.client.kit.CompanionScreen(npcs.get(0),
+                    com.zomboidcraft.client.kit.CompanionScreen.Tab.HER));
+        });
+        sp.getServer().runOnServer(s -> s.getAllLevels().forEach(l -> l.getEntities(com.zomboidcraft.npc.Npcs.NPC, n -> true)
+                .forEach(n -> n.getNavigation().moveTo(n.getX() + 3, n.getY(), n.getZ() + 1, 1.0))));
+        for (int f = 0; f < 40 && page[0] != null; f++) {
+            float spin = f < 24 ? f * 15f : 0f, zoom = f < 24 ? 1f : f < 32 ? 1f + (f - 23) * 0.15f : 2.2f - (f - 31) * 0.15f;
+            int at = f;
+            ctx.runOnClient(mc -> {
+                page[0].view(spin, zoom);
+                if (at == 34) page[0].pose(0);
+            });
+            ctx.waitTicks(3);
+            ctx.takeScreenshot(String.format("companion-clip-%02d", f));
+        }
+        for (int f = 40; f < 52 && page[0] != null; f++) {
+            ctx.waitTicks(4);
+            ctx.takeScreenshot(String.format("companion-clip-%02d", f));
+        }
         ctx.runOnClient(mc -> {
             var npcs = mc.level.getEntitiesOfClass(com.zomboidcraft.npc.NpcEntity.class, mc.player.getBoundingBox().inflate(8));
             if (!npcs.isEmpty()) mc.gui.setScreen(new com.zomboidcraft.client.kit.OrderWheel(npcs.get(0)));

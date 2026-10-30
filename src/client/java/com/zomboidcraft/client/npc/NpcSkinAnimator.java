@@ -90,7 +90,7 @@ final class NpcSkinAnimator {
             turning += (rate - turning) * Math.min(1, dt * 6);
         }
         yawWas = in.bodyYaw;
-        String want = in.portrait && model.clips.containsKey("idle") ? "idle" : choose(model, in, dt);
+        String want = in.portrait && in.action == 0 && model.clips.containsKey("idle") ? "idle" : choose(model, in, dt);
         // sleeping before she has a sleep clip: lie in her fall's last pose, dropped straight in
         boolean lying = in.dead <= 0 && in.action == SLEEP && "die".equals(want);
         if (lying && !"die".equals(cur)) {

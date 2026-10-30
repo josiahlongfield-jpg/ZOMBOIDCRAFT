@@ -48,6 +48,12 @@ public class CompanionScreen extends Screen {
     private final List<Hot> hots = new ArrayList<>();
     private int left, top;
     private @Nullable String tip;
+    /** Her portrait: how far you've turned her (degrees), how close you've zoomed, whether you're dragging her round. */
+    private float spin, zoom = 1;
+    private boolean turning;
+    /** A pose you asked for from her page, and until when she holds it there (ms). */
+    private int pose;
+    private long poseUntil;
 
     private record Hot(int x, int y, int w, int h, Runnable left, @Nullable Runnable right, @Nullable String tip) {
         boolean has(double mx, double my) {
@@ -103,6 +109,11 @@ public class CompanionScreen extends Screen {
     }
 
     private void order(int code) {
+        if (code >= NpcPanel.POSE && code < NpcPanel.POSE + NpcPanel.POSES.length) {
+            // her portrait strikes it too, for as long as she holds it
+            pose = NpcPanel.POSES[code - NpcPanel.POSE];
+            poseUntil = net.minecraft.util.Util.getMillis() + 20_000;
+        }
         ClientPlayNetworking.send(new NpcPanel.Order(npc.getId(), code));
         com.zomboidcraft.client.sound.UiSounds.play(com.zomboidcraft.client.sound.UiSounds.CLICK);
     }
@@ -182,16 +193,39 @@ public class CompanionScreen extends Screen {
         tab = Tab.values()[Math.floorMod(tab.ordinal() + d, Tab.values().length)];
     }
 
-    /** Her, standing in the middle as you are on the Character page. */
+    /**
+     * Her in the middle, head to foot down the page (Josiah 2026-10-30): standing in her idle facing you, not mirroring
+     * what she's doing in the world; drag to turn her, scroll to zoom, and a pose you ask for plays here. Nothing
+     * crops her or what she holds.
+     */
     private void figure(GuiGraphicsExtractor g, int x, int y, int mx, int my) {
-        // standing in her idle, head to foot down most of the page
-        g.fill(x + 250, y + 328, x + 366, y + 333, 0x40000000);
+        var skin = com.zomboidcraft.client.npc.NpcSkin.get(npc.model());
+        float tall = skin != null ? skin.top : npc.getBbHeight();
+        float scale = 300f / tall * zoom;
+        // her middle stays put as you zoom; the inventory drawing puts her feet (bbHeight / 2 + 0.0625) below the box's centre
+        float mid = y + 186, feet = mid + tall * scale / 2;
+        int cx = x + W / 2, cy = Math.round(feet - (npc.getBbHeight() / 2 + 0.0625f) * scale), reach = Math.round(3 * scale) + 400;
+        boolean posing = pose != 0 && net.minecraft.util.Util.getMillis() < poseUntil;
         com.zomboidcraft.client.npc.NpcRenderer.portrait = true;
+        com.zomboidcraft.client.npc.NpcRenderer.portraitYaw = 180f + spin;
+        com.zomboidcraft.client.npc.NpcRenderer.portraitAction = posing ? pose : 0;
         try {
-            InventoryScreen.extractEntityInInventoryFollowsMouse(g, x + 224, y + 24, x + 396, y + H - 4, 160, 0.0625f, mx, my, npc);
+            InventoryScreen.extractEntityInInventoryFollowsMouse(g, cx - reach, cy - reach, cx + reach, cy + reach, Math.round(scale),
+                    0.0625f, cx, cy, npc);
         } finally {
             com.zomboidcraft.client.npc.NpcRenderer.portrait = false;
         }
+    }
+
+    /** Asks for pose n of NpcPanel.POSES, as its chip does (the UI test films it). */
+    public void pose(int n) {
+        order(NpcPanel.POSE + n);
+    }
+
+    /** Sets how her portrait is turned and zoomed (the UI test films her round). */
+    public void view(float spin, float zoom) {
+        this.spin = spin;
+        this.zoom = zoom;
     }
 
     // ------------------------------------------------------------------ her page
@@ -284,6 +318,8 @@ public class CompanionScreen extends Screen {
         int hx = x + 37, hy = y + H - 14;
         hx += KitDraw.hint(g, font, "LMB", "Ask", hx, hy);
         hx += KitDraw.hint(g, font, "Q/R", "Pages", hx, hy);
+        hx += KitDraw.hint(g, font, "Drag", "Turn her", hx, hy);
+        hx += KitDraw.hint(g, font, "Scroll", "Zoom", hx, hy);
         KitDraw.hint(g, font, "G", "Close", hx, hy);
     }
 
@@ -418,6 +454,8 @@ public class CompanionScreen extends Screen {
         int hx = x + 37, hy = y + H - 14;
         hx += KitDraw.hint(g, font, "LMB", "Give / ask", hx, hy);
         hx += KitDraw.hint(g, font, "Q/R", "Pages", hx, hy);
+        hx += KitDraw.hint(g, font, "Drag", "Turn her", hx, hy);
+        hx += KitDraw.hint(g, font, "Scroll", "Zoom", hx, hy);
         KitDraw.hint(g, font, "G", "Close", hx, hy);
     }
 
@@ -442,6 +480,8 @@ public class CompanionScreen extends Screen {
         }
         int hx = x + 37, hy = y + H - 14;
         hx += KitDraw.hint(g, font, "Q/R", "Pages", hx, hy);
+        hx += KitDraw.hint(g, font, "Drag", "Turn her", hx, hy);
+        hx += KitDraw.hint(g, font, "Scroll", "Zoom", hx, hy);
         KitDraw.hint(g, font, "G", "Close", hx, hy);
     }
 
@@ -465,6 +505,26 @@ public class CompanionScreen extends Screen {
             else h.left().run();
             return true;
         }
+        // anywhere else down the middle: take hold of her to turn her
+        turning = event.button() == 0 && Math.abs(event.x() - (left + W / 2.0)) < 95;
+        return true;
+    }
+
+    @Override
+    public boolean mouseDragged(MouseButtonEvent event, double dx, double dy) {
+        if (turning) spin += (float) dx * 1.4f;
+        return true;
+    }
+
+    @Override
+    public boolean mouseReleased(MouseButtonEvent event) {
+        turning = false;
+        return true;
+    }
+
+    @Override
+    public boolean mouseScrolled(double mx, double my, double sx, double sy) {
+        if (tab != Tab.DIARY && sy != 0) zoom = net.minecraft.util.Mth.clamp(zoom * (sy > 0 ? 1.12f : 1 / 1.12f), 0.5f, 3f);
         return true;
     }
 
