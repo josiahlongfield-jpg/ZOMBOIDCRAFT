@@ -7,7 +7,6 @@ import java.util.UUID;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
@@ -378,7 +377,8 @@ public final class NpcBond {
             m.ate(npc, one.getHoverName().getString(), f == null ? 0 : f.nutrition() * 6f, Drinks.thirstValue(one));
             add(1f, 3f, 0);
             reply(npc, NpcWork.pick(npc, "Oh, you're a lifesaver.", "For me? Thank you.", "I could kiss you. Figuratively."));
-        } else if (one.is(ItemTags.FLOWERS)) {
+        } else if (one.getItem() instanceof net.minecraft.world.item.BlockItem bi
+                && (bi.getBlock() instanceof net.minecraft.world.level.block.FlowerBlock || bi.getBlock() instanceof net.minecraft.world.level.block.TallFlowerBlock)) {
             add(0.5f, fresh ? 4f : 1f, fresh ? 2f : 0.5f);
             lastPlayful = p.level().getGameTime();
             npc.work.pack.addItem(one);
