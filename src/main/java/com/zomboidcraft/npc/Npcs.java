@@ -360,6 +360,14 @@ public final class Npcs {
             ctx.getSource().sendFailure(Component.literal("No companion near you"));
             return 0;
         }
+        if (!dresses(npc.model()) && dress(npc.model()).looks().isEmpty() && !pieces(npc).isEmpty()) {
+            // a model with its own loose pieces (no wardrobe, no whole outfits): what's on and what's off
+            List<String> on = pieces(npc).stream().filter(p -> !npc.hidden().contains(p)).sorted().toList();
+            List<String> off = pieces(npc).stream().filter(p -> npc.hidden().contains(p)).sorted().toList();
+            ctx.getSource().sendSuccess(() -> Component.literal("Wearing: " + (on.isEmpty() ? "nothing extra" : String.join(", ", on))
+                    + (off.isEmpty() ? "" : " | Off: " + String.join(", ", off))), false);
+            return 1;
+        }
         if (!dresses(npc.model()) && !dress(npc.model()).looks().isEmpty()) {
             List<String> on = pieces(npc).stream().filter(p -> !npc.hidden().contains(p)).toList();
             ctx.getSource().sendSuccess(() -> Component.literal("Outfit: " + look(npc) + (on.isEmpty() ? "" : ", with " + String.join(", ", on))
