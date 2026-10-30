@@ -168,6 +168,45 @@ final class Ridgeview extends Site {
         }
     }
 
+    /**
+     * One of the files (world/files/LabFiles) dropped near (cx, cz) on the floor at y: the nearest
+     * clear spot within reach that has something under it, kept off the door rows. On the
+     * surface (y 0) the ground under it is terrain, so nothing under it is fine there.
+     */
+    private void file(String id, int cx, int y, int cz, int reach) {
+        for (int r = 0; r <= reach; r++) {
+            for (int tries = 0; tries < 12; tries++) {
+                int x = cx + (r == 0 ? 0 : rng.nextInt(2 * r + 1) - r), z = cz + (r == 0 ? 0 : rng.nextInt(2 * r + 1) - r);
+                if (nearDoor(x, z)) {
+                    continue;
+                }
+                for (int yy = y + 1; yy <= y + 3; yy++) {
+                    String at = out.get(x, yy, z), under = out.get(x, yy - 1, z), over = out.get(x, yy + 1, z);
+                    boolean free = at == null || at.startsWith("rl_files") || at.equals("blood_splat") || at.startsWith("sg_crust");
+                    boolean floor = under != null ? !under.equals("air") && !under.startsWith("rl_doc") : yy == 1;
+                    if (free && floor && over == null) {
+                        set(x, yy, z, "rl_doc_" + id);
+                        out.mark("file " + id, x, yy, z);
+                        return;
+                    }
+                    if (at != null && !free) {
+                        continue;
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
+    private boolean nearDoor(int x, int z) {
+        for (int[] dr : doors) {
+            if (Math.abs(x - dr[0]) <= 3 && Math.abs(z - dr[2]) <= 3) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void doorX(int x, int y, int z, String facing) {
         doors.add(new int[] {x, y, z, 1});
         for (int i = 0; i < 2; i++) {
@@ -246,6 +285,14 @@ final class Ridgeview extends Site {
         camp.burnPit(176, 186, 5);
         camp.crates(130, 186, 6, 4);
         camp.trench(102, 160, 14);
+        // the army's papers where they left them: orders in the tents, the log at the aid station, the pit, the gate
+        file("army01", 105, 0, 146, 3);
+        file("army02", 114, 0, 146, 3);
+        file("army05", 123, 0, 146, 3);
+        file("study02", 132, 0, 146, 3);
+        file("army03", 182, 0, 140, 5);
+        file("army04", 176, 0, 193, 3);
+        file("army06", 156, 0, 214, 3);
         for (int i = 0; i < 4; i++) {
             p.vehicle(150.5 + i * 6, 1, 186 + (i & 1) * 2, 180f + (float) (rng.nextDouble() * 20 - 10),
                     any("=jeep@abandoned", "=jeep_open@wrecked", "=box_truck@burnt", "=ambulance@abandoned"), rng.nextLong());
@@ -296,6 +343,8 @@ final class Ridgeview extends Site {
             set(x, 2, 120, "hs_plastic[facing=south]");
         }
         mess(x0, z0, x1, z1, 0, 0.05, 0.03, 0.0);
+        file("lab01", 122, 0, 124, 3);
+        file("study01", 112, 0, 112, 4);
         lights(x0, z0, x1, z1, 0 + 5, true);
     }
 
@@ -390,6 +439,7 @@ final class Ridgeview extends Site {
         }
         set(sec[2], y + 1, sec[3], "bunk_switchboard[facing=west]");
         mess(sec[0], sec[1], sec[2], sec[3], y, 0.06, 0.03, 0);
+        file("lab08", (sec[0] + sec[2]) / 2, y, (sec[1] + sec[3]) / 2, 5);
 
         int[] dir = room(135, 147, true, y, "home_floor_carpet_brown", "home_wall_panelling", 2);
         for (int x = dir[0] + 3; x <= dir[0] + 6; x++) {
@@ -403,6 +453,8 @@ final class Ridgeview extends Site {
         set(dir[0], y + 2, dir[1] + 6, "bunk_map_wall[facing=east]");
         set(dir[2] - 2, y + 1, dir[3] - 1, "home_sofa_brown_m[facing=north]");
         mess(dir[0], dir[1], dir[2], dir[3], y, 0.18, 0.02, 0);
+        file("lab11", (dir[0] + dir[2]) / 2, y, (dir[1] + dir[3]) / 2, 5);
+        file("lab12", dir[0] + 4, y, dir[1] + 3, 4);
 
         office(149, 172, true, y);
         int[] brk = room(174, UX1 - 1, true, y, "floor_lino", "rl_panel", 3);
@@ -441,6 +493,7 @@ final class Ridgeview extends Site {
         set(conf[0] + 7, y + 3, conf[3], "rl_sgn_threshold_1[facing=north]");
         set(conf[0] + 8, y + 3, conf[3], "rl_sgn_threshold_0[facing=north]");
         mess(conf[0], conf[1], conf[2], conf[3], y, 0.12, 0.02, 0);
+        file("lab02", (conf[0] + conf[2]) / 2, y, (conf[1] + conf[3]) / 2, 5);
         office(153, 176, false, y);
         int[] lk = room(178, UX1 - 1, false, y, "home_floor_tile", "home_wall_tile_white", 2);
         for (int x = lk[0]; x <= lk[2]; x++) {
@@ -479,6 +532,7 @@ final class Ridgeview extends Site {
         int y = B2;
         int[] la = room(123, 147, true, y, "rl_epoxy", "rl_panel", 4);
         bench(la, y);
+        file("lab05", (la[0] + la[2]) / 2, y, (la[1] + la[3]) / 2, 6);
         int[] cr = room(149, 166, true, y, "lobby_floor_white", "rl_panel", 3);
         for (int x = cr[0] + 1; x <= cr[2] - 1; x += 4) {                 // the cleanroom's benches and racks
             for (int z = cr[1] + 3; z <= cr[3] - 2; z++) {
@@ -494,6 +548,7 @@ final class Ridgeview extends Site {
             set(x, y + 2, cr[1] + 1, "hs_plastic[facing=south]");
         }
         mess(cr[0], cr[1], cr[2], cr[3], y, 0.05, 0.03, 0.02);
+        file("lab04", (cr[0] + cr[2]) / 2, y, (cr[1] + cr[3]) / 2, 5);
         int[] sv = room(168, UX1 - 1, true, y, "lobby_floor_dark", "rl_panel", 2);
         for (int x = sv[0] + 2; x <= sv[2] - 1; x += 3) {
             for (int z = sv[1] + 1; z <= sv[3] - 3; z++) {
@@ -523,6 +578,7 @@ final class Ridgeview extends Site {
         mess(ah[0], ah[1], ah[2], ah[3] - 4, y, 0.03, 0.08, 0.05);
         int[] lb = room(167, UX1 - 1, false, y, "rl_epoxy", "rl_panel", 2);
         bench(lb, y);
+        file("lab09", (lb[0] + lb[2]) / 2, y, (lb[1] + lb[3]) / 2, 6);
     }
 
     /** A lab: benches in rows with sinks and microscopes, fume hoods down one wall, a glove box. */
@@ -609,6 +665,7 @@ final class Ridgeview extends Site {
         set(su[0] + 6, y + 3, su[1], "rl_sgn_bsl4_1[facing=south]");
         set(su[0] + 7, y + 3, su[1], "rl_sgn_bsl4_0[facing=south]");
         mess(su[0], su[1], su[2], su[3], y, 0.02, 0.03, 0.04);
+        file("lab06", (su[0] + su[2]) / 2, y, (su[1] + su[3]) / 2, 5);
         int[] dc = room(141, 151, true, y, "bunk_floor_drain", "home_wall_tile_white", 3);
         for (int x = dc[0]; x <= dc[2]; x += 2) {
             set(x, y + 1, dc[1], "bunk_shower[facing=south]");
@@ -627,6 +684,7 @@ final class Ridgeview extends Site {
         set(dc[0] + 4, y + 3, dc[1], "rl_sgn_decon_1[facing=south]");
         set(dc[0] + 5, y + 3, dc[1], "rl_sgn_decon_0[facing=south]");
         mess(dc[0], dc[1], dc[2], dc[3], y, 0.01, 0.05, 0.06);
+        file("lab13", (dc[0] + dc[2]) / 2, y, (dc[1] + dc[3]) / 2, 5);
         int[] pl = room(153, UX1 - 1, true, y, "bunk_floor", "rl_shotcrete", 3);
         for (int x = pl[0] + 2; x <= pl[2] - 6; x += 7) {               // the generators in a row, their exhausts up
             for (int z = pl[1] + 2; z <= pl[1] + 4; z++) {
@@ -654,6 +712,10 @@ final class Ridgeview extends Site {
         set(ct[0], y + 1, ct[1], "rl_beacon");
         set(ct[2], y + 1, ct[1], "rl_beacon");
         mess(ct[0], ct[1], ct[2], ct[3], y, 0.12, 0.04, 0.05);
+        file("lab03", ct[0] + 4, y, ct[3] - 2, 4);
+        file("lab07", ct[0] + 10, y, ct[3] - 2, 4);
+        file("lab10", ct[0] + 16, y, ct[3] - 2, 4);
+        file("lab14", (ct[0] + ct[2]) / 2, y, ct[1] + 2, 5);
         // the way through to the gallery: the passage south from the corridor, the blast door hanging off it
         shell(GX - 1, CZ1 + 2, GX + 2, UZ1 - 1, y, 5, "bunk_floor_line", "rl_panel_b", "bunk_ceiling");
         doorX(GX, y, CZ1 + 1, "south");

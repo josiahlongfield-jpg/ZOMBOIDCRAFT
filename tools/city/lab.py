@@ -472,6 +472,41 @@ def eyewash(seed):
     return t
 
 
+# the files' looks (world/files/LabFiles): a clipboard, the army's olive folder, a manila file, a torn note
+DOC_LOOKS = {"clip": (120, 84, 50), "army": (86, 96, 58), "study": (206, 174, 112), "note": (226, 222, 206)}
+DOC_SETS = {"Ridgeview Labs": "clip", "Quarantine orders": "army", "The Harvestman file": "study", "Survivor notes": "note"}
+
+
+def doc(seed, look, col):
+    """A file lying where someone left it: the cover or board, the top sheet of typing on it, a stamp."""
+    t = P.Tex(seed, (0, 0, 0))
+    t.alpha[:] = 0
+    if look == "note":
+        area(t, 14, 10, 50, 54, col=col, alpha=255, h=0.8)
+        for x in range(14, 50, 3):                       # the torn top edge
+            area(t, x, 10, x + 2, 10 + int(t.rng.integers(0, 4)), alpha=0)
+        for y in range(16, 50, 4):
+            area(t, 18, y, int(t.rng.uniform(30, 46)), y + 1, col=(40, 40, 70), alpha=255)
+    else:
+        area(t, 10, 6, 54, 58, col=col, alpha=255, h=0.85)
+        edges(t, 10, 6, 54, 58, 1)
+        area(t, 14, 12, 50, 54, col=(232, 230, 220), alpha=255, h=0.9)
+        for y in range(18, 50, 3):
+            area(t, 17, y, int(t.rng.uniform(32, 47)), y + 1, col=(60, 60, 66), alpha=255)
+        if look == "clip":
+            area(t, 26, 3, 38, 10, col=(176, 178, 178), alpha=255, h=1.0, smooth=0.7, f0=230)
+        else:
+            area(t, 32, 40, 48, 46, col=(176, 34, 30), alpha=255)    # the stamp
+    t.mix(np.clip(P.fbm(t.rng) * 1.5 - 0.5, 0, 1) * (t.alpha > 0), (120, 110, 90), 0.3)
+    return t
+
+
+def doc_ids():
+    """The files in data/zomboidcraft/files/files.json, as (id, look)."""
+    f = HERE.parents[1] / "src/main/resources/data/zomboidcraft/files/files.json"
+    return [(d["id"], DOC_SETS.get(d["set"], "note")) for d in json.loads(f.read_text())["files"]]
+
+
 @lru_cache(maxsize=None)
 def sign_pic(key):
     text, field, ink = SIGNS[key]
@@ -541,6 +576,8 @@ def textures():
     for key in SIGNS:
         for i in range(2):
             T[f"rl_sgn_{key}_{i}"] = lambda key=key, i=i: sign(key, i)
+    for i, (look, col) in enumerate(DOC_LOOKS.items()):
+        T[f"rl_doc_{look}"] = lambda look=look, col=col, i=i: doc(47260 + i, look, col)
     return T
 
 
@@ -817,6 +854,11 @@ def blocks():
     for key in SIGNS:
         for i in range(2):
             add(f"rl_sgn_{key}_{i}", plate(f"rl_sgn_{key}_{i}"), "Sign", "METAL", decor=True)
+    # the files: one block each (world/files/LabFiles reads the name), lying flat, small enough to step over
+    for fid, look in doc_ids():
+        tex = f"rl_doc_{look}"
+        add(f"rl_doc_{fid}", [[2, 0, 2, 14, 0.6, 14, {"up": tex, "down": tex, "side": tex}]], "Document", "WOOL",
+            decor=True, render="cutout", shape=[[2, 0, 2, 14, 1, 14]])
     return out
 
 

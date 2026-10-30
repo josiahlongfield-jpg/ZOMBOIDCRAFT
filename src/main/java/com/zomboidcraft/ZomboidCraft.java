@@ -38,6 +38,7 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.world.cars.AirNet.register();
         com.zomboidcraft.world.events.WorldEvents.register();
         com.zomboidcraft.world.NetherSeal.register();
+        com.zomboidcraft.world.files.LabFiles.register();
         com.zomboidcraft.world.trains.Trains.register();
         com.zomboidcraft.world.trains.TrainCommand.register();
         com.zomboidcraft.world.lifts.Lifts.register();

@@ -15917,5 +15917,29 @@ final class CitySpecs extends CityBlocks.Specs {
         s("rl_sgn_ridgeview_1", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.2, 16, 16, 16);
         s("rl_sgn_evac_0", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.2, 16, 16, 16);
         s("rl_sgn_evac_1", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.2, 16, 16, 16);
+        s("rl_doc_lab01", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOL, 0f, 2, 0, 2, 14, 1, 14);
+        s("rl_doc_lab02", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOL, 0f, 2, 0, 2, 14, 1, 14);
+        s("rl_doc_lab03", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOL, 0f, 2, 0, 2, 14, 1, 14);
+        s("rl_doc_lab04", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOL, 0f, 2, 0, 2, 14, 1, 14);
+        s("rl_doc_lab05", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOL, 0f, 2, 0, 2, 14, 1, 14);
+        s("rl_doc_lab06", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOL, 0f, 2, 0, 2, 14, 1, 14);
+        s("rl_doc_lab07", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOL, 0f, 2, 0, 2, 14, 1, 14);
+        s("rl_doc_lab08", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOL, 0f, 2, 0, 2, 14, 1, 14);
+        s("rl_doc_lab09", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOL, 0f, 2, 0, 2, 14, 1, 14);
+        s("rl_doc_lab10", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOL, 0f, 2, 0, 2, 14, 1, 14);
+        s("rl_doc_lab11", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOL, 0f, 2, 0, 2, 14, 1, 14);
+        s("rl_doc_lab12", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOL, 0f, 2, 0, 2, 14, 1, 14);
+        s("rl_doc_lab13", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOL, 0f, 2, 0, 2, 14, 1, 14);
+        s("rl_doc_lab14", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOL, 0f, 2, 0, 2, 14, 1, 14);
+        s("rl_doc_army01", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOL, 0f, 2, 0, 2, 14, 1, 14);
+        s("rl_doc_army02", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOL, 0f, 2, 0, 2, 14, 1, 14);
+        s("rl_doc_army03", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOL, 0f, 2, 0, 2, 14, 1, 14);
+        s("rl_doc_army04", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOL, 0f, 2, 0, 2, 14, 1, 14);
+        s("rl_doc_army05", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOL, 0f, 2, 0, 2, 14, 1, 14);
+        s("rl_doc_army06", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOL, 0f, 2, 0, 2, 14, 1, 14);
+        s("rl_doc_study01", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOL, 0f, 2, 0, 2, 14, 1, 14);
+        s("rl_doc_study02", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOL, 0f, 2, 0, 2, 14, 1, 14);
+        s("rl_doc_survivor01", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOL, 0f, 2, 0, 2, 14, 1, 14);
+        s("rl_doc_survivor02", FACING, SEE_THROUGH | DECOR, 0, SoundType.WOOL, 0f, 2, 0, 2, 14, 1, 14);
     }
 }
