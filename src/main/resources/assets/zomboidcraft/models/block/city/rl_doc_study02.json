@@ -1,0 +1,42 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rl_doc_study": "zomboidcraft:block/city/rl_doc_study",
+    "particle": "zomboidcraft:block/city/rl_doc_study"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        2
+      ],
+      "to": [
+        14,
+        0.6,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rl_doc_study"
+        },
+        "south": {
+          "texture": "#rl_doc_study"
+        },
+        "east": {
+          "texture": "#rl_doc_study"
+        },
+        "west": {
+          "texture": "#rl_doc_study"
+        },
+        "up": {
+          "texture": "#rl_doc_study"
+        },
+        "down": {
+          "texture": "#rl_doc_study",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -58,7 +58,7 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
 
     enum Page {
         CHARACTER("Character", true), CLOTHING("Clothing", true), PACK("Pack", true), SUPPLIES("Supplies", true), BENCH("Bench", true), BUILD("Build", true), HEALTH("Health", true), SKILLS("Skills", true),
-        MAP("Map", true);
+        FILES("Files", true), MAP("Map", true);
 
         final String label;
         final boolean open;
@@ -84,6 +84,7 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
     final HealthPage health = new HealthPage(this);
     final SkillsPage skills = new SkillsPage(this);
     final MapPage map = new MapPage(this);
+    final FilesPage files = new FilesPage(this);
 
     /** Something on screen that answers the mouse: a tile, a link, a tab. Rebuilt every frame. */
     record Hot(int x, int y, int w, int h, ItemStack card, @Nullable Runnable click, @Nullable Runnable alt, @Nullable String tip,
@@ -138,6 +139,12 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
         } else {
             mc.gui.setScreen(new KitScreen<>(player.inventoryMenu, player.getInventory(), Component.literal("Kit")));
         }
+    }
+
+    /** A file was just read in the world: the kit opens on the Files page showing it. */
+    public static void openFile(Minecraft mc, String id) {
+        FilesPage.show(id);
+        if (mc.gui.screen() == null) open(mc, Page.FILES);
     }
 
     /** Minecraft's survival inventory is about to open (E): the kit opens instead. Creative keeps its own screen. */
@@ -501,6 +508,7 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
             case BUILD -> build.draw(g, x, y, mouseX, mouseY);
             case HEALTH -> health.draw(g, x, y, mouseX, mouseY);
             case SKILLS -> skills.draw(g, x, y, mouseX, mouseY);
+            case FILES -> files.draw(g, x, y, mouseX, mouseY);
             case MAP -> map.draw(g, x, y, mouseX, mouseY);
         }
     }

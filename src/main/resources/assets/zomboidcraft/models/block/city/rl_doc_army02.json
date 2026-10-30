@@ -1,0 +1,42 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rl_doc_army": "zomboidcraft:block/city/rl_doc_army",
+    "particle": "zomboidcraft:block/city/rl_doc_army"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        2
+      ],
+      "to": [
+        14,
+        0.6,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rl_doc_army"
+        },
+        "south": {
+          "texture": "#rl_doc_army"
+        },
+        "east": {
+          "texture": "#rl_doc_army"
+        },
+        "west": {
+          "texture": "#rl_doc_army"
+        },
+        "up": {
+          "texture": "#rl_doc_army"
+        },
+        "down": {
+          "texture": "#rl_doc_army",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
