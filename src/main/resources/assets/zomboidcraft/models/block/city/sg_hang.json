@@ -1,0 +1,119 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sg_crust_1": "zomboidcraft:block/city/sg_crust_1",
+    "sg_hang": "zomboidcraft:block/city/sg_hang",
+    "particle": "zomboidcraft:block/city/sg_hang"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        8
+      ],
+      "to": [
+        16,
+        16,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sg_hang"
+        },
+        "south": {
+          "texture": "#sg_hang"
+        },
+        "east": {
+          "texture": "#sg_hang",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#sg_hang",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#sg_hang",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sg_hang",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        8,
+        0,
+        0
+      ],
+      "to": [
+        8,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sg_hang",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#sg_hang",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#sg_hang"
+        },
+        "west": {
+          "texture": "#sg_hang"
+        },
+        "up": {
+          "texture": "#sg_hang",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sg_hang",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        15.7,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sg_crust_1",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#sg_crust_1",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#sg_crust_1",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#sg_crust_1",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#sg_crust_1",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sg_crust_1"
+        }
+      }
+    }
+  ]
+}

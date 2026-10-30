@@ -1285833,6 +1285833,10493 @@
    ],
    "title": "Finial",
    "sound": "STONE"
+  },
+  "rl_panel": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     "rl_panel"
+    ]
+   ],
+   "title": "Lab Wall Panel",
+   "sound": "METAL"
+  },
+  "rl_panel_b": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     "rl_panel_b"
+    ]
+   ],
+   "title": "Lab Wall Panel",
+   "sound": "METAL"
+  },
+  "rl_panel_crack": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     "rl_panel_crack"
+    ]
+   ],
+   "title": "Lab Wall Panel",
+   "sound": "METAL"
+  },
+  "rl_epoxy": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     "rl_epoxy"
+    ]
+   ],
+   "title": "Epoxy Floor",
+   "sound": "STONE"
+  },
+  "rl_epoxy_b": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     "rl_epoxy_b"
+    ]
+   ],
+   "title": "Epoxy Floor",
+   "sound": "STONE"
+  },
+  "rl_epoxy_crack": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     "rl_epoxy_crack"
+    ]
+   ],
+   "title": "Epoxy Floor",
+   "sound": "STONE"
+  },
+  "rl_shotcrete": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     "rl_shotcrete"
+    ]
+   ],
+   "title": "Shotcrete",
+   "sound": "STONE"
+  },
+  "rl_shotcrete_b": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     "rl_shotcrete_b"
+    ]
+   ],
+   "title": "Shotcrete",
+   "sound": "STONE"
+  },
+  "rl_ring_o2_0_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     16,
+     -0.25,
+     0,
+     32,
+     16.25,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ringc_o2_0_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     16,
+     -0.25,
+     -2,
+     32,
+     16.25,
+     18,
+     {
+      "north": "rl_steel_flange",
+      "south": "rl_steel_flange",
+      "side": "rl_steel_flange",
+      "up": "rl_steel_flange",
+      "down": "rl_steel_flange"
+     }
+    ]
+   ],
+   "title": "Ring Collar",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o2_p22_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     16,
+     -3,
+     0,
+     32,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o2_p22_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     12,
+     -3,
+     0,
+     28,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o2_p22_8": {
+   "model": "boxes",
+   "boxes": [
+    [
+     8,
+     -3,
+     0,
+     24,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o2_p22_12": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4,
+     -3,
+     0,
+     20,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o2_0_16": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     -0.25,
+     0,
+     16,
+     16.25,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ringc_o2_0_16": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     -0.25,
+     -2,
+     16,
+     16.25,
+     18,
+     {
+      "north": "rl_steel_flange",
+      "south": "rl_steel_flange",
+      "side": "rl_steel_flange",
+      "up": "rl_steel_flange",
+      "down": "rl_steel_flange"
+     }
+    ]
+   ],
+   "title": "Ring Collar",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o2_m22_12": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4,
+     -3,
+     0,
+     20,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o2_m22_8": {
+   "model": "boxes",
+   "boxes": [
+    [
+     8,
+     -3,
+     0,
+     24,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o2_m22_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     12,
+     -3,
+     0,
+     28,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o2_m22_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     16,
+     -3,
+     0,
+     32,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o2_p22_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     14,
+     -3,
+     0,
+     30,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o2_p22_16": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     -3,
+     0,
+     16,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ringc": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     -2,
+     16,
+     16,
+     18,
+     {
+      "north": "rl_steel_flange",
+      "south": "rl_steel_flange",
+      "side": "rl_steel_flange",
+      "up": "rl_steel_flange",
+      "down": "rl_steel_flange"
+     }
+    ]
+   ],
+   "title": "Ring Collar",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o2_m22_16": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     -3,
+     0,
+     16,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o2_m22_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     14,
+     -3,
+     0,
+     30,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o2_p45_6": {
+   "model": "boxes",
+   "boxes": [
+    [
+     10,
+     -4,
+     0,
+     26,
+     20,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o2_p45_16": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     -4,
+     0,
+     16,
+     20,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i2_p22_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     -3,
+     0,
+     16,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i2_p22_0_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     -3,
+     0,
+     16,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i2_0_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4,
+     -0.25,
+     0,
+     12,
+     16.25,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i2_0_4_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4,
+     -0.25,
+     0,
+     12,
+     16.25,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ringc_i2_0_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4,
+     -0.25,
+     -2,
+     12,
+     16.25,
+     18,
+     {
+      "north": "rl_steel_flange",
+      "south": "rl_steel_flange",
+      "side": "rl_steel_flange",
+      "up": "rl_steel_flange",
+      "down": "rl_steel_flange"
+     }
+    ]
+   ],
+   "title": "Ring Collar",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ringc_i2_0_4_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4,
+     -0.25,
+     -2,
+     12,
+     16.25,
+     18,
+     {
+      "north": "rl_steel_flange",
+      "south": "rl_steel_flange",
+      "side": "rl_steel_flange",
+      "up": "rl_steel_flange",
+      "down": "rl_steel_flange"
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i2_m22_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     -3,
+     0,
+     16,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i2_m22_0_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     -3,
+     0,
+     16,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o1_p45_16": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4,
+     0,
+     0,
+     20,
+     16,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o1_p45_6": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4,
+     -10,
+     0,
+     20,
+     6,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ringc_o2_p45_16": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     -4,
+     -2,
+     16,
+     20,
+     18,
+     {
+      "north": "rl_steel_flange",
+      "south": "rl_steel_flange",
+      "side": "rl_steel_flange",
+      "up": "rl_steel_flange",
+      "down": "rl_steel_flange"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Collar",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i2_p22_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4,
+     -3,
+     0,
+     12,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i2_p22_4_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4,
+     -3,
+     0,
+     12,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i2_p22_10": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -10,
+     -3,
+     0,
+     6,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i2_p22_10_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -10,
+     -3,
+     0,
+     6,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i2_p22_16": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -16,
+     -3,
+     0,
+     0,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i2_p22_16_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -16,
+     -3,
+     0,
+     0,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i2_0_16": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -16,
+     -0.25,
+     0,
+     0,
+     16.25,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i2_0_16_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -16,
+     -0.25,
+     0,
+     0,
+     16.25,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i2_m22_16": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -16,
+     -3,
+     0,
+     0,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i2_m22_16_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -16,
+     -3,
+     0,
+     0,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i2_m22_10": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -10,
+     -3,
+     0,
+     6,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i2_m22_10_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -10,
+     -3,
+     0,
+     6,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i2_m22_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4,
+     -3,
+     0,
+     12,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i2_m22_4_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4,
+     -3,
+     0,
+     12,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ringc_o1_p45_16": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4,
+     0,
+     -2,
+     20,
+     16,
+     18,
+     {
+      "north": "rl_steel_flange",
+      "south": "rl_steel_flange",
+      "side": "rl_steel_flange",
+      "up": "rl_steel_flange",
+      "down": "rl_steel_flange"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Collar",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o3_m22_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     14,
+     0,
+     19,
+     30,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ringc_i2_p45_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     -4,
+     -2,
+     16,
+     20,
+     18,
+     {
+      "north": "rl_steel_flange",
+      "south": "rl_steel_flange",
+      "side": "rl_steel_flange",
+      "up": "rl_steel_flange",
+      "down": "rl_steel_flange"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Collar",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ringc_i2_p45_0_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     -4,
+     -2,
+     16,
+     20,
+     18,
+     {
+      "north": "rl_steel_flange",
+      "south": "rl_steel_flange",
+      "side": "rl_steel_flange",
+      "up": "rl_steel_flange",
+      "down": "rl_steel_flange"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i2_p45_8": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -8,
+     -4,
+     0,
+     8,
+     20,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i2_p45_8_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -8,
+     -4,
+     0,
+     8,
+     20,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i1_p45_8": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4,
+     8,
+     0,
+     20,
+     24,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i1_p45_8_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4,
+     8,
+     0,
+     20,
+     24,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ringc_i1_p45_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4,
+     0,
+     -2,
+     20,
+     16,
+     18,
+     {
+      "north": "rl_steel_flange",
+      "south": "rl_steel_flange",
+      "side": "rl_steel_flange",
+      "up": "rl_steel_flange",
+      "down": "rl_steel_flange"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Collar",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ringc_i1_p45_0_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4,
+     0,
+     -2,
+     20,
+     16,
+     18,
+     {
+      "north": "rl_steel_flange",
+      "south": "rl_steel_flange",
+      "side": "rl_steel_flange",
+      "up": "rl_steel_flange",
+      "down": "rl_steel_flange"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o1_p22_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     -14,
+     0,
+     19,
+     2,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o3_m22_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     16,
+     0,
+     19,
+     32,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o3_m22_12": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     4,
+     0,
+     19,
+     20,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ringc_i2_p45_16": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -16,
+     -4,
+     -2,
+     0,
+     20,
+     18,
+     {
+      "north": "rl_steel_flange",
+      "south": "rl_steel_flange",
+      "side": "rl_steel_flange",
+      "up": "rl_steel_flange",
+      "down": "rl_steel_flange"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Collar",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ringc_i2_p45_16_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -16,
+     -4,
+     -2,
+     0,
+     20,
+     18,
+     {
+      "north": "rl_steel_flange",
+      "south": "rl_steel_flange",
+      "side": "rl_steel_flange",
+      "up": "rl_steel_flange",
+      "down": "rl_steel_flange"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ringc_i1_p45_16": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4,
+     16,
+     -2,
+     20,
+     32,
+     18,
+     {
+      "north": "rl_steel_flange",
+      "south": "rl_steel_flange",
+      "side": "rl_steel_flange",
+      "up": "rl_steel_flange",
+      "down": "rl_steel_flange"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Collar",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ringc_i1_p45_16_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4,
+     16,
+     -2,
+     20,
+     32,
+     18,
+     {
+      "north": "rl_steel_flange",
+      "south": "rl_steel_flange",
+      "side": "rl_steel_flange",
+      "up": "rl_steel_flange",
+      "down": "rl_steel_flange"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o1_p22_12": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     -4,
+     0,
+     19,
+     12,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o1_p22_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     -16,
+     0,
+     19,
+     0,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o3_m22_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     12,
+     0,
+     19,
+     28,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o3_m22_16": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     0,
+     0,
+     19,
+     16,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i3_m22_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     -4,
+     0,
+     19,
+     12,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i3_m22_4_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     -4,
+     0,
+     19,
+     12,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i3_m22_16": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     -16,
+     0,
+     19,
+     0,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i3_m22_16_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     -16,
+     0,
+     19,
+     0,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i1_p22_16": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     16,
+     0,
+     19,
+     32,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i1_p22_16_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     16,
+     0,
+     19,
+     32,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i1_p22_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     4,
+     0,
+     19,
+     20,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i1_p22_4_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     4,
+     0,
+     19,
+     20,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o1_p22_16": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     0,
+     0,
+     19,
+     16,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o1_p22_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     -12,
+     0,
+     19,
+     4,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o3_m22_8": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     8,
+     0,
+     19,
+     24,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i3_m22_10": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     -10,
+     0,
+     19,
+     6,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i3_m22_10_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     -10,
+     0,
+     19,
+     6,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i1_p22_10": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     10,
+     0,
+     19,
+     26,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i1_p22_10_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     10,
+     0,
+     19,
+     26,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o1_p22_8": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     -8,
+     0,
+     19,
+     8,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o3_0_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -0.25,
+     16,
+     0,
+     16.25,
+     32,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i3_m22_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     0,
+     0,
+     19,
+     16,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i3_m22_0_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     0,
+     0,
+     19,
+     16,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i1_p22_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     0,
+     0,
+     19,
+     16,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i1_p22_0_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     0,
+     0,
+     19,
+     16,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o1_0_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -0.25,
+     -16,
+     0,
+     16.25,
+     0,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o3_0_16": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -0.25,
+     0,
+     0,
+     16.25,
+     16,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i3_0_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -0.25,
+     -4,
+     0,
+     16.25,
+     12,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i3_0_4_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -0.25,
+     -4,
+     0,
+     16.25,
+     12,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i3_0_16": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -0.25,
+     -16,
+     0,
+     16.25,
+     0,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i3_0_16_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -0.25,
+     -16,
+     0,
+     16.25,
+     0,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i1_0_16": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -0.25,
+     16,
+     0,
+     16.25,
+     32,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i1_0_16_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -0.25,
+     16,
+     0,
+     16.25,
+     32,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i1_0_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -0.25,
+     4,
+     0,
+     16.25,
+     20,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i1_0_4_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -0.25,
+     4,
+     0,
+     16.25,
+     20,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o1_0_16": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -0.25,
+     0,
+     0,
+     16.25,
+     16,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ringc_o3_0_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -0.25,
+     16,
+     -2,
+     16.25,
+     32,
+     18,
+     {
+      "north": "rl_steel_flange",
+      "south": "rl_steel_flange",
+      "side": "rl_steel_flange",
+      "up": "rl_steel_flange",
+      "down": "rl_steel_flange"
+     }
+    ]
+   ],
+   "title": "Ring Collar",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ringc_o3_0_16": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -0.25,
+     0,
+     -2,
+     16.25,
+     16,
+     18,
+     {
+      "north": "rl_steel_flange",
+      "south": "rl_steel_flange",
+      "side": "rl_steel_flange",
+      "up": "rl_steel_flange",
+      "down": "rl_steel_flange"
+     }
+    ]
+   ],
+   "title": "Ring Collar",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ringc_i3_0_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -0.25,
+     -4,
+     -2,
+     16.25,
+     12,
+     18,
+     {
+      "north": "rl_steel_flange",
+      "south": "rl_steel_flange",
+      "side": "rl_steel_flange",
+      "up": "rl_steel_flange",
+      "down": "rl_steel_flange"
+     }
+    ]
+   ],
+   "title": "Ring Collar",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ringc_i3_0_4_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -0.25,
+     -4,
+     -2,
+     16.25,
+     12,
+     18,
+     {
+      "north": "rl_steel_flange",
+      "south": "rl_steel_flange",
+      "side": "rl_steel_flange",
+      "up": "rl_steel_flange",
+      "down": "rl_steel_flange"
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ringc_i1_0_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -0.25,
+     4,
+     -2,
+     16.25,
+     20,
+     18,
+     {
+      "north": "rl_steel_flange",
+      "south": "rl_steel_flange",
+      "side": "rl_steel_flange",
+      "up": "rl_steel_flange",
+      "down": "rl_steel_flange"
+     }
+    ]
+   ],
+   "title": "Ring Collar",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ringc_i1_0_4_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -0.25,
+     4,
+     -2,
+     16.25,
+     20,
+     18,
+     {
+      "north": "rl_steel_flange",
+      "south": "rl_steel_flange",
+      "side": "rl_steel_flange",
+      "up": "rl_steel_flange",
+      "down": "rl_steel_flange"
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ringc_o1_0_16": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -0.25,
+     0,
+     -2,
+     16.25,
+     16,
+     18,
+     {
+      "north": "rl_steel_flange",
+      "south": "rl_steel_flange",
+      "side": "rl_steel_flange",
+      "up": "rl_steel_flange",
+      "down": "rl_steel_flange"
+     }
+    ]
+   ],
+   "title": "Ring Collar",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ringc_o1_0_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -0.25,
+     -16,
+     -2,
+     16.25,
+     0,
+     18,
+     {
+      "north": "rl_steel_flange",
+      "south": "rl_steel_flange",
+      "side": "rl_steel_flange",
+      "up": "rl_steel_flange",
+      "down": "rl_steel_flange"
+     }
+    ]
+   ],
+   "title": "Ring Collar",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o3_p22_12": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     4,
+     0,
+     19,
+     20,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i3_p22_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     0,
+     0,
+     19,
+     16,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i3_p22_0_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     0,
+     0,
+     19,
+     16,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i3_p22_16": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     -16,
+     0,
+     19,
+     0,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i3_p22_16_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     -16,
+     0,
+     19,
+     0,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i1_m22_16": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     16,
+     0,
+     19,
+     32,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i1_m22_16_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     16,
+     0,
+     19,
+     32,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i1_m22_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     0,
+     0,
+     19,
+     16,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i1_m22_0_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     0,
+     0,
+     19,
+     16,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o1_m22_12": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     -4,
+     0,
+     19,
+     12,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o3_p22_8": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     8,
+     0,
+     19,
+     24,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i3_p22_10": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     -10,
+     0,
+     19,
+     6,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i3_p22_10_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     -10,
+     0,
+     19,
+     6,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i1_m22_10": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     10,
+     0,
+     19,
+     26,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i1_m22_10_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     10,
+     0,
+     19,
+     26,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o1_m22_8": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     -8,
+     0,
+     19,
+     8,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o3_p22_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     12,
+     0,
+     19,
+     28,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o3_p22_16": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     0,
+     0,
+     19,
+     16,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i3_p22_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     -4,
+     0,
+     19,
+     12,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i3_p22_4_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     -4,
+     0,
+     19,
+     12,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i1_m22_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     4,
+     0,
+     19,
+     20,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i1_m22_4_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     4,
+     0,
+     19,
+     20,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o1_m22_16": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     0,
+     0,
+     19,
+     16,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o1_m22_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     -12,
+     0,
+     19,
+     4,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o3_p22_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     16,
+     0,
+     19,
+     32,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i3_p45_8": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4,
+     -8,
+     0,
+     20,
+     8,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i3_p45_8_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4,
+     -8,
+     0,
+     20,
+     8,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ringc_i3_p45_16": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4,
+     -16,
+     -2,
+     20,
+     0,
+     18,
+     {
+      "north": "rl_steel_flange",
+      "south": "rl_steel_flange",
+      "side": "rl_steel_flange",
+      "up": "rl_steel_flange",
+      "down": "rl_steel_flange"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Collar",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ringc_i3_p45_16_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4,
+     -16,
+     -2,
+     20,
+     0,
+     18,
+     {
+      "north": "rl_steel_flange",
+      "south": "rl_steel_flange",
+      "side": "rl_steel_flange",
+      "up": "rl_steel_flange",
+      "down": "rl_steel_flange"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ringc_i0_p45_16": {
+   "model": "boxes",
+   "boxes": [
+    [
+     16,
+     -4,
+     -2,
+     32,
+     20,
+     18,
+     {
+      "north": "rl_steel_flange",
+      "south": "rl_steel_flange",
+      "side": "rl_steel_flange",
+      "up": "rl_steel_flange",
+      "down": "rl_steel_flange"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Collar",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ringc_i0_p45_16_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     16,
+     -4,
+     -2,
+     32,
+     20,
+     18,
+     {
+      "north": "rl_steel_flange",
+      "south": "rl_steel_flange",
+      "side": "rl_steel_flange",
+      "up": "rl_steel_flange",
+      "down": "rl_steel_flange"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i0_p45_8": {
+   "model": "boxes",
+   "boxes": [
+    [
+     8,
+     -4,
+     0,
+     24,
+     20,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i0_p45_8_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     8,
+     -4,
+     0,
+     24,
+     20,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o1_m22_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     -16,
+     0,
+     19,
+     0,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o3_p22_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     14,
+     0,
+     19,
+     30,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o3_p45_16": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4,
+     0,
+     0,
+     20,
+     16,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ringc_i3_p45_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4,
+     0,
+     -2,
+     20,
+     16,
+     18,
+     {
+      "north": "rl_steel_flange",
+      "south": "rl_steel_flange",
+      "side": "rl_steel_flange",
+      "up": "rl_steel_flange",
+      "down": "rl_steel_flange"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Collar",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ringc_i3_p45_0_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4,
+     0,
+     -2,
+     20,
+     16,
+     18,
+     {
+      "north": "rl_steel_flange",
+      "south": "rl_steel_flange",
+      "side": "rl_steel_flange",
+      "up": "rl_steel_flange",
+      "down": "rl_steel_flange"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i0_m22_16": {
+   "model": "boxes",
+   "boxes": [
+    [
+     16,
+     -3,
+     0,
+     32,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i0_m22_16_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     16,
+     -3,
+     0,
+     32,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i0_p22_16": {
+   "model": "boxes",
+   "boxes": [
+    [
+     16,
+     -3,
+     0,
+     32,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i0_p22_16_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     16,
+     -3,
+     0,
+     32,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ringc_i0_p45_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     -4,
+     -2,
+     16,
+     20,
+     18,
+     {
+      "north": "rl_steel_flange",
+      "south": "rl_steel_flange",
+      "side": "rl_steel_flange",
+      "up": "rl_steel_flange",
+      "down": "rl_steel_flange"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Collar",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ringc_i0_p45_0_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     -4,
+     -2,
+     16,
+     20,
+     18,
+     {
+      "north": "rl_steel_flange",
+      "south": "rl_steel_flange",
+      "side": "rl_steel_flange",
+      "up": "rl_steel_flange",
+      "down": "rl_steel_flange"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o0_p45_16": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     -4,
+     0,
+     16,
+     20,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o1_m22_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     -14,
+     0,
+     19,
+     2,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o3_p45_6": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4,
+     10,
+     0,
+     20,
+     26,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ringc_o3_p45_16": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4,
+     0,
+     -2,
+     20,
+     16,
+     18,
+     {
+      "north": "rl_steel_flange",
+      "south": "rl_steel_flange",
+      "side": "rl_steel_flange",
+      "up": "rl_steel_flange",
+      "down": "rl_steel_flange"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Collar",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i0_m22_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4,
+     -3,
+     0,
+     20,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i0_m22_4_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4,
+     -3,
+     0,
+     20,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i0_m22_10": {
+   "model": "boxes",
+   "boxes": [
+    [
+     10,
+     -3,
+     0,
+     26,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i0_m22_10_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     10,
+     -3,
+     0,
+     26,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i0_0_16": {
+   "model": "boxes",
+   "boxes": [
+    [
+     16,
+     -0.25,
+     0,
+     32,
+     16.25,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i0_0_16_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     16,
+     -0.25,
+     0,
+     32,
+     16.25,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i0_p22_10": {
+   "model": "boxes",
+   "boxes": [
+    [
+     10,
+     -3,
+     0,
+     26,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i0_p22_10_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     10,
+     -3,
+     0,
+     26,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i0_p22_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4,
+     -3,
+     0,
+     20,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i0_p22_4_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4,
+     -3,
+     0,
+     20,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ringc_o0_p45_16": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     -4,
+     -2,
+     16,
+     20,
+     18,
+     {
+      "north": "rl_steel_flange",
+      "south": "rl_steel_flange",
+      "side": "rl_steel_flange",
+      "up": "rl_steel_flange",
+      "down": "rl_steel_flange"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Collar",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o0_p45_6": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -10,
+     -4,
+     0,
+     6,
+     20,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i0_m22_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     -3,
+     0,
+     16,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i0_m22_0_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     -3,
+     0,
+     16,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i0_0_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4,
+     -0.25,
+     0,
+     20,
+     16.25,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i0_0_4_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4,
+     -0.25,
+     0,
+     20,
+     16.25,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ringc_i0_0_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4,
+     -0.25,
+     -2,
+     20,
+     16.25,
+     18,
+     {
+      "north": "rl_steel_flange",
+      "south": "rl_steel_flange",
+      "side": "rl_steel_flange",
+      "up": "rl_steel_flange",
+      "down": "rl_steel_flange"
+     }
+    ]
+   ],
+   "title": "Ring Collar",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ringc_i0_0_4_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4,
+     -0.25,
+     -2,
+     20,
+     16.25,
+     18,
+     {
+      "north": "rl_steel_flange",
+      "south": "rl_steel_flange",
+      "side": "rl_steel_flange",
+      "up": "rl_steel_flange",
+      "down": "rl_steel_flange"
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i0_p22_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     -3,
+     0,
+     16,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_i0_p22_0_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     -3,
+     0,
+     16,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_face",
+      "up": "rl_ring_face",
+      "down": "rl_ring_face"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o0_m22_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -14,
+     -3,
+     0,
+     2,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o0_m22_12": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4,
+     -3,
+     0,
+     12,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o0_m22_16": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     -3,
+     0,
+     16,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o0_p22_16": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     -3,
+     0,
+     16,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o0_p22_12": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4,
+     -3,
+     0,
+     12,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o0_p22_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -14,
+     -3,
+     0,
+     2,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o0_m22_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -16,
+     -3,
+     0,
+     0,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o0_m22_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -12,
+     -3,
+     0,
+     4,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o0_m22_8": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -8,
+     -3,
+     0,
+     8,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o0_0_16": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     -0.25,
+     0,
+     16,
+     16.25,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ringc_o0_0_16": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     -0.25,
+     -2,
+     16,
+     16.25,
+     18,
+     {
+      "north": "rl_steel_flange",
+      "south": "rl_steel_flange",
+      "side": "rl_steel_flange",
+      "up": "rl_steel_flange",
+      "down": "rl_steel_flange"
+     }
+    ]
+   ],
+   "title": "Ring Collar",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o0_p22_8": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -8,
+     -3,
+     0,
+     8,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o0_p22_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -12,
+     -3,
+     0,
+     4,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o0_p22_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -16,
+     -3,
+     0,
+     0,
+     19,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ring_o0_0_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -16,
+     -0.25,
+     0,
+     0,
+     16.25,
+     16,
+     {
+      "north": "rl_ring_front",
+      "south": "rl_ring_front",
+      "side": "rl_ring_side",
+      "up": "rl_ring_side",
+      "down": "rl_ring_side"
+     }
+    ]
+   ],
+   "title": "Ring Casing",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_ringc_o0_0_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -16,
+     -0.25,
+     -2,
+     0,
+     16.25,
+     18,
+     {
+      "north": "rl_steel_flange",
+      "south": "rl_steel_flange",
+      "side": "rl_steel_flange",
+      "up": "rl_steel_flange",
+      "down": "rl_steel_flange"
+     }
+    ]
+   ],
+   "title": "Ring Collar",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "rl_plug": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     "rl_plug"
+    ]
+   ],
+   "title": "Concrete Plug",
+   "sound": "STONE"
+  },
+  "rl_plug_h": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     "rl_plug_h"
+    ]
+   ],
+   "title": "Cracked Concrete Plug",
+   "sound": "STONE"
+  },
+  "rl_plug_h_glow": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     "rl_plug_h_glow"
+    ]
+   ],
+   "title": "Cracked Concrete Plug",
+   "sound": "STONE",
+   "light": 8
+  },
+  "rl_plug_h_surge": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     "rl_plug_h_glow"
+    ]
+   ],
+   "title": "Cracked Concrete Plug",
+   "sound": "STONE",
+   "light": 15
+  },
+  "rl_plug_v": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     "rl_plug_v"
+    ]
+   ],
+   "title": "Cracked Concrete Plug",
+   "sound": "STONE"
+  },
+  "rl_plug_v_glow": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     "rl_plug_v_glow"
+    ]
+   ],
+   "title": "Cracked Concrete Plug",
+   "sound": "STONE",
+   "light": 8
+  },
+  "rl_plug_v_surge": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     "rl_plug_v_glow"
+    ]
+   ],
+   "title": "Cracked Concrete Plug",
+   "sound": "STONE",
+   "light": 15
+  },
+  "rl_plug_a": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     "rl_plug_a"
+    ]
+   ],
+   "title": "Cracked Concrete Plug",
+   "sound": "STONE"
+  },
+  "rl_plug_a_glow": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     "rl_plug_a_glow"
+    ]
+   ],
+   "title": "Cracked Concrete Plug",
+   "sound": "STONE",
+   "light": 8
+  },
+  "rl_plug_a_surge": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     "rl_plug_a_glow"
+    ]
+   ],
+   "title": "Cracked Concrete Plug",
+   "sound": "STONE",
+   "light": 15
+  },
+  "rl_plug_b": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     "rl_plug_b"
+    ]
+   ],
+   "title": "Cracked Concrete Plug",
+   "sound": "STONE"
+  },
+  "rl_plug_b_glow": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     "rl_plug_b_glow"
+    ]
+   ],
+   "title": "Cracked Concrete Plug",
+   "sound": "STONE",
+   "light": 8
+  },
+  "rl_plug_b_surge": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     "rl_plug_b_glow"
+    ]
+   ],
+   "title": "Cracked Concrete Plug",
+   "sound": "STONE",
+   "light": 15
+  },
+  "rl_rubble": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     3,
+     16,
+     "rl_plug"
+    ],
+    [
+     2,
+     3,
+     3,
+     9,
+     7,
+     10,
+     "rl_plug",
+     null,
+     {
+      "axis": "y",
+      "angle": 22.5,
+      "origin": [
+       5,
+       5,
+       6
+      ]
+     }
+    ],
+    [
+     9,
+     3,
+     6,
+     15,
+     6,
+     13,
+     "rl_plug_h"
+    ],
+    [
+     5,
+     3,
+     11,
+     9,
+     5,
+     15,
+     "rl_plug"
+    ],
+    [
+     11,
+     6,
+     8,
+     12,
+     12,
+     9,
+     "rl_steel_flange",
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       11,
+       6,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Concrete Rubble",
+   "sound": "STONE",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     6,
+     16
+    ]
+   ]
+  },
+  "rl_pipe": {
+   "model": "boxes",
+   "boxes": [
+    [
+     2,
+     1,
+     0,
+     7,
+     6,
+     16,
+     "rl_pipe"
+    ],
+    [
+     9,
+     1,
+     0,
+     14,
+     6,
+     16,
+     "rl_pipe"
+    ],
+    [
+     1,
+     0,
+     7,
+     15,
+     1,
+     9,
+     "rl_steel_flange"
+    ],
+    [
+     1.5,
+     0,
+     7,
+     2.5,
+     7,
+     9,
+     "rl_steel_flange"
+    ],
+    [
+     13.5,
+     0,
+     7,
+     14.5,
+     7,
+     9,
+     "rl_steel_flange"
+    ]
+   ],
+   "title": "Cooling Lines",
+   "sound": "METAL",
+   "rotate": "axis",
+   "shape": [
+    [
+     1,
+     0,
+     0,
+     15,
+     7,
+     16
+    ]
+   ]
+  },
+  "rl_pipe_valve": {
+   "model": "boxes",
+   "boxes": [
+    [
+     2,
+     1,
+     0,
+     7,
+     6,
+     16,
+     "rl_pipe"
+    ],
+    [
+     9,
+     1,
+     0,
+     14,
+     6,
+     16,
+     "rl_pipe"
+    ],
+    [
+     1.5,
+     0.5,
+     5,
+     7.5,
+     6.5,
+     11,
+     "rl_steel_flange"
+    ],
+    [
+     4,
+     6.5,
+     7.5,
+     5,
+     10,
+     8.5,
+     "rl_steel_flange"
+    ],
+    [
+     1,
+     10,
+     4,
+     8,
+     11,
+     12,
+     "rl_beacon_off"
+    ],
+    [
+     4,
+     10,
+     7.5,
+     5,
+     11,
+     8.5,
+     "rl_steel_flange"
+    ]
+   ],
+   "title": "Valve",
+   "sound": "METAL",
+   "rotate": "axis",
+   "shape": [
+    [
+     1,
+     0,
+     0,
+     15,
+     11,
+     16
+    ]
+   ]
+  },
+  "rl_cable": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     0,
+     15,
+     3,
+     16,
+     {
+      "up": "rl_cable",
+      "side": "rl_cable",
+      "down": "rl_cable"
+     }
+    ]
+   ],
+   "title": "Cable Bundle",
+   "sound": "WOOL",
+   "rotate": "axis",
+   "shape": [
+    [
+     1,
+     0,
+     0,
+     15,
+     3,
+     16
+    ]
+   ]
+  },
+  "rl_duct": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     1,
+     0,
+     15,
+     15,
+     16,
+     "rl_duct"
+    ],
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     "rl_duct"
+    ]
+   ],
+   "title": "Ventilation Duct",
+   "sound": "METAL",
+   "rotate": "axis",
+   "shape": [
+    [
+     1,
+     1,
+     0,
+     15,
+     15,
+     16
+    ]
+   ]
+  },
+  "rl_beacon": {
+   "model": "boxes",
+   "boxes": [
+    [
+     5,
+     0,
+     5,
+     11,
+     2,
+     11,
+     "rl_desk"
+    ],
+    [
+     6,
+     2,
+     6,
+     10,
+     7,
+     10,
+     "rl_beacon_off"
+    ]
+   ],
+   "title": "Warning Beacon",
+   "sound": "METAL",
+   "flicker": {
+    "light": 10,
+    "on": {
+     "rl_beacon_off": "rl_beacon_on"
+    }
+   },
+   "shape": [
+    [
+     5,
+     0,
+     5,
+     11,
+     7,
+     11
+    ]
+   ]
+  },
+  "rl_console": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     4,
+     16,
+     9,
+     16,
+     "rl_desk"
+    ],
+    [
+     0,
+     9,
+     4,
+     16,
+     10,
+     16,
+     "rl_desk"
+    ],
+    [
+     0.5,
+     9,
+     6,
+     15.5,
+     11,
+     15,
+     {
+      "up": "rl_console",
+      "north": "rl_desk",
+      "side": "rl_desk",
+      "down": "rl_desk"
+     },
+     null,
+     {
+      "axis": "x",
+      "angle": 22.5,
+      "origin": [
+       8,
+       10,
+       10
+      ]
+     }
+    ],
+    [
+     1,
+     11,
+     13,
+     15,
+     18,
+     15,
+     {
+      "north": "rl_screen_dead",
+      "side": "rl_desk"
+     }
+    ]
+   ],
+   "title": "Control Desk",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     4,
+     16,
+     12,
+     16
+    ]
+   ]
+  },
+  "rl_console_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     4,
+     16,
+     9,
+     16,
+     "rl_desk"
+    ],
+    [
+     0,
+     9,
+     4,
+     16,
+     10,
+     16,
+     "rl_desk"
+    ],
+    [
+     0.5,
+     9,
+     6,
+     15.5,
+     11,
+     15,
+     {
+      "up": "rl_console_on",
+      "north": "rl_desk",
+      "side": "rl_desk",
+      "down": "rl_desk"
+     },
+     null,
+     {
+      "axis": "x",
+      "angle": 22.5,
+      "origin": [
+       8,
+       10,
+       10
+      ]
+     }
+    ],
+    [
+     1,
+     11,
+     13,
+     15,
+     18,
+     15,
+     {
+      "north": "rl_console_on",
+      "side": "rl_desk"
+     }
+    ]
+   ],
+   "title": "Control Desk",
+   "sound": "METAL",
+   "rotate": "facing",
+   "light": 5,
+   "shape": [
+    [
+     0,
+     0,
+     4,
+     16,
+     12,
+     16
+    ]
+   ]
+  },
+  "rl_tank_plinth": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "up": "rl_steel",
+      "side": "rl_hazard",
+      "down": "rl_steel"
+     }
+    ]
+   ],
+   "title": "Tank Plinth",
+   "sound": "METAL"
+  },
+  "rl_tank_glass": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     "rl_fluid"
+    ]
+   ],
+   "title": "Specimen Tank",
+   "sound": "GLASS",
+   "render": "translucent",
+   "light": 3
+  },
+  "rl_tank_body": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     "rl_fluid_body"
+    ]
+   ],
+   "title": "Specimen Tank",
+   "sound": "GLASS",
+   "render": "translucent",
+   "light": 3
+  },
+  "rl_tank_broken": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     "rl_glass_crack"
+    ]
+   ],
+   "title": "Cracked Tank",
+   "sound": "GLASS",
+   "render": "translucent"
+  },
+  "rl_tank_empty": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     2,
+     16,
+     "rl_spill"
+    ],
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     "rl_glass_crack"
+    ]
+   ],
+   "title": "Drained Tank",
+   "sound": "GLASS",
+   "render": "translucent"
+  },
+  "rl_tank_post": {
+   "model": "boxes",
+   "boxes": [
+    [
+     5,
+     0,
+     5,
+     11,
+     16,
+     11,
+     "rl_steel"
+    ],
+    [
+     4,
+     0,
+     4,
+     12,
+     2,
+     12,
+     "rl_steel_flange"
+    ],
+    [
+     4,
+     14,
+     4,
+     12,
+     16,
+     12,
+     "rl_steel_flange"
+    ]
+   ],
+   "title": "Tank Frame",
+   "sound": "METAL",
+   "shape": [
+    [
+     5,
+     0,
+     5,
+     11,
+     16,
+     11
+    ]
+   ]
+  },
+  "rl_tank_cap": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     6,
+     16,
+     {
+      "side": "rl_steel_flange",
+      "up": "rl_steel",
+      "down": "rl_steel"
+     }
+    ],
+    [
+     3,
+     6,
+     3,
+     7,
+     10,
+     7,
+     "rl_hose"
+    ],
+    [
+     9,
+     6,
+     9,
+     13,
+     12,
+     13,
+     "rl_hose"
+    ],
+    [
+     6,
+     6,
+     10,
+     9,
+     16,
+     13,
+     "rl_pipe"
+    ]
+   ],
+   "title": "Tank Cap",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     6,
+     16
+    ]
+   ]
+  },
+  "rl_spill": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     0.2,
+     16,
+     {
+      "up": "rl_spill",
+      "down": "rl_spill",
+      "side": "rl_spill"
+     }
+    ]
+   ],
+   "title": "Dried Fluid",
+   "sound": "WOOL",
+   "decor": true,
+   "render": "translucent",
+   "shape": []
+  },
+  "rl_glovebox": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     2,
+     16,
+     16,
+     16,
+     {
+      "north": "rl_steel",
+      "side": "rl_steel",
+      "up": "rl_steel",
+      "down": "rl_steel"
+     }
+    ],
+    [
+     1,
+     1,
+     1,
+     7,
+     15,
+     2,
+     "rl_desk"
+    ],
+    [
+     9,
+     1,
+     1,
+     15,
+     15,
+     2,
+     "rl_desk"
+    ]
+   ],
+   "title": "Glove Box",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "rl_glovebox_top": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     2,
+     16,
+     12,
+     16,
+     {
+      "north": "rl_glovebox",
+      "side": "rl_steel",
+      "up": "rl_steel",
+      "down": "rl_steel"
+     },
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       0,
+       16
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     6,
+     16,
+     14,
+     16,
+     "rl_steel"
+    ],
+    [
+     6,
+     14,
+     8,
+     10,
+     16,
+     12,
+     "rl_duct"
+    ]
+   ],
+   "title": "Glove Box",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     2,
+     16,
+     14,
+     16
+    ]
+   ]
+  },
+  "rl_suit": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4.5,
+     0,
+     9,
+     7.8,
+     2.5,
+     13.5,
+     "rl_boot"
+    ],
+    [
+     8.2,
+     0,
+     9,
+     11.5,
+     2.5,
+     13.5,
+     "rl_boot"
+    ],
+    [
+     4.5,
+     2.5,
+     9.5,
+     7.8,
+     10,
+     13,
+     "rl_pvc"
+    ],
+    [
+     8.2,
+     2.5,
+     9.5,
+     11.5,
+     10,
+     13,
+     "rl_pvc"
+    ],
+    [
+     4,
+     10,
+     9,
+     12,
+     16,
+     13.5,
+     "rl_pvc"
+    ],
+    [
+     1.5,
+     8,
+     10,
+     4,
+     10.5,
+     12.5,
+     "rl_hose"
+    ],
+    [
+     12,
+     8,
+     10,
+     14.5,
+     10.5,
+     12.5,
+     "rl_hose"
+    ],
+    [
+     1.8,
+     10.5,
+     10,
+     4,
+     16,
+     12.5,
+     "rl_pvc"
+    ],
+    [
+     12,
+     10.5,
+     10,
+     14.2,
+     16,
+     12.5,
+     "rl_pvc"
+    ]
+   ],
+   "title": "Pressure Suit",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "shape": [
+    [
+     2,
+     0,
+     9,
+     14,
+     16,
+     14
+    ]
+   ]
+  },
+  "rl_suit_top": {
+   "model": "boxes",
+   "boxes": [
+    [
+     3.5,
+     0,
+     8.5,
+     12.5,
+     6,
+     14,
+     "rl_pvc"
+    ],
+    [
+     1.8,
+     0,
+     10,
+     4,
+     4.5,
+     12.5,
+     "rl_pvc"
+    ],
+    [
+     12,
+     0,
+     10,
+     14.2,
+     4.5,
+     12.5,
+     "rl_pvc"
+    ],
+    [
+     2.5,
+     4,
+     9.5,
+     13.5,
+     6,
+     13.5,
+     "rl_pvc"
+    ],
+    [
+     4,
+     6,
+     8,
+     12,
+     14,
+     14.5,
+     {
+      "north": "rl_visor",
+      "side": "rl_pvc",
+      "up": "rl_pvc",
+      "down": "rl_pvc"
+     }
+    ],
+    [
+     7,
+     1.5,
+     7.6,
+     9,
+     3.5,
+     8.5,
+     "rl_steel_flange"
+    ],
+    [
+     7.2,
+     14,
+     10.2,
+     8.8,
+     16,
+     11.8,
+     "rl_hose"
+    ]
+   ],
+   "title": "Pressure Suit",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "shape": [
+    [
+     2,
+     0,
+     8,
+     14,
+     14,
+     14.5
+    ]
+   ]
+  },
+  "rl_eyewash": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7,
+     0,
+     13,
+     9,
+     16,
+     15,
+     "rl_steel"
+    ],
+    [
+     3,
+     13,
+     8,
+     13,
+     14,
+     15,
+     "rl_eyewash"
+    ],
+    [
+     7.5,
+     6,
+     12,
+     8.5,
+     13,
+     13,
+     "rl_eyewash"
+    ],
+    [
+     5,
+     12,
+     9,
+     11,
+     13,
+     13,
+     "rl_eyewash"
+    ]
+   ],
+   "title": "Emergency Shower",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "rl_hazard": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4,
+     0,
+     0,
+     12,
+     0.2,
+     16,
+     {
+      "up": "rl_hazard",
+      "down": "rl_hazard",
+      "side": "rl_hazard"
+     }
+    ]
+   ],
+   "title": "Hazard Stripe",
+   "sound": "STONE",
+   "rotate": "axis",
+   "decor": true,
+   "shape": []
+  },
+  "rl_files": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     0.25,
+     16,
+     {
+      "up": "rl_files",
+      "down": "rl_files",
+      "side": "rl_files"
+     }
+    ]
+   ],
+   "title": "Papers",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout",
+   "shape": []
+  },
+  "rl_boxes": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     1,
+     16,
+     8,
+     15,
+     "rl_boxes"
+    ],
+    [
+     1,
+     8,
+     2,
+     15,
+     15,
+     14,
+     "rl_boxes",
+     null,
+     {
+      "axis": "y",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Archive Boxes",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     1,
+     16,
+     15,
+     15
+    ]
+   ]
+  },
+  "rl_sgn_ring_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "rl_sgn_ring_0",
+      "south": "rl_sgn_ring_0",
+      "side": "rl_sgn_ring_0",
+      "up": "rl_sgn_ring_0",
+      "down": "rl_sgn_ring_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "rl_sgn_ring_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "rl_sgn_ring_1",
+      "south": "rl_sgn_ring_1",
+      "side": "rl_sgn_ring_1",
+      "up": "rl_sgn_ring_1",
+      "down": "rl_sgn_ring_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "rl_sgn_specimen_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "rl_sgn_specimen_0",
+      "south": "rl_sgn_specimen_0",
+      "side": "rl_sgn_specimen_0",
+      "up": "rl_sgn_specimen_0",
+      "down": "rl_sgn_specimen_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "rl_sgn_specimen_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "rl_sgn_specimen_1",
+      "south": "rl_sgn_specimen_1",
+      "side": "rl_sgn_specimen_1",
+      "up": "rl_sgn_specimen_1",
+      "down": "rl_sgn_specimen_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "rl_sgn_bsl4_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "rl_sgn_bsl4_0",
+      "south": "rl_sgn_bsl4_0",
+      "side": "rl_sgn_bsl4_0",
+      "up": "rl_sgn_bsl4_0",
+      "down": "rl_sgn_bsl4_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "rl_sgn_bsl4_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "rl_sgn_bsl4_1",
+      "south": "rl_sgn_bsl4_1",
+      "side": "rl_sgn_bsl4_1",
+      "up": "rl_sgn_bsl4_1",
+      "down": "rl_sgn_bsl4_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "rl_sgn_decon_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "rl_sgn_decon_0",
+      "south": "rl_sgn_decon_0",
+      "side": "rl_sgn_decon_0",
+      "up": "rl_sgn_decon_0",
+      "down": "rl_sgn_decon_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "rl_sgn_decon_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "rl_sgn_decon_1",
+      "south": "rl_sgn_decon_1",
+      "side": "rl_sgn_decon_1",
+      "up": "rl_sgn_decon_1",
+      "down": "rl_sgn_decon_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "rl_sgn_threshold_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "rl_sgn_threshold_0",
+      "south": "rl_sgn_threshold_0",
+      "side": "rl_sgn_threshold_0",
+      "up": "rl_sgn_threshold_0",
+      "down": "rl_sgn_threshold_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "rl_sgn_threshold_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "rl_sgn_threshold_1",
+      "south": "rl_sgn_threshold_1",
+      "side": "rl_sgn_threshold_1",
+      "up": "rl_sgn_threshold_1",
+      "down": "rl_sgn_threshold_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "rl_sgn_records_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "rl_sgn_records_0",
+      "south": "rl_sgn_records_0",
+      "side": "rl_sgn_records_0",
+      "up": "rl_sgn_records_0",
+      "down": "rl_sgn_records_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "rl_sgn_records_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "rl_sgn_records_1",
+      "south": "rl_sgn_records_1",
+      "side": "rl_sgn_records_1",
+      "up": "rl_sgn_records_1",
+      "down": "rl_sgn_records_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "rl_sgn_plant_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "rl_sgn_plant_0",
+      "south": "rl_sgn_plant_0",
+      "side": "rl_sgn_plant_0",
+      "up": "rl_sgn_plant_0",
+      "down": "rl_sgn_plant_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "rl_sgn_plant_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "rl_sgn_plant_1",
+      "south": "rl_sgn_plant_1",
+      "side": "rl_sgn_plant_1",
+      "up": "rl_sgn_plant_1",
+      "down": "rl_sgn_plant_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "rl_sgn_ridgeview_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "rl_sgn_ridgeview_0",
+      "south": "rl_sgn_ridgeview_0",
+      "side": "rl_sgn_ridgeview_0",
+      "up": "rl_sgn_ridgeview_0",
+      "down": "rl_sgn_ridgeview_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "rl_sgn_ridgeview_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "rl_sgn_ridgeview_1",
+      "south": "rl_sgn_ridgeview_1",
+      "side": "rl_sgn_ridgeview_1",
+      "up": "rl_sgn_ridgeview_1",
+      "down": "rl_sgn_ridgeview_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "rl_sgn_evac_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "rl_sgn_evac_0",
+      "south": "rl_sgn_evac_0",
+      "side": "rl_sgn_evac_0",
+      "up": "rl_sgn_evac_0",
+      "down": "rl_sgn_evac_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "rl_sgn_evac_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "rl_sgn_evac_1",
+      "south": "rl_sgn_evac_1",
+      "side": "rl_sgn_evac_1",
+      "up": "rl_sgn_evac_1",
+      "down": "rl_sgn_evac_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sg_crust_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     0.3,
+     16,
+     {
+      "up": "sg_crust_0",
+      "down": "sg_crust_0",
+      "side": "sg_crust_0"
+     }
+    ]
+   ],
+   "title": "Red Growth",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout",
+   "shape": []
+  },
+  "sg_vein_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.6,
+     16,
+     16,
+     16,
+     {
+      "north": "sg_vein_0",
+      "south": "sg_vein_0",
+      "side": "sg_vein_0",
+      "up": "sg_vein_0",
+      "down": "sg_vein_0"
+     }
+    ]
+   ],
+   "title": "Red Growth",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout",
+   "shape": []
+  },
+  "sg_crust_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     0.3,
+     16,
+     {
+      "up": "sg_crust_1",
+      "down": "sg_crust_1",
+      "side": "sg_crust_1"
+     }
+    ]
+   ],
+   "title": "Red Growth",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout",
+   "shape": []
+  },
+  "sg_vein_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.6,
+     16,
+     16,
+     16,
+     {
+      "north": "sg_vein_1",
+      "south": "sg_vein_1",
+      "side": "sg_vein_1",
+      "up": "sg_vein_1",
+      "down": "sg_vein_1"
+     }
+    ]
+   ],
+   "title": "Red Growth",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout",
+   "shape": []
+  },
+  "sg_crust_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     0.3,
+     16,
+     {
+      "up": "sg_crust_2",
+      "down": "sg_crust_2",
+      "side": "sg_crust_2"
+     }
+    ]
+   ],
+   "title": "Red Growth",
+   "sound": "PACKED_MUD",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout",
+   "shape": [],
+   "light": 3
+  },
+  "sg_vein_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.6,
+     16,
+     16,
+     16,
+     {
+      "north": "sg_vein_2",
+      "south": "sg_vein_2",
+      "side": "sg_vein_2",
+      "up": "sg_vein_2",
+      "down": "sg_vein_2"
+     }
+    ]
+   ],
+   "title": "Red Growth",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout",
+   "shape": []
+  },
+  "sg_hang": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     8,
+     16,
+     16,
+     8,
+     {
+      "north": "sg_hang",
+      "south": "sg_hang"
+     }
+    ],
+    [
+     8,
+     0,
+     0,
+     8,
+     16,
+     16,
+     {
+      "east": "sg_hang",
+      "west": "sg_hang"
+     }
+    ],
+    [
+     0,
+     15.7,
+     0,
+     16,
+     16,
+     16,
+     {
+      "up": "sg_crust_1",
+      "down": "sg_crust_1",
+      "side": "sg_crust_1"
+     }
+    ]
+   ],
+   "title": "Hanging Growth",
+   "sound": "WOOL",
+   "decor": true,
+   "render": "cutout",
+   "shape": []
+  },
+  "sg_blister": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     1,
+     15,
+     3,
+     15,
+     {
+      "up": "sg_mass",
+      "side": "sg_flesh",
+      "down": "sg_flesh"
+     }
+    ],
+    [
+     3,
+     3,
+     3,
+     12,
+     6,
+     11,
+     {
+      "up": "sg_mass",
+      "side": "sg_flesh",
+      "down": "sg_flesh"
+     }
+    ],
+    [
+     5,
+     6,
+     5,
+     9,
+     8,
+     9,
+     "sg_pod"
+    ]
+   ],
+   "title": "Blister",
+   "sound": "PACKED_MUD",
+   "rotate": "facing",
+   "light": 2,
+   "shape": [
+    [
+     1,
+     0,
+     1,
+     15,
+     6,
+     15
+    ]
+   ]
+  },
+  "sg_mass": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     "sg_mass"
+    ]
+   ],
+   "title": "Grown-Through Block",
+   "sound": "PACKED_MUD",
+   "light": 2
+  },
+  "sg_stalk": {
+   "model": "boxes",
+   "boxes": [
+    [
+     5,
+     0,
+     5,
+     11,
+     16,
+     11,
+     "sg_flesh"
+    ],
+    [
+     3,
+     0,
+     3,
+     13,
+     3,
+     13,
+     {
+      "up": "sg_mass",
+      "side": "sg_flesh"
+     }
+    ],
+    [
+     9,
+     4,
+     6,
+     13,
+     12,
+     10,
+     "sg_flesh",
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       11,
+       4,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Fungal Stalk",
+   "sound": "PACKED_MUD",
+   "rotate": "facing",
+   "shape": [
+    [
+     5,
+     0,
+     5,
+     11,
+     16,
+     11
+    ]
+   ]
+  },
+  "sg_stalk_top": {
+   "model": "boxes",
+   "boxes": [
+    [
+     5.5,
+     0,
+     5.5,
+     10.5,
+     8,
+     10.5,
+     "sg_flesh"
+    ],
+    [
+     0,
+     8,
+     0,
+     16,
+     10,
+     16,
+     {
+      "up": "sg_cap",
+      "side": "sg_cap",
+      "down": "sg_gills"
+     }
+    ],
+    [
+     2,
+     10,
+     2,
+     14,
+     12,
+     14,
+     {
+      "up": "sg_cap",
+      "side": "sg_cap",
+      "down": "sg_gills"
+     }
+    ],
+    [
+     5,
+     12,
+     5,
+     11,
+     13,
+     11,
+     "sg_cap"
+    ]
+   ],
+   "title": "Fungal Stalk",
+   "sound": "PACKED_MUD",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     13,
+     16
+    ]
+   ],
+   "light": 1
+  },
+  "sg_pods": {
+   "model": "boxes",
+   "boxes": [
+    [
+     2,
+     0,
+     3,
+     8,
+     7,
+     9,
+     "sg_pod"
+    ],
+    [
+     8,
+     0,
+     6,
+     14,
+     9,
+     12,
+     "sg_pod"
+    ],
+    [
+     5,
+     0,
+     10,
+     9,
+     5,
+     14,
+     "sg_pod"
+    ],
+    [
+     0,
+     0,
+     0,
+     16,
+     0.3,
+     16,
+     {
+      "up": "sg_crust_1",
+      "down": "sg_crust_1",
+      "side": "sg_crust_1"
+     }
+    ]
+   ],
+   "title": "Spore Pods",
+   "sound": "PACKED_MUD",
+   "rotate": "facing",
+   "light": 6,
+   "shape": [
+    [
+     2,
+     0,
+     3,
+     14,
+     9,
+     14
+    ]
+   ]
+  },
+  "sg_ash": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     0.3,
+     16,
+     {
+      "up": "sg_ash",
+      "down": "sg_ash",
+      "side": "sg_ash"
+     }
+    ]
+   ],
+   "title": "Ash",
+   "sound": "SAND",
+   "rotate": "facing",
+   "decor": true,
+   "render": "cutout",
+   "shape": []
+  },
+  "sg_ash_drift": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     2,
+     16,
+     {
+      "up": "sg_ash_full",
+      "down": "sg_ash_full",
+      "side": "sg_ash_full"
+     }
+    ],
+    [
+     2,
+     2,
+     1,
+     14,
+     3.5,
+     12,
+     {
+      "up": "sg_ash_full",
+      "down": "sg_ash_full",
+      "side": "sg_ash_full"
+     }
+    ],
+    [
+     5,
+     3.5,
+     3,
+     11,
+     4.5,
+     8,
+     {
+      "up": "sg_ash_full",
+      "down": "sg_ash_full",
+      "side": "sg_ash_full"
+     }
+    ]
+   ],
+   "title": "Ash Drift",
+   "sound": "SAND",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     2,
+     16
+    ]
+   ]
   }
  }
 }

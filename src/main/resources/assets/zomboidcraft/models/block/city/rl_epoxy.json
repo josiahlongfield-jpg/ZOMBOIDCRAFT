@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rl_epoxy": "zomboidcraft:block/city/rl_epoxy",
+    "particle": "zomboidcraft:block/city/rl_epoxy"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rl_epoxy",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#rl_epoxy",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#rl_epoxy",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rl_epoxy",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rl_epoxy",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#rl_epoxy",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

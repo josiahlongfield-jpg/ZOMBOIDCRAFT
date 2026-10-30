@@ -16,7 +16,13 @@ public final class Builders {
             case SUBURB -> new SuburbSite(p, out).build();
             case FARM -> new FarmSite(p, out).build();
             case PORT -> new PortSite(p, out).build();
-            case MILITARY -> new MilitarySite(p, out).build();
+            case MILITARY -> {
+                if (p.variant.equals("ridgeview")) {
+                    new Ridgeview(p, out).build();
+                } else {
+                    new MilitarySite(p, out).build();
+                }
+            }
             case ROADSIDE -> {
                 if (p.variant.equals("depot")) {
                     new DepotSite(p, county, out).build();

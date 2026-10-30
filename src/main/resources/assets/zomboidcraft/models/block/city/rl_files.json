@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rl_files": "zomboidcraft:block/city/rl_files",
+    "particle": "zomboidcraft:block/city/rl_files"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        0.25,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rl_files",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#rl_files",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#rl_files",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rl_files",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rl_files"
+        },
+        "down": {
+          "texture": "#rl_files",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
