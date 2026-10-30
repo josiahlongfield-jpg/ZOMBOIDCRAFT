@@ -59,7 +59,9 @@ public final class Profiler {
     /** What one watched thread did: counts per owner, per our class, per method on top, per method anywhere. */
     private static final class Tally {
         final String name;
-        int samples, idle;
+        int samples, idle, blocked;
+        /** Where it waited on a lock (synchronized), by our deepest frame or the top one. */
+        final Map<String, Integer> locks = new HashMap<>();
         final Map<String, Integer> owner = new HashMap<>(), ours = new HashMap<>(), self = new HashMap<>(),
                 inclusive = new HashMap<>(), oursSelf = new HashMap<>();
 
@@ -69,9 +71,22 @@ public final class Profiler {
 
         void add(Thread.State state, StackTraceElement[] stack) {
             samples++;
-            if (stack.length == 0 || state == Thread.State.WAITING || state == Thread.State.TIMED_WAITING
-                    || state == Thread.State.BLOCKED && isPark(stack[0])) {
+            if (stack.length == 0 || state == Thread.State.WAITING || state == Thread.State.TIMED_WAITING) {
                 idle++;
+                return;
+            }
+            if (state == Thread.State.BLOCKED) {
+                // waiting its turn for a lock: not work, but worth knowing where
+                idle++;
+                blocked++;
+                StackTraceElement at = stack[0];
+                for (StackTraceElement f : stack) {
+                    if (f.getClassName().startsWith("com.zomboidcraft.")) {
+                        at = f;
+                        break;
+                    }
+                }
+                locks.merge(method(at) + "  (line " + at.getLineNumber() + ")", 1, Integer::sum);
                 return;
             }
             String top = method(stack[0]);
@@ -116,10 +131,6 @@ public final class Profiler {
                 }
             }
         }
-    }
-
-    private static boolean isPark(StackTraceElement f) {
-        return f.getClassName().equals("jdk.internal.misc.Unsafe") && f.getMethodName().equals("park");
     }
 
     private static String owner(String cls) {
@@ -265,8 +276,11 @@ public final class Profiler {
         for (Tally t : tallies.values()) {
             int busy = t.samples - t.idle;
             r.append("\n==================== ").append(t.name).append(" ====================\n");
-            r.append(String.format("%d samples, %d busy (%.0f%%), %d waiting%n", t.samples, busy,
-                    100.0 * busy / Math.max(1, t.samples), t.idle));
+            r.append(String.format("%d samples, %d busy (%.0f%%), %d waiting (%d of them on a lock)%n", t.samples,
+                    busy, 100.0 * busy / Math.max(1, t.samples), t.idle, t.blocked));
+            if (t.blocked > 0) {
+                section(r, "Waiting on a lock, where (share of the lock waits)", t.locks, t.blocked, 15);
+            }
             if (busy == 0) {
                 continue;
             }

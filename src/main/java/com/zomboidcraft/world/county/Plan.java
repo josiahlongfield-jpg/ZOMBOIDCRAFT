@@ -308,7 +308,8 @@ public final class Plan {
         public final boolean closed;
         public final double reach;
         public final double minX, minZ, maxX, maxZ;
-        private final Map<Long, int[]> buckets = new java.util.HashMap<>();
+        // fastutil mixes the key; a HashMap's Long hash (x ^ z of County.key) put whole diagonals in one bin
+        private final it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap<int[]> buckets = new it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap<>();
         private final Map<Integer, int[]> rows = new java.util.HashMap<>();
 
         Shape(double[] pts, boolean closed, double reach) {
@@ -345,7 +346,7 @@ public final class Plan {
                     rw.computeIfAbsent(r, k -> new ArrayList<>()).add(s);
                 }
             }
-            bk.forEach((k, v) -> buckets.put(k, v.stream().mapToInt(Integer::intValue).toArray()));
+            bk.forEach((k, v) -> buckets.put(k.longValue(), v.stream().mapToInt(Integer::intValue).toArray()));
             rw.forEach((k, v) -> rows.put(k, v.stream().mapToInt(Integer::intValue).toArray()));
         }
 

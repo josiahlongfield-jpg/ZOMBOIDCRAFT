@@ -65,7 +65,9 @@ public final class MeshGuns {
     public static void draw(String id, String part, PoseStack pose, SubmitNodeCollector out, int light) {
         Gun gun = get(id);
         Part p = gun == null ? null : gun.parts().get(part);
-        if (p == null || p.triangles() == 0) {
+        // no shadow from a mesh item: a gun or a tin casts next to none, and the profile showed the bought guns
+        // (15,000-32,000 triangles each, twice over with the ink) costing as much again in the shadow pass
+        if (p == null || p.triangles() == 0 || com.zomboidcraft.client.zombie.body.ZDetail.shadowPass()) {
             return;
         }
         pose.pushPose();
