@@ -44,6 +44,149 @@ final class HollisCamp {
         command();
         air();
         graves();
+        tracks();
+        lines();
+        motorPool();
+        holding();
+        litter();
+    }
+
+    /**
+     * The holding area (hazmat-triage-tents, the treatment units' zoning): three chain-link pens
+     * side by side for the suspected, the probable and the confirmed, a row of shelter tents in
+     * each with their cots, the chlorine drums and the hand-wash at each gate, the walk between.
+     */
+    private void holding() {
+        int x0 = 60, x1 = 132, z0 = 56, z1 = 122;
+        track(x0, z0 - 4, x1, z0 - 2);
+        for (int k = 0; k < 3; k++) {
+            int px0 = x0 + k * 24, px1 = px0 + 22;
+            run(px0, z0, px1, z0, 0.03);
+            run(px0, z1, px1, z1, 0.03);
+            run(px0, z0, px0, z1, 0.03);
+            run(px1, z0, px1, z1, 0.03);
+            int gx = px0 + 10;
+            for (int x = gx; x <= gx + 2; x++) {
+                for (int y = 1; y <= 4; y++) {
+                    set(x, y, z0, "air");
+                }
+            }
+            set(gx - 1, 1, z0 - 1, "pw_drum[axis=x]");
+            set(gx + 3, 1, z0 - 1, c.chance() < 0.5 ? "hs_sink[facing=north]" : "pw_drum[axis=z]");
+            for (int z = z0 + 4; z + 12 < z1; z += 16) {
+                camp.tent(px0 + 2, z, 12, k == 2 ? "white" : "tan", true);
+                camp.tent(px0 + 13, z, 12, k == 2 ? "white" : "tan", true);
+            }
+            for (int z = z0 + 1; z < z1; z++) {
+                for (int x = px0 + 9; x <= px0 + 12; x++) {
+                    if (c.empty(x, 1, z)) {
+                        set(x, 0, z, c.chance() < 0.6 ? "minecraft:gravel" : "minecraft:coarse_dirt");
+                    }
+                }
+            }
+        }
+        c.sign("triage", x0 + 3, 2, z0 - 1, "north");
+    }
+
+    // ------------------------------------------------------------------ the ground between
+
+    /** A gravel track w wide from (x0, z0) to (x1, z1), straight along x or z, churned to mud in the ruts. */
+    private void track(int x0, int z0, int x1, int z1) {
+        for (int x = Math.min(x0, x1); x <= Math.max(x0, x1); x++) {
+            for (int z = Math.min(z0, z1); z <= Math.max(z0, z1); z++) {
+                if (!c.land(x, z) || !c.empty(x, 1, z) && !c.get(x, 1, z).startsWith("minecraft:")) {
+                    continue;
+                }
+                double r = c.chance();
+                set(x, 0, z, r < 0.55 ? "minecraft:gravel" : r < 0.8 ? "minecraft:coarse_dirt" : r < 0.92 ? "minecraft:mud" : "minecraft:packed_mud");
+                set(x, 1, z, "air");
+            }
+        }
+    }
+
+    /** The tracks the trucks wore between the gate, the wards, the hospital, the pad and the pits. */
+    private void tracks() {
+        track(56, -86, 236, -82);
+        track(132, -120, 135, Hollis.ROAD0 - 2);
+        track(56, -86, 59, Hollis.ROAD0 - 2);
+        track(236, -86, 239, -56);
+        track(200, Hollis.ROAD1 + 2, 203, 100);
+        track(140, 96, 236, 99);
+        track(76, -47, 80, -42);
+    }
+
+    /**
+     * The soldiers' own lines east of the command post: olive tents in two rows on gravel, the
+     * sandbagged fighting positions at the corners, the latrines, the water bladders.
+     */
+    private void lines() {
+        for (int x = 172; x <= 202; x += 2) {
+            for (int z = -58; z <= -12; z++) {
+                if (c.chance() < 0.35 && c.empty(x, 1, z)) {
+                    set(x, 0, z, c.chance() < 0.6 ? "minecraft:gravel" : "minecraft:coarse_dirt");
+                }
+            }
+        }
+        for (int i = 0; i < 4; i++) {
+            camp.tent(172 + i * 8, -56, 12, "green", true);
+            camp.tent(172 + i * 8, -30, 12, "green", true);
+        }
+        camp.nest(166, -60);
+        camp.nest(208, -14);
+        camp.toilets(212, -50, 3);
+        camp.fuelTanks(212, -40, 2);
+        camp.crates(214, -28, 6, 6);
+        camp.hesco(118, -50, 118, -28, 2, 0.05);
+        camp.hesco(168, -50, 168, -28, 2, 0.05);
+        camp.lightTower(126, -24, true);
+    }
+
+    /**
+     * The motor pool south of the drive: the ambulances and trucks backed into their hesco bays,
+     * the ones that never got a bay parked in a row, a stack of containers for stores.
+     */
+    private void motorPool() {
+        for (int x = 70; x <= 150; x++) {
+            for (int z = Hollis.ROAD1 + 26; z <= Hollis.ROAD1 + 40; z++) {
+                double r = c.chance();
+                set(x, 0, z, r < 0.55 ? "minecraft:gravel" : r < 0.8 ? "minecraft:coarse_dirt" : "minecraft:mud");
+                set(x, 1, z, "air");
+            }
+        }
+        for (int i = 0; i < 6; i++) {
+            camp.bay(160 + i * 7, Hollis.ROAD1 + 26, c.any("ambulance", "ambulance", "jeep", "box_truck"));
+        }
+        for (int i = 0; i < 9; i++) {
+            c.p.vehicle(74 + i * 8 + 0.5, 1, Hollis.ROAD1 + 32.5, c.chance() < 0.5 ? 0f : 180f,
+                    c.any("ambulance", "jeep", "jeep_open", "box_truck", "", "city_bus,school_bus"), c.rng.nextLong());
+        }
+        camp.containerWall(230, Hollis.ROAD1 + 30, 262, Hollis.ROAD1 + 30, 2, 0.1);
+        camp.containerWall(230, Hollis.ROAD1 + 38, 256, Hollis.ROAD1 + 38, 1, 0.1);
+        camp.lightTower(150, Hollis.ROAD1 + 24, true);
+        camp.fuelTanks(234, Hollis.ROAD1 + 46, 3);
+        // the ambulances that brought the last of them, left at the wards' stairs with their doors open
+        c.p.vehicle(70.5, 1, -70.5, 90f, "ambulance", c.rng.nextLong());
+        c.p.vehicle(70.5, 1, -112.5, 90f, "ambulance", c.rng.nextLong());
+    }
+
+    /** Everything dropped across the compound: sandbags, drums, pallets, stretchers, bags, the dead. */
+    private void litter() {
+        for (int i = 0; i < 140; i++) {
+            int x = Hollis.CAMP + 6 + c.rng.nextInt(X1 - Hollis.CAMP - 12), z = Z0 + 6 + c.rng.nextInt(Z1 - Z0 - 12);
+            if (c.land(x, z) && c.empty(x, 1, z) && c.empty(x + 1, 1, z) && c.empty(x, 1, z + 1)) {
+                camp.litter(x, z);
+            }
+        }
+        for (int i = 0; i < 40; i++) {
+            int x = Hollis.CAMP + 6 + c.rng.nextInt(X1 - Hollis.CAMP - 12), z = Z0 + 6 + c.rng.nextInt(Z1 - Z0 - 12);
+            if (c.land(x, z) && c.empty(x, 1, z) && c.empty(x, 1, z + 1)) {
+                boolean shroud = c.chance() < 0.5;
+                set(x, 1, z, shroud ? "qs_shroud_head[facing=north]" : "bunk_bodybag[facing=" + c.dir() + "]");
+                if (shroud) {
+                    set(x, 1, z + 1, "qs_shroud_foot[facing=north]");
+                }
+            }
+        }
     }
 
     // ------------------------------------------------------------------ the wire
