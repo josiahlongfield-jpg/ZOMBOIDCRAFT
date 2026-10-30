@@ -963,7 +963,7 @@ public final class NpcWork {
                 return leader != null && leader.isSleeping() && leader.distanceToSqr(npc) < 12 * 12;
             }
             if (w.home == null) return m.get(NpcMind.Need.TIRED) > 90;
-            return w.phase(level) == Phase.SLEEP && m.get(NpcMind.Need.TIRED) > 15 || m.get(NpcMind.Need.TIRED) > 90;
+            return w.phase(level) == Phase.SLEEP || m.get(NpcMind.Need.TIRED) > 90;
         }
 
         @Override
