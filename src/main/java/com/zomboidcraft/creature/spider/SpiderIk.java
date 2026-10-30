@@ -178,10 +178,10 @@ final class SpiderIk {
         }
         drop = dead ? 0 : Mth.clamp(drop, 0, SINK + 1.2f);
         float ks = 1 - (float) Math.exp(-dt * 5);
-        lift = Mth.lerp(ks, lift, dead ? 0 : avg * 0.8f - Math.min(drop, SINK) - 0.5f * tuck);
+        lift = Mth.lerp(ks, lift, dead ? 0 : avg * 0.8f - Math.min(drop, SINK) - 0.7f * tuck);
         pitch = Mth.lerp(ks, pitch, pitchWant);
         roll = Mth.lerp(ks, roll, rollWant);
-        float fold = Mth.clamp((drop - SINK) / 0.8f, 0, 1) * FOLD + 0.55f * tuck;
+        float fold = Mth.clamp((drop - SINK) / 0.8f, 0, 1) * FOLD + 0.9f * tuck;
 
         // a slipping foot: it lurches down toward that side
         if (stumblesSeen >= 0 && e.stumbles() != stumblesSeen) {
@@ -217,7 +217,7 @@ final class SpiderIk {
         }
         // and its tail trails the turn (and tucks under it, drawn in)
         if (!dead && model.tail >= 0) {
-            Quaternionf trail = new Quaternionf().rotateX(-0.6f * tuck).premul(spun(spin, -0.25f, 0.5f));
+            Quaternionf trail = new Quaternionf().rotateX(-0.8f * tuck).premul(spun(spin, -0.25f, 0.5f));
             Vector3f at = new Vector3f(p[model.tail]);
             turnAbout(q, p, model.tail, at, trail);
             for (int i : model.below[model.tail]) {
@@ -231,7 +231,7 @@ final class SpiderIk {
                 if ((lost >> l & 1) != 0) {
                     continue;
                 }
-                float s = spread[l] * (1 - 0.45f * tuck);
+                float s = spread[l] * (1 - 0.5f * tuck);
                 Vector3f target = new Vector3f(centre.x + (clip[l].x - centre.x) * s, clip[l].y + ground[l], centre.z + (clip[l].z - centre.z) * s);
                 if (hook[l] > 0.01f) {
                     target.lerp(hookAt[l], hook[l]);
