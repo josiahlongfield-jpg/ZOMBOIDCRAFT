@@ -26,6 +26,9 @@ import net.minecraft.world.level.storage.ValueOutput;
  * Her brain (NpcBrain) makes her a companion: she follows the player who last spoke to her (the interact key toggles
  * follow and wait), keeps clear of zombies and runs from any that get close, picks up a gun she sees lying about and
  * fights zombies with it alongside you. Her gun never runs dry, but she stops to reload each magazine.
+ * <p>
+ * Her mind (NpcMind) gives her needs, feelings, traits and a diary: hungry, tired, hurt or frightened she keeps up slower,
+ * aims shakier and runs sooner, goes for food and drink she sees lying about, and says how she's doing now and then.
  */
 public class NpcEntity extends PathfinderMob {
     private static final EntityDataAccessor<String> MODEL = SynchedEntityData.defineId(NpcEntity.class, EntityDataSerializers.STRING);
@@ -46,6 +49,8 @@ public class NpcEntity extends PathfinderMob {
     public Object clientAnim;
 
     final NpcLines lines = new NpcLines();
+    public final NpcMind mind = new NpcMind();
+    private boolean mindLoaded;
 
     boolean following = true;
     UUID leader;
@@ -70,9 +75,10 @@ public class NpcEntity extends PathfinderMob {
         goalSelector.addGoal(1, new NpcBrain.Flee(this));
         goalSelector.addGoal(2, new NpcBrain.Shoot(this));
         goalSelector.addGoal(3, new NpcBrain.TakeGun(this));
-        goalSelector.addGoal(4, new NpcBrain.Follow(this));
-        goalSelector.addGoal(5, new LookAtPlayerGoal(this, Player.class, 10f));
-        goalSelector.addGoal(6, new RandomLookAroundGoal(this));
+        goalSelector.addGoal(4, new NpcBrain.Forage(this));
+        goalSelector.addGoal(5, new NpcBrain.Follow(this));
+        goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 10f));
+        goalSelector.addGoal(7, new RandomLookAroundGoal(this));
     }
 
     @Override
@@ -144,6 +150,13 @@ public class NpcEntity extends PathfinderMob {
         entityData.set(SHOTS, shots() + 1);
     }
 
+    /** A new companion: her traits rolled, and meeting whoever spawned her as her first memory. */
+    public void born(Player by) {
+        mind.roll(getRandom());
+        mindLoaded = true;
+        mind.remember(this, "Met " + by.getName().getString(), 0.3f, 0.9f);
+    }
+
     /** The interact key on her: follow the one who pressed it, or wait here. Returns whether she now follows. */
     public boolean toggleFollow(Player by) {
         if (following && by.getUUID().equals(leader)) {
@@ -175,6 +188,16 @@ public class NpcEntity extends PathfinderMob {
         if (!level().isClientSide() && talking() > 0) {
             talk(talking() - 1);
         }
+        if (level() instanceof ServerLevel server && isAlive() && tickCount % 20 == 0) {
+            if (!mindLoaded) {
+                // an older companion, from before she had a mind
+                mind.roll(getRandom());
+                mindLoaded = true;
+            }
+            boolean wasLonely = mind.get(NpcMind.Need.LONELY) > 50;
+            mind.tick(this, server);
+            speakMind(wasLonely);
+        }
         if (level().isClientSide()) {
             aimAnimO = aimAnim;
             kickO = kick;
@@ -190,8 +213,59 @@ public class NpcEntity extends PathfinderMob {
         boolean hurt = super.hurtServer(level, source, amount);
         if (hurt && isAlive()) {
             say(NpcLines.Kind.HURT);
+            mind.jolt(25f);
+            if (amount >= 6f || getHealth() < getMaxHealth() * 0.35f) {
+                mind.badlyHurt(this);
+            }
         }
         return hurt;
+    }
+
+    /**
+     * Now and then she says how she's doing: the loudest feeling first, a panic straight away, the rest only by chance
+     * (more often if she's talkative), each kind with its own long wait (NpcLines).
+     */
+    private void speakMind(boolean wasLonely) {
+        Player leader = leader();
+        boolean close = leader != null && leader.distanceTo(this) < 6;
+        if (wasLonely && close) {
+            say(NpcLines.Kind.MISSED);
+            return;
+        }
+        if (mind.panicking()) {
+            say(NpcLines.Kind.PANIC);
+            return;
+        }
+        if (getRandom().nextFloat() > 0.06f * (1f + 0.7f * mind.trait(NpcMind.Trait.TALKATIVE))) {
+            return;
+        }
+        NpcMind.Need loudest = null;
+        float most = 0;
+        for (NpcMind.Need n : NpcMind.Need.values()) {
+            float v = n == NpcMind.Need.MORALE ? 100f - mind.get(n) : mind.get(n);
+            if (v > most) {
+                most = v;
+                loudest = n;
+            }
+        }
+        NpcLines.Kind kind = null;
+        if (loudest != null && most > 60) {
+            kind = switch (loudest) {
+                case HUNGER -> NpcLines.Kind.HUNGRY;
+                case THIRST -> NpcLines.Kind.THIRSTY;
+                case TIRED -> NpcLines.Kind.TIRED;
+                case PAIN -> NpcLines.Kind.PAIN;
+                case FEAR -> NpcLines.Kind.SCARED;
+                case ADRENALINE -> NpcLines.Kind.WIRED;
+                case LONELY -> close ? null : NpcLines.Kind.LONELY;
+                case MORALE -> mind.get(NpcMind.Need.MORALE) < 30 ? NpcLines.Kind.LOW : null;
+            };
+        } else if (mind.get(NpcMind.Need.MORALE) > 78 && close) {
+            kind = NpcLines.Kind.GOOD;
+        }
+        if (kind != null) {
+            say(kind);
+        }
     }
 
     /** She lies where she fell while her death plays out, then she's gone. */
@@ -227,6 +301,7 @@ public class NpcEntity extends PathfinderMob {
         output.putString("npcLook", look());
         output.putInt("npcFollowing", following ? 1 : 0);
         output.putString("npcHidden", entityData.get(HIDDEN));
+        output.putString("npcMind", mind.save());
         if (leader != null) {
             output.putString("npcLeader", leader.toString());
         }
@@ -238,6 +313,7 @@ public class NpcEntity extends PathfinderMob {
         setModel(input.getStringOr("npcModel", Npcs.MODELS.get(0)), input.getStringOr("npcLook", "raw"));
         following = input.getIntOr("npcFollowing", 1) == 1;
         entityData.set(HIDDEN, input.getStringOr("npcHidden", ""));
+        mindLoaded = mind.load(input.getStringOr("npcMind", ""));
         String id = input.getStringOr("npcLeader", "");
         try {
             leader = id.isEmpty() ? null : UUID.fromString(id);
