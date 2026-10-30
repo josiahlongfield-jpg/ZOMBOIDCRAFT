@@ -203,6 +203,7 @@ public final class NpcMind {
         Player leader = npc.leader();
         if (leader != null && leader.distanceTo(npc) < CLOSE) {
             add(Need.LONELY, -10f);
+            if (npc.bond.about(leader)) npc.bond.sharedMeal();
             remember(npc, "Shared a meal with " + leader.getName().getString() + " (" + what + ")", 0.4f, 0.35f);
         }
     }

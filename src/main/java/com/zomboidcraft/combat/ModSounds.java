@@ -205,6 +205,9 @@ public final class ModSounds {
     public static final SoundEvent POCKET_PISTOL_SHOT_DISTANT = register("weapon.pocket_pistol.shot_distant", 80f);
     public static final SoundEvent GRENADE_LAUNCHER_SHOT = register("weapon.grenade_launcher.shot");
     public static final SoundEvent GRENADE_LAUNCHER_SHOT_DISTANT = register("weapon.grenade_launcher.shot_distant", 128f);
+    /** The Warthog minigun, Josiah's pick: one round per play, and the barrels running down when the trigger lets go. */
+    public static final SoundEvent MINIGUN_SHOT = register("weapon.minigun.shot", 128f);
+    public static final SoundEvent MINIGUN_SPIN_DOWN = register("weapon.minigun.spin_down", 48f);
     public static final SoundEvent BLAST_FAR = register("weapon.throw.blast_far", 256f);
     public static final SoundEvent FIRE_BURN = register("weapon.throw.fire_burn", 16f);
 

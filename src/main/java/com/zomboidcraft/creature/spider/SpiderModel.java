@@ -87,8 +87,13 @@ public final class SpiderModel {
     public final int[] limbOf;
     public final Capsule[] capsules;
     public final int pelvis, spine, neck, head, tail;
-    /** The bones of its arms and claws (held round what it drags). */
-    public final boolean[] arm;
+    /**
+     * Its arms, long scythes and short claws (closed round what it holds, SpiderIk), by REACH_* and side (left, right):
+     * each one's four bones from its root out, and its point in the last one's own frame.
+     */
+    public final int[][] reaches = new int[6][4];
+    public final Vector3f[] reachTip = new Vector3f[6];
+    public static final int ARM = 0, SCYTHE = 2, CLAW = 4;
 
     private static SpiderModel model;
     private static boolean failed;
@@ -235,15 +240,22 @@ public final class SpiderModel {
         neck = bone("def_neck");
         head = bone("def_head");
         tail = bone("def_tail_1");
-        arm = new boolean[n];
-        for (int i = 0; i < n; i++) {
-            String b = boneNames[i].toLowerCase(Locale.ROOT);
-            arm[i] = b.contains("sholder") || b.contains("arm") || b.contains("hand") || b.contains("claw");
+        String[][] reachNames = {{"def_sholder%s", "def_arm%s", "def_forarm%s", "def_hand%s"},
+                {"def_clAw_A_1%s", "def_clAw_A_2%s", "def_clAw_A_3%s", "def_clAw_A_4%s"},
+                {"def_claw_B_1%s", "def_claw_B_2%s", "def_claw_B_3%s", "def_claw_B_4%s"}};
+        for (int r = 0; r < 6; r++) {
+            for (int k = 0; k < 4; k++) {
+                String name = String.format(reachNames[r >> 1][k], (r & 1) == 0 ? "L" : "R");
+                reaches[r][k] = bone(name);
+                if (reaches[r][k] < 0) {
+                    throw new IOException("no bone " + name);
+                }
+            }
+            reachTip[r] = furthest(reaches[r][3]);
         }
 
         // the walking legs, and each one's point: the vertex furthest out of those its ankle carries
         String[] legNames = {"A_%dL", "B_%dL", "A_%dR", "B_%dR"};
-        Group body = groups[0];
         for (int l = 0; l < 4; l++) {
             for (int k = 0; k < 3; k++) {
                 legs[l][k] = bone("def_leg_" + String.format(legNames[l], k + 1));
@@ -251,19 +263,7 @@ public final class SpiderModel {
                     throw new IOException("no leg bone " + legNames[l]);
                 }
             }
-            int ankle = legs[l][2];
-            Vector3f best = new Vector3f(bindPos[ankle]);
-            float far = -1;
-            for (int v = 0; v < body.vertices; v++) {
-                if (main(body, v) == ankle) {
-                    float d = bindPos[ankle].distanceSquared(body.pos[v * 3], body.pos[v * 3 + 1], body.pos[v * 3 + 2]);
-                    if (d > far) {
-                        far = d;
-                        best.set(body.pos[v * 3], body.pos[v * 3 + 1], body.pos[v * 3 + 2]);
-                    }
-                }
-            }
-            tip[l] = inverse[ankle].transformPosition(best, new Vector3f());
+            tip[l] = furthest(legs[l][2]);
         }
 
         // the limbs that can be shot away: where each is cut, and its bones
@@ -381,6 +381,24 @@ public final class SpiderModel {
     }
 
     /** The bone a vertex follows most. */
+    /** A limb's point: the vertex furthest out of those its last bone carries, in that bone's own frame. */
+    private Vector3f furthest(int bone) {
+        Vector3f best = new Vector3f(bindPos[bone]);
+        float far = -1;
+        for (Group g : groups) {
+            for (int v = 0; v < g.vertices; v++) {
+                if (main(g, v) == bone) {
+                    float d = bindPos[bone].distanceSquared(g.pos[v * 3], g.pos[v * 3 + 1], g.pos[v * 3 + 2]);
+                    if (d > far) {
+                        far = d;
+                        best.set(g.pos[v * 3], g.pos[v * 3 + 1], g.pos[v * 3 + 2]);
+                    }
+                }
+            }
+        }
+        return inverse[bone].transformPosition(best, new Vector3f());
+    }
+
     public static int main(Group g, int v) {
         int best = 0;
         for (int k = 1; k < 4; k++) {

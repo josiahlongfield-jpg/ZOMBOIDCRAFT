@@ -68,7 +68,16 @@ public final class Npcs {
     }
     public static final List<String> LOOKS = List.of("raw", "toon", "both");
     /** Clothes a skinned companion can put on and take off (the pieces in her .zsk). */
-    public static final List<String> PIECES = List.of("bra", "stockings", "heels", "hair");
+    public static final List<String> PIECES = List.of("bra", "stockings", "heels", "hair", "sweater", "shorts", "skirt",
+            "dress", "boots");
+
+    /** Whether this model is a skinned one in pieces she can dress in (a .zsk in the local folder or the jar), so she has a wardrobe. */
+    public static boolean skinned(String model) {
+        return SKINNED.computeIfAbsent(model, m -> java.nio.file.Files.exists(localFolder().resolve(m + ".zsk"))
+                || Npcs.class.getResource("/assets/zomboidcraft/npc/" + m + ".zsk") != null);
+    }
+
+    private static final java.util.Map<String, Boolean> SKINNED = new java.util.concurrent.ConcurrentHashMap<>();
 
     private static final ResourceKey<EntityType<?>> KEY = ResourceKey.create(Registries.ENTITY_TYPE, ZomboidCraft.id("npc"));
     public static final EntityType<NpcEntity> NPC = Registry.register(BuiltInRegistries.ENTITY_TYPE, KEY,
@@ -79,6 +88,17 @@ public final class Npcs {
     public static void register() {
         FabricDefaultAttributeRegistry.register(NPC, NpcEntity.attributes());
         NpcNet.register();
+        net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents.AFTER_DEATH.register((entity, source) -> {
+            if (!(entity instanceof net.minecraft.world.entity.monster.zombie.Zombie) || !(source.getEntity() instanceof ServerPlayer killer)) {
+                return;
+            }
+            for (NpcEntity npc : entity.level().getEntitiesOfClass(NpcEntity.class, entity.getBoundingBox().inflate(10))) {
+                if (npc.isAlive() && npc.bond.about(killer)
+                        && (npc.mind.get(NpcMind.Need.FEAR) > 30 || npc.distanceTo(entity) < 4)) {
+                    npc.bond.saved(npc);
+                }
+            }
+        });
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> dispatcher.register(
                 Commands.literal("zc")
                         .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
@@ -90,7 +110,10 @@ public final class Npcs {
                                 .then(Commands.literal("remove").then(Commands.argument("piece", StringArgumentType.word())
                                         .suggests((ctx, b) -> SharedSuggestionProvider.suggest(PIECES, b))
                                         .executes(ctx -> dress(ctx, StringArgumentType.getString(ctx, "piece"), false))))
-                                .then(Commands.literal("outfit").executes(Npcs::outfit))
+                                .then(Commands.literal("outfit").executes(Npcs::outfit)
+                                        .then(Commands.argument("outfit", StringArgumentType.word())
+                                                .suggests((ctx, b) -> SharedSuggestionProvider.suggest(names(NpcWardrobe.Outfit.values()), b))
+                                                .executes(ctx -> outfit(ctx, StringArgumentType.getString(ctx, "outfit")))))
                                 .then(Commands.literal("mind").executes(Npcs::mind))
                                 .then(Commands.literal("home").executes(Npcs::home))
                                 .then(Commands.literal("job").then(Commands.argument("job", StringArgumentType.word())
@@ -100,6 +123,13 @@ public final class Npcs {
                                         .suggests((ctx, b) -> SharedSuggestionProvider.suggest(List.of("day", "night"), b))
                                         .executes(ctx -> shift(ctx, StringArgumentType.getString(ctx, "shift")))))
                                 .then(Commands.literal("skills").executes(Npcs::skills))
+                                .then(Commands.literal("bond").executes(Npcs::bond)
+                                        .then(Commands.argument("feeling", StringArgumentType.word())
+                                                .suggests((ctx, b) -> SharedSuggestionProvider.suggest(List.of("trust", "affection", "attraction", "together", "apart"), b))
+                                                .executes(ctx -> bond(ctx, StringArgumentType.getString(ctx, "feeling"), -1))
+                                                .then(Commands.argument("value", FloatArgumentType.floatArg(0f, 100f))
+                                                        .executes(ctx -> bond(ctx, StringArgumentType.getString(ctx, "feeling"),
+                                                                FloatArgumentType.getFloat(ctx, "value"))))))
                                 .then(Commands.literal("skill").then(Commands.argument("skill", StringArgumentType.word())
                                         .suggests((ctx, b) -> SharedSuggestionProvider.suggest(names(NpcSkills.Skill.values()), b))
                                         .then(Commands.argument("level", com.mojang.brigadier.arguments.IntegerArgumentType.integer(0, NpcSkills.MAX))
@@ -184,7 +214,7 @@ public final class Npcs {
 
     private static int dress(CommandContext<CommandSourceStack> ctx, String piece, boolean on) throws CommandSyntaxException {
         if (!PIECES.contains(piece)) {
-            ctx.getSource().sendFailure(Component.literal("Pieces: " + String.join(", ", PIECES) + " (her underwear always stays on)"));
+            ctx.getSource().sendFailure(Component.literal("Pieces: " + String.join(", ", PIECES) + " (her underwear always stays on; she puts her outfit back together after a while)"));
             return 0;
         }
         NpcEntity npc = target(ctx.getSource().getPlayerOrException());
@@ -209,9 +239,21 @@ public final class Npcs {
             return 0;
         }
         List<String> on = PIECES.stream().filter(p -> !npc.hidden().contains(p)).toList();
-        List<String> off = PIECES.stream().filter(p -> npc.hidden().contains(p)).toList();
-        ctx.getSource().sendSuccess(() -> Component.literal("Wearing: underwear" + (on.isEmpty() ? "" : ", " + String.join(", ", on))
-                + (off.isEmpty() ? "" : ". Off: " + String.join(", ", off))), false);
+        String pieces = "underwear" + (on.isEmpty() ? "" : ", " + String.join(", ", on));
+        ctx.getSource().sendSuccess(() -> Component.literal(skinned(npc.model()) ? npc.wardrobe.line() + ": " + pieces : "Wearing: " + pieces), false);
+        return 1;
+    }
+
+    /** Puts her in one of her outfits, as if you'd picked it for her (she keeps it a while, and says what she thinks). */
+    private static int outfit(CommandContext<CommandSourceStack> ctx, String name) throws CommandSyntaxException {
+        ServerPlayer player = ctx.getSource().getPlayerOrException();
+        NpcEntity npc = target(player);
+        NpcWardrobe.Outfit o = NpcWardrobe.Outfit.named(name);
+        if (npc == null || o == null || o == NpcWardrobe.Outfit.SLEEP) {
+            ctx.getSource().sendFailure(Component.literal(npc == null ? "No companion near you" : "Outfits: work, skirt, dress, dress_boots, date"));
+            return 0;
+        }
+        npc.wardrobe.answer(npc, player, NpcWardrobe.DRESS + o.ordinal());
         return 1;
     }
 
@@ -226,7 +268,11 @@ public final class Npcs {
             return 0;
         }
         NpcMind m = npc.mind;
-        StringBuilder b = new StringBuilder(npc.speakerName() + " is " + m.mood() + ". " + capital(m.traitWords()) + ".");
+        StringBuilder b = new StringBuilder(npc.speakerName() + " is " + npc.mood() + ". " + capital(m.traitWords()) + ".");
+        b.append('\n').append(bondLine(npc));
+        if (skinned(npc.model())) {
+            b.append('\n').append(npc.wardrobe.line()).append('.');
+        }
         for (NpcMind.Need n : NpcMind.Need.values()) {
             int v = Math.round(m.get(n));
             b.append("\n ").append(n.label).append(' ').append("|".repeat(v / 5)).append(".".repeat(20 - v / 5)).append(' ').append(v);
@@ -295,6 +341,40 @@ public final class Npcs {
         return 1;
     }
 
+    private static int bond(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        NpcEntity npc = target(ctx.getSource().getPlayerOrException());
+        if (npc == null) {
+            ctx.getSource().sendFailure(Component.literal("No companion near you"));
+            return 0;
+        }
+        ctx.getSource().sendSuccess(() -> Component.literal(bondLine(npc)), false);
+        return 1;
+    }
+
+    /** Sets how she feels about the player she's with (for trying things out), or puts the two of you together or apart. */
+    private static int bond(CommandContext<CommandSourceStack> ctx, String feeling, float value) throws CommandSyntaxException {
+        NpcEntity npc = target(ctx.getSource().getPlayerOrException());
+        boolean known = List.of("trust", "affection", "attraction").contains(feeling);
+        if (npc == null || !known && !feeling.equals("together") && !feeling.equals("apart") || known && value < 0) {
+            ctx.getSource().sendFailure(Component.literal(npc == null ? "No companion near you"
+                    : "Use trust, affection or attraction with a value 0 to 100, or together, or apart"));
+            return 0;
+        }
+        npc.bond.meet(ctx.getSource().getPlayerOrException());
+        if (known) npc.bond.set(feeling, value);
+        else npc.bond.together = feeling.equals("together");
+        ctx.getSource().sendSuccess(() -> Component.literal(bondLine(npc)), false);
+        return 1;
+    }
+
+    static String bondLine(NpcEntity npc) {
+        NpcBond b = npc.bond;
+        if (b.with == null) return "She hasn't got to know anyone yet.";
+        return "About " + b.withName + ": trust " + Math.round(b.trust) + ", affection " + Math.round(b.affection) + ", attraction "
+                + Math.round(b.attraction) + (b.together ? ", together" : "") + ". "
+                + NpcBond.words(b.trust, b.affection, b.attraction, b.together);
+    }
+
     private static int skills(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         NpcEntity npc = target(ctx.getSource().getPlayerOrException());
         if (npc == null) {
@@ -352,7 +432,7 @@ public final class Npcs {
             return 0;
         }
         npc.mind.set(n, value);
-        ctx.getSource().sendSuccess(() -> Component.literal("Her " + n.label + " is " + Math.round(value) + "; she's " + npc.mind.mood()), false);
+        ctx.getSource().sendSuccess(() -> Component.literal("Her " + n.label + " is " + Math.round(value) + "; she's " + npc.mood()), false);
         return 1;
     }
 

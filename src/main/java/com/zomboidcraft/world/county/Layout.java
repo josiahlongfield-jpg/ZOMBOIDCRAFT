@@ -200,6 +200,16 @@ final class Layout {
 
     private void fixed() {
         for (Plan.Spot s : plan.spots) {
+            if (s.id().equals("airfield") || s.id().equals("ranges")) {
+                // Caldwell Army Airfield and the tank ranges: tiles like the airport's, each carrying the gates the tank trail comes to
+                long h = Noise.hash(seed ^ 0x9A1AL, s.x(), s.z());
+                List<Place> tiles = s.id().equals("airfield") ? ArmyField.places(s, county, plan, h) : TankRanges.places(s, county, plan, h);
+                for (int i = 0; i < tiles.size(); i++) {
+                    places.add(tiles.get(i));
+                    named.put(i == 0 ? s.id() : s.id() + "#" + i, tiles.get(i));
+                }
+                continue;
+            }
             if (s.id().equals("airport")) {
                 // Grayhaven International: too big to build whole, so it comes as a row of tiles
                 List<Place> tiles = Airport.places(s, county, Noise.hash(seed ^ 0x9A1AL, s.x(), s.z()));

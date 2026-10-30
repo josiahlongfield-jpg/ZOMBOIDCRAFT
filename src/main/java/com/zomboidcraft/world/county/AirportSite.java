@@ -402,10 +402,15 @@ final class AirportSite extends Site {
                 light(Math.min(ax, Airport.HALF_LEN - 1), s * (Airport.HALF_W + 2), "af_light_edge[facing=north]");
             }
         }
-        // the threshold bars, green out to the approach, red back over the runway
-        for (int az = -Airport.HALF_W - 2; az <= Airport.HALF_W + 2; az += 3) {
-            light(-Airport.HALF_LEN - 1, az, "af_light_thr[facing=west]");
-            light(Airport.HALF_LEN, az, "af_light_thr[facing=east]");
+        // the threshold wing bars, green out to the approach, red back over the runway. They stand
+        // on stems, so they run out either side of the paving and leave the runway ends clear for
+        // jets rolling out long
+        for (int w = 2; w <= 11; w += 3) {
+            for (int s = -1; s <= 1; s += 2) {
+                int az = s * (Airport.HALF_W + w);
+                light(-Airport.HALF_LEN - 1, az, "af_light_thr[facing=west]");
+                light(Airport.HALF_LEN, az, "af_light_thr[facing=east]");
+            }
         }
         // the PAPIs, four boxes on the pilot's left 300 m in
         for (int k = 0; k < 4; k++) {

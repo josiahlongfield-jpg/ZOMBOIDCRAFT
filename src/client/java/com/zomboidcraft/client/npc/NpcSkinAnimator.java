@@ -24,9 +24,23 @@ final class NpcSkinAnimator {
         int shots, id;
         /** NpcEntity.action() and moodBits(): fear, morale, tiredness, pain at 4 bits each. */
         int action, mood;
+        /** NpcEntity.bondBits(): flirty, romantic and jealous moods (bits 23..25). */
+        int bond;
 
         float mood(int k) {
             return ((mood >> (4 * k)) & 15) / 15f;
+        }
+
+        boolean flirty() {
+            return (bond >> 23 & 1) != 0;
+        }
+
+        boolean romantic() {
+            return (bond >> 24 & 1) != 0;
+        }
+
+        boolean jealous() {
+            return (bond >> 25 & 1) != 0;
         }
     }
 
@@ -122,7 +136,7 @@ final class NpcSkinAnimator {
     }
 
     /** NpcWork's actions, as the client knows them. */
-    private static final int SLEEP = 1, SIT = 2, KNEEL = 3, HAMMER = 4, DIG = 5, SEARCH = 6, LOOKOUT = 7, COOKING = 8;
+    private static final int SLEEP = 1, SIT = 2, KNEEL = 3, HAMMER = 4, DIG = 5, SEARCH = 6, LOOKOUT = 7, COOKING = 8, HUG = 9, KISS = 10;
 
     private static String actionClip(int action) {
         return switch (action) {
@@ -133,6 +147,8 @@ final class NpcSkinAnimator {
             case DIG -> "dig";
             case SEARCH -> "search";
             case LOOKOUT -> "lookout";
+            case HUG -> "hug";
+            case KISS -> "kiss";
             default -> null;
         };
     }
@@ -155,7 +171,8 @@ final class NpcSkinAnimator {
             } else {
                 // a mood idle when she has the clip for it
                 float fear = in.mood(0), morale = in.mood(1), tired = in.mood(2);
-                String mood = fear > 0.6f ? "nervous" : morale < 0.3f ? "sad" : tired > 0.7f ? "tired" : morale > 0.8f ? "happy" : null;
+                String mood = fear > 0.6f ? "nervous" : morale < 0.3f ? "sad" : tired > 0.7f ? "tired" : in.flirty() ? "flirty"
+                        : in.romantic() || morale > 0.8f ? "happy" : null;
                 c = mood != null && model.clips.containsKey(mood) ? mood : "idle";
             }
         }
@@ -262,9 +279,31 @@ final class NpcSkinAnimator {
         float dart = fear > 0.4f ? (float) (Math.sin(t * 1.7) * Math.sin(t * 0.63 + 2) * 30f * fear) : 0;
         float sway = (float) Math.sin(t * 0.8) * 3f * tired;
         float shrug = fear * 9f, forward = slump * 8f + fear * 5f;
+        // how she feels about you: a playful tilt of the head, a softer one, chin up and turned away when jealous; until
+        // she has the clips, leaning in for a hug or a kiss
+        float tilt = 0, lean = 0, away = 0;
+        boolean hasClip = model.clips.containsKey(in.action == KISS ? "kiss" : "hug");
+        if (in.action == KISS && !hasClip) {
+            tilt = 12f;
+            lean = 9f;
+            headDown -= 6f;
+        } else if (in.action == HUG && !hasClip) {
+            lean = 12f;
+            tilt = 8f;
+        } else if (in.jealous()) {
+            headDown -= 6f;
+            away = 18f;
+        } else if (in.flirty()) {
+            tilt = 9f + (float) Math.sin(t * 0.9) * 3f;
+            sway += (float) Math.sin(t * 1.1) * 2.5f;
+        } else if (in.romantic()) {
+            tilt = 6f;
+            lean = 3f;
+        }
+        bow += lean;
         turn(model, world, model.bone("mixamorigSpine1"), new Matrix4f().rotateX(rad(bow * 0.5f)).rotateZ(rad(sway)));
         turn(model, world, model.bone("mixamorigSpine2"), new Matrix4f().rotateX(rad(bow * 0.5f)));
-        turn(model, world, model.head, new Matrix4f().rotateX(rad(headDown)).rotateY(rad(dart)));
+        turn(model, world, model.head, new Matrix4f().rotateX(rad(headDown)).rotateY(rad(dart + away)).rotateZ(rad(tilt)));
         turn(model, world, model.bone("mixamorigLeftShoulder"), new Matrix4f().rotateZ(rad(shrug)).rotateY(rad(-forward)));
         turn(model, world, model.bone("mixamorigRightShoulder"), new Matrix4f().rotateZ(rad(-shrug)).rotateY(rad(forward)));
     }
@@ -313,7 +352,7 @@ final class NpcSkinAnimator {
         float lid;
         if (in.dead > 0) {
             lid = Math.min(1, in.dead * 0.8f);
-        } else if (in.action == SLEEP) {
+        } else if (in.action == SLEEP || in.action == KISS) {
             lid = 1;
         } else {
             if (in.now > nextBlink) {

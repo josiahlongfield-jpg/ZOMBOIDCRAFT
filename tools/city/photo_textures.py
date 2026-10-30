@@ -1181,6 +1181,10 @@ import spore  # noqa: E402
 spore.register(sys.modules[__name__])
 import airside  # noqa: E402
 airside.register(sys.modules[__name__])
+import armyfield  # noqa: E402
+armyfield.register(sys.modules[__name__])
+import ranges  # noqa: E402
+ranges.register(sys.modules[__name__])
 
 
 

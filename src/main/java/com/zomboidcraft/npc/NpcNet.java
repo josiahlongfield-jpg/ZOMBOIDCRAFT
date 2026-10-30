@@ -11,7 +11,11 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 
-/** The interact key pressed on an NPC: she follows the player who pressed it, or waits where she is. */
+/**
+ * The interact key pressed on an NPC: she follows the player who pressed it, or waits where she is. Sneaking, it opens
+ * the talk panel instead (client), whose picks come back as Talk: a compliment, a flirt, a gift, a hug, her hand, a kiss,
+ * or about her clothes (NpcWardrobe's LIKE, DISLIKE, SUGGEST + outfit, and DRESS + outfit from the wardrobe panel).
+ */
 public final class NpcNet {
     public record Toggle(int npc) implements CustomPacketPayload {
         public static final Type<Toggle> TYPE = new Type<>(ZomboidCraft.id("npc_toggle"));
@@ -24,8 +28,35 @@ public final class NpcNet {
         }
     }
 
+    public record Talk(int npc, int act) implements CustomPacketPayload {
+        public static final Type<Talk> TYPE = new Type<>(ZomboidCraft.id("npc_talk"));
+        public static final StreamCodec<RegistryFriendlyByteBuf, Talk> CODEC = StreamCodec.composite(
+                ByteBufCodecs.VAR_INT, Talk::npc, ByteBufCodecs.VAR_INT, Talk::act, Talk::new);
+
+        @Override
+        public Type<? extends CustomPacketPayload> type() {
+            return TYPE;
+        }
+    }
+
     static void register() {
         PayloadTypeRegistry.serverboundPlay().register(Toggle.TYPE, Toggle.CODEC);
+        PayloadTypeRegistry.serverboundPlay().register(Talk.TYPE, Talk.CODEC);
+        ServerPlayNetworking.registerGlobalReceiver(Talk.TYPE, (payload, context) -> {
+            ServerPlayer player = context.player();
+            player.level().getServer().execute(() -> {
+                if (!(player.level().getEntity(payload.npc()) instanceof NpcEntity npc) || !npc.isAlive() || player.isSpectator()
+                        || npc.distanceToSqr(player) >= 4 * 4) {
+                    return;
+                }
+                NpcBond.Act act = NpcBond.Act.of(payload.act());
+                if (act != null) {
+                    npc.bond.act(npc, player, act);
+                } else if (payload.act() >= NpcWardrobe.LIKE) {
+                    npc.wardrobe.answer(npc, player, payload.act());
+                }
+            });
+        });
         ServerPlayNetworking.registerGlobalReceiver(Toggle.TYPE, (payload, context) -> {
             ServerPlayer player = context.player();
             player.level().getServer().execute(() -> {

@@ -4,6 +4,7 @@ import com.zomboidcraft.ModItems;
 import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.combat.GunType;
 import com.zomboidcraft.combat.Guns;
+import com.zomboidcraft.combat.ModSounds;
 import com.zomboidcraft.world.events.AirStrikes;
 import com.zomboidcraft.zombie.Noise;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
@@ -155,7 +156,7 @@ public final class Turret {
         }
         if (!held && was >= 1f && spin < 1f) {
             Vec3 at = car.position().add(0, 2, 0);
-            level.playSound(null, at.x, at.y, at.z, SoundEvents.BEACON_DEACTIVATE, SoundSource.PLAYERS, 0.7f, 1.8f);
+            level.playSound(null, at.x, at.y, at.z, ModSounds.MINIGUN_SPIN_DOWN, SoundSource.PLAYERS, 1f, 1f);
         }
         boolean firing = held && spin >= 1f && car.belt() > 0;
         if (firing != car.turretFiring()) {
@@ -193,12 +194,9 @@ public final class Turret {
         Vec3 up = right.cross(aim).normalize();
         Vec3 dir = aim.add(right.scale(Math.cos(a) * Math.tan(spread))).add(up.scale(Math.sin(a) * Math.tan(spread))).normalize();
         Vec3 stop = Guns.mountedRound(gunner, muzzle, dir, stats, car, n % 2 == 0);
-        // everyone else hears the distant take, the gunner the close one
-        float pitch = 0.84f + gunner.getRandom().nextFloat() * 0.08f;
-        level.playSound(gunner, muzzle.x, muzzle.y, muzzle.z, GunType.ASSAULT_RIFLE.shot(false, true), SoundSource.PLAYERS, 1f, pitch);
-        gunner.connection.send(new net.minecraft.network.protocol.game.ClientboundSoundPacket(
-                net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT.wrapAsHolder(GunType.ASSAULT_RIFLE.shot(false, false)),
-                SoundSource.PLAYERS, muzzle.x, muzzle.y, muzzle.z, 0.8f, pitch, gunner.getRandom().nextLong()));
+        // one take per round, heard by everyone, gunner included
+        level.playSound(null, muzzle.x, muzzle.y, muzzle.z, ModSounds.MINIGUN_SHOT, SoundSource.PLAYERS, 1f,
+                0.97f + gunner.getRandom().nextFloat() * 0.06f);
         if (n % 3 == 0) {
             level.playSound(null, muzzle.x, muzzle.y - 0.4, muzzle.z, Guns.casing(GunType.ASSAULT_RIFLE), SoundSource.PLAYERS, 0.35f,
                     0.9f + gunner.getRandom().nextFloat() * 0.25f);

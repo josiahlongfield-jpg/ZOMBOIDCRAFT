@@ -1,0 +1,106 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "corrugated_grey": "zomboidcraft:block/city/corrugated_grey",
+    "mf_vault": "zomboidcraft:block/city/mf_vault",
+    "mf_vault_in": "zomboidcraft:block/city/mf_vault_in",
+    "particle": "zomboidcraft:block/city/mf_vault_in"
+  },
+  "elements": [
+    {
+      "from": [
+        4.0,
+        -0.25,
+        0
+      ],
+      "to": [
+        6.0,
+        16.25,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mf_vault_in",
+          "uv": [
+            10.0,
+            0,
+            12.0,
+            16
+          ],
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#mf_vault_in",
+          "uv": [
+            4.0,
+            0,
+            6.0,
+            16
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#mf_vault",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#mf_vault_in",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#mf_vault_in"
+        },
+        "down": {
+          "texture": "#mf_vault_in"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        4.0,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#corrugated_grey",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#corrugated_grey",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#corrugated_grey"
+        },
+        "west": {
+          "texture": "#corrugated_grey",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#corrugated_grey",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#corrugated_grey",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

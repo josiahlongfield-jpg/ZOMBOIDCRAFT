@@ -50,6 +50,14 @@ final class LandmarkSite extends Site {
 
     @Override
     void build() {
+        if (p.variant.startsWith("ranges@")) {
+            new TankRanges(p, out).build();
+            return;
+        }
+        if (p.variant.startsWith("armyfield@")) {
+            new ArmyFieldSite(p, out).build();
+            return;
+        }
         if (p.variant.startsWith("airport@")) {
             new AirportSite(p, out).build();
             return;
