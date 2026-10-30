@@ -74,7 +74,11 @@ final class NpcSkinAnimator {
     private float aimStill = -1;
     /** Her follow-through: springs for the torso's surge and sway, the chest's give, her head and her arms. */
     private final Spring surge = new Spring(1.6f, 0.35f), sway = new Spring(1.4f, 0.4f), chest = new Spring(3f, 0.3f),
-            side = new Spring(2.5f, 0.35f), head = new Spring(2f, 0.5f), arms = new Spring(1.4f, 0.25f);
+            side = new Spring(2.5f, 0.35f), head = new Spring(2f, 0.5f), arms = new Spring(1.4f, 0.25f),
+            recoil = new Spring(3.5f, 0.3f);
+    private int flowShots = -1;
+    /** How far her held gun is nudged out of her body (model space), smoothed from frame to frame (NpcRenderer). */
+    final Vector3f gunPush = new Vector3f();
     private float flowSpeed = Float.NaN, flowAccel, hipY = Float.NaN, hipX, hipVy, hipVx, fallVy, yWas = Float.NaN;
     private boolean wasGround = true, wasHurt;
     /** Her skinned vertices and normals, two per mesh group (sized to the model the first time she's drawn). */
@@ -558,6 +562,10 @@ final class NpcSkinAnimator {
             chest.kick(-60f);
         }
         wasHurt = in.hurt;
+        if (flowShots >= 0 && in.shots != flowShots) {
+            recoil.kick(130f);
+        }
+        flowShots = in.shots;
 
         float steady = in.aim > 0.5f ? 0.4f : 1;
         float bow = surge.step(clamp(-flowAccel * 0.9f, -7, 7), dt);
@@ -565,12 +573,16 @@ final class NpcSkinAnimator {
         float give = chest.step(clamp(-ay * 0.5f, -4, 4), dt);
         float lead = head.step(clamp(-turning * 0.035f, -9, 9), dt);
         float swing = arms.step(clamp(flowAccel * 1.6f, -12, 12), dt);
+        // a shot drives the stock into her right shoulder: it goes back, her chest turns and tips back a little with it
+        float kick = recoil.step(0, dt);
         bow *= steady;
         lean *= steady;
         give *= steady;
         turn(model, world, model.bone("mixamorigSpine"), new Matrix4f().rotateX(rad(bow * 0.5f)).rotateZ(rad(lean * 0.5f)));
         turn(model, world, model.bone("mixamorigSpine1"), new Matrix4f().rotateX(rad(bow * 0.3f + give * 0.5f)).rotateZ(rad(lean * 0.3f)));
         turn(model, world, model.bone("mixamorigSpine2"), new Matrix4f().rotateX(rad(bow * 0.2f + give * 0.5f)).rotateZ(rad(lean * 0.2f)));
+        turn(model, world, model.bone("mixamorigSpine2"), new Matrix4f().rotateY(rad(-kick * 0.5f)).rotateX(rad(-kick * 0.35f)));
+        turn(model, world, model.bone("mixamorigRightShoulder"), new Matrix4f().rotateY(rad(-kick * 0.6f)));
         // the head steadies against the chest's give and leads a turn
         turn(model, world, model.head, new Matrix4f().rotateY(rad(lead * steady)).rotateX(rad(-give * 0.6f - bow * 0.4f)));
         if (!in.gun) {

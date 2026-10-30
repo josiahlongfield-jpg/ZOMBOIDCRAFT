@@ -26,7 +26,7 @@ final class NpcSkinDraw {
     private static final int BATCH = 2048;
 
     static void submit(String model, NpcSkin skin, Matrix4f[] bones, Set<String> hidden, Object[] buffers, double distSq,
-                       int light, int overlay, PoseStack poseStack, SubmitNodeCollector collector) {
+                       int light, int overlay, float[] press, PoseStack poseStack, SubmitNodeCollector collector) {
         int level = distSq > NEAR * NEAR ? 1 : 0;
         int mode = ZcConfig.get().look.companionDraw;
         float[] m = new float[bones.length * 12];
@@ -58,6 +58,9 @@ final class NpcSkinDraw {
             }
             float[] pos = (float[]) buffers[g * 2], normal = (float[]) buffers[g * 2 + 1];
             skin(gr, m, pos, normal);
+            if (press != null) {
+                press(gr.vertices, pos, normal, press);
+            }
             if (mode == 1) {
                 collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(tex),
                         (pose, out) -> draw(gr, pos, normal, 0, gr.tris.length, false, pose, out, light, overlay));
@@ -107,6 +110,39 @@ final class NpcSkinDraw {
             normal[v * 3] = qx;
             normal[v * 3 + 1] = qy;
             normal[v * 3 + 2] = qz;
+        }
+    }
+
+    /** How far around a held gun her skin and clothes give (blocks past its surface), and the deepest they press in. */
+    private static final float PRESS_REACH = 0.035f, PRESS_DEPTH = 0.008f;
+
+    /**
+     * Where her held gun touches her, the skin and clothes under it press in a few millimetres, deepest where it rests
+     * and easing out around it, and come back when it moves off. The gun is a line (stock to muzzle) with a thickness.
+     */
+    private static void press(int vertices, float[] pos, float[] normal, float[] line) {
+        float ax = line[0], ay = line[1], az = line[2], bx = line[3], by = line[4], bz = line[5], reach = line[6] + PRESS_REACH;
+        float minX = Math.min(ax, bx) - reach, maxX = Math.max(ax, bx) + reach, minY = Math.min(ay, by) - reach;
+        float maxY = Math.max(ay, by) + reach, minZ = Math.min(az, bz) - reach, maxZ = Math.max(az, bz) + reach;
+        float abx = bx - ax, aby = by - ay, abz = bz - az, len = abx * abx + aby * aby + abz * abz;
+        if (len < 1e-8f) {
+            return;
+        }
+        for (int v = 0, i = 0; v < vertices; v++, i += 3) {
+            float px = pos[i], py = pos[i + 1], pz = pos[i + 2];
+            if (px < minX || px > maxX || py < minY || py > maxY || pz < minZ || pz > maxZ) {
+                continue;
+            }
+            float t = Math.max(0, Math.min(1, ((px - ax) * abx + (py - ay) * aby + (pz - az) * abz) / len));
+            float dx = px - (ax + abx * t), dy = py - (ay + aby * t), dz = pz - (az + abz * t);
+            float d = (float) Math.sqrt(dx * dx + dy * dy + dz * dz);
+            if (d >= reach) {
+                continue;
+            }
+            float k = 1 - d / reach, dent = k * k * PRESS_DEPTH;
+            pos[i] -= normal[i] * dent;
+            pos[i + 1] -= normal[i + 1] * dent;
+            pos[i + 2] -= normal[i + 2] * dent;
         }
     }
 
