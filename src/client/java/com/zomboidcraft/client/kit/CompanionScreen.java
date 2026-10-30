@@ -217,6 +217,11 @@ public class CompanionScreen extends Screen {
         }
     }
 
+    /** Asks for pose n of NpcPanel.POSES, as its chip does (the UI test films it). */
+    public void pose(int n) {
+        order(NpcPanel.POSE + n);
+    }
+
     /** Sets how her portrait is turned and zoomed (the UI test films her round). */
     public void view(float spin, float zoom) {
         this.spin = spin;
