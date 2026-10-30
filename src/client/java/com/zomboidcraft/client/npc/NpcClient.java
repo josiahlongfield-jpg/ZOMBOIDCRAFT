@@ -2,19 +2,16 @@ package com.zomboidcraft.client.npc;
 
 import com.zomboidcraft.client.interact.Interactables;
 import com.zomboidcraft.npc.NpcEntity;
-import com.zomboidcraft.npc.NpcNet;
 import com.zomboidcraft.npc.NpcWardrobe;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
 /**
- * The interact key on an NPC, and the green dot showing what it'll do. Looking at her face or neck, the dot sits at her
- * collar: follow or wait (sneaking, talk to her). A companion with a wardrobe (NpcWardrobe) also has a dot on each
- * piece she's wearing, where the crosshair meets it (shoes, stockings, skirt or shorts, sweater or slip dress): that
- * one opens her clothes (WardrobeScreen) for that piece.
+ * The interact key on an NPC, and the green dot showing what it'll do. Interact opens her page (kit/CompanionScreen,
+ * Josiah 2026-10-30); on the dot over a piece she's wearing (shoes, stockings, skirt or shorts, sweater or slip
+ * dress) it opens her gear. The middle mouse button while the dot shows opens the quick order wheel (kit/OrderWheel).
  */
 public final class NpcClient {
     private static final double REACH = 3.0;
@@ -31,6 +28,18 @@ public final class NpcClient {
     };
 
     static void register() {
+        com.zomboidcraft.client.kit.CompanionScreen.register();
+        // middle-click on her: the order wheel, before the game takes it as pick-block
+        net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents.START_CLIENT_TICK.register(client -> {
+            if (client.gui.screen() != null || client.player == null) return;
+            NpcEntity npc = lookedAt(client);
+            if (npc != null && npc.isAlive() && client.options.keyPickItem.consumeClick()) {
+                while (client.options.keyPickItem.consumeClick()) {
+                    // one wheel per press
+                }
+                client.gui.setScreen(new com.zomboidcraft.client.kit.OrderWheel(npc));
+            }
+        });
         Interactables.finder((client, player) -> {
             NpcEntity npc = lookedAt(client);
             if (npc == null) {
@@ -52,17 +61,21 @@ public final class NpcClient {
             return false;
         }
         NpcWardrobe.Piece piece = piece(client, npc);
-        if (piece != null) {
-            client.gui.setScreen(new WardrobeScreen(npc, piece));
-            return true;
-        }
-        if (client.player.isShiftKeyDown()) {
-            // sneaking: talk to her instead
-            client.gui.setScreen(new TalkScreen(npc));
-            return true;
-        }
-        ClientPlayNetworking.send(new NpcNet.Toggle(npc.getId()));
+        client.gui.setScreen(new com.zomboidcraft.client.kit.CompanionScreen(npc, piece != null
+                ? com.zomboidcraft.client.kit.CompanionScreen.Tab.GEAR : com.zomboidcraft.client.kit.CompanionScreen.Tab.HER));
         return true;
+    }
+
+    /** The whole outfits a model like that has to choose from (its .zsk @look list), or none. */
+    public static java.util.List<String> looks(NpcEntity npc) {
+        NpcSkin skin = NpcSkin.get(npc.model());
+        return skin == null ? java.util.List.of() : skin.looks;
+    }
+
+    /** Whether her model dresses piece by piece (NpcWardrobe), rather than in whole outfits. */
+    public static boolean dresses(NpcEntity npc) {
+        NpcSkin skin = NpcSkin.get(npc.model());
+        return skin != null && skin.has("sweater");
     }
 
     /** The part of her under the crosshair, if a piece she's wearing is there (and she has a wardrobe). */
