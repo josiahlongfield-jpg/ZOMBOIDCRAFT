@@ -160,7 +160,8 @@ public final class NpcSkin {
             if (bytes == null) {
                 return null;
             }
-            id = ZomboidCraft.id("dynamic/npc/" + model + "/" + key.toLowerCase(java.util.Locale.ROOT));
+            // identifiers take only [a-z0-9/._-]: anything else in a model's texture key becomes _
+            id = ZomboidCraft.id("dynamic/npc/" + model + "/" + key.toLowerCase(java.util.Locale.ROOT).replaceAll("[^a-z0-9/._-]", "_"));
             try {
                 Minecraft.getInstance().getTextureManager().register(id, new DynamicTexture(() -> "ZomboidCraft NPC " + model + " " + key, decode(bytes)));
             } catch (IOException e) {
