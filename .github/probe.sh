@@ -7,6 +7,12 @@ echo "MC jars: $MC_JARS"
 classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1" | sort -u; }
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
+echo "===== custom geometry phases"
+for c in net.minecraft.client.renderer.feature.CustomFeatureRenderer 'net.minecraft.client.renderer.feature.CustomFeatureRenderer$Storage' net.minecraft.client.renderer.feature.FeatureRenderDispatcher net.minecraft.client.renderer.SubmitNodeCollection; do echo "-- $c"; javap -cp "$CP" -p -c "$c" 2>&1 | grep -vE '^\s+[0-9]+: (aload|astore|iload|istore|dup|pop|return|ifeq|ifne|goto|iconst|areturn|checkcast|new )' | head -260; done
+javap -cp "$CP" -p -c net.minecraft.client.renderer.LevelRenderer 2>&1 | grep -nE 'FeatureRenderDispatcher|renderSolid|renderTranslucent|renderAllFeatures|Method .*Feature|^  [a-z].*\\(' | head -80
+javap -cp "$CP" -p net.minecraft.client.renderer.rendertype.RenderType 2>&1 | head -60
+echo "===== end custom geometry phases"
+exit 0
 echo "===== mesh guns"
 classes 'renderer/special/' | head -60
 for c in net.minecraft.client.renderer.special.SpecialModelRenderer 'net.minecraft.client.renderer.special.SpecialModelRenderer$Unbaked' 'net.minecraft.client.renderer.special.SpecialModelRenderer$BakingContext' net.minecraft.client.renderer.special.NoDataSpecialModelRenderer net.minecraft.client.renderer.special.SpecialModelRenderers net.minecraft.client.renderer.texture.DynamicTexture net.minecraft.client.renderer.rendertype.RenderTypes; do echo "-- $c"; javap -cp "$CP" -p "$c" 2>&1 | grep -vE 'lambda\$' | head -40; done
