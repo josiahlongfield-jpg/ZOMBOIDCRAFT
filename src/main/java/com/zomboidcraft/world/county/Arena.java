@@ -673,7 +673,8 @@ final class Arena extends Grounds {
                 if (c == ' ') {
                     continue;
                 }
-                int lx = x0 + k * 4;
+                // seen from the north the word runs east to west, so its letters go down x there
+                int lx = x0 + (z == BZ0 ? WORD.length() - 1 - k : k) * 4;
                 int zz = z == BZ0 ? z - 2 : z + 2;
                 for (int i = 0; i < 9; i++) {
                     int[] a = MallSigns.at(lx, zz, 3, i % 3, f);

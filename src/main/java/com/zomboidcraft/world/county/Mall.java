@@ -112,6 +112,25 @@ final class Mall {
 
     /** The concourse's floor: terrazzo, cracked and grimed, green where the roof lets the rain in. */
     private String terrazzo(int x, int z) {
+        // the court in rings round the fountain; down the concourse a slate band along each row of
+        // shops and the rose panels between the planters, each in its slate border
+        if (x >= CX0 && x <= CX1 && z >= CZ0 && z <= CZ1) {
+            double d = Math.hypot(x - (KX0 + KX1) / 2.0, z - (KZ0 + KZ1) / 2.0);
+            if (d >= 7.5 && d < 8.5 || d >= 14 && d < 15) {
+                return "ml_terrazzo_slate";
+            }
+            if (d >= 10 && d < 11.5) {
+                return "ml_terrazzo_rose";
+            }
+        } else if (z > FN && z < FS) {
+            if (z == FN + 2 || z == FS - 2) {
+                return "ml_terrazzo_slate";
+            }
+            int u = Math.floorMod(x - AW, 16);
+            if (u >= 2 && u <= 13 && z >= WELL0 && z <= WELL1) {
+                return u == 2 || u == 13 || z == WELL0 || z == WELL1 ? "ml_terrazzo_slate" : "ml_terrazzo_rose";
+            }
+        }
         double r = chance();
         return r < 0.08 ? "tx_terrazzo_d" : r < 0.3 ? "tx_terrazzo_b" : "tx_terrazzo";
     }
@@ -372,8 +391,33 @@ final class Mall {
                 set(x, 1, z, x != cx || z != cz ? "stone_trim" : "planter");
             }
         }
-        if (chance() < 0.75) {
-            Trees.grow(Kit.canopy(p), chance() < 0.7 ? Trees.Kind.YOUNG : Trees.Kind.BUSH, cx, 2, cz, rng);
+        plant(p, rng, cx, cz, false);
+    }
+
+    /**
+     * What grows in a planter at (cx, cz) with its soil at y 1: a fig, a palm (tall ones in the
+     * court), or ferns; dead in some, and the ferns gone over the kerb where the rain gets in.
+     */
+    static void plant(Placer p, SplittableRandom rng, int cx, int cz, boolean tall) {
+        double r = rng.nextDouble();
+        if (tall || r < 0.3) {
+            int h = tall ? 4 + rng.nextInt(2) : 2 + rng.nextInt(2);
+            for (int y = 2; y < 2 + h; y++) {
+                p.set(cx, y, cz, "mu_palm_trunk");
+            }
+            p.set(cx, 2 + h, cz, "mu_palm_crown");
+        } else if (r < 0.8) {
+            p.set(cx, 2, cz, "ml_ficus_lo");
+            p.set(cx, 3, cz, rng.nextDouble() < 0.85 ? "ml_ficus_hi" : "air");
+        } else if (r < 0.92) {
+            p.set(cx, 2, cz, "home_plant_dead");
+        } else {
+            p.set(cx, 2, cz, "mu_fern");
+        }
+        for (int[] o : new int[][] {{-1, -1}, {1, -1}, {-1, 1}, {1, 1}, {0, -1}, {0, 1}, {-1, 0}, {1, 0}}) {
+            if (rng.nextDouble() < 0.3) {
+                p.set(cx + o[0], 2, cz + o[1], rng.nextDouble() < 0.7 ? "mu_fern" : "home_plant");
+            }
         }
     }
 
@@ -430,7 +474,12 @@ final class Mall {
         escalators(KX1 + 1 - (UP + 1), KZ0 + 2, 1);
         escalators(KX0 - 1 + (UP + 1), KZ1 - 3, -1);
         for (int[] c : new int[][] {{KX0 + 2, KZ0 + 6}, {KX1 - 2, KZ0 + 6}, {KX0 + 2, KZ1 - 6}, {KX1 - 2, KZ1 - 6}}) {
-            planter(c[0], c[1]);
+            for (int x = c[0] - 1; x <= c[0] + 1; x++) {
+                for (int z = c[1] - 1; z <= c[1] + 1; z++) {
+                    set(x, 1, z, x != c[0] || z != c[1] ? "stone_trim" : "planter");
+                }
+            }
+            plant(p, rng, c[0], c[1], true);
         }
     }
 
@@ -439,31 +488,43 @@ final class Mall {
      * middle with its bowl, the water gone green and still.
      */
     private void fountain(int cx, int cz) {
-        for (int x = cx - 5; x <= cx + 5; x++) {
-            for (int z = cz - 5; z <= cz + 5; z++) {
-                double r = Math.hypot(x - cx, z - cz);
-                if (r > 5.4) {
-                    continue;
-                }
-                if (r > 4.4) {
-                    set(x, 1, z, "stone_trim");
-                } else {
+        // the basin: a smooth concrete drum two high round the water, moss on it where the pumps stopped
+        double ox = cx + 0.5, oz = cz + 0.5;
+        java.util.Set<Long> rim = new java.util.HashSet<>();
+        for (Round.Cell c : Round.ring(ox, oz, 5.4)) {
+            rim.add(((long) c.x() << 32) ^ (c.z() & 0xffffffffL));
+        }
+        for (int x = cx - 6; x <= cx + 6; x++) {
+            for (int z = cz - 6; z <= cz + 6; z++) {
+                if (Math.hypot(x + 0.5 - ox, z + 0.5 - oz) < 5.2 && !rim.contains(((long) x << 32) ^ (z & 0xffffffffL))) {
                     set(x, -1, z, "stone_trim");
                     set(x, 0, z, "minecraft:water");
-                    if (chance() < 0.15) {
+                    if (chance() < 0.12) {
                         set(x, 1, z, "moss_carpet");
                     }
                 }
             }
         }
-        for (int y = 0; y <= 3; y++) {
+        Round.wall(p, ox, oz, 5.4, 0, 1, "twr", 0);
+        // the centre: a pedestal, a wide round bowl holding water, a slimmer stem, the small bowl, the finial
+        for (int y = 0; y <= 2; y++) {
             set(cx, y, cz, "stone_trim");
         }
-        for (int x = cx - 1; x <= cx + 1; x++) {
-            for (int z = cz - 1; z <= cz + 1; z++) {
-                set(x, 4, z, "stone_trim");
+        set(cx, 3, cz, "stone_trim");
+        for (int x = cx - 2; x <= cx + 2; x++) {
+            for (int z = cz - 2; z <= cz + 2; z++) {
+                if (Math.hypot(x - cx, z - cz) < 1.5) {
+                    set(x, 3, z, "stone_trim");
+                    set(x, 4, z, x == cx && z == cz ? "stone_trim" : "minecraft:water");
+                }
             }
         }
+        Round.wall(p, ox, oz, 2.4, 3, 4, "twr", 0);
+        for (int y = 5; y <= 6; y++) {
+            set(cx, y, cz, "om_bollard");
+        }
+        Round.wall(p, ox, oz, 1.2, 7, 7, "twr", 0);
+        set(cx, 8, cz, "om_bollard");
     }
 
     /**
@@ -559,8 +620,27 @@ final class Mall {
                         }
                         set(x, ROOF + 7, zo - s * k, "stone_trim");
                     }
-                    for (int k = 1; k <= 3; k++) {
-                        set(x, UP, zo + s * k, k == 3 ? "tx_canopy_edge[facing=" + (north ? "north" : "south") + "]" : "tx_canopy");
+                    for (int k = 1; k <= 6; k++) {
+                        set(x, UP, zo + s * k, k == 6 ? "tx_canopy_edge[facing=" + (north ? "north" : "south") + "]" : "tx_canopy");
+                    }
+                }
+                // the canopy out over the drop-off on red steel posts, the way the photos have it, and its lights under it
+                Harbour hb = new Harbour(p, rng, 0.5);
+                for (int x : new int[] {ex - 3, ex + EW + 2}) {
+                    hb.member(x, 1, zo + s * 5, UP - 1, zo + s * 5, "cr_strut_red");
+                    set(x, 0, zo + s * 5, "stone_trim");
+                }
+                for (int x = ex - 2; x <= ex + EW + 1; x += 3) {
+                    set(x, UP - 1, zo + s * 3, power && chance() < 0.4 ? "bunk_lamp_hang_lit" : "bunk_lamp_hang");
+                }
+                // the bollards along the kerb so nobody drove into the doors, and the carts that got as far as the drop-off
+                for (int x = ex - 4; x <= ex + EW + 3; x += 2) {
+                    set(x, 1, zo + s * 7, "om_bollard");
+                }
+                for (int i = 0; i < 4; i++) {
+                    int x = ex - 3 + rng.nextInt(EW + 6), z = zo + s * (2 + rng.nextInt(4));
+                    if (get(x, 1, z) == null) {
+                        set(x, 1, z, rng.nextInt(3) == 0 ? "trash_bag[facing=" + Bldg.DIRS[rng.nextInt(4)] + "]" : "store_cart[facing=" + Bldg.DIRS[rng.nextInt(4)] + "]");
                     }
                 }
                 MallSigns.name(p, rng, "mall", 12, 2, ex - 2, ROOF + 3, zo + s, north ? "north" : "south", power && chance() < 0.75);
@@ -648,6 +728,23 @@ final class Mall {
                     set(x, 1, z, get(x, 1, z) == null ? (chance() < 0.5 ? "moss_carpet" : "weeds") : get(x, 1, z));
                 }
             }
+        }
+        // the steel trusses under the glass, dark red like the frames: a rafter up each slope, the tie
+        // across, the king post and the struts, a lamp hung from the tie
+        Harbour hb = new Harbour(p, rng, 0.5);
+        int mid = (FN + FS) / 2;
+        for (int x = AW + 4; x < AE - 2; x += 8) {
+            if (x >= CX0 - 1 && x <= CX1 + 1) {
+                continue;
+            }
+            double lo = EAVE - 0.5, top = RIDGE - 0.5;
+            hb.member(x, lo, FN + 0.5, top, mid + 0.5, "cr_strut_red");
+            hb.member(x, top, mid + 0.5, lo, FS + 0.5, "cr_strut_red");
+            hb.member(x, lo, FN + 1.5, lo, FS - 0.5, "cr_strut_red");
+            hb.member(x, lo, mid + 0.5, top - 1, mid + 0.5, "cr_strut_red");
+            hb.member(x, lo, FN + 4.5, top - 3, mid + 0.5, "cr_strut_red");
+            hb.member(x, lo, FS - 3.5, top - 3, mid + 0.5, "cr_strut_red");
+            set(x, EAVE - 2, mid, power && chance() < 0.3 ? "bunk_lamp_hang_lit" : "bunk_lamp_hang");
         }
         // the gable ends against the anchors
         for (int z = FN + 1; z < FS; z++) {

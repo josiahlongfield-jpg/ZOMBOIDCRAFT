@@ -25835,5 +25835,10 @@ final class CitySpecs extends CityBlocks.Specs {
         s("fr_name_21", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.8, 16, 16, 16);
         s("fr_name_22", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.8, 16, 16, 16);
         s("fr_name_23", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.8, 16, 16, 16);
+        s("ml_terrazzo_rose", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("ml_terrazzo_slate", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("ml_ficus_lo", PLAIN, DECOR, 0, SoundType.GRASS, 0f, 7, 0, 7, 9, 16, 9, 8, 9, 7.5, 12, 10, 8.5, 4, 11, 6.5, 8, 12, 7.5, 9, 9, 4, 14, 14, 10, 2, 10, 5, 7, 15, 11, 5, 13, 9, 11, 16, 14);
+        s("ml_ficus_hi", PLAIN, DECOR, 0, SoundType.GRASS, 0f, 7.2, 0, 7.2, 8.8, 6, 8.8, 1, 0, 2, 9, 7, 10, 7, 1, 6, 15, 8, 14, 3, 5, 4, 13, 12, 12, 5, 10, 6, 11, 15, 11, 4, 2, 10, 9, 8, 15);
+        s("ml_table_unit", PLAIN, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 12, 16);
     }
 }
