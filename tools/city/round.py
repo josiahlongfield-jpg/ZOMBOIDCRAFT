@@ -138,6 +138,50 @@ def glaze(turn, depth, glass="lamp_glass", frame="lh_cap", bar=True):
     return out
 
 
+def diag(cx, cz, r, x0, x1, y0, y1, z0, z1, tex, steps=7):
+    """A bar from (x0, y0) to (x1, y1) across a panel, as steps (one axis of turn per element)."""
+    out = []
+    for k in range(steps):
+        xa = x0 + (x1 - x0) * k / steps
+        xb = x0 + (x1 - x0) * (k + 1) / steps
+        ya = y0 + (y1 - y0) * k / steps
+        yb = y0 + (y1 - y0) * (k + 1) / steps
+        lo, hi = min(xa, xb), max(xa, xb)
+        out.append(box(lo, round(min(ya, yb), 3), z0, hi + 0.6, round(max(ya, yb), 3) + 0.6, z1, tex, r))
+    return out
+
+
+def xrail(turn, depth):
+    """A gallery railing of X-lattice panels (refs/port/lighthouse 07-09): toe plate, top rail and
+    a post each end, the diagonals crossing between."""
+    L = length(turn)
+    cx, cz = centre(turn, depth)
+    r = rot(turn, cx, cz)
+    a, b = cx - L / 2, cx + L / 2
+    out = [box(a, 0, cz, b, 1.5, cz + 0.6, GALV, r), box(a, 14, cz, b, 15.2, cz + 1.2, "lh_cap", r),
+           box(a, 1.5, cz + 0.2, b, 2.3, cz + 1, "lh_cap", r), box(cx - 0.5, 0, cz + 0.1, cx + 0.5, 15, cz + 1.1, "lh_cap", r)]
+    z0, z1 = round(cz + 0.3, 3), round(cz + 0.9, 3)
+    out += diag(cx, cz, r, a + 0.5, cx - 0.5, 2.3, 13.4, z0, z1, "lh_cap", 6)
+    out += diag(cx, cz, r, cx - 0.5, a + 0.5, 2.3, 13.4, z0, z1, "lh_cap", 6)
+    out += diag(cx, cz, r, cx + 0.5, b - 1.1, 2.3, 13.4, z0, z1, "lh_cap", 6)
+    out += diag(cx, cz, r, b - 1.1, cx + 0.5, 2.3, 13.4, z0, z1, "lh_cap", 6)
+    return out
+
+
+def glazex(turn, depth):
+    """Lantern glazing with diagonal astragals (refs/port/lighthouse 04-06): the panes, sill and
+    head, and the bars crossing the pane corner to corner both ways."""
+    L = length(turn)
+    cx, cz = centre(turn, depth)
+    r = rot(turn, cx, cz)
+    a, b = cx - L / 2, cx + L / 2
+    out = [box(a, 1, cz + 0.6, b, 15, cz + 1, "lamp_glass", r),
+           box(a, 0, cz, b, 1.2, cz + 1.6, "lh_cap", r), box(a, 14.8, cz, b, 16, cz + 1.6, "lh_cap", r)]
+    z0, z1 = round(cz + 0.1, 3), round(cz + 0.5, 3)
+    out += diag(cx, cz, r, a, b - 0.6, 1.2, 14.2, z0, z1, "lh_cap", 8) + diag(cx, cz, r, b - 0.6, a, 1.2, 14.2, z0, z1, "lh_cap", 8)
+    return out
+
+
 def lens(lit):
     """The light: a Fresnel lens's drum of glass prisms on its pedestal, the bull's-eye, a cap."""
     pr = "lh_prism_lit" if lit else "lh_prism"
@@ -214,6 +258,8 @@ def blocks():
         for i, d in enumerate(DEPTHS):
             add(f"rd_rail_{k}_{i}", rail(t, d), "Gallery Rail", "METAL", render="cutout")
             add(f"rd_glaze_{k}_{i}", glaze(t, d), "Lantern Glazing", "GLASS", render="cutout")
+            add(f"rd_xrail_{k}_{i}", xrail(t, d), "Gallery Rail", "METAL", render="cutout")
+            add(f"rd_glazex_{k}_{i}", glazex(t, d), "Lantern Glazing", "GLASS", render="cutout")
             add(f"rd_tglaze_{k}_{i}", glaze(t, d, "rp_glass", "ext_black_metal", False), "Tower Cab Glazing", "GLASS", render="translucent")
     add("rd_lens", lens(False), "Lighthouse Lens", "GLASS", rotate=None)
     add("rd_lens_lit", lens(True), "Lighthouse Lens", "GLASS", rotate=None, light=15)

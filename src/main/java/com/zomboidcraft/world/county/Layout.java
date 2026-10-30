@@ -221,6 +221,13 @@ final class Layout {
                 named.put(s.id(), p);
                 continue;
             }
+            if (s.id().equals("lighthouse")) {
+                // Cape Merrow Lighthouse: the headland as the land lies, cut back to a sea cliff
+                Place p = Cape.place(s, Noise.hash(seed ^ 0xCA9EL, s.x(), s.z()));
+                places.add(p);
+                named.put(s.id(), p);
+                continue;
+            }
             if (s.id().equals("airport")) {
                 // Grayhaven International: too big to build whole, so it comes as a row of tiles
                 List<Place> tiles = Airport.places(s, county, Noise.hash(seed ^ 0x9A1AL, s.x(), s.z()));
