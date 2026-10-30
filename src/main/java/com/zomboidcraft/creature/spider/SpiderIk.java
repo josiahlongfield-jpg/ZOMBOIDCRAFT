@@ -61,7 +61,7 @@ final class SpiderIk {
     private final Vector3f[] hookWant = {new Vector3f(), new Vector3f(), new Vector3f(), new Vector3f()};
     private final boolean[] hooking = new boolean[4];
     /** How closed its arms are round what it holds, how far into feeding, how far it's tipped (eased); the feed's clock. */
-    private float hold, feed, lean, feedT;
+    private float hold, feed, lean, feedT, feetZ = HarvestmanEntity.HELD_FEET;
 
     SpiderIk(SpiderModel model) {
         this.model = model;
@@ -96,6 +96,7 @@ final class SpiderIk {
         float leanWant = upright || hold < 0.5f ? 0 : feed > 0.5f ? HarvestmanEntity.feedLean(feedT) : HarvestmanEntity.DRAG_LEAN;
         lean = Mth.lerp(1 - (float) Math.exp(-dt * 4), lean, leanWant);
         e.heldLean = lean;
+        feetZ = Mth.approach(feetZ, pose == HarvestmanEntity.FEED ? HarvestmanEntity.FEED_FEET : HarvestmanEntity.HELD_FEET, HarvestmanEntity.FEET_SPEED * dt);
         float up = upright ? 0 : feed * Mth.clamp((HarvestmanEntity.FEED_LOW - lean) / (HarvestmanEntity.FEED_LOW - HarvestmanEntity.FEED_UP), 0, 1);
         Quaternionf lies = place.getNormalizedRotation(new Quaternionf());
         Vector3f spinWant = new Vector3f();
@@ -268,7 +269,7 @@ final class SpiderIk {
         // its arms, scythes and claws closed round what it holds, and its head dipping to it as it feeds
         if (!dead && hold > 0.01f) {
             if (!upright && feed > 0.01f && model.neck >= 0) {
-                Quaternionf dip = new Quaternionf().rotateX(0.15f * feed + 0.45f * up);
+                Quaternionf dip = new Quaternionf().rotateX(0.15f * feed + 0.3f * up);
                 Vector3f at = new Vector3f(p[model.neck]);
                 turnAbout(q, p, model.neck, at, dip);
                 for (int i : model.below[model.neck]) {
@@ -284,7 +285,7 @@ final class SpiderIk {
                 out = new Vector3f(0, 0, 1);
             } else {
                 float c = (float) Math.cos(lean), sn = (float) Math.sin(lean);
-                top = new Vector3f(0, 0.02f + HarvestmanEntity.HELD_LEN * c, HarvestmanEntity.HELD_FEET + HarvestmanEntity.HELD_LEN * sn);
+                top = new Vector3f(0, 0.02f + HarvestmanEntity.HELD_LEN * c, feetZ + HarvestmanEntity.HELD_LEN * sn);
                 down = new Vector3f(0, -c, -sn);
                 out = new Vector3f(0, sn, -c);
             }

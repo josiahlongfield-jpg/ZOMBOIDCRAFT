@@ -125,10 +125,13 @@ public class HarvestmanEntity extends Mob {
     /**
      * A body it carries off is dragged along the floor on its back by the shoulders, feet trailing under it: its feet
      * this far ahead of its centre (behind, so negative), the top of its head this far from them, tipped this far from
-     * upright (radians). To feed it hauls it up to its mouth (FEED_UP) and lets it down again (FEED_LOW), over and over
-     * (feedLean). SpiderIk poses its arms to these and sets heldLean; WalkerRenderer draws the body tipped by it.
+     * upright (radians). To feed, its feet are drawn up ahead of it (FEED_FEET) and it hauls it up in front of it, its
+     * head to the front edge of its skull (FEED_UP), and lets it down again (FEED_LOW), over and over (feedLean).
+     * SpiderIk poses its arms to these and sets heldLean; WalkerRenderer draws the body tipped by it.
      */
-    public static final float HELD_FEET = -0.65f, HELD_LEN = 1.6f, DRAG_LEAN = 1.22f, FEED_LOW = 1.12f, FEED_UP = 0.45f;
+    public static final float FEET_SPEED = 1.2f, HELD_FEET = -0.65f, FEED_FEET = 0.6f, HELD_LEN = 1.6f, DRAG_LEAN = 1.22f, FEED_LOW = 1.0f, FEED_UP = 0.44f;
+    /** Where the feet of what it holds are now (ahead of its centre), drawn up as it starts to feed (FEET_SPEED m/s). */
+    private float heldFeet = HELD_FEET;
     /** Client only: how far what it holds is tipped now (SpiderIk, for WalkerRenderer). */
     public float heldLean;
 
@@ -1228,6 +1231,7 @@ public class HarvestmanEntity extends Mob {
         }
         held = prey;
         holdTicks = 0;
+        heldFeet = HELD_FEET;
         feedTicks = 0;
         struggle = 0;
         heldDamage = 0;
@@ -1286,7 +1290,8 @@ public class HarvestmanEntity extends Mob {
         if (!(held instanceof Player)) {
             // a zombie is dragged along the floor on its back, its feet trailing under it and its head toward its front
             // (drawn tipped up to its hands, WalkerRenderer); fed on where it lies, hauled up to its mouth
-            Vec3 feet = centre().add(fwd.scale(HELD_FEET));
+            heldFeet = Mth.approach(heldFeet, feeding() ? FEED_FEET : HELD_FEET, FEET_SPEED / 20);
+            Vec3 feet = centre().add(fwd.scale(heldFeet));
             BlockHitResult floor = cast(feet, feet.subtract(0, STAND + 2, 0));
             held.setPos(floor.getType() != HitResult.Type.MISS ? floor.getLocation() : feet.subtract(0, lift(), 0));
             float yaw = (float) Math.toDegrees(Math.atan2(-fwd.x, fwd.z)) + 180;
