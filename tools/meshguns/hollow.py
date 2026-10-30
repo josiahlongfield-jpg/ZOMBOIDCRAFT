@@ -41,6 +41,20 @@ HOLLOW = {'att_red_dot': (0.5, 1.0), 'own_combat_scope': (0.55, 1.0), 'own_rifle
 # item pixels about the sight line, z up to which): the hood and the thin front window frame are what's left round
 # the sight picture
 WINDOWS = {'att_holo': (-0.7, 0.72, -0.55, 0.6, 0.6)}
+# inches from the back end to the eye on the sights (tools/weapons/weapons.py EYE_RELIEF, 1.6 for the rest)
+RELIEF = {'att_holo': 1.0}
+IN = 25.4 / 31
+
+
+def away(T, eye):
+    """Faces turned away from the eye: culled, but their ink rim would show from there as black shards through the
+    sight, so these go in the tube part too (drawn without it)."""
+    n = np.cross(T[:, 1] - T[:, 0], T[:, 2] - T[:, 0])
+    return (n * (eye - T.mean(1))).sum(1) < 0
+
+
+def eye_of(mid, T, sight):
+    return np.array([sight[0], sight[1], T[:, :, 2].max() + RELIEF.get(mid, 1.6) * IN])
 
 
 def read(mid):
@@ -91,6 +105,8 @@ def main(mid, r_open, r_wall):
     body = np.concatenate([parts['body'], parts.pop('tube')]) if 'tube' in parts else parts['body']
     T = np.stack([body['x'], body['y'], body['z']], -1).astype(float) / 1000
     drop, tube = split(T, sight, r_open, r_wall)
+    rmax = np.hypot(T[:, :, 0] - sight[0], T[:, :, 1] - sight[1]).max(1)
+    tube |= ~drop & (rmax < 1.3 * r_wall) & away(T, eye_of(mid, T, sight))
     parts['body'] = body[~drop & ~tube]
     parts['tube'] = body[tube]
     write(mid, head, png, parts)
@@ -99,14 +115,20 @@ def main(mid, r_open, r_wall):
 
 def window(mid, box):
     head, png, parts = read(mid)
-    sight = json.load(open(BOUNDS))[mid][2]
-    body = parts['body']
-    c = np.stack([body['x'], body['y'], body['z']], -1).astype(float).mean(1) / 1000
+    sight = np.array(json.load(open(BOUNDS))[mid][2])
+    body = np.concatenate([parts['body'], parts.pop('tube')]) if 'tube' in parts else parts['body']
+    T = np.stack([body['x'], body['y'], body['z']], -1).astype(float) / 1000
+    c = T.mean(1)
     x0, x1, y0, y1, z1 = box
-    drop = (c[:, 0] > x0) & (c[:, 0] < x1) & (c[:, 1] - sight[1] > y0) & (c[:, 1] - sight[1] < y1) & (c[:, 2] < z1)
-    parts['body'] = body[~drop]
+    opening = (c[:, 0] > x0) & (c[:, 0] < x1) & (c[:, 1] - sight[1] > y0) & (c[:, 1] - sight[1] < y1)
+    drop = opening & (c[:, 2] < z1)
+    # round the opening, out to the hood, the faces turned away from the eye lose their rim too
+    hood = (np.abs(c[:, 0]) < 1.1) & (c[:, 1] - sight[1] > y0 - 0.1) & (c[:, 1] - sight[1] < y1 + 0.4)
+    tube = ~drop & hood & away(T, eye_of(mid, T, sight))
+    parts['body'] = body[~drop & ~tube]
+    parts['tube'] = body[tube]
     write(mid, head, png, parts)
-    print(f'{mid}: {drop.sum()} faces in its window left out')
+    print(f'{mid}: {drop.sum()} faces in its window left out, {tube.sum()} in the tube')
 
 
 if __name__ == '__main__':
