@@ -86,7 +86,7 @@ public final class NpcNet {
         if (player.getMainHandItem().isEmpty()) {
             player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, held);
         } else if (!player.getInventory().add(held)) {
-            player.drop(held, false);
+            player.spawnAtLocation((net.minecraft.server.level.ServerLevel) player.level(), held);
         }
         npc.lines.sayLine(npc, NpcLines.Kind.REPLY, NpcWork.pick(npc, "Here. Take it.", "Fine, it's yours.", "Careful, it's loaded."));
     }
