@@ -481,3 +481,12 @@ Picked by Josiah Longfield on the Dead Air New Guns Two page, cut by tools/audio
 | weapon.pocket_pistol.shot | [Desert Eagle Gunshot by elliotlp](https://freesound.org/people/elliotlp/sounds/330634/) | elliotlp | Freesound, CC0 1.0 |
 | weapon.grenade_launcher.shot | gun_grenade_launcher_shot_01 (Gamemaster gun packs, bonus sounds) | Gamemaster Audio | Gamemaster Audio licence (bought) |
 | weapon.minigun.shot, weapon.minigun.spin_down | [Slowfiringheavyweapon.wav by SuperPhat](https://freesound.org/people/SuperPhat/sounds/417148/) | SuperPhat | Freesound, CC0 1.0 |
+
+## Harvestman rage
+
+Picked by Josiah Longfield on the Dead Air Harvestman Rage page, built by tools/audio/build_harvestman_rage.py.
+
+| Sound | Recording | By | Licence |
+|---|---|---|---|
+| creature.harvestman.rage | [Alien_Monster_Scream.wav by audione](https://freesound.org/people/audione/sounds/161404/) | audione | Freesound, CC0 1.0 |
+| creature.harvestman.rage | [Demonic Woman Scream.wav by nick121087](https://freesound.org/people/nick121087/sounds/333832/) | nick121087 | Freesound, CC0 1.0 |
