@@ -542,6 +542,8 @@ def mesh_layout(gun, shift):
     gun.flash_at = None if cfg['flash'] is None else np.asarray(cfg['flash'], float) - shift
     if cfg.get('irons') and gun.irons is None:
         gun.irons = lambda m, up: None      # its sights are the mesh's (skin.py draws them): no block of its own
+    # optics that sit where the folded flip-up sights lie: with one of them fitted the sights are off, not drawn through it
+    gun.irons_hidden = set((cfg.get('irons') or {}).get('flip', {}).get('hide', []))
 
 
 def write_gun(gun, assets, shift, displays, lang, eyes=()):
@@ -678,11 +680,12 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
                 continue
             if slot_name == 'optic':
                 down = r('irons_folded') if gun.irons else EMPTY
+                fold = lambda k: EMPTY if k in getattr(gun, 'irons_hidden', ()) else down
                 up = r('irons_up') if gun.irons else EMPTY
                 if st.startswith('ads_'):
-                    entries.append(composite([down, r(st[4:])]))
+                    entries.append(composite([fold(st[4:]), r(st[4:])]))
                 else:
-                    cases = {k: composite([down, r(k)]) for k in s.fits}
+                    cases = {k: composite([fold(k), r(k)]) for k in s.fits}
                     cases['none'] = up
                     # a gun whose stack says nothing has what it came with
                     entries.append(select('optic', cases, cases[s.default] if s.default else up))

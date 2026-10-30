@@ -68,6 +68,12 @@ public record GunState(boolean mag, int rounds, boolean jammed) {
             ZomboidCraft.id("launcher_loaded"), DataComponentType.<Boolean>builder()
                     .persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL).ignoreSwapAnimation().build());
 
+    /** A colour other than the plain one an attachment or a gun's flip-up irons came in ("tan", "camo"):
+     * on a part its own, on a gun its irons' ({@link Attachments#paint}). */
+    public static final DataComponentType<String> COLOUR = Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE,
+            ZomboidCraft.id("colour"), DataComponentType.<String>builder()
+                    .persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8).build());
+
     public GunState withRounds(int rounds) {
         return new GunState(mag, rounds, jammed);
     }
