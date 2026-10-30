@@ -13,7 +13,8 @@ public final class BreachSite {
     public record Glow(int x, int y, int z, String block) {
     }
 
-    public record Found(int x, int y, int z, List<Glow> glows) {
+    /** The plug's centre, its glowing cracks, and the ground level of the lab's campus over it. */
+    public record Found(int x, int y, int z, List<Glow> glows, int ground) {
     }
 
     /** The breach of this county, or null (an endless county, or a lab that isn't Ridgeview). */
@@ -27,7 +28,7 @@ public final class BreachSite {
         for (Voxels.Mark m : gen.voxels(p).marks) {
             int x = p.x0 + m.x(), y = p.level + m.y(), z = p.z0 + m.z();
             if (m.what().equals("breach")) {
-                centre = new Found(x, y, z, glows);
+                centre = new Found(x, y, z, glows, p.level);
             } else if (m.what().startsWith("breach glow ")) {
                 glows.add(new Glow(x, y, z, m.what().substring("breach glow ".length())));
             }

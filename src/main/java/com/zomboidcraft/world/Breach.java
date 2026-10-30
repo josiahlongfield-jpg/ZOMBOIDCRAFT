@@ -104,8 +104,14 @@ public final class Breach {
                                 .then(Commands.literal("flicker").executes(ctx -> force(ctx, false))))));
     }
 
-    private static BreachSite.Found site() {
+    /** The breach of this world, once it's been found (null: none, or not yet). */
+    public static BreachSite.Found site() {
         return site != null && site.isDone() && !site.isCompletedExceptionally() ? site.join() : null;
+    }
+
+    /** Whether the ring is surging right now (not a flicker). */
+    public static boolean surging() {
+        return activeUntil > 0 && surging;
     }
 
     private static void tick(MinecraftServer s) {
