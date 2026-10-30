@@ -1,5 +1,6 @@
 package com.zomboidcraft.npc;
 
+import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -33,7 +34,9 @@ import net.minecraft.world.phys.Vec3;
  * <p>
  * For the companion you're looking at (or the nearest): {@code /zc npc wear <piece>} and {@code /zc npc remove <piece>} put
  * her clothes on and take them off ({@link #PIECES}; her underwear always stays on), {@code /zc npc outfit} says what
- * she has on, and {@code /zc npc name <name>} names her (her chat lines go out under it).
+ * she has on, and {@code /zc npc name <name>} names her (her chat lines go out under it). {@code /zc npc mind} shows her
+ * mood, traits, needs and latest memories (NpcMind); {@code /zc npc trait <trait> <-1..1>} and
+ * {@code /zc npc feel <need> <0..100>} set one, for testing.
  */
 public final class Npcs {
     /** Every model with a file in assets/zomboidcraft/npc/ (tools/npc/pack.py). */
@@ -83,6 +86,17 @@ public final class Npcs {
                                         .suggests((ctx, b) -> SharedSuggestionProvider.suggest(PIECES, b))
                                         .executes(ctx -> dress(ctx, StringArgumentType.getString(ctx, "piece"), false))))
                                 .then(Commands.literal("outfit").executes(Npcs::outfit))
+                                .then(Commands.literal("mind").executes(Npcs::mind))
+                                .then(Commands.literal("trait").then(Commands.argument("trait", StringArgumentType.word())
+                                        .suggests((ctx, b) -> SharedSuggestionProvider.suggest(names(NpcMind.Trait.values()), b))
+                                        .then(Commands.argument("value", FloatArgumentType.floatArg(-1f, 1f))
+                                                .executes(ctx -> trait(ctx, StringArgumentType.getString(ctx, "trait"),
+                                                        FloatArgumentType.getFloat(ctx, "value"))))))
+                                .then(Commands.literal("feel").then(Commands.argument("need", StringArgumentType.word())
+                                        .suggests((ctx, b) -> SharedSuggestionProvider.suggest(names(NpcMind.Need.values()), b))
+                                        .then(Commands.argument("value", FloatArgumentType.floatArg(0f, 100f))
+                                                .executes(ctx -> feel(ctx, StringArgumentType.getString(ctx, "need"),
+                                                        FloatArgumentType.getFloat(ctx, "value"))))))
                                 .then(Commands.literal("name").then(Commands.argument("name", StringArgumentType.greedyString())
                                         .executes(ctx -> name(ctx, StringArgumentType.getString(ctx, "name")))))
                                 .then(Commands.argument("model", StringArgumentType.word())
@@ -124,6 +138,7 @@ public final class Npcs {
             npc.snapTo(p.x, p.y, p.z, face, 0f);
             npc.setYHeadRot(face);
             npc.setYBodyRot(face);
+            npc.born(player);
             npc.toggleFollow(player);
             level.addFreshEntity(npc);
             made++;
@@ -179,6 +194,65 @@ public final class Npcs {
         List<String> off = PIECES.stream().filter(p -> npc.hidden().contains(p)).toList();
         ctx.getSource().sendSuccess(() -> Component.literal("Wearing: underwear" + (on.isEmpty() ? "" : ", " + String.join(", ", on))
                 + (off.isEmpty() ? "" : ". Off: " + String.join(", ", off))), false);
+        return 1;
+    }
+
+    private static List<String> names(Enum<?>[] values) {
+        return java.util.Arrays.stream(values).map(v -> v.name().toLowerCase(java.util.Locale.ROOT)).toList();
+    }
+
+    private static int mind(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        NpcEntity npc = target(ctx.getSource().getPlayerOrException());
+        if (npc == null) {
+            ctx.getSource().sendFailure(Component.literal("No companion near you"));
+            return 0;
+        }
+        NpcMind m = npc.mind;
+        StringBuilder b = new StringBuilder(npc.speakerName() + " is " + m.mood() + ". " + capital(m.traitWords()) + ".");
+        for (NpcMind.Need n : NpcMind.Need.values()) {
+            int v = Math.round(m.get(n));
+            b.append("\n ").append(n.label).append(' ').append("|".repeat(v / 5)).append(".".repeat(20 - v / 5)).append(' ').append(v);
+        }
+        long now = npc.level().getGameTime();
+        List<NpcMind.Memory> recent = m.diary.subList(Math.max(0, m.diary.size() - 5), m.diary.size());
+        if (!recent.isEmpty()) {
+            b.append("\nRemembers:");
+            for (int i = recent.size() - 1; i >= 0; i--) {
+                NpcMind.Memory mem = recent.get(i);
+                long mins = (now - mem.at()) / 1200;
+                b.append("\n - ").append(mem.what()).append(" (").append(mins < 1 ? "just now" : mins + " min ago")
+                        .append(", near ").append(mem.x()).append(", ").append(mem.z()).append(')');
+            }
+        }
+        ctx.getSource().sendSuccess(() -> Component.literal(b.toString()), false);
+        return 1;
+    }
+
+    private static String capital(String s) {
+        return s.isEmpty() ? s : Character.toUpperCase(s.charAt(0)) + s.substring(1);
+    }
+
+    private static int trait(CommandContext<CommandSourceStack> ctx, String name, float value) throws CommandSyntaxException {
+        NpcEntity npc = target(ctx.getSource().getPlayerOrException());
+        NpcMind.Trait t = java.util.Arrays.stream(NpcMind.Trait.values()).filter(v -> v.name().equalsIgnoreCase(name)).findFirst().orElse(null);
+        if (npc == null || t == null) {
+            ctx.getSource().sendFailure(Component.literal(npc == null ? "No companion near you" : "Traits: " + String.join(", ", names(NpcMind.Trait.values()))));
+            return 0;
+        }
+        npc.mind.setTrait(t, value);
+        ctx.getSource().sendSuccess(() -> Component.literal("She's " + npc.mind.traitWords() + " now"), false);
+        return 1;
+    }
+
+    private static int feel(CommandContext<CommandSourceStack> ctx, String name, float value) throws CommandSyntaxException {
+        NpcEntity npc = target(ctx.getSource().getPlayerOrException());
+        NpcMind.Need n = java.util.Arrays.stream(NpcMind.Need.values()).filter(v -> v.name().equalsIgnoreCase(name)).findFirst().orElse(null);
+        if (npc == null || n == null) {
+            ctx.getSource().sendFailure(Component.literal(npc == null ? "No companion near you" : "Needs: " + String.join(", ", names(NpcMind.Need.values()))));
+            return 0;
+        }
+        npc.mind.set(n, value);
+        ctx.getSource().sendSuccess(() -> Component.literal("Her " + n.label + " is " + Math.round(value) + "; she's " + npc.mind.mood()), false);
         return 1;
     }
 
