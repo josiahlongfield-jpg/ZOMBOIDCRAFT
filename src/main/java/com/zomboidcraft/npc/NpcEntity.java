@@ -81,6 +81,18 @@ public class NpcEntity extends PathfinderMob {
                 .add(Attributes.FOLLOW_RANGE, 48);
     }
 
+    /**
+     * The most her pace on the ground can be, against her movement speed: a mob covers ground with the square of
+     * speed x modifier, so at 0.3 a modifier of 1.0 is about a player's walk and this a player's sprint (~5.6 m/s).
+     */
+    static final double SPRINT = 1.19;
+
+    /** Whatever asked her to hurry (following a sprinting player, running from the dead), she runs no faster than you sprint. */
+    @Override
+    public void setSpeed(float speed) {
+        super.setSpeed((float) Math.min(speed, getAttributeValue(Attributes.MOVEMENT_SPEED) * SPRINT));
+    }
+
     @Override
     protected void registerGoals() {
         goalSelector.addGoal(0, new FloatGoal(this));
