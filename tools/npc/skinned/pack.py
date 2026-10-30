@@ -6,7 +6,7 @@
 mix.json holds the Mixamo bind pose (metres, feet on y=0, facing +z, x her left), each mesh's skin and every clip
 sampled at 30 fps (each bone's model-space position and turn). SPEC.json says which meshes to keep, the piece each
 belongs to (pieces can be put on and taken off in game), its texture, whether it's drawn both sides, how much of it
-to keep near and far (lods), and how far (m) clothes stand off the skin (push). face.json (optional) is the original model's face rig, dumped by the page that posed her for Mixamo (kept with her
+to keep near and far (lods), and how far (m) clothes stand off the skin (push), and optionally one bone a stiff piece rides whole (bone, e.g. "mixamorigHead"). A mesh with several materials arrives split as "<mesh>.<material>". face.json (optional) is the original model's face rig, dumped by the page that posed her for Mixamo (kept with her
 files in the project's storage, zomboid-mod/assets/woman/tools/): per vertex
 how much follows the jaw and each top eyelid, and their pivots. Mixamo keeps only the body's bones, so those three
 come back here as extra bones under the head, turned by the game (talking, blinking).
@@ -138,6 +138,10 @@ def main():
         m = next(x for x in J['meshes'] if x['name'] == g['mesh'])
         m = dict(m)
         m['si'] = np.vectorize(lambda i: remap.get(i, 0))(m['si'])
+        if g.get('bone'):
+            # a stiff piece (face, hair, hat) rides one bone whole, whatever Mixamo guessed for it
+            m['si'] = np.zeros_like(m['si']); m['si'][:, 0] = names.index(g['bone'])
+            m['sw'] = np.zeros_like(m['sw']); m['sw'][:, 0] = 1
         if face:
             add_face(m, face, nb)
         m = thin(m, g.get('lods', [1.0, 0.4])[lod])

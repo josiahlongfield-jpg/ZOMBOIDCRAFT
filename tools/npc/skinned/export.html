@@ -15,15 +15,27 @@ const box=new THREE.Box3().setFromObject(root); const U=box.max.y-box.min.y>10?0
 const bones=[],idx={}; root.traverse(o=>{ if(o.isBone && !(o.name in idx)){ idx[o.name]=bones.length; bones.push(o);} });
 const parent=bones.map(b=>b.parent&&b.parent.isBone?idx[b.parent.name]:-1);
 const inv=new Array(bones.length).fill(null); const meshes=[];
+// a mesh with several materials comes out as one mesh per material, named "<mesh>.<material>", so each gets its own texture
+const parts=o=>{ const mats=Array.isArray(o.material)?o.material:[o.material]; let g=o.geometry;
+  if(new Set(g.groups.map(r=>r.materialIndex)).size<2) return [[o.name,g.clone()]];
+  g=g.index?g.toNonIndexed():g.clone(); const by=new Map();
+  for(const r of g.groups){ if(!by.has(r.materialIndex)) by.set(r.materialIndex,[]); by.get(r.materialIndex).push(r); }
+  return [...by].map(([mi,rs])=>{ const s=new THREE.BufferGeometry(), cnt=rs.reduce((t,r)=>t+r.count,0);
+    for(const [k,a] of Object.entries(g.attributes)){ const z=a.itemSize, out=new a.array.constructor(cnt*z); let at=0;
+      for(const r of rs){ out.set(a.array.subarray(r.start*z,(r.start+r.count)*z),at); at+=r.count*z; }
+      s.setAttribute(k,new THREE.BufferAttribute(out,z,a.normalized)); }
+    return [o.name+'.'+(mats[mi]&&mats[mi].name?mats[mi].name:mi),s]; }); };
 root.traverse(o=>{ if(!o.isSkinnedMesh) return;
-  let g=o.geometry.clone(); for(const k of Object.keys(g.attributes)) if(!['position','uv','skinIndex','skinWeight'].includes(k)) g.deleteAttribute(k);
+ for(let [name,g] of parts(o)){
+  for(const k of Object.keys(g.attributes)) if(!['position','uv','skinIndex','skinWeight'].includes(k)) g.deleteAttribute(k);
   g.clearGroups(); g=mergeVertices(g,1e-6); g.computeVertexNormals();
   const n=g.attributes.position.count, P=new Float32Array(n*3), N=new Float32Array(n*3), v=new THREE.Vector3(), nm=new THREE.Matrix3().getNormalMatrix(o.bindMatrix);
   for(let i=0;i<n;i++){ v.fromBufferAttribute(g.attributes.position,i).applyMatrix4(o.bindMatrix).multiplyScalar(U); P.set([v.x,v.y,v.z],i*3); v.fromBufferAttribute(g.attributes.normal,i).applyMatrix3(nm).normalize(); N.set([v.x,v.y,v.z],i*3); }
   const map=o.skeleton.bones.map(b=>idx[b.name]); const SI=new Uint8Array(n*4), SW=new Float32Array(n*4);
   for(let i=0;i<n;i++) for(let k=0;k<4;k++){ SI[i*4+k]=map[g.attributes.skinIndex.array[i*4+k]]; SW[i*4+k]=g.attributes.skinWeight.array[i*4+k]; }
   o.skeleton.bones.forEach((b,j)=>{ const m=o.skeleton.boneInverses[j].clone(); m.elements[12]*=U; m.elements[13]*=U; m.elements[14]*=U; if(!inv[idx[b.name]]) inv[idx[b.name]]=m.toArray(); });
-  meshes.push({name:o.name,n,pos:b64(P),normal:b64(N),uv:b64(new Float32Array(g.attributes.uv.array)),si:b64(SI),sw:b64(SW),ix:b64(new Uint32Array(g.index.array))});
+  meshes.push({name,n,pos:b64(P),normal:b64(N),uv:b64(new Float32Array(g.attributes.uv.array)),si:b64(SI),sw:b64(SW),ix:b64(new Uint32Array(g.index.array))});
+ }
 });
 // inverse binds here are model space (the bound mesh, positions above) -> bone, so skin = boneWorld * inv
 const clips={};
