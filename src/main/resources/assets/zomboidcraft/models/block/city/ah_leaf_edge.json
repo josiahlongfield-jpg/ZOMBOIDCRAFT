@@ -1,0 +1,103 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ah_leaf_edge": "zomboidcraft:block/city/ah_leaf_edge",
+    "home_rubber": "zomboidcraft:block/city/home_rubber",
+    "st_galv": "zomboidcraft:block/city/st_galv",
+    "particle": "zomboidcraft:block/city/ah_leaf_edge"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        2
+      ],
+      "to": [
+        16,
+        16,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ah_leaf_edge"
+        },
+        "south": {
+          "texture": "#ah_leaf_edge"
+        },
+        "east": {
+          "texture": "#home_rubber",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#st_galv",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#st_galv",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#st_galv",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        16,
+        4,
+        6
+      ],
+      "to": [
+        16.1,
+        10,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_galv",
+          "uv": [
+            0,
+            6,
+            0.10000000000000142,
+            12
+          ]
+        },
+        "south": {
+          "texture": "#st_galv",
+          "uv": [
+            15.899999999999999,
+            6,
+            16,
+            12
+          ]
+        },
+        "east": {
+          "texture": "#st_galv"
+        },
+        "west": {
+          "texture": "#st_galv"
+        },
+        "up": {
+          "texture": "#st_galv",
+          "uv": [
+            15.899999999999999,
+            6,
+            16,
+            10
+          ]
+        },
+        "down": {
+          "texture": "#st_galv",
+          "uv": [
+            15.899999999999999,
+            6,
+            16,
+            10
+          ]
+        }
+      }
+    }
+  ]
+}

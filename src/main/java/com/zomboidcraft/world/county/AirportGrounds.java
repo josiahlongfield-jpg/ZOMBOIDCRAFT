@@ -290,9 +290,12 @@ final class AirportGrounds extends Grounds {
         set(x1 - 1, y, z1 - 2, "store_counter[facing=west]");
         set(x1 - 1, y, z1 - 3, "store_coffee[facing=west]");
         // the plant room: the boilers and the switchgear
-        for (int x = x0 + 1; x <= TX - 8; x += 2) {
-            set(x, y, z1 - 1, "filing_cabinet[facing=north]");
-        }
+        set(x0 + 1, y, z1 - 1, "cellar_furnace[facing=north]");
+        set(x0 + 1, y + 1, z1 - 1, "cellar_furnace_top[facing=north]");
+        set(x0 + 3, y, z1 - 1, "pw_breaker[facing=north]");
+        set(x0 + 4, y, z1 - 1, "pw_breaker[facing=north]");
+        set(x0 + 6, y, z1 - 1, "bunk_switchboard[facing=north]");
+        set(x0 + 6, y + 1, z1 - 1, "bunk_switchboard_top[facing=north]");
         set(x0 + 2, y, TZ + 7, "water_tank");
         // the lobby: the desk facing the doors, the seats, the notices, the lights
         for (int x = TX - 3; x <= TX + 3; x++) {

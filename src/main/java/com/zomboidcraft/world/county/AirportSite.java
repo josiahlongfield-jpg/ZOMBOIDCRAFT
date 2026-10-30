@@ -95,7 +95,10 @@ final class AirportSite extends Site {
             copy(terminal());
         }
         if (ax1 >= AirportGrounds.BX0 && ax0 <= AirportGrounds.BX1 && az1 >= AirportGrounds.BZ0 && az0 <= AirportGrounds.BZ1) {
-            copy(grounds());
+            copy(piece("grounds", 0x6A0D5L, (q, r) -> new AirportGrounds(q, r).build()));
+        }
+        if (ax1 >= AirportFire.BX0 && ax0 <= AirportFire.BX1 && az1 >= AirportFire.BZ0 && az0 <= AirportFire.BZ1) {
+            copy(piece("fire", 0xF12EL, (q, r) -> new AirportFire(q, r).build()));
         }
     }
 
@@ -109,7 +112,7 @@ final class AirportSite extends Site {
     private static final Map<String, Voxels> PIECES = new LinkedHashMap<>(4, 0.75f, true) {
         @Override
         protected boolean removeEldestEntry(Map.Entry<String, Voxels> eldest) {
-            return size() > 3;
+            return size() > 4;
         }
     };
 
@@ -126,13 +129,14 @@ final class AirportSite extends Site {
         }
     }
 
-    private Voxels grounds() {
-        String key = "grounds@" + rx + "," + rz;
+    /** A piece built whole in the frame once (by build, from its own seed), kept while tiles round it are made. */
+    private Voxels piece(String name, long salt, java.util.function.BiConsumer<Placer, SplittableRandom> build) {
+        String key = name + "@" + rx + "," + rz;
         synchronized (PIECES) {
             Voxels v = PIECES.get(key);
             if (v == null) {
                 v = new Voxels();
-                new AirportGrounds(new Placer(v, 0, 0, 0, 0), new SplittableRandom(seed ^ 0x6A0D5L)).build();
+                build.accept(new Placer(v, 0, 0, 0, 0), new SplittableRandom(seed ^ salt));
                 PIECES.put(key, v);
             }
             return v;
