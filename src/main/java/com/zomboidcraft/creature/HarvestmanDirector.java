@@ -88,6 +88,8 @@ public final class HarvestmanDirector {
     /** Its call, a few minutes after its target logs back in (it knows they're back); 0 for none due. */
     private static long loginCall;
     private static int population;
+    /** Harvestmen lost while enemy respawning is on, each waiting on the next breach surge to come through. */
+    private static int waiting;
     private static boolean loaded;
     private static int tick;
     private static MinecraftServer server;
@@ -209,8 +211,22 @@ public final class HarvestmanDirector {
         if (h.mind.hid.equals(hunter)) {
             endHunt(true);
         }
-        // the next one is a while coming
+        // the next one is a while coming: it comes through the breach on its next surge (world/Breach); with
+        // enemy respawning off nothing more comes through, and the world has one fewer for good
         nextLair = Math.max(nextLair, level.getGameTime() + 24_000);
+        if (com.zomboidcraft.ZcConfig.get().population.respawnDays > 0) {
+            waiting++;
+        } else {
+            population = Math.max(0, population - 1);
+        }
+    }
+
+    /** A surge of the breach: one lost Harvestman comes through and goes to make its den. */
+    public static void breachSurge(ServerLevel level) {
+        if (waiting > 0) {
+            waiting--;
+            nextLair = level.getGameTime();
+        }
     }
 
     static void killed(ServerLevel level, HarvestmanEntity h, ServerPlayer victim) {
@@ -303,7 +319,7 @@ public final class HarvestmanDirector {
                 }
             }
         }
-        if (tick % 40 == 0 && RECORDS.size() < population && now >= nextLair) {
+        if (tick % 40 == 0 && RECORDS.size() + waiting < population && now >= nextLair) {
             List<ServerPlayer> players = s.getPlayerList().getPlayers();
             if (!players.isEmpty()) {
                 ServerPlayer p = players.get((tick / 40) % players.size());
@@ -704,6 +720,9 @@ public final class HarvestmanDirector {
         long now = s.overworld().getGameTime();
         StringBuilder b = new StringBuilder();
         b.append(RECORDS.size()).append(" of ").append(population).append(" Harvestmen in this world");
+        if (waiting > 0) {
+            b.append(", ").append(waiting).append(" waiting on the breach's next surge");
+        }
         if (target != null) {
             b.append("\nHunting ").append(NAMES.getOrDefault(target, target.toString()))
                     .append(s.getPlayerList().getPlayer(target) == null ? " (offline)" : "");
@@ -758,11 +777,13 @@ public final class HarvestmanDirector {
         hunter = null;
         target = null;
         population = 4 + s.overworld().getRandom().nextInt(3);
+        waiting = 0;
         try {
             Path f = file(s);
             if (Files.exists(f)) {
                 JsonObject root = JsonParser.parseString(Files.readString(f)).getAsJsonObject();
                 population = root.has("population") ? root.get("population").getAsInt() : population;
+                waiting = root.has("waiting") ? root.get("waiting").getAsInt() : 0;
                 graceUntil = root.has("graceUntil") ? root.get("graceUntil").getAsLong() : 0;
                 hunter = root.has("hunter") ? root.get("hunter").getAsString() : null;
                 target = root.has("target") ? UUID.fromString(root.get("target").getAsString()) : null;
@@ -824,6 +845,7 @@ public final class HarvestmanDirector {
         }
         JsonObject root = new JsonObject();
         root.addProperty("population", population);
+        root.addProperty("waiting", waiting);
         root.addProperty("graceUntil", graceUntil);
         if (hunter != null) {
             root.addProperty("hunter", hunter);
