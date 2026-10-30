@@ -111,6 +111,23 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
 
     @Override
     public void submit(CarRenderState state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState camera) {
+        // the shadow map only needs a car's outline: a near car casts it from a coarser copy (the profile showed every
+        // parked car drawn twice at full detail), unless you're sitting in it
+        int lod = state.lod;
+        if (lod < SHADOW_LOD && !state.inside && com.zomboidcraft.client.zombie.body.ZDetail.shadowPass()) {
+            state.lod = SHADOW_LOD;
+        }
+        try {
+            draw(state, poseStack, collector, camera);
+        } finally {
+            state.lod = lod;
+        }
+    }
+
+    /** The coarsest copy a car casts its shadow from ({@link CarLod}: 0.16 m grid, close enough not to show). */
+    private static final int SHADOW_LOD = 2;
+
+    private void draw(CarRenderState state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState camera) {
         CarAssets.Ready car;
         if (state.broken) {
             CarAssets.Broken broken = CarAssets.broken(state.model, state.variant);
