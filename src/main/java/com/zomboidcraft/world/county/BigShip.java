@@ -162,6 +162,103 @@ final class BigShip {
         return h;
     }
 
+    /**
+     * A hull on the building berth (Pelican Point Shipyard's hull 1047), len long and beam wide, her
+     * keel on y = 0 and her deck at `deck`: aft of `built` her blocks are joined and plated to the
+     * deck in red-oxide or zinc primer, the top strakes still to go on over some of them so the
+     * frames stand bare there, the deck laid over the after part and its beams open across the
+     * holds forward of it, a bulkhead every few blocks; forward of `built` the next blocks' double
+     * bottom with its frames standing up like ribs a little way, then only the double bottom. The
+     * yard number on both bows. (The bow block waits elsewhere: {@link #block}.)
+     */
+    Ships.Hull onSlip(int len, int beam, int deck, int built) {
+        setUp(len, beam, deck, 0, 0, 0.16, 0.08);
+        int ribs = Math.min(len, built + 24);
+        for (int x = 0; x < len; x++) {
+            int seg = x / 12;
+            boolean zinc = Math.floorMod(seg * 7 + 3, 5) < 2;
+            // the strakes missing off this block's top, if any
+            int gap = x < built ? (Math.floorMod(seg * 11 + 5, 4) == 0 ? 4 : Math.floorMod(seg * 5 + 1, 4) == 0 ? 2 : 0) : 0;
+            int plated = x < built ? deck - gap : 3;
+            for (int y = 0; y <= deck; y++) {
+                for (int z = -hb - 1; z <= hb; z++) {
+                    if (!h.in(x, y, z)) {
+                        continue;
+                    }
+                    boolean edge = y == 0 || !h.in(x + 1, y, z) || !h.in(x - 1, y, z) || !h.in(x, y, z + 1)
+                            || !h.in(x, y, z - 1) || !h.in(x, y - 1, z);
+                    if (edge && y <= plated && (x < built || y <= 3)) {
+                        p.set(x, y, z, primed(zinc, y, x));
+                    } else if (edge && x % 3 == 0 && x < ribs && (x < built || y <= 3 + (ribs - x) / 2)) {
+                        p.set(x, y, z, "sy_frame[facing=" + (z < 0 ? "north" : "south") + "]");
+                    } else if (edge) {
+                        p.set(x, y, z, "air");
+                    } else if (y == 3) {
+                        p.set(x, y, z, "vessel_tanktop");
+                    } else if (y < 3) {
+                        p.set(x, y, z, zinc ? "sy_zinc" : "sy_primer");
+                    } else if (y == deck && x < built - 14) {
+                        p.set(x, y, z, chance() < 0.04 ? "air" : "sy_zinc_seam");
+                    } else if (y == deck && x < built && x % 3 == 0) {
+                        p.set(x, y, z, "sf_beam[axis=z]");
+                    } else if (x < built && x % 24 == 12 && y < deck && !(Math.abs(z) <= 1 && y <= 6)) {
+                        p.set(x, y, z, "sy_zinc_seam");
+                    } else {
+                        p.set(x, y, z, "air");
+                    }
+                }
+            }
+        }
+        // the yard number on both bows of the blocks that are there, where the name will go
+        int nx = Math.min(built - 10, len - 30);
+        for (int i = 0; i < 6; i++) {
+            onSide(nx - 5 + i, deck - 3, 1, "sy_hull_" + i);
+            onSide(nx - i, deck - 3, -1, "sy_hull_" + i);
+        }
+        return h;
+    }
+
+    /**
+     * One of her blocks built on its own, from x0 to x1 of a hull len long and beam wide (keel on
+     * y = 0, deck at `deck`), plated all round in primer, open at its cut ends where the next
+     * block will be joined: the web frames across it there, the decks' edges, the double bottom.
+     */
+    void block(int len, int beam, int deck, int x0, int x1) {
+        setUp(len, beam, deck, 0, 0, 0.16, 0.08);
+        for (int x = x0; x <= x1; x++) {
+            for (int y = 0; y <= deck; y++) {
+                for (int z = -hb - 1; z <= hb; z++) {
+                    if (!h.in(x, y, z)) {
+                        continue;
+                    }
+                    boolean shell = y == 0 || !h.in(x + 1, y, z) || !h.in(x, y, z + 1) || !h.in(x, y, z - 1) || !h.in(x, y - 1, z);
+                    boolean cut = x == x0 || x == x1 && h.in(x + 1, y, z);
+                    if (shell) {
+                        p.set(x, y, z, primed(false, y, x));
+                    } else if (y == deck) {
+                        p.set(x, y, z, "sy_primer_seam");
+                    } else if (y == 3 || y == deck - 6 && deck > 12) {
+                        p.set(x, y, z, cut ? "sy_stiff[axis=x]" : "vessel_tanktop");
+                    } else if (y < 3) {
+                        p.set(x, y, z, "sy_primer");
+                    } else if (cut) {
+                        p.set(x, y, z, "sy_web[axis=z]");
+                    } else {
+                        p.set(x, y, z, "air");
+                    }
+                }
+            }
+        }
+    }
+
+    /** A shell plate in primer: the seam welds every third strake, a fitter's chalk now and then. */
+    private String primed(boolean zinc, int y, int x) {
+        if (zinc) {
+            return y % 3 == 0 ? "sy_zinc_seam" : "sy_zinc";
+        }
+        return y % 3 == 0 ? "sy_primer_seam" : chance() < 0.03 ? "sy_primer_chalk" : "sy_primer";
+    }
+
     private void setUp(int len, int beam, int deck, int keel, int paintAbove, double bow, double stern) {
         this.len = len;
         this.hb = beam / 2;

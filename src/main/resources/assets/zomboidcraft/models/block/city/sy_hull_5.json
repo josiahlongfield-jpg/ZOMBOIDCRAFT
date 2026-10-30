@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sy_hull_5": "zomboidcraft:block/city/sy_hull_5",
+    "particle": "zomboidcraft:block/city/sy_hull_5"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.8
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sy_hull_5"
+        },
+        "south": {
+          "texture": "#sy_hull_5",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#sy_hull_5",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#sy_hull_5",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#sy_hull_5",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sy_hull_5",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
