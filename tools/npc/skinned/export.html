@@ -1,7 +1,8 @@
 <!doctype html><html><body>
 <!-- Mixamo FBX files -> mix.json for pack.py. Put the clips beside this page as clip_<Name>.fbx (spaces as _), the first
      (Breathing_Idle) downloaded With Skin, link three's node_modules here, and run: node run.js export.html mix.json text
-     (other clips: node run.js "export.html?clips=Breathing_Idle,Female_Walk,..." mix.json text). An upload in centimetres
+     (other clips: node run.js "export.html?clips=Breathing_Idle,Female_Walk,..." mix.json text; a model whose skin came
+     with another clip names it: "export.html?skin=Standing_Pose&clips=Standing_Pose,..." ). An upload in centimetres
      comes out in metres like the rest. --><script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
 <script type="module">
 import * as THREE from 'three'; import {FBXLoader} from 'three/addons/loaders/FBXLoader.js';
@@ -10,7 +11,8 @@ const log=[]; window.LOG=log;
 const b64=a=>{ const u=new Uint8Array(a.buffer,a.byteOffset,a.byteLength); let s=''; for(let i=0;i<u.length;i+=32768) s+=String.fromCharCode.apply(null,u.subarray(i,i+32768)); return btoa(s); };
 try{
 const load=async f=>new FBXLoader().parse(await (await fetch(f)).arrayBuffer(),'./none/');
-const root=await load('clip_Breathing_Idle.fbx'); root.updateMatrixWorld(true);
+const Q=new URLSearchParams(location.search), SKIN=Q.get('skin')||'Breathing_Idle';  // ?skin= names the clip downloaded With Skin
+const root=await load('clip_'+SKIN+'.fbx'); root.updateMatrixWorld(true);
 const box=new THREE.Box3().setFromObject(root); const U=box.max.y-box.min.y>10?0.01:1;  // a character taller than 10 units was uploaded in cm
 const bones=[],idx={}; root.traverse(o=>{ if(o.isBone && !(o.name in idx)){ idx[o.name]=bones.length; bones.push(o);} });
 const parent=bones.map(b=>b.parent&&b.parent.isBone?idx[b.parent.name]:-1);
@@ -39,7 +41,7 @@ root.traverse(o=>{ if(!o.isSkinnedMesh) return;
 });
 // inverse binds here are model space (the bound mesh, positions above) -> bone, so skin = boneWorld * inv
 const clips={};
-for(const f of (new URLSearchParams(location.search).get('clips')||'Breathing_Idle,Female_Walk,Running,Dying,Aiming_Gun,Firing_Rifle,Walk_With_Rifle,Rifle_Aiming_Idle').split(',')){
+for(const f of (Q.get('clips')||'Breathing_Idle,Female_Walk,Running,Dying,Aiming_Gun,Firing_Rifle,Walk_With_Rifle,Rifle_Aiming_Idle').split(',')){
   const r=await load('clip_'+f+'.fbx'); r.updateMatrixWorld(true); const clip=r.animations[0]; const mixer=new THREE.AnimationMixer(r); mixer.clipAction(clip).play();
   const rb=bones.map(b=>r.getObjectByName(b.name)); const fps=30, frames=Math.max(2,Math.round(clip.duration*fps)+1); const out=new Float32Array(frames*bones.length*7);
   const p=new THREE.Vector3(),q=new THREE.Quaternion(),s=new THREE.Vector3(); let smax=0;
