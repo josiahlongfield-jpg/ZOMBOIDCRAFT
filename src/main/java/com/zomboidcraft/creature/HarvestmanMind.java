@@ -317,6 +317,38 @@ public final class HarvestmanMind {
         };
     }
 
+    /**
+     * Whether it puts its glow out altogether, skull and all: whenever it means not to be seen (hiding, stalking,
+     * watching, lying in wait, sheltering, its fake-outs, getting into place to strike). It lights up again to warn,
+     * to show itself, to strike and to feed.
+     */
+    public boolean dark() {
+        if (h.held != null) {
+            return false;
+        }
+        return switch (plan) {
+            case HIDE, STALK, OBSERVE, LIE_IN_WAIT, AMBUSH, SHELTER, CEILING, FEINT, RETREAT, SHADOW, SPLIT, DOOR, HERD,
+                 HORDE, LEAVE_BODY -> true;
+            case STRIKE, DISPLAY -> phase == 0;
+            default -> false;
+        };
+    }
+
+    /**
+     * How tight it draws itself in, 0..1 (SpiderIk): legs pulled in under it, body low, torso curled down, tail under.
+     * All the way when it's keeping still out of sight; a little while it creeps.
+     */
+    public double tuck() {
+        boolean still = h.speed < 0.25;
+        return switch (plan) {
+            case HIDE, SHELTER, CEILING -> still ? 1 : 0.35;
+            case LIE_IN_WAIT, AMBUSH, OBSERVE, DOOR -> still ? 0.85 : 0.2;
+            case STALK, SHADOW -> still ? 0.6 : 0.15;
+            case REST -> still ? 0.5 : 0;
+            default -> 0;
+        };
+    }
+
     public double speedScale() {
         double s = 1 + 0.04 * (stage - 1);
         if (hunger > 0.95) {
