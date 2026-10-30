@@ -38,6 +38,9 @@ EVENTS = {
     "weapon.grenade_launcher.shot": ("weapon/grenade_launcher/shot", 96, [("gm:gun_grenade_launcher_shot_01", None, None)]),
     # the Warthog's minigun (his note: "0-5 sec"): one piece per round of the burst, and the barrels running down after
     "weapon.minigun.shot": ("weapon/minigun/shot", 128, [("fs:417148", ("burst", 0.04, 1.85, False), None)]),
+    # the same burst as one loop to play while the trigger is held: its shots come in fours ~45 ms apart, one group
+    # every ~0.254 s, a rhythm one-piece-per-round loses; five whole groups, from just before the 0.219 s group
+    "weapon.minigun.loop": ("weapon/minigun/loop", 128, [("fs:417148", ("loop", 0.209, 1.479), None)]),
     "weapon.minigun.spin_down": ("weapon/minigun/spin_down", 48, [("fs:417148", ("span", 1.85, 5.0), None)]),
 }
 # made from the near shot: event -> (near event, attenuation distance)
@@ -70,6 +73,12 @@ def cut(a, how):
                 shot = np.concatenate([shot, ring[n:]])
             out.append(trim(shot))
         return out
+    if how and how[0] == "loop":
+        # seamless: the end fades into the start over 10 ms (no trim, so the length stays exact)
+        piece = a[int(how[1] * RATE):int(how[2] * RATE)].copy()
+        n = int(0.01 * RATE)
+        piece[:n] = piece[:n] * np.linspace(0, 1, n) + piece[-n:] * np.linspace(1, 0, n)
+        return [piece[:-n]]
     out = pieces(a, how)
     if how and how[0] == "hits":
         # a shot cut off by the next one in the burst ends on a short fade, not a click
