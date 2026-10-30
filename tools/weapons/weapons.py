@@ -1295,9 +1295,15 @@ MAGNUM_FP = FirstPerson(hip_grip=(0.21, -0.32, -0.52), hip_turn=(2.0, 6.0, -3.0)
 HIDDEN_WHEN_AIMING = tuple(k for k, a in AT.MESHES.items() if a.get('hidden')) + ('magnified',)
 
 
+# inches behind the back end: a pistol scope's long eye relief; the holo close up, so its window (cleared out to the
+# hood by tools/meshguns/hollow.py) fills the middle of the view (Josiah 2026-10-30: "a much bigger sight picture"),
+# its hood still past the near plane (0.05 blocks: 0.67 px at ADS_SCALE)
+EYE_RELIEF = {'pistol_scope': 4.0, 'holo': 1.0}
+
+
 def _eye(key):
     b = AT.BOUNDS[AT.MESHES[key]['mesh']]
-    return (b[1][2] - b[2][2]) / IN + (4.0 if key == 'pistol_scope' else 1.6)     # a pistol scope's long eye relief
+    return (b[1][2] - b[2][2]) / IN + EYE_RELIEF.get(key, 1.6)
 
 
 ADS_EYE = {k: _eye(k) for k, a in AT.MESHES.items() if a['slot'] == 'optic' and a['mesh'] and not a.get('hidden')}

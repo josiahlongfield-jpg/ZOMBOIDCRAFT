@@ -229,8 +229,13 @@ def write_packed(key, img):
 FROM_PACKS = {'holo': pack_holo, 'scope_4x': pack_prism, 'mini_dot': pack_mini_dot}
 HUD = {'red_dot': dot, 'compact_dot': dot,
        'combat_scope': combat_scope, 'rifle_optic': rifle_optic, 'pistol_scope': pistol_scope}
+def magnifier(c):
+    # the 3x magnifier has no reticle of its own: CombatHud draws the one of the sight in front over its eyepiece
+    pass
+
+
 SCOPES = {'hunting_scope': duplex, 'precision_scope': mil_dot, 'long_scope': long_range,
-          'crossbow_scope': crossbow}
+          'crossbow_scope': crossbow, 'magnifier': magnifier}
 
 
 def main():

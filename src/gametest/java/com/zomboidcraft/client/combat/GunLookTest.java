@@ -89,7 +89,7 @@ public class GunLookTest implements FabricClientGameTest {
         String[][] looks = {{"assault_rifle", "holo_sight", "magnifier"}, {"assault_rifle", "holo_sight"},
                 {"assault_rifle", "red_dot_sight"}, {"assault_rifle", "scope_4x"}, {"assault_rifle", "combat_scope"},
                 {"hunting_rifle", "hunting_scope"}, {"precision_rifle", "precision_scope"}, {"heavy_sniper", "long_range_scope"},
-                {"crossbow", "crossbow_scope"}, {"magnum", "pistol_scope"}};
+                {"crossbow", "crossbow_scope"}, {"magnum", "red_dot"}};
         for (String[] look : looks) {
             if (!List.of(GUNS).contains(look[0])) {
                 continue;

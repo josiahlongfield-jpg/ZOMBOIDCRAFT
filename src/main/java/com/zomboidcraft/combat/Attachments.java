@@ -401,10 +401,11 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
         return key(gun, Slot.MUZZLE) != null || GunType.of(gun) == GunType.SUPPRESSED_RIFLE;     // its can is built in
     }
 
-    /** Looking down the sights shows the scope's eyepiece picture, not the gun: a scope you look into. */
+    /** Looking down the sights shows an eyepiece picture, not the gun: a scope you look into, or the magnifier swung
+     * in (its picture with the reticle of the sight in front three times bigger). */
     public static boolean scoped(ItemStack gun) {
         Optic optic = optic(gun);
-        return optic != null && optic.overlay();
+        return optic != null && optic.overlay() || magnified(gun);
     }
 
     /** The field of view on the sights, as a share of normal, or a negative number for the gun's own. */

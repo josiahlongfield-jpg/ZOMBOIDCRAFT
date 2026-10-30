@@ -145,6 +145,10 @@ def swap(node, gun, cfg, mounts, models, left):
         return node
     if node.get('type') == 'minecraft:special' and node.get('model', {}).get('type') == 'zomboidcraft:mesh':
         node = {'type': 'minecraft:model', 'model': node['base']}       # skinned before: start again from the block
+    ms = node.get('models') if node.get('type') == 'minecraft:composite' else None
+    if ms and all(m.get('type') == 'minecraft:special' and m.get('model', {}).get('type') == 'zomboidcraft:mesh'
+                  for m in ms) and len({m['base'] for m in ms}) == 1:
+        node = {'type': 'minecraft:model', 'model': ms[0]['base']}     # one block piece skinned as several (flip irons)
     if node.get('type') != 'minecraft:model':
         return {k: swap(v, gun, cfg, mounts, models, left) for k, v in node.items()}
     base = node['model']
