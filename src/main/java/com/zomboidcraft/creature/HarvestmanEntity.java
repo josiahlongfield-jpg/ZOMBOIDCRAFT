@@ -97,6 +97,11 @@ public class HarvestmanEntity extends Mob {
     private static final EntityDataAccessor<Boolean> ENGAGED = SynchedEntityData.defineId(HarvestmanEntity.class, EntityDataSerializers.BOOLEAN);
     private static final long ENGAGED_TICKS = 600;
     private long engagedUntil;
+    /** What it holds (its entity id, or -1), so the client can draw it held (WalkerRenderer) and close its arms round it. */
+    private static final EntityDataAccessor<Integer> HELD = SynchedEntityData.defineId(HarvestmanEntity.class, EntityDataSerializers.INT);
+    /** Client only: who holds each held entity, by its id; and what this one held last tick. */
+    private static final java.util.Map<Integer, HarvestmanEntity> HOLDERS = new java.util.concurrent.ConcurrentHashMap<>();
+    private int heldSeen = -1;
     private static final List<EntityDataAccessor<org.joml.Vector3fc>> FEET = List.of(FOOT0, FOOT1, FOOT2, FOOT3);
 
     public static final int HUNT = 0, HOLD = 1, FEED = 2, DEAD = 3;
@@ -115,8 +120,13 @@ public class HarvestmanEntity extends Mob {
     private static final double TURN_RATE = 1.9, ACCEL = 1.8, BRAKE = 2.6;
     /** How fast its body turns on to a new surface (a share a second): slow enough that it pours itself round (SpiderIk). */
     private static final double TURN_SURF = 4.5;
-    /** Where what it holds has its head: under the point of its body, gripped by the beard. */
-    private static final Vec3 GRIP = new Vec3(0, -0.64, 0.74);
+    /** Where what it holds has its head: under the point of its body, gripped by the beard (from its centre, its frame). */
+    public static final Vec3 GRIP = new Vec3(0, -0.64, 0.74);
+    /**
+     * A carried body hangs from the grip tipped this far (radians), its feet trailing back under it; to feed, it's laid on
+     * its back on the floor this far ahead of its centre, its head toward it. SpiderIk and WalkerRenderer draw to these.
+     */
+    public static final float HELD_TILT = 0.35f, LAID_AHEAD = 2.35f;
 
     /** Client only: the turn last tick and now, eased toward the synced one; and the legs it draws (HarvestmanRig). */
     public final Quaternionf turn = new Quaternionf(), turnO = new Quaternionf();
@@ -236,6 +246,22 @@ public class HarvestmanEntity extends Mob {
         return entityData.get(ENGAGED);
     }
 
+    /** What it holds, or null (either side). */
+    public Entity heldEntity() {
+        int id = entityData.get(HELD);
+        return id < 0 ? null : level().getEntity(id);
+    }
+
+    /** Client only: the Harvestman holding an entity, or null. */
+    public static HarvestmanEntity holderOf(Entity e) {
+        HarvestmanEntity h = HOLDERS.get(e.getId());
+        if (h != null && (h.isRemoved() || h.level() != e.level() || h.entityData.get(HELD) != e.getId())) {
+            HOLDERS.remove(e.getId(), h);
+            return null;
+        }
+        return h;
+    }
+
     public float rear() {
         return entityData.get(REAR);
     }
@@ -280,6 +306,7 @@ public class HarvestmanEntity extends Mob {
         builder.define(DARK, false);
         builder.define(TUCK, 0f);
         builder.define(ENGAGED, false);
+        builder.define(HELD, -1);
     }
 
     /** Where it's looking, or null. */
@@ -344,6 +371,16 @@ public class HarvestmanEntity extends Mob {
         turnO.set(turn);
         if (!(level() instanceof ServerLevel level)) {
             turn.slerp(entityData.get(TURN), 0.45f);
+            int heldNow = entityData.get(HELD);
+            if (heldNow != heldSeen) {
+                if (heldSeen >= 0) {
+                    HOLDERS.remove(heldSeen, this);
+                }
+                heldSeen = heldNow;
+            }
+            if (heldNow >= 0) {
+                HOLDERS.put(heldNow, this);
+            }
             // what came in this tick, kept a few ticks so the feet can be drawn as far behind as the body is
             feetSeenAt = (feetSeenAt + 1) & 3;
             for (int i = 0; i < 4; i++) {
@@ -351,6 +388,7 @@ public class HarvestmanEntity extends Mob {
             }
             return;
         }
+        entityData.set(HELD, held == null ? -1 : held.getId());
         if (isDeadOrDying()) {
             return;     // tickDeath lays it down
         }
@@ -1226,9 +1264,22 @@ public class HarvestmanEntity extends Mob {
         }
         holdTicks++;
         if (!(held instanceof Player)) {
-            // a zombie is just carried
-            Vec3 g = gripPoint();
-            held.setPos(g.x, g.y - 1.6, g.z);
+            // a zombie is carried hung from its grip by the head, its back to it (drawn tipped so its feet trail); to
+            // feed, it's laid on its back on the floor ahead (drawn lying, its head toward it)
+            if (feeding()) {
+                Vec3 ahead = centre().add(fwd.scale(LAID_AHEAD));
+                BlockHitResult floor = cast(ahead, ahead.subtract(0, STAND + 2, 0));
+                held.setPos(floor.getType() != HitResult.Type.MISS ? floor.getLocation() : ahead.subtract(0, lift(), 0));
+            } else {
+                Vec3 g = gripPoint();
+                held.setPos(g.x, g.y - 1.6, g.z);
+            }
+            float yaw = (float) Math.toDegrees(Math.atan2(-fwd.x, fwd.z));
+            held.setYRot(yaw);
+            held.setYHeadRot(yaw);
+            if (held instanceof LivingEntity le) {
+                le.setYBodyRot(yaw);
+            }
             if (held instanceof Mob m) {
                 m.setNoAi(true);
             }
