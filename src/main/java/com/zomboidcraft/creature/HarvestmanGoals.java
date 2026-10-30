@@ -614,7 +614,7 @@ final class HarvestmanGoals {
                 nearest = p;
             }
         }
-        if (nearest != null) {
+        if (nearest != null && !m.showcase) {
             meet(level, nearest, target);
         }
     }
