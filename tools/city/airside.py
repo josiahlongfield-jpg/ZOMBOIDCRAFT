@@ -9,7 +9,8 @@ world/county/AirportGrounds sets them out. Everything faces north (rotate=facing
   sections stacked under the ceiling on their tracks, set in the top row of the opening);
 - ah_arff_<0..11>: GRAYHAVEN AIRPORT FIRE RESCUE in white on the red fascia over the bays, a panel
   against the wall south of it, tile 0 at the viewer's left; ah_bay_<1..5>: a bay's number in its
-  white disc;
+  white disc; ah_cargo_<0..9> (GRAYHAVEN AIR CARGO, white on blue) and ah_fuel_<0..9> (AVIATION FUEL,
+  red on cream), the same kind of panel along the cargo shed and the fuel farm's pump house;
 - the hangar's sliding doors, a leaf a block thick hung from the head: ah_leaf (ribbed grey steel
   with its rails), ah_leaf_band (the bottom row, the yellow and black band along it), ah_leaf_edge
   (the leaf's end: the rubber seal, the pull handle), ah_leaf_num_<n>_<0..8> (the hangar's number
@@ -140,6 +141,25 @@ def arff(i):
     return arff_pic().tile(i, 31720 + i, smooth=0.45, grime=0.25)
 
 
+# the other buildings' fascia names: key -> (text, tiles, ground, letters)
+BANDS = {"cargo": ("GRAYHAVEN  AIR  CARGO", 10, (30, 62, 120), (240, 240, 236)),
+         "fuel": ("AVIATION  FUEL  \u00b7  NO  SMOKING", 10, (232, 228, 214), (168, 30, 28))}
+
+
+@lru_cache(maxsize=None)
+def band_pic(k):
+    text, n, bg, ink = BANDS[k]
+    p = Pic(n, 1, bg, 31600 + n)
+    W = p.W
+    size = civic.fit(text, BOLD, 36, W - 40)
+    p.text(W / 2, 16, text, BOLD, size, ink, anchor="ma")
+    return p
+
+
+def band(k, i):
+    return band_pic(k).tile(i, 31620 + i + 20 * list(BANDS).index(k), smooth=0.45, grime=0.25)
+
+
 @lru_cache(maxsize=None)
 def bay_pic(n):
     p = Pic(1, 1, RED, 31750 + n)
@@ -217,6 +237,9 @@ def textures():
     for n in range(1, HANGARS + 1):
         for i in range(9):
             out[f"ah_leaf_num_{n}_{i}"] = lambda n=n, i=i: leaf_num(n, i)
+    for k, (_, n, _, _) in BANDS.items():
+        for i in range(n):
+            out[f"ah_{k}_{i}"] = lambda k=k, i=i: band(k, i)
     return out
 
 
@@ -354,6 +377,9 @@ def blocks():
         add(f"ah_arff_{i}", fascia(f"ah_arff_{i}"), "Fire Station Sign", [[0, 0, 14.5, 16, 16, 16]])
     for n in range(1, 6):
         add(f"ah_bay_{n}", fascia(f"ah_bay_{n}"), "Bay Number", [[0, 0, 14.5, 16, 16, 16]])
+    for k, (_, n, _, _) in BANDS.items():
+        for i in range(n):
+            add(f"ah_{k}_{i}", fascia(f"ah_{k}_{i}"), "Sign", [[0, 0, 14.5, 16, 16, 16]])
     hull = [[0, 0, 2, 16, 16, 14]]
     add("ah_leaf", leaf_piece("ah_leaf"), "Hangar Door", hull)
     add("ah_leaf_band", leaf_piece("ah_leaf_band"), "Hangar Door", hull)

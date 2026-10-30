@@ -15788,5 +15788,25 @@ final class CitySpecs extends CityBlocks.Specs {
         s("ah_scaf_rail", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 1.2);
         s("ah_engine_0", FACING, 0, 0, SoundType.METAL, 2f, 1.5, 0, 0, 14.5, 16, 16);
         s("ah_engine_1", FACING, 0, 0, SoundType.METAL, 2f, 1.5, 0, 0, 14.5, 16, 16);
+        s("ah_cargo_0", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 14.5, 16, 16, 16);
+        s("ah_cargo_1", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 14.5, 16, 16, 16);
+        s("ah_cargo_2", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 14.5, 16, 16, 16);
+        s("ah_cargo_3", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 14.5, 16, 16, 16);
+        s("ah_cargo_4", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 14.5, 16, 16, 16);
+        s("ah_cargo_5", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 14.5, 16, 16, 16);
+        s("ah_cargo_6", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 14.5, 16, 16, 16);
+        s("ah_cargo_7", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 14.5, 16, 16, 16);
+        s("ah_cargo_8", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 14.5, 16, 16, 16);
+        s("ah_cargo_9", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 14.5, 16, 16, 16);
+        s("ah_fuel_0", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 14.5, 16, 16, 16);
+        s("ah_fuel_1", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 14.5, 16, 16, 16);
+        s("ah_fuel_2", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 14.5, 16, 16, 16);
+        s("ah_fuel_3", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 14.5, 16, 16, 16);
+        s("ah_fuel_4", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 14.5, 16, 16, 16);
+        s("ah_fuel_5", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 14.5, 16, 16, 16);
+        s("ah_fuel_6", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 14.5, 16, 16, 16);
+        s("ah_fuel_7", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 14.5, 16, 16, 16);
+        s("ah_fuel_8", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 14.5, 16, 16, 16);
+        s("ah_fuel_9", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 14.5, 16, 16, 16);
     }
 }

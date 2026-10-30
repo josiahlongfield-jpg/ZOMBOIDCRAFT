@@ -78,14 +78,14 @@ final class AirportHangars extends Grounds {
         // the blue band round the top of the walls, the floods over the door, a door in each side
         for (int x = x0; x <= x1; x++) {
             for (int z : new int[] {z0, z1}) {
-                set(x, top - 1, z, "corrugated_blue");
-                set(x, top - 2, z, "corrugated_blue");
+                set(x, top - 1, z, "corrugated_blue_b");
+                set(x, top - 2, z, "corrugated_blue_b");
             }
         }
         for (int z = z0; z <= z1; z++) {
             for (int x : new int[] {x0, x1}) {
-                set(x, top - 1, z, "corrugated_blue");
-                set(x, top - 2, z, "corrugated_blue");
+                set(x, top - 1, z, "corrugated_blue_b");
+                set(x, top - 2, z, "corrugated_blue_b");
             }
         }
         for (int x = x0 + 6; x <= x1 - 6; x += 12) {

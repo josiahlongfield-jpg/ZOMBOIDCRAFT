@@ -103,6 +103,9 @@ final class AirportSite extends Site {
         if (ax1 >= AirportHangars.BX0 && ax0 <= AirportHangars.BX1 && az1 >= AirportHangars.BZ0 && az0 <= AirportHangars.BZ1) {
             copy(piece("hangars", 0x4A6EL, (q, r) -> new AirportHangars(q, r).build()));
         }
+        if (ax1 >= AirportCargo.BX0 && ax0 <= AirportCargo.BX1 && az1 >= AirportCargo.BZ0 && az0 <= AirportCargo.BZ1) {
+            copy(piece("cargo", 0xCA60L, (q, r) -> new AirportCargo(q, r).build()));
+        }
     }
 
     // ------------------------------------------------------------------ the big pieces
