@@ -34,6 +34,8 @@ final class Boardwalk extends Site {
     static final int AVE0 = 2, AVE1 = 12, BACK = 22, FRONT = 56, BW0 = 57, BW1 = 74;
     /** The amusement pier: from the boardwalk out to PX1, z PZ0 .. PZ1; the fishing pier on to FX at its T. */
     static final int PZ0 = -28, PZ1 = 28, PX1 = 262, FPX1 = 424;
+    /** The Hollis ferry's bell on the fishing pier's T and where she puts people ashore, in the frame. */
+    static final int[] BELL = {FPX1 - 2, 1, 13}, LANDING = {FPX1 - 6, 1, 11};
 
     private final County county;
 

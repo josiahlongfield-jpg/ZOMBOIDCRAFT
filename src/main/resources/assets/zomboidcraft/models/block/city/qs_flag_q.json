@@ -1,0 +1,111 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cv_brass": "zomboidcraft:block/city/cv_brass",
+    "ext_trim_white": "zomboidcraft:block/city/ext_trim_white",
+    "qs_flag": "zomboidcraft:block/city/qs_flag",
+    "particle": "zomboidcraft:block/city/ext_trim_white"
+  },
+  "elements": [
+    {
+      "from": [
+        7.25,
+        0,
+        7.25
+      ],
+      "to": [
+        8.75,
+        16,
+        8.75
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_trim_white"
+        },
+        "south": {
+          "texture": "#ext_trim_white"
+        },
+        "east": {
+          "texture": "#ext_trim_white"
+        },
+        "west": {
+          "texture": "#ext_trim_white"
+        },
+        "up": {
+          "texture": "#ext_trim_white",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ext_trim_white",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        0,
+        6
+      ],
+      "to": [
+        10,
+        1.5,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cv_brass"
+        },
+        "south": {
+          "texture": "#cv_brass"
+        },
+        "east": {
+          "texture": "#cv_brass"
+        },
+        "west": {
+          "texture": "#cv_brass"
+        },
+        "up": {
+          "texture": "#cv_brass"
+        },
+        "down": {
+          "texture": "#cv_brass",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        8.75,
+        2,
+        7.5
+      ],
+      "to": [
+        16,
+        15.5,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#qs_flag"
+        },
+        "south": {
+          "texture": "#qs_flag"
+        },
+        "east": {
+          "texture": "#qs_flag",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#qs_flag"
+        },
+        "up": {
+          "texture": "#qs_flag"
+        },
+        "down": {
+          "texture": "#qs_flag"
+        }
+      }
+    }
+  ]
+}

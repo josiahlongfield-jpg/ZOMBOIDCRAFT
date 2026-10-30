@@ -1197,6 +1197,8 @@ import cape  # noqa: E402
 cape.register(sys.modules[__name__])
 import boardwalk  # noqa: E402
 boardwalk.register(sys.modules[__name__])
+import hollis  # noqa: E402
+hollis.register(sys.modules[__name__])
 
 
 

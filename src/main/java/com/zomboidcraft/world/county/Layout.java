@@ -228,6 +228,13 @@ final class Layout {
                 named.put(s.id(), p);
                 continue;
             }
+            if (s.id().equals("hollis")) {
+                // Hollis Island Quarantine Station: the whole island as it lies, the wharf to the compound
+                Place p = Hollis.place(s, Noise.hash(seed ^ 0x401L, s.x(), s.z()));
+                places.add(p);
+                named.put(s.id(), p);
+                continue;
+            }
             if (s.id().equals("lighthouse")) {
                 // Cape Merrow Lighthouse: the headland as the land lies, cut back to a sea cliff
                 Place p = Cape.place(s, Noise.hash(seed ^ 0xCA9EL, s.x(), s.z()));

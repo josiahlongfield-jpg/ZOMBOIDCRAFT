@@ -38,6 +38,8 @@ public final class Builders {
                     new Dam(p, county, out).build();
                 } else if (p.variant.equals("boardwalk")) {
                     new Boardwalk(p, county, out).build();
+                } else if (p.variant.equals("hollis")) {
+                    new Hollis(p, county, out).build();
                 } else if (p.variant.equals("cape")) {
                     new Cape(p, county, out).build();
                 } else {
