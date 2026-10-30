@@ -33,8 +33,8 @@ public class WalkerRenderState extends ZombieRenderState {
     /** The new body's eye mask, or null when look.glowingEyes is off. */
     public Identifier zeyes;
     public final ZMove.Pose zpose = new ZMove.Pose();
-    /** Held by the Harvestman: how far it's drawn tipped from its grip, and laid on its back to be fed on (0..1). */
-    public float heldTilt, heldLie;
+    /** Held by the Harvestman: how far it's drawn tipped back from upright about its feet (radians). */
+    public float heldLean;
     /** Crossbow bolts standing in it. */
     public java.util.List<com.zomboidcraft.combat.StuckBolts.Bolt> bolts = java.util.List.of();
 }

@@ -28,9 +28,9 @@ import org.joml.Vector3f;
  * turns, its torso leads every turn and its tail trails it, and a foot with nothing under it hooks round the edge on to
  * the face below, so it pours itself from one surface to the next instead of swinging round whole. Drawn in to hide
  * (HarvestmanEntity.tuck) its feet come in under it, its body sinks, its torso curls down and its tail tucks under.
- * Holding something its arms grip it by the shoulders from behind, its long scythes come round either side and cross in
- * front of it and its short claws hook in at its waist; feeding, it bends low over it where it lies, hands pinning it and
- * pulling in turn, scythes planted either side, its torso and head dipping slowly.
+ * Dragging a body off it bends low and drags it along the floor by the shoulders, its feet trailing under it: its arms
+ * grip it, its long scythes come round either side and cross over its chest and its short claws hook in at its waist.
+ * Feeding, it hauls it up to its mouth, its head dipping to meet it, holds it there and lets it down again, slowly.
  * Model space throughout (+y off the surface it holds, +z ahead, +x its left). Server and client both run it.
  */
 final class SpiderIk {
@@ -60,8 +60,8 @@ final class SpiderIk {
     private final Vector3f[] hookAt = {new Vector3f(), new Vector3f(), new Vector3f(), new Vector3f()};
     private final Vector3f[] hookWant = {new Vector3f(), new Vector3f(), new Vector3f(), new Vector3f()};
     private final boolean[] hooking = new boolean[4];
-    /** How closed its arms are round what it holds and how far into feeding it is, eased; and the feed's own clock. */
-    private float hold, feed, feedT;
+    /** How closed its arms are round what it holds, how far into feeding, how far it's tipped (eased); the feed's clock. */
+    private float hold, feed, lean, feedT;
 
     SpiderIk(SpiderModel model) {
         this.model = model;
@@ -89,12 +89,14 @@ final class SpiderIk {
         int pose = e.pose();
         hold = Mth.lerp(1 - (float) Math.exp(-dt * 7), hold, pose == HarvestmanEntity.HOLD || pose == HarvestmanEntity.FEED ? 1 : 0);
         feed = Mth.lerp(1 - (float) Math.exp(-dt * 2.5f), feed, pose == HarvestmanEntity.FEED ? 1 : 0);
-        feedT += dt;
-        float pulse = (float) Math.sin(feedT * Math.PI * 2 * 0.7);
-        // a held player stays hung upright from its grip (riding it); only a body it carries is laid down to feed on
+        feedT = pose == HarvestmanEntity.FEED ? feedT + dt : 0;
+        // a held player hangs upright from its grip (riding it); a body it carries off is dragged, then hauled up to feed
         Entity prey = hold > 0.01f ? e.heldEntity() : null;
         boolean upright = prey instanceof Player;
-        float lay = upright ? 0 : feed;
+        float leanWant = upright || hold < 0.5f ? 0 : feed > 0.5f ? HarvestmanEntity.feedLean(feedT) : HarvestmanEntity.DRAG_LEAN;
+        lean = Mth.lerp(1 - (float) Math.exp(-dt * 4), lean, leanWant);
+        e.heldLean = lean;
+        float up = upright ? 0 : feed * Mth.clamp((HarvestmanEntity.FEED_LOW - lean) / (HarvestmanEntity.FEED_LOW - HarvestmanEntity.FEED_UP), 0, 1);
         Quaternionf lies = place.getNormalizedRotation(new Quaternionf());
         Vector3f spinWant = new Vector3f();
         if (turnSeen && dt > 1e-4f && !dead) {
@@ -195,7 +197,7 @@ final class SpiderIk {
         }
         drop = dead ? 0 : Mth.clamp(drop, 0, SINK + 1.2f);
         float ks = 1 - (float) Math.exp(-dt * 5);
-        lift = Mth.lerp(ks, lift, dead ? 0 : avg * 0.8f - Math.min(drop, SINK) - 0.7f * tuck - 0.3f * lay);
+        lift = Mth.lerp(ks, lift, dead ? 0 : avg * 0.8f - Math.min(drop, SINK) - 0.7f * tuck - (upright ? 0 : 0.25f) * hold);
         pitch = Mth.lerp(ks, pitch, pitchWant);
         roll = Mth.lerp(ks, roll, rollWant);
         float fold = Mth.clamp((drop - SINK) / 0.8f, 0, 1) * FOLD + 0.9f * tuck;
@@ -225,7 +227,7 @@ final class SpiderIk {
         }
         // its torso leads: rearing to a face ahead, and on into whatever turn its body is making
         if (!dead && model.spine >= 0) {
-            float bow = -0.6f * ahead + 0.25f * hold + (upright ? 0.15f : 0.55f + 0.12f * pulse) * feed;
+            float bow = -0.6f * ahead + (upright ? 0.25f : 0.5f) * hold - 0.15f * up;
             Quaternionf lead = new Quaternionf().rotateX(bow).premul(spun(spin, 0.2f, 0.5f));
             Vector3f at = new Vector3f(p[model.spine]);
             turnAbout(q, p, model.spine, at, lead);
@@ -259,28 +261,34 @@ final class SpiderIk {
                     Vector3f up = new Vector3f(target.x * 0.85f, 0.35f + 1.1f * ahead, aheadZ - 0.06f);
                     target.lerp(up, Math.min(1, ahead * 1.4f));
                 }
-                // its front feet braced wide and forward over what it feeds on
-                if ((l & 1) == 0) {
-                    target.x *= 1 + 0.2f * lay;
-                    target.z += 0.25f * lay;
-                }
                 reach(a, l, target);
             }
         }
 
         // its arms, scythes and claws closed round what it holds, and its head dipping to it as it feeds
         if (!dead && hold > 0.01f) {
-            if (lay > 0.01f && model.neck >= 0) {
-                Quaternionf dip = new Quaternionf().rotateX(lay * (0.4f + 0.2f * (float) Math.sin(feedT * Math.PI * 2 * 0.7 - 0.7)));
+            if (!upright && feed > 0.01f && model.neck >= 0) {
+                Quaternionf dip = new Quaternionf().rotateX(0.15f * feed + 0.45f * up);
                 Vector3f at = new Vector3f(p[model.neck]);
                 turnAbout(q, p, model.neck, at, dip);
                 for (int i : model.below[model.neck]) {
                     turnAbout(q, p, i, at, dip);
                 }
             }
-            Vector3f grip = toModel.transformPosition(lies.transform(new Vector3f((float) HarvestmanEntity.GRIP.x,
-                    (float) HarvestmanEntity.GRIP.y, (float) HarvestmanEntity.GRIP.z)).add(0, (float) HarvestmanEntity.MID, 0));
-            clutch(a, grip, upright ? 0 : HarvestmanEntity.HELD_TILT, lay, pulse);
+            // what it holds: the top of its head, the way down it and the way off its front
+            Vector3f top, down, out;
+            if (upright) {
+                top = toModel.transformPosition(lies.transform(new Vector3f((float) HarvestmanEntity.GRIP.x,
+                        (float) HarvestmanEntity.GRIP.y, (float) HarvestmanEntity.GRIP.z)).add(0, (float) HarvestmanEntity.MID, 0));
+                down = new Vector3f(0, -1, 0);
+                out = new Vector3f(0, 0, 1);
+            } else {
+                float c = (float) Math.cos(lean), sn = (float) Math.sin(lean);
+                top = new Vector3f(0, 0.02f + HarvestmanEntity.HELD_LEN * c, HarvestmanEntity.HELD_FEET + HarvestmanEntity.HELD_LEN * sn);
+                down = new Vector3f(0, -c, -sn);
+                out = new Vector3f(0, sn, -c);
+            }
+            clutch(a, top, down, out);
         }
 
         // its head to what it's listening to
@@ -354,12 +362,8 @@ final class SpiderIk {
         return new Quaternionf().fromAxisAngleRad(new Vector3f(spin).normalize(), angle);
     }
 
-    /**
-     * Closes its arms, scythes and claws round what it holds: hung from its grip (tipped so far), or laid on its back on
-     * the floor ahead of it (lay of the way there, to feed on, its hands pulling in turn as it does).
-     */
-    private void clutch(SpiderAnimator a, Vector3f grip, float tilt, float lay, float pulse) {
-        Quaternionf tipped = new Quaternionf().rotateX(tilt);
+    /** Closes its arms, scythes and claws round what it holds (the top of its head, the way down it and off its front). */
+    private void clutch(SpiderAnimator a, Vector3f top, Vector3f down, Vector3f out) {
         int[] all = {3, 2, 1, 0}, root = {1, 0}, end = {3, 2};
         for (int r = 0; r < 6; r++) {
             int[] bones = model.reaches[r];
@@ -368,26 +372,24 @@ final class SpiderIk {
             final int limb = r;
             Supplier<Vector3f> point = () -> reachTipOf(a, limb);
             if (kind == SpiderModel.ARM) {
-                float pull = lay * (float) Math.sin(feedT * Math.PI * 2 * 0.7 + (s > 0 ? 0 : Math.PI));
-                Vector3f t = between(grip, tipped, 0.24f * s, -0.28f, -0.12f, 0.22f * s, 0.3f + 0.07f * pull, 0.78f - 0.1f * Math.max(0, pull), lay);
+                Vector3f t = on(top, down, out, 0.3f, 0.24f * s, -0.02f);
                 reachChain(a, bones, all, point, point.get().lerp(t, hold));
             } else if (kind == SpiderModel.SCYTHE) {
-                // round its side first (the scythe's middle joint), then its point across in front (or down beside it)
-                Vector3f side = between(grip, tipped, 0.5f * s, -0.3f, 0, 0.85f * s, 0.7f, 1.0f, lay);
-                Vector3f across = between(grip, tipped, -0.1f * s, -0.45f, 0.16f, 0.55f * s, 0.03f, 1.5f, lay);
+                // round its side first (the scythe's middle joint), then its point across its chest
+                Vector3f side = on(top, down, out, 0.55f, 0.55f * s, 0.15f), across = on(top, down, out, 0.65f, -0.1f * s, 0.22f);
                 Supplier<Vector3f> mid = () -> new Vector3f(a.p[bones[2]]);
                 reachChain(a, bones, root, mid, mid.get().lerp(side, hold));
                 reachChain(a, bones, end, point, point.get().lerp(across, hold));
             } else {
-                Vector3f t = between(grip, tipped, 0.24f * s, -0.8f, 0, 0.28f * s, 0.28f, 1.2f, lay);
+                Vector3f t = on(top, down, out, 0.95f, 0.26f * s, 0.02f);
                 reachChain(a, bones, all, point, point.get().lerp(t, hold));
             }
         }
     }
 
-    /** A point on what it holds: hung from the grip (offset in its own tipped frame), or where it lies (model space). */
-    private static Vector3f between(Vector3f grip, Quaternionf tipped, float hx, float hy, float hz, float lx, float ly, float lz, float lay) {
-        return tipped.transform(new Vector3f(hx, hy, hz)).add(grip).lerp(new Vector3f(lx, ly, lz), lay);
+    /** A point on what it holds: so far down it from the top of its head, across it (model x) and off its front. */
+    private static Vector3f on(Vector3f top, Vector3f down, Vector3f out, float along, float across, float off) {
+        return new Vector3f(top).fma(along, down).add(across, 0, 0).fma(off, out);
     }
 
     /** Bends a chain (the joints named, in turn, a few times over) to bring a point on it to the target. */

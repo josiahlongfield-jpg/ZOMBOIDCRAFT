@@ -154,39 +154,36 @@ public class WalkerRenderer extends HumanoidMobRenderer<Zombie, WalkerRenderStat
         held(zombie, state, partialTick);
     }
 
-    /** Per held zombie (by id): how far it's drawn tipped and laid down, eased, and when that was. */
+    /** Per held zombie (by id): how far it's drawn tipped back, and when that was (to ease it upright once let go). */
     private static final java.util.Map<Integer, float[]> HELD = new java.util.HashMap<>();
 
     /**
-     * Carried off by the Harvestman: hung from its grip, its back to it, tipped so its feet trail under it; laid on its
-     * back on the floor ahead of it while it feeds (HarvestmanEntity places it, SpiderIk closes its arms round it).
+     * Carried off by the Harvestman: on its back, its feet trailing on the floor, tipped up to where it grips it by the
+     * shoulders, hauled up to its mouth as it feeds (HarvestmanEntity places it and SpiderIk says how far it's tipped).
      */
     private static void held(Zombie zombie, WalkerRenderState state, float partialTick) {
         HarvestmanEntity h = HarvestmanEntity.holderOf(zombie);
         float[] e = HELD.get(zombie.getId());
         if (h == null && e == null) {
-            state.heldTilt = state.heldLie = 0;
+            state.heldLean = 0;
             return;
         }
         if (e == null) {
-            e = new float[] {0, 0, state.ageInTicks};
+            e = new float[] {0, state.ageInTicks};
             HELD.put(zombie.getId(), e);
         }
-        float dt = Mth.clamp(state.ageInTicks - e[2], 0, 5);
-        e[2] = state.ageInTicks;
-        boolean feeding = h != null && h.pose() == HarvestmanEntity.FEED;
-        float k = 1 - (float) Math.exp(-dt * 0.3f), kl = 1 - (float) Math.exp(-dt * 0.12f);
-        e[0] = Mth.lerp(k, e[0], h != null && !feeding ? 1 : 0);
-        e[1] = Mth.lerp(kl, e[1], feeding ? 1 : 0);
-        if (h == null && e[0] < 0.01f && e[1] < 0.01f || zombie.isRemoved()) {
+        float dt = Mth.clamp(state.ageInTicks - e[1], 0, 5);
+        e[1] = state.ageInTicks;
+        e[0] = h != null ? h.heldLean : Mth.lerp(1 - (float) Math.exp(-dt * 0.3f), e[0], 0);
+        if (h == null && e[0] < 0.01f || zombie.isRemoved()) {
             HELD.remove(zombie.getId());
         }
-        state.heldTilt = e[0];
-        state.heldLie = e[1];
+        state.heldLean = e[0];
         if (h != null) {
             state.bodyRot = zombie.getYRot(partialTick);
         }
     }
+
     /**
      * Breaking in (Acts): beating on a door or a window, its body drawn square in front of it with its hands on it,
      * each blow coming down as the server lands it; or climbing through a window, drawn where the climb has it whatever
@@ -232,14 +229,10 @@ public class WalkerRenderer extends HumanoidMobRenderer<Zombie, WalkerRenderStat
     @Override
     protected void setupRotations(WalkerRenderState state, PoseStack poseStack, float bodyRot, float scale) {
         super.setupRotations(state, poseStack, bodyRot, scale);
-        if (state.heldTilt > 0f || state.heldLie > 0f) {
-            // held (its front is -z here): tipped head first about its head so its feet trail back, then laid back
-            // about its feet on to its back, its head toward what holds it
-            poseStack.translate(0f, 1.6f, 0f);
-            poseStack.rotateDegrees(Axis.XP, -(float) Math.toDegrees(HarvestmanEntity.HELD_TILT) * state.heldTilt);
-            poseStack.translate(0f, -1.6f, 0f);
-            poseStack.rotateDegrees(Axis.XP, 90f * state.heldLie);
-            poseStack.translate(0f, 0f, -0.13f * state.heldLie);
+        if (state.heldLean > 0f) {
+            // held: tipped back about its feet (on to its back at 90 degrees), its back kept off the floor
+            poseStack.rotateDegrees(Axis.XP, (float) Math.toDegrees(state.heldLean));
+            poseStack.translate(0f, 0f, -0.13f * (float) Math.sin(state.heldLean));
             return;
         }
         float lie = state.swimAmount;
