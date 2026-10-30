@@ -76,6 +76,7 @@ SIGNS = {
     "threshold": ("PROJECT THRESHOLD", (40, 42, 44), (220, 222, 216)),
     "records": ("RECORDS", (26, 40, 70), (236, 236, 228)),
     "plant": ("PLANT ROOM B3", (60, 60, 64), (236, 236, 228)),
+    "ridgeview": ("RIDGEVIEW LABORATORIES", (232, 230, 222), (30, 40, 60)),
     "evac": ("BREACH - EVACUATE", (180, 26, 30), (255, 255, 255)),
 }
 

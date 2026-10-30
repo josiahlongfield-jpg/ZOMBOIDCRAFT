@@ -15913,6 +15913,8 @@ final class CitySpecs extends CityBlocks.Specs {
         s("rl_sgn_records_1", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.2, 16, 16, 16);
         s("rl_sgn_plant_0", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.2, 16, 16, 16);
         s("rl_sgn_plant_1", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.2, 16, 16, 16);
+        s("rl_sgn_ridgeview_0", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.2, 16, 16, 16);
+        s("rl_sgn_ridgeview_1", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.2, 16, 16, 16);
         s("rl_sgn_evac_0", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.2, 16, 16, 16);
         s("rl_sgn_evac_1", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 15.2, 16, 16, 16);
     }
