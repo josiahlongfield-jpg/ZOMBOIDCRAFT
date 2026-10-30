@@ -377,6 +377,10 @@ def textures():
     T["ml_brick_b"] = lambda: precast(15012, "brick", stain=True)
     T["ml_skin"] = lambda: plastic(15013, (226, 222, 214))
     T["ml_dress"] = lambda: plastic(15014, (60, 90, 150))
+    T["ml_seat"] = lambda: plastic(15015, (38, 118, 112))
+    T["ml_laminate"] = lambda: plastic(15016, (218, 206, 182))
+    T["ml_terrazzo_rose"] = lambda: transit.terrazzo(15017, base=(196, 160, 148))
+    T["ml_terrazzo_slate"] = lambda: transit.terrazzo(15018, base=(118, 120, 126))
     for key in BRANDS:
         for i in range(4):
             T[f"ml_sign_{key}_{i}"] = lambda key=key, i=i: brand(key, i, False)
@@ -485,6 +489,27 @@ def blocks():
                 boxes += [[0, 15, 7.4, 16, 16, 8.6, chrome]]
             add(tex, boxes, "Banner", "WOOL", decor=True)
 
+    # ---- the floor's inlays: rose panels and slate bands set into the terrazzo
+    for name in ("ml_terrazzo_rose", "ml_terrazzo_slate"):
+        add(name, None, "Terrazzo", "STONE", rotate=None, tex={"up": name, "side": "floor_concrete", "down": "ml_soffit"})
+
+    # ---- the indoor fig in its planter, two blocks: the trunk and the low leaves, the crown
+    bark, leaf = "tree_maple_bark", "home_foliage"
+    add("ml_ficus_lo", [[7, 0, 7, 9, 16, 9, bark], [8, 9, 7.5, 12, 10, 8.5, bark], [4, 11, 6.5, 8, 12, 7.5, bark],
+                        [9, 9, 4, 14, 14, 10, leaf], [2, 10, 5, 7, 15, 11, leaf], [5, 13, 9, 11, 16, 14, leaf]],
+        "Fig Tree", "GRASS", rotate=None, decor=True)
+    add("ml_ficus_hi", [[7.2, 0, 7.2, 8.8, 6, 8.8, bark], [1, 0, 2, 9, 7, 10, leaf], [7, 1, 6, 15, 8, 14, leaf],
+                        [3, 5, 4, 13, 12, 12, leaf], [5, 10, 6, 11, 15, 11, leaf], [4, 2, 10, 9, 8, 15, leaf]],
+        "Fig Tree", "GRASS", rotate=None, decor=True)
+
+    # ---- the food court's table: a laminate top on its pedestal, four swivel seats on arms off the same frame
+    seat, lam = "ml_seat", "ml_laminate"
+    add("ml_table_unit", [[2, 11, 2, 14, 12, 14, lam], [7.2, 1, 7.2, 8.8, 11, 8.8, steel], [4, 0, 4, 12, 1, 12, steel],
+                          [1.5, 5.5, 7.4, 14.5, 6.5, 8.6, steel], [7.4, 5.5, 1.5, 8.6, 6.5, 14.5, steel],
+                          [-1, 6.5, 6, 3, 7.5, 10, seat], [13, 6.5, 6, 17, 7.5, 10, seat],
+                          [6, 6.5, -1, 10, 7.5, 3, seat], [6, 6.5, 13, 10, 7.5, 17, seat]],
+        "Table", "METAL", rotate=None, shape=[[0, 0, 0, 16, 12, 16]])
+
     # ---- the mannequin: the stand and the legs, the body and the head; one knocked flat
     skin, dress = "ml_skin", "ml_dress"
     add("ml_mannequin_lo", [[5, 0, 5, 11, 1, 11, chrome], [7.6, 1, 7.6, 8.4, 4, 8.4, chrome], [6, 4, 7, 7.8, 16, 9, skin], [8.2, 4, 7, 10, 16, 9, skin],
@@ -499,9 +524,9 @@ def blocks():
 def main():
     path = HERE / "blocks.json"
     data = json.loads(path.read_text())
-    kept = {k: v for k, v in data["blocks"].items() if not k.startswith("ml_")}
     made = blocks()
-    kept.update(made)
+    kept = {k: made[k] if k.startswith("ml_") else v for k, v in data["blocks"].items() if not k.startswith("ml_") or k in made}
+    kept.update({k: v for k, v in made.items() if k not in kept})
     data["blocks"] = kept
     path.write_text(json.dumps(data, indent=1) + "\n")
     print(f"{len(made)} mall blocks in {path}")

@@ -164,6 +164,25 @@ final class CityPark extends Grounds {
                 }
             }
         }
+        // the ends of the lake gone back to marsh the way park ponds do when nobody cuts them: the kerb
+        // grassed over, a reed bed of mud in the shallows, the lilies thick off it
+        for (int x = LX - LA - 10; x <= LX + LA + 10; x++) {
+            for (int z = LZ - LB - 10; z <= LZ + LB + 10; z++) {
+                double e = lakeE(x, z), c = Math.cos(Math.atan2((z - LZ) / (double) LB, (x - LX) / (double) LA));
+                if (onIsland(x, z) || e >= 1.07 || e < 0.82 || c > -0.55 && c < 0.7) {
+                    continue;
+                }
+                if (e >= 1) {
+                    set(x, 0, z, "minecraft:grass_block");
+                    reeds(x, z, 0.55);
+                } else if (e >= 0.93 && chance() < 0.7) {
+                    set(x, 0, z, "minecraft:mud");
+                    reeds(x, z, 0.85);
+                } else if (chance() < 0.18) {
+                    set(x, 1, z, "minecraft:lily_pad");
+                }
+            }
+        }
         // the benches along the shore walk facing the water, the lamps between
         for (int k = 0; k < 28; k++) {
             double a = k * Math.PI * 2 / 28;
@@ -178,6 +197,20 @@ final class CityPark extends Grounds {
                 String f = Math.abs(Math.cos(a)) > Math.abs(Math.sin(a)) ? (Math.cos(a) > 0 ? "west" : "east") : (Math.sin(a) > 0 ? "north" : "south");
                 set(x, 1, z, chance() < 0.9 ? "mu_bench[facing=" + f + "]" : "debris_chunk[facing=" + f + "]");
             }
+        }
+    }
+
+    /** Reeds on a shore cell: canes two or three high, else the long grass; bare mud the rest. */
+    private void reeds(int x, int z, double p) {
+        double r = chance();
+        if (r < p * 0.6) {
+            int h = 2 + rng.nextInt(2);
+            for (int y = 1; y <= h; y++) {
+                set(x, y, z, "minecraft:sugar_cane");
+            }
+        } else if (r < p) {
+            set(x, 1, z, "minecraft:tall_grass[half=lower]");
+            set(x, 2, z, "minecraft:tall_grass[half=upper]");
         }
     }
 
