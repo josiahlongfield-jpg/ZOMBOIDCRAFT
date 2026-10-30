@@ -46,6 +46,8 @@ public class NpcRenderer extends EntityRenderer<NpcEntity, NpcRenderer.State> {
     /** On her page: which way she faces (180 = at you; dragging turns her) and the pose you asked for (NpcWork action, 0 idle). */
     public static float portraitYaw = 180f;
     public static int portraitAction;
+    /** How lit she's drawn on her page (15 full; lower fades the companions either side on the selection screen). */
+    public static int portraitLight = 15;
     private static final java.util.Map<NpcEntity, NpcSkinAnimator> PORTRAITS = new java.util.WeakHashMap<>();
     private static final float INK = 0.0065f;
     /** How far the shell is pushed back from the eye, so its front sits behind the body. */
@@ -124,6 +126,7 @@ public class NpcRenderer extends EntityRenderer<NpcEntity, NpcRenderer.State> {
             // her page: standing square to you, turned only by your drag, never by what she's doing out in the world
             state.bodyYaw = portraitYaw;
             state.hurt = false;
+            if (portraitLight < 15) state.lightCoords = portraitLight << 4 | portraitLight << 20;
             in.headYaw = in.headPitch = 0;
         }
         Minecraft.getInstance().getItemModelResolver().updateForTopItem(state.held, entity.getMainHandItem(),
