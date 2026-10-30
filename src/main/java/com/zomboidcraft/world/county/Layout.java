@@ -316,6 +316,10 @@ final class Layout {
             return lot(new Plan.Spot(s.id(), s.kind(), PlaceType.LANDMARK, "power", 3800, s.z(), s.flags(), s.name()),
                     PlaceType.LANDMARK, "power", 3, 2, h);
         }
+        if (s.id().equals("foundry")) {
+            // Foundry Row: the Calder Steel works, six blocks along the street by five deep, the Row along its south side
+            return lot(s, PlaceType.LANDMARK, "foundry", 6, 5, h);
+        }
         if (s.id().equals("market")) {
             // the Old Market: the market house down the middle of three blocks by two, the lanes and rows either side
             return lot(s, PlaceType.LANDMARK, "market", 3, 2, h);

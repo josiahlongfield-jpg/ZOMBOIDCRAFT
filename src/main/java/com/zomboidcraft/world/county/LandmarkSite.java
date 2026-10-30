@@ -94,6 +94,10 @@ final class LandmarkSite extends Site {
             new University(lot(0, 0, w, d, 0), rng, w, d).build();
             return;
         }
+        if (variant("foundry")) {
+            new Foundry(lot(0, 0, w, d, 0), rng, w, d).build();
+            return;
+        }
         if (variant("civic")) {
             new CivicCentre(lot(0, 0, w, d, 0), rng, w, d).build();
             return;
