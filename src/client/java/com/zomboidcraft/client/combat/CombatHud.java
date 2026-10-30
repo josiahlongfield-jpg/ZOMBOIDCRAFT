@@ -1,6 +1,5 @@
 package com.zomboidcraft.client.combat;
 
-import com.zomboidcraft.ZomboidCraft;
 import com.zomboidcraft.combat.Attachments;
 import com.zomboidcraft.combat.GunType;
 import net.minecraft.client.DeltaTracker;
@@ -14,7 +13,7 @@ import net.minecraft.world.item.ItemStack;
 /**
  * The view through a scope you look into (the gun itself isn't drawn then: you're looking down the tube), and the lit
  * reticle of a sight the gun stays drawn behind, three times bigger through the magnifier. Each optic shows its own
- * (textures/gui/sight, drawn by tools/meshguns/reticles.py). The rounds left and the struggle prompt live in the
+ * (SightTextures: the pack's own where it came with one). The rounds left and the struggle prompt live in the
  * field-kit HUD (client/hud).
  */
 public final class CombatHud {
@@ -33,7 +32,7 @@ public final class CombatHud {
         if (key == null) {
             return;
         }
-        Identifier sight = ZomboidCraft.id("textures/gui/sight/" + key + ".png");
+        Identifier sight = SightTextures.get(key);
         int w = graphics.guiWidth(), h = graphics.guiHeight();
         if (!Attachments.scoped(gun)) {
             int size = (int) Math.round(Attachments.reticleSize(gun) * h);

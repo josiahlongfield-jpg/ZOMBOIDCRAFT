@@ -7,24 +7,37 @@ and a sight that comes with its own reticle always uses that one). Writes textur
 - a scope you look into: the whole eyepiece picture (dark rim, black all round, its reticle), stretched to the
   screen's height.
 
-The holo and the 4x prism scope are drawn to the reticles that came with the attachment pack (the Eotech folder's
-reticle.jpg ring and reticle3.jpg chevron), measured from those images on their 1000 px canvas with the aim point in
-the middle: the pack's own images never ship. The rest are the reticles their real kind of sight has.
+A sight whose pack came with a reticle uses that very image (Josiah 2026-10-30: "the scope sights that the attachment
+packs offer, not the ones you made"): the holo the Eotech folder's reticle.jpg ring, the 4x prism its reticle3.jpg
+chevron (the pack's spare, on its 1000 px canvas with the aim point in the middle), the mini red dot the RMR's lit dot
+(Prism_RMR2_Sight_Emissive.png). The packs' images must not sit in the public repo as they are, so these go out like
+the bought meshes: assets/zomboidcraft/sights/<key>.zsight, a PNG zlib-deflated and XORed with the cars' xorshift32
+stream seeded from "sight/<key>" (SightTextures.java undoes it). The rest came with no reticle and are drawn, as their
+real kind of sight has.
 
-    python3 tools/meshguns/reticles.py
+    python3 tools/meshguns/reticles.py [PACKS]
+
+PACKS: the folder holding the attachment packs (attach/Gun Attachments/..., vol1/...); without it the pack sights
+already written are kept.
 """
+import importlib.util
+import sys
+import zlib
 from pathlib import Path
 
 import numpy as np
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw
 
-OUT = Path(__file__).resolve().parents[2] / 'src/main/resources/assets/zomboidcraft/textures/gui/sight'
-FONT = '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf'
+ROOT = Path(__file__).resolve().parents[2]
+OUT = ROOT / 'src/main/resources/assets/zomboidcraft/textures/gui/sight'
+PACKED = ROOT / 'src/main/resources/assets/zomboidcraft/sights'
+_spec = importlib.util.spec_from_file_location('cars_pack', ROOT / 'tools' / 'cars' / 'pack.py')
+_cars_pack = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(_cars_pack)
+scramble = _cars_pack.scramble      # the bought meshes' stream
 SS = 4      # drawn this many times bigger, then shrunk: smooth edges
 
 RED = (235, 25, 20)
-ORANGE = (245, 90, 15)
-DEEP_RED = (200, 25, 22)
 ETCHED = (18, 18, 18)
 
 
@@ -61,10 +74,6 @@ class Canvas:
     def poly(self, pts, color):
         self.d.polygon([self.p(x, y) for x, y in pts], fill=color + (255,))
 
-    def text(self, s, x, y, size, color):
-        f = ImageFont.truetype(FONT, int(self.k(size)))
-        self.d.text(self.p(x, y), s, font=f, fill=color + (255,), anchor='lm')
-
     def done(self):
         return self.img.resize((self.side, self.side), Image.LANCZOS)
 
@@ -78,16 +87,6 @@ def cross(c, half, gap=0.0, reach=None, color=ETCHED):
 
 
 # ---------------------------------------------------------------- sights the gun stays drawn behind
-
-def holo():
-    # the pack's ring: 154-176 units, ticks out to 215 about 14 wide, a 16-unit dot, all one red
-    c = Canvas(256, 460)
-    c.ring(154, 176, RED)
-    for x0, y0, x1, y1 in ((-215, -7, -176, 7), (176, -7, 215, 7), (-7, -215, 7, -176), (-7, 176, 7, 215)):
-        c.rect(x0, y0, x1, y1, RED)
-    c.disc(16, RED)
-    return c.done()
-
 
 def dot():
     c = Canvas(64, 4)
@@ -145,23 +144,6 @@ def eyepiece(reticle, T=1024, span=1000):
     return img
 
 
-def acog(c):
-    # the pack's chevron (drawn a quarter bigger than its canvas, the stadia reaching the rim as in the real one):
-    # tip on the aim point, arms 30 out by 40 down, 20 thick; the stem 5 wide down to 862 with
-    # an orange 4 tick (35 each side) at 78, red ticks at 125 and 188 (the 6), a grey one at 266 and the foot at 362
-    c.poly([(0, 0), (30, 40), (21, 42), (0, 20), (-21, 42), (-30, 40)], ORANGE)
-    c.rect(-2.5, 42, 2.5, 110, ORANGE)
-    c.rect(-2.5, 110, 2.5, 190, DEEP_RED)
-    c.rect(-2.5, 190, 2.5, 362, (70, 70, 70))
-    c.rect(-35, 75, 35, 81, ORANGE)
-    c.text('4', 42, 82, 42, ORANGE)
-    c.rect(-28, 122, 28, 128, DEEP_RED)
-    c.rect(-25, 185, 25, 191, DEEP_RED)
-    c.text('6', 42, 188, 42, DEEP_RED)
-    c.rect(-13, 263, 13, 269, (70, 70, 70))
-    c.rect(-11, 359, 11, 365, (70, 70, 70))
-
-
 def duplex(c):
     cross(c, 1.6, reach=470)
     cross(c, 6.3, gap=120, reach=470)
@@ -203,9 +185,51 @@ def crossbow(c):
         c.rect(-L, y - 1.5, L, y + 1.5, ETCHED)
 
 
-HUD = {'holo': holo, 'red_dot': dot, 'mini_dot': dot, 'compact_dot': dot,
+# ---------------------------------------------------------------- the packs' own
+
+def lit(img):
+    """A reticle photographed on black: its colour, with the black made see-through."""
+    a = np.asarray(img.convert('RGB'), float) / 255
+    alpha = np.clip((a.max(2) - 0.06) / 0.94, 0, 1)
+    rgb = np.where(alpha[..., None] > 0, a / np.maximum(a.max(2, keepdims=True), 1e-6), 0)
+    out = np.dstack([rgb, alpha])
+    return Image.fromarray((out * 255).round().astype(np.uint8), 'RGBA')
+
+
+def pack_holo(packs):
+    # the ring on its 1000 px canvas, cut to the same 460-unit square the HUD size was set for
+    img = Image.open(packs / 'attach/Gun Attachments/Eotech Holo/reticle.jpg')
+    return lit(img.crop((270, 270, 730, 730))).resize((256, 256), Image.LANCZOS)
+
+
+def pack_prism(packs):
+    # the chevron's 1000 px canvas, a quarter bigger (800 of it across the picture), over the eyepiece
+    img = Image.open(packs / 'attach/Gun Attachments/Eotech Holo/reticle3.jpg')
+    reticle = lit(img.crop((100, 100, 900, 900))).resize((1024, 1024), Image.LANCZOS)
+    pic = eyepiece(lambda c: None)
+    pic.alpha_composite(reticle)
+    return pic
+
+
+def pack_mini_dot(packs):
+    # the RMR's lit dot, centred, filling half the square like the drawn dots
+    img = Image.open(packs / 'vol1/Prism RMR2/PBR/Prism_RMR2_Sight_Emissive.png')
+    return lit(img.crop((1872, 2041, 2152, 2321))).resize((64, 64), Image.LANCZOS)
+
+
+def write_packed(key, img):
+    import io
+    buf = io.BytesIO()
+    img.save(buf, 'PNG')
+    PACKED.mkdir(parents=True, exist_ok=True)
+    (PACKED / f'{key}.zsight').write_bytes(scramble(zlib.compress(buf.getvalue(), 9), f'sight/{key}'))
+    (OUT / f'{key}.png').unlink(missing_ok=True)
+
+
+FROM_PACKS = {'holo': pack_holo, 'scope_4x': pack_prism, 'mini_dot': pack_mini_dot}
+HUD = {'red_dot': dot, 'compact_dot': dot,
        'combat_scope': combat_scope, 'rifle_optic': rifle_optic, 'pistol_scope': pistol_scope}
-SCOPES = {'scope_4x': (acog, 800), 'hunting_scope': duplex, 'precision_scope': mil_dot, 'long_scope': long_range,
+SCOPES = {'hunting_scope': duplex, 'precision_scope': mil_dot, 'long_scope': long_range,
           'crossbow_scope': crossbow}
 
 
@@ -216,7 +240,12 @@ def main():
     for key, draw in SCOPES.items():
         draw, span = draw if isinstance(draw, tuple) else (draw, 1000)
         eyepiece(draw, span=span).save(OUT / f'{key}.png')
-    print(f'{len(HUD) + len(SCOPES)} sights in {OUT}')
+    if len(sys.argv) > 1:
+        packs = Path(sys.argv[1])
+        for key, make in FROM_PACKS.items():
+            write_packed(key, make(packs))
+        print(f'{len(FROM_PACKS)} pack sights in {PACKED}')
+    print(f'{len(HUD) + len(SCOPES)} drawn sights in {OUT}')
 
 
 if __name__ == '__main__':
