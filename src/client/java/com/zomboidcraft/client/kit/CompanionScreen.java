@@ -331,7 +331,26 @@ public class CompanionScreen extends Screen {
         KitDraw.heading(g, font, "What she wears", lx, ly, lw, false);
         ly += 11;
         boolean dresses = com.zomboidcraft.client.npc.NpcClient.dresses(npc);
-        for (NpcWardrobe.Piece p : NpcWardrobe.Piece.values()) {
+        List<String> looks = dresses ? List.of() : com.zomboidcraft.client.npc.NpcClient.looks(npc);
+        if (!dresses) {
+            // a model in whole outfits: pick one
+            String current = null;
+            for (String h : npc.hidden()) if (h.startsWith("look=")) current = h.substring(5);
+            if (current == null && !looks.isEmpty()) current = looks.get(0);
+            if (looks.isEmpty()) KitDraw.text(g, font, "She has just the one outfit.", lx, ly + 3, KitDraw.FAINT, 0.8f);
+            for (int i = 0; i < looks.size() && i < 7; i++) {
+                boolean worn = looks.get(i).equals(current), over = KitDraw.in(mx, my, lx, ly, lw, 13);
+                if (over) g.fill(lx, ly, lx + lw, ly + 13, 0x1AE8E4DA);
+                KitDraw.diamond(g, lx + 4, ly + 6, 3, worn ? KitDraw.GOOD : 0x4DE8E4DA);
+                KitDraw.text(g, font, cap(looks.get(i).replace('_', ' ')), lx + 11, ly + 3, worn ? KitDraw.BRIGHT : KitDraw.DIM, 0.85f);
+                if (!worn) KitDraw.capsRight(g, font, "Change into", lx + lw, ly + 3, over ? KitDraw.LINK : KitDraw.FAINT, 0.55f);
+                int code = NpcPanel.LOOK + i;
+                hot(lx, ly, lw, 13, () -> order(code), null, null);
+                ly += 14;
+            }
+            ly += 7 * 14 - Math.min(7, Math.max(1, looks.size())) * 14;
+        }
+        for (NpcWardrobe.Piece p : dresses ? NpcWardrobe.Piece.values() : new NpcWardrobe.Piece[0]) {
             boolean worn = !npc.hidden().contains(p.id);
             boolean over = KitDraw.in(mx, my, lx, ly, lw, 13);
             if (over) g.fill(lx, ly, lx + lw, ly + 13, 0x1AE8E4DA);
@@ -343,7 +362,6 @@ public class CompanionScreen extends Screen {
             hot(lx, ly, lw, 13, () -> order(code), null, null);
             ly += 14;
         }
-        if (!dresses) KitDraw.text(g, font, "This model changes outfit by command.", lx, ly, KitDraw.FAINT, 0.75f);
         ly += 4;
         KitDraw.heading(g, font, "Her weapon", lx, ly, lw, false);
         ly += 11;
@@ -376,7 +394,7 @@ public class CompanionScreen extends Screen {
             ItemStack st = inv.getItem(i);
             boolean over = KitDraw.in(mx, my, tx, ty, 18, 18);
             KitDraw.tile(g, font, st, tx, ty, 18, 18, over);
-            NpcWardrobe.Piece wear = st.isEmpty() ? null : NpcPanel.piece(st);
+            NpcWardrobe.Piece wear = st.isEmpty() || !com.zomboidcraft.client.npc.NpcClient.dresses(npc) ? null : NpcPanel.piece(st);
             if (wear != null) KitDraw.frame(g, tx, ty, 18, 18, KitDraw.LINK);
             int slot = i;
             if (!st.isEmpty()) {

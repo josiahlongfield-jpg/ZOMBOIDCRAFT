@@ -66,6 +66,12 @@ public final class NpcClient {
         return true;
     }
 
+    /** The whole outfits a model like that has to choose from (its .zsk @look list), or none. */
+    public static java.util.List<String> looks(NpcEntity npc) {
+        NpcSkin skin = NpcSkin.get(npc.model());
+        return skin == null ? java.util.List.of() : skin.looks;
+    }
+
     /** Whether her model dresses piece by piece (NpcWardrobe), rather than in whole outfits. */
     public static boolean dresses(NpcEntity npc) {
         NpcSkin skin = NpcSkin.get(npc.model());

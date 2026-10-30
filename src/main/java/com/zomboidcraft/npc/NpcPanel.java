@@ -52,6 +52,8 @@ public final class NpcPanel {
     /** How long she holds a pose you asked for. */
     private static final int POSE_TICKS = 20 * 20;
     // the wardrobe's own acts (NpcWardrobe.LIKE ... TAKE_OFF + piece) pass straight through
+    /** For a model in whole outfits (Npcs.dresses false): wear look n of its list. */
+    public static final int LOOK = 600;
 
     /** What you can do with things: hand her one from your inventory, take one from her bag, or her weapon. */
     public static final int GIVE = 0, TAKE = 1, TAKE_WEAPON = 2;
@@ -290,6 +292,14 @@ public final class NpcPanel {
             npc.bond.pose = POSES[code - POSE];
             npc.bond.poseTicks = POSE_TICKS;
             npc.getNavigation().stop();
+        } else if (code >= LOOK && code < LOOK + 64) {
+            List<String> looks = Npcs.dress(npc.model()).looks();
+            int i = code - LOOK;
+            if (Npcs.dresses(npc.model()) || i >= looks.size()) return;
+            java.util.Set<String> hidden = new java.util.HashSet<>(npc.hidden());
+            hidden.removeIf(h -> h.startsWith("look="));
+            hidden.add("look=" + looks.get(i));
+            npc.setHidden(hidden);
         } else if (code >= NpcWardrobe.LIKE) {
             npc.wardrobe.answer(npc, p, code);
         }
