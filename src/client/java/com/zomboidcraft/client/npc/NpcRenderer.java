@@ -129,6 +129,8 @@ public class NpcRenderer extends EntityRenderer<NpcEntity, NpcRenderer.State> {
             a.shots = entity.shots();
             a.headYaw = in.headYaw;
             a.headPitch = in.headPitch;
+            a.bodyYaw = state.bodyYaw;
+            a.blasted = entity.blasted();
             a.dead = entity.deathTime > 0 ? (entity.deathTime + partialTick) / 20f : 0;
             a.talking = entity.talking() > 0;
             a.id = entity.getId();
