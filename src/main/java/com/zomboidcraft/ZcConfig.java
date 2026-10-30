@@ -815,6 +815,12 @@ public final class ZcConfig {
         public boolean hideCrosshairWhenAiming = true;
         /** Your own arms, in your own skin, hold guns in first person. Client side. */
         public boolean firstPersonArms = true;
+        /**
+         * How skinned companions are drawn, to find what shows a shader pack through them: 0 front faces only (sheets get a
+         * back copy), 1 both sides kept (the old way), 2 like 0 but in small batches, 3 like 0 with no cut-out at all on
+         * closed meshes. Client side.
+         */
+        public int companionDraw = 0;
     }
 
     public static class Combat {
