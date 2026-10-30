@@ -495,11 +495,11 @@ final class AirportHangars extends Grounds {
                 }
             }
             pocketDoors(x0 + 4, GZ1, GDOOR, 3 + k);
-            // a pair of jets nose out, wingtips clear of the door pockets, chocked at the nose wheel,
+            // a pair of jets nose out and fit to fly, wingtips clear of the door pockets, chocked at the nose wheel,
             // the power cart parked behind the tail so the way out stays clear
             for (int j = 0; j < 2; j++) {
                 double jx = x0 + 11.5 + j * 17;
-                p.vehicle(jx, 1, GZ0 + 18.5, 0f, "=" + jets[(k + j) % 2], rng.nextLong());
+                p.vehicle(jx, 1, GZ0 + 18.5, 0f, "=" + jets[(k + j) % 2] + "@usable", rng.nextLong());
                 set((int) jx, 1, GZ0 + 23, "rp_chocks[facing=east]");
                 set((int) jx, 1, GZ0 + 3, "rp_gpu[facing=south]");
             }
@@ -558,7 +558,8 @@ final class AirportHangars extends Grounds {
                 }
             }
             if (i < 2) {
-                p.vehicle(cx + 0.5, 1, cz + 0.5 + 1.84, 180f, "=heli_hornbill", rng.nextLong());  // its rotor hub over the H
+                // its rotor hub over the H; the first pad's always fit to fly
+                p.vehicle(cx + 0.5, 1, cz + 0.5 + 1.84, 180f, "=heli_hornbill" + (i == 0 ? "@usable" : ""), rng.nextLong());
             }
         }
         // the bowser's stand by the ops building: the hose reels, the drums, the extinguisher trolleys
