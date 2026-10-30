@@ -35,9 +35,10 @@ final class NpcSkinDraw {
         if (hidden.contains("heels") && hidden.contains("boots")) {
             poseStack.translate(0, -skin.heel, 0);
         }
+        String look = skin.lookKey(hidden);
         for (int g = 0; g < skin.groups.length; g++) {
             NpcSkin.Group gr = skin.groups[g];
-            if (gr.level != level || !gr.piece.equals("body") && hidden.contains(gr.piece)) {
+            if (gr.level != level || !gr.piece.equals("body") && hidden.contains(gr.piece) || gr.looks != null && !gr.looks.contains(look)) {
                 continue;
             }
             Identifier tex = skin.texture(gr.texture, model);

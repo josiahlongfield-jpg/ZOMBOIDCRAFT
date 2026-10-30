@@ -7,7 +7,9 @@ import org.joml.Vector3f;
 /**
  * Plays a skinned companion's own clips (NpcSkin): breathing idle, walk, run, a rifle walk and aim, a shot's kick and her
  * death, picked from what she's doing each frame and cross-faded a quarter second. Walks and runs play as fast as she's
- * really moving. On top: her head turned toward what she looks at, her jaw moving while she talks, and blinks.
+ * really moving. A model with more clips plays those too: a step off and a stop, the rifle raised and lowered, firing
+ * on the move, holding the rifle at ease, and a fidget or a held pose now and then while she stands about. On top: her
+ * head turned toward what she looks at, her jaw moving while she talks, and blinks.
  * <p>
  * What she's busy with (NpcWork's actions: sleeping, sitting, kneeling, hammering...) plays its own clip when the model
  * has one ("sleep", "sit", "kneel"...), and her mood picks a mood idle ("sad", "nervous", "happy", "tired") when it has
@@ -52,6 +54,9 @@ final class NpcSkinAnimator {
     private String cur = "idle", prev;
     private float curT, prevT, fade = 1, last = -1, fireT = 99, jaw, nextBlink = 2, blinkAt = -10;
     private int shotsSeen = -1;
+    /** The one-off playing (and the steady clip it leads into), the last steady clip, and her idle fidget clock. */
+    private String once, onceFor, lastBase;
+    private float idleFor, nextFidget = 14;
     /** Her skinned vertices and normals, two per mesh group (sized to the model the first time she's drawn). */
     Object[] buffers = new Object[0];
 
@@ -64,7 +69,7 @@ final class NpcSkinAnimator {
         }
         shotsSeen = in.shots;
         fireT += dt;
-        String want = choose(model, in);
+        String want = choose(model, in, dt);
         // sleeping before she has a sleep clip: lie in her fall's last pose, dropped straight in
         boolean lying = in.dead <= 0 && in.action == SLEEP && "die".equals(want);
         if (lying && !"die".equals(cur)) {
@@ -93,11 +98,11 @@ final class NpcSkinAnimator {
         int count = a == null ? 0 : a.bones();
         float[] pos = new float[count * 3], turn = new float[count * 4];
         if (a != null) {
-            sample(a, time(a, curT, !cur.equals("die")), pos, turn);
+            sample(a, time(a, curT, loops(cur)), pos, turn);
             NpcSkin.Clip b = prev == null ? null : model.clips.get(prev);
             if (b != null && fade < 1 && b.bones() == count) {
                 float[] pp = new float[count * 3], pt = new float[count * 4];
-                sample(b, time(b, prevT, !prev.equals("die")), pp, pt);
+                sample(b, time(b, prevT, loops(prev)), pp, pt);
                 float k = fade * fade * (3 - 2 * fade);
                 blend(pp, pt, pos, turn, k);
                 System.arraycopy(pp, 0, pos, 0, pos.length);
@@ -154,7 +159,70 @@ final class NpcSkinAnimator {
         };
     }
 
-    private String choose(NpcSkin model, Input in) {
+    /**
+     * What she plays: her steady clip (steady()), or a one-off that leads into it when the model has one: starting and
+     * stopping a walk, raising and lowering the rifle, and now and then a fidget or a held pose while she stands about.
+     * A one-off ends early if what she's doing changes again.
+     */
+    private String choose(NpcSkin model, Input in, float dt) {
+        String base = steady(model, in);
+        String was = lastBase;
+        lastBase = base;
+        if (once != null) {
+            if (base.equals(onceFor) && curT < onceLength(model, once) - FADE) {
+                return once;
+            }
+            once = null;
+        }
+        boolean idle = !moves(base) && !aims(base) && !base.equals("die");
+        idleFor = idle && base.equals(was) ? idleFor + dt : 0;
+        String lead = null;
+        if (was != null && !base.equals(was)) {
+            if (base.equals("walk") && !moves(was) && !aims(was)) {
+                lead = "walk_start";
+            } else if (idle && was.equals("walk")) {
+                lead = "walk_stop";
+            } else if (idle && (was.equals("rifle_walk") || was.equals("fire_walk"))) {
+                lead = "rifle_stop";
+            } else if (base.equals("aim") && !aims(was)) {
+                lead = "aim_up";
+            } else if (idle && aims(was)) {
+                lead = "aim_down";
+            }
+        } else if (idle && idleFor > nextFidget) {
+            idleFor = 0;
+            nextFidget = 14 + (float) Math.random() * 20;
+            lead = Math.random() < 0.6 ? "fidget" : "pose";
+        }
+        if (lead != null && model.clips.containsKey(lead)) {
+            once = lead;
+            onceFor = base;
+            return lead;
+        }
+        return base;
+    }
+
+    private static boolean moves(String clip) {
+        return clip.equals("walk") || clip.equals("run") || clip.endsWith("_walk");
+    }
+
+    private static boolean aims(String clip) {
+        return clip.equals("aim") || clip.equals("fire") || clip.equals("fire_walk");
+    }
+
+    /** How long a one-off plays: its clip, or a few seconds for a pose (a single frame) held. */
+    private static float onceLength(NpcSkin model, String clip) {
+        return clip.equals("pose") ? 6 : seconds(model, clip);
+    }
+
+    private static boolean loops(String clip) {
+        return switch (clip) {
+            case "die", "walk_start", "walk_stop", "rifle_stop", "aim_up", "aim_down", "fidget", "pose" -> false;
+            default -> true;
+        };
+    }
+
+    private String steady(NpcSkin model, Input in) {
         String c;
         String act = in.dead <= 0 && in.speed <= MOVING && in.aim <= 0.5f ? actionClip(in.action) : null;
         if (in.dead > 0) {
@@ -166,9 +234,12 @@ final class NpcSkinAnimator {
         } else {
             boolean moving = in.speed > MOVING;
             if (in.aim > 0.5f) {
-                c = moving ? "rifle_walk" : fireT < seconds(model, "fire") ? "fire" : "aim";
+                c = moving ? (model.clips.containsKey("fire_walk") ? "fire_walk" : "rifle_walk")
+                        : fireT < seconds(model, "fire") ? "fire" : "aim";
             } else if (moving) {
                 c = in.speed > RUN_FROM ? "run" : in.gun ? "rifle_walk" : "walk";
+            } else if (in.gun && model.clips.containsKey("rifle_idle")) {
+                c = "rifle_idle";
             } else {
                 // a mood idle when she has the clip for it
                 float fear = in.mood(0), morale = in.mood(1), tired = in.mood(2);
@@ -185,7 +256,7 @@ final class NpcSkinAnimator {
             return 1;
         }
         return switch (clip) {
-            case "walk", "rifle_walk" -> clamp(speed / WALK_SPEED, 0.7f, 1.6f);
+            case "walk", "rifle_walk", "fire_walk" -> clamp(speed / WALK_SPEED, 0.7f, 1.6f);
             case "run" -> clamp(speed / RUN_SPEED, 0.75f, 1.4f);
             default -> 1;
         };
