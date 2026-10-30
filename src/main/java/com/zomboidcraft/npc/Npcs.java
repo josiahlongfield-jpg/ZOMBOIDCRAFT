@@ -286,6 +286,10 @@ public final class Npcs {
             Vec3 p = at.add(side.scale(-off));
             float face = player.getYRot() + 180f;
             npc.setModel(model, looks.get(i));
+            if (skinned && !dresses(model)) {
+                // a model's extra clothes start off; she wears what Mixamo saw ("body") until you dress her
+                npc.setHidden(dress(model).pieces());
+            }
             npc.snapTo(p.x, p.y, p.z, face, 0f);
             npc.setYHeadRot(face);
             npc.setYBodyRot(face);
@@ -327,6 +331,11 @@ public final class Npcs {
             return 0;
         }
         java.util.Set<String> hidden = new java.util.HashSet<>(npc.hidden());
+        if (on && piece.contains(".")) {
+            // pieces sharing a slot ("top.jacket", "top.hoodie") are worn one at a time
+            String slot = piece.substring(0, piece.indexOf('.') + 1);
+            pieces(npc).stream().filter(o -> o.startsWith(slot) && !o.equals(piece)).forEach(hidden::add);
+        }
         if (on ? !hidden.remove(piece) : !hidden.add(piece)) {
             ctx.getSource().sendSuccess(() -> Component.literal(on ? "She already has her " + piece + " on" : "Her " + piece + " is already off"), false);
             return 0;
