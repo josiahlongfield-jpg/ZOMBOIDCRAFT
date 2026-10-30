@@ -25,11 +25,12 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  */
 public class FerryBellBlock extends Block {
     public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
+    // a hair under a block tall, so rain still lands on the quay round it (see tools/city/heightmap_tags.py)
     private static final Map<Direction, VoxelShape> SHAPES = Map.of(
-            Direction.NORTH, Shapes.or(Block.box(7, 0, 12, 9, 16, 14), Block.box(5, 6, 5, 11, 14, 11)),
-            Direction.SOUTH, Shapes.or(Block.box(7, 0, 2, 9, 16, 4), Block.box(5, 6, 5, 11, 14, 11)),
-            Direction.WEST, Shapes.or(Block.box(12, 0, 7, 14, 16, 9), Block.box(5, 6, 5, 11, 14, 11)),
-            Direction.EAST, Shapes.or(Block.box(2, 0, 7, 4, 16, 9), Block.box(5, 6, 5, 11, 14, 11)));
+            Direction.NORTH, Shapes.or(Block.box(7, 0, 12, 9, 15, 14), Block.box(5, 6, 5, 11, 14, 11)),
+            Direction.SOUTH, Shapes.or(Block.box(7, 0, 2, 9, 15, 4), Block.box(5, 6, 5, 11, 14, 11)),
+            Direction.WEST, Shapes.or(Block.box(12, 0, 7, 14, 15, 9), Block.box(5, 6, 5, 11, 14, 11)),
+            Direction.EAST, Shapes.or(Block.box(2, 0, 7, 4, 15, 9), Block.box(5, 6, 5, 11, 14, 11)));
 
     public FerryBellBlock(Properties properties) {
         super(properties);
