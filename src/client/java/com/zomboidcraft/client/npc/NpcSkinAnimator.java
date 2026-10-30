@@ -52,7 +52,8 @@ final class NpcSkinAnimator {
     private String cur = "idle", prev;
     private float curT, prevT, fade = 1, last = -1, fireT = 99, jaw, nextBlink = 2, blinkAt = -10;
     private int shotsSeen = -1;
-    final Object[] buffers = new Object[64];
+    /** Her skinned vertices and normals, two per mesh group (sized to the model the first time she's drawn). */
+    Object[] buffers = new Object[0];
 
     /** Poses her for this frame into `skin` (one matrix per bone). */
     void pose(NpcSkin model, Input in, Matrix4f[] skin) {

@@ -141,6 +141,9 @@ public class NpcRenderer extends EntityRenderer<NpcEntity, NpcRenderer.State> {
             }
             anim.pose(skin, a, state.skinned);
             state.hidden = entity.hidden();
+            if (anim.buffers.length != skin.groups.length * 2) {
+                anim.buffers = new Object[skin.groups.length * 2];
+            }
             state.buffers = anim.buffers;
         }
     }
