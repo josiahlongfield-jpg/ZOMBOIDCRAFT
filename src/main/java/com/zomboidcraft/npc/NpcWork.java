@@ -82,7 +82,7 @@ public final class NpcWork {
 
     /** What her body's doing, for the client's clips and poses (synced through NpcEntity.ACTION). */
     public static final int NONE = 0, SLEEP = 1, SIT = 2, KNEEL = 3, HAMMER = 4, DIG = 5, SEARCH = 6, LOOKOUT = 7, COOKING = 8,
-            HUG = 9, KISS = 10;
+            HUG = 9, KISS = 10, SEARCH_LOW = 11;
 
     /** How far from home her jobs reach, where the stores are, and where a scavenger goes looking. */
     static final int HOME_RADIUS = 20, STORE_RADIUS = 12, SCAVENGE_MIN = 20, SCAVENGE_MAX = 64;
@@ -833,7 +833,8 @@ public final class NpcWork {
             }
             npc.getNavigation().stop();
             npc.getLookControl().setLookAt(at.x, at.y + 0.5, at.z);
-            w.action = task.action;
+            // a container down at her feet she kneels to; one higher up she searches standing
+            w.action = task.action == SEARCH && task.at.getY() <= npc.getBlockY() ? SEARCH_LOW : task.action;
             if (task.action == LOOKOUT && npc.tickCount % 60 == 0) {
                 // a guard looks out, away from home
                 Vec3 out = at.add(at.subtract(Vec3.atCenterOf(w.home)).normalize().scale(6));
