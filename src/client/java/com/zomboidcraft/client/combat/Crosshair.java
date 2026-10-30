@@ -19,6 +19,10 @@ public final class Crosshair {
             Minecraft minecraft = Minecraft.getInstance();
             ZcConfig.Look look = ZcConfig.get().look;
             LocalPlayer player = minecraft.player;
+            if (player != null && com.zomboidcraft.world.cars.Turret.isGunner(player)) {
+                spreadReticle(graphics, player);     // at a mounted gun: its own ring, whatever's in hand
+                return;
+            }
             if (com.zomboidcraft.client.camera.ShoulderCam.active()) {
                 spreadReticle(graphics, player);
                 return;
@@ -72,7 +76,17 @@ public final class Crosshair {
         net.minecraft.world.item.ItemStack held = player == null ? net.minecraft.world.item.ItemStack.EMPTY : player.getMainHandItem();
         GunType type = GunType.of(held);
         boolean aiming = type != null && player.isUsingItem();
-        if (type != null) {
+        com.zomboidcraft.world.cars.CarModels.Model mounted = player != null && player.getVehicle() instanceof com.zomboidcraft.world.cars.CarProp car
+                && com.zomboidcraft.world.cars.Turret.isGunner(player) ? com.zomboidcraft.world.cars.CarModels.get(car.model()) : null;
+        if (mounted != null && mounted.turret != null) {
+            // the mounted gun's cone, as the server shoots it: tighter zoomed in, where the view narrows too
+            boolean zoomed = mc.options.keyUse.isDown() && mc.gui.screen() == null;
+            double spread = com.zomboidcraft.world.cars.Turret.spread(zoomed, ZcConfig.get().minigun);
+            double fov = mc.options.fov().get() * (zoomed ? mounted.turret.zoom : 1.0);
+            float px = (float) (Math.tan(Math.toRadians(spread)) / Math.tan(Math.toRadians(fov / 2))
+                    * mc.getWindow().getHeight() / 2);
+            target = Math.max(target, px);
+        } else if (type != null) {
             ZcConfig.GunStats stats = type.stats();
             // the same cone the server shoots inside (Guns.fire), bloom and all, and buckshot's fan round it
             double spread = com.zomboidcraft.combat.Guns.spread(player, held, type, aiming, CombatClient.bloom(type))

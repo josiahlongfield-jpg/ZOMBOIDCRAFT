@@ -1389,8 +1389,8 @@ public final class ZcConfig {
     public static class MinigunStats extends GunStats {
         {
             damage = 12.0;
-            hipSpread = 1.2;
-            aimSpread = 1.2;
+            hipSpread = 0.9;    // zoomed out; aimSpread zoomed in (right-click)
+            aimSpread = 0.35;
             shotNoise = 140.0;
             range = 160.0;
             autoRpm = 945.0;
@@ -1533,7 +1533,7 @@ public final class ZcConfig {
      * are left alone).
      */
     public int defaultsVersion = 0;
-    private static final int DEFAULTS = 15;
+    private static final int DEFAULTS = 16;
 
     private static void upgrade(ZcConfig c) {
         if (c.defaultsVersion < 1) {
@@ -1705,6 +1705,15 @@ public final class ZcConfig {
             // 2026-10-29 (Josiah): three cars, OTTO's included, on both lines
             c.trains.railCars = Math.min(c.trains.railCars, 3);
             c.trains.subwayCars = Math.min(c.trains.subwayCars, 3);
+        }
+        if (c.defaultsVersion < 16) {
+            // 2026-10-30 (Josiah): the Warthog minigun's ring a little tighter, much tighter zoomed in
+            if (c.minigun.hipSpread == 1.2) {
+                c.minigun.hipSpread = 0.9;
+            }
+            if (c.minigun.aimSpread == 1.2) {
+                c.minigun.aimSpread = 0.35;
+            }
         }
         c.defaultsVersion = DEFAULTS;
     }

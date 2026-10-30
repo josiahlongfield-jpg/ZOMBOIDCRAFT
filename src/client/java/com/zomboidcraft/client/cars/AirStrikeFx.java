@@ -122,7 +122,9 @@ final class AirStrikeFx {
             }
             Vec3 dir = line.scale(1 / length);
             double t = (now - s.born) / 1e9, head = Math.min(length, t * SPEED), tail = Math.max(0, head - LENGTH);
-            if (t < 0.06) {
+            // (not at a gun right by the camera: the Warthog's minigun draws its own flash, and up close the
+            // flat square shows under a shader pack)
+            if (t < 0.06 && s.from.distanceToSqr(cam.pos) > 12 * 12) {
                 glow.spot(s.from, 1.4, glow.shade(FLASH, 1f));
             }
             if (head >= length && t * SPEED - length < 0.15 * SPEED) {

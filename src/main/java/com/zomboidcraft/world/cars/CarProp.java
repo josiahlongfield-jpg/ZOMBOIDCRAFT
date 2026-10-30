@@ -92,6 +92,8 @@ public class CarProp extends Entity {
     /** Server: the gunner holds the trigger; rounds due by the rate; ticks till the belt's loaded; rounds fired. */
     boolean turretTrigger;
     int beltBusy, turretShots, fireTicks;
+    /** The gunner is zoomed in (right-click held): the gun's tighter aimed spread. */
+    boolean turretZoom;
     /** How far the gun's barrels have turned (radians), last tick and this one (client side). */
     public float barrels, barrelsO;
 

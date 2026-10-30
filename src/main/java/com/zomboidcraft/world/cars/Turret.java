@@ -65,6 +65,15 @@ public final class Turret {
         return new float[] {x * c + z * s + t.yaw[0], p[1], -x * s + z * c + t.yaw[2]};
     }
 
+    /** The gun's spread (degrees, the cone's half-angle): tighter while the gunner's zoomed in. The client's ring uses it too. */
+    public static double spread(boolean zoomed, ZcConfig.MinigunStats stats) {
+        return zoomed ? stats.aimSpread : stats.hipSpread;
+    }
+
+    static double spread(CarProp car, ZcConfig.MinigunStats stats) {
+        return spread(car.turretZoom && gunner(car) != null, stats);
+    }
+
     /** The gunner's rider, or null. */
     public static Player gunner(CarProp car) {
         CarModels.Model m = CarModels.get(car.model());
@@ -139,6 +148,7 @@ public final class Turret {
         Player gunner = gunner(car);
         if (!(gunner instanceof ServerPlayer shooter) || shooter.isSpectator()) {
             car.turretTrigger = false;
+            car.turretZoom = false;
         }
         if (car.beltBusy > 0) {
             car.beltBusy--;
@@ -206,7 +216,7 @@ public final class Turret {
         Vec3 far = eye.add(look.scale(stats.range));
         HitResult seen = level.clip(new ClipContext(eye.add(look.scale(2.5)), far, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, gunner));
         Vec3 aim = (seen.getType() == HitResult.Type.MISS ? far : seen.getLocation()).subtract(muzzle).normalize();
-        double spread = Math.toRadians(stats.hipSpread) * Math.sqrt(gunner.getRandom().nextDouble());
+        double spread = Math.toRadians(spread(car, stats)) * Math.sqrt(gunner.getRandom().nextDouble());
         double a = gunner.getRandom().nextDouble() * Math.PI * 2;
         Vec3 right = aim.cross(new Vec3(0, 1, 0));
         right = right.lengthSqr() < 1e-6 ? new Vec3(1, 0, 0) : right.normalize();

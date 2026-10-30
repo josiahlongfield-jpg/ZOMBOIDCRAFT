@@ -95,6 +95,39 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         }
     }
 
+    /** Flash timings: each burst's flash lasts this long (ns) of the burst's spacing, and flickers in steps of FLICKER. */
+    private static final long BURST = 250_000_000L, LIT = 180_000_000L, FLICKER = 22_000_000L;
+
+    /**
+     * The minigun's muzzle flash while it fires: a hot core at the barrels' ends and a flare out ahead of them,
+     * flickering through each burst (four shots a quarter second apart, like the recording) and dark between bursts.
+     */
+    private static void muzzleFlash(CarModels.Turret t, CarRenderState state, float[] eye, boolean shaders,
+                                    PoseStack.Pose pose, VertexConsumer out) {
+        long now = System.nanoTime();
+        if (now % BURST > LIT) {
+            return;
+        }
+        long step = now / FLICKER;
+        float jitter = (float) ((step * 2654435761L >>> 8) & 0xFF) / 255f;
+        if (jitter < 0.18f) {
+            return;     // a gap between shots
+        }
+        double rest = Math.toRadians(t.rest);
+        float fy = (float) Math.sin(rest), fz = (float) Math.cos(rest);
+        float[] base = t.muzzle;
+        for (int i = 0; i < 2; i++) {
+            float ahead = i == 0 ? 0.05f : 0.32f + 0.12f * jitter;
+            float[] p = com.zomboidcraft.world.cars.Turret.move(t, new float[] {base[0], base[1] + fy * ahead, base[2] + fz * ahead},
+                    state.turretYaw, state.turretTilt);
+            float half = i == 0 ? 0.13f + 0.06f * jitter : 0.2f + 0.14f * jitter;
+            int colour = i == 0 ? CarLights.shade(new float[] {1f, 0.93f, 0.7f}, 1f, false)
+                    : CarLights.shade(new float[] {1f, 0.62f, 0.22f}, shaders ? 1f : 0.8f, false);
+            com.zomboidcraft.client.interact.Interactables.disc(p[0], p[1], p[2], eye[0] - p[0], eye[1] - p[1], eye[2] - p[2],
+                    half, colour, pose, out);
+        }
+    }
+
     /** The gunner's own arms in first person: shoulders under their eyes (turned with the post), hands on the gun's grips. */
     private static void gunnerArms(CarModels.Model m, CarRenderState state, PoseStack pose, SubmitNodeCollector out, int light) {
         CarModels.Turret t = m.turret;
@@ -289,6 +322,11 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         }
         if (state.arms != CarHands.NONE && state.driverEye != null && model != null && model.steering != null) {
             CarArms.draw(poseStack, collector, light, state.driverEye, model.steering, state.wheelTurn, state.arms);
+        }
+        if (state.turretFiring && model != null && model.turret != null && state.lod == 0) {
+            boolean shaders = CarLights.shaderPackOn();
+            collector.submitCustomGeometry(poseStack, com.zomboidcraft.client.interact.Interactables.type(shaders),
+                    (pose, out) -> muzzleFlash(model.turret, state, eye, shaders, pose, out));
         }
         if (state.gunnerArms && model != null && model.turret != null && model.seats != null && model.gunner >= 0) {
             gunnerArms(model, state, poseStack, collector, light);
