@@ -123,10 +123,30 @@ public class HarvestmanEntity extends Mob {
     /** Where what it holds has its head: under the point of its body, gripped by the beard (from its centre, its frame). */
     public static final Vec3 GRIP = new Vec3(0, -0.64, 0.74);
     /**
-     * A carried body hangs from the grip tipped this far (radians), its feet trailing back under it; to feed, it's laid on
-     * its back on the floor this far ahead of its centre, its head toward it. SpiderIk and WalkerRenderer draw to these.
+     * A body it carries off is dragged along the floor on its back by the shoulders, feet trailing under it: its feet
+     * this far ahead of its centre (behind, so negative), the top of its head this far from them, tipped this far from
+     * upright (radians). To feed it hauls it up to its mouth (FEED_UP) and lets it down again (FEED_LOW), over and over
+     * (feedLean). SpiderIk poses its arms to these and sets heldLean; WalkerRenderer draws the body tipped by it.
      */
-    public static final float HELD_TILT = 0.35f, LAID_AHEAD = 2.35f;
+    public static final float HELD_FEET = -0.65f, HELD_LEN = 1.6f, DRAG_LEAN = 1.22f, FEED_LOW = 1.12f, FEED_UP = 0.45f;
+    /** Client only: how far what it holds is tipped now (SpiderIk, for WalkerRenderer). */
+    public float heldLean;
+
+    /** How far what it feeds on is tipped, so many seconds into feeding: hauled up, held at its mouth, let down. */
+    public static float feedLean(float t) {
+        float p = (t / 4.5f) % 1f;
+        if (p < 0.45f) {
+            return Mth.lerp(smooth(p / 0.45f), FEED_LOW, FEED_UP);
+        }
+        if (p < 0.75f) {
+            return FEED_UP + 0.04f * (float) Math.sin((p - 0.45f) / 0.3f * Math.PI * 4);
+        }
+        return Mth.lerp(smooth((p - 0.75f) / 0.25f), FEED_UP, FEED_LOW);
+    }
+
+    private static float smooth(float x) {
+        return x * x * (3 - 2 * x);
+    }
 
     /** Client only: the turn last tick and now, eased toward the synced one; and the legs it draws (HarvestmanRig). */
     public final Quaternionf turn = new Quaternionf(), turnO = new Quaternionf();
@@ -1264,17 +1284,12 @@ public class HarvestmanEntity extends Mob {
         }
         holdTicks++;
         if (!(held instanceof Player)) {
-            // a zombie is carried hung from its grip by the head, its back to it (drawn tipped so its feet trail); to
-            // feed, it's laid on its back on the floor ahead (drawn lying, its head toward it)
-            if (feeding()) {
-                Vec3 ahead = centre().add(fwd.scale(LAID_AHEAD));
-                BlockHitResult floor = cast(ahead, ahead.subtract(0, STAND + 2, 0));
-                held.setPos(floor.getType() != HitResult.Type.MISS ? floor.getLocation() : ahead.subtract(0, lift(), 0));
-            } else {
-                Vec3 g = gripPoint();
-                held.setPos(g.x, g.y - 1.6, g.z);
-            }
-            float yaw = (float) Math.toDegrees(Math.atan2(-fwd.x, fwd.z));
+            // a zombie is dragged along the floor on its back, its feet trailing under it and its head toward its front
+            // (drawn tipped up to its hands, WalkerRenderer); fed on where it lies, hauled up to its mouth
+            Vec3 feet = centre().add(fwd.scale(HELD_FEET));
+            BlockHitResult floor = cast(feet, feet.subtract(0, STAND + 2, 0));
+            held.setPos(floor.getType() != HitResult.Type.MISS ? floor.getLocation() : feet.subtract(0, lift(), 0));
+            float yaw = (float) Math.toDegrees(Math.atan2(-fwd.x, fwd.z)) + 180;
             held.setYRot(yaw);
             held.setYHeadRot(yaw);
             if (held instanceof LivingEntity le) {
