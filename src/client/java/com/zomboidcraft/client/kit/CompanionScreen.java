@@ -184,31 +184,23 @@ public class CompanionScreen extends Screen {
 
     /** Her, standing in the middle as you are on the Character page. */
     private void figure(GuiGraphicsExtractor g, int x, int y, int mx, int my) {
-        g.fill(x + 236, y + 312, x + 380, y + 318, 0x40000000);
-        InventoryScreen.extractEntityInInventoryFollowsMouse(g, x + 222, y + 50, x + 394, y + 322, 108, 0.0625f, mx, my, npc);
+        // standing in her idle, head to foot down most of the page
+        g.fill(x + 250, y + 328, x + 366, y + 333, 0x40000000);
+        com.zomboidcraft.client.npc.NpcRenderer.portrait = true;
+        try {
+            InventoryScreen.extractEntityInInventoryFollowsMouse(g, x + 224, y + 24, x + 396, y + H - 4, 160, 0.0625f, mx, my, npc);
+        } finally {
+            com.zomboidcraft.client.npc.NpcRenderer.portrait = false;
+        }
     }
 
     // ------------------------------------------------------------------ her page
 
     private void her(GuiGraphicsExtractor g, @Nullable NpcPanel.State s, int x, int y, int mx, int my) {
-        // across the top: health, job, shift, who she's with
-        int sx = x + 160, sy = y + 30;
-        String[][] stats = {
-                {"Health", s == null ? "…" : Math.round(100 * s.health() / Math.max(1, s.maxHealth())) + "%"},
-                {"Job", s == null ? "…" : NpcWork.Job.values()[s.job()].label},
-                {"Shift", s == null ? "…" : s.night() ? "Night" : "Day"},
-                {"Now", s == null ? "…" : s.following() ? "Following" : "Waiting"},
-        };
-        for (String[] st : stats) {
-            KitDraw.caps(g, font, st[0], sx, sy, KitDraw.DIM, 0.55f);
-            KitDraw.caps(g, font, st[1], sx, sy + 7, KitDraw.BRIGHT, 0.95f);
-            g.fill(sx, sy + 17, sx + 66, sy + 18, KitDraw.TEXT);
-            sx += 76;
-        }
-        figure(g, x, y + 10, mx, my);
+        figure(g, x, y, mx, my);
 
         // the left: everything you can ask
-        int lx = x + 37, lw = 185, ly = y + 52;
+        int lx = x + 37, lw = 185, ly = y + 34;
         KitDraw.heading(g, font, "Orders", lx, ly, lw, false);
         ly += 10;
         boolean following = s != null && s.following();
@@ -245,7 +237,7 @@ public class CompanionScreen extends Screen {
         chips(g, lx, ly, lw, mx, my, NpcPanel.POSE_NAMES, pc, -1);
 
         // the right: how she is
-        int rx = x + 400, rw = 179, ry = y + 52;
+        int rx = x + 400, rw = 179, ry = y + 34;
         KitDraw.heading(g, font, "How she is", rx, ry, rw, true);
         ry += 11;
         if (s == null) {
@@ -253,6 +245,8 @@ public class CompanionScreen extends Screen {
             return;
         }
         KitDraw.caps(g, font, s.mood(), rx, ry, KitDraw.LINK, 1.1f);
+        KitDraw.capsRight(g, font, "Health " + Math.round(100 * s.health() / Math.max(1, s.maxHealth())) + "%", rx + rw, ry + 2,
+                s.health() < s.maxHealth() * 0.4f ? KitDraw.LINK : KitDraw.BRIGHT, 0.7f);
         ry += 13;
         int half = (rw - 8) / 2;
         ry = meter(g, "Trust", s.trust(), rx, ry, half, false);

@@ -38,6 +38,12 @@ import org.joml.Vector3f;
  */
 public class NpcRenderer extends EntityRenderer<NpcEntity, NpcRenderer.State> {
     /** How far the outline shell stands off the body, in blocks. */
+    /**
+     * Set while her page (kit/CompanionScreen) draws her: she stands in her idle, whatever she's doing in the world
+     * (Josiah 2026-10-30), with an animator of her own so the world's isn't disturbed.
+     */
+    public static boolean portrait;
+    private static final java.util.Map<NpcEntity, NpcSkinAnimator> PORTRAITS = new java.util.WeakHashMap<>();
     private static final float INK = 0.0065f;
     /** How far the shell is pushed back from the eye, so its front sits behind the body. */
     private static final float BACK = INK * 2.5f;
@@ -103,9 +109,12 @@ public class NpcRenderer extends EntityRenderer<NpcEntity, NpcRenderer.State> {
         in.move = Mth.clamp(speed * 2.2f, 0f, 1f);
         in.run = Mth.clamp((speed - 0.55f) / 0.35f, 0f, 1f);
         in.phase = entity.walkAnimation.position(partialTick) * 0.6662f;
+        if (portrait) {
+            in.move = in.run = in.phase = 0;
+        }
         in.t = entity.tickCount + partialTick;
-        in.aim = Mth.lerp(partialTick, entity.aimAnimO, entity.aimAnim);
-        in.kick = Mth.lerp(partialTick, entity.kickO, entity.kick);
+        in.aim = portrait ? 0 : Mth.lerp(partialTick, entity.aimAnimO, entity.aimAnim);
+        in.kick = portrait ? 0 : Mth.lerp(partialTick, entity.kickO, entity.kick);
         in.headYaw = Mth.clamp(Mth.wrapDegrees(Mth.rotLerp(partialTick, entity.yHeadRotO, entity.yHeadRot) - state.bodyYaw), -70f, 70f);
         in.headPitch = entity.getXRot(partialTick);
         Minecraft.getInstance().getItemModelResolver().updateForTopItem(state.held, entity.getMainHandItem(),
@@ -116,10 +125,11 @@ public class NpcRenderer extends EntityRenderer<NpcEntity, NpcRenderer.State> {
         state.skinned = null;
         if (state.skin != null) {
             NpcSkin skin = state.skin;
-            if (!(entity.clientAnim instanceof NpcSkinAnimator)) {
+            if (!portrait && !(entity.clientAnim instanceof NpcSkinAnimator)) {
                 entity.clientAnim = new NpcSkinAnimator();
             }
-            NpcSkinAnimator anim = (NpcSkinAnimator) entity.clientAnim;
+            NpcSkinAnimator anim = portrait ? PORTRAITS.computeIfAbsent(entity, e -> new NpcSkinAnimator())
+                    : (NpcSkinAnimator) entity.clientAnim;
             NpcSkinAnimator.Input a = new NpcSkinAnimator.Input();
             a.now = in.t / 20f;
             double vx = entity.getX() - entity.xo, vz = entity.getZ() - entity.zo;
@@ -137,6 +147,7 @@ public class NpcRenderer extends EntityRenderer<NpcEntity, NpcRenderer.State> {
             a.action = entity.action();
             a.mood = entity.moodBits();
             a.bond = entity.bondBits();
+            a.portrait = portrait;
             state.skinned = new Matrix4f[skin.boneNames.length];
             for (int i = 0; i < state.skinned.length; i++) {
                 state.skinned[i] = new Matrix4f();
