@@ -97,7 +97,7 @@ final class SpiderIk {
         lean = Mth.lerp(1 - (float) Math.exp(-dt * 4), lean, leanWant);
         e.heldLean = lean;
         feetZ = Mth.approach(feetZ, pose == HarvestmanEntity.FEED ? HarvestmanEntity.FEED_FEET : HarvestmanEntity.HELD_FEET, HarvestmanEntity.FEET_SPEED * dt);
-        float up = upright ? 0 : feed * Mth.clamp((HarvestmanEntity.FEED_LOW - lean) / (HarvestmanEntity.FEED_LOW - HarvestmanEntity.FEED_UP), 0, 1);
+        float raised = upright ? 0 : feed * Mth.clamp((HarvestmanEntity.FEED_LOW - lean) / (HarvestmanEntity.FEED_LOW - HarvestmanEntity.FEED_UP), 0, 1);
         Quaternionf lies = place.getNormalizedRotation(new Quaternionf());
         Vector3f spinWant = new Vector3f();
         if (turnSeen && dt > 1e-4f && !dead) {
@@ -228,7 +228,7 @@ final class SpiderIk {
         }
         // its torso leads: rearing to a face ahead, and on into whatever turn its body is making
         if (!dead && model.spine >= 0) {
-            float bow = -0.6f * ahead + (upright ? 0.25f : 0.5f) * hold - 0.15f * up;
+            float bow = -0.6f * ahead + (upright ? 0.25f : 0.5f) * hold - 0.15f * raised;
             Quaternionf lead = new Quaternionf().rotateX(bow).premul(spun(spin, 0.2f, 0.5f));
             Vector3f at = new Vector3f(p[model.spine]);
             turnAbout(q, p, model.spine, at, lead);
@@ -269,7 +269,7 @@ final class SpiderIk {
         // its arms, scythes and claws closed round what it holds, and its head dipping to it as it feeds
         if (!dead && hold > 0.01f) {
             if (!upright && feed > 0.01f && model.neck >= 0) {
-                Quaternionf dip = new Quaternionf().rotateX(0.15f * feed + 0.3f * up);
+                Quaternionf dip = new Quaternionf().rotateX(0.15f * feed + 0.3f * raised);
                 Vector3f at = new Vector3f(p[model.neck]);
                 turnAbout(q, p, model.neck, at, dip);
                 for (int i : model.below[model.neck]) {
