@@ -22,7 +22,7 @@ import org.joml.Vector3f;
  * (aiming as she walks otherwise), and a shotgun or a blast throws her back as she dies ("die_blast"). Any clip with a
  * second take ("fire_walk_2") alternates with it at random. Aiming still a couple of seconds she drops to one knee
  * ("aim_kneel", with "kneel_aim_down" and "kneel_aim_up" on the way), she kneels down before a kneeling job
- * ("kneel_start"), and badly frightened and standing about she crouches ("crouch").
+ * ("kneel_start"), searches a container down at her feet kneeling ("search_low"), and badly frightened and standing about she crouches ("crouch").
  * One per companion, kept on her (NpcEntity.clientAnim); the posed bones come back as skin matrices (pose * inverse bind).
  */
 final class NpcSkinAnimator {
@@ -166,7 +166,7 @@ final class NpcSkinAnimator {
     }
 
     /** NpcWork's actions, as the client knows them. */
-    private static final int SLEEP = 1, SIT = 2, KNEEL = 3, HAMMER = 4, DIG = 5, SEARCH = 6, LOOKOUT = 7, COOKING = 8, HUG = 9, KISS = 10;
+    private static final int SLEEP = 1, SIT = 2, KNEEL = 3, HAMMER = 4, DIG = 5, SEARCH = 6, LOOKOUT = 7, COOKING = 8, HUG = 9, KISS = 10, SEARCH_LOW = 11;
 
     private static String actionClip(int action) {
         return switch (action) {
@@ -176,6 +176,7 @@ final class NpcSkinAnimator {
             case HAMMER -> "hammer";
             case DIG -> "dig";
             case SEARCH -> "search";
+            case SEARCH_LOW -> "search_low";
             case LOOKOUT -> "lookout";
             case HUG -> "hug";
             case KISS -> "kiss";
@@ -267,6 +268,8 @@ final class NpcSkinAnimator {
             c = in.blasted && model.clips.containsKey("die_blast") ? "die_blast" : "die";
         } else if (act != null && model.clips.containsKey(act)) {
             c = act;
+        } else if ("search_low".equals(act) && model.clips.containsKey("search")) {
+            c = "search";
         } else if (in.action == SLEEP && in.speed <= MOVING) {
             c = "die";
         } else {
