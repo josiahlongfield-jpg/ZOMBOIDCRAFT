@@ -1191,6 +1191,8 @@ import prison  # noqa: E402
 prison.register(sys.modules[__name__])
 import dam  # noqa: E402
 dam.register(sys.modules[__name__])
+import shipyard  # noqa: E402
+shipyard.register(sys.modules[__name__])
 
 
 

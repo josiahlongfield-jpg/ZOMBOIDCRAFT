@@ -1,0 +1,108 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sy_tallow": "zomboidcraft:block/city/sy_tallow",
+    "sy_timber": "zomboidcraft:block/city/sy_timber",
+    "particle": "zomboidcraft:block/city/sy_timber"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        3,
+        0
+      ],
+      "to": [
+        13,
+        13,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sy_timber",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#sy_timber"
+        },
+        "east": {
+          "texture": "#sy_timber"
+        },
+        "west": {
+          "texture": "#sy_timber"
+        },
+        "up": {
+          "texture": "#sy_timber"
+        },
+        "down": {
+          "texture": "#sy_timber"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        4,
+        12
+      ],
+      "to": [
+        14,
+        8,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sy_tallow"
+        },
+        "south": {
+          "texture": "#sy_tallow",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#sy_tallow"
+        },
+        "west": {
+          "texture": "#sy_tallow"
+        },
+        "up": {
+          "texture": "#sy_tallow"
+        },
+        "down": {
+          "texture": "#sy_tallow"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        8,
+        12
+      ],
+      "to": [
+        14,
+        12,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sy_timber"
+        },
+        "south": {
+          "texture": "#sy_timber"
+        },
+        "east": {
+          "texture": "#sy_timber"
+        },
+        "west": {
+          "texture": "#sy_timber"
+        },
+        "up": {
+          "texture": "#sy_timber"
+        },
+        "down": {
+          "texture": "#sy_timber"
+        }
+      }
+    }
+  ]
+}
