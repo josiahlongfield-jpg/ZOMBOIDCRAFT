@@ -8,10 +8,8 @@ classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1"
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 echo "===== custom geometry phases"
-javap -cp "$CP" -p -c net.minecraft.client.renderer.SubmitNodeCollection 2>&1 | awk '/submitCustomGeometry|submitModel\(|submitModelPart\(/{p=1} p{print} /^$/{p=0}' | grep -vE '^\s+[0-9]+: (aload|astore|iload|istore|dup|pop|return|iconst|checkcast)' | head -150
-javap -cp "$CP" -p -c net.minecraft.client.renderer.rendertype.RenderType 2>&1 | awk '/calculateHasBlending|forceSolidModelPhase|sortOnUpload\(\)/{p=1} p{print} /^$/{p=0}' | head -80
-javap -cp "$CP" -p -c net.minecraft.client.renderer.rendertype.RenderTypes 2>&1 | grep -nE 'entityCutout|entitySolid|ENTITY_CUTOUT|ENTITY_SOLID|forceSolid|sortOnUpload|translucent\(' | head -40
-javap -cp "$CP" -p -c net.minecraft.client.renderer.rendertype.RenderSetup 2>&1 | grep -nE 'forceSolid|sortOnUpload|^  [a-z]' | head -60
+javap -cp "$CP" -p -c net.minecraft.client.renderer.rendertype.RenderTypes 2>&1 | grep -E "^  (private|public|static).*lambda|RenderPipelines\.|forceSolidModelPhase|ldc .*String" | head -150
+javap -cp "$CP" -p -c net.minecraft.client.renderer.RenderPipelines 2>&1 | grep -E "ldc .*String|withBlend|ColorTargetState|BlendFunction|putstatic|withColorTarget|withoutBlend" | head -400
 echo "===== end custom geometry phases"
 exit 0
 echo "===== mesh guns"
