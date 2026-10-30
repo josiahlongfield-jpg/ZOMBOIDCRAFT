@@ -11,7 +11,6 @@ import net.minecraft.world.phys.Vec3;
 import java.util.function.Supplier;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import org.joml.AxisAngle4f;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -105,9 +104,12 @@ final class SpiderIk {
             if (d.w < 0) {
                 d.set(-d.x, -d.y, -d.z, -d.w);
             }
-            AxisAngle4f aa = new AxisAngle4f(d);
-            if (Float.isFinite(aa.angle) && aa.angle > 1e-5f) {
-                spinWant.set(aa.x, aa.y, aa.z).normalize().mul(aa.angle / dt);
+            // the turn's axis and angle from the quaternion itself: standing still the axis part is nothing at all
+            // (AxisAngle4f then hands back a zero axis with a small angle, and normalizing that poisons the spin)
+            float sin = (float) Math.sqrt(d.x * d.x + d.y * d.y + d.z * d.z);
+            if (sin > 1e-6f) {
+                float angle = 2 * (float) Math.atan2(sin, d.w);
+                spinWant.set(d.x, d.y, d.z).div(sin).mul(angle / dt);
                 if (spinWant.length() > 4) {
                     spinWant.normalize(4);
                 }
@@ -116,6 +118,9 @@ final class SpiderIk {
         lastTurn.set(lies);
         turnSeen = true;
         spin.lerp(spinWant, 1 - (float) Math.exp(-dt * 6));
+        if (!Float.isFinite(spin.x) || !Float.isFinite(spin.y) || !Float.isFinite(spin.z)) {
+            spin.zero();
+        }
 
         // a face across its way, a wall it's coming to (or the ceiling as it climbs one): it rears to it and puts its
         // front feet up on it before its body turns
