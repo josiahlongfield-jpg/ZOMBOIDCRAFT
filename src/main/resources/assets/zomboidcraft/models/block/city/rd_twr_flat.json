@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "concrete_dark": "zomboidcraft:block/city/concrete_dark",
+    "tx_concrete": "zomboidcraft:block/city/tx_concrete",
+    "particle": "zomboidcraft:block/city/tx_concrete"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_concrete",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#tx_concrete",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#tx_concrete",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#tx_concrete",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#tx_concrete",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#concrete_dark",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -39,6 +39,8 @@ final class Airport {
     /** The apron, from the taxiway's north shoulder to the terminal's face. */
     static final int APRON_Z0 = -330, APRON_Z1 = -134, APRON_X0 = -420, APRON_X1 = 420;
     static final int TILE_W = 250;
+    /** The access road's middle across the landside, through the gate in the west fence to the terminal ({@link AirportLandside}). */
+    static final int ACCESS_Z = -475;
     /** The quarter turns from the airport's frame to the world's. */
     static final int ROT = 0;
 
