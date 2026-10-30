@@ -15783,5 +15783,10 @@ final class CitySpecs extends CityBlocks.Specs {
         s("ah_leaf_num_4_7", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 2, 16, 16, 14);
         s("ah_leaf_num_4_8", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 2, 16, 16, 14);
         s("ah_track", AXIS, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
+        s("ah_scaf", FACING, DECOR, 0, SoundType.METAL, 0f, 0, 0, 0, 16, 16, 16);
+        s("ah_scaf_deck", FACING, 0, 0, SoundType.METAL, 2f, 0, 14.6, 0, 16, 16, 16);
+        s("ah_scaf_rail", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 1.2);
+        s("ah_engine_0", FACING, 0, 0, SoundType.METAL, 2f, 1.5, 0, 0, 14.5, 16, 16);
+        s("ah_engine_1", FACING, 0, 0, SoundType.METAL, 2f, 1.5, 0, 0, 14.5, 16, 16);
     }
 }

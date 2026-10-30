@@ -1282962,6 +1282962,781 @@
     ]
    ],
    "rotate": "axis"
+  },
+  "ah_scaf": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     1.2,
+     16,
+     1.2,
+     "st_galv"
+    ],
+    [
+     14.8,
+     0,
+     0,
+     16,
+     16,
+     1.2,
+     "st_galv"
+    ],
+    [
+     0,
+     0,
+     14.8,
+     1.2,
+     16,
+     16,
+     "st_galv"
+    ],
+    [
+     14.8,
+     0,
+     14.8,
+     16,
+     16,
+     16,
+     "st_galv"
+    ],
+    [
+     0,
+     14.6,
+     0,
+     16,
+     15.6,
+     1,
+     "st_galv"
+    ],
+    [
+     0,
+     14.6,
+     15,
+     16,
+     15.6,
+     16,
+     "st_galv"
+    ],
+    [
+     0,
+     14.6,
+     0,
+     1,
+     15.6,
+     16,
+     "st_galv"
+    ],
+    [
+     15,
+     14.6,
+     0,
+     16,
+     15.6,
+     16,
+     "st_galv"
+    ],
+    [
+     -3,
+     7.5,
+     0.1,
+     19,
+     8.5,
+     1.1,
+     "st_galv",
+     null,
+     {
+      "axis": "z",
+      "angle": 45,
+      "origin": [
+       8,
+       8,
+       0.6
+      ]
+     }
+    ]
+   ],
+   "title": "Scaffold",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ],
+   "rotate": "facing",
+   "render": "cutout",
+   "decor": true
+  },
+  "ah_scaf_deck": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     1.2,
+     16,
+     1.2,
+     "st_galv"
+    ],
+    [
+     14.8,
+     0,
+     0,
+     16,
+     16,
+     1.2,
+     "st_galv"
+    ],
+    [
+     0,
+     0,
+     14.8,
+     1.2,
+     16,
+     16,
+     "st_galv"
+    ],
+    [
+     14.8,
+     0,
+     14.8,
+     16,
+     16,
+     16,
+     "st_galv"
+    ],
+    [
+     0,
+     14.6,
+     0,
+     16,
+     15.6,
+     1,
+     "st_galv"
+    ],
+    [
+     0,
+     14.6,
+     15,
+     16,
+     15.6,
+     16,
+     "st_galv"
+    ],
+    [
+     0,
+     14.6,
+     0,
+     1,
+     15.6,
+     16,
+     "st_galv"
+    ],
+    [
+     15,
+     14.6,
+     0,
+     16,
+     15.6,
+     16,
+     "st_galv"
+    ],
+    [
+     -3,
+     7.5,
+     0.1,
+     19,
+     8.5,
+     1.1,
+     "st_galv",
+     null,
+     {
+      "axis": "z",
+      "angle": 45,
+      "origin": [
+       8,
+       8,
+       0.6
+      ]
+     }
+    ],
+    [
+     0.2,
+     15.6,
+     0.2,
+     15.8,
+     16,
+     15.8,
+     {
+      "north": "st_galv",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "ah_boards",
+      "down": "ah_boards"
+     }
+    ]
+   ],
+   "title": "Scaffold",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     14.6,
+     0,
+     16,
+     16,
+     16
+    ]
+   ],
+   "rotate": "facing",
+   "render": "cutout"
+  },
+  "ah_scaf_rail": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     1.2,
+     16,
+     1.2,
+     "st_galv"
+    ],
+    [
+     14.8,
+     0,
+     0,
+     16,
+     16,
+     1.2,
+     "st_galv"
+    ],
+    [
+     0,
+     14.5,
+     0,
+     16,
+     15.5,
+     1,
+     "st_galv"
+    ],
+    [
+     0,
+     8,
+     0,
+     16,
+     9,
+     1,
+     "st_galv"
+    ],
+    [
+     0,
+     0,
+     0.2,
+     16,
+     2.5,
+     1.2,
+     {
+      "north": "ah_yellow",
+      "south": "ah_yellow",
+      "east": "ah_yellow",
+      "west": "ah_yellow",
+      "up": "ah_yellow",
+      "down": "ah_yellow"
+     }
+    ]
+   ],
+   "title": "Scaffold Rail",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     1.2
+    ]
+   ],
+   "rotate": "facing",
+   "render": "cutout"
+  },
+  "ah_engine_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1.8,
+     6.932,
+     1,
+     14.2,
+     12.068,
+     16,
+     {
+      "north": "ah_cowl",
+      "south": "ah_cowl",
+      "east": "ah_cowl",
+      "west": "ah_cowl",
+      "up": "ah_cowl",
+      "down": "ah_cowl"
+     }
+    ],
+    [
+     5.432,
+     3.3,
+     1,
+     10.568,
+     15.7,
+     16,
+     {
+      "north": "ah_cowl",
+      "south": "ah_cowl",
+      "east": "ah_cowl",
+      "west": "ah_cowl",
+      "up": "ah_cowl",
+      "down": "ah_cowl"
+     }
+    ],
+    [
+     1.8,
+     6.932,
+     1,
+     14.2,
+     12.068,
+     16,
+     {
+      "north": "ah_cowl",
+      "south": "ah_cowl",
+      "east": "ah_cowl",
+      "west": "ah_cowl",
+      "up": "ah_cowl",
+      "down": "ah_cowl"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 45,
+      "origin": [
+       8,
+       9.5,
+       8
+      ]
+     }
+    ],
+    [
+     5.432,
+     3.3,
+     1,
+     10.568,
+     15.7,
+     16,
+     {
+      "north": "ah_cowl",
+      "south": "ah_cowl",
+      "east": "ah_cowl",
+      "west": "ah_cowl",
+      "up": "ah_cowl",
+      "down": "ah_cowl"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 45,
+      "origin": [
+       8,
+       9.5,
+       8
+      ]
+     }
+    ],
+    [
+     1.5,
+     6.632,
+     0,
+     14.5,
+     12.368,
+     1.2,
+     "home_chrome"
+    ],
+    [
+     5.132,
+     3.0,
+     0,
+     10.868,
+     16.0,
+     1.2,
+     "home_chrome"
+    ],
+    [
+     2.6,
+     8.5,
+     1.1,
+     13.4,
+     10.5,
+     1.3,
+     "ext_black_metal"
+    ],
+    [
+     7,
+     4.1,
+     1.1,
+     9,
+     14.9,
+     1.3,
+     "ext_black_metal"
+    ],
+    [
+     6.8,
+     8.3,
+     0.4,
+     9.2,
+     10.7,
+     1.2,
+     "home_chrome"
+    ],
+    [
+     2,
+     1.5,
+     4,
+     14,
+     4.5,
+     6,
+     {
+      "north": "ah_yellow",
+      "south": "ah_yellow",
+      "east": "ah_yellow",
+      "west": "ah_yellow",
+      "up": "ah_yellow",
+      "down": "ah_yellow"
+     }
+    ],
+    [
+     2,
+     1.5,
+     11,
+     14,
+     4.5,
+     13,
+     {
+      "north": "ah_yellow",
+      "south": "ah_yellow",
+      "east": "ah_yellow",
+      "west": "ah_yellow",
+      "up": "ah_yellow",
+      "down": "ah_yellow"
+     }
+    ],
+    [
+     1.5,
+     0.8,
+     0,
+     3,
+     2,
+     16,
+     {
+      "north": "ah_yellow",
+      "south": "ah_yellow",
+      "east": "ah_yellow",
+      "west": "ah_yellow",
+      "up": "ah_yellow",
+      "down": "ah_yellow"
+     }
+    ],
+    [
+     13,
+     0.8,
+     0,
+     14.5,
+     2,
+     16,
+     {
+      "north": "ah_yellow",
+      "south": "ah_yellow",
+      "east": "ah_yellow",
+      "west": "ah_yellow",
+      "up": "ah_yellow",
+      "down": "ah_yellow"
+     }
+    ],
+    [
+     1.5,
+     0,
+     1,
+     3,
+     0.8,
+     3,
+     "home_rubber"
+    ],
+    [
+     13,
+     0,
+     1,
+     14.5,
+     0.8,
+     3,
+     "home_rubber"
+    ],
+    [
+     1.5,
+     0,
+     13,
+     3,
+     0.8,
+     15,
+     "home_rubber"
+    ],
+    [
+     13,
+     0,
+     13,
+     14.5,
+     0.8,
+     15,
+     "home_rubber"
+    ]
+   ],
+   "title": "Spare Engine",
+   "sound": "METAL",
+   "shape": [
+    [
+     1.5,
+     0,
+     0,
+     14.5,
+     16,
+     16
+    ]
+   ],
+   "rotate": "facing"
+  },
+  "ah_engine_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     3.04,
+     7.446,
+     0,
+     12.96,
+     11.554,
+     12,
+     {
+      "north": "ah_cowl",
+      "south": "ah_cowl",
+      "east": "ah_cowl",
+      "west": "ah_cowl",
+      "up": "ah_cowl",
+      "down": "ah_cowl"
+     }
+    ],
+    [
+     5.946,
+     4.54,
+     0,
+     10.054,
+     14.46,
+     12,
+     {
+      "north": "ah_cowl",
+      "south": "ah_cowl",
+      "east": "ah_cowl",
+      "west": "ah_cowl",
+      "up": "ah_cowl",
+      "down": "ah_cowl"
+     }
+    ],
+    [
+     3.04,
+     7.446,
+     0,
+     12.96,
+     11.554,
+     12,
+     {
+      "north": "ah_cowl",
+      "south": "ah_cowl",
+      "east": "ah_cowl",
+      "west": "ah_cowl",
+      "up": "ah_cowl",
+      "down": "ah_cowl"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 45,
+      "origin": [
+       8,
+       9.5,
+       8
+      ]
+     }
+    ],
+    [
+     5.946,
+     4.54,
+     0,
+     10.054,
+     14.46,
+     12,
+     {
+      "north": "ah_cowl",
+      "south": "ah_cowl",
+      "east": "ah_cowl",
+      "west": "ah_cowl",
+      "up": "ah_cowl",
+      "down": "ah_cowl"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 45,
+      "origin": [
+       8,
+       9.5,
+       8
+      ]
+     }
+    ],
+    [
+     5.5,
+     7.0,
+     12,
+     10.5,
+     12.0,
+     15.5,
+     "ext_black_metal"
+    ],
+    [
+     6.8,
+     8.3,
+     15.5,
+     9.2,
+     10.7,
+     16,
+     "home_chrome"
+    ],
+    [
+     2,
+     1.5,
+     4,
+     14,
+     4.5,
+     6,
+     {
+      "north": "ah_yellow",
+      "south": "ah_yellow",
+      "east": "ah_yellow",
+      "west": "ah_yellow",
+      "up": "ah_yellow",
+      "down": "ah_yellow"
+     }
+    ],
+    [
+     2,
+     1.5,
+     11,
+     14,
+     4.5,
+     13,
+     {
+      "north": "ah_yellow",
+      "south": "ah_yellow",
+      "east": "ah_yellow",
+      "west": "ah_yellow",
+      "up": "ah_yellow",
+      "down": "ah_yellow"
+     }
+    ],
+    [
+     1.5,
+     0.8,
+     0,
+     3,
+     2,
+     16,
+     {
+      "north": "ah_yellow",
+      "south": "ah_yellow",
+      "east": "ah_yellow",
+      "west": "ah_yellow",
+      "up": "ah_yellow",
+      "down": "ah_yellow"
+     }
+    ],
+    [
+     13,
+     0.8,
+     0,
+     14.5,
+     2,
+     16,
+     {
+      "north": "ah_yellow",
+      "south": "ah_yellow",
+      "east": "ah_yellow",
+      "west": "ah_yellow",
+      "up": "ah_yellow",
+      "down": "ah_yellow"
+     }
+    ],
+    [
+     1.5,
+     0,
+     1,
+     3,
+     0.8,
+     3,
+     "home_rubber"
+    ],
+    [
+     13,
+     0,
+     1,
+     14.5,
+     0.8,
+     3,
+     "home_rubber"
+    ],
+    [
+     1.5,
+     0,
+     13,
+     3,
+     0.8,
+     15,
+     "home_rubber"
+    ],
+    [
+     13,
+     0,
+     13,
+     14.5,
+     0.8,
+     15,
+     "home_rubber"
+    ]
+   ],
+   "title": "Spare Engine",
+   "sound": "METAL",
+   "shape": [
+    [
+     1.5,
+     0,
+     0,
+     14.5,
+     16,
+     16
+    ]
+   ],
+   "rotate": "facing"
   }
  }
 }

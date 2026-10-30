@@ -14,7 +14,11 @@ world/county/AirportGrounds sets them out. Everything faces north (rotate=facing
   with its rails), ah_leaf_band (the bottom row, the yellow and black band along it), ah_leaf_edge
   (the leaf's end: the rubber seal, the pull handle), ah_leaf_num_<n>_<0..8> (the hangar's number
   stencilled across three by three leaves, n 1 to 4); ah_track: the door's rail let into the
-  floor, along x (rotate=axis).
+  floor, along x (rotate=axis);
+- the maintenance hangar's gear: ah_scaf (a bay of galvanised tube scaffold, its brace on the north
+  face), ah_scaf_deck (the same with its boards at the top, to stand on), ah_scaf_rail (the guard
+  rail and toe board along the deck's north edge, set on the deck block above); ah_engine_0 /
+  ah_engine_1 (a spare engine on its yellow transport stand, the intake to the north, two blocks).
 
     python3 tools/city/airside.py          rewrites the ah_ entries in blocks.json
 
@@ -167,8 +171,35 @@ def leaf_num(n, i):
     return t
 
 
+def boards(seed):
+    """Scaffold boards: grey-brown planks along x, their ends banded yellow, boot-scuffed."""
+    t = F.plain(seed, (128, 112, 88), 0.08, 0.25)
+    for y in range(0, N, 16):
+        area(t, 0, y, N, y + 1, mul=(0.55, 0.55, 0.55), dh=-0.3)
+    area(t, 0, 0, 5, N, col=(206, 168, 40))
+    area(t, N - 5, 0, N, N, col=(206, 168, 40))
+    t.grime(0.35, (60, 54, 44))
+    return t
+
+
+def cowl(seed):
+    """The bare engine's cowl: brushed metal in panels, the fasteners in rows, stencils."""
+    t = F.plain(seed, (176, 178, 180), 0.04, 0.6)
+    t.f0[:] = 120
+    for x in range(0, N, 21):
+        area(t, x, 0, x + 1, N, mul=(0.6, 0.6, 0.6), dh=-0.2)
+        for y in range(3, N, 6):
+            area(t, x + 2, y, x + 3, y + 1, col=(110, 110, 110))
+    area(t, 26, 40, 50, 44, col=(200, 40, 30))
+    t.grime(0.2, (50, 46, 40))
+    return t
+
+
 def textures():
     out = {
+        "ah_boards": lambda: boards(31906),
+        "ah_cowl": lambda: cowl(31907),
+        "ah_yellow": lambda: painted(31908, (220, 176, 34), 0.35, 0.03),
         "ah_leaf": lambda: leaf(31901),
         "ah_leaf_band": lambda: leaf(31902, True),
         "ah_leaf_edge": lambda: leaf_edge(31903),
@@ -195,8 +226,11 @@ def register(ns):
 
 # ---------------------------------------------------------------- shapes
 
-def faces(side, **over):
-    f = {d: side for d in ("north", "south", "east", "west", "up", "down")}
+def faces(tex, side=None, **over):
+    """Every face tex; side= the four sides, and those named (up=, north=, ...) their own."""
+    f = {d: tex for d in ("north", "south", "east", "west", "up", "down")}
+    if side:
+        f.update({d: side for d in ("north", "south", "east", "west")})
     f.update({k: v for k, v in over.items() if v})
     return f
 
@@ -235,6 +269,65 @@ def track_piece():
     return [[0, 0, 0, 16, 16, 16, faces("tx_concrete", up="ah_track")]]
 
 
+def turn(axis, angle, origin):
+    return {"axis": axis, "angle": angle, "origin": [round(v, 3) for v in origin]}
+
+
+def posts():
+    t = 1.2
+    return [[0, 0, 0, t, 16, t, STEEL], [16 - t, 0, 0, 16, 16, t, STEEL],
+            [0, 0, 16 - t, t, 16, 16, STEEL], [16 - t, 0, 16 - t, 16, 16, 16, STEEL]]
+
+
+def scaf(deck=False):
+    """A bay of tube scaffold: the four standards, the ledgers along x at the top, the transoms along
+    z, the brace across the north face; the boards on top when deck."""
+    out = posts()
+    out += [[0, 14.6, 0, 16, 15.6, 1, STEEL], [0, 14.6, 15, 16, 15.6, 16, STEEL],
+            [0, 14.6, 0, 1, 15.6, 16, STEEL], [15, 14.6, 0, 16, 15.6, 16, STEEL]]
+    out.append([-3, 7.5, 0.1, 19, 8.5, 1.1, STEEL, None, turn("z", 45, (8, 8, 0.6))])
+    if deck:
+        out.append([0.2, 15.6, 0.2, 15.8, 16, 15.8, faces("ah_boards", side=STEEL)])
+    return out
+
+
+def scaf_rail():
+    """The guard rail on the deck's north edge: the standards carried up, the rails, the toe board."""
+    return [[0, 0, 0, 1.2, 16, 1.2, STEEL], [14.8, 0, 0, 16, 16, 1.2, STEEL],
+            [0, 14.5, 0, 16, 15.5, 1, STEEL], [0, 8, 0, 16, 9, 1, STEEL],
+            [0, 0, 0.2, 16, 2.5, 1.2, faces("ah_yellow")]]
+
+
+def engine_piece(front):
+    """A spare engine lying along z on its stand: the cowl an octagon, the intake's lip and fan at
+    the front (north), the core and the nozzle at the back; the yellow cradle under it."""
+    cy, r = 9.5, 6.2
+    a = r * 0.4142
+    z0, z1 = (1, 16) if front else (0, 12)
+    rr = r if front else r * 0.8
+    aa = rr * 0.4142
+    t = turn("z", 45, (8, cy, 8))
+    body = [[8 - rr, cy - aa, z0, 8 + rr, cy + aa, z1, faces("ah_cowl", north="ah_cowl", south="ah_cowl")],
+            [8 - aa, cy - rr, z0, 8 + aa, cy + rr, z1, faces("ah_cowl")]]
+    out = body + [q + [None, t] for q in body]
+    if front:
+        out += [[8 - r - 0.3, cy - a - 0.3, 0, 8 + r + 0.3, cy + a + 0.3, 1.2, "home_chrome"],
+                [8 - a - 0.3, cy - r - 0.3, 0, 8 + a + 0.3, cy + r + 0.3, 1.2, "home_chrome"],
+                [8 - r + 0.8, cy - 1, 1.1, 8 + r - 0.8, cy + 1, 1.3, BLACK_METAL],
+                [7, cy - r + 0.8, 1.1, 9, cy + r - 0.8, 1.3, BLACK_METAL],
+                [6.8, cy - 1.2, 0.4, 9.2, cy + 1.2, 1.2, "home_chrome"]]
+    else:
+        out += [[8 - 2.5, cy - 2.5, 12, 8 + 2.5, cy + 2.5, 15.5, BLACK_METAL],
+                [8 - 1.2, cy - 1.2, 15.5, 8 + 1.2, cy + 1.2, 16, "home_chrome"]]
+    # the cradle: two saddles, the rails, the castors
+    for z in ((4, 6), (11, 13)):
+        out.append([2, 1.5, z[0], 14, 4.5, z[1], faces("ah_yellow")])
+    out += [[1.5, 0.8, 0, 3, 2, 16, faces("ah_yellow")], [13, 0.8, 0, 14.5, 2, 16, faces("ah_yellow")],
+            [1.5, 0, 1, 3, 0.8, 3, RUBBER], [13, 0, 1, 14.5, 0.8, 3, RUBBER],
+            [1.5, 0, 13, 3, 0.8, 15, RUBBER], [13, 0, 13, 14.5, 0.8, 15, RUBBER]]
+    return out
+
+
 def blocks():
     out = {}
 
@@ -269,6 +362,11 @@ def blocks():
         for i in range(9):
             add(f"ah_leaf_num_{n}_{i}", leaf_piece(f"ah_leaf_num_{n}_{i}"), "Hangar Door", hull)
     add("ah_track", track_piece(), "Door Track", [[0, 0, 0, 16, 16, 16]], rotate="axis", sound="STONE")
+    add("ah_scaf", scaf(), "Scaffold", [[0, 0, 0, 16, 16, 16]], cutout=True, decor=True)
+    add("ah_scaf_deck", scaf(True), "Scaffold", [[0, 14.6, 0, 16, 16, 16]], cutout=True)
+    add("ah_scaf_rail", scaf_rail(), "Scaffold Rail", [[0, 0, 0, 16, 16, 1.2]], cutout=True)
+    add("ah_engine_0", engine_piece(True), "Spare Engine", [[1.5, 0, 0, 14.5, 16, 16]])
+    add("ah_engine_1", engine_piece(False), "Spare Engine", [[1.5, 0, 0, 14.5, 16, 16]])
     return out
 
 
