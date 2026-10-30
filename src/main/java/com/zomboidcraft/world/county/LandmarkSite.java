@@ -50,6 +50,10 @@ final class LandmarkSite extends Site {
 
     @Override
     void build() {
+        if (p.variant.startsWith("camp@")) {
+            new CampBlackPine(p, out).build();
+            return;
+        }
         if (p.variant.startsWith("ranges@")) {
             new TankRanges(p, out).build();
             return;
