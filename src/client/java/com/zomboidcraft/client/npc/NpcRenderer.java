@@ -43,6 +43,9 @@ public class NpcRenderer extends EntityRenderer<NpcEntity, NpcRenderer.State> {
      * (Josiah 2026-10-30), with an animator of her own so the world's isn't disturbed.
      */
     public static boolean portrait;
+    /** On her page: which way she faces (180 = at you; dragging turns her) and the pose you asked for (NpcWork action, 0 idle). */
+    public static float portraitYaw = 180f;
+    public static int portraitAction;
     private static final java.util.Map<NpcEntity, NpcSkinAnimator> PORTRAITS = new java.util.WeakHashMap<>();
     private static final float INK = 0.0065f;
     /** How far the shell is pushed back from the eye, so its front sits behind the body. */
@@ -118,8 +121,10 @@ public class NpcRenderer extends EntityRenderer<NpcEntity, NpcRenderer.State> {
         in.headYaw = Mth.clamp(Mth.wrapDegrees(Mth.rotLerp(partialTick, entity.yHeadRotO, entity.yHeadRot) - state.bodyYaw), -70f, 70f);
         in.headPitch = entity.getXRot(partialTick);
         if (portrait) {
-            // the inventory turns a body to face you the vanilla way, half a turn from how her mesh faces
-            state.bodyYaw += 180f;
+            // her page: standing square to you, turned only by your drag, never by what she's doing out in the world
+            state.bodyYaw = portraitYaw;
+            state.hurt = false;
+            in.headYaw = in.headPitch = 0;
         }
         Minecraft.getInstance().getItemModelResolver().updateForTopItem(state.held, entity.getMainHandItem(),
                 ItemDisplayContext.THIRD_PERSON_RIGHT_HAND, entity.level(), entity, entity.getId());
@@ -152,6 +157,13 @@ public class NpcRenderer extends EntityRenderer<NpcEntity, NpcRenderer.State> {
             a.mood = entity.moodBits();
             a.bond = entity.bondBits();
             a.portrait = portrait;
+            if (portrait) {
+                a.speed = a.aim = a.headYaw = a.headPitch = a.dead = 0;
+                a.shots = 0;
+                a.talking = a.blasted = false;
+                a.action = portraitAction;
+                a.mood = a.bond = 0;
+            }
             state.skinned = new Matrix4f[skin.boneNames.length];
             for (int i = 0; i < state.skinned.length; i++) {
                 state.skinned[i] = new Matrix4f();
