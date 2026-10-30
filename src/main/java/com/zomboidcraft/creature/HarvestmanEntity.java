@@ -102,6 +102,8 @@ public class HarvestmanEntity extends Mob {
     /** Client only: who holds each held entity, by its id; and what this one held last tick. */
     private static final java.util.Map<Integer, HarvestmanEntity> HOLDERS = new java.util.concurrent.ConcurrentHashMap<>();
     private int heldSeen = -1;
+    /** Which of its two rage screams it gave last (it alternates). */
+    private int rageTake;
     private static final List<EntityDataAccessor<org.joml.Vector3fc>> FEET = List.of(FOOT0, FOOT1, FOOT2, FOOT3);
 
     public static final int HUNT = 0, HOLD = 1, FEED = 2, DEAD = 3;
@@ -377,7 +379,7 @@ public class HarvestmanEntity extends Mob {
         pause = RAGE_TICKS;
         pauseLook = at;
         if (level() instanceof ServerLevel sl) {
-            playSound(sl, centre(), HarvestmanSounds.SCREECH, 1.8f, 0.8f);
+            playTake(sl, centre(), HarvestmanSounds.RAGE, 2f, 1f, rageTake++ & 1);
         }
         return true;
     }
@@ -1154,6 +1156,19 @@ public class HarvestmanEntity extends Mob {
 
     private void playSound(ServerLevel level, Vec3 at, SoundEvent sound, float volume, float pitch) {
         level.playSound(null, at.x, at.y, at.z, sound, SoundSource.HOSTILE, volume, pitch);
+    }
+
+    /**
+     * One chosen take of a sound with two (by order in sounds.json): the client picks a take with a random seeded from
+     * the packet, its first draw over the takes' weights, so a seed whose first draw is the take we want plays that one.
+     */
+    private void playTake(ServerLevel level, Vec3 at, SoundEvent sound, float volume, float pitch, int take) {
+        long seed = random.nextLong();
+        for (int i = 0; i < 64 && net.minecraft.util.RandomSource.create(seed).nextInt(2) != take; i++) {
+            seed++;
+        }
+        level.playSeededSound(null, at.x, at.y, at.z, net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT.wrapAsHolder(sound),
+                SoundSource.HOSTILE, volume, pitch, seed);
     }
 
     @Override

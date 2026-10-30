@@ -19,6 +19,8 @@ public final class HarvestmanSounds {
     public static final SoundEvent CLICK = register("creature.harvestman.click");
     public static final SoundEvent HISS = register("creature.harvestman.hiss");
     public static final SoundEvent SCREECH = register("creature.harvestman.screech", 80f);
+    /** Its rage: a monstrous scream, two takes (Josiah's picks) it alternates between. */
+    public static final SoundEvent RAGE = register("creature.harvestman.rage", 96f);
     public static final SoundEvent FEED = register("creature.harvestman.feed");
     public static final SoundEvent CLANG = register("creature.harvestman.clang");
     public static final SoundEvent HURT = register("creature.harvestman.hurt", 48f);
