@@ -94,19 +94,22 @@ final class AirportSite extends Site {
         if (ax1 >= AirportTerminal.BX0 && ax0 <= AirportTerminal.BX1 && az1 >= AirportTerminal.BZ0 && az0 <= AirportTerminal.BZ1) {
             copy(terminal());
         }
+        if (ax1 >= AirportGrounds.BX0 && ax0 <= AirportGrounds.BX1 && az1 >= AirportGrounds.BZ0 && az0 <= AirportGrounds.BZ1) {
+            copy(grounds());
+        }
     }
 
     // ------------------------------------------------------------------ the big pieces
 
     /**
-     * The pieces too big for one tile (the terminal) are built whole, once, in the frame, then
+     * The pieces too big for one tile (the terminal, the tower and the buildings round it) are built whole, once, in the frame, then
      * each tile copies its part: their builders draw their choices one after another, so a tile
      * building only its own part would draw different ones from its neighbour.
      */
     private static final Map<String, Voxels> PIECES = new LinkedHashMap<>(4, 0.75f, true) {
         @Override
         protected boolean removeEldestEntry(Map.Entry<String, Voxels> eldest) {
-            return size() > 2;
+            return size() > 3;
         }
     };
 
@@ -117,6 +120,19 @@ final class AirportSite extends Site {
             if (v == null) {
                 v = new Voxels();
                 new AirportTerminal(new Placer(v, 0, 0, 0, 0), new SplittableRandom(seed ^ 0x7E2A1L)).build();
+                PIECES.put(key, v);
+            }
+            return v;
+        }
+    }
+
+    private Voxels grounds() {
+        String key = "grounds@" + rx + "," + rz;
+        synchronized (PIECES) {
+            Voxels v = PIECES.get(key);
+            if (v == null) {
+                v = new Voxels();
+                new AirportGrounds(new Placer(v, 0, 0, 0, 0), new SplittableRandom(seed ^ 0x6A0D5L)).build();
                 PIECES.put(key, v);
             }
             return v;
