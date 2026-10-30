@@ -20,7 +20,9 @@ import org.joml.Vector3f;
  * And when the model has them: she draws her rifle off her back and slings it again, walks a catwalk when she's happy
  * or flirty (stepping off, stopping and taking a right turn in that style), fires on the move only while shots go off
  * (aiming as she walks otherwise), and a shotgun or a blast throws her back as she dies ("die_blast"). Any clip with a
- * second take ("fire_walk_2") alternates with it at random.
+ * second take ("fire_walk_2") alternates with it at random. Aiming still a couple of seconds she drops to one knee
+ * ("aim_kneel", with "kneel_aim_down" and "kneel_aim_up" on the way), she kneels down before a kneeling job
+ * ("kneel_start"), and badly frightened and standing about she crouches ("crouch").
  * One per companion, kept on her (NpcEntity.clientAnim); the posed bones come back as skin matrices (pose * inverse bind).
  */
 final class NpcSkinAnimator {
@@ -66,6 +68,8 @@ final class NpcSkinAnimator {
     private final java.util.Map<String, String> take = new java.util.HashMap<>();
     private Boolean gunWas;
     private float yawWas = Float.NaN, turning;
+    /** When she last stood still with her rifle up (or -1 while she isn't). */
+    private float aimStill = -1;
     /** Her skinned vertices and normals, two per mesh group (sized to the model the first time she's drawn). */
     Object[] buffers = new Object[0];
 
@@ -202,7 +206,13 @@ final class NpcSkinAnimator {
         if (drew && !moves(base)) {
             lead = in.gun ? "draw" : "holster";
         } else if (was != null && !base.equals(was)) {
-            if ((base.equals("walk") || base.equals("catwalk")) && !moves(was) && !aims(was)) {
+            if (was.equals("aim_kneel") && !moves(base)) {
+                lead = "kneel_aim_up";
+            } else if (base.equals("aim_kneel")) {
+                lead = "kneel_aim_down";
+            } else if (base.equals("kneel") && !was.equals("kneel")) {
+                lead = "kneel_start";
+            } else if ((base.equals("walk") || base.equals("catwalk")) && !moves(was) && !aims(was)) {
                 lead = base.equals("walk") ? "walk_start" : "catwalk_start";
             } else if (idle && (was.equals("walk") || was.equals("catwalk"))) {
                 lead = was.equals("walk") ? "walk_stop" : "catwalk_stop";
@@ -234,7 +244,7 @@ final class NpcSkinAnimator {
     }
 
     private static boolean aims(String clip) {
-        return clip.equals("aim") || clip.equals("fire") || clip.equals("fire_walk") || clip.equals("aim_walk");
+        return clip.equals("aim") || clip.equals("fire") || clip.equals("fire_walk") || clip.equals("aim_walk") || clip.equals("aim_kneel");
     }
 
     /** How long a one-off plays: its clip, or a few seconds for a pose (a single frame) held. */
@@ -245,7 +255,7 @@ final class NpcSkinAnimator {
     private static boolean loops(String clip) {
         return switch (clip) {
             case "die", "die_blast", "walk_start", "walk_stop", "rifle_stop", "aim_up", "aim_down", "fidget", "pose", "draw",
-                    "holster", "catwalk_start", "catwalk_stop", "catwalk_turn" -> false;
+                    "holster", "catwalk_start", "catwalk_stop", "catwalk_turn", "kneel_aim_down", "kneel_aim_up", "kneel_start" -> false;
             default -> true;
         };
     }
@@ -262,7 +272,11 @@ final class NpcSkinAnimator {
         } else {
             boolean moving = in.speed > MOVING;
             boolean firing = fireT < seconds(model, "fire");
-            if (in.aim > 0.5f) {
+            aimStill = in.aim > 0.5f && !moving ? aimStill < 0 ? in.now : aimStill : -1;
+            if (aimStill >= 0 && in.now - aimStill > 2 && model.clips.containsKey("aim_kneel")) {
+                // a steadier shot from one knee
+                c = "aim_kneel";
+            } else if (in.aim > 0.5f) {
                 // walking at a target: firing as shots go off, aiming otherwise
                 c = !moving ? (firing ? "fire" : "aim")
                         : firing && model.clips.containsKey("fire_walk") ? "fire_walk"
@@ -278,6 +292,9 @@ final class NpcSkinAnimator {
                 String mood = fear > 0.6f ? "nervous" : morale < 0.3f ? "sad" : tired > 0.7f ? "tired" : in.flirty() ? "flirty"
                         : happy(in) ? "happy" : null;
                 c = mood != null && model.clips.containsKey(mood) ? mood : "idle";
+                if (fear > 0.8f && model.clips.containsKey("crouch")) {
+                    c = "crouch";
+                }
             }
         }
         return model.clips.containsKey(c) ? c : model.clips.containsKey("idle") ? "idle" : c;
