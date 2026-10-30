@@ -198,6 +198,15 @@ public final class NpcWork {
         return pack.isEmpty();
     }
 
+    /** Whether everything in her pack is of this kind (an empty pack counts). */
+    boolean packOnly(Predicate<ItemStack> want) {
+        for (int i = 0; i < pack.getContainerSize(); i++) {
+            ItemStack s = pack.getItem(i);
+            if (!s.isEmpty() && !want.test(s)) return false;
+        }
+        return true;
+    }
+
     /** Puts everything in her pack into the stores; what doesn't fit stays with her. */
     void deposit(ServerLevel level) {
         for (BlockPos pos : stores(level)) {
@@ -302,7 +311,7 @@ public final class NpcWork {
             case COOK -> cook(npc, level);
             case SCAVENGE -> scavenge(npc, level);
             case MEDIC -> medic(npc, level);
-            case HAUL -> haul(npc, level);
+            case HAUL -> haul(npc, level, false);
         };
     }
 
@@ -504,11 +513,12 @@ public final class NpcWork {
                 break;
             }
         }
+        if (heat == null) {
+            // no fire: say so once in a while, and leave the raw food in the stores rather than fetch it back and forth
+            if (packHas(RAW) || storeWith(level, RAW) != null) grumble(npc, "I can't cook without a fire. A campfire or a stove, anything.");
+            return packEmpty() ? null : depositTask(npc, level, null);
+        }
         if (packHas(RAW)) {
-            if (heat == null) {
-                grumble(npc, "I can't cook without a fire. A campfire or a stove, anything.");
-                return depositTask(npc, level, null);
-            }
             int cooking = npc.skills.level(NpcSkills.Skill.COOKING);
             return new Task(heat, Math.max(60, 200 - cooking * 12), COOKING, 2.4, () -> {
                 int made = 0;
@@ -529,7 +539,7 @@ public final class NpcWork {
             });
         }
         if (!packEmpty()) return depositTask(npc, level, null);
-        return fetchTask(npc, level, RAW, 6, heat == null ? null : "There's nothing in the stores to cook.");
+        return fetchTask(npc, level, RAW, 6, "There's nothing in the stores to cook.");
     }
 
     // scavenger: out to the nearest unsearched containers, three at most or a full pack, then home
@@ -619,7 +629,8 @@ public final class NpcWork {
                 BlockPos at = storeWith(level, BANDAGE);
                 if (at != null) return fetchTask(npc, level, BANDAGE, 3, null);
             }
-            return haul(npc, level);
+            // between patients she tidies up, but keeps her bandages on her
+            return haul(npc, level, true);
         }
         Player patient = hurt;
         int aid = npc.skills.level(NpcSkills.Skill.FIRST_AID);
@@ -642,7 +653,7 @@ public final class NpcWork {
     }
 
     // hauler: anything lying about at home into the stores (guns stay for whoever picks them up)
-    private Task haul(NpcEntity npc, ServerLevel level) {
+    private Task haul(NpcEntity npc, ServerLevel level, boolean keepBandages) {
         boolean full = pack.getItem(pack.getContainerSize() - 1).getCount() > 0;
         ItemEntity loose = null;
         if (!full) {
@@ -656,7 +667,7 @@ public final class NpcWork {
                 }
             }
         }
-        if (loose == null) return packEmpty() ? null : depositTask(npc, level, null);
+        if (loose == null) return packEmpty() || keepBandages && packOnly(BANDAGE) ? null : depositTask(npc, level, null);
         ItemEntity item = loose;
         return new Task(item.blockPosition(), 8, KNEEL, 1.8, () -> {
             if (!item.isAlive()) return;

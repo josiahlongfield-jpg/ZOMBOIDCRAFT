@@ -63,6 +63,9 @@ final class NpcBrain {
         @Override
         public boolean canUse() {
             // fear pushes the distance out; in a panic she runs even with a gun in her hands
+            if (npc.work.asleep) {
+                return false;
+            }
             double range = (gun(npc) != null && !npc.mind.panicking() ? FLEE_ARMED : FLEE_UNARMED) * npc.mind.flightScale();
             from = nearestZombie(npc, range, false);
             if (from == null) {
@@ -102,7 +105,8 @@ final class NpcBrain {
 
         @Override
         public boolean canUse() {
-            if (gun(npc) == null) {
+            // asleep she sees nothing; a zombie close by or her own alarm wakes her first
+            if (gun(npc) == null || npc.work.asleep) {
                 return false;
             }
             target = nearestZombie(npc, SHOOT_RANGE, true);
