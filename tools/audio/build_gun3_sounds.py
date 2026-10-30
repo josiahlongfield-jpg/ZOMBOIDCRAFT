@@ -25,8 +25,9 @@ EVENTS = {
     # the Lynx .50 heard from 65 m behind: three shots, each with its echo
     "weapon.heavy_sniper.shot_distant": ("weapon/heavy_sniper/shot_distant", 256, [("sx:c5f1fcc6", ("starts", 6.5), None)]),
     "weapon.heavy_sniper.shot_suppressed": ("weapon/heavy_sniper/shot_suppressed", 64, [("sx:b8e50005", ("span", 0.0, 2.0), None)]),
-    # "this needs to be the 308 battle rifle audio": the cannon's single shot with its report
-    "weapon.battle_rifle.shot": ("weapon/battle_rifle/shot", 128, [("sx:627539ff", None, None)]),
+    # "this needs to be the 308 battle rifle audio": the cannon's single shot, from its transient (0.30 s in) and faded
+    # out before the second burst at 2.18 s, which in game sounded like the shot replaying a moment later
+    "weapon.battle_rifle.shot": ("weapon/battle_rifle/shot", 128, [("sx:627539ff", ("span", 0.29, 2.1), "afade=t=out:st=1.45:d=0.35")]),
     "weapon.battle_rifle.shot_suppressed": ("weapon/battle_rifle/shot_suppressed", 48, [("fs:828790", ("starts", 0.7), None)]),
     "weapon.machine_pistol.shot": ("weapon/machine_pistol/shot", 96, [("sx:d53904ec", ("burst", 0.045, None, True), None)]),
     "weapon.machine_pistol.shot_distant": ("weapon/machine_pistol/shot_distant", 96, [("sx:5fec2c29", ("starts", 0.47), None)]),
