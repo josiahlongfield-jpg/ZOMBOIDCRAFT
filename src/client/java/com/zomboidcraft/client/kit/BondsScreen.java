@@ -56,7 +56,7 @@ public class BondsScreen extends Screen {
         g.fillGradient(0, height - 50, width, height, 0x00050607, 0xD9050607);
         shown += (centre - shown) * 0.2f;
 
-        int floor = height - 40, spread = Math.min(width / 3, Math.round(height * 0.62f));
+        int floor = height - 54, spread = Math.min(width / 3, Math.round(height * 0.62f));
         // the far ones first, so the one you're on is drawn over her neighbours
         Integer[] order = new Integer[list.size()];
         for (int i = 0; i < order.length; i++) order[i] = i;
@@ -67,6 +67,11 @@ public class BondsScreen extends Screen {
             float x = width / 2f + Math.signum(d) * (Math.abs(d) <= 1 ? Math.abs(d) * spread : spread + (Math.abs(d) - 1) * spread * 0.8f);
             float tallPx = (height - 96) * (1 - 0.45f * a);
             draw(g, list.get(i), Math.round(x), floor, tallPx, Math.round(15 - 9 * a));
+            if (a > 0.05f) {
+                // the ones either side sit back, faded
+                int half = Math.round(tallPx * 0.4f), alpha = Math.round(150 * a);
+                g.fill(Math.round(x) - half, Math.round(floor - tallPx) - 12, Math.round(x) + half, floor + 6, alpha << 24 | 0x080A0C);
+            }
         }
 
         KitDraw.caps(g, font, "Companions", 16, 12, KitDraw.BRIGHT, 1.3f);
