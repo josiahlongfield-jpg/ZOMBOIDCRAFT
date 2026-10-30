@@ -18,15 +18,14 @@ import java.util.SplittableRandom;
  * lean-to on its east side with the offices upstairs looking down on the floor through their
  * windows.</li>
  * <li>Hangar 2, taken over as the evacuation's relief depot: the supplies on their pallets in rows,
- * the triage and shelter tents, the cots; the helicopter that brought the last of it left on the
- * ramp outside.</li>
+ * the triage and shelter tents, the cots.</li>
  * <li>The T-hangars for the light planes along the east end, a row of eight with their sectional
  * doors, most shut, one or two up on what the owners kept in them.</li>
- * <li>The Air Guard's ramp at the east end, by the A5 connector to the runway (Josiah 2026-10-30:
- * "fighter jets, helicopters to hangars and outside"): hangars 3 and 4 with their doors run right
- * back into the pockets either side, a pair of jets in each nose out; the line of jets on the
- * apron facing the taxiway, the helipads with the helicopters on them, the ops building, the
- * fuel bowser's stand, the chocks, the cones.</li>
+ * <li>The private jet centre at the east end, by the A5 connector to the runway (the Air Guard's
+ * ramp until Josiah, 2026-10-30, sent the fighters and helicopters to Caldwell Army Airfield):
+ * hangars 3 and 4 with their doors run right back into the pockets either side, the line of
+ * stands on the apron facing the taxiway, the helipads, the lounge, the fuel bowser's stand, the
+ * chocks, the cones.</li>
  * </ul>
  */
 final class AirportHangars extends Grounds {
@@ -36,9 +35,9 @@ final class AirportHangars extends Grounds {
     static final int H2X0 = 546, H2X1 = 601, H2Z0 = -238, H2Z1 = -177, H2DOOR = 17, H2ROOF = 21;
     /** The T-hangars: eight units from TX0, each TW wide, the back at TZ0 and the doors at TZ1. */
     static final int TX0 = 622, TW = 12, UNITS = 8, TZ0 = -214, TZ1 = -201, TROOF = 6;
-    /** The Guard's hangars 3 and 4 (x from G3, G4, GW wide, back at GZ0, door wall at GZ1), the door's height, the roof. */
+    /** The jet centre's hangars 3 and 4 (x from G3, G4, GW wide, back at GZ0, door wall at GZ1), the door's height, the roof. */
     static final int G3 = 744, G4 = 794, GW = 40, GZ0 = -232, GZ1 = -193, GDOOR = 10, GROOF = 14;
-    /** The Guard's ops building, the jets' line on the apron, the helipads' middles. */
+    /** The jet centre's lounge building, the line of stands on the apron, the helipads' middles. */
     static final int OX0 = 848, OX1 = 879, OZ0 = -232, OZ1 = -214, LINE_X = 858, LINE_Z = -158;
     static final int[][] PADS = {{906, -200}, {936, -200}, {966, -200}};
     /** The ramp's edge on the taxiway's shoulder; everything this builds lies within these. */
@@ -420,7 +419,6 @@ final class AirportHangars extends Grounds {
         for (int x = H2X0 + 4; x < H2X1 - 3; x += 5) {
             set(x, 1, H2Z1 - 3, any("st_cone", "trash_bag[facing=" + dir() + "]", "cardboard_box[facing=north]"));
         }
-        p.vehicle(H2X0 + 30.5, 1, H2Z1 + 18, 160f, "heli_hornbill", rng.nextLong());
         p.vehicle(H2X0 + 12.5, 1, H2Z1 + 8, 90f, "box_truck,moving_truck", rng.nextLong());
         mess(H2X0 + 1, H2Z0 + 1, H2X1 - 1, H2Z1 - 1, 0, 0.01);
     }
@@ -479,33 +477,28 @@ final class AirportHangars extends Grounds {
         }
     }
 
-    // ------------------------------------------------------------------ the Air Guard
+    // ------------------------------------------------------------------ the jet centre
 
-    /** The Guard's ramp: the two hangars, the ops building, the line of jets, the helipads. */
+    /**
+     * The private jet centre (the Air Guard's ramp until its fighters went to Caldwell Army Airfield):
+     * the two hangars, the lounge, the line on the apron, the helipads.
+     */
     private void guard() {
-        String[] jets = {"jet_corvid", "jet_gyrfalcon"};
         for (int k = 0; k < 2; k++) {
             int x0 = k == 0 ? G3 : G4, x1 = x0 + GW - 1;
             shell(x0, x1, GZ0, GZ1, GDOOR, GROOF);
-            // the green band over the blue the civil hangars carry
-            for (int x = x0; x <= x1; x++) {
-                for (int y = GROOF - 2; y <= GROOF - 1; y++) {
-                    set(x, y, GZ0, "corrugated_green_b");
-                    set(x, y, GZ1, "corrugated_green_b");
+            pocketDoors(x0 + 4, GZ1, GDOOR, 3 + k);
+            // the power cart and the chocks at each stand
+            for (int j = 0; j < 2; j++) {
+                int jx = x0 + 11 + j * 17;
+                set(jx, 1, GZ0 + 3, "rp_gpu[facing=south]");
+                if (chance() < 0.6) {
+                    set(jx, 1, GZ1 - 6, "rp_chocks[facing=east]");
                 }
             }
-            pocketDoors(x0 + 4, GZ1, GDOOR, 3 + k);
-            // a pair of jets nose out and fit to fly, wingtips clear of the door pockets, chocked at the nose wheel,
-            // the power cart parked behind the tail so the way out stays clear
-            for (int j = 0; j < 2; j++) {
-                double jx = x0 + 11.5 + j * 17;
-                p.vehicle(jx, 1, GZ0 + 18.5, 0f, "=" + jets[(k + j) % 2] + "@usable", rng.nextLong());
-                set((int) jx, 1, GZ0 + 23, "rp_chocks[facing=east]");
-                set((int) jx, 1, GZ0 + 3, "rp_gpu[facing=south]");
-            }
             for (int z = GZ0 + 3; z < GZ1 - 3; z += 3) {
-                set(x0 + 1, 1, z, any("pk_tool_chest[facing=east]", "navy_toolbox[facing=east]", "pw_drum", "pk_military_crate"));
-                set(x1 - 1, 1, z, any("pk_military_crate", "pk_military_crate_old", "pw_drum", "home_workbench[facing=west]"));
+                set(x0 + 1, 1, z, any("pk_tool_chest[facing=east]", "navy_toolbox[facing=east]", "pw_drum", "tire_stack"));
+                set(x1 - 1, 1, z, any("pk_tool_chest[facing=west]", "tire_stack", "pw_drum", "home_workbench[facing=west]"));
             }
             set(x0 + GW / 2, 1, GZ0 + 2, "trade_stepladder[facing=south]");
             for (int x = x0 + 4; x <= x1 - 4; x++) {
@@ -517,11 +510,9 @@ final class AirportHangars extends Grounds {
             }
         }
         ops();
-        // the line on the apron, east of the hangars' way out: four jets nose to the taxiway, chocks
-        // under them, cones at the wing tips
+        // the line on the apron, east of the hangars' way out: four stands, chocks and cones left on them
         for (int j = 0; j < 4; j++) {
             double jx = LINE_X + 0.5 + j * 22;
-            p.vehicle(jx, 1, LINE_Z, 0f, "=" + jets[j % 2], rng.nextLong());
             set((int) jx + 1, 1, LINE_Z + 6, "rp_chocks[facing=east]");
             // the crew ladder hooked on by the cockpit, the power cart off the nose
             set((int) jx - 3, 1, LINE_Z + 5, "trade_stepladder[facing=east]");
@@ -542,7 +533,7 @@ final class AirportHangars extends Grounds {
                 }
             }
         }
-        // the helipads: the yellow ring, the white H, a helicopter on each but one
+        // the helipads: the yellow ring, the white H
         for (int i = 0; i < PADS.length; i++) {
             int cx = PADS[i][0], cz = PADS[i][1];
             for (int dx = -9; dx <= 9; dx++) {
@@ -557,18 +548,14 @@ final class AirportHangars extends Grounds {
                     }
                 }
             }
-            if (i < 2) {
-                // its rotor hub over the H; the first pad's always fit to fly
-                p.vehicle(cx + 0.5, 1, cz + 0.5 + 1.84, 180f, "=heli_hornbill" + (i == 0 ? "@usable" : ""), rng.nextLong());
-            }
         }
         // the bowser's stand by the ops building: the hose reels, the drums, the extinguisher trolleys
         for (int x = OX1 + 4; x <= OX1 + 10; x += 3) {
             set(x, 1, OZ1 + 3, "navy_hose_reel[facing=south]");
             set(x + 1, 1, OZ1 + 3, "pw_drum");
         }
-        p.vehicle(OX1 + 8.0, 1, OZ1 + 10.0, 90f, "jeep,jeep_open", rng.nextLong());
-        p.vehicle(OX0 - 4.0, 1, OZ1 + 8.0, 180f, "jeep,swat_van", rng.nextLong());
+        p.vehicle(OX1 + 8.0, 1, OZ1 + 10.0, 90f, "limousine,suv,sedan_ltd", rng.nextLong());
+        p.vehicle(OX0 - 4.0, 1, OZ1 + 8.0, 180f, "suv,sedan_ltd,minivan", rng.nextLong());
     }
 
     /**
@@ -581,9 +568,9 @@ final class AirportHangars extends Grounds {
         for (int x = x0 - 8; x < x0 + w + 8; x++) {
             set(x, 0, z + 1, "ah_track[axis=x]");
             set(x, 0, z + 2, "ah_track[axis=x]");
-            // the hood over the top tracks, clad like the band above
-            set(x, h + 1, z + 1, "corrugated_green_b");
-            set(x, h + 1, z + 2, "corrugated_green_b");
+            // the hood over the top tracks, in the civil hangars' blue
+            set(x, h + 1, z + 1, "corrugated_blue_b");
+            set(x, h + 1, z + 2, "corrugated_blue_b");
         }
         for (int side = 0; side < 2; side++) {
             int lx = side == 0 ? x0 - 8 : x0 + w;
@@ -601,12 +588,12 @@ final class AirportHangars extends Grounds {
         }
     }
 
-    /** The ops building: the briefing room with its map and the rows of chairs, the flight gear lockers, the duty desk. */
+    /** The jet centre's building: the passengers' lounge with its sofas and coffee bar, the crew room, the front desk. */
     private void ops() {
         for (int x = OX0; x <= OX1; x++) {
             for (int z = OZ0; z <= OZ1; z++) {
                 boolean wall = x == OX0 || x == OX1 || z == OZ0 || z == OZ1;
-                set(x, 0, z, wall ? "concrete_dark" : "un_slab_vct");
+                set(x, 0, z, wall ? "concrete_dark" : x < OX0 + 18 ? "home_floor_carpet_blue" : "un_slab_vct");
                 for (int y = 1; y < 5; y++) {
                     String out = z == OZ1 ? "south" : z == OZ0 ? "north" : x == OX0 ? "west" : "east";
                     boolean win = wall && (y == 2 || y == 3) && Math.floorMod(z == OZ0 || z == OZ1 ? x : z, 4) == 2;
@@ -627,18 +614,28 @@ final class AirportHangars extends Grounds {
             }
         }
         doors(OX0 + 23, 0, OZ1, Doors.SHOP, "south");
-        // the briefing room: the map wall, the screen, the chairs in rows facing it
-        set(OX0 + 8, 2, OZ0 + 1, "bunk_map_wall[facing=south]");
-        set(OX0 + 10, 2, OZ0 + 1, "of_whiteboard[facing=south]");
-        set(OX0 + 6, 1, OZ0 + 2, "bunk_map_table");
-        for (int z = OZ0 + 5; z <= OZ1 - 3; z += 2) {
-            for (int x = OX0 + 3; x <= OX0 + 15; x++) {
-                if (x != OX0 + 9 && chance() < 0.85) {
-                    set(x, 1, z, chance() < 0.1 ? "trade_folding_chair_tipped[facing=" + dir() + "]" : "trade_folding_chair[facing=north]");
-                }
+        // the lounge: sofas round low tables, the coffee bar along the back, the screen with the departures
+        for (int gx : new int[] {OX0 + 3, OX0 + 10}) {
+            for (int gz : new int[] {OZ0 + 5, OZ0 + 11}) {
+                String c = any("brown", "blue");
+                set(gx, 1, gz - 1, "home_sofa_" + c + "_l[facing=south]");
+                set(gx + 1, 1, gz - 1, "home_sofa_" + c + "_m[facing=south]");
+                set(gx + 2, 1, gz - 1, "home_sofa_" + c + "_r[facing=south]");
+                set(gx + 1, 1, gz, any("home_coffee_table", "pk_coffee_table", "pk_coffee_table_round"));
+                set(gx, 1, gz + 1, "home_armchair_" + c + "[facing=north]");
+                set(gx + 2, 1, gz + 1, chance() < 0.15 ? "air" : "home_armchair_" + c + "[facing=north]");
             }
         }
-        // the crew room: the lockers with the flight gear, the duty desk, the radio
+        for (int x = OX0 + 2; x <= OX0 + 14; x++) {
+            set(x, 1, OZ0 + 1, x % 4 == 0 ? "home_coffee_maker[facing=south]" : "store_counter[facing=south]");
+        }
+        set(OX0 + 16, 1, OZ0 + 1, "trade_water_cooler[facing=south]");
+        set(OX0 + 1, 1, OZ0 + 2, "store_vending[facing=east]");
+        set(OX0 + 1, 2, OZ0 + 2, "store_vending_top[facing=east]");
+        set(OX0 + 8, 3, OZ1 - 1, "home_tv[facing=north]");
+        set(OX0 + 14, 1, OZ1 - 2, "reception_desk[facing=north]");
+        set(OX0 + 14, 1, OZ1 - 3, "office_chair[facing=north]");
+        // the crew room: the pilots' lockers, the flight planning desk, the radio
         for (int x = OX0 + 20; x <= OX1 - 2; x++) {
             set(x, 1, OZ0 + 1, "fs_locker[facing=south]");
             set(x, 2, OZ0 + 1, "fs_locker_top[facing=south]");
@@ -646,7 +643,7 @@ final class AirportHangars extends Grounds {
         set(OX1 - 2, 1, OZ1 - 3, "home_desk_pc[facing=west]");
         set(OX1 - 3, 1, OZ1 - 3, "office_chair[facing=west]");
         set(OX1 - 1, 1, OZ1 - 6, "bunk_radio_desk[facing=west]");
-        set(OX0 + 20, 1, OZ1 - 2, "fs_scba_rack[facing=east]");
+        set(OX0 + 20, 1, OZ1 - 2, "bunk_map_table");
         lamps(OX0, OZ0, OX1, OZ1, 5, 0.3);
         mess(OX0 + 1, OZ0 + 1, OX1 - 1, OZ1 - 1, 0, 0.03);
         // the flag at the door
