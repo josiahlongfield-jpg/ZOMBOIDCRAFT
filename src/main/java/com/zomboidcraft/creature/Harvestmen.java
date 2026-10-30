@@ -31,7 +31,8 @@ import net.minecraft.world.phys.Vec3;
  * The Harvestman's entity type, and its commands (operators): {@code /zc harvestman} puts one a few blocks in front of
  * you; {@code clear} takes them all away; {@code info} says how many there are, who is hunted and what each is doing;
  * {@code do <plan>} makes the nearest take up a plan; {@code target <player>} sets who is hunted ({@code target clear}
- * ends the hunt).
+ * ends the hunt); {@code room} builds a test room above you where one shows everything it does in turn ({@code room next}
+ * skips on, {@code room stop} ends it).
  */
 public final class Harvestmen {
     private static final ResourceKey<EntityType<?>> KEY = ResourceKey.create(Registries.ENTITY_TYPE, ZomboidCraft.id("harvestman"));
@@ -52,6 +53,13 @@ public final class Harvestmen {
                                 .then(Commands.literal("clear").executes(Harvestmen::clear))
                                 .then(Commands.literal("den").executes(Harvestmen::den))
                                 .then(Commands.literal("info").executes(Harvestmen::info))
+                                .then(Commands.literal("room")
+                                        .executes(ctx -> say(ctx, HarvestmanTour.start(ctx.getSource().getPlayerOrException())))
+                                        .then(Commands.literal("next").executes(ctx -> say(ctx, HarvestmanTour.next())))
+                                        .then(Commands.literal("stop").executes(ctx -> {
+                                            HarvestmanTour.stop();
+                                            return say(ctx, "The test room's Harvestman is gone (the room stays)");
+                                        })))
                                 .then(Commands.literal("target")
                                         .then(Commands.literal("clear").executes(ctx -> target(ctx, null)))
                                         .then(Commands.argument("player", EntityArgument.player())
@@ -122,6 +130,11 @@ public final class Harvestmen {
         ctx.getSource().sendSuccess(() -> Component.literal("Removed " + all.size() + " Harvestm" + (all.size() == 1 ? "an" : "en")
                 + " and forgot every den and hunt"), false);
         return all.size();
+    }
+
+    private static int say(CommandContext<CommandSourceStack> ctx, String text) {
+        ctx.getSource().sendSuccess(() -> Component.literal(text), false);
+        return 1;
     }
 
     private static int info(CommandContext<CommandSourceStack> ctx) {

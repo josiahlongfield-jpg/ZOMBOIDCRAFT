@@ -428,6 +428,9 @@ public final class HarvestmanDirector {
         double bd = Double.MAX_VALUE;
         for (Record r : RECORDS.values()) {
             HarvestmanEntity h = LOADED.get(r.id);
+            if (h != null && h.mind.showcase) {
+                continue;   // the test room's never hunts
+            }
             Vec3 pos = h != null ? h.position() : r.away != null ? r.away : r.lair != null ? Vec3.atCenterOf(r.lair) : Vec3.ZERO;
             double d = pos.distanceToSqr(at);
             if (d < bd) {

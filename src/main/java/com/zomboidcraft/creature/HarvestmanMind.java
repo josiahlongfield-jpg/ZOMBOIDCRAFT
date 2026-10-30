@@ -117,6 +117,8 @@ public final class HarvestmanMind {
     int watchedTicks, unseenTicks;
     boolean watched;
     private Entity carried;
+    /** The test room's Harvestman (HarvestmanTour): it shows what it does but never strikes a player. */
+    boolean showcase;
     /** Taking what it caught back to its den. */
     private boolean dragHome;
     private long glimpseAt, bodyAt;
@@ -1044,7 +1046,7 @@ public final class HarvestmanMind {
 
     // striking: in fast, low; it rears up an arm's length off, and lunges
     void startStrike(ServerLevel level, Entity prey) {
-        if (prey == null) {
+        if (prey == null || showcase && prey instanceof Player) {
             return;
         }
         // on its patient nights it only watches the one it hunts (it still drives anyone out of its den)
