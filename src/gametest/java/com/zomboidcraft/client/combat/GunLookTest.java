@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.client.gametest.v1.context.TestSingleplayerContex
 import com.zomboidcraft.ZomboidCraft;
 import com.zomboidcraft.combat.Attachments;
 import com.zomboidcraft.combat.GunSlotData;
+import com.zomboidcraft.combat.Guns;
 import java.util.List;
 import java.util.Map;
 import net.minecraft.client.CameraType;
@@ -78,6 +79,50 @@ public class GunLookTest implements FabricClientGameTest {
                 ctx.takeScreenshot(gun + "-kit-tp-front");
                 ctx.runOnClient(mc -> mc.options.setCameraType(CameraType.FIRST_PERSON));
             }
+            sights(ctx, sp);
+        }
+    }
+
+    /** On the sights through each kind of optic: what each one shows (its own reticle or eyepiece picture), and the
+     * magnifier swung in and aside behind the holo. */
+    private static void sights(ClientGameTestContext ctx, TestSingleplayerContext sp) {
+        String[][] looks = {{"assault_rifle", "holo_sight", "magnifier"}, {"assault_rifle", "holo_sight"},
+                {"assault_rifle", "red_dot_sight"}, {"assault_rifle", "scope_4x"}, {"assault_rifle", "combat_scope"},
+                {"hunting_rifle", "hunting_scope"}, {"precision_rifle", "precision_scope"}, {"heavy_sniper", "long_range_scope"},
+                {"crossbow", "crossbow_scope"}, {"magnum", "pistol_scope"}};
+        for (String[] look : looks) {
+            if (!List.of(GUNS).contains(look[0])) {
+                continue;
+            }
+            for (String c : new String[] {"kill @e[type=item]", "clear @a", "give @a zomboidcraft:" + look[0], "tp @a ~ ~ ~ 0 0"}) {
+                sp.getServer().runCommand(c);
+            }
+            ctx.waitTicks(20);
+            sp.getServer().runOnServer(server -> {
+                for (var player : server.getPlayerList().getPlayers()) {
+                    ItemStack gunStack = player.getMainHandItem();
+                    for (int i = 1; i < look.length; i++) {
+                        Attachments.mount(gunStack, new ItemStack(BuiltInRegistries.ITEM.getValue(ZomboidCraft.id(look[i]))));
+                    }
+                    LOG.info("ZCGUN sights {} {}", look[0], Attachments.of(gunStack).mounted());
+                }
+            });
+            String name = "sight-" + look[0] + "-" + String.join("-", List.of(look).subList(1, look.length));
+            ctx.waitTicks(10);
+            ctx.getInput().holdMouse(1);
+            ctx.waitTicks(30);
+            ctx.takeScreenshot(name);
+            if (look.length > 2) {
+                sp.getServer().runOnServer(server -> {
+                    for (var player : server.getPlayerList().getPlayers()) {
+                        Guns.flipMagnifier(player);
+                    }
+                });
+                ctx.waitTicks(20);
+                ctx.takeScreenshot(name + "-aside");
+            }
+            ctx.getInput().releaseMouse(1);
+            ctx.waitTicks(10);
         }
     }
 }

@@ -103,8 +103,17 @@ def slot_mounts(gun):
     return out
 
 
+# a magnifier swung aside turns on its mount's hinge, off the sight line to the right
+ASIDE_ROLL = -90
+
+
 def attachment(base, key, gun, mounts):
     """An attachment key's model on a gun: its mesh at the slot's mount, or nothing."""
+    if key.endswith('_aside'):
+        m = attachment(base, key.removesuffix('_aside'), gun, mounts)
+        if m and m.get('type') == 'minecraft:special':
+            m['model']['roll'] = m['model'].get('roll', 0) + ASIDE_ROLL
+        return m
     a = atts().get(key)
     mesh, scale = attachment_mesh(key, gun)
     if not a or a['slot'] not in mounts:
