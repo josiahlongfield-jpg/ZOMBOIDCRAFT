@@ -104,6 +104,8 @@ public final class CarClient {
                 // a companion: follow me, or wait here
             } else if (com.zomboidcraft.client.kit.FilesClient.interact(client, hit)) {
                 // a file lying in the world: read it
+            } else if (com.zomboidcraft.client.ferry.FerryClient.interact(client, hit)) {
+                // a landing's bell: the ferry's coming in
             } else if (player.getMainHandItem().is(com.zomboidcraft.ModItems.CAR_KEY)) {
                 // not at a car, key in hand: its panic button
                 ClientPlayNetworking.send(new CarNet.Use(CarNet.FOB, 0, 0, 0));

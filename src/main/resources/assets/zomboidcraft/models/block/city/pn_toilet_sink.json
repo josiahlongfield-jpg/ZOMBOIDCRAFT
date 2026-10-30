@@ -1,0 +1,338 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fit_grey": "zomboidcraft:block/city/fit_grey",
+    "fit_stainless": "zomboidcraft:block/city/fit_stainless",
+    "home_basin": "zomboidcraft:block/city/home_basin",
+    "home_chrome": "zomboidcraft:block/city/home_chrome",
+    "home_toilet_water": "zomboidcraft:block/city/home_toilet_water",
+    "particle": "zomboidcraft:block/city/fit_stainless"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        9
+      ],
+      "to": [
+        13,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_stainless"
+        },
+        "south": {
+          "texture": "#fit_stainless",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#fit_stainless"
+        },
+        "west": {
+          "texture": "#fit_stainless"
+        },
+        "up": {
+          "texture": "#fit_stainless"
+        },
+        "down": {
+          "texture": "#fit_stainless",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2.6,
+        14,
+        8.6
+      ],
+      "to": [
+        13.4,
+        14.6,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_stainless"
+        },
+        "south": {
+          "texture": "#fit_stainless",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#fit_stainless"
+        },
+        "west": {
+          "texture": "#fit_stainless"
+        },
+        "up": {
+          "texture": "#fit_stainless"
+        },
+        "down": {
+          "texture": "#fit_stainless"
+        }
+      }
+    },
+    {
+      "from": [
+        4.5,
+        0,
+        3
+      ],
+      "to": [
+        11.5,
+        6,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_stainless"
+        },
+        "south": {
+          "texture": "#fit_stainless"
+        },
+        "east": {
+          "texture": "#fit_stainless"
+        },
+        "west": {
+          "texture": "#fit_stainless"
+        },
+        "up": {
+          "texture": "#fit_stainless"
+        },
+        "down": {
+          "texture": "#fit_stainless",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        6,
+        2.5
+      ],
+      "to": [
+        12,
+        7,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_stainless"
+        },
+        "south": {
+          "texture": "#fit_stainless"
+        },
+        "east": {
+          "texture": "#fit_stainless"
+        },
+        "west": {
+          "texture": "#fit_stainless"
+        },
+        "up": {
+          "texture": "#fit_stainless"
+        },
+        "down": {
+          "texture": "#fit_stainless"
+        }
+      }
+    },
+    {
+      "from": [
+        5.5,
+        6.2,
+        3.8
+      ],
+      "to": [
+        10.5,
+        7.1,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_toilet_water"
+        },
+        "south": {
+          "texture": "#home_toilet_water"
+        },
+        "east": {
+          "texture": "#home_toilet_water"
+        },
+        "west": {
+          "texture": "#home_toilet_water"
+        },
+        "up": {
+          "texture": "#home_toilet_water"
+        },
+        "down": {
+          "texture": "#home_toilet_water"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        12,
+        9.4
+      ],
+      "to": [
+        11,
+        14.2,
+        13.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_basin"
+        },
+        "south": {
+          "texture": "#home_basin"
+        },
+        "east": {
+          "texture": "#home_basin"
+        },
+        "west": {
+          "texture": "#home_basin"
+        },
+        "up": {
+          "texture": "#home_basin"
+        },
+        "down": {
+          "texture": "#home_basin"
+        }
+      }
+    },
+    {
+      "from": [
+        7.3,
+        14,
+        14
+      ],
+      "to": [
+        8.7,
+        15.4,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_chrome"
+        },
+        "south": {
+          "texture": "#home_chrome"
+        },
+        "east": {
+          "texture": "#home_chrome"
+        },
+        "west": {
+          "texture": "#home_chrome"
+        },
+        "up": {
+          "texture": "#home_chrome"
+        },
+        "down": {
+          "texture": "#home_chrome"
+        }
+      }
+    },
+    {
+      "from": [
+        12.2,
+        9,
+        8.8
+      ],
+      "to": [
+        13,
+        10,
+        9.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_chrome"
+        },
+        "south": {
+          "texture": "#home_chrome"
+        },
+        "east": {
+          "texture": "#home_chrome"
+        },
+        "west": {
+          "texture": "#home_chrome"
+        },
+        "up": {
+          "texture": "#home_chrome"
+        },
+        "down": {
+          "texture": "#home_chrome"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        9,
+        8.8
+      ],
+      "to": [
+        3.8,
+        10,
+        9.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_chrome"
+        },
+        "south": {
+          "texture": "#home_chrome"
+        },
+        "east": {
+          "texture": "#home_chrome"
+        },
+        "west": {
+          "texture": "#home_chrome"
+        },
+        "up": {
+          "texture": "#home_chrome"
+        },
+        "down": {
+          "texture": "#home_chrome"
+        }
+      }
+    },
+    {
+      "from": [
+        11.4,
+        14.6,
+        10.5
+      ],
+      "to": [
+        12.6,
+        16,
+        11.7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_grey"
+        },
+        "south": {
+          "texture": "#fit_grey"
+        },
+        "east": {
+          "texture": "#fit_grey"
+        },
+        "west": {
+          "texture": "#fit_grey"
+        },
+        "up": {
+          "texture": "#fit_grey",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#fit_grey"
+        }
+      }
+    }
+  ]
+}
