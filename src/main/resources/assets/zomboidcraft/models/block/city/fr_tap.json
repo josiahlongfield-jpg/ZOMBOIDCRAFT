@@ -1,0 +1,79 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "concrete_dark": "zomboidcraft:block/city/concrete_dark",
+    "fr_firebrick": "zomboidcraft:block/city/fr_firebrick",
+    "particle": "zomboidcraft:block/city/fr_firebrick"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        12
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fr_firebrick"
+        },
+        "south": {
+          "texture": "#fr_firebrick",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#fr_firebrick",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#fr_firebrick",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#fr_firebrick",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#fr_firebrick",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        2,
+        11
+      ],
+      "to": [
+        12,
+        8,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#concrete_dark"
+        },
+        "south": {
+          "texture": "#concrete_dark"
+        },
+        "east": {
+          "texture": "#concrete_dark"
+        },
+        "west": {
+          "texture": "#concrete_dark"
+        },
+        "up": {
+          "texture": "#concrete_dark"
+        },
+        "down": {
+          "texture": "#concrete_dark"
+        }
+      }
+    }
+  ]
+}
