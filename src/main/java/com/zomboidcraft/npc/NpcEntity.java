@@ -31,6 +31,7 @@ import net.minecraft.world.level.storage.ValueOutput;
  * aims shakier and runs sooner, goes for food and drink she sees lying about, and says how she's doing now and then.
  * Her skills (NpcSkills) grow with practice; given a home and a job (NpcWork) she keeps the place going on her own,
  * by the clock, and sleeps when her day's done. How she feels about you (NpcBond) grows or sours with how you treat her.
+ * A skinned companion dresses herself (NpcWardrobe), and asks what you think.
  */
 public class NpcEntity extends PathfinderMob {
     private static final EntityDataAccessor<String> MODEL = SynchedEntityData.defineId(NpcEntity.class, EntityDataSerializers.STRING);
@@ -58,6 +59,7 @@ public class NpcEntity extends PathfinderMob {
     final NpcLines lines = new NpcLines();
     public final NpcMind mind = new NpcMind();
     public final NpcSkills skills = new NpcSkills();
+    public final NpcWardrobe wardrobe = new NpcWardrobe();
     public final NpcWork work = new NpcWork();
     public final NpcBond bond = new NpcBond();
     private boolean mindLoaded;
@@ -193,6 +195,10 @@ public class NpcEntity extends PathfinderMob {
         mindLoaded = true;
         bond.roll(getRandom(), mind);
         bond.meet(by);
+        wardrobe.roll(getRandom());
+        if (Npcs.skinned(model())) {
+            wardrobe.dress(this, NpcWardrobe.Outfit.WORK);
+        }
         mind.remember(this, "Met " + by.getName().getString(), 0.3f, 0.9f);
     }
 
@@ -238,6 +244,7 @@ public class NpcEntity extends PathfinderMob {
                 mind.roll(getRandom());
                 skills.roll(getRandom());
                 bond.roll(getRandom(), mind);
+                wardrobe.roll(getRandom());
                 mindLoaded = true;
             }
             boolean wasLonely = mind.get(NpcMind.Need.LONELY) > 50;
@@ -247,7 +254,8 @@ public class NpcEntity extends PathfinderMob {
             }
             work.watch(this, server);
             bond.tick(this, server);
-            entityData.set(BOND, bond.packed(this, server.getGameTime()));
+            wardrobe.tick(this, server);
+            entityData.set(BOND, bond.packed(this, server.getGameTime()) | wardrobe.bits(server.getGameTime()));
             int q = 0, k = 0;
             for (NpcMind.Need n : new NpcMind.Need[] {NpcMind.Need.FEAR, NpcMind.Need.MORALE, NpcMind.Need.TIRED, NpcMind.Need.PAIN}) {
                 q |= Math.min(15, Math.round(mind.get(n) * 15f / 100f)) << (4 * k++);
@@ -265,7 +273,9 @@ public class NpcEntity extends PathfinderMob {
             }
         }
         if (!level().isClientSide()) {
-            entityData.set(ACTION, isAlive() ? (work.asleep ? NpcWork.SLEEP : bond.poseTicks > 0 ? bond.pose : work.action) : 0);
+            wardrobe.changing(this);
+            entityData.set(ACTION, isAlive() ? (work.asleep ? NpcWork.SLEEP : bond.poseTicks > 0 ? bond.pose
+                    : wardrobe.changeTicks > 0 ? NpcWork.KNEEL : work.action) : 0);
         }
         if (level().isClientSide()) {
             aimAnimO = aimAnim;
@@ -384,6 +394,7 @@ public class NpcEntity extends PathfinderMob {
         output.putString("npcMind", mind.save());
         output.putString("npcSkills", skills.save());
         output.putString("npcBond", bond.save());
+        output.putString("npcWardrobe", wardrobe.save());
         output.putString("npcJob", work.job.name());
         output.putInt("npcNightShift", work.nightShift ? 1 : 0);
         output.putString("npcSearched", work.saveSearched());
@@ -408,6 +419,11 @@ public class NpcEntity extends PathfinderMob {
         }
         if (!bond.load(input.getStringOr("npcBond", "")) && mindLoaded) {
             bond.roll(getRandom(), mind);
+        }
+        if (wardrobe.load(input.getStringOr("npcWardrobe", ""))) {
+            entityData.set(HIDDEN, String.join(",", wardrobe.hidden()));
+        } else if (mindLoaded) {
+            wardrobe.roll(getRandom());
         }
         NpcWork.Job job = NpcWork.Job.of(input.getStringOr("npcJob", "NONE"));
         work.job = job == null ? NpcWork.Job.NONE : job;

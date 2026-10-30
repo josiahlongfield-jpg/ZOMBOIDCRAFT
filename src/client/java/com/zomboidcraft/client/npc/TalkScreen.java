@@ -15,7 +15,8 @@ import net.minecraft.network.chat.Component;
 /**
  * Talking to a companion (sneak + interact on her), in the kit screen's dark glass and bone: how she feels about you at
  * the top, then what you can do: compliment her, flirt, give her what's in your hand, hug her, take her hand (or let
- * go), kiss her. She answers in chat, yes or no as she feels. Pick with the mouse or 1-6; Esc or the interact key closes.
+ * go), kiss her, or talk about her outfit (WardrobeScreen). She answers in chat, yes or no as she feels. Pick with the mouse
+ * or 1-7; Esc or the interact key closes.
  */
 public class TalkScreen extends net.minecraft.client.gui.screens.Screen {
     private static final int PANEL = 0xF20C0D0F, EDGE = 0x29E8E4DA, LINE = 0x4DE8E4DA, TEXT = 0xFFE8E4DA, DIM = 0xA8E8E4DA,
@@ -28,6 +29,7 @@ public class TalkScreen extends net.minecraft.client.gui.screens.Screen {
             {"Hug her", "Arms around her"},
             {"Hold her hand", "She walks at your side"},
             {"Kiss her", "Only if she wants to"},
+            {"Her outfit...", "What you think of it"},
     };
 
     private final NpcEntity npc;
@@ -83,7 +85,7 @@ public class TalkScreen extends net.minecraft.client.gui.screens.Screen {
             }
             String label = i == 4 && holding ? "Let go of her hand" : ACTS[i][0];
             g.text(font, Hud.text((i + 1) + "  " + label), b[0] + PAD, y + 5, over ? 0xFFF2EFE8 : TEXT, false);
-            String hint = ACTS[i][1];
+            String hint = i == 6 && (bits >> 29 & 1) != 0 ? "She asked you" : ACTS[i][1];
             g.text(font, Hud.text(hint), b[0] + b[2] - PAD - font.width(Hud.text(hint)), y + 5, DIM, false);
         }
     }
@@ -100,6 +102,10 @@ public class TalkScreen extends net.minecraft.client.gui.screens.Screen {
     }
 
     private void pick(int i) {
+        if (i == 6) {
+            minecraft.gui.setScreen(new WardrobeScreen(npc, false));
+            return;
+        }
         ClientPlayNetworking.send(new NpcNet.Talk(npc.getId(), i));
         onClose();
     }

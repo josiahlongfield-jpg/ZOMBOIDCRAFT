@@ -13,7 +13,8 @@ import net.minecraft.server.level.ServerPlayer;
 
 /**
  * The interact key pressed on an NPC: she follows the player who pressed it, or waits where she is. Sneaking, it opens
- * the talk panel instead (client), whose picks come back as Talk: a compliment, a flirt, a gift, a hug, her hand, a kiss.
+ * the talk panel instead (client), whose picks come back as Talk: a compliment, a flirt, a gift, a hug, her hand, a kiss,
+ * or about her clothes (NpcWardrobe's LIKE, DISLIKE, SUGGEST + outfit, and DRESS + outfit from the wardrobe panel).
  */
 public final class NpcNet {
     public record Toggle(int npc) implements CustomPacketPayload {
@@ -44,10 +45,15 @@ public final class NpcNet {
         ServerPlayNetworking.registerGlobalReceiver(Talk.TYPE, (payload, context) -> {
             ServerPlayer player = context.player();
             player.level().getServer().execute(() -> {
+                if (!(player.level().getEntity(payload.npc()) instanceof NpcEntity npc) || !npc.isAlive() || player.isSpectator()
+                        || npc.distanceToSqr(player) >= 4 * 4) {
+                    return;
+                }
                 NpcBond.Act act = NpcBond.Act.of(payload.act());
-                if (act != null && player.level().getEntity(payload.npc()) instanceof NpcEntity npc && npc.isAlive() && !player.isSpectator()
-                        && npc.distanceToSqr(player) < 4 * 4) {
+                if (act != null) {
                     npc.bond.act(npc, player, act);
+                } else if (payload.act() >= NpcWardrobe.LIKE) {
+                    npc.wardrobe.answer(npc, player, payload.act());
                 }
             });
         });

@@ -52,6 +52,8 @@ public final class NpcLines {
                 "You two look cosy."),
         SAVED(20 * 60, "Thanks. That one was close.", "My hero. Don't let it go to your head.", "I owe you one.",
                 "That was too close. Thank you."),
+        // her clothes (NpcWardrobe): what she says as she changes, the words come with the call
+        OUTFIT(20 * 45),
         // her answer when you talk to her (NpcBond.act): always heard, the words come with the call
         REPLY(0);
 
