@@ -1,0 +1,50 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_belly": "zomboidcraft:block/city/al_belly",
+    "particle": "zomboidcraft:block/city/al_belly"
+  },
+  "elements": [
+    {
+      "from": [
+        5.92,
+        0.0,
+        0.0
+      ],
+      "to": [
+        6.88,
+        16.0,
+        4.8
+      ],
+      "faces": {
+        "south": {
+          "texture": "#al_belly",
+          "uv": [
+            5.92,
+            0.0,
+            6.88,
+            16.0
+          ]
+        },
+        "east": {
+          "texture": "#al_belly",
+          "uv": [
+            11.2,
+            0.0,
+            16.0,
+            16.0
+          ]
+        },
+        "west": {
+          "texture": "#al_belly",
+          "uv": [
+            0.0,
+            0.0,
+            4.8,
+            16.0
+          ]
+        }
+      }
+    }
+  ]
+}

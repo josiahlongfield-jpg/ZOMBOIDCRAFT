@@ -1,0 +1,93 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_lining": "zomboidcraft:block/city/al_lining",
+    "al_paint": "zomboidcraft:block/city/al_paint",
+    "an_coastal_turboprop_title_10": "zomboidcraft:block/city/an_coastal_turboprop_title_10",
+    "particle": "zomboidcraft:block/city/al_paint"
+  },
+  "elements": [
+    {
+      "from": [
+        -0.768,
+        -0.907,
+        0
+      ],
+      "to": [
+        2.232,
+        -0.157,
+        16
+      ],
+      "faces": {
+        "east": {
+          "texture": "#al_paint",
+          "uv": [
+            0,
+            15.25,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#al_lining",
+          "uv": [
+            0,
+            15.25,
+            16,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          2.232,
+          4.884,
+          8.0
+        ],
+        "axis": "z",
+        "angle": 22.575
+      }
+    },
+    {
+      "from": [
+        -0.768,
+        -0.157,
+        0
+      ],
+      "to": [
+        2.232,
+        10.674,
+        16
+      ],
+      "faces": {
+        "east": {
+          "texture": "#an_coastal_turboprop_title_10",
+          "uv": [
+            0,
+            4.633,
+            16,
+            15.745
+          ]
+        },
+        "west": {
+          "texture": "#al_lining",
+          "uv": [
+            0,
+            5.169,
+            16,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          2.232,
+          4.884,
+          8.0
+        ],
+        "axis": "z",
+        "angle": 22.575
+      }
+    }
+  ]
+}

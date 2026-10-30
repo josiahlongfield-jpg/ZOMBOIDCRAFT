@@ -1,0 +1,130 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "an_coastal_main": "zomboidcraft:block/city/an_coastal_main",
+    "particle": "zomboidcraft:block/city/an_coastal_main"
+  },
+  "elements": [
+    {
+      "from": [
+        15.184,
+        0.0,
+        13.4
+      ],
+      "to": [
+        16.0,
+        8.0,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_coastal_main",
+          "uv": [
+            0.0,
+            8.0,
+            0.816,
+            16.0
+          ]
+        },
+        "south": {
+          "texture": "#an_coastal_main",
+          "uv": [
+            15.184,
+            8.0,
+            16.0,
+            16.0
+          ],
+          "cullface": "south"
+        },
+        "west": {
+          "texture": "#an_coastal_main",
+          "uv": [
+            13.4,
+            8.0,
+            16.0,
+            16.0
+          ]
+        },
+        "up": {
+          "texture": "#an_coastal_main",
+          "uv": [
+            15.184,
+            13.4,
+            16.0,
+            16.0
+          ]
+        },
+        "down": {
+          "texture": "#an_coastal_main",
+          "uv": [
+            15.184,
+            0.0,
+            16.0,
+            2.6
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        15.04,
+        3.84,
+        6.16
+      ],
+      "to": [
+        16.0,
+        5.76,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_coastal_main",
+          "uv": [
+            0.0,
+            10.24,
+            0.96,
+            12.16
+          ]
+        },
+        "south": {
+          "texture": "#an_coastal_main",
+          "uv": [
+            15.04,
+            10.24,
+            16.0,
+            12.16
+          ],
+          "cullface": "south"
+        },
+        "west": {
+          "texture": "#an_coastal_main",
+          "uv": [
+            6.16,
+            10.24,
+            16.0,
+            12.16
+          ]
+        },
+        "up": {
+          "texture": "#an_coastal_main",
+          "uv": [
+            15.04,
+            6.16,
+            16.0,
+            16.0
+          ]
+        },
+        "down": {
+          "texture": "#an_coastal_main",
+          "uv": [
+            15.04,
+            0.0,
+            16.0,
+            9.84
+          ]
+        }
+      }
+    }
+  ]
+}

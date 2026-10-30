@@ -1,0 +1,410 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_exhaust_plug": "zomboidcraft:block/city/al_exhaust_plug",
+    "particle": "zomboidcraft:block/city/al_exhaust_plug"
+  },
+  "elements": [
+    {
+      "from": [
+        0.0,
+        2.042,
+        10.0
+      ],
+      "to": [
+        4.0,
+        16.0,
+        14.0
+      ],
+      "faces": {
+        "south": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            0.0,
+            0.0,
+            4.0,
+            13.958
+          ]
+        },
+        "east": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            2.0,
+            0.0,
+            6.0,
+            13.958
+          ]
+        },
+        "west": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            10.0,
+            0.0,
+            14.0,
+            13.958
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            0.0,
+            10.0,
+            4.0,
+            14.0
+          ],
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            0.0,
+            2.0,
+            4.0,
+            6.0
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        4.0,
+        0.0,
+        10.0
+      ],
+      "to": [
+        8.0,
+        16.0,
+        14.0
+      ],
+      "faces": {
+        "south": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            4.0,
+            0.0,
+            8.0,
+            16.0
+          ]
+        },
+        "east": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            2.0,
+            0.0,
+            6.0,
+            16.0
+          ]
+        },
+        "west": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            10.0,
+            0.0,
+            14.0,
+            16.0
+          ]
+        },
+        "up": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            4.0,
+            10.0,
+            8.0,
+            14.0
+          ],
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            4.0,
+            2.0,
+            8.0,
+            6.0
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        8.0,
+        0.0,
+        10.0
+      ],
+      "to": [
+        12.0,
+        16.0,
+        14.0
+      ],
+      "faces": {
+        "south": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            8.0,
+            0.0,
+            12.0,
+            16.0
+          ]
+        },
+        "east": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            2.0,
+            0.0,
+            6.0,
+            16.0
+          ]
+        },
+        "west": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            10.0,
+            0.0,
+            14.0,
+            16.0
+          ]
+        },
+        "up": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            8.0,
+            10.0,
+            12.0,
+            14.0
+          ],
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            8.0,
+            2.0,
+            12.0,
+            6.0
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        12.0,
+        0.0,
+        10.0
+      ],
+      "to": [
+        16.0,
+        16.0,
+        14.0
+      ],
+      "faces": {
+        "south": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            12.0,
+            0.0,
+            16.0,
+            16.0
+          ]
+        },
+        "east": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            2.0,
+            0.0,
+            6.0,
+            16.0
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            10.0,
+            0.0,
+            14.0,
+            16.0
+          ]
+        },
+        "up": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            12.0,
+            10.0,
+            16.0,
+            14.0
+          ],
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            12.0,
+            2.0,
+            16.0,
+            6.0
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4.0,
+        2.2,
+        14.0
+      ],
+      "to": [
+        8.0,
+        16.0,
+        16.0
+      ],
+      "faces": {
+        "east": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            0.0,
+            0.0,
+            2.0,
+            13.8
+          ]
+        },
+        "west": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            14.0,
+            0.0,
+            16.0,
+            13.8
+          ]
+        },
+        "up": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            4.0,
+            14.0,
+            8.0,
+            16.0
+          ],
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            4.0,
+            0.0,
+            8.0,
+            2.0
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        8.0,
+        0.0,
+        14.0
+      ],
+      "to": [
+        12.0,
+        16.0,
+        16.0
+      ],
+      "faces": {
+        "east": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            0.0,
+            0.0,
+            2.0,
+            16.0
+          ]
+        },
+        "west": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            14.0,
+            0.0,
+            16.0,
+            16.0
+          ]
+        },
+        "up": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            8.0,
+            14.0,
+            12.0,
+            16.0
+          ],
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            8.0,
+            0.0,
+            12.0,
+            2.0
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        12.0,
+        0.0,
+        14.0
+      ],
+      "to": [
+        16.0,
+        16.0,
+        16.0
+      ],
+      "faces": {
+        "east": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            0.0,
+            0.0,
+            2.0,
+            16.0
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            14.0,
+            0.0,
+            16.0,
+            16.0
+          ]
+        },
+        "up": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            12.0,
+            14.0,
+            16.0,
+            16.0
+          ],
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            12.0,
+            0.0,
+            16.0,
+            2.0
+          ],
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

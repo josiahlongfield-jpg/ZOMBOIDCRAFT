@@ -1,0 +1,156 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_metal": "zomboidcraft:block/city/al_metal",
+    "particle": "zomboidcraft:block/city/al_metal"
+  },
+  "elements": [
+    {
+      "from": [
+        8.0,
+        11.25,
+        12.4
+      ],
+      "to": [
+        16.0,
+        13.778,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_metal",
+          "uv": [
+            0.0,
+            2.222,
+            8.0,
+            4.75
+          ]
+        },
+        "south": {
+          "texture": "#al_metal",
+          "uv": [
+            8.0,
+            2.222,
+            16.0,
+            4.75
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#al_metal",
+          "uv": [
+            0.0,
+            2.222,
+            3.6,
+            4.75
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#al_metal",
+          "uv": [
+            12.4,
+            2.222,
+            16.0,
+            4.75
+          ]
+        },
+        "up": {
+          "texture": "#al_metal",
+          "uv": [
+            8.0,
+            12.4,
+            16.0,
+            16.0
+          ]
+        },
+        "down": {
+          "texture": "#al_metal",
+          "uv": [
+            8.0,
+            0.0,
+            16.0,
+            3.6
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        7.208,
+        10.574,
+        12.24
+      ],
+      "to": [
+        16.792,
+        15.438,
+        14.16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_metal",
+          "uv": [
+            0,
+            0.562,
+            9.584,
+            5.426
+          ]
+        },
+        "south": {
+          "texture": "#al_metal",
+          "uv": [
+            6.416,
+            0.562,
+            16,
+            5.426
+          ]
+        },
+        "east": {
+          "texture": "#al_metal",
+          "uv": [
+            1.84,
+            0.562,
+            3.76,
+            5.426
+          ]
+        },
+        "west": {
+          "texture": "#al_metal",
+          "uv": [
+            12.24,
+            0.562,
+            14.16,
+            5.426
+          ]
+        },
+        "up": {
+          "texture": "#al_metal",
+          "uv": [
+            6.416,
+            12.24,
+            16,
+            14.16
+          ]
+        },
+        "down": {
+          "texture": "#al_metal",
+          "uv": [
+            6.416,
+            1.84,
+            16,
+            3.76
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          12.0,
+          12.16,
+          13.2
+        ],
+        "axis": "y",
+        "angle": 26.565
+      }
+    }
+  ]
+}

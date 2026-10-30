@@ -1,0 +1,132 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "an_private_main": "zomboidcraft:block/city/an_private_main",
+    "an_private_rudder": "zomboidcraft:block/city/an_private_rudder",
+    "particle": "zomboidcraft:block/city/an_private_main"
+  },
+  "elements": [
+    {
+      "from": [
+        15.696,
+        0.0,
+        0.0
+      ],
+      "to": [
+        16.0,
+        8.0,
+        2.24
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_private_main",
+          "uv": [
+            0.0,
+            8.0,
+            0.304,
+            16.0
+          ],
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#an_private_main",
+          "uv": [
+            15.696,
+            8.0,
+            16.0,
+            16.0
+          ]
+        },
+        "west": {
+          "texture": "#an_private_rudder",
+          "uv": [
+            0.0,
+            8.0,
+            2.24,
+            16.0
+          ]
+        },
+        "up": {
+          "texture": "#an_private_main",
+          "uv": [
+            15.696,
+            0.0,
+            16.0,
+            2.24
+          ]
+        },
+        "down": {
+          "texture": "#an_private_main",
+          "uv": [
+            15.696,
+            13.76,
+            16.0,
+            16.0
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        15.599,
+        8.0,
+        0.0
+      ],
+      "to": [
+        16.0,
+        16.0,
+        5.44
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_private_main",
+          "uv": [
+            0.0,
+            0.0,
+            0.401,
+            8.0
+          ],
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#an_private_main",
+          "uv": [
+            15.599,
+            0.0,
+            16.0,
+            8.0
+          ]
+        },
+        "west": {
+          "texture": "#an_private_rudder",
+          "uv": [
+            0.0,
+            0.0,
+            5.44,
+            8.0
+          ]
+        },
+        "up": {
+          "texture": "#an_private_main",
+          "uv": [
+            15.599,
+            0.0,
+            16.0,
+            5.44
+          ],
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#an_private_main",
+          "uv": [
+            15.599,
+            10.56,
+            16.0,
+            16.0
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,252 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "an_north_main": "zomboidcraft:block/city/an_north_main",
+    "particle": "zomboidcraft:block/city/an_north_main"
+  },
+  "elements": [
+    {
+      "from": [
+        13.66,
+        0.0,
+        0.0
+      ],
+      "to": [
+        16.0,
+        8.0,
+        8.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_north_main",
+          "uv": [
+            0.0,
+            8.0,
+            2.34,
+            16.0
+          ],
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#an_north_main",
+          "uv": [
+            13.66,
+            8.0,
+            16.0,
+            16.0
+          ]
+        },
+        "west": {
+          "texture": "#an_north_main",
+          "uv": [
+            0.0,
+            8.0,
+            8.0,
+            16.0
+          ]
+        },
+        "up": {
+          "texture": "#an_north_main",
+          "uv": [
+            13.66,
+            0.0,
+            16.0,
+            8.0
+          ]
+        },
+        "down": {
+          "texture": "#an_north_main",
+          "uv": [
+            13.66,
+            8.0,
+            16.0,
+            16.0
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        13.057,
+        0.0,
+        8.0
+      ],
+      "to": [
+        16.0,
+        8.0,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_north_main",
+          "uv": [
+            0.0,
+            8.0,
+            2.943,
+            16.0
+          ]
+        },
+        "south": {
+          "texture": "#an_north_main",
+          "uv": [
+            13.057,
+            8.0,
+            16.0,
+            16.0
+          ],
+          "cullface": "south"
+        },
+        "west": {
+          "texture": "#an_north_main",
+          "uv": [
+            8.0,
+            8.0,
+            16.0,
+            16.0
+          ]
+        },
+        "up": {
+          "texture": "#an_north_main",
+          "uv": [
+            13.057,
+            8.0,
+            16.0,
+            16.0
+          ]
+        },
+        "down": {
+          "texture": "#an_north_main",
+          "uv": [
+            13.057,
+            0.0,
+            16.0,
+            8.0
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        14.668,
+        8.0,
+        0.68
+      ],
+      "to": [
+        16.0,
+        16.0,
+        8.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_north_main",
+          "uv": [
+            0.0,
+            0.0,
+            1.332,
+            8.0
+          ]
+        },
+        "south": {
+          "texture": "#an_north_main",
+          "uv": [
+            14.668,
+            0.0,
+            16.0,
+            8.0
+          ]
+        },
+        "west": {
+          "texture": "#an_north_main",
+          "uv": [
+            0.68,
+            0.0,
+            8.0,
+            8.0
+          ]
+        },
+        "up": {
+          "texture": "#an_north_main",
+          "uv": [
+            14.668,
+            0.68,
+            16.0,
+            8.0
+          ],
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#an_north_main",
+          "uv": [
+            14.668,
+            8.0,
+            16.0,
+            15.32
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        13.722,
+        8.0,
+        8.0
+      ],
+      "to": [
+        16.0,
+        16.0,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_north_main",
+          "uv": [
+            0.0,
+            0.0,
+            2.278,
+            8.0
+          ]
+        },
+        "south": {
+          "texture": "#an_north_main",
+          "uv": [
+            13.722,
+            0.0,
+            16.0,
+            8.0
+          ],
+          "cullface": "south"
+        },
+        "west": {
+          "texture": "#an_north_main",
+          "uv": [
+            8.0,
+            0.0,
+            16.0,
+            8.0
+          ]
+        },
+        "up": {
+          "texture": "#an_north_main",
+          "uv": [
+            13.722,
+            8.0,
+            16.0,
+            16.0
+          ],
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#an_north_main",
+          "uv": [
+            13.722,
+            0.0,
+            16.0,
+            8.0
+          ]
+        }
+      }
+    }
+  ]
+}

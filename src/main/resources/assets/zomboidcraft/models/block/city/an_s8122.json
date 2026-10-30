@@ -1,0 +1,93 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_lining": "zomboidcraft:block/city/al_lining",
+    "al_paint": "zomboidcraft:block/city/al_paint",
+    "an_charter_door_0_0": "zomboidcraft:block/city/an_charter_door_0_0",
+    "particle": "zomboidcraft:block/city/an_charter_door_0_0"
+  },
+  "elements": [
+    {
+      "from": [
+        -0.714,
+        12.692,
+        0
+      ],
+      "to": [
+        0.536,
+        15.692,
+        16
+      ],
+      "faces": {
+        "up": {
+          "texture": "#an_charter_door_0_0",
+          "uv": [
+            0,
+            0.166,
+            16,
+            1.05
+          ]
+        },
+        "down": {
+          "texture": "#al_lining",
+          "uv": [
+            0,
+            0,
+            1.25,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          0.335,
+          15.692,
+          8.0
+        ],
+        "axis": "z",
+        "angle": 44.975
+      }
+    },
+    {
+      "from": [
+        0.536,
+        12.692,
+        0
+      ],
+      "to": [
+        1.385,
+        15.692,
+        16
+      ],
+      "faces": {
+        "up": {
+          "texture": "#al_paint",
+          "uv": [
+            0.536,
+            0,
+            1.385,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#al_lining",
+          "uv": [
+            0.536,
+            0,
+            1.385,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          0.335,
+          15.692,
+          8.0
+        ],
+        "axis": "z",
+        "angle": 44.975
+      }
+    }
+  ]
+}

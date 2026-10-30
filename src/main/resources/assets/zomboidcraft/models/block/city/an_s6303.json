@@ -1,0 +1,132 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "an_north_main": "zomboidcraft:block/city/an_north_main",
+    "an_north_rudder": "zomboidcraft:block/city/an_north_rudder",
+    "particle": "zomboidcraft:block/city/an_north_main"
+  },
+  "elements": [
+    {
+      "from": [
+        15.603,
+        0.0,
+        0.0
+      ],
+      "to": [
+        16.0,
+        8.0,
+        2.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_north_main",
+          "uv": [
+            0.0,
+            8.0,
+            0.397,
+            16.0
+          ],
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#an_north_main",
+          "uv": [
+            15.603,
+            8.0,
+            16.0,
+            16.0
+          ]
+        },
+        "west": {
+          "texture": "#an_north_rudder",
+          "uv": [
+            0.0,
+            8.0,
+            2.2,
+            16.0
+          ]
+        },
+        "up": {
+          "texture": "#an_north_main",
+          "uv": [
+            15.603,
+            0.0,
+            16.0,
+            2.2
+          ]
+        },
+        "down": {
+          "texture": "#an_north_main",
+          "uv": [
+            15.603,
+            13.8,
+            16.0,
+            16.0
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        15.543,
+        8.0,
+        0.0
+      ],
+      "to": [
+        16.0,
+        16.0,
+        4.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_north_main",
+          "uv": [
+            0.0,
+            0.0,
+            0.457,
+            8.0
+          ],
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#an_north_main",
+          "uv": [
+            15.543,
+            0.0,
+            16.0,
+            8.0
+          ]
+        },
+        "west": {
+          "texture": "#an_north_rudder",
+          "uv": [
+            0.0,
+            0.0,
+            4.2,
+            8.0
+          ]
+        },
+        "up": {
+          "texture": "#an_north_main",
+          "uv": [
+            15.543,
+            0.0,
+            16.0,
+            4.2
+          ],
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#an_north_main",
+          "uv": [
+            15.543,
+            11.8,
+            16.0,
+            16.0
+          ]
+        }
+      }
+    }
+  ]
+}

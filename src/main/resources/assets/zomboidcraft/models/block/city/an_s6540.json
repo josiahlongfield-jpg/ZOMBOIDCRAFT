@@ -1,0 +1,126 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_ceiling": "zomboidcraft:block/city/al_ceiling",
+    "al_dark": "zomboidcraft:block/city/al_dark",
+    "al_lining": "zomboidcraft:block/city/al_lining",
+    "al_paint": "zomboidcraft:block/city/al_paint",
+    "particle": "zomboidcraft:block/city/al_paint"
+  },
+  "elements": [
+    {
+      "from": [
+        8.517,
+        11.096,
+        0
+      ],
+      "to": [
+        12.767,
+        14.096,
+        16
+      ],
+      "faces": {
+        "up": {
+          "texture": "#al_paint",
+          "uv": [
+            8.517,
+            0,
+            12.767,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#al_dark",
+          "uv": [
+            8.517,
+            0,
+            12.767,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          12.888,
+          14.096,
+          8.0
+        ],
+        "axis": "z",
+        "angle": -32.075
+      }
+    },
+    {
+      "from": [
+        12.767,
+        11.096,
+        0
+      ],
+      "to": [
+        17.259,
+        14.096,
+        16
+      ],
+      "faces": {
+        "up": {
+          "texture": "#al_paint",
+          "uv": [
+            11.508,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#al_lining",
+          "uv": [
+            11.508,
+            0,
+            16,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          12.888,
+          14.096,
+          8.0
+        ],
+        "axis": "z",
+        "angle": -32.075
+      }
+    },
+    {
+      "from": [
+        0.0,
+        10.88,
+        0
+      ],
+      "to": [
+        16.0,
+        12.48,
+        16
+      ],
+      "faces": {
+        "up": {
+          "texture": "#al_dark",
+          "uv": [
+            0.0,
+            0,
+            16.0,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#al_ceiling",
+          "uv": [
+            0.0,
+            0,
+            16.0,
+            16
+          ]
+        }
+      }
+    }
+  ]
+}

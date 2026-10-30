@@ -23,9 +23,9 @@ import java.util.SplittableRandom;
  * doors, most shut, one or two up on what the owners kept in them.</li>
  * <li>The private jet centre at the east end, by the A5 connector to the runway (the Air Guard's
  * ramp until Josiah, 2026-10-30, sent the fighters and helicopters to Caldwell Army Airfield):
- * hangars 3 and 4 with their doors run right back into the pockets either side, the line of
- * stands on the apron facing the taxiway, the helipads, the lounge, the fuel bowser's stand, the
- * chocks, the cones.</li>
+ * hangars 3 and 4 with their doors run right back into the pockets either side and a business
+ * jet in each (tools/city/fleet.py), two more on the line facing the taxiway with their stairs
+ * down, the helipads, the lounge, the fuel bowser's stand, the chocks, the cones.</li>
  * </ul>
  */
 final class AirportHangars extends Grounds {
@@ -36,7 +36,7 @@ final class AirportHangars extends Grounds {
     /** The T-hangars: eight units from TX0, each TW wide, the back at TZ0 and the doors at TZ1. */
     static final int TX0 = 622, TW = 12, UNITS = 8, TZ0 = -214, TZ1 = -201, TROOF = 6;
     /** The jet centre's hangars 3 and 4 (x from G3, G4, GW wide, back at GZ0, door wall at GZ1), the door's height, the roof. */
-    static final int G3 = 744, G4 = 794, GW = 40, GZ0 = -232, GZ1 = -193, GDOOR = 10, GROOF = 14;
+    static final int G3 = 744, G4 = 800, GW = 44, GZ0 = -232, GZ1 = -193, GDOOR = 13, GROOF = 17;
     /** The jet centre's lounge building, the line of stands on the apron, the helipads' middles. */
     static final int OX0 = 848, OX1 = 879, OZ0 = -232, OZ1 = -214, LINE_X = 858, LINE_Z = -158;
     static final int[][] PADS = {{906, -200}, {936, -200}, {966, -200}};
@@ -488,14 +488,13 @@ final class AirportHangars extends Grounds {
             int x0 = k == 0 ? G3 : G4, x1 = x0 + GW - 1;
             shell(x0, x1, GZ0, GZ1, GDOOR, GROOF);
             pocketDoors(x0 + 4, GZ1, GDOOR, 3 + k);
-            // the power cart and the chocks at each stand
-            for (int j = 0; j < 2; j++) {
-                int jx = x0 + 11 + j * 17;
-                set(jx, 1, GZ0 + 3, "rp_gpu[facing=south]");
-                if (chance() < 0.6) {
-                    set(jx, 1, GZ1 - 6, "rp_chocks[facing=east]");
-                }
-            }
+            // a business jet nose out to the door, its stair let down, the power cart behind its tail
+            Airliner.Plane jet = Airliner.plane(k == 0 ? "bizjet_private" : "bizjet_charter");
+            Placer q = p.turned(x0 + GW / 2, 0, GZ1 - 4, 2);
+            jet.place(q, 0, 0, 0);
+            AirportGates.stairTruck(q, jet.skinW() - 1, jet.floor() - 1, jet.west()[0]);
+            q.set(0, 1, 4, "rp_chocks[facing=east]");
+            set(x0 + GW / 2 + 3, 1, GZ0 + 2, "rp_gpu[facing=south]");
             for (int z = GZ0 + 3; z < GZ1 - 3; z += 3) {
                 set(x0 + 1, 1, z, any("pk_tool_chest[facing=east]", "navy_toolbox[facing=east]", "pw_drum", "tire_stack"));
                 set(x1 - 1, 1, z, any("pk_tool_chest[facing=west]", "tire_stack", "pw_drum", "home_workbench[facing=west]"));
@@ -510,26 +509,30 @@ final class AirportHangars extends Grounds {
             }
         }
         ops();
-        // the line on the apron, east of the hangars' way out: four stands, chocks and cones left on them
-        for (int j = 0; j < 4; j++) {
-            double jx = LINE_X + 0.5 + j * 22;
-            set((int) jx + 1, 1, LINE_Z + 6, "rp_chocks[facing=east]");
+        // the line on the apron, east of the hangars' way out: two jets nose to the taxiway, their stairs
+        // down, chocks and cones left about them
+        for (int j = 0; j < 2; j++) {
+            int jx = LINE_X + 20 + j * 50;
+            Airliner.Plane jet = Airliner.plane(j == 0 ? "bizjet_charter" : "bizjet_private");
+            Placer q = p.turned(jx, 0, LINE_Z + 18, 2);
+            jet.place(q, 0, 0, 0);
+            AirportGates.stairTruck(q, jet.skinW() - 1, jet.floor() - 1, jet.west()[0]);
+            set(jx, 1, LINE_Z + 13, "rp_chocks[facing=east]");
             // the crew ladder hooked on by the cockpit, the power cart off the nose
-            set((int) jx - 3, 1, LINE_Z + 5, "trade_stepladder[facing=east]");
-            set((int) jx + 5, 1, LINE_Z + 9, "rp_gpu[facing=west]");
+            set(jx + 5, 1, LINE_Z + 21, "rp_gpu[facing=west]");
             for (int s = -1; s <= 1; s += 2) {
                 if (chance() < 0.7) {
-                    set((int) jx + s * 9, 1, LINE_Z, "st_cone");
+                    set(jx + s * 19, 1, LINE_Z + 4, "st_cone");
                 }
             }
             // the parking box painted round each
-            for (int x = (int) jx - 10; x <= (int) jx + 12; x++) {
-                set(x, 0, LINE_Z - 11, "af_paint_y");
+            for (int x = jx - 22; x <= jx + 22; x++) {
+                set(x, 0, LINE_Z - 18, "af_paint_y");
             }
-            for (int z = LINE_Z - 11; z <= LINE_Z + 10; z++) {
-                set((int) jx - 10, 0, z, "af_paint_y");
-                if (j == 3) {
-                    set((int) jx + 12, 0, z, "af_paint_y");
+            for (int z = LINE_Z - 18; z <= LINE_Z + 20; z++) {
+                set(jx - 22, 0, z, "af_paint_y");
+                if (j == 1) {
+                    set(jx + 22, 0, z, "af_paint_y");
                 }
             }
         }

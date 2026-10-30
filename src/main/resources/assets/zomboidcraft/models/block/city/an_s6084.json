@@ -1,0 +1,246 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_dark": "zomboidcraft:block/city/al_dark",
+    "al_paint": "zomboidcraft:block/city/al_paint",
+    "particle": "zomboidcraft:block/city/al_dark"
+  },
+  "elements": [
+    {
+      "from": [
+        -1.117,
+        -0.015,
+        0.0
+      ],
+      "to": [
+        11.035,
+        2.985,
+        4.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_dark",
+          "uv": [
+            3.848,
+            13.0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#al_paint",
+          "uv": [
+            0,
+            13.0,
+            12.152,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#al_paint",
+          "uv": [
+            0,
+            0.0,
+            12.152,
+            4.0
+          ]
+        },
+        "down": {
+          "texture": "#al_dark",
+          "uv": [
+            0,
+            12.0,
+            12.152,
+            16.0
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          4.959,
+          2.985,
+          2.0
+        ],
+        "axis": "z",
+        "angle": -29.425
+      }
+    },
+    {
+      "from": [
+        -1.07,
+        -0.359,
+        4.0
+      ],
+      "to": [
+        9.81,
+        2.641,
+        8.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_dark",
+          "uv": [
+            5.12,
+            13.0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#al_paint",
+          "uv": [
+            0,
+            13.0,
+            10.88,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#al_paint",
+          "uv": [
+            0,
+            4.0,
+            10.88,
+            8.0
+          ]
+        },
+        "down": {
+          "texture": "#al_dark",
+          "uv": [
+            0,
+            8.0,
+            10.88,
+            12.0
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          4.37,
+          2.641,
+          6.0
+        ],
+        "axis": "z",
+        "angle": -29.65
+      }
+    },
+    {
+      "from": [
+        -1.038,
+        -0.712,
+        8.0
+      ],
+      "to": [
+        8.595,
+        2.288,
+        12.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_dark",
+          "uv": [
+            6.367,
+            13.0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#al_paint",
+          "uv": [
+            0,
+            13.0,
+            9.633,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#al_paint",
+          "uv": [
+            0,
+            8.0,
+            9.633,
+            12.0
+          ]
+        },
+        "down": {
+          "texture": "#al_dark",
+          "uv": [
+            0,
+            4.0,
+            9.633,
+            8.0
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          3.779,
+          2.288,
+          10.0
+        ],
+        "axis": "z",
+        "angle": -29.9
+      }
+    },
+    {
+      "from": [
+        -0.992,
+        -1.071,
+        12.0
+      ],
+      "to": [
+        7.358,
+        1.929,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_dark",
+          "uv": [
+            7.65,
+            13.0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#al_paint",
+          "uv": [
+            0,
+            13.0,
+            8.35,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#al_paint",
+          "uv": [
+            0,
+            12.0,
+            8.35,
+            16.0
+          ]
+        },
+        "down": {
+          "texture": "#al_dark",
+          "uv": [
+            0,
+            0.0,
+            8.35,
+            4.0
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          3.183,
+          1.929,
+          14.0
+        ],
+        "axis": "z",
+        "angle": -30.175
+      }
+    }
+  ]
+}

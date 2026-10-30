@@ -1,0 +1,119 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_belly": "zomboidcraft:block/city/al_belly",
+    "al_strut": "zomboidcraft:block/city/al_strut",
+    "particle": "zomboidcraft:block/city/al_strut"
+  },
+  "elements": [
+    {
+      "from": [
+        5.76,
+        2.4,
+        0.0
+      ],
+      "to": [
+        7.04,
+        9.6,
+        1.6
+      ],
+      "faces": {
+        "south": {
+          "texture": "#al_strut",
+          "uv": [
+            5.76,
+            6.4,
+            7.04,
+            13.6
+          ]
+        },
+        "east": {
+          "texture": "#al_strut",
+          "uv": [
+            14.4,
+            6.4,
+            16.0,
+            13.6
+          ]
+        },
+        "west": {
+          "texture": "#al_strut",
+          "uv": [
+            0.0,
+            6.4,
+            1.6,
+            13.6
+          ]
+        },
+        "up": {
+          "texture": "#al_strut",
+          "uv": [
+            5.76,
+            0.0,
+            7.04,
+            1.6
+          ]
+        },
+        "down": {
+          "texture": "#al_strut",
+          "uv": [
+            5.76,
+            14.4,
+            7.04,
+            16.0
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        9.12,
+        7.2,
+        0.0
+      ],
+      "to": [
+        10.08,
+        16.0,
+        4.8
+      ],
+      "faces": {
+        "south": {
+          "texture": "#al_belly",
+          "uv": [
+            9.12,
+            0.0,
+            10.08,
+            8.8
+          ]
+        },
+        "east": {
+          "texture": "#al_belly",
+          "uv": [
+            11.2,
+            0.0,
+            16.0,
+            8.8
+          ]
+        },
+        "west": {
+          "texture": "#al_belly",
+          "uv": [
+            0.0,
+            0.0,
+            4.8,
+            8.8
+          ]
+        },
+        "down": {
+          "texture": "#al_belly",
+          "uv": [
+            9.12,
+            11.2,
+            10.08,
+            16.0
+          ]
+        }
+      }
+    }
+  ]
+}

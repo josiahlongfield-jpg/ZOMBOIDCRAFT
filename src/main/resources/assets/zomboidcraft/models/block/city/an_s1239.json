@@ -1,0 +1,251 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_metal": "zomboidcraft:block/city/al_metal",
+    "an_coastal_main": "zomboidcraft:block/city/an_coastal_main",
+    "particle": "zomboidcraft:block/city/an_coastal_main"
+  },
+  "elements": [
+    {
+      "from": [
+        4.041,
+        0.0,
+        0.0
+      ],
+      "to": [
+        7.209,
+        1.6,
+        16.0
+      ],
+      "faces": {
+        "east": {
+          "texture": "#an_coastal_main",
+          "uv": [
+            0.0,
+            14.4,
+            16.0,
+            16.0
+          ]
+        },
+        "west": {
+          "texture": "#an_coastal_main",
+          "uv": [
+            0.0,
+            14.4,
+            16.0,
+            16.0
+          ]
+        },
+        "up": {
+          "texture": "#an_coastal_main",
+          "uv": [
+            4.041,
+            0.0,
+            7.209,
+            16.0
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        4.879,
+        1.6,
+        0.0
+      ],
+      "to": [
+        7.871,
+        5.6,
+        16.0
+      ],
+      "faces": {
+        "east": {
+          "texture": "#an_coastal_main",
+          "uv": [
+            0.0,
+            10.4,
+            16.0,
+            14.4
+          ]
+        },
+        "west": {
+          "texture": "#an_coastal_main",
+          "uv": [
+            0.0,
+            10.4,
+            16.0,
+            14.4
+          ]
+        },
+        "up": {
+          "texture": "#an_coastal_main",
+          "uv": [
+            4.879,
+            0.0,
+            7.871,
+            16.0
+          ]
+        },
+        "down": {
+          "texture": "#an_coastal_main",
+          "uv": [
+            4.879,
+            0.0,
+            7.871,
+            16.0
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        5.716,
+        5.6,
+        0.0
+      ],
+      "to": [
+        8.534,
+        9.6,
+        16.0
+      ],
+      "faces": {
+        "east": {
+          "texture": "#an_coastal_main",
+          "uv": [
+            0.0,
+            6.4,
+            16.0,
+            10.4
+          ]
+        },
+        "west": {
+          "texture": "#an_coastal_main",
+          "uv": [
+            0.0,
+            6.4,
+            16.0,
+            10.4
+          ]
+        },
+        "up": {
+          "texture": "#an_coastal_main",
+          "uv": [
+            5.716,
+            0.0,
+            8.534,
+            16.0
+          ]
+        },
+        "down": {
+          "texture": "#an_coastal_main",
+          "uv": [
+            5.716,
+            0.0,
+            8.534,
+            16.0
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        6.554,
+        9.6,
+        0.0
+      ],
+      "to": [
+        9.196,
+        13.6,
+        16.0
+      ],
+      "faces": {
+        "east": {
+          "texture": "#an_coastal_main",
+          "uv": [
+            0.0,
+            2.4,
+            16.0,
+            6.4
+          ]
+        },
+        "west": {
+          "texture": "#an_coastal_main",
+          "uv": [
+            0.0,
+            2.4,
+            16.0,
+            6.4
+          ]
+        },
+        "up": {
+          "texture": "#an_coastal_main",
+          "uv": [
+            6.554,
+            0.0,
+            9.196,
+            16.0
+          ]
+        },
+        "down": {
+          "texture": "#an_coastal_main",
+          "uv": [
+            6.554,
+            0.0,
+            9.196,
+            16.0
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        7.391,
+        13.6,
+        1.648
+      ],
+      "to": [
+        9.859,
+        16.0,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_metal",
+          "uv": [
+            6.141,
+            0.0,
+            8.609,
+            2.4
+          ]
+        },
+        "east": {
+          "texture": "#an_coastal_main",
+          "uv": [
+            0.0,
+            0.0,
+            14.352,
+            2.4
+          ]
+        },
+        "west": {
+          "texture": "#an_coastal_main",
+          "uv": [
+            1.648,
+            0.0,
+            16.0,
+            2.4
+          ]
+        },
+        "down": {
+          "texture": "#an_coastal_main",
+          "uv": [
+            7.391,
+            0.0,
+            9.859,
+            14.352
+          ]
+        }
+      }
+    }
+  ]
+}

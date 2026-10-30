@@ -1,0 +1,250 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "an_private_main": "zomboidcraft:block/city/an_private_main",
+    "particle": "zomboidcraft:block/city/an_private_main"
+  },
+  "elements": [
+    {
+      "from": [
+        15.605,
+        0.0,
+        6.6
+      ],
+      "to": [
+        16.0,
+        8.0,
+        8.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_private_main",
+          "uv": [
+            0.0,
+            8.0,
+            0.395,
+            16.0
+          ]
+        },
+        "south": {
+          "texture": "#an_private_main",
+          "uv": [
+            15.605,
+            8.0,
+            16.0,
+            16.0
+          ]
+        },
+        "west": {
+          "texture": "#an_private_main",
+          "uv": [
+            6.6,
+            8.0,
+            8.0,
+            16.0
+          ]
+        },
+        "up": {
+          "texture": "#an_private_main",
+          "uv": [
+            15.605,
+            6.6,
+            16.0,
+            8.0
+          ]
+        },
+        "down": {
+          "texture": "#an_private_main",
+          "uv": [
+            15.605,
+            8.0,
+            16.0,
+            9.4
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        14.969,
+        0.0,
+        8.0
+      ],
+      "to": [
+        16.0,
+        8.0,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_private_main",
+          "uv": [
+            0.0,
+            8.0,
+            1.031,
+            16.0
+          ]
+        },
+        "south": {
+          "texture": "#an_private_main",
+          "uv": [
+            14.969,
+            8.0,
+            16.0,
+            16.0
+          ],
+          "cullface": "south"
+        },
+        "west": {
+          "texture": "#an_private_main",
+          "uv": [
+            8.0,
+            8.0,
+            16.0,
+            16.0
+          ]
+        },
+        "up": {
+          "texture": "#an_private_main",
+          "uv": [
+            14.969,
+            8.0,
+            16.0,
+            16.0
+          ]
+        },
+        "down": {
+          "texture": "#an_private_main",
+          "uv": [
+            14.969,
+            0.0,
+            16.0,
+            8.0
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        15.398,
+        8.0,
+        12.6
+      ],
+      "to": [
+        16.0,
+        9.6,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_private_main",
+          "uv": [
+            0.0,
+            6.4,
+            0.602,
+            8.0
+          ]
+        },
+        "south": {
+          "texture": "#an_private_main",
+          "uv": [
+            15.398,
+            6.4,
+            16.0,
+            8.0
+          ],
+          "cullface": "south"
+        },
+        "west": {
+          "texture": "#an_private_main",
+          "uv": [
+            12.6,
+            6.4,
+            16.0,
+            8.0
+          ]
+        },
+        "up": {
+          "texture": "#an_private_main",
+          "uv": [
+            15.398,
+            12.6,
+            16.0,
+            16.0
+          ]
+        },
+        "down": {
+          "texture": "#an_private_main",
+          "uv": [
+            15.398,
+            0.0,
+            16.0,
+            3.4
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        15.04,
+        5.44,
+        1.6
+      ],
+      "to": [
+        16.0,
+        7.36,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_private_main",
+          "uv": [
+            0.0,
+            8.64,
+            0.96,
+            10.56
+          ]
+        },
+        "south": {
+          "texture": "#an_private_main",
+          "uv": [
+            15.04,
+            8.64,
+            16.0,
+            10.56
+          ],
+          "cullface": "south"
+        },
+        "west": {
+          "texture": "#an_private_main",
+          "uv": [
+            1.6,
+            8.64,
+            16.0,
+            10.56
+          ]
+        },
+        "up": {
+          "texture": "#an_private_main",
+          "uv": [
+            15.04,
+            1.6,
+            16.0,
+            16.0
+          ]
+        },
+        "down": {
+          "texture": "#an_private_main",
+          "uv": [
+            15.04,
+            0.0,
+            16.0,
+            14.4
+          ]
+        }
+      }
+    }
+  ]
+}

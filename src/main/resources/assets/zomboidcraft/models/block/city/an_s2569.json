@@ -1,0 +1,128 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_ck_lining": "zomboidcraft:block/city/al_ck_lining",
+    "al_paint": "zomboidcraft:block/city/al_paint",
+    "particle": "zomboidcraft:block/city/al_paint"
+  },
+  "elements": [
+    {
+      "from": [
+        15.635,
+        -0.678,
+        12.0
+      ],
+      "to": [
+        18.635,
+        1.943,
+        14.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_paint",
+          "uv": [
+            0,
+            13.379,
+            3.0,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#al_ck_lining",
+          "uv": [
+            13.0,
+            13.379,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#al_ck_lining",
+          "uv": [
+            2.0,
+            13.379,
+            4.0,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#al_paint",
+          "uv": [
+            12.0,
+            13.379,
+            14.0,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          15.635,
+          0.633,
+          13.0
+        ],
+        "axis": "z",
+        "angle": -32.975
+      }
+    },
+    {
+      "from": [
+        15.271,
+        -0.811,
+        14.0
+      ],
+      "to": [
+        18.271,
+        3.162,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_paint",
+          "uv": [
+            0,
+            12.027,
+            3.0,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#al_ck_lining",
+          "uv": [
+            13.0,
+            12.027,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#al_ck_lining",
+          "uv": [
+            0.0,
+            12.027,
+            2.0,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#al_paint",
+          "uv": [
+            14.0,
+            12.027,
+            16.0,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          15.271,
+          1.175,
+          15.0
+        ],
+        "axis": "z",
+        "angle": -33.025
+      }
+    }
+  ]
+}

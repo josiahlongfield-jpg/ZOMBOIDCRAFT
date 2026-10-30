@@ -1,0 +1,254 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "an_charter_bizjet_fin_10": "zomboidcraft:block/city/an_charter_bizjet_fin_10",
+    "an_charter_main": "zomboidcraft:block/city/an_charter_main",
+    "particle": "zomboidcraft:block/city/an_charter_main"
+  },
+  "elements": [
+    {
+      "from": [
+        14.006,
+        0.0,
+        0.0
+      ],
+      "to": [
+        16.0,
+        8.0,
+        8.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_charter_main",
+          "uv": [
+            0.0,
+            8.0,
+            1.994,
+            16.0
+          ],
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#an_charter_main",
+          "uv": [
+            14.006,
+            8.0,
+            16.0,
+            16.0
+          ]
+        },
+        "west": {
+          "texture": "#an_charter_bizjet_fin_10",
+          "uv": [
+            0.0,
+            8.0,
+            8.0,
+            16.0
+          ]
+        },
+        "up": {
+          "texture": "#an_charter_main",
+          "uv": [
+            14.006,
+            0.0,
+            16.0,
+            8.0
+          ]
+        },
+        "down": {
+          "texture": "#an_charter_main",
+          "uv": [
+            14.006,
+            8.0,
+            16.0,
+            16.0
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        14.084,
+        0.0,
+        8.0
+      ],
+      "to": [
+        16.0,
+        8.0,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_charter_main",
+          "uv": [
+            0.0,
+            8.0,
+            1.916,
+            16.0
+          ]
+        },
+        "south": {
+          "texture": "#an_charter_main",
+          "uv": [
+            14.084,
+            8.0,
+            16.0,
+            16.0
+          ],
+          "cullface": "south"
+        },
+        "west": {
+          "texture": "#an_charter_bizjet_fin_10",
+          "uv": [
+            8.0,
+            8.0,
+            16.0,
+            16.0
+          ]
+        },
+        "up": {
+          "texture": "#an_charter_main",
+          "uv": [
+            14.084,
+            8.0,
+            16.0,
+            16.0
+          ]
+        },
+        "down": {
+          "texture": "#an_charter_main",
+          "uv": [
+            14.084,
+            0.0,
+            16.0,
+            8.0
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        14.117,
+        8.0,
+        0.0
+      ],
+      "to": [
+        16.0,
+        16.0,
+        8.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_charter_main",
+          "uv": [
+            0.0,
+            0.0,
+            1.883,
+            8.0
+          ],
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#an_charter_main",
+          "uv": [
+            14.117,
+            0.0,
+            16.0,
+            8.0
+          ]
+        },
+        "west": {
+          "texture": "#an_charter_bizjet_fin_10",
+          "uv": [
+            0.0,
+            0.0,
+            8.0,
+            8.0
+          ]
+        },
+        "up": {
+          "texture": "#an_charter_main",
+          "uv": [
+            14.117,
+            0.0,
+            16.0,
+            8.0
+          ],
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#an_charter_main",
+          "uv": [
+            14.117,
+            8.0,
+            16.0,
+            16.0
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        14.119,
+        8.0,
+        8.0
+      ],
+      "to": [
+        16.0,
+        16.0,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_charter_main",
+          "uv": [
+            0.0,
+            0.0,
+            1.881,
+            8.0
+          ]
+        },
+        "south": {
+          "texture": "#an_charter_main",
+          "uv": [
+            14.119,
+            0.0,
+            16.0,
+            8.0
+          ],
+          "cullface": "south"
+        },
+        "west": {
+          "texture": "#an_charter_bizjet_fin_10",
+          "uv": [
+            8.0,
+            0.0,
+            16.0,
+            8.0
+          ]
+        },
+        "up": {
+          "texture": "#an_charter_main",
+          "uv": [
+            14.119,
+            8.0,
+            16.0,
+            16.0
+          ],
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#an_charter_main",
+          "uv": [
+            14.119,
+            0.0,
+            16.0,
+            8.0
+          ]
+        }
+      }
+    }
+  ]
+}

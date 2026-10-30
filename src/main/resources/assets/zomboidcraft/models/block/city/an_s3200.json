@@ -1,0 +1,135 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_lining": "zomboidcraft:block/city/al_lining",
+    "al_paint": "zomboidcraft:block/city/al_paint",
+    "an_north_door_0_1": "zomboidcraft:block/city/an_north_door_0_1",
+    "an_north_door_0_2": "zomboidcraft:block/city/an_north_door_0_2",
+    "particle": "zomboidcraft:block/city/al_paint"
+  },
+  "elements": [
+    {
+      "from": [
+        8.303,
+        -0.558,
+        0
+      ],
+      "to": [
+        11.303,
+        0.192,
+        16
+      ],
+      "faces": {
+        "east": {
+          "texture": "#al_lining",
+          "uv": [
+            0,
+            15.25,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#al_paint",
+          "uv": [
+            0,
+            15.25,
+            16,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8.303,
+          8.066,
+          8.0
+        ],
+        "axis": "z",
+        "angle": 4.375
+      }
+    },
+    {
+      "from": [
+        8.303,
+        0.192,
+        0
+      ],
+      "to": [
+        11.303,
+        16.192,
+        16
+      ],
+      "faces": {
+        "east": {
+          "texture": "#al_lining",
+          "uv": [
+            0,
+            0,
+            16,
+            16.0
+          ]
+        },
+        "west": {
+          "texture": "#an_north_door_0_2",
+          "uv": [
+            0,
+            0.0,
+            16,
+            15.785
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8.303,
+          8.066,
+          8.0
+        ],
+        "axis": "z",
+        "angle": 4.375
+      }
+    },
+    {
+      "from": [
+        8.303,
+        16.192,
+        0
+      ],
+      "to": [
+        11.303,
+        16.69,
+        16
+      ],
+      "faces": {
+        "east": {
+          "texture": "#al_lining",
+          "uv": [
+            0,
+            0,
+            16,
+            0.498
+          ]
+        },
+        "west": {
+          "texture": "#an_north_door_0_1",
+          "uv": [
+            0,
+            15.335,
+            16,
+            15.831
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8.303,
+          8.066,
+          8.0
+        ],
+        "axis": "z",
+        "angle": 4.375
+      }
+    }
+  ]
+}

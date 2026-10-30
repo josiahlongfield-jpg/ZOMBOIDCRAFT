@@ -1,0 +1,69 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "an_charter_main": "zomboidcraft:block/city/an_charter_main",
+    "particle": "zomboidcraft:block/city/an_charter_main"
+  },
+  "elements": [
+    {
+      "from": [
+        13.345,
+        3.745,
+        0.0
+      ],
+      "to": [
+        16.0,
+        9.055,
+        3.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_charter_main",
+          "uv": [
+            0.0,
+            6.945,
+            2.655,
+            12.255
+          ],
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#an_charter_main",
+          "uv": [
+            13.345,
+            6.945,
+            16.0,
+            12.255
+          ]
+        },
+        "west": {
+          "texture": "#an_charter_main",
+          "uv": [
+            0.0,
+            6.945,
+            3.2,
+            12.255
+          ]
+        },
+        "up": {
+          "texture": "#an_charter_main",
+          "uv": [
+            13.345,
+            0.0,
+            16.0,
+            3.2
+          ]
+        },
+        "down": {
+          "texture": "#an_charter_main",
+          "uv": [
+            13.345,
+            12.8,
+            16.0,
+            16.0
+          ]
+        }
+      }
+    }
+  ]
+}

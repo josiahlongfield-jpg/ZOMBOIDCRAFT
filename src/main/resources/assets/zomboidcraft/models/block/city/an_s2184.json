@@ -1,0 +1,252 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "an_skyline_main": "zomboidcraft:block/city/an_skyline_main",
+    "an_skyline_rudder": "zomboidcraft:block/city/an_skyline_rudder",
+    "particle": "zomboidcraft:block/city/an_skyline_main"
+  },
+  "elements": [
+    {
+      "from": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "to": [
+        0.806,
+        8.0,
+        8.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            15.194,
+            8.0,
+            16.0,
+            16.0
+          ],
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            0.0,
+            8.0,
+            0.806,
+            16.0
+          ]
+        },
+        "east": {
+          "texture": "#an_skyline_rudder",
+          "uv": [
+            8.0,
+            8.0,
+            0.0,
+            16.0
+          ]
+        },
+        "up": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            0.0,
+            0.0,
+            0.806,
+            8.0
+          ]
+        },
+        "down": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            0.0,
+            8.0,
+            0.806,
+            16.0
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0.0,
+        0.0,
+        8.0
+      ],
+      "to": [
+        0.46,
+        8.0,
+        12.56
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            15.54,
+            8.0,
+            16.0,
+            16.0
+          ]
+        },
+        "south": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            0.0,
+            8.0,
+            0.46,
+            16.0
+          ]
+        },
+        "east": {
+          "texture": "#an_skyline_rudder",
+          "uv": [
+            12.56,
+            8.0,
+            8.0,
+            16.0
+          ]
+        },
+        "up": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            0.0,
+            8.0,
+            0.46,
+            12.56
+          ]
+        },
+        "down": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            0.0,
+            3.44,
+            0.46,
+            8.0
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0.0,
+        8.0,
+        0.0
+      ],
+      "to": [
+        0.887,
+        16.0,
+        8.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            15.113,
+            0.0,
+            16.0,
+            8.0
+          ],
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            0.0,
+            0.0,
+            0.887,
+            8.0
+          ]
+        },
+        "east": {
+          "texture": "#an_skyline_rudder",
+          "uv": [
+            8.0,
+            0.0,
+            0.0,
+            8.0
+          ]
+        },
+        "up": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            0.0,
+            0.0,
+            0.887,
+            8.0
+          ],
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            0.0,
+            8.0,
+            0.887,
+            16.0
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        0.0,
+        8.0,
+        8.0
+      ],
+      "to": [
+        0.504,
+        16.0,
+        14.32
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            15.496,
+            0.0,
+            16.0,
+            8.0
+          ]
+        },
+        "south": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            0.0,
+            0.0,
+            0.504,
+            8.0
+          ]
+        },
+        "east": {
+          "texture": "#an_skyline_rudder",
+          "uv": [
+            14.32,
+            0.0,
+            8.0,
+            8.0
+          ]
+        },
+        "up": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            0.0,
+            8.0,
+            0.504,
+            14.32
+          ],
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            0.0,
+            1.68,
+            0.504,
+            8.0
+          ]
+        }
+      }
+    }
+  ]
+}

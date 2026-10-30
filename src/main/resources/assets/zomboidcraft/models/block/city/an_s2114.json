@@ -1,0 +1,254 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "an_skyline_main": "zomboidcraft:block/city/an_skyline_main",
+    "an_skyline_twinjet_fin_27": "zomboidcraft:block/city/an_skyline_twinjet_fin_27",
+    "particle": "zomboidcraft:block/city/an_skyline_main"
+  },
+  "elements": [
+    {
+      "from": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "to": [
+        2.162,
+        8.0,
+        8.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            13.838,
+            8.0,
+            16.0,
+            16.0
+          ],
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            0.0,
+            8.0,
+            2.162,
+            16.0
+          ]
+        },
+        "east": {
+          "texture": "#an_skyline_twinjet_fin_27",
+          "uv": [
+            8.0,
+            8.0,
+            0.0,
+            16.0
+          ]
+        },
+        "up": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            0.0,
+            0.0,
+            2.162,
+            8.0
+          ]
+        },
+        "down": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            0.0,
+            8.0,
+            2.162,
+            16.0
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0.0,
+        0.0,
+        8.0
+      ],
+      "to": [
+        2.302,
+        8.0,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            13.698,
+            8.0,
+            16.0,
+            16.0
+          ]
+        },
+        "south": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            0.0,
+            8.0,
+            2.302,
+            16.0
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#an_skyline_twinjet_fin_27",
+          "uv": [
+            16.0,
+            8.0,
+            8.0,
+            16.0
+          ]
+        },
+        "up": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            0.0,
+            8.0,
+            2.302,
+            16.0
+          ]
+        },
+        "down": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            0.0,
+            0.0,
+            2.302,
+            8.0
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0.0,
+        8.0,
+        0.0
+      ],
+      "to": [
+        1.863,
+        16.0,
+        8.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            14.137,
+            0.0,
+            16.0,
+            8.0
+          ],
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            0.0,
+            0.0,
+            1.863,
+            8.0
+          ]
+        },
+        "east": {
+          "texture": "#an_skyline_twinjet_fin_27",
+          "uv": [
+            8.0,
+            0.0,
+            0.0,
+            8.0
+          ]
+        },
+        "up": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            0.0,
+            0.0,
+            1.863,
+            8.0
+          ],
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            0.0,
+            8.0,
+            1.863,
+            16.0
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        0.0,
+        8.0,
+        8.0
+      ],
+      "to": [
+        2.107,
+        16.0,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            13.893,
+            0.0,
+            16.0,
+            8.0
+          ]
+        },
+        "south": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            0.0,
+            0.0,
+            2.107,
+            8.0
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#an_skyline_twinjet_fin_27",
+          "uv": [
+            16.0,
+            0.0,
+            8.0,
+            8.0
+          ]
+        },
+        "up": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            0.0,
+            8.0,
+            2.107,
+            16.0
+          ],
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            0.0,
+            0.0,
+            2.107,
+            8.0
+          ]
+        }
+      }
+    }
+  ]
+}

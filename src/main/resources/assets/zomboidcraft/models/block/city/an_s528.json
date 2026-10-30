@@ -1,0 +1,133 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_cowl": "zomboidcraft:block/city/al_cowl",
+    "al_intake": "zomboidcraft:block/city/al_intake",
+    "particle": "zomboidcraft:block/city/al_cowl"
+  },
+  "elements": [
+    {
+      "from": [
+        14.092,
+        -0.514,
+        1.6
+      ],
+      "to": [
+        16.592,
+        16.031,
+        5.6
+      ],
+      "faces": {
+        "east": {
+          "texture": "#al_intake",
+          "uv": [
+            10.4,
+            0,
+            14.4,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#al_cowl",
+          "uv": [
+            1.6,
+            0,
+            5.6,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          14.092,
+          7.759,
+          3.6
+        ],
+        "axis": "z",
+        "angle": -5.075
+      }
+    },
+    {
+      "from": [
+        14.746,
+        -0.551,
+        5.6
+      ],
+      "to": [
+        17.246,
+        13.941,
+        9.6
+      ],
+      "faces": {
+        "east": {
+          "texture": "#al_intake",
+          "uv": [
+            6.4,
+            1.508,
+            10.4,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#al_cowl",
+          "uv": [
+            5.6,
+            1.508,
+            9.6,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          14.746,
+          6.695,
+          7.6
+        ],
+        "axis": "z",
+        "angle": -2.65
+      }
+    },
+    {
+      "from": [
+        15.445,
+        -0.007,
+        9.6
+      ],
+      "to": [
+        17.945,
+        11.227,
+        13.6
+      ],
+      "faces": {
+        "east": {
+          "texture": "#al_intake",
+          "uv": [
+            2.4,
+            4.766,
+            6.4,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#al_cowl",
+          "uv": [
+            9.6,
+            4.766,
+            13.6,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          15.445,
+          5.61,
+          11.6
+        ],
+        "axis": "z",
+        "angle": -0.025
+      }
+    }
+  ]
+}

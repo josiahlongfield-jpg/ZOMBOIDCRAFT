@@ -1,0 +1,147 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "an_north_main": "zomboidcraft:block/city/an_north_main",
+    "particle": "zomboidcraft:block/city/an_north_main"
+  },
+  "elements": [
+    {
+      "from": [
+        0.0,
+        0.0,
+        9.08
+      ],
+      "to": [
+        1.283,
+        8.0,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_north_main",
+          "uv": [
+            14.717,
+            8.0,
+            16.0,
+            16.0
+          ]
+        },
+        "south": {
+          "texture": "#an_north_main",
+          "uv": [
+            0.0,
+            8.0,
+            1.283,
+            16.0
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#an_north_main",
+          "uv": [
+            16.0,
+            8.0,
+            9.08,
+            16.0
+          ]
+        },
+        "up": {
+          "texture": "#an_north_main",
+          "uv": [
+            0.0,
+            9.08,
+            1.283,
+            16.0
+          ]
+        },
+        "down": {
+          "texture": "#an_north_main",
+          "uv": [
+            0.0,
+            0.0,
+            1.283,
+            6.92
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        -3.898,
+        -2.12,
+        8.92
+      ],
+      "to": [
+        3.898,
+        10.12,
+        10.84
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_north_main",
+          "uv": [
+            8.204,
+            3.76,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#an_north_main",
+          "uv": [
+            0,
+            3.76,
+            7.796,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#an_north_main",
+          "uv": [
+            5.16,
+            3.76,
+            7.08,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#an_north_main",
+          "uv": [
+            8.92,
+            3.76,
+            10.84,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#an_north_main",
+          "uv": [
+            0,
+            8.92,
+            7.796,
+            10.84
+          ]
+        },
+        "down": {
+          "texture": "#an_north_main",
+          "uv": [
+            0,
+            5.16,
+            7.796,
+            7.08
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          0.0,
+          4.0,
+          9.88
+        ],
+        "axis": "x",
+        "angle": 46.397
+      }
+    }
+  ]
+}

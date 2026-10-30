@@ -1,0 +1,102 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_cowl": "zomboidcraft:block/city/al_cowl",
+    "al_intake": "zomboidcraft:block/city/al_intake",
+    "al_metal": "zomboidcraft:block/city/al_metal",
+    "particle": "zomboidcraft:block/city/al_metal"
+  },
+  "elements": [
+    {
+      "from": [
+        3.43,
+        -0.469,
+        9.6
+      ],
+      "to": [
+        7.43,
+        16.838,
+        13.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_metal",
+          "uv": [
+            8.57,
+            0,
+            12.57,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#al_intake",
+          "uv": [
+            2.4,
+            0,
+            6.4,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#al_metal",
+          "uv": [
+            9.6,
+            0,
+            13.6,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          3.43,
+          8.185,
+          11.6
+        ],
+        "axis": "z",
+        "angle": -6.65
+      }
+    },
+    {
+      "from": [
+        0.93,
+        -0.505,
+        13.6
+      ],
+      "to": [
+        3.43,
+        16.782,
+        17.6
+      ],
+      "faces": {
+        "east": {
+          "texture": "#al_intake",
+          "uv": [
+            0,
+            0,
+            4.0,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#al_cowl",
+          "uv": [
+            12.0,
+            0,
+            16,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          0.93,
+          8.138,
+          15.6
+        ],
+        "axis": "z",
+        "angle": -5.875
+      }
+    }
+  ]
+}

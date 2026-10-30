@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_psu": "zomboidcraft:block/city/al_psu",
+    "particle": "zomboidcraft:block/city/al_psu"
+  },
+  "elements": [
+    {
+      "from": [
+        0.0,
+        8.0,
+        0
+      ],
+      "to": [
+        16.0,
+        16.0,
+        16
+      ],
+      "faces": {
+        "down": {
+          "texture": "#al_psu",
+          "uv": [
+            16,
+            0,
+            0,
+            16
+          ]
+        }
+      }
+    }
+  ]
+}

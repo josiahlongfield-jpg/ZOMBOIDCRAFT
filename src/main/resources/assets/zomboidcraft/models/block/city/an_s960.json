@@ -1,0 +1,238 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_belly": "zomboidcraft:block/city/al_belly",
+    "al_chrome": "zomboidcraft:block/city/al_chrome",
+    "al_strut": "zomboidcraft:block/city/al_strut",
+    "particle": "zomboidcraft:block/city/al_strut"
+  },
+  "elements": [
+    {
+      "from": [
+        3.84,
+        1.6,
+        10.24
+      ],
+      "to": [
+        8.96,
+        16.0,
+        15.36
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_strut",
+          "uv": [
+            7.04,
+            0.0,
+            12.16,
+            14.4
+          ]
+        },
+        "south": {
+          "texture": "#al_strut",
+          "uv": [
+            3.84,
+            0.0,
+            8.96,
+            14.4
+          ]
+        },
+        "east": {
+          "texture": "#al_strut",
+          "uv": [
+            0.64,
+            0.0,
+            5.76,
+            14.4
+          ]
+        },
+        "west": {
+          "texture": "#al_strut",
+          "uv": [
+            10.24,
+            0.0,
+            15.36,
+            14.4
+          ]
+        },
+        "down": {
+          "texture": "#al_strut",
+          "uv": [
+            3.84,
+            0.64,
+            8.96,
+            5.76
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        4.64,
+        0.0,
+        11.04
+      ],
+      "to": [
+        8.16,
+        7.2,
+        14.56
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_chrome",
+          "uv": [
+            7.84,
+            8.8,
+            11.36,
+            16.0
+          ]
+        },
+        "south": {
+          "texture": "#al_chrome",
+          "uv": [
+            4.64,
+            8.8,
+            8.16,
+            16.0
+          ]
+        },
+        "east": {
+          "texture": "#al_chrome",
+          "uv": [
+            1.44,
+            8.8,
+            4.96,
+            16.0
+          ]
+        },
+        "west": {
+          "texture": "#al_chrome",
+          "uv": [
+            11.04,
+            8.8,
+            14.56,
+            16.0
+          ]
+        },
+        "up": {
+          "texture": "#al_chrome",
+          "uv": [
+            4.64,
+            11.04,
+            8.16,
+            14.56
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        5.76,
+        2.4,
+        14.56
+      ],
+      "to": [
+        7.04,
+        9.6,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_strut",
+          "uv": [
+            8.96,
+            6.4,
+            10.24,
+            13.6
+          ]
+        },
+        "east": {
+          "texture": "#al_strut",
+          "uv": [
+            0.0,
+            6.4,
+            1.44,
+            13.6
+          ]
+        },
+        "west": {
+          "texture": "#al_strut",
+          "uv": [
+            14.56,
+            6.4,
+            16.0,
+            13.6
+          ]
+        },
+        "up": {
+          "texture": "#al_strut",
+          "uv": [
+            5.76,
+            14.56,
+            7.04,
+            16.0
+          ]
+        },
+        "down": {
+          "texture": "#al_strut",
+          "uv": [
+            5.76,
+            0.0,
+            7.04,
+            1.44
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        9.12,
+        7.2,
+        1.6
+      ],
+      "to": [
+        10.08,
+        16.0,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_belly",
+          "uv": [
+            5.92,
+            0.0,
+            6.88,
+            8.8
+          ]
+        },
+        "east": {
+          "texture": "#al_belly",
+          "uv": [
+            0.0,
+            0.0,
+            14.4,
+            8.8
+          ]
+        },
+        "west": {
+          "texture": "#al_belly",
+          "uv": [
+            1.6,
+            0.0,
+            16.0,
+            8.8
+          ]
+        },
+        "down": {
+          "texture": "#al_belly",
+          "uv": [
+            9.12,
+            0.0,
+            10.08,
+            14.4
+          ]
+        }
+      }
+    }
+  ]
+}

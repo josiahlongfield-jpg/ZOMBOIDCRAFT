@@ -1,0 +1,183 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_lining": "zomboidcraft:block/city/al_lining",
+    "al_paint": "zomboidcraft:block/city/al_paint",
+    "al_win": {
+      "sprite": "zomboidcraft:block/city/al_win",
+      "force_translucent": true
+    },
+    "al_win_in": {
+      "sprite": "zomboidcraft:block/city/al_win_in",
+      "force_translucent": true
+    },
+    "an_charter_bizjet_reg_2": "zomboidcraft:block/city/an_charter_bizjet_reg_2",
+    "particle": "zomboidcraft:block/city/al_paint"
+  },
+  "elements": [
+    {
+      "from": [
+        9.06,
+        -0.638,
+        0
+      ],
+      "to": [
+        12.06,
+        0.612,
+        16
+      ],
+      "faces": {
+        "east": {
+          "texture": "#al_paint",
+          "uv": [
+            0,
+            14.75,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#al_lining",
+          "uv": [
+            0,
+            14.75,
+            16,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          12.06,
+          8.106,
+          8.0
+        ],
+        "axis": "z",
+        "angle": 10.425
+      }
+    },
+    {
+      "from": [
+        9.06,
+        0.612,
+        0
+      ],
+      "to": [
+        12.06,
+        10.612,
+        16
+      ],
+      "faces": {
+        "east": {
+          "texture": "#al_win",
+          "uv": [
+            0,
+            0.0,
+            16,
+            16.0
+          ]
+        },
+        "west": {
+          "texture": "#al_win_in",
+          "uv": [
+            0,
+            0.0,
+            16,
+            16.0
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          12.06,
+          8.106,
+          8.0
+        ],
+        "axis": "z",
+        "angle": 10.425
+      }
+    },
+    {
+      "from": [
+        9.06,
+        10.612,
+        0
+      ],
+      "to": [
+        12.06,
+        15.112,
+        16
+      ],
+      "faces": {
+        "east": {
+          "texture": "#al_paint",
+          "uv": [
+            0,
+            0.888,
+            16,
+            5.388
+          ]
+        },
+        "west": {
+          "texture": "#al_lining",
+          "uv": [
+            0,
+            0.888,
+            16,
+            5.388
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          12.06,
+          8.106,
+          8.0
+        ],
+        "axis": "z",
+        "angle": 10.425
+      }
+    },
+    {
+      "from": [
+        9.06,
+        15.112,
+        0
+      ],
+      "to": [
+        12.06,
+        16.851,
+        16
+      ],
+      "faces": {
+        "east": {
+          "texture": "#an_charter_bizjet_reg_2",
+          "uv": [
+            0,
+            13.681,
+            16,
+            16.0
+          ]
+        },
+        "west": {
+          "texture": "#al_lining",
+          "uv": [
+            0,
+            0,
+            16,
+            1.739
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          12.06,
+          8.106,
+          8.0
+        ],
+        "axis": "z",
+        "angle": 10.425
+      }
+    }
+  ]
+}

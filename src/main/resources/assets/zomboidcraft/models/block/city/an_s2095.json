@@ -1,0 +1,147 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "an_skyline_main": "zomboidcraft:block/city/an_skyline_main",
+    "particle": "zomboidcraft:block/city/an_skyline_main"
+  },
+  "elements": [
+    {
+      "from": [
+        0.0,
+        0.0,
+        12.0
+      ],
+      "to": [
+        0.733,
+        8.0,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            15.267,
+            8.0,
+            16.0,
+            16.0
+          ]
+        },
+        "south": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            0.0,
+            8.0,
+            0.733,
+            16.0
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            16.0,
+            8.0,
+            12.0,
+            16.0
+          ]
+        },
+        "up": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            0.0,
+            12.0,
+            0.733,
+            16.0
+          ]
+        },
+        "down": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            0.0,
+            0.0,
+            0.733,
+            4.0
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        -1.994,
+        -1.977,
+        11.84
+      ],
+      "to": [
+        1.994,
+        9.977,
+        13.76
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            12.012,
+            4.046,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            0,
+            4.046,
+            3.988,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            2.24,
+            4.046,
+            4.16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            11.84,
+            4.046,
+            13.76,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            0,
+            11.84,
+            3.988,
+            13.76
+          ]
+        },
+        "down": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            0,
+            2.24,
+            3.988,
+            4.16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          0.0,
+          4.0,
+          12.8
+        ],
+        "axis": "x",
+        "angle": 45.0
+      }
+    }
+  ]
+}

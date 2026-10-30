@@ -1,0 +1,59 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "an_skyline_main": "zomboidcraft:block/city/an_skyline_main",
+    "particle": "zomboidcraft:block/city/an_skyline_main"
+  },
+  "elements": [
+    {
+      "from": [
+        7.391,
+        0.0,
+        0.0
+      ],
+      "to": [
+        9.859,
+        1.6,
+        9.531
+      ],
+      "faces": {
+        "south": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            7.391,
+            14.4,
+            9.859,
+            16.0
+          ]
+        },
+        "east": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            6.469,
+            14.4,
+            16.0,
+            16.0
+          ]
+        },
+        "west": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            0.0,
+            14.4,
+            9.531,
+            16.0
+          ]
+        },
+        "up": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            7.391,
+            0.0,
+            9.859,
+            9.531
+          ]
+        }
+      }
+    }
+  ]
+}

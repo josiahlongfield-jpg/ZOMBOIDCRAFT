@@ -1,0 +1,59 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_nav_red": "zomboidcraft:block/city/al_nav_red",
+    "particle": "zomboidcraft:block/city/al_nav_red"
+  },
+  "elements": [
+    {
+      "from": [
+        14.4,
+        11.2,
+        0.0
+      ],
+      "to": [
+        16.0,
+        14.4,
+        4.0
+      ],
+      "faces": {
+        "south": {
+          "texture": "#al_nav_red",
+          "uv": [
+            14.4,
+            1.6,
+            16.0,
+            4.8
+          ]
+        },
+        "west": {
+          "texture": "#al_nav_red",
+          "uv": [
+            0.0,
+            1.6,
+            4.0,
+            4.8
+          ]
+        },
+        "up": {
+          "texture": "#al_nav_red",
+          "uv": [
+            14.4,
+            0.0,
+            16.0,
+            4.0
+          ]
+        },
+        "down": {
+          "texture": "#al_nav_red",
+          "uv": [
+            14.4,
+            12.0,
+            16.0,
+            16.0
+          ]
+        }
+      }
+    }
+  ]
+}

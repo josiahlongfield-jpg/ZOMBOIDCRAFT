@@ -1,0 +1,70 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "an_private_main": "zomboidcraft:block/city/an_private_main",
+    "particle": "zomboidcraft:block/city/an_private_main"
+  },
+  "elements": [
+    {
+      "from": [
+        15.577,
+        0.0,
+        14.6
+      ],
+      "to": [
+        16.0,
+        8.0,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_private_main",
+          "uv": [
+            0.0,
+            8.0,
+            0.423,
+            16.0
+          ]
+        },
+        "south": {
+          "texture": "#an_private_main",
+          "uv": [
+            15.577,
+            8.0,
+            16.0,
+            16.0
+          ],
+          "cullface": "south"
+        },
+        "west": {
+          "texture": "#an_private_main",
+          "uv": [
+            14.6,
+            8.0,
+            16.0,
+            16.0
+          ]
+        },
+        "up": {
+          "texture": "#an_private_main",
+          "uv": [
+            15.577,
+            14.6,
+            16.0,
+            16.0
+          ]
+        },
+        "down": {
+          "texture": "#an_private_main",
+          "uv": [
+            15.577,
+            0.0,
+            16.0,
+            1.4
+          ],
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

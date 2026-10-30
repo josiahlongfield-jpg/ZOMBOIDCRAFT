@@ -1,0 +1,127 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_spinner": "zomboidcraft:block/city/al_spinner",
+    "particle": "zomboidcraft:block/city/al_spinner"
+  },
+  "elements": [
+    {
+      "from": [
+        4.0,
+        0.7,
+        15.2
+      ],
+      "to": [
+        8.0,
+        10.5,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_spinner",
+          "uv": [
+            8.0,
+            5.5,
+            12.0,
+            15.3
+          ]
+        },
+        "east": {
+          "texture": "#al_spinner",
+          "uv": [
+            0.0,
+            5.5,
+            0.8,
+            15.3
+          ]
+        },
+        "west": {
+          "texture": "#al_spinner",
+          "uv": [
+            15.2,
+            5.5,
+            16.0,
+            15.3
+          ]
+        },
+        "up": {
+          "texture": "#al_spinner",
+          "uv": [
+            4.0,
+            15.2,
+            8.0,
+            16.0
+          ]
+        },
+        "down": {
+          "texture": "#al_spinner",
+          "uv": [
+            4.0,
+            0.0,
+            8.0,
+            0.8
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        4.0,
+        2.758,
+        13.6
+      ],
+      "to": [
+        8.0,
+        8.442,
+        15.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_spinner",
+          "uv": [
+            8.0,
+            7.558,
+            12.0,
+            13.242
+          ]
+        },
+        "east": {
+          "texture": "#al_spinner",
+          "uv": [
+            0.8,
+            7.558,
+            2.4,
+            13.242
+          ]
+        },
+        "west": {
+          "texture": "#al_spinner",
+          "uv": [
+            13.6,
+            7.558,
+            15.2,
+            13.242
+          ]
+        },
+        "up": {
+          "texture": "#al_spinner",
+          "uv": [
+            4.0,
+            13.6,
+            8.0,
+            15.2
+          ]
+        },
+        "down": {
+          "texture": "#al_spinner",
+          "uv": [
+            4.0,
+            0.8,
+            8.0,
+            2.4
+          ]
+        }
+      }
+    }
+  ]
+}
