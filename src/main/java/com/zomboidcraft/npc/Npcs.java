@@ -69,6 +69,8 @@ public final class Npcs {
         return out;
     }
     public static final List<String> LOOKS = List.of("raw", "toon", "both");
+    /** Pieces worn one or the other, across slots. */
+    private static final String[][] CLASH = {{"top.jacket", "gloves"}};
     /** Clothes a skinned companion can put on and take off (the pieces in her .zsk). */
     public static final List<String> PIECES = List.of("bra", "stockings", "heels", "hair", "sweater", "shorts", "skirt",
             "dress", "boots");
@@ -335,6 +337,13 @@ public final class Npcs {
             // pieces sharing a slot ("top.jacket", "top.hoodie") are worn one at a time
             String slot = piece.substring(0, piece.indexOf('.') + 1);
             pieces(npc).stream().filter(o -> o.startsWith(slot) && !o.equals(piece)).forEach(hidden::add);
+        }
+        if (on) {
+            // pieces that don't fit together: a slim jacket's sleeves can't go over the big gloves
+            for (String[] pair : CLASH) {
+                if (pair[0].equals(piece)) hidden.add(pair[1]);
+                if (pair[1].equals(piece)) hidden.add(pair[0]);
+            }
         }
         if (on ? !hidden.remove(piece) : !hidden.add(piece)) {
             ctx.getSource().sendSuccess(() -> Component.literal(on ? "She already has her " + piece + " on" : "Her " + piece + " is already off"), false);
