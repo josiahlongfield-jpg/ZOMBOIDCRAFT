@@ -1,0 +1,74 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rg_shell": "zomboidcraft:block/city/rg_shell",
+    "particle": "zomboidcraft:block/city/rg_shell"
+  },
+  "elements": [
+    {
+      "from": [
+        6,
+        0,
+        6
+      ],
+      "to": [
+        10,
+        9,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rg_shell"
+        },
+        "south": {
+          "texture": "#rg_shell"
+        },
+        "east": {
+          "texture": "#rg_shell"
+        },
+        "west": {
+          "texture": "#rg_shell"
+        },
+        "up": {
+          "texture": "#rg_shell"
+        },
+        "down": {
+          "texture": "#rg_shell",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        6.5,
+        9,
+        6.5
+      ],
+      "to": [
+        9.5,
+        11,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rg_shell"
+        },
+        "south": {
+          "texture": "#rg_shell"
+        },
+        "east": {
+          "texture": "#rg_shell"
+        },
+        "west": {
+          "texture": "#rg_shell"
+        },
+        "up": {
+          "texture": "#rg_shell"
+        },
+        "down": {
+          "texture": "#rg_shell"
+        }
+      }
+    }
+  ]
+}

@@ -200,9 +200,10 @@ final class Layout {
 
     private void fixed() {
         for (Plan.Spot s : plan.spots) {
-            if (s.id().equals("airfield")) {
-                // Caldwell Army Airfield: tiles like the airport's, each carrying the gates the tank trail comes to
-                List<Place> tiles = ArmyField.places(s, county, plan, Noise.hash(seed ^ 0x9A1AL, s.x(), s.z()));
+            if (s.id().equals("airfield") || s.id().equals("ranges")) {
+                // Caldwell Army Airfield and the tank ranges: tiles like the airport's, each carrying the gates the tank trail comes to
+                long h = Noise.hash(seed ^ 0x9A1AL, s.x(), s.z());
+                List<Place> tiles = s.id().equals("airfield") ? ArmyField.places(s, county, plan, h) : TankRanges.places(s, county, plan, h);
                 for (int i = 0; i < tiles.size(); i++) {
                     places.add(tiles.get(i));
                     named.put(i == 0 ? s.id() : s.id() + "#" + i, tiles.get(i));

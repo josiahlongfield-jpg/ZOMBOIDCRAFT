@@ -1,0 +1,114 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rg_armour_rust": "zomboidcraft:block/city/rg_armour_rust",
+    "particle": "zomboidcraft:block/city/rg_armour_rust"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        10
+      ],
+      "to": [
+        16,
+        13,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rg_armour_rust"
+        },
+        "south": {
+          "texture": "#rg_armour_rust",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#rg_armour_rust",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rg_armour_rust",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rg_armour_rust"
+        },
+        "down": {
+          "texture": "#rg_armour_rust",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        5
+      ],
+      "to": [
+        16,
+        10,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rg_armour_rust"
+        },
+        "south": {
+          "texture": "#rg_armour_rust"
+        },
+        "east": {
+          "texture": "#rg_armour_rust",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rg_armour_rust",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rg_armour_rust"
+        },
+        "down": {
+          "texture": "#rg_armour_rust",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        1,
+        1
+      ],
+      "to": [
+        16,
+        6,
+        5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rg_armour_rust"
+        },
+        "south": {
+          "texture": "#rg_armour_rust"
+        },
+        "east": {
+          "texture": "#rg_armour_rust",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rg_armour_rust",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rg_armour_rust"
+        },
+        "down": {
+          "texture": "#rg_armour_rust"
+        }
+      }
+    }
+  ]
+}

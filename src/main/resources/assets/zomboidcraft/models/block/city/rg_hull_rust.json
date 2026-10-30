@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rg_armour_rust": "zomboidcraft:block/city/rg_armour_rust",
+    "rg_deck_rust": "zomboidcraft:block/city/rg_deck_rust",
+    "particle": "zomboidcraft:block/city/rg_armour_rust"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        13,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rg_armour_rust",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#rg_armour_rust",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#rg_armour_rust",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rg_armour_rust",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rg_deck_rust"
+        },
+        "down": {
+          "texture": "#rg_armour_rust",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
