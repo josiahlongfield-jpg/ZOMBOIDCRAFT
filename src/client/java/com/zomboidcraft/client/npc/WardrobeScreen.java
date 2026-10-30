@@ -16,42 +16,59 @@ import net.minecraft.network.chat.Component;
 
 /**
  * Her clothes, in the talk panel's dark glass and bone. Two ways in: from the talk panel (sneak + interact, "Her
- * outfit") you tell her what you think of what she's wearing or suggest something else, and she takes it or not; from
- * the green dot at her waist you pick her outfit yourself and she changes into it. Mouse or 1-9; Esc or interact closes.
+ * outfit") you tell her what you think of what she's wearing or suggest an outfit; from the green dot on a piece she's
+ * wearing you ask her to take that piece off, or to put on another. Either way she says yes or no. Mouse or 1-9; Esc or
+ * interact closes.
  */
 public class WardrobeScreen extends net.minecraft.client.gui.screens.Screen {
     private static final int PANEL = 0xF20C0D0F, EDGE = 0x29E8E4DA, LINE = 0x4DE8E4DA, TEXT = 0xFFE8E4DA, DIM = 0xA8E8E4DA,
             GOLD = 0xFFE0C25E;
-    private static final int W = 230, ROW = 20, PAD = 10, HEAD = 40;
+    private static final int W = 240, ROW = 18, PAD = 10, HEAD = 44;
 
     private record Row(String label, String hint, int act) {
     }
 
     private final NpcEntity npc;
+    /** The piece whose dot you used (its rows first), or null from the talk panel. */
+    private final NpcWardrobe.Piece piece;
     private final boolean dressHer;
 
-    public WardrobeScreen(NpcEntity npc, boolean dressHer) {
-        super(Component.literal(dressHer ? "Her clothes" : "Her outfit"));
+    public WardrobeScreen(NpcEntity npc, NpcWardrobe.Piece piece) {
+        super(Component.literal(piece != null ? "Her clothes" : "Her outfit"));
         this.npc = npc;
-        this.dressHer = dressHer;
+        this.piece = piece;
+        this.dressHer = piece != null;
     }
 
-    private NpcWardrobe.Outfit worn() {
-        NpcWardrobe.Outfit o = NpcWardrobe.Outfit.of(npc.bondBits() >> 26 & 7);
-        return o == null ? NpcWardrobe.Outfit.WORK : o;
+    private boolean wearing(NpcWardrobe.Piece p) {
+        return !npc.hidden().contains(p.id);
+    }
+
+    private String wornWords() {
+        StringBuilder s = new StringBuilder();
+        for (NpcWardrobe.Piece p : NpcWardrobe.Piece.values()) {
+            if (wearing(p)) s.append(s.length() == 0 ? "" : ", ").append(p.label);
+        }
+        return s.length() == 0 ? "her underwear" : s.toString();
     }
 
     private List<Row> rows() {
         List<Row> rows = new ArrayList<>();
-        NpcWardrobe.Outfit worn = worn();
         if (!dressHer) {
             rows.add(new Row("Looks great on you", "Tell her", NpcWardrobe.LIKE));
             rows.add(new Row("Not my favourite", "Be honest", NpcWardrobe.DISLIKE));
+            for (NpcWardrobe.Outfit o : NpcWardrobe.Outfit.values()) {
+                rows.add(new Row("Try " + o.label, "Suggest it", NpcWardrobe.SUGGEST + o.ordinal()));
+            }
+            return rows;
         }
-        for (NpcWardrobe.Outfit o : NpcWardrobe.Outfit.values()) {
-            if (o == NpcWardrobe.Outfit.SLEEP || o == worn) continue;
-            rows.add(new Row((dressHer ? "Put her in " : "Try ") + o.label, dressHer ? "" : "Suggest it",
-                    (dressHer ? NpcWardrobe.DRESS : NpcWardrobe.SUGGEST) + o.ordinal()));
+        // the piece you're looking at, then the rest she has on, then what she could put on
+        rows.add(new Row("Take off the " + piece.label, "Ask her", NpcWardrobe.TAKE_OFF + piece.ordinal()));
+        for (NpcWardrobe.Piece p : NpcWardrobe.Piece.values()) {
+            if (p != piece && wearing(p)) rows.add(new Row("Take off the " + p.label, "", NpcWardrobe.TAKE_OFF + p.ordinal()));
+        }
+        for (NpcWardrobe.Piece p : NpcWardrobe.Piece.values()) {
+            if (!wearing(p)) rows.add(new Row("Put on the " + p.label, "", NpcWardrobe.PUT_ON + p.ordinal()));
         }
         return rows;
     }
@@ -84,7 +101,7 @@ public class WardrobeScreen extends net.minecraft.client.gui.screens.Screen {
             String m = "SHE ASKED";
             g.text(font, Hud.text(m), b[0] + b[2] - PAD - font.width(Hud.text(m)), b[1] + 8, GOLD, false);
         }
-        g.text(font, Hud.text("She's wearing " + worn().label), b[0] + PAD, b[1] + 22, DIM, false);
+        g.textWithWordWrap(font, Hud.text("Wearing " + wornWords()), b[0] + PAD, b[1] + 22, b[2] - PAD * 2, DIM, false);
         g.fill(b[0] + PAD, b[1] + HEAD - 4, b[0] + b[2] - PAD, b[1] + HEAD - 3, LINE);
         for (int i = 0; i < rows.size(); i++) {
             int y = b[1] + HEAD + i * ROW;

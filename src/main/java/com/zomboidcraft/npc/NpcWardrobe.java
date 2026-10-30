@@ -1,5 +1,6 @@
 package com.zomboidcraft.npc;
 
+import java.util.EnumSet;
 import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
@@ -10,37 +11,72 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 
 /**
- * What a skinned companion wears, and why: she knows her outfits, what each is good for (work, looking nice, keeping
- * cosy), which ones she likes, and what you've said about them. She picks for herself: boots and practical clothes for
- * work or out with you, something nicer in her free time or when she's feeling romantic, a sweater when she's low,
- * the slip dress for bed, and boots after she's had to run in heels. She changes when it's safe (a few seconds,
- * kneeling), sometimes asks what you think, and listens to your answer and your suggestions as much as she feels like.
- * You can also pick her outfit yourself (the green dot at her waist); she wears it, and says what she thinks.
- * Her underwear and hair stay on; she always puts a whole outfit on.
+ * What a skinned companion wears, piece by piece, and why. She knows each piece (what it's good for: work, looking
+ * nice, keeping cosy), which ones she likes, and what you've said about them. She dresses herself: boots and practical
+ * clothes for work or out with you, something nicer in her free time or when she's feeling romantic, a sweater when
+ * she's low, the slip dress for bed, and boots after she's had to run in heels. She changes when it's safe (a few
+ * seconds, kneeling), sometimes asks what you think, and listens to your answers and suggestions as much as she feels like.
+ * <p>
+ * Each piece she's wearing has its own green dot: you can ask her to take it off, or to put another piece on, and she
+ * says yes or no by her taste, her mood, how she feels about you and what she's doing. Her bra counts as a top, so
+ * she can be down to it if she's comfortable with you (she needs to trust you, or be with you, to go about in just her
+ * underwear); the bra, her underwear and her hair always stay on.
  */
 public final class NpcWardrobe {
-    /** Her outfits: name, how practical, pretty and cosy (0..1), and the pieces it's made of. */
-    public enum Outfit {
-        WORK("work clothes", 1.0f, 0.2f, 0.6f, "sweater", "shorts", "stockings", "boots"),
-        SKIRT("sweater and skirt", 0.6f, 0.6f, 0.6f, "sweater", "skirt", "stockings", "boots"),
-        DRESS("the slip dress", 0.0f, 1.0f, 0.1f, "dress", "heels"),
-        DRESS_BOOTS("the slip dress and boots", 0.4f, 0.7f, 0.2f, "dress", "stockings", "boots"),
-        DATE("skirt and heels", 0.1f, 0.9f, 0.5f, "sweater", "skirt", "stockings", "heels"),
-        SLEEP("her slip, for bed", 0f, 0f, 0f, "dress");
+    /** Her pieces: the name in her model, what you'd call it, and how practical, pretty and cosy it is. */
+    public enum Piece {
+        SWEATER("sweater", "sweater", 0.2f, 0f, 0.5f),
+        DRESS("dress", "slip dress", -0.2f, 0.6f, 0f),
+        SKIRT("skirt", "skirt", 0.1f, 0.3f, 0.1f),
+        SHORTS("shorts", "denim shorts", 0.3f, 0.1f, 0f),
+        STOCKINGS("stockings", "stockings", 0f, 0.15f, 0.2f),
+        BOOTS("boots", "boots", 0.5f, 0f, 0.1f),
+        HEELS("heels", "heels", -0.5f, 0.4f, 0f);
 
-        public final String label;
+        public final String id, label;
         final float practical, pretty, cosy;
-        final Set<String> pieces;
 
-        Outfit(String label, float practical, float pretty, float cosy, String... pieces) {
+        Piece(String id, String label, float practical, float pretty, float cosy) {
+            this.id = id;
             this.label = label;
             this.practical = practical;
             this.pretty = pretty;
             this.cosy = cosy;
-            Set<String> p = new TreeSet<>(Set.of(pieces));
-            p.add("bra");
-            p.add("hair");
-            this.pieces = p;
+        }
+
+        public static Piece of(int i) {
+            return i >= 0 && i < values().length ? values()[i] : null;
+        }
+
+        public static Piece named(String s) {
+            for (Piece p : values()) {
+                if (p.id.equalsIgnoreCase(s) || p.name().equalsIgnoreCase(s)) return p;
+            }
+            return null;
+        }
+
+        /** What can't be worn with it: the slip dress with a sweater, skirt or shorts, a skirt with shorts, boots with heels. */
+        boolean clashes(Piece o) {
+            if (this == o) return false;
+            return this == DRESS && (o == SWEATER || o == SKIRT || o == SHORTS) || o == DRESS && (this == SWEATER || this == SKIRT || this == SHORTS)
+                    || (this == SKIRT && o == SHORTS || this == SHORTS && o == SKIRT) || (this == BOOTS && o == HEELS || this == HEELS && o == BOOTS);
+        }
+    }
+
+    /** The combinations she reaches for herself (with what she's wearing, if that's something else). */
+    public enum Outfit {
+        WORK("work clothes", Piece.SWEATER, Piece.SHORTS, Piece.STOCKINGS, Piece.BOOTS),
+        SKIRT("sweater and skirt", Piece.SWEATER, Piece.SKIRT, Piece.STOCKINGS, Piece.BOOTS),
+        DRESS("the slip dress", Piece.DRESS, Piece.HEELS),
+        DRESS_BOOTS("the slip dress and boots", Piece.DRESS, Piece.STOCKINGS, Piece.BOOTS),
+        DATE("skirt and heels", Piece.SWEATER, Piece.SKIRT, Piece.STOCKINGS, Piece.HEELS);
+
+        public final String label;
+        final EnumSet<Piece> pieces;
+
+        Outfit(String label, Piece... pieces) {
+            this.label = label;
+            this.pieces = EnumSet.of(pieces[0], pieces);
         }
 
         public static Outfit of(int i) {
@@ -53,46 +89,55 @@ public final class NpcWardrobe {
             }
             return null;
         }
-
-        boolean heels() {
-            return pieces.contains("heels");
-        }
     }
 
-    /** What you can say from the panels (sent as NpcNet.Talk acts): like it, not keen, suggest one, or dress her yourself. */
-    public static final int LIKE = 100, DISLIKE = 101, SUGGEST = 200, DRESS = 300;
+    /** For bed: the slip dress, barefoot. */
+    private static final EnumSet<Piece> SLEEP = EnumSet.of(Piece.DRESS);
+
+    /** What you can say or do from the panels (NpcNet.Talk acts): like it, not keen, suggest an outfit, put a piece on, take one off. */
+    public static final int LIKE = 100, DISLIKE = 101, SUGGEST = 200, PUT_ON = 300, TAKE_OFF = 400;
     /** How long she keeps something you picked, and how long she kneels to change. */
     private static final int KEEP = 12000, CHANGE_TICKS = 40;
 
-    Outfit worn = Outfit.WORK;
+    EnumSet<Piece> worn = EnumSet.copyOf(Outfit.WORK.pieces);
     String why = "it's what she had on";
-    final float[] taste = new float[Outfit.values().length];
-    final float[] his = new float[Outfit.values().length];
-    private Outfit kept;
+    final float[] taste = new float[Piece.values().length];
+    final float[] his = new float[Piece.values().length];
+    private EnumSet<Piece> kept, next;
     private long keepUntil = -1, bootsUntil = -1, askedUntil = -1, lastChange = -1_000_000, lastAsk = -1_000_000;
-    private Outfit next;
     int changeTicks;
     private int heelRun, offFor, checkIn;
 
     void roll(RandomSource random) {
-        for (Outfit o : Outfit.values()) {
-            taste[o.ordinal()] = o == Outfit.SLEEP ? 0 : Mth.clamp((float) random.nextGaussian() * 0.5f, -1f, 1f);
+        for (int i = 0; i < taste.length; i++) {
+            taste[i] = Mth.clamp((float) random.nextGaussian() * 0.5f, -1f, 1f);
         }
     }
 
     /** Dressed straight away, no fuss (a new companion, or one from before she had a wardrobe). */
     void dress(NpcEntity npc, Outfit o) {
-        put(npc, o, "it's what she had on");
+        put(npc, EnumSet.copyOf(o.pieces), "it's what she had on");
     }
 
     boolean asking(long now) {
         return now < askedUntil;
     }
 
+    /** Dressed past her underwear: a sweater or the slip on top, and something on the bottom. */
+    static boolean covered(Set<Piece> s) {
+        return (s.contains(Piece.SWEATER) || s.contains(Piece.DRESS)) && (s.contains(Piece.DRESS) || s.contains(Piece.SKIRT) || s.contains(Piece.SHORTS));
+    }
+
     /** The pieces she has off, for the client (NpcEntity.HIDDEN). */
     Set<String> hidden() {
+        return hidden(worn);
+    }
+
+    static Set<String> hidden(Set<Piece> on) {
         Set<String> off = new TreeSet<>(Npcs.PIECES);
-        off.removeAll(worn.pieces);
+        off.remove("bra");
+        off.remove("hair");
+        for (Piece p : on) off.remove(p.id);
         return off;
     }
 
@@ -104,53 +149,71 @@ public final class NpcWardrobe {
         return !npc.following && npc.work.home != null && npc.work.job != NpcWork.Job.NONE && npc.work.phase(level) == NpcWork.Phase.WORK;
     }
 
-    /** How much she'd like to be in this outfit right now, and the reason that weighs most. */
-    private float score(NpcEntity npc, ServerLevel level, Outfit o, long now, String[] reason) {
+    private static float practical(Set<Piece> s) {
+        float v = 0;
+        for (Piece p : s) v += p.practical;
+        return Mth.clamp(v, 0f, 1f);
+    }
+
+    private float sum(float[] by, Set<Piece> s) {
+        float v = 0;
+        for (Piece p : s) v += by[p.ordinal()];
+        return s.isEmpty() ? 0 : v / s.size();
+    }
+
+    /** How much she'd like to be in this right now, and the reason that weighs most. */
+    private float score(NpcEntity npc, ServerLevel level, Set<Piece> s, long now, String[] reason) {
         NpcBond b = npc.bond;
         boolean work = working(npc, level);
         float practicalW = work ? 2.5f : npc.following ? 1.5f : 0.3f;
         float prettyW = b.romantic(npc, now) ? 1.2f : b.flirty(npc, now) ? 0.6f : 0f;
         float cosyW = npc.mind.get(NpcMind.Need.MORALE) < 40 || npc.mind.get(NpcMind.Need.LONELY) > 60 ? 0.8f : 0f;
+        float pretty = 0, cosy = 0;
+        for (Piece p : s) {
+            pretty += p.pretty;
+            cosy += p.cosy;
+        }
+        boolean heels = s.contains(Piece.HEELS);
         float[] parts = {
-                taste[o.ordinal()] * 1.2f,
-                his[o.ordinal()] * (0.5f + b.affection / 100f),
-                o.practical * practicalW,
-                o.pretty * prettyW,
-                o.cosy * cosyW,
-                o == kept && now < keepUntil && (!work || o.practical >= 0.4f) ? 2.5f : 0f,
+                sum(taste, s) * 1.6f,
+                sum(his, s) * (0.6f + b.affection / 80f),
+                practical(s) * practicalW,
+                Math.min(1f, pretty) * prettyW,
+                Math.min(1f, cosy) * cosyW,
+                s.equals(kept) && now < keepUntil && (!work || practical(s) >= 0.4f) ? 2.5f : 0f,
         };
         String[] words = {"she likes it", "you like it on her", work ? "she's working" : "she's out with you", "she's feeling romantic",
                 "she wants something cosy", "you picked it"};
-        float s = (o == worn ? 0.5f : 0f) - (o.heels() && now < bootsUntil ? 3f : 0f);
+        float v = (s.equals(worn) ? 0.5f : 0f) - (heels && now < bootsUntil ? 3f : 0f);
         int top = 0;
         for (int i = 0; i < parts.length; i++) {
-            s += parts[i];
+            v += parts[i];
             if (parts[i] > parts[top]) top = i;
         }
-        if (reason != null) reason[0] = o.heels() && now < bootsUntil ? "her feet still hurt" : words[top];
-        return s;
+        if (reason != null) reason[0] = heels && now < bootsUntil ? "her feet still hurt" : words[top];
+        return v;
     }
 
-    /** Once a second: her heels on a run, kneeling to change, someone else's change to her clothes, and her own picks. */
+    /** Once a second: her heels on a run, someone else's change to her clothes, bed, and her own picks. */
     void tick(NpcEntity npc, ServerLevel level) {
         long now = level.getGameTime();
         if (!Npcs.skinned(npc.model())) return;
         boolean asleep = npc.work.asleep;
         // running in heels: she'll want boots for a while
         boolean running = npc.getDeltaMovement().horizontalDistanceSqr() > 0.2 * 0.2;
-        heelRun = worn.heels() && running && !asleep ? heelRun + 1 : 0;
+        heelRun = worn.contains(Piece.HEELS) && running && !asleep ? heelRun + 1 : 0;
         if (heelRun == 3) {
             bootsUntil = now + 20 * 60 * 20;
-            taste[worn.ordinal()] = Mth.clamp(taste[worn.ordinal()] - 0.05f, -1f, 1f);
+            taste[Piece.HEELS.ordinal()] = Mth.clamp(taste[Piece.HEELS.ordinal()] - 0.05f, -1f, 1f);
             npc.lines.sayLine(npc, NpcLines.Kind.OUTFIT, NpcWork.pick(npc, "Running in heels. Brilliant plan, me.",
                     "These heels were a mistake.", "Next time I'm wearing boots. Remind me."));
         }
         if (changeTicks > 0) return;
         if (asleep) {
-            if (worn != Outfit.SLEEP) put(npc, Outfit.SLEEP, "she's in bed");
+            if (!worn.equals(SLEEP)) put(npc, EnumSet.copyOf(SLEEP), "she's in bed");
             return;
         }
-        // something of hers came off (or went on) that isn't her outfit: she sorts herself out when she can
+        // something of hers came off (or went on) that she didn't put there: she sorts herself out when she can
         offFor = npc.hidden().equals(hidden()) ? 0 : offFor + 1;
         if (offFor >= 10 && !danger(npc)) {
             offFor = 0;
@@ -159,24 +222,26 @@ public final class NpcWardrobe {
             return;
         }
         // she thinks about it every half minute (straight away on waking), and not again for two minutes after a change
-        if (++checkIn >= 30 || worn == Outfit.SLEEP) {
+        boolean waking = worn.equals(SLEEP);
+        if (++checkIn >= 30 || waking) {
             checkIn = 0;
-            if (danger(npc) || worn != Outfit.SLEEP && now - lastChange < 20 * 120) return;
-            String[] reason = new String[1], bestWhy = new String[1];
-            Outfit best = worn;
-            float bestS = -1e9f;
+            if (danger(npc) || !waking && now - lastChange < 20 * 120) return;
+            String[] reason = new String[1];
+            EnumSet<Piece> best = worn;
+            String bestWhy = why;
+            float bestS = waking ? -1e9f : score(npc, level, worn, now, reason);
+            if (!waking) bestWhy = reason[0];
             for (Outfit o : Outfit.values()) {
-                if (o == Outfit.SLEEP) continue;
-                float s = score(npc, level, o, now, reason);
+                float s = score(npc, level, o.pieces, now, reason);
                 if (s > bestS) {
                     bestS = s;
-                    best = o;
-                    bestWhy[0] = reason[0];
+                    best = o.pieces;
+                    bestWhy = reason[0];
                 }
             }
-            if (best != worn) {
-                Outfit was = worn;
-                change(npc, best, bestWhy[0], now);
+            if (!best.equals(worn)) {
+                EnumSet<Piece> was = worn;
+                change(npc, best, bestWhy, now);
                 changeLine(npc, level, was, best);
                 maybeAsk(npc, level, best, now);
             }
@@ -184,8 +249,8 @@ public final class NpcWardrobe {
     }
 
     /** Kneels a moment and changes into this. */
-    private void change(NpcEntity npc, Outfit o, String reason, long now) {
-        next = o;
+    private void change(NpcEntity npc, Set<Piece> s, String reason, long now) {
+        next = EnumSet.copyOf(s);
         why = reason;
         changeTicks = CHANGE_TICKS;
         lastChange = now;
@@ -202,22 +267,24 @@ public final class NpcWardrobe {
         }
     }
 
-    private void put(NpcEntity npc, Outfit o, String reason) {
-        worn = o;
+    private void put(NpcEntity npc, EnumSet<Piece> s, String reason) {
+        worn = EnumSet.copyOf(s);
         why = reason;
         npc.setHidden(hidden());
     }
 
-    private void changeLine(NpcEntity npc, ServerLevel level, Outfit was, Outfit now) {
+    private void changeLine(NpcEntity npc, ServerLevel level, Set<Piece> was, Set<Piece> now) {
+        float pretty = 0;
+        for (Piece p : now) pretty += p.pretty;
         String line;
-        if (working(npc, level) && now.practical >= 0.6f) {
+        if (working(npc, level) && practical(now) >= 0.6f) {
             line = NpcWork.pick(npc, "Boots on. Let's get to work.", "Work clothes. Joy.", "Right. Dressed for it.");
-        } else if (was == Outfit.SLEEP) {
+        } else if (was.equals(SLEEP)) {
             line = NpcWork.pick(npc, "Okay. Dressed. Human again.", "Morning outfit, done.");
-        } else if (now.pretty >= 0.7f) {
+        } else if (pretty >= 0.7f) {
             line = NpcWork.pick(npc, "Felt like dressing up. Don't laugh.", "End of the world's no excuse to look bad.",
                     "Might as well wear it while there's someone to see it.");
-        } else if (now.heels() == false && was.heels()) {
+        } else if (!now.contains(Piece.HEELS) && was.contains(Piece.HEELS)) {
             line = NpcWork.pick(npc, "Bye, heels. Hello, feet.", "Much better.");
         } else {
             line = NpcWork.pick(npc, "That's better.", "Changed. Feels good to be out of those.", "Okay, that'll do.");
@@ -226,9 +293,9 @@ public final class NpcWardrobe {
     }
 
     /** After changing into something she picked for herself, she sometimes asks you what you think. */
-    private void maybeAsk(NpcEntity npc, ServerLevel level, Outfit o, long now) {
+    private void maybeAsk(NpcEntity npc, ServerLevel level, Set<Piece> s, long now) {
         Player p = npc.bond.player(level);
-        if (p == null || p.distanceTo(npc) > 8 || npc.bond.affection < 30 || o == Outfit.WORK || now - lastAsk < 20 * 600) return;
+        if (p == null || p.distanceTo(npc) > 8 || npc.bond.affection < 30 || s.equals(Outfit.WORK.pieces) || now - lastAsk < 20 * 600) return;
         float chance = 0.45f + 0.25f * npc.mind.trait(NpcMind.Trait.TALKATIVE) + (npc.bond.together ? 0.2f : 0f);
         if (npc.getRandom().nextFloat() > chance) return;
         lastAsk = now;
@@ -242,7 +309,25 @@ public final class NpcWardrobe {
         npc.lines.sayLine(npc, NpcLines.Kind.REPLY, line);
     }
 
-    /** Your answer from the panels: LIKE, DISLIKE, SUGGEST + outfit, DRESS + outfit. */
+    /** With this piece on: whatever clashes comes off, and if that leaves her without a top or bottom she adds the one she likes best. */
+    private EnumSet<Piece> withOn(Piece p) {
+        EnumSet<Piece> s = EnumSet.copyOf(worn);
+        s.removeIf(p::clashes);
+        s.add(p);
+        if (!s.contains(Piece.SWEATER) && !s.contains(Piece.DRESS)) s.add(Piece.SWEATER);
+        if (!covered(s)) s.add(taste[Piece.SKIRT.ordinal()] >= taste[Piece.SHORTS.ordinal()] ? Piece.SKIRT : Piece.SHORTS);
+        return s;
+    }
+
+    /** Would she wear this, if you asked? Her taste, how she feels about you, and her nature. */
+    private boolean willing(NpcEntity npc, boolean mine, float liking) {
+        NpcBond b = npc.bond;
+        float yes = 0.4f + b.affection / 250f + b.trust / 400f + liking * 0.4f + 0.1f * npc.mind.trait(NpcMind.Trait.LOYAL)
+                + (b.together ? 0.15f : 0f) + (mine ? 0f : -0.3f);
+        return npc.getRandom().nextFloat() < yes;
+    }
+
+    /** Your answer or ask from the panels: LIKE, DISLIKE, SUGGEST + outfit, PUT_ON + piece, TAKE_OFF + piece. */
     void answer(NpcEntity npc, ServerPlayer p, int act) {
         ServerLevel level = (ServerLevel) npc.level();
         long now = level.getGameTime();
@@ -256,19 +341,17 @@ public final class NpcWardrobe {
             reply(npc, NpcWork.pick(npc, "Not now!", "Seriously? Now?"));
             return;
         }
-        boolean mine = b.about(p), asked = asking(now);
+        boolean mine = b.about(p), asked = asking(now), work = working(npc, level);
         askedUntil = -1;
-        int i = worn.ordinal();
-        float t = taste[i];
+        float t = sum(taste, worn);
         if (act == LIKE) {
-            his[i] = Mth.clamp(his[i] + 0.35f, -1f, 1f);
+            for (Piece x : worn) his[x.ordinal()] = Mth.clamp(his[x.ordinal()] + 0.25f, -1f, 1f);
             if (mine) b.nudge(asked ? 0.5f : 0.2f, asked ? 2f : 1f, asked ? 1f : 0.5f);
             npc.mind.add(NpcMind.Need.MORALE, asked ? 4f : 2f);
-            if (asked && mine && worn.pretty >= 0.7f) npc.mind.remember(npc, b.withName + " liked me in " + worn.label, 0.4f, 0.4f);
             reply(npc, b.attraction >= 55 ? NpcWork.pick(npc, "I was hoping you'd say that.", "Yeah? Keep looking, then.", "Good. I wore it for you. A bit.")
                     : NpcWork.pick(npc, "Yeah? Thanks.", "Good. I wasn't sure.", "Okay. Keeping it."));
         } else if (act == DISLIKE) {
-            his[i] = Mth.clamp(his[i] - 0.35f, -1f, 1f);
+            for (Piece x : worn) his[x.ordinal()] = Mth.clamp(his[x.ordinal()] - 0.25f, -1f, 1f);
             if (mine && !asked) b.nudge(0f, -0.5f, 0f);
             if (t > 0.4f && (npc.mind.trait(NpcMind.Trait.LOYAL) < 0 || b.trust < 40)) {
                 reply(npc, NpcWork.pick(npc, "Well, I like it.", "Good thing I'm not dressing for you, then.", "Noted. Ignored, but noted."));
@@ -279,68 +362,111 @@ public final class NpcWardrobe {
             }
         } else if (act >= SUGGEST && act < SUGGEST + Outfit.values().length) {
             Outfit o = Outfit.of(act - SUGGEST);
-            if (o == null || o == Outfit.SLEEP) return;
-            if (o == worn) {
+            if (o.pieces.equals(worn)) {
                 reply(npc, "I'm already wearing it.");
                 return;
             }
-            if (working(npc, level) && o.practical < 0.4f) {
+            if (work && practical(o.pieces) < 0.4f) {
                 reply(npc, NpcWork.pick(npc, "Not for work. Later, maybe.", "In that? I've got planks to haul."));
                 return;
             }
-            float yes = 0.35f + b.affection / 250f + b.trust / 400f + taste[o.ordinal()] * 0.35f + 0.1f * npc.mind.trait(NpcMind.Trait.LOYAL)
-                    + (b.together ? 0.15f : 0f) + (mine ? 0f : -0.3f);
-            if (npc.getRandom().nextFloat() < yes) {
-                his[o.ordinal()] = Mth.clamp(his[o.ordinal()] + 0.2f, -1f, 1f);
-                kept = o;
-                keepUntil = now + KEEP;
-                change(npc, o, "you suggested it", now);
-                reply(npc, taste[o.ordinal()] > 0.3f ? NpcWork.pick(npc, "Ooh, good call.", "I was thinking the same.")
+            float like = sum(taste, o.pieces);
+            if (willing(npc, mine, like)) {
+                for (Piece x : o.pieces) his[x.ordinal()] = Mth.clamp(his[x.ordinal()] + 0.15f, -1f, 1f);
+                keep(npc, o.pieces, "you suggested it", now);
+                reply(npc, like > 0.3f ? NpcWork.pick(npc, "Ooh, good call.", "I was thinking the same.")
                         : NpcWork.pick(npc, "Okay, give me a second.", "Fine. For you.", "If you insist."));
             } else {
-                reply(npc, taste[o.ordinal()] < -0.3f ? NpcWork.pick(npc, "That one? No.", "I don't even like that one.")
+                reply(npc, like < -0.3f ? NpcWork.pick(npc, "That one? No.", "I don't even like that one.")
                         : NpcWork.pick(npc, "Nah. I like what I've got on.", "Not today.", "Maybe later."));
             }
-        } else if (act >= DRESS && act < DRESS + Outfit.values().length) {
-            Outfit o = Outfit.of(act - DRESS);
-            if (o == null || o == Outfit.SLEEP || o == worn) return;
-            his[o.ordinal()] = Mth.clamp(his[o.ordinal()] + 0.2f, -1f, 1f);
-            kept = o;
-            keepUntil = now + KEEP;
-            change(npc, o, "you picked it", now);
-            float like = taste[o.ordinal()];
-            if (like < -0.3f && mine && !b.together) b.nudge(0f, -0.3f, 0f);
-            reply(npc, working(npc, level) && o.practical < 0.4f ? "Cute. I'll change back for work, though."
-                    : like > 0.3f ? NpcWork.pick(npc, "Good choice.", "Oh, I like this one.", "You've got taste. Sometimes.")
-                    : like < -0.3f ? NpcWork.pick(npc, "Really? ...Fine.", "Not my favourite, but okay.", "You owe me for this.")
-                    : NpcWork.pick(npc, "Okay. This one.", "Sure, why not.", "Alright."));
+        } else if (act >= PUT_ON && act < PUT_ON + Piece.values().length) {
+            Piece x = Piece.of(act - PUT_ON);
+            if (worn.contains(x)) return;
+            EnumSet<Piece> s = withOn(x);
+            if (work && (x == Piece.HEELS || x == Piece.DRESS)) {
+                reply(npc, NpcWork.pick(npc, "Not while I'm working.", "In " + x.label + "? I've got work to do."));
+                return;
+            }
+            float like = taste[x.ordinal()];
+            if (!willing(npc, mine, like)) {
+                reply(npc, like < -0.3f ? NpcWork.pick(npc, "I don't like the " + x.label + ".", "Not the " + x.label + ". No.")
+                        : NpcWork.pick(npc, "Nah, not right now.", "Maybe later.", "I'm good, thanks."));
+                return;
+            }
+            his[x.ordinal()] = Mth.clamp(his[x.ordinal()] + 0.15f, -1f, 1f);
+            keep(npc, s, "you asked for the " + x.label, now);
+            boolean more = s.size() > worn.size() + 1 || !s.containsAll(worn);
+            reply(npc, like > 0.3f ? NpcWork.pick(npc, "Ooh, yes. The " + x.label + ".", "Good call.")
+                    : more ? NpcWork.pick(npc, "Okay. Let me swap a few things.", "Sure. Give me a second.")
+                    : NpcWork.pick(npc, "Okay.", "Sure, why not.", "Alright."));
+        } else if (act >= TAKE_OFF && act < TAKE_OFF + Piece.values().length) {
+            Piece x = Piece.of(act - TAKE_OFF);
+            if (!worn.contains(x)) return;
+            EnumSet<Piece> s = EnumSet.copyOf(worn);
+            s.remove(x);
+            if (!covered(s) && !(b.together || b.trust >= 60 && b.affection >= 50) || !covered(s) && !willing(npc, mine, -0.5f)) {
+                // down to her bra or her underwear: only with someone she trusts, and only if she feels like it
+                reply(npc, NpcWork.pick(npc, "I'm not walking around in my underwear.", "Nope. That stays on.", "Not happening."));
+                return;
+            }
+            if (work && x == Piece.BOOTS) {
+                reply(npc, "I need those for work.");
+                return;
+            }
+            float like = -taste[x.ordinal()];
+            if (!willing(npc, mine, like)) {
+                reply(npc, NpcWork.pick(npc, "I like the " + x.label + ". They stay.", "Nah, I'm keeping it.", "No, I'm comfortable."));
+                return;
+            }
+            keep(npc, s, "you asked her to take off the " + x.label, now);
+            reply(npc, x == Piece.HEELS ? "Gladly. My feet thank you." : NpcWork.pick(npc, "Sure.", "Okay, off it comes.", "Fine by me."));
         }
     }
 
-    /** Synced to clients with the bond (bits 26-28 the outfit, 29 she's asked you about it). */
+    /** Into this outfit, no questions (the /zc npc outfit test command). */
+    void force(NpcEntity npc, Outfit o) {
+        keep(npc, EnumSet.copyOf(o.pieces), "you picked it", npc.level().getGameTime());
+    }
+
+    private void keep(NpcEntity npc, EnumSet<Piece> s, String reason, long now) {
+        kept = EnumSet.copyOf(s);
+        keepUntil = now + KEEP;
+        change(npc, s, reason, now);
+    }
+
+    /** Synced to clients with the bond: bit 29, she's asked you what you think. */
     int bits(long now) {
-        return worn.ordinal() << 26 | (asking(now) ? 1 << 29 : 0);
+        return asking(now) ? 1 << 29 : 0;
     }
 
     /** What she's wearing and why, for /zc npc outfit and her mind readout. */
     String line() {
-        return "Wearing " + worn.label + " (" + why + ")";
+        StringBuilder s = new StringBuilder();
+        for (Piece p : worn) s.append(s.length() == 0 ? "" : ", ").append(p.label);
+        return "Wearing her " + (s.length() == 0 ? "underwear" : s) + " (" + why + ")";
     }
 
     String save() {
-        StringBuilder s = new StringBuilder(worn.name()).append('\t').append(why.replace('\t', ' '));
+        StringBuilder s = new StringBuilder();
+        for (Piece p : worn) s.append(s.length() == 0 ? "" : ",").append(p.id);
+        s.append('\t').append(why.replace('\t', ' '));
         for (int i = 0; i < taste.length; i++) {
             s.append('\t').append(String.format(Locale.ROOT, "%.2f,%.2f", taste[i], his[i]));
         }
-        return s.toString();
+        return "2\t" + s;
     }
 
     boolean load(String s) {
-        if (s == null || s.isBlank()) return false;
+        if (s == null || !s.startsWith("2\t")) return false;
         try {
-            String[] f = s.split("\t", -1);
-            Outfit o = Outfit.named(f[0]);
-            worn = o == null ? Outfit.WORK : o;
+            String[] f = s.substring(2).split("\t", -1);
+            EnumSet<Piece> w = EnumSet.noneOf(Piece.class);
+            for (String id : f[0].split(",")) {
+                Piece p = Piece.named(id);
+                if (p != null) w.add(p);
+            }
+            worn = w;
             why = f[1];
             for (int i = 0; i < taste.length && i + 2 < f.length; i++) {
                 String[] p = f[i + 2].split(",");

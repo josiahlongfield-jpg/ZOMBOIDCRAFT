@@ -103,7 +103,7 @@ public class TalkScreen extends net.minecraft.client.gui.screens.Screen {
 
     private void pick(int i) {
         if (i == 6) {
-            minecraft.gui.setScreen(new WardrobeScreen(npc, false));
+            minecraft.gui.setScreen(new WardrobeScreen(npc, null));
             return;
         }
         ClientPlayNetworking.send(new NpcNet.Talk(npc.getId(), i));
