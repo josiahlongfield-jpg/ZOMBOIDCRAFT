@@ -315,7 +315,7 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
             case "holo" -> new Optic(cfg.holoAimSpread, 1, 0.065, false);
             case "scope_4x" -> new Optic(cfg.scopeAimSpread, cfg.scopeZoom, 0, true);
             case "rifle_optic" -> new Optic(cfg.scopeAimSpread, 1 / 2.0, 0.35, false);
-            case "combat_scope" -> new Optic(cfg.scopeAimSpread, 1 / 3.0, 0.5, false);
+            case "combat_scope" -> new Optic(cfg.scopeAimSpread, 1 / 3.0, 0.45, false);     // 10% under the 0.5 its opening (hollow.py) reaches
             case "pistol_scope" -> new Optic(cfg.scopeAimSpread, 1 / 2.0, 0.2, false);     // only inside its small lens
             case "crossbow_scope" -> new Optic(cfg.scopeAimSpread, 1 / 3.0, 0, true);
             case "hunting_scope" -> new Optic(cfg.scopeAimSpread * 0.8, 1 / 6.0, 0, true);

@@ -44,7 +44,7 @@ public final class GunSlotData {
         Map.entry("sawn_off", Map.ofEntries(
 )),
         Map.entry("magnum", Map.ofEntries(
-                Map.entry(Attachments.Slot.OPTIC, List.of("pistol_scope", "mini_red_dot", "compact_red_dot", "red_dot_sight")))),
+                Map.entry(Attachments.Slot.OPTIC, List.of("red_dot_sight", "mini_red_dot", "compact_red_dot")))),
         Map.entry("lever_action", Map.ofEntries(
 )),
         Map.entry("crossbow", Map.ofEntries(
@@ -97,7 +97,7 @@ public final class GunSlotData {
         Map.entry("rimfire", Map.ofEntries()),
         Map.entry("smg", Map.ofEntries()),
         Map.entry("sawn_off", Map.ofEntries()),
-        Map.entry("magnum", Map.ofEntries(Map.entry(Attachments.Slot.OPTIC, "pistol_scope"))),
+        Map.entry("magnum", Map.ofEntries(Map.entry(Attachments.Slot.OPTIC, "red_dot_sight"))),
         Map.entry("lever_action", Map.ofEntries()),
         Map.entry("crossbow", Map.ofEntries(Map.entry(Attachments.Slot.OPTIC, "crossbow_scope"))),
         Map.entry("battle_rifle", Map.ofEntries(Map.entry(Attachments.Slot.OPTIC, "combat_scope"), Map.entry(Attachments.Slot.UNDERBARREL, "skeleton_grip"), Map.entry(Attachments.Slot.STOCK, "rifle_stock"))),
@@ -139,7 +139,6 @@ public final class GunSlotData {
         Map.entry("hunting_rifle_magazine", "mag"),
         Map.entry("rimfire_magazine", "mag"),
         Map.entry("smg_magazine", "mag"),
-        Map.entry("pistol_scope", "pistol_scope"),
         Map.entry("crossbow_scope", "crossbow_scope"),
         Map.entry("crossbow_bolt", "bolt"),
         Map.entry("battle_rifle_magazine", "mag"),
