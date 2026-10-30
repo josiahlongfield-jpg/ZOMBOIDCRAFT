@@ -1035,7 +1035,10 @@ public final class NpcWork {
                     BlockState s = npc.level().getBlockState(bed);
                     if (s.is(BlockTags.BEDS)) {
                         Direction head = s.getValue(BedBlock.FACING);
-                        npc.snapTo(bed.getX() + 0.5, bed.getY() + 0.5625, bed.getZ() + 0.5, head.toYRot(), 0f);
+                        // until she has a sleep clip she lies down with the end of her fall (hips forward of her feet),
+                        // so her hips go three quarters of a block toward the pillow to keep her whole body on the bed
+                        npc.snapTo(bed.getX() + 0.5 + head.getStepX() * 0.75, bed.getY() + 0.5625, bed.getZ() + 0.5 + head.getStepZ() * 0.75,
+                                head.toYRot(), 0f);
                         npc.setYBodyRot(head.toYRot());
                         npc.setYHeadRot(head.toYRot());
                     }
