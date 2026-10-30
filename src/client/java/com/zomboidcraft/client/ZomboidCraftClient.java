@@ -31,6 +31,7 @@ public class ZomboidCraftClient implements ClientModInitializer {
         com.zomboidcraft.client.carry.CarryClient.register();
         com.zomboidcraft.client.kit.KitScreen.register();
         com.zomboidcraft.client.kit.FilesClient.register();
+        com.zomboidcraft.client.camera.BreachTremor.register();
         com.zomboidcraft.client.kit.SpawnScreen.register();
         com.zomboidcraft.client.hud.QuickWheel.register();
         com.zomboidcraft.client.map.MapStore.register();
