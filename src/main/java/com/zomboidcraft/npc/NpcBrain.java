@@ -171,11 +171,11 @@ final class NpcBrain {
         private void fire(GunType type, ZcConfig.GunStats stats) {
             ServerLevel level = (ServerLevel) npc.level();
             Vec3 eye = npc.getEyePosition();
-            boolean head = npc.getRandom().nextFloat() < 0.2f;
+            boolean head = npc.getRandom().nextFloat() < 0.12f + 0.025f * npc.skills.level(NpcSkills.Skill.AIM);
             Vec3 aimAt = head ? target.getEyePosition() : target.position().add(0, target.getBbHeight() * 0.6, 0);
             Vec3 dir = aimAt.subtract(eye).normalize();
             // about two degrees of wobble when she's steady; pain, tiredness and fear shake it (NpcMind.wobble)
-            double wobble = 0.02 * npc.mind.wobble();
+            double wobble = 0.02 * npc.mind.wobble() * (1.25 - 0.06 * npc.skills.level(NpcSkills.Skill.AIM));
             dir = dir.add(npc.getRandom().nextGaussian() * wobble, npc.getRandom().nextGaussian() * wobble, npc.getRandom().nextGaussian() * wobble).normalize();
             Vec3 muzzle = eye.add(dir.scale(0.8)).add(0, -0.15, 0);
             // never through a friend
@@ -186,6 +186,7 @@ final class NpcBrain {
             }
             npc.shot();
             npc.mind.add(NpcMind.Need.ADRENALINE, 3f);
+            npc.work.practise(npc, NpcSkills.Skill.AIM, 1f);
             level.playSound(null, muzzle.x, muzzle.y, muzzle.z, type.shot(false, false), SoundSource.NEUTRAL, 1.4f,
                     0.95f + npc.getRandom().nextFloat() * 0.1f);
             level.sendParticles(ParticleTypes.SMOKE, muzzle.x, muzzle.y, muzzle.z, 2, 0.03, 0.03, 0.03, 0.01);
@@ -202,6 +203,7 @@ final class NpcBrain {
                 target.hurtServer(level, ModDamageTypes.source(level, ModDamageTypes.BULLET, npc), damage);
                 if (!target.isAlive()) {
                     npc.mind.killed(npc);
+                    npc.work.practise(npc, NpcSkills.Skill.AIM, 3f);
                 }
             }
         }
@@ -219,7 +221,7 @@ final class NpcBrain {
 
         @Override
         public boolean canUse() {
-            if (!npc.getMainHandItem().isEmpty()) {
+            if (!npc.getMainHandItem().isEmpty() || npc.work.asleep) {
                 return false;
             }
             item = null;
@@ -291,7 +293,7 @@ final class NpcBrain {
         @Override
         public boolean canUse() {
             float hunger = npc.mind.get(NpcMind.Need.HUNGER), thirst = npc.mind.get(NpcMind.Need.THIRST);
-            if (hunger < FORAGE_FROM && thirst < FORAGE_FROM || npc.getRandom().nextInt(10) != 0) {
+            if (hunger < FORAGE_FROM && thirst < FORAGE_FROM || npc.work.asleep || npc.getRandom().nextInt(10) != 0) {
                 return false;
             }
             item = null;

@@ -116,8 +116,9 @@ public final class NpcMind {
         add(Need.HUNGER, HUNGER_RATE * (sprinting ? 2f : 1f));
         add(Need.THIRST, THIRST_RATE * (sprinting ? 2.5f : 1f));
         // waiting somewhere quiet she rests; on the move it builds, faster at a run
+        // asleep she recovers in a few minutes; waiting somewhere quiet she rests; on the move it builds, faster at a run
         boolean resting = !npc.following && !moving && threat < 5;
-        add(Need.TIRED, resting ? -0.45f : TIRED_RATE * (sprinting ? 2.5f : 1f));
+        add(Need.TIRED, npc.work.asleep ? -0.6f : resting ? -0.15f : TIRED_RATE * (sprinting ? 2.5f : 1f));
 
         // pain follows her wounds: quick to come, slow to go
         float wound = (1f - npc.getHealth() / npc.getMaxHealth()) * 100f;
@@ -133,7 +134,7 @@ public final class NpcMind {
 
         boolean company = leaderD < CLOSE;
         boolean anyone = level.getNearestPlayer(npc, LONELY_RANGE) != null;
-        add(Need.LONELY, company ? -LONELY_EASE : anyone ? 0f : LONELY_RISE * (1f + 0.4f * trait(Trait.TALKATIVE)));
+        add(Need.LONELY, company ? -LONELY_EASE : anyone || npc.work.asleep ? 0f : LONELY_RISE * (1f + 0.4f * trait(Trait.TALKATIVE)));
 
         // morale drifts toward how things are going; optimists aim higher and drift back faster
         float aim = 60f + 15f * trait(Trait.OPTIMIST) - 0.2f * get(Need.HUNGER) - 0.25f * get(Need.THIRST)

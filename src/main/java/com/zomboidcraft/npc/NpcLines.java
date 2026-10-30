@@ -39,7 +39,9 @@ public final class NpcLines {
                 "Took your time.", "I was starting to worry."),
         LOW(20 * 300, "What's even the point anymore?", "I keep thinking about before.", "We're not getting out of this, are we?"),
         GOOD(20 * 400, "You know, we might actually make it.", "Not a bad day, all things considered.", "I'm glad I'm not doing this alone."),
-        EAT(20 * 20, "Oh, thank god.", "Mm. Better.", "That hit the spot.", "Don't tell me what's in it.");
+        EAT(20 * 20, "Oh, thank god.", "Mm. Better.", "That hit the spot.", "Don't tell me what's in it."),
+        // her work and her day (NpcWork): the words come with the call (sayLine)
+        WORK(20 * 20), WORK_DONE(20 * 25), LEVEL(0), ALARM(0), SLEEPY(20 * 60), WAKE(20 * 60), NIGHTMARE(0);
 
         final int wait;
         final List<String> lines;
@@ -60,16 +62,21 @@ public final class NpcLines {
 
     /** Says a line of this kind if she isn't keeping quiet; returns whether she did. */
     boolean say(NpcEntity npc, Kind kind) {
+        return kind.lines.isEmpty() ? false : sayLine(npc, kind, null);
+    }
+
+    /** Says this line under this kind's wait (null: one of the kind's own lines). */
+    boolean sayLine(NpcEntity npc, Kind kind, String said) {
         if (!(npc.level() instanceof ServerLevel level) || !npc.isAlive() && kind != Kind.HURT) {
             return false;
         }
         long now = level.getGameTime();
         Long prev = last.get(kind);
-        if (now - lastAny < QUIET || prev != null && now - prev < kind.wait) {
+        if (kind != Kind.ALARM && now - lastAny < QUIET || prev != null && now - prev < kind.wait) {
             return false;
         }
-        String line = kind.lines.get(npc.getRandom().nextInt(kind.lines.size()));
-        if (line.equals(lastLine) && kind.lines.size() > 1) {
+        String line = said != null ? said : kind.lines.get(npc.getRandom().nextInt(kind.lines.size()));
+        if (said == null && line.equals(lastLine) && kind.lines.size() > 1) {
             line = kind.lines.get((kind.lines.indexOf(line) + 1) % kind.lines.size());
         }
         last.put(kind, now);

@@ -132,6 +132,8 @@ public class NpcRenderer extends EntityRenderer<NpcEntity, NpcRenderer.State> {
             a.dead = entity.deathTime > 0 ? (entity.deathTime + partialTick) / 20f : 0;
             a.talking = entity.talking() > 0;
             a.id = entity.getId();
+            a.action = entity.action();
+            a.mood = entity.moodBits();
             state.skinned = new Matrix4f[skin.boneNames.length];
             for (int i = 0; i < state.skinned.length; i++) {
                 state.skinned[i] = new Matrix4f();
