@@ -385,8 +385,15 @@ final class Camp {
                         p.set(x, 2, side[0], "bunk_bed_head_top[facing=" + g + "]");
                         p.set(x, 2, side[1], "bunk_bed_foot_top[facing=" + g + "]");
                     }
-                    if (chance() < 0.4) {
-                        p.set(x + 1, 1, side[0], "filing_cabinet[facing=" + f + "]");
+                    // the wall locker beside each bunk, the foot locker at its end in the aisle, as the photos have them
+                    if (chance() < 0.85) {
+                        boolean open = chance() < 0.3;
+                        p.set(x + 1, 1, side[0], (open ? "bunk_locker_open" : "bunk_locker") + "[facing=" + f + "]");
+                        p.set(x + 1, 2, side[0], "bunk_locker_top[facing=" + f + "]");
+                    }
+                    if (chance() < 0.7) {
+                        int fz = side[0] == 1 ? side[1] + 1 : side[1] - 1;
+                        p.set(x, 1, fz, "bunk_footlocker[facing=" + f + "]");
                     }
                 }
             }
