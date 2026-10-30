@@ -1,0 +1,68 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "mf_vault": "zomboidcraft:block/city/mf_vault",
+    "mf_vault_in": "zomboidcraft:block/city/mf_vault_in",
+    "particle": "zomboidcraft:block/city/mf_vault_in"
+  },
+  "elements": [
+    {
+      "from": [
+        2.0,
+        -0.25,
+        0
+      ],
+      "to": [
+        4.0,
+        16.25,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mf_vault_in",
+          "uv": [
+            12.0,
+            0,
+            14.0,
+            16
+          ],
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#mf_vault_in",
+          "uv": [
+            2.0,
+            0,
+            4.0,
+            16
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#mf_vault",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#mf_vault_in",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#mf_vault_in"
+        },
+        "down": {
+          "texture": "#mf_vault_in"
+        }
+      }
+    }
+  ]
+}

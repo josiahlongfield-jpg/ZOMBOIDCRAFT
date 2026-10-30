@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "mf_crib": "zomboidcraft:block/city/mf_crib",
+    "mf_earth": "zomboidcraft:block/city/mf_earth",
+    "particle": "zomboidcraft:block/city/mf_crib"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mf_crib",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#mf_crib",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#mf_crib",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#mf_crib",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#mf_earth",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#mf_earth",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
