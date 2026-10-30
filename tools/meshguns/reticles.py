@@ -116,9 +116,9 @@ def rifle_optic():
 def pistol_scope():
     # a long-eye-relief pistol scope: plain fine crosshairs, a small lit centre
     c = Canvas(256, 200)
-    cross(c, 0.7, gap=3, reach=55)
-    cross(c, 2.0, gap=55)
-    c.disc(1.8, RED)
+    cross(c, 1.5, gap=6, reach=55)
+    cross(c, 4.5, gap=55)
+    c.disc(4, RED)
     return c.done()
 
 

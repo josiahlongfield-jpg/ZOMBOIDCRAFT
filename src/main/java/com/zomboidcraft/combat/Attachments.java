@@ -311,12 +311,12 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
     private static Optic optic(String key) {
         ZcConfig.Guns cfg = ZcConfig.get().guns;
         return switch (key) {
-            case "red_dot", "mini_dot", "compact_dot" -> new Optic(cfg.redDotAimSpread, 1, 0.012, false);
+            case "red_dot", "mini_dot", "compact_dot" -> new Optic(cfg.redDotAimSpread, 1, 0.02, false);
             case "holo" -> new Optic(cfg.holoAimSpread, 1, 0.065, false);
             case "scope_4x" -> new Optic(cfg.scopeAimSpread, cfg.scopeZoom, 0, true);
-            case "rifle_optic" -> new Optic(cfg.scopeAimSpread, 1 / 2.0, 0.5, false);
+            case "rifle_optic" -> new Optic(cfg.scopeAimSpread, 1 / 2.0, 0.35, false);
             case "combat_scope" -> new Optic(cfg.scopeAimSpread, 1 / 3.0, 0.5, false);
-            case "pistol_scope" -> new Optic(cfg.scopeAimSpread, 1 / 2.0, 0.5, false);
+            case "pistol_scope" -> new Optic(cfg.scopeAimSpread, 1 / 2.0, 0.2, false);     // only inside its small lens
             case "crossbow_scope" -> new Optic(cfg.scopeAimSpread, 1 / 3.0, 0, true);
             case "hunting_scope" -> new Optic(cfg.scopeAimSpread * 0.8, 1 / 6.0, 0, true);
             case "precision_scope" -> new Optic(cfg.scopeAimSpread * 0.7, 1 / 8.0, 0, true);
