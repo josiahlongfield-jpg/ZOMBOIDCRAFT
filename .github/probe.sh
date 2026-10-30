@@ -8,8 +8,8 @@ classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1"
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 echo "===== custom geometry phases"
-javap -cp "$CP" -p -c net.minecraft.client.renderer.rendertype.RenderTypes 2>&1 | grep -E "^  (private|public|static).*lambda|RenderPipelines\.|forceSolidModelPhase|ldc .*String" | head -150
-javap -cp "$CP" -p -c net.minecraft.client.renderer.RenderPipelines 2>&1 | grep -E "ldc .*String|withBlend|ColorTargetState|BlendFunction|putstatic|withColorTarget|withoutBlend" | head -400
+for c in net.minecraft.client.renderer.StagedVertexBuffer net.minecraft.client.renderer.feature.RenderTypeFeatureRenderer; do echo "-- $c"; javap -cp "$CP" -p -c "$c" 2>&1 | grep -vE '^\s+[0-9]+: (aload|astore|iload|istore|dup|pop|iconst|checkcast|lload|lstore)' | head -400; done
+javap -cp "$CP" -p -c net.minecraft.client.renderer.rendertype.RenderType 2>&1 | grep -E "BIG_BUFFER|SMALL_BUFFER|TRANSIENT|MEGABYTE|ldc|sipush|bipush" | head -20
 echo "===== end custom geometry phases"
 exit 0
 echo "===== mesh guns"
