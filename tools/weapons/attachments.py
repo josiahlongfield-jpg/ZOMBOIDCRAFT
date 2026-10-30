@@ -363,30 +363,3 @@ for _key, _a in MESHES.items():
                    sight=mesh_sight(_a['mesh']) if _a['slot'] in ('optic', 'magnifier') and _a['mesh'] else None,
                    note=_a.get('note', '')))
 BY_KEY = {a.key: a for a in ALL}
-
-
-def scope_overlay(path, T=1024):
-    """What you see looking through the 4x scope: a round eyepiece that darkens at its rim, a duplex
-    reticle (heavy posts that thin to fine hairs at the centre), and black all round. The game stretches
-    it to the screen's height and fills the sides with the same black."""
-    ss = 3
-    n = T * ss
-    yy, xx = np.mgrid[0:n, 0:n]
-    c = (n - 1) / 2
-    dx, dy = (xx - c) / n, (yy - c) / n
-    r = np.hypot(dx, dy)
-    R, inner = 0.46, 0.12               # eyepiece radius, where the posts stop (both as shares of the side)
-    heavy, fine = 0.0062, 0.0016        # half-widths of the posts and the hairs
-    black = 0.02
-    alpha = np.clip((r / R - 0.84) / 0.16, 0, 1) ** 1.6 * 0.88     # the rim shadow
-    ax, ay = np.abs(dx), np.abs(dy)
-    post = ((ay < heavy) & (ax > inner)) | ((ax < heavy) & (ay > inner))
-    hair = ((ay < fine) & (ax <= inner)) | ((ax < fine) & (ay <= inner))
-    alpha = np.where(post | hair, 0.97, alpha)
-    alpha = np.where(r >= R, 1.0, alpha)
-    alpha = alpha.reshape(T, ss, T, ss).mean(axis=(1, 3))
-    img = np.zeros((T, T, 4))
-    img[..., :3] = black
-    img[..., 3] = alpha
-    path.parent.mkdir(parents=True, exist_ok=True)
-    M.save_png(img, path)

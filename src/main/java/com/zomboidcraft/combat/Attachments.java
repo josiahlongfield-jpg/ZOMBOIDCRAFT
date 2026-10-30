@@ -171,7 +171,7 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
             Optic optic = optic(gun);
             return optic == null || optic.zoom() >= 1 && !optic.overlay();
         }
-        if (slot == Slot.OPTIC && magnified(gun) && part.getItem() instanceof AttachmentItem item) {
+        if (slot == Slot.OPTIC && hasMagnifier(gun) && part.getItem() instanceof AttachmentItem item) {
             Optic optic = optic(item.modelKey());
             return optic.zoom() >= 1 && !optic.overlay();
         }
@@ -299,31 +299,29 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
 
     // ---- what the parts do ----
 
-    /** The reticle drawn in the middle of the view on a sight the gun stays drawn behind. */
-    public enum Reticle { NONE, DOT, RING, CROSS }
-
     /**
      * What an optic does on the sights: multiplies aimed spread, narrows the view to this share of normal (1: the
-     * gun's own), puts a reticle in the middle, and whether looking through it shows the scope picture in place of
+     * gun's own), how big its reticle (textures/gui/sight/<key>.png, drawn by tools/meshguns/reticles.py) is drawn as
+     * a share of the screen's height (0: none), and whether looking through it shows its eyepiece picture in place of
      * the gun. Keyed by model key, as tools/meshguns/attachments.json lists them.
      */
-    public record Optic(double spread, double zoom, Reticle reticle, boolean overlay) {
+    public record Optic(double spread, double zoom, double sight, boolean overlay) {
     }
 
     private static Optic optic(String key) {
         ZcConfig.Guns cfg = ZcConfig.get().guns;
         return switch (key) {
-            case "red_dot", "mini_dot", "compact_dot" -> new Optic(cfg.redDotAimSpread, 1, Reticle.DOT, false);
-            case "holo" -> new Optic(cfg.holoAimSpread, 1, Reticle.RING, false);
-            case "scope_4x" -> new Optic(cfg.scopeAimSpread, cfg.scopeZoom, Reticle.NONE, true);
-            case "rifle_optic" -> new Optic(cfg.scopeAimSpread, 1 / 2.0, Reticle.DOT, false);
-            case "combat_scope" -> new Optic(cfg.scopeAimSpread, 1 / 3.0, Reticle.DOT, false);
-            case "pistol_scope" -> new Optic(cfg.scopeAimSpread, 1 / 2.0, Reticle.CROSS, false);
-            case "crossbow_scope" -> new Optic(cfg.scopeAimSpread, 1 / 3.0, Reticle.NONE, true);
-            case "hunting_scope" -> new Optic(cfg.scopeAimSpread * 0.8, 1 / 6.0, Reticle.NONE, true);
-            case "precision_scope" -> new Optic(cfg.scopeAimSpread * 0.7, 1 / 8.0, Reticle.NONE, true);
-            case "long_scope" -> new Optic(cfg.scopeAimSpread * 0.6, 1 / 10.0, Reticle.NONE, true);
-            default -> new Optic(1, 1, Reticle.NONE, false);
+            case "red_dot", "mini_dot", "compact_dot" -> new Optic(cfg.redDotAimSpread, 1, 0.02, false);
+            case "holo" -> new Optic(cfg.holoAimSpread, 1, 0.065, false);
+            case "scope_4x" -> new Optic(cfg.scopeAimSpread, cfg.scopeZoom, 0, true);
+            case "rifle_optic" -> new Optic(cfg.scopeAimSpread, 1 / 2.0, 0.35, false);
+            case "combat_scope" -> new Optic(cfg.scopeAimSpread, 1 / 3.0, 0.5, false);
+            case "pistol_scope" -> new Optic(cfg.scopeAimSpread, 1 / 2.0, 0.2, false);     // only inside its small lens
+            case "crossbow_scope" -> new Optic(cfg.scopeAimSpread, 1 / 3.0, 0, true);
+            case "hunting_scope" -> new Optic(cfg.scopeAimSpread * 0.8, 1 / 6.0, 0, true);
+            case "precision_scope" -> new Optic(cfg.scopeAimSpread * 0.7, 1 / 8.0, 0, true);
+            case "long_scope" -> new Optic(cfg.scopeAimSpread * 0.6, 1 / 10.0, 0, true);
+            default -> new Optic(1, 1, 0, false);
         };
     }
 
@@ -338,9 +336,14 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
         return key == null ? null : optic(key);
     }
 
-    /** A 3x magnifier sits behind the optic: flipped in, it's looked through like a scope. */
-    public static boolean magnified(ItemStack gun) {
+    /** A 3x magnifier is fitted behind the optic, swung in or aside. */
+    public static boolean hasMagnifier(ItemStack gun) {
         return key(gun, Slot.MAGNIFIER) != null;
+    }
+
+    /** The magnifier is swung in behind the optic: the dot or ring in front is seen three times bigger. */
+    public static boolean magnified(ItemStack gun) {
+        return hasMagnifier(gun) && !gun.getOrDefault(GunState.MAGNIFIER_ASIDE, false);
     }
 
     /** Multiplies aimed spread: optics settle the aim, a gun with no stock wanders. */
@@ -398,10 +401,10 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
         return key(gun, Slot.MUZZLE) != null || GunType.of(gun) == GunType.SUPPRESSED_RIFLE;     // its can is built in
     }
 
-    /** Looking down the sights shows the scope picture, not the gun: a scope you look into, or the magnifier. */
+    /** Looking down the sights shows the scope's eyepiece picture, not the gun: a scope you look into. */
     public static boolean scoped(ItemStack gun) {
         Optic optic = optic(gun);
-        return magnified(gun) || optic != null && optic.overlay();
+        return optic != null && optic.overlay();
     }
 
     /** The field of view on the sights, as a share of normal, or a negative number for the gun's own. */
@@ -414,10 +417,16 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
         return zoom < 1 ? zoom : -1;
     }
 
-    /** The reticle drawn over a sight the gun stays drawn behind, NONE when there's no such sight. */
-    public static Reticle reticle(ItemStack gun) {
+    /** The optic's model key, which names the picture or reticle it shows (textures/gui/sight), or null. */
+    public static @Nullable String sightKey(ItemStack gun) {
+        return key(gun, Slot.OPTIC);
+    }
+
+    /** How big the reticle of a sight the gun stays drawn behind shows, as a share of the screen's height: three
+     * times bigger through the magnifier. 0 when there's none to draw. */
+    public static double reticleSize(ItemStack gun) {
         Optic optic = optic(gun);
-        return optic == null || scoped(gun) ? Reticle.NONE : optic.reticle();
+        return optic == null || optic.overlay() ? 0 : optic.sight() * (magnified(gun) ? 3 : 1);
     }
 
     private static boolean stockless(ItemStack gun) {
@@ -448,6 +457,9 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
         List<String> keys = new ArrayList<>();
         for (Slot slot : Slot.values()) {
             String key = key(gun, slot);
+            if (key != null && slot == Slot.MAGNIFIER && !magnified(gun)) {
+                key += "_aside";        // swung off the sight line on its mount
+            }
             keys.add(key == null ? EMPTY_KEY : key);
         }
         String finish = GunFinish.key(gun);

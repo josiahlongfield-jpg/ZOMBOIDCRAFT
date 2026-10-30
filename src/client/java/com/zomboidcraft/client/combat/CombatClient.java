@@ -207,7 +207,10 @@ public final class CombatClient {
         }
         while (FIRE_MODE.consumeClick()) {
             GunType type = GunType.of(player.getMainHandItem());
-            if (type != null && type.stats().selectFire) {
+            if (type != null && player.isUsingItem() && Attachments.hasMagnifier(player.getMainHandItem())) {
+                // on the sights the key swings the magnifier in or aside instead
+                ClientPlayNetworking.send(new CombatNet.Action(CombatNet.Action.MAGNIFIER));
+            } else if (type != null && type.stats().selectFire) {
                 ClientPlayNetworking.send(new CombatNet.Action(CombatNet.Action.FIRE_MODE));
             }
         }

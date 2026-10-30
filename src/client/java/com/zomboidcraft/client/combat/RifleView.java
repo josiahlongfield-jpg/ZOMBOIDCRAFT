@@ -271,10 +271,6 @@ public final class RifleView {
     private static String optic(ItemStack gun) {
         CustomModelData data = gun.get(DataComponents.CUSTOM_MODEL_DATA);
         List<String> keys = data == null ? List.of() : data.strings();
-        int magnifier = Attachments.Slot.MAGNIFIER.ordinal();
-        if (keys.size() > magnifier && !keys.get(magnifier).equals(Attachments.EMPTY_KEY)) {
-            return "magnified";     // looked through like a scope, whatever sits in front of it
-        }
         return keys.isEmpty() ? "none" : keys.get(0);
     }
 
@@ -1013,9 +1009,9 @@ public final class RifleView {
         return turned;
     }
 
-    /** The pose on the sights for an optic, or null when the gun isn't drawn (a scope, or the magnifier). */
+    /** The pose on the sights for an optic, or null when the gun isn't drawn (a scope you look into). */
     private static Pose sights(String optic) {
-        if (optic.equals("magnified") || !optic.equals(Attachments.EMPTY_KEY) && Attachments.overlay(optic)) {
+        if (!optic.equals(Attachments.EMPTY_KEY) && Attachments.overlay(optic)) {
             return null;
         }
         float[] d = rig.sights().getOrDefault(optic, rig.sights().get("irons"));

@@ -653,6 +653,15 @@ public final class Guns {
         }
     }
 
+    /** Swings the magnifier in behind the optic or aside on its mount, with a click. */
+    public static void flipMagnifier(ServerPlayer player) {
+        ItemStack gun = player.getMainHandItem();
+        if (GunType.isGun(gun) && Attachments.hasMagnifier(gun)) {
+            toggle(player, gun, GunState.MAGNIFIER_ASIDE);
+            Attachments.refreshModel(gun);
+        }
+    }
+
     private static void toggle(ServerPlayer player, ItemStack gun, DataComponentType<Boolean> switched) {
         boolean on = !gun.getOrDefault(switched, false);
         gun.set(switched, on);

@@ -460,6 +460,7 @@ Real gun meshes bought by Josiah under the stores' Royalty Free licences, toon-p
 | own_crossbow_scope (the crossbow scope) | scope off Crossbow (PBR Weapons Pack) | CGTrader | Royalty Free |
 | own_long_scope, own_long_bipod (the long range scope, heavy sniper bipod) | scope and bipod off the M200 rifle model | bought by Josiah | Royalty Free |
 | att_holo, att_red_dot, att_prism_4x, att_mini_dot, att_magnifier (sights) | holographic sight, tube red dot, 4x prism, mini red dot and 3x magnifier from the gun attachments pack, maker logos painted out | bought by Josiah | Royalty Free |
+| textures/gui/sight (reticles) | the holo ring and the 4x prism's chevron are redrawn (tools/meshguns/reticles.py) to the reticle images that came with the gun attachments pack; the pack's images aren't shipped. The rest are drawn for the mod | bought by Josiah / ZomboidCraft | Royalty Free / the mod's own |
 | att_foregrip, att_angled_grip, att_stubby_grip, att_light (grips and the weapon light) | vertical, angled and stubby grips and the weapon light from the gun attachments pack, maker logos painted out | bought by Josiah | Royalty Free |
 | att_irons_front_up/down, att_irons_rear_up/down (flip-up iron sights) | flip-up iron sights from the gun attachments pack | bought by Josiah | Royalty Free |
 

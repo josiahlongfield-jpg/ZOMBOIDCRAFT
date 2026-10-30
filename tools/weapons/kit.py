@@ -631,7 +631,11 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
                 loose_flash[n] = f'{n}_loose'
         names_posed = names + list(made)
     else:
-        names_posed = names
+        names_posed = list(names)
+    # a magnifier swung aside is its own model (skin.py turns its mesh off the sight line)
+    for k in (gun.slots['magnifier'].fits if 'magnifier' in gun.slots else ()):
+        M.dump({'parent': f'{NS}:item/{base}/{k}'}, assets / f'models/item/{base}/{k}_aside.json')
+        names_posed.append(f'{k}_aside')
 
     # poses: the full gun (stock, magazine, the longest muzzle part) sets the size in the inventory
     fit_parts = [models['body']] + [models[k] for k in ('irons_up',) if k in models]
@@ -642,12 +646,10 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
         fit_parts.append(models[gun.slots['muzzle'].fits[0]])
     fit = shifted_model(fit_parts, shift)
     states = ['hip', 'ads'] + [f'ads_{k}' for k in gun.optics()] + ['mag_out', 'mag_in', 'charge']
-    if 'magnifier' in gun.slots:
-        states.append('ads_magnified')      # through the magnifier the game draws its picture over the screen
     states += ['raised_' + st for st in ('hip', 'mag_out', 'mag_in', 'charge')]     # the same, gun up in third person
     shown = {}
     for st in states:
-        optic = st[4:] if st.startswith('ads_') and st != 'ads_magnified' else None
+        optic = st[4:] if st.startswith('ads_') else None
         disp = displays(st, fit, gun.sight_point(optic) + shift)
         shown[st] = disp
         for n in names_posed:
@@ -677,7 +679,7 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
             if slot_name == 'optic':
                 down = r('irons_folded') if gun.irons else EMPTY
                 up = r('irons_up') if gun.irons else EMPTY
-                if st.startswith('ads_') and st != 'ads_magnified':
+                if st.startswith('ads_'):
                     entries.append(composite([down, r(st[4:])]))
                 else:
                     cases = {k: composite([down, r(k)]) for k in s.fits}
@@ -699,6 +701,9 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
                 entries.append(select('magazine', cases, r(s.default) if s.default else EMPTY))
             else:
                 cases = {k: r(k) for k in s.fits}
+                if slot_name == 'magnifier':
+                    # swung aside on its mount: the sight in front is looked through at 1x (Attachments.writeModelData)
+                    cases.update({f'{k}_aside': r(f'{k}_aside') for k in s.fits})
                 cases['none'] = EMPTY
                 entries.append(select(slot_name, cases, r(s.default) if s.default else EMPTY))
         return composite(entries)
@@ -709,9 +714,8 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
                 'on_true': pose('raised_' + st, key), 'on_false': pose(st, key)}
 
     def tree(key):
+        # through the magnifier the sight line is the optic's in front of it: the same pose
         aim = select('optic', {k: pose(f'ads_{k}', key) for k in gun.optics()}, pose('ads', key)) if gun.optics() else pose('ads', key)
-        if 'magnifier' in gun.slots:
-            aim = select('magnifier', {k: pose('ads_magnified', key) for k in gun.slots['magnifier'].fits}, aim)
         return {'type': 'minecraft:range_dispatch', 'property': 'minecraft:custom_model_data', 'index': 0,
                 'entries': [{'threshold': 1, 'model': held('mag_out', key)}, {'threshold': 2, 'model': held('mag_in', key)},
                             {'threshold': 3, 'model': held('charge', key)}],
