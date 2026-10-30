@@ -173,6 +173,9 @@ QUERIES = {
     "thr_pin": ["grenade pin pull", "pulling pin", "cotter pin", "metal pin removal", "split ring", "key ring metal",
                 "safety pin metal click", "grenade arm", "grenade spoon release", "metal clip pull", "lever release spring",
                 "metal ring pull", "weapon foley metal click", "military gear click"],
+    # the Harvestman's rage (2026-10-30): "a monstrous scream"
+    "crt_rage": ["monster roar", "monster scream", "creature roar", "demon scream", "beast roar", "monster rage",
+                 "creature scream", "monster screech", "horror creature roar", "giant monster", "alien scream", "mutant roar"],
     # wave-two guns (2026-10-29): Josiah wants each its own shot, the .50 "much heavier"
     "gun3_heavy": ["50 cal rifle", "barrett", "50 bmg", "anti material rifle", "heavy sniper shot", "50 caliber", "big rifle shot",
                    "sniper rifle shot", "cannon rifle shot"],
