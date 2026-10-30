@@ -52,6 +52,8 @@ public final class NpcNet {
                 NpcBond.Act act = NpcBond.Act.of(payload.act());
                 if (act != null) {
                     npc.bond.act(npc, player, act);
+                } else if (payload.act() == TAKE_GUN) {
+                    takeGun(npc, player);
                 } else if (payload.act() >= NpcWardrobe.LIKE) {
                     npc.wardrobe.answer(npc, player, payload.act());
                 }
@@ -69,6 +71,24 @@ public final class NpcNet {
                         .withStyle(ChatFormatting.GRAY));
             });
         });
+    }
+
+    /** The talk panel's "take her weapon" act: what she holds goes to your hand if it's empty, else your pack, else your feet. */
+    public static final int TAKE_GUN = 50;
+
+    private static void takeGun(NpcEntity npc, ServerPlayer player) {
+        net.minecraft.world.item.ItemStack held = npc.getMainHandItem();
+        if (held.isEmpty()) {
+            player.sendOverlayMessage(Component.literal("She isn't holding anything").withStyle(ChatFormatting.GRAY));
+            return;
+        }
+        npc.setItemSlot(net.minecraft.world.entity.EquipmentSlot.MAINHAND, net.minecraft.world.item.ItemStack.EMPTY);
+        if (player.getMainHandItem().isEmpty()) {
+            player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, held);
+        } else if (!player.getInventory().add(held)) {
+            player.drop(held, false);
+        }
+        npc.lines.sayLine(npc, NpcLines.Kind.REPLY, NpcWork.pick(npc, "Here. Take it.", "Fine, it's yours.", "Careful, it's loaded."));
     }
 
     private NpcNet() {
