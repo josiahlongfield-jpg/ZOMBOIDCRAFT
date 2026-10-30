@@ -15808,5 +15808,18 @@ final class CitySpecs extends CityBlocks.Specs {
         s("ah_fuel_7", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 14.5, 16, 16, 16);
         s("ah_fuel_8", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 14.5, 16, 16, 16);
         s("ah_fuel_9", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 14.5, 16, 16, 16);
+        s("ah_guide_0", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 14.5, 16, 16, 16);
+        s("ah_guide_1", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 14.5, 16, 16, 16);
+        s("ah_guide_2", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 14.5, 16, 16, 16);
+        s("ah_guide_3", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 14.5, 16, 16, 16);
+        s("ah_guide_4", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 14.5, 16, 16, 16);
+        s("ah_guide_5", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 14.5, 16, 16, 16);
+        s("ah_guide_6", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 14.5, 16, 16, 16);
+        s("ah_guide_7", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 14.5, 16, 16, 16);
+        s("ah_shelter_back", FACING, SEE_THROUGH, 0, SoundType.METAL, 2f, 0, 0, 14, 16, 16, 16);
+        s("ah_shelter_side", FACING, SEE_THROUGH, 0, SoundType.METAL, 2f, 0, 0, 0, 2, 16, 16);
+        s("ah_shelter_roof", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 2.5, 16);
+        s("ah_stop", FACING, 0, 0, SoundType.METAL, 2f, 7, 0, 7, 9, 16, 9);
+        s("ah_stop_sign", FACING, 0, 0, SoundType.METAL, 2f, 2, 0, 7, 14, 16, 9);
     }
 }

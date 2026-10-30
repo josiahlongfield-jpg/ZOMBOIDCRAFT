@@ -25,7 +25,7 @@ final class AirportCargo extends Grounds {
     /** The fuel farm's bund. */
     static final int FX0 = -780, FX1 = -700, FZ0 = -330, FZ1 = -275;
     /** Everything this builds lies within these (in the frame). */
-    static final int BX0 = CX0 - 4, BX1 = FX1 + 24, BZ0 = FZ0 - 5, BZ1 = Airport.TWY_Z - Airport.TWY_SHOULDER - 1;
+    static final int BX0 = CX0 - 4, BX1 = FX1 + 28, BZ0 = FZ0 - 5, BZ1 = Airport.TWY_Z - Airport.TWY_SHOULDER - 1;
 
     AirportCargo(Placer p, SplittableRandom rng) {
         super(p, rng, BX1 - BX0 + 1, BZ1 - BZ0 + 1, 0.3, 0.0, 0.25);
@@ -292,14 +292,19 @@ final class AirportCargo extends Grounds {
             set((sx0 + sx1) / 2, 1, z, "fit_fuel_valves[facing=east]");
             set((sx0 + sx1) / 2, 2, z, "fit_valve[facing=east]");
         }
-        // the fence round it all, the gate on the south side left open
-        int fx0 = FX0 - 3, fx1 = sx1 + 4, fz0 = FZ0 - 3, fz1 = FZ1 + 3;
-        for (int x = fx0; x <= fx1; x++) {
-            boolean gate = x >= sx0 + 2 && x <= sx1 - 2;
-            fence(x, fz0, true);
-            if (!gate) {
-                fence(x, fz1, true);
+        // the drive in from the gate on the north side down the east of the pump house to the stand
+        for (int x = sx1 + 1; x <= sx1 + 8; x++) {
+            for (int z = FZ0 - 2; z <= sz1; z++) {
+                set(x, 0, z, "floor_concrete");
             }
+        }
+        // the fence round it all, the gate on the north side left open
+        int fx0 = FX0 - 3, fx1 = sx1 + 9, fz0 = FZ0 - 3, fz1 = FZ1 + 3;
+        for (int x = fx0; x <= fx1; x++) {
+            if (x < sx1 + 2 || x > sx1 + 7) {
+                fence(x, fz0, true);
+            }
+            fence(x, fz1, true);
         }
         for (int z = fz0; z <= fz1; z++) {
             fence(fx0, z, false);

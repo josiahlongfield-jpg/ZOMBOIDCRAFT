@@ -16,6 +16,11 @@ world/county/AirportGrounds sets them out. Everything faces north (rotate=facing
   (the leaf's end: the rubber seal, the pull handle), ah_leaf_num_<n>_<0..8> (the hangar's number
   stencilled across three by three leaves, n 1 to 4); ah_track: the door's rail let into the
   floor, along x (rotate=axis);
+- the landside: ah_guide_<0..7> (the green guide sign at the gate, four by two tiles: the airport's
+  name over TERMINAL, PARKING, CARGO with their arrows), a panel against the posts south of it;
+  ah_shelter_back / ah_shelter_side / ah_shelter_roof (the shuttle stop's glass shelter: the back
+  panel along the block's south side, an end panel with the map on its west side, the roof);
+  ah_stop (the stop's pole) and ah_stop_sign (the plate on top: SHUTTLE TO AIRPORT STATION);
 - the maintenance hangar's gear: ah_scaf (a bay of galvanised tube scaffold, its brace on the north
   face), ah_scaf_deck (the same with its boards at the top, to stand on), ah_scaf_rail (the guard
   rail and toe board along the deck's north edge, set on the deck block above); ah_engine_0 /
@@ -147,6 +152,59 @@ BANDS = {"cargo": ("GRAYHAVEN  AIR  CARGO", 10, (30, 62, 120), (240, 240, 236)),
 
 
 @lru_cache(maxsize=None)
+def guide_pic():
+    """The green guide sign at the gate: the airport's name, then the three ways with their arrows."""
+    green, white = (24, 92, 56), (240, 240, 236)
+    p = Pic(4, 2, green, 31650)
+    W, H = p.W, p.H
+    p.rect(3, 3, W - 3, H - 3, outline=white, width=2)
+    p.text(W / 2, 10, "GRAYHAVEN INT'L AIRPORT", BOLD, 15, white, anchor="ma")
+    p.line([(10, 34), (W - 10, 34)], white, 1)
+    for k, (txt, way) in enumerate((("TERMINAL", "up"), ("PARKING", "up"), ("CARGO \u00b7 FIRE", "right"))):
+        y = 44 + k * 26
+        p.text(46, y, txt, BOLD, 15, white)
+        cx, cy = 26, y + 9
+        if way == "up":
+            p.poly([(cx, cy - 9), (cx - 8, cy), (cx - 3, cy), (cx - 3, cy + 9), (cx + 3, cy + 9), (cx + 3, cy), (cx + 8, cy)], fill=white)
+        else:
+            p.poly([(cx + 9, cy), (cx, cy - 8), (cx, cy - 3), (cx - 9, cy - 3), (cx - 9, cy + 3), (cx, cy + 3), (cx, cy + 8)], fill=white)
+    return p
+
+
+def guide(i):
+    return guide_pic().tile(i, 31660 + i, smooth=0.5, grime=0.2)
+
+
+@lru_cache(maxsize=None)
+def stop_pic():
+    p = Pic(1, 1, (236, 236, 230), 31670)
+    W = p.W
+    p.rect(0, 0, W, 18, fill=(30, 62, 120))
+    p.text(W / 2, 4, "SHUTTLE", BOLD, 11, (240, 240, 236), anchor="ma")
+    p.text(W / 2, 23, "TO AIRPORT", BOLD, 8, (30, 30, 30), anchor="ma")
+    p.text(W / 2, 34, "STATION", BOLD, 8, (30, 30, 30), anchor="ma")
+    p.text(W / 2, 48, "EVERY 20 MIN", BOLD, 6, (168, 30, 28), anchor="ma")
+    return p
+
+
+def stop_tex():
+    return stop_pic().tile(0, 31672, smooth=0.4, grime=0.2)
+
+
+def shelter_map(seed):
+    """The shelter's end panel: the route map behind its glass, the shuttle's line out to the station."""
+    t = F.plain(seed, (226, 224, 214), 0.03, 0.6)
+    area(t, 6, 6, 58, 58, col=(208, 214, 206))
+    for y in (20, 34, 48):
+        area(t, 6, y, 58, y + 1, col=(170, 170, 160))
+    area(t, 12, 30, 52, 33, col=(30, 62, 120))
+    for x in (12, 52):
+        area(t, x - 2, 28, x + 3, 35, col=(168, 30, 28))
+    t.grime(0.2, (60, 54, 44))
+    return t
+
+
+@lru_cache(maxsize=None)
 def band_pic(k):
     text, n, bg, ink = BANDS[k]
     p = Pic(n, 1, bg, 31600 + n)
@@ -240,6 +298,10 @@ def textures():
     for k, (_, n, _, _) in BANDS.items():
         for i in range(n):
             out[f"ah_{k}_{i}"] = lambda k=k, i=i: band(k, i)
+    for i in range(8):
+        out[f"ah_guide_{i}"] = lambda i=i: guide(i)
+    out["ah_stop_sign"] = stop_tex
+    out["ah_shelter_map"] = lambda: shelter_map(31673)
     return out
 
 
@@ -351,6 +413,30 @@ def engine_piece(front):
     return out
 
 
+def shelter_back():
+    """The shelter's back: the glass in its frame along the block's south side, the bench rail."""
+    return [[0, 0.5, 14.5, 16, 15, 15.5, "rp_glass"], [0, 0, 14, 16, 1, 16, BLACK_METAL],
+            [0, 14.5, 14, 16, 16, 16, BLACK_METAL], [0, 0, 14, 1, 16, 16, BLACK_METAL], [15, 0, 14, 16, 16, 16, BLACK_METAL]]
+
+
+def shelter_side():
+    """An end panel on the block's west side, the route map behind its glass, the post at the kerb."""
+    return [[0.5, 0.5, 0, 1.5, 15, 14, faces("rp_glass", east="ah_shelter_map", west="ah_shelter_map")],
+            [0, 0, 0, 2, 1, 16, BLACK_METAL], [0, 14.5, 0, 2, 16, 16, BLACK_METAL], [0, 0, 0, 2, 16, 1.5, BLACK_METAL]]
+
+
+def shelter_roof():
+    return [[0, 0, -2, 16, 1.5, 16, faces(BLACK_METAL, up=STEEL)], [0, 1.5, -2, 16, 2.5, -1, BLACK_METAL]]
+
+
+def stop_pole():
+    return [[7, 0, 7, 9, 16, 9, STEEL]]
+
+
+def stop_sign():
+    return [[7, 0, 7, 9, 4, 9, STEEL], [2, 4, 7.2, 14, 16, 8.8, faces(STEEL, north="ah_stop_sign", south="ah_stop_sign")]]
+
+
 def blocks():
     out = {}
 
@@ -388,6 +474,13 @@ def blocks():
         for i in range(9):
             add(f"ah_leaf_num_{n}_{i}", leaf_piece(f"ah_leaf_num_{n}_{i}"), "Hangar Door", hull)
     add("ah_track", track_piece(), "Door Track", [[0, 0, 0, 16, 16, 16]], rotate="axis", sound="STONE")
+    for i in range(8):
+        add(f"ah_guide_{i}", fascia(f"ah_guide_{i}"), "Guide Sign", [[0, 0, 14.5, 16, 16, 16]])
+    add("ah_shelter_back", shelter_back(), "Shuttle Shelter", [[0, 0, 14, 16, 16, 16]], cutout=True)
+    add("ah_shelter_side", shelter_side(), "Shuttle Shelter", [[0, 0, 0, 2, 16, 16]], cutout=True)
+    add("ah_shelter_roof", shelter_roof(), "Shuttle Shelter", [[0, 0, 0, 16, 2.5, 16]])
+    add("ah_stop", stop_pole(), "Bus Stop", [[7, 0, 7, 9, 16, 9]])
+    add("ah_stop_sign", stop_sign(), "Bus Stop", [[2, 0, 7, 14, 16, 9]])
     add("ah_scaf", scaf(), "Scaffold", [[0, 0, 0, 16, 16, 16]], cutout=True, decor=True)
     add("ah_scaf_deck", scaf(True), "Scaffold", [[0, 14.6, 0, 16, 16, 16]], cutout=True)
     add("ah_scaf_rail", scaf_rail(), "Scaffold Rail", [[0, 0, 0, 16, 16, 1.2]], cutout=True)

@@ -91,6 +91,9 @@ final class AirportSite extends Site {
         approach();
         signs();
         fence();
+        if (ax1 >= AirportLandside.BX0 && ax0 <= AirportLandside.BX1 && az1 >= AirportLandside.BZ0 && az0 <= AirportLandside.BZ1) {
+            copy(piece("landside", 0x1A2DL, (q, r) -> new AirportLandside(q, r).build()));
+        }
         if (ax1 >= AirportTerminal.BX0 && ax0 <= AirportTerminal.BX1 && az1 >= AirportTerminal.BZ0 && az0 <= AirportTerminal.BZ1) {
             copy(terminal());
         }
@@ -118,7 +121,7 @@ final class AirportSite extends Site {
     private static final Map<String, Voxels> PIECES = new LinkedHashMap<>(4, 0.75f, true) {
         @Override
         protected boolean removeEldestEntry(Map.Entry<String, Voxels> eldest) {
-            return size() > 4;
+            return size() > 6;
         }
     };
 
@@ -479,7 +482,10 @@ final class AirportSite extends Site {
             fencePost(ax, Airport.Z1 - 1, true);
         }
         for (int az = Airport.LAND_Z0 + 1; az < Airport.Z1; az++) {
-            fencePost(Airport.X0 + 1, az, false);
+            // the gap for the access road through the west fence
+            if (az < AirportLandside.ACC_Z0 - 1 || az > AirportLandside.ACC_Z1 + 1) {
+                fencePost(Airport.X0 + 1, az, false);
+            }
             fencePost(Airport.X1 - 1, az, false);
         }
     }
