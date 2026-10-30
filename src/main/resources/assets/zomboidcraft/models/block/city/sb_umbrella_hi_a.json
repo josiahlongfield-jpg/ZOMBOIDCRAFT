@@ -1,0 +1,383 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sb_chrome": "zomboidcraft:block/city/sb_chrome",
+    "sb_stripe_a": "zomboidcraft:block/city/sb_stripe_a",
+    "particle": "zomboidcraft:block/city/sb_chrome"
+  },
+  "elements": [
+    {
+      "from": [
+        7.3,
+        0,
+        7.3
+      ],
+      "to": [
+        8.7,
+        6,
+        8.7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sb_chrome"
+        },
+        "south": {
+          "texture": "#sb_chrome"
+        },
+        "east": {
+          "texture": "#sb_chrome"
+        },
+        "west": {
+          "texture": "#sb_chrome"
+        },
+        "up": {
+          "texture": "#sb_chrome"
+        },
+        "down": {
+          "texture": "#sb_chrome",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        6.8,
+        6.5,
+        6.8
+      ],
+      "to": [
+        9.2,
+        8,
+        9.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sb_stripe_a"
+        },
+        "south": {
+          "texture": "#sb_stripe_a"
+        },
+        "east": {
+          "texture": "#sb_stripe_a"
+        },
+        "west": {
+          "texture": "#sb_stripe_a"
+        },
+        "up": {
+          "texture": "#sb_stripe_a"
+        },
+        "down": {
+          "texture": "#sb_stripe_a"
+        }
+      }
+    },
+    {
+      "from": [
+        8,
+        4,
+        -8
+      ],
+      "to": [
+        24,
+        5,
+        24
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sb_stripe_a",
+          "uv": [
+            0,
+            11,
+            16,
+            12
+          ]
+        },
+        "south": {
+          "texture": "#sb_stripe_a",
+          "uv": [
+            0,
+            11,
+            16,
+            12
+          ]
+        },
+        "east": {
+          "texture": "#sb_stripe_a",
+          "uv": [
+            0,
+            11,
+            16,
+            12
+          ]
+        },
+        "west": {
+          "texture": "#sb_stripe_a",
+          "uv": [
+            0,
+            11,
+            16,
+            12
+          ]
+        },
+        "up": {
+          "texture": "#sb_stripe_a",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#sb_stripe_a",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          6.5,
+          8
+        ],
+        "axis": "z",
+        "angle": 15
+      }
+    },
+    {
+      "from": [
+        -8,
+        4,
+        -8
+      ],
+      "to": [
+        8,
+        5,
+        24
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sb_stripe_a",
+          "uv": [
+            0,
+            11,
+            16,
+            12
+          ]
+        },
+        "south": {
+          "texture": "#sb_stripe_a",
+          "uv": [
+            0,
+            11,
+            16,
+            12
+          ]
+        },
+        "east": {
+          "texture": "#sb_stripe_a",
+          "uv": [
+            0,
+            11,
+            16,
+            12
+          ]
+        },
+        "west": {
+          "texture": "#sb_stripe_a",
+          "uv": [
+            0,
+            11,
+            16,
+            12
+          ]
+        },
+        "up": {
+          "texture": "#sb_stripe_a",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#sb_stripe_a",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          6.5,
+          8
+        ],
+        "axis": "z",
+        "angle": -15
+      }
+    },
+    {
+      "from": [
+        -8,
+        4,
+        8
+      ],
+      "to": [
+        24,
+        5,
+        24
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sb_stripe_a",
+          "uv": [
+            0,
+            11,
+            16,
+            12
+          ]
+        },
+        "south": {
+          "texture": "#sb_stripe_a",
+          "uv": [
+            0,
+            11,
+            16,
+            12
+          ]
+        },
+        "east": {
+          "texture": "#sb_stripe_a",
+          "uv": [
+            0,
+            11,
+            16,
+            12
+          ]
+        },
+        "west": {
+          "texture": "#sb_stripe_a",
+          "uv": [
+            0,
+            11,
+            16,
+            12
+          ]
+        },
+        "up": {
+          "texture": "#sb_stripe_a",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#sb_stripe_a",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          6.5,
+          8
+        ],
+        "axis": "x",
+        "angle": -15
+      }
+    },
+    {
+      "from": [
+        -8,
+        4,
+        -8
+      ],
+      "to": [
+        24,
+        5,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sb_stripe_a",
+          "uv": [
+            0,
+            11,
+            16,
+            12
+          ]
+        },
+        "south": {
+          "texture": "#sb_stripe_a",
+          "uv": [
+            0,
+            11,
+            16,
+            12
+          ]
+        },
+        "east": {
+          "texture": "#sb_stripe_a",
+          "uv": [
+            0,
+            11,
+            16,
+            12
+          ]
+        },
+        "west": {
+          "texture": "#sb_stripe_a",
+          "uv": [
+            0,
+            11,
+            16,
+            12
+          ]
+        },
+        "up": {
+          "texture": "#sb_stripe_a",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#sb_stripe_a",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          6.5,
+          8
+        ],
+        "axis": "x",
+        "angle": 15
+      }
+    }
+  ]
+}

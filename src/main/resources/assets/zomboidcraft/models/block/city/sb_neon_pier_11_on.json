@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sb_neon_pier_11_on": "zomboidcraft:block/city/sb_neon_pier_11_on",
+    "particle": "zomboidcraft:block/city/sb_neon_pier_11_on"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.2
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sb_neon_pier_11_on"
+        },
+        "south": {
+          "texture": "#sb_neon_pier_11_on",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#sb_neon_pier_11_on",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#sb_neon_pier_11_on",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#sb_neon_pier_11_on",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sb_neon_pier_11_on",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

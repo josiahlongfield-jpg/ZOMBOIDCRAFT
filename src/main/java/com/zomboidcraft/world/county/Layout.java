@@ -221,6 +221,13 @@ final class Layout {
                 named.put(s.id(), p);
                 continue;
             }
+            if (s.id().equals("boardwalk")) {
+                // Seabright Boardwalk: the shops, the boards and the pier on the shore as it lies
+                Place p = Boardwalk.place(s, Noise.hash(seed ^ 0xB0A4L, s.x(), s.z()));
+                places.add(p);
+                named.put(s.id(), p);
+                continue;
+            }
             if (s.id().equals("lighthouse")) {
                 // Cape Merrow Lighthouse: the headland as the land lies, cut back to a sea cliff
                 Place p = Cape.place(s, Noise.hash(seed ^ 0xCA9EL, s.x(), s.z()));

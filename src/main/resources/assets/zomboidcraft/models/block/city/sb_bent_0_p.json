@@ -1,0 +1,65 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sb_white": "zomboidcraft:block/city/sb_white",
+    "particle": "zomboidcraft:block/city/sb_white"
+  },
+  "elements": [
+    {
+      "from": [
+        -4,
+        12.4,
+        6.4
+      ],
+      "to": [
+        20,
+        15.6,
+        9.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sb_white",
+          "uv": [
+            0,
+            0.40000000000000036,
+            16,
+            3.5999999999999996
+          ]
+        },
+        "south": {
+          "texture": "#sb_white",
+          "uv": [
+            0,
+            0.40000000000000036,
+            16,
+            3.5999999999999996
+          ]
+        },
+        "east": {
+          "texture": "#sb_white"
+        },
+        "west": {
+          "texture": "#sb_white"
+        },
+        "up": {
+          "texture": "#sb_white",
+          "uv": [
+            0,
+            6.4,
+            16,
+            9.6
+          ]
+        },
+        "down": {
+          "texture": "#sb_white",
+          "uv": [
+            0,
+            6.4,
+            16,
+            9.6
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -4173486,6 +4173486,9565 @@
    "sound": "METAL",
    "rotate": "facing",
    "decor": true
+  },
+  "sb_deck": {
+   "tex": {
+    "up": "sb_deck",
+    "down": "sb_pile",
+    "side": "sb_pile"
+   },
+   "title": "Boardwalk",
+   "sound": "WOOD"
+  },
+  "sb_deck_z": {
+   "tex": {
+    "up": "sb_deck_z",
+    "down": "sb_pile",
+    "side": "sb_pile"
+   },
+   "title": "Boardwalk",
+   "sound": "WOOD"
+  },
+  "sb_pile": {
+   "model": "boxes",
+   "boxes": [
+    [
+     5,
+     0,
+     5,
+     11,
+     16,
+     11,
+     "sb_pile"
+    ]
+   ],
+   "title": "Pile",
+   "sound": "WOOD",
+   "shape": [
+    [
+     5,
+     0,
+     5,
+     11,
+     16,
+     11
+    ]
+   ]
+  },
+  "sb_beam": {
+   "model": "boxes",
+   "boxes": [
+    [
+     5,
+     4,
+     0,
+     11,
+     16,
+     16,
+     "sb_pile"
+    ]
+   ],
+   "title": "Stringer",
+   "sound": "WOOD",
+   "rotate": "axis",
+   "shape": [
+    [
+     5,
+     4,
+     0,
+     11,
+     16,
+     16
+    ]
+   ]
+  },
+  "sb_rail": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0.5,
+     2,
+     15,
+     2.5,
+     "sb_white"
+    ],
+    [
+     14,
+     0,
+     0.5,
+     16,
+     15,
+     2.5,
+     "sb_white"
+    ],
+    [
+     0,
+     13,
+     0,
+     16,
+     15,
+     3,
+     "sb_white"
+    ],
+    [
+     0,
+     6,
+     1,
+     16,
+     7.5,
+     2,
+     "sb_white"
+    ]
+   ],
+   "title": "Boardwalk Rail",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     3
+    ]
+   ]
+  },
+  "sb_white": {
+   "tex": "sb_white",
+   "title": "Painted Boards",
+   "sound": "WOOD"
+  },
+  "sb_red": {
+   "tex": "sb_red",
+   "title": "Painted Boards",
+   "sound": "WOOD"
+  },
+  "sb_blue": {
+   "tex": "sb_blue",
+   "title": "Painted Boards",
+   "sound": "WOOD"
+  },
+  "sb_yellow": {
+   "tex": "sb_yellow",
+   "title": "Painted Boards",
+   "sound": "WOOD"
+  },
+  "sb_stripe_a": {
+   "tex": "sb_stripe_a",
+   "title": "Canvas",
+   "sound": "WOOL"
+  },
+  "sb_stripe_b": {
+   "tex": "sb_stripe_b",
+   "title": "Canvas",
+   "sound": "WOOL"
+  },
+  "sb_stripe_c": {
+   "tex": "sb_stripe_c",
+   "title": "Canvas",
+   "sound": "WOOL"
+  },
+  "sb_claw_lo": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     1,
+     15,
+     14,
+     15,
+     {
+      "side": "sb_red",
+      "north": "sb_bulbs",
+      "up": "sb_red",
+      "down": "sb_red"
+     }
+    ],
+    [
+     2,
+     6,
+     0,
+     14,
+     10,
+     1,
+     "sb_chrome"
+    ],
+    [
+     6,
+     10,
+     0.2,
+     10,
+     12,
+     1,
+     "cm_iron"
+    ]
+   ],
+   "title": "Claw Machine",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     1,
+     0,
+     1,
+     15,
+     16,
+     15
+    ]
+   ]
+  },
+  "sb_claw_hi": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     1,
+     15,
+     7,
+     15,
+     "sb_plush"
+    ],
+    [
+     1,
+     0,
+     1,
+     15,
+     13,
+     1.6,
+     "wf_glass"
+    ],
+    [
+     1,
+     0,
+     14.4,
+     15,
+     13,
+     15,
+     "wf_glass"
+    ],
+    [
+     1,
+     0,
+     1,
+     1.6,
+     13,
+     15,
+     "wf_glass"
+    ],
+    [
+     14.4,
+     0,
+     1,
+     15,
+     13,
+     15,
+     "wf_glass"
+    ],
+    [
+     7.5,
+     7,
+     7.5,
+     8.5,
+     12,
+     8.5,
+     "sb_chrome"
+    ],
+    [
+     6,
+     6,
+     6,
+     10,
+     7,
+     10,
+     "sb_chrome"
+    ],
+    [
+     0.5,
+     13,
+     0.5,
+     15.5,
+     16,
+     15.5,
+     {
+      "side": "sb_bulbs",
+      "up": "sb_red",
+      "down": "sb_red"
+     }
+    ]
+   ],
+   "title": "Claw Machine",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "shape": [
+    [
+     1,
+     0,
+     1,
+     15,
+     16,
+     15
+    ]
+   ]
+  },
+  "sb_claw_hi_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     1,
+     15,
+     7,
+     15,
+     "sb_plush"
+    ],
+    [
+     1,
+     0,
+     1,
+     15,
+     13,
+     1.6,
+     "wf_glass"
+    ],
+    [
+     1,
+     0,
+     14.4,
+     15,
+     13,
+     15,
+     "wf_glass"
+    ],
+    [
+     1,
+     0,
+     1,
+     1.6,
+     13,
+     15,
+     "wf_glass"
+    ],
+    [
+     14.4,
+     0,
+     1,
+     15,
+     13,
+     15,
+     "wf_glass"
+    ],
+    [
+     7.5,
+     7,
+     7.5,
+     8.5,
+     12,
+     8.5,
+     "sb_chrome"
+    ],
+    [
+     6,
+     6,
+     6,
+     10,
+     7,
+     10,
+     "sb_chrome"
+    ],
+    [
+     0.5,
+     13,
+     0.5,
+     15.5,
+     16,
+     15.5,
+     {
+      "side": "sb_bulbs_on",
+      "up": "sb_red",
+      "down": "sb_red"
+     }
+    ]
+   ],
+   "title": "Claw Machine",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "render": "translucent",
+   "light": 10,
+   "shape": [
+    [
+     1,
+     0,
+     1,
+     15,
+     16,
+     15
+    ]
+   ]
+  },
+  "sb_skee_a": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     2,
+     9,
+     16,
+     "sb_yellow"
+    ],
+    [
+     14,
+     0,
+     0,
+     16,
+     9,
+     16,
+     "sb_yellow"
+    ],
+    [
+     2,
+     0,
+     0,
+     14,
+     6,
+     16,
+     {
+      "up": "sb_skee",
+      "side": "sb_yellow",
+      "down": "sb_yellow"
+     }
+    ],
+    [
+     2,
+     6,
+     13,
+     14,
+     9,
+     16,
+     "sb_yellow"
+    ],
+    [
+     4,
+     9,
+     13.5,
+     6.4,
+     11.4,
+     15.9,
+     "sb_chrome"
+    ],
+    [
+     7,
+     9,
+     13.5,
+     9.4,
+     11.4,
+     15.9,
+     "sb_chrome"
+    ],
+    [
+     10,
+     9,
+     13.5,
+     12.4,
+     11.4,
+     15.9,
+     "sb_chrome"
+    ]
+   ],
+   "title": "Skee-Ball Lane",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     9,
+     16
+    ]
+   ]
+  },
+  "sb_skee_b": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     2,
+     16,
+     16,
+     "sb_yellow"
+    ],
+    [
+     14,
+     0,
+     0,
+     16,
+     16,
+     16,
+     "sb_yellow"
+    ],
+    [
+     2,
+     0,
+     0,
+     14,
+     8,
+     16,
+     "sb_yellow"
+    ],
+    [
+     2,
+     8,
+     4,
+     14,
+     16,
+     16,
+     {
+      "north": "sb_rings",
+      "up": "sb_yellow",
+      "side": "sb_yellow",
+      "down": "sb_yellow"
+     },
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       10
+      ]
+     }
+    ],
+    [
+     0,
+     16,
+     12,
+     16,
+     22,
+     16,
+     {
+      "north": "sb_bulbs",
+      "side": "sb_red",
+      "up": "sb_red",
+      "down": "sb_red"
+     }
+    ]
+   ],
+   "title": "Skee-Ball Lane",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "sb_skee_b_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     2,
+     16,
+     16,
+     "sb_yellow"
+    ],
+    [
+     14,
+     0,
+     0,
+     16,
+     16,
+     16,
+     "sb_yellow"
+    ],
+    [
+     2,
+     0,
+     0,
+     14,
+     8,
+     16,
+     "sb_yellow"
+    ],
+    [
+     2,
+     8,
+     4,
+     14,
+     16,
+     16,
+     {
+      "north": "sb_rings_on",
+      "up": "sb_yellow",
+      "side": "sb_yellow",
+      "down": "sb_yellow"
+     },
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       10
+      ]
+     }
+    ],
+    [
+     0,
+     16,
+     12,
+     16,
+     22,
+     16,
+     {
+      "north": "sb_bulbs_on",
+      "side": "sb_red",
+      "up": "sb_red",
+      "down": "sb_red"
+     }
+    ]
+   ],
+   "title": "Skee-Ball Lane",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "light": 8,
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "sb_pinball": {
+   "model": "boxes",
+   "boxes": [
+    [
+     2,
+     0,
+     1,
+     4,
+     8,
+     3,
+     "cm_iron"
+    ],
+    [
+     12,
+     0,
+     1,
+     14,
+     8,
+     3,
+     "cm_iron"
+    ],
+    [
+     2,
+     0,
+     13,
+     4,
+     8,
+     15,
+     "cm_iron"
+    ],
+    [
+     12,
+     0,
+     13,
+     14,
+     8,
+     15,
+     "cm_iron"
+    ],
+    [
+     1,
+     8,
+     0,
+     15,
+     11,
+     16,
+     {
+      "up": "sb_pinball",
+      "side": "sb_blue",
+      "down": "sb_blue"
+     },
+     null,
+     {
+      "axis": "x",
+      "angle": 5,
+      "origin": [
+       8,
+       9,
+       8
+      ]
+     }
+    ],
+    [
+     1,
+     11,
+     14,
+     15,
+     20,
+     16,
+     {
+      "north": "sb_screen_on",
+      "side": "sb_blue",
+      "up": "sb_blue",
+      "south": "sb_blue"
+     }
+    ]
+   ],
+   "title": "Pinball",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     1,
+     0,
+     0,
+     15,
+     16,
+     16
+    ]
+   ]
+  },
+  "sb_prize": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     13,
+     16,
+     16,
+     16,
+     "sb_red"
+    ],
+    [
+     0,
+     2,
+     8,
+     16,
+     3,
+     13,
+     "sb_white"
+    ],
+    [
+     0.5,
+     3,
+     8.5,
+     15.5,
+     6.5,
+     12.5,
+     "sb_plush"
+    ],
+    [
+     0,
+     7,
+     8,
+     16,
+     8,
+     13,
+     "sb_white"
+    ],
+    [
+     0.5,
+     8,
+     8.5,
+     15.5,
+     11.5,
+     12.5,
+     "sb_plush"
+    ],
+    [
+     0,
+     12,
+     8,
+     16,
+     13,
+     13,
+     "sb_white"
+    ],
+    [
+     0.5,
+     13,
+     8.5,
+     15.5,
+     16.5,
+     12.5,
+     "sb_plush"
+    ]
+   ],
+   "title": "Prize Wall",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     8,
+     16,
+     16,
+     16
+    ]
+   ]
+  },
+  "sb_track_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     4.0,
+     1,
+     19,
+     8.0,
+     15,
+     "sb_white"
+    ],
+    [
+     -3,
+     8.0,
+     0,
+     19,
+     9.5,
+     16,
+     {
+      "up": "sb_track",
+      "side": "sb_pile",
+      "down": "sb_pile"
+     }
+    ],
+    [
+     -3,
+     9.5,
+     2,
+     19,
+     11.0,
+     4,
+     "sb_chrome"
+    ],
+    [
+     -3,
+     9.5,
+     12,
+     19,
+     11.0,
+     14,
+     "sb_chrome"
+    ]
+   ],
+   "title": "Coaster Track",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     5,
+     0,
+     16,
+     11,
+     16
+    ]
+   ]
+  },
+  "sb_bent_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4,
+     6.4,
+     6.4,
+     20,
+     9.6,
+     9.6,
+     "sb_white"
+    ]
+   ],
+   "title": "Coaster Bent",
+   "sound": "WOOD",
+   "render": "cutout",
+   "shape": [
+    [
+     6,
+     6,
+     6,
+     10,
+     10,
+     10
+    ]
+   ]
+  },
+  "sb_track_0_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     10.0,
+     1,
+     19,
+     14.0,
+     15,
+     "sb_white"
+    ],
+    [
+     -3,
+     14.0,
+     0,
+     19,
+     15.5,
+     16,
+     {
+      "up": "sb_track",
+      "side": "sb_pile",
+      "down": "sb_pile"
+     }
+    ],
+    [
+     -3,
+     15.5,
+     2,
+     19,
+     17.0,
+     4,
+     "sb_chrome"
+    ],
+    [
+     -3,
+     15.5,
+     12,
+     19,
+     17.0,
+     14,
+     "sb_chrome"
+    ]
+   ],
+   "title": "Coaster Track",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     5,
+     0,
+     16,
+     11,
+     16
+    ]
+   ]
+  },
+  "sb_bent_0_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4,
+     12.4,
+     6.4,
+     20,
+     15.6,
+     9.6,
+     "sb_white"
+    ]
+   ],
+   "title": "Coaster Bent",
+   "sound": "WOOD",
+   "render": "cutout",
+   "shape": [
+    [
+     6,
+     6,
+     6,
+     10,
+     10,
+     10
+    ]
+   ]
+  },
+  "sb_track_0_m": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     -2.0,
+     1,
+     19,
+     2.0,
+     15,
+     "sb_white"
+    ],
+    [
+     -3,
+     2.0,
+     0,
+     19,
+     3.5,
+     16,
+     {
+      "up": "sb_track",
+      "side": "sb_pile",
+      "down": "sb_pile"
+     }
+    ],
+    [
+     -3,
+     3.5,
+     2,
+     19,
+     5.0,
+     4,
+     "sb_chrome"
+    ],
+    [
+     -3,
+     3.5,
+     12,
+     19,
+     5.0,
+     14,
+     "sb_chrome"
+    ]
+   ],
+   "title": "Coaster Track",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     5,
+     0,
+     16,
+     11,
+     16
+    ]
+   ]
+  },
+  "sb_bent_0_m": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4,
+     0.3999999999999999,
+     6.4,
+     20,
+     3.6,
+     9.6,
+     "sb_white"
+    ]
+   ],
+   "title": "Coaster Bent",
+   "sound": "WOOD",
+   "render": "cutout",
+   "shape": [
+    [
+     6,
+     6,
+     6,
+     10,
+     10,
+     10
+    ]
+   ]
+  },
+  "sb_track_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     4.0,
+     1,
+     19,
+     8.0,
+     15,
+     "sb_white",
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     -3,
+     8.0,
+     0,
+     19,
+     9.5,
+     16,
+     {
+      "up": "sb_track",
+      "side": "sb_pile",
+      "down": "sb_pile"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     -3,
+     9.5,
+     2,
+     19,
+     11.0,
+     4,
+     "sb_chrome",
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     -3,
+     9.5,
+     12,
+     19,
+     11.0,
+     14,
+     "sb_chrome",
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Coaster Track",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     5,
+     0,
+     16,
+     11,
+     16
+    ]
+   ]
+  },
+  "sb_bent_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4,
+     6.4,
+     6.4,
+     20,
+     9.6,
+     9.6,
+     "sb_white",
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Coaster Bent",
+   "sound": "WOOD",
+   "render": "cutout",
+   "shape": [
+    [
+     6,
+     6,
+     6,
+     10,
+     10,
+     10
+    ]
+   ]
+  },
+  "sb_track_1_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     10.0,
+     1,
+     19,
+     14.0,
+     15,
+     "sb_white",
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     -3,
+     14.0,
+     0,
+     19,
+     15.5,
+     16,
+     {
+      "up": "sb_track",
+      "side": "sb_pile",
+      "down": "sb_pile"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     -3,
+     15.5,
+     2,
+     19,
+     17.0,
+     4,
+     "sb_chrome",
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     -3,
+     15.5,
+     12,
+     19,
+     17.0,
+     14,
+     "sb_chrome",
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Coaster Track",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     5,
+     0,
+     16,
+     11,
+     16
+    ]
+   ]
+  },
+  "sb_bent_1_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4,
+     12.4,
+     6.4,
+     20,
+     15.6,
+     9.6,
+     "sb_white",
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Coaster Bent",
+   "sound": "WOOD",
+   "render": "cutout",
+   "shape": [
+    [
+     6,
+     6,
+     6,
+     10,
+     10,
+     10
+    ]
+   ]
+  },
+  "sb_track_1_m": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     -2.0,
+     1,
+     19,
+     2.0,
+     15,
+     "sb_white",
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     -3,
+     2.0,
+     0,
+     19,
+     3.5,
+     16,
+     {
+      "up": "sb_track",
+      "side": "sb_pile",
+      "down": "sb_pile"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     -3,
+     3.5,
+     2,
+     19,
+     5.0,
+     4,
+     "sb_chrome",
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     -3,
+     3.5,
+     12,
+     19,
+     5.0,
+     14,
+     "sb_chrome",
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Coaster Track",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     5,
+     0,
+     16,
+     11,
+     16
+    ]
+   ]
+  },
+  "sb_bent_1_m": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4,
+     0.3999999999999999,
+     6.4,
+     20,
+     3.6,
+     9.6,
+     "sb_white",
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Coaster Bent",
+   "sound": "WOOD",
+   "render": "cutout",
+   "shape": [
+    [
+     6,
+     6,
+     6,
+     10,
+     10,
+     10
+    ]
+   ]
+  },
+  "sb_track_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     4.0,
+     1,
+     19,
+     8.0,
+     15,
+     "sb_white",
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     -3,
+     8.0,
+     0,
+     19,
+     9.5,
+     16,
+     {
+      "up": "sb_track",
+      "side": "sb_pile",
+      "down": "sb_pile"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     -3,
+     9.5,
+     2,
+     19,
+     11.0,
+     4,
+     "sb_chrome",
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     -3,
+     9.5,
+     12,
+     19,
+     11.0,
+     14,
+     "sb_chrome",
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Coaster Track",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     5,
+     0,
+     16,
+     11,
+     16
+    ]
+   ]
+  },
+  "sb_bent_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4,
+     6.4,
+     6.4,
+     20,
+     9.6,
+     9.6,
+     "sb_white",
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Coaster Bent",
+   "sound": "WOOD",
+   "render": "cutout",
+   "shape": [
+    [
+     6,
+     6,
+     6,
+     10,
+     10,
+     10
+    ]
+   ]
+  },
+  "sb_track_2_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     10.0,
+     1,
+     19,
+     14.0,
+     15,
+     "sb_white",
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     -3,
+     14.0,
+     0,
+     19,
+     15.5,
+     16,
+     {
+      "up": "sb_track",
+      "side": "sb_pile",
+      "down": "sb_pile"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     -3,
+     15.5,
+     2,
+     19,
+     17.0,
+     4,
+     "sb_chrome",
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     -3,
+     15.5,
+     12,
+     19,
+     17.0,
+     14,
+     "sb_chrome",
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Coaster Track",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     5,
+     0,
+     16,
+     11,
+     16
+    ]
+   ]
+  },
+  "sb_bent_2_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4,
+     12.4,
+     6.4,
+     20,
+     15.6,
+     9.6,
+     "sb_white",
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Coaster Bent",
+   "sound": "WOOD",
+   "render": "cutout",
+   "shape": [
+    [
+     6,
+     6,
+     6,
+     10,
+     10,
+     10
+    ]
+   ]
+  },
+  "sb_track_2_m": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     -2.0,
+     1,
+     19,
+     2.0,
+     15,
+     "sb_white",
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     -3,
+     2.0,
+     0,
+     19,
+     3.5,
+     16,
+     {
+      "up": "sb_track",
+      "side": "sb_pile",
+      "down": "sb_pile"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     -3,
+     3.5,
+     2,
+     19,
+     5.0,
+     4,
+     "sb_chrome",
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     -3,
+     3.5,
+     12,
+     19,
+     5.0,
+     14,
+     "sb_chrome",
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Coaster Track",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     5,
+     0,
+     16,
+     11,
+     16
+    ]
+   ]
+  },
+  "sb_bent_2_m": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4,
+     0.3999999999999999,
+     6.4,
+     20,
+     3.6,
+     9.6,
+     "sb_white",
+     null,
+     {
+      "axis": "z",
+      "angle": 45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Coaster Bent",
+   "sound": "WOOD",
+   "render": "cutout",
+   "shape": [
+    [
+     6,
+     6,
+     6,
+     10,
+     10,
+     10
+    ]
+   ]
+  },
+  "sb_track_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     8.0,
+     -3,
+     1,
+     12.0,
+     19,
+     15,
+     "sb_white",
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     6.5,
+     -3,
+     0,
+     8.0,
+     19,
+     16,
+     {
+      "up": "sb_track",
+      "side": "sb_pile",
+      "down": "sb_pile"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     5.0,
+     -3,
+     2,
+     6.5,
+     19,
+     4,
+     "sb_chrome",
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     5.0,
+     -3,
+     12,
+     6.5,
+     19,
+     14,
+     "sb_chrome",
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Coaster Track",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     5,
+     0,
+     16,
+     11,
+     16
+    ]
+   ]
+  },
+  "sb_bent_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     6.4,
+     -4,
+     6.4,
+     9.6,
+     20,
+     9.6,
+     "sb_white",
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Coaster Bent",
+   "sound": "WOOD",
+   "render": "cutout",
+   "shape": [
+    [
+     6,
+     6,
+     6,
+     10,
+     10,
+     10
+    ]
+   ]
+  },
+  "sb_track_3_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     2.0,
+     -3,
+     1,
+     6.0,
+     19,
+     15,
+     "sb_white",
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     0.5,
+     -3,
+     0,
+     2.0,
+     19,
+     16,
+     {
+      "up": "sb_track",
+      "side": "sb_pile",
+      "down": "sb_pile"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     -1.0,
+     -3,
+     2,
+     0.5,
+     19,
+     4,
+     "sb_chrome",
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     -1.0,
+     -3,
+     12,
+     0.5,
+     19,
+     14,
+     "sb_chrome",
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Coaster Track",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     5,
+     0,
+     16,
+     11,
+     16
+    ]
+   ]
+  },
+  "sb_bent_3_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0.3999999999999999,
+     -4,
+     6.4,
+     3.6,
+     20,
+     9.6,
+     "sb_white",
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Coaster Bent",
+   "sound": "WOOD",
+   "render": "cutout",
+   "shape": [
+    [
+     6,
+     6,
+     6,
+     10,
+     10,
+     10
+    ]
+   ]
+  },
+  "sb_track_3_m": {
+   "model": "boxes",
+   "boxes": [
+    [
+     14.0,
+     -3,
+     1,
+     18.0,
+     19,
+     15,
+     "sb_white",
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     12.5,
+     -3,
+     0,
+     14.0,
+     19,
+     16,
+     {
+      "up": "sb_track",
+      "side": "sb_pile",
+      "down": "sb_pile"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     11.0,
+     -3,
+     2,
+     12.5,
+     19,
+     4,
+     "sb_chrome",
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     11.0,
+     -3,
+     12,
+     12.5,
+     19,
+     14,
+     "sb_chrome",
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Coaster Track",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     5,
+     0,
+     16,
+     11,
+     16
+    ]
+   ]
+  },
+  "sb_bent_3_m": {
+   "model": "boxes",
+   "boxes": [
+    [
+     12.4,
+     -4,
+     6.4,
+     15.6,
+     20,
+     9.6,
+     "sb_white",
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Coaster Bent",
+   "sound": "WOOD",
+   "render": "cutout",
+   "shape": [
+    [
+     6,
+     6,
+     6,
+     10,
+     10,
+     10
+    ]
+   ]
+  },
+  "sb_track_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     8.0,
+     -3,
+     1,
+     12.0,
+     19,
+     15,
+     "sb_white"
+    ],
+    [
+     6.5,
+     -3,
+     0,
+     8.0,
+     19,
+     16,
+     {
+      "up": "sb_track",
+      "side": "sb_pile",
+      "down": "sb_pile"
+     }
+    ],
+    [
+     5.0,
+     -3,
+     2,
+     6.5,
+     19,
+     4,
+     "sb_chrome"
+    ],
+    [
+     5.0,
+     -3,
+     12,
+     6.5,
+     19,
+     14,
+     "sb_chrome"
+    ]
+   ],
+   "title": "Coaster Track",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     5,
+     0,
+     16,
+     11,
+     16
+    ]
+   ]
+  },
+  "sb_bent_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     6.4,
+     -4,
+     6.4,
+     9.6,
+     20,
+     9.6,
+     "sb_white"
+    ]
+   ],
+   "title": "Coaster Bent",
+   "sound": "WOOD",
+   "render": "cutout",
+   "shape": [
+    [
+     6,
+     6,
+     6,
+     10,
+     10,
+     10
+    ]
+   ]
+  },
+  "sb_track_4_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     2.0,
+     -3,
+     1,
+     6.0,
+     19,
+     15,
+     "sb_white"
+    ],
+    [
+     0.5,
+     -3,
+     0,
+     2.0,
+     19,
+     16,
+     {
+      "up": "sb_track",
+      "side": "sb_pile",
+      "down": "sb_pile"
+     }
+    ],
+    [
+     -1.0,
+     -3,
+     2,
+     0.5,
+     19,
+     4,
+     "sb_chrome"
+    ],
+    [
+     -1.0,
+     -3,
+     12,
+     0.5,
+     19,
+     14,
+     "sb_chrome"
+    ]
+   ],
+   "title": "Coaster Track",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     5,
+     0,
+     16,
+     11,
+     16
+    ]
+   ]
+  },
+  "sb_bent_4_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0.3999999999999999,
+     -4,
+     6.4,
+     3.6,
+     20,
+     9.6,
+     "sb_white"
+    ]
+   ],
+   "title": "Coaster Bent",
+   "sound": "WOOD",
+   "render": "cutout",
+   "shape": [
+    [
+     6,
+     6,
+     6,
+     10,
+     10,
+     10
+    ]
+   ]
+  },
+  "sb_track_4_m": {
+   "model": "boxes",
+   "boxes": [
+    [
+     14.0,
+     -3,
+     1,
+     18.0,
+     19,
+     15,
+     "sb_white"
+    ],
+    [
+     12.5,
+     -3,
+     0,
+     14.0,
+     19,
+     16,
+     {
+      "up": "sb_track",
+      "side": "sb_pile",
+      "down": "sb_pile"
+     }
+    ],
+    [
+     11.0,
+     -3,
+     2,
+     12.5,
+     19,
+     4,
+     "sb_chrome"
+    ],
+    [
+     11.0,
+     -3,
+     12,
+     12.5,
+     19,
+     14,
+     "sb_chrome"
+    ]
+   ],
+   "title": "Coaster Track",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     5,
+     0,
+     16,
+     11,
+     16
+    ]
+   ]
+  },
+  "sb_bent_4_m": {
+   "model": "boxes",
+   "boxes": [
+    [
+     12.4,
+     -4,
+     6.4,
+     15.6,
+     20,
+     9.6,
+     "sb_white"
+    ]
+   ],
+   "title": "Coaster Bent",
+   "sound": "WOOD",
+   "render": "cutout",
+   "shape": [
+    [
+     6,
+     6,
+     6,
+     10,
+     10,
+     10
+    ]
+   ]
+  },
+  "sb_track_5": {
+   "model": "boxes",
+   "boxes": [
+    [
+     8.0,
+     -3,
+     1,
+     12.0,
+     19,
+     15,
+     "sb_white",
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     6.5,
+     -3,
+     0,
+     8.0,
+     19,
+     16,
+     {
+      "up": "sb_track",
+      "side": "sb_pile",
+      "down": "sb_pile"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     5.0,
+     -3,
+     2,
+     6.5,
+     19,
+     4,
+     "sb_chrome",
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     5.0,
+     -3,
+     12,
+     6.5,
+     19,
+     14,
+     "sb_chrome",
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Coaster Track",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     5,
+     0,
+     16,
+     11,
+     16
+    ]
+   ]
+  },
+  "sb_bent_5": {
+   "model": "boxes",
+   "boxes": [
+    [
+     6.4,
+     -4,
+     6.4,
+     9.6,
+     20,
+     9.6,
+     "sb_white",
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Coaster Bent",
+   "sound": "WOOD",
+   "render": "cutout",
+   "shape": [
+    [
+     6,
+     6,
+     6,
+     10,
+     10,
+     10
+    ]
+   ]
+  },
+  "sb_track_5_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     2.0,
+     -3,
+     1,
+     6.0,
+     19,
+     15,
+     "sb_white",
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     0.5,
+     -3,
+     0,
+     2.0,
+     19,
+     16,
+     {
+      "up": "sb_track",
+      "side": "sb_pile",
+      "down": "sb_pile"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     -1.0,
+     -3,
+     2,
+     0.5,
+     19,
+     4,
+     "sb_chrome",
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     -1.0,
+     -3,
+     12,
+     0.5,
+     19,
+     14,
+     "sb_chrome",
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Coaster Track",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     5,
+     0,
+     16,
+     11,
+     16
+    ]
+   ]
+  },
+  "sb_bent_5_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0.3999999999999999,
+     -4,
+     6.4,
+     3.6,
+     20,
+     9.6,
+     "sb_white",
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Coaster Bent",
+   "sound": "WOOD",
+   "render": "cutout",
+   "shape": [
+    [
+     6,
+     6,
+     6,
+     10,
+     10,
+     10
+    ]
+   ]
+  },
+  "sb_track_5_m": {
+   "model": "boxes",
+   "boxes": [
+    [
+     14.0,
+     -3,
+     1,
+     18.0,
+     19,
+     15,
+     "sb_white",
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     12.5,
+     -3,
+     0,
+     14.0,
+     19,
+     16,
+     {
+      "up": "sb_track",
+      "side": "sb_pile",
+      "down": "sb_pile"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     11.0,
+     -3,
+     2,
+     12.5,
+     19,
+     4,
+     "sb_chrome",
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     11.0,
+     -3,
+     12,
+     12.5,
+     19,
+     14,
+     "sb_chrome",
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Coaster Track",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     5,
+     0,
+     16,
+     11,
+     16
+    ]
+   ]
+  },
+  "sb_bent_5_m": {
+   "model": "boxes",
+   "boxes": [
+    [
+     12.4,
+     -4,
+     6.4,
+     15.6,
+     20,
+     9.6,
+     "sb_white",
+     null,
+     {
+      "axis": "z",
+      "angle": 22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Coaster Bent",
+   "sound": "WOOD",
+   "render": "cutout",
+   "shape": [
+    [
+     6,
+     6,
+     6,
+     10,
+     10,
+     10
+    ]
+   ]
+  },
+  "sb_track_6": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     4.0,
+     1,
+     19,
+     8.0,
+     15,
+     "sb_white",
+     null,
+     {
+      "axis": "z",
+      "angle": -45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     -3,
+     8.0,
+     0,
+     19,
+     9.5,
+     16,
+     {
+      "up": "sb_track",
+      "side": "sb_pile",
+      "down": "sb_pile"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     -3,
+     9.5,
+     2,
+     19,
+     11.0,
+     4,
+     "sb_chrome",
+     null,
+     {
+      "axis": "z",
+      "angle": -45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     -3,
+     9.5,
+     12,
+     19,
+     11.0,
+     14,
+     "sb_chrome",
+     null,
+     {
+      "axis": "z",
+      "angle": -45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Coaster Track",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     5,
+     0,
+     16,
+     11,
+     16
+    ]
+   ]
+  },
+  "sb_bent_6": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4,
+     6.4,
+     6.4,
+     20,
+     9.6,
+     9.6,
+     "sb_white",
+     null,
+     {
+      "axis": "z",
+      "angle": -45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Coaster Bent",
+   "sound": "WOOD",
+   "render": "cutout",
+   "shape": [
+    [
+     6,
+     6,
+     6,
+     10,
+     10,
+     10
+    ]
+   ]
+  },
+  "sb_track_6_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     10.0,
+     1,
+     19,
+     14.0,
+     15,
+     "sb_white",
+     null,
+     {
+      "axis": "z",
+      "angle": -45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     -3,
+     14.0,
+     0,
+     19,
+     15.5,
+     16,
+     {
+      "up": "sb_track",
+      "side": "sb_pile",
+      "down": "sb_pile"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     -3,
+     15.5,
+     2,
+     19,
+     17.0,
+     4,
+     "sb_chrome",
+     null,
+     {
+      "axis": "z",
+      "angle": -45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     -3,
+     15.5,
+     12,
+     19,
+     17.0,
+     14,
+     "sb_chrome",
+     null,
+     {
+      "axis": "z",
+      "angle": -45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Coaster Track",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     5,
+     0,
+     16,
+     11,
+     16
+    ]
+   ]
+  },
+  "sb_bent_6_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4,
+     0.3999999999999999,
+     6.4,
+     20,
+     3.6,
+     9.6,
+     "sb_white",
+     null,
+     {
+      "axis": "z",
+      "angle": -45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Coaster Bent",
+   "sound": "WOOD",
+   "render": "cutout",
+   "shape": [
+    [
+     6,
+     6,
+     6,
+     10,
+     10,
+     10
+    ]
+   ]
+  },
+  "sb_track_6_m": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     -2.0,
+     1,
+     19,
+     2.0,
+     15,
+     "sb_white",
+     null,
+     {
+      "axis": "z",
+      "angle": -45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     -3,
+     2.0,
+     0,
+     19,
+     3.5,
+     16,
+     {
+      "up": "sb_track",
+      "side": "sb_pile",
+      "down": "sb_pile"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     -3,
+     3.5,
+     2,
+     19,
+     5.0,
+     4,
+     "sb_chrome",
+     null,
+     {
+      "axis": "z",
+      "angle": -45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     -3,
+     3.5,
+     12,
+     19,
+     5.0,
+     14,
+     "sb_chrome",
+     null,
+     {
+      "axis": "z",
+      "angle": -45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Coaster Track",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     5,
+     0,
+     16,
+     11,
+     16
+    ]
+   ]
+  },
+  "sb_bent_6_m": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4,
+     12.4,
+     6.4,
+     20,
+     15.6,
+     9.6,
+     "sb_white",
+     null,
+     {
+      "axis": "z",
+      "angle": -45.0,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Coaster Bent",
+   "sound": "WOOD",
+   "render": "cutout",
+   "shape": [
+    [
+     6,
+     6,
+     6,
+     10,
+     10,
+     10
+    ]
+   ]
+  },
+  "sb_track_7": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     4.0,
+     1,
+     19,
+     8.0,
+     15,
+     "sb_white",
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     -3,
+     8.0,
+     0,
+     19,
+     9.5,
+     16,
+     {
+      "up": "sb_track",
+      "side": "sb_pile",
+      "down": "sb_pile"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     -3,
+     9.5,
+     2,
+     19,
+     11.0,
+     4,
+     "sb_chrome",
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     -3,
+     9.5,
+     12,
+     19,
+     11.0,
+     14,
+     "sb_chrome",
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Coaster Track",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     5,
+     0,
+     16,
+     11,
+     16
+    ]
+   ]
+  },
+  "sb_bent_7": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4,
+     6.4,
+     6.4,
+     20,
+     9.6,
+     9.6,
+     "sb_white",
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Coaster Bent",
+   "sound": "WOOD",
+   "render": "cutout",
+   "shape": [
+    [
+     6,
+     6,
+     6,
+     10,
+     10,
+     10
+    ]
+   ]
+  },
+  "sb_track_7_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     10.0,
+     1,
+     19,
+     14.0,
+     15,
+     "sb_white",
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     -3,
+     14.0,
+     0,
+     19,
+     15.5,
+     16,
+     {
+      "up": "sb_track",
+      "side": "sb_pile",
+      "down": "sb_pile"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     -3,
+     15.5,
+     2,
+     19,
+     17.0,
+     4,
+     "sb_chrome",
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     -3,
+     15.5,
+     12,
+     19,
+     17.0,
+     14,
+     "sb_chrome",
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Coaster Track",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     5,
+     0,
+     16,
+     11,
+     16
+    ]
+   ]
+  },
+  "sb_bent_7_p": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4,
+     0.3999999999999999,
+     6.4,
+     20,
+     3.6,
+     9.6,
+     "sb_white",
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Coaster Bent",
+   "sound": "WOOD",
+   "render": "cutout",
+   "shape": [
+    [
+     6,
+     6,
+     6,
+     10,
+     10,
+     10
+    ]
+   ]
+  },
+  "sb_track_7_m": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -3,
+     -2.0,
+     1,
+     19,
+     2.0,
+     15,
+     "sb_white",
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     -3,
+     2.0,
+     0,
+     19,
+     3.5,
+     16,
+     {
+      "up": "sb_track",
+      "side": "sb_pile",
+      "down": "sb_pile"
+     },
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     -3,
+     3.5,
+     2,
+     19,
+     5.0,
+     4,
+     "sb_chrome",
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ],
+    [
+     -3,
+     3.5,
+     12,
+     19,
+     5.0,
+     14,
+     "sb_chrome",
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Coaster Track",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     5,
+     0,
+     16,
+     11,
+     16
+    ]
+   ]
+  },
+  "sb_bent_7_m": {
+   "model": "boxes",
+   "boxes": [
+    [
+     -4,
+     12.4,
+     6.4,
+     20,
+     15.6,
+     9.6,
+     "sb_white",
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       8,
+       8,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Coaster Bent",
+   "sound": "WOOD",
+   "render": "cutout",
+   "shape": [
+    [
+     6,
+     6,
+     6,
+     10,
+     10,
+     10
+    ]
+   ]
+  },
+  "sb_track_z": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     4,
+     -3,
+     15,
+     8,
+     19,
+     "sb_white"
+    ],
+    [
+     0,
+     8,
+     -3,
+     16,
+     9.5,
+     19,
+     {
+      "up": "sb_track_z",
+      "side": "sb_pile",
+      "down": "sb_pile"
+     }
+    ],
+    [
+     2,
+     9.5,
+     -3,
+     4,
+     11,
+     19,
+     "sb_chrome"
+    ],
+    [
+     12,
+     9.5,
+     -3,
+     14,
+     11,
+     19,
+     "sb_chrome"
+    ]
+   ],
+   "title": "Coaster Track",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     5,
+     0,
+     16,
+     11,
+     16
+    ]
+   ]
+  },
+  "sb_car": {
+   "model": "boxes",
+   "boxes": [
+    [
+     2,
+     2,
+     0,
+     14,
+     9,
+     16,
+     {
+      "side": "sb_red",
+      "up": "sb_red",
+      "down": "sb_pile"
+     }
+    ],
+    [
+     3,
+     3,
+     2,
+     13,
+     9.2,
+     7,
+     "cm_iron"
+    ],
+    [
+     3,
+     3,
+     9,
+     13,
+     9.2,
+     14,
+     "cm_iron"
+    ],
+    [
+     3,
+     9,
+     6,
+     13,
+     12,
+     7,
+     "sb_red"
+    ],
+    [
+     3,
+     9,
+     13,
+     13,
+     12,
+     14,
+     "sb_red"
+    ],
+    [
+     3,
+     10,
+     2,
+     13,
+     11,
+     3,
+     "sb_chrome"
+    ],
+    [
+     3,
+     10,
+     9,
+     13,
+     11,
+     10,
+     "sb_chrome"
+    ],
+    [
+     3,
+     0,
+     2,
+     5,
+     2,
+     5,
+     "cm_iron"
+    ],
+    [
+     11,
+     0,
+     2,
+     13,
+     2,
+     5,
+     "cm_iron"
+    ],
+    [
+     3,
+     0,
+     11,
+     5,
+     2,
+     14,
+     "cm_iron"
+    ],
+    [
+     11,
+     0,
+     11,
+     13,
+     2,
+     14,
+     "cm_iron"
+    ]
+   ],
+   "title": "Coaster Car",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     2,
+     0,
+     0,
+     14,
+     12,
+     16
+    ]
+   ]
+  },
+  "sb_car_front": {
+   "model": "boxes",
+   "boxes": [
+    [
+     2,
+     2,
+     0,
+     14,
+     9,
+     16,
+     {
+      "side": "sb_red",
+      "up": "sb_red",
+      "down": "sb_pile"
+     }
+    ],
+    [
+     3,
+     3,
+     2,
+     13,
+     9.2,
+     7,
+     "cm_iron"
+    ],
+    [
+     3,
+     3,
+     9,
+     13,
+     9.2,
+     14,
+     "cm_iron"
+    ],
+    [
+     3,
+     9,
+     6,
+     13,
+     12,
+     7,
+     "sb_red"
+    ],
+    [
+     3,
+     9,
+     13,
+     13,
+     12,
+     14,
+     "sb_red"
+    ],
+    [
+     3,
+     10,
+     2,
+     13,
+     11,
+     3,
+     "sb_chrome"
+    ],
+    [
+     3,
+     10,
+     9,
+     13,
+     11,
+     10,
+     "sb_chrome"
+    ],
+    [
+     3,
+     0,
+     2,
+     5,
+     2,
+     5,
+     "cm_iron"
+    ],
+    [
+     11,
+     0,
+     2,
+     13,
+     2,
+     5,
+     "cm_iron"
+    ],
+    [
+     3,
+     0,
+     11,
+     5,
+     2,
+     14,
+     "cm_iron"
+    ],
+    [
+     11,
+     0,
+     11,
+     13,
+     2,
+     14,
+     "cm_iron"
+    ],
+    [
+     4,
+     4,
+     -1,
+     12,
+     11,
+     0,
+     {
+      "north": "sb_bulbs_on",
+      "side": "sb_red",
+      "up": "sb_red",
+      "down": "sb_red"
+     }
+    ],
+    [
+     6.5,
+     7,
+     -2,
+     9.5,
+     10,
+     -1,
+     "sb_chrome"
+    ]
+   ],
+   "title": "Coaster Car",
+   "sound": "METAL",
+   "rotate": "facing",
+   "light": 6,
+   "shape": [
+    [
+     2,
+     0,
+     0,
+     14,
+     12,
+     16
+    ]
+   ]
+  },
+  "sb_swing": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4,
+     0,
+     4,
+     12,
+     1.5,
+     12,
+     "sb_yellow"
+    ],
+    [
+     4,
+     1.5,
+     11,
+     12,
+     7,
+     12.5,
+     "sb_yellow"
+    ],
+    [
+     4.5,
+     3,
+     4,
+     5.2,
+     16,
+     4.7,
+     "sb_chrome"
+    ],
+    [
+     10.8,
+     3,
+     4,
+     11.5,
+     16,
+     4.7,
+     "sb_chrome"
+    ],
+    [
+     4.5,
+     7,
+     11.3,
+     5.2,
+     16,
+     12,
+     "sb_chrome"
+    ],
+    [
+     10.8,
+     7,
+     11.3,
+     11.5,
+     16,
+     12,
+     "sb_chrome"
+    ],
+    [
+     4,
+     4,
+     3.5,
+     12,
+     4.6,
+     4.3,
+     "sb_chrome"
+    ]
+   ],
+   "title": "Swing Seat",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     4,
+     0,
+     4,
+     12,
+     16,
+     12
+    ]
+   ]
+  },
+  "sb_chain": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.6,
+     0,
+     4,
+     8.4,
+     16,
+     4.8,
+     "sb_chrome"
+    ],
+    [
+     7.6,
+     0,
+     11.2,
+     8.4,
+     16,
+     12,
+     "sb_chrome"
+    ]
+   ],
+   "title": "Chains",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     7,
+     0,
+     4,
+     9,
+     16,
+     12
+    ]
+   ]
+  },
+  "sb_umbrella_lo": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.3,
+     0,
+     7.3,
+     8.7,
+     16,
+     8.7,
+     "sb_chrome"
+    ]
+   ],
+   "title": "Beach Umbrella",
+   "sound": "WOOL",
+   "decor": true,
+   "shape": [
+    [
+     7,
+     0,
+     7,
+     9,
+     16,
+     9
+    ]
+   ]
+  },
+  "sb_umbrella_hi_a": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.3,
+     0,
+     7.3,
+     8.7,
+     6,
+     8.7,
+     "sb_chrome"
+    ],
+    [
+     6.8,
+     6.5,
+     6.8,
+     9.2,
+     8,
+     9.2,
+     "sb_stripe_a"
+    ],
+    [
+     8,
+     4,
+     -8,
+     24,
+     5,
+     24,
+     "sb_stripe_a",
+     null,
+     {
+      "axis": "z",
+      "angle": 15,
+      "origin": [
+       8,
+       6.5,
+       8
+      ]
+     }
+    ],
+    [
+     -8,
+     4,
+     -8,
+     8,
+     5,
+     24,
+     "sb_stripe_a",
+     null,
+     {
+      "axis": "z",
+      "angle": -15,
+      "origin": [
+       8,
+       6.5,
+       8
+      ]
+     }
+    ],
+    [
+     -8,
+     4,
+     8,
+     24,
+     5,
+     24,
+     "sb_stripe_a",
+     null,
+     {
+      "axis": "x",
+      "angle": -15,
+      "origin": [
+       8,
+       6.5,
+       8
+      ]
+     }
+    ],
+    [
+     -8,
+     4,
+     -8,
+     24,
+     5,
+     8,
+     "sb_stripe_a",
+     null,
+     {
+      "axis": "x",
+      "angle": 15,
+      "origin": [
+       8,
+       6.5,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Beach Umbrella",
+   "sound": "WOOL",
+   "decor": true,
+   "shape": [
+    [
+     7,
+     0,
+     7,
+     9,
+     8,
+     9
+    ]
+   ]
+  },
+  "sb_umbrella_hi_b": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.3,
+     0,
+     7.3,
+     8.7,
+     6,
+     8.7,
+     "sb_chrome"
+    ],
+    [
+     6.8,
+     6.5,
+     6.8,
+     9.2,
+     8,
+     9.2,
+     "sb_stripe_c"
+    ],
+    [
+     8,
+     4,
+     -8,
+     24,
+     5,
+     24,
+     "sb_stripe_c",
+     null,
+     {
+      "axis": "z",
+      "angle": 15,
+      "origin": [
+       8,
+       6.5,
+       8
+      ]
+     }
+    ],
+    [
+     -8,
+     4,
+     -8,
+     8,
+     5,
+     24,
+     "sb_stripe_c",
+     null,
+     {
+      "axis": "z",
+      "angle": -15,
+      "origin": [
+       8,
+       6.5,
+       8
+      ]
+     }
+    ],
+    [
+     -8,
+     4,
+     8,
+     24,
+     5,
+     24,
+     "sb_stripe_c",
+     null,
+     {
+      "axis": "x",
+      "angle": -15,
+      "origin": [
+       8,
+       6.5,
+       8
+      ]
+     }
+    ],
+    [
+     -8,
+     4,
+     -8,
+     24,
+     5,
+     8,
+     "sb_stripe_c",
+     null,
+     {
+      "axis": "x",
+      "angle": 15,
+      "origin": [
+       8,
+       6.5,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Beach Umbrella",
+   "sound": "WOOL",
+   "decor": true,
+   "shape": [
+    [
+     7,
+     0,
+     7,
+     9,
+     8,
+     9
+    ]
+   ]
+  },
+  "sb_chair": {
+   "model": "boxes",
+   "boxes": [
+    [
+     2,
+     0,
+     2,
+     3,
+     6,
+     3,
+     "sb_chrome"
+    ],
+    [
+     13,
+     0,
+     2,
+     14,
+     6,
+     3,
+     "sb_chrome"
+    ],
+    [
+     2,
+     0,
+     12,
+     3,
+     4,
+     13,
+     "sb_chrome"
+    ],
+    [
+     13,
+     0,
+     12,
+     14,
+     4,
+     13,
+     "sb_chrome"
+    ],
+    [
+     2.5,
+     3,
+     2,
+     13.5,
+     4,
+     12,
+     "sb_stripe_b"
+    ],
+    [
+     2.5,
+     4,
+     12,
+     13.5,
+     13,
+     13,
+     "sb_stripe_b",
+     null,
+     {
+      "axis": "x",
+      "angle": -20,
+      "origin": [
+       8,
+       4,
+       12
+      ]
+     }
+    ],
+    [
+     2,
+     6,
+     2,
+     3,
+     7,
+     10,
+     "sb_chrome"
+    ],
+    [
+     13,
+     6,
+     2,
+     14,
+     7,
+     10,
+     "sb_chrome"
+    ]
+   ],
+   "title": "Beach Chair",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     2,
+     0,
+     2,
+     14,
+     13,
+     14
+    ]
+   ]
+  },
+  "sb_towel_a": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     3,
+     15,
+     0.4,
+     13,
+     "sb_towel_a"
+    ]
+   ],
+   "title": "Beach Towel",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     1,
+     0,
+     3,
+     15,
+     1,
+     13
+    ]
+   ]
+  },
+  "sb_towel_b": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     3,
+     15,
+     0.4,
+     13,
+     "sb_towel_b"
+    ]
+   ],
+   "title": "Beach Towel",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true,
+   "shape": [
+    [
+     1,
+     0,
+     3,
+     15,
+     1,
+     13
+    ]
+   ]
+  },
+  "sb_cooler": {
+   "model": "boxes",
+   "boxes": [
+    [
+     3,
+     0,
+     4,
+     13,
+     8,
+     12,
+     {
+      "side": "sb_blue",
+      "up": "sb_white",
+      "down": "sb_blue"
+     }
+    ],
+    [
+     3,
+     8,
+     4,
+     13,
+     9.5,
+     12,
+     "sb_white"
+    ],
+    [
+     5,
+     9.5,
+     7.5,
+     11,
+     10.5,
+     8.5,
+     "cm_iron"
+    ]
+   ],
+   "title": "Cooler",
+   "sound": "METAL",
+   "rotate": "facing",
+   "shape": [
+    [
+     3,
+     0,
+     4,
+     13,
+     10,
+     12
+    ]
+   ],
+   "loot": "st_cooler"
+  },
+  "sb_fence": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.6,
+     3,
+     0,
+     8.4,
+     3.6,
+     16,
+     "cm_iron"
+    ],
+    [
+     7.6,
+     10,
+     0,
+     8.4,
+     10.6,
+     16,
+     "cm_iron"
+    ],
+    [
+     7.3,
+     0,
+     1,
+     8.7,
+     13,
+     2.5,
+     "sb_fence"
+    ],
+    [
+     7.3,
+     0,
+     4,
+     8.7,
+     13,
+     5.5,
+     "sb_fence"
+    ],
+    [
+     7.3,
+     0,
+     7,
+     8.7,
+     13,
+     8.5,
+     "sb_fence"
+    ],
+    [
+     7.3,
+     0,
+     10,
+     8.7,
+     13,
+     11.5,
+     "sb_fence"
+    ],
+    [
+     7.3,
+     0,
+     13,
+     8.7,
+     13,
+     14.5,
+     "sb_fence"
+    ]
+   ],
+   "title": "Snow Fence",
+   "sound": "WOOD",
+   "rotate": "axis",
+   "render": "cutout",
+   "shape": [
+    [
+     7,
+     0,
+     0,
+     9,
+     13,
+     16
+    ]
+   ]
+  },
+  "sb_guard_lo": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     1,
+     2.5,
+     16,
+     2.5,
+     "sb_white"
+    ],
+    [
+     1,
+     0,
+     14,
+     2.5,
+     16,
+     15.5,
+     "sb_white"
+    ],
+    [
+     14,
+     0,
+     1,
+     15.5,
+     16,
+     2.5,
+     "sb_white"
+    ],
+    [
+     14,
+     0,
+     14,
+     15.5,
+     16,
+     15.5,
+     "sb_white"
+    ],
+    [
+     3,
+     2,
+     0.5,
+     13,
+     3,
+     2.5,
+     "sb_white"
+    ],
+    [
+     3,
+     6,
+     0.5,
+     13,
+     7,
+     2.5,
+     "sb_white"
+    ],
+    [
+     3,
+     10,
+     0.5,
+     13,
+     11,
+     2.5,
+     "sb_white"
+    ],
+    [
+     3,
+     14,
+     0.5,
+     13,
+     15,
+     2.5,
+     "sb_white"
+    ],
+    [
+     1,
+     7,
+     1,
+     15.5,
+     8,
+     2.5,
+     "sb_white"
+    ],
+    [
+     1,
+     7,
+     14,
+     15.5,
+     8,
+     15.5,
+     "sb_white"
+    ]
+   ],
+   "title": "Lifeguard Chair",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "shape": [
+    [
+     1,
+     0,
+     0,
+     15.5,
+     16,
+     15.5
+    ]
+   ]
+  },
+  "sb_guard_hi": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     2,
+     16,
+     "sb_white"
+    ],
+    [
+     1,
+     2,
+     13,
+     15,
+     10,
+     15,
+     "sb_white"
+    ],
+    [
+     0,
+     2,
+     1,
+     2,
+     6,
+     15,
+     "sb_white"
+    ],
+    [
+     14,
+     2,
+     1,
+     16,
+     6,
+     15,
+     "sb_white"
+    ],
+    [
+     7.3,
+     10,
+     13.3,
+     8.7,
+     22,
+     14.7,
+     "sb_chrome"
+    ],
+    [
+     -4,
+     21,
+     -2,
+     20,
+     22,
+     18,
+     "sb_stripe_a"
+    ],
+    [
+     15.5,
+     3,
+     6,
+     17.5,
+     9,
+     9,
+     "sb_red"
+    ]
+   ],
+   "title": "Lifeguard Chair",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     10,
+     16
+    ]
+   ]
+  },
+  "sb_marquee": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_bulbs",
+      "south": "sb_bulbs",
+      "side": "sb_bulbs",
+      "up": "sb_bulbs",
+      "down": "sb_bulbs"
+     }
+    ]
+   ],
+   "title": "Marquee Lights",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_marquee_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_bulbs_on",
+      "south": "sb_bulbs_on",
+      "side": "sb_bulbs_on",
+      "up": "sb_bulbs_on",
+      "down": "sb_bulbs_on"
+     }
+    ]
+   ],
+   "title": "Marquee Lights",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_sgn_beach_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_sgn_beach_0",
+      "south": "sb_sgn_beach_0",
+      "side": "sb_sgn_beach_0",
+      "up": "sb_sgn_beach_0",
+      "down": "sb_sgn_beach_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_sgn_beach_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_sgn_beach_1",
+      "south": "sb_sgn_beach_1",
+      "side": "sb_sgn_beach_1",
+      "up": "sb_sgn_beach_1",
+      "down": "sb_sgn_beach_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_sgn_closed_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_sgn_closed_0",
+      "south": "sb_sgn_closed_0",
+      "side": "sb_sgn_closed_0",
+      "up": "sb_sgn_closed_0",
+      "down": "sb_sgn_closed_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_sgn_closed_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_sgn_closed_1",
+      "south": "sb_sgn_closed_1",
+      "side": "sb_sgn_closed_1",
+      "up": "sb_sgn_closed_1",
+      "down": "sb_sgn_closed_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_sgn_ride_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_sgn_ride_0",
+      "south": "sb_sgn_ride_0",
+      "side": "sb_sgn_ride_0",
+      "up": "sb_sgn_ride_0",
+      "down": "sb_sgn_ride_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_sgn_ride_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_sgn_ride_1",
+      "south": "sb_sgn_ride_1",
+      "side": "sb_sgn_ride_1",
+      "up": "sb_sgn_ride_1",
+      "down": "sb_sgn_ride_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_sgn_tickets_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_sgn_tickets_0",
+      "south": "sb_sgn_tickets_0",
+      "side": "sb_sgn_tickets_0",
+      "up": "sb_sgn_tickets_0",
+      "down": "sb_sgn_tickets_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_sgn_tickets_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_sgn_tickets_1",
+      "south": "sb_sgn_tickets_1",
+      "side": "sb_sgn_tickets_1",
+      "up": "sb_sgn_tickets_1",
+      "down": "sb_sgn_tickets_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_sgn_nodogs_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_sgn_nodogs_0",
+      "south": "sb_sgn_nodogs_0",
+      "side": "sb_sgn_nodogs_0",
+      "up": "sb_sgn_nodogs_0",
+      "down": "sb_sgn_nodogs_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_sgn_nodogs_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_sgn_nodogs_1",
+      "south": "sb_sgn_nodogs_1",
+      "side": "sb_sgn_nodogs_1",
+      "up": "sb_sgn_nodogs_1",
+      "down": "sb_sgn_nodogs_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_sgn_evac_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_sgn_evac_0",
+      "south": "sb_sgn_evac_0",
+      "side": "sb_sgn_evac_0",
+      "up": "sb_sgn_evac_0",
+      "down": "sb_sgn_evac_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_sgn_evac_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_sgn_evac_1",
+      "south": "sb_sgn_evac_1",
+      "side": "sb_sgn_evac_1",
+      "up": "sb_sgn_evac_1",
+      "down": "sb_sgn_evac_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_sgn_bait_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_sgn_bait_0",
+      "south": "sb_sgn_bait_0",
+      "side": "sb_sgn_bait_0",
+      "up": "sb_sgn_bait_0",
+      "down": "sb_sgn_bait_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_sgn_bait_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_sgn_bait_1",
+      "south": "sb_sgn_bait_1",
+      "side": "sb_sgn_bait_1",
+      "up": "sb_sgn_bait_1",
+      "down": "sb_sgn_bait_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_sgn_ramp_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_sgn_ramp_0",
+      "south": "sb_sgn_ramp_0",
+      "side": "sb_sgn_ramp_0",
+      "up": "sb_sgn_ramp_0",
+      "down": "sb_sgn_ramp_0"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_sgn_ramp_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_sgn_ramp_1",
+      "south": "sb_sgn_ramp_1",
+      "side": "sb_sgn_ramp_1",
+      "up": "sb_sgn_ramp_1",
+      "down": "sb_sgn_ramp_1"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_funland_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_0",
+      "south": "sb_neon_funland_0",
+      "side": "sb_neon_funland_0",
+      "up": "sb_neon_funland_0",
+      "down": "sb_neon_funland_0"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_funland_0_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_0_on",
+      "south": "sb_neon_funland_0_on",
+      "side": "sb_neon_funland_0_on",
+      "up": "sb_neon_funland_0_on",
+      "down": "sb_neon_funland_0_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_funland_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_1",
+      "south": "sb_neon_funland_1",
+      "side": "sb_neon_funland_1",
+      "up": "sb_neon_funland_1",
+      "down": "sb_neon_funland_1"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_funland_1_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_1_on",
+      "south": "sb_neon_funland_1_on",
+      "side": "sb_neon_funland_1_on",
+      "up": "sb_neon_funland_1_on",
+      "down": "sb_neon_funland_1_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_funland_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_2",
+      "south": "sb_neon_funland_2",
+      "side": "sb_neon_funland_2",
+      "up": "sb_neon_funland_2",
+      "down": "sb_neon_funland_2"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_funland_2_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_2_on",
+      "south": "sb_neon_funland_2_on",
+      "side": "sb_neon_funland_2_on",
+      "up": "sb_neon_funland_2_on",
+      "down": "sb_neon_funland_2_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_funland_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_3",
+      "south": "sb_neon_funland_3",
+      "side": "sb_neon_funland_3",
+      "up": "sb_neon_funland_3",
+      "down": "sb_neon_funland_3"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_funland_3_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_3_on",
+      "south": "sb_neon_funland_3_on",
+      "side": "sb_neon_funland_3_on",
+      "up": "sb_neon_funland_3_on",
+      "down": "sb_neon_funland_3_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_funland_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_4",
+      "south": "sb_neon_funland_4",
+      "side": "sb_neon_funland_4",
+      "up": "sb_neon_funland_4",
+      "down": "sb_neon_funland_4"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_funland_4_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_4_on",
+      "south": "sb_neon_funland_4_on",
+      "side": "sb_neon_funland_4_on",
+      "up": "sb_neon_funland_4_on",
+      "down": "sb_neon_funland_4_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_funland_5": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_5",
+      "south": "sb_neon_funland_5",
+      "side": "sb_neon_funland_5",
+      "up": "sb_neon_funland_5",
+      "down": "sb_neon_funland_5"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_funland_5_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_5_on",
+      "south": "sb_neon_funland_5_on",
+      "side": "sb_neon_funland_5_on",
+      "up": "sb_neon_funland_5_on",
+      "down": "sb_neon_funland_5_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_funland_6": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_6",
+      "south": "sb_neon_funland_6",
+      "side": "sb_neon_funland_6",
+      "up": "sb_neon_funland_6",
+      "down": "sb_neon_funland_6"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_funland_6_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_6_on",
+      "south": "sb_neon_funland_6_on",
+      "side": "sb_neon_funland_6_on",
+      "up": "sb_neon_funland_6_on",
+      "down": "sb_neon_funland_6_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_funland_7": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_7",
+      "south": "sb_neon_funland_7",
+      "side": "sb_neon_funland_7",
+      "up": "sb_neon_funland_7",
+      "down": "sb_neon_funland_7"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_funland_7_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_7_on",
+      "south": "sb_neon_funland_7_on",
+      "side": "sb_neon_funland_7_on",
+      "up": "sb_neon_funland_7_on",
+      "down": "sb_neon_funland_7_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_funland_8": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_8",
+      "south": "sb_neon_funland_8",
+      "side": "sb_neon_funland_8",
+      "up": "sb_neon_funland_8",
+      "down": "sb_neon_funland_8"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_funland_8_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_8_on",
+      "south": "sb_neon_funland_8_on",
+      "side": "sb_neon_funland_8_on",
+      "up": "sb_neon_funland_8_on",
+      "down": "sb_neon_funland_8_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_funland_9": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_9",
+      "south": "sb_neon_funland_9",
+      "side": "sb_neon_funland_9",
+      "up": "sb_neon_funland_9",
+      "down": "sb_neon_funland_9"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_funland_9_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_9_on",
+      "south": "sb_neon_funland_9_on",
+      "side": "sb_neon_funland_9_on",
+      "up": "sb_neon_funland_9_on",
+      "down": "sb_neon_funland_9_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_funland_10": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_10",
+      "south": "sb_neon_funland_10",
+      "side": "sb_neon_funland_10",
+      "up": "sb_neon_funland_10",
+      "down": "sb_neon_funland_10"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_funland_10_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_10_on",
+      "south": "sb_neon_funland_10_on",
+      "side": "sb_neon_funland_10_on",
+      "up": "sb_neon_funland_10_on",
+      "down": "sb_neon_funland_10_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_funland_11": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_11",
+      "south": "sb_neon_funland_11",
+      "side": "sb_neon_funland_11",
+      "up": "sb_neon_funland_11",
+      "down": "sb_neon_funland_11"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_funland_11_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_11_on",
+      "south": "sb_neon_funland_11_on",
+      "side": "sb_neon_funland_11_on",
+      "up": "sb_neon_funland_11_on",
+      "down": "sb_neon_funland_11_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_funland_12": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_12",
+      "south": "sb_neon_funland_12",
+      "side": "sb_neon_funland_12",
+      "up": "sb_neon_funland_12",
+      "down": "sb_neon_funland_12"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_funland_12_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_12_on",
+      "south": "sb_neon_funland_12_on",
+      "side": "sb_neon_funland_12_on",
+      "up": "sb_neon_funland_12_on",
+      "down": "sb_neon_funland_12_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_funland_13": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_13",
+      "south": "sb_neon_funland_13",
+      "side": "sb_neon_funland_13",
+      "up": "sb_neon_funland_13",
+      "down": "sb_neon_funland_13"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_funland_13_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_13_on",
+      "south": "sb_neon_funland_13_on",
+      "side": "sb_neon_funland_13_on",
+      "up": "sb_neon_funland_13_on",
+      "down": "sb_neon_funland_13_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_funland_14": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_14",
+      "south": "sb_neon_funland_14",
+      "side": "sb_neon_funland_14",
+      "up": "sb_neon_funland_14",
+      "down": "sb_neon_funland_14"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_funland_14_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_14_on",
+      "south": "sb_neon_funland_14_on",
+      "side": "sb_neon_funland_14_on",
+      "up": "sb_neon_funland_14_on",
+      "down": "sb_neon_funland_14_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_funland_15": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_15",
+      "south": "sb_neon_funland_15",
+      "side": "sb_neon_funland_15",
+      "up": "sb_neon_funland_15",
+      "down": "sb_neon_funland_15"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_funland_15_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_15_on",
+      "south": "sb_neon_funland_15_on",
+      "side": "sb_neon_funland_15_on",
+      "up": "sb_neon_funland_15_on",
+      "down": "sb_neon_funland_15_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_funland_16": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_16",
+      "south": "sb_neon_funland_16",
+      "side": "sb_neon_funland_16",
+      "up": "sb_neon_funland_16",
+      "down": "sb_neon_funland_16"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_funland_16_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_16_on",
+      "south": "sb_neon_funland_16_on",
+      "side": "sb_neon_funland_16_on",
+      "up": "sb_neon_funland_16_on",
+      "down": "sb_neon_funland_16_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_funland_17": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_17",
+      "south": "sb_neon_funland_17",
+      "side": "sb_neon_funland_17",
+      "up": "sb_neon_funland_17",
+      "down": "sb_neon_funland_17"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_funland_17_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_17_on",
+      "south": "sb_neon_funland_17_on",
+      "side": "sb_neon_funland_17_on",
+      "up": "sb_neon_funland_17_on",
+      "down": "sb_neon_funland_17_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_funland_18": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_18",
+      "south": "sb_neon_funland_18",
+      "side": "sb_neon_funland_18",
+      "up": "sb_neon_funland_18",
+      "down": "sb_neon_funland_18"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_funland_18_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_18_on",
+      "south": "sb_neon_funland_18_on",
+      "side": "sb_neon_funland_18_on",
+      "up": "sb_neon_funland_18_on",
+      "down": "sb_neon_funland_18_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_funland_19": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_19",
+      "south": "sb_neon_funland_19",
+      "side": "sb_neon_funland_19",
+      "up": "sb_neon_funland_19",
+      "down": "sb_neon_funland_19"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_funland_19_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_19_on",
+      "south": "sb_neon_funland_19_on",
+      "side": "sb_neon_funland_19_on",
+      "up": "sb_neon_funland_19_on",
+      "down": "sb_neon_funland_19_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_funland_20": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_20",
+      "south": "sb_neon_funland_20",
+      "side": "sb_neon_funland_20",
+      "up": "sb_neon_funland_20",
+      "down": "sb_neon_funland_20"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_funland_20_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_20_on",
+      "south": "sb_neon_funland_20_on",
+      "side": "sb_neon_funland_20_on",
+      "up": "sb_neon_funland_20_on",
+      "down": "sb_neon_funland_20_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_funland_21": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_21",
+      "south": "sb_neon_funland_21",
+      "side": "sb_neon_funland_21",
+      "up": "sb_neon_funland_21",
+      "down": "sb_neon_funland_21"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_funland_21_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_21_on",
+      "south": "sb_neon_funland_21_on",
+      "side": "sb_neon_funland_21_on",
+      "up": "sb_neon_funland_21_on",
+      "down": "sb_neon_funland_21_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_funland_22": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_22",
+      "south": "sb_neon_funland_22",
+      "side": "sb_neon_funland_22",
+      "up": "sb_neon_funland_22",
+      "down": "sb_neon_funland_22"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_funland_22_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_22_on",
+      "south": "sb_neon_funland_22_on",
+      "side": "sb_neon_funland_22_on",
+      "up": "sb_neon_funland_22_on",
+      "down": "sb_neon_funland_22_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_funland_23": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_23",
+      "south": "sb_neon_funland_23",
+      "side": "sb_neon_funland_23",
+      "up": "sb_neon_funland_23",
+      "down": "sb_neon_funland_23"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_funland_23_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_23_on",
+      "south": "sb_neon_funland_23_on",
+      "side": "sb_neon_funland_23_on",
+      "up": "sb_neon_funland_23_on",
+      "down": "sb_neon_funland_23_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_funland_24": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_24",
+      "south": "sb_neon_funland_24",
+      "side": "sb_neon_funland_24",
+      "up": "sb_neon_funland_24",
+      "down": "sb_neon_funland_24"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_funland_24_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_24_on",
+      "south": "sb_neon_funland_24_on",
+      "side": "sb_neon_funland_24_on",
+      "up": "sb_neon_funland_24_on",
+      "down": "sb_neon_funland_24_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_funland_25": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_25",
+      "south": "sb_neon_funland_25",
+      "side": "sb_neon_funland_25",
+      "up": "sb_neon_funland_25",
+      "down": "sb_neon_funland_25"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_funland_25_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_25_on",
+      "south": "sb_neon_funland_25_on",
+      "side": "sb_neon_funland_25_on",
+      "up": "sb_neon_funland_25_on",
+      "down": "sb_neon_funland_25_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_funland_26": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_26",
+      "south": "sb_neon_funland_26",
+      "side": "sb_neon_funland_26",
+      "up": "sb_neon_funland_26",
+      "down": "sb_neon_funland_26"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_funland_26_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_26_on",
+      "south": "sb_neon_funland_26_on",
+      "side": "sb_neon_funland_26_on",
+      "up": "sb_neon_funland_26_on",
+      "down": "sb_neon_funland_26_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_funland_27": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_27",
+      "south": "sb_neon_funland_27",
+      "side": "sb_neon_funland_27",
+      "up": "sb_neon_funland_27",
+      "down": "sb_neon_funland_27"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_funland_27_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_27_on",
+      "south": "sb_neon_funland_27_on",
+      "side": "sb_neon_funland_27_on",
+      "up": "sb_neon_funland_27_on",
+      "down": "sb_neon_funland_27_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_funland_28": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_28",
+      "south": "sb_neon_funland_28",
+      "side": "sb_neon_funland_28",
+      "up": "sb_neon_funland_28",
+      "down": "sb_neon_funland_28"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_funland_28_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_28_on",
+      "south": "sb_neon_funland_28_on",
+      "side": "sb_neon_funland_28_on",
+      "up": "sb_neon_funland_28_on",
+      "down": "sb_neon_funland_28_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_funland_29": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_29",
+      "south": "sb_neon_funland_29",
+      "side": "sb_neon_funland_29",
+      "up": "sb_neon_funland_29",
+      "down": "sb_neon_funland_29"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_funland_29_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_29_on",
+      "south": "sb_neon_funland_29_on",
+      "side": "sb_neon_funland_29_on",
+      "up": "sb_neon_funland_29_on",
+      "down": "sb_neon_funland_29_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_funland_30": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_30",
+      "south": "sb_neon_funland_30",
+      "side": "sb_neon_funland_30",
+      "up": "sb_neon_funland_30",
+      "down": "sb_neon_funland_30"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_funland_30_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_30_on",
+      "south": "sb_neon_funland_30_on",
+      "side": "sb_neon_funland_30_on",
+      "up": "sb_neon_funland_30_on",
+      "down": "sb_neon_funland_30_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_funland_31": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_31",
+      "south": "sb_neon_funland_31",
+      "side": "sb_neon_funland_31",
+      "up": "sb_neon_funland_31",
+      "down": "sb_neon_funland_31"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_funland_31_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_31_on",
+      "south": "sb_neon_funland_31_on",
+      "side": "sb_neon_funland_31_on",
+      "up": "sb_neon_funland_31_on",
+      "down": "sb_neon_funland_31_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_funland_32": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_32",
+      "south": "sb_neon_funland_32",
+      "side": "sb_neon_funland_32",
+      "up": "sb_neon_funland_32",
+      "down": "sb_neon_funland_32"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_funland_32_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_32_on",
+      "south": "sb_neon_funland_32_on",
+      "side": "sb_neon_funland_32_on",
+      "up": "sb_neon_funland_32_on",
+      "down": "sb_neon_funland_32_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_funland_33": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_33",
+      "south": "sb_neon_funland_33",
+      "side": "sb_neon_funland_33",
+      "up": "sb_neon_funland_33",
+      "down": "sb_neon_funland_33"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_funland_33_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_33_on",
+      "south": "sb_neon_funland_33_on",
+      "side": "sb_neon_funland_33_on",
+      "up": "sb_neon_funland_33_on",
+      "down": "sb_neon_funland_33_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_funland_34": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_34",
+      "south": "sb_neon_funland_34",
+      "side": "sb_neon_funland_34",
+      "up": "sb_neon_funland_34",
+      "down": "sb_neon_funland_34"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_funland_34_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_34_on",
+      "south": "sb_neon_funland_34_on",
+      "side": "sb_neon_funland_34_on",
+      "up": "sb_neon_funland_34_on",
+      "down": "sb_neon_funland_34_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_funland_35": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_35",
+      "south": "sb_neon_funland_35",
+      "side": "sb_neon_funland_35",
+      "up": "sb_neon_funland_35",
+      "down": "sb_neon_funland_35"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_funland_35_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_funland_35_on",
+      "south": "sb_neon_funland_35_on",
+      "side": "sb_neon_funland_35_on",
+      "up": "sb_neon_funland_35_on",
+      "down": "sb_neon_funland_35_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_skee_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_skee_0",
+      "south": "sb_neon_skee_0",
+      "side": "sb_neon_skee_0",
+      "up": "sb_neon_skee_0",
+      "down": "sb_neon_skee_0"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_skee_0_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_skee_0_on",
+      "south": "sb_neon_skee_0_on",
+      "side": "sb_neon_skee_0_on",
+      "up": "sb_neon_skee_0_on",
+      "down": "sb_neon_skee_0_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_skee_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_skee_1",
+      "south": "sb_neon_skee_1",
+      "side": "sb_neon_skee_1",
+      "up": "sb_neon_skee_1",
+      "down": "sb_neon_skee_1"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_skee_1_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_skee_1_on",
+      "south": "sb_neon_skee_1_on",
+      "side": "sb_neon_skee_1_on",
+      "up": "sb_neon_skee_1_on",
+      "down": "sb_neon_skee_1_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_skee_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_skee_2",
+      "south": "sb_neon_skee_2",
+      "side": "sb_neon_skee_2",
+      "up": "sb_neon_skee_2",
+      "down": "sb_neon_skee_2"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_skee_2_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_skee_2_on",
+      "south": "sb_neon_skee_2_on",
+      "side": "sb_neon_skee_2_on",
+      "up": "sb_neon_skee_2_on",
+      "down": "sb_neon_skee_2_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_skee_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_skee_3",
+      "south": "sb_neon_skee_3",
+      "side": "sb_neon_skee_3",
+      "up": "sb_neon_skee_3",
+      "down": "sb_neon_skee_3"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_skee_3_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_skee_3_on",
+      "south": "sb_neon_skee_3_on",
+      "side": "sb_neon_skee_3_on",
+      "up": "sb_neon_skee_3_on",
+      "down": "sb_neon_skee_3_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_taffy_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_taffy_0",
+      "south": "sb_neon_taffy_0",
+      "side": "sb_neon_taffy_0",
+      "up": "sb_neon_taffy_0",
+      "down": "sb_neon_taffy_0"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_taffy_0_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_taffy_0_on",
+      "south": "sb_neon_taffy_0_on",
+      "side": "sb_neon_taffy_0_on",
+      "up": "sb_neon_taffy_0_on",
+      "down": "sb_neon_taffy_0_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_taffy_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_taffy_1",
+      "south": "sb_neon_taffy_1",
+      "side": "sb_neon_taffy_1",
+      "up": "sb_neon_taffy_1",
+      "down": "sb_neon_taffy_1"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_taffy_1_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_taffy_1_on",
+      "south": "sb_neon_taffy_1_on",
+      "side": "sb_neon_taffy_1_on",
+      "up": "sb_neon_taffy_1_on",
+      "down": "sb_neon_taffy_1_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_taffy_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_taffy_2",
+      "south": "sb_neon_taffy_2",
+      "side": "sb_neon_taffy_2",
+      "up": "sb_neon_taffy_2",
+      "down": "sb_neon_taffy_2"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_taffy_2_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_taffy_2_on",
+      "south": "sb_neon_taffy_2_on",
+      "side": "sb_neon_taffy_2_on",
+      "up": "sb_neon_taffy_2_on",
+      "down": "sb_neon_taffy_2_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_taffy_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_taffy_3",
+      "south": "sb_neon_taffy_3",
+      "side": "sb_neon_taffy_3",
+      "up": "sb_neon_taffy_3",
+      "down": "sb_neon_taffy_3"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_taffy_3_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_taffy_3_on",
+      "south": "sb_neon_taffy_3_on",
+      "side": "sb_neon_taffy_3_on",
+      "up": "sb_neon_taffy_3_on",
+      "down": "sb_neon_taffy_3_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_taffy_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_taffy_4",
+      "south": "sb_neon_taffy_4",
+      "side": "sb_neon_taffy_4",
+      "up": "sb_neon_taffy_4",
+      "down": "sb_neon_taffy_4"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_taffy_4_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_taffy_4_on",
+      "south": "sb_neon_taffy_4_on",
+      "side": "sb_neon_taffy_4_on",
+      "up": "sb_neon_taffy_4_on",
+      "down": "sb_neon_taffy_4_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_taffy_5": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_taffy_5",
+      "south": "sb_neon_taffy_5",
+      "side": "sb_neon_taffy_5",
+      "up": "sb_neon_taffy_5",
+      "down": "sb_neon_taffy_5"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_taffy_5_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_taffy_5_on",
+      "south": "sb_neon_taffy_5_on",
+      "side": "sb_neon_taffy_5_on",
+      "up": "sb_neon_taffy_5_on",
+      "down": "sb_neon_taffy_5_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_fries_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_fries_0",
+      "south": "sb_neon_fries_0",
+      "side": "sb_neon_fries_0",
+      "up": "sb_neon_fries_0",
+      "down": "sb_neon_fries_0"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_fries_0_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_fries_0_on",
+      "south": "sb_neon_fries_0_on",
+      "side": "sb_neon_fries_0_on",
+      "up": "sb_neon_fries_0_on",
+      "down": "sb_neon_fries_0_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_fries_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_fries_1",
+      "south": "sb_neon_fries_1",
+      "side": "sb_neon_fries_1",
+      "up": "sb_neon_fries_1",
+      "down": "sb_neon_fries_1"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_fries_1_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_fries_1_on",
+      "south": "sb_neon_fries_1_on",
+      "side": "sb_neon_fries_1_on",
+      "up": "sb_neon_fries_1_on",
+      "down": "sb_neon_fries_1_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_fries_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_fries_2",
+      "south": "sb_neon_fries_2",
+      "side": "sb_neon_fries_2",
+      "up": "sb_neon_fries_2",
+      "down": "sb_neon_fries_2"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_fries_2_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_fries_2_on",
+      "south": "sb_neon_fries_2_on",
+      "side": "sb_neon_fries_2_on",
+      "up": "sb_neon_fries_2_on",
+      "down": "sb_neon_fries_2_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_fries_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_fries_3",
+      "south": "sb_neon_fries_3",
+      "side": "sb_neon_fries_3",
+      "up": "sb_neon_fries_3",
+      "down": "sb_neon_fries_3"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_fries_3_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_fries_3_on",
+      "south": "sb_neon_fries_3_on",
+      "side": "sb_neon_fries_3_on",
+      "up": "sb_neon_fries_3_on",
+      "down": "sb_neon_fries_3_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_fries_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_fries_4",
+      "south": "sb_neon_fries_4",
+      "side": "sb_neon_fries_4",
+      "up": "sb_neon_fries_4",
+      "down": "sb_neon_fries_4"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_fries_4_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_fries_4_on",
+      "south": "sb_neon_fries_4_on",
+      "side": "sb_neon_fries_4_on",
+      "up": "sb_neon_fries_4_on",
+      "down": "sb_neon_fries_4_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_pizza_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_pizza_0",
+      "south": "sb_neon_pizza_0",
+      "side": "sb_neon_pizza_0",
+      "up": "sb_neon_pizza_0",
+      "down": "sb_neon_pizza_0"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_pizza_0_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_pizza_0_on",
+      "south": "sb_neon_pizza_0_on",
+      "side": "sb_neon_pizza_0_on",
+      "up": "sb_neon_pizza_0_on",
+      "down": "sb_neon_pizza_0_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_pizza_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_pizza_1",
+      "south": "sb_neon_pizza_1",
+      "side": "sb_neon_pizza_1",
+      "up": "sb_neon_pizza_1",
+      "down": "sb_neon_pizza_1"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_pizza_1_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_pizza_1_on",
+      "south": "sb_neon_pizza_1_on",
+      "side": "sb_neon_pizza_1_on",
+      "up": "sb_neon_pizza_1_on",
+      "down": "sb_neon_pizza_1_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_pizza_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_pizza_2",
+      "south": "sb_neon_pizza_2",
+      "side": "sb_neon_pizza_2",
+      "up": "sb_neon_pizza_2",
+      "down": "sb_neon_pizza_2"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_pizza_2_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_pizza_2_on",
+      "south": "sb_neon_pizza_2_on",
+      "side": "sb_neon_pizza_2_on",
+      "up": "sb_neon_pizza_2_on",
+      "down": "sb_neon_pizza_2_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_pizza_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_pizza_3",
+      "south": "sb_neon_pizza_3",
+      "side": "sb_neon_pizza_3",
+      "up": "sb_neon_pizza_3",
+      "down": "sb_neon_pizza_3"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_pizza_3_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_pizza_3_on",
+      "south": "sb_neon_pizza_3_on",
+      "side": "sb_neon_pizza_3_on",
+      "up": "sb_neon_pizza_3_on",
+      "down": "sb_neon_pizza_3_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_pizza_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_pizza_4",
+      "south": "sb_neon_pizza_4",
+      "side": "sb_neon_pizza_4",
+      "up": "sb_neon_pizza_4",
+      "down": "sb_neon_pizza_4"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_pizza_4_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_pizza_4_on",
+      "south": "sb_neon_pizza_4_on",
+      "side": "sb_neon_pizza_4_on",
+      "up": "sb_neon_pizza_4_on",
+      "down": "sb_neon_pizza_4_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_pizza_5": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_pizza_5",
+      "south": "sb_neon_pizza_5",
+      "side": "sb_neon_pizza_5",
+      "up": "sb_neon_pizza_5",
+      "down": "sb_neon_pizza_5"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_pizza_5_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_pizza_5_on",
+      "south": "sb_neon_pizza_5_on",
+      "side": "sb_neon_pizza_5_on",
+      "up": "sb_neon_pizza_5_on",
+      "down": "sb_neon_pizza_5_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_cream_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_cream_0",
+      "south": "sb_neon_cream_0",
+      "side": "sb_neon_cream_0",
+      "up": "sb_neon_cream_0",
+      "down": "sb_neon_cream_0"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_cream_0_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_cream_0_on",
+      "south": "sb_neon_cream_0_on",
+      "side": "sb_neon_cream_0_on",
+      "up": "sb_neon_cream_0_on",
+      "down": "sb_neon_cream_0_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_cream_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_cream_1",
+      "south": "sb_neon_cream_1",
+      "side": "sb_neon_cream_1",
+      "up": "sb_neon_cream_1",
+      "down": "sb_neon_cream_1"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_cream_1_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_cream_1_on",
+      "south": "sb_neon_cream_1_on",
+      "side": "sb_neon_cream_1_on",
+      "up": "sb_neon_cream_1_on",
+      "down": "sb_neon_cream_1_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_cream_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_cream_2",
+      "south": "sb_neon_cream_2",
+      "side": "sb_neon_cream_2",
+      "up": "sb_neon_cream_2",
+      "down": "sb_neon_cream_2"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_cream_2_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_cream_2_on",
+      "south": "sb_neon_cream_2_on",
+      "side": "sb_neon_cream_2_on",
+      "up": "sb_neon_cream_2_on",
+      "down": "sb_neon_cream_2_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_cream_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_cream_3",
+      "south": "sb_neon_cream_3",
+      "side": "sb_neon_cream_3",
+      "up": "sb_neon_cream_3",
+      "down": "sb_neon_cream_3"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_cream_3_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_cream_3_on",
+      "south": "sb_neon_cream_3_on",
+      "side": "sb_neon_cream_3_on",
+      "up": "sb_neon_cream_3_on",
+      "down": "sb_neon_cream_3_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_pier_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_pier_0",
+      "south": "sb_neon_pier_0",
+      "side": "sb_neon_pier_0",
+      "up": "sb_neon_pier_0",
+      "down": "sb_neon_pier_0"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_pier_0_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_pier_0_on",
+      "south": "sb_neon_pier_0_on",
+      "side": "sb_neon_pier_0_on",
+      "up": "sb_neon_pier_0_on",
+      "down": "sb_neon_pier_0_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_pier_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_pier_1",
+      "south": "sb_neon_pier_1",
+      "side": "sb_neon_pier_1",
+      "up": "sb_neon_pier_1",
+      "down": "sb_neon_pier_1"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_pier_1_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_pier_1_on",
+      "south": "sb_neon_pier_1_on",
+      "side": "sb_neon_pier_1_on",
+      "up": "sb_neon_pier_1_on",
+      "down": "sb_neon_pier_1_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_pier_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_pier_2",
+      "south": "sb_neon_pier_2",
+      "side": "sb_neon_pier_2",
+      "up": "sb_neon_pier_2",
+      "down": "sb_neon_pier_2"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_pier_2_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_pier_2_on",
+      "south": "sb_neon_pier_2_on",
+      "side": "sb_neon_pier_2_on",
+      "up": "sb_neon_pier_2_on",
+      "down": "sb_neon_pier_2_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_pier_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_pier_3",
+      "south": "sb_neon_pier_3",
+      "side": "sb_neon_pier_3",
+      "up": "sb_neon_pier_3",
+      "down": "sb_neon_pier_3"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_pier_3_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_pier_3_on",
+      "south": "sb_neon_pier_3_on",
+      "side": "sb_neon_pier_3_on",
+      "up": "sb_neon_pier_3_on",
+      "down": "sb_neon_pier_3_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_pier_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_pier_4",
+      "south": "sb_neon_pier_4",
+      "side": "sb_neon_pier_4",
+      "up": "sb_neon_pier_4",
+      "down": "sb_neon_pier_4"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_pier_4_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_pier_4_on",
+      "south": "sb_neon_pier_4_on",
+      "side": "sb_neon_pier_4_on",
+      "up": "sb_neon_pier_4_on",
+      "down": "sb_neon_pier_4_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_pier_5": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_pier_5",
+      "south": "sb_neon_pier_5",
+      "side": "sb_neon_pier_5",
+      "up": "sb_neon_pier_5",
+      "down": "sb_neon_pier_5"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_pier_5_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_pier_5_on",
+      "south": "sb_neon_pier_5_on",
+      "side": "sb_neon_pier_5_on",
+      "up": "sb_neon_pier_5_on",
+      "down": "sb_neon_pier_5_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_pier_6": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_pier_6",
+      "south": "sb_neon_pier_6",
+      "side": "sb_neon_pier_6",
+      "up": "sb_neon_pier_6",
+      "down": "sb_neon_pier_6"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_pier_6_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_pier_6_on",
+      "south": "sb_neon_pier_6_on",
+      "side": "sb_neon_pier_6_on",
+      "up": "sb_neon_pier_6_on",
+      "down": "sb_neon_pier_6_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_pier_7": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_pier_7",
+      "south": "sb_neon_pier_7",
+      "side": "sb_neon_pier_7",
+      "up": "sb_neon_pier_7",
+      "down": "sb_neon_pier_7"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_pier_7_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_pier_7_on",
+      "south": "sb_neon_pier_7_on",
+      "side": "sb_neon_pier_7_on",
+      "up": "sb_neon_pier_7_on",
+      "down": "sb_neon_pier_7_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_pier_8": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_pier_8",
+      "south": "sb_neon_pier_8",
+      "side": "sb_neon_pier_8",
+      "up": "sb_neon_pier_8",
+      "down": "sb_neon_pier_8"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_pier_8_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_pier_8_on",
+      "south": "sb_neon_pier_8_on",
+      "side": "sb_neon_pier_8_on",
+      "up": "sb_neon_pier_8_on",
+      "down": "sb_neon_pier_8_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_pier_9": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_pier_9",
+      "south": "sb_neon_pier_9",
+      "side": "sb_neon_pier_9",
+      "up": "sb_neon_pier_9",
+      "down": "sb_neon_pier_9"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_pier_9_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_pier_9_on",
+      "south": "sb_neon_pier_9_on",
+      "side": "sb_neon_pier_9_on",
+      "up": "sb_neon_pier_9_on",
+      "down": "sb_neon_pier_9_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_pier_10": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_pier_10",
+      "south": "sb_neon_pier_10",
+      "side": "sb_neon_pier_10",
+      "up": "sb_neon_pier_10",
+      "down": "sb_neon_pier_10"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_pier_10_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_pier_10_on",
+      "south": "sb_neon_pier_10_on",
+      "side": "sb_neon_pier_10_on",
+      "up": "sb_neon_pier_10_on",
+      "down": "sb_neon_pier_10_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_pier_11": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_pier_11",
+      "south": "sb_neon_pier_11",
+      "side": "sb_neon_pier_11",
+      "up": "sb_neon_pier_11",
+      "down": "sb_neon_pier_11"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_pier_11_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_pier_11_on",
+      "south": "sb_neon_pier_11_on",
+      "side": "sb_neon_pier_11_on",
+      "up": "sb_neon_pier_11_on",
+      "down": "sb_neon_pier_11_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_noreaster_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_noreaster_0",
+      "south": "sb_neon_noreaster_0",
+      "side": "sb_neon_noreaster_0",
+      "up": "sb_neon_noreaster_0",
+      "down": "sb_neon_noreaster_0"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_noreaster_0_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_noreaster_0_on",
+      "south": "sb_neon_noreaster_0_on",
+      "side": "sb_neon_noreaster_0_on",
+      "up": "sb_neon_noreaster_0_on",
+      "down": "sb_neon_noreaster_0_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_noreaster_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_noreaster_1",
+      "south": "sb_neon_noreaster_1",
+      "side": "sb_neon_noreaster_1",
+      "up": "sb_neon_noreaster_1",
+      "down": "sb_neon_noreaster_1"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_noreaster_1_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_noreaster_1_on",
+      "south": "sb_neon_noreaster_1_on",
+      "side": "sb_neon_noreaster_1_on",
+      "up": "sb_neon_noreaster_1_on",
+      "down": "sb_neon_noreaster_1_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_noreaster_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_noreaster_2",
+      "south": "sb_neon_noreaster_2",
+      "side": "sb_neon_noreaster_2",
+      "up": "sb_neon_noreaster_2",
+      "down": "sb_neon_noreaster_2"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_noreaster_2_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_noreaster_2_on",
+      "south": "sb_neon_noreaster_2_on",
+      "side": "sb_neon_noreaster_2_on",
+      "up": "sb_neon_noreaster_2_on",
+      "down": "sb_neon_noreaster_2_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_noreaster_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_noreaster_3",
+      "south": "sb_neon_noreaster_3",
+      "side": "sb_neon_noreaster_3",
+      "up": "sb_neon_noreaster_3",
+      "down": "sb_neon_noreaster_3"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_noreaster_3_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_noreaster_3_on",
+      "south": "sb_neon_noreaster_3_on",
+      "side": "sb_neon_noreaster_3_on",
+      "up": "sb_neon_noreaster_3_on",
+      "down": "sb_neon_noreaster_3_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_noreaster_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_noreaster_4",
+      "south": "sb_neon_noreaster_4",
+      "side": "sb_neon_noreaster_4",
+      "up": "sb_neon_noreaster_4",
+      "down": "sb_neon_noreaster_4"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_noreaster_4_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_noreaster_4_on",
+      "south": "sb_neon_noreaster_4_on",
+      "side": "sb_neon_noreaster_4_on",
+      "up": "sb_neon_noreaster_4_on",
+      "down": "sb_neon_noreaster_4_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_noreaster_5": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_noreaster_5",
+      "south": "sb_neon_noreaster_5",
+      "side": "sb_neon_noreaster_5",
+      "up": "sb_neon_noreaster_5",
+      "down": "sb_neon_noreaster_5"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_noreaster_5_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_noreaster_5_on",
+      "south": "sb_neon_noreaster_5_on",
+      "side": "sb_neon_noreaster_5_on",
+      "up": "sb_neon_noreaster_5_on",
+      "down": "sb_neon_noreaster_5_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_surf_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_surf_0",
+      "south": "sb_neon_surf_0",
+      "side": "sb_neon_surf_0",
+      "up": "sb_neon_surf_0",
+      "down": "sb_neon_surf_0"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_surf_0_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_surf_0_on",
+      "south": "sb_neon_surf_0_on",
+      "side": "sb_neon_surf_0_on",
+      "up": "sb_neon_surf_0_on",
+      "down": "sb_neon_surf_0_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_surf_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_surf_1",
+      "south": "sb_neon_surf_1",
+      "side": "sb_neon_surf_1",
+      "up": "sb_neon_surf_1",
+      "down": "sb_neon_surf_1"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_surf_1_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_surf_1_on",
+      "south": "sb_neon_surf_1_on",
+      "side": "sb_neon_surf_1_on",
+      "up": "sb_neon_surf_1_on",
+      "down": "sb_neon_surf_1_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_surf_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_surf_2",
+      "south": "sb_neon_surf_2",
+      "side": "sb_neon_surf_2",
+      "up": "sb_neon_surf_2",
+      "down": "sb_neon_surf_2"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_surf_2_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_surf_2_on",
+      "south": "sb_neon_surf_2_on",
+      "side": "sb_neon_surf_2_on",
+      "up": "sb_neon_surf_2_on",
+      "down": "sb_neon_surf_2_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_surf_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_surf_3",
+      "south": "sb_neon_surf_3",
+      "side": "sb_neon_surf_3",
+      "up": "sb_neon_surf_3",
+      "down": "sb_neon_surf_3"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_surf_3_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_surf_3_on",
+      "south": "sb_neon_surf_3_on",
+      "side": "sb_neon_surf_3_on",
+      "up": "sb_neon_surf_3_on",
+      "down": "sb_neon_surf_3_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_games_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_games_0",
+      "south": "sb_neon_games_0",
+      "side": "sb_neon_games_0",
+      "up": "sb_neon_games_0",
+      "down": "sb_neon_games_0"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_games_0_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_games_0_on",
+      "south": "sb_neon_games_0_on",
+      "side": "sb_neon_games_0_on",
+      "up": "sb_neon_games_0_on",
+      "down": "sb_neon_games_0_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_games_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_games_1",
+      "south": "sb_neon_games_1",
+      "side": "sb_neon_games_1",
+      "up": "sb_neon_games_1",
+      "down": "sb_neon_games_1"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_games_1_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_games_1_on",
+      "south": "sb_neon_games_1_on",
+      "side": "sb_neon_games_1_on",
+      "up": "sb_neon_games_1_on",
+      "down": "sb_neon_games_1_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
+  },
+  "sb_neon_games_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_games_2",
+      "south": "sb_neon_games_2",
+      "side": "sb_neon_games_2",
+      "up": "sb_neon_games_2",
+      "down": "sb_neon_games_2"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true
+  },
+  "sb_neon_games_2_on": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.2,
+     16,
+     16,
+     16,
+     {
+      "north": "sb_neon_games_2_on",
+      "south": "sb_neon_games_2_on",
+      "side": "sb_neon_games_2_on",
+      "up": "sb_neon_games_2_on",
+      "down": "sb_neon_games_2_on"
+     }
+    ]
+   ],
+   "title": "Neon Sign",
+   "sound": "GLASS",
+   "rotate": "facing",
+   "decor": true,
+   "light": 12
   }
  }
 }

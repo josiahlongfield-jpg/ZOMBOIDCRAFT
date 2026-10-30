@@ -1,0 +1,247 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sb_chrome": "zomboidcraft:block/city/sb_chrome",
+    "sb_skee": "zomboidcraft:block/city/sb_skee",
+    "sb_yellow": "zomboidcraft:block/city/sb_yellow",
+    "particle": "zomboidcraft:block/city/sb_yellow"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        2,
+        9,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sb_yellow",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#sb_yellow",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#sb_yellow"
+        },
+        "west": {
+          "texture": "#sb_yellow",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#sb_yellow"
+        },
+        "down": {
+          "texture": "#sb_yellow",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        14,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        9,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sb_yellow",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#sb_yellow",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#sb_yellow",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#sb_yellow"
+        },
+        "up": {
+          "texture": "#sb_yellow"
+        },
+        "down": {
+          "texture": "#sb_yellow",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        0,
+        0
+      ],
+      "to": [
+        14,
+        6,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sb_yellow",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#sb_yellow",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#sb_yellow"
+        },
+        "west": {
+          "texture": "#sb_yellow"
+        },
+        "up": {
+          "texture": "#sb_skee"
+        },
+        "down": {
+          "texture": "#sb_yellow",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        6,
+        13
+      ],
+      "to": [
+        14,
+        9,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sb_yellow"
+        },
+        "south": {
+          "texture": "#sb_yellow",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#sb_yellow"
+        },
+        "west": {
+          "texture": "#sb_yellow"
+        },
+        "up": {
+          "texture": "#sb_yellow"
+        },
+        "down": {
+          "texture": "#sb_yellow"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        9,
+        13.5
+      ],
+      "to": [
+        6.4,
+        11.4,
+        15.9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sb_chrome"
+        },
+        "south": {
+          "texture": "#sb_chrome"
+        },
+        "east": {
+          "texture": "#sb_chrome"
+        },
+        "west": {
+          "texture": "#sb_chrome"
+        },
+        "up": {
+          "texture": "#sb_chrome"
+        },
+        "down": {
+          "texture": "#sb_chrome"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        9,
+        13.5
+      ],
+      "to": [
+        9.4,
+        11.4,
+        15.9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sb_chrome"
+        },
+        "south": {
+          "texture": "#sb_chrome"
+        },
+        "east": {
+          "texture": "#sb_chrome"
+        },
+        "west": {
+          "texture": "#sb_chrome"
+        },
+        "up": {
+          "texture": "#sb_chrome"
+        },
+        "down": {
+          "texture": "#sb_chrome"
+        }
+      }
+    },
+    {
+      "from": [
+        10,
+        9,
+        13.5
+      ],
+      "to": [
+        12.4,
+        11.4,
+        15.9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sb_chrome"
+        },
+        "south": {
+          "texture": "#sb_chrome"
+        },
+        "east": {
+          "texture": "#sb_chrome"
+        },
+        "west": {
+          "texture": "#sb_chrome"
+        },
+        "up": {
+          "texture": "#sb_chrome"
+        },
+        "down": {
+          "texture": "#sb_chrome"
+        }
+      }
+    }
+  ]
+}
