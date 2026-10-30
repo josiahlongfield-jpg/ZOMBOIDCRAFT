@@ -1,0 +1,114 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rg_armour_sand": "zomboidcraft:block/city/rg_armour_sand",
+    "particle": "zomboidcraft:block/city/rg_armour_sand"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        10
+      ],
+      "to": [
+        16,
+        13,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rg_armour_sand"
+        },
+        "south": {
+          "texture": "#rg_armour_sand",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#rg_armour_sand",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rg_armour_sand",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rg_armour_sand"
+        },
+        "down": {
+          "texture": "#rg_armour_sand",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        5
+      ],
+      "to": [
+        16,
+        10,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rg_armour_sand"
+        },
+        "south": {
+          "texture": "#rg_armour_sand"
+        },
+        "east": {
+          "texture": "#rg_armour_sand",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rg_armour_sand",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rg_armour_sand"
+        },
+        "down": {
+          "texture": "#rg_armour_sand",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        1,
+        1
+      ],
+      "to": [
+        16,
+        6,
+        5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rg_armour_sand"
+        },
+        "south": {
+          "texture": "#rg_armour_sand"
+        },
+        "east": {
+          "texture": "#rg_armour_sand",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rg_armour_sand",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rg_armour_sand"
+        },
+        "down": {
+          "texture": "#rg_armour_sand"
+        }
+      }
+    }
+  ]
+}

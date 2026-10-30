@@ -1,0 +1,124 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rg_armour_sand": "zomboidcraft:block/city/rg_armour_sand",
+    "particle": "zomboidcraft:block/city/rg_armour_sand"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        -3,
+        0
+      ],
+      "to": [
+        16,
+        9,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rg_armour_sand",
+          "uv": [
+            0,
+            4,
+            11,
+            16
+          ],
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#rg_armour_sand",
+          "uv": [
+            5,
+            4,
+            16,
+            16
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#rg_armour_sand",
+          "uv": [
+            0,
+            4,
+            16,
+            16
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rg_armour_sand",
+          "uv": [
+            0,
+            4,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#rg_armour_sand"
+        },
+        "down": {
+          "texture": "#rg_armour_sand"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        -3,
+        2
+      ],
+      "to": [
+        5,
+        7,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rg_armour_sand",
+          "uv": [
+            11,
+            6,
+            13,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#rg_armour_sand",
+          "uv": [
+            3,
+            6,
+            5,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#rg_armour_sand",
+          "uv": [
+            2,
+            6,
+            14,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#rg_armour_sand",
+          "uv": [
+            2,
+            6,
+            14,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#rg_armour_sand"
+        },
+        "down": {
+          "texture": "#rg_armour_sand"
+        }
+      }
+    }
+  ]
+}

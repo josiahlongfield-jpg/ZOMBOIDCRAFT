@@ -1,10 +1,6 @@
 package com.zomboidcraft.world.county;
 
 import com.zomboidcraft.world.city.BlockSink;
-import com.zomboidcraft.world.city.Placer;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.SplittableRandom;
 
 /**
@@ -23,69 +19,15 @@ import java.util.SplittableRandom;
  * </ul>
  * {@link ArmyFieldBase}, built once in the frame and copied, holds everything standing on the ramp.
  */
-final class ArmyFieldSite extends Site {
-    private final int rx, rz;
-    private final Placer a;
-    private final int ax0, ax1, az0, az1;
-    private final long seed;
-    private final List<int[]> gates;
-
+final class ArmyFieldSite extends FrameSite {
     ArmyFieldSite(Place p, BlockSink out) {
-        super(p, out);
-        int[] o = ArmyField.origin(p.variant);
-        rx = o[0];
-        rz = o[1];
-        gates = ArmyField.gates(p.variant);
-        BlockSink clip = new BlockSink() {
-            @Override
-            public void set(int x, int y, int z, String block) {
-                if (inside(x, z)) {
-                    out.set(x, y, z, block);
-                }
-            }
-
-            @Override
-            public String get(int x, int y, int z) {
-                return inside(x, z) ? out.get(x, y, z) : null;
-            }
-
-            @Override
-            public void vehicle(double x, int y, double z, float yaw, String models, long seed) {
-                if (inside((int) Math.floor(x), (int) Math.floor(z))) {
-                    out.vehicle(x, y, z, yaw, models, seed);
-                }
-            }
-
-            @Override
-            public void car(double x, int y, double z, float yaw, double minLength, double maxLength, long seed) {
-                if (inside((int) Math.floor(x), (int) Math.floor(z))) {
-                    out.car(x, y, z, yaw, minLength, maxLength, seed);
-                }
-            }
-
-            @Override
-            public void mark(String what, int x, int y, int z) {
-                if (inside(x, z)) {
-                    out.mark(what, x, y, z);
-                }
-            }
-        };
-        a = new Placer(clip, rx - p.x0, 0, rz - p.z0, 0);
-        ax0 = p.x0 - rx;
-        ax1 = p.x1 - rx;
-        az0 = p.z0 - rz;
-        az1 = p.z1 - rz;
-        seed = Noise.hash(0xA2F1EL, rx, rz);
-    }
-
-    private double rnd(int ax, int az, long salt) {
-        return Noise.unit(Noise.hash(seed ^ salt, ax, az));
+        super(p, out, 0xA2F1EL);
     }
 
     @Override
     void build() {
-        for (int ax = ax0; ax <= ax1; ax++) {
-            for (int az = az0; az <= az1; az++) {
+        for (int ax = fx0; ax <= fx1; ax++) {
+            for (int az = fz0; az <= fz1; az++) {
                 String g = surface(ax, az);
                 a.set(ax, 0, az, g);
                 if (g.equals("minecraft:grass_block")) {
@@ -100,51 +42,8 @@ final class ArmyFieldSite extends Site {
         signs();
         fence();
         gates();
-        if (ax1 >= ArmyFieldBase.BX0 && ax0 <= ArmyFieldBase.BX1 && az1 >= ArmyFieldBase.BZ0 && az0 <= ArmyFieldBase.BZ1) {
+        if (overlaps(ArmyFieldBase.BX0, ArmyFieldBase.BZ0, ArmyFieldBase.BX1, ArmyFieldBase.BZ1)) {
             copy(piece("base", 0xBA5EL, (q, r) -> new ArmyFieldBase(q, r).build()));
-        }
-    }
-
-    // ------------------------------------------------------------------ the pieces built whole
-
-    private static final Map<String, Voxels> PIECES = new LinkedHashMap<>(4, 0.75f, true) {
-        @Override
-        protected boolean removeEldestEntry(Map.Entry<String, Voxels> eldest) {
-            return size() > 3;
-        }
-    };
-
-    private Voxels piece(String name, long salt, java.util.function.BiConsumer<Placer, SplittableRandom> build) {
-        String key = name + "@" + rx + "," + rz;
-        synchronized (PIECES) {
-            Voxels v = PIECES.get(key);
-            if (v == null) {
-                v = new Voxels();
-                build.accept(new Placer(v, 0, 0, 0, 0), new SplittableRandom(seed ^ salt));
-                PIECES.put(key, v);
-            }
-            return v;
-        }
-    }
-
-    private void copy(Voxels v) {
-        List<String> palette = v.palette();
-        v.forEach((x, y, z, id) -> {
-            if (x >= ax0 && x <= ax1 && z >= az0 && z <= az1) {
-                a.set(x, y, z, palette.get(id));
-            }
-        });
-        for (Voxels.Car c : v.cars) {
-            if (c.models() == null) {
-                a.car(c.x(), c.y(), c.z(), c.yaw(), c.minLength(), c.maxLength(), c.seed());
-            } else {
-                a.vehicle(c.x(), c.y(), c.z(), c.yaw(), c.models(), c.seed());
-            }
-        }
-        for (Voxels.Mark m : v.marks) {
-            if (m.x() >= ax0 && m.x() <= ax1 && m.z() >= az0 && m.z() <= az1) {
-                a.mark(m.what(), m.x(), m.y(), m.z());
-            }
         }
     }
 

@@ -1183,6 +1183,8 @@ import airside  # noqa: E402
 airside.register(sys.modules[__name__])
 import armyfield  # noqa: E402
 armyfield.register(sys.modules[__name__])
+import ranges  # noqa: E402
+ranges.register(sys.modules[__name__])
 
 
 

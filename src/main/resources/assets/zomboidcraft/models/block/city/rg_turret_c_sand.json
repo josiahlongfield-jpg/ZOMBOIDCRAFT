@@ -1,0 +1,181 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rg_armour_sand": "zomboidcraft:block/city/rg_armour_sand",
+    "particle": "zomboidcraft:block/city/rg_armour_sand"
+  },
+  "elements": [
+    {
+      "from": [
+        8,
+        -3,
+        6
+      ],
+      "to": [
+        16,
+        9,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rg_armour_sand",
+          "uv": [
+            0,
+            4,
+            8,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#rg_armour_sand",
+          "uv": [
+            8,
+            4,
+            16,
+            16
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#rg_armour_sand",
+          "uv": [
+            0,
+            4,
+            10,
+            16
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rg_armour_sand",
+          "uv": [
+            6,
+            4,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#rg_armour_sand"
+        },
+        "down": {
+          "texture": "#rg_armour_sand"
+        }
+      }
+    },
+    {
+      "from": [
+        12,
+        -3,
+        2
+      ],
+      "to": [
+        16,
+        8,
+        6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rg_armour_sand",
+          "uv": [
+            0,
+            5,
+            4,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#rg_armour_sand",
+          "uv": [
+            12,
+            5,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#rg_armour_sand",
+          "uv": [
+            10,
+            5,
+            14,
+            16
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rg_armour_sand",
+          "uv": [
+            2,
+            5,
+            6,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#rg_armour_sand"
+        },
+        "down": {
+          "texture": "#rg_armour_sand"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        -3,
+        10
+      ],
+      "to": [
+        8,
+        8,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rg_armour_sand",
+          "uv": [
+            8,
+            5,
+            12,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#rg_armour_sand",
+          "uv": [
+            4,
+            5,
+            8,
+            16
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#rg_armour_sand",
+          "uv": [
+            0,
+            5,
+            6,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#rg_armour_sand",
+          "uv": [
+            10,
+            5,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#rg_armour_sand"
+        },
+        "down": {
+          "texture": "#rg_armour_sand"
+        }
+      }
+    }
+  ]
+}
