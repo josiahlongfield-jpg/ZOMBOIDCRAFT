@@ -252,6 +252,8 @@ public class NpcEntity extends PathfinderMob {
     public boolean hurtServer(ServerLevel level, net.minecraft.world.damagesource.DamageSource source, float amount) {
         boolean hurt = super.hurtServer(level, source, amount);
         if (hurt && isAlive()) {
+            // pain wakes her
+            work.asleep = false;
             say(NpcLines.Kind.HURT);
             mind.jolt(25f);
             if (amount >= 6f || getHealth() < getMaxHealth() * 0.35f) {
