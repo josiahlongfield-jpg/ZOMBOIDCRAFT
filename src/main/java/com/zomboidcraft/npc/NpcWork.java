@@ -866,7 +866,8 @@ public final class NpcWork {
             NpcWork w = npc.work;
             if (npc.following || w.home == null || w.asleep || !(npc.level() instanceof ServerLevel level)) return false;
             Phase p = w.phase(level);
-            return p == Phase.FREE || p == Phase.WORK && w.job == Job.NONE;
+            // free time, a day with no job, and bedtime till she's tired enough to turn in (Sleep takes over then)
+            return p == Phase.FREE || p == Phase.SLEEP || p == Phase.WORK && w.job == Job.NONE;
         }
 
         @Override
