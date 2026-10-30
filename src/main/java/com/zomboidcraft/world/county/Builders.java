@@ -30,6 +30,8 @@ public final class Builders {
             case LANDMARK -> {
                 if (p.variant.equals("dam")) {
                     new Dam(p, county, out).build();
+                } else if (p.variant.equals("cape")) {
+                    new Cape(p, county, out).build();
                 } else {
                     new LandmarkSite(p, out).build();
                 }
