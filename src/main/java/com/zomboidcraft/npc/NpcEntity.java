@@ -47,6 +47,8 @@ public class NpcEntity extends PathfinderMob {
     private static final EntityDataAccessor<Integer> MOOD = SynchedEntityData.defineId(NpcEntity.class, EntityDataSerializers.INT);
     /** How she feels about the player she's with (NpcBond.packed): trust, affection, attraction and the moods they bring. */
     private static final EntityDataAccessor<Integer> BOND = SynchedEntityData.defineId(NpcEntity.class, EntityDataSerializers.INT);
+    /** Killed by a shotgun or a blast: she's thrown back as she falls. */
+    private static final EntityDataAccessor<Boolean> BLASTED = SynchedEntityData.defineId(NpcEntity.class, EntityDataSerializers.BOOLEAN);
     /** How long she lies where she fell before she's gone (her death clip runs about six seconds). */
     private static final int DEATH_TICKS = 20 * 8;
 
@@ -108,6 +110,7 @@ public class NpcEntity extends PathfinderMob {
         builder.define(ACTION, 0);
         builder.define(MOOD, 0);
         builder.define(BOND, 0);
+        builder.define(BLASTED, false);
     }
 
     /** The clothes she has off. */
@@ -118,6 +121,11 @@ public class NpcEntity extends PathfinderMob {
 
     void setHidden(java.util.Set<String> pieces) {
         entityData.set(HIDDEN, String.join(",", new java.util.TreeSet<>(pieces)));
+    }
+
+    /** Killed by a shotgun or a blast. */
+    public boolean blasted() {
+        return entityData.get(BLASTED);
     }
 
     /** What her body's doing (NpcWork's SLEEP, SIT, KNEEL...). */
@@ -365,6 +373,9 @@ public class NpcEntity extends PathfinderMob {
     /** Her gun drops where she falls. */
     @Override
     public void die(net.minecraft.world.damagesource.DamageSource source) {
+        com.zomboidcraft.combat.GunType by = source.getEntity() instanceof net.minecraft.world.entity.LivingEntity l
+                ? com.zomboidcraft.combat.GunType.of(l.getMainHandItem()) : null;
+        entityData.set(BLASTED, source.is(net.minecraft.tags.DamageTypeTags.IS_EXPLOSION) || by != null && by.pellets() > 1);
         net.minecraft.world.item.ItemStack gun = getMainHandItem();
         if (!gun.isEmpty() && level() instanceof ServerLevel server) {
             spawnAtLocation(server, gun.copy());
