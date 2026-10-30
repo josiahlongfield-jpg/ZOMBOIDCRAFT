@@ -93,6 +93,10 @@ public class HarvestmanEntity extends Mob {
     /** Its glow put out altogether, skull and all (HarvestmanMind.dark), and how tight it's drawn itself in (tuck). */
     private static final EntityDataAccessor<Boolean> DARK = SynchedEntityData.defineId(HarvestmanEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Float> TUCK = SynchedEntityData.defineId(HarvestmanEntity.class, EntityDataSerializers.FLOAT);
+    /** In a fight with a player: shot by one in the last half minute (its health bar shows only then, EnemyBars). */
+    private static final EntityDataAccessor<Boolean> ENGAGED = SynchedEntityData.defineId(HarvestmanEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final long ENGAGED_TICKS = 600;
+    private long engagedUntil;
     private static final List<EntityDataAccessor<org.joml.Vector3fc>> FEET = List.of(FOOT0, FOOT1, FOOT2, FOOT3);
 
     public static final int HUNT = 0, HOLD = 1, FEED = 2, DEAD = 3;
@@ -228,6 +232,10 @@ public class HarvestmanEntity extends Mob {
         return entityData.get(TUCK);
     }
 
+    public boolean engaged() {
+        return entityData.get(ENGAGED);
+    }
+
     public float rear() {
         return entityData.get(REAR);
     }
@@ -271,6 +279,7 @@ public class HarvestmanEntity extends Mob {
         builder.define(MENACE, false);
         builder.define(DARK, false);
         builder.define(TUCK, 0f);
+        builder.define(ENGAGED, false);
     }
 
     /** Where it's looking, or null. */
@@ -360,6 +369,7 @@ public class HarvestmanEntity extends Mob {
         entityData.set(MENACE, mind.menace());
         entityData.set(DARK, mind.dark());
         entityData.set(TUCK, Mth.approach(tuck(), (float) mind.tuck(), 0.06f));
+        entityData.set(ENGAGED, level.getGameTime() < engagedUntil);
         struck.clear();
         struckAt.clear();
         stepLegs(level, false);
@@ -965,6 +975,9 @@ public class HarvestmanEntity extends Mob {
     public boolean hurtServer(ServerLevel level, DamageSource source, float amount) {
         if (isDeadOrDying() || isInvulnerableTo(level, source)) {
             return false;
+        }
+        if (source.getEntity() instanceof Player) {
+            engagedUntil = level.getGameTime() + ENGAGED_TICKS;
         }
         double toHealth = 0;
         boolean eyes = false;
