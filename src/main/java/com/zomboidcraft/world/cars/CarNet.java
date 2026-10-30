@@ -76,6 +76,11 @@ public final class CarNet {
         net.fabricmc.fabric.api.event.player.AttackEntityCallback.EVENT.register((player, level, hand, entity, hit) ->
                 CarProp.mayUse(player, player.getMainHandItem()) ? net.minecraft.world.InteractionResult.PASS
                         : net.minecraft.world.InteractionResult.FAIL);
+        // at a mounted gun both hands are on it: right-click narrows the view instead (client side)
+        net.fabricmc.fabric.api.event.player.UseItemCallback.EVENT.register((player, level, hand) ->
+                Turret.isGunner(player) ? net.minecraft.world.InteractionResult.FAIL : net.minecraft.world.InteractionResult.PASS);
+        net.fabricmc.fabric.api.event.player.UseBlockCallback.EVENT.register((player, level, hand, hit) ->
+                Turret.isGunner(player) ? net.minecraft.world.InteractionResult.FAIL : net.minecraft.world.InteractionResult.PASS);
         PayloadTypeRegistry.serverboundPlay().register(Use.TYPE, Use.CODEC);
         ServerPlayNetworking.registerGlobalReceiver(Use.TYPE, (payload, context) -> {
             ServerPlayer player = context.player();

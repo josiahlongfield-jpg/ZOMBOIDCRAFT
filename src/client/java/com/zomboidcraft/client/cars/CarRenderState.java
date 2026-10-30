@@ -51,4 +51,6 @@ public class CarRenderState extends EntityRenderState {
     /** The local player drives this car in first person: which of their hands to draw on the wheel ({@link CarHands}), and their seat. */
     public int arms;
     public float[] driverEye;
+    /** The local player stands at this car's mounted gun, seen first person: their hands go on its grips. */
+    public boolean gunnerArms;
 }
