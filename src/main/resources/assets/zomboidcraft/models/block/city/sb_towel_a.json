@@ -1,0 +1,42 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sb_towel_a": "zomboidcraft:block/city/sb_towel_a",
+    "particle": "zomboidcraft:block/city/sb_towel_a"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        3
+      ],
+      "to": [
+        15,
+        0.4,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sb_towel_a"
+        },
+        "south": {
+          "texture": "#sb_towel_a"
+        },
+        "east": {
+          "texture": "#sb_towel_a"
+        },
+        "west": {
+          "texture": "#sb_towel_a"
+        },
+        "up": {
+          "texture": "#sb_towel_a"
+        },
+        "down": {
+          "texture": "#sb_towel_a",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

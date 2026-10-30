@@ -1195,6 +1195,8 @@ import shipyard  # noqa: E402
 shipyard.register(sys.modules[__name__])
 import cape  # noqa: E402
 cape.register(sys.modules[__name__])
+import boardwalk  # noqa: E402
+boardwalk.register(sys.modules[__name__])
 
 
 

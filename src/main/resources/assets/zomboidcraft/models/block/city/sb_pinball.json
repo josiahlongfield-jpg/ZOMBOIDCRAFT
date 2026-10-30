@@ -1,0 +1,242 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cm_iron": "zomboidcraft:block/city/cm_iron",
+    "sb_blue": "zomboidcraft:block/city/sb_blue",
+    "sb_pinball": "zomboidcraft:block/city/sb_pinball",
+    "sb_screen_on": "zomboidcraft:block/city/sb_screen_on",
+    "particle": "zomboidcraft:block/city/cm_iron"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        1
+      ],
+      "to": [
+        4,
+        8,
+        3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cm_iron"
+        },
+        "south": {
+          "texture": "#cm_iron"
+        },
+        "east": {
+          "texture": "#cm_iron"
+        },
+        "west": {
+          "texture": "#cm_iron"
+        },
+        "up": {
+          "texture": "#cm_iron"
+        },
+        "down": {
+          "texture": "#cm_iron",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        12,
+        0,
+        1
+      ],
+      "to": [
+        14,
+        8,
+        3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cm_iron"
+        },
+        "south": {
+          "texture": "#cm_iron"
+        },
+        "east": {
+          "texture": "#cm_iron"
+        },
+        "west": {
+          "texture": "#cm_iron"
+        },
+        "up": {
+          "texture": "#cm_iron"
+        },
+        "down": {
+          "texture": "#cm_iron",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        0,
+        13
+      ],
+      "to": [
+        4,
+        8,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cm_iron"
+        },
+        "south": {
+          "texture": "#cm_iron"
+        },
+        "east": {
+          "texture": "#cm_iron"
+        },
+        "west": {
+          "texture": "#cm_iron"
+        },
+        "up": {
+          "texture": "#cm_iron"
+        },
+        "down": {
+          "texture": "#cm_iron",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        12,
+        0,
+        13
+      ],
+      "to": [
+        14,
+        8,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cm_iron"
+        },
+        "south": {
+          "texture": "#cm_iron"
+        },
+        "east": {
+          "texture": "#cm_iron"
+        },
+        "west": {
+          "texture": "#cm_iron"
+        },
+        "up": {
+          "texture": "#cm_iron"
+        },
+        "down": {
+          "texture": "#cm_iron",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        8,
+        0
+      ],
+      "to": [
+        15,
+        11,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sb_blue"
+        },
+        "south": {
+          "texture": "#sb_blue"
+        },
+        "east": {
+          "texture": "#sb_blue"
+        },
+        "west": {
+          "texture": "#sb_blue"
+        },
+        "up": {
+          "texture": "#sb_pinball"
+        },
+        "down": {
+          "texture": "#sb_blue"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          9,
+          8
+        ],
+        "axis": "x",
+        "angle": 5
+      }
+    },
+    {
+      "from": [
+        1,
+        11,
+        14
+      ],
+      "to": [
+        15,
+        20,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sb_screen_on",
+          "uv": [
+            1,
+            0,
+            15,
+            9
+          ]
+        },
+        "south": {
+          "texture": "#sb_blue",
+          "uv": [
+            1,
+            0,
+            15,
+            9
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#sb_blue",
+          "uv": [
+            0,
+            0,
+            2,
+            9
+          ]
+        },
+        "west": {
+          "texture": "#sb_blue",
+          "uv": [
+            14,
+            0,
+            16,
+            9
+          ]
+        },
+        "up": {
+          "texture": "#sb_blue"
+        },
+        "down": {
+          "texture": "#sb_blue"
+        }
+      }
+    }
+  ]
+}

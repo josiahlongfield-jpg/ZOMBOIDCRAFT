@@ -1,0 +1,108 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "cm_iron": "zomboidcraft:block/city/cm_iron",
+    "sb_blue": "zomboidcraft:block/city/sb_blue",
+    "sb_white": "zomboidcraft:block/city/sb_white",
+    "particle": "zomboidcraft:block/city/sb_blue"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        4
+      ],
+      "to": [
+        13,
+        8,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sb_blue"
+        },
+        "south": {
+          "texture": "#sb_blue"
+        },
+        "east": {
+          "texture": "#sb_blue"
+        },
+        "west": {
+          "texture": "#sb_blue"
+        },
+        "up": {
+          "texture": "#sb_white"
+        },
+        "down": {
+          "texture": "#sb_blue",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        8,
+        4
+      ],
+      "to": [
+        13,
+        9.5,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sb_white"
+        },
+        "south": {
+          "texture": "#sb_white"
+        },
+        "east": {
+          "texture": "#sb_white"
+        },
+        "west": {
+          "texture": "#sb_white"
+        },
+        "up": {
+          "texture": "#sb_white"
+        },
+        "down": {
+          "texture": "#sb_white"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        9.5,
+        7.5
+      ],
+      "to": [
+        11,
+        10.5,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cm_iron"
+        },
+        "south": {
+          "texture": "#cm_iron"
+        },
+        "east": {
+          "texture": "#cm_iron"
+        },
+        "west": {
+          "texture": "#cm_iron"
+        },
+        "up": {
+          "texture": "#cm_iron"
+        },
+        "down": {
+          "texture": "#cm_iron"
+        }
+      }
+    }
+  ]
+}

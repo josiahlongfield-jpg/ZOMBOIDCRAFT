@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sb_neon_funland_11": "zomboidcraft:block/city/sb_neon_funland_11",
+    "particle": "zomboidcraft:block/city/sb_neon_funland_11"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.2
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sb_neon_funland_11"
+        },
+        "south": {
+          "texture": "#sb_neon_funland_11",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#sb_neon_funland_11",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#sb_neon_funland_11",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#sb_neon_funland_11",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sb_neon_funland_11",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

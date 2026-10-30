@@ -1,0 +1,77 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sb_chrome": "zomboidcraft:block/city/sb_chrome",
+    "particle": "zomboidcraft:block/city/sb_chrome"
+  },
+  "elements": [
+    {
+      "from": [
+        7.6,
+        0,
+        4
+      ],
+      "to": [
+        8.4,
+        16,
+        4.8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sb_chrome"
+        },
+        "south": {
+          "texture": "#sb_chrome"
+        },
+        "east": {
+          "texture": "#sb_chrome"
+        },
+        "west": {
+          "texture": "#sb_chrome"
+        },
+        "up": {
+          "texture": "#sb_chrome",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sb_chrome",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        7.6,
+        0,
+        11.2
+      ],
+      "to": [
+        8.4,
+        16,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sb_chrome"
+        },
+        "south": {
+          "texture": "#sb_chrome"
+        },
+        "east": {
+          "texture": "#sb_chrome"
+        },
+        "west": {
+          "texture": "#sb_chrome"
+        },
+        "up": {
+          "texture": "#sb_chrome",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sb_chrome",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

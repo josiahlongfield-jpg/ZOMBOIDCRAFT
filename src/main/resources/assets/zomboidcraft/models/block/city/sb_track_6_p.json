@@ -1,0 +1,296 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sb_chrome": "zomboidcraft:block/city/sb_chrome",
+    "sb_pile": "zomboidcraft:block/city/sb_pile",
+    "sb_track": "zomboidcraft:block/city/sb_track",
+    "sb_white": "zomboidcraft:block/city/sb_white",
+    "particle": "zomboidcraft:block/city/sb_white"
+  },
+  "elements": [
+    {
+      "from": [
+        -3,
+        10.0,
+        1
+      ],
+      "to": [
+        19,
+        14.0,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sb_white",
+          "uv": [
+            0,
+            2.0,
+            16,
+            6.0
+          ]
+        },
+        "south": {
+          "texture": "#sb_white",
+          "uv": [
+            0,
+            2.0,
+            16,
+            6.0
+          ]
+        },
+        "east": {
+          "texture": "#sb_white"
+        },
+        "west": {
+          "texture": "#sb_white"
+        },
+        "up": {
+          "texture": "#sb_white",
+          "uv": [
+            0,
+            1,
+            16,
+            15
+          ]
+        },
+        "down": {
+          "texture": "#sb_white",
+          "uv": [
+            0,
+            1,
+            16,
+            15
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "z",
+        "angle": -45.0
+      }
+    },
+    {
+      "from": [
+        -3,
+        14.0,
+        0
+      ],
+      "to": [
+        19,
+        15.5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sb_pile",
+          "uv": [
+            0,
+            0.5,
+            16,
+            2.0
+          ]
+        },
+        "south": {
+          "texture": "#sb_pile",
+          "uv": [
+            0,
+            0.5,
+            16,
+            2.0
+          ]
+        },
+        "east": {
+          "texture": "#sb_pile"
+        },
+        "west": {
+          "texture": "#sb_pile"
+        },
+        "up": {
+          "texture": "#sb_track",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#sb_pile",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "z",
+        "angle": -45.0
+      }
+    },
+    {
+      "from": [
+        -3,
+        15.5,
+        2
+      ],
+      "to": [
+        19,
+        17.0,
+        4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sb_chrome",
+          "uv": [
+            0,
+            0,
+            16,
+            1.5
+          ]
+        },
+        "south": {
+          "texture": "#sb_chrome",
+          "uv": [
+            0,
+            0,
+            16,
+            1.5
+          ]
+        },
+        "east": {
+          "texture": "#sb_chrome",
+          "uv": [
+            12,
+            0,
+            14,
+            1.5
+          ]
+        },
+        "west": {
+          "texture": "#sb_chrome",
+          "uv": [
+            2,
+            0,
+            4,
+            1.5
+          ]
+        },
+        "up": {
+          "texture": "#sb_chrome",
+          "uv": [
+            0,
+            2,
+            16,
+            4
+          ]
+        },
+        "down": {
+          "texture": "#sb_chrome",
+          "uv": [
+            0,
+            12,
+            16,
+            14
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "z",
+        "angle": -45.0
+      }
+    },
+    {
+      "from": [
+        -3,
+        15.5,
+        12
+      ],
+      "to": [
+        19,
+        17.0,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sb_chrome",
+          "uv": [
+            0,
+            0,
+            16,
+            1.5
+          ]
+        },
+        "south": {
+          "texture": "#sb_chrome",
+          "uv": [
+            0,
+            0,
+            16,
+            1.5
+          ]
+        },
+        "east": {
+          "texture": "#sb_chrome",
+          "uv": [
+            2,
+            0,
+            4,
+            1.5
+          ]
+        },
+        "west": {
+          "texture": "#sb_chrome",
+          "uv": [
+            12,
+            0,
+            14,
+            1.5
+          ]
+        },
+        "up": {
+          "texture": "#sb_chrome",
+          "uv": [
+            0,
+            12,
+            16,
+            14
+          ]
+        },
+        "down": {
+          "texture": "#sb_chrome",
+          "uv": [
+            0,
+            2,
+            16,
+            4
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "z",
+        "angle": -45.0
+      }
+    }
+  ]
+}

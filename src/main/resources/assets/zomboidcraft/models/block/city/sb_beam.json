@@ -1,0 +1,44 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sb_pile": "zomboidcraft:block/city/sb_pile",
+    "particle": "zomboidcraft:block/city/sb_pile"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        4,
+        0
+      ],
+      "to": [
+        11,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sb_pile",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#sb_pile",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#sb_pile"
+        },
+        "west": {
+          "texture": "#sb_pile"
+        },
+        "up": {
+          "texture": "#sb_pile",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sb_pile"
+        }
+      }
+    }
+  ]
+}
