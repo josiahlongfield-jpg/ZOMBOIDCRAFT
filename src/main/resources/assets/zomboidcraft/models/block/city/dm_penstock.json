@@ -1,0 +1,145 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "dm_gate": "zomboidcraft:block/city/dm_gate",
+    "dm_gate_rust": "zomboidcraft:block/city/dm_gate_rust",
+    "painted_steel": "zomboidcraft:block/city/painted_steel",
+    "particle": "zomboidcraft:block/city/dm_gate_rust"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        2,
+        0
+      ],
+      "to": [
+        12,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dm_gate_rust",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#dm_gate_rust",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#dm_gate_rust"
+        },
+        "west": {
+          "texture": "#dm_gate_rust"
+        },
+        "up": {
+          "texture": "#dm_gate_rust"
+        },
+        "down": {
+          "texture": "#dm_gate_rust"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        4,
+        0
+      ],
+      "to": [
+        14,
+        12,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dm_gate_rust",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#dm_gate_rust",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#dm_gate_rust"
+        },
+        "west": {
+          "texture": "#dm_gate_rust"
+        },
+        "up": {
+          "texture": "#dm_gate_rust"
+        },
+        "down": {
+          "texture": "#dm_gate_rust"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        3,
+        0
+      ],
+      "to": [
+        13,
+        13,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dm_gate",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#dm_gate",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#dm_gate"
+        },
+        "west": {
+          "texture": "#dm_gate"
+        },
+        "up": {
+          "texture": "#dm_gate"
+        },
+        "down": {
+          "texture": "#dm_gate"
+        }
+      }
+    },
+    {
+      "from": [
+        1.4,
+        1.4,
+        7
+      ],
+      "to": [
+        14.6,
+        14.6,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#painted_steel"
+        },
+        "south": {
+          "texture": "#painted_steel"
+        },
+        "east": {
+          "texture": "#painted_steel"
+        },
+        "west": {
+          "texture": "#painted_steel"
+        },
+        "up": {
+          "texture": "#painted_steel"
+        },
+        "down": {
+          "texture": "#painted_steel"
+        }
+      }
+    }
+  ]
+}

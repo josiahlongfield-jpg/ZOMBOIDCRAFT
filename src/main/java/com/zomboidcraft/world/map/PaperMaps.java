@@ -92,7 +92,7 @@ public final class PaperMaps {
                 double x = x0 + i * step + step / 2.0, z = z0 + j * step + step / 2.0;
                 double h = terrain.height(x, z);
                 byte c;
-                if (Terrain.isWater(h) || terrain.riverChannel(x, z)) c = h < Terrain.WATER - 5 ? MapPalette.DEEP : MapPalette.WATER;
+                if (terrain.wet(x, z, h) || terrain.riverChannel(x, z)) c = h < terrain.water(x, z) - 5 ? MapPalette.DEEP : MapPalette.WATER;
                 else if (h > 98) c = MapPalette.ROCK;
                 else if (h < Terrain.WATER + 1.5 && (terrain.river(x, z) > 0.2 || terrain.lake(x, z) < -0.24)) c = MapPalette.SAND;
                 else if (terrain.forest(x, z) > 0.55) c = MapPalette.FOREST;

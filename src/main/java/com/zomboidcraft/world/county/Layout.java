@@ -212,6 +212,13 @@ final class Layout {
                 }
                 continue;
             }
+            if (s.id().equals("dam") && terrain.reservoir(s.x(), s.z() - Terrain.FACE - 1) < 0) {
+                // Black Pine Dam: built into the gorge where the land lies, its crest the road's level
+                Place p = Dam.place(s, Noise.hash(seed ^ 0xDA4L, s.x(), s.z()));
+                places.add(p);
+                named.put(s.id(), p);
+                continue;
+            }
             if (s.id().equals("airport")) {
                 // Grayhaven International: too big to build whole, so it comes as a row of tiles
                 List<Place> tiles = Airport.places(s, county, Noise.hash(seed ^ 0x9A1AL, s.x(), s.z()));
@@ -475,7 +482,7 @@ final class Layout {
         // on dry land, and no other line (nor this one coming round again) through it
         for (int x = p.x0; x <= p.x1; x += 8) {
             for (int z = p.z0; z <= p.z1; z += 8) {
-                if (terrain.height(x, z) < Terrain.WATER + 1 || terrain.riverChannel(x, z)) {
+                if (terrain.height(x, z) < terrain.water(x, z) + 1 || terrain.riverChannel(x, z)) {
                     return null;
                 }
             }

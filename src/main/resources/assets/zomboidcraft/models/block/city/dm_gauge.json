@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "dm_gauge": "zomboidcraft:block/city/dm_gauge",
+    "particle": "zomboidcraft:block/city/dm_gauge"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.2
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dm_gauge"
+        },
+        "south": {
+          "texture": "#dm_gauge",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#dm_gauge",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#dm_gauge",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#dm_gauge",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#dm_gauge",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

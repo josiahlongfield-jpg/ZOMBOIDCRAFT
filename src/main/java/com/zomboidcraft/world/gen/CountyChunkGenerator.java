@@ -153,24 +153,26 @@ public final class CountyChunkGenerator extends ChunkGenerator {
      * is the places round the spot (placesNear with County.SKIRT), worked out once for a whole chunk.
      */
     public static int surface(County county, int x, int z, List<Place> near) {
-        return Math.max((int) Math.floor(county.ground(x, z, near)), Terrain.WATER - 1) + 1;
+        return Math.max((int) Math.floor(county.ground(x, z, near)), county.terrain.water(x, z) - 1) + 1;
     }
 
     @Override
     public int getBaseHeight(int x, int z, Heightmap.Types type, LevelHeightAccessor level, RandomState random) {
-        int g = ground(gen(random.seed(), isPlanned()).county(), x, z);
+        County county = gen(random.seed(), isPlanned()).county();
+        int g = ground(county, x, z);
         boolean fluidCounts = type != Heightmap.Types.OCEAN_FLOOR && type != Heightmap.Types.OCEAN_FLOOR_WG;
-        return (fluidCounts ? Math.max(g, Terrain.WATER - 1) : g) + 1;
+        return (fluidCounts ? Math.max(g, county.terrain.water(x, z) - 1) : g) + 1;
     }
 
     @Override
     public NoiseColumn getBaseColumn(int x, int z, LevelHeightAccessor level, RandomState random) {
-        int g = ground(gen(random.seed(), isPlanned()).county(), x, z);
+        County county = gen(random.seed(), isPlanned()).county();
+        int g = ground(county, x, z), sea = county.terrain.water(x, z);
         int min = level.getMinY();
         BlockState[] states = new BlockState[level.getHeight()];
         for (int i = 0; i < states.length; i++) {
             int y = min + i;
-            states[i] = y <= g ? Blocks.STONE.defaultBlockState() : y < Terrain.WATER ? Blocks.WATER.defaultBlockState()
+            states[i] = y <= g ? Blocks.STONE.defaultBlockState() : y < sea ? Blocks.WATER.defaultBlockState()
                     : Blocks.AIR.defaultBlockState();
         }
         return new NoiseColumn(min, states);
