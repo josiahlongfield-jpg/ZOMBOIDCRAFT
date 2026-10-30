@@ -4,7 +4,8 @@ screen and how they were held kept; every attachment is a bought one too).
 
 guns.json, one entry per bought gun: its mesh, which of the block gun's pieces each mesh part stands in for (null:
 nothing drawn there), its sights ({"part": a mesh part shown while no optic is fitted}, or {"flip": front and rear
-flip-up sights from the attachment pack}, or null), its muzzle's flash point and sight line, and every slot's mount
+flip-up sights from the attachment pack, on the rail clear of everything, and "hide": optics that sit where they lie
+folded, which take them off}, or null), its muzzle's flash point and sight line, and every slot's mount
 on the mesh (item pixels), what fits it and what it comes with ("keys" moves one part elsewhere in the slot, e.g. a
 long launcher back from the grips; "roll" turns a slot's parts, e.g. a pistol's light hung under its frame).
 kit.py lays the gun out from the same file. Every block model the item definitions name for a bought gun becomes its

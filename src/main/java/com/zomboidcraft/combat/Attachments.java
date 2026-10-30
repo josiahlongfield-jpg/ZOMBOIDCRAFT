@@ -447,7 +447,7 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
             "holo", List.of("tan"), "magnifier", List.of("tan"), "stubby_grip", List.of("tan"), "light", List.of("tan"));
     private static final List<String> IRONS_COLOURS = List.of("dark", "camo", "green");
     /** The guns whose irons are the flip-up pair (tools/meshguns/guns.json "flip"). */
-    private static final Set<String> FLIP_IRONS = Set.of("assault_rifle", "hunting_rifle", "precision_rifle", "heavy_sniper", "crossbow");
+    private static final Set<String> FLIP_IRONS = Set.of("assault_rifle", "hunting_rifle", "precision_rifle", "heavy_sniper");
 
     /** The colour a part came in, or the colour of a gun's irons, for tooltips: null for the plain look. */
     public static @Nullable String colour(ItemStack stack) {

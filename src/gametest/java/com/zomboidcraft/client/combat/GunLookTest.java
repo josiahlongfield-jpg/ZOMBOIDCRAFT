@@ -83,6 +83,7 @@ public class GunLookTest implements FabricClientGameTest {
                 ctx.runOnClient(mc -> mc.options.setCameraType(CameraType.FIRST_PERSON));
             }
             colours(ctx, sp);
+            irons(ctx, sp);
             sights(ctx, sp);
         }
     }
@@ -154,6 +155,33 @@ public class GunLookTest implements FabricClientGameTest {
             ctx.getInput().holdKey(options -> options.keyUse);
             ctx.waitTicks(30);
             ctx.takeScreenshot("colour-irons-" + irons + "-ads");
+            ctx.getInput().releaseKey(options -> options.keyUse);
+            ctx.waitTicks(10);
+        }
+    }
+
+    /** Each gun with flip-up irons, its optic off so they stand up: at the hip and looking down them. */
+    private static void irons(ClientGameTestContext ctx, TestSingleplayerContext sp) {
+        for (String gun : new String[] {"assault_rifle", "precision_rifle", "hunting_rifle", "heavy_sniper"}) {
+            if (!List.of(GUNS).contains(gun)) {
+                continue;
+            }
+            for (String c : new String[] {"kill @e[type=item]", "clear @a", "give @a zomboidcraft:" + gun, "tp @a ~ ~ ~ 0 10"}) {
+                sp.getServer().runCommand(c);
+            }
+            ctx.waitTicks(20);
+            sp.getServer().runOnServer(server -> {
+                for (var player : server.getPlayerList().getPlayers()) {
+                    ItemStack gunStack = player.getMainHandItem();
+                    Attachments.unmount(gunStack, Attachments.Slot.OPTIC);
+                    Attachments.refreshModel(gunStack);
+                }
+            });
+            ctx.waitTicks(20);
+            ctx.takeScreenshot("irons-" + gun + "-fp-hip");
+            ctx.getInput().holdKey(options -> options.keyUse);
+            ctx.waitTicks(30);
+            ctx.takeScreenshot("irons-" + gun + "-ads");
             ctx.getInput().releaseKey(options -> options.keyUse);
             ctx.waitTicks(10);
         }
