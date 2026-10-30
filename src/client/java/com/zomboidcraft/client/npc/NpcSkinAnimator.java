@@ -8,6 +8,12 @@ import org.joml.Vector3f;
  * Plays a skinned companion's own clips (NpcSkin): breathing idle, walk, run, a rifle walk and aim, a shot's kick and her
  * death, picked from what she's doing each frame and cross-faded a quarter second. Walks and runs play as fast as she's
  * really moving. On top: her head turned toward what she looks at, her jaw moving while she talks, and blinks.
+ * <p>
+ * What she's busy with (NpcWork's actions: sleeping, sitting, kneeling, hammering...) plays its own clip when the model
+ * has one ("sleep", "sit", "kneel"...), and her mood picks a mood idle ("sad", "nervous", "happy", "tired") when it has
+ * those; until then she sleeps in her fall's last pose and works from her idle. Either way her mood shows in her body:
+ * low or tired she slumps, head down; frightened her shoulders come up, she hunches and her eyes dart about; in good
+ * spirits she stands a little taller.
  * One per companion, kept on her (NpcEntity.clientAnim); the posed bones come back as skin matrices (pose * inverse bind).
  */
 final class NpcSkinAnimator {
@@ -16,6 +22,12 @@ final class NpcSkinAnimator {
         float now, speed, aim, headYaw, headPitch, dead;
         boolean gun, talking;
         int shots, id;
+        /** NpcEntity.action() and moodBits(): fear, morale, tiredness, pain at 4 bits each. */
+        int action, mood;
+
+        float mood(int k) {
+            return ((mood >> (4 * k)) & 15) / 15f;
+        }
     }
 
     private static final float FADE = 0.25f;
@@ -38,6 +50,15 @@ final class NpcSkinAnimator {
         shotsSeen = in.shots;
         fireT += dt;
         String want = choose(model, in);
+        // sleeping before she has a sleep clip: lie in her fall's last pose, dropped straight in
+        boolean lying = in.dead <= 0 && in.action == SLEEP && "die".equals(want);
+        if (lying && !"die".equals(cur)) {
+            prev = cur;
+            prevT = curT;
+            fade = 0;
+            cur = "die";
+            curT = seconds(model, "die");
+        }
         if (!want.equals(cur)) {
             // a walk into a rifle walk (and back) keeps its step
             boolean keep = cur.endsWith("walk") && want.endsWith("walk");
@@ -77,8 +98,22 @@ final class NpcSkinAnimator {
         for (int i = count; i < n; i++) {
             world[i] = new Matrix4f(model.inverse[i]).invert();
         }
-        if (in.dead <= 0 && in.aim < 0.5f) {
+        if (lying && a != null) {
+            // her fall carries her forward; keep her where she lies down
+            int hips = model.bone("mixamorigHips");
+            if (hips >= 0 && hips < count) {
+                float[] first = new float[count * 3], last = new float[count * 3], t0 = new float[count * 4];
+                sample(a, 0, first, t0);
+                sample(a, a.frames() - 1, last, t0);
+                float dx = last[hips * 3] - first[hips * 3], dz = last[hips * 3 + 2] - first[hips * 3 + 2];
+                for (int i = 0; i < count; i++) {
+                    world[i].m30(world[i].m30() - dx * fade).m32(world[i].m32() - dz * fade);
+                }
+            }
+        }
+        if (in.dead <= 0 && in.aim < 0.5f && in.action != SLEEP) {
             look(model, world, in.headYaw, in.headPitch);
+            posture(model, world, in);
         }
         for (int i = 0; i < n; i++) {
             skin[i].set(world[i]).mul(model.inverse[i]);
@@ -86,9 +121,30 @@ final class NpcSkinAnimator {
         face(model, in, dt, skin);
     }
 
+    /** NpcWork's actions, as the client knows them. */
+    private static final int SLEEP = 1, SIT = 2, KNEEL = 3, HAMMER = 4, DIG = 5, SEARCH = 6, LOOKOUT = 7, COOKING = 8;
+
+    private static String actionClip(int action) {
+        return switch (action) {
+            case SLEEP -> "sleep";
+            case SIT -> "sit";
+            case KNEEL, COOKING -> "kneel";
+            case HAMMER -> "hammer";
+            case DIG -> "dig";
+            case SEARCH -> "search";
+            case LOOKOUT -> "lookout";
+            default -> null;
+        };
+    }
+
     private String choose(NpcSkin model, Input in) {
         String c;
+        String act = in.dead <= 0 && in.speed <= MOVING && in.aim <= 0.5f ? actionClip(in.action) : null;
         if (in.dead > 0) {
+            c = "die";
+        } else if (act != null && model.clips.containsKey(act)) {
+            c = act;
+        } else if (in.action == SLEEP && in.speed <= MOVING) {
             c = "die";
         } else {
             boolean moving = in.speed > MOVING;
@@ -97,7 +153,10 @@ final class NpcSkinAnimator {
             } else if (moving) {
                 c = in.speed > RUN_FROM ? "run" : in.gun ? "rifle_walk" : "walk";
             } else {
-                c = "idle";
+                // a mood idle when she has the clip for it
+                float fear = in.mood(0), morale = in.mood(1), tired = in.mood(2);
+                String mood = fear > 0.6f ? "nervous" : morale < 0.3f ? "sad" : tired > 0.7f ? "tired" : morale > 0.8f ? "happy" : null;
+                c = mood != null && model.clips.containsKey(mood) ? mood : "idle";
             }
         }
         return model.clips.containsKey(c) ? c : model.clips.containsKey("idle") ? "idle" : c;
@@ -188,6 +247,46 @@ final class NpcSkinAnimator {
         }
     }
 
+    /**
+     * Her mood in her body, laid over whatever clip plays: slumped and head down when she's low, tired or hurting;
+     * shoulders up, hunched and glancing about when she's frightened; a little taller when she's in good spirits.
+     */
+    private void posture(NpcSkin model, Matrix4f[] world, Input in) {
+        float fear = in.mood(0), morale = in.mood(1), tired = in.mood(2), pain = in.mood(3);
+        float slump = clamp((0.45f - morale) * 1.6f, 0, 0.7f) + tired * 0.35f + pain * 0.35f;
+        float proud = clamp((morale - 0.75f) * 4f, 0, 1) * (1 - fear);
+        float t = in.now + in.id * 0.61f;
+        float bow = slump * 12f + fear * 7f - proud * 4f;
+        float headDown = slump * 14f - proud * 4f;
+        // a frightened glance every second or so, a tired sway
+        float dart = fear > 0.4f ? (float) (Math.sin(t * 1.7) * Math.sin(t * 0.63 + 2) * 30f * fear) : 0;
+        float sway = (float) Math.sin(t * 0.8) * 3f * tired;
+        float shrug = fear * 9f, forward = slump * 8f + fear * 5f;
+        turn(model, world, model.bone("mixamorigSpine1"), new Matrix4f().rotateX(rad(bow * 0.5f)).rotateZ(rad(sway)));
+        turn(model, world, model.bone("mixamorigSpine2"), new Matrix4f().rotateX(rad(bow * 0.5f)));
+        turn(model, world, model.head, new Matrix4f().rotateX(rad(headDown)).rotateY(rad(dart)));
+        turn(model, world, model.bone("mixamorigLeftShoulder"), new Matrix4f().rotateZ(rad(shrug)).rotateY(rad(-forward)));
+        turn(model, world, model.bone("mixamorigRightShoulder"), new Matrix4f().rotateZ(rad(-shrug)).rotateY(rad(forward)));
+    }
+
+    /** Turns a bone and everything below it by `rot` about the bone's own place (model space). */
+    private static void turn(NpcSkin model, Matrix4f[] world, int bone, Matrix4f rot) {
+        if (bone < 0 || bone >= world.length || world[bone] == null) {
+            return;
+        }
+        Vector3f at = world[bone].getTranslation(new Vector3f());
+        Matrix4f m = new Matrix4f().translation(at).mul(rot).translate(-at.x, -at.y, -at.z);
+        for (int i = 0; i < world.length; i++) {
+            if (i == bone || below(model, i, bone)) {
+                world[i] = new Matrix4f(m).mul(world[i]);
+            }
+        }
+    }
+
+    private static float rad(float degrees) {
+        return (float) Math.toRadians(degrees);
+    }
+
     private static boolean below(NpcSkin model, int bone, int of) {
         for (int p = model.parent[bone]; p >= 0; p = model.parent[p]) {
             if (p == of) {
@@ -214,6 +313,8 @@ final class NpcSkinAnimator {
         float lid;
         if (in.dead > 0) {
             lid = Math.min(1, in.dead * 0.8f);
+        } else if (in.action == SLEEP) {
+            lid = 1;
         } else {
             if (in.now > nextBlink) {
                 blinkAt = in.now;

@@ -352,7 +352,7 @@ public final class BuildBlocks {
             return null;
         }
 
-        net.minecraft.world.item.Item seeds() {
+        public net.minecraft.world.item.Item seeds() {
             return switch (this) {
                 case CARROT -> com.zomboidcraft.ModItems.CARROT_SEEDS;
                 case POTATO -> com.zomboidcraft.ModItems.SEED_POTATOES;
@@ -360,7 +360,7 @@ public final class BuildBlocks {
             };
         }
 
-        net.minecraft.world.item.Item produce() {
+        public net.minecraft.world.item.Item produce() {
             return switch (this) {
                 case CARROT -> Items.CARROT;
                 case POTATO -> Items.POTATO;
@@ -368,7 +368,7 @@ public final class BuildBlocks {
             };
         }
 
-        String label() {
+        public String label() {
             return switch (this) {
                 case CARROT -> "carrots";
                 case POTATO -> "potatoes";
