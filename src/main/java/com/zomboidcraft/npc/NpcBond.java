@@ -1,5 +1,6 @@
 package com.zomboidcraft.npc;
 
+import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.combat.GunType;
 import com.zomboidcraft.survival.Drinks;
 import java.util.Locale;
@@ -52,11 +53,28 @@ public final class NpcBond {
         java.util.Arrays.fill(lastAct, -1_000_000L);
     }
 
-    /** Where she starts with whoever she's just met: her nature tilts it, and attraction is hers to roll. */
+    /**
+     * Where she starts with whoever she's just met: a friend already (companions.start*), each rolled a little either way,
+     * her nature tilting trust and affection.
+     */
     void roll(RandomSource random, NpcMind mind) {
-        trust = Mth.clamp(35 + 12 * mind.trait(NpcMind.Trait.LOYAL), 10, 60);
-        affection = Mth.clamp(25 + 10 * mind.trait(NpcMind.Trait.KIND), 10, 45);
-        attraction = Mth.clamp(15 + (float) random.nextGaussian() * 12, 0, 45);
+        ZcConfig.Companions c = ZcConfig.get().companions;
+        float spread = (float) c.startSpread;
+        trust = start(c.startTrust, spread, random, 0.5f * mind.trait(NpcMind.Trait.LOYAL));
+        affection = start(c.startAffection, spread, random, 0.5f * mind.trait(NpcMind.Trait.KIND));
+        attraction = start(c.startAttraction, spread, random, 0);
+    }
+
+    private static float start(double centre, float spread, RandomSource random, float tilt) {
+        return Mth.clamp((float) centre + spread * (Mth.clamp((float) random.nextGaussian() * 0.5f, -1, 1) + tilt), 0, 100);
+    }
+
+    /** A bond saved before the friendlier start: lifted to at least the low end of where a new one starts. */
+    private void lift() {
+        ZcConfig.Companions c = ZcConfig.get().companions;
+        trust = Math.max(trust, (float) (c.startTrust - c.startSpread));
+        affection = Math.max(affection, (float) (c.startAffection - c.startSpread));
+        attraction = Math.max(attraction, (float) (c.startAttraction - c.startSpread));
     }
 
     void meet(Player p) {
@@ -75,9 +93,14 @@ public final class NpcBond {
     }
 
     private void add(float trust, float affection, float attraction) {
-        this.trust = Mth.clamp(this.trust + trust, 0, 100);
-        this.affection = Mth.clamp(this.affection + affection, 0, 100);
-        this.attraction = Mth.clamp(this.attraction + attraction, 0, 100);
+        this.trust = grow(this.trust, trust);
+        this.affection = grow(this.affection, affection);
+        this.attraction = grow(this.attraction, attraction);
+    }
+
+    /** Good things count for more while a feeling is low and less near the top, so the awkward start passes quickly. */
+    private static float grow(float now, float by) {
+        return Mth.clamp(now + (by > 0 ? by * (1.6f - now / 100f) : by), 0, 100);
     }
 
     /** A small change from something outside the bond (her clothes, say). */
@@ -246,6 +269,44 @@ public final class NpcBond {
     }
 
     /** You did something sweet (or tried to); she answers. */
+    private long lastCalm = -1_000_000;
+
+    /**
+     * "Calm her down": a hand on her shoulder and a steady voice. The more she trusts you the more it takes the fear out of
+     * her, and for a minute after the dead frighten her less; it ends a cower. Too often and it stops working.
+     */
+    void calm(NpcEntity npc, ServerPlayer p) {
+        long now = npc.level().getGameTime();
+        NpcMind m = npc.mind;
+        if (npc.work.asleep) {
+            return;
+        }
+        if (now - lastCalm < 20 * 4) {
+            reply(npc, "I'm trying, okay?");
+            return;
+        }
+        lastCalm = now;
+        float fear = m.get(NpcMind.Need.FEAR);
+        if (fear < 25) {
+            reply(npc, NpcWork.pick(npc, "I'm fine. Really.", "I'm okay. You?"));
+            return;
+        }
+        float trusts = about(p) ? trust : 20;
+        if (trusts < 20) {
+            reply(npc, "Don't tell me to calm down!");
+            return;
+        }
+        m.add(NpcMind.Need.FEAR, -(20 + trusts * 0.4f));
+        m.add(NpcMind.Need.ADRENALINE, -10);
+        m.steadied = 60;
+        npc.cowerTicks = 0;
+        if (about(p)) {
+            add(0.8f, 0.4f, 0);
+        }
+        reply(npc, NpcWork.pick(npc, "Okay. Okay. I'm okay.", "Breathe. Right. Breathing.", "Stay close. Please.",
+                "...Thanks. I lost it for a second."));
+    }
+
     void act(NpcEntity npc, ServerPlayer p, Act act) {
         ServerLevel level = (ServerLevel) npc.level();
         long now = level.getGameTime();
@@ -305,7 +366,7 @@ public final class NpcBond {
             }
             case GIFT -> gift(npc, p, since);
             case HUG -> {
-                if (together || affection >= 45 || m.get(NpcMind.Need.FEAR) > 40 && trust >= 40) {
+                if (together || affection >= 35 || m.get(NpcMind.Need.FEAR) > 40 && trust >= 40) {
                     hold(npc, NpcWork.HUG, HUG_TICKS);
                     lastTender = now;
                     pushes = 0;
@@ -324,7 +385,7 @@ public final class NpcBond {
                 if (holding) {
                     holding = false;
                     reply(npc, "Okay.");
-                } else if (together || affection >= 60 && attraction >= 45) {
+                } else if (together || affection >= 50 && attraction >= 35) {
                     holding = true;
                     lastTender = now;
                     pushes = 0;
@@ -349,7 +410,7 @@ public final class NpcBond {
             m.add(NpcMind.Need.MORALE, again ? 1 : 5);
             m.add(NpcMind.Need.LONELY, -20);
             reply(npc, NpcWork.pick(npc, "Mm. Again later.", "...Wow.", "Don't get used to it. Okay, get used to it."));
-        } else if (affection >= 70 && attraction >= 65 && trust >= 50) {
+        } else if (affection >= 60 && attraction >= 55 && trust >= 45) {
             together = true;
             hold(npc, NpcWork.KISS, KISS_TICKS);
             lastTender = now;
@@ -358,7 +419,7 @@ public final class NpcBond {
             m.add(NpcMind.Need.MORALE, 10);
             m.remember(npc, "First kiss with " + withName, 0.9f, 1f);
             reply(npc, NpcWork.pick(npc, "...About time.", "I was wondering when you'd do that.", "So. That happened."));
-        } else if (attraction >= 45 && affection >= 45) {
+        } else if (attraction >= 35 && affection >= 40) {
             reply(npc, NpcWork.pick(npc, "Not yet. Ask me again sometime.", "Slow down. I like you, but slow down."));
         } else {
             pushes++;
@@ -423,7 +484,7 @@ public final class NpcBond {
     }
 
     String save() {
-        return String.format(Locale.ROOT, "%s\t%s\t%.2f\t%.2f\t%.2f\t%d", with == null ? "" : with, withName.replace('\t', ' '),
+        return String.format(Locale.ROOT, "%s\t%s\t%.2f\t%.2f\t%.2f\t%d\t2", with == null ? "" : with, withName.replace('\t', ' '),
                 trust, affection, attraction, together ? 1 : 0);
     }
 
@@ -437,6 +498,9 @@ public final class NpcBond {
             affection = Float.parseFloat(f[3]);
             attraction = Float.parseFloat(f[4]);
             together = "1".equals(f[5]);
+            if (f.length < 7) {
+                lift();
+            }
             return true;
         } catch (RuntimeException e) {
             return false;

@@ -49,11 +49,14 @@ public final class NpcNet {
                         || npc.distanceToSqr(player) >= 4 * 4) {
                     return;
                 }
+                npc.attend(player);
                 NpcBond.Act act = NpcBond.Act.of(payload.act());
                 if (act != null) {
                     npc.bond.act(npc, player, act);
                 } else if (payload.act() == TAKE_GUN) {
                     takeGun(npc, player);
+                } else if (payload.act() == CALM) {
+                    npc.bond.calm(npc, player);
                 } else if (payload.act() >= NpcWardrobe.LIKE) {
                     npc.wardrobe.answer(npc, player, payload.act());
                 }
@@ -75,6 +78,8 @@ public final class NpcNet {
 
     /** The talk panel's "take her weapon" act: what she holds goes to your hand if it's empty, else your pack, else your feet. */
     public static final int TAKE_GUN = 50;
+    /** The talk panel's "calm her down" (NpcBond.calm). */
+    public static final int CALM = 51;
 
     private static void takeGun(NpcEntity npc, ServerPlayer player) {
         net.minecraft.world.item.ItemStack held = npc.getMainHandItem();

@@ -31,6 +31,7 @@ public class TalkScreen extends net.minecraft.client.gui.screens.Screen {
             {"Kiss her", "Only if she wants to"},
             {"Her outfit...", "What you think of it"},
             {"Take her weapon", "Into your hand or your pack"},
+            {"Calm her down", "Steady her when she's scared"},
     };
 
     private final NpcEntity npc;
@@ -115,7 +116,7 @@ public class TalkScreen extends net.minecraft.client.gui.screens.Screen {
             minecraft.gui.setScreen(new WardrobeScreen(npc, null));
             return;
         }
-        ClientPlayNetworking.send(new NpcNet.Talk(npc.getId(), i == 7 ? NpcNet.TAKE_GUN : i));
+        ClientPlayNetworking.send(new NpcNet.Talk(npc.getId(), i == 7 ? NpcNet.TAKE_GUN : i == 8 ? NpcNet.CALM : i));
         onClose();
     }
 

@@ -185,6 +185,18 @@ public final class ZcConfig {
         public double blastFireChance = 0.35;
     }
 
+    /** Companions: how they feel about you when you first meet. */
+    public Companions companions = new Companions();
+
+    public static class Companions {
+        /** Where a companion you spawn or recruit starts with you, 0..100: she trusts you, likes you and is a little drawn to you. */
+        public double startTrust = 60;
+        public double startAffection = 45;
+        public double startAttraction = 35;
+        /** How far each one is rolled either way, so every companion is a bit different. */
+        public double startSpread = 10;
+    }
+
     public Start start = new Start();
 
     public static class Start {

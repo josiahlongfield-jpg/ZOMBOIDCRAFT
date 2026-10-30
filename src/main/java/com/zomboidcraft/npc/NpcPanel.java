@@ -194,6 +194,7 @@ public final class NpcPanel {
             player.level().getServer().execute(() -> {
                 NpcEntity npc = near(player, payload.npc());
                 if (npc != null) {
+                    npc.ordered();
                     order(npc, player, payload.code());
                     ServerPlayNetworking.send(player, state(npc));
                 }
@@ -215,7 +216,10 @@ public final class NpcPanel {
                 ServerPlayer p = server.getPlayerList().getPlayer(e.getKey());
                 if (p == null) return true;
                 NpcEntity npc = near(p, e.getValue());
-                if (npc != null) ServerPlayNetworking.send(p, state(npc));
+                if (npc != null) {
+                    npc.attend(p);
+                    ServerPlayNetworking.send(p, state(npc));
+                }
                 return false;
             });
         });

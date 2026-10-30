@@ -168,7 +168,7 @@ final class NpcSkinAnimator {
     }
 
     /** NpcWork's actions, as the client knows them. */
-    private static final int SLEEP = 1, SIT = 2, KNEEL = 3, HAMMER = 4, DIG = 5, SEARCH = 6, LOOKOUT = 7, COOKING = 8, HUG = 9, KISS = 10, SEARCH_LOW = 11, POSE = 12, FIDGET = 13;
+    private static final int SLEEP = 1, SIT = 2, KNEEL = 3, HAMMER = 4, DIG = 5, SEARCH = 6, LOOKOUT = 7, COOKING = 8, HUG = 9, KISS = 10, SEARCH_LOW = 11, POSE = 12, FIDGET = 13, COWER = 14;
 
     private static String actionClip(int action) {
         return switch (action) {
@@ -182,6 +182,7 @@ final class NpcSkinAnimator {
             case LOOKOUT -> "lookout";
             case POSE -> "pose";
             case FIDGET -> "fidget";
+            case COWER -> "cower";
             case HUG -> "hug";
             case KISS -> "kiss";
             default -> null;
@@ -274,6 +275,9 @@ final class NpcSkinAnimator {
             c = act;
         } else if ("search_low".equals(act) && model.clips.containsKey("search")) {
             c = "search";
+        } else if ("cower".equals(act) && model.clips.containsKey("kneel")) {
+            // no clip of her covering up: down on one knee, the nervous slump on top
+            c = "kneel";
         } else if (in.action == SLEEP && in.speed <= MOVING) {
             c = "die";
         } else {

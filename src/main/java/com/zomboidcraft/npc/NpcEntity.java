@@ -95,9 +95,37 @@ public class NpcEntity extends PathfinderMob {
         super.setSpeed((float) Math.min(speed, getAttributeValue(Attributes.MOVEMENT_SPEED) * SPRINT));
     }
 
+    /** Who's talking to her or has her page open, and until when (game time): she stands still for them. */
+    private UUID attendBy;
+    private long attendUntil = -1, orderedAt = -1_000_000;
+    /** Ticks left crouched with her arms over her head (NpcBrain.Flee). */
+    int cowerTicks;
+
+    /** You're talking to her, or her page is open: she holds still for a moment and looks at you. */
+    void attend(Player by) {
+        attendBy = by.getUUID();
+        attendUntil = level().getGameTime() + 30;
+    }
+
+    /** An order from her page: she goes and does it instead of holding still for you. */
+    void ordered() {
+        orderedAt = level().getGameTime();
+    }
+
+    /** The player she's holding still for, if any: close by, and not just after an order. */
+    Player attendant() {
+        long now = level().getGameTime();
+        if (attendBy == null || now > attendUntil || now - orderedAt < 20 * 10 || !(level() instanceof ServerLevel server)) {
+            return null;
+        }
+        Player p = server.getPlayerByUUID(attendBy);
+        return p != null && p.isAlive() && p.distanceToSqr(this) < 4 * 4 ? p : null;
+    }
+
     @Override
     protected void registerGoals() {
         goalSelector.addGoal(0, new FloatGoal(this));
+        goalSelector.addGoal(1, new NpcBrain.Attend(this));
         goalSelector.addGoal(1, new NpcBrain.Flee(this));
         goalSelector.addGoal(2, new NpcBrain.Shoot(this));
         goalSelector.addGoal(3, new NpcWork.Sleep(this));
@@ -295,7 +323,7 @@ public class NpcEntity extends PathfinderMob {
         if (!level().isClientSide()) {
             wardrobe.changing(this);
             entityData.set(ACTION, isAlive() ? (work.asleep ? NpcWork.SLEEP : bond.poseTicks > 0 ? bond.pose
-                    : wardrobe.changeTicks > 0 ? NpcWork.KNEEL : work.action) : 0);
+                    : cowerTicks > 0 ? NpcWork.COWER : wardrobe.changeTicks > 0 ? NpcWork.KNEEL : work.action) : 0);
         }
         if (level().isClientSide()) {
             aimAnimO = aimAnim;
