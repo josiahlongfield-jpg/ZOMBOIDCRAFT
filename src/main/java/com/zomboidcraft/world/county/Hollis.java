@@ -133,8 +133,9 @@ final class Hollis extends Site {
                     if (n <= SEA) {
                         continue;
                     }
-                    int t = Math.min(n, 0);
-                    boolean beach = t < 0;
+                    // a hollow inland is filled to the grass; only the shore's own slope is beach
+                    boolean beach = n < 0 && nearSea(x, z);
+                    int t = beach ? n : 0;
                     for (int y = t - 3; y <= t; y++) {
                         set(x, y, z, beach ? (y == t && noise.get(x * 0.2, z * 0.2) > 0.6 ? "minecraft:gravel" : "minecraft:sand")
                                 : y == t ? (chance() < 0.06 ? "minecraft:coarse_dirt" : "minecraft:grass_block") : "minecraft:dirt");
@@ -144,8 +145,11 @@ final class Hollis extends Site {
                     }
                     double r = chance();
                     if (beach) {
-                        if (t == SEA + 1 && r < 0.12) {
-                            set(x, t + 1, z, any("minecraft:seagrass", "pk_trash_bag", "debris_chunk"));
+                        // the wrack along the tideline: weed thrown up in a line, the odd bit of driftwood and rubbish
+                        if (t == SEA + 1 && r < 0.1) {
+                            set(x, t, z, "minecraft:gravel");
+                        } else if (t == SEA + 1 && r < 0.13) {
+                            set(x, t + 1, z, any("minecraft:dead_bush", "debris_chunk[facing=" + dir() + "]", "fallen_pole"));
                         }
                     } else if (r < 0.25) {
                         set(x, 1, z, noise.get(x * 0.05, z * 0.05) > 0.55 ? "minecraft:tall_dry_grass" : "minecraft:short_grass");
@@ -154,6 +158,16 @@ final class Hollis extends Site {
                     }
                 }
             }
+        }
+
+        /** Whether the sea is within a few blocks of (x, z). */
+        private boolean nearSea(int x, int z) {
+            for (int d = 2; d <= 8; d += 3) {
+                if (nat(x - d, z) <= SEA || nat(x + d, z) <= SEA || nat(x, z - d) <= SEA || nat(x, z + d) <= SEA) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         /** The drive from the shore to the compound and on through it: asphalt patched and broken, the verges. */
