@@ -185,10 +185,10 @@ public class CompanionScreen extends Screen {
     /** Her, standing in the middle as you are on the Character page. */
     private void figure(GuiGraphicsExtractor g, int x, int y, int mx, int my) {
         // standing in her idle, head to foot down most of the page
-        g.fill(x + 250, y + 328, x + 366, y + 333, 0x40000000);
+        g.fill(x + 250, y + 330, x + 366, y + 335, 0x40000000);
         com.zomboidcraft.client.npc.NpcRenderer.portrait = true;
         try {
-            InventoryScreen.extractEntityInInventoryFollowsMouse(g, x + 224, y + 24, x + 396, y + H - 4, 160, 0.0625f, mx, my, npc);
+            InventoryScreen.extractEntityInInventoryFollowsMouse(g, x + 224, y + 20, x + 396, y + H, 150, 0.0625f, mx, my, npc);
         } finally {
             com.zomboidcraft.client.npc.NpcRenderer.portrait = false;
         }

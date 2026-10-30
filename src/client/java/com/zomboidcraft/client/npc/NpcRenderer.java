@@ -117,6 +117,10 @@ public class NpcRenderer extends EntityRenderer<NpcEntity, NpcRenderer.State> {
         in.kick = portrait ? 0 : Mth.lerp(partialTick, entity.kickO, entity.kick);
         in.headYaw = Mth.clamp(Mth.wrapDegrees(Mth.rotLerp(partialTick, entity.yHeadRotO, entity.yHeadRot) - state.bodyYaw), -70f, 70f);
         in.headPitch = entity.getXRot(partialTick);
+        if (portrait) {
+            // the inventory turns a body to face you the vanilla way, half a turn from how her mesh faces
+            state.bodyYaw += 180f;
+        }
         Minecraft.getInstance().getItemModelResolver().updateForTopItem(state.held, entity.getMainHandItem(),
                 ItemDisplayContext.THIRD_PERSON_RIGHT_HAND, entity.level(), entity, entity.getId());
         GunType gun = GunType.of(entity.getMainHandItem());
