@@ -27,7 +27,13 @@ public final class Builders {
                 }
             }
             case HIDEOUT -> new HatchSite(p, county, out).build();
-            case LANDMARK -> new LandmarkSite(p, out).build();
+            case LANDMARK -> {
+                if (p.variant.equals("dam")) {
+                    new Dam(p, county, out).build();
+                } else {
+                    new LandmarkSite(p, out).build();
+                }
+            }
         }
         if (out instanceof Voxels v) {
             finishFlights(v);

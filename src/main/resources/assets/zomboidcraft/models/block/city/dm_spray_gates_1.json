@@ -1,0 +1,49 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "dm_spray_gates_1": {
+      "sprite": "zomboidcraft:block/city/dm_spray_gates_1",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/dm_spray_gates_1"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.8
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dm_spray_gates_1"
+        },
+        "south": {
+          "texture": "#dm_spray_gates_1",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#dm_spray_gates_1",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#dm_spray_gates_1",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#dm_spray_gates_1",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#dm_spray_gates_1",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

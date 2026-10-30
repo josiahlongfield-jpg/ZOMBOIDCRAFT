@@ -70,7 +70,7 @@ public final class CountyBiomeSource extends BiomeSource {
         }
         Terrain t = county.terrain;
         double h = t.height(x, z);
-        if (Terrain.isWater(h)) {
+        if (t.wet(x, z, h)) {
             return t.river(x, z) > 0.5 ? river : lake;
         }
         List<Place> near = county.placesNear(x, z, x, z, 0);
@@ -82,7 +82,7 @@ public final class CountyBiomeSource extends BiomeSource {
         if (near.isEmpty() && t.forest(x, z) > 0.55) {
             return woods;
         }
-        if (t.moisture(x, z) > 0.3 && h < Terrain.WATER + 7) {
+        if (t.moisture(x, z) > 0.3 && h < t.water(x, z) + 7) {
             return bottoms;
         }
         return fields;

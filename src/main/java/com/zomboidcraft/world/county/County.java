@@ -394,7 +394,7 @@ public final class County {
             for (int j = 0; j <= 6; j++) {
                 double x = x0 + (x1 - x0) * i / 6.0, z = z0 + (z1 - z0) * j / 6.0;
                 double g = terrain.height(x, z);
-                if (Terrain.isWater(g - 1) || terrain.riverChannel(x, z)) {
+                if (terrain.wet(x, z, g - 1) || terrain.riverChannel(x, z)) {
                     return null;
                 }
                 sum += g;
@@ -539,7 +539,7 @@ public final class County {
             return false;
         }
         double g = terrain.height(x, z);
-        if (g < Terrain.WATER + 4) {
+        if (g < terrain.water(x, z) + 4) {
             return false;
         }
         for (int[] d : new int[][] {{-3, 0}, {3, 0}, {0, -3}, {0, 3}, {-3, -3}, {3, 3}, {-3, 3}, {3, -3}}) {
@@ -550,7 +550,7 @@ public final class County {
         // dry land over wherever the bunker may run
         for (int dx = -48; dx <= 48; dx += 8) {
             for (int dz = -48; dz <= 48; dz += 8) {
-                if (terrain.height(x + dx, z + dz) < Terrain.WATER + 3 || terrain.riverChannel(x + dx, z + dz)) {
+                if (terrain.height(x + dx, z + dz) < terrain.water(x + dx, z + dz) + 3 || terrain.riverChannel(x + dx, z + dz)) {
                     return false;
                 }
             }
@@ -573,7 +573,7 @@ public final class County {
         double bestW = 0, target = h;
         for (Place p : near) {
             double d = p.outside(x, z);
-            if (d >= SKIRT) {
+            if (d >= SKIRT || p.natural) {
                 continue;
             }
             double w = Terrain.smooth(SKIRT, 0, d);
@@ -869,9 +869,9 @@ public final class County {
             zs[i] = line.get(i)[1];
             List<Place> near = placesNear((int) xs[i], (int) zs[i], (int) xs[i], (int) zs[i], SKIRT);
             double g = ground(xs[i], zs[i], near);
-            if (Terrain.isWater(g)) {
+            if (terrain.wet(xs[i], zs[i], g)) {
                 water += Road.STEP;
-                g = Terrain.WATER + 4;  // a bridge
+                g = terrain.water(xs[i], zs[i]) + 4;  // a bridge
             }
             ys[i] = Math.max(g, Terrain.WATER + 2);
         }

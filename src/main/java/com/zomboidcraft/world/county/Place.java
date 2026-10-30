@@ -25,6 +25,8 @@ public final class Place {
     public final Tile tile;
     /** For a piece of the city, what the railway asks of it (blocks left open, a street it runs down); null if nothing. */
     Railway.TileRails rails;
+    /** The land is left as it lies under this place, not levelled to its level (Black Pine Dam, built into its gorge). */
+    boolean natural;
 
     /**
      * A piece of the planned city: the street grid runs on world lines every {@code pitch} blocks

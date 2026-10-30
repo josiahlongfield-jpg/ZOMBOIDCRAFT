@@ -1183,6 +1183,8 @@ import ranges  # noqa: E402
 ranges.register(sys.modules[__name__])
 import prison  # noqa: E402
 prison.register(sys.modules[__name__])
+import dam  # noqa: E402
+dam.register(sys.modules[__name__])
 
 
 
