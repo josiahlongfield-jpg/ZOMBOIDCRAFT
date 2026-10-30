@@ -1,0 +1,104 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "dm_conc": "zomboidcraft:block/city/dm_conc",
+    "dm_conc_stain": "zomboidcraft:block/city/dm_conc_stain",
+    "particle": "zomboidcraft:block/city/dm_conc"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        11,
+        5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dm_conc",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#dm_conc"
+        },
+        "east": {
+          "texture": "#dm_conc",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#dm_conc",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#dm_conc"
+        },
+        "down": {
+          "texture": "#dm_conc",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        11,
+        -0.5
+      ],
+      "to": [
+        16,
+        13,
+        5.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#dm_conc_stain"
+        },
+        "south": {
+          "texture": "#dm_conc_stain"
+        },
+        "east": {
+          "texture": "#dm_conc_stain",
+          "uv": [
+            10.0,
+            3,
+            16,
+            5
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#dm_conc_stain",
+          "uv": [
+            0,
+            3,
+            6.0,
+            5
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#dm_conc_stain",
+          "uv": [
+            0,
+            0,
+            16,
+            6.0
+          ]
+        },
+        "down": {
+          "texture": "#dm_conc_stain",
+          "uv": [
+            0,
+            10.0,
+            16,
+            16
+          ]
+        }
+      }
+    }
+  ]
+}

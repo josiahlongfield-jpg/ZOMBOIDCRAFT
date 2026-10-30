@@ -15,6 +15,17 @@ public final class Terrain {
     public static final int WATER = 62;
     /** The city's ground inside the wall and on the island: a seawall five blocks above the water. */
     public static final int CITY = WATER + 4;
+    /**
+     * The one water that stands higher: the reservoir behind Black Pine Dam, held this far up by
+     * the wall (see {@link #reservoir}); it is filled up to here the way the rest is up to WATER.
+     */
+    public static final int RESERVOIR = WATER + 24;
+    /**
+     * The reservoir's shape round the plan's lake: the dam's upstream face FACE north of its spot,
+     * the arm from the lake down to it ARM out each side of its line; the shore's slope SHORE wide
+     * up to the rim of hills that holds the water in, easing back to the land RIM out.
+     */
+    static final int FACE = 8, ARM = 75, SHORE = 15, RIM = 280;
 
     private final Noise hills, detail, warp, knobs, knobMask, lakes, rivers, forest, moist, urban;
     /** The county plan, or null for the endless county the seed alone lays out. */
@@ -24,8 +35,34 @@ public final class Terrain {
         this(seed, null);
     }
 
+    /** The reservoir lake and the dam's spot, when the plan has both; the arm's two ends. */
+    private final Plan.Oval resLake;
+    private final double damX, damZ, armX0, armZ0, armX1, armZ1;
+
     public Terrain(long seed, Plan plan) {
         this.plan = plan;
+        Plan.Oval lake = null;
+        Plan.Spot dam = plan == null ? null : plan.byId.get("dam");
+        if (plan != null) {
+            for (Plan.Oval o : plan.lakes) {
+                if (o.id().equals("reservoir")) {
+                    lake = o;
+                }
+            }
+        }
+        if (lake != null && dam != null) {
+            resLake = lake;
+            damX = dam.x();
+            damZ = dam.z();
+            // the arm leaves the lake three quarters of the way out toward the dam's end of it
+            armX0 = lake.x() + 0.75 * lake.rx() * Math.signum(damX - lake.x());
+            armZ0 = lake.z();
+            armX1 = damX;
+            armZ1 = damZ - FACE - 10;
+        } else {
+            resLake = null;
+            damX = damZ = armX0 = armZ0 = armX1 = armZ1 = 0;
+        }
         hills = new Noise(seed ^ 0x51ED2701L);
         detail = new Noise(seed ^ 0x2C1B3C6DL);
         warp = new Noise(seed ^ 0x297A2D39L);
@@ -211,6 +248,9 @@ public final class Terrain {
             h = lerp(WATER - 5, top, smooth(1.05, isl.cliff() ? 0.93 : 0.8, e));
         }
         // the reservoir behind the dam
+        if (resLake != null) {
+            return dammed(h, x, z);
+        }
         double l = plan.lake(x, z);
         if (l < 80) {
             h = lerp(h, WATER + 1.5, smooth(80, 2, l));
@@ -219,6 +259,64 @@ public final class Terrain {
             }
         }
         return h;
+    }
+
+    // ------------------------------------------------------------------ Black Pine Dam's reservoir
+
+    /** How far outside the reservoir's water (negative inside) the lake and its arm put (x, z), the dam's cut aside. */
+    private double reach(double x, double z) {
+        double lake = (resLake.at(x, z) - 1) * Math.min(resLake.rx(), resLake.rz());
+        double dx = armX1 - armX0, dz = armZ1 - armZ0;
+        double t = Math.max(0, Math.min(1, ((x - armX0) * dx + (z - armZ0) * dz) / (dx * dx + dz * dz)));
+        double arm = Math.hypot(x - armX0 - t * dx, z - armZ0 - t * dz) - ARM;
+        return Math.min(lake, arm);
+    }
+
+    /**
+     * How far outside the reservoir (negative inside) (x, z) is: the lake, the arm down to the dam,
+     * cut off at the dam's upstream face (the dam stands south of its water); 1e9 with no dam.
+     */
+    public double reservoir(double x, double z) {
+        if (resLake == null) {
+            return 1e9;
+        }
+        return Math.max(reach(x, z), z - (damZ - FACE));
+    }
+
+    /** The water's surface over (x, z): the reservoir's behind the dam, everywhere else the sea's. */
+    public int water(double x, double z) {
+        return resLake != null && z <= damZ - FACE && reservoir(x, z) < SHORE ? RESERVOIR : WATER;
+    }
+
+    /** Whether ground at h over (x, z) is under water there. */
+    public boolean wet(double x, double z, double h) {
+        return h < water(x, z) + 0.5;
+    }
+
+    /**
+     * The land round the raised reservoir: its bed deepening from the shore, the shore up to a rim
+     * of hills a few blocks over the water all the way round (higher land left as it is), easing
+     * back down to the land around; below the dam the Calder's gorge, its walls rising from the
+     * river to the rim either side of the wall and falling away downstream.
+     */
+    private double dammed(double h, double x, double z) {
+        double d = reservoir(x, z);
+        if (d < 0) {
+            return lerp(RESERVOIR - 1.5, RESERVOIR - 22, smooth(0, 110, -reach(x, z)));
+        }
+        if (d > RIM) {
+            return h;
+        }
+        double rim = RESERVOIR + 3 + 1.5 * detail.fbm(x, z, 40, 2);
+        double hold = lerp(rim, h, smooth(SHORE, RIM, d));
+        if (z > damZ - FACE) {
+            double w = smooth(0, 50, plan.river(x, z, null)) * (1 - smooth(200, 520, Math.hypot(x - damX, z - damZ)));
+            return Math.max(h, lerp(h, hold, w));
+        }
+        if (d < SHORE) {
+            return lerp(RESERVOIR - 1.5, rim, smooth(0, SHORE, d));
+        }
+        return Math.max(h, hold);
     }
 
     /** Damp ground: swampy near water, dry on hilltops. -1 to 1. */
