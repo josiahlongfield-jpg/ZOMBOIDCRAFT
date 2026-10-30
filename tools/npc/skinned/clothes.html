@@ -1,0 +1,38 @@
+<!doctype html><html><body>
+<!-- Clothes exported from Blender (FBX, Selected Objects, Mesh only, Apply Modifiers: the body plus the pieces, posed exactly as
+     the Mixamo upload) -> clothes.json for add_clothes.py: every mesh's positions, uvs and triangles as exported, a mesh with
+     several materials split into "<mesh>.<material>" like export.html. Put clothes.fbx beside this page and run:
+     node run.js clothes.html clothes.json text --><script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three'; import {FBXLoader} from 'three/addons/loaders/FBXLoader.js';
+import {mergeVertices} from 'three/addons/utils/BufferGeometryUtils.js';
+const log=[]; window.LOG=log;
+const b64=a=>{ const u=new Uint8Array(a.buffer,a.byteOffset,a.byteLength); let s=''; for(let i=0;i<u.length;i+=32768) s+=String.fromCharCode.apply(null,u.subarray(i,i+32768)); return btoa(s); };
+try{
+const file=new URLSearchParams(location.search).get('file')||'clothes.fbx';
+const root=new FBXLoader().parse(await (await fetch(file)).arrayBuffer(),'./none/'); root.updateMatrixWorld(true);
+const parts=o=>{ const mats=Array.isArray(o.material)?o.material:[o.material]; let g=o.geometry;
+  if(new Set(g.groups.map(r=>r.materialIndex)).size<2) return [[o.name,g.clone()]];
+  g=g.index?g.toNonIndexed():g.clone(); const by=new Map();
+  for(const r of g.groups){ if(!by.has(r.materialIndex)) by.set(r.materialIndex,[]); by.get(r.materialIndex).push(r); }
+  return [...by].map(([mi,rs])=>{ const s=new THREE.BufferGeometry(), cnt=rs.reduce((t,r)=>t+r.count,0);
+    for(const [k,a] of Object.entries(g.attributes)){ const z=a.itemSize, out=new a.array.constructor(cnt*z); let at=0;
+      for(const r of rs){ out.set(a.array.subarray(r.start*z,(r.start+r.count)*z),at); at+=r.count*z; }
+      s.setAttribute(k,new THREE.BufferAttribute(out,z,a.normalized)); }
+    return [o.name+'.'+(mats[mi]&&mats[mi].name?mats[mi].name:mi),s]; }); };
+const meshes=[];
+root.traverse(o=>{ if(!o.isMesh) return;
+ for(let [name,g] of parts(o)){
+  for(const k of Object.keys(g.attributes)) if(!['position','uv'].includes(k)) g.deleteAttribute(k);
+  if(!g.attributes.uv){ log.push(name+' has no uvs, skipped'); continue; }
+  g.clearGroups(); g=mergeVertices(g,1e-6);
+  const n=g.attributes.position.count, P=new Float32Array(n*3), v=new THREE.Vector3();
+  for(let i=0;i<n;i++){ v.fromBufferAttribute(g.attributes.position,i).applyMatrix4(o.matrixWorld); P.set([v.x,v.y,v.z],i*3); }
+  meshes.push({name,n,pos:b64(P),uv:b64(new Float32Array(g.attributes.uv.array)),ix:b64(new Uint32Array(g.index.array))});
+ }
+});
+window.OUT=JSON.stringify({meshes});
+log.push('meshes '+meshes.map(m=>m.name+':'+m.n).join(' '));
+}catch(e){log.push('ERR '+e.stack)}
+window.DONE=1;
+</script></body></html>
