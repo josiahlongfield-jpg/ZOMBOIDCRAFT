@@ -197,7 +197,7 @@ public final class NpcWardrobe {
     /** Once a second: her heels on a run, someone else's change to her clothes, bed, and her own picks. */
     void tick(NpcEntity npc, ServerLevel level) {
         long now = level.getGameTime();
-        if (!Npcs.skinned(npc.model())) return;
+        if (!Npcs.dresses(npc.model())) return;
         boolean asleep = npc.work.asleep;
         // running in heels: she'll want boots for a while
         boolean running = npc.getDeltaMovement().horizontalDistanceSqr() > 0.2 * 0.2;
@@ -332,7 +332,7 @@ public final class NpcWardrobe {
         ServerLevel level = (ServerLevel) npc.level();
         long now = level.getGameTime();
         NpcBond b = npc.bond;
-        if (!Npcs.skinned(npc.model())) return;
+        if (!Npcs.dresses(npc.model())) return;
         if (npc.work.asleep) {
             p.sendOverlayMessage(net.minecraft.network.chat.Component.literal("She's asleep"));
             return;

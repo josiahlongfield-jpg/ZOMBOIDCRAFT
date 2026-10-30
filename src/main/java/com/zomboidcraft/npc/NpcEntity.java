@@ -196,7 +196,7 @@ public class NpcEntity extends PathfinderMob {
         bond.roll(getRandom(), mind);
         bond.meet(by);
         wardrobe.roll(getRandom());
-        if (Npcs.skinned(model())) {
+        if (Npcs.dresses(model())) {
             wardrobe.dress(this, NpcWardrobe.Outfit.WORK);
         }
         mind.remember(this, "Met " + by.getName().getString(), 0.3f, 0.9f);
@@ -421,7 +421,9 @@ public class NpcEntity extends PathfinderMob {
             bond.roll(getRandom(), mind);
         }
         if (wardrobe.load(input.getStringOr("npcWardrobe", ""))) {
-            entityData.set(HIDDEN, String.join(",", wardrobe.hidden()));
+            if (Npcs.dresses(model())) {
+                entityData.set(HIDDEN, String.join(",", wardrobe.hidden()));
+            }
         } else if (mindLoaded) {
             wardrobe.roll(getRandom());
         }

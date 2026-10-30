@@ -30,9 +30,15 @@ import org.joml.Vector3f;
  * Model space: metres, feet on y=0, facing +z, +x her left.
  */
 public final class NpcSkin {
-    /** One mesh: its piece ("body" always shows), texture, both sides or not, cut-out alpha, level (0 near, 1 far). */
+    /**
+     * One mesh: its piece ("body" always shows), texture, both sides or not, cut-out alpha, level (0 near, 1 far).
+     * A model with whole outfits (looks) writes its piece as "piece@look|1,look|0,...": the mesh shows only in those looks,
+     * |1 with her shoes on and |0 with them off (each outfit has its own barefoot version).
+     */
     public static final class Group {
         public final String mesh, piece, texture;
+        /** The looks this mesh belongs to, or null for every look. */
+        public final java.util.Set<String> looks;
         public final boolean bothSides, cutout;
         public final int level, vertices;
         public final float[] pos, normal, uv, weight;
@@ -41,7 +47,9 @@ public final class NpcSkin {
 
         Group(String mesh, String piece, String texture, int flags, int level, int vertices) {
             this.mesh = mesh;
-            this.piece = piece;
+            int at = piece.indexOf('@');
+            this.piece = at < 0 ? piece : piece.substring(0, at);
+            this.looks = at < 0 ? null : java.util.Set.of(piece.substring(at + 1).split(","));
             this.texture = texture;
             this.bothSides = (flags & 1) != 0;
             this.cutout = (flags & 2) != 0;
@@ -77,6 +85,20 @@ public final class NpcSkin {
     private final Map<String, Identifier> textures = new HashMap<>();
 
     private static final Map<String, CompletableFuture<NpcSkin>> LOADING = new HashMap<>();
+
+    /** Her outfits (looks), in the file's order, the first her own; empty for a model dressed piece by piece. */
+    public final java.util.List<String> looks = new java.util.ArrayList<>();
+
+    /** Which of her looks to draw for these pieces off: "look=NAME" among them picks one (else her first). */
+    public String lookKey(java.util.Set<String> hidden) {
+        String look = looks.isEmpty() ? "" : looks.get(0);
+        for (String h : hidden) {
+            if (h.startsWith("look=") && looks.contains(h.substring(5))) {
+                look = h.substring(5);
+            }
+        }
+        return look + "|" + (hidden.contains("shoes") ? 0 : 1);
+    }
 
     /** Whether any of her meshes belongs to this piece (older models have fewer clothes). */
     public boolean has(String piece) {
@@ -246,6 +268,16 @@ public final class NpcSkin {
             }
         }
         head = bone("mixamorigHead");
+        for (Group g : groups) {
+            if (g.looks != null) {
+                for (String k : g.looks) {
+                    String look = k.substring(0, k.indexOf('|') < 0 ? k.length() : k.indexOf('|'));
+                    if (!looks.contains(look)) {
+                        looks.add(look);
+                    }
+                }
+            }
+        }
         // the heels' height: how far the body's lowest point sits above the shoes' lowest
         float body = Float.MAX_VALUE, shoes = Float.MAX_VALUE;
         for (Group g : groups) {

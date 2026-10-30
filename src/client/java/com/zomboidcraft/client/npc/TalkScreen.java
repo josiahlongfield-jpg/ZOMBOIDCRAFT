@@ -103,6 +103,14 @@ public class TalkScreen extends net.minecraft.client.gui.screens.Screen {
 
     private void pick(int i) {
         if (i == 6) {
+            NpcSkin skin = NpcSkin.get(npc.model());
+            if (skin != null && !skin.has("sweater")) {
+                // a model in whole outfits, not piece by piece: those are picked by command
+                minecraft.player.sendOverlayMessage(Component.literal("She changes outfit by command: /zc npc outfit "
+                        + String.join("|", skin.looks)));
+                onClose();
+                return;
+            }
             minecraft.gui.setScreen(new WardrobeScreen(npc, null));
             return;
         }
