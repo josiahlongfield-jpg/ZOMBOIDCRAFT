@@ -230,9 +230,9 @@ public final class SpiderDraw {
             // its skull glows, lit however dark it is round it, and the rest of its glow goes dark as it hides; put out
             // altogether, skull and all, when it means not to be seen
             boolean isSkull = g == skull;
-            float out = Math.max(0, dark);
-            float hide = isSkull ? out : Math.max(camo, out), lit = (isSkull ? 1 : show) * (1 - out);
-            int skullLight = brighten(light, 1 - out);
+            float putOut = Math.max(0, dark);
+            float hide = isSkull ? putOut : Math.max(camo, putOut), lit = (isSkull ? 1 : show) * (1 - putOut);
+            int skullLight = brighten(light, 1 - putOut);
             float[] vg = looks.glow[g];
             collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(looks.texture[g]),
                     (p, out) -> body(gr, gr.tris, vg, pos[gi], normal[gi], p, out, isSkull ? skullLight : light, overlay, hide));
