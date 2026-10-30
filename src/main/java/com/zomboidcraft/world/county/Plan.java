@@ -308,8 +308,9 @@ public final class Plan {
         public final boolean closed;
         public final double reach;
         public final double minX, minZ, maxX, maxZ;
-        // fastutil mixes the key; a HashMap's Long hash (x ^ z of County.key) put whole diagonals in one bin
-        private final it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap<int[]> buckets = new it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap<>();
+        // keyed by County.key times an odd constant: a plain key's Long hash (x ^ z) put whole diagonals in one bin
+        private static final long MIX = 0x9E3779B97F4A7C15L;
+        private final Map<Long, int[]> buckets = new java.util.HashMap<>();
         private final Map<Integer, int[]> rows = new java.util.HashMap<>();
 
         Shape(double[] pts, boolean closed, double reach) {
@@ -346,7 +347,7 @@ public final class Plan {
                     rw.computeIfAbsent(r, k -> new ArrayList<>()).add(s);
                 }
             }
-            bk.forEach((k, v) -> buckets.put(k.longValue(), v.stream().mapToInt(Integer::intValue).toArray()));
+            bk.forEach((k, v) -> buckets.put(k * MIX, v.stream().mapToInt(Integer::intValue).toArray()));
             rw.forEach((k, v) -> rows.put(k, v.stream().mapToInt(Integer::intValue).toArray()));
         }
 
@@ -368,7 +369,7 @@ public final class Plan {
 
         /** Distance to the nearest segment, or cap if none is nearer (cap at most {@link #reach}). */
         public double distance(double x, double z, double cap) {
-            int[] segs = buckets.get(County.key(Math.floorDiv((int) Math.floor(x), CELL), Math.floorDiv((int) Math.floor(z), CELL)));
+            int[] segs = buckets.get(County.key(Math.floorDiv((int) Math.floor(x), CELL), Math.floorDiv((int) Math.floor(z), CELL)) * MIX);
             double best = cap;
             if (segs != null) {
                 for (int s : segs) {
@@ -380,7 +381,7 @@ public final class Plan {
 
         /** The nearest point on the line and the direction there: {x, z, dx, dz, along}, or null past reach. */
         public double[] nearest(double x, double z) {
-            int[] segs = buckets.get(County.key(Math.floorDiv((int) Math.floor(x), CELL), Math.floorDiv((int) Math.floor(z), CELL)));
+            int[] segs = buckets.get(County.key(Math.floorDiv((int) Math.floor(x), CELL), Math.floorDiv((int) Math.floor(z), CELL)) * MIX);
             if (segs == null) {
                 return null;
             }
