@@ -86,6 +86,11 @@ public final class County {
         return planned() ? layout().named.get(id) : null;
     }
 
+    /** Every named plan spot's id (tiles past the first, "airport#3", left out); empty off the plan. */
+    public List<String> names() {
+        return planned() ? layout().named.keySet().stream().filter(k -> k.indexOf('#') < 0).toList() : List.of();
+    }
+
     /** Called by the layout as it starts, so the roads it builds can already find its places. */
     void layingOut(Layout l) {
         layout = l;
