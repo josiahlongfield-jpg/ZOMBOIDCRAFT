@@ -401,6 +401,16 @@ final class Farmstead {
         if (use == Use.HORSES) {
             p.set(hx1, 2, d - 2, "fm_saddle_rack[facing=west]");
         }
+        if (use != Use.HAY) {
+            // the butcher's gambrel on its tackle, hung off the loft beam over the drive at the back
+            for (int y = loft; y <= top + 3; y++) {
+                p.set(c - 1, y, d - 3, "fm_chain");
+            }
+            p.set(c - 1, loft - 1, d - 3, "fm_butcher_hook[axis=x]");
+            if (chance() < 0.35 + hit * 0.3) {
+                p.setIfAir(c - 1, 1, d - 3, "blood_splat");
+            }
+        }
         for (int z = d / 3; z < d - 2; z += d / 3) {
             p.set(c, top + 3, z, "fm_chain");
             p.set(c, top + 2, z, chance() < 0.5 ? (chance() < 0.3 ? "fm_lantern_lit" : "fm_lantern") : "fm_chain");
@@ -994,6 +1004,36 @@ final class Farmstead {
         Round.wall(p, x + 0.5, z + 0.5, 1.4, 1, 1, "field", 0);
         p.set(x, 1, z, "air");
         p.set(x, 2, z, "fm_well[facing=" + pick("north", "east") + "]");
+    }
+
+    /**
+     * A smokehouse, five blocks square (refs/farm/butcher-hook: the Corbit-Sharp survey, the smokehouse
+     * interiors): board or brick walls, a gable roof, a plank door; inside, the rails of hams and bacon under
+     * the roof, the fire pit's ash in the earth floor, the salt box, the butcher's gambrel off the ridge beam.
+     */
+    void smokehouse(String wall) {
+        for (int x = 0; x < 5; x++) {
+            for (int z = 0; z < 5; z++) {
+                p.set(x, 0, z, x > 0 && x < 4 && z > 0 && z < 4 ? "minecraft:coarse_dirt" : "fm_fieldstone");
+            }
+        }
+        b.walls(0, 0, 4, 4, 1, 3, wall);
+        b.gable(0, 4, 0, 4, 4, "minecraft:dark_oak", true, wall, 1);
+        b.door(2, 1, 0, "ext_door_oak", "north");
+        for (int z = 1; z <= 3; z++) {
+            p.set(1, 3, z, "fm_meat_rail[axis=z]");
+            if (z < 3) {
+                p.set(3, 3, z, "fm_meat_rail[axis=z]");
+            }
+        }
+        p.set(2, 0, 3, "fm_char_logs");
+        p.set(2, 1, 3, "fm_char_logs");
+        p.set(1, 1, 1, "crate[loot=farm]");
+        p.set(3, 3, 3, "fm_butcher_hook[axis=x]");
+        p.set(3, 4, 3, "fm_chain");
+        if (chance() < 0.4 + hit * 0.4) {
+            p.setIfAir(3, 1, 1, "blood_splat");
+        }
     }
 
     /** An outhouse of grey boards, the moon cut in its door, a block square. */
