@@ -21,7 +21,7 @@ import java.util.function.UnaryOperator;
  * Every setting on the Sandbox page, in page order within each group.
  *
  * Zomboid's own 269 come from data/zomboidcraft/sandbox/zomboid.json (B42.21's list: id, label, tooltip, range and
- * every preset's value), and start as "coming" at Zomboid's Apocalypse value, Josiah's rule. When a thread builds what
+ * its Apocalypse value), and start as "coming" at Zomboid's Apocalypse value, Josiah's rule. When a thread builds what
  * one drives it wires it in {@link #wires()}: the config key, and our own choices or range if they differ. Settings
  * only ZomboidCraft has, and Josiah's fixed rules, are in {@link #ours()}.
  */
@@ -43,7 +43,7 @@ final class SandboxOptions {
         w.put("EnableSnowOnGround", b -> b.toggle("nature.snowOnGround").owner("WEATHER")
                 .tip("There is no snow yet, so this does nothing for now."));
         // Skills (SURVIVAL): one global multiplier for now
-        w.put("MultiplierConfig.Global", b -> b.number("progression.xpMultiplier", 0, 1000).sameScale().owner("SURVIVAL"));
+        w.put("MultiplierConfig.Global", b -> b.number("progression.xpMultiplier", 0, 1000).owner("SURVIVAL"));
         // Vehicles (VEHICLES)
         w.put("EnableVehicles", b -> b.toggle("world.streetCars").owner("VEHICLES"));
         return w;
@@ -193,8 +193,7 @@ final class SandboxOptions {
                     SandboxGroup group = SandboxGroup.byId(o.get("group").getAsString());
                     SandboxOption.Builder b = of(group, o.get("id").getAsString(), o.get("label").getAsString())
                             .tip(o.get("tooltip").getAsString()).owner(o.get("owner").getAsString());
-                    JsonObject presets = o.getAsJsonObject("presets");
-                    String apocalypse = presets.get("apocalypse").getAsString();
+                    String apocalypse = o.get("default").getAsString();
                     switch (o.get("kind").getAsString()) {
                         case "toggle" -> b.kind(SandboxOption.Kind.TOGGLE);
                         case "number" -> b.kind(SandboxOption.Kind.NUMBER)
@@ -207,7 +206,6 @@ final class SandboxOptions {
                         default -> b.kind(SandboxOption.Kind.TEXT);
                     }
                     b.coming(apocalypse).zomboid(apocalypse);
-                    presets.entrySet().forEach(p -> b.preset(p.getKey(), p.getValue().getAsString()));
                     out.add(b);
                 }
             }

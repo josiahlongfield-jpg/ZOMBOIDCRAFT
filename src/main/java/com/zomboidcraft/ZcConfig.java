@@ -196,6 +196,10 @@ public final class ZcConfig {
         public double startAttraction = 35;
         /** How far each one is rolled either way, so every companion is a bit different. */
         public double startSpread = 10;
+        /** Her gun never runs dry (the old way); off, she loads real rounds from her pack and goes looking for more. */
+        public boolean endlessAmmo = false;
+        /** The share of your experience a bonded companion picks up watching you work nearby (0 turns it off). */
+        public double watchShare = 0.25;
     }
 
     public Start start = new Start();
@@ -591,6 +595,7 @@ public final class ZcConfig {
     public static class Survival {
         public boolean thirst = true;
         public double thirstPerSecond = 0.07;
+        /** Zomboid's "sleep needed": off and you never get tired. */
         public boolean fatigue = true;
         public double fatiguePerSecond = 0.055;
         public boolean bleeding = true;
@@ -607,6 +612,22 @@ public final class ZcConfig {
         /** In multiplayer a killing blow puts you down for this long instead, so a friend can revive you (not alone). */
         public boolean downed = true;
         public int downedSeconds = 60;
+        /** Zomboid hunger in place of Minecraft's food bar (survival/Needs). */
+        public boolean hunger = true;
+        /** Zomboid's "nutrition": calories, carbs, fats and proteins that move your weight. */
+        public boolean nutrition = true;
+        /** Real minutes in one Zomboid day for the needs clock (Zomboid's default day length is one hour). */
+        public double dayMinutes = 60;
+        /** Zomboid's "stats decrease speed": how fast hunger and the calorie burn climb (0.5 slow, 2 fast). */
+        public double statsDecrease = 1.0;
+        /** Calories an adult at rest burns in a Zomboid day; running, loads and cold burn more. */
+        public double caloriesPerDay = 2000;
+        /** How quickly the calorie bank moves your weight (1 = Zomboid's pace, approximately). */
+        public double weightChange = 1.0;
+        /** Hit points a fed, watered, rested body heals in a Zomboid hour (Minecraft's food bar no longer heals). */
+        public double regenPerHour = 3;
+        /** Zomboid's "sleep allowed": whether you can lie down at all. */
+        public boolean sleepAllowed = true;
     }
 
     public static class Building {
