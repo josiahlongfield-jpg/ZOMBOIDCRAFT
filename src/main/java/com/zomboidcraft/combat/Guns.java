@@ -79,6 +79,8 @@ public final class Guns {
         ItemStack loading = ItemStack.EMPTY;
         /** When the pump or bolt is worked after a shot (game time), or -1; when its empty case lands. */
         long cycleAt = -1, caseAt = -1;
+        /** The fired cases an opened gun throws out when caseAt comes (the live rounds stay in). */
+        int empties;
     }
 
     private static final Map<ServerPlayer, State> STATES = new WeakHashMap<>();
@@ -164,6 +166,7 @@ public final class Guns {
             // the shooter's own client plays its case in time with the shot; the server's tick would bunch them
             level.playSound(player, player.getX(), player.getY(), player.getZ(), casing(type), SoundSource.PLAYERS,
                     0.4f, 0.9f + player.getRandom().nextFloat() * 0.25f);
+            Reloading.eject(player, type, 1);
         }
         Noise.emit(level, player.position(), Firearms.noise(stats.shotNoise * (suppressed ? config.suppressedNoise : 1.0)));
 
@@ -750,6 +753,7 @@ public final class Guns {
             // thrown open: the empties come out as the barrels drop
             sound(player, type.magOut());
             st.caseAt = player.level().getGameTime() + type.raise / 2;
+            st.empties = Math.max(0, type.capacity() - g.rounds());
         }
     }
 
@@ -875,6 +879,8 @@ public final class Guns {
                     // a shotgun hull lands with a dull plastic bounce, a brass case with a ring
                     player.level().playSound(null, player.getX(), player.getY(), player.getZ(), casing(held),
                             SoundSource.PLAYERS, 0.4f, 0.85f + player.getRandom().nextFloat() * 0.2f);
+                    Reloading.eject(player, held, held.opens ? st.empties : 1);
+                    st.empties = 0;
                 }
             }
             if (st.reloadTick < 0) {

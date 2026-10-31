@@ -63,6 +63,7 @@ public final class SkillUnlocks {
             case PILOTING -> "Steadier hands and softer landings";
             case TAILORING -> "Stitches that hold, sewn quicker";
             case MECHANICS -> "Parts come off and go on more surely";
+            case RELOADING -> "Load quicker and spoil fewer rounds";
             default -> "Faster and surer at it";
         };
     }

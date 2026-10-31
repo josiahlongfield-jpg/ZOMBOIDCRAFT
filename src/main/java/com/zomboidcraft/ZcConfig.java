@@ -1806,6 +1806,8 @@ public final class ZcConfig {
         public double moodleMultiplier = 1.0;
         public double weatherMultiplier = 1.0;
         public boolean headgearEffect = true;
+        /** Every shot drops its spent case (a shotgun's hull) to pick up for the reloading bench (combat/Reloading). */
+        public boolean dropBrass = true;
         /** Worn guns sometimes jam (scaled by jamMultiplier); clear them with the reload key. */
         public boolean jams = true;
         /**

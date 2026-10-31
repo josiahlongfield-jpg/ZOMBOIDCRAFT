@@ -58,6 +58,33 @@ public final class ModItems {
     // stones out of rubble and gravel, and a stone knapped sharp against another.
     public static final Item TREE_BRANCH = register("tree_branch", Item::new, new Item.Properties().stacksTo(8));
     public static final Item STONE = register("stone", Item::new, new Item.Properties().stacksTo(16));
+    // Handloading (combat/Reloading): spent brass picked up after a fight, and what a bench turns it back into rounds with.
+    public static final Item SPENT_9MM = register("spent_9mm", Item::new, new Item.Properties());
+    public static final Item SPENT_380 = register("spent_380", Item::new, new Item.Properties());
+    public static final Item SPENT_38 = register("spent_38", Item::new, new Item.Properties());
+    public static final Item SPENT_44 = register("spent_44", Item::new, new Item.Properties());
+    public static final Item SPENT_556 = register("spent_556", Item::new, new Item.Properties());
+    public static final Item SPENT_308 = register("spent_308", Item::new, new Item.Properties());
+    public static final Item SPENT_3030 = register("spent_3030", Item::new, new Item.Properties());
+    public static final Item SPENT_50 = register("spent_50", Item::new, new Item.Properties().stacksTo(32));
+    public static final Item SPENT_HULLS = register("spent_hulls", Item::new, new Item.Properties());
+    /** A jug of powder: its durability is the charges left in it (one a round, three for a .50). */
+    public static final Item SMOKELESS_POWDER = register("smokeless_powder", Item::new, new Item.Properties().durability(100));
+    public static final Item PRIMERS = register("primers", Item::new, new Item.Properties().stacksTo(100));
+    public static final Item BULLETS_9MM = register("bullets_9mm", Item::new, new Item.Properties().stacksTo(100));
+    public static final Item BULLETS_38 = register("bullets_38", Item::new, new Item.Properties().stacksTo(100));
+    public static final Item BULLETS_44 = register("bullets_44", Item::new, new Item.Properties().stacksTo(100));
+    public static final Item BULLETS_556 = register("bullets_556", Item::new, new Item.Properties().stacksTo(100));
+    public static final Item BULLETS_30 = register("bullets_30", Item::new, new Item.Properties().stacksTo(100));
+    public static final Item BULLETS_50 = register("bullets_50", Item::new, new Item.Properties().stacksTo(50));
+    /** A bag of lead shot: its durability is the shells' worth left in it. */
+    public static final Item LEAD_SHOT = register("lead_shot", Item::new, new Item.Properties().durability(40));
+    public static final Item GUNSMITH_MAGAZINE = register("gunsmith_magazine",
+            p -> new com.zomboidcraft.loot.items.SkillBookItem(p, com.zomboidcraft.skills.Skill.RELOADING),
+            new Item.Properties().stacksTo(1));
+    public static final Item RELOADING_BENCH = register("reloading_bench",
+            p -> new net.minecraft.world.item.BlockItem(com.zomboidcraft.combat.ReloadingBenchBlock.BENCH, p.useBlockDescriptionPrefix()),
+            new Item.Properties().stacksTo(1));
     public static final Item SHARP_STONE = register("sharp_stone", Item::new, new Item.Properties().stacksTo(16));
     public static final Item SCRAP_METAL = register("scrap_metal", Item::new, new Item.Properties().stacksTo(32));
     public static final Item PROPANE_TORCH = register("propane_torch", Item::new, new Item.Properties().durability(120));

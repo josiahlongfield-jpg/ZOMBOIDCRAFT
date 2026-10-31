@@ -68,6 +68,20 @@ public final class Weights {
         mod("tree_branch", 1.0);
         mod("stone", 0.3);
         mod("sharp_stone", 0.2);
+        // handloading (combat/Reloading): per case, head or primer; a jug of powder, a bag of shot, the bench itself
+        for (String c : new String[] {"spent_9mm", "spent_380", "spent_38", "spent_44", "spent_556", "spent_308", "spent_3030", "spent_hulls"}) {
+            mod(c, 0.01);
+        }
+        mod("spent_50", 0.05);
+        mod("primers", 0.002);
+        for (String b : new String[] {"bullets_9mm", "bullets_38", "bullets_44", "bullets_556", "bullets_30"}) {
+            mod(b, 0.01);
+        }
+        mod("bullets_50", 0.04);
+        mod("smokeless_powder", 1.0);
+        mod("lead_shot", 2.0);
+        mod("gunsmith_magazine", 0.2);
+        mod("reloading_bench", 25.0);
         mod("assault_rifle", 3.0);
         mod("rifle_magazine", 0.5);
         mod("rifle_ammo", 0.012);

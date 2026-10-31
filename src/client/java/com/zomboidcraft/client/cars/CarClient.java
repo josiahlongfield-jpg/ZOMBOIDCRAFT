@@ -172,6 +172,8 @@ public final class CarClient {
             // a room's light switch
         } else if (com.zomboidcraft.client.survival.SleepClient.interact(client, hit)) {
             // a bed, sofa or mattress (or the floor, crouching): lie down and sleep
+        } else if (com.zomboidcraft.client.combat.ReloadingClient.interact(client, hit)) {
+            // a reloading bench: what it can load
         } else if (player.getMainHandItem().is(com.zomboidcraft.ModItems.CAR_KEY)) {
             // not at a car, key in hand: its panic button
             ClientPlayNetworking.send(new CarNet.Use(CarNet.FOB, 0, 0, 0));
