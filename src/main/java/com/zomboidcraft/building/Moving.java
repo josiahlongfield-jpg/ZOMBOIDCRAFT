@@ -229,8 +229,8 @@ public final class Moving {
         if (refusal(piece, player, level, pos) != null) {
             return 0f;
         }
-        int level = piece.kind.skill == null ? 0 : Skills.level(player, piece.kind.skill);
-        double ticks = (10 + piece.kg * ZcConfig.get().building.liftTicksPerKg) / (1 + 0.08 * level);
+        int skill = piece.kind.skill == null ? 0 : Skills.level(player, piece.kind.skill);
+        double ticks = (10 + piece.kg * ZcConfig.get().building.liftTicksPerKg) / (1 + 0.08 * skill);
         return (float) (1 / Math.max(4, ticks));
     }
 
