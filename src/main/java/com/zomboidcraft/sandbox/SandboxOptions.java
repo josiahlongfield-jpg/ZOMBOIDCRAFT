@@ -184,6 +184,12 @@ final class SandboxOptions {
         w.put("MaximumLooted", b -> b.number("loot.maximumLooted", 0, 200).owner("LOOT")
                 .tip("The chance a container has already been picked over when you find it, once the days below have passed."));
         w.put("DaysUntilMaximumLooted", b -> b.number("loot.daysUntilMaximumLooted", 0, 3650).owner("LOOT"));
+        w.put("RuralLooted", b -> b.number("loot.ruralLooted", 0, 2).owner("LOOT")
+                .tip("Multiplies the looted chance for farms, roadside places and the countryside outside towns."));
+        w.put("MaximumLootedBuildingRooms", b -> b.number("loot.maximumLootedBuildingRooms", 0, 200).owner("LOOT")
+                .tip("Buildings with more rooms than this are never pre-looted (malls, hospitals, the big landmarks)."));
+        w.put("TimeSinceApo", b -> b.choice("loot.timeSinceApo", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12")
+                .owner("LOOT").tip("Months since the outbreak when you start: the looted and diminished loot ramps start that far along."));
         w.put("MaximumDiminishedLoot", b -> b.number("loot.maximumDiminished", 0, 100).owner("LOOT"));
         w.put("DaysUntilMaximumDiminishedLoot", b -> b.number("loot.daysUntilMaximumDiminished", 0, 3650).owner("LOOT"));
         w.put("StarterKit", b -> b.toggle("loot.starterKit").owner("LOOT"));

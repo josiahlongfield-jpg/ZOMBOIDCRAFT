@@ -130,6 +130,12 @@ public final class ZcConfig {
         /** Zomboid's Maximum Looted Building Chance (percent), reached after daysUntilMaximumLooted. */
         public double maximumLooted = 25;
         public double daysUntilMaximumLooted = 90;
+        /** Zomboid's Rural Building Looted Chance Multiplier. */
+        public double ruralLooted = 0.5;
+        /** Zomboid's Maximum Looted Building Rooms: bigger buildings are never pre-looted. */
+        public double maximumLootedBuildingRooms = 50;
+        /** Zomboid's Months since the Apocalypse (0-12): moves the looted and diminished ramps on. */
+        public String timeSinceApo = "0";
         /** Zomboid's Maximum Diminished Loot (percent), reached after daysUntilMaximumDiminished. */
         public double maximumDiminished = 20;
         public double daysUntilMaximumDiminished = 3650;

@@ -23,6 +23,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -134,9 +135,17 @@ public final class LootSettings {
         if (!ours) {
             return;
         }
-        double days = level.getGameTime() / DAY;
+        double days = level.getGameTime() / DAY + LootArea.monthsSinceApo(cfg) * 30;
         // already looted before you got here
         double looted = cfg.maximumLooted / 100.0 * ramp(days, cfg.daysUntilMaximumLooted);
+        if (!story && looted > 0 && at != null) {
+            BlockPos pos = BlockPos.containing(at);
+            if (LootArea.rooms(level, pos) > cfg.maximumLootedBuildingRooms) {
+                looted = 0;
+            } else if (LootArea.rural(level, pos)) {
+                looted *= cfg.ruralLooted;
+            }
+        }
         if (!story && random.nextDouble() < looted) {
             drops.removeIf(s -> random.nextFloat() < 0.9f);
             return;
