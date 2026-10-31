@@ -77,6 +77,8 @@ public class CarProp extends Entity {
     /** An aircraft's attitude, engine (or rotor) speed, thrust, and the top speed the server allows ({@link Flight}). */
     private static final EntityDataAccessor<org.joml.Quaternionfc> AIR_ATTITUDE = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.QUATERNION);
     private static final EntityDataAccessor<Float> AIR_RPM = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.FLOAT);
+    /** Where a helicopter's searchlight is turned to, world space (the search helicopter's); zero is its own way, ahead and down. */
+    private static final EntityDataAccessor<org.joml.Vector3fc> SEARCH_AIM = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.VECTOR3);
     private static final EntityDataAccessor<Float> AIR_POWER = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> AIR_TOP = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.FLOAT);
     /** A crashed aircraft whose wings, nose and tail have been torn off ({@link AirBreakup}). */
@@ -211,6 +213,7 @@ public class CarProp extends Entity {
         builder.define(ALARM, false);
         builder.define(SIREN, false);
         builder.define(AIR_ATTITUDE, new org.joml.Quaternionf());
+        builder.define(SEARCH_AIM, new org.joml.Vector3f());
         builder.define(AIR_RPM, 0f);
         builder.define(AIR_POWER, 0f);
         builder.define(AIR_TOP, 0f);
@@ -2170,6 +2173,15 @@ public class CarProp extends Entity {
 
     public boolean helicopter() {
         return model().startsWith("heli_");
+    }
+
+    /** Turns the searchlight to point this way (world space), or back to its own way with zero (SearchHeli). */
+    public void aimSearchlight(Vec3 dir) {
+        entityData.set(SEARCH_AIM, new org.joml.Vector3f((float) dir.x, (float) dir.y, (float) dir.z));
+    }
+
+    public org.joml.Vector3fc searchlightAim() {
+        return entityData.get(SEARCH_AIM);
     }
 
     /** This aircraft's flight state (attitude, speed, engine), made the first time it's asked for. */

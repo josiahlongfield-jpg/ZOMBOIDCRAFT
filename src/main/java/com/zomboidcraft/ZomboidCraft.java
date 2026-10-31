@@ -100,6 +100,7 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.combat.Downed.register();
         com.zomboidcraft.zombie.LyingInWait.register();
         com.zomboidcraft.zombie.BeltedDead.register();
+        com.zomboidcraft.world.events.SearchHeli.register();
         com.zomboidcraft.combat.Dismember.register();
         com.zomboidcraft.combat.Deaths.register();
         com.zomboidcraft.zombie.Corpses.register();

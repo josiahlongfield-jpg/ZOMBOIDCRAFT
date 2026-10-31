@@ -97,6 +97,8 @@ public final class ZcConfig {
     /** Zomboid's Zombie Lore page, setting for setting: how the dead move, see, hear, remember and hurt (zombie/Lore). */
     public ZombieLore zombieLore = new ZombieLore();
     public ZombiePopulation zombiePopulation = new ZombiePopulation();
+    /** Zomboid's search helicopter (world/events/SearchHeli). */
+    public SearchHeli searchHeli = new SearchHeli();
     /** Driverless trains: the county railway and the downtown subway (TrainCommand, world.trains). */
     public Trains trains = new Trains();
     /** Things you throw: lures, fire, smoke and blasts (combat/throwing). */
@@ -395,6 +397,22 @@ public final class ZcConfig {
         public int herds = 6;
         public int herdMin = 200;
         public int herdMax = 400;
+    }
+
+    /**
+     * Zomboid's Helicopter setting: the search helicopter that finds a survivor and drags every zombie under its path
+     * to them. Once: one day between firstDay and lastDay. Sometimes and Often: again every few weeks or days.
+     */
+    public static class SearchHeli {
+        public enum Frequency { NEVER, ONCE, SOMETIMES, OFTEN }
+
+        public Frequency frequency = Frequency.ONCE;
+        public int firstDay = 6;
+        public int lastDay = 9;
+        /** How long it stays on someone it has found, in-game hours (Zomboid's: up to about four). */
+        public double lockHours = 4;
+        /** How far its noise carries every second while it hovers (blocks). */
+        public double noise = 90;
     }
 
     public static class ZombieLore {
