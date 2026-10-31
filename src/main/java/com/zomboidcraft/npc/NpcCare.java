@@ -505,6 +505,7 @@ public final class NpcCare {
 
         @Override
         public void tick() {
+            if (doing == NONE || ticks <= 0) return;
             ServerLevel level = (ServerLevel) npc.level();
             if (doing == READ && ticks % 60 == 0) {
                 level.playSound(null, npc.blockPosition(), SoundEvents.BOOK_PAGE_TURN, SoundSource.NEUTRAL, 0.6f,
@@ -609,6 +610,8 @@ public final class NpcCare {
 
         @Override
         public void tick() {
+            // done with this one: the selector only lets the goal go on its next full pass
+            if (item == null && box == null || item != null && !item.isAlive()) return;
             ServerLevel level = (ServerLevel) npc.level();
             Vec3 at = item != null ? item.position() : Vec3.atBottomCenterOf(box);
             double reach = item != null ? 1.8 : 2.2;
