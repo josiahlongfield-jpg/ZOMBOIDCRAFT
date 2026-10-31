@@ -837,6 +837,7 @@ public class KitUiTest implements FabricClientGameTest {
         ctx.runOnClient(mc -> mc.gui.setScreen(null));
         bondsTest(ctx, sp);
         sp.getServer().runCommand("zc npc clear");
+        mechanicsTest(ctx, sp);
     }
 
     /** Bonding (Josiah 2026-10-30): the prompt on a first G, then K's selection of two companions, sliding, and a pick. */
@@ -890,6 +891,65 @@ public class KitUiTest implements FabricClientGameTest {
         ctx.waitTicks(20);
         ctx.takeScreenshot("bonds-clip-30");
         ctx.runOnClient(mc -> mc.gui.setScreen(null));
+    }
+
+    /**
+     * The mechanics screen's x-ray car (Josiah 2026-10-31): a four-door, a two-door, a pickup and a box truck, each with
+     * a few parts worn, failing or missing, and the mouse run down the car so each part lights as it's pointed at.
+     */
+    private static void mechanicsTest(ClientGameTestContext ctx, TestSingleplayerContext sp) {
+        String[] models = {"sedan", "coupe", "pickup", "box_truck"};
+        for (String model : models) {
+            int[] id = new int[1];
+            sp.getServer().runOnServer(s -> {
+                ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+                var level = (ServerLevel) p.level();
+                var look = p.getLookAngle().multiply(1, 0, 1).normalize();
+                var car = com.zomboidcraft.world.cars.Cars.spawn(level, p.getX() + look.x * 4, p.getY(), p.getZ() + look.z * 4, 0, model, "usable", true);
+                String parts = car.parts();
+                if (!parts.isEmpty()) {
+                    parts = com.zomboidcraft.world.cars.CarParts.set(parts, com.zomboidcraft.world.cars.CarParts.slot(com.zomboidcraft.world.cars.CarParts.Part.TIRE, 1), 8);
+                    parts = com.zomboidcraft.world.cars.CarParts.set(parts, com.zomboidcraft.world.cars.CarParts.slot(com.zomboidcraft.world.cars.CarParts.Part.BRAKES, 0), 30);
+                    parts = com.zomboidcraft.world.cars.CarParts.set(parts, com.zomboidcraft.world.cars.CarParts.slot(com.zomboidcraft.world.cars.CarParts.Part.BATTERY, 0), 95);
+                    parts = com.zomboidcraft.world.cars.CarParts.set(parts, com.zomboidcraft.world.cars.CarParts.slot(com.zomboidcraft.world.cars.CarParts.Part.EXHAUST, 0), 18);
+                    parts = com.zomboidcraft.world.cars.CarParts.set(parts, com.zomboidcraft.world.cars.CarParts.slot(com.zomboidcraft.world.cars.CarParts.Part.RIM, 3), -1);
+                    parts = com.zomboidcraft.world.cars.CarParts.set(parts, com.zomboidcraft.world.cars.CarParts.slot(com.zomboidcraft.world.cars.CarParts.Part.TIRE, 3), -1);
+                    parts = com.zomboidcraft.world.cars.CarParts.set(parts, com.zomboidcraft.world.cars.CarParts.slot(com.zomboidcraft.world.cars.CarParts.Part.RADIO, 0), -1);
+                    car.setParts(parts);
+                }
+                id[0] = car.getId();
+                LOG.info("ZCUI mechanics {} parts {}", model, car.parts());
+            });
+            ctx.waitTicks(20);
+            ctx.runOnClient(mc -> {
+                if (mc.level.getEntity(id[0]) instanceof com.zomboidcraft.world.cars.CarProp car) {
+                    mc.gui.setScreen(new MechanicsScreen(car));
+                }
+            });
+            ctx.waitTicks(10);
+            ctx.takeScreenshot("mech-" + model + "-00");
+            // run the mouse down the car, a little off the middle so it crosses the seats and the battery side
+            for (int f = 1; f <= 12; f++) {
+                int at = f;
+                double[] px = ctx.computeOnClient(mc -> {
+                    if (!(mc.gui.screen() instanceof MechanicsScreen m)) return new double[]{0, 0};
+                    float[] fig = m.figure();
+                    var w = mc.getWindow();
+                    double scale = (double) w.getScreenWidth() / w.getGuiScaledWidth();
+                    double u = (at % 2 == 0 ? 40 : -50), v = -260 + at * 42;
+                    return new double[]{(fig[0] + u * fig[2]) * scale, (fig[1] + v * fig[2]) * scale};
+                });
+                ctx.getInput().setCursorPos(px[0], px[1]);
+                ctx.waitTicks(3);
+                ctx.takeScreenshot(String.format("mech-%s-%02d", model, f));
+            }
+            ctx.runOnClient(mc -> mc.gui.setScreen(null));
+            sp.getServer().runOnServer(s -> {
+                var e = s.overworld().getEntity(id[0]);
+                if (e != null) e.discard();
+            });
+            ctx.waitTicks(5);
+        }
     }
 
     private static void bookTest(TestSingleplayerContext sp) {
