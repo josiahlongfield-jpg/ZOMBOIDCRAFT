@@ -28,6 +28,11 @@ import java.util.function.UnaryOperator;
 final class SandboxOptions {
     private static final String ZOMBOID = "/data/zomboidcraft/sandbox/zomboid.json";
 
+    /** One of Zomboid's ZombieConfig numbers wired to its zombiePopulation field. */
+    private static void pop(Map<String, UnaryOperator<SandboxOption.Builder>> w, String id, String field, double min, double max) {
+        w.put("ZombieConfig." + id, b -> b.number("zombiePopulation." + field, min, max).owner("ENTITY"));
+    }
+
     /** A Zombie Lore choice wired to its zombieLore field. */
     private static void lore(Map<String, UnaryOperator<SandboxOption.Builder>> w, String id, String field, String... choices) {
         w.put("ZombieLore." + id, b -> b.choice("zombieLore." + field, choices).owner("ENTITY"));
@@ -38,6 +43,26 @@ final class SandboxOptions {
         Map<String, UnaryOperator<SandboxOption.Builder>> w = new HashMap<>();
         // Zombie Population (ENTITY)
         w.put("ZombieConfig.PopulationMultiplier", b -> b.number("population.density", 0.25, 4).owner("ENTITY"));
+        w.put("Zombies", b -> b.choice("zombiePopulation.count", "insane", "very_high", "high", "normal", "low", "none").owner("ENTITY"));
+        w.put("Distribution", b -> b.choice("zombiePopulation.distribution", "urban_focused", "uniform").owner("ENTITY"));
+        w.put("ZombieVoronoiNoise", b -> b.toggle("zombiePopulation.voronoiNoise").owner("ENTITY"));
+        w.put("ZombieRespawn", b -> b.choice("zombiePopulation.respawn", "none", "low", "normal", "high").owner("ENTITY"));
+        w.put("ZombieMigrate", b -> b.toggle("zombiePopulation.migrate").owner("ENTITY"));
+        w.put("ZombieAttractionMultiplier", b -> b.number("zombiePopulation.attractionMultiplier", 0, 100).owner("ENTITY"));
+        pop(w, "PopulationStartMultiplier", "startMultiplier", 0, 4);
+        pop(w, "PopulationPeakMultiplier", "peakMultiplier", 0, 4);
+        pop(w, "PopulationPeakDay", "peakDay", 1, 365);
+        pop(w, "RespawnHours", "respawnHours", 0, 8760);
+        pop(w, "RespawnUnseenHours", "respawnUnseenHours", 0, 8760);
+        pop(w, "RespawnMultiplier", "respawnMultiplier", 0, 1);
+        pop(w, "RedistributeHours", "redistributeHours", 0, 8760);
+        pop(w, "FollowSoundDistance", "followSoundDistance", 10, 1000);
+        pop(w, "RallyGroupSize", "rallyGroupSize", 0, 1000);
+        pop(w, "RallyGroupSizeVariance", "rallyGroupSizeVariance", 0, 100);
+        pop(w, "RallyTravelDistance", "rallyTravelDistance", 5, 50);
+        pop(w, "RallyGroupSeparation", "rallyGroupSeparation", 5, 25);
+        pop(w, "RallyGroupRadius", "rallyGroupRadius", 1, 10);
+        pop(w, "ZombiesCountBeforeDelete", "countBeforeDelete", 0, 5000);
         // Zombie Lore (ENTITY): every one of Zomboid's 29, its own choices in Zomboid's order (ZcConfig.ZombieLore)
         lore(w, "Speed", "speed", "sprinters", "fast_shamblers", "shamblers", "random");
         w.put("ZombieLore.SprinterPercentage", b -> b.number("zombieLore.sprinterPercent", 0, 100).owner("ENTITY"));

@@ -726,7 +726,7 @@ public class CarProp extends Entity {
         entityData.set(SMASHED, true);
         server.playSound(null, attacker.getX(), attacker.getEyeY(), attacker.getZ(), SoundEvents.GLASS_BREAK, SoundSource.HOSTILE,
                 1.2f, 0.8f + random.nextFloat() * 0.2f);
-        Noise.emit(server, position(), 16);
+        Noise.emitEngine(server, position(), 16);
         return false;
     }
 
@@ -739,7 +739,7 @@ public class CarProp extends Entity {
         server.playSound(null, at.x, at.y, at.z, SoundEvents.GLASS_BREAK, SoundSource.BLOCKS, 1.2f, 0.8f + random.nextFloat() * 0.2f);
         server.sendParticles(new net.minecraft.core.particles.BlockParticleOption(net.minecraft.core.particles.ParticleTypes.BLOCK,
                 net.minecraft.world.level.block.Blocks.GLASS.defaultBlockState()), at.x, at.y, at.z, 24, 0.3, 0.2, 0.3, 0.1);
-        Noise.emit(server, position(), 16);
+        Noise.emitEngine(server, position(), 16);
     }
 
     /**
@@ -884,7 +884,7 @@ public class CarProp extends Entity {
         if (catchAt >= 0 && tickCount >= catchAt) {
             catchAt = -1;
             entityData.set(ENGINE, true);
-            Noise.emit(server, position(), 24);
+            Noise.emitEngine(server, position(), 24);
         }
         if (doorShutAt >= 0 && tickCount >= doorShutAt) {
             doorShutAt = -1;
@@ -1202,7 +1202,7 @@ public class CarProp extends Entity {
             server.playSound(null, getX(), getY(), getZ(), CarSounds.HORN, SoundSource.NEUTRAL, 2f, 1f);
         }
         if (alarmLeft % 40 == 0) {
-            Noise.emit(server, position(), 56);
+            Noise.emitEngine(server, position(), 56);
         }
     }
 
@@ -1211,7 +1211,7 @@ public class CarProp extends Entity {
         if (level() instanceof ServerLevel server && getControllingPassenger() == driver && tickCount >= hornFreeAt && !jet()) {
             hornFreeAt = tickCount + 40;
             server.playSound(null, getX(), getY(), getZ(), CarSounds.HORN, SoundSource.NEUTRAL, 1.5f, 1f);
-            Noise.emit(server, position(), 48);
+            Noise.emitEngine(server, position(), 48);
         }
     }
 
@@ -1700,7 +1700,7 @@ public class CarProp extends Entity {
         if (speedBefore > 0.35 && lastSpeed < speedBefore * 0.45 && speed < speedBefore * 0.45) {
             server.playSound(null, getX(), getY(), getZ(), CarSounds.CRASH, SoundSource.NEUTRAL,
                     (float) Math.min(1.5, speedBefore * 1.4), 0.9f + random.nextFloat() * 0.2f);
-            Noise.emit(server, position(), 30);
+            Noise.emitEngine(server, position(), 30);
             if (!parts().isEmpty()) {
                 crashWear(speedBefore);
             }
@@ -1711,7 +1711,7 @@ public class CarProp extends Entity {
         lastSpeed = speed;
         strike(server, driver, m, speed);
         if (engineOn() && tickCount % 10 == 0) {
-            Noise.emit(server, position(), (18 + 30 * speed) * Math.min(2.5, partDrive().noise()));
+            Noise.emitEngine(server, position(), (18 + 30 * speed) * Math.min(2.5, partDrive().noise()));
         }
         if (!parts().isEmpty()) {
             wearDriving(moved, speed);
@@ -2331,7 +2331,7 @@ public class CarProp extends Entity {
         }
         if (engineOn() && tickCount % 10 == 0) {
             // like Zomboid's helicopter: every zombie for miles comes to look
-            Noise.emit(server, position(), f.kind == Flight.Kind.HELI ? 112 : 72 + 72 * f.power);
+            Noise.emitEngine(server, position(), f.kind == Flight.Kind.HELI ? 112 : 72 + 72 * f.power);
         }
     }
 
@@ -2384,7 +2384,7 @@ public class CarProp extends Entity {
         player.sendOverlayMessage(Component.literal(on ? (helicopter() ? "Rotors coming up to speed. " : "Engines spooling up. ") + flightHelp()
                 : "Shutting down."));
         if (on) {
-            Noise.emit(server, position(), 48);
+            Noise.emitEngine(server, position(), 48);
         }
     }
 
@@ -2412,7 +2412,7 @@ public class CarProp extends Entity {
             }
         }
         entityData.set(ENGINE, false);
-        Noise.emit(server, position(), 128);
+        Noise.emitEngine(server, position(), 128);
         Flight f = flight();
         Quaternionf q = new Quaternionf(f.q);
         float rpm = f.rpm;
