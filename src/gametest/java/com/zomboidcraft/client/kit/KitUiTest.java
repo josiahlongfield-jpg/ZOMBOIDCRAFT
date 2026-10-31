@@ -837,6 +837,11 @@ public class KitUiTest implements FabricClientGameTest {
         ctx.runOnClient(mc -> mc.gui.setScreen(null));
         bondsTest(ctx, sp);
         sp.getServer().runCommand("zc npc clear");
+        mechanicsTest(ctx, sp);
+        sandboxTest(ctx);
+        deathCardTest(ctx);
+        levelUpTest(ctx);
+        gMenuTest(ctx, sp);
     }
 
     /** Bonding (Josiah 2026-10-30): the prompt on a first G, then K's selection of two companions, sliding, and a pick. */
@@ -890,6 +895,181 @@ public class KitUiTest implements FabricClientGameTest {
         ctx.waitTicks(20);
         ctx.takeScreenshot("bonds-clip-30");
         ctx.runOnClient(mc -> mc.gui.setScreen(null));
+    }
+
+    /**
+     * The mechanics screen's x-ray car (Josiah 2026-10-31): a four-door, a two-door, a pickup and a box truck, each with
+     * a few parts worn, failing or missing, and the mouse run down the car so each part lights as it's pointed at.
+     */
+    private static void mechanicsTest(ClientGameTestContext ctx, TestSingleplayerContext sp) {
+        String[] models = {"sedan", "coupe", "pickup", "box_truck"};
+        for (String model : models) {
+            int[] id = new int[1];
+            sp.getServer().runOnServer(s -> {
+                ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+                var level = (ServerLevel) p.level();
+                var look = p.getLookAngle().multiply(1, 0, 1).normalize();
+                var car = com.zomboidcraft.world.cars.Cars.spawn(level, p.getX() + look.x * 4, p.getY(), p.getZ() + look.z * 4, 0, model, "usable", true);
+                String parts = car.parts();
+                if (!parts.isEmpty()) {
+                    parts = com.zomboidcraft.world.cars.CarParts.set(parts, com.zomboidcraft.world.cars.CarParts.slot(com.zomboidcraft.world.cars.CarParts.Part.TIRE, 1), 8);
+                    parts = com.zomboidcraft.world.cars.CarParts.set(parts, com.zomboidcraft.world.cars.CarParts.slot(com.zomboidcraft.world.cars.CarParts.Part.BRAKES, 0), 30);
+                    parts = com.zomboidcraft.world.cars.CarParts.set(parts, com.zomboidcraft.world.cars.CarParts.slot(com.zomboidcraft.world.cars.CarParts.Part.BATTERY, 0), 95);
+                    parts = com.zomboidcraft.world.cars.CarParts.set(parts, com.zomboidcraft.world.cars.CarParts.slot(com.zomboidcraft.world.cars.CarParts.Part.EXHAUST, 0), 18);
+                    parts = com.zomboidcraft.world.cars.CarParts.set(parts, com.zomboidcraft.world.cars.CarParts.slot(com.zomboidcraft.world.cars.CarParts.Part.RIM, 3), -1);
+                    parts = com.zomboidcraft.world.cars.CarParts.set(parts, com.zomboidcraft.world.cars.CarParts.slot(com.zomboidcraft.world.cars.CarParts.Part.TIRE, 3), -1);
+                    parts = com.zomboidcraft.world.cars.CarParts.set(parts, com.zomboidcraft.world.cars.CarParts.slot(com.zomboidcraft.world.cars.CarParts.Part.RADIO, 0), -1);
+                    car.setParts(parts);
+                }
+                id[0] = car.getId();
+                LOG.info("ZCUI mechanics {} parts {}", model, car.parts());
+            });
+            ctx.waitTicks(20);
+            ctx.runOnClient(mc -> {
+                if (mc.level.getEntity(id[0]) instanceof com.zomboidcraft.world.cars.CarProp car) {
+                    mc.gui.setScreen(new MechanicsScreen(car));
+                }
+            });
+            ctx.waitTicks(10);
+            ctx.takeScreenshot("mech-" + model + "-00");
+            // run the mouse down the car, a little off the middle so it crosses the seats and the battery side
+            for (int f = 1; f <= 12; f++) {
+                int at = f;
+                double[] px = ctx.computeOnClient(mc -> {
+                    if (!(mc.gui.screen() instanceof MechanicsScreen m)) return new double[]{0, 0};
+                    float[] fig = m.figure();
+                    var w = mc.getWindow();
+                    double scale = (double) w.getScreenWidth() / w.getGuiScaledWidth();
+                    double u = (at % 2 == 0 ? 40 : -50), v = -260 + at * 42;
+                    return new double[]{(fig[0] + u * fig[2]) * scale, (fig[1] + v * fig[2]) * scale};
+                });
+                ctx.getInput().setCursorPos(px[0], px[1]);
+                ctx.waitTicks(3);
+                ctx.takeScreenshot(String.format("mech-%s-%02d", model, f));
+            }
+            ctx.runOnClient(mc -> mc.gui.setScreen(null));
+            sp.getServer().runOnServer(s -> {
+                var e = s.overworld().getEntity(id[0]);
+                if (e != null) e.discard();
+            });
+            ctx.waitTicks(5);
+        }
+    }
+
+    /** The Sandbox page (Josiah 2026-10-31): a group, a search, a toggle and a number changed, then the pause menu's way in. */
+    private static void sandboxTest(ClientGameTestContext ctx) {
+        SandboxScreen[] page = new SandboxScreen[1];
+        ctx.runOnClient(mc -> {
+            page[0] = new SandboxScreen(null);
+            mc.gui.setScreen(page[0]);
+        });
+        ctx.waitTicks(10);
+        ctx.takeScreenshot("sandbox-00-population");
+        ctx.runOnClient(mc -> page[0].group(com.zomboidcraft.sandbox.SandboxGroup.LORE));
+        ctx.waitTicks(4);
+        ctx.takeScreenshot("sandbox-01-lore");
+        ctx.runOnClient(mc -> page[0].group(com.zomboidcraft.sandbox.SandboxGroup.ZOMBOIDCRAFT));
+        ctx.waitTicks(4);
+        ctx.takeScreenshot("sandbox-02-ours");
+        ctx.runOnClient(mc -> page[0].group(com.zomboidcraft.sandbox.SandboxGroup.LOOT));
+        ctx.waitTicks(4);
+        ctx.takeScreenshot("sandbox-03-loot");
+        ctx.runOnClient(mc -> page[0].search("zombie"));
+        ctx.waitTicks(4);
+        ctx.takeScreenshot("sandbox-04-search");
+        String live = ctx.computeOnClient(mc -> {
+            StringBuilder b = new StringBuilder();
+            for (var o : com.zomboidcraft.sandbox.Sandbox.options()) {
+                if (!o.coming() && o.perWorld() && b.length() < 400) b.append(o.id).append('=').append(o.kind).append(' ');
+            }
+            return b.toString();
+        });
+        LOG.info("ZCUI sandbox live settings: {}", live);
+        ctx.runOnClient(mc -> mc.gui.setScreen(new net.minecraft.client.gui.screens.PauseScreen(true)));
+        ctx.waitTicks(10);
+        ctx.takeScreenshot("sandbox-05-pause");
+        ctx.runOnClient(mc -> mc.gui.setScreen(SandboxScreen.forNewWorld(null)));
+        ctx.waitTicks(6);
+        ctx.takeScreenshot("sandbox-06-newworld");
+        ctx.runOnClient(mc -> mc.gui.setScreen(null));
+    }
+
+    /** The death card (Josiah 2026-10-31): one who was bitten and will rise, one who fell and stays down. */
+    private static void deathCardTest(ClientGameTestContext ctx) {
+        ctx.runOnClient(mc -> mc.gui.setScreen(new DeathCardScreen(new com.zomboidcraft.survival.DeathCard.Card(
+                "Mara Kowalski", 23 * 24000L + 7000, 412, "Mara Kowalski was slain by Zombie", "Mercer Ave Pharmacy, Grayhaven",
+                1184, -2210, true, List.of("Aiming 5", "Mechanics 4", "Carpentry 3", "Sprinting 3", "Sneaking 2", "First Aid 2", "Maintenance 1")), null)));
+        ctx.waitTicks(10);
+        ctx.takeScreenshot("death-card-risen");
+        ctx.runOnClient(mc -> mc.gui.setScreen(new DeathCardScreen(new com.zomboidcraft.survival.DeathCard.Card(
+                "Dale Hurst", 2 * 24000L + 15000, 9, "Dale Hurst fell from a high place", "", 412, 380, false, List.of()), null)));
+        ctx.waitTicks(10);
+        ctx.takeScreenshot("death-card-fell");
+        ctx.runOnClient(mc -> mc.gui.setScreen(null));
+    }
+
+    /** The level-up card (Josiah 2026-10-31): Mechanics 3 opens parts, Aiming 6 only gets better. */
+    private static void levelUpTest(ClientGameTestContext ctx) {
+        ctx.runOnClient(mc -> mc.gui.setScreen(null));
+        ctx.runOnClient(mc -> com.zomboidcraft.client.hud.SkillTape.show(Skill.MECHANICS, 3));
+        for (int f = 0; f < 8; f++) {
+            ctx.waitTicks(3);
+            ctx.takeScreenshot(String.format("levelup-mech-%02d", f));
+        }
+        ctx.runOnClient(mc -> com.zomboidcraft.client.hud.SkillTape.show(Skill.AIMING, 6));
+        ctx.waitTicks(12);
+        ctx.takeScreenshot("levelup-aiming");
+    }
+
+    /**
+     * Held G (Josiah 2026-10-31): the menu on a car in front, then on nothing; and Zomboid's queue, three jobs lined up
+     * behind a running one, then walking off clearing them all.
+     */
+    private static void gMenuTest(ClientGameTestContext ctx, TestSingleplayerContext sp) {
+        int[] id = new int[1];
+        sp.getServer().runOnServer(s -> {
+            ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+            var level = (ServerLevel) p.level();
+            var look = p.getLookAngle().multiply(1, 0, 1).normalize();
+            var car = com.zomboidcraft.world.cars.Cars.spawn(level, p.getX() + look.x * 3, p.getY(), p.getZ() + look.z * 3, 90, "sedan", "usable", true);
+            id[0] = car.getId();
+            p.setXRot(20);
+        });
+        ctx.waitTicks(20);
+        ctx.runOnClient(mc -> com.zomboidcraft.client.interact.InteractMenu.open(mc));
+        ctx.waitTicks(6);
+        ctx.takeScreenshot("gmenu-car");
+        String opts = ctx.computeOnClient(mc -> {
+            StringBuilder b = new StringBuilder();
+            for (var o : com.zomboidcraft.client.interact.InteractMenu.collect(mc, mc.player, mc.hitResult)) b.append(o.label()).append(o.can() ? "" : " (no)").append(" | ");
+            return b.toString();
+        });
+        LOG.info("ZCUI gmenu car: {}", opts);
+        ctx.getInput().pressKey(InputConstants.KEY_DOWN);
+        ctx.waitTicks(2);
+        ctx.getInput().pressKey(InputConstants.KEY_DOWN);
+        ctx.waitTicks(4);
+        ctx.takeScreenshot("gmenu-car-down");
+        ctx.runOnClient(mc -> mc.gui.setScreen(null));
+        sp.getServer().runOnServer(s -> {
+            var e = s.overworld().getEntity(id[0]);
+            if (e != null) e.discard();
+            ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+            p.setGameMode(GameType.SURVIVAL);
+            for (String job : new String[]{"Nailing the first plank", "Nailing the second plank", "Nailing the third plank", "Nailing the fourth plank"}) {
+                com.zomboidcraft.survival.TimedActions.start(p, "test_" + job, job, 60, q -> { });
+            }
+        });
+        for (int f = 0; f < 10; f++) {
+            ctx.waitTicks(8);
+            ctx.takeScreenshot(String.format("queue-%02d", f));
+        }
+        sp.getServer().runOnServer(s -> {
+            ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+            p.teleportTo(p.getX() + 2, p.getY(), p.getZ());
+        });
+        ctx.waitTicks(6);
+        ctx.takeScreenshot("queue-walked-off");
     }
 
     private static void bookTest(TestSingleplayerContext sp) {

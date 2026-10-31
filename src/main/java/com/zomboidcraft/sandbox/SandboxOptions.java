@@ -28,11 +28,73 @@ import java.util.function.UnaryOperator;
 final class SandboxOptions {
     private static final String ZOMBOID = "/data/zomboidcraft/sandbox/zomboid.json";
 
+    /** One of Zomboid's ZombieConfig numbers wired to its zombiePopulation field. */
+    private static void pop(Map<String, UnaryOperator<SandboxOption.Builder>> w, String id, String field, double min, double max) {
+        w.put("ZombieConfig." + id, b -> b.number("zombiePopulation." + field, min, max).owner("ENTITY"));
+    }
+
+    /** A Zombie Lore choice wired to its zombieLore field. */
+    private static void lore(Map<String, UnaryOperator<SandboxOption.Builder>> w, String id, String field, String... choices) {
+        w.put("ZombieLore." + id, b -> b.choice("zombieLore." + field, choices).owner("ENTITY"));
+    }
+
     /** Zomboid settings our systems drive, by Zomboid's id. */
     private static Map<String, UnaryOperator<SandboxOption.Builder>> wires() {
         Map<String, UnaryOperator<SandboxOption.Builder>> w = new HashMap<>();
         // Zombie Population (ENTITY)
         w.put("ZombieConfig.PopulationMultiplier", b -> b.number("population.density", 0.25, 4).owner("ENTITY"));
+        w.put("Zombies", b -> b.choice("zombiePopulation.count", "insane", "very_high", "high", "normal", "low", "none").owner("ENTITY"));
+        w.put("Distribution", b -> b.choice("zombiePopulation.distribution", "urban_focused", "uniform").owner("ENTITY"));
+        w.put("ZombieVoronoiNoise", b -> b.toggle("zombiePopulation.voronoiNoise").owner("ENTITY"));
+        w.put("ZombieRespawn", b -> b.choice("zombiePopulation.respawn", "none", "low", "normal", "high").owner("ENTITY"));
+        w.put("ZombieMigrate", b -> b.toggle("zombiePopulation.migrate").owner("ENTITY"));
+        w.put("ZombieAttractionMultiplier", b -> b.number("zombiePopulation.attractionMultiplier", 0, 100).owner("ENTITY"));
+        pop(w, "PopulationStartMultiplier", "startMultiplier", 0, 4);
+        pop(w, "PopulationPeakMultiplier", "peakMultiplier", 0, 4);
+        pop(w, "PopulationPeakDay", "peakDay", 1, 365);
+        pop(w, "RespawnHours", "respawnHours", 0, 8760);
+        pop(w, "RespawnUnseenHours", "respawnUnseenHours", 0, 8760);
+        pop(w, "RespawnMultiplier", "respawnMultiplier", 0, 1);
+        pop(w, "RedistributeHours", "redistributeHours", 0, 8760);
+        pop(w, "FollowSoundDistance", "followSoundDistance", 10, 1000);
+        pop(w, "RallyGroupSize", "rallyGroupSize", 0, 1000);
+        pop(w, "RallyGroupSizeVariance", "rallyGroupSizeVariance", 0, 100);
+        pop(w, "RallyTravelDistance", "rallyTravelDistance", 5, 50);
+        pop(w, "RallyGroupSeparation", "rallyGroupSeparation", 5, 25);
+        pop(w, "RallyGroupRadius", "rallyGroupRadius", 1, 10);
+        pop(w, "ZombiesCountBeforeDelete", "countBeforeDelete", 0, 5000);
+        // Zombie Lore (ENTITY): every one of Zomboid's 29, its own choices in Zomboid's order (ZcConfig.ZombieLore)
+        lore(w, "Speed", "speed", "sprinters", "fast_shamblers", "shamblers", "random");
+        w.put("ZombieLore.SprinterPercentage", b -> b.number("zombieLore.sprinterPercent", 0, 100).owner("ENTITY"));
+        lore(w, "Strength", "strength", "superhuman", "normal", "weak", "random");
+        lore(w, "Toughness", "toughness", "tough", "normal", "fragile", "random");
+        lore(w, "Transmission", "transmission", "blood_and_saliva", "saliva_only", "everyones_infected", "none");
+        lore(w, "Mortality", "mortality", "instant", "seconds_0_30", "minutes_0_1", "hours_0_12", "days_2_3", "weeks_1_2", "never");
+        lore(w, "Reanimate", "reanimate", "instant", "seconds_0_30", "minutes_0_1", "hours_0_12", "days_2_3", "weeks_1_2");
+        lore(w, "Cognition", "cognition", "navigate_and_use_doors", "navigate", "basic_navigation", "random");
+        w.put("ZombieLore.DoorOpeningPercentage", b -> b.number("zombieLore.doorOpeningPercent", 0, 100).owner("ENTITY"));
+        lore(w, "CrawlUnderVehicle", "crawlUnderVehicle", "crawlers_only", "extremely_rare", "rare", "sometimes", "often",
+                "very_often", "extremely_often");
+        lore(w, "Memory", "memory", "long", "normal", "short", "none", "random", "random_normal_none");
+        lore(w, "Sight", "sight", "eagle", "normal", "poor", "random", "random_normal_poor");
+        lore(w, "Hearing", "hearing", "pinpoint", "normal", "poor", "random", "random_normal_poor");
+        w.put("ZombieLore.SpottedLogic", b -> b.toggle("zombieLore.stealthSystem").owner("ENTITY"));
+        w.put("ZombieLore.ThumpNoChasing", b -> b.toggle("zombieLore.environmentalAttacks").owner("ENTITY"));
+        w.put("ZombieLore.ThumpOnConstruction", b -> b.toggle("zombieLore.damageConstruction").owner("ENTITY"));
+        lore(w, "ActiveOnly", "activeOnly", "both", "night", "day");
+        w.put("ZombieLore.TriggerHouseAlarm", b -> b.toggle("zombieLore.houseAlarms").owner("ENTITY"));
+        w.put("ZombieLore.ZombiesDragDown", b -> b.toggle("zombieLore.dragDown").owner("ENTITY"));
+        w.put("ZombieLore.ZombiesCrawlersDragDown", b -> b.toggle("zombieLore.crawlersDragDown").owner("ENTITY"));
+        w.put("ZombieLore.ZombiesFenceLunge", b -> b.toggle("zombieLore.lunge").owner("ENTITY"));
+        w.put("ZombieLore.ZombiesArmorFactor", b -> b.number("zombieLore.armorFactor", 0, 100).owner("ENTITY"));
+        w.put("ZombieLore.ZombiesMaxDefense", b -> b.number("zombieLore.maxDefense", 0, 100).owner("ENTITY"));
+        w.put("ZombieLore.ChanceOfAttachedWeapon", b -> b.number("zombieLore.attachedWeaponPercent", 0, 100).owner("ENTITY"));
+        w.put("ZombieLore.ZombiesFallDamage", b -> b.number("zombieLore.fallDamage", 0, 100).owner("ENTITY"));
+        lore(w, "DisableFakeDead", "fakeDead", "world_zombies", "world_and_combat", "off");
+        lore(w, "PlayerSpawnZombieRemoval", "spawnArea", "inside_the_building_and_around_it", "inside_the_building",
+                "inside_the_room", "none");
+        w.put("ZombieLore.FenceThumpersRequired", b -> b.number("zombieLore.fenceThumpersRequired", -1, 100).owner("ENTITY"));
+        w.put("ZombieLore.FenceDamageMultiplier", b -> b.number("zombieLore.fenceDamageMultiplier", 0.01, 100).owner("ENTITY"));
         // Nature (WEATHER): our own choices, Zomboid's endless snow and blizzard wait for snow
         w.put("ClimateCycle", b -> b.choice("nature.climateCycle", "normal", "no_weather", "endless_rain", "endless_storm").owner("WEATHER"));
         w.put("FogCycle", b -> b.choice("nature.fogCycle", "normal", "no_fog", "endless_fog").owner("WEATHER"));
@@ -44,8 +106,39 @@ final class SandboxOptions {
                 .tip("There is no snow yet, so this does nothing for now."));
         // Skills (SURVIVAL): one global multiplier for now
         w.put("MultiplierConfig.Global", b -> b.number("progression.xpMultiplier", 0, 1000).owner("SURVIVAL"));
+        // Far-off events (AUDIO): Zomboid's three choices
+        w.put("Helicopter", b -> b.choice("searchHeli.frequency", "never", "once", "sometimes", "often").owner("ENTITY"));
+        w.put("MetaEvent", b -> b.choice("world.metaEvents", "never", "sometimes", "often").owner("AUDIO"));
         // Vehicles (VEHICLES)
         w.put("EnableVehicles", b -> b.toggle("world.streetCars").owner("VEHICLES"));
+        w.put("CarSpawnRate", b -> b.choice("world.carSpawnRate", "none", "very_low", "low", "normal", "high").owner("VEHICLES")
+                .tip("How many parking spots hold a car or truck. Cars at auto shops always stay. New chunks only."));
+        w.put("VehicleEasyUse", b -> b.toggle("world.vehicleEasyUse").owner("VEHICLES"));
+        w.put("CarGeneralCondition", b -> b.choice("world.carCondition", "very_low", "low", "normal", "high", "very_high").owner("VEHICLES"));
+        w.put("CarDamageOnImpact", b -> b.choice("world.carCrashDamage", "very_low", "low", "normal", "high", "very_high").owner("VEHICLES"));
+        w.put("ChanceHasGas", b -> b.choice("world.carChanceHasGas", "low", "normal", "high").owner("VEHICLES"));
+        w.put("InitialGas", b -> b.choice("world.carInitialGas", "very_low", "low", "normal", "high", "very_high", "full").owner("VEHICLES"));
+        w.put("CarGasConsumption", b -> b.number("world.carGasConsumption", 0, 100).owner("VEHICLES"));
+        w.put("FuelStationGasInfinite", b -> b.toggle("world.fuelStationGasInfinite").owner("VEHICLES"));
+        w.put("FuelStationGasMin", b -> b.number("world.fuelStationGasMin", 0, 1).owner("VEHICLES"));
+        w.put("FuelStationGasMax", b -> b.number("world.fuelStationGasMax", 0, 1).owner("VEHICLES"));
+        w.put("FuelStationGasEmptyChance", b -> b.number("world.fuelStationEmptyChance", 0, 100).owner("VEHICLES"));
+        w.put("LockedCar", b -> b.choice("world.carLocked", "never", "extremely_rare", "rare", "sometimes", "often", "very_often").owner("VEHICLES"));
+        w.put("CarAlarm", b -> b.choice("world.carAlarm", "never", "extremely_rare", "rare", "sometimes", "often", "very_often").owner("VEHICLES"));
+        w.put("SirenEffectsZombies", b -> b.toggle("world.sirenEffectsZombies").owner("VEHICLES"));
+        w.put("SirenShutoffHours", b -> b.number("world.sirenShutoffHours", 0, 168).owner("VEHICLES"));
+        w.put("PlayerDamageFromCrash", b -> b.toggle("world.playerDamageFromCrash").owner("VEHICLES"));
+        w.put("RecentlySurvivorVehicles", b -> b.choice("world.survivorCars", "none", "low", "normal", "high").owner("VEHICLES"));
+        // Power (LOOT): the mains go off on the shutoff day, each district at its own hour
+        w.put("ElecShutModifier", b -> b.number("power.shutoffDays", -1, 1000000000).owner("LOOT")
+                .tip("The day the mains go off, each district at its own hour that day. -1: off from the start."));
+        w.put("GeneratorFuelConsumption", b -> b.number("power.generatorFuel", 0, 100).owner("LOOT"));
+        w.put("GeneratorTileRange", b -> b.number("power.generatorRange", 1, 100).owner("LOOT")
+                .tip("How far round a running generator it powers, in blocks."));
+        w.put("GeneratorVerticalPowerRange", b -> b.number("power.generatorFloors", 1, 15).owner("LOOT"));
+        w.put("AllowExteriorGenerator", b -> b.toggle("power.generatorExterior").owner("LOOT"));
+        w.put("TrafficJam", b -> b.toggle("world.trafficJams").owner("LANDSCAPE"));
+        w.put("DamageToPlayerFromHitByACar", b -> b.number("world.carHitDamage", 1, 4).owner("VEHICLES"));
         // Firearms (WEAPONS): combat/Firearms. Use Damage Chance says who a shot strikes just by being aimed at;
         // jams start at 0 since Josiah cut them on 10-26
         w.put("FirearmUseDamageChance", b -> b.choice("guns.useDamageChance", "both", "zombies", "off").owner("WEAPONS")
@@ -71,15 +164,24 @@ final class SandboxOptions {
                 .tip("Hospitals, police stations, malls, fire stations and schools hold extra dead indoors.")
                 .toggle("population.hotspots").owner("PERFORMANCE"));
 
+        o.add(of(LORE, "zc.fakeDeadStreet", "Fake Dead On The Street")
+                .tip("Percent of the bodies lying in the street that are only playing dead.")
+                .number("zombieLore.fakeDeadStreetPercent", 0, 100).owner("ENTITY"));
+        o.add(of(LORE, "zc.fakeDeadIndoor", "Fake Dead Indoors")
+                .tip("Percent of the bodies lying indoors that are only playing dead.")
+                .number("zombieLore.fakeDeadIndoorPercent", 0, 100).owner("ENTITY"));
+        o.add(of(LORE, "zc.fakeDeadCombat", "Playing Dead After A Knockdown")
+                .tip("With World and Combat: percent of zombies knocked flat by a blunt weapon that stay down and play dead.")
+                .number("zombieLore.fakeDeadCombatPercent", 0, 100).owner("ENTITY"));
+        o.add(of(LORE, "zc.beltedDead", "Dead Belted Into Cars")
+                .tip("Percent of abandoned and wrecked cars with a dead driver still belted in, waiting for someone to open the door.")
+                .number("zombieLore.beltedPercent", 0, 100).owner("ENTITY"));
         o.add(of(LORE, "zc.onlyHeadshotsKill", "Only Headshots Kill")
                 .fixed("true", "Your rule: body and limb shots wear a zombie down, only the head kills it."));
         o.add(of(LORE, "zc.shotsFlinch", "Shots Only Flinch")
                 .fixed("true", "Your rule: guns make zombies flinch, only blunt melee knocks them back."));
         o.add(of(LORE, "zc.crawlNeedsBothLegs", "Crawl Only Without Legs")
                 .fixed("true", "Your rule: a zombie crawls only with both legs gone."));
-        o.add(of(LORE, "zc.sprinterChance", "Sprinter Share")
-                .tip("Share of zombies that sprint once they spot you; about one in seven.")
-                .number("zombies.sprinterChance", 0, 1).owner("ENTITY"));
 
         o.add(of(TIME, "zc.endlessNight", "Endless Night")
                 .fixed("true", "Your rule: the clouds keep the day nearly as dark as the night, and it always rains."));
@@ -93,12 +195,21 @@ final class SandboxOptions {
                 .tip("Pick a town or city and wake inside a building with no dead in it.")
                 .toggle("start.picker").owner("UI"));
 
+        o.add(of(UTILITIES, "zc.powerAlwaysOn", "Power Always On")
+                .tip("The mains never go off, whatever the shutoff day says.")
+                .toggle("power.alwaysOn").owner("LOOT"));
         o.add(of(UTILITIES, "zc.worldEvents", "World Events")
                 .tip("Air-raid sirens, far-off explosions, jets and helicopters crossing the map, heard by everyone.")
                 .toggle("world.worldEvents").owner("AUDIO"));
         o.add(of(UTILITIES, "zc.worldEventMinutes", "Time Between World Events")
                 .tip("About how many minutes between world events.")
                 .number("world.worldEventMinutes", 1, 240).owner("AUDIO"));
+        o.add(of(UTILITIES, "zc.broadcasts", "Outbreak Broadcasts")
+                .tip("News, the emergency broadcast, the military and survivors on the two-way and military radios, as captions.")
+                .toggle("broadcast.enabled").owner("AUDIO"));
+        o.add(of(UTILITIES, "zc.broadcastDayOffset", "Broadcasts Start On Day")
+                .tip("Days already gone on the broadcast timeline when the world starts: 9 or more and the news is already off air.")
+                .number("broadcast.dayOffset", 0, 60).owner("AUDIO"));
 
         o.add(of(LOOT, "zc.lootNeverScales", "Loot Never Scales With Distance")
                 .fixed("true", "Your rule: loot is the same however far you are from where you started."));
@@ -120,6 +231,9 @@ final class SandboxOptions {
         o.add(of(CHARACTER, "zc.infectionMinutes", "Infection Time")
                 .tip("Minutes from infection to death.")
                 .number("survival.infectionMinutes", 1, 600).owner("SURVIVAL"));
+        o.add(of(CHARACTER, "zc.lacerationInfection", "Laceration Infection Chance")
+                .tip("Chance a zombie laceration infects you (Zomboid: 0.25).")
+                .number("survival.lacerationInfectionChance", 0, 1).owner("SURVIVAL"));
         o.add(of(CHARACTER, "zc.downed", "Downed in Multiplayer")
                 .tip("A killing blow puts you down for a while instead, so a friend can revive you.")
                 .toggle("survival.downed").owner("SURVIVAL"));
@@ -205,8 +319,7 @@ final class SandboxOptions {
                     SandboxGroup group = SandboxGroup.byId(o.get("group").getAsString());
                     SandboxOption.Builder b = of(group, o.get("id").getAsString(), o.get("label").getAsString())
                             .tip(o.get("tooltip").getAsString()).owner(o.get("owner").getAsString());
-                    JsonObject presets = o.getAsJsonObject("presets");
-                    String apocalypse = presets.get("apocalypse").getAsString();
+                    String apocalypse = o.get("default").getAsString();
                     switch (o.get("kind").getAsString()) {
                         case "toggle" -> b.kind(SandboxOption.Kind.TOGGLE);
                         case "number" -> b.kind(SandboxOption.Kind.NUMBER)

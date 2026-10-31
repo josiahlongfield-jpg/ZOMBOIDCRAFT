@@ -1,0 +1,105 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "as_concrete": "zomboidcraft:block/city/as_concrete",
+    "as_lamp": "zomboidcraft:block/city/as_lamp",
+    "as_pit_wall": "zomboidcraft:block/city/as_pit_wall",
+    "particle": "zomboidcraft:block/city/as_pit_wall"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_pit_wall",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#as_concrete",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#as_concrete",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#as_concrete",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#as_concrete",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#as_concrete",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        5,
+        -0.5
+      ],
+      "to": [
+        13,
+        11,
+        0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_lamp"
+        },
+        "south": {
+          "texture": "#as_lamp"
+        },
+        "east": {
+          "texture": "#as_lamp",
+          "uv": [
+            15.5,
+            5,
+            16,
+            11
+          ]
+        },
+        "west": {
+          "texture": "#as_lamp",
+          "uv": [
+            0,
+            5,
+            0.5,
+            11
+          ]
+        },
+        "up": {
+          "texture": "#as_lamp",
+          "uv": [
+            3,
+            0,
+            13,
+            0.5
+          ]
+        },
+        "down": {
+          "texture": "#as_lamp",
+          "uv": [
+            3,
+            15.5,
+            13,
+            16
+          ]
+        }
+      }
+    }
+  ]
+}

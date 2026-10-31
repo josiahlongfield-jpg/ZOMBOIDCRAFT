@@ -557,20 +557,21 @@ final class GasStation {
             for (int z = 0; z < bd; z++) {
                 boolean wall = x == 0 || x == bw - 1 || z == 0 || z == bd - 1;
                 s.set(x, 0, z, wall ? "concrete_dark" : x < 6 ? (chance() < 0.15 ? "gs_vct_mud" : "gs_vct") : "gs_bay_floor");
-                for (int y = 1; y <= 5; y++) {
+                for (int y = 1; y <= 7; y++) {
                     s.set(x, y, z, "air");
                 }
+                // six high inside, the headroom any car up on the hoist needs (VEHICLES' car_hoist)
                 if (wall) {
                     String in = x == 0 ? "east" : x == bw - 1 ? "west" : z == bd - 1 ? "north" : "south";
-                    for (int y = 1; y <= 4; y++) {
+                    for (int y = 1; y <= 6; y++) {
                         boolean corner = (x == 0 || x == bw - 1) && (z == 0 || z == bd - 1);
                         s.set(x, y, z, corner || z == 0 || x >= 6 ? (chance() < 0.25 + hit * 0.3 ? "gs_enamel_rust" : "gs_enamel")
                                 : "gs_wall_enamel[facing=" + in + "]");
                     }
-                    s.set(x, 5, z, "gs_enamel_band");
-                    s.set(x, 6, z, "stone_trim");
+                    s.set(x, 7, z, "gs_enamel_band");
+                    s.set(x, 8, z, "stone_trim");
                 } else {
-                    s.set(x, 5, z, b.wall("roof", 2));
+                    s.set(x, 7, z, b.wall("roof", 2));
                 }
             }
         }
@@ -582,7 +583,7 @@ final class GasStation {
         }
         b.door(5, 1, 0, "shop_door", "north");
         for (int z = 1; z < bd - 1; z++) {
-            for (int y = 1; y <= 4; y++) {
+            for (int y = 1; y <= 6; y++) {
                 s.set(6, y, z, z == 3 && y <= 2 ? "air" : "gs_wall_enamel[facing=west]");
             }
         }
@@ -601,9 +602,9 @@ final class GasStation {
         // the name over the bays, the band elsewhere
         int xc = 12;
         for (int i = 0; i < 6; i++) {
-            s.set(xc + 3 - i, 5, 0, "gs_valley_" + i + "[facing=north]");
+            s.set(xc + 3 - i, 7, 0, "gs_valley_" + i + "[facing=north]");
         }
-        s.set(15, 6, 4, "pk_aircon[facing=south]");
+        s.set(15, 8, 4, "pk_aircon[facing=south]");
         // the office: the counter and till, the soda machine, the oil display, the tyre rack, a desk
         s.set(1, 1, 3, "store_counter[facing=north]");
         s.set(2, 1, 3, "store_register[facing=north]");
@@ -627,9 +628,9 @@ final class GasStation {
             }
         }
         // the bays: the lift with its car, the tyre machines, the compressor, the bench, the drums
-        s.set(10, 1, 5, "gs_lift_post");
-        s.set(10, 2, 5, "gs_lift_arms");
-        s.vehicle(10.5, 2, 5.5, 0, CARS, rng.nextLong());
+        // the two-post hoist (VEHICLES' car_hoist) in the first bay, a customer's car up on it, its key on the board in the office
+        s.vehicle(10.0, 1, 4.5, 0, "!hoist:" + rng.nextInt(4) + ";" + CARS + (chance() < 0.5 ? "@usable" : "@abandoned") + "#customer", rng.nextLong());
+        s.set(5, 2, 5, "as_keyboard[facing=west]");
         s.set(14, 1, 6, "gs_tirechanger[facing=west]");
         s.set(15, 1, 8, "gs_balancer[facing=west]");
         s.set(16, 1, bd - 2, "gs_compressor_lo");
@@ -644,8 +645,8 @@ final class GasStation {
         s.set(7, 2, 2, "tire[axis=z]");
         for (int x = 7; x < bw - 1; x++) {
             for (int z = 1; z < bd - 1; z++) {
-                if (x % 4 == 1 && z % 4 == 2 && empty(s, x, 4, z)) {
-                    s.set(x, 4, z, power && chance() > 0.25 ? "bunk_lamp_hang_lit" : "bunk_lamp_hang");
+                if (x % 4 == 1 && z % 4 == 2 && empty(s, x, 6, z)) {
+                    s.set(x, 6, z, power && chance() > 0.25 ? "bunk_lamp_hang_lit" : "bunk_lamp_hang");
                 }
             }
         }

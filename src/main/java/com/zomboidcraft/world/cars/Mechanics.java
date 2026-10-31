@@ -277,8 +277,8 @@ public final class Mechanics {
         return player.isCreative() ? Skill.MAX_LEVEL : Skills.level(player, Skill.MECHANICS);
     }
 
-    /** Whether the car is up on a hoist (all of it) or this player has a jack for the corners. */
-    private static String access(Player player, CarProp car, Part part) {
+    /** Whether the car is up on a hoist (all of it), a trolley jack holds up this wheel's corner, or (tyres) they have a jack. */
+    private static String access(Player player, CarProp car, Part part, int wheel) {
         if (!part.lifted || car.underReach()) {
             return null;
         }
@@ -289,10 +289,11 @@ public final class Mechanics {
         if (car.wheelsFree()) {
             return null;
         }
-        if (has(player, "trolley_jack") || part == Part.TIRE && has(player, "car_jack")) {
+        if (car.jackedFree(wheel) || part == Part.TIRE && has(player, "car_jack")) {
             return null;
         }
-        return part == Part.TIRE ? "Needs a jack, or the car on a hoist" : "Needs a trolley jack, or the car on a hoist";
+        return part == Part.TIRE ? "Needs a jack under that corner, or the car on a hoist"
+                : "Needs a trolley jack under that corner, or the car on a hoist";
     }
 
     /**
@@ -329,7 +330,7 @@ public final class Mechanics {
         if (!basic(part) && !knows(player, carKind)) {
             return "Needs Laine's Auto Manual: " + manualTitle(carKind);
         }
-        String a = access(player, car, part);
+        String a = access(player, car, part, s.index());
         if (a != null) {
             return a;
         }
@@ -339,8 +340,8 @@ public final class Mechanics {
         if (part == Part.TIRE && job == Job.INSTALL && CarParts.get(parts, Part.RIM, s.index()) < 0) {
             return "No wheel rim to fit it on";
         }
-        if (part == Part.ENGINE && job == Job.REMOVE && !has(player, "engine_crane") && !nearCrane(car)) {
-            return "Needs an engine crane";
+        if (part == Part.ENGINE && !ShopTool.craneAt(car)) {
+            return job == Job.REMOVE ? "Needs an engine crane at the front to lift it out" : "Needs an engine crane at the front to drop it in";
         }
         String t = tool(part);
         if (t != null && !has(player, t)) {
@@ -367,10 +368,6 @@ public final class Mechanics {
     }
 
     /** An engine crane block stands within a few blocks (the shop's own, set up by the hoist work). */
-    private static boolean nearCrane(CarProp car) {
-        return false;
-    }
-
     /** How long a job takes, in ticks: harder parts longer, a hoist and the right power tools quicker, skill too. */
     public static int ticks(Player player, CarProp car, int slot, Job job) {
         Part part = CarParts.SLOTS.get(slot).part();
@@ -388,6 +385,10 @@ public final class Mechanics {
             t /= 3;
         }
         t *= 1 - 0.03 * Math.max(0, level(player) - part.level);
+        // a companion bonded to you lending a hand (NpcTrades)
+        if (com.zomboidcraft.npc.NpcTrades.helper(player, car) != null) {
+            t *= com.zomboidcraft.npc.NpcTrades.HELP_SPEED;
+        }
         return (int) Math.round(t);
     }
 
@@ -402,8 +403,9 @@ public final class Mechanics {
         }
         CarParts.Slot s = CarParts.SLOTS.get(slot);
         String what = label(s.part(), job) + ": " + s.title().toLowerCase(Locale.ROOT);
-        TimedActions.start(player, "car_" + car.getId() + "_" + slot + "_" + job, what, ticks(player, car, slot, job),
-                p -> finish(p, car, slot, job));
+        int ticks = ticks(player, car, slot, job);
+        TimedActions.start(player, "car_" + car.getId() + "_" + slot + "_" + job, what, ticks, p -> finish(p, car, slot, job));
+        com.zomboidcraft.npc.NpcTrades.helpWith(player, car, ticks);
         ServerLevel level = (ServerLevel) player.level();
         level.playSound(null, car.getX(), car.getY(), car.getZ(), job == Job.TOP_UP ? SoundEvents.BUCKET_EMPTY : SoundEvents.CHAIN_PLACE,
                 SoundSource.PLAYERS, 0.6f, 0.9f);
@@ -421,7 +423,7 @@ public final class Mechanics {
         Random rng = new Random(player.getRandom().nextLong());
         Kind kind = CarParts.kind(CarModels.get(car.model()));
         // the chance a job goes wrong: high at the level it's first allowed, falling with each level past it
-        double slip = player.isCreative() ? 0 : Math.max(0.03, 0.3 - 0.05 * (level - part.level));
+        double slip = player.isCreative() ? 0 : Math.max(0.03, 0.3 - 0.05 * (level - part.level) - com.zomboidcraft.npc.NpcTrades.steadier(player, car));
         ServerLevel world = (ServerLevel) player.level();
         String said;
         switch (job) {

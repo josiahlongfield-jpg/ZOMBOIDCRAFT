@@ -85,6 +85,10 @@ public class SurvivalLookTest implements FabricClientGameTest {
                 m.put("nausea", 60);
                 m.put("drunk", 70);
                 com.zomboidcraft.survival.Ailments.save(p, m);
+                com.zomboidcraft.survival.Mood.add(p, com.zomboidcraft.survival.Mood.Stat.BOREDOM, 30);
+                com.zomboidcraft.survival.Mood.add(p, com.zomboidcraft.survival.Mood.Stat.UNHAPPINESS, 55);
+                com.zomboidcraft.survival.Mood.add(p, com.zomboidcraft.survival.Mood.Stat.STRESS, 80);
+                p.setAttached(com.zomboidcraft.survival.Panic.TYPE, 75);
             });
             ctx.waitTicks(50);
             shot(ctx, "ailments");
@@ -115,6 +119,35 @@ public class SurvivalLookTest implements FabricClientGameTest {
             }
             ctx.getInput().pressKey(InputConstants.KEY_ESCAPE);
             ctx.waitTicks(10);
+
+            // wave 2: the seventeen parts. A bitten hand, a cut forearm with glass in it, a broken shin, a scratched neck
+            sp.getServer().runOnServer(server -> {
+                ServerPlayer p = server.getPlayerList().getPlayers().get(0);
+                com.zomboidcraft.survival.Body b = com.zomboidcraft.survival.Body.get(p)
+                        .wound(com.zomboidcraft.survival.Body.Region.LEFT_HAND, com.zomboidcraft.survival.Body.Wound.BITE, true)
+                        .wound(com.zomboidcraft.survival.Body.Region.RIGHT_FOREARM, com.zomboidcraft.survival.Body.Wound.LACERATION, true)
+                        .wound(com.zomboidcraft.survival.Body.Region.NECK, com.zomboidcraft.survival.Body.Wound.SCRATCH, false)
+                        .fracture(com.zomboidcraft.survival.Body.Region.LEFT_SHIN);
+                com.zomboidcraft.survival.Body.set(p, b);
+                com.zomboidcraft.survival.Ailments.set(p, "lodged:" + com.zomboidcraft.survival.Body.Region.RIGHT_FOREARM.ordinal(), 1);
+                p.setHealth(Math.max(4, p.getHealth()));
+            });
+            ctx.waitTicks(30);
+            shot(ctx, "wounds");
+            ctx.getInput().pressKey(InputConstants.KEY_E);
+            ctx.waitTicks(10);
+            ctx.runOnClient(mc -> {
+                if (mc.gui.screen() instanceof KitScreen<?> k) k.open(KitScreen.Page.HEALTH);
+            });
+            ctx.waitTicks(10);
+            shot(ctx, "health");
+            ctx.getInput().pressKey(InputConstants.KEY_ESCAPE);
+            ctx.waitTicks(10);
+            sp.getServer().runOnServer(server -> {
+                ServerPlayer p = server.getPlayerList().getPlayers().get(0);
+                com.zomboidcraft.survival.Body.set(p, com.zomboidcraft.survival.Body.FRESH);
+                p.setHealth(p.getMaxHealth());
+            });
 
             // a bed in front of you: lie down, the screen goes dark, rest runs fast, you wake rested
             sp.getServer().runOnServer(server -> {

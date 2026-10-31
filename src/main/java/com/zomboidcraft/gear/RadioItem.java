@@ -30,7 +30,8 @@ public class RadioItem extends Item {
     public enum Type {
         TOY("toy_radio", "A kids' walkie-talkie: not much reach"),
         TWO_WAY("two_way_radio", "A two-way radio"),
-        MILITARY("military_radio", "A military handheld: a long reach");
+        MILITARY("military_radio", "A military handheld: a long reach"),
+        FIELD("field_radio", "A manpack field radio: the longest reach, and it picks up military broadcasts");
 
         public final String key;
         final String blurb;
@@ -47,6 +48,7 @@ public class RadioItem extends Item {
                 case TOY -> cfg.toyRange;
                 case TWO_WAY -> cfg.twoWayRange;
                 case MILITARY -> cfg.militaryRange;
+                case FIELD -> cfg.militaryRange * 3;
             });
         }
 
@@ -55,7 +57,7 @@ public class RadioItem extends Item {
             return Math.max(1, switch (this) {
                 case TOY -> cfg.toyChannels;
                 case TWO_WAY -> cfg.twoWayChannels;
-                case MILITARY -> cfg.militaryChannels;
+                case MILITARY, FIELD -> cfg.militaryChannels;
             });
         }
     }
@@ -102,7 +104,7 @@ public class RadioItem extends Item {
         Radios.Tuning tuning = Radios.tuning(stack);
         tooltip.accept(Component.literal(type.blurb + ", about " + Math.round(type.range()) + " blocks")
                 .withStyle(ChatFormatting.GRAY));
-        tooltip.accept(Component.literal("Channel " + tuning.channel() + " of " + type.channels() + ", " + (tuning.on() ? "on" : "off"))
+        tooltip.accept(Component.literal(Broadcasts.label(tuning.channel(), type) + ", " + (tuning.on() ? "on" : "off"))
                 .withStyle(tuning.on() ? ChatFormatting.GRAY : ChatFormatting.DARK_GRAY));
         if (ZcConfig.get().radio.batteries) {
             tooltip.accept(Component.literal(stack.has(Headgear.CHARGE) ? Radios.chargeText(stack) : "Battery: not checked yet")

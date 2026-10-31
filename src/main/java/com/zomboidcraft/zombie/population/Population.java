@@ -54,12 +54,24 @@ import net.minecraft.world.phys.Vec3;
  * Real zombies left idle well away from everyone go back to being records where they stand.
  */
 public final class Population {
-    /** A chunk's records (see {@link #pack}), how many it was given, and the day it was given them. */
-    public record Pop(int[] recs, int given, long day) {
+    /**
+     * A chunk's records (see {@link #pack}), how many it was given, the day it was given them (or last topped up),
+     * and the tick a player was last near it (for Zomboid's Respawn Unseen Hours).
+     */
+    public record Pop(int[] recs, int given, long day, long seen) {
         static final Codec<Pop> CODEC = RecordCodecBuilder.create(i -> i.group(
                 Codec.INT_STREAM.xmap(IntStream::toArray, IntStream::of).fieldOf("z").forGetter(Pop::recs),
                 Codec.INT.fieldOf("given").forGetter(Pop::given),
-                Codec.LONG.fieldOf("day").forGetter(Pop::day)).apply(i, Pop::new));
+                Codec.LONG.fieldOf("day").forGetter(Pop::day),
+                Codec.LONG.optionalFieldOf("seen", 0L).forGetter(Pop::seen)).apply(i, Pop::new));
+
+        Pop(int[] recs, int given, long day) {
+            this(recs, given, day, 0);
+        }
+
+        Pop with(int[] recs) {
+            return new Pop(recs, given, day, seen);
+        }
     }
 
     public static final AttachmentType<Pop> POP = AttachmentRegistry.create(ZomboidCraft.id("population"),
@@ -68,8 +80,26 @@ public final class Population {
     /** Where survivors woke up (block positions): the dead are never placed in the building round one. */
     public static final AttachmentType<List<Long>> CLEAR = AttachmentRegistry.create(ZomboidCraft.id("clear_zones"),
             builder -> builder.persistent(Codec.LONG.listOf()).initializer(List::of));
-    /** How far round a waking spot is kept clear: across the building, and a few floors up and down. */
-    private static final int CLEAR_REACH = 14, CLEAR_BELOW = 4, CLEAR_ABOVE = 10;
+    /**
+     * How much round a chosen spawn stays clear, by Zomboid's Player Spawn Area (zombieLore.spawnArea): the building
+     * and round it 14 blocks out and two floors up, the building alone 8, the room 4 on its own floor, or nothing.
+     */
+    private static int clearReach() {
+        return switch (ZcConfig.get().zombieLore.spawnArea) {
+            case INSIDE_THE_BUILDING_AND_AROUND_IT -> 14;
+            case INSIDE_THE_BUILDING -> 8;
+            case INSIDE_THE_ROOM -> 4;
+            case NONE -> 0;
+        };
+    }
+
+    private static int clearBelow() {
+        return ZcConfig.get().zombieLore.spawnArea == ZcConfig.ZombieLore.SpawnArea.INSIDE_THE_ROOM ? 1 : 4;
+    }
+
+    private static int clearAbove() {
+        return ZcConfig.get().zombieLore.spawnArea == ZcConfig.ZombieLore.SpawnArea.INSIDE_THE_ROOM ? 3 : 10;
+    }
 
     private static final int SURVEY_EVERY = 10;
     /** Chunks at least this far round a player (in chunks) get their dead; further when the crowd reaches further. */
@@ -89,6 +119,8 @@ public final class Population {
     private static int lastRecords, lastReal;
     /** The cap on real zombies now (autoCap moves it by the server's tick time); below 0 until the first survey. */
     private static double cap = -1;
+    private static MinecraftServer lastServer;
+    private static long lastMigration = -1;
     private static long placed;
 
     private record Zone(Vec3 pos, double radius, long until) {
@@ -100,6 +132,7 @@ public final class Population {
     public static void register() {
         net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry.clientboundPlay().register(CrowdPayload.TYPE, CrowdPayload.CODEC);
         ServerTickEvents.END_SERVER_TICK.register(Population::tick);
+        Herds.register();
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
             QUEUE.clear();
             ZONES.clear();
@@ -113,10 +146,12 @@ public final class Population {
 
     /** For /zc perf. */
     public static String stats() {
+        MinecraftServer server = lastServer;
         ZcConfig.Population cfg = ZcConfig.get().population;
         return String.format("population %s · records near players %,d · real %d of %d%s · placed this session %,d · chunks waiting %d"
                         + " · places being counted %d", cfg.enabled ? "on" : "off", lastRecords, lastReal, cap(cfg),
-                cfg.autoCap ? " (self-tuning)" : "", placed, QUEUE.size(), Census.pending());
+                cfg.autoCap ? " (self-tuning)" : "", placed, QUEUE.size(), Census.pending())
+                + (server == null ? "" : " · " + Herds.stats(server.overworld()));
     }
 
     /** A noise (Noise.emit, already scaled by hearing and weather): loud ones wake the records round it. */
@@ -136,10 +171,19 @@ public final class Population {
             return;
         }
         ServerLevel level = server.overworld();
+        lastServer = server;
         place(level, cfg);
         if (server.getTickCount() % SURVEY_EVERY == 0) {
             survey(level, cfg);
         }
+        List<ServerPlayer> players = new ArrayList<>();
+        for (ServerPlayer p : level.players()) {
+            if (!p.isSpectator()) {
+                players.add(p);
+            }
+        }
+        Herds.tick(level, players);
+        migrate(level, cfg, players);
         if (cfg.crowd && server.getTickCount() % CROWD_EVERY == 5) {
             crowd(level, cfg);
         }
@@ -179,6 +223,12 @@ public final class Population {
         int minY = level.getMinY(), maxY = level.getMaxY() + 1;
         List<Place> places = county == null ? List.of() : county.placesNear(bx, bz, bx + 15, bz + 15, 0);
         double[] rin = new double[places.size()], rout = new double[places.size()];
+        ZcConfig.ZombiePopulation zp = ZcConfig.get().zombiePopulation;
+        // Zombie Count and Population Start Multiplier on top of the table (population.density is Zomboid's Population Multiplier)
+        double mult = cfg.density * Herds.countFactor(zp) * zp.startMultiplier;
+        // Uniform: the county's whole count spread evenly over the land, whatever stands on it
+        double uniform = zp.distribution == ZcConfig.ZombiePopulation.Distribution.UNIFORM && county != null
+                ? uniformRate(county) * mult : -1;
         if (!places.isEmpty()) {
             CountyGen gen = CountyChunkGenerator.gen(level.getSeed());
             for (int i = 0; i < places.size(); i++) {
@@ -192,7 +242,7 @@ public final class Population {
                     return false;
                 }
                 Budgets.Budget b = isle ? Budgets.ISLAND : Budgets.of(p);
-                double total = b.total() * cfg.density, in = c.indoor() < 1 ? 0 : total * b.indoors();
+                double total = b.total() * mult, in = c.indoor() < 1 ? 0 : total * b.indoors();
                 rin[i] = in == 0 ? 0 : in / c.indoor();
                 rout[i] = c.outdoor() < 1 ? 0 : (total - in) / c.outdoor();
             }
@@ -214,10 +264,15 @@ public final class Population {
         int[][] out = {new int[32]};
         int[] n = {0};
         List<BlockPos> clear = clearNear(level, bx, bz);
+        List<int[]> streetSpots = new ArrayList<>();
+        int[] street = {0};
         Spots.scan(blocks, bx, bz, minY, maxY, ground, (lx, y, lz, indoor) -> {
             int x = bx + lx, z = bz + lz;
             if (!clear.isEmpty() && cleared(clear, x, y, z)) {
                 return;
+            }
+            if (!indoor) {
+                streetSpots.add(new int[] {lx, y, lz});
             }
             double rate = -1;
             for (int i = 0; i < places.size(); i++) {
@@ -234,9 +289,19 @@ public final class Population {
                 }
             }
             if (rate < 0) {
-                rate = Budgets.WILD * cfg.density * (road(blocks.at(lx, y - 1, lz)) ? Budgets.WILD_ROAD : Budgets.WILD_OFF_ROAD);
+                rate = Budgets.WILD * mult * (road(blocks.at(lx, y - 1, lz)) ? Budgets.WILD_ROAD : Budgets.WILD_OFF_ROAD);
+            }
+            if (uniform >= 0) {
+                rate = uniform;
+            }
+            if (zp.voronoiNoise) {
+                rate *= voronoi(seed, x, z);
             }
             if (random.nextDouble() < rate) {
+                if (!indoor) {
+                    street[0]++;   // placed below, in clumps
+                    return;
+                }
                 int rec = pack(lx, y, lz, indoor, 0);
                 if (rec != -1) {
                     if (n[0] == out[0].length) {
@@ -246,17 +311,24 @@ public final class Population {
                 }
             }
         });
-        int[] recs = Arrays.copyOf(out[0], n[0]);
+        // the ones out in the street stand in clumps (Zomboid's rallies), round a spot or two of the chunk's
+        int[] clumped = clump(streetSpots, street[0], zp, random);
+        int[] recs = Arrays.copyOf(out[0], n[0] + clumped.length);
+        System.arraycopy(clumped, 0, recs, n[0], clumped.length);
         int given = recs.length;
         if (old != null) {
             // a respawn tops the chunk back up to what it was given, no more
             int add = Math.max(0, Math.min(recs.length, old.given() - old.recs().length));
+            if (!breachDue(old)) {
+                // Zomboid's respawn: a top-up brings back this share of what it first had
+                add = Math.min(add, (int) Math.ceil(old.given() * respawn(zp)[2]));
+            }
             int[] merged = Arrays.copyOf(old.recs(), old.recs().length + add);
             System.arraycopy(recs, 0, merged, old.recs().length, add);
             recs = merged;
             given = old.given();
         }
-        chunk.setAttached(POP, new Pop(recs, given, day(level)));
+        chunk.setAttached(POP, new Pop(recs, given, day(level), old == null ? 0 : old.seen()));
         placed += recs.length - (old == null ? 0 : old.recs().length);
         return true;
     }
@@ -268,6 +340,9 @@ public final class Population {
      * chunks given their dead later leave it out. Used where a survivor wakes up.
      */
     public static void keepClear(ServerLevel level, BlockPos pos) {
+        if (clearReach() <= 0) {
+            return;
+        }
         List<Long> zones = new ArrayList<>(level.getAttachedOrElse(CLEAR, List.of()));
         zones.add(pos.asLong());
         while (zones.size() > 256) {
@@ -275,8 +350,8 @@ public final class Population {
         }
         level.setAttached(CLEAR, List.copyOf(zones));
         List<BlockPos> one = List.of(pos);
-        for (int cx = (pos.getX() - CLEAR_REACH) >> 4; cx <= (pos.getX() + CLEAR_REACH) >> 4; cx++) {
-            for (int cz = (pos.getZ() - CLEAR_REACH) >> 4; cz <= (pos.getZ() + CLEAR_REACH) >> 4; cz++) {
+        for (int cx = (pos.getX() - clearReach()) >> 4; cx <= (pos.getX() + clearReach()) >> 4; cx++) {
+            for (int cz = (pos.getZ() - clearReach()) >> 4; cz <= (pos.getZ() + clearReach()) >> 4; cz++) {
                 LevelChunk chunk = level.getChunkSource().getChunkNow(cx, cz);
                 Pop pop = chunk == null ? null : chunk.getAttached(POP);
                 if (pop == null) {
@@ -285,12 +360,12 @@ public final class Population {
                 int bx = cx << 4, bz = cz << 4;
                 int[] kept = Arrays.stream(pop.recs()).filter(r -> !cleared(one, bx + (r & 15), y(r), bz + (r >> 4 & 15))).toArray();
                 if (kept.length != pop.recs().length) {
-                    chunk.setAttached(POP, new Pop(kept, pop.given(), pop.day()));
+                    chunk.setAttached(POP, pop.with(kept));
                 }
             }
         }
-        net.minecraft.world.phys.AABB box = new net.minecraft.world.phys.AABB(pos).inflate(CLEAR_REACH, (CLEAR_ABOVE + CLEAR_BELOW) / 2.0, CLEAR_REACH)
-                .move(0, (CLEAR_ABOVE - CLEAR_BELOW) / 2.0, 0);
+        net.minecraft.world.phys.AABB box = new net.minecraft.world.phys.AABB(pos).inflate(clearReach(), (clearAbove() + clearBelow()) / 2.0, clearReach())
+                .move(0, (clearAbove() - clearBelow()) / 2.0, 0);
         for (Zombie zombie : level.getEntitiesOfClass(Zombie.class, box)) {
             zombie.discard();
         }
@@ -304,8 +379,8 @@ public final class Population {
         List<BlockPos> near = new ArrayList<>();
         for (long l : zones) {
             BlockPos p = BlockPos.of(l);
-            if (p.getX() + CLEAR_REACH >= bx && p.getX() - CLEAR_REACH <= bx + 15 && p.getZ() + CLEAR_REACH >= bz
-                    && p.getZ() - CLEAR_REACH <= bz + 15) {
+            if (p.getX() + clearReach() >= bx && p.getX() - clearReach() <= bx + 15 && p.getZ() + clearReach() >= bz
+                    && p.getZ() - clearReach() <= bz + 15) {
                 near.add(p);
             }
         }
@@ -315,7 +390,7 @@ public final class Population {
     private static boolean cleared(List<BlockPos> zones, int x, int y, int z) {
         for (BlockPos p : zones) {
             int dx = x - p.getX(), dz = z - p.getZ(), dy = y - p.getY();
-            if (dx * dx + dz * dz <= CLEAR_REACH * CLEAR_REACH && dy >= -CLEAR_BELOW && dy <= CLEAR_ABOVE) {
+            if (dx * dx + dz * dz <= clearReach() * clearReach() && dy >= -clearBelow() && dy <= clearAbove()) {
                 return true;
             }
         }
@@ -339,8 +414,122 @@ public final class Population {
     }
 
     private static boolean respawnDue(ServerLevel level, Pop pop, ZcConfig.Population cfg) {
+        if (pop.recs().length >= pop.given()) {
+            return false;
+        }
         // the refill comes with a breach surge: a place cleared before the last one fills again
-        return cfg.respawnDays > 0 && com.zomboidcraft.world.Breach.lastSurgeDay() > pop.day() && pop.recs().length < pop.given();
+        if (cfg.respawnDays > 0 && breachDue(pop)) {
+            return true;
+        }
+        // Zomboid's respawn: every so many hours, a chunk nobody's been near for long enough is topped up a little
+        double[] r = respawn(ZcConfig.get().zombiePopulation);
+        long now = level.getGameTime();
+        return r[0] > 0 && r[2] > 0 && now - pop.day() * 24000 >= r[0] * GAME_HOUR && now - pop.seen() >= r[1] * GAME_HOUR;
+    }
+
+    private static boolean breachDue(Pop pop) {
+        return ZcConfig.get().population.respawnDays > 0 && com.zomboidcraft.world.Breach.lastSurgeDay() > pop.day();
+    }
+
+    /** Ticks in an in-game hour. */
+    static final long GAME_HOUR = 1000;
+
+    /**
+     * Respawn Hours, Unseen Hours and Multiplier: the numbers if any are set, else the Zombie Respawn preset's
+     * (Low, Normal, High; None is off).
+     */
+    static double[] respawn(ZcConfig.ZombiePopulation zp) {
+        if (zp.respawnHours > 0 || zp.respawnMultiplier > 0) {
+            return new double[] {zp.respawnHours, zp.respawnUnseenHours, zp.respawnMultiplier};
+        }
+        return switch (zp.respawn) {
+            case NONE -> new double[] {0, 0, 0};
+            case LOW -> new double[] {72, 16, 0.05};
+            case NORMAL -> new double[] {72, 16, 0.1};
+            case HIGH -> new double[] {72, 16, 0.2};
+        };
+    }
+
+    /**
+     * Zomboid's Voronoi noise: the land in cells about 48 blocks across, each thicker or thinner with the dead (0.35 to
+     * 1.65, averaging 1), so one street teems and the next is thin while the totals stay the same.
+     */
+    static double voronoi(long seed, int x, int z) {
+        final int cell = 48;
+        int cx = Math.floorDiv(x, cell), cz = Math.floorDiv(z, cell);
+        double best = Double.MAX_VALUE;
+        long pick = 0;
+        for (int dx = -1; dx <= 1; dx++) {
+            for (int dz = -1; dz <= 1; dz++) {
+                long h = mix(seed ^ (cx + dx) * 341873128712L ^ (cz + dz) * 132897987541L);
+                double px = (cx + dx + (h & 0xFFFF) / 65536.0) * cell, pz = (cz + dz + (h >>> 16 & 0xFFFF) / 65536.0) * cell;
+                double d = (px - x) * (px - x) + (pz - z) * (pz - z);
+                if (d < best) {
+                    best = d;
+                    pick = h;
+                }
+            }
+        }
+        return 0.35 + 1.3 * ((pick >>> 32 & 0xFFFF) / 65535.0);
+    }
+
+    private static long mix(long z) {
+        z = (z ^ (z >>> 33)) * 0xff51afd7ed558ccdL;
+        z = (z ^ (z >>> 33)) * 0xc4ceb9fe1a85ec53L;
+        return z ^ (z >>> 33);
+    }
+
+    private static double uniformRate;
+    private static int uniformFor;
+
+    /** Uniform distribution: the county's table total over its land, per standing spot. */
+    private static double uniformRate(County county) {
+        if (uniformFor != System.identityHashCode(county)) {
+            int x0 = Integer.MAX_VALUE, z0 = Integer.MAX_VALUE, x1 = Integer.MIN_VALUE, z1 = Integer.MIN_VALUE;
+            for (Place p : county.allPlaces()) {
+                x0 = Math.min(x0, p.x0);
+                z0 = Math.min(z0, p.z0);
+                x1 = Math.max(x1, p.x1);
+                z1 = Math.max(z1, p.z1);
+            }
+            double area = x1 > x0 && z1 > z0 ? (double) (x1 - x0) * (z1 - z0) : 1;
+            uniformRate = Herds.total(county) / area;
+            uniformFor = System.identityHashCode(county);
+        }
+        return uniformRate;
+    }
+
+    /**
+     * Street records placed in clumps, as Zomboid's dead rally: up to a group's worth round each of a spot or two,
+     * the rest where they fell. Returns the packed records.
+     */
+    private static int[] clump(List<int[]> spots, int count, ZcConfig.ZombiePopulation zp, RandomSource random) {
+        if (count <= 0 || spots.isEmpty()) {
+            return new int[0];
+        }
+        count = Math.min(count, spots.size());
+        List<int[]> free = new ArrayList<>(spots);
+        int[] out = new int[count];
+        int n = 0;
+        while (n < count && !free.isEmpty()) {
+            int[] centre = free.get(random.nextInt(free.size()));
+            int group = Math.max(1, (int) Math.round(zp.rallyGroupSize * (1 + (random.nextDouble() * 2 - 1) * zp.rallyGroupSizeVariance / 100)));
+            double r2 = Math.max(1, zp.rallyGroupRadius) * Math.max(1, zp.rallyGroupRadius) * 4;
+            free.sort(Comparator.comparingDouble(sp -> (sp[0] - centre[0]) * (sp[0] - centre[0]) + (sp[2] - centre[2]) * (sp[2] - centre[2])));
+            for (int g = 0; g < group && n < count && !free.isEmpty(); g++) {
+                int[] sp = free.get(0);
+                double d2 = (sp[0] - centre[0]) * (sp[0] - centre[0]) + (sp[2] - centre[2]) * (sp[2] - centre[2]);
+                if (g > 0 && d2 > r2) {
+                    break;
+                }
+                free.remove(0);
+                int rec = pack(sp[0], sp[1], sp[2], false, 0);
+                if (rec != -1) {
+                    out[n++] = rec;
+                }
+            }
+        }
+        return Arrays.copyOf(out, n);
     }
 
     private static long day(ServerLevel level) {
@@ -526,6 +715,7 @@ public final class Population {
             return;
         }
         int reach = (int) Math.ceil(Math.max(cfg.streetRange, cfg.indoorRange) / 16) + 1;
+        boolean seenStep = level.getServer().getTickCount() % 200 == 0;
         Map<Long, LevelChunk> chunks = new LinkedHashMap<>();
         for (ServerPlayer p : players) {
             int pcx = p.getBlockX() >> 4, pcz = p.getBlockZ() >> 4;
@@ -546,6 +736,9 @@ public final class Population {
                             QUEUE.add(key);
                         } else if (r <= reach) {
                             chunks.put(key, chunk);
+                            if (seenStep) {
+                                chunk.setAttached(POP, new Pop(pop.recs(), pop.given(), pop.day(), now));
+                            }
                         }
                     }
                 }
@@ -623,7 +816,7 @@ public final class Population {
                     kept[k++] = recs[i];
                 }
             }
-            e.getKey().setAttached(POP, new Pop(kept, pop.given(), pop.day()));
+            e.getKey().setAttached(POP, pop.with(kept));
         }
     }
 
@@ -642,6 +835,13 @@ public final class Population {
         zombie.setYHeadRot(zombie.getYRot());
         if (woke != null) {
             ((NoiseListener) zombie).zomboidcraft$hear(woke);
+        } else {
+            // the dead found where they lie: some only playing dead, some under the parked cars
+            boolean indoor = (rec >> 17 & 1) != 0;
+            if (!(!indoor && com.zomboidcraft.zombie.LyingInWait.placeUnderCar(level, zombie))
+                    && com.zomboidcraft.zombie.LyingInWait.rollFakeDead(level, pos, indoor)) {
+                com.zomboidcraft.zombie.LyingInWait.lie(zombie, com.zomboidcraft.zombie.LyingInWait.FAKE_DEAD);
+            }
         }
         return true;
     }
@@ -649,6 +849,15 @@ public final class Population {
     /** Idle walkers well away from everyone go back to being records. Returns how many. */
     private static int fold(ServerLevel level, List<? extends Zombie> walkers, List<ServerPlayer> players, ZcConfig.Population cfg) {
         int folded = 0;
+        // Zomboid's Zombie Count Before Deletion: past this many real ones in a 128-block area, idle extras go back
+        // into records (Zomboid deletes them; ours keeps them as records so none are lost)
+        int limit = ZcConfig.get().zombiePopulation.countBeforeDelete;
+        Map<Long, Integer> areas = new HashMap<>();
+        if (limit > 0) {
+            for (Zombie z : walkers) {
+                areas.merge(area(z), 1, Integer::sum);
+            }
+        }
         for (Zombie z : walkers) {
             if (folded >= FOLDS_PER_STEP) {
                 break;
@@ -669,8 +878,13 @@ public final class Population {
                 continue;   // its chunk hasn't had its own dead yet
             }
             boolean indoor = Spots.roofed(level, pos);
-            if (!farFromAll(z.position(), indoor, players, cfg)) {
+            long area = area(z);
+            boolean crowded = limit > 0 && areas.getOrDefault(area, 0) > limit && !within(z.position(), players, 24);
+            if (!crowded && !farFromAll(z.position(), indoor, players, cfg)) {
                 continue;
+            }
+            if (crowded) {
+                areas.merge(area, -1, Integer::sum);
             }
             int rec = pack(pos.getX() & 15, pos.getY(), pos.getZ() & 15, indoor, outfitIndex(ZombieLook.outfit(z)));
             if (rec == -1) {
@@ -678,11 +892,205 @@ public final class Population {
             }
             int[] recs = Arrays.copyOf(pop.recs(), pop.recs().length + 1);
             recs[recs.length - 1] = rec;
-            chunk.setAttached(POP, new Pop(recs, pop.given(), pop.day()));
+            chunk.setAttached(POP, pop.with(recs));
             z.discard();
             folded++;
         }
         return folded;
+    }
+
+    private static long area(Zombie z) {
+        return ((long) (z.getBlockX() >> 7) << 32) | ((z.getBlockZ() >> 7) & 0xFFFFFFFFL);
+    }
+
+    private static boolean within(Vec3 at, List<ServerPlayer> players, double r) {
+        for (ServerPlayer p : players) {
+            if (p.position().distanceToSqr(at) < r * r) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // ---- for Herds: the cap's room, and the dead they bring
+
+    /** How many more may turn real under the shared cap right now. */
+    static int room() {
+        return lastServer == null ? 0 : cap(ZcConfig.get().population) - lastReal;
+    }
+
+    static void spilled(int n) {
+        lastReal += n;
+    }
+
+    /** One of a herd's dead made real at pos, walking on toward heading (or idle if null). */
+    static boolean spawnWalker(ServerLevel level, BlockPos pos, Vec3 heading) {
+        int rec = pack(pos.getX() & 15, pos.getY(), pos.getZ() & 15, false, 0);
+        return rec != -1 && spawn(level, pos, rec, heading == null ? null : new Vec3(heading.x, pos.getY(), heading.z));
+    }
+
+    /**
+     * Zomboid's Follow Sound Distance for the dead nobody can see: street records within reach of a loud noise, in
+     * chunks the server has but out of every player's street range (the ones in range wake instead), leave their
+     * chunks and walk toward it as one herd from where most of them were. Null if none.
+     */
+    static Herds.Herd gatherToward(ServerLevel level, Vec3 pos, double reach) {
+        ZcConfig.Population cfg = ZcConfig.get().population;
+        if (!cfg.enabled) {
+            return null;
+        }
+        List<ServerPlayer> players = level.players();
+        int r = (int) Math.ceil(reach / 16);
+        int pcx = (int) Math.floor(pos.x) >> 4, pcz = (int) Math.floor(pos.z) >> 4;
+        double sx = 0, sz = 0;
+        int n = 0;
+        for (int dx = -r; dx <= r; dx++) {
+            for (int dz = -r; dz <= r; dz++) {
+                LevelChunk chunk = level.getChunkSource().getChunkNow(pcx + dx, pcz + dz);
+                Pop pop = chunk == null ? null : chunk.getAttached(POP);
+                if (pop == null || pop.recs().length == 0) {
+                    continue;
+                }
+                int bx = chunk.getPos().x() << 4, bz = chunk.getPos().z() << 4;
+                int[] recs = pop.recs();
+                int[] kept = new int[recs.length];
+                int k = 0;
+                for (int rec : recs) {
+                    double x = bx + (rec & 15) + 0.5, z = bz + (rec >> 4 & 15) + 0.5;
+                    boolean indoor = (rec >> 17 & 1) != 0;
+                    double ddx = x - pos.x, ddz = z - pos.z;
+                    if (indoor || ddx * ddx + ddz * ddz > reach * reach || within(new Vec3(x, y(rec), z), players, cfg.streetRange)) {
+                        kept[k++] = rec;
+                        continue;
+                    }
+                    sx += x;
+                    sz += z;
+                    n++;
+                }
+                if (k != recs.length) {
+                    chunk.setAttached(POP, pop.with(Arrays.copyOf(kept, k)));
+                }
+            }
+        }
+        return n == 0 ? null : Herds.toward(sx / n, sz / n, n, pos);
+    }
+
+    // ---- migration
+
+    /**
+     * Zomboid's migration, every Redistribute Hours: in the chunks round each player, street records drift from a
+     * crowded chunk into an emptier one beside it, a few each step, so the dead spread into ground you cleared.
+     * Indoor records stay put: a house you emptied and shut stays empty.
+     */
+    private static void migrate(ServerLevel level, ZcConfig.Population cfg, List<ServerPlayer> players) {
+        ZcConfig.ZombiePopulation zp = ZcConfig.get().zombiePopulation;
+        if (!zp.migrate || zp.redistributeHours <= 0 || players.isEmpty()) {
+            return;
+        }
+        long now = level.getGameTime(), every = (long) Math.max(GAME_HOUR / 10, zp.redistributeHours * GAME_HOUR);
+        if (lastMigration < 0) {
+            lastMigration = now;
+        }
+        if (now - lastMigration < every) {
+            return;
+        }
+        lastMigration = now;
+        RandomSource random = level.getRandom();
+        int radius = seedRadius(cfg);
+        java.util.Set<Long> done = new java.util.HashSet<>();
+        int moved = 0;
+        for (ServerPlayer p : players) {
+            int pcx = p.getBlockX() >> 4, pcz = p.getBlockZ() >> 4;
+            for (int dx = -radius; dx <= radius; dx++) {
+                for (int dz = -radius; dz <= radius; dz++) {
+                    long key = ((long) (pcx + dx) << 32) | ((pcz + dz) & 0xFFFFFFFFL);
+                    if (!done.add(key)) {
+                        continue;
+                    }
+                    moved += drift(level, pcx + dx, pcz + dz, random);
+                }
+            }
+        }
+        if (moved > 0) {
+            ZomboidCraft.LOGGER.debug("Migration moved {} records", moved);
+        }
+    }
+
+    private static final int[][] SIDES = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+
+    /** One chunk's street dead drift toward its emptiest neighbour: a third of the difference, at most four. */
+    private static int drift(ServerLevel level, int cx, int cz, RandomSource random) {
+        LevelChunk chunk = level.getChunkSource().getChunkNow(cx, cz);
+        Pop pop = chunk == null ? null : chunk.getAttached(POP);
+        if (pop == null) {
+            return 0;
+        }
+        int street = streetCount(pop);
+        if (street < 2) {
+            return 0;
+        }
+        LevelChunk best = null;
+        Pop bestPop = null;
+        int bestStreet = Integer.MAX_VALUE;
+        for (int[] s : SIDES) {
+            LevelChunk n = level.getChunkSource().getChunkNow(cx + s[0], cz + s[1]);
+            Pop np = n == null ? null : n.getAttached(POP);
+            if (np != null && streetCount(np) < bestStreet) {
+                best = n;
+                bestPop = np;
+                bestStreet = streetCount(np);
+            }
+        }
+        int move = best == null ? 0 : Math.min(4, (street - bestStreet) / 3);
+        if (move <= 0) {
+            return 0;
+        }
+        int bx = best.getPos().x() << 4, bz = best.getPos().z() << 4;
+        List<Integer> arrived = new ArrayList<>();
+        for (int t = 0; t < move * 4 && arrived.size() < move; t++) {
+            int lx = random.nextInt(16), lz = random.nextInt(16);
+            int y = best.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, lx, lz) + 1;
+            BlockPos at = new BlockPos(bx + lx, y, bz + lz);
+            if (!Spots.free(level, at) || Spots.roofed(level, at)) {
+                continue;
+            }
+            int rec = pack(lx, y, lz, false, 0);
+            if (rec != -1) {
+                arrived.add(rec);
+            }
+        }
+        if (arrived.isEmpty()) {
+            return 0;
+        }
+        // the ones that leave: street records, last first
+        int[] recs = pop.recs();
+        int[] kept = new int[recs.length];
+        int k = 0, left = arrived.size();
+        for (int i = recs.length - 1; i >= 0; i--) {
+            if (left > 0 && (recs[i] >> 17 & 1) == 0) {
+                left--;
+                continue;
+            }
+            kept[k++] = recs[i];
+        }
+        int[] gone = Arrays.copyOf(kept, k);
+        chunk.setAttached(POP, pop.with(gone));
+        int[] into = Arrays.copyOf(bestPop.recs(), bestPop.recs().length + arrived.size());
+        for (int i = 0; i < arrived.size(); i++) {
+            into[bestPop.recs().length + i] = arrived.get(i);
+        }
+        best.setAttached(POP, bestPop.with(into));
+        return arrived.size();
+    }
+
+    private static int streetCount(Pop pop) {
+        int n = 0;
+        for (int rec : pop.recs()) {
+            if ((rec >> 17 & 1) == 0) {
+                n++;
+            }
+        }
+        return n;
     }
 
     private static boolean farFromAll(Vec3 at, boolean indoor, List<ServerPlayer> players, ZcConfig.Population cfg) {

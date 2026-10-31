@@ -36,6 +36,9 @@ import com.zomboidcraft.world.city.Placer;
  * coal plant, the turbine hall's front to the west street the subway runs under.</li>
  * <li>market: the Old Market ({@link Market}), the granite market house with its dome between two
  * cobbled lanes and the brick rows of shops either side.</li>
+ * <li>scrapyard: Calder Salvage ({@link AutoYards}), across the street from Foundry Row, the
+ * office and pulling shed on the street, the crusher, the magnet gantry and the pick rows behind
+ * the tin fence.</li>
  * <li>waterfront: the Waterfront ({@link Waterfront}), the seawall promenade, the ferry terminal and
  * its ferry, the pier of shops with the carousel at its end, and the marina.</li>
  * </ul>
@@ -92,6 +95,37 @@ final class LandmarkSite extends Site {
         }
         if (variant("university")) {
             new University(lot(0, 0, w, d, 0), rng, w, d).build();
+            return;
+        }
+        if (variant("autoshops")) {
+            // the auto shops' preview yard (SitePreview landmark autoshops 220 44): each build on its own lot, the gas station's bay
+            Placer q = lot(0, 0, w, d, 0);
+            String[] signs = {"holloway", "seabright", "roadking", "quikfix", "motors"};
+            int x = 0;
+            for (AutoShop.Kind k : new AutoShop.Kind[] {AutoShop.Kind.VILLAGE, AutoShop.Kind.REPAIR, AutoShop.Kind.TYRE,
+                    AutoShop.Kind.CORNER, AutoShop.Kind.DEALER}) {
+                int[] sz = AutoShop.lot(k);
+                new AutoShop(q.shifted(x, 0, 0), rng, 0.4).build(k, sz[0], sz[1], signs[k.ordinal()]);
+                x += sz[0] + 4;
+            }
+            new AutoShop(q, rng, 0.4).sideBay(x, 8, "sh_cmu_tan");
+            return;
+        }
+        if (variant("substations")) {
+            // the substations' preview yard (SitePreview landmark substations 150 60): a city yard, a town yard, a hamlet's
+            Placer q = lot(0, 0, w, d, 0);
+            new Substation(q, rng, Districts.byId("midtown"), 0.5).build(60, 58);
+            new Substation(q.shifted(64, 0, 0), rng, Districts.byId("millbrook"), 0.5).build(44, 38);
+            new Substation(q.shifted(112, 0, 0), rng, Districts.byId("dunmore"), 0.5).build(28, 22);
+            return;
+        }
+        if (variant("substation")) {
+            // a city district's substation (Districts): the full yard on its block
+            new Substation(lot(0, 0, w, d, 0), rng, Districts.district(null, p.centreX(), p.centreZ()), chance() * 0.6 + 0.2).build(w, d);
+            return;
+        }
+        if (variant("scrapyard")) {
+            new AutoYards(lot(0, 0, w, d, 0), rng, chance() * 0.7 + 0.2).scrapyard(w, d);
             return;
         }
         if (variant("foundry")) {

@@ -1,0 +1,63 @@
+name: Base test
+
+# Base customisation in a real client (BaseMoveTest): wood building (wave 2a); lifting and walls when LIFTING is on. Pushes the
+# numbered screenshots, a preview video stitched from them and the log to the shots/91cq2a branch.
+on:
+  workflow_dispatch:
+  push:
+    branches: [claude/project-thread-91cq2a]
+
+permissions:
+  contents: write
+
+jobs:
+  shots:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '25'
+      - uses: gradle/actions/setup-gradle@v5
+      - run: sudo apt-get update -q && sudo apt-get install -y -q xvfb xserver-xorg-core xserver-xorg-video-dummy mesa-utils libgl1-mesa-dri libglx-mesa0 libegl-mesa0 mesa-vulkan-drivers ffmpeg > /dev/null
+      # only this test: the kit test takes its own run
+      - name: Only the base test
+        run: |
+          sed -i 's/"fabric-client-gametest": \[[^]]*\]/"fabric-client-gametest": ["com.zomboidcraft.client.kit.BaseMoveTest"]/' src/gametest/resources/fabric.mod.json
+      - name: Shrink block textures for the software renderer
+        run: |
+          pip install -q pillow
+          python3 - <<'PY'
+          import os
+          from PIL import Image
+          root = 'src/main/resources/assets/zomboidcraft/textures'
+          for d, _, fs in os.walk(root):
+              for f in fs:
+                  p = os.path.join(d, f)
+                  if f.endswith(('_n.png', '_s.png')):
+                      os.remove(p); continue
+                  if f.endswith('.png'):
+                      im = Image.open(p)
+                      if im.width > 256 and im.width == im.height:
+                          im.resize((256, 256), Image.LANCZOS).save(p)
+          PY
+      - name: Run client test
+        run: |
+          xvfb-run -a -s "-screen 0 1920x1080x24" ./gradlew runClientGameTest -Puitest > test.log 2>&1 || true
+          grep -E "ZCBASE|error:|ERROR|Exception|FAIL|BUILD|Caused" test.log | head -150 || true
+      - name: Push the screenshots and the video
+        if: always()
+        run: |
+          mkdir -p /tmp/shots
+          find . -path '*screenshots*' -name '*.png' -exec cp {} /tmp/shots/ \; || true
+          grep -E "ZCBASE|Exception|Caused|error:" test.log | head -200 > /tmp/shots/log.txt || true
+          cd /tmp/shots
+          ls *.png | sort > list.txt || true
+          if [ -s list.txt ]; then
+            awk '{print "file \x27" $0 "\x27\nduration 0.6"}' list.txt > concat.txt
+            ffmpeg -loglevel error -y -f concat -safe 0 -i concat.txt -vf "scale=1280:-2,format=yuv420p" -r 25 preview.mp4 || true
+          fi
+          git init -q && git checkout -q -b shots/91cq2a
+          git add -A && git -c user.name=ci -c user.email=ci@localhost commit -qm "base shots ${GITHUB_SHA::7}"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}" shots/91cq2a

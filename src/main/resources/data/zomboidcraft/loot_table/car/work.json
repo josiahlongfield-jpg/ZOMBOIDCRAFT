@@ -619,6 +619,21 @@
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:rubber_hose",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:d_battery",
           "weight": 4,
           "functions": [
@@ -741,6 +756,26 @@
           "type": "minecraft:item",
           "name": "zomboidcraft:knee_pads",
           "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:chainsaw_chaps",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:cut_resistant_gloves",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
         },
         {
           "type": "minecraft:item",
@@ -879,7 +914,22 @@
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:skillbook_electrical",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:skillbook_plumbing",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:mag_carpentry",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:mag_generators",
           "weight": 2
         },
         {
@@ -970,6 +1020,11 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:multitool",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:metal_detector",
           "weight": 1
         }
       ]

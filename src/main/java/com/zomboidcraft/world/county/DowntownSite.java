@@ -60,7 +60,14 @@ final class DowntownSite extends Site {
         }
     }
 
-    private enum Role { TOWERS, MIXED, WALKUPS, PLAZA, HOSPITAL, POLICE, PARKING, CONSTRUCTION, CHURCH, VACANT, HALL, STATION }
+    private enum Role { TOWERS, MIXED, WALKUPS, PLAZA, HOSPITAL, POLICE, PARKING, CONSTRUCTION, CHURCH, VACANT, HALL, STATION, AUTO, DEALER }
+
+    /**
+     * The city's three dealer service centres (Josiah 2026-10-31: three, and about twenty corner
+     * garages): the block holding each of these points, a block off Midtown's, Uptown's and
+     * Eastside's middles, where the arterials run out.
+     */
+    private static final int[][] DEALERS = {{2180, -2470}, {1820, -3770}, {3370, 730}};
 
     private Kit kit;
     private CityCivic civic;
@@ -289,6 +296,15 @@ final class DowntownSite extends Site {
                 role = Role.CHURCH;
             } else if (r < 0.172 && variant("old_city")) {
                 role = Role.HALL;
+            } else if (r >= 0.172 && r < 0.176 && t > 0.25) {
+                // a corner garage: about one block in 250, some twenty across the city
+                role = Role.AUTO;
+            }
+            Blk b = blocks.get(i);
+            for (int[] at : DEALERS) {
+                if (at[0] >= p.x0 + b.x0 && at[0] <= p.x0 + b.x1 && at[1] >= p.z0 + b.z0 && at[1] <= p.z0 + b.z1) {
+                    role = Role.DEALER;
+                }
             }
             roles[i] = role;
         }
@@ -444,6 +460,8 @@ final class DowntownSite extends Site {
             case CHURCH -> church(b);
             case VACANT -> vacant(b);
             case STATION -> station(b);
+            case AUTO -> cornerGarage(b);
+            case DEALER -> dealer(b);
             default -> walkups(b);
         }
     }
@@ -893,6 +911,50 @@ final class DowntownSite extends Site {
         if (side >= 9) {
             frontage(b, front, 0, side - 1, Math.min(pd, 20));
             frontage(b, front, side + pw, len - 1, Math.min(pd, 20));
+        }
+        backyard(b);
+    }
+
+    /** A corner garage ({@link AutoShop}'s CORNER) on one end of the block's main side, walk-ups along the rest. */
+    private void cornerGarage(Blk b) {
+        int front = bigSide(b), back = (front + 2) & 3;
+        int len = b.len(front), dep = b.depth(front);
+        int[] sz = AutoShop.lot(AutoShop.Kind.CORNER);
+        if (len < sz[0] + 10 || dep < sz[1] + 2) {
+            walkups(b);
+            return;
+        }
+        boolean atStart = chance() < 0.5;
+        int along = atStart ? 0 : len - sz[0];
+        Placer pl = lotOn(b, front, along, sz[0], sz[1]);
+        new AutoShop(pl, rng, 0.3 + chance() * 0.6).build(AutoShop.Kind.CORNER, sz[0], sz[1], chance() < 0.5 ? "repair" : "quikfix");
+        ruin(boxOn(b, front, along, sz[0], sz[1]), 9);
+        frontage(b, front, atStart ? sz[0] + 1 : 0, atStart ? len - 1 : len - sz[0] - 2, Math.min(sz[1], 20));
+        if (b.street[back] && dep - sz[1] >= 12) {
+            frontage(b, back, 0, len - 1, Math.min(dep - sz[1] - 1, 20));
+        }
+        backyard(b);
+    }
+
+    /** A dealer's service centre ({@link AutoShop}'s DEALER) in the middle of the block's main side. */
+    private void dealer(Blk b) {
+        int front = bigSide(b), back = (front + 2) & 3;
+        int len = b.len(front), dep = b.depth(front);
+        int[] sz = AutoShop.lot(AutoShop.Kind.DEALER);
+        if (len < sz[0] + 2 || dep < sz[1] + 1) {
+            cornerGarage(b);
+            return;
+        }
+        int along = (len - sz[0]) / 2;
+        Placer pl = lotOn(b, front, along, sz[0], sz[1]);
+        new AutoShop(pl, rng, 0.3 + chance() * 0.5).build(AutoShop.Kind.DEALER, sz[0], sz[1], "motors");
+        ruin(boxOn(b, front, along, sz[0], sz[1]), 10);
+        if (along >= 9) {
+            frontage(b, front, 0, along - 2, 20);
+            frontage(b, front, along + sz[0] + 1, len - 1, 20);
+        }
+        if (b.street[back] && dep - sz[1] >= 12) {
+            frontage(b, back, 0, len - 1, Math.min(dep - sz[1] - 1, 20));
         }
         backyard(b);
     }

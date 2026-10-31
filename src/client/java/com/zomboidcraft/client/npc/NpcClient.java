@@ -31,6 +31,20 @@ public final class NpcClient {
         com.zomboidcraft.client.kit.CompanionScreen.register();
         NpcVoice.register();
         com.zomboidcraft.client.kit.Bonds.register();
+        // held G on a companion: her page, her gear, orders, bonding
+        com.zomboidcraft.client.interact.InteractMenu.provider((client, player, hit, out) -> {
+            NpcEntity npc = lookedAt(client);
+            if (npc == null) return;
+            out.add(com.zomboidcraft.client.interact.InteractMenu.Option.of("Talk to " + npc.getName().getString(),
+                    () -> client.gui.setScreen(new com.zomboidcraft.client.kit.CompanionScreen(npc, com.zomboidcraft.client.kit.CompanionScreen.Tab.HER))));
+            out.add(com.zomboidcraft.client.interact.InteractMenu.Option.of("Gear and trade",
+                    () -> client.gui.setScreen(new com.zomboidcraft.client.kit.CompanionScreen(npc, com.zomboidcraft.client.kit.CompanionScreen.Tab.GEAR))));
+            out.add(com.zomboidcraft.client.interact.InteractMenu.Option.of("Orders",
+                    () -> client.gui.setScreen(new com.zomboidcraft.client.kit.OrderWheel(npc))));
+            boolean bonded = com.zomboidcraft.client.kit.Bonds.bonded(npc);
+            out.add(com.zomboidcraft.client.interact.InteractMenu.Option.of(bonded ? "Unbond" : "Bond",
+                    () -> com.zomboidcraft.client.kit.Bonds.bond(npc, !bonded)));
+        });
         // middle-click on her: the order wheel, before the game takes it as pick-block
         net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents.START_CLIENT_TICK.register(client -> {
             if (client.gui.screen() != null || client.player == null) return;

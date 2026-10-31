@@ -89,6 +89,11 @@ public final class CarParts {
     }
 
     private static final String[] CORNERS = {"Front left", "Front right", "Rear left", "Rear right"};
+
+    /** A wheel corner's name: 0 front left, 1 front right, 2 rear left, 3 rear right. */
+    public static String corner(int i) {
+        return CORNERS[i];
+    }
     public static final List<Slot> SLOTS;
     private static final int[] FIRST = new int[Part.values().length];
 

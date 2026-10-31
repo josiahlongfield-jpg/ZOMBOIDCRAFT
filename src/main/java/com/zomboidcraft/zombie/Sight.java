@@ -30,9 +30,74 @@ public final class Sight {
         return zombie.getSensing().hasLineOfSight(player);
     }
 
-    /** How far this zombie could see this player right now. */
+    /**
+     * How far this zombie could see this player right now: its own eyes (zombieLore sight, half outside its active
+     * hours), and with the new stealth system a lit light in your hands carries half as far again, while crouched
+     * behind a car, hedge or low wall you can't be picked out past arm's reach.
+     */
     public static double range(Mob zombie, Player player, ZcConfig.Senses config) {
-        return range(player, config);
+        double range = range(player, config) * Lore.sight(zombie);
+        if (ZcConfig.get().zombieLore.stealthSystem) {
+            if (lit(player)) {
+                range *= LIGHT_GIVES_AWAY;
+            } else if (player.isCrouching() && behindCover(zombie, player)) {
+                range = Math.min(range, config.closeRange);
+            }
+        }
+        return range;
+    }
+
+    /** A lit flashlight, lantern, torch or flare in either hand, or a gun with its light switched on. */
+    private static final double LIGHT_GIVES_AWAY = 1.5;
+
+    public static boolean lit(Player player) {
+        return lit(player.getMainHandItem()) || lit(player.getOffhandItem());
+    }
+
+    private static boolean lit(net.minecraft.world.item.ItemStack stack) {
+        if (stack.isEmpty()) {
+            return false;
+        }
+        if (com.zomboidcraft.loot.items.LightItem.lit(stack) || com.zomboidcraft.combat.Attachments.lightOn(stack)) {
+            return true;
+        }
+        String id = net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(stack.getItem()).getPath();
+        return id.equals("torch") || id.equals("lantern") || id.equals("soul_torch") || id.contains("flare");
+    }
+
+    /**
+     * Something solid between you and it, close to you and no taller than you crouch: a car, a hedge, a low wall,
+     * a fence of boards, a counter. Looked for along the line from its eyes to your chest, in the last 3 blocks.
+     */
+    private static boolean behindCover(Mob zombie, Player player) {
+        Vec3 chest = player.position().add(0, 0.6, 0);
+        Vec3 eye = zombie.getEyePosition();
+        for (com.zomboidcraft.world.cars.CarProp car : player.level().getEntitiesOfClass(com.zomboidcraft.world.cars.CarProp.class,
+                player.getBoundingBox().inflate(4), c -> c.getVehicle() == null && !player.isPassengerOfSameVehicle(c))) {
+            if (car.getBoundingBox().clip(chest, eye).isPresent()) {
+                return true;
+            }
+        }
+        Vec3 dir = eye.subtract(chest);
+        double len = dir.length();
+        if (len < 2) {
+            return false;
+        }
+        dir = dir.scale(1 / len);
+        net.minecraft.world.level.Level level = player.level();
+        for (double d = 0.6; d <= Math.min(3, len - 1); d += 0.5) {
+            Vec3 at = chest.add(dir.scale(d));
+            net.minecraft.core.BlockPos pos = net.minecraft.core.BlockPos.containing(at);
+            net.minecraft.world.level.block.state.BlockState state = level.getBlockState(pos);
+            if (!state.getCollisionShape(level, pos).isEmpty() || state.is(net.minecraft.tags.BlockTags.LEAVES)) {
+                // low cover: what's over it is open, so standing you'd be seen over it
+                net.minecraft.core.BlockPos above = pos.above();
+                if (level.getBlockState(above).getCollisionShape(level, above).isEmpty()) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /** How far any zombie could see this player right now: what the HUD's sight meter shows. */

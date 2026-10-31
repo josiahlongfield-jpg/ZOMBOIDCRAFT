@@ -344,6 +344,12 @@ public final class Dismember {
         return new Shot(w.shotDir, w.shotGun, w.shotPart);
     }
 
+    /** A bullet or bolt struck this walker's head this tick (or its head is already gone). */
+    public static boolean headStruckNow(Zombie zombie) {
+        Wounds w = WOUNDS.get(zombie);
+        return headGone(zombie) || w != null && (w.struck >> HEAD & 1) != 0 && w.shotTick == zombie.level().getGameTime();
+    }
+
     /**
      * Only the head kills (combat.onlyHeadshotsKill): a bullet or bolt that struck a walker this tick without touching
      * its head can't take the last of its health, so one shot to pieces lives on, crawling or wriggling, until it's
@@ -384,7 +390,7 @@ public final class Dismember {
             int i = Integer.numberOfTrailingZeros(cut);
             if ((cuts(zombie) & (cut | above(cut))) != 0) {
                 w.dealt[i] = 0f;
-            } else if (w.dealt[i] >= toughness(cut, config)) {
+            } else if (w.dealt[i] >= toughness(cut, config) * com.zomboidcraft.zombie.Lore.toughness(zombie)) {
                 w.dealt[i] = 0f;
                 severed |= cut;
                 sever(zombie, cut, partOf(cut), w.dir, w.gun);
@@ -673,7 +679,7 @@ public final class Dismember {
             int i = Integer.numberOfTrailingZeros(cut);
             if ((cuts(zombie) & (cut | above(cut))) != 0) {
                 w.dealt[i] = 0f;
-            } else if (w.dealt[i] >= toughness(cut, config)) {
+            } else if (w.dealt[i] >= toughness(cut, config) * com.zomboidcraft.zombie.Lore.toughness(zombie)) {
                 w.dealt[i] = 0f;
                 severed |= cut;
                 sever(zombie, cut, partOf(cut), away, 3);

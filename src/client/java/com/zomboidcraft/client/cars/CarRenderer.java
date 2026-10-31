@@ -39,6 +39,9 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         state.variant = car.variant();
         // turned smoothly between ticks, or a car you're steering judders against your smooth view
         state.yaw = car.getYRot(partialTick);
+        state.jackCorner = car.jackCorner();
+        state.pose = car.pose();
+        state.jackLift = car.jackLift();
         // from the driver's seat the windows are left out: shaders fog see-through glass right in front of you
         Minecraft mc = Minecraft.getInstance();
         state.smashed = car.smashed();
@@ -199,6 +202,30 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
             poseStack.translate(0, -state.pivot, 0);
         } else {
             poseStack.rotateDegrees(Axis.YP, -state.yaw);
+            if (state.pose != 0) {
+                // a wreck left lying: turned over about its long axis, set back down on the ground
+                CarModels.Model m = CarModels.get(state.model);
+                float h = m == null ? 1.5f : m.size[1], w = m == null ? 1.8f : m.size[0];
+                if (state.pose == CarProp.POSE_ROOF) {
+                    poseStack.translate(0, h, 0);
+                    poseStack.rotateDegrees(Axis.ZP, 180);
+                } else {
+                    poseStack.translate(h / 2, w / 2, 0);
+                    poseStack.rotateDegrees(Axis.ZP, 90);
+                }
+            }
+            if (state.jackCorner >= 0 && state.jackLift > 0.001f) {
+                // one corner up on a trolley jack: that corner the full height, the far one still on the floor
+                CarModels.Model m = CarModels.get(state.model);
+                float h = state.jackLift, sx = state.jackCorner % 2 == 0 ? 1 : -1, sz = state.jackCorner < 2 ? 1 : -1;
+                // tipped about the middle of its own wheels, which needn't be the model's middle
+                float halfTrack = m == null ? 0.8f : Math.max(0.4f, Math.abs(m.wheel(state.jackCorner)[0]));
+                float halfBase = m == null ? 1.4f : Math.max(0.5f, m.halfBase()), mid = m == null ? 0 : m.axleMid();
+                poseStack.translate(0, h / 2, mid);
+                poseStack.rotateDegrees(Axis.XP, (float) -Math.toDegrees(Math.asin(Math.min(0.5f, h / 4 / halfBase))) * sz);
+                poseStack.rotateDegrees(Axis.ZP, (float) Math.toDegrees(Math.asin(Math.min(0.5f, h / 4 / halfTrack))) * sx);
+                poseStack.translate(0, 0, -mid);
+            }
         }
         Turn[] lids = new Turn[car.lids().size()];
         for (int i = 0; i < lids.length; i++) {

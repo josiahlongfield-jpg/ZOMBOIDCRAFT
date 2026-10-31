@@ -84,6 +84,27 @@ public final class ZcConfig {
     public NightVision nightVision = new NightVision();
     /** Handheld radios that carry players' voices (through the voice chat mod), and the comms headset. */
     public Radio radio = new Radio();
+    public Broadcast broadcast = new Broadcast();
+    public Power power = new Power();
+
+    /** Mains power (power/PowerGrid): Zomboid's Electricity Shutoff, cut district by district. */
+    public static class Power {
+        /**
+         * Zomboid's ElecShutModifier: the day the mains go off, each district at its own hour that day.
+         * -1 is off from the start.
+         */
+        public int shutoffDays = 14;
+        /** The mains never go off (Josiah's always-on toggle). */
+        public boolean alwaysOn = false;
+        /** Zomboid's GeneratorFuelConsumption: litres a generator burns an in-game hour. */
+        public double generatorFuel = 0.1;
+        /** Zomboid's GeneratorTileRange: how far round a generator it powers, in blocks. */
+        public int generatorRange = 20;
+        /** Zomboid's GeneratorVerticalPowerRange: how many floors above and below it powers (5 blocks a floor). */
+        public int generatorFloors = 3;
+        /** Zomboid's AllowExteriorGenerator: generators power spots out in the open too (gas pumps). */
+        public boolean generatorExterior = true;
+    }
     /** How good each found weapon is: its tier, where its stats land inside the model's range, and flaws. */
     public WeaponRolls rolls = new WeaponRolls();
     /** What it takes to dig down and knock walls through, so nobody tunnels under the whole map (building/DigRules). */
@@ -93,6 +114,11 @@ public final class ZcConfig {
     /** Keeping big hordes smooth: how much detail far zombies get, and how often far idle ones think. */
     public Performance performance = new Performance();
     public Population population = new Population();
+    /** Zomboid's Zombie Lore page, setting for setting: how the dead move, see, hear, remember and hurt (zombie/Lore). */
+    public ZombieLore zombieLore = new ZombieLore();
+    public ZombiePopulation zombiePopulation = new ZombiePopulation();
+    /** Zomboid's search helicopter (world/events/SearchHeli). */
+    public SearchHeli searchHeli = new SearchHeli();
     /** Driverless trains: the county railway and the downtown subway (TrainCommand, world.trains). */
     public Trains trains = new Trains();
     /** Things you throw: lures, fire, smoke and blasts (combat/throwing). */
@@ -335,6 +361,163 @@ public final class ZcConfig {
         public double crowdMinDistance = 40;
     }
 
+    /**
+     * Project Zomboid's Zombie Lore sandbox page, all 29 of its settings under their Zomboid names, at Zomboid's
+     * Apocalypse defaults except where Josiah changed them (the sprinter share). "random" lets each zombie roll its
+     * own, from its UUID, so every player sees the same zombie the same way. Read by zombie/Lore.
+     * Fixed rules that are not settings: shots only flinch, only a head hit kills with a gun, crawling only with both
+     * legs gone.
+     */
+    /**
+     * Zomboid's Zombie Population page (B42), on top of our population engine (zombie/population): the approved
+     * place-by-place table is what Normal means, population.density is Zomboid's Population Multiplier, and the dead
+     * move as Zomboid's do: rallies, migration, following sound, and herds on the roads (Herds). Defaults are Zomboid's
+     * Apocalypse values except respawn, which stays off (Josiah's rule).
+     */
+    public static class ZombiePopulation {
+        public enum Count { INSANE, VERY_HIGH, HIGH, NORMAL, LOW, NONE }
+        public enum Distribution { URBAN_FOCUSED, UNIFORM }
+        public enum Respawn { NONE, LOW, NORMAL, HIGH }
+
+        /** Zombie Count: 4, 3, 2, 1, 0.35 or 0 times the approved table, on top of population.density. */
+        public Count count = Count.NORMAL;
+        /** Urban Focused: the table, place by place. Uniform: the same total spread evenly over the land. */
+        public Distribution distribution = Distribution.URBAN_FOCUSED;
+        /** Patchy clusters: some streets thick, the next thin, the totals the same. */
+        public boolean voronoiNoise = true;
+        /** Presets for the three respawn numbers below, used while those are 0. None stays off (Josiah's rule). */
+        public Respawn respawn = Respawn.NONE;
+        /** The dead drift from crowded chunks into emptier ones (every redistributeHours). */
+        public boolean migrate = true;
+        /** How loud engines, alarms and generators are to the dead. */
+        public double attractionMultiplier = 1;
+        /** Share of the count placed at world start... */
+        public double startMultiplier = 1;
+        /** ...growing to this share by peakDay; the extra walk in as herds from the county's edges. */
+        public double peakMultiplier = 1.5;
+        public int peakDay = 28;
+        /** In-game hours between top-ups of emptied chunks (0 never), how long a chunk must go unseen first, and how much of its first count a top-up restores. */
+        public double respawnHours = 0;
+        public double respawnUnseenHours = 0;
+        public double respawnMultiplier = 0;
+        /** In-game hours between migration steps. */
+        public double redistributeHours = 12;
+        /** Farthest the dead walk toward one sound, real or still records. */
+        public double followSoundDistance = 100;
+        /** Idle dead gather into groups this big, give or take this share... */
+        public int rallyGroupSize = 20;
+        public double rallyGroupSizeVariance = 50;
+        /** ...walking up to this far to join one, groups this far apart, standing this close together (blocks). */
+        public double rallyTravelDistance = 20;
+        public double rallyGroupSeparation = 15;
+        public double rallyGroupRadius = 3;
+        /** Real zombies in one 128-block area before idle extras fold back into records (Zomboid deletes them). */
+        public int countBeforeDelete = 300;
+        /** Ours: herds on the roads at world start, and how many walk in each. */
+        public int herds = 6;
+        public int herdMin = 200;
+        public int herdMax = 400;
+    }
+
+    /**
+     * Zomboid's Helicopter setting: the search helicopter that finds a survivor and drags every zombie under its path
+     * to them. Once: one day between firstDay and lastDay. Sometimes and Often: again every few weeks or days.
+     */
+    public static class SearchHeli {
+        public enum Frequency { NEVER, ONCE, SOMETIMES, OFTEN }
+
+        public Frequency frequency = Frequency.ONCE;
+        public int firstDay = 6;
+        public int lastDay = 9;
+        /** How long it stays on someone it has found, in-game hours (Zomboid's: up to about four). */
+        public double lockHours = 4;
+        /** How far its noise carries every second while it hovers (blocks). */
+        public double noise = 90;
+    }
+
+    public static class ZombieLore {
+        public enum Speed { SPRINTERS, FAST_SHAMBLERS, SHAMBLERS, RANDOM }
+        public enum Strength { SUPERHUMAN, NORMAL, WEAK, RANDOM }
+        public enum Toughness { TOUGH, NORMAL, FRAGILE, RANDOM }
+        public enum Transmission { BLOOD_AND_SALIVA, SALIVA_ONLY, EVERYONES_INFECTED, NONE }
+        public enum Mortality { INSTANT, SECONDS_0_30, MINUTES_0_1, HOURS_0_12, DAYS_2_3, WEEKS_1_2, NEVER }
+        public enum Reanimate { INSTANT, SECONDS_0_30, MINUTES_0_1, HOURS_0_12, DAYS_2_3, WEEKS_1_2 }
+        public enum Cognition { NAVIGATE_AND_USE_DOORS, NAVIGATE, BASIC_NAVIGATION, RANDOM }
+        public enum CrawlUnderVehicle { CRAWLERS_ONLY, EXTREMELY_RARE, RARE, SOMETIMES, OFTEN, VERY_OFTEN, EXTREMELY_OFTEN }
+        public enum Memory { LONG, NORMAL, SHORT, NONE, RANDOM, RANDOM_NORMAL_NONE }
+        public enum Sight { EAGLE, NORMAL, POOR, RANDOM, RANDOM_NORMAL_POOR }
+        public enum Hearing { PINPOINT, NORMAL, POOR, RANDOM, RANDOM_NORMAL_POOR }
+        public enum ActiveOnly { BOTH, NIGHT, DAY }
+        public enum FakeDead { WORLD_ZOMBIES, WORLD_AND_COMBAT, OFF }
+        public enum SpawnArea { INSIDE_THE_BUILDING_AND_AROUND_IT, INSIDE_THE_BUILDING, INSIDE_THE_ROOM, NONE }
+
+        /** Shamblers, fast shamblers, sprinters, or each its own (random: shamblers and fast shamblers half and half, and the sprinter share). */
+        public Speed speed = Speed.RANDOM;
+        /** Random Sprinter Amount: percent of zombies that sprint when speed is random (Josiah 27 Oct: 15; Zomboid's is 0). */
+        public double sprinterPercent = 15;
+        /** How hard they bite, scratch and hold on. */
+        public Strength strength = Strength.NORMAL;
+        /** How much they take before they go down: health, limb toughness, blows. Any bullet in the head still kills. */
+        public Toughness toughness = Toughness.RANDOM;
+        /** How the infection spreads: bites and scratches, bites only, everyone rises when they die, or not at all. */
+        public Transmission transmission = Transmission.BLOOD_AND_SALIVA;
+        /** How long the infection takes to kill you, in game time. */
+        public Mortality mortality = Mortality.DAYS_2_3;
+        /** How long an infected body lies before it gets up. */
+        public Reanimate reanimate = Reanimate.MINUTES_0_1;
+        /** Basic: bash doors, climb broken windows, go round to a way in. Navigate plans round things better. Use doors opens them. */
+        public Cognition cognition = Cognition.BASIC_NAVIGATION;
+        /** Random Door Opening Amount: percent that open doors when cognition is random. */
+        public double doorOpeningPercent = 0;
+        /** How often crawlers lie in wait under parked cars and grab your ankle. */
+        public CrawlUnderVehicle crawlUnderVehicle = CrawlUnderVehicle.OFTEN;
+        /** How long they keep after you once you're out of sight, and how hard they search. */
+        public Memory memory = Memory.NORMAL;
+        /** How far they see: eagle 150%, normal, poor 60%. */
+        public Sight sight = Sight.RANDOM_NORMAL_POOR;
+        /** How far they hear, and how close to the spot they come: pinpoint 150% and exact, poor 60%. */
+        public Hearing hearing = Hearing.RANDOM_NORMAL_POOR;
+        /** New Stealth System: crouched behind a car, a hedge or a low wall you're hidden, and a lit light gives you away. */
+        public boolean stealthSystem = true;
+        /** Environmental Attacks: zombies that aren't after anyone still thump doors and windows they wander into. */
+        public boolean environmentalAttacks = false;
+        /** Damage Construction: zombies beat down boards, sheets, sandbags and the rest of what you build. */
+        public boolean damageConstruction = true;
+        /** Day/Night Zombie Speed Effect: outside these clock hours (night 19:00-06:00) they're slower and duller. */
+        public ActiveOnly activeOnly = ActiveOnly.BOTH;
+        /** Zombie House Alarm Triggering: breaking in trips a house's alarm (once houses have them). */
+        public boolean houseAlarms = true;
+        /** Drag Down: three or more on you, one from behind, pull you down. */
+        public boolean dragDown = true;
+        /** Crawlers Drag Down: crawlers count toward it. */
+        public boolean crawlersDragDown = false;
+        /** Zombie Lunge: one that just climbed in at a window lunges if you're close. */
+        public boolean lunge = true;
+        /** Zombie Armor Factor: how much a zombie's helmet, vest or turnout gear stops. */
+        public double armorFactor = 2;
+        /** Maximum Zombie Armor Defense, percent. */
+        public double maxDefense = 85;
+        /** Chance Of Attached Weapon, percent: a knife or an axe left stuck in the body, yours once it's down. */
+        public double attachedWeaponPercent = 6;
+        /** Zombie Fall Damage Multiplier. */
+        public double fallDamage = 1;
+        /** Fake Dead Zombie Reanimation: some of the dead lying about get up. */
+        public FakeDead fakeDead = FakeDead.WORLD_ZOMBIES;
+        /** Ours: percent of the dead found lying on the street and indoors that are only playing dead (plan: 1 in 6, 1 in 10). */
+        public double fakeDeadStreetPercent = 16.7;
+        public double fakeDeadIndoorPercent = 10;
+        /** Ours, World and Combat only: percent of zombies knocked flat by blunt melee that stay down and play dead. */
+        public double fakeDeadCombatPercent = 25;
+        /** Ours: percent of abandoned and wrecked cars with a dead driver still belted in (plan: 1 in 20). */
+        public double beltedPercent = 5;
+        /** Player Spawn Area: where the dead are kept clear round the spawn you pick. */
+        public SpawnArea spawnArea = SpawnArea.INSIDE_THE_BUILDING_AND_AROUND_IT;
+        /** Zombies To Damage Fences: this many leaning on a tall fence knock a panel down; -1 never. */
+        public int fenceThumpersRequired = 25;
+        /** Fence Damage Multiplier: how fast they do it. */
+        public double fenceDamageMultiplier = 1;
+    }
+
     public static class Cases {
         /** A found case comes packed with a gun, magazines and rounds, a can with rounds. Off, they're found empty. */
         public boolean packed = true;
@@ -393,6 +576,20 @@ public final class ZcConfig {
         public double tubeSize = 0.92;
         /** How bright the view through the tube is, 0.2 to 2 (1 is the preview's look). Client side. */
         public double brightness = 0.85;
+    }
+
+    /** The outbreak on the radio (world/Broadcasts): news, the emergency broadcast, the military and the hams. */
+    public static class Broadcast {
+        /** Broadcasts on the two-way and military radios. Off: they only carry voices. */
+        public boolean enabled = true;
+        /** Days added to the world's day before the timeline is read: 9 starts the world with the news already gone. */
+        public int dayOffset = 0;
+        /** Seconds between one caption and the next. */
+        public double lineSeconds = 5;
+        /** The day the emergency broadcast's battery gives out, once the power is down (until the grid fails by district). */
+        public int aebsLastDay = 30;
+        /** How long a caption stays on screen, in seconds. Client side. */
+        public double captionSeconds = 7;
     }
 
     public static class Radio {
@@ -519,10 +716,12 @@ public final class ZcConfig {
     }
 
     public static class Zombies {
-        /** Share of zombies that sprint once they spot you (Zomboid's "random" speed mix): about one in seven. */
+        /** Old place of the sprinter share, read once to move it to zombieLore.sprinterPercent; not used since. */
         public double sprinterChance = 0.15;
         /** Speed change for shamblers and sprinters, as a fraction of vanilla zombie speed. */
         public double shamblerSpeed = -0.3;
+        /** Zomboid's fast shamblers: a quicker walk, still no run. */
+        public double fastShamblerSpeed = -0.12;
         public double sprinterSpeed = 0.25;
         public boolean burnInSunlight = false;
         public boolean breakDoors = true;
@@ -614,6 +813,9 @@ public final class ZcConfig {
         public double biteChance = 0.12;
         public double scratchChance = 0.30;
         public double scratchInfectionChance = 0.07;
+        /** Zomboid's chance a zombie's laceration (a deeper scratch) carries the infection. */
+        public double lacerationInfectionChance = 0.25;
+        /** No longer read: how long the infection takes is zombieLore.mortality now (Zomboid's Infection Mortality). */
         public int infectionMinutes = 40;
         /** Infected players rise as zombies. */
         public boolean reanimate = true;
@@ -662,6 +864,40 @@ public final class ZcConfig {
         /** Blows a spiked log wall stands, and the damage its spikes do to a zombie pushing or beating on it. */
         public int spikedWallHits = 24;
         public float spikeDamage = 2f;
+        /** Blows a boarded wooden wall stands at Carpentry 0 (a tenth more for each level of its builder's Carpentry). */
+        public int woodWallHits = 30;
+        /** How many boards a wooden floor reaches out from whatever holds it up. */
+        public int floorSpan = 3;
+        /** How long a floor that's lost its support sags and creaks before it falls in, in seconds. */
+        public int floorSagSeconds = 60;
+        /** How many wooden posts stand one on another. */
+        public int postStack = 3;
+        /** Furniture weight: kilograms at or over these are medium (table, bed, sofa) and large (wardrobe, counter, fridge). */
+        public double mediumKg = 6;
+        public double largeKg = 19;
+        /**
+         * Chance a piece breaks as you lift it at skill 0, Zomboid style. Anything that needs a tool to come loose
+         * (a hammer for furniture, a screwdriver for appliances and wired lights) breaks 75% of the time at 0 and
+         * 7.5% less each level, never at 10; a pipe wrench job (sinks, toilets, tubs) is Zomboid's flat 25%, which
+         * here falls 2.5% a level of Plumbing. Small loose things and fridges need no tool and never break.
+         */
+        public double toolBreak = 0.75;
+        public double plumbedBreak = 0.25;
+        /** Scales every piece of furniture's weight. */
+        public double furnitureWeight = 1.0;
+        /** Lifting a piece takes half a second plus this many ticks for every kilogram (8% less a level over the need). */
+        public double liftTicksPerKg = 1.5;
+        /** Placing blocks from the vanilla game in survival: off, every wall comes from the Build page. */
+        public boolean vanillaBlocks = false;
+        /** Earth you may still put down while vanillaBlocks is off, only to fill natural ground back to where it lay. */
+        public java.util.List<String> soil = new java.util.ArrayList<>(java.util.List.of("minecraft:dirt", "minecraft:coarse_dirt",
+                "minecraft:rooted_dirt", "minecraft:grass_block", "minecraft:podzol", "minecraft:mud", "minecraft:farmland"));
+        /** Other vanilla things that still go down while vanillaBlocks is off: seeds and saplings. */
+        public java.util.List<String> plants = new java.util.ArrayList<>(java.util.List.of("minecraft:wheat_seeds",
+                "minecraft:beetroot_seeds", "minecraft:melon_seeds", "minecraft:pumpkin_seeds", "minecraft:carrot",
+                "minecraft:potato", "minecraft:sweet_berries", "minecraft:oak_sapling", "minecraft:spruce_sapling",
+                "minecraft:birch_sapling", "minecraft:jungle_sapling", "minecraft:acacia_sapling", "minecraft:dark_oak_sapling",
+                "minecraft:cherry_sapling", "minecraft:mangrove_propagule", "minecraft:sugar_cane", "minecraft:bamboo"));
     }
 
     public static class Digging {
@@ -673,6 +909,10 @@ public final class ZcConfig {
         public int carpentryLevel = 2;
         public int masonryLevel = 2;
         public int metalworkingLevel = 2;
+        /** Steps up by wall: brick or block facing the outside, poured concrete (bunkers, car parks, cellars), heavy steel (hulls, bulkheads, vaults). */
+        public int outsideMasonryLevel = 5;
+        public int concreteLevel = 8;
+        public int heavySteelLevel = 8;
         /** How far zombies hear each kind of wall coming down, in blocks. */
         public double woodNoise = 16;
         public double masonryNoise = 36;
@@ -703,6 +943,43 @@ public final class ZcConfig {
         public double carAbandoned = 0.3;
         public double carWrecked = 0.18;
         public double carBurnt = 0.07;
+        /**
+         * Zomboid's Vehicle Spawn Rate: none, very_low, low, normal, high. The share of the map's parking spots that
+         * hold a road vehicle (customer cars at auto shops always stay); high fills every one.
+         */
+        public String carSpawnRate = "low";
+        /** Zomboid's Vehicle Easy Use: no keys needed and nothing locked. */
+        public boolean vehicleEasyUse = false;
+        /** Zomboid's General Condition: very_low, low, normal, high, very_high; moves every found car's condition. */
+        public String carCondition = "normal";
+        /** Zomboid's Car Damage on Impact: very_low, low, normal, high, very_high; how hard crashes wear the parts. */
+        public String carCrashDamage = "normal";
+        /** Zomboid's Damage From Being Hit By A Car: what a player takes when a car runs into them, times this. */
+        public double carHitDamage = 1;
+        /** Zomboid's Chance Has Gas: low, normal, high; the share of runners found with fuel in the tank. */
+        public String carChanceHasGas = "normal";
+        /** Zomboid's Initial Gas: very_low, low, normal, high, very_high, full; how much is in a tank that has any. */
+        public String carInitialGas = "low";
+        /** Zomboid's Gas Consumption: how fast engines drink, times this. */
+        public double carGasConsumption = 1;
+        /** Zomboid's Fuel Station Gas: pumps never run dry; else each starts with Min to Max of its tank, EmptyChance percent dry. */
+        public boolean fuelStationGasInfinite = false;
+        public double fuelStationGasMin = 0;
+        public double fuelStationGasMax = 0.8;
+        public double fuelStationEmptyChance = 20;
+        /** Zomboid's Locked Vehicle Frequency and Car Alarm: never, extremely_rare, rare, sometimes, often, very_often. */
+        public String carLocked = "sometimes";
+        public String carAlarm = "rare";
+        /** Zomboid's Siren Effects Zombies: an emergency vehicle's siren draws the dead from far off. */
+        public boolean sirenEffectsZombies = true;
+        /** Zomboid's Siren Shutoff Hours: a siren left on dies after this many in-game hours (0 = never). */
+        public double sirenShutoffHours = 0;
+        /** Zomboid's Player Damage From Crash: a crash at speed hurts whoever's inside. */
+        public boolean playerDamageFromCrash = true;
+        /** Zomboid's Recently Survivor Vehicles: none, low, normal, high. */
+        public String survivorCars = "low";
+        /** Zomboid's Traffic Jam: wrecked cars piled up along the main roads (laid by the county's road builder). */
+        public boolean trafficJams = true;
         /** Car boots and the backs of vans hold loot (tools/cars/car_loot.py); off leaves them empty. */
         public boolean carLoot = true;
         /** The jets' top speed in km/h. Past about 300 the world can't load fast enough to keep up with them. */
@@ -715,6 +992,11 @@ public final class ZcConfig {
         public boolean worldEvents = true;
         /** About how many minutes between those events. */
         public double worldEventMinutes = 10;
+        /**
+         * Zomboid's meta events (MetaEvents): gunfire or a scream from a real spot 80 to 250 blocks off, which the dead
+         * there hear too. "never", "sometimes" or "often".
+         */
+        public String metaEvents = "sometimes";
         /**
          * Air strikes among those events (Josiah 2026-10-28): a jet strafing or bombing a crowd of zombies, or the
          * Apache circling a horde shooting them; zombies caught die, players right there are hurt, blocks never.
@@ -1634,7 +1916,7 @@ public final class ZcConfig {
      * are left alone).
      */
     public int defaultsVersion = 0;
-    private static final int DEFAULTS = 16;
+    private static final int DEFAULTS = 17;
 
     private static void upgrade(ZcConfig c) {
         if (c.defaultsVersion < 1) {
@@ -1816,6 +2098,10 @@ public final class ZcConfig {
                 c.minigun.aimSpread = 0.35;
             }
         }
+        if (c.defaultsVersion < 17) {
+            // 2026-10-31: the sprinter share moved to Zomboid's lore page (zombieLore.sprinterPercent), kept as it was
+            c.zombieLore.sprinterPercent = Math.round(c.zombies.sprinterChance * 1000) / 10.0;
+        }
         c.defaultsVersion = DEFAULTS;
     }
 
@@ -1877,10 +2163,15 @@ public final class ZcConfig {
         try {
             String[] parts = key.split("\\.", 2);
             Object group = ZcConfig.class.getField(parts[0]).get(instance);
-            return String.valueOf(group.getClass().getField(parts[1]).get(group));
+            return text(group.getClass().getField(parts[1]).get(group));
         } catch (ReflectiveOperationException | ArrayIndexOutOfBoundsException e) {
             throw new IllegalArgumentException("Unknown setting " + key);
         }
+    }
+
+    /** A setting's value as text; a choice by its lower-case name ("random_normal_poor"), as setValue reads it back. */
+    private static String text(Object value) {
+        return value instanceof Enum<?> e ? e.name().toLowerCase(java.util.Locale.ROOT) : String.valueOf(value);
     }
 
     public static void setValue(String key, String raw) {
@@ -1898,6 +2189,8 @@ public final class ZcConfig {
                 field.setInt(group, Integer.parseInt(raw));
             } else if (type == double.class) {
                 field.setDouble(group, Double.parseDouble(raw));
+            } else if (type.isEnum()) {
+                field.set(group, enumValue(type, raw, key));
             } else {
                 field.set(group, raw);
             }
@@ -1935,7 +2228,7 @@ public final class ZcConfig {
         if (defaults == null) {
             defaults = new ZcConfig();
         }
-        return String.valueOf(getValue(key, defaults));
+        return text(getValue(key, defaults));
     }
 
     private static Object getValue(String key, ZcConfig from) {
@@ -1946,6 +2239,22 @@ public final class ZcConfig {
         } catch (ReflectiveOperationException | ArrayIndexOutOfBoundsException e) {
             throw new IllegalArgumentException("Unknown setting " + key);
         }
+    }
+
+    /** A choice by name, any case, with spaces, dashes or underscores: "random_normal_poor", "Random Normal-Poor". */
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private static Object enumValue(Class<?> type, String raw, String key) {
+        String want = raw.trim().toUpperCase(java.util.Locale.ROOT).replace(' ', '_').replace('-', '_');
+        for (Object c : type.getEnumConstants()) {
+            if (((Enum) c).name().equals(want)) {
+                return c;
+            }
+        }
+        StringBuilder choices = new StringBuilder();
+        for (Object c : type.getEnumConstants()) {
+            choices.append(choices.length() == 0 ? "" : ", ").append(((Enum) c).name().toLowerCase(java.util.Locale.ROOT));
+        }
+        throw new IllegalArgumentException(key + " must be one of " + choices);
     }
 
     private ZcConfig() {

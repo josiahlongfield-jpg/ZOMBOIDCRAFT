@@ -63,10 +63,44 @@ public enum Build {
             tool("Axe", s -> s.is(ModItems.FIRE_AXE) || s.is(ItemTags.AXES), ModItems.FIRE_AXE), need("Logs", s -> s.is(ItemTags.LOGS), 3, Items.OAK_LOG)),
     WELD_SHEET("Metal sheet from scrap", Where.MAKE, Skill.METALWORKING, 1, 120, 10, 10,
             "Cut and weld scrap into a flat sheet you can put over a window.",
-            tool("Propane torch", ModItems.PROPANE_TORCH), need("Scrap metal", ModItems.SCRAP_METAL, 4));
+            tool("Propane torch", ModItems.PROPANE_TORCH), need("Scrap metal", ModItems.SCRAP_METAL, 4)),
+    // wood building (base customisation wave 2): frame first, then finish
+    CRATE("Wooden crate", Where.GROUND, Skill.CARPENTRY, 1, 100, 6, 12,
+            "A plank box with a lid, nailed square. Storage you can put anywhere, and your first thing built from scratch.",
+            hammer(), planks(3), need("Nails", ModItems.NAILS, 3)),
+    WALL_FRAME("Wall frame", Where.WALL, Skill.CARPENTRY, 3, 100, 8, 14,
+            "Studs nailed between a sole plate and a top plate, with a brace. Quick to put up and the start of every wall, "
+                    + "but zombies see, reach and push straight through it. Board it to finish it. Stand it on the ground, "
+                    + "a floor, or another wall.",
+            hammer(), planks(2), need("Nails", ModItems.NAILS, 2)),
+    WOOD_WALL("Board a wall", Where.FRAME, Skill.CARPENTRY, 4, 160, 12, 16,
+            "Board a wall frame on both sides into a solid wall. Zombies have to beat it down plank by plank, and it "
+                    + "stands longer the better the carpenter who built it.",
+            hammer(), planks(3), need("Nails", ModItems.NAILS, 3)),
+    WINDOW_FRAME("Window frame", Where.WALL, Skill.CARPENTRY, 3, 120, 8, 14,
+            "A sill, a header and jambs in the run of a wall, round an opening to look out of. Board it over when they come.",
+            hammer(), planks(2), need("Nails", ModItems.NAILS, 2)),
+    DOOR_FRAME("Door frame", Where.WALL, Skill.CARPENTRY, 3, 140, 10, 14,
+            "Two jambs and a header, two blocks tall, in the run of a wall. Walk through it, or hang a door in it.",
+            hammer(), planks(3), need("Nails", ModItems.NAILS, 3)),
+    WOOD_DOOR("Wooden door", Where.DOORWAY, Skill.CARPENTRY, 4, 200, 14, 14,
+            "A ledged and braced plank door hung in a door frame. Opens by hand; zombies have to beat it in.",
+            hammer(), planks(4), need("Nails", ModItems.NAILS, 4),
+            need("Door hinges", s -> BuiltInRegistries.ITEM.getKey(s.getItem()).equals(com.zomboidcraft.ZomboidCraft.id("hinges")), 1, ModItems.NAILS)),
+    POST("Wooden post", Where.POST, Skill.CARPENTRY, 3, 80, 6, 10,
+            "A squared timber post. Up to three stand one on another, and a floor goes on top: how a room is built out "
+                    + "over open ground or raised off it.",
+            hammer(), planks(2), need("Nails", ModItems.NAILS, 2)),
+    FLOOR("Wooden floor", Where.FLOOR, Skill.CARPENTRY, 3, 80, 6, 12,
+            "Boards over joists. It has to stand on something (a post, a wall or solid ground) or reach no more than "
+                    + "three boards from something that does. Take its support away and it sags, creaks, then falls in.",
+            hammer(), planks(2), need("Nails", ModItems.NAILS, 2));
 
-    /** Where a build goes: on a window or doorway, on open ground, on a parked car, or into your pack. */
-    public enum Where { OPENING, GROUND, CAR, MAKE }
+    /**
+     * Where a build goes: on a window or doorway, on open ground, on a parked car, into your pack; or for wood
+     * building, in the run of a wall, onto a wall frame, into a door frame, as a post, or as a floor.
+     */
+    public enum Where { OPENING, GROUND, CAR, MAKE, WALL, FRAME, DOORWAY, POST, FLOOR }
 
     /** Something a build uses up (or, for the tool, only needs on you). */
     public record Need(String label, Predicate<ItemStack> fits, int count, Item icon) {
@@ -109,6 +143,16 @@ public enum Build {
         this.about = about;
         this.tool = tool;
         this.needs = List.of(needs);
+    }
+
+    private static Need hammer() {
+        return tool("Hammer", ModItems.HAMMER);
+    }
+
+    /** Planks: the game's own, or the loot plank from a hardware store or a lumber pile. */
+    private static Need planks(int count) {
+        return need("Planks", s -> s.is(ItemTags.PLANKS) || BuiltInRegistries.ITEM.getKey(s.getItem()).equals(com.zomboidcraft.ZomboidCraft.id("plank")),
+                count, Items.OAK_PLANKS);
     }
 
     private static Need tool(String label, Item item) {
@@ -201,6 +245,43 @@ public enum Build {
                         : BuildBlocks.METAL_SHEET.defaultBlockState().setValue(BuildBlocks.MetalSheet.FACING, facing);
                 return new Spot(pos.immutable(), state, "");
             }
+            case FRAME -> {
+                if (!there.is(WoodBlocks.WALL_FRAME)) return Spot.no("Look at a wall frame.");
+                return new Spot(hit, WoodBlocks.WALL.defaultBlockState().setValue(WoodBlocks.Wall.AXIS, there.getValue(WoodBlocks.Frame.AXIS)), "");
+            }
+            case DOORWAY -> {
+                if (!there.is(WoodBlocks.DOOR_FRAME)) return Spot.no("Look at a door frame.");
+                BlockPos lower = there.getValue(WoodBlocks.DoorFrame.HALF) == net.minecraft.world.level.block.state.properties.DoubleBlockHalf.LOWER ? hit : hit.below();
+                Direction.Axis axis = there.getValue(WoodBlocks.DoorFrame.AXIS);
+                // the door faces the way you look as you hang it, as a door you place yourself would
+                Direction facing = looking.getAxis() != axis ? looking : Direction.fromAxisAndDirection(
+                        axis == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X, Direction.AxisDirection.POSITIVE);
+                return new Spot(lower.immutable(), WoodBlocks.DOOR.defaultBlockState().setValue(DoorBlock.FACING, facing), "");
+            }
+            case WALL, POST, FLOOR -> {
+                BlockPos pos = there.canBeReplaced() ? hit : hit.relative(face);
+                if (!level.getBlockState(pos).canBeReplaced()) return Spot.no("Something's in the way.");
+                // walls run across the way you're looking
+                Direction.Axis axis = looking.getClockWise().getAxis();
+                if (where == Where.FLOOR) {
+                    if (!WoodBlocks.supported(level, pos, null)) {
+                        return Spot.no("Nothing would hold it up: a post, a wall or ground under it, within " + com.zomboidcraft.ZcConfig.get().building.floorSpan + " boards.");
+                    }
+                    return new Spot(pos.immutable(), WoodBlocks.FLOOR.defaultBlockState(), "");
+                }
+                if (!WoodBlocks.base(level, pos.below())) return Spot.no("Needs the ground, a floor or a wall under it.");
+                if (where == Where.POST) {
+                    if (WoodBlocks.postsBelow(level, pos) >= com.zomboidcraft.ZcConfig.get().building.postStack) return Spot.no("Posts stand no more than three high.");
+                    return new Spot(pos.immutable(), WoodBlocks.POST.defaultBlockState(), "");
+                }
+                return switch (this) {
+                    case WINDOW_FRAME -> new Spot(pos.immutable(), WoodBlocks.WINDOW_FRAME.defaultBlockState().setValue(WoodBlocks.Window.AXIS, axis), "");
+                    case DOOR_FRAME -> level.getBlockState(pos.above()).canBeReplaced()
+                            ? new Spot(pos.immutable(), WoodBlocks.DOOR_FRAME.defaultBlockState().setValue(WoodBlocks.DoorFrame.AXIS, axis), "")
+                            : Spot.no("Needs two blocks of room.");
+                    default -> new Spot(pos.immutable(), WoodBlocks.WALL_FRAME.defaultBlockState().setValue(WoodBlocks.Frame.AXIS, axis), "");
+                };
+            }
             default -> {
                 BlockPos pos = there.canBeReplaced() ? hit : hit.relative(face);
                 if (!level.getBlockState(pos).canBeReplaced()) return Spot.no("Something's in the way.");
@@ -213,6 +294,7 @@ public enum Build {
                     case TRIPWIRE -> BuildBlocks.TRIPWIRE.defaultBlockState().setValue(BuildBlocks.Tripwire.AXIS,
                             looking.getClockWise().getAxis());
                     case RAIN_BARREL -> BuildBlocks.RAIN_BARREL.defaultBlockState();
+                    case CRATE -> com.zomboidcraft.world.blocks.CityBlocks.resolve("crate");
                     default -> BuildBlocks.SANDBAGS.defaultBlockState().setValue(BuildBlocks.Sandbags.FACING, looking);
                 };
                 return new Spot(pos.immutable(), state, "");

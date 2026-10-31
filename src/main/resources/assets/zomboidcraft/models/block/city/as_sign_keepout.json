@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "as_galv": "zomboidcraft:block/city/as_galv",
+    "as_sign_keepout": "zomboidcraft:block/city/as_sign_keepout",
+    "particle": "zomboidcraft:block/city/as_sign_keepout"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        2,
+        15
+      ],
+      "to": [
+        14,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_sign_keepout"
+        },
+        "south": {
+          "texture": "#as_galv",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#as_galv"
+        },
+        "west": {
+          "texture": "#as_galv"
+        },
+        "up": {
+          "texture": "#as_galv"
+        },
+        "down": {
+          "texture": "#as_galv"
+        }
+      }
+    }
+  ]
+}

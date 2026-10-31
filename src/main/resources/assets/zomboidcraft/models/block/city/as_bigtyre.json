@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "as_tread": "zomboidcraft:block/city/as_tread",
+    "as_tyre": "zomboidcraft:block/city/as_tyre",
+    "particle": "zomboidcraft:block/city/as_tyre"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        4
+      ],
+      "to": [
+        16,
+        16,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_tyre"
+        },
+        "south": {
+          "texture": "#as_tyre"
+        },
+        "east": {
+          "texture": "#as_tread",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#as_tread",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#as_tread",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#as_tread",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

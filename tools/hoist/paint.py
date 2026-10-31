@@ -19,7 +19,8 @@ OUT = os.path.join(HERE, '..', '..', 'src', 'main', 'resources', 'assets', 'zomb
 T = 32
 rng = np.random.default_rng(1983)
 
-BLUE, STEEL, RUBBER, CHROME, RESERVOIR, BOX, GREEN, RED, LAMP, HOSE, HAZARD, PLATE, MOTOR, BASE, KNOB, LADDER, CABLE, STICKER, BLUE_DARK, PAD = range(20)
+BLUE, STEEL, RUBBER, CHROME, RESERVOIR, BOX, GREEN, RED, LAMP, HOSE, HAZARD, PLATE, MOTOR, BASE, KNOB, LADDER, CABLE, STICKER, BLUE_DARK, PAD, \
+    JACK_RED, CRANE_YELLOW, WASHER_GREEN, SOLVENT, TREAD, MACHINE_GREY, TURNTABLE, JACK_LABEL, BRUSH = range(29)
 
 
 def noise(scale=1.0):
@@ -104,6 +105,30 @@ s = flat((236, 140, 30), grain=3)
 s[10:22, 6:26, :3] = (24, 24, 24)
 tile(STICKER, s)
 tile(PAD, flat((44, 44, 46), grain=6))
+# the shop tools (ShopToolRenderer): a red trolley jack with its white instruction label (refs garage-interior 05/06),
+# a yellow engine crane, a grey tyre machine with its ribbed turntable, a green solvent tub, tyre tread, a brush
+tile(JACK_RED, chips(flat((198, 30, 28), grain=5), bare=(120, 110, 100), n=8))
+tile(CRANE_YELLOW, chips(flat((226, 178, 26), grain=6), bare=(110, 100, 90), n=14))
+tile(WASHER_GREEN, chips(flat((46, 96, 58), grain=6), bare=(120, 120, 110), n=10))
+v = flat((70, 64, 40), grain=8, edge=0.9)
+v[::5, :, :3] *= 1.2                          # the dirty solvent's surface, oily streaks
+tile(SOLVENT, v)
+t = flat((30, 30, 32), grain=3)
+for x in range(0, T, 4):
+    t[:, x:x + 2, :3] *= 0.55                 # tread blocks
+tile(TREAD, t)
+tile(MACHINE_GREY, chips(flat((120, 124, 128), grain=6), bare=(160, 160, 156), n=8))
+u = flat((150, 152, 156), grain=4)
+for y in range(0, T, 5):
+    u[y:y + 2, :, :3] *= 0.6                  # the turntable's ribs
+tile(TURNTABLE, u)
+lab = flat((232, 228, 216), grain=3, edge=0.85)
+lab[5:27:4, 4:28, :3] = (110, 108, 104)
+lab[22:28, 22:28, :3] = (190, 30, 28)
+tile(JACK_LABEL, lab)
+br = flat((160, 120, 70), grain=7)
+br[:, ::3, :3] *= 0.7
+tile(BRUSH, br)
 os.makedirs(os.path.dirname(OUT), exist_ok=True)
 Image.fromarray(atlas.astype(np.uint8), 'RGBA').save(OUT)
 print('wrote', OUT)

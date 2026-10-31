@@ -100,6 +100,66 @@ public final class DigRules {
         }
     }
 
+    /**
+     * The kind of wall, which sets the level it takes: a wooden wall or a brick partition between rooms comes down
+     * early, brick facing the outside later, poured concrete and heavy steel (hulls, bulkheads, vaults) last.
+     */
+    public enum Wall {
+        WOOD(Tier.WOOD, "Wooden wall", 1.0), PARTITION(Tier.MASONRY, "Inside brick and plaster", 1.0),
+        OUTSIDE(Tier.MASONRY, "Outside brickwork", 1.3), CONCRETE(Tier.MASONRY, "Poured concrete", 1.6),
+        STEEL(Tier.METAL, "Steel", 1.0), HEAVY_STEEL(Tier.METAL, "Heavy steel", 1.6);
+
+        public final Tier tier;
+        public final String what;
+        final double slower;
+
+        Wall(Tier tier, String what, double slower) {
+            this.tier = tier;
+            this.what = what;
+            this.slower = slower;
+        }
+
+        public int level() {
+            ZcConfig.Digging d = ZcConfig.get().digging;
+            return switch (this) {
+                case WOOD, PARTITION, STEEL -> tier.level();
+                case OUTSIDE -> d.outsideMasonryLevel;
+                case CONCRETE -> d.concreteLevel;
+                case HEAVY_STEEL -> d.heavySteelLevel;
+            };
+        }
+    }
+
+    /** Which kind of wall this is, or null when it isn't one. */
+    @Nullable
+    public static Wall wall(BlockState state, BlockGetter level, BlockPos pos) {
+        Tier tier = wallTier(state, level, pos);
+        if (tier == null) {
+            return null;
+        }
+        String path = BuiltInRegistries.BLOCK.getKey(state.getBlock()).getPath();
+        return switch (tier) {
+            case WOOD -> Wall.WOOD;
+            case METAL -> path.matches(".*(hull|bulkhead|vault|blast|bunk_plate|armou?r|navy_).*") ? Wall.HEAVY_STEEL : Wall.STEEL;
+            case MASONRY -> path.matches(".*(concrete|cement|bunk_|park_|cellar|pillar|column|slab|bunker|silo|dam_|dm_).*") ? Wall.CONCRETE
+                    : outside(level, pos) ? Wall.OUTSIDE : Wall.PARTITION;
+        };
+    }
+
+    /** A wall with open sky beside it on one side: it faces the outside, so it holds the building up and keeps the weather out. */
+    private static boolean outside(BlockGetter level, BlockPos pos) {
+        if (!(level instanceof net.minecraft.world.level.LevelReader reader)) {
+            return false;
+        }
+        for (net.minecraft.core.Direction d : net.minecraft.core.Direction.Plane.HORIZONTAL) {
+            BlockPos next = pos.relative(d);
+            if (reader.getBlockState(next).isAir() && reader.canSeeSky(next)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /** The last ground column the server checked for you, so your own client stops cracking a block it won't let go. */
     public record Floor(int x, int z, int y) {
         public static final StreamCodec<io.netty.buffer.ByteBuf, Floor> STREAM_CODEC = StreamCodec.composite(
@@ -120,6 +180,18 @@ public final class DigRules {
         });
         PlayerBlockBreakEvents.BEFORE.register((level, player, pos, state, blockEntity) ->
                 !(player instanceof ServerPlayer server && active(player) && knockDown(server, (ServerLevel) level, pos, state)));
+        MoveNet.register();
+        unlocks();
+    }
+
+    /** The level-up card's lines for the building skills: each wall a level opens, and the levels where nothing breaks. */
+    private static void unlocks() {
+        for (Wall w : Wall.values()) {
+            if (w.level() > 0) com.zomboidcraft.skills.SkillUnlocks.add(w.tier.skill, w.level(), "Knock through " + w.what.toLowerCase(java.util.Locale.ROOT));
+        }
+        com.zomboidcraft.skills.SkillUnlocks.add(Skill.CARPENTRY, 10, "Furniture never breaks as you pick it up");
+        com.zomboidcraft.skills.SkillUnlocks.add(Skill.ELECTRICAL, 10, "Appliances and lights never break as you unhook them");
+        com.zomboidcraft.skills.SkillUnlocks.add(Skill.PLUMBING, 10, "Sinks, toilets and tubs never break as you take them out");
     }
 
     private static boolean active(Player player) {
@@ -149,12 +221,21 @@ public final class DigRules {
 
     /** Furniture and fixtures you can strip down with the tool for their material. */
     @Nullable
-    private static Tier propTier(BlockState state, BlockGetter level, BlockPos pos) {
+    public static Tier propTier(BlockState state, BlockGetter level, BlockPos pos) {
         Block block = state.getBlock();
         if (!(block instanceof CityBlock) || block instanceof EntityBlock || state.getDestroySpeed(level, pos) <= 0f) {
             return null;
         }
         return tierOf(state);
+    }
+
+    /**
+     * Whether a swing at a piece of furniture takes it apart for materials (Zomboid's Scrap) rather than lifting it:
+     * crouching with a tool that strips its material. Standing, the same hammer lifts it whole.
+     */
+    private static boolean stripping(BlockState state, Player player, BlockGetter level, BlockPos pos) {
+        Tier strip = propTier(state, level, pos);
+        return player.isShiftKeyDown() && strip != null && fits(strip, player.getMainHandItem());
     }
 
     public static boolean fits(Tier tier, ItemStack tool) {
@@ -177,15 +258,20 @@ public final class DigRules {
         if (belowFloor(state, player, level, pos)) {
             return 0f;
         }
-        Tier tier = wallTier(state, level, pos);
-        if (tier == null) {
-            return Float.NaN;
+        Wall wall = wall(state, level, pos);
+        if (wall == null) {
+            Moving.Piece piece = Moving.piece(state, level, pos);
+            if (piece == null || stripping(state, player, level, pos)) {
+                return Float.NaN;  // stripping it down for materials goes at the game's pace
+            }
+            return Moving.progress(piece, player, level, pos);
         }
-        int level0 = Skills.level(player, tier.skill), need = tier.level();
+        Tier tier = wall.tier;
+        int level0 = Skills.level(player, tier.skill), need = wall.level();
         if (!fits(tier, player.getMainHandItem()) || level0 < need) {
             return 0f;
         }
-        double ticks = tier.seconds(ZcConfig.get().digging) * 20 / (1 + 0.12 * (level0 - need));
+        double ticks = tier.seconds(ZcConfig.get().digging) * wall.slower * 20 / (1 + 0.12 * (level0 - need));
         return (float) (1 / Math.max(2, ticks));
     }
 
@@ -202,13 +288,13 @@ public final class DigRules {
     }
 
     /** Ground the world put there: anything that isn't a mod block (every building block is one). */
-    private static boolean natural(BlockState state) {
+    static boolean natural(BlockState state) {
         return state.getFluidState().isEmpty()
                 && BuiltInRegistries.BLOCK.getKey(state.getBlock()).getNamespace().equals("minecraft");
     }
 
     /** The top block of natural ground here, as the world generator laid it. */
-    private static int ground(ServerLevel level, int x, int z) {
+    static int ground(ServerLevel level, int x, int z) {
         if (GROUND.size() > 65536) {
             GROUND.clear();
         }
@@ -228,13 +314,19 @@ public final class DigRules {
             }
             return;
         }
-        Tier tier = wallTier(state, level, pos);
-        if (tier == null) {
+        Wall wall = wall(state, level, pos);
+        if (wall == null) {
+            Moving.Piece piece = Moving.piece(state, level, pos);
+            if (piece != null && !stripping(state, player, level, pos)) {
+                String no = Moving.refusal(piece, player, level, pos);
+                say(player, no != null ? no : Moving.risk(piece, player));
+            }
             return;
         }
-        int have = Skills.level(player, tier.skill), need = tier.level();
+        Tier tier = wall.tier;
+        int have = Skills.level(player, tier.skill), need = wall.level();
         if (!fits(tier, player.getMainHandItem())) {
-            say(player, tier.what + " needs " + tier.tools() + " to knock through" + (need > 0 ? ", and " + tier.skill.displayName() + " " + need + "." : "."));
+            say(player, wall.what + " needs " + tier.tools() + " to knock through" + (need > 0 ? ", and " + tier.skill.displayName() + " " + need + "." : "."));
         } else if (have < need) {
             say(player, "You need " + tier.skill.displayName() + " " + need + " to knock through this. You're at " + have
                     + ". Strip furniture down with the same tool to learn.");
@@ -255,10 +347,22 @@ public final class DigRules {
         boolean wall = tier != null;
         if (!wall) {
             tier = propTier(state, level, pos);
-            if (tier == null || !fits(tier, tool)) {
-                return false;
+            Moving.Piece piece = Moving.piece(state, level, pos);
+            if (tier == null || !fits(tier, tool) || piece != null && !player.isShiftKeyDown()) {
+                if (piece == null || Moving.refusal(piece, player, level, pos) != null) {
+                    return piece != null;  // not liftable yet: it stays put
+                }
+                Moving.pickUp(player, level, pos, state, piece);
+                return true;
             }
         }
+        strip(player, level, pos, tier, wall);
+        return true;
+    }
+
+    /** Takes a wall down, or a piece of furniture apart for what it's made of (Zomboid's Scrap), with the tool in hand. */
+    static void strip(ServerPlayer player, ServerLevel level, BlockPos pos, Tier tier, boolean wall) {
+        ItemStack tool = player.getMainHandItem();
         ZcConfig.Digging d = ZcConfig.get().digging;
         double share = wall ? 1 : 0.5;
         level.destroyBlock(pos, false, player);
@@ -275,7 +379,6 @@ public final class DigRules {
         Stamina.use(player, tier.endurance(d) * share);
         com.zomboidcraft.combat.Wear.use(tool, player, InteractionHand.MAIN_HAND, wall ? 2 : 1);
         Skills.addXp(player, tier.skill, wall ? 12 : 6);
-        return true;
     }
 
     private static void drop(ServerLevel level, BlockPos pos, ItemStack stack) {

@@ -91,6 +91,16 @@ public final class Placer {
         sink.vehicle(ox + wx + 0.5, oy + y, oz + wz + 0.5, yaw + 90 * rot, models, seed);
     }
 
+    /** An auto shop floor tool at local (x, z); see {@link BlockSink#shopTool}. */
+    public void shopTool(double x, int y, double z, float yaw, String kind, long seed) {
+        vehicle(x, y, z, yaw, "!tool:" + kind, seed);
+    }
+
+    /** Farm animals for a pen in local coordinates (see {@link BlockSink#herd}). */
+    public void herd(String species, int count, int x0, int z0, int x1, int z1, int y, long seed) {
+        vehicle((x0 + x1 + 1) / 2.0, y, (z0 + z1 + 1) / 2.0, 0, "!herd:" + species + ";" + count + ";" + (x1 - x0 + 1) + ";" + (z1 - z0 + 1), seed);
+    }
+
     /** Marks a local block for the sink (see {@link BlockSink#mark}). */
     public void mark(String what, int x, int y, int z) {
         int[] at = world(x, z);

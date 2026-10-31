@@ -29,7 +29,7 @@ import net.minecraft.world.item.ItemStack;
  */
 public final class PaperMaps {
     public enum Kind {
-        STREET, ATLAS
+        STREET, ATLAS, TOPO
     }
 
     /** How the map you just read went: false when this world has no county plan to draw from. */
@@ -38,7 +38,8 @@ public final class PaperMaps {
         if (!(level.getChunkSource().getGenerator() instanceof CountyChunkGenerator)) return false;
         CountyGen gen = CountyChunkGenerator.gen(level.getSeed());
         int px = player.getBlockX(), pz = player.getBlockZ();
-        CompletableFuture.supplyAsync(() -> kind == Kind.STREET ? street(gen, px, pz) : atlas(gen, px, pz))
+        CompletableFuture.supplyAsync(() -> kind == Kind.STREET ? street(gen, px, pz) : kind == Kind.TOPO ? topo(gen, px, pz)
+                        : atlas(gen, px, pz))
                 .whenComplete((reveal, error) -> level.getServer().execute(() -> {
                     if (error != null) {
                         ZomboidCraft.LOGGER.error("Couldn't draw a paper map", error);
@@ -72,6 +73,11 @@ public final class PaperMaps {
 
     private static MapNet.Reveal atlas(CountyGen gen, int px, int pz) {
         return draw(gen, "County road atlas", px - 2048, pz - 2048, 16, 2048, false);
+    }
+
+    /** A military topographic set: the whole county's lie of the land, coarser than the atlas but four times as wide. */
+    private static MapNet.Reveal topo(CountyGen gen, int px, int pz) {
+        return draw(gen, "Topographic map set", px - 4096, pz - 4096, 32, 4096, false);
     }
 
     private static String name(PlaceType type) {

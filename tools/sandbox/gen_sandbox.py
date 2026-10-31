@@ -14,7 +14,7 @@ OWNERS = {'population': 'ENTITY', 'lore': 'ENTITY', 'time': 'COMMANDS', 'utiliti
           'nature': 'SURVIVAL', 'character': 'SURVIVAL', 'skills': 'SURVIVAL', 'vehicles': 'VEHICLES',
           'firearms': 'WEAPONS', 'animals': 'SURVIVAL', 'map': 'LANDSCAPE'}
 BY_ID = [(r'^(DayNightCycle|NightDarkness|NightLength|ClimateCycle|FogCycle|Temperature|Rain|MaxFogIntensity|'
-          r'MaxRainFxIntensity|EnableSnowOnGround|FireSpread)$', 'WEATHER'),
+          r'MaxRainFxIntensity|EnableSnowOnGround)$', 'WEATHER'), (r'^FireSpread$', 'WEAPONS'),
          (r'^TimeSinceApo$', 'LOOT'), (r'^Water', 'SURVIVAL'), (r'^(Generator|AllowExteriorGenerator|LightBulb)', 'BASES'),
          (r'^Helicopter$', 'ENTITY'), (r'^(MetaEvent|SleepingEvent)$', 'AUDIO'), (r'^SirenShutoffHours$', 'VEHICLES'),
          (r'^Erosion', 'NONE (no erosion for now)'), (r'^Map\.', 'UI'), (r'^(HoursForCorpseRemoval|DecayingCorpse)', 'ENTITY')]
@@ -33,7 +33,7 @@ for o in d['options']:
     r = o['range'].strip()
     e = {'id': o['sandboxVar'].replace(' (?)', ''), 'group': GROUPS[o['group']], 'label': o['label'],
          'tooltip': ' '.join(o['tooltip'].split())}
-    vals = o['presets']
+    vals = o['presets'] if 'presets' in o else {'Apocalypse': o['default']}
     if r == 'On / Off':
         e['kind'] = 'toggle'
         conv = lambda v: 'true' if v.strip().lower() == 'on' else 'false'
@@ -55,10 +55,11 @@ for o in d['options']:
             nums = [float(v) for v in vals.values()]
             e['min'], e['max'] = min(nums + [1]), max(nums + [4])
         conv = lambda v: v.strip()
-    e['presets'] = {PRESETS[k]: conv(v) for k, v in vals.items()}
+    seen_vals = {PRESETS[k]: conv(v) for k, v in vals.items()}
+    e['default'] = seen_vals['apocalypse']
     if e['kind'] == 'choice':
         seen = []
-        for v in e['presets'].values():
+        for v in seen_vals.values():
             if v not in seen:
                 seen.append(v)
         e['choices'] = seen

@@ -6,8 +6,10 @@ import com.zomboidcraft.world.StandIns;
 import com.zomboidcraft.world.blocks.CityBlocks;
 import com.zomboidcraft.world.blocks.Fittings;
 import com.zomboidcraft.world.cars.CarHoist;
+import com.zomboidcraft.world.cars.ShopTool;
 import com.zomboidcraft.world.cars.CarModels;
 import com.zomboidcraft.world.cars.CarProp;
+import com.zomboidcraft.world.cars.CarParts;
 import com.zomboidcraft.world.cars.Cars;
 import com.zomboidcraft.world.county.CarSpacing;
 import com.zomboidcraft.world.county.ChunkSink;
@@ -119,9 +121,30 @@ public final class ChunkWriter implements ChunkSink {
             hoist(x, y, z, yaw, models, seed);
             return;
         }
+        if (models.startsWith("!herd:")) {
+            // a farm pen's animals, kept on the chunk for SURVIVAL to spawn (FarmHerds)
+            FarmHerds.add(chunk, x, y, z, yaw, models);
+            return;
+        }
+        if (models.startsWith("!tool:")) {
+            ShopTool.Kind kind = ShopTool.Kind.of(models.substring(6));
+            ShopTool tool = kind == null || !(chunk instanceof ProtoChunk) ? null : Cars.TOOL.create(region.getLevel(), EntitySpawnReason.STRUCTURE);
+            if (tool != null) {
+                tool.setKind(kind);
+                tool.snapTo(x, y, z, yaw, 0f);
+                ((ProtoChunk) chunk).addEntity(tool);
+            }
+            return;
+        }
         // "...@wrecked": how it's left pinned, whatever the shares (the cars on the harbour's bed)
         int at = models.indexOf('@');
-        spawn(x, y, z, yaw, filter(0, 99, at < 0 ? models : models.substring(0, at)), at < 0 ? null : models.substring(at + 1), seed, -1);
+        String names = at < 0 ? models : models.substring(0, at), variant = at < 0 ? null : models.substring(at + 1);
+        // a bare variant ("burnt", "abandoned": the highway places' wrecks) is any road car left that way
+        if (variant == null && CarModels.variants().contains(names)) {
+            variant = names;
+            names = null;
+        }
+        spawn(x, y, z, yaw, filter(0, 99, names), variant, seed, -1);
     }
 
     /** A car lift from {@link com.zomboidcraft.world.city.BlockSink#hoist}: "!hoist:notch;car models". */
@@ -201,9 +224,32 @@ public final class ChunkWriter implements ChunkSink {
         if (!ZcConfig.get().world.streetCars || !(chunk instanceof ProtoChunk proto)) {
             return null;
         }
+        // "wrecked^roof", "wrecked^side": a car left on its roof or its side (LANDSCAPE's road stories)
+        int pose = 0;
+        if (variant != null && variant.indexOf('^') >= 0) {
+            int at = variant.indexOf('^'), end = variant.indexOf('#', at);
+            String p = variant.substring(at + 1, end < 0 ? variant.length() : end);
+            pose = p.equals("roof") ? CarProp.POSE_ROOF : p.equals("side") ? CarProp.POSE_SIDE : 0;
+            variant = variant.substring(0, at) + (end < 0 ? "" : variant.substring(end));
+            if (variant.isEmpty() || variant.startsWith("#")) {
+                variant = "wrecked" + variant;
+            }
+        }
+        // "abandoned#jam": a traffic jam's car on the open road (world/county/Jams), left out under Zomboid's Traffic Jam off
+        if (variant != null && variant.endsWith("#jam")) {
+            if (!ZcConfig.get().world.trafficJams) {
+                return null;
+            }
+            variant = variant.substring(0, variant.length() - 4);
+        }
         SplittableRandom rng = new SplittableRandom(seed);
         CarModels.Model model = CarModels.pick(rng, filter);
         if (model == null) {
+            return null;
+        }
+        // Zomboid's Vehicle Spawn Rate thins the parked road vehicles; shop customers and lifted cars always stay
+        boolean kept = raised >= 0 || variant != null && variant.endsWith("#customer") || !CarParts.applies(model);
+        if (!kept && !Cars.spawnKept(seed)) {
             return null;
         }
         CarProp car = Cars.CAR.create(region.getLevel(), EntitySpawnReason.STRUCTURE);
@@ -232,11 +278,12 @@ public final class ChunkWriter implements ChunkSink {
             }
         }
         car.setLook(model.id, variant != null ? variant : Cars.pickVariant(rng));
+        car.setPose(pose);
         car.snapTo(x, ground, z, yaw, 0f);
         proto.addEntity(car);
         int base = (int) Math.ceil(ground - 0.05);
         int lift = (int) Math.round((base - ground) * 100);
-        for (int[] col : Cars.hullColumns(model, x, z, yaw)) {
+        for (int[] col : Cars.hullColumns(model, x, z, yaw, pose)) {
             int[] layers = Cars.layers(col, lift);
             for (int i = 0; i < layers.length; i++) {
                 if (layers[i] != 0 && col[0] >= bx && col[0] <= bx + 15 && col[1] >= bz && col[1] <= bz + 15) {

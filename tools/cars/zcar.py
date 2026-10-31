@@ -124,9 +124,13 @@ def pick(entry, index, variants=('usable', 'abandoned', 'wrecked', 'burnt')):
     a named one by id or kind, else one in the length range (never a jet), chosen by position."""
     x, y, z = entry[:3]
     h = java_hash(f'{x:.2f},{y},{z:.2f}')
-    names = entry[6].split(',') if len(entry) > 6 and entry[6] else None
-    if names and len(names) == 1 and '@' in names[0]:
+    names = entry[6].split('#')[0].split(',') if len(entry) > 6 and entry[6] else None
+    if names and len(names) == 1 and '@' in names[0] and names[0].startswith('='):
         return tuple(names[0].lstrip('=').split('@'))
+    pinned = None
+    if names and '@' in names[-1]:
+        # "car,van@abandoned" (a traffic jam's): any of the kinds, left that way
+        names[-1], pinned = names[-1].split('@', 1)
     names = [n.lstrip('=') for n in names] if names else None
     if names:
         cands = [m for m in index if m['id'] in names or m['kind'] in names]
@@ -135,5 +139,7 @@ def pick(entry, index, variants=('usable', 'abandoned', 'wrecked', 'burnt')):
     if not cands:
         return None, None
     m = cands[h % len(cands)]
+    if pinned in variants:
+        return m['id'], pinned
     state = variants[[0, 0, 0, 1, 1, 2][(h >> 8) % 6]] if m['kind'] != 'jet' else variants[[0, 0, 1][(h >> 8) % 3]]
     return m['id'], state

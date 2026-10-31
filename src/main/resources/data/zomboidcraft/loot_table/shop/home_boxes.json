@@ -249,6 +249,21 @@
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:unit_patch_set",
+          "weight": 8,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:newspaper_bundle",
           "weight": 8
         },

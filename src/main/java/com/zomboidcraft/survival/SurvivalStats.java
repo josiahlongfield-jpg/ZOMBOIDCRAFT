@@ -23,9 +23,23 @@ import net.minecraft.world.entity.player.Player;
  */
 public record SurvivalStats(float thirst, float fatigue, int wounds, int infection) {
     /** Seconds from infection to death: 40 minutes (two Minecraft days) by default. */
+    /**
+     * Seconds from bite to death, by Zomboid's Infection Mortality (zombieLore.mortality), in game time: a game day is
+     * 20 minutes, so 2-3 days is about 50 minutes (the middle of the range, the same on server and HUD).
+     */
     public static int infectionDuration() {
-        return Math.max(60, ZcConfig.get().survival.infectionMinutes * 60);
+        return switch (ZcConfig.get().zombieLore.mortality) {
+            case INSTANT -> 1;
+            case SECONDS_0_30, MINUTES_0_1 -> 2;
+            case HOURS_0_12 -> 6 * GAME_HOUR;
+            case DAYS_2_3 -> 60 * GAME_HOUR;
+            case WEEKS_1_2 -> 252 * GAME_HOUR;
+            case NEVER -> Integer.MAX_VALUE / 4;
+        };
     }
+
+    /** One game hour in real seconds (a 20-minute day). */
+    public static final int GAME_HOUR = 50;
 
     public static final SurvivalStats FRESH = new SurvivalStats(100f, 0f, 0, -1);
 

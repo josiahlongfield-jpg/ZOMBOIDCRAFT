@@ -401,6 +401,7 @@ fence_posts | Fence Post | C | 1 | 4.0 | farm hard
 cinder_block | Cinder Block | C | 1 | 16.0 | build farm
 propane_cylinder | Propane Cylinder | S | 10 | 15.0 | garage.2 hard camp farm diner
 gas_can | Gas Can | S | 6 | 1.2 | garage.3 trunk farm hard auto
+rubber_hose | Rubber Hose | C | 2 | 0.6 | garage.2 hard farm auto trunk
 """
 
 ROSTER['Electrical & electronics'] = """
@@ -526,6 +527,43 @@ combat_trousers | Combat Trousers | C | 10 | 0.6 | mil.3 thrift
 tactical_boots | Tactical Boots | S | 20 | 1.3 | mil.2 police gun
 denim_strips | Denim Strips | C | 1 | 0.05 | laund cloth thrift
 leather_strips | Leather Strips | S | 2 | 0.05 | cloth thrift farm
+fur_ushanka | Fur Ushanka | S | 12 | 0.3 | mil cloth thrift
+watch_cap | Watch Cap | C | 3 | 0.1 | mil.3 carrier dock thrift
+cbrn_mask | CBRN Mask | R | 30 | 0.8 | mil.3 bunker.2 police
+cbrn_suit | CBRN Suit | R | 40 | 2.5 | mil.2 bunker.2
+combat_shirt | Combat Shirt | S | 12 | 0.4 | mil.3
+fleece_liner | Fleece Liner | C | 8 | 0.5 | mil.3 camp thrift
+wet_weather_jacket | Wet-Weather Jacket | S | 16 | 0.8 | mil.3 camp
+flight_coverall | Flight Coverall | S | 18 | 1.0 | carrier.3 mil
+sniper_smock | Sniper Smock | R | 25 | 1.0 | mil
+arctic_parka | Arctic Parka | R | 35 | 2.4 | mil bunker
+snow_overwhites | Snow Overwhites | R | 18 | 1.0 | mil
+jungle_boots | Jungle Boots | S | 18 | 1.1 | mil thrift
+desert_boots | Desert Boots | S | 18 | 1.1 | mil.2 thrift
+arctic_boots | Arctic Boots | R | 30 | 2.0 | mil bunker
+flight_gloves | Flight Gloves | S | 10 | 0.1 | carrier.3 mil
+shooting_gloves | Shooting Gloves | S | 10 | 0.1 | gun.3 mil
+arctic_mittens | Arctic Mittens | S | 10 | 0.3 | mil
+riot_arm_guards | Riot Arm Guards | R | 20 | 0.8 | police.3
+riot_leg_guards | Riot Leg Guards | R | 22 | 1.2 | police.3
+wool_commando_sweater | Wool Commando Sweater | S | 14 | 0.7 | mil.2 thrift cloth
+shooting_earmuffs | Shooting Earmuffs | S | 8 | 0.3 | gun.3 police
+chainsaw_chaps | Chainsaw Chaps | S | 18 | 1.4 | farm hard build
+beekeeper_suit | Beekeeper Suit | R | 20 | 1.2 | farm
+cut_resistant_gloves | Cut-Resistant Gloves | C | 5 | 0.1 | diner factory hard
+shin_guards | Shin Guards | C | 5 | 0.3 | sport.3 school gym
+gaiters | Gaiters | C | 6 | 0.3 | camp sport mil
+football_shoulder_pads | Football Shoulder Pads | S | 15 | 2.0 | school.2 stadium.3 gym
+hockey_shoulder_pads | Hockey Shoulder Pads | S | 15 | 1.6 | sport stadium gym
+hockey_neck_guard | Hockey Neck Guard | C | 6 | 0.2 | sport stadium gym
+leather_neck_guard | Leather Neck Guard | S | 8 | 0.3 | thrift farm
+padded_football_pants | Padded Football Pants | S | 12 | 1.2 | school stadium.2 gym
+hockey_pants | Hockey Pants | S | 12 | 1.2 | sport stadium gym
+catchers_vest | Catcher's Chest Protector | S | 12 | 1.0 | school stadium sport
+hockey_gloves | Hockey Gloves | S | 10 | 0.6 | sport stadium gym
+chainmail_butcher_glove | Chainmail Butcher Glove | R | 20 | 0.3 | diner factory
+chainmail_sleeve | Chainmail Sleeve | R | 25 | 0.6 | diner factory
+athletic_cup | Athletic Cup | C | 3 | 0.1 | gym school sport
 # head
 baseball_cap | Baseball Cap | C | 2 | 0.1 | bed cloth thrift stadium body
 trucker_cap | Trucker Cap | C | 2 | 0.1 | worktruck farm thrift body
@@ -654,6 +692,8 @@ skillbook_maintenance | Home Maintenance, Vols 1-5 | S-P | 8-60 | 0.5 | books ha
 skillbook_masonry | Bricklaying Basics, Vols 1-5 | S-P | 8-60 | 0.5 | books hard build
 skillbook_metalworking | Metal Shop, Vols 1-5 | S-P | 8-60 | 0.5 | books factory farm school
 skillbook_piloting | Flight Training Manual, Vols 1-5 | R-G | 15-120 | 0.6 | carrier.3 mil books
+skillbook_electrical | Basic Electronics and Wiring, Vols 1-5 | S-P | 8-60 | 0.5 | books hard elec school
+skillbook_plumbing | Plumbing Made Easy, Vols 1-5 | S-P | 8-60 | 0.5 | books hard build
 # recipe magazines: each teaches one recipe or one finish blueprint
 mag_carpentry | Handyman Magazine (recipe) | S | 6 | 0.2 | desk hard books conv
 mag_mechanics | Car Mechanics Monthly (recipe) | S | 6 | 0.2 | garage auto conv
@@ -663,6 +703,7 @@ mag_electronics | Electronics Hobbyist (recipe) | R | 10 | 0.2 | elec desk
 mag_farming | Farm Almanac (recipe) | S | 6 | 0.3 | farm.3 books
 mag_hunting | Hunting & Trapping (recipe) | S | 6 | 0.2 | camp gun conv
 mag_guns | Gun Digest (finish blueprint) | R | 12 | 0.2 | gun.3 pawn conv
+mag_generators | How to Use Generators | S | 8 | 0.2 | elec garage hard books
 # reading for comfort
 paperback | Paperback Novel | C | 1 | 0.3 | night.3 books desk station bus
 hardback | Hardback Book | C | 2 | 0.8 | desk books mansion
@@ -855,6 +896,48 @@ halligan_tool | Halligan Bar | R | 20 | 5.0 | fire.3 firetruck
 scba_tank | Breathing Apparatus | P | 60 | 12.0 | fire.3 firetruck
 traffic_cone | Traffic Cone | C | 1 | 1.5 | build worktruck pcar
 road_sign | Road Sign | C | 1 | 4.0 | build
+camo_netting | Camo Netting | C | 5 | 3.0 | mil.3 sport camp
+waterproof_notebook | Waterproof Notebook | C | 2 | 0.1 | mil police desk
+signal_panel | Signal Panel | C | 4 | 0.5 | mil.3 carrier
+field_wire_spool | Field Wire Spool | C | 3 | 2.5 | mil.3 bunker
+tripwire_flare | Tripwire Flare | C | 5 | 0.4 | mil.3 bunker
+folding_cot | Folding Cot | C | 8 | 6.0 | mil.3 camp bunker
+unit_patch_set | Unit Patch Set | C | 2 | 0.05 | mil thrift attic
+angle_flashlight | Angle-Head Flashlight | C | 6 | 0.4 | mil.3 bunker
+radio_battery_pack | Radio Battery Pack | S | 8 | 1.0 | mil.3 bunker carrier
+lensatic_compass | Lensatic Compass | S | 8 | 0.2 | mil.3 sport camp
+topo_map_set | Topographic Map Set | S | 10 | 0.4 | mil.3 camp
+ghillie_kit | Ghillie Kit | S | 12 | 2.0 | mil sport gun
+periscope | Periscope | S | 15 | 1.5 | mil carrier
+military_binoculars | Military Binoculars | S | 18 | 1.0 | mil.3 carrier
+water_bladder | Water Bladder | S | 8 | 0.8 | mil.3 camp bunker
+ration_heater | Ration Heater | S | 3 | 0.05 | mil.3 bunker carrier
+blast_wall_bag | Blast Wall Bag | S | 15 | 12.0 | mil.3 dock
+unit_flag | Unit Flag | S | 10 | 0.8 | mil court
+survival_field_manual | Survival Field Manual | S | 6 | 0.4 | mil.3 books camp
+footlocker | Footlocker | S | 14 | 9.0 | mil.3
+field_radio | Field Radio | R | 40 | 7.5 | mil.3 carrier bunker
+laser_rangefinder | Laser Rangefinder | R | 35 | 0.8 | mil gun
+metal_detector | Metal Detector | R | 30 | 2.5 | mil hard pawn garage
+door_ram | Hydraulic Door Ram | R | 30 | 6.0 | police.3 fire mil
+quiet_generator | Quiet Field Generator | R | 50 | 60.0 | mil.3 bunker
+motion_sensor_kit | Motion Sensor Kit | R | 30 | 2.0 | mil.3 office
+tactical_floodlight | Tactical Floodlight | R | 25 | 8.0 | mil police.3
+codebook | Codebook | R | 20 | 0.3 | mil bunker.3
+checkpoint_overlay | Checkpoint Overlay | R | 25 | 0.1 | mil.3
+weapons_locker | Weapons Locker | R | 40 | 40.0 | mil.3 police
+parachute | Parachute | R | 20 | 12.0 | carrier.3 mil
+grappling_ladder | Grappling Hook and Ladder | R | 20 | 4.0 | mil sport
+thermal_monocular | Thermal Monocular | P | 90 | 0.6 | mil.3 police
+recon_drone | Recon Drone | P | 100 | 1.5 | mil.3 police
+map_table | Map Table | P | 60 | 25.0 | mil.3
+satellite_terminal | Satellite Terminal | P | 90 | 6.0 | mil.3 carrier
+regimental_drum | Regimental Drum | P | 50 | 5.0 | mil court mansion
+bunker_blueprints | Bunker Blueprints | P | 60 | 0.3 | mil bunker.3
+shell_casing_lamp | Shell Casing Lamp | P | 45 | 3.0 | mansion pawn mil
+ejection_seat | Ejection Seat | G | 220 | 90.0 | carrier mil
+launch_keys | Decommissioned Launch Keys | G | 250 | 0.2 | bunker
+cipher_machine | Wartime Cipher Machine | G | 300 | 12.0 | mansion.3 mil
 """
 
 ROSTER['Junk & scrap'] = """

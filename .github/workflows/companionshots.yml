@@ -1,6 +1,6 @@
 name: Companion shots
 
-# Films a companion looking after herself in a real client (CompanionCareTest) and pushes the frames and log to the
+# Films a companion in a real client (CompanionTradesTest; CompanionCareTest before it) and pushes the frames and log to the
 # shots/pd5a26 branch, for the NPC thread's video previews.
 on:
   workflow_dispatch:
@@ -24,7 +24,7 @@ jobs:
       - run: sudo apt-get update -q && sudo apt-get install -y -q xvfb xserver-xorg-core xserver-xorg-video-dummy mesa-utils libgl1-mesa-dri libglx-mesa0 libegl-mesa0 mesa-vulkan-drivers > /dev/null
       - name: Only the companion test
         run: |
-          sed -i 's/"fabric-client-gametest": \[[^]]*\]/"fabric-client-gametest": ["com.zomboidcraft.client.npc.CompanionCareTest"]/' src/gametest/resources/fabric.mod.json
+          sed -i 's/"fabric-client-gametest": \[[^]]*\]/"fabric-client-gametest": ["com.zomboidcraft.client.npc.CompanionTradesTest"]/' src/gametest/resources/fabric.mod.json
       - name: Shrink block textures for the software renderer
         run: |
           pip install -q pillow

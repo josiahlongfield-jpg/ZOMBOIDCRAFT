@@ -214,12 +214,27 @@
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:skillbook_electrical",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:skillbook_plumbing",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:mag_carpentry",
           "weight": 6
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:mag_farming",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:mag_generators",
           "weight": 4
         },
         {
@@ -521,6 +536,26 @@
               }
             }
           ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:waterproof_notebook",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:survival_field_manual",
+          "weight": 4
         },
         {
           "type": "minecraft:item",

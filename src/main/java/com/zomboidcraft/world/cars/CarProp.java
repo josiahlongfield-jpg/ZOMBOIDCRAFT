@@ -72,9 +72,13 @@ public class CarProp extends Entity {
     private static final EntityDataAccessor<Integer> SEATS = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.INT);
     /** The alarm's going off (a storm set it off): the horn honks and the lamps flash. */
     private static final EntityDataAccessor<Boolean> ALARM = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.BOOLEAN);
+    /** An emergency vehicle's siren is wailing (double-tap the horn). */
+    private static final EntityDataAccessor<Boolean> SIREN = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.BOOLEAN);
     /** An aircraft's attitude, engine (or rotor) speed, thrust, and the top speed the server allows ({@link Flight}). */
     private static final EntityDataAccessor<org.joml.Quaternionfc> AIR_ATTITUDE = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.QUATERNION);
     private static final EntityDataAccessor<Float> AIR_RPM = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.FLOAT);
+    /** Where a helicopter's searchlight is turned to, world space (the search helicopter's); zero is its own way, ahead and down. */
+    private static final EntityDataAccessor<org.joml.Vector3fc> SEARCH_AIM = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.VECTOR3);
     private static final EntityDataAccessor<Float> AIR_POWER = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> AIR_TOP = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.FLOAT);
     /** A crashed aircraft whose wings, nose and tail have been torn off ({@link AirBreakup}). */
@@ -93,6 +97,12 @@ public class CarProp extends Entity {
     private static final EntityDataAccessor<String> PARTS = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.STRING);
     /** How high a hoist's arms have it, metres (0 on its wheels): up at all, it can't be driven off. */
     private static final EntityDataAccessor<Float> LIFT = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.FLOAT);
+    /** A trolley jack under one corner ({@link ShopTool}): which (0-3, -1 none) and how high it's lifted. */
+    private static final EntityDataAccessor<Integer> JACK = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Float> JACK_LIFT = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.FLOAT);
+    /** How a wreck was left lying: on its wheels, on its roof, or on its side (worldgen's "wrecked^roof"). */
+    private static final EntityDataAccessor<Integer> POSE = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.INT);
+    public static final int POSE_ROOF = 1, POSE_SIDE = 2;
     /** Server: the gunner holds the trigger; rounds due by the rate; ticks till the belt's loaded; rounds fired. */
     boolean turretTrigger;
     int beltBusy, turretShots, fireTicks;
@@ -143,6 +153,12 @@ public class CarProp extends Entity {
     private boolean hotwired;
     /** Whether a car's condition has been decided yet ({@link #carCondition}). */
     private boolean worn;
+    /** Whether a road vehicle's tank has been rolled (Zomboid's Chance Has Gas and Initial Gas), the first time it ticks. */
+    private boolean fuelRolled;
+    /** Zomboid's Locked Vehicle Frequency and Car Alarm, rolled once: whether the doors are locked, and whether it has an alarm armed. */
+    private boolean lockRolled, locked, armed;
+    /** Ticks the siren has been on (Siren Shutoff Hours), and when the horn was last pressed (a double tap is the siren). */
+    private int sirenTicks, hornPressedAt = -100;
     /** Server side: wear owed each part slot below a whole percent, so slow wear adds up. */
     private final double[] partWear = new double[CarParts.SLOTS.size()];
     private double lastSpeedForWear;
@@ -198,7 +214,9 @@ public class CarProp extends Entity {
         builder.define(GLASS, "");
         builder.define(SEATS, 0);
         builder.define(ALARM, false);
+        builder.define(SIREN, false);
         builder.define(AIR_ATTITUDE, new org.joml.Quaternionf());
+        builder.define(SEARCH_AIM, new org.joml.Vector3f());
         builder.define(AIR_RPM, 0f);
         builder.define(AIR_POWER, 0f);
         builder.define(AIR_TOP, 0f);
@@ -212,6 +230,9 @@ public class CarProp extends Entity {
         builder.define(BELT, 0);
         builder.define(PARTS, "");
         builder.define(LIFT, 0f);
+        builder.define(JACK, -1);
+        builder.define(JACK_LIFT, 0f);
+        builder.define(POSE, 0);
     }
 
     @Override
@@ -221,6 +242,13 @@ public class CarProp extends Entity {
         entityData.set(BROKEN, input.getIntOr("broken", 0) != 0);
         airFound = input.getIntOr("air_found", 0) != 0;
         entityData.set(FUEL, input.getFloatOr("fuel", 1f));
+        fuelRolled = input.getIntOr("fuel_rolled", 0) != 0;
+        entityData.set(POSE, input.getIntOr("pose", 0));
+        lockRolled = input.getIntOr("lock_rolled", 0) != 0;
+        locked = input.getIntOr("locked", 0) != 0;
+        armed = input.getIntOr("armed", 0) != 0;
+        entityData.set(SIREN, input.getIntOr("siren", 0) != 0);
+        sirenTicks = input.getIntOr("siren_ticks", 0);
         entityData.set(BATTERY, input.getIntOr("battery", 1) != 0);
         entityData.set(CONDITION, input.getIntOr("condition", 100));
         windows = input.getFloatOr("windows", windowsWhole());
@@ -273,6 +301,13 @@ public class CarProp extends Entity {
         output.putInt("broken", broken() ? 1 : 0);
         output.putInt("air_found", airFound ? 1 : 0);
         output.putFloat("fuel", fuel());
+        output.putInt("fuel_rolled", fuelRolled ? 1 : 0);
+        output.putInt("pose", pose());
+        output.putInt("lock_rolled", lockRolled ? 1 : 0);
+        output.putInt("locked", locked ? 1 : 0);
+        output.putInt("armed", armed ? 1 : 0);
+        output.putInt("siren", siren() ? 1 : 0);
+        output.putInt("siren_ticks", sirenTicks);
         output.putInt("battery", battery() ? 1 : 0);
         output.putInt("condition", condition());
         output.putFloat("windows", windows);
@@ -306,6 +341,9 @@ public class CarProp extends Entity {
 
     /** The loot table for this car's boot, from what kind of vehicle it is. */
     public String lootTable() {
+        if (survivor()) {
+            return "survivor";     // someone's whole life in the back: LOOT's survivor table
+        }
         return switch (model()) {
             case "swat_van" -> "swat";
             case "ambulance", "ambulance_van" -> "ambulance";
@@ -333,12 +371,19 @@ public class CarProp extends Entity {
             return;
         }
         CarModels.Model m = CarModels.get(model());
+        if (player instanceof net.minecraft.server.level.ServerPlayer sp && !hasPassenger(player) && Fuel.useCan(sp, this)) {
+            return;     // a gas can in hand: pour it in, or siphon the tank
+        }
         if (m != null && m.jet() && player instanceof net.minecraft.server.level.ServerPlayer sp && !hasPassenger(player)
                 && AirReadiness.service(this, sp)) {
             return;     // fuel, a battery or parts in hand: service it rather than climb in
         }
         if (m != null && m.jet() || !(m != null && m.searchedOnly()) && !player.isSecondaryUseActive() && !atBoot(location)) {
             getIn(player);
+            return;
+        }
+        if (locked && !CarKeys.carries(player, this)) {
+            player.sendOverlayMessage(Component.literal("The boot's locked. Get in by a door (sneak and G smashes a window) and pop it."));
             return;
         }
         if (!searched) {
@@ -387,6 +432,38 @@ public class CarProp extends Entity {
         entityData.set(LIFT, metres);
     }
 
+    public float liftHeight() {
+        return entityData.get(LIFT);
+    }
+
+    /** The corner a trolley jack holds up (0 front left, 1 front right, 2 rear left, 3 rear right), or -1. */
+    /** 0 on its wheels, {@link #POSE_ROOF} or {@link #POSE_SIDE}: a wreck that never drives again where it lies. */
+    public int pose() {
+        return entityData.get(POSE);
+    }
+
+    public void setPose(int pose) {
+        entityData.set(POSE, pose);
+    }
+
+    public int jackCorner() {
+        return entityData.get(JACK);
+    }
+
+    public float jackLift() {
+        return entityData.get(JACK_LIFT);
+    }
+
+    /** Whether this wheel's corner is jacked high enough to spin the wheel free. */
+    public boolean jackedFree(int corner) {
+        return jackCorner() == corner && jackLift() >= ShopTool.JACK_LIFT - 0.02f;
+    }
+
+    public void setJack(int corner, float metres) {
+        entityData.set(JACK, corner);
+        entityData.set(JACK_LIFT, corner < 0 ? 0f : metres);
+    }
+
     /** Whether a point (relative to the car, or in the world) is at its front end, where the bonnet and the engine are. */
     public boolean atBonnet(Vec3 location) {
         CarModels.Model m = CarModels.get(model());
@@ -427,8 +504,16 @@ public class CarProp extends Entity {
 
     /** Gets in to the seat given (by its door handle), or with -1 the free seat nearest where they stand. */
     public void getIn(Player player, int seat) {
+        if (com.zomboidcraft.zombie.BeltedDead.doorOpened(this, player)) {
+            return;   // the dead driver comes out at you instead
+        }
         if ("burnt".equals(variant())) {
             player.sendOverlayMessage(Component.literal("It's burnt out."));
+            return;
+        }
+        if (pose() != 0) {
+            player.sendOverlayMessage(Component.literal(pose() == POSE_ROOF ? "It's on its roof. Nobody's getting in that way."
+                    : "It's on its side. You can't get in."));
             return;
         }
         if (player.isPassenger() || !canAddPassenger(player)) {
@@ -441,6 +526,9 @@ public class CarProp extends Entity {
             player.sendOverlayMessage(Component.literal("Someone's in that seat."));
             return;
         }
+        if (locked && !hasPassenger(player) && !breakIn(player)) {
+            return;
+        }
         nextSeat = seat >= 0 ? seat : nearestFreeSeat(player);
         if (!seatFitted(nextSeat)) {
             player.sendOverlayMessage(Component.literal(nextSeat == 0 ? "The driver's seat is gone: nowhere to sit and drive."
@@ -448,6 +536,17 @@ public class CarProp extends Entity {
             return;
         }
         player.startRiding(this);
+    }
+
+    /** The model's seats (model space, the driver's first), for the dead belted into them. */
+    public float[][] seatSpots() {
+        CarModels.Model m = CarModels.get(model());
+        return m == null || m.seats == null ? new float[0][] : m.seats;
+    }
+
+    /** Where to sit someone in seat s: the next rider added goes there. */
+    public void seatNext(int s) {
+        nextSeat = s;
     }
 
     /** Whether seat s still has a seat in it (Zomboid's seat parts); cars without parts have all theirs. */
@@ -726,7 +825,7 @@ public class CarProp extends Entity {
         entityData.set(SMASHED, true);
         server.playSound(null, attacker.getX(), attacker.getEyeY(), attacker.getZ(), SoundEvents.GLASS_BREAK, SoundSource.HOSTILE,
                 1.2f, 0.8f + random.nextFloat() * 0.2f);
-        Noise.emit(server, position(), 16);
+        Noise.emitEngine(server, position(), 16);
         return false;
     }
 
@@ -739,7 +838,7 @@ public class CarProp extends Entity {
         server.playSound(null, at.x, at.y, at.z, SoundEvents.GLASS_BREAK, SoundSource.BLOCKS, 1.2f, 0.8f + random.nextFloat() * 0.2f);
         server.sendParticles(new net.minecraft.core.particles.BlockParticleOption(net.minecraft.core.particles.ParticleTypes.BLOCK,
                 net.minecraft.world.level.block.Blocks.GLASS.defaultBlockState()), at.x, at.y, at.z, 24, 0.3, 0.2, 0.3, 0.1);
-        Noise.emit(server, position(), 16);
+        Noise.emitEngine(server, position(), 16);
     }
 
     /**
@@ -884,7 +983,8 @@ public class CarProp extends Entity {
         if (catchAt >= 0 && tickCount >= catchAt) {
             catchAt = -1;
             entityData.set(ENGINE, true);
-            Noise.emit(server, position(), 24);
+            stopAlarm();      // started, by key or wires: the alarm's brain gives up
+            Noise.emitEngine(server, position(), 24);
         }
         if (doorShutAt >= 0 && tickCount >= doorShutAt) {
             doorShutAt = -1;
@@ -899,7 +999,7 @@ public class CarProp extends Entity {
             return "It's dead. It won't start.";
         }
         rollKey();
-        String how = keyWhere == CarKeys.IGNITION ? "The key's in the ignition: C to start it."
+        String how = keyWhere == CarKeys.IGNITION || com.zomboidcraft.ZcConfig.get().world.vehicleEasyUse ? "The key's in the ignition: C to start it."
                 : CarKeys.carries(player, this) ? "You have the key: C to start it."
                 : hotwired ? "It's been hotwired: C to start it."
                 : "No key: C to hotwire it. The wiring looks " + wiring(carCondition()) + ".";
@@ -914,11 +1014,13 @@ public class CarProp extends Entity {
         if (!aircraft() && !worn) {
             worn = true;
             java.util.Random rng = new java.util.Random(getUUID().getLeastSignificantBits());
-            setCondition(switch (variant()) {
+            int found = survivor() ? 85 + rng.nextInt(16) : switch (variant()) {
                 case "usable" -> 55 + rng.nextInt(46);
                 case "abandoned" -> 15 + rng.nextInt(46);
                 default -> rng.nextInt(16);
-            });
+            };
+            // Zomboid's General Condition; wrecks and burnt-out shells stay ruins
+            setCondition("usable".equals(variant()) || "abandoned".equals(variant()) ? Math.clamp(found + Cars.conditionShift(), 0, 100) : found);
         }
         if (!aircraft() && !parts().isEmpty()) {
             return CarParts.overall(parts());
@@ -977,7 +1079,7 @@ public class CarProp extends Entity {
             return true;
         }
         rollKey();
-        return keyWhere == CarKeys.IGNITION || hotwired || CarKeys.carries(player, this);
+        return keyWhere == CarKeys.IGNITION || hotwired || CarKeys.carries(player, this) || com.zomboidcraft.ZcConfig.get().world.vehicleEasyUse;
     }
 
     public boolean lightsOn() {
@@ -1016,6 +1118,7 @@ public class CarProp extends Entity {
         if (!canStart(player)) {
             hotwireLeft = (int) Math.round(com.zomboidcraft.ZcConfig.get().world.hotwireSeconds * 20);
             hotwirer = player;
+            soundAlarm();
             player.sendOverlayMessage(Component.literal("No key. You pull the panel off under the dash: the wiring looks "
                     + wiring(carCondition()) + "..."));
             return;
@@ -1030,6 +1133,13 @@ public class CarProp extends Entity {
 
     /** The starter turns over and the engine catches about three seconds later. */
     private void crank(ServerLevel server) {
+        if (roadCar() && fuel() <= 0) {
+            server.playSound(null, getX(), getY(), getZ(), CarSounds.STALL, SoundSource.NEUTRAL, 1f, 1f);
+            if (getControllingPassenger() instanceof Player player) {
+                player.sendOverlayMessage(Component.literal("It cranks and cranks but won't catch: the tank's dry."));
+            }
+            return;
+        }
         String fault = parts().isEmpty() ? null : CarParts.startFault(parts(), new java.util.Random(random.nextLong()),
                 knowsCars(getControllingPassenger()));
         if (fault != null) {
@@ -1156,6 +1266,7 @@ public class CarProp extends Entity {
         }
         alarmLeft = ticks;
         entityData.set(ALARM, true);
+        level().playSound(null, getX(), getY(), getZ(), CarSounds.ALARM, SoundSource.NEUTRAL, 2.5f, 1f);
         return true;
     }
 
@@ -1193,25 +1304,166 @@ public class CarProp extends Entity {
         if (alarmLeft <= 0) {
             return;
         }
-        if (--alarmLeft == 0 || isVehicle()) {
+        if (--alarmLeft == 0) {
             alarmLeft = 0;
             entityData.set(ALARM, false);
             return;
         }
-        if (alarmLeft % 16 == 0) {
-            server.playSound(null, getX(), getY(), getZ(), CarSounds.HORN, SoundSource.NEUTRAL, 2f, 1f);
+        if (alarmLeft % 79 == 0) {
+            server.playSound(null, getX(), getY(), getZ(), CarSounds.ALARM, SoundSource.NEUTRAL, 2.5f, 1f);
         }
         if (alarmLeft % 40 == 0) {
-            Noise.emit(server, position(), 56);
+            Noise.emitEngine(server, position(), 56);
+        }
+    }
+
+    // ---------------------------------------------------------------- locks, alarms, sirens (Zomboid's settings)
+
+    private static double share(String often) {
+        return switch (often) {
+            case "never" -> 0;
+            case "extremely_rare" -> 0.03;
+            case "rare" -> 0.1;
+            case "sometimes" -> 0.3;
+            case "often" -> 0.55;
+            case "very_often" -> 0.8;
+            default -> 0.3;
+        };
+    }
+
+    /** Zomboid's Locked Vehicle Frequency and Car Alarm: whether a car that still runs is found locked, and armed. */
+    private void rollLock() {
+        lockRolled = true;
+        if (!roadCar() || !engineRuns()) {
+            return;
+        }
+        java.util.Random rng = new java.util.Random(getUUID().getMostSignificantBits() ^ 0x10C4L);
+        com.zomboidcraft.ZcConfig.World w = com.zomboidcraft.ZcConfig.get().world;
+        rollKey();
+        // keys left in the ignition mean nobody locked up; a shop's customer cars are always locked
+        locked = !w.vehicleEasyUse && keyWhere != CarKeys.IGNITION && (customer || survivor() || rng.nextDouble() < share(w.carLocked));
+        armed = !w.vehicleEasyUse && rng.nextDouble() < share(w.carAlarm);
+    }
+
+    public boolean locked() {
+        return locked;
+    }
+
+    /**
+     * Someone tries a locked door: their key opens it; sneaking, they smash the nearest window and reach in (glass
+     * everywhere, and an armed alarm goes off). Returns whether they're in.
+     */
+    private boolean breakIn(Player player) {
+        if (CarKeys.carries(player, this)) {
+            locked = false;
+            stopAlarm();
+            level().playSound(null, getX(), getY(), getZ(), SoundEvents.IRON_TRAPDOOR_OPEN, SoundSource.NEUTRAL, 0.5f, 1.8f);
+            player.sendOverlayMessage(Component.literal("You unlock it with the key."));
+            return true;
+        }
+        if (!player.isSecondaryUseActive() || !(level() instanceof ServerLevel server)) {
+            player.sendOverlayMessage(Component.literal("It's locked. Sneak and press G to smash a window and reach in."));
+            return false;
+        }
+        CarGlass.Window[] ws = CarGlass.windows(CarModels.get(model()), variantIndex());
+        CarGlass.Window best = null;
+        double bestD = Double.MAX_VALUE;
+        for (CarGlass.Window w : ws) {
+            if (w != null && panes().closed(w.index())) {
+                Vec3 at = toWorld(new float[]{(float) w.centre().x, (float) w.centre().y, (float) w.centre().z});
+                double d = at.distanceToSqr(player.getEyePosition());
+                if (d < bestD) {
+                    best = w;
+                    bestD = d;
+                }
+            }
+        }
+        if (best != null) {
+            shatter(server, best);
+        }
+        locked = false;
+        soundAlarm();
+        player.sendOverlayMessage(Component.literal(best != null ? "You put the window in and reach for the lock." : "You reach in and pop the lock."));
+        return true;
+    }
+
+    /** A break-in sets off an armed alarm (once: after that its fuse is blown). */
+    private void soundAlarm() {
+        if (armed && tripAlarm(com.zomboidcraft.ZcConfig.get().building.carAlarmSeconds * 20 + 40 * 20)) {
+            armed = false;
+        }
+    }
+
+    /**
+     * Zomboid's Recently Survivor Vehicles: a rare running car someone was living out of after the outbreak, found
+     * locked, in good repair and fuelled (none, low, normal, high). Decided by the car itself, so it never changes.
+     */
+    public boolean survivor() {
+        if (!roadCar() || !"usable".equals(variant()) || customer) {
+            return false;
+        }
+        double share = switch (com.zomboidcraft.ZcConfig.get().world.survivorCars) {
+            case "none" -> 0;
+            case "normal" -> 0.03;
+            case "high" -> 0.06;
+            default -> 0.012;
+        };
+        return new java.util.Random(getUUID().getLeastSignificantBits() ^ 0x5A7L).nextDouble() < share;
+    }
+
+    /** Police cars, ambulances, fire trucks and the like: the ones with a siren. */
+    public boolean emergency() {
+        CarModels.Model m = CarModels.get(model());
+        String id = model();
+        return m != null && ("emergency".equals(m.kind) || id.startsWith("police") || id.contains("ambulance") || id.contains("fire_truck")
+                || id.startsWith("swat"));
+    }
+
+    public boolean siren() {
+        return entityData.get(SIREN);
+    }
+
+    private void setSiren(Player driver, boolean on) {
+        if (on && (!engineRuns() || !battery())) {
+            driver.sendOverlayMessage(Component.literal("The siren gives a dying squawk: no power."));
+            return;
+        }
+        entityData.set(SIREN, on);
+        sirenTicks = 0;
+        driver.sendOverlayMessage(Component.literal(on ? "Siren on. Double-tap H to kill it." : "Siren off."));
+    }
+
+    /** The siren wails on whether anyone's in or not; zombies come (Siren Effects Zombies) until Siren Shutoff Hours runs out. */
+    private void siren(ServerLevel server) {
+        if (!siren()) {
+            return;
+        }
+        com.zomboidcraft.ZcConfig.World w = com.zomboidcraft.ZcConfig.get().world;
+        sirenTicks++;
+        if (w.sirenShutoffHours > 0 && sirenTicks > w.sirenShutoffHours * 1000) {
+            entityData.set(SIREN, false);     // a Zomboid hour is a Minecraft one: 1000 ticks
+            return;
+        }
+        if (sirenTicks % 120 == 1) {
+            server.playSound(null, getX(), getY(), getZ(), CarSounds.SIREN, SoundSource.NEUTRAL, 3f, 1f);
+        }
+        if (w.sirenEffectsZombies && sirenTicks % 40 == 0) {
+            Noise.emitEngine(server, position(), 96);
         }
     }
 
     /** The driver leans on the horn: loud, and every zombie in earshot comes. */
     public void honk(Player driver) {
+        if (level() instanceof ServerLevel server && getControllingPassenger() == driver && emergency() && tickCount - hornPressedAt < 10) {
+            hornPressedAt = -100;
+            setSiren(driver, !siren());
+            return;
+        }
+        hornPressedAt = tickCount;
         if (level() instanceof ServerLevel server && getControllingPassenger() == driver && tickCount >= hornFreeAt && !jet()) {
             hornFreeAt = tickCount + 40;
             server.playSound(null, getX(), getY(), getZ(), CarSounds.HORN, SoundSource.NEUTRAL, 1.5f, 1f);
-            Noise.emit(server, position(), 48);
+            Noise.emitEngine(server, position(), 48);
         }
     }
 
@@ -1236,7 +1488,8 @@ public class CarProp extends Entity {
 
     @Override
     protected boolean canAddPassenger(Entity passenger) {
-        return passenger instanceof Player && getPassengers().size() < seats() && !"burnt".equals(variant()) && !crashed;
+        return (passenger instanceof Player || com.zomboidcraft.zombie.BeltedDead.belted(passenger))
+                && getPassengers().size() < seats() && !"burnt".equals(variant()) && !crashed;
     }
 
     /** Whoever sits at the wheel drives; a car with only passengers in it goes nowhere. */
@@ -1323,10 +1576,10 @@ public class CarProp extends Entity {
      * through the doors (or round the cockpit), and grow back as they get out.
      */
     private void fit(Entity passenger, boolean in) {
-        if (level().isClientSide() || !(passenger instanceof Player player)) {
+        if (level().isClientSide() || !(passenger instanceof LivingEntity rider)) {
             return;
         }
-        net.minecraft.world.entity.ai.attributes.AttributeInstance scale = player.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.SCALE);
+        net.minecraft.world.entity.ai.attributes.AttributeInstance scale = rider.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.SCALE);
         if (scale == null) {
             return;
         }
@@ -1351,12 +1604,13 @@ public class CarProp extends Entity {
             int packed = entityData.get(SEATS) & ~(0xF << (4 * i));
             entityData.set(SEATS, packed | (Math.max(seat, 0) + 1) << (4 * i));
         }
-        if (first && level() instanceof ServerLevel server) {
+        boolean dead = com.zomboidcraft.zombie.BeltedDead.belted(passenger);
+        if (first && !dead && level() instanceof ServerLevel server) {
             Cars.clearHull(server, this);
             parkPending = false;
             mountedAt = tickCount;
         }
-        if (level() instanceof ServerLevel server) {
+        if (!dead && level() instanceof ServerLevel server) {
             door(server);
         }
         if (passenger instanceof Player player && player.isLocalPlayer()) {
@@ -1498,6 +1752,16 @@ public class CarProp extends Entity {
             if (!aircraft() && parts().isEmpty()) {
                 rollParts();
             }
+            if (!fuelRolled && !aircraft()) {
+                rollFuel();
+            }
+            if (!lockRolled && !aircraft()) {
+                rollLock();
+            }
+            siren(server);
+            if (roadCar()) {
+                burnFuel(server);
+            }
             if (entityData.get(OPEN) && server.getGameTime() % 10 == 0 && !beingSearched(server)) {
                 entityData.set(OPEN, false);
                 server.playSound(null, getX(), getY(), getZ(), SoundEvents.IRON_TRAPDOOR_CLOSE, SoundSource.BLOCKS, 0.6f, 0.7f);
@@ -1544,8 +1808,8 @@ public class CarProp extends Entity {
         if (m == null) {
             return;
         }
-        if (hoisted()) {
-            setDeltaMovement(Vec3.ZERO);    // wheels spinning in the air on the hoist's arms
+        if (hoisted() || jackCorner() >= 0 || pose() != 0) {
+            setDeltaMovement(Vec3.ZERO);    // wheels spinning in the air on the hoist's arms, or a corner up on a jack
             return;
         }
         double rad = Math.toRadians(getYRot());
@@ -1675,6 +1939,9 @@ public class CarProp extends Entity {
         }
         for (LivingEntity hit : struck(m)) {
             float damage = (float) (speed * speed * 25 + speed * 5);
+            if (hit instanceof Player) {
+                damage *= (float) com.zomboidcraft.ZcConfig.get().world.carHitDamage;     // Zomboid's Damage From Being Hit By A Car
+            }
             DamageSource source = damageSources().mobAttack(driver);
             if (hit.hurtServer(server, source, damage)) {
                 Vec3 away = hit.position().subtract(position());
@@ -1700,7 +1967,8 @@ public class CarProp extends Entity {
         if (speedBefore > 0.35 && lastSpeed < speedBefore * 0.45 && speed < speedBefore * 0.45) {
             server.playSound(null, getX(), getY(), getZ(), CarSounds.CRASH, SoundSource.NEUTRAL,
                     (float) Math.min(1.5, speedBefore * 1.4), 0.9f + random.nextFloat() * 0.2f);
-            Noise.emit(server, position(), 30);
+            Noise.emitEngine(server, position(), 30);
+            crashHurt(server, speedBefore);
             if (!parts().isEmpty()) {
                 crashWear(speedBefore);
             }
@@ -1711,13 +1979,13 @@ public class CarProp extends Entity {
         lastSpeed = speed;
         strike(server, driver, m, speed);
         if (engineOn() && tickCount % 10 == 0) {
-            Noise.emit(server, position(), (18 + 30 * speed) * Math.min(2.5, partDrive().noise()));
+            Noise.emitEngine(server, position(), (18 + 30 * speed) * Math.min(2.5, partDrive().noise()));
         }
         if (!parts().isEmpty()) {
             wearDriving(moved, speed);
         }
         if (engineOn() && tickCount % 5 == 0 && tickCount - mountedAt > 100) {
-            driver.sendOverlayMessage(Component.literal(Math.round(speed * 72) + " km/h"));
+            driver.sendOverlayMessage(Component.literal(Math.round(speed * 72) + " km/h" + (roadCar() ? "   " + gauge() : "")));
         }
     }
 
@@ -1763,9 +2031,42 @@ public class CarProp extends Entity {
         lastSpeedForWear = speed;
     }
 
+    /**
+     * Zomboid's Player Damage From Crash: everyone inside is thrown about by a crash from past about 30 km/h, worse
+     * the faster it was (twice the hurt at 70 as at 50): cuts on the head and arms off the wheel and glass, and from
+     * about 80 a chance of a broken bone (the survival body's 17-part health, on its six regions).
+     */
+    private void crashHurt(ServerLevel server, double speed) {
+        if (!com.zomboidcraft.ZcConfig.get().world.playerDamageFromCrash || speed < 0.42) {
+            return;
+        }
+        float damage = (float) (Math.pow(speed - 0.35, 1.6) * 40 * Cars.crashDamage());
+        for (Entity rider : getPassengers()) {
+            if (!(rider instanceof net.minecraft.server.level.ServerPlayer p) || p.isCreative()) {
+                continue;
+            }
+            p.hurtServer(server, damageSources().flyIntoWall(), damage);
+            if (!com.zomboidcraft.ZcConfig.get().survival.injuries) {
+                continue;
+            }
+            com.zomboidcraft.survival.Body body = com.zomboidcraft.survival.Body.get(p);
+            // head, torso and arms first; only a hard crash reaches the legs
+            com.zomboidcraft.survival.Body.Zone zone = com.zomboidcraft.survival.Body.Zone.values()[random.nextInt(speed > 0.9 ? 6 : 4)];
+            com.zomboidcraft.survival.Body.Region r = com.zomboidcraft.survival.Body.any(zone, random);
+            if (random.nextDouble() < Math.min(0.9, (speed - 0.35) * 1.5)) {
+                body = body.wound(r, com.zomboidcraft.survival.Body.Wound.LACERATION, true);
+            }
+            if (speed > 1.1 && random.nextDouble() < (speed - 1.1) * 1.5 && !body.part(r).fractured()) {
+                body = body.fracture(r);
+                p.sendOverlayMessage(Component.literal("You broke your " + r.label + " in the crash."));
+            }
+            com.zomboidcraft.survival.Body.set(p, body);
+        }
+    }
+
     /** A crash at speed (blocks a tick) knocks the front about: lights, bonnet, radiator, steering, the front wheels. */
     private void crashWear(double speed) {
-        double hit = Math.min(60, speed * speed * 60) * com.zomboidcraft.ZcConfig.get().world.partWear;
+        double hit = Math.min(60, speed * speed * 60) * com.zomboidcraft.ZcConfig.get().world.partWear * Cars.crashDamage();
         wear(CarParts.Part.HEADLIGHT, 0, hit * 1.5);
         wear(CarParts.Part.HEADLIGHT, 1, hit * 1.5);
         wear(CarParts.Part.BONNET, 0, hit);
@@ -1891,6 +2192,15 @@ public class CarProp extends Entity {
 
     public boolean helicopter() {
         return model().startsWith("heli_");
+    }
+
+    /** Turns the searchlight to point this way (world space), or back to its own way with zero (SearchHeli). */
+    public void aimSearchlight(Vec3 dir) {
+        entityData.set(SEARCH_AIM, new org.joml.Vector3f((float) dir.x, (float) dir.y, (float) dir.z));
+    }
+
+    public org.joml.Vector3fc searchlightAim() {
+        return entityData.get(SEARCH_AIM);
     }
 
     /** This aircraft's flight state (attitude, speed, engine), made the first time it's asked for. */
@@ -2029,7 +2339,94 @@ public class CarProp extends Entity {
     /** What the tanks hold when full, litres: the real aircraft's internal fuel, or a car's tank. */
     public float fuelCapacity() {
         String m = model();
-        return m.equals("jet_corvid") ? 10300 : m.equals("jet_gyrfalcon") ? 11800 : m.startsWith("heli") ? 1420 : 55;
+        if (m.equals("jet_corvid") || m.equals("jet_gyrfalcon") || m.startsWith("heli")) {
+            return m.equals("jet_corvid") ? 10300 : m.equals("jet_gyrfalcon") ? 11800 : 1420;
+        }
+        CarModels.Model cm = CarModels.get(m);
+        if (cm != null && "bus".equals(cm.kind)) {
+            return 150;
+        }
+        // Zomboid's tanks by class: a small car's, a standard one's, a truck's or van's
+        return switch (CarParts.kind(cm)) {
+            case SPORT -> 40;
+            case HEAVY -> cm != null && ("car".equals(cm.kind) || cm.kind == null) ? 70 : 80;
+            default -> 55;
+        };
+    }
+
+    /** A car, van, truck or bus that runs on the road's fuel (not an aircraft, boat or cart). */
+    public boolean roadCar() {
+        return !aircraft() && CarParts.applies(CarModels.get(model()));
+    }
+
+    /**
+     * The tank as found: Zomboid's Chance Has Gas decides whether there's any in it, Initial Gas how much.
+     * Wrecks and burnt-out shells are dry; a survivor-kept car comes full.
+     */
+    private void rollFuel() {
+        fuelRolled = true;
+        if (!roadCar()) {
+            return;
+        }
+        java.util.Random rng = new java.util.Random(getUUID().getLeastSignificantBits() ^ 0xF0E1L);
+        com.zomboidcraft.ZcConfig.World w = com.zomboidcraft.ZcConfig.get().world;
+        double has = switch (w.carChanceHasGas) {
+            case "low" -> 0.4;
+            case "high" -> 0.8;
+            default -> 0.6;
+        };
+        if (survivor()) {
+            setFuel(0.7f + rng.nextFloat() * 0.3f);     // kept topped up by whoever was living out of it
+            return;
+        }
+        if (!engineRuns() || rng.nextDouble() >= has) {
+            setFuel(0);
+            return;
+        }
+        double[] range = switch (w.carInitialGas) {
+            case "very_low" -> new double[] {0.02, 0.12};
+            case "normal" -> new double[] {0.15, 0.45};
+            case "high" -> new double[] {0.3, 0.7};
+            case "very_high" -> new double[] {0.5, 0.9};
+            case "full" -> new double[] {1, 1};
+            default -> new double[] {0.05, 0.25};
+        };
+        setFuel((float) (range[0] + rng.nextDouble() * (range[1] - range[0])));
+    }
+
+    /** Server tick: the running engine drinks by how hard it's worked, and a holed tank leaks whether it runs or not. */
+    private void burnFuel(ServerLevel server) {
+        if (fuel() <= 0) {
+            return;
+        }
+        float cap = fuelCapacity();
+        double litres = 0;
+        if (engineOn()) {
+            // about 35 minutes of cruising on a full standard tank; idling a quarter-litre a minute; worn engines drink more
+            double speed = getDeltaMovement().horizontalDistance();
+            double perMinute = 0.25 + 1.2 * Math.pow(Math.min(1.4, speed / 0.83), 1.5);
+            double load = CarParts.kind(CarModels.get(model())) == CarParts.Kind.HEAVY ? 1.6 : 1;
+            double engine = parts().isEmpty() ? 1 : 1 + 0.5 * (1 - CarParts.get(parts(), CarParts.Part.ENGINE, 0) / 100.0);
+            litres += perMinute * load * engine * com.zomboidcraft.ZcConfig.get().world.carGasConsumption / 1200;
+        }
+        int tank = parts().isEmpty() ? 100 : CarParts.get(parts(), CarParts.Part.FUEL_TANK, 0);
+        if (tank >= 0 && tank < 15) {
+            litres += (15 - tank) * 0.0005;     // a holed tank drips away: up to about a litre a minute
+        }
+        setFuel(fuel() - (float) (litres / cap));
+        if (fuel() <= 0 && engineOn()) {
+            entityData.set(ENGINE, false);
+            server.playSound(null, getX(), getY(), getZ(), CarSounds.STALL, SoundSource.NEUTRAL, 1f, 0.9f);
+            if (getControllingPassenger() instanceof Player player) {
+                player.sendOverlayMessage(Component.literal("The engine coughs and dies: out of fuel."));
+            }
+        }
+    }
+
+    /** The dash's fuel gauge, as the driver reads it. */
+    public String gauge() {
+        int eighths = Math.round(fuel() * 8);
+        return "E " + "\u258c".repeat(eighths) + "\u00b7".repeat(8 - eighths) + " F";
     }
 
     public boolean battery() {
@@ -2331,7 +2728,7 @@ public class CarProp extends Entity {
         }
         if (engineOn() && tickCount % 10 == 0) {
             // like Zomboid's helicopter: every zombie for miles comes to look
-            Noise.emit(server, position(), f.kind == Flight.Kind.HELI ? 112 : 72 + 72 * f.power);
+            Noise.emitEngine(server, position(), f.kind == Flight.Kind.HELI ? 112 : 72 + 72 * f.power);
         }
     }
 
@@ -2384,7 +2781,7 @@ public class CarProp extends Entity {
         player.sendOverlayMessage(Component.literal(on ? (helicopter() ? "Rotors coming up to speed. " : "Engines spooling up. ") + flightHelp()
                 : "Shutting down."));
         if (on) {
-            Noise.emit(server, position(), 48);
+            Noise.emitEngine(server, position(), 48);
         }
     }
 
@@ -2412,7 +2809,7 @@ public class CarProp extends Entity {
             }
         }
         entityData.set(ENGINE, false);
-        Noise.emit(server, position(), 128);
+        Noise.emitEngine(server, position(), 128);
         Flight f = flight();
         Quaternionf q = new Quaternionf(f.q);
         float rpm = f.rpm;

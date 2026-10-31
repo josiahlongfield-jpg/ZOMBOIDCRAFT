@@ -44,6 +44,12 @@ public final class Cars {
                     .sized(0.5f, 0.5f).clientTrackingRange(8).updateInterval(1).fireImmune().noLootTable()
                     .build(HOIST_KEY));
 
+    private static final ResourceKey<EntityType<?>> TOOL_KEY = ResourceKey.create(Registries.ENTITY_TYPE, ZomboidCraft.id("shop_tool"));
+    public static final EntityType<ShopTool> TOOL = Registry.register(BuiltInRegistries.ENTITY_TYPE, TOOL_KEY,
+            EntityType.Builder.<ShopTool>of(ShopTool::new, MobCategory.MISC)
+                    .sized(0.5f, 0.5f).clientTrackingRange(8).updateInterval(1).fireImmune().noLootTable()
+                    .build(TOOL_KEY));
+
     private static final ResourceKey<Block> HULL_KEY = ResourceKey.create(Registries.BLOCK, ZomboidCraft.id("car_hull"));
     public static final Block HULL = Registry.register(BuiltInRegistries.BLOCK, HULL_KEY, new CarHull(BlockBehaviour.Properties.of()
             .strength(-1f, 3600000f).noOcclusion().noLootTable().noTerrainParticles()
@@ -74,6 +80,18 @@ public final class Cars {
      * spilling past its corners; its underside is the lowest one under the body there.
      */
     public static List<int[]> hullColumns(CarModels.Model model, double x, double z, float yaw) {
+        return hullColumns(model, x, z, yaw, 0);
+    }
+
+    /**
+     * As above for a car left in a pose ({@link CarProp#POSE_ROOF}, {@link CarProp#POSE_SIDE}): on its roof it
+     * keeps about its own outline and height; on its side it's a slab as long as the car, as wide as the car is
+     * tall and as high as it is wide.
+     */
+    public static List<int[]> hullColumns(CarModels.Model model, double x, double z, float yaw, int pose) {
+        if (pose == CarProp.POSE_SIDE) {
+            return sideColumns(model, x, z, yaw);
+        }
         List<int[]> out = new ArrayList<>();
         double t = Math.toRadians(-yaw), cos = Math.cos(t), sin = Math.sin(t);
         double reach = Math.hypot(model.size[0], model.size[2]) / 2 + 0.5;
@@ -93,6 +111,31 @@ public final class Cars {
                     if (samples[2] > 0.15f) {
                         col[2 + q] = Math.round(samples[2] * 100);
                         col[6 + q] = Math.round(Math.min(Math.min(unders[0], unders[1]), Math.min(unders[2], unders[3])) * 100);
+                        any = true;
+                    }
+                }
+                if (any) {
+                    out.add(col);
+                }
+            }
+        }
+        return out;
+    }
+
+    private static List<int[]> sideColumns(CarModels.Model model, double x, double z, float yaw) {
+        List<int[]> out = new ArrayList<>();
+        double t = Math.toRadians(-yaw), cos = Math.cos(t), sin = Math.sin(t);
+        double halfAcross = model.size[1] / 2, halfLong = model.size[2] / 2 - 0.15, reach = Math.hypot(halfAcross, halfLong) + 0.5;
+        int top = Math.round(model.size[0] * 0.9f * 100);
+        for (int bx = Mth.floor(x - reach); bx <= Mth.floor(x + reach); bx++) {
+            for (int bz = Mth.floor(z - reach); bz <= Mth.floor(z + reach); bz++) {
+                int[] col = {bx, bz, 0, 0, 0, 0, 0, 0, 0, 0};
+                boolean any = false;
+                for (int q = 0; q < 4; q++) {
+                    double dx = bx + (q & 1) * 0.5 + 0.25 - x, dz = bz + (q >> 1) * 0.5 + 0.25 - z;
+                    double lx = dx * cos - dz * sin, lz = dx * sin + dz * cos;
+                    if (Math.abs(lx) < halfAcross && Math.abs(lz) < halfLong) {
+                        col[2 + q] = top;
                         any = true;
                     }
                 }
@@ -192,7 +235,7 @@ public final class Cars {
         double y = car.getY();
         int base = Mth.ceil(y - 0.05);
         int lift = (int) Math.round((base - y) * 100);
-        for (int[] col : hullColumns(m, car.getX(), car.getZ(), car.getYRot())) {
+        for (int[] col : hullColumns(m, car.getX(), car.getZ(), car.getYRot(), car.pose())) {
             int[] layers = layers(col, lift);
             for (int i = 0; i < layers.length; i++) {
                 if (layers[i] == 0) {
@@ -214,7 +257,7 @@ public final class Cars {
             return;
         }
         int base = Mth.floor(car.getY() + 0.01);
-        for (int[] col : hullColumns(m, car.getX(), car.getZ(), car.getYRot())) {
+        for (int[] col : hullColumns(m, car.getX(), car.getZ(), car.getYRot(), car.pose())) {
             for (int i = 0; i <= 7; i++) {
                 BlockPos pos = new BlockPos(col[0], base + i, col[1]);
                 if (level.getBlockState(pos).is(HULL)) {
@@ -224,6 +267,40 @@ public final class Cars {
                 }
             }
         }
+    }
+
+    /** Whether a parking spot keeps its road vehicle at the world's Vehicle Spawn Rate (decided by the spot's seed). */
+    public static boolean spawnKept(long seed) {
+        double share = switch (ZcConfig.get().world.carSpawnRate) {
+            case "none" -> 0;
+            case "very_low" -> 0.35;
+            case "normal" -> 0.85;
+            case "high" -> 1;
+            default -> 0.65;
+        };
+        return new java.util.SplittableRandom(seed ^ 0x5A7E5L).nextDouble() < share;
+    }
+
+    /** Zomboid's General Condition, as points on every found car's condition. */
+    public static int conditionShift() {
+        return switch (ZcConfig.get().world.carCondition) {
+            case "very_low" -> -30;
+            case "low" -> -15;
+            case "high" -> 15;
+            case "very_high" -> 30;
+            default -> 0;
+        };
+    }
+
+    /** Zomboid's Car Damage on Impact, as a multiplier on crash wear. */
+    public static double crashDamage() {
+        return switch (ZcConfig.get().world.carCrashDamage) {
+            case "very_low" -> 0.25;
+            case "low" -> 0.5;
+            case "high" -> 2;
+            case "very_high" -> 4;
+            default -> 1;
+        };
     }
 
     private Cars() {

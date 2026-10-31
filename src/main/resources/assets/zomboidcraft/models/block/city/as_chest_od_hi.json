@@ -1,0 +1,149 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "as_chrome": "zomboidcraft:block/city/as_chrome",
+    "as_drawers_od": "zomboidcraft:block/city/as_drawers_od",
+    "as_od": "zomboidcraft:block/city/as_od",
+    "particle": "zomboidcraft:block/city/as_drawers_od"
+  },
+  "elements": [
+    {
+      "from": [
+        1.5,
+        0,
+        4
+      ],
+      "to": [
+        14.5,
+        9,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_drawers_od"
+        },
+        "south": {
+          "texture": "#as_od"
+        },
+        "east": {
+          "texture": "#as_od"
+        },
+        "west": {
+          "texture": "#as_od"
+        },
+        "up": {
+          "texture": "#as_od"
+        },
+        "down": {
+          "texture": "#as_od",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        1.5,
+        9,
+        4
+      ],
+      "to": [
+        14.5,
+        10.5,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_od"
+        },
+        "south": {
+          "texture": "#as_od"
+        },
+        "east": {
+          "texture": "#as_od"
+        },
+        "west": {
+          "texture": "#as_od"
+        },
+        "up": {
+          "texture": "#as_od"
+        },
+        "down": {
+          "texture": "#as_od"
+        }
+      }
+    },
+    {
+      "from": [
+        1.5,
+        10.5,
+        5
+      ],
+      "to": [
+        14.5,
+        11.5,
+        15.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_od"
+        },
+        "south": {
+          "texture": "#as_od"
+        },
+        "east": {
+          "texture": "#as_od"
+        },
+        "west": {
+          "texture": "#as_od"
+        },
+        "up": {
+          "texture": "#as_od"
+        },
+        "down": {
+          "texture": "#as_od"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          10.5,
+          15
+        ],
+        "axis": "x",
+        "angle": 22.5
+      }
+    },
+    {
+      "from": [
+        5,
+        9.5,
+        3.5
+      ],
+      "to": [
+        11,
+        10,
+        4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_chrome"
+        },
+        "south": {
+          "texture": "#as_chrome"
+        },
+        "east": {
+          "texture": "#as_chrome"
+        },
+        "west": {
+          "texture": "#as_chrome"
+        },
+        "up": {
+          "texture": "#as_chrome"
+        },
+        "down": {
+          "texture": "#as_chrome"
+        }
+      }
+    }
+  ]
+}

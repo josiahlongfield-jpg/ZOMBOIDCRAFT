@@ -6,6 +6,8 @@ import com.zomboidcraft.client.sound.UiSounds;
 import com.zomboidcraft.combat.Stamina;
 import com.zomboidcraft.survival.Ailments;
 import com.zomboidcraft.survival.Body;
+import com.zomboidcraft.survival.Mood;
+import com.zomboidcraft.survival.Panic;
 import com.zomboidcraft.survival.Needs;
 import com.zomboidcraft.survival.Nutrition;
 import com.zomboidcraft.survival.SurvivalStats;
@@ -95,7 +97,8 @@ public final class MoodleHud {
                 Hud.sprite(g, Hud.id(p.trend > 0 ? "arrow_up" : "arrow_down"), x - 3.5f + slide, y + SIZE / 2f - 2.5f, 5, 5,
                         Hud.alpha(p.trend > 0 ? 0xFFE8D9B0 : 0xFF8FBF5E, a));
             }
-            if (n > 0) {
+            // names stay off while a screen is open, so they never write over the kit
+            if (n > 0 && mc.gui.screen() == null) {
                 // the name's capitals start level with the plate's top edge and the level bars end on its bottom edge
                 float w = Hud.capsWidth(font, p.label, 1f, LABEL);
                 float tx = x - 6 - w + (1 - n) * 3;
@@ -196,6 +199,11 @@ public final class MoodleHud {
         int drunk = Ailments.get(player, "drunk");
         stage(list, "drunk", "bottle", drunk >= 85 ? 4 : drunk >= 60 ? 3 : drunk >= 30 ? 2 : drunk >= 10 ? 1 : 0,
                 "Tipsy", "Drunk", "Very Drunk", "Hammered");
+        stage(list, "panic", "fear", Panic.stage(Panic.get(player)), "Slight Panic", "Panic", "Strong Panic", "Extreme Panic");
+        // Zomboid's mood moodles, from LOOT's Mood (0-100, bands at 25, 50, 75 and 90)
+        mood(list, player, "bored", "hourglass", Mood.Stat.BOREDOM, "Slightly Bored", "Bored", "Very Bored", "Extremely Bored");
+        mood(list, player, "unhappy", "sad", Mood.Stat.UNHAPPINESS, "A Bit Sad", "Unhappy", "Very Unhappy", "Depressed");
+        mood(list, player, "stress", "stress", Mood.Stat.STRESS, "Anxious", "Agitated", "Stressed", "Nervous Wreck");
         if (ZcConfig.get().combat.stamina) {
             float endurance = player.getAttachedOrElse(Stamina.TYPE, Stamina.FULL);
             add(list, "breath", "lungs", endurance < 10 ? 3 : endurance < 30 ? 2 : endurance < 60 ? 1 : 0,
@@ -212,6 +220,11 @@ public final class MoodleHud {
         soak(player);
         add(list, "wet", "rain", wet > .85f ? 3 : wet > .5f ? 2 : wet > .2f ? 1 : 0, "Damp", "Wet", "Soaked");
         return list;
+    }
+
+    private static void mood(List<Moodle> list, LocalPlayer player, String key, String icon, Mood.Stat stat, String... names) {
+        int v = Mood.get(player, stat);
+        stage(list, key, icon, v >= 90 ? 4 : v >= 75 ? 3 : v >= 50 ? 2 : v >= 25 ? 1 : 0, names);
     }
 
     /** A Zomboid moodle with four stages (1 to 4). */

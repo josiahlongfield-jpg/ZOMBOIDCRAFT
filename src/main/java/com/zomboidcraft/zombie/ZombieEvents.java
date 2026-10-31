@@ -24,6 +24,13 @@ import net.minecraft.world.phys.Vec3;
 
 public final class ZombieEvents {
     private static final Identifier SPEED_MODIFIER = ZomboidCraft.id("shamble");
+    /** Zomboid's lore rolls on each zombie: how hard it bites, how much it takes, and slowing outside its hours. */
+    private static final Identifier STRENGTH = ZomboidCraft.id("lore_strength");
+    private static final Identifier TOUGHNESS = ZomboidCraft.id("lore_toughness");
+    private static final Identifier DORMANT = ZomboidCraft.id("lore_dormant");
+    /** Speed taken off outside its active hours (Day/Night Zombie Speed Effect). */
+    private static final double DORMANT_SLOW = -0.3;
+    private static boolean wasDormant;
 
     private static final Map<ServerPlayer, Vec3> lastPositions = new WeakHashMap<>();
     private static int ticks;
@@ -32,6 +39,13 @@ public final class ZombieEvents {
         ServerEntityEvents.ENTITY_LOAD.register((entity, level) -> {
             if (ZombieTypes.isWalker(entity)) {
                 setUp((Zombie) entity);
+            }
+        });
+
+        // what was left stuck in it falls out when it goes down (zombieLore.attachedWeaponPercent)
+        net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents.AFTER_DEATH.register((entity, source) -> {
+            if (entity instanceof Zombie zombie && ZombieTypes.isWalker(zombie) && zombie.level() instanceof ServerLevel level) {
+                AttachedWeapons.drop(level, zombie);
             }
         });
 
@@ -64,17 +78,79 @@ public final class ZombieEvents {
             zombie.getNavigation().getNodeEvaluator().setCanOpenDoors(true);
         }
         com.zomboidcraft.combat.Downed.onLoad(zombie);
+        LyingInWait.onLoad(zombie);
+        BeltedDead.onLoad(zombie);
         AttributeInstance speed = zombie.getAttribute(Attributes.MOVEMENT_SPEED);
         if (speed != null) {
-            double amount = ZombieTypes.isSprinter(zombie) ? config.sprinterSpeed : config.shamblerSpeed;
+            double amount = switch (Lore.pace(zombie)) {
+                case SPRINTER -> config.sprinterSpeed;
+                case FAST_SHAMBLER -> config.fastShamblerSpeed;
+                case SHAMBLER -> config.shamblerSpeed;
+            };
             speed.addOrReplacePermanentModifier(new AttributeModifier(
                     SPEED_MODIFIER, amount, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
+        }
+        lore(zombie);
+    }
+
+    /**
+     * Zomboid's strength and toughness rolls (zombieLore): strength on every bite and scratch, toughness on its
+     * health, so a tough one takes half again the blows and a fragile one goes down in two thirds of them. Set on
+     * every load, so a changed setting reaches zombies already in the world. Path reach follows its wits.
+     */
+    private static void lore(Zombie zombie) {
+        AttributeInstance damage = zombie.getAttribute(Attributes.ATTACK_DAMAGE);
+        if (damage != null) {
+            damage.addOrReplacePermanentModifier(new AttributeModifier(
+                    STRENGTH, Lore.strength(zombie) - 1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+        }
+        AttributeInstance health = zombie.getAttribute(Attributes.MAX_HEALTH);
+        if (health != null) {
+            boolean full = zombie.getHealth() >= zombie.getMaxHealth();
+            health.addOrReplacePermanentModifier(new AttributeModifier(
+                    TOUGHNESS, Lore.toughness(zombie) - 1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+            if (full || zombie.getHealth() > zombie.getMaxHealth()) {
+                zombie.setHealth(zombie.getMaxHealth());
+            }
+        }
+        zombie.getNavigation().setMaxVisitedNodesMultiplier(Lore.pathReach(zombie));
+        dormant(zombie, Lore.dormant(zombie.level()));
+    }
+
+    private static void dormant(Zombie zombie, boolean on) {
+        AttributeInstance speed = zombie.getAttribute(Attributes.MOVEMENT_SPEED);
+        if (speed == null) {
+            return;
+        }
+        if (on) {
+            speed.addOrUpdateTransientModifier(new AttributeModifier(DORMANT, DORMANT_SLOW, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+        } else {
+            speed.removeModifier(DORMANT);
+        }
+    }
+
+    /** When the clock crosses into or out of their active hours, every loaded walker speeds up or slows. */
+    private static void watchHours(MinecraftServer server) {
+        boolean now = Lore.dormant(server.overworld());
+        if (now == wasDormant) {
+            return;
+        }
+        wasDormant = now;
+        for (ServerLevel level : server.getAllLevels()) {
+            for (net.minecraft.world.entity.Entity e : level.getAllEntities()) {
+                if (e instanceof Zombie zombie && ZombieTypes.isWalker(zombie)) {
+                    dormant(zombie, now);
+                }
+            }
         }
     }
 
     private static void onServerTick(MinecraftServer server) {
         if (++ticks % 10 != 0) {
             return;
+        }
+        if (ticks % 200 == 0) {
+            watchHours(server);
         }
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
             if (player.isSpectator() || player.isCreative()) {

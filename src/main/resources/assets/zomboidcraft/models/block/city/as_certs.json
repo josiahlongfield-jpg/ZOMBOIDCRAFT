@@ -1,0 +1,44 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "as_certs": "zomboidcraft:block/city/as_certs",
+    "particle": "zomboidcraft:block/city/as_certs"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        2,
+        15.5
+      ],
+      "to": [
+        16,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_certs"
+        },
+        "south": {
+          "texture": "#as_certs",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#as_certs",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#as_certs",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#as_certs"
+        },
+        "down": {
+          "texture": "#as_certs"
+        }
+      }
+    }
+  ]
+}

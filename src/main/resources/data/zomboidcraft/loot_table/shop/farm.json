@@ -494,6 +494,21 @@
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:rubber_hose",
+          "weight": 48,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:car_battery",
           "weight": 24
         },
@@ -655,6 +670,16 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:leather_strips",
+          "weight": 24
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:chainsaw_chaps",
+          "weight": 24
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:leather_neck_guard",
           "weight": 24
         },
         {
@@ -931,6 +956,11 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:saddle",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:beekeeper_suit",
           "weight": 1
         }
       ]

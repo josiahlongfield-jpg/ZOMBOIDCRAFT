@@ -49,7 +49,26 @@ public final class ClothingItems {
             // wave 2, military batch 1 (the rigs are bags: ModItems)
             "high_cut_helmet", "steel_pot_helmet", "tanker_helmet", "boonie_hat", "patrol_cap", "beret",
             "ballistic_glasses", "ballistic_goggles", "shemagh", "neck_gaiter", "elbow_pads", "knee_pads",
-            "field_shirt", "combat_trousers", "tactical_boots");
+            "field_shirt", "combat_trousers", "tactical_boots",
+            // wave 2, military batch 2: cold, wet, CBRN, aircrew and riot
+            "fur_ushanka", "watch_cap", "cbrn_mask", "cbrn_suit", "combat_shirt", "fleece_liner", "wet_weather_jacket",
+            "flight_coverall", "sniper_smock", "arctic_parka", "snow_overwhites", "jungle_boots", "desert_boots",
+            "arctic_boots", "flight_gloves", "shooting_gloves", "arctic_mittens", "riot_arm_guards", "riot_leg_guards",
+            "wool_commando_sweater",
+            // wave 2, batch 3: useful kit, pads and sport armour
+            "shooting_earmuffs", "chainsaw_chaps", "beekeeper_suit", "cut_resistant_gloves",
+            "shin_guards", "gaiters", "football_shoulder_pads", "hockey_shoulder_pads", "hockey_neck_guard",
+            "leather_neck_guard", "padded_football_pants", "hockey_pants", "catchers_vest", "hockey_gloves",
+            "chainmail_butcher_glove", "chainmail_sleeve", "athletic_cup",
+            // wave 2, batch 4: civilian
+            "puffer_jacket", "ski_jacket", "ski_trousers", "ski_goggles", "cardigan", "blazer", "gilet", "tracksuit_top",
+            "tracksuit_bottoms", "bathrobe", "rugby_shirt", "chef_jacket", "mechanic_coveralls", "prison_jumpsuit",
+            "security_shirt", "flat_cap", "fedora", "straw_hat", "fingerless_gloves", "sandals",
+            // wave 2, batch 5: Zomboid's headwear, face and eyes
+            "ranger_hat", "peaked_cap", "captains_hat", "chefs_hat", "surgical_cap", "visor_cap", "sweatband",
+            "winter_earmuffs", "miner_helmet", "batting_helmet", "hockey_helmet", "riding_helmet", "boxing_headgear",
+            "swat_helmet", "welder_mask", "dust_mask", "half_mask_respirator", "safety_goggles", "eyepatch", "monocle",
+            "prescription_glasses");
 
     /** What ripping clothes up gives, beside the ripped sheets the loot roster already has (clothing/Tailoring). */
     public static final List<String> SUPPLIES = List.of("denim_strips", "leather_strips");

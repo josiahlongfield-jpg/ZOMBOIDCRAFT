@@ -46,17 +46,41 @@ final class SkillsPage {
                     new Perk(0, "6% more back from every repair, each level"),
                     new Perk(10, "120%: better than the kit promises")),
                     l -> "Right now: repairs give back " + Math.round((0.6f + 0.06f * l) * 100) + "%."),
-            new Info(Skill.CARPENTRY, "Crafting", "Board up windows and doors, and strip wooden furniture with a hammer, crowbar or axe.", List.of(
+            new Info(Skill.CARPENTRY, "Crafting", "Board up windows and doors, and move furniture: a hammer gets it loose, "
+                    + "crouch with one to strip it for materials instead.", List.of(
                     new Perk(0, "5% chance to save the nails on every board, and quicker hammering"),
-                    new Perk(DigRules.Tier.WOOD.level(), "Knock through wooden walls and floors"),
+                    new Perk(0, "Furniture lifted with a hammer breaks 75% of the time at level 0, 7.5% less each level"),
+                    new Perk(DigRules.Wall.WOOD.level(), "Knock through wooden walls and floors"),
                     new Perk(4, "Reinforced barricades take more hits"),
-                    new Perk(8, "Heavy barricades")),
+                    new Perk(8, "Heavy barricades"),
+                    new Perk(10, "Furniture never breaks as you lift it")),
                     l -> "Right now: " + (l >= 8 ? "heavy" : l >= 4 ? "reinforced" : "plain") + " barricades, " + 5 * l
-                            + "% of nails saved, " + secs(Math.max(30, 60 - 3 * l)) + " a board" + wall(DigRules.Tier.WOOD, l)),
-            new Info(Skill.MASONRY, "Crafting", "Break up steps, kerbs and other stonework with a sledgehammer. It leaves rubble.", wallPerks(DigRules.Tier.MASONRY),
-                    l -> "Right now:" + wall(DigRules.Tier.MASONRY, l).substring(1)),
-            new Info(Skill.METALWORKING, "Crafting", "Cut up metal furniture and fittings with a propane torch. It leaves scrap metal.", wallPerks(DigRules.Tier.METAL),
-                    l -> "Right now:" + wall(DigRules.Tier.METAL, l).substring(1)),
+                            + "% of nails saved, " + secs(Math.max(30, 60 - 3 * l)) + " a board, " + breaks(l, lift().toolBreak, "furniture")
+                            + wall(DigRules.Wall.WOOD, l)),
+            new Info(Skill.MASONRY, "Crafting", "Break up steps, kerbs and brickwork with a sledgehammer. It leaves rubble.", List.of(
+                    new Perk(0, "Walls you can break come down 12% quicker"),
+                    new Perk(DigRules.Wall.PARTITION.level(), "Knock through brick and plaster walls between rooms"),
+                    new Perk(DigRules.Wall.OUTSIDE.level(), "Knock through outside brickwork: a new doorway, or join two buildings"),
+                    new Perk(DigRules.Wall.CONCRETE.level(), "Knock through poured concrete: bunkers, car parks, cellars")),
+                    l -> "Right now:" + wall(DigRules.Wall.PARTITION, l).substring(1) + wallAlso(DigRules.Wall.OUTSIDE, l) + wallAlso(DigRules.Wall.CONCRETE, l)),
+            new Info(Skill.METALWORKING, "Crafting", "Cut up metal furniture and fittings with a propane torch. It leaves scrap metal.", List.of(
+                    new Perk(0, "Walls you can break come down 12% quicker"),
+                    new Perk(DigRules.Wall.STEEL.level(), "Cut through thin steel walls and plating"),
+                    new Perk(DigRules.Wall.HEAVY_STEEL.level(), "Cut through heavy steel: hulls, bulkheads, vaults")),
+                    l -> "Right now:" + wall(DigRules.Wall.STEEL, l).substring(1) + wallAlso(DigRules.Wall.HEAVY_STEEL, l)),
+            new Info(Skill.ELECTRICAL, "Crafting", "Unhook appliances (stoves, washers, TVs) and take down switches and lights "
+                    + "with a screwdriver. Every one you take out teaches it.", List.of(
+                    new Perk(0, "Switch room lights on and off"),
+                    new Perk(0, "Anything you unhook breaks 75% of the time at level 0, 7.5% less each level"),
+                    new Perk(0, "Generators and wiring rooms come in a later update"),
+                    new Perk(10, "Nothing you unhook ever breaks")),
+                    l -> "Right now: " + breaks(l, lift().toolBreak, "appliances and lights") + "."),
+            new Info(Skill.PLUMBING, "Crafting", "Unbolt sinks, toilets and tubs with a pipe wrench. Every fixture you take out "
+                    + "teaches it.", List.of(
+                    new Perk(0, "Fixtures break 25% of the time at level 0 (Zomboid's chance), 2.5% less each level"),
+                    new Perk(0, "Hooking them up to water comes in a later update"),
+                    new Perk(10, "Fixtures never break")),
+                    l -> "Right now: " + breaks(l, lift().plumbedBreak, "fixtures") + "."),
             new Info(Skill.MECHANICS, "Crafting", "Take cars apart and put them back together. Every part you fit or pull teaches it, and Laine's Auto Manuals "
                     + "teach you each class of car (standard, commercial, performance).", List.of(
                     new Perk(0, "Fluids, the battery, tyres on a jack, headlights"),
@@ -105,7 +129,6 @@ final class SkillsPage {
             soon(Skill.LIGHTFOOTED, "Agility", "Walk without making noise and stepping on things that give you away."),
             soon(Skill.NIMBLE, "Agility", "Move faster while aiming and fighting."),
             soon(Skill.RELOADING, "Firearm", "Load magazines and rounds faster, and rack a jam clear quicker."),
-            soon(Skill.ELECTRICAL, "Crafting", "Wire generators, lights and alarms, and hotwire cars."),
             soon(Skill.COOKING, "Crafting", "Cook dishes on stoves, campfires and barbecues; better cooks make more filling food."),
             soon(Skill.CARVING, "Crafting", "Carve wood and bone into handles, spears and tools."),
             soon(Skill.KNAPPING, "Crafting", "Chip stone into blades, axe heads and arrowheads."),
@@ -130,7 +153,7 @@ final class SkillsPage {
     private static final int ROW = 22, PITCH = 24;
 
     private final KitScreen<?> screen;
-    private Skill selected = Skill.AIMING;
+    Skill selected = Skill.AIMING;
     /** How far the list is scrolled, in pixels. */
     private int scroll, listHeight;
 
@@ -144,21 +167,32 @@ final class SkillsPage {
                 new Perk(10, "Hits 60% harder, knockdowns 40% more likely"));
     }
 
-    private static List<Perk> wallPerks(DigRules.Tier tier) {
-        return List.of(new Perk(0, "Walls you can break come down 12% quicker"),
-                new Perk(tier.level(), "Knock through " + (tier == DigRules.Tier.METAL ? "steel walls and plating" : "brick, block and concrete walls")
-                        + " with " + tier.tools()));
+    private static ZcConfig.Building lift() {
+        return ZcConfig.get().building;
     }
 
-    /** What the skill does to walls, as the rest of a "Right now" sentence: starts with a comma. */
-    private static String wall(DigRules.Tier tier, int l) {
+    /** How often what you lift breaks at this level, as part of a sentence. */
+    private static String breaks(int l, double risk, String what) {
+        double chance = com.zomboidcraft.building.Moving.chance(risk, l);
+        return chance <= 0 ? what + " never break" : String.format(Locale.ROOT, "%s break %.1f%% of the time", what, chance * 100)
+                .replace(".0%", "%");
+    }
+
+    /** What the skill does to a kind of wall, as the rest of a "Right now" sentence: starts with a comma. */
+    private static String wall(DigRules.Wall kind, int l) {
         ZcConfig.Digging d = ZcConfig.get().digging;
-        int need = tier.level();
+        DigRules.Tier tier = kind.tier;
+        int need = kind.level();
         if (!d.rules) return ", and any wall breaks the old way.";
         if (l < need) return ", too green to knock a wall through (level " + need + " with " + tier.tools() + ").";
         double s = (tier == DigRules.Tier.WOOD ? d.woodSeconds : tier == DigRules.Tier.MASONRY ? d.masonrySeconds : d.metalSeconds)
                 / (1 + 0.12 * (l - need));
         return String.format(Locale.ROOT, ", a wall comes down in %.1f s with %s.", s, tier.tools());
+    }
+
+    /** The next tougher kind of wall: when it opens up, or nothing once it has. */
+    private static String wallAlso(DigRules.Wall kind, int l) {
+        return ZcConfig.get().digging.rules && l < kind.level() ? " " + kind.what + " at level " + kind.level() + "." : "";
     }
 
     private static String meleeNow(int l) {

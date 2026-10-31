@@ -492,3 +492,28 @@ Picked by Josiah Longfield on the Dead Air Harvestman Rage page, built by tools/
 |---|---|---|---|
 | creature.harvestman.rage | [Alien_Monster_Scream.wav by audione](https://freesound.org/people/audione/sounds/161404/) | audione | Freesound, CC0 1.0 |
 | creature.harvestman.rage | [Demonic Woman Scream.wav by nick121087](https://freesound.org/people/nick121087/sounds/333832/) | nick121087 | Freesound, CC0 1.0 |
+
+## Broadcasts and far-off events
+
+Picked by Josiah Longfield on the Dead Air Broadcasts page, cut by tools/audio/build_broadcast_picks.py. The Sonniss originals are not included.
+
+| Sound | Recording | By | Licence |
+|---|---|---|---|
+| radio.eas.attention | [Alarm.wav by DylanTheFish](https://freesound.org/people/DylanTheFish/sounds/440307/) | DylanTheFish | Freesound, CC0 1.0 |
+| radio.static | CB Radio_Freq 06_Static_Fienup_001 (Soundopolis - CB Radio) | Sonniss GameAudioGDC 2015 | Sonniss royalty-free |
+| radio.tune | [am band static.wav by cognito perceptu](https://freesound.org/people/cognito%20perceptu/sounds/38693/) | cognito%20perceptu | Freesound, CC0 1.0 |
+| world.meta.gunfire | [Rapid Fire Sub Machine Gun distant.wav by SuperPhat](https://freesound.org/people/SuperPhat/sounds/417690/) | SuperPhat | Freesound, CC0 1.0 |
+| world.meta.scream | VOXScrm_Female Scream in Pain, Agony, Wounded 2_344 Audio_Screaming (344 Audio - Screaming) | Sonniss GameAudioGDC 2023 | Sonniss royalty-free |
+| world.alarm.house.siren | [burglar alarm siren long alert warning sound 3 by vyclops](https://freesound.org/people/vyclops/sounds/717414/) | vyclops | Freesound, CC0 1.0 |
+| radio.eas.header, radio.eas.eom, world.alarm.house.bell, block.alarm_panel.* | Made here: the EAS header bursts and two-tone signal to the published spec, the bell box and the keypad | ZomboidCraft | Own work |
+
+## Sirens and car alarms
+
+Picked by Josiah Longfield on the Sirens and Car Alarms page, cut into loops by tools/audio/build_siren_sounds.py. The Sonniss originals are not included.
+
+| Sound | Recording | By | Licence |
+|---|---|---|---|
+| car.siren | EFX EXT Emergency Siren 10 B (Coll Anderson - Traditional Sirens) | Sonniss GameAudioGDC 2015 | Sonniss royalty-free |
+| car.siren | EFX EXT Emergency Siren 02 A (Coll Anderson - Traditional Sirens) | Sonniss GameAudioGDC 2015 | Sonniss royalty-free |
+| car.siren | EFX EXT Emergency Siren Distant 18 B (Coll Anderson - Traditional Sirens) | Sonniss GameAudioGDC 2015 | Sonniss royalty-free |
+| car.alarm | [Car Alarm in Parking Structure.wav by erkanozan](https://freesound.org/people/erkanozan/sounds/51747/) | erkanozan | Freesound, CC0 1.0 |

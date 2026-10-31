@@ -47,6 +47,11 @@ public final class ZcCommand {
                                                 .executes(ctx -> car(ctx, StringArgumentType.getString(ctx, "model"),
                                                         StringArgumentType.getString(ctx, "variant"))))))
                         .then(Commands.literal("hoist").executes(ZcCommand::hoist))
+                        .then(Commands.literal("shoptool")
+                                .then(Commands.argument("kind", StringArgumentType.word())
+                                        .suggests((ctx, b) -> SharedSuggestionProvider.suggest(java.util.Arrays.stream(
+                                                com.zomboidcraft.world.cars.ShopTool.Kind.values()).map(k -> k.name().toLowerCase(java.util.Locale.ROOT)), b))
+                                        .executes(ctx -> shopTool(ctx, StringArgumentType.getString(ctx, "kind")))))
                         .then(Commands.literal("carparts").executes(ctx -> carParts(ctx, null, -1))
                                 .then(Commands.argument("part", StringArgumentType.word())
                                         .suggests((ctx, b) -> SharedSuggestionProvider.suggest(com.zomboidcraft.world.cars.CarParts.names(), b))
@@ -72,6 +77,7 @@ public final class ZcCommand {
                                                 .suggests((ctx, b) -> SharedSuggestionProvider.suggest(ZOMBIE_KINDS, b))
                                                 .executes(ctx -> zombie(ctx, StringArgumentType.getString(ctx, "outfit"),
                                                         StringArgumentType.getString(ctx, "kind"))))))
+                        .then(Commands.literal("lore").executes(ZcCommand::lore))
                         .then(Commands.literal("weather")
                                 .executes(ZcCommand::weather)
                                 .then(Commands.argument("kind", StringArgumentType.word())
@@ -227,6 +233,25 @@ public final class ZcCommand {
         return 1;
     }
 
+    /** An auto shop floor tool (jack, crane, tyre_machine, washer) set down two blocks ahead, facing you. */
+    private static int shopTool(CommandContext<CommandSourceStack> ctx, String name) throws CommandSyntaxException {
+        net.minecraft.server.level.ServerPlayer player = ctx.getSource().getPlayerOrException();
+        com.zomboidcraft.world.cars.ShopTool.Kind kind = com.zomboidcraft.world.cars.ShopTool.Kind.of(name);
+        com.zomboidcraft.world.cars.ShopTool tool = com.zomboidcraft.world.cars.Cars.TOOL.create(player.level(),
+                net.minecraft.world.entity.EntitySpawnReason.COMMAND);
+        if (kind == null || tool == null) {
+            ctx.getSource().sendFailure(Component.literal("Unknown tool: jack, crane, tyre_machine or washer."));
+            return 0;
+        }
+        float yaw = Math.round(player.getYRot() / 90f) * 90f;
+        net.minecraft.world.phys.Vec3 ahead = net.minecraft.world.phys.Vec3.directionFromRotation(0, yaw).scale(2);
+        tool.setKind(kind);
+        tool.snapTo(player.getX() + ahead.x, Math.floor(player.getY() + 0.01), player.getZ() + ahead.z, yaw + 180, 0);
+        player.level().addFreshEntity(tool);
+        ctx.getSource().sendSuccess(() -> Component.literal("A " + kind.title.toLowerCase(java.util.Locale.ROOT) + ". G works it."), false);
+        return 1;
+    }
+
     /**
      * The nearest car's parts (within 8 blocks), listed; or one set (part name, "tire" for all four, "all" for
      * everything) to a condition, -1 to take it off. For trying out worn and missing parts without driving for days.
@@ -368,6 +393,33 @@ public final class ZcCommand {
         return 1;
     }
 
+    /** What the zombie you're looking at rolled under Zomboid's Zombie Lore settings (zombie/Lore). */
+    private static int lore(CommandContext<CommandSourceStack> ctx) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
+        net.minecraft.server.level.ServerPlayer player = ctx.getSource().getPlayerOrException();
+        net.minecraft.world.phys.Vec3 eye = player.getEyePosition(), look = player.getLookAngle();
+        net.minecraft.world.entity.monster.zombie.Zombie best = null;
+        double bestCos = Math.cos(Math.toRadians(8));
+        for (net.minecraft.world.entity.monster.zombie.Zombie z : player.level().getEntitiesOfClass(
+                net.minecraft.world.entity.monster.zombie.Zombie.class, player.getBoundingBox().inflate(48),
+                com.zomboidcraft.zombie.ZombieTypes::isWalker)) {
+            net.minecraft.world.phys.Vec3 to = z.getBoundingBox().getCenter().subtract(eye);
+            double cos = to.normalize().dot(look);
+            if (cos > bestCos) {
+                bestCos = cos;
+                best = z;
+            }
+        }
+        if (best == null) {
+            ctx.getSource().sendFailure(Component.literal("Look at a zombie first."));
+            return 0;
+        }
+        String text = com.zomboidcraft.zombie.Lore.describe(best) + ", armour "
+                + Math.round(com.zomboidcraft.zombie.ZombieArmor.share(best) * 100) + "%, health "
+                + Math.round(best.getHealth()) + "/" + Math.round(best.getMaxHealth());
+        ctx.getSource().sendSuccess(() -> Component.literal(text), false);
+        return 1;
+    }
+
     private static int showConfig(CommandContext<CommandSourceStack> ctx, String key) {
         try {
             String value = ZcConfig.getValue(key);
@@ -426,8 +478,13 @@ public final class ZcCommand {
         try {
             region = com.zomboidcraft.survival.Body.Region.valueOf(part.toUpperCase(java.util.Locale.ROOT));
         } catch (IllegalArgumentException e) {
-            ctx.getSource().sendFailure(Component.literal("No body part called " + part));
-            return 0;
+            // the old six names (left_leg, torso, ...) still work, on the limb's main part
+            try {
+                region = com.zomboidcraft.survival.Body.Zone.valueOf(part.toUpperCase(java.util.Locale.ROOT)).main();
+            } catch (IllegalArgumentException e2) {
+                ctx.getSource().sendFailure(Component.literal("No body part called " + part));
+                return 0;
+            }
         }
         com.zomboidcraft.survival.Body body = com.zomboidcraft.survival.Body.get(player);
         body = switch (kind) {
