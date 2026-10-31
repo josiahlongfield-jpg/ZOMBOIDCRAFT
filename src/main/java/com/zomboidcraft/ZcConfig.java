@@ -86,6 +86,22 @@ public final class ZcConfig {
     public Radio radio = new Radio();
     public Broadcast broadcast = new Broadcast();
     public Power power = new Power();
+    public Stories stories = new Stories();
+
+    /**
+     * Zomboid's randomized stories (LANDSCAPE places the scenes, LOOT stocks them): never, extremely_rare, rare,
+     * sometimes, often, very_often, always (the map chance has no always).
+     */
+    public static class Stories {
+        /** Road stories: crashes, police blockades, road works. */
+        public String vehicleChance = "rare";
+        /** Zone stories: a campsite in the woods, a picnic in the park. */
+        public String zoneChance = "rare";
+        /** Randomized buildings: burnt out, a stash, the dead inside. */
+        public String survivorHouseChance = "rare";
+        /** How often a looted map has a dead survivor's notes on it. */
+        public String annotatedMapChance = "sometimes";
+    }
 
     /** Mains power (power/PowerGrid): Zomboid's Electricity Shutoff, cut district by district. */
     public static class Power {

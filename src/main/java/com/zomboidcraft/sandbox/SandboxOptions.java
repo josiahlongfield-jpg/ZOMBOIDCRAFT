@@ -38,6 +38,8 @@ final class SandboxOptions {
         w.put("ZombieLore." + id, b -> b.choice("zombieLore." + field, choices).owner("ENTITY"));
     }
 
+    private static final String[] STORY = {"never", "extremely_rare", "rare", "sometimes", "often", "very_often", "always"};
+
     /** Zomboid settings our systems drive, by Zomboid's id. */
     private static Map<String, UnaryOperator<SandboxOption.Builder>> wires() {
         Map<String, UnaryOperator<SandboxOption.Builder>> w = new HashMap<>();
@@ -136,6 +138,12 @@ final class SandboxOptions {
                 .tip("How far round a running generator it powers, in blocks."));
         w.put("GeneratorVerticalPowerRange", b -> b.number("power.generatorFloors", 1, 15).owner("LOOT"));
         w.put("AllowExteriorGenerator", b -> b.toggle("power.generatorExterior").owner("LOOT"));
+        // World stories (LOOT owns the settings; LANDSCAPE reads the three scene chances at generation)
+        w.put("VehicleStoryChance", b -> b.choice("stories.vehicleChance", STORY).owner("LOOT"));
+        w.put("ZoneStoryChance", b -> b.choice("stories.zoneChance", STORY).owner("LOOT"));
+        w.put("SurvivorHouseChance", b -> b.choice("stories.survivorHouseChance", STORY).owner("LOOT"));
+        w.put("AnnotatedMapChance", b -> b.choice("stories.annotatedMapChance",
+                "never", "extremely_rare", "rare", "sometimes", "often", "very_often").owner("LOOT"));
         w.put("TrafficJam", b -> b.toggle("world.trafficJams").owner("LANDSCAPE"));
         w.put("DamageToPlayerFromHitByACar", b -> b.number("world.carHitDamage", 1, 4).owner("VEHICLES"));
         // Firearms (WEAPONS): combat/Firearms. Use Damage Chance says who a shot strikes just by being aimed at;
