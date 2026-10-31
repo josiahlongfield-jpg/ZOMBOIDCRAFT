@@ -140,8 +140,8 @@ public class ZombieLoreTest implements FabricClientGameTest {
      */
     private static void fence(ClientGameTestContext ctx, TestSingleplayerContext sp) {
         // a closed pen of chain-link, so the only way out is through it
-        sp.getServer().runCommand("fill -5 100 2 5 101 2 zomboidcraft:chainlink");
-        sp.getServer().runCommand("fill -5 100 11 5 101 11 zomboidcraft:chainlink");
+        sp.getServer().runCommand("fill -5 100 2 5 101 2 zomboidcraft:chainlink[axis=x]");
+        sp.getServer().runCommand("fill -5 100 11 5 101 11 zomboidcraft:chainlink[axis=x]");
         sp.getServer().runCommand("fill -5 100 2 -5 101 11 zomboidcraft:chainlink");
         sp.getServer().runCommand("fill 5 100 2 5 101 11 zomboidcraft:chainlink");
         sp.getServer().runCommand("tp @a 0 100.5 -7 0 12");
