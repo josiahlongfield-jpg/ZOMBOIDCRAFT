@@ -86,6 +86,7 @@ public class GunLookTest implements FabricClientGameTest {
             irons(ctx, sp);
             primitives(ctx, sp);
             sights(ctx, sp);
+            reloading(ctx, sp);
         }
     }
 
@@ -221,6 +222,131 @@ public class GunLookTest implements FabricClientGameTest {
         sp.getServer().runCommand("tp @a ~ ~ ~ 0 55");
         ctx.waitTicks(30);
         ctx.takeScreenshot("prim-ground");
+        sp.getServer().runCommand("tp @a ~ ~ ~ 0 10");
+    }
+
+    /** The reloading bench: placed and looked at, its G menu and sub-menu, a batch of 9mm loaded (frames through the
+     * timed action), brass thrown from a pistol, a revolver's six and a shotgun hull, and every making on the ground. */
+    private static void reloading(ClientGameTestContext ctx, TestSingleplayerContext sp) {
+        if (!List.of(GUNS).contains("assault_rifle")) {
+            return;
+        }
+        final int[] b = new int[3];
+        sp.getServer().runCommand("kill @e[type=item]");
+        sp.getServer().runCommand("clear @a");
+        sp.getServer().runOnServer(server -> {
+            var p = server.getPlayerList().getPlayers().get(0).blockPosition();
+            b[0] = p.getX();
+            b[1] = p.getY();
+            b[2] = p.getZ();
+        });
+        int x = b[0], y = b[1], z = b[2] + 2;
+        sp.getServer().runCommand("setblock " + x + " " + y + " " + z + " zomboidcraft:reloading_bench[facing=north]");
+        String at = (x + 0.5) + " " + (y + 0.7) + " " + (z + 0.5);
+        String[][] views = {
+                {"reload-bench-front", (x + 0.5) + " " + y + " " + (z - 2.3)},
+                {"reload-bench-angle", (x + 2.6) + " " + y + " " + (z - 1.6)},
+                {"reload-bench-left", (x - 2.2) + " " + y + " " + (z - 1.2)},
+                {"reload-bench-close", (x + 0.9) + " " + (y + 0.4) + " " + (z - 1.0)}};
+        for (String[] v : views) {
+            sp.getServer().runCommand("tp @a " + v[1] + " facing " + at);
+            ctx.waitTicks(20);
+            ctx.takeScreenshot(v[0]);
+        }
+        // the G menu, with makings for 9mm and shells but no .38 heads
+        for (String c : new String[] {"give @a zomboidcraft:spent_9mm 10", "give @a zomboidcraft:primers 20",
+                "give @a zomboidcraft:bullets_9mm 20", "give @a zomboidcraft:smokeless_powder 1",
+                "give @a zomboidcraft:spent_hulls 6", "give @a zomboidcraft:lead_shot 1", "give @a zomboidcraft:spent_38 4"}) {
+            sp.getServer().runCommand(c);
+        }
+        sp.getServer().runCommand("tp @a " + (x + 0.5) + " " + y + " " + (z - 1.3) + " facing " + (x + 0.5) + " " + (y + 0.6) + " " + (z + 0.5));
+        ctx.waitTicks(20);
+        boolean opened = ctx.computeOnClient(mc -> ReloadingClient.interact(mc, mc.hitResult));
+        LOG.info("ZCGUN reload menu opened {}", opened);
+        ctx.waitTicks(5);
+        ctx.takeScreenshot("reload-menu");
+        ctx.getInput().pressKey(com.mojang.blaze3d.platform.InputConstants.KEY_RIGHT);
+        ctx.waitTicks(5);
+        ctx.takeScreenshot("reload-menu-sub");
+        ctx.getInput().pressKey(com.mojang.blaze3d.platform.InputConstants.KEY_RETURN);
+        for (int i = 0; i <= 11; i++) {
+            ctx.waitTicks(i == 0 ? 10 : 36);
+            ctx.takeScreenshot(String.format("reload-load-%02d", i));
+        }
+        String inv = ctx.computeOnClient(mc -> {
+            StringBuilder sb = new StringBuilder();
+            var in = mc.player.getInventory();
+            for (int i = 0; i < in.getContainerSize(); i++) {
+                if (!in.getItem(i).isEmpty()) sb.append(in.getItem(i)).append(' ');
+            }
+            return sb.toString();
+        });
+        LOG.info("ZCGUN after loading: {}", inv);
+        ctx.runOnClient(mc -> mc.options.setCameraType(CameraType.THIRD_PERSON_BACK));
+        ctx.waitTicks(10);
+        ctx.takeScreenshot("reload-after-tp");
+        ctx.runOnClient(mc -> mc.options.setCameraType(CameraType.FIRST_PERSON));
+        // brass: a pistol's casings thrown to the right, frame by frame from behind
+        sp.getServer().runCommand("kill @e[type=item]");
+        sp.getServer().runCommand("clear @a");
+        sp.getServer().runCommand("give @a zomboidcraft:pistol");
+        sp.getServer().runCommand("tp @a " + (x - 4.5) + " " + y + " " + (z - 3.5) + " 0 15");
+        ctx.waitTicks(20);
+        ctx.runOnClient(mc -> mc.player.getInventory().setSelectedSlot(0));
+        ctx.runOnClient(mc -> mc.options.setCameraType(CameraType.THIRD_PERSON_BACK));
+        ctx.waitTicks(10);
+        for (int f = 0; f < 36; f++) {
+            if (f % 6 == 0 && f < 30) {
+                sp.getServer().runOnServer(server -> {
+                    for (var player : server.getPlayerList().getPlayers()) {
+                        com.zomboidcraft.combat.Reloading.eject(player, com.zomboidcraft.combat.GunType.PISTOL, 1);
+                    }
+                });
+            }
+            ctx.waitTicks(1);
+            ctx.takeScreenshot(String.format("reload-brass-%02d", f));
+        }
+        // the real trigger too: does a fired pistol throw its own?
+        ctx.runOnClient(mc -> mc.options.setCameraType(CameraType.FIRST_PERSON));
+        sp.getServer().runCommand("kill @e[type=item]");
+        ctx.getInput().holdKey(options -> options.keyAttack);
+        ctx.waitTicks(30);
+        ctx.getInput().releaseKey(options -> options.keyAttack);
+        ctx.waitTicks(10);
+        int thrown = ctx.computeOnClient(mc -> mc.level.getEntitiesOfClass(ItemEntity.class, mc.player.getBoundingBox().inflate(6)).size());
+        LOG.info("ZCGUN pistol fired: {} casings on the ground", thrown);
+        ctx.takeScreenshot("reload-brass-fired");
+        // a revolver's six on reload, and a shotgun hull
+        sp.getServer().runCommand("kill @e[type=item]");
+        sp.getServer().runCommand("tp @a " + (x - 4.5) + " " + y + " " + (z - 3.5) + " 0 50");
+        sp.getServer().runOnServer(server -> {
+            for (var player : server.getPlayerList().getPlayers()) {
+                com.zomboidcraft.combat.Reloading.eject(player, com.zomboidcraft.combat.GunType.MAGNUM, 6);
+                com.zomboidcraft.combat.Reloading.eject(player, com.zomboidcraft.combat.GunType.SHOTGUN, 2);
+            }
+        });
+        ctx.waitTicks(40);
+        ctx.takeScreenshot("reload-brass-revolver");
+        // every making on the ground
+        sp.getServer().runCommand("kill @e[type=item]");
+        sp.getServer().runCommand("clear @a");
+        String[] all = {"spent_9mm", "spent_380", "spent_38", "spent_44", "spent_556", "spent_308", "spent_3030",
+                "spent_50", "spent_hulls", "smokeless_powder", "primers", "lead_shot", "gunsmith_magazine",
+                "bullets_9mm", "bullets_38", "bullets_44", "bullets_556", "bullets_30", "bullets_50"};
+        sp.getServer().runOnServer(server -> {
+            for (var player : server.getPlayerList().getPlayers()) {
+                Vec3 p = player.position();
+                for (int i = 0; i < all.length; i++) {
+                    int row = i < 7 ? 0 : i < 13 ? 1 : 2;
+                    int col = i < 7 ? i : i < 13 ? i - 7 : i - 13;
+                    drop(player.level(), p.add(1.4 - col * 0.47, 0, 1.0 + row * 0.6),
+                            new ItemStack(BuiltInRegistries.ITEM.getValue(ZomboidCraft.id(all[i]))));
+                }
+            }
+        });
+        sp.getServer().runCommand("tp @a ~ ~ ~ 0 58");
+        ctx.waitTicks(30);
+        ctx.takeScreenshot("reload-ground");
         sp.getServer().runCommand("tp @a ~ ~ ~ 0 10");
     }
 
