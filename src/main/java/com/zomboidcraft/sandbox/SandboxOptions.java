@@ -44,6 +44,8 @@ final class SandboxOptions {
                 .tip("There is no snow yet, so this does nothing for now."));
         // Skills (SURVIVAL): one global multiplier for now
         w.put("MultiplierConfig.Global", b -> b.number("progression.xpMultiplier", 0, 1000).owner("SURVIVAL"));
+        // Far-off events (AUDIO): Zomboid's three choices
+        w.put("MetaEvent", b -> b.choice("world.metaEvents", "never", "sometimes", "often").owner("AUDIO"));
         // Vehicles (VEHICLES)
         w.put("EnableVehicles", b -> b.toggle("world.streetCars").owner("VEHICLES"));
         return w;

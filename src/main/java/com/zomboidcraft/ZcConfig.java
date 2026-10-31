@@ -706,6 +706,11 @@ public final class ZcConfig {
         /** About how many minutes between those events. */
         public double worldEventMinutes = 10;
         /**
+         * Zomboid's meta events (MetaEvents): gunfire or a scream from a real spot 80 to 250 blocks off, which the dead
+         * there hear too. "never", "sometimes" or "often".
+         */
+        public String metaEvents = "sometimes";
+        /**
          * Air strikes among those events (Josiah 2026-10-28): a jet strafing or bombing a crowd of zombies, or the
          * Apache circling a horde shooting them; zombies caught die, players right there are hurt, blocks never.
          */
