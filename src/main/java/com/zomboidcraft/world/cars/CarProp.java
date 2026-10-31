@@ -1229,6 +1229,7 @@ public class CarProp extends Entity {
         }
         alarmLeft = ticks;
         entityData.set(ALARM, true);
+        level().playSound(null, getX(), getY(), getZ(), CarSounds.ALARM, SoundSource.NEUTRAL, 2.5f, 1f);
         return true;
     }
 
@@ -1271,8 +1272,8 @@ public class CarProp extends Entity {
             entityData.set(ALARM, false);
             return;
         }
-        if (alarmLeft % 16 == 0) {
-            server.playSound(null, getX(), getY(), getZ(), CarSounds.HORN, SoundSource.NEUTRAL, 2f, 1f);
+        if (alarmLeft % 79 == 0) {
+            server.playSound(null, getX(), getY(), getZ(), CarSounds.ALARM, SoundSource.NEUTRAL, 2.5f, 1f);
         }
         if (alarmLeft % 40 == 0) {
             Noise.emitEngine(server, position(), 56);
@@ -1406,10 +1407,8 @@ public class CarProp extends Entity {
             entityData.set(SIREN, false);     // a Zomboid hour is a Minecraft one: 1000 ticks
             return;
         }
-        if (sirenTicks % 20 == 1) {
-            // a wail rising and falling: the horn bent up and down until AUDIO's siren is in
-            boolean up = sirenTicks / 20 % 2 == 0;
-            server.playSound(null, getX(), getY(), getZ(), CarSounds.HORN, SoundSource.NEUTRAL, 3f, up ? 1.5f : 1.2f);
+        if (sirenTicks % 120 == 1) {
+            server.playSound(null, getX(), getY(), getZ(), CarSounds.SIREN, SoundSource.NEUTRAL, 3f, 1f);
         }
         if (w.sirenEffectsZombies && sirenTicks % 40 == 0) {
             Noise.emitEngine(server, position(), 96);
