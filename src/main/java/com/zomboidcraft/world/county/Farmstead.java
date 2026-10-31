@@ -593,6 +593,9 @@ final class Farmstead {
         for (int i = 0; i < d / 4; i++) {
             p.setIfAir(1 + rng.nextInt(w - 2), 1, 1 + rng.nextInt(d - 2), pick("blood_splat", "fm_bones[facing=" + pick(DIRS) + "]", "straw_floor", "paper"));
         }
+        // the milking herd, either side of the feed alley (FarmHerds: SURVIVAL's cows)
+        p.herd("cow", 3 + rng.nextInt(3), 1, 1, c - 4, d - 2, 1, rng.nextLong());
+        p.herd("cow", 3 + rng.nextInt(3), c + 3, 1, w - 2, d - 2, 1, rng.nextLong());
     }
 
     /** The milk house: a white block room, the steel bulk tank, the sink and the hoses. */
@@ -931,6 +934,49 @@ final class Farmstead {
         Kit.chainlink(p, rng, w, rz + 1, w, -1, 1);
         Doors.place(p, w / 2, 1, rz, "fm_gate", "north", Doors.hinge(rng), true);
         p.set(1, 1, rz + 2, "fm_waterer");
+        p.set(w - 2, 1, rz + 3, "fm_feeder");
+        p.set(w - 3, 1, 2, "fm_feeder");
+        // the flock, the coop and its run (FarmHerds: SURVIVAL's chickens)
+        p.herd("chicken", 4 + rng.nextInt(7), 0, rz + 1, w - 1, d - 2, 1, rng.nextLong());
+    }
+
+    /**
+     * A corral w x d of galvanised pipe panels (refs/farm/cattle-pen-feedlot): the ground trodden to mud and
+     * straw, a round stock tank and a bale ring feeder inside, the tube gate in the north side; and the cows
+     * it held (FarmHerds).
+     */
+    void corral(int w, int d, int cows) {
+        for (int x = 0; x < w; x++) {
+            for (int z = 0; z < d; z++) {
+                // trodden earth, wettest where they crowd round the tank and the feeder
+                boolean crowd = Math.min(Math.abs(x - 2) + Math.abs(z - (d - 2)), Math.abs(x - (w - 2)) + Math.abs(z - 3)) < 4;
+                double r = chance();
+                p.set(x, 0, z, r < (crowd ? 0.7 : 0.15) ? "minecraft:mud" : r < 0.8 ? "minecraft:coarse_dirt" : "minecraft:packed_mud");
+                p.set(x, 1, z, "air");
+                p.set(x, 2, z, "air");
+                boolean ns = z == 0 || z == d - 1, ew = x == 0 || x == w - 1;
+                if (!ns && !ew) {
+                    if (chance() < 0.08) {
+                        p.set(x, 1, z, pick("straw_floor", "straw_floor", "fm_bale_one[facing=" + pick(DIRS) + "]"));
+                    }
+                    continue;
+                }
+                boolean post = ns && ew || (ns ? x % 4 == 0 : z % 4 == 0);
+                p.set(x, 1, z, (post ? "fm_panel_post" : "fm_panel") + "[axis=" + (ns ? "x" : "z") + "]");
+            }
+        }
+        Doors.place(p, w / 2, 1, 0, "fm_gate", "north", Doors.hinge(rng), chance() < 0.3 + hit * 0.5);
+        quad(1, d - 3, "fm_stock_tank");
+        quad(w - 3, 2, "fm_ring_feeder");
+        p.herd("cow", cows, 1, 1, w - 2, d - 2, 1, rng.nextLong());
+    }
+
+    /** One of the round pen pieces, four quarters round the corner between (x, z) and (x + 1, z + 1). */
+    void quad(int x, int z, String block) {
+        p.set(x, 1, z, block + "[facing=north]");
+        p.set(x + 1, 1, z, block + "[facing=east]");
+        p.set(x + 1, 1, z + 1, block + "[facing=south]");
+        p.set(x, 1, z + 1, block + "[facing=west]");
     }
 
     /** A dug well: a round fieldstone curb, the little shingled roof on two posts, the windlass and its bucket. */

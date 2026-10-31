@@ -54,6 +54,15 @@ public interface BlockSink {
         vehicle(x, y, z, yaw, "!tool:" + kind, seed);
     }
 
+    /**
+     * Farm animals that live in a pen (SURVIVAL spawns them, see world/gen/FarmHerds): species ("chicken", "cow"),
+     * how many, and the pen's box x0..x1, z0..z1 (inclusive) whose floor is y. Goes through {@link #vehicle} at the
+     * box's middle, so it lands in the one chunk that holds the middle, its size turned with the frame.
+     */
+    default void herd(String species, int count, int x0, int z0, int x1, int z1, int y, long seed) {
+        vehicle((x0 + x1 + 1) / 2.0, y, (z0 + z1 + 1) / 2.0, 0, "!herd:" + species + ";" + count + ";" + (x1 - x0 + 1) + ";" + (z1 - z0 + 1), seed);
+    }
+
     /** Notes a spot worth finding again (what: "bunker" for a bunker's hatch); the game ignores it. */
     default void mark(String what, int x, int y, int z) {
     }

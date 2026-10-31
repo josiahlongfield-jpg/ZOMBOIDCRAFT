@@ -567,6 +567,10 @@ final class FarmSite extends Site {
         if (hs != null) {
             hayStack(hs, 8, 5);
         }
+        // most farms kept a few hens
+        if (chance() < 0.6) {
+            coop(houseLeft ? yw - 12 : 3, yardEnd - 10);
+        }
         Placer tr = put(3, 12, 0, ydx + 4, yardEnd, 0);
         if (tr != null) {
             Farmstead fs = new Farmstead(tr, rng, hit);
@@ -646,6 +650,14 @@ final class FarmSite extends Site {
         if (tr != null) {
             new Farmstead(tr, rng, hit).tractor(0, 0, any("green", "red"));
         }
+        // the holding pen by the barn, and the hens
+        Placer cr = put(14, 12, 0, houseLeft ? ydx + 2 : ydx - 16, yardEnd + 6, 1);
+        if (cr != null) {
+            new Farmstead(cr, rng, hit).corral(14, 12, 2 + rng.nextInt(3));
+        }
+        if (chance() < 0.5) {
+            coop(houseLeft ? yw - 12 : 3, 6);
+        }
         // the manure pit
         Placer mp = put(12, 10, 0, houseLeft ? yw - 14 : 2, yd - 14, 1);
         if (mp != null) {
@@ -716,6 +728,11 @@ final class FarmSite extends Site {
         if (ht != null) {
             ht.vehicle(1.5, 1, 4.5, 180, "=horse_trailer", rng.nextLong());
             yp.vehicle(ydx + 8.5, 1, yardEnd - 18, 0, "pickup", rng.nextLong());
+        }
+        // the ranch runs cattle now (Zomboid has no horses): the working corral by the barns
+        Placer cr = put(16, 14, 0, ydx - 18, yd - 16, 1);
+        if (cr != null) {
+            new Farmstead(cr, rng, hit).corral(16, 14, 3 + rng.nextInt(3));
         }
         Placer m = put(8, 6, 0, ydx - 14, yd - 10, 1);
         if (m != null) {
@@ -796,9 +813,11 @@ final class FarmSite extends Site {
         barnComplex(12, 16, chance() < 0.75 ? "barn_red" : "barn_grey", any("minecraft:dark_oak", Farmstead.TIN[1], "minecraft:deepslate_tile"),
                 true, Farmstead.Use.STALLS, chance() < 0.4 ? 1 : 0, Farmstead.Silo.BRICK, chance() < 0.5, houseLeft ? ydx + 3 : ydx - 22,
                 yardEnd + 2);
-        Placer c = put(9, 12, 0, houseLeft ? yw - 11 : 2, 4, 1);
-        if (c != null) {
-            new Farmstead(c.shifted(1, 0, 7), rng, hit).coop(7, 5, any("barn_red", "siding_white", "barn_grey"));
+        coop(houseLeft ? yw - 11 : 2, 4);
+        // the family cow in her little pen by the barn
+        Placer cr = put(9, 9, 0, houseLeft ? ydx + 17 : ydx - 32, yardEnd + 4, 1);
+        if (cr != null) {
+            new Farmstead(cr, rng, hit).corral(9, 9, 1 + rng.nextInt(2));
         }
         Placer wl = put(3, 3, 0, houseLeft ? ydx - 8 : ydx + 6, yardEnd - 4, 1);
         if (wl != null) {
@@ -867,6 +886,14 @@ final class FarmSite extends Site {
         Kit.railFence(yp, rng, yw - 1, 1, yw - 1, yd - 1, false, 0.1);
         yp.vehicle(ydx + (houseLeft ? 4 : -4), 1, yardEnd - 6, (float) (chance() * 360), "pickup", rng.nextLong());
         yardStory();
+    }
+
+    /** A chicken coop and its run at the nearest free yard spot to (x, z), with its hens. */
+    private void coop(int x, int z) {
+        Placer c = put(9, 12, 0, x, z, 1);
+        if (c != null) {
+            new Farmstead(c.shifted(1, 0, 7), rng, hit).coop(7, 5, any("barn_red", "siding_white", "barn_grey"));
+        }
     }
 
     /** The place coordinates of a point in some frame. */
@@ -1118,8 +1145,37 @@ final class FarmSite extends Site {
                 out.set(gx + dx, 2, gz + dz, "air");
             }
         }
-        out.set(gx, 1, gz, "fm_water_trough[axis=x]");
-        out.set(gx + 1, 1, gz, "fm_water_trough[axis=x]");
+        if (chance() < 0.6) {
+            // the round stock tank in its mud (refs/farm/cattle-water-trough)
+            out.set(gx, 1, gz - 1, "fm_stock_tank[facing=north]");
+            out.set(gx + 1, 1, gz - 1, "fm_stock_tank[facing=east]");
+            out.set(gx + 1, 1, gz, "fm_stock_tank[facing=south]");
+            out.set(gx, 1, gz, "fm_stock_tank[facing=west]");
+        } else {
+            out.set(gx, 1, gz, "fm_water_trough[axis=x]");
+            out.set(gx + 1, 1, gz, "fm_water_trough[axis=x]");
+        }
+        boolean stock = p.variant.equals("dairy") || p.variant.equals("horse_ranch") || p.variant.equals("homestead");
+        if (stock && chance() < 0.6 && x1 - x0 > 12 && z1 - z0 > 12) {
+            // a bale ring feeder out in the field, the grass worn to mud round it
+            int fx = x0 + 4 + rng.nextInt(x1 - x0 - 9), fz = z0 + 4 + rng.nextInt(z1 - z0 - 9);
+            for (int dx = -1; dx <= 2; dx++) {
+                for (int dz = -1; dz <= 2; dz++) {
+                    out.set(fx + dx, 0, fz + dz, chance() < 0.6 ? "minecraft:mud" : "minecraft:coarse_dirt");
+                    out.set(fx + dx, 1, fz + dz, "air");
+                    out.set(fx + dx, 2, fz + dz, "air");
+                }
+            }
+            out.set(fx, 1, fz, "fm_ring_feeder[facing=north]");
+            out.set(fx + 1, 1, fz, "fm_ring_feeder[facing=east]");
+            out.set(fx + 1, 1, fz + 1, "fm_ring_feeder[facing=south]");
+            out.set(fx, 1, fz + 1, "fm_ring_feeder[facing=west]");
+        }
+        if (stock) {
+            // the herd out at grass (FarmHerds: SURVIVAL's cows)
+            int n = Math.min(6, 2 + (x1 - x0) * (z1 - z0) / 400);
+            out.herd("cow", n, x0, z0, x1, z1, 1, rng.nextLong());
+        }
         if (f.w() > 24 && f.d() > 24) {
             kit.tree(chance() < 0.6 ? Trees.Kind.OAK : Trees.Kind.MAPLE, (x0 + x1) / 2 - 6, (z0 + z1) / 2);
         }

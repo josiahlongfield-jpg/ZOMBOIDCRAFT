@@ -19,7 +19,9 @@ farm photos in refs/farm (barn-interior, dairy-barn, machine-shed, silos).
   fm_stall_door (its sliding front, hung as a door), fm_loop (a cattle stall's pipe divider),
   fm_headlock (the feed fence), fm_manger, fm_water_trough, fm_feed_bin (searchable),
   fm_ladder / fm_ladder_broken (climbable), fm_saddle_rack, fm_tack_trunk (searchable), fm_lantern / fm_lantern_lit (hanging), fm_chain,
-  fm_bedroll, fm_grindstone, fm_anvil, fm_nest_boxes, fm_roost, fm_waterer, fm_feathers;
+  fm_bedroll, fm_grindstone, fm_anvil, fm_nest_boxes, fm_roost, fm_waterer, fm_feathers, fm_feeder;
+- pens (the animals' furniture, tagged zomboidcraft:animal/*): fm_panel / fm_panel_post (galvanised
+  corral panels), fm_stock_tank and fm_ring_feeder (round, a quarter a block, four round a corner);
 - the yard: fm_hive / fm_hive_tipped, fm_scarecrow_lo / _hi, fm_firewood (split wood stacked
   between stakes), fm_chop_block (with the axe in it), fm_well (the well's roof, windlass and
   bucket over its round stone curb), fm_outhouse_lo / _hi, fm_girt (a windmill tower's X brace),
@@ -1025,6 +1027,70 @@ def beam():
     return [[3, 2, 0, 13, 12, 16, {"side": "tree_spruce_bark", "north": "tree_spruce_rings", "south": "tree_spruce_rings"}]]
 
 
+def panel(post=False):
+    """A corral panel along z (refs/farm/cattle-pen-feedlot): five galvanised tube rails, a short
+    upright at the joint; with post, the round pipe post the panels are chained to."""
+    b = [[7.4, y, 0, 8.6, y + 1.2, 16, GALV] for y in (2, 5, 8, 11, 14)]
+    b.append([7.3, 0, 7.4, 8.7, 15.5, 8.6, GALV])
+    if post:
+        b += [[6.4, 0, 6.4, 9.6, 17, 9.6, GALV], [6.1, 17, 6.1, 9.9, 17.6, 9.9, GALV],
+              [6.2, 13.2, 6.2, 9.8, 14.2, 9.8, "rust"]]
+    return b
+
+
+def quarter(r, step=2.0):
+    """The quarter of a circle of radius r round the block's south-east corner (16, 16), as z strips
+    (z0, z1, x0): each strip runs from x0 to the corner's side."""
+    out = []
+    for z0, z1, x0, x1 in disc_strips(r, 16, 16, step):
+        if z1 <= 16.001:
+            out.append((z0, z1, max(x0, 0.0)))
+    return out
+
+
+def stock_tank():
+    """A quarter of a round galvanised stock tank, eight foot across and two deep (refs/farm/
+    cattle-water-trough): four of them round a corner make the tank, its rolled rim and the water."""
+    b = []
+    for z0, z1, x0 in quarter(14.5):
+        b.append([x0, 0, z0, 16, 9, z1, {"up": "fm_water", "side": GALV, "down": GALV}])
+        b.append([x0, 9, z0, min(16, x0 + 1.0), 10.2, z1, GALV])
+    z0, z1, x0 = quarter(14.5)[0]
+    b.append([x0, 9, z0, 16, 10.2, z0 + 1.0, GALV])
+    for y in (2.5, 6):
+        for z0, z1, x0 in quarter(14.7, 3.0):
+            b.append([x0 - 0.2, y, z0, x0 + 0.3, y + 0.6, z1, GALV])
+    return b
+
+
+def ring_feeder():
+    """A quarter of a round bale ring feeder (refs/farm/cattle-pen-feedlot): the galvanised ring,
+    its top and bottom tubes and the slanted bars, round the bale it was last filled with, half
+    eaten. Four round a corner make it."""
+    b = []
+    hay = {"up": "fm_hay_end", "down": "fm_hay_end", "side": "fm_hay_round_v"}
+    for z0, z1, x0 in quarter(11.5):
+        b.append([x0, 0, z0, 16, 15 if x0 > 8 else 13, z1, hay])
+    for z0, z1, x0 in quarter(15.2, 1.5):
+        for y0, y1 in ((1.5, 3), (14, 15.5)):
+            b.append([x0, y0, z0, min(16, x0 + 1.5), y1, z1, GALV])
+    # the bars: short uprights round the ring, leaning in
+    for k in range(5):
+        a = math.radians(9 + k * 18)
+        x, z = 16 - 15.2 * math.cos(a), 16 - 15.2 * math.sin(a)
+        b.append([round(x - 0.6, 2), 3, round(z - 0.6, 2), round(x + 0.6, 2), 14, round(z + 0.6, 2), GALV])
+    b.append([0, 0, 0, 16, 0.3, 16, "fm_feed"])
+    return b
+
+
+def feeder():
+    """A poultry tube feeder (refs/farm/chicken-coop-and-run): the red plastic pan, the tube of
+    feed above it and the cap, standing on the litter."""
+    red = "fm_tank_red"
+    return [[3, 0, 3, 13, 1, 13, red], [2.5, 1, 2.5, 13.5, 2.6, 13.5, red], [4, 1, 4, 12, 2.4, 12, "fm_feed"],
+            [5, 2.6, 5, 11, 12, 11, red], [4.5, 12, 4.5, 11.5, 13.2, 11.5, red], [7.5, 13.2, 7.5, 8.5, 14.5, 8.5, STEEL]]
+
+
 def pole():
     """A pole barn's treated post, a knee brace up to the plate on one side (the model's south)."""
     return [[5, 0, 5, 11, 16, 11, TIM], [6, 10, 11, 10, 11.5, 22, TIMH, None, turn("x", -45, (8, 10, 11))]]
@@ -1130,6 +1196,11 @@ def blocks():
     add("fm_hutch_back", hutch_piece(False), "Calf Hutch", "WOOD")
     add("fm_silage", silage(), "Silage Cover", "WOOL", rotate=None, decor=True)
     add("fm_beam", beam(), "Log Beam", "WOOD", rotate="axis")
+    add("fm_panel", panel(), "Corral Panel", "METAL", rotate="axis")
+    add("fm_panel_post", panel(True), "Corral Panel", "METAL", rotate="axis")
+    add("fm_stock_tank", stock_tank(), "Stock Tank", "METAL")
+    add("fm_ring_feeder", ring_feeder(), "Bale Feeder", "METAL")
+    add("fm_feeder", feeder(), "Poultry Feeder", "WOOD", rotate=None)
     return out
 
 
