@@ -67,8 +67,11 @@ public final class Injuries {
                 body = body.fracture(r);
                 broke = r;
             }
-        } else if (source.is(DamageTypeTags.IS_PROJECTILE)) {
-            body = body.wound(Body.any(random), Wound.LACERATION, true);
+        } else if (source.is(DamageTypeTags.IS_PROJECTILE) || source.is(ModDamageTypes.BULLET)) {
+            // a round that a vest or helmet stopped bruises but doesn't cut (clothing/Clothes.bullet)
+            Region hit = com.zomboidcraft.clothing.Clothes.lastBullet(player);
+            if (hit != null) body = body.wound(hit, Wound.LACERATION, true);
+            else if (!source.is(ModDamageTypes.BULLET)) body = body.wound(Body.any(random), Wound.LACERATION, true);
         }
         Body.set(player, body);
         if (broke != null) {
@@ -77,14 +80,15 @@ public final class Injuries {
     }
 
     /**
-     * A zombie's scratch or bite on the part it reached. Returns where, or null when the clothes over that part
-     * stopped it (see clothing/Clothes).
+     * A zombie's scratch or bite on the part it reached. Returns where, or null when the clothes over the spot it
+     * reached stopped it (see clothing/Clothes, which wears them down for it).
      */
     public static @org.jetbrains.annotations.Nullable Region zombieWound(ServerPlayer player, boolean bite) {
         RandomSource random = player.getRandom();
         Region where = Body.zombieTarget(random);
-        com.zomboidcraft.clothing.Clothes.Totals worn = com.zomboidcraft.clothing.Clothes.totals(player);
-        if (random.nextFloat() < (bite ? worn.bite() : worn.scratch()).getOrDefault(where, 0f)) {
+        com.zomboidcraft.clothing.Spot spot = com.zomboidcraft.clothing.Spot.roll(where, random);
+        if (com.zomboidcraft.clothing.Clothes.stops(player, where, spot, bite ? com.zomboidcraft.clothing.Clothes.Threat.BITE
+                : com.zomboidcraft.clothing.Clothes.Threat.SCRATCH)) {
             return null;
         }
         Wound wound = bite ? Wound.BITE : random.nextFloat() < 0.25f ? Wound.LACERATION : Wound.SCRATCH;

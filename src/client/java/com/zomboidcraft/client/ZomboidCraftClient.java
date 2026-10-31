@@ -27,6 +27,8 @@ import net.minecraft.world.entity.monster.zombie.Zombie;
 public class ZomboidCraftClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
+        // medical supports drawn on the body, from the synced worn-medical mask
+        com.zomboidcraft.client.clothing.ClothingLayer.medicalMask = com.zomboidcraft.survival.WornMedical::mask;
         com.zomboidcraft.client.hud.Hud.register();
         com.zomboidcraft.client.carry.CarryClient.register();
         com.zomboidcraft.client.kit.KitScreen.register();

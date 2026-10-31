@@ -63,6 +63,12 @@ public final class MeshGuns {
 
     /** Draws one part of a gun with the pose at the item model's corner (one unit a block, as a block model draws). */
     public static void draw(String id, String part, PoseStack pose, SubmitNodeCollector out, int light) {
+        draw(id, part, pose, out, light, null);
+    }
+
+    /** The same, painted with another texture laid out like the packed one (a garment's camo), when one is given. */
+    public static void draw(String id, String part, PoseStack pose, SubmitNodeCollector out, int light,
+                            @org.jetbrains.annotations.Nullable Identifier texture) {
         Gun gun = get(id);
         Part p = gun == null ? null : gun.parts().get(part);
         // no shadow from a mesh item: a gun or a tin casts next to none, and the profile showed the bought guns
@@ -72,9 +78,10 @@ public final class MeshGuns {
         }
         pose.pushPose();
         pose.scale(1 / 16f, 1 / 16f, 1 / 16f);
-        out.submitCustomGeometry(pose, RenderTypes.entityCutoutCull(gun.texture()), (at, buffer) -> solid(p, at, buffer, light));
+        Identifier paint = texture != null ? texture : gun.texture();
+        out.submitCustomGeometry(pose, RenderTypes.entityCutoutCull(paint), (at, buffer) -> solid(p, at, buffer, light));
         if (inkOn) {
-            out.submitCustomGeometry(pose, RenderTypes.entityCutoutCull(gun.texture()), (at, buffer) -> ink(p, gun.outline(), at, buffer, light));
+            out.submitCustomGeometry(pose, RenderTypes.entityCutoutCull(paint), (at, buffer) -> ink(p, gun.outline(), at, buffer, light));
         }
         pose.popPose();
     }
