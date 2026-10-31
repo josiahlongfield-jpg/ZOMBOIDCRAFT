@@ -1,0 +1,920 @@
+{
+ "note": "PROVISIONAL: B41 MainCreationMethods values with the B42 changes known so far. Replace with Zomboid B42's own game data when it arrives from Josiah's PC (survival/pz-b42-data).",
+ "traits": [
+  {
+   "id": "athletic",
+   "name": "Athletic",
+   "cost": 10,
+   "skills": {
+    "FITNESS": 4
+   },
+   "excludes": [
+    "fit",
+    "unfit",
+    "out_of_shape",
+    "overweight",
+    "obese",
+    "very_underweight",
+    "smoker"
+   ],
+   "description": "Fast runner, great endurance.",
+   "occupationOnly": false
+  },
+  {
+   "id": "fit",
+   "name": "Fit",
+   "cost": 6,
+   "skills": {
+    "FITNESS": 2
+   },
+   "excludes": [
+    "athletic",
+    "unfit",
+    "out_of_shape"
+   ],
+   "description": "In good shape.",
+   "occupationOnly": false
+  },
+  {
+   "id": "strong",
+   "name": "Strong",
+   "cost": 10,
+   "skills": {
+    "STRENGTH": 4
+   },
+   "excludes": [
+    "stout",
+    "weak",
+    "feeble"
+   ],
+   "description": "Hits harder, carries more.",
+   "occupationOnly": false
+  },
+  {
+   "id": "stout",
+   "name": "Stout",
+   "cost": 6,
+   "skills": {
+    "STRENGTH": 2
+   },
+   "excludes": [
+    "strong",
+    "weak",
+    "feeble"
+   ],
+   "description": "Strong-ish.",
+   "occupationOnly": false
+  },
+  {
+   "id": "fast_healer",
+   "name": "Fast Healer",
+   "cost": 6,
+   "skills": {},
+   "excludes": [
+    "slow_healer"
+   ],
+   "description": "Wounds heal faster.",
+   "occupationOnly": false
+  },
+  {
+   "id": "fast_learner",
+   "name": "Fast Learner",
+   "cost": 6,
+   "skills": {},
+   "excludes": [
+    "slow_learner"
+   ],
+   "description": "30% more XP.",
+   "occupationOnly": false
+  },
+  {
+   "id": "fast_reader",
+   "name": "Fast Reader",
+   "cost": 2,
+   "skills": {},
+   "excludes": [
+    "slow_reader",
+    "illiterate"
+   ],
+   "description": "Reads books in less time.",
+   "occupationOnly": false
+  },
+  {
+   "id": "inconspicuous",
+   "name": "Inconspicuous",
+   "cost": 4,
+   "skills": {},
+   "excludes": [
+    "conspicuous"
+   ],
+   "description": "Zombies notice you less.",
+   "occupationOnly": false
+  },
+  {
+   "id": "iron_gut",
+   "name": "Iron Gut",
+   "cost": 3,
+   "skills": {},
+   "excludes": [
+    "weak_stomach"
+   ],
+   "description": "Rarely sick from food.",
+   "occupationOnly": false
+  },
+  {
+   "id": "keen_hearing",
+   "name": "Keen Hearing",
+   "cost": 6,
+   "skills": {},
+   "excludes": [
+    "hard_of_hearing",
+    "deaf"
+   ],
+   "description": "Hears further; wider awareness behind you.",
+   "occupationOnly": false
+  },
+  {
+   "id": "light_eater",
+   "name": "Light Eater",
+   "cost": 4,
+   "skills": {},
+   "excludes": [
+    "hearty_appetite"
+   ],
+   "description": "Gets hungry less often.",
+   "occupationOnly": false
+  },
+  {
+   "id": "low_thirst",
+   "name": "Low Thirst",
+   "cost": 2,
+   "skills": {},
+   "excludes": [
+    "high_thirst"
+   ],
+   "description": "Needs half the water.",
+   "occupationOnly": false
+  },
+  {
+   "id": "needs_less_sleep",
+   "name": "Wakeful",
+   "cost": 2,
+   "skills": {},
+   "excludes": [
+    "needs_more_sleep"
+   ],
+   "description": "Tires more slowly.",
+   "occupationOnly": false
+  },
+  {
+   "id": "organized",
+   "name": "Organized",
+   "cost": 4,
+   "skills": {},
+   "excludes": [
+    "disorganized"
+   ],
+   "description": "More room in bags and containers.",
+   "occupationOnly": false
+  },
+  {
+   "id": "outdoorsman",
+   "name": "Outdoorsman",
+   "cost": 2,
+   "skills": {},
+   "excludes": [],
+   "description": "Rain and cold bother you less.",
+   "occupationOnly": false
+  },
+  {
+   "id": "resilient",
+   "name": "Resilient",
+   "cost": 4,
+   "skills": {},
+   "excludes": [
+    "prone_to_illness"
+   ],
+   "description": "Infection and colds take longer.",
+   "occupationOnly": false
+  },
+  {
+   "id": "thick_skinned",
+   "name": "Thick Skinned",
+   "cost": 8,
+   "skills": {},
+   "excludes": [
+    "thin_skinned"
+   ],
+   "description": "Scratches break the skin less often.",
+   "occupationOnly": false
+  },
+  {
+   "id": "brave",
+   "name": "Brave",
+   "cost": 4,
+   "skills": {},
+   "excludes": [
+    "cowardly",
+    "hemophobic",
+    "agoraphobic",
+    "claustrophobic"
+   ],
+   "description": "Panics far less.",
+   "occupationOnly": false
+  },
+  {
+   "id": "eagle_eyed",
+   "name": "Eagle Eyed",
+   "cost": 4,
+   "skills": {},
+   "excludes": [
+    "short_sighted"
+   ],
+   "description": "Sees further.",
+   "occupationOnly": false
+  },
+  {
+   "id": "cats_eyes",
+   "name": "Cat's Eyes",
+   "cost": 2,
+   "skills": {},
+   "excludes": [],
+   "description": "Sees better in the dark.",
+   "occupationOnly": false
+  },
+  {
+   "id": "graceful",
+   "name": "Graceful",
+   "cost": 4,
+   "skills": {},
+   "excludes": [
+    "clumsy"
+   ],
+   "description": "Moves more quietly.",
+   "occupationOnly": false
+  },
+  {
+   "id": "dextrous",
+   "name": "Dextrous",
+   "cost": 2,
+   "skills": {},
+   "excludes": [
+    "all_thumbs"
+   ],
+   "description": "Moves items faster.",
+   "occupationOnly": false
+  },
+  {
+   "id": "nutritionist",
+   "name": "Nutritionist",
+   "cost": 4,
+   "skills": {},
+   "excludes": [],
+   "description": "Sees calories and nutrients on food.",
+   "occupationOnly": false
+  },
+  {
+   "id": "adrenaline_junkie",
+   "name": "Adrenaline Junkie",
+   "cost": 4,
+   "skills": {},
+   "excludes": [],
+   "description": "Runs faster when panicked.",
+   "occupationOnly": false
+  },
+  {
+   "id": "speed_demon",
+   "name": "Speed Demon",
+   "cost": 1,
+   "skills": {},
+   "excludes": [
+    "sunday_driver"
+   ],
+   "description": "Drives faster.",
+   "occupationOnly": false
+  },
+  {
+   "id": "angler",
+   "name": "Angler",
+   "cost": 4,
+   "skills": {
+    "FISHING": 1
+   },
+   "excludes": [],
+   "description": "Knows how to fish.",
+   "occupationOnly": false
+  },
+  {
+   "id": "baseball_player",
+   "name": "Baseball Player",
+   "cost": 4,
+   "skills": {
+    "BLUNT": 1
+   },
+   "excludes": [],
+   "description": "Swings a bat well.",
+   "occupationOnly": false
+  },
+  {
+   "id": "brawler",
+   "name": "Brawler",
+   "cost": 6,
+   "skills": {
+    "BLADE": 1,
+    "BLUNT": 1
+   },
+   "excludes": [],
+   "description": "Used to fights.",
+   "occupationOnly": false
+  },
+  {
+   "id": "cook",
+   "name": "Cook",
+   "cost": 6,
+   "skills": {
+    "COOKING": 2
+   },
+   "excludes": [],
+   "description": "Knows the kitchen.",
+   "occupationOnly": false
+  },
+  {
+   "id": "first_aider",
+   "name": "First Aider",
+   "cost": 4,
+   "skills": {
+    "FIRST_AID": 1
+   },
+   "excludes": [],
+   "description": "Trained in first aid.",
+   "occupationOnly": false
+  },
+  {
+   "id": "gardener",
+   "name": "Gardener",
+   "cost": 4,
+   "skills": {
+    "AGRICULTURE": 1
+   },
+   "excludes": [],
+   "description": "Grows vegetables.",
+   "occupationOnly": false
+  },
+  {
+   "id": "gymnast",
+   "name": "Gymnast",
+   "cost": 5,
+   "skills": {
+    "LIGHTFOOTED": 1,
+    "NIMBLE": 1
+   },
+   "excludes": [],
+   "description": "Light on your feet.",
+   "occupationOnly": false
+  },
+  {
+   "id": "handy",
+   "name": "Handy",
+   "cost": 8,
+   "skills": {
+    "CARPENTRY": 1,
+    "MAINTENANCE": 1,
+    "MASONRY": 1,
+    "CARVING": 1
+   },
+   "excludes": [],
+   "description": "Builds faster and sturdier.",
+   "occupationOnly": false
+  },
+  {
+   "id": "herbalist",
+   "name": "Herbalist",
+   "cost": 6,
+   "skills": {
+    "FORAGING": 1
+   },
+   "excludes": [],
+   "description": "Knows medicinal plants.",
+   "occupationOnly": false
+  },
+  {
+   "id": "hiker",
+   "name": "Hiker",
+   "cost": 6,
+   "skills": {
+    "FORAGING": 1,
+    "TRAPPING": 1
+   },
+   "excludes": [],
+   "description": "At home in the outdoors.",
+   "occupationOnly": false
+  },
+  {
+   "id": "hunter",
+   "name": "Hunter",
+   "cost": 8,
+   "skills": {
+    "AIMING": 1,
+    "TRAPPING": 1,
+    "SNEAKING": 1,
+    "BLADE": 1,
+    "BUTCHERING": 1,
+    "TRACKING": 1
+   },
+   "excludes": [],
+   "description": "Tracks, traps and shoots game.",
+   "occupationOnly": false
+  },
+  {
+   "id": "jogger",
+   "name": "Jogger",
+   "cost": 4,
+   "skills": {
+    "SPRINTING": 1
+   },
+   "excludes": [],
+   "description": "Runs regularly.",
+   "occupationOnly": false
+  },
+  {
+   "id": "sewer",
+   "name": "Sewer",
+   "cost": 4,
+   "skills": {
+    "TAILORING": 1
+   },
+   "excludes": [],
+   "description": "Can patch clothes.",
+   "occupationOnly": false
+  },
+  {
+   "id": "whittler",
+   "name": "Whittler",
+   "cost": 2,
+   "skills": {
+    "CARVING": 2
+   },
+   "excludes": [],
+   "description": "Carves wood and bone.",
+   "occupationOnly": false
+  },
+  {
+   "id": "artisan",
+   "name": "Artisan",
+   "cost": 2,
+   "skills": {
+    "GLASSMAKING": 1,
+    "POTTERY": 1
+   },
+   "excludes": [],
+   "description": "Works glass and clay.",
+   "occupationOnly": false
+  },
+  {
+   "id": "desensitized",
+   "name": "Desensitized",
+   "cost": 0,
+   "skills": {},
+   "excludes": [],
+   "description": "Never panics.",
+   "occupationOnly": true
+  },
+  {
+   "id": "burglar",
+   "name": "Burglar",
+   "cost": 0,
+   "skills": {},
+   "excludes": [],
+   "description": "Can hotwire cars and pick locks.",
+   "occupationOnly": true
+  },
+  {
+   "id": "axpert",
+   "name": "Ax-pert",
+   "cost": 0,
+   "skills": {},
+   "excludes": [],
+   "description": "Chops faster with an axe.",
+   "occupationOnly": true
+  },
+  {
+   "id": "amateur_mechanic",
+   "name": "Amateur Mechanic",
+   "cost": 0,
+   "skills": {},
+   "excludes": [],
+   "description": "Knows the parts of every car.",
+   "occupationOnly": true
+  },
+  {
+   "id": "night_owl",
+   "name": "Night Owl",
+   "cost": 0,
+   "skills": {},
+   "excludes": [],
+   "description": "Needs little sleep and wakes alert.",
+   "occupationOnly": true
+  },
+  {
+   "id": "agoraphobic",
+   "name": "Agoraphobic",
+   "cost": -4,
+   "skills": {},
+   "excludes": [
+    "claustrophobic",
+    "brave"
+   ],
+   "description": "Panics outdoors.",
+   "occupationOnly": false
+  },
+  {
+   "id": "claustrophobic",
+   "name": "Claustrophobic",
+   "cost": -4,
+   "skills": {},
+   "excludes": [
+    "agoraphobic",
+    "brave"
+   ],
+   "description": "Panics indoors.",
+   "occupationOnly": false
+  },
+  {
+   "id": "all_thumbs",
+   "name": "All Thumbs",
+   "cost": -2,
+   "skills": {},
+   "excludes": [
+    "dextrous"
+   ],
+   "description": "Moves items slowly.",
+   "occupationOnly": false
+  },
+  {
+   "id": "short_of_breath",
+   "name": "Short of Breath",
+   "cost": -5,
+   "skills": {},
+   "excludes": [],
+   "description": "Endurance comes back slowly.",
+   "occupationOnly": false
+  },
+  {
+   "id": "clumsy",
+   "name": "Clumsy",
+   "cost": -2,
+   "skills": {},
+   "excludes": [
+    "graceful"
+   ],
+   "description": "Makes more noise moving.",
+   "occupationOnly": false
+  },
+  {
+   "id": "conspicuous",
+   "name": "Conspicuous",
+   "cost": -4,
+   "skills": {},
+   "excludes": [
+    "inconspicuous"
+   ],
+   "description": "Zombies spot you more easily.",
+   "occupationOnly": false
+  },
+  {
+   "id": "cowardly",
+   "name": "Cowardly",
+   "cost": -2,
+   "skills": {},
+   "excludes": [
+    "brave"
+   ],
+   "description": "Panics much more.",
+   "occupationOnly": false
+  },
+  {
+   "id": "deaf",
+   "name": "Deaf",
+   "cost": -12,
+   "skills": {},
+   "excludes": [
+    "keen_hearing",
+    "hard_of_hearing"
+   ],
+   "description": "Hears almost nothing.",
+   "occupationOnly": false
+  },
+  {
+   "id": "disorganized",
+   "name": "Disorganized",
+   "cost": -4,
+   "skills": {},
+   "excludes": [
+    "organized"
+   ],
+   "description": "Less room in bags and containers.",
+   "occupationOnly": false
+  },
+  {
+   "id": "feeble",
+   "name": "Feeble",
+   "cost": -6,
+   "skills": {
+    "STRENGTH": -2
+   },
+   "excludes": [
+    "strong",
+    "stout",
+    "weak"
+   ],
+   "description": "Weak-ish.",
+   "occupationOnly": false
+  },
+  {
+   "id": "weak",
+   "name": "Weak",
+   "cost": -10,
+   "skills": {
+    "STRENGTH": -5
+   },
+   "excludes": [
+    "strong",
+    "stout",
+    "feeble"
+   ],
+   "description": "Hits soft, carries little.",
+   "occupationOnly": false
+  },
+  {
+   "id": "hard_of_hearing",
+   "name": "Hard of Hearing",
+   "cost": -4,
+   "skills": {},
+   "excludes": [
+    "keen_hearing",
+    "deaf"
+   ],
+   "description": "Hears less.",
+   "occupationOnly": false
+  },
+  {
+   "id": "hearty_appetite",
+   "name": "Hearty Appetite",
+   "cost": -4,
+   "skills": {},
+   "excludes": [
+    "light_eater"
+   ],
+   "description": "Gets hungry more often.",
+   "occupationOnly": false
+  },
+  {
+   "id": "hemophobic",
+   "name": "Hemophobic",
+   "cost": -3,
+   "skills": {},
+   "excludes": [
+    "brave"
+   ],
+   "description": "Panics at the sight of your own blood; slow to bandage.",
+   "occupationOnly": false
+  },
+  {
+   "id": "high_thirst",
+   "name": "High Thirst",
+   "cost": -2,
+   "skills": {},
+   "excludes": [
+    "low_thirst"
+   ],
+   "description": "Needs twice the water.",
+   "occupationOnly": false
+  },
+  {
+   "id": "illiterate",
+   "name": "Illiterate",
+   "cost": -10,
+   "skills": {},
+   "excludes": [
+    "fast_reader",
+    "slow_reader"
+   ],
+   "description": "Can't read skill books.",
+   "occupationOnly": false
+  },
+  {
+   "id": "out_of_shape",
+   "name": "Out of Shape",
+   "cost": -6,
+   "skills": {
+    "FITNESS": -2
+   },
+   "excludes": [
+    "athletic",
+    "fit",
+    "unfit"
+   ],
+   "description": "Tires quickly.",
+   "occupationOnly": false
+  },
+  {
+   "id": "unfit",
+   "name": "Unfit",
+   "cost": -10,
+   "skills": {
+    "FITNESS": -4
+   },
+   "excludes": [
+    "athletic",
+    "fit",
+    "out_of_shape"
+   ],
+   "description": "Very poor endurance.",
+   "occupationOnly": false
+  },
+  {
+   "id": "overweight",
+   "name": "Overweight",
+   "cost": -6,
+   "skills": {},
+   "excludes": [
+    "obese",
+    "underweight",
+    "very_underweight",
+    "athletic"
+   ],
+   "description": "Starts heavier; tires faster.",
+   "occupationOnly": false
+  },
+  {
+   "id": "obese",
+   "name": "Obese",
+   "cost": -10,
+   "skills": {},
+   "excludes": [
+    "overweight",
+    "underweight",
+    "very_underweight",
+    "athletic"
+   ],
+   "description": "Starts much heavier.",
+   "occupationOnly": false
+  },
+  {
+   "id": "underweight",
+   "name": "Underweight",
+   "cost": -6,
+   "skills": {},
+   "excludes": [
+    "overweight",
+    "obese",
+    "very_underweight"
+   ],
+   "description": "Starts light; weaker.",
+   "occupationOnly": false
+  },
+  {
+   "id": "very_underweight",
+   "name": "Very Underweight",
+   "cost": -10,
+   "skills": {},
+   "excludes": [
+    "overweight",
+    "obese",
+    "underweight",
+    "athletic"
+   ],
+   "description": "Starts very light.",
+   "occupationOnly": false
+  },
+  {
+   "id": "reluctant_fighter",
+   "name": "Reluctant Fighter",
+   "cost": -2,
+   "skills": {},
+   "excludes": [],
+   "description": "Learns weapon skills slowly.",
+   "occupationOnly": false
+  },
+  {
+   "id": "prone_to_illness",
+   "name": "Prone to Illness",
+   "cost": -4,
+   "skills": {},
+   "excludes": [
+    "resilient"
+   ],
+   "description": "Infection and colds move faster.",
+   "occupationOnly": false
+  },
+  {
+   "id": "restless_sleeper",
+   "name": "Restless Sleeper",
+   "cost": -6,
+   "skills": {},
+   "excludes": [],
+   "description": "Sleep rests you less.",
+   "occupationOnly": false
+  },
+  {
+   "id": "short_sighted",
+   "name": "Short Sighted",
+   "cost": -2,
+   "skills": {},
+   "excludes": [
+    "eagle_eyed"
+   ],
+   "description": "Sees less far.",
+   "occupationOnly": false
+  },
+  {
+   "id": "needs_more_sleep",
+   "name": "Sleepyhead",
+   "cost": -4,
+   "skills": {},
+   "excludes": [
+    "needs_less_sleep"
+   ],
+   "description": "Tires faster.",
+   "occupationOnly": false
+  },
+  {
+   "id": "slow_healer",
+   "name": "Slow Healer",
+   "cost": -6,
+   "skills": {},
+   "excludes": [
+    "fast_healer"
+   ],
+   "description": "Wounds heal slower.",
+   "occupationOnly": false
+  },
+  {
+   "id": "slow_learner",
+   "name": "Slow Learner",
+   "cost": -6,
+   "skills": {},
+   "excludes": [
+    "fast_learner"
+   ],
+   "description": "30% less XP.",
+   "occupationOnly": false
+  },
+  {
+   "id": "slow_reader",
+   "name": "Slow Reader",
+   "cost": -2,
+   "skills": {},
+   "excludes": [
+    "fast_reader",
+    "illiterate"
+   ],
+   "description": "Takes longer to read.",
+   "occupationOnly": false
+  },
+  {
+   "id": "smoker",
+   "name": "Smoker",
+   "cost": -3,
+   "skills": {},
+   "excludes": [
+    "athletic"
+   ],
+   "description": "Gets stressed without cigarettes.",
+   "occupationOnly": false
+  },
+  {
+   "id": "sunday_driver",
+   "name": "Sunday Driver",
+   "cost": -1,
+   "skills": {},
+   "excludes": [
+    "speed_demon"
+   ],
+   "description": "Drives slowly.",
+   "occupationOnly": false
+  },
+  {
+   "id": "thin_skinned",
+   "name": "Thin-skinned",
+   "cost": -8,
+   "skills": {},
+   "excludes": [
+    "thick_skinned"
+   ],
+   "description": "Scratches break the skin more often.",
+   "occupationOnly": false
+  },
+  {
+   "id": "weak_stomach",
+   "name": "Weak Stomach",
+   "cost": -2,
+   "skills": {},
+   "excludes": [
+    "iron_gut"
+   ],
+   "description": "Sick from food more easily.",
+   "occupationOnly": false
+  }
+ ]
+}

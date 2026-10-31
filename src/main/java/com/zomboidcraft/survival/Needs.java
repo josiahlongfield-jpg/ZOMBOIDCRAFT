@@ -62,7 +62,8 @@ public final class Needs {
             Nutrition n = Nutrition.get(player);
             float hour = 1f / hourSeconds(), speed = (float) config.statsDecrease;
             float activity = activity(player);
-            n = n.withHunger(n.hunger() + HUNGER_PER_HOUR * hour * speed * (0.6f + 0.4f * activity));
+            n = n.withHunger(n.hunger() + HUNGER_PER_HOUR * hour * speed * (0.6f + 0.4f * activity)
+                    * com.zomboidcraft.survival.character.Traits.hungerScale(player));
             if (config.nutrition) {
                 float burn = (float) config.caloriesPerDay / 24f * hour * speed * activity;
                 n = n.plus(-burn, fade(n.carbs(), CARBS_PER_HOUR * hour), fade(n.fats(), FATS_PER_HOUR * hour),
@@ -161,7 +162,7 @@ public final class Needs {
             if (hunger == 4) f *= 0.6f;
             else if (hunger == 3) f *= 0.8f;
         }
-        return Math.max(0.2f, f);
+        return Math.max(0.2f, f * com.zomboidcraft.survival.character.Traits.enduranceScale(player));
     }
 
     /** kg more (or less) you can carry for your Strength (Carry). */

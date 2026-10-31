@@ -37,6 +37,34 @@ public class SurvivalLookTest implements FabricClientGameTest {
             ctx.waitTicks(20);
             shot(ctx, "start");
 
+            // wave 3: character creation. A veteran who's Strong and Fast Learner, paid for by Smoker and Hard of Hearing
+            ctx.runOnClient(mc -> mc.gui.setScreen(new CharacterScreen(new com.zomboidcraft.survival.character.CharacterNet.Open(false, 0, 0))));
+            ctx.waitTicks(5);
+            shot(ctx, "character");
+            ctx.runOnClient(mc -> {
+                if (mc.gui.screen() instanceof CharacterScreen c) {
+                    c.choose("veteran", java.util.List.of("strong", "fast_learner", "smoker", "hard_of_hearing", "weak_stomach", "slow_reader", "high_thirst"));
+                    LOG.info("character points left {}", c.pointsLeft());
+                }
+            });
+            ctx.waitTicks(5);
+            shot(ctx, "character");
+            ctx.runOnClient(mc -> {
+                if (mc.gui.screen() instanceof CharacterScreen c) {
+                    c.choose("park_ranger", java.util.List.of("brave", "outdoorsman", "keen_hearing", "agoraphobic", "short_sighted", "cowardly"));
+                }
+            });
+            ctx.waitTicks(5);
+            shot(ctx, "character");
+            ctx.runOnClient(mc -> mc.gui.setScreen(null));
+            sp.getServer().runOnServer(server -> {
+                ServerPlayer p = server.getPlayerList().getPlayers().get(0);
+                com.zomboidcraft.survival.character.Traits.apply(p, "veteran", java.util.List.of("strong", "fast_learner", "smoker", "hard_of_hearing"));
+                LOG.info("veteran aiming {} strength {} traits {}", com.zomboidcraft.skills.Skills.level(p, Skill.AIMING),
+                        com.zomboidcraft.skills.Skills.level(p, Skill.STRENGTH), com.zomboidcraft.survival.character.Traits.profile(p));
+            });
+            ctx.waitTicks(10);
+
             // hunger, thirst and tiredness climbing together, stage by stage
             float[][] steps = {{0.16f, 87, 61}, {0.27f, 74, 71}, {0.47f, 29, 81}, {0.72f, 15, 91}};
             for (float[] s : steps) {
