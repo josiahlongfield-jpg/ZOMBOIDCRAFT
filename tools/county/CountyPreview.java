@@ -30,6 +30,8 @@ public final class CountyPreview implements ChunkSink {
     private final short[] vox;
     private final List<String> palette = new ArrayList<>(List.of("air"));
     private final Map<String, Short> ids = new HashMap<>(Map.of("air", (short) 0));
+    /** The cars the generator stood on the roads (the jams), as mesh.py --cars reads them. */
+    private final StringBuilder cars = new StringBuilder();
 
     CountyPreview(int x0, int z0, int sx, int sz, int y0, int h) {
         this.x0 = x0;
@@ -58,6 +60,26 @@ public final class CountyPreview implements ChunkSink {
             ids.put(name, id);
         }
         vox[(y * sz + z) * sx + x] = id;
+    }
+
+    @Override
+    public void car(double x, int y, double z, float yaw, double minLength, double maxLength, long seed) {
+        addCar(x, y, z, yaw, minLength, maxLength, "");
+    }
+
+    @Override
+    public void vehicle(double x, int y, double z, float yaw, String models, long seed) {
+        if (!models.startsWith("!")) {
+            addCar(x, y, z, yaw, 0, 99, models);
+        }
+    }
+
+    private void addCar(double x, int y, double z, float yaw, double minLength, double maxLength, String models) {
+        if (x < x0 || x >= x0 + sx || z < z0 || z >= z0 + sz) {
+            return;
+        }
+        cars.append(cars.length() > 0 ? "," : "").append(String.format(java.util.Locale.ROOT, "[%.2f,%d,%.2f,%.1f,%.1f,%.1f,\"%s\"]",
+                x - x0, y - y0, z - z0, yaw, minLength, maxLength, models));
     }
 
     @Override
@@ -94,8 +116,8 @@ public final class CountyPreview implements ChunkSink {
             for (int i = 0; i < dump.palette.size(); i++) {
                 pal.append(i > 0 ? "," : "").append('"').append(dump.palette.get(i).replace("\"", "\\\"")).append('"');
             }
-            w.printf("{\"size\":[%d,%d,%d],\"origin\":[%d,%d,%d],\"palette\":[%s],\"lamps\":[]}%n",
-                    dump.sx, dump.h, dump.sz, dump.x0, y0, dump.z0, pal);
+            w.printf("{\"size\":[%d,%d,%d],\"origin\":[%d,%d,%d],\"palette\":[%s],\"lamps\":[],\"cars\":[%s]}%n",
+                    dump.sx, dump.h, dump.sz, dump.x0, y0, dump.z0, pal, dump.cars);
         }
     }
 }

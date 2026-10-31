@@ -97,6 +97,7 @@ public class BaseMoveTest implements FabricClientGameTest {
             LOG.info("ZCBASE carrying: {}", load);
             frame(ctx, "carrying");
 
+            gMenu(ctx, sp);
             walls(ctx, sp);
             soil(ctx, sp);
             pages(ctx);
@@ -257,6 +258,44 @@ public class BaseMoveTest implements FabricClientGameTest {
         });
         ctx.waitTicks(5);
         frame(ctx, "pack");
+    }
+
+    /**
+     * The G menu on a fresh piece: Pick up and Scrap greyed with an empty hand, then live with a hammer (weight and
+     * break chance on the line), then Pick up chosen: it joins the action bar and the piece comes up.
+     */
+    private static void gMenu(ClientGameTestContext ctx, TestSingleplayerContext sp) {
+        sp.getServer().runOnServer(s -> {
+            ServerPlayer p = player(s);
+            p.getInventory().clearContent();
+            p.setAttached(Skills.TYPE, java.util.Map.of());
+            s.overworld().setBlockAndUpdate(at(2), CityBlocks.resolve("home_sofa_blue_m[facing=north]"));
+        });
+        BlockPos pos = at(2);
+        stand(ctx, sp, pos.getX() - origin.getX(), pos.getZ() - origin.getZ() - 1.7, 0f, 38f);
+        hold(sp, ItemStack.EMPTY);
+        menu(ctx, "gmenu-empty-hand");
+        hold(sp, new ItemStack(ModItems.HAMMER));
+        menu(ctx, "gmenu-hammer");
+        String lines = ctx.computeOnClient(mc -> String.valueOf(com.zomboidcraft.client.interact.InteractMenu.collect(mc, mc.player, mc.hitResult)
+                .stream().map(o -> o.label() + (o.can() ? "" : " [" + o.why() + "]")).toList()));
+        LOG.info("ZCBASE g menu: {}", lines);
+        ctx.runOnClient(mc -> net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.send(
+                new com.zomboidcraft.building.MoveNet.Move(pos, false)));
+        ctx.waitTicks(4);
+        frame(ctx, "gmenu-picking-up");
+        ctx.waitTicks(40);
+        String after = sp.getServer().computeOnServer(s -> "block now " + s.overworld().getBlockState(pos).getBlock());
+        LOG.info("ZCBASE g menu pick up: {}", after);
+        frame(ctx, "gmenu-done");
+    }
+
+    private static void menu(ClientGameTestContext ctx, String name) {
+        ctx.waitTicks(5);
+        ctx.runOnClient(com.zomboidcraft.client.interact.InteractMenu::open);
+        frame(ctx, name);
+        ctx.runOnClient(mc -> mc.gui.setScreen(null));
+        ctx.waitTicks(5);
     }
 
     private static void frame(ClientGameTestContext ctx, String name) {

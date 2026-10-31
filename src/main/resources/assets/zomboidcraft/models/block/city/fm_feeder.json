@@ -1,0 +1,204 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fm_feed": "zomboidcraft:block/city/fm_feed",
+    "fm_tank_red": "zomboidcraft:block/city/fm_tank_red",
+    "painted_steel": "zomboidcraft:block/city/painted_steel",
+    "particle": "zomboidcraft:block/city/fm_tank_red"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        3
+      ],
+      "to": [
+        13,
+        1,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fm_tank_red"
+        },
+        "south": {
+          "texture": "#fm_tank_red"
+        },
+        "east": {
+          "texture": "#fm_tank_red"
+        },
+        "west": {
+          "texture": "#fm_tank_red"
+        },
+        "up": {
+          "texture": "#fm_tank_red"
+        },
+        "down": {
+          "texture": "#fm_tank_red",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2.5,
+        1,
+        2.5
+      ],
+      "to": [
+        13.5,
+        2.6,
+        13.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fm_tank_red"
+        },
+        "south": {
+          "texture": "#fm_tank_red"
+        },
+        "east": {
+          "texture": "#fm_tank_red"
+        },
+        "west": {
+          "texture": "#fm_tank_red"
+        },
+        "up": {
+          "texture": "#fm_tank_red"
+        },
+        "down": {
+          "texture": "#fm_tank_red"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        1,
+        4
+      ],
+      "to": [
+        12,
+        2.4,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fm_feed"
+        },
+        "south": {
+          "texture": "#fm_feed"
+        },
+        "east": {
+          "texture": "#fm_feed"
+        },
+        "west": {
+          "texture": "#fm_feed"
+        },
+        "up": {
+          "texture": "#fm_feed"
+        },
+        "down": {
+          "texture": "#fm_feed"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        2.6,
+        5
+      ],
+      "to": [
+        11,
+        12,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fm_tank_red"
+        },
+        "south": {
+          "texture": "#fm_tank_red"
+        },
+        "east": {
+          "texture": "#fm_tank_red"
+        },
+        "west": {
+          "texture": "#fm_tank_red"
+        },
+        "up": {
+          "texture": "#fm_tank_red"
+        },
+        "down": {
+          "texture": "#fm_tank_red"
+        }
+      }
+    },
+    {
+      "from": [
+        4.5,
+        12,
+        4.5
+      ],
+      "to": [
+        11.5,
+        13.2,
+        11.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fm_tank_red"
+        },
+        "south": {
+          "texture": "#fm_tank_red"
+        },
+        "east": {
+          "texture": "#fm_tank_red"
+        },
+        "west": {
+          "texture": "#fm_tank_red"
+        },
+        "up": {
+          "texture": "#fm_tank_red"
+        },
+        "down": {
+          "texture": "#fm_tank_red"
+        }
+      }
+    },
+    {
+      "from": [
+        7.5,
+        13.2,
+        7.5
+      ],
+      "to": [
+        8.5,
+        14.5,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#painted_steel"
+        },
+        "south": {
+          "texture": "#painted_steel"
+        },
+        "east": {
+          "texture": "#painted_steel"
+        },
+        "west": {
+          "texture": "#painted_steel"
+        },
+        "up": {
+          "texture": "#painted_steel"
+        },
+        "down": {
+          "texture": "#painted_steel"
+        }
+      }
+    }
+  ]
+}

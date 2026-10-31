@@ -58,6 +58,7 @@ final class RoadsideSite extends Site {
             case "warehouse" -> warehouse();
             case "trailer_lot" -> trailerLot();
             case "truck_depot" -> truckDepot();
+            case "substation" -> substation();
             default -> gasStation();
         }
         roadside();
@@ -276,6 +277,20 @@ final class RoadsideSite extends Site {
     }
 
     /** I-88 Truck &amp; Diesel ({@link AutoYards#truckDepot}): the truck hall, the diesel canopy, the lot out back. */
+    /** A power district's substation (Districts) off the road: the yard sized to its district. */
+    private void substation() {
+        Districts.District dist = Districts.district(null, p.centreX(), p.centreZ());
+        int[] size = switch (dist.kind()) {
+            case CITY -> new int[] {60, 58};
+            case TOWN -> new int[] {44, 38};
+            default -> new int[] {28, 22};
+        };
+        Kit.Lot lot = business(size[0], size[1]);
+        if (lot != null) {
+            new Substation(lot.placer(out), rng, dist, hit).build(lot.w(), lot.d());
+        }
+    }
+
     private void truckDepot() {
         Kit.Lot lot = business(70, 60);
         if (lot != null) {
