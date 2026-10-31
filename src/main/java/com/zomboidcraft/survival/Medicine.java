@@ -129,7 +129,7 @@ public final class Medicine {
     }
 
     private static void forget(Map<String, Integer> m, Region r) {
-        for (String key : new String[]{"wk", "wl", "dirty", "infect", "deep", "lodged", "stitched", "packed", "rag",
+        for (String key : new String[]{"wk", "wl", "bage", "dirty", "infect", "deep", "lodged", "stitched", "packed", "rag",
                 "salve", "burnsalve", "sealed", "wrap"}) {
             m.remove(k(key, r));
         }
@@ -151,6 +151,25 @@ public final class Medicine {
         for (Region r : Region.values()) {
             Part p = body.part(r);
             if (!p.wounded()) continue;
+            // Zomboid's bandages get dirty: a day on, bled through, or soaked in rain or water. A soiled one is no
+            // longer doing its job: the wound's open to dirt again until it's changed for a fresh one.
+            if (p.bandaged()) {
+                int age = get(m, "bage", r) + 1;
+                boolean soiled = age > Needs.hourSeconds() * 24 || p.bleeding()
+                        || player.isInWaterOrRain() && random.nextInt(90) == 0;
+                if (soiled) {
+                    p = new Part(p.wound(), p.woundLeft(), p.bleeding(), false, p.fractureLeft(), p.splinted());
+                    body = body.with(r, p);
+                    put(m, k("dirty", r), 1);
+                    m.remove(k("bage", r));
+                    player.sendOverlayMessage(Component.literal("The bandage on your " + r.label + " is dirty. Change it.")
+                            .withStyle(ChatFormatting.GOLD));
+                } else {
+                    put(m, k("bage", r), age);
+                }
+            } else {
+                m.remove(k("bage", r));
+            }
             int infect = get(m, "infect", r);
             int grow = 0;
             if (get(m, "dirty", r) > 0) grow += p.bandaged() ? second % 2 : 1;
