@@ -31,6 +31,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.LevelResource;
+import net.minecraft.world.phys.Vec3;
 
 /**
  * Zomboid's fuel for road vehicles: the town's gas pumps, each with its own fuel (Fuel Station Gas Min/Max, Empty
@@ -179,7 +180,7 @@ public final class Fuel {
             return;
         }
         TimedActions.start(player, "fuel_car", "Filling the tank", Math.round(Math.min(room, left) * 3), p -> {
-            if (car.isRemoved() || car.distanceToSqr(foot.getCenter()) > HOSE * HOSE) {
+            if (car.isRemoved() || car.distanceToSqr(Vec3.atCenterOf(foot)) > HOSE * HOSE) {
                 return;
             }
             float take = Math.min((1 - car.fuel()) * car.fuelCapacity(), avail(level, foot));
@@ -199,7 +200,7 @@ public final class Fuel {
         CarProp best = null;
         double bestD = HOSE * HOSE;
         for (CarProp c : level.getEntitiesOfClass(CarProp.class, new net.minecraft.world.phys.AABB(foot).inflate(HOSE, 2, HOSE), CarProp::roadCar)) {
-            double d = c.distanceToSqr(foot.getCenter());
+            double d = c.distanceToSqr(Vec3.atCenterOf(foot));
             if (d < bestD) {
                 best = c;
                 bestD = d;
