@@ -44,9 +44,7 @@ public enum Skill {
     /** Taking cars apart and putting them back together (world/cars/CarParts): each level unlocks more of the car. */
     MECHANICS("Mechanics"),
     /** Spears (combat/SpearItem): Zomboid's Spear skill, for the carved and tied-on spears. */
-    SPEAR("Spear"),
-    /** Handloading spent brass at a reloading bench (combat/Reloading): quicker batches, fewer parts ruined. */
-    RELOADING("Reloading");
+    SPEAR("Spear");
 
     public static final int MAX_LEVEL = 10;
 

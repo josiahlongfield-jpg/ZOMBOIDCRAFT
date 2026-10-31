@@ -28,11 +28,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.storage.loot.LootPool;
-import net.minecraft.world.level.storage.loot.entries.LootItem;
-import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
-import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
-import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import net.minecraft.world.phys.Vec3;
 
 /**
@@ -113,15 +108,15 @@ public final class Reloading {
                 }
             });
         });
-        LootTableEvents.MODIFY.register((key, table, source, registries) -> {
-            String path = key.identifier().getPath();
-            if (key.identifier().getNamespace().equals(ZomboidCraft.MOD_ID)) {
-                LootPool.Builder pool = makings(path);
-                if (pool != null) {
-                    table.withPool(pool);
-                }
+        LootTableEvents.MODIFY_DROPS.register((table, context, drops) -> table.unwrapKey().ifPresent(key -> {
+            if (!key.identifier().getNamespace().equals(ZomboidCraft.MOD_ID)) {
+                return;
             }
-        });
+            Pool pool = makings(key.identifier().getPath());
+            if (pool != null) {
+                pool.roll(context.getRandom(), drops);
+            }
+        }));
     }
 
     // ---------------------------------------------------------------- brass
@@ -188,8 +183,10 @@ public final class Reloading {
             for (int i = 0; i < now; i++) {
                 if (p.getRandom().nextDouble() >= spoil) made++;
             }
-            if (made > 0 && !inv.add(new ItemStack(load.round(), made))) {
-                p.drop(new ItemStack(load.round(), made), false);
+            if (made > 0) {
+                ItemStack out = new ItemStack(load.round(), made);
+                inv.add(out);
+                give(p, out);
             }
             Skills.addXp(p, Skill.RELOADING, 3 * now);
             p.level().playSound(null, pos, SoundEvents.ARMOR_EQUIP_CHAIN.value(), SoundSource.BLOCKS, 0.5f, 1.4f);
@@ -220,13 +217,18 @@ public final class Reloading {
             }
             p.level().removeBlock(pos, false);
             ItemStack bench = new ItemStack(ModItems.RELOADING_BENCH);
-            if (!p.getInventory().add(bench)) {
-                p.drop(bench, false);
-            }
+            p.getInventory().add(bench);
+            give(p, bench);
         });
     }
 
     // ---------------------------------------------------------------- inventory
+
+    /** What didn't fit in the inventory lands at the player's feet. */
+    private static void give(Player p, ItemStack stack) {
+        if (stack.isEmpty()) return;
+        p.level().addFreshEntity(new ItemEntity(p.level(), p.getX(), p.getY() + 0.3, p.getZ(), stack.copyAndClear()));
+    }
 
     private static int count(Inventory inv, Item item) {
         int n = 0;
@@ -284,25 +286,25 @@ public final class Reloading {
      * The makings, added to the gun shop, hunters' gun safes and basements, police armouries and home garages as a
      * pool of their own (the shelves' own tables are LOOT's, generated: they're left alone).
      */
-    private static LootPool.Builder makings(String path) {
+    private static Pool makings(String path) {
         return switch (path) {
-            case "shop/guns" -> pool(UniformGenerator.between(1, 3),
+            case "shop/guns" -> pool(1, 3,
                     e(ModItems.PRIMERS, 30, 20, 100), e(ModItems.SMOKELESS_POWDER, 22, 1, 1), e(ModItems.LEAD_SHOT, 12, 1, 1),
                     e(ModItems.BULLETS_9MM, 14, 20, 100), e(ModItems.BULLETS_38, 8, 20, 100), e(ModItems.BULLETS_44, 6, 20, 50),
                     e(ModItems.BULLETS_556, 12, 20, 100), e(ModItems.BULLETS_30, 12, 20, 100), e(ModItems.BULLETS_50, 2, 10, 30),
                     e(ModItems.GUNSMITH_MAGAZINE, 4, 1, 1));
-            case "shop/home_guns", "shop/basement_guns" -> pool(UniformGenerator.between(0, 2),
+            case "shop/home_guns", "shop/basement_guns" -> pool(0, 2,
                     e(ModItems.PRIMERS, 20, 10, 60), e(ModItems.SMOKELESS_POWDER, 14, 1, 1), e(ModItems.LEAD_SHOT, 8, 1, 1),
                     e(ModItems.BULLETS_9MM, 8, 10, 50), e(ModItems.BULLETS_30, 10, 10, 50), e(ModItems.BULLETS_556, 5, 10, 50),
                     e(ModItems.SPENT_308, 10, 5, 30), e(ModItems.SPENT_9MM, 8, 5, 30), e(ModItems.SPENT_HULLS, 10, 5, 25),
                     e(ModItems.GUNSMITH_MAGAZINE, 3, 1, 1));
-            case "shop/police" -> pool(UniformGenerator.between(0, 1),
+            case "shop/police" -> pool(0, 1,
                     e(ModItems.PRIMERS, 10, 20, 60), e(ModItems.SMOKELESS_POWDER, 6, 1, 1), e(ModItems.BULLETS_9MM, 10, 20, 60),
                     e(ModItems.SPENT_9MM, 14, 10, 40), e(ModItems.SPENT_HULLS, 6, 5, 20), e(ModItems.SPENT_38, 6, 5, 30));
-            case "shop/home_garage" -> pool(ConstantValue.exactly(1),
+            case "shop/home_garage" -> pool(1, 1,
                     e(null, 90, 0, 0), e(ModItems.SMOKELESS_POWDER, 3, 1, 1), e(ModItems.PRIMERS, 3, 10, 40),
                     e(ModItems.SPENT_308, 3, 5, 20), e(ModItems.LEAD_SHOT, 1, 1, 1));
-            case "shop/home_books" -> pool(ConstantValue.exactly(1), e(null, 97, 0, 0), e(ModItems.GUNSMITH_MAGAZINE, 3, 1, 1));
+            case "shop/home_books" -> pool(1, 1, e(null, 97, 0, 0), e(ModItems.GUNSMITH_MAGAZINE, 3, 1, 1));
             default -> null;
         };
     }
@@ -314,18 +316,28 @@ public final class Reloading {
         return new Entry(item, weight, min, max);
     }
 
-    private static LootPool.Builder pool(net.minecraft.world.level.storage.loot.providers.number.NumberProvider rolls, Entry... entries) {
-        LootPool.Builder pool = LootPool.lootPool().setRolls(rolls);
-        for (Entry en : entries) {
-            if (en.item() == null) {
-                pool.add(net.minecraft.world.level.storage.loot.entries.EmptyLootItem.emptyItem().setWeight(en.weight()));
-            } else if (en.max() > 1) {
-                pool.add(LootItem.lootTableItem(en.item()).setWeight(en.weight())
-                        .apply(SetItemCountFunction.setCount(UniformGenerator.between(en.min(), en.max()))));
-            } else {
-                pool.add(LootItem.lootTableItem(en.item()).setWeight(en.weight()));
+    private static Pool pool(int min, int max, Entry... entries) {
+        return new Pool(min, max, entries);
+    }
+
+    /** A pool rolled straight into a container's drops: min..max picks by weight, each a count in its range. */
+    private record Pool(int min, int max, Entry[] entries) {
+        void roll(net.minecraft.util.RandomSource random, List<ItemStack> drops) {
+            int total = 0;
+            for (Entry en : entries) total += en.weight();
+            int rolls = min + random.nextInt(max - min + 1);
+            for (int r = 0; r < rolls; r++) {
+                int pick = random.nextInt(total);
+                for (Entry en : entries) {
+                    pick -= en.weight();
+                    if (pick < 0) {
+                        if (en.item() != null) {
+                            drops.add(new ItemStack(en.item(), en.min() + random.nextInt(Math.max(1, en.max() - en.min() + 1))));
+                        }
+                        break;
+                    }
+                }
             }
         }
-        return pool;
     }
 }
