@@ -124,7 +124,7 @@ public class ZombieHerdTest implements FabricClientGameTest {
                         b.append(String.format(" [%.0f,%.0f x%d mode %d]", h.x(), h.z(), h.count(), h.mode()));
                     }
                     int real = level.getEntitiesOfClass(Zombie.class, new AABB(-70, 90, -100, 70, 130, 40)).size();
-                    LOG.info("ZCHERD herd frame {}: herds{} real {}", frame, b, real);
+                    LOG.info("ZCHERD herd frame {}: herds{} real {} spill {} | {} | {}", frame, b, real, Herds.why, level.getDifficulty(), com.zomboidcraft.zombie.population.Population.stats());
                 });
             }
         }

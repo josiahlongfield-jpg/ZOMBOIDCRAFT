@@ -281,6 +281,9 @@ public final class Herds {
 
     // ---- turning real near a player
 
+    /** Test hook: what the last spill did. */
+    public static String why = "";
+
     private static Herd spill(ServerLevel level, County county, Herd h, List<ServerPlayer> players) {
         if (h == null || h.count() <= 0 || players.isEmpty() || level.getDifficulty() == Difficulty.PEACEFUL) {
             return h;
@@ -295,10 +298,12 @@ public final class Herds {
             }
         }
         if (!near) {
+            why = "far";
             return h;
         }
         int room = Math.min(SPILL_PER_STEP, Population.room());
         if (room <= 0) {
+            why = "no room";
             return h;
         }
         RandomSource random = level.getRandom();
@@ -321,6 +326,7 @@ public final class Herds {
             }
         }
         Population.spilled(made);
+        why = "made " + made + " of " + room;
         return h.with(h.x(), h.z(), h.count() - made);
     }
 
