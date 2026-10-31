@@ -176,7 +176,11 @@ public final class Weights {
         if (stack.has(DataComponents.FOOD)) return 0.3;
         if (stack.is(INGOTS)) return 0.3;
         if (stack.is(NUGGETS)) return 0.03;
-        if (stack.getItem() instanceof BlockItem) {
+        if (stack.getItem() instanceof BlockItem block) {
+            // the town's furniture weighs what it really would, so carrying a fridge home is a real load
+            if (block.getBlock() instanceof com.zomboidcraft.world.blocks.CityBlock) {
+                return com.zomboidcraft.building.Moving.kg(block.getBlock());
+            }
             if (stack.is(ItemTags.LOGS)) return 2.0;
             if (stack.is(ItemTags.PLANKS)) return 0.6;
             if (stack.is(ItemTags.WOOL) || stack.is(ItemTags.LEAVES)) return 0.2;

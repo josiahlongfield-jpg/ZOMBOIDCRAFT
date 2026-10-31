@@ -100,6 +100,66 @@ public final class DigRules {
         }
     }
 
+    /**
+     * The kind of wall, which sets the level it takes: a wooden wall or a brick partition between rooms comes down
+     * early, brick facing the outside later, poured concrete and heavy steel (hulls, bulkheads, vaults) last.
+     */
+    public enum Wall {
+        WOOD(Tier.WOOD, "Wooden wall", 1.0), PARTITION(Tier.MASONRY, "Inside brick and plaster", 1.0),
+        OUTSIDE(Tier.MASONRY, "Outside brickwork", 1.3), CONCRETE(Tier.MASONRY, "Poured concrete", 1.6),
+        STEEL(Tier.METAL, "Steel", 1.0), HEAVY_STEEL(Tier.METAL, "Heavy steel", 1.6);
+
+        public final Tier tier;
+        public final String what;
+        final double slower;
+
+        Wall(Tier tier, String what, double slower) {
+            this.tier = tier;
+            this.what = what;
+            this.slower = slower;
+        }
+
+        public int level() {
+            ZcConfig.Digging d = ZcConfig.get().digging;
+            return switch (this) {
+                case WOOD, PARTITION, STEEL -> tier.level();
+                case OUTSIDE -> d.outsideMasonryLevel;
+                case CONCRETE -> d.concreteLevel;
+                case HEAVY_STEEL -> d.heavySteelLevel;
+            };
+        }
+    }
+
+    /** Which kind of wall this is, or null when it isn't one. */
+    @Nullable
+    public static Wall wall(BlockState state, BlockGetter level, BlockPos pos) {
+        Tier tier = wallTier(state, level, pos);
+        if (tier == null) {
+            return null;
+        }
+        String path = BuiltInRegistries.BLOCK.getKey(state.getBlock()).getPath();
+        return switch (tier) {
+            case WOOD -> Wall.WOOD;
+            case METAL -> path.matches(".*(hull|bulkhead|vault|blast|bunk_plate|armou?r|navy_).*") ? Wall.HEAVY_STEEL : Wall.STEEL;
+            case MASONRY -> path.matches(".*(concrete|cement|bunk_|park_|cellar|pillar|column|slab|bunker|silo|dam_|dm_).*") ? Wall.CONCRETE
+                    : outside(level, pos) ? Wall.OUTSIDE : Wall.PARTITION;
+        };
+    }
+
+    /** A wall with open sky beside it on one side: it faces the outside, so it holds the building up and keeps the weather out. */
+    private static boolean outside(BlockGetter level, BlockPos pos) {
+        if (!(level instanceof net.minecraft.world.level.LevelReader reader)) {
+            return false;
+        }
+        for (net.minecraft.core.Direction d : net.minecraft.core.Direction.Plane.HORIZONTAL) {
+            BlockPos next = pos.relative(d);
+            if (reader.getBlockState(next).isAir() && reader.canSeeSky(next)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /** The last ground column the server checked for you, so your own client stops cracking a block it won't let go. */
     public record Floor(int x, int z, int y) {
         public static final StreamCodec<io.netty.buffer.ByteBuf, Floor> STREAM_CODEC = StreamCodec.composite(
@@ -177,15 +237,21 @@ public final class DigRules {
         if (belowFloor(state, player, level, pos)) {
             return 0f;
         }
-        Tier tier = wallTier(state, level, pos);
-        if (tier == null) {
-            return Float.NaN;
+        Wall wall = wall(state, level, pos);
+        if (wall == null) {
+            Moving.Piece piece = Moving.piece(state, level, pos);
+            Tier strip = propTier(state, level, pos);
+            if (piece == null || strip != null && fits(strip, player.getMainHandItem())) {
+                return Float.NaN;  // stripping it down for materials goes at the game's pace
+            }
+            return Moving.progress(piece, player, level, pos);
         }
-        int level0 = Skills.level(player, tier.skill), need = tier.level();
+        Tier tier = wall.tier;
+        int level0 = Skills.level(player, tier.skill), need = wall.level();
         if (!fits(tier, player.getMainHandItem()) || level0 < need) {
             return 0f;
         }
-        double ticks = tier.seconds(ZcConfig.get().digging) * 20 / (1 + 0.12 * (level0 - need));
+        double ticks = tier.seconds(ZcConfig.get().digging) * wall.slower * 20 / (1 + 0.12 * (level0 - need));
         return (float) (1 / Math.max(2, ticks));
     }
 
@@ -202,13 +268,13 @@ public final class DigRules {
     }
 
     /** Ground the world put there: anything that isn't a mod block (every building block is one). */
-    private static boolean natural(BlockState state) {
+    static boolean natural(BlockState state) {
         return state.getFluidState().isEmpty()
                 && BuiltInRegistries.BLOCK.getKey(state.getBlock()).getNamespace().equals("minecraft");
     }
 
     /** The top block of natural ground here, as the world generator laid it. */
-    private static int ground(ServerLevel level, int x, int z) {
+    static int ground(ServerLevel level, int x, int z) {
         if (GROUND.size() > 65536) {
             GROUND.clear();
         }
@@ -228,13 +294,22 @@ public final class DigRules {
             }
             return;
         }
-        Tier tier = wallTier(state, level, pos);
-        if (tier == null) {
+        Wall wall = wall(state, level, pos);
+        if (wall == null) {
+            Moving.Piece piece = Moving.piece(state, level, pos);
+            Tier strip = propTier(state, level, pos);
+            if (piece != null && !(strip != null && fits(strip, player.getMainHandItem()))) {
+                String no = Moving.refusal(piece, player, level, pos);
+                if (no != null) {
+                    say(player, no);
+                }
+            }
             return;
         }
-        int have = Skills.level(player, tier.skill), need = tier.level();
+        Tier tier = wall.tier;
+        int have = Skills.level(player, tier.skill), need = wall.level();
         if (!fits(tier, player.getMainHandItem())) {
-            say(player, tier.what + " needs " + tier.tools() + " to knock through" + (need > 0 ? ", and " + tier.skill.displayName() + " " + need + "." : "."));
+            say(player, wall.what + " needs " + tier.tools() + " to knock through" + (need > 0 ? ", and " + tier.skill.displayName() + " " + need + "." : "."));
         } else if (have < need) {
             say(player, "You need " + tier.skill.displayName() + " " + need + " to knock through this. You're at " + have
                     + ". Strip furniture down with the same tool to learn.");
@@ -256,7 +331,12 @@ public final class DigRules {
         if (!wall) {
             tier = propTier(state, level, pos);
             if (tier == null || !fits(tier, tool)) {
-                return false;
+                Moving.Piece piece = Moving.piece(state, level, pos);
+                if (piece == null || Moving.refusal(piece, player, level, pos) != null) {
+                    return piece != null;  // not liftable yet: it stays put
+                }
+                Moving.pickUp(player, level, pos, state, piece);
+                return true;
             }
         }
         ZcConfig.Digging d = ZcConfig.get().digging;

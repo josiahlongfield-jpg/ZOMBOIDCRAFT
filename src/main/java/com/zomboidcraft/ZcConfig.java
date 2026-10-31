@@ -629,6 +629,31 @@ public final class ZcConfig {
         /** Blows a spiked log wall stands, and the damage its spikes do to a zombie pushing or beating on it. */
         public int spikedWallHits = 24;
         public float spikeDamage = 2f;
+        /** Furniture weight: kilograms at or over these are medium (table, bed, sofa) and large (wardrobe, counter, fridge). */
+        public double mediumKg = 8;
+        public double largeKg = 25;
+        /** The level of the material's skill it takes to lift a medium and a large piece (small ones anyone can). */
+        public int mediumLevel = 2;
+        public int largeLevel = 5;
+        /** Plumbing to take out a sink or toilet with a pipe wrench, and a tub or anything big; Electrical for wired fittings. */
+        public int plumbedLevel = 1;
+        public int plumbedLargeLevel = 3;
+        public int wiredLevel = 1;
+        /** Scales every piece of furniture's weight. */
+        public double furnitureWeight = 1.0;
+        /** Lifting a piece takes half a second plus this many ticks for every kilogram (8% less a level over the need). */
+        public double liftTicksPerKg = 1.5;
+        /** Placing blocks from the vanilla game in survival: off, every wall comes from the Build page. */
+        public boolean vanillaBlocks = false;
+        /** Earth you may still put down while vanillaBlocks is off, only to fill natural ground back to where it lay. */
+        public java.util.List<String> soil = new java.util.ArrayList<>(java.util.List.of("minecraft:dirt", "minecraft:coarse_dirt",
+                "minecraft:rooted_dirt", "minecraft:grass_block", "minecraft:podzol", "minecraft:mud", "minecraft:farmland"));
+        /** Other vanilla things that still go down while vanillaBlocks is off: seeds and saplings. */
+        public java.util.List<String> plants = new java.util.ArrayList<>(java.util.List.of("minecraft:wheat_seeds",
+                "minecraft:beetroot_seeds", "minecraft:melon_seeds", "minecraft:pumpkin_seeds", "minecraft:carrot",
+                "minecraft:potato", "minecraft:sweet_berries", "minecraft:oak_sapling", "minecraft:spruce_sapling",
+                "minecraft:birch_sapling", "minecraft:jungle_sapling", "minecraft:acacia_sapling", "minecraft:dark_oak_sapling",
+                "minecraft:cherry_sapling", "minecraft:mangrove_propagule", "minecraft:sugar_cane", "minecraft:bamboo"));
     }
 
     public static class Digging {
@@ -640,6 +665,10 @@ public final class ZcConfig {
         public int carpentryLevel = 2;
         public int masonryLevel = 2;
         public int metalworkingLevel = 2;
+        /** Steps up by wall: brick or block facing the outside, poured concrete (bunkers, car parks, cellars), heavy steel (hulls, bulkheads, vaults). */
+        public int outsideMasonryLevel = 5;
+        public int concreteLevel = 8;
+        public int heavySteelLevel = 8;
         /** How far zombies hear each kind of wall coming down, in blocks. */
         public double woodNoise = 16;
         public double masonryNoise = 36;

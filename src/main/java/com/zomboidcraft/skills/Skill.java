@@ -14,7 +14,11 @@ public enum Skill {
     /** Cutting through steel with a propane torch (building/DigRules). */
     METALWORKING("Metalworking"),
     /** Flying the jets and the helicopter (world/cars/AirReadiness): steadier hands and softer landings. */
-    PILOTING("Piloting");
+    PILOTING("Piloting"),
+    /** Generators, wiring and lights, and moving lamps and switches (building/Moving, building/Ladder). */
+    ELECTRICAL("Electrical"),
+    /** Sinks, tubs and toilets: taking them out with a pipe wrench and plumbing them in (building/Moving, building/Ladder). */
+    PLUMBING("Plumbing");
 
     public static final int MAX_LEVEL = 10;
 

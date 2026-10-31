@@ -437,6 +437,7 @@ SKILLBOOKS = {
     'skillbook_blade': 'Blade weapons', 'skillbook_sprinting': 'Sprinting', 'skillbook_sneaking': 'Sneaking',
     'skillbook_aiming': 'Aiming', 'skillbook_maintenance': 'Maintenance', 'skillbook_masonry': 'Masonry',
     'skillbook_metalworking': 'Metalworking', 'skillbook_piloting': 'Piloting',
+    'skillbook_electrical': 'Electrical', 'skillbook_plumbing': 'Plumbing',
 }
 MAGS = {
     'mag_carpentry': 'Teaches the recipes for log walls, sturdy doors and reinforced barricades.',
