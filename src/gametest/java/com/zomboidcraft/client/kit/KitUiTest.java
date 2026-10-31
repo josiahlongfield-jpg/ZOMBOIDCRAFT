@@ -1075,7 +1075,11 @@ public class KitUiTest implements FabricClientGameTest {
 
     /** SURVIVAL's traits on the UI side: the Skills page box, the header, food tips and a timed transfer. */
     private static void traitsTest(ClientGameTestContext ctx, TestSingleplayerContext sp) {
-        ctx.runOnClient(mc -> mc.gui.setScreen(null));
+        // closed properly, so the server lets the kit open again
+        ctx.runOnClient(mc -> {
+            if (mc.player != null) mc.player.closeContainer();
+            mc.gui.setScreen(null);
+        });
         sp.getServer().runOnServer(s -> {
             ServerPlayer p = s.getPlayerList().getPlayers().get(0);
             com.zomboidcraft.survival.character.Traits.apply(p, "carpenter",
@@ -1114,7 +1118,7 @@ public class KitUiTest implements FabricClientGameTest {
             ctx.waitTicks(5);
             ctx.takeScreenshot(String.format("transfer-%02d", f));
         }
-        ctx.runOnClient(mc -> mc.gui.setScreen(null));
+        ctx.runOnClient(mc -> mc.player.closeContainer());
     }
 
     private static void bookTest(TestSingleplayerContext sp) {
