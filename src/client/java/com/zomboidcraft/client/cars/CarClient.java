@@ -160,6 +160,8 @@ public final class CarClient {
             // the water tower: the key under the pump, the padlocked ladder
         } else if (com.zomboidcraft.client.power.GeneratorClient.interact(client, hit)) {
             // a generator: on or off
+        } else if (com.zomboidcraft.client.decor.DecorClient.interact(client, hit)) {
+            // a decor piece: switch it, or play it
         } else if (com.zomboidcraft.client.npc.NpcClient.interact(client, hit)) {
             // a companion: follow me, or wait here
         } else if (com.zomboidcraft.client.kit.FilesClient.interact(client, hit)) {

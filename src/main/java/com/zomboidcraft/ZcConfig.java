@@ -893,6 +893,8 @@ public final class ZcConfig {
         /** Furniture weight: kilograms at or over these are medium (table, bed, sofa) and large (wardrobe, counter, fridge). */
         public double mediumKg = 6;
         public double largeKg = 19;
+        /** Large pieces at least this heavy need a hand truck in the other hand to lift (Zomboid's heaviest furniture). */
+        public double handTruckKg = 40;
         /**
          * Chance a piece breaks as you lift it at skill 0, Zomboid style. Anything that needs a tool to come loose
          * (a hammer for furniture, a screwdriver for appliances and wired lights) breaks 75% of the time at 0 and
