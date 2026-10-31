@@ -153,7 +153,9 @@ public final class Mechanics {
     }
 
     public static boolean knows(Player player, Kind kind) {
-        return player.isCreative() || player.getAttachedOrCreate(MANUALS).contains(manual(kind));
+        // the Mechanic occupation's Amateur Mechanic knows every model's parts without the manuals
+        return player.isCreative() || com.zomboidcraft.survival.character.Traits.has(player, "amateur_mechanic")
+                || player.getAttachedOrCreate(MANUALS).contains(manual(kind));
     }
 
     /** The jobs anyone can do without a manual: what you'd do at the roadside. */
