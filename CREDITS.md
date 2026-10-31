@@ -506,3 +506,14 @@ Picked by Josiah Longfield on the Dead Air Broadcasts page, cut by tools/audio/b
 | world.meta.scream | VOXScrm_Female Scream in Pain, Agony, Wounded 2_344 Audio_Screaming (344 Audio - Screaming) | Sonniss GameAudioGDC 2023 | Sonniss royalty-free |
 | world.alarm.house.siren | [burglar alarm siren long alert warning sound 3 by vyclops](https://freesound.org/people/vyclops/sounds/717414/) | vyclops | Freesound, CC0 1.0 |
 | radio.eas.header, radio.eas.eom, world.alarm.house.bell, block.alarm_panel.* | Made here: the EAS header bursts and two-tone signal to the published spec, the bell box and the keypad | ZomboidCraft | Own work |
+
+## Sirens and car alarms
+
+Picked by Josiah Longfield on the Sirens and Car Alarms page, cut into loops by tools/audio/build_siren_sounds.py. The Sonniss originals are not included.
+
+| Sound | Recording | By | Licence |
+|---|---|---|---|
+| car.siren | EFX EXT Emergency Siren 10 B (Coll Anderson - Traditional Sirens) | Sonniss GameAudioGDC 2015 | Sonniss royalty-free |
+| car.siren | EFX EXT Emergency Siren 02 A (Coll Anderson - Traditional Sirens) | Sonniss GameAudioGDC 2015 | Sonniss royalty-free |
+| car.siren | EFX EXT Emergency Siren Distant 18 B (Coll Anderson - Traditional Sirens) | Sonniss GameAudioGDC 2015 | Sonniss royalty-free |
+| car.alarm | [Car Alarm in Parking Structure.wav by erkanozan](https://freesound.org/people/erkanozan/sounds/51747/) | erkanozan | Freesound, CC0 1.0 |
