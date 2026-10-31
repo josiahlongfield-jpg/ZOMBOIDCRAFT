@@ -303,7 +303,7 @@ public final class CharacterScreen extends Screen {
         c.bottom = top + Math.max(ROW + 1, (bottom - top) / (ROW + 1) * (ROW + 1));
         c.rows.clear();
         c.ids.clear();
-        g.enableScissor(x, top, x + w, bottom);
+        g.enableScissor(x, top, x + w, c.bottom);
     }
 
     private void end(GuiGraphicsExtractor g, Column c, int y) {
