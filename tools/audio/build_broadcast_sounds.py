@@ -1,4 +1,4 @@
-"""Builds the broadcast sounds, synthesised: stand-ins until Josiah picks on the Dead Air Broadcasts page (2026-10-31).
+"""Builds the broadcast sounds, synthesised: the two alert tones Josiah kept on the Dead Air Broadcasts page (2026-10-31).
 
     python3 tools/audio/build_broadcast_sounds.py
 
@@ -6,11 +6,8 @@ The alert tones are made to the published Emergency Alert System spec: SAME head
 2083.3 Hz, space 1562.5 Hz, three bursts a second apart) and the two-tone attention signal (853 Hz + 960 Hz), all
 heard through a cheap receiver. world/Broadcasts plays them on [EAS] and [EOM] lines.
 
-    radio.eas.header     the three header bursts alone
-    radio.eas.attention  the bursts then 8 s of the attention tone, as a message starts
-    radio.eas.eom        the end-of-message bursts ("NNNN")
-    radio.static         a short wash of static under each caption
-    radio.tune           the dial turning onto a station: a sweep through whistles and static
+    radio.eas.header     the three header bursts, clean (Josiah's pick)
+    radio.eas.eom        8 s of the two-tone attention signal, clean, closing a message (Josiah's pick)
 """
 import json
 import os
@@ -69,12 +66,11 @@ def tune(rng):
     return out * np.minimum(1, (t - k) / 0.2)
 
 
+# Josiah's picks (2026-10-31): the clean header bursts, and the clean two-tone signal as the end of a message. The
+# attention alarm, static and tuning are recordings (build_broadcast_picks.py); the synth versions stay for the page.
 SOUNDS = {
-    "radio.eas.header": (lambda rng: receiver(bursts(HEADER), rng), -3.0, 16),
-    "radio.eas.attention": (lambda rng: receiver(np.concatenate([bursts(HEADER), gap(0.5), attention()]), rng), -3.0, 16),
-    "radio.eas.eom": (lambda rng: receiver(bursts("NNNN"), rng), -3.0, 16),
-    "radio.static": (static, -12.0, 12),
-    "radio.tune": (tune, -10.0, 8),
+    "radio.eas.header": (lambda rng: bursts(HEADER), -3.0, 16),
+    "radio.eas.eom": (lambda rng: attention(), -3.0, 16),
 }
 
 

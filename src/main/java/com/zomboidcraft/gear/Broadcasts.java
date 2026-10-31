@@ -72,6 +72,13 @@ public final class Broadcasts {
     public static final int FIRST = 1001;
 
     private static List<Station> stations = List.of();
+    /** A sound due on someone's radio later: the attention alarm waits for the header bursts to finish. */
+    private record Later(long due, java.util.UUID player, SoundEvent sound) {
+    }
+
+    private static final List<Later> LATER = new ArrayList<>();
+    /** How long the header bursts run before the attention alarm starts (three bursts and their gaps, 5.7 s). */
+    private static final int HEADER_TICKS = 116;
 
     public static void register() {
         PayloadTypeRegistry.clientboundPlay().register(Caption.TYPE, Caption.CODEC);
@@ -115,6 +122,18 @@ public final class Broadcasts {
             return;
         }
         long time = server.overworld().getGameTime();
+        if (!LATER.isEmpty()) {
+            LATER.removeIf(l -> {
+                if (l.due() > time) {
+                    return false;
+                }
+                ServerPlayer p = server.getPlayerList().getPlayer(l.player());
+                if (p != null) {
+                    Radios.fromRadio(p, l.sound(), 0.8f);
+                }
+                return true;
+            });
+        }
         int lineTicks = Math.max(20, (int) Math.round(cfg.lineSeconds * 20));
         if (time % lineTicks != 0) {
             return;
@@ -143,7 +162,7 @@ public final class Broadcasts {
             if (text.contains(tag[0])) {
                 text = text.replace(tag[0], "");
                 switch (tag[1]) {
-                    case "eas" -> sounds.add(ModSounds.RADIO_EAS_ATTENTION);
+                    case "eas" -> sounds.add(ModSounds.RADIO_EAS_HEADER);
                     case "eom" -> sounds.add(ModSounds.RADIO_EAS_EOM);
                     case "hum" -> sounds.add(HarvestmanSounds.HUM);
                     default -> sounds.add(ModSounds.RADIO_SQUELCH);
@@ -163,6 +182,9 @@ public final class Broadcasts {
             }
             for (SoundEvent sound : sounds) {
                 Radios.fromRadio(player, sound, sound == ModSounds.RADIO_STATIC ? 0.35f : 0.8f);
+                if (sound == ModSounds.RADIO_EAS_HEADER) {
+                    LATER.add(new Later(server.overworld().getGameTime() + HEADER_TICKS, player.getUUID(), ModSounds.RADIO_EAS_ATTENTION));
+                }
             }
         }
     }
