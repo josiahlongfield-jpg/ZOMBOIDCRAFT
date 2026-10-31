@@ -110,9 +110,8 @@ public final class Wear {
         if (spec == null || Boolean.TRUE.equals(stack.get(ZOMBOID))) {
             return;
         }
-        var patched = stack.getComponentsPatch().get(DataComponents.MAX_DAMAGE);
-        Integer own = patched == null ? null : patched.orElse(null);
-        int oldMax = own != null && own > 40 ? own : OLD.getOrDefault(spec.name(), spec.durability());
+        int own = stack.getMaxDamage();     // a rolled copy carried its own, larger full condition
+        int oldMax = own > 40 ? own : OLD.getOrDefault(spec.name(), spec.durability());
         float worn = Math.clamp((float) stack.getDamageValue() / Math.max(1, oldMax), 0f, 1f);
         int max = stack.getItem().components().getOrDefault(DataComponents.MAX_DAMAGE, spec.durability());
         stack.set(DataComponents.MAX_DAMAGE, max);

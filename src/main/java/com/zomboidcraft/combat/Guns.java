@@ -195,7 +195,7 @@ public final class Guns {
         double pelletSpread = pelletSpread(type);
         float power = (float) Rolls.multiplier(gun, Stat.DAMAGE);
         Map<LivingEntity, Hit> hits = new java.util.LinkedHashMap<>();
-        Map<net.minecraft.world.entity.Entity, Boolean> struck = new java.util.HashMap<>();     // Firearm Use Damage Chance, rolled once a shot
+        Map<net.minecraft.world.entity.Entity, Boolean> aimed = new java.util.HashMap<>();     // Firearm Use Damage Chance, rolled once a shot
         boolean ricochet = false;
         boolean nearby = false;     // the crack of a round landing close, for the others round where it struck
         boolean bow = type == GunType.CROSSBOW;
@@ -228,7 +228,7 @@ public final class Guns {
             // a zombie is hit where its body is drawn, not by its box (see Dismember.shot)
             Dismember.BodyHit hit = Dismember.shot(player, eye, stop,
                     e -> e instanceof LivingEntity && e.isAlive() && !e.isSpectator() && e.isPickable() && e != player
-                            && struck.computeIfAbsent(e, t -> Firearms.strikes(player, t)));
+                            && aimed.computeIfAbsent(e, t -> Firearms.strikes(player, t)));
             // the panes it went through on the way (only those before whoever it hit), each taking some out of it
             double reached = hit != null ? hit.getLocation().distanceTo(eye) : Double.MAX_VALUE;
             float spent = 1f;
