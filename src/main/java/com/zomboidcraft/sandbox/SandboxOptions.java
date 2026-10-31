@@ -187,6 +187,13 @@ final class SandboxOptions {
         w.put("MaximumDiminishedLoot", b -> b.number("loot.maximumDiminished", 0, 100).owner("LOOT"));
         w.put("DaysUntilMaximumDiminishedLoot", b -> b.number("loot.daysUntilMaximumDiminished", 0, 3650).owner("LOOT"));
         w.put("StarterKit", b -> b.toggle("loot.starterKit").owner("LOOT"));
+        w.put("HoursForLootRespawn", b -> b.number("loot.hoursForLootRespawn", 0, 1000000000).owner("LOOT")
+                .tip("When above 0, a shop or house container fills again this many in-game hours after it was opened."));
+        w.put("SeenHoursPreventLootRespawn", b -> b.number("loot.seenHoursPreventLootRespawn", 0, 1000000000).owner("LOOT")
+                .tip("When above 0, a container someone has been near (64 blocks) doesn't refill: its clock starts again."));
+        w.put("MaxItemsForLootRespawn", b -> b.number("loot.maxItemsForLootRespawn", 0, 1000000000).owner("LOOT"));
+        w.put("ConstructionPreventsLootRespawn", b -> b.toggle("loot.constructionPreventsLootRespawn").owner("LOOT")
+                .tip("Containers near barricades don't refill."));
         w.put("TrafficJam", b -> b.toggle("world.trafficJams").owner("LANDSCAPE"));
         w.put("Alarm", b -> b.choice("world.houseAlarms", "never", "extremely_rare", "rare", "sometimes", "often", "very_often")
                 .owner("LANDSCAPE").tip("How many houses have an alarm (a bell box out front). Getting in sets it ringing. New ground only."));

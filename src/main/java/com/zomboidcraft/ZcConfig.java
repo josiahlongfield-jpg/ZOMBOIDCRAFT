@@ -135,6 +135,11 @@ public final class ZcConfig {
         public double daysUntilMaximumDiminished = 3650;
         /** Zomboid's Starter Kit: chips, a water bottle, a small backpack, a baseball bat and a hammer. */
         public boolean starterKit = false;
+        /** Zomboid's loot respawn: hours after a container was opened that it fills again (0: never). */
+        public double hoursForLootRespawn = 0;
+        public double seenHoursPreventLootRespawn = 0;
+        public int maxItemsForLootRespawn = 5;
+        public boolean constructionPreventsLootRespawn = true;
     }
 
     /**

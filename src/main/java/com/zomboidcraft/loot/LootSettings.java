@@ -101,6 +101,7 @@ public final class LootSettings {
     }
 
     public static void register() {
+        LootRespawn.register();
         net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents.JOIN.register(
                 (handler, sender, server) -> server.execute(() -> kit(handler.getPlayer())));
         net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents.AFTER_RESPAWN.register(
@@ -116,6 +117,9 @@ public final class LootSettings {
             }
             apply(context.getLevel(), context.getOptional(LootContextParams.ORIGIN), context.getRandom(),
                     drops, ours, story, zombie);
+            if (ours && id.startsWith("zomboidcraft:shop/")) {
+                LootRespawn.rolled(context.getLevel(), context.getOptional(LootContextParams.ORIGIN), id);
+            }
         });
     }
 
