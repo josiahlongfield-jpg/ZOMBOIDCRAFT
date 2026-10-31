@@ -84,6 +84,7 @@ public class GunLookTest implements FabricClientGameTest {
             }
             colours(ctx, sp);
             irons(ctx, sp);
+            primitives(ctx, sp);
             sights(ctx, sp);
         }
     }
@@ -185,6 +186,42 @@ public class GunLookTest implements FabricClientGameTest {
             ctx.getInput().releaseKey(options -> options.keyUse);
             ctx.waitTicks(10);
         }
+    }
+
+    /** B42's primitive weapons and what they're made from: each in hand, from the front, and on the ground. */
+    private static void primitives(ClientGameTestContext ctx, TestSingleplayerContext sp) {
+        if (!List.of(GUNS).contains("assault_rifle")) {
+            return;
+        }
+        for (String w : new String[] {"wooden_spear", "fire_hardened_spear", "spear_knife", "stone_axe", "stone_hammer",
+                "stone_knife", "plank_nails", "cudgel_nails"}) {
+            for (String c : new String[] {"kill @e[type=item]", "clear @a", "give @a zomboidcraft:" + w, "tp @a ~ ~ ~ 0 10"}) {
+                sp.getServer().runCommand(c);
+            }
+            ctx.waitTicks(20);
+            ctx.takeScreenshot("prim-" + w + "-fp-hip");
+            ctx.runOnClient(mc -> mc.options.setCameraType(CameraType.THIRD_PERSON_FRONT));
+            ctx.waitTicks(10);
+            ctx.takeScreenshot("prim-" + w + "-tp-front");
+            ctx.runOnClient(mc -> mc.options.setCameraType(CameraType.FIRST_PERSON));
+        }
+        sp.getServer().runOnServer(server -> {
+            for (var player : server.getPlayerList().getPlayers()) {
+                Vec3 at = player.position();
+                String[] all = {"wooden_spear", "fire_hardened_spear", "spear_knife", "stone_axe", "stone_hammer",
+                        "stone_knife", "plank_nails", "cudgel_nails", "tree_branch", "stone", "sharp_stone"};
+                for (int i = 0; i < all.length; i++) {
+                    double x = 1.5 - (i % 6) * 0.6;
+                    drop(player.level(), at.add(x, 0, i < 6 ? 1.2 : 2.0),
+                            new ItemStack(BuiltInRegistries.ITEM.getValue(ZomboidCraft.id(all[i]))));
+                }
+            }
+        });
+        sp.getServer().runCommand("clear @a");
+        sp.getServer().runCommand("tp @a ~ ~ ~ 0 55");
+        ctx.waitTicks(30);
+        ctx.takeScreenshot("prim-ground");
+        sp.getServer().runCommand("tp @a ~ ~ ~ 0 10");
     }
 
     private static void drop(net.minecraft.world.level.Level level, Vec3 at, ItemStack stack) {

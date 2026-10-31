@@ -25,6 +25,11 @@ import net.minecraft.world.phys.Vec3;
  * Zomboid's timed actions: bandaging, splinting, boarding up and the like take a few seconds, shown as a bar above
  * the belt. Walking off, swinging at something, shooting or being hit stops it (swings and shots cancel it where
  * they happen), and nothing is used up until the bar fills.
+ * <p>
+ * Zomboid's action queue too (PZ review section 16, Josiah 2026-10-31): starting something while busy lines it up
+ * behind what's running, with no limit, and each starts when the one before finishes. Anything that stops the
+ * running action (walking off, a swing, a hit) clears the whole queue, as Zomboid's does. The queued labels are
+ * synced so the HUD can list what's next.
  */
 public final class TimedActions {
     /** What the player's client draws: a label and how many ticks the bar takes. A new {@code id} restarts it. */
@@ -47,6 +52,12 @@ public final class TimedActions {
             builder -> builder.initializer(() -> View.NONE)
                     .syncWith(View.STREAM_CODEC, AttachmentSyncPredicate.targetOnly()));
 
+    /** What's lined up after the running action, by label, in order (what the HUD lists). */
+    public static final AttachmentType<List<String>> QUEUED = AttachmentRegistry.create(
+            ZomboidCraft.id("timed_queue"),
+            builder -> builder.initializer(List::<String>of)
+                    .syncWith(ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs.list()), AttachmentSyncPredicate.targetOnly()));
+
     /** How far you can shuffle while working before it counts as walking off. */
     private static final double STRAY = 0.6;
 
@@ -68,7 +79,11 @@ public final class TimedActions {
         }
     }
 
+    private record Pending(String key, String label, int ticks, Consumer<ServerPlayer> done) {
+    }
+
     private static final Map<UUID, Running> RUNNING = new HashMap<>();
+    private static final Map<UUID, java.util.ArrayDeque<Pending>> QUEUE = new HashMap<>();
     private static int next = 1;
 
     public static void register() {
@@ -87,8 +102,9 @@ public final class TimedActions {
     }
 
     /**
-     * Starts an action, replacing whatever else was running. {@code key} tells repeats apart (holding the use key
-     * mustn't restart the bar); {@code done} runs when the bar fills and should check again that it still can.
+     * Starts an action, or lines it up behind what's running. {@code key} tells repeats apart (holding the use key
+     * mustn't restart the bar or queue it twice); {@code done} runs when the bar fills and should check again that it
+     * still can.
      */
     public static void start(ServerPlayer player, String key, String label, int ticks, Consumer<ServerPlayer> done) {
         if (doing(player, key)) return;
@@ -97,12 +113,44 @@ public final class TimedActions {
             return;
         }
         ticks = Math.max(1, ticks);
-        RUNNING.put(player.getUUID(), new Running(key, ticks, player.position(), player.hurtTime, done));
-        player.setAttached(TYPE, new View(label, ticks, next++));
+        if (busy(player)) {
+            java.util.ArrayDeque<Pending> q = QUEUE.computeIfAbsent(player.getUUID(), u -> new java.util.ArrayDeque<>());
+            for (Pending p : q) {
+                if (p.key.equals(key)) return;
+            }
+            q.add(new Pending(key, label, ticks, done));
+            syncQueue(player);
+            return;
+        }
+        begin(player, new Pending(key, label, ticks, done));
     }
 
-    /** Stops what the player is doing, saying why when there's a reason worth telling. */
+    private static void begin(ServerPlayer player, Pending p) {
+        RUNNING.put(player.getUUID(), new Running(p.key, p.ticks, player.position(), player.hurtTime, p.done));
+        player.setAttached(TYPE, new View(p.label, p.ticks, next++));
+    }
+
+    /** Whether this is lined up to run (the key {@link #start} was given). */
+    public static boolean queued(Player player, String key) {
+        java.util.ArrayDeque<Pending> q = QUEUE.get(player.getUUID());
+        if (q == null) return false;
+        for (Pending p : q) {
+            if (p.key.equals(key)) return true;
+        }
+        return false;
+    }
+
+    private static void syncQueue(ServerPlayer player) {
+        java.util.ArrayDeque<Pending> q = QUEUE.get(player.getUUID());
+        List<String> labels = new ArrayList<>();
+        if (q != null) q.forEach(p -> labels.add(p.label));
+        player.setAttached(QUEUED, List.copyOf(labels));
+    }
+
+    /** Stops what the player is doing and everything lined up after it, saying why when there's a reason worth telling. */
     public static void cancel(ServerPlayer player, String why) {
+        boolean queued = QUEUE.remove(player.getUUID()) != null;
+        if (queued) player.setAttached(QUEUED, List.of());
         if (RUNNING.remove(player.getUUID()) == null) return;
         player.setAttached(TYPE, View.NONE);
         if (why != null) player.sendOverlayMessage(Component.literal(why).withStyle(ChatFormatting.GRAY));
@@ -118,7 +166,11 @@ public final class TimedActions {
             Running r = e.getValue();
             if (player == null || !player.isAlive() || player.isSpectator()) {
                 it.remove();
-                if (player != null) player.setAttached(TYPE, View.NONE);
+                QUEUE.remove(e.getKey());
+                if (player != null) {
+                    player.setAttached(TYPE, View.NONE);
+                    player.setAttached(QUEUED, List.of());
+                }
                 continue;
             }
             String why = null;
@@ -129,6 +181,7 @@ public final class TimedActions {
             r.hurt = player.hurtTime;
             if (why != null) {
                 it.remove();
+                if (QUEUE.remove(e.getKey()) != null) player.setAttached(QUEUED, List.of());
                 player.setAttached(TYPE, View.NONE);
                 player.sendOverlayMessage(Component.literal(why).withStyle(ChatFormatting.GRAY));
                 continue;
@@ -136,7 +189,17 @@ public final class TimedActions {
             if (--r.left > 0) continue;
             it.remove();
             player.setAttached(TYPE, View.NONE);
-            finished.add(() -> r.done.accept(player));
+            finished.add(() -> {
+                r.done.accept(player);
+                // then the next in line, from where they stand now
+                java.util.ArrayDeque<Pending> q = QUEUE.get(player.getUUID());
+                if (q != null && !busy(player)) {
+                    Pending p = q.poll();
+                    if (q.isEmpty()) QUEUE.remove(player.getUUID());
+                    if (p != null) begin(player, p);
+                    syncQueue(player);
+                }
+            });
         }
         // after the loop: finishing one thing may start the next
         finished.forEach(Runnable::run);

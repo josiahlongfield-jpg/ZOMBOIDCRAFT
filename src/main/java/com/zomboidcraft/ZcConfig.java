@@ -170,15 +170,23 @@ public final class ZcConfig {
         public double launcherShrapnel = 8;
 
         /**
-         * Fires from blasts, molotovs and flares never break blocks themselves and never run away across the world:
-         * each spreads at most fireReach blocks from where it started, holds at most fireMaxBlocks flames, and
-         * burns out after fireLifeTicks. Left alone it burns wooden and soft blocks (fireBurnChance per check);
-         * rain puts it out (fireRainChance), and so does water.
+         * Fires from blasts, molotovs and flares. fireSpreads is Zomboid's Fire Spread: off, flames stay where they
+         * were lit. With fireZomboid on (Josiah 2026-10-31: Zomboid's spread) a fire creeps on through anything that
+         * burns, room to room and house to house, until it runs out of fuel or is put out, holding at most
+         * fireZomboidMaxBlocks flames. With it off, the old contained fire (Josiah 2026-10-27): each spreads at most
+         * fireReach blocks from where it started, holds at most fireMaxBlocks flames, and burns out after
+         * fireLifeTicks. Either way it burns wooden and soft blocks (fireBurnChance per check); rain puts it out
+         * (fireRainChance), and so do water and a fire extinguisher (extinguisherUses sprays, fireDouseRadius
+         * blocks round where it's aimed).
          */
         public boolean fireSpreads = true;
+        public boolean fireZomboid = true;
+        public int fireZomboidMaxBlocks = 3000;
         public int fireReach = 2;
         public int fireMaxBlocks = 60;
         public int fireLifeTicks = 1200;
+        public int extinguisherUses = 20;
+        public double fireDouseRadius = 2.5;
         public double fireSpreadChance = 0.3;
         public double fireBurnChance = 0.08;
         public double fireRainChance = 0.35;
@@ -963,8 +971,15 @@ public final class ZcConfig {
         public double downedSeconds = 3.5;
         /** Looking down and attacking a zombie on the ground stomps or strikes it hard. */
         public boolean groundAttacks = true;
-        /** Damage of a bare-footed stomp. */
+        /**
+         * Damage of a stomp in ordinary shoes; bare feet do 0.7 of it and heavy boots up to 1.5 (Shove.footwear). The
+         * shove key (V) over a zombie on the ground stomps it whatever's in your hands, within stompRange blocks, for
+         * stompCost endurance and a stompNoise radius.
+         */
         public double stompDamage = 7.0;
+        public double stompRange = 1.6;
+        public double stompCost = 4.0;
+        public double stompNoise = 4.0;
         /** Multiplies weapon damage against zombies on the ground. */
         public double groundAttackMultiplier = 1.8;
         /** Push zombies away with the shove key (V). */
@@ -1526,7 +1541,20 @@ public final class ZcConfig {
         }
 
         public boolean enabled = true;
-        /** Worn guns sometimes jam; clear them with the reload key. */
+        /**
+         * Zomboid's Firearms settings (combat/Firearms). useDamageChance: who a shot strikes just by being aimed at,
+         * "both", "zombies" or "off"; anyone it doesn't cover has to pass an Aiming roll to be hit. noiseMultiplier
+         * (0.2 to 2) scales how far gunshots are heard; jamMultiplier (0 to 10, 0 = no jams) scales the jam chance;
+         * moodleMultiplier and weatherMultiplier (0 to 10, 0 = none) scale how much tiredness, hurt arms and
+         * winded breath, and wind, rain and fog, widen the spread; headgearEffect lets masks and visors widen it.
+         */
+        public String useDamageChance = "both";
+        public double noiseMultiplier = 1.0;
+        public double jamMultiplier = 0.0;
+        public double moodleMultiplier = 1.0;
+        public double weatherMultiplier = 1.0;
+        public boolean headgearEffect = true;
+        /** Worn guns sometimes jam (scaled by jamMultiplier); clear them with the reload key. */
         public boolean jams = true;
         /**
          * Jam chance per shot of a gun in new condition, and how much is added at no condition left (rising with the

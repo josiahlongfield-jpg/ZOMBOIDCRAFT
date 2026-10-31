@@ -358,7 +358,7 @@ public final class DigRules {
         }
         Noise.emit(level, Vec3.atCenterOf(pos), tier.noise(d) * share);
         Stamina.use(player, tier.endurance(d) * share);
-        tool.hurtAndBreak(wall ? 2 : 1, player, InteractionHand.MAIN_HAND);
+        com.zomboidcraft.combat.Wear.use(tool, player, InteractionHand.MAIN_HAND, wall ? 2 : 1);
         Skills.addXp(player, tier.skill, wall ? 12 : 6);
         return true;
     }

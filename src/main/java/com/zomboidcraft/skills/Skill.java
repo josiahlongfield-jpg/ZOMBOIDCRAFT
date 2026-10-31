@@ -42,7 +42,9 @@ public enum Skill {
     /** Ours (Josiah's pick, Zomboid has none): sinks, tubs and toilets out with a pipe wrench (building/Moving). */
     PLUMBING("Plumbing"),
     /** Taking cars apart and putting them back together (world/cars/CarParts): each level unlocks more of the car. */
-    MECHANICS("Mechanics");
+    MECHANICS("Mechanics"),
+    /** Spears (combat/SpearItem): Zomboid's Spear skill, for the carved and tied-on spears. */
+    SPEAR("Spear");
 
     public static final int MAX_LEVEL = 10;
 

@@ -57,6 +57,17 @@ public final class Weights {
         mod("katana", 1.2);
         mod("fire_axe", 2.2);
         mod("sledgehammer", 4.5);
+        mod("wooden_spear", 2.0);       // B42's primitive weapons, at Zomboid's weights
+        mod("fire_hardened_spear", 2.0);
+        mod("spear_knife", 2.2);
+        mod("stone_axe", 2.0);
+        mod("stone_hammer", 1.0);
+        mod("stone_knife", 0.3);
+        mod("plank_nails", 3.0);
+        mod("cudgel_nails", 6.0);
+        mod("tree_branch", 1.0);
+        mod("stone", 0.3);
+        mod("sharp_stone", 0.2);
         mod("assault_rifle", 3.0);
         mod("rifle_magazine", 0.5);
         mod("rifle_ammo", 0.012);
