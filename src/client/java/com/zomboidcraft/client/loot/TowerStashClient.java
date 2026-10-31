@@ -35,7 +35,7 @@ public final class TowerStashClient {
 
     private static Interactables.Spot dot(Minecraft client, LocalPlayer player) {
         BlockPos pos = lookedAt(client);
-        return pos == null ? null : new Interactables.Spot(pos.getCenter(), Interactables.SIZE);
+        return pos == null ? null : new Interactables.Spot(net.minecraft.world.phys.Vec3.atCenterOf(pos), Interactables.SIZE);
     }
 
     private TowerStashClient() {

@@ -101,7 +101,7 @@ public final class TowerStash {
 
     private static void use(ServerPlayer player, BlockPos pos) {
         ServerLevel level = (ServerLevel) player.level();
-        if (TimedActions.busy(player) || player.distanceToSqr(pos.getCenter()) > 5 * 5) return;
+        if (TimedActions.busy(player) || player.distanceToSqr(net.minecraft.world.phys.Vec3.atCenterOf(pos)) > 5 * 5) return;
         Kind kind = kind(level, pos);
         if (kind == Kind.PUMP) {
             TimedActions.start(player, "stash:" + pos.asLong(), "Feeling under the pump", 60, p -> search(p, pos));
@@ -111,7 +111,7 @@ public final class TowerStash {
             } else if (MedSpecs.carries(player, "bolt_cutters")) {
                 TimedActions.start(player, "stash:" + pos.asLong(), "Cutting the chain", 140, p -> {
                     level.playSound(null, pos, SoundEvents.CHAIN_BREAK, SoundSource.BLOCKS, 1f, 0.8f);
-                    com.zomboidcraft.zombie.Noise.emit(level, pos.getCenter(), 12);
+                    com.zomboidcraft.zombie.Noise.emit(level, net.minecraft.world.phys.Vec3.atCenterOf(pos), 12);
                     open(p, pos, "The chain snaps and drops away.");
                 });
             } else {
