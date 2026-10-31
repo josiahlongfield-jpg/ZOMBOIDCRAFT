@@ -6,6 +6,7 @@ import com.zomboidcraft.npc.NpcEntity;
 import com.zomboidcraft.npc.NpcMind;
 import com.zomboidcraft.npc.NpcPanel;
 import com.zomboidcraft.npc.NpcSkills;
+import com.zomboidcraft.survival.character.CharacterData;
 import com.zomboidcraft.npc.NpcWardrobe;
 import com.zomboidcraft.npc.NpcWork;
 import java.util.ArrayList;
@@ -51,6 +52,8 @@ public class CompanionScreen extends Screen {
     /** Her portrait: how far you've turned her (degrees), how close you've zoomed, whether you're dragging her round. */
     private float spin, zoom = 1;
     private boolean turning;
+    /** Choosing her occupation: the left column lists them instead of the orders. */
+    private boolean picking;
     /** A pose you asked for from her page, and until when she holds it there (ms). */
     private int pose;
     private long poseUntil;
@@ -59,6 +62,11 @@ public class CompanionScreen extends Screen {
         boolean has(double mx, double my) {
             return mx >= x && my >= y && mx < x + w && my < y + h;
         }
+    }
+
+    /** Opens the occupation list, as clicking her past does. */
+    public void pickOccupation() {
+        picking = true;
     }
 
     public CompanionScreen(NpcEntity npc, Tab tab) {
@@ -246,6 +254,77 @@ public class CompanionScreen extends Screen {
 
         // the left: everything you can ask
         int lx = x + 37, lw = 185, ly = y + 34;
+        if (picking && s != null) {
+            occupations(g, s, lx, ly, lw, mx, my);
+        } else {
+            orders(g, s, lx, ly, lw, mx, my);
+        }
+
+        // the right: how she is
+        int rx = x + 400, rw = 179, ry = y + 34;
+        KitDraw.heading(g, font, "How she is", rx, ry, rw, true);
+
+        ry += 11;
+        if (s == null) {
+            KitDraw.text(g, font, "…", rx, ry, KitDraw.DIM, 1f);
+            return;
+        }
+        KitDraw.caps(g, font, s.mood(), rx, ry, KitDraw.LINK, 1.1f);
+        KitDraw.capsRight(g, font, "Health " + Math.round(100 * s.health() / Math.max(1, s.maxHealth())) + "%", rx + rw, ry + 2,
+                s.health() < s.maxHealth() * 0.4f ? KitDraw.LINK : KitDraw.BRIGHT, 0.7f);
+        ry += 13;
+        int half = (rw - 8) / 2;
+        ry = meter(g, "Trust", s.trust(), rx, ry, half, false);
+        meter(g, "Affection", s.affection(), rx + half + 8, ry - 13, half, false);
+        NpcMind.Need[] needs = NpcMind.Need.values();
+        for (int i = 0; i < needs.length; i += 2) {
+            int yy = ry;
+            ry = meter(g, needs[i].label, s.needs()[i], rx, yy, half, needs[i] == NpcMind.Need.FEAR || needs[i] == NpcMind.Need.PAIN);
+            if (i + 1 < needs.length) {
+                meter(g, needs[i + 1].label, s.needs()[i + 1], rx + half + 8, yy, half, false);
+            }
+        }
+        ry += 2;
+        KitDraw.heading(g, font, "Who she is", rx, ry, rw, true);
+        ry += 10;
+        NpcMind.Trait[] traits = NpcMind.Trait.values();
+        for (int i = 0; i < traits.length; i++) {
+            KitDraw.caps(g, font, traits[i].low, rx, ry, KitDraw.DIM, 0.55f);
+            KitDraw.capsRight(g, font, traits[i].high, rx + rw, ry, KitDraw.DIM, 0.55f);
+            g.fill(rx, ry + 7, rx + rw, ry + 8, 0x33E8E4DA);
+            int k = rx + Math.round((s.traits()[i] + 1) / 2f * (rw - 1));
+            g.fill(k, ry + 5, k + 1, ry + 10, KitDraw.LINK);
+            ry += 12;
+        }
+        ry += 2;
+        KitDraw.heading(g, font, "Skills", rx, ry, rw, true);
+        ry += 10;
+        // her past: click it to choose her occupation
+        String past = s.past();
+        boolean over = KitDraw.in(mx, my, rx, ry - 1, rw, 10);
+        KitDraw.text(g, font, past, rx, ry, over ? KitDraw.BRIGHT : KitDraw.LINK, 0.7f);
+        hot(rx, ry - 1, rw, 10, () -> picking = !picking, null, "Choose her occupation");
+        ry += 11;
+        List<String> rows = s.skillRows();
+        for (int i = 0; i < rows.size(); i++) {
+            String[] r = rows.get(i).split("\\|");
+            int level = r.length > 1 ? Integer.parseInt(r[1]) : 0;
+            int cx = rx + (i % 2) * (half + 8), cy = ry + (i / 2) * 10;
+            KitDraw.text(g, font, r[0], cx, cy, KitDraw.TEXT, 0.8f);
+            KitDraw.capsRight(g, font, "Lv " + level, cx + half, cy, level >= 4 ? KitDraw.LINK : KitDraw.DIM, 0.7f);
+        }
+
+        int hx = x + 37, hy = y + H - 14;
+        hx += KitDraw.hint(g, font, "LMB", "Ask", hx, hy);
+        hx += KitDraw.hint(g, font, "Q/R", "Pages", hx, hy);
+        hx += KitDraw.hint(g, font, "Drag", "Turn her", hx, hy);
+        hx += KitDraw.hint(g, font, "Scroll", "Zoom", hx, hy);
+        if (Bonds.bonded(npc)) hx += KitDraw.hint(g, font, "Bksp", "Companions", hx, hy);
+        KitDraw.hint(g, font, "G", "Close", hx, hy);
+    }
+
+    /** Everything you can ask her: orders, job, shift, talk, poses, bond. */
+    private void orders(GuiGraphicsExtractor g, @Nullable NpcPanel.State s, int lx, int ly, int lw, int mx, int my) {
         KitDraw.heading(g, font, "Orders", lx, ly, lw, false);
         ly += 10;
         boolean following = s != null && s.following();
@@ -287,58 +366,64 @@ public class CompanionScreen extends Screen {
         chips(g, lx, ly, lw, mx, my, bonded ? new String[] {"All companions", "Unbond"} : new String[] {"Bond with her"},
                 bonded ? new int[] {-4, -3} : new int[] {-3}, -1);
 
-        // the right: how she is
-        int rx = x + 400, rw = 179, ry = y + 34;
-        KitDraw.heading(g, font, "How she is", rx, ry, rw, true);
-        ry += 11;
-        if (s == null) {
-            KitDraw.text(g, font, "…", rx, ry, KitDraw.DIM, 1f);
-            return;
+    }
+
+    /** Her life before: Zomboid's occupations to pick from, and what the one under the mouse gives her. */
+    private void occupations(GuiGraphicsExtractor g, NpcPanel.State s, int lx, int ly, int lw, int mx, int my) {
+        KitDraw.heading(g, font, "Her occupation", lx, ly, lw, false);
+        ly += 10;
+        List<CharacterData.Occupation> all = new ArrayList<>(CharacterData.occupations().values());
+        String[] labels = new String[all.size() + 1];
+        int[] codes = new int[labels.length];
+        int on = -1;
+        for (int i = 0; i < all.size(); i++) {
+            labels[i] = all.get(i).name();
+            codes[i] = NpcPanel.OCCUPATION + i;
+            if (all.get(i).id().equals(s.occupation())) on = i;
         }
-        KitDraw.caps(g, font, s.mood(), rx, ry, KitDraw.LINK, 1.1f);
-        KitDraw.capsRight(g, font, "Health " + Math.round(100 * s.health() / Math.max(1, s.maxHealth())) + "%", rx + rw, ry + 2,
-                s.health() < s.maxHealth() * 0.4f ? KitDraw.LINK : KitDraw.BRIGHT, 0.7f);
-        ry += 13;
-        int half = (rw - 8) / 2;
-        ry = meter(g, "Trust", s.trust(), rx, ry, half, false);
-        meter(g, "Affection", s.affection(), rx + half + 8, ry - 13, half, false);
-        NpcMind.Need[] needs = NpcMind.Need.values();
-        for (int i = 0; i < needs.length; i += 2) {
-            int yy = ry;
-            ry = meter(g, needs[i].label, s.needs()[i], rx, yy, half, needs[i] == NpcMind.Need.FEAR || needs[i] == NpcMind.Need.PAIN);
-            if (i + 1 < needs.length) {
-                meter(g, needs[i + 1].label, s.needs()[i + 1], rx + half + 8, yy, half, false);
+        labels[all.size()] = "Back";
+        codes[all.size()] = -6;
+        int top = ly;
+        ly = chips(g, lx, ly, lw, mx, my, labels, codes, on);
+        // what the one under the mouse (or hers) would give her
+        int shown = on;
+        int cx = lx, cy = top;
+        for (int i = 0; i < all.size(); i++) {
+            int cw = Math.round(KitDraw.width(font, labels[i], 0.75f)) + 8;
+            if (cx + cw > lx + lw) {
+                cx = lx;
+                cy += 15;
+            }
+            if (KitDraw.in(mx, my, cx, cy, cw, 12)) shown = i;
+            cx += cw + 3;
+        }
+        if (shown < 0) return;
+        CharacterData.Occupation o = all.get(shown);
+        List<String> parts = new ArrayList<>();
+        o.skills().forEach((k, v) -> parts.add(k.displayName() + " " + (v > 0 ? "+" : "") + v));
+        KitDraw.caps(g, font, o.name(), lx, ly, KitDraw.LINK, 0.7f);
+        ly += 10;
+        for (String line : wrap(parts.isEmpty() ? "No skills to start with" : String.join(", ", parts), lw)) {
+            KitDraw.text(g, font, line, lx, ly, KitDraw.TEXT, 0.7f);
+            ly += 9;
+        }
+        KitDraw.text(g, font, "Plus a hobby or two off her trade, picked at random.", lx, ly + 2, KitDraw.DIM, 0.65f);
+    }
+
+    private List<String> wrap(String text, int w) {
+        List<String> out = new ArrayList<>();
+        StringBuilder line = new StringBuilder();
+        for (String word : text.split(" ")) {
+            String next = line.isEmpty() ? word : line + " " + word;
+            if (KitDraw.width(font, next, 0.7f) > w && !line.isEmpty()) {
+                out.add(line.toString());
+                line = new StringBuilder(word);
+            } else {
+                line = new StringBuilder(next);
             }
         }
-        ry += 2;
-        KitDraw.heading(g, font, "Who she is", rx, ry, rw, true);
-        ry += 10;
-        NpcMind.Trait[] traits = NpcMind.Trait.values();
-        for (int i = 0; i < traits.length; i++) {
-            KitDraw.caps(g, font, traits[i].low, rx, ry, KitDraw.DIM, 0.55f);
-            KitDraw.capsRight(g, font, traits[i].high, rx + rw, ry, KitDraw.DIM, 0.55f);
-            g.fill(rx, ry + 7, rx + rw, ry + 8, 0x33E8E4DA);
-            int k = rx + Math.round((s.traits()[i] + 1) / 2f * (rw - 1));
-            g.fill(k, ry + 5, k + 1, ry + 10, KitDraw.LINK);
-            ry += 12;
-        }
-        ry += 2;
-        KitDraw.heading(g, font, "Skills", rx, ry, rw, true);
-        ry += 10;
-        NpcSkills.Skill[] skills = NpcSkills.Skill.values();
-        for (int i = 0; i < skills.length; i++) {
-            int cx = rx + (i % 2) * (half + 8), cy = ry + (i / 2) * 10;
-            KitDraw.text(g, font, cap(skills[i].label), cx, cy, KitDraw.TEXT, 0.8f);
-            KitDraw.capsRight(g, font, "Lv " + s.skills()[i], cx + half, cy, s.skills()[i] >= 4 ? KitDraw.LINK : KitDraw.DIM, 0.7f);
-        }
-
-        int hx = x + 37, hy = y + H - 14;
-        hx += KitDraw.hint(g, font, "LMB", "Ask", hx, hy);
-        hx += KitDraw.hint(g, font, "Q/R", "Pages", hx, hy);
-        hx += KitDraw.hint(g, font, "Drag", "Turn her", hx, hy);
-        hx += KitDraw.hint(g, font, "Scroll", "Zoom", hx, hy);
-        if (Bonds.bonded(npc)) hx += KitDraw.hint(g, font, "Bksp", "Companions", hx, hy);
-        KitDraw.hint(g, font, "G", "Close", hx, hy);
+        if (!line.isEmpty()) out.add(line.toString());
+        return out;
     }
 
     private int meter(GuiGraphicsExtractor g, String label, float v, int x, int y, int w, boolean warn) {
@@ -368,7 +453,12 @@ public class CompanionScreen extends Screen {
                 case -2 -> () -> minecraft.gui.setScreen(new com.zomboidcraft.client.npc.WardrobeScreen(npc, null));
                 case -3 -> () -> Bonds.bond(npc, !Bonds.bonded(npc));
                 case -4 -> this::companions;
-                default -> () -> order(code);
+                case -5 -> () -> picking = true;
+                case -6 -> () -> picking = false;
+                default -> () -> {
+                    order(code);
+                    if (code >= NpcPanel.OCCUPATION) picking = false;
+                };
             };
             hot(cx, y, cw, h, act, null, null);
             cx += cw + 3;

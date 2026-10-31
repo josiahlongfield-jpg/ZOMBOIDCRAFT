@@ -230,6 +230,10 @@ public final class Npcs {
                                         .suggests((ctx, b) -> SharedSuggestionProvider.suggest(List.of("day", "night"), b))
                                         .executes(ctx -> shift(ctx, StringArgumentType.getString(ctx, "shift")))))
                                 .then(Commands.literal("skills").executes(Npcs::skills))
+                                .then(Commands.literal("occupation").then(Commands.argument("occupation", StringArgumentType.word())
+                                        .suggests((ctx, b) -> SharedSuggestionProvider.suggest(
+                                                com.zomboidcraft.survival.character.CharacterData.occupations().keySet(), b))
+                                        .executes(ctx -> occupation(ctx, StringArgumentType.getString(ctx, "occupation")))))
                                 .then(Commands.literal("bond").executes(Npcs::bond)
                                         .then(Commands.argument("feeling", StringArgumentType.word())
                                                 .suggests((ctx, b) -> SharedSuggestionProvider.suggest(List.of("trust", "affection", "attraction", "together", "apart"), b))
@@ -558,6 +562,18 @@ public final class Npcs {
         return 1;
     }
 
+    /** Her life before: a Zomboid occupation, with a hobby spread off it (NpcSkills.occupy). */
+    private static int occupation(CommandContext<CommandSourceStack> ctx, String id) throws CommandSyntaxException {
+        NpcEntity npc = target(ctx.getSource().getPlayerOrException());
+        if (npc == null || !npc.skills.occupy(id, npc.getRandom())) {
+            ctx.getSource().sendFailure(Component.literal(npc == null ? "No companion near you" : "Occupations: "
+                    + String.join(", ", com.zomboidcraft.survival.character.CharacterData.occupations().keySet())));
+            return 0;
+        }
+        ctx.getSource().sendSuccess(() -> Component.literal(npc.speakerName() + ": " + npc.skills.past()), false);
+        return 1;
+    }
+
     private static int shift(CommandContext<CommandSourceStack> ctx, String name) throws CommandSyntaxException {
         NpcEntity npc = target(ctx.getSource().getPlayerOrException());
         if (npc == null || !name.equals("day") && !name.equals("night")) {
@@ -616,7 +632,7 @@ public final class Npcs {
     }
 
     static String skillLines(NpcEntity npc) {
-        StringBuilder b = new StringBuilder(npc.speakerName() + ": " + npc.work.job.label
+        StringBuilder b = new StringBuilder(npc.speakerName() + " (" + npc.skills.past() + "): " + npc.work.job.label
                 + (npc.work.home == null ? ", no home" : ", " + (npc.work.nightShift ? "night" : "day") + " shift"));
         // every shared skill she has anything in, the six her work uses first
         java.util.Set<String> keys = new java.util.LinkedHashSet<>();
