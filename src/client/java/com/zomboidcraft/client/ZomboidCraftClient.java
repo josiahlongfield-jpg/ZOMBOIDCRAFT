@@ -42,6 +42,7 @@ public class ZomboidCraftClient implements ClientModInitializer {
         com.zomboidcraft.client.kit.WeaponTip.register();
         SkillsHud.register();
         com.zomboidcraft.client.survival.DownedClient.register();
+        com.zomboidcraft.client.loot.TowerStashClient.register();
         // the sky eases toward the weather the server last sent
         ClientTickEvents.END_CLIENT_TICK.register(client ->
                 WeatherView.update(client.player == null ? null : client.player.getAttached(Weather.TYPE)));

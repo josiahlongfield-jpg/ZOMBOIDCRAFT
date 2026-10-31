@@ -34,6 +34,7 @@ public final class Injuries {
         Body.register();
         Medicine.register();
         Downs.register();
+        com.zomboidcraft.loot.TowerStash.register();
         ServerLivingEntityEvents.AFTER_DAMAGE.register((entity, source, baseDamage, damage, blocked) -> {
             if (entity instanceof ServerPlayer player && !blocked && damage > 0 && on(player)) {
                 hurt(player, source, damage);
