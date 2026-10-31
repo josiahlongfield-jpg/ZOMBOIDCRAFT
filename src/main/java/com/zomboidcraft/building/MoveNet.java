@@ -74,7 +74,7 @@ public final class MoveNet {
     private static String why(ServerPlayer player, ServerLevel level, BlockPos pos, boolean scrap) {
         BlockState state = level.getBlockState(pos);
         Moving.Piece piece = Moving.piece(state, level, pos);
-        if (piece == null || player.distanceToSqr(pos.getCenter()) > 36 || !ZcConfig.get().digging.rules) {
+        if (piece == null || player.distanceToSqr(net.minecraft.world.phys.Vec3.atCenterOf(pos)) > 36 || !ZcConfig.get().digging.rules) {
             return "It's not there to move.";
         }
         if (scrap) {
