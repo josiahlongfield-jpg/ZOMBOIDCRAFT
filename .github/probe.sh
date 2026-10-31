@@ -7,6 +7,12 @@ echo "MC jars: $MC_JARS"
 classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1" | sort -u; }
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
+echo "===== traits fog"
+classes '(fog|Fog|Lightmap|LightTexture)' | head -40
+for c in net.minecraft.client.renderer.fog.FogRenderer net.minecraft.client.renderer.fog.FogData net.minecraft.client.renderer.fog.environment.FogEnvironment net.minecraft.client.renderer.fog.environment.AtmosphericFogEnvironment net.minecraft.client.renderer.LightTexture net.minecraft.client.renderer.Lightmap; do echo "-- $c"; javap -cp "$CP" -p "$c" 2>&1 | grep -vE 'lambda\$' | head -40; done
+javap -cp "$CP" -p net.minecraft.client.renderer.GameRenderer 2>&1 | grep -i 'nightvision'
+javap -cp "$CP" -p -c net.minecraft.client.renderer.fog.environment.AtmosphericFogEnvironment 2>&1 | grep -A40 'void setupFog' | head -60
+
 echo "===== npc voice2"
 for c in com.mojang.blaze3d.audio.SoundBuffer net.minecraft.client.sounds.FloatSampleSource 'net.minecraft.client.resources.sounds.Sound$Type' net.minecraft.util.valueproviders.SampledFloat; do echo "-- $c"; javap -cp "$CP" -p "$c" 2>&1 | grep -vE 'lambda\$' | head -30; done
 javap -cp "$CP" -p net.minecraft.client.resources.sounds.Sound 2>&1 | grep 'Sound(' | tr ',' '\n'
