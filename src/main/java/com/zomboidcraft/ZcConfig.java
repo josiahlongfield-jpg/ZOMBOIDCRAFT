@@ -795,6 +795,8 @@ public final class ZcConfig {
         public double biteChance = 0.12;
         public double scratchChance = 0.30;
         public double scratchInfectionChance = 0.07;
+        /** Zomboid's chance a zombie's laceration (a deeper scratch) carries the infection. */
+        public double lacerationInfectionChance = 0.25;
         /** No longer read: how long the infection takes is zombieLore.mortality now (Zomboid's Infection Mortality). */
         public int infectionMinutes = 40;
         /** Infected players rise as zombies. */

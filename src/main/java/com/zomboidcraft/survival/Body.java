@@ -15,17 +15,63 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 
 /**
- * Injuries by body part, Zomboid-lite: six parts matching the blocky model, each with at most one wound (a scratch,
- * a laceration, a bite or a burn) and a fracture. Wounds can bleed until bandaged or clotted; fractures heal far
+ * Injuries by body part, Zomboid's seventeen (see {@link Region}), each with at most one wound (a scratch, a
+ * laceration, a bite or a burn) and a fracture. Wounds can bleed until bandaged or clotted; fractures heal far
  * faster splinted. Saved with the player and synced to their own client for the HUD's figure.
  */
 public record Body(List<Part> parts) {
+    /**
+     * Zomboid's seventeen body parts, head to toe. Each sits in a coarse {@link Zone} (a limb, the head, the torso) for
+     * whatever only cares which limb it is: a slowed leg, a shaky arm, which sleeve of a jacket.
+     */
     public enum Region {
+        HEAD("head", Zone.HEAD), NECK("neck", Zone.HEAD),
+        UPPER_TORSO("upper torso", Zone.TORSO), LOWER_TORSO("lower torso", Zone.TORSO), GROIN("groin", Zone.TORSO),
+        LEFT_UPPER_ARM("left upper arm", Zone.LEFT_ARM), RIGHT_UPPER_ARM("right upper arm", Zone.RIGHT_ARM),
+        LEFT_FOREARM("left forearm", Zone.LEFT_ARM), RIGHT_FOREARM("right forearm", Zone.RIGHT_ARM),
+        LEFT_HAND("left hand", Zone.LEFT_ARM), RIGHT_HAND("right hand", Zone.RIGHT_ARM),
+        LEFT_THIGH("left thigh", Zone.LEFT_LEG), RIGHT_THIGH("right thigh", Zone.RIGHT_LEG),
+        LEFT_SHIN("left shin", Zone.LEFT_LEG), RIGHT_SHIN("right shin", Zone.RIGHT_LEG),
+        LEFT_FOOT("left foot", Zone.LEFT_LEG), RIGHT_FOOT("right foot", Zone.RIGHT_LEG);
+
+        public final String label;
+        public final Zone zone;
+
+        Region(String label, Zone zone) {
+            this.label = label;
+            this.zone = zone;
+        }
+
+        public Zone zone() {
+            return zone;
+        }
+
+        public boolean arm() {
+            return zone == Zone.LEFT_ARM || zone == Zone.RIGHT_ARM;
+        }
+
+        public boolean leg() {
+            return zone == Zone.LEFT_LEG || zone == Zone.RIGHT_LEG;
+        }
+
+        public boolean left() {
+            return zone == Zone.LEFT_ARM || zone == Zone.LEFT_LEG;
+        }
+
+        /** The same part on the other side, or itself on the midline. */
+        public Region mirror() {
+            if (zone == Zone.HEAD || zone == Zone.TORSO) return this;
+            return values()[left() ? ordinal() + 1 : ordinal() - 1];
+        }
+    }
+
+    /** The six blocks of the Minecraft body each part belongs to, and the part that stands in for the whole of one. */
+    public enum Zone {
         HEAD("head"), TORSO("torso"), LEFT_ARM("left arm"), RIGHT_ARM("right arm"), LEFT_LEG("left leg"), RIGHT_LEG("right leg");
 
         public final String label;
 
-        Region(String label) {
+        Zone(String label) {
             this.label = label;
         }
 
@@ -35,6 +81,25 @@ public record Body(List<Part> parts) {
 
         public boolean leg() {
             return this == LEFT_LEG || this == RIGHT_LEG;
+        }
+
+        /** Its parts, head to toe. */
+        public List<Region> parts() {
+            List<Region> out = new ArrayList<>(3);
+            for (Region r : Region.values()) if (r.zone == this) out.add(r);
+            return out;
+        }
+
+        /** Where a hit on the zone as a whole lands, or what an old six-part save becomes. */
+        public Region main() {
+            return switch (this) {
+                case HEAD -> Region.HEAD;
+                case TORSO -> Region.UPPER_TORSO;
+                case LEFT_ARM -> Region.LEFT_FOREARM;
+                case RIGHT_ARM -> Region.RIGHT_FOREARM;
+                case LEFT_LEG -> Region.LEFT_SHIN;
+                case RIGHT_LEG -> Region.RIGHT_SHIN;
+            };
         }
     }
 
@@ -111,7 +176,7 @@ public record Body(List<Part> parts) {
         }
     }
 
-    public static final Body FRESH = new Body(List.of(Part.FINE, Part.FINE, Part.FINE, Part.FINE, Part.FINE, Part.FINE));
+    public static final Body FRESH = new Body(java.util.Collections.nCopies(Region.values().length, Part.FINE));
 
     public static final Codec<Body> CODEC = Part.CODEC.listOf().xmap(Body::of, Body::parts);
     public static final StreamCodec<io.netty.buffer.ByteBuf, Body> STREAM_CODEC =
@@ -122,10 +187,14 @@ public record Body(List<Part> parts) {
             builder -> builder.persistent(CODEC).initializer(() -> FRESH)
                     .syncWith(STREAM_CODEC, AttachmentSyncPredicate.targetOnly()));
 
-    /** Six parts whatever was saved. */
+    /** Seventeen parts whatever was saved; a save from the six-part body puts each part's state on its zone's main part. */
     private static Body of(List<Part> saved) {
         List<Part> parts = new ArrayList<>(FRESH.parts);
-        for (int i = 0; i < Math.min(parts.size(), saved.size()); i++) parts.set(i, saved.get(i));
+        if (saved.size() == Zone.values().length) {
+            for (Zone z : Zone.values()) parts.set(z.main().ordinal(), saved.get(z.ordinal()));
+        } else {
+            for (int i = 0; i < Math.min(parts.size(), saved.size()); i++) parts.set(i, saved.get(i));
+        }
         return new Body(List.copyOf(parts));
     }
 
@@ -139,6 +208,22 @@ public record Body(List<Part> parts) {
 
     public Part part(Region region) {
         return parts.get(region.ordinal());
+    }
+
+    /** The worst-off part of a zone, standing for the limb as a whole (FINE when all of it is). */
+    public Part zone(Zone zone) {
+        Part worst = Part.FINE;
+        for (Region r : zone.parts()) {
+            Part p = part(r);
+            if (p.severity() > worst.severity() || worst.fine() && !p.fine()) worst = p;
+        }
+        return worst;
+    }
+
+    /** Whether any part of the zone is broken. */
+    public boolean broken(Zone zone) {
+        for (Region r : zone.parts()) if (part(r).fractured()) return true;
+        return false;
     }
 
     public Body with(Region region, Part part) {
@@ -179,18 +264,48 @@ public record Body(List<Part> parts) {
         return part.wound().word() + " " + region.label;
     }
 
-    /** Where a zombie's hands and teeth land: mostly arms raised to fend it off, then the body and neck. */
+    /**
+     * Where a zombie's hands and teeth land, after Zomboid: mostly the hands, forearms and upper arms raised to fend it
+     * off, then the upper body, the head, and the neck (rare, and the worst place to be bitten). A crawler on the floor
+     * goes for the legs instead.
+     */
     public static Region zombieTarget(RandomSource random) {
-        float r = random.nextFloat();
-        if (r < 0.24f) return Region.LEFT_ARM;
-        if (r < 0.48f) return Region.RIGHT_ARM;
-        if (r < 0.76f) return Region.TORSO;
-        if (r < 0.88f) return Region.HEAD;
-        return random.nextBoolean() ? Region.LEFT_LEG : Region.RIGHT_LEG;
+        return zombieTarget(random, false);
     }
 
+    public static Region zombieTarget(RandomSource random, boolean crawler) {
+        float[] weights = crawler ? CRAWLER_HITS : ZOMBIE_HITS;
+        float total = 0;
+        for (float w : weights) total += w;
+        float r = random.nextFloat() * total;
+        for (Region region : Region.values()) {
+            r -= weights[region.ordinal()];
+            if (r < 0) return region;
+        }
+        return Region.UPPER_TORSO;
+    }
+
+    /** Relative odds per part (Region order): standing zombies, and crawlers at your ankles. */
+    private static final float[] ZOMBIE_HITS = {
+            6, 3,          // head, neck
+            10, 6, 1,      // upper torso, lower torso, groin
+            9, 9, 13, 13, 12, 12, // upper arms, forearms, hands
+            1, 1, 1, 1, 0.5f, 0.5f};
+    private static final float[] CRAWLER_HITS = {
+            0, 0,
+            0, 1, 1,
+            0, 0, 1, 1, 2, 2,
+            6, 6, 12, 12, 10, 10};
+
+    /** Any part, evenly. */
     public static Region any(RandomSource random) {
         return Region.values()[random.nextInt(Region.values().length)];
+    }
+
+    /** A random part of one zone. */
+    public static Region any(Zone zone, RandomSource random) {
+        List<Region> parts = zone.parts();
+        return parts.get(random.nextInt(parts.size()));
     }
 
     /** Opens a wound on a part; a worse wound replaces a milder one, the same kind starts healing over. */

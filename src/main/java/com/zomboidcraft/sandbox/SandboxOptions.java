@@ -230,6 +230,9 @@ final class SandboxOptions {
         o.add(of(CHARACTER, "zc.infectionMinutes", "Infection Time")
                 .tip("Minutes from infection to death.")
                 .number("survival.infectionMinutes", 1, 600).owner("SURVIVAL"));
+        o.add(of(CHARACTER, "zc.lacerationInfection", "Laceration Infection Chance")
+                .tip("Chance a zombie laceration infects you (Zomboid: 0.25).")
+                .number("survival.lacerationInfectionChance", 0, 1).owner("SURVIVAL"));
         o.add(of(CHARACTER, "zc.downed", "Downed in Multiplayer")
                 .tip("A killing blow puts you down for a while instead, so a friend can revive you.")
                 .toggle("survival.downed").owner("SURVIVAL"));

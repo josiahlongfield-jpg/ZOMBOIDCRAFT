@@ -2047,10 +2047,9 @@ public class CarProp extends Entity {
                 continue;
             }
             com.zomboidcraft.survival.Body body = com.zomboidcraft.survival.Body.get(p);
-            com.zomboidcraft.survival.Body.Region[] where = {com.zomboidcraft.survival.Body.Region.HEAD, com.zomboidcraft.survival.Body.Region.TORSO,
-                    com.zomboidcraft.survival.Body.Region.LEFT_ARM, com.zomboidcraft.survival.Body.Region.RIGHT_ARM,
-                    com.zomboidcraft.survival.Body.Region.LEFT_LEG, com.zomboidcraft.survival.Body.Region.RIGHT_LEG};
-            com.zomboidcraft.survival.Body.Region r = where[random.nextInt(speed > 0.9 ? 6 : 4)];
+            // head, torso and arms first; only a hard crash reaches the legs
+            com.zomboidcraft.survival.Body.Zone zone = com.zomboidcraft.survival.Body.Zone.values()[random.nextInt(speed > 0.9 ? 6 : 4)];
+            com.zomboidcraft.survival.Body.Region r = com.zomboidcraft.survival.Body.any(zone, random);
             if (random.nextDouble() < Math.min(0.9, (speed - 0.35) * 1.5)) {
                 body = body.wound(r, com.zomboidcraft.survival.Body.Wound.LACERATION, true);
             }
