@@ -2,7 +2,9 @@ package com.zomboidcraft.client.kit;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.zomboidcraft.ModItems;
+import com.zomboidcraft.building.Build;
 import com.zomboidcraft.building.DigRules;
+import com.zomboidcraft.building.WoodBlocks;
 import com.zomboidcraft.building.Moving;
 import com.zomboidcraft.carry.Carry;
 import com.zomboidcraft.carry.Weights;
@@ -15,6 +17,7 @@ import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestSingleplayerContext;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -57,6 +60,10 @@ public class BaseMoveTest implements FabricClientGameTest {
             sp.getConnection().waitForChunksRender();
             stand(ctx, sp, 4, 1, 60, 30);
             frame(ctx, "room");
+
+            wood(ctx, sp);
+            buildPage(ctx);
+            if (!LIFTING) return;
 
             LOG.info("ZCBASE break chance by level (tool jobs / pipe wrench): {}", chances());
             // a chair: small and loose, by hand, never breaks
@@ -102,6 +109,148 @@ public class BaseMoveTest implements FabricClientGameTest {
             soil(ctx, sp);
             pages(ctx);
         }
+    }
+
+    /** Wave 1 (lifting, the G menu, walls, soil, the Skills page) is merged; set true to film it again. */
+    private static final boolean LIFTING = false;
+
+    /** The wood building yard: a grass platform east of the room. */
+    private static BlockPos yard;
+
+    /**
+     * Wave 2a through the real Build requests: a crate, a run of wall frames, two boarded, a window frame, a door frame
+     * with a door hung in it, a frame left open; then two posts, floorboards out from them to the span limit (one past
+     * it refused), and the post knocked out so the floor sags, creaks and falls in.
+     */
+    private static void wood(ClientGameTestContext ctx, TestSingleplayerContext sp) {
+        sp.getServer().runOnServer(s -> {
+            ServerPlayer p = player(s);
+            ServerLevel level = s.overworld();
+            yard = origin.offset(20, 1, 2);
+            for (int x = -2; x <= 14; x++) {
+                for (int z = -12; z <= 10; z++) level.setBlockAndUpdate(yard.offset(x, -1, z), Blocks.GRASS_BLOCK.defaultBlockState());
+            }
+            Skills.addXp(p, Skill.CARPENTRY, Skill.xpForLevel(6));
+            p.getInventory().clearContent();
+            p.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ModItems.HAMMER));
+            p.getInventory().add(new ItemStack(net.minecraft.world.item.Items.OAK_PLANKS, 64));
+            p.getInventory().add(new ItemStack(net.minecraft.world.item.Items.OAK_PLANKS, 64));
+            p.getInventory().add(new ItemStack(ModItems.NAILS, 64));
+            p.getInventory().add(new ItemStack(BuiltInRegistries.ITEM.getValue(com.zomboidcraft.ZomboidCraft.id("hinges")), 2));
+            com.zomboidcraft.ZcConfig.get().building.floorSagSeconds = 9;
+        });
+        // the wall run along x at z = 4, built from z = 1 looking south
+        standYard(ctx, sp, 3, 0.5, 0f, 25f);
+        frame(ctx, "yard");
+        build(ctx, sp, Build.CRATE, yard.offset(8, -1, 1), Direction.UP, Direction.SOUTH);
+        for (int x = 0; x <= 5; x++) {
+            Build b = x == 1 ? Build.DOOR_FRAME : x == 4 ? Build.WINDOW_FRAME : Build.WALL_FRAME;
+            build(ctx, sp, b, yard.offset(x, -1, 4), Direction.UP, Direction.SOUTH);
+        }
+        frame(ctx, "frames-up");
+        for (int x : new int[] {0, 2, 3}) build(ctx, sp, Build.WOOD_WALL, yard.offset(x, 0, 4), Direction.NORTH, Direction.SOUTH);
+        frame(ctx, "boarded");
+        // a second course on top: walls stand on walls and window frames
+        for (int x : new int[] {0, 2, 3, 4, 5}) build(ctx, sp, Build.WALL_FRAME, yard.offset(x, 0, 4), Direction.UP, Direction.SOUTH);
+        for (int x : new int[] {0, 2, 3, 4}) build(ctx, sp, Build.WOOD_WALL, yard.offset(x, 1, 4), Direction.NORTH, Direction.SOUTH);
+        standYard(ctx, sp, 3, -2.5, 0f, 8f);
+        frame(ctx, "two-high");
+        standYard(ctx, sp, 3, 0.5, 0f, 25f);
+        build(ctx, sp, Build.WOOD_DOOR, yard.offset(1, 0, 4), Direction.NORTH, Direction.SOUTH);
+        standYard(ctx, sp, 2, -1.5, 0f, 8f);
+        frame(ctx, "door-hung");
+        sp.getServer().runOnServer(s -> {
+            BlockPos d = yard.offset(1, 0, 4);
+            BlockState door = s.overworld().getBlockState(d);
+            if (door.hasProperty(net.minecraft.world.level.block.DoorBlock.OPEN)) {
+                ((net.minecraft.world.level.block.DoorBlock) door.getBlock()).setOpen(null, s.overworld(), door, d, true);
+            }
+        });
+        frame(ctx, "door-open");
+        standYard(ctx, sp, 2.5, 8.5, 180f, 8f);
+        frame(ctx, "wall-inside");
+        // walls take a beating: the boards split, then come off
+        sp.getServer().runOnServer(s -> {
+            ServerLevel level = s.overworld();
+            level.setBlockAndUpdate(yard.offset(2, 0, 4), level.getBlockState(yard.offset(2, 0, 4)).setValue(WoodBlocks.Wall.DAMAGE, 3));
+            level.setBlockAndUpdate(yard.offset(3, 0, 4), level.getBlockState(yard.offset(3, 0, 4)).setValue(WoodBlocks.Wall.DAMAGE, 6));
+        });
+        standYard(ctx, sp, 2.5, -1.5, 0f, 8f);
+        frame(ctx, "walls-damaged");
+        // posts and a floor out over open ground at z = -3
+        standYard(ctx, sp, 11, -6.5, 15f, -5f);
+        build(ctx, sp, Build.POST, yard.offset(8, -1, -3), Direction.UP, Direction.SOUTH);
+        build(ctx, sp, Build.POST, yard.offset(8, 0, -3), Direction.UP, Direction.SOUTH);
+        build(ctx, sp, Build.FLOOR, yard.offset(8, 1, -3), Direction.UP, Direction.SOUTH);
+        for (int x = 9; x <= 12; x++) build(ctx, sp, Build.FLOOR, yard.offset(x - 1, 2, -3), Direction.EAST, Direction.SOUTH);
+        standYard(ctx, sp, 10, -9.5, 0f, -6f);
+        frame(ctx, "floor-out");
+        String states = sp.getServer().computeOnServer(s -> {
+            StringBuilder b = new StringBuilder();
+            for (int x = 0; x <= 5; x++) b.append(" x").append(x).append('=').append(s.overworld().getBlockState(yard.offset(x, 0, 4)));
+            b.append(" crate=").append(s.overworld().getBlockState(yard.offset(8, 0, 1)).getBlock());
+            for (int x = 8; x <= 12; x++) b.append(" floor").append(x).append('=').append(s.overworld().getBlockState(yard.offset(x, 2, -3)).getBlock());
+            b.append(" wall hits=").append(WoodBlocks.wallHits(s.overworld().getBlockState(yard.offset(0, 0, 4))));
+            return b.toString();
+        });
+        LOG.info("ZCBASE wood built:{}", states);
+        // the top post knocked out: the floor goes, a stage every three seconds, then the next board in with it
+        sp.getServer().runOnServer(s -> s.overworld().destroyBlock(yard.offset(8, 1, -3), true));
+        for (int k = 0; k < 6; k++) {
+            ctx.waitTicks(40);
+            int t = k;
+            String sag = sp.getServer().computeOnServer(s -> {
+                StringBuilder b = new StringBuilder();
+                for (int x = 8; x <= 12; x++) {
+                    BlockState f = s.overworld().getBlockState(yard.offset(x, 2, -3));
+                    b.append(' ').append(f.is(WoodBlocks.FLOOR) ? String.valueOf(f.getValue(WoodBlocks.Floor.SAG)) : "-");
+                }
+                return b.toString();
+            });
+            LOG.info("ZCBASE floor sag {}s:{}", (t + 1) * 2 + 1, sag);
+            frame(ctx, "floor-sag-" + k);
+        }
+    }
+
+    private static void standYard(ClientGameTestContext ctx, TestSingleplayerContext sp, double x, double z, float yaw, float pitch) {
+        sp.getServer().runCommand(String.format(java.util.Locale.ROOT, "tp @a %.2f %d %.2f %.1f %.1f",
+                yard.getX() + x + 0.5, yard.getY(), yard.getZ() + z + 0.5, yaw, pitch));
+        ctx.waitTicks(10);
+    }
+
+    /** Sends the Build request the Placer would on a left click, waits out the bar, and logs what's there after. */
+    private static void build(ClientGameTestContext ctx, TestSingleplayerContext sp, Build b, BlockPos hit, Direction face, Direction looking) {
+        int ticks = sp.getServer().computeOnServer(s -> b.ticksFor(player(s)));
+        ctx.runOnClient(mc -> net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.send(
+                new com.zomboidcraft.building.Builder.Request(b.ordinal(), hit, face.get3DDataValue(), looking.get3DDataValue())));
+        ctx.waitTicks(Math.min(20, ticks / 2));
+        if (b == Build.CRATE || b == Build.WOOD_DOOR || b == Build.FLOOR && hit.getY() == yard.getY() + 1) frame(ctx, "building-" + b.name().toLowerCase());
+        ctx.waitTicks(ticks + 10);
+        String what = sp.getServer().computeOnServer(s -> {
+            Build.Spot spot = b.spot(s.overworld(), hit, face, looking);
+            return "now " + (spot.ok() ? "free" : spot.problem()) + ", at hit+face " + s.overworld().getBlockState(hit.relative(face)).getBlock()
+                    + ", hit " + s.overworld().getBlockState(hit).getBlock();
+        });
+        LOG.info("ZCBASE build {} at {}: {}", b, hit, what);
+    }
+
+    /** The Build page scrolled to the wood builds. */
+    private static void buildPage(ClientGameTestContext ctx) {
+        ctx.getInput().pressKey(InputConstants.KEY_E);
+        ctx.waitTicks(10);
+        ctx.runOnClient(mc -> {
+            if (mc.gui.screen() instanceof KitScreen<?> k) k.open(KitScreen.Page.BUILD);
+        });
+        frame(ctx, "build-page");
+        ctx.runOnClient(mc -> {
+            if (mc.gui.screen() instanceof KitScreen<?> k) {
+                for (int i = 0; i < 8; i++) k.build.scrolled(0, 0, -1);
+                k.build.selected = Build.WOOD_DOOR;
+            }
+        });
+        frame(ctx, "build-page-scrolled");
+        ctx.runOnClient(mc -> mc.gui.setScreen(null));
+        ctx.waitTicks(5);
     }
 
     private static void hold(TestSingleplayerContext sp, ItemStack stack) {
