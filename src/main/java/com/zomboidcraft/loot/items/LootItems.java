@@ -73,6 +73,8 @@ public final class LootItems {
         } else if (com.zomboidcraft.survival.MedSpecs.has(spec.id())) {
             com.zomboidcraft.survival.MedSpecs.Med med = com.zomboidcraft.survival.MedSpecs.spec(spec.id());
             item = new com.zomboidcraft.survival.MedicalItem(med.uses() > 0 ? props.durability(med.uses()) : props, spec.id());
+        } else if (spec.id().equals("gas_can")) {
+            item = new GasCanItem(props);
         } else if (LeisureItem.FUN.containsKey(spec.id())) {
             item = new LeisureItem(props, spec.id());
         } else if (InfoItem.KINDS.containsKey(spec.id())) {
