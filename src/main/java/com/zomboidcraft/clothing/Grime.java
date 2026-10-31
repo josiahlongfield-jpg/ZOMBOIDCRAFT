@@ -54,9 +54,9 @@ public final class Grime {
             if (blocked || damage <= 0) return;
             if (entity instanceof ServerPlayer player && !player.isCreative()) {
                 // your own blood: into whatever covers the torso, and the arms a little
-                splash(player, Region.TORSO, 0, Math.round(3 + damage * 2));
-                if (player.getRandom().nextBoolean()) splash(player, Region.LEFT_ARM, 0, 3);
-                else splash(player, Region.RIGHT_ARM, 0, 3);
+                splash(player, Region.UPPER_TORSO, 0, Math.round(3 + damage * 2));
+                if (player.getRandom().nextBoolean()) splash(player, Region.LEFT_UPPER_ARM, 0, 3);
+                else splash(player, Region.RIGHT_UPPER_ARM, 0, 3);
             }
             if (ZombieTypes.isWalker(entity) && source.getDirectEntity() instanceof ServerPlayer player
                     && source.getEntity() == player && player.distanceToSqr(entity) < 16) {
@@ -64,8 +64,8 @@ public final class Grime {
                 if (r.nextFloat() < 0.6f) {
                     int b = 2 + r.nextInt(4);
                     splashSlot(player, ClothingSlot.HANDS, 0, b + 2);
-                    splash(player, Region.TORSO, 0, b);
-                    splash(player, r.nextBoolean() ? Region.RIGHT_ARM : Region.LEFT_ARM, 0, b + 1);
+                    splash(player, Region.UPPER_TORSO, 0, b);
+                    splash(player, r.nextBoolean() ? Region.RIGHT_UPPER_ARM : Region.LEFT_UPPER_ARM, 0, b + 1);
                 }
             }
         });
