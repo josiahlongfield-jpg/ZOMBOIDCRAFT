@@ -431,7 +431,7 @@ public final class NpcCare {
         private final NpcEntity npc;
         private int doing, ticks;
         private String key;
-        private long lastDark = -1_000_000;
+        private long lastDark = -1_000_000, next;
 
         LookAfter(NpcEntity npc) {
             this.npc = npc;
@@ -440,7 +440,9 @@ public final class NpcCare {
 
         @Override
         public boolean canUse() {
-            if (npc.tickCount % 20 != 0 || npc.work.asleep || !(npc.level() instanceof ServerLevel level)) return false;
+            // once a second (goals are only asked every other tick, so a tickCount % 20 test can miss for good)
+            if (!(npc.level() instanceof ServerLevel level) || level.getGameTime() < next || npc.work.asleep) return false;
+            next = level.getGameTime() + 20;
             expire(npc, level.getGameTime());
             if (!safe(npc, SAFE)) return false;
             eat(npc);
@@ -534,6 +536,7 @@ public final class NpcCare {
         private ItemEntity item;
         private BlockPos box;
         private int searching, repath;
+        private long next;
 
         Gather(NpcEntity npc) {
             this.npc = npc;
@@ -546,7 +549,8 @@ public final class NpcCare {
 
         @Override
         public boolean canUse() {
-            if (npc.tickCount % 20 != 7 || npc.work.asleep || npc.aiming() || !(npc.level() instanceof ServerLevel level)) return false;
+            if (!(npc.level() instanceof ServerLevel level) || level.getGameTime() < next || npc.work.asleep || npc.aiming()) return false;
+            next = level.getGameTime() + 20;
             Player leader = leader();
             if (leader == null || leader.distanceToSqr(npc) > FROM_LEADER * FROM_LEADER || !safe(npc, SAFE)) return false;
             item = null;

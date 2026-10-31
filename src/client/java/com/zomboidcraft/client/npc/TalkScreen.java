@@ -22,7 +22,7 @@ import net.minecraft.network.chat.Component;
 public class TalkScreen extends net.minecraft.client.gui.screens.Screen {
     private static final int PANEL = 0xF20C0D0F, EDGE = 0x29E8E4DA, LINE = 0x4DE8E4DA, TEXT = 0xFFE8E4DA, DIM = 0xA8E8E4DA,
             GOLD = 0xFFE0C25E;
-    private static final int W = 230, ROW = 20, PAD = 10, HEAD = 48;
+    private static final int W = 230, PAD = 10, HEAD = 48;
     private static final String[][] ACTS = {
             {"Compliment her", "Say something nice"},
             {"Flirt", "See if she flirts back"},
@@ -67,13 +67,18 @@ public class TalkScreen extends net.minecraft.client.gui.screens.Screen {
         }
     }
 
+    /** Row height: 20, closer together when the rows wouldn't fit the screen (a small window, a big GUI scale). */
+    private int row() {
+        return Math.max(12, Math.min(20, (height - HEAD - PAD - 4) / rows()));
+    }
+
     private int[] box() {
-        int h = HEAD + rows() * ROW + PAD;
+        int h = HEAD + rows() * row() + PAD;
         return new int[] {(width - W) / 2, (height - h) / 2, W, h};
     }
 
     private int rowY(int[] b, int i) {
-        return b[1] + HEAD + i * ROW;
+        return b[1] + HEAD + i * row();
     }
 
     @Override
@@ -94,17 +99,17 @@ public class TalkScreen extends net.minecraft.client.gui.screens.Screen {
         g.fill(b[0] + PAD, b[1] + HEAD - 4, b[0] + b[2] - PAD, b[1] + HEAD - 3, LINE);
         for (int i = 0; i < rows(); i++) {
             int y = rowY(b, i);
-            boolean over = in(mouseX, mouseY, b[0] + 4, y, b[2] - 8, ROW - 2);
+            boolean over = in(mouseX, mouseY, b[0] + 4, y, b[2] - 8, row() - 2);
             if (over) {
-                g.fill(b[0] + 4, y, b[0] + b[2] - 4, y + ROW - 2, 0x1FE8E4DA);
-                frame(g, b[0] + 4, y, b[2] - 8, ROW - 2, LINE);
+                g.fill(b[0] + 4, y, b[0] + b[2] - 4, y + row() - 2, 0x1FE8E4DA);
+                frame(g, b[0] + 4, y, b[2] - 8, row() - 2, LINE);
             }
             String label = i == 4 && holding ? "Let go of her hand" : row(i)[0];
             String key = i < 9 ? (i + 1) + "  " : i == 9 ? "0  " : "    ";
-            g.text(font, Hud.text(key + label), b[0] + PAD, y + 5, over ? 0xFFF2EFE8 : i >= ACTS.length ? GOLD : TEXT, false);
+            g.text(font, Hud.text(key + label), b[0] + PAD, y + (row() - 10) / 2, over ? 0xFFF2EFE8 : i >= ACTS.length ? GOLD : TEXT, false);
             String hint = i == 6 && (bits >> 29 & 1) != 0 ? "She asked you" : row(i)[1];
             if (font.width(Hud.text(key + label)) + font.width(Hud.text(hint)) < b[2] - PAD * 2 - 8) {
-                g.text(font, Hud.text(hint), b[0] + b[2] - PAD - font.width(Hud.text(hint)), y + 5, DIM, false);
+                g.text(font, Hud.text(hint), b[0] + b[2] - PAD - font.width(Hud.text(hint)), y + (row() - 10) / 2, DIM, false);
             }
         }
     }
@@ -152,7 +157,7 @@ public class TalkScreen extends net.minecraft.client.gui.screens.Screen {
         }
         int[] b = box();
         for (int i = 0; i < rows(); i++) {
-            if (in(event.x(), event.y(), b[0] + 4, rowY(b, i), b[2] - 8, ROW - 2)) {
+            if (in(event.x(), event.y(), b[0] + 4, rowY(b, i), b[2] - 8, row() - 2)) {
                 pick(i);
                 return true;
             }
