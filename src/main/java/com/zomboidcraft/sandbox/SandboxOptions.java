@@ -38,6 +38,8 @@ final class SandboxOptions {
         w.put("ZombieLore." + id, b -> b.choice("zombieLore." + field, choices).owner("ENTITY"));
     }
 
+    private static final String[] STORY = {"never", "extremely_rare", "rare", "sometimes", "often", "very_often", "always"};
+
     /** Zomboid settings our systems drive, by Zomboid's id. */
     private static Map<String, UnaryOperator<SandboxOption.Builder>> wires() {
         Map<String, UnaryOperator<SandboxOption.Builder>> w = new HashMap<>();
@@ -111,6 +113,7 @@ final class SandboxOptions {
         // Skills (SURVIVAL): one global multiplier for now
         w.put("MultiplierConfig.Global", b -> b.number("progression.xpMultiplier", 0, 1000).owner("SURVIVAL"));
         // Far-off events (AUDIO): Zomboid's three choices
+        w.put("Helicopter", b -> b.choice("searchHeli.frequency", "never", "once", "sometimes", "often").owner("ENTITY"));
         w.put("MetaEvent", b -> b.choice("world.metaEvents", "never", "sometimes", "often").owner("AUDIO"));
         // Vehicles (VEHICLES)
         w.put("EnableVehicles", b -> b.toggle("world.streetCars").owner("VEHICLES"));
@@ -140,7 +143,72 @@ final class SandboxOptions {
                 .tip("How far round a running generator it powers, in blocks."));
         w.put("GeneratorVerticalPowerRange", b -> b.number("power.generatorFloors", 1, 15).owner("LOOT"));
         w.put("AllowExteriorGenerator", b -> b.toggle("power.generatorExterior").owner("LOOT"));
+        // World stories (LOOT owns the settings; LANDSCAPE reads the three scene chances at generation)
+        w.put("VehicleStoryChance", b -> b.choice("stories.vehicleChance", STORY).owner("LOOT"));
+        w.put("ZoneStoryChance", b -> b.choice("stories.zoneChance", STORY).owner("LOOT"));
+        w.put("SurvivorHouseChance", b -> b.choice("stories.survivorHouseChance", STORY).owner("LOOT"));
+        w.put("AnnotatedMapChance", b -> b.choice("stories.annotatedMapChance",
+                "never", "extremely_rare", "rare", "sometimes", "often", "very_often").owner("LOOT"));
+        // Loot (LOOT): every number as Zomboid has it, applied as containers are first opened (loot/LootSettings)
+        w.put("FoodLootNew", b -> b.number("loot.food", 0, 4).owner("LOOT"));
+        w.put("LiteratureLootNew", b -> b.number("loot.literature", 0, 4).owner("LOOT"));
+        w.put("SkillBookLoot", b -> b.number("loot.skillBook", 0, 4).owner("LOOT"));
+        w.put("RecipeResourceLoot", b -> b.number("loot.recipeResource", 0, 4).owner("LOOT"));
+        w.put("MedicalLootNew", b -> b.number("loot.medical", 0, 4).owner("LOOT"));
+        w.put("SurvivalGearsLootNew", b -> b.number("loot.survivalGears", 0, 4).owner("LOOT"));
+        w.put("CannedFoodLootNew", b -> b.number("loot.cannedFood", 0, 4).owner("LOOT"));
+        w.put("WeaponLootNew", b -> b.number("loot.weapon", 0, 4).owner("LOOT"));
+        w.put("RangedWeaponLootNew", b -> b.number("loot.rangedWeapon", 0, 4).owner("LOOT"));
+        w.put("AmmoLootNew", b -> b.number("loot.ammo", 0, 4).owner("LOOT"));
+        w.put("MechanicsLootNew", b -> b.number("loot.mechanics", 0, 4).owner("LOOT"));
+        w.put("OtherLootNew", b -> b.number("loot.other", 0, 4).owner("LOOT"));
+        w.put("ClothingLootNew", b -> b.number("loot.clothing", 0, 4).owner("LOOT"));
+        w.put("ContainerLootNew", b -> b.number("loot.container", 0, 4).owner("LOOT"));
+        w.put("KeyLootNew", b -> b.number("loot.key", 0, 4).owner("LOOT"));
+        w.put("MediaLootNew", b -> b.number("loot.media", 0, 4).owner("LOOT"));
+        w.put("MementoLootNew", b -> b.number("loot.memento", 0, 4).owner("LOOT"));
+        w.put("CookwareLootNew", b -> b.number("loot.cookware", 0, 4).owner("LOOT"));
+        w.put("MaterialLootNew", b -> b.number("loot.material", 0, 4).owner("LOOT"));
+        w.put("FarmingLootNew", b -> b.number("loot.farming", 0, 4).owner("LOOT"));
+        w.put("ToolLootNew", b -> b.number("loot.tool", 0, 4).owner("LOOT"));
+        w.put("RollsMultiplier", b -> b.number("loot.rollsMultiplier", 0.1, 100).owner("LOOT"));
+        w.put("InsaneLootFactor", b -> b.number("loot.insaneFactor", 0, 0.2).owner("LOOT").tip("How often Grail finds turn up."));
+        w.put("ExtremeLootFactor", b -> b.number("loot.extremeFactor", 0.05, 0.6).owner("LOOT").tip("How often Prized finds turn up."));
+        w.put("RareLootFactor", b -> b.number("loot.rareFactor", 0.2, 1).owner("LOOT").tip("How often Rare finds turn up."));
+        w.put("NormalLootFactor", b -> b.number("loot.normalFactor", 0.6, 2).owner("LOOT").tip("How often Scarce finds turn up."));
+        w.put("CommonLootFactor", b -> b.number("loot.commonFactor", 1, 3).owner("LOOT").tip("How often Common finds turn up."));
+        w.put("ZombiePopLootEffect", b -> b.number("loot.zombiePopLootEffect", 0, 20).owner("LOOT"));
+        w.put("LootItemRemovalList", b -> {
+            b.kind(SandboxOption.Kind.TEXT);
+            b.key = "loot.removalList";
+            return b.owner("LOOT");
+        });
+        w.put("RemoveStoryLoot", b -> b.toggle("loot.removeStoryLoot").owner("LOOT"));
+        w.put("RemoveZombieLoot", b -> b.toggle("loot.removeZombieLoot").owner("LOOT"));
+        w.put("MaximumLooted", b -> b.number("loot.maximumLooted", 0, 200).owner("LOOT")
+                .tip("The chance a container has already been picked over when you find it, once the days below have passed."));
+        w.put("DaysUntilMaximumLooted", b -> b.number("loot.daysUntilMaximumLooted", 0, 3650).owner("LOOT"));
+        w.put("RuralLooted", b -> b.number("loot.ruralLooted", 0, 2).owner("LOOT")
+                .tip("Multiplies the looted chance for farms, roadside places and the countryside outside towns."));
+        w.put("MaximumLootedBuildingRooms", b -> b.number("loot.maximumLootedBuildingRooms", 0, 200).owner("LOOT")
+                .tip("Buildings with more rooms than this are never pre-looted (malls, hospitals, the big landmarks)."));
+        w.put("TimeSinceApo", b -> b.choice("loot.timeSinceApo", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12")
+                .owner("LOOT").tip("Months since the outbreak when you start: the looted and diminished loot ramps start that far along."));
+        w.put("MaximumDiminishedLoot", b -> b.number("loot.maximumDiminished", 0, 100).owner("LOOT"));
+        w.put("DaysUntilMaximumDiminishedLoot", b -> b.number("loot.daysUntilMaximumDiminished", 0, 3650).owner("LOOT"));
+        w.put("StarterKit", b -> b.toggle("loot.starterKit").owner("LOOT"));
+        w.put("HoursForLootRespawn", b -> b.number("loot.hoursForLootRespawn", 0, 1000000000).owner("LOOT")
+                .tip("When above 0, a shop or house container fills again this many in-game hours after it was opened."));
+        w.put("SeenHoursPreventLootRespawn", b -> b.number("loot.seenHoursPreventLootRespawn", 0, 1000000000).owner("LOOT")
+                .tip("When above 0, a container someone has been near (64 blocks) doesn't refill: its clock starts again."));
+        w.put("MaxItemsForLootRespawn", b -> b.number("loot.maxItemsForLootRespawn", 0, 1000000000).owner("LOOT"));
+        w.put("ConstructionPreventsLootRespawn", b -> b.toggle("loot.constructionPreventsLootRespawn").owner("LOOT")
+                .tip("Containers near barricades don't refill."));
         w.put("TrafficJam", b -> b.toggle("world.trafficJams").owner("LANDSCAPE"));
+        w.put("Alarm", b -> b.choice("world.houseAlarms", "never", "extremely_rare", "rare", "sometimes", "often", "very_often")
+                .owner("LANDSCAPE").tip("How many houses have an alarm (a bell box out front). Getting in sets it ringing. New ground only."));
+        w.put("AlarmDecayModifier", b -> b.number("world.alarmBatteryDays", -1, 1000000000).owner("LANDSCAPE")
+                .tip("Days a house alarm's battery keeps it working after the mains go off, each house up to twice this. -1: none."));
         w.put("DamageToPlayerFromHitByACar", b -> b.number("world.carHitDamage", 1, 4).owner("VEHICLES"));
         // Firearms (WEAPONS): combat/Firearms. Use Damage Chance says who a shot strikes just by being aimed at;
         // jams start at 0 since Josiah cut them on 10-26

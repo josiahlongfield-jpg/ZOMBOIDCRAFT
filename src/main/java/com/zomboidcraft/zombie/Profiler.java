@@ -28,6 +28,9 @@ import net.fabricmc.loader.api.FabricLoader;
 public final class Profiler {
     private static final long GAP_NANOS = 3_000_000L;
     private static volatile boolean running;
+    /** Lit blocks that change their light (each one relights and redraws the chunks round it), counted while sampling. */
+    public static final java.util.concurrent.atomic.LongAdder FLICKERS = new java.util.concurrent.atomic.LongAdder(),
+            SIGNALS = new java.util.concurrent.atomic.LongAdder();
 
     /** Who owns a frame, by package: the first match wins, so put the narrower names first. */
     private static final String[][] OWNERS = {
@@ -208,6 +211,8 @@ public final class Profiler {
         long heapPeak = heap0.getUsed();
         long start = System.nanoTime(), end = start + seconds * 1_000_000_000L;
         long late = 0, rounds = 0;
+        FLICKERS.reset();
+        SIGNALS.reset();
         List<Thread> threads = new ArrayList<>();
         List<String> buckets = new ArrayList<>();
         long refound = 0;
@@ -266,6 +271,8 @@ public final class Profiler {
             r.append(String.format("Garbage collector %s: %d runs, %d ms%n", gcs.get(i).getName(), n, ms));
         }
         r.append(String.format("Garbage collection took %.1f%% of the time%n", gcMs / 10.0 / Math.max(0.1, took)));
+        r.append(String.format("Flickering lamps changed %d times (%.0f a second), traffic signals %d times%n",
+                FLICKERS.sum(), FLICKERS.sum() / Math.max(0.1, took), SIGNALS.sum()));
         r.append("JVM: ").append(System.getProperty("java.vm.name")).append(' ')
                 .append(System.getProperty("java.version")).append(", args ")
                 .append(ManagementFactory.getRuntimeMXBean().getInputArguments()).append("\n");

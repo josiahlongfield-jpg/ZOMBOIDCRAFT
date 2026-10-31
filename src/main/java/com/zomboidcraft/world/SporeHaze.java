@@ -66,7 +66,15 @@ public final class SporeHaze {
 
     private static boolean masked(ServerPlayer p) {
         Garment g = Clothes.of(ClothingSlot.FACE.worn(p));
-        return g != null && g.id().equals("gas_mask");
+        if (g == null) {
+            return false;
+        }
+        // a filter mask, or the breathing set's mask with its bottle worn (it brings its own air)
+        return switch (g.id()) {
+            case "gas_mask", "cbrn_mask" -> true;
+            case "scba_mask" -> { Garment set = Clothes.of(ClothingSlot.VEST.worn(p)); yield set != null && set.id().equals("scba_set"); }
+            default -> false;
+        };
     }
 
     private static void tick(MinecraftServer s) {

@@ -59,7 +59,27 @@ public final class ClothingItems {
             "shooting_earmuffs", "chainsaw_chaps", "beekeeper_suit", "cut_resistant_gloves",
             "shin_guards", "gaiters", "football_shoulder_pads", "hockey_shoulder_pads", "hockey_neck_guard",
             "leather_neck_guard", "padded_football_pants", "hockey_pants", "catchers_vest", "hockey_gloves",
-            "chainmail_butcher_glove", "chainmail_sleeve", "athletic_cup");
+            "chainmail_butcher_glove", "chainmail_sleeve", "athletic_cup",
+            // wave 2, batch 4: civilian
+            "puffer_jacket", "ski_jacket", "ski_trousers", "ski_goggles", "cardigan", "blazer", "gilet", "tracksuit_top",
+            "tracksuit_bottoms", "bathrobe", "rugby_shirt", "chef_jacket", "mechanic_coveralls", "prison_jumpsuit",
+            "security_shirt", "flat_cap", "fedora", "straw_hat", "fingerless_gloves", "sandals",
+            // wave 2, batch 5: Zomboid's headwear, face and eyes
+            "ranger_hat", "peaked_cap", "captains_hat", "chefs_hat", "surgical_cap", "visor_cap", "sweatband",
+            "winter_earmuffs", "miner_helmet", "batting_helmet", "hockey_helmet", "riding_helmet", "boxing_headgear",
+            "swat_helmet", "welder_mask", "dust_mask", "half_mask_respirator", "safety_goggles", "eyepatch", "monocle",
+            "prescription_glasses",
+            // wave 2, batch 6: the rest of Zomboid's wardrobe, and survivor-made scrap and tyre armour
+            "hunting_vest", "foreman_vest", "waistcoat", "leather_biker_vest", "sheepskin_vest", "sheepskin_jacket",
+            "padded_jacket", "hunting_jacket", "paramedic_jacket", "apron", "leather_apron", "long_johns", "socks",
+            "legwarmers", "riding_boots", "bowling_shoes", "flip_flops", "boxing_gloves", "pyjama_top", "pyjama_bottoms",
+            "sports_jersey", "postal_shirt", "cycling_jersey", "cycling_shorts", "wetsuit", "fishing_waders",
+            "scrap_cuirass", "tyre_cuirass", "scrap_arm_guards", "scrap_leg_guards", "scrap_helmet", "hunting_cap",
+            // wave 2, batch 7: prized and grail (the black crusader kit is our own design)
+            "crusader_great_helm", "crusader_plate", "crusader_tabard", "crusader_pauldrons", "crusader_cloak",
+            "crusader_greaves", "crusader_gauntlets", "crusader_sabatons", "gothic_sallet", "gothic_cuirass",
+            "gothic_arm_harness", "gothic_leg_harness", "gothic_gauntlets", "gothic_sabatons", "bomb_disposal_suit",
+            "bomb_disposal_helmet", "shark_mesh_suit", "motorcycle_leathers", "scba_set", "scba_mask", "bodyguard_suit");
 
     /** What ripping clothes up gives, beside the ripped sheets the loot roster already has (clothing/Tailoring). */
     public static final List<String> SUPPLIES = List.of("denim_strips", "leather_strips");
@@ -69,6 +89,11 @@ public final class ClothingItems {
     public static void register() {
         ClothWear.register();
         ClothingLoot.register();
+        Grime.register();
+        Grooming.register();
+        // what Tailoring's levels change (Tailoring.patch: a quarter of patches pull loose at 0, none at 10)
+        com.zomboidcraft.skills.SkillUnlocks.add(com.zomboidcraft.skills.Skill.TAILORING, 5, "Half as many patches pull loose");
+        com.zomboidcraft.skills.SkillUnlocks.add(com.zomboidcraft.skills.Skill.TAILORING, 10, "Patches never pull loose, sewn in half the time");
         for (String id : SUPPLIES) {
             ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, ZomboidCraft.id(id));
             ITEMS.add(Registry.register(BuiltInRegistries.ITEM, key, new Item(new Item.Properties().stacksTo(16).setId(key))));

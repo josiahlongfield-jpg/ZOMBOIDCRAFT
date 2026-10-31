@@ -366,6 +366,9 @@ public final class Carry {
             // a garment's camo shows (clothing/ClothingLoot)
             String camo = stack.get(com.zomboidcraft.clothing.ClothingLoot.CAMO);
             if (camo != null) plain.set(com.zomboidcraft.clothing.ClothingLoot.CAMO, camo);
+            // and how dirty, bloody and wet it looks, in the steps the clothing layer draws (so it resyncs only on a step)
+            com.zomboidcraft.clothing.ClothDirt grime = com.zomboidcraft.clothing.ClothDirt.of(stack).shown();
+            if (!grime.clean() || grime.wet() > 0) plain.set(com.zomboidcraft.clothing.ClothDirt.TYPE, grime);
             now.add(plain);
         }
         // carried weapons keep their parts and finish, so they look the same on you
@@ -378,7 +381,9 @@ public final class Carry {
             same = i >= GearStore.SIZE ? ItemStack.isSameItemSameComponents(shown.get(i), now.get(i))
                     : shown.get(i).getItem() == now.get(i).getItem() && shown.get(i).isEmpty() == now.get(i).isEmpty()
                     && java.util.Objects.equals(shown.get(i).get(com.zomboidcraft.clothing.ClothingLoot.CAMO),
-                    now.get(i).get(com.zomboidcraft.clothing.ClothingLoot.CAMO));
+                    now.get(i).get(com.zomboidcraft.clothing.ClothingLoot.CAMO))
+                    && java.util.Objects.equals(shown.get(i).get(com.zomboidcraft.clothing.ClothDirt.TYPE),
+                    now.get(i).get(com.zomboidcraft.clothing.ClothDirt.TYPE));
         }
         if (!same) {
             player.setAttached(WORN, List.copyOf(now));

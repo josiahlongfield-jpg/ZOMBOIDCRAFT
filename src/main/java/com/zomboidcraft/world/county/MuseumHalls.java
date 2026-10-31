@@ -500,6 +500,10 @@ final class MuseumHalls {
         for (int z = 44; z <= 64; z += 10) {
             vitrine(x0 + 6, y, z, "smashed", 0.6);
         }
+        // the gothic harness, crated by the curators for the state archive and never sent: the whole set
+        // inside, every piece (LOOT's shop/museum_armour)
+        set(x0 + 3, y + 1, 35, "mu_crate[facing=east,loot=museum_armour]");
+        set(x0 + 4, y + 1, 35, "mu_crate_flat[facing=north]");
         c.sign("arms", x0, y + 5, 46, "east");
         pendants(x0, 34, x1, MZ1, y);
         c.mess(x0, 34, x1, MZ1 - 1, y, 0.03);

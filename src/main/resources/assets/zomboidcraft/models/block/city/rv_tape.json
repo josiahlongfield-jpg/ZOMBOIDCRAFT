@@ -1,0 +1,105 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rv_tape": "zomboidcraft:block/city/rv_tape",
+    "particle": "zomboidcraft:block/city/rv_tape"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        9.6,
+        7.95
+      ],
+      "to": [
+        5.4,
+        11.6,
+        8.05
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rv_tape",
+          "uv": [
+            0,
+            4,
+            5.4,
+            12
+          ]
+        },
+        "south": {
+          "texture": "#rv_tape",
+          "uv": [
+            0,
+            4,
+            5.4,
+            12
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        5.4,
+        9.2,
+        7.95
+      ],
+      "to": [
+        10.6,
+        11.2,
+        8.05
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rv_tape",
+          "uv": [
+            5.4,
+            4,
+            10.6,
+            12
+          ]
+        },
+        "south": {
+          "texture": "#rv_tape",
+          "uv": [
+            5.4,
+            4,
+            10.6,
+            12
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        10.6,
+        9.6,
+        7.95
+      ],
+      "to": [
+        16,
+        11.6,
+        8.05
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rv_tape",
+          "uv": [
+            10.6,
+            4,
+            16,
+            12
+          ]
+        },
+        "south": {
+          "texture": "#rv_tape",
+          "uv": [
+            10.6,
+            4,
+            16,
+            12
+          ]
+        }
+      }
+    }
+  ]
+}

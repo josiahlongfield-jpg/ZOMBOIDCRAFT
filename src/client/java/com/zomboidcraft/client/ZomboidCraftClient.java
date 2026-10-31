@@ -29,6 +29,7 @@ public class ZomboidCraftClient implements ClientModInitializer {
     public void onInitializeClient() {
         // medical supports drawn on the body, from the synced worn-medical mask
         com.zomboidcraft.client.clothing.ClothingLayer.medicalMask = com.zomboidcraft.survival.WornMedical::mask;
+        com.zomboidcraft.client.clothing.ClothingMenu.register();
         com.zomboidcraft.client.hud.Hud.register();
         com.zomboidcraft.client.carry.CarryClient.register();
         com.zomboidcraft.client.kit.KitScreen.register();
@@ -46,6 +47,7 @@ public class ZomboidCraftClient implements ClientModInitializer {
         com.zomboidcraft.client.survival.DownedClient.register();
         com.zomboidcraft.client.loot.TowerStashClient.register();
         com.zomboidcraft.client.power.GeneratorClient.register();
+        com.zomboidcraft.client.decor.DecorClient.register();
         // the sky eases toward the weather the server last sent
         ClientTickEvents.END_CLIENT_TICK.register(client ->
                 WeatherView.update(client.player == null ? null : client.player.getAttached(Weather.TYPE)));
@@ -85,6 +87,8 @@ public class ZomboidCraftClient implements ClientModInitializer {
         com.zomboidcraft.client.trains.TrainClient.register();
         com.zomboidcraft.client.ferry.FerryClient.register();
         com.zomboidcraft.client.lights.LightClient.register();
+        com.zomboidcraft.client.alarms.AlarmClient.register();
+        com.zomboidcraft.client.power.YardRepairClient.register();
         com.zomboidcraft.client.survival.SleepClient.register();
         com.zomboidcraft.client.survival.TreatClient.register();
         com.zomboidcraft.client.lifts.LiftClient.register();

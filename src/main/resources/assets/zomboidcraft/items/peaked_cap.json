@@ -1,0 +1,23 @@
+{
+ "model": {
+  "type": "minecraft:select",
+  "property": "minecraft:display_context",
+  "cases": [
+   {
+    "when": "head",
+    "model": {
+     "type": "minecraft:empty"
+    }
+   }
+  ],
+  "fallback": {
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/peaked_cap",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/peaked_cap",
+    "part": "loot"
+   }
+  }
+ }
+}

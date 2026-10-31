@@ -33,9 +33,11 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.zombie.ZombieLook.register();
         ModBlocks.register();
         com.zomboidcraft.building.BuildBlocks.register();
+        com.zomboidcraft.building.WoodBlocks.register();
         com.zomboidcraft.world.blocks.CityBlocks.register();
         com.zomboidcraft.world.cars.Cars.register();
         com.zomboidcraft.world.cars.CarNet.register();
+        com.zomboidcraft.world.cars.CarPush.register();
         com.zomboidcraft.world.cars.Mechanics.register();
         com.zomboidcraft.world.cars.CarHoist.register();
         com.zomboidcraft.world.cars.ShopTool.register();
@@ -66,7 +68,10 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.combat.ModSounds.register();
         com.zomboidcraft.combat.throwing.Throwing.register();
         ModItems.register();
+        com.zomboidcraft.decor.Decor.registerBlocks();
         com.zomboidcraft.loot.items.LootItems.register();
+        com.zomboidcraft.decor.Decor.register();
+        com.zomboidcraft.loot.LootSettings.register();
         com.zomboidcraft.power.Generators.register();
         com.zomboidcraft.power.PowerGrid.register();
         com.zomboidcraft.power.Blackout.register();
@@ -95,6 +100,10 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.zombie.PerfCommand.register();
         com.zomboidcraft.zombie.population.Population.register();
         com.zomboidcraft.world.gen.FarmHerds.register();
+        com.zomboidcraft.world.gen.StoryMarks.register();
+        com.zomboidcraft.world.gen.YardEffects.register();
+        com.zomboidcraft.world.gen.HouseAlarms.register();
+        com.zomboidcraft.world.gen.YardRepair.register();
         com.zomboidcraft.zombie.Hordes.register();
         ZcCommand.register();
         com.zomboidcraft.sandbox.Sandbox.register();
@@ -106,6 +115,7 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.combat.Downed.register();
         com.zomboidcraft.zombie.LyingInWait.register();
         com.zomboidcraft.zombie.BeltedDead.register();
+        com.zomboidcraft.world.events.SearchHeli.register();
         com.zomboidcraft.combat.Dismember.register();
         com.zomboidcraft.combat.Deaths.register();
         com.zomboidcraft.zombie.Corpses.register();

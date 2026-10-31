@@ -1,0 +1,122 @@
+{
+ "model": {
+  "type": "minecraft:select",
+  "property": "minecraft:component",
+  "component": "zomboidcraft:camo",
+  "cases": [
+   {
+    "when": "black",
+    "model": {
+     "type": "minecraft:special",
+     "base": "zomboidcraft:item/clothing/hair_mohawk/head",
+     "model": {
+      "type": "zomboidcraft:mesh",
+      "id": "clothing/hair_mohawk",
+      "part": "head",
+      "texture": "zomboidcraft:textures/item/clothing/hair_mohawk/camo_black.png"
+     }
+    }
+   },
+   {
+    "when": "brown",
+    "model": {
+     "type": "minecraft:special",
+     "base": "zomboidcraft:item/clothing/hair_mohawk/head",
+     "model": {
+      "type": "zomboidcraft:mesh",
+      "id": "clothing/hair_mohawk",
+      "part": "head",
+      "texture": "zomboidcraft:textures/item/clothing/hair_mohawk/camo_brown.png"
+     }
+    }
+   },
+   {
+    "when": "auburn",
+    "model": {
+     "type": "minecraft:special",
+     "base": "zomboidcraft:item/clothing/hair_mohawk/head",
+     "model": {
+      "type": "zomboidcraft:mesh",
+      "id": "clothing/hair_mohawk",
+      "part": "head",
+      "texture": "zomboidcraft:textures/item/clothing/hair_mohawk/camo_auburn.png"
+     }
+    }
+   },
+   {
+    "when": "ginger",
+    "model": {
+     "type": "minecraft:special",
+     "base": "zomboidcraft:item/clothing/hair_mohawk/head",
+     "model": {
+      "type": "zomboidcraft:mesh",
+      "id": "clothing/hair_mohawk",
+      "part": "head",
+      "texture": "zomboidcraft:textures/item/clothing/hair_mohawk/camo_ginger.png"
+     }
+    }
+   },
+   {
+    "when": "blonde",
+    "model": {
+     "type": "minecraft:special",
+     "base": "zomboidcraft:item/clothing/hair_mohawk/head",
+     "model": {
+      "type": "zomboidcraft:mesh",
+      "id": "clothing/hair_mohawk",
+      "part": "head",
+      "texture": "zomboidcraft:textures/item/clothing/hair_mohawk/camo_blonde.png"
+     }
+    }
+   },
+   {
+    "when": "platinum",
+    "model": {
+     "type": "minecraft:special",
+     "base": "zomboidcraft:item/clothing/hair_mohawk/head",
+     "model": {
+      "type": "zomboidcraft:mesh",
+      "id": "clothing/hair_mohawk",
+      "part": "head",
+      "texture": "zomboidcraft:textures/item/clothing/hair_mohawk/camo_platinum.png"
+     }
+    }
+   },
+   {
+    "when": "grey",
+    "model": {
+     "type": "minecraft:special",
+     "base": "zomboidcraft:item/clothing/hair_mohawk/head",
+     "model": {
+      "type": "zomboidcraft:mesh",
+      "id": "clothing/hair_mohawk",
+      "part": "head",
+      "texture": "zomboidcraft:textures/item/clothing/hair_mohawk/camo_grey.png"
+     }
+    }
+   },
+   {
+    "when": "white",
+    "model": {
+     "type": "minecraft:special",
+     "base": "zomboidcraft:item/clothing/hair_mohawk/head",
+     "model": {
+      "type": "zomboidcraft:mesh",
+      "id": "clothing/hair_mohawk",
+      "part": "head",
+      "texture": "zomboidcraft:textures/item/clothing/hair_mohawk/camo_white.png"
+     }
+    }
+   }
+  ],
+  "fallback": {
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/hair_mohawk/head",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/hair_mohawk",
+    "part": "head"
+   }
+  }
+ }
+}

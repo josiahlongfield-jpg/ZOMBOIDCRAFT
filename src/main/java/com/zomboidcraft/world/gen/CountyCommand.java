@@ -36,7 +36,7 @@ public final class CountyCommand {
                                         .executes(ctx -> places(ctx, StringArgumentType.getString(ctx, "type")))))
                         .then(Commands.literal("goto")
                                 .then(Commands.argument("type", StringArgumentType.word())
-                                        .suggests((ctx, b) -> SharedSuggestionProvider.suggest(types(), b))
+                                        .suggests((ctx, b) -> SharedSuggestionProvider.suggest(gotoNames(ctx.getSource()), b))
                                         .executes(ctx -> go(ctx, StringArgumentType.getString(ctx, "type")))))
                         .then(Commands.literal("bunker")
                                 .executes(ctx -> bunker(ctx, null, false))
@@ -53,6 +53,21 @@ public final class CountyCommand {
         return Arrays.stream(PlaceType.values()).map(t -> t.name().toLowerCase()).toList();
     }
 
+    /** What /zc goto takes: the place kinds, then every named spot of the planned county (stadium, mercy, airport, lab, ...). */
+    private static List<String> gotoNames(CommandSourceStack src) {
+        List<String> out = new java.util.ArrayList<>(types());
+        if (src.getLevel().getChunkSource().getGenerator() instanceof CountyChunkGenerator) {
+            out.addAll(CountyChunkGenerator.gen(src.getLevel().getSeed()).county().names());
+        }
+        return out;
+    }
+
+    /** A place's variant without the "@x,z" the tiled sites (airport, shipyard, Ravenrock, ...) carry. */
+    private static String bare(String variant) {
+        int at = variant.indexOf('@');
+        return at < 0 ? variant : variant.substring(0, at);
+    }
+
     private static County county(CommandSourceStack src) {
         ServerLevel level = src.getLevel();
         if (level.getChunkSource().getGenerator() instanceof CountyChunkGenerator) {
@@ -67,7 +82,7 @@ public final class CountyCommand {
         List<Place> all = new java.util.ArrayList<>(county.placesNear(x - radius, z - radius, x + radius, z + radius, 0));
         all.addAll(county.hideoutsNear(x - radius, z - radius, x + radius, z + radius, 0));
         return all.stream()
-                .filter(p -> type == null || p.type.name().equalsIgnoreCase(type) || p.variant.equalsIgnoreCase(type))
+                .filter(p -> type == null || p.type.name().equalsIgnoreCase(type) || bare(p.variant).equalsIgnoreCase(type))
                 .sorted(Comparator.comparingDouble(p -> Math.hypot(p.centreX() - at.x, p.centreZ() - at.z)))
                 .toList();
     }
@@ -103,16 +118,20 @@ public final class CountyCommand {
         if (county == null || src.getEntity() == null) {
             return 0;
         }
+        // a named spot of the plan (stadium, mercy, airport, lab, kingsbridge, ...) goes straight there
+        Place spot = county.named(type.toLowerCase(java.util.Locale.ROOT));
+        List<Place> list = spot != null ? List.of(spot) : List.of();
         // rare kinds (a naval wharf, one port in eight) can be far off: look wider until one turns up
-        List<Place> list = List.of();
         for (int r : GO_REACH) {
-            list = nearest(county, src.getPosition(), type, r);
             if (!list.isEmpty()) {
                 break;
             }
+            list = nearest(county, src.getPosition(), type, r);
         }
         if (list.isEmpty()) {
-            src.sendFailure(Component.literal("No " + type + " within " + GO_REACH[GO_REACH.length - 1] + " blocks."));
+            List<String> names = county.names();
+            src.sendFailure(Component.literal("No " + type + " within " + GO_REACH[GO_REACH.length - 1] + " blocks."
+                    + (names.isEmpty() ? "" : " Named places: " + String.join(", ", names))));
             return 0;
         }
         Place p = list.get(0);
