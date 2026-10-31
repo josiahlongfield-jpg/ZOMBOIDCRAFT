@@ -36,7 +36,9 @@ public enum Skill {
     /** Cutting through steel with a propane torch (building/DigRules). */
     METALWORKING("Metalworking"),
     /** Flying the jets and the helicopter (world/cars/AirReadiness): steadier hands and softer landings. */
-    PILOTING("Piloting");
+    PILOTING("Piloting"),
+    /** Patching clothes: stitches that hold, sewn quicker (clothing/Tailoring). */
+    TAILORING("Tailoring");
 
     public static final int MAX_LEVEL = 10;
 

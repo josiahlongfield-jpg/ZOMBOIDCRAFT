@@ -279,10 +279,12 @@ public final class ZcCommand {
             ctx.getSource().sendFailure(Component.literal("The mod's weather is off (weather.enabled)"));
             return 0;
         }
+        double air = com.zomboidcraft.world.weather.Climate.airTemp(ctx.getSource().getLevel(),
+                net.minecraft.core.BlockPos.containing(ctx.getSource().getPosition()));
         ctx.getSource().sendSuccess(() -> Component.literal(String.format(
-                "Weather: %s for %d more seconds | rain %.2f thunder %.2f fog %.2f wind %.2f moon %.2f hail %.2f",
+                "Weather: %s for %d more seconds | rain %.2f thunder %.2f fog %.2f wind %.2f moon %.2f hail %.2f | air %.0f°C",
                 WeatherDirector.kind().id, WeatherDirector.secondsLeft(), w.rain(), w.thunder(), w.fog(), w.wind(),
-                w.moon(), w.hail())), false);
+                w.moon(), w.hail(), air)), false);
         return 1;
     }
 

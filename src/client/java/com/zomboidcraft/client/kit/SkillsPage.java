@@ -64,6 +64,13 @@ final class SkillsPage {
                     new Perk(10, "Full control authority, no wobble")),
                     l -> "Right now: " + Math.round(65 + 3.5 * l) + "% control authority, touch down at up to "
                             + String.format(Locale.ROOT, "%.1f", 7 + 0.3 * l) + " m/s."),
+            new Info(Skill.TAILORING, "Survival", "Patch holes in your clothes, and rip old ones into strips. Needs a sewing kit, "
+                    + "thread and something to sew on.", List.of(
+                    new Perk(0, "A quarter of patches pull loose at first"),
+                    new Perk(0, "Each level, fewer pull loose and sewing goes 5% quicker"),
+                    new Perk(10, "Stitches always hold, and a patch takes half the time")),
+                    l -> "Right now: " + Math.round(Math.max(0, 25 - 2.5f * l)) + "% of patches pull loose, "
+                            + secs(Math.round(100 * (1 - 0.05f * l))) + " a patch."),
             new Info(Skill.SPRINTING, "Agility", "Run. Long sprints teach the most.", List.of(
                     new Perk(0, "A tenth less tiring each level"),
                     new Perk(10, "Only 1.5 times as tiring as walking, down from 2.5")),

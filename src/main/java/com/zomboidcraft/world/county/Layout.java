@@ -267,6 +267,18 @@ final class Layout {
 
     private Place fixedPlace(Plan.Spot s) {
         long h = Noise.hash(seed ^ 0x9A1AL, s.x(), s.z());
+        if (s.id().equals("restarea")) {
+            // the Pine Ridge Welcome Center: astride I-95, its gates on the interstate
+            return county.fit(PlaceType.LANDMARK, "restarea", s.x(), s.z(), RestArea.W, RestArea.D, h);
+        }
+        if (s.id().equals("tollplaza")) {
+            // the Westgate Toll Plaza: across I-88, its gates on the turnpike
+            return county.fit(PlaceType.LANDMARK, "tollplaza", s.x(), s.z(), TollPlaza.W, TollPlaza.D, h);
+        }
+        if (s.id().equals("interchange")) {
+            // the Millbrook Interchange: the cloverleaf where I-495 crosses I-88, its gates on both
+            return county.fit(PlaceType.LANDMARK, "interchange", s.x(), s.z(), Interchange.S, Interchange.S, h);
+        }
         if (s.id().equals("stadium")) {
             return lot(s, PlaceType.LANDMARK, "stadium", 6, 7, h);
         }

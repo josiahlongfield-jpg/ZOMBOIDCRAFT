@@ -1,0 +1,81 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hw_booth_steel": "zomboidcraft:block/city/hw_booth_steel",
+    "st_galv": "zomboidcraft:block/city/st_galv",
+    "particle": "zomboidcraft:block/city/hw_booth_steel"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        14
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hw_booth_steel"
+        },
+        "south": {
+          "texture": "#hw_booth_steel",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#hw_booth_steel",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#hw_booth_steel",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#hw_booth_steel",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#hw_booth_steel",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        13,
+        11.5
+      ],
+      "to": [
+        16,
+        14,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_galv"
+        },
+        "south": {
+          "texture": "#st_galv"
+        },
+        "east": {
+          "texture": "#st_galv",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#st_galv",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#st_galv"
+        },
+        "down": {
+          "texture": "#st_galv"
+        }
+      }
+    }
+  ]
+}

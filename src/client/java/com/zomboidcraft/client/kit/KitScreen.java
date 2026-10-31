@@ -485,6 +485,13 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
             inspect(hover.slot());
             return true;
         }
+        // patch a piece of clothing, or rip it into strips (clothing/Tailoring)
+        if ((event.key() == InputConstants.KEY_P || event.key() == InputConstants.KEY_T) && hover != null && hover.slot() >= 0
+                && com.zomboidcraft.clothing.Clothes.of(hover.card()) != null) {
+            int action = event.key() == InputConstants.KEY_P ? com.zomboidcraft.clothing.Tailoring.PATCH : com.zomboidcraft.clothing.Tailoring.RIP;
+            button(com.zomboidcraft.combat.Bench.TAILOR + action * com.zomboidcraft.clothing.Tailoring.SLOTS + hover.slot());
+            return true;
+        }
         if (page == Page.SUPPLIES && supplies.keyPressed(event)) return true;
         return super.keyPressed(event);
     }

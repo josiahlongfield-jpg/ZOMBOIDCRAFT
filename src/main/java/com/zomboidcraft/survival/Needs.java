@@ -141,6 +141,18 @@ public final class Needs {
         if (player instanceof ServerPlayer sp) holdFoodBar(sp);
     }
 
+    /** Throwing up: the stomach empties (hunger back up) and the calories it held are gone. */
+    public static void lose(ServerPlayer player, float hunger, float kcal) {
+        if (on()) Nutrition.set(player, Nutrition.get(player).withHunger(Nutrition.get(player).hunger() + hunger).plus(-kcal, 0, 0, 0));
+        else player.getFoodData().setFoodLevel(Math.max(0, player.getFoodData().getFoodLevel() - 4));
+    }
+
+    /** Something small swallowed that isn't a food item (glucose gel): a little off hunger, its calories banked. */
+    public static void gain(ServerPlayer player, float hunger, float kcal, float carbs, float fats, float proteins) {
+        if (on()) Nutrition.set(player, Nutrition.get(player).withHunger(Nutrition.get(player).hunger() - hunger).plus(kcal, carbs, fats, proteins));
+        else player.getFoodData().eat(2, 0.3f);
+    }
+
     /** Endurance comes back quicker with Fitness, slower when very hungry or starving (Stamina). */
     public static float enduranceRegen(Player player) {
         float f = 1f + 0.06f * (Skills.level(player, Skill.FITNESS) - 5);

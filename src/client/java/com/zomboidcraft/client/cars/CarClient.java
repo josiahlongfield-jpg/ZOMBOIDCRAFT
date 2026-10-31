@@ -100,6 +100,8 @@ public final class CarClient {
                 // a lift's call button, or the floor panel inside a car
             } else if (com.zomboidcraft.client.trains.TrainClient.interact(client, hit)) {
                 // a station's call button: the train's on its way
+            } else if (com.zomboidcraft.client.survival.DownedClient.interact(client, hit)) {
+                // a downed friend: revive them, or lift them onto a stretcher
             } else if (com.zomboidcraft.client.npc.NpcClient.interact(client, hit)) {
                 // a companion: follow me, or wait here
             } else if (com.zomboidcraft.client.kit.FilesClient.interact(client, hit)) {
