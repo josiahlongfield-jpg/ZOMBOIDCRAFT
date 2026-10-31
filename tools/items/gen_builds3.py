@@ -472,6 +472,85 @@ def wave2b():
                 f'block.{NS}.wood_ladder': 'Wooden Ladder', f'block.{NS}.wood_window_shutters': 'Window Shutters'})
 
 
+# ================================================================== wave 2c: reinforced wall, fence and gate, hidden door
+# refs/building/wood: reinforced-walls (boarded storefronts: planks nailed crossways over the old boards, heavy nails),
+# wooden-gates (a braced board gate in a post-and-rail fence), hidden-doors (a panel door that is part of the panelling).
+
+
+def build_reinforced(damage):
+    """A wooden wall with planks nailed crossways over both faces and a plank along the top and foot of each."""
+    def build(m):
+        build_wall(damage)(m)
+        for z, out in ((-0.9, -1), (16.9, 1)):
+            for y0 in (0.6, 13.4):
+                m.box([0, y0, min(z, z - 0.9 * out)], [16, y0 + 2.0, max(z, z - 0.9 * out)], 'fresh')
+            zc = z - 0.45 * out
+            m.seg((1.0, 2.6), (15.0, 13.4), 2.2, 0.9, 'fresh', z=zc, over=0.0)
+            if damage < 2:
+                m.seg((1.0, 13.4), (15.0, 2.6), 2.2, 0.9, 'fresh', z=zc - 0.4 * out, over=0.0)
+            for x, y in ((1.6, 1.6), (14.4, 1.6), (1.6, 14.4), (14.4, 14.4), (8.0, 8.0), (4.5, 1.6), (11.5, 14.4)):
+                zf = z if out < 0 else z
+                m.box([x - 0.22, y - 0.22, min(zf, zf + 0.15 * out)], [x + 0.22, y + 0.22, max(zf, zf + 0.15 * out)], 'nail')
+    return build
+
+
+def build_hidden_open(m):
+    """The hidden door swung back against its jamb: a boarded panel three thick, board ends showing."""
+    m.box([0.0, 0, 0], [0.4, 16, 16], 'board')
+    for i in range(4):
+        m.box([0.4, i * 4.0, 0], [2.6, i * 4.0 + 3.88, 16], 'board')
+    m.box([2.6, 0, 0], [3.0, 16, 16], 'board')
+    for y in (2.0, 13.0):
+        m.box([2.9, y, 14.6], [3.1, y + 1.0, 15.6], 'iron')                # the concealed hinges, seen only open
+
+
+def wave2c():
+    for d in range(3):
+        block_model(build_reinforced(d), f'wood_wall_reinforced_{d}', 0.35 + 0.15 * d, px=5)
+    block_model(build_hidden_open, 'wood_hidden_door_open', 0.3)
+    plank_tex('wood_fence', '#9d8461', '#62503a', boards=2)
+    models = ASSETS / 'models/block/building'
+    tex = {'texture': f'{NS}:block/building/wood_fence', 'particle': f'{NS}:block/building/wood_fence'}
+    for part in ('fence_post', 'fence_side', 'fence_inventory'):
+        M.dump({'parent': f'minecraft:block/{part}', 'textures': tex}, models / f'wood_{part}.json')
+    for part in ('', '_open', '_wall', '_wall_open'):
+        M.dump({'parent': f'minecraft:block/template_fence_gate{part}', 'textures': tex}, models / f'wood_gate{part}.json')
+    bs = ASSETS / 'blockstates'
+    M.dump(axis_states(None, [(f'damage={d}', f'wood_wall_reinforced_{0 if d < 2 else 1 if d < 5 else 2}') for d in range(8)]),
+           bs / 'wood_wall_reinforced.json')
+    parts = [{'apply': {'model': model('wood_fence_post')}}]
+    for f, y in (('north', 0), ('east', 90), ('south', 180), ('west', 270)):
+        parts.append({'when': {f: 'true'}, 'apply': {'model': model('wood_fence_side'), 'uvlock': True, **({'y': y} if y else {})}})
+    M.dump({'multipart': parts}, bs / 'wood_fence.json')
+    v = {}
+    for f, y in (('south', 0), ('west', 90), ('north', 180), ('east', 270)):
+        for wall in ('false', 'true'):
+            for o in ('false', 'true'):
+                name = 'wood_gate' + ('_wall' if wall == 'true' else '') + ('_open' if o == 'true' else '')
+                v[f'facing={f},in_wall={wall},open={o}'] = {'model': model(name), 'uvlock': True, **({'y': y} if y else {})}
+    M.dump({'variants': v}, bs / 'wood_gate.json')
+    v = {}
+    for f, y in (('north', 0), ('east', 90), ('south', 180), ('west', 270)):
+        for half in ('lower', 'upper'):
+            v[f'facing={f},half={half},open=false'] = {'model': model('wood_wall_0'), **({'y': 90} if f in ('east', 'west') else {})}
+            v[f'facing={f},half={half},open=true'] = {'model': model('wood_hidden_door_open'), **({'y': y} if y else {})}
+    M.dump({'variants': v}, bs / 'wood_hidden_door.json')
+    loot = {'wood_wall_reinforced': ([('minecraft:oak_planks', 3)], False), 'wood_fence': ([('minecraft:oak_planks', 1)], False),
+            'wood_gate': ([('minecraft:oak_planks', 1), (f'{NS}:hinges', 1)], False),
+            'wood_hidden_door': ([('minecraft:oak_planks', 3), (f'{NS}:hinges', 1)], True)}
+    for block, (items, lower) in loot.items():
+        pools = []
+        for item, n in items:
+            cond = [{'condition': 'minecraft:survives_explosion'}]
+            if lower:
+                cond.append({'condition': 'minecraft:block_state_property', 'block': f'{NS}:{block}', 'properties': {'half': 'lower'}})
+            pools.append({'rolls': 1, 'entries': [{'type': 'minecraft:item', 'name': item,
+                          'functions': [{'function': 'minecraft:set_count', 'count': n}]}], 'conditions': cond})
+        (DATA / f'{NS}/loot_table/blocks/{block}.json').write_text(json.dumps({'type': 'minecraft:block', 'pools': pools}, indent=2) + '\n')
+    merge_lang({f'block.{NS}.wood_wall_reinforced': 'Reinforced Wooden Wall', f'block.{NS}.wood_fence': 'Wooden Fence',
+                f'block.{NS}.wood_gate': 'Wooden Gate', f'block.{NS}.wood_hidden_door': 'Wooden Wall'})
+
+
 # ================================================================== writing it out
 
 
@@ -553,6 +632,7 @@ def main():
         path.write_text(json.dumps(table, indent=2) + '\n')
     merge_lang({f'block.{NS}.{k}': v for k, v in NAMES.items()})
     wave2b()
+    wave2c()
 
 
 if __name__ == '__main__':

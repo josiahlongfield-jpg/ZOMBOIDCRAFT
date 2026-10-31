@@ -948,6 +948,8 @@ public final class ZcConfig {
         public int floorSagSeconds = 60;
         /** Blows shut window shutters stand before they give and leave the bare frame. */
         public int shutterHits = 12;
+        /** How many times a plain wooden wall's blows a reinforced one stands. */
+        public double reinforcedWallFactor = 2.0;
         /** How many wooden posts stand one on another. */
         public int postStack = 3;
         /** Furniture weight: kilograms at or over these are medium (table, bed, sofa) and large (wardrobe, counter, fridge). */

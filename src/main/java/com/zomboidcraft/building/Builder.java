@@ -113,6 +113,12 @@ public final class Builder {
             case LADDER -> "Nailing up a ladder";
             case ROOF -> "Shingling the roof";
             case SHUTTERS -> "Hanging shutters";
+            case REINFORCE -> "Reinforcing the wall";
+            case PADLOCK -> "Fitting a hasp and padlock";
+            case WOOD_FENCE -> "Putting up fence";
+            case WOOD_GATE -> "Hanging a gate";
+            case HIDDEN_DOOR -> "Building a hidden door";
+            case WATCHTOWER -> "Raising a lookout tower";
         };
     }
 
@@ -120,7 +126,7 @@ public final class Builder {
         return switch (build) {
             case METAL_SHEET, WELD_SHEET -> SoundEvents.FIRECHARGE_USE;
             case SANDBAGS -> SoundEvents.SHOVEL_FLATTEN.value();
-            case BOARD, PLANTER, SPIKED_WALL, CRATE, WALL_FRAME, WOOD_WALL, WINDOW_FRAME, DOOR_FRAME, WOOD_DOOR, POST, FLOOR, WOOD_STAIRS, LADDER, ROOF, SHUTTERS -> SoundEvents.WOOD_HIT;
+            case BOARD, PLANTER, SPIKED_WALL, CRATE, WALL_FRAME, WOOD_WALL, WINDOW_FRAME, DOOR_FRAME, WOOD_DOOR, POST, FLOOR, WOOD_STAIRS, LADDER, ROOF, SHUTTERS, REINFORCE, PADLOCK, WOOD_FENCE, WOOD_GATE, HIDDEN_DOOR, WATCHTOWER -> SoundEvents.WOOD_HIT;
             default -> SoundEvents.ARMOR_EQUIP_LEATHER.value();
         };
     }
@@ -163,7 +169,11 @@ public final class Builder {
             } else if (build == Build.BOARD) {
                 place = place.setValue(BarricadeBlock.STRENGTH, BarricadeBlock.strengthFor(Skills.level(player, build.skill)));
             }
-            if (build.ordinal() >= Build.CRATE.ordinal()) {
+            if (build == Build.PADLOCK) {
+                WoodBlocks.padlock(level, pos, player);
+            } else if (build == Build.WATCHTOWER) {
+                WoodBlocks.tower(level, pos, looking);
+            } else if (build.ordinal() >= Build.CRATE.ordinal()) {
                 WoodBlocks.place(level, pos, place, build.skillLevel(player));
             } else {
                 level.setBlockAndUpdate(pos, place);
@@ -232,7 +242,7 @@ public final class Builder {
 
     private static SoundEvent doneSound(Build build) {
         return switch (build) {
-            case BOARD, CRATE, WALL_FRAME, WOOD_WALL, WINDOW_FRAME, DOOR_FRAME, WOOD_DOOR, POST, FLOOR, WOOD_STAIRS, LADDER, ROOF, SHUTTERS -> ModSounds.HAMMER_NAIL;
+            case BOARD, CRATE, WALL_FRAME, WOOD_WALL, WINDOW_FRAME, DOOR_FRAME, WOOD_DOOR, POST, FLOOR, WOOD_STAIRS, LADDER, ROOF, SHUTTERS, REINFORCE, WOOD_FENCE, WOOD_GATE, HIDDEN_DOOR, WATCHTOWER -> ModSounds.HAMMER_NAIL;
             case METAL_SHEET -> SoundEvents.ANVIL_PLACE;
             case TRIPWIRE -> SoundEvents.CHAIN_PLACE;
             case SANDBAGS -> SoundEvents.SAND_PLACE;

@@ -133,7 +133,10 @@ public class BaseMoveTest implements FabricClientGameTest {
             Skills.addXp(p, Skill.CARPENTRY, Skill.xpForLevel(6));
             p.getInventory().clearContent();
             p.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ModItems.HAMMER));
-            p.getInventory().add(new ItemStack(BuiltInRegistries.ITEM.getValue(com.zomboidcraft.ZomboidCraft.id("hinges")), 3));
+            p.getInventory().add(new ItemStack(BuiltInRegistries.ITEM.getValue(com.zomboidcraft.ZomboidCraft.id("hinges")), 6));
+            p.getInventory().add(new ItemStack(BuiltInRegistries.ITEM.getValue(com.zomboidcraft.ZomboidCraft.id("padlock")), 1));
+            p.getInventory().add(new ItemStack(BuiltInRegistries.ITEM.getValue(com.zomboidcraft.ZomboidCraft.id("screws")), 4));
+            Skills.addXp(p, Skill.CARPENTRY, Skill.xpForLevel(8));
             p.getInventory().add(new ItemStack(net.minecraft.world.item.Items.OAK_PLANKS, 64));
             p.getInventory().add(new ItemStack(net.minecraft.world.item.Items.OAK_PLANKS, 64));
             for (int i = 0; i < 3; i++) {
@@ -217,6 +220,7 @@ public class BaseMoveTest implements FabricClientGameTest {
             return b.toString();
         });
         LOG.info("ZCBASE wave 2b:{}", b2);
+        wave2c(ctx, sp);
         // posts and a floor out over open ground at z = -3
         standYard(ctx, sp, 11, -6.5, 15f, -5f);
         build(ctx, sp, Build.POST, yard.offset(8, -1, -3), Direction.UP, Direction.SOUTH);
@@ -250,6 +254,69 @@ public class BaseMoveTest implements FabricClientGameTest {
             LOG.info("ZCBASE floor sag {}s:{}", (t + 1) * 2 + 1, sag);
             frame(ctx, "floor-sag-" + k);
         }
+    }
+
+    /**
+     * Wave 2c: two walls reinforced, the door padlocked (it won't open by hand; its key unlocks it), a fence run with a
+     * gate, a hidden door at the end of the wall run, and a lookout tower.
+     */
+    private static void wave2c(ClientGameTestContext ctx, TestSingleplayerContext sp) {
+        standYard(ctx, sp, 3, 0.5, 0f, 25f);
+        build(ctx, sp, Build.REINFORCE, yard.offset(0, 0, 4), Direction.NORTH, Direction.SOUTH);
+        build(ctx, sp, Build.REINFORCE, yard.offset(3, 0, 4), Direction.NORTH, Direction.SOUTH);
+        sp.getServer().runOnServer(s -> {
+            BlockState d = s.overworld().getBlockState(yard.offset(1, 0, 4));
+            if (d.is(WoodBlocks.DOOR)) s.overworld().setBlockAndUpdate(yard.offset(1, 0, 4), d.setValue(net.minecraft.world.level.block.DoorBlock.OPEN, false));
+        });
+        build(ctx, sp, Build.PADLOCK, yard.offset(1, 0, 4), Direction.NORTH, Direction.SOUTH);
+        build(ctx, sp, Build.HIDDEN_DOOR, yard.offset(6, -1, 4), Direction.UP, Direction.SOUTH);
+        standYard(ctx, sp, 3, -2.5, 0f, 8f);
+        frame(ctx, "reinforced-padlocked-hidden");
+        String lock = sp.getServer().computeOnServer(s -> {
+            ServerPlayer p = player(s);
+            ServerLevel level = s.overworld();
+            BlockPos door = yard.offset(1, 0, 4);
+            var hit = new net.minecraft.world.phys.BlockHitResult(net.minecraft.world.phys.Vec3.atCenterOf(door), Direction.NORTH, door, false);
+            StringBuilder b = new StringBuilder(" fitted " + level.getBlockState(door));
+            level.getBlockState(door).useWithoutItem(level, p, hit);
+            b.append(" | by hand: open=").append(level.getBlockState(door).getValue(net.minecraft.world.level.block.DoorBlock.OPEN));
+            ItemStack key = ItemStack.EMPTY;
+            for (ItemStack st : p.getInventory()) {
+                if (BuiltInRegistries.ITEM.getKey(st.getItem()).getPath().equals("padlock_key")) key = st;
+            }
+            b.append(" | key ").append(key.getHoverName().getString());
+            level.getBlockState(door).useItemOn(key, level, p, InteractionHand.MAIN_HAND, hit);
+            b.append(" | after key: locked=").append(level.getBlockState(door).getValue(WoodBlocks.LockDoor.LOCKED));
+            level.getBlockState(door).useWithoutItem(level, p, hit);
+            b.append(" | by hand: open=").append(level.getBlockState(door).getValue(net.minecraft.world.level.block.DoorBlock.OPEN));
+            BlockPos hidden = yard.offset(6, 0, 4);
+            level.getBlockState(hidden).useWithoutItem(level, p, new net.minecraft.world.phys.BlockHitResult(net.minecraft.world.phys.Vec3.atCenterOf(hidden), Direction.NORTH, hidden, false));
+            b.append(" | hidden ").append(level.getBlockState(hidden)).append(" / ").append(level.getBlockState(hidden.above()));
+            b.append(" | reinforced hits ").append(WoodBlocks.wallHits(level.getBlockState(yard.offset(0, 0, 4))))
+                    .append(" vs plain ").append(WoodBlocks.wallHits(level.getBlockState(yard.offset(2, 0, 4))));
+            return b.toString();
+        });
+        LOG.info("ZCBASE padlock:{}", lock);
+        frame(ctx, "unlocked-open-hidden-open");
+        // a fence run with a gate in it
+        standYard(ctx, sp, 2, -2.5, 180f, 25f);
+        for (int x = 0; x <= 4; x++) build(ctx, sp, x == 2 ? Build.WOOD_GATE : Build.WOOD_FENCE, yard.offset(x, -1, -5), Direction.UP, Direction.NORTH);
+        standYard(ctx, sp, 2, -1.5, 180f, 15f);
+        frame(ctx, "fence-and-gate");
+        // the lookout tower, three by three, north of the fence
+        standYard(ctx, sp, 0, -6.5, 180f, 25f);
+        build(ctx, sp, Build.WATCHTOWER, yard.offset(-1, -1, -8), Direction.UP, Direction.NORTH);
+        standYard(ctx, sp, 5, -5.5, 127f, -12f);
+        frame(ctx, "lookout-tower");
+        String tower = sp.getServer().computeOnServer(s -> {
+            StringBuilder b = new StringBuilder();
+            b.append(" leg=").append(s.overworld().getBlockState(yard.offset(-1, 2, -8)).getBlock());
+            b.append(" deck=").append(s.overworld().getBlockState(yard.offset(0, 3, -9)).getBlock());
+            b.append(" rail=").append(s.overworld().getBlockState(yard.offset(1, 4, -10)).getBlock());
+            b.append(" ladder=").append(s.overworld().getBlockState(yard.offset(-1, 3, -7)).getBlock());
+            return b.toString();
+        });
+        LOG.info("ZCBASE tower:{}", tower);
     }
 
     private static void standYard(ClientGameTestContext ctx, TestSingleplayerContext sp, double x, double z, float yaw, float pitch) {
