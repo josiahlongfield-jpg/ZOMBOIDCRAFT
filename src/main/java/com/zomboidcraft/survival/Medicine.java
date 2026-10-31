@@ -46,6 +46,7 @@ public final class Medicine {
     public static void register() {
         Ailments.register();
         WornMedical.register();
+        Mood.register();
         ServerLivingEntityEvents.AFTER_DAMAGE.register((entity, source, baseDamage, damage, blocked) -> {
             if (entity instanceof ServerPlayer player && !blocked && damage > 0 && on(player)) {
                 hurt(player, source, damage);
@@ -282,6 +283,10 @@ public final class Medicine {
             if (nausea > 50 && random.nextInt(30) == 0) vomit(player, level, m, stats);
         }
         if (get(m, "weak") > 0) effect(player, MobEffects.WEAKNESS, 0);
+        // drink wears off a point every five seconds; well drunk, the world sways
+        int drunk = get(m, "drunk");
+        if (drunk > 0 && second % 5 == 0) put(m, "drunk", drunk - 1);
+        if (drunk > 60 && random.nextInt(20) == 0) effect(player, MobEffects.NAUSEA, 0, 100);
     }
 
     private static void vomit(ServerPlayer player, ServerLevel level, Map<String, Integer> m, SurvivalStats stats) {
@@ -361,6 +366,8 @@ public final class Medicine {
     public static float painShake(Player player) {
         int pain = pain(player);
         float shake = pain >= 60 ? 0.35f : pain >= 30 ? 0.15f : 0;
+        int drunk = Ailments.get(player, "drunk");
+        shake += drunk >= 60 ? 0.3f : drunk >= 30 ? 0.12f : 0;
         return Ailments.get(player, "beta") > 0 ? shake * 0.4f : shake;
     }
 
@@ -384,6 +391,13 @@ public final class Medicine {
         if (MedSpecs.carries(player, "knee_brace")) k *= 0.5;
         if (Ailments.get(player, "wrap", leg) > 0) k *= 0.8;
         return k;
+    }
+
+    /** Zomboid's Drunk: each strength point of a drink adds 12 (0-100). */
+    public static void drink(ServerPlayer player, int strength) {
+        Map<String, Integer> m = Ailments.edit(player);
+        add(m, "drunk", 12 * strength, 100);
+        Ailments.save(player, m);
     }
 
     /** Rotten food, raw meat, too many pills: queasy, then sick. Anti-nausea pills stop it for a while. */

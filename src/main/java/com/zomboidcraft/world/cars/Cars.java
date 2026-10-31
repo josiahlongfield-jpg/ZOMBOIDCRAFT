@@ -38,6 +38,12 @@ public final class Cars {
                     .sized(1.2f, 0.8f).clientTrackingRange(10).updateInterval(2).fireImmune().noLootTable()
                     .build(DEBRIS_KEY));
 
+    private static final ResourceKey<EntityType<?>> HOIST_KEY = ResourceKey.create(Registries.ENTITY_TYPE, ZomboidCraft.id("car_hoist"));
+    public static final EntityType<CarHoist> HOIST = Registry.register(BuiltInRegistries.ENTITY_TYPE, HOIST_KEY,
+            EntityType.Builder.<CarHoist>of(CarHoist::new, MobCategory.MISC)
+                    .sized(0.5f, 0.5f).clientTrackingRange(8).updateInterval(1).fireImmune().noLootTable()
+                    .build(HOIST_KEY));
+
     private static final ResourceKey<Block> HULL_KEY = ResourceKey.create(Registries.BLOCK, ZomboidCraft.id("car_hull"));
     public static final Block HULL = Registry.register(BuiltInRegistries.BLOCK, HULL_KEY, new CarHull(BlockBehaviour.Properties.of()
             .strength(-1f, 3600000f).noOcclusion().noLootTable().noTerrainParticles()

@@ -24,8 +24,10 @@ import net.minecraft.world.level.storage.ValueOutput;
  * ("raw", as bought, or "toon", painted like the guns) are synced and saved.
  * <p>
  * Her brain (NpcBrain) makes her a companion: she follows the player who last spoke to her (the interact key toggles
- * follow and wait), keeps clear of zombies and runs from any that get close, picks up a gun she sees lying about and
- * fights zombies with it alongside you. Her gun never runs dry, but she stops to reload each magazine.
+ * follow and wait), keeps clear of zombies and runs from any that get close, and fights zombies alongside you with a
+ * gun she has rounds for: real ones from her pack (or endless, by setting), reloading each magazine. She looks after
+ * herself (NpcCare): eats, patches herself up, reads her skill books, gathers what she needs walking with you and puts on
+ * better kit, and asks you first about anything you might want.
  * <p>
  * Her mind (NpcMind) gives her needs, feelings, traits and a diary: hungry, tired, hurt or frightened she keeps up slower,
  * aims shakier and runs sooner, goes for food and drink she sees lying about, and says how she's doing now and then.
@@ -48,6 +50,8 @@ public class NpcEntity extends PathfinderMob {
     /** How she feels about the player she's with (NpcBond.packed): trust, affection, attraction and the moods they bring. */
     private static final EntityDataAccessor<Integer> BOND = SynchedEntityData.defineId(NpcEntity.class, EntityDataSerializers.INT);
     /** Killed by a shotgun or a blast: she's thrown back as she falls. */
+    /** What she found and is asking you about (NpcCare), for the talk page: "" when nothing. */
+    private static final EntityDataAccessor<String> OFFER = SynchedEntityData.defineId(NpcEntity.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<Boolean> BLASTED = SynchedEntityData.defineId(NpcEntity.class, EntityDataSerializers.BOOLEAN);
     /** How long she lies where she fell before she's gone (her death clip runs about six seconds). */
     private static final int DEATH_TICKS = 20 * 8;
@@ -62,7 +66,7 @@ public class NpcEntity extends PathfinderMob {
     public final NpcMind mind = new NpcMind();
     public final NpcSkills skills = new NpcSkills();
     public final NpcWardrobe wardrobe = new NpcWardrobe();
-    public final NpcWork work = new NpcWork();
+    public final NpcWork work = new NpcWork(this);
     public final NpcBond bond = new NpcBond();
     private boolean mindLoaded;
 
@@ -131,8 +135,9 @@ public class NpcEntity extends PathfinderMob {
         goalSelector.addGoal(1, new NpcBrain.Flee(this));
         goalSelector.addGoal(2, new NpcBrain.Shoot(this));
         goalSelector.addGoal(3, new NpcWork.Sleep(this));
-        goalSelector.addGoal(4, new NpcBrain.TakeGun(this));
+        goalSelector.addGoal(4, new NpcCare.LookAfter(this));
         goalSelector.addGoal(5, new NpcBrain.Forage(this));
+        goalSelector.addGoal(5, new NpcCare.Gather(this));
         goalSelector.addGoal(6, new NpcWork.Work(this));
         goalSelector.addGoal(7, new NpcWork.Evening(this));
         goalSelector.addGoal(8, new NpcBrain.Follow(this));
@@ -153,6 +158,7 @@ public class NpcEntity extends PathfinderMob {
         builder.define(MOOD, 0);
         builder.define(BOND, 0);
         builder.define(BLASTED, false);
+        builder.define(OFFER, "");
     }
 
     /** The clothes she has off. */
@@ -178,6 +184,11 @@ public class NpcEntity extends PathfinderMob {
     /** Her fear, morale, tiredness and pain, each 0..15, for her posture on the client. */
     public int moodBits() {
         return entityData.get(MOOD);
+    }
+
+    /** What she found and is asking you about ("" when nothing). */
+    public String offer() {
+        return entityData.get(OFFER);
     }
 
     /** How she feels about the player she's with, packed (NpcBond.packed). */
@@ -308,6 +319,7 @@ public class NpcEntity extends PathfinderMob {
             bond.tick(this, server);
             wardrobe.tick(this, server);
             entityData.set(BOND, bond.packed(this, server.getGameTime()) | wardrobe.bits(server.getGameTime()));
+            entityData.set(OFFER, NpcCare.pendingName(this));
             int q = 0, k = 0;
             for (NpcMind.Need n : new NpcMind.Need[] {NpcMind.Need.FEAR, NpcMind.Need.MORALE, NpcMind.Need.TIRED, NpcMind.Need.PAIN}) {
                 q |= Math.min(15, Math.round(mind.get(n) * 15f / 100f)) << (4 * k++);
@@ -428,7 +440,12 @@ public class NpcEntity extends PathfinderMob {
         // and whatever she was carrying
         if (level() instanceof ServerLevel server) {
             for (net.minecraft.world.item.ItemStack s : work.pack.removeAllItems()) {
+                NpcCare.clear(s);
                 spawnAtLocation(server, s);
+            }
+            if (!work.bag.isEmpty()) {
+                spawnAtLocation(server, work.bag);
+                work.bag = net.minecraft.world.item.ItemStack.EMPTY;
             }
         }
         super.die(source);
@@ -456,6 +473,9 @@ public class NpcEntity extends PathfinderMob {
         output.putString("npcSearched", work.saveSearched());
         if (work.home != null) {
             output.putString("npcHome", work.home.getX() + " " + work.home.getY() + " " + work.home.getZ());
+        }
+        if (!work.bag.isEmpty()) {
+            output.store("npcBag", net.minecraft.world.item.ItemStack.CODEC, work.bag);
         }
         net.minecraft.world.ContainerHelper.saveAllItems(output, work.pack.getItems());
         if (leader != null) {
@@ -501,6 +521,8 @@ public class NpcEntity extends PathfinderMob {
         } catch (NumberFormatException e) {
             work.home = null;
         }
+        work.bag = input.read("npcBag", net.minecraft.world.item.ItemStack.CODEC).orElse(net.minecraft.world.item.ItemStack.EMPTY);
+        work.resize(this, NpcCare.BASE_PACK + NpcCare.bagSlots(work.bag));
         net.minecraft.world.ContainerHelper.loadAllItems(input, work.pack.getItems());
         String id = input.getStringOr("npcLeader", "");
         try {

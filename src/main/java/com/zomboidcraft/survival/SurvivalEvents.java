@@ -121,6 +121,7 @@ public final class SurvivalEvents {
         Needs.tick(player, second);
         Injuries.tick(player, second);
         Medicine.tick(player, second);
+        Mood.tick(player, second);
         Downs.tick(player, second);
     }
 

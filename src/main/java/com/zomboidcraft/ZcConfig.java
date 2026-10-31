@@ -196,6 +196,10 @@ public final class ZcConfig {
         public double startAttraction = 35;
         /** How far each one is rolled either way, so every companion is a bit different. */
         public double startSpread = 10;
+        /** Her gun never runs dry (the old way); off, she loads real rounds from her pack and goes looking for more. */
+        public boolean endlessAmmo = false;
+        /** The share of your experience a bonded companion picks up watching you work nearby (0 turns it off). */
+        public double watchShare = 0.25;
     }
 
     public Start start = new Start();
@@ -733,6 +737,8 @@ public final class ZcConfig {
         public double hotwireSeconds = 8;
         public double hotwireFail = 0.25;
         public double hotwireWear = 0.8;
+        /** How fast car parts wear from driving and crashes (CarParts): 1 is the plan's pace, 0 turns wear off. */
+        public double partWear = 1.0;
         /** How big a player is while in a car or aircraft (1 = full size): a little smaller so arms and legs stay inside the cabin. */
         public double carRiderScale = 0.85;
     }
