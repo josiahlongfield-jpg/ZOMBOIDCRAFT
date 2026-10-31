@@ -137,6 +137,10 @@ public final class Tailoring {
             tell(player, "That won't rip into anything useful.");
             return;
         }
+        if (holding(stack)) {
+            tell(player, "Empty it first.");
+            return;
+        }
         int ticks = g.cloth() == Garment.Cloth.FABRIC ? 60 : 100;
         TimedActions.start(player, "rip:" + slot, "Ripping", ticks, p -> rip(p, slot));
     }
@@ -145,7 +149,7 @@ public final class Tailoring {
         Slot from = player.inventoryMenu.slots.get(slot);
         ItemStack stack = from.getItem();
         Garment g = Clothes.of(stack);
-        if (g == null || !rippable(g)) return;
+        if (g == null || !rippable(g) || holding(stack)) return;
         int places = 0;
         for (Spot s : g.covers()) places += s.regions().length;
         ClothWear wear = ClothWear.of(stack);
@@ -165,6 +169,12 @@ public final class Tailoring {
         Skills.addXp(player, Skill.TAILORING, 1);
         player.inventoryMenu.broadcastChanges();
         player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.WOOL_BREAK, SoundSource.PLAYERS, 0.8f, 1f);
+    }
+
+    /** A rig with gear still in its pouches: ripping it would lose what's in it. */
+    private static boolean holding(ItemStack stack) {
+        var contents = stack.get(net.minecraft.core.component.DataComponents.CONTAINER);
+        return contents != null && contents.nonEmptyItemCopyStream().findAny().isPresent();
     }
 
     private static ClothWear.Patch patchOf(ItemStack strip) {

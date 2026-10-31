@@ -38,7 +38,7 @@ public class ClothingLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
             ClothingSlot.LEG_GUARDS, ClothingSlot.FEET, ClothingSlot.HANDS, ClothingSlot.JACKET, ClothingSlot.ARM_GUARDS,
             ClothingSlot.VEST, ClothingSlot.NECK, ClothingSlot.FACE, ClothingSlot.EYES, ClothingSlot.HAT);
 
-    /** A stack that draws one garment's model for one body part, per garment and part. */
+    /** A stack that draws one garment's model for one body part, per garment, part and camo. */
     private static final Map<String, ItemStack> PART_STACKS = new HashMap<>();
 
     private final ItemModelResolver items;
@@ -77,7 +77,7 @@ public class ClothingLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
                 if (on == null || !on.visible) {
                     continue;
                 }
-                items.updateForLiving(piece, stack(garment.id(), part), ItemDisplayContext.NONE, player);
+                items.updateForLiving(piece, stack(garment.id(), part, worn.get(com.zomboidcraft.clothing.ClothingLoot.CAMO)), ItemDisplayContext.NONE, player);
                 if (piece.isEmpty()) {
                     continue;
                 }
@@ -96,6 +96,12 @@ public class ClothingLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
         }
     }
 
+    /** Whether this layer draws the piece (a rig is a bag too, and the bag layer leaves it to this one). */
+    public static boolean draws(ItemStack stack) {
+        Garment g = Clothes.of(stack);
+        return g != null && WornParts.PARTS.containsKey(g.id());
+    }
+
     /** How a belt widens (x, z) to sit over what's worn at the waist: trousers and shirts, not jackets or coats. */
     private static final float[] BARE = {1f, 1f}, OVER = {(4f + 0.55f) / 4f, (2f + 0.55f) / 2f};
 
@@ -103,10 +109,11 @@ public class ClothingLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
         return Clothes.of(ClothingSlot.LEGS.shown(player)) != null || Clothes.of(ClothingSlot.SHIRT.shown(player)) != null ? OVER : BARE;
     }
 
-    private static ItemStack stack(String id, String part) {
-        return PART_STACKS.computeIfAbsent(id + "/" + part, key -> {
+    private static ItemStack stack(String id, String part, @org.jetbrains.annotations.Nullable String camo) {
+        return PART_STACKS.computeIfAbsent(id + "/" + part + (camo == null ? "" : "@" + camo), key -> {
             ItemStack s = new ItemStack(Items.STICK);
-            s.set(DataComponents.ITEM_MODEL, ZomboidCraft.id("clothing/" + key));
+            s.set(DataComponents.ITEM_MODEL, ZomboidCraft.id("clothing/" + id + "/" + part));
+            if (camo != null) s.set(com.zomboidcraft.clothing.ClothingLoot.CAMO, camo);
             return s;
         });
     }
