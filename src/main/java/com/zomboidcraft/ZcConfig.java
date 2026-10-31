@@ -836,6 +836,19 @@ public final class ZcConfig {
         public double carAbandoned = 0.3;
         public double carWrecked = 0.18;
         public double carBurnt = 0.07;
+        /**
+         * Zomboid's Vehicle Spawn Rate: none, very_low, low, normal, high. The share of the map's parking spots that
+         * hold a road vehicle (customer cars at auto shops always stay); high fills every one.
+         */
+        public String carSpawnRate = "low";
+        /** Zomboid's Vehicle Easy Use: no keys needed and nothing locked. */
+        public boolean vehicleEasyUse = false;
+        /** Zomboid's General Condition: very_low, low, normal, high, very_high; moves every found car's condition. */
+        public String carCondition = "normal";
+        /** Zomboid's Car Damage on Impact: very_low, low, normal, high, very_high; how hard crashes wear the parts. */
+        public String carCrashDamage = "normal";
+        /** Zomboid's Damage From Being Hit By A Car: what a player takes when a car runs into them, times this. */
+        public double carHitDamage = 1;
         /** Car boots and the backs of vans hold loot (tools/cars/car_loot.py); off leaves them empty. */
         public boolean carLoot = true;
         /** The jets' top speed in km/h. Past about 300 the world can't load fast enough to keep up with them. */

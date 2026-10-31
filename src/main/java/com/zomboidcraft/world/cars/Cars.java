@@ -232,6 +232,40 @@ public final class Cars {
         }
     }
 
+    /** Whether a parking spot keeps its road vehicle at the world's Vehicle Spawn Rate (decided by the spot's seed). */
+    public static boolean spawnKept(long seed) {
+        double share = switch (ZcConfig.get().world.carSpawnRate) {
+            case "none" -> 0;
+            case "very_low" -> 0.35;
+            case "normal" -> 0.85;
+            case "high" -> 1;
+            default -> 0.65;
+        };
+        return new java.util.SplittableRandom(seed ^ 0x5A7E5L).nextDouble() < share;
+    }
+
+    /** Zomboid's General Condition, as points on every found car's condition. */
+    public static int conditionShift() {
+        return switch (ZcConfig.get().world.carCondition) {
+            case "very_low" -> -30;
+            case "low" -> -15;
+            case "high" -> 15;
+            case "very_high" -> 30;
+            default -> 0;
+        };
+    }
+
+    /** Zomboid's Car Damage on Impact, as a multiplier on crash wear. */
+    public static double crashDamage() {
+        return switch (ZcConfig.get().world.carCrashDamage) {
+            case "very_low" -> 0.25;
+            case "low" -> 0.5;
+            case "high" -> 2;
+            case "very_high" -> 4;
+            default -> 1;
+        };
+    }
+
     private Cars() {
     }
 }

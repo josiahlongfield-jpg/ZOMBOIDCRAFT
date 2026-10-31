@@ -927,7 +927,7 @@ public class CarProp extends Entity {
             return "It's dead. It won't start.";
         }
         rollKey();
-        String how = keyWhere == CarKeys.IGNITION ? "The key's in the ignition: C to start it."
+        String how = keyWhere == CarKeys.IGNITION || com.zomboidcraft.ZcConfig.get().world.vehicleEasyUse ? "The key's in the ignition: C to start it."
                 : CarKeys.carries(player, this) ? "You have the key: C to start it."
                 : hotwired ? "It's been hotwired: C to start it."
                 : "No key: C to hotwire it. The wiring looks " + wiring(carCondition()) + ".";
@@ -942,11 +942,13 @@ public class CarProp extends Entity {
         if (!aircraft() && !worn) {
             worn = true;
             java.util.Random rng = new java.util.Random(getUUID().getLeastSignificantBits());
-            setCondition(switch (variant()) {
+            int found = switch (variant()) {
                 case "usable" -> 55 + rng.nextInt(46);
                 case "abandoned" -> 15 + rng.nextInt(46);
                 default -> rng.nextInt(16);
-            });
+            };
+            // Zomboid's General Condition; wrecks and burnt-out shells stay ruins
+            setCondition("usable".equals(variant()) || "abandoned".equals(variant()) ? Math.clamp(found + Cars.conditionShift(), 0, 100) : found);
         }
         if (!aircraft() && !parts().isEmpty()) {
             return CarParts.overall(parts());
@@ -1005,7 +1007,7 @@ public class CarProp extends Entity {
             return true;
         }
         rollKey();
-        return keyWhere == CarKeys.IGNITION || hotwired || CarKeys.carries(player, this);
+        return keyWhere == CarKeys.IGNITION || hotwired || CarKeys.carries(player, this) || com.zomboidcraft.ZcConfig.get().world.vehicleEasyUse;
     }
 
     public boolean lightsOn() {
@@ -1703,6 +1705,9 @@ public class CarProp extends Entity {
         }
         for (LivingEntity hit : struck(m)) {
             float damage = (float) (speed * speed * 25 + speed * 5);
+            if (hit instanceof Player) {
+                damage *= (float) com.zomboidcraft.ZcConfig.get().world.carHitDamage;     // Zomboid's Damage From Being Hit By A Car
+            }
             DamageSource source = damageSources().mobAttack(driver);
             if (hit.hurtServer(server, source, damage)) {
                 Vec3 away = hit.position().subtract(position());
@@ -1793,7 +1798,7 @@ public class CarProp extends Entity {
 
     /** A crash at speed (blocks a tick) knocks the front about: lights, bonnet, radiator, steering, the front wheels. */
     private void crashWear(double speed) {
-        double hit = Math.min(60, speed * speed * 60) * com.zomboidcraft.ZcConfig.get().world.partWear;
+        double hit = Math.min(60, speed * speed * 60) * com.zomboidcraft.ZcConfig.get().world.partWear * Cars.crashDamage();
         wear(CarParts.Part.HEADLIGHT, 0, hit * 1.5);
         wear(CarParts.Part.HEADLIGHT, 1, hit * 1.5);
         wear(CarParts.Part.BONNET, 0, hit);
