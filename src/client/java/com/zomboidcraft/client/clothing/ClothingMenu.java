@@ -55,7 +55,7 @@ public final class ClothingMenu {
         if (!wash.isEmpty() && water(client, hit, player)) out.add(Option.menu("Wash", wash));
         if (hit == null || hit.getType() == HitResult.Type.MISS) {                  // looking at nothing: yourself
             if (!patch.isEmpty()) out.add(Option.menu("Patch clothing", patch));
-            out.add(Option.of("Hair and beard", () -> client.setScreen(new com.zomboidcraft.client.kit.GroomingScreen(null))));
+            out.add(Option.of("Hair and beard", () -> client.gui.setScreen(new com.zomboidcraft.client.kit.GroomingScreen(null))));
         }
     }
 

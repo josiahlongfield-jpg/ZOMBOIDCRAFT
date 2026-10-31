@@ -95,7 +95,7 @@ public class GroomingScreen extends Screen {
 
     @Override
     public void onClose() {
-        minecraft.setScreen(back);                                   // null from the G menu: back to the game
+        minecraft.gui.setScreen(back);                                   // null from the G menu: back to the game
     }
 
     private static String label(String id) {

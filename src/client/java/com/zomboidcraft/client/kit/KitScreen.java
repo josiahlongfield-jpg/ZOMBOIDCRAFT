@@ -487,7 +487,7 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
         }
         // hair and beard (clothing/Grooming)
         if (event.key() == InputConstants.KEY_H && page == Page.CLOTHING) {
-            minecraft.setScreen(new GroomingScreen(this));
+            minecraft.gui.setScreen(new GroomingScreen(this));
             return true;
         }
         // patch a piece of clothing, or rip it into strips (clothing/Tailoring)
