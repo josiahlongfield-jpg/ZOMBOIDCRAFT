@@ -444,7 +444,7 @@ public final class Mechanics {
                 car.setParts(CarParts.set(parts, slot, -1));
                 ItemStack out = stack(part, got, kind);
                 if (!player.getInventory().add(out)) {
-                    player.drop(out, false);
+                    player.spawnAtLocation((ServerLevel) player.level(), out);
                 }
                 said = slipped ? "It fights you and comes off damaged: " + s.title().toLowerCase(Locale.ROOT) + " " + got + "%."
                         : s.title() + " off (" + got + "%).";
