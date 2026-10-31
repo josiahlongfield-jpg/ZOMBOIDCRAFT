@@ -57,7 +57,8 @@ public class LightItem extends LootItem {
             "kerosene_lantern", new Spec(Kind.AROUND, 14, "kerosene", "kerosene", 2400, true),
             "candle", new Spec(Kind.AROUND, 10, null, "", 600, true),
             "church_candle", new Spec(Kind.AROUND, 11, null, "", 1200, true),
-            "glow_stick", new Spec(Kind.AROUND, 7, null, "", 480, false));
+            "glow_stick", new Spec(Kind.AROUND, 7, null, "", 480, false),
+            "angle_flashlight", new Spec(Kind.BEAM, 12, "aa_battery", "an AA battery", 2400, false));
 
     private final Spec spec;
 

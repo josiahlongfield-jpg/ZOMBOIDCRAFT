@@ -221,13 +221,13 @@ public final class Headgear {
             return false;
         }
         if (target.getItem() instanceof NightVisionItem) {
-            freshBattery(target);
+            target.set(CHARGE, fullCharge() * BatteryItem.lasts(battery));
         } else if (mounted(target) != null) {
             if (player instanceof ServerPlayer sp) {
                 PENDING.remove(sp.getUUID());
             }
             ItemStack goggles = mounted(target).goggles().copy();
-            freshBattery(goggles);
+            goggles.set(CHARGE, fullCharge() * BatteryItem.lasts(battery));
             setGoggles(target, goggles);
         } else {
             return false;

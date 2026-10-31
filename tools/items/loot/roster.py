@@ -858,6 +858,48 @@ halligan_tool | Halligan Bar | R | 20 | 5.0 | fire.3 firetruck
 scba_tank | Breathing Apparatus | P | 60 | 12.0 | fire.3 firetruck
 traffic_cone | Traffic Cone | C | 1 | 1.5 | build worktruck pcar
 road_sign | Road Sign | C | 1 | 4.0 | build
+camo_netting | Camo Netting | C | 5 | 3.0 | mil.3 sport camp
+waterproof_notebook | Waterproof Notebook | C | 2 | 0.1 | mil police desk
+signal_panel | Signal Panel | C | 4 | 0.5 | mil.3 carrier
+field_wire_spool | Field Wire Spool | C | 3 | 2.5 | mil.3 bunker
+tripwire_flare | Tripwire Flare | C | 5 | 0.4 | mil.3 bunker
+folding_cot | Folding Cot | C | 8 | 6.0 | mil.3 camp bunker
+unit_patch_set | Unit Patch Set | C | 2 | 0.05 | mil thrift attic
+angle_flashlight | Angle-Head Flashlight | C | 6 | 0.4 | mil.3 bunker
+radio_battery_pack | Radio Battery Pack | S | 8 | 1.0 | mil.3 bunker carrier
+lensatic_compass | Lensatic Compass | S | 8 | 0.2 | mil.3 sport camp
+topo_map_set | Topographic Map Set | S | 10 | 0.4 | mil.3 camp
+ghillie_kit | Ghillie Kit | S | 12 | 2.0 | mil sport gun
+periscope | Periscope | S | 15 | 1.5 | mil carrier
+military_binoculars | Military Binoculars | S | 18 | 1.0 | mil.3 carrier
+water_bladder | Water Bladder | S | 8 | 0.8 | mil.3 camp bunker
+ration_heater | Ration Heater | S | 3 | 0.05 | mil.3 bunker carrier
+blast_wall_bag | Blast Wall Bag | S | 15 | 12.0 | mil.3 dock
+unit_flag | Unit Flag | S | 10 | 0.8 | mil court
+survival_field_manual | Survival Field Manual | S | 6 | 0.4 | mil.3 books camp
+footlocker | Footlocker | S | 14 | 9.0 | mil.3
+field_radio | Field Radio | R | 40 | 7.5 | mil.3 carrier bunker
+laser_rangefinder | Laser Rangefinder | R | 35 | 0.8 | mil gun
+metal_detector | Metal Detector | R | 30 | 2.5 | mil hard pawn garage
+door_ram | Hydraulic Door Ram | R | 30 | 6.0 | police.3 fire mil
+quiet_generator | Quiet Field Generator | R | 50 | 60.0 | mil.3 bunker
+motion_sensor_kit | Motion Sensor Kit | R | 30 | 2.0 | mil.3 office
+tactical_floodlight | Tactical Floodlight | R | 25 | 8.0 | mil police.3
+codebook | Codebook | R | 20 | 0.3 | mil bunker.3
+checkpoint_overlay | Checkpoint Overlay | R | 25 | 0.1 | mil.3
+weapons_locker | Weapons Locker | R | 40 | 40.0 | mil.3 police
+parachute | Parachute | R | 20 | 12.0 | carrier.3 mil
+grappling_ladder | Grappling Hook and Ladder | R | 20 | 4.0 | mil sport
+thermal_monocular | Thermal Monocular | P | 90 | 0.6 | mil.3 police
+recon_drone | Recon Drone | P | 100 | 1.5 | mil.3 police
+map_table | Map Table | P | 60 | 25.0 | mil.3
+satellite_terminal | Satellite Terminal | P | 90 | 6.0 | mil.3 carrier
+regimental_drum | Regimental Drum | P | 50 | 5.0 | mil court mansion
+bunker_blueprints | Bunker Blueprints | P | 60 | 0.3 | mil bunker.3
+shell_casing_lamp | Shell Casing Lamp | P | 45 | 3.0 | mansion pawn mil
+ejection_seat | Ejection Seat | G | 220 | 90.0 | carrier mil
+launch_keys | Decommissioned Launch Keys | G | 250 | 0.2 | bunker
+cipher_machine | Wartime Cipher Machine | G | 300 | 12.0 | mansion.3 mil
 """
 
 ROSTER['Junk & scrap'] = """
