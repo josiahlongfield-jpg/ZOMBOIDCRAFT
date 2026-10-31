@@ -128,7 +128,7 @@ final class SkillsPage {
                     l -> String.format(Locale.ROOT, "Right now: %+.1f kg carry limit, melee %+d%%.", 0.6 * (l - 5), 4 * (l - 5))),
             soon(Skill.LIGHTFOOTED, "Agility", "Walk without making noise and stepping on things that give you away."),
             soon(Skill.NIMBLE, "Agility", "Move faster while aiming and fighting."),
-            soon(Skill.RELOADING, "Firearm", "Load magazines and rounds faster, and rack a jam clear quicker."),
+            soon(Skill.RELOADING, "Firearm", "Load magazines and rounds faster, and rack a jam clear quicker. Handloading brass at a reloading bench already trains it."),
             soon(Skill.COOKING, "Crafting", "Cook dishes on stoves, campfires and barbecues; better cooks make more filling food."),
             soon(Skill.CARVING, "Crafting", "Carve wood and bone into handles, spears and tools."),
             soon(Skill.KNAPPING, "Crafting", "Chip stone into blades, axe heads and arrowheads."),
