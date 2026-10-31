@@ -198,7 +198,7 @@ public final class Moving {
         ItemStack stack = new ItemStack(state.getBlock().asItem());
         level.removeBlock(pos, false);
         if (!stack.isEmpty() && !player.getInventory().add(stack)) {
-            player.drop(stack, false);
+            net.minecraft.world.level.block.Block.popResource(level, player.blockPosition(), stack);
         }
         // only the work that takes know-how teaches: unbolting plumbing and wiring
         if (piece.kind != Kind.PLAIN) {
