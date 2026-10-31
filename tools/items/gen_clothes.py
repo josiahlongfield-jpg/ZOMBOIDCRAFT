@@ -2564,6 +2564,662 @@ MILITARY = {
 
 
 
+# ------------------------------------------------------------------ wave 2, military batch 2: cold, wet, CBRN, aircrew and riot
+# Refs: refs/items/clothing (fur-ushanka, cbrn-mask-hood, cbrn-suit, combat-shirt-ubacs, fleece-liner-jacket,
+# wet-weather-jacket-military, flight-coverall, sniper-smock, arctic-parka-white-camo, snow-overwhites, jungle-boots,
+# desert-boots, arctic-boots-mukluk, flight-gloves-nomex, shooting-gloves, arctic-mittens, riot-armour-set).
+
+
+def build_fur_ushanka(g):
+    d = 0.6
+    g.box('head', (-4 - d, -9.6, -4 - d), (4 + d, -5.4, 4 + d), 'felt')               # the crown
+    g.box('head', (-4 - d - 0.6, -7.4, -4 - d - 0.7), (4 + d + 0.6, -5.2, -4 - d), 'fur')   # front flap turned up
+    for s in (-1, 1):                                                                # ear flaps tied up over the crown
+        x0 = s * (4 + d) - (0.8 if s > 0 else 0)
+        g.box('head', (x0, -8.8, -3.4), (x0 + 0.8, -4.6, 3.6), 'fur')
+        g.box('head', (x0 + (0.4 if s > 0 else -0.1), -9.0, -0.4), (x0 + (0.9 if s > 0 else 0.4), -8.4, 0.4), 'tie')
+    g.box('head', (-4 - d - 0.3, -8.2, 4 + d), (4 + d + 0.3, -4.4, 4 + d + 0.8), 'fur')   # the back flap
+    g.box('head', (-0.5, -6.8, -4 - d - 0.85), (0.5, -5.9, -4 - d - 0.7), 'badge')
+    g.box('head', (-4 - d + 0.6, -10.0, -4 - d + 0.6), (4 + d - 0.6, -9.6, 4 + d - 0.6), 'felt')
+
+
+def build_watch_cap(g):
+    d = 0.3
+    g.box('head', (-4 - d, -8.8, -4 - d), (4 + d, -5.2, 4 + d), 'knit')
+    g.box('head', (-4 - d - 0.25, -6.6, -4 - d - 0.25), (4 + d + 0.25, -5.0, 4 + d + 0.25), 'rib')   # the turn-up
+    g.box('head', (-3.6, -9.2, -3.6), (3.6, -8.8, 3.6), 'knit')
+
+
+def build_cbrn_mask(g):
+    """A respirator with its hood: rubber face, two eye lenses, the side canister and a hood down over the shoulders."""
+    d = 0.5
+    g.box('head', (-4 - d, -8 - d, -4 + 0.6), (4 + d, 0.8, 4 + d), 'hood')           # the hood over head and neck
+    eye_open_front(g, -4 - d, -4 + 0.6, -8 - d, -3.6, 4 + d, 'hood', port=(3.6, EYES_HIGH - 0.8, -3.6))
+    z0, z1 = -4.95, -4.3
+    g.box('head', (-3.9, -3.6, z0), (3.9, 0.6, z1), 'rubber')                         # the face piece, below the eyes
+    for s in (-1, 1):                                                                # lens rims round the open eyes
+        x0, x1 = (-3.5, -0.5) if s < 0 else (0.5, 3.5)
+        g.box('head', (x0 - 0.2, EYES_HIGH - 0.6, z0 - 0.3), (x1 + 0.2, EYES_HIGH - 0.3, z1), 'rim')
+        g.box('head', (x0 - 0.2, EYES_LOW + 0.3, z0 - 0.3), (x1 + 0.2, EYES_LOW + 0.6, z1), 'rim')
+        g.box('head', (x0 - 0.2, EYES_HIGH - 0.3, z0 - 0.3), (x0 + 0.1, EYES_LOW + 0.3, z1), 'rim')
+        g.box('head', (x1 - 0.1, EYES_HIGH - 0.3, z0 - 0.3), (x1 + 0.2, EYES_LOW + 0.3, z1), 'rim')
+    g.box('head', (-1.1, -2.4, z0 - 0.6), (1.1, -0.2, z0), 'rubber')                  # outlet valve
+    g.box('head', (-0.6, -2.0, z0 - 0.9), (0.6, -0.6, z0 - 0.6), 'rim')
+    g.box('head', (-4.6, -2.6, z0 - 0.4), (-2.8, -0.4, z0 + 0.6), 'rubber')           # the canister port, left cheek
+    g.box('head', (-6.4, -2.9, z0 - 1.0), (-4.4, -0.1, z0 + 1.0), 'canister')
+    g.box('head', (-4 - d - 0.6, 0.2, -4 - d - 0.6), (4 + d + 0.6, 1.6, 4 + d + 0.6), 'hood')   # the skirt at the collar
+
+
+def build_cbrn_suit(g):
+    """A protective overgarment: hooded smock over trousers, taped cuffs, the mask carrier on the hip."""
+    d = JACKET + 0.15
+    g.shell('body', 0, 12, d, 'suit')
+    g.box('body', (-3.8, -2.2, 0.0), (3.8, 1.0, 2 + d + 1.1), 'suit')                # the hood down
+    g.front('body', d, -0.8, -0.4, 0.8, 11.0, 'suit', t=0.3)                          # storm flap
+    for s in (-1, 1):
+        x0, x1 = sorted((s * 1.2, s * 3.6))
+        g.front('body', d, x0, 7.0, x1, 10.4, 'suit', t=0.35)
+        g.front('body', d + 0.35, x0 - 0.05, 6.8, x1 + 0.05, 7.8, 'flap', t=0.12)
+    g.shell('body', 10.6, 12.0, d + 0.1, 'suit')
+    g.front('body', d, -3.8, 1.6, -1.6, 2.2, 'tape', t=0.06)                          # the detector-paper patch
+    def arm(p, s):
+        g.shell(p, -2.0, 8.6, d, 'suit')
+        g.shell(p, 7.6, 8.6, d + 0.12, 'tape')                                       # cuffs taped to the gloves
+        g.side(p, d, s, -1.2, 0.6, 1.2, 1.6, 'tape', t=0.06)
+    g.both(ARMS, arm)
+    def leg(p, s):
+        g.shell(p, -0.2, 11.0, PANTS + 0.35, 'suit')
+        g.shell(p, 10.0, 11.0, PANTS + 0.5, 'tape')
+        g.side(p, PANTS + 0.35, s, -1.6, 3.0, 1.0, 6.0, 'flap', t=0.3)                # thigh pocket
+    g.both(LEGS, leg)
+    g.side('body', d, 1, -1.4, 8.2, 1.4, 12.2, 'bag', t=0.9)                          # the mask carrier on the left hip
+
+
+def build_combat_shirt(g):
+    """A combat shirt worn under armour: plain wicking torso, camo sleeves with pockets, a zip mock neck."""
+    d = SHIRT + 0.05
+    g.shell('body', 0, 12, d, 'torso')
+    g.box('body', (-3.0, -1.0, -2 - d - 0.25), (3.0, 0.4, 2 + d + 0.2), 'sleeve')    # the camo mock neck
+    g.front('body', d, -0.25, -1.0, 0.25, 3.0, 'zip', t=0.12)
+    def arm(p, s):
+        g.shell(p, -2.0, 8.0, d, 'sleeve')
+        g.shell(p, 7.4, 8.2, d + 0.1, 'cuff')
+        g.side(p, d, s, -1.6, 0.0, 1.4, 2.8, 'pocket', t=0.25)                        # shoulder pockets
+        g.side(p, d + 0.25, s, -1.7, -0.2, 1.5, 0.6, 'flap', t=0.1)
+        g.side(p, d + 0.35, s, -1.2, 0.8, 1.0, 2.2, 'velcro', t=0.05)
+        g.back(p, d, -1.6, 3.0, 1.6, 5.4, 'pad', t=0.15)                              # elbow pad pocket
+    g.both(ARMS, arm)
+
+
+def build_fleece_liner(g):
+    d = JACKET - 0.05
+    g.shell('body', 0, 11.6, d, 'fleece')
+    g.shell('body', 11.2, 12.2, d + 0.12, 'binding')
+    g.box('body', (-3.2, -1.6, -2 - d - 0.25), (3.2, 0.3, 2 + d + 0.25), 'fleece')   # tall collar
+    g.front('body', d, -0.25, -1.6, 0.25, 12.0, 'zip', t=0.14)
+    for s in (-1, 1):
+        g.front('body', d, s * 1.6 - 0.1, 7.0, s * 1.6 + 0.1, 10.0, 'zip', t=0.08)    # zipped hand pockets
+    g.front('body', d, 1.4, 2.4, 3.2, 4.8, 'velcro', t=0.08)
+    sleeves(g, d, 'fleece', end=8.0, cuff='binding', cuff_d=0.12)
+    g.both(ARMS, lambda p, s: g.side(p, d, s, -1.2, 0.4, 1.2, 2.0, 'velcro', t=0.06))
+
+
+def build_wet_weather_jacket(g):
+    d = JACKET + 0.05
+    g.shell('body', 0, 12, d, 'shell')
+    g.box('body', (-3.4, -1.8, -2 - d - 0.3), (3.4, 0.2, 2 + d + 0.3), 'shell')      # high collar, the hood in it
+    g.box('body', (-3.0, -2.4, 1.0), (3.0, -1.6, 2 + d + 0.4), 'shell')
+    g.front('body', d, -0.9, -1.6, 0.9, 12, 'shell', t=0.3)                            # storm flap with snaps
+    buttons(g, 'body', d + 0.3, 0, (1.0, 3.6, 6.2, 8.8, 11.0), 'snap')
+    for s in (-1, 1):
+        x0, x1 = sorted((s * 1.2, s * 3.7))
+        g.front('body', d, x0, 7.4, x1, 10.8, 'shell', t=0.3)                        # slash pockets with flaps
+        g.front('body', d + 0.3, x0 - 0.1, 7.2, x1 + 0.1, 8.0, 'flap', t=0.12)
+        g.front('body', d, s * 3.8 - 0.25, 2.0, s * 3.8 + 0.25, 6.0, 'zip', t=0.1)   # pit zips
+    g.shell('body', 5.6, 5.95, d + 0.05, 'seam')                                     # taped seams
+    def arm(p, s):
+        g.shell(p, -2.0, 8.2, d, 'shell')
+        g.shell(p, 7.4, 8.4, d + 0.1, 'flap')                                        # velcro cuff tabs
+        g.shell(p, 1.4, 1.75, d + 0.03, 'seam')
+    g.both(ARMS, arm)
+
+
+def build_flight_coverall(g):
+    """A one-piece flight suit: zips everywhere, pen pockets on the sleeve, name tag, worn as the outer layer."""
+    d = JACKET - 0.15
+    g.shell('body', 0, 12, d, 'suit')
+    collar_flaps(g, d, 'suit')
+    g.front('body', d, -0.25, 0.2, 0.25, 12.0, 'zip', t=0.12)
+    for s in (-1, 1):                                                                 # zipped chest pockets, slanted
+        x0, x1 = sorted((s * 1.4, s * 3.4))
+        g.front('body', d, x0, 2.0, x1, 4.6, 'pocket', t=0.15)
+        g.front('body', d + 0.15, x0, 2.0, x1, 2.2, 'zip', t=0.06)
+    g.front('body', d + 0.15, -3.4, 1.2, -1.5, 1.8, 'name', t=0.06)
+    g.shell('body', 10.4, 11.0, d + 0.06, 'tab')                                       # waist adjusters
+    def arm(p, s):
+        g.shell(p, -2.0, 8.4, d, 'suit')
+        g.shell(p, 7.8, 8.6, d + 0.1, 'tab')
+        g.side(p, d, s, -1.4, 1.2, 1.0, 4.0, 'pocket', t=0.2)                         # pen pockets on the left sleeve
+        for i in range(3):
+            g.side(p, d + 0.2, s, -1.2 + i * 0.6, 0.8, -0.95 + i * 0.6, 1.6, 'pen', t=0.08)
+        g.side(p, d, s, -1.2, 5.0, 1.2, 5.3, 'zip', t=0.06)
+    g.both(ARMS, arm)
+    def leg(p, s):
+        g.shell(p, -0.2, 11.2, PANTS + 0.3, 'suit')
+        g.side(p, PANTS + 0.3, s, -1.8, 2.4, 1.6, 6.4, 'pocket', t=0.25)              # thigh pockets
+        g.side(p, PANTS + 0.55, s, -1.8, 2.4, 1.6, 2.65, 'zip', t=0.06)
+        g.front(p, PANTS + 0.3, -1.8, 6.6, 1.4, 9.4, 'pocket', t=0.2)                 # shin pocket
+        g.side(p, PANTS + 0.3, -s, -0.12, 8.4, 0.12, 11.2, 'zip', t=0.08)             # ankle zips
+    g.both(LEGS, leg)
+
+
+def build_sniper_smock(g):
+    """A camo smock with a scrim net yoke and burlap strips sewn on the shoulders, not a full ghillie."""
+    import random
+    rnd = random.Random(11)
+    d = JACKET + 0.05
+    g.shell('body', 0, 12, d, 'cloth')
+    g.both(LEGS, lambda p, s: g.shell(p, -0.2, 2.6, d + 0.05, 'cloth'))
+    g.box('body', (-3.8, -2.0, 0.0), (3.8, 1.0, 2 + d + 1.0), 'cloth')                # the hood down
+    g.front('body', d, -0.8, -0.4, 0.8, 12, 'cloth', t=0.25)
+    for s in (-1, 1):
+        x0, x1 = sorted((s * 1.1, s * 3.7))
+        pouch(g, 'body', d, x0, 6.6, x1, 10.4, 'pocket', 'flap', t=0.4)
+    g.shell('body', 0, 5.0, d + 0.12, 'scrim')                                        # the net yoke
+    sleeves(g, d, 'cloth', end=8.0, cuff='flap', cuff_d=0.12)
+    g.both(ARMS, lambda p, s: g.shell(p, -2.0, 3.0, d + 0.12, 'scrim'))
+    for _ in range(26):                                                               # hessian strips on the yoke
+        part = rnd.choice(('body', 'body', 'right_arm', 'left_arm'))
+        y = rnd.uniform(-1.6 if part == 'body' else -2.0, 4.0 if part == 'body' else 2.4)
+        w, L = rnd.uniform(0.4, 1.0), rnd.uniform(1.2, 2.6)
+        m = rnd.choice(('jute', 'jute2'))
+        dd = d + 0.12
+        if part == 'body':
+            x = rnd.uniform(-4 - dd, 4 + dd - w)
+            (g.front if rnd.random() < 0.5 else g.back)(part, dd, x, y, x + w, y + L, m, t=rnd.uniform(0.15, 0.4))
+        else:
+            s = -1 if part.startswith('right') else 1
+            z = rnd.uniform(-2.0, 2.0 - w)
+            g.side(part, dd, s, z, y, z + w, y + L, m, t=rnd.uniform(0.15, 0.4))
+
+
+def build_arctic_parka(g):
+    """A white-camo cold weather parka: long, a fur-ruffed hood down, a drawcord waist."""
+    d = 1.15
+    g.shell('body', 0, 12, d, 'cloth')
+    g.both(LEGS, lambda p, s: g.shell(p, -0.2, 4.4, d + 0.05, 'cloth'))
+    g.front('body', d, -0.9, -0.2, 0.9, 12, 'cloth', t=0.28)
+    buttons(g, 'body', d + 0.28, 0, (1.5, 4.5, 7.5, 10.5), 'toggle')
+    g.box('body', (-3.9, -2.4, 0.0), (3.9, 1.6, 2 + d + 1.3), 'cloth')
+    g.box('body', (-4.3, -2.9, 0.2), (4.3, -1.7, 2 + d + 1.6), 'fur')
+    for s in (-1, 1):
+        g.box('body', (s * 2.6 - (1.7 if s < 0 else 0), -2.1, -2 - d - 0.4), (s * 2.6 + (1.7 if s > 0 else 0), 0.8, 0.6), 'fur')
+        x0, x1 = sorted((s * 1.3, s * 3.8))
+        pouch(g, 'body', d, x0, 7.6, x1, 11.0, 'cloth', 'flap', t=0.4)
+    g.shell('body', 6.4, 6.8, d + 0.06, 'cord')
+    def arm(p, s):
+        g.shell(p, -2.0, 8.0, d, 'cloth')
+        g.shell(p, 7.6, 9.0, d + 0.15, 'cuff')
+    g.both(ARMS, arm)
+
+
+def build_snow_overwhites(g):
+    """White over-trousers for snow, pulled on over the uniform, with ties at the ankle."""
+    d = PANTS + 0.3
+    g.shell('body', 9.6, 12, d, 'cloth')
+    g.shell('body', 9.4, 10.2, d + 0.1, 'cord')
+    def leg(p, s):
+        g.shell(p, 0, 11.0, d, 'cloth')
+        g.shell(p, 10.2, 11.0, d + 0.15, 'cord')
+        g.front(p, d, -1.8, 4.4, 1.8, 7.0, 'patch', t=0.12)
+        g.side(p, d, s, -0.2, 0.2, 0.2, 9.0, 'seam', t=0.05)
+    g.both(LEGS, leg)
+
+
+def build_jungle_boots(g):
+    def foot(p, s):
+        shoe(g, p, s, 4.4, sole='lugsole', toe=3.0)
+        g.side(p, BOOT, s, -1.9, 5.0, 1.9, 9.6, 'canvas', t=0.08)                    # canvas uppers
+        g.side(p, BOOT, -s, -1.9, 5.0, 1.9, 9.6, 'canvas', t=0.08)
+        g.shell(p, 4.2, 5.0, BOOT + 0.15, 'collar')
+        laces(g, p, BOOT, 5.0, 10.4, 0.8)
+        for y in (9.2, 9.8):                                                        # the drain eyelets
+            g.side(p, BOOT + 0.08, -s, -0.3, y, 0.3, y + 0.3, 'eyelet', t=0.08)
+        g.box(p, (-2.2, 10.2, -5.2), (2.2, 11.42, -3.8), 'toecap')
+        g.box(p, (-2.45, 11.6, -5.15), (2.45, 12.4, 2.5), 'lugsole')
+    g.both(LEGS, foot)
+
+
+def build_desert_boots(g):
+    def foot(p, s):
+        shoe(g, p, s, 4.6, sole='lugsole', toe=3.0)
+        g.shell(p, 4.4, 5.2, BOOT + 0.15, 'collar')
+        g.side(p, BOOT, s, -1.9, 5.4, 1.9, 9.8, 'nylon', t=0.08)
+        laces(g, p, BOOT, 5.2, 10.4, 0.8)
+        g.box(p, (-2.2, 10.2, -5.2), (2.2, 11.42, -3.8), 'toecap')
+        g.box(p, (-2.45, 11.6, -5.15), (2.45, 12.4, 2.5), 'lugsole')
+    g.both(LEGS, foot)
+
+
+def build_arctic_boots(g):
+    """Mukluks: tall, soft, fur-cuffed, the moccasin foot puckered round the toe and tied at the ankle."""
+    def foot(p, s):
+        shoe(g, p, s, 2.6, d=0.8, toe=3.2, upper='hide', sole='sole')
+        g.shell(p, 2.0, 3.2, 1.15, 'fur')                                            # the fur cuff
+        g.shell(p, 8.4, 8.9, 0.85, 'tie')                                            # ankle wraps
+        g.box(p, (-2.4, 10.0, -5.3), (2.4, 11.4, -4.6), 'pucker')
+        for x in (-1.6, -0.6, 0.4, 1.4):
+            g.box(p, (x, 10.4, -5.4), (x + 0.3, 11.2, -5.3), 'tie')
+        g.side(p, 0.8, s, -1.6, 3.6, 1.6, 7.8, 'bead', t=0.06)                         # beaded panel
+    g.both(LEGS, foot)
+
+
+def build_flight_gloves(g):
+    def hand(p, s):
+        glove(g, p, s, 'nomex', d=0.35, cuff='nomex', cuff_y=(6.4, 8.6), cuff_d=0.5)    # long thin gauntlet
+        g.shell(p, 9.8, 10.4, 0.4, 'palm')
+        g.side(p, 0.35, s, -1.6, 8.6, 1.6, 9.6, 'seam', t=0.04)
+    g.both(ARMS, hand)
+
+
+def build_shooting_gloves(g):
+    """Trigger-finger mitts: a mitten with the forefinger split out, camo shell, knit wrist."""
+    def hand(p, s):
+        glove(g, p, s, 'shell', d=0.6, cuff='knit', cuff_y=(7.2, 8.8), cuff_d=0.8)
+        g.front(p, 0.6, -2.0 if s < 0 else 1.0, 10.6, -1.0 if s < 0 else 2.0, 11.3, 'shell', t=0.5)   # the trigger finger
+        g.side(p, 0.6, s, -1.6, 8.6, 1.6, 8.9, 'seam', t=0.05)
+    g.both(ARMS, hand)
+
+
+def build_arctic_mittens(g):
+    """Big gauntlet mittens: leather palm, fur back, the cuff to mid-forearm, a lanyard round the neck."""
+    def hand(p, s):
+        glove(g, p, s, 'leather', d=0.85, cuff='canvas', cuff_y=(5.2, 8.6), cuff_d=1.0)
+        g.side(p, 0.85, s, -2.0, 8.6, 2.0, 10.6, 'fur', t=0.4)
+        g.shell(p, 5.2, 5.7, 1.1, 'cord')
+    g.both(ARMS, hand)
+    for s in (-1, 1):                                                                # the idiot cord across the shoulders
+        x0, x1 = sorted((s * 3.0, s * 3.5))
+        g.box('body', (x0, -0.3, -2 - JACKET - 0.2), (x1, 0.15, 2 + JACKET + 0.2), 'cord')
+        g.front('body', JACKET + 0.2, x0, 0.15, x1, 6.0, 'cord', t=0.12)
+
+
+def build_riot_arm_guards(g):
+    """Hard shells over the forearm and upper arm, a cap on the elbow, strapped over the sleeve."""
+    def arm(p, s):
+        d = JACKET + 0.15
+        g.side(p, d, s, -2.4, -1.8, 2.4, 3.0, 'shell', t=0.45)                       # shoulder and upper arm
+        g.front(p, d, -2.0, 4.8, 2.0, 8.4, 'shell', t=0.4)                           # forearm plate
+        g.side(p, d, s, -2.0, 4.8, 2.0, 8.4, 'shell', t=0.35)
+        g.back(p, d, -1.8, 3.0, 1.8, 5.0, 'cap', t=0.5)                              # elbow cup
+        for y in (0.2, 5.6, 7.6):
+            g.shell(p, y, y + 0.5, d, 'strap')
+        g.side(p, d + 0.45, s, -1.6, -1.2, 1.6, -0.6, 'vent', t=0.04)
+    g.both(ARMS, arm)
+
+
+def build_riot_leg_guards(g):
+    """Thigh plates, a knee cup and shin shells over the trousers, Velcro-strapped."""
+    def leg(p, s):
+        d = PANTS + 0.2
+        g.front(p, d, -2.0, 0.4, 2.0, 4.0, 'shell', t=0.4)                           # thigh plate
+        g.side(p, d, s, -1.8, 0.4, 1.8, 3.6, 'shell', t=0.35)
+        g.front(p, d, -1.8, 4.2, 1.8, 6.6, 'cap', t=0.55)                            # knee cup
+        g.front(p, d, -2.0, 6.8, 2.0, 10.6, 'shell', t=0.45)                         # shin shell
+        g.side(p, d, s, -1.8, 6.8, 1.6, 10.4, 'shell', t=0.35)
+        for y in (1.0, 3.2, 7.4, 9.8):
+            g.shell(p, y, y + 0.5, d, 'strap')
+        g.front(p, d + 0.45, -1.2, 8.0, 1.2, 8.4, 'vent', t=0.04)
+    g.both(LEGS, leg)
+
+
+def build_wool_commando_sweater(g):
+    """A ribbed wool pullover with cloth patches on the shoulders and elbows, epaulettes and a pen pocket."""
+    d = JACKET - 0.05
+    g.shell('body', 0, 10.8, d, 'knit')
+    g.shell('body', 10.5, 12.2, d + 0.12, 'rib')
+    g.box('body', (-2.8, -0.9, -2 - d - 0.2), (2.8, 0.3, 2 + d + 0.2), 'rib')         # crew neck
+    g.front('body', d, 1.2, 2.2, 3.0, 3.8, 'patch', t=0.08)                           # pen pocket
+    sleeves(g, d, 'knit', end=7.8, cuff='rib', cuff_d=0.12)
+    def arm(p, s):
+        g.shell(p, -2.0, 1.4, d + 0.08, 'patch')                                      # shoulder patches
+        g.back(p, d, -1.6, 3.2, 1.6, 5.6, 'patch', t=0.1)                              # elbow patches
+        g.side(p, d + 0.08, s, -0.6, -2.1, 0.6, 1.4, 'epaulette', t=0.1)
+    g.both(ARMS, arm)
+
+
+MILITARY_2 = {
+    'fur_ushanka': (build_fur_ushanka, dict(felt=cloth('#5a5c5e', weave=0.05), fur=fur('#6e6e6c'), tie=flat('#2a2a28'),
+                                            badge=metal('brass')), 0.4),
+    'watch_cap': (build_watch_cap, dict(knit=knit('#2e3226'), rib=rib('#2a2e22')), 0.3),
+    'cbrn_mask': (build_cbrn_mask, dict(hood=cloth('#3a3e30', weave=0.05, stitch=None), rubber=rubber('#1e1f1d'),
+                                        rim=metal('steel'), canister=plastic('#4a4f3e')), 0.4),
+    'cbrn_suit': (build_cbrn_suit, dict(suit=Camo(weave=0.04), flap=Camo(0.85), tape=flat('#3a3a36'), bag=cloth('#4a4e38')), 0.4),
+    'combat_shirt': (build_combat_shirt, dict(torso=cloth('#8a7a5a', weave=0.04, stitch=None), sleeve=Camo(), cuff=Camo(0.88),
+                                              pocket=Camo(0.85), flap=Camo(0.75), velcro=cloth('#4a4c3a', stitch=None),
+                                              pad=Camo(0.8), zip=metal()), 0.45),
+    'fleece_liner': (build_fleece_liner, dict(fleece=fur('#4a4c3a'), binding=cloth('#3a3c2e', stitch=None), zip=metal(),
+                                              velcro=cloth('#3e4032', stitch=None)), 0.35),
+    'wet_weather_jacket': (build_wet_weather_jacket, dict(shell=Camo(weave=0.02), flap=Camo(0.85, weave=0.02), snap=metal(),
+                                                          zip=flat('#1e1e1c'), seam=flat('#2a2a26', ink=False)), 0.4),
+    'flight_coverall': (build_flight_coverall, dict(suit=cloth('#5e6450', weave=0.05), pocket=cloth('#575d4a'), zip=metal(),
+                                                    name=leather('#2a2a26'), tab=cloth('#4e5442'), pen=plastic('#1e1e1e')), 0.45),
+    'sniper_smock': (build_sniper_smock, dict(cloth=Camo(), pocket=Camo(0.85), flap=Camo(0.75), scrim=mesh('#3e4230'),
+                                              jute=fur('#5d5a3a'), jute2=fur('#4a4f30')), 0.5),
+    'arctic_parka': (build_arctic_parka, dict(cloth=cloth('#d4d6d0', weave=0.04, pattern=camo(['#b4b8b2', '#9aa098'], size=1.9)),
+                                              flap=cloth('#c8cac4'), fur=fur('#a89a84'), toggle=plastic('#2a2a2a'),
+                                              cord=flat('#b0b2ac'), cuff=rib('#bcbeb8')), 0.4),
+    'snow_overwhites': (build_snow_overwhites, dict(cloth=cloth('#dcdcd6', weave=0.04, stitch=None), cord=flat('#b8b8b2'),
+                                                    patch=cloth('#d0d0ca', stitch=None), seam=flat('#c4c4be', ink=False)), 0.4),
+    'jungle_boots': (build_jungle_boots, dict(lugsole=rubber('#1c1a18', stud=True), sole=rubber('#1c1a18'), upper=leather('#262420'),
+                                              canvas=cloth('#4e5236', weave=0.14), collar=leather('#22201c'), tongue=cloth('#4a4e34'),
+                                              lace=flat('#2a2a26'), eyelet=metal(), toecap=leather('#22201c')), 0.55),
+    'desert_boots': (build_desert_boots, dict(lugsole=rubber('#6a5a44', stud=True), sole=rubber('#6a5a44'), upper=cloth('#a88e66', weave=0.03),
+                                              collar=leather('#8e7856'), nylon=cloth('#9a8460', weave=0.12), tongue=cloth('#9a8460'),
+                                              lace=flat('#7a6a4e'), toecap=leather('#8e7856')), 0.5),
+    'arctic_boots': (build_arctic_boots, dict(hide=leather('#6a5440', gloss=0.05), sole=leather('#4e3e2e'), fur=fur('#8a7a66'),
+                                              tie=flat('#2e2a24'), pucker=leather('#5e4a38'), bead=checker('#7a2a24', '#c8c0aa')), 0.45),
+    'flight_gloves': (build_flight_gloves, dict(nomex=cloth('#5e6450', weave=0.04, stitch=None), palm=leather('#c2b49a'),
+                                                seam=flat('#4e5442', ink=False)), 0.4),
+    'shooting_gloves': (build_shooting_gloves, dict(shell=Camo(weave=0.06), knit=rib('#2e3226'), seam=flat('#2e3226', ink=False)), 0.45),
+    'arctic_mittens': (build_arctic_mittens, dict(leather=leather('#9a7a4a'), canvas=cloth('#5e5e48', weave=0.12),
+                                                  fur=fur('#3a3228'), cord=flat('#2e2e28')), 0.45),
+    'riot_arm_guards': (build_riot_arm_guards, dict(shell=plastic('#1c1d1f', gloss=0.25), cap=plastic('#232427', gloss=0.3),
+                                                    strap=cloth('#1a1b1d', stitch=None), vent=flat('#0a0a0b', ink=False)), 0.45),
+    'riot_leg_guards': (build_riot_leg_guards, dict(shell=plastic('#1c1d1f', gloss=0.25), cap=plastic('#232427', gloss=0.3),
+                                                    strap=cloth('#1a1b1d', stitch=None), vent=flat('#0a0a0b', ink=False)), 0.45),
+    'wool_commando_sweater': (build_wool_commando_sweater, dict(knit=rib('#3e4432'), rib=rib('#363c2c'),
+                                                                patch=cloth('#4a5038', weave=0.1), epaulette=cloth('#4a5038')), 0.4),
+}
+
+
+# ------------------------------------------------------------------ wave 2, batch 3: useful kit, pads and sport armour
+# Refs: refs/items/clothing (headlamp, shooting-earmuffs, dog-tags, chainsaw-chaps, beekeeper-suit, cut-resistant-gloves,
+# shin-guards, gaiters, football-shoulder-pads, hockey-shoulder-pads, hockey-neck-guard, padded-football-pants,
+# hockey-pants, catchers-vest, hockey-gloves, chainmail-sleeve, athletic-cup).
+
+
+def build_headlamp(g):
+    """An elastic band round the head with the lamp on the brow, above the eyes, and a battery pack at the back."""
+    d = 0.2
+    ring(g, -6.4, -5.4, d, 'band', t=0.15)
+    g.box('head', (-0.5, -8.0 - d - 0.15, -2.0), (0.5, -8.0 - d, 2.0), 'band')        # the strap over the top
+    g.box('head', (-1.4, -6.8, -4 - d - 1.1), (1.4, -5.0, -4 - d - 0.15), 'lamp')       # the lamp housing
+    g.box('head', (-1.0, -6.5, -4 - d - 1.2), (1.0, -5.3, -4 - d - 1.1), 'lens')
+    g.box('head', (1.5, -6.4, -4 - d - 0.7), (1.9, -5.8, -4 - d - 0.3), 'button')
+    g.box('head', (-1.6, -7.0, 4 + d + 0.15), (1.6, -4.8, 4 + d + 1.0), 'lamp')         # battery box
+    g.box('head', (-0.3, -6.9, 4 + d + 1.0), (0.3, -6.3, 4 + d + 1.2), 'button')
+
+
+def build_shooting_earmuffs(g):
+    d = 0.2
+    g.box('head', (-HX - 1.1, -8.0 - d - 0.6, -0.7), (HX + 1.1, -8.0 - d, 0.7), 'band')   # the headband over the top
+    for s in (-1, 1):
+        x0 = s * (HX + d) - (1.2 if s > 0 else 0)
+        g.box('head', (x0 + (0.9 if s > 0 else -0.2), -8.0 - d - 0.3, -0.5), (x0 + (1.3 if s > 0 else 0.3), -4.4, 0.5), 'band')
+        g.box('head', (x0, -4.8, -1.8), (x0 + 1.2, -0.8, 1.8), 'cup')                  # the ear cups
+        g.box('head', (x0 + (1.0 if s > 0 else -0.1), -4.4, -1.4), (x0 + (1.3 if s > 0 else 0.2), -1.2, 1.4), 'cap')
+        g.box('head', (x0 + (-0.05 if s > 0 else 1.05), -4.6, -1.6), (x0 + (0.15 if s > 0 else 1.25), -1.0, 1.6), 'foam')
+
+
+def build_dog_tags(g):
+    """A ball chain round the neck and two stamped tags on the chest, worn under the shirt or over it."""
+    d = SHIRT + 0.1
+    for s in (-1, 1):
+        g.box('body', (s * 1.6 - 0.1, -0.15, -2 - d - 0.1), (s * 1.6 + 0.1, 0.05, 1.6), 'chain')
+        g.front('body', d, s * 1.6 - 0.1, 0.0, s * 1.6 + 0.1, 3.2 - abs(s) * 0.2, 'chain', t=0.1)
+    g.box('body', (-1.6, -0.15, 1.4), (1.6, 0.05, 1.6), 'chain')
+    g.front('body', d + 0.1, -0.9, 3.0, 0.3, 4.8, 'tag', t=0.08)
+    g.front('body', d + 0.18, -0.3, 3.2, 0.9, 5.0, 'tag', t=0.08)
+    g.front('body', d + 0.26, -0.15, 3.6, 0.75, 4.6, 'stamp', t=0.02)
+    g.front('body', d + 0.1, -1.0, 3.0, 1.0, 3.2, 'chain', t=0.1)
+
+
+def build_chainsaw_chaps(g):
+    """Apron chaps over the trousers: a cut-resistant front from thigh to boot, buckled round the leg and waist."""
+    d = PANTS + 0.35
+    g.front('body', d, -3.8, 9.6, 3.8, 12.0, 'shell', t=0.3)
+    g.shell('body', 9.4, 10.2, d + 0.3, 'belt')
+    g.front('body', d + 0.6, -0.7, 9.3, 0.7, 10.3, 'buckle', t=0.18)
+    def leg(p, s):
+        g.front(p, d, -2.3, -0.2, 2.3, 10.6, 'shell', t=0.3)
+        for side in (-1, 1):
+            g.side(p, d, side, -2.3, -0.2, 0.2, 10.6, 'shell', t=0.3)
+        for y in (2.0, 6.4, 9.4):                                                     # straps round the back of the leg
+            g.back(p, d, -2.0, y, 2.0, y + 0.5, 'belt', t=0.14)
+            g.side(p, d + 0.3, s, -0.6, y - 0.1, 0.4, y + 0.6, 'buckle', t=0.15)
+        g.front(p, d + 0.3, -1.8, 0.4, 1.8, 1.4, 'label', t=0.04)
+    g.both(LEGS, leg)
+
+
+def build_beekeeper_suit(g):
+    """A loose white smock and trousers zipped together, the round brimmed veil hood down on the back."""
+    d = JACKET + 0.2
+    g.shell('body', 0, 12, d, 'suit')
+    g.front('body', d, -0.25, -0.4, 0.25, 11.0, 'zip', t=0.12)
+    for s in (-1, 1):
+        x0, x1 = sorted((s * 1.2, s * 3.6))
+        g.front('body', d, x0, 6.8, x1, 10.0, 'suit', t=0.3)
+    g.box('body', (-4.2, -2.6, 0.6), (4.2, 0.4, 2 + d + 1.4), 'veil')                   # the veil hood folded down
+    g.box('body', (-5.0, -3.0, 2 + d + 0.2), (5.0, -2.6, 2 + d + 1.8), 'brim')
+    def arm(p, s):
+        g.shell(p, -2.0, 8.4, d, 'suit')
+        g.shell(p, 7.6, 8.6, d + 0.12, 'elastic')
+    g.both(ARMS, arm)
+    def leg(p, s):
+        g.shell(p, -0.2, 11.0, PANTS + 0.45, 'suit')
+        g.shell(p, 10.2, 11.0, PANTS + 0.55, 'elastic')
+    g.both(LEGS, leg)
+
+
+def build_cut_resistant_gloves(g):
+    def hand(p, s):
+        glove(g, p, s, 'knit', d=0.3, cuff='cuff', cuff_y=(7.6, 8.6), cuff_d=0.4)
+        g.shell(p, 9.2, 10.4, 0.36, 'palm')                                           # the dipped palm coat
+    g.both(ARMS, hand)
+
+
+def build_shin_guards(g):
+    def leg(p, s):
+        d = PANTS + 0.15
+        g.front(p, d, -2.1, 5.0, 2.1, 10.4, 'shell', t=0.45)
+        g.front(p, d, -1.8, 3.8, 1.8, 5.2, 'cap', t=0.6)                               # the knee cup at the top
+        for side in (-1, 1):
+            g.side(p, d, side, -2.1, 5.4, -0.2, 10.0, 'shell', t=0.35)
+        for y in (6.0, 9.0):
+            g.back(p, d, -2.0, y, 2.0, y + 0.6, 'strap', t=0.12)
+            g.side(p, d + 0.35, s, -1.0, y - 0.1, -0.2, y + 0.7, 'velcro', t=0.1)
+        g.front(p, d + 0.45, -0.8, 6.0, 0.8, 7.0, 'badge', t=0.04)
+    g.both(LEGS, leg)
+
+
+def build_gaiters(g):
+    def leg(p, s):
+        d = BOOT + 0.25
+        g.shell(p, 6.4, 11.0, d, 'shell')
+        g.shell(p, 6.2, 6.9, d + 0.1, 'cord')
+        g.front(p, d, -0.3, 6.4, 0.3, 11.0, 'zip', t=0.12)
+        g.box(p, (-0.25, 11.5, -2.4), (0.25, 11.7, 2.4), 'strap')                       # the instep strap under the boot
+        g.side(p, d, s, -1.8, 9.0, 1.8, 11.0, 'panel', t=0.08)
+    g.both(LEGS, leg)
+
+
+def build_football_shoulder_pads(g):
+    """Big hard shoulder caps on a padded chest and back plate, laced at the front."""
+    d = SHIRT + 0.6
+    g.front('body', d, -3.8, 0.4, 3.8, 6.0, 'shell', t=0.5)
+    g.back('body', d, -3.8, 0.0, 3.8, 6.6, 'shell', t=0.5)
+    g.front('body', d + 0.5, -0.5, 1.0, 0.5, 5.2, 'lace', t=0.08)
+    for s in (-1, 1):                                                                # the arches over each shoulder
+        x0, x1 = sorted((s * 1.6, s * 4.2))
+        g.box('body', (x0, -1.4, -2 - d - 0.6), (x1, 0.4, 2 + d + 0.6), 'shell')
+        g.side('body', d, s, -2.0, 6.4, 2.0, 7.0, 'strap', t=0.15)
+    def arm(p, s):
+        g.box(p, (-3.6 if s < 0 else -1.4, -3.4, -3.2), (1.4 if s < 0 else 3.6, -1.4, 3.2), 'cap')   # shoulder cap
+        g.side(p, JACKET, s, -2.8, -1.6, 2.8, 1.0, 'cap', t=0.5)
+        g.side(p, JACKET + 0.5, s, -2.4, -0.8, 2.4, -0.4, 'stripe', t=0.04)
+    g.both(ARMS, arm)
+
+
+def build_hockey_shoulder_pads(g):
+    d = SHIRT + 0.45
+    g.front('body', d, -3.6, 0.6, 3.6, 8.4, 'foam', t=0.4)                              # chest and belly protector
+    g.front('body', d + 0.4, -3.2, 1.0, 3.2, 4.0, 'shell', t=0.25)
+    g.back('body', d, -3.6, 0.2, 3.6, 7.6, 'foam', t=0.4)
+    g.back('body', d + 0.4, -1.0, 0.4, 1.0, 6.8, 'shell', t=0.3)                        # the spine plate
+    for s in (-1, 1):
+        x0, x1 = sorted((s * 1.4, s * 4.0))
+        g.box('body', (x0, -0.9, -2 - d - 0.4), (x1, 0.4, 2 + d + 0.4), 'foam')
+        g.side('body', d, s, -2.0, 7.0, 2.0, 7.6, 'strap', t=0.15)
+    def arm(p, s):
+        g.box(p, (-3.4 if s < 0 else -1.2, -2.9, -2.8), (1.2 if s < 0 else 3.4, -1.6, 2.8), 'shell')   # shoulder caps
+        g.side(p, JACKET - 0.1, s, -2.4, -1.6, 2.4, 2.6, 'foam', t=0.4)                # bicep pads
+    g.both(ARMS, arm)
+
+
+def build_hockey_neck_guard(g):
+    d = SHIRT + 0.25
+    g.box('body', (-3.0, -1.6, -2 - d - 0.3), (3.0, 0.4, 2 + d + 0.3), 'collar')
+    g.front('body', d, -2.6, 0.2, 2.6, 2.6, 'bib', t=0.25)                             # the bib down the chest
+    g.box('body', (-0.5, -1.4, 2 + d + 0.3), (0.5, 0.2, 2 + d + 0.5), 'velcro')
+
+
+def build_leather_neck_guard(g):
+    """A survivor's neck guard: layered leather strips riveted round a stiff collar, bite-proof at the throat."""
+    d = SHIRT + 0.35
+    g.box('body', (-3.2, -2.0, -2 - d - 0.35), (3.2, 0.6, 2 + d + 0.35), 'leather')
+    for i, y in enumerate((-1.6, -0.6, 0.4)):
+        g.box('body', (-3.3 - 0.1 * i, y, -2 - d - 0.45 - 0.08 * i), (3.3 + 0.1 * i, y + 0.6, 2 + d + 0.45 + 0.08 * i), 'band')
+    for x in (-2.4, -0.8, 0.8, 2.4):
+        g.front('body', d + 0.55, x - 0.15, -1.2, x + 0.15, -0.9, 'rivet', t=0.08)
+    g.box('body', (-0.6, -1.8, 2 + d + 0.4), (0.6, 0.4, 2 + d + 0.7), 'buckle')
+
+
+def build_padded_football_pants(g):
+    d = PANTS
+    trouser_top(g, d, 'cloth')
+    def leg(p, s):
+        g.shell(p, 0, 7.6, d, 'cloth')                                                # cut just below the knee
+        g.shell(p, 7.2, 7.8, d + 0.08, 'hem')
+        g.front(p, d, -1.8, 0.8, 1.8, 4.0, 'pad', t=0.3)                              # thigh pads
+        g.front(p, d, -1.6, 4.6, 1.6, 6.8, 'pad', t=0.35)                             # knee pads
+        g.side(p, d, s, -0.2, 0, 0.2, 7.6, 'stripe', t=0.04)
+    g.both(LEGS, leg)
+    for s in (-1, 1):                                                                 # hip pads
+        g.side('body', d, s, -1.6, 9.6, 1.6, 12.0, 'pad', t=0.35)
+
+
+def build_hockey_pants(g):
+    """Girdle pants: bulky padded shorts to the knee, padded hips, the kidney panel at the back."""
+    d = PANTS + 0.5
+    g.shell('body', 8.8, 12, d, 'shell')
+    g.shell('body', 8.6, 9.2, d + 0.1, 'belt')
+    g.back('body', d, -3.0, 9.2, 3.0, 11.8, 'pad', t=0.3)                              # kidney pad
+    def leg(p, s):
+        g.shell(p, 0, 5.4, d, 'shell')
+        g.shell(p, 4.8, 5.6, d + 0.1, 'hem')
+        g.side(p, d, s, -2.0, 0, 2.0, 4.6, 'stripe', t=0.06)
+        g.front(p, d, -1.8, 0.6, 1.8, 3.8, 'pad', t=0.2)
+    g.both(LEGS, leg)
+
+
+def build_catchers_vest(g):
+    """A catcher's chest protector: padded ribs down the front and a groin flap, strapped across the back."""
+    d = SHIRT + 0.35
+    g.front('body', d, -3.6, -0.2, 3.6, 10.6, 'shell', t=0.55)
+    for y in (1.2, 3.0, 4.8, 6.6, 8.4):                                               # the padded ribs
+        g.front('body', d + 0.55, -3.4, y, 3.4, y + 1.2, 'pad', t=0.25)
+    g.box('body', (-2.6, -1.0, -2 - d - 0.55), (2.6, 0.0, -2 - d + 0.2), 'shell')       # the throat collar
+    g.front('body', d + 0.8, -1.8, 2.2, 1.8, 3.6, 'logo', t=0.04)
+    for s in (-1, 1):
+        x0, x1 = sorted((s * 1.4, s * 2.8))
+        g.box('body', (x0, -0.3, -2 - d), (x1, 0.3, 2 + d), 'strap')
+        g.back('body', d, x0, 0.3, x1, 4.0, 'strap', t=0.12)
+    g.back('body', d, -3.8, 4.0, 3.8, 4.6, 'strap', t=0.12)
+    def leg(p, s):                                                                    # the groin flap on the thighs
+        g.front(p, PANTS + 0.4, -1.8 if s < 0 else -2.2, -0.4, 2.2 if s < 0 else 1.8, 2.0, 'shell', t=0.45)
+    g.both(LEGS, leg)
+
+
+def build_hockey_gloves(g):
+    def hand(p, s):
+        glove(g, p, s, 'shell', d=0.75, cuff='cuff', cuff_y=(6.6, 8.6), cuff_d=1.1)
+        for y in (8.6, 9.3, 10.0):                                                     # segmented finger rolls
+            g.side(p, 0.75, s, -2.2, y, 2.2, y + 0.6, 'roll', t=0.3)
+        g.shell(p, 9.6, 10.5, 0.8, 'palm')
+        g.side(p, 1.1, s, -1.4, 7.0, 1.4, 8.0, 'logo', t=0.05)
+    g.both(ARMS, hand)
+
+
+def build_chainmail_butcher_glove(g):
+    def hand(p, s):
+        glove(g, p, s, 'mail', d=0.35, cuff='mail', cuff_y=(6.8, 8.6), cuff_d=0.45)
+        g.shell(p, 6.6, 7.0, 0.55, 'strap')
+    g.both(ARMS, hand)
+
+
+def build_chainmail_sleeve(g):
+    """Butcher's mail sleeves from the wrist past the elbow, over the shirt, an elastic strap at the top."""
+    def arm(p, s):
+        g.shell(p, 1.4, 8.6, JACKET + 0.05, 'mail')
+        g.shell(p, 1.2, 1.8, JACKET + 0.12, 'strap')
+    g.both(ARMS, arm)
+
+
+def build_athletic_cup(g):
+    """A jockstrap with a hard cup, worn under everything."""
+    d = 0.12
+    g.shell('body', 10.6, 11.4, d, 'band')
+    g.front('body', d, -1.2, 11.0, 1.2, 12.0, 'cup', t=0.4)
+    def leg(p, s):
+        g.front(p, d, -1.0 if s > 0 else -0.6, -0.2, 0.6 if s > 0 else 1.0, 1.0, 'cup', t=0.4)
+        g.back(p, d, -1.6, -0.2, 1.6, 0.4, 'band', t=0.06)
+    g.both(LEGS, leg)
+
+
+# worn models for items registered elsewhere (loot/items): their own item model and name stay theirs
+OTHERS_ITEMS = {'headlamp', 'dog_tags'}
+
+KIT_2 = {
+    'headlamp': (build_headlamp, dict(band=cloth('#2a2a2c', stitch=None), lamp=plastic('#b83a2a'), lens=plastic('#e8e6d8', gloss=0.5),
+                                      button=plastic('#1a1a1a')), 0.35),
+    'shooting_earmuffs': (build_shooting_earmuffs, dict(band=plastic('#1e1f22'), cup=plastic('#2a4a7a', gloss=0.25),
+                                                        cap=plastic('#1e1f22'), foam=cloth('#1a1a1a', stitch=None)), 0.35),
+    'dog_tags': (build_dog_tags, dict(chain=metal('steel'), tag=metal('steel'), stamp=flat('#4a4a4a', ink=False)), 0.3),
+    'chainsaw_chaps': (build_chainsaw_chaps, dict(shell=cloth('#c8682a', weave=0.08), belt=cloth('#2a2a2a', stitch=None),
+                                                  buckle=plastic('#111111'), label=flat('#d8d4c4')), 0.5),
+    'beekeeper_suit': (build_beekeeper_suit, dict(suit=cloth('#dedcd2', weave=0.05), zip=metal(), veil=mesh('#2a2a2a'),
+                                                  brim=cloth('#d0ccbe'), elastic=rib('#cfcbbd')), 0.45),
+    'cut_resistant_gloves': (build_cut_resistant_gloves, dict(knit=knit('#7a7c80'), palm=rubber('#3a3c40'), cuff=rib('#5a2a24')), 0.45),
+    'shin_guards': (build_shin_guards, dict(shell=plastic('#1e1f22', gloss=0.3), cap=plastic('#26272a', gloss=0.3),
+                                            strap=cloth('#1a1a1c', stitch=None), velcro=cloth('#2a2a2c', stitch=None),
+                                            badge=flat('#c8c8c8')), 0.5),
+    'gaiters': (build_gaiters, dict(shell=cloth('#2a2c2e', weave=0.04), panel=cloth('#c86a2a', weave=0.04), cord=flat('#1e1e1e'),
+                                    zip=metal(), strap=rubber('#1a1a1a')), 0.45),
+    'football_shoulder_pads': (build_football_shoulder_pads, dict(shell=plastic('#d8d4ca', gloss=0.25), cap=plastic('#d8d4ca', gloss=0.25),
+                                                                  lace=flat('#1e1e1e'), strap=cloth('#2a2a2a', stitch=None),
+                                                                  stripe=flat('#7a2a24')), 0.5),
+    'hockey_shoulder_pads': (build_hockey_shoulder_pads, dict(foam=cloth('#3a3e44', weave=0.05), shell=plastic('#9aa0a6', gloss=0.2),
+                                                              strap=cloth('#1e1e1e', stitch=None)), 0.5),
+    'hockey_neck_guard': (build_hockey_neck_guard, dict(collar=cloth('#2a2c30', weave=0.04), bib=cloth('#2a2c30', weave=0.04),
+                                                        velcro=cloth('#1e1e1e', stitch=None)), 0.4),
+    'leather_neck_guard': (build_leather_neck_guard, dict(leather=leather('#4a3020'), band=leather('#5a3a26', stitch='#2a1a10'),
+                                                          rivet=metal('steel'), buckle=metal('steel')), 0.55),
+    'padded_football_pants': (build_padded_football_pants, dict(cloth=cloth('#c8a83a', weave=0.04, stitch=None), hem=rib('#b89a34'),
+                                                                pad=cloth('#bc9e36', stitch=None), stripe=flat('#7a2a24'),
+                                                                loop=cloth('#b89a34')), 0.5),
+    'hockey_pants': (build_hockey_pants, dict(shell=cloth('#1e2a4a', weave=0.04), belt=cloth('#1a1a1a', stitch=None),
+                                              pad=cloth('#1a2440'), hem=cloth('#1a2440'), stripe=flat('#b8b4a8')), 0.5),
+    'catchers_vest': (build_catchers_vest, dict(shell=cloth('#1e2a4a', weave=0.04), pad=cloth('#24325a', weave=0.04),
+                                                strap=cloth('#1a1a1a', stitch=None), logo=flat('#c8c4b8')), 0.5),
+    'hockey_gloves': (build_hockey_gloves, dict(shell=cloth('#1e1f22', weave=0.04), cuff=cloth('#1e1f22', weave=0.04),
+                                                roll=plastic('#26272a'), palm=leather('#c8b898'), logo=flat('#c8c4b8')), 0.5),
+    'chainmail_butcher_glove': (build_chainmail_butcher_glove, dict(mail=mesh('#9a9ca0'), strap=plastic('#2a5a9a')), 0.4),
+    'chainmail_sleeve': (build_chainmail_sleeve, dict(mail=mesh('#9a9ca0'), strap=rib('#2a5a9a')), 0.4),
+    'athletic_cup': (build_athletic_cup, dict(band=rib('#d8d4c8'), cup=plastic('#d4d0c4', gloss=0.2)), 0.3),
+}
+
+
 # ------------------------------------------------------------------ medical supports seen on the body
 # Not items: worn models ClothingLayer draws on whichever part has them applied (the synced worn-medical mask).
 # Dressings sit under the clothes; splints, slings, tourniquets, the collar and the knee brace go over them.
@@ -2713,6 +3369,8 @@ GARMENTS.update(TOPS)
 GARMENTS.update(LOWER)
 GARMENTS.update(KIT)
 GARMENTS.update(MILITARY)
+GARMENTS.update(MILITARY_2)
+GARMENTS.update(KIT_2)
 GARMENTS.update(MEDICAL)
 
 
@@ -2932,7 +3590,7 @@ def main(only):
         M.dump(whole_json, ASSETS / f'models/item/clothing/{gid}.json')
         mesh_id = f'clothing/{gid}'
         # worn in the head slot, ClothingLayer draws it: vanilla's own head layer gets nothing
-        if gid not in MEDICAL:      # medical pieces are only ever drawn on the body, never an item of their own
+        if gid not in MEDICAL and gid not in OTHERS_ITEMS:   # drawn on the body only; the item is someone else's
             M.dump({'model': {'type': 'minecraft:select', 'property': 'minecraft:display_context',
                               'cases': [{'when': 'head', 'model': {'type': 'minecraft:empty'}}],
                               'fallback': camo_item(ref, mesh_id, 'loot', gid, camos)}}, ASSETS / f'items/{gid}.json')
@@ -2946,7 +3604,7 @@ def main(only):
             M.dump({'model': camo_item(f'{ref}/{part}', mesh_id, part, gid, camos)}, ASSETS / f'items/clothing/{gid}/{part}.json')
             meshes[part] = pj
         write_mesh(mesh_id, meshes, tex)
-        if gid not in MEDICAL:
+        if gid not in MEDICAL and gid not in OTHERS_ITEMS:
             lang[f'item.{NS}.{gid}'] = titles.get(gid, gid.replace('_', ' ').title())
         print(f'{gid}: {len(m.parts)} boxes on {", ".join(parts)}, {T}px')
     lang_path.write_text(json.dumps(lang, indent=2, ensure_ascii=False) + '\n')
