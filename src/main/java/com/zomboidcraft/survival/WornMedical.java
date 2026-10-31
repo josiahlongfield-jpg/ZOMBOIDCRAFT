@@ -33,6 +33,14 @@ public final class WornMedical {
         // loading the class registers the attachment
     }
 
+    /** All six parts' bits, by Body.Region ordinal. */
+    public static int[] mask(Player player) {
+        List<Integer> worn = player.getAttachedOrElse(TYPE, NONE);
+        int[] out = new int[6];
+        for (int i = 0; i < Math.min(6, worn.size()); i++) out[i] = worn.get(i);
+        return out;
+    }
+
     /** The bits on one part (0 when nothing shows). */
     public static int on(Player player, Region part) {
         List<Integer> worn = player.getAttachedOrElse(TYPE, NONE);
