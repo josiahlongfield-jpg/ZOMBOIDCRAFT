@@ -332,7 +332,8 @@ public class BaseMoveTest implements FabricClientGameTest {
             b.append(" leg=").append(s.overworld().getBlockState(yard.offset(-1, 2, -8)).getBlock());
             b.append(" deck=").append(s.overworld().getBlockState(yard.offset(0, 3, -9)).getBlock());
             b.append(" rail=").append(s.overworld().getBlockState(yard.offset(1, 4, -10)).getBlock());
-            b.append(" ladder=").append(s.overworld().getBlockState(yard.offset(-1, 3, -7)).getBlock());
+            b.append(" ladder=").append(s.overworld().getBlockState(yard.offset(-1, 3, -7)).getBlock())
+                    .append(" climbable=").append(s.overworld().getBlockState(yard.offset(-1, 3, -7)).is(net.minecraft.tags.BlockTags.CLIMBABLE));
             return b.toString();
         });
         LOG.info("ZCBASE tower:{}", tower);
