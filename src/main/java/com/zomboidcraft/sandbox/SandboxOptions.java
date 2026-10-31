@@ -28,11 +28,48 @@ import java.util.function.UnaryOperator;
 final class SandboxOptions {
     private static final String ZOMBOID = "/data/zomboidcraft/sandbox/zomboid.json";
 
+    /** A Zombie Lore choice wired to its zombieLore field. */
+    private static void lore(Map<String, UnaryOperator<SandboxOption.Builder>> w, String id, String field, String... choices) {
+        w.put("ZombieLore." + id, b -> b.choice("zombieLore." + field, choices).owner("ENTITY"));
+    }
+
     /** Zomboid settings our systems drive, by Zomboid's id. */
     private static Map<String, UnaryOperator<SandboxOption.Builder>> wires() {
         Map<String, UnaryOperator<SandboxOption.Builder>> w = new HashMap<>();
         // Zombie Population (ENTITY)
         w.put("ZombieConfig.PopulationMultiplier", b -> b.number("population.density", 0.25, 4).owner("ENTITY"));
+        // Zombie Lore (ENTITY): every one of Zomboid's 29, its own choices in Zomboid's order (ZcConfig.ZombieLore)
+        lore(w, "Speed", "speed", "sprinters", "fast_shamblers", "shamblers", "random");
+        w.put("ZombieLore.SprinterPercentage", b -> b.number("zombieLore.sprinterPercent", 0, 100).owner("ENTITY"));
+        lore(w, "Strength", "strength", "superhuman", "normal", "weak", "random");
+        lore(w, "Toughness", "toughness", "tough", "normal", "fragile", "random");
+        lore(w, "Transmission", "transmission", "blood_and_saliva", "saliva_only", "everyones_infected", "none");
+        lore(w, "Mortality", "mortality", "instant", "seconds_0_30", "minutes_0_1", "hours_0_12", "days_2_3", "weeks_1_2", "never");
+        lore(w, "Reanimate", "reanimate", "instant", "seconds_0_30", "minutes_0_1", "hours_0_12", "days_2_3", "weeks_1_2");
+        lore(w, "Cognition", "cognition", "navigate_and_use_doors", "navigate", "basic_navigation", "random");
+        w.put("ZombieLore.DoorOpeningPercentage", b -> b.number("zombieLore.doorOpeningPercent", 0, 100).owner("ENTITY"));
+        lore(w, "CrawlUnderVehicle", "crawlUnderVehicle", "crawlers_only", "extremely_rare", "rare", "sometimes", "often",
+                "very_often", "extremely_often");
+        lore(w, "Memory", "memory", "long", "normal", "short", "none", "random", "random_normal_none");
+        lore(w, "Sight", "sight", "eagle", "normal", "poor", "random", "random_normal_poor");
+        lore(w, "Hearing", "hearing", "pinpoint", "normal", "poor", "random", "random_normal_poor");
+        w.put("ZombieLore.SpottedLogic", b -> b.toggle("zombieLore.stealthSystem").owner("ENTITY"));
+        w.put("ZombieLore.ThumpNoChasing", b -> b.toggle("zombieLore.environmentalAttacks").owner("ENTITY"));
+        w.put("ZombieLore.ThumpOnConstruction", b -> b.toggle("zombieLore.damageConstruction").owner("ENTITY"));
+        lore(w, "ActiveOnly", "activeOnly", "both", "night", "day");
+        w.put("ZombieLore.TriggerHouseAlarm", b -> b.toggle("zombieLore.houseAlarms").owner("ENTITY"));
+        w.put("ZombieLore.ZombiesDragDown", b -> b.toggle("zombieLore.dragDown").owner("ENTITY"));
+        w.put("ZombieLore.ZombiesCrawlersDragDown", b -> b.toggle("zombieLore.crawlersDragDown").owner("ENTITY"));
+        w.put("ZombieLore.ZombiesFenceLunge", b -> b.toggle("zombieLore.lunge").owner("ENTITY"));
+        w.put("ZombieLore.ZombiesArmorFactor", b -> b.number("zombieLore.armorFactor", 0, 100).owner("ENTITY"));
+        w.put("ZombieLore.ZombiesMaxDefense", b -> b.number("zombieLore.maxDefense", 0, 100).owner("ENTITY"));
+        w.put("ZombieLore.ChanceOfAttachedWeapon", b -> b.number("zombieLore.attachedWeaponPercent", 0, 100).owner("ENTITY"));
+        w.put("ZombieLore.ZombiesFallDamage", b -> b.number("zombieLore.fallDamage", 0, 100).owner("ENTITY"));
+        lore(w, "DisableFakeDead", "fakeDead", "world_zombies", "world_and_combat", "off");
+        lore(w, "PlayerSpawnZombieRemoval", "spawnArea", "inside_the_building_and_around_it", "inside_the_building",
+                "inside_the_room", "none");
+        w.put("ZombieLore.FenceThumpersRequired", b -> b.number("zombieLore.fenceThumpersRequired", -1, 100).owner("ENTITY"));
+        w.put("ZombieLore.FenceDamageMultiplier", b -> b.number("zombieLore.fenceDamageMultiplier", 0.01, 100).owner("ENTITY"));
         // Nature (WEATHER): our own choices, Zomboid's endless snow and blizzard wait for snow
         w.put("ClimateCycle", b -> b.choice("nature.climateCycle", "normal", "no_weather", "endless_rain", "endless_storm").owner("WEATHER"));
         w.put("FogCycle", b -> b.choice("nature.fogCycle", "normal", "no_fog", "endless_fog").owner("WEATHER"));
@@ -79,9 +116,6 @@ final class SandboxOptions {
                 .fixed("true", "Your rule: guns make zombies flinch, only blunt melee knocks them back."));
         o.add(of(LORE, "zc.crawlNeedsBothLegs", "Crawl Only Without Legs")
                 .fixed("true", "Your rule: a zombie crawls only with both legs gone."));
-        o.add(of(LORE, "zc.sprinterChance", "Sprinter Share")
-                .tip("Share of zombies that sprint once they spot you; about one in seven.")
-                .number("zombies.sprinterChance", 0, 1).owner("ENTITY"));
 
         o.add(of(TIME, "zc.endlessNight", "Endless Night")
                 .fixed("true", "Your rule: the clouds keep the day nearly as dark as the night, and it always rains."));

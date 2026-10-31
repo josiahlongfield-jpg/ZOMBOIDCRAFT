@@ -2019,10 +2019,15 @@ public final class ZcConfig {
         try {
             String[] parts = key.split("\\.", 2);
             Object group = ZcConfig.class.getField(parts[0]).get(instance);
-            return String.valueOf(group.getClass().getField(parts[1]).get(group));
+            return text(group.getClass().getField(parts[1]).get(group));
         } catch (ReflectiveOperationException | ArrayIndexOutOfBoundsException e) {
             throw new IllegalArgumentException("Unknown setting " + key);
         }
+    }
+
+    /** A setting's value as text; a choice by its lower-case name ("random_normal_poor"), as setValue reads it back. */
+    private static String text(Object value) {
+        return value instanceof Enum<?> e ? e.name().toLowerCase(java.util.Locale.ROOT) : String.valueOf(value);
     }
 
     public static void setValue(String key, String raw) {
@@ -2079,7 +2084,7 @@ public final class ZcConfig {
         if (defaults == null) {
             defaults = new ZcConfig();
         }
-        return String.valueOf(getValue(key, defaults));
+        return text(getValue(key, defaults));
     }
 
     private static Object getValue(String key, ZcConfig from) {
