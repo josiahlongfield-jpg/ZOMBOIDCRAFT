@@ -193,8 +193,7 @@ final class SandboxOptions {
                     SandboxGroup group = SandboxGroup.byId(o.get("group").getAsString());
                     SandboxOption.Builder b = of(group, o.get("id").getAsString(), o.get("label").getAsString())
                             .tip(o.get("tooltip").getAsString()).owner(o.get("owner").getAsString());
-                    JsonObject presets = o.getAsJsonObject("presets");
-                    String apocalypse = presets.get("apocalypse").getAsString();
+                    String apocalypse = o.get("default").getAsString();
                     switch (o.get("kind").getAsString()) {
                         case "toggle" -> b.kind(SandboxOption.Kind.TOGGLE);
                         case "number" -> b.kind(SandboxOption.Kind.NUMBER)
