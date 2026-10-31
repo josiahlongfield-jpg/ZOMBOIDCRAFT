@@ -4244281,6 +4244281,87 @@
    "sound": "METAL",
    "rotate": "axis",
    "decor": true
+  },
+  "bunk_haunch": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     4,
+     14.5,
+     16,
+     8,
+     16,
+     "bunk_concrete"
+    ],
+    [
+     0,
+     8,
+     12.5,
+     16,
+     11,
+     16,
+     "bunk_concrete"
+    ],
+    [
+     0,
+     11,
+     10.5,
+     16,
+     13,
+     16,
+     "bunk_concrete"
+    ],
+    [
+     0,
+     13,
+     8,
+     16,
+     14.5,
+     16,
+     "bunk_concrete"
+    ],
+    [
+     0,
+     14.5,
+     5.5,
+     16,
+     15.5,
+     16,
+     "bunk_concrete"
+    ],
+    [
+     0,
+     15.5,
+     2.5,
+     16,
+     16,
+     16,
+     "bunk_concrete"
+    ]
+   ],
+   "title": "Vaulted Concrete",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "bk_deposit_blank": {
+   "tex": {
+    "north": "bk_deposit_blank",
+    "side": "cv_iron",
+    "up": "cv_iron",
+    "down": "cv_iron"
+   },
+   "title": "Safe Deposit Boxes",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "bk_deposit_door": {
+   "door": "steel",
+   "tex": {
+    "top": "bk_deposit_blank",
+    "bottom": "bk_deposit_blank"
+   },
+   "title": "Safe Deposit Boxes"
   }
  }
 }

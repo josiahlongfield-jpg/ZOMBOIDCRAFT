@@ -452,6 +452,7 @@ final class Cellar {
         }
         against("home_gun_cabinet", "home_gun_cabinet_top");
         against(withLoot("home_workbench", "basement_supplies"));
+        against("zomboidcraft:reloading_bench");
         for (int i = 0, n = 1 + rng.nextInt(2); i < n; i++) {
             against("cellar_barrel[loot=basement_supplies]");
         }
