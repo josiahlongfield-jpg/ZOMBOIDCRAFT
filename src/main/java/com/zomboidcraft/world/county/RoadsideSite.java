@@ -277,9 +277,9 @@ final class RoadsideSite extends Site {
     }
 
     /** I-88 Truck &amp; Diesel ({@link AutoYards#truckDepot}): the truck hall, the diesel canopy, the lot out back. */
-    /** A power district's substation (PowerGrid) off the road: the yard sized to its district. */
+    /** A power district's substation (Districts) off the road: the yard sized to its district. */
     private void substation() {
-        PowerGrid.District dist = PowerGrid.district(null, p.centreX(), p.centreZ());
+        Districts.District dist = Districts.district(null, p.centreX(), p.centreZ());
         int[] size = switch (dist.kind()) {
             case CITY -> new int[] {60, 58};
             case TOWN -> new int[] {44, 38};

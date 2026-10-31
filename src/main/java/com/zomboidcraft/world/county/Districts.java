@@ -16,7 +16,7 @@ import java.util.List;
  * county_plan.txt and {@link Layout}): a full yard for a city district, a compact yard for a town, an H-pole
  * and a kiosk for a hamlet; {@link Substation} builds them.
  */
-public final class PowerGrid {
+public final class Districts {
     /** How big a district's substation is. */
     public enum Kind {
         /** Harbor Point Generating Station's own switchyard: nothing new to build. */
@@ -53,7 +53,7 @@ public final class PowerGrid {
             new District("capemerrow", "Cape Merrow", 6250, -5150, Kind.HAMLET),
             new District("gullharbor", "Gull Harbor", 4650, 7500, Kind.HAMLET));
 
-    private PowerGrid() {
+    private Districts() {
     }
 
     /** The district a column is in: the island's on the island, everywhere else the nearest middle off it. */
