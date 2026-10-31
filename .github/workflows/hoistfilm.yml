@@ -8,7 +8,7 @@ on:
     branches: [claude/project-thread-cilddw]
     paths: ['.github/workflows/hoistfilm.yml', 'src/gametest/java/com/zomboidcraft/client/cars/**',
             'src/main/java/com/zomboidcraft/world/cars/CarHoist.java', 'src/client/java/com/zomboidcraft/client/cars/Hoist*.java', 'src/client/java/com/zomboidcraft/client/cars/ShopTool*.java',
-            'src/main/java/com/zomboidcraft/world/cars/ShopTool.java']
+            'src/main/java/com/zomboidcraft/world/cars/ShopTool.java', 'src/main/java/com/zomboidcraft/world/cars/Mechanics.java']
 
 permissions:
   contents: write

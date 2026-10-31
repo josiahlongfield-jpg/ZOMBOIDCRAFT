@@ -278,7 +278,7 @@ public final class Mechanics {
     }
 
     /** Whether the car is up on a hoist (all of it), a trolley jack holds up this wheel's corner, or (tyres) they have a jack. */
-    private static String access(Player player, CarProp car, Part part, int corner) {
+    private static String access(Player player, CarProp car, Part part, int wheel) {
         if (!part.lifted || car.underReach()) {
             return null;
         }
@@ -289,7 +289,7 @@ public final class Mechanics {
         if (car.wheelsFree()) {
             return null;
         }
-        if (car.jackedFree(corner) || part == Part.TIRE && has(player, "car_jack")) {
+        if (car.jackedFree(wheel) || part == Part.TIRE && has(player, "car_jack")) {
             return null;
         }
         return part == Part.TIRE ? "Needs a jack under that corner, or the car on a hoist"
