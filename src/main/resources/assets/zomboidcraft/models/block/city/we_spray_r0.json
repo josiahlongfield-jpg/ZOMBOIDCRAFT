@@ -1,0 +1,148 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "concrete_dark": "zomboidcraft:block/city/concrete_dark",
+    "moss": "zomboidcraft:block/city/moss",
+    "pole_wood": "zomboidcraft:block/city/pole_wood",
+    "we_spray_r0": "zomboidcraft:block/city/we_spray_r0",
+    "particle": "zomboidcraft:block/city/we_spray_r0"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        3,
+        7
+      ],
+      "to": [
+        16,
+        16,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#we_spray_r0"
+        },
+        "south": {
+          "texture": "#pole_wood"
+        },
+        "east": {
+          "texture": "#pole_wood",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#pole_wood",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#pole_wood",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#pole_wood"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        2
+      ],
+      "to": [
+        16,
+        3,
+        6.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#concrete_dark"
+        },
+        "south": {
+          "texture": "#concrete_dark"
+        },
+        "east": {
+          "texture": "#concrete_dark",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#concrete_dark",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#concrete_dark"
+        },
+        "down": {
+          "texture": "#concrete_dark",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0.5,
+        3,
+        2.5
+      ],
+      "to": [
+        15.5,
+        3.4,
+        6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#moss"
+        },
+        "south": {
+          "texture": "#moss"
+        },
+        "east": {
+          "texture": "#moss"
+        },
+        "west": {
+          "texture": "#moss"
+        },
+        "up": {
+          "texture": "#moss"
+        },
+        "down": {
+          "texture": "#moss"
+        }
+      }
+    },
+    {
+      "from": [
+        0.5,
+        0,
+        9
+      ],
+      "to": [
+        4.5,
+        16,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pole_wood"
+        },
+        "south": {
+          "texture": "#pole_wood"
+        },
+        "east": {
+          "texture": "#pole_wood"
+        },
+        "west": {
+          "texture": "#pole_wood"
+        },
+        "up": {
+          "texture": "#pole_wood",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#pole_wood",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

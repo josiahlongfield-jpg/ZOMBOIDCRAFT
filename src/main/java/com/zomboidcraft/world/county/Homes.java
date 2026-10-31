@@ -2,6 +2,8 @@ package com.zomboidcraft.world.county;
 
 import com.zomboidcraft.world.city.Doors;
 import com.zomboidcraft.world.city.Placer;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.SplittableRandom;
 
 /**
@@ -28,10 +30,18 @@ final class Homes {
 
     private final Kit kit;
     private final SplittableRandom rng;
+    /** The realtor's signs, set out by {@link #finish()} once the place is built round them. */
+    private final List<Runnable> signs = new ArrayList<>();
 
     Homes(Kit kit) {
         this.kit = kit;
         this.rng = kit.rng;
+    }
+
+    /** Sets out the yard signs once everything else in the place is built. */
+    void finish() {
+        signs.forEach(Runnable::run);
+        signs.clear();
     }
 
     House.Style pick(double[] weights) {
@@ -166,6 +176,20 @@ final class Homes {
             if (mx >= 0 && mx < lw && p.get(mx, 1, 0) == null) {
                 p.set(mx, 0, 0, "minecraft:grass_block");
                 p.set(mx, 1, 0, rng.nextDouble() < 0.12 ? "yd_deck_post" : "mailbox[facing=north]");
+            }
+        }
+        // the realtor's sign in the yard, from when people still moved house: its own dice, and set
+        // out last (finish), so nothing built after it sees the cell taken and the place comes out as it did
+        SplittableRandom sale = new SplittableRandom(Noise.hash(lot.x0(), lot.z0(), 0x5A1E));
+        if (sale.nextDouble() < 0.07) {
+            int ax = doorX > lw / 2 ? 2 : lw - 3, az = Math.min(2 + sale.nextInt(2), sb - 2);
+            String sign = (sale.nextDouble() < 0.25 ? "we_sale_down" : "we_sale") + "[facing=north]";
+            if (ax >= 0 && ax < lw && az >= 1 && (dx0 < 0 || ax < dx0 - 1 || ax > dx1 + 1)) {
+                signs.add(() -> {
+                    if (p.get(ax, 1, az) == null) {
+                        p.set(ax, 1, az, sign);
+                    }
+                });
             }
         }
         // bins left out for a collection that never came

@@ -685,23 +685,15 @@ final class RoadsideSite extends Site {
                 q.set(x + i, 1, z, i % 7 == 3 ? "air" : "hesco");
             }
         }
-        for (int t = 0; t < 2; t++) {
-            int tx = x + 2 + t * 9;
-            for (int i = 0; i < 6; i++) {
-                for (int j = 0; j < 4; j++) {
-                    q.set(tx + i, 2, z + 2 + j, "tarp_green");
-                }
-                q.set(tx + i, 1, z + 2, i == 0 || i == 5 ? "pole_wood" : "air");
-            }
-            q.set(tx + 2, 1, z + 2, "sc_cot_head[facing=north]");
-            q.set(tx + 2, 1, z + 3, chance() < 0.5 ? "sc_cot_foot_b[facing=north]" : "sc_cot_foot[facing=north]");
-            if (chance() < 0.6) {
-                q.set(tx + 3, 1, z + 2, "sc_cot_head_b[facing=north]");
-                q.set(tx + 3, 1, z + 3, "sc_cot_foot[facing=north]");
-            }
+        // two shelter tents off the Tents kit, the cots inside, the lawn trodden round them
+        Tents t = new Tents(q, rng);
+        t.hit = hit;
+        t.lit = 0.05;
+        for (int k = 0; k < 2; k++) {
+            t.tent(x + 2 + k * 9, z + 2, 6, 7, Tents.canvasFor("shelter"), "shelter", 0.2);
         }
         q.set(x + 19, 1, z + 3, "sign_quarantine_0[facing=south]");
-        q.vehicle(x + 10, 1, z + 8, 90, "ambulance,ambulance_van,police_suv", rng.nextLong());
+        q.vehicle(x + 9.5, 1, z + 5, 0, "ambulance,ambulance_van,police_suv", rng.nextLong());
     }
 
     // ------------------------------------------------------------------ the warehouse

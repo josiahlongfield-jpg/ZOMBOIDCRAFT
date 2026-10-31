@@ -1,0 +1,115 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "pole_wood": "zomboidcraft:block/city/pole_wood",
+    "we_clean_m1": "zomboidcraft:block/city/we_clean_m1",
+    "we_shingle": "zomboidcraft:block/city/we_shingle",
+    "particle": "zomboidcraft:block/city/we_clean_m1"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        7
+      ],
+      "to": [
+        16,
+        14,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#we_clean_m1"
+        },
+        "south": {
+          "texture": "#pole_wood"
+        },
+        "east": {
+          "texture": "#pole_wood",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#pole_wood",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#pole_wood"
+        },
+        "down": {
+          "texture": "#pole_wood",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        14,
+        5.5
+      ],
+      "to": [
+        16,
+        15,
+        10.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pole_wood"
+        },
+        "south": {
+          "texture": "#pole_wood"
+        },
+        "east": {
+          "texture": "#pole_wood",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#pole_wood",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#pole_wood"
+        },
+        "down": {
+          "texture": "#pole_wood"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        15,
+        6
+      ],
+      "to": [
+        16,
+        16,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#we_shingle"
+        },
+        "south": {
+          "texture": "#we_shingle"
+        },
+        "east": {
+          "texture": "#we_shingle",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#we_shingle",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#we_shingle",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#pole_wood"
+        }
+      }
+    }
+  ]
+}
