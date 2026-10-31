@@ -867,6 +867,8 @@ public final class ZcConfig {
         public boolean sirenEffectsZombies = true;
         /** Zomboid's Siren Shutoff Hours: a siren left on dies after this many in-game hours (0 = never). */
         public double sirenShutoffHours = 0;
+        /** Zomboid's Player Damage From Crash: a crash at speed hurts whoever's inside. */
+        public boolean playerDamageFromCrash = true;
         /** Car boots and the backs of vans hold loot (tools/cars/car_loot.py); off leaves them empty. */
         public boolean carLoot = true;
         /** The jets' top speed in km/h. Past about 300 the world can't load fast enough to keep up with them. */

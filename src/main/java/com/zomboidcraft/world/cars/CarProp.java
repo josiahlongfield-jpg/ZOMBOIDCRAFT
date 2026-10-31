@@ -1910,6 +1910,7 @@ public class CarProp extends Entity {
             server.playSound(null, getX(), getY(), getZ(), CarSounds.CRASH, SoundSource.NEUTRAL,
                     (float) Math.min(1.5, speedBefore * 1.4), 0.9f + random.nextFloat() * 0.2f);
             Noise.emit(server, position(), 30);
+            crashHurt(server, speedBefore);
             if (!parts().isEmpty()) {
                 crashWear(speedBefore);
             }
@@ -1970,6 +1971,40 @@ public class CarProp extends Entity {
             }
         }
         lastSpeedForWear = speed;
+    }
+
+    /**
+     * Zomboid's Player Damage From Crash: everyone inside is thrown about by a crash from past about 30 km/h, worse
+     * the faster it was (twice the hurt at 70 as at 50): cuts on the head and arms off the wheel and glass, and from
+     * about 80 a chance of a broken bone (the survival body's 17-part health, on its six regions).
+     */
+    private void crashHurt(ServerLevel server, double speed) {
+        if (!com.zomboidcraft.ZcConfig.get().world.playerDamageFromCrash || speed < 0.42) {
+            return;
+        }
+        float damage = (float) (Math.pow(speed - 0.35, 1.6) * 40 * Cars.crashDamage());
+        for (Entity rider : getPassengers()) {
+            if (!(rider instanceof net.minecraft.server.level.ServerPlayer p) || p.isCreative()) {
+                continue;
+            }
+            p.hurtServer(server, damageSources().flyIntoWall(), damage);
+            if (!com.zomboidcraft.ZcConfig.get().survival.injuries) {
+                continue;
+            }
+            com.zomboidcraft.survival.Body body = com.zomboidcraft.survival.Body.get(p);
+            com.zomboidcraft.survival.Body.Region[] where = {com.zomboidcraft.survival.Body.Region.HEAD, com.zomboidcraft.survival.Body.Region.TORSO,
+                    com.zomboidcraft.survival.Body.Region.LEFT_ARM, com.zomboidcraft.survival.Body.Region.RIGHT_ARM,
+                    com.zomboidcraft.survival.Body.Region.LEFT_LEG, com.zomboidcraft.survival.Body.Region.RIGHT_LEG};
+            com.zomboidcraft.survival.Body.Region r = where[random.nextInt(speed > 0.9 ? 6 : 4)];
+            if (random.nextDouble() < Math.min(0.9, (speed - 0.35) * 1.5)) {
+                body = body.wound(r, com.zomboidcraft.survival.Body.Wound.LACERATION, true);
+            }
+            if (speed > 1.1 && random.nextDouble() < (speed - 1.1) * 1.5 && !body.part(r).fractured()) {
+                body = body.fracture(r);
+                p.sendOverlayMessage(Component.literal("You broke your " + r.label + " in the crash."));
+            }
+            com.zomboidcraft.survival.Body.set(p, body);
+        }
     }
 
     /** A crash at speed (blocks a tick) knocks the front about: lights, bonnet, radiator, steering, the front wheels. */
