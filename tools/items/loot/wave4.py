@@ -345,6 +345,20 @@ def tray_kit(w, h, d, colour_mat='body'):
     return build
 
 
+def iv_kit(m):
+    """An IV start kit: the sealed tray, and beside it a coil of giving-set tubing with its drip chamber and a
+    cannula with the coloured wings and hub."""
+    tray_kit(6.0, 1.4, 4.0)(m)
+    m.shift([-1.6, 0, 0])
+    for r in (1.3, 1.6):
+        flat_arc(m, (3.6, 0.2), r, 0, 360, 0.2, 0.2, 'tube', steps=16)
+    m.rod(0.0, 0.4, 0.3, 'tube', cx=3.6, cz=-1.9, axis=1)
+    m.rod(3.0, 4.2, 0.28, 'glass', cx=0.15, cz=-1.9, axis=0)               # the drip chamber
+    m.rod(1.4, 3.6, 0.12, 'metal', cx=0.15, cz=2.4, axis=0)                # the cannula needle
+    m.rod(3.6, 4.4, 0.25, 'cap', cx=0.2, cz=2.4, axis=0)                   # its coloured hub
+    m.box([3.7, 0.05, 2.0], [4.1, 0.15, 2.8], 'red')                       # the wings
+
+
 def manual(w=5.5, l=8.5, t=0.8):
     """A spiral-bound field manual lying flat."""
     def build(m):
@@ -491,8 +505,8 @@ def table(it):
         'airway_kit': it(airway, cloth=A.fabric('#b02a22'), body='#e8c040', lid=A.plastic('#3a8a3a'),
                          lens=A.plastic('#e8e4da'), mark=A.plastic('#3a6ab0'), tube=A.plastic('#f2efe8'),
                          strap=A.fabric('#1e1f20')),
-        'iv_kit': it(tray_kit(6.0, 1.4, 4.0), 'IV START', WHITE, band=BLUE, word_ink=WHITE, tint='#e8f0f0', body=BLUE,
-                     cap=BLUE),
+        'iv_kit': it(iv_kit, 'IV START', WHITE, band=BLUE, word_ink=WHITE, tint='#e8f0f0', body=BLUE,
+                     cap=BLUE, tube=A.plastic('#e8f0f0'), red=A.plastic('#e86aa0')),
         'bag_valve_mask': it(bag_valve, body='#e8e4da', cap=BLUE, tint='#e0eef0', lid=A.plastic('#3a9a6a'),
                              mark=A.plastic('#6a9ad8')),
         'stretcher': it(stretcher, cloth=A.fabric('#4a5a3a'), alu=A.alu, strap=A.fabric('#1e1f20')),
