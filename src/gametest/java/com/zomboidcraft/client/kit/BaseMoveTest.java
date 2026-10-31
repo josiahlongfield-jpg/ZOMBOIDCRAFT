@@ -133,13 +133,13 @@ public class BaseMoveTest implements FabricClientGameTest {
             Skills.addXp(p, Skill.CARPENTRY, Skill.xpForLevel(6));
             p.getInventory().clearContent();
             p.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ModItems.HAMMER));
+            p.getInventory().add(new ItemStack(BuiltInRegistries.ITEM.getValue(com.zomboidcraft.ZomboidCraft.id("hinges")), 3));
             p.getInventory().add(new ItemStack(net.minecraft.world.item.Items.OAK_PLANKS, 64));
             p.getInventory().add(new ItemStack(net.minecraft.world.item.Items.OAK_PLANKS, 64));
             for (int i = 0; i < 3; i++) {
                 p.getInventory().add(new ItemStack(ModItems.NAILS, 64));
                 p.getInventory().add(new ItemStack(net.minecraft.world.item.Items.OAK_PLANKS, 64));
             }
-            p.getInventory().add(new ItemStack(BuiltInRegistries.ITEM.getValue(com.zomboidcraft.ZomboidCraft.id("hinges")), 2));
             com.zomboidcraft.ZcConfig.get().building.floorSagSeconds = 9;
         });
         // the wall run along x at z = 4, built from z = 1 looking south
@@ -205,7 +205,7 @@ public class BaseMoveTest implements FabricClientGameTest {
             build(ctx, sp, Build.WOOD_STAIRS, yard.offset(8, 0, z), Direction.UP, Direction.EAST);
             build(ctx, sp, Build.WOOD_STAIRS, yard.offset(7, -1, z), Direction.UP, Direction.EAST);
         }
-        standYard(ctx, sp, 5.5, 6.5, -90f, 15f);
+        standYard(ctx, sp, 3.5, 6.5, -90f, 10f);
         frame(ctx, "stairs");
         String b2 = sp.getServer().computeOnServer(s -> {
             StringBuilder b = new StringBuilder();
