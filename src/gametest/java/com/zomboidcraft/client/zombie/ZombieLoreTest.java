@@ -139,6 +139,7 @@ public class ZombieLoreTest implements FabricClientGameTest {
      * rule (25 to damage a tall fence) they lean on it until a panel goes.
      */
     private static void fence(ClientGameTestContext ctx, TestSingleplayerContext sp) {
+        sp.getServer().runCommand("kill @e[type=zomboidcraft:corpse]");
         // a closed pen of chain-link, so the only way out is through it
         sp.getServer().runCommand("fill -5 100 2 5 101 2 zomboidcraft:chainlink[axis=x]");
         sp.getServer().runCommand("fill -5 100 11 5 101 11 zomboidcraft:chainlink[axis=x]");

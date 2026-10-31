@@ -375,6 +375,24 @@ public class BashGoal extends Goal {
     }
 
     /**
+     * Whether its path gets it where it's going without going through a fence. Chain-link and railings are thin, so
+     * the pathfinder will happily route straight through them; a path like that is no way round.
+     */
+    private boolean hasWayRound() {
+        net.minecraft.world.level.pathfinder.Path path = zombie.getNavigation().getPath();
+        if (zombie.getNavigation().isDone() || path == null || !path.canReach()) {
+            return false;
+        }
+        for (int i = path.getNextNodeIndex(); i < path.getNodeCount(); i++) {
+            BlockPos at = path.getNodePos(i);
+            if (isFence(zombie.level().getBlockState(at)) || isFence(zombie.level().getBlockState(at.above()))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
      * The nearest barricade around the zombie, or failing that the nearest shut door that stands
      * between it and where it's going.
      */
@@ -401,8 +419,7 @@ public class BashGoal extends Goal {
                         continue;  // behind it, or it's already this side of the door
                     }
                 }
-                if (isFence && !zombie.getNavigation().isDone() && zombie.getNavigation().getPath() != null
-                        && zombie.getNavigation().getPath().canReach()) {
+                if (isFence && hasWayRound()) {
                     continue;      // it has a way round the fence: it takes it, as Zomboid's do
                 }
                 isDoor = true;
