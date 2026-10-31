@@ -90,6 +90,7 @@ public final class ClothingItems {
         ClothWear.register();
         ClothingLoot.register();
         Grime.register();
+        Grooming.register();
         for (String id : SUPPLIES) {
             ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, ZomboidCraft.id(id));
             ITEMS.add(Registry.register(BuiltInRegistries.ITEM, key, new Item(new Item.Properties().stacksTo(16).setId(key))));

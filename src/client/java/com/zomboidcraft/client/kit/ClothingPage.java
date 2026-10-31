@@ -137,6 +137,7 @@ final class ClothingPage {
         hx += KitDraw.hint(g, font, "P", "Patch", hx, hy);
         hx += KitDraw.hint(g, font, "T", "Rip up", hx, hy);
         hx += KitDraw.hint(g, font, "W", "Wash", hx, hy);
+        hx += KitDraw.hint(g, font, "H", "Hair", hx, hy);
         screen.pagesAndClose(g, font, hx, hy);
     }
 

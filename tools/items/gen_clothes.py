@@ -4885,6 +4885,257 @@ GRAIL = {
 }
 
 
+# ------------------------------------------------------------------ hair and beards (clothing/Grooming)
+# Zomboid's hair grows out over the weeks and a beard over the days; scissors cut it to a shorter style, a razor
+# shaves. These are drawn over the skin's own painted hair by ClothingLayer. Each comes in every HAIR_COLOURS shade,
+# chosen through the same component as camo. A "_c" twin keeps only what shows under a hat. Eyes stay clear: fringes
+# stop above the eyes, beards start below them.
+
+HAIR_COLOURS = {
+    'dark_brown': '#3a2618', 'black': '#1a1614', 'brown': '#5e3e24', 'auburn': '#6e2e1a', 'ginger': '#a8501e',
+    'blonde': '#c8a45a', 'platinum': '#ddd2b0', 'grey': '#8a8884', 'white': '#d8d6d0',
+}
+
+
+class Tinted:
+    """A hair material, painted in whichever HAIR_COLOURS shade the variant being made is in."""
+
+    def __init__(self, shade=1.0, curl=False):
+        self.shade, self.curl = shade, curl
+
+    def make(self, name):
+        base = HAIR_COLOURS[name]
+        if self.shade != 1.0:
+            base = '#%02x%02x%02x' % tuple(min(255, int(int(base[i:i + 2], 16) * self.shade)) for i in (1, 3, 5))
+        return strands(base, self.curl)
+
+
+def strands(base, curl=False):
+    """Hair: locks running down the head, lighter on the lit side of each, the parting darker."""
+    def fn(f):
+        c = P.plain(f, base, 0.1)
+        across = f.P[..., 0] if abs(f.n[0]) < 0.5 else f.P[..., 2]
+        if abs(f.n[1]) > 0.5:
+            across = f.P[..., 0] * 0.6 + f.P[..., 2]
+        if curl:
+            across = across + np.sin(f.P[..., 1] * 9.0) * 0.12
+        band = np.floor(across / TX) % 3
+        c = c * (0.84 + 0.14 * band)[..., None]
+        c = np.where((P.white(f.shape, f.rng) > 0.86)[..., None], c * 1.18, c)
+        return toon(f, grade(c, 0.15), ink=True)
+    return fn
+
+
+HAIR_LINE = -6.9        # where the hairline meets the forehead
+FRINGE = EYES_HIGH - 1.0  # the lowest a fringe comes down: a pixel above the eyes
+
+
+class Capped:
+    """A builder that keeps only what shows below a hat's band: the back and sides below y -4.2, nothing in front."""
+
+    def __init__(self, g):
+        self.g = g
+
+    def box(self, part, lo, hi, mat, **kw):
+        if part == 'head':
+            if hi[2] <= -3.0:
+                return None
+            lo = (lo[0], max(lo[1], -4.2), max(lo[2], -3.0))
+            if lo[1] >= hi[1] or lo[2] >= hi[2]:
+                return None
+        return self.g.box(part, lo, hi, mat, **kw)
+
+
+def hair_cap(g, d, back_to, side_to, hairline=HAIR_LINE, mat='hair'):
+    """The hair close over the skull: top, back down to back_to, sides down to side_to, the front at the hairline."""
+    g.box('head', (-4 - d, -8 - d, -4 - d), (4 + d, hairline, 4 + d), mat)                     # top and front band
+    g.box('head', (-4 - d, hairline, -1.0), (4 + d, side_to, 4 + d), mat)                       # sides behind the temples
+    g.box('head', (-4 - d, side_to, 1.6), (4 + d, back_to, 4 + d), mat)                         # the back
+    g.box('head', (-4 - d, hairline, -4 - d), (-3.4, -5.2, -1.0), mat)                           # sideburns, clear of the eyes
+    g.box('head', (3.4, hairline, -4 - d), (4 + d, -5.2, -1.0), mat)
+
+
+def build_hair_buzz(g):
+    hair_cap(g, 0.08, -2.6, -4.4, hairline=-7.2)
+
+
+def build_hair_short(g):
+    hair_cap(g, 0.3, -2.0, -4.2)
+    g.box('head', (-3.6, -8.6, -4.3), (3.6, -8.3, 3.8), 'hair')                                # a little height on top
+    g.box('head', (-3.4, HAIR_LINE, -4.36), (1.4, HAIR_LINE + 0.6, -4.3), 'hair')               # short fringe
+
+
+def build_hair_side_part(g):
+    hair_cap(g, 0.32, -2.0, -4.2)
+    g.box('head', (-0.6, -8.75, -4.35), (4.35, -8.32, 4.0), 'hair')                             # the swept side
+    g.box('head', (-4.35, -8.55, -4.35), (-1.0, -8.32, 4.0), 'hair')
+    g.box('head', (-1.0, -8.6, -4.35), (-0.6, -8.32, 2.0), 'part')                              # the parting
+    g.box('head', (0.0, HAIR_LINE, -4.4), (4.4, HAIR_LINE + 0.8, -4.32), 'hair')
+
+
+def build_hair_spiky(g):
+    hair_cap(g, 0.3, -2.2, -4.4)
+    for x, z, h in ((-2.6, -2.6, 1.4), (0.0, -3.0, 1.8), (2.6, -2.4, 1.3), (-1.4, 0.0, 1.6), (1.4, 0.4, 1.7),
+                    (-2.6, 2.4, 1.2), (0.2, 2.6, 1.4), (2.6, 2.2, 1.1)):
+        g.box('head', (x - 0.7, -8.3 - h, z - 0.7), (x + 0.7, -8.3, z + 0.7), 'hair')
+        g.box('head', (x - 0.35, -8.3 - h - 0.5, z - 0.35), (x + 0.35, -8.3 - h, z + 0.35), 'tip')
+
+
+def build_hair_mohawk(g):
+    hair_cap(g, 0.06, -2.6, -4.6, hairline=-7.4, mat='shaved')
+    for i, h in enumerate((1.4, 2.0, 2.4, 2.4, 2.0, 1.6)):                                      # the crest, front to back
+        z0 = -4.2 + i * 1.45
+        g.box('head', (-0.8, -8.1 - h, z0), (0.8, -8.0, z0 + 1.45), 'hair')
+    g.box('head', (-0.8, -7.0, 4.0), (0.8, -3.0, 4.6), 'hair')
+
+
+def build_hair_medium(g):
+    hair_cap(g, 0.45, -0.6, -2.8)
+    g.box('head', (-3.8, -8.95, -4.4), (3.8, -8.45, 4.2), 'hair')
+    g.box('head', (-4.5, HAIR_LINE, -4.55), (1.0, FRINGE, -4.45), 'hair')                       # fringe swept to one side
+    g.box('head', (1.0, HAIR_LINE, -4.55), (4.5, HAIR_LINE + 1.2, -4.45), 'hair')
+    g.box('head', (-4.55, -5.2, -2.6), (-4.45, -2.4, 0.4), 'hair')                             # over the ears
+    g.box('head', (4.45, -5.2, -2.6), (4.55, -2.4, 0.4), 'hair')
+
+
+def build_hair_bob(g):
+    hair_cap(g, 0.5, -1.6, -1.6)
+    g.box('head', (-4.6, -1.6, -2.4), (4.6, -1.0, 4.6), 'hair')                                # the blunt line, flared
+    g.box('head', (-4.5, HAIR_LINE, -4.6), (4.5, FRINGE, -4.5), 'hair')                         # straight fringe
+    g.box('head', (-4.6, -5.2, -4.5), (-4.5, -1.0, -2.4), 'hair')
+    g.box('head', (4.5, -5.2, -4.5), (4.6, -1.0, -2.4), 'hair')
+
+
+def build_hair_slicked_back(g):
+    hair_cap(g, 0.35, -1.0, -3.6, hairline=-7.3)
+    g.box('head', (-3.8, -8.75, -4.0), (3.8, -8.35, 4.4), 'hair')
+    for x in (-2.4, -0.8, 0.8, 2.4):                                                             # comb lines
+        g.box('head', (x - 0.1, -8.8, -3.8), (x + 0.1, -8.7, 4.0), 'part')
+    g.box('head', (-3.0, -3.0, 4.35), (3.0, -0.4, 4.7), 'hair')                                # curling at the collar
+
+
+def long_back(g, mat='hair'):
+    g.box('body', (-3.8, -0.2, 2.25), (3.8, 4.4, 2.75), mat)                                    # down over the shoulder blades
+    g.box('body', (-3.4, 4.4, 2.3), (3.4, 5.2, 2.7), mat)
+
+
+def build_hair_long(g):
+    hair_cap(g, 0.5, 0.4, -0.4)
+    g.box('head', (-3.8, -9.0, -4.4), (3.8, -8.5, 4.3), 'hair')
+    g.box('head', (-4.0, -8.0, -4.0 - 0.6), (-0.4, FRINGE + 0.4, -4.5), 'hair')                 # centre parting, framing the face
+    g.box('head', (0.4, -8.0, -4.6), (4.0, FRINGE + 0.4, -4.5), 'hair')
+    for s in (-1, 1):
+        x0, x1 = (-4.6, -3.5) if s < 0 else (3.5, 4.6)
+        g.box('head', (x0, -5.2, -4.6), (x1, 0.6, -0.6), 'hair')                                # falling past the jaw
+    long_back(g)
+
+
+def build_hair_ponytail(g):
+    hair_cap(g, 0.35, -1.4, -3.8, hairline=-7.2)
+    g.box('head', (-3.8, -8.75, -4.0), (3.8, -8.35, 4.3), 'hair')
+    g.box('head', (-0.9, -4.6, 4.3), (0.9, -3.4, 4.9), 'tie')
+    g.box('head', (-1.0, -4.4, 4.8), (1.0, 0.0, 5.8), 'hair')                                  # the tail
+    g.box('body', (-0.9, -0.2, 2.3), (0.9, 3.6, 3.2), 'hair')
+
+
+def build_hair_bun(g):
+    hair_cap(g, 0.35, -1.6, -3.8, hairline=-7.2)
+    g.box('head', (-3.8, -8.75, -4.0), (3.8, -8.35, 4.3), 'hair')
+    g.box('head', (-1.8, -9.6, 2.0), (1.8, -6.6, 5.4), 'hair')                                 # the bun, high at the back
+    g.box('head', (-1.3, -10.0, 2.5), (1.3, -9.6, 4.9), 'hair')
+    g.box('head', (-1.9, -7.4, 2.0), (1.9, -7.0, 5.5), 'tie')
+
+
+def build_hair_braid(g):
+    hair_cap(g, 0.35, -1.2, -3.8, hairline=-7.2)
+    g.box('head', (-3.8, -8.75, -4.0), (3.8, -8.35, 4.3), 'hair')
+    g.box('head', (-1.0, -3.6, 4.3), (1.0, 0.0, 5.0), 'hair')
+    for i in range(6):                                                                           # plaits down the back
+        y = -0.2 + i * 1.0
+        g.box('body', (-0.9 + (0.2 if i % 2 else 0), y, 2.3), (0.9 - (0 if i % 2 else 0.2), y + 1.0, 3.1), 'hair' if i % 2 else 'plait')
+    g.box('body', (-0.6, 5.8, 2.4), (0.6, 6.3, 3.0), 'tie')
+
+
+# beards: the jaw is the head's lowest three rows; nothing goes above the eyes' bottom edge (y -3)
+
+def build_beard_stubble(g):
+    g.box('head', (-4.06, -2.6, -4.06), (4.06, 0.06, -1.0), 'hair')
+    g.box('head', (-4.06, -3.0, -1.0), (-3.6, 0.06, 0.6), 'hair')
+    g.box('head', (3.6, -3.0, -1.0), (4.06, 0.06, 0.6), 'hair')
+
+
+def build_beard_moustache(g):
+    g.box('head', (-2.2, -2.5, -4.35), (2.2, -1.7, -4.0), 'hair')
+    g.box('head', (-2.4, -1.9, -4.35), (-1.6, -1.2, -4.0), 'hair')
+    g.box('head', (1.6, -1.9, -4.35), (2.4, -1.2, -4.0), 'hair')
+
+
+def build_beard_goatee(g):
+    build_beard_moustache(g)
+    g.box('head', (-1.6, -1.2, -4.35), (1.6, 0.6, -3.4), 'hair')
+    g.box('head', (-1.2, 0.0, -4.4), (1.2, 0.9, -3.0), 'hair')
+
+
+def build_beard_chin_strap(g):
+    for s in (-1, 1):
+        x0, x1 = (-4.25, -3.6) if s < 0 else (3.6, 4.25)
+        g.box('head', (x0, -3.0, -1.4), (x1, 0.25, 0.4), 'hair')                                # up to the sideburns
+        g.box('head', (x0, -0.8, -4.25), (x1, 0.25, -1.4), 'hair')
+    g.box('head', (-4.25, -0.5, -4.3), (4.25, 0.35, -3.6), 'hair')
+
+
+def build_beard_short(g):
+    g.box('head', (-4.25, -2.6, -4.3), (4.25, 0.4, -1.2), 'hair')
+    g.box('head', (-4.25, -3.0, -1.2), (-3.6, 0.4, 0.8), 'hair')
+    g.box('head', (3.6, -3.0, -1.2), (4.25, 0.4, 0.8), 'hair')
+    g.box('head', (-2.2, -2.6, -4.45), (2.2, -1.8, -4.3), 'tip')                                # moustache over it
+    g.box('head', (-1.0, -1.4, -4.4), (1.0, -1.0, -4.3), 'mouth')
+
+
+def build_beard_full(g):
+    g.box('head', (-4.5, -2.7, -4.55), (4.5, 1.4, -1.0), 'hair')
+    g.box('head', (-4.5, -3.0, -1.0), (-3.6, 0.8, 1.0), 'hair')
+    g.box('head', (3.6, -3.0, -1.0), (4.5, 0.8, 1.0), 'hair')
+    g.box('head', (-3.0, 1.4, -4.6), (3.0, 2.0, -3.2), 'hair')
+    g.box('head', (-2.4, -2.7, -4.7), (2.4, -1.8, -4.55), 'tip')
+    g.box('head', (-1.0, -1.4, -4.6), (1.0, -1.0, -4.55), 'mouth')
+
+
+def build_beard_long(g):
+    build_beard_full(g)
+    g.box('head', (-3.2, 2.0, -4.7), (3.2, 3.8, -3.4), 'hair')                                 # hanging in front of the chest
+    g.box('head', (-2.2, 3.8, -4.6), (2.2, 5.0, -3.5), 'hair')
+    g.box('head', (-1.2, 5.0, -4.5), (1.2, 5.6, -3.6), 'tip')
+
+
+HAIR_STYLES = {
+    'buzz': build_hair_buzz, 'short': build_hair_short, 'side_part': build_hair_side_part, 'spiky': build_hair_spiky,
+    'mohawk': build_hair_mohawk, 'medium': build_hair_medium, 'bob': build_hair_bob, 'slicked_back': build_hair_slicked_back,
+    'long': build_hair_long, 'ponytail': build_hair_ponytail, 'bun': build_hair_bun, 'braid': build_hair_braid,
+}
+BEARD_STYLES = {
+    'stubble': build_beard_stubble, 'moustache': build_beard_moustache, 'goatee': build_beard_goatee,
+    'chin_strap': build_beard_chin_strap, 'short': build_beard_short, 'full': build_beard_full, 'long': build_beard_long,
+}
+
+
+def _hair_mats():
+    return dict(hair=Tinted(), tip=Tinted(1.18), part=Tinted(0.7), plait=Tinted(0.85), shaved=Tinted(0.75),
+                mouth=flat('#2a1a14', ink=False), tie=cloth('#1e1e22', stitch=None))
+
+
+def _capped(fn):
+    return lambda g: fn(Capped(g))
+
+
+GROOMING = {}
+for _name, _fn in HAIR_STYLES.items():
+    GROOMING[f'hair_{_name}'] = (_fn, _hair_mats(), 0.0)
+    GROOMING[f'hair_{_name}_c'] = (_capped(_fn), _hair_mats(), 0.0)
+for _name, _fn in BEARD_STYLES.items():
+    GROOMING[f'beard_{_name}'] = (_fn, _hair_mats(), 0.0)
+
+
 # ------------------------------------------------------------------ medical supports seen on the body
 # Not items: worn models ClothingLayer draws on whichever part has them applied (the synced worn-medical mask).
 # Dressings sit under the clothes; splints, slings, tourniquets, the collar and the knee brace go over them.
@@ -5040,6 +5291,7 @@ GARMENTS.update(CIVILIAN)
 GARMENTS.update(CIVILIAN_2)
 GARMENTS.update(CIVILIAN_3)
 GARMENTS.update(GRAIL)
+GARMENTS.update(GROOMING)
 GARMENTS.update(MEDICAL)
 
 
@@ -5232,10 +5484,12 @@ def main(only):
         seed = zlib.crc32(gid.encode()) % 1000
         lo, hi = m.bounds()
         camos = list(CAMOS) if any(isinstance(v, Camo) for v in mats.values()) else []
-        CAMO_FOR[gid] = camos
+        if any(isinstance(v, Tinted) for v in mats.values()):
+            camos = list(HAIR_COLOURS)                  # hair: its shades ride the camo component
+        CAMO_FOR[gid] = [] if gid in GROOMING else camos
 
         def look(name):
-            return dict({k: v.make(name) if isinstance(v, Camo) else v for k, v in mats.items()},
+            return dict({k: v.make(name) if isinstance(v, (Camo, Tinted)) else v for k, v in mats.items()},
                         _after=worn(wear, low=lo[1] + 4))
         patches = paint(m, look(camos[0] if camos else None), wear, seed)
         img, uvs, T = M.pack(patches)
@@ -5259,7 +5513,7 @@ def main(only):
         M.dump(whole_json, ASSETS / f'models/item/clothing/{gid}.json')
         mesh_id = f'clothing/{gid}'
         # worn in the head slot, ClothingLayer draws it: vanilla's own head layer gets nothing
-        if gid not in MEDICAL and gid not in OTHERS_ITEMS:   # drawn on the body only; the item is someone else's
+        if gid not in MEDICAL and gid not in OTHERS_ITEMS and gid not in GROOMING:   # drawn on the body only; the item is someone else's
             M.dump({'model': {'type': 'minecraft:select', 'property': 'minecraft:display_context',
                               'cases': [{'when': 'head', 'model': {'type': 'minecraft:empty'}}],
                               'fallback': camo_item(ref, mesh_id, 'loot', gid, camos)}}, ASSETS / f'items/{gid}.json')
@@ -5273,7 +5527,7 @@ def main(only):
             M.dump({'model': camo_item(f'{ref}/{part}', mesh_id, part, gid, camos)}, ASSETS / f'items/clothing/{gid}/{part}.json')
             meshes[part] = pj
         write_mesh(mesh_id, meshes, tex)
-        if gid not in MEDICAL and gid not in OTHERS_ITEMS:
+        if gid not in MEDICAL and gid not in OTHERS_ITEMS and gid not in GROOMING:
             lang[f'item.{NS}.{gid}'] = titles.get(gid, gid.replace('_', ' ').title())
         print(f'{gid}: {len(m.parts)} boxes on {", ".join(parts)}, {T}px')
     lang_path.write_text(json.dumps(lang, indent=2, ensure_ascii=False) + '\n')
