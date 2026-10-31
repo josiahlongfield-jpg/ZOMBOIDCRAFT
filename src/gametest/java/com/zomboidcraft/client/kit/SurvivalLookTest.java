@@ -75,6 +75,21 @@ public class SurvivalLookTest implements FabricClientGameTest {
             ctx.waitTicks(30);
             shot(ctx, "stuffed");
 
+            // the rest of the set: a toothache and a sting for pain, a cold, a turned stomach
+            sp.getServer().runOnServer(server -> {
+                ServerPlayer p = server.getPlayerList().getPlayers().get(0);
+                var m = com.zomboidcraft.survival.Ailments.edit(p);
+                m.put("tooth", 999);
+                m.put("sting", 30);
+                m.put("cold", 2000);
+                m.put("nausea", 60);
+                com.zomboidcraft.survival.Ailments.save(p, m);
+            });
+            ctx.waitTicks(50);
+            shot(ctx, "ailments");
+            ctx.waitTicks(40);
+            shot(ctx, "ailments");
+
             // the Skills page, scrolled through the whole Zomboid list
             sp.getServer().runOnServer(server -> {
                 ServerPlayer p = server.getPlayerList().getPlayers().get(0);

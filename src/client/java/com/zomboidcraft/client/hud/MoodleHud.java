@@ -4,6 +4,7 @@ import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.carry.Carry;
 import com.zomboidcraft.client.sound.UiSounds;
 import com.zomboidcraft.combat.Stamina;
+import com.zomboidcraft.survival.Ailments;
 import com.zomboidcraft.survival.Body;
 import com.zomboidcraft.survival.Needs;
 import com.zomboidcraft.survival.Nutrition;
@@ -30,7 +31,7 @@ import net.minecraft.world.effect.MobEffects;
 public final class MoodleHud {
     private static final int SIZE = 12, GAP = 3, RIGHT = 8;
     /** The name's scale, and how far below its draw point the capitals start (measured in game, per unit of scale). */
-    private static final float LABEL = .9f, CAP_TOP = 2.22f;
+    private static final float LABEL = .9f, CAP_TOP = 1.5f;
     private static final int GOOD = 4;
     private static final float MILD_SHOWS = 6f, NAME_SHOWS = 3.5f, TREND_SHOWS = 4f;
     private static final int[] LEVEL_INK = {0, 0xFFE8CF7C, 0xFFE69A66, 0xFFCE675B, 0xFF8EB07E};
@@ -137,6 +138,7 @@ public final class MoodleHud {
     private static boolean harms(Moodle m) {
         return switch (m.key()) {
             case "bleeding", "injury", "ill" -> true;
+            case "pain" -> m.label().equals("Agony");
             case "air" -> m.level() == 3;
             case "hunger" -> m.label().equals("Starving");
             case "thirst" -> m.label().equals("Dying of Thirst");
@@ -173,16 +175,24 @@ public final class MoodleHud {
             String label = Body.describe(worst, part);
             add(list, "injury", icon, part.severity(), label, label, label);
         }
-        // one Sick plate, Zomboid's: the infection, or a bad stomach (rotten food, poison, nausea)
+        // one Sick plate, Zomboid's: the infection, a fevered wound, or a bad stomach (rotten food, poison, nausea)
         float infection = s.infectionProgress();
-        int ill = infection > 0.8f ? 3 : infection > 0.5f ? 2 : infection > 0.25f ? 1 : 0;
-        int stomach = 0;
+        int fever = Ailments.get(player, "fever");
+        int ill = Math.max(infection > 0.8f ? 3 : infection > 0.5f ? 2 : infection > 0.25f ? 1 : 0,
+                fever >= 70 ? 3 : fever >= 40 ? 2 : fever > 0 ? 1 : 0);
+        int nausea = Ailments.get(player, "nausea");
+        int stomach = nausea >= 75 ? 3 : nausea >= 50 ? 2 : nausea >= 25 ? 1 : 0;
         for (MobEffectInstance effect : player.getActiveEffects()) {
             if (effect.is(MobEffects.POISON)) stomach = Math.max(stomach, Math.min(3, 2 + effect.getAmplifier()));
             else if (effect.is(MobEffects.HUNGER) || effect.is(MobEffects.NAUSEA)) stomach = Math.max(stomach, Math.min(3, 1 + effect.getAmplifier()));
         }
         if (stomach > ill) add(list, "ill", "thermo", stomach, "Queasy", "Nauseous", "Sick");
         else add(list, "ill", "thermo", ill, "Queasy", "Feverish", "Gravely ill");
+        // Zomboid's pain stages, from wounds, breaks, a bad tooth or a cold (LOOT's Medicine adds it up)
+        int pain = Ailments.get(player, "pain");
+        stage(list, "pain", "pain", pain >= 75 ? 4 : pain >= 50 ? 3 : pain >= 25 ? 2 : pain >= 10 ? 1 : 0,
+                "Minor Pain", "Pain", "Severe Pain", "Agony");
+        if (Ailments.get(player, "cold") > 0) list.add(new Moodle("cold", "germ", 1, "Has a Cold"));
         if (ZcConfig.get().combat.stamina) {
             float endurance = player.getAttachedOrElse(Stamina.TYPE, Stamina.FULL);
             add(list, "breath", "lungs", endurance < 10 ? 3 : endurance < 30 ? 2 : endurance < 60 ? 1 : 0,
