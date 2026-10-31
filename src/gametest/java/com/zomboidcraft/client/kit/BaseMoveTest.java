@@ -292,9 +292,16 @@ public class BaseMoveTest implements FabricClientGameTest {
             StringBuilder b = new StringBuilder(" fitted " + level.getBlockState(door));
             level.getBlockState(door).useWithoutItem(level, p, hit);
             b.append(" | by hand: open=").append(level.getBlockState(door).getValue(net.minecraft.world.level.block.DoorBlock.OPEN));
-            ItemStack key = ItemStack.EMPTY;
+            // a full pack sets the key down at your feet: pick it up
+            for (var e : level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, p.getBoundingBox().inflate(4))) {
+                if (BuiltInRegistries.ITEM.getKey(e.getItem().getItem()).getPath().equals("padlock_key")) {
+                    p.setItemInHand(InteractionHand.OFF_HAND, e.getItem().copy());
+                    e.discard();
+                }
+            }
+            ItemStack key = p.getOffhandItem().isEmpty() ? ItemStack.EMPTY : p.getOffhandItem();
             for (ItemStack st : p.getInventory()) {
-                if (BuiltInRegistries.ITEM.getKey(st.getItem()).getPath().equals("padlock_key")) key = st;
+                if (key.isEmpty() && BuiltInRegistries.ITEM.getKey(st.getItem()).getPath().equals("padlock_key")) key = st;
             }
             b.append(" | key ").append(key.getHoverName().getString());
             level.getBlockState(door).useItemOn(key, level, p, InteractionHand.MAIN_HAND, hit);
