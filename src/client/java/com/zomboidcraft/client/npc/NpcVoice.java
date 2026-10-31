@@ -79,8 +79,8 @@ public final class NpcVoice {
         if (mc.level == null) {
             return;
         }
-        if (ZcConfig.get().look.npcSubtitles) {
-            mc.gui.getChat().addMessage(Component.literal("<" + v.speaker() + "> ").withStyle(ChatFormatting.GRAY)
+        if (ZcConfig.get().look.npcSubtitles && mc.player != null) {
+            mc.player.sendSystemMessage(Component.literal("<" + v.speaker() + "> ").withStyle(ChatFormatting.GRAY)
                     .append(Component.literal(v.text()).withStyle(ChatFormatting.WHITE)));
         }
         Speaking old = SPEAKING.remove(v.npc());
