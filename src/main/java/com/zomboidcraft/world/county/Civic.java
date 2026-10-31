@@ -174,7 +174,14 @@ final class Civic {
 
     /** A school, built by {@link School}: classrooms off a corridor, the office, library and gym. */
     void school(int w, int d, boolean high) {
-        new School(p, rng).build(w, d, high);
+        school(w, d, high, false);
+    }
+
+    /** evacuated: the front loop is left empty for an aid station (no buses or cars on it). */
+    void school(int w, int d, boolean high, boolean evacuated) {
+        School s = new School(p, rng);
+        s.evacuated = evacuated;
+        s.build(w, d, high);
     }
 
     // ------------------------------------------------------------------ the picture house
