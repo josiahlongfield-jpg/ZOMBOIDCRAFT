@@ -220,7 +220,8 @@ public final class Bunker {
         ship = kind == Kind.SHIP;
         boolean small = kind == Kind.FOREST || kind == Kind.ARMY;
         // under a tower the rooms open off the operations floor, an open hall of desks between two lines of columns
-        cw = small ? 2 : kind == Kind.TOWER ? 9 : 3;
+        // the army's gallery is three wide under a vault, the forest's two
+        cw = kind == Kind.FOREST ? 2 : kind == Kind.TOWER ? 9 : 3;
         mouth0 = cw <= 3 ? 0 : cw / 2 - 1;
         mouth1 = cw <= 3 ? cw - 1 : cw / 2 + 1;
         damp = switch (kind) {
@@ -360,9 +361,12 @@ public final class Bunker {
                 u.add(Use.PANTRY);
             }
             case ARMY -> {
-                // the guard room by the door (the radio desk and the map), then the bunks
+                // the guard room by the door (the radio desk, the map, the rifles), the squad room, the
+                // cookhouse and the latrine: a section lived down here
                 u.add(Use.COMMS);
                 u.add(Use.BUNKS);
+                u.add(Use.MESS);
+                u.add(Use.WASH);
             }
         }
         u.add(Use.PLANT);
@@ -412,6 +416,11 @@ public final class Bunker {
             return;
         }
         boolean bare = kind == Kind.FOREST;
+        if (kind == Kind.ARMY && r.use == Use.CORRIDOR) {
+            // the gallery is board-marked concrete as it was cast, the floor painted
+            r.lower = r.upper = "bunk_concrete";
+            return;
+        }
         switch (r.use) {
             case DECON, WASH -> {
                 r.lower = r.upper = "bunk_tile";
@@ -809,7 +818,17 @@ public final class Bunker {
     private void corridor(Room r) {
         int wx = r.x0, ex = r.x1;
         boolean pipesWest = rng.nextBoolean();
+        boolean vault = kind == Kind.ARMY;
         for (int z = r.z0; z <= r.z1; z++) {
+            if (vault) {
+                // a gallery vaulted from wall to wall, the pipes low along one side, the lamps and the
+                // cable tray hung from the crown
+                r.decor(wx, z, 3, 3, "bunk_haunch");
+                r.decor(ex, z, 1, 3, "bunk_haunch");
+                r.decor(pipesWest ? wx : ex, z, pipesWest ? 3 : 1, 1, "bunk_pipes_low");
+                r.ceiling(r.x0 + 1, z, (z - r.z0) % 5 == 2 ? "bunk_lamp_hang" : "bunk_cable_tray[axis=z]");
+                continue;
+            }
             r.decor(pipesWest ? wx : ex, z, pipesWest ? 3 : 1, 3, (z - r.z0) % 7 == 3 ? "bunk_pipes_valve" : "bunk_pipes");
             if (cw >= 3) {
                 int cx = r.x0 + 1;
@@ -906,6 +925,17 @@ public final class Bunker {
         for (int i = from, n = 0; i <= to; i++, n++) {
             if (n % 3 == 2) {
                 continue;  // a gap to get between them
+            }
+            if (kind == Kind.ARMY) {
+                // a squad room: the bunks round the walls, the tall lockers back to back down the middle
+                if (acrossX) {
+                    r.free(i, zc, 0, "bunk_locker", "bunk_locker_top");
+                    r.free(i, zc + 1, 2, "bunk_locker", "bunk_locker_top");
+                } else {
+                    r.free(xc, i, 3, "bunk_locker", "bunk_locker_top");
+                    r.free(xc + 1, i, 1, "bunk_locker", "bunk_locker_top");
+                }
+                continue;
             }
             String[] head = {"bunk_bed_head", "bunk_bed_head_top"}, foot = {"bunk_bed_foot", "bunk_bed_foot_top"};
             if (acrossX) {
@@ -1010,6 +1040,15 @@ public final class Bunker {
         if (command) {
             r.against("filing_cabinet");
             r.against("filing_cabinet");
+        }
+        if (kind == Kind.ARMY) {
+            // the guard room: the section's rifles on the wall, the duty board, the log in the cabinet
+            r.wallDecor(2, "bunk_gun_rack");
+            r.wallDecor(2, "bunk_gun_rack");
+            r.wallDecor(2, "bunk_pegboard");
+            r.against("filing_cabinet");
+            r.against("bunk_footlocker");
+            r.against("bunk_crate_ammo");
         }
     }
 
@@ -1195,7 +1234,13 @@ public final class Bunker {
                     r.place(c[0], c[1], s, crate);
                 }
                 double v = rng.nextDouble();
-                if (v < 0.7) {
+                if (kind == Kind.ARMY) {
+                    // an army armoury is racked wall to wall, two tiers of rifles
+                    r.decor(c[0], c[1], s, 2, v < 0.85 ? "bunk_gun_rack" : "bunk_pegboard");
+                    if (v < 0.6) {
+                        r.decor(c[0], c[1], s, 1, "bunk_gun_rack");
+                    }
+                } else if (v < 0.7) {
                     r.decor(c[0], c[1], s, 2, v < 0.55 ? "bunk_gun_rack" : "bunk_pegboard");
                 }
             }
