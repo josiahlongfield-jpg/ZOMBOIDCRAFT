@@ -586,11 +586,11 @@ final class NpcSkinAnimator {
         // the head steadies against the chest's give and leads a turn
         turn(model, world, model.head, new Matrix4f().rotateY(rad(lead * steady)).rotateX(rad(-give * 0.6f - bow * 0.4f)));
         if (!in.gun) {
-            // a hanging arm turned forward is a negative turn about x
-            turn(model, world, model.bone("mixamorigLeftArm"), new Matrix4f().rotateX(rad(-swing)));
-            turn(model, world, model.bone("mixamorigRightArm"), new Matrix4f().rotateX(rad(-swing)));
-            turn(model, world, model.bone("mixamorigLeftForeArm"), new Matrix4f().rotateX(rad(-swing * 0.5f)));
-            turn(model, world, model.bone("mixamorigRightForeArm"), new Matrix4f().rotateX(rad(-swing * 0.5f)));
+            // a hanging arm turned forward is a negative turn about x: a stop (swing below zero) carries them on forward
+            turn(model, world, model.bone("mixamorigLeftArm"), new Matrix4f().rotateX(rad(swing)));
+            turn(model, world, model.bone("mixamorigRightArm"), new Matrix4f().rotateX(rad(swing)));
+            turn(model, world, model.bone("mixamorigLeftForeArm"), new Matrix4f().rotateX(rad(swing * 0.5f)));
+            turn(model, world, model.bone("mixamorigRightForeArm"), new Matrix4f().rotateX(rad(swing * 0.5f)));
         }
     }
 
