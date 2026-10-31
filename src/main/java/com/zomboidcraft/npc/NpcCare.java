@@ -343,7 +343,7 @@ public final class NpcCare {
     /** Puts on a bigger backpack, picks the best gun she has rounds for, and fits attachments with a free slot. */
     private static void kit(NpcEntity npc) {
         NpcWork w = npc.work;
-        var pack = w.pack;
+        net.minecraft.world.SimpleContainer pack = w.pack;
         for (int i = 0; i < pack.getContainerSize(); i++) {
             ItemStack s = pack.getItem(i);
             BagSpec spec = BagItem.spec(s);
@@ -351,6 +351,7 @@ public final class NpcCare {
                 ItemStack old = w.bag;
                 w.bag = pack.removeItemNoUpdate(i);
                 w.resize(npc, BASE_PACK + spec.slots());
+                pack = w.pack;
                 if (!old.isEmpty()) {
                     ItemStack left = pack.addItem(old);
                     if (!left.isEmpty()) npc.spawnAtLocation((ServerLevel) npc.level(), left);
