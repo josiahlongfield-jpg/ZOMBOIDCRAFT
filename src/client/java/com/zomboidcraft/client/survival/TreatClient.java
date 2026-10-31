@@ -1,5 +1,6 @@
 package com.zomboidcraft.client.survival;
 
+import com.zomboidcraft.client.interact.InteractMenu;
 import com.zomboidcraft.client.interact.Interactables;
 import com.zomboidcraft.survival.Downs;
 import com.zomboidcraft.survival.Treatment;
@@ -16,6 +17,15 @@ public final class TreatClient {
 
     public static void register() {
         Interactables.finder(TreatClient::dot);
+        // hold G on a friend: Zomboid's "Treat" entry, greyed out when you carry nothing to treat them with
+        InteractMenu.provider((client, player, hit, out) -> {
+            Player t = lookedAt(client);
+            if (t == null) return;
+            String label = "Treat " + t.getName().getString();
+            boolean supplied = Treatment.find(player, Treatment.Kind.BANDAGE) != null || Treatment.find(player, Treatment.Kind.SPLINT) != null;
+            out.add(supplied ? InteractMenu.Option.of(label, () -> ClientPlayNetworking.send(new Treatment.Other(t.getId())))
+                    : InteractMenu.Option.no(label, "No bandage or splint"));
+        });
     }
 
     public static boolean interact(Minecraft client, HitResult hit) {
