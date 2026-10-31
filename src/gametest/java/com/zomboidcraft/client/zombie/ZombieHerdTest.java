@@ -99,14 +99,14 @@ public class ZombieHerdTest implements FabricClientGameTest {
      * you stand: it turns, walks this way as a record, and spills out as real dead once it's in range.
      */
     private static void herd(ClientGameTestContext ctx, TestSingleplayerContext sp) {
-        for (String c : new String[] {"zc config population.density 0", "zc config population.streetRange 40",
+        for (String c : new String[] {"zc config population.density 0", "zc config population.streetRange 34",
                 "zc config population.crowd false", "zc config population.enabled true"}) {
             sp.getServer().runCommand(c);
         }
         sp.getServer().runOnServer(server -> Herds.add(server.overworld(), 0, -80, 60));
         // watched from the side, off the road it comes down
-        sp.getServer().runCommand("setblock 46 114 -36 minecraft:barrier");
-        sp.getServer().runCommand("tp @a 46 115 -36 90 16");
+        sp.getServer().runCommand("setblock 28 114 -20 minecraft:barrier");
+        sp.getServer().runCommand("tp @a 28 115 -20 90 18");
         ctx.waitTicks(40);
         for (int f = 0; f < 95; f++) {
             if (f % 15 == 0) {
