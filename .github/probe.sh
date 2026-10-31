@@ -7,6 +7,14 @@ echo "MC jars: $MC_JARS"
 classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1" | sort -u; }
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
+echo "===== npc voice"
+for c in net.minecraft.client.resources.sounds.SoundInstance net.minecraft.client.resources.sounds.AbstractSoundInstance net.minecraft.client.resources.sounds.Sound net.minecraft.client.sounds.WeighedSoundEvents net.minecraft.client.sounds.AudioStream net.minecraft.client.sounds.JOrbisAudioStream net.minecraft.client.sounds.FiniteAudioStream net.minecraft.client.sounds.SoundBufferLibrary net.minecraft.client.sounds.SoundManager net.minecraft.util.valueproviders.ConstantFloat net.minecraft.client.resources.sounds.EntityBoundSoundInstance; do echo "-- $c"; javap -cp "$CP" -p "$c" 2>&1 | grep -vE 'lambda\$' | head -40; done
+classes 'client/sounds/' | head -60
+javap -cp "$CP" -p -c net.minecraft.client.sounds.SoundEngine 2>&1 | grep -A80 'play(net.minecraft.client.resources.sounds.SoundInstance)' | grep -E 'invoke|getstatic' | head -60
+for j in $MC_JARS; do unzip -Z1 "$j" | grep -i stbvorbis | head -3; done
+find ~/.gradle/caches/modules-2 -name 'lwjgl-stb*.jar' | head -3
+classes 'fabric/api/entity/event/v1/' | head -20
+sig net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents 'AFTER|ALLOW|interface|boolean|void'
 echo "===== mesh guns"
 classes 'renderer/special/' | head -60
 for c in net.minecraft.client.renderer.special.SpecialModelRenderer 'net.minecraft.client.renderer.special.SpecialModelRenderer$Unbaked' 'net.minecraft.client.renderer.special.SpecialModelRenderer$BakingContext' net.minecraft.client.renderer.special.NoDataSpecialModelRenderer net.minecraft.client.renderer.special.SpecialModelRenderers net.minecraft.client.renderer.texture.DynamicTexture net.minecraft.client.renderer.rendertype.RenderTypes; do echo "-- $c"; javap -cp "$CP" -p "$c" 2>&1 | grep -vE 'lambda\$' | head -40; done
