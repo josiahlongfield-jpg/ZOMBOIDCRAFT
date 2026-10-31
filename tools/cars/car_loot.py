@@ -114,20 +114,45 @@ TABLES["swat"] = (TABLES["swat"][0], TABLES["swat"][1] + [(f"{ZC}:battle_rifle",
 TABLES["trunk"] = (TABLES["trunk"][0], TABLES["trunk"][1] + [(f"{ZC}:pocket_ammo", 1, 3, 12)])
 RARE["swat"] = RARE["swat"] + [(f"{ZC}:battle_rifle", 1), (f"{ZC}:heavy_sniper", 1), (f"{ZC}:grenade_launcher", 1)]
 RARE["trunk"] = RARE["trunk"] + [(f"{ZC}:pocket_pistol", 2)]
+
+# Zomboid's Recently Survivor Vehicles: someone was living out of this car. Food, water, fuel, a bed roll, first aid,
+# something to fight with and the ammo for it, tools and the map they were following. Generous by design: it's rare.
+FUEL = lambda lo, hi: {"function": "minecraft:set_custom_data", "tag": "{fuel:%sf}" % round((lo + hi) / 2, 1)}
+TABLES["survivor"] = ((6, 10), [
+    (f"{ZC}:canned_beans", 6, 1, 3), (f"{ZC}:canned_soup", 5, 1, 3), (f"{ZC}:canned_stew", 4, 1, 2), (f"{ZC}:canned_chili", 4, 1, 2),
+    (f"{ZC}:canned_tuna", 4, 1, 3), (f"{ZC}:canned_ham", 2, 1, 1), (f"{ZC}:beef_jerky", 3, 1, 3), (f"{ZC}:granola_bar", 3, 1, 4),
+    (f"{ZC}:trail_mix", 3, 1, 2), (f"{ZC}:can_opener", 4, 1, 1), (f"{ZC}:water_bottle", 8, 1, 4),
+    (f"{ZC}:gas_can", 3, 1, 1), (f"{ZC}:gas_can", 3, 1, 1, FUEL(3, 5)), (f"{ZC}:gas_can", 2, 1, 1, FUEL(9, 11)),
+    (f"{ZC}:sleeping_bag", 5, 1, 1), (f"{ZC}:tarp", 2, 1, 1), (f"{ZC}:rope", 2, 1, 1),
+    (f"{ZC}:first_aid_kit", 4, 1, 1), (f"{ZC}:bandage", 5, 1, 4),
+    (f"{ZC}:crowbar", 3, 1, 1, worn(.2, .7)), (f"{ZC}:machete", 2, 1, 1, worn(.2, .7)), (f"{ZC}:baseball_bat", 2, 1, 1, worn(.2, .7)),
+    (f"{ZC}:kitchen_knife", 2, 1, 1, worn(.2, .6)), (f"{ZC}:pistol", 2, 1, 1, worn(.2, .7)), (f"{ZC}:pistol_ammo", 4, 4, 15),
+    (f"{ZC}:shotgun", 1, 1, 1, worn(.2, .7)), (f"{ZC}:double_barrel", 1, 1, 1, worn(.2, .7)), (f"{ZC}:shotgun_shell", 4, 3, 10),
+    (f"{ZC}:hammer", 2, 1, 1), (f"{ZC}:screwdriver", 2, 1, 1), (f"{ZC}:multitool", 2, 1, 1), (f"{ZC}:duct_tape", 3, 1, 2),
+    (f"{ZC}:flashlight", 3, 1, 1), (f"{ZC}:lighter", 3, 1, 1), (f"{ZC}:matches", 3, 1, 2), (f"{ZC}:camp_stove", 1, 1, 1),
+    (f"{ZC}:street_map", 3, 1, 1), (f"{ZC}:road_atlas", 2, 1, 1), (f"{ZC}:two_way_radio", 1, 1, 1)])
+# a survivor's car always has the map, the bed and the water: the guaranteed pool
+SURE = {"survivor": [[(f"{ZC}:street_map", 1, 1, 1), (f"{ZC}:road_atlas", 1, 1, 1)], [(f"{ZC}:sleeping_bag", 1, 1, 1)],
+                     [(f"{ZC}:water_bottle", 1, 2, 3)]]}
+
+
 def table(name):
     (lo, hi), entries = TABLES[name]
     pools = [{"rolls": {"type": "minecraft:uniform", "min": lo, "max": hi}, "entries": [entry(*e) for e in entries]}]
     if name in RARE:
         pools.append({"rolls": 1, "conditions": [{"condition": "minecraft:random_chance", "chance": 0.04}],
                       "entries": [entry(item, w, 1, 1) for item, w in RARE[name]]})
+    for sure in SURE.get(name, []):
+        pools.append({"rolls": 1, "entries": [entry(*e) for e in sure]})
     return {"type": "minecraft:chest", "pools": pools, "random_sequence": f"{ZC}:car/{name}"}
 
 
 def main():
+    # python3 tools/cars/car_loot.py survivor: just those tables. With no names it rewrites them all, which drops what
+    # place_loot.py and other threads added since (the glovebox table among them), so prefer naming the table.
     OUT.mkdir(parents=True, exist_ok=True)
-    for old in OUT.glob("*.json"):
-        old.unlink()
-    for name in TABLES:
+    only = sys.argv[1:]
+    for name in only or TABLES:
         (OUT / f"{name}.json").write_text(json.dumps(table(name), indent=2) + "\n")
     print(f"{len(TABLES)} car loot tables in {OUT}")
 
