@@ -99,9 +99,7 @@ public class CompanionTradesTest implements FabricClientGameTest {
                 }
             });
             sp.getServer().runCommand("execute as @p at @p run zc npc job mechanic");
-            // a little Mechanics of your own for later (its skill-up card has gone by then)
-            sp.getServer().runOnServer(s -> com.zomboidcraft.skills.Skills.addXp(s.getPlayerList().getPlayers().get(0),
-                    com.zomboidcraft.skills.Skill.MECHANICS, 200));
+
             log(sp, c, "mechanic start");
             for (int i = 0; i < 44; i++) {
                 ctx.waitTicks(15);
@@ -115,6 +113,7 @@ public class CompanionTradesTest implements FabricClientGameTest {
                 p.getInventory().add(item("screwdriver", 1));
                 // a survivor's job (creative finishes it at once): a little Mechanics of your own
                 p.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
+                com.zomboidcraft.skills.Skills.addXp(p, com.zomboidcraft.skills.Skill.MECHANICS, 200);
                 if (s.overworld().getEntity(carId) instanceof CarProp car) {
                     s.getCommands().performPrefixedCommand(s.createCommandSourceStack(), String.format(Locale.ROOT,
                             "tp @a %.2f %.2f %.2f -90 25", car.getX() - 3.4, car.getY(), car.getZ() + 1.2));
@@ -122,7 +121,8 @@ public class CompanionTradesTest implements FabricClientGameTest {
                     npc.teleportTo(car.getX() + 2.5, car.getY(), car.getZ() + 4.5);
                 }
             });
-            ctx.waitTicks(10);
+            // till the skill-up card has gone
+            ctx.waitTicks(140);
             int tail = CarParts.slot(Part.TAIL_LIGHT, 0);
             sp.getServer().runOnServer(s -> {
                 ServerPlayer p = s.getPlayerList().getPlayers().get(0);
