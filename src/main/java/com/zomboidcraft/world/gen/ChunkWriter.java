@@ -210,6 +210,11 @@ public final class ChunkWriter implements ChunkSink {
         if (car == null) {
             return null;
         }
+        // "usable#customer": a customer car at an auto shop, its key on the shop's board
+        if (variant != null && variant.endsWith("#customer")) {
+            car.setCustomer();
+            variant = variant.length() > 9 ? variant.substring(0, variant.length() - 9) : null;
+        }
         if (raised >= 0) {
             car.setLook(model.id, variant != null ? variant : Cars.pickVariant(rng));
             car.snapTo(x, y + raised, z, yaw, 0f);

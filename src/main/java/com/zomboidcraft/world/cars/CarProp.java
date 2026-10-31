@@ -139,6 +139,7 @@ public class CarProp extends Entity {
     private int nextSeat = -1;
     /** Where the key is ({@link CarKeys}), whether someone's hotwired it, and ticks left on a hotwiring and who's at it. */
     private int keyWhere;
+    private boolean customer;
     private boolean hotwired;
     /** Whether a car's condition has been decided yet ({@link #carCondition}). */
     private boolean worn;
@@ -250,6 +251,7 @@ public class CarProp extends Entity {
             boot.setItem(i, items.get(i));
         }
         keyWhere = input.getIntOr("key", CarKeys.UNROLLED);
+        customer = input.getIntOr("customer", 0) != 0;
         hotwired = input.getIntOr("hotwired", 0) != 0;
         worn = input.getIntOr("worn", 0) != 0;
         entityData.set(LIGHTS, input.getIntOr("lights", 0) != 0);
@@ -290,6 +292,7 @@ public class CarProp extends Entity {
         }
         ContainerHelper.saveAllItems(output, items);
         output.putInt("key", keyWhere);
+        output.putInt("customer", customer ? 1 : 0);
         output.putInt("hotwired", hotwired ? 1 : 0);
         output.putInt("worn", worn ? 1 : 0);
         output.putInt("lights", lightsOn() ? 1 : 0);
@@ -936,8 +939,19 @@ public class CarProp extends Entity {
     /** Decides where the key is, the first time it matters. */
     private void rollKey() {
         if (keyWhere == CarKeys.UNROLLED) {
-            keyWhere = CarKeys.roll(new java.util.Random(getUUID().getMostSignificantBits()));
+            keyWhere = customer ? CarKeys.BOARD : CarKeys.roll(new java.util.Random(getUUID().getMostSignificantBits()));
         }
+    }
+
+    /** Worldgen: a customer car left at an auto shop, its key on the shop's key board ({@link CarKeys#board}). */
+    public void setCustomer() {
+        customer = true;
+    }
+
+    /** Whether this car's key still hangs on a shop's key board. */
+    boolean onBoard() {
+        rollKey();
+        return keyWhere == CarKeys.BOARD;
     }
 
     /** Whether the key went walking with one of the dead nearby (deciding where it is if nobody has yet). */
