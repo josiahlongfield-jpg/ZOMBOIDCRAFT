@@ -51,7 +51,7 @@ jobs:
         run: |
           mkdir -p /tmp/shots
           find . -path '*screenshots*' -name 'hoist-*.png' -exec cp {} /tmp/shots/ \; || true
-          grep -E "ZCHOIST|Exception|Caused|error:" test.log | head -150 > /tmp/shots/log.txt || true
+          grep -E -A2 "ZCHOIST|Exception|Caused|error:" test.log | head -150 > /tmp/shots/log.txt || true
           cd /tmp/shots
           ls hoist-*.png > /dev/null 2>&1 && ffmpeg -loglevel error -framerate 10 -pattern_type glob -i 'hoist-*.png' -vf "scale=1280:-2" -c:v libx264 -pix_fmt yuv420p -crf 23 hoist.mp4 || true
           git init -q && git checkout -q -b shots/cilddw

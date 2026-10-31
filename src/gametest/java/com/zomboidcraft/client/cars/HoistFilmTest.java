@@ -48,7 +48,7 @@ public class HoistFilmTest implements FabricClientGameTest {
                         for (int y = -1; y <= 7; y++) {
                             BlockPos at = b.offset(x, y, z);
                             level.setBlock(at, y == -1 ? Blocks.SMOOTH_STONE.defaultBlockState()
-                                    : z == 6 && y < 6 || Math.abs(x) == 9 && y < 6 ? Blocks.WHITE_CONCRETE.defaultBlockState()
+                                    : z == 6 && y < 6 || Math.abs(x) == 9 && y < 6 ? Blocks.SMOOTH_STONE.defaultBlockState()
                                     : Blocks.AIR.defaultBlockState(), 2);
                         }
                     }
@@ -62,7 +62,6 @@ public class HoistFilmTest implements FabricClientGameTest {
                 p.teleportTo(level, b.getX() + 0.5, b.getY(), b.getZ() - 8, java.util.Set.of(), 0, 15, false);
             });
             ctx.waitTicks(40);
-            ctx.runOnClient(mc -> mc.options.hideGui = true);
             // 1. the bay, from the front and a little to the side
             shot(sp, -3.2, 1.7, -6.5, -25, 12);
             frames(ctx, 12, 2);
@@ -103,7 +102,6 @@ public class HoistFilmTest implements FabricClientGameTest {
             shot(sp, 0, 1.0, -4.2, 0, 10);
             ctx.waitTicks(10);
             ctx.runOnClient(mc -> {
-                mc.options.hideGui = false;
                 if (mc.level.getEntity(carId) instanceof CarProp car) {
                     mc.gui.setScreen(new com.zomboidcraft.client.kit.MechanicsScreen(car));
                 }
@@ -111,7 +109,6 @@ public class HoistFilmTest implements FabricClientGameTest {
             frames(ctx, 16, 2);
             ctx.runOnClient(mc -> {
                 mc.gui.setScreen(null);
-                mc.options.hideGui = true;
             });
             sp.getServer().runCommand("gamemode creative @a");
             // 7. the valve: down to the floor, arms out
