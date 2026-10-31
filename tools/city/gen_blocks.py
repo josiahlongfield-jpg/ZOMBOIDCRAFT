@@ -374,6 +374,8 @@ def java_line(name, spec, tex_dir):
         flags.append("FLICKER")
     if "signal" in spec:
         flags.append("SIGNAL")
+    if spec.get("switch"):
+        flags.append("SWITCH")
     if spec.get("offset"):
         flags.append("OFFSET")
     if model == "cross":

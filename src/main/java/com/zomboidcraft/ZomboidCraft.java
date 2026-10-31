@@ -40,6 +40,7 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.world.trains.TrainCommand.register();
         com.zomboidcraft.world.lifts.Lifts.register();
         com.zomboidcraft.world.ferry.Ferries.register();
+        com.zomboidcraft.world.blocks.LightSwitch.register();
         com.zomboidcraft.combat.GunState.register();
         com.zomboidcraft.combat.Attachments.register();
         com.zomboidcraft.combat.GunFinish.register();

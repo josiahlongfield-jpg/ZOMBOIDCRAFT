@@ -25436,5 +25436,11 @@ final class CitySpecs extends CityBlocks.Specs {
         s("tp_bales_blown", FACING, 0, 0, SoundType.GRASS, 1f, 0, 0, 0, 16, 10, 16);
         s("tp_roll", AXIS, 0, 0, SoundType.WOOL, 1f, 5.1, 10, 0, 10.9, 16, 16);
         s("tp_roll_torn", AXIS, 0, 0, SoundType.WOOL, 1f, 5.1, 0, 0, 10.9, 16, 16);
+        s("lx_switch", FACING, DECOR | SWITCH, 0, SoundType.STONE, 0f, 6, 5, 14, 10, 11, 16);
+        s("lx_switch_on", FACING, DECOR | SWITCH, 0, SoundType.STONE, 0f, 6, 5, 14, 10, 11, 16);
+        s("lx_cube_blue", PLAIN, 0, 0, SoundType.GLASS, 0.3f, 5, 7, 5, 11, 16, 11);
+        s("lx_cube_blue_lit", PLAIN, 0, 13, SoundType.GLASS, 0.3f, 5, 7, 5, 11, 16, 11);
+        s("lx_cube_red", PLAIN, 0, 0, SoundType.GLASS, 0.3f, 5, 7, 5, 11, 16, 11);
+        s("lx_cube_red_lit", PLAIN, 0, 10, SoundType.GLASS, 0.3f, 5, 7, 5, 11, 16, 11);
     }
 }
