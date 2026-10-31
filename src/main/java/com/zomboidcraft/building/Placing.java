@@ -44,10 +44,10 @@ public final class Placing {
                     && DigRules.natural(level.getBlockState(at.below()))) {
                 return true;
             }
-            say(player, "Earth only goes back into the ground, no higher than the land lay. Build walls from the Build page.");
+            say(player, "Earth only fills the ground back in. Build walls from the Build page.");
             return false;
         }
-        say(player, "That's no building material here. Build from the Build page (E), and the skills it takes.");
+        say(player, "Not a building material. Build walls from the Build page (E).");
         return false;
     }
 
@@ -58,6 +58,8 @@ public final class Placing {
     private static void say(Player player, String text) {
         if (player instanceof ServerPlayer server) {
             server.sendOverlayMessage(Component.literal(text).withStyle(ChatFormatting.GRAY));
+            // the client already took one off the stack for the block it guessed would go down: put it back
+            server.inventoryMenu.sendAllDataToRemote();
         }
     }
 
