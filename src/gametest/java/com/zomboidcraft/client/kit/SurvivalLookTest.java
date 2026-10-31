@@ -56,19 +56,22 @@ public class SurvivalLookTest implements FabricClientGameTest {
             sp.getServer().runOnServer(server -> {
                 ServerPlayer p = server.getPlayerList().getPlayers().get(0);
                 SurvivalStats.set(p, SurvivalStats.get(p).withThirst(100).withFatigue(65));
-                for (int i = 0; i < 4; i++) {
-                    net.minecraft.world.item.ItemStack food = p.getInventory().getItem(i).copy();
-                    if (food.isEmpty()) continue;
-                    com.zomboidcraft.survival.Drinks.onConsumed(p, food);
-                }
+                com.zomboidcraft.survival.Drinks.onConsumed(p, new net.minecraft.world.item.ItemStack(
+                        com.zomboidcraft.loot.items.LootItems.item("canned_ham")));
+                LOG.info("ZCSURV ham is worth {}", com.zomboidcraft.survival.Foods.of(new net.minecraft.world.item.ItemStack(
+                        com.zomboidcraft.loot.items.LootItems.item("canned_ham"))));
             });
             ctx.waitTicks(30);
             shot(ctx, "ate");
-            log(sp, "after eating");
+            log(sp, "after the ham");
             sp.getServer().runOnServer(server -> {
                 ServerPlayer p = server.getPlayerList().getPlayers().get(0);
-                Nutrition.set(p, Nutrition.get(p).withHunger(-0.2f));
+                for (int i = 0; i < 3; i++) {
+                    com.zomboidcraft.survival.Drinks.onConsumed(p, new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.BREAD));
+                }
             });
+            ctx.waitTicks(30);
+            log(sp, "after three loaves");
             ctx.waitTicks(30);
             shot(ctx, "stuffed");
 
