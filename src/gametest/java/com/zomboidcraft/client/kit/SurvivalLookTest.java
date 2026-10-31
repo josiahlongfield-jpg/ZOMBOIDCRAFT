@@ -75,7 +75,7 @@ public class SurvivalLookTest implements FabricClientGameTest {
             ctx.waitTicks(30);
             shot(ctx, "stuffed");
 
-            // the rest of the set: a toothache and a sting for pain, a cold, a turned stomach
+            // the rest of the set: a toothache and a sting for pain, a cold, a turned stomach, a few drinks
             sp.getServer().runOnServer(server -> {
                 ServerPlayer p = server.getPlayerList().getPlayers().get(0);
                 var m = com.zomboidcraft.survival.Ailments.edit(p);
@@ -83,6 +83,7 @@ public class SurvivalLookTest implements FabricClientGameTest {
                 m.put("sting", 30);
                 m.put("cold", 2000);
                 m.put("nausea", 60);
+                m.put("drunk", 70);
                 com.zomboidcraft.survival.Ailments.save(p, m);
             });
             ctx.waitTicks(50);

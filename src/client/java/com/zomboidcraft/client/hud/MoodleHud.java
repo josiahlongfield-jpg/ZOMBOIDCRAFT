@@ -193,6 +193,9 @@ public final class MoodleHud {
         stage(list, "pain", "pain", pain >= 75 ? 4 : pain >= 50 ? 3 : pain >= 25 ? 2 : pain >= 10 ? 1 : 0,
                 "Minor Pain", "Pain", "Severe Pain", "Agony");
         if (Ailments.get(player, "cold") > 0) list.add(new Moodle("cold", "germ", 1, "Has a Cold"));
+        int drunk = Ailments.get(player, "drunk");
+        stage(list, "drunk", "bottle", drunk >= 85 ? 4 : drunk >= 60 ? 3 : drunk >= 30 ? 2 : drunk >= 10 ? 1 : 0,
+                "Tipsy", "Drunk", "Very Drunk", "Hammered");
         if (ZcConfig.get().combat.stamina) {
             float endurance = player.getAttachedOrElse(Stamina.TYPE, Stamina.FULL);
             add(list, "breath", "lungs", endurance < 10 ? 3 : endurance < 30 ? 2 : endurance < 60 ? 1 : 0,
