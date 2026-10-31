@@ -85,6 +85,21 @@ public final class Clothes {
         c("flat_cap", HAT, "").warm(0.25f, 0.15f, 0.1f);
         c("fedora", HAT, "").warm(0.2f, 0.15f, 0.2f);
         c("straw_hat", HAT, "").warm(0.1f, 0, 0.1f);
+        c("ranger_hat", HAT, "").warm(0.3f, 0.2f, 0.3f);
+        c("peaked_cap", HAT, "").warm(0.15f, 0, 0.2f);
+        c("captains_hat", HAT, "").warm(0.15f, 0, 0.2f);
+        c("chefs_hat", HAT, "").warm(0.1f, 0, 0);
+        c("surgical_cap", HAT, "").warm(0.1f, 0, 0);
+        c("visor_cap", HAT, "").of(NONE);
+        c("sweatband", HAT, "").warm(0.05f, 0, 0);
+        c("winter_earmuffs", HAT, "").warm(0.3f, 0.3f, 0).of(NONE);
+        c("miner_helmet", HAT, "H").guard(80, 70).warm(0.15f, 0.25f, 0.5f).feel(0.1f).of(HARD).armour(1);
+        c("batting_helmet", HAT, "H").guard(60, 40).warm(0.25f, 0.2f, 0.3f).feel(0.1f).of(HARD).armour(1);
+        c("hockey_helmet", HAT, "H").guard(80, 70).warm(0.3f, 0.2f, 0.2f).feel(0.15f).of(HARD).armour(1);
+        c("riding_helmet", HAT, "H").guard(50, 30).warm(0.3f, 0.2f, 0.2f).of(HARD).armour(1);
+        c("boxing_headgear", HAT, "H").guard(40, 25).warm(0.4f, 0.3f, 0).feel(0.1f).of(LEATHER);
+        c("swat_helmet", HAT, "H").guard(90, 80).bullet(60).warm(0.25f, 0.1f, 0.3f).feel(0.2f).of(HARD).armour(2);
+        c("welder_mask", HAT, "H").guard(50, 30).warm(0.2f, 0.2f, 0.2f).feel(0.2f).of(HARD);
         // eyes
         c("welding_goggles", EYES, "").guard(5, 0).of(NONE);
         c("sunglasses", EYES, "").of(NONE);
@@ -93,10 +108,16 @@ public final class Clothes {
         c("ballistic_glasses", EYES, "").guard(5, 0).of(NONE);
         c("ballistic_goggles", EYES, "").guard(10, 0).warm(0, 0.1f, 0).of(NONE);
         c("ski_goggles", EYES, "").warm(0, 0.2f, 0).of(NONE);
+        c("safety_goggles", EYES, "").guard(5, 0).of(NONE);
+        c("eyepatch", EYES, "").of(NONE);
+        c("monocle", EYES, "").of(NONE);
+        c("prescription_glasses", EYES, "").of(NONE);
         // face
         c("hockey_mask", FACE, "H").guard(50, 30).warm(0.25f, 0.55f, 0).feel(0.1f).of(HARD);
         c("gas_mask", FACE, "H").guard(50, 30).warm(0.75f, 0.6f, 1f).feel(0.3f).of(RUBBER);
         c("cbrn_mask", FACE, "HN").guard(50, 30).warm(0.8f, 0.8f, 1f).feel(0.35f).of(RUBBER);
+        c("dust_mask", FACE, "").guard(5, 0).of(NONE);
+        c("half_mask_respirator", FACE, "").guard(10, 5).warm(0.1f, 0.1f, 0).feel(0.1f).of(RUBBER);
         c("bandana", FACE, "").guard(5, 0).warm(0.1f, 0, 0);
         c("balaclava", FACE, "HN").guard(5, 0).warm(1f, 1f, 0.5f);
         c("surgical_mask_worn", FACE, "").guard(5, 0);

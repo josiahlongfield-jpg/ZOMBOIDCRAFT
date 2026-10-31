@@ -63,7 +63,12 @@ public final class ClothingItems {
             // wave 2, batch 4: civilian
             "puffer_jacket", "ski_jacket", "ski_trousers", "ski_goggles", "cardigan", "blazer", "gilet", "tracksuit_top",
             "tracksuit_bottoms", "bathrobe", "rugby_shirt", "chef_jacket", "mechanic_coveralls", "prison_jumpsuit",
-            "security_shirt", "flat_cap", "fedora", "straw_hat", "fingerless_gloves", "sandals");
+            "security_shirt", "flat_cap", "fedora", "straw_hat", "fingerless_gloves", "sandals",
+            // wave 2, batch 5: Zomboid's headwear, face and eyes
+            "ranger_hat", "peaked_cap", "captains_hat", "chefs_hat", "surgical_cap", "visor_cap", "sweatband",
+            "winter_earmuffs", "miner_helmet", "batting_helmet", "hockey_helmet", "riding_helmet", "boxing_headgear",
+            "swat_helmet", "welder_mask", "dust_mask", "half_mask_respirator", "safety_goggles", "eyepatch", "monocle",
+            "prescription_glasses");
 
     /** What ripping clothes up gives, beside the ripped sheets the loot roster already has (clothing/Tailoring). */
     public static final List<String> SUPPLIES = List.of("denim_strips", "leather_strips");

@@ -3532,6 +3532,288 @@ CIVILIAN = {
 }
 
 
+# ------------------------------------------------------------------ wave 2, batch 5: Zomboid's headwear, face and eyes
+# Refs: refs/items/clothing (ranger-hat, peaked-military-cap, captains-hat, chefs-hat, surgical-cap, visor, sweatband,
+# winter-earmuffs, miner-helmet-lamp, batting-helmet, hockey-helmet, riding-helmet, boxing-headgear, swat-helmet,
+# welder-mask, dust-mask, half-mask-respirator, safety-goggles, eyepatch, monocle, prescription-glasses).
+
+
+def build_ranger_hat(g):
+    """A campaign hat: tall crown pinched into four dents, a flat stiff brim, a leather band."""
+    g.box('head', (-3.8, -10.8, -3.8), (3.8, -5.6, 3.8), 'felt')
+    for x, z in ((-2.6, -2.6), (1.6, -2.6), (-2.6, 1.6), (1.6, 1.6)):                  # the Montana pinch
+        g.box('head', (x, -10.9, z), (x + 1.0, -9.6, z + 1.0), 'dent')
+    g.box('head', (-0.4, -11.0, -0.4), (0.4, -10.6, 0.4), 'felt')
+    g.box('head', (-3.95, -6.6, -3.95), (3.95, -5.6, 3.95), 'band')
+    g.box('head', (-7.2, -5.6, -7.2), (7.2, -5.2, 7.2), 'felt')                         # flat brim all round
+    g.box('head', (-0.3, -6.6, -4.1), (0.3, -5.6, -3.95), 'acorn')
+
+
+def build_peaked_cap(g):
+    """An officer's peaked cap: stiff saucer top, black band, gloss peak, cap badge and chin strap."""
+    g.box('head', (-4.45, -6.6, -4.45), (4.45, EYES_HIGH - 0.3, 4.45), 'band')
+    g.box('head', (-5.6, -8.4, -6.0), (5.6, -6.6, 5.2), 'cloth')
+    g.box('head', (-5.2, -8.7, -5.6), (5.2, -8.4, 4.8), 'cloth')
+    g.box('head', (-5.6, -6.8, -6.0), (5.6, -6.6, 5.2), 'piping')
+    g.box('head', (-3.8, EYES_HIGH - 0.6, -7.2), (3.8, EYES_HIGH - 0.25, -4.45), 'peak')
+    g.box('head', (-3.9, -5.4, -4.62), (3.9, -5.1, -4.45), 'strap')
+    g.box('head', (-0.9, -8.2, -6.15), (0.9, -6.5, -6.0), 'badge')
+
+
+def build_captains_hat(g):
+    """A white-topped skipper's cap with a black band, gold-braid peak and anchor badge."""
+    g.box('head', (-4.45, -6.4, -4.45), (4.45, EYES_HIGH - 0.3, 4.45), 'band')
+    g.box('head', (-5.0, -8.2, -5.2), (5.0, -6.4, 4.8), 'top')
+    g.box('head', (-3.8, EYES_HIGH - 0.6, -7.0), (3.8, EYES_HIGH - 0.25, -4.45), 'peak')
+    g.box('head', (-3.6, EYES_HIGH - 0.65, -6.9), (3.6, EYES_HIGH - 0.6, -5.4), 'braid')
+    g.box('head', (-3.9, -5.4, -4.62), (3.9, -5.1, -4.45), 'braid')
+    g.box('head', (-0.8, -6.3, -4.6), (0.8, -4.9, -4.45), 'badge')
+
+
+def build_chefs_hat(g):
+    """A pleated toque, tall and puffed out at the top."""
+    g.box('head', (-4.3, -6.6, -4.3), (4.3, -5.2, 4.3), 'band')
+    g.box('head', (-4.0, -11.4, -4.0), (4.0, -6.6, 4.0), 'cotton')
+    g.box('head', (-4.6, -13.4, -4.6), (4.6, -11.4, 4.6), 'cotton')                     # the puff
+    for x in (-3.2, -1.6, 0.0, 1.6, 3.2):                                               # pleats
+        g.box('head', (x - 0.12, -11.4, -4.1), (x + 0.12, -6.6, -4.0), 'pleat')
+        g.box('head', (x - 0.12, -11.4, 4.0), (x + 0.12, -6.6, 4.1), 'pleat')
+
+
+def build_surgical_cap(g):
+    d = 0.25
+    g.box('head', (-4 - d, -8 - d, -4 - d), (4 + d, -5.0, 4 + d), 'cloth')
+    g.box('head', (-4 - d - 0.08, -5.8, -4 - d - 0.08), (4 + d + 0.08, -5.0, 4 + d + 0.08), 'band')
+    g.box('head', (-0.6, -6.4, 4 + d), (0.6, -4.2, 4 + d + 0.25), 'band')              # the tie at the back
+
+
+def build_visor_cap(g):
+    d = 0.25
+    ring(g, -6.4, -5.0, d, 'band', t=0.2)
+    g.box('head', (-3.8, -5.4, -8.2), (3.8, -5.0, -4 - d - 0.2), 'peak')
+    g.box('head', (-1.6, -6.2, -4 - d - 0.3), (1.6, -5.2, -4 - d - 0.2), 'logo')
+
+
+def build_sweatband(g):
+    ring(g, -7.0, -5.6, 0.1, 'terry', t=0.3)
+    g.box('head', (-1.0, -6.8, -4.45), (1.0, -5.8, -4.4), 'logo')
+
+
+def build_winter_earmuffs(g):
+    d = 0.2
+    g.box('head', (-HX - 1.0, -8.0 - d - 0.4, -0.5), (HX + 1.0, -8.0 - d, 0.5), 'band')
+    for s in (-1, 1):
+        x0 = s * (HX + d) - (1.1 if s > 0 else 0)
+        g.box('head', (x0 + (0.8 if s > 0 else -0.1), -8.2, -0.4), (x0 + (1.1 if s > 0 else 0.2), -4.6, 0.4), 'band')
+        g.box('head', (x0, -5.0, -1.6), (x0 + 1.1, -1.2, 1.6), 'fluff')
+
+
+def build_miner_helmet(g):
+    d = 0.9
+    dome(g, -9.6, -5.3, d, 'shell', ((0, 0), (0.6, 0.5), (1.4, 0.4)))
+    ring(g, -5.6, -5.15, d, 'shell', t=0.6)                                              # the full brim
+    g.box('head', (-1.4, -8.6, -4 - d - 0.5), (1.4, -6.6, -4 - d), 'bracket')           # the lamp bracket and lamp
+    g.box('head', (-1.2, -8.4, -4 - d - 1.6), (1.2, -6.8, -4 - d - 0.5), 'lamp')
+    g.box('head', (-0.9, -8.1, -4 - d - 1.7), (0.9, -7.1, -4 - d - 1.6), 'lens')
+    g.box('head', (-0.25, -6.0, 4 + d), (0.25, -2.0, 4 + d + 0.25), 'cable')            # cable to the belt battery
+    g.box('head', (-0.25, -5.3, 4 + d), (0.25, -5.0, 2.0), 'cable')
+
+
+def build_batting_helmet(g):
+    d = 0.9
+    dome(g, -9.6, -5.0, d, 'shell', ((0, 0), (0.6, 0.5), (1.4, 0.4)))
+    g.box('head', (-3.8, -5.4, -6.4), (3.8, -5.0, -4 - d), 'shell')                     # short peak
+    g.box('head', (-HX - d, -5.0, -1.2), (HX + d, -1.4, HX + d), 'shell')               # down over the back
+    for s in (-1, 1):                                                                    # ear flaps with holes
+        x0 = s * (HX + d) - (0.3 if s > 0 else 0)
+        g.box('head', (x0, -5.0, -2.4), (x0 + 0.3, -0.8, 0.4), 'shell')
+        g.box('head', (x0 - s * 0.02, -3.4, -1.4), (x0 + 0.32, -2.4, -0.4), 'hole')
+    g.box('head', (-0.4, -9.8, -3.0), (0.4, -9.6, 3.0), 'vent')
+    g.box('head', (-1.4, -8.0, -4 - d - 0.06), (1.4, -6.6, -4 - d), 'logo')
+
+
+def build_hockey_helmet(g):
+    d = 0.8
+    g.box('head', (-4 - d, -9.0, -4 - d), (4 + d, -5.2, 4 + d), 'shell')
+    g.box('head', (-3.8, -9.5, -3.6), (3.8, -9.0, 4.2), 'shell')
+    for x in (-2.4, -0.4, 1.6):
+        g.box('head', (x, -9.55, -2.6), (x + 0.8, -9.4, 3.2), 'vent')
+    for s in (-1, 1):                                                                    # ear guards
+        x0 = s * (HX + d) - (0.3 if s > 0 else 0)
+        g.box('head', (x0, -5.2, -1.6), (x0 + 0.3, -2.2, 1.4), 'shell')
+    # the cage over the face: open bars, so the eyes show between them
+    zc = -4 - d - 1.2
+    for x in (-3.4, -1.7, 0.0, 1.7, 3.4):                                              # bars over the eyes start below them
+        g.box('head', (x - 0.1, -5.2 if abs(x) in (0.0, 3.4) else EYES_LOW + 0.2, zc), (x + 0.1, 0.4, zc + 0.2), 'cage')
+    for y in (-2.4, -0.8, 0.4):
+        g.box('head', (-3.6, y - 0.1, zc), (3.6, y + 0.1, zc + 0.2), 'cage')
+    for s in (-1, 1):
+        g.box('head', (s * 3.6 - 0.1, -5.2, zc), (s * 3.6 + 0.1, -4.8, -4 - d), 'cage')
+    g.box('head', (-1.2, 0.4, -4 - d - 1.0), (1.2, 0.8, -4 - d - 0.2), 'chin')
+
+
+def build_riding_helmet(g):
+    d = 0.8
+    dome(g, -9.6, -5.1, d, 'shell', ((0, 0), (0.6, 0.5), (1.4, 0.45)))
+    g.box('head', (-3.6, -5.5, -6.6), (3.6, -5.1, -4 - d), 'peak')
+    g.box('head', (-0.4, -10.0, -0.4), (0.4, -9.6, 0.4), 'button')
+    for s in (-1, 1):
+        x = s * (HX + 0.1) - (0.12 if s < 0 else 0)
+        g.box('head', (x, -5.1, -1.4), (x + 0.12, 0.2, -0.9), 'strap')
+        g.box('head', (x, -5.1, 1.0), (x + 0.12, -2.4, 1.5), 'strap')
+    g.box('head', (-1.2, 0.0, -1.4), (1.2, 0.3, -0.9), 'strap')
+
+
+def build_boxing_headgear(g):
+    d = 0.6
+    g.box('head', (-4 - d, -8.8, -3.4), (4 + d, -1.4, 4 + d), 'leather')                 # the padded sides and back
+    g.box('head', (-4 - d, -8.8, -4 - d), (4 + d, -6.2, -3.4), 'leather')                # brow bar above the eyes
+    for s in (-1, 1):                                                                    # cheek pads, clear of the eye row
+        x0, x1 = sorted((s * 2.4, s * (4 + d)))
+        g.box('head', (x0, EYES_LOW + 0.2, -4 - d), (x1, -0.6, -3.4), 'leather')
+    g.box('head', (-3.6, -0.4, -4 - d - 0.3), (3.6, 0.6, -3.6), 'leather')                # chin strap pad
+    g.box('head', (-1.4, -8.6, -4 - d - 0.06), (1.4, -7.0, -4 - d), 'logo')
+    g.box('head', (-0.6, -9.0, 4 + d), (0.6, -2.0, 4 + d + 0.4), 'lace')
+
+
+def build_swat_helmet(g):
+    d = 1.0
+    dome(g, -9.8, -5.0, d, 'shell', ((0, 0), (0.6, 0.5), (1.4, 0.45)))
+    g.box('head', (-HX - d, -5.0, 0.0), (HX + d, -2.6, HX + d), 'shell')                 # down round the back
+    for s in (-1, 1):
+        x0 = s * (HX + d) - (0.35 if s > 0 else 0)
+        g.box('head', (x0, -6.4, -2.4), (x0 + 0.35, -5.0, 3.0), 'rail')
+    # the ballistic visor flipped up over the brow
+    g.box('head', (-4.2, -7.6, -4 - d - 0.6), (4.2, EYES_HIGH - 0.9, -4 - d - 0.2), 'visor')
+    g.box('head', (-0.9, -6.4, -4 - d - 0.2), (0.9, -5.4, -4 - d), 'shroud')
+    g.box('head', (-3.0, -9.0, HX + d), (3.0, -7.4, HX + d + 0.08), 'patch')             # POLICE on the back
+    for s in (-1, 1):
+        x = s * (HX + 0.1) - (0.12 if s < 0 else 0)
+        g.box('head', (x, -5.0, -1.2), (x + 0.12, 0.2, -0.7), 'strap')
+    g.box('head', (-2.4, 0.0, -1.2), (2.4, 0.3, -0.7), 'strap')
+
+
+def build_welder_mask(g):
+    """A welding helmet with its shield flipped up off the face, the dark window showing."""
+    d = 0.4
+    ring(g, -6.6, -5.6, d, 'harness', t=0.3)
+    g.box('head', (-0.6, -8.0 - d - 0.3, -3.0), (0.6, -8.0 - d, 3.0), 'harness')
+    g.box('head', (-4.6, -11.0, -4 - d - 2.6), (4.6, -7.2, -4 - d - 1.6), 'shield')        # the shield tilted up on top
+    g.box('head', (-4.6, -11.6, -4 - d - 1.6), (4.6, -10.6, 1.4), 'shield')
+    g.box('head', (-2.2, -10.4, -4 - d - 2.7), (2.2, -8.6, -4 - d - 2.6), 'window')
+    for s in (-1, 1):
+        x0 = s * (HX + d) - (0.4 if s > 0 else 0)
+        g.box('head', (x0, -7.4, -2.0), (x0 + 0.4, -6.0, -0.6), 'knob')
+
+
+def build_dust_mask(g):
+    z = -4.35
+    g.box('head', (-2.4, EYES_LOW + 0.4, z - 0.9), (2.4, -0.2, z), 'cup')
+    g.box('head', (-1.8, EYES_LOW + 0.7, z - 1.1), (1.8, -0.5, z - 0.9), 'cup')
+    g.box('head', (-0.5, -2.0, z - 1.25), (0.5, -1.2, z - 1.1), 'valve')
+    g.box('head', (-1.4, EYES_LOW + 0.4, z - 0.95), (1.4, EYES_LOW + 0.55, z - 0.85), 'wire')
+    for s in (-1, 1):
+        x = -4.25 if s < 0 else 4.15
+        g.box('head', (x, -4.6, z), (x + 0.1, -4.4, 4.25), 'band')
+        g.box('head', (x, -1.4, z), (x + 0.1, -1.2, 4.25), 'band')
+
+
+def build_half_mask_respirator(g):
+    z = -4.35
+    g.box('head', (-2.6, EYES_LOW + 0.3, z - 0.9), (2.6, 0.2, z), 'rubber')
+    for s in (-1, 1):                                                                    # twin cartridges on the cheeks
+        x0, x1 = sorted((s * 1.6, s * 3.8))
+        g.box('head', (x0, -2.6, z - 1.8), (x1, -0.6, z - 0.4), 'cartridge')
+        g.box('head', (x0 + 0.2, -2.4, z - 1.85), (x1 - 0.2, -0.8, z - 1.8), 'filter')
+    g.box('head', (-0.7, -1.4, z - 1.2), (0.7, -0.2, z - 0.9), 'valve')
+    for s in (-1, 1):
+        x = -4.25 if s < 0 else 4.15
+        g.box('head', (x, -5.0, z + 0.2), (x + 0.12, -4.6, 4.25), 'strap')
+        g.box('head', (x, -0.6, z + 0.2), (x + 0.12, -0.2, 4.25), 'strap')
+
+
+def build_safety_goggles(g):
+    """Vented chemical goggles; the clear lens is left open so the eyes show through."""
+    z = -4.4
+    top, bot = EYES_HIGH - 0.8, EYES_LOW + 0.7
+    g.box('head', (-3.9, top, z - 0.8), (3.9, top + 0.35, z), 'frame')
+    g.box('head', (-3.9, bot - 0.35, z - 0.8), (-0.5, bot, z), 'frame')
+    g.box('head', (0.5, bot - 0.35, z - 0.8), (3.9, bot, z), 'frame')
+    g.box('head', (-0.5, bot - 0.8, z - 0.8), (0.5, bot - 0.2, z), 'frame')
+    for s in (-1, 1):
+        x0 = -3.9 if s < 0 else 3.45
+        g.box('head', (x0, top + 0.35, z - 0.8), (x0 + 0.45, bot - 0.35, z), 'frame')
+        g.box('head', (x0 + (0.1 if s > 0 else 0), top + 0.5, z - 0.82), (x0 + (0.35 if s > 0 else 0.25), top + 0.8, z - 0.78), 'vent')
+        x = -4.32 if s < 0 else 4.2
+        g.box('head', (x, top + 0.3, z), (x + 0.12, bot - 0.3, 4.32), 'strap')
+    g.box('head', (-4.32, top + 0.3, 4.2), (4.32, bot - 0.3, 4.32), 'strap')
+
+
+def build_eyepatch(g):
+    z = -4.42
+    g.box('head', (0.4, EYES_HIGH - 0.3, z - 0.2), (3.0, EYES_LOW + 0.3, z), 'patch')   # over the left eye only
+    g.box('head', (-4.32, -5.6, z), (0.4, -5.4, z + 0.05), 'string')                    # the string over the brow
+    g.box('head', (-4.32, -5.6, z), (-4.2, -5.4, 4.32), 'string')                       # and round the head
+    g.box('head', (4.2, -3.6, z), (4.32, -3.4, 4.32), 'string')
+    g.box('head', (-4.32, -5.6, 4.2), (4.32, -5.4, 4.32), 'string')
+
+
+def build_monocle(g):
+    z = -4.45
+    x0, x1 = 0.5, 3.4
+    g.box('head', (x0, EYES_HIGH - 0.3, z - 0.15), (x1, EYES_HIGH - 0.15, z), 'rim')
+    g.box('head', (x0, EYES_LOW + 0.15, z - 0.15), (x1, EYES_LOW + 0.3, z), 'rim')
+    g.box('head', (x0, EYES_HIGH - 0.15, z - 0.15), (x0 + 0.15, EYES_LOW + 0.15, z), 'rim')
+    g.box('head', (x1 - 0.15, EYES_HIGH - 0.15, z - 0.15), (x1, EYES_LOW + 0.15, z), 'rim')
+    g.box('head', (2.6, EYES_LOW + 0.3, z - 0.1), (2.75, 0.4, z), 'chain')               # the chain down to the collar
+
+
+def build_prescription_glasses(g):
+    glasses(g, None, 'frame')
+
+
+CIVILIAN_2 = {
+    'ranger_hat': (build_ranger_hat, dict(felt=cloth('#7a6446', weave=0.02, stitch=None), dent=cloth('#6e5a3e', weave=0.02, stitch=None),
+                                          band=leather('#3a2a1a'), acorn=metal('brass')), 0.35),
+    'peaked_cap': (build_peaked_cap, dict(band=cloth('#1a1a1c', stitch=None), cloth=cloth('#4a5038', weave=0.04),
+                                          piping=flat('#7a2a24'), peak=plastic('#111111', gloss=0.5), strap=leather('#1a1a1a'),
+                                          badge=metal('brass')), 0.3),
+    'captains_hat': (build_captains_hat, dict(band=cloth('#1a1a1c', stitch=None), top=cloth('#e4e2dc', weave=0.02),
+                                              peak=plastic('#111111', gloss=0.5), braid=metal('brass'), badge=metal('brass')), 0.3),
+    'chefs_hat': (build_chefs_hat, dict(cotton=cloth('#ecebe6', weave=0.03, stitch=None), band=cloth('#e0dfda', stitch=None),
+                                        pleat=flat('#c8c6c0', ink=False)), 0.3),
+    'surgical_cap': (build_surgical_cap, dict(cloth=cloth('#3f6f6a', weave=0.03, stitch=None), band=cloth('#386360', stitch=None)), 0.3),
+    'visor_cap': (build_visor_cap, dict(band=cloth('#e4e2dc', stitch=None), peak=plastic('#2a4a7a'), logo=flat('#2a4a7a')), 0.3),
+    'sweatband': (build_sweatband, dict(terry=fur('#d8d4c8'), logo=flat('#7a2a24')), 0.3),
+    'winter_earmuffs': (build_winter_earmuffs, dict(band=plastic('#1e1e1e'), fluff=fur('#c8b8a8')), 0.3),
+    'miner_helmet': (build_miner_helmet, dict(shell=plastic('#c8a82a'), bracket=metal('steel'), lamp=plastic('#1e1e1e'),
+                                              lens=plastic('#e8e6d8', gloss=0.5), cable=rubber('#1a1a1a')), 0.5),
+    'batting_helmet': (build_batting_helmet, dict(shell=plastic('#1e2a5a', gloss=0.35), hole=flat('#0a0a0a', ink=False),
+                                                  vent=flat('#0a0a0a', ink=False), logo=flat('#e0dcd0')), 0.4),
+    'hockey_helmet': (build_hockey_helmet, dict(shell=plastic('#1e1f22', gloss=0.3), vent=flat('#0a0a0a', ink=False),
+                                                cage=metal('steel'), chin=plastic('#1e1f22')), 0.4),
+    'riding_helmet': (build_riding_helmet, dict(shell=cloth('#1e1e22', weave=0.03, stitch=None), peak=cloth('#1a1a1e', stitch=None),
+                                                button=cloth('#1a1a1e'), strap=leather('#1a1a1a')), 0.35),
+    'boxing_headgear': (build_boxing_headgear, dict(leather=leather('#8a2a24', gloss=0.2), logo=flat('#e0dcd0'),
+                                                    lace=flat('#e0dcd0')), 0.45),
+    'swat_helmet': (build_swat_helmet, dict(shell=plastic('#1c1d1f', gloss=0.2), rail=plastic('#111213'),
+                                            visor=plastic('#3a4048', gloss=0.6), shroud=metal('steel'),
+                                            patch=stencil('#1c1d1f', '#c8c0a8'), strap=cloth('#1a1a1a', stitch=None)), 0.4),
+    'welder_mask': (build_welder_mask, dict(harness=plastic('#2a2a2a'), shield=plastic('#1e1f22', gloss=0.2),
+                                            window=plastic('#2a4a2a', gloss=0.6), knob=plastic('#1a1a1a')), 0.5),
+    'dust_mask': (build_dust_mask, dict(cup=cloth('#e4e2dc', weave=0.06, stitch=None), valve=plastic('#d8a82a'),
+                                        wire=flat('#c8c4bb'), band=flat('#c8642a')), 0.5),
+    'half_mask_respirator': (build_half_mask_respirator, dict(rubber=rubber('#3a3c3e'), cartridge=plastic('#c8a82a'),
+                                                              filter=plastic('#d8d4c8'), valve=plastic('#2a2a2a'),
+                                                              strap=rubber('#2a2a2c')), 0.45),
+    'safety_goggles': (build_safety_goggles, dict(frame=plastic('#c8d0d4', gloss=0.3), vent=flat('#4a5054', ink=False),
+                                                  strap=cloth('#2a4a7a', stitch=None)), 0.3),
+    'eyepatch': (build_eyepatch, dict(patch=leather('#141414', gloss=0.2), string=flat('#141414')), 0.2),
+    'monocle': (build_monocle, dict(rim=metal('brass'), chain=metal('brass')), 0.1),
+    'prescription_glasses': (build_prescription_glasses, dict(frame=plastic('#2a2a2c')), 0.1),
+}
+
+
 # ------------------------------------------------------------------ medical supports seen on the body
 # Not items: worn models ClothingLayer draws on whichever part has them applied (the synced worn-medical mask).
 # Dressings sit under the clothes; splints, slings, tourniquets, the collar and the knee brace go over them.
@@ -3684,6 +3966,7 @@ GARMENTS.update(MILITARY)
 GARMENTS.update(MILITARY_2)
 GARMENTS.update(KIT_2)
 GARMENTS.update(CIVILIAN)
+GARMENTS.update(CIVILIAN_2)
 GARMENTS.update(MEDICAL)
 
 
