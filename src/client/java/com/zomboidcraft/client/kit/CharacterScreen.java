@@ -109,7 +109,7 @@ public final class CharacterScreen extends Screen {
 
         int gap = 8;
         int usable = width - pad * 2 - gap * 3;
-        int jw = Math.max(96, usable * 22 / 100), cw = Math.max(110, usable * 24 / 100);
+        int jw = Math.max(90, usable * 21 / 100), cw = Math.max(100, usable * 22 / 100);
         int rw = usable - jw - cw * 2;
         int x = pad;
         hovered = null;
@@ -188,7 +188,7 @@ public final class CharacterScreen extends Screen {
             int level = (e.getKey().passive() ? 5 : 0) + e.getValue();
             float cx = x + in + col * (tw / 2f);
             KitDraw.text(g, font, e.getKey().displayName(), cx, y, KitDraw.TEXT, 0.75f);
-            KitDraw.textRight(g, font, String.valueOf(Math.max(0, Math.min(10, level))), cx + tw / 2f - 6, y,
+            KitDraw.textRight(g, font, String.valueOf(Math.max(0, Math.min(10, level))), cx + tw / 2f - 8, y,
                     e.getValue() < 0 ? KitDraw.BAD : KitDraw.GOOD, 0.75f);
             if (++col == 2) {
                 col = 0;
@@ -218,20 +218,24 @@ public final class CharacterScreen extends Screen {
         mine.w = tw;
         mine.top = top;
         mine.bottom = listBottom;
+        // yours in two columns, so a full build still fits
+        int cwid = (tw - 6) / 2, slot = 0, rowY = y;
         for (String id : chosen) {
             Trait t = CharacterData.trait(id);
-            if (t == null || y > listBottom) continue;
-            boolean hover = KitDraw.in(mx, my, x + in, y - 1, tw, 10);
+            if (t == null || rowY > listBottom) continue;
+            int cx = x + in + (slot % 2) * (cwid + 6);
+            boolean hover = KitDraw.in(mx, my, cx, rowY - 1, cwid, 10);
             if (hover) {
                 hovered = "t:" + id;
-                g.fill(x + in - 2, y - 1, x + w - in + 2, y + 9, 0x14E8E4DA);
+                g.fill(cx - 2, rowY - 1, cx + cwid + 2, rowY + 9, 0x14E8E4DA);
             }
-            KitDraw.text(g, font, t.name(), x + in, y, t.positive() ? KitDraw.GOOD : KitDraw.BAD, 0.75f);
-            KitDraw.capsRight(g, font, hover ? "remove" : signed(-t.cost()), x + w - in, y + 1, KitDraw.DIM, 0.6f);
-            mine.rows.add(new int[]{x + in, y - 1, tw, 10});
+            KitDraw.text(g, font, t.name(), cx, rowY, t.positive() ? KitDraw.GOOD : KitDraw.BAD, 0.7f);
+            KitDraw.capsRight(g, font, hover ? "x" : signed(-t.cost()), cx + cwid, rowY + 1, KitDraw.DIM, 0.6f);
+            mine.rows.add(new int[]{cx, rowY - 1, cwid, 10});
             mine.ids.add(id);
-            y += 10;
+            if (++slot % 2 == 0) rowY += 10;
         }
+        y = rowY + (slot % 2 == 1 ? 10 : 0);
         if (chosen.isEmpty()) KitDraw.text(g, font, "Pick some from the middle", x + in, y, KitDraw.FAINT, 0.75f);
 
         // done: a bone slab like the spawn picker's, greyed while you're over budget
@@ -243,7 +247,7 @@ public final class CharacterScreen extends Screen {
         g.fill(x + in, by, x + in + tw, by + 16, face);
         g.fill(x + in, by, x + in + tw, by + 1, left < 0 ? 0xFF55524A : hd ? 0xFFFFFFFF : 0xFFF4F1EA);
         g.fill(x + in, by + 15, x + in + tw, by + 16, left < 0 ? 0xFF3A3832 : 0xFFB9B4A8);
-        String label = left < 0 ? "Too many traits" : "Choose where you wake";
+        String label = left < 0 ? "Over budget" : "Choose where you wake";
         float lw = KitDraw.capsWidth(font, label, 0.85f);
         com.zomboidcraft.client.hud.Hud.caps(g, font, label, x + w / 2f - lw / 2, by + 4.5f, left < 0 ? 0xFF8F8A80 : 0xFF1D1B16, 0.85f, 0.85f, false);
         int half = (tw - 4) / 2;

@@ -43,7 +43,7 @@ public class SurvivalLookTest implements FabricClientGameTest {
             shot(ctx, "character");
             ctx.runOnClient(mc -> {
                 if (mc.gui.screen() instanceof CharacterScreen c) {
-                    c.choose("veteran", java.util.List.of("strong", "fast_learner", "smoker", "hard_of_hearing", "weak_stomach", "slow_reader", "high_thirst"));
+                    c.choose("veteran", java.util.List.of("fast_learner", "smoker", "hard_of_hearing", "weak_stomach", "slow_reader", "high_thirst", "sunday_driver"));
                     LOG.info("character points left {}", c.pointsLeft());
                 }
             });
