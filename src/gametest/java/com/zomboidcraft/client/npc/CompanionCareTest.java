@@ -43,7 +43,7 @@ public class CompanionCareTest implements FabricClientGameTest {
             }
             BlockPos c = sp.getServer().computeOnServer(CompanionCareTest::stage);
             ctx.waitTicks(40);
-            sp.getServer().runCommand("zc npc dark_elf raw");
+            sp.getServer().runCommand("execute as @p at @p run zc npc dark_elf raw");
             ctx.waitTicks(10);
             sp.getServer().runOnServer(s -> setUp(s, c));
             ctx.waitTicks(20);
