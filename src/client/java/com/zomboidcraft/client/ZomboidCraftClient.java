@@ -51,6 +51,7 @@ public class ZomboidCraftClient implements ClientModInitializer {
         CombatClient.register();
         com.zomboidcraft.client.gear.NightVisionClient.register();
         com.zomboidcraft.client.gear.RadioClient.register();
+        com.zomboidcraft.client.gear.BroadcastHud.register();
         RailLights.register();
         com.zomboidcraft.client.gear.HandLights.register();
         com.zomboidcraft.client.building.Placer.register();

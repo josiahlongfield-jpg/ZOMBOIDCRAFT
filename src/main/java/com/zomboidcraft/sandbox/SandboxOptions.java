@@ -87,6 +87,12 @@ final class SandboxOptions {
         o.add(of(UTILITIES, "zc.worldEventMinutes", "Time Between World Events")
                 .tip("About how many minutes between world events.")
                 .number("world.worldEventMinutes", 1, 240).owner("AUDIO"));
+        o.add(of(UTILITIES, "zc.broadcasts", "Outbreak Broadcasts")
+                .tip("News, the emergency broadcast, the military and survivors on the two-way and military radios, as captions.")
+                .toggle("broadcast.enabled").owner("AUDIO"));
+        o.add(of(UTILITIES, "zc.broadcastDayOffset", "Broadcasts Start On Day")
+                .tip("Days already gone on the broadcast timeline when the world starts: 9 or more and the news is already off air.")
+                .number("broadcast.dayOffset", 0, 60).owner("AUDIO"));
 
         o.add(of(LOOT, "zc.lootNeverScales", "Loot Never Scales With Distance")
                 .fixed("true", "Your rule: loot is the same however far you are from where you started."));

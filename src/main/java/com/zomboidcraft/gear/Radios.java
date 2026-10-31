@@ -202,12 +202,18 @@ public final class Radios {
             return;
         }
         Tuning t = tuning(radio);
-        int channels = item.type().channels();
-        int channel = Math.floorMod(Math.min(t.channel(), channels) - 1 + step, channels) + 1;
+        // the talk channels, then the stations this radio picks up (Broadcasts)
+        List<Integer> dial = new ArrayList<>();
+        for (int c = 1; c <= item.type().channels(); c++) {
+            dial.add(c);
+        }
+        dial.addAll(Broadcasts.channels(item.type()));
+        int at = dial.indexOf(t.channel());
+        int channel = dial.get(Math.floorMod((at < 0 ? 0 : at) + step, dial.size()));
         radio.set(TUNING, new Tuning(channel, t.on()));
-        player.level().playSound(null, player.getX(), player.getEyeY(), player.getZ(), ModSounds.RADIO_CHANNEL,
-                SoundSource.PLAYERS, 0.45f, t.on() ? 1f : 0.9f);
-        player.sendOverlayMessage(Component.literal("Channel " + channel + " of " + channels
+        player.level().playSound(null, player.getX(), player.getEyeY(), player.getZ(),
+                Broadcasts.station(channel) != null ? ModSounds.RADIO_TUNE : ModSounds.RADIO_CHANNEL, SoundSource.PLAYERS, 0.45f, t.on() ? 1f : 0.9f);
+        player.sendOverlayMessage(Component.literal(Broadcasts.label(channel, item.type())
                 + (t.on() ? "" : ". It's switched off: right-click it in your inventory to turn it on.")).withStyle(ChatFormatting.GRAY));
     }
 
@@ -257,6 +263,11 @@ public final class Radios {
             player.sendOverlayMessage(Component.literal(why(player)).withStyle(ChatFormatting.GRAY));
             return;
         }
+        if (Broadcasts.station(tuning(radio).channel()) != null) {
+            player.sendOverlayMessage(Component.literal("That's a broadcast: you can only listen. Step back to a talk channel.")
+                    .withStyle(ChatFormatting.GRAY));
+            return;
+        }
         KEYED.add(id);
         others(player, radio, ModSounds.RADIO_KEY_UP);
         player.level().playSound(null, player.getX(), player.getEyeY(), player.getZ(), ModSounds.RADIO_PTT, SoundSource.PLAYERS, 0.35f, 1f);
@@ -290,7 +301,7 @@ public final class Radios {
     }
 
     /** A sound out of a player's radio: into their headset if they wear one, otherwise out loud where they stand. */
-    private static void fromRadio(ServerPlayer to, SoundEvent sound, float volume) {
+    static void fromRadio(ServerPlayer to, SoundEvent sound, float volume) {
         if (Headgear.headset(to.getItemBySlot(EquipmentSlot.HEAD)) != null) {
             to.connection.send(new ClientboundSoundPacket(BuiltInRegistries.SOUND_EVENT.wrapAsHolder(sound), SoundSource.PLAYERS,
                     to.getX(), to.getEyeY(), to.getZ(), volume * 0.6f, 1f, to.getRandom().nextLong()));

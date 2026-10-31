@@ -84,6 +84,7 @@ public final class ZcConfig {
     public NightVision nightVision = new NightVision();
     /** Handheld radios that carry players' voices (through the voice chat mod), and the comms headset. */
     public Radio radio = new Radio();
+    public Broadcast broadcast = new Broadcast();
     /** How good each found weapon is: its tier, where its stats land inside the model's range, and flaws. */
     public WeaponRolls rolls = new WeaponRolls();
     /** What it takes to dig down and knock walls through, so nobody tunnels under the whole map (building/DigRules). */
@@ -385,6 +386,20 @@ public final class ZcConfig {
         public double tubeSize = 0.92;
         /** How bright the view through the tube is, 0.2 to 2 (1 is the preview's look). Client side. */
         public double brightness = 0.85;
+    }
+
+    /** The outbreak on the radio (world/Broadcasts): news, the emergency broadcast, the military and the hams. */
+    public static class Broadcast {
+        /** Broadcasts on the two-way and military radios. Off: they only carry voices. */
+        public boolean enabled = true;
+        /** Days added to the world's day before the timeline is read: 9 starts the world with the news already gone. */
+        public int dayOffset = 0;
+        /** Seconds between one caption and the next. */
+        public double lineSeconds = 5;
+        /** The day the emergency broadcast's battery gives out, once the power is down (until the grid fails by district). */
+        public int aebsLastDay = 30;
+        /** How long a caption stays on screen, in seconds. Client side. */
+        public double captionSeconds = 7;
     }
 
     public static class Radio {

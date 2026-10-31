@@ -213,6 +213,18 @@ public final class ModSounds {
     public static final SoundEvent BLAST_FAR = register("weapon.throw.blast_far", 256f);
     public static final SoundEvent FIRE_BURN = register("weapon.throw.fire_burn", 16f);
 
+    /** The outbreak broadcasts (world/Broadcasts): the alert tones, the static under a caption, the carrier dropping. */
+    public static final SoundEvent RADIO_EAS_HEADER = register("radio.eas.header");
+    public static final SoundEvent RADIO_EAS_ATTENTION = register("radio.eas.attention");
+    public static final SoundEvent RADIO_EAS_EOM = register("radio.eas.eom");
+    public static final SoundEvent RADIO_STATIC = register("radio.static");
+    public static final SoundEvent RADIO_TUNE = register("radio.tune");
+    /** House alarms (never the air raid siren, Josiah): seamless loops to repeat for about a minute, and the panel. */
+    public static final SoundEvent HOUSE_ALARM_BELL = register("world.alarm.house.bell", 160f);
+    public static final SoundEvent HOUSE_ALARM_SIREN = register("world.alarm.house.siren", 160f);
+    public static final SoundEvent ALARM_PANEL_BEEP = register("block.alarm_panel.beep", 8f);
+    public static final SoundEvent ALARM_PANEL_DISARM = register("block.alarm_panel.disarm", 8f);
+
     private static SoundEvent register(String name) {
         Identifier id = ZomboidCraft.id(name);
         return Registry.register(BuiltInRegistries.SOUND_EVENT, id, SoundEvent.createVariableRangeEvent(id));
