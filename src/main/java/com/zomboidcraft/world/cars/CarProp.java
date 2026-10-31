@@ -428,7 +428,17 @@ public class CarProp extends Entity {
             return;
         }
         nextSeat = seat >= 0 ? seat : nearestFreeSeat(player);
+        if (!seatFitted(nextSeat)) {
+            player.sendOverlayMessage(Component.literal(nextSeat == 0 ? "The driver's seat is gone: nowhere to sit and drive."
+                    : "That seat's been torn out."));
+            return;
+        }
         player.startRiding(this);
+    }
+
+    /** Whether seat s still has a seat in it (Zomboid's seat parts); cars without parts have all theirs. */
+    public boolean seatFitted(int s) {
+        return parts().isEmpty() || s < 0 || s >= 8 || CarParts.get(parts(), CarParts.Part.SEAT, s) > 0;
     }
 
     /** Whether someone sits in seat s. */
@@ -1067,6 +1077,10 @@ public class CarProp extends Entity {
     /** Opens the glovebox for someone in a front seat, its key (if it's there) and odds and ends put in the first time. */
     public void openGlovebox(Player player) {
         if (!(level() instanceof ServerLevel server) || player.getVehicle() != this || seatOf(player) > 1) {
+            return;
+        }
+        if (!parts().isEmpty() && CarParts.get(parts(), CarParts.Part.GLOVEBOX, 0) == -1) {
+            player.sendOverlayMessage(Component.literal("The glovebox has been taken out."));
             return;
         }
         if (!gloveSearched) {

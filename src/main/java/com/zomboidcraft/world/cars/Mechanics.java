@@ -58,6 +58,7 @@ public final class Mechanics {
     public static final double REACH = 3.5;
 
     public static void register() {
+        net.fabricmc.fabric.api.event.player.UseItemCallback.EVENT.register(Mechanics::read);
         PayloadTypeRegistry.serverboundPlay().register(Work.TYPE, Work.CODEC);
         ServerPlayNetworking.registerGlobalReceiver(Work.TYPE, (payload, context) -> {
             ServerPlayer player = context.player();
@@ -117,12 +118,81 @@ public final class Mechanics {
         return stack;
     }
 
-    /** Parts any car takes whatever its class: tyres, batteries, the bulbs and the small stuff. */
+    /**
+     * Parts any car takes whatever its class, as in Zomboid: the battery, the bulbs, the radio and the small
+     * stuff. Everything else fits only its own class (standard, heavy-duty, sport), so the donor car matters.
+     */
     private static boolean universal(Part part) {
         return switch (part) {
-            case TIRE, BATTERY, SPARK_PLUGS, HEADLIGHT, TAIL_LIGHT, HORN, RADIO, FAN_BELT, OIL, BRAKE_FLUID -> true;
+            case BATTERY, SPARK_PLUGS, HEADLIGHT, TAIL_LIGHT, HORN, RADIO, FAN_BELT, OIL, BRAKE_FLUID -> true;
             default -> false;
         };
+    }
+
+    /**
+     * Zomboid's auto manuals ("Laine's Auto Manual"): reading one teaches you to work on that class of car, kept
+     * till you die. Without it you can still do what anyone can (tyres, the battery, bulbs, fluids).
+     */
+    public static final net.fabricmc.fabric.api.attachment.v1.AttachmentType<java.util.List<String>> MANUALS =
+            net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry.create(ZomboidCraft.id("auto_manuals"),
+                    builder -> builder.persistent(com.mojang.serialization.Codec.STRING.listOf())
+                            .initializer(java.util.List::of)
+                            .syncWith(ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs.list()),
+                                    net.fabricmc.fabric.api.attachment.v1.AttachmentSyncPredicate.targetOnly()));
+
+    public static String manual(Kind kind) {
+        return "auto_manual_" + kind.name().toLowerCase(Locale.ROOT);
+    }
+
+    public static String manualTitle(Kind kind) {
+        return switch (kind) {
+            case STANDARD -> "Standard Models";
+            case HEAVY -> "Commercial Models";
+            case SPORT -> "Performance Models";
+        };
+    }
+
+    public static boolean knows(Player player, Kind kind) {
+        return player.isCreative() || player.getAttachedOrCreate(MANUALS).contains(manual(kind));
+    }
+
+    /** The jobs anyone can do without a manual: what you'd do at the roadside. */
+    private static boolean basic(Part part) {
+        return universal(part) || part == Part.TIRE;
+    }
+
+    /** Using an auto manual reads it (a while, like a flight manual); it stays in the bag afterwards. */
+    private static net.minecraft.world.InteractionResult read(Player player, net.minecraft.world.level.Level level,
+            net.minecraft.world.InteractionHand hand) {
+        ItemStack held = player.getItemInHand(hand);
+        String id = held.isEmpty() ? "" : BuiltInRegistries.ITEM.getKey(held.getItem()).getPath();
+        Kind kind = null;
+        for (Kind k : Kind.values()) {
+            if (manual(k).equals(id)) {
+                kind = k;
+            }
+        }
+        if (kind == null) {
+            return net.minecraft.world.InteractionResult.PASS;
+        }
+        if (player instanceof ServerPlayer sp && !TimedActions.busy(player)) {
+            Kind k = kind;
+            if (knows(player, k) && !player.isCreative()) {
+                sp.sendOverlayMessage(Component.literal("You've already read Laine's Auto Manual: " + manualTitle(k) + "."));
+                return net.minecraft.world.InteractionResult.CONSUME;
+            }
+            TimedActions.start(sp, "read_auto_manual", "Reading", 20 * 15, p -> {
+                java.util.List<String> read = new java.util.ArrayList<>(p.getAttachedOrCreate(MANUALS));
+                if (!read.contains(manual(k))) {
+                    read.add(manual(k));
+                }
+                p.setAttached(MANUALS, read);
+                Skills.addXp(p, Skill.MECHANICS, 40);
+                p.sendOverlayMessage(Component.literal("You know your way around " + manualTitle(k).toLowerCase(Locale.ROOT)
+                        + " now: their parts are yours to take off and fit."));
+            });
+        }
+        return net.minecraft.world.InteractionResult.CONSUME;
     }
 
     /** The fluid (or kit) a top-up uses, or null where a part can't be topped up. */
@@ -252,6 +322,10 @@ public final class Mechanics {
             String f = fluid(part);
             return has(player, f) || part == Part.RADIATOR && has(player, "antifreeze") ? null : "Needs " + name(f);
         }
+        Kind carKind = CarParts.kind(CarModels.get(car.model()));
+        if (!basic(part) && !knows(player, carKind)) {
+            return "Needs Laine's Auto Manual: " + manualTitle(carKind);
+        }
         String a = access(player, car, part);
         if (a != null) {
             return a;
@@ -283,9 +357,8 @@ public final class Mechanics {
             return "You have no " + part.title.toLowerCase(Locale.ROOT);
         }
         Held h = held(player.getInventory().getItem(at));
-        Kind kind = CarParts.kind(CarModels.get(car.model()));
-        if (!universal(part) && h.kind != kind && level < 7) {
-            return "That's a " + h.kind.name().toLowerCase(Locale.ROOT) + " part: Mechanics 7 to make it fit";
+        if (!universal(part) && h.kind != carKind) {
+            return "Yours is a " + manualTitle(h.kind).toLowerCase(Locale.ROOT).replace(" models", "") + " part: it won't fit this car";
         }
         return null;
     }
@@ -390,9 +463,6 @@ public final class Mechanics {
                     ItemStack item = player.getInventory().getItem(at);
                     Held h = held(item);
                     int fit = h.condition;
-                    if (!universal(part) && h.kind != kind) {
-                        fit = Math.max(0, fit - 15);   // made to fit, never quite right
-                    }
                     boolean slipped = rng.nextDouble() < slip;
                     if (slipped) {
                         fit = Math.max(0, fit - 5 - rng.nextInt(16));

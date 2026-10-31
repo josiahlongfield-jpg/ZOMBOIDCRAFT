@@ -47,7 +47,11 @@ public final class CarParts {
         BONNET("car_bonnet", "Bonnet", 1, Area.BODY, false, 2),
         BOOT_LID("boot_lid", "Boot lid", 1, Area.BODY, false, 2),
         HORN("car_horn", "Horn", 1, Area.ENGINE, false, 1),
-        RADIO("car_radio", "Radio", 1, Area.BODY, false, 1);
+        RADIO("car_radio", "Radio", 1, Area.BODY, false, 1),
+        /** Zomboid's seats: one gone or broken can't be sat in (eight slots, as many used as the model has). */
+        SEAT("car_seat", "Seat", 8, Area.BODY, false, 2),
+        /** Zomboid's glovebox: gone, there's nowhere to keep things up front. */
+        GLOVEBOX("glovebox", "Glovebox", 1, Area.BODY, false, 1);
 
         /** The loot item the part comes off as (LOOT's id, condition and kind as its data). */
         public final String item, title;
@@ -76,6 +80,9 @@ public final class CarParts {
             }
             if (part.count == 2) {
                 return (index == 0 ? "Left " : "Right ") + part.title.toLowerCase(java.util.Locale.ROOT);
+            }
+            if (part.count == 8) {
+                return part.title + " " + (index + 1);
             }
             return CORNERS[index] + " " + part.title.toLowerCase(java.util.Locale.ROOT);
         }
@@ -134,7 +141,8 @@ public final class CarParts {
         int doors = doors(m);
         boolean burnt = "burnt".equals(variant), wrecked = "wrecked".equals(variant);
         for (Slot s : SLOTS) {
-            if (s.part == Part.DOOR && s.index >= doors) {
+            if (s.part == Part.DOOR && s.index >= doors || s.part == Part.SEAT && s.index >= (m.seats == null ? 0 : m.seats.length)
+                    || s.part == Part.GLOVEBOX && m.glovebox == null) {
                 out.append(NONE);
                 continue;
             }
