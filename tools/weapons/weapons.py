@@ -416,9 +416,12 @@ def build_branch(m):
 
 
 def build_stone(m):
-    m.box([-1.6, -1.0, -1.2], [1.6, 1.0, 1.2], 'stone')
-    m.box([-1.2, -1.3, -0.9], [1.3, 1.25, 0.95], 'stone')
-    m.box([-1.9, -0.6, -0.8], [1.8, 0.7, 0.85], 'stone')
+    """A fist-sized field stone: a flat-bottomed lump, rounded by stepped layers and a little off true."""
+    for y0, y1, (x0, x1), (z0, z1) in ((-1.0, -0.6, (-1.5, 1.7), (-1.0, 1.1)), (-0.6, 0.1, (-1.8, 1.9), (-1.2, 1.25)),
+                                         (0.1, 0.6, (-1.5, 1.6), (-1.0, 1.0)), (0.6, 0.95, (-1.0, 1.0), (-0.7, 0.6))):
+        m.box([x0, y0, z0], [x1, y1, z1], 'stone')
+    m.box([1.9, -0.5, -0.6], [2.2, 0.0, 0.5], 'stone')         # a knob on one end
+    m.box([-0.3, -0.6, 1.25], [0.9, 0.0, 1.45], 'stone')
 
 
 def build_sharp_stone(m):
@@ -1870,13 +1873,14 @@ def main():
             ('tree_branch', 'Tree Branch', build_branch, {'shaft': bark}, 571),
             ('stone', 'Stone', build_stone, {'stone': stone_paint('#86817a')}, 572),
             ('sharp_stone', 'Sharpened Stone', build_sharp_stone, {'stone': stone_paint('#6f6b64', 0.45)}, 573)):
+        real = (1.0, 1.7) if 'stone' in name else None        # a stone lies at a stone's size, not blown up
         item = M.Model(name)
         build(item)
         lo, hi = item.bounds()
         item.shift(C - (lo + hi) / 2)
         item.tidy()
         uvs, T = write_texture(item, lk, 0.3, seed, name)
-        M.dump(M.model_json(item, uvs, f'{NS}:item/weapon/{name}', small_display(item)),
+        M.dump(M.model_json(item, uvs, f'{NS}:item/weapon/{name}', small_display(item, real=real)),
                ASSETS / f'models/item/weapon/{name}.json')
         item_def(name, ref(name))
         lang[f'item.{NS}.{name}'] = title

@@ -36,6 +36,10 @@ public final class Rolls {
             GUN_CABINET = "gun_cabinet", GUN_SHOP = "gun_shop", POLICE = "police", MILITARY = "military",
             CASE = "case", UNKNOWN = "unknown";
 
+    /** Weapons only ever made by hand, never found: they come off the bench in full condition, as in Zomboid. */
+    private static final java.util.Set<String> HANDMADE = java.util.Set.of("wooden_spear", "fire_hardened_spear",
+            "spear_knife", "stone_axe", "stone_hammer", "stone_knife", "plank_nails", "cudgel_nails");
+
     private static final float[][] STAT_BANDS = {{0, .40f}, {.20f, .60f}, {.40f, .80f}, {.60f, .95f}, {.85f, 1}};
     private static final float[][] CONDITION_BANDS = {{.20f, .50f}, {.40f, .70f}, {.60f, .85f}, {.80f, .95f}, {.95f, 1}};
 
@@ -62,6 +66,10 @@ public final class Rolls {
             tier = Math.min(5, tier + 1);
         }
         set(stack, rolled(stack, tier, place, random), random);
+        WeaponSpecs.WeaponSpec spec = Weapons.spec(stack);
+        if (spec != null && HANDMADE.contains(spec.name())) {
+            stack.setDamageValue(0);
+        }
         return true;
     }
 
