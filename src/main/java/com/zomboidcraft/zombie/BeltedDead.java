@@ -162,7 +162,7 @@ public final class BeltedDead {
         }
     }
 
-    /** Out of the seat and out of the door on its side, at whoever let it out. */
+    /** Out of the seat and out of the door, at whoever let it out. */
     private static void unbelt(CarProp car, Zombie zombie, Player at) {
         int seat = car.seatOf(zombie);
         zombie.removeAttached(BELTED);
@@ -170,7 +170,11 @@ public final class BeltedDead {
         zombie.stopRiding();
         CarModels.Model m = CarModels.get(car.model());
         float[][] seats = car.seatSpots();
+        // out of the door they opened (the side they stand on), else its own
         double side = seats.length > 0 && seats[Math.max(0, seat)][0] < 0 ? -1 : 1;
+        if (at != null) {
+            side = at.position().subtract(car.position()).yRot((float) Math.toRadians(car.getYRot())).x < 0 ? -1 : 1;
+        }
         double half = m == null ? 1 : m.size[0] / 2;
         double lz = seats.length > 0 ? seats[Math.max(0, seat)][2] : 0;
         Vec3 out = new Vec3(side * (half + 0.6), 0, lz).yRot((float) -Math.toRadians(car.getYRot()));

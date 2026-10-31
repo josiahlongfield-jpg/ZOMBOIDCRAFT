@@ -60,7 +60,8 @@ public class ZombieDeadTest implements FabricClientGameTest {
             sp.getServer().runCommand("fill -40 " + y + " -40 120 " + y + " 120 minecraft:air");
         }
         sp.getServer().runCommand("kill @e[type=!player]");
-        ctx.waitTicks(40);
+        sp.getServer().runCommand("weather clear");
+        ctx.waitTicks(200);
         sp.getConnection().waitForChunksRender();
     }
 
@@ -170,7 +171,7 @@ public class ZombieDeadTest implements FabricClientGameTest {
         // walk past the first car's side, close enough to be caught
         double x = 2;
         for (int f = 0; f < 40; f++) {
-            sp.getServer().runCommand(String.format("tp @a %.2f 100 90.3 -90 35", x));
+            sp.getServer().runCommand(String.format("tp @a %.2f 100 89.9 0 50", x));
             x += 0.3;
             ctx.waitTicks(6);
             ctx.takeScreenshot(String.format("under-%03d", f));
