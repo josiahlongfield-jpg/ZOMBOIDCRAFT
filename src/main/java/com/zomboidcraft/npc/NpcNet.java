@@ -74,6 +74,10 @@ public final class NpcNet {
                     takeGun(npc, player);
                 } else if (payload.act() == CALM) {
                     npc.bond.calm(npc, player);
+                } else if (payload.act() == OFFER_TAKE || payload.act() == OFFER_KEEP) {
+                    NpcCare.answer(npc, player, payload.act() == OFFER_TAKE);
+                } else if (payload.act() == CARRYING) {
+                    NpcCare.tellCarrying(npc, player);
                 } else if (payload.act() >= NpcWardrobe.LIKE) {
                     npc.wardrobe.answer(npc, player, payload.act());
                 }
@@ -97,6 +101,10 @@ public final class NpcNet {
     public static final int TAKE_GUN = 50;
     /** The talk panel's "calm her down" (NpcBond.calm). */
     public static final int CALM = 51;
+    /** The talk panel's answers about something she found for you (NpcCare): hand it over, or she keeps it. */
+    public static final int OFFER_TAKE = 52, OFFER_KEEP = 53;
+    /** The talk panel's "what are you carrying?" (NpcCare.tellCarrying). */
+    public static final int CARRYING = 54;
 
     private static void takeGun(NpcEntity npc, ServerPlayer player) {
         net.minecraft.world.item.ItemStack held = npc.getMainHandItem();

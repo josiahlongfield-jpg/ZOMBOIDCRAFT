@@ -238,7 +238,7 @@ public final class Npcs {
                                                         .executes(ctx -> bond(ctx, StringArgumentType.getString(ctx, "feeling"),
                                                                 FloatArgumentType.getFloat(ctx, "value"))))))
                                 .then(Commands.literal("skill").then(Commands.argument("skill", StringArgumentType.word())
-                                        .suggests((ctx, b) -> SharedSuggestionProvider.suggest(names(NpcSkills.Skill.values()), b))
+                                        .suggests((ctx, b) -> SharedSuggestionProvider.suggest(names(com.zomboidcraft.skills.Skill.values()), b))
                                         .then(Commands.argument("level", com.mojang.brigadier.arguments.IntegerArgumentType.integer(0, NpcSkills.MAX))
                                                 .executes(ctx -> skill(ctx, StringArgumentType.getString(ctx, "skill"),
                                                         com.mojang.brigadier.arguments.IntegerArgumentType.getInteger(ctx, "level"))))))
@@ -618,24 +618,45 @@ public final class Npcs {
     static String skillLines(NpcEntity npc) {
         StringBuilder b = new StringBuilder(npc.speakerName() + ": " + npc.work.job.label
                 + (npc.work.home == null ? ", no home" : ", " + (npc.work.nightShift ? "night" : "day") + " shift"));
-        for (NpcSkills.Skill sk : NpcSkills.Skill.values()) {
-            int l = npc.skills.level(sk);
-            b.append("\n ").append(sk.label).append(' ').append("#".repeat(l)).append("-".repeat(NpcSkills.MAX - l))
-                    .append(' ').append(l).append(" (").append(Math.round(npc.skills.progress(sk) * 100)).append("% to next)");
+        // every shared skill she has anything in, the six her work uses first
+        java.util.Set<String> keys = new java.util.LinkedHashSet<>();
+        for (NpcSkills.Skill sk : NpcSkills.Skill.values()) keys.add(sk.key);
+        keys.addAll(npc.skills.known().keySet());
+        for (String key : keys) {
+            com.zomboidcraft.skills.Skill shared = shared(key);
+            String label = shared != null ? shared.displayName() : key;
+            int l = npc.skills.level(key);
+            b.append("\n ").append(label).append(' ').append("#".repeat(l)).append("-".repeat(NpcSkills.MAX - l))
+                    .append(' ').append(l).append(" (").append(Math.round(npc.skills.progress(key) * 100)).append("% to next");
+            int boost = npc.skills.boost(key);
+            b.append(boost > 1 ? ", book x" + boost + ")" : ")");
         }
         return b.toString();
     }
 
     private static int skill(CommandContext<CommandSourceStack> ctx, String name, int level) throws CommandSyntaxException {
         NpcEntity npc = target(ctx.getSource().getPlayerOrException());
-        NpcSkills.Skill sk = java.util.Arrays.stream(NpcSkills.Skill.values()).filter(v -> v.name().equalsIgnoreCase(name)).findFirst().orElse(null);
-        if (npc == null || sk == null) {
-            ctx.getSource().sendFailure(Component.literal(npc == null ? "No companion near you" : "Skills: " + String.join(", ", names(NpcSkills.Skill.values()))));
+        // the shared skill's name (aiming, first_aid...), or the old short names her work used (aim, scavenging, farming)
+        NpcSkills.Skill old = java.util.Arrays.stream(NpcSkills.Skill.values()).filter(v -> v.name().equalsIgnoreCase(name)).findFirst().orElse(null);
+        com.zomboidcraft.skills.Skill sk = shared(old != null ? old.key : name.toUpperCase(java.util.Locale.ROOT));
+        if (npc == null || sk == null && old == null) {
+            ctx.getSource().sendFailure(Component.literal(npc == null ? "No companion near you"
+                    : "Skills: " + String.join(", ", names(com.zomboidcraft.skills.Skill.values()))));
             return 0;
         }
-        npc.skills.set(sk, level);
-        ctx.getSource().sendSuccess(() -> Component.literal("Her " + sk.label + " is " + level + " now"), false);
+        String key = sk != null ? sk.name() : old.key, label = sk != null ? sk.displayName() : old.label;
+        npc.skills.set(key, level);
+        ctx.getSource().sendSuccess(() -> Component.literal("Her " + label + " is " + level + " now"), false);
         return 1;
+    }
+
+    /** The shared skill by its name, or null (a skill this build doesn't have yet). */
+    private static com.zomboidcraft.skills.Skill shared(String key) {
+        try {
+            return com.zomboidcraft.skills.Skill.valueOf(key);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 
     private static String capital(String s) {

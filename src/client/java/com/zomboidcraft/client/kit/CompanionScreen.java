@@ -435,13 +435,18 @@ public class CompanionScreen extends Screen {
         KitDraw.heading(g, font, "Her bag", lx, ly, lw, false);
         ly += 11;
         List<ItemStack> pack = s == null ? List.of() : s.pack();
-        for (int i = 0; i < 9; i++) {
-            int tx = lx + (i % 7) * 26, ty = ly + (i / 7) * 26;
+        // nine slots, more with a backpack on (smaller tiles then); what she's holding for you is gold-edged
+        int slots = Math.max(9, pack.size()), per = slots > 14 ? 10 : 7, step = slots > 14 ? 18 : 26, tile = step - 4;
+        for (int i = 0; i < slots; i++) {
+            int tx = lx + (i % per) * step, ty = ly + (i / per) * step;
             ItemStack st = i < pack.size() ? pack.get(i) : ItemStack.EMPTY;
-            boolean over = KitDraw.in(mx, my, tx, ty, 22, 22);
-            KitDraw.tile(g, font, st, tx, ty, 22, 22, over);
+            boolean over = KitDraw.in(mx, my, tx, ty, tile, tile);
+            KitDraw.tile(g, font, st, tx, ty, tile, tile, over);
+            boolean mine = !st.isEmpty() && minecraft.player.getUUID().equals(com.zomboidcraft.npc.NpcCare.offeredTo(st));
+            if (mine) KitDraw.frame(g, tx, ty, tile, tile, KitDraw.LINK);
             int slot = i;
-            if (!st.isEmpty()) hot(tx, ty, 22, 22, () -> gear(NpcPanel.TAKE, slot), null, st.getHoverName().getString() + ": ask for it");
+            if (!st.isEmpty()) hot(tx, ty, tile, tile, () -> gear(NpcPanel.TAKE, slot), null, st.getHoverName().getString()
+                    + (mine ? ": she found it for you, take it" : ": ask for it"));
         }
 
         // the right: your things, clothes she could wear marked
