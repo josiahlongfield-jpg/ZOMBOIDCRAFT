@@ -148,6 +148,21 @@ public class CompanionTradesTest implements FabricClientGameTest {
             for (int i = 0; i < 24; i++) {
                 ctx.waitTicks(5);
                 shot(ctx, "help");
+                if (i % 3 == 0) sp.getServer().runOnServer(s -> {
+                    NpcEntity npc = npc(s);
+                    String running = "?";
+                    try {
+                        var f = net.minecraft.world.entity.Mob.class.getDeclaredField("goalSelector");
+                        f.setAccessible(true);
+                        var sel = (net.minecraft.world.entity.ai.goal.GoalSelector) f.get(npc);
+                        running = String.join(",", sel.getAvailableGoals().stream().filter(g -> g.isRunning())
+                                .map(g -> g.getGoal().getClass().getSimpleName()).toList());
+                    } catch (ReflectiveOperationException e) {
+                        running = e.toString();
+                    }
+                    double d = s.overworld().getEntity(carId) instanceof CarProp car ? Math.sqrt(car.getBoundingBox().distanceToSqr(npc.position())) : -1;
+                    LOG.info("ZCNPC   helping: action {}, {} from the car, goals {}", npc.action(), String.format(Locale.ROOT, "%.2f", d), running);
+                });
             }
             log(sp, c, "after helping");
         }
