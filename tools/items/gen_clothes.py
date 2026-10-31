@@ -37,6 +37,22 @@ import model as M  # noqa: E402
 import paint as P  # noqa: E402
 import gen_bags as B  # noqa: E402
 import toon as T  # noqa: E402
+
+# Josiah 2026-10-31: every black in the clothing is a deep black. Near-black, near-grey colours (all channels at or
+# under 0x30, within 0x10 of each other) are taken down to under half, so black cloth, leather, rubber, plate and
+# the black camo read as black rather than charcoal; the toon pass's lit edges keep their shapes reading.
+_col = P.col
+
+
+def _deep(hexstr):
+    c = _col(hexstr)
+    hi, lo = c.max(), c.min()
+    if 0.03 < hi <= 0x30 / 255 and hi - lo <= 0x10 / 255:
+        return c * 0.45
+    return c
+
+
+P.col = _deep
 import importlib.util  # noqa: E402
 import io  # noqa: E402
 import struct  # noqa: E402
@@ -4453,7 +4469,7 @@ CIVILIAN_3 = {
 def blackened(base='#1c1c22'):
     """Blackened (fire-blued) plate: near black with a cold steel sheen along the light."""
     def fn(f):
-        c = P.steel(f, 0.5) * 0.32 + P.col(base) * 0.55
+        c = P.steel(f, 0.5) * 0.2 + P.col(base) * 0.55
         return toon(f, grade(c, 0.2), ink=False)
     return fn
 
@@ -5113,15 +5129,15 @@ GRAIL = {
     'crusader_greaves': (build_crusader_greaves, dict(plate=H('plate'), brass=H('trim')), 0.3),
     'crusader_gauntlets': (build_crusader_gauntlets, dict(plate=H('plate'), brass=H('trim')), 0.3),
     'crusader_sabatons': (build_crusader_sabatons, dict(plate=H('plate'), brass=H('trim'), sole=leather('#1e1814')), 0.3),
-    'gothic_sallet': (build_gothic_sallet, dict(steel=metal('steel'), brass=metal('brass'), dark=flat('#0a0a0a', ink=False),
-                                                flute=metal('steel')), 0.3),
-    'gothic_cuirass': (build_gothic_cuirass, dict(steel=metal('steel'), flute=metal('steel'), brass=metal('brass'),
+    'gothic_sallet': (build_gothic_sallet, dict(steel=H('plate'), brass=H('trim'), dark=flat('#0a0a0a', ink=False),
+                                                flute=H('ridge')), 0.3),
+    'gothic_cuirass': (build_gothic_cuirass, dict(steel=H('plate'), flute=H('ridge'), brass=H('trim'),
                                                   mail=mesh('#8a8c90'), leather=leather('#4a3020')), 0.3),
-    'gothic_arm_harness': (build_gothic_arm_harness, dict(steel=metal('steel'), brass=metal('brass'), besagew=metal('steel'),
+    'gothic_arm_harness': (build_gothic_arm_harness, dict(steel=H('plate'), brass=H('trim'), besagew=H('ridge'),
                                                           points=cloth('#7a1e24', stitch=None)), 0.3),
-    'gothic_leg_harness': (build_gothic_leg_harness, dict(steel=metal('steel'), brass=metal('brass'), flute=metal('steel')), 0.3),
-    'gothic_gauntlets': (build_gothic_gauntlets, dict(steel=metal('steel'), brass=metal('brass'), flute=metal('steel')), 0.3),
-    'gothic_sabatons': (build_gothic_sabatons, dict(steel=metal('steel'), brass=metal('brass'), sole=leather('#3a2616')), 0.3),
+    'gothic_leg_harness': (build_gothic_leg_harness, dict(steel=H('plate'), brass=H('trim'), flute=H('ridge')), 0.3),
+    'gothic_gauntlets': (build_gothic_gauntlets, dict(steel=H('plate'), brass=H('trim'), flute=H('ridge')), 0.3),
+    'gothic_sabatons': (build_gothic_sabatons, dict(steel=H('plate'), brass=H('trim'), sole=leather('#3a2616')), 0.3),
     'bomb_disposal_suit': (build_bomb_disposal_suit, dict(cloth=cloth('#4a5236', weave=0.06), collar=cloth('#3e452e', weave=0.06),
                                                           plate=cloth('#1c1e1a', weave=0.04), strap=cloth('#2a2c26', stitch=None),
                                                           grille=plastic('#1a1a1a')), 0.45),

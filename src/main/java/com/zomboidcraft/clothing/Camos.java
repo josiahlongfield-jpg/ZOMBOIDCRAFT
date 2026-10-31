@@ -36,7 +36,13 @@ public final class Camos {
             Map.entry("crusader_cloak", List.of("black", "templar", "hospitaller", "teutonic", "lazarite", "crimson", "gilded", "rusted")),
             Map.entry("crusader_greaves", List.of("black", "templar", "hospitaller", "teutonic", "lazarite", "crimson", "gilded", "rusted")),
             Map.entry("crusader_gauntlets", List.of("black", "templar", "hospitaller", "teutonic", "lazarite", "crimson", "gilded", "rusted")),
-            Map.entry("crusader_sabatons", List.of("black", "templar", "hospitaller", "teutonic", "lazarite", "crimson", "gilded", "rusted")));
+            Map.entry("crusader_sabatons", List.of("black", "templar", "hospitaller", "teutonic", "lazarite", "crimson", "gilded", "rusted")),
+            Map.entry("gothic_sallet", List.of("black", "templar", "hospitaller", "teutonic", "lazarite", "crimson", "gilded", "rusted")),
+            Map.entry("gothic_cuirass", List.of("black", "templar", "hospitaller", "teutonic", "lazarite", "crimson", "gilded", "rusted")),
+            Map.entry("gothic_arm_harness", List.of("black", "templar", "hospitaller", "teutonic", "lazarite", "crimson", "gilded", "rusted")),
+            Map.entry("gothic_leg_harness", List.of("black", "templar", "hospitaller", "teutonic", "lazarite", "crimson", "gilded", "rusted")),
+            Map.entry("gothic_gauntlets", List.of("black", "templar", "hospitaller", "teutonic", "lazarite", "crimson", "gilded", "rusted")),
+            Map.entry("gothic_sabatons", List.of("black", "templar", "hospitaller", "teutonic", "lazarite", "crimson", "gilded", "rusted")));
 
     private Camos() {
     }
