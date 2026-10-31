@@ -59,6 +59,7 @@ public final class CarClient {
         com.zomboidcraft.client.interact.Interactables.drawsOwn(() -> target != null);
         HoistClient.register();
         ShopToolClient.register();
+        FuelClient.register();
         com.zomboidcraft.client.interact.Interactables.finder(CarClient::boot);
         com.zomboidcraft.client.interact.Interactables.finder(CarClient::bonnet);
         com.zomboidcraft.client.interact.InteractMenu.provider(CarClient::menu);
@@ -128,7 +129,11 @@ public final class CarClient {
 
     /** A tap of G: the one obvious thing for what you're looking at, as before the menu. */
     private static void interact(Minecraft client, LocalPlayer player, CarProp inside, CarProp car, HitResult hit) {
-        if (target != null) {
+        CarProp canAt = target != null ? target.car() : car;
+        if (inside == null && canAt != null && player.getMainHandItem().getItem() instanceof com.zomboidcraft.loot.items.GasCanItem) {
+            // a gas can in hand: pour it in, or siphon (the server decides which), wherever on the car you're looking
+            ClientPlayNetworking.send(new CarNet.Use(canAt.getId(), 0, 0, 0));
+        } else if (target != null) {
             ClientPlayNetworking.send(new CarNet.Seat(target.car().getId(), target.seat()));
         } else if (inside != null) {
             ClientPlayNetworking.send(new CarNet.Use(CarNet.GET_OUT, 0, 0, 0));
@@ -136,6 +141,8 @@ public final class CarClient {
             // a car lift's control box or its pump lever
         } else if (ShopToolClient.interact(client, player)) {
             // a trolley jack, engine crane, tyre machine or parts washer
+        } else if (FuelClient.interact(client, hit)) {
+            // a gas pump: fill the can in hand, or the car parked beside it
         } else if (car != null && atBonnet(car, hit, player)) {
             client.gui.setScreen(new com.zomboidcraft.client.kit.MechanicsScreen(car));
         } else if (car != null) {

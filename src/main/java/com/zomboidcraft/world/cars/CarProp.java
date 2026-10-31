@@ -342,6 +342,9 @@ public class CarProp extends Entity {
             return;
         }
         CarModels.Model m = CarModels.get(model());
+        if (player instanceof net.minecraft.server.level.ServerPlayer sp && !hasPassenger(player) && Fuel.useCan(sp, this)) {
+            return;     // a gas can in hand: pour it in, or siphon the tank
+        }
         if (m != null && m.jet() && player instanceof net.minecraft.server.level.ServerPlayer sp && !hasPassenger(player)
                 && AirReadiness.service(this, sp)) {
             return;     // fuel, a battery or parts in hand: service it rather than climb in

@@ -855,6 +855,11 @@ public final class ZcConfig {
         public String carInitialGas = "low";
         /** Zomboid's Gas Consumption: how fast engines drink, times this. */
         public double carGasConsumption = 1;
+        /** Zomboid's Fuel Station Gas: pumps never run dry; else each starts with Min to Max of its tank, EmptyChance percent dry. */
+        public boolean fuelStationGasInfinite = false;
+        public double fuelStationGasMin = 0;
+        public double fuelStationGasMax = 0.8;
+        public double fuelStationEmptyChance = 20;
         /** Car boots and the backs of vans hold loot (tools/cars/car_loot.py); off leaves them empty. */
         public boolean carLoot = true;
         /** The jets' top speed in km/h. Past about 300 the world can't load fast enough to keep up with them. */
