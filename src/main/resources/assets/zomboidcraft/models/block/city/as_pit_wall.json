@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "as_concrete": "zomboidcraft:block/city/as_concrete",
+    "as_pit_wall": "zomboidcraft:block/city/as_pit_wall",
+    "particle": "zomboidcraft:block/city/as_pit_wall"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_pit_wall",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#as_concrete",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#as_concrete",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#as_concrete",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#as_concrete",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#as_concrete",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

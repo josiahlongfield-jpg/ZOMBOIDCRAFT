@@ -1,0 +1,83 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "as_crt": "zomboidcraft:block/city/as_crt",
+    "as_flat_red": "zomboidcraft:block/city/as_flat_red",
+    "particle": "zomboidcraft:block/city/as_flat_red"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        13
+      ],
+      "to": [
+        15,
+        14,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_flat_red"
+        },
+        "south": {
+          "texture": "#as_flat_red"
+        },
+        "east": {
+          "texture": "#as_flat_red"
+        },
+        "west": {
+          "texture": "#as_flat_red"
+        },
+        "up": {
+          "texture": "#as_flat_red"
+        },
+        "down": {
+          "texture": "#as_flat_red"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          0,
+          15
+        ],
+        "axis": "x",
+        "angle": -22.5
+      }
+    },
+    {
+      "from": [
+        2,
+        9,
+        13.5
+      ],
+      "to": [
+        14,
+        13,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_crt"
+        },
+        "south": {
+          "texture": "#as_crt"
+        },
+        "east": {
+          "texture": "#as_crt"
+        },
+        "west": {
+          "texture": "#as_crt"
+        },
+        "up": {
+          "texture": "#as_crt"
+        },
+        "down": {
+          "texture": "#as_crt"
+        }
+      }
+    }
+  ]
+}

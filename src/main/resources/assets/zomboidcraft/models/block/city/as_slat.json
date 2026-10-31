@@ -1,0 +1,45 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "as_metal": "zomboidcraft:block/city/as_metal",
+    "particle": "zomboidcraft:block/city/as_metal"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        13
+      ],
+      "to": [
+        16,
+        16,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_metal"
+        },
+        "south": {
+          "texture": "#as_metal"
+        },
+        "east": {
+          "texture": "#as_metal",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#as_metal",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#as_metal",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#as_metal",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

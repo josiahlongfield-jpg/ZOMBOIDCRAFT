@@ -1,0 +1,145 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "as_engine": "zomboidcraft:block/city/as_engine",
+    "as_rust": "zomboidcraft:block/city/as_rust",
+    "as_shelf_brakes": "zomboidcraft:block/city/as_shelf_brakes",
+    "as_steel": "zomboidcraft:block/city/as_steel",
+    "particle": "zomboidcraft:block/city/as_steel"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        10,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_steel",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#as_steel",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#as_steel",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#as_steel",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#as_steel"
+        },
+        "down": {
+          "texture": "#as_steel",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        8,
+        2
+      ],
+      "to": [
+        14,
+        12,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_engine"
+        },
+        "south": {
+          "texture": "#as_engine"
+        },
+        "east": {
+          "texture": "#as_engine"
+        },
+        "west": {
+          "texture": "#as_engine"
+        },
+        "up": {
+          "texture": "#as_engine"
+        },
+        "down": {
+          "texture": "#as_engine"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        10,
+        3
+      ],
+      "to": [
+        8,
+        14,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_shelf_brakes"
+        },
+        "south": {
+          "texture": "#as_shelf_brakes"
+        },
+        "east": {
+          "texture": "#as_shelf_brakes"
+        },
+        "west": {
+          "texture": "#as_shelf_brakes"
+        },
+        "up": {
+          "texture": "#as_shelf_brakes"
+        },
+        "down": {
+          "texture": "#as_shelf_brakes"
+        }
+      }
+    },
+    {
+      "from": [
+        9,
+        10,
+        8
+      ],
+      "to": [
+        14,
+        13,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_rust"
+        },
+        "south": {
+          "texture": "#as_rust"
+        },
+        "east": {
+          "texture": "#as_rust"
+        },
+        "west": {
+          "texture": "#as_rust"
+        },
+        "up": {
+          "texture": "#as_rust"
+        },
+        "down": {
+          "texture": "#as_rust"
+        }
+      }
+    }
+  ]
+}
