@@ -106,6 +106,12 @@ public class ClothingLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
         pose.popPose();
     }
 
+    /** Whether this layer draws the piece (a rig is a bag too, and the bag layer leaves it to this one). */
+    public static boolean draws(ItemStack stack) {
+        Garment g = Clothes.of(stack);
+        return g != null && WornParts.PARTS.containsKey(g.id());
+    }
+
     /** Medical supports by bit of the worn-medical mask, and the body part each body region draws on. */
     private static final String[] MEDICAL = {"worn_bandage", "worn_gauze", "worn_wrap", "worn_tourniquet", "worn_splint",
             "worn_finger_splint", "worn_moldable_splint", "worn_sling", "worn_collar", "worn_knee_brace"};
