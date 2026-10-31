@@ -191,7 +191,8 @@ public final class Medicine {
             put(m, k("wl", r), left);
         }
         // a sling rests a broken arm: it knits a third faster
-        for (Region r : new Region[]{Region.LEFT_ARM, Region.RIGHT_ARM}) {
+        for (Region r : Region.values()) {
+            if (!r.arm()) continue;
             Part p = body.part(r);
             if (get(m, "sling", r) > 0 && p.fractured() && p.splinted() && second % 3 == 0) {
                 body = body.with(r, new Part(p.wound(), p.woundLeft(), p.bleeding(), p.bandaged(), Math.max(0, p.fractureLeft() - 1), true));
@@ -322,7 +323,7 @@ public final class Medicine {
         if (get(m, "tooth") > 0) pain += 25;
         if (get(m, "cold") > 0) pain += 3;
         pain += get(m, "sting");
-        if (body.part(Region.LEFT_LEG).severity() >= 2 || body.part(Region.RIGHT_LEG).severity() >= 2) {
+        if (body.zone(Body.Zone.LEFT_LEG).severity() >= 2 || body.zone(Body.Zone.RIGHT_LEG).severity() >= 2) {
             if (MedSpecs.holds(player, "walking_cane") || MedSpecs.holds(player, "crutches")) pain -= 10;
         }
         if (get(m, "coldpack") > 0) pain -= 15;

@@ -224,11 +224,8 @@ public final class Tailoring {
             case FOOT -> "foot";
             default -> spot.label;
         };
-        return switch (region) {
-            case LEFT_ARM, LEFT_LEG -> "left " + label;
-            case RIGHT_ARM, RIGHT_LEG -> "right " + label;
-            default -> label;
-        };
+        if (spot.kind == Spot.Kind.HEAD || spot.kind == Spot.Kind.TORSO) return label;
+        return (region.left() ? "left " : "right ") + label;
     }
 
     private static void tell(ServerPlayer player, String s) {

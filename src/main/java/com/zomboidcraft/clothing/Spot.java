@@ -34,7 +34,7 @@ public enum Spot {
     public static final int PLACES = 20;
 
     static Kind kind(Region region) {
-        return switch (region) {
+        return switch (region.zone()) {
             case HEAD -> Kind.HEAD;
             case TORSO -> Kind.TORSO;
             case LEFT_ARM, RIGHT_ARM -> Kind.ARM;
@@ -42,20 +42,40 @@ public enum Spot {
         };
     }
 
+    /** The body part this spot is on, on the left side for a limb (elbows go with the upper arm, knees with the shin). */
+    private Region left() {
+        return switch (this) {
+            case HEAD -> Region.HEAD;
+            case NECK -> Region.NECK;
+            case TORSO -> Region.UPPER_TORSO;
+            case GROIN -> Region.GROIN;
+            case UPPER_ARM, ELBOW -> Region.LEFT_UPPER_ARM;
+            case FOREARM -> Region.LEFT_FOREARM;
+            case HAND -> Region.LEFT_HAND;
+            case THIGH -> Region.LEFT_THIGH;
+            case KNEE, SHIN -> Region.LEFT_SHIN;
+            case FOOT -> Region.LEFT_FOOT;
+        };
+    }
+
+    /** Whether this spot is on that body part (the torso spot covers both the upper and lower torso). */
     public boolean on(Region region) {
-        return kind == kind(region);
+        Region mine = left();
+        return region == mine || region == mine.mirror() || this == TORSO && region == Region.LOWER_TORSO;
     }
 
     /** The spots of a part, head to toe. */
     public static List<Spot> of(Region region) {
-        List<Spot> out = new ArrayList<>(4);
+        List<Spot> out = new ArrayList<>(2);
         for (Spot s : values()) if (s.on(region)) out.add(s);
         return out;
     }
 
-    /** Where on the part a hit lands. */
+    /** Where on the part a hit lands, by the spots' weights. */
     public static Spot roll(Region region, RandomSource random) {
-        float r = random.nextFloat();
+        float total = 0;
+        for (Spot s : values()) if (s.on(region)) total += s.weight;
+        float r = random.nextFloat() * total;
         Spot last = null;
         for (Spot s : values()) {
             if (!s.on(region)) continue;
@@ -66,23 +86,19 @@ public enum Spot {
         return last;
     }
 
-    /** This spot on that part, as a bit index 0 to 19 (head and torso spots have no side). */
+    /** This spot on that part's side, as a bit index 0 to 19 (head and torso spots have no side). */
     public int place(Region region) {
         return switch (kind) {
             case HEAD -> ordinal();
             case TORSO -> ordinal();
-            case ARM -> 4 + (region == Region.RIGHT_ARM ? 4 : 0) + (ordinal() - UPPER_ARM.ordinal());
-            case LEG -> 12 + (region == Region.RIGHT_LEG ? 4 : 0) + (ordinal() - THIGH.ordinal());
+            case ARM -> 4 + (region.left() ? 0 : 4) + (ordinal() - UPPER_ARM.ordinal());
+            case LEG -> 12 + (region.left() ? 0 : 4) + (ordinal() - THIGH.ordinal());
         };
     }
 
-    /** The parts a spot is on: one for the head and torso, both sides for a limb. */
+    /** The parts a spot is on, one per side: one for the head and torso, both sides for a limb. */
     public Region[] regions() {
-        return switch (kind) {
-            case HEAD -> new Region[]{Region.HEAD};
-            case TORSO -> new Region[]{Region.TORSO};
-            case ARM -> new Region[]{Region.LEFT_ARM, Region.RIGHT_ARM};
-            case LEG -> new Region[]{Region.LEFT_LEG, Region.RIGHT_LEG};
-        };
+        Region mine = left();
+        return kind == Kind.HEAD || kind == Kind.TORSO ? new Region[]{mine} : new Region[]{mine, mine.mirror()};
     }
 }

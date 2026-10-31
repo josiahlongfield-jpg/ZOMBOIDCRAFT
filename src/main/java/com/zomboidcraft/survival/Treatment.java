@@ -37,8 +37,10 @@ public final class Treatment {
     }
 
     /** Legs first: a broken leg is the one that gets you killed. */
-    private static final Region[] SPLINT_ORDER = {Region.LEFT_LEG, Region.RIGHT_LEG, Region.LEFT_ARM, Region.RIGHT_ARM,
-            Region.TORSO, Region.HEAD};
+    private static final Region[] SPLINT_ORDER = {Region.LEFT_SHIN, Region.RIGHT_SHIN, Region.LEFT_THIGH, Region.RIGHT_THIGH,
+            Region.LEFT_FOOT, Region.RIGHT_FOOT, Region.LEFT_FOREARM, Region.RIGHT_FOREARM, Region.LEFT_UPPER_ARM,
+            Region.RIGHT_UPPER_ARM, Region.LEFT_HAND, Region.RIGHT_HAND, Region.UPPER_TORSO, Region.LOWER_TORSO, Region.GROIN,
+            Region.NECK, Region.HEAD};
 
     /** Whether this part needs this treatment. */
     public static boolean needs(Part p, Kind kind) {

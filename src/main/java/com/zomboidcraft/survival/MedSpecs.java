@@ -213,7 +213,7 @@ public final class MedSpecs {
             case EXTRACT -> extract(player, id, med, m);
             case SPLINT -> onPart(player, id, med, med.arg().equals("sling") ? "Fitting a sling to" : "Splinting", (r, p) -> switch (med.arg()) {
                 case "arm" -> r.arm() && p.fractured() && !p.splinted();
-                case "core" -> (r == Region.HEAD || r == Region.TORSO) && p.fractured() && !p.splinted();
+                case "core" -> (r.zone() == Body.Zone.HEAD || r.zone() == Body.Zone.TORSO) && p.fractured() && !p.splinted();
                 case "sling" -> r.arm() && p.fractured() && Medicine.get(m, "sling", r) == 0;
                 default -> p.fractured() && !p.splinted();
             }, "Nothing broken that this would help.");
@@ -260,7 +260,7 @@ public final class MedSpecs {
             case "small" -> (r, p) -> p.wounded() && !p.bandaged() && Medicine.get(m, "deep", r) == 0 && p.wound() != Wound.BITE;
             case "pack" -> (r, p) -> p.wounded() && Medicine.get(m, "packed", r) == 0 && (Medicine.get(m, "deep", r) > 0 || !p.bandaged());
             case "hemostatic" -> (r, p) -> p.bleeding();
-            case "seal" -> (r, p) -> r == Region.TORSO && p.wounded() && Medicine.get(m, "sealed", r) == 0;
+            case "seal" -> (r, p) -> r.zone() == Body.Zone.TORSO && p.wounded() && Medicine.get(m, "sealed", r) == 0;
             case "wrap" -> (r, p) -> (r.arm() || r.leg()) && !p.fine() && Medicine.get(m, "wrap", r) == 0;
             default -> (r, p) -> p.wounded() && !p.bandaged();
         };

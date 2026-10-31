@@ -53,10 +53,13 @@ public final class Injuries {
         if (source.is(DamageTypeTags.IS_FALL)) {
             // about half a chance per leg from ten blocks, certain from fourteen
             float chance = Math.max(0, Math.min(1, (damage - 3) / 8f));
-            for (Region leg : new Region[]{Region.LEFT_LEG, Region.RIGHT_LEG}) {
-                if (!body.part(leg).fractured() && random.nextFloat() < chance) {
-                    body = body.fracture(leg);
-                    broke = leg;
+            // Zomboid: a bad landing breaks a shin (sometimes a foot or thigh) and jars the feet
+            for (Region leg : new Region[]{Region.LEFT_SHIN, Region.RIGHT_SHIN}) {
+                if (!body.broken(leg.zone()) && random.nextFloat() < chance) {
+                    float where = random.nextFloat();
+                    Region bone = where < 0.6f ? leg : where < 0.85f ? Body.Region.values()[leg.ordinal() + 2] : Body.Region.values()[leg.ordinal() - 2];
+                    body = body.fracture(bone);
+                    broke = bone;
                 }
             }
         } else if (source.is(DamageTypeTags.IS_FIRE)) {
@@ -139,16 +142,18 @@ public final class Injuries {
     private static void effects(ServerPlayer player, Body body) {
         double legs = 0, arms = 0;
         boolean broken = false;
-        for (Region r : Region.values()) {
-            Part p = body.part(r);
-            if (r.leg()) {
+        // a limb slows or weakens you by its worst part (a broken shin and a cut foot is still one bad leg)
+        for (Body.Zone z : Body.Zone.values()) {
+            Part p = body.zone(z);
+            if (z.leg()) {
+                Region worst = worstPart(body, z);
                 if (p.fractured()) {
-                    legs -= (p.splinted() ? 0.12 : 0.25) * Medicine.legSupport(player, r, true);
+                    legs -= (p.splinted() ? 0.12 : 0.25) * Medicine.legSupport(player, worst, true);
                     broken |= !p.splinted();
                 } else if (p.severity() >= 2) {
-                    legs -= 0.05 * Medicine.legSupport(player, r, false);
+                    legs -= 0.05 * Medicine.legSupport(player, worst, false);
                 }
-            } else if (r.arm()) {
+            } else if (z.arm()) {
                 if (p.fractured()) arms -= p.splinted() ? 0.2 : 0.35;
                 else if (p.severity() >= 2) arms -= 0.1;
             }
@@ -156,6 +161,12 @@ public final class Injuries {
         modify(player.getAttribute(Attributes.MOVEMENT_SPEED), LEGS, legs);
         modify(player.getAttribute(Attributes.ATTACK_DAMAGE), ARMS, arms);
         if (broken && player.isSprinting() && !MedSpecs.holds(player, "crutches")) player.setSprinting(false);
+    }
+
+    private static Region worstPart(Body body, Body.Zone zone) {
+        Region worst = zone.main();
+        for (Region r : zone.parts()) if (body.part(r).severity() > body.part(worst).severity()) worst = r;
+        return worst;
     }
 
     private static void modify(AttributeInstance attribute, Identifier id, double amount) {
@@ -171,7 +182,7 @@ public final class Injuries {
     /** True while a leg is broken and not yet splinted: no sprinting. */
     public static boolean cantSprint(net.minecraft.world.entity.player.Player player) {
         Body body = Body.get(player);
-        return body.part(Region.LEFT_LEG).severity() == 3 || body.part(Region.RIGHT_LEG).severity() == 3
+        return body.zone(Body.Zone.LEFT_LEG).severity() == 3 || body.zone(Body.Zone.RIGHT_LEG).severity() == 3
                 || Medicine.painStopsSprint(player) || Downs.downed(player);
     }
 
@@ -179,8 +190,8 @@ public final class Injuries {
     public static float armShake(net.minecraft.world.entity.player.Player player) {
         Body body = Body.get(player);
         float shake = 0;
-        for (Region r : new Region[]{Region.LEFT_ARM, Region.RIGHT_ARM}) {
-            Part p = body.part(r);
+        for (Body.Zone z : new Body.Zone[]{Body.Zone.LEFT_ARM, Body.Zone.RIGHT_ARM}) {
+            Part p = body.zone(z);
             shake += p.fractured() ? (p.splinted() ? 0.3f : 0.5f) : p.severity() >= 2 ? 0.15f : 0;
         }
         return Math.min(1, shake * Medicine.steadiness(player) + Medicine.painShake(player) + com.zomboidcraft.survival.Mood.shake(player));
