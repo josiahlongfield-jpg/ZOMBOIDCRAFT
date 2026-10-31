@@ -869,6 +869,10 @@ public final class ZcConfig {
         public double sirenShutoffHours = 0;
         /** Zomboid's Player Damage From Crash: a crash at speed hurts whoever's inside. */
         public boolean playerDamageFromCrash = true;
+        /** Zomboid's Recently Survivor Vehicles: none, low, normal, high. */
+        public String survivorCars = "low";
+        /** Zomboid's Traffic Jam: wrecked cars piled up along the main roads (laid by the county's road builder). */
+        public boolean trafficJams = true;
         /** Car boots and the backs of vans hold loot (tools/cars/car_loot.py); off leaves them empty. */
         public boolean carLoot = true;
         /** The jets' top speed in km/h. Past about 300 the world can't load fast enough to keep up with them. */

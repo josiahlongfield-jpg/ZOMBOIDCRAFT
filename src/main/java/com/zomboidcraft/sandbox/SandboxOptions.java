@@ -65,6 +65,8 @@ final class SandboxOptions {
         w.put("SirenEffectsZombies", b -> b.toggle("world.sirenEffectsZombies").owner("VEHICLES"));
         w.put("SirenShutoffHours", b -> b.number("world.sirenShutoffHours", 0, 168).owner("VEHICLES"));
         w.put("PlayerDamageFromCrash", b -> b.toggle("world.playerDamageFromCrash").owner("VEHICLES"));
+        w.put("RecentlySurvivorVehicles", b -> b.choice("world.survivorCars", "none", "low", "normal", "high").owner("VEHICLES"));
+        w.put("TrafficJam", b -> b.toggle("world.trafficJams").owner("LANDSCAPE"));
         w.put("DamageToPlayerFromHitByACar", b -> b.number("world.carHitDamage", 1, 4).owner("VEHICLES"));
         // Firearms (WEAPONS): combat/Firearms. Use Damage Chance says who a shot strikes just by being aimed at;
         // jams start at 0 since Josiah cut them on 10-26

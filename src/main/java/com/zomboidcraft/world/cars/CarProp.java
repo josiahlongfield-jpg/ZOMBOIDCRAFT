@@ -332,6 +332,9 @@ public class CarProp extends Entity {
 
     /** The loot table for this car's boot, from what kind of vehicle it is. */
     public String lootTable() {
+        if (survivor()) {
+            return "survivor";     // someone's whole life in the back: LOOT's survivor table
+        }
         return switch (model()) {
             case "swat_van" -> "swat";
             case "ambulance", "ambulance_van" -> "ambulance";
@@ -974,7 +977,7 @@ public class CarProp extends Entity {
         if (!aircraft() && !worn) {
             worn = true;
             java.util.Random rng = new java.util.Random(getUUID().getLeastSignificantBits());
-            int found = switch (variant()) {
+            int found = survivor() ? 85 + rng.nextInt(16) : switch (variant()) {
                 case "usable" -> 55 + rng.nextInt(46);
                 case "abandoned" -> 15 + rng.nextInt(46);
                 default -> rng.nextInt(16);
@@ -1300,7 +1303,7 @@ public class CarProp extends Entity {
         com.zomboidcraft.ZcConfig.World w = com.zomboidcraft.ZcConfig.get().world;
         rollKey();
         // keys left in the ignition mean nobody locked up; a shop's customer cars are always locked
-        locked = !w.vehicleEasyUse && keyWhere != CarKeys.IGNITION && (customer || rng.nextDouble() < share(w.carLocked));
+        locked = !w.vehicleEasyUse && keyWhere != CarKeys.IGNITION && (customer || survivor() || rng.nextDouble() < share(w.carLocked));
         armed = !w.vehicleEasyUse && rng.nextDouble() < share(w.carAlarm);
     }
 
@@ -1351,6 +1354,23 @@ public class CarProp extends Entity {
         if (armed && tripAlarm(com.zomboidcraft.ZcConfig.get().building.carAlarmSeconds * 20 + 40 * 20)) {
             armed = false;
         }
+    }
+
+    /**
+     * Zomboid's Recently Survivor Vehicles: a rare running car someone was living out of after the outbreak, found
+     * locked, in good repair and fuelled (none, low, normal, high). Decided by the car itself, so it never changes.
+     */
+    public boolean survivor() {
+        if (!roadCar() || !"usable".equals(variant()) || customer) {
+            return false;
+        }
+        double share = switch (com.zomboidcraft.ZcConfig.get().world.survivorCars) {
+            case "none" -> 0;
+            case "normal" -> 0.03;
+            case "high" -> 0.06;
+            default -> 0.012;
+        };
+        return new java.util.Random(getUUID().getLeastSignificantBits() ^ 0x5A7L).nextDouble() < share;
     }
 
     /** Police cars, ambulances, fire trucks and the like: the ones with a siren. */
@@ -2309,6 +2329,10 @@ public class CarProp extends Entity {
             case "high" -> 0.8;
             default -> 0.6;
         };
+        if (survivor()) {
+            setFuel(0.7f + rng.nextFloat() * 0.3f);     // kept topped up by whoever was living out of it
+            return;
+        }
         if (!engineRuns() || rng.nextDouble() >= has) {
             setFuel(0);
             return;
