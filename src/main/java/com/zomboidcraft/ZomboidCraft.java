@@ -88,6 +88,7 @@ public class ZomboidCraft implements ModInitializer {
         ZombieSpawner.register();
         com.zomboidcraft.zombie.PerfCommand.register();
         com.zomboidcraft.zombie.population.Population.register();
+        com.zomboidcraft.world.gen.FarmHerds.register();
         com.zomboidcraft.zombie.Hordes.register();
         ZcCommand.register();
         com.zomboidcraft.sandbox.Sandbox.register();
