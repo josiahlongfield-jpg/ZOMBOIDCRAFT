@@ -66,6 +66,7 @@ public class ClothingLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
                 continue;
             }
             com.zomboidcraft.client.combat.MeshGuns.overlays = grime(worn);
+            com.zomboidcraft.client.combat.MeshGuns.tint = WET_TINT[com.zomboidcraft.clothing.ClothDirt.of(worn).wetStep()];
             try {
                 for (String part : parts) {
                     drawPart(pose, collector, light, state, player, model, slim, garment.id(), part,
@@ -73,6 +74,7 @@ public class ClothingLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
                 }
             } finally {
                 com.zomboidcraft.client.combat.MeshGuns.overlays = List.of();
+                com.zomboidcraft.client.combat.MeshGuns.tint = 0xFFFFFFFF;
             }
         }
         submitMedical(pose, collector, light, state, player, model, slim);
@@ -138,20 +140,25 @@ public class ClothingLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
 
     private static final List<List<net.minecraft.resources.Identifier>> GRIME = new java.util.ArrayList<>();
 
-    /** The dirt and blood layers a worn piece shows (textures/entity/grime, tools/items/gen_grime.py). */
+    /** Dry, damp and soaked: wet cloth goes darker and a touch cooler; soaked also beads and runs (textures/entity/grime/wet). */
+    private static final int[] WET_TINT = {0xFFFFFFFF, 0xFFB9B9C0, 0xFF92949C};
+    private static final net.minecraft.resources.Identifier WET = ZomboidCraft.id("textures/entity/grime/wet.png");
+
+    /** The dirt, blood and soaked layers a worn piece shows (textures/entity/grime, tools/items/gen_grime.py). */
     private static List<net.minecraft.resources.Identifier> grime(ItemStack worn) {
         com.zomboidcraft.clothing.ClothDirt d = com.zomboidcraft.clothing.ClothDirt.of(worn);
-        int dirt = d.dirtStep(), blood = d.bloodStep();
-        if (dirt == 0 && blood == 0) return List.of();
+        int i = d.dirtStep() * 5 + d.bloodStep() + (d.wetStep() == 2 ? 25 : 0);
         if (GRIME.isEmpty()) {
-            for (int i = 0; i < 25; i++) {
+            for (int k = 0; k < 50; k++) {
                 List<net.minecraft.resources.Identifier> l = new java.util.ArrayList<>();
-                if (i / 5 > 0) l.add(ZomboidCraft.id("textures/entity/grime/dirt_" + i / 5 + ".png"));
-                if (i % 5 > 0) l.add(ZomboidCraft.id("textures/entity/grime/blood_" + i % 5 + ".png"));
+                int dirt = k % 25 / 5, blood = k % 5;
+                if (dirt > 0) l.add(ZomboidCraft.id("textures/entity/grime/dirt_" + dirt + ".png"));
+                if (blood > 0) l.add(ZomboidCraft.id("textures/entity/grime/blood_" + blood + ".png"));
+                if (k >= 25) l.add(WET);
                 GRIME.add(List.copyOf(l));
             }
         }
-        return GRIME.get(dirt * 5 + blood);
+        return GRIME.get(i);
     }
 
     /** Whether this layer draws the piece (a rig is a bag too, and the bag layer leaves it to this one). */
