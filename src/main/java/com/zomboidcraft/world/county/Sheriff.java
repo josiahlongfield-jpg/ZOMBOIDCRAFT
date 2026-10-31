@@ -551,6 +551,8 @@ final class Sheriff {
             }
         }
         p.set(14, 2, z1 - 1, "sh_gun_rack[facing=north]");
+        // the deputies loaded their own range rounds at the bench under the rack
+        p.set(14, 1, z1 - 1, "zomboidcraft:reloading_bench[facing=north]");
         if (raided) {
             for (int i = 0; i < 3; i++) {
                 p.setIfAir(14, 1, bars + 1 + rng.nextInt(Math.max(1, z1 - bars - 1)), rng.nextBoolean() ? "cardboard_box[facing=north]" : "bunk_casings");
