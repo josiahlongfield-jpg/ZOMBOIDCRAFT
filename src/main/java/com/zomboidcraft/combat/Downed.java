@@ -88,6 +88,9 @@ public final class Downed {
         if (mob.level().isClientSide() || com.zomboidcraft.zombie.Acts.climbing(mob)) {
             return false;
         }
+        if (com.zomboidcraft.zombie.LyingInWait.waiting(mob) || com.zomboidcraft.zombie.BeltedDead.belted(mob)) {
+            return true;   // playing dead, under a car, or belted into one
+        }
         Timer t = TIMERS.get(mob);
         return t != null && (t.down > 0 || t.stun > 0);
     }
@@ -255,8 +258,9 @@ public final class Downed {
 
     /** Gets back up, unless there's no headroom (then it waits) or it crawls now. */
     private static void standUp(Mob mob, Timer t) {
-        if (isCrawler(mob) || !mob.hasPose(Pose.SWIMMING)) {
-            return;
+        if (isCrawler(mob) || !mob.hasPose(Pose.SWIMMING) || com.zomboidcraft.zombie.LyingInWait.waiting(mob)
+                || com.zomboidcraft.zombie.LyingInWait.stayDown(mob)) {
+            return;   // Zomboid's World and Combat: some knocked flat stay down and play dead
         }
         if (!mob.level().noCollision(mob, mob.getType().getDimensions().makeBoundingBox(mob.position()).deflate(0.05))) {
             t.down = 20;

@@ -2,7 +2,6 @@ package com.zomboidcraft.zombie;
 
 import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.world.county.Place;
-import com.zomboidcraft.world.county.PlaceType;
 import com.zomboidcraft.world.gen.CountyChunkGenerator;
 import java.util.HashMap;
 import java.util.Map;
@@ -147,38 +146,17 @@ public final class ZombieSpawner {
     }
 
     /**
-     * The dead dressed for where they died: most of the crew aboard the carrier and on the naval
-     * wharf are soldiers, so are the army base and depot, and the quarantine camp is soldiers and
-     * patients; the stadium shelter fell with its guards and the sick it took in, and Union
-     * Station's camp with the soldiers who ran it and its field hospital's patients. Null leaves the
-     * zombie to the general mix.
+     * The dead dressed for where they died: most of the crew aboard the carrier are soldiers, and on land each place
+     * and building has its own mix (PlaceOutfits). Null leaves the zombie to the general mix.
      */
     public static String uniform(ServerLevel level, BlockPos pos, RandomSource random) {
         if (onShip(level, pos)) {
             return random.nextInt(100) < 85 ? "soldier" : null;
         }
-        if (!(level.getChunkSource().getGenerator() instanceof CountyChunkGenerator)) {
-            return null;
-        }
-        int roll = random.nextInt(100);
-        for (Place p : CountyChunkGenerator.gen(level.getSeed()).county().placesNear(pos.getX(), pos.getZ(), pos.getX(), pos.getZ(), 0)) {
-            if (p.type == PlaceType.PORT && p.variant.equals("naval")) {
-                return roll < 80 ? "soldier" : null;
-            }
-            if (p.type == PlaceType.MILITARY) {
-                if (p.variant.equals("quarantine")) {
-                    return roll < 40 ? "soldier" : roll < 70 ? "patient" : null;
-                }
-                return roll < 70 ? "soldier" : null;
-            }
-            if (p.type == PlaceType.LANDMARK && p.variant.equals("stadium")) {
-                return roll < 20 ? "soldier" : roll < 45 ? "patient" : null;
-            }
-            if (p.type == PlaceType.LANDMARK && p.variant.equals("union_station")) {
-                return roll < 20 ? "soldier" : roll < 50 ? "patient" : null;
-            }
-        }
-        return null;
+        java.util.List<Place> places = level.getChunkSource().getGenerator() instanceof CountyChunkGenerator
+                ? CountyChunkGenerator.gen(level.getSeed()).county().placesNear(pos.getX(), pos.getZ(), pos.getX(), pos.getZ(), 0)
+                : java.util.List.of();
+        return PlaceOutfits.pick(level, pos, places, random);
     }
 
     /** Standing on the carrier: her decks and compartments are all navy blocks. */

@@ -485,6 +485,13 @@ public final class ZcConfig {
         public double fallDamage = 1;
         /** Fake Dead Zombie Reanimation: some of the dead lying about get up. */
         public FakeDead fakeDead = FakeDead.WORLD_ZOMBIES;
+        /** Ours: percent of the dead found lying on the street and indoors that are only playing dead (plan: 1 in 6, 1 in 10). */
+        public double fakeDeadStreetPercent = 16.7;
+        public double fakeDeadIndoorPercent = 10;
+        /** Ours, World and Combat only: percent of zombies knocked flat by blunt melee that stay down and play dead. */
+        public double fakeDeadCombatPercent = 25;
+        /** Ours: percent of abandoned and wrecked cars with a dead driver still belted in (plan: 1 in 20). */
+        public double beltedPercent = 5;
         /** Player Spawn Area: where the dead are kept clear round the spawn you pick. */
         public SpawnArea spawnArea = SpawnArea.INSIDE_THE_BUILDING_AND_AROUND_IT;
         /** Zombies To Damage Fences: this many leaning on a tall fence knock a panel down; -1 never. */

@@ -121,6 +121,11 @@ public final class ChunkWriter implements ChunkSink {
             hoist(x, y, z, yaw, models, seed);
             return;
         }
+        if (models.startsWith("!herd:")) {
+            // a farm pen's animals, kept on the chunk for SURVIVAL to spawn (FarmHerds)
+            FarmHerds.add(chunk, x, y, z, yaw, models);
+            return;
+        }
         if (models.startsWith("!tool:")) {
             ShopTool.Kind kind = ShopTool.Kind.of(models.substring(6));
             ShopTool tool = kind == null || !(chunk instanceof ProtoChunk) ? null : Cars.TOOL.create(region.getLevel(), EntitySpawnReason.STRUCTURE);

@@ -16,6 +16,9 @@ public final class CarSounds {
     public static final SoundEvent IDLE = register("car.idle", 32f);
     public static final SoundEvent HORN = register("car.horn", 96f);
     public static final SoundEvent CRASH = register("car.crash", 48f);
+    /** An emergency vehicle's wail, a 6 s loop, and a car alarm's whoop-and-chirp, a 4 s loop (AUDIO, Josiah's picks). */
+    public static final SoundEvent SIREN = register("car.siren", 160f);
+    public static final SoundEvent ALARM = register("car.alarm", 160f);
     public static final SoundEvent DOOR_OPEN = register("car.door.open", 16f);
     public static final SoundEvent DOOR_CLOSE = register("car.door.close", 16f);
 
