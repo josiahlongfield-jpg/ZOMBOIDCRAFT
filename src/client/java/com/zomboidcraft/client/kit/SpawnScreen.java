@@ -74,6 +74,8 @@ public final class SpawnScreen extends Screen {
     }
 
     private static void show(Minecraft mc) {
+        // character creation comes first: who you were, then where you wake
+        if (CharacterScreen.pending()) return;
         if (!(mc.gui.screen() instanceof SpawnScreen) && (mc.gui.screen() == null || mc.level != null)) {
             mc.gui.setScreen(new SpawnScreen(offered));
         }

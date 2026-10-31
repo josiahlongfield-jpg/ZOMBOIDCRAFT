@@ -128,12 +128,18 @@ public final class Injuries {
         }
         // First Aid: bound wounds heal 5% faster a level; from level 8 a splint sets a break a third faster
         int firstAid = Skills.level(player, Skill.FIRST_AID);
+        boolean fastHealer = com.zomboidcraft.survival.character.Traits.has(player, "fast_healer");
+        boolean slowHealer = com.zomboidcraft.survival.character.Traits.has(player, "slow_healer");
         for (Region r : Region.values()) {
             Part p = body.part(r);
             if (p.fine()) continue;
             boolean bleeds = p.bleeding() && config.bleeding && random.nextFloat() >= config.clotChancePerSecond * p.wound().clot;
             int bound = 2 + (random.nextFloat() < 0.1f * firstAid ? 1 : 0);
-            int woundLeft = p.wounded() ? Math.max(0, p.woundLeft() - (p.bandaged() ? bound : 1)) : 0;
+            int mend = p.bandaged() ? bound : 1;
+            // Fast Healer: half again as quick; Slow Healer: a third of the time nothing mends
+            if (fastHealer && random.nextBoolean()) mend++;
+            if (slowHealer && random.nextInt(3) == 0) mend = 0;
+            int woundLeft = p.wounded() ? Math.max(0, p.woundLeft() - mend) : 0;
             Wound wound = woundLeft == 0 ? Wound.NONE : p.wound();
             int set = firstAid >= 8 ? 4 : 3;
             int fractureLeft = p.fractured() ? Math.max(0, p.fractureLeft() - (p.splinted() ? set : 1)) : 0;

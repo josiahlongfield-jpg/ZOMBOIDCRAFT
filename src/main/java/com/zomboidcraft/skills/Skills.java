@@ -44,8 +44,11 @@ public final class Skills {
         // companions working beside you pick some of it up (before your books: hers are her own)
         com.zomboidcraft.npc.NpcSkills.watched(player, skill, amount);
         double multiplier = ZcConfig.get().progression.xpMultiplier;
-        amount = multiplier <= 0 ? 0 : Math.max(1, (int) Math.round(amount * multiplier * SkillBooks.boost(player, skill)
-                * com.zomboidcraft.survival.Mood.learning(player)));
+        double scaled = amount * multiplier * SkillBooks.boost(player, skill) * com.zomboidcraft.survival.Mood.learning(player)
+                * com.zomboidcraft.survival.character.Traits.xpScale(player, skill);
+        // fractions carry by chance, so a 1 XP action at x1.3 or x0.7 really does average 1.3 or 0.7
+        int whole = (int) Math.floor(scaled);
+        amount = multiplier <= 0 ? 0 : whole + (player.getRandom().nextDouble() < scaled - whole ? 1 : 0);
         if (amount <= 0 || player.isCreative()) {
             return;
         }

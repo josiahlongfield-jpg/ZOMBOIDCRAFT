@@ -203,7 +203,8 @@ public final class Sleep {
         State s = player.getAttachedOrElse(TYPE, State.AWAKE);
         if (!s.asleep()) return fatigue;
         Bed bed = Bed.values()[Math.min(s.bed(), Bed.values().length - 1)];
-        fatigue = Math.max(RESTED, fatigue - bed.restPerHour / Needs.hourSeconds());
+        fatigue = Math.max(RESTED, fatigue - bed.restPerHour / Needs.hourSeconds()
+                * com.zomboidcraft.survival.character.Traits.restScale(player));
         if (fatigue <= RESTED) {
             wake(player, "You wake up rested.");
         } else if (zombieNear(player, 8) && player.getRandom().nextInt(4) == 0) {
