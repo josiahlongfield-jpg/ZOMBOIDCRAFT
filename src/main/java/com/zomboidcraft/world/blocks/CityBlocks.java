@@ -63,6 +63,8 @@ public final class CityBlocks {
         static final int OFFSET = 16;
         /** A traffic signal running its cycle (see {@link Signal}). */
         static final int SIGNAL = 32;
+        /** A room's light switch (see {@link LightSwitch}). */
+        static final int SWITCH = 64;
 
         protected void s(String name, int kind, int flags, int light, SoundType sound, float strength, double... boxes) {
             ResourceKey<Block> key = ResourceKey.create(Registries.BLOCK, ZomboidCraft.id(name));
@@ -96,7 +98,8 @@ public final class CityBlocks {
                 shape = Shapes.or(shape, Block.box(boxes[i], boxes[i + 1], boxes[i + 2], boxes[i + 3], boxes[i + 4], boxes[i + 5]));
             }
             boolean loot = (flags & LOOT) != 0;
-            Block block = signal ? new Signal.Facing(properties, shape) : flicker ? switch (kind) {
+            Block block = (flags & SWITCH) != 0 ? new LightSwitch.Switch(properties, shape)
+                    : signal ? new Signal.Facing(properties, shape) : flicker ? switch (kind) {
                 case FACING -> new Flicker.Facing(properties, shape);
                 case AXIS -> new Flicker.Axis(properties, shape);
                 default -> new Flicker.Plain(properties, shape);
@@ -164,6 +167,11 @@ public final class CityBlocks {
         } else {
             ZomboidCraft.LOGGER.warn("Rain falls through these solid blocks (run tools/city/heightmap_tags.py): {}", leaky);
         }
+    }
+
+    /** A city block by its name in blocks.json, or null. */
+    public static Block block(String name) {
+        return BLOCKS.get(name);
     }
 
     /** The state for a generator name like "window[axis=x]", or null when it isn't a city block. */
