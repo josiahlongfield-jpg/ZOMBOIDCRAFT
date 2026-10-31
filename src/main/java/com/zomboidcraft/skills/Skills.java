@@ -42,7 +42,8 @@ public final class Skills {
 
     public static void addXp(ServerPlayer player, Skill skill, int amount) {
         double multiplier = ZcConfig.get().progression.xpMultiplier;
-        amount = multiplier <= 0 ? 0 : Math.max(1, (int) Math.round(amount * multiplier * SkillBooks.boost(player, skill)));
+        amount = multiplier <= 0 ? 0 : Math.max(1, (int) Math.round(amount * multiplier * SkillBooks.boost(player, skill)
+                * com.zomboidcraft.survival.Mood.learning(player)));
         if (amount <= 0 || player.isCreative()) {
             return;
         }

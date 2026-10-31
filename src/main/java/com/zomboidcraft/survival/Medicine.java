@@ -46,6 +46,7 @@ public final class Medicine {
     public static void register() {
         Ailments.register();
         WornMedical.register();
+        Mood.register();
         ServerLivingEntityEvents.AFTER_DAMAGE.register((entity, source, baseDamage, damage, blocked) -> {
             if (entity instanceof ServerPlayer player && !blocked && damage > 0 && on(player)) {
                 hurt(player, source, damage);
