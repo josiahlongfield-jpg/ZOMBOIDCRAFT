@@ -68,6 +68,8 @@ public class NpcEntity extends PathfinderMob {
 
     boolean following = true;
     UUID leader;
+    /** The players bonded with her (NpcPanel.Bond): each can bring her page up from anywhere. */
+    public final java.util.Set<UUID> bonds = new java.util.HashSet<>();
     /** Rounds left in her magazine; she reloads when it's out (reloadLeft ticks). */
     int rounds = -1, reloadLeft;
 
@@ -159,7 +161,7 @@ public class NpcEntity extends PathfinderMob {
         return h.isEmpty() ? java.util.Set.of() : java.util.Set.of(h.split(","));
     }
 
-    void setHidden(java.util.Set<String> pieces) {
+    public void setHidden(java.util.Set<String> pieces) {
         entityData.set(HIDDEN, String.join(",", new java.util.TreeSet<>(pieces)));
     }
 
@@ -445,6 +447,7 @@ public class NpcEntity extends PathfinderMob {
         output.putString("npcMind", mind.save());
         output.putString("npcSkills", skills.save());
         output.putString("npcBond", bond.save());
+        output.putString("npcBonds", String.join(",", bonds.stream().map(UUID::toString).toList()));
         output.putString("npcWardrobe", wardrobe.save());
         output.putString("npcJob", work.job.name());
         output.putInt("npcNightShift", work.nightShift ? 1 : 0);
@@ -467,6 +470,14 @@ public class NpcEntity extends PathfinderMob {
         mindLoaded = mind.load(input.getStringOr("npcMind", ""));
         if (!skills.load(input.getStringOr("npcSkills", "")) && mindLoaded) {
             skills.roll(getRandom());
+        }
+        bonds.clear();
+        for (String u : input.getStringOr("npcBonds", "").split(",")) {
+            try {
+                if (!u.isBlank()) bonds.add(UUID.fromString(u));
+            } catch (IllegalArgumentException ignored) {
+                // a bad entry is dropped
+            }
         }
         if (!bond.load(input.getStringOr("npcBond", "")) && mindLoaded) {
             bond.roll(getRandom(), mind);
