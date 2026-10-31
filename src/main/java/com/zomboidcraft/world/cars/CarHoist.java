@@ -66,6 +66,8 @@ public class CarHoist extends Entity {
     /** Where the arms reach in to: half the car's track and the distance of its lift points from the middle, metres. */
     private static final EntityDataAccessor<Float> REACH_X = SynchedEntityData.defineId(CarHoist.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> REACH_Z = SynchedEntityData.defineId(CarHoist.class, EntityDataSerializers.FLOAT);
+    /** How high above the wheels the car's underside is at its lift points: the pads screw up to meet it. */
+    private static final EntityDataAccessor<Float> PAD = SynchedEntityData.defineId(CarHoist.class, EntityDataSerializers.FLOAT);
 
     private UUID carId;
     private boolean armsIn;
@@ -91,6 +93,7 @@ public class CarHoist extends Entity {
         builder.define(CAR, -1);
         builder.define(REACH_X, 0.75f);
         builder.define(REACH_Z, 1.3f);
+        builder.define(PAD, 0.25f);
     }
 
     public float height() {
@@ -107,6 +110,10 @@ public class CarHoist extends Entity {
 
     public float reachZ() {
         return entityData.get(REACH_Z);
+    }
+
+    public float pad() {
+        return entityData.get(PAD);
     }
 
     public int target() {
@@ -304,8 +311,31 @@ public class CarHoist extends Entity {
         carTurn = Math.abs(Mth.wrapDegrees(car.getYRot() - getYRot())) > 90 ? 180f : 0f;
         carId = car.getUUID();
         entityData.set(CAR, car.getId());
-        entityData.set(REACH_X, Math.min(m.size[0] / 2 - 0.25f, 0.95f));
-        entityData.set(REACH_Z, Math.max(0.9f, (m.wheelbase > 0.5f ? m.wheelbase : m.size[2] * 0.6f) / 2 - 0.35f));
+        // the lift points: on the sills just inside each wheel, wherever this model's are
+        float wb = m.wheelbase > 0.5f ? m.wheelbase : m.size[2] * 0.6f;
+        float rz = Math.max(0.6f, wb / 2 - 0.55f);
+        float rx = Math.min(0.6f, m.size[0] / 2 - 0.2f);
+        for (float x = m.size[0] / 2; x > 0.45f; x -= 0.05f) {
+            if (m.heightAt(x, rz) > 0.3f && m.heightAt(-x, rz) > 0.3f && m.heightAt(x, -rz) > 0.3f && m.heightAt(-x, -rz) > 0.3f) {
+                rx = x - 0.2f;     // a hand's width in from the body's edge, under the pinch weld
+                break;
+            }
+        }
+        rx = Math.min(rx, POST_X - POST_W / 2 - 0.15f);
+        float under = 0;
+        int n = 0;
+        for (int sx = -1; sx <= 1; sx += 2) {
+            for (int sz = -1; sz <= 1; sz += 2) {
+                float f = m.floorAt(sx * rx, sz * rz);
+                if (f > 0.02f) {
+                    under += f;
+                    n++;
+                }
+            }
+        }
+        entityData.set(REACH_X, rx);
+        entityData.set(REACH_Z, rz);
+        entityData.set(PAD, n > 0 ? under / n : 0.25f);
         armsIn = true;
     }
 
@@ -446,6 +476,7 @@ public class CarHoist extends Entity {
         entityData.set(ARMS, armsIn ? 1f : 0f);
         entityData.set(REACH_X, input.getFloatOr("reach_x", 0.75f));
         entityData.set(REACH_Z, input.getFloatOr("reach_z", 1.3f));
+        entityData.set(PAD, input.getFloatOr("pad", 0.25f));
         String id = input.getStringOr("car", "");
         carId = id.isEmpty() ? null : UUID.fromString(id);
         hullLaid = input.getIntOr("hull", 1) != 0;
@@ -459,6 +490,7 @@ public class CarHoist extends Entity {
         output.putInt("arms_in", armsIn ? 1 : 0);
         output.putFloat("reach_x", reachX());
         output.putFloat("reach_z", reachZ());
+        output.putFloat("pad", pad());
         output.putString("car", carId == null ? "" : carId.toString());
         output.putInt("hull", hullLaid ? 1 : 0);
         output.putFloat("car_turn", carTurn);
