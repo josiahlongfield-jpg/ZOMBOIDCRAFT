@@ -68,7 +68,6 @@ public final class Population {
     /** Where survivors woke up (block positions): the dead are never placed in the building round one. */
     public static final AttachmentType<List<Long>> CLEAR = AttachmentRegistry.create(ZomboidCraft.id("clear_zones"),
             builder -> builder.persistent(Codec.LONG.listOf()).initializer(List::of));
-    /** How far round a waking spot is kept clear: across the building, and a few floors up and down. */
     /**
      * How much round a chosen spawn stays clear, by Zomboid's Player Spawn Area (zombieLore.spawnArea): the building
      * and round it 14 blocks out and two floors up, the building alone 8, the room 4 on its own floor, or nothing.

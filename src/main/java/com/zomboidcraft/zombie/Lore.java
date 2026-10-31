@@ -167,7 +167,7 @@ public final class Lore {
 
     /** The clock hours Zomboid counts as night: 19:00 to 06:00 (Minecraft time 13000 to 24000). */
     public static boolean night(Level level) {
-        long t = Math.floorMod(level.getDayTime(), 24000L);
+        long t = Math.floorMod(level.getDefaultClockTime(), 24000L);
         return t >= 13000;
     }
 
