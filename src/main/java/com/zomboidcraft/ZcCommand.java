@@ -74,7 +74,7 @@ public final class ZcCommand {
                         .then(Commands.literal("config")
                                 .executes(ZcCommand::listConfig)
                                 .then(Commands.literal("reload").executes(ctx -> {
-                                    ZcConfig.load();
+                                    com.zomboidcraft.sandbox.Sandbox.reloadConfig();
                                     ctx.getSource().sendSuccess(() -> Component.literal("Reloaded config/zomboidcraft.json"), true);
                                     return 1;
                                 }))
@@ -323,6 +323,7 @@ public final class ZcCommand {
     private static int setConfig(CommandContext<CommandSourceStack> ctx, String key, String value) {
         try {
             ZcConfig.setValue(key, value);
+            com.zomboidcraft.sandbox.Sandbox.configChanged(key);
             ctx.getSource().sendSuccess(() -> Component.literal(key + " set to " + ZcConfig.getValue(key)), true);
             return 1;
         } catch (IllegalArgumentException e) {

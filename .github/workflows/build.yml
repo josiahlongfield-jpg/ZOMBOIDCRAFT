@@ -189,6 +189,10 @@ jobs:
           sleep 90
           echo 'zc lift list' >&4
           sleep 1
+          echo 'zc sandbox list' >&4
+          echo 'zc sandbox set ClimateCycle endless_rain' >&4
+          echo 'zc sandbox list nature' >&4
+          sleep 1
           echo 'stop' >&4
           for i in $(seq 1 24); do kill -0 $pid 2>/dev/null || break; sleep 5; done
           exec 4>&-
@@ -200,6 +204,9 @@ jobs:
           ! grep -q 'Unknown vanilla block' county.log
           grep -q 'ZomboidCraft county planned' county.log
           grep 'County lines laid for the trains' county.log
+          grep -A16 'World settings (preset' county.log | head -20 || true
+          grep -q 'Climate Cycle = endless_rain' county.log
+          grep -q '"ClimateCycle": "endless_rain"' run/world/zomboidcraft_sandbox.json
           grep -q 'Done (' county.log
           ! grep -E 'Exception in server tick|Encountered an unexpected exception|crash report|zomboidcraft.*Exception|Failed to (load|parse)' county.log
 
