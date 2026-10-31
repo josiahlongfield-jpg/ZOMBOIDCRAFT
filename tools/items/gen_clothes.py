@@ -4443,6 +4443,448 @@ CIVILIAN_3 = {
 }
 
 
+# ------------------------------------------------------------------ wave 2, batch 7: prized and grail pieces
+# Refs: refs/items/clothing (bomb-disposal-suit, shark-mesh-dive-suit, plate-armour-full-gothic, black-plate-armour-replica,
+# crusader-knight-surcoat-great-helm, motorcycle-racing-leathers, scba-firefighter, armoured-suit-bodyguard).
+# The black crusader kit is our own design off real 13th-14th century great helms, surcoats and later plate; no
+# franchise markings. Every helmet keeps the eyes clear: a slit or port is cut where the skin's eyes are.
+
+
+def blackened(base='#1c1c22'):
+    """Blackened (fire-blued) plate: near black with a cold steel sheen along the light."""
+    def fn(f):
+        c = P.steel(f, 0.5) * 0.32 + P.col(base) * 0.55
+        return toon(f, grade(c, 0.2), ink=False)
+    return fn
+
+
+def plate_arm(g, p, s, mat, edge, d=0.7, fan=True):
+    """An arm harness: rerebrace, couter with a fan on the outside of the elbow, vambrace."""
+    g.shell(p, 0.4, 3.6, d, mat)
+    g.shell(p, 3.4, 3.7, d + 0.12, edge)
+    g.shell(p, 3.8, 5.2, d + 0.25, mat)                                                      # couter
+    if fan:
+        g.side(p, d + 0.25, s, -1.8, 3.4, 1.4, 5.8, mat, t=0.3)                              # the fan
+        g.side(p, d + 0.55, s, -0.3, 4.2, 0.3, 4.8, edge, t=0.12)
+    g.shell(p, 5.4, 8.2, d, mat)
+    g.shell(p, 7.9, 8.2, d + 0.1, edge)
+
+
+def plate_leg(g, p, s, mat, edge, d=PANTS + 0.5, fan=True):
+    """A leg harness: cuisse, poleyn with its side wing, greave down to the ankle."""
+    g.shell(p, 0.4, 4.4, d, mat)
+    g.shell(p, 4.1, 4.4, d + 0.12, edge)
+    g.front(p, d, -2.2, 4.4, 2.2, 6.6, mat, t=0.45)                                          # poleyn
+    if fan:
+        g.side(p, d, s, -2.4, 4.2, 0.4, 6.8, mat, t=0.35)
+    g.front(p, d + 0.45, -0.3, 5.0, 0.3, 6.0, edge, t=0.12)
+    g.shell(p, 6.6, 10.6, d - 0.1, mat)
+    g.front(p, d - 0.1, -0.2, 6.8, 0.2, 10.4, edge, t=0.14)                                  # the greave's ridge
+
+
+def gauntlet(g, p, s, mat, edge):
+    """An hourglass gauntlet: flared cuff, plated back of the hand, lames over the fingers."""
+    lo, hi = BOXES[p]
+    g.shell(p, 6.8, 8.0, 0.95, mat)
+    g.shell(p, 6.8, 7.1, 1.05, edge)
+    g.shell(p, 8.0, 8.6, 0.6, mat)
+    g.shell(p, 8.6, 9.8, 0.55, mat)
+    for y in (9.8, 10.15):
+        g.shell(p, y, y + 0.35, 0.5 + (0.05 if y > 10 else 0), mat)
+    g.box(p, (lo[0] - 0.5, 10.5, lo[2] - 0.5), (hi[0] + 0.5, 10.75, hi[2] + 0.5), mat)
+    g.side(p, 0.55, s, -1.6, 9.2, 1.6, 9.6, edge, t=0.14)                                    # knuckle ridge
+
+
+def sabaton(g, p, s, mat, edge, toe=3.2, point=0.0):
+    """Plate shoes: laminated lames over the foot, a sole of leather, the toe as long as the fashion."""
+    g.box(p, (-2.3, 11.4, -2 - toe - point), (2.3, 12.2, 2.4), 'sole')
+    g.shell(p, 9.4, 11.4, 0.55, mat)
+    for i in range(4):
+        z = -2.6 - i * 0.7
+        g.box(p, (-2.2, 10.0 + i * 0.25, z - 0.7), (2.2, 11.4, z), mat)
+        g.box(p, (-2.2, 10.0 + i * 0.25, z - 0.12), (2.2, 10.2 + i * 0.25, z), edge)
+    if point:
+        g.box(p, (-0.6, 11.0, -2 - toe - point), (0.6, 11.4, -2 - toe), mat)
+
+
+# ---- the black crusader kit (grail)
+
+
+def build_crusader_great_helm(g):
+    """A flat-topped great helm in blackened plate: a single eye slit, a brass cross over the face, breaths below,
+    brass-edged, with a white and black torse round the crown."""
+    d = 1.0
+    top, bot = -9.6, 0.9
+    py0, py1 = EYES_HIGH - 0.35, EYES_LOW + 0.35
+    g.box('head', (-4 - d, top, -3.4), (4 + d, bot, 4 + d), 'plate')                          # sides and back
+    eye_open_front(g, -4 - d, -3.4, top, bot, 4 + d, 'plate', port=(3.7, py0, py1))
+    g.box('head', (-0.4, py0, -4 - d), (0.4, py1, -3.4), 'plate')                              # bar splitting the slit
+    g.box('head', (-4 - d + 0.2, top - 0.4, -4 - d + 0.2), (4 + d - 0.2, top, 4 + d - 0.2), 'plate')   # the flat top
+    # the brass cross: brow band and the upright below the slit
+    g.box('head', (-4 - d - 0.05, py0 - 0.7, -4 - d - 0.2), (4 + d + 0.05, py0, -4 - d), 'brass')
+    g.box('head', (-0.55, py1, -4 - d - 0.2), (0.55, bot - 0.4, -4 - d), 'brass')
+    g.box('head', (-0.4, top + 0.6, -4 - d - 0.2), (0.4, py0 - 0.7, -4 - d), 'brass')
+    g.box('head', (-4 - d - 0.1, bot - 0.4, -4 - d - 0.1), (4 + d + 0.1, bot, 4 + d + 0.1), 'brass')   # the hem
+    g.box('head', (-4 - d - 0.1, top, -4 - d - 0.1), (4 + d + 0.1, top + 0.35, 4 + d + 0.1), 'brass')
+    for row, y in enumerate((-2.2, -1.2)):                                                       # breaths, right side only
+        for i in range(4):
+            x = 1.4 + i * 0.75 + (0.35 if row else 0)
+            g.box('head', (x, y, -4 - d - 0.06), (x + 0.3, y + 0.35, -4 - d), 'dark')
+    for i in range(6):                                                                           # rivets round the brow
+        x = -4.2 + i * 1.7
+        g.box('head', (x, py0 - 1.3, -4 - d - 0.12), (x + 0.3, py0 - 1.0, -4 - d), 'brass')
+    g.box('head', (-4 - d - 0.35, top - 0.7, -4 - d - 0.35), (4 + d + 0.35, top + 0.1, 4 + d + 0.35), 'torse')   # torse
+    for i in range(5):
+        x = -4.6 + i * 2.0
+        g.box('head', (x, top - 0.75, -4 - d - 0.4), (x + 1.0, top + 0.15, -4 - d - 0.3), 'torse_b')
+    g.box('head', (-0.35, top - 2.6, -0.35), (0.35, top - 0.7, 0.35), 'brass')                 # a small cross crest
+    g.box('head', (-1.0, top - 2.1, -0.35), (1.0, top - 1.6, 0.35), 'brass')
+
+
+def build_crusader_plate(g):
+    """The harness under the surcoat: blackened breastplate with a medial ridge, faulds, arms in plate."""
+    d = JACKET + 0.15
+    g.shell('body', 0, 7.8, d, 'plate')
+    g.front('body', d, -0.2, 0.6, 0.2, 7.6, 'ridge', t=0.25)
+    for i, y in enumerate((7.8, 8.9, 10.0)):                                                     # faulds over the hips
+        g.shell('body', y, y + 1.2, d + 0.1 + 0.08 * i, 'plate')
+        g.shell('body', y + 1.0, y + 1.2, d + 0.2 + 0.08 * i, 'edge')
+    g.box('body', (-3.2, -1.2, -2 - d - 0.2), (3.2, 0.3, 2 + d + 0.2), 'plate')                # gorget
+    g.box('body', (-3.3, 0.1, -2 - d - 0.25), (3.3, 0.3, 2 + d + 0.25), 'edge')
+    g.both(LEGS, lambda p, s: g.shell(p, -0.2, 1.4, d, 'mail'))                                 # mail skirt peeks below
+    g.both(ARMS, lambda p, s: plate_arm(g, p, s, 'plate', 'edge', d=0.7))
+
+
+def build_crusader_tabard(g):
+    """A long white surcoat over the plate, a black cross front and back, split for riding and belted."""
+    d = VEST_D + 0.1
+    g.shell('body', -0.2, 12, d, 'linen')
+    for side in ('front', 'back'):
+        fn = g.front if side == 'front' else g.back
+        fn('body', d, -0.75, 1.0, 0.75, 10.0, 'cross', t=0.04)
+        fn('body', d, -3.4, 3.6, 3.4, 5.0, 'cross', t=0.04)
+    for s in (-1, 1):                                                                            # no sleeves, wide shoulders
+        x0, x1 = sorted((s * 1.4, s * (4 + d)))
+        g.box('body', (x0, -0.3 - d, -2 - d), (x1, 0.0, 2 + d), 'linen')
+    g.shell('body', 8.6, 9.2, d + 0.1, 'belt')
+    g.front('body', d + 0.1, -0.6, 8.4, 0.6, 9.4, 'buckle', t=0.2)
+    g.front('body', d + 0.3, -0.25, 9.4, 0.25, 11.4, 'belt', t=0.1)                              # the belt's tail
+    def leg(p, s):                                                                               # skirts to the knee
+        g.front(p, PANTS + 0.9, -2.3, -0.2, 2.3, 6.4, 'linen', t=0.1)
+        g.back(p, PANTS + 0.9, -2.3, -0.2, 2.3, 6.4, 'linen', t=0.1)
+        g.side(p, PANTS + 0.9, s, -2.3, -0.2, 2.3, 6.0, 'linen', t=0.1)
+        g.front(p, PANTS + 1.0, -2.3, 6.0, 2.3, 6.4, 'hem', t=0.04)
+        g.back(p, PANTS + 1.0, -2.3, 6.0, 2.3, 6.4, 'hem', t=0.04)
+        g.front(p, PANTS + 1.0, -2.3, 2.0, 2.3, 2.6, 'grime', t=0.02)
+    g.both(LEGS, leg)
+
+
+def build_crusader_pauldrons(g):
+    """Huge layered spaulders in blackened plate, brass-edged, each with a white cross on a raised boss."""
+    def arm(p, s):
+        for i, (y0, y1, d) in enumerate(((-2.6, 0.6, 1.8), (0.2, 1.8, 1.6), (1.4, 3.0, 1.4), (2.6, 4.0, 1.2))):
+            g.shell(p, y0, y1, d, 'plate')
+            g.shell(p, y1 - 0.25, y1, d + 0.06, 'brass')
+        lo, hi = BOXES[p]
+        x = lo[0] - 1.8 if s < 0 else hi[0] + 1.8
+        g.box(p, (min(x, x + s * 0.5), -2.2, -1.8), (max(x, x + s * 0.5), 0.6, 1.8), 'plate')   # the raised boss
+        xb = x + s * 0.5
+        g.box(p, (min(xb, xb + s * 0.1), -1.9, -0.25), (max(xb, xb + s * 0.1), 0.3, 0.25), 'cross')
+        g.box(p, (min(xb, xb + s * 0.1), -1.1, -1.2), (max(xb, xb + s * 0.1), -0.5, 1.2), 'cross')
+        g.box(p, (lo[0] - 2.0, -3.4, lo[2] - 2.0), (hi[0] + 2.0, -2.6, hi[2] + 2.0), 'plate')    # the top shelf
+        g.box(p, (lo[0] - 2.1, -3.5, lo[2] - 2.1), (hi[0] + 2.1, -3.3, hi[2] + 2.1), 'brass')
+    g.both(ARMS, arm)
+
+
+def build_crusader_cloak(g):
+    """A heavy black wool cloak from the shoulders to the calf, held by a brass cross clasp, lined in white."""
+    lo, hi = BOXES['body']
+    d = VEST_D + 0.5
+    g.box('body', (-4 - d - 0.6, -0.6 - d, -2 - d), (4 + d + 0.6, 0.2, 2 + d + 0.3), 'wool')     # over the shoulders
+    g.box('body', (-4 - d - 0.6, 0.2, hi[2] + d), (4 + d + 0.6, 12.2, hi[2] + d + 0.35), 'wool')
+    for s in (-1, 1):
+        x0 = -4 - d - 0.6 if s < 0 else 4 + d + 0.25
+        g.box('body', (x0, 0.2, -1.0), (x0 + 0.35, 9.0, hi[2] + d), 'wool')                       # falling round the sides
+        g.box('body', (x0 + (0.35 if s < 0 else -0.1), 0.2, -1.0), (x0 + (0.45 if s < 0 else 0.0), 9.0, -0.6), 'lining')
+        g.front('body', d, s * 2.2 - 0.6, -0.2, s * 2.2 + 0.6, 0.8, 'brass', t=0.25)              # clasp plates
+    g.front('body', d + 0.25, -2.0, 0.2, 2.0, 0.4, 'chain', t=0.1)
+    def leg(p, s):
+        g.back(p, d - 0.3, -2.6, -0.2, 2.6, 9.0, 'wool', t=0.35)
+        g.back(p, d + 0.05, -2.6, 8.6, 2.6, 9.0, 'hem', t=0.04)
+    g.both(LEGS, leg)
+    for x in (-3.0, -0.8, 1.6):                                                                    # heavy folds
+        g.back('body', d + 0.35, x, 1.0, x + 0.5, 12.0, 'fold', t=0.12)
+
+
+def build_crusader_greaves(g):
+    g.both(LEGS, lambda p, s: plate_leg(g, p, s, 'plate', 'brass'))
+
+
+def build_crusader_gauntlets(g):
+    g.both(ARMS, lambda p, s: gauntlet(g, p, s, 'plate', 'brass'))
+
+
+def build_crusader_sabatons(g):
+    g.both(LEGS, lambda p, s: sabaton(g, p, s, 'plate', 'brass'))
+
+
+# ---- gothic plate (prized): bright, fluted, after the late 15th century German harnesses
+
+
+def build_gothic_sallet(g):
+    """A sallet: rounded skull swept into a long tail, the visor slit sitting just above the eyes, open below."""
+    d = 0.9
+    g.box('head', (-4 - d, -9.0, -4 - d), (4 + d, EYES_HIGH - 0.5, 4 + d), 'steel')
+    g.box('head', (-3.6, -9.6, -3.6), (3.6, -9.0, 3.6), 'steel')
+    g.box('head', (-0.25, -9.9, -3.8), (0.25, -9.0, 4.8), 'steel')                             # comb
+    g.box('head', (-4 - d, EYES_HIGH - 0.5, 0.0), (4 + d, -1.8, 4 + d), 'steel')                # cheeks and back
+    g.box('head', (-4.6, -2.4, 4 + d), (4.6, -1.2, 4 + d + 3.0), 'steel')                       # the tail
+    g.box('head', (-4.2, -1.2, 4 + d + 1.0), (4.2, -0.8, 4 + d + 3.0), 'steel')
+    g.box('head', (-4 - d - 0.1, EYES_HIGH - 0.75, -4 - d - 0.1), (4 + d + 0.1, EYES_HIGH - 0.5, 0.0), 'brass')
+    g.box('head', (-3.6, EYES_HIGH - 1.4, -4 - d - 0.08), (3.6, EYES_HIGH - 1.1, -4 - d), 'dark')   # sight slit
+    for s in (-1, 1):
+        for y in (-8.2, -7.2, -6.2):                                                              # fluting
+            g.box('head', (s * 2.0 - 0.15, y, -4 - d - 0.12), (s * 2.0 + 0.15, y + 0.8, -4 - d), 'flute')
+        x = s * (4 + d) - (0.25 if s > 0 else 0)
+        g.box('head', (x, -5.0, -1.0), (x + 0.25, -4.4, -0.4), 'brass')
+
+
+def build_gothic_cuirass(g):
+    """A fluted breastplate with a V plackart, brass-edged, faulds, a mail skirt below."""
+    d = VEST_D - 0.2
+    g.shell('body', 0.2, 7.6, d, 'steel')
+    for i in range(5):                                                                           # radiating flutes
+        x = -2.4 + i * 1.2
+        g.front('body', d, x - 0.15, 2.4 + abs(i - 2) * 0.6, x + 0.15, 7.2, 'flute', t=0.18)
+    for k in range(5):                                                                           # the V of the plackart
+        y = 4.2 + k * 0.6
+        w = 3.6 - k * 0.7
+        g.front('body', d + 0.18, -w, y, w, y + 0.6, 'steel', t=0.12)
+    g.front('body', d + 0.3, -3.8, 4.0, 3.8, 4.25, 'brass', t=0.06)
+    for i, y in enumerate((7.6, 8.6, 9.6)):
+        g.shell('body', y, y + 1.1, d + 0.08 * i, 'steel')
+        g.shell('body', y + 0.9, y + 1.1, d + 0.1 + 0.08 * i, 'brass')
+    g.box('body', (-3.2, -1.1, -2 - d - 0.2), (3.2, 0.3, 2 + d + 0.2), 'steel')
+    g.box('body', (-3.3, 0.1, -2 - d - 0.25), (3.3, 0.3, 2 + d + 0.25), 'brass')
+    g.both(LEGS, lambda p, s: g.shell(p, -0.2, 2.4, PANTS + 0.45, 'mail'))
+    g.front('body', d + 0.18, -0.4, 1.0, 0.4, 2.2, 'brass', t=0.12)                              # lance rest stub
+    g.side('body', d, -1, -1.0, 2.0, 1.0, 3.0, 'leather', t=0.12)
+
+
+def build_gothic_arm_harness(g):
+    """Pauldrons with round besagews, fluted couters and vambraces, the arming points tied off in red."""
+    def arm(p, s):
+        for y0, y1, d in ((-2.4, 0.4, 1.3), (0.2, 1.6, 1.15)):
+            g.shell(p, y0, y1, d, 'steel')
+            g.shell(p, y1 - 0.2, y1, d + 0.05, 'brass')
+        g.front(p, 1.35, -1.4, -1.6, 1.4, 1.0, 'besagew', t=0.3)                                 # the round besagew
+        g.front(p, 1.65, -0.3, -0.6, 0.3, 0.0, 'brass', t=0.12)
+        plate_arm(g, p, s, 'steel', 'brass', d=0.7)
+        g.side(p, 0.95, -s, -0.5, 3.6, 0.5, 4.2, 'points', t=0.15)
+    g.both(ARMS, arm)
+
+
+def build_gothic_leg_harness(g):
+    def leg(p, s):
+        plate_leg(g, p, s, 'steel', 'brass')
+        for z in (-1.0, 0.0, 1.0):
+            g.front(p, PANTS + 0.5, z - 0.1, 0.8, z + 0.1, 3.8, 'flute', t=0.14)
+    g.both(LEGS, leg)
+
+
+def build_gothic_gauntlets(g):
+    def hand(p, s):
+        gauntlet(g, p, s, 'steel', 'brass')
+        g.side(p, 1.05, s, -0.8, 6.9, 0.8, 7.9, 'flute', t=0.12)
+    g.both(ARMS, hand)
+
+
+def build_gothic_sabatons(g):
+    g.both(LEGS, lambda p, s: sabaton(g, p, s, 'steel', 'brass', toe=3.2, point=1.4))
+
+
+# ---- modern prized protection
+
+
+def build_bomb_disposal_suit(g):
+    """An EOD suit: bulky padded olive cloth, a black blast plate down the chest and groin, a high collar."""
+    d = JACKET + 0.45
+    g.shell('body', -0.2, 12, d, 'cloth')
+    g.box('body', (-3.8, -2.2, -2 - d - 0.6), (3.8, 0.4, 2 + d + 0.6), 'collar')               # tall blast collar
+    g.front('body', d, -3.4, 0.4, 3.4, 12.0, 'plate', t=0.8)
+    g.front('body', d + 0.8, -3.0, 2.4, 3.0, 2.8, 'strap', t=0.08)
+    g.front('body', d + 0.8, -3.0, 7.0, 3.0, 7.4, 'strap', t=0.08)
+    for s in (-1, 1):
+        g.side('body', d, s, -1.6, 4.0, 1.6, 5.0, 'strap', t=0.14)
+    sleeves(g, d, 'cloth', end=7.8, cuff='strap', cuff_d=0.12)
+    g.both(ARMS, lambda p, s: g.side(p, d, s, -2.4, -2.0, 2.4, 2.6, 'cloth', t=0.5))             # shoulder padding
+    def leg(p, s):
+        g.shell(p, -0.2, 11.4, PANTS + 0.55, 'cloth')
+        g.front(p, PANTS + 0.55, -2.4, -0.2, 2.4, 10.4, 'plate', t=0.6)                          # leg blast plates
+        g.front(p, PANTS + 1.15, -2.0, 4.6, 2.0, 5.0, 'strap', t=0.08)
+        g.side(p, PANTS + 0.55, s, -1.6, 2.0, 1.6, 2.6, 'strap', t=0.12)
+    g.both(LEGS, leg)
+    g.back('body', d, -2.4, 1.0, 2.4, 6.0, 'cloth', t=0.8)                                         # the fan pack on the back
+    g.back('body', d + 0.8, -1.6, 2.0, 1.6, 3.2, 'grille', t=0.1)
+
+
+def build_bomb_disposal_helmet(g):
+    """The EOD helmet: a big olive shell, the visor frame round an open port, a fan hose over the top."""
+    d = 1.3
+    g.box('head', (-4 - d, -9.6, -3.2), (4 + d, 1.2, 4 + d), 'shell')
+    eye_open_front(g, -4 - d - 0.4, -3.2, -9.6, 1.2, 4 + d, 'frame', port=(3.6, -6.4, -1.0))      # big visor frame
+    g.box('head', (-4 - d + 0.2, -10.2, -3.0), (4 + d - 0.2, -9.6, 4 + d - 0.2), 'shell')
+    g.box('head', (-0.5, -11.0, -1.0), (0.5, -10.2, 6.2), 'hose')                                   # fan hose over the top
+    g.box('head', (-0.5, -10.2, 5.4), (0.5, -2.0, 6.2), 'hose')
+    for s in (-1, 1):
+        x = s * (4 + d) - (0.3 if s > 0 else 0)
+        g.box('head', (x, -5.6, -2.0), (x + 0.3, -3.6, 0.0), 'frame')                              # the speaker pods
+    g.box('head', (-4 - d - 0.45, -6.6, -4 - d - 0.5), (4 + d + 0.45, -6.4, -4 - d - 0.3), 'frame')
+
+
+def build_shark_mesh_suit(g):
+    """A diver's chainmail shark suit: stainless mail over everything, neoprene cuffs and seams, straps at the joints."""
+    d = SHIRT + 0.2
+    g.shell('body', -0.2, 12, d, 'mail')
+    g.box('body', (-2.8, -0.9, -2 - d - 0.12), (2.8, 0.2, 2 + d + 0.12), 'neo')
+    g.front('body', d, -0.2, 0.2, 0.2, 9.8, 'neo', t=0.08)
+    sleeves(g, d, 'mail', end=8.2, cuff='neo', cuff_d=0.06)
+    g.both(ARMS, lambda p, s: g.shell(p, 4.0, 4.4, d + 0.06, 'neo'))
+    def leg(p, s):
+        g.shell(p, -0.2, 11.2, PANTS + 0.1, 'mail')
+        g.shell(p, 5.0, 5.4, PANTS + 0.16, 'neo')
+        g.shell(p, 10.6, 11.2, PANTS + 0.16, 'neo')
+    g.both(LEGS, leg)
+
+
+def build_motorcycle_leathers(g):
+    """A one-piece racing suit: panelled leather, a speed hump, armour at shoulders, elbows and knees, knee sliders."""
+    d = JACKET - 0.05
+    g.shell('body', -0.2, 12, d, 'black')
+    g.box('body', (-2.6, -0.9, -2 - d - 0.15), (2.6, 0.2, 2 + d + 0.15), 'black')
+    g.front('body', d, -0.2, -0.8, 0.2, 11.0, 'zip', t=0.1)
+    for s in (-1, 1):
+        g.front('body', d, s * 0.6 if s > 0 else -3.8, 2.0, 3.8 if s > 0 else -0.6, 5.0, 'colour', t=0.06)
+        g.side('body', d, s, -2.2, 3.0, 2.2, 12.0, 'stretch', t=0.04)
+    g.back('body', d, -2.0, -1.4, 2.0, 5.0, 'black', t=1.0)                                         # the speed hump
+    g.back('body', d + 1.0, -1.2, -1.0, 1.2, 4.4, 'colour', t=0.05)
+    sleeves(g, d, 'black', end=8.0, cuff='black', cuff_d=0.08)
+    def arm(p, s):
+        g.side(p, d, s, -2.2, -1.8, 2.2, 1.6, 'colour', t=0.3)
+        g.side(p, d, s, -1.4, 3.6, 1.4, 5.2, 'puck', t=0.3)
+    g.both(ARMS, arm)
+    def leg(p, s):
+        g.shell(p, -0.2, 11.4, PANTS + 0.05, 'black')
+        g.front(p, PANTS + 0.05, -2.0, 4.2, 2.0, 7.0, 'colour', t=0.25)
+        g.side(p, PANTS + 0.05, s, -1.2, 4.6, 1.2, 6.6, 'puck', t=0.45)                             # knee slider
+        g.front(p, PANTS + 0.05, -1.6, 0.6, 1.6, 3.4, 'stretch', t=0.06)
+    g.both(LEGS, leg)
+
+
+def build_scba_set(g):
+    """Firefighter breathing apparatus: a backplate harness and a cylinder on the back, gauge hose over the shoulder."""
+    d = VEST_D
+    for s in (-1, 1):
+        x0, x1 = sorted((s * 1.4, s * 3.0))
+        g.front('body', d, x0, 0.0, x1, 9.4, 'strap', t=0.14)
+        g.box('body', (x0, -0.3 - d, -2 - d), (x1, 0.0, 2 + d), 'strap')
+        g.front('body', d + 0.14, x0, 4.0, x1, 4.6, 'buckle', t=0.12)
+    g.shell('body', 9.2, 10.2, d, 'strap')
+    g.front('body', d, -0.8, 9.0, 0.8, 10.4, 'buckle', t=0.2)
+    g.back('body', d, -3.4, 0.4, 3.4, 10.4, 'plate', t=0.3)                                         # backplate
+    g.back('body', d + 0.3, -1.8, 0.2, 1.8, 9.0, 'cylinder', t=3.4)                                  # the bottle
+    g.back('body', d + 0.3, -1.6, -0.5, 1.6, 0.2, 'cylinder', t=3.2)
+    g.back('body', d + 1.4, -0.5, -1.4, 0.5, -0.5, 'valve', t=1.0)
+    g.back('body', d + 3.7, -1.8, 3.0, 1.8, 3.4, 'band', t=0.06)
+    g.back('body', d + 3.7, -1.8, 6.6, 1.8, 7.0, 'band', t=0.06)
+    g.front('body', d + 0.14, -2.6, 3.0, -2.0, 7.6, 'hose', t=0.3)                                   # hose and gauge
+    g.front('body', d + 0.44, -3.0, 7.4, -1.6, 8.8, 'gauge', t=0.4)
+    g.front('body', d + 0.14, 1.9, 1.0, 2.6, 5.4, 'hose', t=0.3)
+
+
+def build_scba_mask(g):
+    """A full-face SCBA mask: rubber seal, a big lens frame left open over the eyes, the regulator out front."""
+    z0, z1 = -5.0, -4.3
+    eye_open_front(g, z0, z1, -7.0, 0.6, 4.1, 'rubber', port=(3.7, EYES_HIGH - 1.0, EYES_LOW + 1.0))
+    g.box('head', (-3.9, EYES_HIGH - 1.2, z0 - 0.3), (3.9, EYES_HIGH - 0.9, z0), 'frame')
+    g.box('head', (-3.9, EYES_LOW + 0.9, z0 - 0.3), (3.9, EYES_LOW + 1.2, z0), 'frame')
+    g.box('head', (-1.4, -2.0, z0 - 1.2), (1.4, 0.4, z0), 'regulator')
+    g.box('head', (-0.6, -1.4, z0 - 1.5), (0.6, -0.4, z0 - 1.2), 'frame')
+    for s in (-1, 1):
+        x = -4.3 if s < 0 else 4.18
+        for y0, y1 in ((-6.6, -6.1), (-2.2, -1.7)):
+            g.box('head', (x, y0, z1), (x + 0.12, y1, 2.6), 'strap')
+    g.box('head', (-2.4, -7.8, 2.2), (2.4, -1.2, 4.32), 'strap')
+
+
+def build_bodyguard_suit(g):
+    """A protective detail's suit: charcoal, cut roomy over a concealed vest, an earpiece coil down the collar."""
+    d = JACKET + 0.15
+    g.shell('body', 0, 12, d, 'wool')
+    g.both(LEGS, lambda p, s: g.shell(p, -0.2, 1.4, d + 0.05, 'wool'))
+    g.front('body', d, -1.4, -0.2, 1.4, 5.8, 'shirt', t=0.05)                                        # shirt and tie in the V
+    g.front('body', d + 0.05, -0.35, 0.4, 0.35, 5.6, 'tie', t=0.1)
+    g.front('body', d + 0.05, -0.5, 0.0, 0.5, 0.7, 'tie', t=0.15)
+    lapels(g, d, 'lapel', y1=6.0, width=1.0)
+    buttons(g, 'body', d + 0.05, 0, (6.8,), 'button')
+    g.front('body', d, -3.4, 2.8, -1.8, 3.1, 'lapel', t=0.1)
+    g.front('body', d + 0.1, 2.2, 1.6, 2.8, 2.2, 'pin', t=0.1)                                       # detail lapel pin
+    for s in (-1, 1):
+        g.front('body', d, s * 1.4 - (2.2 if s < 0 else 0), 8.6, s * 1.4 + (2.2 if s > 0 else 0), 9.0, 'lapel', t=0.12)
+    sleeves(g, d, 'wool', end=8.0)
+    g.back('body', d, 2.4, -1.0, 2.6, 2.4, 'coil', t=0.1)                                            # earpiece coil
+    def leg(p, s):
+        g.shell(p, 1.4, 11.2, PANTS, 'wool')
+        g.front(p, PANTS, -0.1, 1.4, 0.1, 11.0, 'crease', t=0.04)
+    g.both(LEGS, leg)
+
+
+GRAIL = {
+    'crusader_great_helm': (build_crusader_great_helm, dict(plate=blackened(), brass=metal('brass'), dark=flat('#050505', ink=False),
+                                                            torse=cloth('#e8e4da', weave=0.03, stitch=None),
+                                                            torse_b=cloth('#141416', weave=0.03, stitch=None)), 0.3),
+    'crusader_plate': (build_crusader_plate, dict(plate=blackened(), ridge=blackened('#26262c'), edge=metal('brass'),
+                                                  mail=mesh('#3a3a40')), 0.3),
+    'crusader_tabard': (build_crusader_tabard, dict(linen=cloth('#e6e2d6', weave=0.06), cross=cloth('#141416', weave=0.04, stitch=None),
+                                                    belt=leather('#1e1814'), buckle=metal('brass'), hem=cloth('#d0ccc0'),
+                                                    grime=flat('#8a8270', ink=False)), 0.35),
+    'crusader_pauldrons': (build_crusader_pauldrons, dict(plate=blackened(), brass=metal('brass'),
+                                                          cross=flat('#e6e2d6')), 0.3),
+    'crusader_cloak': (build_crusader_cloak, dict(wool=cloth('#16161a', weave=0.08), lining=cloth('#e6e2d6'), brass=metal('brass'),
+                                                  chain=metal('brass'), hem=cloth('#202026'), fold=cloth('#0e0e12', weave=0.08)), 0.35),
+    'crusader_greaves': (build_crusader_greaves, dict(plate=blackened(), brass=metal('brass')), 0.3),
+    'crusader_gauntlets': (build_crusader_gauntlets, dict(plate=blackened(), brass=metal('brass')), 0.3),
+    'crusader_sabatons': (build_crusader_sabatons, dict(plate=blackened(), brass=metal('brass'), sole=leather('#1e1814')), 0.3),
+    'gothic_sallet': (build_gothic_sallet, dict(steel=metal('steel'), brass=metal('brass'), dark=flat('#0a0a0a', ink=False),
+                                                flute=metal('steel')), 0.3),
+    'gothic_cuirass': (build_gothic_cuirass, dict(steel=metal('steel'), flute=metal('steel'), brass=metal('brass'),
+                                                  mail=mesh('#8a8c90'), leather=leather('#4a3020')), 0.3),
+    'gothic_arm_harness': (build_gothic_arm_harness, dict(steel=metal('steel'), brass=metal('brass'), besagew=metal('steel'),
+                                                          points=cloth('#7a1e24', stitch=None)), 0.3),
+    'gothic_leg_harness': (build_gothic_leg_harness, dict(steel=metal('steel'), brass=metal('brass'), flute=metal('steel')), 0.3),
+    'gothic_gauntlets': (build_gothic_gauntlets, dict(steel=metal('steel'), brass=metal('brass'), flute=metal('steel')), 0.3),
+    'gothic_sabatons': (build_gothic_sabatons, dict(steel=metal('steel'), brass=metal('brass'), sole=leather('#3a2616')), 0.3),
+    'bomb_disposal_suit': (build_bomb_disposal_suit, dict(cloth=cloth('#4a5236', weave=0.06), collar=cloth('#3e452e', weave=0.06),
+                                                          plate=cloth('#1c1e1a', weave=0.04), strap=cloth('#2a2c26', stitch=None),
+                                                          grille=plastic('#1a1a1a')), 0.45),
+    'bomb_disposal_helmet': (build_bomb_disposal_helmet, dict(shell=plastic('#4a5236', gloss=0.15), frame=plastic('#1a1a1a'),
+                                                              hose=rib('#3e452e')), 0.4),
+    'shark_mesh_suit': (build_shark_mesh_suit, dict(mail=mesh('#a8aab0'), neo=rubber('#141416')), 0.35),
+    'motorcycle_leathers': (build_motorcycle_leathers, dict(black=leather('#18181a', gloss=0.25), colour=leather('#b8241e', gloss=0.25),
+                                                            stretch=cloth('#2a2a2c', weave=0.02, stitch=None), zip=metal('steel'),
+                                                            puck=plastic('#d8d4c8', gloss=0.3)), 0.4),
+    'scba_set': (build_scba_set, dict(strap=cloth('#1e1e1e', stitch=None), buckle=metal('steel'), plate=plastic('#1e1e1e'),
+                                      cylinder=plastic('#c8c4b8', gloss=0.35), valve=metal('steel'), band=glow_tape(),
+                                      hose=rubber('#1a1a1a'), gauge=plastic('#2a2a2a', gloss=0.4)), 0.45),
+    'scba_mask': (build_scba_mask, dict(rubber=rubber('#1a1a1a'), frame=plastic('#2a2a2a', gloss=0.3),
+                                        regulator=plastic('#c8a82a'), strap=rubber('#1a1a1a')), 0.4),
+    'bodyguard_suit': (build_bodyguard_suit, dict(wool=cloth('#26272b', weave=0.03), lapel=cloth('#222327', weave=0.03),
+                                                  shirt=cloth('#e4e2dc', weave=0.02), tie=cloth('#141416', stitch=None),
+                                                  button=plastic('#111111'), pin=metal('brass'), coil=plastic('#d0d4d8', gloss=0.5),
+                                                  crease=flat('#1c1d20', ink=False)), 0.3),
+}
+
+
 # ------------------------------------------------------------------ medical supports seen on the body
 # Not items: worn models ClothingLayer draws on whichever part has them applied (the synced worn-medical mask).
 # Dressings sit under the clothes; splints, slings, tourniquets, the collar and the knee brace go over them.
@@ -4597,6 +5039,7 @@ GARMENTS.update(KIT_2)
 GARMENTS.update(CIVILIAN)
 GARMENTS.update(CIVILIAN_2)
 GARMENTS.update(CIVILIAN_3)
+GARMENTS.update(GRAIL)
 GARMENTS.update(MEDICAL)
 
 
