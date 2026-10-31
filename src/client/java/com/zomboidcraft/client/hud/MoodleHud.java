@@ -4,7 +4,11 @@ import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.carry.Carry;
 import com.zomboidcraft.client.sound.UiSounds;
 import com.zomboidcraft.combat.Stamina;
+import com.zomboidcraft.survival.Ailments;
 import com.zomboidcraft.survival.Body;
+import com.zomboidcraft.survival.Mood;
+import com.zomboidcraft.survival.Needs;
+import com.zomboidcraft.survival.Nutrition;
 import com.zomboidcraft.survival.SurvivalStats;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,19 +20,19 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.core.Holder;
-import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 
 /**
  * Moodles, Zomboid style: small enamel plates down the right edge, yellow, orange or red as a need gets worse, with a
  * sprayed stencil icon. A plate shows its name for a moment when it changes; mild ones fade after a while, bad ones
- * stay. Hunger, air and potion effects are moodles too (potions get our own names); infection stays hidden until
- * symptoms show.
+ * stay. Hunger, thirst and tiredness have Zomboid's four stages; Minecraft's potion effects never get plates of their
+ * own (a bad stomach shows as Sick); infection stays hidden until symptoms show.
  */
 public final class MoodleHud {
-    private static final int SIZE = 20, GAP = 3, RIGHT = 8;
+    private static final int SIZE = 12, GAP = 3, RIGHT = 8;
+    /** The name's scale, and how far below its draw point the capitals start (measured in game, per unit of scale). */
+    private static final float LABEL = .9f, CAP_TOP = 1.5f;
     private static final int GOOD = 4;
     private static final float MILD_SHOWS = 6f, NAME_SHOWS = 3.5f, TREND_SHOWS = 4f;
     private static final int[] LEVEL_INK = {0, 0xFFE8CF7C, 0xFFE69A66, 0xFFCE675B, 0xFF8EB07E};
@@ -52,29 +56,6 @@ public final class MoodleHud {
     private static float wet;
     private static long wetTick = -1;
 
-    private record EffectMoodle(Holder<MobEffect> effect, String icon, int least, String... names) {
-    }
-
-    // our own words for Minecraft's potion effects; the rest keep the game's name on a plain vial
-    private static final List<EffectMoodle> EFFECTS = List.of(
-            new EffectMoodle(MobEffects.POISON, "skull", 2, "Poisoned", "Poisoned", "Badly poisoned"),
-            new EffectMoodle(MobEffects.WITHER, "skull", 2, "Withering", "Withering", "Wasting away"),
-            new EffectMoodle(MobEffects.HUNGER, "fork", 1, "Upset stomach", "Food poisoning", "Food poisoning"),
-            new EffectMoodle(MobEffects.NAUSEA, "spiral", 1, "Dizzy", "Nauseous", "Retching"),
-            new EffectMoodle(MobEffects.BLINDNESS, "eye", 2, "Can't see", "Can't see", "Blind"),
-            new EffectMoodle(MobEffects.DARKNESS, "eye", 1, "Darkness closing in", "Darkness closing in", "Darkness closing in"),
-            new EffectMoodle(MobEffects.SLOWNESS, "weight", 1, "Sluggish", "Heavy limbs", "Can barely move"),
-            new EffectMoodle(MobEffects.MINING_FATIGUE, "weight", 1, "Tired arms", "Aching arms", "Arms like lead"),
-            new EffectMoodle(MobEffects.WEAKNESS, "weight", 1, "Weak", "Very weak", "Feeble"),
-            new EffectMoodle(MobEffects.REGENERATION, "heart", GOOD, "Recovering"),
-            new EffectMoodle(MobEffects.HEALTH_BOOST, "heart", GOOD, "Hardy"),
-            new EffectMoodle(MobEffects.ABSORPTION, "heart", GOOD, "Second wind"),
-            new EffectMoodle(MobEffects.RESISTANCE, "heart", GOOD, "Tough skin"),
-            new EffectMoodle(MobEffects.SPEED, "bolt", GOOD, "Adrenaline"),
-            new EffectMoodle(MobEffects.HASTE, "bolt", GOOD, "Quick hands"),
-            new EffectMoodle(MobEffects.STRENGTH, "bolt", GOOD, "Strong"),
-            new EffectMoodle(MobEffects.JUMP_BOOST, "bolt", GOOD, "Light on your feet"));
-
     /** Draws the plates from {@code top} down. */
     public static void render(GuiGraphicsExtractor g, int top) {
         Minecraft mc = Minecraft.getInstance();
@@ -85,7 +66,7 @@ public final class MoodleHud {
         for (Plate p : plates.values()) p.live = false;
         for (Moodle m : now) {
             Plate p = plates.computeIfAbsent(m.key(), k -> new Plate());
-            if (p.level != m.level()) {
+            if (p.level != m.level() || p.label != null && !p.label.equals(m.label()) && m.key().matches("hunger|thirst|tired|full")) {
                 p.trend = p.level == 0 || m.level() == GOOD || p.level == GOOD ? 0 : m.level() > p.level ? 1 : -1;
                 p.level = m.level();
                 p.since = 0;
@@ -116,13 +97,14 @@ public final class MoodleHud {
                         Hud.alpha(p.trend > 0 ? 0xFFE8D9B0 : 0xFF8FBF5E, a));
             }
             if (n > 0) {
-                float w = Hud.capsWidth(font, p.label, 1f, .9f);
+                // the name's capitals start level with the plate's top edge and the level bars end on its bottom edge
+                float w = Hud.capsWidth(font, p.label, 1f, LABEL);
                 float tx = x - 6 - w + (1 - n) * 3;
-                Hud.caps(g, font, p.label, tx, y + 3, Hud.alpha(Hud.BONE, n * a), 1f, .9f);
+                Hud.caps(g, font, p.label, tx, y - CAP_TOP * LABEL, Hud.alpha(Hud.BONE, n * a), 1f, LABEL);
                 if (p.level != GOOD) {
                     for (int i = 0; i < 3; i++) {
-                        int bx = Math.round(x - 6 - (3 - i) * 5 + (1 - n) * 3), by = Math.round(y + 13);
-                        g.fill(bx, by, bx + 4, by + 1, Hud.alpha(i < p.level ? LEVEL_INK[p.level] : Hud.BONE_FAINT, n * a));
+                        int bx = Math.round(x - 6 - (3 - i) * 5 + (1 - n) * 3), by = Math.round(y + SIZE - 2);
+                        g.fill(bx, by, bx + 4, by + 2, Hud.alpha(i < p.level ? LEVEL_INK[p.level] : Hud.BONE_FAINT, n * a));
                     }
                 }
             }
@@ -157,20 +139,29 @@ public final class MoodleHud {
     private static boolean harms(Moodle m) {
         return switch (m.key()) {
             case "bleeding", "injury", "ill" -> true;
-            case "air", "hunger", "thirst" -> m.level() == 3;
+            case "pain" -> m.label().equals("Agony");
+            case "air" -> m.level() == 3;
+            case "hunger" -> m.label().equals("Starving");
+            case "thirst" -> m.label().equals("Dying of Thirst");
             case "load" -> m.label().startsWith("Crushed");
-            default -> m.key().startsWith("effect:") && m.icon().equals("skull");
+            default -> false;
         };
     }
 
     private static List<Moodle> moodles(LocalPlayer player) {
         List<Moodle> list = new ArrayList<>();
         SurvivalStats s = SurvivalStats.get(player);
-        add(list, "hunger", "fork", hungerLevel(player.getFoodData().getFoodLevel()), "Peckish", "Hungry", "Starving");
-        add(list, "thirst", "drop", s.thirst() <= 5 ? 3 : s.thirst() < 25 ? 2 : s.thirst() < 50 ? 1 : 0,
-                "Thirsty", "Parched", "Dying of thirst");
-        add(list, "tired", "eye", s.fatigue() > 90 ? 3 : s.fatigue() > 75 ? 2 : s.fatigue() > 60 ? 1 : 0,
-                "Tired", "Very tired", "Exhausted");
+        // Zomboid's four stages; the plate's colour tops out at red for the last two
+        if (Needs.on()) {
+            Nutrition n = Nutrition.get(player);
+            stage(list, "hunger", "fork", n.hungerStage(), "Peckish", "Hungry", "Very Hungry", "Starving");
+            int full = n.fullStage();
+            if (full > 0) list.add(new Moodle("full", "fork", GOOD, full == 2 ? "Stuffed" : "Full"));
+        } else {
+            add(list, "hunger", "fork", hungerLevel(player.getFoodData().getFoodLevel()), "Peckish", "Hungry", "Starving");
+        }
+        stage(list, "thirst", "drop", Needs.thirstStage(s.thirst()), "Slightly Thirsty", "Thirsty", "Parched", "Dying of Thirst");
+        stage(list, "tired", "eye", Needs.tiredStage(s.fatigue()), "Drowsy", "Tired", "Very Tired", "Ridiculously Tired");
         Body body = Body.get(player);
         int bleeding = body.bleeding();
         if (bleeding > 0) {
@@ -185,9 +176,31 @@ public final class MoodleHud {
             String label = Body.describe(worst, part);
             add(list, "injury", icon, part.severity(), label, label, label);
         }
+        // one Sick plate, Zomboid's: the infection, a fevered wound, or a bad stomach (rotten food, poison, nausea)
         float infection = s.infectionProgress();
-        add(list, "ill", "thermo", infection > 0.8f ? 3 : infection > 0.5f ? 2 : infection > 0.25f ? 1 : 0,
-                "Queasy", "Feverish", "Gravely ill");
+        int fever = Ailments.get(player, "fever");
+        int ill = Math.max(infection > 0.8f ? 3 : infection > 0.5f ? 2 : infection > 0.25f ? 1 : 0,
+                fever >= 70 ? 3 : fever >= 40 ? 2 : fever > 0 ? 1 : 0);
+        int nausea = Ailments.get(player, "nausea");
+        int stomach = nausea >= 75 ? 3 : nausea >= 50 ? 2 : nausea >= 25 ? 1 : 0;
+        for (MobEffectInstance effect : player.getActiveEffects()) {
+            if (effect.is(MobEffects.POISON)) stomach = Math.max(stomach, Math.min(3, 2 + effect.getAmplifier()));
+            else if (effect.is(MobEffects.HUNGER) || effect.is(MobEffects.NAUSEA)) stomach = Math.max(stomach, Math.min(3, 1 + effect.getAmplifier()));
+        }
+        if (stomach > ill) add(list, "ill", "thermo", stomach, "Queasy", "Nauseous", "Sick");
+        else add(list, "ill", "thermo", ill, "Queasy", "Feverish", "Gravely ill");
+        // Zomboid's pain stages, from wounds, breaks, a bad tooth or a cold (LOOT's Medicine adds it up)
+        int pain = Ailments.get(player, "pain");
+        stage(list, "pain", "pain", pain >= 75 ? 4 : pain >= 50 ? 3 : pain >= 25 ? 2 : pain >= 10 ? 1 : 0,
+                "Minor Pain", "Pain", "Severe Pain", "Agony");
+        if (Ailments.get(player, "cold") > 0) list.add(new Moodle("cold", "germ", 1, "Has a Cold"));
+        int drunk = Ailments.get(player, "drunk");
+        stage(list, "drunk", "bottle", drunk >= 85 ? 4 : drunk >= 60 ? 3 : drunk >= 30 ? 2 : drunk >= 10 ? 1 : 0,
+                "Tipsy", "Drunk", "Very Drunk", "Hammered");
+        // Zomboid's mood moodles, from LOOT's Mood (0-100, bands at 25, 50, 75 and 90)
+        mood(list, player, "bored", "hourglass", Mood.Stat.BOREDOM, "Slightly Bored", "Bored", "Very Bored", "Extremely Bored");
+        mood(list, player, "unhappy", "sad", Mood.Stat.UNHAPPINESS, "A Bit Sad", "Unhappy", "Very Unhappy", "Depressed");
+        mood(list, player, "stress", "stress", Mood.Stat.STRESS, "Anxious", "Agitated", "Stressed", "Nervous Wreck");
         if (ZcConfig.get().combat.stamina) {
             float endurance = player.getAttachedOrElse(Stamina.TYPE, Stamina.FULL);
             add(list, "breath", "lungs", endurance < 10 ? 3 : endurance < 30 ? 2 : endurance < 60 ? 1 : 0,
@@ -203,24 +216,17 @@ public final class MoodleHud {
         }
         soak(player);
         add(list, "wet", "rain", wet > .85f ? 3 : wet > .5f ? 2 : wet > .2f ? 1 : 0, "Damp", "Wet", "Soaked");
-        for (MobEffectInstance effect : player.getActiveEffects()) {
-            if (!effect.showIcon()) continue;
-            EffectMoodle known = null;
-            for (EffectMoodle e : EFFECTS) if (effect.is(e.effect())) known = e;
-            int amp = effect.getAmplifier();
-            String key = "effect:" + effect.getDescriptionId();
-            if (known == null) {
-                boolean good = effect.getEffect().value().isBeneficial();
-                String name = effect.getEffect().value().getDisplayName().getString();
-                list.add(new Moodle(key, "vial", good ? GOOD : Math.min(3, amp + 1), name));
-            } else if (known.least() == GOOD) {
-                list.add(new Moodle(key, known.icon(), GOOD, known.names()[0]));
-            } else {
-                int level = Math.max(known.least(), Math.min(3, amp + 1));
-                list.add(new Moodle(key, known.icon(), level, known.names()[level - 1]));
-            }
-        }
         return list;
+    }
+
+    private static void mood(List<Moodle> list, LocalPlayer player, String key, String icon, Mood.Stat stat, String... names) {
+        int v = Mood.get(player, stat);
+        stage(list, key, icon, v >= 90 ? 4 : v >= 75 ? 3 : v >= 50 ? 2 : v >= 25 ? 1 : 0, names);
+    }
+
+    /** A Zomboid moodle with four stages (1 to 4). */
+    private static void stage(List<Moodle> list, String key, String icon, int stage, String... names) {
+        if (stage > 0) list.add(new Moodle(key, icon, Math.min(3, stage), names[stage - 1]));
     }
 
     private static void add(List<Moodle> list, String key, String icon, int level, String mild, String bad, String severe) {

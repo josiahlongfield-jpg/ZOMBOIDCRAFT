@@ -28,36 +28,36 @@ final class SkillsPage {
     }
 
     private static final List<Info> SKILLS = List.of(
-            new Info(Skill.AIMING, "Combat", "Fire guns. A hit teaches more than a miss.", List.of(
+            new Info(Skill.AIMING, "Firearm", "Fire guns. A hit teaches more than a miss.", List.of(
                     new Perk(0, "5% tighter spread, from the hip and aimed"),
                     new Perk(5, "Steadier on the move: walking widens your spread far less"),
                     new Perk(10, "Half the spread of a beginner")),
                     l -> "Right now: " + 5 * l + "% tighter spread than a beginner" + (l >= 5 ? ", steady on the move." : ".")),
             new Info(Skill.BLUNT, "Combat", "Hit zombies with bats, pipes, hammers and the like.", melee(), SkillsPage::meleeNow),
             new Info(Skill.BLADE, "Combat", "Hit zombies with knives, machetes, axes and swords.", melee(), SkillsPage::meleeNow),
-            new Info(Skill.FIRST_AID, "Survival", "Bandage wounds and splint breaks.", List.of(
+            new Info(Skill.FIRST_AID, "Survivalist", "Bandage wounds and splint breaks.", List.of(
                     new Perk(0, "Quicker hands, and bound wounds heal 5% faster"),
                     new Perk(5, "One bandage binds two wounds"),
                     new Perk(8, "Splints set breaks a third faster")),
                     l -> "Right now: bandaging takes " + secs(Treatment.ticks(Treatment.Kind.BANDAGE, l)) + ", bound wounds heal "
                             + 5 * l + "% faster."),
-            new Info(Skill.MAINTENANCE, "Survival", "Repair weapons at the bench.", List.of(
+            new Info(Skill.MAINTENANCE, "Combat", "Repair weapons at the bench.", List.of(
                     new Perk(0, "A repair gives back 60% of what the kit could at level 0"),
                     new Perk(0, "6% more back from every repair, each level"),
                     new Perk(10, "120%: better than the kit promises")),
                     l -> "Right now: repairs give back " + Math.round((0.6f + 0.06f * l) * 100) + "%."),
-            new Info(Skill.CARPENTRY, "Building", "Board up windows and doors, and strip wooden furniture with a hammer, crowbar or axe.", List.of(
+            new Info(Skill.CARPENTRY, "Crafting", "Board up windows and doors, and strip wooden furniture with a hammer, crowbar or axe.", List.of(
                     new Perk(0, "5% chance to save the nails on every board, and quicker hammering"),
                     new Perk(DigRules.Tier.WOOD.level(), "Knock through wooden walls and floors"),
                     new Perk(4, "Reinforced barricades take more hits"),
                     new Perk(8, "Heavy barricades")),
                     l -> "Right now: " + (l >= 8 ? "heavy" : l >= 4 ? "reinforced" : "plain") + " barricades, " + 5 * l
                             + "% of nails saved, " + secs(Math.max(30, 60 - 3 * l)) + " a board" + wall(DigRules.Tier.WOOD, l)),
-            new Info(Skill.MASONRY, "Building", "Break up steps, kerbs and other stonework with a sledgehammer. It leaves rubble.", wallPerks(DigRules.Tier.MASONRY),
+            new Info(Skill.MASONRY, "Crafting", "Break up steps, kerbs and other stonework with a sledgehammer. It leaves rubble.", wallPerks(DigRules.Tier.MASONRY),
                     l -> "Right now:" + wall(DigRules.Tier.MASONRY, l).substring(1)),
-            new Info(Skill.METALWORKING, "Building", "Cut up metal furniture and fittings with a propane torch. It leaves scrap metal.", wallPerks(DigRules.Tier.METAL),
+            new Info(Skill.METALWORKING, "Crafting", "Cut up metal furniture and fittings with a propane torch. It leaves scrap metal.", wallPerks(DigRules.Tier.METAL),
                     l -> "Right now:" + wall(DigRules.Tier.METAL, l).substring(1)),
-            new Info(Skill.MECHANICS, "Survival", "Take cars apart and put them back together. Every part you fit or pull teaches it, and Laine's Auto Manuals "
+            new Info(Skill.MECHANICS, "Crafting", "Take cars apart and put them back together. Every part you fit or pull teaches it, and Laine's Auto Manuals "
                     + "teach you each class of car (standard, commercial, performance).", List.of(
                     new Perk(0, "Fluids, the battery, tyres on a jack, headlights"),
                     new Perk(1, "Spark plugs, horn, tail lights; you can tell which part won't let it start"),
@@ -69,14 +69,14 @@ final class SkillsPage {
                     new Perk(7, "Gearbox"),
                     new Perk(8, "Engine rebuilds and swaps")),
                     l -> "Right now: you can work on parts up to level " + l + "."),
-            new Info(Skill.PILOTING, "Survival", "Fly the jets and the helicopter. Time in the air and clean landings teach it; "
+            new Info(Skill.PILOTING, "Survivalist", "Fly the jets and the helicopter. Time in the air and clean landings teach it; "
                     + "reading a flight manual gets you off the ground in the first place.", List.of(
                     new Perk(0, "Shaky hands: the controls are slow and twitchy"),
                     new Perk(0, "Each level steadies the controls and lets you land a little harder"),
                     new Perk(10, "Full control authority, no wobble")),
                     l -> "Right now: " + Math.round(65 + 3.5 * l) + "% control authority, touch down at up to "
                             + String.format(Locale.ROOT, "%.1f", 7 + 0.3 * l) + " m/s."),
-            new Info(Skill.TAILORING, "Survival", "Patch holes in your clothes, and rip old ones into strips. Needs a sewing kit, "
+            new Info(Skill.TAILORING, "Crafting", "Patch holes in your clothes, and rip old ones into strips. Needs a sewing kit, "
                     + "thread and something to sew on.", List.of(
                     new Perk(0, "A quarter of patches pull loose at first"),
                     new Perk(0, "Each level, fewer pull loose and sewing goes 5% quicker"),
@@ -91,13 +91,48 @@ final class SkillsPage {
                     new Perk(0, "Zombies see you 3% less far"),
                     new Perk(0, "Footsteps carry 0.3 blocks less far"),
                     new Perk(10, "Seen 30% less far, footsteps 3 blocks quieter")),
-                    l -> String.format(Locale.ROOT, "Right now: seen %d%% less far, footsteps %.1f blocks quieter.", 3 * l, 0.3 * l)));
+                    l -> String.format(Locale.ROOT, "Right now: seen %d%% less far, footsteps %.1f blocks quieter.", 3 * l, 0.3 * l)),
+            new Info(Skill.FITNESS, "Passive", "Everyone starts at 5. Running, fighting and exercise raise it; starving "
+                    + "or lying idle for days wears it down again.", List.of(
+                    new Perk(0, "Endurance comes back 6% quicker per level above 5, and 6% slower per level below")),
+                    l -> String.format(Locale.ROOT, "Right now: endurance comes back %d%% %s than an average body.",
+                            Math.abs(6 * (l - 5)), l >= 5 ? "quicker" : "slower")),
+            new Info(Skill.STRENGTH, "Passive", "Everyone starts at 5. Carrying a heavy load and fighting in melee raise "
+                    + "it; starving wears it down again.", List.of(
+                    new Perk(0, "Carry 0.6 kg more per level above 5 (less below)"),
+                    new Perk(0, "Melee hits 4% harder per level above 5 (weaker below)")),
+                    l -> String.format(Locale.ROOT, "Right now: %+.1f kg carry limit, melee %+d%%.", 0.6 * (l - 5), 4 * (l - 5))),
+            soon(Skill.LIGHTFOOTED, "Agility", "Walk without making noise and stepping on things that give you away."),
+            soon(Skill.NIMBLE, "Agility", "Move faster while aiming and fighting."),
+            soon(Skill.RELOADING, "Firearm", "Load magazines and rounds faster, and rack a jam clear quicker."),
+            soon(Skill.ELECTRICAL, "Crafting", "Wire generators, lights and alarms, and hotwire cars."),
+            soon(Skill.COOKING, "Crafting", "Cook dishes on stoves, campfires and barbecues; better cooks make more filling food."),
+            soon(Skill.CARVING, "Crafting", "Carve wood and bone into handles, spears and tools."),
+            soon(Skill.KNAPPING, "Crafting", "Chip stone into blades, axe heads and arrowheads."),
+            soon(Skill.POTTERY, "Crafting", "Shape and fire clay into pots, jars and bowls."),
+            soon(Skill.GLASSMAKING, "Crafting", "Melt and blow glass into jars and bottles."),
+            soon(Skill.BLACKSMITHING, "Crafting", "Forge iron at an anvil into tools and parts."),
+            soon(Skill.AGRICULTURE, "Farming", "Grow crops: see their health and grow time, and harvest more."),
+            soon(Skill.ANIMAL_CARE, "Farming", "Keep farm animals fed, calm and healthy; milk, shear and breed them."),
+            soon(Skill.BUTCHERING, "Farming", "Butcher carcasses for more meat, hide, bone and fat."),
+            soon(Skill.FISHING, "Survivalist", "Catch fish with a rod or a net; more bites, fewer snapped lines."),
+            soon(Skill.FORAGING, "Survivalist", "Spot berries, mushrooms, herbs and useful junk from further away."),
+            soon(Skill.TRAPPING, "Survivalist", "Set snares and cage traps that catch more often."),
+            soon(Skill.TRACKING, "Survivalist", "Read animal tracks and droppings to hunt them down."));
 
-    private static final String[] GROUPS = {"Combat", "Building", "Survival", "Agility"};
+    /** A Zomboid skill whose system is still being built: shown, with XP, so nothing is hidden. */
+    private static Info soon(Skill skill, String group, String what) {
+        return new Info(skill, group, what, List.of(new Perk(0, "Its actions arrive in a later survival update")),
+                l -> "Not trained by anything yet: the actions that teach it are still being built.");
+    }
+
+    private static final String[] GROUPS = {"Passive", "Agility", "Combat", "Firearm", "Crafting", "Farming", "Survivalist"};
     private static final int ROW = 22, PITCH = 24;
 
     private final KitScreen<?> screen;
     private Skill selected = Skill.AIMING;
+    /** How far the list is scrolled, in pixels. */
+    private int scroll, listHeight;
 
     SkillsPage(KitScreen<?> screen) {
         this.screen = screen;
@@ -141,23 +176,40 @@ final class SkillsPage {
         LocalPlayer player = screen.player();
         KitDraw.heading(g, font, "Skills", x + 37, y + 33, 262, false);
         KitDraw.textRight(g, font, "Lost when you die, like everything else", x + 299, y + 41, KitDraw.FAINT, 0.8f);
-        int ry = y + 52;
+        // the whole Zomboid list is taller than the page: it scrolls, and only rows wholly inside the frame draw
+        int top = y + 52, bottom = y + KitScreen.H - 20;
+        scroll = Math.max(0, Math.min(scroll, listHeight - (bottom - top)));
+        int ry = top - scroll;
         for (String group : GROUPS) {
-            KitDraw.caps(g, font, group, x + 42, ry, KitDraw.FAINT, 0.6f);
+            if (ry >= top && ry + 8 <= bottom) KitDraw.caps(g, font, group, x + 42, ry, KitDraw.FAINT, 0.6f);
             ry += 8;
             for (Info info : SKILLS) {
                 if (!info.group().equals(group)) continue;
-                row(g, font, player, info, x + 37, ry, 262, mx, my);
+                if (ry >= top && ry + ROW <= bottom) row(g, font, player, info, x + 37, ry, 262, mx, my);
                 ry += PITCH;
             }
             ry += 1;
+        }
+        listHeight = ry + scroll - top;
+        if (listHeight > bottom - top) {
+            int track = bottom - top, thumb = Math.max(16, track * track / listHeight);
+            int ty = top + (track - thumb) * scroll / Math.max(1, listHeight - track);
+            g.fill(x + 302, top, x + 303, bottom, 0x1AE8E4DA);
+            g.fill(x + 301, ty, x + 304, ty + thumb, 0x80E8E4DA);
         }
         detail(g, font, player, info(selected), x + 323, y + 33, 256);
 
         int hx = x + 37, hy = y + KitScreen.H - 14;
         hx += KitDraw.hint(g, font, "LMB", "Select", hx, hy);
+        hx += KitDraw.hint(g, font, "Wheel", "Scroll", hx, hy);
         screen.pagesAndClose(g, font, hx, hy);
         KitDraw.textRight(g, font, "Every number here is the real effect in game", x + 579, hy + 1, KitDraw.FAINT, 0.9f);
+    }
+
+    boolean scrolled(double mx, double my, double sy) {
+        scroll -= (int) Math.signum(sy) * PITCH;
+        if (scroll < 0) scroll = 0;
+        return true;
     }
 
     private static Info info(Skill skill) {

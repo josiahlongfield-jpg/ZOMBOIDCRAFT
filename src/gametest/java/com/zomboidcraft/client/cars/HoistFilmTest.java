@@ -59,7 +59,7 @@ public class HoistFilmTest implements FabricClientGameTest {
                 hoist.snapTo(b.getX(), b.getY(), b.getZ(), 0, 0);
                 level.addFreshEntity(hoist);
                 hoistId = hoist.getId();
-                CarProp car = Cars.spawn(level, b.getX() + 0.1, b.getY(), b.getZ() + 0.3, 0, "sedan", "usable", true);
+                CarProp car = Cars.spawn(level, b.getX() + 0.8, b.getY(), b.getZ() + 1.3, 14, "step_van", "usable", true);
                 carId = car.getId();
                 p.teleportTo(level, b.getX() + 0.5, b.getY(), b.getZ() - 8, java.util.Set.of(), 0, 15, false);
             });

@@ -33,7 +33,7 @@ public class HoistRenderer extends EntityRenderer<CarHoist, HoistRenderer.State>
             BLUE_DARK = 18, PAD = 19;
 
     public static class State extends EntityRenderState {
-        float height, arms, yaw, reachX, reachZ;
+        float height, arms, yaw, reachX, reachZ, pad;
         boolean lampOn;
     }
 
@@ -60,6 +60,7 @@ public class HoistRenderer extends EntityRenderer<CarHoist, HoistRenderer.State>
         state.yaw = hoist.getYRot();
         state.reachX = hoist.reachX();
         state.reachZ = hoist.reachZ();
+        state.pad = hoist.pad();
         state.lampOn = hoist.height() > 0.01f || hoist.arms() > 0.01f;
     }
 
@@ -142,9 +143,11 @@ public class HoistRenderer extends EntityRenderer<CarHoist, HoistRenderer.State>
             Vector3f end = new Vector3f(pivot).add(new Vector3f(dir).mul(len));
             // the pivot pin, the screw pedestal and its rubber pad
             box(pivot.x, pivot.y + 0.05f, pivot.z, 0.03f, 0.06f, 0.03f, CHROME);
-            box(end.x, end.y + 0.08f, end.z, 0.025f, 0.05f, 0.025f, CHROME);
-            box(end.x, end.y + 0.14f, end.z, 0.075f, 0.018f, 0.075f, PAD);
-            box(end.x, end.y + 0.162f, end.z, 0.06f, 0.006f, 0.06f, RUBBER);
+            // the pedestal screwed up so the rubber meets the car's underside (pad above the wheels; the arm is 0.1 up)
+            float post = Math.max(0.03f, (st.pad - 0.1f - 0.048f) * a + 0.03f * (1 - a));
+            box(end.x, end.y + post / 2, end.z, 0.025f, post / 2, 0.025f, CHROME);
+            box(end.x, end.y + post + 0.018f, end.z, 0.075f, 0.018f, 0.075f, PAD);
+            box(end.x, end.y + post + 0.042f, end.z, 0.06f, 0.006f, 0.06f, RUBBER);
         }
 
         /** The control box and the power unit on the first post's outside face (x = face). */

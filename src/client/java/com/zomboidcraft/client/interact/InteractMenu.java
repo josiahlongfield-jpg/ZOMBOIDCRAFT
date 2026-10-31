@@ -13,7 +13,6 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.FenceGateBlock;
@@ -143,8 +142,9 @@ public final class InteractMenu {
             out.add(Option.of("Pull lever", use));
         } else if (state.getBlock() instanceof ButtonBlock) {
             out.add(Option.of("Press button", use));
-        } else if (state.getBlock() instanceof BedBlock) {
-            out.add(Option.of("Sleep", use));
+        } else if (com.zomboidcraft.survival.Sleep.bedOf(state) != null) {
+            // beds, sofas, mattresses and cots: Zomboid's sleep, not the vanilla night skip
+            out.add(Option.of("Sleep", () -> com.zomboidcraft.client.survival.SleepClient.interact(client, hit)));
         } else if (client.level.getBlockEntity(b.getBlockPos()) instanceof Container) {
             out.add(Option.of("Loot", use));
         }
