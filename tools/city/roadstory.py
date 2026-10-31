@@ -284,8 +284,6 @@ def trunk(crown):
               [8, 4, 1, 9.5, 5.5, 9, BARK, None, turn("x", 22.5, (8.7, 4.7, 8))],
               [2, 6, 2, 4, 7.5, 10, BARK, None, turn("y", 22.5, (3, 6.7, 8))],
               [0, 0, 0, 16, 12, 6, "tree_oak_leaves"], [10, 5, 2, 16, 14, 9, "tree_oak_leaves"]]
-    else:
-        b += [[10.5, 9, 4, 12, 13, 5.5, BARK, None, turn("z", -22.5, (11.2, 9, 4.7))]]   # a snapped limb
     return b
 
 

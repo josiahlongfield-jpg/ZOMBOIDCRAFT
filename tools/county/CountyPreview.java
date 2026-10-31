@@ -79,6 +79,8 @@ public final class CountyPreview implements ChunkSink {
             set(bx, y, bz, "home_corpse_head[facing=" + face + "]");
         } else if (models.startsWith("!walkers:")) {
             System.out.println("walkers " + models.substring(9) + " at " + Math.round(x) + " " + Math.round(z));
+        } else if (models.startsWith("!alarm:")) {
+            System.out.println("alarm " + models.substring(7) + " at " + Math.round(x) + " " + y + " " + Math.round(z) + " yaw " + Math.round(yaw));
         }
     }
 

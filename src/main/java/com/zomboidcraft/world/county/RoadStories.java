@@ -545,6 +545,17 @@ public final class RoadStories {
                 block(cut, l, "rv_trunk", ACROSS);
             }
             block(cut, half + 2, "rv_trunk_crown", RIGHT);
+            // the crown's spread on the verge: a rough ball of leaves round the top of the trunk
+            for (int ds = -2; ds <= 2; ds++) {
+                for (int dl = 2; dl <= 6; dl++) {
+                    for (int dy = 0; dy <= 2; dy++) {
+                        double r = Math.hypot(ds / 2.4, (dl - 4) / 2.6) + dy * 0.35;
+                        if ((ds != 0 || dl != 2) && r < 1.05 - (chance(0.25) ? 0.3 : 0)) {
+                            block(cut + ds, half + dl, dy, "tree_oak_leaves", NONE);
+                        }
+                    }
+                }
+            }
             block(cut - 1, -half - 2, "debris_chunk", any(4));
             car(-1, lane - 0.4, skew(6), "car,van,pickup@abandoned");
             int dead = 2 + any(2);

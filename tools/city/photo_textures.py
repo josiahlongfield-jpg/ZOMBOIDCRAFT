@@ -1147,6 +1147,8 @@ import farm  # noqa: E402
 farm.register(sys.modules[__name__])
 import roadstory  # noqa: E402
 roadstory.register(sys.modules[__name__])
+import housealarm  # noqa: E402
+housealarm.register(sys.modules[__name__])
 import yard  # noqa: E402
 yard.register(sys.modules[__name__])
 import housekit  # noqa: E402
