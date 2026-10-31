@@ -8,7 +8,6 @@ import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestSingleplayerContext;
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.phys.Vec3;
@@ -33,6 +32,9 @@ public class ZombieLoreTest implements FabricClientGameTest {
                 sp.getServer().runCommand(c);
             }
             ctx.getInput().resizeWindow(1280, 720);
+            // a clean picture: no HUD, and night vision against the endless night
+            ctx.runOnClient(mc -> mc.options.hideGui = true);
+            sp.getServer().runCommand("effect give @a night_vision infinite 0 true");
             stage(ctx, sp);
             weapons(ctx, sp);
             crowd(ctx, sp);
@@ -70,15 +72,16 @@ public class ZombieLoreTest implements FabricClientGameTest {
         sp.getServer().runCommand("tp @a 0 100 -12.5 0 12");
         ctx.waitTicks(20);
         ctx.takeScreenshot("weapons-back-wide");
-        sp.getServer().runCommand("tp @a -1.5 100 -10.2 0 20");
-        ctx.waitTicks(20);
-        ctx.takeScreenshot("weapons-back-close");
-        sp.getServer().runCommand("tp @a 0 100 -3.5 180 12");
-        ctx.waitTicks(20);
-        ctx.takeScreenshot("weapons-front-wide");
-        sp.getServer().runCommand("tp @a 1.5 100 -6 180 20");
-        ctx.waitTicks(20);
-        ctx.takeScreenshot("weapons-front-close");
+        // each one close, from behind and over the shoulder from the front
+        for (int i = 0; i < 7; i++) {
+            double x = -4.5 + i * 1.5;
+            sp.getServer().runCommand("tp @a " + (x + 0.6) + " 100.3 -10.3 -15 18");
+            ctx.waitTicks(10);
+            ctx.takeScreenshot("weapons-back-" + i);
+            sp.getServer().runCommand("tp @a " + (x - 0.6) + " 100.3 -5.7 165 18");
+            ctx.waitTicks(10);
+            ctx.takeScreenshot("weapons-front-" + i);
+        }
         sp.getServer().runCommand("kill @e[type=zombie]");
         ZcConfig.get().zombieLore.attachedWeaponPercent = 6;
         ctx.waitTicks(10);
@@ -87,9 +90,6 @@ public class ZombieLoreTest implements FabricClientGameTest {
     /** Sixteen of the dead come at you from 26 blocks: shamblers, fast shamblers and a sprinter or two, each its own. */
     private static void crowd(ClientGameTestContext ctx, TestSingleplayerContext sp) {
         sp.getServer().runCommand("tp @a 0 100 -14 0 8");
-        sp.getServer().runCommand("gamemode survival @a");
-        sp.getServer().runCommand("effect give @a resistance 600 4 true");
-        sp.getServer().runCommand("effect give @a regeneration 600 4 true");
         for (int i = 0; i < 16; i++) {
             double x = -9 + (i % 8) * 2.5, z = 12 + (i / 8) * 2;
             sp.getServer().runCommand("summon zombie " + x + " 100 " + z + " {Rotation:[180f,0f]}");
@@ -99,15 +99,17 @@ public class ZombieLoreTest implements FabricClientGameTest {
             ServerPlayer player = server.getPlayerList().getPlayers().getFirst();
             for (Zombie z : server.overworld().getEntitiesOfClass(Zombie.class, player.getBoundingBox().inflate(40), ZombieTypes::isWalker)) {
                 LOG.info("ZCLORE crowd {}", Lore.describe(z));
-                z.setTarget(player);
             }
         });
-        for (int f = 0; f < 48; f++) {
+        // a noise where you stand draws them on, each at its own pace (you're in creative so they don't bite)
+        for (int f = 0; f < 72; f++) {
+            if (f % 5 == 0) {
+                sp.getServer().runOnServer(server -> Noise.emit(server.overworld(), new Vec3(0, 100, -12), 40));
+            }
             ctx.waitTicks(4);
             ctx.takeScreenshot(String.format("crowd-%03d", f));
         }
         sp.getServer().runCommand("kill @e[type=zombie]");
-        sp.getServer().runCommand("gamemode creative @a");
         ctx.waitTicks(10);
     }
 
@@ -117,26 +119,28 @@ public class ZombieLoreTest implements FabricClientGameTest {
      */
     private static void fence(ClientGameTestContext ctx, TestSingleplayerContext sp) {
         sp.getServer().runCommand("fill -8 100 2 8 101 2 zomboidcraft:chainlink");
-        sp.getServer().runCommand("tp @a 0 100 -9 0 10");
-        sp.getServer().runCommand("gamemode survival @a");
+        sp.getServer().runCommand("tp @a 0 100.5 -7 0 12");
         for (int i = 0; i < 30; i++) {
             double x = -3 + (i % 6) * 1.2, z = 4 + (i / 6) * 1.2;
             sp.getServer().runCommand("summon zombie " + x + " 100 " + z + " {Rotation:[180f,0f]}");
         }
-        for (int f = 0; f < 90; f++) {
-            sp.getServer().runOnServer(server -> {
-                ServerLevel level = server.overworld();
-                ServerPlayer player = server.getPlayerList().getPlayers().getFirst();
-                Noise.emit(level, player.position(), 30);
-            });
+        for (int f = 0; f < 150; f++) {
+            if (f % 2 == 0) {
+                sp.getServer().runOnServer(server -> Noise.emit(server.overworld(), new Vec3(0, 100, -5), 30));
+            }
             ctx.waitTicks(10);
             ctx.takeScreenshot(String.format("fence-%03d", f));
             if (f % 15 == 0) {
-                boolean standing = ctx.computeOnClient(mc -> !mc.level.getBlockState(new BlockPos(0, 100, 2)).isAir());
-                LOG.info("ZCLORE fence frame {} centre panel standing {}", f, standing);
+                int left = ctx.computeOnClient(mc -> {
+                    int n = 0;
+                    for (int x = -8; x <= 8; x++) {
+                        n += mc.level.getBlockState(new BlockPos(x, 100, 2)).isAir() ? 0 : 1;
+                    }
+                    return n;
+                });
+                LOG.info("ZCLORE fence frame {} panels standing {} of 17", f, left);
             }
         }
         sp.getServer().runCommand("kill @e[type=zombie]");
-        sp.getServer().runCommand("gamemode creative @a");
     }
 }

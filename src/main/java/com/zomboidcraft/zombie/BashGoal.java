@@ -31,12 +31,20 @@ public class BashGoal extends Goal {
     private static final java.util.Map<net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level>,
             java.util.Map<Long, long[]>> DENTS = new java.util.HashMap<>();
 
-    /** A tall fence's panel falls once a crowd of at least zombieLore.fenceThumpersRequired leans on it for this many blows. */
-    private static final int FENCE_BLOWS = 600;
+    /**
+     * A tall fence's panel falls after this many blows on it while the crowd is big enough: three or four zombies fit
+     * at a panel, so a 25-strong crowd has one down in about forty seconds.
+     */
+    private static final int FENCE_BLOWS = 120;
     /** A zombie counts as leaning on a fence for this long after its last blow (ticks). */
     private static final int FENCE_CROWD_TICKS = 40;
-    /** Who's been at each fence panel lately: zombie id to the tick of its last blow. */
-    private static final java.util.Map<Long, java.util.Map<Integer, Long>> FENCE_CROWDS = new java.util.HashMap<>();
+    /**
+     * How far along the fence the crowd is counted (blocks, either way). Zomboid's crowd piles onto one tile; ours
+     * can't stand inside each other, so the crowd is everyone at this stretch of fence.
+     */
+    private static final int FENCE_STRETCH = 4;
+    /** Who's been at a fence lately: zombie id to {panel position, tick of its last blow}. */
+    private static final java.util.Map<Integer, long[]> FENCE_CROWDS = new java.util.HashMap<>();
 
     private final Zombie zombie;
     private BlockPos block;
@@ -291,13 +299,17 @@ public class BashGoal extends Goal {
             return;
         }
         long now = level.getGameTime();
-        java.util.Map<Integer, Long> crowd = FENCE_CROWDS.computeIfAbsent(block.asLong(), k -> new java.util.HashMap<>());
-        crowd.put(zombie.getId(), now);
-        crowd.values().removeIf(at -> now - at > FENCE_CROWD_TICKS);
-        if (FENCE_CROWDS.size() > 1024) {
-            FENCE_CROWDS.values().removeIf(c -> c.values().stream().allMatch(at -> now - at > FENCE_CROWD_TICKS));
+        FENCE_CROWDS.put(zombie.getId(), new long[] {block.asLong(), now});
+        FENCE_CROWDS.values().removeIf(at -> now - at[1] > FENCE_CROWD_TICKS);
+        int crowd = 0;
+        for (long[] at : FENCE_CROWDS.values()) {
+            BlockPos p = BlockPos.of(at[0]);
+            if (Math.abs(p.getX() - block.getX()) <= FENCE_STRETCH && Math.abs(p.getZ() - block.getZ()) <= FENCE_STRETCH
+                    && Math.abs(p.getY() - block.getY()) <= 2) {
+                crowd++;
+            }
         }
-        if (crowd.size() < Math.max(1, lore.fenceThumpersRequired)) {
+        if (crowd < Math.max(1, lore.fenceThumpersRequired)) {
             return;
         }
         java.util.Map<Long, long[]> dents = DENTS.computeIfAbsent(level.dimension(), k -> new java.util.HashMap<>());
@@ -309,7 +321,6 @@ public class BashGoal extends Goal {
         dent[1] = now;
         if (dent[0] >= FENCE_BLOWS * 10L) {
             dents.remove(block.asLong());
-            FENCE_CROWDS.remove(block.asLong());
             // the panel and whatever of the fence stands over it
             BlockPos at = block;
             while (isFence(level.getBlockState(at.below()))) {
@@ -323,7 +334,7 @@ public class BashGoal extends Goal {
             Noise.emit(level, Vec3.atCenterOf(block), BANG_NOISE * 2);
             return;
         }
-        level.destroyBlockProgress(block.hashCode(), block, (int) Math.min(9, dent[0] / (FENCE_BLOWS * 1L)));
+        level.destroyBlockProgress(block.hashCode(), block, (int) Math.min(9, dent[0] / FENCE_BLOWS));
     }
 
     /**
