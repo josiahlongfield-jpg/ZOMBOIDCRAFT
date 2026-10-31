@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/multitool"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/multitool",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/multitool",
+   "part": "body"
+  }
  }
 }

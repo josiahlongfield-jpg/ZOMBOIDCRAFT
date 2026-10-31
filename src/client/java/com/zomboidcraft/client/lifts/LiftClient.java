@@ -17,7 +17,7 @@ import net.minecraft.world.phys.Vec3;
 /**
  * The lifts on your side: each car run on smoothly between the server's updates (before anything
  * else moves each tick, so you ride in step), drawn by {@link LiftRenderer}; the interact key on a
- * landing's call button calls the car, and looking at the floor panel inside a car opens it ({@link LiftScreen}).
+ * landing's call button (or its doors) calls the car, and looking at the floor panel inside a car opens it ({@link LiftScreen}).
  */
 public final class LiftClient {
     public static void register() {
@@ -25,7 +25,7 @@ public final class LiftClient {
         ClientTickEvents.START_CLIENT_TICK.register(LiftClient::start);
         ClientTickEvents.END_CLIENT_TICK.register(LiftClient::end);
         // the usable dot on call buttons, and on the floor panel inside a car
-        Interactables.blocks(state -> state.is(Lifts.BUTTON));
+        Interactables.blocks(state -> state.is(Lifts.BUTTON) || state.is(Lifts.DOOR) && !state.getValue(com.zomboidcraft.world.lifts.LiftDoorBlock.OPEN));
         Interactables.finder((client, player) -> {
             LiftCar car = LiftPhysics.inside(player);
             Vec3 at = car == null ? null : panel(car, player.getEyePosition(), player.getViewVector(1f));
@@ -79,7 +79,8 @@ public final class LiftClient {
     /** The interact key pressed: on a lift's call button, call it; inside a car, its floor panel. Returns whether it was either. */
     public static boolean interact(Minecraft client, HitResult hit) {
         if (hit instanceof BlockHitResult block && hit.getType() == HitResult.Type.BLOCK
-                && client.level.getBlockState(block.getBlockPos()).is(Lifts.BUTTON)) {
+                && (client.level.getBlockState(block.getBlockPos()).is(Lifts.BUTTON)
+                        || client.level.getBlockState(block.getBlockPos()).is(Lifts.DOOR) && !client.level.getBlockState(block.getBlockPos()).getValue(com.zomboidcraft.world.lifts.LiftDoorBlock.OPEN))) {
             ClientPlayNetworking.send(new Lifts.Call(block.getBlockPos()));
             return true;
         }

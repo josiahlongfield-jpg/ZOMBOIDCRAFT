@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/plate"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/plate",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/plate",
+   "part": "body"
+  }
  }
 }

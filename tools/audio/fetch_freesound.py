@@ -8,6 +8,7 @@ plus OUT_DIR/manifest.json (title, author, page, licence, tags, downloads) for p
 """
 import json
 import re
+import socket
 import sys
 import time
 import urllib.parse
@@ -156,8 +157,56 @@ QUERIES = {
     "car_stall": ["car engine failing to start", "car won't start", "engine stall sputter"],
     "horde": ["zombie horde", "zombie crowd", "zombies distant", "crowd of zombies moaning"],
     "flesh_impact": ["flesh impact", "body punch hit", "meat slap", "gore impact"],
+    # throwables (WEAPONS, Josiah approved 2026-10-27): weapon.throw.* events
+    "thr_throw": ["throw whoosh", "object throw", "throwing whoosh", "arm throw swish", "toss object"],
+    "thr_bottle": ["bottle smash", "glass bottle break", "beer bottle smash", "bottle shatter", "bottle break ground"],
+    "thr_can": ["can clatter", "tin can drop", "empty can bounce", "can kick", "metal can rolling"],
+    "thr_brick": ["brick drop", "brick thud", "rock thrown impact", "stone drop ground", "brick hit concrete"],
+    "thr_firecracker": ["firecracker", "firecrackers string", "firework banger", "cherry bomb", "firecracker pop"],
+    "thr_fuse": ["fuse burning", "lit fuse", "fuse sizzle", "dynamite fuse", "sparkler burning"],
+    "thr_flare": ["road flare", "flare burning", "flare ignite", "magnesium burn", "emergency flare", "flare strike"],
+    "thr_alarm": ["alarm clock ticking", "clock tick", "alarm clock ring", "bell alarm clock", "mechanical alarm clock"],
+    "thr_molotov": ["molotov", "molotov cocktail", "fire whoosh ignite", "petrol ignite", "gasoline fire burst", "fireball whoosh"],
+    "thr_grenade": ["grenade pin", "pin pull", "grenade spoon", "smoke grenade", "smoke canister hiss", "flashbang", "stun grenade"],
+    "thr_ring": ["tinnitus", "ear ringing", "high pitch ringing", "ringing ears explosion"],
+    # round 2: Josiah found none of the first pin pulls or ear ringings fitted
+    "thr_pin": ["grenade pin pull", "pulling pin", "cotter pin", "metal pin removal", "split ring", "key ring metal",
+                "safety pin metal click", "grenade arm", "grenade spoon release", "metal clip pull", "lever release spring",
+                "metal ring pull", "weapon foley metal click", "military gear click"],
+    # outbreak broadcasts and far-off events (2026-10-31, PZ review sections 14 and 15)
+    "bc_static": ["radio static", "am radio tuning", "shortwave static", "radio between stations", "radio tuning dial",
+                  "shortwave radio", "radio interference", "numbers station", "old radio static", "ham radio static"],
+    "bc_eas": ["emergency alert system", "emergency broadcast tone", "eas tone", "weather radio alert", "attention signal tone",
+               "emergency broadcast system"],
+    "meta_firefight": ["distant gunfire", "gunfight distant", "firefight distant", "distant machine gun", "gun battle distant",
+                       "war gunfire distant", "distant shootout", "gunshots far away night"],
+    "meta_scream": ["distant scream", "scream far away", "woman scream distant", "man scream distant", "scream for help",
+                    "terrified scream", "scream echo", "blood curdling scream"],
+    "meta_house_alarm": ["burglar alarm", "house alarm", "intruder alarm", "security alarm siren", "alarm bell outside",
+                         "alarm box bell", "two tone alarm", "alarm siren loop"],
+    "meta_keypad": ["keypad beep", "alarm keypad", "security keypad", "keypad code entry", "alarm panel beep"],
+    # the Harvestman's rage (2026-10-30): "a monstrous scream"
+    "crt_rage": ["monster roar", "monster scream", "creature roar", "demon scream", "beast roar", "monster rage",
+                 "creature scream", "monster screech", "horror creature roar", "giant monster", "alien scream", "mutant roar"],
+    # wave-two guns (2026-10-29): Josiah wants each its own shot, the .50 "much heavier"
+    "gun3_heavy": ["50 cal rifle", "barrett", "50 bmg", "anti material rifle", "heavy sniper shot", "50 caliber", "big rifle shot",
+                   "sniper rifle shot", "cannon rifle shot"],
+    "gun3_battle": ["m14 rifle", "fn fal", "308 rifle shot", "7.62 rifle", "battle rifle", "g3 rifle", "m1 garand", "semi auto rifle shot"],
+    "gun3_precision": ["bolt action rifle shot", "sniper shot", "remington 700", "mosin nagant", "rifle shot distant", "hunting rifle shot"],
+    "gun3_pistol": ["machine pistol", "glock 18", "full auto pistol", "uzi", "mac 10", "380 pistol", "small pistol shot", "pocket pistol",
+                    "22 pistol", "9mm shot"],
+    "gun3_quiet": ["suppressed rifle", "silenced rifle", "suppressed sniper", "silencer shot", "suppressed pistol", "silenced pistol"],
+    "gun3_launcher": ["grenade launcher", "m79", "m203", "40mm launcher", "mortar launch", "launcher thump", "potato cannon"],
+    "thr_ring2": ["tinnitus effect", "tinnitus high", "shell shock", "shellshock", "after explosion ringing",
+                  "deaf ringing", "concussion ringing", "flashbang ringing", "ears ringing", "sine whine high",
+                  "high frequency whine", "head ringing", "bomb aftermath", "dazed muffled"],
+    "thr_blast": ["grenade explosion", "explosion close", "explosion", "big explosion", "distant explosion", "explosion far",
+                  "explosion rumble", "explosion debris"],
+    "thr_fire": ["fire burning", "fire crackle", "burning fire loop", "flames burning", "gasoline fire", "bonfire crackle"],
 }
 PER_QUERY = 6
+# a stalled download once hung a whole runner until the job timed out; no single read may wait longer than this
+socket.setdefaulttimeout(30)
 UA = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) ZomboidCraft-sound-collector"}
 
 

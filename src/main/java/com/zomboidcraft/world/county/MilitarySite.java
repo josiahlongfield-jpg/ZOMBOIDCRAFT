@@ -556,7 +556,7 @@ final class MilitarySite extends Site {
             Placer t = new Placer(out, s[0], 0, s[1], 0);
             for (int i = 0; i < 6; i++) {
                 if (chance() < 0.4) {
-                    t.vehicle(2.5 + i * 5, 1, 4, chance() < 0.85 ? 0 : 180, "jeep,jeep_open,box_truck,swat_van,moving_truck", rng.nextLong());
+                    t.vehicle(2.5 + i * 5, 1, 4, chance() < 0.85 ? 0 : 180, "jeep,jeep_open,box_truck,swat_van,moving_truck,warthog", rng.nextLong());
                 } else if (chance() < 0.4) {
                     new Camp(t, rng, hit).litter(1 + i * 5, 3);
                 }

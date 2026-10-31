@@ -32,6 +32,8 @@ public final class Injuries {
 
     public static void register() {
         Body.register();
+        Medicine.register();
+        Downs.register();
         ServerLivingEntityEvents.AFTER_DAMAGE.register((entity, source, baseDamage, damage, blocked) -> {
             if (entity instanceof ServerPlayer player && !blocked && damage > 0 && on(player)) {
                 hurt(player, source, damage);
@@ -65,8 +67,11 @@ public final class Injuries {
                 body = body.fracture(r);
                 broke = r;
             }
-        } else if (source.is(DamageTypeTags.IS_PROJECTILE)) {
-            body = body.wound(Body.any(random), Wound.LACERATION, true);
+        } else if (source.is(DamageTypeTags.IS_PROJECTILE) || source.is(ModDamageTypes.BULLET)) {
+            // a round that a vest or helmet stopped bruises but doesn't cut (clothing/Clothes.bullet)
+            Region hit = com.zomboidcraft.clothing.Clothes.lastBullet(player);
+            if (hit != null) body = body.wound(hit, Wound.LACERATION, true);
+            else if (!source.is(ModDamageTypes.BULLET)) body = body.wound(Body.any(random), Wound.LACERATION, true);
         }
         Body.set(player, body);
         if (broke != null) {
@@ -74,10 +79,18 @@ public final class Injuries {
         }
     }
 
-    /** A zombie's scratch or bite on the part it reached. Returns where. */
-    public static Region zombieWound(ServerPlayer player, boolean bite) {
+    /**
+     * A zombie's scratch or bite on the part it reached. Returns where, or null when the clothes over the spot it
+     * reached stopped it (see clothing/Clothes, which wears them down for it).
+     */
+    public static @org.jetbrains.annotations.Nullable Region zombieWound(ServerPlayer player, boolean bite) {
         RandomSource random = player.getRandom();
         Region where = Body.zombieTarget(random);
+        com.zomboidcraft.clothing.Spot spot = com.zomboidcraft.clothing.Spot.roll(where, random);
+        if (com.zomboidcraft.clothing.Clothes.stops(player, where, spot, bite ? com.zomboidcraft.clothing.Clothes.Threat.BITE
+                : com.zomboidcraft.clothing.Clothes.Threat.SCRATCH)) {
+            return null;
+        }
         Wound wound = bite ? Wound.BITE : random.nextFloat() < 0.25f ? Wound.LACERATION : Wound.SCRATCH;
         Body.set(player, Body.get(player).wound(where, wound, true));
         return where;
@@ -129,10 +142,10 @@ public final class Injuries {
             Part p = body.part(r);
             if (r.leg()) {
                 if (p.fractured()) {
-                    legs -= p.splinted() ? 0.12 : 0.25;
+                    legs -= (p.splinted() ? 0.12 : 0.25) * Medicine.legSupport(player, r, true);
                     broken |= !p.splinted();
                 } else if (p.severity() >= 2) {
-                    legs -= 0.05;
+                    legs -= 0.05 * Medicine.legSupport(player, r, false);
                 }
             } else if (r.arm()) {
                 if (p.fractured()) arms -= p.splinted() ? 0.2 : 0.35;
@@ -141,7 +154,7 @@ public final class Injuries {
         }
         modify(player.getAttribute(Attributes.MOVEMENT_SPEED), LEGS, legs);
         modify(player.getAttribute(Attributes.ATTACK_DAMAGE), ARMS, arms);
-        if (broken && player.isSprinting()) player.setSprinting(false);
+        if (broken && player.isSprinting() && !MedSpecs.holds(player, "crutches")) player.setSprinting(false);
     }
 
     private static void modify(AttributeInstance attribute, Identifier id, double amount) {
@@ -157,7 +170,8 @@ public final class Injuries {
     /** True while a leg is broken and not yet splinted: no sprinting. */
     public static boolean cantSprint(net.minecraft.world.entity.player.Player player) {
         Body body = Body.get(player);
-        return body.part(Region.LEFT_LEG).severity() == 3 || body.part(Region.RIGHT_LEG).severity() == 3;
+        return body.part(Region.LEFT_LEG).severity() == 3 || body.part(Region.RIGHT_LEG).severity() == 3
+                || Medicine.painStopsSprint(player) || Downs.downed(player);
     }
 
     /** How shaky your aim is from hurt arms: 0 steady, up to 1 with both broken. */
@@ -168,7 +182,7 @@ public final class Injuries {
             Part p = body.part(r);
             shake += p.fractured() ? (p.splinted() ? 0.3f : 0.5f) : p.severity() >= 2 ? 0.15f : 0;
         }
-        return Math.min(1, shake);
+        return Math.min(1, shake * Medicine.steadiness(player) + Medicine.painShake(player) + com.zomboidcraft.survival.Mood.shake(player));
     }
 
     private Injuries() {

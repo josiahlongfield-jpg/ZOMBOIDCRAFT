@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/electrical_tape"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/electrical_tape",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/electrical_tape",
+   "part": "body"
+  }
  }
 }

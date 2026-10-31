@@ -124,7 +124,7 @@ public final class ZDetail {
     }
 
     /** Whether a shader pack (through Iris) is drawing its shadow map right now; false without Iris. */
-    private static boolean shadowPass() {
+    public static boolean shadowPass() {
         if (!irisAsked) {
             irisAsked = true;
             try {

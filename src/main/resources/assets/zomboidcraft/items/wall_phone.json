@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/wall_phone"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/wall_phone",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/wall_phone",
+   "part": "body"
+  }
  }
 }

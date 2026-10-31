@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/bedroll"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/bedroll",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/bedroll",
+   "part": "body"
+  }
  }
 }

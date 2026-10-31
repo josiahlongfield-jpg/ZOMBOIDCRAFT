@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/pickles_jar"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/pickles_jar",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/pickles_jar",
+   "part": "body"
+  }
  }
 }

@@ -32,6 +32,8 @@ public final class LootItems {
 
     public static void register() {
         Spoil.register();
+        LightItem.register();
+        InfoItem.register();
         for (LootSpec spec : LootSpecs.ALL) {
             BY_ID.put(spec.id(), spec);
         }
@@ -59,10 +61,24 @@ public final class LootItems {
         Item.Properties props = new Item.Properties().stacksTo(spec.stack()).setId(key);
         LootSpec.Food food = spec.food();
         Item item;
-        if (Packs.has(spec.id())) {
+        if (spec.id().startsWith("skillbook_")) {
+            item = new SkillBookItem(props, com.zomboidcraft.skills.Skill.valueOf(
+                    spec.id().substring("skillbook_".length()).toUpperCase(java.util.Locale.ROOT)));
+        } else if (Packs.has(spec.id())) {
             item = new PackItem(props, spec.id());
+        } else if (LightItem.SPECS.containsKey(spec.id())) {
+            item = new LightItem(props, LightItem.SPECS.get(spec.id()));
+        } else if (FireItem.STRIKES.containsKey(spec.id())) {
+            item = new FireItem(props, FireItem.STRIKES.get(spec.id()));
+        } else if (com.zomboidcraft.survival.MedSpecs.has(spec.id())) {
+            com.zomboidcraft.survival.MedSpecs.Med med = com.zomboidcraft.survival.MedSpecs.spec(spec.id());
+            item = new com.zomboidcraft.survival.MedicalItem(med.uses() > 0 ? props.durability(med.uses()) : props, spec.id());
+        } else if (LeisureItem.FUN.containsKey(spec.id())) {
+            item = new LeisureItem(props, spec.id());
+        } else if (InfoItem.KINDS.containsKey(spec.id())) {
+            item = new InfoItem(props, InfoItem.KINDS.get(spec.id()));
         } else if (food == null) {
-            item = new Item(props);
+            item = new LootItem(props);
         } else if (food.is(LootSpec.Food.CAN)) {
             // a sealed can: nothing to eat until it's opened (SealedCanItem gives the opened stack its food)
             item = new SealedCanItem(props);
@@ -73,7 +89,7 @@ public final class LootItems {
             if (left != null) {
                 props.usingConvertsTo(left);
             }
-            item = new Item(props);
+            item = new LootItem(props);
         }
         Registry.register(BuiltInRegistries.ITEM, key, item);
         ITEMS.put(spec.id(), item);

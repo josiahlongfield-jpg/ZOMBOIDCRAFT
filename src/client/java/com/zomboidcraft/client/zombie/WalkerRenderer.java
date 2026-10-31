@@ -11,6 +11,8 @@ import com.zomboidcraft.zombie.Acts;
 import com.zomboidcraft.zombie.ClimbPath;
 import com.zomboidcraft.combat.Dismember;
 import com.zomboidcraft.combat.Downed;
+import com.zomboidcraft.creature.HarvestmanEntity;
+import net.minecraft.util.Mth;
 import com.zomboidcraft.client.zombie.body.Gibs;
 import com.zomboidcraft.client.zombie.body.ZBodyAnimator;
 import com.zomboidcraft.client.zombie.body.ZBodyLayer;
@@ -149,6 +151,37 @@ public class WalkerRenderer extends HumanoidMobRenderer<Zombie, WalkerRenderStat
                         state.x, state.y, state.z, state.bodyRot, state.scale, state.variant);
             }
         }
+        held(zombie, state, partialTick);
+    }
+
+    /** Per held zombie (by id): how far it's drawn tipped back, and when that was (to ease it upright once let go). */
+    private static final java.util.Map<Integer, float[]> HELD = new java.util.HashMap<>();
+
+    /**
+     * Carried off by the Harvestman: on its back, its feet trailing on the floor, tipped up to where it grips it by the
+     * shoulders, hauled up to its mouth as it feeds (HarvestmanEntity places it and SpiderIk says how far it's tipped).
+     */
+    private static void held(Zombie zombie, WalkerRenderState state, float partialTick) {
+        HarvestmanEntity h = HarvestmanEntity.holderOf(zombie);
+        float[] e = HELD.get(zombie.getId());
+        if (h == null && e == null) {
+            state.heldLean = 0;
+            return;
+        }
+        if (e == null) {
+            e = new float[] {0, state.ageInTicks};
+            HELD.put(zombie.getId(), e);
+        }
+        float dt = Mth.clamp(state.ageInTicks - e[1], 0, 5);
+        e[1] = state.ageInTicks;
+        e[0] = h != null ? h.heldLean : Mth.lerp(1 - (float) Math.exp(-dt * 0.3f), e[0], 0);
+        if (h == null && e[0] < 0.01f || zombie.isRemoved()) {
+            HELD.remove(zombie.getId());
+        }
+        state.heldLean = e[0];
+        if (h != null) {
+            state.bodyRot = zombie.getYRot(partialTick);
+        }
     }
 
     /**
@@ -196,6 +229,12 @@ public class WalkerRenderer extends HumanoidMobRenderer<Zombie, WalkerRenderStat
     @Override
     protected void setupRotations(WalkerRenderState state, PoseStack poseStack, float bodyRot, float scale) {
         super.setupRotations(state, poseStack, bodyRot, scale);
+        if (state.heldLean > 0f) {
+            // held: tipped back about its feet (on to its back at 90 degrees), its back kept off the floor
+            poseStack.rotateDegrees(Axis.XP, (float) Math.toDegrees(state.heldLean));
+            poseStack.translate(0f, 0f, -0.13f * (float) Math.sin(state.heldLean));
+            return;
+        }
         float lie = state.swimAmount;
         if (lie > 0f && state.zbody == null) {
             poseStack.rotateDegrees(Axis.XP, lie * (state.crawler ? -90f : 90f));

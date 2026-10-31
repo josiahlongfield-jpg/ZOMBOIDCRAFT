@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/tie_down_chain"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/tie_down_chain",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/tie_down_chain",
+   "part": "body"
+  }
  }
 }

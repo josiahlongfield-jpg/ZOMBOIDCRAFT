@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/dish_soap"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/dish_soap",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/dish_soap",
+   "part": "body"
+  }
  }
 }

@@ -41,6 +41,7 @@ public final class TrainClient {
         TrackRenderer.register();
         ClientPlayNetworking.registerGlobalReceiver(TrainNet.Lines.TYPE, (payload, context) -> context.client().execute(() -> Trains.received(payload)));
         ClientPlayNetworking.registerGlobalReceiver(TrainNet.Riders.TYPE, (payload, context) -> context.client().execute(() -> riders(payload)));
+        ClientPlayNetworking.registerGlobalReceiver(TrainNet.Positions.TYPE, (payload, context) -> context.client().execute(() -> StationMaps.received(payload)));
         ClientPlayNetworking.registerGlobalReceiver(TrainNet.OttoSay.TYPE, (payload, context) -> context.client().execute(() -> OttoVoice.received(payload)));
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> client.execute(() -> {
             Trains.lines(true).clear();
@@ -48,6 +49,7 @@ public final class TrainClient {
             LAST_LOCAL.clear();
             TrainPhysics.REMOTE_STEPS.clear();
             OttoVoice.clear();
+            StationMaps.clear();
         }));
         ClientTickEvents.START_CLIENT_TICK.register(TrainClient::start);
         ClientTickEvents.END_CLIENT_TICK.register(TrainClient::end);
@@ -138,7 +140,7 @@ public final class TrainClient {
     public static boolean interact(Minecraft client, HitResult hit) {
         int train = stopButton(client.player);
         if (train >= 0) {
-            ClientPlayNetworking.send(new TrainNet.StopRequest(train));
+            ClientPlayNetworking.send(new TrainNet.StopRequest(train, stopButtonAt(client.player).close()));
             return true;
         }
         if (hit instanceof BlockHitResult block && hit.getType() == HitResult.Type.BLOCK
@@ -161,8 +163,8 @@ public final class TrainClient {
         return found == null ? null : new com.zomboidcraft.client.interact.Interactables.Spot(found.at(), 0);
     }
 
-    /** A stop button: its train's entity id, and where it is in the world. */
-    private record Button(int train, Vec3 at) {
+    /** A stop (or close-doors) button: its train's entity id, and where it is in the world. */
+    private record Button(int train, Vec3 at, boolean close) {
     }
 
     /** The stop button looked at from aboard, or null. */
@@ -173,6 +175,8 @@ public final class TrainClient {
             return null;
         }
         Vec3 eye = player.getEyePosition(), look = player.getViewVector(1f);
+        Button best = null;
+        double bestMiss = Double.MAX_VALUE;
         for (int car = 0; car < line.cars; car++) {
             TrainCar.Pose pose = TrainCar.pose(line.route, train.s(), car);
             Vec3 e = pose.toLocal(eye);
@@ -180,15 +184,19 @@ public final class TrainClient {
                 continue;
             }
             Vec3 d = pose.dirToLocal(look);
-            for (double[] b : TrainCar.STOP_BUTTONS) {
+            for (int k = 0; k < TrainCar.STOP_BUTTONS.length * 2; k++) {
+                double[] b = k % 2 == 0 ? TrainCar.STOP_BUTTONS[k / 2] : TrainCar.CLOSE_BUTTONS[k / 2];
                 Vec3 c = new Vec3(b[0], b[1], b[2]);
                 double t = c.subtract(e).dot(d);
-                if (t > 0 && t < 3 && e.add(d.scale(t)).distanceTo(c) < TrainCar.BUTTON_RADIUS) {
-                    return new Button(train.getId(), pose.toWorld(c.x, c.y, c.z));
+                double miss = e.add(d.scale(t)).distanceTo(c);
+                // the nearest the look passes, so the two buttons on a pole don't steal each other's presses
+                if (t > 0 && t < 3 && miss < TrainCar.BUTTON_RADIUS && miss < bestMiss) {
+                    bestMiss = miss;
+                    best = new Button(train.getId(), pose.toWorld(c.x, c.y, c.z), k % 2 == 1);
                 }
             }
         }
-        return null;
+        return best;
     }
 
     private TrainClient() {

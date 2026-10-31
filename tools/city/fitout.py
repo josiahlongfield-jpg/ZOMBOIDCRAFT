@@ -254,6 +254,153 @@ def exam_paper(seed):
     return t
 
 
+def teak(seed, deck=False):
+    """Weathered teak: grey-gold boards, the gaps between them dark (decking runs them the long way)."""
+    t = F.wood(seed, "oak")
+    F.tone(t, (150, 118, 82), 0.9)
+    step = 8 if deck else 16
+    for x in range(0, N, step):
+        area(t, x, 0, x + 1, N, mul=0.4, dh=-0.3)
+    if deck:
+        for y in (12, 40):
+            area(t, 0, y, N, y + 1, mul=0.7, dh=-0.1)
+    t.grime(0.1)
+    return t
+
+
+def cushion(seed, rgb):
+    """Outdoor cushion canvas: a fine weave, piped seams round the edge."""
+    t = F.plain(seed, rgb, 0.04, 0.2)
+    yy, xx = np.mgrid[0:N, 0:N]
+    t.c[(xx + yy) % 2 == 0] *= 0.95
+    t.frame(2, tuple(int(c * 0.82) for c in rgb), h=0.8)
+    t.grime(0.06)
+    return t
+
+
+def art(seed, cols):
+    """A big abstract canvas in a thin black frame: soft colour fields, a few hard bars."""
+    t = F.plain(seed, cols[0], 0.03, 0.3)
+    area(t, 4, 6, 60, 30, cols[1], smooth=0.3)
+    area(t, 4, 34, 40, 58, cols[2])
+    area(t, 44, 34, 60, 58, cols[3])
+    area(t, 10, 26, 54, 28, (24, 22, 20))
+    t.frame(2, (16, 16, 18), h=0.95, smooth=0.6)
+    return t
+
+
+def screen(seed):
+    """A cinema screen: matte white, the black masking border."""
+    t = F.plain(seed, (226, 226, 222), 0.02, 0.1)
+    t.frame(4, (14, 14, 16), h=0.9)
+    return t
+
+
+def ember(seed):
+    """A fire pit's bed: black lava rock glowing orange in the cracks."""
+    t = F.plain(seed, (30, 26, 24), 0.12, 0.2)
+    t.speckle(0.18, (240, 120, 30), 0.9, 0.05)
+    t.speckle(0.06, (255, 200, 80), 0.9, 0.05)
+    return t
+
+
+def grate(seed):
+    """A grill's top: steel bars over the dark firebox, grease on them."""
+    t = F.plain(seed, (24, 22, 22), 0.05, 0.3)
+    for x in range(3, N, 5):
+        area(t, x, 2, x + 2, N - 2, (150, 150, 152), dh=0.3, smooth=0.6, f0=60)
+    t.frame(2, (120, 120, 124), h=0.9)
+    t.grime(0.2, (30, 20, 10))
+    return t
+
+
+def velvet(seed, rgb):
+    """Crushed velvet: deep colour, a soft sheen that wanders, tufted buttons in a grid."""
+    t = F.plain(seed, rgb, 0.08, 0.15)
+    yy, xx = np.mgrid[0:N, 0:N]
+    t.c *= (0.9 + 0.12 * np.sin((xx * 0.21 + yy * 0.13)))[..., None]
+    for x in range(8, N, 16):
+        for y in range(8, N, 16):
+            area(t, x - 1, y - 1, x + 1, y + 1, tuple(int(c * 0.5) for c in rgb), dh=-0.4)
+    t.grime(0.05)
+    return t
+
+
+def neon(seed, rgb):
+    """A neon tube's glow: hot white core fading to the colour."""
+    t = F.plain(seed, rgb, 0.02, 0.05)
+    yy, xx = np.mgrid[0:N, 0:N]
+    core = np.exp(-((yy - N / 2) / (N / 7)) ** 2)
+    t.c = t.c * (0.7 + 0.3 * core[..., None]) + 255 * 0.45 * core[..., None]
+    return t
+
+
+def felt(seed):
+    """Billiard felt: deep green, nap scuffed paler where the balls ran."""
+    t = F.plain(seed, (28, 96, 52), 0.05, 0.05)
+    t.speckle(0.04, (60, 130, 80), 0.3, 0.0)
+    t.grime(0.05)
+    return t
+
+
+def sheet(seed):
+    """A dust sheet thrown over a car: off-white cotton, folds and dust."""
+    t = F.plain(seed, (206, 200, 186), 0.06, 0.2)
+    yy, xx = np.mgrid[0:N, 0:N]
+    t.c *= (0.88 + 0.12 * np.sin(xx * 0.35 + np.sin(yy * 0.2) * 2))[..., None]
+    t.grime(0.15, (120, 110, 90))
+    return t
+
+
+def cedar(seed):
+    """Sauna cedar: pale pinkish-gold slats with dark gaps."""
+    t = F.wood(seed, "oak")
+    F.tone(t, (196, 150, 104), 0.9)
+    for y in range(0, N, 10):
+        area(t, 0, y, N, y + 1, mul=0.45, dh=-0.3)
+    return t
+
+
+def slats(seed):
+    """A feature wall of vertical oak slats, warm, with dark gaps between."""
+    t = F.wood(seed, "oak")
+    F.tone(t, (182, 132, 84), 0.9)
+    for x in range(0, N, 6):
+        area(t, x, 0, x + 2, N, mul=0.35, dh=-0.4)
+    return t
+
+
+def firm_sign(seed):
+    """A law firm's sign: black lacquer, the scales of justice and a name bar in brass."""
+    t = F.plain(seed, (18, 18, 20), 0.02, 0.6)
+    gold = (206, 168, 82)
+    area(t, 31, 10, 33, 40, gold)
+    area(t, 16, 14, 48, 16, gold)
+    for cx in (18, 46):
+        area(t, cx - 6, 26, cx + 6, 28, gold)
+        area(t, cx - 1, 16, cx + 1, 26, gold)
+    area(t, 24, 40, 40, 42, gold)
+    area(t, 10, 48, 54, 52, gold)
+    t.frame(2, (120, 96, 50), h=0.9)
+    return t
+
+
+def iron(seed):
+    """Wrought iron: near-black, hammered, a dull sheen on the high spots."""
+    t = F.plain(seed, (34, 34, 36), 0.1, 0.5)
+    t.speckle(0.08, (70, 70, 74), 0.4, 0.1)
+    return t
+
+
+def roses(seed):
+    """A climbing rose: dense dark leaves, pink blooms scattered through them."""
+    t = F.plain(seed, (46, 92, 40), 0.18, 0.1)
+    t.speckle(0.25, (30, 66, 28), 0.6, 0.1)
+    t.speckle(0.07, (226, 92, 150), 0.95, 0.2)
+    t.speckle(0.03, (250, 170, 200), 0.95, 0.2)
+    return t
+
+
 def textures():
     T = {}
     T["of_rubber"] = lambda: rubber(9901)
@@ -277,6 +424,27 @@ def textures():
     T["of_vinyl_teal"] = lambda: vinyl(9950, (60, 128, 132))
     T["of_vinyl_black"] = lambda: vinyl(9951, (36, 36, 40))
     T["of_exam_paper"] = lambda: exam_paper(9952)
+    T["of_teak"] = lambda: teak(9960)
+    T["of_deck"] = lambda: teak(9961, deck=True)
+    T["of_cushion"] = lambda: cushion(9962, (214, 206, 188))
+    T["of_cushion_navy"] = lambda: cushion(9963, (44, 56, 82))
+    T["of_art_a"] = lambda: art(9964, ((222, 214, 196), (196, 88, 52), (40, 62, 92), (210, 172, 70)))
+    T["of_art_b"] = lambda: art(9965, ((30, 34, 40), (120, 150, 160), (200, 196, 180), (150, 40, 44)))
+    T["of_screen"] = lambda: screen(9966)
+    T["of_ember"] = lambda: ember(9967)
+    T["of_grate"] = lambda: grate(9968)
+    T["of_velvet_red"] = lambda: velvet(9970, (120, 18, 34))
+    T["of_velvet_purple"] = lambda: velvet(9971, (70, 24, 96))
+    T["of_neon_pink"] = lambda: neon(9972, (240, 40, 170))
+    T["of_neon_blue"] = lambda: neon(9973, (40, 150, 250))
+    T["of_felt"] = lambda: felt(9974)
+    T["of_sheet"] = lambda: sheet(9975)
+    T["of_cedar"] = lambda: cedar(9976)
+    T["of_velvet_green"] = lambda: velvet(9977, (30, 86, 50))
+    T["of_slats"] = lambda: slats(9978)
+    T["of_firm_sign"] = lambda: firm_sign(9979)
+    T["of_iron"] = lambda: iron(9980)
+    T["of_roses"] = lambda: roses(9981)
     return T
 
 
@@ -358,7 +526,7 @@ def blocks():
     # the DJ booth faces the crowd north; the DJ stands behind it
     add("of_dj_booth", [[0, 0, 0, 16, 11, 2.5, face("of_dj_front", "of_dj_front")], [0, 0, 2.5, 16, 10, 14, "of_dj_front"],
                         [0, 10, 1, 16, 11, 15, {"up": "of_decks", "side": black, "down": black}],
-                        [2, 11, 4, 14, 11.6, 12, {"up": "of_decks", "side": black}]], "DJ Booth", "METAL", loot="storage")
+                        [2, 11, 4, 14, 11.6, 12, {"up": "of_decks", "side": black}]], "DJ Booth", "METAL", loot="dj")
     add("of_speaker", [[1.5, 0, 2, 14.5, 16, 14, face("of_speaker", "of_dj_front", black)]], "Speaker Stack", "WOOD")
     add("of_high_table", [[7, 0, 7, 9, 11, 9, chrome], [4, 0, 4, 12, 0.6, 12, chrome],
                           [2, 11, 2, 14, 12, 14, {"up": "home_vanity_top", "side": black, "down": black}]], "High Table", "METAL")
@@ -392,6 +560,206 @@ def blocks():
                           [3, 9, 1, 13, 9.3, 15, {"up": "of_exam_paper", "side": "of_exam_paper"}],
                           [2, 9, 12, 14, 12, 15.5, "of_vinyl_teal"], [2.5, 12, 14.5, 13.5, 13.5, 15.5, {"side": "of_exam_paper", "up": "of_exam_paper"}]],
         "Exam Couch", "WOOL")
+    # ---- the penthouse and its terrace
+    tk, cu, cn = "of_teak", "of_cushion", "of_cushion_navy"
+    add("of_deck", None, "Teak Decking", "WOOD", rotate=None, tex={"up": "of_deck", "side": "of_teak", "down": "floor_concrete"})
+    # outdoor sofa: sits facing north, its back against z = 16
+    add("of_out_sofa", [[0.5, 0, 1, 15.5, 4, 15, tk], [1, 4, 1, 15, 6.5, 13, cu], [0.5, 4, 13, 15.5, 12, 15.5, cu], [0, 0, 1, 1.5, 8, 16, tk],
+                        [14.5, 0, 1, 16, 8, 16, tk], [3, 6.5, 11, 7, 10, 13, cn], [9, 6.5, 11, 13, 10, 13, cn]], "Outdoor Sofa", "WOOL")
+    add("of_daybed", [[0, 0, 0, 16, 4, 16, tk], [0.5, 4, 0.5, 15.5, 7, 15.5, cu], [0, 4, 14, 16, 13, 16, tk], [2, 7, 11, 7, 10, 14, cn],
+                      [9, 7, 11, 14, 10, 14, cn], [0, 13, 0, 1, 16, 1, tk], [15, 13, 0, 16, 16, 1, tk], [0, 15, 0, 16, 16, 16, cu]], "Daybed", "WOOL")
+    add("of_patio_table", [[0, 11, 0, 16, 12, 16, {"up": "of_deck", "side": tk, "down": tk}], [1, 0, 1, 3, 11, 3, tk], [13, 0, 1, 15, 11, 3, tk],
+                           [1, 0, 13, 3, 11, 15, tk], [13, 0, 13, 15, 11, 15, tk]], "Patio Table", "WOOD", rotate="axis")
+    add("of_patio_chair", [[3, 0, 2, 4.5, 7, 3.5, tk], [11.5, 0, 2, 13, 7, 3.5, tk], [3, 0, 12, 4.5, 15, 13.5, tk], [11.5, 0, 12, 13, 15, 13.5, tk],
+                           [3, 6, 2, 13, 7, 13.5, {"up": "of_deck", "side": tk}], [3.5, 7, 2.5, 12.5, 8, 12, cu], [3, 9, 12.5, 13, 15, 13.5, tk]],
+        "Patio Chair", "WOOD")
+    add("of_fire_pit", [[2, 0, 2, 14, 5, 14, "pt_stone_rough"], [1, 4, 1, 15, 5, 15, "stone_trim"], [3, 5, 3, 13, 5.5, 13, "of_ember"]],
+        "Fire Pit", "STONE", rotate=None, light=11)
+    add("of_bbq", [[1, 0, 3, 15, 9, 14, face(steel, steel)], [1, 9, 3, 15, 10, 14, {"up": "of_grate", "side": steel}], [1, 10, 11, 15, 15, 14, chrome],
+                   [15, 8, 4, 16, 9, 13, steel], [0, 8, 4, 1, 9, 13, steel], [4, 6, 2, 12, 7, 3, chrome]], "Outdoor Grill", "METAL", loot="grill")
+    add("of_out_counter", [[0, 0, 1, 16, 14, 16, {"north": "home_drw_white", "side": steel, "up": steel}], [0, 14, 0, 16, 15, 16, "marble_white"]],
+        "Outdoor Kitchen", "STONE", loot="grill")
+    add("of_parasol_pole", [[7.5, 0, 7.5, 8.5, 16, 8.5, chrome], [5, 0, 5, 11, 1, 11, steel]], "Parasol", "METAL", rotate=None, decor=True)
+    add("of_parasol_top", [[7.5, 0, 7.5, 8.5, 6, 8.5, chrome], [0, 4, 0, 16, 5, 16, cu], [3, 5, 3, 13, 6, 13, cu], [6, 6, 6, 10, 7, 10, cu]],
+        "Parasol", "WOOL", rotate=None, decor=True)
+    add("of_tree_pot", [[3, 0, 3, 13, 9, 13, "home_terracotta"], [3.5, 8.6, 3.5, 12.5, 9, 12.5, "leaf_litter"], [7, 9, 7, 9, 16, 9, "pole_wood"]],
+        "Olive Tree", "STONE", rotate=None)
+    add("of_tree_crown", [[7, 0, 7, 9, 5, 9, "pole_wood"], [2, 3, 2, 14, 12, 14, "gc_leaves_2"], [4, 12, 4, 12, 15, 12, "gc_leaves_2"],
+                          [0, 5, 4, 3, 10, 11, "gc_leaves_3"], [13, 5, 5, 16, 10, 12, "gc_leaves_3"]], "Olive Tree", "GRASS", rotate=None, render="cutout")
+    add("of_pergola_post", [[6, 0, 6, 10, 16, 10, tk]], "Pergola Post", "WOOD", rotate=None)
+    add("of_pergola_beam", [[0, 10, 6, 16, 16, 10, tk], [2, 14, 0, 4, 16, 16, tk], [7, 14, 0, 9, 16, 16, tk], [12, 14, 0, 14, 16, 16, tk]],
+        "Pergola", "WOOD", rotate="axis")
+    add("of_telescope", [[7, 0, 7, 9, 9, 9, black], [4, 0, 7.5, 7, 1, 8.5, black], [9, 0, 7.5, 12, 1, 8.5, black], [7.5, 0, 9, 8.5, 1, 12, black],
+                         [6, 9, 2, 10, 12, 14, "fit_brass"], [6.5, 9.5, 0.5, 9.5, 11.5, 2, black], [7, 12, 10, 9, 13.5, 13, black]], "Telescope", "METAL")
+    lac = "home_plastic_black"
+    keys = {"north": "home_piano_keys", "side": lac, "up": "home_piano_keys", "down": lac}
+    add("of_grand_piano_l", [[0, 8, 0, 16, 12, 16, lac], [1, 0, 1, 3, 8, 3, lac], [1, 0, 13, 3, 8, 15, lac], [0, 7, -2, 16, 9, 0, keys],
+                             [2, 12, 3, 16, 13, 15, lac], [14, 12, 3, 15, 16, 4, lac], [6, 0, 0, 10, 5, 1, "fit_brass"]], "Grand Piano", "WOOD")
+    add("of_grand_piano_r", [[0, 8, 0, 10, 12, 12, lac], [8, 0, 9, 10, 8, 11, lac], [0, 7, -2, 6, 9, 0, keys], [0, 12, 3, 9, 13, 11, lac]],
+        "Grand Piano", "WOOD")
+    add("of_art_a", [[0, 2, 15.2, 16, 16, 16, face("of_art_a", black)]], "Painting", "WOOD", decor=True)
+    add("of_art_b", [[0, 2, 15.2, 16, 16, 16, face("of_art_b", black)]], "Painting", "WOOD", decor=True)
+    add("of_sculpture", [[4, 0, 4, 12, 9, 12, "marble_white"], [5.5, 9, 7, 8, 16, 9.5, "bk_bronze"], [7, 12, 6, 11, 15, 10, "bk_bronze"],
+                         [9, 9, 6.5, 10.5, 13, 9, "bk_bronze"]], "Sculpture", "STONE")
+    add("of_screen", [[0, 0, 15.2, 16, 16, 16, face("of_screen", black)]], "Cinema Screen", "WOOL", decor=True)
+    add("of_island", [[0, 0, 1, 16, 14, 15, face("home_drw_white", "home_white")], [0, 14, 0, 16, 15, 16, "marble_white"]], "Kitchen Island", "STONE",
+        loot="home_cupboard")
+    # ---- the millionaire penthouses: the club stage, the collector's cars, billiards, cards, the sauna
+    brass, vr, vp = "fit_brass", "of_velvet_red", "of_velvet_purple"
+    add("of_dance_pole", [[7, 0, 7, 9, 16, 9, brass], [5, 0, 5, 11, 0.5, 11, brass]], "Dance Pole", "METAL", rotate=None)
+    add("of_pole_top", [[7, 0, 7, 9, 15, 9, brass], [5, 15, 5, 11, 16, 11, brass]], "Dance Pole", "METAL", rotate=None)
+    # the velvet booth: sits facing north, its high back along z = 16
+    add("of_booth", [[0, 0, 2, 16, 7, 15, face(vr, vr)], [0, 7, 3, 16, 9, 14, vr], [0, 0, 13, 16, 18, 16, vr], [0, 18, 13, 16, 19, 16, brass]],
+        "Velvet Booth", "WOOL")
+    add("of_booth_purple", [[0, 0, 2, 16, 7, 15, face(vp, vp)], [0, 7, 3, 16, 9, 14, vp], [0, 0, 13, 16, 18, 16, vp], [0, 18, 13, 16, 19, 16, brass]],
+        "Velvet Booth", "WOOL")
+    add("of_neon_pink", [[0, 6, 15, 16, 8, 16, "of_neon_pink"], [0, 12, 15, 16, 14, 16, "of_neon_pink"]], "Neon Tube", "GLASS", decor=True, light=12)
+    add("of_neon_blue", [[0, 6, 15, 16, 8, 16, "of_neon_blue"], [0, 12, 15, 16, 14, 16, "of_neon_blue"]], "Neon Tube", "GLASS", decor=True, light=12)
+    add("of_champagne", [[4, 0, 4, 12, 10, 12, chrome], [5, 10, 5, 11, 11, 11, "of_ember"], [6, 10, 6, 8, 16, 8, "home_bottle_green"],
+                         [9, 10, 8, 11, 15, 10, "home_bottle_green"]], "Champagne Bucket", "METAL", rotate=None)
+    # a dust-sheeted car, three blocks nose to tail along its axis
+    sh = "of_sheet"
+    add("of_car_sheet_f", [[1, 0, 0, 15, 8, 16, sh], [2, 8, 0, 14, 9, 16, sh], [0, 0, 3, 1, 5, 7, "gs_tyre"], [15, 0, 3, 16, 5, 7, "gs_tyre"]],
+        "Covered Car", "WOOL", rotate="axis")
+    add("of_car_sheet_m", [[1, 0, 0, 15, 9, 16, sh], [2, 9, 2, 14, 18, 14, sh], [3, 18, 4, 13, 19, 12, sh]], "Covered Car", "WOOL", rotate="axis")
+    add("of_car_sheet_b", [[1, 0, 0, 15, 9, 16, sh], [2, 9, 0, 14, 10, 13, sh], [0, 0, 9, 1, 5, 13, "gs_tyre"], [15, 0, 9, 16, 5, 13, "gs_tyre"]],
+        "Covered Car", "WOOL", rotate="axis")
+    wd = "home_wood_dark"
+    add("of_pool_table_l", [[0, 10, 0, 16, 13, 16, {"up": "of_felt", "side": wd, "down": wd}], [0, 13, 0, 16, 14, 2, wd], [0, 13, 14, 16, 14, 16, wd],
+                            [0, 13, 0, 2, 14, 16, wd], [2, 0, 2, 5, 10, 5, wd], [2, 0, 11, 5, 10, 14, wd]], "Pool Table", "WOOD")
+    add("of_pool_table_r", [[0, 10, 0, 16, 13, 16, {"up": "of_felt", "side": wd, "down": wd}], [0, 13, 0, 16, 14, 2, wd], [0, 13, 14, 16, 14, 16, wd],
+                            [14, 13, 0, 16, 14, 16, wd], [11, 0, 2, 14, 10, 5, wd], [11, 0, 11, 14, 10, 14, wd]], "Pool Table", "WOOD")
+    add("of_card_table", [[1, 11, 1, 15, 12, 15, {"up": "of_felt", "side": wd, "down": wd}], [0, 10, 0, 16, 11, 16, wd], [7, 0, 7, 9, 10, 9, wd],
+                          [4, 0, 4, 12, 1, 12, wd], [5, 12, 6, 8, 12.4, 9, "home_white"]], "Card Table", "WOOD", rotate=None, loot="dj")
+    add("of_humidor", [[2, 0, 3, 14, 14, 13, face("dn_menucase", wd)], [1, 14, 2, 15, 15, 14, wd]], "Humidor", "WOOD", loot="dj")
+    add("of_sauna_bench", [[0, 6, 0, 16, 8, 16, {"up": "of_cedar", "side": "of_cedar"}], [1, 0, 1, 3, 6, 15, "of_cedar"], [13, 0, 1, 15, 6, 15, "of_cedar"]],
+        "Sauna Bench", "WOOD", rotate="axis")
+    add("of_sauna_stove", [[2, 0, 2, 14, 9, 14, steel], [3, 9, 3, 13, 12, 13, "pt_stone_rough"], [5, 12, 5, 11, 13, 11, "of_ember"]],
+        "Sauna Stove", "METAL", rotate=None, light=7)
+    # the pool's lights: a lit lens set in the tile wall, facing into the water
+    add("of_pool_light", [[0, 0, 1, 16, 16, 16, {"all": "of_pool_tile"}], [4, 5, 0, 12, 11, 1, chrome], [5, 6, -0.5, 11, 10, 0, "of_neon_blue"]],
+        "Pool Light", "STONE", light=9)
+    add("of_car_lift", None, "Car Lift Platform", "METAL", rotate=None, tex={"up": "deck_steel", "side": steel, "down": steel})
+    add("of_cedar_wall", None, "Cedar Lining", "WOOD", rotate=None, tex={"all": "of_cedar"})
+    add("of_carpet_red", None, "Red Carpet", "WOOL", rotate=None, tex={"up": "cv_carpet_red", "side": "of_velvet_red", "down": "of_velvet_red"})
+    add("of_velvet_wall", None, "Velvet Wall", "WOOL", rotate=None, tex={"all": "of_velvet_red"})
+    # ---- the penthouse crown: stainless steel like the Chrysler's, a needle spire, stone finials
+    add("of_deco_steel", None, "Stainless Cladding", "METAL", rotate=None, tex={"all": chrome})
+    add("of_deco_brass", None, "Brass Cladding", "METAL", rotate=None, tex={"all": brass})
+    add("of_spire_a", [[4, 0, 4, 12, 16, 12, chrome], [3.5, 0, 3.5, 12.5, 1, 12.5, chrome]], "Spire", "METAL", rotate=None)
+    add("of_spire_b", [[5, 0, 5, 11, 16, 11, chrome]], "Spire", "METAL", rotate=None)
+    add("of_spire_c", [[6, 0, 6, 10, 16, 10, chrome], [5.5, 7, 5.5, 10.5, 8, 10.5, chrome]], "Spire", "METAL", rotate=None)
+    add("of_spire_tip", [[6.5, 0, 6.5, 9.5, 6, 9.5, chrome], [7, 6, 7, 9, 11, 9, chrome], [7.5, 11, 7.5, 8.5, 16, 8.5, chrome]], "Spire", "METAL",
+        rotate=None)
+    # the crown's sunburst: a module 4 blocks wide by 3 high, a half-round arch of raised rim
+    # with rays fanning out from its hub and lit glass between them, cut into twelve blocks; each
+    # has a solid back and the relief on its north face. In steel, brass or stone.
+    import math
+
+    def burst(px, py):
+        dx, r = px - 32, math.hypot(px - 32, py)
+        if r >= 34:
+            return "bg"
+        if r >= 30 or r < 5:
+            return "rim"
+        a = math.atan2(py, dx)
+        return "ray" if int(a / (math.pi / 9)) % 2 == 0 else "glass"
+
+    depth = {"bg": 1.5, "rim": 4, "ray": 3, "glass": 0.5}
+    for mat, clad in (("steel", chrome), ("brass", brass), ("stone", "stone_trim")):
+        for col in range(4):
+            for row in range(3):
+                boxes = [[0, 0, 4, 16, 16, 16, clad]]
+                for ly in range(16):
+                    runs, cur, start = [], None, 0
+                    for lx in range(17):
+                        c = burst(col * 16 + lx + 0.5, row * 16 + ly + 0.5) if lx < 16 else None
+                        if c != cur:
+                            if cur is not None:
+                                runs.append((start, lx, cur))
+                            cur, start = c, lx
+                    for x0, x1, c in runs:
+                        tex = "window_lit" if c == "glass" else clad
+                        # seen from the north the block's left is +x: mirror so col runs left to right
+                        boxes.append([16 - x1, ly, 4 - depth[c], 16 - x0, ly + 1, 4, tex])
+                add(f"of_burst_{mat}_{col}{row}", boxes, "Sunburst Panel", "METAL", light=6)
+        # the band at each tier's foot, after the Chrysler's: a drip moulding over a row of raised
+        # chevrons on a bead, lit glass in the V's; its corner turns the moulding round both faces
+        band = [[0, 0, 4, 16, 16, 16, clad], [0, 13, 0.5, 16, 16, 4, clad], [0, 0, 2.5, 16, 1.5, 4, clad]]
+        for ly in range(2, 12):
+            runs, cur, start = [], None, 0
+            for lx in range(17):
+                c = None
+                if lx < 16:
+                    d = abs((lx + 0.5) % 8 - 4)
+                    arm = abs(d - (11.5 - ly - 0.5) * 0.36)
+                    c = "ray" if arm < 0.9 else "glass" if d < (11.5 - ly - 0.5) * 0.36 - 0.9 and ly > 4 else None
+                if c != cur:
+                    if cur is not None:
+                        runs.append((start, lx, cur))
+                    cur, start = c, lx
+            for x0, x1, c in runs:
+                band.append([x0, ly, 2 if c == "ray" else 3.5, x1, ly + 1, 4, clad if c == "ray" else "window_lit"])
+        add(f"of_chevron_{mat}", band, "Chevron Band", "METAL", light=4)
+        add(f"of_chevron_corner_{mat}", [[0, 0, 0, 16, 13, 16, clad], [-0.5, 13, -0.5, 16.5, 16, 16.5, clad], [1, 0, 1, 15, 2, 15, clad]],
+            "Chevron Band", "METAL", rotate=None)
+        # fluted cladding between the bursts: three ribs on a plate
+        add(f"of_flute_{mat}", [[0, 0, 3, 16, 16, 16, clad], [1, 0, 1, 4, 16, 3, clad], [6.5, 0, 1, 9.5, 16, 3, clad], [12, 0, 1, 15, 16, 3, clad]],
+            "Fluted Cladding", "METAL")
+    # the observatory dome's ribs: standing-seam verdigris copper
+    add("of_copper_rib", None, "Copper Dome Rib", "METAL", rotate=None, tex={"side": "cv_copper_seam", "up": "cv_copper_seam", "down": "cv_copper"})
+    # ---- from the tower-interior photos (2026-10-29)
+    marble = {"north": "bk_marble_white", "side": "bk_marble_white", "up": "bk_marble_white", "down": "bk_marble_white"}
+    # the clinic's reception: a marble front on a lit plinth, a wood top overhanging both sides
+    add("of_reception_marble", [[0, 1.5, 2, 16, 14, 16, "home_white"], [0, 1.5, 1.2, 16, 14, 2, marble], [1, 0, 2.5, 15, 1.5, 15, "window_lit"],
+                                [0, 14, 0.5, 16, 15.5, 16, "of_teak"], [0, 9, 13, 16, 10, 16, "of_teak"]], "Reception Desk", "STONE", light=5)
+    # a feature wall of oak slats behind a reception, and the firm's sign on it
+    add("of_slat_wall", [[0, 0, 14, 16, 16, 16, "of_teak"]] + [[x, 0, 12.5, x + 2, 16, 14, "of_slats"] for x in range(1, 16, 3)],
+        "Slatted Wall", "WOOD")
+    add("of_firm_sign", [[1, 4, 14.5, 15, 12, 16, {"north": "of_firm_sign", "side": "of_iron"}]], "Firm Sign", "METAL", decor=True)
+    # the vitals monitor on its stand: five-star base, pole, the monitor, a basket of cuffs
+    add("of_vitals_stand", [[4, 0, 7.4, 12, 0.6, 8.6, chrome], [7.4, 0, 4, 8.6, 0.6, 12, chrome], [7.4, 0.6, 7.4, 8.6, 11, 8.6, chrome],
+                            [5, 10, 6, 11, 15, 10, {"north": "of_screen", "side": "home_plastic_beige", "up": "home_plastic_beige", "down": "home_plastic_beige"}],
+                            [5.5, 6, 8.6, 10.5, 8, 11, steel]], "Vitals Monitor", "METAL")
+    # the gym's elliptical: a low rail, the flywheel housing at the front, two arms and the console
+    add("of_elliptical", [[6, 0, 1, 10, 1.5, 15, "bunk_grey"], [4, 1.5, 9, 6.5, 2.5, 13, black], [9.5, 1.5, 9, 12, 2.5, 13, black],
+                          [5, 0, 1, 11, 6, 5, {"side": "home_plastic_black", "north": "of_plate", "up": "bunk_grey", "down": "bunk_grey"}],
+                          [3.5, 2.5, 3, 4.5, 14, 4, "bunk_grey"], [11.5, 2.5, 3, 12.5, 14, 4, "bunk_grey"], [6, 9, 2, 10, 13, 4, {"north": "of_console", "side": black}]],
+        "Elliptical Trainer", "METAL")
+    # a drinking fountain on the wall: a steel basin on a bracket, the bubbler
+    add("of_drink_fountain", [[3, 7, 9, 13, 10, 16, steel], [7, 2, 14, 9, 7, 16, steel], [7.5, 10, 11, 8.5, 11.5, 12, chrome]], "Drinking Fountain",
+        "METAL")
+    # bar stools in green velvet, after the pub photos: turned wood legs, a brass footrest
+    add("of_stool_velvet", [[4.5, 0, 4.5, 5.5, 10, 5.5, "of_teak"], [10.5, 0, 4.5, 11.5, 10, 5.5, "of_teak"], [4.5, 0, 10.5, 5.5, 10, 11.5, "of_teak"],
+                            [10.5, 0, 10.5, 11.5, 10, 11.5, "of_teak"], [4.5, 4, 4.5, 11.5, 4.6, 11.5, brass],
+                            [3.5, 10, 3.5, 12.5, 13, 12.5, {"up": "of_velvet_green", "side": "of_velvet_green", "down": "of_teak"}]], "Velvet Bar Stool", "WOOD",
+        rotate=None)
+    # the wine cellar's cask on its cradle, lying along z: oak staves, two iron hoops, the head
+    cask = []
+    for i, (h0, h1) in enumerate(((1, 13), (2.5, 14.5), (3.5, 15))):
+        w0 = 8 - (h1 - h0) / 2
+        cask.append([w0, h0, 1 + i * 0.5, 16 - w0, h1, 15 - i * 0.5, "of_teak"])
+    cask += [[2, 0, 3, 14, 1.5, 4, "of_teak"], [2, 0, 12, 14, 1.5, 13, "of_teak"], [1.8, 1, 4.5, 14.2, 15.2, 5, "of_iron"],
+             [1.8, 1, 11, 14.2, 15.2, 11.5, "of_iron"], [7, 6, 0.5, 9, 8, 1, "of_iron"]]
+    add("of_wine_cask", cask, "Wine Cask", "WOOD", rotate="axis", loot="liquor")
+    # the grand stair's balustrade: wrought-iron balusters and scrolls under a brass handrail, along x
+    scroll = [[0, 14, 7, 16, 15.5, 9, brass], [0, 1, 7.5, 16, 2, 8.5, "of_iron"]]
+    scroll += [[x, 2, 7.6, x + 1, 14, 8.4, "of_iron"] for x in (0.5, 7.5, 14.5)]
+    for cx in (4, 11.5):
+        scroll += [[cx - 2.5, 5, 7.7, cx + 2.5, 5.8, 8.3, "of_iron"], [cx - 2.5, 10.2, 7.7, cx + 2.5, 11, 8.3, "of_iron"],
+                   [cx - 3, 5.8, 7.7, cx - 2.2, 10.2, 8.3, "of_iron"], [cx + 2.2, 5.8, 7.7, cx + 3, 10.2, 8.3, "of_iron"],
+                   [cx - 0.4, 7.4, 7.7, cx + 0.4, 8.6, 8.3, brass]]
+    add("of_iron_scroll", scroll, "Iron Balustrade", "METAL", rotate="axis")
+    add("of_newel_brass", [[5, 0, 5, 11, 1.5, 11, "of_iron"], [6, 1.5, 6, 10, 13, 10, "of_iron"], [5.5, 13, 5.5, 10.5, 14, 10.5, "of_iron"],
+                           [6, 14, 6, 10, 16, 10, brass]], "Newel Post", "METAL", rotate=None)
+    # the terrace: a pergola post with a climbing rose round it, and a round timber bench round a planted bed
+    add("of_rose_post", [[6, 0, 6, 10, 16, 10, "of_teak"], [4, 3, 4, 12, 9, 12, "of_roses"], [5, 9, 3.5, 11, 15, 9, "of_roses"],
+                         [3.5, 11, 7, 9, 16, 12.5, "of_roses"]], "Climbing Rose", "GRASS", rotate=None)
+    add("of_planter_bench", [[0, 0, 0, 16, 7, 16, {"side": "of_slats", "up": "of_teak", "down": "of_teak"}], [2, 7, 2, 14, 8, 14, "bp_grass_a"],
+                             [3.5, 8, 3.5, 12.5, 14, 12.5, "of_roses"], [5.5, 14, 5.5, 10.5, 16, 10.5, "of_roses"]], "Planter Bench", "WOOD",
+        rotate=None)
+    add("of_finial", [[2, 0, 2, 14, 4, 14, "stone_trim"], [3, 4, 3, 13, 8, 13, "stone_trim"], [4.5, 8, 4.5, 11.5, 12, 11.5, "stone_trim"],
+                      [6, 12, 6, 10, 15, 10, "stone_trim"], [7, 15, 7, 9, 16, 9, chrome]], "Finial", "STONE", rotate=None)
     return out
 
 

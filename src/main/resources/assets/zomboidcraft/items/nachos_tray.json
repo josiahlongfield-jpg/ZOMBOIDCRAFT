@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/nachos_tray"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/nachos_tray",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/nachos_tray",
+   "part": "body"
+  }
  }
 }

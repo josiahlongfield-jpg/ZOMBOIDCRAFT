@@ -1,0 +1,77 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rl_steel_flange": "zomboidcraft:block/city/rl_steel_flange",
+    "particle": "zomboidcraft:block/city/rl_steel_flange"
+  },
+  "elements": [
+    {
+      "from": [
+        -16,
+        -0.25,
+        -2
+      ],
+      "to": [
+        0,
+        16.25,
+        18
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rl_steel_flange",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#rl_steel_flange",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#rl_steel_flange",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#rl_steel_flange",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#rl_steel_flange",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#rl_steel_flange",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    }
+  ]
+}

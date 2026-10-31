@@ -4,6 +4,7 @@ import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.building.DigRules;
 import com.zomboidcraft.client.sound.UiSounds;
 import com.zomboidcraft.skills.Skill;
+import com.zomboidcraft.skills.SkillBooks;
 import com.zomboidcraft.skills.Skills;
 import com.zomboidcraft.survival.Treatment;
 import java.util.List;
@@ -56,6 +57,18 @@ final class SkillsPage {
                     l -> "Right now:" + wall(DigRules.Tier.MASONRY, l).substring(1)),
             new Info(Skill.METALWORKING, "Building", "Cut up metal furniture and fittings with a propane torch. It leaves scrap metal.", wallPerks(DigRules.Tier.METAL),
                     l -> "Right now:" + wall(DigRules.Tier.METAL, l).substring(1)),
+            new Info(Skill.MECHANICS, "Survival", "Take cars apart and put them back together. Every part you fit or pull teaches it, and Laine's Auto Manuals "
+                    + "teach you each class of car (standard, commercial, performance).", List.of(
+                    new Perk(0, "Fluids, the battery, tyres on a jack, headlights"),
+                    new Perk(1, "Spark plugs, horn, tail lights; you can tell which part won't let it start"),
+                    new Perk(2, "Fan belt, bonnet and boot lid"),
+                    new Perk(3, "Oil changes, brake pads, doors"),
+                    new Perk(4, "Radiator, alternator, starter motor, wheel rims"),
+                    new Perk(5, "Suspension, exhaust, steering rack"),
+                    new Perk(6, "Fuel tank and pump, brake fluid"),
+                    new Perk(7, "Gearbox"),
+                    new Perk(8, "Engine rebuilds and swaps")),
+                    l -> "Right now: you can work on parts up to level " + l + "."),
             new Info(Skill.PILOTING, "Survival", "Fly the jets and the helicopter. Time in the air and clean landings teach it; "
                     + "reading a flight manual gets you off the ground in the first place.", List.of(
                     new Perk(0, "Shaky hands: the controls are slow and twitchy"),
@@ -63,6 +76,13 @@ final class SkillsPage {
                     new Perk(10, "Full control authority, no wobble")),
                     l -> "Right now: " + Math.round(65 + 3.5 * l) + "% control authority, touch down at up to "
                             + String.format(Locale.ROOT, "%.1f", 7 + 0.3 * l) + " m/s."),
+            new Info(Skill.TAILORING, "Survival", "Patch holes in your clothes, and rip old ones into strips. Needs a sewing kit, "
+                    + "thread and something to sew on.", List.of(
+                    new Perk(0, "A quarter of patches pull loose at first"),
+                    new Perk(0, "Each level, fewer pull loose and sewing goes 5% quicker"),
+                    new Perk(10, "Stitches always hold, and a patch takes half the time")),
+                    l -> "Right now: " + Math.round(Math.max(0, 25 - 2.5f * l)) + "% of patches pull loose, "
+                            + secs(Math.round(100 * (1 - 0.05f * l))) + " a patch."),
             new Info(Skill.SPRINTING, "Agility", "Run. Long sprints teach the most.", List.of(
                     new Perk(0, "A tenth less tiring each level"),
                     new Perk(10, "Only 1.5 times as tiring as walking, down from 2.5")),
@@ -164,6 +184,8 @@ final class SkillsPage {
         }
         KitDraw.capsRight(g, font, String.valueOf(level), x + w - 6, y + 3, KitDraw.BRIGHT, 1.1f);
         String next = level >= Skill.MAX_LEVEL ? "Mastered" : (Skill.xpForLevel(level + 1) - xp) + " xp to level " + (level + 1);
+        int boost = SkillBooks.boost(player, skill);
+        if (boost > 1) next += "  \u00b7  book x" + boost;
         KitDraw.text(g, font, next, x + 5, y + 14, KitDraw.DIM, 0.75f);
         screen.hot(x, y, w, ROW, () -> {
             if (selected != skill) UiSounds.play(UiSounds.CLICK);
@@ -190,7 +212,14 @@ final class SkillsPage {
         String count = level >= Skill.MAX_LEVEL ? xp + " xp" : xp + " / " + Skill.xpForLevel(level + 1) + " xp";
         KitDraw.textRight(g, font, count, bx + bw, cy + 5, KitDraw.DIM, 0.8f);
         KitDraw.bar(g, bx, cy + 16, bw, 2, part(xp, level), Float.NaN);
-        cy += 32;
+        if (level < Skill.MAX_LEVEL) {
+            int vol = SkillBooks.volume(level);
+            boolean read = SkillBooks.read(player, skill, vol);
+            String book = read ? "Book Vol " + vol + " read: x" + SkillBooks.multiplier(vol) + " xp up to level " + SkillBooks.lastLevel(vol)
+                    : "Book Vol " + vol + " not read: find it to earn x" + SkillBooks.multiplier(vol) + " xp";
+            KitDraw.text(g, font, book, bx, cy + 22, read ? KitDraw.LINK : KitDraw.DIM, 0.75f);
+        }
+        cy += 38;
 
         KitDraw.caps(g, font, "How it grows", cx, cy, KitDraw.FAINT, 0.65f);
         cy += 8;

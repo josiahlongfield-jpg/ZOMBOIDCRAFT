@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/cooking_oil"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/cooking_oil",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/cooking_oil",
+   "part": "body"
+  }
  }
 }

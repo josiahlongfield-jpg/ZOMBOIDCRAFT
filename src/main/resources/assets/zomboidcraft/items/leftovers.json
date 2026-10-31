@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/leftovers"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/leftovers",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/leftovers",
+   "part": "body"
+  }
  }
 }

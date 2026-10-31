@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/flare_gun"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/flare_gun",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/flare_gun",
+   "part": "body"
+  }
  }
 }

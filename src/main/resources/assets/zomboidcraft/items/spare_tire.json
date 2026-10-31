@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/spare_tire"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/spare_tire",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/spare_tire",
+   "part": "body"
+  }
  }
 }

@@ -36,8 +36,13 @@ public final class WeatherFx {
     /** Ticks to the next flash; and a second flicker of the same stroke, when there is one. */
     private static int nextFlash = 200, flicker;
     private static float flickerStrength;
-    /** Client-only lightning gets ids below anything the server hands out. */
-    private static int boltId = -100000;
+    /**
+     * Client-only lightning gets ids from near the top of the range, far above anything the server
+     * hands out, counting down (26.3 throws on any negative id; aircraft stand-ins count down from
+     * the very top). The bolt being added right now, so the load event knows it's ours.
+     */
+    private static int boltId = Integer.MAX_VALUE - 2_000_000;
+    private static LightningBolt adding;
     private static final List<Thunder> THUNDER = new ArrayList<>();
 
     /** A clap on its way: sound is slower than light, so the far ones arrive seconds later. */
@@ -66,7 +71,7 @@ public final class WeatherFx {
         LevelRenderEvents.COLLECT_SUBMITS.register(GroundFog::draw);
         // every bolt that lands near you, the server's real strikes too, lights up the street
         ClientEntityEvents.ENTITY_LOAD.register((entity, level) -> {
-            if (entity instanceof LightningBolt && entity.getId() >= 0) {  // our own flashes set their own strength
+            if (entity instanceof LightningBolt && entity != adding) {  // our own flashes set their own strength
                 strike(level, entity.getX(), entity.getZ());
                 Skyline.struck(entity.getX(), entity.getZ());  // real strikes start real fires: let them smoulder
             }
@@ -84,6 +89,15 @@ public final class WeatherFx {
         if (player != null && ZcConfig.get().weather.stormSurges
                 && Math.hypot(player.getX() - x, player.getZ() - z) < 64) {
             StormLights.surge(level, player.blockPosition());
+        }
+    }
+
+    private static void add(ClientLevel level, LightningBolt bolt) {
+        adding = bolt;
+        try {
+            level.addEntity(bolt);
+        } finally {
+            adding = null;
         }
     }
 
@@ -176,7 +190,7 @@ public final class WeatherFx {
             strike.setId(boltId--);
             int y = level.getHeight(Heightmap.Types.MOTION_BLOCKING, Mth.floor(x), Mth.floor(z));
             strike.snapTo(x, y, z);
-            level.addEntity(strike);
+            add(level, strike);
             strike(level, x, z);
         } else {
             // sheet lightning: the clouds light up and the street with them, less the further off it is.
@@ -191,7 +205,7 @@ public final class WeatherFx {
             sheet.setSilent(true);
             sheet.setId(boltId--);
             sheet.snapTo(player.getX() + Math.cos(angle) * 160, player.getY() + 90, player.getZ() + Math.sin(angle) * 160);
-            level.addEntity(sheet);
+            add(level, sheet);
         }
         if (RANDOM.nextFloat() < 0.5f) {
             flicker = 3 + RANDOM.nextInt(4);

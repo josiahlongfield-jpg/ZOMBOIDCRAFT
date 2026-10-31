@@ -45,6 +45,11 @@ public class AttachmentItem extends Item {
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display,
                                 Consumer<Component> tooltip, TooltipFlag flag) {
+        String colour = Attachments.colour(stack);
+        if (colour != null) {
+            tooltip.accept(Component.literal(colour.substring(0, 1).toUpperCase(Locale.ROOT) + colour.substring(1))
+                    .withStyle(ChatFormatting.GRAY));
+        }
         tooltip.accept(Component.literal(slotName(slot) + ". Fits: " + String.join(", ", gunsFitted(this)))
                 .withStyle(ChatFormatting.GRAY));
         if (!ZcConfig.get().guns.attachments) {
@@ -77,6 +82,7 @@ public class AttachmentItem extends Item {
             case MAGAZINE -> "Magazine";
             case BIPOD -> "Bipod";
             case RIGHT_RAIL -> "Right rail";
+            case MAGNIFIER -> "Magnifier";
         };
     }
 }

@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/plastic_sheeting"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/plastic_sheeting",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/plastic_sheeting",
+   "part": "body"
+  }
  }
 }

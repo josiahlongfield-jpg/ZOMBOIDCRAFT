@@ -4,6 +4,7 @@ import com.zomboidcraft.world.city.Floorplan.Room;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.SplittableRandom;
 
 /**
@@ -174,17 +175,25 @@ public final class Floors {
             t[3 + rng.nextInt(2)] = Type.HOTEL_SPA;
         }
         t[n] = Type.PENTHOUSE;
+        if (n >= 12) {
+            // a tall hotel's top three floors are one penthouse ({@link Penthouse}), the sky club under it
+            t[n - 1] = Type.PENTHOUSE;
+            t[n - 2] = Type.PENTHOUSE;
+            t[n - 3] = Type.NIGHTCLUB;
+            t[n - 4] = Type.HOTEL_SUITES;
+            if (n >= 16) {
+                t[n - 5] = Type.HOTEL_SUITES;
+            }
+            if (n >= 24) {
+                t[n / 2] = Type.PLANT;
+            }
+            return;
+        }
         if (n >= 6) {
             t[n - 1] = Type.NIGHTCLUB;
         }
         if (n >= 9) {
             t[n - 2] = Type.HOTEL_SUITES;
-        }
-        if (n >= 14) {
-            t[n - 3] = Type.HOTEL_SUITES;
-        }
-        if (n >= 24) {
-            t[n / 2] = Type.PLANT;
         }
     }
 
@@ -240,13 +249,20 @@ public final class Floors {
             case "exec", "board", "library", "hotel_suite", "penthouse_bed", "penthouse_lounge" -> rng.nextBoolean() ? "home_floor_parquet" : "home_floor_carpet_brown";
             case "hotel_room" -> rng.nextBoolean() ? "home_floor_carpet_blue" : "home_floor_carpet_green";
             case "studio" -> "home_floor_carpet_brown";
+            case "ph_bath", "ph_treat" -> rng.nextBoolean() ? "marble_white" : "pt_marble";
+            case "ph_sauna" -> "of_cedar_wall";
+            case "ph_kitchen", "ph_staff", "ph_juice" -> rng.nextBoolean() ? "lobby_floor_white" : "home_floor_tile";
+            case "ph_gym" -> "of_rubber";
+            case "ph_vault", "ph_cash", "ph_guns" -> "floor_concrete";
+            case "ph_master", "ph_closet", "ph_dressing", "ph_cinema", "ph_cigar", "ph_champagne" -> rng.nextBoolean() ? "home_floor_carpet_brown" : "home_floor_carpet_blue";
+            case "ph_study", "ph_billiards", "ph_cards", "ph_music", "ph_trophy", "ph_wine", "ph_tea", "ph_dining", "ph_bar", "ph_lounge" -> "home_floor_parquet";
             default -> null;
         };
     }
 
     static String doorOf(String kind) {
         return switch (kind) {
-            case "server", "boiler", "pumps", "generator", "chiller", "store", "workshop", "armoury", "cages" -> Doors.STEEL;
+            case "server", "boiler", "pumps", "generator", "chiller", "store", "workshop", "armoury", "cages", "ph_vault", "ph_cash", "ph_guns" -> Doors.STEEL;
             case "meeting", "board", "reception", "waiting" -> Doors.SHOP;
             default -> Doors.FLAT;
         };
@@ -267,6 +283,29 @@ public final class Floors {
         new Fitter(f, type, state, rng).run();
         if (Boolean.getBoolean("zc.floordebug")) {
             StringBuilder b = new StringBuilder(type + " y" + f.y + "\n");
+            for (int z = 0; z < f.d; z++) {
+                for (int x = 0; x < f.w; x++) {
+                    b.append(" o.#rIx@d".charAt(f.g[z * f.w + x]));
+                }
+                b.append('\n');
+            }
+            System.err.print(b);
+        }
+    }
+
+    /**
+     * One level of a hotel's penthouse ({@link Penthouse}): the rooms are given, rectangles of
+     * open floor with their kinds; open says what fills the floor between them. The cells in
+     * keepClear (x, z pairs) are kept free of furniture: the glass doors out to the terraces.
+     */
+    public static void penthouseLevel(Floorplan f, SplittableRandom rng, List<int[]> rects, List<String> kinds, String open, List<int[]> keepClear) {
+        double s = rng.nextDouble();
+        State state = s < 0.5 ? State.ABANDONED : s < 0.9 ? State.LOOTED : State.BARRICADED;
+        Fitter ft = new Fitter(f, Type.PENTHOUSE, state, rng);
+        ft.penthouseLevel(rects, kinds, open, keepClear);
+        ft.aftermath();
+        if (Boolean.getBoolean("zc.floordebug")) {
+            StringBuilder b = new StringBuilder("PENTHOUSE " + open + " y" + f.y + "\n");
             for (int z = 0; z < f.d; z++) {
                 for (int x = 0; x < f.w; x++) {
                     b.append(" o.#rIx@d".charAt(f.g[z * f.w + x]));
@@ -301,6 +340,20 @@ public final class Floors {
             this.wall = state == State.BURNT && !w0.startsWith("concrete") && rng.nextBoolean() && w0.startsWith("home_wall") ? w0 + "_worn" : w0;
             String[] carpets = {"office_floor", "office_floor", "fit_carpet", "home_floor_carpet_blue", "home_floor_carpet_brown", "home_floor_carpet_green"};
             this.carpet = carpets[rng.nextInt(carpets.length)];
+            f.airy = airy(type);
+        }
+
+        /**
+         * Floors laid out open plan: no corridor ring, only a few rooms on the windows (glass
+         * walled) so the floor reads as one big space out to the view. Bedrooms, flats, the
+         * separate firms of a suites floor and the plant stay cut up into rooms.
+         */
+        static boolean airy(Type t) {
+            return switch (t) {
+                case OPEN_OFFICE, CELLULAR, LAW, CALL_CENTRE, NEWSROOM, COMPUTERS, CAFETERIA, GYM, EXECUTIVE, MEDICAL, DENTAL, GOVERNMENT, RADIO,
+                        HOTEL_SERVICE, HOTEL_DINING, HOTEL_SPA, NIGHTCLUB -> true;
+                default -> false;
+            };
         }
 
         void run() {
@@ -380,11 +433,27 @@ public final class Floors {
                     return i < first.length ? first[i++] : tail[j++ % tail.length];
                 }
             };
-            return f.rooms(true, 7, 4, 7, k, wall, true, max);
+            // open plan: only the rooms the floor can't do without, the rest of the inner floor left
+            // open, and the rooms people work in walled in glass
+            List<Room> rs = f.rooms(true, 7, 4, 7, k, wall, true, f.airy ? Math.min(max, first.length) : max);
+            if (f.airy) {
+                for (Room r : rs) {
+                    r.glass = Set.of("office", "meeting", "board", "exec", "library", "reception", "day_room", "studio").contains(r.kind);
+                }
+            }
+            return rs;
         }
 
         List<Room> windows(int max, int min, int size, String... kinds) {
-            return f.rooms(false, f.band, min, size, cycle(kinds), wall, true, max);
+            if (!f.airy) {
+                return f.rooms(false, f.band, min, size, cycle(kinds), wall, true, max);
+            }
+            // open plan: a handful of glass rooms on the windows, the rest of the glass left to the floor
+            List<Room> rs = f.rooms(false, f.band, min, size, cycle(kinds), wall, true, Math.min(max, 3 + rng.nextInt(2)));
+            for (Room r : rs) {
+                r.glass = true;
+            }
+            return rs;
         }
 
         void furnish(List<Room> rs) {
@@ -418,12 +487,12 @@ public final class Floors {
 
         void cellular(boolean law) {
             f.corridor(4 + rng.nextInt(2), true);
-            List<Room> rs = new ArrayList<>(coreThen(16, law ? new String[] {"wc", "kitchen", "library", "files", "board", "store"}
+            List<Room> rs = new ArrayList<>(coreThen(16, law ? new String[] {"wc", "reception", "kitchen", "library", "files", "board"}
                     : new String[] {"wc", "kitchen", "files", "copy", "meeting", "store"}, law ? new String[] {"files", "meeting", "library", "copy"}
                     : new String[] {"meeting", "files", "office", "copy"}));
             rs.addAll(windows(60, 3, 4, law ? new String[] {"office", "office", "office", "exec"} : new String[] {"office", "office", "office", "meeting"}));
             for (Room r : rs) {
-                r.glass = !law && r.kind.equals("meeting");
+                r.glass |= !law && r.kind.equals("meeting");
             }
             furnish(rs);
             deskPods();
@@ -569,7 +638,7 @@ public final class Floors {
                 }
                 int s = facingOut(x, z);
                 int[] back = Floorplan.step(x, z, s + 2);
-                f.place(x, z, (Math.floorMod(x + z, 6) < 3 ? "of_treadmill" : "of_bike") + "[facing=" + Floorplan.face(s) + "]", back);
+                f.place(x, z, (Math.floorMod(x + z, 9) < 3 ? "of_treadmill" : Math.floorMod(x + z, 9) < 6 ? "of_elliptical" : "of_bike") + "[facing=" + Floorplan.face(s) + "]", back);
             }
         }
 
@@ -609,6 +678,10 @@ public final class Floors {
                     "copy"));
             rs.addAll(windows(60, 5, 8, "exec", "exec", "board", "office"));
             furnish(rs);
+            // the open floor a lounge: sofas looking out of the glass, sitting groups between
+            String sofa = pick("brown", "blue");
+            byGlass(sofa);
+            groups(6, 5, 7, i -> 0, sofa);
             dotOpen(new String[] {"pk_houseplant[facing=%s]", "home_armchair_brown[facing=%s]", "home_floor_lamp", "fit_painting_a[facing=%s]"}, 0.02);
             f.floors("home_floor_carpet_brown", "home_floor_parquet");
         }
@@ -652,7 +725,7 @@ public final class Floors {
             List<Room> rs = new ArrayList<>(core(5, "wc", "kitchen", "server", "library", "store"));
             rs.addAll(windows(8, 4, 6, "studio", "studio", "office", "meeting"));
             for (Room r : rs) {
-                r.glass = r.kind.equals("studio");
+                r.glass |= r.kind.equals("studio");
             }
             furnish(rs);
             deskPods();
@@ -852,20 +925,198 @@ public final class Floors {
         }
 
         void penthouse() {
-            // one home: the great room is open from the lift to the glass
-            f.corridor(8, false);
-            List<Room> rs = new ArrayList<>(core(4, "wc", "kitchen", "store", "linen"));
-            rs.addAll(windows(6, 6, 10, "penthouse_bed", "penthouse_lounge", "library", "penthouse_bed", "exec"));
+            // one home: the great room open from the lift to the glass, the private rooms round it
+            // a slim top floor (stepped in for the terrace) keeps its rooms shallow by the glass
+            boolean slim = f.deepest() < 8;
+            f.corridor(slim ? 3 : 8, false);
+            if (slim) {
+                f.band = 3;
+            }
+            // open plan: the powder room and the wine store by the core, the master suite (and on a
+            // deep floor one guest room) on the glass, everything else one great room out to the view
+            f.airy = true;
+            List<Room> rs = new ArrayList<>(core(2, "wc", "ph_wine"));
+            rs.addAll(f.rooms(false, f.band, slim ? 4 : 6, slim ? 7 : 10, list("penthouse_bed", "ph_master"), wall, true, slim ? 1 : 2));
             furnish(rs);
-            // the great room: sitting groups, the dining table, the piano, a bar, the pool table
+            // the great room: sitting groups under chandeliers, the long dining table, the grand
+            // piano by the glass, the bar, sculpture on plinths between
             String sofa = pick("brown", "blue", "floral");
-            groups(16, 4, 9, i -> switch (i % 5) {
+            byGlass(sofa);
+            groups(16, 4, 9, i -> switch (i % 6) {
                 case 0, 3 -> 0;
                 case 1 -> 1;
-                case 2 -> 2;
-                default -> 3;
+                case 2 -> 4;
+                case 4 -> 3;
+                default -> 5;
             }, sofa);
-            f.floors("home_floor_parquet", "home_floor_parquet");
+            f.floors("marble_white", "marble_white");
+        }
+
+        /** One level of a big penthouse: the given rooms, then the open floor filled by its use. */
+        void penthouseLevel(List<int[]> rects, List<String> kinds, String open, List<int[]> keepClear) {
+            List<Room> rs = new ArrayList<>();
+            for (int i = 0; i < rects.size(); i++) {
+                int[] q = rects.get(i);
+                Room r = f.room(q[0], q[1], q[2], q[3], kinds.get(i), wall(kinds.get(i)));
+                if (r == null) {
+                    continue;
+                }
+                r.glass = kinds.get(i).equals("ph_study") || kinds.get(i).equals("ph_gym") || kinds.get(i).equals("ph_cards");
+                rs.add(r);
+            }
+            for (Room r : new ArrayList<>(rs)) {
+                if (!f.door(r, true) && !f.door(r, false)) {
+                    // boxed in among the others: fixDoors / joinUp give it a way through a neighbour
+                    r.dx = -1;
+                }
+            }
+            for (int[] c : keepClear) {
+                byte v = f.at(c[0], c[1]);
+                if (v == Floorplan.ROOM || v == Floorplan.OPEN) {
+                    f.put(c[0], c[1], Floorplan.CLEAR);
+                }
+            }
+            furnish(rs);
+            String sofa = pick("brown", "blue", "floral");
+            switch (open) {
+                case "club" -> {
+                    if (!zone(7, 9, 15, this::danceFloor) && !zone(6, 7, 15, this::danceFloor)) {
+                        zone(5, 6, 15, this::danceFloor);
+                    }
+                    release();
+                    backBar();
+                    booths("dn_booth_r", "dn_booth_b");
+                    groups(4, 5, 7, i -> 0, sofa);
+                    f.floors("lobby_floor_dark", "lobby_floor_dark");
+                }
+                case "velvet" -> {
+                    stool = "of_stool_velvet";
+                    backBar();
+                    booths("of_booth", "of_booth_purple");
+                    highTables();
+                    groups(3, 5, 7, i -> 3, sofa);
+                    f.floors("lobby_floor_dark", "lobby_floor_dark");
+                }
+                case "bar" -> {
+                    stool = "of_stool_velvet";
+                    backBar();
+                    highTables();
+                    groups(3, 5, 7, i -> 0, sofa);
+                    f.floors("lobby_floor_dark", "lobby_floor_dark");
+                }
+                case "gallery" -> {
+                    byGlass(sofa);
+                    groups(12, 4, 7, i -> i % 3 == 2 ? 0 : 5, sofa);
+                    f.floors("marble_white", "marble_white");
+                }
+                case "cars", "pool", "garden" -> {
+                    groups(3, 5, 8, i -> i == 1 ? 3 : 0, sofa);
+                    dotOpen(new String[] {"pk_houseplant[facing=%s]", "of_tree_pot", "of_lounger[facing=%s]"}, open.equals("pool") ? 0.05 : 0.015);
+                    f.floors(open.equals("pool") ? "home_floor_tile" : "pt_marble", open.equals("pool") ? "home_floor_tile" : "pt_marble");
+                }
+                case "lounge" -> {
+                    byGlass(sofa);
+                    groups(8, 4, 8, i -> i % 4 == 3 ? 3 : 0, sofa);
+                    f.floors("home_floor_parquet", "home_floor_parquet");
+                }
+                default -> {
+                    // the great room: sitting groups under chandeliers, the long table, the piano, the bar, sculpture
+                    byGlass(sofa);
+                    groups(16, 4, 9, i -> switch (i % 6) {
+                        case 0, 3 -> 0;
+                        case 1 -> 1;
+                        case 2 -> 4;
+                        case 4 -> 3;
+                        default -> 5;
+                    }, sofa);
+                    f.floors("marble_white", "marble_white");
+                }
+            }
+            finishFloor(open);
+        }
+
+        /**
+         * The penthouse's floor detail: a dark marble border along the glass and the walls, a
+         * diamond inlay across the open marble, rugs under the furniture, lamps and plants and
+         * urns dotted about, a chandelier now and then.
+         */
+        void finishFloor(String open) {
+            boolean marble = !open.equals("club") && !open.equals("velvet") && !open.equals("bar") && !open.equals("pool");
+            for (int i = 0; i < f.g.length; i++) {
+                int x = i % f.w, z = i / f.w;
+                byte v = f.g[i];
+                boolean openish = v == Floorplan.OPEN || v == Floorplan.WALK || v == Floorplan.CLEAR || v == Floorplan.ITEM && !inRoom(x, z);
+                if (!openish || !marble) {
+                    continue;
+                }
+                if (f.dist[i] == 1) {
+                    f.p.set(x, f.y, z, "lobby_floor_dark");
+                } else if (Math.floorMod(x + z, 6) == 0 || Math.floorMod(x - z, 6) == 0) {
+                    f.p.set(x, f.y, z, "pt_marble");
+                }
+            }
+            String[] rug = open.equals("velvet") ? new String[] {"of_carpet_red"} : new String[] {"of_carpet_red", "home_floor_carpet_blue", "home_floor_carpet_brown"};
+            for (int[] r : rugs) {
+                String b = rug[rng.nextInt(rug.length)];
+                for (int x = r[0]; x <= r[2]; x++) {
+                    for (int z = r[1]; z <= r[3]; z++) {
+                        byte v = f.at(x, z);
+                        if ((v == Floorplan.OPEN || v == Floorplan.ITEM || v == Floorplan.CLEAR) && !inRoom(x, z)) {
+                            f.p.set(x, f.y, z, b);
+                        }
+                    }
+                }
+            }
+            dotOpen(new String[] {"home_floor_lamp", "pk_houseplant[facing=%s]", "mu_urn", "of_tree_pot", "pk_sideboard[facing=%s]"}, 0.02);
+            for (int[] c : f.openCells()) {
+                if (Math.floorMod(c[0], 6) == 3 && Math.floorMod(c[1], 6) == 3 && (f.p.get(c[0], f.y + f.rows, c[1]) == null || "air".equals(f.p.get(c[0], f.y + f.rows, c[1])))) {
+                    f.set(c[0], f.rows, c[1], rng.nextDouble() < f.lit + 0.2 ? "tr_chandelier_on" : "tr_chandelier");
+                }
+            }
+        }
+
+        boolean inRoom(int x, int z) {
+            for (Room r : f.rooms) {
+                if (r.has(x, z)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /** A room's walls: the sauna lined in cedar, the club rooms in velvet, the vault in concrete. */
+        String wall(String kind) {
+            return switch (kind) {
+                case "ph_sauna" -> "of_cedar_wall";
+                case "ph_champagne", "ph_cigar" -> "of_velvet_wall";
+                case "ph_vault", "ph_cash" -> "concrete_dark";
+                case "ph_study", "ph_billiards", "ph_cards", "ph_trophy", "ph_guns", "library" -> "home_wall_panelling";
+                case "ph_bath" -> "marble_white";
+                default -> wall;
+            };
+        }
+
+        /** Booths back to the glass looking into the room. */
+        void booths(String a, String b) {
+            for (int[] c : f.openCells()) {
+                int x = c[0], z = c[1];
+                if (f.dist[z * f.w + x] == 1 && Math.floorMod(x + z, 3) != 0 && rng.nextDouble() < 0.7) {
+                    f.place(x, z, pick(a, b) + "[facing=" + Floorplan.face(facingOut(x, z) + 2) + "]", null);
+                } else if (f.dist[z * f.w + x] == 1 && rng.nextDouble() < 0.4) {
+                    f.place(x, z, "of_champagne", null);
+                }
+            }
+        }
+
+        /** High tables with stools, a few steps in from the glass. */
+        void highTables() {
+            for (int[] c : f.openCells()) {
+                int x = c[0], z = c[1];
+                if (f.dist[z * f.w + x] == 3 && Math.floorMod(x + z, 4) == 0 && f.place(x, z, "of_high_table[facing=north]", null)) {
+                    int[] st = Floorplan.step(x, z, rng.nextInt(4));
+                    f.place(st[0], st[1], "pk_bar_chair[facing=north]", null);
+                }
+            }
         }
 
         void dorm() {
@@ -995,6 +1246,8 @@ public final class Floors {
         }
 
         boolean[] mine;
+        /** Rugs laid under the furniture groups (x0, z0, x1, z1), painted into the floor once it's down. */
+        final List<int[]> rugs = new ArrayList<>();
 
         interface GroupPick {
             int kind(int i);
@@ -1017,6 +1270,8 @@ public final class Floors {
                     case 0 -> sitting(x0, z0, x1, z1, sofa);
                     case 1 -> dining(x0, z0, x1, z1);
                     case 2 -> piano(x0, z0, x1, z1);
+                    case 4 -> grandPiano(x0, z0, x1, z1);
+                    case 5 -> gallery(x0, z0, x1, z1);
                     default -> bar(x0, z0, x1, z1);
                 }
                 for (int z = b[1]; z <= b[3]; z++) {
@@ -1038,6 +1293,7 @@ public final class Floors {
         /** A three-piece sofa facing south across a coffee table at two armchairs, a lamp, a plant. */
         void sitting(int x0, int z0, int x1, int z1, String sofa) {
             int cx = (x0 + x1) / 2;
+            rugs.add(new int[] {cx - 2, z0, cx + 2, z1});
             boolean flip = rng.nextBoolean();
             int sz = flip ? z1 : z0, tz = flip ? z1 - 2 : z0 + 2, az = flip ? z1 - 4 : z0 + 4;
             String toward = flip ? "north" : "south", back = flip ? "south" : "north";
@@ -1058,6 +1314,7 @@ public final class Floors {
         /** A long dining table down the patch, chairs either side. */
         void dining(int x0, int z0, int x1, int z1) {
             int cz = (z0 + z1) / 2;
+            rugs.add(new int[] {x0, cz - 1, x1, cz + 1});
             for (int x = x0 + 1; x <= x1 - 1; x++) {
                 if (f.place(x, cz, "pk_table_wooden[facing=north]", null)) {
                     f.place(x, cz - 1, (rng.nextDouble() < 0.15 ? "home_chair_tipped" : "pk_chair_dining") + "[facing=south]", null);
@@ -1077,6 +1334,100 @@ public final class Floors {
             }
             f.place(x0, z1, "home_armchair_brown[facing=north]", null);
             f.place(x1, z1, "home_armchair_brown[facing=north]", null);
+        }
+
+        /**
+         * The great room along the outside wall (the glass, once the facade is up), every seven blocks or so: a sofa looking out over a
+         * coffee table with armchairs either side, the grand piano, a dining table for six, a
+         * sculpture; a chandelier over each. What's left behind them is the way round.
+         */
+        void byGlass(String sofa) {
+            List<int[]> spots = new ArrayList<>();
+            for (int[] c : f.openCells()) {
+                int side = -1, n = 0;
+                for (int s = 0; s < 4; s++) {
+                    int[] o = Floorplan.step(c[0], c[1], s);
+                    if (!f.in(o[0], o[1]) || f.at(o[0], o[1]) == Floorplan.SHELL) {
+                        side = s;
+                        n++;
+                    }
+                }
+                if (n == 1) {
+                    spots.add(new int[] {c[0], c[1], side});
+                }
+            }
+            spots.sort((a, b) -> a[2] != b[2] ? a[2] - b[2] : (a[2] % 2 == 0 ? a[0] - b[0] : a[1] - b[1]));
+            int last = Integer.MIN_VALUE, lastSide = -1, i = rng.nextInt(4);
+            for (int[] c : spots) {
+                int along = c[2] % 2 == 0 ? c[0] : c[1];
+                if (c[2] == lastSide && along - last < 7) {
+                    continue;
+                }
+                int x = c[0], z = c[1], s = c[2];
+                int[] back = Floorplan.step(x, z, s + 2), back2 = Floorplan.step(back[0], back[1], s + 2);
+                if (f.at(back[0], back[1]) != Floorplan.OPEN || f.at(back2[0], back2[1]) != Floorplan.OPEN) {
+                    continue;
+                }
+                last = along;
+                lastSide = s;
+                switch (i++ % 4) {
+                    case 0, 2 -> viewSofa(x, z, s, sofa);
+                    case 1 -> {
+                        // the piano side on to the glass, its bench to the room
+                        if (f.place(x, z, "of_grand_piano_l[facing=" + Floorplan.face(s + 2) + "]", null)) {
+                            int[] r = Floorplan.step(x, z, s + 3);
+                            f.place(r[0], r[1], "of_grand_piano_r[facing=" + Floorplan.face(s + 2) + "]", null);
+                            f.place(back[0], back[1], "home_chair[facing=" + Floorplan.face(s) + "]", null);
+                        }
+                    }
+                    default -> {
+                        f.place(x, z, "of_sculpture[facing=" + Floorplan.face(s + 2) + "]", null);
+                        int[] l = Floorplan.step(x, z, s + 1), r = Floorplan.step(x, z, s + 3);
+                        f.place(l[0], l[1], pick("pk_houseplant", "pk_planter") + "[facing=north]", null);
+                        f.place(r[0], r[1], "home_floor_lamp", null);
+                    }
+                }
+                f.set(back[0], f.rows, back[1], "tr_chandelier");
+            }
+        }
+
+        /** A sofa looking out of the glass at s, the coffee table before it, armchairs at its ends. */
+        void viewSofa(int x, int z, int s, String sofa) {
+            String look = Floorplan.face(s);
+            int[] m = Floorplan.step(x, z, s + 2);
+            int[] l = Floorplan.step(m[0], m[1], s + 3), r = Floorplan.step(m[0], m[1], s + 1);
+            if (!f.place(m[0], m[1], "home_sofa_" + sofa + "_m[facing=" + look + "]", null)) {
+                return;
+            }
+            f.place(l[0], l[1], "home_sofa_" + sofa + "_l[facing=" + look + "]", null);
+            f.place(r[0], r[1], "home_sofa_" + sofa + "_r[facing=" + look + "]", null);
+            f.place(x, z, "pk_coffee_table[facing=north]", null);
+            int[] al = Floorplan.step(x, z, s + 3), ar = Floorplan.step(x, z, s + 1);
+            f.place(al[0], al[1], "home_armchair_" + sofa + "[facing=" + Floorplan.face(s + 1) + "]", null);
+            f.place(ar[0], ar[1], "home_armchair_" + sofa + "[facing=" + Floorplan.face(s + 3) + "]", null);
+        }
+
+        /** A grand piano with its bench, a chandelier over it, two armchairs to listen from. */
+        void grandPiano(int x0, int z0, int x1, int z1) {
+            int cx = (x0 + x1) / 2, cz = (z0 + z1) / 2;
+            rugs.add(new int[] {cx - 2, cz - 1, cx + 1, cz + 1});
+            if (f.place(cx, cz, "of_grand_piano_l[facing=south]", null)) {
+                f.place(cx - 1, cz, "of_grand_piano_r[facing=south]", null);
+                f.place(cx, cz + 1, "home_chair[facing=north]", null);
+                f.set(cx, f.rows, cz, "tr_chandelier");
+            }
+            f.place(x0, z0, "home_armchair_brown[facing=south]", null);
+            f.place(x1, z0, "home_armchair_brown[facing=south]", null);
+        }
+
+        /** Sculpture on plinths in the open, a bench to look at them from, a chandelier. */
+        void gallery(int x0, int z0, int x1, int z1) {
+            int cx = (x0 + x1) / 2, cz = (z0 + z1) / 2;
+            f.place(x0, z0, "of_sculpture[facing=south]", null);
+            f.place(x1, z1, "of_sculpture[facing=north]", null);
+            f.place(cx, cz, "cv_hall_bench[facing=north]", null);
+            f.place(x1, z0, pick("pk_houseplant", "pk_planter") + "[facing=north]", null);
+            f.set(cx, f.rows, cz, "tr_chandelier");
         }
 
         /** A short bar with the stools in front, the drinks shelf behind. */
@@ -1169,6 +1520,9 @@ public final class Floors {
          * The club's bar against a wall of the core rooms: the bottles on shelves against the wall,
          * a cell for the bartender, the counter, the stools on the floor side.
          */
+        /** The stool at a bar counter (green velvet in the lounges, after the pub photos). */
+        String stool = "pk_bar_chair";
+
         void backBar() {
             for (int[] c : f.openCells()) {
                 int x = c[0], z = c[1];
@@ -1205,7 +1559,11 @@ public final class Floors {
                         f.put(keep[0], keep[1], Floorplan.CLEAR);
                         if (f.place(counter[0], counter[1], (i == n / 2 ? "trade_bar_taps" : "trade_bar") + "[facing=" + Floorplan.face(s + 2) + "]", null)
                                 && rng.nextDouble() < 0.8) {
-                            f.place(stool[0], stool[1], "pk_bar_chair[facing=" + Floorplan.face(s) + "]", null);
+                            f.place(stool[0], stool[1], this.stool + (this.stool.equals("pk_bar_chair") ? "[facing=" + Floorplan.face(s) + "]" : ""), null);
+                        }
+                        // pendants over the counter
+                        if (i % 2 == 1) {
+                            f.set(counter[0], f.rows, counter[1], "tx_pendant");
                         }
                     }
                     return;
@@ -1320,7 +1678,30 @@ public final class Floors {
                 case "hotel_room" -> k.hotelRoom(false);
                 case "hotel_suite" -> k.hotelRoom(true);
                 case "penthouse_bed" -> k.hotelRoom(true);
-                case "penthouse_lounge" -> k.lounge();
+                case "ph_master" -> k.master();
+                case "ph_cinema" -> k.cinema();
+                case "ph_wine" -> k.wine();
+                case "ph_kitchen" -> k.homeKitchen();
+                case "penthouse_lounge", "ph_lounge" -> k.lounge();
+                case "ph_bath" -> k.bath();
+                case "ph_closet", "ph_dressing" -> k.closet(r.kind.equals("ph_dressing"));
+                case "ph_study" -> k.study();
+                case "ph_billiards" -> k.billiards();
+                case "ph_cards" -> k.cards();
+                case "ph_cigar" -> k.cigar();
+                case "ph_music" -> k.music();
+                case "ph_staff" -> k.staff();
+                case "ph_guns" -> k.guns();
+                case "ph_trophy" -> k.trophy();
+                case "ph_vault" -> k.vault();
+                case "ph_cash" -> k.cash();
+                case "ph_champagne" -> k.champagne();
+                case "ph_sauna" -> k.sauna();
+                case "ph_treat" -> k.spa();
+                case "ph_juice", "ph_bar" -> k.homeBar();
+                case "ph_tea" -> k.tea();
+                case "ph_dining" -> k.diningRoom();
+                case "ph_gym" -> k.homeGym();
                 case "linen" -> k.linen();
                 case "vending" -> k.vending();
                 case "laundry" -> k.laundry();
@@ -1336,6 +1717,9 @@ public final class Floors {
                 case "tailor" -> k.tailor();
                 case "pawn" -> k.pawn();
                 default -> k.office(false);
+            }
+            if (type == Type.PENTHOUSE && !r.kind.equals("ph_vault") && !r.kind.equals("ph_sauna") && !r.kind.equals("wc")) {
+                k.dress();
             }
         }
 
@@ -1556,7 +1940,22 @@ public final class Floors {
             }
 
             void reception() {
-                deskFacingDoor("cv_circ_desk");
+                // after the photos: a clinic's marble counter on its lit plinth; a firm's slatted
+                // oak wall behind the desk with its sign; a gym's drinking fountain by the door
+                boolean clinic = type == Type.MEDICAL || type == Type.DENTAL;
+                deskFacingDoor(clinic ? "of_reception_marble" : "cv_circ_desk");
+                if (type == Type.LAW || type == Type.EXECUTIVE) {
+                    for (int i = 0; i < 3; i++) {
+                        wall("of_slat_wall[facing=%s]", true);
+                    }
+                    hang("of_firm_sign[facing=%s]");
+                }
+                if (type == Type.GYM) {
+                    hang("of_drink_fountain[facing=%s]");
+                }
+                if (clinic) {
+                    wall("home_tv[facing=%s]", false);
+                }
                 several(2 + rng.nextInt(2), false, "home_sofa_blue_m[facing=%s]", "home_armchair_blue[facing=%s]", "pk_armchair_green[facing=%s]");
                 several(2, false, "pk_houseplant[facing=%s]", "trade_water_cooler[facing=%s]", "home_coffee_table[facing=%s]");
             }
@@ -1582,12 +1981,15 @@ public final class Floors {
                 wall("of_exam_table[facing=%s]", false);
                 several(2, false, "fit_medcab[facing=%s]", "fit_sink_cabin[facing=%s]", "bunk_medcab[facing=%s]");
                 wall("bunk_iv_stand", false);
+                wall("of_vitals_stand[facing=%s]", false);
+                hang("hs_sharps[facing=%s]");
                 hang("sc_eye_chart[facing=%s]");
                 deskFacingDoor("desk");
             }
 
             void dental() {
                 wall("of_dental_chair[facing=%s]", false);
+                wall("of_vitals_stand[facing=%s]", false);
                 several(2, false, "fit_medcab[facing=%s]", "fit_sink_cabin[facing=%s]", "fit_counter_steel[facing=%s]");
                 hang("fit_surgical");
             }
@@ -1672,8 +2074,72 @@ public final class Floors {
                 wall("home_vanity[facing=%s]", false);
                 hang(rng.nextBoolean() ? "fit_painting_a[facing=%s]" : "fit_painting_b[facing=%s]");
                 if (state == State.LOOTED) {
-                    scatter(1, "home_clothes_pile", "trade_luggage_cart[facing=%s]");
+                    // clothes thrown down; the luggage cart left by a wall, not across the way
+                    scatter(1, "home_clothes_pile");
+                    if (rng.nextBoolean()) {
+                        wall("trade_luggage_cart[facing=%s]", false);
+                    }
                 }
+            }
+
+            /**
+             * The master suite: a king bed (two pushed together) between nightstands, the
+             * freestanding tub and the vanity at one end, the dressing wall of wardrobes, a chaise
+             * by the glass, paintings.
+             */
+            void master() {
+                String bed = pick("home_bed_rose", "home_bed_quilt", "home_bed_blue");
+                bed(bed);
+                bed(bed);
+                wall("home_tub_l[facing=%s]", false);
+                several(2, false, "pk_nightstand[facing=%s]");
+                wall("home_vanity[facing=%s]", false);
+                several(3, true, "home_wardrobe[facing=%s]");
+                wall("home_dresser[facing=%s]", false);
+                several(2, false, "home_armchair_floral[facing=%s]", "home_floor_lamp");
+                hang("of_art_a[facing=%s]");
+                hang("fit_mirror_long[facing=%s]");
+                scatter(state == State.LOOTED ? 2 : 0, "home_clothes_pile", "home_towel[facing=%s]");
+            }
+
+            /** The screening room: the screen on the far wall, rows of sofas facing it. */
+            void cinema() {
+                int s = r.dside;
+                int[] in = Floorplan.step(0, 0, s);
+                for (int z = r.z0; z <= r.z1; z++) {
+                    for (int x = r.x0; x <= r.x1; x++) {
+                        int nx = x + in[0], nz = z + in[1];
+                        boolean far = nx < r.x0 || nx > r.x1 || nz < r.z0 || nz > r.z1;
+                        if (!far) {
+                            continue;
+                        }
+                        f.set(x, 2, z, "of_screen[facing=" + Floorplan.face(s + 2) + "]");
+                        for (int row = 2; row <= 4; row += 2) {
+                            int sx = x - in[0] * row, sz = z - in[1] * row;
+                            if (sx > r.x0 && sx < r.x1 || sz > r.z0 && sz < r.z1) {
+                                f.place(sx, sz, "home_sofa_blue_m[facing=" + Floorplan.face(s) + "]", null);
+                            }
+                        }
+                    }
+                }
+                several(2, false, "home_floor_lamp", "home_lamp_table[facing=%s]");
+                wall("trade_back_bar[facing=%s]", true);
+            }
+
+            /** The wine room: racks floor to ceiling all round, a tasting table. */
+            void wine() {
+                several(Math.max(4, r.area() / 2), true, "cellar_wine_rack[facing=%s]");
+                // casks on their cradles down the middle, after the cellar photos
+                table("of_wine_cask[axis=" + (r.w() >= r.d() ? "x" : "z") + "]", "air", true);
+                table("pk_coffee_table[facing=north]", "pk_bar_chair[facing=%s]", false);
+            }
+
+            /** The penthouse kitchen: counters and the range round the walls, a marble island with stools. */
+            void homeKitchen() {
+                wall("home_fridge[facing=%s]", true);
+                several(3 + rng.nextInt(2), false, "home_counter_white[facing=%s]", "home_sink_white[facing=%s]", "home_stove[facing=%s]");
+                table("of_island[facing=north]", "pk_bar_chair[facing=%s]", true);
+                scatter(1, "pk_trash_can[facing=%s]");
             }
 
             void lounge() {
@@ -1683,6 +2149,203 @@ public final class Floors {
                 wall("home_floor_lamp", false);
                 table("home_coffee_table[facing=north]", "air", false);
                 hang("fit_painting_c[facing=%s]");
+            }
+
+            // ---- the penthouse's rooms
+
+            /**
+             * A rich man's room never looks bare: a rug under the middle, paintings and a lamp, and
+             * for a big room more pieces against the walls until it's furnished for its size.
+             */
+            void dress() {
+                boolean wet = r.kind.equals("ph_bath") || r.kind.equals("ph_treat") || r.kind.equals("ph_kitchen") || r.kind.equals("ph_staff")
+                        || r.kind.equals("ph_gym") || r.kind.equals("ph_juice");
+                if (!wet && r.w() >= 6 && r.d() >= 6) {
+                    String rug = pick("of_carpet_red", "home_floor_carpet_blue", "home_floor_carpet_beige");
+                    for (int x = r.x0 + 2; x <= r.x1 - 2; x++) {
+                        for (int z = r.z0 + 2; z <= r.z1 - 2; z++) {
+                            if (f.at(x, z) == Floorplan.ROOM || f.at(x, z) == Floorplan.ITEM || f.at(x, z) == Floorplan.CLEAR) {
+                                f.p.set(x, f.y, z, rug);
+                            }
+                        }
+                    }
+                }
+                hang(pick("of_art_a[facing=%s]", "of_art_b[facing=%s]", "fit_painting_a[facing=%s]", "fit_painting_c[facing=%s]"));
+                hang(pick("of_art_a[facing=%s]", "of_art_b[facing=%s]", "fit_mirror_long[facing=%s]"));
+                int extra = Math.max(0, r.area() / 10 - 1);
+                String[] filler = wet ? new String[] {"pk_houseplant[facing=%s]", "home_towel[facing=%s]", "home_counter_white[facing=%s]"}
+                        : new String[] {"home_floor_lamp", "pk_houseplant[facing=%s]", "pk_sideboard[facing=%s]", "home_bookcase[facing=%s]",
+                            "home_armchair_brown[facing=%s]", "mu_urn", "of_tree_pot", "pk_cabinet_oak[facing=%s]", "of_sculpture[facing=%s]"};
+                several(extra, false, filler);
+                int cx = (r.x0 + r.x1) / 2, cz = (r.z0 + r.z1) / 2;
+                if (r.area() >= 30 && !wet && f.p.get(cx, f.y + f.rows, cz) == null) {
+                    f.set(cx, f.rows, cz, "tr_chandelier");
+                }
+            }
+
+            /** The marble bathroom: the tub, twin basins, the shower, the toilet, a mirror. */
+            void bath() {
+                wall("home_tub_l[facing=%s]", false);
+                several(2, false, "fit_sink_cabin[facing=%s]");
+                wallBack("home_toilet[facing=%s]");
+                hang("fit_mirror_long[facing=%s]");
+                several(1, false, "pk_houseplant[facing=%s]", "home_towel[facing=%s]");
+            }
+
+            /** The walk-in closet or the dancers' dressing room: wardrobes all round, mirrors, a vanity. */
+            void closet(boolean dressing) {
+                several(Math.max(3, r.area() / 3), true, "home_wardrobe[facing=%s]");
+                several(dressing ? 3 : 1, false, "home_vanity[facing=%s]");
+                hang(dressing ? "of_mirror[facing=%s]" : "fit_mirror_long[facing=%s]");
+                hang("fit_mirror_long[facing=%s]");
+                several(1, false, "mu_ottoman", "home_dresser[facing=%s]");
+                scatter(state == State.LOOTED ? 2 : 1, "home_clothes_pile");
+            }
+
+            /** The study: the desk facing the door, bookcases, a globe of a drinks cabinet, a leather chair. */
+            void study() {
+                deskFacingDoor("home_desk_pc");
+                several(Math.max(2, r.area() / 4), true, "home_bookcase[facing=%s]", "pk_cabinet_oak[facing=%s]");
+                several(2, false, "home_armchair_brown[facing=%s]", "trade_back_bar[facing=%s]", "home_floor_lamp");
+                hang("of_art_b[facing=%s]");
+            }
+
+            /** The billiard room: the table in the middle, the cue rack and the drinks against the walls. */
+            void billiards() {
+                int cx = (r.x0 + r.x1) / 2, cz = (r.z0 + r.z1) / 2;
+                boolean alongX = r.w() >= r.d();
+                int[] b = alongX ? new int[] {cx + 1, cz} : new int[] {cx, cz + 1};
+                String fc = alongX ? "south" : "west";
+                if (f.place(cx, cz, "of_pool_table_l[facing=" + fc + "]", null) && !f.place(b[0], b[1], "of_pool_table_r[facing=" + fc + "]", null)) {
+                    f.set(cx, 1, cz, "air");
+                    f.put(cx, cz, Floorplan.ROOM);
+                }
+                f.set(cx, f.rows, cz, "tr_chandelier");
+                several(2, false, "pk_bar_chair[facing=%s]", "home_armchair_brown[facing=%s]");
+                several(2, true, "pk_shelf_liquor_1[facing=%s]", "trade_back_bar[facing=%s]");
+                hang("fit_painting_c[facing=%s]");
+            }
+
+            /** The card room: felt tables with four chairs, the humidor, the bar. */
+            void cards() {
+                int cx = (r.x0 + r.x1) / 2, cz = (r.z0 + r.z1) / 2;
+                for (int[] t : new int[][] {{cx - 2, cz}, {cx + 2, cz}}) {
+                    if (f.at(t[0], t[1]) == Floorplan.ROOM && f.place(t[0], t[1], "of_card_table", null)) {
+                        for (int s2 = 0; s2 < 4; s2++) {
+                            int[] c = Floorplan.step(t[0], t[1], s2);
+                            if (rng.nextDouble() < 0.8) {
+                                f.place(c[0], c[1], (rng.nextDouble() < 0.15 ? "home_chair_tipped" : "pk_chair_dining") + "[facing=" + Floorplan.face(s2 + 2) + "]", null);
+                            }
+                        }
+                        f.set(t[0], f.rows, t[1], "tr_chandelier");
+                    }
+                }
+                wall("of_humidor[facing=%s]", false);
+                several(2, true, "trade_back_bar[facing=%s]", "pk_shelf_liquor_2[facing=%s]");
+            }
+
+            /** The cigar lounge: leather chairs round low tables, the humidor, the decanters. */
+            void cigar() {
+                several(2, false, "of_humidor[facing=%s]");
+                several(4, false, "home_armchair_brown[facing=%s]", "home_sofa_brown_m[facing=%s]");
+                table("pk_coffee_table[facing=north]", "home_armchair_brown[facing=%s]", false);
+                several(1, true, "pk_shelf_liquor_3[facing=%s]");
+                hang("fit_painting_a[facing=%s]");
+            }
+
+            /** The music room: the grand piano, a stand, chairs to listen from. */
+            void music() {
+                int cx = (r.x0 + r.x1) / 2, cz = (r.z0 + r.z1) / 2;
+                if (f.place(cx, cz, "of_grand_piano_l[facing=south]", null)) {
+                    f.place(cx - 1, cz, "of_grand_piano_r[facing=south]", null);
+                    f.set(cx, f.rows, cz, "tr_chandelier");
+                }
+                several(3, false, "mu_music_stand[facing=%s]", "home_armchair_floral[facing=%s]", "home_armchair_floral[facing=%s]");
+                several(1, true, "home_bookcase[facing=%s]");
+                hang("of_art_a[facing=%s]");
+            }
+
+            /** The staff quarters: two narrow beds, lockers, a table. */
+            void staff() {
+                bed("home_bed_blue");
+                bed("home_bed_blue");
+                several(2, true, "sc_locker_a[facing=%s]", "home_wardrobe[facing=%s]");
+                several(2, false, "home_sink_white[facing=%s]", "home_counter_white[facing=%s]", "fit_laundry_bag[facing=%s]");
+            }
+
+            /** The gun room: cabinets and racks round the walls, a glass case in the middle. */
+            void guns() {
+                several(Math.max(3, r.area() / 3), true, "home_gun_cabinet[facing=%s]", "store_gun_rack[facing=%s]", "sh_gun_rack[facing=%s]");
+                table("store_case_guns[facing=north]", "air", false);
+                hang("mu_swords[facing=%s]");
+                several(1, false, "bunk_crate_gun[facing=%s]");
+            }
+
+            /** The trophy hall: mounted beasts and armour round the walls, a pair of chairs between. */
+            void trophy() {
+                several(Math.max(3, r.area() / 4), false, "mu_bear_lo[facing=%s]", "mu_deer_lo[facing=%s]", "mu_wolf[facing=%s]", "mu_armour_lo[facing=%s]",
+                        "mu_fox[facing=%s]");
+                hang("mu_shield[facing=%s]");
+                hang("mu_swords[facing=%s]");
+                several(2, false, "home_armchair_brown[facing=%s]", "mu_eagle[facing=%s]");
+            }
+
+            /** The vault: safes and cases of jewels and coin. */
+            void vault() {
+                several(Math.max(2, r.area() / 2), false, "cellar_safe[facing=%s]", "mu_table_jewels", "mu_table_coins", "bk_coffer");
+                scatter(2, "bk_notes[facing=%s]");
+            }
+
+            /** The cash office: the safe, the counting desk, the bags of takings. */
+            void cash() {
+                deskFacingDoor("home_desk");
+                several(2, false, "cellar_safe[facing=%s]", "bk_bags[facing=%s]", "filing_cabinet[facing=%s]");
+                scatter(2, "bk_notes[facing=%s]");
+            }
+
+            /** The private champagne rooms: velvet booths round the walls, a bucket on each table. */
+            void champagne() {
+                several(Math.max(3, r.area() / 3), false, "of_booth[facing=%s]", "of_booth_purple[facing=%s]");
+                table("pk_coffee_table[facing=north]", "air", false);
+                scatter(2, "of_champagne");
+                hang("of_neon_pink[facing=%s]");
+            }
+
+            /** The sauna: cedar benches round the walls, the stove. */
+            void sauna() {
+                several(Math.max(3, r.area() / 2), false, "of_sauna_bench[axis=x]", "of_sauna_bench[axis=z]");
+                wall("of_sauna_stove", false);
+                several(1, false, "home_towel[facing=%s]");
+            }
+
+            /** A bar in a room: the counter, stools, the bottles behind. */
+            void homeBar() {
+                several(Math.max(2, r.area() / 4), true, "pk_shelf_liquor_1[facing=%s]", "pk_shelf_liquor_2[facing=%s]", "trade_back_bar[facing=%s]");
+                table("trade_bar[facing=north]", "pk_bar_chair[facing=%s]", true);
+                several(2, false, "of_high_table[facing=%s]", "trade_neon_beer[facing=%s]");
+            }
+
+            /** The tea room by the garden: a round table, cane chairs, plants. */
+            void tea() {
+                table("pk_table_wooden[facing=north]", "pk_chair_wooden[facing=%s]", false);
+                several(3, false, "mu_fern", "pk_houseplant[facing=%s]", "of_tree_pot");
+                several(1, false, "pk_sideboard[facing=%s]");
+            }
+
+            /** The formal dining room: the long table, the sideboards, the chandeliers. */
+            void diningRoom() {
+                table("pk_table_wooden[facing=north]", "pk_chair_dining[facing=%s]", true);
+                several(2, false, "pk_sideboard[facing=%s]", "pk_cabinet_oak[facing=%s]");
+                f.set((r.x0 + r.x1) / 2, f.rows, (r.z0 + r.z1) / 2, "tr_chandelier");
+                hang("of_art_a[facing=%s]");
+            }
+
+            /** The private gym: a treadmill, the rack, the bench, the mirror. */
+            void homeGym() {
+                several(2, false, "of_treadmill[facing=%s]", "of_bike[facing=%s]");
+                several(2, false, "of_squat_rack[facing=%s]", "of_bench_press[facing=%s]", "of_dumbbells[facing=%s]");
+                hang("of_mirror[facing=%s]");
+                hang("of_mirror[facing=%s]");
             }
 
             void linen() {

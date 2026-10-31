@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/trauma_kit"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/trauma_kit",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/trauma_kit",
+   "part": "body"
+  }
  }
 }

@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/bottle_opener"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/bottle_opener",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/bottle_opener",
+   "part": "body"
+  }
  }
 }

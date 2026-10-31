@@ -28,6 +28,7 @@ import numpy as np
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import wreck
 import cabin
+import glass
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 VARIANTS = ['usable', 'abandoned', 'wrecked', 'burnt']
@@ -133,6 +134,10 @@ def build(path):
     with open(out, 'wb') as f:
         f.write(blob)
     glo, nx, nz, grid = heights(base - centre)
+    # the windows, per variant, and which window each glass triangle of each mesh (body, then each lid) is
+    wins = [glass.windows(car, b, centre) for b in variants]
+    gtris = [glass.glass_tris(b, [(b['lid'] < 0) & (b['wheel'] < 0)] + [b['lid'] == k for k in range(len(b['lids']))])
+             for b in variants]
     axles = sorted({round(float(c[2]), 1) for c, _, _ in variants[0]['wheels']})
     wheelbase = axles[-1] - axles[0] if len(axles) > 1 else 0.6 * (hi[2] - lo[2])
     size = hi - lo
@@ -141,7 +146,7 @@ def build(path):
             'cell': CELL, 'x0': round(float(glo[0]), 3), 'z0': round(float(glo[2]), 3), 'nx': nx, 'nz': nz,
             'heights': [int(round(h * 100)) for h in grid.ravel()],
             'seats': [[round(float(v), 3) for v in seat - centre] for seat in wreck.seats(car)],
-            'wheelbase': round(float(wheelbase), 3), **cabin.info(car, centre)}
+            'wheelbase': round(float(wheelbase), 3), **cabin.info(car, centre), 'windows': wins, 'glassTris': gtris}
 
 
 def main():

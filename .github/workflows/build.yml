@@ -119,9 +119,16 @@ jobs:
           echo 'execute as @e[tag=zc_tough] run say still alive after a body shot' >&3
           # A test train line gets laid and its train runs round it.
           echo 'execute positioned 0 100 0 run zc train test rail' >&3
+          # A test lift is built and called to its top floor.
+          echo 'forceload add 40 40' >&3
+          echo 'execute positioned 40 100 40 run zc lift test 4' >&3
           sleep 8
           echo 'zc train list' >&3
-          sleep 32  # it comes in to its platform about 30 s after the loop is laid (slower on a busy server), then stands there 34 s
+          echo 'zc lift list' >&3
+          echo 'zc lift call' >&3
+          sleep 12
+          echo 'zc lift list' >&3
+          sleep 20  # (12 s went on the lift above) it comes in to its platform about 30 s after the loop is laid (slower on a busy server), then stands there 34 s
           echo 'zc train list' >&3
           sleep 2
           echo 'stop' >&3
@@ -129,6 +136,7 @@ jobs:
           exec 3>&-
           kill $pid 2>/dev/null || true
           pkill -f 'net.fabricmc' || true
+          grep -E 'lift|Called' server.log | head -20 || true
           grep -E 'zomboidcraft|test_rail|The dead walk|Summoned|Mixin|ERROR|Exception|settings|Dropped|LootTable|loot' server.log | head -90 || true
           grep -q 'zomboidcraft:shop/grocery' server.log
           grep -q 'swat_van' server.log
@@ -153,7 +161,9 @@ jobs:
           grep -E '^[a-z_]+ [a-z_]+ -?[0-9]+ -?[0-9]+( |$)' places.all > places.txt
           # and the railway: the el and subway at Union Station, a country stop, the el's bridge over the north arm
           printf 'rail union_el 3043 -1150\nrail union_subway 3050 -1043\nrail millbrook -4750 -1003\nrail north_arm_bridge 3010 -2420\n' >> places.txt
-          printf 'level-type=zomboidcraft\\:county\nlevel-seed=12345\n' >> run/server.properties
+          # forceload makes the server thread wait while each place is built (several at once queue behind one
+          # build lock), which in play happens off the main thread; give the watchdog room so a slow runner passes
+          printf 'level-type=zomboidcraft\\:county\nlevel-seed=12345\nmax-tick-time=300000\n' >> run/server.properties
           grep level- run/server.properties
           trap 'echo "----- county server.log"; grep -E "orce|WARN|ERROR|Exception|Done|county|County lines|Can.t keep up" county.log | grep -v "^[[:space:]]" | head -n 150; for f in run/crash-reports/*.txt; do [ -f "$f" ] && { echo "----- $f"; head -n 30 "$f"; echo "----- threads"; grep "^\"" "$f"; echo "----- busy threads"; awk -v RS= "/zomboidcraft|Worker-Main|Server thread/" "$f" | head -n 400; }; done' EXIT
           rm -f console2 && mkfifo console2
@@ -177,16 +187,26 @@ jobs:
           done < places.txt
           echo 'forceload add -100 -100 100 100' >&4
           sleep 90
+          echo 'zc lift list' >&4
+          sleep 1
+          echo 'zc sandbox list' >&4
+          echo 'zc sandbox set ClimateCycle endless_rain' >&4
+          echo 'zc sandbox list nature' >&4
+          sleep 1
           echo 'stop' >&4
           for i in $(seq 1 24); do kill -0 $pid 2>/dev/null || break; sleep 5; done
           exec 4>&-
           kill $pid 2>/dev/null || true
           pkill -f 'net.fabricmc' || true
           grep -E 'county|blocks (north|south|east|west)|ERROR|Exception' county.log | head -80 || true
+          grep -E 'lifts running|lift at' county.log | head -20 || true
           grep 'Unknown vanilla block' county.log | sort -u | head -40 || true
           ! grep -q 'Unknown vanilla block' county.log
           grep -q 'ZomboidCraft county planned' county.log
           grep 'County lines laid for the trains' county.log
+          grep -A16 'World settings:' county.log | head -20 || true
+          grep -q 'Climate Cycle = endless_rain' county.log
+          grep -q '"ClimateCycle": "endless_rain"' run/world/zomboidcraft_sandbox.json
           grep -q 'Done (' county.log
           ! grep -E 'Exception in server tick|Encountered an unexpected exception|crash report|zomboidcraft.*Exception|Failed to (load|parse)' county.log
 

@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/ifak"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/ifak",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/ifak",
+   "part": "body"
+  }
  }
 }

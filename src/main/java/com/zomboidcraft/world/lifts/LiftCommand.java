@@ -1,6 +1,8 @@
 package com.zomboidcraft.world.lifts;
 
 import com.mojang.brigadier.arguments.IntegerArgumentType;
+import java.util.ArrayList;
+import java.util.List;
 import com.mojang.brigadier.context.CommandContext;
 import com.zomboidcraft.world.blocks.CityBlocks;
 import com.zomboidcraft.world.city.BlockSink;
@@ -18,17 +20,43 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
-/** /zc lift test [floors]: builds a bare lift shaft in front of you, its doors facing you, floors 4 apart, to try a lift out. */
+/**
+ * /zc lift test [floors]: builds a bare lift shaft in front of you, its doors facing you, floors 4 apart, to try a lift out.
+ * /zc lift list: every lift running nearby and what it's doing; /zc lift call: sends each to its far floor.
+ */
 public final class LiftCommand {
     static void register() {
         CommandRegistrationCallback.EVENT.register((dispatcher, registry, env) -> dispatcher.register(
                 Commands.literal("zc")
                         .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                         .then(Commands.literal("lift")
+                                .then(Commands.literal("list").executes(LiftCommand::list))
+                                .then(Commands.literal("call").executes(LiftCommand::call))
                                 .then(Commands.literal("test")
                                         .executes(ctx -> test(ctx, 6))
                                         .then(Commands.argument("floors", IntegerArgumentType.integer(2, 40))
                                                 .executes(ctx -> test(ctx, IntegerArgumentType.getInteger(ctx, "floors"))))))));
+    }
+
+    /** Every lift ticking now, one line each. */
+    private static int list(CommandContext<CommandSourceStack> ctx) {
+        CommandSourceStack src = ctx.getSource();
+        List<LiftMachine> all = new ArrayList<>(LiftMachine.LOADED);
+        src.sendSuccess(() -> Component.literal(all.size() + " lifts running"), false);
+        for (LiftMachine m : all) {
+            src.sendSuccess(() -> Component.literal(m.describe()), false);
+        }
+        return all.size();
+    }
+
+    /** Calls every running lift to its far end, as if someone pressed the button there. */
+    private static int call(CommandContext<CommandSourceStack> ctx) {
+        List<LiftMachine> all = new ArrayList<>(LiftMachine.LOADED);
+        for (LiftMachine m : all) {
+            m.callFar(ctx.getSource().getLevel());
+        }
+        ctx.getSource().sendSuccess(() -> Component.literal("Called " + all.size() + " lifts"), true);
+        return all.size();
     }
 
     private static int test(CommandContext<CommandSourceStack> ctx, int floors) {

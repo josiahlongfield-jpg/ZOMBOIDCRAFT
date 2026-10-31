@@ -16,7 +16,13 @@ public final class Builders {
             case SUBURB -> new SuburbSite(p, out).build();
             case FARM -> new FarmSite(p, out).build();
             case PORT -> new PortSite(p, out).build();
-            case MILITARY -> new MilitarySite(p, out).build();
+            case MILITARY -> {
+                if (p.variant.equals("ridgeview")) {
+                    new Ridgeview(p, out).build();
+                } else {
+                    new MilitarySite(p, out).build();
+                }
+            }
             case ROADSIDE -> {
                 if (p.variant.equals("depot")) {
                     new DepotSite(p, county, out).build();
@@ -434,8 +440,12 @@ public final class Builders {
         });
     }
 
+    /**
+     * A column's map key. Mixed (a bijection, so still one key per column): the plain x << 32 | z hashes to x ^ z,
+     * which puts every column of a diagonal in one bucket and made clearing a big place's trees crawl.
+     */
     private static long column(int x, int z) {
-        return (long) x << 32 | (z & 0xFFFFFFFFL);
+        return ((long) x << 32 | (z & 0xFFFFFFFFL)) * 0x9E3779B97F4A7C15L;
     }
 
     /** Grass, ferns and wild flowers: what only grows out of soil. */

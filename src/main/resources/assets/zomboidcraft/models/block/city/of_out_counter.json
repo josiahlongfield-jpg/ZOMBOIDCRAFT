@@ -1,0 +1,83 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_drw_white": "zomboidcraft:block/city/home_drw_white",
+    "home_steel": "zomboidcraft:block/city/home_steel",
+    "marble_white": "zomboidcraft:block/city/marble_white",
+    "particle": "zomboidcraft:block/city/home_drw_white"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        1
+      ],
+      "to": [
+        16,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_drw_white"
+        },
+        "south": {
+          "texture": "#home_steel",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#home_steel",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#home_steel",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#home_steel"
+        },
+        "down": {
+          "texture": "#home_steel",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        14,
+        0
+      ],
+      "to": [
+        16,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#marble_white",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#marble_white",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#marble_white",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#marble_white",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#marble_white"
+        },
+        "down": {
+          "texture": "#marble_white"
+        }
+      }
+    }
+  ]
+}

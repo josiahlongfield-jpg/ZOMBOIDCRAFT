@@ -125,7 +125,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:arrow",
+          "name": "zomboidcraft:crossbow_bolt",
           "weight": 3,
           "functions": [
             {
@@ -140,7 +140,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:bow",
+          "name": "zomboidcraft:crossbow",
           "weight": 1,
           "functions": [
             {
@@ -294,6 +294,51 @@
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:pocket_pistol",
+          "weight": 2,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "type": "minecraft:uniform",
+                "min": 0.1,
+                "max": 0.6
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:pocket_ammo",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 5,
+                "max": 24
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:precision_rifle",
+          "weight": 1,
+          "functions": [
+            {
+              "function": "minecraft:set_damage",
+              "damage": {
+                "type": "minecraft:uniform",
+                "min": 0.1,
+                "max": 0.6
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:hip_holster",
           "weight": 6
         }
@@ -331,6 +376,11 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:nvg_gen3",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:shoulder_holster",
           "weight": 1
         }
       ]

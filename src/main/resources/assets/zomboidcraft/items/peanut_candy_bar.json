@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/peanut_candy_bar"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/peanut_candy_bar",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/peanut_candy_bar",
+   "part": "body"
+  }
  }
 }

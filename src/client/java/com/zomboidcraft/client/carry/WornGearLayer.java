@@ -40,10 +40,23 @@ public class WornGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
             "hiking_backpack", new Fit(1f, 1f, 1f, 4.65f, 5.55f, false),
             "military_rucksack", new Fit(0.85f, 0.85f, 0.85f, 4.53f, 5.78f, false),
             "plate_carrier", new Fit(0.95f, 1f, 1f, 5.1f, -0.75f, true),
-            "fanny_pack", new Fit(0.6f, 0.85f, 0.85f, 10.9f, -3.73f, true));
+            "fanny_pack", new Fit(0.6f, 0.85f, 0.85f, 10.9f, -3.73f, true),
+            // the satchel hangs low on the back from its shoulder strap; the pouch sits at the belt's front
+            "mail_bag", new Fit(0.8f, 0.8f, 0.8f, 6.2f, 3.4f, false),
+            "ammo_pouch_belt", new Fit(0.62f, 0.85f, 0.85f, 10.9f, -3.73f, true));
     private static final Fit BACK = new Fit(1f, 1f, 1f, 5.3f, 5.5f, false);
     private static final Fit CHEST = new Fit(1f, 1f, 1f, 5f, -0.75f, true);
     private static final Fit WAIST = new Fit(0.7f, 0.85f, 0.85f, 10.9f, -3.7f, true);
+
+    /** Worn pieces with a body-scale model; anything else in those slots isn't drawn on you. */
+    private static final java.util.Set<net.minecraft.world.item.Item> BODY_SCALE = java.util.Set.of(
+            com.zomboidcraft.ModItems.LEATHER_BELT, com.zomboidcraft.ModItems.TOOL_BELT, com.zomboidcraft.ModItems.DUTY_BELT,
+            com.zomboidcraft.ModItems.HIP_HOLSTER, com.zomboidcraft.ModItems.SHOULDER_HOLSTER,
+            com.zomboidcraft.ModItems.THIGH_HOLSTER, com.zomboidcraft.ModItems.KNIFE_SHEATH,
+            com.zomboidcraft.ModItems.MACHETE_SHEATH);
+
+    /** Where the right leg hangs from, in body pixels: the thigh rig is drawn on the leg so it swings with it. */
+    private static final float LEG_X = -1.9f, LEG_Y = 12f;
 
     /** How far down the body a belt's bottom edge sits, less the 0.8 px its model is built below centre. */
     private static final float BELT_DOWN = 11.7f - 0.8f;
@@ -70,7 +83,7 @@ public class WornGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
         for (int i = 0; i < Math.min(worn.size(), GearStore.BELT); i++) {
             ItemStack stack = worn.get(i);
             BagSpec spec = BagItem.spec(stack);
-            if (spec == null) {
+            if (spec == null || com.zomboidcraft.client.clothing.ClothingLayer.draws(stack)) {
                 continue;
             }
             Fit fit = FITS.getOrDefault(BuiltInRegistries.ITEM.getKey(stack.getItem()).getPath(),
@@ -94,13 +107,19 @@ public class WornGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
             item.submit(pose, collector, light, OverlayTexture.NO_OVERLAY, state.outlineColor);
             pose.popPose();
         }
-        if (worn.size() > GearStore.BELT && !worn.get(GearStore.BELT).isEmpty()) {
-            // belt models are built at body scale round the waist (tools/items/gen_belts.py): just move them down to it
+        // the belt, holster and sheath are built at body scale round the waist (tools/items/gen_belts.py,
+        // gen_holsters.py): they only need moving down to it
+        // over trousers or a shirt tail the belt sits out on the cloth (clothing/ClothingLayer's waistband)
+        float[] out = com.zomboidcraft.client.clothing.ClothingLayer.beltOut(player);
+        for (int i = GearStore.BELT; i <= GearStore.SHEATH && i < worn.size(); i++) {
+            if (!BODY_SCALE.contains(worn.get(i).getItem())) continue;
+            boolean thigh = worn.get(i).is(com.zomboidcraft.ModItems.THIGH_HOLSTER);
             pose.pushPose();
-            getParentModel().body.translateAndRotate(pose);
+            onPart(pose, thigh);
             pose.translate(0, BELT_DOWN / 16f, 0);
             pose.scale(1f, -1f, -1f);
-            items.updateForLiving(item, worn.get(GearStore.BELT), ItemDisplayContext.NONE, player);
+            if (!thigh) pose.scale(out[0], 1f, out[1]);
+            items.updateForLiving(item, worn.get(i), ItemDisplayContext.NONE, player);
             item.submit(pose, collector, light, OverlayTexture.NO_OVERLAY, state.outlineColor);
             pose.popPose();
         }
@@ -108,17 +127,38 @@ public class WornGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
             if (!worn.get(Carry.WORN_BACK).isEmpty()) {
                 sling(pose, collector, light, state, player, worn.get(Carry.WORN_BACK), packOut);
             }
-            hip(pose, collector, light, state, player, worn.get(Carry.WORN_HOLSTER), -1);
-            hip(pose, collector, light, state, player, worn.get(Carry.WORN_SHEATH), 1);
+            ItemStack holster = worn.get(GearStore.HOLSTER), sheath = worn.get(GearStore.SHEATH);
+            // the handgun sits down in its holster's pouch (gen_holsters.py), its grip out of the top
+            if (holster.is(com.zomboidcraft.ModItems.SHOULDER_HOLSTER)) {
+                hip(pose, collector, light, state, player, worn.get(Carry.WORN_HOLSTER), -1, false, 4.1f, 6.5f, -2.55f, 5.5f);
+            } else if (holster.is(com.zomboidcraft.ModItems.THIGH_HOLSTER)) {
+                hip(pose, collector, light, state, player, worn.get(Carry.WORN_HOLSTER), -1, true, -3.8f, 16.2f, -0.1f, 6.5f);
+            } else {
+                hip(pose, collector, light, state, player, worn.get(Carry.WORN_HOLSTER), -1, false, -5.1f, 11.5f, -0.4f, 6.5f);
+            }
+            boolean machete = sheath.is(com.zomboidcraft.ModItems.MACHETE_SHEATH);
+            // a knife cross-draw on the front of the left hip, a machete behind it (gen_holsters.py)
+            hip(pose, collector, light, state, player, worn.get(Carry.WORN_SHEATH), 1, false, machete ? 2.6f : 2.8f,
+                    machete ? 12.6f : 12.7f, machete ? 2.9f : -2.9f, machete ? 10f : 7.5f);
+        }
+    }
+
+    /** Moves to the body, or to the right leg in the body's frame (so a piece built round the waist lines up). */
+    private void onPart(PoseStack pose, boolean leg) {
+        if (leg) {
+            getParentModel().rightLeg.translateAndRotate(pose);
+            pose.translate(-LEG_X / 16f, -LEG_Y / 16f, 0);
+        } else {
+            getParentModel().body.translateAndRotate(pose);
         }
     }
 
     /**
-     * A holstered handgun on the right hip or a sheathed blade on the left (side -1 or 1), hanging grip up along the
-     * thigh, about as long as a hand span on the body.
+     * A holstered handgun or a sheathed blade (side -1 or 1), hanging grip up at (x, y, z) body pixels, {@code size}
+     * pixels long.
      */
     private void hip(PoseStack pose, SubmitNodeCollector collector, int light, AvatarRenderState state, Player player, ItemStack stack,
-                     int side) {
+                     int side, boolean leg, float x, float y, float z, float size) {
         if (stack.isEmpty()) return;
         items.updateForLiving(item, stack, ItemDisplayContext.NONE, player);
         if (item.isEmpty()) return;
@@ -126,10 +166,10 @@ public class WornGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
         boolean alongZ = box.getZsize() >= Math.max(box.getXsize(), box.getYsize());
         double length = alongZ ? box.getZsize() : Math.max(box.getXsize(), box.getYsize());
         if (length <= 0) return;
-        float k = (float) ((side < 0 ? 6.5f : 7.5f) / 16f / length);
+        float k = (float) (size / 16f / length);
         pose.pushPose();
-        getParentModel().body.translateAndRotate(pose);
-        pose.translate(side * 4.7f / 16f, 11.5f / 16f, 0.2f / 16f);
+        onPart(pose, leg);
+        pose.translate(x / 16f, y / 16f, z / 16f);
         pose.scale(-k, -k, k);
         // guns point their muzzle down the thigh; a blade's tip hangs down
         if (alongZ) {
@@ -137,6 +177,10 @@ public class WornGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
             pose.mulPose(new org.joml.Matrix4f().rotationZ((float) (side * Math.PI / 2)));
         } else if (box.getYsize() < box.getXsize()) {
             pose.mulPose(new org.joml.Matrix4f().rotationZ((float) (Math.PI / 2)));
+        }
+        if (side > 0 && !alongZ && box.getYsize() >= box.getXsize()) {
+            // held models stand handle down; turn a blade over so its handle stands out of the sheath
+            pose.mulPose(new org.joml.Matrix4f().rotationZ((float) Math.PI));
         }
         pose.translate(-(box.minX + box.maxX) / 2, -(box.minY + box.maxY) / 2, -(box.minZ + box.maxZ) / 2);
         item.submit(pose, collector, light, OverlayTexture.NO_OVERLAY, state.outlineColor);

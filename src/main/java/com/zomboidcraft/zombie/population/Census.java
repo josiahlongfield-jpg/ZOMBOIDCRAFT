@@ -5,6 +5,7 @@ import com.zomboidcraft.world.county.ChunkSink;
 import com.zomboidcraft.world.county.County;
 import com.zomboidcraft.world.county.CountyGen;
 import com.zomboidcraft.world.county.Place;
+import com.zomboidcraft.world.county.PlaceCache;
 import com.zomboidcraft.world.gen.ChunkWriter;
 import com.zomboidcraft.world.gen.CountyChunkGenerator;
 import java.util.ArrayList;
@@ -42,6 +43,17 @@ final class Census {
         return t;
     });
 
+    /**
+     * The census's own generator beside each world one: same county, but its own small place cache, so
+     * counting a big landmark doesn't push the places round the players out of the world's cache (they'd
+     * be built again while chunks wait, which is what made the game stall without the frame rate dropping).
+     */
+    private static final Map<CountyGen, CountyGen> GENS = Collections.synchronizedMap(new java.util.WeakHashMap<>());
+
+    private static CountyGen side(CountyGen world) {
+        return GENS.computeIfAbsent(world, w -> new CountyGen(w.county(), new PlaceCache(4, w.cache())));
+    }
+
     static String key(Place p) {
         return p.type + "/" + p.variant + "/" + p.x0 + "," + p.z0 + "/" + p.seed;
     }
@@ -53,7 +65,7 @@ final class Census {
         if (c == null && RUNNING.add(key)) {
             POOL.submit(() -> {
                 try {
-                    DONE.put(key, count(gen, p, minY, maxY));
+                    DONE.put(key, count(side(gen), p, minY, maxY));
                 } catch (Throwable e) {
                     ZomboidCraft.LOGGER.error("Population census failed for {}", key, e);
                     // a rough guess from its size, so the place still fills
@@ -65,6 +77,16 @@ final class Census {
             });
         }
         return c;
+    }
+
+    /** The place's count if it's done, without asking for one. */
+    static Count peek(Place p) {
+        return DONE.get(key(p));
+    }
+
+    /** How many places have been counted, so callers can tell when sums over them are out of date. */
+    static int done() {
+        return DONE.size();
     }
 
     static int pending() {

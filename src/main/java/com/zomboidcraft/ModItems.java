@@ -13,6 +13,8 @@ import com.zomboidcraft.combat.MagazineItem;
 import com.zomboidcraft.combat.MeleeWeaponItem;
 import com.zomboidcraft.combat.RifleItem;
 import com.zomboidcraft.combat.Weapons;
+import com.zomboidcraft.combat.throwing.ThrowKind;
+import com.zomboidcraft.combat.throwing.ThrowableItem;
 import com.zomboidcraft.survival.BandageItem;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +58,7 @@ public final class ModItems {
     public static final Item PROPANE_TORCH = register("propane_torch", Item::new, new Item.Properties().durability(120));
     // What the Build page builds with (building/Build).
     public static final Item METAL_SHEET = register("metal_sheet", Item::new, new Item.Properties().stacksTo(8));
-    public static final Item TIN_CAN = register("tin_can", Item::new, new Item.Properties().stacksTo(16));
+    public static final Item TIN_CAN = register("tin_can", p -> new ThrowableItem(ThrowKind.CAN, p), new Item.Properties().stacksTo(16));
     public static final Item PLASTIC_DRUM = register("plastic_drum", Item::new, new Item.Properties().stacksTo(1));
     public static final Item TARP = register("tarp", Item::new, new Item.Properties().stacksTo(4));
     public static final Item EMPTY_SANDBAG = register("empty_sandbag", Item::new, new Item.Properties().stacksTo(16));
@@ -98,6 +100,7 @@ public final class ModItems {
     public static final Item SPIKED_BAT = weapon("spiked_bat", MeleeWeaponItem::new);
     public static final Item SHOVEL = weapon("shovel", MeleeWeaponItem::new);
     public static final Item MACHETE = weapon("machete", MeleeWeaponItem::new);
+    public static final Item TOMAHAWK = weapon("tomahawk", MeleeWeaponItem::new);
     public static final Item KATANA = weapon("katana", MeleeWeaponItem::new);
     public static final Item FIRE_AXE = weapon("fire_axe", MeleeWeaponItem::new);
     public static final Item SLEDGEHAMMER = weapon("sledgehammer", MeleeWeaponItem::new);
@@ -129,6 +132,38 @@ public final class ModItems {
     public static final Item LEVER_AMMO = register("lever_ammo", Item::new, new Item.Properties().stacksTo(50));
     public static final Item CROSSBOW = gun("crossbow", GunType.CROSSBOW, 1400);
     public static final Item CROSSBOW_BOLT = register("crossbow_bolt", Item::new, new Item.Properties().stacksTo(12));
+    // the .308 battle rifle (Josiah 10-29: "slower firing but hard hitting"), fed the hunting rifle's rounds
+    public static final Item BATTLE_RIFLE = gun("battle_rifle", GunType.BATTLE_RIFLE, 1700);
+    public static final Item BATTLE_RIFLE_MAGAZINE = magazine("battle_rifle_magazine", GunType.BATTLE_RIFLE);
+    // the rest of the bought guns (Josiah 2026-10-29: "i want all of the pbr weapons in the game")
+    public static final Item POCKET_PISTOL = gun("pocket_pistol", GunType.POCKET_PISTOL, 1000);
+    public static final Item POCKET_PISTOL_MAGAZINE = magazine("pocket_pistol_magazine", GunType.POCKET_PISTOL);
+    public static final Item POCKET_AMMO = register("pocket_ammo", Item::new, new Item.Properties().stacksTo(60));
+    public static final Item MACHINE_PISTOL = gun("machine_pistol", GunType.MACHINE_PISTOL, 1200);
+    public static final Item MACHINE_PISTOL_MAGAZINE = magazine("machine_pistol_magazine", GunType.MACHINE_PISTOL);
+    public static final Item SUPPRESSED_RIFLE = gun("suppressed_rifle", GunType.SUPPRESSED_RIFLE, 1600);
+    public static final Item PRECISION_RIFLE = gun("precision_rifle", GunType.PRECISION_RIFLE, 1800);
+    public static final Item PRECISION_RIFLE_MAGAZINE = magazine("precision_rifle_magazine", GunType.PRECISION_RIFLE);
+    public static final Item HEAVY_SNIPER = gun("heavy_sniper", GunType.HEAVY_SNIPER, 2000);
+    public static final Item HEAVY_SNIPER_MAGAZINE = magazine("heavy_sniper_magazine", GunType.HEAVY_SNIPER);
+    public static final Item HEAVY_AMMO = register("heavy_ammo", Item::new, new Item.Properties().stacksTo(20));
+    public static final Item GRENADE_LAUNCHER = gun("grenade_launcher", GunType.GRENADE_LAUNCHER, 900);
+    public static final Item GRENADE_ROUND = register("grenade_round", Item::new, new Item.Properties().stacksTo(12));
+
+    // Things to throw (combat/throwing): lures, fire and smoke, and blasts. The tin can and the alarm clock are
+    // thrown too (see TIN_CAN and ALARM_CLOCK).
+    public static final Item GLASS_BOTTLE = throwable(ThrowKind.BOTTLE, 8);
+    public static final Item BRICK = throwable(ThrowKind.BRICK, 8);
+    public static final Item FIRECRACKERS = throwable(ThrowKind.FIRECRACKERS, 8);
+    public static final Item ROAD_FLARE = throwable(ThrowKind.FLARE, 8);
+    public static final Item MOLOTOV = throwable(ThrowKind.MOLOTOV, 4);
+    public static final Item SMOKE_GRENADE = throwable(ThrowKind.SMOKE, 4);
+    public static final Item FLASHBANG = throwable(ThrowKind.FLASHBANG, 4);
+    public static final Item FRAG_GRENADE = throwable(ThrowKind.FRAG, 4);
+
+    private static Item throwable(ThrowKind kind, int stack) {
+        return register(kind.id, p -> new ThrowableItem(kind, p), new Item.Properties().stacksTo(stack));
+    }
 
     private static Item gun(String name, GunType type, int durability) {
         return register(name, p -> new RifleItem(type, p),
@@ -153,9 +188,27 @@ public final class ModItems {
     public static final Item RIFLE_SUPPRESSOR = part("rifle_suppressor", Attachments.Slot.MUZZLE);
     public static final Item PISTOL_SUPPRESSOR = part("pistol_suppressor", Attachments.Slot.MUZZLE);
     public static final Item FOREGRIP = part("foregrip", Attachments.Slot.UNDERBARREL);
+    public static final Item UNDERBARREL_LAUNCHER = part("underbarrel_launcher", Attachments.Slot.UNDERBARREL);
     public static final Item WEAPON_LIGHT = part("weapon_light", Attachments.Slot.SIDE_RAIL);
     public static final Item LASER_SIGHT = part("laser_sight", Attachments.Slot.RIGHT_RAIL);
     public static final Item RIFLE_STOCK = part("rifle_stock", Attachments.Slot.STOCK);
+    public static final Item MINI_RED_DOT = part("mini_red_dot", Attachments.Slot.OPTIC);
+    public static final Item COMPACT_RED_DOT = part("compact_red_dot", Attachments.Slot.OPTIC);
+    public static final Item COMBAT_SCOPE = part("combat_scope", Attachments.Slot.OPTIC);
+    public static final Item RIFLE_SCOPE = part("rifle_scope", Attachments.Slot.OPTIC);
+    public static final Item PISTOL_SCOPE = part("pistol_scope", Attachments.Slot.OPTIC);
+    public static final Item PRECISION_SCOPE = part("precision_scope", Attachments.Slot.OPTIC);
+    public static final Item HUNTING_SCOPE = part("hunting_scope", Attachments.Slot.OPTIC);
+    public static final Item LONG_RANGE_SCOPE = part("long_range_scope", Attachments.Slot.OPTIC);
+    public static final Item CROSSBOW_SCOPE = part("crossbow_scope", Attachments.Slot.OPTIC);
+    public static final Item MAGNIFIER = part("magnifier", Attachments.Slot.MAGNIFIER);
+    public static final Item ANGLED_GRIP = part("angled_grip", Attachments.Slot.UNDERBARREL);
+    public static final Item STUBBY_GRIP = part("stubby_grip", Attachments.Slot.UNDERBARREL);
+    public static final Item SKELETON_GRIP = part("skeleton_grip", Attachments.Slot.UNDERBARREL);
+    public static final Item TACTICAL_GRIP = part("tactical_grip", Attachments.Slot.UNDERBARREL);
+    public static final Item COMPACT_LIGHT = part("compact_light", Attachments.Slot.SIDE_RAIL);
+    public static final Item SNIPER_SUPPRESSOR = part("sniper_suppressor", Attachments.Slot.MUZZLE);
+    public static final Item BIPOD = part("bipod", Attachments.Slot.BIPOD);
 
     private static Item part(String name, Attachments.Slot slot) {
         String key = GunSlotData.MODEL_KEYS.get(name);
@@ -168,7 +221,24 @@ public final class ModItems {
     public static final Item MILITARY_RUCKSACK = bag("military_rucksack", com.zomboidcraft.carry.BagSpec.RUCKSACK);
     public static final Item DUFFEL_BAG = bag("duffel_bag", com.zomboidcraft.carry.BagSpec.DUFFEL);
     public static final Item PLATE_CARRIER = bag("plate_carrier", com.zomboidcraft.carry.BagSpec.PLATE_CARRIER);
+    public static final Item CHEST_RIG = bag("chest_rig", com.zomboidcraft.carry.BagSpec.CHEST_RIG);
+    public static final Item LOAD_BEARING_VEST = bag("load_bearing_vest", com.zomboidcraft.carry.BagSpec.LOAD_BEARING_VEST);
+    public static final Item MEDIC_VEST = bag("medic_vest", com.zomboidcraft.carry.BagSpec.MEDIC_VEST);
+    public static final Item BANDOLIER = bag("bandolier", com.zomboidcraft.carry.BagSpec.BANDOLIER);
+    public static final Item HEAVY_PLATE_CARRIER = bag("heavy_plate_carrier", com.zomboidcraft.carry.BagSpec.HEAVY_PLATE_CARRIER);
     public static final Item FANNY_PACK = bag("fanny_pack", com.zomboidcraft.carry.BagSpec.FANNY_PACK);
+    public static final Item PURSE = bag("purse", com.zomboidcraft.carry.BagSpec.PURSE);
+    public static final Item BRIEFCASE = bag("briefcase", com.zomboidcraft.carry.BagSpec.BRIEFCASE);
+    public static final Item GYM_BAG = bag("gym_bag", com.zomboidcraft.carry.BagSpec.GYM_BAG);
+    public static final Item DOCTORS_BAG = bag("doctors_bag", com.zomboidcraft.carry.BagSpec.DOCTORS_BAG);
+    public static final Item PLASTIC_BAG = bag("plastic_bag", com.zomboidcraft.carry.BagSpec.PLASTIC_BAG);
+    public static final Item PAPER_BAG = bag("paper_bag", com.zomboidcraft.carry.BagSpec.PAPER_BAG);
+    public static final Item SUITCASE = bag("suitcase", com.zomboidcraft.carry.BagSpec.SUITCASE);
+    public static final Item LUNCHBOX = bag("lunchbox", com.zomboidcraft.carry.BagSpec.LUNCHBOX);
+    public static final Item COOLER = bag("cooler", com.zomboidcraft.carry.BagSpec.COOLER);
+    public static final Item MAIL_BAG = bag("mail_bag", com.zomboidcraft.carry.BagSpec.MAIL_BAG);
+    public static final Item TOOL_BAG = bag("tool_bag", com.zomboidcraft.carry.BagSpec.TOOL_BAG);
+    public static final Item AMMO_POUCH_BELT = bag("ammo_pouch_belt", com.zomboidcraft.carry.BagSpec.AMMO_POUCH_BELT);
 
     // Gun cases and an ammo can: carried in the off hand, packed when found (combat/CaseItem).
     public static final Item RIFLE_CASE = gunCase("rifle_case", CaseItem.Kind.RIFLE, com.zomboidcraft.carry.BagSpec.RIFLE_CASE);
@@ -255,10 +325,11 @@ public final class ModItems {
                 mag.set(GunState.MAG_ROUNDS, type.capacity());
                 output.accept(mag);
                 ItemStack kitted = gun.copy();
-                for (Item part : type == GunType.PISTOL ? List.of(PISTOL_SUPPRESSOR, WEAPON_LIGHT)
+                for (Item part : type == GunType.PISTOL || type == GunType.MACHINE_PISTOL ? List.of(PISTOL_SUPPRESSOR, WEAPON_LIGHT)
                         : type == GunType.RIMFIRE || type == GunType.SMG ? List.of(PISTOL_SUPPRESSOR)
-                        : type == GunType.HUNTING_RIFLE ? List.of(SCOPE_4X, RIFLE_SUPPRESSOR)
-                        : List.of(HOLO_SIGHT, RIFLE_SUPPRESSOR, FOREGRIP, WEAPON_LIGHT)) {
+                        : type == GunType.HUNTING_RIFLE || type == GunType.PRECISION_RIFLE || type == GunType.HEAVY_SNIPER
+                        ? List.of(LONG_RANGE_SCOPE, SNIPER_SUPPRESSOR, BIPOD)
+                        : List.of(HOLO_SIGHT, MAGNIFIER, RIFLE_SUPPRESSOR, ANGLED_GRIP, WEAPON_LIGHT)) {
                     Attachments.mount(kitted, new ItemStack(part));
                 }
                 if (!ItemStack.matches(kitted, gun)) {      // a gun with no rails or threads has nothing to put on

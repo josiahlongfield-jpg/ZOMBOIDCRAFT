@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/tape_measure"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/tape_measure",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/tape_measure",
+   "part": "body"
+  }
  }
 }

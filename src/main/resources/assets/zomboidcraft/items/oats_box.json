@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/oats_box"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/oats_box",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/oats_box",
+   "part": "body"
+  }
  }
 }

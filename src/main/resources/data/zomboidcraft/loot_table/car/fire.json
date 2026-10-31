@@ -11,7 +11,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:fire_axe",
-          "weight": 8,
+          "weight": 16,
           "functions": [
             {
               "function": "minecraft:set_damage",
@@ -26,17 +26,17 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:crowbar",
-          "weight": 6
+          "weight": 12
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:sledgehammer",
-          "weight": 4
+          "weight": 8
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:iron_helmet",
-          "weight": 6,
+          "name": "zomboidcraft:combat_helmet",
+          "weight": 12,
           "functions": [
             {
               "function": "minecraft:set_damage",
@@ -44,46 +44,6 @@
                 "type": "minecraft:uniform",
                 "min": 0.25,
                 "max": 0.85
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:leather_chestplate",
-          "weight": 6,
-          "functions": [
-            {
-              "function": "minecraft:set_damage",
-              "damage": {
-                "type": "minecraft:uniform",
-                "min": 0.25,
-                "max": 0.85
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:bucket",
-          "weight": 6
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:water_bucket",
-          "weight": 4
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:ladder",
-          "weight": 6,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 4
               }
             }
           ]
@@ -91,7 +51,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:bandage",
-          "weight": 6,
+          "weight": 12,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -105,32 +65,57 @@
         },
         {
           "type": "minecraft:empty",
-          "weight": 8
+          "weight": 16
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:two_way_radio",
-          "weight": 6
+          "weight": 12
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:coffee_thermos",
-          "weight": 2
+          "weight": 18
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:burn_ointment",
-          "weight": 6
+          "weight": 54
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:moldable_splint",
+          "weight": 18
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:rope",
-          "weight": 4
+          "weight": 36
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:big_flashlight",
-          "weight": 2
+          "weight": 18
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:fire_gloves",
+          "weight": 54
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:skillbook_first_aid",
+          "weight": 18
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:fire_extinguisher",
+          "weight": 108
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:fire_hose_nozzle",
+          "weight": 72
         },
         {
           "type": "minecraft:item",
@@ -139,8 +124,63 @@
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:bag_valve_mask",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:oxygen_cylinder",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:burn_kit",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:trauma_bag",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:bolt_cutters",
           "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:medic_vest",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:fire_helmet",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:gas_mask",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:fire_coat",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:fire_pants",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:halligan_tool",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:scba_tank",
+          "weight": 4
         }
       ]
     }

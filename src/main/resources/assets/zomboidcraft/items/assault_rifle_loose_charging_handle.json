@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/weapon/assault_rifle/charging_handle"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/weapon/assault_rifle/charging_handle",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "pbr_assault_rifle",
+   "part": "handle"
+  }
  }
 }

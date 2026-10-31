@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/scalpel"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/scalpel",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/scalpel",
+   "part": "body"
+  }
  }
 }

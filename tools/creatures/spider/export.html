@@ -1,0 +1,93 @@
+<!doctype html><script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
+import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
+const L = new FBXLoader();
+const load = u => new Promise((r, j) => L.load(u, r, undefined, j));
+try {
+  const obj = await load('Anim_Spider_7.fbx');
+  obj.traverse(o => { if (o.isBone) { o.userData.restQ = o.quaternion.clone(); o.userData.restP = o.position.clone(); } });
+  // one copy of each clip (the ROOT| ones are the same takes), scale tracks dropped (they never change)
+  const seen = new Set(), clips = [];
+  for (const c of obj.animations) {
+    const n = c.name.replace(/^ROOT\|/, '');
+    if (seen.has(n)) continue; seen.add(n);
+    const k = c.clone(); k.name = n;
+    k.tracks = k.tracks.filter(t => !t.name.endsWith('.scale') && (!t.name.endsWith('.position') || /^(ROOT|def_pelvis)\./.test(t.name)));
+    k.optimize();
+    clips.push(k);
+  }
+  clips.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
+  // Walk_Right folds two legs across the body; rebuild it as Walk_left mirrored left-to-right
+  {
+    const B = {}; obj.traverse(o => { if (o.isBone) B[o.name] = o; });
+    const twin = n => n.replace(/L$/, '\u0000').replace(/R$/, 'L').replace('\u0000', 'R');
+    const mixer = new THREE.AnimationMixer(obj);
+    obj.updateMatrixWorld(true);
+    // work in the skinned mesh's bind space, where the rig is exactly symmetric across x
+    let T = null; obj.traverse(o => { if (o.isSkinnedMesh) T = o; });
+    const sk = T.skeleton, inv = T.bindMatrixInverse;
+    const dec = m => { const q = new THREE.Quaternion(), p = new THREE.Vector3(); m.decompose(p, q, new THREE.Vector3()); return { q, p }; };
+    const objQ = m => dec(new THREE.Matrix4().multiplyMatrices(inv, m)).q;
+    const objP = b => dec(new THREE.Matrix4().multiplyMatrices(inv, b.matrixWorld)).p;
+    const rest = {}; sk.bones.forEach((bn, i) => { rest[bn.name] = dec(new THREE.Matrix4().copy(sk.boneInverses[i]).invert()).q; });
+    const nAx = new THREE.Vector3(1, 0, 0);
+    const mirQ = q => { const v = new THREE.Vector3(q.x, q.y, q.z), d = v.dot(nAx); v.copy(nAx).multiplyScalar(2 * d).sub(new THREE.Vector3(q.x, q.y, q.z)); return new THREE.Quaternion(v.x, v.y, v.z, q.w); };
+    const mirP = p => p.clone().sub(nAx.clone().multiplyScalar(2 * p.dot(nAx)));
+    const left = obj.animations.find(c => c.name === 'Walk_left');
+    const act = mixer.clipAction(left); act.play();
+    const FPS = 30, N = Math.round(left.duration * FPS), times = [], qv = {}, pv = [];
+    for (const n in B) qv[n] = [];
+    const order = []; obj.traverse(o => { if (o.isBone) order.push(o.name); });   // parents before children
+    for (let i = 0; i <= N; i++) {
+      const t = Math.min(left.duration, i / FPS); times.push(t);
+      mixer.setTime(t); obj.updateMatrixWorld(true);
+      const cur = {}; for (const n in B) cur[n] = objQ(B[n].matrixWorld);
+      const want = {};
+      for (const n of order) {
+        const src = twin(n) in B ? twin(n) : n;
+        // the source bone's turn away from its rest, mirrored, put on this bone's rest
+        const d = cur[src].clone().multiply(rest[src].clone().invert());
+        want[n] = mirQ(d).multiply(rest[n]);
+      }
+      for (const n of order) {
+        const p = B[n].parent, pw = p && p.isBone ? want[p.name] : objQ(p.matrixWorld);
+        const local = pw.clone().invert().multiply(want[n]);
+        qv[n].push(local.x, local.y, local.z, local.w);
+      }
+      // the pelvis drifts side to side: mirror its offset from rest
+      const pel = B.def_pelvis, lp = pel.position.clone();
+      pv.push(lp.x, lp.y, lp.z);
+    }
+    // pelvis local position: mirror through the parent's frame
+    {
+      const pel = B.def_pelvis, par = pel.parent; pv.length = 0;
+      const parInv = new THREE.Matrix4();
+      for (let i = 0; i <= N; i++) {
+        mixer.setTime(times[i]); obj.updateMatrixWorld(true);
+        const wp = mirP(objP(pel));
+        parInv.copy(new THREE.Matrix4().multiplyMatrices(inv, par.matrixWorld)).invert();
+        const lp = wp.applyMatrix4(parInv); pv.push(lp.x, lp.y, lp.z);
+      }
+    }
+    mixer.stopAllAction(); mixer.uncacheRoot(obj);
+    obj.traverse(o => { if (o.isBone) {} });
+    const tracks = order.map(n => new THREE.QuaternionKeyframeTrack(n + '.quaternion', times, qv[n]));
+    tracks.push(new THREE.VectorKeyframeTrack('def_pelvis.position', times, pv));
+    const keepRoot = left.tracks.filter(t => /^ROOT\./.test(t.name) && !t.name.endsWith('.scale'));
+    const mirrored = new THREE.AnimationClip('Walk_Right', left.duration, tracks.concat(keepRoot));
+    mirrored.optimize();
+    const i = clips.findIndex(c => c.name === 'Walk_Right'); clips[i] = mirrored;
+    // put the skeleton back in its rest pose for export
+    for (const n in B) { B[n].quaternion.copy(B[n].userData.restQ); B[n].position.copy(B[n].userData.restP); } obj.updateMatrixWorld(true);
+  }
+  obj.traverse(o => { if (o.isMesh) { for (const m of [].concat(o.material)) { m.map = null; } } });
+  const ex = new GLTFExporter();
+  const glb = await new Promise((r, j) => ex.parse(obj, r, j, { binary: true, animations: clips }));
+  const bytes = new Uint8Array(glb);
+  let s = ''; for (let i = 0; i < bytes.length; i += 0x8000) s += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+  window.OUT = { size: bytes.length, clips: clips.map(c => c.name), b64: btoa(s) };
+} catch (e) { window.OUT = { err: String(e) + e.stack }; }
+document.title = 'done';
+</script>

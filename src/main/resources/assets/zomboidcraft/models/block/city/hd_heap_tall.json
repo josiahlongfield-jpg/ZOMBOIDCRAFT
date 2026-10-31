@@ -1,0 +1,458 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hd_scrap": "zomboidcraft:block/city/hd_scrap",
+    "hd_scrap_b": "zomboidcraft:block/city/hd_scrap_b",
+    "hd_sheet": "zomboidcraft:block/city/hd_sheet",
+    "hd_sheet_b": "zomboidcraft:block/city/hd_sheet_b",
+    "hd_tangle": "zomboidcraft:block/city/hd_tangle",
+    "hd_tangle_b": "zomboidcraft:block/city/hd_tangle_b",
+    "particle": "zomboidcraft:block/city/hd_scrap"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        10,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hd_scrap",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#hd_scrap",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#hd_scrap",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#hd_scrap",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#hd_scrap"
+        },
+        "down": {
+          "texture": "#hd_scrap",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        10,
+        1
+      ],
+      "to": [
+        15,
+        15,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hd_scrap_b"
+        },
+        "south": {
+          "texture": "#hd_scrap_b"
+        },
+        "east": {
+          "texture": "#hd_scrap_b"
+        },
+        "west": {
+          "texture": "#hd_scrap_b"
+        },
+        "up": {
+          "texture": "#hd_scrap_b"
+        },
+        "down": {
+          "texture": "#hd_scrap_b"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        6,
+        2
+      ],
+      "to": [
+        15,
+        7,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hd_sheet"
+        },
+        "south": {
+          "texture": "#hd_sheet"
+        },
+        "east": {
+          "texture": "#hd_sheet"
+        },
+        "west": {
+          "texture": "#hd_sheet"
+        },
+        "up": {
+          "texture": "#hd_sheet"
+        },
+        "down": {
+          "texture": "#hd_sheet"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "x",
+        "angle": 22.5
+      }
+    },
+    {
+      "from": [
+        2,
+        9,
+        3
+      ],
+      "to": [
+        14,
+        10,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hd_sheet_b"
+        },
+        "south": {
+          "texture": "#hd_sheet_b"
+        },
+        "east": {
+          "texture": "#hd_sheet_b"
+        },
+        "west": {
+          "texture": "#hd_sheet_b"
+        },
+        "up": {
+          "texture": "#hd_sheet_b"
+        },
+        "down": {
+          "texture": "#hd_sheet_b"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "z",
+        "angle": 22.5
+      }
+    },
+    {
+      "from": [
+        3,
+        15,
+        4
+      ],
+      "to": [
+        12,
+        16,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hd_scrap"
+        },
+        "south": {
+          "texture": "#hd_scrap"
+        },
+        "east": {
+          "texture": "#hd_scrap"
+        },
+        "west": {
+          "texture": "#hd_scrap"
+        },
+        "up": {
+          "texture": "#hd_scrap",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#hd_scrap"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        10,
+        0
+      ],
+      "to": [
+        8.5,
+        22,
+        1.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hd_scrap_b",
+          "uv": [
+            7.5,
+            0,
+            9,
+            12
+          ]
+        },
+        "south": {
+          "texture": "#hd_scrap_b",
+          "uv": [
+            7,
+            0,
+            8.5,
+            12
+          ]
+        },
+        "east": {
+          "texture": "#hd_scrap_b",
+          "uv": [
+            14.5,
+            0,
+            16,
+            12
+          ]
+        },
+        "west": {
+          "texture": "#hd_scrap_b",
+          "uv": [
+            0,
+            0,
+            1.5,
+            12
+          ]
+        },
+        "up": {
+          "texture": "#hd_scrap_b"
+        },
+        "down": {
+          "texture": "#hd_scrap_b"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "x",
+        "angle": -22.5
+      }
+    },
+    {
+      "from": [
+        11,
+        12,
+        9
+      ],
+      "to": [
+        12.5,
+        24,
+        10.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hd_scrap",
+          "uv": [
+            3.5,
+            0,
+            5,
+            12
+          ]
+        },
+        "south": {
+          "texture": "#hd_scrap",
+          "uv": [
+            11,
+            0,
+            12.5,
+            12
+          ]
+        },
+        "east": {
+          "texture": "#hd_scrap",
+          "uv": [
+            5.5,
+            0,
+            7,
+            12
+          ]
+        },
+        "west": {
+          "texture": "#hd_scrap",
+          "uv": [
+            9,
+            0,
+            10.5,
+            12
+          ]
+        },
+        "up": {
+          "texture": "#hd_scrap"
+        },
+        "down": {
+          "texture": "#hd_scrap"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "z",
+        "angle": 22.5
+      }
+    },
+    {
+      "from": [
+        0,
+        4,
+        8
+      ],
+      "to": [
+        16,
+        20,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hd_tangle",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#hd_tangle",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#hd_tangle",
+          "uv": [
+            8,
+            0,
+            8,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#hd_tangle",
+          "uv": [
+            8,
+            0,
+            8,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#hd_tangle"
+        },
+        "down": {
+          "texture": "#hd_tangle"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "y",
+        "angle": 45
+      }
+    },
+    {
+      "from": [
+        0,
+        4,
+        8
+      ],
+      "to": [
+        16,
+        18,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hd_tangle_b",
+          "uv": [
+            0,
+            0,
+            16,
+            14
+          ]
+        },
+        "south": {
+          "texture": "#hd_tangle_b",
+          "uv": [
+            0,
+            0,
+            16,
+            14
+          ]
+        },
+        "east": {
+          "texture": "#hd_tangle_b",
+          "uv": [
+            8,
+            0,
+            8,
+            14
+          ]
+        },
+        "west": {
+          "texture": "#hd_tangle_b",
+          "uv": [
+            8,
+            0,
+            8,
+            14
+          ]
+        },
+        "up": {
+          "texture": "#hd_tangle_b"
+        },
+        "down": {
+          "texture": "#hd_tangle_b"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "y",
+        "angle": -45
+      }
+    }
+  ]
+}

@@ -308,6 +308,8 @@ public final class Plan {
         public final boolean closed;
         public final double reach;
         public final double minX, minZ, maxX, maxZ;
+        // keyed by County.key times an odd constant: a plain key's Long hash (x ^ z) put whole diagonals in one bin
+        private static final long MIX = 0x9E3779B97F4A7C15L;
         private final Map<Long, int[]> buckets = new java.util.HashMap<>();
         private final Map<Integer, int[]> rows = new java.util.HashMap<>();
 
@@ -345,7 +347,7 @@ public final class Plan {
                     rw.computeIfAbsent(r, k -> new ArrayList<>()).add(s);
                 }
             }
-            bk.forEach((k, v) -> buckets.put(k, v.stream().mapToInt(Integer::intValue).toArray()));
+            bk.forEach((k, v) -> buckets.put(k * MIX, v.stream().mapToInt(Integer::intValue).toArray()));
             rw.forEach((k, v) -> rows.put(k, v.stream().mapToInt(Integer::intValue).toArray()));
         }
 
@@ -367,7 +369,7 @@ public final class Plan {
 
         /** Distance to the nearest segment, or cap if none is nearer (cap at most {@link #reach}). */
         public double distance(double x, double z, double cap) {
-            int[] segs = buckets.get(County.key(Math.floorDiv((int) Math.floor(x), CELL), Math.floorDiv((int) Math.floor(z), CELL)));
+            int[] segs = buckets.get(County.key(Math.floorDiv((int) Math.floor(x), CELL), Math.floorDiv((int) Math.floor(z), CELL)) * MIX);
             double best = cap;
             if (segs != null) {
                 for (int s : segs) {
@@ -379,7 +381,7 @@ public final class Plan {
 
         /** The nearest point on the line and the direction there: {x, z, dx, dz, along}, or null past reach. */
         public double[] nearest(double x, double z) {
-            int[] segs = buckets.get(County.key(Math.floorDiv((int) Math.floor(x), CELL), Math.floorDiv((int) Math.floor(z), CELL)));
+            int[] segs = buckets.get(County.key(Math.floorDiv((int) Math.floor(x), CELL), Math.floorDiv((int) Math.floor(z), CELL)) * MIX);
             if (segs == null) {
                 return null;
             }
@@ -389,7 +391,7 @@ public final class Plan {
                 double ax = x(s), az = z(s), bx = x(s + 1), bz = z(s + 1);
                 double vx = bx - ax, vz = bz - az, len2 = vx * vx + vz * vz;
                 double t = len2 == 0 ? 0 : Math.max(0, Math.min(1, ((x - ax) * vx + (z - az) * vz) / len2));
-                double px = ax + vx * t, pz = az + vz * t, dist = Math.hypot(x - px, z - pz);
+                double px = ax + vx * t, pz = az + vz * t, dist = Math.sqrt((x - px) * (x - px) + (z - pz) * (z - pz));
                 if (dist < best) {
                     best = dist;
                     double len = Math.sqrt(len2);
@@ -439,7 +441,8 @@ public final class Plan {
         static double segDist(double x, double z, double ax, double az, double bx, double bz) {
             double vx = bx - ax, vz = bz - az, len2 = vx * vx + vz * vz;
             double t = len2 == 0 ? 0 : Math.max(0, Math.min(1, ((x - ax) * vx + (z - az) * vz) / len2));
-            return Math.hypot(x - ax - vx * t, z - az - vz * t);
+            double ex = x - ax - vx * t, ez = z - az - vz * t;
+            return Math.sqrt(ex * ex + ez * ez);
         }
     }
 }

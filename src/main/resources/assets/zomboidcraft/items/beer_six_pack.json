@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/beer_six_pack"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/beer_six_pack",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/beer_six_pack",
+   "part": "body"
+  }
  }
 }

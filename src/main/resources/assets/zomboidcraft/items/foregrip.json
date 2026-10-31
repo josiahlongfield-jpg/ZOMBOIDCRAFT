@@ -1,6 +1,16 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/weapon/part/foregrip"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/weapon/part/foregrip",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "att_foregrip",
+   "part": "body",
+   "offset": [
+    8.0,
+    6.771,
+    8.0
+   ]
+  }
  }
 }

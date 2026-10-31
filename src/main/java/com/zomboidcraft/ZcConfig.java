@@ -30,6 +30,7 @@ public final class ZcConfig {
     public Look look = new Look();
     public World world = new World();
     public Weather weather = new Weather();
+    public Nature nature = new Nature();
     public Combat combat = new Combat();
     /** Shooting limbs off zombies: how much each limb takes before it tears off, and how hard each kind of gun tears. */
     public Limbs limbs = new Limbs();
@@ -58,6 +59,22 @@ public final class ZcConfig {
     public GunStats leverAction = GunStats.leverAction();
     /** The crossbow's own numbers, and how often its bolts break. */
     public CrossbowStats crossbow = new CrossbowStats();
+    /** The .308 battle rifle's own numbers (it has full auto, slower than the assault rifle's). */
+    public GunStats battleRifle = GunStats.battleRifle();
+    /** The .380 pocket pistol's own numbers. */
+    public GunStats pocketPistol = GunStats.pocketPistol();
+    /** The 9mm machine pistol's own numbers (it has full auto, very fast). */
+    public GunStats machinePistol = GunStats.machinePistol();
+    /** The suppressed rifle's own numbers (its can is built in, so every shot is quiet). */
+    public GunStats suppressedRifle = GunStats.suppressedRifle();
+    /** The .308 bolt-action precision rifle's own numbers. */
+    public GunStats precisionRifle = GunStats.precisionRifle();
+    /** The .50 heavy sniper's own numbers. */
+    public GunStats heavySniper = GunStats.heavySniper();
+    /** The six-shot 40mm grenade launcher's own numbers (its blast is in throwing.launcher*). */
+    public GunStats grenadeLauncher = GunStats.grenadeLauncher();
+    /** The Warthog's mounted minigun: its rounds, rate, spin-up and belt. */
+    public MinigunStats minigun = new MinigunStats();
     /** How often a found gun comes in each of its finishes. */
     public Finishes finishes = new Finishes();
     public Carry carry = new Carry();
@@ -78,6 +95,113 @@ public final class ZcConfig {
     public Population population = new Population();
     /** Driverless trains: the county railway and the downtown subway (TrainCommand, world.trains). */
     public Trains trains = new Trains();
+    /** Things you throw: lures, fire, smoke and blasts (combat/throwing). */
+    public Throwing throwing = new Throwing();
+
+    public static class Throwing {
+        public boolean enabled = true;
+        /** Ticks of wind-up for a full-strength throw, and its speed then (blocks a tick); a tap throws at a third. */
+        public int fullDrawTicks = 12;
+        public double throwSpeed = 1.35;
+        /** Endurance each throw costs. */
+        public double throwEndurance = 4;
+        /** Fire, blasts and flashbangs hurt players too, friends included. */
+        public boolean friendlyFire = true;
+        /** Show where it will land while you wind up: a dotted arc and a mark where it comes down. */
+        public boolean arcPreview = true;
+        /** How hard a throw off the quick-use wheel is, as a share of a full wind-up (0 to 1). */
+        public double quickThrowPower = 0.7;
+
+        /** How far zombies hear each one (blocks). */
+        public double bottleNoise = 20;
+        public double canNoise = 12;
+        public double brickNoise = 10;
+        public double firecrackerNoise = 45;
+        public double flareNoise = 20;
+        public double alarmNoise = 35;
+        public double molotovNoise = 18;
+        public double smokeNoise = 10;
+        public double flashbangNoise = 60;
+        public double fragNoise = 80;
+
+        /** Damage a hit with a thrown bottle, can or brick does; a brick to the head staggers for this many ticks. */
+        public double bottleDamage = 2;
+        public double canDamage = 1;
+        public double brickDamage = 4;
+        public int brickStagger = 20;
+
+        /** Ticks the firecrackers bang for, a flare burns, and a thrown alarm clock rings (it waits the time it's set to). */
+        public int firecrackerTicks = 120;
+        public int flareTicks = 1200;
+        public int alarmRingTicks = 400;
+        /** Light a burning flare gives (0-15). */
+        public int flareLight = 14;
+
+        /** The molotov's fire pool: radius (blocks), and how long the spilled fuel burns (ticks). */
+        public double molotovRadius = 1.6;
+        public int molotovBurnTicks = 200;
+        /** Ticks a zombie or player that catches fire keeps burning. */
+        public int burnTicks = 160;
+
+        /** The smoke cloud's radius (blocks) and how long it lasts (ticks). */
+        public double smokeRadius = 5;
+        public int smokeTicks = 400;
+
+        /** Fuses from the moment the pin's pulled or the fuse is lit (ticks). Hold on too long and it goes off in hand. */
+        public int flashbangFuse = 30;
+        public int fragFuse = 90;
+        /** The flashbang: zombies within this radius are stunned this long; players near it are blinded and deafened. */
+        public double flashbangRadius = 6;
+        public int flashbangStun = 80;
+        public int flashbangBlind = 100;
+        /** Blasts: the radius they kill or maim in, the damage at the middle, and a frag's shrapnel reach past that. */
+        public double fragRadius = 5;
+        public double fragDamage = 50;
+        public double fragShrapnel = 10;
+        public double shrapnelDamage = 8;
+        /**
+         * The grenade launchers' 40mm rounds: how fast they leave the barrel (blocks a tick), how many ticks they fly
+         * before they're armed (one that hits something sooner thuds and doesn't go off), and their blast.
+         */
+        public double launcherSpeed = 2.4;
+        public int launcherArmTicks = 3;
+        public double launcherRadius = 4;
+        public double launcherDamage = 45;
+        public double launcherShrapnel = 8;
+
+        /**
+         * Fires from blasts, molotovs and flares never break blocks themselves and never run away across the world:
+         * each spreads at most fireReach blocks from where it started, holds at most fireMaxBlocks flames, and
+         * burns out after fireLifeTicks. Left alone it burns wooden and soft blocks (fireBurnChance per check);
+         * rain puts it out (fireRainChance), and so does water.
+         */
+        public boolean fireSpreads = true;
+        public int fireReach = 2;
+        public int fireMaxBlocks = 60;
+        public int fireLifeTicks = 1200;
+        public double fireSpreadChance = 0.3;
+        public double fireBurnChance = 0.08;
+        public double fireRainChance = 0.35;
+        /** Share of the flammable spots in a blast's radius that catch. */
+        public double blastFireChance = 0.35;
+    }
+
+    /** Companions: how they feel about you when you first meet. */
+    public Companions companions = new Companions();
+
+    public static class Companions {
+        /** Where a companion you spawn or recruit starts with you, 0..100: she trusts you, likes you and is a little drawn to you. */
+        public double startTrust = 60;
+        public double startAffection = 45;
+        public double startAttraction = 35;
+        /** How far each one is rolled either way, so every companion is a bit different. */
+        public double startSpread = 10;
+        /** Her gun never runs dry (the old way); off, she loads real rounds from her pack and goes looking for more. */
+        public boolean endlessAmmo = false;
+        /** The share of your experience a bonded companion picks up watching you work nearby (0 turns it off). */
+        public double watchShare = 0.25;
+    }
+
     public Start start = new Start();
 
     public static class Start {
@@ -90,34 +214,43 @@ public final class ZcConfig {
     }
 
     public static class Trains {
-        /** Cruising speeds in blocks a second; a little slow, so the view from the ride is enjoyed. */
-        public double railSpeed = 10;
-        public double subwaySpeed = 9;
+        /** Cruising speeds in blocks a second (60 is about 216 km/h). */
+        public double railSpeed = 60;
+        public double subwaySpeed = 56;
         /** Speeding up and braking, blocks a second per second: gradual, never sudden. */
-        public double acceleration = 0.6;
-        public double braking = 0.75;
+        public double acceleration = 3;
+        public double braking = 3.5;
         /** How hard a curve may be taken (sideways blocks/s/s): lower slows trains more on bends. */
-        public double curveGrip = 1.1;
+        public double curveGrip = 4.0;
         /** Seconds the doors stay open at a stop before they close by themselves. */
         public int doorSeconds = 30;
         /** Cars in each train. */
         public int railCars = 3;
         public int subwayCars = 3;
-        /** Trains running each line. */
-        public int railTrains = 1;
-        public int subwayTrains = 1;
-        /** Earshot of the flare (railway) and the siren (subway) a call button sets off, for zombies. */
+        /** Trains running each line; 0 spreads them along it, one every railSpacing / subwaySpacing blocks of track. */
+        public int railTrains = 0;
+        public int subwayTrains = 0;
+        public double railSpacing = 1500;
+        /** How much faster a train runs on its way to a call button (curves still slow it), never past 80 blocks a second. */
+        public double expressSpeed = 1.3;
+        public double subwaySpacing = 900;
+        /** Earshot of the flare (railway) and the buzzer (subway) a call button sets off, once, for zombies. */
         public double flareNoise = 72;
         public double sirenNoise = 64;
-        /** How long one flare burns, in seconds; another goes up if the train still hasn't come. */
+        /** How long the flare burns, in seconds. */
         public int flareSeconds = 45;
         /** Damage a moving train does to a zombie it hits, and to a player per block-a-second of speed. */
         public float hitZombie = 40;
         public float hitPlayerPerSpeed = 1.2f;
         /** OTTO, the robot conductor, talks in chat to riders and people on the platform. */
         public boolean ottoTalks = true;
+        /** OTTO keeps quiet except for his one greeting when someone boards (Josiah 2026-10-29); false for all his lines. */
+        public boolean ottoOnlyGreets = true;
         /** Seconds between OTTO's remarks while running between stops. */
         public int ottoChatter = 45;
+        /** Zombies ride the trains: share of trains that start with some aboard, and most a train carries. */
+        public double zombieRiderChance = 0.6;
+        public int zombieRidersMax = 6;
     }
 
     public static class Performance {
@@ -177,7 +310,13 @@ public final class ZcConfig {
         public int perStep = 24;
         /** Share of houses (in towns, suburbs and farms) with nobody left in them. */
         public double emptyHouses = 0.5;
-        /** In-game days before a cleared place fills again; 0 never (Zomboid's respawn setting). */
+        /** Buildings where the dead gathered at the end draw extra indoors: hospital x3, police x2.5, mall x2, fire station and school x1.5. */
+        public boolean hotspots = true;
+        /**
+         * In-game days between breach surges (world/Breach): each one the ring under Ridgeview Labs opens for a minute
+         * and the dead pour out, so cleared places fill again and a lost Harvestman is replaced; 0 never (Zomboid's
+         * respawn setting; the ring only flickers then).
+         */
         public int respawnDays = 0;
         /** The dead out in the open past the real ones are drawn as a still crowd (pictures, no cost to the server)... */
         public boolean crowd = true;
@@ -201,8 +340,15 @@ public final class ZcConfig {
         public int sawnOffWeight = 2;
         public int leverActionWeight = 3;
         public int crossbowWeight = 1;
+        public int battleRifleWeight = 2;
+        public int suppressedRifleWeight = 1;
+        public int precisionRifleWeight = 2;
+        public int heavySniperWeight = 1;
+        public int grenadeLauncherWeight = 1;
         /** How often a pistol case holds each handgun, against the others. */
         public int pistolWeight = 3;
+        public int pocketPistolWeight = 2;
+        public int machinePistolWeight = 1;
         public int revolverWeight = 2;
         public int magnumWeight = 1;
         /** Most of a packed gun's durability that's already worn off, as a fraction. */
@@ -462,6 +608,9 @@ public final class ZcConfig {
         public int infectionMinutes = 40;
         /** Infected players rise as zombies. */
         public boolean reanimate = true;
+        /** In multiplayer a killing blow puts you down for this long instead, so a friend can revive you (not alone). */
+        public boolean downed = true;
+        public int downedSeconds = 60;
     }
 
     public static class Building {
@@ -542,6 +691,21 @@ public final class ZcConfig {
         /** About how many minutes between those events. */
         public double worldEventMinutes = 10;
         /**
+         * Air strikes among those events (Josiah 2026-10-28): a jet strafing or bombing a crowd of zombies, or the
+         * Apache circling a horde shooting them; zombies caught die, players right there are hurt, blocks never.
+         */
+        public boolean airStrikes = true;
+        /** The share of the events that are air strikes, when there's a crowd of at least airStrikeCrowd zombies near. */
+        public double airStrikeShare = 0.35;
+        public int airStrikeCrowd = 4;
+        /** Shells a second: the jets' rotary cannon and the Apache's chain gun. */
+        public double strikeCannonRate = 50;
+        public double strikeChainGunRate = 10;
+        /** A bomb kills zombies within strikeBombKill blocks and hurts players within strikeBombHurt, up to strikeBombDamage. */
+        public double strikeBombKill = 9;
+        public double strikeBombHurt = 7;
+        public double strikeBombDamage = 30;
+        /**
          * Where a car's key is, as shares: left in the ignition, in the glovebox, on a zombie that dies near the car
          * (each death nearby has carKeyDrop of being the one); the rest are lost, and the car has to be hotwired.
          */
@@ -556,6 +720,8 @@ public final class ZcConfig {
         public double hotwireSeconds = 8;
         public double hotwireFail = 0.25;
         public double hotwireWear = 0.8;
+        /** How fast car parts wear from driving and crashes (CarParts): 1 is the plan's pace, 0 turns wear off. */
+        public double partWear = 1.0;
         /** How big a player is while in a car or aircraft (1 = full size): a little smaller so arms and legs stay inside the cabin. */
         public double carRiderScale = 0.85;
     }
@@ -572,6 +738,10 @@ public final class ZcConfig {
         public boolean endlessNight = true;
         /** Daylight under endless night, as a share of vanilla's; nights sit a little under 0.30. */
         public double endlessDaylight = 0.30;
+        /** Daytime keeps one look whatever the weather: the same light and the same distance haze (rain, fog and storms show at night). */
+        public boolean steadyDay = true;
+        /** The day's haze under steadyDay, 0..1: 0.2 is a light haze you can see a fair way through. */
+        public double dayFog = 0.2;
         /** Night darkness as a share of vanilla's night light; lower is darker. */
         public double nightLight = 0.8;
         /** The moon breaks through gaps in the clouds now and then at night. */
@@ -587,7 +757,7 @@ public final class ZcConfig {
         /** Fog rolling in and out on its own over any weather, from clear to a thick bank; 0 turns it off, 0.5 halves it. */
         public double rollingFog = 1.0;
         /** Mist you can see under shader packs: banks drifting with the wind in fog, low ground mist at night. Client side. */
-        public boolean mist = true;
+        public boolean mist = false;
         /** How thick the mist gets, as a share; 0.5 halves it. Client side. */
         public double mistAmount = 1.0;
         /** Lightning flickering over the skyline in storms, the odd bolt between the towers, thunder after. Client side. */
@@ -618,6 +788,38 @@ public final class ZcConfig {
         public boolean windDamage = true;
         /** Rain and wind cover your noise and fog hides you, for you and the zombies alike. */
         public boolean affectsZombies = true;
+    }
+
+    /**
+     * Project Zomboid's sandbox Nature page, with its own options. The weather ones are run here; farming, foraging,
+     * fishing, clay and erosion settings join this section as those systems are built.
+     */
+    public static class Nature {
+        /**
+         * Zomboid's climate cycle: "normal" (the weather comes and goes), "no_weather" (dry and still under the
+         * clouds), "endless_rain" (rain and downpours only) or "endless_storm" (storms only, with their warnings).
+         * Zomboid's endless snow and blizzard wait until there is snow.
+         */
+        public String climateCycle = "normal";
+        /** Zomboid's fog cycle: "normal" (fog rolls in and out), "no_fog" or "endless_fog" (thick fog day and night). */
+        public String fogCycle = "normal";
+        /**
+         * Zomboid's rain: "very_dry", "dry", "normal", "rainy" or "very_rainy". Shifts how heavy the rain gets and how
+         * often downpours and storms come; drier settings let it ease below weather.minRain. Normal is the mix chosen
+         * for the city: never below moderate, often heavy.
+         */
+        public String rain = "normal";
+        /**
+         * Zomboid's temperature: "very_cold", "cold", "normal", "hot" or "very_hot". Sets the air temperature, which
+         * drops at night, in rain and in wind; it only matters to you when body temperature is on.
+         */
+        public String temperature = "normal";
+        /** Zomboid's max fog intensity, for what you see: "normal", "moderate", "low" or "none". Zombies still go by the real fog. Client side. */
+        public String maxFog = "normal";
+        /** Zomboid's max rain effects intensity, for what you see of the rain: "normal", "moderate" or "low". Client side. */
+        public String maxRainFx = "normal";
+        /** Zomboid's snow on the ground. Not built yet: there is no snow, so this does nothing for now. */
+        public boolean snowOnGround = false;
     }
 
     public static class Look {
@@ -671,6 +873,14 @@ public final class ZcConfig {
         public boolean hideCrosshairWhenAiming = true;
         /** Your own arms, in your own skin, hold guns in first person. Client side. */
         public boolean firstPersonArms = true;
+        /**
+         * How skinned companions are drawn, to find what shows a shader pack through them: 0 front faces only (sheets get a
+         * back copy), 1 both sides kept (the old way), 2 like 0 but in small batches, 3 like 0 with no cut-out at all on
+         * closed meshes. Client side.
+         */
+        public int companionDraw = 0;
+        /** A companion's own voiced lines (her lines.txt) also show in chat as subtitles. Client side. */
+        public boolean npcSubtitles = true;
     }
 
     public static class Combat {
@@ -821,7 +1031,7 @@ public final class ZcConfig {
         /** Bursting for every other gun (0 = never). */
         public double burstOtherGuns = 0;
         /**
-         * Pipe bombs and grenades tear limbs off too: the ones facing the blast and nearest it first, and right on top
+         * Grenades tear limbs off too: the ones facing the blast and nearest it first, and right on top
          * of one the head sometimes bursts.
          */
         public boolean blasts = true;
@@ -1002,6 +1212,125 @@ public final class ZcConfig {
             return s;
         }
 
+        /**
+         * The .308 battle rifle: the hunting rifle's round from a self-loader, twenty to a magazine, semi or a slow full
+         * auto; it hits far harder than the assault rifle and kicks and blooms harder for it.
+         */
+        static GunStats battleRifle() {
+            GunStats s = new GunStats();
+            s.damage = 20.0;
+            s.hipSpread = 2.4;
+            s.aimSpread = 0.3;
+            s.recoil = 1.8;
+            s.shotNoise = 125.0;
+            s.aimZoom = 0.80;
+            s.range = 160.0;
+            s.fireDelayTicks = 4;
+            s.magazineSize = 20;
+            s.selectFire = true;
+            s.autoRpm = 480.0;
+            s.autoRecoil = 0.85;
+            s.shotBloom = 0.8;
+            s.autoBloomPerShot = 0.8;
+            s.autoBloomMax = 5.0;
+            return s;
+        }
+
+        /** The .380 pocket pistol: a light round that needs a good hit, seven in the magazine, short reach. */
+        static GunStats pocketPistol() {
+            GunStats s = new GunStats();
+            s.damage = 5.5;
+            s.hipSpread = 1.8;
+            s.aimSpread = 0.85;
+            s.recoil = 0.75;
+            s.shotNoise = 55.0;
+            s.aimZoom = 0.9;
+            s.range = 45.0;
+            s.magazineSize = 7;
+            return s;
+        }
+
+        /** The 9mm machine pistol: the pistol's round on full auto, very fast and hard to hold on target. */
+        static GunStats machinePistol() {
+            GunStats s = new GunStats();
+            s.damage = 6.5;
+            s.hipSpread = 1.6;
+            s.aimSpread = 0.8;
+            s.recoil = 0.6;
+            s.shotNoise = 70.0;
+            s.aimZoom = 0.88;
+            s.range = 55.0;
+            s.magazineSize = 20;
+            s.selectFire = true;
+            s.autoRpm = 1100.0;
+            s.autoRecoil = 0.8;
+            s.autoBloomPerShot = 0.45;
+            s.autoBloomMax = 5.0;
+            return s;
+        }
+
+        /** The suppressed rifle: the assault rifle's round through a built-in can, a little less punch, always quiet. */
+        static GunStats suppressedRifle() {
+            GunStats s = new GunStats();
+            s.damage = 11.0;
+            s.hipSpread = 1.8;
+            s.aimSpread = 0.4;
+            s.shotNoise = 90.0;      // the suppressor multiplier (guns.suppressedNoise) still applies
+            s.range = 100.0;
+            s.magazineSize = 30;
+            s.selectFire = true;
+            s.autoRpm = 700.0;
+            s.suppressedPitch = 0.92;
+            return s;
+        }
+
+        /**
+         * The .308 bolt-action precision rifle: the hunting rifle's round from a heavier barrel, ten to a magazine, the
+         * tightest aimed spread of any gun, and a long reach.
+         */
+        static GunStats precisionRifle() {
+            GunStats s = new GunStats();
+            s.damage = 34.0;
+            s.hipSpread = 4.0;
+            s.aimSpread = 0.06;
+            s.recoil = 2.3;
+            s.shotNoise = 145.0;
+            s.aimZoom = 0.80;
+            s.range = 260.0;
+            s.fireDelayTicks = 25;     // never less than the bolt takes to work (GunType.fireDelay)
+            s.magazineSize = 10;
+            return s;
+        }
+
+        /** The .50 heavy sniper: a huge round that stops anything it hits, a brutal kick, heard across the map. */
+        static GunStats heavySniper() {
+            GunStats s = new GunStats();
+            s.damage = 80.0;
+            s.hipSpread = 6.0;
+            s.aimSpread = 0.05;
+            s.recoil = 4.5;
+            s.shotNoise = 220.0;
+            s.aimZoom = 0.80;
+            s.range = 320.0;
+            s.fireDelayTicks = 30;
+            s.magazineSize = 7;
+            return s;
+        }
+
+        /** The six-shot grenade launcher: each pull lobs a 40mm round that bursts where it lands (see throwing). */
+        static GunStats grenadeLauncher() {
+            GunStats s = new GunStats();
+            s.damage = 0.0;            // the round's blast does the work
+            s.hipSpread = 2.0;
+            s.aimSpread = 0.6;
+            s.recoil = 2.2;
+            s.shotNoise = 60.0;        // the thump; the burst is heard much further
+            s.aimZoom = 0.85;
+            s.fireDelayTicks = 10;
+            s.magazineSize = 6;
+            return s;
+        }
+
         /** The .44 magnum: a heavy, hard-kicking round that stops most things it hits, six of them, heard far off. */
         static GunStats magnum() {
             GunStats s = new GunStats();
@@ -1112,6 +1441,36 @@ public final class ZcConfig {
     }
 
     /** Settings every gun shares, and the assault rifle's own numbers. */
+    /** A mounted three-barrel minigun, fed a belt loaded from the gunner's own 5.56 rounds. */
+    public static class MinigunStats extends GunStats {
+        {
+            damage = 12.0;
+            hipSpread = 0.9;    // zoomed out; aimSpread zoomed in (right-click)
+            aimSpread = 0.35;
+            shotNoise = 140.0;
+            range = 160.0;
+            autoRpm = 945.0;
+        }
+
+        /**
+         * Its rhythm, matched to the recording (Josiah: the old steady 1500 rpm ran far ahead of it): rounds come in
+         * groups of groupRounds, a group every groupTicks ticks, and the sound's loop restarts every loopTicks.
+         * 4 every 5 ticks is about 945 rpm.
+         */
+        public int groupRounds = 4;
+        public int groupTicks = 5;
+        public int loopTicks = 25;
+
+        /** Seconds the barrels take to spin up before it fires, and to run down after. */
+        public double spinUpSeconds = 0.6;
+        public double spinDownSeconds = 2.0;
+        /** Rounds the belt holds, and seconds to load it. */
+        public int beltSize = 300;
+        public double beltLoadSeconds = 3.0;
+        /** One round in this many is a tracer. */
+        public int tracerEvery = 3;
+    }
+
     public static class Guns extends GunStats {
         {
             selectFire = true;      // the assault rifle has semi and full auto
@@ -1149,6 +1508,9 @@ public final class ZcConfig {
         public double foregripRecoil = 0.75;
         public double noStockRecoil = 1.5;
         public double noStockSpread = 1.6;
+        /** A bipod, crouched on the sights, multiplies the spread and the kick. */
+        public double bipodSpread = 0.6;
+        public double bipodRecoil = 0.5;
         /** A laser multiplies spread from the hip. */
         public double laserHipSpread = 0.6;
         /** Smoke and a spark at the muzzle after each shot (off by default: they hid the sights). */
@@ -1165,6 +1527,15 @@ public final class ZcConfig {
         public double bloodSeconds = 120.0;
         /** How many holes and splashes stay at once; the oldest go first. Client side. */
         public int maxDecals = 300;
+        /**
+         * Bullets go through glass (a little spent) and leave holes in it; this many holes and it shatters: small
+         * and leaded panes, a house window, big panes (ship, roof), shop and office plate glass, glass bricks.
+         */
+        public int glassHolesSmall = 2;
+        public int glassHolesWindow = 3;
+        public int glassHolesLarge = 4;
+        public int glassHolesShop = 5;
+        public int glassHolesBlock = 6;
         /** A short, soft flash at the muzzle with each shot (a smaller one at the end of a suppressor). */
         public boolean muzzleFlash = true;
         /** How much the gun bobs and sways on the sights: 1 = as much as at the hip, 0 = dead still. Client side. */
@@ -1218,7 +1589,7 @@ public final class ZcConfig {
      * are left alone).
      */
     public int defaultsVersion = 0;
-    private static final int DEFAULTS = 10;
+    private static final int DEFAULTS = 16;
 
     private static void upgrade(ZcConfig c) {
         if (c.defaultsVersion < 1) {
@@ -1333,6 +1704,73 @@ public final class ZcConfig {
                 c.trains.railCars = 3;
             }
         }
+        if (c.defaultsVersion < 11) {
+            // 2026-10-28 (Josiah waited ages at a stop): one train on the long county loop came round about every
+            // half hour; now a train every 1500 blocks of railway (900 of subway)
+            if (c.trains.railTrains == 1) {
+                c.trains.railTrains = 0;
+            }
+            if (c.trains.subwayTrains == 1) {
+                c.trains.subwayTrains = 0;
+            }
+        }
+        if (c.defaultsVersion < 12) {
+            // 2026-10-28 (Josiah): the trips between stops took far too long; both lines about three times faster
+            if (c.trains.railSpeed == 10) {
+                c.trains.railSpeed = 30;
+            }
+            if (c.trains.subwaySpeed == 9) {
+                c.trains.subwaySpeed = 28;
+            }
+            if (c.trains.acceleration == 0.6) {
+                c.trains.acceleration = 1.5;
+            }
+            if (c.trains.braking == 0.75) {
+                c.trains.braking = 1.8;
+            }
+            if (c.trains.curveGrip == 1.1) {
+                c.trains.curveGrip = 2.0;
+            }
+            if (c.trains.expressSpeed == 2.5) {
+                c.trains.expressSpeed = 1.3;
+            }
+        }
+        if (c.defaultsVersion < 13) {
+            // 2026-10-28 (Josiah): the ground mist cost too much under Photon in heavy fog; off unless turned back on
+            c.weather.mist = false;
+        }
+        if (c.defaultsVersion < 14) {
+            // 2026-10-28 (Josiah): double the train speed again
+            if (c.trains.railSpeed == 30) {
+                c.trains.railSpeed = 60;
+            }
+            if (c.trains.subwaySpeed == 28) {
+                c.trains.subwaySpeed = 56;
+            }
+            if (c.trains.acceleration == 1.5) {
+                c.trains.acceleration = 3;
+            }
+            if (c.trains.braking == 1.8) {
+                c.trains.braking = 3.5;
+            }
+            if (c.trains.curveGrip == 2.0) {
+                c.trains.curveGrip = 4.0;
+            }
+        }
+        if (c.defaultsVersion < 15) {
+            // 2026-10-29 (Josiah): three cars, OTTO's included, on both lines
+            c.trains.railCars = Math.min(c.trains.railCars, 3);
+            c.trains.subwayCars = Math.min(c.trains.subwayCars, 3);
+        }
+        if (c.defaultsVersion < 16) {
+            // 2026-10-30 (Josiah): the Warthog minigun's ring a little tighter, much tighter zoomed in
+            if (c.minigun.hipSpread == 1.2) {
+                c.minigun.hipSpread = 0.9;
+            }
+            if (c.minigun.aimSpread == 1.2) {
+                c.minigun.aimSpread = 0.35;
+            }
+        }
         c.defaultsVersion = DEFAULTS;
     }
 
@@ -1359,10 +1797,16 @@ public final class ZcConfig {
     }
 
     public static void save() {
+        if (quiet) {
+            return;
+        }
         try {
             Files.createDirectories(FILE.getParent());
             try (Writer writer = Files.newBufferedWriter(FILE)) {
-                GSON.toJson(instance, writer);
+                // a world's own sandbox values never leak into this file: it keeps what it had before the world opened
+                com.google.gson.JsonObject tree = GSON.toJsonTree(instance).getAsJsonObject();
+                com.zomboidcraft.sandbox.Sandbox.unapply(tree);
+                GSON.toJson(tree, writer);
             }
         } catch (IOException e) {
             ZomboidCraft.LOGGER.error("Couldn't save {}", FILE, e);
@@ -1418,6 +1862,45 @@ public final class ZcConfig {
             throw new IllegalArgumentException("Unknown setting " + key);
         }
         save();
+    }
+
+    // ---- for the per-world sandbox settings (sandbox/Sandbox) ----
+
+    /** While set, save() writes nothing: a world's values are put in place without touching the file. */
+    private static boolean quiet;
+    private static ZcConfig defaults;
+
+    /** Sets a setting for now only, without saving the file. */
+    public static void applyValue(String key, String raw) {
+        quiet = true;
+        try {
+            setValue(key, raw);
+        } finally {
+            quiet = false;
+        }
+    }
+
+    /** A setting's current value as it is written in the file. */
+    public static com.google.gson.JsonElement jsonValue(String key) {
+        return GSON.toJsonTree(getValue(key, instance));
+    }
+
+    /** What a setting is out of the box, before anyone changed it. */
+    public static String defaultValue(String key) {
+        if (defaults == null) {
+            defaults = new ZcConfig();
+        }
+        return String.valueOf(getValue(key, defaults));
+    }
+
+    private static Object getValue(String key, ZcConfig from) {
+        try {
+            String[] parts = key.split("\\.", 2);
+            Object group = ZcConfig.class.getField(parts[0]).get(from);
+            return group.getClass().getField(parts[1]).get(group);
+        } catch (ReflectiveOperationException | ArrayIndexOutOfBoundsException e) {
+            throw new IllegalArgumentException("Unknown setting " + key);
+        }
     }
 
     private ZcConfig() {

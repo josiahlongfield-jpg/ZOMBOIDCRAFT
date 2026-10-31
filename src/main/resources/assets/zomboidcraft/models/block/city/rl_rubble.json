@@ -1,0 +1,194 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rl_plug": "zomboidcraft:block/city/rl_plug",
+    "rl_plug_h": "zomboidcraft:block/city/rl_plug_h",
+    "rl_steel_flange": "zomboidcraft:block/city/rl_steel_flange",
+    "particle": "zomboidcraft:block/city/rl_plug"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        3,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rl_plug",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#rl_plug",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#rl_plug",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rl_plug",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rl_plug"
+        },
+        "down": {
+          "texture": "#rl_plug",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        3,
+        3
+      ],
+      "to": [
+        9,
+        7,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rl_plug"
+        },
+        "south": {
+          "texture": "#rl_plug"
+        },
+        "east": {
+          "texture": "#rl_plug"
+        },
+        "west": {
+          "texture": "#rl_plug"
+        },
+        "up": {
+          "texture": "#rl_plug"
+        },
+        "down": {
+          "texture": "#rl_plug"
+        }
+      },
+      "rotation": {
+        "origin": [
+          5,
+          5,
+          6
+        ],
+        "axis": "y",
+        "angle": 22.5
+      }
+    },
+    {
+      "from": [
+        9,
+        3,
+        6
+      ],
+      "to": [
+        15,
+        6,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rl_plug_h"
+        },
+        "south": {
+          "texture": "#rl_plug_h"
+        },
+        "east": {
+          "texture": "#rl_plug_h"
+        },
+        "west": {
+          "texture": "#rl_plug_h"
+        },
+        "up": {
+          "texture": "#rl_plug_h"
+        },
+        "down": {
+          "texture": "#rl_plug_h"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        3,
+        11
+      ],
+      "to": [
+        9,
+        5,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rl_plug"
+        },
+        "south": {
+          "texture": "#rl_plug"
+        },
+        "east": {
+          "texture": "#rl_plug"
+        },
+        "west": {
+          "texture": "#rl_plug"
+        },
+        "up": {
+          "texture": "#rl_plug"
+        },
+        "down": {
+          "texture": "#rl_plug"
+        }
+      }
+    },
+    {
+      "from": [
+        11,
+        6,
+        8
+      ],
+      "to": [
+        12,
+        12,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rl_steel_flange"
+        },
+        "south": {
+          "texture": "#rl_steel_flange"
+        },
+        "east": {
+          "texture": "#rl_steel_flange"
+        },
+        "west": {
+          "texture": "#rl_steel_flange"
+        },
+        "up": {
+          "texture": "#rl_steel_flange"
+        },
+        "down": {
+          "texture": "#rl_steel_flange"
+        }
+      },
+      "rotation": {
+        "origin": [
+          11,
+          6,
+          8
+        ],
+        "axis": "z",
+        "angle": 22.5
+      }
+    }
+  ]
+}

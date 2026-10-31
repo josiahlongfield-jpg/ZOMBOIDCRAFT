@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/lockpick_set"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/lockpick_set",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/lockpick_set",
+   "part": "body"
+  }
  }
 }

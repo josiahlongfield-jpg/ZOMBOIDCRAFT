@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/lettuce_seeds"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/lettuce_seeds",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/lettuce_seeds",
+   "part": "body"
+  }
  }
 }

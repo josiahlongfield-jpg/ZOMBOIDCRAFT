@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/egg_basket"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/egg_basket",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/egg_basket",
+   "part": "body"
+  }
  }
 }

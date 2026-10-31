@@ -1009,9 +1009,9 @@ public final class RifleView {
         return turned;
     }
 
-    /** The pose on the sights for an optic, or null when the gun isn't drawn (the scope). */
+    /** The pose on the sights for an optic, or null when the gun isn't drawn (a scope you look into). */
     private static Pose sights(String optic) {
-        if (optic.equals("scope_4x")) {
+        if (!optic.equals(Attachments.EMPTY_KEY) && Attachments.overlay(optic)) {
             return null;
         }
         float[] d = rig.sights().getOrDefault(optic, rig.sights().get("irons"));

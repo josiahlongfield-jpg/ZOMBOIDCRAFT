@@ -6,14 +6,22 @@
    {
     "threshold": 0.5,
     "model": {
-     "type": "minecraft:model",
-     "model": "zomboidcraft:item/weapon/machete_worn"
+     "type": "minecraft:special",
+     "base": "zomboidcraft:item/weapon/machete_worn",
+     "model": {
+      "type": "zomboidcraft:mesh",
+      "id": "pbr_machete"
+     }
     }
    }
   ],
   "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/weapon/machete"
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/weapon/machete",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "pbr_machete"
+   }
   }
  }
 }

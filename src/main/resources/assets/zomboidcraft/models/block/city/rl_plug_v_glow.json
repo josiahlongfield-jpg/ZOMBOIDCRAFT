@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rl_plug_v_glow": "zomboidcraft:block/city/rl_plug_v_glow",
+    "particle": "zomboidcraft:block/city/rl_plug_v_glow"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rl_plug_v_glow",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#rl_plug_v_glow",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#rl_plug_v_glow",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rl_plug_v_glow",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rl_plug_v_glow",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#rl_plug_v_glow",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -18,7 +18,9 @@ glass texture), and gun_slots/<gun>.json saying where each slot's mount point is
 """
 import json
 import math
+import sys
 import zlib
+from pathlib import Path
 
 import numpy as np
 
@@ -28,7 +30,7 @@ import pbr
 import toon
 
 NS = 'zomboidcraft'
-SLOTS = ['optic', 'muzzle', 'underbarrel', 'side_rail', 'stock', 'magazine', 'bipod', 'right_rail']    # Attachments.Slot order
+SLOTS = ['optic', 'muzzle', 'underbarrel', 'side_rail', 'stock', 'magazine', 'bipod', 'right_rail', 'magnifier']    # Attachments.Slot order
 FINISH = len(SLOTS)     # the model data string after the slot keys: the gun's finish
 PX = 16
 # Skins by how damaged the gun is: (skin, how worn it's painted, the damage it starts at). Josiah wants every gun and
@@ -335,6 +337,8 @@ FLASH_TEX = f'{NS}:item/weapon/muzzle_flash'
 def flash_tip(gun):
     """Where the flash starts: the front of the bare muzzle on the bore line (item pixels, before the shift); for a
     gun with no flash (the crossbow), its tip."""
+    if getattr(gun, 'flash_at', None) is not None:
+        return gun.flash_at                 # a bought gun's own muzzle
     if gun.flash is None:
         return np.asarray(gun.tip, float)
     lo, hi = drawn('flash', lambda m: gun.flash(m, None)).bounds()
@@ -487,10 +491,66 @@ def opened(m, axis, angle, origin):
     return out
 
 
+def _meshskin():
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent / 'meshguns'))
+    import skin
+    return skin
+
+
+def mesh_skin(name, assets):
+    """A bought mesh in place of the block weapon (tools/meshguns/skins.json), if it has one."""
+    _meshskin().apply(name, str(assets / 'items'))
+
+
+def mesh_skins():
+    return list(_meshskin().skins())
+
+
+# which way a slot's parts face on a bought gun (attachments are drawn standing up off a top rail)
+SLOT_FACING = {'optic': 'top', 'magnifier': 'top', 'muzzle': 'axial', 'stock': 'axial', 'magazine': 'axial',
+               'underbarrel': 'bottom', 'bipod': 'bottom', 'side_rail': 'left', 'right_rail': 'right'}
+ROLL_FACING = {0: 'top', 90: 'left', 180: 'bottom', -90: 'right', 270: 'right'}
+
+
+def mesh_layout(gun, shift):
+    """A bought gun is laid out from its own mesh (Josiah 2026-10-29: as if the block guns never existed, only where
+    they sat on the screen and how they were held kept): tools/meshguns/guns.json gives, in item pixels, each slot's
+    mount on the mesh, what fits it and what it comes with, the muzzle's flash point and the sight line. The block gun
+    this one is built on keeps only its frame (holds, poses, reload steps)."""
+    sk = _meshskin()
+    cfg = sk.guns().get(gun.name)
+    if not cfg:
+        return
+    import attachments as AT
+    shift = np.asarray(shift, float)
+    slots, parts = {}, {}
+    for name, sc in cfg['slots'].items():
+        facing = ROLL_FACING[sc['roll']] if 'roll' in sc else SLOT_FACING[name]
+        slots[name] = Slot(np.asarray(sc['at'], float) - shift, facing, sc['fits'], sc.get('default'))
+        for key in sc['fits']:
+            if key in ('mag', 'stock', 'bolt'):
+                parts[key] = gun.parts[key]
+                continue
+            a = AT.BY_KEY[key]
+            mesh, scale = sk.attachment_mesh(key, gun.name)
+            item = gun.parts[key].item if key in gun.parts else a.item      # the pistol's can is the pistol suppressor
+            title = gun.parts[key].title if key in gun.parts else a.title
+            parts[key] = Part(key, item, title, name, AT.mesh_box(mesh, scale) if mesh else a.build, a.look,
+                              AT.mesh_sight(mesh, scale) if mesh and a.sight else None, a.note)
+    gun.slots, gun.parts = slots, parts
+    gun.aperture = np.asarray(cfg['aperture'], float) - shift
+    gun.flash_at = None if cfg['flash'] is None else np.asarray(cfg['flash'], float) - shift
+    if cfg.get('irons') and gun.irons is None:
+        gun.irons = lambda m, up: None      # its sights are the mesh's (skin.py draws them): no block of its own
+    # optics that sit where the folded flip-up sights lie: with one of them fitted the sights are off, not drawn through it
+    gun.irons_hidden = set((cfg.get('irons') or {}).get('flip', {}).get('hide', []))
+
+
 def write_gun(gun, assets, shift, displays, lang, eyes=()):
     """Writes everything for one gun. displays: fn(state, fit_model, sight_point) -> display dict.
     Every finish comes in each of the WEARS skins, laid out alike. Returns a summary line and the data the
     preview page reads."""
+    mesh_layout(gun, shift)
     seed = gun.seed
     fins = list(gun.finishes) if gun.finishes else [None]
     base_fin = fins[0]
@@ -573,7 +633,11 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
                 loose_flash[n] = f'{n}_loose'
         names_posed = names + list(made)
     else:
-        names_posed = names
+        names_posed = list(names)
+    # a magnifier swung aside is its own model (skin.py turns its mesh off the sight line)
+    for k in (gun.slots['magnifier'].fits if 'magnifier' in gun.slots else ()):
+        M.dump({'parent': f'{NS}:item/{base}/{k}'}, assets / f'models/item/{base}/{k}_aside.json')
+        names_posed.append(f'{k}_aside')
 
     # poses: the full gun (stock, magazine, the longest muzzle part) sets the size in the inventory
     fit_parts = [models['body']] + [models[k] for k in ('irons_up',) if k in models]
@@ -616,20 +680,22 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
                 continue
             if slot_name == 'optic':
                 down = r('irons_folded') if gun.irons else EMPTY
+                fold = lambda k: EMPTY if k in getattr(gun, 'irons_hidden', ()) else down
                 up = r('irons_up') if gun.irons else EMPTY
                 if st.startswith('ads_'):
-                    entries.append(composite([down, r(st[4:])]))
+                    entries.append(composite([fold(st[4:]), r(st[4:])]))
                 else:
-                    cases = {k: composite([down, r(k)]) for k in s.fits}
+                    cases = {k: composite([fold(k), r(k)]) for k in s.fits}
                     cases['none'] = up
-                    entries.append(select('optic', cases, up))
+                    # a gun whose stack says nothing has what it came with
+                    entries.append(select('optic', cases, cases[s.default] if s.default else up))
             elif slot_name == 'muzzle':
                 # a suppressor shrinks the flash to a small one at the end of its can
                 cases = {k: composite([r(k), flash_entry(r('muzzle_flash_quiet' if 'suppressor' in k else 'muzzle_flash'))])
                          for k in s.fits}
                 bare = flash_entry(r('muzzle_flash'))
                 cases['none'] = bare
-                entries.append(select('muzzle', cases, bare))
+                entries.append(select('muzzle', cases, cases[s.default] if s.default else bare))
             elif slot_name == 'magazine':
                 if base_st == 'mag_out':
                     continue    # first person draws the old magazine falling away and the new one coming up
@@ -638,6 +704,9 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
                 entries.append(select('magazine', cases, r(s.default) if s.default else EMPTY))
             else:
                 cases = {k: r(k) for k in s.fits}
+                if slot_name == 'magnifier':
+                    # swung aside on its mount: the sight in front is looked through at 1x (Attachments.writeModelData)
+                    cases.update({f'{k}_aside': r(f'{k}_aside') for k in s.fits})
                 cases['none'] = EMPTY
                 entries.append(select(slot_name, cases, r(s.default) if s.default else EMPTY))
         return composite(entries)
@@ -648,6 +717,7 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
                 'on_true': pose('raised_' + st, key), 'on_false': pose(st, key)}
 
     def tree(key):
+        # through the magnifier the sight line is the optic's in front of it: the same pose
         aim = select('optic', {k: pose(f'ads_{k}', key) for k in gun.optics()}, pose('ads', key)) if gun.optics() else pose('ads', key)
         return {'type': 'minecraft:range_dispatch', 'property': 'minecraft:custom_model_data', 'index': 0,
                 'entries': [{'threshold': 1, 'model': held('mag_out', key)}, {'threshold': 2, 'model': held('mag_in', key)},
@@ -708,6 +778,7 @@ def write_gun(gun, assets, shift, displays, lang, eyes=()):
                           'default': f'{NS}:{gun.parts[s.default].item}' if s.default else None})
     M.dump({'gun': f'{NS}:{gun.name}', 'note': 'Generated by tools/weapons/weapons.py. Mount points are in item '
             'model pixels, before the display transform.', 'slots': slot_data}, assets / f'gun_slots/{gun.name}.json')
+    mesh_skin(gun.name, assets)     # after its slots are written: a block gun's attachments go on their mounts
     return f'{gun.name}: {sum(len(m.parts) for m in models.values())} boxes in {len(models)} parts, {T}px', slot_data
 
 

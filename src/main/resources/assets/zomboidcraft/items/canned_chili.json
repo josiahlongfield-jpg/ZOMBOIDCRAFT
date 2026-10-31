@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/canned_chili"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/canned_chili",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/canned_chili",
+   "part": "body"
+  }
  }
 }

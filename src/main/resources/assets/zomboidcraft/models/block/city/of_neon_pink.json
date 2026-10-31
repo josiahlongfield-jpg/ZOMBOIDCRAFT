@@ -1,0 +1,79 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "of_neon_pink": "zomboidcraft:block/city/of_neon_pink",
+    "particle": "zomboidcraft:block/city/of_neon_pink"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        6,
+        15
+      ],
+      "to": [
+        16,
+        8,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#of_neon_pink"
+        },
+        "south": {
+          "texture": "#of_neon_pink",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#of_neon_pink",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#of_neon_pink",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#of_neon_pink"
+        },
+        "down": {
+          "texture": "#of_neon_pink"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        12,
+        15
+      ],
+      "to": [
+        16,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#of_neon_pink"
+        },
+        "south": {
+          "texture": "#of_neon_pink",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#of_neon_pink",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#of_neon_pink",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#of_neon_pink"
+        },
+        "down": {
+          "texture": "#of_neon_pink"
+        }
+      }
+    }
+  ]
+}

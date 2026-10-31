@@ -47,7 +47,11 @@ public final class CarAssets {
     public record Rotor(float ax, float ay, float az, float px, float py, float pz, Mesh mesh) {
     }
 
-    public record Ready(Mesh mesh, List<Lid> lids, List<Wheel> wheels, List<Rotor> rotors, Identifier texture) {
+    /**
+     * turret: a mounted gun's parts, in order the post (turns about its upright axis), the gun (tilts on the post) and
+     * its barrels (spin in the gun), each on its pivot and axis; empty for the rest.
+     */
+    public record Ready(Mesh mesh, List<Lid> lids, List<Wheel> wheels, List<Rotor> rotors, List<Rotor> turret, Identifier texture) {
     }
 
     private static final class Variant {
@@ -55,7 +59,10 @@ public final class CarAssets {
         List<Lid> lids;
         List<Wheel> wheels;
         List<Rotor> rotors = List.of();
+        List<Rotor> turret = List.of();
         byte[] jpeg;
+        /** The texture being decoded off the render thread (a car's JPEG took a frame-long hitch to read in place). */
+        java.util.concurrent.CompletableFuture<NativeImage> decoding;
         Identifier texture;
         /** The car at each level of detail, simplified the first time it's needed. */
         final Ready[] levels = new Ready[CarLod.LEVELS];
@@ -98,17 +105,32 @@ public final class CarAssets {
             }
         }
         if (v.texture == null) {
+            // decoded on a worker; the car isn't drawn until it's ready (a frame or two)
+            if (v.decoding == null) {
+                byte[] jpeg = v.jpeg;
+                v.decoding = java.util.concurrent.CompletableFuture.supplyAsync(() -> {
+                    try {
+                        return decode(jpeg);
+                    } catch (IOException e) {
+                        throw new java.io.UncheckedIOException(e);
+                    }
+                });
+            }
+            if (!v.decoding.isDone()) {
+                return null;
+            }
             Identifier id = ZomboidCraft.id("dynamic/car/" + model + "/" + state);
             try {
-                NativeImage image = decode(v.jpeg);
+                NativeImage image = v.decoding.join();
                 Minecraft.getInstance().getTextureManager().register(id, new DynamicTexture(() -> "ZomboidCraft car " + model, image));
-            } catch (IOException e) {
+            } catch (RuntimeException e) {
                 ZomboidCraft.LOGGER.error("Bad texture in car model {}", model, e);
                 MISSING.add(model);
                 return null;
             }
             v.texture = id;
             v.jpeg = null;
+            v.decoding = null;
         }
         Ready ready = v.levels[level];
         if (ready == null) {
@@ -124,7 +146,11 @@ public final class CarAssets {
             for (Rotor r : v.rotors) {
                 rotors.add(new Rotor(r.ax(), r.ay(), r.az(), r.px(), r.py(), r.pz(), CarLod.simplify(r.mesh(), level)));
             }
-            ready = new Ready(CarLod.simplify(v.mesh, level), lids, wheels, rotors, v.texture);
+            List<Rotor> turret = new ArrayList<>(v.turret.size());
+            for (Rotor r : v.turret) {
+                turret.add(new Rotor(r.ax(), r.ay(), r.az(), r.px(), r.py(), r.pz(), CarLod.simplify(r.mesh(), level)));
+            }
+            ready = new Ready(CarLod.simplify(v.mesh, level), lids, wheels, rotors, turret, v.texture);
             v.levels[level] = ready;
         }
         return ready;
@@ -167,21 +193,27 @@ public final class CarAssets {
             pieces.add(subset(m, bits, false));
         }
         // the rotors went with the rotor piece; the doors and wheels stay on the shell
-        b = new Broken(new Ready(subset(m, gone, true), whole.lids(), whole.wheels(), List.of(), whole.texture()), pieces);
+        b = new Broken(new Ready(subset(m, gone, true), whole.lids(), whole.wheels(), List.of(), whole.turret(), whole.texture()), pieces);
         BROKEN.put(key, b);
         return b;
     }
 
     private static Map<String, Variant> read(String model) throws IOException {
         byte[] data;
-        try (InputStream in = Minecraft.getInstance().getResourceManager().open(ZomboidCraft.id("cars/" + model + ".zcar"))) {
-            data = in.readAllBytes();
+        java.nio.file.Path local = com.zomboidcraft.world.cars.CarModels.LOCAL.resolve(model + ".zcar");
+        if (java.nio.file.Files.isRegularFile(local)) {
+            data = java.nio.file.Files.readAllBytes(local);     // a vehicle kept on this computer, not in the mod
+        } else {
+            try (InputStream in = Minecraft.getInstance().getResourceManager().open(ZomboidCraft.id("cars/" + model + ".zcar"))) {
+                data = in.readAllBytes();
+            }
         }
         unscramble(data, model);
         Map<String, Variant> out = new HashMap<>();
         try (DataInputStream in = new DataInputStream(new InflaterInputStream(new ByteArrayInputStream(data)))) {
             byte[] magic = in.readNBytes(4);
-            if (magic[0] != 'Z' || magic[1] != 'C' || magic[2] != 'A' || magic[3] != 'R' || in.readInt() != 3) {
+            int version = magic[0] == 'Z' && magic[1] == 'C' && magic[2] == 'A' && magic[3] == 'R' ? in.readInt() : -1;
+            if (version != 3 && version != 4) {
                 throw new IOException("not a car file");
             }
             int count = in.readInt();
@@ -203,6 +235,17 @@ public final class CarAssets {
                     float cx = in.readFloat(), cy = in.readFloat(), cz = in.readFloat(), r = in.readFloat();
                     boolean steers = in.readByte() == 1;
                     v.wheels.add(new Wheel(cx, cy, cz, r, steers, readMesh(in)));
+                }
+                if (version >= 4) {
+                    // the turret's parts (warthog.py): kind, pivot, axis, mesh
+                    int parts = in.readInt();
+                    v.turret = new ArrayList<>(parts);
+                    for (int k = 0; k < parts; k++) {
+                        in.readByte();
+                        float px = in.readFloat(), py = in.readFloat(), pz = in.readFloat();
+                        float ax = in.readFloat(), ay = in.readFloat(), az = in.readFloat();
+                        v.turret.add(new Rotor(ax, ay, az, px, py, pz, readMesh(in)));
+                    }
                 }
                 if ("usable".equals(name) || "abandoned".equals(name)) {
                     rotors(model, v);
@@ -310,16 +353,19 @@ public final class CarAssets {
             throw new IOException("unreadable texture");
         }
         NativeImage out = new NativeImage(img.getWidth(), img.getHeight(), false);
+        int w = img.getWidth();
+        int[] row = new int[w];
         for (int y = 0; y < img.getHeight(); y++) {
-            for (int x = 0; x < img.getWidth(); x++) {
-                out.setPixel(x, y, 0xFF000000 | img.getRGB(x, y));
+            img.getRGB(0, y, w, 1, row, 0, w);
+            for (int x = 0; x < w; x++) {
+                out.setPixel(x, y, 0xFF000000 | row[x]);
             }
         }
         return out;
     }
 
     /** Undoes pack.py's xorshift32 scramble (seeded from the model id). */
-    static void unscramble(byte[] data, String model) {
+    public static void unscramble(byte[] data, String model) {
         int x = 0x5A0C4A55 ^ model.hashCode();
         if (x == 0) {
             x = 1;

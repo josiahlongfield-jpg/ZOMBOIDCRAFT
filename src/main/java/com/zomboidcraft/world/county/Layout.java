@@ -354,6 +354,10 @@ final class Layout {
             int x1 = (i0 + 2) * PITCH - EDGE - 1, z1 = (j0 + 3) * PITCH - EDGE - 1;
             return new Place(PlaceType.LANDMARK, "waterfront", x0, z0, x1, z1, Terrain.CITY, h, 1, x1 - x0 - Waterfront.SEAWALL);
         }
+        if (s.id().equals("lab")) {
+            // Ridgeview Labs and the ground zero round it: 300 square on the mountain, near its spot
+            return near(PlaceType.MILITARY, "ridgeview", s.x(), s.z(), h);
+        }
         if (s.id().equals("naval")) {
             // the page builds the naval station as a base; here it's the naval wharf, the carrier along it
             return port(new Plan.Spot(s.id(), s.kind(), PlaceType.PORT, "naval", s.x(), s.z(), s.flags(), s.name()), h);
@@ -392,6 +396,7 @@ final class Layout {
             case "MILITARY:quarantine" -> new int[] {210, 190};
             case "MILITARY:army_base" -> new int[] {280, 260};
             case "MILITARY:depot" -> new int[] {190, 170};
+            case "MILITARY:ridgeview" -> new int[] {300, 300};
             case "FARM:crop" -> new int[] {220, 200};
             case "FARM:dairy" -> new int[] {200, 180};
             case "FARM:horse_ranch" -> new int[] {220, 210};

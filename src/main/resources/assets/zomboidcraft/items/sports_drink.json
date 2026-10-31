@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/sports_drink"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/sports_drink",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/sports_drink",
+   "part": "body"
+  }
  }
 }

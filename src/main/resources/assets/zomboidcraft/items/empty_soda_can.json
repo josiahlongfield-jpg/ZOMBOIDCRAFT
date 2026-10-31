@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/empty_soda_can"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/empty_soda_can",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/empty_soda_can",
+   "part": "body"
+  }
  }
 }

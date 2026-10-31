@@ -40,6 +40,18 @@ public final class CarModels {
          * of the deck, so its hull leaves the room under them open to walk through.
          */
         public int[] floors;
+        /**
+         * Per look (variants order), each window's pane: centre, outward normal, two half axes, kind, holes it
+         * takes, then its outline; null where that look has it broken out. See {@link CarGlass}.
+         */
+        public float[][][] windows;
+        /** Per look, per mesh (the body, then each lid), the window each of its glass triangles belongs to. */
+        public int[][][] glassTris;
+        /** The seat that works the turret (standing behind the gun), or -1 where there's none. */
+        public int gunner = -1;
+        /** The mounted gun, or null. */
+        public Turret turret;
+        transient CarGlass.Window[][] parsedWindows;
 
         public float length() {
             return size[2];
@@ -81,10 +93,31 @@ public final class CarModels {
             return "farm".equals(kind);
         }
 
+        /**
+         * The army's own vehicles (tools/cars/warthog.py): never on a street, only where the army left them, or
+         * by name. They may carry a turret worked from the gunner's seat.
+         */
+        public boolean military() {
+            return "military".equals(kind);
+        }
+
         /** Something to search rather than sit in: a boat, or a wagon or trailer with no seat. */
         public boolean searchedOnly() {
             return boat() || farm() && (seats == null || seats.length == 0);
         }
+    }
+
+    /**
+     * A mounted gun (model space): the post turns about the upright through yaw, the gun on it tilts about the
+     * crosswise line through pitch, and its rounds leave at muzzle (where it is with the gun at rest, its barrels
+     * rest degrees above level). It tilts up to up degrees and down to down below level.
+     */
+    public static final class Turret {
+        public float[] yaw, pitch, muzzle;
+        public float rest, up, down;
+        /** The gun's two grips at rest (left, right), where the gunner's hands go; and the view's narrowing on right-click. */
+        public float[][] grips;
+        public float zoom = 0.6f;
     }
 
     private static final class Index {
@@ -113,9 +146,40 @@ public final class CarModels {
         } catch (Exception e) {
             com.zomboidcraft.ZomboidCraft.LOGGER.error("Couldn't read the car models", e);
         }
+        // vehicles kept on this computer rather than shipped in the mod (see LOCAL): their rows beside their files
+        java.nio.file.Path local = LOCAL;
+        if (java.nio.file.Files.isDirectory(local)) {
+            try (var files = java.nio.file.Files.list(local)) {
+                for (java.nio.file.Path f : (Iterable<java.nio.file.Path>) files::iterator) {
+                    String file = f.getFileName().toString();
+                    if (!file.endsWith(".json")) {
+                        continue;
+                    }
+                    try (var r = java.nio.file.Files.newBufferedReader(f, StandardCharsets.UTF_8)) {
+                        Model m = new Gson().fromJson(r, Model.class);
+                        if (m != null && m.id != null && java.nio.file.Files.isRegularFile(local.resolve(m.id + ".zcar"))) {
+                            seatToWheel(m);
+                            found.put(m.id, m);
+                        }
+                    } catch (Exception e) {
+                        com.zomboidcraft.ZomboidCraft.LOGGER.error("Couldn't read the vehicle {}", f, e);
+                    }
+                }
+            } catch (java.io.IOException e) {
+                com.zomboidcraft.ZomboidCraft.LOGGER.error("Couldn't list {}", local, e);
+            }
+        }
         variants = names;
         models = found;
     }
+
+    /**
+     * Where a player keeps vehicles of their own that the mod doesn't ship (config/zomboidcraft/vehicles): each one's
+     * row (ID.json, as in models.json) and packed file (ID.zcar), both written by its tool (e.g. tools/cars/warthog.py).
+     * Everyone in the game needs the same files for it to show and to be sat in.
+     */
+    public static final java.nio.file.Path LOCAL =
+            net.fabricmc.loader.api.FabricLoader.getInstance().getConfigDir().resolve("zomboidcraft").resolve("vehicles");
 
     /**
      * Where the driver's eyes sit against the steering wheel, the same in every vehicle: this far behind the

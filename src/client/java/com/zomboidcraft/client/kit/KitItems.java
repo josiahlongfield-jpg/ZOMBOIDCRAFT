@@ -213,6 +213,13 @@ final class KitItems {
                 case MAGNUM -> "Magnum revolver";
                 case LEVER_ACTION -> "Lever-action carbine";
                 case CROSSBOW -> "Compound crossbow";
+                case BATTLE_RIFLE -> "Battle rifle";
+                case POCKET_PISTOL -> "Pocket pistol";
+                case MACHINE_PISTOL -> "Machine pistol";
+                case SUPPRESSED_RIFLE -> "Suppressed rifle";
+                case PRECISION_RIFLE -> "Bolt-action precision rifle";
+                case HEAVY_SNIPER -> "Heavy sniper rifle";
+                case GRENADE_LAUNCHER -> "Six-shot grenade launcher";
             };
             return what + ", " + t.caliber();
         }
@@ -267,7 +274,7 @@ final class KitItems {
         var item = stack.getItem();
         if (item instanceof HammerItem) return Category.TOOLS;
         if (weapon(stack)) return Category.WEAPONS;
-        if (item instanceof BandageItem || item instanceof SplintItem || stack.has(DataComponents.POTION_CONTENTS)) return Category.MEDICAL;
+        if (item instanceof BandageItem || item instanceof SplintItem || item instanceof com.zomboidcraft.survival.MedicalItem || stack.has(DataComponents.POTION_CONTENTS)) return Category.MEDICAL;
         if (stack.has(DataComponents.FOOD) || stack.has(DataComponents.CONSUMABLE)) return Category.FOOD;
         if (item instanceof MagazineItem || ammo(stack)) return Category.AMMO;
         if (item instanceof AttachmentItem) return Category.GUN_PARTS;

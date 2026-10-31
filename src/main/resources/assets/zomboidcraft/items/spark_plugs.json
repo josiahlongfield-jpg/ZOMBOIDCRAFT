@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/spark_plugs"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/spark_plugs",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/spark_plugs",
+   "part": "body"
+  }
  }
 }

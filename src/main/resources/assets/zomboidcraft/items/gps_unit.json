@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/gps_unit"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/gps_unit",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/gps_unit",
+   "part": "body"
+  }
  }
 }

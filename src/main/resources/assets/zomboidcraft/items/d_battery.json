@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/d_battery"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/d_battery",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/d_battery",
+   "part": "body"
+  }
  }
 }

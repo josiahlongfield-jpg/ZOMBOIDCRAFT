@@ -17,7 +17,8 @@ import net.minecraft.world.entity.Mob;
 /**
  * The measuring stick for big hordes. {@code /zc perf} says how long the server's ticks take and how many zombies it
  * is running (and turns the client's hotbar readout of what is drawn on or off); {@code /zc horde <count> [distance]}
- * drops that many around you, so a test can be run the same way each time.
+ * drops that many around you, so a test can be run the same way each time; {@code /zc profile [seconds]} samples where
+ * the time goes (Profiler) and writes a report to the game folder.
  */
 public final class PerfCommand {
     public static void register() {
@@ -25,6 +26,10 @@ public final class PerfCommand {
                 Commands.literal("zc")
                         .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                         .then(Commands.literal("perf").executes(PerfCommand::perf))
+                        .then(Commands.literal("profile")
+                                .executes(ctx -> profile(ctx, 30))
+                                .then(Commands.argument("seconds", IntegerArgumentType.integer(5, 300))
+                                        .executes(ctx -> profile(ctx, IntegerArgumentType.getInteger(ctx, "seconds")))))
                         .then(Commands.literal("horde")
                                 .then(Commands.argument("count", IntegerArgumentType.integer(1, 2000))
                                         .executes(ctx -> horde(ctx, IntegerArgumentType.getInteger(ctx, "count"), 32))
@@ -63,6 +68,21 @@ public final class PerfCommand {
         String pop = com.zomboidcraft.zombie.population.Population.stats();
         ctx.getSource().sendSuccess(() -> Component.literal(line + "\n" + pop + "\n" + readout), false);
         return walkers;
+    }
+
+    private static int profile(CommandContext<CommandSourceStack> ctx, int seconds) {
+        CommandSourceStack source = ctx.getSource();
+        MinecraftServer server = source.getServer();
+        boolean started = Profiler.start(seconds, summary -> server.execute(() ->
+                source.sendSuccess(() -> Component.literal("Profile done.\n" + summary
+                        + "\nSend that file to Claude."), false)));
+        if (!started) {
+            source.sendFailure(Component.literal("A profile is already running"));
+            return 0;
+        }
+        source.sendSuccess(() -> Component.literal("Profiling for " + seconds
+                + " s. Play as normal where the frame rate drops; the report is written when it ends."), false);
+        return 1;
     }
 
     private static int horde(CommandContext<CommandSourceStack> ctx, int count, int distance) throws CommandSyntaxException {

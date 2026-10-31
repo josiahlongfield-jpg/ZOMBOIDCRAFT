@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/bowl"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/bowl",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/bowl",
+   "part": "body"
+  }
  }
 }

@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/ripped_sheet"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/ripped_sheet",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/ripped_sheet",
+   "part": "body"
+  }
  }
 }

@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/toothbrush"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/toothbrush",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/toothbrush",
+   "part": "body"
+  }
  }
 }

@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/cutting_board"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/cutting_board",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/cutting_board",
+   "part": "body"
+  }
  }
 }

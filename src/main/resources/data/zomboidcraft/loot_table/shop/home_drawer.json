@@ -15,61 +15,6 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:paper",
-          "weight": 6,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 4
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:flint_and_steel",
-          "weight": 2
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:torch",
-          "weight": 3,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 3
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:shears",
-          "weight": 2
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:gold_nugget",
-          "weight": 2,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 4
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
           "name": "zomboidcraft:nails",
           "weight": 3,
           "functions": [
@@ -87,11 +32,6 @@
           "type": "minecraft:item",
           "name": "zomboidcraft:bandage",
           "weight": 2
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:name_tag",
-          "weight": 1
         },
         {
           "type": "minecraft:empty",
@@ -130,7 +70,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:can_opener",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -145,7 +85,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:safety_pins",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -160,7 +100,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:painkillers",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -175,7 +115,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:adhesive_bandages",
-          "weight": 4,
+          "weight": 8,
           "functions": [
             {
               "function": "minecraft:set_count",

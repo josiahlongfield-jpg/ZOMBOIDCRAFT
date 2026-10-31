@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/frozen_pizza"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/frozen_pizza",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/frozen_pizza",
+   "part": "body"
+  }
  }
 }

@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/saline_bag"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/saline_bag",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/saline_bag",
+   "part": "body"
+  }
  }
 }

@@ -433,6 +433,122 @@ for i, rows in enumerate(["###.###..#..###", "#....#..#.#.#.#", "###..#..#.#.###
         if ch == '#':
             d.point((8 + j, 23 + i), fill=(24, 22, 20, 255))
 put(img, 13, 5)
+img, _ = tile(0, 6)                          # close-doors button: a dark plate, a big green button with the doors-shut arrows, CLOSE under it
+noise_fill(img, (52, 56, 58), 8, 6150)
+d = ImageDraw.Draw(img)
+d.rectangle([0, 0, T - 1, T - 1], outline=(20, 20, 20, 255), width=2)
+d.ellipse([7, 3, 24, 20], fill=(10, 50, 18, 255))
+d.ellipse([8, 4, 23, 19], fill=(40, 176, 70, 255))
+d.ellipse([11, 6, 17, 11], fill=(140, 240, 160, 255))
+d.rectangle([15, 7, 16, 16], fill=(16, 30, 18, 255))
+d.polygon([(10, 8), (14, 11), (14, 12), (10, 15)], fill=(16, 30, 18, 255))
+d.polygon([(21, 8), (17, 11), (17, 12), (21, 15)], fill=(16, 30, 18, 255))
+for i, rows in enumerate(["###.#...###.###.###", "#...#...#.#.#...#..", "#...#...#.#.###.###", "#...#...#.#...#.#..", "###.###.###.###.###"]):
+    for j, ch in enumerate(rows):
+        if ch == '#':
+            d.point((6 + j, 23 + i), fill=(230, 232, 226, 255))
+put(img, 0, 6)
+# ---- track detail (row 6): tie plates, ballast, weeds, third-rail insulators and cover, clips
+img, _ = tile(1, 6)                          # tie plate: rusty rolled steel, bolt holes, scale
+noise_fill(img, (96, 62, 40), 26, 6300)
+d = ImageDraw.Draw(img)
+for (x, y) in [(6, 8), (25, 8), (6, 23), (25, 23)]:
+    d.ellipse([x - 2, y - 2, x + 2, y + 2], fill=(40, 30, 24, 255))
+for _ in range(40):
+    x, y = rng.randrange(T), rng.randrange(T)
+    d.point((x, y), fill=(150, 92, 52, 255))
+put(img, 1, 6)
+img, _ = tile(2, 6)                          # ballast: crushed grey stone, rust-stained, oil-dark in places
+r2 = random.Random(6400)
+px = img.load()
+for y in range(T):
+    for x in range(T):
+        px[x, y] = (54, 52, 50, 255)
+for _ in range(150):
+    cx, cy, rr = r2.randrange(T), r2.randrange(T), r2.randrange(1, 4)
+    g = r2.randrange(80, 170)
+    tint = r2.random()
+    col = (clamp(g + (24 if tint < 0.2 else 0)), clamp(g - (6 if tint < 0.2 else 0)), clamp(g - (16 if tint < 0.2 else 0)), 255)
+    ImageDraw.Draw(img).ellipse([cx - rr, cy - rr, cx + rr, cy + rr], fill=col)
+    ImageDraw.Draw(img).point((cx - 1, cy - 1), fill=(clamp(g + 40),) * 3 + (255,))
+for _ in range(3):
+    cx, cy = r2.randrange(T), r2.randrange(T)
+    for k in range(30):
+        x, y = cx + r2.randrange(-5, 6), cy + r2.randrange(-4, 5)
+        if 0 <= x < T and 0 <= y < T:
+            c = px[x, y]
+            px[x, y] = (clamp(c[0] * 0.6), clamp(c[1] * 0.58), clamp(c[2] * 0.55), 255)
+put(img, 2, 6)
+img = Image.new('RGBA', (T, T), (0, 0, 0, 0))  # weeds through the ballast (cut out)
+d = ImageDraw.Draw(img)
+r3 = random.Random(6500)
+for _ in range(16):
+    x = r3.randrange(2, T - 2)
+    h = r3.randrange(8, 28)
+    lean = r3.uniform(-0.35, 0.35)
+    g = (r3.randrange(60, 110), r3.randrange(90, 140), r3.randrange(30, 60), 255)
+    if r3.random() < 0.3:
+        g = (r3.randrange(120, 150), r3.randrange(110, 130), r3.randrange(50, 70), 255)   # dry
+    for k in range(h):
+        d.point((clamp(x + lean * k) if 0 <= x + lean * k < T else x, T - 1 - k), fill=g)
+    if r3.random() < 0.25:
+        d.ellipse([x - 2, T - h - 2, x + 2, T - h + 2], fill=(220, 210, 120, 255))
+put(img, 3, 6)
+img, _ = tile(4, 6)                          # third-rail insulator: glazed ceramic, chipped, sooted
+noise_fill(img, (196, 180, 140), 14, 6600)
+d = ImageDraw.Draw(img)
+for y in range(4, T, 6):
+    d.line([(0, y), (T, y)], fill=(120, 108, 84, 255))
+grime(img, 6610, 70)
+put(img, 4, 6)
+img, _ = tile(5, 6)                          # third-rail cover board: faded yellow fibreglass, warning, grime
+noise_fill(img, (176, 150, 60), 14, 6700)
+d = ImageDraw.Draw(img)
+d.rectangle([0, 0, T - 1, 2], fill=(110, 92, 40, 255))
+for x in range(0, T, 8):
+    d.line([(x, 10), (x + 4, 20)], fill=(30, 28, 24, 255), width=2)
+grime(img, 6710, 80)
+put(img, 5, 6)
+img, _ = tile(6, 6)                          # clips and joint bars: dark oily steel
+noise_fill(img, (52, 48, 46), 16, 6800)
+d = ImageDraw.Draw(img)
+for x in range(4, T, 9):
+    d.ellipse([x - 2, 14, x + 2, 18], fill=(90, 80, 72, 255))
+put(img, 6, 6)
+img, _ = tile(7, 6)                          # moulded seat, the yellow ones between the orange (R46-style two-tone)
+noise_fill(img, (236, 176, 40), 8, 6900)
+d = ImageDraw.Draw(img)
+d.line([(0, 2), (T, 2)], fill=(250, 214, 110, 255))
+grime(img, 6910, 30)
+put(img, 7, 6)
+img, _ = tile(8, 6)                          # wood-grain laminate: draft screens by the doors
+r8 = random.Random(7000)
+px = img.load()
+for y in range(T):
+    for x in range(T):
+        g = math.sin(y * 0.9 + math.sin(x * 0.25 + r8.random() * 0.3) * 2.2) * 14 + (r8.random() - 0.5) * 10
+        px[x, y] = (clamp(104 + g), clamp(62 + g * 0.7), clamp(36 + g * 0.4), 255)
+grime(img, 7010, 30)
+put(img, 8, 6)
+img, _ = tile(9, 6)                          # yellow-painted grab pole, worn to steel where hands go
+noise_fill(img, (230, 196, 30), 10, 7100)
+d = ImageDraw.Draw(img)
+for y in range(10, 22):
+    for x in range(T):
+        if rng.random() < 0.35:
+            d.point((x, y), fill=(170, 172, 168, 255))
+put(img, 9, 6)
+img, _ = tile(10, 6)                         # the system map in its frame by the doors
+noise_fill(img, (226, 228, 214), 6, 7200)
+d = ImageDraw.Draw(img)
+d.rectangle([0, 0, T - 1, T - 1], outline=(150, 152, 150, 255), width=2)
+d.polygon([(4, 6), (14, 4), (26, 10), (27, 26), (12, 28), (5, 18)], fill=(140, 190, 220, 255))
+d.polygon([(9, 9), (20, 8), (22, 22), (11, 24)], fill=(230, 222, 190, 255))
+for col, pts in [((220, 40, 40, 255), [(6, 14), (16, 12), (24, 18)]), ((40, 120, 200, 255), [(12, 6), (14, 18), (13, 27)]),
+                 ((240, 170, 30, 255), [(8, 24), (18, 20), (25, 12)]), ((40, 160, 70, 255), [(10, 8), (20, 16), (22, 26)])]:
+    d.line(pts, fill=col, width=1)
+grime(img, 7210, 30)
+put(img, 10, 6)
 img, _ = tile(14, 5)                         # hazard stripes
 for y in range(T):
     for x in range(T):
@@ -452,19 +568,59 @@ otto.write_java()
 atlas.save(os.path.join(ROOT, 'entity', 'train', 'atlas.png'))
 
 # ---------------------------------------------------------------- the call button (block texture)
-b = Image.new('RGBA', (32, 32), (0, 0, 0, 255))
-noise_fill(b, (214, 176, 40), 20, 7000)
+# 64 px: the housing's face (yellow, hazard band, CALL TRAIN, a steel ring round the button, a speaker
+# grille, screws, scuffs) and the galvanised steel of its back plate, hood and conduit
+B = 64
+b = Image.new('RGBA', (B, B), (0, 0, 0, 255))
+rb = random.Random(7000)
+pb = b.load()
+for y in range(B):
+    for x in range(B):
+        n = (rb.random() - 0.5) * 22
+        pb[x, y] = (clamp(214 + n), clamp(176 + n), clamp(40 + n * 0.5), 255)
 d = ImageDraw.Draw(b)
-d.rectangle([0, 0, 31, 31], outline=(40, 34, 20, 255))
-for y in range(0, 32):
-    for x in range(0, 32):
-        if y < 5 and ((x + y) // 3) % 2 == 0:
-            b.putpixel((x, y), (24, 24, 24, 255))
-d.ellipse([9, 11, 23, 25], fill=(60, 10, 10, 255))
-d.ellipse([10, 12, 22, 24], fill=(200, 26, 22, 255))
-d.ellipse([12, 13, 17, 17], fill=(255, 120, 110, 255))
-grime(b, 7100, 50)
+d.rectangle([0, 0, B - 1, B - 1], outline=(40, 34, 20, 255), width=2)
+for y in range(2, 10):
+    for x in range(2, B - 2):
+        if ((x + y) // 4) % 2 == 0:
+            pb[x, y] = (24, 24, 24, 255)
+def letters(dr, text, x, y, col):
+    font5 = {'C': ["###", "#..", "#..", "#..", "###"], 'A': ["###", "#.#", "###", "#.#", "#.#"], 'L': ["#..", "#..", "#..", "#..", "###"],
+             'T': ["###", ".#.", ".#.", ".#.", ".#."], 'R': ["##.", "#.#", "##.", "#.#", "#.#"], 'I': ["###", ".#.", ".#.", ".#.", "###"],
+             'N': ["#.#", "###", "###", "###", "#.#"], ' ': ["...", "...", "...", "...", "..."]}
+    for ch in text:
+        for j, row in enumerate(font5[ch]):
+            for i, c in enumerate(row):
+                if c == '#':
+                    dr.point((x + i, y + j), fill=col)
+        x += 4
+letters(d, "CALL TRAIN", 13, 13, (24, 22, 18, 255))
+d.ellipse([18, 18 + 2, 46, 46 + 2], fill=(70, 70, 72, 255))
+d.ellipse([20, 20 + 2, 44, 44 + 2], fill=(150, 150, 154, 255))
+d.ellipse([23, 23 + 2, 41, 41 + 2], fill=(40, 10, 10, 255))
+for gy in range(52, 60, 3):
+    for gx in range(22, 43, 3):
+        d.point((gx, gy), fill=(30, 26, 18, 255))
+for (sx, sy) in [(5, 14), (58, 14), (5, 58), (58, 58)]:
+    d.ellipse([sx - 2, sy - 2, sx + 2, sy + 2], fill=(110, 110, 112, 255))
+    d.line([(sx - 1, sy), (sx + 1, sy)], fill=(40, 40, 40, 255))
+for _ in range(14):    # scuffs and chips down to the steel
+    x0, y0 = rb.randrange(B), rb.randrange(B)
+    d.line([(x0, y0), (x0 + rb.randrange(-6, 7), y0 + rb.randrange(-2, 3))], fill=(120, 116, 104, 255))
+for x0 in [rb.randrange(B) for _ in range(5)]:    # rust run down from the screws and the top
+    for y in range(rb.randrange(10, 40)):
+        if 0 <= x0 < B and 10 + y < B:
+            c = pb[x0, 10 + y]
+            pb[x0, 10 + y] = (clamp(c[0] * 0.75), clamp(c[1] * 0.6), clamp(c[2] * 0.5), 255)
 b.save(os.path.join(ROOT, 'block', 'train_call_button.png'))
+s = Image.new('RGBA', (32, 32), (0, 0, 0, 255))
+noise_fill(s, (108, 112, 114), 22, 7200)
+ds = ImageDraw.Draw(s)
+for _ in range(20):
+    x0, y0 = rng.randrange(32), rng.randrange(32)
+    ds.point((x0, y0), fill=(150, 154, 156, 255))
+grime(s, 7210, 60)
+s.save(os.path.join(ROOT, 'block', 'train_call_button_steel.png'))
 r = Image.new('RGBA', (16, 16), (190, 22, 20, 255))
 dr = ImageDraw.Draw(r)
 dr.ellipse([3, 3, 9, 9], fill=(250, 110, 100, 255))

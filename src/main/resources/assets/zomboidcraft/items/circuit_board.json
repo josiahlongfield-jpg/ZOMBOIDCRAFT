@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/circuit_board"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/circuit_board",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/circuit_board",
+   "part": "body"
+  }
  }
 }

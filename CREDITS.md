@@ -65,6 +65,12 @@ The street cars, vans, trucks and buses are from the [American Cars 80s Pack](ht
 
 The aircraft on the carrier are three models bought on CGTrader and used under its Royalty Free licence: [Lockheed Martin F-22 Raptor](https://www.cgtrader.com/3d-models/aircraft/military-aircraft/lockheed-martin-f-22-raptor-73212c3c-8419-4d38-81b5-443f1ca23646) (the Corvid), "Sukhoi Su-27 with interior" (the Gyrfalcon) and "Apache AH64D Low" (the Hornbill helicopter). tools/cars/aircraft.py repainted them with made-up markings, weathered and damaged them, and packs them into the mod (tools/cars/cockpit_glow.py adds their cockpit lighting and the made-up screen pages, packed the same way); the original files are not part of this repository and may not be redistributed or used to train AI models.
 
+The mod can also load vehicles kept on the player's own computer (config/zomboidcraft/vehicles), which it does not ship: tools/cars/warthog_bake.py and tools/cars/warthog.py make one from a model a player supplies. Neither that model nor anything made from it is part of this repository or the mod.
+
+## Characters
+
+The dark elf NPC is a royalty-free model bought by the project's owner. tools/npc/pack.py packs it into the mod as a scrambled mesh with its texture as bought and a toon-painted copy; the original files are not part of this repository and may not be redistributed.
+
 ## Looting and item sounds
 
 CC0 (public domain) recordings from [Freesound](https://freesound.org) and royalty-free sounds from the [Sonniss GameAudioGDC](https://sonniss.com/gameaudiogdc) bundles, picked by ear, cut, mixed to mono and levelled by tools/audio/build_loot_sounds.py.
@@ -357,3 +363,132 @@ Jets and helicopters crossing the map (world events), picked by Josiah Longfield
 Spoken with the Piper text-to-speech engine (https://github.com/OHF-Voice/piper1-gpl) using the
 "joe" voice (en_US-joe-medium, dataset licence CC0, https://huggingface.co/rhasspy/piper-voices),
 then given a robot and train-speaker treatment with ffmpeg. Made by tools/trains/otto_voice.py.
+
+## Throwables
+
+Picked by Josiah Longfield on the Dead Air Throwables page, cut by tools/audio/build_throw_sounds.py. The Sonniss and Gamemaster originals are not included.
+
+| Sound | Recording | By | Licence |
+|---|---|---|---|
+| weapon.throw.swing | foley_jump_movement_throw_06 (Gun Sound Pack bonus sounds) | Gamemaster Audio | Gamemaster Audio licence (bought) |
+| weapon.throw.bottle_smash | Bluezone_BC0274_glass_impact_break_small_014 (BluezoneCorp - Broken Glass) | Sonniss GameAudioGDC 2023 | Sonniss royalty-free |
+| weapon.throw.can_clatter | [Spray Can Rattle 170428_1483.wav by megashroom](https://freesound.org/people/megashroom/sounds/390334/) | megashroom | Freesound, CC0 1.0 |
+| weapon.throw.brick_thud | Brick_bricks_shuffle_impact_several_many_moving_laying_cement_hit_fall_10 (Matt Script - You Me & Debris) | Sonniss GameAudioGDC 2019 | Sonniss royalty-free |
+| weapon.throw.brick_thud | Bluezone_BC0297_stone_impact_steel_bar_01_010 (BluezoneCorp - Stone Impact) | Sonniss GameAudioGDC 2024 | Sonniss royalty-free |
+| weapon.throw.brick_thud | Bluezone_BC0297_stone_impact_hammer_015 (BluezoneCorp - Stone Impact) | Sonniss GameAudioGDC 2024 | Sonniss royalty-free |
+| weapon.throw.firecracker | [Firecracker - Multiple String.wav by iliyabylich04](https://freesound.org/people/iliyabylich04/sounds/651328/) | iliyabylich04 | Freesound, CC0 1.0 |
+| weapon.throw.fuse | [firecracker sparkler ignite, burn, fizzle out3.flac by kyles](https://freesound.org/people/kyles/sounds/637527/) | kyles | Freesound, CC0 1.0 |
+| weapon.throw.flare_strike, weapon.throw.flare_hiss | [road flare ignite burns.wav by frankelmedico](https://freesound.org/people/frankelmedico/sounds/348767/) | frankelmedico | Freesound, CC0 1.0 |
+| weapon.throw.alarm_tick | [Clock.Windup.Bell.Antique.wav by jessepash](https://freesound.org/people/jessepash/sounds/139958/) | jessepash | Freesound, CC0 1.0 |
+| weapon.throw.alarm_ring | [alarm clock.wav by jackjames_tomknevitt](https://freesound.org/people/jackjames_tomknevitt/sounds/209536/) | jackjames_tomknevitt | Freesound, CC0 1.0 |
+| weapon.throw.alarm_ring | [2018 07 alarm clock.flac by arseniiv](https://freesound.org/people/arseniiv/sounds/459701/) | arseniiv | Freesound, CC0 1.0 |
+| weapon.throw.pin_pull | gun_grenade_launcher_trigger_02 (Gun Sound Pack bonus sounds) | Gamemaster Audio | Gamemaster Audio licence (bought) |
+| weapon.throw.molotov_burst | [Lighting a Fire by plasterbrain](https://freesound.org/people/plasterbrain/sounds/534702/) | plasterbrain | Freesound, CC0 1.0 |
+| weapon.throw.smoke_pop | [R27-34-Fuse Burning.wav by craigsmith](https://freesound.org/people/craigsmith/sounds/483320/) | craigsmith | Freesound, CC0 1.0 |
+| weapon.throw.flashbang | [Cherry Bomb Explodes, Normal Speed by CHallSmith](https://freesound.org/people/CHallSmith/sounds/870713/) | CHallSmith | Freesound, CC0 1.0 |
+| weapon.throw.blast, world.explosion | [Pipe Bomb by modusmogulus](https://freesound.org/people/modusmogulus/sounds/737321/) | modusmogulus | Freesound, CC0 1.0 |
+| weapon.throw.blast, world.explosion | explosion_large_07 (Gamemaster Audio - Guns, Bullets and Explosions) | Sonniss GameAudioGDC 2018 | Sonniss royalty-free |
+| weapon.throw.blast_far | explosion_far_distant_02 (Gun Sound Pack bonus sounds) | Gamemaster Audio | Gamemaster Audio licence (bought) |
+| weapon.throw.blast_far | FarExplosion03 (Stefano Cremona - Explosions) | Sonniss GameAudioGDC 2020 | Sonniss royalty-free |
+| weapon.throw.fire_burn | [Fire Burning Loop by midimagician](https://freesound.org/people/midimagician/sounds/249418/) | midimagician | Freesound, CC0 1.0 |
+| world.explosion.far | [Muffled Distant Explosion by NenadSimic](https://freesound.org/people/NenadSimic/sounds/149966/) | NenadSimic | Freesound, CC0 1.0 |
+| world.explosion.far | [Big Far Explosion by unfa](https://freesound.org/people/unfa/sounds/156500/) | unfa | Freesound, CC0 1.0 |
+| world.explosion.far | [Distant Explosion by Mr_KeybOred](https://freesound.org/people/Mr_KeybOred/sounds/372086/) | Mr_KeybOred | Freesound, CC0 1.0 |
+
+## Harvestman sounds
+
+Layered, pitched and filtered by tools/audio/build_harvestman_sounds.py; its clicks are made from scratch.
+
+| Sound | Recording | By | Licence |
+|---|---|---|---|
+| creature.harvestman.hurt, creature.harvestman.screech | Monster_Roar_Growl_164 (SoundBits -  Screams & Shouts 2 - Monsters) | Sonniss GameAudioGDC 2016 | Sonniss royalty-free |
+| creature.harvestman.call | Monster_Roar_Growl_009 (SoundBits -  Screams & Shouts 2 - Monsters) | Sonniss GameAudioGDC 2016 | Sonniss royalty-free |
+| creature.harvestman.feed, creature.harvestman.hiss | Zombie Subject B Hiss (1) (Glitchedtones - Zombie) | Sonniss GameAudioGDC 2019 | Sonniss royalty-free |
+| creature.harvestman.death | VOXReac_Construction Kit Male Flutter Death Vocal Stuttered Long 05_ESM_HC4 (Epic Stock Media - Humanoid Creatures Vol 4 - Monstrous and Undead Creature Vocalization Sound Sets) | Sonniss GameAudioGDC 2026 | Sonniss royalty-free |
+| creature.harvestman.leg_off | EFX SD GORE Snap 05 C.M (Coll Anderson - Gore) | Sonniss GameAudioGDC 2015 | Sonniss royalty-free |
+| creature.harvestman.clang, creature.harvestman.death, creature.harvestman.hurt | MECHMisc_Ricochet Hits 01_JSE_SG (Justsoundeffects - Steampunk Gadgets) | Sonniss GameAudioGDC 2024 | Sonniss royalty-free |
+| creature.harvestman.feed | Smash_Gore_Juicy_Smash_07 (Sound Spark LLC – Gore) | Sonniss GameAudioGDC 2019 | Sonniss royalty-free |
+| creature.harvestman.screech | HMNBrth_Construction Kit Male Screeching Breath Inhale Weak Squeal 05_ESM_HC4 (Epic Stock Media - Humanoid Creatures Vol 4 - Monstrous and Undead Creature Vocalization Sound Sets) | Sonniss GameAudioGDC 2026 | Sonniss royalty-free |
+| creature.harvestman.screech | CREAHmn_Designed Orc Male Attack Long Heavy Hit Charged Up 03_ESM_HC4 (Epic Stock Media - Humanoid Creatures Vol 4 - Monstrous and Undead Creature Vocalization Sound Sets) | Sonniss GameAudioGDC 2026 | Sonniss royalty-free |
+| creature.harvestman.scrape | ResonantRustyDoor_scrape_short_05 (Alex Lane - Resonant Rusty Door) | Sonniss GameAudioGDC 2020 | Sonniss royalty-free |
+| creature.harvestman.hurt, creature.harvestman.screech | Monster_Pain_Death_121 (SoundBits -  Screams & Shouts 2 - Monsters) | Sonniss GameAudioGDC 2016 | Sonniss royalty-free |
+| creature.harvestman.feed | WakeyWakey,tea,gaiwan,ceramic,glazed,thick,3piece,cup,full,drink,sipping,slurp,swallow,mouthclicks,alt5 (Eiravaein Works - WakeyWakey) | Sonniss GameAudioGDC 2019 | Sonniss royalty-free |
+| creature.harvestman.tap | Tallons_Concrete_Gallop-3-Step (Joshua Reinhardt - Ultimate Creature Footstep and Movement Library) | Sonniss GameAudioGDC 2020 | Sonniss royalty-free |
+| creature.harvestman.death, creature.harvestman.leg_off | CREAMnstr_Designed Sea Beast Creature Pain Intense Yell Long 04_ESM_HC4 (Epic Stock Media - Humanoid Creatures Vol 4 - Monstrous and Undead Creature Vocalization Sound Sets) | Sonniss GameAudioGDC 2026 | Sonniss royalty-free |
+| creature.harvestman.hurt | Monster_Struggle_Grunt_240 (SoundBits -  Screams & Shouts 2 - Monsters) | Sonniss GameAudioGDC 2016 | Sonniss royalty-free |
+
+## Air strikes
+
+The jets' cannon and the Apache's chain gun on their strike runs (world events), built by tools/audio/build_strike_sounds.py from one real 30 mm cannon shot. The bombs use the world explosion sounds. The Sonniss originals are not included.
+
+| Sound | Recording | By | Licence |
+|---|---|---|---|
+| world.strike.cannon | Automatic Cannon - MK44 - 03 - Single Shot with Report 03 (Fascinated Sound - The Gun Locker SFX Pack), laid down 52 rounds a second | Sonniss GameAudioGDC 2016 | Sonniss royalty-free |
+| world.strike.chaingun | Automatic Cannon - MK44 - 03 - Single Shot with Report 03 (Fascinated Sound - The Gun Locker SFX Pack), laid down 10.4 rounds a second | Sonniss GameAudioGDC 2016 | Sonniss royalty-free |
+
+## Bought gun models
+
+Real gun meshes bought by Josiah under the stores' Royalty Free licences, toon-painted and packed by tools/meshguns/pack.py into scrambled assets/zomboidcraft/meshes/*.zmesh files. The original models and textures are not included.
+
+| Mesh | Model | From | Licence |
+|---|---|---|---|
+| pbr_assault_rifle (the assault rifle) | Automatic Rifle 03, recoloured black (PBR Weapons Pack) | CGTrader | Royalty Free |
+| pbr_smg (the SMG) | Automatic Rifle 04 (PBR Weapons Pack) | CGTrader | Royalty Free |
+| pbr_pistol (the pistol) | Gun (PBR Weapons Pack) | CGTrader | Royalty Free |
+| pbr_magnum (the magnum) | Gun 03, scope left off (PBR Weapons Pack) | CGTrader | Royalty Free |
+| pbr_shotgun (the pump shotgun) | Shotgun (PBR Weapons Pack) | CGTrader | Royalty Free |
+| pbr_hunting_rifle (the hunting rifle) | Sniper Rifle 02, scope left off (PBR Weapons Pack) | CGTrader | Royalty Free |
+| pbr_crossbow (the crossbow) | Crossbow, scope left off (PBR Weapons Pack) | CGTrader | Royalty Free |
+| pbr_crossbow_bolt, pbr_bolt (crossbow bolts) | Arrow (PBR Weapons Pack) | CGTrader | Royalty Free |
+| pbr_machete (the machete) | Knife (PBR Weapons Pack) | CGTrader | Royalty Free |
+| pbr_battle_rifle (the battle rifle) | Automatic Rifle 01, scope and grip left off (PBR Weapons Pack) | CGTrader | Royalty Free |
+| pbr_suppressed_rifle (the suppressed rifle) | Automatic Rifle 05, scope left off (PBR Weapons Pack) | CGTrader | Royalty Free |
+| pbr_machine_pistol (the machine pistol) | Automatic Gun (PBR Weapons Pack) | CGTrader | Royalty Free |
+| pbr_pocket_pistol (the pocket pistol) | Gun 02 (PBR Weapons Pack) | CGTrader | Royalty Free |
+| pbr_precision_rifle (the precision rifle) | Sniper Rifle, scope left off (PBR Weapons Pack) | CGTrader | Royalty Free |
+| pbr_grenade_launcher (the grenade launcher) | Grenade Gun (PBR Weapons Pack) | CGTrader | Royalty Free |
+| pbr_tomahawk (the tomahawk) | Axe (PBR Weapons Pack) | CGTrader | Royalty Free |
+| heavy_sniper_mesh (the heavy sniper) | M200 rifle model (m200-rifle-cheytac-intervention pack), scope, bipod and monopod left off | bought by Josiah | Royalty Free |
+| pbr_frag_grenade (the frag grenade) | Grenade (PBR Weapons Pack) | CGTrader | Royalty Free |
+| own_combat_scope, own_combat_grip (the combat scope, skeleton grip) | scope and grip off Automatic Rifle 01 (PBR Weapons Pack) | CGTrader | Royalty Free |
+| own_launcher, own_launcher_grip (the underbarrel launcher, tactical grip) | launcher off Automatic Rifle 02, grip off Grenade Gun (PBR Weapons Pack) | CGTrader | Royalty Free |
+| own_compact_dot, own_rail_light (the compact red dot and light) | sight and light off Automatic Rifle 03 (PBR Weapons Pack) | CGTrader | Royalty Free |
+| own_rifle_optic, own_rifle_suppressor, own_compact_suppressor (the rifle scope and suppressors) | scope and suppressor off Automatic Rifle 05 (PBR Weapons Pack) | CGTrader | Royalty Free |
+| own_pistol_scope (the pistol scope) | scope off Gun 03 (PBR Weapons Pack) | CGTrader | Royalty Free |
+| own_precision_scope, own_precision_bipod | scope and bipod off Sniper Rifle (PBR Weapons Pack) | CGTrader | Royalty Free |
+| own_hunting_scope, own_hunting_bipod, own_sniper_suppressor | scope, bipod and suppressor off Sniper Rifle 02 (PBR Weapons Pack) | CGTrader | Royalty Free |
+| own_crossbow_scope (the crossbow scope) | scope off Crossbow (PBR Weapons Pack) | CGTrader | Royalty Free |
+| own_long_scope, own_long_bipod (the long range scope, heavy sniper bipod) | scope and bipod off the M200 rifle model | bought by Josiah | Royalty Free |
+| att_holo, att_red_dot, att_prism_4x, att_mini_dot, att_magnifier (sights) | holographic sight, tube red dot, 4x prism, mini red dot and 3x magnifier from the gun attachments pack, maker logos painted out | bought by Josiah | Royalty Free |
+| sights/holo, scope_4x, mini_dot (.zsight) | the holo's ring and the spare chevron (in the 4x prism) from the gun attachments pack's Eotech folder, and the mini red dot's lit dot from its pack, shipped scrambled like the meshes (tools/meshguns/reticles.py) | bought by Josiah | Royalty Free |
+| textures/gui/sight (reticles) | the sights whose packs came with no reticle: drawn for the mod (tools/meshguns/reticles.py) | ZomboidCraft | the mod's own |
+| att_foregrip, att_angled_grip, att_stubby_grip, att_light (grips and the weapon light) | vertical, angled and stubby grips and the weapon light from the gun attachments pack, maker logos painted out | bought by Josiah | Royalty Free |
+| att_irons_front_up/down, att_irons_rear_up/down (flip-up iron sights) | flip-up iron sights from the gun attachments pack | bought by Josiah | Royalty Free |
+
+## Wave-two guns
+
+Picked by Josiah Longfield on the Dead Air New Guns Two page, cut by tools/audio/build_gun3_sounds.py (far-off shots are made from the near ones). The Sonniss and Gamemaster originals are not included.
+
+| Sound | Recording | By | Licence |
+|---|---|---|---|
+| weapon.heavy_sniper.shot | [M1 Garand Rifle by nioczkus](https://freesound.org/people/nioczkus/sounds/386842/) | nioczkus | Freesound, CC0 1.0 |
+| weapon.heavy_sniper.shot_distant | Lynx 50 - FIRING - Take 1 - 65m Behind - ORTF - CM3 (Pole Position - Lynx 50 Cal Sniper Rifle) | Sonniss GameAudioGDC 2024 | Sonniss royalty-free |
+| weapon.heavy_sniper.shot_suppressed | Sako_TRG_22_TRG_1m_left_off_axis_MKH416_clean_Single_shots_x_5 (Pole Position Production - Sako TRG 22) | Sonniss GameAudioGDC 2016 | Sonniss royalty-free |
+| weapon.battle_rifle.shot | Automatic Cannon - MK44 - 03 - Single Shot with Report 03 (Fascinated Sound - The Gun Locker SFX Pack) | Sonniss GameAudioGDC 2016 | Sonniss royalty-free |
+| weapon.battle_rifle.shot_suppressed | [SIG Sauer P226 (Suppressed) by areniporgen](https://freesound.org/people/areniporgen/sounds/828790/) | areniporgen | Freesound, CC0 1.0 |
+| weapon.machine_pistol.shot | Glock_18_75m_behind_Ehrlund_R2_clean_Six_shots_x_1 (Pole Position Production - Glock 18c) | Sonniss GameAudioGDC 2016 | Sonniss royalty-free |
+| weapon.machine_pistol.shot_distant | HK_VP70_9mm_1m_in_front_RE20_clean_Double_shots_x_1 (Pole Position Production -  Heckler & Koch VP70 9mm) | Sonniss GameAudioGDC 2016 | Sonniss royalty-free |
+| weapon.machine_pistol.shot_suppressed | [suppressed-submachinegun.wav by mnslugger20](https://freesound.org/people/mnslugger20/sounds/242846/) | mnslugger20 | Freesound, CC0 1.0 |
+| weapon.machine_pistol.shot_suppressed | [A silenced/suppressed handgun being shot once w/ phaser sounding trail // pretty metallic sounding by serøutōnin--deprivəd](https://freesound.org/people/ser%C3%B8ut%C5%8Dnin--depriv%C9%99d/sounds/855656/) | ser%C3%B8ut%C5%8Dnin--depriv%C9%99d | Freesound, CC0 1.0 |
+| weapon.pocket_pistol.shot | [Desert Eagle Gunshot by elliotlp](https://freesound.org/people/elliotlp/sounds/330634/) | elliotlp | Freesound, CC0 1.0 |
+| weapon.grenade_launcher.shot | gun_grenade_launcher_shot_01 (Gamemaster gun packs, bonus sounds) | Gamemaster Audio | Gamemaster Audio licence (bought) |
+| weapon.minigun.shot, weapon.minigun.loop, weapon.minigun.spin_down | [Slowfiringheavyweapon.wav by SuperPhat](https://freesound.org/people/SuperPhat/sounds/417148/) | SuperPhat | Freesound, CC0 1.0 |
+
+## Harvestman rage
+
+Picked by Josiah Longfield on the Dead Air Harvestman Rage page, built by tools/audio/build_harvestman_rage.py.
+
+| Sound | Recording | By | Licence |
+|---|---|---|---|
+| creature.harvestman.rage | [Alien_Monster_Scream.wav by audione](https://freesound.org/people/audione/sounds/161404/) | audione | Freesound, CC0 1.0 |
+| creature.harvestman.rage | [Demonic Woman Scream.wav by nick121087](https://freesound.org/people/nick121087/sounds/333832/) | nick121087 | Freesound, CC0 1.0 |

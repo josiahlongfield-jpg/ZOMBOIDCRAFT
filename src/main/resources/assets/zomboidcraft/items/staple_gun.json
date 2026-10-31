@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/staple_gun"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/staple_gun",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/staple_gun",
+   "part": "body"
+  }
  }
 }

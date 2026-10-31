@@ -1,0 +1,75 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rl_beacon_on": "zomboidcraft:block/city/rl_beacon_on",
+    "rl_desk": "zomboidcraft:block/city/rl_desk",
+    "particle": "zomboidcraft:block/city/rl_desk"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        0,
+        5
+      ],
+      "to": [
+        11,
+        2,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rl_desk"
+        },
+        "south": {
+          "texture": "#rl_desk"
+        },
+        "east": {
+          "texture": "#rl_desk"
+        },
+        "west": {
+          "texture": "#rl_desk"
+        },
+        "up": {
+          "texture": "#rl_desk"
+        },
+        "down": {
+          "texture": "#rl_desk",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        2,
+        6
+      ],
+      "to": [
+        10,
+        7,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rl_beacon_on"
+        },
+        "south": {
+          "texture": "#rl_beacon_on"
+        },
+        "east": {
+          "texture": "#rl_beacon_on"
+        },
+        "west": {
+          "texture": "#rl_beacon_on"
+        },
+        "up": {
+          "texture": "#rl_beacon_on"
+        },
+        "down": {
+          "texture": "#rl_beacon_on"
+        }
+      }
+    }
+  ]
+}

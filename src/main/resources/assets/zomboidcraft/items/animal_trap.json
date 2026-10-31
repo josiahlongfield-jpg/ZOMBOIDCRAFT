@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/animal_trap"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/animal_trap",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/animal_trap",
+   "part": "body"
+  }
  }
 }

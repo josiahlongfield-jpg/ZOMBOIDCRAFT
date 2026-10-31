@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/cola_can"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/cola_can",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/cola_can",
+   "part": "body"
+  }
  }
 }

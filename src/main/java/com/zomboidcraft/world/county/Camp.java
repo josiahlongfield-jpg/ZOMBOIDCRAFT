@@ -553,7 +553,7 @@ final class Camp {
         }
         for (int i = 2; i + 3 < len; i += 6) {
             if (chance() < 0.75) {
-                p.vehicle(x + i + 1.5, 1, z + 4.5, 0, any("jeep", "jeep_open", "jeep", "box_truck", "ambulance"), rng.nextLong());
+                p.vehicle(x + i + 1.5, 1, z + 4.5, 0, any("jeep", "jeep_open", "jeep", "box_truck", "ambulance", "jeep", "jeep_open", "box_truck", "jeep", "warthog"), rng.nextLong());
             }
         }
         for (int i = 0; i < 4; i++) {

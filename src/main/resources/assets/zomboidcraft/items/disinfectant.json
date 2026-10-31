@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/disinfectant"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/disinfectant",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/disinfectant",
+   "part": "body"
+  }
  }
 }

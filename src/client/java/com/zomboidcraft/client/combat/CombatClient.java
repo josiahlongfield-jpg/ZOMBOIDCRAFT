@@ -76,6 +76,9 @@ public final class CombatClient {
         KeyMappingHelper.registerKeyMapping(FIRE_MODE);
         KeyMappingHelper.registerKeyMapping(SHOULDER);
         ClientPreAttackCallback.EVENT.register((client, player, clicks) -> {
+            if (com.zomboidcraft.world.cars.Turret.isGunner(player)) {
+                return true;    // at a mounted gun the button works its trigger (see gunner)
+            }
             ItemStack hand = player.getMainHandItem();
             if (!com.zomboidcraft.world.cars.CarProp.mayUse(player, hand)) {
                 return true;    // driving: a hand on the wheel, nothing but a handgun
@@ -97,6 +100,7 @@ public final class CombatClient {
         ClientTickEvents.END_CLIENT_TICK.register(CombatClient::tick);
         ClientTickEvents.END_CLIENT_TICK.register(HoldPoses::faceLook);
         RaisedProperty.register();
+        MeshGunRenderer.register();
         LevelRenderEvents.COLLECT_SUBMITS.register(context -> autoFire(Minecraft.getInstance()));
     }
 
@@ -110,8 +114,43 @@ public final class CombatClient {
         if (!client.options.keyAttack.isDown() || client.gui.screen() != null || client.isPaused()
                 || com.zomboidcraft.client.building.Placer.building() != null) {
             burstLeft = -1;
-        } else if (Guns.fullAuto(hand) && ZcConfig.get().guns.enabled && !player.isSpectator()) {
+        } else if (Guns.fullAuto(hand) && ZcConfig.get().guns.enabled && !player.isSpectator()
+                && !com.zomboidcraft.world.cars.Turret.isGunner(player)) {
             pullTrigger(client, player, hand, true);
+        }
+    }
+
+    /** The trigger of the mounted gun this player stands at, as the server last heard it; and the belt last shown. */
+    private static boolean triggerSent, zoomSent;
+    private static int beltShown = -1;
+    private static long beltShownAt;
+
+    /** At a mounted gun: the attack button held or let go works its trigger, and the rounds left show above the hotbar. */
+    private static void gunner(Minecraft client, LocalPlayer player) {
+        boolean at = com.zomboidcraft.world.cars.Turret.isGunner(player);
+        boolean held = at && client.options.keyAttack.isDown() && client.gui.screen() == null && !client.isPaused();
+        if (held != triggerSent) {
+            triggerSent = held;
+            ClientPlayNetworking.send(new com.zomboidcraft.world.cars.CarNet.Use(held ? com.zomboidcraft.world.cars.CarNet.TRIGGER_ON
+                    : com.zomboidcraft.world.cars.CarNet.TRIGGER_OFF, 0, 0, 0));
+        }
+        boolean zoom = at && client.options.keyUse.isDown() && client.gui.screen() == null && !client.isPaused();
+        if (zoom != zoomSent) {
+            zoomSent = zoom;
+            ClientPlayNetworking.send(new com.zomboidcraft.world.cars.CarNet.Use(zoom ? com.zomboidcraft.world.cars.CarNet.ZOOM_ON
+                    : com.zomboidcraft.world.cars.CarNet.ZOOM_OFF, 0, 0, 0));
+        }
+        if (!at) {
+            beltShown = -1;
+            return;
+        }
+        int belt = ((com.zomboidcraft.world.cars.CarProp) player.getVehicle()).belt();
+        long now = System.currentTimeMillis();
+        if (belt != beltShown && (held || now - beltShownAt > 1500) || now - beltShownAt > 4000) {
+            beltShown = belt;
+            beltShownAt = now;
+            player.sendOverlayMessage(net.minecraft.network.chat.Component.literal(belt > 0 ? "Minigun: " + belt + " rounds"
+                    : "Minigun: belt empty, R loads it from your 5.56"));
         }
     }
 
@@ -144,13 +183,21 @@ public final class CombatClient {
             shoulderSent = shoulder;
             ClientPlayNetworking.send(new CombatNet.Action(shoulder ? CombatNet.Action.SHOULDER_ON : CombatNet.Action.SHOULDER_OFF));
         }
+        gunner(client, player);
         while (RELOAD.consumeClick()) {
-            if (GunType.isGun(player.getMainHandItem())) {
+            if (com.zomboidcraft.world.cars.Turret.isGunner(player)) {
+                ClientPlayNetworking.send(new com.zomboidcraft.world.cars.CarNet.Use(com.zomboidcraft.world.cars.CarNet.BELT, 0, 0, 0));
+            } else if (GunType.isGun(player.getMainHandItem())) {
                 ClientPlayNetworking.send(new CombatNet.Action(CombatNet.Action.RELOAD));
             }
         }
         while (SHOVE.consumeClick()) {
-            ClientPlayNetworking.send(new CombatNet.Action(CombatNet.Action.SHOVE));
+            if (player.getVehicle() instanceof com.zomboidcraft.world.cars.CarProp car && !car.aircraft()) {
+                // sat in a car there's no shoving anyone: the key winds your window down or up
+                ClientPlayNetworking.send(new com.zomboidcraft.world.cars.CarNet.Use(com.zomboidcraft.world.cars.CarNet.WINDOW, 0, 0, 0));
+            } else {
+                ClientPlayNetworking.send(new CombatNet.Action(CombatNet.Action.SHOVE));
+            }
         }
         while (RAIL.consumeClick()) {
             if (com.zomboidcraft.client.cars.CarClient.driving(player)) {
@@ -166,7 +213,10 @@ public final class CombatClient {
         }
         while (FIRE_MODE.consumeClick()) {
             GunType type = GunType.of(player.getMainHandItem());
-            if (type != null && type.stats().selectFire) {
+            if (type != null && player.isUsingItem() && Attachments.hasMagnifier(player.getMainHandItem())) {
+                // on the sights the key swings the magnifier in or aside instead
+                ClientPlayNetworking.send(new CombatNet.Action(CombatNet.Action.MAGNIFIER));
+            } else if (type != null && type.stats().selectFire) {
                 ClientPlayNetworking.send(new CombatNet.Action(CombatNet.Action.FIRE_MODE));
             }
         }
@@ -204,6 +254,18 @@ public final class CombatClient {
         boolean auto = Guns.fullAuto(gun);
         double ms = System.nanoTime() / 1e6;
         if (auto ? ms < autoNextMs : now >= lastShot && now - lastShot < type.fireDelay()) {
+            return;
+        }
+        if (Guns.launcherOn(gun)) {
+            // the underbarrel launcher: one round, one pull; the server answers with the thump or the dry click
+            if (!held && now - lastShot >= 10) {
+                lastShot = now;
+                ClientPlayNetworking.send(new CombatNet.Fire(player.isUsingItem() && GunType.isGun(player.getUseItem())));
+                if (gun.getOrDefault(GunState.LAUNCHER_LOADED, false)) {
+                    kickPending += 3f;
+                    recoverLeft += 1.5f;
+                }
+            }
             return;
         }
         GunState g = gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG);
@@ -247,7 +309,8 @@ public final class CombatClient {
         }
         RifleView.fired(player, config.muzzleFlash);
         float kick = (aiming ? 1.1f : 2.0f) * (float) (stats.recoil * Attachments.recoilFactor(gun)
-                * Rolls.multiplier(gun, Stat.STABILITY) * (auto ? stats.autoRecoil : 1.0));
+                * Rolls.multiplier(gun, Stat.STABILITY) * (auto ? stats.autoRecoil : 1.0)
+                * (aiming && player.isCrouching() && Attachments.hasBipod(gun) ? config.bipodRecoil : 1.0));
         float now65 = kick * 0.65f;
         player.setXRot(Mth.clamp(player.getXRot() - now65, -90f, 90f));
         player.setYRot(player.getYRot() + (player.getRandom().nextFloat() - 0.5f) * kick * 0.5f);

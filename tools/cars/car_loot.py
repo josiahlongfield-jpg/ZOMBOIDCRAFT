@@ -101,6 +101,19 @@ TABLES["swat"] = (TABLES["swat"][0], TABLES["swat"][1] + [(f"{ZC}:smg", 2, 1, 1,
 RARE["trunk"] = RARE["trunk"] + [(f"{ZC}:rimfire", 2), (f"{ZC}:magnum", 1), (f"{ZC}:sawn_off", 1), (f"{ZC}:lever_action", 1),
                                  (f"{ZC}:crossbow", 1)]
 RARE["police"] = RARE["police"] + [(f"{ZC}:smg", 1)]
+
+# weapons wave two: the battle rifle, the suppressed rifle and the machine pistol in the back of a SWAT van (the .50 a
+# rare find there), a pocket pistol left in a boot
+TABLES["swat"] = (TABLES["swat"][0], TABLES["swat"][1] + [(f"{ZC}:battle_rifle", 1, 1, 1, worn(0, .4)),
+                                                          (f"{ZC}:battle_rifle_magazine", 2, 1, 2, rounds(20)),
+                                                          (f"{ZC}:suppressed_rifle", 1, 1, 1, worn(0, .4)),
+                                                          (f"{ZC}:machine_pistol", 1, 1, 1, worn(0, .4)),
+                                                          (f"{ZC}:machine_pistol_magazine", 2, 1, 2, rounds(20)),
+                                                          (f"{ZC}:grenade_round", 1, 1, 3),
+                                                          (f"{ZC}:underbarrel_launcher", 1, 1, 1)])
+TABLES["trunk"] = (TABLES["trunk"][0], TABLES["trunk"][1] + [(f"{ZC}:pocket_ammo", 1, 3, 12)])
+RARE["swat"] = RARE["swat"] + [(f"{ZC}:battle_rifle", 1), (f"{ZC}:heavy_sniper", 1), (f"{ZC}:grenade_launcher", 1)]
+RARE["trunk"] = RARE["trunk"] + [(f"{ZC}:pocket_pistol", 2)]
 def table(name):
     (lo, hi), entries = TABLES[name]
     pools = [{"rolls": {"type": "minecraft:uniform", "min": lo, "max": hi}, "entries": [entry(*e) for e in entries]}]

@@ -69,9 +69,17 @@ public class KitUiTest implements FabricClientGameTest {
                     "give @a zomboidcraft:propane_torch", "give @a zomboidcraft:rubble_chunks 6", "give @a zomboidcraft:scrap_metal 4",
                     "give @a zomboidcraft:shovel", "give @a zomboidcraft:empty_sandbag 8", "give @a minecraft:dirt 8",
                     "give @a zomboidcraft:hammer", "give @a minecraft:oak_planks 4", "give @a zomboidcraft:nails 8",
-                    "give @a zomboidcraft:fire_axe", "give @a zomboidcraft:crossbow", "give @a zomboidcraft:revolver", "give @a zomboidcraft:smg")) {
+                    "give @a zomboidcraft:fire_axe", "give @a zomboidcraft:crossbow", "give @a zomboidcraft:revolver", "give @a zomboidcraft:smg",
+                    "item replace entity @a armor.head with zomboidcraft:beanie", "item replace entity @a armor.chest with zomboidcraft:hoodie",
+                    "item replace entity @a armor.legs with zomboidcraft:jeans", "item replace entity @a armor.feet with zomboidcraft:work_boots")) {
                 sp.getServer().runCommand(c);
             }
+            sp.getServer().runOnServer(s -> {
+                ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+                var gear = new com.zomboidcraft.carry.GearContainer(p);
+                gear.setItem(com.zomboidcraft.carry.GearStore.SHIRT, new ItemStack(net.minecraft.core.registries.BuiltInRegistries.ITEM.getValue(com.zomboidcraft.ZomboidCraft.id("t_shirt"))));
+                gear.setItem(com.zomboidcraft.carry.GearStore.HANDS, new ItemStack(net.minecraft.core.registries.BuiltInRegistries.ITEM.getValue(com.zomboidcraft.ZomboidCraft.id("work_gloves"))));
+            });
             ctx.waitTicks(20);
             ctx.getInput().resizeWindow(1999, 1089);
             ctx.runOnClient(mc -> {
@@ -111,8 +119,9 @@ public class KitUiTest implements FabricClientGameTest {
             }
 
             // the pack page: left click a tile with something in it picks it up, again puts it down
-            if (tabs.size() > 1) {
-                click(ctx, tabs.get(1)[0], tabs.get(1)[1], 0);
+            int packTab = KitScreen.Page.PACK.ordinal(), benchTab = KitScreen.Page.BENCH.ordinal();
+            if (tabs.size() > packTab) {
+                click(ctx, tabs.get(packTab)[0], tabs.get(packTab)[1], 0);
                 int[] tile = ctx.computeOnClient(mc -> {
                     if (mc.gui.screen() instanceof KitScreen<?> k) {
                         for (KitScreen.Hot h : hots(k)) {
@@ -174,8 +183,8 @@ public class KitUiTest implements FabricClientGameTest {
             }
 
             // the bench, then a drag across the gun
-            if (tabs.size() > 3) {
-                click(ctx, tabs.get(3)[0], tabs.get(3)[1], 0);
+            if (tabs.size() > benchTab) {
+                click(ctx, tabs.get(benchTab)[0], tabs.get(benchTab)[1], 0);
                 ctx.takeScreenshot("bench");
                 log(ctx, "bench");
                 // every weapon carried goes on the 3D stage, guns without sockets and melee too
@@ -227,6 +236,9 @@ public class KitUiTest implements FabricClientGameTest {
             swapSweep(ctx, sp);
             slingTest(ctx, sp);
             beltHudTest(ctx, sp);
+            mapTest(ctx);
+            bookTest(sp);
+            companionTest(ctx, sp);
             spawnPickerTest(ctx, sp);
             pauseOptions(ctx, "after the kit");
         }
@@ -694,6 +706,206 @@ public class KitUiTest implements FabricClientGameTest {
             return "from 3 forward -> " + (forward + 1) + ", from there back -> " + (back + 1) + ", key 7 -> " + (key + 1);
         });
         LOG.info("ZCUI quick slot scroll: {}", scrolled);
+        // the other rigs worn: a shoulder holster with a knife on the belt, then a thigh holster
+        for (boolean shoulder : new boolean[]{true, false}) {
+            sp.getServer().runOnServer(s -> {
+                ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+                var gear = new com.zomboidcraft.carry.GearContainer(p);
+                gear.setItem(com.zomboidcraft.carry.GearStore.BELT, new ItemStack(ModItems.LEATHER_BELT));
+                gear.setItem(com.zomboidcraft.carry.GearStore.HOLSTER,
+                        new ItemStack(shoulder ? ModItems.SHOULDER_HOLSTER : ModItems.THIGH_HOLSTER));
+                gear.setItem(com.zomboidcraft.carry.GearStore.SHEATH, shoulder ? new ItemStack(ModItems.KNIFE_SHEATH) : ItemStack.EMPTY);
+                for (int i = 0; i < 9; i++) p.getInventory().setItem(i, ItemStack.EMPTY);
+                p.getInventory().setItem(3, new ItemStack(ModItems.PISTOL));
+                if (shoulder) p.getInventory().setItem(4, new ItemStack(ModItems.KITCHEN_KNIFE));
+            });
+            ctx.waitTicks(5);
+            for (float turn : new float[]{0f, 150f, 210f}) {
+                ctx.runOnClient(mc -> mc.gui.setScreen(new BackView(turn)));
+                ctx.waitTicks(3);
+                ctx.takeScreenshot("rig-figure-" + (shoulder ? "shoulder-" : "thigh-") + Math.round(turn));
+            }
+            ctx.runOnClient(mc -> mc.gui.setScreen(null));
+        }
+    }
+
+    /**
+     * The map page over the planned county (the test world isn't one, so the atlas is opened by hand): the whole
+     * county, the island, then streets close in, each once its tiles are drawn.
+     */
+    private static void mapTest(ClientGameTestContext ctx) {
+        ctx.runOnClient(mc -> com.zomboidcraft.client.map.CountyAtlas.open(12345L, true));
+        ctx.runOnClient(mc -> com.zomboidcraft.client.map.MapPlayers.pretend(java.util.List.of(
+                new com.zomboidcraft.world.map.MapNet.Spot(java.util.UUID.nameUUIDFromBytes(new byte[] {1}), "Rowan", "minecraft:overworld", 3296, -1248, 0),
+                new com.zomboidcraft.world.map.MapNet.Spot(java.util.UUID.nameUUIDFromBytes(new byte[] {2}), "Mags", "minecraft:overworld", 3424, -1312, 0))));
+        ctx.runOnClient(mc -> mc.gui.setScreen(null));
+        ctx.getInput().pressKey(InputConstants.KEY_E);
+        ctx.waitTicks(10);
+        ctx.runOnClient(mc -> {
+            if (mc.gui.screen() instanceof KitScreen<?> k) k.open(KitScreen.Page.MAP);
+        });
+        float[][] views = {{0, 0, 0.022f, 3}, {3100, -1500, 0.09f, 2}, {3350, -1250, 0.3f, 1}, {3350, -1250, 1.2f, 0}};
+        String[] names = {"county", "island", "downtown", "streets"};
+        for (int v = 0; v < views.length; v++) {
+            float[] view = views[v];
+            ctx.runOnClient(mc -> {
+                if (mc.gui.screen() instanceof KitScreen<?> k) k.map.look(view[0], view[1], view[2]);
+            });
+            long start = System.currentTimeMillis();
+            boolean ready = false;
+            while (System.currentTimeMillis() - start < 150_000) {
+                ctx.waitTicks(20);
+                ready = ctx.computeOnClient(mc -> com.zomboidcraft.client.map.CountyAtlas.ready((int) view[3], view[0], view[1]));
+                if (ready) break;
+            }
+            ctx.waitTicks(10);
+            LOG.info("ZCUI map {}: ready {} after {} s, {} tiles drawn", names[v], ready, (System.currentTimeMillis() - start) / 1000,
+                    ctx.computeOnClient(mc -> com.zomboidcraft.client.map.CountyAtlas.made()));
+            ctx.takeScreenshot("map-" + names[v]);
+        }
+        // the far-out levels again, now the close tiles drawn for downtown have gone into them
+        float[][] again = {{3100, -1500, 0.09f}, {3350, -1250, 0.03f}};
+        String[] againNames = {"island-detail", "county-detail"};
+        for (int v = 0; v < again.length; v++) {
+            float[] view = again[v];
+            ctx.runOnClient(mc -> {
+                if (mc.gui.screen() instanceof KitScreen<?> k) k.map.look(view[0], view[1], view[2]);
+            });
+            ctx.waitTicks(400);
+            ctx.takeScreenshot("map-" + againNames[v]);
+        }
+        ctx.runOnClient(mc -> com.zomboidcraft.client.map.MapPlayers.pretend(java.util.List.of()));
+        ctx.runOnClient(mc -> mc.gui.setScreen(null));
+    }
+
+    /** A skill book read for your band multiplies the XP you earn (SkillBooks). */
+    /** A companion's page, gear and diary, and the middle-click order wheel (kit/CompanionScreen, kit/OrderWheel). */
+    private static void companionTest(ClientGameTestContext ctx, TestSingleplayerContext sp) {
+        sp.getServer().runCommand("give @a zomboidcraft:hoodie");
+        sp.getServer().runCommand("give @a zomboidcraft:work_boots");
+        sp.getServer().runCommand("give @a zomboidcraft:jeans");
+        sp.getServer().runOnServer(s -> {
+            ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+            var level = (net.minecraft.server.level.ServerLevel) p.level();
+            var npc = com.zomboidcraft.npc.Npcs.NPC.create(level, net.minecraft.world.entity.EntitySpawnReason.COMMAND);
+            var look = p.getLookAngle().multiply(1, 0, 1).normalize().scale(2.2);
+            npc.setModel("dark_elf", "raw");
+            npc.snapTo(p.getX() + look.x, p.getY(), p.getZ() + look.z, p.getYRot() + 180f, 0f);
+            npc.born(p);
+            level.addFreshEntity(npc);
+        });
+        ctx.waitTicks(30);
+        for (com.zomboidcraft.client.kit.CompanionScreen.Tab tab : com.zomboidcraft.client.kit.CompanionScreen.Tab.values()) {
+            ctx.runOnClient(mc -> {
+                var npcs = mc.level.getEntitiesOfClass(com.zomboidcraft.npc.NpcEntity.class, mc.player.getBoundingBox().inflate(8));
+                if (!npcs.isEmpty()) mc.gui.setScreen(new com.zomboidcraft.client.kit.CompanionScreen(npcs.get(0), tab));
+            });
+            ctx.waitTicks(30);
+            LOG.info("ZCUI companion {}: screen {}", tab, ctx.computeOnClient(mc -> mc.gui.screen() == null ? "none" : mc.gui.screen().getClass().getSimpleName()));
+            ctx.takeScreenshot("companion-" + tab.name().toLowerCase(java.util.Locale.ROOT));
+        }
+        // a clip of her portrait: she walks off in the world while her page keeps her in her idle facing you; turned
+        // round by a drag, zoomed in and out, then asked to sit
+        com.zomboidcraft.client.kit.CompanionScreen[] page = new com.zomboidcraft.client.kit.CompanionScreen[1];
+        ctx.runOnClient(mc -> {
+            var npcs = mc.level.getEntitiesOfClass(com.zomboidcraft.npc.NpcEntity.class, mc.player.getBoundingBox().inflate(8));
+            if (!npcs.isEmpty()) mc.gui.setScreen(page[0] = new com.zomboidcraft.client.kit.CompanionScreen(npcs.get(0),
+                    com.zomboidcraft.client.kit.CompanionScreen.Tab.HER));
+        });
+        sp.getServer().runOnServer(s -> s.getAllLevels().forEach(l -> l.getEntities(com.zomboidcraft.npc.Npcs.NPC, n -> true)
+                .forEach(n -> n.getNavigation().moveTo(n.getX() + 3, n.getY(), n.getZ() + 1, 1.0))));
+        for (int f = 0; f < 40 && page[0] != null; f++) {
+            float spin = f < 24 ? f * 15f : 0f, zoom = f < 24 ? 1f : f < 32 ? 1f + (f - 23) * 0.15f : 2.2f - (f - 31) * 0.15f;
+            int at = f;
+            ctx.runOnClient(mc -> {
+                page[0].view(spin, zoom);
+                if (at == 34) page[0].pose(0);
+            });
+            ctx.waitTicks(3);
+            ctx.takeScreenshot(String.format("companion-clip-%02d", f));
+        }
+        for (int f = 40; f < 52 && page[0] != null; f++) {
+            ctx.waitTicks(4);
+            ctx.takeScreenshot(String.format("companion-clip-%02d", f));
+        }
+        ctx.runOnClient(mc -> {
+            var npcs = mc.level.getEntitiesOfClass(com.zomboidcraft.npc.NpcEntity.class, mc.player.getBoundingBox().inflate(8));
+            if (!npcs.isEmpty()) mc.gui.setScreen(new com.zomboidcraft.client.kit.OrderWheel(npcs.get(0)));
+        });
+        ctx.waitTicks(10);
+        ctx.takeScreenshot("companion-wheel");
+        ctx.runOnClient(mc -> mc.gui.setScreen(null));
+        bondsTest(ctx, sp);
+        sp.getServer().runCommand("zc npc clear");
+    }
+
+    /** Bonding (Josiah 2026-10-30): the prompt on a first G, then K's selection of two companions, sliding, and a pick. */
+    private static void bondsTest(ClientGameTestContext ctx, TestSingleplayerContext sp) {
+        sp.getServer().runOnServer(s -> {
+            ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+            var level = (net.minecraft.server.level.ServerLevel) p.level();
+            var npc = com.zomboidcraft.npc.Npcs.NPC.create(level, net.minecraft.world.entity.EntitySpawnReason.COMMAND);
+            var look = p.getLookAngle().multiply(1, 0, 1).normalize();
+            npc.setModel("dark_elf", "raw");
+            npc.snapTo(p.getX() + look.x * 2.2 - look.z * 1.5, p.getY(), p.getZ() + look.z * 2.2 + look.x * 1.5, p.getYRot() + 180f, 0f);
+            npc.born(p);
+            level.addFreshEntity(npc);
+        });
+        ctx.waitTicks(20);
+        ctx.runOnClient(mc -> {
+            var npcs = mc.level.getEntitiesOfClass(com.zomboidcraft.npc.NpcEntity.class, mc.player.getBoundingBox().inflate(8));
+            if (!npcs.isEmpty()) mc.gui.setScreen(new BondPrompt(npcs.get(0), CompanionScreen.Tab.HER));
+        });
+        ctx.waitTicks(10);
+        ctx.takeScreenshot("bonds-prompt");
+        ctx.runOnClient(mc -> {
+            if (mc.gui.screen() instanceof BondPrompt prompt) prompt.answer(true);
+        });
+        ctx.waitTicks(10);
+        ctx.runOnClient(mc -> mc.gui.setScreen(null));
+        // the second one bonded on the server too, then wait for the list to come round
+        sp.getServer().runOnServer(s -> {
+            ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+            ((net.minecraft.server.level.ServerLevel) p.level()).getEntities(com.zomboidcraft.npc.Npcs.NPC, n -> true)
+                    .forEach(n -> n.bonds.add(p.getUUID()));
+        });
+        ctx.waitTicks(50);
+        String bonded = ctx.computeOnClient(mc -> String.valueOf(Bonds.companions(mc).size()));
+        LOG.info("ZCUI bonds: {}", bonded);
+        ctx.runOnClient(mc -> Bonds.open(mc));
+        BondsScreen[] sel = new BondsScreen[1];
+        ctx.runOnClient(mc -> sel[0] = mc.gui.screen() instanceof BondsScreen b ? b : null);
+        for (int f = 0; f < 30 && sel[0] != null; f++) {
+            int at = f;
+            ctx.runOnClient(mc -> {
+                if (at == 8) sel[0].slide(1);
+                if (at == 20) sel[0].slide(-1);
+            });
+            ctx.waitTicks(2);
+            ctx.takeScreenshot(String.format("bonds-clip-%02d", f));
+        }
+        ctx.runOnClient(mc -> {
+            if (sel[0] != null) sel[0].pick();
+        });
+        ctx.waitTicks(20);
+        ctx.takeScreenshot("bonds-clip-30");
+        ctx.runOnClient(mc -> mc.gui.setScreen(null));
+    }
+
+    private static void bookTest(TestSingleplayerContext sp) {
+        sp.getServer().runOnServer(s -> {
+            ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+            var skill = com.zomboidcraft.skills.Skill.CARPENTRY;
+            var item = com.zomboidcraft.loot.items.LootItems.item("skillbook_carpentry");
+            int a = com.zomboidcraft.skills.Skills.xp(p, skill);
+            com.zomboidcraft.skills.Skills.addXp(p, skill, 10);
+            int b = com.zomboidcraft.skills.Skills.xp(p, skill);
+            new ItemStack(item).finishUsingItem(p.level(), p);
+            com.zomboidcraft.skills.Skills.addXp(p, skill, 10);
+            int c = com.zomboidcraft.skills.Skills.xp(p, skill);
+            LOG.info("ZCUI skill book: item {} plain +{} read +{} vol1 read {}", item == null ? "missing" : item.getClass().getSimpleName(),
+                    b - a, c - b, com.zomboidcraft.skills.SkillBooks.read(p, skill, 1));
+        });
     }
 
     private static void dragTest(ClientGameTestContext ctx, TestSingleplayerContext sp) {

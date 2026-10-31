@@ -13,8 +13,12 @@ public class CarRenderState extends EntityRenderState {
     public float steer;
     /** The local player is sitting in this car, looking out of it. */
     public boolean inside;
-    /** Zombies have smashed the windows in: no glass. */
+    /** Every window's shattered: no glass. */
     public boolean smashed;
+    /** The windows one by one ({@link CarGlassDraw}): which look's windows, how each is, how far each is wound down. */
+    public int look = -1;
+    public com.zomboidcraft.world.cars.CarGlass.Panes panes;
+    public float[] wound = new float[0];
     /** How coarse a copy of the mesh to draw, from how far off the car is ({@link CarLod}). */
     public int lod;
     /** The headlights (and tail lights) are switched on; the engine's running, so the dash is lit; the brake or reversing lights. */
@@ -31,6 +35,9 @@ public class CarRenderState extends EntityRenderState {
     public com.zomboidcraft.world.cars.CarProp aircraft;
     /** An aircraft: turned by its attitude about a point pivot metres up, rotors at rotor radians. */
     public boolean air;
+    /** A mounted gun: its turn on the post and tilt (radians, see Turret), its barrels' turn, and whether it's firing. */
+    public float turretYaw, turretTilt, barrels;
+    public boolean turretFiring;
     public final org.joml.Quaternionf attitude = new org.joml.Quaternionf();
     public float pivot;
     public double rotor;
@@ -44,4 +51,6 @@ public class CarRenderState extends EntityRenderState {
     /** The local player drives this car in first person: which of their hands to draw on the wheel ({@link CarHands}), and their seat. */
     public int arms;
     public float[] driverEye;
+    /** The local player stands at this car's mounted gun, seen first person: their hands go on its grips. */
+    public boolean gunnerArms;
 }

@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/detergent"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/detergent",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/detergent",
+   "part": "body"
+  }
  }
 }

@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/socket_set"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/socket_set",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/socket_set",
+   "part": "body"
+  }
  }
 }

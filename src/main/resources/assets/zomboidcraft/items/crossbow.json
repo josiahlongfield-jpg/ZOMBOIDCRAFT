@@ -13,8 +13,13 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/crossbow/raised_mag_out/body"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/crossbow/raised_mag_out/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_crossbow",
+         "part": "body"
+        }
        },
        {
         "type": "minecraft:select",
@@ -28,8 +33,166 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/crossbow/raised_mag_out/charging_handle"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/crossbow/raised_mag_out/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_crossbow",
+          "part": "handle"
+         }
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 0,
+        "cases": [
+         {
+          "when": "red_dot",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/crossbow/raised_mag_out/red_dot",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "att_red_dot",
+            "part": "body",
+            "offset": [
+             8.0,
+             8.246,
+             14.671
+            ]
+           }
+          }
+         },
+         {
+          "when": "holo",
+          "model": {
+           "type": "minecraft:select",
+           "property": "minecraft:custom_model_data",
+           "index": 10,
+           "cases": [
+            {
+             "when": "tan",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/crossbow/raised_mag_out/holo",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_holo_tan",
+               "part": "body",
+               "offset": [
+                8.0,
+                8.246,
+                14.671
+               ]
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/crossbow/raised_mag_out/holo",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_holo",
+             "part": "body",
+             "offset": [
+              8.0,
+              8.246,
+              14.671
+             ]
+            }
+           }
+          }
+         },
+         {
+          "when": "mini_dot",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/crossbow/raised_mag_out/mini_dot",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "att_mini_dot",
+            "part": "body",
+            "offset": [
+             8.0,
+             8.246,
+             14.671
+            ]
+           }
+          }
+         },
+         {
+          "when": "compact_dot",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/crossbow/raised_mag_out/compact_dot",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "own_compact_dot",
+            "part": "body",
+            "offset": [
+             8.0,
+             8.246,
+             14.671
+            ]
+           }
+          }
+         },
+         {
+          "when": "scope_4x",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/crossbow/raised_mag_out/scope_4x",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "att_prism_4x",
+            "part": "body",
+            "offset": [
+             8.0,
+             8.246,
+             14.671
+            ]
+           }
+          }
+         },
+         {
+          "when": "crossbow_scope",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/crossbow/raised_mag_out/crossbow_scope",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "own_crossbow_scope",
+            "part": "body",
+            "offset": [
+             8.0,
+             8.246,
+             14.671
+            ]
+           }
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/crossbow/raised_mag_out/crossbow_scope",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "own_crossbow_scope",
+          "part": "body",
+          "offset": [
+           8.0,
+           8.246,
+           14.671
+          ]
+         }
         }
        }
       ]
@@ -38,8 +201,13 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/crossbow/mag_out/body"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/crossbow/mag_out/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_crossbow",
+         "part": "body"
+        }
        },
        {
         "type": "minecraft:select",
@@ -53,8 +221,166 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/crossbow/mag_out/charging_handle"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/crossbow/mag_out/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_crossbow",
+          "part": "handle"
+         }
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 0,
+        "cases": [
+         {
+          "when": "red_dot",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/crossbow/mag_out/red_dot",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "att_red_dot",
+            "part": "body",
+            "offset": [
+             8.0,
+             8.246,
+             14.671
+            ]
+           }
+          }
+         },
+         {
+          "when": "holo",
+          "model": {
+           "type": "minecraft:select",
+           "property": "minecraft:custom_model_data",
+           "index": 10,
+           "cases": [
+            {
+             "when": "tan",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/crossbow/mag_out/holo",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_holo_tan",
+               "part": "body",
+               "offset": [
+                8.0,
+                8.246,
+                14.671
+               ]
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/crossbow/mag_out/holo",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_holo",
+             "part": "body",
+             "offset": [
+              8.0,
+              8.246,
+              14.671
+             ]
+            }
+           }
+          }
+         },
+         {
+          "when": "mini_dot",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/crossbow/mag_out/mini_dot",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "att_mini_dot",
+            "part": "body",
+            "offset": [
+             8.0,
+             8.246,
+             14.671
+            ]
+           }
+          }
+         },
+         {
+          "when": "compact_dot",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/crossbow/mag_out/compact_dot",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "own_compact_dot",
+            "part": "body",
+            "offset": [
+             8.0,
+             8.246,
+             14.671
+            ]
+           }
+          }
+         },
+         {
+          "when": "scope_4x",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/crossbow/mag_out/scope_4x",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "att_prism_4x",
+            "part": "body",
+            "offset": [
+             8.0,
+             8.246,
+             14.671
+            ]
+           }
+          }
+         },
+         {
+          "when": "crossbow_scope",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/crossbow/mag_out/crossbow_scope",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "own_crossbow_scope",
+            "part": "body",
+            "offset": [
+             8.0,
+             8.246,
+             14.671
+            ]
+           }
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/crossbow/mag_out/crossbow_scope",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "own_crossbow_scope",
+          "part": "body",
+          "offset": [
+           8.0,
+           8.246,
+           14.671
+          ]
+         }
         }
        }
       ]
@@ -70,8 +396,13 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/crossbow/raised_mag_in/body"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/crossbow/raised_mag_in/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_crossbow",
+         "part": "body"
+        }
        },
        {
         "type": "minecraft:select",
@@ -85,20 +416,144 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/crossbow/raised_mag_in/charging_handle"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/crossbow/raised_mag_in/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_crossbow",
+          "part": "handle"
+         }
         }
        },
        {
         "type": "minecraft:select",
         "property": "minecraft:custom_model_data",
-        "index": 5,
+        "index": 0,
         "cases": [
          {
-          "when": "bolt",
+          "when": "red_dot",
           "model": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/crossbow/raised_mag_in/bolt"
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/crossbow/raised_mag_in/red_dot",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "att_red_dot",
+            "part": "body",
+            "offset": [
+             8.0,
+             8.246,
+             14.671
+            ]
+           }
+          }
+         },
+         {
+          "when": "holo",
+          "model": {
+           "type": "minecraft:select",
+           "property": "minecraft:custom_model_data",
+           "index": 10,
+           "cases": [
+            {
+             "when": "tan",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/crossbow/raised_mag_in/holo",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_holo_tan",
+               "part": "body",
+               "offset": [
+                8.0,
+                8.246,
+                14.671
+               ]
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/crossbow/raised_mag_in/holo",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_holo",
+             "part": "body",
+             "offset": [
+              8.0,
+              8.246,
+              14.671
+             ]
+            }
+           }
+          }
+         },
+         {
+          "when": "mini_dot",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/crossbow/raised_mag_in/mini_dot",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "att_mini_dot",
+            "part": "body",
+            "offset": [
+             8.0,
+             8.246,
+             14.671
+            ]
+           }
+          }
+         },
+         {
+          "when": "compact_dot",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/crossbow/raised_mag_in/compact_dot",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "own_compact_dot",
+            "part": "body",
+            "offset": [
+             8.0,
+             8.246,
+             14.671
+            ]
+           }
+          }
+         },
+         {
+          "when": "scope_4x",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/crossbow/raised_mag_in/scope_4x",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "att_prism_4x",
+            "part": "body",
+            "offset": [
+             8.0,
+             8.246,
+             14.671
+            ]
+           }
+          }
+         },
+         {
+          "when": "crossbow_scope",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/crossbow/raised_mag_in/crossbow_scope",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "own_crossbow_scope",
+            "part": "body",
+            "offset": [
+             8.0,
+             8.246,
+             14.671
+            ]
+           }
           }
          },
          {
@@ -109,8 +564,52 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/crossbow/raised_mag_in/bolt"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/crossbow/raised_mag_in/crossbow_scope",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "own_crossbow_scope",
+          "part": "body",
+          "offset": [
+           8.0,
+           8.246,
+           14.671
+          ]
+         }
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 5,
+        "cases": [
+         {
+          "when": "bolt",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/crossbow/raised_mag_in/bolt",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "pbr_crossbow_bolt",
+            "part": "body"
+           }
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/crossbow/raised_mag_in/bolt",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_crossbow_bolt",
+          "part": "body"
+         }
         }
        }
       ]
@@ -119,8 +618,13 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/crossbow/mag_in/body"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/crossbow/mag_in/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_crossbow",
+         "part": "body"
+        }
        },
        {
         "type": "minecraft:select",
@@ -134,20 +638,144 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/crossbow/mag_in/charging_handle"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/crossbow/mag_in/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_crossbow",
+          "part": "handle"
+         }
         }
        },
        {
         "type": "minecraft:select",
         "property": "minecraft:custom_model_data",
-        "index": 5,
+        "index": 0,
         "cases": [
          {
-          "when": "bolt",
+          "when": "red_dot",
           "model": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/crossbow/mag_in/bolt"
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/crossbow/mag_in/red_dot",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "att_red_dot",
+            "part": "body",
+            "offset": [
+             8.0,
+             8.246,
+             14.671
+            ]
+           }
+          }
+         },
+         {
+          "when": "holo",
+          "model": {
+           "type": "minecraft:select",
+           "property": "minecraft:custom_model_data",
+           "index": 10,
+           "cases": [
+            {
+             "when": "tan",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/crossbow/mag_in/holo",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_holo_tan",
+               "part": "body",
+               "offset": [
+                8.0,
+                8.246,
+                14.671
+               ]
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/crossbow/mag_in/holo",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_holo",
+             "part": "body",
+             "offset": [
+              8.0,
+              8.246,
+              14.671
+             ]
+            }
+           }
+          }
+         },
+         {
+          "when": "mini_dot",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/crossbow/mag_in/mini_dot",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "att_mini_dot",
+            "part": "body",
+            "offset": [
+             8.0,
+             8.246,
+             14.671
+            ]
+           }
+          }
+         },
+         {
+          "when": "compact_dot",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/crossbow/mag_in/compact_dot",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "own_compact_dot",
+            "part": "body",
+            "offset": [
+             8.0,
+             8.246,
+             14.671
+            ]
+           }
+          }
+         },
+         {
+          "when": "scope_4x",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/crossbow/mag_in/scope_4x",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "att_prism_4x",
+            "part": "body",
+            "offset": [
+             8.0,
+             8.246,
+             14.671
+            ]
+           }
+          }
+         },
+         {
+          "when": "crossbow_scope",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/crossbow/mag_in/crossbow_scope",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "own_crossbow_scope",
+            "part": "body",
+            "offset": [
+             8.0,
+             8.246,
+             14.671
+            ]
+           }
           }
          },
          {
@@ -158,8 +786,52 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/crossbow/mag_in/bolt"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/crossbow/mag_in/crossbow_scope",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "own_crossbow_scope",
+          "part": "body",
+          "offset": [
+           8.0,
+           8.246,
+           14.671
+          ]
+         }
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 5,
+        "cases": [
+         {
+          "when": "bolt",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/crossbow/mag_in/bolt",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "pbr_crossbow_bolt",
+            "part": "body"
+           }
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/crossbow/mag_in/bolt",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_crossbow_bolt",
+          "part": "body"
+         }
         }
        }
       ]
@@ -175,8 +847,13 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/crossbow/raised_charge/body"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/crossbow/raised_charge/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_crossbow",
+         "part": "body"
+        }
        },
        {
         "type": "minecraft:select",
@@ -190,20 +867,144 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/crossbow/raised_charge/charging_handle"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/crossbow/raised_charge/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_crossbow",
+          "part": "handle"
+         }
         }
        },
        {
         "type": "minecraft:select",
         "property": "minecraft:custom_model_data",
-        "index": 5,
+        "index": 0,
         "cases": [
          {
-          "when": "bolt",
+          "when": "red_dot",
           "model": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/crossbow/raised_charge/bolt"
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/crossbow/raised_charge/red_dot",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "att_red_dot",
+            "part": "body",
+            "offset": [
+             8.0,
+             8.246,
+             14.671
+            ]
+           }
+          }
+         },
+         {
+          "when": "holo",
+          "model": {
+           "type": "minecraft:select",
+           "property": "minecraft:custom_model_data",
+           "index": 10,
+           "cases": [
+            {
+             "when": "tan",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/crossbow/raised_charge/holo",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_holo_tan",
+               "part": "body",
+               "offset": [
+                8.0,
+                8.246,
+                14.671
+               ]
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/crossbow/raised_charge/holo",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_holo",
+             "part": "body",
+             "offset": [
+              8.0,
+              8.246,
+              14.671
+             ]
+            }
+           }
+          }
+         },
+         {
+          "when": "mini_dot",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/crossbow/raised_charge/mini_dot",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "att_mini_dot",
+            "part": "body",
+            "offset": [
+             8.0,
+             8.246,
+             14.671
+            ]
+           }
+          }
+         },
+         {
+          "when": "compact_dot",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/crossbow/raised_charge/compact_dot",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "own_compact_dot",
+            "part": "body",
+            "offset": [
+             8.0,
+             8.246,
+             14.671
+            ]
+           }
+          }
+         },
+         {
+          "when": "scope_4x",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/crossbow/raised_charge/scope_4x",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "att_prism_4x",
+            "part": "body",
+            "offset": [
+             8.0,
+             8.246,
+             14.671
+            ]
+           }
+          }
+         },
+         {
+          "when": "crossbow_scope",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/crossbow/raised_charge/crossbow_scope",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "own_crossbow_scope",
+            "part": "body",
+            "offset": [
+             8.0,
+             8.246,
+             14.671
+            ]
+           }
           }
          },
          {
@@ -214,8 +1015,52 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/crossbow/raised_charge/bolt"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/crossbow/raised_charge/crossbow_scope",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "own_crossbow_scope",
+          "part": "body",
+          "offset": [
+           8.0,
+           8.246,
+           14.671
+          ]
+         }
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 5,
+        "cases": [
+         {
+          "when": "bolt",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/crossbow/raised_charge/bolt",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "pbr_crossbow_bolt",
+            "part": "body"
+           }
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/crossbow/raised_charge/bolt",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_crossbow_bolt",
+          "part": "body"
+         }
         }
        }
       ]
@@ -224,8 +1069,13 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/crossbow/charge/body"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/crossbow/charge/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_crossbow",
+         "part": "body"
+        }
        },
        {
         "type": "minecraft:select",
@@ -239,20 +1089,144 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/crossbow/charge/charging_handle"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/crossbow/charge/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_crossbow",
+          "part": "handle"
+         }
         }
        },
        {
         "type": "minecraft:select",
         "property": "minecraft:custom_model_data",
-        "index": 5,
+        "index": 0,
         "cases": [
          {
-          "when": "bolt",
+          "when": "red_dot",
           "model": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/crossbow/charge/bolt"
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/crossbow/charge/red_dot",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "att_red_dot",
+            "part": "body",
+            "offset": [
+             8.0,
+             8.246,
+             14.671
+            ]
+           }
+          }
+         },
+         {
+          "when": "holo",
+          "model": {
+           "type": "minecraft:select",
+           "property": "minecraft:custom_model_data",
+           "index": 10,
+           "cases": [
+            {
+             "when": "tan",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/crossbow/charge/holo",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_holo_tan",
+               "part": "body",
+               "offset": [
+                8.0,
+                8.246,
+                14.671
+               ]
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/crossbow/charge/holo",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_holo",
+             "part": "body",
+             "offset": [
+              8.0,
+              8.246,
+              14.671
+             ]
+            }
+           }
+          }
+         },
+         {
+          "when": "mini_dot",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/crossbow/charge/mini_dot",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "att_mini_dot",
+            "part": "body",
+            "offset": [
+             8.0,
+             8.246,
+             14.671
+            ]
+           }
+          }
+         },
+         {
+          "when": "compact_dot",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/crossbow/charge/compact_dot",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "own_compact_dot",
+            "part": "body",
+            "offset": [
+             8.0,
+             8.246,
+             14.671
+            ]
+           }
+          }
+         },
+         {
+          "when": "scope_4x",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/crossbow/charge/scope_4x",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "att_prism_4x",
+            "part": "body",
+            "offset": [
+             8.0,
+             8.246,
+             14.671
+            ]
+           }
+          }
+         },
+         {
+          "when": "crossbow_scope",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/crossbow/charge/crossbow_scope",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "own_crossbow_scope",
+            "part": "body",
+            "offset": [
+             8.0,
+             8.246,
+             14.671
+            ]
+           }
           }
          },
          {
@@ -263,8 +1237,52 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/crossbow/charge/bolt"
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/crossbow/charge/crossbow_scope",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "own_crossbow_scope",
+          "part": "body",
+          "offset": [
+           8.0,
+           8.246,
+           14.671
+          ]
+         }
+        }
+       },
+       {
+        "type": "minecraft:select",
+        "property": "minecraft:custom_model_data",
+        "index": 5,
+        "cases": [
+         {
+          "when": "bolt",
+          "model": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/crossbow/charge/bolt",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "pbr_crossbow_bolt",
+            "part": "body"
+           }
+          }
+         },
+         {
+          "when": "none",
+          "model": {
+           "type": "minecraft:empty"
+          }
+         }
+        ],
+        "fallback": {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/crossbow/charge/bolt",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_crossbow_bolt",
+          "part": "body"
+         }
         }
        }
       ]
@@ -276,53 +1294,773 @@
    "type": "minecraft:condition",
    "property": "minecraft:using_item",
    "on_true": {
-    "type": "minecraft:composite",
-    "models": [
+    "type": "minecraft:select",
+    "property": "minecraft:custom_model_data",
+    "index": 0,
+    "cases": [
      {
-      "type": "minecraft:model",
-      "model": "zomboidcraft:item/weapon/crossbow/ads/body"
-     },
-     {
-      "type": "minecraft:select",
-      "property": "minecraft:display_context",
-      "cases": [
-       {
-        "when": "firstperson_righthand",
-        "model": {
-         "type": "minecraft:empty"
+      "when": "red_dot",
+      "model": {
+       "type": "minecraft:composite",
+       "models": [
+        {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/crossbow/ads_red_dot/body",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_crossbow",
+          "part": "body"
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:display_context",
+         "cases": [
+          {
+           "when": "firstperson_righthand",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/crossbow/ads_red_dot/charging_handle",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_crossbow",
+           "part": "handle"
+          }
+         }
+        },
+        {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/crossbow/ads_red_dot/red_dot",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "att_red_dot",
+          "part": "body",
+          "offset": [
+           8.0,
+           8.246,
+           14.671
+          ]
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 5,
+         "cases": [
+          {
+           "when": "bolt",
+           "model": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/crossbow/ads_red_dot/bolt",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "pbr_crossbow_bolt",
+             "part": "body"
+            }
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/crossbow/ads_red_dot/bolt",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_crossbow_bolt",
+           "part": "body"
+          }
+         }
         }
-       }
-      ],
-      "fallback": {
-       "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/crossbow/ads/charging_handle"
+       ]
       }
      },
      {
-      "type": "minecraft:select",
-      "property": "minecraft:custom_model_data",
-      "index": 5,
-      "cases": [
-       {
-        "when": "bolt",
-        "model": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/crossbow/ads/bolt"
+      "when": "holo",
+      "model": {
+       "type": "minecraft:composite",
+       "models": [
+        {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/crossbow/ads_holo/body",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_crossbow",
+          "part": "body"
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:display_context",
+         "cases": [
+          {
+           "when": "firstperson_righthand",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/crossbow/ads_holo/charging_handle",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_crossbow",
+           "part": "handle"
+          }
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 10,
+         "cases": [
+          {
+           "when": "tan",
+           "model": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/crossbow/ads_holo/holo",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_holo_tan",
+             "part": "body",
+             "offset": [
+              8.0,
+              8.246,
+              14.671
+             ]
+            }
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/crossbow/ads_holo/holo",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "att_holo",
+           "part": "body",
+           "offset": [
+            8.0,
+            8.246,
+            14.671
+           ]
+          }
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 5,
+         "cases": [
+          {
+           "when": "bolt",
+           "model": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/crossbow/ads_holo/bolt",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "pbr_crossbow_bolt",
+             "part": "body"
+            }
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/crossbow/ads_holo/bolt",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_crossbow_bolt",
+           "part": "body"
+          }
+         }
         }
-       },
-       {
-        "when": "none",
-        "model": {
-         "type": "minecraft:empty"
+       ]
+      }
+     },
+     {
+      "when": "mini_dot",
+      "model": {
+       "type": "minecraft:composite",
+       "models": [
+        {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/crossbow/ads_mini_dot/body",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_crossbow",
+          "part": "body"
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:display_context",
+         "cases": [
+          {
+           "when": "firstperson_righthand",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/crossbow/ads_mini_dot/charging_handle",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_crossbow",
+           "part": "handle"
+          }
+         }
+        },
+        {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/crossbow/ads_mini_dot/mini_dot",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "att_mini_dot",
+          "part": "body",
+          "offset": [
+           8.0,
+           8.246,
+           14.671
+          ]
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 5,
+         "cases": [
+          {
+           "when": "bolt",
+           "model": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/crossbow/ads_mini_dot/bolt",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "pbr_crossbow_bolt",
+             "part": "body"
+            }
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/crossbow/ads_mini_dot/bolt",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_crossbow_bolt",
+           "part": "body"
+          }
+         }
         }
-       }
-      ],
-      "fallback": {
-       "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/crossbow/ads/bolt"
+       ]
+      }
+     },
+     {
+      "when": "compact_dot",
+      "model": {
+       "type": "minecraft:composite",
+       "models": [
+        {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/crossbow/ads_compact_dot/body",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_crossbow",
+          "part": "body"
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:display_context",
+         "cases": [
+          {
+           "when": "firstperson_righthand",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/crossbow/ads_compact_dot/charging_handle",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_crossbow",
+           "part": "handle"
+          }
+         }
+        },
+        {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/crossbow/ads_compact_dot/compact_dot",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "own_compact_dot",
+          "part": "body",
+          "offset": [
+           8.0,
+           8.246,
+           14.671
+          ]
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 5,
+         "cases": [
+          {
+           "when": "bolt",
+           "model": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/crossbow/ads_compact_dot/bolt",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "pbr_crossbow_bolt",
+             "part": "body"
+            }
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/crossbow/ads_compact_dot/bolt",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_crossbow_bolt",
+           "part": "body"
+          }
+         }
+        }
+       ]
+      }
+     },
+     {
+      "when": "scope_4x",
+      "model": {
+       "type": "minecraft:composite",
+       "models": [
+        {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/crossbow/ads_scope_4x/body",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_crossbow",
+          "part": "body"
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:display_context",
+         "cases": [
+          {
+           "when": "firstperson_righthand",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/crossbow/ads_scope_4x/charging_handle",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_crossbow",
+           "part": "handle"
+          }
+         }
+        },
+        {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/crossbow/ads_scope_4x/scope_4x",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "att_prism_4x",
+          "part": "body",
+          "offset": [
+           8.0,
+           8.246,
+           14.671
+          ]
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 5,
+         "cases": [
+          {
+           "when": "bolt",
+           "model": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/crossbow/ads_scope_4x/bolt",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "pbr_crossbow_bolt",
+             "part": "body"
+            }
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/crossbow/ads_scope_4x/bolt",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_crossbow_bolt",
+           "part": "body"
+          }
+         }
+        }
+       ]
+      }
+     },
+     {
+      "when": "crossbow_scope",
+      "model": {
+       "type": "minecraft:composite",
+       "models": [
+        {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/crossbow/ads_crossbow_scope/body",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "pbr_crossbow",
+          "part": "body"
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:display_context",
+         "cases": [
+          {
+           "when": "firstperson_righthand",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/crossbow/ads_crossbow_scope/charging_handle",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_crossbow",
+           "part": "handle"
+          }
+         }
+        },
+        {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/crossbow/ads_crossbow_scope/crossbow_scope",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "own_crossbow_scope",
+          "part": "body",
+          "offset": [
+           8.0,
+           8.246,
+           14.671
+          ]
+         }
+        },
+        {
+         "type": "minecraft:select",
+         "property": "minecraft:custom_model_data",
+         "index": 5,
+         "cases": [
+          {
+           "when": "bolt",
+           "model": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/crossbow/ads_crossbow_scope/bolt",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "pbr_crossbow_bolt",
+             "part": "body"
+            }
+           }
+          },
+          {
+           "when": "none",
+           "model": {
+            "type": "minecraft:empty"
+           }
+          }
+         ],
+         "fallback": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/crossbow/ads_crossbow_scope/bolt",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_crossbow_bolt",
+           "part": "body"
+          }
+         }
+        }
+       ]
       }
      }
-    ]
+    ],
+    "fallback": {
+     "type": "minecraft:composite",
+     "models": [
+      {
+       "type": "minecraft:special",
+       "base": "zomboidcraft:item/weapon/crossbow/ads/body",
+       "model": {
+        "type": "zomboidcraft:mesh",
+        "id": "pbr_crossbow",
+        "part": "body"
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:display_context",
+       "cases": [
+        {
+         "when": "firstperson_righthand",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/crossbow/ads/charging_handle",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_crossbow",
+         "part": "handle"
+        }
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 0,
+       "cases": [
+        {
+         "when": "red_dot",
+         "model": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/crossbow/ads/red_dot",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "att_red_dot",
+           "part": "body",
+           "offset": [
+            8.0,
+            8.246,
+            14.671
+           ]
+          }
+         }
+        },
+        {
+         "when": "holo",
+         "model": {
+          "type": "minecraft:select",
+          "property": "minecraft:custom_model_data",
+          "index": 10,
+          "cases": [
+           {
+            "when": "tan",
+            "model": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/crossbow/ads/holo",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_holo_tan",
+              "part": "body",
+              "offset": [
+               8.0,
+               8.246,
+               14.671
+              ]
+             }
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/crossbow/ads/holo",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "att_holo",
+            "part": "body",
+            "offset": [
+             8.0,
+             8.246,
+             14.671
+            ]
+           }
+          }
+         }
+        },
+        {
+         "when": "mini_dot",
+         "model": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/crossbow/ads/mini_dot",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "att_mini_dot",
+           "part": "body",
+           "offset": [
+            8.0,
+            8.246,
+            14.671
+           ]
+          }
+         }
+        },
+        {
+         "when": "compact_dot",
+         "model": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/crossbow/ads/compact_dot",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "own_compact_dot",
+           "part": "body",
+           "offset": [
+            8.0,
+            8.246,
+            14.671
+           ]
+          }
+         }
+        },
+        {
+         "when": "scope_4x",
+         "model": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/crossbow/ads/scope_4x",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "att_prism_4x",
+           "part": "body",
+           "offset": [
+            8.0,
+            8.246,
+            14.671
+           ]
+          }
+         }
+        },
+        {
+         "when": "crossbow_scope",
+         "model": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/crossbow/ads/crossbow_scope",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "own_crossbow_scope",
+           "part": "body",
+           "offset": [
+            8.0,
+            8.246,
+            14.671
+           ]
+          }
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/crossbow/ads/crossbow_scope",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "own_crossbow_scope",
+         "part": "body",
+         "offset": [
+          8.0,
+          8.246,
+          14.671
+         ]
+        }
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 5,
+       "cases": [
+        {
+         "when": "bolt",
+         "model": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/crossbow/ads/bolt",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_crossbow_bolt",
+           "part": "body"
+          }
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/crossbow/ads/bolt",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_crossbow_bolt",
+         "part": "body"
+        }
+       }
+      }
+     ]
+    }
    },
    "on_false": {
     "type": "minecraft:condition",
@@ -331,8 +2069,13 @@
      "type": "minecraft:composite",
      "models": [
       {
-       "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/crossbow/raised_hip/body"
+       "type": "minecraft:special",
+       "base": "zomboidcraft:item/weapon/crossbow/raised_hip/body",
+       "model": {
+        "type": "zomboidcraft:mesh",
+        "id": "pbr_crossbow",
+        "part": "body"
+       }
       },
       {
        "type": "minecraft:select",
@@ -346,20 +2089,144 @@
         }
        ],
        "fallback": {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/crossbow/raised_hip/charging_handle"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/crossbow/raised_hip/charging_handle",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_crossbow",
+         "part": "handle"
+        }
        }
       },
       {
        "type": "minecraft:select",
        "property": "minecraft:custom_model_data",
-       "index": 5,
+       "index": 0,
        "cases": [
         {
-         "when": "bolt",
+         "when": "red_dot",
          "model": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/crossbow/raised_hip/bolt"
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/crossbow/raised_hip/red_dot",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "att_red_dot",
+           "part": "body",
+           "offset": [
+            8.0,
+            8.246,
+            14.671
+           ]
+          }
+         }
+        },
+        {
+         "when": "holo",
+         "model": {
+          "type": "minecraft:select",
+          "property": "minecraft:custom_model_data",
+          "index": 10,
+          "cases": [
+           {
+            "when": "tan",
+            "model": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/crossbow/raised_hip/holo",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_holo_tan",
+              "part": "body",
+              "offset": [
+               8.0,
+               8.246,
+               14.671
+              ]
+             }
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/crossbow/raised_hip/holo",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "att_holo",
+            "part": "body",
+            "offset": [
+             8.0,
+             8.246,
+             14.671
+            ]
+           }
+          }
+         }
+        },
+        {
+         "when": "mini_dot",
+         "model": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/crossbow/raised_hip/mini_dot",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "att_mini_dot",
+           "part": "body",
+           "offset": [
+            8.0,
+            8.246,
+            14.671
+           ]
+          }
+         }
+        },
+        {
+         "when": "compact_dot",
+         "model": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/crossbow/raised_hip/compact_dot",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "own_compact_dot",
+           "part": "body",
+           "offset": [
+            8.0,
+            8.246,
+            14.671
+           ]
+          }
+         }
+        },
+        {
+         "when": "scope_4x",
+         "model": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/crossbow/raised_hip/scope_4x",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "att_prism_4x",
+           "part": "body",
+           "offset": [
+            8.0,
+            8.246,
+            14.671
+           ]
+          }
+         }
+        },
+        {
+         "when": "crossbow_scope",
+         "model": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/crossbow/raised_hip/crossbow_scope",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "own_crossbow_scope",
+           "part": "body",
+           "offset": [
+            8.0,
+            8.246,
+            14.671
+           ]
+          }
          }
         },
         {
@@ -370,8 +2237,52 @@
         }
        ],
        "fallback": {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/crossbow/raised_hip/bolt"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/crossbow/raised_hip/crossbow_scope",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "own_crossbow_scope",
+         "part": "body",
+         "offset": [
+          8.0,
+          8.246,
+          14.671
+         ]
+        }
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 5,
+       "cases": [
+        {
+         "when": "bolt",
+         "model": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/crossbow/raised_hip/bolt",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_crossbow_bolt",
+           "part": "body"
+          }
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/crossbow/raised_hip/bolt",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_crossbow_bolt",
+         "part": "body"
+        }
        }
       }
      ]
@@ -380,8 +2291,13 @@
      "type": "minecraft:composite",
      "models": [
       {
-       "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/crossbow/hip/body"
+       "type": "minecraft:special",
+       "base": "zomboidcraft:item/weapon/crossbow/hip/body",
+       "model": {
+        "type": "zomboidcraft:mesh",
+        "id": "pbr_crossbow",
+        "part": "body"
+       }
       },
       {
        "type": "minecraft:select",
@@ -395,20 +2311,144 @@
         }
        ],
        "fallback": {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/crossbow/hip/charging_handle"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/crossbow/hip/charging_handle",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_crossbow",
+         "part": "handle"
+        }
        }
       },
       {
        "type": "minecraft:select",
        "property": "minecraft:custom_model_data",
-       "index": 5,
+       "index": 0,
        "cases": [
         {
-         "when": "bolt",
+         "when": "red_dot",
          "model": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/crossbow/hip/bolt"
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/crossbow/hip/red_dot",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "att_red_dot",
+           "part": "body",
+           "offset": [
+            8.0,
+            8.246,
+            14.671
+           ]
+          }
+         }
+        },
+        {
+         "when": "holo",
+         "model": {
+          "type": "minecraft:select",
+          "property": "minecraft:custom_model_data",
+          "index": 10,
+          "cases": [
+           {
+            "when": "tan",
+            "model": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/crossbow/hip/holo",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_holo_tan",
+              "part": "body",
+              "offset": [
+               8.0,
+               8.246,
+               14.671
+              ]
+             }
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/crossbow/hip/holo",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "att_holo",
+            "part": "body",
+            "offset": [
+             8.0,
+             8.246,
+             14.671
+            ]
+           }
+          }
+         }
+        },
+        {
+         "when": "mini_dot",
+         "model": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/crossbow/hip/mini_dot",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "att_mini_dot",
+           "part": "body",
+           "offset": [
+            8.0,
+            8.246,
+            14.671
+           ]
+          }
+         }
+        },
+        {
+         "when": "compact_dot",
+         "model": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/crossbow/hip/compact_dot",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "own_compact_dot",
+           "part": "body",
+           "offset": [
+            8.0,
+            8.246,
+            14.671
+           ]
+          }
+         }
+        },
+        {
+         "when": "scope_4x",
+         "model": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/crossbow/hip/scope_4x",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "att_prism_4x",
+           "part": "body",
+           "offset": [
+            8.0,
+            8.246,
+            14.671
+           ]
+          }
+         }
+        },
+        {
+         "when": "crossbow_scope",
+         "model": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/crossbow/hip/crossbow_scope",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "own_crossbow_scope",
+           "part": "body",
+           "offset": [
+            8.0,
+            8.246,
+            14.671
+           ]
+          }
          }
         },
         {
@@ -419,8 +2459,52 @@
         }
        ],
        "fallback": {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/crossbow/hip/bolt"
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/crossbow/hip/crossbow_scope",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "own_crossbow_scope",
+         "part": "body",
+         "offset": [
+          8.0,
+          8.246,
+          14.671
+         ]
+        }
+       }
+      },
+      {
+       "type": "minecraft:select",
+       "property": "minecraft:custom_model_data",
+       "index": 5,
+       "cases": [
+        {
+         "when": "bolt",
+         "model": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/crossbow/hip/bolt",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "pbr_crossbow_bolt",
+           "part": "body"
+          }
+         }
+        },
+        {
+         "when": "none",
+         "model": {
+          "type": "minecraft:empty"
+         }
+        }
+       ],
+       "fallback": {
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/crossbow/hip/bolt",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "pbr_crossbow_bolt",
+         "part": "body"
+        }
        }
       }
      ]

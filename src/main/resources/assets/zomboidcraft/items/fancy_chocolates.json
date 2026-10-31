@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/fancy_chocolates"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/fancy_chocolates",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/fancy_chocolates",
+   "part": "body"
+  }
  }
 }

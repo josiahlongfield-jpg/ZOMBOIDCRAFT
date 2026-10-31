@@ -9,19 +9,28 @@ import net.minecraft.world.item.component.Consumable;
 
 /**
  * The quick-use wheel's other half: let go over a bandage or splint and it goes on the part that needs it most; over
- * food or a drink and you eat or drink it there and then, as a timed action. Anything else is just drawn (the
+ * food or a drink and you eat or drink it there and then, as a timed action; over something to throw and it's
+ * thrown where you're looking. Anything else is just drawn (the
  * client picks the slot).
  */
 public final class QuickUse {
     public static void use(ServerPlayer player, int slot) {
         ItemStack stack = player.getInventory().getItem(slot);
         if (stack.isEmpty()) return;
+        if (stack.getItem() instanceof com.zomboidcraft.combat.throwing.ThrowableItem) {
+            com.zomboidcraft.combat.throwing.Throwing.quickThrow(player, stack);
+            return;
+        }
         if (Treatment.Kind.BANDAGE.is(stack)) {
             Treatment.start(player, Treatment.Kind.BANDAGE, null);
             return;
         }
         if (Treatment.Kind.SPLINT.is(stack)) {
             Treatment.start(player, Treatment.Kind.SPLINT, null);
+            return;
+        }
+        if (stack.getItem() instanceof MedicalItem med) {
+            MedSpecs.use(player, med.id());
             return;
         }
         Consumable consumable = stack.get(DataComponents.CONSUMABLE);

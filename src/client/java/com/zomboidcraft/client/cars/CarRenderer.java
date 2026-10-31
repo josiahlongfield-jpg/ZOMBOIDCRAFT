@@ -42,6 +42,14 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         // from the driver's seat the windows are left out: shaders fog see-through glass right in front of you
         Minecraft mc = Minecraft.getInstance();
         state.smashed = car.smashed();
+        state.look = car.variantIndex();
+        state.panes = car.aircraft() ? null : car.panes();
+        if (state.wound.length != car.wound.length) {
+            state.wound = new float[car.wound.length];
+        }
+        for (int i = 0; i < state.wound.length && i < car.woundO.length; i++) {
+            state.wound[i] = car.woundO[i] + (car.wound[i] - car.woundO[i]) * partialTick;
+        }
         state.inside = mc.player != null && car.hasPassenger(mc.player) && mc.options.getCameraType().isFirstPerson();
         Entity eye = mc.getCameraEntity();
         // a jet with its engines running is drawn whole three times further off, so its moving surfaces show
@@ -71,6 +79,12 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         state.arms = driving ? CarHands.onWheel(mc.player) : CarHands.NONE;
         state.driverEye = driving ? m.seats[0] : null;
         state.air = car.aircraft();
+        net.minecraft.world.entity.player.Player gunner = m != null && m.turret != null ? com.zomboidcraft.world.cars.Turret.gunner(car) : null;
+        state.turretYaw = gunner == null ? 0 : com.zomboidcraft.world.cars.Turret.yaw(gunner.getYRot(partialTick), state.yaw);
+        state.turretTilt = gunner == null ? 0 : com.zomboidcraft.world.cars.Turret.pitch(m.turret, gunner.getXRot(partialTick));
+        state.gunnerArms = state.inside && gunner == mc.player && m.turret.grips != null && m.turret.grips.length == 2;
+        state.barrels = car.barrelsO + (car.barrels - car.barrelsO) * partialTick;
+        state.turretFiring = car.turretFiring();
         state.aircraft = state.air ? car : null;
         state.broken = state.air && car.broken();
         if (state.air) {
@@ -79,6 +93,58 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
             state.pivot = car.pivot();
             state.rotor = car.rotorO + (car.rotor - car.rotorO) * partialTick;
         }
+    }
+
+    /** Flash timings: each burst's flash lasts this long (ns) of the burst's spacing, and flickers in steps of FLICKER. */
+    private static final long BURST = 250_000_000L, LIT = 180_000_000L, FLICKER = 22_000_000L;
+
+    /**
+     * The minigun's muzzle flash while it fires: a hot core at the barrels' ends and a flare out ahead of them,
+     * flickering through each burst (four shots a quarter second apart, like the recording) and dark between bursts.
+     */
+    private static void muzzleFlash(CarModels.Turret t, CarRenderState state, float[] eye, boolean shaders,
+                                    PoseStack.Pose pose, VertexConsumer out) {
+        long now = System.nanoTime();
+        if (now % BURST > LIT) {
+            return;
+        }
+        long step = now / FLICKER;
+        float jitter = (float) ((step * 2654435761L >>> 8) & 0xFF) / 255f;
+        if (jitter < 0.18f) {
+            return;     // a gap between shots
+        }
+        double rest = Math.toRadians(t.rest);
+        float fy = (float) Math.sin(rest), fz = (float) Math.cos(rest);
+        float[] base = t.muzzle;
+        for (int i = 0; i < 2; i++) {
+            float ahead = i == 0 ? 0.05f : 0.32f + 0.12f * jitter;
+            float[] p = com.zomboidcraft.world.cars.Turret.move(t, new float[] {base[0], base[1] + fy * ahead, base[2] + fz * ahead},
+                    state.turretYaw, state.turretTilt);
+            float half = i == 0 ? 0.13f + 0.06f * jitter : 0.2f + 0.14f * jitter;
+            int colour = i == 0 ? CarLights.shade(new float[] {1f, 0.93f, 0.7f}, 1f, false)
+                    : CarLights.shade(new float[] {1f, 0.62f, 0.22f}, shaders ? 1f : 0.8f, false);
+            com.zomboidcraft.client.interact.Interactables.disc(p[0], p[1], p[2], eye[0] - p[0], eye[1] - p[1], eye[2] - p[2],
+                    half, colour, pose, out);
+        }
+    }
+
+    /** The gunner's own arms in first person: shoulders under their eyes (turned with the post), hands on the gun's grips. */
+    private static void gunnerArms(CarModels.Model m, CarRenderState state, PoseStack pose, SubmitNodeCollector out, int light) {
+        CarModels.Turret t = m.turret;
+        float yaw = state.turretYaw, tilt = state.turretTilt;
+        float[] eye = com.zomboidcraft.world.cars.Turret.turn(t, m.seats[m.gunner], yaw);
+        float c = net.minecraft.util.Mth.cos(yaw), s = net.minecraft.util.Mth.sin(yaw);
+        org.joml.Vector3f[] shoulder = new org.joml.Vector3f[2], hand = new org.joml.Vector3f[2], palm = new org.joml.Vector3f[2];
+        for (int i = 0; i < 2; i++) {
+            float side = i == 0 ? 0.2f : -0.2f, back = -0.1f;
+            shoulder[i] = new org.joml.Vector3f(eye[0] + side * c + back * s, eye[1] - 0.34f, eye[2] - side * s + back * c);
+            float[] g = t.grips[i];
+            float[] h = com.zomboidcraft.world.cars.Turret.move(t, g, yaw, tilt);
+            float[] p = com.zomboidcraft.world.cars.Turret.move(t, new float[]{t.pitch[0], g[1], g[2]}, yaw, tilt);
+            hand[i] = new org.joml.Vector3f(h[0], h[1], h[2]);
+            palm[i] = new org.joml.Vector3f(p[0], p[1], p[2]);
+        }
+        CarArms.grips(pose, out, light, shoulder[0], hand[0], palm[0], shoulder[1], hand[1], palm[1]);
     }
 
     /** A flyby still drawn from far off (FarFlybys) hides the real one there, which trails a little behind it. */
@@ -98,6 +164,23 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
 
     @Override
     public void submit(CarRenderState state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState camera) {
+        // the shadow map only needs a car's outline: a near car casts it from a coarser copy (the profile showed every
+        // parked car drawn twice at full detail), unless you're sitting in it
+        int lod = state.lod;
+        if (lod < SHADOW_LOD && !state.inside && com.zomboidcraft.client.zombie.body.ZDetail.shadowPass()) {
+            state.lod = SHADOW_LOD;
+        }
+        try {
+            draw(state, poseStack, collector, camera);
+        } finally {
+            state.lod = lod;
+        }
+    }
+
+    /** The coarsest copy a car casts its shadow from ({@link CarLod}: 0.16 m grid, close enough not to show). */
+    private static final int SHADOW_LOD = 2;
+
+    private void draw(CarRenderState state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState camera) {
         CarAssets.Ready car;
         if (state.broken) {
             CarAssets.Broken broken = CarAssets.broken(state.model, state.variant);
@@ -130,6 +213,7 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
             // the tail rotor turns about five times for each turn of the main one
             rotors[i] = spin(car.rotors().get(i), i == 0 ? state.rotor : state.rotor * 4.9);
         }
+        Turn[] turret = turret(car.turret(), state);
         boolean solidGlass = state.lod >= CarLod.SOLID_GLASS && !state.smashed;
         CarAssets.Ready full = !state.lights && !state.dash ? null : state.lod == 0 ? car : CarAssets.get(state.model, state.variant, 0);
         CarLamps.Lamps lamps = full == null ? null : CarLamps.get(state.model, state.variant, full);
@@ -151,7 +235,7 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         AirSurfaces.Set surfaces = state.aircraft != null && state.lod == 0 && !state.broken ? AirSurfaces.of(state.model, car.mesh()) : null;
         Turn[] surface = surfaces == null ? null : AirSurfaces.turns(state.aircraft, state.model, surfaces);
         collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(car.texture()), (pose, out) -> {
-            each(car, lids, wheels, rotors, (mesh, turn) -> {
+            each(car, lids, wheels, rotors, turret, (mesh, turn) -> {
                 if (mesh == car.mesh() && (panel != null && !panel.isEmpty() || steer != null || surface != null)) {
                     // the backlit dials and displays at full brightness, the steering wheel turned, the surfaces on their hinges, the rest as usual
                     int t = 0;
@@ -174,10 +258,23 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
                 }
             });
         });
+        // close up each window's its own: shattered ones gone, wound-down ones in the door, and their marks on them,
+        // drawn from inside too (the dust on the glass says it's there)
+        CarGlassDraw.Set windows = CarGlassDraw.of(state, car, model);
         if (!state.inside && !state.smashed && !solidGlass) {
             collector.submitCustomGeometry(poseStack, RenderTypes.entityTranslucent(car.texture()), (pose, out) -> {
-                each(car, lids, wheels, rotors, (mesh, turn) -> draw(mesh, mesh.opaque(), mesh.triangles(), turn, pose, out, light, GLASS, null));
+                each(car, lids, wheels, rotors, turret, (mesh, turn) -> {
+                    if (windows != null) {
+                        CarGlassDraw.glass(windows, mesh, turn, pose, out, light, GLASS);
+                    } else {
+                        draw(mesh, mesh.opaque(), mesh.triangles(), turn, pose, out, light, GLASS, null);
+                    }
+                });
             });
+        }
+        if (windows != null && !state.smashed) {
+            collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(CarGlassDraw.MARKS), (pose, out) ->
+                    each(car, lids, wheels, rotors, turret, (mesh, turn) -> CarGlassDraw.marks(windows, mesh, turn, pose, out, light)));
         }
         // the instrument panel drawn sharp over a blurred one, in the aircraft you're in, powered or not
         CockpitPanel.Panel facePanel = state.liveCockpit != null && state.lod == 0
@@ -218,11 +315,21 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         if (state.highlight != null) {
             float[] h = state.highlight;
             float size = state.highlightSize;
-            boolean shaders = state.shaders;
-            collector.submitCustomGeometry(poseStack, CarLights.glowType(shaders), (pose, out) -> highlight(h, size, eye, shaders, pose, out));
+            // a shader pack's on or not, whatever the car's lamps are doing (state.shaders is only set for lit cars)
+            boolean shaders = CarLights.shaderPackOn();
+            collector.submitCustomGeometry(poseStack, com.zomboidcraft.client.interact.Interactables.type(shaders),
+                    (pose, out) -> highlight(h, size, eye, shaders, pose, out));
         }
         if (state.arms != CarHands.NONE && state.driverEye != null && model != null && model.steering != null) {
             CarArms.draw(poseStack, collector, light, state.driverEye, model.steering, state.wheelTurn, state.arms);
+        }
+        if (state.turretFiring && model != null && model.turret != null && state.lod == 0) {
+            boolean shaders = CarLights.shaderPackOn();
+            collector.submitCustomGeometry(poseStack, com.zomboidcraft.client.interact.Interactables.type(shaders),
+                    (pose, out) -> muzzleFlash(model.turret, state, eye, shaders, pose, out));
+        }
+        if (state.gunnerArms && model != null && model.turret != null && model.seats != null && model.gunner >= 0) {
+            gunnerArms(model, state, poseStack, collector, light);
         }
         if (state.liveCockpit != null && state.lod == 0) {
             // stick and throttle, and the pilot's hands on them
@@ -384,9 +491,12 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         void apply(float[] v, boolean normal);
     }
 
-    private static void each(CarAssets.Ready car, Turn[] lids, Turn[] wheels, Turn[] rotors,
+    private static void each(CarAssets.Ready car, Turn[] lids, Turn[] wheels, Turn[] rotors, Turn[] turret,
                              java.util.function.BiConsumer<CarAssets.Mesh, Turn> part) {
         part.accept(car.mesh(), null);
+        for (int i = 0; i < turret.length; i++) {
+            part.accept(car.turret().get(i).mesh(), turret[i]);
+        }
         for (int i = 0; i < rotors.length; i++) {
             part.accept(car.rotors().get(i).mesh(), rotors[i]);
         }
@@ -396,6 +506,40 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         for (int i = 0; i < wheels.length; i++) {
             part.accept(car.wheels().get(i).mesh(), wheels[i]);
         }
+    }
+
+    /**
+     * A mounted gun's parts moved (CarAssets.Ready.turret): the post turned on its upright axis, the gun tilted on the
+     * post and turned with it, the barrels spun in the gun, tilted and turned with it.
+     */
+    private static Turn[] turret(java.util.List<CarAssets.Rotor> parts, CarRenderState state) {
+        Turn[] out = new Turn[parts.size()];
+        Turn yaw = null, tilt = null;
+        for (int i = 0; i < out.length; i++) {
+            CarAssets.Rotor r = parts.get(i);
+            if (i == 0) {
+                yaw = state.turretYaw == 0 ? null : spin(r, state.turretYaw);
+                out[i] = yaw;
+            } else if (i == 1) {
+                Turn own = state.turretTilt == 0 ? null : spin(r, state.turretTilt), post = yaw;
+                tilt = then(own, post);
+                out[i] = tilt;
+            } else {
+                out[i] = then(spin(r, state.barrels), tilt);
+            }
+        }
+        return out;
+    }
+
+    /** first, then second (either may be null: nothing moves). */
+    private static Turn then(Turn first, Turn second) {
+        if (first == null || second == null) {
+            return first == null ? second : first;
+        }
+        return (v, normal) -> {
+            first.apply(v, normal);
+            second.apply(v, normal);
+        };
     }
 
     /** A lid turned about its hinge by open (0 to 1) of its full swing. */

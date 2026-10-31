@@ -38,6 +38,10 @@ public class Corpse extends Entity {
      * gone. Not saved.
      */
     private static final EntityDataAccessor<Integer> FROM = SynchedEntityData.defineId(Corpse.class, EntityDataSerializers.INT);
+    /** How it was left: where its fall ended, or set out by a Harvestman (sat up, slumped in a doorway, hung). */
+    private static final EntityDataAccessor<Integer> POSE = SynchedEntityData.defineId(Corpse.class, EntityDataSerializers.INT);
+
+    public static final int FALLEN = 0, SAT = 1, SLUMPED = 2, HUNG = 3;
 
     /** The game time it was laid, so the oldest go first. */
     long laidAt;
@@ -57,6 +61,15 @@ public class Corpse extends Entity {
         entityData.set(SIZE, zombie.getScale());
         entityData.set(FROM, zombie.getId());
         laidAt = zombie.level().getGameTime();
+    }
+
+    /** Dresses a body that never walked in this world (a Harvestman's den): its outfit, what's missing, its fall. */
+    void dress(String outfit, int limbs, long death, int variant) {
+        entityData.set(OUTFIT, outfit);
+        entityData.set(LIMBS, limbs);
+        entityData.set(DEATH_LO, (int) death);
+        entityData.set(DEATH_HI, (int) (death >>> 32));
+        entityData.set(VARIANT, variant);
     }
 
     public String outfit() {
@@ -87,6 +100,20 @@ public class Corpse extends Entity {
         return entityData.get(SIZE);
     }
 
+    public int pose() {
+        return entityData.get(POSE);
+    }
+
+    /** Sets it out as a Harvestman leaves it (a hung body stays where it's put, off the floor). */
+    public void pose(int pose) {
+        entityData.set(POSE, pose);
+    }
+
+    /** Never the oldest to go and never times out (a body a Harvestman set out to be found). */
+    public void keep() {
+        laidAt = level().getGameTime() + 1_000_000_000L;
+    }
+
     /** The zombie it was, while that's still falling (its entity id), or -1. */
     public int from() {
         return entityData.get(FROM);
@@ -102,6 +129,7 @@ public class Corpse extends Entity {
         builder.define(VARIANT, 0);
         builder.define(SIZE, 1f);
         builder.define(FROM, -1);
+        builder.define(POSE, FALLEN);
     }
 
     @Override
@@ -117,7 +145,9 @@ public class Corpse extends Entity {
         }
         // drops if what it lay on goes (looked at now and then once it's down)
         Vec3 v = getDeltaMovement();
-        if (!onGround() || v.y != 0 || tickCount % 20 == 0) {
+        if (pose() == HUNG) {
+            // hangs from its cable
+        } else if (!onGround() || v.y != 0 || tickCount % 20 == 0) {
             v = new Vec3(0, Math.max(-1.5, v.y - 0.08) * 0.98, 0);
             move(MoverType.SELF, v);
             setDeltaMovement(onGround() ? Vec3.ZERO : v);
@@ -137,6 +167,7 @@ public class Corpse extends Entity {
         entityData.set(VARIANT, input.getIntOr("variant", 0));
         entityData.set(SIZE, input.getFloatOr("size", 1f));
         laidAt = input.getIntOr("laidAt", 0) & 0xFFFFFFFFL;
+        entityData.set(POSE, input.getIntOr("pose", FALLEN));
     }
 
     @Override
@@ -149,6 +180,7 @@ public class Corpse extends Entity {
         output.putInt("variant", variant());
         output.putFloat("size", size());
         output.putInt("laidAt", (int) laidAt);
+        output.putInt("pose", pose());
     }
 
     @Override

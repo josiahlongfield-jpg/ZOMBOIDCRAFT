@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/two_by_four"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/two_by_four",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/two_by_four",
+   "part": "body"
+  }
  }
 }

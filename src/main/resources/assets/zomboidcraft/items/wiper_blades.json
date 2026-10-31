@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/wiper_blades"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/wiper_blades",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/wiper_blades",
+   "part": "body"
+  }
  }
 }

@@ -10,6 +10,7 @@ import json
 from pathlib import Path
 
 import roster
+import uses
 import wave1
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -31,7 +32,11 @@ RAR = {'C': 'COMMON', 'S': 'SCARCE', 'R': 'RARE', 'P': 'PRIZED', 'G': 'GRAIL'}
 # categories in wave 2 (tools, materials, electronics, light, camping, car, kitchen kit); waves up to LIVE are in the game
 WAVE2 = ('Kitchen & cooking', 'Hand tools', 'Building & materials', 'Electrical & electronics', 'Light & fire',
          'Outdoors, camping & farm', 'Vehicle & fuel')
-LIVE = 2
+LIVE = 3
+# wave-3 rows other threads make: clothes and wearables (PLAYERS), bags and containers (UI inventory)
+OTHERS_CATS = ('Clothing', 'Bags & containers')
+WEARABLES = {'flight_deck_jersey', 'cranial_helmet', 'g_suit', 'survival_vest', 'pilot_helmet', 'poncho', 'fur_coat',
+             'bespoke_suit'}
 # the leftovers food needs, built in wave 1 although they're junk-wave rows
 EXTRA_WAVE1 = {'empty_soda_can', 'empty_jar', 'can_opener'}
 EXTRA_ROWS = [
@@ -51,7 +56,8 @@ def rows():
     out = roster.parse() + EXTRA_ROWS
     for r in out:
         r['wave'] = 1 if (r['cat'] in wave1.WAVE1 or r['id'] in EXTRA_WAVE1) else 2 if r['cat'] in WAVE2 else 3
-        r['live'] = r['wave'] <= LIVE and not r['exists']
+        r['live'] = (r['wave'] <= LIVE and not r['exists'] and r['cat'] not in OTHERS_CATS
+                     and r['id'] not in WEARABLES)
     return out
 
 
@@ -94,6 +100,9 @@ public final class LootSpecs {{
     for r in rs:
         if r['live']:
             lang[f'item.{NS}.{r["id"]}'] = r['name']
+            use = uses.use_line(r)
+            if use:
+                lang[f'item.{NS}.{r["id"]}.use'] = use
     lang_path.write_text(json.dumps(lang, indent=2, ensure_ascii=False) + '\n')
     tags = {}
     for r in rs:

@@ -101,9 +101,9 @@ public final class HoldPoses {
             if (aiming) {
                 // the shouldered long gun, or the pistol out at arm's length, follows the eyes
                 gun = rot(headX, headY, 0).mul(rot(switch (item.type()) {
-                    case PISTOL -> HoldPoseData.PISTOL_AIM;
-                    case SHOTGUN -> HoldPoseData.SHOTGUN_AIM;
-                    case HUNTING_RIFLE -> HoldPoseData.HUNTING_AIM;
+                    case PISTOL, POCKET_PISTOL, MACHINE_PISTOL -> HoldPoseData.PISTOL_AIM;
+                    case SHOTGUN, GRENADE_LAUNCHER -> HoldPoseData.SHOTGUN_AIM;
+                    case HUNTING_RIFLE, PRECISION_RIFLE, HEAVY_SNIPER -> HoldPoseData.HUNTING_AIM;
                     case DOUBLE_BARREL -> HoldPoseData.DOUBLE_BARREL_AIM;
                     case REVOLVER -> HoldPoseData.REVOLVER_AIM;
                     case RIMFIRE -> HoldPoseData.RIMFIRE_AIM;
@@ -115,9 +115,9 @@ public final class HoldPoses {
                     default -> HoldPoseData.RIFLE_AIM;
                 }));
                 support = switch (item.type()) {
-                    case PISTOL -> HoldPoseData.PISTOL_AIM_SUPPORT;
-                    case SHOTGUN -> HoldPoseData.SHOTGUN_AIM_SUPPORT;
-                    case HUNTING_RIFLE -> HoldPoseData.HUNTING_AIM_SUPPORT;
+                    case PISTOL, POCKET_PISTOL, MACHINE_PISTOL -> HoldPoseData.PISTOL_AIM_SUPPORT;
+                    case SHOTGUN, GRENADE_LAUNCHER -> HoldPoseData.SHOTGUN_AIM_SUPPORT;
+                    case HUNTING_RIFLE, PRECISION_RIFLE, HEAVY_SNIPER -> HoldPoseData.HUNTING_AIM_SUPPORT;
                     case DOUBLE_BARREL -> HoldPoseData.DOUBLE_BARREL_AIM_SUPPORT;
                     case REVOLVER -> HoldPoseData.REVOLVER_AIM_SUPPORT;
                     case RIMFIRE -> HoldPoseData.RIMFIRE_AIM_SUPPORT;
@@ -131,9 +131,9 @@ public final class HoldPoses {
             } else if (up) {
                 // raised, the gun points where they look, so a laser runs down the barrel to the crosshair
                 gun = rot(headX + bob(state), headY, 0).mul(rot(switch (item.type()) {
-                    case PISTOL -> HoldPoseData.PISTOL_RAISED;
-                    case SHOTGUN -> HoldPoseData.SHOTGUN_RAISED;
-                    case HUNTING_RIFLE -> HoldPoseData.HUNTING_RAISED;
+                    case PISTOL, POCKET_PISTOL, MACHINE_PISTOL -> HoldPoseData.PISTOL_RAISED;
+                    case SHOTGUN, GRENADE_LAUNCHER -> HoldPoseData.SHOTGUN_RAISED;
+                    case HUNTING_RIFLE, PRECISION_RIFLE, HEAVY_SNIPER -> HoldPoseData.HUNTING_RAISED;
                     case DOUBLE_BARREL -> HoldPoseData.DOUBLE_BARREL_RAISED;
                     case REVOLVER -> HoldPoseData.REVOLVER_RAISED;
                     case RIMFIRE -> HoldPoseData.RIMFIRE_RAISED;
@@ -145,9 +145,9 @@ public final class HoldPoses {
                     default -> HoldPoseData.RIFLE_RAISED;
                 }));
                 support = switch (item.type()) {
-                    case PISTOL -> HoldPoseData.PISTOL_RAISED_SUPPORT;
-                    case SHOTGUN -> HoldPoseData.SHOTGUN_RAISED_SUPPORT;
-                    case HUNTING_RIFLE -> HoldPoseData.HUNTING_RAISED_SUPPORT;
+                    case PISTOL, POCKET_PISTOL, MACHINE_PISTOL -> HoldPoseData.PISTOL_RAISED_SUPPORT;
+                    case SHOTGUN, GRENADE_LAUNCHER -> HoldPoseData.SHOTGUN_RAISED_SUPPORT;
+                    case HUNTING_RIFLE, PRECISION_RIFLE, HEAVY_SNIPER -> HoldPoseData.HUNTING_RAISED_SUPPORT;
                     case DOUBLE_BARREL -> HoldPoseData.DOUBLE_BARREL_RAISED_SUPPORT;
                     case REVOLVER -> HoldPoseData.REVOLVER_RAISED_SUPPORT;
                     case RIMFIRE -> HoldPoseData.RIMFIRE_RAISED_SUPPORT;
@@ -161,9 +161,9 @@ public final class HoldPoses {
             } else {
                 // the low ready: muzzle down, not following the eyes
                 gun = rot(bob(state), 0, 0).mul(rot(switch (item.type()) {
-                    case PISTOL -> HoldPoseData.PISTOL_READY;
-                    case SHOTGUN -> HoldPoseData.SHOTGUN_READY;
-                    case HUNTING_RIFLE -> HoldPoseData.HUNTING_READY;
+                    case PISTOL, POCKET_PISTOL, MACHINE_PISTOL -> HoldPoseData.PISTOL_READY;
+                    case SHOTGUN, GRENADE_LAUNCHER -> HoldPoseData.SHOTGUN_READY;
+                    case HUNTING_RIFLE, PRECISION_RIFLE, HEAVY_SNIPER -> HoldPoseData.HUNTING_READY;
                     case DOUBLE_BARREL -> HoldPoseData.DOUBLE_BARREL_READY;
                     case REVOLVER -> HoldPoseData.REVOLVER_READY;
                     case RIMFIRE -> HoldPoseData.RIMFIRE_READY;
@@ -175,9 +175,9 @@ public final class HoldPoses {
                     default -> HoldPoseData.RIFLE_READY;
                 }));
                 support = switch (item.type()) {
-                    case PISTOL -> HoldPoseData.PISTOL_READY_SUPPORT;
-                    case SHOTGUN -> HoldPoseData.SHOTGUN_READY_SUPPORT;
-                    case HUNTING_RIFLE -> HoldPoseData.HUNTING_READY_SUPPORT;
+                    case PISTOL, POCKET_PISTOL, MACHINE_PISTOL -> HoldPoseData.PISTOL_READY_SUPPORT;
+                    case SHOTGUN, GRENADE_LAUNCHER -> HoldPoseData.SHOTGUN_READY_SUPPORT;
+                    case HUNTING_RIFLE, PRECISION_RIFLE, HEAVY_SNIPER -> HoldPoseData.HUNTING_READY_SUPPORT;
                     case DOUBLE_BARREL -> HoldPoseData.DOUBLE_BARREL_READY_SUPPORT;
                     case REVOLVER -> HoldPoseData.REVOLVER_READY_SUPPORT;
                     case RIMFIRE -> HoldPoseData.RIMFIRE_READY_SUPPORT;
@@ -368,9 +368,9 @@ public final class HoldPoses {
     /** A gun's name in HoldPoseData.LENS. */
     private static String lensKey(GunType type) {
         return switch (type) {
-            case PISTOL -> "pistol";
-            case SHOTGUN -> "shotgun";
-            case HUNTING_RIFLE -> "hunting";
+            case PISTOL, POCKET_PISTOL, MACHINE_PISTOL -> "pistol";
+            case SHOTGUN, GRENADE_LAUNCHER -> "shotgun";
+            case HUNTING_RIFLE, PRECISION_RIFLE, HEAVY_SNIPER -> "hunting";
             case DOUBLE_BARREL -> "double_barrel";
             case REVOLVER -> "revolver";
             case RIMFIRE -> "rimfire";

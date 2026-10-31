@@ -71,7 +71,7 @@ public final class Lifts {
         return Registry.register(BuiltInRegistries.SOUND_EVENT, id, SoundEvent.createFixedRangeEvent(id, range));
     }
 
-    /** A call button pressed (with the interact key). */
+    /** A call button (or a landing door) pressed with the interact key. */
     public record Call(BlockPos pos) implements CustomPacketPayload {
         public static final Type<Call> TYPE = new Type<>(ZomboidCraft.id("lift_call"));
         public static final StreamCodec<RegistryFriendlyByteBuf, Call> CODEC = StreamCodec.composite(
@@ -101,20 +101,31 @@ public final class Lifts {
         ServerPlayNetworking.registerGlobalReceiver(Call.TYPE, (payload, context) -> {
             ServerPlayer player = context.player();
             player.level().getServer().execute(() -> {
-                if (!player.isSpectator() && player.blockPosition().distSqr(payload.pos()) < 6 * 6
-                        && player.level().getBlockState(payload.pos()).is(BUTTON)) {
-                    press((ServerLevel) player.level(), payload.pos(), player);
+                if (!player.isSpectator() && player.blockPosition().distSqr(payload.pos()) < 6 * 6) {
+                    BlockState at = player.level().getBlockState(payload.pos());
+                    if (at.is(BUTTON)) {
+                        press((ServerLevel) player.level(), payload.pos(), player);
+                    } else if (at.is(DOOR)) {
+                        pressDoor((ServerLevel) player.level(), payload.pos(), player);
+                    }
                 }
             });
         });
         ServerPlayNetworking.registerGlobalReceiver(Pick.TYPE, (payload, context) -> {
             ServerPlayer player = context.player();
             player.level().getServer().execute(() -> {
-                if (!player.isSpectator() && player.level().getEntity(payload.car()) instanceof LiftCar car && car.machine != null
+                if (player.isSpectator()) {
+                    return;
+                }
+                if (player.level().getEntity(payload.car()) instanceof LiftCar car && car.machine != null
                         && car.machine.shaft() != null && car.machine.shaft().over(player.getX(), player.getZ(), -0.5)
                         && Math.abs(player.getY() - car.carY()) < 2.5) {
                     car.machine.carCall((ServerLevel) player.level(), payload.landing());
                     player.level().playSound(null, player.getX(), player.getY() + 1, player.getZ(), BUTTON_SOUND, SoundSource.BLOCKS, 0.6f, 1.2f);
+                } else {
+                    ZomboidCraft.LOGGER.info("Lift panel press from {} refused: car {} {}", player.getName().getString(), payload.car(),
+                            player.level().getEntity(payload.car()) instanceof LiftCar c ? (c.machine == null ? "has no machine" : "is out of reach at y " + c.carY() + ", player at " + player.position()) : "not found");
+                    player.sendOverlayMessage(Component.literal("Nothing happens.").withStyle(net.minecraft.ChatFormatting.GRAY));
                 }
             });
         });
@@ -128,8 +139,26 @@ public final class Lifts {
         if (!state.is(BUTTON)) {
             return;
         }
-        LiftMachine m = machineFor(level, pos, state.getValue(LiftButtonBlock.FACING));
-        int landing = m == null ? -1 : m.shaft().landingAt(pos.getY() - 1);
+        Direction f = state.getValue(LiftButtonBlock.FACING);
+        // the shaft's front row is two blocks back from the button, beside it
+        call(level, by, machineFor(level, pos.relative(f, -2), f.getClockWise(), 1, pos.getY() - 1), pos.getY() - 1);
+    }
+
+    /** A landing door used: the same as its call button, for whoever reaches for the doors. */
+    static void pressDoor(ServerLevel level, BlockPos pos, Player by) {
+        BlockState state = level.getBlockState(pos);
+        if (!state.is(DOOR)) {
+            return;
+        }
+        BlockPos lower = state.getValue(LiftDoorBlock.PART) == LiftDoorBlock.Part.UPPER ? pos.below() : pos;
+        Direction f = state.getValue(LiftDoorBlock.FACING);
+        level.playSound(null, lower.above(), BUTTON_SOUND, SoundSource.BLOCKS, 0.6f, 0.9f);
+        // the shaft's front row is right behind the doors
+        call(level, by, machineFor(level, lower.relative(f, -1), f.getClockWise(), 0, lower.getY()), lower.getY());
+    }
+
+    private static void call(ServerLevel level, Player by, LiftMachine m, int y) {
+        int landing = m == null ? -1 : m.shaft().landingAt(y);
         if (landing < 0) {
             by.sendOverlayMessage(Component.literal("Nothing happens.").withStyle(net.minecraft.ChatFormatting.GRAY));
             return;
@@ -137,22 +166,26 @@ public final class Lifts {
         m.hallCall(level, landing);
     }
 
-    /** The machine of the lift a button calls: up the shaft beside the wall it's on, either side of it. */
-    private static LiftMachine machineFor(ServerLevel level, BlockPos button, Direction f) {
-        Direction r = f.getClockWise();
-        int top = Math.min(level.getMaxY(), button.getY() + 420);
-        for (int k = 1; k <= 4; k++) {
+    /**
+     * The machine of the lift with a landing at height y: up the shaft columns from row, from min
+     * to 4 blocks either side of it along r.
+     */
+    private static LiftMachine machineFor(ServerLevel level, BlockPos row, Direction r, int min, int y) {
+        int top = Math.min(level.getMaxY(), y + 420);
+        for (int k = min; k <= 4; k++) {
             for (int sign = -1; sign <= 1; sign += 2) {
-                BlockPos col = button.relative(f, -2).relative(r, sign * k);
-                for (int y = button.getY(); y <= top; y++) {
-                    BlockPos at = new BlockPos(col.getX(), y, col.getZ());
+                BlockPos col = row.relative(r, sign * k);
+                for (int yy = y; yy <= top; yy++) {
+                    BlockPos at = new BlockPos(col.getX(), yy, col.getZ());
                     if (level.getBlockState(at).is(MACHINE)) {
-                        if (level.getBlockEntity(at) instanceof LiftMachine m && m.shaft() != null
-                                && m.shaft().landingAt(button.getY() - 1) >= 0) {
+                        if (level.getBlockEntity(at) instanceof LiftMachine m && m.shaft() != null && m.shaft().landingAt(y) >= 0) {
                             return m;
                         }
                         break;
                     }
+                }
+                if (k == 0) {
+                    break;
                 }
             }
         }

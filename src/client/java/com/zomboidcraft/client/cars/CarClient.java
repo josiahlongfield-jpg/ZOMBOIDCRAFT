@@ -57,7 +57,9 @@ public final class CarClient {
         CarProp.clientInput = player -> player instanceof LocalPlayer local ? local.input.keyPresses : Input.EMPTY;
         ClientTickEvents.END_CLIENT_TICK.register(CarClient::tick);
         com.zomboidcraft.client.interact.Interactables.drawsOwn(() -> target != null);
+        HoistClient.register();
         com.zomboidcraft.client.interact.Interactables.finder(CarClient::boot);
+        com.zomboidcraft.client.interact.Interactables.finder(CarClient::bonnet);
         CarLights.register();
     }
 
@@ -93,6 +95,10 @@ public final class CarClient {
                 ClientPlayNetworking.send(new CarNet.Seat(target.car().getId(), target.seat()));
             } else if (inside != null) {
                 ClientPlayNetworking.send(new CarNet.Use(CarNet.GET_OUT, 0, 0, 0));
+            } else if (HoistClient.interact(client, player)) {
+                // a car lift's control box or its pump lever
+            } else if (car != null && atBonnet(car, hit, player)) {
+                client.gui.setScreen(new com.zomboidcraft.client.kit.MechanicsScreen(car));
             } else if (car != null) {
                 Vec3 at = hit.getLocation().subtract(car.position());
                 ClientPlayNetworking.send(new CarNet.Use(car.getId(), (float) at.x, (float) at.y, (float) at.z));
@@ -100,6 +106,12 @@ public final class CarClient {
                 // a lift's call button, or the floor panel inside a car
             } else if (com.zomboidcraft.client.trains.TrainClient.interact(client, hit)) {
                 // a station's call button: the train's on its way
+            } else if (com.zomboidcraft.client.survival.DownedClient.interact(client, hit)) {
+                // a downed friend: revive them, or lift them onto a stretcher
+            } else if (com.zomboidcraft.client.npc.NpcClient.interact(client, hit)) {
+                // a companion: follow me, or wait here
+            } else if (com.zomboidcraft.client.kit.FilesClient.interact(client, hit)) {
+                // a file lying in the world: read it
             } else if (com.zomboidcraft.client.ferry.FerryClient.interact(client, hit)) {
                 // a landing's bell: the ferry's coming in
             } else if (com.zomboidcraft.client.lights.LightClient.interact(client, hit)) {
@@ -148,6 +160,29 @@ public final class CarClient {
                 com.zomboidcraft.client.interact.Interactables.SIZE);
     }
 
+    /** Whether the interact key at this car, looked at here, opens its mechanics screen: at the front end of a car with parts. */
+    private static boolean atBonnet(CarProp car, HitResult hit, LocalPlayer player) {
+        return !car.parts().isEmpty() && hit.getLocation().distanceTo(player.getEyePosition()) <= DOOR_REACH
+                && car.atBonnet(hit.getLocation().subtract(car.position()));
+    }
+
+    /** The bonnet's dot: you're at the front of a car with parts, close, looking at it; the interact key opens the mechanics screen. */
+    private static com.zomboidcraft.client.interact.Interactables.Spot bonnet(Minecraft client, LocalPlayer player) {
+        if (target != null || player.isPassenger()) {
+            return null;
+        }
+        HitResult hit = client.hitResult;
+        CarProp car = lookedAt(client, hit);
+        CarModels.Model m = car == null ? null : CarModels.get(car.model());
+        if (m == null || !atBonnet(car, hit, player)) {
+            return null;
+        }
+        float z = m.size[2] / 2 - 0.5f;
+        float y = m.heightAt(0, z) + 0.05f;
+        return new com.zomboidcraft.client.interact.Interactables.Spot(car.toWorld(new float[]{0, y, z}),
+                com.zomboidcraft.client.interact.Interactables.SIZE);
+    }
+
     /**
      * The door you're standing right at and facing the handle of, and the free seat it lets you into: only
      * close up, on that side, level with that door, looking at it; running past a car lights nothing.
@@ -170,15 +205,17 @@ public final class CarClient {
                 if (h == null || car.seatTaken(s)) {
                     continue;
                 }
-                // outside the car on the handle's side, within arm's reach of the door, level with it
-                double out = Math.signum(h[0]) * at.x - Math.abs(h[0]);
-                if (out < -0.15 || out > 1.3 || Math.abs(at.z - h[2]) > 1.1) {
+                // outside the car on the handle's side, within arm's reach of the door, level with it; a handle
+                // on the middle line (the Warthog's gun, lit on its grips) is climbed to from behind the car
+                boolean back = Math.abs(h[0]) < 0.05f;
+                double out = back ? -m.size[2] / 2 - at.z : Math.signum(h[0]) * at.x - Math.abs(h[0]);
+                if (out < -0.15 || out > (back ? 1.6 : 1.3) || (back ? Math.abs(at.x) > 1.3 : Math.abs(at.z - h[2]) > 1.1)) {
                     continue;
                 }
                 Vec3 to = car.toWorld(h).subtract(eye);
                 double d = to.length();
                 double cos = d < 1e-3 ? 1 : to.dot(look) / d;
-                if (d < DOOR_REACH && cos > bestCos) {
+                if (d < (back ? 3.2 : DOOR_REACH) && cos > bestCos) {
                     bestCos = cos;
                     best = new Target(car, s, h, com.zomboidcraft.client.interact.Interactables.SIZE, seatName(m, s));
                 }
@@ -224,6 +261,9 @@ public final class CarClient {
     private static String seatName(CarModels.Model m, int s) {
         if (s == 0) {
             return "Drive";
+        }
+        if (s == m.gunner) {
+            return "Gun";
         }
         return m.seats[s][2] < m.seats[0][2] - 0.5f ? "Back seat" : "Front seat";
     }

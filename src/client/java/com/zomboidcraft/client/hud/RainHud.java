@@ -1,6 +1,7 @@
 package com.zomboidcraft.client.hud;
 
 import com.zomboidcraft.world.cars.CarProp;
+import com.zomboidcraft.world.weather.Climate;
 import com.zomboidcraft.world.weather.Weather;
 import com.zomboidcraft.world.weather.WeatherView;
 import java.util.ArrayList;
@@ -65,7 +66,7 @@ final class RainHud {
         boolean exposed = exposed(player, level);
         out = exposed ? out + dt : 0;
         Weather weather = WeatherView.client();
-        float rain = Math.max(level.getRainLevel(1f), weather == null ? 0 : weather.rain());
+        float rain = Math.max(level.getRainLevel(1f), weather == null ? 0 : weather.rain() * Climate.maxRainFx());
 
         // new drops: more in heavy rain and looking up, far fewer under a hat
         if (out >= SETTLE && rain > 0.05f) {

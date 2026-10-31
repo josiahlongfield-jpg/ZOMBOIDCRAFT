@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/vodka"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/vodka",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/vodka",
+   "part": "body"
+  }
  }
 }

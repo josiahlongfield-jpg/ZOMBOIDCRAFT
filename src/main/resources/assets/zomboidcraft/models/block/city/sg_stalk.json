@@ -1,0 +1,118 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sg_flesh": "zomboidcraft:block/city/sg_flesh",
+    "sg_mass": "zomboidcraft:block/city/sg_mass",
+    "particle": "zomboidcraft:block/city/sg_flesh"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        0,
+        5
+      ],
+      "to": [
+        11,
+        16,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sg_flesh"
+        },
+        "south": {
+          "texture": "#sg_flesh"
+        },
+        "east": {
+          "texture": "#sg_flesh"
+        },
+        "west": {
+          "texture": "#sg_flesh"
+        },
+        "up": {
+          "texture": "#sg_flesh",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sg_flesh",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        0,
+        3
+      ],
+      "to": [
+        13,
+        3,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sg_flesh"
+        },
+        "south": {
+          "texture": "#sg_flesh"
+        },
+        "east": {
+          "texture": "#sg_flesh"
+        },
+        "west": {
+          "texture": "#sg_flesh"
+        },
+        "up": {
+          "texture": "#sg_mass"
+        },
+        "down": {
+          "texture": "#sg_flesh",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        9,
+        4,
+        6
+      ],
+      "to": [
+        13,
+        12,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sg_flesh"
+        },
+        "south": {
+          "texture": "#sg_flesh"
+        },
+        "east": {
+          "texture": "#sg_flesh"
+        },
+        "west": {
+          "texture": "#sg_flesh"
+        },
+        "up": {
+          "texture": "#sg_flesh"
+        },
+        "down": {
+          "texture": "#sg_flesh"
+        }
+      },
+      "rotation": {
+        "origin": [
+          11,
+          4,
+          8
+        ],
+        "axis": "z",
+        "angle": -22.5
+      }
+    }
+  ]
+}

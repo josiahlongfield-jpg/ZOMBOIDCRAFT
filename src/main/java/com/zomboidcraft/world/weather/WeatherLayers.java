@@ -37,7 +37,7 @@ public final class WeatherLayers {
         }
         // a lightning flash lights the street, day or night, whatever the gloom (client side only)
         layer(builder, level, EnvironmentAttributes.SKY_LIGHT_FACTOR, (v, w, night, c) ->
-                (float) Mth.lerp(flash(level) * 0.9, v * light(w, night, c), 1));
+                (float) Mth.lerp(flash(level) * 0.9, steady(c) ? Mth.lerp(night, light(w, 0, c), v * light(w, 1, c)) : v * light(w, night, c), 1));
         // the light level the game goes by (spawning, zombie eyes) keeps the plain overcast day:
         // endless night only darkens what you see
         layer(builder, level, EnvironmentAttributes.SKY_LIGHT_LEVEL, (v, w, night, c) ->
@@ -45,7 +45,7 @@ public final class WeatherLayers {
         layer(builder, level, EnvironmentAttributes.SKY_COLOR, (v, w, night, c) -> {
             Vector3fc sky = overcast(c) ? gray(v, 0.42f, 0.9f) : v;
             sky = endless(c) ? toward(sky, DUSK_SKY, 0.8f * (float) (1 - night)) : sky;
-            sky = gray(sky, 0.55f, 0.8f * w.fog());
+            sky = gray(sky, 0.55f, 0.8f * fog(w, night, c));
             // moonlight through the gap: a faint cold blue
             sky = w.moon() > 0 ? new Vector3f(sky).add(0.035f * w.moon(), 0.045f * w.moon(), 0.07f * w.moon()) : sky;
             return toward(sky, FLASH, 0.75f * flash(level));
@@ -53,7 +53,7 @@ public final class WeatherLayers {
         layer(builder, level, EnvironmentAttributes.FOG_COLOR, (v, w, night, c) -> {
             Vector3fc fog = overcast(c) ? gray(v, 0.5f, 0.75f) : v;
             fog = endless(c) ? toward(fog, DUSK_FOG, 0.7f * (float) (1 - night)) : fog;
-            return toward(gray(fog, 0.6f, 0.85f * w.fog()), FLASH, 0.6f * flash(level));
+            return toward(gray(fog, 0.6f, 0.85f * fog(w, night, c)), FLASH, 0.6f * flash(level));
         });
         layer(builder, level, EnvironmentAttributes.CLOUD_COLOR, (v, w, night, c) ->
                 overcast(c) ? ColorModifier.BLEND_TO_GRAY_ARGB.apply(v, new ColorModifier.BlendToGray(endless(c) ? 0.22f : 0.32f, 0.85f)) : v);
@@ -63,28 +63,45 @@ public final class WeatherLayers {
         // a light haze always hangs over the distance; in thick fog the street fades out a
         // couple of dozen blocks away
         layer(builder, level, EnvironmentAttributes.FOG_START_DISTANCE, (v, w, night, c) ->
-                (float) Mth.lerp(w.fog(), haze(v, c, 0.15), 0));
+                (float) Mth.lerp(fog(w, night, c), haze(v, c, 0.15), 0));
         // a lightning flash throws the fog back for a moment: shapes down the street show up
         layer(builder, level, EnvironmentAttributes.FOG_END_DISTANCE, (v, w, night, c) ->
-                (float) Mth.lerp(flash(level), fogEnd(haze(v, c, 1), w, 22), Math.max(fogEnd(haze(v, c, 1), w, 22), 110)));
-        layer(builder, level, EnvironmentAttributes.SKY_FOG_END_DISTANCE, (v, w, night, c) -> fogEnd(haze(v, c, 1), w, 30));
-        layer(builder, level, EnvironmentAttributes.CLOUD_FOG_END_DISTANCE, (v, w, night, c) -> fogEnd(v, w, 30));
+                (float) Mth.lerp(flash(level), fogEnd(haze(v, c, 1), fog(w, night, c), 22), Math.max(fogEnd(haze(v, c, 1), fog(w, night, c), 22), 110)));
+        layer(builder, level, EnvironmentAttributes.SKY_FOG_END_DISTANCE, (v, w, night, c) -> fogEnd(haze(v, c, 1), fog(w, night, c), 30));
+        layer(builder, level, EnvironmentAttributes.CLOUD_FOG_END_DISTANCE, (v, w, night, c) -> fogEnd(v, fog(w, night, c), 30));
     }
 
     /** Daylight held low (under endless night, barely above the night), and a little light back when the moon shows. */
     private static float light(Weather w, double night, ZcConfig.Weather c) {
         double day = !overcast(c) ? 1 : endless(c) ? c.endlessDaylight : OVERCAST_DAY;
         double dark = c.nightLight * (1 + 0.6 * w.moon());
-        return (float) (Mth.lerp(night, day, dark) * (1 - 0.15 * w.fog()));
+        return (float) (Mth.lerp(night, day, dark) * (1 - 0.15 * fog(w, night, c)));
     }
 
-    private static float fogEnd(float v, Weather w, float near) {
-        return (float) Mth.lerp(w.fog(), v, Math.min(v, near));
+    private static float fogEnd(float v, float fog, float near) {
+        return (float) Mth.lerp(fog, v, Math.min(v, near));
     }
 
     /** Pulls a fog distance in to the haze (scaled by share), when the haze is on. */
     private static float haze(float v, ZcConfig.Weather c, double share) {
         return c.hazeDistance > 0 ? (float) Math.min(v, c.hazeDistance * share) : v;
+    }
+
+    /**
+     * How foggy things look. With a steady day the day always looks the same (weather.dayFog: a
+     * haze you can still see a fair way through), whatever the weather; only the night brings the
+     * weather's own fog in. The weather's real fog still counts for the zombies' eyes; nature.maxFog
+     * caps only what you see.
+     */
+    private static float fog(Weather w, double night, ZcConfig.Weather c) {
+        // under the endless fog cycle the day is as thick as the night
+        double day = Climate.fogCycle() == Climate.FogCycle.ENDLESS_FOG ? Math.max(c.dayFog, w.fog()) : c.dayFog;
+        return (steady(c) ? (float) Mth.lerp(night, day, w.fog()) : w.fog()) * Climate.maxFog();
+    }
+
+    /** The day keeps one look: the same light and the same haze through rain, fog and storms. */
+    private static boolean steady(ZcConfig.Weather c) {
+        return c.steadyDay && endless(c);
     }
 
     private static boolean overcast(ZcConfig.Weather c) {

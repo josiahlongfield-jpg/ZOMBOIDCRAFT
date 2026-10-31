@@ -57,7 +57,7 @@ import net.minecraft.world.phys.Vec3;
  * A big enough hit to the head bursts it: a hunting rifle headshot, or most of a blast of buckshot up close. Most of
  * a blast of buckshot in the chest from point-blank range blows a hole right through it.
  *
- * A pipe bomb or grenade going off tears at every limb at once, the ones facing it and nearest it most ({@link #blast}),
+ * A grenade going off tears at every limb at once, the ones facing it and nearest it most ({@link #blast}),
  * and right on top of one the head sometimes goes too.
  */
 public final class Dismember {
@@ -208,6 +208,9 @@ public final class Dismember {
         BodyHit best = null;
         double nearest = range;
         for (Entity e : shooter.level().getEntities(shooter, new AABB(eye, stop).inflate(REACH + MOVED), canHit)) {
+            if (e instanceof com.zomboidcraft.creature.HarvestmanEntity) {
+                continue;   // its own pass, below
+            }
             if (shooter.isPassenger() && e.getRootVehicle() == shooter.getRootVehicle()) {
                 continue;   // not whoever's riding with you
             }
@@ -240,6 +243,22 @@ public final class Dismember {
                     best = new BodyHit(e, at.get(), -1);
                 }
             }
+        }
+        // a Harvestman is hit where its hull, belly and legs are (they reach well past its box)
+        com.zomboidcraft.creature.HarvestmanEntity hm = null;
+        com.zomboidcraft.creature.HarvestmanBody.Strike hs = null;
+        for (com.zomboidcraft.creature.HarvestmanEntity h : shooter.level().getEntitiesOfClass(
+                com.zomboidcraft.creature.HarvestmanEntity.class, new AABB(eye, stop).inflate(6), canHit::test)) {
+            com.zomboidcraft.creature.HarvestmanBody.Strike s = h.strike(eye, dir, nearest);
+            if (s != null && s.distance() < nearest) {
+                nearest = s.distance();
+                hm = h;
+                hs = s;
+            }
+        }
+        if (hm != null) {
+            hm.struck(hs);
+            return new BodyHit(hm, hs.at(), -1);
         }
         return best;
     }
@@ -501,9 +520,9 @@ public final class Dismember {
             return config.shotguns;
         }
         return switch (gun) {
-            case PISTOL, REVOLVER, MAGNUM, SMG, RIMFIRE -> config.handguns;
-            case ASSAULT_RIFLE -> config.rifles;
-            case HUNTING_RIFLE, LEVER_ACTION -> config.huntingRifles;
+            case PISTOL, REVOLVER, MAGNUM, SMG, RIMFIRE, POCKET_PISTOL, MACHINE_PISTOL -> config.handguns;
+            case ASSAULT_RIFLE, BATTLE_RIFLE, SUPPRESSED_RIFLE -> config.rifles;
+            case HUNTING_RIFLE, LEVER_ACTION, PRECISION_RIFLE, HEAVY_SNIPER -> config.huntingRifles;
             case CROSSBOW -> config.crossbows;
             default -> config.otherGuns;
         };
@@ -515,7 +534,7 @@ public final class Dismember {
             return config.burstShotguns;
         }
         return switch (gun) {
-            case HUNTING_RIFLE -> config.burstHuntingRifle;
+            case HUNTING_RIFLE, BATTLE_RIFLE, PRECISION_RIFLE, HEAVY_SNIPER -> config.burstHuntingRifle;
             case LEVER_ACTION -> config.burstLeverAction;
             case MAGNUM -> config.burstMagnum;
             default -> config.burstOtherGuns;
@@ -528,8 +547,8 @@ public final class Dismember {
             return 3;
         }
         return switch (gun) {
-            case HUNTING_RIFLE, LEVER_ACTION -> 2;
-            case ASSAULT_RIFLE, MAGNUM -> 1;
+            case HUNTING_RIFLE, LEVER_ACTION, BATTLE_RIFLE, PRECISION_RIFLE, HEAVY_SNIPER -> 2;
+            case ASSAULT_RIFLE, MAGNUM, SUPPRESSED_RIFLE -> 1;
             default -> 0;
         };
     }
@@ -613,7 +632,7 @@ public final class Dismember {
     }
 
     /**
-     * A pipe bomb or grenade going off near a walker: it tears at every limb at once, adding to what shots have done
+     * A grenade going off near a walker: it tears at every limb at once, adding to what shots have done
      * to them, and the limbs facing the blast and nearest it take the most (one stood over a grenade on the floor
      * loses its legs first; its arms may go too, and the side turned away mostly keeps them). Whatever passes its
      * toughness comes off and flies away from the blast as hard as buckshot throws it; legs lost, it hops or falls

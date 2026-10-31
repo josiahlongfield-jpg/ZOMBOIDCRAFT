@@ -9,6 +9,7 @@ final class OttoLines {
     static final String[][] CLOSING = {{"otto.closing_0"}, {"otto.closing_1"}, {"otto.closing_2"}, {"otto.closing_3"}};
     static final String[][] CHATTER = {{"otto.chatter_0"}, {"otto.chatter_1"}, {"otto.chatter_2"}, {"otto.chatter_3"}, {"otto.chatter_4"}, {"otto.chatter_5"}, {"otto.chatter_6"}, {"otto.chatter_7"}, {"otto.chatter_8"}, {"otto.chatter_9"}, {"otto.chatter_10"}, {"otto.chatter_11"}, {"otto.chatter_12"}, {"otto.chatter_13"}};
     static final String[][] JOB = {{"otto.job_0"}, {"otto.job_1"}, {"otto.job_2"}, {"otto.job_3"}, {"otto.job_4"}, {"otto.job_5"}, {"otto.job_6"}, {"otto.job_7"}, {"otto.job_8"}, {"otto.job_9"}};
+    static final String[][] GREET = {{"otto.greet_0"}};
     static final String[][] BOARD = {{"otto.board_0"}, {"otto.board_1"}, {"otto.board_2"}, {"otto.board_3"}, {"otto.board_4"}};
     static final String[][] ALIGHT = {{"otto.alight_0"}, {"otto.alight_1"}, {"otto.alight_2"}, {"otto.alight_3"}};
     static final String[][] JUMPED = {{"otto.jumped_0"}, {"otto.jumped_1"}, {"otto.jumped_2"}};
@@ -20,6 +21,7 @@ final class OttoLines {
     static final String[][] STOP_REQUESTED = {{"otto.stop_requested_0"}, {"otto.stop_requested_1"}, {"otto.stop_requested_2"}, {"otto.stop_requested_3"}, {"otto.stop_requested_4"}};
     static final String[][] HALTED = {{"otto.halted_0"}, {"otto.halted_1"}, {"otto.halted_2"}, {"otto.halted_3"}};
     static final String[][] DOORS_HELD = {{"otto.doors_held_0"}, {"otto.doors_held_1"}, {"otto.doors_held_2"}};
+    static final String[][] DOORS_SHUT = {{"otto.doors_shut_0"}, {"otto.doors_shut_1"}, {"otto.doors_shut_2"}, {"otto.doors_shut_3"}};
     static final String[][] BUMP = {{"otto.bump_0"}, {"otto.bump_1"}, {"otto.bump_2"}, {"otto.bump_3"}, {"otto.bump_4"}};
     static final String[][] ZOMBIE_ABOARD = {{"otto.zombie_aboard_0"}, {"otto.zombie_aboard_1"}, {"otto.zombie_aboard_2"}};
     static final String[][] EXPRESS = {{"otto.express_0_0", "{stop}", "otto.express_0_1"}, {"otto.express_1_0", "{stop}", "otto.express_1_1"}, {"otto.express_2_0", "{stop}", "otto.express_2_1"}};

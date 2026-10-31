@@ -21,6 +21,10 @@ import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 public final class CarKeys {
     /** Where a car's key is. */
     public static final int UNROLLED = 0, IGNITION = 1, GLOVEBOX = 2, ZOMBIE = 3, LOST = 4, TAKEN = 5;
+    /** A customer car at an auto shop: its key hangs on the shop's key board until someone opens it. */
+    public static final int BOARD = 6;
+    /** How far from its board a shop's customer cars may be parked. */
+    public static final double BOARD_REACH = 48;
 
     /** A fresh key to car. */
     public static ItemStack make(CarProp car) {
@@ -62,6 +66,27 @@ public final class CarKeys {
             return GLOVEBOX;
         }
         return r - w.carKeyZombie < 0 ? ZOMBIE : LOST;
+    }
+
+    /**
+     * An auto shop's key board, opened the first time: hangs the key of every customer car parked within
+     * {@link #BOARD_REACH} whose key is still on a board, in the first empty slots. Returns how many it hung.
+     * The board's block calls this once and remembers it has.
+     */
+    public static int board(ServerLevel level, net.minecraft.core.BlockPos at, net.minecraft.world.Container into) {
+        int hung = 0;
+        net.minecraft.world.phys.AABB around = new net.minecraft.world.phys.AABB(at).inflate(BOARD_REACH, 16, BOARD_REACH);
+        for (CarProp car : level.getEntitiesOfClass(CarProp.class, around, CarProp::onBoard)) {
+            for (int i = 0; i < into.getContainerSize(); i++) {
+                if (into.getItem(i).isEmpty()) {
+                    into.setItem(i, make(car));
+                    car.keyFound();
+                    hung++;
+                    break;
+                }
+            }
+        }
+        return hung;
     }
 
     /** "police_suv" as "Police Suv". */

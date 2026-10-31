@@ -66,6 +66,8 @@ public class CarProp extends Entity {
     private static final EntityDataAccessor<Boolean> ENGINE = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.BOOLEAN);
     /** The windows are smashed in: clients leave the glass out, and zombies can reach whoever's inside. */
     private static final EntityDataAccessor<Boolean> SMASHED = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.BOOLEAN);
+    /** Each window's state and the holes and cracks in it ({@link CarGlass.Panes#encode}); empty until first set. */
+    private static final EntityDataAccessor<String> GLASS = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.STRING);
     /** Which seat each rider has: four bits per rider in passenger order, the seat's index plus one. */
     private static final EntityDataAccessor<Integer> SEATS = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.INT);
     /** The alarm's going off (a storm set it off): the horn honks and the lamps flash. */
@@ -83,6 +85,21 @@ public class CarProp extends Entity {
     private static final EntityDataAccessor<Integer> CONDITION = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.INT);
     /** The driver has the headlights switched on. */
     private static final EntityDataAccessor<Boolean> LIGHTS = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.BOOLEAN);
+    /** A mounted gun's barrels spun up (0 to 1), whether it's firing, and the rounds on its belt (see Turret). */
+    private static final EntityDataAccessor<Float> TURRET_SPIN = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.FLOAT);
+    private static final EntityDataAccessor<Boolean> TURRET_FIRING = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer> BELT = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.INT);
+    /** Every part's condition, a character a slot ({@link CarParts}); empty until the server first rolls them. */
+    private static final EntityDataAccessor<String> PARTS = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.STRING);
+    /** How high a hoist's arms have it, metres (0 on its wheels): up at all, it can't be driven off. */
+    private static final EntityDataAccessor<Float> LIFT = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.FLOAT);
+    /** Server: the gunner holds the trigger; rounds due by the rate; ticks till the belt's loaded; rounds fired. */
+    boolean turretTrigger;
+    int beltBusy, turretShots, fireTicks;
+    /** The gunner is zoomed in (right-click held): the gun's tighter aimed spread. */
+    boolean turretZoom;
+    /** How far the gun's barrels have turned (radians), last tick and this one (client side). */
+    public float barrels, barrelsO;
 
     private final SimpleContainer boot = new SimpleContainer(27) {
         @Override
@@ -109,15 +126,26 @@ public class CarProp extends Entity {
     private Entity lastDriver;
     private int catchAt = -1, doorShutAt = -1, hornFreeAt;
     private double lastSpeed, speedBefore;
-    /** How much more bashing the windows take before they give, in zombie damage. -1 until first set. */
+    /** How much more bashing the windows take before they give, in zombie damage. -1 until first set (old saves). */
     private float windows = -1;
+    /** Server side: how much more bashing each window takes, in zombie damage; null until first set. */
+    private float[] glassLeft;
+    /** The windows as last read from GLASS, and the text they were read from. */
+    private CarGlass.Panes panes;
+    private String panesFrom;
+    /** On each computer, for drawing: how far each window is wound down, 0 to 1, last tick and this one. */
+    public float[] woundO = new float[0], wound = new float[0];
     /** The seat the next rider to get in takes (server), or -1 for the nearest free one. */
     private int nextSeat = -1;
     /** Where the key is ({@link CarKeys}), whether someone's hotwired it, and ticks left on a hotwiring and who's at it. */
     private int keyWhere;
+    private boolean customer;
     private boolean hotwired;
     /** Whether a car's condition has been decided yet ({@link #carCondition}). */
     private boolean worn;
+    /** Server side: wear owed each part slot below a whole percent, so slow wear adds up. */
+    private final double[] partWear = new double[CarParts.SLOTS.size()];
+    private double lastSpeedForWear;
     private int hotwireLeft = -1;
     private Entity hotwirer;
     /** The glovebox, filled the first time anyone opens it. */
@@ -148,6 +176,7 @@ public class CarProp extends Entity {
         entityData.set(MODEL, model);
         entityData.set(VARIANT, variant);
         flight = null;
+        panes = null;
         setBoundingBox(makeBoundingBox(position()));
     }
 
@@ -166,6 +195,7 @@ public class CarProp extends Entity {
         builder.define(OPEN, false);
         builder.define(ENGINE, false);
         builder.define(SMASHED, false);
+        builder.define(GLASS, "");
         builder.define(SEATS, 0);
         builder.define(ALARM, false);
         builder.define(AIR_ATTITUDE, new org.joml.Quaternionf());
@@ -177,6 +207,11 @@ public class CarProp extends Entity {
         builder.define(BATTERY, true);
         builder.define(CONDITION, 100);
         builder.define(LIGHTS, false);
+        builder.define(TURRET_SPIN, 0f);
+        builder.define(TURRET_FIRING, false);
+        builder.define(BELT, 0);
+        builder.define(PARTS, "");
+        builder.define(LIFT, 0f);
     }
 
     @Override
@@ -189,16 +224,39 @@ public class CarProp extends Entity {
         entityData.set(BATTERY, input.getIntOr("battery", 1) != 0);
         entityData.set(CONDITION, input.getIntOr("condition", 100));
         windows = input.getFloatOr("windows", windowsWhole());
-        entityData.set(SMASHED, windows <= 0);
+        entityData.set(GLASS, input.getStringOr("glass", ""));
+        String left = input.getStringOr("glass_left", "");
+        glassLeft = null;
+        if (!left.isEmpty()) {
+            String[] parts = left.split(",");
+            glassLeft = new float[parts.length];
+            for (int i = 0; i < parts.length; i++) {
+                try {
+                    glassLeft[i] = Float.parseFloat(parts[i]);
+                } catch (NumberFormatException e) {
+                    glassLeft[i] = 1;
+                }
+            }
+        }
+        if (entityData.get(GLASS).isEmpty() && windows <= 0 && windowsWhole() > 0) {
+            // an old save's car with its windows smashed in: every one of them gone
+            CarGlass.Panes p = panes();
+            java.util.Arrays.fill(p.state, CarGlass.SHATTERED);
+            setPanes(p);
+        }
+        entityData.set(SMASHED, panes().size() > 0 ? panes().allShattered() : windows <= 0);
         NonNullList<ItemStack> items = NonNullList.withSize(boot.getContainerSize(), ItemStack.EMPTY);
         ContainerHelper.loadAllItems(input, items);
         for (int i = 0; i < items.size(); i++) {
             boot.setItem(i, items.get(i));
         }
         keyWhere = input.getIntOr("key", CarKeys.UNROLLED);
+        customer = input.getIntOr("customer", 0) != 0;
         hotwired = input.getIntOr("hotwired", 0) != 0;
         worn = input.getIntOr("worn", 0) != 0;
         entityData.set(LIGHTS, input.getIntOr("lights", 0) != 0);
+        entityData.set(BELT, input.getIntOr("belt", 0));
+        entityData.set(PARTS, input.getStringOr("parts", ""));
         gloveSearched = input.getIntOr("glove_searched", 0) != 0;
         NonNullList<ItemStack> glove = NonNullList.withSize(glovebox.getContainerSize(), ItemStack.EMPTY);
         ContainerHelper.loadAllItems(input.childOrEmpty("glovebox"), glove);
@@ -218,12 +276,23 @@ public class CarProp extends Entity {
         output.putInt("battery", battery() ? 1 : 0);
         output.putInt("condition", condition());
         output.putFloat("windows", windows);
+        output.putInt("belt", belt());
+        output.putString("parts", parts());
+        output.putString("glass", entityData.get(GLASS));
+        if (glassLeft != null) {
+            StringBuilder left = new StringBuilder();
+            for (int i = 0; i < glassLeft.length; i++) {
+                left.append(i > 0 ? "," : "").append(glassLeft[i]);
+            }
+            output.putString("glass_left", left.toString());
+        }
         NonNullList<ItemStack> items = NonNullList.withSize(boot.getContainerSize(), ItemStack.EMPTY);
         for (int i = 0; i < items.size(); i++) {
             items.set(i, boot.getItem(i));
         }
         ContainerHelper.saveAllItems(output, items);
         output.putInt("key", keyWhere);
+        output.putInt("customer", customer ? 1 : 0);
         output.putInt("hotwired", hotwired ? 1 : 0);
         output.putInt("worn", worn ? 1 : 0);
         output.putInt("lights", lightsOn() ? 1 : 0);
@@ -299,6 +368,37 @@ public class CarProp extends Entity {
         }
     }
 
+    /** Up on a hoist at all: its wheels are off the ground. */
+    public boolean hoisted() {
+        return entityData.get(LIFT) > 0.02f;
+    }
+
+    /** Up far enough (a hoist's wheels-free notch) that the wheels and brakes come off without a jack. */
+    public boolean wheelsFree() {
+        return entityData.get(LIFT) >= 0.45f;
+    }
+
+    /** Up high enough to stand under: everything underneath can be reached. */
+    public boolean underReach() {
+        return entityData.get(LIFT) >= 1.2f;
+    }
+
+    public void setLift(float metres) {
+        entityData.set(LIFT, metres);
+    }
+
+    /** Whether a point (relative to the car, or in the world) is at its front end, where the bonnet and the engine are. */
+    public boolean atBonnet(Vec3 location) {
+        CarModels.Model m = CarModels.get(model());
+        if (m == null) {
+            return false;
+        }
+        if (location.horizontalDistanceSqr() > m.size[2] * m.size[2]) {
+            location = location.subtract(position());
+        }
+        return local(location).z > m.size[2] / 2 - 1.1;
+    }
+
     /** Whether a point (relative to the car, or in the world) is at its back end, where the boot is. */
     public boolean atBoot(Vec3 location) {
         CarModels.Model m = CarModels.get(model());
@@ -342,7 +442,17 @@ public class CarProp extends Entity {
             return;
         }
         nextSeat = seat >= 0 ? seat : nearestFreeSeat(player);
+        if (!seatFitted(nextSeat)) {
+            player.sendOverlayMessage(Component.literal(nextSeat == 0 ? "The driver's seat is gone: nowhere to sit and drive."
+                    : "That seat's been torn out."));
+            return;
+        }
         player.startRiding(this);
+    }
+
+    /** Whether seat s still has a seat in it (Zomboid's seat parts); cars without parts have all theirs. */
+    public boolean seatFitted(int s) {
+        return parts().isEmpty() || s < 0 || s >= 8 || CarParts.get(parts(), CarParts.Part.SEAT, s) > 0;
     }
 
     /** Whether someone sits in seat s. */
@@ -388,6 +498,31 @@ public class CarProp extends Entity {
         return position().add(world(p[0], p[1], p[2]));
     }
 
+    public float turretSpin() {
+        return entityData.get(TURRET_SPIN);
+    }
+
+    void setTurretSpin(float spin) {
+        entityData.set(TURRET_SPIN, spin);
+    }
+
+    public boolean turretFiring() {
+        return entityData.get(TURRET_FIRING);
+    }
+
+    void setTurretFiring(boolean firing) {
+        entityData.set(TURRET_FIRING, firing);
+    }
+
+    /** Rounds on a mounted gun's belt. */
+    public int belt() {
+        return entityData.get(BELT);
+    }
+
+    public void setBelt(int rounds) {
+        entityData.set(BELT, Math.max(0, rounds));
+    }
+
     /** Where a seat's occupant's eyes are, in the world. */
     public Vec3 seatEye(int seat) {
         CarModels.Model m = CarModels.get(model());
@@ -410,12 +545,14 @@ public class CarProp extends Entity {
 
     /** Whether someone in a car may fire, aim or swing what they hold: passengers anything, a moving driver only a handgun. */
     public static boolean mayUse(Entity entity, ItemStack stack) {
+        if (Turret.isGunner(entity)) {
+            return false;   // both hands on the mounted gun
+        }
         if (!handsOnWheel(entity)) {
             return true;
         }
         com.zomboidcraft.combat.GunType gun = com.zomboidcraft.combat.GunType.of(stack);
-        return gun == com.zomboidcraft.combat.GunType.PISTOL || gun == com.zomboidcraft.combat.GunType.REVOLVER
-                || gun == com.zomboidcraft.combat.GunType.MAGNUM;
+        return gun != null && gun.handgun();
     }
 
     /** The seat a rider has (0 the driver's), or -1 if they aren't riding. */
@@ -476,17 +613,105 @@ public class CarProp extends Entity {
         };
     }
 
-    /** Whether someone sits safe behind a car's glass: in a car whose windows are still in. */
-    public static boolean shielded(Entity entity) {
-        return entity.getVehicle() instanceof CarProp car && !car.smashed();
+    /** Whether someone sits safe behind a car's glass from what's at from: the window nearest it is still in and up. */
+    public static boolean shielded(Entity entity, Entity from) {
+        return entity.getVehicle() instanceof CarProp car && !car.reachable(entity, from);
+    }
+
+    /** Which of the windows something outside (in the world) would bash at, or null where the car has none. */
+    public CarGlass.Window windowFacing(Vec3 at) {
+        return CarGlass.facing(CarGlass.windows(CarModels.get(model()), variantIndex()), toLocal(at));
     }
 
     /**
-     * A mob's blow at someone inside lands on the glass instead, like a zombie on a door, until the
-     * windows give; after that blows get through. Returns whether the blow reaches the rider.
+     * Whether a mob at from can get at a rider: through the window nearest it, when that's down or broken out
+     * and the rider sits close enough to it to be reached (a zombie at a bus's back window can't get the driver).
      */
-    public boolean blowAtRider(Entity attacker, float amount) {
-        if (!(level() instanceof ServerLevel server) || smashed()) {
+    public boolean reachable(Entity rider, Entity from) {
+        CarGlass.Window[] whole = CarGlass.windows(CarModels.get(model()), 0);
+        if (whole.length == 0) {
+            return smashed();
+        }
+        CarGlass.Window w = CarGlass.facing(whole, toLocal(from.getEyePosition()));
+        return w != null && !panes().closed(w.index()) && toLocal(rider.getEyePosition()).distanceTo(w.centre()) < 1.6;
+    }
+
+    /** How much bashing a window of this kind takes when whole, in zombie damage. */
+    private float glassWhole(CarGlass.Window w) {
+        float share = switch (w.kind()) {
+            case CarGlass.WINDSCREEN -> 1.25f;
+            case CarGlass.REAR -> 0.8f;
+            default -> 0.6f;
+        };
+        return Math.max(4f, windowsWhole() * share);
+    }
+
+    private float[] glassLeft(CarGlass.Window[] ws) {
+        if (glassLeft == null || glassLeft.length != ws.length) {
+            glassLeft = new float[ws.length];
+            for (CarGlass.Window w : ws) {
+                if (w != null) {
+                    glassLeft[w.index()] = glassWhole(w) * (1 - (float) panes().bulletHoles(w.index()) / w.holes());
+                }
+            }
+        }
+        return glassLeft;
+    }
+
+    /**
+     * A mob's blow at someone inside lands on the window nearest it instead, like a zombie on a door, cracking it,
+     * until it gives; then blows through it get at whoever sits by it. Returns whether the blow reaches the rider.
+     */
+    public boolean blowAtRider(Entity rider, Entity attacker, float amount) {
+        if (!(level() instanceof ServerLevel server)) {
+            return true;
+        }
+        CarGlass.Window[] ws = CarGlass.windows(CarModels.get(model()), variantIndex());
+        if (ws.length == 0) {
+            return oldBlow(server, attacker, amount);   // an aircraft's canopy: all one piece
+        }
+        if (reachable(rider, attacker)) {
+            return true;
+        }
+        CarGlass.Window open = CarGlass.facing(CarGlass.windows(CarModels.get(model()), 0), toLocal(attacker.getEyePosition()));
+        if (open == null || !panes().closed(open.index()) || ws[open.index()] == null) {
+            return false;   // flailing at an opening they can't reach through from there
+        }
+        CarGlass.Window w = ws[open.index()];
+        float[] left = glassLeft(ws);
+        float whole = glassWhole(w), was = left[w.index()];
+        left[w.index()] -= amount;
+        CarGlass.Panes p = panes();
+        if (left[w.index()] > 0) {
+            // a crack where it struck, at each third of the way to giving (never more than three to a window)
+            if (Math.floor(was / whole * 3) != Math.floor(left[w.index()] / whole * 3)
+                    && p.marks.get(w.index()).stream().filter(CarGlass.Mark::crack).count() < 3) {
+                Vec3 at = toLocal(attacker.getEyePosition()).subtract(w.centre());
+                float u = (float) Mth.clamp(at.dot(w.a()) / w.a().lengthSqr(), -0.7, 0.7);
+                float v = (float) Mth.clamp(at.dot(w.b()) / w.b().lengthSqr(), -0.7, 0.7);
+                if (!w.on(u, v)) {
+                    u *= 0.4f;
+                    v *= 0.4f;
+                }
+                p.marks.get(w.index()).add(new CarGlass.Mark(u, v, true));
+                setPanes(p);
+            }
+            server.playSound(null, attacker.getX(), attacker.getEyeY(), attacker.getZ(), SoundEvents.GLASS_HIT, SoundSource.HOSTILE,
+                    1f, 0.7f + random.nextFloat() * 0.2f);
+            return false;
+        }
+        shatter(server, w);
+        for (Entity r : getPassengers()) {
+            if (r instanceof Player player && toLocal(r.getEyePosition()).distanceTo(w.centre()) < 1.6) {
+                player.sendOverlayMessage(Component.literal("They've smashed the window in!"));
+            }
+        }
+        return false;
+    }
+
+    /** The windows all as one, for what has no windows of its own listed (an aircraft's canopy). */
+    private boolean oldBlow(ServerLevel server, Entity attacker, float amount) {
+        if (smashed()) {
             return true;
         }
         if (windows < 0) {
@@ -502,12 +727,114 @@ public class CarProp extends Entity {
         server.playSound(null, attacker.getX(), attacker.getEyeY(), attacker.getZ(), SoundEvents.GLASS_BREAK, SoundSource.HOSTILE,
                 1.2f, 0.8f + random.nextFloat() * 0.2f);
         Noise.emit(server, position(), 16);
-        for (Entity rider : getPassengers()) {
-            if (rider instanceof Player player) {
-                player.sendOverlayMessage(Component.literal("They've smashed the windows in!"));
+        return false;
+    }
+
+    /** A window gives: glass everywhere, a crash heard down the street. */
+    private void shatter(ServerLevel server, CarGlass.Window w) {
+        CarGlass.Panes p = panes();
+        p.state[w.index()] = CarGlass.SHATTERED;
+        setPanes(p);
+        Vec3 at = toWorld(new float[]{(float) w.centre().x, (float) w.centre().y, (float) w.centre().z});
+        server.playSound(null, at.x, at.y, at.z, SoundEvents.GLASS_BREAK, SoundSource.BLOCKS, 1.2f, 0.8f + random.nextFloat() * 0.2f);
+        server.sendParticles(new net.minecraft.core.particles.BlockParticleOption(net.minecraft.core.particles.ParticleTypes.BLOCK,
+                net.minecraft.world.level.block.Blocks.GLASS.defaultBlockState()), at.x, at.y, at.z, 24, 0.3, 0.2, 0.3, 0.1);
+        Noise.emit(server, position(), 16);
+    }
+
+    /**
+     * A bullet goes through a window at (u, v) on it: a hole there, and it shatters if that's one more than it takes.
+     * Returns whether it shattered.
+     */
+    public boolean shootWindow(ServerLevel server, int index, float u, float v, Vec3 at, boolean sound) {
+        CarGlass.Window[] ws = CarGlass.windows(CarModels.get(model()), variantIndex());
+        if (index < 0 || index >= ws.length || ws[index] == null || !panes().closed(index)) {
+            return false;
+        }
+        server.sendParticles(new net.minecraft.core.particles.BlockParticleOption(net.minecraft.core.particles.ParticleTypes.BLOCK,
+                net.minecraft.world.level.block.Blocks.GLASS.defaultBlockState()), at.x, at.y, at.z, 6, 0.04, 0.04, 0.04, 0.06);
+        if (sound) {
+            server.playSound(null, at.x, at.y, at.z, com.zomboidcraft.combat.Surface.GLASS.impact(), SoundSource.PLAYERS, 0.9f,
+                    0.92f + random.nextFloat() * 0.16f);
+        }
+        CarGlass.Window w = ws[index];
+        CarGlass.Panes p = panes();
+        p.marks.get(index).add(new CarGlass.Mark(u, v, false));
+        float[] left = glassLeft(ws);
+        left[index] -= glassWhole(w) / w.holes();
+        if (p.bulletHoles(index) >= w.holes() || left[index] <= 0) {
+            shatter(server, w);
+            return true;
+        }
+        setPanes(p);
+        return false;
+    }
+
+    /** Winds a side window down, or back up (not one that's shattered). Returns whether it moved. */
+    public boolean windWindow(int index) {
+        CarGlass.Window[] ws = CarGlass.windows(CarModels.get(model()), variantIndex());
+        if (index < 0 || index >= ws.length || ws[index] == null || !ws[index].winds() || !(level() instanceof ServerLevel server)) {
+            return false;
+        }
+        CarGlass.Panes p = panes();
+        if (p.state[index] == CarGlass.SHATTERED) {
+            return false;
+        }
+        p.state[index] = p.state[index] == CarGlass.UP ? CarGlass.DOWN : CarGlass.UP;
+        setPanes(p);
+        Vec3 at = toWorld(new float[]{(float) ws[index].centre().x, (float) ws[index].centre().y, (float) ws[index].centre().z});
+        server.playSound(null, at.x, at.y, at.z, SoundEvents.SPYGLASS_USE, SoundSource.NEUTRAL, 0.6f, p.state[index] == CarGlass.UP ? 0.7f : 0.55f);
+        return true;
+    }
+
+    /** The windows as they are now (each computer reads them from the car's synced text). */
+    public CarGlass.Panes panes() {
+        String text = entityData.get(GLASS);
+        if (panes == null || !text.equals(panesFrom)) {
+            CarGlass.Window[] ws = CarGlass.windows(CarModels.get(model()), variantIndex());
+            panes = CarGlass.Panes.decode(text, ws.length);
+            panesFrom = text;
+            if (text.isEmpty()) {
+                // as the car was made: its look's broken-out windows are gone already
+                for (int i = 0; i < ws.length; i++) {
+                    if (ws[i] == null) {
+                        panes.state[i] = CarGlass.SHATTERED;
+                    }
+                }
             }
         }
-        return false;
+        return panes;
+    }
+
+    private void setPanes(CarGlass.Panes p) {
+        String text = p.encode();
+        panes = p;
+        panesFrom = text;
+        entityData.set(GLASS, text);
+        entityData.set(SMASHED, p.size() > 0 && p.allShattered());
+    }
+
+    /** Each computer winds its picture of the windows toward where they are: about two seconds top to bottom. */
+    private void wind() {
+        CarGlass.Panes p = panes();
+        if (wound.length != p.size()) {
+            woundO = new float[p.size()];
+            wound = new float[p.size()];
+            for (int i = 0; i < wound.length; i++) {
+                wound[i] = woundO[i] = p.state[i] == CarGlass.DOWN ? 1 : 0;
+            }
+            return;
+        }
+        for (int i = 0; i < wound.length; i++) {
+            woundO[i] = wound[i];
+            float to = p.state[i] == CarGlass.DOWN ? 1 : 0;
+            wound[i] = to > wound[i] ? Math.min(to, wound[i] + 0.025f) : Math.max(to, wound[i] - 0.025f);
+        }
+    }
+
+    /** Which of the model's looks this car has, as an index into its per-look data. */
+    public int variantIndex() {
+        return CarModels.variants().indexOf(variant());
     }
 
     /**
@@ -593,6 +920,9 @@ public class CarProp extends Entity {
                 default -> rng.nextInt(16);
             });
         }
+        if (!aircraft() && !parts().isEmpty()) {
+            return CarParts.overall(parts());
+        }
         return condition();
     }
 
@@ -609,8 +939,19 @@ public class CarProp extends Entity {
     /** Decides where the key is, the first time it matters. */
     private void rollKey() {
         if (keyWhere == CarKeys.UNROLLED) {
-            keyWhere = CarKeys.roll(new java.util.Random(getUUID().getMostSignificantBits()));
+            keyWhere = customer ? CarKeys.BOARD : CarKeys.roll(new java.util.Random(getUUID().getMostSignificantBits()));
         }
+    }
+
+    /** Worldgen: a customer car left at an auto shop, its key on the shop's key board ({@link CarKeys#board}). */
+    public void setCustomer() {
+        customer = true;
+    }
+
+    /** Whether this car's key still hangs on a shop's key board. */
+    boolean onBoard() {
+        rollKey();
+        return keyWhere == CarKeys.BOARD;
     }
 
     /** Whether the key went walking with one of the dead nearby (deciding where it is if nobody has yet). */
@@ -689,8 +1030,24 @@ public class CarProp extends Entity {
 
     /** The starter turns over and the engine catches about three seconds later. */
     private void crank(ServerLevel server) {
+        String fault = parts().isEmpty() ? null : CarParts.startFault(parts(), new java.util.Random(random.nextLong()),
+                knowsCars(getControllingPassenger()));
+        if (fault != null) {
+            server.playSound(null, getX(), getY(), getZ(), CarSounds.STALL, SoundSource.NEUTRAL, 1f, 1f);
+            if (getControllingPassenger() instanceof Player player) {
+                player.sendOverlayMessage(Component.literal(fault + " C to try again."));
+            }
+            return;
+        }
         server.playSound(null, getX(), getY(), getZ(), CarSounds.START, SoundSource.NEUTRAL, 1f, 1f);
         catchAt = tickCount + 58;
+        wear(CarParts.Part.STARTER, 0, 0.15);
+        wear(CarParts.Part.SPARK_PLUGS, 0, 0.1);
+    }
+
+    /** Whether someone knows enough to tell which part's at fault (Mechanics 1). */
+    private static boolean knowsCars(Entity who) {
+        return who instanceof Player p && (p.isCreative() || com.zomboidcraft.skills.Skills.level(p, com.zomboidcraft.skills.Skill.MECHANICS) >= 1);
     }
 
     /** A tick of hotwiring: the one at it has to stay at the wheel; at the end it starts, or only sparks. */
@@ -728,6 +1085,12 @@ public class CarProp extends Entity {
             player.sendOverlayMessage(Component.literal("Nothing. The battery's dead."));
             return;
         }
+        if (!lightsOn() && !parts().isEmpty() && CarParts.get(parts(), CarParts.Part.HEADLIGHT, 0) <= 0
+                && CarParts.get(parts(), CarParts.Part.HEADLIGHT, 1) <= 0) {
+            server.playSound(null, getX(), getY(), getZ(), SoundEvents.LEVER_CLICK, SoundSource.NEUTRAL, 0.4f, 1.2f);
+            player.sendOverlayMessage(Component.literal("Click. Both headlights are smashed or gone."));
+            return;
+        }
         entityData.set(LIGHTS, !lightsOn());
         server.playSound(null, getX(), getY(), getZ(), SoundEvents.LEVER_CLICK, SoundSource.NEUTRAL, 0.4f, 1.2f);
         if (helicopter()) {
@@ -739,6 +1102,10 @@ public class CarProp extends Entity {
     /** Opens the glovebox for someone in a front seat, its key (if it's there) and odds and ends put in the first time. */
     public void openGlovebox(Player player) {
         if (!(level() instanceof ServerLevel server) || player.getVehicle() != this || seatOf(player) > 1) {
+            return;
+        }
+        if (!parts().isEmpty() && CarParts.get(parts(), CarParts.Part.GLOVEBOX, 0) == -1) {
+            player.sendOverlayMessage(Component.literal("The glovebox has been taken out."));
             return;
         }
         if (!gloveSearched) {
@@ -892,6 +1259,10 @@ public class CarProp extends Entity {
             return super.getPassengerAttachmentPoint(passenger, dimensions, scale);
         }
         float[] seat = m.seats[Math.min(i, m.seats.length - 1)];
+        if (m.turret != null && i == m.gunner) {
+            // the gunner stands behind the gun and goes round with it
+            seat = Turret.turn(m.turret, seat, Turret.yaw(passenger.getYRot(), getYRot()));
+        }
         if (aircraft()) {
             // the seat turns with the airframe about its middle, the eyes staying upright above it
             float pivot = pivot();
@@ -926,6 +1297,14 @@ public class CarProp extends Entity {
     }
 
     private void clampLook(Entity passenger) {
+        CarModels.Model m = CarModels.get(model());
+        if (m != null && m.turret != null && seatOf(passenger) == m.gunner) {
+            // the gun goes all the way round; it tilts only so far
+            float pitch = Mth.clamp(passenger.getXRot(), -m.turret.up, m.turret.down);
+            passenger.xRotO += pitch - passenger.getXRot();
+            passenger.setXRot(pitch);
+            return;
+        }
         float rel = Mth.wrapDegrees(passenger.getYRot() - getYRot());
         float clamped = Mth.clamp(rel, -130f, 130f);
         passenger.yRotO += clamped - rel;
@@ -1078,6 +1457,9 @@ public class CarProp extends Entity {
         if (MODEL.equals(accessor)) {
             setBoundingBox(makeBoundingBox(position()));
         }
+        if (MODEL.equals(accessor) || VARIANT.equals(accessor)) {
+            panes = null;   // read the windows again for the model and look they belong to
+        }
     }
 
     @Override
@@ -1089,6 +1471,12 @@ public class CarProp extends Entity {
         lidOpenO = lidOpen;
         rolledO = rolled;
         steerO = steer;
+        if (level().isClientSide()) {
+            wind();
+            barrelsO = barrels;
+            // about seven turns a second flat out
+            barrels = (barrels + turretSpin() * 2.2f) % (float) (Math.PI * 2000);
+        }
         if (isLocalInstanceAuthoritative() && getControllingPassenger() instanceof Player driver) {
             getInterpolation().cancel();
             if (aircraft()) {
@@ -1107,6 +1495,9 @@ public class CarProp extends Entity {
             setDeltaMovement(Vec3.ZERO);  // passengers but nobody at the wheel
         }
         if (level() instanceof ServerLevel server) {
+            if (!aircraft() && parts().isEmpty()) {
+                rollParts();
+            }
             if (entityData.get(OPEN) && server.getGameTime() % 10 == 0 && !beingSearched(server)) {
                 entityData.set(OPEN, false);
                 server.playSound(null, getX(), getY(), getZ(), SoundEvents.IRON_TRAPDOOR_CLOSE, SoundSource.BLOCKS, 0.6f, 0.7f);
@@ -1119,6 +1510,7 @@ public class CarProp extends Entity {
             lastPos = position();
             engine(server, getControllingPassenger());
             alarm(server);
+            Turret.tick(this, server);
             CarModels.Model model = CarModels.get(model());
             if (isVehicle() && model != null) {
                 keepOut(model);
@@ -1152,21 +1544,28 @@ public class CarProp extends Entity {
         if (m == null) {
             return;
         }
+        if (hoisted()) {
+            setDeltaMovement(Vec3.ZERO);    // wheels spinning in the air on the hoist's arms
+            return;
+        }
         double rad = Math.toRadians(getYRot());
         Vec3 v = getDeltaMovement();
         double fx = -Math.sin(rad), fz = Math.cos(rad);
         double speed = v.x * fx + v.z * fz, lx = v.x - fx * speed, lz = v.z - fz * speed;
-        double top = topSpeed();
+        CarParts.Drive d = partDrive();
+        double top = topSpeed() * d.top();
+        double accel = ACCEL * d.power(), brake = BRAKE * d.brake();
         boolean runs = engineOn(), ground = onGround();
+        boolean stopping = in.backward() && !in.forward() && speed > 0.02 || in.forward() && !in.backward() && speed < -0.02;
         if (runs && (in.backward() && !in.forward() && speed > 0.02 || in.forward() && !in.backward() && speed < -0.02
                 || in.jump() && Math.abs(speed) > 0.01)) {
             braking = 4;
         }
         if (ground) {
             if (in.forward() && !in.backward() && runs) {
-                speed = speed < -0.02 ? approach(speed, 0, BRAKE) : speed + ACCEL * Math.max(0, 1 - (speed / top) * (speed / top));
+                speed = speed < -0.02 ? approach(speed, 0, brake) : speed + accel * Math.max(0, 1 - (speed / top) * (speed / top));
             } else if (in.backward() && !in.forward() && runs) {
-                speed = speed > 0.02 ? approach(speed, 0, BRAKE) : speed - ACCEL * 0.6 * Math.max(0, 1 - (speed / REVERSE) * (speed / REVERSE));
+                speed = speed > 0.02 ? approach(speed, 0, brake) : speed - accel * 0.6 * Math.max(0, 1 - (speed / REVERSE) * (speed / REVERSE));
             } else {
                 speed = approach(speed * 0.99, 0, 0.002);
             }
@@ -1181,7 +1580,12 @@ public class CarProp extends Entity {
         float want = (in.left() ? 1 : 0) - (in.right() ? 1 : 0);
         float limit = (float) Math.toRadians(35 - 27 * Math.min(1, Math.abs(speed) / top));
         float target = want * limit;
-        steer += Mth.clamp(target - steer, -0.12f, 0.12f);
+        if (ground && Math.abs(speed) > 0.05) {
+            // flats and bent rims drag the car to one side, uneven brakes pull it while stopping
+            target += (float) ((d.pull() + (stopping && runs ? d.brakePull() : 0)) * 3);
+        }
+        float rate = (float) (0.12 * d.steer());
+        steer += Mth.clamp(target - steer, -rate, rate);
         float yaw = getYRot();
         if (ground) {
             double wheelbase = m.wheelbase > 0.5f ? m.wheelbase : m.size[2] * 0.6;
@@ -1195,7 +1599,7 @@ public class CarProp extends Entity {
         setYRot(yaw);
 
         // tyres keep most of the car going the way it points; less in the rain, little on the handbrake
-        double grip = !ground ? 0 : in.jump() ? 0.15 : level().isRainingAt(blockPosition()) ? 0.35 : 0.6;
+        double grip = (!ground ? 0 : in.jump() ? 0.15 : level().isRainingAt(blockPosition()) ? 0.35 : 0.6) * d.grip();
         rad = Math.toRadians(yaw);
         fx = -Math.sin(rad);
         fz = Math.cos(rad);
@@ -1297,6 +1701,9 @@ public class CarProp extends Entity {
             server.playSound(null, getX(), getY(), getZ(), CarSounds.CRASH, SoundSource.NEUTRAL,
                     (float) Math.min(1.5, speedBefore * 1.4), 0.9f + random.nextFloat() * 0.2f);
             Noise.emit(server, position(), 30);
+            if (!parts().isEmpty()) {
+                crashWear(speedBefore);
+            }
             speedBefore = 0;
         } else {
             speedBefore = lastSpeed;
@@ -1304,11 +1711,71 @@ public class CarProp extends Entity {
         lastSpeed = speed;
         strike(server, driver, m, speed);
         if (engineOn() && tickCount % 10 == 0) {
-            Noise.emit(server, position(), 18 + 30 * speed);
+            Noise.emit(server, position(), (18 + 30 * speed) * Math.min(2.5, partDrive().noise()));
+        }
+        if (!parts().isEmpty()) {
+            wearDriving(moved, speed);
         }
         if (engineOn() && tickCount % 5 == 0 && tickCount - mountedAt > 100) {
             driver.sendOverlayMessage(Component.literal(Math.round(speed * 72) + " km/h"));
         }
+    }
+
+    /**
+     * Wear from a tick of driving, by what the driver does with it: distance wears the tyres, the oil and the
+     * engine (more with the oil low, and hard near the top speed), hard slowing wears the brakes, and a
+     * jolt down onto the road (a kerb, a drop) wears the suspension.
+     */
+    private void wearDriving(Vec3 moved, double speed) {
+        double scale = com.zomboidcraft.ZcConfig.get().world.partWear;
+        if (scale <= 0) {
+            return;
+        }
+        String p = parts();
+        double km = speed / 1000 * scale;   // a block a metre
+        double oil = CarParts.get(p, CarParts.Part.OIL, 0) / 100.0;
+        double redline = speed > topSpeed() * 0.85 ? 3 : 1;
+        wear(CarParts.Part.ENGINE, 0, km * 0.4 * redline * (oil <= 0 ? 20 : oil < 0.25 ? 4 : 1)
+                * (CarParts.get(p, CarParts.Part.RADIATOR, 0) <= 0 || CarParts.get(p, CarParts.Part.FAN_BELT, 0) <= 0 ? 15 : 1));
+        wear(CarParts.Part.OIL, 0, km * 2);
+        wear(CarParts.Part.GEARBOX, 0, km * 0.3);
+        wear(CarParts.Part.EXHAUST, 0, km * 0.3);
+        wear(CarParts.Part.FUEL_PUMP, 0, km * 0.2);
+        wear(CarParts.Part.FAN_BELT, 0, km * 0.4);
+        for (int i = 0; i < 4; i++) {
+            wear(CarParts.Part.TIRE, i, km * 1.2);
+            wear(CarParts.Part.SUSPENSION, i, km * 0.3);
+        }
+        // the driver's moves arrive unevenly, so one tick's drop is capped at about a hard stop's
+        double slowed = Math.min(0.06, lastSpeedForWear - speed);
+        if (slowed > 0.02) {
+            for (int i = 0; i < 4; i++) {
+                wear(CarParts.Part.BRAKES, i, slowed * (i < 2 ? 0.8 : 0.5) * scale);
+            }
+            wear(CarParts.Part.BRAKE_FLUID, 0, slowed * 0.2 * scale);
+        }
+        if (moved.y < -0.3 && speed > 0.2) {
+            for (int i = 0; i < 4; i++) {
+                wear(CarParts.Part.SUSPENSION, i, -moved.y * 4 * scale);
+                wear(CarParts.Part.RIM, i, -moved.y * 1.5 * scale);
+            }
+        }
+        lastSpeedForWear = speed;
+    }
+
+    /** A crash at speed (blocks a tick) knocks the front about: lights, bonnet, radiator, steering, the front wheels. */
+    private void crashWear(double speed) {
+        double hit = Math.min(60, speed * speed * 60) * com.zomboidcraft.ZcConfig.get().world.partWear;
+        wear(CarParts.Part.HEADLIGHT, 0, hit * 1.5);
+        wear(CarParts.Part.HEADLIGHT, 1, hit * 1.5);
+        wear(CarParts.Part.BONNET, 0, hit);
+        wear(CarParts.Part.RADIATOR, 0, hit);
+        wear(CarParts.Part.STEERING, 0, hit * 0.5);
+        wear(CarParts.Part.ENGINE, 0, hit * 0.25);
+        wear(CarParts.Part.RIM, 0, hit * 0.5);
+        wear(CarParts.Part.RIM, 1, hit * 0.5);
+        wear(CarParts.Part.SUSPENSION, 0, hit * 0.4);
+        wear(CarParts.Part.SUSPENSION, 1, hit * 0.4);
     }
 
     /**
@@ -1464,13 +1931,18 @@ public class CarProp extends Entity {
      * (or in afterburner), so everyone's game draws it flying and plays its engines as for any aircraft.
      */
     public void flyby(Vec3 at, Vec3 velocity, boolean afterburner) {
+        double horizontal = Math.sqrt(velocity.x * velocity.x + velocity.z * velocity.z);
+        float yaw = (float) Math.toDegrees(Math.atan2(-velocity.x, velocity.z));
+        float nose = helicopter() ? -7 : (float) Math.toDegrees(Math.atan2(velocity.y, horizontal));
+        flyby(at, velocity, yaw, nose, 0, afterburner);
+    }
+
+    /** The same, its attitude given outright (an air strike's dive, turns and the helicopter's hover, WorldEvents.Event.place). */
+    public void flyby(Vec3 at, Vec3 velocity, float yaw, float nose, float bank, boolean afterburner) {
         flyby = true;
         noPhysics = true;
         Flight f = flight();
-        double horizontal = Math.sqrt(velocity.x * velocity.x + velocity.z * velocity.z);
-        float yaw = (float) Math.toDegrees(Math.atan2(-velocity.x, velocity.z));
-        float nose = f.kind == Flight.Kind.HELI ? -7 : (float) Math.toDegrees(Math.atan2(velocity.y, horizontal));
-        f.set(yaw, nose, 0);
+        f.set(yaw, nose, bank);
         f.vel = velocity;
         f.grounded = false;
         f.rpm = 1;
@@ -1480,6 +1952,8 @@ public class CarProp extends Entity {
         setYRot(yaw);
         setXRot(-nose);
         setDeltaMovement(velocity.scale(Flight.DT));
+        // how far the nose rides above the way it's going (the leading-edge flaps droop with it)
+        f.aoa = velocity.lengthSqr() < 1 ? 0 : (float) Math.atan2(-velocity.dot(f.up()), Math.max(0.1, velocity.dot(f.forward())));
         entityData.set(ENGINE, true);
         entityData.set(AIR_ATTITUDE, new Quaternionf(f.q));
         entityData.set(AIR_RPM, f.rpm);
@@ -1501,6 +1975,48 @@ public class CarProp extends Entity {
     private int flightTicks;
     /** Whether a catapult was pulling the jet last tick (for the call when it fires). */
     private boolean launching;
+
+    /** The parts string ({@link CarParts}), empty on a car that has none (aircraft, boats) or isn't rolled yet. */
+    public String parts() {
+        return entityData.get(PARTS);
+    }
+
+    public void setParts(String parts) {
+        entityData.set(PARTS, parts);
+    }
+
+    /** Server side: gives a road vehicle its parts the first time it ticks, scattered about the condition it was found in. */
+    private void rollParts() {
+        CarModels.Model m = CarModels.get(model());
+        if (parts().isEmpty() && CarParts.applies(m)) {
+            int overall = carCondition();
+            setParts(CarParts.roll(m, variant(), overall, new java.util.Random(getUUID().getMostSignificantBits() ^ 0x5eedL)));
+        }
+    }
+
+    /** Wears one part slot by amount (percent), stopping at broken (0); missing parts stay missing. */
+    public void wear(int slot, double amount) {
+        String p = parts();
+        int c = CarParts.get(p, slot);
+        if (c <= 0 || amount <= 0) {
+            return;
+        }
+        partWear[slot] += amount;
+        int whole = (int) partWear[slot];
+        if (whole > 0) {
+            partWear[slot] -= whole;
+            setParts(CarParts.set(p, slot, Math.max(0, c - whole)));
+        }
+    }
+
+    public void wear(CarParts.Part part, int index, double amount) {
+        wear(CarParts.slot(part, index), amount);
+    }
+
+    /** What the parts make of the drive; perfect for anything without them. */
+    public CarParts.Drive partDrive() {
+        return CarParts.drive(parts());
+    }
 
     public float fuel() {
         return entityData.get(FUEL);

@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/wheel_chock"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/wheel_chock",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/wheel_chock",
+   "part": "body"
+  }
  }
 }

@@ -192,8 +192,9 @@ public final class TrainCommand {
             }
             for (TrainRun run : l.trains) {
                 TrainCar.Pose p = run.pose(0);
-                sb.append(String.format("train %d at %d %d %d, %.1f b/s%s; ", run.index, Math.round(p.x()), Math.round(p.y()),
-                        Math.round(p.z()), run.speedPerSecond(), run.phase == TrainRun.Phase.DWELL ? " (stopped)" : ""));
+                sb.append(String.format("train %d at %d %d %d, %.1f b/s%s, %d dead riding unseen; ", run.index, Math.round(p.x()),
+                        Math.round(p.y()), Math.round(p.z()), run.speedPerSecond(), run.phase == TrainRun.Phase.DWELL ? " (stopped)" : "",
+                        run.passengers));
             }
             String text = sb.toString();
             ctx.getSource().sendSuccess(() -> Component.literal(text), false);

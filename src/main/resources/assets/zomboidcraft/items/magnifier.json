@@ -1,0 +1,40 @@
+{
+ "model": {
+  "type": "minecraft:select",
+  "property": "minecraft:component",
+  "component": "zomboidcraft:colour",
+  "cases": [
+   {
+    "when": "tan",
+    "model": {
+     "type": "minecraft:special",
+     "base": "zomboidcraft:item/weapon/part/magnifier",
+     "model": {
+      "type": "zomboidcraft:mesh",
+      "id": "att_magnifier_tan",
+      "part": "body",
+      "offset": [
+       8.0,
+       6.638,
+       9.104
+      ]
+     }
+    }
+   }
+  ],
+  "fallback": {
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/weapon/part/magnifier",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "att_magnifier",
+    "part": "body",
+    "offset": [
+     8.0,
+     6.638,
+     9.104
+    ]
+   }
+  }
+ }
+}

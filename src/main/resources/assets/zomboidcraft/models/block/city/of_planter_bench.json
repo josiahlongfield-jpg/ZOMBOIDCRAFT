@@ -1,0 +1,146 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bp_grass_a": "zomboidcraft:block/city/bp_grass_a",
+    "of_roses": "zomboidcraft:block/city/of_roses",
+    "of_slats": "zomboidcraft:block/city/of_slats",
+    "of_teak": "zomboidcraft:block/city/of_teak",
+    "particle": "zomboidcraft:block/city/of_slats"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        7,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#of_slats",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#of_slats",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#of_slats",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#of_slats",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#of_teak"
+        },
+        "down": {
+          "texture": "#of_teak",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        7,
+        2
+      ],
+      "to": [
+        14,
+        8,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bp_grass_a"
+        },
+        "south": {
+          "texture": "#bp_grass_a"
+        },
+        "east": {
+          "texture": "#bp_grass_a"
+        },
+        "west": {
+          "texture": "#bp_grass_a"
+        },
+        "up": {
+          "texture": "#bp_grass_a"
+        },
+        "down": {
+          "texture": "#bp_grass_a"
+        }
+      }
+    },
+    {
+      "from": [
+        3.5,
+        8,
+        3.5
+      ],
+      "to": [
+        12.5,
+        14,
+        12.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#of_roses"
+        },
+        "south": {
+          "texture": "#of_roses"
+        },
+        "east": {
+          "texture": "#of_roses"
+        },
+        "west": {
+          "texture": "#of_roses"
+        },
+        "up": {
+          "texture": "#of_roses"
+        },
+        "down": {
+          "texture": "#of_roses"
+        }
+      }
+    },
+    {
+      "from": [
+        5.5,
+        14,
+        5.5
+      ],
+      "to": [
+        10.5,
+        16,
+        10.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#of_roses"
+        },
+        "south": {
+          "texture": "#of_roses"
+        },
+        "east": {
+          "texture": "#of_roses"
+        },
+        "west": {
+          "texture": "#of_roses"
+        },
+        "up": {
+          "texture": "#of_roses",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#of_roses"
+        }
+      }
+    }
+  ]
+}

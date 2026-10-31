@@ -1,0 +1,110 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rl_steel": "zomboidcraft:block/city/rl_steel",
+    "rl_steel_flange": "zomboidcraft:block/city/rl_steel_flange",
+    "particle": "zomboidcraft:block/city/rl_steel"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        0,
+        5
+      ],
+      "to": [
+        11,
+        16,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rl_steel"
+        },
+        "south": {
+          "texture": "#rl_steel"
+        },
+        "east": {
+          "texture": "#rl_steel"
+        },
+        "west": {
+          "texture": "#rl_steel"
+        },
+        "up": {
+          "texture": "#rl_steel",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#rl_steel",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        0,
+        4
+      ],
+      "to": [
+        12,
+        2,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rl_steel_flange"
+        },
+        "south": {
+          "texture": "#rl_steel_flange"
+        },
+        "east": {
+          "texture": "#rl_steel_flange"
+        },
+        "west": {
+          "texture": "#rl_steel_flange"
+        },
+        "up": {
+          "texture": "#rl_steel_flange"
+        },
+        "down": {
+          "texture": "#rl_steel_flange",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        14,
+        4
+      ],
+      "to": [
+        12,
+        16,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rl_steel_flange"
+        },
+        "south": {
+          "texture": "#rl_steel_flange"
+        },
+        "east": {
+          "texture": "#rl_steel_flange"
+        },
+        "west": {
+          "texture": "#rl_steel_flange"
+        },
+        "up": {
+          "texture": "#rl_steel_flange",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#rl_steel_flange"
+        }
+      }
+    }
+  ]
+}

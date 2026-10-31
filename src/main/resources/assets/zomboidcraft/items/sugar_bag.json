@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/sugar_bag"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/sugar_bag",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/sugar_bag",
+   "part": "body"
+  }
  }
 }

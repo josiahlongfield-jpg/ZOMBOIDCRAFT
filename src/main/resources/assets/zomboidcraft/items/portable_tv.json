@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/portable_tv"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/portable_tv",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/portable_tv",
+   "part": "body"
+  }
  }
 }

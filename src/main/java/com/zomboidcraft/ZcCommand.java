@@ -46,6 +46,13 @@ public final class ZcCommand {
                                                 .suggests((ctx, b) -> SharedSuggestionProvider.suggest(CarModels.variants(), b))
                                                 .executes(ctx -> car(ctx, StringArgumentType.getString(ctx, "model"),
                                                         StringArgumentType.getString(ctx, "variant"))))))
+                        .then(Commands.literal("hoist").executes(ZcCommand::hoist))
+                        .then(Commands.literal("carparts").executes(ctx -> carParts(ctx, null, -1))
+                                .then(Commands.argument("part", StringArgumentType.word())
+                                        .suggests((ctx, b) -> SharedSuggestionProvider.suggest(com.zomboidcraft.world.cars.CarParts.names(), b))
+                                        .then(Commands.argument("condition", IntegerArgumentType.integer(-1, 100))
+                                                .executes(ctx -> carParts(ctx, StringArgumentType.getString(ctx, "part"),
+                                                        IntegerArgumentType.getInteger(ctx, "condition"))))))
                         .then(Commands.literal("aircraft")
                                 .executes(ctx -> aircraft(ctx, "jet_corvid"))
                                 .then(Commands.argument("model", StringArgumentType.word())
@@ -74,7 +81,7 @@ public final class ZcCommand {
                         .then(Commands.literal("config")
                                 .executes(ZcCommand::listConfig)
                                 .then(Commands.literal("reload").executes(ctx -> {
-                                    ZcConfig.load();
+                                    com.zomboidcraft.sandbox.Sandbox.reloadConfig();
                                     ctx.getSource().sendSuccess(() -> Component.literal("Reloaded config/zomboidcraft.json"), true);
                                     return 1;
                                 }))
@@ -198,10 +205,62 @@ public final class ZcCommand {
     }
 
     /** Drops a car side-on a few blocks in front of you: a random one, or the model and state named. */
+    /**
+     * A two-post car lift set down in front of you, its bay running the way you face (squared to the
+     * compass), centred on the block line so its posts stand in whole blocks: for trying it out, and
+     * for building your own garage.
+     */
+    private static int hoist(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        net.minecraft.server.level.ServerPlayer player = ctx.getSource().getPlayerOrException();
+        float yaw = Math.round(player.getYRot() / 90f) * 90f;
+        net.minecraft.world.phys.Vec3 ahead = net.minecraft.world.phys.Vec3.directionFromRotation(0, yaw).scale(4.5);
+        com.zomboidcraft.world.cars.CarHoist hoist = com.zomboidcraft.world.cars.Cars.HOIST.create(player.level(),
+                net.minecraft.world.entity.EntitySpawnReason.COMMAND);
+        if (hoist == null) {
+            return 0;
+        }
+        double x = Math.round(player.getX() + ahead.x), z = Math.round(player.getZ() + ahead.z);
+        hoist.snapTo(x, Math.floor(player.getY() + 0.01), z, yaw, 0);
+        player.level().addFreshEntity(hoist);
+        ctx.getSource().sendSuccess(() -> Component.literal("A car lift, its bay running the way you face. Drive a car in between the posts, "
+                + "then G on the control box."), false);
+        return 1;
+    }
+
+    /**
+     * The nearest car's parts (within 8 blocks), listed; or one set (part name, "tire" for all four, "all" for
+     * everything) to a condition, -1 to take it off. For trying out worn and missing parts without driving for days.
+     */
+    private static int carParts(CommandContext<CommandSourceStack> ctx, String part, int condition) throws CommandSyntaxException {
+        net.minecraft.server.level.ServerPlayer player = ctx.getSource().getPlayerOrException();
+        com.zomboidcraft.world.cars.CarProp car = player.level().getEntitiesOfClass(com.zomboidcraft.world.cars.CarProp.class,
+                        player.getBoundingBox().inflate(8), c -> !c.parts().isEmpty()).stream()
+                .min(java.util.Comparator.comparingDouble(c -> c.distanceToSqr(player))).orElse(null);
+        if (car == null) {
+            ctx.getSource().sendFailure(Component.literal("No car with parts within 8 blocks."));
+            return 0;
+        }
+        String parts = car.parts();
+        if (part != null) {
+            java.util.List<Integer> slots = com.zomboidcraft.world.cars.CarParts.slots(part);
+            if (slots.isEmpty()) {
+                ctx.getSource().sendFailure(Component.literal("No part called " + part + "."));
+                return 0;
+            }
+            for (int slot : slots) {
+                parts = com.zomboidcraft.world.cars.CarParts.set(parts, slot, condition);
+            }
+            car.setParts(parts);
+        }
+        String shown = parts;
+        ctx.getSource().sendSuccess(() -> Component.literal(com.zomboidcraft.world.cars.CarParts.describe(car.model(), shown)), false);
+        return 1;
+    }
+
     private static int car(CommandContext<CommandSourceStack> ctx, String model, String variant) throws CommandSyntaxException {
         ServerPlayer player = ctx.getSource().getPlayerOrException();
         java.util.Random rng = new java.util.Random();
-        CarModels.Model m = model == null ? CarModels.pick(rng, c -> !c.boat() && !c.farm()) : CarModels.get(model);
+        CarModels.Model m = model == null ? CarModels.pick(rng, c -> !c.boat() && !c.farm() && !c.military()) : CarModels.get(model);
         if (m == null || (variant != null && !CarModels.variants().contains(variant))) {
             ctx.getSource().sendFailure(Component.literal("Unknown car: " + model + (variant == null ? "" : " " + variant)));
             return 0;
@@ -254,17 +313,20 @@ public final class ZcCommand {
         return 1;
     }
 
-    /** /zc event jet|heli|siren|explosion: starts one of the shared world events around you now. */
+    /**
+     * /zc event jet|heli|siren|explosion|strafe|bomb|hunt: starts one of the shared world events around you now (a
+     * strike with no crowd of zombies about makes its run at the ground ahead of you).
+     */
     private static int worldEvent(CommandContext<CommandSourceStack> ctx, String name) throws CommandSyntaxException {
         ServerPlayer player = ctx.getSource().getPlayerOrException();
         com.zomboidcraft.world.events.WorldEvents.Kind kind;
         try {
             kind = com.zomboidcraft.world.events.WorldEvents.Kind.valueOf(name.toUpperCase(java.util.Locale.ROOT));
         } catch (IllegalArgumentException e) {
-            ctx.getSource().sendFailure(Component.literal("Unknown event: " + name + " (jet, heli, siren or explosion)"));
+            ctx.getSource().sendFailure(Component.literal("Unknown event: " + name + " (jet, heli, siren, explosion, strafe, bomb or hunt)"));
             return 0;
         }
-        var e = com.zomboidcraft.world.events.WorldEvents.start(player.level().getServer().overworld(), kind, player);
+        var e = com.zomboidcraft.world.events.WorldEvents.start(player.level().getServer().overworld(), kind, player, true);
         ctx.getSource().sendSuccess(() -> Component.literal(String.format("Started %s at %d %d %d", name, (int) e.x(), (int) e.y(),
                 (int) e.z())), false);
         return 1;
@@ -276,10 +338,12 @@ public final class ZcCommand {
             ctx.getSource().sendFailure(Component.literal("The mod's weather is off (weather.enabled)"));
             return 0;
         }
+        double air = com.zomboidcraft.world.weather.Climate.airTemp(ctx.getSource().getLevel(),
+                net.minecraft.core.BlockPos.containing(ctx.getSource().getPosition()));
         ctx.getSource().sendSuccess(() -> Component.literal(String.format(
-                "Weather: %s for %d more seconds | rain %.2f thunder %.2f fog %.2f wind %.2f moon %.2f hail %.2f",
+                "Weather: %s for %d more seconds | rain %.2f thunder %.2f fog %.2f wind %.2f moon %.2f hail %.2f | air %.0f°C",
                 WeatherDirector.kind().id, WeatherDirector.secondsLeft(), w.rain(), w.thunder(), w.fog(), w.wind(),
-                w.moon(), w.hail())), false);
+                w.moon(), w.hail(), air)), false);
         return 1;
     }
 
@@ -318,6 +382,7 @@ public final class ZcCommand {
     private static int setConfig(CommandContext<CommandSourceStack> ctx, String key, String value) {
         try {
             ZcConfig.setValue(key, value);
+            com.zomboidcraft.sandbox.Sandbox.configChanged(key);
             ctx.getSource().sendSuccess(() -> Component.literal(key + " set to " + ZcConfig.getValue(key)), true);
             return 1;
         } catch (IllegalArgumentException e) {

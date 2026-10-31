@@ -862,8 +862,8 @@ def plugs(m):
 
 
 def belt(m):
-    m.rod(0, 0.8, 5.0, 'rubber')
-    m.rod(0.8, 0.82, 4.5, 'core')
+    # a rubber loop stood on its edge, ribbed inside
+    sh.torus(m, (0, 4.6), 4.3, 0.6, 1.2, 'rubber')
 
 
 def blades(m):

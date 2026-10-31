@@ -21,28 +21,32 @@ import net.minecraft.world.item.ItemStack;
  * field kit's menu and the plain inventory menu (the kit screen's) send their bench clicks here as menu buttons.
  */
 public final class Bench {
-    /** The field kit's cursor clicks: BENCH + gun slot * 8 + socket. */
+    /** The field kit's cursor clicks: BENCH + gun slot * SOCKETS + socket. */
     public static final int BENCH = 1000;
-    /** Take a part off into your bags: TAKE_OFF + gun slot * 8 + socket. */
+    /** Take a part off into your bags: TAKE_OFF + gun slot * SOCKETS + socket. */
     public static final int TAKE_OFF = 500_000;
-    /** Fit a part straight from a carried slot: FIT + (part slot * 256 + gun slot) * 8 + socket. */
+    /** Fit a part straight from a carried slot: FIT + (part slot * 256 + gun slot) * SOCKETS + socket. */
     public static final int FIT = 1_000_000;
+    /** Room for each gun's sockets in a button id: more than there are attachment slots. */
+    static final int SOCKETS = 16;
 
     /** Mend a weapon with what's in another carried slot: REPAIR + material slot * 256 + weapon slot. */
     public static final int REPAIR = 100_000_000;
 
     /** See to a wound from the health page: TREAT + treatment * 8 + body part. */
     public static final int TREAT = 200_000_000;
+    /** Patching and ripping clothes (clothing/Tailoring): TAILOR + action * Tailoring.SLOTS + menu slot. */
+    public static final int TAILOR = 300_000_000;
 
     /** Where the gear slots start in both menus: right after Minecraft's off hand. */
     static final int FIRST_GEAR = InventoryMenu.SHIELD_SLOT + 1;
 
     public static int cursorButton(int gunSlot, Attachments.Slot socket) {
-        return BENCH + gunSlot * 8 + socket.ordinal();
+        return BENCH + gunSlot * SOCKETS + socket.ordinal();
     }
 
     public static int takeOffButton(int gunSlot, Attachments.Slot socket) {
-        return TAKE_OFF + gunSlot * 8 + socket.ordinal();
+        return TAKE_OFF + gunSlot * SOCKETS + socket.ordinal();
     }
 
     public static int repairButton(int materialSlot, int weaponSlot) {
@@ -54,7 +58,7 @@ public final class Bench {
     }
 
     public static int fitButton(int partSlot, int gunSlot, Attachments.Slot socket) {
-        return FIT + (partSlot * 256 + gunSlot) * 8 + socket.ordinal();
+        return FIT + (partSlot * 256 + gunSlot) * SOCKETS + socket.ordinal();
     }
 
     /**
@@ -63,6 +67,9 @@ public final class Bench {
      */
     public static boolean click(AbstractContainerMenu menu, Player player, int id, int carriedEnd) {
         var sockets = Attachments.Slot.values();
+        if (id >= TAILOR) {
+            return com.zomboidcraft.clothing.Tailoring.click(menu, player, id - TAILOR, carriedEnd);
+        }
         if (id >= TREAT) {
             int n = id - TREAT;
             if (n / 8 >= Treatment.Kind.values().length || n % 8 >= Body.Region.values().length) return false;
@@ -79,18 +86,18 @@ public final class Bench {
         }
         if (id >= FIT) {
             int n = id - FIT;
-            int socket = n % 8;
-            int gun = n / 8 % 256;
-            int part = n / 8 / 256;
+            int socket = n % SOCKETS;
+            int gun = n / SOCKETS % 256;
+            int part = n / SOCKETS / 256;
             return socket < sockets.length && fit(menu, player, gun, sockets[socket], part, carriedEnd);
         }
         if (id >= TAKE_OFF) {
             int n = id - TAKE_OFF;
-            return n % 8 < sockets.length && takeOff(menu, player, n / 8, sockets[n % 8], carriedEnd);
+            return n % SOCKETS < sockets.length && takeOff(menu, player, n / SOCKETS, sockets[n % SOCKETS], carriedEnd);
         }
         if (id >= BENCH) {
             int n = id - BENCH;
-            return n % 8 < sockets.length && cursor(menu, player, n / 8, sockets[n % 8], carriedEnd);
+            return n % SOCKETS < sockets.length && cursor(menu, player, n / SOCKETS, sockets[n % SOCKETS], carriedEnd);
         }
         return false;
     }

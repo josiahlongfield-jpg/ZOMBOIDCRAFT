@@ -32,6 +32,8 @@ import art as A  # noqa: E402
 import shapes as sh  # noqa: E402
 import gen_java  # noqa: E402
 import wave2  # noqa: E402
+import wave3  # noqa: E402
+import wave4  # noqa: E402
 
 NS = 'zomboidcraft'
 ASSETS = ROOT / 'src/main/resources/assets/zomboidcraft'
@@ -327,6 +329,10 @@ DEF_LOOK = {
     'wax': A.flat('#efe6d0', 0.04), 'dial': A.flat('#efe6d0'), 'wire': A.steel, 'leather': lambda f: P.leather(f),
     'stone': A.flat('#8a8a84', 0.12), 'wicker': A.flat('#a8804a', 0.15), 'white': A.flat('#efeae0'),
     'head': A.flat('#2f6a3e'), 'bill': A.flat('#d8a020'), 'cardboard': A.cardboard,
+    # wave 3 parts
+    'gold': wave3.GOLD, 'silver': wave3.SILVER, 'gem': A.flat('#e8f0f0', 0.05), 'felt': A.flat('#7a1a2a'),
+    'fur': A.fabric('#9a6a3a'), 'hair': A.flat('#5a3a1a'), 'pearl': A.flat('#f2eee4', 0.04), 'cash': A.flat('#9ab08a'),
+    'mould': A.flat('#8aa86a'),
 }
 
 
@@ -433,7 +439,7 @@ ITEMS = {
     'lettuce': it(S(sh.head_veg, r=2.6), base='#8ab84a', leaf=A.skin('#6aa03a')),
     'tomato': it(sh.tomato, base='#c8321f'),
     'potato': it(sh.potato, base='#b0885a', skin=A.skin('#b0885a', '#6a4a2a')),
-    'onion': it(sh.onion, base='#b8763a'),
+    'onion': it(sh.onion, base='#a47a44'),
     'carrot': it(sh.carrot, base='#e0782a'),
     'cabbage': it(S(sh.head_veg, r=3.0), base='#a8c87a', leaf=A.skin('#7aa05a')),
     'eggs_carton': it(egg_carton, 'EGGS', '#d8d0bc', band=BLUE, word_ink='#f0e8d8', side=A.flat('#d8d0bc')),
@@ -631,6 +637,8 @@ ITEMS = {
     'can_opener': it(can_opener, handle=A.plastic('#a8281f'), metal=A.steel),
 }
 ITEMS.update(wave2.table(it))
+ITEMS.update(wave3.table(it))
+ITEMS.update(wave4.table(it))
 
 
 # ================================================================== output
@@ -693,7 +701,9 @@ def tab_of(rows):
              'Drinks': 'drinks', 'Medical': 'medical', 'Hygiene & household': 'hygiene',
              'Kitchen & cooking': 'kitchen', 'Hand tools': 'tools', 'Building & materials': 'materials',
              'Electrical & electronics': 'electrical', 'Light & fire': 'light', 'Outdoors, camping & farm': 'camping',
-             'Vehicle & fuel': 'car'}
+             'Vehicle & fuel': 'car', 'Books, magazines & papers': 'books', 'Keys, cards & documents': 'keys',
+             'Valuables & trade goods': 'valuables', 'Toys, hobbies & personal': 'toys', 'Military & service': 'service',
+             'Junk & scrap': 'junk'}
     return {r['id']: short.get(r['cat'], 'misc') for r in rows}
 
 
@@ -730,7 +740,12 @@ def main():
                 else:
                     M.dump({'gui_light': 'front', 'textures': {'0': f'{NS}:{tex}', 'particle': f'{NS}:{tex}'},
                             'elements': els, 'display': disp}, ASSETS / f'models/item/loot/{n}.json')
-                    M.dump({'model': kit.ref(f'loot/{n}')}, ASSETS / f'items/{n}.json')
+                    if (ASSETS / f'meshes/loot/{n}.zmesh').exists():     # drawn as a toon mesh (mesh.py)
+                        M.dump({'model': {'type': 'minecraft:special', 'base': f'{NS}:item/loot/{n}',
+                                          'model': {'type': f'{NS}:mesh', 'id': f'loot/{n}', 'part': 'body'}}},
+                               ASSETS / f'items/{n}.json')
+                    else:
+                        M.dump({'model': kit.ref(f'loot/{n}')}, ASSETS / f'items/{n}.json')
             print(f'{sheet}: {len(gn)} items, {T}px  ({time.time() - t0:.0f}s)')
     if preview:
         (preview / 'manifest.json').write_text(json.dumps(manifest))

@@ -157,13 +157,25 @@ public final class Interactables {
         float x = (float) (s.at().x - cam.x), y = (float) (s.at().y - cam.y), z = (float) (s.at().z - cam.z);
         float size = s.size() > 0 ? s.size() : SIZE;
         boolean shaders = CarLights.shaderPackOn();
-        context.submitNodeCollector().submitCustomGeometry(context.poseStack(), CarLights.glowType(shaders),
+        context.submitNodeCollector().submitCustomGeometry(context.poseStack(), type(shaders),
                 (pose, out) -> dot(x, y, z, -x, -y, -z, size, shaders, pose, out));
     }
 
+    /** A solid round dot, for shader packs: Photon drops beacon-beam pixels fainter than half and adds no glow. */
+    private static final net.minecraft.resources.Identifier SOLID = com.zomboidcraft.ZomboidCraft.id("textures/effect/air_dot.png");
+
     /**
-     * Draws a dot at (x, y, z) facing back along (tx, ty, tz) toward the camera: a bright core in a soft glow,
-     * pulled a few centimetres toward the camera so it isn't lost in what it's on.
+     * What dots are drawn with ({@link #dot} must be given the same shaders flag): a soft added glow, or under a
+     * shader pack a solid dot drawn the way beacon beams are, which the packs show bright.
+     */
+    public static net.minecraft.client.renderer.rendertype.RenderType type(boolean shaders) {
+        return shaders ? net.minecraft.client.renderer.rendertype.RenderTypes.beaconBeam(SOLID, false) : CarLights.glowType(false);
+    }
+
+    /**
+     * Draws a dot at (x, y, z) facing back along (tx, ty, tz) toward the camera: a bright core in a soft glow (under a
+     * shader pack, one solid dot the size of the glow's bright part), pulled a few centimetres toward the camera so
+     * it isn't lost in what it's on. Draw it with {@link #type}.
      */
     public static void dot(float x, float y, float z, float tx, float ty, float tz, float size, boolean shaders,
                            PoseStack.Pose pose, VertexConsumer out) {
@@ -178,8 +190,25 @@ public final class Interactables {
         ty /= len;
         tz /= len;
         float cx = x + tx * 0.03f, cy = y + ty * 0.03f, cz = z + tz * 0.03f;
-        halo(cx, cy, cz, tx, ty, tz, size * 2.2f, pose, out, CarLights.shade(GREEN, 0.55f, shaders));
-        halo(cx, cy, cz, tx, ty, tz, size, pose, out, CarLights.shade(GREEN, 1f, shaders));
+        if (shaders) {
+            halo(cx, cy, cz, tx, ty, tz, size * 1.3f, pose, out, CarLights.shade(GREEN, 1f, false));
+            return;
+        }
+        halo(cx, cy, cz, tx, ty, tz, size * 2.2f, pose, out, CarLights.shade(GREEN, 0.55f, false));
+        halo(cx, cy, cz, tx, ty, tz, size, pose, out, CarLights.shade(GREEN, 1f, false));
+    }
+
+    /**
+     * A flat disc of light in any colour, facing back along t (toward the camera): the same draw as the dots, for a
+     * flash (the Warthog's minigun). Draw it with {@link #type}.
+     */
+    public static void disc(float x, float y, float z, float tx, float ty, float tz, float half, int colour,
+                            PoseStack.Pose pose, VertexConsumer out) {
+        float len = (float) Math.sqrt(tx * tx + ty * ty + tz * tz);
+        if (len < 0.05f) {
+            return;
+        }
+        halo(x, y, z, tx / len, ty / len, tz / len, half, pose, out, colour);
     }
 
     private static void halo(float cx, float cy, float cz, float tx, float ty, float tz, float half, PoseStack.Pose pose,

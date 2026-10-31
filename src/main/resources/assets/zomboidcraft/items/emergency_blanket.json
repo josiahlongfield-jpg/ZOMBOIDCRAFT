@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/emergency_blanket"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/emergency_blanket",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/emergency_blanket",
+   "part": "body"
+  }
  }
 }

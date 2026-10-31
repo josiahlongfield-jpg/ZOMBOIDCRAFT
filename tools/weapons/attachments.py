@@ -3,6 +3,9 @@ top face of the rail it clamps to, +y away from the rail, the muzzle end toward 
 the bore line with the origin at the end of the barrel. kit.py turns each one onto whichever rail it's
 fitted to, so one drawing serves every gun.
 """
+import json
+from pathlib import Path
+
 import numpy as np
 
 import model as M
@@ -173,6 +176,16 @@ def foregrip(m):
     b.rod(3.40, 3.68, 0.50, 'poly', axis=1, at=(0.0, 0.0))
 
 
+def launcher(m):
+    """An underbarrel 40mm grenade launcher (drawn as the bought rifle 2's launcher; this sets its size): a rail mount,
+    the tube under the barrel, and its trigger housing behind."""
+    b = Inch(m)
+    b.box((-0.48, 0.0, -3.0), (0.48, 0.34, 2.0), 'anod')
+    jaws(b, -3.0, 2.0)
+    b.rod(-7.0, 2.2, 0.95, 'anod', axis=2, at=(0.0, 1.30))
+    b.box((-0.45, 2.20, 1.2), (0.45, 3.40, 2.6), 'poly')
+
+
 def light(m):
     """A scout weapon light (SureFire M600 style) on an offset mount."""
     b = Inch(m)
@@ -317,44 +330,36 @@ def look(wear=0.4):
 
 LOOK = look()
 
-ALL = [
-    Att('red_dot', 'red_dot_sight', 'Red Dot Sight', 'optic', red_dot, LOOK, sight=(0.0, CO_WITNESS, 0.0),
-        note='Steadier aim'),
-    Att('holo', 'holo_sight', 'Holographic Sight', 'optic', holo, LOOK, sight=(0.0, CO_WITNESS, 0.0),
-        note='Steadier aim, quick to pick up'),
-    Att('scope_4x', 'scope_4x', '4x Scope', 'optic', scope_4x, LOOK, sight=(0.0, SCOPE_H, 4.6),
-        note='Four times zoom when aiming'),
-    Att('suppressor', 'rifle_suppressor', 'Rifle Suppressor', 'muzzle', suppressor, LOOK,
-        note='Much quieter shots'),
-    Att('foregrip', 'foregrip', 'Vertical Foregrip', 'underbarrel', foregrip, LOOK, note='Less recoil'),
-    Att('light', 'weapon_light', 'Weapon Light', 'side_rail', light, LOOK, note='Lights the way ahead'),
-    Att('laser', 'laser_sight', 'Laser Sight', 'right_rail', laser, LOOK, note='Tighter shots from the hip'),
-]
+# Every attachment is a bought mesh now (Josiah 2026-10-29: the attachments the bought guns came with, and the two
+# attachment packs, all interchangeable): tools/meshguns/attachments.json says which mesh each one is, and skin.py
+# draws it on the gun. What's built here is only its reach (a plain box round the mesh), for the weapon screen's
+# ghost and the inventory fit, and where its lens is, for the eye line. The laser has no mesh yet, so it keeps its
+# drawing until one is bought.
+_MESHGUNS = Path(__file__).resolve().parent.parent / 'meshguns'
+MESHES = json.loads((_MESHGUNS / 'attachments.json').read_text())
+BOUNDS = json.loads((_MESHGUNS / 'bounds.json').read_text())
+DRAWN = {'laser': laser}
+
+
+def mesh_box(mesh, scale=1.0):
+    """A build drawing the mesh's reach as one box (item pixels in its clamp's frame, so inches are pixels / IN)."""
+    lo, hi = (np.asarray(b, float) * scale / IN for b in BOUNDS[mesh][:2])
+
+    def build(m):
+        Inch(m).box(tuple(lo), tuple(hi), 'anod')
+    return build
+
+
+def mesh_sight(mesh, scale=1.0):
+    """Where the eye lines up through a mesh optic (inches, its clamp's frame): its lens's middle."""
+    b = BOUNDS.get(mesh)
+    return tuple(float(x) * scale / IN for x in b[2]) if b and len(b) > 2 else None
+
+
+ALL = []
+for _key, _a in MESHES.items():
+    _build = mesh_box(_a['mesh']) if _a['mesh'] else DRAWN[_key]
+    ALL.append(Att(_key, _a['item'], _a['title'], _a['slot'], _build, LOOK,
+                   sight=mesh_sight(_a['mesh']) if _a['slot'] in ('optic', 'magnifier') and _a['mesh'] else None,
+                   note=_a.get('note', '')))
 BY_KEY = {a.key: a for a in ALL}
-
-
-def scope_overlay(path, T=1024):
-    """What you see looking through the 4x scope: a round eyepiece that darkens at its rim, a duplex
-    reticle (heavy posts that thin to fine hairs at the centre), and black all round. The game stretches
-    it to the screen's height and fills the sides with the same black."""
-    ss = 3
-    n = T * ss
-    yy, xx = np.mgrid[0:n, 0:n]
-    c = (n - 1) / 2
-    dx, dy = (xx - c) / n, (yy - c) / n
-    r = np.hypot(dx, dy)
-    R, inner = 0.46, 0.12               # eyepiece radius, where the posts stop (both as shares of the side)
-    heavy, fine = 0.0062, 0.0016        # half-widths of the posts and the hairs
-    black = 0.02
-    alpha = np.clip((r / R - 0.84) / 0.16, 0, 1) ** 1.6 * 0.88     # the rim shadow
-    ax, ay = np.abs(dx), np.abs(dy)
-    post = ((ay < heavy) & (ax > inner)) | ((ax < heavy) & (ay > inner))
-    hair = ((ay < fine) & (ax <= inner)) | ((ax < fine) & (ay <= inner))
-    alpha = np.where(post | hair, 0.97, alpha)
-    alpha = np.where(r >= R, 1.0, alpha)
-    alpha = alpha.reshape(T, ss, T, ss).mean(axis=(1, 3))
-    img = np.zeros((T, T, 4))
-    img[..., :3] = black
-    img[..., 3] = alpha
-    path.parent.mkdir(parents=True, exist_ok=True)
-    M.save_png(img, path)

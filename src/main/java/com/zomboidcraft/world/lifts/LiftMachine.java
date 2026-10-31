@@ -33,6 +33,8 @@ public class LiftMachine extends BlockEntity {
 
     private LiftShaft shaft;
     private int retry;
+    /** The machines ticking now, for /zc lift list and call. */
+    static final java.util.Set<LiftMachine> LOADED = java.util.Collections.newSetFromMap(new java.util.WeakHashMap<>());
     private boolean scanned;
     /** The car's floor height, last tick's, its speed (blocks a tick, up positive). */
     double y = Double.NaN, yO = Double.NaN, v;
@@ -106,6 +108,7 @@ public class LiftMachine extends BlockEntity {
     // ------------------------------------------------------------------ running
 
     void tick(ServerLevel level) {
+        LOADED.add(this);
         if (!scanned) {
             if (retry-- > 0) {
                 return;
@@ -307,7 +310,9 @@ public class LiftMachine extends BlockEntity {
         BlockPos a = shaft.door(at, 0), c = shaft.door(at, shaft.w - 1);
         AABB box = new AABB(Math.min(a.getX(), c.getX()), a.getY(), Math.min(a.getZ(), c.getZ()),
                 Math.max(a.getX(), c.getX()) + 1, a.getY() + 2, Math.max(a.getZ(), c.getZ()) + 1).deflate(0.02);
-        return !level.getEntities((Entity) null, box, e -> !(e instanceof LiftCar) && !e.isSpectator() && e.isAlive()).isEmpty();
+        // standing in the doorway itself, not just brushing it from inside the car or the landing
+        return !level.getEntities((Entity) null, box, e -> !(e instanceof LiftCar) && !e.isSpectator() && e.isAlive()
+                && box.contains(e.getX(), box.minY + 0.5, e.getZ())).isEmpty();
     }
 
     /** Opens or shuts a landing's doors (the blocks: while they slide the car draws them). */
@@ -390,6 +395,10 @@ public class LiftMachine extends BlockEntity {
             return;
         }
         calls[i] = true;
+        // a floor chosen with the doors open: they shut soon, as a real car's do
+        if (phase == OPEN) {
+            hold = Math.min(hold, 30);
+        }
         setChanged();
     }
 
@@ -437,6 +446,30 @@ public class LiftMachine extends BlockEntity {
 
     int phase() {
         return phase;
+    }
+
+    @Override
+    public void setRemoved() {
+        super.setRemoved();
+        LOADED.remove(this);
+    }
+
+    /** One line on the lift for /zc lift list: where it is, its floors, where the car is and what it's doing. */
+    String describe() {
+        BlockPos m = getBlockPos();
+        String where = m.getX() + " " + m.getY() + " " + m.getZ();
+        if (shaft == null) {
+            return "lift at " + where + ": no shaft found yet (retry in " + Math.max(0, retry) + " ticks)";
+        }
+        return String.format(java.util.Locale.ROOT, "lift at %s: %d floors, car y %.2f at %d, going %d, phase %d, doors %.2f, calls %s, car entity %s",
+                where, shaft.landings.length, y, at, dir, phase, doors, callsString(), car != null && !car.isRemoved() ? "yes" : "no");
+    }
+
+    /** Calls the car to its top floor (or the bottom one if it's at the top): /zc lift call. */
+    void callFar(ServerLevel level) {
+        if (shaft != null) {
+            hallCall(level, at == shaft.landings.length - 1 ? 0 : shaft.landings.length - 1);
+        }
     }
 
     // ------------------------------------------------------------------ saving

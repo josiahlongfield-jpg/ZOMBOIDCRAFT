@@ -1131,6 +1131,8 @@ import power  # noqa: E402
 power.register(sys.modules[__name__])
 import market  # noqa: E402
 market.register(sys.modules[__name__])
+import harvestman_den  # noqa: E402
+harvestman_den.register(sys.modules[__name__])
 import waterfront  # noqa: E402
 waterfront.register(sys.modules[__name__])
 import tents  # noqa: E402
@@ -1185,6 +1187,10 @@ import fleet  # noqa: E402
 fleet.register(sys.modules[__name__])
 import ramp  # noqa: E402
 ramp.register(sys.modules[__name__])
+import lab  # noqa: E402
+lab.register(sys.modules[__name__])
+import spore  # noqa: E402
+spore.register(sys.modules[__name__])
 import airside  # noqa: E402
 airside.register(sys.modules[__name__])
 import armyfield  # noqa: E402

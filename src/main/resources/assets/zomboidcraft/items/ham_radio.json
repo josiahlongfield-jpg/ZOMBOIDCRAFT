@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/ham_radio"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/ham_radio",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/ham_radio",
+   "part": "body"
+  }
  }
 }

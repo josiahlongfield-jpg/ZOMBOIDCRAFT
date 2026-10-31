@@ -106,6 +106,7 @@ public final class Population {
             cap = -1;
             islandPlaces = null;
             islandCount = null;
+            islandSeen = -1;
             Census.clear();
         });
     }
@@ -183,7 +184,10 @@ public final class Population {
             for (int i = 0; i < places.size(); i++) {
                 Place p = places.get(i);
                 boolean isle = county.island(p.x0 + p.width() / 2, p.z0 + p.depth() / 2);
-                Census.Count c = isle ? island(county, gen, minY, maxY) : Census.get(gen, p, minY, maxY);
+                Census.Count c = Census.get(gen, p, minY, maxY);
+                if (c != null && isle) {
+                    c = island(county);
+                }
                 if (c == null) {
                     return false;
                 }
@@ -206,6 +210,7 @@ public final class Population {
         RandomSource random = RandomSource.create(level.getSeed() ^ (bx * 341873128712L + bz * 132897987541L) ^ (old == null ? 0 : old.day()));
         long seed = level.getSeed();
         double empty = Math.min(0.95, Math.max(0, cfg.emptyHouses));
+        double hot = cfg.hotspots ? hotspot(sections) : 1;
         int[][] out = {new int[32]};
         int[] n = {0};
         List<BlockPos> clear = clearNear(level, bx, bz);
@@ -218,7 +223,7 @@ public final class Population {
             for (int i = 0; i < places.size(); i++) {
                 Place p = places.get(i);
                 if (p.contains(x, z, 0)) {
-                    rate = indoor ? rin[i] : rout[i];
+                    rate = indoor ? rin[i] * hot : rout[i];
                     if (indoor && empty > 0 && Budgets.houses(p)) {
                         if (emptyHouse(seed, x, z, empty)) {
                             return;
@@ -334,7 +339,8 @@ public final class Population {
     }
 
     private static boolean respawnDue(ServerLevel level, Pop pop, ZcConfig.Population cfg) {
-        return cfg.respawnDays > 0 && day(level) - pop.day() >= cfg.respawnDays && pop.recs().length < pop.given();
+        // the refill comes with a breach surge: a place cleared before the last one fills again
+        return cfg.respawnDays > 0 && com.zomboidcraft.world.Breach.lastSurgeDay() > pop.day() && pop.recs().length < pop.given();
     }
 
     private static long day(ServerLevel level) {
@@ -401,37 +407,82 @@ public final class Population {
         }
     }
 
+    // ---- hotspots: where the dead gathered at the end
+
+    /** Each building kit's prefix and how many more of the dead it holds indoors. */
+    private static final String[][] HOT = {{"hs_", "3"}, {"sh_", "2.5"}, {"ml_", "2"}, {"fs_", "1.5"}, {"sc_", "1.5"}};
+    private static final Map<net.minecraft.world.level.block.Block, Double> HOT_BLOCKS = new java.util.IdentityHashMap<>();
+
+    /**
+     * How crowded indoors this chunk is for the building it holds, found from the blocks it's built with: the
+     * hospital's kit (people brought their sick and bitten there), the police and sheriff's (holding cells, the last
+     * stand), the mall's (shelter), the fire station's and the school's. 1 for anything else.
+     */
+    private static double hotspot(net.minecraft.world.level.chunk.LevelChunkSection[] sections) {
+        double best = 1;
+        for (net.minecraft.world.level.chunk.LevelChunkSection section : sections) {
+            if (section.hasOnlyAir()) {
+                continue;
+            }
+            for (String[] h : HOT) {
+                double m = Double.parseDouble(h[1]);
+                if (m > best && section.maybeHas(state -> hot(state.getBlock()) == m)) {
+                    best = m;
+                }
+            }
+        }
+        return best;
+    }
+
+    private static double hot(net.minecraft.world.level.block.Block block) {
+        return HOT_BLOCKS.computeIfAbsent(block, b -> {
+            String path = net.minecraft.core.registries.BuiltInRegistries.BLOCK.getKey(b).getPath();
+            if (path.startsWith("hs_pad")) {
+                return 1.0;   // a helipad on some other roof isn't a hospital
+            }
+            for (String[] h : HOT) {
+                if (path.startsWith(h[0])) {
+                    return Double.parseDouble(h[1]);
+                }
+            }
+            return 1.0;
+        });
+    }
+
     // ---- Grayhaven island: one pool over every place on it
 
     private static List<Place> islandPlaces;
+    private static double islandArea;
     private static Census.Count islandCount;
+    private static int islandSeen = -1;
 
-    /** Every island place's floor space added up (null while any is still being counted). */
-    private static Census.Count island(County county, CountyGen gen, int minY, int maxY) {
-        if (islandCount != null) {
-            return islandCount;
-        }
+    /**
+     * The whole island's floor space, worked out from the island places counted so far (each counted as players
+     * come near it, like any other place) and scaled up by ground area to every place on the island. Counting
+     * every island building up front built the whole city at once, which held up the world's own building and
+     * made the game stall round Union Station; this way the estimate just gets better as more is counted.
+     */
+    private static Census.Count island(County county) {
         if (islandPlaces == null) {
             islandPlaces = county.allPlaces().stream()
                     .filter(p -> county.island(p.x0 + p.width() / 2, p.z0 + p.depth() / 2)).toList();
+            islandArea = islandPlaces.stream().mapToDouble(p -> (double) p.width() * p.depth()).sum();
         }
-        double in = 0, out = 0;
-        boolean all = true;
+        if (islandCount != null && islandSeen == Census.done()) {
+            return islandCount;
+        }
+        double in = 0, out = 0, area = 0;
         for (Place p : islandPlaces) {
-            Census.Count c = Census.get(gen, p, minY, maxY);   // asks for every one at once, so they're counted together
-            if (c == null) {
-                all = false;
-            } else {
+            Census.Count c = Census.peek(p);
+            if (c != null) {
                 in += c.indoor();
                 out += c.outdoor();
+                area += (double) p.width() * p.depth();
             }
         }
-        if (!all) {
-            return null;
-        }
-        islandCount = new Census.Count(in, out);
-        ZomboidCraft.LOGGER.info("Grayhaven island: {} places, {} indoor and {} outdoor spots for its {} dead",
-                islandPlaces.size(), (long) in, (long) out, Budgets.ISLAND.total());
+        double scale = area <= 0 ? 1 : Math.max(1, islandArea / area);
+        islandCount = new Census.Count(in * scale, out * scale);
+        islandSeen = Census.done();
         return islandCount;
     }
 

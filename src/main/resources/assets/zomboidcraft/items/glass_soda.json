@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/glass_soda"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/glass_soda",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/glass_soda",
+   "part": "body"
+  }
  }
 }

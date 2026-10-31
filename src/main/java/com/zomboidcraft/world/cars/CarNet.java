@@ -16,8 +16,12 @@ import net.minecraft.world.phys.Vec3;
  * headlights. Keys of their own rather than right-click, which aims a gun.
  */
 public final class CarNet {
-    /** Stand-ins for a car id: get out of the car you're in, sound its horn, turn the key, switch the headlights. */
-    public static final int GET_OUT = -1, HORN = -2, ENGINE = -3, LIGHTS = -4, FOB = -5;
+    /**
+     * Stand-ins for a car id: get out of the car you're in, sound its horn, turn the key, switch the headlights,
+     * wind your window down or up; at a mounted gun, the trigger held and let go, and the belt loaded.
+     */
+    public static final int GET_OUT = -1, HORN = -2, ENGINE = -3, LIGHTS = -4, FOB = -5, WINDOW = -6,
+            TRIGGER_ON = -7, TRIGGER_OFF = -8, BELT = -9, ZOOM_ON = -10, ZOOM_OFF = -11;
 
     /** Use car (its entity id) at a point relative to it, or GET_OUT or HORN for the car you're in. */
     public record Use(int car, float x, float y, float z) implements CustomPacketPayload {
@@ -72,6 +76,11 @@ public final class CarNet {
         net.fabricmc.fabric.api.event.player.AttackEntityCallback.EVENT.register((player, level, hand, entity, hit) ->
                 CarProp.mayUse(player, player.getMainHandItem()) ? net.minecraft.world.InteractionResult.PASS
                         : net.minecraft.world.InteractionResult.FAIL);
+        // at a mounted gun both hands are on it: right-click narrows the view instead (client side)
+        net.fabricmc.fabric.api.event.player.UseItemCallback.EVENT.register((player, level, hand) ->
+                Turret.isGunner(player) ? net.minecraft.world.InteractionResult.FAIL : net.minecraft.world.InteractionResult.PASS);
+        net.fabricmc.fabric.api.event.player.UseBlockCallback.EVENT.register((player, level, hand, hit) ->
+                Turret.isGunner(player) ? net.minecraft.world.InteractionResult.FAIL : net.minecraft.world.InteractionResult.PASS);
         PayloadTypeRegistry.serverboundPlay().register(Use.TYPE, Use.CODEC);
         ServerPlayNetworking.registerGlobalReceiver(Use.TYPE, (payload, context) -> {
             ServerPlayer player = context.player();
@@ -86,6 +95,11 @@ public final class CarNet {
                             case HORN -> car.honk(player);
                             case ENGINE -> car.toggleEngine(player);
                             case LIGHTS -> car.toggleLights(player);
+                            case WINDOW -> car.windWindow(CarGlass.seatWindow(CarModels.get(car.model()), car.variantIndex(),
+                                    car.seatOf(player)));
+                            case TRIGGER_ON, TRIGGER_OFF -> Turret.trigger(car, player, payload.car() == TRIGGER_ON);
+                            case BELT -> Turret.loadBelt(car, player);
+                            case ZOOM_ON, ZOOM_OFF -> car.turretZoom = payload.car() == ZOOM_ON && Turret.gunner(car) == player;
                             default -> player.stopRiding();
                         }
                     }

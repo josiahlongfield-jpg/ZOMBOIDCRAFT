@@ -118,8 +118,7 @@ public final class Carry {
     /** What the sling (the Back quick slot) takes across your back: every gun bar a handgun, and melee weapons. */
     public static boolean slings(ItemStack stack) {
         com.zomboidcraft.combat.GunType type = com.zomboidcraft.combat.GunType.of(stack);
-        return weapon(stack) && type != com.zomboidcraft.combat.GunType.PISTOL && type != com.zomboidcraft.combat.GunType.REVOLVER
-                && type != com.zomboidcraft.combat.GunType.MAGNUM;
+        return weapon(stack) && (type == null || !type.handgun());
     }
 
     /** Whether a slot of the player's inventory is a pocket (the main rows, locked or not), where weapons never go. */
@@ -256,6 +255,7 @@ public final class Carry {
                 continue;
             }
             kit(player);
+            com.zomboidcraft.clothing.Clothes.tick(player);
             // a gun case or ammo can found shut is filled the first time someone has it; a found gun's finish is
             // rolled, and a weapon that didn't come out of a loot table gets its tier
             Inventory inventory = player.getInventory();
@@ -263,7 +263,8 @@ public final class Carry {
                 if (CaseItem.unpack(inventory.getItem(i), player.getRandom())
                         | com.zomboidcraft.combat.rolls.Rolls.roll(inventory.getItem(i),
                                 com.zomboidcraft.combat.rolls.Rolls.UNKNOWN, player.getRandom())
-                        | com.zomboidcraft.combat.GunFinish.roll(inventory.getItem(i), player.getRandom())) {
+                        | com.zomboidcraft.combat.GunFinish.roll(inventory.getItem(i), player.getRandom())
+                        | com.zomboidcraft.combat.Attachments.ensureModel(inventory.getItem(i))) {
                     inventory.setChanged();
                 }
             }
@@ -361,7 +362,11 @@ public final class Carry {
         List<ItemStack> now = new ArrayList<>(WORN_SIZE);
         for (int i = 0; i < GearStore.SIZE; i++) {
             ItemStack stack = gear.get(i);
-            now.add(stack.isEmpty() ? ItemStack.EMPTY : new ItemStack(stack.getItem()));
+            ItemStack plain = stack.isEmpty() ? ItemStack.EMPTY : new ItemStack(stack.getItem());
+            // a garment's camo shows (clothing/ClothingLoot)
+            String camo = stack.get(com.zomboidcraft.clothing.ClothingLoot.CAMO);
+            if (camo != null) plain.set(com.zomboidcraft.clothing.ClothingLoot.CAMO, camo);
+            now.add(plain);
         }
         // carried weapons keep their parts and finish, so they look the same on you
         now.add(hanging(player, QuickSlots.BACK, Carry::slings));
@@ -371,7 +376,9 @@ public final class Carry {
         boolean same = shown.size() == WORN_SIZE;
         for (int i = 0; same && i < WORN_SIZE; i++) {
             same = i >= GearStore.SIZE ? ItemStack.isSameItemSameComponents(shown.get(i), now.get(i))
-                    : shown.get(i).getItem() == now.get(i).getItem() && shown.get(i).isEmpty() == now.get(i).isEmpty();
+                    : shown.get(i).getItem() == now.get(i).getItem() && shown.get(i).isEmpty() == now.get(i).isEmpty()
+                    && java.util.Objects.equals(shown.get(i).get(com.zomboidcraft.clothing.ClothingLoot.CAMO),
+                    now.get(i).get(com.zomboidcraft.clothing.ClothingLoot.CAMO));
         }
         if (!same) {
             player.setAttached(WORN, List.copyOf(now));

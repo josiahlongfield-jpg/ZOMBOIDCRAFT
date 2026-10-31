@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/canned_condensed_milk"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/canned_condensed_milk",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/canned_condensed_milk",
+   "part": "body"
+  }
  }
 }

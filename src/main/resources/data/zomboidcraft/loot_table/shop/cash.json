@@ -9,39 +9,13 @@
       },
       "entries": [
         {
-          "type": "minecraft:item",
-          "name": "minecraft:paper",
-          "weight": 12,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 2,
-                "max": 10
-              }
-            }
-          ]
+          "type": "minecraft:empty",
+          "weight": 10
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:gold_nugget",
-          "weight": 8,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 6
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:emerald",
-          "weight": 3,
+          "name": "zomboidcraft:cash_bundle",
+          "weight": 16,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -55,37 +29,68 @@
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:book",
+          "name": "zomboidcraft:cash_stack",
+          "weight": 6
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:coin_roll",
+          "weight": 16,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:silver_coin",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:safe_combination",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:deposit_box_key",
           "weight": 3
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:writable_book",
-          "weight": 2
+          "name": "zomboidcraft:vault_key",
+          "weight": 3
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:map",
-          "weight": 2
+          "name": "zomboidcraft:gold_watch",
+          "weight": 1
         },
         {
           "type": "minecraft:item",
-          "name": "minecraft:ink_sac",
-          "weight": 2,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 2
-              }
-            }
-          ]
+          "name": "zomboidcraft:diamond_ring",
+          "weight": 1
         },
         {
-          "type": "minecraft:empty",
-          "weight": 10
+          "type": "minecraft:item",
+          "name": "zomboidcraft:gold_coin",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:gold_bar",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:uncut_diamonds",
+          "weight": 1
         }
       ]
     }

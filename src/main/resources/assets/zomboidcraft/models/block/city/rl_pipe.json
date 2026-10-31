@@ -1,0 +1,177 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rl_pipe": "zomboidcraft:block/city/rl_pipe",
+    "rl_steel_flange": "zomboidcraft:block/city/rl_steel_flange",
+    "particle": "zomboidcraft:block/city/rl_pipe"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        1,
+        0
+      ],
+      "to": [
+        7,
+        6,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rl_pipe",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#rl_pipe",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#rl_pipe"
+        },
+        "west": {
+          "texture": "#rl_pipe"
+        },
+        "up": {
+          "texture": "#rl_pipe"
+        },
+        "down": {
+          "texture": "#rl_pipe"
+        }
+      }
+    },
+    {
+      "from": [
+        9,
+        1,
+        0
+      ],
+      "to": [
+        14,
+        6,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rl_pipe",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#rl_pipe",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#rl_pipe"
+        },
+        "west": {
+          "texture": "#rl_pipe"
+        },
+        "up": {
+          "texture": "#rl_pipe"
+        },
+        "down": {
+          "texture": "#rl_pipe"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        0,
+        7
+      ],
+      "to": [
+        15,
+        1,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rl_steel_flange"
+        },
+        "south": {
+          "texture": "#rl_steel_flange"
+        },
+        "east": {
+          "texture": "#rl_steel_flange"
+        },
+        "west": {
+          "texture": "#rl_steel_flange"
+        },
+        "up": {
+          "texture": "#rl_steel_flange"
+        },
+        "down": {
+          "texture": "#rl_steel_flange",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        1.5,
+        0,
+        7
+      ],
+      "to": [
+        2.5,
+        7,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rl_steel_flange"
+        },
+        "south": {
+          "texture": "#rl_steel_flange"
+        },
+        "east": {
+          "texture": "#rl_steel_flange"
+        },
+        "west": {
+          "texture": "#rl_steel_flange"
+        },
+        "up": {
+          "texture": "#rl_steel_flange"
+        },
+        "down": {
+          "texture": "#rl_steel_flange",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        13.5,
+        0,
+        7
+      ],
+      "to": [
+        14.5,
+        7,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rl_steel_flange"
+        },
+        "south": {
+          "texture": "#rl_steel_flange"
+        },
+        "east": {
+          "texture": "#rl_steel_flange"
+        },
+        "west": {
+          "texture": "#rl_steel_flange"
+        },
+        "up": {
+          "texture": "#rl_steel_flange"
+        },
+        "down": {
+          "texture": "#rl_steel_flange",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

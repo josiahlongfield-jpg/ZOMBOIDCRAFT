@@ -1,0 +1,140 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bk_bronze": "zomboidcraft:block/city/bk_bronze",
+    "marble_white": "zomboidcraft:block/city/marble_white",
+    "particle": "zomboidcraft:block/city/marble_white"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        0,
+        4
+      ],
+      "to": [
+        12,
+        9,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#marble_white"
+        },
+        "south": {
+          "texture": "#marble_white"
+        },
+        "east": {
+          "texture": "#marble_white"
+        },
+        "west": {
+          "texture": "#marble_white"
+        },
+        "up": {
+          "texture": "#marble_white"
+        },
+        "down": {
+          "texture": "#marble_white",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5.5,
+        9,
+        7
+      ],
+      "to": [
+        8,
+        16,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bk_bronze"
+        },
+        "south": {
+          "texture": "#bk_bronze"
+        },
+        "east": {
+          "texture": "#bk_bronze"
+        },
+        "west": {
+          "texture": "#bk_bronze"
+        },
+        "up": {
+          "texture": "#bk_bronze",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#bk_bronze"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        12,
+        6
+      ],
+      "to": [
+        11,
+        15,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bk_bronze"
+        },
+        "south": {
+          "texture": "#bk_bronze"
+        },
+        "east": {
+          "texture": "#bk_bronze"
+        },
+        "west": {
+          "texture": "#bk_bronze"
+        },
+        "up": {
+          "texture": "#bk_bronze"
+        },
+        "down": {
+          "texture": "#bk_bronze"
+        }
+      }
+    },
+    {
+      "from": [
+        9,
+        9,
+        6.5
+      ],
+      "to": [
+        10.5,
+        13,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bk_bronze"
+        },
+        "south": {
+          "texture": "#bk_bronze"
+        },
+        "east": {
+          "texture": "#bk_bronze"
+        },
+        "west": {
+          "texture": "#bk_bronze"
+        },
+        "up": {
+          "texture": "#bk_bronze"
+        },
+        "down": {
+          "texture": "#bk_bronze"
+        }
+      }
+    }
+  ]
+}

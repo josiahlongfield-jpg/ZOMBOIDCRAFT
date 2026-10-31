@@ -25,7 +25,7 @@ import net.minecraft.world.level.Level;
  * opener (or a knife, in a pinch: anything in zomboidcraft:can_openers). Opened, it's food like any other, leaves an
  * empty can (LootFood hands it back), and goes off in a few days like leftovers.
  */
-public class SealedCanItem extends Item {
+public class SealedCanItem extends LootItem {
     public static final TagKey<Item> OPENERS = TagKey.create(Registries.ITEM, ZomboidCraft.id("can_openers"));
 
     public SealedCanItem(Properties properties) {

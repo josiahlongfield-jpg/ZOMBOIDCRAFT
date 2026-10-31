@@ -21,9 +21,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.zombie.Zombie;
@@ -101,6 +103,10 @@ public final class Guns {
         ZcConfig.GunStats stats = type.stats();
         State st = state(player);
         long now = player.level().getGameTime();
+        if (launcherOn(gun)) {
+            fireLauncher(player, gun, st, now, aiming);
+            return;
+        }
         boolean auto = fullAuto(gun);
         // full auto is timed on the shooter's clock, between ticks: take a little slack for shots that land in the same
         // tick; the rate still holds on average
@@ -147,11 +153,10 @@ public final class Guns {
         st.flashLeft = FLASH_TICKS;
         setModelData(gun, 0, config.muzzleFlash ? 1 : 0);
 
-        // the bang: everyone else hears the distant take; the shooter's client plays the close one at once.
+        // the bang: the shooter's client plays the close one at once; everyone else hears it by how far off they are.
         // A suppressor takes the crack down to a cough, and shortens how far the zombies hear it.
         boolean suppressed = Attachments.suppressed(gun);
-        level.playSound(player, player.getX(), player.getEyeY(), player.getZ(), type.shot(suppressed, true), SoundSource.PLAYERS,
-                suppressed ? (float) config.suppressedVolume : 1f,
+        bang(level, player, type, suppressed, suppressed ? (float) config.suppressedVolume : 1f,
                 (suppressed ? (float) stats.suppressedPitch : 1f) * (0.95f + player.getRandom().nextFloat() * 0.1f));
         if (type.manual()) {
             st.cycleAt = now + type.cycleAfterShot;     // the empty hull or case comes out when it's worked
@@ -172,6 +177,11 @@ public final class Guns {
         Vec3 aim = jitter(look, spread, player);
         Vec3 muzzle = eye.add(look.scale(0.9)).add(look.cross(new Vec3(0, 1, 0)).normalize().scale(aiming ? 0 : 0.25))
                 .add(0, aiming ? -0.08 : -0.22, 0);
+        if (type == GunType.GRENADE_LAUNCHER) {
+            // a 40mm round lobbed on its own arc, bursting where it lands (combat/throwing/Thrown)
+            com.zomboidcraft.combat.throwing.Thrown.fire(level, player, new ItemStack(ModItems.GRENADE_ROUND), muzzle, aim);
+            return;
+        }
         if (config.muzzleSmoke && type != GunType.CROSSBOW) {
             level.sendParticles(ParticleTypes.SMOKE, muzzle.x, muzzle.y, muzzle.z, 3, 0.03, 0.03, 0.03, 0.01);
             if (!suppressed) {
@@ -194,14 +204,49 @@ public final class Guns {
         for (int i = 0; i < pellets; i++) {
             Vec3 dir = pellets > 1 ? jitter(aim, pelletSpread, player) : aim;
             Vec3 end = eye.add(dir.scale(stats.range));
+            // a bullet goes on through glass (see GlassShots): look on past each pane it meets, up to a few
+            // and in at a parked car's window and out the far side of it (see CarGlass)
+            java.util.List<BlockHitResult> panes = new java.util.ArrayList<>();
             BlockHitResult block = level.clip(new ClipContext(eye, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, player));
+            Vec3 from = eye;
+            for (int pass = 0; !bow && block.getType() != HitResult.Type.MISS && pass < 8; pass++) {
+                BlockState bs = level.getBlockState(block.getBlockPos());
+                Vec3 on;
+                if (panes.size() < 6 && GlassShots.isGlass(bs)) {
+                    panes.add(block);
+                    on = GlassShots.past(block.getBlockPos(), block.getLocation(), dir);
+                } else if (!bs.is(com.zomboidcraft.world.cars.Cars.HULL)
+                        || (on = com.zomboidcraft.world.cars.CarGlass.throughHull(level, block, from, dir)) == null) {
+                    break;
+                }
+                from = on;
+                block = level.clip(new ClipContext(on, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, player));
+            }
             Vec3 stop = block.getType() == HitResult.Type.MISS ? end : block.getLocation();
             com.zomboidcraft.world.trains.Trains.shot(level, player, eye, stop);    // OTTO minds being shot at
             // a zombie is hit where its body is drawn, not by its box (see Dismember.shot)
             Dismember.BodyHit hit = Dismember.shot(player, eye, stop,
                     e -> e instanceof LivingEntity && e.isAlive() && !e.isSpectator() && e.isPickable() && e != player);
+            // the panes it went through on the way (only those before whoever it hit), each taking some out of it
+            double reached = hit != null ? hit.getLocation().distanceTo(eye) : Double.MAX_VALUE;
+            float spent = 1f;
+            for (BlockHitResult pane : panes) {
+                if (pane.getLocation().distanceTo(eye) < reached) {
+                    GlassShots.shot(level, player, pane, dir, level.getBlockState(pane.getBlockPos()), !ricochet);
+                    ricochet = true;
+                    spent *= GlassShots.THROUGH;
+                }
+            }
+            // and the car windows it went through, each holed where it went in
+            if (!bow) {
+                for (var c : com.zomboidcraft.world.cars.CarGlass.along(level, eye, hit != null ? hit.getLocation() : stop)) {
+                    c.car().shootWindow(level, c.window(), c.u(), c.v(), c.at(), !ricochet);
+                    ricochet = true;
+                    spent *= GlassShots.THROUGH;
+                }
+            }
             if (hit != null && hit.getEntity() instanceof LivingEntity target) {
-                Pellet struck = pellet(target, hit, eye, stats, power);
+                Pellet struck = pellet(target, hit, eye, stats, power * spent);
                 hits.computeIfAbsent(target, t -> new Hit(dir)).add(struck);
                 Dismember.pellet(player, target, hit, dir, struck.tears(), struck.head(), struck.legs(), type);
                 if (!nearby && !bow) {
@@ -249,9 +294,6 @@ public final class Guns {
                                 0.9f + player.getRandom().nextFloat() * 0.3f);
                     }
                 }
-                if (bs.is(Blocks.GLASS) || bs.is(Blocks.GLASS_PANE) || bs.getBlock().getDescriptionId().contains("glass")) {
-                    level.destroyBlock(block.getBlockPos(), false, player);
-                }
             }
         }
         // the bolt stays in the zombie it hit (before the hit lands, so one it kills drops it with the body), or lies
@@ -267,6 +309,71 @@ public final class Guns {
         if (!hits.isEmpty()) {
             Skills.addXp(player, Skill.AIMING, 2);
         }
+    }
+
+    /**
+     * One round from a mounted gun (the Warthog's minigun, see world/cars/Turret): from the muzzle toward dir, through
+     * glass and past the hull of the vehicle it's mounted on, striking like a rifle's bullet. Returns where it ended.
+     */
+    public static Vec3 mountedRound(ServerPlayer shooter, Vec3 muzzle, Vec3 dir, ZcConfig.GunStats stats, Entity mount,
+                                    boolean sounds) {
+        ServerLevel level = (ServerLevel) shooter.level();
+        Vec3 end = muzzle.add(dir.scale(stats.range));
+        java.util.List<BlockHitResult> panes = new java.util.ArrayList<>();
+        net.minecraft.world.phys.AABB own = mount.getBoundingBox().inflate(1.5);
+        BlockHitResult block = level.clip(new ClipContext(muzzle, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, shooter));
+        Vec3 from = muzzle;
+        for (int pass = 0; block.getType() != HitResult.Type.MISS && pass < 8; pass++) {
+            BlockState bs = level.getBlockState(block.getBlockPos());
+            Vec3 on;
+            if (panes.size() < 6 && GlassShots.isGlass(bs)) {
+                panes.add(block);
+                on = GlassShots.past(block.getBlockPos(), block.getLocation(), dir);
+            } else if (bs.is(com.zomboidcraft.world.cars.Cars.HULL) && own.contains(block.getLocation())) {
+                on = block.getLocation().add(dir.scale(0.05));     // its own vehicle's hull, under the gun
+            } else if (!bs.is(com.zomboidcraft.world.cars.Cars.HULL)
+                    || (on = com.zomboidcraft.world.cars.CarGlass.throughHull(level, block, from, dir)) == null) {
+                break;
+            }
+            from = on;
+            block = level.clip(new ClipContext(on, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, shooter));
+        }
+        Vec3 stop = block.getType() == HitResult.Type.MISS ? end : block.getLocation();
+        Dismember.BodyHit hit = Dismember.shot(shooter, muzzle, stop, e -> e instanceof LivingEntity && e.isAlive()
+                && !e.isSpectator() && e.isPickable() && e != shooter && e != mount && !mount.hasPassenger(e));
+        double reached = hit != null ? hit.getLocation().distanceTo(muzzle) : Double.MAX_VALUE;
+        float spent = 1f;
+        boolean struck = !sounds;
+        for (BlockHitResult pane : panes) {
+            if (pane.getLocation().distanceTo(muzzle) < reached) {
+                GlassShots.shot(level, shooter, pane, dir, level.getBlockState(pane.getBlockPos()), !struck);
+                struck = true;
+                spent *= GlassShots.THROUGH;
+            }
+        }
+        for (var c : com.zomboidcraft.world.cars.CarGlass.along(level, muzzle, hit != null ? hit.getLocation() : stop)) {
+            if (c.car() != mount) {
+                c.car().shootWindow(level, c.window(), c.u(), c.v(), c.at(), !struck);
+                struck = true;
+                spent *= GlassShots.THROUGH;
+            }
+        }
+        if (hit != null && hit.getEntity() instanceof LivingEntity target) {
+            Pellet p = pellet(target, hit, muzzle, stats, spent);
+            Dismember.pellet(shooter, target, hit, dir, p.tears(), p.head(), p.legs(), GunType.ASSAULT_RIFLE);
+            hitEntity(level, shooter, target, new Hit(dir).add(p), 1, stats);
+            return hit.getLocation();
+        }
+        if (block.getType() != HitResult.Type.MISS) {
+            BlockState bs = level.getBlockState(block.getBlockPos());
+            Impacts.block(level, block, dir, bs, (float) Math.min(1.6, 0.6 + stats.damage / 20));
+            if (!struck) {
+                Vec3 p = block.getLocation();
+                level.playSound(null, p.x, p.y, p.z, Surface.of(bs).impact(), SoundSource.PLAYERS, 0.7f,
+                        0.92f + shooter.getRandom().nextFloat() * 0.16f);
+            }
+        }
+        return stop;
     }
 
     /** What the pellets that struck one target add up to. */
@@ -320,6 +427,9 @@ public final class Guns {
                                   ZcConfig.GunStats stats) {
         Vec3 at = hit.at;
         target.hurtServer(level, ModDamageTypes.source(level, ModDamageTypes.BULLET, player), hit.damage);
+        if (target instanceof com.zomboidcraft.creature.HarvestmanEntity) {
+            return;     // it rings off the plates or bleeds red from the core itself (see HarvestmanEntity.hurtServer)
+        }
         // a shot doesn't throw a zombie back: it flinches and its advance is checked for a split second, longer for a
         // close load of buckshot; only a blunt blow knocks one back
         Downed.flinch(target, stats instanceof ZcConfig.ShotgunStats sg
@@ -334,6 +444,39 @@ public final class Guns {
             player.connection.send(new net.minecraft.network.protocol.game.ClientboundSoundPacket(
                     net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT.wrapAsHolder(ModSounds.BULLET_WHIZZ), SoundSource.PLAYERS,
                     at.x, at.y, at.z, 0.8f, 0.9f + player.getRandom().nextFloat() * 0.2f, player.getRandom().nextLong()));
+        }
+    }
+
+    /** Within this many blocks of a shot you hear the close bang; past FAR_BANG the far-off take; between, a crossfade. */
+    private static final double CLOSE_BANG = 16, FAR_BANG = 48;
+
+    /** A shot as each other player hears it: the close bang near the shooter, fading into the far-off take with distance. */
+    private static void bang(ServerLevel level, ServerPlayer shooter, GunType type, boolean suppressed, float volume, float pitch) {
+        SoundEvent close = type.shot(suppressed, false), far = type.shot(suppressed, true);
+        double range = Math.max(close.getRange(volume), far.getRange(volume));
+        long seed = shooter.getRandom().nextLong();
+        double x = shooter.getX(), y = shooter.getEyeY(), z = shooter.getZ();
+        for (ServerPlayer p : level.players()) {
+            double d = Math.sqrt(p.distanceToSqr(x, y, z));
+            if (p == shooter || d > range) {
+                continue;
+            }
+            // equal-power, so the shot doesn't dip in loudness halfway between
+            double t = close == far ? 0 : Mth.clamp((d - CLOSE_BANG) / (FAR_BANG - CLOSE_BANG), 0, 1) * Math.PI / 2;
+            if (t < Math.PI / 2) {
+                send(p, close, x, y, z, volume * (float) Math.cos(t), pitch, seed);
+            }
+            if (t > 0) {
+                send(p, far, x, y, z, volume * (float) Math.sin(t), pitch, seed);
+            }
+        }
+    }
+
+    private static void send(ServerPlayer p, SoundEvent sound, double x, double y, double z, float volume, float pitch, long seed) {
+        if (volume > 0.01f) {
+            p.connection.send(new net.minecraft.network.protocol.game.ClientboundSoundPacket(
+                    net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT.wrapAsHolder(sound), SoundSource.PLAYERS,
+                    x, y, z, volume, pitch, seed));
         }
     }
 
@@ -362,6 +505,8 @@ public final class Guns {
                 * (1 - 0.05 * aimLevel) * Rolls.multiplier(gun, Stat.ACCURACY);
         if (player.getDeltaMovement().horizontalDistanceSqr() > 0.003) {
             spread *= aimLevel >= 5 ? 1.3 : 1.6;    // Aiming 5: a steadier hand on the move
+        } else if (aiming && player.isCrouching() && Attachments.hasBipod(gun)) {
+            spread *= ZcConfig.get().guns.bipodSpread;
         }
         return spread + bloom * (aiming ? 0.5 : 1.0);
     }
@@ -395,7 +540,7 @@ public final class Guns {
     /** The gun has a full-auto setting and is set to it. */
     public static boolean fullAuto(ItemStack gun) {
         GunType type = GunType.of(gun);
-        return type != null && type.stats().selectFire && gun.getOrDefault(GunState.FULL_AUTO, false);
+        return type != null && type.stats().selectFire && gun.getOrDefault(GunState.FULL_AUTO, false) && !launcherOn(gun);
     }
 
     /**
@@ -407,18 +552,87 @@ public final class Guns {
         return (now - due > gap || now < due - 2 * gap ? now : due) + gap;
     }
 
-    /** Switches a select-fire gun between semi and full auto, with the selector's click. */
+    /**
+     * Switches a select-fire gun between semi and full auto, with the selector's click; with an underbarrel grenade
+     * launcher on, the launcher is the next setting round.
+     */
     public static void toggleFireMode(ServerPlayer player) {
         ItemStack gun = player.getMainHandItem();
         GunType type = GunType.of(gun);
-        if (type == null || !type.stats().selectFire) {
+        boolean launcher = type != null && Attachments.hasLauncher(gun);
+        if (type == null || !type.stats().selectFire && !launcher) {
             return;
         }
-        boolean auto = !gun.getOrDefault(GunState.FULL_AUTO, false);
-        gun.set(GunState.FULL_AUTO, auto);
+        String mode;
+        if (launcherOn(gun)) {
+            gun.set(GunState.LAUNCHER_ON, false);
+            gun.set(GunState.FULL_AUTO, false);
+            mode = "Semi-auto";
+        } else if (type.stats().selectFire && !gun.getOrDefault(GunState.FULL_AUTO, false)) {
+            gun.set(GunState.FULL_AUTO, true);
+            mode = "Full auto";
+        } else if (launcher) {
+            gun.set(GunState.LAUNCHER_ON, true);
+            mode = gun.getOrDefault(GunState.LAUNCHER_LOADED, false) ? "Grenade launcher" : "Grenade launcher (empty: R to load)";
+        } else {
+            gun.set(GunState.FULL_AUTO, false);
+            mode = "Semi-auto";
+        }
         player.level().playSound(null, player.getX(), player.getEyeY(), player.getZ(), SoundEvents.STONE_BUTTON_CLICK_ON,
-                SoundSource.PLAYERS, 0.3f, auto ? 1.5f : 1.3f);
-        player.sendOverlayMessage(Component.literal(auto ? "Full auto" : "Semi-auto"));
+                SoundSource.PLAYERS, 0.3f, mode.equals("Full auto") ? 1.5f : mode.equals("Semi-auto") ? 1.3f : 1.1f);
+        player.sendOverlayMessage(Component.literal(mode));
+    }
+
+    /** The trigger works the underbarrel grenade launcher. */
+    public static boolean launcherOn(ItemStack gun) {
+        return gun.getOrDefault(GunState.LAUNCHER_ON, false) && Attachments.hasLauncher(gun);
+    }
+
+    /** The underbarrel launcher's one round goes, lobbed like the six-shot's (combat/throwing/Thrown.fire). */
+    private static void fireLauncher(ServerPlayer player, ItemStack gun, State st, long now, boolean aiming) {
+        if (now - st.lastShot < 10 || st.reloadTick >= 0) {
+            return;
+        }
+        st.lastShot = now;
+        ServerLevel level = (ServerLevel) player.level();
+        if (!gun.getOrDefault(GunState.LAUNCHER_LOADED, false)) {
+            level.playSound(null, player.getX(), player.getEyeY(), player.getZ(), ModSounds.SHOTGUN_DRY, SoundSource.PLAYERS, 0.8f, 0.8f);
+            player.sendOverlayMessage(Component.literal("Launcher empty: press R to load a 40mm grenade.").withStyle(ChatFormatting.GRAY));
+            return;
+        }
+        gun.set(GunState.LAUNCHER_LOADED, false);
+        GunRaise.shot(player);
+        Vec3 look = player.getLookAngle();
+        Vec3 aim = jitter(look, aiming ? 0.6 : 2.0, player);
+        Vec3 muzzle = player.getEyePosition().add(look.scale(0.9)).add(0, aiming ? -0.2 : -0.35, 0);
+        com.zomboidcraft.combat.throwing.Thrown.fire(level, player, new ItemStack(ModItems.GRENADE_ROUND), muzzle, aim);
+        level.playSound(null, player.getX(), player.getEyeY(), player.getZ(), ModSounds.SHOTGUN_SHOT, SoundSource.PLAYERS, 1f, 0.6f);
+        Noise.emit(level, player.position(), ZcConfig.get().grenadeLauncher.shotNoise);
+    }
+
+    /** Pushes a 40mm round into the underbarrel launcher. */
+    private static void loadLauncher(ServerPlayer player, ItemStack gun) {
+        if (gun.getOrDefault(GunState.LAUNCHER_LOADED, false)) {
+            player.sendOverlayMessage(Component.literal("The launcher is loaded.").withStyle(ChatFormatting.GRAY));
+            return;
+        }
+        Inventory inv = player.getInventory();
+        int at = -1;
+        for (int i = 0; i < inv.getContainerSize() && at < 0; i++) {
+            if (inv.getItem(i).is(ModItems.GRENADE_ROUND)) {
+                at = i;
+            }
+        }
+        if (at < 0 && !player.hasInfiniteMaterials()) {
+            player.sendOverlayMessage(Component.literal("No 40mm grenades.").withStyle(ChatFormatting.GRAY));
+            return;
+        }
+        if (at >= 0 && !player.hasInfiniteMaterials()) {
+            inv.getItem(at).shrink(1);
+        }
+        gun.set(GunState.LAUNCHER_LOADED, true);
+        sound(player, ModSounds.SHOTGUN_SHELL_IN);
+        player.sendOverlayMessage(Component.literal("Launcher loaded"));
     }
 
     // ------------------------------------------------------------------ light and laser
@@ -439,6 +653,15 @@ public final class Guns {
         }
     }
 
+    /** Swings the magnifier in behind the optic or aside on its mount, with a click. */
+    public static void flipMagnifier(ServerPlayer player) {
+        ItemStack gun = player.getMainHandItem();
+        if (GunType.isGun(gun) && Attachments.hasMagnifier(gun)) {
+            toggle(player, gun, GunState.MAGNIFIER_ASIDE);
+            Attachments.refreshModel(gun);
+        }
+    }
+
     private static void toggle(ServerPlayer player, ItemStack gun, DataComponentType<Boolean> switched) {
         boolean on = !gun.getOrDefault(switched, false);
         gun.set(switched, on);
@@ -452,6 +675,10 @@ public final class Guns {
         ItemStack gun = player.getMainHandItem();
         GunType type = GunType.of(gun);
         if (type == null) {
+            return;
+        }
+        if (launcherOn(gun)) {
+            loadLauncher(player, gun);
             return;
         }
         State st = state(player);

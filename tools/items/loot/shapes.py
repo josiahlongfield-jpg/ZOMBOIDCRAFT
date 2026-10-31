@@ -180,7 +180,7 @@ def flat_box(m, w=10.0, h=1.8, d=10.0):
 
 def bag(m, w=6.0, h=8.5, d=2.4):
     # a pillow bag: the puffed body and the flat crimped seals top and bottom
-    m.box([-w / 2, 0.5, -d / 2], [w / 2, h - 0.6, d / 2], 'label')
+    oval_rod(m, 0.5, h - 0.6, w / 2, d / 2, 'label')
     m.box([-w / 2 + 0.2, 0.0, -0.18], [w / 2 - 0.2, 0.5, 0.18], 'seal')
     m.box([-w / 2 + 0.2, h - 0.6, -0.18], [w / 2 - 0.2, h, 0.18], 'seal')
 
@@ -261,11 +261,34 @@ def soft_bag(m, w=8.0, h=5.0, d=3.5, zip_colour=True, straps=False):
 # ================================================================== produce
 
 
+def oval_rod(m, y0, y1, rx, rz, mat, cx=0.0, cz=0.0):
+    """An upright bar with an oval section (a puffed bag): stepped boxes like rod(), drawn as an oval in mesh.py."""
+    for fx, fz in ((1, 0.45), (0.45, 1), (0.74, 0.74)):
+        m.box([cx - rx * fx, y0, cz - rz * fz], [cx + rx * fx, y1, cz + rz * fz], mat, round=max(rx, rz), axis=1, oval=True)
+
+
+def torus(m, centre, R, w, t, mat, z=0.0, steps=16):
+    """A ring stood up in the x-y plane: R to the middle of the band, w across it, t thick; smooth in mesh.py."""
+    tag = ('torus',) + tuple(round(float(v), 4) for v in (centre[0], centre[1], z, R, w, t))
+    return m.arc(centre, R, 0, 360, w, t, mat, steps=steps, z=z, torus=tag)
+
+
+def blob(m, c, r, mat, axis=1):
+    """An ellipsoid centred on c with radii r (x, y, z): two stepped boxes, drawn as a smooth ball in mesh.py."""
+    tag = ('blob',) + tuple(round(float(v), 4) for v in (*c, *r))
+    o = [i for i in range(3) if i != axis]
+    for fa, fo in ((1, 0.74), (0.8, 1)):
+        f = [fo] * 3
+        f[axis] = fa
+        m.box([c[i] - r[i] * f[i] for i in range(3)], [c[i] + r[i] * f[i] for i in range(3)], mat, ball=tag, axis=axis)
+
+
 def ball(m, r, mat, squash=1.0, cy=None):
     cy = r * squash if cy is None else cy
     h = r * squash
-    m.rod(cy - h, cy + h, r * 0.82, mat)
-    m.rod(cy - h * 0.8, cy + h * 0.8, r, mat)
+    tag = (round(cy, 4), r, squash)     # tells mesh.py these two rods are one ball
+    m.rod(cy - h, cy + h, r * 0.82, mat, ball=tag)
+    m.rod(cy - h * 0.8, cy + h * 0.8, r, mat, ball=tag)
 
 
 def apple(m, r=1.5):
@@ -288,15 +311,15 @@ def tomato(m, r=1.3):
 
 def onion(m, r=1.4):
     ball(m, r, 'skin', 0.85)
-    m.rod(r * 1.7, r * 1.7 + 0.8, 0.25, 'skin')
+    blob(m, (0, r * 1.7 + 0.15, 0), (0.42, 0.55, 0.42), 'skin')
+    m.rod(r * 1.7 + 0.6, r * 1.7 + 0.95, 0.12, 'skin')
     m.rod(-0.3, 0.0, 0.3, 'stem')
 
 
 def potato(m):
-    m.box([-1.8, 0, -1.1], [1.8, 1.6, 1.1], 'skin')
-    m.box([-1.4, 0.2, -1.3], [1.2, 1.4, 1.3], 'skin')
-    m.box([-2.0, 0.3, -0.8], [1.9, 1.3, 0.8], 'skin')
-    m.box([0.4, 1.5, -0.5], [1.4, 1.75, 0.4], 'skin')
+    # a long lumpy oval, one end fatter than the other
+    blob(m, (-0.3, 1.15, 0), (1.9, 1.1, 1.3), 'skin', axis=0)
+    blob(m, (1.0, 1.05, 0.1), (1.0, 0.95, 1.1), 'skin', axis=0)
 
 
 def banana(m):

@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/nine_volt"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/nine_volt",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/nine_volt",
+   "part": "body"
+  }
  }
 }

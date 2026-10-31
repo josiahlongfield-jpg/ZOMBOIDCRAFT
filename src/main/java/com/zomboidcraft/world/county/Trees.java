@@ -214,6 +214,14 @@ public final class Trees {
         boolean ragged = !sp.equals("dead");
         List<int[]> sprigs = new ArrayList<>();
         List<String> sprigLeaves = new ArrayList<>();
+        // each leaf's thinned version, worked out once per template rather than looked up for every leaf of every tree
+        String[] thin = THIN.computeIfAbsent(t, k -> {
+            String[] out = new String[k.state.length];
+            for (int i = 0; i < out.length; i++) {
+                out[i] = sparse(k.state[i]);
+            }
+            return out;
+        });
         for (int i = 0; i < t.x.length; i++) {
             String s = t.state[i];
             int wx = x + t.x[i], wy = y + t.y[i], wz = z + t.z[i];
@@ -230,7 +238,7 @@ public final class Trees {
                         continue;
                     }
                     if (n < -0.32) {
-                        s = sparse(s);
+                        s = thin[i];
                     }
                 } else {
                     int open = Integer.bitCount(sh);
@@ -242,7 +250,7 @@ public final class Trees {
                         continue;
                     }
                     if (n < 0.12 + 0.07 * open || r.nextDouble() < 0.3) {
-                        s = sparse(s);
+                        s = thin[i];
                     }
                     if ((sh & 0b110111) != 0 && r.nextDouble() < 0.07 * open) {
                         // a sprig out of one of its open sides, not hanging straight down
@@ -275,8 +283,12 @@ public final class Trees {
     }
 
     private static String sparse(String leaves) {
-        return leaves.endsWith("_sparse") ? leaves : leaves + "_sparse";
+        // cached: called for most leaves of every tree, and a fresh string each time made every lookup after it slow
+        return SPARSE.computeIfAbsent(leaves, l -> l.endsWith("_sparse") ? l : l + "_sparse");
     }
+
+    private static final Map<String, String> SPARSE = new ConcurrentHashMap<>();
+    private static final Map<Template, String[]> THIN = new ConcurrentHashMap<>();
 
     /** A crossed sprig of the same leaves, for the crown's ragged edge. */
     private static String tuft(String leaves) {
@@ -299,11 +311,12 @@ public final class Trees {
         return v;
     }
 
-    private static final Map<String, String> RECOLOURED = new ConcurrentHashMap<>();
+    /** By colour, then leaves: no key string built per leaf (this was the slowest part of building a wooded place). */
+    private static final Map<String, Map<String, String>> RECOLOURED = new ConcurrentHashMap<>();
 
     /** "tree_maple_leaves_sparse" in red is "tree_maple_leaves_red_sparse"; sick ones are all one grey. */
     private static String recolour(String leaves, String colour) {
-        return RECOLOURED.computeIfAbsent(leaves + "|" + colour, k -> {
+        return RECOLOURED.computeIfAbsent(colour, k -> new ConcurrentHashMap<>()).computeIfAbsent(leaves, k -> {
             String suffix = leaves.endsWith("_sparse") ? "_sparse" : leaves.endsWith("_tuft") ? "_tuft" : "";
             if (colour.equals("sick")) {
                 return "tree_leaves_sick" + suffix;

@@ -1,6 +1,11 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/loot/canned_coffee"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/loot/canned_coffee",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "loot/canned_coffee",
+   "part": "body"
+  }
  }
 }
