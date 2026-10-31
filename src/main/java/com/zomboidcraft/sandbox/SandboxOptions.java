@@ -115,6 +115,20 @@ final class SandboxOptions {
         w.put("VehicleEasyUse", b -> b.toggle("world.vehicleEasyUse").owner("VEHICLES"));
         w.put("CarGeneralCondition", b -> b.choice("world.carCondition", "very_low", "low", "normal", "high", "very_high").owner("VEHICLES"));
         w.put("CarDamageOnImpact", b -> b.choice("world.carCrashDamage", "very_low", "low", "normal", "high", "very_high").owner("VEHICLES"));
+        w.put("ChanceHasGas", b -> b.choice("world.carChanceHasGas", "low", "normal", "high").owner("VEHICLES"));
+        w.put("InitialGas", b -> b.choice("world.carInitialGas", "very_low", "low", "normal", "high", "very_high", "full").owner("VEHICLES"));
+        w.put("CarGasConsumption", b -> b.number("world.carGasConsumption", 0, 100).owner("VEHICLES"));
+        w.put("FuelStationGasInfinite", b -> b.toggle("world.fuelStationGasInfinite").owner("VEHICLES"));
+        w.put("FuelStationGasMin", b -> b.number("world.fuelStationGasMin", 0, 1).owner("VEHICLES"));
+        w.put("FuelStationGasMax", b -> b.number("world.fuelStationGasMax", 0, 1).owner("VEHICLES"));
+        w.put("FuelStationGasEmptyChance", b -> b.number("world.fuelStationEmptyChance", 0, 100).owner("VEHICLES"));
+        w.put("LockedCar", b -> b.choice("world.carLocked", "never", "extremely_rare", "rare", "sometimes", "often", "very_often").owner("VEHICLES"));
+        w.put("CarAlarm", b -> b.choice("world.carAlarm", "never", "extremely_rare", "rare", "sometimes", "often", "very_often").owner("VEHICLES"));
+        w.put("SirenEffectsZombies", b -> b.toggle("world.sirenEffectsZombies").owner("VEHICLES"));
+        w.put("SirenShutoffHours", b -> b.number("world.sirenShutoffHours", 0, 168).owner("VEHICLES"));
+        w.put("PlayerDamageFromCrash", b -> b.toggle("world.playerDamageFromCrash").owner("VEHICLES"));
+        w.put("RecentlySurvivorVehicles", b -> b.choice("world.survivorCars", "none", "low", "normal", "high").owner("VEHICLES"));
+        w.put("TrafficJam", b -> b.toggle("world.trafficJams").owner("LANDSCAPE"));
         w.put("DamageToPlayerFromHitByACar", b -> b.number("world.carHitDamage", 1, 4).owner("VEHICLES"));
         // Firearms (WEAPONS): combat/Firearms. Use Damage Chance says who a shot strikes just by being aimed at;
         // jams start at 0 since Josiah cut them on 10-26
