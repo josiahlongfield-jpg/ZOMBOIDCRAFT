@@ -46,7 +46,11 @@ public class WalkerRenderer extends HumanoidMobRenderer<Zombie, WalkerRenderStat
         addLayer(new WalkerEyesLayer(this));
         addLayer(new ZBodyLayer(this));
         addLayer(new com.zomboidcraft.client.zombie.body.BoltsLayer(this));
+        addLayer(new com.zomboidcraft.client.zombie.body.BodyWeaponLayer(this, context.getItemModelResolver()));
     }
+
+    /** One stack per kind of stuck weapon, made on first sight (never at class load: components aren't bound then). */
+    private static final java.util.Map<String, net.minecraft.world.item.ItemStack> STUCK_STACKS = new java.util.HashMap<>();
 
     private static final class OldBodyOnly extends RenderLayer<WalkerRenderState, WalkerModel> {
         private final RenderLayer<WalkerRenderState, WalkerModel> layer;
@@ -79,6 +83,9 @@ public class WalkerRenderer extends HumanoidMobRenderer<Zombie, WalkerRenderStat
         int limbs = Dismember.limbs(zombie);
         state.cuts = limbs & (Dismember.CUTS | Dismember.MARKS);
         state.bolts = zombie.getAttachedOrElse(com.zomboidcraft.combat.StuckBolts.BOLTS, java.util.List.of());
+        state.bodyWeapon = com.zomboidcraft.zombie.AttachedWeapons.of(zombie);
+        state.bodyWeaponStack = state.bodyWeapon == null ? null : STUCK_STACKS.computeIfAbsent(state.bodyWeapon.item(),
+                k -> com.zomboidcraft.zombie.AttachedWeapons.stack(state.bodyWeapon));
         ZcConfig.Look look = ZcConfig.get().look;
         state.zbody = look.newZombies ? ZBodyMesh.get(state.outfit) : null;
         if (state.zbody != null) {

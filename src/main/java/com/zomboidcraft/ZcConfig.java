@@ -94,6 +94,8 @@ public final class ZcConfig {
     /** Keeping big hordes smooth: how much detail far zombies get, and how often far idle ones think. */
     public Performance performance = new Performance();
     public Population population = new Population();
+    /** Zomboid's Zombie Lore page, setting for setting: how the dead move, see, hear, remember and hurt (zombie/Lore). */
+    public ZombieLore zombieLore = new ZombieLore();
     /** Driverless trains: the county railway and the downtown subway (TrainCommand, world.trains). */
     public Trains trains = new Trains();
     /** Things you throw: lures, fire, smoke and blasts (combat/throwing). */
@@ -336,6 +338,89 @@ public final class ZcConfig {
         public double crowdMinDistance = 40;
     }
 
+    /**
+     * Project Zomboid's Zombie Lore sandbox page, all 29 of its settings under their Zomboid names, at Zomboid's
+     * Apocalypse defaults except where Josiah changed them (the sprinter share). "random" lets each zombie roll its
+     * own, from its UUID, so every player sees the same zombie the same way. Read by zombie/Lore.
+     * Fixed rules that are not settings: shots only flinch, only a head hit kills with a gun, crawling only with both
+     * legs gone.
+     */
+    public static class ZombieLore {
+        public enum Speed { SPRINTERS, FAST_SHAMBLERS, SHAMBLERS, RANDOM }
+        public enum Strength { SUPERHUMAN, NORMAL, WEAK, RANDOM }
+        public enum Toughness { TOUGH, NORMAL, FRAGILE, RANDOM }
+        public enum Transmission { BLOOD_AND_SALIVA, SALIVA_ONLY, EVERYONES_INFECTED, NONE }
+        public enum Mortality { INSTANT, SECONDS_0_30, MINUTES_0_1, HOURS_0_12, DAYS_2_3, WEEKS_1_2, NEVER }
+        public enum Reanimate { INSTANT, SECONDS_0_30, MINUTES_0_1, HOURS_0_12, DAYS_2_3, WEEKS_1_2 }
+        public enum Cognition { NAVIGATE_AND_USE_DOORS, NAVIGATE, BASIC_NAVIGATION, RANDOM }
+        public enum CrawlUnderVehicle { CRAWLERS_ONLY, EXTREMELY_RARE, RARE, SOMETIMES, OFTEN, VERY_OFTEN, EXTREMELY_OFTEN }
+        public enum Memory { LONG, NORMAL, SHORT, NONE, RANDOM, RANDOM_NORMAL_NONE }
+        public enum Sight { EAGLE, NORMAL, POOR, RANDOM, RANDOM_NORMAL_POOR }
+        public enum Hearing { PINPOINT, NORMAL, POOR, RANDOM, RANDOM_NORMAL_POOR }
+        public enum ActiveOnly { BOTH, NIGHT, DAY }
+        public enum FakeDead { WORLD_ZOMBIES, WORLD_AND_COMBAT, OFF }
+        public enum SpawnArea { INSIDE_THE_BUILDING_AND_AROUND_IT, INSIDE_THE_BUILDING, INSIDE_THE_ROOM, NONE }
+
+        /** Shamblers, fast shamblers, sprinters, or each its own (random: shamblers and fast shamblers half and half, and the sprinter share). */
+        public Speed speed = Speed.RANDOM;
+        /** Random Sprinter Amount: percent of zombies that sprint when speed is random (Josiah 27 Oct: 15; Zomboid's is 0). */
+        public double sprinterPercent = 15;
+        /** How hard they bite, scratch and hold on. */
+        public Strength strength = Strength.NORMAL;
+        /** How much they take before they go down: health, limb toughness, blows. Any bullet in the head still kills. */
+        public Toughness toughness = Toughness.RANDOM;
+        /** How the infection spreads: bites and scratches, bites only, everyone rises when they die, or not at all. */
+        public Transmission transmission = Transmission.BLOOD_AND_SALIVA;
+        /** How long the infection takes to kill you, in game time. */
+        public Mortality mortality = Mortality.DAYS_2_3;
+        /** How long an infected body lies before it gets up. */
+        public Reanimate reanimate = Reanimate.MINUTES_0_1;
+        /** Basic: bash doors, climb broken windows, go round to a way in. Navigate plans round things better. Use doors opens them. */
+        public Cognition cognition = Cognition.BASIC_NAVIGATION;
+        /** Random Door Opening Amount: percent that open doors when cognition is random. */
+        public double doorOpeningPercent = 0;
+        /** How often crawlers lie in wait under parked cars and grab your ankle. */
+        public CrawlUnderVehicle crawlUnderVehicle = CrawlUnderVehicle.OFTEN;
+        /** How long they keep after you once you're out of sight, and how hard they search. */
+        public Memory memory = Memory.NORMAL;
+        /** How far they see: eagle 150%, normal, poor 60%. */
+        public Sight sight = Sight.RANDOM_NORMAL_POOR;
+        /** How far they hear, and how close to the spot they come: pinpoint 150% and exact, poor 60%. */
+        public Hearing hearing = Hearing.RANDOM_NORMAL_POOR;
+        /** New Stealth System: crouched behind a car, a hedge or a low wall you're hidden, and a lit light gives you away. */
+        public boolean stealthSystem = true;
+        /** Environmental Attacks: zombies that aren't after anyone still thump doors and windows they wander into. */
+        public boolean environmentalAttacks = false;
+        /** Damage Construction: zombies beat down boards, sheets, sandbags and the rest of what you build. */
+        public boolean damageConstruction = true;
+        /** Day/Night Zombie Speed Effect: outside these clock hours (night 19:00-06:00) they're slower and duller. */
+        public ActiveOnly activeOnly = ActiveOnly.BOTH;
+        /** Zombie House Alarm Triggering: breaking in trips a house's alarm (once houses have them). */
+        public boolean houseAlarms = true;
+        /** Drag Down: three or more on you, one from behind, pull you down. */
+        public boolean dragDown = true;
+        /** Crawlers Drag Down: crawlers count toward it. */
+        public boolean crawlersDragDown = false;
+        /** Zombie Lunge: one that just climbed in at a window lunges if you're close. */
+        public boolean lunge = true;
+        /** Zombie Armor Factor: how much a zombie's helmet, vest or turnout gear stops. */
+        public double armorFactor = 2;
+        /** Maximum Zombie Armor Defense, percent. */
+        public double maxDefense = 85;
+        /** Chance Of Attached Weapon, percent: a knife or an axe left stuck in the body, yours once it's down. */
+        public double attachedWeaponPercent = 6;
+        /** Zombie Fall Damage Multiplier. */
+        public double fallDamage = 1;
+        /** Fake Dead Zombie Reanimation: some of the dead lying about get up. */
+        public FakeDead fakeDead = FakeDead.WORLD_ZOMBIES;
+        /** Player Spawn Area: where the dead are kept clear round the spawn you pick. */
+        public SpawnArea spawnArea = SpawnArea.INSIDE_THE_BUILDING_AND_AROUND_IT;
+        /** Zombies To Damage Fences: this many leaning on a tall fence knock a panel down; -1 never. */
+        public int fenceThumpersRequired = 25;
+        /** Fence Damage Multiplier: how fast they do it. */
+        public double fenceDamageMultiplier = 1;
+    }
+
     public static class Cases {
         /** A found case comes packed with a gun, magazines and rounds, a can with rounds. Off, they're found empty. */
         public boolean packed = true;
@@ -534,10 +619,12 @@ public final class ZcConfig {
     }
 
     public static class Zombies {
-        /** Share of zombies that sprint once they spot you (Zomboid's "random" speed mix): about one in seven. */
+        /** Old place of the sprinter share, read once to move it to zombieLore.sprinterPercent; not used since. */
         public double sprinterChance = 0.15;
         /** Speed change for shamblers and sprinters, as a fraction of vanilla zombie speed. */
         public double shamblerSpeed = -0.3;
+        /** Zomboid's fast shamblers: a quicker walk, still no run. */
+        public double fastShamblerSpeed = -0.12;
         public double sprinterSpeed = 0.25;
         public boolean burnInSunlight = false;
         public boolean breakDoors = true;
@@ -629,6 +716,7 @@ public final class ZcConfig {
         public double biteChance = 0.12;
         public double scratchChance = 0.30;
         public double scratchInfectionChance = 0.07;
+        /** No longer read: how long the infection takes is zombieLore.mortality now (Zomboid's Infection Mortality). */
         public int infectionMinutes = 40;
         /** Infected players rise as zombies. */
         public boolean reanimate = true;
@@ -1684,7 +1772,7 @@ public final class ZcConfig {
      * are left alone).
      */
     public int defaultsVersion = 0;
-    private static final int DEFAULTS = 16;
+    private static final int DEFAULTS = 17;
 
     private static void upgrade(ZcConfig c) {
         if (c.defaultsVersion < 1) {
@@ -1866,6 +1954,10 @@ public final class ZcConfig {
                 c.minigun.aimSpread = 0.35;
             }
         }
+        if (c.defaultsVersion < 17) {
+            // 2026-10-31: the sprinter share moved to Zomboid's lore page (zombieLore.sprinterPercent), kept as it was
+            c.zombieLore.sprinterPercent = Math.round(c.zombies.sprinterChance * 1000) / 10.0;
+        }
         c.defaultsVersion = DEFAULTS;
     }
 
@@ -1948,6 +2040,8 @@ public final class ZcConfig {
                 field.setInt(group, Integer.parseInt(raw));
             } else if (type == double.class) {
                 field.setDouble(group, Double.parseDouble(raw));
+            } else if (type.isEnum()) {
+                field.set(group, enumValue(type, raw, key));
             } else {
                 field.set(group, raw);
             }
@@ -1996,6 +2090,22 @@ public final class ZcConfig {
         } catch (ReflectiveOperationException | ArrayIndexOutOfBoundsException e) {
             throw new IllegalArgumentException("Unknown setting " + key);
         }
+    }
+
+    /** A choice by name, any case, with spaces, dashes or underscores: "random_normal_poor", "Random Normal-Poor". */
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private static Object enumValue(Class<?> type, String raw, String key) {
+        String want = raw.trim().toUpperCase(java.util.Locale.ROOT).replace(' ', '_').replace('-', '_');
+        for (Object c : type.getEnumConstants()) {
+            if (((Enum) c).name().equals(want)) {
+                return c;
+            }
+        }
+        StringBuilder choices = new StringBuilder();
+        for (Object c : type.getEnumConstants()) {
+            choices.append(choices.length() == 0 ? "" : ", ").append(((Enum) c).name().toLowerCase(java.util.Locale.ROOT));
+        }
+        throw new IllegalArgumentException(key + " must be one of " + choices);
     }
 
     private ZcConfig() {

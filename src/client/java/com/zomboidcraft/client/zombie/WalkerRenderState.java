@@ -37,4 +37,7 @@ public class WalkerRenderState extends ZombieRenderState {
     public float heldLean;
     /** Crossbow bolts standing in it. */
     public java.util.List<com.zomboidcraft.combat.StuckBolts.Bolt> bolts = java.util.List.of();
+    /** A knife or an axe left stuck in it (zombieLore attached weapon), and the stack drawn for it. */
+    public com.zomboidcraft.zombie.AttachedWeapons.Stuck bodyWeapon;
+    public net.minecraft.world.item.ItemStack bodyWeaponStack;
 }
