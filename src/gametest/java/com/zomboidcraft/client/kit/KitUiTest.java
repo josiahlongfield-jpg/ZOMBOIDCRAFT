@@ -838,6 +838,7 @@ public class KitUiTest implements FabricClientGameTest {
         bondsTest(ctx, sp);
         sp.getServer().runCommand("zc npc clear");
         mechanicsTest(ctx, sp);
+        sandboxTest(ctx);
     }
 
     /** Bonding (Josiah 2026-10-30): the prompt on a first G, then K's selection of two companions, sliding, and a pick. */
@@ -950,6 +951,44 @@ public class KitUiTest implements FabricClientGameTest {
             });
             ctx.waitTicks(5);
         }
+    }
+
+    /** The Sandbox page (Josiah 2026-10-31): a group, a search, a toggle and a number changed, then the pause menu's way in. */
+    private static void sandboxTest(ClientGameTestContext ctx) {
+        SandboxScreen[] page = new SandboxScreen[1];
+        ctx.runOnClient(mc -> {
+            page[0] = new SandboxScreen(null);
+            mc.gui.setScreen(page[0]);
+        });
+        ctx.waitTicks(10);
+        ctx.takeScreenshot("sandbox-00-population");
+        ctx.runOnClient(mc -> page[0].group(com.zomboidcraft.sandbox.SandboxGroup.LORE));
+        ctx.waitTicks(4);
+        ctx.takeScreenshot("sandbox-01-lore");
+        ctx.runOnClient(mc -> page[0].group(com.zomboidcraft.sandbox.SandboxGroup.ZOMBOIDCRAFT));
+        ctx.waitTicks(4);
+        ctx.takeScreenshot("sandbox-02-ours");
+        ctx.runOnClient(mc -> page[0].group(com.zomboidcraft.sandbox.SandboxGroup.LOOT));
+        ctx.waitTicks(4);
+        ctx.takeScreenshot("sandbox-03-loot");
+        ctx.runOnClient(mc -> page[0].search("zombie"));
+        ctx.waitTicks(4);
+        ctx.takeScreenshot("sandbox-04-search");
+        String live = ctx.computeOnClient(mc -> {
+            StringBuilder b = new StringBuilder();
+            for (var o : com.zomboidcraft.sandbox.Sandbox.options()) {
+                if (!o.coming() && o.perWorld() && b.length() < 400) b.append(o.id).append('=').append(o.kind).append(' ');
+            }
+            return b.toString();
+        });
+        LOG.info("ZCUI sandbox live settings: {}", live);
+        ctx.runOnClient(mc -> mc.gui.setScreen(new net.minecraft.client.gui.screens.PauseScreen(true)));
+        ctx.waitTicks(10);
+        ctx.takeScreenshot("sandbox-05-pause");
+        ctx.runOnClient(mc -> mc.gui.setScreen(SandboxScreen.forNewWorld(null)));
+        ctx.waitTicks(6);
+        ctx.takeScreenshot("sandbox-06-newworld");
+        ctx.runOnClient(mc -> mc.gui.setScreen(null));
     }
 
     private static void bookTest(TestSingleplayerContext sp) {
