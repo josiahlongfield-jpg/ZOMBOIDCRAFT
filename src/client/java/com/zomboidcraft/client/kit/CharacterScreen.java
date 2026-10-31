@@ -109,7 +109,7 @@ public final class CharacterScreen extends Screen {
 
         int gap = 8;
         int usable = width - pad * 2 - gap * 3;
-        int jw = Math.max(90, usable * 21 / 100), cw = Math.max(100, usable * 22 / 100);
+        int jw = Math.max(80, usable * 19 / 100), cw = Math.max(84, usable * 20 / 100);
         int rw = usable - jw - cw * 2;
         int x = pad;
         hovered = null;
@@ -230,7 +230,7 @@ public final class CharacterScreen extends Screen {
                 g.fill(cx - 2, rowY - 1, cx + cwid + 2, rowY + 9, 0x14E8E4DA);
             }
             KitDraw.text(g, font, t.name(), cx, rowY, t.positive() ? KitDraw.GOOD : KitDraw.BAD, 0.7f);
-            KitDraw.capsRight(g, font, hover ? "x" : signed(-t.cost()), cx + cwid, rowY + 1, KitDraw.DIM, 0.6f);
+            if (hover) KitDraw.capsRight(g, font, "x", cx + cwid, rowY + 1, KitDraw.DIM, 0.6f);
             mine.rows.add(new int[]{cx, rowY - 1, cwid, 10});
             mine.ids.add(id);
             if (++slot % 2 == 0) rowY += 10;
@@ -247,9 +247,10 @@ public final class CharacterScreen extends Screen {
         g.fill(x + in, by, x + in + tw, by + 16, face);
         g.fill(x + in, by, x + in + tw, by + 1, left < 0 ? 0xFF55524A : hd ? 0xFFFFFFFF : 0xFFF4F1EA);
         g.fill(x + in, by + 15, x + in + tw, by + 16, left < 0 ? 0xFF3A3832 : 0xFFB9B4A8);
-        String label = left < 0 ? "Over budget" : "Choose where you wake";
-        float lw = KitDraw.capsWidth(font, label, 0.85f);
-        com.zomboidcraft.client.hud.Hud.caps(g, font, label, x + w / 2f - lw / 2, by + 4.5f, left < 0 ? 0xFF8F8A80 : 0xFF1D1B16, 0.85f, 0.85f, false);
+        String label = left < 0 ? "Over budget" : "Next: where you wake";
+        float ls = Math.min(0.85f, (tw - 8) / Math.max(1f, KitDraw.capsWidth(font, label, 1f)));
+        float lw = KitDraw.capsWidth(font, label, ls);
+        com.zomboidcraft.client.hud.Hud.caps(g, font, label, x + w / 2f - lw / 2, by + 4.5f, left < 0 ? 0xFF8F8A80 : 0xFF1D1B16, ls, ls, false);
         int half = (tw - 4) / 2;
         random = new int[]{x + in, by + 20, half, 12};
         reset = new int[]{x + in + half + 4, by + 20, half, 12};
