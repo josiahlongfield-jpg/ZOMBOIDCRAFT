@@ -166,7 +166,7 @@ public class BaseMoveTest implements FabricClientGameTest {
             ctx.waitTicks(12);
             frame(ctx, "lift-" + name + "-" + k);
         }
-        ctx.waitTicks(140);
+        ctx.waitTicks(40);
         ctx.runOnClient(mc -> mc.options.keyAttack.setDown(false));
         ctx.waitTicks(5);
         String after = sp.getServer().computeOnServer(s -> {
@@ -238,6 +238,8 @@ public class BaseMoveTest implements FabricClientGameTest {
     }
 
     private static void frame(ClientGameTestContext ctx, String name) {
+        // the software renderer on CI draws a few frames a second: give it time to catch up with the game
+        ctx.waitTicks(30);
         ctx.takeScreenshot(String.format("%03d-%s", shot++, name));
     }
 }

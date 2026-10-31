@@ -177,8 +177,10 @@ public final class Moving {
     }
 
     private static boolean empty(BlockEntity be) {
-        if (be instanceof RandomizableContainer r && r.getLootTable() != null) {
-            return false;  // still to be searched: whatever's in it is in it
+        // still to be searched: whatever's in it is in it. Only the server knows (a fitting on the client always
+        // carries its default table), so the client lets the crack run and the server has the last word.
+        if (be instanceof RandomizableContainer r && r.getLootTable() != null && be.getLevel() != null && !be.getLevel().isClientSide()) {
+            return false;
         }
         return !(be instanceof Container c) || c.isEmpty();
     }
