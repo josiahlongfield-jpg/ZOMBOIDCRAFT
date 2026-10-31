@@ -173,7 +173,7 @@ public class HammerItem extends MeleeWeaponItem {
     private void hammered(ServerLevel level, ServerPlayer player, BlockPos pos, InteractionHand hand) {
         level.playSound(null, pos, ModSounds.HAMMER_NAIL, SoundSource.PLAYERS, 1f, 0.92f + level.getRandom().nextFloat() * 0.16f);
         Noise.emit(level, Vec3.atCenterOf(pos), HAMMER_NOISE);
-        player.getItemInHand(hand).hurtAndBreak(1, player, hand);
+        com.zomboidcraft.combat.Wear.use(player.getItemInHand(hand), player, hand, 1);
         Skills.addXp(player, Skill.CARPENTRY, 6);
     }
 

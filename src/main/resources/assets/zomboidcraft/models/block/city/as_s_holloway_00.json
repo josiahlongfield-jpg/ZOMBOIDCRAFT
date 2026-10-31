@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "as_laminate": "zomboidcraft:block/city/as_laminate",
+    "as_s_holloway_00": "zomboidcraft:block/city/as_s_holloway_00",
+    "particle": "zomboidcraft:block/city/as_s_holloway_00"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        13.5
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_s_holloway_00"
+        },
+        "south": {
+          "texture": "#as_laminate",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#as_laminate",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#as_laminate",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#as_laminate",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#as_laminate",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

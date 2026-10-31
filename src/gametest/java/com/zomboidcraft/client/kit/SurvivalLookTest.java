@@ -85,6 +85,9 @@ public class SurvivalLookTest implements FabricClientGameTest {
                 m.put("nausea", 60);
                 m.put("drunk", 70);
                 com.zomboidcraft.survival.Ailments.save(p, m);
+                com.zomboidcraft.survival.Mood.add(p, com.zomboidcraft.survival.Mood.Stat.BOREDOM, 30);
+                com.zomboidcraft.survival.Mood.add(p, com.zomboidcraft.survival.Mood.Stat.UNHAPPINESS, 55);
+                com.zomboidcraft.survival.Mood.add(p, com.zomboidcraft.survival.Mood.Stat.STRESS, 80);
             });
             ctx.waitTicks(50);
             shot(ctx, "ailments");

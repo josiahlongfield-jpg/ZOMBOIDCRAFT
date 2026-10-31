@@ -111,6 +111,29 @@ public final class SitePreview {
                 v.forColumn(cx, cz, (x, y, z, id) -> set.set(x, y + LEVEL, z, pal.get(id)));
             }
         }
+        // VEHICLES' two-post hoists ("!hoist:notch;models") as the preview can show them: the posts as
+        // steel columns 1.7 either side of the bay's centre line, the car on it raised a block per notch past the first
+        List<Voxels.Car> shown = new ArrayList<>();
+        for (Voxels.Car c : v.cars) {
+            String models = c.models();
+            if (models == null || !models.startsWith("!hoist:")) {
+                shown.add(c);
+                continue;
+            }
+            int semi = models.indexOf(';');
+            int notch = Integer.parseInt(models.substring(7, semi < 0 ? models.length() : semi));
+            boolean alongZ = Math.round(c.yaw() / 90.0) % 2 == 0;
+            for (int sgn = -1; sgn <= 1; sgn += 2) {
+                int px = (int) Math.floor(alongZ ? c.x() + sgn * 1.7 : c.x()), pz = (int) Math.floor(alongZ ? c.z() : c.z() + sgn * 1.7);
+                for (int y = 0; y < 4; y++) {
+                    set.set(px, c.y() + y + LEVEL, pz, y == 0 ? "as_column_base" : "as_column");
+                }
+            }
+            if (semi >= 0) {
+                shown.add(new Voxels.Car(c.x(), c.y() + Math.max(0, notch - 1), c.z(), c.yaw(), c.minLength(), c.maxLength(), c.seed(),
+                        models.substring(semi + 1).replace("#customer", "")));
+            }
+        }
         try (DataOutputStream o = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(out + ".vox")))) {
             ByteBuffer b = ByteBuffer.allocate(vox.length * 2).order(ByteOrder.LITTLE_ENDIAN);
             for (short s : vox) {
@@ -119,9 +142,9 @@ public final class SitePreview {
             o.write(b.array());
         }
         StringBuilder cars = new StringBuilder();
-        for (Voxels.Car c : v.cars) {
+        for (Voxels.Car c : shown) {
             cars.append(cars.length() > 0 ? "," : "").append(String.format(Locale.ROOT, "[%.2f,%d,%.2f,%.1f,%.1f,%.1f,\"%s\"]",
-                    c.x() + m, c.y() + LEVEL, c.z() + m, c.yaw(), c.minLength(), c.maxLength(), c.models() == null ? "" : c.models()));
+                    c.x() + m, c.y() + LEVEL, c.z() + m, c.yaw(), c.minLength(), c.maxLength(), c.models() == null ? "" : c.models().replace("#customer", "")));
         }
         try (PrintWriter pw = new PrintWriter(out + ".json")) {
             StringBuilder ps = new StringBuilder();

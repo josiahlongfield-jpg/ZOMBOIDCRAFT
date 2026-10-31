@@ -42,6 +42,7 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.world.cars.AirReadiness.register();
         com.zomboidcraft.world.cars.AirNet.register();
         com.zomboidcraft.world.events.WorldEvents.register();
+        com.zomboidcraft.world.events.MetaEvents.register();
         com.zomboidcraft.world.NetherSeal.register();
         com.zomboidcraft.world.files.LabFiles.register();
         com.zomboidcraft.world.Breach.register();
@@ -55,6 +56,8 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.combat.Attachments.register();
         com.zomboidcraft.combat.GunFinish.register();
         com.zomboidcraft.combat.Repairs.register();
+        com.zomboidcraft.combat.Wear.register();
+        com.zomboidcraft.combat.SpearItem.register();
         com.zomboidcraft.combat.ModSounds.register();
         com.zomboidcraft.combat.throwing.Throwing.register();
         ModItems.register();
@@ -65,6 +68,7 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.spawn.SpawnPicker.register();
         com.zomboidcraft.gear.Headgear.register();
         com.zomboidcraft.gear.Radios.register();
+        com.zomboidcraft.gear.Broadcasts.register();
         com.zomboidcraft.loot.Nearby.register();
         Loot.register();
         com.zomboidcraft.combat.rolls.Rolls.register();
@@ -73,6 +77,7 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.building.Builder.register();
         com.zomboidcraft.barricade.CrowbarItem.register();
         SurvivalEvents.register();
+        com.zomboidcraft.survival.DeathCard.register();
         com.zomboidcraft.survival.Injuries.register();
         com.zomboidcraft.survival.TimedActions.register();
         ZombieEvents.register();

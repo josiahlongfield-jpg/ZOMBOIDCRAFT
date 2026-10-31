@@ -654,6 +654,8 @@ skillbook_maintenance | Home Maintenance, Vols 1-5 | S-P | 8-60 | 0.5 | books ha
 skillbook_masonry | Bricklaying Basics, Vols 1-5 | S-P | 8-60 | 0.5 | books hard build
 skillbook_metalworking | Metal Shop, Vols 1-5 | S-P | 8-60 | 0.5 | books factory farm school
 skillbook_piloting | Flight Training Manual, Vols 1-5 | R-G | 15-120 | 0.6 | carrier.3 mil books
+skillbook_electrical | Basic Electronics and Wiring, Vols 1-5 | S-P | 8-60 | 0.5 | books hard elec school
+skillbook_plumbing | Plumbing Made Easy, Vols 1-5 | S-P | 8-60 | 0.5 | books hard build
 # recipe magazines: each teaches one recipe or one finish blueprint
 mag_carpentry | Handyman Magazine (recipe) | S | 6 | 0.2 | desk hard books conv
 mag_mechanics | Car Mechanics Monthly (recipe) | S | 6 | 0.2 | garage auto conv

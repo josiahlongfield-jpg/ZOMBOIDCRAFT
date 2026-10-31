@@ -16,6 +16,19 @@ public final class ShopToolClient {
             return t == null ? null : new com.zomboidcraft.client.interact.Interactables.Spot(t.handle(),
                     com.zomboidcraft.client.interact.Interactables.SIZE);
         });
+        // held G: the tool's one job, named
+        com.zomboidcraft.client.interact.InteractMenu.provider((client, player, hit, out) -> {
+            ShopTool t = spot(client, player);
+            if (t == null) return;
+            String label = switch (t.kind()) {
+                case JACK -> "Work the jack";
+                case CRANE -> "Wheel the crane to the car";
+                case TYRE_MACHINE -> "Reseat a tyre";
+                case WASHER -> "Clean a part";
+            };
+            out.add(com.zomboidcraft.client.interact.InteractMenu.Option.of(label,
+                    () -> ClientPlayNetworking.send(new ShopTool.Press(t.getId()))));
+        });
     }
 
     private static ShopTool spot(Minecraft client, LocalPlayer player) {

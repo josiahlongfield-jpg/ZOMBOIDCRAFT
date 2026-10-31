@@ -51,6 +51,7 @@ public class ZomboidCraftClient implements ClientModInitializer {
         CombatClient.register();
         com.zomboidcraft.client.gear.NightVisionClient.register();
         com.zomboidcraft.client.gear.RadioClient.register();
+        com.zomboidcraft.client.gear.BroadcastHud.register();
         RailLights.register();
         com.zomboidcraft.client.gear.HandLights.register();
         com.zomboidcraft.client.building.Placer.register();
@@ -87,6 +88,8 @@ public class ZomboidCraftClient implements ClientModInitializer {
         com.zomboidcraft.client.sound.Score.register();
         com.zomboidcraft.client.weather.WeatherFx.register();
         com.zomboidcraft.client.sandbox.SandboxClient.register();
+        com.zomboidcraft.client.kit.SandboxScreen.register();
+        com.zomboidcraft.client.kit.DeathCardScreen.register();
         // last, so it can wrap every HUD piece registered above
         com.zomboidcraft.client.camera.CinematicView.register();
         if (ZcConfig.get().look.customZombies) {

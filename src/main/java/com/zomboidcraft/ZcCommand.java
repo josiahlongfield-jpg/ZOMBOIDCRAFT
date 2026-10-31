@@ -77,6 +77,7 @@ public final class ZcCommand {
                                                 .suggests((ctx, b) -> SharedSuggestionProvider.suggest(ZOMBIE_KINDS, b))
                                                 .executes(ctx -> zombie(ctx, StringArgumentType.getString(ctx, "outfit"),
                                                         StringArgumentType.getString(ctx, "kind"))))))
+                        .then(Commands.literal("lore").executes(ZcCommand::lore))
                         .then(Commands.literal("weather")
                                 .executes(ZcCommand::weather)
                                 .then(Commands.argument("kind", StringArgumentType.word())
@@ -389,6 +390,33 @@ public final class ZcCommand {
             text.append(String.format("%n  %s = %s", key, ZcConfig.getValue(key)));
         }
         ctx.getSource().sendSuccess(() -> Component.literal(text.toString()), false);
+        return 1;
+    }
+
+    /** What the zombie you're looking at rolled under Zomboid's Zombie Lore settings (zombie/Lore). */
+    private static int lore(CommandContext<CommandSourceStack> ctx) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
+        net.minecraft.server.level.ServerPlayer player = ctx.getSource().getPlayerOrException();
+        net.minecraft.world.phys.Vec3 eye = player.getEyePosition(), look = player.getLookAngle();
+        net.minecraft.world.entity.monster.zombie.Zombie best = null;
+        double bestCos = Math.cos(Math.toRadians(8));
+        for (net.minecraft.world.entity.monster.zombie.Zombie z : player.level().getEntitiesOfClass(
+                net.minecraft.world.entity.monster.zombie.Zombie.class, player.getBoundingBox().inflate(48),
+                com.zomboidcraft.zombie.ZombieTypes::isWalker)) {
+            net.minecraft.world.phys.Vec3 to = z.getBoundingBox().getCenter().subtract(eye);
+            double cos = to.normalize().dot(look);
+            if (cos > bestCos) {
+                bestCos = cos;
+                best = z;
+            }
+        }
+        if (best == null) {
+            ctx.getSource().sendFailure(Component.literal("Look at a zombie first."));
+            return 0;
+        }
+        String text = com.zomboidcraft.zombie.Lore.describe(best) + ", armour "
+                + Math.round(com.zomboidcraft.zombie.ZombieArmor.share(best) * 100) + "%, health "
+                + Math.round(best.getHealth()) + "/" + Math.round(best.getMaxHealth());
+        ctx.getSource().sendSuccess(() -> Component.literal(text), false);
         return 1;
     }
 

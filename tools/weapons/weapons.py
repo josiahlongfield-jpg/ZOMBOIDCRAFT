@@ -118,11 +118,14 @@ def brand_oval(y0, y1, colour='#3b2414'):
 # ================================================================== melee roster
 
 class Weapon:
+    # durability is Zomboid's ConditionMax and lower its ConditionLowerChanceOneIn (Josiah 2026-10-31: Zomboid's
+    # numbers): each hit has a 1 in lower chance of taking a point off
     def __init__(self, name, title, kind, damage, speed, reach, knockback, durability, stamina, knockdown,
-                 two_handed=False, sound='blunt', skill='BLUNT', notes=''):
+                 two_handed=False, sound='blunt', skill='BLUNT', notes='', lower=10):
         self.name, self.title, self.kind = name, title, kind
         self.damage, self.speed, self.reach = damage, speed, reach
         self.knockback, self.durability, self.stamina = knockback, durability, stamina
+        self.lower = lower
         self.knockdown, self.two_handed, self.sound, self.skill = knockdown, two_handed, sound, skill
         self.notes = notes
 
@@ -342,6 +345,121 @@ def build_hammer(m):
         m.seg((2.5, 6.3), (2.9, 5.6), 0.4, 0.28, 'forged', z=z)
 
 
+# B42's primitive weapons (Josiah 2026-10-31: Zomboid's version): carved and fire-hardened spears, a spear with a
+# kitchen knife tied on, the crude stone axe, the stone hammer and knife, and the nailed plank and cudgel
+def spear_shaft(m, y1, mat='shaft'):
+    m.rod(-9.0, y1, 0.42, mat)
+    for y in (1.5, 13.0, 21.5):                 # knots where twigs were trimmed off
+        m.rod(y, y + 0.35, 0.47, mat)
+
+
+def build_wooden_spear(m, point='point'):
+    spear_shaft(m, 27.0)
+    for y0, y1, r in ((27.0, 28.2, 0.36), (28.2, 29.2, 0.27), (29.2, 30.0, 0.17), (30.0, 30.5, 0.08)):
+        m.rod(y0, y1, r, point)
+
+
+def build_hardened_spear(m):
+    build_wooden_spear(m, point='char')
+    m.rod(25.4, 27.0, 0.43, 'char')
+
+
+def build_spear_knife(m):
+    spear_shaft(m, 27.2)
+    m.box([-0.32, 25.0, -0.24], [0.32, 28.4, 0.24], 'handle')        # the knife's handle laid along the tip
+    for y in (24.9, 26.0, 27.1, 28.0):
+        m.rod(y, y + 0.55, 0.55, 'tape')
+    m.box([-0.36, 28.4, -0.2], [0.42, 28.7, 0.2], 'steel')
+    for y0, y1, w in ((28.7, 31.0, 1.2), (31.0, 32.2, 1.08), (32.2, 33.0, 0.86), (33.0, 33.6, 0.6), (33.6, 34.0, 0.34),
+                      (34.0, 34.25, 0.14)):
+        m.box([-0.4, y0, -0.06], [-0.4 + w, y1, 0.06], 'blade')
+    m.shift([0, -3.2, 0])       # held a little further up the shaft, so the knife fits inside the model's bounds
+
+
+def lashing(m, y0, y1, r):
+    for y in np.arange(y0, y1, 0.42):
+        m.rod(y, y + 0.3, r, 'binding')
+
+
+def build_stone_axe(m):
+    m.rod(-4.2, -3.6, 0.55, 'shaft')
+    m.rod(-3.6, 15.2, 0.47, 'shaft')
+    m.box([-0.7, 12.0, -0.55], [0.75, 15.0, 0.55], 'stone')          # wedged through a split in the haft
+    for x0, x1, y0, y1, t in ((0.75, 1.7, 11.8, 15.3, 0.9), (1.7, 2.6, 11.5, 15.4, 0.66), (2.6, 3.2, 11.9, 15.0, 0.4)):
+        m.box([x0, y0, -t / 2], [x1, y1, t / 2], 'stone')
+    m.box([-1.2, 12.6, -0.4], [-0.7, 14.4, 0.4], 'stone')
+    lashing(m, 11.0, 12.1, 0.62)
+    lashing(m, 14.9, 15.6, 0.6)
+
+
+def build_stone_hammer(m):
+    m.rod(-3.6, 9.4, 0.42, 'shaft')
+    for lo, hi in (([-1.9, 9.0, -0.95], [1.9, 11.6, 0.95]), ([-2.2, 9.4, -0.75], [2.2, 11.2, 0.75]),
+                   ([-1.6, 8.7, -0.7], [1.6, 11.9, 0.7])):
+        m.box(lo, hi, 'stone')
+    lashing(m, 7.8, 9.0, 0.56)
+    m.box([-0.5, 9.0, -1.0], [0.5, 11.6, 1.02], 'binding')            # the wrap over the stone
+
+
+def build_stone_knife(m):
+    m.rod(-2.8, 1.6, 0.46, 'shaft')
+    lashing(m, 0.9, 2.3, 0.52)
+    for y0, y1, x0, x1, t in ((1.6, 3.6, -0.5, 0.75, 0.3), (3.6, 5.4, -0.45, 0.68, 0.24), (5.4, 6.6, -0.32, 0.5, 0.18),
+                              (6.6, 7.4, -0.15, 0.3, 0.12)):
+        m.box([x0, y0, -t / 2], [x1, y1, t / 2], 'flint')
+
+
+def build_branch(m):
+    m.rod(-9.0, 9.0, 0.45, 'shaft')
+    m.seg((0.0, 3.0), (2.2, 6.6), 0.4, 0.4, 'shaft')       # a side twig
+    m.rod(9.0, 9.4, 0.3, 'shaft')
+
+
+def build_stone(m):
+    """A fist-sized field stone: a flat-bottomed lump, rounded by stepped layers and a little off true."""
+    for y0, y1, (x0, x1), (z0, z1) in ((-1.0, -0.6, (-1.5, 1.7), (-1.0, 1.1)), (-0.6, 0.1, (-1.8, 1.9), (-1.2, 1.25)),
+                                         (0.1, 0.6, (-1.5, 1.6), (-1.0, 1.0)), (0.6, 0.95, (-1.0, 1.0), (-0.7, 0.6))):
+        m.box([x0, y0, z0], [x1, y1, z1], 'stone')
+    m.box([1.9, -0.5, -0.6], [2.2, 0.0, 0.5], 'stone')         # a knob on one end
+    m.box([-0.3, -0.6, 1.25], [0.9, 0.0, 1.45], 'stone')
+
+
+def build_sharp_stone(m):
+    m.box([-1.2, -0.5, -0.9], [1.2, 0.5, 0.9], 'stone')
+    for x0, x1, t in ((1.2, 2.0, 0.7), (2.0, 2.7, 0.45), (2.7, 3.2, 0.22)):
+        m.box([x0, -t / 2, -0.8], [x1, t / 2, 0.8], 'stone')
+
+def nails_round(m, y0, n, r0, grow, seed):
+    rng = np.random.default_rng(seed)
+    for i in range(n):
+        y = y0 + i * 0.75
+        r = r0 + i * grow
+        L, s, d = 1.2 + rng.random() * 0.35, 0.17, i % 4
+        if d == 0:
+            m.box([r - 0.3, y, -s / 2], [r + L, y + s, s / 2], 'nail')
+        elif d == 1:
+            m.box([-s / 2, y, r - 0.3], [s / 2, y + s, r + L], 'nail')
+        elif d == 2:
+            m.box([-r - L, y, -s / 2], [-r + 0.3, y + s, s / 2], 'nail')
+        else:
+            m.box([-s / 2, y, -r - L], [s / 2, y + s, -r + 0.3], 'nail')
+
+
+def build_plank_nails(m):
+    m.box([-0.95, -4.6, -0.42], [0.95, 20.5, 0.42], 'plank')
+    m.box([-1.0, -4.0, -0.47], [1.0, 2.6, 0.47], 'binding')            # a rag round the grip
+    nails_round(m, 13.0, 10, 0.95, 0.0, 9)
+
+
+def build_cudgel_nails(m):
+    prof = [(-4.6, 0.5), (2.0, 0.55), (8.0, 0.7), (12.0, 0.9), (16.0, 1.1), (19.5, 1.2)]
+    for (y0, r0), (y1, r1) in zip(prof, prof[1:]):
+        m.rod(y0, y1, (r0 + r1) / 2, 'shaft')
+    m.rod(19.5, 20.1, 1.05, 'shaft')
+    m.rod(9.0, 9.4, 0.85, 'shaft')
+    nails_round(m, 12.6, 10, 0.85, 0.035, 11)
+
+
 def blade_fn(base=0.66, hamon=False, dark=None, bevel=0.3, edge=None):
     def fn(f):
         if edge is not None:
@@ -376,56 +494,100 @@ def shovel_blade(f):
     return P.rust(f, c, 0.25 + 0.4 * f.wear)
 
 
+def bark(f):
+    """A branch with its bark on, trimmed and handled smooth in places."""
+    c = P.wood(f, '#7d5f40', '#3f2c1c', 1.1)
+    return P.grime(f, c, 0.35)
+
+
+def charred(f):
+    """A spear's point hardened in the fire: blackened, cracked to brown where it was turned."""
+    c = P.wood(f, '#4a3626', '#160f0a', 1.6)
+    return P.grime(f, c, 0.5)
+
+
+def rag(f):
+    """Strips of torn sheet and twine lashed round."""
+    return P.grime(f, P.tape(f, '#bdb196', 0.6, 0.14), 0.45)
+
+
+def stone_paint(colour, noise=0.35):
+    return lambda f: P.grime(f, P.plain(f, colour, noise), 0.5)
+
+
 WEAPONS = [
-    (Weapon('kitchen_knife', 'Kitchen Knife', 'short_blade', 4.5, 2.0, 2.6, 0.0, 140, 3, 0.0, sound='blade',
-            skill='BLADE'), build_kitchen_knife,
+    (Weapon('kitchen_knife', 'Kitchen Knife', 'short_blade', 4.5, 2.0, 2.6, 0.0, 10, 3, 0.0, sound='blade',
+            skill='BLADE', lower=2), build_kitchen_knife,
      dict(handle=lambda f: P.polymer(f, '#141414'), steel=bright_steel(0.7), rivet=bright_steel(0.8),
           blade=blade_fn(0.7, bevel=0.22))),
-    (Weapon('hammer', 'Hammer', 'small_blunt', 5.0, 1.6, 2.7, 0.2, 260, 5, 0.08), build_hammer,
+    (Weapon('hammer', 'Hammer', 'small_blunt', 5.0, 1.6, 2.7, 0.2, 10, 5, 0.08, lower=30), build_hammer,
      dict(wood=lambda f: P.wood(f, '#b98d5c', '#7a5230'), forged=rusty_steel(0.36, 0.3),
           strike=bright_steel(0.7))),
-    (Weapon('frying_pan', 'Frying Pan', 'small_blunt', 5.5, 1.3, 2.8, 0.5, 170, 7, 0.22, sound='pan'),
+    (Weapon('frying_pan', 'Frying Pan', 'small_blunt', 5.5, 1.3, 2.8, 0.5, 10, 7, 0.22, sound='pan', lower=12),
      build_frying_pan, dict(iron=P.cast_iron, base=lambda f: P.cast_iron(f, rim=False))),
-    (Weapon('crowbar', 'Crowbar', 'blunt', 6.0, 1.2, 3.0, 0.4, 480, 7, 0.18), build_crowbar,
+    (Weapon('crowbar', 'Crowbar', 'blunt', 6.0, 1.2, 3.0, 0.4, 15, 7, 0.18, lower=70), build_crowbar,
      dict(paint=red_paint('#a0130d', 0.8), bare=rusty_steel(0.55, 0.2))),
-    (Weapon('pipe_wrench', 'Pipe Wrench', 'blunt', 6.5, 1.1, 2.9, 0.5, 420, 8, 0.24), build_wrench,
+    (Weapon('pipe_wrench', 'Pipe Wrench', 'blunt', 6.5, 1.1, 2.9, 0.5, 10, 8, 0.24, lower=25), build_wrench,
      dict(red=red_paint('#b3170f', 0.7), jaw=rusty_steel(0.42, 0.3), knurl=rusty_steel(0.4, 0.3))),
-    (Weapon('lead_pipe', 'Lead Pipe', 'blunt', 6.0, 1.15, 3.1, 0.45, 380, 7, 0.22), build_lead_pipe,
+    (Weapon('lead_pipe', 'Lead Pipe', 'blunt', 6.0, 1.15, 3.1, 0.45, 15, 7, 0.22, lower=20), build_lead_pipe,
      dict(pipe=P.galvanised, duct=P.duct_tape, fitting=lambda f: P.rust(f, P.cast_iron(f), 0.4))),
-    (Weapon('golf_club', 'Golf Club', 'blunt', 6.0, 1.1, 3.3, 0.5, 110, 7, 0.28), build_golf_club,
+    (Weapon('golf_club', 'Golf Club', 'blunt', 6.0, 1.1, 3.3, 0.5, 5, 7, 0.28, lower=15), build_golf_club,
      dict(grip=lambda f: P.rubber(f, '#151515', 0.25), chrome=P.chrome, steel=bright_steel(0.7),
           head=bright_steel(0.62))),
-    (Weapon('hockey_stick', 'Hockey Stick', 'blunt', 5.5, 1.1, 3.4, 0.6, 120, 7, 0.3), build_hockey_stick,
+    (Weapon('hockey_stick', 'Hockey Stick', 'blunt', 5.5, 1.1, 3.4, 0.6, 7, 7, 0.3, lower=5), build_hockey_stick,
      dict(tape_white=lambda f: P.tape(f, '#d9d6cc', 0.6, 0.12), tape_black=lambda f: P.tape(f, '#111112', 0.5),
           shaft=lambda f: P.wood(f, '#caa676', '#94683f', 1.4))),
-    (Weapon('baseball_bat', 'Baseball Bat', 'blunt', 7.0, 1.0, 3.2, 0.7, 220, 9, 0.4), build_baseball_bat,
+    (Weapon('baseball_bat', 'Baseball Bat', 'blunt', 7.0, 1.0, 3.2, 0.7, 15, 9, 0.4, lower=20), build_baseball_bat,
      dict(wood=lambda f: P.wood(f, '#d9b98a', '#a4794b'), tape=lambda f: P.tape(f, '#16161a'),
           _brand=brand_oval(14.2, 16.6))),
-    (Weapon('spiked_bat', 'Spiked Bat', 'blunt', 8.5, 0.95, 3.2, 0.7, 200, 9, 0.4, notes='nails'),
+    (Weapon('spiked_bat', 'Spiked Bat', 'blunt', 8.5, 0.95, 3.2, 0.7, 15, 9, 0.4, notes='nails', lower=10),
      build_spiked_bat,
      dict(wood=lambda f: P.wood(f, '#a8835a', '#6b4a2c'), tape=lambda f: P.tape(f, '#16161a'),
           nail=rusty_steel(0.55, 0.5))),
-    (Weapon('shovel', 'Shovel', 'blunt', 7.0, 0.9, 3.4, 0.8, 300, 10, 0.45, two_handed=True), build_shovel,
+    (Weapon('shovel', 'Shovel', 'blunt', 7.0, 0.9, 3.4, 0.8, 10, 10, 0.45, two_handed=True, lower=10), build_shovel,
      dict(cap=lambda f: P.polymer(f, '#222222'), wood=lambda f: P.wood(f, '#b48a5a', '#7a5532', 1.8),
           blade=shovel_blade)),
-    (Weapon('machete', 'Machete', 'long_blade', 9.0, 1.2, 3.1, 0.3, 300, 8, 0.12, sound='blade', skill='BLADE'),
+    (Weapon('machete', 'Machete', 'long_blade', 9.0, 1.2, 3.1, 0.3, 13, 8, 0.12, sound='blade', skill='BLADE', lower=25),
      build_machete,
      dict(handle=lambda f: P.polymer(f, '#1a1a1a', 0.12), rivet=bright_steel(0.78),
           blade=blade_fn(dark='#4d4f50', bevel=0.34))),
-    (Weapon('katana', 'Katana', 'long_blade', 12.0, 1.1, 3.3, 0.3, 360, 8, 0.12, two_handed=True, sound='blade',
-            skill='BLADE'), build_katana,
+    (Weapon('katana', 'Katana', 'long_blade', 12.0, 1.1, 3.3, 0.3, 10, 8, 0.12, two_handed=True, sound='blade',
+            skill='BLADE', lower=15), build_katana,
      dict(iron=lambda f: P.cast_iron(f, '#24211f'), wrap=P.silk_wrap, tsuba=lambda f: P.cast_iron(f, '#2a2622'),
           brass=P.brass, blade=blade_fn(0.74, hamon=True, bevel=0.18))),
-    (Weapon('fire_axe', 'Fire Axe', 'axe', 13.0, 0.8, 3.2, 0.6, 420, 13, 0.35, two_handed=True, sound='blade',
-            skill='BLADE'), build_fire_axe,
+    (Weapon('fire_axe', 'Fire Axe', 'axe', 13.0, 0.8, 3.2, 0.6, 13, 13, 0.35, two_handed=True, sound='blade',
+            skill='BLADE', lower=35), build_fire_axe,
      dict(wood=lambda f: P.wood(f, '#c79c66', '#8c6339'), head=axe_head(4.25), steel=bright_steel(0.6))),
-    (Weapon('tomahawk', 'Tomahawk', 'axe', 10.0, 1.1, 3.0, 0.45, 350, 9, 0.25, sound='blade', skill='BLADE'),
+    (Weapon('tomahawk', 'Tomahawk', 'axe', 10.0, 1.1, 3.0, 0.45, 10, 9, 0.25, sound='blade', skill='BLADE', lower=15),
      build_tomahawk,
      dict(wood=lambda f: P.wood(f, '#8a6a48', '#5a3f28'), head=axe_head(2.8), steel=bright_steel(0.6))),
-    (Weapon('sledgehammer', 'Sledgehammer', 'heavy_blunt', 16.0, 0.6, 3.3, 1.2, 600, 17, 0.8, two_handed=True),
+    (Weapon('sledgehammer', 'Sledgehammer', 'heavy_blunt', 16.0, 0.6, 3.3, 1.2, 10, 17, 0.8, two_handed=True, lower=40),
      build_sledgehammer,
      dict(rubber=lambda f: P.rubber(f, '#121212', 0.3), glass=P.fibreglass, forged=rusty_steel(0.3, 0.45),
           strike=bright_steel(0.62), steel=bright_steel(0.55))),
+    (Weapon('wooden_spear', 'Wooden Spear', 'spear', 7.0, 1.0, 3.7, 0.0, 5, 8, 0.05, two_handed=True,
+            sound='blade', skill='SPEAR', lower=2), build_wooden_spear,
+     dict(shaft=bark, point=lambda f: P.wood(f, '#d9c39c', '#a98c60', 1.4))),
+    (Weapon('fire_hardened_spear', 'Fire Hardened Spear', 'spear', 7.5, 1.0, 3.7, 0.0, 7, 8, 0.05, two_handed=True,
+            sound='blade', skill='SPEAR', lower=4), build_hardened_spear,
+     dict(shaft=bark, char=charred)),
+    (Weapon('spear_knife', 'Spear with Kitchen Knife', 'spear', 8.5, 1.0, 3.8, 0.0, 7, 8, 0.05, two_handed=True,
+            sound='blade', skill='SPEAR', lower=4), build_spear_knife,
+     dict(shaft=bark, handle=lambda f: P.polymer(f, '#141414'), tape=P.duct_tape, steel=bright_steel(0.7),
+          blade=blade_fn(0.7, bevel=0.22))),
+    (Weapon('stone_axe', 'Crude Stone Axe', 'axe', 7.0, 0.95, 3.0, 0.4, 5, 9, 0.2, sound='blade', skill='BLADE',
+            lower=5), build_stone_axe,
+     dict(shaft=bark, stone=stone_paint('#77736b'), binding=rag)),
+    (Weapon('stone_hammer', 'Stone Hammer', 'small_blunt', 4.5, 1.4, 2.7, 0.2, 5, 6, 0.08, lower=5),
+     build_stone_hammer, dict(shaft=bark, stone=stone_paint('#86817a'), binding=rag)),
+    (Weapon('stone_knife', 'Stone Knife', 'short_blade', 3.8, 1.9, 2.5, 0.0, 6, 3, 0.0, sound='blade', skill='BLADE',
+            lower=7), build_stone_knife,
+     dict(shaft=bark, flint=stone_paint('#3f3b39', 0.45), binding=rag)),
+    (Weapon('plank_nails', 'Plank with Nails', 'blunt', 6.0, 1.0, 3.3, 0.6, 10, 9, 0.3, lower=2), build_plank_nails,
+     dict(plank=lambda f: P.wood(f, '#c9a77a', '#8a6440', 1.0), binding=rag, nail=rusty_steel(0.55, 0.5))),
+    (Weapon('cudgel_nails', 'Cudgel with Nails', 'heavy_blunt', 11.0, 0.7, 3.3, 1.0, 10, 14, 0.6, two_handed=True,
+            lower=5), build_cudgel_nails,
+     dict(shaft=bark, nail=rusty_steel(0.55, 0.5))),
 ]
 
 
@@ -457,6 +619,17 @@ MELEE_PBR = {
     'heavy_ammo': dict(carton='card'),
     'grenade_round': dict(carton='card'),
     'tomahawk': dict(wood='varnish', head='painted', steel='steel'),
+    'wooden_spear': dict(shaft='raw_wood', point='raw_wood'),
+    'fire_hardened_spear': dict(shaft='raw_wood', char='raw_wood'),
+    'spear_knife': dict(shaft='raw_wood', handle='polymer', tape='duct', steel='steel', blade='blade'),
+    'stone_axe': dict(shaft='raw_wood', stone='stone', binding='cloth_tape'),
+    'stone_hammer': dict(shaft='raw_wood', stone='stone', binding='cloth_tape'),
+    'stone_knife': dict(shaft='raw_wood', flint='stone', binding='cloth_tape'),
+    'plank_nails': dict(plank='varnish', binding='cloth_tape', nail='steel'),
+    'cudgel_nails': dict(shaft='raw_wood', nail='steel'),
+    'tree_branch': dict(shaft='raw_wood'),
+    'stone': dict(stone='stone'),
+    'sharp_stone': dict(stone='stone'),
 }
 MELEE_PX = 16       # texture pixels per unit, the rifle's density, so a held weapon's texels stay small
 
@@ -547,7 +720,8 @@ S3M = 0.85 * K  # melee third-person scale, vanilla's
 TWO_HAND_GRIPS = {
     'baseball_bat': (-2.6, -3.7), 'spiked_bat': (-2.6, -3.7), 'golf_club': (-2.4, -3.0),
     'hockey_stick': (-2.6, -3.4), 'shovel': (3.0, 6.5), 'katana': (-2.6, -4.4), 'fire_axe': (-2.6, -3.9),
-    'sledgehammer': (-2.6, -3.9),
+    'sledgehammer': (-2.6, -3.9), 'wooden_spear': (7.0, 8.4), 'fire_hardened_spear': (7.0, 8.4),
+    'spear_knife': (7.0, 8.4), 'cudgel_nails': (-2.6, -3.9),
 }
 
 # where the off hand's centre goes: under the magazine well and forward along the handguard, an arm's
@@ -1694,6 +1868,23 @@ def main():
         item_def(name, ref(name))
         lang[f'item.{NS}.{name}'] = title
 
+    # what the primitive weapons are made from
+    for name, title, build, lk, seed in (
+            ('tree_branch', 'Tree Branch', build_branch, {'shaft': bark}, 571),
+            ('stone', 'Stone', build_stone, {'stone': stone_paint('#86817a')}, 572),
+            ('sharp_stone', 'Sharpened Stone', build_sharp_stone, {'stone': stone_paint('#6f6b64', 0.45)}, 573)):
+        real = (1.0, 1.7) if 'stone' in name else None        # a stone lies at a stone's size, not blown up
+        item = M.Model(name)
+        build(item)
+        lo, hi = item.bounds()
+        item.shift(C - (lo + hi) / 2)
+        item.tidy()
+        uvs, T = write_texture(item, lk, 0.3, seed, name)
+        M.dump(M.model_json(item, uvs, f'{NS}:item/weapon/{name}', small_display(item, real=real)),
+               ASSETS / f'models/item/weapon/{name}.json')
+        item_def(name, ref(name))
+        lang[f'item.{NS}.{name}'] = title
+
     merge_lang(lang)
     write_java()
     pose_data = write_pose_java({'rifle': holds, 'pistol': pistol_hold, 'shotgun': sg_hold, 'hunting': hr_hold,
@@ -1726,7 +1917,7 @@ def write_java():
     for spec, _b, _m in WEAPONS:
         rows.append(f'        new WeaponSpec("{spec.name}", Kind.{spec.kind.upper()}, {spec.damage}f, {spec.speed}f, '
                     f'{spec.reach}f, {spec.knockback}f, {spec.durability}, {spec.stamina}f, {spec.knockdown}f, '
-                    f'{str(spec.two_handed).lower()}, Sound.{spec.sound.upper()}, Skill.{spec.skill})')
+                    f'{str(spec.two_handed).lower()}, Sound.{spec.sound.upper()}, Skill.{spec.skill}, {spec.lower})')
     body = ',\n'.join(rows)
     JAVA.parent.mkdir(parents=True, exist_ok=True)
     JAVA.write_text(f'''package com.zomboidcraft.combat;
@@ -1738,15 +1929,16 @@ import java.util.List;
  * Melee weapon stats. Generated by tools/weapons/weapons.py: edit the roster there.
  * damage = total hit damage (zombies have 20 health), speed = swings a second, reach in blocks,
  * stamina = endurance spent per swing, knockdown = base chance a hit puts a zombie on the ground.
+ * durability = Zomboid's condition, and lower = the 1 in lower chance each hit takes a point off it.
  */
 public final class WeaponSpecs {{
-    public enum Kind {{ SHORT_BLADE, SMALL_BLUNT, BLUNT, LONG_BLADE, AXE, HEAVY_BLUNT }}
+    public enum Kind {{ SHORT_BLADE, SMALL_BLUNT, BLUNT, LONG_BLADE, AXE, HEAVY_BLUNT, SPEAR }}
 
     public enum Sound {{ BLUNT, BLADE, PAN }}
 
     public record WeaponSpec(String name, Kind kind, float damage, float speed, float reach, float knockback,
                              int durability, float stamina, float knockdown, boolean twoHanded, Sound sound,
-                             Skill skill) {{
+                             Skill skill, int lower) {{
     }}
 
     public static final List<WeaponSpec> ALL = List.of(
@@ -1831,7 +2023,7 @@ def write_pose_java(guns, melee, lenses, reloads):
                            for k, v in data['support'].items() if k.startswith(held))
     lens = ',\n'.join(f'            Map.entry("{k}", new float[] {{{f3(v)}}})' for k, v in data['lens'].items())
     reload = ',\n'.join(f'            Map.entry("{k}", new float[] {{{f3(v)}}})' for k, v in data['reload'].items())
-    melee_sup = ',\n'.join(f'            "{k}", new float[] {{{f3(v)}}}' for k, v in data['support'].items()
+    melee_sup = ',\n'.join(f'            Map.entry("{k}", new float[] {{{f3(v)}}})' for k, v in data['support'].items()
                             if not k.startswith(held))
     POSE_JAVA.parent.mkdir(parents=True, exist_ok=True)
     POSE_JAVA.write_text(f'''package com.zomboidcraft.client.combat;
@@ -1855,7 +2047,7 @@ final class HoldPoseData {{
     static final Map<String, float[]> RELOAD = Map.ofEntries(
 {reload});
     /** Two-handed melee weapons and where the off hand holds the handle. */
-    static final Map<String, float[]> MELEE_SUPPORT = Map.of(
+    static final Map<String, float[]> MELEE_SUPPORT = Map.ofEntries(
 {melee_sup});
 
     private HoldPoseData() {{

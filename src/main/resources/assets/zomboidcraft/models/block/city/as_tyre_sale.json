@@ -1,0 +1,109 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "as_sign_parts": "zomboidcraft:block/city/as_sign_parts",
+    "as_steel": "zomboidcraft:block/city/as_steel",
+    "as_tyre": "zomboidcraft:block/city/as_tyre",
+    "particle": "zomboidcraft:block/city/as_steel"
+  },
+  "elements": [
+    {
+      "from": [
+        7,
+        0,
+        7
+      ],
+      "to": [
+        9,
+        10,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_steel"
+        },
+        "south": {
+          "texture": "#as_steel"
+        },
+        "east": {
+          "texture": "#as_steel"
+        },
+        "west": {
+          "texture": "#as_steel"
+        },
+        "up": {
+          "texture": "#as_steel"
+        },
+        "down": {
+          "texture": "#as_steel",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        6,
+        6
+      ],
+      "to": [
+        14,
+        15,
+        7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_sign_parts"
+        },
+        "south": {
+          "texture": "#as_tyre"
+        },
+        "east": {
+          "texture": "#as_tyre"
+        },
+        "west": {
+          "texture": "#as_tyre"
+        },
+        "up": {
+          "texture": "#as_tyre"
+        },
+        "down": {
+          "texture": "#as_tyre"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        0,
+        7
+      ],
+      "to": [
+        12,
+        1,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_steel"
+        },
+        "south": {
+          "texture": "#as_steel"
+        },
+        "east": {
+          "texture": "#as_steel"
+        },
+        "west": {
+          "texture": "#as_steel"
+        },
+        "up": {
+          "texture": "#as_steel"
+        },
+        "down": {
+          "texture": "#as_steel",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

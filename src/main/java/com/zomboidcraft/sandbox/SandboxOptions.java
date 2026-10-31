@@ -44,8 +44,22 @@ final class SandboxOptions {
                 .tip("There is no snow yet, so this does nothing for now."));
         // Skills (SURVIVAL): one global multiplier for now
         w.put("MultiplierConfig.Global", b -> b.number("progression.xpMultiplier", 0, 1000).owner("SURVIVAL"));
+        // Far-off events (AUDIO): Zomboid's three choices
+        w.put("MetaEvent", b -> b.choice("world.metaEvents", "never", "sometimes", "often").owner("AUDIO"));
         // Vehicles (VEHICLES)
         w.put("EnableVehicles", b -> b.toggle("world.streetCars").owner("VEHICLES"));
+        // Firearms (WEAPONS): combat/Firearms. Use Damage Chance says who a shot strikes just by being aimed at;
+        // jams start at 0 since Josiah cut them on 10-26
+        w.put("FirearmUseDamageChance", b -> b.choice("guns.useDamageChance", "both", "zombies", "off").owner("WEAPONS")
+                .tip("Shots strike what they're aimed at. Both: zombies and players; Zombies: only zombies; Off: Aiming decides if a shot lands."));
+        w.put("FirearmNoiseMultiplier", b -> b.number("guns.noiseMultiplier", 0.2, 2).owner("WEAPONS"));
+        w.put("FirearmJamMultiplier", b -> b.number("guns.jamMultiplier", 0, 10).owner("WEAPONS"));
+        w.put("FirearmMoodleMultiplier", b -> b.number("guns.moodleMultiplier", 0, 10).owner("WEAPONS"));
+        w.put("FirearmWeatherMultiplier", b -> b.number("guns.weatherMultiplier", 0, 10).owner("WEAPONS")
+                .tip("How much wind, rain and fog throw your aim off, out under the sky. Kept light, as the rain never stops."));
+        w.put("FirearmHeadGearEffect", b -> b.toggle("guns.headgearEffect").owner("WEAPONS"));
+        // Fire (WEAPONS, combat/ContainedFire): off keeps a fire to what it was started on and a little round it
+        w.put("FireSpread", b -> b.toggle("throwing.fireZomboid").owner("WEAPONS"));
         return w;
     }
 
@@ -87,6 +101,12 @@ final class SandboxOptions {
         o.add(of(UTILITIES, "zc.worldEventMinutes", "Time Between World Events")
                 .tip("About how many minutes between world events.")
                 .number("world.worldEventMinutes", 1, 240).owner("AUDIO"));
+        o.add(of(UTILITIES, "zc.broadcasts", "Outbreak Broadcasts")
+                .tip("News, the emergency broadcast, the military and survivors on the two-way and military radios, as captions.")
+                .toggle("broadcast.enabled").owner("AUDIO"));
+        o.add(of(UTILITIES, "zc.broadcastDayOffset", "Broadcasts Start On Day")
+                .tip("Days already gone on the broadcast timeline when the world starts: 9 or more and the news is already off air.")
+                .number("broadcast.dayOffset", 0, 60).owner("AUDIO"));
 
         o.add(of(LOOT, "zc.lootNeverScales", "Loot Never Scales With Distance")
                 .fixed("true", "Your rule: loot is the same however far you are from where you started."));

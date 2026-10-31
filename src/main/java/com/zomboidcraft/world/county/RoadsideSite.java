@@ -9,7 +9,7 @@ import com.zomboidcraft.world.city.ShopLights;
  * A stop on the county road, where a side lane comes in off to one end. Every one comes in
  * several builds, picked from the place's seed, and every one was hit when it all came down:
  * <ul>
- * <li>gas_station: a brand's canopy station with its food mart behind, an old VALLEY service
+ * <li>gas_station: a brand's canopy station with its food mart behind and a service bay beside it, an old VALLEY service
  * station with its bays and lift, or a country store with two pumps out front and bait for
  * sale (the stations and the pumps are {@link GasStation}'s).</li>
  * <li>motel: a single-storey L of rooms, a two-storey bar with a walkway and stairs, or a U round
@@ -22,6 +22,8 @@ import com.zomboidcraft.world.city.ShopLights;
  * <li>warehouse: a storage depot, a feed and farm supply, or a lumber yard; docks, trailers
  * backed in, racks inside, a fenced yard.</li>
  * <li>trailer_lot: a few single-wides on gravel pads round a lane, junk and propane tanks.</li>
+ * <li>truck_depot: I-88 Truck &amp; Diesel ({@link AutoYards}), the truck hall with its pit, column
+ * lifts and van hoist, the diesel canopy, the trucks waiting out back.</li>
  * </ul>
  */
 final class RoadsideSite extends Site {
@@ -55,6 +57,7 @@ final class RoadsideSite extends Site {
             case "school" -> school();
             case "warehouse" -> warehouse();
             case "trailer_lot" -> trailerLot();
+            case "truck_depot" -> truckDepot();
             default -> gasStation();
         }
         roadside();
@@ -258,9 +261,25 @@ final class RoadsideSite extends Site {
         Placer q = lot.placer(out);
         GasStation gs = new GasStation(q, rng, hit);
         switch (style) {
-            case 1 -> gs.modern(lot.w(), lot.d());
+            case 1 -> {
+                gs.modern(lot.w(), lot.d());
+                // the bigger stations' service bay, east of the mart on the forecourt (GasStation.modern's layout)
+                int sw = Math.max(14, Math.min(22, lot.w() - 12)), sx = lot.w() / 2 - sw / 2 + sw + 1;
+                int sd = Math.max(9, Math.min(12, lot.d() - 20)), storeZ = lot.d() - sd - 1;
+                if (sx + 8 <= lot.w() - 2 && storeZ + 12 <= lot.d()) {
+                    new AutoShop(q, rng, hit).sideBay(sx, storeZ, "sh_cmu_tan");
+                }
+            }
             case 0 -> gs.valley(lot.w(), lot.d());
             default -> countryStore(q, gs, lot.w(), lot.d());
+        }
+    }
+
+    /** I-88 Truck &amp; Diesel ({@link AutoYards#truckDepot}): the truck hall, the diesel canopy, the lot out back. */
+    private void truckDepot() {
+        Kit.Lot lot = business(70, 60);
+        if (lot != null) {
+            new AutoYards(lot.placer(out), rng, hit).truckDepot(lot.w(), lot.d());
         }
     }
 
@@ -870,6 +889,9 @@ final class RoadsideSite extends Site {
         // power down the road, the odd wreck, a fallen pole across the shoulder now and then
         double zr = zAt(road, w / 2.0);
         int side = chance() < 0.5 ? -9 : 9;
+        if (bizSide != 0) {
+            side = -9 * bizSide;    // down the far verge, so no pole stands in the forecourt or a bay's way
+        }
         int pz = (int) Math.round(zr + side);
         if (pz > 2 && pz < d - 3) {
             kit.powerLine(4, pz, w - 5, pz, 8, 20);
