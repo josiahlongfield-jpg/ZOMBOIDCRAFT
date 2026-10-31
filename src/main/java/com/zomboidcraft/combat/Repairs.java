@@ -52,9 +52,16 @@ public final class Repairs {
         }
         if (material.is(ModItems.DUCT_TAPE)) return gun ? 0.06f : 0.14f;
         if (material.is(ModItems.WOOD_GLUE)) return gun ? 0 : 0.22f;
+        if (material.is(ModItems.NAILS)) return nailed(weapon) ? 0.2f : 0;
         if (material.is(ModItems.GUN_OIL)) return gun ? 0.12f : 0;
         if (material.is(ModItems.GUN_PARTS)) return gun ? 0.35f : 0;
         return 0;
+    }
+
+    /** Zomboid mends its nailed clubs with more nails. */
+    private static boolean nailed(ItemStack weapon) {
+        WeaponSpecs.WeaponSpec spec = Weapons.spec(weapon);
+        return spec != null && (spec.name().equals("spiked_bat") || spec.name().endsWith("_nails"));
     }
 
     public static int times(ItemStack weapon) {
@@ -77,6 +84,7 @@ public final class Repairs {
         if (weaponSlot == materialSlot) return false;
         Slot ws = menu.slots.get(weaponSlot), ms = menu.slots.get(materialSlot);
         ItemStack weapon = ws.getItem(), material = ms.getItem();
+        Wear.migrate(weapon);
         if (weapon.getDamageValue() <= 0 || base(weapon, material) <= 0 || !ms.mayPickup(player)) return false;
         int gain = gain(player, weapon, material);
         weapon.setDamageValue(weapon.getDamageValue() - gain);

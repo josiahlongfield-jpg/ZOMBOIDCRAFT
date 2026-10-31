@@ -162,15 +162,19 @@ final class HoldPoseData {
             Map.entry("crossbow_aim", new float[] {-2.49654f, 10.41997f, -3.03776f, -2.95153f, 10.77614f, -3.83858f}),
             Map.entry("crossbow_raised", new float[] {-0.95642f, 11.69881f, -2.04670f, -1.15406f, 12.20081f, -2.87381f}));
     /** Two-handed melee weapons and where the off hand holds the handle. */
-    static final Map<String, float[]> MELEE_SUPPORT = Map.of(
-            "baseball_bat", new float[] {0.02942f, 9.95268f, 0.85853f, 0.46495f, 10.27941f, 1.22175f},
-            "spiked_bat", new float[] {0.02942f, 9.95268f, 0.85853f, 0.46495f, 10.27941f, 1.22175f},
-            "golf_club", new float[] {-0.04976f, 9.89327f, 0.79249f, 0.18780f, 10.07149f, 0.99061f},
-            "hockey_stick", new float[] {0.02942f, 9.95268f, 0.85853f, 0.34617f, 10.19030f, 1.12269f},
-            "shovel", new float[] {-2.18780f, 8.28928f, -0.99061f, -3.57356f, 7.24966f, -2.14632f},
-            "katana", new float[] {0.02942f, 9.95268f, 0.85853f, 0.74210f, 10.48734f, 1.45289f},
-            "fire_axe", new float[] {0.02942f, 9.95268f, 0.85853f, 0.54413f, 10.33882f, 1.28779f},
-            "sledgehammer", new float[] {0.02942f, 9.95268f, 0.85853f, 0.54413f, 10.33882f, 1.28779f});
+    static final Map<String, float[]> MELEE_SUPPORT = Map.ofEntries(
+            Map.entry("baseball_bat", new float[] {0.02942f, 9.95268f, 0.85853f, 0.46495f, 10.27941f, 1.22175f}),
+            Map.entry("spiked_bat", new float[] {0.02942f, 9.95268f, 0.85853f, 0.46495f, 10.27941f, 1.22175f}),
+            Map.entry("golf_club", new float[] {-0.04976f, 9.89327f, 0.79249f, 0.18780f, 10.07149f, 0.99061f}),
+            Map.entry("hockey_stick", new float[] {0.02942f, 9.95268f, 0.85853f, 0.34617f, 10.19030f, 1.12269f}),
+            Map.entry("shovel", new float[] {-2.18780f, 8.28928f, -0.99061f, -3.57356f, 7.24966f, -2.14632f}),
+            Map.entry("katana", new float[] {0.02942f, 9.95268f, 0.85853f, 0.74210f, 10.48734f, 1.45289f}),
+            Map.entry("fire_axe", new float[] {0.02942f, 9.95268f, 0.85853f, 0.54413f, 10.33882f, 1.28779f}),
+            Map.entry("sledgehammer", new float[] {0.02942f, 9.95268f, 0.85853f, 0.54413f, 10.33882f, 1.28779f}),
+            Map.entry("wooden_spear", new float[] {-3.77152f, 7.10115f, -2.31142f, -4.32583f, 6.68530f, -2.77370f}),
+            Map.entry("fire_hardened_spear", new float[] {-3.77152f, 7.10115f, -2.31142f, -4.32583f, 6.68530f, -2.77370f}),
+            Map.entry("spear_knife", new float[] {-3.77152f, 7.10115f, -2.31142f, -4.32583f, 6.68530f, -2.77370f}),
+            Map.entry("cudgel_nails", new float[] {0.02942f, 9.95268f, 0.85853f, 0.54413f, 10.33882f, 1.28779f}));
 
     private HoldPoseData() {
     }

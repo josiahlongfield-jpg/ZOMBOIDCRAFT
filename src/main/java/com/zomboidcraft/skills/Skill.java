@@ -40,7 +40,9 @@ public enum Skill {
     /** Patching clothes: stitches that hold, sewn quicker (clothing/Tailoring). */
     TAILORING("Tailoring"),
     /** Taking cars apart and putting them back together (world/cars/CarParts): each level unlocks more of the car. */
-    MECHANICS("Mechanics");
+    MECHANICS("Mechanics"),
+    /** Spears (combat/SpearItem): Zomboid's Spear skill, for the carved and tied-on spears. */
+    SPEAR("Spear");
 
     public static final int MAX_LEVEL = 10;
 

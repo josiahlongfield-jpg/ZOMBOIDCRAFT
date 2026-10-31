@@ -29,9 +29,9 @@ public class MeleeWeaponItem extends Item {
     }
 
     public static Properties properties(WeaponSpecs.WeaponSpec spec) {
-        int wear = ZcConfig.get().combat.weaponWear ? 1 : 0;
+        // worn by Wear, on Zomboid's chance per hit, rather than a point a hit
         return new Properties().stacksTo(1).durability(spec.durability()).attributes(attributes(spec, 1, 1, 1))
-                .component(DataComponents.WEAPON, new Weapon(wear, 0f)).enchantable(10);
+                .component(DataComponents.WEAPON, new Weapon(0, 0f)).enchantable(10);
     }
 
     /** The weapon's swing in the hand: its damage, speed and reach, each scaled (by a rolled copy's stats). */
@@ -47,6 +47,15 @@ public class MeleeWeaponItem extends Item {
                 .add(Attributes.ATTACK_KNOCKBACK, new AttributeModifier(ZomboidCraft.id("weapon_knockback"),
                         spec.knockback(), AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
                 .build();
+    }
+
+    /** Tools a recipe uses rather than uses up, as in Zomboid: the knife that carves a spear, the hammer that nails. */
+    private static final java.util.Set<String> KEPT = java.util.Set.of("kitchen_knife", "stone_knife", "hammer", "stone_hammer");
+
+    /** Fabric's stack-aware crafting remainder (FabricItem): a kept tool comes back out of the grid. */
+    public ItemStack getRecipeRemainder(ItemStack stack) {
+        WeaponSpecs.WeaponSpec spec = Weapons.spec(stack);
+        return spec != null && KEPT.contains(spec.name()) ? stack.copyWithCount(1) : ItemStack.EMPTY;
     }
 
     /** Wearing down doesn't make the weapon dip out of view as if it had been swapped. */
@@ -81,8 +90,9 @@ public class MeleeWeaponItem extends Item {
         if (!stack.isDamageableItem()) {
             return Component.empty();
         }
-        float left = 1f - (float) stack.getDamageValue() / stack.getMaxDamage();
-        String word = left > 0.85f ? "Pristine" : left > 0.6f ? "Good" : left > 0.35f ? "Worn"
+        float left = stack.getItem() instanceof MeleeWeaponItem ? Wear.left(stack)
+                : 1f - (float) stack.getDamageValue() / stack.getMaxDamage();
+        String word = left <= 0f ? "Broken" : left > 0.85f ? "Pristine" : left > 0.6f ? "Good" : left > 0.35f ? "Worn"
                 : left > 0.15f ? "Battered" : "About to break";
         ChatFormatting colour = left > 0.6f ? ChatFormatting.GREEN : left > 0.35f ? ChatFormatting.YELLOW
                 : left > 0.15f ? ChatFormatting.GOLD : ChatFormatting.RED;

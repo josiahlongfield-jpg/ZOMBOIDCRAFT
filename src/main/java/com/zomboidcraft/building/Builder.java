@@ -176,8 +176,11 @@ public final class Builder {
         }
         if (build.tool != null) {
             ItemStack tool = Materials.find(player, build.tool.fits());
-            if (tool.isDamageableItem()) {
-                tool.hurtAndBreak(build == Build.WELD_SHEET || build == Build.SPIKED_WALL ? 3 : 1, (ServerLevel) player.level(), player, item -> { });
+            int uses = build == Build.WELD_SHEET || build == Build.SPIKED_WALL ? 3 : 1;
+            if (com.zomboidcraft.combat.Weapons.spec(tool) != null) {
+                com.zomboidcraft.combat.Wear.use(tool, player, net.minecraft.world.InteractionHand.MAIN_HAND, uses);    // a hammer's chance a use
+            } else if (tool.isDamageableItem()) {
+                tool.hurtAndBreak(uses, (ServerLevel) player.level(), player, item -> { });
             }
         }
         return true;

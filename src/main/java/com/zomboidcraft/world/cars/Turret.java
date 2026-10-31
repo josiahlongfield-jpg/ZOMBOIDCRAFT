@@ -229,7 +229,7 @@ public final class Turret {
                     0.9f + gunner.getRandom().nextFloat() * 0.25f);
         }
         if (n % 5 == 0) {
-            Noise.emit(level, muzzle, stats.shotNoise);
+            Noise.emit(level, muzzle, com.zomboidcraft.combat.Firearms.noise(stats.shotNoise));
             level.sendParticles(ParticleTypes.SMOKE, muzzle.x, muzzle.y, muzzle.z, 2, 0.05, 0.05, 0.05, 0.01);
         }
         if (stats.tracerEvery > 0 && n % stats.tracerEvery == 0) {
