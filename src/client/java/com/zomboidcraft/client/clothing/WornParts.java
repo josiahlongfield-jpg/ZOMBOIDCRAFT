@@ -115,7 +115,17 @@ final class WornParts {
             Map.entry("elbow_pads", List.of("left_arm", "right_arm")),
             Map.entry("field_shirt", List.of("body", "left_arm", "right_arm")),
             Map.entry("combat_trousers", List.of("body", "left_leg", "right_leg")),
-            Map.entry("tactical_boots", List.of("left_leg", "right_leg")));
+            Map.entry("tactical_boots", List.of("left_leg", "right_leg")),
+            Map.entry("worn_bandage", List.of("body", "head", "left_arm", "left_leg", "right_arm", "right_leg")),
+            Map.entry("worn_gauze", List.of("body", "head", "left_arm", "left_leg", "right_arm", "right_leg")),
+            Map.entry("worn_wrap", List.of("left_arm", "left_leg", "right_arm", "right_leg")),
+            Map.entry("worn_tourniquet", List.of("left_arm", "left_leg", "right_arm", "right_leg")),
+            Map.entry("worn_splint", List.of("left_arm", "left_leg", "right_arm", "right_leg")),
+            Map.entry("worn_finger_splint", List.of("left_arm", "right_arm")),
+            Map.entry("worn_moldable_splint", List.of("left_arm", "left_leg", "right_arm", "right_leg")),
+            Map.entry("worn_sling", List.of("body", "left_arm", "right_arm")),
+            Map.entry("worn_collar", List.of("body", "head")),
+            Map.entry("worn_knee_brace", List.of("left_leg", "right_leg")));
 
     private WornParts() {
     }

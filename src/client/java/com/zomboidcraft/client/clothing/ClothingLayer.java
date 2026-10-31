@@ -65,41 +65,74 @@ public class ClothingLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
                 continue;
             }
             for (String part : parts) {
-                ModelPart on = switch (part) {
-                    case "head" -> model.head;
-                    case "body" -> model.body;
-                    case "right_arm" -> model.rightArm;
-                    case "left_arm" -> model.leftArm;
-                    case "right_leg" -> model.rightLeg;
-                    case "left_leg" -> model.leftLeg;
-                    default -> null;
-                };
-                if (on == null || !on.visible) {
-                    continue;
-                }
-                items.updateForLiving(piece, stack(garment.id(), part, worn.get(com.zomboidcraft.clothing.ClothingLoot.CAMO)), ItemDisplayContext.NONE, player);
-                if (piece.isEmpty()) {
-                    continue;
-                }
-                pose.pushPose();
-                on.translateAndRotate(pose);
-                if (slim && part.endsWith("_arm")) {
-                    // a slim arm is 3 px wide, its middle half a pixel nearer the body than a wide arm's
-                    pose.translate((part.startsWith("right") ? 0.25f : -0.25f) / 16f, 0, 0);
-                    pose.scale(0.75f, 1f, 1f);
-                }
-                // model space is y up with its front at +z; the body's is y down, front at -z
-                pose.scale(1f, -1f, -1f);
-                piece.submit(pose, collector, light, OverlayTexture.NO_OVERLAY, state.outlineColor);
-                pose.popPose();
+                drawPart(pose, collector, light, state, player, model, slim, garment.id(), part,
+                        worn.get(com.zomboidcraft.clothing.ClothingLoot.CAMO));
             }
         }
+        submitMedical(pose, collector, light, state, player, model, slim);
     }
 
-    /** Whether this layer draws the piece (a rig is a bag too, and the bag layer leaves it to this one). */
-    public static boolean draws(ItemStack stack) {
-        Garment g = Clothes.of(stack);
-        return g != null && WornParts.PARTS.containsKey(g.id());
+    private void drawPart(PoseStack pose, SubmitNodeCollector collector, int light, AvatarRenderState state, Player player,
+                          PlayerModel model, boolean slim, String id, String part, @org.jetbrains.annotations.Nullable String camo) {
+        if (!WornParts.PARTS.getOrDefault(id, List.of()).contains(part)) {
+            return;
+        }
+        ModelPart on = switch (part) {
+            case "head" -> model.head;
+            case "body" -> model.body;
+            case "right_arm" -> model.rightArm;
+            case "left_arm" -> model.leftArm;
+            case "right_leg" -> model.rightLeg;
+            case "left_leg" -> model.leftLeg;
+            default -> null;
+        };
+        if (on == null || !on.visible) {
+            return;
+        }
+        items.updateForLiving(piece, stack(id, part, camo), ItemDisplayContext.NONE, player);
+        if (piece.isEmpty()) {
+            return;
+        }
+        pose.pushPose();
+        on.translateAndRotate(pose);
+        if (slim && part.endsWith("_arm")) {
+            // a slim arm is 3 px wide, its middle half a pixel nearer the body than a wide arm's
+            pose.translate((part.startsWith("right") ? 0.25f : -0.25f) / 16f, 0, 0);
+            pose.scale(0.75f, 1f, 1f);
+        }
+        // model space is y up with its front at +z; the body's is y down, front at -z
+        pose.scale(1f, -1f, -1f);
+        piece.submit(pose, collector, light, OverlayTexture.NO_OVERLAY, state.outlineColor);
+        pose.popPose();
+    }
+
+    /** Medical supports by bit of the worn-medical mask, and the body part each body region draws on. */
+    private static final String[] MEDICAL = {"worn_bandage", "worn_gauze", "worn_wrap", "worn_tourniquet", "worn_splint",
+            "worn_finger_splint", "worn_moldable_splint", "worn_sling", "worn_collar", "worn_knee_brace"};
+    private static final String[] REGION_PART = {"head", "body", "left_arm", "right_arm", "left_leg", "right_leg"};
+
+    /** The worn-medical mask per body region (survival's synced view), or null while there's none. */
+    public static java.util.function.Function<Player, int[]> medicalMask = p -> null;
+
+    private void submitMedical(PoseStack pose, SubmitNodeCollector collector, int light, AvatarRenderState state, Player player,
+                               PlayerModel model, boolean slim) {
+        int[] mask = medicalMask.apply(player);
+        if (mask == null) {
+            return;
+        }
+        boolean slingBody = false;
+        for (int r = 0; r < Math.min(mask.length, REGION_PART.length); r++) {
+            for (int bit = 0; bit < MEDICAL.length; bit++) {
+                if ((mask[r] & (1 << bit)) == 0) continue;
+                String id = MEDICAL[bit];
+                String part = REGION_PART[r];
+                if (id.equals("worn_collar")) part = "head";              // a splinted neck or torso: the collar
+                if (id.equals("worn_sling")) slingBody = true;
+                drawPart(pose, collector, light, state, player, model, slim, id, part, null);
+                if (id.equals("worn_collar")) drawPart(pose, collector, light, state, player, model, slim, id, "body", null);
+            }
+        }
+        if (slingBody) drawPart(pose, collector, light, state, player, model, slim, "worn_sling", "body", null);
     }
 
     /** How a belt widens (x, z) to sit over what's worn at the waist: trousers and shirts, not jackets or coats. */

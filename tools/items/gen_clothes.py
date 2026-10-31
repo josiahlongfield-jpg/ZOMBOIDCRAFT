@@ -2563,11 +2563,157 @@ MILITARY = {
 }
 
 
+
+# ------------------------------------------------------------------ medical supports seen on the body
+# Not items: worn models ClothingLayer draws on whichever part has them applied (the synced worn-medical mask).
+# Dressings sit under the clothes; splints, slings, tourniquets, the collar and the knee brace go over them.
+MED_UNDER, MED_OVER = 0.3, 0.95
+
+
+def build_worn_bandage(g):
+    g.box('head', (-HX - 0.3, -7.2, -HX - 0.3), (HX + 0.3, -5.6, HX + 0.3), 'gauze')   # round the brow, above the eyes
+    g.box('head', (-HX - 0.4, -7.0, HX + 0.2), (-HX + 1.4, -5.8, HX + 0.5), 'gauze')    # the tucked end
+    g.box('head', (-1.6, -7.0, -HX - 0.45), (0.2, -5.8, -HX - 0.3), 'stain')
+    g.shell('body', 4.6, 8.4, MED_UNDER, 'gauze')
+    g.front('body', MED_UNDER, -2.6, 5.6, -0.6, 7.2, 'stain', t=0.06)
+    g.both(ARMS, lambda p, s: (g.shell(p, 4.2, 7.0, MED_UNDER, 'gauze'), g.side(p, MED_UNDER, s, -1.0, 5.0, 0.6, 6.4, 'stain', t=0.06)))
+    g.both(LEGS, lambda p, s: (g.shell(p, 1.6, 4.6, MED_UNDER, 'gauze'), g.front(p, MED_UNDER, -1.0, 2.4, 0.8, 3.8, 'stain', t=0.06)))
+
+
+def build_worn_gauze(g):
+    """Packed gauze: a thick pad taped down, under the clothes."""
+    def pad(p, put, *a):
+        put(p, MED_UNDER, *a, 'pad', t=0.4)
+    g.box('head', (1.0, -7.4, -HX - 0.5), (3.2, -5.4, -HX), 'pad')
+    g.box('head', (0.6, -6.6, -HX - 0.55), (3.6, -6.2, -HX - 0.45), 'tape')
+    g.front('body', MED_UNDER, 0.6, 3.4, 3.0, 6.0, 'pad', t=0.4)
+    g.front('body', MED_UNDER + 0.4, 0.2, 4.5, 3.4, 4.9, 'tape', t=0.05)
+    g.front('body', MED_UNDER + 0.4, 1.6, 3.0, 2.0, 6.4, 'tape', t=0.05)
+    def limb(p, s, y0):
+        g.side(p, MED_UNDER, s, -1.2, y0, 1.2, y0 + 2.2, 'pad', t=0.4)
+        g.side(p, MED_UNDER + 0.4, s, -1.6, y0 + 0.9, 1.6, y0 + 1.3, 'tape', t=0.05)
+    g.both(ARMS, lambda p, s: limb(p, s, 1.0))
+    g.both(LEGS, lambda p, s: limb(p, s, 2.0))
+
+
+def build_worn_wrap(g):
+    """Elastic wrap: the wrist and forearm, the knee down the shin, wound in overlapping turns."""
+    def arm(p, s):
+        for i, y in enumerate((5.6, 6.5, 7.4, 8.3)):
+            g.shell(p, y, y + 0.95, MED_UNDER + (0.06 if i % 2 else 0), 'wrap')
+        g.front(p, MED_UNDER + 0.06, 0.6, 6.0, 1.4, 6.6, 'clip', t=0.08)
+    def leg(p, s):
+        for i, y in enumerate((4.4, 5.3, 6.2, 7.1, 8.0)):
+            g.shell(p, y, y + 0.95, MED_UNDER + (0.06 if i % 2 else 0), 'wrap')
+        g.front(p, MED_UNDER + 0.06, 0.6, 5.0, 1.4, 5.6, 'clip', t=0.08)
+    g.both(ARMS, arm)
+    g.both(LEGS, leg)
+
+
+def build_worn_tourniquet(g):
+    """A windlass tourniquet high on the limb, over the clothes."""
+    def limb(p, s, y):
+        g.shell(p, y, y + 0.7, MED_OVER - 0.2, 'strap')
+        g.side(p, MED_OVER - 0.2, s, -1.4, y - 0.2, 1.0, y + 0.9, 'buckle', t=0.18)
+        g.front(p, MED_OVER - 0.2, -1.8, y - 0.05, 1.8, y + 0.55, 'rod', t=0.35)       # the windlass rod
+        g.front(p, MED_OVER + 0.15, 1.2, y - 0.4, 1.9, y + 0.9, 'clip', t=0.25)        # its keeper clip
+        g.front(p, MED_OVER - 0.2, -1.2, y + 0.8, 0.2, y + 1.2, 'tag', t=0.06)          # the time written on the tag
+    g.both(ARMS, lambda p, s: limb(p, s, -0.6))
+    g.both(LEGS, lambda p, s: limb(p, s, 0.8))
+
+
+def build_worn_splint(g):
+    """Boards either side of the limb, tied on with strips."""
+    def limb(p, s, y0, y1):
+        for side in (-1, 1):
+            g.side(p, MED_OVER - 0.3, side, -1.0, y0, 1.0, y1, 'board', t=0.35)
+        (bx0, _, bz0), (bx1, _, bz1) = BOXES[p]
+        w = MED_OVER + 0.1
+        for y in (y0 + 0.6, (y0 + y1) / 2, y1 - 1.2):                                 # ties round boards and limb
+            g.box(p, (bx0 - w, y, bz0 - 0.55), (bx1 + w, y + 0.6, bz1 + 0.55), 'tie')
+    g.both(ARMS, lambda p, s: limb(p, s, 1.2, 9.4))
+    g.both(LEGS, lambda p, s: limb(p, s, 1.0, 11.0))
+
+
+def build_worn_finger_splint(g):
+    def hand(p, s):
+        g.front(p, 0.25, -1.4, 9.0, -0.6, 10.6, 'alu', t=0.14)
+        g.box(p, (-1.5, 10.3, -2.4), (-0.5, 10.7, -2.1), 'alu')
+        g.shell(p, 9.3, 9.7, 0.3, 'tape')
+    g.both(ARMS, hand)
+
+
+def build_worn_moldable_splint(g):
+    """An orange roll splint folded into a gutter under the forearm or the calf, wrapped on."""
+    def limb(p, s, y0, y1, under):
+        put = g.back if under else g.front
+        put(p, MED_OVER - 0.3, -2.0, y0, 2.0, y1, 'foam', t=0.3)
+        for side in (-1, 1):
+            g.side(p, MED_OVER - 0.3, side, -0.4 if under else -2.4, y0, 2.4 if under else 0.4, y1, 'foam', t=0.3)
+        for y in (y0 + 0.4, y1 - 1.2):
+            g.shell(p, y, y + 0.8, MED_OVER + 0.05, 'wrap')
+    g.both(ARMS, lambda p, s: limb(p, s, 3.6, 9.4, True))
+    g.both(LEGS, lambda p, s: limb(p, s, 5.0, 11.0, True))
+
+
+def build_worn_sling(g):
+    """A triangular sling cradling the forearm, its strap over the opposite shoulder."""
+    def arm(p, s):
+        g.shell(p, 4.4, 9.6, JACKET + 0.1, 'sling')
+        g.front(p, JACKET + 0.1, -2.1, 9.6, 2.1, 10.3, 'sling', t=0.3)                 # the cradle under the wrist
+        g.back(p, JACKET + 0.1, -1.2, 4.6, 1.2, 5.2, 'pin', t=0.12)
+    g.both(ARMS, arm)
+    for i in range(7):                                                               # the strap across the chest
+        x, y = -3.4 + i * 1.0, -0.2 + i * 0.95
+        g.front('body', JACKET + 0.2, x, y, x + 1.2, y + 1.1, 'sling', t=0.2)
+    g.box('body', (-3.6, -0.35, -2 - JACKET - 0.2), (-2.2, 0.25, 2 + JACKET + 0.2), 'sling')
+
+
+def build_worn_collar(g):
+    """A cervical collar: a stiff ring from the chin down to the collarbone, below the eyes."""
+    g.box('head', (-HX - 0.5, -2.0, -HX - 0.6), (HX + 0.5, 0.0, HX + 0.5), 'foam')
+    g.box('head', (-2.4, -2.6, -HX - 0.75), (2.4, -1.6, -HX - 0.1), 'foam')            # the chin rest
+    g.box('head', (-0.8, -1.6, -HX - 0.75), (0.8, -0.4, -HX - 0.6), 'vent')
+    g.box('head', (-HX - 0.55, -1.6, -0.6), (HX + 0.55, -0.4, 0.6), 'velcro')
+    g.box('body', (-3.4, -0.4, -2 - SHIRT - 0.4), (3.4, 0.6, 2 + SHIRT + 0.3), 'foam')  # the collarbone plate
+
+
+def build_worn_knee_brace(g):
+    def leg(p, s):
+        g.front(p, MED_OVER - 0.4, -1.2, 4.6, 1.2, 7.2, 'neo', t=0.3)                 # open patella ring
+        for side in (-1, 1):
+            g.side(p, MED_OVER - 0.4, side, -1.2, 2.6, 1.2, 9.4, 'bar', t=0.3)          # hinged uprights
+            g.side(p, MED_OVER - 0.1, side, -0.7, 5.4, 0.7, 6.6, 'hinge', t=0.3)
+        for y in (2.8, 8.4):
+            g.shell(p, y, y + 0.9, MED_OVER - 0.4, 'strap')
+        g.shell(p, 3.8, 4.6, MED_OVER - 0.45, 'neo')
+        g.shell(p, 7.2, 8.0, MED_OVER - 0.45, 'neo')
+    g.both(LEGS, leg)
+
+
+MEDICAL = {
+    'worn_bandage': (build_worn_bandage, dict(gauze=cloth('#d8d3c4', weave=0.2, stitch=None), stain=flat('#7a2a22')), 0.3),
+    'worn_gauze': (build_worn_gauze, dict(pad=cloth('#e0dccf', weave=0.25, stitch=None), tape=flat('#c9c3b0')), 0.3),
+    'worn_wrap': (build_worn_wrap, dict(wrap=knit('#b89a78'), clip=metal()), 0.3),
+    'worn_tourniquet': (build_worn_tourniquet, dict(strap=cloth('#1e1e1c', weave=0.1), buckle=plastic('#111111'),
+                                                    rod=plastic('#1a1a1a'), clip=plastic('#1a1a1a'), tag=flat('#c8c4b4')), 0.3),
+    'worn_splint': (build_worn_splint, dict(board=cloth('#8a6e48', weave=0.04, stitch=None), tie=cloth('#cfc9b8', stitch=None)), 0.35),
+    'worn_finger_splint': (build_worn_finger_splint, dict(alu=metal('steel'), tape=flat('#d6d0c0')), 0.2),
+    'worn_moldable_splint': (build_worn_moldable_splint, dict(foam=plastic('#c86a2a', gloss=0.1), wrap=knit('#b89a78')), 0.3),
+    'worn_sling': (build_worn_sling, dict(sling=cloth('#3a4a6a', weave=0.06), pin=metal()), 0.3),
+    'worn_collar': (build_worn_collar, dict(foam=plastic('#d8d4c8', gloss=0.1), vent=flat('#2a2a2a', ink=False),
+                                            velcro=cloth('#2a2b2e', stitch=None)), 0.2),
+    'worn_knee_brace': (build_worn_knee_brace, dict(neo=cloth('#26272a', weave=0.04, stitch=None), bar=metal('steel'),
+                                                    hinge=plastic('#3a3b3e'), strap=cloth('#2e2f33', stitch=None)), 0.3),
+}
+
+
 GARMENTS.update(HEADWEAR)
 GARMENTS.update(TOPS)
 GARMENTS.update(LOWER)
 GARMENTS.update(KIT)
 GARMENTS.update(MILITARY)
+GARMENTS.update(MEDICAL)
 
 
 # ================================================================== export
@@ -2786,9 +2932,10 @@ def main(only):
         M.dump(whole_json, ASSETS / f'models/item/clothing/{gid}.json')
         mesh_id = f'clothing/{gid}'
         # worn in the head slot, ClothingLayer draws it: vanilla's own head layer gets nothing
-        M.dump({'model': {'type': 'minecraft:select', 'property': 'minecraft:display_context',
-                          'cases': [{'when': 'head', 'model': {'type': 'minecraft:empty'}}],
-                          'fallback': camo_item(ref, mesh_id, 'loot', gid, camos)}}, ASSETS / f'items/{gid}.json')
+        if gid not in MEDICAL:      # medical pieces are only ever drawn on the body, never an item of their own
+            M.dump({'model': {'type': 'minecraft:select', 'property': 'minecraft:display_context',
+                              'cases': [{'when': 'head', 'model': {'type': 'minecraft:empty'}}],
+                              'fallback': camo_item(ref, mesh_id, 'loot', gid, camos)}}, ASSETS / f'items/{gid}.json')
         parts = [] if gid in SUPPLIES else sorted({p['part'] for p in m.parts})
         meshes = {'loot': whole_json}
         for part in parts:
@@ -2799,7 +2946,8 @@ def main(only):
             M.dump({'model': camo_item(f'{ref}/{part}', mesh_id, part, gid, camos)}, ASSETS / f'items/clothing/{gid}/{part}.json')
             meshes[part] = pj
         write_mesh(mesh_id, meshes, tex)
-        lang[f'item.{NS}.{gid}'] = titles.get(gid, gid.replace('_', ' ').title())
+        if gid not in MEDICAL:
+            lang[f'item.{NS}.{gid}'] = titles.get(gid, gid.replace('_', ' ').title())
         print(f'{gid}: {len(m.parts)} boxes on {", ".join(parts)}, {T}px')
     lang_path.write_text(json.dumps(lang, indent=2, ensure_ascii=False) + '\n')
     write_parts()
