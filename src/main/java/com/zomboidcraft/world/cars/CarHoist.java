@@ -292,7 +292,7 @@ public class CarHoist extends Entity {
     }
 
     /** The sill's height above the wheels where the pack has no underside heights: low on cars, higher on trucks. */
-    private static float sill(CarModels.Model m) {
+    public static float sill(CarModels.Model m) {
         return switch (m.kind == null ? "" : m.kind) {
             case "car" -> m.size[1] > 1.6f ? 0.26f : 0.19f;
             case "van" -> m.size[1] > 2.4f ? 0.32f : 0.22f;

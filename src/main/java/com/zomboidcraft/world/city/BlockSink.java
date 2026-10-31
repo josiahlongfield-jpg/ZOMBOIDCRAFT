@@ -46,6 +46,14 @@ public interface BlockSink {
         vehicle(x, y, z, yaw, "!hoist:" + notch + (car == null ? "" : ";" + car), seed);
     }
 
+    /**
+     * An auto shop floor tool (an entity): "jack", "crane", "tyre_machine" or "washer", standing at (x, z) on floor
+     * level y, its working side (handle, front) toward yaw + 180. Goes through {@link #vehicle} like {@link #hoist}.
+     */
+    default void shopTool(double x, int y, double z, float yaw, String kind, long seed) {
+        vehicle(x, y, z, yaw, "!tool:" + kind, seed);
+    }
+
     /** Notes a spot worth finding again (what: "bunker" for a bunker's hatch); the game ignores it. */
     default void mark(String what, int x, int y, int z) {
     }

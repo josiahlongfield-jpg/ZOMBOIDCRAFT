@@ -277,8 +277,8 @@ public final class Mechanics {
         return player.isCreative() ? Skill.MAX_LEVEL : Skills.level(player, Skill.MECHANICS);
     }
 
-    /** Whether the car is up on a hoist (all of it) or this player has a jack for the corners. */
-    private static String access(Player player, CarProp car, Part part) {
+    /** Whether the car is up on a hoist (all of it), a trolley jack holds up this wheel's corner, or (tyres) they have a jack. */
+    private static String access(Player player, CarProp car, Part part, int corner) {
         if (!part.lifted || car.underReach()) {
             return null;
         }
@@ -289,10 +289,11 @@ public final class Mechanics {
         if (car.wheelsFree()) {
             return null;
         }
-        if (has(player, "trolley_jack") || part == Part.TIRE && has(player, "car_jack")) {
+        if (car.jackedFree(corner) || part == Part.TIRE && has(player, "car_jack")) {
             return null;
         }
-        return part == Part.TIRE ? "Needs a jack, or the car on a hoist" : "Needs a trolley jack, or the car on a hoist";
+        return part == Part.TIRE ? "Needs a jack under that corner, or the car on a hoist"
+                : "Needs a trolley jack under that corner, or the car on a hoist";
     }
 
     /**
@@ -329,7 +330,7 @@ public final class Mechanics {
         if (!basic(part) && !knows(player, carKind)) {
             return "Needs Laine's Auto Manual: " + manualTitle(carKind);
         }
-        String a = access(player, car, part);
+        String a = access(player, car, part, s.index());
         if (a != null) {
             return a;
         }
@@ -339,8 +340,8 @@ public final class Mechanics {
         if (part == Part.TIRE && job == Job.INSTALL && CarParts.get(parts, Part.RIM, s.index()) < 0) {
             return "No wheel rim to fit it on";
         }
-        if (part == Part.ENGINE && job == Job.REMOVE && !has(player, "engine_crane") && !nearCrane(car)) {
-            return "Needs an engine crane";
+        if (part == Part.ENGINE && !ShopTool.craneAt(car)) {
+            return job == Job.REMOVE ? "Needs an engine crane at the front to lift it out" : "Needs an engine crane at the front to drop it in";
         }
         String t = tool(part);
         if (t != null && !has(player, t)) {
@@ -367,10 +368,6 @@ public final class Mechanics {
     }
 
     /** An engine crane block stands within a few blocks (the shop's own, set up by the hoist work). */
-    private static boolean nearCrane(CarProp car) {
-        return false;
-    }
-
     /** How long a job takes, in ticks: harder parts longer, a hoist and the right power tools quicker, skill too. */
     public static int ticks(Player player, CarProp car, int slot, Job job) {
         Part part = CarParts.SLOTS.get(slot).part();

@@ -47,6 +47,11 @@ public final class ZcCommand {
                                                 .executes(ctx -> car(ctx, StringArgumentType.getString(ctx, "model"),
                                                         StringArgumentType.getString(ctx, "variant"))))))
                         .then(Commands.literal("hoist").executes(ZcCommand::hoist))
+                        .then(Commands.literal("shoptool")
+                                .then(Commands.argument("kind", StringArgumentType.word())
+                                        .suggests((ctx, b) -> SharedSuggestionProvider.suggest(java.util.Arrays.stream(
+                                                com.zomboidcraft.world.cars.ShopTool.Kind.values()).map(k -> k.name().toLowerCase(java.util.Locale.ROOT)), b))
+                                        .executes(ctx -> shopTool(ctx, StringArgumentType.getString(ctx, "kind")))))
                         .then(Commands.literal("carparts").executes(ctx -> carParts(ctx, null, -1))
                                 .then(Commands.argument("part", StringArgumentType.word())
                                         .suggests((ctx, b) -> SharedSuggestionProvider.suggest(com.zomboidcraft.world.cars.CarParts.names(), b))
@@ -224,6 +229,25 @@ public final class ZcCommand {
         player.level().addFreshEntity(hoist);
         ctx.getSource().sendSuccess(() -> Component.literal("A car lift, its bay running the way you face. Drive a car in between the posts, "
                 + "then G on the control box."), false);
+        return 1;
+    }
+
+    /** An auto shop floor tool (jack, crane, tyre_machine, washer) set down two blocks ahead, facing you. */
+    private static int shopTool(CommandContext<CommandSourceStack> ctx, String name) throws CommandSyntaxException {
+        net.minecraft.server.level.ServerPlayer player = ctx.getSource().getPlayerOrException();
+        com.zomboidcraft.world.cars.ShopTool.Kind kind = com.zomboidcraft.world.cars.ShopTool.Kind.of(name);
+        com.zomboidcraft.world.cars.ShopTool tool = com.zomboidcraft.world.cars.Cars.TOOL.create(player.level(),
+                net.minecraft.world.entity.EntitySpawnReason.COMMAND);
+        if (kind == null || tool == null) {
+            ctx.getSource().sendFailure(Component.literal("Unknown tool: jack, crane, tyre_machine or washer."));
+            return 0;
+        }
+        float yaw = Math.round(player.getYRot() / 90f) * 90f;
+        net.minecraft.world.phys.Vec3 ahead = net.minecraft.world.phys.Vec3.directionFromRotation(0, yaw).scale(2);
+        tool.setKind(kind);
+        tool.snapTo(player.getX() + ahead.x, Math.floor(player.getY() + 0.01), player.getZ() + ahead.z, yaw + 180, 0);
+        player.level().addFreshEntity(tool);
+        ctx.getSource().sendSuccess(() -> Component.literal("A " + kind.title.toLowerCase(java.util.Locale.ROOT) + ". G works it."), false);
         return 1;
     }
 

@@ -93,6 +93,9 @@ public class CarProp extends Entity {
     private static final EntityDataAccessor<String> PARTS = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.STRING);
     /** How high a hoist's arms have it, metres (0 on its wheels): up at all, it can't be driven off. */
     private static final EntityDataAccessor<Float> LIFT = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.FLOAT);
+    /** A trolley jack under one corner ({@link ShopTool}): which (0-3, -1 none) and how high it's lifted. */
+    private static final EntityDataAccessor<Integer> JACK = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Float> JACK_LIFT = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.FLOAT);
     /** Server: the gunner holds the trigger; rounds due by the rate; ticks till the belt's loaded; rounds fired. */
     boolean turretTrigger;
     int beltBusy, turretShots, fireTicks;
@@ -212,6 +215,8 @@ public class CarProp extends Entity {
         builder.define(BELT, 0);
         builder.define(PARTS, "");
         builder.define(LIFT, 0f);
+        builder.define(JACK, -1);
+        builder.define(JACK_LIFT, 0f);
     }
 
     @Override
@@ -385,6 +390,29 @@ public class CarProp extends Entity {
 
     public void setLift(float metres) {
         entityData.set(LIFT, metres);
+    }
+
+    public float liftHeight() {
+        return entityData.get(LIFT);
+    }
+
+    /** The corner a trolley jack holds up (0 front left, 1 front right, 2 rear left, 3 rear right), or -1. */
+    public int jackCorner() {
+        return entityData.get(JACK);
+    }
+
+    public float jackLift() {
+        return entityData.get(JACK_LIFT);
+    }
+
+    /** Whether this wheel's corner is jacked high enough to spin the wheel free. */
+    public boolean jackedFree(int corner) {
+        return jackCorner() == corner && jackLift() >= ShopTool.JACK_LIFT - 0.02f;
+    }
+
+    public void setJack(int corner, float metres) {
+        entityData.set(JACK, corner);
+        entityData.set(JACK_LIFT, corner < 0 ? 0f : metres);
     }
 
     /** Whether a point (relative to the car, or in the world) is at its front end, where the bonnet and the engine are. */
@@ -1544,8 +1572,8 @@ public class CarProp extends Entity {
         if (m == null) {
             return;
         }
-        if (hoisted()) {
-            setDeltaMovement(Vec3.ZERO);    // wheels spinning in the air on the hoist's arms
+        if (hoisted() || jackCorner() >= 0) {
+            setDeltaMovement(Vec3.ZERO);    // wheels spinning in the air on the hoist's arms, or a corner up on a jack
             return;
         }
         double rad = Math.toRadians(getYRot());

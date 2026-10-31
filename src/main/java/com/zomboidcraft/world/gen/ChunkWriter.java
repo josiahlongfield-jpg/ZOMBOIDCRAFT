@@ -6,6 +6,7 @@ import com.zomboidcraft.world.StandIns;
 import com.zomboidcraft.world.blocks.CityBlocks;
 import com.zomboidcraft.world.blocks.Fittings;
 import com.zomboidcraft.world.cars.CarHoist;
+import com.zomboidcraft.world.cars.ShopTool;
 import com.zomboidcraft.world.cars.CarModels;
 import com.zomboidcraft.world.cars.CarProp;
 import com.zomboidcraft.world.cars.Cars;
@@ -117,6 +118,16 @@ public final class ChunkWriter implements ChunkSink {
     public void vehicle(double x, int y, double z, float yaw, String models, long seed) {
         if (models.startsWith("!hoist")) {
             hoist(x, y, z, yaw, models, seed);
+            return;
+        }
+        if (models.startsWith("!tool:")) {
+            ShopTool.Kind kind = ShopTool.Kind.of(models.substring(6));
+            ShopTool tool = kind == null || !(chunk instanceof ProtoChunk) ? null : Cars.TOOL.create(region.getLevel(), EntitySpawnReason.STRUCTURE);
+            if (tool != null) {
+                tool.setKind(kind);
+                tool.snapTo(x, y, z, yaw, 0f);
+                ((ProtoChunk) chunk).addEntity(tool);
+            }
             return;
         }
         // "...@wrecked": how it's left pinned, whatever the shares (the cars on the harbour's bed)

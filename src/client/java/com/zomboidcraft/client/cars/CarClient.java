@@ -58,6 +58,7 @@ public final class CarClient {
         ClientTickEvents.END_CLIENT_TICK.register(CarClient::tick);
         com.zomboidcraft.client.interact.Interactables.drawsOwn(() -> target != null);
         HoistClient.register();
+        ShopToolClient.register();
         com.zomboidcraft.client.interact.Interactables.finder(CarClient::boot);
         com.zomboidcraft.client.interact.Interactables.finder(CarClient::bonnet);
         CarLights.register();
@@ -97,6 +98,8 @@ public final class CarClient {
                 ClientPlayNetworking.send(new CarNet.Use(CarNet.GET_OUT, 0, 0, 0));
             } else if (HoistClient.interact(client, player)) {
                 // a car lift's control box or its pump lever
+            } else if (ShopToolClient.interact(client, player)) {
+                // a trolley jack, engine crane, tyre machine or parts washer
             } else if (car != null && atBonnet(car, hit, player)) {
                 client.gui.setScreen(new com.zomboidcraft.client.kit.MechanicsScreen(car));
             } else if (car != null) {
