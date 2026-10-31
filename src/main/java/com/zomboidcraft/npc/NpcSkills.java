@@ -105,9 +105,11 @@ public final class NpcSkills {
     /** Swaps her starting levels for this occupation and these hobbies, keeping what she's learned since. */
     void start(String id, List<String> picked) {
         Map<String, Float> next = new HashMap<>();
-        for (Map.Entry<com.zomboidcraft.skills.Skill, Integer> e : Traits.bonuses(id, picked).entrySet()) {
-            int level = Math.max(0, (e.getKey().passive() ? 5 : 0) + e.getValue());
-            if (level > 0) next.put(e.getKey().name(), xpFor(level));
+        Map<com.zomboidcraft.skills.Skill, Integer> bonus = Traits.bonuses(id, picked);
+        for (com.zomboidcraft.skills.Skill k : com.zomboidcraft.skills.Skill.values()) {
+            // Fitness and Strength start at five for everyone, like Zomboid's survivors
+            int level = Math.max(0, Math.min(MAX, (k.passive() ? 5 : 0) + bonus.getOrDefault(k, 0)));
+            if (level > 0) next.put(k.name(), xpFor(level));
         }
         java.util.Set<String> keys = new java.util.HashSet<>(xp.keySet());
         keys.addAll(next.keySet());
