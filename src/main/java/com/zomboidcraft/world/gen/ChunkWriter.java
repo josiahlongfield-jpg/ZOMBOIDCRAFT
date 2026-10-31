@@ -133,7 +133,13 @@ public final class ChunkWriter implements ChunkSink {
         }
         // "...@wrecked": how it's left pinned, whatever the shares (the cars on the harbour's bed)
         int at = models.indexOf('@');
-        spawn(x, y, z, yaw, filter(0, 99, at < 0 ? models : models.substring(0, at)), at < 0 ? null : models.substring(at + 1), seed, -1);
+        String names = at < 0 ? models : models.substring(0, at), variant = at < 0 ? null : models.substring(at + 1);
+        // a bare variant ("burnt", "abandoned": the highway places' wrecks) is any road car left that way
+        if (variant == null && CarModels.variants().contains(names)) {
+            variant = names;
+            names = null;
+        }
+        spawn(x, y, z, yaw, filter(0, 99, names), variant, seed, -1);
     }
 
     /** A car lift from {@link com.zomboidcraft.world.city.BlockSink#hoist}: "!hoist:notch;car models". */
@@ -212,6 +218,13 @@ public final class ChunkWriter implements ChunkSink {
             long seed, double raised) {
         if (!ZcConfig.get().world.streetCars || !(chunk instanceof ProtoChunk proto)) {
             return null;
+        }
+        // "abandoned#jam": a traffic jam's car on the open road (world/county/Jams), left out under Zomboid's Traffic Jam off
+        if (variant != null && variant.endsWith("#jam")) {
+            if (!ZcConfig.get().world.trafficJams) {
+                return null;
+            }
+            variant = variant.substring(0, variant.length() - 4);
         }
         SplittableRandom rng = new SplittableRandom(seed);
         CarModels.Model model = CarModels.pick(rng, filter);
