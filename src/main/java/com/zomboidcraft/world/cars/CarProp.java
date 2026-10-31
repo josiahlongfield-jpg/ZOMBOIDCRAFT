@@ -93,6 +93,9 @@ public class CarProp extends Entity {
     private static final EntityDataAccessor<String> PARTS = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.STRING);
     /** How high a hoist's arms have it, metres (0 on its wheels): up at all, it can't be driven off. */
     private static final EntityDataAccessor<Float> LIFT = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.FLOAT);
+    /** A trolley jack under one corner ({@link ShopTool}): which (0-3, -1 none) and how high it's lifted. */
+    private static final EntityDataAccessor<Integer> JACK = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Float> JACK_LIFT = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.FLOAT);
     /** Server: the gunner holds the trigger; rounds due by the rate; ticks till the belt's loaded; rounds fired. */
     boolean turretTrigger;
     int beltBusy, turretShots, fireTicks;
@@ -212,6 +215,8 @@ public class CarProp extends Entity {
         builder.define(BELT, 0);
         builder.define(PARTS, "");
         builder.define(LIFT, 0f);
+        builder.define(JACK, -1);
+        builder.define(JACK_LIFT, 0f);
     }
 
     @Override
@@ -385,6 +390,29 @@ public class CarProp extends Entity {
 
     public void setLift(float metres) {
         entityData.set(LIFT, metres);
+    }
+
+    public float liftHeight() {
+        return entityData.get(LIFT);
+    }
+
+    /** The corner a trolley jack holds up (0 front left, 1 front right, 2 rear left, 3 rear right), or -1. */
+    public int jackCorner() {
+        return entityData.get(JACK);
+    }
+
+    public float jackLift() {
+        return entityData.get(JACK_LIFT);
+    }
+
+    /** Whether this wheel's corner is jacked high enough to spin the wheel free. */
+    public boolean jackedFree(int corner) {
+        return jackCorner() == corner && jackLift() >= ShopTool.JACK_LIFT - 0.02f;
+    }
+
+    public void setJack(int corner, float metres) {
+        entityData.set(JACK, corner);
+        entityData.set(JACK_LIFT, corner < 0 ? 0f : metres);
     }
 
     /** Whether a point (relative to the car, or in the world) is at its front end, where the bonnet and the engine are. */
@@ -899,7 +927,7 @@ public class CarProp extends Entity {
             return "It's dead. It won't start.";
         }
         rollKey();
-        String how = keyWhere == CarKeys.IGNITION ? "The key's in the ignition: C to start it."
+        String how = keyWhere == CarKeys.IGNITION || com.zomboidcraft.ZcConfig.get().world.vehicleEasyUse ? "The key's in the ignition: C to start it."
                 : CarKeys.carries(player, this) ? "You have the key: C to start it."
                 : hotwired ? "It's been hotwired: C to start it."
                 : "No key: C to hotwire it. The wiring looks " + wiring(carCondition()) + ".";
@@ -914,11 +942,13 @@ public class CarProp extends Entity {
         if (!aircraft() && !worn) {
             worn = true;
             java.util.Random rng = new java.util.Random(getUUID().getLeastSignificantBits());
-            setCondition(switch (variant()) {
+            int found = switch (variant()) {
                 case "usable" -> 55 + rng.nextInt(46);
                 case "abandoned" -> 15 + rng.nextInt(46);
                 default -> rng.nextInt(16);
-            });
+            };
+            // Zomboid's General Condition; wrecks and burnt-out shells stay ruins
+            setCondition("usable".equals(variant()) || "abandoned".equals(variant()) ? Math.clamp(found + Cars.conditionShift(), 0, 100) : found);
         }
         if (!aircraft() && !parts().isEmpty()) {
             return CarParts.overall(parts());
@@ -977,7 +1007,7 @@ public class CarProp extends Entity {
             return true;
         }
         rollKey();
-        return keyWhere == CarKeys.IGNITION || hotwired || CarKeys.carries(player, this);
+        return keyWhere == CarKeys.IGNITION || hotwired || CarKeys.carries(player, this) || com.zomboidcraft.ZcConfig.get().world.vehicleEasyUse;
     }
 
     public boolean lightsOn() {
@@ -1544,8 +1574,8 @@ public class CarProp extends Entity {
         if (m == null) {
             return;
         }
-        if (hoisted()) {
-            setDeltaMovement(Vec3.ZERO);    // wheels spinning in the air on the hoist's arms
+        if (hoisted() || jackCorner() >= 0) {
+            setDeltaMovement(Vec3.ZERO);    // wheels spinning in the air on the hoist's arms, or a corner up on a jack
             return;
         }
         double rad = Math.toRadians(getYRot());
@@ -1675,6 +1705,9 @@ public class CarProp extends Entity {
         }
         for (LivingEntity hit : struck(m)) {
             float damage = (float) (speed * speed * 25 + speed * 5);
+            if (hit instanceof Player) {
+                damage *= (float) com.zomboidcraft.ZcConfig.get().world.carHitDamage;     // Zomboid's Damage From Being Hit By A Car
+            }
             DamageSource source = damageSources().mobAttack(driver);
             if (hit.hurtServer(server, source, damage)) {
                 Vec3 away = hit.position().subtract(position());
@@ -1765,7 +1798,7 @@ public class CarProp extends Entity {
 
     /** A crash at speed (blocks a tick) knocks the front about: lights, bonnet, radiator, steering, the front wheels. */
     private void crashWear(double speed) {
-        double hit = Math.min(60, speed * speed * 60) * com.zomboidcraft.ZcConfig.get().world.partWear;
+        double hit = Math.min(60, speed * speed * 60) * com.zomboidcraft.ZcConfig.get().world.partWear * Cars.crashDamage();
         wear(CarParts.Part.HEADLIGHT, 0, hit * 1.5);
         wear(CarParts.Part.HEADLIGHT, 1, hit * 1.5);
         wear(CarParts.Part.BONNET, 0, hit);

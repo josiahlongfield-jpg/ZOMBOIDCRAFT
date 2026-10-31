@@ -4,6 +4,7 @@ import com.zomboidcraft.world.cars.CarHoist;
 import com.zomboidcraft.world.cars.CarParts;
 import com.zomboidcraft.world.cars.CarProp;
 import com.zomboidcraft.world.cars.Cars;
+import com.zomboidcraft.world.cars.ShopTool;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.fabricmc.fabric.api.client.gametest.v1.context.TestSingleplayerContext;
@@ -121,8 +122,52 @@ public class HoistFilmTest implements FabricClientGameTest {
             }
             use(sp, CarHoist.Use.CONTROL_DOWN);
             frames(ctx, 16, 2);
+            // 8. the shop tools: a jack rolled under the front left wheel, the crane wheeled to the nose, the machines facing the bay
+            tool(sp, ShopTool.Kind.JACK, -2.2, 1.0, 90);
+            tool(sp, ShopTool.Kind.CRANE, 0, 5.2, 180);
+            tool(sp, ShopTool.Kind.TYRE_MACHINE, -6.5, 3.0, -90);
+            tool(sp, ShopTool.Kind.WASHER, -6.5, -2.0, -90);
+            ctx.waitTicks(10);
+            shot(sp, 1.9, 1.6, 1.6, 44, 25);
+            work(sp, ShopTool.Kind.JACK);
+            shot(sp, 3.6, 1.5, -1.0, 44, 22);
+            frames(ctx, 26, 2);
+            shot(sp, 0.6, 1.6, 4.6, 0, 0);
+            work(sp, ShopTool.Kind.CRANE);
+            shot(sp, 3.0, 1.8, 2.4, 59, 15);
+            frames(ctx, 12, 2);
+            shot(sp, -4.6, 1.7, 3.0, 90, 23);
+            frames(ctx, 8, 2);
+            shot(sp, -4.6, 1.7, -2.0, 90, 23);
+            frames(ctx, 8, 2);
+            shot(sp, 1.9, 1.6, 1.6, 44, 25);
+            work(sp, ShopTool.Kind.JACK);
+            shot(sp, 3.6, 1.5, -1.0, 44, 22);
+            frames(ctx, 14, 2);
             LOG.info("ZCHOIST frames {}", frame);
         }
+    }
+
+    private void tool(TestSingleplayerContext sp, ShopTool.Kind kind, double x, double z, float yaw) {
+        sp.getServer().runOnServer(server -> {
+            ShopTool t = Cars.TOOL.create(server.overworld(), EntitySpawnReason.COMMAND);
+            t.setKind(kind);
+            t.snapTo(base.x + x, base.y, base.z + z, yaw, 0);
+            server.overworld().addFreshEntity(t);
+        });
+    }
+
+    /** The player works the nearest tool of a kind from where they stand. */
+    private void work(TestSingleplayerContext sp, ShopTool.Kind kind) {
+        sp.getServer().runOnServer(server -> {
+            ServerPlayer p = server.getPlayerList().getPlayers().get(0);
+            for (ShopTool t : server.overworld().getEntitiesOfClass(ShopTool.class, p.getBoundingBox().inflate(12))) {
+                if (t.kind() == kind) {
+                    t.use(p);
+                    LOG.info("ZCHOIST tool {} at {}", kind, t.position().subtract(base));
+                }
+            }
+        });
     }
 
     private void use(TestSingleplayerContext sp, CarHoist.Use use) {

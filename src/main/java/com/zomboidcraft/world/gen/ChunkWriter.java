@@ -6,8 +6,10 @@ import com.zomboidcraft.world.StandIns;
 import com.zomboidcraft.world.blocks.CityBlocks;
 import com.zomboidcraft.world.blocks.Fittings;
 import com.zomboidcraft.world.cars.CarHoist;
+import com.zomboidcraft.world.cars.ShopTool;
 import com.zomboidcraft.world.cars.CarModels;
 import com.zomboidcraft.world.cars.CarProp;
+import com.zomboidcraft.world.cars.CarParts;
 import com.zomboidcraft.world.cars.Cars;
 import com.zomboidcraft.world.county.CarSpacing;
 import com.zomboidcraft.world.county.ChunkSink;
@@ -119,6 +121,16 @@ public final class ChunkWriter implements ChunkSink {
             hoist(x, y, z, yaw, models, seed);
             return;
         }
+        if (models.startsWith("!tool:")) {
+            ShopTool.Kind kind = ShopTool.Kind.of(models.substring(6));
+            ShopTool tool = kind == null || !(chunk instanceof ProtoChunk) ? null : Cars.TOOL.create(region.getLevel(), EntitySpawnReason.STRUCTURE);
+            if (tool != null) {
+                tool.setKind(kind);
+                tool.snapTo(x, y, z, yaw, 0f);
+                ((ProtoChunk) chunk).addEntity(tool);
+            }
+            return;
+        }
         // "...@wrecked": how it's left pinned, whatever the shares (the cars on the harbour's bed)
         int at = models.indexOf('@');
         spawn(x, y, z, yaw, filter(0, 99, at < 0 ? models : models.substring(0, at)), at < 0 ? null : models.substring(at + 1), seed, -1);
@@ -204,6 +216,11 @@ public final class ChunkWriter implements ChunkSink {
         SplittableRandom rng = new SplittableRandom(seed);
         CarModels.Model model = CarModels.pick(rng, filter);
         if (model == null) {
+            return null;
+        }
+        // Zomboid's Vehicle Spawn Rate thins the parked road vehicles; shop customers and lifted cars always stay
+        boolean kept = raised >= 0 || variant != null && variant.endsWith("#customer") || !CarParts.applies(model);
+        if (!kept && !Cars.spawnKept(seed)) {
             return null;
         }
         CarProp car = Cars.CAR.create(region.getLevel(), EntitySpawnReason.STRUCTURE);

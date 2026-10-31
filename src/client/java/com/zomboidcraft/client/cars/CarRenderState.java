@@ -6,6 +6,9 @@ public class CarRenderState extends EntityRenderState {
     public String model = "sedan";
     public String variant = "usable";
     public float yaw;
+    /** A trolley jack's corner (0-3, -1 none) and how high it holds it. */
+    public int jackCorner = -1;
+    public float jackLift;
     /** How far the boot is open, eased, 0 to 1. */
     public float open;
     /** How far the wheels have rolled (metres), and the front wheels' steer (radians, left +). */
