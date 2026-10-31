@@ -261,6 +261,18 @@ public class BaseMoveTest implements FabricClientGameTest {
      * gate, a hidden door at the end of the wall run, and a lookout tower.
      */
     private static void wave2c(ClientGameTestContext ctx, TestSingleplayerContext sp) {
+        // a fresh load: the pack only carries so much, and the yard so far has used most of it
+        sp.getServer().runOnServer(s -> {
+            ServerPlayer p = player(s);
+            p.getInventory().clearContent();
+            p.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ModItems.HAMMER));
+            p.getInventory().add(new ItemStack(BuiltInRegistries.ITEM.getValue(com.zomboidcraft.ZomboidCraft.id("hinges")), 4));
+            p.getInventory().add(new ItemStack(BuiltInRegistries.ITEM.getValue(com.zomboidcraft.ZomboidCraft.id("padlock")), 1));
+            p.getInventory().add(new ItemStack(BuiltInRegistries.ITEM.getValue(com.zomboidcraft.ZomboidCraft.id("screws")), 4));
+            p.getInventory().add(new ItemStack(ModItems.NAILS, 64));
+            for (int i = 0; i < 2; i++) p.getInventory().add(new ItemStack(net.minecraft.world.item.Items.OAK_PLANKS, 64));
+            LOG.info("ZCBASE 2c load: {} planks", com.zomboidcraft.building.Materials.count(p, st -> st.is(net.minecraft.world.item.Items.OAK_PLANKS)));
+        });
         standYard(ctx, sp, 3, 0.5, 0f, 25f);
         build(ctx, sp, Build.REINFORCE, yard.offset(0, 0, 4), Direction.NORTH, Direction.SOUTH);
         build(ctx, sp, Build.REINFORCE, yard.offset(3, 0, 4), Direction.NORTH, Direction.SOUTH);
