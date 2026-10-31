@@ -116,6 +116,11 @@ public final class PowerGrid {
         }
     }
 
+    /** Has any district's mains gone off? */
+    public static boolean anyDown(ServerLevel level) {
+        return !level.getAttachedOrElse(DOWN, List.of()).isEmpty();
+    }
+
     /** Every district id in this world. */
     public static List<String> districts(ServerLevel level) {
         List<String> ids = new ArrayList<>();

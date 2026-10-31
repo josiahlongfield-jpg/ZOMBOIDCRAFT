@@ -4,7 +4,6 @@ import com.zomboidcraft.world.blocks.LightSwitch;
 import java.util.ArrayDeque;
 import java.util.HashSet;
 import java.util.Set;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
@@ -19,11 +18,11 @@ import net.minecraft.world.level.chunk.LevelChunkSection;
 
 /**
  * The lights going out with the mains: when a district's power goes off, every room lamp left on in it (and its
- * switch) goes dark, in the chunks round the players then and in every chunk loaded after. A spot a running generator
+ * switch) goes dark, in the chunks round the players then and round wherever they go after. A spot a running generator
  * reaches keeps its lights. Traffic signals see to themselves (world/blocks/Signal).
  */
 public final class Blackout {
-    private static final int RADIUS = 8, PER_TICK = 4;
+    private static final int RADIUS = 8, NEAR = 6, PER_TICK = 6;
     private static final ArrayDeque<Long> QUEUE = new ArrayDeque<>();
     private static final Set<Long> QUEUED = new HashSet<>();
 
@@ -39,11 +38,6 @@ public final class Blackout {
                         queue(px + dx, pz + dz);
                     }
                 }
-            }
-        });
-        ServerChunkEvents.CHUNK_LOAD.register((level, chunk) -> {
-            if (level.dimension() == Level.OVERWORLD) {
-                queue(chunk.getPos().getMinBlockX() >> 4, chunk.getPos().getMinBlockZ() >> 4);
             }
         });
         ServerTickEvents.END_SERVER_TICK.register(Blackout::tick);
@@ -62,6 +56,17 @@ public final class Blackout {
 
     private static void tick(MinecraftServer server) {
         ServerLevel level = server.overworld();
+        if (level.getGameTime() % 100 == 0 && PowerGrid.anyDown(level)) {
+            // chunks players come to after the cut: each is looked at again now and then (cheap once it's dark)
+            for (ServerPlayer p : level.players()) {
+                int px = p.blockPosition().getX() >> 4, pz = p.blockPosition().getZ() >> 4;
+                for (int dx = -NEAR; dx <= NEAR; dx++) {
+                    for (int dz = -NEAR; dz <= NEAR; dz++) {
+                        queue(px + dx, pz + dz);
+                    }
+                }
+            }
+        }
         for (int i = 0; i < PER_TICK && !QUEUE.isEmpty(); i++) {
             long key = QUEUE.poll();
             QUEUED.remove(key);
@@ -74,7 +79,7 @@ public final class Blackout {
 
     private static void sweep(ServerLevel level, LevelChunk chunk) {
         ChunkPos c = chunk.getPos();
-        BlockPos middle = new BlockPos(c.getMiddleBlockX(), 64, c.getMiddleBlockZ());
+        BlockPos middle = new BlockPos(c.getMinBlockX() + 8, 64, c.getMinBlockZ() + 8);
         if (PowerGrid.mainsOn(level, middle)) {
             return;
         }
