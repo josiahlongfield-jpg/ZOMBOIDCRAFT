@@ -91,6 +91,9 @@ public final class ClothingItems {
         ClothingLoot.register();
         Grime.register();
         Grooming.register();
+        // what Tailoring's levels change (Tailoring.patch: a quarter of patches pull loose at 0, none at 10)
+        com.zomboidcraft.skills.SkillUnlocks.add(com.zomboidcraft.skills.Skill.TAILORING, 5, "Half as many patches pull loose");
+        com.zomboidcraft.skills.SkillUnlocks.add(com.zomboidcraft.skills.Skill.TAILORING, 10, "Patches never pull loose, sewn in half the time");
         for (String id : SUPPLIES) {
             ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, ZomboidCraft.id(id));
             ITEMS.add(Registry.register(BuiltInRegistries.ITEM, key, new Item(new Item.Properties().stacksTo(16).setId(key))));
