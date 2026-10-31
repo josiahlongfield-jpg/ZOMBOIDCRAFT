@@ -25,7 +25,8 @@ public class ZombieHerdTest implements FabricClientGameTest {
         try (TestSingleplayerContext sp = ctx.worldBuilder().create()) {
             sp.getConnection().waitForChunksRender();
             for (String c : new String[] {"gamemode creative @a", "time set noon", "weather clear", "gamerule doDaylightCycle false",
-                    "gamerule doMobSpawning false", "zc config population.enabled false"}) {
+                    "gamerule doMobSpawning false", "zc config population.enabled false", "zc config nature.climateCycle no_weather",
+                    "zc config nature.fogCycle no_fog"}) {
                 sp.getServer().runCommand(c);
             }
             ctx.getInput().resizeWindow(1280, 720);
@@ -64,8 +65,8 @@ public class ZombieHerdTest implements FabricClientGameTest {
                 }
             }
         });
-        sp.getServer().runCommand("setblock 0 139 0 minecraft:barrier");
-        sp.getServer().runCommand("tp @a 0 140 0 180 62");
+        sp.getServer().runCommand("setblock 0 129 -2 minecraft:barrier");
+        sp.getServer().runCommand("tp @a 0 130 -2 180 58");
         ctx.waitTicks(20);
         for (int f = 0; f < 70; f++) {
             ctx.waitTicks(20);
@@ -103,8 +104,9 @@ public class ZombieHerdTest implements FabricClientGameTest {
             sp.getServer().runCommand(c);
         }
         sp.getServer().runOnServer(server -> Herds.add(server.overworld(), 0, -80, 60));
-        sp.getServer().runCommand("setblock 0 111 8 minecraft:barrier");
-        sp.getServer().runCommand("tp @a 0 112 8 180 22");
+        // watched from the side, off the road it comes down
+        sp.getServer().runCommand("setblock 46 114 -36 minecraft:barrier");
+        sp.getServer().runCommand("tp @a 46 115 -36 90 16");
         ctx.waitTicks(40);
         for (int f = 0; f < 95; f++) {
             if (f % 15 == 0) {
