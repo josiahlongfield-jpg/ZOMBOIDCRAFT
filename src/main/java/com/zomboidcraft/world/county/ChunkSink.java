@@ -22,6 +22,9 @@ public interface ChunkSink {
 
     /** One of the named models or kinds (see {@link com.zomboidcraft.world.city.BlockSink#vehicle}). */
     default void vehicle(double x, int y, double z, float yaw, String models, long seed) {
+        if (models.startsWith("!")) {
+            return;     // a lift ("!hoist", see BlockSink#hoist), which only the chunk writer places
+        }
         car(x, y, z, yaw, 0, 99, seed);
     }
 

@@ -57,6 +57,18 @@ final class SkillsPage {
                     l -> "Right now:" + wall(DigRules.Tier.MASONRY, l).substring(1)),
             new Info(Skill.METALWORKING, "Building", "Cut up metal furniture and fittings with a propane torch. It leaves scrap metal.", wallPerks(DigRules.Tier.METAL),
                     l -> "Right now:" + wall(DigRules.Tier.METAL, l).substring(1)),
+            new Info(Skill.MECHANICS, "Survival", "Take cars apart and put them back together. Every part you fit or pull teaches it, and Laine's Auto Manuals "
+                    + "teach you each class of car (standard, commercial, performance).", List.of(
+                    new Perk(0, "Fluids, the battery, tyres on a jack, headlights"),
+                    new Perk(1, "Spark plugs, horn, tail lights; you can tell which part won't let it start"),
+                    new Perk(2, "Fan belt, bonnet and boot lid"),
+                    new Perk(3, "Oil changes, brake pads, doors"),
+                    new Perk(4, "Radiator, alternator, starter motor, wheel rims"),
+                    new Perk(5, "Suspension, exhaust, steering rack"),
+                    new Perk(6, "Fuel tank and pump, brake fluid"),
+                    new Perk(7, "Gearbox"),
+                    new Perk(8, "Engine rebuilds and swaps")),
+                    l -> "Right now: you can work on parts up to level " + l + "."),
             new Info(Skill.PILOTING, "Survival", "Fly the jets and the helicopter. Time in the air and clean landings teach it; "
                     + "reading a flight manual gets you off the ground in the first place.", List.of(
                     new Perk(0, "Shaky hands: the controls are slow and twitchy"),
