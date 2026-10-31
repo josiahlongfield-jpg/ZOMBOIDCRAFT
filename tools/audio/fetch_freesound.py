@@ -184,6 +184,11 @@ QUERIES = {
                     "terrified scream", "scream echo", "blood curdling scream"],
     "meta_house_alarm": ["burglar alarm", "house alarm", "intruder alarm", "security alarm siren", "alarm bell outside",
                          "alarm box bell", "two tone alarm", "alarm siren loop"],
+    # VEHICLES' emergency sirens and car alarms (2026-10-31): US police/ambulance wail, classic cycling car alarm
+    "car_siren": ["police siren", "ambulance siren", "american police siren", "us siren wail", "siren wail loop",
+                  "police car siren", "emergency siren yelp", "fire truck siren", "siren close"],
+    "car_alarm": ["car alarm", "car alarm loop", "vehicle alarm", "auto alarm", "car alarm siren", "car security alarm",
+                  "car alarm chirp", "car alarm going off"],
     "meta_keypad": ["keypad beep", "alarm keypad", "security keypad", "keypad code entry", "alarm panel beep"],
     # the Harvestman's rage (2026-10-30): "a monstrous scream"
     "crt_rage": ["monster roar", "monster scream", "creature roar", "demon scream", "beast roar", "monster rage",
