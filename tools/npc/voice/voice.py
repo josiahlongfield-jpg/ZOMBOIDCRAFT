@@ -148,6 +148,8 @@ def voice(text, key, voice_id, model):
         hint = {401: 'the API key is wrong', 402: 'your fish.audio account is out of credit',
                 404: 'no voice with that ID (check voice: in lines.txt)', 429: 'too many at once: wait a minute and run it again'}
         raise SystemExit(f'fish.audio said {e.code}: {hint.get(e.code, msg)}')
+    except (urllib.error.URLError, TimeoutError) as e:
+        raise SystemExit(f'Timed out or no connection to fish.audio ({e}). Check your internet and run it again.')
 
 
 def main():
