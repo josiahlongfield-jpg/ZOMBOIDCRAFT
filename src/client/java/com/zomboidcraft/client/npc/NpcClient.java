@@ -29,6 +29,7 @@ public final class NpcClient {
 
     static void register() {
         com.zomboidcraft.client.kit.CompanionScreen.register();
+        NpcVoice.register();
         // middle-click on her: the order wheel, before the game takes it as pick-block
         net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents.START_CLIENT_TICK.register(client -> {
             if (client.gui.screen() != null || client.player == null) return;

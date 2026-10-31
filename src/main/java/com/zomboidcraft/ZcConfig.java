@@ -837,6 +837,8 @@ public final class ZcConfig {
          * closed meshes. Client side.
          */
         public int companionDraw = 0;
+        /** A companion's own voiced lines (her lines.txt) also show in chat as subtitles. Client side. */
+        public boolean npcSubtitles = true;
     }
 
     public static class Combat {

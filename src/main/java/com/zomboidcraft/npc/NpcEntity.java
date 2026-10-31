@@ -300,6 +300,8 @@ public class NpcEntity extends PathfinderMob {
             if (!work.asleep) {
                 speakMind(wasLonely);
             }
+            // her own moments from lines.txt that wait on no event
+            NpcMoments.tick(this);
             work.watch(this, server);
             bond.tick(this, server);
             wardrobe.tick(this, server);

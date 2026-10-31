@@ -194,6 +194,7 @@ public final class Npcs {
         FabricDefaultAttributeRegistry.register(NPC, NpcEntity.attributes());
         NpcNet.register();
         NpcPanel.register();
+        NpcMoments.register();
         net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents.AFTER_DEATH.register((entity, source) -> {
             if (!(entity instanceof net.minecraft.world.entity.monster.zombie.Zombie) || !(source.getEntity() instanceof ServerPlayer killer)) {
                 return;
