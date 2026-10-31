@@ -70,6 +70,7 @@ public class CarHoist extends Entity {
     private boolean armsIn;
     /** Server: whether the motor ran last tick (for the hum) and whether the hull's laid for where the car sits. */
     private boolean running, hullLaid = true, postsLaid;
+    private int lost;
     /** Client: last tick's height and arms, for smooth drawing. */
     public float heightO, armsO;
 
@@ -235,7 +236,7 @@ public class CarHoist extends Entity {
             return;
         }
         CarModels.Model m = CarModels.get(found.model());
-        if (m == null || !CarParts.applies(m) || m.size[2] > MAX_LENGTH || m.size[0] > MAX_WIDTH) {
+        if (!fits(m)) {
             say(player, "Too big for a two-post lift.");
             return;
         }
@@ -250,13 +251,36 @@ public class CarHoist extends Entity {
         }
         // the car squared up between the posts, the arms reaching for its lift points behind the wheels
         found.setPos(toWorld(new Vec3(0, 0, at.z)).x, getY(), toWorld(new Vec3(0, 0, at.z)).z);
-        carId = found.getUUID();
-        entityData.set(CAR, found.getId());
+        hold(found, m);
+        level().playSound(null, getX(), getY(), getZ(), SoundEvents.CHAIN_PLACE, SoundSource.BLOCKS, 0.8f, 0.8f);
+        say(player, "Arms swung in under the " + found.model().replace('_', ' ') + ". The control box takes it up.");
+    }
+
+    /** Whether a model goes up on a two-post lift: a road vehicle no longer or wider than the arms reach. */
+    public static boolean fits(CarModels.Model m) {
+        return m != null && CarParts.applies(m) && m.size[2] <= MAX_LENGTH && m.size[0] <= MAX_WIDTH;
+    }
+
+    /** The arms reaching for the car's lift points behind the wheels. */
+    private void hold(CarProp car, CarModels.Model m) {
+        carId = car.getUUID();
+        entityData.set(CAR, car.getId());
         entityData.set(REACH_X, Math.min(m.size[0] / 2 - 0.25f, 0.95f));
         entityData.set(REACH_Z, Math.max(0.9f, (m.wheelbase > 0.5f ? m.wheelbase : m.size[2] * 0.6f) / 2 - 0.35f));
         armsIn = true;
-        level().playSound(null, getX(), getY(), getZ(), SoundEvents.CHAIN_PLACE, SoundSource.BLOCKS, 0.8f, 0.8f);
-        say(player, "Arms swung in under the " + found.model().replace('_', ' ') + ". The control box takes it up.");
+    }
+
+    /**
+     * Worldgen: the lift found already holding a car at a notch, as it was left (the car stands at the lift's
+     * height, square between the posts). The hull is laid on the first tick.
+     */
+    public void raised(CarProp car, int notch) {
+        hold(car, CarModels.get(car.model()));
+        notch = Mth.clamp(notch, 0, NOTCHES.length - 1);
+        entityData.set(ARMS, 1f);
+        entityData.set(TARGET, notch);
+        setHeight(NOTCHES[notch]);
+        hullLaid = false;
     }
 
     private void releaseCar() {
@@ -301,8 +325,13 @@ public class CarHoist extends Entity {
         }
         entityData.set(ARMS, Mth.approach(arms(), armsIn ? 1f : 0f, 0.04f));
         CarProp car = car();
-        if (armsIn && car == null && carId != null) {
-            armsIn = false;     // the car went (removed, or towed off somehow)
+        if (car != null && entityData.get(CAR) != car.getId()) {
+            entityData.set(CAR, car.getId());     // loaded from disk, where the id was another
+        }
+        // the car went (removed, or towed off somehow); given a few seconds, as it may load after the lift
+        lost = armsIn && car == null && carId != null ? lost + 1 : 0;
+        if (lost > 100) {
+            armsIn = false;
             releaseCar();
         }
         float h = height(), want = arms() < 0.999f ? 0 : NOTCHES[target()];
@@ -379,7 +408,7 @@ public class CarHoist extends Entity {
         entityData.set(REACH_Z, input.getFloatOr("reach_z", 1.3f));
         String id = input.getStringOr("car", "");
         carId = id.isEmpty() ? null : UUID.fromString(id);
-        hullLaid = true;
+        hullLaid = input.getIntOr("hull", 1) != 0;
     }
 
     @Override
@@ -390,6 +419,7 @@ public class CarHoist extends Entity {
         output.putFloat("reach_x", reachX());
         output.putFloat("reach_z", reachZ());
         output.putString("car", carId == null ? "" : carId.toString());
+        output.putInt("hull", hullLaid ? 1 : 0);
     }
 
     @Override

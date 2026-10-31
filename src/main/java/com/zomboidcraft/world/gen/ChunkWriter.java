@@ -5,6 +5,7 @@ import com.zomboidcraft.ZomboidCraft;
 import com.zomboidcraft.world.StandIns;
 import com.zomboidcraft.world.blocks.CityBlocks;
 import com.zomboidcraft.world.blocks.Fittings;
+import com.zomboidcraft.world.cars.CarHoist;
 import com.zomboidcraft.world.cars.CarModels;
 import com.zomboidcraft.world.cars.CarProp;
 import com.zomboidcraft.world.cars.Cars;
@@ -109,14 +110,47 @@ public final class ChunkWriter implements ChunkSink {
 
     @Override
     public void car(double x, int y, double z, float yaw, double minLength, double maxLength, long seed) {
-        spawn(x, y, z, yaw, filter(minLength, maxLength, null), null, seed);
+        spawn(x, y, z, yaw, filter(minLength, maxLength, null), null, seed, -1);
     }
 
     @Override
     public void vehicle(double x, int y, double z, float yaw, String models, long seed) {
+        if (models.startsWith("!hoist")) {
+            hoist(x, y, z, yaw, models, seed);
+            return;
+        }
         // "...@wrecked": how it's left pinned, whatever the shares (the cars on the harbour's bed)
         int at = models.indexOf('@');
-        spawn(x, y, z, yaw, filter(0, 99, at < 0 ? models : models.substring(0, at)), at < 0 ? null : models.substring(at + 1), seed);
+        spawn(x, y, z, yaw, filter(0, 99, at < 0 ? models : models.substring(0, at)), at < 0 ? null : models.substring(at + 1), seed, -1);
+    }
+
+    /** A car lift from {@link com.zomboidcraft.world.city.BlockSink#hoist}: "!hoist:notch;car models". */
+    private void hoist(double x, int y, double z, float yaw, String spec, long seed) {
+        if (!(chunk instanceof ProtoChunk proto)) {
+            return;
+        }
+        int semi = spec.indexOf(';');
+        int notch = 0;
+        try {
+            notch = Integer.parseInt(spec.substring(7, semi < 0 ? spec.length() : semi));
+        } catch (RuntimeException ignored) {
+        }
+        notch = Math.max(0, Math.min(CarHoist.NOTCHES.length - 1, notch));
+        CarHoist hoist = Cars.HOIST.create(region.getLevel(), EntitySpawnReason.STRUCTURE);
+        if (hoist == null) {
+            return;
+        }
+        hoist.snapTo(x, y, z, yaw, 0f);
+        if (semi >= 0) {
+            String models = spec.substring(semi + 1);
+            int at = models.indexOf('@');
+            CarProp car = spawn(x, y, z, yaw, filter(0, 99, at < 0 ? models : models.substring(0, at)).and(CarHoist::fits),
+                    at < 0 ? null : models.substring(at + 1), seed, notch > 0 ? CarHoist.NOTCHES[notch] : -1);
+            if (car != null && notch > 0) {
+                hoist.raised(car, notch);
+            }
+        }
+        proto.addEntity(hoist);
     }
 
     /**
@@ -161,18 +195,26 @@ public final class ChunkWriter implements ChunkSink {
         }
     };
 
-    private void spawn(double x, int y, double z, float yaw, java.util.function.Predicate<CarModels.Model> filter, String variant, long seed) {
+    /** Places a car, or one held up on a lift that high (raised ≥ 0: standing in the air, its hull left to the lift). */
+    private CarProp spawn(double x, int y, double z, float yaw, java.util.function.Predicate<CarModels.Model> filter, String variant,
+            long seed, double raised) {
         if (!ZcConfig.get().world.streetCars || !(chunk instanceof ProtoChunk proto)) {
-            return;
+            return null;
         }
         SplittableRandom rng = new SplittableRandom(seed);
         CarModels.Model model = CarModels.pick(rng, filter);
         if (model == null) {
-            return;
+            return null;
         }
         CarProp car = Cars.CAR.create(region.getLevel(), EntitySpawnReason.STRUCTURE);
         if (car == null) {
-            return;
+            return null;
+        }
+        if (raised >= 0) {
+            car.setLook(model.id, variant != null ? variant : Cars.pickVariant(rng));
+            car.snapTo(x, y + raised, z, yaw, 0f);
+            proto.addEntity(car);
+            return car;
         }
         // stand it on whatever is under it: roads are 14/16 of a block tall
         double ground = y;
@@ -203,6 +245,7 @@ public final class ChunkWriter implements ChunkSink {
                 }
             }
         }
+        return car;
     }
 
     void finish() {
