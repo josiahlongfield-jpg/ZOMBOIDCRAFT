@@ -60,6 +60,7 @@ public final class CarClient {
         HoistClient.register();
         com.zomboidcraft.client.interact.Interactables.finder(CarClient::boot);
         com.zomboidcraft.client.interact.Interactables.finder(CarClient::bonnet);
+        com.zomboidcraft.client.interact.InteractMenu.provider(CarClient::menu);
         CarLights.register();
     }
 
@@ -90,35 +91,16 @@ public final class CarClient {
         target = client.gui.screen() != null ? null : inside != null ? insideTarget(player, inside) : doorTarget(client, player);
         HitResult hit = client.hitResult;
         CarProp car = inside != null || target != null ? null : lookedAt(client, hit);
-        while (INTERACT.consumeClick()) {
-            if (target != null) {
-                ClientPlayNetworking.send(new CarNet.Seat(target.car().getId(), target.seat()));
-            } else if (inside != null) {
-                ClientPlayNetworking.send(new CarNet.Use(CarNet.GET_OUT, 0, 0, 0));
-            } else if (HoistClient.interact(client, player)) {
-                // a car lift's control box or its pump lever
-            } else if (car != null && atBonnet(car, hit, player)) {
-                client.gui.setScreen(new com.zomboidcraft.client.kit.MechanicsScreen(car));
-            } else if (car != null) {
-                Vec3 at = hit.getLocation().subtract(car.position());
-                ClientPlayNetworking.send(new CarNet.Use(car.getId(), (float) at.x, (float) at.y, (float) at.z));
-            } else if (com.zomboidcraft.client.lifts.LiftClient.interact(client, hit)) {
-                // a lift's call button, or the floor panel inside a car
-            } else if (com.zomboidcraft.client.trains.TrainClient.interact(client, hit)) {
-                // a station's call button: the train's on its way
-            } else if (com.zomboidcraft.client.survival.DownedClient.interact(client, hit)) {
-                // a downed friend: revive them, or lift them onto a stretcher
-            } else if (com.zomboidcraft.client.npc.NpcClient.interact(client, hit)) {
-                // a companion: follow me, or wait here
-            } else if (com.zomboidcraft.client.kit.FilesClient.interact(client, hit)) {
-                // a file lying in the world: read it
-            } else if (com.zomboidcraft.client.ferry.FerryClient.interact(client, hit)) {
-                // a landing's bell: the ferry's coming in
-            } else if (com.zomboidcraft.client.lights.LightClient.interact(client, hit)) {
-                // a room's light switch
-            } else if (player.getMainHandItem().is(com.zomboidcraft.ModItems.CAR_KEY)) {
-                // not at a car, key in hand: its panic button
-                ClientPlayNetworking.send(new CarNet.Use(CarNet.FOB, 0, 0, 0));
+        // G: a tap does the obvious thing; held, it opens Zomboid's menu of everything you can do here
+        boolean pressed = false;
+        while (INTERACT.consumeClick()) pressed = true;
+        if (pressed && held < 0) held = 0;
+        if (held >= 0) {
+            if (INTERACT.isDown() && client.gui.screen() == null) {
+                if (++held == HOLD) com.zomboidcraft.client.interact.InteractMenu.open(client);
+            } else {
+                if (held < HOLD && client.gui.screen() == null) interact(client, player, inside, car, hit);
+                held = -1;
             }
         }
         while (HORN.consumeClick()) {
@@ -137,6 +119,99 @@ public final class CarClient {
         if (player.isUsingItem() && !CarProp.mayUse(player, player.getUseItem()) && client.gameMode != null) {
             client.gameMode.releaseUsingItem(player);
         }
+    }
+
+    /** How long G is held (ticks) before the menu opens instead of the tap's action; -1 when it isn't. */
+    private static final int HOLD = 6;
+    private static int held = -1;
+
+    /** A tap of G: the one obvious thing for what you're looking at, as before the menu. */
+    private static void interact(Minecraft client, LocalPlayer player, CarProp inside, CarProp car, HitResult hit) {
+        if (target != null) {
+            ClientPlayNetworking.send(new CarNet.Seat(target.car().getId(), target.seat()));
+        } else if (inside != null) {
+            ClientPlayNetworking.send(new CarNet.Use(CarNet.GET_OUT, 0, 0, 0));
+        } else if (HoistClient.interact(client, player)) {
+            // a car lift's control box or its pump lever
+        } else if (car != null && atBonnet(car, hit, player)) {
+            client.gui.setScreen(new com.zomboidcraft.client.kit.MechanicsScreen(car));
+        } else if (car != null) {
+            Vec3 at = hit.getLocation().subtract(car.position());
+            ClientPlayNetworking.send(new CarNet.Use(car.getId(), (float) at.x, (float) at.y, (float) at.z));
+        } else if (com.zomboidcraft.client.lifts.LiftClient.interact(client, hit)) {
+            // a lift's call button, or the floor panel inside a car
+        } else if (com.zomboidcraft.client.trains.TrainClient.interact(client, hit)) {
+            // a station's call button: the train's on its way
+        } else if (com.zomboidcraft.client.survival.DownedClient.interact(client, hit)) {
+            // a downed friend: revive them, or lift them onto a stretcher
+        } else if (com.zomboidcraft.client.npc.NpcClient.interact(client, hit)) {
+            // a companion: follow me, or wait here
+        } else if (com.zomboidcraft.client.kit.FilesClient.interact(client, hit)) {
+            // a file lying in the world: read it
+        } else if (com.zomboidcraft.client.ferry.FerryClient.interact(client, hit)) {
+            // a landing's bell: the ferry's coming in
+        } else if (com.zomboidcraft.client.lights.LightClient.interact(client, hit)) {
+            // a room's light switch
+        } else if (player.getMainHandItem().is(com.zomboidcraft.ModItems.CAR_KEY)) {
+            // not at a car, key in hand: its panic button
+            ClientPlayNetworking.send(new CarNet.Use(CarNet.FOB, 0, 0, 0));
+        }
+    }
+
+    /** Held G's menu, for cars: the seat you're at, the boot, the mechanics, getting out and moving over from inside. */
+    private static void menu(Minecraft client, LocalPlayer player, HitResult hit, java.util.List<com.zomboidcraft.client.interact.InteractMenu.Option> out) {
+        CarProp inside = player.getVehicle() instanceof CarProp c ? c : null;
+        if (inside != null) {
+            CarModels.Model m = CarModels.get(inside.model());
+            int mine = inside.seatOf(player);
+            java.util.List<com.zomboidcraft.client.interact.InteractMenu.Option> seats = new java.util.ArrayList<>();
+            if (m != null && m.seats != null) {
+                for (int s = 0; s < m.seats.length; s++) {
+                    if (s == mine) continue;
+                    int seat = s;
+                    String name = seatName(m, s);
+                    seats.add(inside.seatTaken(s) ? com.zomboidcraft.client.interact.InteractMenu.Option.no(name, "Someone's in it")
+                            : com.zomboidcraft.client.interact.InteractMenu.Option.of(name,
+                            () -> ClientPlayNetworking.send(new CarNet.Seat(inside.getId(), seat))));
+                }
+            }
+            if (!seats.isEmpty()) out.add(com.zomboidcraft.client.interact.InteractMenu.Option.menu("Switch seat", seats));
+            if (m != null && m.glovebox != null && mine >= 0 && mine <= 1) {
+                out.add(com.zomboidcraft.client.interact.InteractMenu.Option.of("Open glovebox",
+                        () -> ClientPlayNetworking.send(new CarNet.Seat(inside.getId(), CarNet.Seat.GLOVEBOX))));
+            }
+            if (mine == 0) {
+                out.add(com.zomboidcraft.client.interact.InteractMenu.Option.of("Start or stop the engine",
+                        () -> ClientPlayNetworking.send(new CarNet.Use(CarNet.ENGINE, 0, 0, 0))));
+                out.add(com.zomboidcraft.client.interact.InteractMenu.Option.of("Headlights", CarClient::headlights));
+                out.add(com.zomboidcraft.client.interact.InteractMenu.Option.of("Horn",
+                        () -> ClientPlayNetworking.send(new CarNet.Use(CarNet.HORN, 0, 0, 0))));
+            }
+            out.add(com.zomboidcraft.client.interact.InteractMenu.Option.of("Get out",
+                    () -> ClientPlayNetworking.send(new CarNet.Use(CarNet.GET_OUT, 0, 0, 0))));
+            return;
+        }
+        Target t = doorTarget(client, player);
+        CarProp car = t != null ? t.car() : lookedAt(client, hit);
+        if (car == null) return;
+        if (hit.getLocation().distanceTo(player.getEyePosition()) > 4) return;
+        if (t != null) {
+            Target door = t;
+            out.add(com.zomboidcraft.client.interact.InteractMenu.Option.of(door.label(),
+                    () -> ClientPlayNetworking.send(new CarNet.Seat(door.car().getId(), door.seat()))));
+        }
+        Vec3 at = hit.getLocation().subtract(car.position());
+        if (car.atBoot(at)) {
+            out.add(com.zomboidcraft.client.interact.InteractMenu.Option.of("Open the trunk",
+                    () -> ClientPlayNetworking.send(new CarNet.Use(car.getId(), (float) at.x, (float) at.y, (float) at.z))));
+        } else if (t == null) {
+            out.add(com.zomboidcraft.client.interact.InteractMenu.Option.of("Search it",
+                    () -> ClientPlayNetworking.send(new CarNet.Use(car.getId(), (float) at.x, (float) at.y, (float) at.z))));
+        }
+        out.add(car.parts().isEmpty()
+                ? com.zomboidcraft.client.interact.InteractMenu.Option.no("Vehicle mechanics", "Nothing on this one to work on")
+                : com.zomboidcraft.client.interact.InteractMenu.Option.of("Vehicle mechanics",
+                () -> client.gui.setScreen(new com.zomboidcraft.client.kit.MechanicsScreen(car))));
     }
 
     /**

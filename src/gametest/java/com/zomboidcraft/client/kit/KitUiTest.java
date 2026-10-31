@@ -841,6 +841,7 @@ public class KitUiTest implements FabricClientGameTest {
         sandboxTest(ctx);
         deathCardTest(ctx);
         levelUpTest(ctx);
+        gMenuTest(ctx, sp);
     }
 
     /** Bonding (Josiah 2026-10-30): the prompt on a first G, then K's selection of two companions, sliding, and a pick. */
@@ -1018,6 +1019,57 @@ public class KitUiTest implements FabricClientGameTest {
         ctx.runOnClient(mc -> com.zomboidcraft.client.hud.SkillTape.show(Skill.AIMING, 6));
         ctx.waitTicks(12);
         ctx.takeScreenshot("levelup-aiming");
+    }
+
+    /**
+     * Held G (Josiah 2026-10-31): the menu on a car in front, then on nothing; and Zomboid's queue, three jobs lined up
+     * behind a running one, then walking off clearing them all.
+     */
+    private static void gMenuTest(ClientGameTestContext ctx, TestSingleplayerContext sp) {
+        int[] id = new int[1];
+        sp.getServer().runOnServer(s -> {
+            ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+            var level = (ServerLevel) p.level();
+            var look = p.getLookAngle().multiply(1, 0, 1).normalize();
+            var car = com.zomboidcraft.world.cars.Cars.spawn(level, p.getX() + look.x * 3, p.getY(), p.getZ() + look.z * 3, 90, "sedan", "usable", true);
+            id[0] = car.getId();
+            p.setXRot(20);
+        });
+        ctx.waitTicks(20);
+        ctx.runOnClient(mc -> com.zomboidcraft.client.interact.InteractMenu.open(mc));
+        ctx.waitTicks(6);
+        ctx.takeScreenshot("gmenu-car");
+        String opts = ctx.computeOnClient(mc -> {
+            StringBuilder b = new StringBuilder();
+            for (var o : com.zomboidcraft.client.interact.InteractMenu.collect(mc, mc.player, mc.hitResult)) b.append(o.label()).append(o.can() ? "" : " (no)").append(" | ");
+            return b.toString();
+        });
+        LOG.info("ZCUI gmenu car: {}", opts);
+        ctx.getInput().pressKey(InputConstants.KEY_DOWN);
+        ctx.waitTicks(2);
+        ctx.getInput().pressKey(InputConstants.KEY_DOWN);
+        ctx.waitTicks(4);
+        ctx.takeScreenshot("gmenu-car-down");
+        ctx.runOnClient(mc -> mc.gui.setScreen(null));
+        sp.getServer().runOnServer(s -> {
+            var e = s.overworld().getEntity(id[0]);
+            if (e != null) e.discard();
+            ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+            p.setGameMode(GameType.SURVIVAL);
+            for (String job : new String[]{"Nailing the first plank", "Nailing the second plank", "Nailing the third plank", "Nailing the fourth plank"}) {
+                com.zomboidcraft.survival.TimedActions.start(p, "test_" + job, job, 60, q -> { });
+            }
+        });
+        for (int f = 0; f < 10; f++) {
+            ctx.waitTicks(8);
+            ctx.takeScreenshot(String.format("queue-%02d", f));
+        }
+        sp.getServer().runOnServer(s -> {
+            ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+            p.teleportTo(p.getX() + 2, p.getY(), p.getZ());
+        });
+        ctx.waitTicks(6);
+        ctx.takeScreenshot("queue-walked-off");
     }
 
     private static void bookTest(TestSingleplayerContext sp) {
