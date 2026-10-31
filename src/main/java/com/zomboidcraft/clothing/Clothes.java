@@ -419,7 +419,7 @@ public final class Clothes {
      */
     public record Totals(Map<Region, Float> bite, Map<Region, Float> scratch, Map<Region, Float> bullet, int warmth,
                          float wind, float water, float discomfort, float run, float swing, int armour) {
-        /** The average guard over the body's six parts, for a single headline number. */
+        /** The average guard over the body's parts, for a single headline number. */
         public float meanBite() {
             return mean(bite);
         }

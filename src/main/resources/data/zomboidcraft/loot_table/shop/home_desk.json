@@ -449,6 +449,21 @@
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:waterproof_notebook",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:rubber_band_ball",
           "weight": 4,
           "functions": [

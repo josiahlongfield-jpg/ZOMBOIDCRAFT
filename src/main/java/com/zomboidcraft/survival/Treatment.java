@@ -5,7 +5,14 @@ import com.zomboidcraft.skills.Skill;
 import com.zomboidcraft.skills.Skills;
 import com.zomboidcraft.survival.Body.Part;
 import com.zomboidcraft.survival.Body.Region;
+import com.zomboidcraft.ZomboidCraft;
 import java.util.function.Predicate;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -16,7 +23,8 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 /**
- * Seeing to your own wounds, from the item in your hand, the health page or the quick-use wheel. Each treatment is
+ * Seeing to wounds, your own (from the item in your hand, the health page or the quick-use wheel) or a friend's (the
+ * interact key on them). Each treatment is
  * a timed action: the bandage or splint is only used up when it's done, and First Aid makes the hands quicker.
  */
 public final class Treatment {
@@ -37,8 +45,10 @@ public final class Treatment {
     }
 
     /** Legs first: a broken leg is the one that gets you killed. */
-    private static final Region[] SPLINT_ORDER = {Region.LEFT_LEG, Region.RIGHT_LEG, Region.LEFT_ARM, Region.RIGHT_ARM,
-            Region.TORSO, Region.HEAD};
+    private static final Region[] SPLINT_ORDER = {Region.LEFT_SHIN, Region.RIGHT_SHIN, Region.LEFT_THIGH, Region.RIGHT_THIGH,
+            Region.LEFT_FOOT, Region.RIGHT_FOOT, Region.LEFT_FOREARM, Region.RIGHT_FOREARM, Region.LEFT_UPPER_ARM,
+            Region.RIGHT_UPPER_ARM, Region.LEFT_HAND, Region.RIGHT_HAND, Region.UPPER_TORSO, Region.LOWER_TORSO, Region.GROIN,
+            Region.NECK, Region.HEAD};
 
     /** Whether this part needs this treatment. */
     public static boolean needs(Part p, Kind kind) {
@@ -89,7 +99,56 @@ public final class Treatment {
 
     /** Starts treating a part (or the one that needs it most, when {@code region} is null). False if there's nothing to do. */
     public static boolean start(ServerPlayer player, Kind kind, Region region) {
-        Body body = Body.get(player);
+        return start(player, player, kind, region);
+    }
+
+    /**
+     * Treating someone else, Zomboid style: the interact key on a friend sees to what they need most, a bleeding wound
+     * first, then a break. The helper's kit and First Aid do the work; the patient's body takes it.
+     */
+    public static boolean treatOther(ServerPlayer helper, Player patient) {
+        if (patient == helper || patient.distanceToSqr(helper) > REACH * REACH) return false;
+        Body body = Body.get(patient);
+        for (Kind kind : Kind.values()) {
+            Region r = target(body, kind);
+            if (r != null && find(helper, kind) != null) return start(helper, patient, kind, r);
+        }
+        boolean hurt = body.injured();
+        helper.sendOverlayMessage(Component.literal(!hurt ? patient.getName().getString() + " has nothing to treat."
+                : "You have nothing to treat " + patient.getName().getString() + " with.").withStyle(ChatFormatting.GRAY));
+        return false;
+    }
+
+    /** The interact key on a friend who isn't down: treat them. */
+    public record Other(int target) implements CustomPacketPayload {
+        public static final Type<Other> TYPE = new Type<>(ZomboidCraft.id("treat_other"));
+        public static final StreamCodec<RegistryFriendlyByteBuf, Other> CODEC = StreamCodec.composite(
+                ByteBufCodecs.VAR_INT, Other::target, Other::new);
+
+        @Override
+        public Type<? extends CustomPacketPayload> type() {
+            return TYPE;
+        }
+    }
+
+    public static void register() {
+        PayloadTypeRegistry.serverboundPlay().register(Other.TYPE, Other.CODEC);
+        ServerPlayNetworking.registerGlobalReceiver(Other.TYPE, (payload, context) -> {
+            ServerPlayer helper = context.player();
+            helper.level().getServer().execute(() -> {
+                if (helper.level().getEntity(payload.target()) instanceof Player patient && !Downs.downed(patient) && !Downs.downed(helper)) {
+                    treatOther(helper, patient);
+                }
+            });
+        });
+    }
+
+    /** How close you have to be to treat someone. */
+    private static final double REACH = 3;
+
+    private static boolean start(ServerPlayer player, Player patient, Kind kind, Region region) {
+        Body body = Body.get(patient);
+        boolean self = patient == player;
         if (region == null) region = target(body, kind);
         if (region == null || !needs(body.part(region), kind)) {
             player.sendOverlayMessage(Component.literal(kind == Kind.BANDAGE ? "Nothing needs a bandage." : "Nothing is broken.")
@@ -104,16 +163,44 @@ public final class Treatment {
         int firstAid = Skills.level(player, Skill.FIRST_AID);
         player.level().playSound(null, player.getX(), player.getY(), player.getZ(),
                 ModSounds.BANDAGE, SoundSource.PLAYERS, 0.6f, kind == Kind.BANDAGE ? 1.1f : 0.85f);
-        TimedActions.start(player, "treat:" + kind + ":" + part, kind.verb + " " + part.label, ticks(kind, firstAid),
-                p -> finish(p, kind, part));
+        String whose = self ? "" : patient.getName().getString() + "'s ";
+        TimedActions.start(player, "treat:" + kind + ":" + part + ":" + patient.getId(), kind.verb + " " + whose + part.label,
+                ticks(kind, firstAid), p -> finish(p, patient, kind, part));
+        if (!self && patient instanceof ServerPlayer sp) {
+            sp.sendOverlayMessage(Component.literal(player.getName().getString() + " is " + kind.verb.toLowerCase(java.util.Locale.ROOT)
+                    + " your " + part.label + ".").withStyle(ChatFormatting.GRAY));
+        }
         return true;
     }
 
-    private static void finish(ServerPlayer player, Kind kind, Region region) {
-        Body body = Body.get(player);
+    private static void finish(ServerPlayer player, Player patient, Kind kind, Region region) {
+        if (patient != player && (!patient.isAlive() || patient.distanceToSqr(player) > REACH * REACH)) {
+            player.sendOverlayMessage(Component.literal(patient.getName().getString() + " moved away.").withStyle(ChatFormatting.GRAY));
+            return;
+        }
         Slot slot = find(player, kind);
-        if (slot == null || !needs(body.part(region), kind)) return;
+        if (slot == null) return;
         int firstAid = Skills.level(player, Skill.FIRST_AID);
+        if (!apply(patient, kind, region, firstAid)) return;
+        Skills.addXp(player, Skill.FIRST_AID, kind == Kind.BANDAGE ? 10 : 15);
+        ItemStack stack = slot.getItem();
+        stack.shrink(1);
+        if (stack.isEmpty()) slot.setByPlayer(ItemStack.EMPTY);
+        else slot.setChanged();
+        player.level().playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.BANDAGE, SoundSource.PLAYERS,
+                1f, (kind == Kind.BANDAGE ? 0.95f : 0.8f) + player.getRandom().nextFloat() * 0.1f);
+        player.sendOverlayMessage(Component.literal(patient == player ? "You " + kind.noun + " your " + region.label + "."
+                : "You " + kind.noun + " " + patient.getName().getString() + "'s " + region.label + "."));
+    }
+
+    /**
+     * Puts a bandage or splint on a part, done by someone with this First Aid level: the end of a treatment, for a
+     * player helper above or the companion nurse (who times it herself with {@link #ticks}). False if the part no
+     * longer needs it. Uses up nothing; the helper's supply is theirs to take.
+     */
+    public static boolean apply(Player patient, Kind kind, Region region, int firstAid) {
+        Body body = Body.get(patient);
+        if (!needs(body.part(region), kind)) return false;
         if (kind == Kind.BANDAGE) {
             // First Aid 5: one bandage stretches to a second wound
             body = bind(body, region);
@@ -121,21 +208,13 @@ public final class Treatment {
                 Region second = target(body, kind);
                 if (second != null) body = bind(body, second);
             }
-            if (firstAid > 0) player.heal(0.5f * firstAid);
-            Skills.addXp(player, Skill.FIRST_AID, 10);
+            if (firstAid > 0) patient.heal(0.5f * firstAid);
         } else {
             Part p = body.part(region);
             body = body.with(region, new Part(p.wound(), p.woundLeft(), p.bleeding(), p.bandaged(), p.fractureLeft(), true));
-            Skills.addXp(player, Skill.FIRST_AID, 15);
         }
-        Body.set(player, body);
-        ItemStack stack = slot.getItem();
-        stack.shrink(1);
-        if (stack.isEmpty()) slot.setByPlayer(ItemStack.EMPTY);
-        else slot.setChanged();
-        player.level().playSound(null, player.getX(), player.getY(), player.getZ(), ModSounds.BANDAGE, SoundSource.PLAYERS,
-                1f, (kind == Kind.BANDAGE ? 0.95f : 0.8f) + player.getRandom().nextFloat() * 0.1f);
-        player.sendOverlayMessage(Component.literal("You " + kind.noun + " your " + region.label + "."));
+        Body.set(patient, body);
+        return true;
     }
 
     private static Body bind(Body body, Region r) {

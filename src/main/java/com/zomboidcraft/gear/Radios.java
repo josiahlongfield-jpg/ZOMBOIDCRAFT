@@ -234,7 +234,7 @@ public final class Radios {
         if (!(radio.getItem() instanceof RadioItem) || !(battery.getItem() instanceof BatteryItem)) {
             return false;
         }
-        radio.set(Headgear.CHARGE, fullCharge());
+        radio.set(Headgear.CHARGE, fullCharge() * BatteryItem.lasts(battery));
         battery.consume(1, player);
         player.playSound(SoundEvents.ITEM_FRAME_REMOVE_ITEM, 0.5f, 1.6f);
         return true;

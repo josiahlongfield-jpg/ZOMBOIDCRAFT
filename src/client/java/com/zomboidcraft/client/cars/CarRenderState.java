@@ -8,6 +8,8 @@ public class CarRenderState extends EntityRenderState {
     public float yaw;
     /** A trolley jack's corner (0-3, -1 none) and how high it holds it. */
     public int jackCorner = -1;
+    /** A wreck lying on its roof (1) or side (2). */
+    public int pose;
     public float jackLift;
     /** How far the boot is open, eased, 0 to 1. */
     public float open;

@@ -254,6 +254,11 @@
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:shooting_earmuffs",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:police_cap",
           "weight": 2
         },
@@ -316,6 +321,21 @@
           "type": "minecraft:item",
           "name": "zomboidcraft:handcuffs",
           "weight": 6
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:waterproof_notebook",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
         },
         {
           "type": "minecraft:item",
@@ -425,6 +445,21 @@
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:cbrn_mask",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:riot_arm_guards",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:riot_leg_guards",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:riot_helmet",
           "weight": 3
         },
@@ -452,6 +487,31 @@
           "type": "minecraft:item",
           "name": "zomboidcraft:police_radio_belt",
           "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:door_ram",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:tactical_floodlight",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:weapons_locker",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:thermal_monocular",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:recon_drone",
+          "weight": 1
         },
         {
           "type": "minecraft:item",

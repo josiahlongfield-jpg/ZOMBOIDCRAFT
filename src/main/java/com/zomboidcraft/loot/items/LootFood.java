@@ -57,6 +57,12 @@ public final class LootFood {
             sp.addEffect(new MobEffectInstance(MobEffects.HUNGER, 200, 0));
         }
         com.zomboidcraft.survival.Medicine.ate(sp, stack);
+        var data = stack.get(net.minecraft.core.component.DataComponents.CUSTOM_DATA);
+        if (data != null && data.copyTag().getBooleanOr("hot", false)) {
+            // a hot meal (a ration warmed on a flameless heater) does a body good, as Zomboid's hot food does
+            com.zomboidcraft.survival.Mood.add(sp, com.zomboidcraft.survival.Mood.Stat.UNHAPPINESS, -10);
+            com.zomboidcraft.survival.Mood.add(sp, com.zomboidcraft.survival.Mood.Stat.BOREDOM, -5);
+        }
         if (food.is(LootSpec.Food.RAW) && random.nextFloat() < 0.5f) {
             com.zomboidcraft.survival.Medicine.nausea(sp, 25);
             sp.addEffect(new MobEffectInstance(MobEffects.HUNGER, 400, 0));

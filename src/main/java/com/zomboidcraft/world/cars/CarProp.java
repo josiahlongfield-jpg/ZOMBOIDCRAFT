@@ -98,6 +98,9 @@ public class CarProp extends Entity {
     /** A trolley jack under one corner ({@link ShopTool}): which (0-3, -1 none) and how high it's lifted. */
     private static final EntityDataAccessor<Integer> JACK = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Float> JACK_LIFT = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.FLOAT);
+    /** How a wreck was left lying: on its wheels, on its roof, or on its side (worldgen's "wrecked^roof"). */
+    private static final EntityDataAccessor<Integer> POSE = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.INT);
+    public static final int POSE_ROOF = 1, POSE_SIDE = 2;
     /** Server: the gunner holds the trigger; rounds due by the rate; ticks till the belt's loaded; rounds fired. */
     boolean turretTrigger;
     int beltBusy, turretShots, fireTicks;
@@ -226,6 +229,7 @@ public class CarProp extends Entity {
         builder.define(LIFT, 0f);
         builder.define(JACK, -1);
         builder.define(JACK_LIFT, 0f);
+        builder.define(POSE, 0);
     }
 
     @Override
@@ -236,6 +240,7 @@ public class CarProp extends Entity {
         airFound = input.getIntOr("air_found", 0) != 0;
         entityData.set(FUEL, input.getFloatOr("fuel", 1f));
         fuelRolled = input.getIntOr("fuel_rolled", 0) != 0;
+        entityData.set(POSE, input.getIntOr("pose", 0));
         lockRolled = input.getIntOr("lock_rolled", 0) != 0;
         locked = input.getIntOr("locked", 0) != 0;
         armed = input.getIntOr("armed", 0) != 0;
@@ -294,6 +299,7 @@ public class CarProp extends Entity {
         output.putInt("air_found", airFound ? 1 : 0);
         output.putFloat("fuel", fuel());
         output.putInt("fuel_rolled", fuelRolled ? 1 : 0);
+        output.putInt("pose", pose());
         output.putInt("lock_rolled", lockRolled ? 1 : 0);
         output.putInt("locked", locked ? 1 : 0);
         output.putInt("armed", armed ? 1 : 0);
@@ -428,6 +434,15 @@ public class CarProp extends Entity {
     }
 
     /** The corner a trolley jack holds up (0 front left, 1 front right, 2 rear left, 3 rear right), or -1. */
+    /** 0 on its wheels, {@link #POSE_ROOF} or {@link #POSE_SIDE}: a wreck that never drives again where it lies. */
+    public int pose() {
+        return entityData.get(POSE);
+    }
+
+    public void setPose(int pose) {
+        entityData.set(POSE, pose);
+    }
+
     public int jackCorner() {
         return entityData.get(JACK);
     }
@@ -491,6 +506,11 @@ public class CarProp extends Entity {
         }
         if ("burnt".equals(variant())) {
             player.sendOverlayMessage(Component.literal("It's burnt out."));
+            return;
+        }
+        if (pose() != 0) {
+            player.sendOverlayMessage(Component.literal(pose() == POSE_ROOF ? "It's on its roof. Nobody's getting in that way."
+                    : "It's on its side. You can't get in."));
             return;
         }
         if (player.isPassenger() || !canAddPassenger(player)) {
@@ -1785,7 +1805,7 @@ public class CarProp extends Entity {
         if (m == null) {
             return;
         }
-        if (hoisted() || jackCorner() >= 0) {
+        if (hoisted() || jackCorner() >= 0 || pose() != 0) {
             setDeltaMovement(Vec3.ZERO);    // wheels spinning in the air on the hoist's arms, or a corner up on a jack
             return;
         }
@@ -2027,10 +2047,9 @@ public class CarProp extends Entity {
                 continue;
             }
             com.zomboidcraft.survival.Body body = com.zomboidcraft.survival.Body.get(p);
-            com.zomboidcraft.survival.Body.Region[] where = {com.zomboidcraft.survival.Body.Region.HEAD, com.zomboidcraft.survival.Body.Region.TORSO,
-                    com.zomboidcraft.survival.Body.Region.LEFT_ARM, com.zomboidcraft.survival.Body.Region.RIGHT_ARM,
-                    com.zomboidcraft.survival.Body.Region.LEFT_LEG, com.zomboidcraft.survival.Body.Region.RIGHT_LEG};
-            com.zomboidcraft.survival.Body.Region r = where[random.nextInt(speed > 0.9 ? 6 : 4)];
+            // head, torso and arms first; only a hard crash reaches the legs
+            com.zomboidcraft.survival.Body.Zone zone = com.zomboidcraft.survival.Body.Zone.values()[random.nextInt(speed > 0.9 ? 6 : 4)];
+            com.zomboidcraft.survival.Body.Region r = com.zomboidcraft.survival.Body.any(zone, random);
             if (random.nextDouble() < Math.min(0.9, (speed - 0.35) * 1.5)) {
                 body = body.wound(r, com.zomboidcraft.survival.Body.Wound.LACERATION, true);
             }

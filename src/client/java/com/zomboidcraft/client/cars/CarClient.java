@@ -154,8 +154,12 @@ public final class CarClient {
             // a station's call button: the train's on its way
         } else if (com.zomboidcraft.client.survival.DownedClient.interact(client, hit)) {
             // a downed friend: revive them, or lift them onto a stretcher
+        } else if (com.zomboidcraft.client.survival.TreatClient.interact(client, hit)) {
+            // a friend on their feet: bandage or splint what they need most
         } else if (com.zomboidcraft.client.loot.TowerStashClient.interact(client, hit)) {
             // the water tower: the key under the pump, the padlocked ladder
+        } else if (com.zomboidcraft.client.power.GeneratorClient.interact(client, hit)) {
+            // a generator: on or off
         } else if (com.zomboidcraft.client.npc.NpcClient.interact(client, hit)) {
             // a companion: follow me, or wait here
         } else if (com.zomboidcraft.client.kit.FilesClient.interact(client, hit)) {

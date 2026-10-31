@@ -29,7 +29,7 @@ public final class SurvivalEvents {
             if (entity instanceof ServerPlayer player && !blocked && damage > 0) {
                 Sleep.wake(player, "Pain jolts you awake.");
                 if (ZombieTypes.isWalker(source.getEntity())) {
-                    onZombieHit(player);
+                    onZombieHit(player, com.zomboidcraft.combat.Downed.isCrawler(source.getEntity()));
                 }
             }
         });
@@ -47,6 +47,7 @@ public final class SurvivalEvents {
     private static void onServerTick(MinecraftServer server) {
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
             Needs.holdFoodBar(player);
+            Glass.tick(player);
         }
         Sleep.tick(server);
         if (++ticks % 20 != 0) {
@@ -127,10 +128,12 @@ public final class SurvivalEvents {
         Injuries.tick(player, second);
         Medicine.tick(player, second);
         Mood.tick(player, second);
+        Panic.tick(player, second);
         Downs.tick(player, second);
     }
 
-    private static void onZombieHit(ServerPlayer player) {
+    private static void onZombieHit(ServerPlayer player, boolean crawler) {
+        Panic.hit(player);
         RandomSource random = player.getRandom();
         SurvivalStats stats = SurvivalStats.get(player);
         ZcConfig.Survival config = ZcConfig.get().survival;
@@ -142,7 +145,7 @@ public final class SurvivalEvents {
                 || spread == ZcConfig.ZombieLore.Transmission.SALIVA_ONLY;
         boolean scratches = spread == ZcConfig.ZombieLore.Transmission.BLOOD_AND_SALIVA;
         if (roll < config.biteChance) {
-            Body.Region where = Injuries.zombieWound(player, true);
+            Body.Region where = Injuries.zombieWound(player, true, crawler);
             if (where == null) {
                 player.sendOverlayMessage(Component.literal("Your clothes stopped a bite.").withStyle(ChatFormatting.GRAY));
             } else {
@@ -152,11 +155,14 @@ public final class SurvivalEvents {
                 player.sendOverlayMessage(Component.literal("You've been bitten on the " + where.label + ".").withStyle(ChatFormatting.DARK_RED));
             }
         } else if (roll < config.biteChance + config.scratchChance) {
-            Body.Region where = Injuries.zombieWound(player, false);
+            Body.Region where = Injuries.zombieWound(player, false, crawler);
             if (where == null) {
                 player.sendOverlayMessage(Component.literal("Your clothes took the scratch.").withStyle(ChatFormatting.GRAY));
             } else {
-                if (!stats.infected() && config.infection && scratches && random.nextFloat() < config.scratchInfectionChance) {
+                // Zomboid's odds: a laceration carries it a quarter of the time, a scratch 7%
+                boolean cut = Body.get(player).part(where).wound() == Body.Wound.LACERATION;
+                double chance = cut ? config.lacerationInfectionChance : config.scratchInfectionChance;
+                if (!stats.infected() && config.infection && scratches && random.nextFloat() < chance) {
                     stats = stats.withInfection(0);
                 }
                 player.sendOverlayMessage(Component.literal("You've been hurt on the " + where.label + ".").withStyle(ChatFormatting.RED));

@@ -40,6 +40,7 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         // turned smoothly between ticks, or a car you're steering judders against your smooth view
         state.yaw = car.getYRot(partialTick);
         state.jackCorner = car.jackCorner();
+        state.pose = car.pose();
         state.jackLift = car.jackLift();
         // from the driver's seat the windows are left out: shaders fog see-through glass right in front of you
         Minecraft mc = Minecraft.getInstance();
@@ -201,6 +202,18 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
             poseStack.translate(0, -state.pivot, 0);
         } else {
             poseStack.rotateDegrees(Axis.YP, -state.yaw);
+            if (state.pose != 0) {
+                // a wreck left lying: turned over about its long axis, set back down on the ground
+                CarModels.Model m = CarModels.get(state.model);
+                float h = m == null ? 1.5f : m.size[1], w = m == null ? 1.8f : m.size[0];
+                if (state.pose == CarProp.POSE_ROOF) {
+                    poseStack.translate(0, h, 0);
+                    poseStack.rotateDegrees(Axis.ZP, 180);
+                } else {
+                    poseStack.translate(h / 2, w / 2, 0);
+                    poseStack.rotateDegrees(Axis.ZP, 90);
+                }
+            }
             if (state.jackCorner >= 0 && state.jackLift > 0.001f) {
                 // one corner up on a trolley jack: that corner the full height, the far one still on the floor
                 CarModels.Model m = CarModels.get(state.model);
