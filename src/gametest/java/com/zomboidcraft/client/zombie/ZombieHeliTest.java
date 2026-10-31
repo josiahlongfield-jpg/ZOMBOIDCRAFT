@@ -37,9 +37,13 @@ public class ZombieHeliTest implements FabricClientGameTest {
             sp.getServer().runCommand("effect give @a night_vision infinite 0 true");
             sp.getServer().runCommand("tp @a 0 140 0");
             ctx.waitTicks(40);
-            sp.getServer().runCommand("fill -100 99 -100 100 99 100 minecraft:stone");
-            for (int y = 100; y < 130; y++) {
-                sp.getServer().runCommand("fill -100 " + y + " -100 100 " + y + " 100 minecraft:air");
+            // in quarters: one fill can't take more than 32768 blocks
+            for (int[] q : new int[][] {{-100, -100}, {0, -100}, {-100, 0}, {0, 0}}) {
+                String box = String.format("%d %%d %d %d %%d %d", q[0], q[1], q[0] + 100, q[1] + 100);
+                sp.getServer().runCommand("fill " + String.format(box, 99, 99) + " minecraft:stone");
+                for (int y = 100; y < 112; y++) {
+                    sp.getServer().runCommand("fill " + String.format(box, y, y) + " minecraft:air");
+                }
             }
             // a shelter: a stone roof on four posts, to get under
             sp.getServer().runCommand("fill 14 100 -4 14 103 -4 minecraft:stone_bricks");
