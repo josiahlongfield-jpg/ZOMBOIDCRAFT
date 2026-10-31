@@ -1,0 +1,113 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hw_conc": "zomboidcraft:block/city/hw_conc",
+    "particle": "zomboidcraft:block/city/hw_conc"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        0,
+        0
+      ],
+      "to": [
+        12,
+        3,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hw_conc",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#hw_conc",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#hw_conc"
+        },
+        "west": {
+          "texture": "#hw_conc"
+        },
+        "up": {
+          "texture": "#hw_conc"
+        },
+        "down": {
+          "texture": "#hw_conc",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        6.8,
+        3,
+        0
+      ],
+      "to": [
+        9.2,
+        13,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hw_conc",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#hw_conc",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#hw_conc"
+        },
+        "west": {
+          "texture": "#hw_conc"
+        },
+        "up": {
+          "texture": "#hw_conc"
+        },
+        "down": {
+          "texture": "#hw_conc"
+        }
+      }
+    },
+    {
+      "from": [
+        4.5,
+        13,
+        0
+      ],
+      "to": [
+        11.5,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hw_conc",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#hw_conc",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#hw_conc"
+        },
+        "west": {
+          "texture": "#hw_conc"
+        },
+        "up": {
+          "texture": "#hw_conc",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#hw_conc"
+        }
+      }
+    }
+  ]
+}

@@ -83,7 +83,7 @@ public class WornGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
         for (int i = 0; i < Math.min(worn.size(), GearStore.BELT); i++) {
             ItemStack stack = worn.get(i);
             BagSpec spec = BagItem.spec(stack);
-            if (spec == null) {
+            if (spec == null || com.zomboidcraft.client.clothing.ClothingLayer.draws(stack)) {
                 continue;
             }
             Fit fit = FITS.getOrDefault(BuiltInRegistries.ITEM.getKey(stack.getItem()).getPath(),

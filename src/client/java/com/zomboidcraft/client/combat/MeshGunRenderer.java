@@ -28,14 +28,16 @@ public final class MeshGunRenderer implements NoDataSpecialModelRenderer {
     private final String part;
     private final List<Float> offset;
     private final float roll, pitch, scale;
+    private final @org.jetbrains.annotations.Nullable net.minecraft.resources.Identifier texture;
 
-    private MeshGunRenderer(String id, String part, List<Float> offset, float roll, float pitch, float scale) {
+    private MeshGunRenderer(String id, String part, List<Float> offset, float roll, float pitch, float scale, String texture) {
         this.id = id;
         this.part = part;
         this.offset = offset;
         this.roll = roll;
         this.pitch = pitch;
         this.scale = scale;
+        this.texture = texture.isEmpty() ? null : net.minecraft.resources.Identifier.parse(texture);
     }
 
     public static void register() {
@@ -45,7 +47,7 @@ public final class MeshGunRenderer implements NoDataSpecialModelRenderer {
     @Override
     public void submit(PoseStack pose, SubmitNodeCollector out, int light, int overlay, boolean foil, int outline) {
         if (offset.isEmpty() && roll == 0 && pitch == 0 && scale == 1) {
-            MeshGuns.draw(id, part, pose, out, light);
+            MeshGuns.draw(id, part, pose, out, light, texture);
             return;
         }
         pose.pushPose();
@@ -61,7 +63,7 @@ public final class MeshGunRenderer implements NoDataSpecialModelRenderer {
         if (scale != 1) {
             pose.scale(scale, scale, scale);
         }
-        MeshGuns.draw(id, part, pose, out, light);
+        MeshGuns.draw(id, part, pose, out, light, texture);
         pose.popPose();
     }
 
@@ -84,9 +86,10 @@ public final class MeshGunRenderer implements NoDataSpecialModelRenderer {
      * offset: item pixels to move the part by, for a piece our block gun draws somewhere else (a revolver's cylinder
      * swung out), or an attachment's mount point on the gun (attachment meshes are packed with their clamp at the
      * origin). Then roll (degrees about z: 90 puts a top-rail part on the left rail, 180 under the barrel), pitch
-     * (degrees about x: a flip-up sight folded flat) and scale.
+     * (degrees about x: a flip-up sight folded flat) and scale. texture: a texture to paint it with instead of the one
+     * packed in the mesh, laid out the same (a garment's camo: tools/items/gen_clothes.py).
      */
-    public record Unbaked(String id, String part, List<Float> offset, float roll, float pitch, float scale)
+    public record Unbaked(String id, String part, List<Float> offset, float roll, float pitch, float scale, String texture)
             implements SpecialModelRenderer.Unbaked<Void> {
         public static final MapCodec<Unbaked> MAP_CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
                 Codec.STRING.fieldOf("id").forGetter(Unbaked::id),
@@ -94,7 +97,8 @@ public final class MeshGunRenderer implements NoDataSpecialModelRenderer {
                 Codec.FLOAT.listOf(3, 3).optionalFieldOf("offset", List.of()).forGetter(Unbaked::offset),
                 Codec.FLOAT.optionalFieldOf("roll", 0f).forGetter(Unbaked::roll),
                 Codec.FLOAT.optionalFieldOf("pitch", 0f).forGetter(Unbaked::pitch),
-                Codec.FLOAT.optionalFieldOf("scale", 1f).forGetter(Unbaked::scale)
+                Codec.FLOAT.optionalFieldOf("scale", 1f).forGetter(Unbaked::scale),
+                Codec.STRING.optionalFieldOf("texture", "").forGetter(Unbaked::texture)
         ).apply(i, Unbaked::new));
 
         @Override
@@ -104,7 +108,7 @@ public final class MeshGunRenderer implements NoDataSpecialModelRenderer {
 
         @Override
         public SpecialModelRenderer<Void> bake(SpecialModelRenderer.BakingContext context) {
-            return new MeshGunRenderer(id, part, offset, roll, pitch, scale);
+            return new MeshGunRenderer(id, part, offset, roll, pitch, scale, texture);
         }
     }
 }

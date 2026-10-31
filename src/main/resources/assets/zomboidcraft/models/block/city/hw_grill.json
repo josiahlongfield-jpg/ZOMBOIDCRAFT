@@ -1,0 +1,139 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hw_grill": "zomboidcraft:block/city/hw_grill",
+    "st_galv": "zomboidcraft:block/city/st_galv",
+    "particle": "zomboidcraft:block/city/st_galv"
+  },
+  "elements": [
+    {
+      "from": [
+        7,
+        0,
+        7
+      ],
+      "to": [
+        9,
+        9,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_galv"
+        },
+        "south": {
+          "texture": "#st_galv"
+        },
+        "east": {
+          "texture": "#st_galv"
+        },
+        "west": {
+          "texture": "#st_galv"
+        },
+        "up": {
+          "texture": "#st_galv"
+        },
+        "down": {
+          "texture": "#st_galv",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2.5,
+        9,
+        4
+      ],
+      "to": [
+        13.5,
+        11.5,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hw_grill"
+        },
+        "south": {
+          "texture": "#hw_grill"
+        },
+        "east": {
+          "texture": "#hw_grill"
+        },
+        "west": {
+          "texture": "#hw_grill"
+        },
+        "up": {
+          "texture": "#hw_grill"
+        },
+        "down": {
+          "texture": "#hw_grill"
+        }
+      }
+    },
+    {
+      "from": [
+        2.5,
+        11.5,
+        4
+      ],
+      "to": [
+        13.5,
+        12,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hw_grill"
+        },
+        "south": {
+          "texture": "#hw_grill"
+        },
+        "east": {
+          "texture": "#hw_grill"
+        },
+        "west": {
+          "texture": "#hw_grill"
+        },
+        "up": {
+          "texture": "#hw_grill"
+        },
+        "down": {
+          "texture": "#hw_grill"
+        }
+      }
+    },
+    {
+      "from": [
+        2.5,
+        11.5,
+        11
+      ],
+      "to": [
+        13.5,
+        15,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hw_grill"
+        },
+        "south": {
+          "texture": "#hw_grill"
+        },
+        "east": {
+          "texture": "#hw_grill"
+        },
+        "west": {
+          "texture": "#hw_grill"
+        },
+        "up": {
+          "texture": "#hw_grill"
+        },
+        "down": {
+          "texture": "#hw_grill"
+        }
+      }
+    }
+  ]
+}

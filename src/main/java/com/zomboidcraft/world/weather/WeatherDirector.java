@@ -55,6 +55,8 @@ public final class WeatherDirector {
     /** A fog bank rolling in over ordinary weather, 0 when there is none. */
     private static float bank;
     private static long ticks;
+    /** The kind was set by /zc weather. */
+    private static boolean forced;
     private static boolean running;
     /** Holds the weather where it is, for filming (/zc cinematic weather): it doesn't move on until let go. */
     public static boolean hold;
@@ -99,6 +101,7 @@ public final class WeatherDirector {
     /** Starts a kind of weather now, skipping the build-up (for /zc weather). */
     public static void force(WeatherKind next) {
         start(next);
+        forced = true;  // stays until it runs out, even where the climate cycle wouldn't bring it
         bank = 0;  // what you asked for, without a fog bank rolling in over it
         warning = 0;
         current = target(null);
@@ -130,8 +133,9 @@ public final class WeatherDirector {
             if (--warning == 0) {
                 start(queued);
             }
-        } else if (!hold && --ticksLeft <= 0) {
+        } else if (!hold && (--ticksLeft <= 0 || !forced && !Climate.allowed(kind))) {
             WeatherKind next = pick(level);
+            forced = false;
             if (next.isDangerous()) {
                 queued = next;
                 warning = WARNING_TICKS;
@@ -172,7 +176,7 @@ public final class WeatherDirector {
         // now and then thick fog rolls in over ordinary rain, day or night
         ZcConfig.Weather config = ZcConfig.get().weather;
         boolean plain = !next.isStorm() && next != WeatherKind.FOG;
-        bank = config.fog && plain && RNG.nextDouble() < 0.15 * config.eventFrequency ? 0.55f + 0.4f * RNG.nextFloat() : 0;
+        bank = config.fog && plain && Climate.fogCycle() == Climate.FogCycle.NORMAL && RNG.nextDouble() < 0.15 * config.eventFrequency ? 0.55f + 0.4f * RNG.nextFloat() : 0;
     }
 
     private static WeatherKind pick(Level level) {
@@ -181,7 +185,10 @@ public final class WeatherDirector {
         double[] weights = new double[WeatherKind.values().length];
         double total = 0;
         for (WeatherKind k : WeatherKind.values()) {
-            double w = k.weight;
+            double w = k == WeatherKind.DRIZZLE ? Climate.drizzleWeight() : k.weight * Climate.rainWeight(k);
+            if (!Climate.allowed(k)) {
+                w = 0;
+            }
             if (k != WeatherKind.RAIN) {
                 w *= config.eventFrequency;
             }
@@ -189,7 +196,7 @@ public final class WeatherDirector {
                 w *= config.stormFrequency * (k.isDangerous() ? config.stormFrequency : 1);
             }
             if (k == WeatherKind.FOG) {
-                w = config.fog ? w * (0.6 + 2.4 * night) : 0;  // fog gathers at night and lingers into the morning
+                w = config.fog && Climate.fogCycle() == Climate.FogCycle.NORMAL ? w * (0.6 + 2.4 * night) : 0;  // fog gathers at night and lingers into the morning
             }
             if (k == kind && k != WeatherKind.RAIN) {
                 w *= 0.3;  // rarely the same thing twice running
@@ -204,16 +211,26 @@ public final class WeatherDirector {
                 return k;
             }
         }
-        return WeatherKind.RAIN;
+        return Climate.cycle() == Climate.Cycle.ENDLESS_STORM ? WeatherKind.STORM : WeatherKind.RAIN;
     }
 
     /** Where the weather is heading: the current kind, or the build-up to a storm. */
     private static Weather target(Level level) {
         ZcConfig.Weather config = ZcConfig.get().weather;
         WeatherKind k = kind;
-        // the rain never eases below moderate, whatever else the weather is doing
-        float rain = Math.max(k.rain, (float) config.minRain), thunder = k.thunder, wind = k.wind;
-        float fog = config.fog ? Math.max(k.fog, Math.max(bank, rolling(config))) : 0;
+        // the rain never eases below moderate, whatever else the weather is doing (unless the rain setting is dry)
+        float rain = Math.max(k.rain, Climate.rainFloor(config.minRain)), thunder = k.thunder, wind = k.wind;
+        float fog = switch (Climate.fogCycle()) {
+            case NO_FOG -> 0;
+            case ENDLESS_FOG -> config.fog ? Math.max(k.fog, Climate.ENDLESS_FOG) : 0;
+            default -> config.fog ? Math.max(k.fog, Math.max(bank, rolling(config))) : 0;
+        };
+        if (Climate.cycle() == Climate.Cycle.NO_WEATHER) {
+            // Zomboid's no weather: dry and nearly still under the clouds
+            rain = 0;
+            thunder = 0;
+            wind = 0.08f;
+        }
         if (warning > 0 && queued != null) {
             // the calm before: wind rising, darker, rain thickening
             float t = 1 - warning / (float) WARNING_TICKS;
@@ -251,6 +268,15 @@ public final class WeatherDirector {
     private static void holdVanillaRain(ServerLevel level) {
         WeatherData data = level.getWeatherData();
         boolean thunder = current.thunder() > 0.5f;
+        if (current.rain() < 0.05f) {
+            if (data.isRaining() || data.isThundering()) {
+                data.setRaining(false);
+                data.setThundering(false);
+                data.setClearWeatherTime(12000);
+                data.setDirty();
+            }
+            return;
+        }
         if (!data.isRaining() || data.isThundering() != thunder || data.getRainTime() < 1000) {
             data.setRaining(true);
             data.setRainTime(12000);

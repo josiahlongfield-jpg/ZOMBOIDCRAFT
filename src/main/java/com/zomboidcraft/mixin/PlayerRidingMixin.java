@@ -19,5 +19,9 @@ public abstract class PlayerRidingMixin {
         if (((Player) (Object) this).getVehicle() instanceof com.zomboidcraft.creature.HarvestmanEntity) {
             cir.setReturnValue(false);
         }
+        // a downed survivor on a stretcher can't climb off it; whoever carries them sneaks to set them down
+        if (com.zomboidcraft.survival.Downs.downed((Player) (Object) this)) {
+            cir.setReturnValue(false);
+        }
     }
 }

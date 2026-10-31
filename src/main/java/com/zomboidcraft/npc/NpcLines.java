@@ -74,15 +74,35 @@ public final class NpcLines {
     long lastAny = -1_000_000;
     String lastLine = "";
 
+    /** When each of her own moments (NpcMoments) last spoke, by name. */
+    final Map<String, Long> lastMoment = new java.util.HashMap<>();
+    /** Whether a corpse was near her at the last look (for sees_corpse). */
+    boolean sawCorpse;
+
     /** Says a line of this kind if she isn't keeping quiet; returns whether she did. */
     boolean say(NpcEntity npc, Kind kind) {
+        if (NpcMoments.of(npc.model()) != null) {
+            return sayLine(npc, kind, null);
+        }
         return kind.lines.isEmpty() ? false : sayLine(npc, kind, null);
     }
 
-    /** Says this line under this kind's wait (null: one of the kind's own lines). */
+    /**
+     * Says this line under this kind's wait (null: one of the kind's own lines). A character with her own lines.txt says
+     * one of hers for this moment instead; if she has none for it, words the game gave (an answer, what she's doing) still
+     * show in the chat, unvoiced, and otherwise she says nothing.
+     */
     boolean sayLine(NpcEntity npc, Kind kind, String said) {
         if (!(npc.level() instanceof ServerLevel level) || !npc.isAlive() && kind != Kind.HURT) {
             return false;
+        }
+        if (NpcMoments.of(npc.model()) != null) {
+            if (event(npc, kind.name().toLowerCase(java.util.Locale.ROOT))) {
+                return true;
+            }
+            if (said == null) {
+                return false;
+            }
         }
         long now = level.getGameTime();
         Long prev = last.get(kind);
@@ -105,6 +125,77 @@ public final class NpcLines {
         }
         // a little over a tenth of a second a syllable or so: long enough to read as speech
         npc.talk(10 + line.length() * 2);
+        return true;
+    }
+
+    /**
+     * Something happened (a built-in moment's name, or one of NpcMoments.EVENTS): one of her own moments for it whose
+     * conditions hold, off its wait and through its chance, speaks. Returns whether one did.
+     */
+    boolean event(NpcEntity npc, String event) {
+        NpcMoments.Script script = NpcMoments.of(npc.model());
+        if (script == null || !(npc.level() instanceof ServerLevel)) {
+            return false;
+        }
+        List<NpcMoments.Moment> ready = new java.util.ArrayList<>();
+        for (NpcMoments.Moment m : script.moments) {
+            if (NpcMoments.on(m, event) && !m.lines.isEmpty() && ready(npc, m) && NpcMoments.holds(npc, m)) {
+                ready.add(m);
+            }
+        }
+        java.util.Collections.shuffle(ready, new java.util.Random(npc.getRandom().nextLong()));
+        for (NpcMoments.Moment m : ready) {
+            if (moment(npc, m, null, true)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean ready(NpcEntity npc, NpcMoments.Moment m) {
+        long now = npc.level().getGameTime();
+        Long prev = lastMoment.get(m.name);
+        boolean urgent = m.kind == Kind.ALARM || m.kind == Kind.REPLY;
+        return (urgent || now - lastAny >= QUIET) && (prev == null || now - prev >= m.waitTicks());
+    }
+
+    /**
+     * Speaks one of the moment's lines if it's ready and its chance comes up (checked already when checked is true); a
+     * given line (/zc npc say) skips the chance.
+     */
+    boolean moment(NpcEntity npc, NpcMoments.Moment m, NpcMoments.Line pick, boolean checked) {
+        if (!(npc.level() instanceof ServerLevel level)) {
+            return false;
+        }
+        if (!checked && (!ready(npc, m) || !NpcMoments.holds(npc, m))) {
+            return false;
+        }
+        long now = level.getGameTime();
+        if (pick == null && m.chance < 100 && npc.getRandom().nextInt(100) >= m.chance) {
+            // a miss still waits its turn, so a 10% moment isn't rolled every second
+            lastMoment.put(m.name, now);
+            return false;
+        }
+        NpcMoments.Line line = pick;
+        if (line == null) {
+            line = m.lines.get(npc.getRandom().nextInt(m.lines.size()));
+            if (line.text().equals(lastLine) && m.lines.size() > 1) {
+                line = m.lines.get((m.lines.indexOf(line) + 1) % m.lines.size());
+            }
+        }
+        lastMoment.put(m.name, now);
+        if (m.kind != null) {
+            last.put(m.kind, now);
+        }
+        lastAny = now;
+        lastLine = line.text();
+        NpcNet.Voice voice = new NpcNet.Voice(npc.getId(), npc.model(), line.clip(), npc.speakerName(), line.text());
+        for (ServerPlayer p : level.players()) {
+            if (p.distanceToSqr(npc) < HEARD * HEARD) {
+                net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking.send(p, voice);
+            }
+        }
+        npc.talk(10 + line.text().length() * 2);
         return true;
     }
 }

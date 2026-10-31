@@ -30,6 +30,8 @@ final class NpcSkinAnimator {
     static final class Input {
         float now, speed, aim, headYaw, headPitch, dead, bodyYaw, y;
         boolean gun, talking, blasted, onGround = true, hurt;
+        /** How open her mouth is for the voice clip she's playing (NpcVoice), 0..1, or -1 for none. */
+        float voice = -1;
         /** Drawn on her page: her idle and nothing else. */
         boolean portrait;
         int shots, id;
@@ -630,6 +632,8 @@ final class NpcSkinAnimator {
         float target = 0;
         if (in.dead > 0) {
             target = 0.35f;
+        } else if (in.voice >= 0) {
+            target = in.voice;
         } else if (in.talking) {
             float s = Math.abs((float) Math.sin(t * 13.0)) * 0.7f + Math.abs((float) Math.sin(t * 5.3 + 1.1)) * 0.3f;
             target = 0.25f + 0.75f * s;

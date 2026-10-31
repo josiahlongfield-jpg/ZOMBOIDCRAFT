@@ -1,0 +1,107 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hw_green": "zomboidcraft:block/city/hw_green",
+    "hw_white": "zomboidcraft:block/city/hw_white",
+    "particle": "zomboidcraft:block/city/hw_green"
+  },
+  "elements": [
+    {
+      "from": [
+        7.3,
+        0,
+        7.3
+      ],
+      "to": [
+        8.7,
+        13,
+        8.7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hw_green"
+        },
+        "south": {
+          "texture": "#hw_green"
+        },
+        "east": {
+          "texture": "#hw_green"
+        },
+        "west": {
+          "texture": "#hw_green"
+        },
+        "up": {
+          "texture": "#hw_green"
+        },
+        "down": {
+          "texture": "#hw_green",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        8,
+        5.4
+      ],
+      "to": [
+        11,
+        12,
+        7.3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hw_green"
+        },
+        "south": {
+          "texture": "#hw_green"
+        },
+        "east": {
+          "texture": "#hw_green"
+        },
+        "west": {
+          "texture": "#hw_green"
+        },
+        "up": {
+          "texture": "#hw_green"
+        },
+        "down": {
+          "texture": "#hw_green"
+        }
+      }
+    },
+    {
+      "from": [
+        4.5,
+        12.5,
+        6
+      ],
+      "to": [
+        11.5,
+        15.5,
+        7.3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hw_white"
+        },
+        "south": {
+          "texture": "#hw_white"
+        },
+        "east": {
+          "texture": "#hw_white"
+        },
+        "west": {
+          "texture": "#hw_white"
+        },
+        "up": {
+          "texture": "#hw_white"
+        },
+        "down": {
+          "texture": "#hw_white"
+        }
+      }
+    }
+  ]
+}

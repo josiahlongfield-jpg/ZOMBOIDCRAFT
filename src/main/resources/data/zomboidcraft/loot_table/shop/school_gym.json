@@ -284,6 +284,26 @@
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:glucose_gel",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:knee_brace",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:shampoo",
           "weight": 4,
           "functions": [

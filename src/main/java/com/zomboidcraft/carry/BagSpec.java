@@ -17,6 +17,12 @@ public record BagSpec(Wear wear, int slots, int columns, double capacity, double
     public static final BagSpec RUCKSACK = new BagSpec(Wear.BACK, 24, 8, 28, 0.45, 2.2);
     public static final BagSpec DUFFEL = new BagSpec(Wear.HAND, 18, 6, 24, 0.15, 1.0);
     public static final BagSpec PLATE_CARRIER = new BagSpec(Wear.VEST, 6, 6, 5, 0.15, 2.1);
+    // worn rigs (clothing/Clothes has what they guard): magazines and kit on the chest, a medic's pouches, an ammo sash
+    public static final BagSpec CHEST_RIG = new BagSpec(Wear.VEST, 6, 6, 4, 0.10, 0.8);
+    public static final BagSpec LOAD_BEARING_VEST = new BagSpec(Wear.VEST, 8, 4, 7, 0.15, 1.3);
+    public static final BagSpec MEDIC_VEST = new BagSpec(Wear.VEST, 8, 4, 6, 0.10, 1.1);
+    public static final BagSpec BANDOLIER = new BagSpec(Wear.VEST, 5, 5, 3, 0, 0.5, Holds.AMMO);
+    public static final BagSpec HEAVY_PLATE_CARRIER = new BagSpec(Wear.VEST, 6, 6, 5, 0.15, 9.0);
     public static final BagSpec FANNY_PACK = new BagSpec(Wear.WAIST, 3, 3, 2, 0.10, 0.4);
     // carried in the off hand: a long gun's hard case, a handgun's, and a .50 cal ammo can
     public static final BagSpec RIFLE_CASE = new BagSpec(Wear.HAND, 4, 4, 9, 0, 3.2, Holds.GUN_GEAR);

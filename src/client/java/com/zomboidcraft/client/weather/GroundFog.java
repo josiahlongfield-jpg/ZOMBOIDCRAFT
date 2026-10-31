@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.ZomboidCraft;
+import com.zomboidcraft.world.weather.Climate;
 import com.zomboidcraft.world.weather.Weather;
 import com.zomboidcraft.world.weather.WeatherView;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
@@ -126,7 +127,7 @@ final class GroundFog {
         // each sheet stays faint (its flecks barely over what the pack keeps, so none of them stands out
         // as a dot); the thickness comes from stacking many of them, each speckled differently
         int stack = Mth.clamp(8 + Math.round(thick * 4), 8, 13);
-        float each = (float) Math.min(0.22, 0.2 * c.mistAmount * (0.85 + 0.3 * Math.min(thick, 1))) * (1 - 0.4f * flash);
+        float each = (float) Math.min(0.22, 0.2 * c.mistAmount * Climate.maxFog() * (0.85 + 0.3 * Math.min(thick, 1))) * (1 - 0.4f * flash);
         // high above it (a roof, a tower) the sheets all lie on top of each other as seen from up there, so a few
         // stronger ones look the same; a dozen full-screen sheets under a shader pack is what cost the frame rate
         boolean above = !Float.isNaN(groundMean) && eye.y - groundMean > 12;

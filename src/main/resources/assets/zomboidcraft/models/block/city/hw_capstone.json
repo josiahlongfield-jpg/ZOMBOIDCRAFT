@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hw_capstone": "zomboidcraft:block/city/hw_capstone",
+    "hw_ledge": "zomboidcraft:block/city/hw_ledge",
+    "particle": "zomboidcraft:block/city/hw_ledge"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hw_ledge",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#hw_ledge",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#hw_ledge",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#hw_ledge",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#hw_capstone",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#hw_capstone",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

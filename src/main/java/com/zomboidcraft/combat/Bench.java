@@ -35,6 +35,8 @@ public final class Bench {
 
     /** See to a wound from the health page: TREAT + treatment * 8 + body part. */
     public static final int TREAT = 200_000_000;
+    /** Patching and ripping clothes (clothing/Tailoring): TAILOR + action * Tailoring.SLOTS + menu slot. */
+    public static final int TAILOR = 300_000_000;
 
     /** Where the gear slots start in both menus: right after Minecraft's off hand. */
     static final int FIRST_GEAR = InventoryMenu.SHIELD_SLOT + 1;
@@ -65,6 +67,9 @@ public final class Bench {
      */
     public static boolean click(AbstractContainerMenu menu, Player player, int id, int carriedEnd) {
         var sockets = Attachments.Slot.values();
+        if (id >= TAILOR) {
+            return com.zomboidcraft.clothing.Tailoring.click(menu, player, id - TAILOR, carriedEnd);
+        }
         if (id >= TREAT) {
             int n = id - TREAT;
             if (n / 8 >= Treatment.Kind.values().length || n % 8 >= Body.Region.values().length) return false;

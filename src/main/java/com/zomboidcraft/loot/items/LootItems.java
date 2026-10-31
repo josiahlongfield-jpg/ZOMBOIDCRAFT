@@ -70,6 +70,9 @@ public final class LootItems {
             item = new LightItem(props, LightItem.SPECS.get(spec.id()));
         } else if (FireItem.STRIKES.containsKey(spec.id())) {
             item = new FireItem(props, FireItem.STRIKES.get(spec.id()));
+        } else if (com.zomboidcraft.survival.MedSpecs.has(spec.id())) {
+            com.zomboidcraft.survival.MedSpecs.Med med = com.zomboidcraft.survival.MedSpecs.spec(spec.id());
+            item = new com.zomboidcraft.survival.MedicalItem(med.uses() > 0 ? props.durability(med.uses()) : props, spec.id());
         } else if (InfoItem.KINDS.containsKey(spec.id())) {
             item = new InfoItem(props, InfoItem.KINDS.get(spec.id()));
         } else if (food == null) {
