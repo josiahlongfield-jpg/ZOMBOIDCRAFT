@@ -506,9 +506,32 @@ public final class County {
         return hideouts.computeIfAbsent(key(cx, cz), k -> Optional.ofNullable(planHideout(cx, cz)));
     }
 
+    private volatile Optional<Place> ghostStation;
+
+    /**
+     * EXCHANGE HALL, the subway's closed stop, as a hideout of its own: the old platform beside the
+     * tunnel and the control bunker under the street (GhostSite). Empty in the endless county.
+     */
+    public Optional<Place> ghostStation() {
+        Optional<Place> g = ghostStation;
+        if (g == null) {
+            if (tracks().isEmpty()) {
+                return Optional.empty();   // not laid yet (or never): ask again later
+            }
+            g = Optional.ofNullable(GhostSite.place(this, Noise.hash(seed ^ 0x6057L, 1, 2)));
+            ghostStation = g;
+        }
+        return g;
+    }
+
     /** Every hideout whose footprint plus margin touches the box. */
     public List<Place> hideoutsNear(int x0, int z0, int x1, int z1, int margin) {
         List<Place> out = new ArrayList<>();
+        ghostStation().ifPresent(p -> {
+            if (p.x0 - margin <= x1 && p.x1 + margin >= x0 && p.z0 - margin <= z1 && p.z1 + margin >= z0) {
+                out.add(p);
+            }
+        });
         int reach = HIDE_REACH + margin;
         for (int cx = Math.floorDiv(x0 - reach, CELL); cx <= Math.floorDiv(x1 + reach, CELL); cx++) {
             for (int cz = Math.floorDiv(z0 - reach, CELL); cz <= Math.floorDiv(z1 + reach, CELL); cz++) {

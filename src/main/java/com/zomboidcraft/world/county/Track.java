@@ -69,6 +69,8 @@ public final class Track {
      * what the stations build round them, beyond each track's own side of the platform.
      */
     final List<Island> islands = new ArrayList<>();
+    /** The subway's closed stop, if it has one (Railway picks it, RailGen leaves its side to GhostSite). */
+    Ghost ghost;
     /** Per sample in a tube: +1 if the nearer way out is the way trains run, -1 if it's back (the escape signs' arrows). */
     private byte[] tubeWay;
     /** Some of the line runs in the Glass Line's tubes (a channel is dredged for them). */
@@ -111,6 +113,11 @@ public final class Track {
             }
         }
         build.forEach((k, v) -> cells.put(k, v.stream().mapToInt(Integer::intValue).toArray()));
+    }
+
+    /** Samples from a to b round the loop the short way. */
+    int da(int a, int b) {
+        return Math.floorMod(b - a + n / 2, n) - n / 2;
     }
 
     int wrap(int i) {
@@ -173,6 +180,22 @@ public final class Track {
             tubeWay = w;
         }
         return tubeWay[i];
+    }
+
+    /**
+     * EXCHANGE HALL, the stop the subway closed in 1961: its platform's middle sample, how many samples
+     * it runs either way, the side it's on (as a stop's) and the bed top along it. Everything on its side
+     * from two blocks out is the ghost station's ({@link GhostSite}), not the tunnel's.
+     */
+    record Ghost(int mid, int half, int side, int y) {
+        /** Samples from the middle, round the loop the short way. */
+        int da(int i, int n) {
+            return Math.floorMod(i - mid + n / 2, n) - n / 2;
+        }
+
+        boolean covers(int i, double offset, int n) {
+            return Math.abs(da(i, n)) <= half && Math.signum(offset) == side;
+        }
     }
 
     /** Finds the nearest sample among the candidates to the column's middle. */

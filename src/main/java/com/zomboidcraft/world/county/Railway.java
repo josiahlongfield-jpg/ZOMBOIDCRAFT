@@ -96,7 +96,85 @@ final class Railway {
                 e.printStackTrace(System.out);
             }
         }
+        for (Track t : tracks) {
+            if (t.kind == Track.Kind.SUBWAY && !t.tubed) {
+                t.ghost = ghost(t);
+            }
+        }
     }
+
+    // ------------------------------------------------------------------ the ghost station
+
+    /** Samples either side of the ghost station's middle its platform runs. */
+    static final int GHOST_HALF = 26;
+
+    /**
+     * Where EXCHANGE HALL was: a straight, level stretch of the subway's tunnel under a street, far
+     * from every stop that's still open and from every other line (its control bunker runs on under
+     * the street from it, deep), picked by the seed among those that fit. Null if none does.
+     */
+    private Track.Ghost ghost(Track t) {
+        int n = t.n;
+        if (n < 600) {
+            return null;
+        }
+        List<Integer> fits = new ArrayList<>();
+        for (int i = 0; i < n; i += 4) {
+            if (ghostFits(t, i)) {
+                fits.add(i);
+            }
+        }
+        if (fits.isEmpty()) {
+            System.out.println("No stretch of the subway fits the ghost station");
+            return null;
+        }
+        long h = Noise.hash(layout.seed() ^ 0x6057L, n, fits.size());
+        int mid = fits.get((int) Math.floorMod(h, (long) fits.size()));
+        int side = (h >>> 20 & 1) == 0 ? 1 : -1;
+        System.out.printf("The ghost station is at %.0f, %.0f (side %d)%n", t.xs[mid], t.zs[mid], side);
+        return new Track.Ghost(mid, GHOST_HALF, side, RailGen.bedTop(t.ys[mid]));
+    }
+
+    private boolean ghostFits(Track t, int i) {
+        int n = t.n;
+        float ax = t.tx[i], az = t.tz[i];
+        if (Math.abs(ax) < 0.9999 && Math.abs(az) < 0.9999) {
+            return false;   // on the grid's axes only, so the platform's columns line up
+        }
+        int y = RailGen.bedTop(t.ys[i]);
+        for (int d = -120; d <= 120; d++) {
+            int j = t.wrap(i + d);
+            if (t.mode[j] != Track.TUNNEL || t.stopAt[j] >= 0) {
+                return false;
+            }
+            if (Math.abs(d) <= 44 && (Math.abs(t.tx[j] - ax) > 1e-4 || Math.abs(t.tz[j] - az) > 1e-4
+                    || RailGen.bedTop(t.ys[j]) != y || t.street[j] < 7 || t.street[j] != t.street[i])) {
+                return false;
+            }
+        }
+        // the bunker runs up to a hundred blocks on from the middle, a dozen to the side and deep:
+        // nothing else underground near it (the loop's own far side, the Glass Line)
+        double cx = t.xs[i], cz = t.zs[i];
+        for (Track o : tracks) {
+            for (int j = 0; j < o.n; j += 3) {
+                if (o == t && Math.abs(t.da(i, j)) <= 160) {
+                    continue;
+                }
+                if (Math.hypot(o.xs[j] - cx, o.zs[j] - cz) < 130) {
+                    return false;
+                }
+            }
+        }
+        // and none of the stops' stairs, passages or depots near it either
+        for (Track.Stop st : t.stops) {
+            int m = st.middle();
+            if (Math.hypot(t.xs[m] - cx, t.zs[m] - cz) < 200) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     // ------------------------------------------------------------------ the city's grid
 

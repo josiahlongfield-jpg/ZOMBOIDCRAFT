@@ -26,7 +26,8 @@ import java.util.SplittableRandom;
 public final class Bunker {
     /** Who built it; each kind dresses the same core its own way. */
     /** ARMY: the small coded bunker under Camp Black Pine (CampBlackPine.keypadBunker, world/Keypads). */
-    public enum Kind { TOWER, SHIP, SHELTER, FOREST, ARMY, VAULT }
+    /** SUBWAY: the transit authority's control bunker under the closed EXCHANGE HALL station (GhostSite). */
+    public enum Kind { TOWER, SHIP, SHELTER, FOREST, ARMY, VAULT, SUBWAY }
 
     /**
      * SEALED: nobody has been in since. LOOTED: a second copy of the map led someone here first.
@@ -84,6 +85,7 @@ public final class Bunker {
             case FOREST -> 0.65;
             case ARMY -> 0.35;
             case VAULT -> 0.2;   // kept up: he paid for the service
+            case SUBWAY -> 0.5;  // shut up in 1961 and only the drills since
         } + (state == State.LOOTED ? 0.1 : state == State.BREACHED ? 0.2 : 0);
     }
 
@@ -150,10 +152,12 @@ public final class Bunker {
             case SHIP, FOREST -> "survivor";
             case SHELTER, VAULT -> "civilian";
             case ARMY -> "soldier";
+            case SUBWAY -> "office";     // the controllers
         };
         String guard = switch (kind) {
             case TOWER, VAULT -> "security";
             case ARMY, FOREST -> "soldier";
+            case SUBWAY -> "construction";   // the track gangs who came down with them
             default -> who;
         };
         List<Room> living = new ArrayList<>();
@@ -232,6 +236,7 @@ public final class Bunker {
             case SHIP -> 0.1;
             case TOWER -> 0.04;
             case VAULT -> 0.03;
+            case SUBWAY -> 0.2;   // the water table, and the tunnels' seep
         };
         int dMin = switch (kind) {
             case FOREST, ARMY, VAULT -> 5;
@@ -370,6 +375,18 @@ public final class Bunker {
                 u.add(Use.WASH);
                 u.add(Use.PANTRY);
             }
+            case SUBWAY -> {
+                // the line run from down here if the city above was lost: the control room with
+                // its model board, the relay room that worked the signals, the radio and the
+                // phones, and the rooms to live in while it lasted
+                u.add(Use.COMMAND);
+                u.add(Use.SERVER);
+                u.add(Use.COMMS);
+                u.add(Use.BUNKS);
+                u.add(Use.MESS);
+                u.add(Use.WASH);
+                u.add(Use.MED);
+            }
             case ARMY -> {
                 // the guard room by the door (the radio desk, the map, the rifles), the squad room, the
                 // cookhouse and the latrine: a section lived down here
@@ -431,6 +448,12 @@ public final class Bunker {
             r.lower = "of_cedar_wall";
             r.upper = "bunk_paint";
             r.ground = r.use == Use.PANTRY ? "bunk_tile" : "fit_carpet";
+            return;
+        }
+        if (kind == Kind.SUBWAY && (r.use == Use.CORRIDOR || r.use == Use.COMMAND || r.use == Use.MESS)) {
+            // built by the transit authority with what it built its stations with: green dado, cream tile
+            r.lower = "gh_tile_green";
+            r.upper = "gh_tile";
             return;
         }
         if (kind == Kind.ARMY && r.use == Use.CORRIDOR) {
@@ -1039,6 +1062,9 @@ public final class Bunker {
 
     /** Radio desks and their chairs along a wall, the map table, maps pinned up, the phone. */
     private void comms(Room r, boolean command) {
+        if (command && kind == Kind.SUBWAY) {
+            controlBoard(r);   // the board first: it wants a clear wall
+        }
         int[] desk = r.row("bunk_radio_desk", "bunk_radio_desk", rng.nextBoolean() ? "bunk_desk" : "bunk_radio_desk");
         if (desk != null) {
             int[] sv = side(desk[2]);
@@ -1058,6 +1084,7 @@ public final class Bunker {
             r.against("filing_cabinet");
             r.against("filing_cabinet");
         }
+
         if (kind == Kind.ARMY) {
             // the guard room: the section's rifles on the wall, the duty board, the log in the cabinet
             r.wallDecor(2, "bunk_gun_rack");
@@ -1066,6 +1093,39 @@ public final class Bunker {
             r.against("filing_cabinet");
             r.against("bunk_footlocker");
             r.against("bunk_crate_ammo");
+        }
+    }
+
+    /**
+     * The transit control room's model board, four blocks wide and two high, on the wall facing the
+     * door (or any wall with the run free), the control desks along under it with a chair at each.
+     */
+    private void controlBoard(Room r) {
+        int[] order = {(r.toCorridor + 2) & 3, (r.toCorridor + 1) & 3, (r.toCorridor + 3) & 3};
+        for (int s : order) {
+            List<int[]> cells = r.along(s);
+            if (s == 2 || s == 3) {
+                java.util.Collections.reverse(cells);   // tile 0 at the viewer's left
+            }
+            for (int a = 1; a + 4 <= cells.size() - 1; a++) {
+                boolean fits = true;
+                for (int i = 0; i < 4 && fits; i++) {
+                    int[] c = cells.get(a + i);
+                    fits = r.at(c[0], c[1]) == FREE && r.canDecor(c[0], c[1], s, 2) && r.canDecor(c[0], c[1], s, 3);
+                }
+                if (!fits) {
+                    continue;
+                }
+                for (int i = 0; i < 4; i++) {
+                    int[] c = cells.get(a + i);
+                    r.decor(c[0], c[1], s, 3, "gh_diagram_" + i);
+                    r.decor(c[0], c[1], s, 2, "gh_diagram_" + (4 + i));
+                    if (r.place(c[0], c[1], s, "gh_console")) {
+                        r.chair(new int[] {c[0], c[1], (s + 2) & 3});
+                    }
+                }
+                return;
+            }
         }
     }
 
@@ -1649,6 +1709,10 @@ public final class Bunker {
         }
 
         /** A thing on the wall at row y, its back to side s; it doesn't stand in anyone's way. */
+        boolean canDecor(int x, int z, int s, int y) {
+            return in(x, z) && !used[x - x0][y][z - z0] && solid(x, z, s, y);
+        }
+
         boolean decor(int x, int z, int s, int y, String block) {
             if (!in(x, z) || used[x - x0][y][z - z0] || !solid(x, z, s, y)) {
                 return false;
