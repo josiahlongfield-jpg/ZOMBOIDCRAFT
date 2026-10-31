@@ -87,6 +87,55 @@ public final class ZcConfig {
     public Broadcast broadcast = new Broadcast();
     public Power power = new Power();
     public Stories stories = new Stories();
+    public Loot loot = new Loot();
+
+    /** Zomboid's Loot sandbox settings (loot/LootSettings), at its Apocalypse values unless Josiah chose otherwise. */
+    public static class Loot {
+        /** Per-category multipliers, 0 to 4: Zomboid's Food, Literature ... Tools. */
+        public double food = 0.8;
+        public double literature = 0.6;
+        public double skillBook = 0.6;
+        public double recipeResource = 0.6;
+        public double medical = 0.6;
+        public double survivalGears = 0.6;
+        public double cannedFood = 0.6;
+        public double weapon = 0.6;
+        public double rangedWeapon = 1.2;
+        public double ammo = 0.6;
+        public double mechanics = 0.6;
+        public double other = 0.8;
+        public double clothing = 0.6;
+        public double container = 0.6;
+        public double key = 0.4;
+        public double media = 0.6;
+        public double memento = 0.6;
+        public double cookware = 0.6;
+        public double material = 0.6;
+        public double farming = 0.6;
+        public double tool = 0.6;
+        /** Zomboid's RollsMultiplier: more rolls on every container. */
+        public double rollsMultiplier = 1;
+        /** Zomboid's rarity factors, read against our tiers (Common, Scarce, Rare, Prized, Grail). */
+        public double insaneFactor = 0.05;
+        public double extremeFactor = 0.2;
+        public double rareFactor = 0.6;
+        public double normalFactor = 1;
+        public double commonFactor = 2;
+        /** Zomboid's ZombiePopLootEffect: more and better loot where the dead crowd round. Josiah picked on. */
+        public double zombiePopLootEffect = 10;
+        /** Item ids (comma-separated) that never turn up as loot. */
+        public String removalList = "";
+        public boolean removeStoryLoot = false;
+        public boolean removeZombieLoot = false;
+        /** Zomboid's Maximum Looted Building Chance (percent), reached after daysUntilMaximumLooted. */
+        public double maximumLooted = 25;
+        public double daysUntilMaximumLooted = 90;
+        /** Zomboid's Maximum Diminished Loot (percent), reached after daysUntilMaximumDiminished. */
+        public double maximumDiminished = 20;
+        public double daysUntilMaximumDiminished = 3650;
+        /** Zomboid's Starter Kit: chips, a water bottle, a small backpack, a baseball bat and a hammer. */
+        public boolean starterKit = false;
+    }
 
     /**
      * Zomboid's randomized stories (LANDSCAPE places the scenes, LOOT stocks them): never, extremely_rare, rare,

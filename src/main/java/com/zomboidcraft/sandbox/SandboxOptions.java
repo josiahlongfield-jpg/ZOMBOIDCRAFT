@@ -145,6 +145,48 @@ final class SandboxOptions {
         w.put("SurvivorHouseChance", b -> b.choice("stories.survivorHouseChance", STORY).owner("LOOT"));
         w.put("AnnotatedMapChance", b -> b.choice("stories.annotatedMapChance",
                 "never", "extremely_rare", "rare", "sometimes", "often", "very_often").owner("LOOT"));
+        // Loot (LOOT): every number as Zomboid has it, applied as containers are first opened (loot/LootSettings)
+        w.put("FoodLootNew", b -> b.number("loot.food", 0, 4).owner("LOOT"));
+        w.put("LiteratureLootNew", b -> b.number("loot.literature", 0, 4).owner("LOOT"));
+        w.put("SkillBookLoot", b -> b.number("loot.skillBook", 0, 4).owner("LOOT"));
+        w.put("RecipeResourceLoot", b -> b.number("loot.recipeResource", 0, 4).owner("LOOT"));
+        w.put("MedicalLootNew", b -> b.number("loot.medical", 0, 4).owner("LOOT"));
+        w.put("SurvivalGearsLootNew", b -> b.number("loot.survivalGears", 0, 4).owner("LOOT"));
+        w.put("CannedFoodLootNew", b -> b.number("loot.cannedFood", 0, 4).owner("LOOT"));
+        w.put("WeaponLootNew", b -> b.number("loot.weapon", 0, 4).owner("LOOT"));
+        w.put("RangedWeaponLootNew", b -> b.number("loot.rangedWeapon", 0, 4).owner("LOOT"));
+        w.put("AmmoLootNew", b -> b.number("loot.ammo", 0, 4).owner("LOOT"));
+        w.put("MechanicsLootNew", b -> b.number("loot.mechanics", 0, 4).owner("LOOT"));
+        w.put("OtherLootNew", b -> b.number("loot.other", 0, 4).owner("LOOT"));
+        w.put("ClothingLootNew", b -> b.number("loot.clothing", 0, 4).owner("LOOT"));
+        w.put("ContainerLootNew", b -> b.number("loot.container", 0, 4).owner("LOOT"));
+        w.put("KeyLootNew", b -> b.number("loot.key", 0, 4).owner("LOOT"));
+        w.put("MediaLootNew", b -> b.number("loot.media", 0, 4).owner("LOOT"));
+        w.put("MementoLootNew", b -> b.number("loot.memento", 0, 4).owner("LOOT"));
+        w.put("CookwareLootNew", b -> b.number("loot.cookware", 0, 4).owner("LOOT"));
+        w.put("MaterialLootNew", b -> b.number("loot.material", 0, 4).owner("LOOT"));
+        w.put("FarmingLootNew", b -> b.number("loot.farming", 0, 4).owner("LOOT"));
+        w.put("ToolLootNew", b -> b.number("loot.tool", 0, 4).owner("LOOT"));
+        w.put("RollsMultiplier", b -> b.number("loot.rollsMultiplier", 0.1, 100).owner("LOOT"));
+        w.put("InsaneLootFactor", b -> b.number("loot.insaneFactor", 0, 0.2).owner("LOOT").tip("How often Grail finds turn up."));
+        w.put("ExtremeLootFactor", b -> b.number("loot.extremeFactor", 0.05, 0.6).owner("LOOT").tip("How often Prized finds turn up."));
+        w.put("RareLootFactor", b -> b.number("loot.rareFactor", 0.2, 1).owner("LOOT").tip("How often Rare finds turn up."));
+        w.put("NormalLootFactor", b -> b.number("loot.normalFactor", 0.6, 2).owner("LOOT").tip("How often Scarce finds turn up."));
+        w.put("CommonLootFactor", b -> b.number("loot.commonFactor", 1, 3).owner("LOOT").tip("How often Common finds turn up."));
+        w.put("ZombiePopLootEffect", b -> b.number("loot.zombiePopLootEffect", 0, 20).owner("LOOT"));
+        w.put("LootItemRemovalList", b -> {
+            b.kind(SandboxOption.Kind.TEXT);
+            b.key = "loot.removalList";
+            return b.owner("LOOT");
+        });
+        w.put("RemoveStoryLoot", b -> b.toggle("loot.removeStoryLoot").owner("LOOT"));
+        w.put("RemoveZombieLoot", b -> b.toggle("loot.removeZombieLoot").owner("LOOT"));
+        w.put("MaximumLooted", b -> b.number("loot.maximumLooted", 0, 200).owner("LOOT")
+                .tip("The chance a container has already been picked over when you find it, once the days below have passed."));
+        w.put("DaysUntilMaximumLooted", b -> b.number("loot.daysUntilMaximumLooted", 0, 3650).owner("LOOT"));
+        w.put("MaximumDiminishedLoot", b -> b.number("loot.maximumDiminished", 0, 100).owner("LOOT"));
+        w.put("DaysUntilMaximumDiminishedLoot", b -> b.number("loot.daysUntilMaximumDiminished", 0, 3650).owner("LOOT"));
+        w.put("StarterKit", b -> b.toggle("loot.starterKit").owner("LOOT"));
         w.put("TrafficJam", b -> b.toggle("world.trafficJams").owner("LANDSCAPE"));
         w.put("Alarm", b -> b.choice("world.houseAlarms", "never", "extremely_rare", "rare", "sometimes", "often", "very_often")
                 .owner("LANDSCAPE").tip("How many houses have an alarm (a bell box out front). Getting in sets it ringing. New ground only."));

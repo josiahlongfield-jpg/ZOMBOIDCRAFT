@@ -69,6 +69,7 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.decor.Decor.registerBlocks();
         com.zomboidcraft.loot.items.LootItems.register();
         com.zomboidcraft.decor.Decor.register();
+        com.zomboidcraft.loot.LootSettings.register();
         com.zomboidcraft.power.Generators.register();
         com.zomboidcraft.power.PowerGrid.register();
         com.zomboidcraft.power.Blackout.register();
