@@ -1,0 +1,109 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hw_arm": "zomboidcraft:block/city/hw_arm",
+    "hw_grey": "zomboidcraft:block/city/hw_grey",
+    "hw_yellow": "zomboidcraft:block/city/hw_yellow",
+    "particle": "zomboidcraft:block/city/hw_yellow"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        0,
+        5
+      ],
+      "to": [
+        12,
+        13,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hw_yellow"
+        },
+        "south": {
+          "texture": "#hw_yellow"
+        },
+        "east": {
+          "texture": "#hw_yellow"
+        },
+        "west": {
+          "texture": "#hw_yellow"
+        },
+        "up": {
+          "texture": "#hw_yellow"
+        },
+        "down": {
+          "texture": "#hw_yellow",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        13,
+        6
+      ],
+      "to": [
+        11,
+        15,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hw_grey"
+        },
+        "south": {
+          "texture": "#hw_grey"
+        },
+        "east": {
+          "texture": "#hw_grey"
+        },
+        "west": {
+          "texture": "#hw_grey"
+        },
+        "up": {
+          "texture": "#hw_grey"
+        },
+        "down": {
+          "texture": "#hw_grey"
+        }
+      }
+    },
+    {
+      "from": [
+        12,
+        10.5,
+        7.5
+      ],
+      "to": [
+        16,
+        12,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hw_arm"
+        },
+        "south": {
+          "texture": "#hw_arm"
+        },
+        "east": {
+          "texture": "#hw_arm",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#hw_arm"
+        },
+        "up": {
+          "texture": "#hw_arm"
+        },
+        "down": {
+          "texture": "#hw_arm"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hw_wbeam": "zomboidcraft:block/city/hw_wbeam",
+    "st_galv": "zomboidcraft:block/city/st_galv",
+    "particle": "zomboidcraft:block/city/hw_wbeam"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        6.5,
+        4.5
+      ],
+      "to": [
+        16,
+        10.5,
+        6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hw_wbeam"
+        },
+        "south": {
+          "texture": "#st_galv"
+        },
+        "east": {
+          "texture": "#st_galv",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#st_galv",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#st_galv"
+        },
+        "down": {
+          "texture": "#st_galv"
+        }
+      }
+    }
+  ]
+}
