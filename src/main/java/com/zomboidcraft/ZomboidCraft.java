@@ -45,6 +45,7 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.world.events.MetaEvents.register();
         com.zomboidcraft.world.NetherSeal.register();
         com.zomboidcraft.world.files.LabFiles.register();
+        com.zomboidcraft.world.Keypads.register();
         com.zomboidcraft.world.Breach.register();
         com.zomboidcraft.world.SporeHaze.register();
         com.zomboidcraft.world.trains.Trains.register();

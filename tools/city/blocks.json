@@ -4241217,6 +4241217,64 @@
     ]
    ],
    "render": "cutout"
+  },
+  "bunk_st_restricted": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15.75,
+     16,
+     16,
+     16,
+     "bunk_st_restricted"
+    ]
+   ],
+   "title": "Stencil",
+   "sound": "STONE",
+   "rotate": "facing",
+   "decor": true
+  },
+  "bunk_keypad": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4,
+     2,
+     14.5,
+     12,
+     14,
+     16,
+     {
+      "north": "bunk_keypad",
+      "side": "bunk_grey",
+      "up": "bunk_grey",
+      "down": "bunk_grey"
+     }
+    ]
+   ],
+   "title": "Keypad",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "bunk_sign_warning": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     1,
+     15.5,
+     15,
+     15,
+     16,
+     "bunk_sign_warning"
+    ]
+   ],
+   "title": "Warning Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
   }
  }
 }

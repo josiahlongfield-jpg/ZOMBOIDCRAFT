@@ -153,6 +153,8 @@ public final class CarClient {
             // a companion: follow me, or wait here
         } else if (com.zomboidcraft.client.kit.FilesClient.interact(client, hit)) {
             // a file lying in the world: read it
+        } else if (com.zomboidcraft.client.interact.KeypadScreen.interact(client, hit)) {
+            // a blast door's keypad: the number pad
         } else if (com.zomboidcraft.client.ferry.FerryClient.interact(client, hit)) {
             // a landing's bell: the ferry's coming in
         } else if (com.zomboidcraft.client.lights.LightClient.interact(client, hit)) {
