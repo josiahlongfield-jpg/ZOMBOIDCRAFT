@@ -17,7 +17,12 @@ public final class Camos {
             Map.entry("patrol_cap", List.of("woodland", "desert", "chocolate_chip", "urban", "snow", "olive_drab", "coyote", "black", "tiger_stripe", "digital_woodland", "digital_desert", "digital_navy", "multi_terrain", "flecked", "splinter")),
             Map.entry("neck_gaiter", List.of("woodland", "desert", "chocolate_chip", "urban", "snow", "olive_drab", "coyote", "black", "tiger_stripe", "digital_woodland", "digital_desert", "digital_navy", "multi_terrain", "flecked", "splinter")),
             Map.entry("field_shirt", List.of("woodland", "desert", "chocolate_chip", "urban", "snow", "olive_drab", "coyote", "black", "tiger_stripe", "digital_woodland", "digital_desert", "digital_navy", "multi_terrain", "flecked", "splinter")),
-            Map.entry("combat_trousers", List.of("woodland", "desert", "chocolate_chip", "urban", "snow", "olive_drab", "coyote", "black", "tiger_stripe", "digital_woodland", "digital_desert", "digital_navy", "multi_terrain", "flecked", "splinter")));
+            Map.entry("combat_trousers", List.of("woodland", "desert", "chocolate_chip", "urban", "snow", "olive_drab", "coyote", "black", "tiger_stripe", "digital_woodland", "digital_desert", "digital_navy", "multi_terrain", "flecked", "splinter")),
+            Map.entry("cbrn_suit", List.of("woodland", "desert", "chocolate_chip", "urban", "snow", "olive_drab", "coyote", "black", "tiger_stripe", "digital_woodland", "digital_desert", "digital_navy", "multi_terrain", "flecked", "splinter")),
+            Map.entry("combat_shirt", List.of("woodland", "desert", "chocolate_chip", "urban", "snow", "olive_drab", "coyote", "black", "tiger_stripe", "digital_woodland", "digital_desert", "digital_navy", "multi_terrain", "flecked", "splinter")),
+            Map.entry("wet_weather_jacket", List.of("woodland", "desert", "chocolate_chip", "urban", "snow", "olive_drab", "coyote", "black", "tiger_stripe", "digital_woodland", "digital_desert", "digital_navy", "multi_terrain", "flecked", "splinter")),
+            Map.entry("sniper_smock", List.of("woodland", "desert", "chocolate_chip", "urban", "snow", "olive_drab", "coyote", "black", "tiger_stripe", "digital_woodland", "digital_desert", "digital_navy", "multi_terrain", "flecked", "splinter")),
+            Map.entry("shooting_gloves", List.of("woodland", "desert", "chocolate_chip", "urban", "snow", "olive_drab", "coyote", "black", "tiger_stripe", "digital_woodland", "digital_desert", "digital_navy", "multi_terrain", "flecked", "splinter")));
 
     private Camos() {
     }

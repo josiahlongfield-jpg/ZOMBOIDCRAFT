@@ -49,7 +49,12 @@ public final class ClothingItems {
             // wave 2, military batch 1 (the rigs are bags: ModItems)
             "high_cut_helmet", "steel_pot_helmet", "tanker_helmet", "boonie_hat", "patrol_cap", "beret",
             "ballistic_glasses", "ballistic_goggles", "shemagh", "neck_gaiter", "elbow_pads", "knee_pads",
-            "field_shirt", "combat_trousers", "tactical_boots");
+            "field_shirt", "combat_trousers", "tactical_boots",
+            // wave 2, military batch 2: cold, wet, CBRN, aircrew and riot
+            "fur_ushanka", "watch_cap", "cbrn_mask", "cbrn_suit", "combat_shirt", "fleece_liner", "wet_weather_jacket",
+            "flight_coverall", "sniper_smock", "arctic_parka", "snow_overwhites", "jungle_boots", "desert_boots",
+            "arctic_boots", "flight_gloves", "shooting_gloves", "arctic_mittens", "riot_arm_guards", "riot_leg_guards",
+            "wool_commando_sweater");
 
     /** What ripping clothes up gives, beside the ripped sheets the loot roster already has (clothing/Tailoring). */
     public static final List<String> SUPPLIES = List.of("denim_strips", "leather_strips");
