@@ -24,7 +24,13 @@ public final class GearStore {
     public static final int NECK = 9;
     public static final int SHIRT = 10;
     public static final int HANDS = 11;
-    public static final int SIZE = 12;
+    /** Shoulder, elbow and forearm pads, over the sleeves. */
+    public static final int ARM_GUARDS = 12;
+    /** Thigh, knee and shin pads, over the trousers. */
+    public static final int LEG_GUARDS = 13;
+    /** Long johns, thermals and socks, under everything. */
+    public static final int UNDER = 14;
+    public static final int SIZE = 15;
 
     public static final Codec<GearStore> CODEC = ItemStack.OPTIONAL_CODEC.listOf().xmap(GearStore::new, GearStore::list);
 

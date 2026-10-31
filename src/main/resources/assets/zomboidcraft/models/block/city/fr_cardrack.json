@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fr_cards": "zomboidcraft:block/city/fr_cards",
+    "particle": "zomboidcraft:block/city/fr_cards"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        14
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fr_cards"
+        },
+        "south": {
+          "texture": "#fr_cards",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#fr_cards",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#fr_cards",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#fr_cards",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#fr_cards",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

@@ -69,6 +69,8 @@ public final class Npcs {
         return out;
     }
     public static final List<String> LOOKS = List.of("raw", "toon", "both");
+    /** Pieces worn one or the other, across slots. */
+    private static final String[][] CLASH = {{"top.jacket", "gloves"}};
     /** Clothes a skinned companion can put on and take off (the pieces in her .zsk). */
     public static final List<String> PIECES = List.of("bra", "stockings", "heels", "hair", "sweater", "shorts", "skirt",
             "dress", "boots");
@@ -157,7 +159,7 @@ public final class Npcs {
     }
 
     /** The pieces she can put on and take off: the wardrobe's, or her own model's. */
-    private static List<String> pieces(NpcEntity npc) {
+    static List<String> pieces(NpcEntity npc) {
         return npc == null || dresses(npc.model()) ? PIECES : List.copyOf(dress(npc.model()).pieces());
     }
 
@@ -191,6 +193,8 @@ public final class Npcs {
     public static void register() {
         FabricDefaultAttributeRegistry.register(NPC, NpcEntity.attributes());
         NpcNet.register();
+        NpcPanel.register();
+        NpcMoments.register();
         net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents.AFTER_DEATH.register((entity, source) -> {
             if (!(entity instanceof net.minecraft.world.entity.monster.zombie.Zombie) || !(source.getEntity() instanceof ServerPlayer killer)) {
                 return;
@@ -234,7 +238,7 @@ public final class Npcs {
                                                         .executes(ctx -> bond(ctx, StringArgumentType.getString(ctx, "feeling"),
                                                                 FloatArgumentType.getFloat(ctx, "value"))))))
                                 .then(Commands.literal("skill").then(Commands.argument("skill", StringArgumentType.word())
-                                        .suggests((ctx, b) -> SharedSuggestionProvider.suggest(names(NpcSkills.Skill.values()), b))
+                                        .suggests((ctx, b) -> SharedSuggestionProvider.suggest(names(com.zomboidcraft.skills.Skill.values()), b))
                                         .then(Commands.argument("level", com.mojang.brigadier.arguments.IntegerArgumentType.integer(0, NpcSkills.MAX))
                                                 .executes(ctx -> skill(ctx, StringArgumentType.getString(ctx, "skill"),
                                                         com.mojang.brigadier.arguments.IntegerArgumentType.getInteger(ctx, "level"))))))
@@ -248,6 +252,10 @@ public final class Npcs {
                                         .then(Commands.argument("value", FloatArgumentType.floatArg(0f, 100f))
                                                 .executes(ctx -> feel(ctx, StringArgumentType.getString(ctx, "need"),
                                                         FloatArgumentType.getFloat(ctx, "value"))))))
+                                .then(Commands.literal("lines").executes(Npcs::lines))
+                                .then(Commands.literal("say").then(Commands.argument("moment", StringArgumentType.word())
+                                        .suggests((ctx, b) -> SharedSuggestionProvider.suggest(moments(ctx), b))
+                                        .executes(ctx -> say(ctx, StringArgumentType.getString(ctx, "moment")))))
                                 .then(Commands.literal("name").then(Commands.argument("name", StringArgumentType.greedyString())
                                         .executes(ctx -> name(ctx, StringArgumentType.getString(ctx, "name")))))
                                 .then(Commands.argument("model", StringArgumentType.word())
@@ -286,6 +294,10 @@ public final class Npcs {
             Vec3 p = at.add(side.scale(-off));
             float face = player.getYRot() + 180f;
             npc.setModel(model, looks.get(i));
+            if (skinned && !dresses(model)) {
+                // a model's extra clothes start off; she wears what Mixamo saw ("body") until you dress her
+                npc.setHidden(dress(model).pieces());
+            }
             npc.snapTo(p.x, p.y, p.z, face, 0f);
             npc.setYHeadRot(face);
             npc.setYBodyRot(face);
@@ -326,14 +338,37 @@ public final class Npcs {
                     + (dresses(npc.model()) ? " (her underwear always stays on; she puts her outfit back together after a while)" : "")));
             return 0;
         }
-        java.util.Set<String> hidden = new java.util.HashSet<>(npc.hidden());
-        if (on ? !hidden.remove(piece) : !hidden.add(piece)) {
+        if (!wear(npc, piece, on)) {
             ctx.getSource().sendSuccess(() -> Component.literal(on ? "She already has her " + piece + " on" : "Her " + piece + " is already off"), false);
             return 0;
         }
-        npc.setHidden(hidden);
         ctx.getSource().sendSuccess(() -> Component.literal((on ? "Put on: " : "Took off: ") + piece), false);
         return 1;
+    }
+
+    /**
+     * Puts one of her model's pieces on or takes it off; returns false if it already was. Putting one on takes off
+     * whatever shares its slot ("top.jacket", "top.hoodie") and whatever clashes with it (CLASH).
+     */
+    static boolean wear(NpcEntity npc, String piece, boolean on) {
+        java.util.Set<String> hidden = new java.util.HashSet<>(npc.hidden());
+        if (on && piece.contains(".")) {
+            // pieces sharing a slot ("top.jacket", "top.hoodie") are worn one at a time
+            String slot = piece.substring(0, piece.indexOf('.') + 1);
+            pieces(npc).stream().filter(o -> o.startsWith(slot) && !o.equals(piece)).forEach(hidden::add);
+        }
+        if (on) {
+            // pieces that don't fit together: a slim jacket's sleeves can't go over the big gloves
+            for (String[] pair : CLASH) {
+                if (pair[0].equals(piece)) hidden.add(pair[1]);
+                if (pair[1].equals(piece)) hidden.add(pair[0]);
+            }
+        }
+        if (on ? !hidden.remove(piece) : !hidden.add(piece)) {
+            return false;
+        }
+        npc.setHidden(hidden);
+        return true;
     }
 
     private static int outfit(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
@@ -341,6 +376,14 @@ public final class Npcs {
         if (npc == null) {
             ctx.getSource().sendFailure(Component.literal("No companion near you"));
             return 0;
+        }
+        if (!dresses(npc.model()) && dress(npc.model()).looks().isEmpty() && !pieces(npc).isEmpty()) {
+            // a model with its own loose pieces (no wardrobe, no whole outfits): what's on and what's off
+            List<String> on = pieces(npc).stream().filter(p -> !npc.hidden().contains(p)).sorted().toList();
+            List<String> off = pieces(npc).stream().filter(p -> npc.hidden().contains(p)).sorted().toList();
+            ctx.getSource().sendSuccess(() -> Component.literal("Wearing: " + (on.isEmpty() ? "nothing extra" : String.join(", ", on))
+                    + (off.isEmpty() ? "" : " | Off: " + String.join(", ", off))), false);
+            return 1;
         }
         if (!dresses(npc.model()) && !dress(npc.model()).looks().isEmpty()) {
             List<String> on = pieces(npc).stream().filter(p -> !npc.hidden().contains(p)).toList();
@@ -379,6 +422,73 @@ public final class Npcs {
 
     private static List<String> names(Enum<?>[] values) {
         return java.util.Arrays.stream(values).map(v -> v.name().toLowerCase(java.util.Locale.ROOT)).toList();
+    }
+
+    /** /zc npc lines: reads her lines.txt again now and says what's in it and anything wrong with it. */
+    private static int lines(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        NpcEntity npc = target(ctx.getSource().getPlayerOrException());
+        if (npc == null) {
+            ctx.getSource().sendFailure(Component.literal("No companion near you"));
+            return 0;
+        }
+        java.nio.file.Path file = NpcMoments.folder(npc.model()).resolve("lines.txt");
+        NpcMoments.Script s = NpcMoments.of(npc.model());
+        if (s == null) {
+            ctx.getSource().sendFailure(Component.literal("No " + file + " (she uses the built-in lines)"));
+            return 0;
+        }
+        StringBuilder b = new StringBuilder(npc.speakerName() + "'s lines.txt: " + s.moments.size() + " moments");
+        int voiced = 0, lines = 0;
+        for (NpcMoments.Moment m : s.moments) {
+            int have = 0;
+            for (NpcMoments.Line l : m.lines) {
+                if (java.nio.file.Files.exists(NpcMoments.folder(npc.model()).resolve("voice").resolve(l.clip() + ".ogg"))) {
+                    have++;
+                }
+            }
+            voiced += have;
+            lines += m.lines.size();
+            b.append("\n [").append(m.name.toUpperCase(java.util.Locale.ROOT)).append("] ").append(m.lines.size())
+                    .append(" lines, ").append(have).append(" voiced");
+        }
+        b.append("\n").append(voiced).append(" of ").append(lines).append(" lines have a clip.");
+        for (String problem : s.problems) {
+            b.append("\n PROBLEM: ").append(problem);
+        }
+        ctx.getSource().sendSuccess(() -> Component.literal(b.toString()), false);
+        return 1;
+    }
+
+    /** /zc npc say MOMENT: the nearest companion says one of that moment's lines now, whatever its when: and wait. */
+    private static int say(CommandContext<CommandSourceStack> ctx, String name) throws CommandSyntaxException {
+        NpcEntity npc = target(ctx.getSource().getPlayerOrException());
+        if (npc == null) {
+            ctx.getSource().sendFailure(Component.literal("No companion near you"));
+            return 0;
+        }
+        NpcMoments.Script s = NpcMoments.of(npc.model());
+        NpcMoments.Moment m = s == null ? null : s.named(name.toLowerCase(java.util.Locale.ROOT));
+        if (m == null || m.lines.isEmpty()) {
+            ctx.getSource().sendFailure(Component.literal(s == null ? "She has no lines.txt" : "No lines under [" + name.toUpperCase(java.util.Locale.ROOT) + "]"));
+            return 0;
+        }
+        NpcMoments.Line line = m.lines.get(npc.getRandom().nextInt(m.lines.size()));
+        npc.lines.lastAny = -1_000_000;
+        npc.lines.lastMoment.remove(m.name);
+        npc.lines.moment(npc, m, line, true);
+        return 1;
+    }
+
+    private static List<String> moments(CommandContext<CommandSourceStack> ctx) {
+        NpcEntity npc = ctx.getSource().getPlayer() == null ? null : target(ctx.getSource().getPlayer());
+        NpcMoments.Script s = npc == null ? null : NpcMoments.of(npc.model());
+        List<String> out = new java.util.ArrayList<>();
+        if (s != null) {
+            for (NpcMoments.Moment m : s.moments) {
+                out.add(m.name);
+            }
+        }
+        return out;
     }
 
     private static int mind(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
@@ -508,24 +618,45 @@ public final class Npcs {
     static String skillLines(NpcEntity npc) {
         StringBuilder b = new StringBuilder(npc.speakerName() + ": " + npc.work.job.label
                 + (npc.work.home == null ? ", no home" : ", " + (npc.work.nightShift ? "night" : "day") + " shift"));
-        for (NpcSkills.Skill sk : NpcSkills.Skill.values()) {
-            int l = npc.skills.level(sk);
-            b.append("\n ").append(sk.label).append(' ').append("#".repeat(l)).append("-".repeat(NpcSkills.MAX - l))
-                    .append(' ').append(l).append(" (").append(Math.round(npc.skills.progress(sk) * 100)).append("% to next)");
+        // every shared skill she has anything in, the six her work uses first
+        java.util.Set<String> keys = new java.util.LinkedHashSet<>();
+        for (NpcSkills.Skill sk : NpcSkills.Skill.values()) keys.add(sk.key);
+        keys.addAll(npc.skills.known().keySet());
+        for (String key : keys) {
+            com.zomboidcraft.skills.Skill shared = shared(key);
+            String label = shared != null ? shared.displayName() : key;
+            int l = npc.skills.level(key);
+            b.append("\n ").append(label).append(' ').append("#".repeat(l)).append("-".repeat(NpcSkills.MAX - l))
+                    .append(' ').append(l).append(" (").append(Math.round(npc.skills.progress(key) * 100)).append("% to next");
+            int boost = npc.skills.boost(key);
+            b.append(boost > 1 ? ", book x" + boost + ")" : ")");
         }
         return b.toString();
     }
 
     private static int skill(CommandContext<CommandSourceStack> ctx, String name, int level) throws CommandSyntaxException {
         NpcEntity npc = target(ctx.getSource().getPlayerOrException());
-        NpcSkills.Skill sk = java.util.Arrays.stream(NpcSkills.Skill.values()).filter(v -> v.name().equalsIgnoreCase(name)).findFirst().orElse(null);
-        if (npc == null || sk == null) {
-            ctx.getSource().sendFailure(Component.literal(npc == null ? "No companion near you" : "Skills: " + String.join(", ", names(NpcSkills.Skill.values()))));
+        // the shared skill's name (aiming, first_aid...), or the old short names her work used (aim, scavenging, farming)
+        NpcSkills.Skill old = java.util.Arrays.stream(NpcSkills.Skill.values()).filter(v -> v.name().equalsIgnoreCase(name)).findFirst().orElse(null);
+        com.zomboidcraft.skills.Skill sk = shared(old != null ? old.key : name.toUpperCase(java.util.Locale.ROOT));
+        if (npc == null || sk == null && old == null) {
+            ctx.getSource().sendFailure(Component.literal(npc == null ? "No companion near you"
+                    : "Skills: " + String.join(", ", names(com.zomboidcraft.skills.Skill.values()))));
             return 0;
         }
-        npc.skills.set(sk, level);
-        ctx.getSource().sendSuccess(() -> Component.literal("Her " + sk.label + " is " + level + " now"), false);
+        String key = sk != null ? sk.name() : old.key, label = sk != null ? sk.displayName() : old.label;
+        npc.skills.set(key, level);
+        ctx.getSource().sendSuccess(() -> Component.literal("Her " + label + " is " + level + " now"), false);
         return 1;
+    }
+
+    /** The shared skill by its name, or null (a skill this build doesn't have yet). */
+    private static com.zomboidcraft.skills.Skill shared(String key) {
+        try {
+            return com.zomboidcraft.skills.Skill.valueOf(key);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 
     private static String capital(String s) {

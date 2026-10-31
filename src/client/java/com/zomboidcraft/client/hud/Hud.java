@@ -108,6 +108,7 @@ public final class Hud {
     private static void over(GuiGraphicsExtractor g, DeltaTracker delta) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null || player.isSpectator()) return;
+        com.zomboidcraft.client.survival.SleepClient.render(g, dt);
         int top = WatchHud.render(g);
         MoodleHud.render(g, top);
         WeaponHud.render(g, delta);

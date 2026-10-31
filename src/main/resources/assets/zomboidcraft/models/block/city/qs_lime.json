@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "qs_lime": "zomboidcraft:block/city/qs_lime",
+    "particle": "zomboidcraft:block/city/qs_lime"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        0.6,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#qs_lime",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#qs_lime",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#qs_lime",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#qs_lime",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#qs_lime"
+        },
+        "down": {
+          "texture": "#qs_lime",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

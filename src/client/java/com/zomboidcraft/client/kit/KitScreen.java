@@ -451,6 +451,7 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
         if (page == Page.SUPPLIES && supplies.scrolled(mx, my, sy)) return true;
         if (page == Page.BENCH && bench.scrolled(mx, my, sy)) return true;
         if (page == Page.MAP && map.scrolled(mx, my, sy)) return true;
+        if (page == Page.SKILLS && skills.scrolled(mx, my, sy)) return true;
         return true;
     }
 
@@ -482,6 +483,13 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
         }
         if (event.key() == InputConstants.KEY_F && hover != null && hover.slot() >= 0 && KitItems.weapon(hover.card())) {
             inspect(hover.slot());
+            return true;
+        }
+        // patch a piece of clothing, or rip it into strips (clothing/Tailoring)
+        if ((event.key() == InputConstants.KEY_P || event.key() == InputConstants.KEY_T) && hover != null && hover.slot() >= 0
+                && com.zomboidcraft.clothing.Clothes.of(hover.card()) != null) {
+            int action = event.key() == InputConstants.KEY_P ? com.zomboidcraft.clothing.Tailoring.PATCH : com.zomboidcraft.clothing.Tailoring.RIP;
+            button(com.zomboidcraft.combat.Bench.TAILOR + action * com.zomboidcraft.clothing.Tailoring.SLOTS + hover.slot());
             return true;
         }
         if (page == Page.SUPPLIES && supplies.keyPressed(event)) return true;

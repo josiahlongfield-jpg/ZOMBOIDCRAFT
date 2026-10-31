@@ -238,6 +238,7 @@ public class KitUiTest implements FabricClientGameTest {
             beltHudTest(ctx, sp);
             mapTest(ctx);
             bookTest(sp);
+            companionTest(ctx, sp);
             spawnPickerTest(ctx, sp);
             pauseOptions(ctx, "after the kit");
         }
@@ -778,6 +779,119 @@ public class KitUiTest implements FabricClientGameTest {
     }
 
     /** A skill book read for your band multiplies the XP you earn (SkillBooks). */
+    /** A companion's page, gear and diary, and the middle-click order wheel (kit/CompanionScreen, kit/OrderWheel). */
+    private static void companionTest(ClientGameTestContext ctx, TestSingleplayerContext sp) {
+        sp.getServer().runCommand("give @a zomboidcraft:hoodie");
+        sp.getServer().runCommand("give @a zomboidcraft:work_boots");
+        sp.getServer().runCommand("give @a zomboidcraft:jeans");
+        sp.getServer().runOnServer(s -> {
+            ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+            var level = (net.minecraft.server.level.ServerLevel) p.level();
+            var npc = com.zomboidcraft.npc.Npcs.NPC.create(level, net.minecraft.world.entity.EntitySpawnReason.COMMAND);
+            var look = p.getLookAngle().multiply(1, 0, 1).normalize().scale(2.2);
+            npc.setModel("dark_elf", "raw");
+            npc.snapTo(p.getX() + look.x, p.getY(), p.getZ() + look.z, p.getYRot() + 180f, 0f);
+            npc.born(p);
+            level.addFreshEntity(npc);
+        });
+        ctx.waitTicks(30);
+        for (com.zomboidcraft.client.kit.CompanionScreen.Tab tab : com.zomboidcraft.client.kit.CompanionScreen.Tab.values()) {
+            ctx.runOnClient(mc -> {
+                var npcs = mc.level.getEntitiesOfClass(com.zomboidcraft.npc.NpcEntity.class, mc.player.getBoundingBox().inflate(8));
+                if (!npcs.isEmpty()) mc.gui.setScreen(new com.zomboidcraft.client.kit.CompanionScreen(npcs.get(0), tab));
+            });
+            ctx.waitTicks(30);
+            LOG.info("ZCUI companion {}: screen {}", tab, ctx.computeOnClient(mc -> mc.gui.screen() == null ? "none" : mc.gui.screen().getClass().getSimpleName()));
+            ctx.takeScreenshot("companion-" + tab.name().toLowerCase(java.util.Locale.ROOT));
+        }
+        // a clip of her portrait: she walks off in the world while her page keeps her in her idle facing you; turned
+        // round by a drag, zoomed in and out, then asked to sit
+        com.zomboidcraft.client.kit.CompanionScreen[] page = new com.zomboidcraft.client.kit.CompanionScreen[1];
+        ctx.runOnClient(mc -> {
+            var npcs = mc.level.getEntitiesOfClass(com.zomboidcraft.npc.NpcEntity.class, mc.player.getBoundingBox().inflate(8));
+            if (!npcs.isEmpty()) mc.gui.setScreen(page[0] = new com.zomboidcraft.client.kit.CompanionScreen(npcs.get(0),
+                    com.zomboidcraft.client.kit.CompanionScreen.Tab.HER));
+        });
+        sp.getServer().runOnServer(s -> s.getAllLevels().forEach(l -> l.getEntities(com.zomboidcraft.npc.Npcs.NPC, n -> true)
+                .forEach(n -> n.getNavigation().moveTo(n.getX() + 3, n.getY(), n.getZ() + 1, 1.0))));
+        for (int f = 0; f < 40 && page[0] != null; f++) {
+            float spin = f < 24 ? f * 15f : 0f, zoom = f < 24 ? 1f : f < 32 ? 1f + (f - 23) * 0.15f : 2.2f - (f - 31) * 0.15f;
+            int at = f;
+            ctx.runOnClient(mc -> {
+                page[0].view(spin, zoom);
+                if (at == 34) page[0].pose(0);
+            });
+            ctx.waitTicks(3);
+            ctx.takeScreenshot(String.format("companion-clip-%02d", f));
+        }
+        for (int f = 40; f < 52 && page[0] != null; f++) {
+            ctx.waitTicks(4);
+            ctx.takeScreenshot(String.format("companion-clip-%02d", f));
+        }
+        ctx.runOnClient(mc -> {
+            var npcs = mc.level.getEntitiesOfClass(com.zomboidcraft.npc.NpcEntity.class, mc.player.getBoundingBox().inflate(8));
+            if (!npcs.isEmpty()) mc.gui.setScreen(new com.zomboidcraft.client.kit.OrderWheel(npcs.get(0)));
+        });
+        ctx.waitTicks(10);
+        ctx.takeScreenshot("companion-wheel");
+        ctx.runOnClient(mc -> mc.gui.setScreen(null));
+        bondsTest(ctx, sp);
+        sp.getServer().runCommand("zc npc clear");
+    }
+
+    /** Bonding (Josiah 2026-10-30): the prompt on a first G, then K's selection of two companions, sliding, and a pick. */
+    private static void bondsTest(ClientGameTestContext ctx, TestSingleplayerContext sp) {
+        sp.getServer().runOnServer(s -> {
+            ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+            var level = (net.minecraft.server.level.ServerLevel) p.level();
+            var npc = com.zomboidcraft.npc.Npcs.NPC.create(level, net.minecraft.world.entity.EntitySpawnReason.COMMAND);
+            var look = p.getLookAngle().multiply(1, 0, 1).normalize();
+            npc.setModel("dark_elf", "raw");
+            npc.snapTo(p.getX() + look.x * 2.2 - look.z * 1.5, p.getY(), p.getZ() + look.z * 2.2 + look.x * 1.5, p.getYRot() + 180f, 0f);
+            npc.born(p);
+            level.addFreshEntity(npc);
+        });
+        ctx.waitTicks(20);
+        ctx.runOnClient(mc -> {
+            var npcs = mc.level.getEntitiesOfClass(com.zomboidcraft.npc.NpcEntity.class, mc.player.getBoundingBox().inflate(8));
+            if (!npcs.isEmpty()) mc.gui.setScreen(new BondPrompt(npcs.get(0), CompanionScreen.Tab.HER));
+        });
+        ctx.waitTicks(10);
+        ctx.takeScreenshot("bonds-prompt");
+        ctx.runOnClient(mc -> {
+            if (mc.gui.screen() instanceof BondPrompt prompt) prompt.answer(true);
+        });
+        ctx.waitTicks(10);
+        ctx.runOnClient(mc -> mc.gui.setScreen(null));
+        // the second one bonded on the server too, then wait for the list to come round
+        sp.getServer().runOnServer(s -> {
+            ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+            ((net.minecraft.server.level.ServerLevel) p.level()).getEntities(com.zomboidcraft.npc.Npcs.NPC, n -> true)
+                    .forEach(n -> n.bonds.add(p.getUUID()));
+        });
+        ctx.waitTicks(50);
+        String bonded = ctx.computeOnClient(mc -> String.valueOf(Bonds.companions(mc).size()));
+        LOG.info("ZCUI bonds: {}", bonded);
+        ctx.runOnClient(mc -> Bonds.open(mc));
+        BondsScreen[] sel = new BondsScreen[1];
+        ctx.runOnClient(mc -> sel[0] = mc.gui.screen() instanceof BondsScreen b ? b : null);
+        for (int f = 0; f < 30 && sel[0] != null; f++) {
+            int at = f;
+            ctx.runOnClient(mc -> {
+                if (at == 8) sel[0].slide(1);
+                if (at == 20) sel[0].slide(-1);
+            });
+            ctx.waitTicks(2);
+            ctx.takeScreenshot(String.format("bonds-clip-%02d", f));
+        }
+        ctx.runOnClient(mc -> {
+            if (sel[0] != null) sel[0].pick();
+        });
+        ctx.waitTicks(20);
+        ctx.takeScreenshot("bonds-clip-30");
+        ctx.runOnClient(mc -> mc.gui.setScreen(null));
+    }
+
     private static void bookTest(TestSingleplayerContext sp) {
         sp.getServer().runOnServer(s -> {
             ServerPlayer p = s.getPlayerList().getPlayers().get(0);

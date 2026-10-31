@@ -101,6 +101,8 @@ public final class NpcSkin {
     public final Map<String, Clip> clips = new HashMap<>();
     /** How far the heels lift her (metres): she's dropped this much with them off. */
     public final float heel;
+    /** Her height at rest (metres, the top of her highest mesh), so her page can frame her head to foot. */
+    public final float top;
     private final Map<String, byte[]> images = new HashMap<>();
     private final Map<String, Identifier> textures = new HashMap<>();
 
@@ -317,6 +319,13 @@ public final class NpcSkin {
             }
         }
         heel = body < Float.MAX_VALUE && shoes < Float.MAX_VALUE ? Math.max(0, body - shoes) : 0;
+        float high = 0;
+        for (Group g : groups) {
+            for (int v = 0; v < g.vertices; v++) {
+                high = Math.max(high, g.pos[v * 3 + 1]);
+            }
+        }
+        top = high > 0.5f ? high : 1.85f;
     }
 
     /** PNG straight in (it keeps its alpha); JPEG through Java's reader. */

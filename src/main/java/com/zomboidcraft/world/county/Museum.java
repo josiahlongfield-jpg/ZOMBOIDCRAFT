@@ -421,7 +421,8 @@ final class Museum {
         // the lamps on the cheek walls, litter and the barricade's leavings on the deck
         for (int x : new int[] {QX0 - 1, QX1 + 1}) {
             set(x, 5, STEP_Z, "cv_lamp_post");
-            set(x, 6, STEP_Z, c.power && chance() < 0.5 ? "cv_lamp_globe_lit" : "cv_lamp_globe");
+            boolean roll = c.power && chance() < 0.5;  // the old dead-bulb roll, kept so everything after it lands where it did: every lamp works now
+            set(x, 6, STEP_Z, "cv_lamp_globe_lit");
         }
         for (int x = QX0 + 2; x <= QX1 - 2; x++) {
             if (chance() < 0.08) {

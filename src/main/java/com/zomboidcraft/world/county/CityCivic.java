@@ -121,7 +121,7 @@ final class CityCivic {
         p.set(x, 1, z, "lamp_base");
         p.set(x, 2, z, "cv_lamp_post");
         p.set(x, 3, z, "cv_lamp_post");
-        p.set(x, 4, z, lit ? "cv_lamp_globe_lit" : "cv_lamp_globe");
+        p.set(x, 4, z, "cv_lamp_globe_lit");  // every lamp works now; lit is the old roll's answer
     }
 
     /** A raised stone bed three blocks square with what grew wild in it. */
@@ -328,7 +328,8 @@ final class CityCivic {
         // a lamp at each corner of the pedestal
         for (int[] c : new int[][] {{-1, -1}, {1, -1}, {-1, 1}, {1, 1}}) {
             if (chance() < 0.6) {
-                out.set(cx + c[0], 2, cz + c[1], chance() < 0.3 ? "cv_lamp_globe" : "cv_lamp_globe_lit");
+                boolean roll = chance() < 0.3;  // the old dead-bulb roll, kept so everything after it lands where it did: every lamp works now
+                out.set(cx + c[0], 2, cz + c[1], "cv_lamp_globe_lit");
             }
         }
     }
@@ -797,7 +798,8 @@ final class CityCivic {
         for (int lx : new int[] {ex - 3, ex + 4}) {
             p.set(lx, 1, z0 - 1, "cv_lamp_post");
             p.set(lx, 2, z0 - 1, "cv_lamp_post");
-            p.set(lx, 3, z0 - 1, chance() < 0.3 ? "cv_lamp_globe_lit" : "cv_lamp_globe");
+            boolean roll = chance() < 0.3;  // the old dead-bulb roll, kept so everything after it lands where it did: every lamp works now
+            p.set(lx, 3, z0 - 1, "cv_lamp_globe_lit");
         }
         Civic civic = new Civic(p, rng);
         civic.flagpole(2, 1, 10);

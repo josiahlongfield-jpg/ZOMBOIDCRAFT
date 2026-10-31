@@ -82,7 +82,7 @@ public final class NpcWork {
 
     /** What her body's doing, for the client's clips and poses (synced through NpcEntity.ACTION). */
     public static final int NONE = 0, SLEEP = 1, SIT = 2, KNEEL = 3, HAMMER = 4, DIG = 5, SEARCH = 6, LOOKOUT = 7, COOKING = 8,
-            HUG = 9, KISS = 10, SEARCH_LOW = 11;
+            HUG = 9, KISS = 10, SEARCH_LOW = 11, POSE = 12, FIDGET = 13, COWER = 14;
 
     /** How far from home her jobs reach, where the stores are, and where a scavenger goes looking. */
     static final int HOME_RADIUS = 20, STORE_RADIUS = 12, SCAVENGE_MIN = 20, SCAVENGE_MAX = 64;
@@ -90,7 +90,26 @@ public final class NpcWork {
     BlockPos home;
     Job job = Job.NONE;
     boolean nightShift;
-    final SimpleContainer pack = new SimpleContainer(9);
+    /** What she carries: nine slots, more with a backpack on (NpcCare.kit). */
+    SimpleContainer pack = new SimpleContainer(NpcCare.BASE_PACK);
+    /** The backpack she's wearing, or EMPTY. */
+    ItemStack bag = ItemStack.EMPTY;
+    private final NpcEntity npc;
+
+    NpcWork(NpcEntity npc) {
+        this.npc = npc;
+    }
+
+    /** Makes her pack this many slots, keeping what's in it; what no longer fits drops at her feet. */
+    void resize(NpcEntity npc, int size) {
+        if (size == pack.getContainerSize()) return;
+        SimpleContainer next = new SimpleContainer(size);
+        for (ItemStack s : pack.removeAllItems()) {
+            ItemStack left = next.addItem(s);
+            if (!left.isEmpty() && npc.level() instanceof ServerLevel level) npc.spawnAtLocation(level, left);
+        }
+        pack = next;
+    }
     /** Containers she's already searched (BlockPos longs), the oldest forgotten past 300. */
     final Set<Long> searched = new LinkedHashSet<>();
     boolean asleep;
@@ -195,8 +214,13 @@ public final class NpcWork {
         return count(pack, want) > 0;
     }
 
+    /** Nothing in her pack for the stores: it's empty, or all she has is what she keeps on her (NpcCare.keeps). */
     boolean packEmpty() {
-        return pack.isEmpty();
+        for (int i = 0; i < pack.getContainerSize(); i++) {
+            ItemStack s = pack.getItem(i);
+            if (!s.isEmpty() && !NpcCare.keeps(npc, s)) return false;
+        }
+        return true;
     }
 
     /** Whether everything in her pack is of this kind (an empty pack counts). */
@@ -208,17 +232,17 @@ public final class NpcWork {
         return true;
     }
 
-    /** Puts everything in her pack into the stores; what doesn't fit stays with her. */
+    /** Puts everything in her pack into the stores but what she keeps on her; what doesn't fit stays with her. */
     void deposit(ServerLevel level) {
         for (BlockPos pos : stores(level)) {
             Container c = container(level, pos);
             if (c == null) continue;
             for (int i = 0; i < pack.getContainerSize(); i++) {
                 ItemStack s = pack.getItem(i);
-                if (!s.isEmpty()) pack.setItem(i, HopperBlockEntity.addItem(null, c, s, null));
+                if (!s.isEmpty() && !NpcCare.keeps(npc, s)) pack.setItem(i, HopperBlockEntity.addItem(null, c, s, null));
             }
             c.setChanged();
-            if (pack.isEmpty()) return;
+            if (packEmpty()) return;
         }
     }
 

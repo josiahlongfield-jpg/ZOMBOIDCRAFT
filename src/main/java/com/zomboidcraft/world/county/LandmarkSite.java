@@ -54,6 +54,10 @@ final class LandmarkSite extends Site {
             new CampBlackPine(p, out).build();
             return;
         }
+        if (p.variant.startsWith("shipyard@")) {
+            new Shipyard(p, out).build();
+            return;
+        }
         if (p.variant.startsWith("ravenrock@")) {
             new Ravenrock(p, out).build();
             return;
@@ -88,6 +92,10 @@ final class LandmarkSite extends Site {
         }
         if (variant("university")) {
             new University(lot(0, 0, w, d, 0), rng, w, d).build();
+            return;
+        }
+        if (variant("foundry")) {
+            new Foundry(lot(0, 0, w, d, 0), rng, w, d).build();
             return;
         }
         if (variant("civic")) {

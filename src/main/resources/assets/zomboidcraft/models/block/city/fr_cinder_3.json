@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fr_cinder": "zomboidcraft:block/city/fr_cinder",
+    "particle": "zomboidcraft:block/city/fr_cinder"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        12,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fr_cinder",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#fr_cinder",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#fr_cinder",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#fr_cinder",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#fr_cinder"
+        },
+        "down": {
+          "texture": "#fr_cinder",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

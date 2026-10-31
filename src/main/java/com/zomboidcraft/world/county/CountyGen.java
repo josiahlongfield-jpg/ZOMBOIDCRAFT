@@ -237,6 +237,12 @@ public final class CountyGen {
             double r = rng.nextDouble();
             return r < 0.5 ? "minecraft:mud" : r < 0.8 ? "minecraft:gravel" : "minecraft:clay";
         }
+        // the reservoir's bathtub ring: the pale band of rock and lime left bare above the water
+        // as it drew down, the way the reservoir photos show it
+        if (!c.water && county.terrain.water(x, z) == Terrain.RESERVOIR && top > Terrain.RESERVOIR && top <= Terrain.RESERVOIR + 4) {
+            double r = rng.nextDouble();
+            return r < 0.45 ? "minecraft:calcite" : r < 0.75 ? "minecraft:diorite" : r < 0.9 ? "minecraft:tuff" : "minecraft:gravel";
+        }
         if (c.shore) {
             return rng.nextDouble() < 0.6 ? "minecraft:mud" : "minecraft:coarse_dirt";
         }

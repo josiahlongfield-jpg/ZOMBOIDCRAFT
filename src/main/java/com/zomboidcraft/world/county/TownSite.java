@@ -56,7 +56,9 @@ final class TownSite extends Site {
             new Decay(out, rng.nextLong(), Math.max(0, c[0]), Math.min(w - 1, c[2]), Math.max(0, c[1]), Math.min(d - 1, c[3]), 30).run();
         }
         kit.roadWeeds(0.2);
+        welcome();
         shelter();
+        homes.finish();
     }
 
     /** A post office as a shelter host: the shelter's stair comes up in its workroom. */
@@ -307,6 +309,178 @@ final class TownSite extends Site {
         out.set(x, 2, z, rng.nextDouble() < 0.1 ? "sign_post" : "stop_sign[facing=" + facing(tx, tz) + "]");
     }
 
+    /**
+     * The traffic signals where two straight streets cross at (cx, cz), the way the town photos
+     * have them (refs/town/courthouse 01): a galvanised pole on each sidewalk corner, its mast arm
+     * reaching out over the street that corner fronts, the dead three-lamp heads hung from it facing
+     * the traffic coming in, the street's name blade clamped on the arm, the pedestrian heads on the
+     * poles, the controller cabinet on one corner with its door hanging open. One head in a few hangs
+     * off a single bracket; now and then one lies smashed on the road under its arm. ew is the
+     * street along x (its name blade's key), ns the one along z. Rolls its own dice, so the town
+     * round it comes out as it always did.
+     */
+    private void signals(double cx, double cz, Kit.Style ew, String ewName, Kit.Style ns, String nsName) {
+        SplittableRandom g = new SplittableRandom(Noise.hash(p.seed, (int) cx * 31 + 0x5161, (int) cz));
+        double oz = ew.half + ew.verge + 1.5, ox = ns.half + ns.verge + 1.5;
+        // {sx, sz, arm dx, arm dz}: NE and SW reach over the street along x, NW and SE over the one along z
+        int[][] corners = {{1, -1, 0, 1}, {-1, 1, 0, -1}, {-1, -1, 1, 0}, {1, 1, -1, 0}};
+        boolean cabinet = false;
+        for (int[] c : corners) {
+            int[] at = walkNear((int) Math.floor(cx + c[0] * ox), (int) Math.floor(cz + c[1] * oz));
+            if (at == null) {
+                continue;
+            }
+            int x = at[0], z = at[1], ax = c[2], az = c[3];
+            String arm = facing(ax, az), axis = ax != 0 ? "x" : "z";
+            // the heads face back along the street the arm crosses, toward the traffic coming in on this side
+            String heads = ax != 0 ? facing(0, c[1]) : facing(c[0], 0);
+            String blade = ax != 0 ? nsName : ewName;
+            int reach = (int) Math.round(ax != 0 ? Math.abs(x + 0.5 - cx) : Math.abs(z + 0.5 - cz));
+            out.set(x, 1, z, "ts_pole_base[facing=" + arm + "]");
+            out.set(x, 2, z, "ts_pole");
+            out.set(x, 3, z, "ts_pole_ped[facing=" + arm + "]");  // to the people waiting across the street it crosses
+            for (int y = 4; y <= 6; y++) {
+                out.set(x, y, z, "ts_pole");
+            }
+            out.set(x, 7, z, "ts_pole_arm[facing=" + arm + "]");
+            for (int k = 1; k <= reach; k++) {
+                int x1 = x + ax * k, z1 = z + az * k;
+                if (!inside(x1, z1)) {
+                    break;
+                }
+                out.set(x1, 7, z1, k == reach ? "ts_arm_end[facing=" + arm + "]"
+                        : k == 2 ? "ts_arm_sign_" + blade + "[axis=" + axis + "]" : "ts_arm[axis=" + axis + "]");
+                if (k == 3 || (k == reach - 1 && k > 4)) {
+                    double r = g.nextDouble();
+                    if (r < 0.08) {
+                        out.set(x1, 1, z1, "ts_head_down[facing=" + arm + "]");
+                    } else if (r < 0.2) {
+                        out.set(x1, 6, z1, "ts_head_swing[facing=" + heads + "]");
+                    } else {
+                        out.set(x1, 6, z1, "ts_head[facing=" + heads + "]");
+                    }
+                }
+            }
+            // the controller cabinet a step back from the first corner that has room
+            int bx = x + c[0], bz = z + c[1];
+            if (!cabinet && inside(bx, bz) && kit.use(bx, bz) == Kit.WALK && out.get(bx, 1, bz) == null) {
+                out.set(bx, 1, bz, "ts_cabinet[facing=" + facing(-c[0], 0) + "]");
+                cabinet = true;
+            }
+        }
+    }
+
+    /** The nearest clear sidewalk cell to (x, z), within two blocks, or null. */
+    private int[] walkNear(int x, int z) {
+        for (int r = 0; r <= 2; r++) {
+            for (int dx = -r; dx <= r; dx++) {
+                for (int dz = -r; dz <= r; dz++) {
+                    if (Math.max(Math.abs(dx), Math.abs(dz)) == r && kit.use(x + dx, z + dz) == Kit.WALK
+                            && out.get(x + dx, 1, z + dz) == null && out.get(x + dx, 7, z + dz) == null) {
+                        return new int[] {x + dx, z + dz};
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * The town's welcome board beside every road in from the county (refs/suburb/
+     * roadside-billboards), a little way in from the edge on the right of the traffic coming in,
+     * facing it; on about half of them someone has sprayed TURN BACK across it. Its own dice.
+     */
+    private void welcome() {
+        SplittableRandom g = new SplittableRandom(Noise.hash(p.seed, 0x3E1C, 0x0AE5));
+        for (Kit.Lane l : new ArrayList<>(kit.lanes)) {
+            if (l.style == Kit.Style.GRAVEL || l.style == Kit.Style.TRACK) {
+                continue;
+            }
+            for (int end = 0; end < 2; end++) {
+                int i = end == 0 ? 0 : l.xs.length - 1;
+                if (inside((int) Math.floor(l.xs[i]), (int) Math.floor(l.zs[i]))) {
+                    continue;  // not a road in from outside
+                }
+                // on the right of the way in if there's room there, else on the left, a little further in if need be
+                placed:
+                for (double in : new double[] {16, 10, 22, 28}) {
+                    double s = Math.min(in, l.length() - 3);
+                    double[] q = l.point(end == 0 ? s : l.length() - s);
+                    double tx = end == 0 ? q[2] : -q[2], tz = end == 0 ? q[3] : -q[3];  // the way in
+                    for (int side = 1; side >= -1; side -= 2) {
+                        double o = (l.style.reach() + 3) * side;
+                        int x = (int) Math.floor(q[0] - tz * o), z = (int) Math.floor(q[1] + tx * o);
+                        if (board(g, x, z, facing(-tx, -tz))) {
+                            break placed;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /** The welcome board's three columns centred on (x, z) facing the road, if the ground is clear. */
+    private boolean board(SplittableRandom g, int x, int z, String face) {
+        int lx = face.equals("north") ? 1 : face.equals("south") ? -1 : 0;
+        int lz = face.equals("east") ? 1 : face.equals("west") ? -1 : 0;
+        for (int k = -1; k <= 1; k++) {
+            int cx = x + lx * k, cz = z + lz * k;
+            byte u = kit.use(cx, cz);
+            if ((u != Kit.FREE && u != Kit.VERGE) || !weeds(out.get(cx, 1, cz)) || !weeds(out.get(cx, 2, cz)) || out.get(cx, 3, cz) != null) {
+                return false;
+            }
+        }
+        String kind = g.nextDouble() < 0.5 ? "spray" : "clean";
+        String[] cols = {"r", "m", "l"};
+        for (int k = -1; k <= 1; k++) {
+            int cx = x + lx * k, cz = z + lz * k;
+            out.set(cx, 1, cz, "we_" + kind + "_" + cols[k + 1] + "0[facing=" + face + "]");
+            out.set(cx, 2, cz, "we_" + kind + "_" + cols[k + 1] + "1[facing=" + face + "]");
+            kit.claim(cx, cz, cx, cz, Kit.BUILT);
+        }
+        return true;
+    }
+
+    /** Nothing there, or only grass and weeds a sign can stand in. */
+    private static boolean weeds(String b) {
+        return b == null || b.startsWith("minecraft:") && (b.contains("grass") || b.contains("fern") || b.contains("flower")
+                || b.contains("dandelion") || b.contains("poppy") || b.contains("bush") || b.contains("leaf_litter"));
+    }
+
+    /** True when every column of the box is open lawn with nothing standing on it yet. */
+    private boolean lawn(int x0, int z0, int x1, int z1) {
+        for (int x = x0; x <= x1; x++) {
+            for (int z = z0; z <= z1; z++) {
+                if (kit.use(x, z) != Kit.PARK || out.get(x, 1, z) != null) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * The one flashing signal over a country crossroads at (cx, cz): a span wire corner to corner
+     * between two wooden poles, the four-way head hung in the middle of it, red to every road.
+     */
+    private void flasher(int cx, int cz, int r) {
+        int[] a = {cx - r, cz - r}, b = {cx + r, cz + r};
+        for (int[] q : new int[][] {a, b}) {
+            if (!inside(q[0], q[1]) || kit.use(q[0], q[1]) == Kit.ROAD || out.get(q[0], 1, q[1]) != null) {
+                return;
+            }
+        }
+        for (int[] q : new int[][] {a, b}) {
+            for (int y = 1; y <= 7; y++) {
+                out.set(q[0], y, q[1], "pole_wood");
+            }
+            out.set(q[0], 8, q[1], "pole_top[axis=x]");
+        }
+        for (int k = 1; k < 2 * r; k++) {
+            out.set(cx - r + k, 7, cz - r + k, k == r ? "ts_flasher[facing=north]" : "ts_span[facing=north]");
+        }
+    }
+
     /** Quiet residential streets of older houses. */
     private void houses(List<Kit.Lane> streets, Homes.Mix mix, int minW, int maxW, int depth) {
         for (Kit.Lane l : streets) {
@@ -450,6 +624,7 @@ final class TownSite extends Site {
         }
         kit.powerLine(0, (int) cz - 6, w - 1, (int) cz - 6, 8, 24);
         kit.powerLine((int) cx + 6, 0, (int) cx + 6, d - 1, 8, 24);
+        flasher((int) cx, (int) cz, 5);
         stopSign(ns, false);
         stopSign(ns, true);
         kit.abandonedCars(we, 1.2);
@@ -587,6 +762,7 @@ final class TownSite extends Site {
         barricade(cross, along(cross, gx, gz + Kit.Style.MAIN.reach() + 5));
         stopSign(cross2n, false);
         stopSign(cross2s, true);
+        signals(gx, gz, Kit.Style.MAIN, "main", Kit.Style.STREET, "elm");
         for (Kit.Lane a : new Kit.Lane[] {alleyN, alleyS}) {
             kit.powerLine((int) a.xs[0], (int) a.zs[0] + 3, (int) a.xs[a.xs.length - 1], (int) a.zs[0] + 3, 8, 22);
         }
@@ -697,16 +873,41 @@ final class TownSite extends Site {
             townLamp(x, sq0z + 1, rng.nextDouble() < 0.3);
             townLamp(x, sq1z - 1, rng.nextDouble() < 0.3);
         }
-        // a FEMA aid station that didn't last: tents, crates, a barricade of buses
-        for (int i = 0; i < 4; i++) {
-            int tx = sq0x + 6 + i * 6, tz = (int) cz + 6;
-            if (kit.use(tx, tz) == Kit.PARK) {
-                for (int dx = 0; dx < 4; dx++) {
-                    for (int dz = 0; dz < 3; dz++) {
-                        out.set(tx + dx, 1 + (dz == 1 ? 1 : 0), tz + dz, "tarp_green");
-                    }
+        // a FEMA aid station that didn't last: a white triage tent, the supply tent, the shelter, on
+        // the lawn either side of the courthouse wherever the ground is clear (the Tents kit, as at
+        // the stadium and the camps; its own dice, so the town round it comes out as it did)
+        Tents aid = new Tents(world, new SplittableRandom(Noise.hash(p.seed, 0xA1D, 0x7E47)));
+        aid.hit = 0.6;
+        aid.lit = 0.05;
+        String[] uses = {"triage", "supply", "shelter"};
+        int pitched = 0;
+        for (int lx : new int[] {sq0x + 3, sq1x - 8}) {
+            for (int lz = (int) cz + 3; lz + 10 <= sq1z - 2 && pitched < uses.length; lz += 13) {
+                if (lawn(lx - 2, lz - 3, lx + 7, lz + 11)) {
+                    aid.tent(lx, lz, 6, 10, Tents.canvasFor(uses[pitched]), uses[pitched], 0.25);
+                    kit.claim(lx - 2, lz - 3, lx + 7, lz + 11, Kit.BUILT);
+                    pitched++;
                 }
-                out.set(tx + 1, 1, tz + 1, "crate");
+            }
+        }
+        // the iron railings round the square (refs/town/courthouse 01, 03), open where the paths come in
+        for (int x = sq0x; x <= sq1x; x++) {
+            for (int z = sq0z; z <= sq1z; z++) {
+                if (kit.use(x, z) != Kit.PARK || out.get(x, 1, z) != null) {
+                    continue;
+                }
+                // the lawn's edge: a cell with the sidewalk beside it
+                boolean edgeX = kit.use(x, z - 1) == Kit.WALK || kit.use(x, z + 1) == Kit.WALK;
+                boolean edgeZ = kit.use(x - 1, z) == Kit.WALK || kit.use(x + 1, z) == Kit.WALK;
+                if (!edgeX && !edgeZ) {
+                    continue;
+                }
+                int run = edgeX ? x - (int) cx : z - (int) cz;
+                if (Math.abs(run) <= 1) {
+                    continue;
+                }
+                boolean post = (edgeX && edgeZ) || Math.abs(run) == 2 || Math.floorMod(run, 4) == 0;
+                out.set(x, 1, z, post ? "cv_iron_post" : "cv_iron_fence[axis=" + (edgeX ? "x" : "z") + "]");
             }
         }
 
@@ -765,6 +966,11 @@ final class TownSite extends Site {
             kit.abandonedCars(l, 2.5);
         }
         core.add(new int[] {(int) (cx - outer), (int) (cz - outer), (int) (cx + outer), (int) (cz + outer)});
+        for (int sx = -1; sx <= 1; sx += 2) {
+            for (int sz = -1; sz <= 1; sz += 2) {
+                signals(cx + sx * ring, cz + sz * ring, Kit.Style.MAIN, "court", Kit.Style.MAIN, "main");
+            }
+        }
 
         // out past the ring road on the roads in: the sheriff and jail, the fire station
         double pastRing = Kit.Style.STREET.reach() + 12;

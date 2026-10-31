@@ -99,6 +99,9 @@ public final class NpcMind {
     }
 
     /** A sudden jolt: adrenaline up, and a little fear unless she's brave. */
+    /** Seconds left of being talked down (NpcBond.calm): the dead around her frighten her less meanwhile. */
+    int steadied;
+
     void jolt(float amount) {
         add(Need.ADRENALINE, amount);
         add(Need.FEAR, amount * 0.4f * (1f - 0.5f * trait(Trait.BRAVE)));
@@ -127,6 +130,11 @@ public final class NpcMind {
 
         // fear rises fast toward what's around her and settles slowly; brave ones feel less of it
         float target = (float) threat * (1f - 0.35f * trait(Trait.BRAVE)) + (get(Need.PAIN) > 60 ? 10f : 0f);
+        if (steadied > 0) {
+            // you talked her down: for a while what's around her frightens her less
+            steadied--;
+            target *= 0.6f;
+        }
         float fear = get(Need.FEAR);
         set(Need.FEAR, target > fear ? fear + (target - fear) * 0.5f : fear - 1.5f);
 

@@ -250,7 +250,8 @@ final class WaterfrontPier {
             for (int y = 1; y <= 6; y++) {
                 set(x, y, z, "wf_trim");
             }
-            set(x, 8, z, c.power && c.chance() < 0.6 ? "cv_lamp_globe_lit" : "cv_lamp_globe");
+            boolean roll = c.power && c.chance() < 0.6;  // the old dead-bulb roll, kept so everything after it lands where it did: every lamp works now
+            set(x, 8, z, "cv_lamp_globe_lit");
         }
         for (int z = BZ0; z <= BZ1; z++) {
             set(x, 7, z, "wf_trim");

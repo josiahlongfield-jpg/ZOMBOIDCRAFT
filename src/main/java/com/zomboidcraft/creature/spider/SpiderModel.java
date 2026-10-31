@@ -380,7 +380,6 @@ public final class SpiderModel {
         return false;
     }
 
-    /** The bone a vertex follows most. */
     /** A limb's point: the vertex furthest out of those its last bone carries, in that bone's own frame. */
     private Vector3f furthest(int bone) {
         Vector3f best = new Vector3f(bindPos[bone]);
@@ -399,6 +398,7 @@ public final class SpiderModel {
         return inverse[bone].transformPosition(best, new Vector3f());
     }
 
+    /** The bone a vertex follows most. */
     public static int main(Group g, int v) {
         int best = 0;
         for (int k = 1; k < 4; k++) {

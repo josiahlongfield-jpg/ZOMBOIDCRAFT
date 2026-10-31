@@ -142,13 +142,48 @@ final class MallWings {
         }
         for (int x = LX0 - 6; x <= LX1 + 6; x++) {
             for (int z = NZ0 - 4; z < NZ0; z++) {
-                set(x, 5, z, z == NZ0 - 4 ? (power && chance() < 0.5 ? "tr_bulbs_on" : "tr_bulbs") : "stone_trim");
+                set(x, 5, z, z == NZ0 - 4 ? (power && chance() < 0.5 ? "tr_bulbs_on[axis=x]" : "tr_bulbs[axis=x]") : "stone_trim");
             }
         }
         for (int[] c : new int[][] {{LX0 - 6, NZ0 - 4}, {LX1 + 6, NZ0 - 4}}) {
             for (int y = 1; y <= 4; y++) {
                 set(c[0], y, c[1], "tx_column");
             }
+        }
+        // the front given some depth: a glazed lobby box over the doors up to the roof between two
+        // brick towers standing proud, precast piers every six along the rest, poster cases between them
+        for (int x = LX0 - 1; x <= LX1 + 1; x++) {
+            for (int y = 6; y < NTOP; y++) {
+                boolean mullion = x == LX0 - 1 || x == LX1 + 1 || Math.floorMod(x - LX0, 3) == 0 || y == up + 6 || y == 6;
+                set(x, y, NZ0, mullion ? "steel_mullion" : chance() < 0.08 ? "tx_glass_broken[axis=x]" : "tx_glass[axis=x]");
+            }
+        }
+        for (int[] t : new int[][] {{LX0 - 4, LX0 - 2}, {LX1 + 2, LX1 + 4}}) {
+            for (int x = t[0]; x <= t[1]; x++) {
+                for (int z = NZ0 - 2; z < NZ0; z++) {
+                    for (int y = 0; y <= NTOP + 4; y++) {
+                        set(x, y, z, y == NTOP + 4 ? "stone_trim" : y <= 1 ? "ml_brick" : y % 4 == 0 ? "ml_precast_band" : "ml_brick");
+                    }
+                }
+            }
+        }
+        for (int x = NX0 + 3; x <= NX1 - 3; x += 6) {
+            if (x >= LX0 - 5 && x <= LX1 + 5) {
+                continue;
+            }
+            for (int y = 0; y <= NTOP + 1; y++) {
+                set(x, y, NZ0 - 1, y == NTOP + 1 ? "stone_trim" : "ml_precast_band");
+            }
+            set(x + 2, 2, NZ0 - 1, "tr_poster_" + rng.nextInt(6) + "_lo[facing=north]");
+            set(x + 2, 3, NZ0 - 1, "tr_poster_" + rng.nextInt(6) + "_hi[facing=north]");
+            set(x + 2, 5, NZ0 - 1, lamp(0.3).equals("ceiling_light") ? "wall_lantern" : "wall_lantern_off");
+        }
+        // bollards and planters along the walk in front, a bench
+        for (int x = NX0 + 2; x <= NX1 - 2; x += 3) {
+            if (x >= LX0 - 6 && x <= LX1 + 6) {
+                continue;
+            }
+            set(x, 1, NZ0 - 4, x % 2 == 0 ? "om_bollard" : "om_planter");
         }
         // the letter board along the canopy's front, the name high on the wall over it
         String key = new String[] {"a", "b", "c"}[rng.nextInt(3)];
@@ -160,15 +195,15 @@ final class MallWings {
         }
         for (int x = LX0 - 2; x <= LX1 + 2; x++) {
             if (x < LX0 - 1 || x > LX0 + 13) {
-                set(x, 6, NZ0 - 4, "tr_mq_box");
-                set(x, 7, NZ0 - 4, "tr_mq_box");
+                set(x, 6, NZ0 - 4, "tr_mq_box[facing=north]");
+                set(x, 7, NZ0 - 4, "tr_mq_box[facing=north]");
             }
         }
         MallSigns.name(p, rng, "cinema", 6, 2, (LX0 + LX1) / 2 - 3, 12, NZ0 - 1, "north", power && chance() < 0.8);
-        for (int i = 0; i < 4; i++) {
-            int x = i < 2 ? LX0 - 5 + i * 3 : LX1 + 2 + (i - 2) * 3;
-            set(x, 2, NZ0 - 1, "tr_poster_" + rng.nextInt(6) + "_lo[facing=north]");
-            set(x, 3, NZ0 - 1, "tr_poster_" + rng.nextInt(6) + "_hi[facing=north]");
+        // the towers' faces carry the posters now showing
+        for (int x : new int[] {LX0 - 3, LX1 + 3}) {
+            set(x, 2, NZ0 - 3, "tr_poster_" + rng.nextInt(6) + "_lo[facing=north]");
+            set(x, 3, NZ0 - 3, "tr_poster_" + rng.nextInt(6) + "_hi[facing=north]");
         }
         for (int x = NX0 + 2; x < NX1 - 1; x += 4) {
             for (int z = NZ0 + 2; z < Mall.CZ0 - 2; z += 4) {
@@ -492,11 +527,11 @@ final class MallWings {
                 if (chance() < 0.12) {
                     continue;
                 }
-                set(x, 1, z, "store_table");
-                for (int[] c : new int[][] {{1, 0, 3}, {-1, 0, 1}, {0, 1, 2}, {0, -1, 0}}) {
-                    if (chance() < 0.75) {
-                        set(x + c[0], 1, z + c[1], (chance() < 0.15 ? "trade_folding_chair_tipped" : "store_chair") + "[facing=" + Bldg.DIRS[c[2]] + "]");
-                    }
+                // the fixed units, a laminate top and four seats on one frame; trays and cups left on the floor round some
+                set(x, 1, z, "ml_table_unit");
+                set(x + 2, 1, z, chance() < 0.85 ? "ml_table_unit" : "trade_folding_chair_tipped[facing=" + Bldg.DIRS[rng.nextInt(4)] + "]");
+                if (chance() < 0.3) {
+                    set(x + 1, 1, z + (chance() < 0.5 ? 1 : -1), chance() < 0.6 ? "paper" : "trash_bag[facing=" + Bldg.DIRS[rng.nextInt(4)] + "]");
                 }
             }
         }
@@ -506,9 +541,7 @@ final class MallWings {
                     set(x, 1, z, x != c[0] || z != c[1] ? "stone_trim" : "planter");
                 }
             }
-            if (chance() < 0.8) {
-                Trees.grow(Kit.canopy(p), Trees.Kind.YOUNG, c[0], 2, c[1], rng);
-            }
+            Mall.plant(p, rng, c[0], c[1], true);
         }
         // the doors out to the service road and the decks, in the middle of the south wall
         int dx0 = (FX0 + FX1) / 2 - 4;

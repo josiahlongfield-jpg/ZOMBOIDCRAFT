@@ -39,7 +39,24 @@ public final class NpcNet {
         }
     }
 
+    /**
+     * A line from a character's own lines.txt (NpcMoments), to the players near: the client plays her clip
+     * (config/zomboidcraft/npc/MODEL/voice/CLIP.ogg) from her if it has it, and shows the words if subtitles are on.
+     */
+    public record Voice(int npc, String model, String clip, String speaker, String text) implements CustomPacketPayload {
+        public static final Type<Voice> TYPE = new Type<>(ZomboidCraft.id("npc_voice"));
+        public static final StreamCodec<RegistryFriendlyByteBuf, Voice> CODEC = StreamCodec.composite(
+                ByteBufCodecs.VAR_INT, Voice::npc, ByteBufCodecs.STRING_UTF8, Voice::model, ByteBufCodecs.STRING_UTF8, Voice::clip,
+                ByteBufCodecs.STRING_UTF8, Voice::speaker, ByteBufCodecs.STRING_UTF8, Voice::text, Voice::new);
+
+        @Override
+        public Type<? extends CustomPacketPayload> type() {
+            return TYPE;
+        }
+    }
+
     static void register() {
+        PayloadTypeRegistry.clientboundPlay().register(Voice.TYPE, Voice.CODEC);
         PayloadTypeRegistry.serverboundPlay().register(Toggle.TYPE, Toggle.CODEC);
         PayloadTypeRegistry.serverboundPlay().register(Talk.TYPE, Talk.CODEC);
         ServerPlayNetworking.registerGlobalReceiver(Talk.TYPE, (payload, context) -> {
@@ -49,9 +66,18 @@ public final class NpcNet {
                         || npc.distanceToSqr(player) >= 4 * 4) {
                     return;
                 }
+                npc.attend(player);
                 NpcBond.Act act = NpcBond.Act.of(payload.act());
                 if (act != null) {
                     npc.bond.act(npc, player, act);
+                } else if (payload.act() == TAKE_GUN) {
+                    takeGun(npc, player);
+                } else if (payload.act() == CALM) {
+                    npc.bond.calm(npc, player);
+                } else if (payload.act() == OFFER_TAKE || payload.act() == OFFER_KEEP) {
+                    NpcCare.answer(npc, player, payload.act() == OFFER_TAKE);
+                } else if (payload.act() == CARRYING) {
+                    NpcCare.tellCarrying(npc, player);
                 } else if (payload.act() >= NpcWardrobe.LIKE) {
                     npc.wardrobe.answer(npc, player, payload.act());
                 }
@@ -69,6 +95,30 @@ public final class NpcNet {
                         .withStyle(ChatFormatting.GRAY));
             });
         });
+    }
+
+    /** The talk panel's "take her weapon" act: what she holds goes to your hand if it's empty, else your pack, else your feet. */
+    public static final int TAKE_GUN = 50;
+    /** The talk panel's "calm her down" (NpcBond.calm). */
+    public static final int CALM = 51;
+    /** The talk panel's answers about something she found for you (NpcCare): hand it over, or she keeps it. */
+    public static final int OFFER_TAKE = 52, OFFER_KEEP = 53;
+    /** The talk panel's "what are you carrying?" (NpcCare.tellCarrying). */
+    public static final int CARRYING = 54;
+
+    private static void takeGun(NpcEntity npc, ServerPlayer player) {
+        net.minecraft.world.item.ItemStack held = npc.getMainHandItem();
+        if (held.isEmpty()) {
+            player.sendOverlayMessage(Component.literal("She isn't holding anything").withStyle(ChatFormatting.GRAY));
+            return;
+        }
+        npc.setItemSlot(net.minecraft.world.entity.EquipmentSlot.MAINHAND, net.minecraft.world.item.ItemStack.EMPTY);
+        if (player.getMainHandItem().isEmpty()) {
+            player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, held);
+        } else if (!player.getInventory().add(held)) {
+            player.spawnAtLocation((net.minecraft.server.level.ServerLevel) player.level(), held);
+        }
+        npc.lines.sayLine(npc, NpcLines.Kind.REPLY, NpcWork.pick(npc, "Here. Take it.", "Fine, it's yours.", "Careful, it's loaded."));
     }
 
     private NpcNet() {

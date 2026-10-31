@@ -14,6 +14,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.util.DefaultRandomPos;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
@@ -27,6 +28,10 @@ final class NpcBrain {
     private static final double SHOOT_RANGE = 22, GUN_RANGE = 12;
     /** A zombie this close sends her running: closer when she's armed. */
     private static final double FLEE_ARMED = 3.0, FLEE_UNARMED = 9.0;
+    /** Closer than this she sprints; further she jogs. How near she runs to her player from, and how far behind him she stands. */
+    private static final double SPRINT_FROM = 4.0, REFUGE = 24.0, BEHIND = 1.8;
+    /** No zombie within this, and she'll hold still while you talk to her. */
+    private static final double ATTEND_SAFE = 5.0;
     /** Ticks to bring the gun up before the first shot, and to reload a magazine. */
     private static final int RAISE = 8, RELOAD = 50;
 
@@ -50,10 +55,56 @@ final class NpcBrain {
         return best;
     }
 
-    /** Runs from a zombie that's too close. */
+    /** Holds still for whoever is talking to her or has her page open, facing them, while no zombie is close. */
+    static final class Attend extends Goal {
+        private final NpcEntity npc;
+        private Player by;
+
+        Attend(NpcEntity npc) {
+            this.npc = npc;
+            setFlags(EnumSet.of(Flag.MOVE, Flag.LOOK));
+        }
+
+        @Override
+        public boolean canUse() {
+            by = npc.work.asleep ? null : npc.attendant();
+            return by != null && nearestZombie(npc, ATTEND_SAFE, false) == null;
+        }
+
+        @Override
+        public boolean canContinueToUse() {
+            return canUse();
+        }
+
+        @Override
+        public void start() {
+            npc.getNavigation().stop();
+        }
+
+        @Override
+        public void tick() {
+            npc.getLookControl().setLookAt(by, 30f, 30f);
+        }
+
+        @Override
+        public void stop() {
+            by = null;
+        }
+    }
+
+    /**
+     * Gets away from a zombie that's too close. Armed, she stands and fights (Shoot) and only steps back from one in arm's
+     * reach. Unarmed, she makes for the spot just behind the player she follows, on his side away from the zombie, and
+     * stays there; on her own she picks one way out (under a roof or toward home if she can) and keeps to it rather than
+     * darting about. She jogs, and sprints only with a zombie right on her. In a panic, once she's as far as she can get,
+     * she crouches with her arms over her head for a few seconds (calming her down ends it).
+     */
     static final class Flee extends Goal {
         private final NpcEntity npc;
         private Zombie from;
+        private Vec3 to;
+        private boolean behind, armed;
+        private int repick, follow;
 
         Flee(NpcEntity npc) {
             this.npc = npc;
@@ -62,33 +113,160 @@ final class NpcBrain {
 
         @Override
         public boolean canUse() {
-            // fear pushes the distance out; in a panic she runs even with a gun in her hands
             if (npc.work.asleep) {
                 return false;
             }
-            double range = (gun(npc) != null && !npc.mind.panicking() ? FLEE_ARMED : FLEE_UNARMED) * npc.mind.flightScale();
-            from = nearestZombie(npc, range, false);
+            armed = NpcCare.armed(npc);
+            from = nearestZombie(npc, armed ? FLEE_ARMED : FLEE_UNARMED * npc.mind.flightScale(), false);
             if (from == null) {
                 return false;
             }
-            Vec3 away = DefaultRandomPos.getPosAway(npc, 14, 6, from.position());
-            if (away == null || away.distanceToSqr(from.position()) < from.distanceToSqr(npc)) {
+            double d = from.distanceToSqr(npc);
+            if (npc.attendant() != null && d > ATTEND_SAFE * ATTEND_SAFE) {
                 return false;
             }
-            npc.getNavigation().moveTo(away.x, away.y, away.z, 1.7 * npc.mind.pace());
+            if (armed) {
+                to = DefaultRandomPos.getPosAway(npc, 5, 3, from.position());
+                behind = false;
+                return to != null && npc.getNavigation().moveTo(to.x, to.y, to.z, 1.0);
+            }
+            if (!refuge() && !escape()) {
+                // nowhere better to go: if she's frightened enough, she freezes where she is
+                if (npc.mind.panicking() && d > SPRINT_FROM * SPRINT_FROM) {
+                    cower();
+                    return true;
+                }
+                return false;
+            }
             npc.mind.jolt(12f);
             npc.say(npc.mind.panicking() ? NpcLines.Kind.PANIC : NpcLines.Kind.FLEE);
             return true;
         }
 
+        /** The player she follows, if he's near enough to run to. */
+        private Player leader() {
+            Player p = npc.following ? npc.leader() : null;
+            return p != null && p.distanceToSqr(npc) < REFUGE * REFUGE ? p : null;
+        }
+
+        /** Just behind her player, on his side away from the zombie. */
+        private boolean refuge() {
+            Player p = leader();
+            if (p == null) {
+                return false;
+            }
+            Vec3 away = p.position().subtract(from.position()).multiply(1, 0, 1);
+            if (away.lengthSqr() < 1e-4) {
+                away = p.position().subtract(npc.position()).multiply(-1, 0, -1);
+            }
+            if (away.lengthSqr() < 1e-4) {
+                return false;
+            }
+            Vec3 spot = p.position().add(away.normalize().scale(BEHIND));
+            if (!npc.getNavigation().moveTo(spot.x, spot.y, spot.z, 1.0)) {
+                return false;
+            }
+            to = spot;
+            behind = true;
+            return true;
+        }
+
+        /** One way out: the best of a few spots away from the zombie, a roof over it or home close scoring higher. */
+        private boolean escape() {
+            Vec3 best = null;
+            double bestScore = -Double.MAX_VALUE, now = from.distanceToSqr(npc);
+            for (int i = 0; i < 6; i++) {
+                Vec3 c = DefaultRandomPos.getPosAway(npc, 14, 6, from.position());
+                if (c == null || c.distanceToSqr(from.position()) <= now) {
+                    continue;
+                }
+                double score = Math.sqrt(c.distanceToSqr(from.position()));
+                if (!npc.level().canSeeSky(net.minecraft.core.BlockPos.containing(c).above())) {
+                    score += 6;
+                }
+                if (npc.work.home != null) {
+                    score -= 0.3 * Math.sqrt(c.distanceToSqr(net.minecraft.world.phys.Vec3.atCenterOf(npc.work.home)));
+                }
+                if (score > bestScore) {
+                    bestScore = score;
+                    best = c;
+                }
+            }
+            if (best == null || !npc.getNavigation().moveTo(best.x, best.y, best.z, 1.0)) {
+                return false;
+            }
+            to = best;
+            behind = false;
+            repick = 40;
+            return true;
+        }
+
+        private void cower() {
+            npc.getNavigation().stop();
+            npc.cowerTicks = 60 + npc.getRandom().nextInt(41);
+            npc.say(NpcLines.Kind.PANIC);
+        }
+
         @Override
         public boolean canContinueToUse() {
-            return !npc.getNavigation().isDone() && from.isAlive() && from.distanceToSqr(npc) < 14 * 14;
+            if (from == null || !from.isAlive() || npc.work.asleep) {
+                return false;
+            }
+            double d = from.distanceToSqr(npc);
+            if (armed) {
+                return !npc.getNavigation().isDone() && d < 6 * 6;
+            }
+            return npc.cowerTicks > 0 || d < (FLEE_UNARMED + 5) * (FLEE_UNARMED + 5) * npc.mind.flightScale() * npc.mind.flightScale();
+        }
+
+        @Override
+        public void tick() {
+            double d = from.distanceToSqr(npc);
+            if (npc.cowerTicks > 0) {
+                npc.cowerTicks--;
+                npc.getNavigation().stop();
+                if (d < SPRINT_FROM * SPRINT_FROM * 0.5) {
+                    // it's on her: she bolts after all
+                    npc.cowerTicks = 0;
+                    if (!refuge()) escape();
+                }
+                return;
+            }
+            // a jog, unless it's right on her
+            npc.getNavigation().setSpeedModifier((d < SPRINT_FROM * SPRINT_FROM ? 1.6 : 1.0) * npc.mind.pace());
+            if (armed) {
+                return;
+            }
+            repick--;
+            if (behind) {
+                // stay behind him as he moves
+                if (++follow % 10 == 0 && !refuge() && !escape()) {
+                    behind = false;
+                }
+                if (npc.getNavigation().isDone()) {
+                    npc.getLookControl().setLookAt(from, 30f, 30f);
+                }
+                return;
+            }
+            if (leader() != null && follow++ % 20 == 0 && refuge()) {
+                return;
+            }
+            if (npc.getNavigation().isDone()) {
+                npc.getLookControl().setLookAt(from, 30f, 30f);
+                if (d < SPRINT_FROM * SPRINT_FROM && repick <= 0) {
+                    if (!escape() && npc.mind.panicking()) cower();
+                } else if (npc.mind.panicking() && d > SPRINT_FROM * SPRINT_FROM) {
+                    cower();
+                }
+            }
         }
 
         @Override
         public void stop() {
             from = null;
+            to = null;
+            behind = false;
+            npc.cowerTicks = 0;
         }
     }
 
@@ -97,6 +275,7 @@ final class NpcBrain {
         private final NpcEntity npc;
         private Zombie target;
         private int raised, cooldown;
+        private ItemStack lastGun;
 
         Shoot(NpcEntity npc) {
             this.npc = npc;
@@ -106,7 +285,7 @@ final class NpcBrain {
         @Override
         public boolean canUse() {
             // asleep she sees nothing; a zombie close by or her own alarm wakes her first
-            if (gun(npc) == null || npc.work.asleep) {
+            if (!NpcCare.armed(npc) || npc.work.asleep) {
                 return false;
             }
             target = nearestZombie(npc, SHOOT_RANGE, true);
@@ -115,7 +294,7 @@ final class NpcBrain {
 
         @Override
         public boolean canContinueToUse() {
-            return gun(npc) != null && target != null && target.isAlive() && target.distanceToSqr(npc) < SHOOT_RANGE * SHOOT_RANGE
+            return NpcCare.armed(npc) && target != null && target.isAlive() && target.distanceToSqr(npc) < SHOOT_RANGE * SHOOT_RANGE
                     && npc.getSensing().hasLineOfSight(target);
         }
 
@@ -151,12 +330,29 @@ final class NpcBrain {
             npc.setYBodyRot(npc.getYHeadRot());
             raised++;
             ZcConfig.GunStats stats = type.stats();
+            boolean endless = ZcConfig.get().companions.endlessAmmo;
+            ItemStack held = npc.getMainHandItem();
+            if (held != lastGun) {
+                // a different gun in her hands (a swap, or one you handed her): count what's in this one
+                lastGun = held;
+                npc.rounds = -1;
+                npc.reloadLeft = 0;
+            }
             if (npc.rounds < 0) {
-                npc.rounds = stats.magazineSize;
+                // endless, a full magazine; else what's really in the gun
+                npc.rounds = endless ? stats.magazineSize : NpcCare.loaded(held);
             }
             if (npc.reloadLeft > 0) {
                 if (--npc.reloadLeft == 0) {
-                    npc.rounds = stats.magazineSize;
+                    npc.rounds = endless ? stats.magazineSize : npc.rounds + NpcCare.draw(npc, type, type.capacity() - npc.rounds);
+                    if (!endless) NpcCare.setLoaded(held, npc.rounds);
+                }
+                return;
+            }
+            if (npc.rounds <= 0) {
+                if (endless || NpcCare.reserve(npc, type) > 0) {
+                    npc.reloadLeft = RELOAD;
+                    npc.say(NpcLines.Kind.RELOAD);
                 }
                 return;
             }
@@ -166,9 +362,16 @@ final class NpcBrain {
             fire(type, stats);
             // a person's pace, not the gun's top rate: short bursts from automatics, aimed shots otherwise
             cooldown = Math.max(type.fireDelay(), 4) + npc.getRandom().nextInt(6);
-            if (--npc.rounds <= 0) {
-                npc.reloadLeft = RELOAD;
-                npc.say(NpcLines.Kind.RELOAD);
+            npc.rounds--;
+            if (!endless) NpcCare.setLoaded(held, npc.rounds);
+            if (npc.rounds <= 0) {
+                if (endless || NpcCare.reserve(npc, type) > 0) {
+                    npc.reloadLeft = RELOAD;
+                    npc.say(NpcLines.Kind.RELOAD);
+                } else {
+                    npc.lines.sayLine(npc, NpcLines.Kind.RELOAD, NpcWork.pick(npc, "I'm out! I've got nothing left!",
+                            "Empty! I need rounds!", "That's my last one!"));
+                }
             }
         }
 
@@ -209,67 +412,6 @@ final class NpcBrain {
                     npc.mind.killed(npc);
                     npc.work.practise(npc, NpcSkills.Skill.AIM, 3f);
                 }
-            }
-        }
-    }
-
-    /** Walks over to a gun lying on the ground and takes it, when her hands are empty. */
-    static final class TakeGun extends Goal {
-        private final NpcEntity npc;
-        private ItemEntity item;
-
-        TakeGun(NpcEntity npc) {
-            this.npc = npc;
-            setFlags(EnumSet.of(Flag.MOVE));
-        }
-
-        @Override
-        public boolean canUse() {
-            if (!npc.getMainHandItem().isEmpty() || npc.work.asleep) {
-                return false;
-            }
-            item = null;
-            double best = Double.MAX_VALUE;
-            for (ItemEntity e : npc.level().getEntitiesOfClass(ItemEntity.class, npc.getBoundingBox().inflate(GUN_RANGE),
-                    e -> e.isAlive() && GunType.of(e.getItem()) != null)) {
-                double d = e.distanceToSqr(npc);
-                if (d < best) {
-                    best = d;
-                    item = e;
-                }
-            }
-            return item != null;
-        }
-
-        @Override
-        public boolean canContinueToUse() {
-            return item != null && item.isAlive() && npc.getMainHandItem().isEmpty();
-        }
-
-        @Override
-        public void start() {
-            npc.getNavigation().moveTo(item, 1.2);
-        }
-
-        @Override
-        public void stop() {
-            item = null;
-        }
-
-        @Override
-        public void tick() {
-            if (item == null) {
-                return;
-            }
-            if (item.distanceToSqr(npc) < 1.8 * 1.8) {
-                npc.setItemSlot(EquipmentSlot.MAINHAND, item.getItem().copy());
-                npc.say(NpcLines.Kind.GUN);
-                npc.rounds = -1;
-                npc.reloadLeft = 0;
-                item.discard();
-                item = null;
-            } else if (npc.getNavigation().isDone()) {
-                npc.getNavigation().moveTo(item, 1.2);
             }
         }
     }

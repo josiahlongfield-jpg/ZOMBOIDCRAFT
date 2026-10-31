@@ -36,6 +36,18 @@ public final class Builders {
             case LANDMARK -> {
                 if (p.variant.equals("dam")) {
                     new Dam(p, county, out).build();
+                } else if (p.variant.equals("boardwalk")) {
+                    new Boardwalk(p, county, out).build();
+                } else if (p.variant.equals("hollis")) {
+                    new Hollis(p, county, out).build();
+                } else if (p.variant.equals("cape")) {
+                    new Cape(p, county, out).build();
+                } else if (p.variant.equals("restarea")) {
+                    new RestArea(p, out).build();
+                } else if (p.variant.equals("tollplaza")) {
+                    new TollPlaza(p, out).build();
+                } else if (p.variant.equals("interchange")) {
+                    new Interchange(p, out).build();
                 } else {
                     new LandmarkSite(p, out).build();
                 }
@@ -51,6 +63,7 @@ public final class Builders {
             if (p.type != PlaceType.LANDMARK && county != null) {
                 clearFrontage(p, county, v);
             }
+            RoomLights.fit(p, v);
         }
     }
 

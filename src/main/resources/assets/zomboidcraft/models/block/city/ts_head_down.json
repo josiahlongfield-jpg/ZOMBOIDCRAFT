@@ -1,0 +1,251 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ext_black_metal": "zomboidcraft:block/city/ext_black_metal",
+    "lamp_glass": "zomboidcraft:block/city/lamp_glass",
+    "tire": "zomboidcraft:block/city/tire",
+    "ts_face_smash": "zomboidcraft:block/city/ts_face_smash",
+    "ts_housing": "zomboidcraft:block/city/ts_housing",
+    "particle": "zomboidcraft:block/city/ts_housing"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        0,
+        0.5
+      ],
+      "to": [
+        11,
+        5,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ts_housing"
+        },
+        "south": {
+          "texture": "#ts_housing"
+        },
+        "east": {
+          "texture": "#ts_housing"
+        },
+        "west": {
+          "texture": "#ts_housing"
+        },
+        "up": {
+          "texture": "#ts_face_smash"
+        },
+        "down": {
+          "texture": "#ts_housing",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        0,
+        15
+      ],
+      "to": [
+        13,
+        0.5,
+        15.8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_black_metal"
+        },
+        "south": {
+          "texture": "#ext_black_metal"
+        },
+        "east": {
+          "texture": "#ext_black_metal"
+        },
+        "west": {
+          "texture": "#ext_black_metal"
+        },
+        "up": {
+          "texture": "#ext_black_metal"
+        },
+        "down": {
+          "texture": "#ext_black_metal"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          0,
+          15
+        ],
+        "axis": "x",
+        "angle": 22.5
+      }
+    },
+    {
+      "from": [
+        5.4,
+        5,
+        1.2
+      ],
+      "to": [
+        10.6,
+        7.4,
+        1.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_black_metal"
+        },
+        "south": {
+          "texture": "#ext_black_metal"
+        },
+        "east": {
+          "texture": "#ext_black_metal"
+        },
+        "west": {
+          "texture": "#ext_black_metal"
+        },
+        "up": {
+          "texture": "#ext_black_metal"
+        },
+        "down": {
+          "texture": "#ext_black_metal"
+        }
+      }
+    },
+    {
+      "from": [
+        5.4,
+        5,
+        10.2
+      ],
+      "to": [
+        10.6,
+        6.6,
+        10.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_black_metal"
+        },
+        "south": {
+          "texture": "#ext_black_metal"
+        },
+        "east": {
+          "texture": "#ext_black_metal"
+        },
+        "west": {
+          "texture": "#ext_black_metal"
+        },
+        "up": {
+          "texture": "#ext_black_metal"
+        },
+        "down": {
+          "texture": "#ext_black_metal"
+        }
+      }
+    },
+    {
+      "from": [
+        9,
+        0,
+        0
+      ],
+      "to": [
+        11,
+        0.4,
+        0.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tire",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#tire"
+        },
+        "east": {
+          "texture": "#tire"
+        },
+        "west": {
+          "texture": "#tire"
+        },
+        "up": {
+          "texture": "#tire"
+        },
+        "down": {
+          "texture": "#tire",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        0,
+        3
+      ],
+      "to": [
+        4.5,
+        0.3,
+        4.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#lamp_glass"
+        },
+        "south": {
+          "texture": "#lamp_glass"
+        },
+        "east": {
+          "texture": "#lamp_glass"
+        },
+        "west": {
+          "texture": "#lamp_glass"
+        },
+        "up": {
+          "texture": "#lamp_glass"
+        },
+        "down": {
+          "texture": "#lamp_glass",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        11.5,
+        0,
+        8
+      ],
+      "to": [
+        13,
+        0.3,
+        9.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#lamp_glass"
+        },
+        "south": {
+          "texture": "#lamp_glass"
+        },
+        "east": {
+          "texture": "#lamp_glass"
+        },
+        "west": {
+          "texture": "#lamp_glass"
+        },
+        "up": {
+          "texture": "#lamp_glass"
+        },
+        "down": {
+          "texture": "#lamp_glass",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

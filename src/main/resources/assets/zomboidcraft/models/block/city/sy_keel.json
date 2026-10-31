@@ -1,0 +1,145 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "concrete_dark": "zomboidcraft:block/city/concrete_dark",
+    "sy_tallow": "zomboidcraft:block/city/sy_tallow",
+    "sy_timber": "zomboidcraft:block/city/sy_timber",
+    "particle": "zomboidcraft:block/city/concrete_dark"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        1
+      ],
+      "to": [
+        15,
+        8,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#concrete_dark"
+        },
+        "south": {
+          "texture": "#concrete_dark"
+        },
+        "east": {
+          "texture": "#concrete_dark"
+        },
+        "west": {
+          "texture": "#concrete_dark"
+        },
+        "up": {
+          "texture": "#concrete_dark"
+        },
+        "down": {
+          "texture": "#concrete_dark",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        8,
+        2
+      ],
+      "to": [
+        16,
+        12,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sy_timber"
+        },
+        "south": {
+          "texture": "#sy_timber"
+        },
+        "east": {
+          "texture": "#sy_timber",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#sy_timber",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#sy_timber"
+        },
+        "down": {
+          "texture": "#sy_timber"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        12,
+        0
+      ],
+      "to": [
+        14,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sy_timber",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#sy_timber",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#sy_timber"
+        },
+        "west": {
+          "texture": "#sy_timber"
+        },
+        "up": {
+          "texture": "#sy_timber"
+        },
+        "down": {
+          "texture": "#sy_timber"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        15,
+        1
+      ],
+      "to": [
+        11,
+        16,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sy_tallow"
+        },
+        "south": {
+          "texture": "#sy_tallow"
+        },
+        "east": {
+          "texture": "#sy_tallow"
+        },
+        "west": {
+          "texture": "#sy_tallow"
+        },
+        "up": {
+          "texture": "#sy_tallow",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sy_tallow"
+        }
+      }
+    }
+  ]
+}

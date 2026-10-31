@@ -27,6 +27,8 @@ import net.minecraft.world.entity.monster.zombie.Zombie;
 public class ZomboidCraftClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
+        // medical supports drawn on the body, from the synced worn-medical mask
+        com.zomboidcraft.client.clothing.ClothingLayer.medicalMask = com.zomboidcraft.survival.WornMedical::mask;
         com.zomboidcraft.client.hud.Hud.register();
         com.zomboidcraft.client.carry.CarryClient.register();
         com.zomboidcraft.client.kit.KitScreen.register();
@@ -39,6 +41,7 @@ public class ZomboidCraftClient implements ClientModInitializer {
         com.zomboidcraft.client.map.MapPlayers.register();
         com.zomboidcraft.client.kit.WeaponTip.register();
         SkillsHud.register();
+        com.zomboidcraft.client.survival.DownedClient.register();
         // the sky eases toward the weather the server last sent
         ClientTickEvents.END_CLIENT_TICK.register(client ->
                 WeatherView.update(client.player == null ? null : client.player.getAttached(Weather.TYPE)));
@@ -61,6 +64,7 @@ public class ZomboidCraftClient implements ClientModInitializer {
         HordeSounds.register();
         EntityRendererRegistry.register(com.zomboidcraft.world.cars.Cars.CAR, com.zomboidcraft.client.cars.CarRenderer::new);
         EntityRendererRegistry.register(com.zomboidcraft.world.cars.Cars.DEBRIS, com.zomboidcraft.client.cars.DebrisRenderer::new);
+        EntityRendererRegistry.register(com.zomboidcraft.world.cars.Cars.HOIST, com.zomboidcraft.client.cars.HoistRenderer::new);
         EntityRendererRegistry.register(com.zomboidcraft.combat.throwing.Throwing.THROWN, com.zomboidcraft.client.throwing.ThrownRenderer::new);
         com.zomboidcraft.client.throwing.ThrowEffects.register();
         EntityRendererRegistry.register(com.zomboidcraft.zombie.Corpses.CORPSE, com.zomboidcraft.client.zombie.body.CorpseRenderer::new);
@@ -73,12 +77,15 @@ public class ZomboidCraftClient implements ClientModInitializer {
         com.zomboidcraft.client.cars.CarClient.register();
         com.zomboidcraft.client.trains.TrainClient.register();
         com.zomboidcraft.client.ferry.FerryClient.register();
+        com.zomboidcraft.client.lights.LightClient.register();
+        com.zomboidcraft.client.survival.SleepClient.register();
         com.zomboidcraft.client.lifts.LiftClient.register();
         com.zomboidcraft.client.cars.FlightClient.register();
         com.zomboidcraft.client.sound.Ambience.register();
         com.zomboidcraft.client.sound.WorldEventSound.register();
         com.zomboidcraft.client.sound.Score.register();
         com.zomboidcraft.client.weather.WeatherFx.register();
+        com.zomboidcraft.client.sandbox.SandboxClient.register();
         // last, so it can wrap every HUD piece registered above
         com.zomboidcraft.client.camera.CinematicView.register();
         if (ZcConfig.get().look.customZombies) {

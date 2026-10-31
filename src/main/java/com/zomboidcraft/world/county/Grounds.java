@@ -238,7 +238,9 @@ abstract class Grounds {
         for (int y = 1; y <= 3; y++) {
             set(x, y, z, "cv_lamp_post");
         }
-        set(x, 4, z, power && chance() < 0.5 ? "cv_lamp_globe_lit" : chance() < 0.25 ? "air" : "cv_lamp_globe");
+        // the globe smashed out now and then, the rest lit (the same rolls as when most were dark)
+        boolean on = power && chance() < 0.5;
+        set(x, 4, z, !on && chance() < 0.25 ? "air" : "cv_lamp_globe_lit");
     }
 
     /** A shelter tent six across from x and len along from z, its door at its north end ({@link Tents}). */

@@ -1,0 +1,114 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hw_booth_roof": "zomboidcraft:block/city/hw_booth_roof",
+    "particle": "zomboidcraft:block/city/hw_booth_roof"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        4,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hw_booth_roof",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#hw_booth_roof",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#hw_booth_roof",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#hw_booth_roof",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#hw_booth_roof"
+        },
+        "down": {
+          "texture": "#hw_booth_roof",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        -1,
+        3,
+        -1
+      ],
+      "to": [
+        17,
+        5,
+        17
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hw_booth_roof",
+          "uv": [
+            0,
+            11,
+            16,
+            13
+          ]
+        },
+        "south": {
+          "texture": "#hw_booth_roof",
+          "uv": [
+            0,
+            11,
+            16,
+            13
+          ]
+        },
+        "east": {
+          "texture": "#hw_booth_roof",
+          "uv": [
+            0,
+            11,
+            16,
+            13
+          ]
+        },
+        "west": {
+          "texture": "#hw_booth_roof",
+          "uv": [
+            0,
+            11,
+            16,
+            13
+          ]
+        },
+        "up": {
+          "texture": "#hw_booth_roof",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#hw_booth_roof",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    }
+  ]
+}

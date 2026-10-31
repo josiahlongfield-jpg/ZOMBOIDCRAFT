@@ -28,8 +28,12 @@ import org.joml.Vector3f;
 final class NpcSkinAnimator {
     /** What she's doing this frame. Speed is metres a second over the ground. */
     static final class Input {
-        float now, speed, aim, headYaw, headPitch, dead, bodyYaw;
-        boolean gun, talking, blasted;
+        float now, speed, aim, headYaw, headPitch, dead, bodyYaw, y;
+        boolean gun, talking, blasted, onGround = true, hurt;
+        /** How open her mouth is for the voice clip she's playing (NpcVoice), 0..1, or -1 for none. */
+        float voice = -1;
+        /** Drawn on her page: her idle and nothing else. */
+        boolean portrait;
         int shots, id;
         /** NpcEntity.action() and moodBits(): fear, morale, tiredness, pain at 4 bits each. */
         int action, mood;
@@ -70,6 +74,15 @@ final class NpcSkinAnimator {
     private float yawWas = Float.NaN, turning;
     /** When she last stood still with her rifle up (or -1 while she isn't). */
     private float aimStill = -1;
+    /** Her follow-through: springs for the torso's surge and sway, the chest's give, her head and her arms. */
+    private final Spring surge = new Spring(1.6f, 0.35f), sway = new Spring(1.4f, 0.4f), chest = new Spring(3f, 0.3f),
+            side = new Spring(2.5f, 0.35f), head = new Spring(2f, 0.5f), arms = new Spring(1.4f, 0.25f),
+            recoil = new Spring(3.5f, 0.3f);
+    private int flowShots = -1;
+    /** How far her held gun is nudged out of her body (model space), smoothed from frame to frame (NpcRenderer). */
+    final Vector3f gunPush = new Vector3f();
+    private float flowSpeed = Float.NaN, flowAccel, hipY = Float.NaN, hipX, hipVy, hipVx, fallVy, yWas = Float.NaN;
+    private boolean wasGround = true, wasHurt;
     /** Her skinned vertices and normals, two per mesh group (sized to the model the first time she's drawn). */
     Object[] buffers = new Object[0];
 
@@ -88,7 +101,7 @@ final class NpcSkinAnimator {
             turning += (rate - turning) * Math.min(1, dt * 6);
         }
         yawWas = in.bodyYaw;
-        String want = choose(model, in, dt);
+        String want = in.portrait && in.action == 0 && model.clips.containsKey("idle") ? "idle" : choose(model, in, dt);
         // sleeping before she has a sleep clip: lie in her fall's last pose, dropped straight in
         boolean lying = in.dead <= 0 && in.action == SLEEP && "die".equals(want);
         if (lying && !"die".equals(cur)) {
@@ -159,6 +172,9 @@ final class NpcSkinAnimator {
             look(model, world, in.headYaw, in.headPitch);
             posture(model, world, in);
         }
+        if (in.dead <= 0 && in.action != SLEEP && !in.portrait) {
+            flow(model, world, in, dt);
+        }
         for (int i = 0; i < n; i++) {
             skin[i].set(world[i]).mul(model.inverse[i]);
         }
@@ -166,7 +182,7 @@ final class NpcSkinAnimator {
     }
 
     /** NpcWork's actions, as the client knows them. */
-    private static final int SLEEP = 1, SIT = 2, KNEEL = 3, HAMMER = 4, DIG = 5, SEARCH = 6, LOOKOUT = 7, COOKING = 8, HUG = 9, KISS = 10, SEARCH_LOW = 11;
+    private static final int SLEEP = 1, SIT = 2, KNEEL = 3, HAMMER = 4, DIG = 5, SEARCH = 6, LOOKOUT = 7, COOKING = 8, HUG = 9, KISS = 10, SEARCH_LOW = 11, POSE = 12, FIDGET = 13, COWER = 14;
 
     private static String actionClip(int action) {
         return switch (action) {
@@ -178,6 +194,9 @@ final class NpcSkinAnimator {
             case SEARCH -> "search";
             case SEARCH_LOW -> "search_low";
             case LOOKOUT -> "lookout";
+            case POSE -> "pose";
+            case FIDGET -> "fidget";
+            case COWER -> "cower";
             case HUG -> "hug";
             case KISS -> "kiss";
             default -> null;
@@ -270,6 +289,9 @@ final class NpcSkinAnimator {
             c = act;
         } else if ("search_low".equals(act) && model.clips.containsKey("search")) {
             c = "search";
+        } else if ("cower".equals(act) && model.clips.containsKey("kneel")) {
+            // no clip of her covering up: down on one knee, the nervous slump on top
+            c = "kneel";
         } else if (in.action == SLEEP && in.speed <= MOVING) {
             c = "die";
         } else {
@@ -467,6 +489,113 @@ final class NpcSkinAnimator {
         turn(model, world, model.bone("mixamorigRightShoulder"), new Matrix4f().rotateZ(rad(-shrug)).rotateY(rad(forward)));
     }
 
+    /** A damped spring: pulled toward a target or kicked, it overshoots a little and settles. */
+    private static final class Spring {
+        float x, v;
+        private final float k, c;
+
+        Spring(float hz, float damping) {
+            float w = (float) (2 * Math.PI * hz);
+            k = w * w;
+            c = 2 * damping * w;
+        }
+
+        float step(float target, float dt) {
+            // small steps, so a slow frame can't blow it up
+            int n = Math.max(1, (int) Math.ceil(dt / 0.01f));
+            float h = dt / n;
+            for (int i = 0; i < n; i++) {
+                v += (k * (target - x) - c * v) * h;
+                x += v * h;
+            }
+            return x;
+        }
+
+        void kick(float dv) {
+            v += dv;
+        }
+    }
+
+    /**
+     * Follow-through over the clip, so her body has give instead of moving as one stiff piece: she tips forward and
+     * rocks back when she stops (and back when she sets off), leans into turns with her head leading, her chest gives
+     * a little on every step from the clip's own bob, her arms swing on past a stop, a landing sinks through her and a
+     * hit snaps her back. Every spring settles on its own, and it's all only a few degrees.
+     */
+    private void flow(NpcSkin model, Matrix4f[] world, Input in, float dt) {
+        int hips = model.bone("mixamorigHips");
+        if (dt <= 0 || hips < 0 || world[hips] == null) {
+            return;
+        }
+        // her speed changing (m/s a second), smoothed: speed only changes once a tick
+        if (Float.isNaN(flowSpeed)) {
+            flowSpeed = in.speed;
+        }
+        float was = flowSpeed;
+        flowSpeed += (in.speed - flowSpeed) * Math.min(1, dt * 8);
+        flowAccel += ((flowSpeed - was) / dt - flowAccel) * Math.min(1, dt * 10);
+        // the clip's own bob and side-to-side at the hips (model space), as accelerations
+        float hy = world[hips].m31(), hx = world[hips].m30(), ay = 0, ax = 0;
+        if (!Float.isNaN(hipY)) {
+            float vy = (hy - hipY) / dt, vx = (hx - hipX) / dt;
+            ay = (vy - hipVy) / dt;
+            ax = (vx - hipVx) / dt;
+            hipVy += (vy - hipVy) * Math.min(1, dt * 20);
+            hipVx += (vx - hipVx) * Math.min(1, dt * 20);
+        }
+        hipY = hy;
+        hipX = hx;
+        // a landing and a hit, as kicks
+        if (!Float.isNaN(yWas)) {
+            float vy = (in.y - yWas) / dt;
+            fallVy = in.onGround ? fallVy * Math.max(0, 1 - dt * 10) : Math.min(fallVy, vy);
+            if (in.onGround && !wasGround && fallVy < -3f) {
+                float hard = Math.min(1, (-fallVy - 3f) / 9f) + 0.35f;
+                surge.kick(60f * hard);
+                chest.kick(90f * hard);
+                arms.kick(-50f * hard);
+            }
+        }
+        yWas = in.y;
+        wasGround = in.onGround;
+        if (in.hurt && !wasHurt) {
+            surge.kick(-70f);
+            head.kick(Math.random() < 0.5 ? -90f : 90f);
+            chest.kick(-60f);
+        }
+        wasHurt = in.hurt;
+        if (flowShots >= 0 && in.shots != flowShots) {
+            recoil.kick(130f);
+        }
+        flowShots = in.shots;
+
+        float steady = in.aim > 0.5f ? 0.4f : 1;
+        float bow = surge.step(clamp(-flowAccel * 0.9f, -7, 7), dt);
+        float lean = sway.step(clamp(turning * 0.03f, -6, 6), dt) + side.step(clamp(ax * 0.25f, -2.5f, 2.5f), dt);
+        float give = chest.step(clamp(-ay * 0.5f, -4, 4), dt);
+        float lead = head.step(clamp(-turning * 0.035f, -9, 9), dt);
+        float swing = arms.step(clamp(flowAccel * 1.6f, -12, 12), dt);
+        // a shot drives the stock into her right shoulder: it goes back, her chest turns and tips back a little with it
+        float kick = recoil.step(0, dt);
+        bow *= steady;
+        lean *= steady;
+        give *= steady;
+        turn(model, world, model.bone("mixamorigSpine"), new Matrix4f().rotateX(rad(bow * 0.5f)).rotateZ(rad(lean * 0.5f)));
+        turn(model, world, model.bone("mixamorigSpine1"), new Matrix4f().rotateX(rad(bow * 0.3f + give * 0.5f)).rotateZ(rad(lean * 0.3f)));
+        turn(model, world, model.bone("mixamorigSpine2"), new Matrix4f().rotateX(rad(bow * 0.2f + give * 0.5f)).rotateZ(rad(lean * 0.2f)));
+        turn(model, world, model.bone("mixamorigSpine2"), new Matrix4f().rotateY(rad(-kick * 0.5f)).rotateX(rad(-kick * 0.35f)));
+        turn(model, world, model.bone("mixamorigRightShoulder"), new Matrix4f().rotateY(rad(-kick * 0.6f)));
+        // the head steadies against the chest's give and leads a turn
+        turn(model, world, model.head, new Matrix4f().rotateY(rad(lead * steady)).rotateX(rad(-give * 0.6f - bow * 0.4f)));
+        if (!in.gun) {
+            // a hanging arm turned forward is a negative turn about x: a stop (swing below zero) carries them on forward
+            turn(model, world, model.bone("mixamorigLeftArm"), new Matrix4f().rotateX(rad(swing)));
+            turn(model, world, model.bone("mixamorigRightArm"), new Matrix4f().rotateX(rad(swing)));
+            turn(model, world, model.bone("mixamorigLeftForeArm"), new Matrix4f().rotateX(rad(swing * 0.5f)));
+            turn(model, world, model.bone("mixamorigRightForeArm"), new Matrix4f().rotateX(rad(swing * 0.5f)));
+        }
+    }
+
     /** Turns a bone and everything below it by `rot` about the bone's own place (model space). */
     private static void turn(NpcSkin model, Matrix4f[] world, int bone, Matrix4f rot) {
         if (bone < 0 || bone >= world.length || world[bone] == null) {
@@ -503,6 +632,8 @@ final class NpcSkinAnimator {
         float target = 0;
         if (in.dead > 0) {
             target = 0.35f;
+        } else if (in.voice >= 0) {
+            target = in.voice;
         } else if (in.talking) {
             float s = Math.abs((float) Math.sin(t * 13.0)) * 0.7f + Math.abs((float) Math.sin(t * 5.3 + 1.1)) * 0.3f;
             target = 0.25f + 0.75f * s;

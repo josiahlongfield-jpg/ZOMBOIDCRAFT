@@ -1,0 +1,79 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "qs_granite": "zomboidcraft:block/city/qs_granite",
+    "qs_memorial_0": "zomboidcraft:block/city/qs_memorial_0",
+    "particle": "zomboidcraft:block/city/qs_granite"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        3
+      ],
+      "to": [
+        16,
+        3,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#qs_granite"
+        },
+        "south": {
+          "texture": "#qs_granite"
+        },
+        "east": {
+          "texture": "#qs_granite",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#qs_granite",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#qs_granite"
+        },
+        "down": {
+          "texture": "#qs_granite",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        3,
+        5.5
+      ],
+      "to": [
+        16,
+        15,
+        10.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#qs_memorial_0"
+        },
+        "south": {
+          "texture": "#qs_granite"
+        },
+        "east": {
+          "texture": "#qs_granite",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#qs_granite",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#qs_granite"
+        },
+        "down": {
+          "texture": "#qs_granite"
+        }
+      }
+    }
+  ]
+}

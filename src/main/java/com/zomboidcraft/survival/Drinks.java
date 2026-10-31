@@ -11,6 +11,7 @@ import net.minecraft.world.item.alchemy.Potions;
 public final class Drinks {
     public static void onConsumed(Player player, ItemStack stack) {
         com.zomboidcraft.loot.items.LootFood.onConsumed(player, stack);
+        Needs.eat(player, stack);
         float value = thirstValue(stack);
         if (value > 0) {
             SurvivalStats stats = SurvivalStats.get(player);

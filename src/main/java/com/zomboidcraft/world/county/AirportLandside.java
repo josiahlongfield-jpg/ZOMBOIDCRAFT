@@ -286,7 +286,8 @@ final class AirportLandside extends Grounds {
         }
         int ax = x + dir[toward][0], az = z + dir[toward][1];
         set(ax, h, az, "streetlight_arm[facing=" + ((toward & 1) == 1 ? "east" : "south") + "]");
-        set(ax + dir[toward][0], h, az + dir[toward][1], (power && chance() < 0.5 ? "streetlight_head" : "streetlight_head_off")
+        boolean roll = power && chance() < 0.5;  // the old dead-bulb roll, kept so everything after it lands where it did: every lamp works now
+        set(ax + dir[toward][0], h, az + dir[toward][1], "streetlight_head"
                 + "[facing=" + new String[] {"south", "west", "north", "east"}[toward] + "]");
     }
 

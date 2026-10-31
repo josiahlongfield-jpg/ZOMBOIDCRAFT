@@ -29,7 +29,21 @@ public interface BlockSink {
      * ending "@wrecked" (or another of the cars' variants) leaves it that way.
      */
     default void vehicle(double x, int y, double z, float yaw, String models, long seed) {
+        if (models.startsWith("!")) {
+            return;     // a lift ("!hoist", see BlockSink#hoist), which only the chunk writer places
+        }
         car(x, y, z, yaw, 0, 99, seed);
+    }
+
+    /**
+     * A two-post car lift (an entity, not blocks) centred in its bay at (x, z) on floor level y, the bay running
+     * along the yaw (0: along z, a car's nose to +z). Its posts stand 1.7 either side of the centre line, so
+     * centre it on a block line of a 4-wide bay. With car models (as {@link #vehicle} takes them, "=sedan@usable"
+     * or "sedan,coupe"), one that fits stands in the bay, up at notch 0 (down), 1 (wheels free), 2 (chest
+     * height) or 3 (full height). It goes through {@link #vehicle} so every sink passes it on.
+     */
+    default void hoist(double x, int y, double z, float yaw, int notch, String car, long seed) {
+        vehicle(x, y, z, yaw, "!hoist:" + notch + (car == null ? "" : ";" + car), seed);
     }
 
     /** Notes a spot worth finding again (what: "bunker" for a bunker's hatch); the game ignores it. */

@@ -15,13 +15,14 @@ import net.minecraft.network.chat.Component;
 /**
  * Talking to a companion (sneak + interact on her), in the kit screen's dark glass and bone: how she feels about you at
  * the top, then what you can do: compliment her, flirt, give her what's in your hand, hug her, take her hand (or let
- * go), kiss her, or talk about her outfit (WardrobeScreen). She answers in chat, yes or no as she feels. Pick with the mouse
- * or 1-7; Esc or the interact key closes.
+ * go), kiss her, or talk about her outfit (WardrobeScreen); ask what she's carrying, and answer her about anything she found
+ * for you (take it, or let her keep it). She answers in chat, yes or no as she feels. Pick with the mouse or 1-9 and 0; Esc
+ * or the interact key closes.
  */
 public class TalkScreen extends net.minecraft.client.gui.screens.Screen {
     private static final int PANEL = 0xF20C0D0F, EDGE = 0x29E8E4DA, LINE = 0x4DE8E4DA, TEXT = 0xFFE8E4DA, DIM = 0xA8E8E4DA,
             GOLD = 0xFFE0C25E;
-    private static final int W = 230, ROW = 20, PAD = 10, HEAD = 48;
+    private static final int W = 230, PAD = 10, HEAD = 48;
     private static final String[][] ACTS = {
             {"Compliment her", "Say something nice"},
             {"Flirt", "See if she flirts back"},
@@ -30,7 +31,22 @@ public class TalkScreen extends net.minecraft.client.gui.screens.Screen {
             {"Hold her hand", "She walks at your side"},
             {"Kiss her", "Only if she wants to"},
             {"Her outfit...", "What you think of it"},
+            {"Take her weapon", "Into your hand or your pack"},
+            {"Calm her down", "Steady her when she's scared"},
+            {"What are you carrying?", "She tells you in chat"},
     };
+
+    /** Rows after the fixed ones while she's asking about something she found for you. */
+    private int rows() {
+        return ACTS.length + (npc.offer().isEmpty() ? 0 : 2);
+    }
+
+    private String[] row(int i) {
+        if (i < ACTS.length) return ACTS[i];
+        String what = npc.offer();
+        return i == ACTS.length ? new String[] {"Take the " + what, "She found it for you"}
+                : new String[] {"Let her keep the " + what, "It's hers then"};
+    }
 
     private final NpcEntity npc;
 
@@ -51,13 +67,18 @@ public class TalkScreen extends net.minecraft.client.gui.screens.Screen {
         }
     }
 
+    /** Row height: 20, closer together when the rows wouldn't fit the screen (a small window, a big GUI scale). */
+    private int row() {
+        return Math.max(12, Math.min(20, (height - HEAD - PAD - 4) / rows()));
+    }
+
     private int[] box() {
-        int h = HEAD + ACTS.length * ROW + PAD;
+        int h = HEAD + rows() * row() + PAD;
         return new int[] {(width - W) / 2, (height - h) / 2, W, h};
     }
 
     private int rowY(int[] b, int i) {
-        return b[1] + HEAD + i * ROW;
+        return b[1] + HEAD + i * row();
     }
 
     @Override
@@ -76,17 +97,20 @@ public class TalkScreen extends net.minecraft.client.gui.screens.Screen {
         }
         g.textWithWordWrap(font, Hud.text(NpcBond.words(trust, affection, attraction, together)), b[0] + PAD, b[1] + 22, b[2] - PAD * 2, DIM, false);
         g.fill(b[0] + PAD, b[1] + HEAD - 4, b[0] + b[2] - PAD, b[1] + HEAD - 3, LINE);
-        for (int i = 0; i < ACTS.length; i++) {
+        for (int i = 0; i < rows(); i++) {
             int y = rowY(b, i);
-            boolean over = in(mouseX, mouseY, b[0] + 4, y, b[2] - 8, ROW - 2);
+            boolean over = in(mouseX, mouseY, b[0] + 4, y, b[2] - 8, row() - 2);
             if (over) {
-                g.fill(b[0] + 4, y, b[0] + b[2] - 4, y + ROW - 2, 0x1FE8E4DA);
-                frame(g, b[0] + 4, y, b[2] - 8, ROW - 2, LINE);
+                g.fill(b[0] + 4, y, b[0] + b[2] - 4, y + row() - 2, 0x1FE8E4DA);
+                frame(g, b[0] + 4, y, b[2] - 8, row() - 2, LINE);
             }
-            String label = i == 4 && holding ? "Let go of her hand" : ACTS[i][0];
-            g.text(font, Hud.text((i + 1) + "  " + label), b[0] + PAD, y + 5, over ? 0xFFF2EFE8 : TEXT, false);
-            String hint = i == 6 && (bits >> 29 & 1) != 0 ? "She asked you" : ACTS[i][1];
-            g.text(font, Hud.text(hint), b[0] + b[2] - PAD - font.width(Hud.text(hint)), y + 5, DIM, false);
+            String label = i == 4 && holding ? "Let go of her hand" : row(i)[0];
+            String key = i < 9 ? (i + 1) + "  " : i == 9 ? "0  " : "    ";
+            g.text(font, Hud.text(key + label), b[0] + PAD, y + (row() - 10) / 2, over ? 0xFFF2EFE8 : i >= ACTS.length ? GOLD : TEXT, false);
+            String hint = i == 6 && (bits >> 29 & 1) != 0 ? "She asked you" : row(i)[1];
+            if (font.width(Hud.text(key + label)) + font.width(Hud.text(hint)) < b[2] - PAD * 2 - 8) {
+                g.text(font, Hud.text(hint), b[0] + b[2] - PAD - font.width(Hud.text(hint)), y + (row() - 10) / 2, DIM, false);
+            }
         }
     }
 
@@ -114,7 +138,15 @@ public class TalkScreen extends net.minecraft.client.gui.screens.Screen {
             minecraft.gui.setScreen(new WardrobeScreen(npc, null));
             return;
         }
-        ClientPlayNetworking.send(new NpcNet.Talk(npc.getId(), i));
+        int act = switch (i) {
+            case 7 -> NpcNet.TAKE_GUN;
+            case 8 -> NpcNet.CALM;
+            case 9 -> NpcNet.CARRYING;
+            case 10 -> NpcNet.OFFER_TAKE;
+            case 11 -> NpcNet.OFFER_KEEP;
+            default -> i;
+        };
+        ClientPlayNetworking.send(new NpcNet.Talk(npc.getId(), act));
         onClose();
     }
 
@@ -124,8 +156,8 @@ public class TalkScreen extends net.minecraft.client.gui.screens.Screen {
             return true;
         }
         int[] b = box();
-        for (int i = 0; i < ACTS.length; i++) {
-            if (in(event.x(), event.y(), b[0] + 4, rowY(b, i), b[2] - 8, ROW - 2)) {
+        for (int i = 0; i < rows(); i++) {
+            if (in(event.x(), event.y(), b[0] + 4, rowY(b, i), b[2] - 8, row() - 2)) {
                 pick(i);
                 return true;
             }
@@ -140,8 +172,12 @@ public class TalkScreen extends net.minecraft.client.gui.screens.Screen {
             return true;
         }
         int key = event.key();
-        if (key >= InputConstants.KEY_1 && key < InputConstants.KEY_1 + ACTS.length) {
+        if (key >= InputConstants.KEY_1 && key <= InputConstants.KEY_9) {
             pick(key - InputConstants.KEY_1);
+            return true;
+        }
+        if (key == InputConstants.KEY_0) {
+            pick(9);
             return true;
         }
         return super.keyPressed(event);

@@ -270,7 +270,7 @@ public final class Carry {
             }
             com.zomboidcraft.loot.items.LootHooks.tick(player);
             boolean on = ZcConfig.get().carry.weight && !player.isCreative() && !player.isSpectator();
-            float ratio = on ? Math.round(load(player) / capacity() * 100f) / 100f : 0f;
+            float ratio = on ? Math.round(load(player) / (capacity() + com.zomboidcraft.survival.Needs.carryBonus(player)) * 100f) / 100f : 0f;
             if (player.getAttachedOrElse(LOAD, 0f) != ratio) {
                 player.setAttached(LOAD, ratio);
             }
@@ -362,7 +362,11 @@ public final class Carry {
         List<ItemStack> now = new ArrayList<>(WORN_SIZE);
         for (int i = 0; i < GearStore.SIZE; i++) {
             ItemStack stack = gear.get(i);
-            now.add(stack.isEmpty() ? ItemStack.EMPTY : new ItemStack(stack.getItem()));
+            ItemStack plain = stack.isEmpty() ? ItemStack.EMPTY : new ItemStack(stack.getItem());
+            // a garment's camo shows (clothing/ClothingLoot)
+            String camo = stack.get(com.zomboidcraft.clothing.ClothingLoot.CAMO);
+            if (camo != null) plain.set(com.zomboidcraft.clothing.ClothingLoot.CAMO, camo);
+            now.add(plain);
         }
         // carried weapons keep their parts and finish, so they look the same on you
         now.add(hanging(player, QuickSlots.BACK, Carry::slings));
@@ -372,7 +376,9 @@ public final class Carry {
         boolean same = shown.size() == WORN_SIZE;
         for (int i = 0; same && i < WORN_SIZE; i++) {
             same = i >= GearStore.SIZE ? ItemStack.isSameItemSameComponents(shown.get(i), now.get(i))
-                    : shown.get(i).getItem() == now.get(i).getItem() && shown.get(i).isEmpty() == now.get(i).isEmpty();
+                    : shown.get(i).getItem() == now.get(i).getItem() && shown.get(i).isEmpty() == now.get(i).isEmpty()
+                    && java.util.Objects.equals(shown.get(i).get(com.zomboidcraft.clothing.ClothingLoot.CAMO),
+                    now.get(i).get(com.zomboidcraft.clothing.ClothingLoot.CAMO));
         }
         if (!same) {
             player.setAttached(WORN, List.copyOf(now));

@@ -82,6 +82,7 @@ final class FarmSite extends Site {
         kit.woods(0.5);
         kit.overgrow(0.85);
         kit.roadWeeds(0.3);
+        homes.finish();
     }
 
     private double jitter(double amount) {
@@ -437,16 +438,24 @@ final class FarmSite extends Site {
             yp.set(x, y, z, "pole_wood");
         }
         yp.set(x, 7, z + 1, "streetlight_arm[facing=south]");
-        yp.set(x, 7, z + 2, (chance() < 0.55 ? "streetlight_head" : "streetlight_head_off") + "[facing=south]");
+        chance();  // the old dead-bulb roll, kept so everything after it lands where it did: every lamp works now
+        yp.set(x, 7, z + 2, "streetlight_head[facing=south]");
         take(x, z, x, z);
     }
 
-    /** Hay stacked in a stepped pile, the tarp blown half off. */
+    /** Hay stacked in a stepped pile under its tarp (the tp_ kit), the tarp blown half off. */
     private void hayStack(Placer q, int sw, int sd) {
         for (int y = 1; y <= 3; y++) {
             for (int x = y - 1; x < sw - y + 1; x++) {
                 for (int z = 0; z < sd; z++) {
-                    q.set(x, y, z, y == 3 && chance() < 0.5 ? "tarp_green" : y == 3 ? "fm_bales_low[axis=z]" : "fm_bales[axis=z]");
+                    if (y < 3) {
+                        q.set(x, y, z, "fm_bales[axis=z]");
+                        continue;
+                    }
+                    // the top course under the tarp, roped and weighed with tyres, blown half off in places
+                    double r = chance();
+                    q.set(x, y, z, r < 0.2 ? "fm_bales_low[axis=z]" : r < 0.35 ? "tp_bales_tyre[axis=z]"
+                            : r < 0.5 ? "tp_bales_blown[facing=north]" : "tp_bales[axis=z]");
                 }
             }
         }
@@ -1258,7 +1267,8 @@ final class FarmSite extends Site {
             for (int y = 1; y <= 7; y++) {
                 out.set(c[0], y, c[1], "pole_wood");
             }
-            out.set(c[0], 8, c[1], (chance() < 0.4 ? "streetlight_head" : "streetlight_head_off") + "[facing=north]");
+            chance();  // the old dead-bulb roll, kept so everything after it lands where it did: every lamp works now
+            out.set(c[0], 8, c[1], "streetlight_head[facing=north]");
         }
     }
 
@@ -1331,7 +1341,8 @@ final class FarmSite extends Site {
                     for (int y = 1; y <= 4; y++) {
                         out.set(lx, y, lz, "pole_wood");
                     }
-                    out.set(lx, 5, lz, (chance() < 0.4 ? "streetlight_head" : "streetlight_head_off") + "[facing=" + (fx == 1 ? "south" : "north") + "]");
+                    chance();  // the old dead-bulb roll, kept so everything after it lands where it did: every lamp works now
+                    out.set(lx, 5, lz, "streetlight_head[facing=" + (fx == 1 ? "south" : "north") + "]");
                 }
             }
             String sign = switch (p.variant) {

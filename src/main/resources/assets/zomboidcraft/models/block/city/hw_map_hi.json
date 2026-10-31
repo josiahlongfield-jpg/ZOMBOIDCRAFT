@@ -1,0 +1,75 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hw_brown": "zomboidcraft:block/city/hw_brown",
+    "hw_map_1": "zomboidcraft:block/city/hw_map_1",
+    "particle": "zomboidcraft:block/city/hw_map_1"
+  },
+  "elements": [
+    {
+      "from": [
+        1.5,
+        0,
+        8.5
+      ],
+      "to": [
+        14.5,
+        13,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hw_map_1"
+        },
+        "south": {
+          "texture": "#hw_brown"
+        },
+        "east": {
+          "texture": "#hw_brown"
+        },
+        "west": {
+          "texture": "#hw_brown"
+        },
+        "up": {
+          "texture": "#hw_brown"
+        },
+        "down": {
+          "texture": "#hw_brown",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0.5,
+        13,
+        6
+      ],
+      "to": [
+        15.5,
+        15,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hw_brown"
+        },
+        "south": {
+          "texture": "#hw_brown"
+        },
+        "east": {
+          "texture": "#hw_brown"
+        },
+        "west": {
+          "texture": "#hw_brown"
+        },
+        "up": {
+          "texture": "#hw_brown"
+        },
+        "down": {
+          "texture": "#hw_brown"
+        }
+      }
+    }
+  ]
+}

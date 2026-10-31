@@ -57,7 +57,10 @@ public final class CarHands {
         Minecraft mc = Minecraft.getInstance();
         Entity rider = mc.level == null ? null : mc.level.getEntity(state.id);
         if (rider != null && com.zomboidcraft.world.cars.Turret.isGunner(rider)) {
-            // at the mounted gun: both hands forward on its grips
+            // at the mounted gun: standing, both hands forward on its grips
+            model.leftLeg.xRot = model.rightLeg.xRot = 0f;
+            model.leftLeg.yRot = model.rightLeg.yRot = 0f;
+            model.leftLeg.zRot = model.rightLeg.zRot = 0f;
             model.leftArm.xRot = model.rightArm.xRot = -1.35f + model.head.xRot * 0.6f;
             model.leftArm.yRot = 0.18f;
             model.rightArm.yRot = -0.18f;

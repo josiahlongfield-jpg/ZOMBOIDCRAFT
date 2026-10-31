@@ -198,6 +198,19 @@ public final class Interactables {
         halo(cx, cy, cz, tx, ty, tz, size, pose, out, CarLights.shade(GREEN, 1f, false));
     }
 
+    /**
+     * A flat disc of light in any colour, facing back along t (toward the camera): the same draw as the dots, for a
+     * flash (the Warthog's minigun). Draw it with {@link #type}.
+     */
+    public static void disc(float x, float y, float z, float tx, float ty, float tz, float half, int colour,
+                            PoseStack.Pose pose, VertexConsumer out) {
+        float len = (float) Math.sqrt(tx * tx + ty * ty + tz * tz);
+        if (len < 0.05f) {
+            return;
+        }
+        halo(x, y, z, tx / len, ty / len, tz / len, half, pose, out, colour);
+    }
+
     private static void halo(float cx, float cy, float cz, float tx, float ty, float tz, float half, PoseStack.Pose pose,
                              VertexConsumer out, int colour) {
         // right = t x up, then up = right x t; wound so the quad faces t

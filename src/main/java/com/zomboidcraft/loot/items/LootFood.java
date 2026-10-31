@@ -50,13 +50,23 @@ public final class LootFood {
             if (random.nextFloat() < 0.4f) {
                 sp.addEffect(new MobEffectInstance(MobEffects.POISON, 100, 0));
             }
+            com.zomboidcraft.survival.Medicine.nausea(sp, 45);
+            com.zomboidcraft.survival.Mood.add(sp, com.zomboidcraft.survival.Mood.Stat.UNHAPPINESS, 10);
             sp.sendOverlayMessage(Component.literal("That was rotten. You feel sick.").withStyle(ChatFormatting.GRAY));
         } else if (state == Spoil.STALE) {
             sp.addEffect(new MobEffectInstance(MobEffects.HUNGER, 200, 0));
         }
+        com.zomboidcraft.survival.Medicine.ate(sp, stack);
         if (food.is(LootSpec.Food.RAW) && random.nextFloat() < 0.5f) {
+            com.zomboidcraft.survival.Medicine.nausea(sp, 25);
             sp.addEffect(new MobEffectInstance(MobEffects.HUNGER, 400, 0));
             sp.addEffect(new MobEffectInstance(MobEffects.NAUSEA, 200, 0));
+        }
+        if (food.alcohol() > 0) {
+            // a drink takes the edge off, and too many get you drunk
+            com.zomboidcraft.survival.Medicine.drink(sp, food.alcohol());
+            com.zomboidcraft.survival.Mood.add(sp, com.zomboidcraft.survival.Mood.Stat.STRESS, -8 * food.alcohol());
+            com.zomboidcraft.survival.Mood.add(sp, com.zomboidcraft.survival.Mood.Stat.UNHAPPINESS, -4 * food.alcohol());
         }
         if (food.alcohol() >= 2) {
             sp.addEffect(new MobEffectInstance(MobEffects.NAUSEA, 120 * food.alcohol(), 0));

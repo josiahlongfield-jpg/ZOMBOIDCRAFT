@@ -36,6 +36,7 @@ final class CivicChamber {
     void build() {
         drum();
         roof();
+        skin();
         portal();
         dais();
         seats();
@@ -100,6 +101,29 @@ final class CivicChamber {
             }
             String f = Math.abs(Math.cos(a)) > Math.abs(Math.sin(a)) ? (Math.cos(a) < 0 ? "east" : "west") : "south";
             c.set(x, 5, z, (k % 2 == 0 ? "cv_portrait" : "cv_portrait_b") + "[facing=" + f + "]");
+        }
+    }
+
+    /**
+     * The drum's face smoothed the way the photos' concrete drums are: a skin of round precast
+     * panels just outside the stepped wall, the clerestory a continuous band of glass round it,
+     * the cornice a ring over the top; left open at the portal, the fire door and the concourse.
+     */
+    private void skin() {
+        double ox = CHX + 0.5, oz = CHZ + 0.5;
+        for (Round.Cell k : Round.ring(ox, oz, CHR + 1.1)) {
+            if (r(k.x(), k.z()) <= CHR + 0.5) {
+                continue; // never eat into the wall itself
+            }
+            for (int y = 1; y <= TOP + 1; y++) {
+                boolean portalGap = k.z() < CHZ && k.x() >= CHX - 6 && k.x() <= CHX + 5 && y <= 6;
+                boolean fireGap = k.x() < CHX && Math.abs(k.z() - CHZ) <= 1 && y <= 3;
+                if (portalGap || fireGap) {
+                    continue;
+                }
+                String m = y >= 7 && y <= 8 ? "glaze" : "twr";
+                c.set(k.x(), y, k.z(), "rd_" + m + "_" + k.suffix() + "[facing=" + k.facing() + "]");
+            }
         }
     }
 

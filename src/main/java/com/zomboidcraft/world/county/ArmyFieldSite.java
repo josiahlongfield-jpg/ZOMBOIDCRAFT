@@ -85,6 +85,9 @@ final class ArmyFieldSite extends FrameSite {
         return jx && jz ? "af_apron_jj[facing=north]" : jx ? "af_apron_j[facing=north]" : jz ? "af_apron_j[facing=east]" : "af_apron";
     }
 
+    /** How far in from each threshold the arresting gear's cable crosses the runway. */
+    private static final int GEAR = 460;
+
     private String runway(int ax, int az) {
         int L = ArmyField.HALF_LEN, u = ax < 0 ? ax + L : L - 1 - ax, aaz = Math.abs(az);
         boolean paint = aaz == ArmyField.HALF_W
@@ -94,6 +97,14 @@ final class ArmyFieldSite extends FrameSite {
                 || az == 0 && u >= 70 && Math.floorMod(ax + L, 50) < 30;
         if (paint) {
             return "af_paint";
+        }
+        // the arresting gear's cable across the runway near each end, the yellow discs on the
+        // pavement marking where it lies
+        if (u == GEAR && aaz < ArmyField.HALF_W) {
+            return "af_rwy_tar";
+        }
+        if (u == GEAR + 1 && aaz % 5 == 2) {
+            return "af_paint_y";
         }
         // the touchdown zones gone black with tyre rubber, the cracks tarred over between the slabs
         if (u >= 120 && u < 400 && aaz <= 7 && rnd(ax, az, 0x7B8E) < 0.6 - aaz * 0.06) {
@@ -234,6 +245,26 @@ final class ArmyFieldSite extends FrameSite {
             for (int s = -1; s <= 1; s += 2) {
                 if (!openTo(ax, s)) {
                     light(ax, ArmyField.TWY_Z + s * (ArmyField.TWY_HALF + 1), "af_light_twy[facing=north]");
+                }
+            }
+        }
+        // the arresting gear's housings either side of the runway at each cable: a low concrete
+        // pit cover with its hatch, the tape reel drum, the yellow disc marker on its post
+        for (int end = -1; end <= 1; end += 2) {
+            int gx = end < 0 ? -L + GEAR : L - 1 - GEAR;
+            for (int s = -1; s <= 1; s += 2) {
+                int z0 = s * (W + 6);
+                for (int dx = -1; dx <= 2; dx++) {
+                    for (int k = 0; k < 3; k++) {
+                        a.set(gx + dx, 1, z0 + s * k, "concrete_panel");
+                    }
+                }
+                a.set(gx, 2, z0 + s, "pw_reel[axis=x]");
+                a.set(gx + 2, 2, z0 + s, "bd_hatch[facing=" + (s < 0 ? "north" : "south") + "]");
+                a.set(gx + 3, 1, s * (W + 4), "fence_post");
+                a.set(gx + 3, 2, s * (W + 4), "af_light_thr[facing=" + (s < 0 ? "north" : "south") + "]");
+                for (int z = W + 1; z <= W + 5; z++) {
+                    a.set(gx, 0, s * z, "af_rwy_tar");
                 }
             }
         }

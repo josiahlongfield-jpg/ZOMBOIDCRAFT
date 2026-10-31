@@ -23,6 +23,8 @@ public class ZomboidCraft implements ModInitializer {
     public void onInitialize() {
         ZcConfig.load();
         SurvivalStats.register();
+        com.zomboidcraft.survival.Nutrition.register();
+        com.zomboidcraft.survival.Sleep.register();
         Skills.register();
         com.zomboidcraft.skills.SkillBooks.register();
         com.zomboidcraft.zombie.ZombieLook.register();
@@ -31,6 +33,8 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.world.blocks.CityBlocks.register();
         com.zomboidcraft.world.cars.Cars.register();
         com.zomboidcraft.world.cars.CarNet.register();
+        com.zomboidcraft.world.cars.Mechanics.register();
+        com.zomboidcraft.world.cars.CarHoist.register();
         com.zomboidcraft.world.cars.CarKeys.register();
         com.zomboidcraft.world.cars.CarSounds.register();
         com.zomboidcraft.world.cars.AirSounds.register();
@@ -45,6 +49,7 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.world.trains.TrainCommand.register();
         com.zomboidcraft.world.lifts.Lifts.register();
         com.zomboidcraft.world.ferry.Ferries.register();
+        com.zomboidcraft.world.blocks.LightSwitch.register();
         com.zomboidcraft.combat.GunState.register();
         com.zomboidcraft.combat.Attachments.register();
         com.zomboidcraft.combat.GunFinish.register();
@@ -79,6 +84,7 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.zombie.population.Population.register();
         com.zomboidcraft.zombie.Hordes.register();
         ZcCommand.register();
+        com.zomboidcraft.sandbox.Sandbox.register();
         Cinematic.register();
         com.zomboidcraft.combat.CombatNet.register();
         com.zomboidcraft.combat.Impacts.register();

@@ -30,6 +30,7 @@ public final class ZcConfig {
     public Look look = new Look();
     public World world = new World();
     public Weather weather = new Weather();
+    public Nature nature = new Nature();
     public Combat combat = new Combat();
     /** Shooting limbs off zombies: how much each limb takes before it tears off, and how hard each kind of gun tears. */
     public Limbs limbs = new Limbs();
@@ -191,6 +192,22 @@ public final class ZcConfig {
         public double fireRainChance = 0.35;
         /** Share of the flammable spots in a blast's radius that catch. */
         public double blastFireChance = 0.35;
+    }
+
+    /** Companions: how they feel about you when you first meet. */
+    public Companions companions = new Companions();
+
+    public static class Companions {
+        /** Where a companion you spawn or recruit starts with you, 0..100: she trusts you, likes you and is a little drawn to you. */
+        public double startTrust = 60;
+        public double startAffection = 45;
+        public double startAttraction = 35;
+        /** How far each one is rolled either way, so every companion is a bit different. */
+        public double startSpread = 10;
+        /** Her gun never runs dry (the old way); off, she loads real rounds from her pack and goes looking for more. */
+        public boolean endlessAmmo = false;
+        /** The share of your experience a bonded companion picks up watching you work nearby (0 turns it off). */
+        public double watchShare = 0.25;
     }
 
     public Start start = new Start();
@@ -586,6 +603,7 @@ public final class ZcConfig {
     public static class Survival {
         public boolean thirst = true;
         public double thirstPerSecond = 0.07;
+        /** Zomboid's "sleep needed": off and you never get tired. */
         public boolean fatigue = true;
         public double fatiguePerSecond = 0.055;
         public boolean bleeding = true;
@@ -599,6 +617,25 @@ public final class ZcConfig {
         public int infectionMinutes = 40;
         /** Infected players rise as zombies. */
         public boolean reanimate = true;
+        /** In multiplayer a killing blow puts you down for this long instead, so a friend can revive you (not alone). */
+        public boolean downed = true;
+        public int downedSeconds = 60;
+        /** Zomboid hunger in place of Minecraft's food bar (survival/Needs). */
+        public boolean hunger = true;
+        /** Zomboid's "nutrition": calories, carbs, fats and proteins that move your weight. */
+        public boolean nutrition = true;
+        /** Real minutes in one Zomboid day for the needs clock (Zomboid's default day length is one hour). */
+        public double dayMinutes = 60;
+        /** Zomboid's "stats decrease speed": how fast hunger and the calorie burn climb (0.5 slow, 2 fast). */
+        public double statsDecrease = 1.0;
+        /** Calories an adult at rest burns in a Zomboid day; running, loads and cold burn more. */
+        public double caloriesPerDay = 2000;
+        /** How quickly the calorie bank moves your weight (1 = Zomboid's pace, approximately). */
+        public double weightChange = 1.0;
+        /** Hit points a fed, watered, rested body heals in a Zomboid hour (Minecraft's food bar no longer heals). */
+        public double regenPerHour = 3;
+        /** Zomboid's "sleep allowed": whether you can lie down at all. */
+        public boolean sleepAllowed = true;
     }
 
     public static class Building {
@@ -708,6 +745,8 @@ public final class ZcConfig {
         public double hotwireSeconds = 8;
         public double hotwireFail = 0.25;
         public double hotwireWear = 0.8;
+        /** How fast car parts wear from driving and crashes (CarParts): 1 is the plan's pace, 0 turns wear off. */
+        public double partWear = 1.0;
         /** How big a player is while in a car or aircraft (1 = full size): a little smaller so arms and legs stay inside the cabin. */
         public double carRiderScale = 0.85;
     }
@@ -776,6 +815,38 @@ public final class ZcConfig {
         public boolean affectsZombies = true;
     }
 
+    /**
+     * Project Zomboid's sandbox Nature page, with its own options. The weather ones are run here; farming, foraging,
+     * fishing, clay and erosion settings join this section as those systems are built.
+     */
+    public static class Nature {
+        /**
+         * Zomboid's climate cycle: "normal" (the weather comes and goes), "no_weather" (dry and still under the
+         * clouds), "endless_rain" (rain and downpours only) or "endless_storm" (storms only, with their warnings).
+         * Zomboid's endless snow and blizzard wait until there is snow.
+         */
+        public String climateCycle = "normal";
+        /** Zomboid's fog cycle: "normal" (fog rolls in and out), "no_fog" or "endless_fog" (thick fog day and night). */
+        public String fogCycle = "normal";
+        /**
+         * Zomboid's rain: "very_dry", "dry", "normal", "rainy" or "very_rainy". Shifts how heavy the rain gets and how
+         * often downpours and storms come; drier settings let it ease below weather.minRain. Normal is the mix chosen
+         * for the city: never below moderate, often heavy.
+         */
+        public String rain = "normal";
+        /**
+         * Zomboid's temperature: "very_cold", "cold", "normal", "hot" or "very_hot". Sets the air temperature, which
+         * drops at night, in rain and in wind; it only matters to you when body temperature is on.
+         */
+        public String temperature = "normal";
+        /** Zomboid's max fog intensity, for what you see: "normal", "moderate", "low" or "none". Zombies still go by the real fog. Client side. */
+        public String maxFog = "normal";
+        /** Zomboid's max rain effects intensity, for what you see of the rain: "normal", "moderate" or "low". Client side. */
+        public String maxRainFx = "normal";
+        /** Zomboid's snow on the ground. Not built yet: there is no snow, so this does nothing for now. */
+        public boolean snowOnGround = false;
+    }
+
     public static class Look {
         /** Zomboid-style zombie model and outfits. Client side; needs a restart. */
         public boolean customZombies = true;
@@ -833,6 +904,8 @@ public final class ZcConfig {
          * closed meshes. Client side.
          */
         public int companionDraw = 0;
+        /** A companion's own voiced lines (her lines.txt) also show in chat as subtitles. Client side. */
+        public boolean npcSubtitles = true;
     }
 
     public static class Combat {
@@ -1404,8 +1477,8 @@ public final class ZcConfig {
     public static class MinigunStats extends GunStats {
         {
             damage = 12.0;
-            hipSpread = 1.2;
-            aimSpread = 1.2;
+            hipSpread = 0.9;    // zoomed out; aimSpread zoomed in (right-click)
+            aimSpread = 0.35;
             shotNoise = 140.0;
             range = 160.0;
             autoRpm = 945.0;
@@ -1561,7 +1634,7 @@ public final class ZcConfig {
      * are left alone).
      */
     public int defaultsVersion = 0;
-    private static final int DEFAULTS = 15;
+    private static final int DEFAULTS = 16;
 
     private static void upgrade(ZcConfig c) {
         if (c.defaultsVersion < 1) {
@@ -1734,6 +1807,15 @@ public final class ZcConfig {
             c.trains.railCars = Math.min(c.trains.railCars, 3);
             c.trains.subwayCars = Math.min(c.trains.subwayCars, 3);
         }
+        if (c.defaultsVersion < 16) {
+            // 2026-10-30 (Josiah): the Warthog minigun's ring a little tighter, much tighter zoomed in
+            if (c.minigun.hipSpread == 1.2) {
+                c.minigun.hipSpread = 0.9;
+            }
+            if (c.minigun.aimSpread == 1.2) {
+                c.minigun.aimSpread = 0.35;
+            }
+        }
         c.defaultsVersion = DEFAULTS;
     }
 
@@ -1760,10 +1842,16 @@ public final class ZcConfig {
     }
 
     public static void save() {
+        if (quiet) {
+            return;
+        }
         try {
             Files.createDirectories(FILE.getParent());
             try (Writer writer = Files.newBufferedWriter(FILE)) {
-                GSON.toJson(instance, writer);
+                // a world's own sandbox values never leak into this file: it keeps what it had before the world opened
+                com.google.gson.JsonObject tree = GSON.toJsonTree(instance).getAsJsonObject();
+                com.zomboidcraft.sandbox.Sandbox.unapply(tree);
+                GSON.toJson(tree, writer);
             }
         } catch (IOException e) {
             ZomboidCraft.LOGGER.error("Couldn't save {}", FILE, e);
@@ -1819,6 +1907,45 @@ public final class ZcConfig {
             throw new IllegalArgumentException("Unknown setting " + key);
         }
         save();
+    }
+
+    // ---- for the per-world sandbox settings (sandbox/Sandbox) ----
+
+    /** While set, save() writes nothing: a world's values are put in place without touching the file. */
+    private static boolean quiet;
+    private static ZcConfig defaults;
+
+    /** Sets a setting for now only, without saving the file. */
+    public static void applyValue(String key, String raw) {
+        quiet = true;
+        try {
+            setValue(key, raw);
+        } finally {
+            quiet = false;
+        }
+    }
+
+    /** A setting's current value as it is written in the file. */
+    public static com.google.gson.JsonElement jsonValue(String key) {
+        return GSON.toJsonTree(getValue(key, instance));
+    }
+
+    /** What a setting is out of the box, before anyone changed it. */
+    public static String defaultValue(String key) {
+        if (defaults == null) {
+            defaults = new ZcConfig();
+        }
+        return String.valueOf(getValue(key, defaults));
+    }
+
+    private static Object getValue(String key, ZcConfig from) {
+        try {
+            String[] parts = key.split("\\.", 2);
+            Object group = ZcConfig.class.getField(parts[0]).get(from);
+            return group.getClass().getField(parts[1]).get(group);
+        } catch (ReflectiveOperationException | ArrayIndexOutOfBoundsException e) {
+            throw new IllegalArgumentException("Unknown setting " + key);
+        }
     }
 
     private ZcConfig() {

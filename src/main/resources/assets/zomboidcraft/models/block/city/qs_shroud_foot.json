@@ -1,0 +1,76 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "qs_shroud": "zomboidcraft:block/city/qs_shroud",
+    "particle": "zomboidcraft:block/city/qs_shroud"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        0,
+        0
+      ],
+      "to": [
+        12,
+        3.5,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#qs_shroud",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#qs_shroud"
+        },
+        "east": {
+          "texture": "#qs_shroud"
+        },
+        "west": {
+          "texture": "#qs_shroud"
+        },
+        "up": {
+          "texture": "#qs_shroud"
+        },
+        "down": {
+          "texture": "#qs_shroud",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        0,
+        12
+      ],
+      "to": [
+        11,
+        2.5,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#qs_shroud"
+        },
+        "south": {
+          "texture": "#qs_shroud"
+        },
+        "east": {
+          "texture": "#qs_shroud"
+        },
+        "west": {
+          "texture": "#qs_shroud"
+        },
+        "up": {
+          "texture": "#qs_shroud"
+        },
+        "down": {
+          "texture": "#qs_shroud",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

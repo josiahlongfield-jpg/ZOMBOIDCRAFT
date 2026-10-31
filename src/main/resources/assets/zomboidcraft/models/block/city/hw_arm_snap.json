@@ -1,0 +1,91 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hw_arm": "zomboidcraft:block/city/hw_arm",
+    "particle": "zomboidcraft:block/city/hw_arm"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        6
+      ],
+      "to": [
+        16,
+        1.5,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hw_arm"
+        },
+        "south": {
+          "texture": "#hw_arm"
+        },
+        "east": {
+          "texture": "#hw_arm"
+        },
+        "west": {
+          "texture": "#hw_arm"
+        },
+        "up": {
+          "texture": "#hw_arm"
+        },
+        "down": {
+          "texture": "#hw_arm"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          0,
+          7
+        ],
+        "axis": "y",
+        "angle": 22.5
+      }
+    },
+    {
+      "from": [
+        1,
+        0,
+        10
+      ],
+      "to": [
+        9,
+        1.5,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hw_arm"
+        },
+        "south": {
+          "texture": "#hw_arm"
+        },
+        "east": {
+          "texture": "#hw_arm"
+        },
+        "west": {
+          "texture": "#hw_arm"
+        },
+        "up": {
+          "texture": "#hw_arm"
+        },
+        "down": {
+          "texture": "#hw_arm"
+        }
+      },
+      "rotation": {
+        "origin": [
+          5,
+          0,
+          11
+        ],
+        "axis": "y",
+        "angle": -22.5
+      }
+    }
+  ]
+}

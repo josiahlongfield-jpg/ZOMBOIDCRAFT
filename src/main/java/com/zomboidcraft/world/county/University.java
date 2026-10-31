@@ -81,6 +81,10 @@ final class University extends Grounds {
         pave(EAST_WALK0, 36, DORM_X0 + 12, 40);
         pave(LOT_X1 + 1, 18, 87, 22);
         pave(WEST_WALK0, 47, WEST_WALK1, 50);
+        // the diagonals the students wore across the lawns from the quad's corners to the fountain, paved after
+        for (int[] c : new int[][] {{WEST_WALK1 + 1, 51}, {EAST_WALK0 - 1, 51}, {WEST_WALK1 + 1, CROSS_B0 - 1}, {EAST_WALK0 - 1, CROSS_B0 - 1}}) {
+            diagonal(c[0], c[1], FX, FZ);
+        }
         // round the fountain
         for (int x = FX - FR - 3; x <= FX + FR + 3; x++) {
             for (int z = FZ - FR - 3; z <= FZ + FR + 3; z++) {
@@ -88,6 +92,39 @@ final class University extends Grounds {
                 if (r <= FR + 3) {
                     set(x, 0, z, chance() < 0.25 ? "un_paver_b" : "un_paver");
                 }
+            }
+        }
+    }
+
+    /** A walk three wide from (x0, z0) straight to (x1, z1), its lamps and benches every so often along it. */
+    private void diagonal(int x0, int z0, int x1, int z1) {
+        double len = Math.hypot(x1 - x0, z1 - z0);
+        for (double t = 0; t <= len; t += 0.5) {
+            double x = x0 + (x1 - x0) * t / len, z = z0 + (z1 - z0) * t / len;
+            for (int dx = -1; dx <= 1; dx++) {
+                for (int dz = -1; dz <= 1; dz++) {
+                    if (Math.abs(dx) + Math.abs(dz) < 2) {
+                        set((int) Math.round(x) + dx, 0, (int) Math.round(z) + dz, chance() < 0.25 ? "un_paver_b" : "un_paver");
+                    }
+                }
+            }
+        }
+    }
+
+    /** The lamps and benches down a diagonal walk, set off its edge; done with the quad's furniture. */
+    private void diagonalFurniture(int x0, int z0, int x1, int z1) {
+        double len = Math.hypot(x1 - x0, z1 - z0), nx = -(z1 - z0) / len, nz = (x1 - x0) / len;
+        for (double t = 8; t < len - FR - 4; t += 11) {
+            double x = x0 + (x1 - x0) * t / len, z = z0 + (z1 - z0) * t / len;
+            int lx = (int) Math.round(x + nx * 2.6), lz = (int) Math.round(z + nz * 2.6);
+            if (empty(lx, 1, lz)) {
+                lampPost(lx, lz);
+            }
+            int bx = (int) Math.round(x - nx * 2.4), bz = (int) Math.round(z - nz * 2.4);
+            String f = Math.abs(nx) > Math.abs(nz) ? (nx > 0 ? "west" : "east") : (nz > 0 ? "north" : "south");
+            bench(bx, bz, f);
+            if ((int) (t / 11) % 2 == 1) {
+                tree((int) Math.round(x - nx * 6), (int) Math.round(z - nz * 6));
             }
         }
     }
@@ -242,25 +279,25 @@ final class University extends Grounds {
 
     /** The lawns gone to seed, the oaks down the walks, the fountain, the benches and lamps. */
     private void quad() {
-        // the fountain: a stone basin, the water gone green, the statue in the middle on its column
-        for (int x = FX - FR; x <= FX + FR; x++) {
-            for (int z = FZ - FR; z <= FZ + FR; z++) {
-                double r = Math.hypot(x - FX, z - FZ);
-                if (r > FR + 0.5) {
-                    continue;
-                }
-                set(x, -1, z, "stone_trim");
-                if (r > FR - 0.7) {
-                    set(x, 0, z, "stone_trim");
-                    set(x, 1, z, "stone_trim");
-                } else {
+        // the fountain: a smooth stone drum round the water gone green, the statue in the middle on its column
+        double ox = FX + 0.5, oz = FZ + 0.5;
+        java.util.Set<Long> rim = new java.util.HashSet<>();
+        for (Round.Cell c : Round.ring(ox, oz, FR + 0.4)) {
+            rim.add(((long) c.x() << 32) ^ (c.z() & 0xffffffffL));
+        }
+        for (int x = FX - FR - 1; x <= FX + FR + 1; x++) {
+            for (int z = FZ - FR - 1; z <= FZ + FR + 1; z++) {
+                if (Math.hypot(x + 0.5 - ox, z + 0.5 - oz) < FR + 0.2 && !rim.contains(((long) x << 32) ^ (z & 0xffffffffL))) {
+                    set(x, -1, z, "stone_trim");
                     set(x, 0, z, "minecraft:water");
-                    if (chance() < 0.2) {
+                    if (chance() < 0.15) {
                         set(x, 1, z, any("paper", "trash_bag[facing=" + dir() + "]"));
                     }
                 }
             }
         }
+        Round.wall(p, ox, oz, FR + 0.4, 0, 1, "twr", 0);
+        Round.wall(p, ox, oz, 1.4, 1, 2, "twr", 0);
         fill(FX, 0, FZ, FX, 2, FZ, "stone_trim");
         set(FX, 3, FZ, "ch_statue[facing=north]");
         set(FX, 4, FZ, "ch_statue_top[facing=north]");
@@ -292,6 +329,9 @@ final class University extends Grounds {
                 }
                 bench(x + 2, c[1], "north");
             }
+        }
+        for (int[] c : new int[][] {{WEST_WALK1 + 1, 51}, {EAST_WALK0 - 1, 51}, {WEST_WALK1 + 1, CROSS_B0 - 1}, {EAST_WALK0 - 1, CROSS_B0 - 1}}) {
+            diagonalFurniture(c[0], c[1], FX, FZ);
         }
         // the lawns, worst where the tents stood
         Kit.lawn(p, rng, 5, 5, w - 6, d - 6, 0.7);

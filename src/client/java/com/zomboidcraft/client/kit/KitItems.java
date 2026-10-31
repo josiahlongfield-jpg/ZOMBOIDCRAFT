@@ -275,7 +275,7 @@ final class KitItems {
         var item = stack.getItem();
         if (item instanceof HammerItem) return Category.TOOLS;
         if (weapon(stack)) return Category.WEAPONS;
-        if (item instanceof BandageItem || item instanceof SplintItem || stack.has(DataComponents.POTION_CONTENTS)) return Category.MEDICAL;
+        if (item instanceof BandageItem || item instanceof SplintItem || item instanceof com.zomboidcraft.survival.MedicalItem || stack.has(DataComponents.POTION_CONTENTS)) return Category.MEDICAL;
         if (stack.has(DataComponents.FOOD) || stack.has(DataComponents.CONSUMABLE)) return Category.FOOD;
         if (item instanceof MagazineItem || ammo(stack)) return Category.AMMO;
         if (item instanceof AttachmentItem) return Category.GUN_PARTS;

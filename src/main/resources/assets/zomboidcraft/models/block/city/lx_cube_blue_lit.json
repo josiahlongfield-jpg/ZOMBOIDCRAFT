@@ -1,0 +1,107 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "lx_blue_lit": "zomboidcraft:block/city/lx_blue_lit",
+    "lx_steel": "zomboidcraft:block/city/lx_steel",
+    "particle": "zomboidcraft:block/city/lx_steel"
+  },
+  "elements": [
+    {
+      "from": [
+        4,
+        15,
+        4
+      ],
+      "to": [
+        12,
+        16,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#lx_steel"
+        },
+        "south": {
+          "texture": "#lx_steel"
+        },
+        "east": {
+          "texture": "#lx_steel"
+        },
+        "west": {
+          "texture": "#lx_steel"
+        },
+        "up": {
+          "texture": "#lx_steel",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#lx_steel"
+        }
+      }
+    },
+    {
+      "from": [
+        7.5,
+        13,
+        7.5
+      ],
+      "to": [
+        8.5,
+        15,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#lx_steel"
+        },
+        "south": {
+          "texture": "#lx_steel"
+        },
+        "east": {
+          "texture": "#lx_steel"
+        },
+        "west": {
+          "texture": "#lx_steel"
+        },
+        "up": {
+          "texture": "#lx_steel"
+        },
+        "down": {
+          "texture": "#lx_steel"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        7,
+        5
+      ],
+      "to": [
+        11,
+        13,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#lx_blue_lit"
+        },
+        "south": {
+          "texture": "#lx_blue_lit"
+        },
+        "east": {
+          "texture": "#lx_blue_lit"
+        },
+        "west": {
+          "texture": "#lx_blue_lit"
+        },
+        "up": {
+          "texture": "#lx_blue_lit"
+        },
+        "down": {
+          "texture": "#lx_blue_lit"
+        }
+      }
+    }
+  ]
+}
