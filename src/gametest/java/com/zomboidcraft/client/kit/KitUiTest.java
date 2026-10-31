@@ -839,6 +839,7 @@ public class KitUiTest implements FabricClientGameTest {
         sp.getServer().runCommand("zc npc clear");
         mechanicsTest(ctx, sp);
         sandboxTest(ctx);
+        deathCardTest(ctx);
     }
 
     /** Bonding (Josiah 2026-10-30): the prompt on a first G, then K's selection of two companions, sliding, and a pick. */
@@ -988,6 +989,20 @@ public class KitUiTest implements FabricClientGameTest {
         ctx.runOnClient(mc -> mc.gui.setScreen(SandboxScreen.forNewWorld(null)));
         ctx.waitTicks(6);
         ctx.takeScreenshot("sandbox-06-newworld");
+        ctx.runOnClient(mc -> mc.gui.setScreen(null));
+    }
+
+    /** The death card (Josiah 2026-10-31): one who was bitten and will rise, one who fell and stays down. */
+    private static void deathCardTest(ClientGameTestContext ctx) {
+        ctx.runOnClient(mc -> mc.gui.setScreen(new DeathCardScreen(new com.zomboidcraft.survival.DeathCard.Card(
+                "Mara Kowalski", 23 * 24000L + 7000, 412, "Mara Kowalski was slain by Zombie", "Mercer Ave Pharmacy, Grayhaven",
+                1184, -2210, true, List.of("Aiming 5", "Mechanics 4", "Carpentry 3", "Sprinting 3", "Sneaking 2", "First Aid 2", "Maintenance 1")), null)));
+        ctx.waitTicks(10);
+        ctx.takeScreenshot("death-card-risen");
+        ctx.runOnClient(mc -> mc.gui.setScreen(new DeathCardScreen(new com.zomboidcraft.survival.DeathCard.Card(
+                "Dale Hurst", 2 * 24000L + 15000, 9, "Dale Hurst fell from a high place", "", 412, 380, false, List.of()), null)));
+        ctx.waitTicks(10);
+        ctx.takeScreenshot("death-card-fell");
         ctx.runOnClient(mc -> mc.gui.setScreen(null));
     }
 

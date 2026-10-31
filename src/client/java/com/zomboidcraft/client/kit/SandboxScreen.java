@@ -85,10 +85,10 @@ public class SandboxScreen extends Screen {
         };
         ScreenEvents.AFTER_INIT.register((client, screen, w, h) -> {
             if (screen instanceof PauseScreen && client.player != null) {
-                Screens.getButtons(screen).add(Button.builder(Component.literal("Sandbox settings"),
+                Screens.getWidgets(screen).add(Button.builder(Component.literal("Sandbox settings"),
                         b -> client.gui.setScreen(new SandboxScreen(screen))).bounds(6, 6, 110, 20).build());
             } else if (screen instanceof CreateWorldScreen) {
-                Screens.getButtons(screen).add(Button.builder(Component.literal("ZomboidCraft sandbox"),
+                Screens.getWidgets(screen).add(Button.builder(Component.literal("ZomboidCraft sandbox"),
                         b -> client.gui.setScreen(forNewWorld(screen))).bounds(w - 136, 6, 130, 20).build());
             }
         });
