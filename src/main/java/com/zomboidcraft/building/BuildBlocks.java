@@ -70,11 +70,13 @@ public final class BuildBlocks {
     public static @Nullable IntegerProperty bashDamage(BlockState state) {
         if (state.is(METAL_SHEET)) return MetalSheet.DAMAGE;
         if (state.is(SPIKED_WALL)) return SpikedWall.DAMAGE;
+        if (state.is(WoodBlocks.WALL)) return WoodBlocks.Wall.DAMAGE;
         return null;
     }
 
     /** Blows such a build stands. */
     public static int bashHits(BlockState state) {
+        if (state.is(WoodBlocks.WALL)) return Math.max(1, WoodBlocks.wallHits(state));
         return Math.max(1, state.is(SPIKED_WALL) ? ZcConfig.get().building.spikedWallHits : ZcConfig.get().building.metalSheetHits);
     }
 

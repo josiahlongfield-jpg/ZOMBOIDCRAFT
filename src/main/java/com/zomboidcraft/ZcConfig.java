@@ -817,6 +817,14 @@ public final class ZcConfig {
         /** Blows a spiked log wall stands, and the damage its spikes do to a zombie pushing or beating on it. */
         public int spikedWallHits = 24;
         public float spikeDamage = 2f;
+        /** Blows a boarded wooden wall stands at Carpentry 0 (a tenth more for each level of its builder's Carpentry). */
+        public int woodWallHits = 30;
+        /** How many boards a wooden floor reaches out from whatever holds it up. */
+        public int floorSpan = 3;
+        /** How long a floor that's lost its support sags and creaks before it falls in, in seconds. */
+        public int floorSagSeconds = 60;
+        /** How many wooden posts stand one on another. */
+        public int postStack = 3;
         /** Furniture weight: kilograms at or over these are medium (table, bed, sofa) and large (wardrobe, counter, fridge). */
         public double mediumKg = 6;
         public double largeKg = 19;

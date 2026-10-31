@@ -452,6 +452,7 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
         if (page == Page.BENCH && bench.scrolled(mx, my, sy)) return true;
         if (page == Page.MAP && map.scrolled(mx, my, sy)) return true;
         if (page == Page.SKILLS && skills.scrolled(mx, my, sy)) return true;
+        if (page == Page.BUILD && build.scrolled(mx, my, sy)) return true;
         return true;
     }
 
