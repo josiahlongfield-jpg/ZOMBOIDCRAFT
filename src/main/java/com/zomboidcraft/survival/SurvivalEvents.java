@@ -80,7 +80,8 @@ public final class SurvivalEvents {
                         player.getBoundingBox().inflate(16), ZombieTypes::isWalker).isEmpty()) {
             Skills.addXp(player, Skill.SNEAKING, 1);
         }
-        stats = stats.withThirst(stats.thirst() - thirstDrain * (Sleep.asleep(player) ? 0.5f : 1f));
+        stats = stats.withThirst(stats.thirst() - thirstDrain * (Sleep.asleep(player) ? 0.5f : 1f)
+                * com.zomboidcraft.survival.character.Traits.thirstScale(player));
         if (stats.thirst() <= 0f && second % 4 == 0) {
             player.hurtServer(level, ModDamageTypes.source(level, ModDamageTypes.THIRST), 1f);
         }
@@ -91,7 +92,8 @@ public final class SurvivalEvents {
         } else if (player.isSleeping()) {
             stats = stats.withFatigue(stats.fatigue() - Sleep.Bed.GOOD.restPerHour / Needs.hourSeconds());
         } else {
-            stats = stats.withFatigue(config.fatigue ? stats.fatigue() + (float) config.fatiguePerSecond : 0f);
+            stats = stats.withFatigue(config.fatigue ? stats.fatigue() + (float) config.fatiguePerSecond
+                    * com.zomboidcraft.survival.character.Traits.fatigueScale(player) : 0f);
         }
 
         // Bleeding and healing are per body part now: see Injuries
@@ -101,7 +103,11 @@ public final class SurvivalEvents {
             stats = stats.withInfection(-1);
         }
         if (stats.infected()) {
-            stats = stats.withInfection(stats.infection() + 1);
+            // Resilient holds it back a quarter; Prone to Illness lets it run a quarter faster
+            int step = 1;
+            if (com.zomboidcraft.survival.character.Traits.has(player, "resilient") && random.nextInt(4) == 0) step = 0;
+            if (com.zomboidcraft.survival.character.Traits.has(player, "prone_to_illness") && random.nextInt(4) == 0) step = 2;
+            stats = stats.withInfection(stats.infection() + step);
             float progress = stats.infectionProgress();
             if (progress > 0.25f && random.nextInt(40) == 0) {
                 effect(player, MobEffects.NAUSEA, 0, 160);
@@ -155,8 +161,12 @@ public final class SurvivalEvents {
                 player.sendOverlayMessage(Component.literal("You've been bitten on the " + where.label + ".").withStyle(ChatFormatting.DARK_RED));
             }
         } else if (roll < config.biteChance + config.scratchChance) {
-            Body.Region where = Injuries.zombieWound(player, false, crawler);
-            if (where == null) {
+            // Thick Skinned: a quarter of scratches don't break the skin; Thin-skinned: none of them fail to
+            boolean thick = com.zomboidcraft.survival.character.Traits.has(player, "thick_skinned") && random.nextInt(4) == 0;
+            Body.Region where = thick ? null : Injuries.zombieWound(player, false, crawler);
+            if (thick) {
+                player.sendOverlayMessage(Component.literal("It didn't break the skin.").withStyle(ChatFormatting.GRAY));
+            } else if (where == null) {
                 player.sendOverlayMessage(Component.literal("Your clothes took the scratch.").withStyle(ChatFormatting.GRAY));
             } else {
                 // Zomboid's odds: a laceration carries it a quarter of the time, a scratch 7%

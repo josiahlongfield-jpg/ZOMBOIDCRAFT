@@ -1,0 +1,302 @@
+{
+ "note": "PROVISIONAL: B41 MainCreationMethods values with the B42 changes known so far. Replace with Zomboid B42's own game data when it arrives from Josiah's PC (survival/pz-b42-data).",
+ "occupations": [
+  {
+   "id": "unemployed",
+   "name": "Unemployed",
+   "points": 8,
+   "skills": {},
+   "traits": [],
+   "description": "No job to speak of, and the most points to spend."
+  },
+  {
+   "id": "fire_officer",
+   "name": "Fire Officer",
+   "points": 0,
+   "skills": {
+    "FITNESS": 1,
+    "STRENGTH": 1,
+    "BLADE": 1,
+    "SPRINTING": 1
+   },
+   "traits": [],
+   "description": "Fit, strong and handy with an axe."
+  },
+  {
+   "id": "police_officer",
+   "name": "Police Officer",
+   "points": -4,
+   "skills": {
+    "AIMING": 3,
+    "RELOADING": 2,
+    "NIMBLE": 1
+   },
+   "traits": [],
+   "description": "Trained with a handgun."
+  },
+  {
+   "id": "park_ranger",
+   "name": "Park Ranger",
+   "points": -4,
+   "skills": {
+    "FORAGING": 2,
+    "TRAPPING": 2,
+    "TRACKING": 1,
+    "CARPENTRY": 1,
+    "BLADE": 1
+   },
+   "traits": [
+    "herbalist"
+   ],
+   "description": "Knows the woods: what to eat, where game runs."
+  },
+  {
+   "id": "construction_worker",
+   "name": "Construction Worker",
+   "points": -2,
+   "skills": {
+    "BLUNT": 3,
+    "CARPENTRY": 1
+   },
+   "traits": [],
+   "description": "Swings a hammer all day."
+  },
+  {
+   "id": "security_guard",
+   "name": "Security Guard",
+   "points": -2,
+   "skills": {
+    "SPRINTING": 2,
+    "LIGHTFOOTED": 1
+   },
+   "traits": [
+    "night_owl"
+   ],
+   "description": "Used to nights awake."
+  },
+  {
+   "id": "carpenter",
+   "name": "Carpenter",
+   "points": -2,
+   "skills": {
+    "CARPENTRY": 3,
+    "BLUNT": 1,
+    "MASONRY": 1
+   },
+   "traits": [],
+   "description": "Builds and mends with wood."
+  },
+  {
+   "id": "burglar",
+   "name": "Burglar",
+   "points": -6,
+   "skills": {
+    "NIMBLE": 2,
+    "SNEAKING": 2,
+    "LIGHTFOOTED": 2
+   },
+   "traits": [
+    "burglar"
+   ],
+   "description": "Quiet, quick, and can hotwire a car."
+  },
+  {
+   "id": "chef",
+   "name": "Chef",
+   "points": -4,
+   "skills": {
+    "COOKING": 3,
+    "MAINTENANCE": 1,
+    "BLADE": 1,
+    "BUTCHERING": 1
+   },
+   "traits": [],
+   "description": "Knows the recipes."
+  },
+  {
+   "id": "diy_expert",
+   "name": "DIY Expert",
+   "points": -4,
+   "skills": {
+    "CARPENTRY": 1,
+    "MAINTENANCE": 2,
+    "BLUNT": 1
+   },
+   "traits": [],
+   "description": "Keeps tools and things working."
+  },
+  {
+   "id": "farmer",
+   "name": "Farmer",
+   "points": 2,
+   "skills": {
+    "AGRICULTURE": 3
+   },
+   "traits": [],
+   "description": "Grows food."
+  },
+  {
+   "id": "rancher",
+   "name": "Rancher",
+   "points": -2,
+   "skills": {
+    "ANIMAL_CARE": 3,
+    "BUTCHERING": 1,
+    "AGRICULTURE": 1
+   },
+   "traits": [],
+   "description": "Raises and butchers livestock."
+  },
+  {
+   "id": "fisherman",
+   "name": "Fisherman",
+   "points": -2,
+   "skills": {
+    "FISHING": 3,
+    "FORAGING": 1
+   },
+   "traits": [],
+   "description": "Lives off the water."
+  },
+  {
+   "id": "doctor",
+   "name": "Doctor",
+   "points": 2,
+   "skills": {
+    "FIRST_AID": 3,
+    "BLADE": 1
+   },
+   "traits": [],
+   "description": "Treats wounds well."
+  },
+  {
+   "id": "veteran",
+   "name": "Veteran",
+   "points": -8,
+   "skills": {
+    "AIMING": 3,
+    "RELOADING": 2
+   },
+   "traits": [
+    "desensitized"
+   ],
+   "description": "Has seen worse; doesn't panic."
+  },
+  {
+   "id": "nurse",
+   "name": "Nurse",
+   "points": 2,
+   "skills": {
+    "FIRST_AID": 2,
+    "LIGHTFOOTED": 1
+   },
+   "traits": [],
+   "description": "Patches people up."
+  },
+  {
+   "id": "lumberjack",
+   "name": "Lumberjack",
+   "points": 0,
+   "skills": {
+    "BLADE": 2,
+    "STRENGTH": 1
+   },
+   "traits": [
+    "axpert"
+   ],
+   "description": "Fells trees, and anything else, with an axe."
+  },
+  {
+   "id": "fitness_instructor",
+   "name": "Fitness Instructor",
+   "points": -6,
+   "skills": {
+    "FITNESS": 3,
+    "SPRINTING": 2
+   },
+   "traits": [
+    "nutritionist"
+   ],
+   "description": "Fit, and reads a food label."
+  },
+  {
+   "id": "burger_flipper",
+   "name": "Burger Flipper",
+   "points": 2,
+   "skills": {
+    "COOKING": 2,
+    "MAINTENANCE": 1,
+    "BLADE": 1
+   },
+   "traits": [],
+   "description": "Cooks fast."
+  },
+  {
+   "id": "electrician",
+   "name": "Electrician",
+   "points": -4,
+   "skills": {
+    "ELECTRICAL": 3
+   },
+   "traits": [],
+   "description": "Wires things up."
+  },
+  {
+   "id": "engineer",
+   "name": "Engineer",
+   "points": -4,
+   "skills": {
+    "ELECTRICAL": 1,
+    "CARPENTRY": 1
+   },
+   "traits": [],
+   "description": "Builds traps and contraptions."
+  },
+  {
+   "id": "metalworker",
+   "name": "Metalworker",
+   "points": -6,
+   "skills": {
+    "METALWORKING": 3,
+    "CARPENTRY": 1
+   },
+   "traits": [],
+   "description": "Cuts and joins metal."
+  },
+  {
+   "id": "mechanic",
+   "name": "Mechanic",
+   "points": -4,
+   "skills": {
+    "MECHANICS": 3,
+    "BLUNT": 1
+   },
+   "traits": [
+    "amateur_mechanic"
+   ],
+   "description": "Knows every car's parts."
+  },
+  {
+   "id": "blacksmith",
+   "name": "Blacksmith",
+   "points": -6,
+   "skills": {
+    "BLACKSMITHING": 3,
+    "METALWORKING": 1,
+    "BLADE": 1
+   },
+   "traits": [],
+   "description": "Forges tools and blades."
+  },
+  {
+   "id": "tailor",
+   "name": "Tailor",
+   "points": -2,
+   "skills": {
+    "TAILORING": 3
+   },
+   "traits": [],
+   "description": "Mends and makes clothes."
+  }
+ ]
+}

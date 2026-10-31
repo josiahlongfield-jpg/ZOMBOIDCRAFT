@@ -1,6 +1,7 @@
 package com.zomboidcraft.survival;
 
 import com.zomboidcraft.ZomboidCraft;
+import com.zomboidcraft.survival.character.Traits;
 import com.zomboidcraft.zombie.ZombieTypes;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentSyncPredicate;
@@ -46,7 +47,7 @@ public final class Panic {
 
     /** A zombie got its hands on you. */
     public static void hit(ServerPlayer player) {
-        set(player, get(player) + Math.round(18 * steel(player)));
+        set(player, get(player) + Math.round(18 * steel(player) * Traits.panicScale(player)));
     }
 
     /** Once a second (SurvivalEvents.tickPlayer). */
@@ -65,11 +66,15 @@ public final class Panic {
         int now = get(player);
         if (seen > 0) {
             // a crowd frightens more, but not without end
-            float rise = Math.min(14, 1.5f * seen) * steel(player);
-            set(player, now + Math.max(1, Math.round(rise)));
+            float rise = Math.min(14, 1.5f * seen) * steel(player) * Traits.panicScale(player);
+            set(player, now + (rise <= 0 ? 0 : Math.max(1, Math.round(rise))));
+        } else if (phobia(player) > 0) {
+            // the phobias build their own fear, to strong panic at most, with no zombie in sight
+            if (now < 60) set(player, Math.min(60, now + phobia(player)));
         } else if (now > 0) {
             set(player, now - (now > 60 ? 2 : 3));
         }
+        speed(player);
         if (seen > 0 && stage(get(player)) >= 3) Mood.add(player, Mood.Stat.STRESS, second % 3 == 0 ? 1 : 0);
     }
 
@@ -81,6 +86,36 @@ public final class Panic {
         long ticks = player.getStats().getValue(net.minecraft.stats.Stats.CUSTOM.get(net.minecraft.stats.Stats.TIME_SINCE_DEATH));
         double days = ticks / 20.0 / (Needs.hourSeconds() * 24);
         return (float) Math.max(0.2, 1 - 0.02 * days);
+    }
+
+    /**
+     * Zomboid's phobias, per second: Claustrophobic indoors, Agoraphobic out under the sky, Hemophobic while you're
+     * bleeding. Brave, Desensitized and the rest of {@link Traits#panicScale} still apply.
+     */
+    private static int phobia(ServerPlayer player) {
+        float f = 0;
+        boolean outside = player.level().canSeeSky(player.blockPosition().above());
+        if (Traits.has(player, "claustrophobic") && !outside) f += 2;
+        if (Traits.has(player, "agoraphobic") && outside) f += 2;
+        if (Traits.has(player, "hemophobic") && Body.get(player).bleeding() > 0) f += 3;
+        return Math.round(f * Traits.panicScale(player));
+    }
+
+    private static final net.minecraft.resources.Identifier RUSH = ZomboidCraft.id("adrenaline_rush");
+
+    /** Adrenaline Junkie: panic makes you quicker, 5% a stage from panic up. */
+    private static void speed(ServerPlayer player) {
+        var speed = player.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED);
+        if (speed == null) return;
+        int stage = stage(get(player));
+        double amount = Traits.has(player, "adrenaline_junkie") && stage >= 2 ? 0.05 * (stage - 1) : 0;
+        var current = speed.getModifier(RUSH);
+        if (amount == 0) {
+            if (current != null) speed.removeModifier(RUSH);
+        } else if (current == null || current.amount() != amount) {
+            speed.addOrUpdateTransientModifier(new net.minecraft.world.entity.ai.attributes.AttributeModifier(RUSH, amount,
+                    net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+        }
     }
 
     /** Panic throws your aim: added to Injuries.armShake. */
