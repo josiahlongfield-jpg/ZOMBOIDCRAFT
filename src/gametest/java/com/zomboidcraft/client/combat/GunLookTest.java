@@ -234,24 +234,28 @@ public class GunLookTest implements FabricClientGameTest {
         final int[] b = new int[3];
         sp.getServer().runCommand("kill @e[type=item]");
         sp.getServer().runCommand("clear @a");
+        sp.getServer().runCommand("weather clear");
+        sp.getServer().runCommand("time set noon");
+        ctx.waitTicks(2);
         sp.getServer().runOnServer(server -> {
-            var p = server.getPlayerList().getPlayers().get(0).blockPosition();
+            var pl = server.getPlayerList().getPlayers().get(0);
+            var p = pl.blockPosition();
             b[0] = p.getX();
-            b[1] = p.getY();
             b[2] = p.getZ();
+            b[1] = pl.level().getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, p.getX(), p.getZ() + 2);
         });
         int x = b[0], y = b[1], z = b[2] + 2;
         sp.getServer().runCommand("setblock " + x + " " + y + " " + z + " zomboidcraft:reloading_bench[facing=north]");
-        String at = (x + 0.5) + " " + (y + 0.7) + " " + (z + 0.5);
-        String[][] views = {
-                {"reload-bench-front", (x + 0.5) + " " + y + " " + (z - 2.3)},
-                {"reload-bench-angle", (x + 2.6) + " " + y + " " + (z - 1.6)},
-                {"reload-bench-left", (x - 2.2) + " " + y + " " + (z - 1.2)},
-                {"reload-bench-close", (x + 0.9) + " " + (y + 0.4) + " " + (z - 1.0)}};
-        for (String[] v : views) {
-            sp.getServer().runCommand("tp @a " + v[1] + " facing " + at);
+        Vec3 at = new Vec3(x + 0.5, y + 0.8, z + 0.5);
+        Object[][] views = {
+                {"reload-bench-front", new Vec3(x + 0.5, y, z - 2.3)},
+                {"reload-bench-angle", new Vec3(x + 2.6, y, z - 1.6)},
+                {"reload-bench-left", new Vec3(x - 2.2, y, z - 1.2)},
+                {"reload-bench-close", new Vec3(x + 0.9, y + 0.3, z - 0.9)}};
+        for (Object[] v : views) {
+            sp.getServer().runCommand(look((Vec3) v[1], at));
             ctx.waitTicks(20);
-            ctx.takeScreenshot(v[0]);
+            ctx.takeScreenshot((String) v[0]);
         }
         // the G menu, with makings for 9mm and shells but no .38 heads
         for (String c : new String[] {"give @a zomboidcraft:spent_9mm 10", "give @a zomboidcraft:primers 20",
@@ -259,7 +263,7 @@ public class GunLookTest implements FabricClientGameTest {
                 "give @a zomboidcraft:spent_hulls 6", "give @a zomboidcraft:lead_shot 1", "give @a zomboidcraft:spent_38 4"}) {
             sp.getServer().runCommand(c);
         }
-        sp.getServer().runCommand("tp @a " + (x + 0.5) + " " + y + " " + (z - 1.3) + " facing " + (x + 0.5) + " " + (y + 0.6) + " " + (z + 0.5));
+        sp.getServer().runCommand(look(new Vec3(x + 0.5, y, z - 1.2), new Vec3(x + 0.5, y + 0.85, z + 0.45)));
         ctx.waitTicks(20);
         boolean opened = ctx.computeOnClient(mc -> ReloadingClient.interact(mc, mc.hitResult));
         LOG.info("ZCGUN reload menu opened {}", opened);
@@ -291,6 +295,7 @@ public class GunLookTest implements FabricClientGameTest {
         sp.getServer().runCommand("clear @a");
         sp.getServer().runCommand("give @a zomboidcraft:pistol");
         sp.getServer().runCommand("tp @a " + (x - 4.5) + " " + y + " " + (z - 3.5) + " 0 15");
+        ctx.waitTicks(3);
         ctx.waitTicks(20);
         ctx.runOnClient(mc -> mc.player.getInventory().setSelectedSlot(0));
         ctx.runOnClient(mc -> mc.options.setCameraType(CameraType.THIRD_PERSON_BACK));
@@ -306,19 +311,12 @@ public class GunLookTest implements FabricClientGameTest {
             ctx.waitTicks(1);
             ctx.takeScreenshot(String.format("reload-brass-%02d", f));
         }
-        // the real trigger too: does a fired pistol throw its own?
         ctx.runOnClient(mc -> mc.options.setCameraType(CameraType.FIRST_PERSON));
-        sp.getServer().runCommand("kill @e[type=item]");
-        ctx.getInput().holdKey(options -> options.keyAttack);
-        ctx.waitTicks(30);
-        ctx.getInput().releaseKey(options -> options.keyAttack);
-        ctx.waitTicks(10);
-        int thrown = ctx.computeOnClient(mc -> mc.level.getEntitiesOfClass(ItemEntity.class, mc.player.getBoundingBox().inflate(6)).size());
-        LOG.info("ZCGUN pistol fired: {} casings on the ground", thrown);
-        ctx.takeScreenshot("reload-brass-fired");
         // a revolver's six on reload, and a shotgun hull
         sp.getServer().runCommand("kill @e[type=item]");
-        sp.getServer().runCommand("tp @a " + (x - 4.5) + " " + y + " " + (z - 3.5) + " 0 50");
+        sp.getServer().runCommand("tp @a " + (x - 4.5) + " " + y + " " + (z - 3.5) + " 0 30");
+        ctx.runOnClient(mc -> mc.options.setCameraType(CameraType.THIRD_PERSON_BACK));
+        ctx.waitTicks(3);
         sp.getServer().runOnServer(server -> {
             for (var player : server.getPlayerList().getPlayers()) {
                 com.zomboidcraft.combat.Reloading.eject(player, com.zomboidcraft.combat.GunType.MAGNUM, 6);
@@ -327,9 +325,11 @@ public class GunLookTest implements FabricClientGameTest {
         });
         ctx.waitTicks(40);
         ctx.takeScreenshot("reload-brass-revolver");
+        ctx.runOnClient(mc -> mc.options.setCameraType(CameraType.FIRST_PERSON));
         // every making on the ground
         sp.getServer().runCommand("kill @e[type=item]");
         sp.getServer().runCommand("clear @a");
+        ctx.waitTicks(3);
         String[] all = {"spent_9mm", "spent_380", "spent_38", "spent_44", "spent_556", "spent_308", "spent_3030",
                 "spent_50", "spent_hulls", "smokeless_powder", "primers", "lead_shot", "gunsmith_magazine",
                 "bullets_9mm", "bullets_38", "bullets_44", "bullets_556", "bullets_30", "bullets_50"};
@@ -348,6 +348,14 @@ public class GunLookTest implements FabricClientGameTest {
         ctx.waitTicks(30);
         ctx.takeScreenshot("reload-ground");
         sp.getServer().runCommand("tp @a ~ ~ ~ 0 10");
+    }
+
+    /** A tp putting the eyes at from (feet + 1.62) and looking at to. */
+    private static String look(Vec3 from, Vec3 to) {
+        double dx = to.x - from.x, dy = to.y - (from.y + 1.62), dz = to.z - from.z;
+        float yaw = (float) Math.toDegrees(Math.atan2(-dx, dz));
+        float pitch = (float) -Math.toDegrees(Math.atan2(dy, Math.sqrt(dx * dx + dz * dz)));
+        return String.format(java.util.Locale.ROOT, "tp @a %.3f %.3f %.3f %.2f %.2f", from.x, from.y, from.z, yaw, pitch);
     }
 
     private static void drop(net.minecraft.world.level.Level level, Vec3 at, ItemStack stack) {

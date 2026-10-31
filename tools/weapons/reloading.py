@@ -283,7 +283,7 @@ def items():
     return out
 
 
-def toon_write(name, build, look, seed, px, centre, display, model_path, gui_light='front'):
+def toon_write(name, build, look, seed, px, centre, display, model_path, gui_light='front', tex=None):
     """Draws and paints a model with the guns' toon painter (kit.paint: an outline round each part's outside,
     lit tops, shaded undersides, chipped edges), packs its texture and writes its model. centre: where its
     middle goes (None leaves a block where it was built)."""
@@ -291,7 +291,7 @@ def toon_write(name, build, look, seed, px, centre, display, model_path, gui_lig
     lo, hi = m.bounds()
     shift = np.zeros(3) if centre is None else np.asarray(centre, float) - (lo + hi) / 2
     img, uvs, T = kit.pack(kit.paint([m], px=px))
-    tex = f'item/weapon/{name}'
+    tex = tex or f'item/weapon/{name}'
     kit.save_textures(img, ASSETS / f'textures/{tex}.png')
     fit = kit.shifted_model([m], shift)
     M.dump({'gui_light': gui_light, 'textures': {'0': f'{NS}:{tex}', 'particle': f'{NS}:{tex}'},
@@ -306,7 +306,8 @@ def write_item(name, build, lk, seed):
 
 def write_bench():
     name = 'reloading_bench'
-    toon_write(name, build_bench, BENCH_LOOK, 991, 8, None, W.small_display, f'models/block/{name}.json', 'side')
+    toon_write(name, build_bench, BENCH_LOOK, 991, 8, None, W.small_display, f'models/block/{name}.json', 'side',
+               f'block/{name}')  # a placed block draws from the block atlas
     M.dump({'variants': {f'facing={d}': {'model': f'{NS}:block/{name}', **({'y': y} if y else {})}
                          for d, y in (('north', 0), ('east', 90), ('south', 180), ('west', 270))}},
            ASSETS / f'blockstates/{name}.json')
