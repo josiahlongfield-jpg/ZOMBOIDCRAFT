@@ -82,6 +82,7 @@ final class FarmSite extends Site {
         kit.woods(0.5);
         kit.overgrow(0.85);
         kit.roadWeeds(0.3);
+        homes.finish();
     }
 
     private double jitter(double amount) {
@@ -441,12 +442,19 @@ final class FarmSite extends Site {
         take(x, z, x, z);
     }
 
-    /** Hay stacked in a stepped pile, the tarp blown half off. */
+    /** Hay stacked in a stepped pile under its tarp (the tp_ kit), the tarp blown half off. */
     private void hayStack(Placer q, int sw, int sd) {
         for (int y = 1; y <= 3; y++) {
             for (int x = y - 1; x < sw - y + 1; x++) {
                 for (int z = 0; z < sd; z++) {
-                    q.set(x, y, z, y == 3 && chance() < 0.5 ? "tarp_green" : y == 3 ? "fm_bales_low[axis=z]" : "fm_bales[axis=z]");
+                    if (y < 3) {
+                        q.set(x, y, z, "fm_bales[axis=z]");
+                        continue;
+                    }
+                    // the top course under the tarp, roped and weighed with tyres, blown half off in places
+                    double r = chance();
+                    q.set(x, y, z, r < 0.2 ? "fm_bales_low[axis=z]" : r < 0.35 ? "tp_bales_tyre[axis=z]"
+                            : r < 0.5 ? "tp_bales_blown[facing=north]" : "tp_bales[axis=z]");
                 }
             }
         }

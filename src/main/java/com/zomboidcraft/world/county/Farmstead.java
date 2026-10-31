@@ -546,8 +546,9 @@ final class Farmstead {
                 }
             } else if (chance() < 0.6) {
                 // the curtain, rolled up or torn
-                p.set(0, 4, z, "tarp_green");
-                p.set(w - 1, 4, z, "tarp_green");
+                // (torn here and there by the cell, not the dice, so the barn round it comes out as it did)
+                p.set(0, 4, z, Math.floorMod(z * 7 + 3, 5) == 0 ? "tp_roll_torn[axis=z]" : "tp_roll[axis=z]");
+                p.set(w - 1, 4, z, Math.floorMod(z * 7 + w, 5) == 0 ? "tp_roll_torn[axis=z]" : "tp_roll[axis=z]");
             }
         }
         for (int x = 0; x < w; x++) {

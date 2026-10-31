@@ -1,0 +1,74 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tire": "zomboidcraft:block/city/tire",
+    "particle": "zomboidcraft:block/city/tire"
+  },
+  "elements": [
+    {
+      "from": [
+        7.8,
+        15,
+        -3.3
+      ],
+      "to": [
+        8.2,
+        15.5,
+        19.3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tire"
+        },
+        "south": {
+          "texture": "#tire"
+        },
+        "east": {
+          "texture": "#tire",
+          "uv": [
+            0,
+            0.5,
+            16,
+            1
+          ]
+        },
+        "west": {
+          "texture": "#tire",
+          "uv": [
+            0,
+            0.5,
+            16,
+            1
+          ]
+        },
+        "up": {
+          "texture": "#tire",
+          "uv": [
+            7.8,
+            0,
+            8.2,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#tire",
+          "uv": [
+            7.8,
+            0,
+            8.2,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          15,
+          8
+        ],
+        "axis": "y",
+        "angle": 45
+      }
+    }
+  ]
+}

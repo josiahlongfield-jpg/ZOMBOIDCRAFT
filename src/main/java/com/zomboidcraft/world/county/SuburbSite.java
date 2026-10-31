@@ -41,6 +41,7 @@ final class SuburbSite extends Site {
             default -> culDeSac();
         }
         kit.roadWeeds(0.25);
+        homes.finish();
     }
 
     private double jitter(double amount) {
