@@ -146,6 +146,10 @@ final class SandboxOptions {
         w.put("AnnotatedMapChance", b -> b.choice("stories.annotatedMapChance",
                 "never", "extremely_rare", "rare", "sometimes", "often", "very_often").owner("LOOT"));
         w.put("TrafficJam", b -> b.toggle("world.trafficJams").owner("LANDSCAPE"));
+        w.put("Alarm", b -> b.choice("world.houseAlarms", "never", "extremely_rare", "rare", "sometimes", "often", "very_often")
+                .owner("LANDSCAPE").tip("How many houses have an alarm (a bell box out front). Getting in sets it ringing. New ground only."));
+        w.put("AlarmDecayModifier", b -> b.number("world.alarmBatteryDays", -1, 1000000000).owner("LANDSCAPE")
+                .tip("Days a house alarm's battery keeps it working after the mains go off, each house up to twice this. -1: none."));
         w.put("DamageToPlayerFromHitByACar", b -> b.number("world.carHitDamage", 1, 4).owner("VEHICLES"));
         // Firearms (WEAPONS): combat/Firearms. Use Damage Chance says who a shot strikes just by being aimed at;
         // jams start at 0 since Josiah cut them on 10-26

@@ -1,0 +1,149 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rv_ash": "zomboidcraft:block/city/rv_ash",
+    "rv_burnt": "zomboidcraft:block/city/rv_burnt",
+    "particle": "zomboidcraft:block/city/rv_burnt"
+  },
+  "elements": [
+    {
+      "from": [
+        3.5,
+        0,
+        5
+      ],
+      "to": [
+        12.5,
+        4,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rv_burnt"
+        },
+        "south": {
+          "texture": "#rv_burnt"
+        },
+        "east": {
+          "texture": "#rv_burnt"
+        },
+        "west": {
+          "texture": "#rv_burnt"
+        },
+        "up": {
+          "texture": "#rv_burnt"
+        },
+        "down": {
+          "texture": "#rv_burnt",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3.5,
+        4,
+        5
+      ],
+      "to": [
+        12.5,
+        4.6,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rv_burnt"
+        },
+        "south": {
+          "texture": "#rv_burnt"
+        },
+        "east": {
+          "texture": "#rv_burnt"
+        },
+        "west": {
+          "texture": "#rv_burnt"
+        },
+        "up": {
+          "texture": "#rv_burnt"
+        },
+        "down": {
+          "texture": "#rv_burnt"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          4,
+          5
+        ],
+        "axis": "x",
+        "angle": -22.5
+      }
+    },
+    {
+      "from": [
+        7,
+        4.6,
+        7.6
+      ],
+      "to": [
+        9,
+        5.4,
+        8.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rv_burnt"
+        },
+        "south": {
+          "texture": "#rv_burnt"
+        },
+        "east": {
+          "texture": "#rv_burnt"
+        },
+        "west": {
+          "texture": "#rv_burnt"
+        },
+        "up": {
+          "texture": "#rv_burnt"
+        },
+        "down": {
+          "texture": "#rv_burnt"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        0,
+        4
+      ],
+      "to": [
+        9,
+        0.2,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rv_ash"
+        },
+        "south": {
+          "texture": "#rv_ash"
+        },
+        "east": {
+          "texture": "#rv_ash"
+        },
+        "west": {
+          "texture": "#rv_ash"
+        },
+        "up": {
+          "texture": "#rv_ash"
+        },
+        "down": {
+          "texture": "#rv_ash",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

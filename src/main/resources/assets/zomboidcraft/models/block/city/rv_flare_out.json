@@ -1,0 +1,143 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_plastic_black": "zomboidcraft:block/city/home_plastic_black",
+    "rv_ash": "zomboidcraft:block/city/rv_ash",
+    "rv_flare": "zomboidcraft:block/city/rv_flare",
+    "particle": "zomboidcraft:block/city/rv_flare"
+  },
+  "elements": [
+    {
+      "from": [
+        7,
+        0,
+        7.3
+      ],
+      "to": [
+        12,
+        1.4,
+        8.7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rv_flare"
+        },
+        "south": {
+          "texture": "#rv_flare"
+        },
+        "east": {
+          "texture": "#rv_flare"
+        },
+        "west": {
+          "texture": "#rv_flare"
+        },
+        "up": {
+          "texture": "#rv_flare"
+        },
+        "down": {
+          "texture": "#rv_flare",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2.6,
+        0,
+        7.2
+      ],
+      "to": [
+        3,
+        1.5,
+        8.8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_plastic_black"
+        },
+        "south": {
+          "texture": "#home_plastic_black"
+        },
+        "east": {
+          "texture": "#home_plastic_black"
+        },
+        "west": {
+          "texture": "#home_plastic_black"
+        },
+        "up": {
+          "texture": "#home_plastic_black"
+        },
+        "down": {
+          "texture": "#home_plastic_black",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        0,
+        10
+      ],
+      "to": [
+        7,
+        1.2,
+        11.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rv_flare"
+        },
+        "south": {
+          "texture": "#rv_flare"
+        },
+        "east": {
+          "texture": "#rv_flare"
+        },
+        "west": {
+          "texture": "#rv_flare"
+        },
+        "up": {
+          "texture": "#rv_flare"
+        },
+        "down": {
+          "texture": "#rv_flare",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        0,
+        6.6
+      ],
+      "to": [
+        7,
+        0.2,
+        9.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rv_ash"
+        },
+        "south": {
+          "texture": "#rv_ash"
+        },
+        "east": {
+          "texture": "#rv_ash"
+        },
+        "west": {
+          "texture": "#rv_ash"
+        },
+        "up": {
+          "texture": "#rv_ash"
+        },
+        "down": {
+          "texture": "#rv_ash",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

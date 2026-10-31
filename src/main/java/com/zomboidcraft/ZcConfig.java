@@ -996,6 +996,16 @@ public final class ZcConfig {
         public String survivorCars = "low";
         /** Zomboid's Traffic Jam: wrecked cars piled up along the main roads (laid by the county's road builder). */
         public boolean trafficJams = true;
+        /**
+         * Zomboid's House Alarms Frequency: never, extremely_rare, rare, sometimes, often, very_often; how many houses
+         * are wired with an alarm (a bell box out front). Read when a house is generated.
+         */
+        public String houseAlarms = "sometimes";
+        /**
+         * Zomboid's Alarm Battery Decay (AlarmDecayModifier): days an alarm's battery runs it after the mains go off,
+         * each house's somewhere up to twice this. Below 0: the batteries are flat when the power goes.
+         */
+        public int alarmBatteryDays = 14;
         /** Car boots and the backs of vans hold loot (tools/cars/car_loot.py); off leaves them empty. */
         public boolean carLoot = true;
         /** The jets' top speed in km/h. Past about 300 the world can't load fast enough to keep up with them. */

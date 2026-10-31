@@ -1,0 +1,174 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hw_chrome": "zomboidcraft:block/city/hw_chrome",
+    "painted_steel": "zomboidcraft:block/city/painted_steel",
+    "particle": "zomboidcraft:block/city/hw_chrome"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        7.4
+      ],
+      "to": [
+        15,
+        0.9,
+        8.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hw_chrome"
+        },
+        "south": {
+          "texture": "#hw_chrome"
+        },
+        "east": {
+          "texture": "#hw_chrome"
+        },
+        "west": {
+          "texture": "#hw_chrome"
+        },
+        "up": {
+          "texture": "#hw_chrome"
+        },
+        "down": {
+          "texture": "#hw_chrome"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          0,
+          8
+        ],
+        "axis": "y",
+        "angle": 45
+      }
+    },
+    {
+      "from": [
+        7.4,
+        0,
+        1
+      ],
+      "to": [
+        8.6,
+        0.9,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hw_chrome"
+        },
+        "south": {
+          "texture": "#hw_chrome"
+        },
+        "east": {
+          "texture": "#hw_chrome"
+        },
+        "west": {
+          "texture": "#hw_chrome"
+        },
+        "up": {
+          "texture": "#hw_chrome"
+        },
+        "down": {
+          "texture": "#hw_chrome"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          0,
+          8
+        ],
+        "axis": "y",
+        "angle": 45
+      }
+    },
+    {
+      "from": [
+        0.6,
+        0,
+        7
+      ],
+      "to": [
+        2.2,
+        1.4,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#painted_steel"
+        },
+        "south": {
+          "texture": "#painted_steel"
+        },
+        "east": {
+          "texture": "#painted_steel"
+        },
+        "west": {
+          "texture": "#painted_steel"
+        },
+        "up": {
+          "texture": "#painted_steel"
+        },
+        "down": {
+          "texture": "#painted_steel"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          0,
+          8
+        ],
+        "axis": "y",
+        "angle": 45
+      }
+    },
+    {
+      "from": [
+        13.8,
+        0,
+        7
+      ],
+      "to": [
+        15.4,
+        1.4,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#painted_steel"
+        },
+        "south": {
+          "texture": "#painted_steel"
+        },
+        "east": {
+          "texture": "#painted_steel"
+        },
+        "west": {
+          "texture": "#painted_steel"
+        },
+        "up": {
+          "texture": "#painted_steel"
+        },
+        "down": {
+          "texture": "#painted_steel"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          0,
+          8
+        ],
+        "axis": "y",
+        "angle": 45
+      }
+    }
+  ]
+}

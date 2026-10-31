@@ -1,0 +1,350 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hw_white": "zomboidcraft:block/city/hw_white",
+    "rv_closed": "zomboidcraft:block/city/rv_closed",
+    "rv_stripes": "zomboidcraft:block/city/rv_stripes",
+    "particle": "zomboidcraft:block/city/hw_white"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        6
+      ],
+      "to": [
+        2.6,
+        13.5,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hw_white"
+        },
+        "south": {
+          "texture": "#hw_white"
+        },
+        "east": {
+          "texture": "#hw_white"
+        },
+        "west": {
+          "texture": "#hw_white"
+        },
+        "up": {
+          "texture": "#hw_white"
+        },
+        "down": {
+          "texture": "#hw_white",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        13.4,
+        0,
+        6
+      ],
+      "to": [
+        15,
+        13.5,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hw_white"
+        },
+        "south": {
+          "texture": "#hw_white"
+        },
+        "east": {
+          "texture": "#hw_white"
+        },
+        "west": {
+          "texture": "#hw_white"
+        },
+        "up": {
+          "texture": "#hw_white"
+        },
+        "down": {
+          "texture": "#hw_white",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        5
+      ],
+      "to": [
+        3.6,
+        0.8,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hw_white"
+        },
+        "south": {
+          "texture": "#hw_white"
+        },
+        "east": {
+          "texture": "#hw_white"
+        },
+        "west": {
+          "texture": "#hw_white",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#hw_white"
+        },
+        "down": {
+          "texture": "#hw_white",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        12.4,
+        0,
+        5
+      ],
+      "to": [
+        16,
+        0.8,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hw_white"
+        },
+        "south": {
+          "texture": "#hw_white"
+        },
+        "east": {
+          "texture": "#hw_white",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#hw_white"
+        },
+        "up": {
+          "texture": "#hw_white"
+        },
+        "down": {
+          "texture": "#hw_white",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        3,
+        7.2
+      ],
+      "to": [
+        16,
+        5.4,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rv_stripes"
+        },
+        "south": {
+          "texture": "#rv_stripes"
+        },
+        "east": {
+          "texture": "#rv_stripes",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rv_stripes",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rv_stripes"
+        },
+        "down": {
+          "texture": "#rv_stripes"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        7,
+        7.2
+      ],
+      "to": [
+        16,
+        9.4,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rv_stripes"
+        },
+        "south": {
+          "texture": "#rv_stripes"
+        },
+        "east": {
+          "texture": "#rv_stripes",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rv_stripes",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rv_stripes"
+        },
+        "down": {
+          "texture": "#rv_stripes"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        11,
+        7.2
+      ],
+      "to": [
+        16,
+        13.4,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rv_stripes"
+        },
+        "south": {
+          "texture": "#rv_stripes"
+        },
+        "east": {
+          "texture": "#rv_stripes",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rv_stripes",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rv_stripes"
+        },
+        "down": {
+          "texture": "#rv_stripes"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        13.6,
+        7.2
+      ],
+      "to": [
+        16,
+        16,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rv_closed",
+          "uv": [
+            0,
+            4.5,
+            16,
+            11.5
+          ]
+        },
+        "south": {
+          "texture": "#rv_closed",
+          "uv": [
+            0,
+            4.5,
+            16,
+            11.5
+          ]
+        },
+        "east": {
+          "texture": "#rv_closed",
+          "uv": [
+            0,
+            0,
+            1,
+            16
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rv_closed",
+          "uv": [
+            0,
+            0,
+            1,
+            16
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rv_closed",
+          "uv": [
+            0,
+            0,
+            16,
+            1
+          ],
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#rv_closed",
+          "uv": [
+            0,
+            0,
+            16,
+            1
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        13.5,
+        7.4
+      ],
+      "to": [
+        2.6,
+        13.8,
+        7.8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hw_white"
+        },
+        "south": {
+          "texture": "#hw_white"
+        },
+        "east": {
+          "texture": "#hw_white"
+        },
+        "west": {
+          "texture": "#hw_white"
+        },
+        "up": {
+          "texture": "#hw_white"
+        },
+        "down": {
+          "texture": "#hw_white"
+        }
+      }
+    }
+  ]
+}
