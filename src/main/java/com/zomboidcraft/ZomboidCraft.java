@@ -80,6 +80,7 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.zombie.population.Population.register();
         com.zomboidcraft.zombie.Hordes.register();
         ZcCommand.register();
+        com.zomboidcraft.sandbox.Sandbox.register();
         Cinematic.register();
         com.zomboidcraft.combat.CombatNet.register();
         com.zomboidcraft.combat.Impacts.register();

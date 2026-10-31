@@ -84,6 +84,7 @@ public class ZomboidCraftClient implements ClientModInitializer {
         com.zomboidcraft.client.sound.WorldEventSound.register();
         com.zomboidcraft.client.sound.Score.register();
         com.zomboidcraft.client.weather.WeatherFx.register();
+        com.zomboidcraft.client.sandbox.SandboxClient.register();
         // last, so it can wrap every HUD piece registered above
         com.zomboidcraft.client.camera.CinematicView.register();
         if (ZcConfig.get().look.customZombies) {

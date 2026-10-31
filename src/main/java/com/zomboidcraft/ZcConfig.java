@@ -1808,10 +1808,16 @@ public final class ZcConfig {
     }
 
     public static void save() {
+        if (quiet) {
+            return;
+        }
         try {
             Files.createDirectories(FILE.getParent());
             try (Writer writer = Files.newBufferedWriter(FILE)) {
-                GSON.toJson(instance, writer);
+                // a world's own sandbox values never leak into this file: it keeps what it had before the world opened
+                com.google.gson.JsonObject tree = GSON.toJsonTree(instance).getAsJsonObject();
+                com.zomboidcraft.sandbox.Sandbox.unapply(tree);
+                GSON.toJson(tree, writer);
             }
         } catch (IOException e) {
             ZomboidCraft.LOGGER.error("Couldn't save {}", FILE, e);
@@ -1867,6 +1873,45 @@ public final class ZcConfig {
             throw new IllegalArgumentException("Unknown setting " + key);
         }
         save();
+    }
+
+    // ---- for the per-world sandbox settings (sandbox/Sandbox) ----
+
+    /** While set, save() writes nothing: a world's values are put in place without touching the file. */
+    private static boolean quiet;
+    private static ZcConfig defaults;
+
+    /** Sets a setting for now only, without saving the file. */
+    public static void applyValue(String key, String raw) {
+        quiet = true;
+        try {
+            setValue(key, raw);
+        } finally {
+            quiet = false;
+        }
+    }
+
+    /** A setting's current value as it is written in the file. */
+    public static com.google.gson.JsonElement jsonValue(String key) {
+        return GSON.toJsonTree(getValue(key, instance));
+    }
+
+    /** What a setting is out of the box, before anyone changed it. */
+    public static String defaultValue(String key) {
+        if (defaults == null) {
+            defaults = new ZcConfig();
+        }
+        return String.valueOf(getValue(key, defaults));
+    }
+
+    private static Object getValue(String key, ZcConfig from) {
+        try {
+            String[] parts = key.split("\\.", 2);
+            Object group = ZcConfig.class.getField(parts[0]).get(from);
+            return group.getClass().getField(parts[1]).get(group);
+        } catch (ReflectiveOperationException | ArrayIndexOutOfBoundsException e) {
+            throw new IllegalArgumentException("Unknown setting " + key);
+        }
     }
 
     private ZcConfig() {

@@ -504,6 +504,28 @@ plastic_drum* | Plastic Drum | C | 4 | 8.0 | farm factory dock
 """
 
 ROSTER['Clothing'] = """
+chest_rig | Chest Rig | S | 25 | 1.2 | mil.3 bunker police
+load_bearing_vest | Load-Bearing Vest | S | 22 | 1.4 | mil.3 bunker
+medic_vest | Medic Vest | R | 30 | 1.3 | amb.3 mil fire
+bandolier | Ammo Bandolier | S | 12 | 0.4 | gun mil farm
+heavy_plate_carrier | Heavy Plate Carrier | G | 160 | 9.0 | mil bunker.2
+high_cut_helmet | High-Cut Helmet | R | 45 | 1.2 | mil.2 bunker police
+steel_pot_helmet | Steel Pot Helmet | S | 15 | 1.4 | mil thrift pawn attic
+tanker_helmet | Tanker Helmet | R | 30 | 1.0 | mil
+boonie_hat | Boonie Hat | C | 4 | 0.1 | mil.3 camp thrift
+patrol_cap | Patrol Cap | C | 4 | 0.1 | mil.3 thrift
+beret | Beret | S | 6 | 0.1 | mil cloth thrift
+ballistic_glasses | Ballistic Glasses | S | 10 | 0.05 | mil.3 police gun
+ballistic_goggles | Ballistic Goggles | S | 14 | 0.2 | mil.3 police
+shemagh | Shemagh | C | 5 | 0.2 | mil.3 camp thrift
+neck_gaiter | Neck Gaiter | C | 4 | 0.05 | mil sport camp
+elbow_pads | Elbow Pads | S | 10 | 0.3 | mil police sport
+knee_pads | Knee Pads | S | 10 | 0.4 | mil police build sport
+field_shirt | Field Shirt | C | 8 | 0.4 | mil.3 thrift
+combat_trousers | Combat Trousers | C | 10 | 0.6 | mil.3 thrift
+tactical_boots | Tactical Boots | S | 20 | 1.3 | mil.2 police gun
+denim_strips | Denim Strips | C | 1 | 0.05 | laund cloth thrift
+leather_strips | Leather Strips | S | 2 | 0.05 | cloth thrift farm
 # head
 baseball_cap | Baseball Cap | C | 2 | 0.1 | bed cloth thrift stadium body
 trucker_cap | Trucker Cap | C | 2 | 0.1 | worktruck farm thrift body
