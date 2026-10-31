@@ -849,6 +849,30 @@ public final class ZcConfig {
         public String carCrashDamage = "normal";
         /** Zomboid's Damage From Being Hit By A Car: what a player takes when a car runs into them, times this. */
         public double carHitDamage = 1;
+        /** Zomboid's Chance Has Gas: low, normal, high; the share of runners found with fuel in the tank. */
+        public String carChanceHasGas = "normal";
+        /** Zomboid's Initial Gas: very_low, low, normal, high, very_high, full; how much is in a tank that has any. */
+        public String carInitialGas = "low";
+        /** Zomboid's Gas Consumption: how fast engines drink, times this. */
+        public double carGasConsumption = 1;
+        /** Zomboid's Fuel Station Gas: pumps never run dry; else each starts with Min to Max of its tank, EmptyChance percent dry. */
+        public boolean fuelStationGasInfinite = false;
+        public double fuelStationGasMin = 0;
+        public double fuelStationGasMax = 0.8;
+        public double fuelStationEmptyChance = 20;
+        /** Zomboid's Locked Vehicle Frequency and Car Alarm: never, extremely_rare, rare, sometimes, often, very_often. */
+        public String carLocked = "sometimes";
+        public String carAlarm = "rare";
+        /** Zomboid's Siren Effects Zombies: an emergency vehicle's siren draws the dead from far off. */
+        public boolean sirenEffectsZombies = true;
+        /** Zomboid's Siren Shutoff Hours: a siren left on dies after this many in-game hours (0 = never). */
+        public double sirenShutoffHours = 0;
+        /** Zomboid's Player Damage From Crash: a crash at speed hurts whoever's inside. */
+        public boolean playerDamageFromCrash = true;
+        /** Zomboid's Recently Survivor Vehicles: none, low, normal, high. */
+        public String survivorCars = "low";
+        /** Zomboid's Traffic Jam: wrecked cars piled up along the main roads (laid by the county's road builder). */
+        public boolean trafficJams = true;
         /** Car boots and the backs of vans hold loot (tools/cars/car_loot.py); off leaves them empty. */
         public boolean carLoot = true;
         /** The jets' top speed in km/h. Past about 300 the world can't load fast enough to keep up with them. */
