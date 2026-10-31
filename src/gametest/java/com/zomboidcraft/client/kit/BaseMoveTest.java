@@ -133,10 +133,13 @@ public class BaseMoveTest implements FabricClientGameTest {
             Skills.addXp(p, Skill.CARPENTRY, Skill.xpForLevel(6));
             p.getInventory().clearContent();
             p.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ModItems.HAMMER));
+            p.getInventory().add(new ItemStack(BuiltInRegistries.ITEM.getValue(com.zomboidcraft.ZomboidCraft.id("hinges")), 3));
             p.getInventory().add(new ItemStack(net.minecraft.world.item.Items.OAK_PLANKS, 64));
             p.getInventory().add(new ItemStack(net.minecraft.world.item.Items.OAK_PLANKS, 64));
-            p.getInventory().add(new ItemStack(ModItems.NAILS, 64));
-            p.getInventory().add(new ItemStack(BuiltInRegistries.ITEM.getValue(com.zomboidcraft.ZomboidCraft.id("hinges")), 2));
+            for (int i = 0; i < 3; i++) {
+                p.getInventory().add(new ItemStack(ModItems.NAILS, 64));
+                p.getInventory().add(new ItemStack(net.minecraft.world.item.Items.OAK_PLANKS, 64));
+            }
             com.zomboidcraft.ZcConfig.get().building.floorSagSeconds = 9;
         });
         // the wall run along x at z = 4, built from z = 1 looking south
@@ -177,6 +180,43 @@ public class BaseMoveTest implements FabricClientGameTest {
         });
         standYard(ctx, sp, 2.5, -1.5, 0f, 8f);
         frame(ctx, "walls-damaged");
+        // wave 2b: shutters on the window frame, a ladder up the wall, a shed roof over it, stairs up to a deck
+        standYard(ctx, sp, 3, 0.5, 0f, 25f);
+        build(ctx, sp, Build.SHUTTERS, yard.offset(4, 0, 4), Direction.NORTH, Direction.SOUTH);
+        build(ctx, sp, Build.LADDER, yard.offset(2, 0, 4), Direction.NORTH, Direction.SOUTH);
+        build(ctx, sp, Build.LADDER, yard.offset(2, 1, 4), Direction.NORTH, Direction.SOUTH);
+        standYard(ctx, sp, 4, 8.5, 180f, 8f);
+        frame(ctx, "shutters-shut");
+        sp.getServer().runOnServer(s -> {
+            BlockState sh = s.overworld().getBlockState(yard.offset(4, 0, 4));
+            if (sh.is(WoodBlocks.SHUTTERS)) s.overworld().setBlockAndUpdate(yard.offset(4, 0, 4), sh.setValue(WoodBlocks.Shutters.OPEN, true));
+        });
+        frame(ctx, "shutters-open");
+        standYard(ctx, sp, 2.5, 2.5, 0f, -15f);
+        for (int x = 0; x <= 5; x++) build(ctx, sp, Build.ROOF, yard.offset(x, 1, 4), Direction.UP, Direction.SOUTH);
+        for (int x = 0; x <= 5; x++) build(ctx, sp, Build.ROOF, yard.offset(x, 3, 5), Direction.SOUTH, Direction.SOUTH);
+        standYard(ctx, sp, 2.5, -3.5, -20f, 0f);
+        frame(ctx, "ladder-and-roof");
+        standYard(ctx, sp, 9, 4.5, 0f, 25f);
+        for (int z = 6; z <= 7; z++) {
+            build(ctx, sp, Build.POST, yard.offset(9, -1, z), Direction.UP, Direction.SOUTH);
+            build(ctx, sp, Build.FLOOR, yard.offset(9, 0, z), Direction.UP, Direction.SOUTH);
+            build(ctx, sp, Build.POST, yard.offset(8, -1, z), Direction.UP, Direction.SOUTH);
+            build(ctx, sp, Build.WOOD_STAIRS, yard.offset(8, 0, z), Direction.UP, Direction.EAST);
+            build(ctx, sp, Build.WOOD_STAIRS, yard.offset(7, -1, z), Direction.UP, Direction.EAST);
+        }
+        standYard(ctx, sp, 3.5, 6.5, -90f, 10f);
+        frame(ctx, "stairs");
+        String b2 = sp.getServer().computeOnServer(s -> {
+            StringBuilder b = new StringBuilder();
+            b.append(" shutters=").append(s.overworld().getBlockState(yard.offset(4, 0, 4)));
+            b.append(" ladder=").append(s.overworld().getBlockState(yard.offset(2, 1, 3)).getBlock());
+            for (int x = 0; x <= 5; x++) b.append(" roof").append(x).append('=').append(s.overworld().getBlockState(yard.offset(x, 2, 4)).getBlock().getName().getString())
+                    .append('/').append(s.overworld().getBlockState(yard.offset(x, 3, 5)).getBlock().getName().getString());
+            b.append(" stairs=").append(s.overworld().getBlockState(yard.offset(7, 0, 6))).append(" / ").append(s.overworld().getBlockState(yard.offset(8, 1, 6)));
+            return b.toString();
+        });
+        LOG.info("ZCBASE wave 2b:{}", b2);
         // posts and a floor out over open ground at z = -3
         standYard(ctx, sp, 11, -6.5, 15f, -5f);
         build(ctx, sp, Build.POST, yard.offset(8, -1, -3), Direction.UP, Direction.SOUTH);
@@ -245,7 +285,7 @@ public class BaseMoveTest implements FabricClientGameTest {
         ctx.runOnClient(mc -> {
             if (mc.gui.screen() instanceof KitScreen<?> k) {
                 for (int i = 0; i < 8; i++) k.build.scrolled(0, 0, -1);
-                k.build.selected = Build.WOOD_DOOR;
+                k.build.selected = Build.SHUTTERS;
             }
         });
         frame(ctx, "build-page-scrolled");

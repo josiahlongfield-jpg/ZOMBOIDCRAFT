@@ -94,13 +94,30 @@ public enum Build {
     FLOOR("Wooden floor", Where.FLOOR, Skill.CARPENTRY, 3, 80, 6, 12,
             "Boards over joists. It has to stand on something (a post, a wall or solid ground) or reach no more than "
                     + "three boards from something that does. Take its support away and it sags, creaks, then falls in.",
-            hammer(), planks(2), need("Nails", ModItems.NAILS, 2));
+            hammer(), planks(2), need("Nails", ModItems.NAILS, 2)),
+    // wave 2b
+    WOOD_STAIRS("Wooden stairs", Where.STAIRS, Skill.CARPENTRY, 6, 160, 10, 18,
+            "Treads on stringers, climbing away from you. Stand them on the ground, a floor or a wall to get up a storey, "
+                    + "the way Zomboid's stairs take a good carpenter.",
+            hammer(), planks(3), need("Nails", ModItems.NAILS, 3)),
+    LADDER("Wooden ladder", Where.FACE, Skill.CARPENTRY, 2, 80, 6, 8,
+            "Two rails and rungs nailed up against a wall. Climb it to a roof or a lookout; zombies can't.",
+            hammer(), planks(2), need("Nails", ModItems.NAILS, 2)),
+    ROOF("Shingled roof", Where.ROOF, Skill.CARPENTRY, 5, 120, 8, 14,
+            "A pitched roof section, boards under tarred shingles. It sits on a wall, a post or a floor, or runs on from "
+                    + "more roof beside it. Keeps the rain off what you store.",
+            hammer(), planks(2), need("Nails", ModItems.NAILS, 3)),
+    SHUTTERS("Window shutters", Where.SHUTTER, Skill.CARPENTRY, 3, 120, 8, 12,
+            "Plank shutters hung outside a window frame you built. Open them by hand to look out; shut, zombies have to "
+                    + "beat them in, and the frame's left bare when they give.",
+            hammer(), planks(2), need("Nails", ModItems.NAILS, 2),
+            need("Door hinges", s -> BuiltInRegistries.ITEM.getKey(s.getItem()).equals(com.zomboidcraft.ZomboidCraft.id("hinges")), 1, ModItems.NAILS));
 
     /**
      * Where a build goes: on a window or doorway, on open ground, on a parked car, into your pack; or for wood
      * building, in the run of a wall, onto a wall frame, into a door frame, as a post, or as a floor.
      */
-    public enum Where { OPENING, GROUND, CAR, MAKE, WALL, FRAME, DOORWAY, POST, FLOOR }
+    public enum Where { OPENING, GROUND, CAR, MAKE, WALL, FRAME, DOORWAY, POST, FLOOR, STAIRS, FACE, ROOF, SHUTTER }
 
     /** Something a build uses up (or, for the tool, only needs on you). */
     public record Need(String label, Predicate<ItemStack> fits, int count, Item icon) {
@@ -257,6 +274,29 @@ public enum Build {
                 Direction facing = looking.getAxis() != axis ? looking : Direction.fromAxisAndDirection(
                         axis == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X, Direction.AxisDirection.POSITIVE);
                 return new Spot(lower.immutable(), WoodBlocks.DOOR.defaultBlockState().setValue(DoorBlock.FACING, facing), "");
+            }
+            case SHUTTER -> {
+                if (!there.is(WoodBlocks.WINDOW_FRAME)) return Spot.no("Look at a window frame you built.");
+                Direction.Axis axis = there.getValue(WoodBlocks.Window.AXIS);
+                // they hang on the far side, the outside as you stand in the room looking out
+                Direction out = looking.getAxis() != axis ? looking
+                        : Direction.fromAxisAndDirection(axis == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X, Direction.AxisDirection.POSITIVE);
+                return new Spot(hit, WoodBlocks.SHUTTERS.defaultBlockState().setValue(WoodBlocks.Shutters.FACING, out), "");
+            }
+            case FACE -> {
+                if (face.getAxis().isVertical()) return Spot.no("Look at the side of a wall.");
+                BlockPos pos = hit.relative(face);
+                if (!level.getBlockState(pos).canBeReplaced()) return Spot.no("Something's in the way.");
+                if (!there.isFaceSturdy(level, hit, face)) return Spot.no("It needs a solid wall behind it.");
+                return new Spot(pos.immutable(), WoodBlocks.LADDER.defaultBlockState().setValue(net.minecraft.world.level.block.LadderBlock.FACING, face), "");
+            }
+            case STAIRS, ROOF -> {
+                BlockPos pos = there.canBeReplaced() ? hit : hit.relative(face);
+                if (!level.getBlockState(pos).canBeReplaced()) return Spot.no("Something's in the way.");
+                if (where == Where.STAIRS && !WoodBlocks.base(level, pos.below())) return Spot.no("Needs the ground, a floor or a wall under it.");
+                if (where == Where.ROOF && !WoodBlocks.roofHeld(level, pos)) return Spot.no("Nothing to sit on: a wall, a post, a floor or more roof beside it.");
+                net.minecraft.world.level.block.Block block = where == Where.ROOF ? WoodBlocks.ROOF : WoodBlocks.STAIRS;
+                return new Spot(pos.immutable(), block.defaultBlockState().setValue(net.minecraft.world.level.block.StairBlock.FACING, looking), "");
             }
             case WALL, POST, FLOOR -> {
                 BlockPos pos = there.canBeReplaced() ? hit : hit.relative(face);

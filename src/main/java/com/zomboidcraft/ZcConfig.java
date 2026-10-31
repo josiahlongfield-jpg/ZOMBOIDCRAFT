@@ -886,6 +886,8 @@ public final class ZcConfig {
         public int floorSpan = 3;
         /** How long a floor that's lost its support sags and creaks before it falls in, in seconds. */
         public int floorSagSeconds = 60;
+        /** Blows shut window shutters stand before they give and leave the bare frame. */
+        public int shutterHits = 12;
         /** How many wooden posts stand one on another. */
         public int postStack = 3;
         /** Furniture weight: kilograms at or over these are medium (table, bed, sofa) and large (wardrobe, counter, fridge). */

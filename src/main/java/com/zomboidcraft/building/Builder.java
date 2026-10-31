@@ -109,6 +109,10 @@ public final class Builder {
             case WOOD_DOOR -> "Hanging a door";
             case POST -> "Setting a post";
             case FLOOR -> "Laying floorboards";
+            case WOOD_STAIRS -> "Building stairs";
+            case LADDER -> "Nailing up a ladder";
+            case ROOF -> "Shingling the roof";
+            case SHUTTERS -> "Hanging shutters";
         };
     }
 
@@ -116,7 +120,7 @@ public final class Builder {
         return switch (build) {
             case METAL_SHEET, WELD_SHEET -> SoundEvents.FIRECHARGE_USE;
             case SANDBAGS -> SoundEvents.SHOVEL_FLATTEN.value();
-            case BOARD, PLANTER, SPIKED_WALL, CRATE, WALL_FRAME, WOOD_WALL, WINDOW_FRAME, DOOR_FRAME, WOOD_DOOR, POST, FLOOR -> SoundEvents.WOOD_HIT;
+            case BOARD, PLANTER, SPIKED_WALL, CRATE, WALL_FRAME, WOOD_WALL, WINDOW_FRAME, DOOR_FRAME, WOOD_DOOR, POST, FLOOR, WOOD_STAIRS, LADDER, ROOF, SHUTTERS -> SoundEvents.WOOD_HIT;
             default -> SoundEvents.ARMOR_EQUIP_LEATHER.value();
         };
     }
@@ -228,7 +232,7 @@ public final class Builder {
 
     private static SoundEvent doneSound(Build build) {
         return switch (build) {
-            case BOARD, CRATE, WALL_FRAME, WOOD_WALL, WINDOW_FRAME, DOOR_FRAME, WOOD_DOOR, POST, FLOOR -> ModSounds.HAMMER_NAIL;
+            case BOARD, CRATE, WALL_FRAME, WOOD_WALL, WINDOW_FRAME, DOOR_FRAME, WOOD_DOOR, POST, FLOOR, WOOD_STAIRS, LADDER, ROOF, SHUTTERS -> ModSounds.HAMMER_NAIL;
             case METAL_SHEET -> SoundEvents.ANVIL_PLACE;
             case TRIPWIRE -> SoundEvents.CHAIN_PLACE;
             case SANDBAGS -> SoundEvents.SAND_PLACE;
