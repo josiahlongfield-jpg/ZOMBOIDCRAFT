@@ -64,7 +64,7 @@ public class CompanionCareTest implements FabricClientGameTest {
             ctx.runOnClient(mc -> {
                 NpcEntity npc = clientNpc(mc);
                 mc.player.lookAt(net.minecraft.commands.arguments.EntityAnchorArgument.Anchor.EYES, npc.getEyePosition());
-                mc.setScreen(new TalkScreen(npc));
+                mc.gui.setScreen(new TalkScreen(npc));
             });
             ctx.waitTicks(10);
             shot(ctx, "talk");
@@ -78,7 +78,7 @@ public class CompanionCareTest implements FabricClientGameTest {
             }
             ctx.runOnClient(mc -> ClientPlayNetworking.send(new NpcNet.Talk(clientNpc(mc).getId(), NpcNet.CARRYING)));
             ctx.waitTicks(10);
-            ctx.runOnClient(mc -> mc.setScreen(null));
+            ctx.runOnClient(mc -> mc.gui.setScreen(null));
             ctx.waitTicks(10);
             shot(ctx, "carrying");
             log(sp, "after answering");
