@@ -637,6 +637,8 @@ public final class ZcConfig {
         public int largeLevel = 5;
         /** Plumbing to take out a sink or toilet with a pipe wrench, and a tub or anything big; Electrical for wired fittings. */
         public int plumbedLevel = 1;
+        /** Plumbed fixtures at or over this weight (a bathtub, a shower tray) count as big. */
+        public double plumbedLargeKg = 45;
         public int plumbedLargeLevel = 3;
         public int wiredLevel = 1;
         /** Scales every piece of furniture's weight. */

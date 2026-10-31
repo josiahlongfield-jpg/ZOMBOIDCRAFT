@@ -79,7 +79,7 @@ public final class Moving {
             case PLAIN -> material(block.defaultBlockState());
         };
         int need = switch (kind) {
-            case PLUMBED -> size == Size.LARGE ? b.plumbedLargeLevel : b.plumbedLevel;
+            case PLUMBED -> kg >= b.plumbedLargeKg ? b.plumbedLargeLevel : b.plumbedLevel;
             case WIRED -> b.wiredLevel;
             case PLAIN -> switch (size) {
                 case SMALL -> 0;

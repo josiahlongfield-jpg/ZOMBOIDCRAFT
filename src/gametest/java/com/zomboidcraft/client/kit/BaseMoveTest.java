@@ -47,7 +47,7 @@ public class BaseMoveTest implements FabricClientGameTest {
     public void runTest(ClientGameTestContext ctx) {
         try (TestSingleplayerContext sp = ctx.worldBuilder().create()) {
             sp.getConnection().waitForChunksRender();
-            for (String c : new String[] {"time set noon", "weather clear", "gamerule doDaylightCycle false", "gamerule doMobSpawning false"}) {
+            for (String c : new String[] {"time set noon", "weather clear", "gamerule doDaylightCycle false", "gamerule doMobSpawning false", "effect give @a night_vision infinite 0 true"}) {
                 sp.getServer().runCommand(c);
             }
             ctx.getInput().resizeWindow(1280, 720);
@@ -149,7 +149,7 @@ public class BaseMoveTest implements FabricClientGameTest {
     private static void lift(ClientGameTestContext ctx, TestSingleplayerContext sp, String name, int i) {
         BlockPos pos = at(i);
         // two blocks back from it, looking straight at its middle
-        stand(ctx, sp, pos.getX() - origin.getX(), pos.getZ() - origin.getZ() - 2.2, 0f, 28f);
+        stand(ctx, sp, pos.getX() - origin.getX(), pos.getZ() - origin.getZ() - 1.7, 0f, 38f);
         String before = sp.getServer().computeOnServer(s -> {
             ServerPlayer p = player(s);
             BlockState st = s.overworld().getBlockState(pos);
@@ -166,7 +166,7 @@ public class BaseMoveTest implements FabricClientGameTest {
             ctx.waitTicks(12);
             frame(ctx, "lift-" + name + "-" + k);
         }
-        ctx.waitTicks(60);
+        ctx.waitTicks(140);
         ctx.runOnClient(mc -> mc.options.keyAttack.setDown(false));
         ctx.waitTicks(5);
         String after = sp.getServer().computeOnServer(s -> {
@@ -213,7 +213,7 @@ public class BaseMoveTest implements FabricClientGameTest {
         ctx.runOnClient(mc -> KeyMapping.click(mc.options.keyUse.getDefaultKey()));
         ctx.waitTicks(5);
         frame(ctx, "dirt-refused");
-        String floor = sp.getServer().computeOnServer(s -> String.valueOf(s.overworld().getBlockState(origin.offset(7, 1, 3)).getBlock()));
+        String floor = sp.getServer().computeOnServer(s -> String.valueOf(s.overworld().getBlockState(origin.offset(7, 1, 2)).getBlock()));
         LOG.info("ZCBASE dirt on the floor: block above the floor is now {}", floor);
     }
 
