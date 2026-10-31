@@ -89,6 +89,8 @@ public class CarProp extends Entity {
     private static final EntityDataAccessor<Float> TURRET_SPIN = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Boolean> TURRET_FIRING = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Integer> BELT = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.INT);
+    /** Every part's condition, a character a slot ({@link CarParts}); empty until the server first rolls them. */
+    private static final EntityDataAccessor<String> PARTS = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.STRING);
     /** Server: the gunner holds the trigger; rounds due by the rate; ticks till the belt's loaded; rounds fired. */
     boolean turretTrigger;
     int beltBusy, turretShots, fireTicks;
@@ -138,6 +140,9 @@ public class CarProp extends Entity {
     private boolean hotwired;
     /** Whether a car's condition has been decided yet ({@link #carCondition}). */
     private boolean worn;
+    /** Server side: wear owed each part slot below a whole percent, so slow wear adds up. */
+    private final double[] partWear = new double[CarParts.SLOTS.size()];
+    private double lastSpeedForWear;
     private int hotwireLeft = -1;
     private Entity hotwirer;
     /** The glovebox, filled the first time anyone opens it. */
@@ -202,6 +207,7 @@ public class CarProp extends Entity {
         builder.define(TURRET_SPIN, 0f);
         builder.define(TURRET_FIRING, false);
         builder.define(BELT, 0);
+        builder.define(PARTS, "");
     }
 
     @Override
@@ -245,6 +251,7 @@ public class CarProp extends Entity {
         worn = input.getIntOr("worn", 0) != 0;
         entityData.set(LIGHTS, input.getIntOr("lights", 0) != 0);
         entityData.set(BELT, input.getIntOr("belt", 0));
+        entityData.set(PARTS, input.getStringOr("parts", ""));
         gloveSearched = input.getIntOr("glove_searched", 0) != 0;
         NonNullList<ItemStack> glove = NonNullList.withSize(glovebox.getContainerSize(), ItemStack.EMPTY);
         ContainerHelper.loadAllItems(input.childOrEmpty("glovebox"), glove);
@@ -265,6 +272,7 @@ public class CarProp extends Entity {
         output.putInt("condition", condition());
         output.putFloat("windows", windows);
         output.putInt("belt", belt());
+        output.putString("parts", parts());
         output.putString("glass", entityData.get(GLASS));
         if (glassLeft != null) {
             StringBuilder left = new StringBuilder();
@@ -865,6 +873,9 @@ public class CarProp extends Entity {
                 default -> rng.nextInt(16);
             });
         }
+        if (!aircraft() && !parts().isEmpty()) {
+            return CarParts.overall(parts());
+        }
         return condition();
     }
 
@@ -961,8 +972,24 @@ public class CarProp extends Entity {
 
     /** The starter turns over and the engine catches about three seconds later. */
     private void crank(ServerLevel server) {
+        String fault = parts().isEmpty() ? null : CarParts.startFault(parts(), new java.util.Random(random.nextLong()),
+                knowsCars(getControllingPassenger()));
+        if (fault != null) {
+            server.playSound(null, getX(), getY(), getZ(), CarSounds.STALL, SoundSource.NEUTRAL, 1f, 1f);
+            if (getControllingPassenger() instanceof Player player) {
+                player.sendOverlayMessage(Component.literal(fault + " C to try again."));
+            }
+            return;
+        }
         server.playSound(null, getX(), getY(), getZ(), CarSounds.START, SoundSource.NEUTRAL, 1f, 1f);
         catchAt = tickCount + 58;
+        wear(CarParts.Part.STARTER, 0, 0.15);
+        wear(CarParts.Part.SPARK_PLUGS, 0, 0.1);
+    }
+
+    /** Whether someone knows enough to tell which part's at fault (Mechanics 1). */
+    private static boolean knowsCars(Entity who) {
+        return who instanceof Player p && (p.isCreative() || com.zomboidcraft.skills.Skills.level(p, com.zomboidcraft.skills.Skill.MECHANICS) >= 1);
     }
 
     /** A tick of hotwiring: the one at it has to stay at the wheel; at the end it starts, or only sparks. */
@@ -998,6 +1025,12 @@ public class CarProp extends Entity {
         }
         if (!engineRuns()) {
             player.sendOverlayMessage(Component.literal("Nothing. The battery's dead."));
+            return;
+        }
+        if (!lightsOn() && !parts().isEmpty() && CarParts.get(parts(), CarParts.Part.HEADLIGHT, 0) <= 0
+                && CarParts.get(parts(), CarParts.Part.HEADLIGHT, 1) <= 0) {
+            server.playSound(null, getX(), getY(), getZ(), SoundEvents.LEVER_CLICK, SoundSource.NEUTRAL, 0.4f, 1.2f);
+            player.sendOverlayMessage(Component.literal("Click. Both headlights are smashed or gone."));
             return;
         }
         entityData.set(LIGHTS, !lightsOn());
@@ -1400,6 +1433,9 @@ public class CarProp extends Entity {
             setDeltaMovement(Vec3.ZERO);  // passengers but nobody at the wheel
         }
         if (level() instanceof ServerLevel server) {
+            if (!aircraft() && parts().isEmpty()) {
+                rollParts();
+            }
             if (entityData.get(OPEN) && server.getGameTime() % 10 == 0 && !beingSearched(server)) {
                 entityData.set(OPEN, false);
                 server.playSound(null, getX(), getY(), getZ(), SoundEvents.IRON_TRAPDOOR_CLOSE, SoundSource.BLOCKS, 0.6f, 0.7f);
@@ -1450,17 +1486,20 @@ public class CarProp extends Entity {
         Vec3 v = getDeltaMovement();
         double fx = -Math.sin(rad), fz = Math.cos(rad);
         double speed = v.x * fx + v.z * fz, lx = v.x - fx * speed, lz = v.z - fz * speed;
-        double top = topSpeed();
+        CarParts.Drive d = partDrive();
+        double top = topSpeed() * d.top();
+        double accel = ACCEL * d.power(), brake = BRAKE * d.brake();
         boolean runs = engineOn(), ground = onGround();
+        boolean stopping = in.backward() && !in.forward() && speed > 0.02 || in.forward() && !in.backward() && speed < -0.02;
         if (runs && (in.backward() && !in.forward() && speed > 0.02 || in.forward() && !in.backward() && speed < -0.02
                 || in.jump() && Math.abs(speed) > 0.01)) {
             braking = 4;
         }
         if (ground) {
             if (in.forward() && !in.backward() && runs) {
-                speed = speed < -0.02 ? approach(speed, 0, BRAKE) : speed + ACCEL * Math.max(0, 1 - (speed / top) * (speed / top));
+                speed = speed < -0.02 ? approach(speed, 0, brake) : speed + accel * Math.max(0, 1 - (speed / top) * (speed / top));
             } else if (in.backward() && !in.forward() && runs) {
-                speed = speed > 0.02 ? approach(speed, 0, BRAKE) : speed - ACCEL * 0.6 * Math.max(0, 1 - (speed / REVERSE) * (speed / REVERSE));
+                speed = speed > 0.02 ? approach(speed, 0, brake) : speed - accel * 0.6 * Math.max(0, 1 - (speed / REVERSE) * (speed / REVERSE));
             } else {
                 speed = approach(speed * 0.99, 0, 0.002);
             }
@@ -1475,7 +1514,12 @@ public class CarProp extends Entity {
         float want = (in.left() ? 1 : 0) - (in.right() ? 1 : 0);
         float limit = (float) Math.toRadians(35 - 27 * Math.min(1, Math.abs(speed) / top));
         float target = want * limit;
-        steer += Mth.clamp(target - steer, -0.12f, 0.12f);
+        if (ground && Math.abs(speed) > 0.05) {
+            // flats and bent rims drag the car to one side, uneven brakes pull it while stopping
+            target += (float) ((d.pull() + (stopping && runs ? d.brakePull() : 0)) * 3);
+        }
+        float rate = (float) (0.12 * d.steer());
+        steer += Mth.clamp(target - steer, -rate, rate);
         float yaw = getYRot();
         if (ground) {
             double wheelbase = m.wheelbase > 0.5f ? m.wheelbase : m.size[2] * 0.6;
@@ -1489,7 +1533,7 @@ public class CarProp extends Entity {
         setYRot(yaw);
 
         // tyres keep most of the car going the way it points; less in the rain, little on the handbrake
-        double grip = !ground ? 0 : in.jump() ? 0.15 : level().isRainingAt(blockPosition()) ? 0.35 : 0.6;
+        double grip = (!ground ? 0 : in.jump() ? 0.15 : level().isRainingAt(blockPosition()) ? 0.35 : 0.6) * d.grip();
         rad = Math.toRadians(yaw);
         fx = -Math.sin(rad);
         fz = Math.cos(rad);
@@ -1591,6 +1635,9 @@ public class CarProp extends Entity {
             server.playSound(null, getX(), getY(), getZ(), CarSounds.CRASH, SoundSource.NEUTRAL,
                     (float) Math.min(1.5, speedBefore * 1.4), 0.9f + random.nextFloat() * 0.2f);
             Noise.emit(server, position(), 30);
+            if (!parts().isEmpty()) {
+                crashWear(speedBefore);
+            }
             speedBefore = 0;
         } else {
             speedBefore = lastSpeed;
@@ -1598,11 +1645,71 @@ public class CarProp extends Entity {
         lastSpeed = speed;
         strike(server, driver, m, speed);
         if (engineOn() && tickCount % 10 == 0) {
-            Noise.emit(server, position(), 18 + 30 * speed);
+            Noise.emit(server, position(), (18 + 30 * speed) * Math.min(2.5, partDrive().noise()));
+        }
+        if (!parts().isEmpty()) {
+            wearDriving(moved, speed);
         }
         if (engineOn() && tickCount % 5 == 0 && tickCount - mountedAt > 100) {
             driver.sendOverlayMessage(Component.literal(Math.round(speed * 72) + " km/h"));
         }
+    }
+
+    /**
+     * Wear from a tick of driving, by what the driver does with it: distance wears the tyres, the oil and the
+     * engine (more with the oil low, and hard near the top speed), hard slowing wears the brakes, and a
+     * jolt down onto the road (a kerb, a drop) wears the suspension.
+     */
+    private void wearDriving(Vec3 moved, double speed) {
+        double scale = com.zomboidcraft.ZcConfig.get().world.partWear;
+        if (scale <= 0) {
+            return;
+        }
+        String p = parts();
+        double km = speed / 1000 * scale;   // a block a metre
+        double oil = CarParts.get(p, CarParts.Part.OIL, 0) / 100.0;
+        double redline = speed > topSpeed() * 0.85 ? 3 : 1;
+        wear(CarParts.Part.ENGINE, 0, km * 0.4 * redline * (oil <= 0 ? 20 : oil < 0.25 ? 4 : 1)
+                * (CarParts.get(p, CarParts.Part.RADIATOR, 0) <= 0 || CarParts.get(p, CarParts.Part.FAN_BELT, 0) <= 0 ? 15 : 1));
+        wear(CarParts.Part.OIL, 0, km * 2);
+        wear(CarParts.Part.GEARBOX, 0, km * 0.3);
+        wear(CarParts.Part.EXHAUST, 0, km * 0.3);
+        wear(CarParts.Part.FUEL_PUMP, 0, km * 0.2);
+        wear(CarParts.Part.FAN_BELT, 0, km * 0.4);
+        for (int i = 0; i < 4; i++) {
+            wear(CarParts.Part.TIRE, i, km * 1.2);
+            wear(CarParts.Part.SUSPENSION, i, km * 0.3);
+        }
+        // the driver's moves arrive unevenly, so one tick's drop is capped at about a hard stop's
+        double slowed = Math.min(0.06, lastSpeedForWear - speed);
+        if (slowed > 0.02) {
+            for (int i = 0; i < 4; i++) {
+                wear(CarParts.Part.BRAKES, i, slowed * (i < 2 ? 0.8 : 0.5) * scale);
+            }
+            wear(CarParts.Part.BRAKE_FLUID, 0, slowed * 0.2 * scale);
+        }
+        if (moved.y < -0.3 && speed > 0.2) {
+            for (int i = 0; i < 4; i++) {
+                wear(CarParts.Part.SUSPENSION, i, -moved.y * 4 * scale);
+                wear(CarParts.Part.RIM, i, -moved.y * 1.5 * scale);
+            }
+        }
+        lastSpeedForWear = speed;
+    }
+
+    /** A crash at speed (blocks a tick) knocks the front about: lights, bonnet, radiator, steering, the front wheels. */
+    private void crashWear(double speed) {
+        double hit = Math.min(60, speed * speed * 60) * com.zomboidcraft.ZcConfig.get().world.partWear;
+        wear(CarParts.Part.HEADLIGHT, 0, hit * 1.5);
+        wear(CarParts.Part.HEADLIGHT, 1, hit * 1.5);
+        wear(CarParts.Part.BONNET, 0, hit);
+        wear(CarParts.Part.RADIATOR, 0, hit);
+        wear(CarParts.Part.STEERING, 0, hit * 0.5);
+        wear(CarParts.Part.ENGINE, 0, hit * 0.25);
+        wear(CarParts.Part.RIM, 0, hit * 0.5);
+        wear(CarParts.Part.RIM, 1, hit * 0.5);
+        wear(CarParts.Part.SUSPENSION, 0, hit * 0.4);
+        wear(CarParts.Part.SUSPENSION, 1, hit * 0.4);
     }
 
     /**
@@ -1802,6 +1909,48 @@ public class CarProp extends Entity {
     private int flightTicks;
     /** Whether a catapult was pulling the jet last tick (for the call when it fires). */
     private boolean launching;
+
+    /** The parts string ({@link CarParts}), empty on a car that has none (aircraft, boats) or isn't rolled yet. */
+    public String parts() {
+        return entityData.get(PARTS);
+    }
+
+    public void setParts(String parts) {
+        entityData.set(PARTS, parts);
+    }
+
+    /** Server side: gives a road vehicle its parts the first time it ticks, scattered about the condition it was found in. */
+    private void rollParts() {
+        CarModels.Model m = CarModels.get(model());
+        if (parts().isEmpty() && CarParts.applies(m)) {
+            int overall = carCondition();
+            setParts(CarParts.roll(m, variant(), overall, new java.util.Random(getUUID().getMostSignificantBits() ^ 0x5eedL)));
+        }
+    }
+
+    /** Wears one part slot by amount (percent), stopping at broken (0); missing parts stay missing. */
+    public void wear(int slot, double amount) {
+        String p = parts();
+        int c = CarParts.get(p, slot);
+        if (c <= 0 || amount <= 0) {
+            return;
+        }
+        partWear[slot] += amount;
+        int whole = (int) partWear[slot];
+        if (whole > 0) {
+            partWear[slot] -= whole;
+            setParts(CarParts.set(p, slot, Math.max(0, c - whole)));
+        }
+    }
+
+    public void wear(CarParts.Part part, int index, double amount) {
+        wear(CarParts.slot(part, index), amount);
+    }
+
+    /** What the parts make of the drive; perfect for anything without them. */
+    public CarParts.Drive partDrive() {
+        return CarParts.drive(parts());
+    }
 
     public float fuel() {
         return entityData.get(FUEL);

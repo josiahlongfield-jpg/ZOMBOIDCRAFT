@@ -712,6 +712,8 @@ public final class ZcConfig {
         public double hotwireSeconds = 8;
         public double hotwireFail = 0.25;
         public double hotwireWear = 0.8;
+        /** How fast car parts wear from driving and crashes (CarParts): 1 is the plan's pace, 0 turns wear off. */
+        public double partWear = 1.0;
         /** How big a player is while in a car or aircraft (1 = full size): a little smaller so arms and legs stay inside the cabin. */
         public double carRiderScale = 0.85;
     }

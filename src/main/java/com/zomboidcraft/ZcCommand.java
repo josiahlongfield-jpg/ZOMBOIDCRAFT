@@ -46,6 +46,12 @@ public final class ZcCommand {
                                                 .suggests((ctx, b) -> SharedSuggestionProvider.suggest(CarModels.variants(), b))
                                                 .executes(ctx -> car(ctx, StringArgumentType.getString(ctx, "model"),
                                                         StringArgumentType.getString(ctx, "variant"))))))
+                        .then(Commands.literal("carparts").executes(ctx -> carParts(ctx, null, -1))
+                                .then(Commands.argument("part", StringArgumentType.word())
+                                        .suggests((ctx, b) -> SharedSuggestionProvider.suggest(com.zomboidcraft.world.cars.CarParts.names(), b))
+                                        .then(Commands.argument("condition", IntegerArgumentType.integer(-1, 100))
+                                                .executes(ctx -> carParts(ctx, StringArgumentType.getString(ctx, "part"),
+                                                        IntegerArgumentType.getInteger(ctx, "condition"))))))
                         .then(Commands.literal("aircraft")
                                 .executes(ctx -> aircraft(ctx, "jet_corvid"))
                                 .then(Commands.argument("model", StringArgumentType.word())
@@ -198,6 +204,36 @@ public final class ZcCommand {
     }
 
     /** Drops a car side-on a few blocks in front of you: a random one, or the model and state named. */
+    /**
+     * The nearest car's parts (within 8 blocks), listed; or one set (part name, "tire" for all four, "all" for
+     * everything) to a condition, -1 to take it off. For trying out worn and missing parts without driving for days.
+     */
+    private static int carParts(CommandContext<CommandSourceStack> ctx, String part, int condition) throws CommandSyntaxException {
+        net.minecraft.server.level.ServerPlayer player = ctx.getSource().getPlayerOrException();
+        com.zomboidcraft.world.cars.CarProp car = player.level().getEntitiesOfClass(com.zomboidcraft.world.cars.CarProp.class,
+                        player.getBoundingBox().inflate(8), c -> !c.parts().isEmpty()).stream()
+                .min(java.util.Comparator.comparingDouble(c -> c.distanceToSqr(player))).orElse(null);
+        if (car == null) {
+            ctx.getSource().sendFailure(Component.literal("No car with parts within 8 blocks."));
+            return 0;
+        }
+        String parts = car.parts();
+        if (part != null) {
+            java.util.List<Integer> slots = com.zomboidcraft.world.cars.CarParts.slots(part);
+            if (slots.isEmpty()) {
+                ctx.getSource().sendFailure(Component.literal("No part called " + part + "."));
+                return 0;
+            }
+            for (int slot : slots) {
+                parts = com.zomboidcraft.world.cars.CarParts.set(parts, slot, condition);
+            }
+            car.setParts(parts);
+        }
+        String shown = parts;
+        ctx.getSource().sendSuccess(() -> Component.literal(com.zomboidcraft.world.cars.CarParts.describe(car.model(), shown)), false);
+        return 1;
+    }
+
     private static int car(CommandContext<CommandSourceStack> ctx, String model, String variant) throws CommandSyntaxException {
         ServerPlayer player = ctx.getSource().getPlayerOrException();
         java.util.Random rng = new java.util.Random();
