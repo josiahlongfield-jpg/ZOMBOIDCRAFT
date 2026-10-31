@@ -58,6 +58,8 @@ public final class Bunker {
     private final List<Room> rooms = new ArrayList<>();
     /** The corridor's width; it runs x = 0 .. cw - 1. */
     private int cw;
+    /** Where the corridor runs on into the storage hall, x = mouth0 .. mouth1. */
+    private int mouth0, mouth1;
     /** The outer faces of the walls round everything. */
     private int bx0, bz0, bx1, bz1;
     private boolean[][] carved;
@@ -130,6 +132,83 @@ public final class Bunker {
         if (state == State.LOOTED) {
             pried();
         }
+        occupants();
+    }
+
+    /**
+     * Who was down here, for world.gen.StoryMarks to lay out when a player comes near: the people who
+     * sealed themselves in and didn't make it (one of them may still be on its feet), the one who
+     * found a looted bunker first, or the dead that broke into a breached one and the ones they caught.
+     */
+    private void occupants() {
+        String who = switch (kind) {
+            case TOWER -> "office";
+            case SHIP, FOREST -> "survivor";
+            case SHELTER -> "civilian";
+            case ARMY -> "soldier";
+        };
+        String guard = switch (kind) {
+            case TOWER -> "security";
+            case ARMY, FOREST -> "soldier";
+            default -> who;
+        };
+        List<Room> living = new ArrayList<>();
+        for (Room r : rooms) {
+            if (r != decon && r != corridor && r != storage && r != armoury) {
+                living.add(r);
+            }
+        }
+        Room bunks = living.stream().filter(r -> r.use == Use.BUNKS).findFirst().orElse(living.get(0));
+        switch (state) {
+            case SEALED -> {
+                if (rng.nextDouble() < 0.7) {
+                    body(bunks, who);
+                }
+                if (rng.nextDouble() < 0.5) {
+                    body(living.get(rng.nextInt(living.size())), guard);
+                }
+                if (rng.nextDouble() < 0.35) {
+                    walkers(living.get(rng.nextInt(living.size())), who, 1);
+                }
+            }
+            case LOOTED -> {
+                if (rng.nextDouble() < 0.5) {
+                    body(rng.nextBoolean() ? storage : corridor, "survivor");
+                }
+                if (rng.nextDouble() < 0.3) {
+                    walkers(storage, "survivor", 1);
+                }
+            }
+            case BREACHED -> {
+                body(decon, guard);
+                for (int i = 0, n = 1 + rng.nextInt(3); i < n; i++) {
+                    body(rng.nextBoolean() ? corridor : living.get(rng.nextInt(living.size())), rng.nextBoolean() ? guard : who);
+                }
+                walkers(corridor, "any", 1 + rng.nextInt(3));
+                for (int i = 0, n = 2 + rng.nextInt(3); i < n; i++) {
+                    walkers(living.get(rng.nextInt(living.size())), rng.nextDouble() < 0.6 ? who : "any", 1);
+                }
+            }
+        }
+    }
+
+    /** A body on the floor of the room, maybe missing a limb, in a pool of blood. */
+    private void body(Room r, String outfit) {
+        int[] c = r.clearFloor();
+        if (c == null) {
+            return;
+        }
+        int limbs = rng.nextDouble() < 0.25 ? 1 << rng.nextInt(8) : 0;
+        p.vehicle(c[0] + 0.5, 1, c[1] + 0.5, (float) (rng.nextDouble() * 360), "!body:" + outfit + ";" + limbs + ";0", rng.nextLong());
+        if (rng.nextDouble() < 0.5) {
+            r.floor(c[0], c[1], rng.nextBoolean() ? "home_blood_pool" : "blood_splat");
+        }
+    }
+
+    /** Walkers that stand up inside the room (a negative radius keeps them on the bunker's floor). */
+    private void walkers(Room r, String outfit, int n) {
+        int radius = Math.max(1, Math.min(r.w(), r.d()) / 2);
+        p.vehicle((r.x0 + r.x1) / 2 + 0.5, 1, (r.z0 + r.z1) / 2 + 0.5, 0, "!walkers:" + outfit + ";" + n + ";" + (-radius), rng.nextLong());
     }
 
     // ------------------------------------------------------------------ the plan
@@ -137,7 +216,10 @@ public final class Bunker {
     private void plan() {
         ship = kind == Kind.SHIP;
         boolean small = kind == Kind.FOREST || kind == Kind.ARMY;
-        cw = small ? 2 : 3;
+        // under a tower the rooms open off the operations floor, an open hall of desks between two lines of columns
+        cw = small ? 2 : kind == Kind.TOWER ? 9 : 3;
+        mouth0 = cw <= 3 ? 0 : cw / 2 - 1;
+        mouth1 = cw <= 3 ? cw - 1 : cw / 2 + 1;
         damp = switch (kind) {
             case FOREST -> 0.25;
             case ARMY -> 0.12;
@@ -151,7 +233,7 @@ public final class Bunker {
             default -> 6;
         };
         int dLen = small ? 4 : 5;
-        decon = room(Use.DECON, -2, 1, cw + 1, dLen);
+        decon = room(Use.DECON, -2, 1, Math.min(cw, 3) + 1, dLen);
         decon.way(0, 1);
         decon.way(1, 1);
         decon.way(0, dLen);
@@ -192,7 +274,7 @@ public final class Bunker {
         }
         int sLen = small ? 6 + rng.nextInt(2) : kind == Kind.SHELTER ? 11 + rng.nextInt(3) : 9 + rng.nextInt(3);
         storage = room(Use.STORAGE, minX, cEnd + 3, maxX, cEnd + 2 + sLen);
-        for (int x = 0; x < cw; x++) {
+        for (int x = mouth0; x <= mouth1; x++) {
             storage.way(x, storage.z0);
             corridor.way(x, cEnd);
         }
@@ -318,9 +400,15 @@ public final class Bunker {
             case STORAGE -> {
                 r.lower = r.upper = "bunk_concrete";
             }
-            case SERVER, EXEC -> {
+            case SERVER -> {
                 r.lower = r.upper = "bunk_paint";
                 r.ground = "office_floor";
+            }
+            case EXEC -> {
+                // panelled to the dado, carpet: the board meant to see out the war in comfort
+                r.lower = "of_cedar_wall";
+                r.upper = "bunk_paint";
+                r.ground = "fit_carpet";
             }
             default -> {
                 r.lower = bare ? "bunk_concrete" : "bunk_dado";
@@ -444,7 +532,7 @@ public final class Bunker {
             reveal(wx + STEP[s][0], wz + STEP[s][1], r.ground);
         }
         // the corridor runs straight into the storage hall under a lintel
-        for (int x = 0; x < cw; x++) {
+        for (int x = mouth0; x <= mouth1; x++) {
             for (int z = corridor.z1 + 1; z <= corridor.z1 + 2; z++) {
                 reveal(x, z, corridor.ground);
             }
@@ -473,7 +561,13 @@ public final class Bunker {
     private void dress(Room r) {
         switch (r.use) {
             case DECON -> decon(r);
-            case CORRIDOR -> corridor(r);
+            case CORRIDOR -> {
+                if (cw > 3) {
+                    opsFloor(r);
+                } else {
+                    corridor(r);
+                }
+            }
             case BUNKS -> bunks(r);
             case MESS -> mess(r);
             case WASH -> wash(r);
@@ -490,6 +584,7 @@ public final class Bunker {
         if (r.use != Use.CORRIDOR) {
             lights(r);
             services(r);
+            beams(r);
         }
         r.tops();
     }
@@ -525,6 +620,107 @@ public final class Bunker {
         r.wallDecor(2, "bunk_phone");
     }
 
+    /**
+     * Under a tower the corridor is the operations floor: an open hall with a line of columns down
+     * each side, the doors to the rooms opening off the aisles behind them, and the desks out in the
+     * middle in rows, every chair turned to the status boards on the end wall by the way in. A steel
+     * frame crosses the roof between each pair of columns carrying the trays and the duct.
+     */
+    private void opsFloor(Room r) {
+        int cA = r.x0 + 2, cB = r.x1 - 2;
+        // the columns, full height, every five blocks
+        List<Integer> lines = new ArrayList<>();
+        for (int z = r.z0 + 3; z <= r.z1 - 2; z += 5) {
+            lines.add(z);
+            for (int x : new int[] {cA, cB}) {
+                if (r.free(x, z, 0, "bunk_dado", "bunk_paint", "bunk_paint")) {
+                    r.used(x, z);
+                }
+            }
+        }
+        // the frames over each line of columns, and lights hung between them
+        for (int z : lines) {
+            for (int x = r.x0; x <= r.x1; x++) {
+                String b = x == cA || x == cB ? null : (x - r.x0) % 3 == 1 ? "bunk_beam_tray[axis=x]"
+                        : x == r.x0 + 1 || x == r.x1 - 1 ? "bunk_beam_duct[axis=x]" : "bunk_beam[axis=x]";
+                if (b != null) {
+                    r.ceiling(x, z, b);
+                }
+            }
+        }
+        for (int z = r.z0 + 1; z <= r.z1 - 1; z++) {
+            if (lines.contains(z)) {
+                continue;
+            }
+            int off = (z - r.z0) % 5;
+            if (off == 1 || off == 4) {
+                continue;
+            }
+            for (int x : new int[] {r.x0 + 1, (r.x0 + r.x1) / 2, r.x1 - 1}) {
+                r.ceiling(x, z, "bunk_tube[axis=z]");
+            }
+        }
+        // cable tray down the aisles along the side walls, pipes along one of them
+        boolean pipesWest = rng.nextBoolean();
+        for (int z = r.z0; z <= r.z1; z++) {
+            r.decor(pipesWest ? r.x0 : r.x1, z, pipesWest ? 3 : 1, 3, (z - r.z0) % 7 == 3 ? "bunk_pipes_valve" : "bunk_pipes");
+            r.ceiling(pipesWest ? r.x1 : r.x0, z, "bunk_cable_tray[axis=z]");
+        }
+        // desks in rows of three between the columns, a chair at each turned to the boards by the door
+        for (int z0 = r.z0 + 5; z0 + 1 <= r.z1 - 4; z0 += 5) {
+            for (int x = cA + 1; x <= cB - 1; x++) {
+                if (x == (cA + cB) / 2 && rng.nextDouble() < 0.4) {
+                    continue;   // a gap to walk through
+                }
+                String desk = rng.nextDouble() < 0.6 ? "fit_console" : "bunk_desk";
+                if (r.free(x, z0 - 1, 2, desk)) {
+                    r.free(x, z0, 0, rng.nextDouble() < 0.15 ? "office_chair_fallen" : "office_chair");
+                }
+            }
+        }
+        // the status boards and the clocks on the end wall, the floor's name beside the way in
+        for (int x = r.x0; x <= r.x1; x++) {
+            if (x < 0 || x > 1) {
+                r.decor(x, r.z0, 0, 2, (x & 1) == 0 ? "bunk_map_wall" : "fit_console");
+            }
+        }
+        r.decor(r.x0, r.z0 + 1, 3, 2, "bunk_st_b4");
+        r.decor(r.x1, r.z0 + 1, 1, 3, "bunk_clock");
+        doorSigns(r);
+        r.wallDecor(1, "bunk_extinguisher");
+        r.wallDecor(1, "bunk_extinguisher");
+        r.wallDecor(2, "bunk_phone");
+        r.wallDecor(2, "bunk_fusebox");
+        r.against("filing_cabinet");
+        r.against("filing_cabinet");
+        r.against("bunk_locker", "bunk_locker_top");
+        r.wallDecor(2, "of_whiteboard");
+        r.against("of_copier");
+        r.scatter("paper", 2 + rng.nextInt(3));
+    }
+
+    /**
+     * Steel beams across the room under the slab, where the strip lights leave a gap; one of them
+     * carries the room's tray or a pipe run. Real shelters show their frame; nothing is boxed in.
+     */
+    private void beams(Room r) {
+        if (r.use == Use.DECON || r.use == Use.WASH) {
+            return;
+        }
+        boolean alongZ = r.d() >= r.w();
+        int span = alongZ ? r.d() : r.w();
+        String ax = alongZ ? "x" : "z";
+        String carry = pick("bunk_beam_pipes", "bunk_beam_tray", "bunk_beam_duct");
+        for (int i = 3; i < span - 1; i += 3) {
+            boolean services = i == 3 || rng.nextDouble() < 0.25;
+            int across = alongZ ? r.w() : r.d();
+            for (int j = 0; j < across; j++) {
+                int x = alongZ ? r.x0 + j : r.x0 + i, z = alongZ ? r.z0 + i : r.z0 + j;
+                r.ceiling(x, z, (services ? carry : "bunk_beam") + "[axis=" + ax + "]");
+            }
+        }
+    }
+
     /** Pipes down one wall and a duct down the other under the ceiling, lamps and cable tray down
      *  the middle, a stencilled name by every door, and arrows back to the way out. */
     private void corridor(Room r) {
@@ -534,17 +730,41 @@ public final class Bunker {
             r.decor(pipesWest ? wx : ex, z, pipesWest ? 3 : 1, 3, (z - r.z0) % 7 == 3 ? "bunk_pipes_valve" : "bunk_pipes");
             if (cw >= 3) {
                 int cx = r.x0 + 1;
+                // a steel frame across the roof every four blocks carries the tray and the duct
+                boolean frame = (z - r.z0) % 4 == 0 && (z - r.z0) % 5 != 2;
                 if ((z - r.z0) % 5 == 2) {
                     r.ceiling(cx, z, "bunk_lamp_hang");
                 } else {
-                    r.ceiling(cx, z, "bunk_cable_tray[axis=z]");
+                    r.ceiling(cx, z, frame ? "bunk_beam_tray[axis=x]" : "bunk_cable_tray[axis=z]");
                 }
-                r.ceiling(pipesWest ? ex : wx, z, (z - r.z0) % 6 == 4 ? "bunk_duct_vent[axis=z]" : "bunk_duct[axis=z]");
+                r.ceiling(pipesWest ? ex : wx, z, frame ? "bunk_beam_duct[axis=x]"
+                        : (z - r.z0) % 6 == 4 ? "bunk_duct_vent[axis=z]" : "bunk_duct[axis=z]");
             } else if ((z - r.z0) % 5 == 2) {
                 r.ceiling(pipesWest ? ex : wx, z, "bunk_lamp_hang");
+            } else if ((z - r.z0) % 4 == 0) {
+                r.ceiling(pipesWest ? ex : wx, z, "bunk_beam[axis=x]");
             }
         }
-        // the name of each room beside its door
+        doorSigns(r);
+        // arrows back toward the blast door, every so often
+        for (int z = r.z0 + 6; z < r.z1; z += 9) {
+            boolean west = rng.nextBoolean();
+            r.decor(west ? wx : ex, z, west ? 3 : 1, 2, west ? "bunk_st_exit_r" : "bunk_st_exit_l");
+        }
+        if (kind == Kind.SHELTER) {
+            r.decor(ex, r.z0 + 2, 1, 2, "bunk_shelter_a");
+            r.decor(ex, r.z0 + 3, 1, 2, "bunk_shelter_b");
+        }
+        r.wallDecor(2, "bunk_fusebox");
+        r.wallDecor(1, "bunk_extinguisher");
+        if (r.d() > 20) {
+            r.wallDecor(1, "bunk_extinguisher");
+            r.wallDecor(2, "bunk_phone");
+        }
+    }
+
+    /** The name of each room stencilled beside its door, on the corridor's side. */
+    private void doorSigns(Room r) {
         for (Room o : rooms) {
             if (o.door == null || o == armoury) {
                 continue;
@@ -563,23 +783,6 @@ public final class Bunker {
             if (o.use == Use.PLANT && rng.nextBoolean()) {
                 r.decor(cx, o.door[1] + 2, s, 2, "bunk_st_nosmoking");
             }
-        }
-        // arrows back toward the blast door, every so often
-        for (int z = r.z0 + 6; z < r.z1; z += 9) {
-            boolean west = rng.nextBoolean();
-            r.decor(west ? wx : ex, z, west ? 3 : 1, 2, west ? "bunk_st_exit_r" : "bunk_st_exit_l");
-        }
-        if (kind == Kind.TOWER) {
-            r.decor(wx, r.z0 + 1, 3, 2, "bunk_st_b4");
-        } else if (kind == Kind.SHELTER) {
-            r.decor(ex, r.z0 + 2, 1, 2, "bunk_shelter_a");
-            r.decor(ex, r.z0 + 3, 1, 2, "bunk_shelter_b");
-        }
-        r.wallDecor(2, "bunk_fusebox");
-        r.wallDecor(1, "bunk_extinguisher");
-        if (r.d() > 20) {
-            r.wallDecor(1, "bunk_extinguisher");
-            r.wallDecor(2, "bunk_phone");
         }
     }
 
@@ -785,8 +988,20 @@ public final class Bunker {
                 int x = alongZ ? r.x0 + line : r.x0 + i, z = alongZ ? r.z0 + i : r.z0 + line;
                 r.free(x, z, fs, "bunk_server", "bunk_server_top");
             }
+            // the cable tray runs over each row of cabinets
+            for (int i = 0; i < span; i++) {
+                int x = alongZ ? r.x0 + line : r.x0 + i, z = alongZ ? r.z0 + i : r.z0 + line;
+                r.ceiling(x, z, "bunk_cable_tray[axis=" + (alongZ ? "z" : "x") + "]");
+            }
         }
+        // the cooling units and the battery cabinets that kept it running when the city went dark
+        r.against("bunk_filter", "bunk_filter_top");
+        r.against("bunk_filter", "bunk_filter_top");
+        r.rowStack(new String[] {"bunk_switchboard", "bunk_switchboard_top"}, new String[] {"bunk_switchboard", "bunk_switchboard_top"});
         r.wallDecor(2, "bunk_fusebox");
+        r.wallDecor(2, "bunk_fusebox");
+        r.wallDecor(1, "bunk_extinguisher");
+        r.scatter("paper", 1 + rng.nextInt(2));
     }
 
     /** The executives' suite: a good desk, a sofa and armchair, books, a plant gone brown. */
@@ -811,6 +1026,18 @@ public final class Bunker {
         }
         r.wallDecor(2, "bunk_clock");
         r.wallDecor(2, "bunk_phone");
+        // a bed for the chairman, the pictures and the wall lights brought down from upstairs
+        r.run(r.x0 + rng.nextInt(r.w()), r.z1, 2, new String[] {"home_bed_quilt_head"}, new String[] {"home_bed_quilt_foot"});
+        r.against("home_nightstand");
+        r.against("home_wardrobe", "home_wardrobe_top");
+        for (int i = 0; i < 3; i++) {
+            r.wallDecor(2, pick("fit_painting_a", "fit_painting_b", "fit_painting_c"));
+        }
+        for (int i = 0; i < 3; i++) {
+            r.wallDecor(2, "fit_sconce");
+        }
+        r.against("of_humidor");
+        r.scatter("home_bottles_low", 1 + rng.nextInt(2));
     }
 
     /** Pallet racking two high round the walls and in double rows down the hall, crates and drums. */
