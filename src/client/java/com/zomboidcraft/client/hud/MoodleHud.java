@@ -97,7 +97,8 @@ public final class MoodleHud {
                 Hud.sprite(g, Hud.id(p.trend > 0 ? "arrow_up" : "arrow_down"), x - 3.5f + slide, y + SIZE / 2f - 2.5f, 5, 5,
                         Hud.alpha(p.trend > 0 ? 0xFFE8D9B0 : 0xFF8FBF5E, a));
             }
-            if (n > 0) {
+            // names stay off while a screen is open, so they never write over the kit
+            if (n > 0 && mc.gui.screen() == null) {
                 // the name's capitals start level with the plate's top edge and the level bars end on its bottom edge
                 float w = Hud.capsWidth(font, p.label, 1f, LABEL);
                 float tx = x - 6 - w + (1 - n) * 3;
