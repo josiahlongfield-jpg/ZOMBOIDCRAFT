@@ -630,15 +630,15 @@ public final class ZcConfig {
         public int spikedWallHits = 24;
         public float spikeDamage = 2f;
         /** Furniture weight: kilograms at or over these are medium (table, bed, sofa) and large (wardrobe, counter, fridge). */
-        public double mediumKg = 8;
-        public double largeKg = 25;
+        public double mediumKg = 6;
+        public double largeKg = 19;
         /** The level of the material's skill it takes to lift a medium and a large piece (small ones anyone can). */
         public int mediumLevel = 2;
         public int largeLevel = 5;
         /** Plumbing to take out a sink or toilet with a pipe wrench, and a tub or anything big; Electrical for wired fittings. */
         public int plumbedLevel = 1;
         /** Plumbed fixtures at or over this weight (a bathtub, a shower tray) count as big. */
-        public double plumbedLargeKg = 45;
+        public double plumbedLargeKg = 34;
         public int plumbedLargeLevel = 3;
         public int wiredLevel = 1;
         /** Scales every piece of furniture's weight. */

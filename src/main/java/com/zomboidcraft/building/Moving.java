@@ -117,11 +117,11 @@ public final class Moving {
     public static double kg(Block block) {
         return KG.computeIfAbsent(block, k -> {
             double density = switch (densityOf(k.defaultBlockState().getSoundType())) {
-                case 1 -> 70;   // steel
-                case 2 -> 110;  // stone, ceramic
-                case 3 -> 18;   // upholstery, cloth
-                case 4 -> 35;   // glass
-                default -> 40;  // wood and the rest
+                case 1 -> 52;   // steel
+                case 2 -> 82;   // stone, ceramic
+                case 3 -> 14;   // upholstery, cloth
+                case 4 -> 26;   // glass
+                default -> 30;  // wood and the rest
             };
             double kg = Math.max(0.3, volume(k) * density * ZcConfig.get().building.furnitureWeight);
             return Math.round(kg * 2) / 2.0;
