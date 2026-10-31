@@ -843,7 +843,8 @@ final class UnionHall {
             for (int y = 1; y <= 3; y++) {
                 set(PLAZA + 4, y, z, "cv_lamp_post");
             }
-            set(PLAZA + 4, 4, z, power && chance() < 0.3 ? "cv_lamp_globe_lit" : "cv_lamp_globe");
+            boolean roll = power && chance() < 0.3;  // the old dead-bulb roll, kept so everything after it lands where it did: every lamp works now
+            set(PLAZA + 4, 4, z, "cv_lamp_globe_lit");
             set(PLAZA + 4, 1, z + 5, "planter");
             set(PLAZA + 4, 2, z + 5, chance() < 0.6 ? "weeds_tall" : "weeds");
             set(PLAZA + 5, 1, z + 5, "planter");

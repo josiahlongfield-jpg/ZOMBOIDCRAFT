@@ -79,9 +79,10 @@ def blocks():
 def main():
     path = HERE / "blocks.json"
     data = json.loads(path.read_text())
-    data["blocks"] = {k: v for k, v in data["blocks"].items() if not k.startswith("tp_")}
     made = blocks()
-    data["blocks"].update(made)
+    # in place: blocks.json is append-only, its order is the registry's
+    data["blocks"] = {k: made.get(k, v) for k, v in data["blocks"].items() if not k.startswith("tp_") or k in made}
+    data["blocks"].update({k: v for k, v in made.items() if k not in data["blocks"]})
     path.write_text(json.dumps(data, indent=1) + "\n")
     print(f"{len(made)} tarp blocks in {path}")
 

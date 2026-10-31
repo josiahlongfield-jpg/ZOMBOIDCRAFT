@@ -154,12 +154,8 @@ public final class Streets {
                     int z = r.alongZ ? along : r.centre + across;
                     sink.set(x, y + 7, z, k < 3 ? "streetlight_arm[facing=" + armFacing + "]" : "streetlight_head[facing=" + headFacing + "]");
                     if (k == 3) {
-                        // some bulbs died with the grid; the rest run off the last generators
-                        if (rng.nextDouble() < 0.8) {
-                            lamps.add(new int[] {x, y + 7, z});
-                        } else {
-                            sink.set(x, y + 7, z, "streetlight_head_off[facing=" + headFacing + "]");
-                        }
+                        rng.nextDouble();  // the old dead-bulb roll, kept so everything after it lands where it did: every lamp works now
+                        lamps.add(new int[] {x, y + 7, z});
                     }
                 }
             }

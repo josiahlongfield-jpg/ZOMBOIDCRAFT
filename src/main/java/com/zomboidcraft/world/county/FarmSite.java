@@ -438,7 +438,8 @@ final class FarmSite extends Site {
             yp.set(x, y, z, "pole_wood");
         }
         yp.set(x, 7, z + 1, "streetlight_arm[facing=south]");
-        yp.set(x, 7, z + 2, (chance() < 0.55 ? "streetlight_head" : "streetlight_head_off") + "[facing=south]");
+        chance();  // the old dead-bulb roll, kept so everything after it lands where it did: every lamp works now
+        yp.set(x, 7, z + 2, "streetlight_head[facing=south]");
         take(x, z, x, z);
     }
 
@@ -1266,7 +1267,8 @@ final class FarmSite extends Site {
             for (int y = 1; y <= 7; y++) {
                 out.set(c[0], y, c[1], "pole_wood");
             }
-            out.set(c[0], 8, c[1], (chance() < 0.4 ? "streetlight_head" : "streetlight_head_off") + "[facing=north]");
+            chance();  // the old dead-bulb roll, kept so everything after it lands where it did: every lamp works now
+            out.set(c[0], 8, c[1], "streetlight_head[facing=north]");
         }
     }
 
@@ -1339,7 +1341,8 @@ final class FarmSite extends Site {
                     for (int y = 1; y <= 4; y++) {
                         out.set(lx, y, lz, "pole_wood");
                     }
-                    out.set(lx, 5, lz, (chance() < 0.4 ? "streetlight_head" : "streetlight_head_off") + "[facing=" + (fx == 1 ? "south" : "north") + "]");
+                    chance();  // the old dead-bulb roll, kept so everything after it lands where it did: every lamp works now
+                    out.set(lx, 5, lz, "streetlight_head[facing=" + (fx == 1 ? "south" : "north") + "]");
                 }
             }
             String sign = switch (p.variant) {

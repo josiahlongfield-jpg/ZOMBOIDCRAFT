@@ -282,7 +282,7 @@ final class Dam extends Site {
                     for (int y = 1; y <= 3; y++) {
                         set(x, y, lz, "cv_lamp_post");
                     }
-                    set(x, 4, lz, chance() < 0.2 ? "air" : "cv_lamp_globe");
+                    set(x, 4, lz, chance() < 0.2 ? "air" : "cv_lamp_globe_lit");
                 }
             }
             // the danger notices on the parapet's lamp standards, facing the road
@@ -861,7 +861,7 @@ final class Dam extends Site {
             for (int y = 1; y <= 3; y++) {
                 set(x1 - 2, y, z1 - 1, "cv_lamp_post");
             }
-            set(x1 - 2, 4, z1 - 1, "cv_lamp_globe");
+            set(x1 - 2, 4, z1 - 1, "cv_lamp_globe_lit");
         }
 
         /** The keeper's house on the west bank below the crest, its drive to the road, his gate piers. */

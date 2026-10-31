@@ -4189151,7 +4189151,55 @@
     ]
    ],
    "render": "cutout",
-   "rotate": "facing"
+   "rotate": "facing",
+   "signal": {
+    "light": 8,
+    "on": {
+     "g": {
+      "ts_face": "ts_face_g"
+     },
+     "y": {
+      "ts_face": "ts_face_y"
+     },
+     "r": {
+      "ts_face": "ts_face_r"
+     }
+    },
+    "states": {
+     "north": [
+      "",
+      "g",
+      "y",
+      "r",
+      "r",
+      "r"
+     ],
+     "east": [
+      "",
+      "r",
+      "r",
+      "r",
+      "g",
+      "y"
+     ],
+     "south": [
+      "",
+      "g",
+      "y",
+      "r",
+      "r",
+      "r"
+     ],
+     "west": [
+      "",
+      "r",
+      "r",
+      "r",
+      "g",
+      "y"
+     ]
+    }
+   }
   },
   "ts_head_swing": {
    "model": "boxes",
@@ -4189427,7 +4189475,55 @@
     ]
    ],
    "render": "cutout",
-   "rotate": "facing"
+   "rotate": "facing",
+   "signal": {
+    "light": 8,
+    "on": {
+     "g": {
+      "ts_face": "ts_face_g"
+     },
+     "y": {
+      "ts_face": "ts_face_y"
+     },
+     "r": {
+      "ts_face": "ts_face_r"
+     }
+    },
+    "states": {
+     "north": [
+      "",
+      "g",
+      "y",
+      "r",
+      "r",
+      "r"
+     ],
+     "east": [
+      "",
+      "r",
+      "r",
+      "r",
+      "g",
+      "y"
+     ],
+     "south": [
+      "",
+      "g",
+      "y",
+      "r",
+      "r",
+      "r"
+     ],
+     "west": [
+      "",
+      "r",
+      "r",
+      "r",
+      "g",
+      "y"
+     ]
+    }
+   }
   },
   "ts_head_down": {
    "model": "boxes",
@@ -4189532,32 +4189628,32 @@
    "boxes": [
     [
      5,
-     4,
+     0.6,
      5,
      11,
-     11,
+     14.6,
      11,
      {
-      "north": "ts_flasher",
-      "south": "ts_flasher",
-      "east": "ts_flasher",
-      "west": "ts_flasher",
+      "north": "ts_face",
+      "south": "ts_face",
+      "east": "ts_face_x",
+      "west": "ts_face_x",
       "up": "ts_housing",
       "down": "ts_housing"
      }
     ],
     [
      7.4,
-     11,
+     14.6,
      7.4,
      8.6,
-     15,
+     15.2,
      8.6,
      "st_galv"
     ],
     [
      7,
-     14.5,
+     14.8,
      7,
      9,
      15.6,
@@ -4189585,55 +4189681,186 @@
     ],
     [
      5.4,
-     9.8,
-     2.6,
+     14.6,
+     3,
      10.6,
-     10.2,
+     15.0,
      5,
      "ext_black_metal"
     ],
     [
      5.4,
-     9.8,
+     14.6,
      11,
      10.6,
-     10.2,
-     13.4,
+     15.0,
+     13,
      "ext_black_metal"
     ],
     [
-     2.6,
-     9.8,
+     3,
+     14.6,
      5.4,
      5,
-     10.2,
+     15.0,
      10.6,
      "ext_black_metal"
     ],
     [
      11,
-     9.8,
+     14.6,
      5.4,
-     13.4,
-     10.2,
+     13,
+     15.0,
+     10.6,
+     "ext_black_metal"
+    ],
+    [
+     5.4,
+     10.1,
+     3,
+     10.6,
+     10.5,
+     5,
+     "ext_black_metal"
+    ],
+    [
+     5.4,
+     10.1,
+     11,
+     10.6,
+     10.5,
+     13,
+     "ext_black_metal"
+    ],
+    [
+     3,
+     10.1,
+     5.4,
+     5,
+     10.5,
+     10.6,
+     "ext_black_metal"
+    ],
+    [
+     11,
+     10.1,
+     5.4,
+     13,
+     10.5,
+     10.6,
+     "ext_black_metal"
+    ],
+    [
+     5.4,
+     5.6,
+     3,
+     10.6,
+     6.0,
+     5,
+     "ext_black_metal"
+    ],
+    [
+     5.4,
+     5.6,
+     11,
+     10.6,
+     6.0,
+     13,
+     "ext_black_metal"
+    ],
+    [
+     3,
+     5.6,
+     5.4,
+     5,
+     6.0,
+     10.6,
+     "ext_black_metal"
+    ],
+    [
+     11,
+     5.6,
+     5.4,
+     13,
+     6.0,
      10.6,
      "ext_black_metal"
     ]
    ],
-   "title": "Flashing Signal",
+   "title": "Traffic Signal",
    "sound": "METAL",
    "shape": [
     [
-     2.6,
-     4,
-     2.6,
-     13.4,
+     3,
+     0.6,
+     3,
+     13,
      16,
-     13.4
+     13
     ]
    ],
    "render": "cutout",
-   "rotate": "facing"
+   "rotate": "facing",
+   "signal": {
+    "light": 8,
+    "on": {
+     "gr": {
+      "ts_face": "ts_face_g",
+      "ts_face_x": "ts_face_r"
+     },
+     "yr": {
+      "ts_face": "ts_face_y",
+      "ts_face_x": "ts_face_r"
+     },
+     "rg": {
+      "ts_face": "ts_face_r",
+      "ts_face_x": "ts_face_g"
+     },
+     "ry": {
+      "ts_face": "ts_face_r",
+      "ts_face_x": "ts_face_y"
+     },
+     "rr": {
+      "ts_face": "ts_face_r",
+      "ts_face_x": "ts_face_r"
+     }
+    },
+    "states": {
+     "north": [
+      "",
+      "gr",
+      "yr",
+      "rr",
+      "rg",
+      "ry"
+     ],
+     "east": [
+      "",
+      "rg",
+      "ry",
+      "rr",
+      "gr",
+      "yr"
+     ],
+     "south": [
+      "",
+      "gr",
+      "yr",
+      "rr",
+      "rg",
+      "ry"
+     ],
+     "west": [
+      "",
+      "rg",
+      "ry",
+      "rr",
+      "gr",
+      "yr"
+     ]
+    }
+   }
   },
   "ts_span": {
    "model": "boxes",

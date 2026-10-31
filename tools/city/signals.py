@@ -1,6 +1,7 @@
 """The ts_ kit: the traffic signals over a town's main crossing, which the county had none of (refs/town
 courthouse 01: the three-lamp heads hung from a galvanised mast arm over the street; main-street
-exterior: the poles on the sidewalk corners). The power is out, so every lens is dark. world/county/
+exterior: the poles on the sidewalk corners). The heads still run their cycle (green, a short amber,
+red; blocks/Signal times it off the world clock), so the models come dark and lit. world/county/
 TownSite.signals sets them out.
 
 - ts_pole / ts_pole_base: the galvanised pole, round as the kit can make it; its cast base on the
@@ -18,9 +19,14 @@ TownSite.signals sets them out.
   hanging off one bracket, swung out (rotate=facing);
 - ts_head_down: a head lying on the road where it fell, the lenses up and one smashed, drawn along z
   (rotate=facing);
-- ts_flasher: the four-way flasher on the span wire over a country crossroads, a red lens on each
+- ts_flasher: the four-way head on the span wire over a country crossroads, three lenses on each
   face up each road, the wire running corner to corner (rotate=facing: north and east give the two
   diagonals); ts_span: the span wire alone, corner to corner (rotate=facing);
+
+ts_head, ts_head_swing and ts_flasher carry "signal": their lit models (one lens lit: g, y, r; the
+four-way by its north-south and east-west faces: gr, yr, rr, rg, ry) and, for each facing, the model
+each of Signal's six phases shows (0 dark, 1 north-south green, 2 north-south amber, 3 all red,
+4 east-west green, 5 east-west amber). A head facing north or south faces the traffic along z.
 - ts_cabinet: the controller cabinet on its concrete plinth, the door to the north hanging open on
   the racks of relays (rotate=facing).
 
@@ -29,6 +35,7 @@ TownSite.signals sets them out.
 photo_textures.py draws the textures (signals.register()).
 """
 import json
+import numpy as np
 import sys
 from pathlib import Path
 
@@ -87,10 +94,21 @@ def face(seed, smashed=-1):
     return t
 
 
-def flasher(seed):
-    """The four-way flasher's face: the one red lens in the middle of each side."""
-    t = housing(seed)
-    lens(t, 32, 32, DARK[0])
+LIT = ((255, 70, 50), (255, 178, 40), (70, 255, 170))
+
+
+def lit_face(seed, which):
+    """The face with one lens lit: the glass bright with the bulb behind it, glowing out to its rim."""
+    t = face(seed)
+    i = "ryg".index(which)
+    cx, cy, r = 32, (16 - LENS_Y[i]) * 4, LENS_R * 4
+    yy, xx = np.mgrid[0:N, 0:N]
+    d = ((xx - cx) ** 2 + (yy - cy) ** 2) ** 0.5
+    m = d <= r
+    hot = np.clip(1.15 - d / r * 0.35, 0, 1)[..., None]
+    t.c[m] = (np.array(LIT[i], "float32") * hot)[m]
+    t.c[m] = np.minimum(t.c[m] + 40 * (d[m] < r * 0.35)[..., None], 255)
+    t.emit[m] = 1.0
     return t
 
 
@@ -174,10 +192,12 @@ def blade(seed, text):
 
 def textures():
     out = {"ts_housing": lambda: housing(49700), "ts_face": lambda: face(49701), "ts_face_smash": lambda: face(49702, 1),
-           "ts_flasher": lambda: flasher(49703), "ts_back": lambda: backplate(49704), "ts_ped": lambda: ped(49705),
+           "ts_face_x": lambda: face(49703), "ts_back": lambda: backplate(49704), "ts_ped": lambda: ped(49705),
            "ts_cab": lambda: cabinet(49706), "ts_cab_in": lambda: cabinet(49707, True)}
     for i, (k, text) in enumerate(SIGNS.items()):
         out["ts_blade_" + k] = lambda text=text, i=i: blade(49710 + i, text)
+    for i, w in enumerate("gyr"):
+        out["ts_face_" + w] = lambda w=w, i=i: lit_face(49720 + i, w)
     return out
 
 
@@ -254,13 +274,45 @@ def head_down():
 
 
 def flasher_block():
-    """The four-way flasher on its hanger under the span wire."""
-    body = {f: "ts_flasher" for f in ("north", "south", "east", "west")}
-    body.update({"up": "ts_housing", "down": "ts_housing"})
-    b = [[5, 4, 5, 11, 11, 11, body], [7.4, 11, 7.4, 8.6, 15, 8.6, GALV], [7, 14.5, 7, 9, 15.6, 9, GALV]] + span()
-    for x0, z0, x1, z1 in ((5.4, 2.6, 10.6, 5), (5.4, 11, 10.6, 13.4), (2.6, 5.4, 5, 10.6), (11, 5.4, 13.4, 10.6)):
-        b.append([x0, 9.8, z0, x1, 10.2, z1, BLACK])
+    """The four-way head on its hanger under the span wire: a three-lamp face up each road (north and
+    south "ts_face", east and west "ts_face_x", so the two pairs light apart), the visors over them."""
+    body = {"north": "ts_face", "south": "ts_face", "east": "ts_face_x", "west": "ts_face_x",
+            "up": "ts_housing", "down": "ts_housing"}
+    b = [[5, 0.6, 5, 11, 14.6, 11, body], [7.4, 14.6, 7.4, 8.6, 15.2, 8.6, GALV], [7, 14.8, 7, 9, 15.6, 9, GALV]] + span()
+    for y in LENS_Y:
+        top = y + LENS_R + 0.3
+        for x0, z0, x1, z1 in ((5.4, 3, 10.6, 5), (5.4, 11, 10.6, 13), (3, 5.4, 5, 10.6), (11, 5.4, 13, 10.6)):
+            b.append([x0, top, z0, x1, top + 0.4, z1, BLACK])
     return b
+
+
+FACINGS = ("north", "east", "south", "west")
+
+
+def colour(ns, phase):
+    """The lens a head shows in a phase: ns, it faces the traffic along z."""
+    go, slow = (1, 2) if ns else (4, 5)
+    return "" if phase == 0 else "g" if phase == go else "y" if phase == slow else "r"
+
+
+def head_signal():
+    swap = {w: {"ts_face": "ts_face_" + w} for w in "gyr"}
+    states = {f: [colour(f in ("north", "south"), k) for k in range(6)] for f in FACINGS}
+    return {"light": 8, "on": swap, "states": states}
+
+
+def fourway_signal():
+    swap = {}
+    for a in "gyr":
+        for b in "gyr":
+            swap[a + b] = {"ts_face": "ts_face_" + a, "ts_face_x": "ts_face_" + b}
+    states = {}
+    for f in FACINGS:
+        ns = f in ("north", "south")
+        # the model's north and south faces turn to face along z for north or south, along x otherwise
+        states[f] = ["" if k == 0 else colour(ns, k) + colour(not ns, k) for k in range(6)]
+    used = {k for v in states.values() for k in v if k}
+    return {"light": 8, "on": {k: v for k, v in swap.items() if k in used}, "states": states}
 
 
 def span():
@@ -298,7 +350,10 @@ def blocks():
     add("ts_head", head(), "Traffic Signal", [[3, 0, 3, 13, 16, 11.5]], "facing")
     add("ts_head_swing", head({"axis": "x", "angle": 22.5, "origin": [8, 16, 8]}), "Traffic Signal", [[3, 0, 3, 13, 16, 13]], "facing")
     add("ts_head_down", head_down(), "Traffic Signal", [[3, 0, 0, 13, 6, 16]], "facing")
-    add("ts_flasher", flasher_block(), "Flashing Signal", [[2.6, 4, 2.6, 13.4, 16, 13.4]], "facing")
+    add("ts_flasher", flasher_block(), "Traffic Signal", [[3, 0.6, 3, 13, 16, 13]], "facing")
+    for k in ("ts_head", "ts_head_swing"):
+        out[k]["signal"] = head_signal()
+    out["ts_flasher"]["signal"] = fourway_signal()
     add("ts_span", span(), "Span Wire", [[0, 15, 0, 16, 15.5, 16]], "facing")
     add("ts_cabinet", cabinet_block(), "Signal Cabinet", [[2, 0, 3, 14, 15.6, 13]], "facing")
     return out
@@ -307,9 +362,10 @@ def blocks():
 def main():
     path = HERE / "blocks.json"
     data = json.loads(path.read_text())
-    data["blocks"] = {k: v for k, v in data["blocks"].items() if not k.startswith("ts_")}
     made = blocks()
-    data["blocks"].update(made)
+    # in place: blocks.json is append-only, its order is the registry's
+    data["blocks"] = {k: made.get(k, v) for k, v in data["blocks"].items() if not k.startswith("ts_") or k in made}
+    data["blocks"].update({k: v for k, v in made.items() if k not in data["blocks"]})
     path.write_text(json.dumps(data, indent=1) + "\n")
     print(f"{len(made)} signal blocks in {path}")
 

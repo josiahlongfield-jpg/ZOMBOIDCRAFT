@@ -102,7 +102,9 @@ public final class ChunkWriter implements ChunkSink {
     private static boolean needsUpdate(BlockState state) {
         return state.getBlock() instanceof net.minecraft.world.level.block.CrossCollisionBlock
                 || state.getBlock() instanceof net.minecraft.world.level.block.WallBlock
-                || state.getBlock() instanceof net.minecraft.world.level.block.StairBlock;
+                || state.getBlock() instanceof net.minecraft.world.level.block.StairBlock
+                // traffic signals start their cycle on the first update (blocks.Signal)
+                || state.getBlock() instanceof com.zomboidcraft.world.blocks.Signal.Lamp;
     }
 
     @Override

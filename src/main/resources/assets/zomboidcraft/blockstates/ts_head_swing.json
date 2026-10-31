@@ -1,18 +1,93 @@
 {
   "variants": {
-    "facing=north": {
+    "facing=north,phase=0": {
       "model": "zomboidcraft:block/city/ts_head_swing"
     },
-    "facing=east": {
+    "facing=north,phase=1": {
+      "model": "zomboidcraft:block/city/ts_head_swing_g"
+    },
+    "facing=north,phase=2": {
+      "model": "zomboidcraft:block/city/ts_head_swing_y"
+    },
+    "facing=north,phase=3": {
+      "model": "zomboidcraft:block/city/ts_head_swing_r"
+    },
+    "facing=north,phase=4": {
+      "model": "zomboidcraft:block/city/ts_head_swing_r"
+    },
+    "facing=north,phase=5": {
+      "model": "zomboidcraft:block/city/ts_head_swing_r"
+    },
+    "facing=east,phase=0": {
       "model": "zomboidcraft:block/city/ts_head_swing",
       "y": 90
     },
-    "facing=south": {
+    "facing=east,phase=1": {
+      "model": "zomboidcraft:block/city/ts_head_swing_r",
+      "y": 90
+    },
+    "facing=east,phase=2": {
+      "model": "zomboidcraft:block/city/ts_head_swing_r",
+      "y": 90
+    },
+    "facing=east,phase=3": {
+      "model": "zomboidcraft:block/city/ts_head_swing_r",
+      "y": 90
+    },
+    "facing=east,phase=4": {
+      "model": "zomboidcraft:block/city/ts_head_swing_g",
+      "y": 90
+    },
+    "facing=east,phase=5": {
+      "model": "zomboidcraft:block/city/ts_head_swing_y",
+      "y": 90
+    },
+    "facing=south,phase=0": {
       "model": "zomboidcraft:block/city/ts_head_swing",
       "y": 180
     },
-    "facing=west": {
+    "facing=south,phase=1": {
+      "model": "zomboidcraft:block/city/ts_head_swing_g",
+      "y": 180
+    },
+    "facing=south,phase=2": {
+      "model": "zomboidcraft:block/city/ts_head_swing_y",
+      "y": 180
+    },
+    "facing=south,phase=3": {
+      "model": "zomboidcraft:block/city/ts_head_swing_r",
+      "y": 180
+    },
+    "facing=south,phase=4": {
+      "model": "zomboidcraft:block/city/ts_head_swing_r",
+      "y": 180
+    },
+    "facing=south,phase=5": {
+      "model": "zomboidcraft:block/city/ts_head_swing_r",
+      "y": 180
+    },
+    "facing=west,phase=0": {
       "model": "zomboidcraft:block/city/ts_head_swing",
+      "y": 270
+    },
+    "facing=west,phase=1": {
+      "model": "zomboidcraft:block/city/ts_head_swing_r",
+      "y": 270
+    },
+    "facing=west,phase=2": {
+      "model": "zomboidcraft:block/city/ts_head_swing_r",
+      "y": 270
+    },
+    "facing=west,phase=3": {
+      "model": "zomboidcraft:block/city/ts_head_swing_r",
+      "y": 270
+    },
+    "facing=west,phase=4": {
+      "model": "zomboidcraft:block/city/ts_head_swing_g",
+      "y": 270
+    },
+    "facing=west,phase=5": {
+      "model": "zomboidcraft:block/city/ts_head_swing_y",
       "y": 270
     }
   }

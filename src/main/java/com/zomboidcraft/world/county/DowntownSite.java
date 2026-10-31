@@ -1132,8 +1132,9 @@ final class DowntownSite extends Site {
                 }
                 int ax = x + dir[toward][0], az = z + dir[toward][1];
                 out.set(ax, hgt, az, "streetlight_arm[facing=" + ((toward & 1) == 1 ? "east" : "south") + "]");
-                // the head faces back toward its pole; some died with the grid
-                out.set(ax + dir[toward][0], hgt, az + dir[toward][1], (chance() < 0.22 ? "streetlight_head_off" : "streetlight_head")
+                // the head faces back toward its pole
+                chance();  // the old dead-bulb roll, kept so everything after it lands where it did: every lamp works now
+                out.set(ax + dir[toward][0], hgt, az + dir[toward][1], "streetlight_head"
                         + "[facing=" + new String[] {"south", "west", "north", "east"}[toward] + "]");
             }
         }
