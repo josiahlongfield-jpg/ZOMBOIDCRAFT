@@ -49,9 +49,12 @@ public class CarHoist extends Entity {
     public static final float[] NOTCHES = {0f, 0.5f, 1.25f, 1.85f};
     public static final String[] NOTCH_NAMES = {"the floor", "wheels free", "chest height", "full height"};
     /** The posts' middles, either side (local x), and their size. */
-    public static final float POST_X = 1.7f, POST_W = 0.3f, POST_D = 0.36f, POST_H = 4.4f;
+    public static final float POST_X = 1.7f, POST_W = 0.3f, POST_D = 0.36f, POST_H = 4.9f;
     /** The biggest car it takes: length and width, metres. */
-    /** Vans, ambulances, step vans and the army's light trucks fit; buses and heavy trucks don't. */
+    /**
+     * Vans, ambulances, step vans and the army's light trucks fit; buses and heavy trucks don't. The posts stand
+     * tall enough that the tallest of them (the SWAT van) goes to full height, room to stand under every one.
+     */
     public static final float MAX_LENGTH = 7.6f, MAX_WIDTH = 3.0f;
     /** Rise per tick on the motor and per stroke of the hand pump, metres; the valve lets it down this fast a tick. */
     private static final float MOTOR = 0.03f, STROKE = 0.06f, VALVE = 0.012f;
@@ -313,7 +316,9 @@ public class CarHoist extends Entity {
 
     /** Whether a model goes up on a two-post lift: a road vehicle no longer or wider than the arms reach. */
     public static boolean fits(CarModels.Model m) {
-        return m != null && CarParts.applies(m) && m.size[2] <= MAX_LENGTH && m.size[0] <= MAX_WIDTH;
+        // trailers and wagons have nothing underneath to work on
+        return m != null && CarParts.applies(m) && !m.id.contains("trailer") && !m.id.contains("wagon")
+                && m.size[2] <= MAX_LENGTH && m.size[0] <= MAX_WIDTH;
     }
 
     /** The arms reaching for the car's lift points behind the wheels. */
