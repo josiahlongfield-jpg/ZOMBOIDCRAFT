@@ -149,11 +149,13 @@ public final class CountyCommand {
                     case "ship" -> "at the false plate in the engine room's forward bulkhead";
                     case "shelter" -> "at the top of the stairs down to the boiler room";
                     case "forest" -> "on the hatch under the leaves";
+                    case "vault" -> "at the deposit boxes with no numbers in the bank's vault";
                     default -> "on the hatch in the electrical room";
                 };
                 String in = switch (b.kind()) {
                     case "ship" -> "in the ship at ";
                     case "forest" -> "in the woods at ";
+                    case "vault" -> "under the bank in ";
                     default -> "under ";
                 };
                 src.sendSuccess(() -> Component.literal("The " + b.kind() + " bunker " + in + p + " (" + b.state() + "): " + where), false);

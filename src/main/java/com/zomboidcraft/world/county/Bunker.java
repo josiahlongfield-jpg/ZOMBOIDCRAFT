@@ -26,7 +26,7 @@ import java.util.SplittableRandom;
 public final class Bunker {
     /** Who built it; each kind dresses the same core its own way. */
     /** ARMY: the small coded bunker under Camp Black Pine (CampBlackPine.keypadBunker, world/Keypads). */
-    public enum Kind { TOWER, SHIP, SHELTER, FOREST, ARMY }
+    public enum Kind { TOWER, SHIP, SHELTER, FOREST, ARMY, VAULT }
 
     /**
      * SEALED: nobody has been in since. LOOTED: a second copy of the map led someone here first.
@@ -83,6 +83,7 @@ public final class Bunker {
             case SHELTER -> 0.5;
             case FOREST -> 0.65;
             case ARMY -> 0.35;
+            case VAULT -> 0.2;   // kept up: he paid for the service
         } + (state == State.LOOTED ? 0.1 : state == State.BREACHED ? 0.2 : 0);
     }
 
@@ -147,11 +148,11 @@ public final class Bunker {
         String who = switch (kind) {
             case TOWER -> "office";
             case SHIP, FOREST -> "survivor";
-            case SHELTER -> "civilian";
+            case SHELTER, VAULT -> "civilian";
             case ARMY -> "soldier";
         };
         String guard = switch (kind) {
-            case TOWER -> "security";
+            case TOWER, VAULT -> "security";
             case ARMY, FOREST -> "soldier";
             default -> who;
         };
@@ -218,10 +219,10 @@ public final class Bunker {
 
     private void plan() {
         ship = kind == Kind.SHIP;
-        boolean small = kind == Kind.FOREST || kind == Kind.ARMY;
+        boolean small = kind == Kind.FOREST || kind == Kind.ARMY || kind == Kind.VAULT;
         // under a tower the rooms open off the operations floor, an open hall of desks between two lines of columns
         // the army's gallery is three wide under a vault, the forest's two
-        cw = kind == Kind.FOREST ? 2 : kind == Kind.TOWER ? 9 : 3;
+        cw = kind == Kind.FOREST || kind == Kind.VAULT ? 2 : kind == Kind.TOWER ? 9 : 3;
         mouth0 = cw <= 3 ? 0 : cw / 2 - 1;
         mouth1 = cw <= 3 ? cw - 1 : cw / 2 + 1;
         damp = switch (kind) {
@@ -230,9 +231,10 @@ public final class Bunker {
             case SHELTER -> 0.15;
             case SHIP -> 0.1;
             case TOWER -> 0.04;
+            case VAULT -> 0.03;
         };
         int dMin = switch (kind) {
-            case FOREST, ARMY -> 5;
+            case FOREST, ARMY, VAULT -> 5;
             case SHELTER -> 8;
             case SHIP -> 9;     // a forty-foot container's length, end on to the passage
             default -> 6;
@@ -360,6 +362,14 @@ public final class Bunker {
                 u.add(Use.WASH);
                 u.add(Use.PANTRY);
             }
+            case VAULT -> {
+                // a panic room a rich client paid the bank for: his suite, the monitors and the
+                // radio, the bathroom, the pantry; small, but nothing left out
+                u.add(Use.EXEC);
+                u.add(Use.COMMS);
+                u.add(Use.WASH);
+                u.add(Use.PANTRY);
+            }
             case ARMY -> {
                 // the guard room by the door (the radio desk, the map, the rifles), the squad room, the
                 // cookhouse and the latrine: a section lived down here
@@ -416,6 +426,13 @@ public final class Bunker {
             return;
         }
         boolean bare = kind == Kind.FOREST;
+        if (kind == Kind.VAULT && (r.use == Use.CORRIDOR || r.use == Use.COMMS || r.use == Use.PANTRY)) {
+            // the client's money shows everywhere but the plant and the stores: panelling and carpet
+            r.lower = "of_cedar_wall";
+            r.upper = "bunk_paint";
+            r.ground = r.use == Use.PANTRY ? "bunk_tile" : "fit_carpet";
+            return;
+        }
         if (kind == Kind.ARMY && r.use == Use.CORRIDOR) {
             // the gallery is board-marked concrete as it was cast, the floor painted
             r.lower = r.upper = "bunk_concrete";
@@ -1189,6 +1206,13 @@ public final class Bunker {
             r.against("bunk_drum_water");
         }
         r.against("bunk_jerry_cans");
+        if (kind == Kind.VAULT) {
+            // what he brought down from the boxes upstairs: the safes, the cash in its bags
+            r.against("cellar_safe", "cellar_safe_top");
+            r.against("store_safe");
+            r.against("bk_bags");
+            r.against("bk_bags");
+        }
         for (int x = r.x0 + 2; x < r.x1 - 1; x += 5) {
             for (int z = r.z0 + 2; z < r.z1 - 1; z += 4) {
                 r.ceiling(x, z, "bunk_lamp_hang");
@@ -1223,6 +1247,10 @@ public final class Bunker {
             r.chair(d);
         }
         r.against("bunk_footlocker");
+        if (kind == Kind.VAULT) {
+            // a collector's guns, not an army's: glass-fronted cabinets in front of the cage
+            r.against("home_gun_cabinet", "home_gun_cabinet_top");
+        }
         // behind the cage: the racks and the crates
         for (int s = 1; s < 4; s++) {
             for (int[] c : r.along(s)) {

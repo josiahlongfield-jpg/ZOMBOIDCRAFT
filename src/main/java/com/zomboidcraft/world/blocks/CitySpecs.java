@@ -26379,5 +26379,7 @@ final class CitySpecs extends CityBlocks.Specs {
         s("bunk_beam_pipes", AXIS, DECOR, 0, SoundType.METAL, 0f, 7.25, 9, 0, 8.75, 16, 16, 5, 8.5, 0, 11, 9, 16, 0.5, 4, 0, 4.5, 8, 16, 11.5, 4.5, 0, 14.5, 7.5, 16, 1.5, 8, 7.5, 3.5, 8.5, 8.5, 12, 7.5, 7.5, 14, 8.5, 8.5);
         s("bunk_beam_duct", AXIS, DECOR, 0, SoundType.METAL, 0f, 7.25, 9, 0, 8.75, 16, 16, 5, 8.5, 0, 11, 9, 16, 2, 2, 0, 14, 8.5, 16);
         s("bunk_haunch", FACING, 0, 0, SoundType.STONE, 2f, 0, 4, 14.5, 16, 8, 16, 0, 8, 12.5, 16, 11, 16, 0, 11, 10.5, 16, 13, 16, 0, 13, 8, 16, 14.5, 16, 0, 14.5, 5.5, 16, 15.5, 16, 0, 15.5, 2.5, 16, 16, 16);
+        s("bk_deposit_blank", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 0, 16, 16, 16);
+        s("bk_deposit_door", DOOR, 0, 0, SoundType.METAL, 3f);
     }
 }

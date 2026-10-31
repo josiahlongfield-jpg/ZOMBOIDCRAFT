@@ -12,7 +12,7 @@ import java.util.List;
  * taken from the cache) nearest first.
  */
 public final class Bunkers {
-    public static final List<String> KINDS = List.of("tower", "ship", "shelter", "forest");
+    public static final List<String> KINDS = List.of("tower", "ship", "shelter", "forest", "vault");
 
     /** One bunker: its kind and state, and in world blocks the way in and its blast door. */
     public record Found(String kind, String state, int x, int y, int z, int doorX, int doorY, int doorZ, Place place) {
@@ -32,7 +32,7 @@ public final class Bunkers {
         if (kind == null || kind.equals("ship")) {
             out.addAll(nearest(places, PlaceType.PORT, x, z, 3));
         }
-        if (kind == null || kind.equals("shelter")) {
+        if (kind == null || kind.equals("shelter") || kind.equals("vault")) {
             out.addAll(nearest(places, PlaceType.TOWN, x, z, 6));
         }
         if (kind == null || kind.equals("forest")) {
