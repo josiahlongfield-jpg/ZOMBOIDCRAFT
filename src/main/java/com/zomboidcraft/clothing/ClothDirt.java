@@ -69,6 +69,30 @@ public record ClothDirt(int dirt, int blood, int wet) {
         return s.toString();
     }
 
+    /** Steps of dirt and blood the worn clothes show (0 to 4), from the level each starts at. */
+    private static final int[] DIRT_STEPS = {10, 30, 55, 80}, BLOOD_STEPS = {5, 20, 45, 75};
+
+    public static int step(int value, boolean blood) {
+        int[] steps = blood ? BLOOD_STEPS : DIRT_STEPS;
+        int n = 0;
+        while (n < steps.length && value >= steps[n]) n++;
+        return n;
+    }
+
+    public int dirtStep() {
+        return step(dirt, false);
+    }
+
+    public int bloodStep() {
+        return step(blood, true);
+    }
+
+    /** What others see: dirt and blood rounded down to their steps, no wetness. */
+    public ClothDirt shown() {
+        int d = dirtStep(), b = bloodStep();
+        return new ClothDirt(d == 0 ? 0 : DIRT_STEPS[d - 1], b == 0 ? 0 : BLOOD_STEPS[b - 1], 0);
+    }
+
     private static int clamp(int v) {
         return Math.max(0, Math.min(100, v));
     }
