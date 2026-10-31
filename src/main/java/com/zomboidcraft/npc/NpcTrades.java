@@ -377,12 +377,18 @@ public final class NpcTrades {
             Entity car = npc.work.helpCar;
             if (car == null) return;
             npc.getLookControl().setLookAt(car.getX(), car.getY() + 0.6, car.getZ());
-            double d = npc.distanceTo(car) - car.getBbWidth() / 2;
-            if (d > 1.6) {
+            // the nearest side of the car to her, and a step out from it
+            AABB box = car.getBoundingBox();
+            Vec3 me = npc.position();
+            Vec3 edge = new Vec3(Math.clamp(me.x, box.minX, box.maxX), box.minY, Math.clamp(me.z, box.minZ, box.maxZ));
+            Vec3 out = new Vec3(me.x - edge.x, 0, me.z - edge.z);
+            double d = out.length();
+            if (d > 1.3) {
                 npc.work.action = NpcWork.NONE;
                 if (--repath <= 0) {
                     repath = 15;
-                    npc.getNavigation().moveTo(car.getX(), car.getY(), car.getZ(), 1.0 * npc.mind.pace());
+                    Vec3 to = d < 1e-3 ? edge : edge.add(out.scale(0.8 / d));
+                    npc.getNavigation().moveTo(to.x, to.y, to.z, 1.0 * npc.mind.pace());
                 }
                 return;
             }
