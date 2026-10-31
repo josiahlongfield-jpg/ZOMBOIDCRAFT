@@ -33,7 +33,7 @@ public final class Skills {
     }
 
     public static int xp(Player player, Skill skill) {
-        return player.getAttachedOrCreate(TYPE).getOrDefault(skill.name(), 0);
+        return player.getAttachedOrCreate(TYPE).getOrDefault(skill.name(), skill.passive() ? Skill.xpForLevel(5) : 0);
     }
 
     public static int level(Player player, Skill skill) {
@@ -52,6 +52,16 @@ public final class Skills {
         updated.put(skill.name(), after);
         player.setAttached(TYPE, updated);
         // the client's skill tape shows a level going up
+    }
+
+    /** Takes XP away (a passive skill wasting from starving or idleness); never below level 0. */
+    public static void loseXp(ServerPlayer player, Skill skill, int amount) {
+        if (amount <= 0 || player.isCreative()) {
+            return;
+        }
+        Map<String, Integer> updated = new HashMap<>(player.getAttachedOrCreate(TYPE));
+        updated.put(skill.name(), Math.max(0, xp(player, skill) - amount));
+        player.setAttached(TYPE, updated);
     }
 
     private Skills() {
