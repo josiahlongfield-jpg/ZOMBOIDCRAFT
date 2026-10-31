@@ -152,7 +152,7 @@ public class CarHoist extends Entity {
         player.sendOverlayMessage(Component.literal(what));
     }
 
-    private void use(ServerPlayer player, Use use) {
+    public void use(ServerPlayer player, Use use) {
         ServerLevel level = (ServerLevel) level();
         CarProp car = car();
         int notch = target();
