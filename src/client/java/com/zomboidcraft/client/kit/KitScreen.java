@@ -217,6 +217,7 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
         // closed mid-drag: the dragged thing goes back where it came from
         if (dragFrom >= 0 && !menu.getCarried().isEmpty()) click(dragFrom, 0, ContainerInput.PICKUP);
         dragFrom = -1;
+        transfers.clear();
         super.onClose();
     }
 
@@ -260,6 +261,15 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
      */
     void swap(int from, int to) {
         if (!menu.getCarried().isEmpty() || from == to) return;
+        if (timed(from, to)) {
+            transfer(from, () -> swapNow(from, to));
+            return;
+        }
+        swapNow(from, to);
+    }
+
+    private void swapNow(int from, int to) {
+        if (!menu.getCarried().isEmpty() || from == to) return;
         click(from, 0, ContainerInput.PICKUP);
         click(to, 0, ContainerInput.PICKUP);
         if (!menu.getCarried().isEmpty()) click(from, 0, ContainerInput.PICKUP);
@@ -269,8 +279,10 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
 
     /** Takes a slot's thing off you into your bags (or pockets), the way a shift-click does. */
     void unequip(int slot) {
-        click(slot, 0, ContainerInput.QUICK_MOVE);
-        UiSounds.play(UiSounds.ITEM_MOVE);
+        transfer(slot, () -> {
+            click(slot, 0, ContainerInput.QUICK_MOVE);
+            UiSounds.play(UiSounds.ITEM_MOVE);
+        });
     }
 
     /**
@@ -286,12 +298,92 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
             Hot h = hots.get(i);
             if (h.slot() >= 0 && h.slot() < menu.slots.size() && h.has(mx, my)) to = h.slot();
         }
+        if (to >= 0 && to != from && timed(from, to)) {
+            // into another container: it goes back for now, and moves across once the transfer's done
+            click(from, 0, ContainerInput.PICKUP);
+            if (!menu.getCarried().isEmpty()) putDown();
+            int target = to;
+            transfer(from, () -> swapNow(from, target));
+            return;
+        }
         if (to >= 0 && to != from) {
             click(to, 0, ContainerInput.PICKUP);
             UiSounds.play(UiSounds.ITEM_MOVE);
         }
         if (!menu.getCarried().isEmpty()) click(from, 0, ContainerInput.PICKUP);
         if (!menu.getCarried().isEmpty()) putDown();
+    }
+
+    // ------------------------------------------------------------------ Zomboid's transfer time
+
+    /**
+     * Moving something into another container takes time, as in Zomboid (Josiah 2026-10-31): half a second plus a
+     * quarter for every kilo, up to four, halved for Dextrous and doubled for All Thumbs. Moves wait their turn in a
+     * queue; closing the kit drops what's left. Rearranging inside one container stays instant.
+     */
+    private record Transfer(int from, ItemStack what, float seconds, Runnable run) {
+    }
+
+    private final java.util.ArrayDeque<Transfer> transfers = new java.util.ArrayDeque<>();
+    private float transferDone;
+    private long transferLast;
+
+    /** Whether moving between these two slots crosses containers (and so takes time). */
+    private boolean timed(int from, int to) {
+        if (from < 0 || to < 0 || from >= menu.slots.size() || to >= menu.slots.size()) return false;
+        return menu.slots.get(from).container != menu.slots.get(to).container;
+    }
+
+    private void transfer(int from, Runnable run) {
+        if (from < 0 || from >= menu.slots.size() || !menu.slots.get(from).hasItem()) return;
+        ItemStack what = menu.slots.get(from).getItem().copy();
+        transfers.add(new Transfer(from, what, transferSeconds(minecraft.player, what), run));
+        if (transfers.size() == 1) {
+            transferDone = 0;
+            transferLast = System.nanoTime();
+        }
+    }
+
+    public static float transferSeconds(LocalPlayer player, ItemStack what) {
+        float s = (float) Math.min(4, 0.5 + 0.25 * com.zomboidcraft.carry.Weights.of(what));
+        if (com.zomboidcraft.survival.character.Traits.has(player, "dextrous")) s *= 0.5f;
+        if (com.zomboidcraft.survival.character.Traits.has(player, "all_thumbs")) s *= 2f;
+        return s;
+    }
+
+    /** Runs the clock on the front transfer; done, it moves (if the thing is still where it was). */
+    private void tickTransfers() {
+        long now = System.nanoTime();
+        float dt = (now - transferLast) / 1e9f;
+        transferLast = now;
+        Transfer t = transfers.peek();
+        if (t == null) return;
+        transferDone += dt;
+        if (transferDone < t.seconds()) return;
+        transfers.poll();
+        transferDone = 0;
+        Slot slot = menu.slots.get(t.from());
+        if (ItemStack.isSameItemSameComponents(slot.getItem(), t.what()) && menu.getCarried().isEmpty()) t.run().run();
+    }
+
+    /** The bar on the moving thing's tile, and what's under way along the bottom. */
+    private void drawTransfers(GuiGraphicsExtractor g) {
+        Transfer t = transfers.peek();
+        if (t == null) return;
+        float done = Math.min(1, transferDone / t.seconds());
+        for (Hot h : hots) {
+            if (h.slot() != t.from()) continue;
+            g.fill(h.x() + 1, h.y() + h.h() - 3, h.x() + h.w() - 1, h.y() + h.h() - 1, 0xB3000000);
+            g.fill(h.x() + 1, h.y() + h.h() - 3, h.x() + 1 + Math.round((h.w() - 2) * done), h.y() + h.h() - 1, KitDraw.BRIGHT);
+            break;
+        }
+        String line = "Moving " + t.what().getHoverName().getString() + "  "
+                + String.format(java.util.Locale.ROOT, "%.1f s", Math.max(0, t.seconds() - transferDone))
+                + (transfers.size() > 1 ? "  ·  " + (transfers.size() - 1) + " more" : "");
+        int cx = leftPos + W / 2, y = topPos + H - 30;
+        KitDraw.textCentred(g, font, line, cx, y, KitDraw.TEXT, 0.8f);
+        g.fill(cx - 50, y + 9, cx + 50, y + 10, 0x2EE9E1CB);
+        g.fill(cx - 50, y + 9, cx - 50 + Math.round(100 * done), y + 10, KitDraw.BRIGHT);
     }
 
     /** Whatever is left on the cursor goes into the first carried slot that takes it. */
@@ -320,6 +412,14 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
 
     /** A plain click on a slot, the way a vanilla screen sends it: shift moves it across, right takes half. */
     void slotClick(int slot, int button) {
+        if (shift && menu.getCarried().isEmpty() && slot >= 0 && slot < menu.slots.size() && menu.slots.get(slot).hasItem()) {
+            // a shift-click sends it to another container: Zomboid's transfer time
+            transfer(slot, () -> {
+                click(slot, button, ContainerInput.QUICK_MOVE);
+                UiSounds.play(UiSounds.ITEM_MOVE);
+            });
+            return;
+        }
         boolean had = !menu.getCarried().isEmpty() || slot >= 0 && slot < menu.slots.size() && menu.slots.get(slot).hasItem();
         click(slot, button, shift ? ContainerInput.QUICK_MOVE : ContainerInput.PICKUP);
         if (had) UiSounds.play(UiSounds.ITEM_MOVE);
@@ -526,6 +626,8 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
             case FILES -> files.draw(g, x, y, mouseX, mouseY);
             case MAP -> map.draw(g, x, y, mouseX, mouseY);
         }
+        tickTransfers();
+        drawTransfers(g);
     }
 
     /** The top bar: who you are, the pages, and the time and weather. */
@@ -536,7 +638,9 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
         KitDraw.item(g, new ItemStack(net.minecraft.world.item.Items.SKELETON_SKULL), x + 14, y + 9, 14);
         KitDraw.caps(g, font, player.getName().getString(), x + 36, y + 7, KitDraw.BRIGHT, 1.3f);
         long day = minecraft.level == null ? 1 : Math.floorDiv(minecraft.level.getDefaultClockTime(), 24000L) + 1;
-        KitDraw.text(g, font, "Survivor · day " + day, x + 36, y + 19, KitDraw.DIM, 0.9f);
+        var profile = com.zomboidcraft.survival.character.Traits.profile(player);
+        var job = profile == null ? null : com.zomboidcraft.survival.character.CharacterData.occupation(profile.occupation());
+        KitDraw.text(g, font, (job == null ? "Survivor" : job.name()) + " · day " + day, x + 36, y + 19, KitDraw.DIM, 0.9f);
 
         // Q · pages · E
         String[] labels = new String[Page.values().length];
