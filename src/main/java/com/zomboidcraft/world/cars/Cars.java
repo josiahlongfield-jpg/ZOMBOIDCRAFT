@@ -80,6 +80,18 @@ public final class Cars {
      * spilling past its corners; its underside is the lowest one under the body there.
      */
     public static List<int[]> hullColumns(CarModels.Model model, double x, double z, float yaw) {
+        return hullColumns(model, x, z, yaw, 0);
+    }
+
+    /**
+     * As above for a car left in a pose ({@link CarProp#POSE_ROOF}, {@link CarProp#POSE_SIDE}): on its roof it
+     * keeps about its own outline and height; on its side it's a slab as long as the car, as wide as the car is
+     * tall and as high as it is wide.
+     */
+    public static List<int[]> hullColumns(CarModels.Model model, double x, double z, float yaw, int pose) {
+        if (pose == CarProp.POSE_SIDE) {
+            return sideColumns(model, x, z, yaw);
+        }
         List<int[]> out = new ArrayList<>();
         double t = Math.toRadians(-yaw), cos = Math.cos(t), sin = Math.sin(t);
         double reach = Math.hypot(model.size[0], model.size[2]) / 2 + 0.5;
@@ -99,6 +111,31 @@ public final class Cars {
                     if (samples[2] > 0.15f) {
                         col[2 + q] = Math.round(samples[2] * 100);
                         col[6 + q] = Math.round(Math.min(Math.min(unders[0], unders[1]), Math.min(unders[2], unders[3])) * 100);
+                        any = true;
+                    }
+                }
+                if (any) {
+                    out.add(col);
+                }
+            }
+        }
+        return out;
+    }
+
+    private static List<int[]> sideColumns(CarModels.Model model, double x, double z, float yaw) {
+        List<int[]> out = new ArrayList<>();
+        double t = Math.toRadians(-yaw), cos = Math.cos(t), sin = Math.sin(t);
+        double halfAcross = model.size[1] / 2, halfLong = model.size[2] / 2 - 0.15, reach = Math.hypot(halfAcross, halfLong) + 0.5;
+        int top = Math.round(model.size[0] * 0.9f * 100);
+        for (int bx = Mth.floor(x - reach); bx <= Mth.floor(x + reach); bx++) {
+            for (int bz = Mth.floor(z - reach); bz <= Mth.floor(z + reach); bz++) {
+                int[] col = {bx, bz, 0, 0, 0, 0, 0, 0, 0, 0};
+                boolean any = false;
+                for (int q = 0; q < 4; q++) {
+                    double dx = bx + (q & 1) * 0.5 + 0.25 - x, dz = bz + (q >> 1) * 0.5 + 0.25 - z;
+                    double lx = dx * cos - dz * sin, lz = dx * sin + dz * cos;
+                    if (Math.abs(lx) < halfAcross && Math.abs(lz) < halfLong) {
+                        col[2 + q] = top;
                         any = true;
                     }
                 }
@@ -198,7 +235,7 @@ public final class Cars {
         double y = car.getY();
         int base = Mth.ceil(y - 0.05);
         int lift = (int) Math.round((base - y) * 100);
-        for (int[] col : hullColumns(m, car.getX(), car.getZ(), car.getYRot())) {
+        for (int[] col : hullColumns(m, car.getX(), car.getZ(), car.getYRot(), car.pose())) {
             int[] layers = layers(col, lift);
             for (int i = 0; i < layers.length; i++) {
                 if (layers[i] == 0) {
@@ -220,7 +257,7 @@ public final class Cars {
             return;
         }
         int base = Mth.floor(car.getY() + 0.01);
-        for (int[] col : hullColumns(m, car.getX(), car.getZ(), car.getYRot())) {
+        for (int[] col : hullColumns(m, car.getX(), car.getZ(), car.getYRot(), car.pose())) {
             for (int i = 0; i <= 7; i++) {
                 BlockPos pos = new BlockPos(col[0], base + i, col[1]);
                 if (level.getBlockState(pos).is(HULL)) {
