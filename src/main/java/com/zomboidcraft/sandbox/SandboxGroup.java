@@ -5,15 +5,15 @@ public enum SandboxGroup {
     POPULATION("population", "Zombie Population"),
     LORE("lore", "Zombie Lore"),
     TIME("time", "Time and Start"),
-    UTILITIES("utilities", "Water, Power and Events"),
+    UTILITIES("utilities", "Water, Power and World Events"),
     LOOT("loot", "Loot"),
     NATURE("nature", "Nature, Weather and Farming"),
     CHARACTER("character", "Character, Health and Food"),
-    SKILLS("skills", "Skills and XP"),
+    SKILLS("skills", "Skills, XP and Reading"),
     VEHICLES("vehicles", "Vehicles and Fuel"),
     FIREARMS("firearms", "Firearms"),
-    ANIMALS("animals", "Animals and Vermin"),
-    MAP("map", "Map and Clean-up"),
+    ANIMALS("animals", "Animals and Rats"),
+    MAP("map", "Map, Basements and Clean-up"),
     ZOMBOIDCRAFT("zomboidcraft", "ZomboidCraft Only");
 
     public final String id;

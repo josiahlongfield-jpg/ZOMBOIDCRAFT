@@ -30,8 +30,8 @@ import net.minecraft.world.level.storage.LevelResource;
  * Settings that only change what you see (client) stay on each player's PC.
  */
 public final class Sandbox {
-    /** Zomboid's presets, in its order. Apocalypse is the default: our settings out of the box. */
-    public static final List<String> PRESETS = List.of("apocalypse", "survivor", "builder", "six_months_later");
+    /** Zomboid B42's presets, in its order. Apocalypse is the default: our settings out of the box. */
+    public static final List<String> PRESETS = List.of("apocalypse", "rising", "outbreak", "extinction", "six_months_later");
     public static final String CUSTOM = "custom";
 
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();

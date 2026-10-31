@@ -19,6 +19,8 @@ public final class SandboxOption {
         NUMBER,
         /** One of the choices. */
         CHOICE,
+        /** Free text, such as an item list. */
+        TEXT,
         /** A rule Josiah set: shown with its value and reason, never changed. */
         FIXED
     }
@@ -56,7 +58,21 @@ public final class SandboxOption {
         owner = b.owner;
         client = b.client;
         fallback = b.fallback;
-        presets = Map.copyOf(b.presets);
+        // Apocalypse is always the default; a preset value that doesn't fit what we built (another scale, a choice
+        // we don't have) is left out, so that preset keeps our default there. A wired number keeps Zomboid's other
+        // presets only if its thread says the scales match.
+        Map<String, String> kept = new HashMap<>();
+        b.presets.forEach((preset, value) -> {
+            if (preset.equals("apocalypse") || (key != null && kind == Kind.NUMBER && !b.sameScale)) {
+                return;
+            }
+            try {
+                kept.put(preset, check(value));
+            } catch (IllegalArgumentException e) {
+                // not one we can take
+            }
+        });
+        presets = Map.copyOf(kept);
     }
 
     public boolean coming() {
@@ -88,6 +104,9 @@ public final class SandboxOption {
         String v = raw.trim();
         switch (kind) {
             case FIXED -> throw new IllegalArgumentException(label + " is fixed: " + tooltip);
+            case TEXT -> {
+                return v;
+            }
             case TOGGLE -> {
                 if (!v.equalsIgnoreCase("true") && !v.equalsIgnoreCase("false")) {
                     throw new IllegalArgumentException(label + " is true or false");
@@ -139,6 +158,7 @@ public final class SandboxOption {
         String owner = "COMMANDS";
         boolean client;
         String fallback;
+        boolean sameScale;
         final Map<String, String> presets = new HashMap<>();
 
         Builder(SandboxGroup group, String id, String label) {
@@ -170,6 +190,28 @@ public final class SandboxOption {
             kind = Kind.CHOICE;
             this.key = key;
             this.choices = List.of(choices);
+            return this;
+        }
+
+        Builder kind(Kind kind) {
+            this.kind = kind;
+            return this;
+        }
+
+        Builder range(double min, double max) {
+            this.min = min;
+            this.max = max;
+            return this;
+        }
+
+        Builder choices(List<String> choices) {
+            this.choices = List.copyOf(choices);
+            return this;
+        }
+
+        /** A wired number whose values mean what Zomboid's do, so Zomboid's presets apply to it as they are. */
+        Builder sameScale() {
+            sameScale = true;
             return this;
         }
 

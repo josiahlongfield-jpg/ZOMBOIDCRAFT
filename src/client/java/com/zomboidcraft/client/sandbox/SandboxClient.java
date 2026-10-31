@@ -17,8 +17,8 @@ public final class SandboxClient {
     public static Runnable opener = () -> {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player != null) {
-            mc.player.displayClientMessage(Component.literal(
-                    "The Sandbox page isn't in this build yet: /zc sandbox list shows the world's settings."), false);
+            mc.player.sendSystemMessage(Component.literal(
+                    "The Sandbox page isn't in this build yet: /zc sandbox list shows the world's settings."));
         }
     };
 
