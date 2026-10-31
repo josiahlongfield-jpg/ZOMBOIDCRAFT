@@ -10,7 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * The eleven places clothing goes, Zomboid style, head to foot. Four are Minecraft's own armour slots (so a hat or
+ * The fourteen places clothing goes, Zomboid style, head to foot. Four are Minecraft's own armour slots (so a hat or
  * helmet still sits where vanilla, zombies and armour stands expect it); the vest and belt share the gear store's
  * bag-vest and belt places; the rest are clothing layers in the gear store.
  */
@@ -19,12 +19,15 @@ public enum ClothingSlot {
     EYES("Eyes", null, GearStore.EYES),
     FACE("Face", null, GearStore.FACE),
     NECK("Neck", null, GearStore.NECK),
+    UNDER("Under-layer", null, GearStore.UNDER),
     SHIRT("Shirt", null, GearStore.SHIRT),
     JACKET("Jacket", EquipmentSlot.CHEST, -1),
     VEST("Vest", null, GearStore.VEST),
+    ARM_GUARDS("Arm guards", null, GearStore.ARM_GUARDS),
     HANDS("Hands", null, GearStore.HANDS),
     BELT("Belt", null, GearStore.BELT),
     LEGS("Legs", EquipmentSlot.LEGS, -1),
+    LEG_GUARDS("Leg guards", null, GearStore.LEG_GUARDS),
     FEET("Feet", EquipmentSlot.FEET, -1);
 
     public static final List<ClothingSlot> ALL = List.of(values());

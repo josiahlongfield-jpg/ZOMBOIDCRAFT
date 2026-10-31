@@ -47,9 +47,17 @@ public final class ClothingItems {
             "fur_coat", "bespoke_suit", "poncho", "flak_vest", "police_vest", "survival_vest",
             "fire_gloves", "fire_pants", "g_suit");
 
+    /** What ripping clothes up gives, beside the ripped sheets the loot roster already has (clothing/Tailoring). */
+    public static final List<String> SUPPLIES = List.of("denim_strips", "leather_strips");
+
     private static final List<Item> ITEMS = new ArrayList<>();
 
     public static void register() {
+        ClothWear.register();
+        for (String id : SUPPLIES) {
+            ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, ZomboidCraft.id(id));
+            ITEMS.add(Registry.register(BuiltInRegistries.ITEM, key, new Item(new Item.Properties().stacksTo(16).setId(key))));
+        }
         for (String id : MADE) {
             Garment g = Clothes.byId(id);
             if (g == null) {

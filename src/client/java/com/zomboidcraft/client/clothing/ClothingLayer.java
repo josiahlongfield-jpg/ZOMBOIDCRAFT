@@ -34,9 +34,9 @@ import net.minecraft.world.item.Items;
  */
 public class ClothingLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
     /** Inner layers first, so what's over them is drawn after (it doesn't matter to the depth test, only for reading). */
-    private static final List<ClothingSlot> ORDER = List.of(ClothingSlot.SHIRT, ClothingSlot.LEGS, ClothingSlot.FEET,
-            ClothingSlot.HANDS, ClothingSlot.JACKET, ClothingSlot.VEST, ClothingSlot.NECK, ClothingSlot.FACE, ClothingSlot.EYES,
-            ClothingSlot.HAT);
+    private static final List<ClothingSlot> ORDER = List.of(ClothingSlot.UNDER, ClothingSlot.SHIRT, ClothingSlot.LEGS,
+            ClothingSlot.LEG_GUARDS, ClothingSlot.FEET, ClothingSlot.HANDS, ClothingSlot.JACKET, ClothingSlot.ARM_GUARDS,
+            ClothingSlot.VEST, ClothingSlot.NECK, ClothingSlot.FACE, ClothingSlot.EYES, ClothingSlot.HAT);
 
     /** A stack that draws one garment's model for one body part, per garment and part. */
     private static final Map<String, ItemStack> PART_STACKS = new HashMap<>();

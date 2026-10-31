@@ -2078,6 +2078,24 @@ def display(m):
     return disp
 
 
+# ================================================================== tailoring supplies (loot only, never worn)
+
+
+def build_strips(g):
+    """A bundle of cloth strips, folded over and tied: what ripping a garment up gives, and what patches it."""
+    for i, (x0, x1, y0) in enumerate(((-3.6, 3.4, 4.6), (-3.2, 3.8, 3.9), (-3.8, 3.0, 3.2))):
+        z0 = -1.4 + i * 0.12
+        g.box('body', (x0, y0, z0), (x1, y0 + 0.75, z0 + 2.6), 'strip' if i != 1 else 'strip_b')
+        g.box('body', (x1 - 0.1, y0 - 0.2, z0 + 0.3), (x1 + 0.35, y0 + 0.75, z0 + 2.3), 'strip' if i != 1 else 'strip_b')
+    g.box('body', (-0.5, 3.0, -1.6), (0.5, 5.5, 1.5), 'tie')
+
+
+SUPPLIES = {
+    'denim_strips': (build_strips, dict(strip=denim('#34465e'), strip_b=denim('#3e5270'), tie=cloth('#8a8170')), 0.4),
+    'leather_strips': (build_strips, dict(strip=leather('#5a3a26'), strip_b=leather('#6b4630'), tie=cloth('#8a8170')), 0.4),
+}
+
+
 def names():
     import roster
     out = {}
@@ -2198,7 +2216,7 @@ def main(only):
     lang_path = ASSETS / 'lang/en_us.json'
     lang = json.loads(lang_path.read_text())
     titles = names()
-    for gid, (build, mats, wear) in GARMENTS.items():
+    for gid, (build, mats, wear) in {**GARMENTS, **SUPPLIES}.items():
         if only and gid not in only:
             continue
         g = Garment(gid)
@@ -2227,7 +2245,7 @@ def main(only):
         M.dump({'model': {'type': 'minecraft:select', 'property': 'minecraft:display_context',
                           'cases': [{'when': 'head', 'model': {'type': 'minecraft:empty'}}],
                           'fallback': mesh_item(ref, mesh_id, 'loot')}}, ASSETS / f'items/{gid}.json')
-        parts = sorted({p['part'] for p in m.parts})
+        parts = [] if gid in SUPPLIES else sorted({p['part'] for p in m.parts})
         meshes = {'loot': whole_json}
         for part in parts:
             pm, idx = part_model(m, part, gid)
