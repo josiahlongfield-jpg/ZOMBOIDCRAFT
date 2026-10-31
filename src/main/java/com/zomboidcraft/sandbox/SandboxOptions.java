@@ -155,6 +155,18 @@ final class SandboxOptions {
                 .tip("Hospitals, police stations, malls, fire stations and schools hold extra dead indoors.")
                 .toggle("population.hotspots").owner("PERFORMANCE"));
 
+        o.add(of(LORE, "zc.fakeDeadStreet", "Fake Dead On The Street")
+                .tip("Percent of the bodies lying in the street that are only playing dead.")
+                .number("zombieLore.fakeDeadStreetPercent", 0, 100).owner("ENTITY"));
+        o.add(of(LORE, "zc.fakeDeadIndoor", "Fake Dead Indoors")
+                .tip("Percent of the bodies lying indoors that are only playing dead.")
+                .number("zombieLore.fakeDeadIndoorPercent", 0, 100).owner("ENTITY"));
+        o.add(of(LORE, "zc.fakeDeadCombat", "Playing Dead After A Knockdown")
+                .tip("With World and Combat: percent of zombies knocked flat by a blunt weapon that stay down and play dead.")
+                .number("zombieLore.fakeDeadCombatPercent", 0, 100).owner("ENTITY"));
+        o.add(of(LORE, "zc.beltedDead", "Dead Belted Into Cars")
+                .tip("Percent of abandoned and wrecked cars with a dead driver still belted in, waiting for someone to open the door.")
+                .number("zombieLore.beltedPercent", 0, 100).owner("ENTITY"));
         o.add(of(LORE, "zc.onlyHeadshotsKill", "Only Headshots Kill")
                 .fixed("true", "Your rule: body and limb shots wear a zombie down, only the head kills it."));
         o.add(of(LORE, "zc.shotsFlinch", "Shots Only Flinch")

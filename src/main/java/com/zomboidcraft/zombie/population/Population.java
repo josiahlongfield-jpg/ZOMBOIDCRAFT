@@ -835,6 +835,13 @@ public final class Population {
         zombie.setYHeadRot(zombie.getYRot());
         if (woke != null) {
             ((NoiseListener) zombie).zomboidcraft$hear(woke);
+        } else {
+            // the dead found where they lie: some only playing dead, some under the parked cars
+            boolean indoor = (rec >> 17 & 1) != 0;
+            if (!(!indoor && com.zomboidcraft.zombie.LyingInWait.placeUnderCar(level, zombie))
+                    && com.zomboidcraft.zombie.LyingInWait.rollFakeDead(level, pos, indoor)) {
+                com.zomboidcraft.zombie.LyingInWait.lie(zombie, com.zomboidcraft.zombie.LyingInWait.FAKE_DEAD);
+            }
         }
         return true;
     }

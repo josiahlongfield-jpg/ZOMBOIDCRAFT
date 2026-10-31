@@ -49,6 +49,8 @@ public final class Grabs {
         int ticks;
         /** Ticks the crowd has had you, toward being dragged down. */
         int dragging;
+        /** Held by the ankle from the ground (a crawler under a car, the fake dead getting up): it may lie low. */
+        boolean ankle;
 
         Hold(Zombie by, int taps) {
             this.by = by;
@@ -143,7 +145,7 @@ public final class Grabs {
     private static void holdTick(ServerPlayer player, Hold hold) {
         Zombie by = hold.by;
         if (!ZcConfig.get().combat.grabs || !player.isAlive() || player.isCreative() || player.isSpectator()
-                || !by.isAlive() || by.isRemoved() || Downed.isLow(by) || !Dismember.hasHands(by)
+                || !by.isAlive() || by.isRemoved() || Downed.isLow(by) && !hold.ankle || !Dismember.hasHands(by)
                 || by.distanceToSqr(player) > 2.5 * 2.5) {
             release(player);
             return;
@@ -225,6 +227,26 @@ public final class Grabs {
                 && Dismember.hasHands(zombie) && zombie.getRandom().nextFloat() < 0.5f) {
             grab(near, zombie);
         }
+    }
+
+    /**
+     * A grab out of hiding: a crawler under a car or one of the fake dead getting up catches your ankle as you pass
+     * (fromGround: it keeps hold lying down), or the dead driver lunging out of the door you opened. Held as by any
+     * grab; it lets go if it's pulled more than a couple of blocks off.
+     */
+    public static boolean seize(ServerPlayer player, Zombie zombie, boolean fromGround) {
+        Long freed = FREED_AT.get(player);
+        if (!ZcConfig.get().combat.grabs || HOLDS.containsKey(player) || player.isCreative() || player.isSpectator()
+                || !Dismember.hasHands(zombie) || freed != null && player.level().getGameTime() - freed <= COOLDOWN) {
+            return false;
+        }
+        grab(player, zombie);
+        Hold hold = HOLDS.get(player);
+        if (hold != null) {
+            hold.ankle = fromGround;
+        }
+        zombie.setTarget(player);
+        return true;
     }
 
     /** Once a second per player: a zombie in reach may grab, one a few steps off may lunge. */

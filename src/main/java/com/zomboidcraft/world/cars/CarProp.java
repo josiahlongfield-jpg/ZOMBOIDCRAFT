@@ -486,6 +486,9 @@ public class CarProp extends Entity {
 
     /** Gets in to the seat given (by its door handle), or with -1 the free seat nearest where they stand. */
     public void getIn(Player player, int seat) {
+        if (com.zomboidcraft.zombie.BeltedDead.doorOpened(this, player)) {
+            return;   // the dead driver comes out at you instead
+        }
         if ("burnt".equals(variant())) {
             player.sendOverlayMessage(Component.literal("It's burnt out."));
             return;
@@ -510,6 +513,17 @@ public class CarProp extends Entity {
             return;
         }
         player.startRiding(this);
+    }
+
+    /** The model's seats (model space, the driver's first), for the dead belted into them. */
+    public float[][] seatSpots() {
+        CarModels.Model m = CarModels.get(model());
+        return m == null || m.seats == null ? new float[0][] : m.seats;
+    }
+
+    /** Where to sit someone in seat s: the next rider added goes there. */
+    public void seatNext(int s) {
+        nextSeat = s;
     }
 
     /** Whether seat s still has a seat in it (Zomboid's seat parts); cars without parts have all theirs. */
@@ -1452,7 +1466,8 @@ public class CarProp extends Entity {
 
     @Override
     protected boolean canAddPassenger(Entity passenger) {
-        return passenger instanceof Player && getPassengers().size() < seats() && !"burnt".equals(variant()) && !crashed;
+        return (passenger instanceof Player || com.zomboidcraft.zombie.BeltedDead.belted(passenger))
+                && getPassengers().size() < seats() && !"burnt".equals(variant()) && !crashed;
     }
 
     /** Whoever sits at the wheel drives; a car with only passengers in it goes nowhere. */
@@ -1539,10 +1554,10 @@ public class CarProp extends Entity {
      * through the doors (or round the cockpit), and grow back as they get out.
      */
     private void fit(Entity passenger, boolean in) {
-        if (level().isClientSide() || !(passenger instanceof Player player)) {
+        if (level().isClientSide() || !(passenger instanceof LivingEntity rider)) {
             return;
         }
-        net.minecraft.world.entity.ai.attributes.AttributeInstance scale = player.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.SCALE);
+        net.minecraft.world.entity.ai.attributes.AttributeInstance scale = rider.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.SCALE);
         if (scale == null) {
             return;
         }
@@ -1567,12 +1582,13 @@ public class CarProp extends Entity {
             int packed = entityData.get(SEATS) & ~(0xF << (4 * i));
             entityData.set(SEATS, packed | (Math.max(seat, 0) + 1) << (4 * i));
         }
-        if (first && level() instanceof ServerLevel server) {
+        boolean dead = com.zomboidcraft.zombie.BeltedDead.belted(passenger);
+        if (first && !dead && level() instanceof ServerLevel server) {
             Cars.clearHull(server, this);
             parkPending = false;
             mountedAt = tickCount;
         }
-        if (level() instanceof ServerLevel server) {
+        if (!dead && level() instanceof ServerLevel server) {
             door(server);
         }
         if (passenger instanceof Player player && player.isLocalPlayer()) {
