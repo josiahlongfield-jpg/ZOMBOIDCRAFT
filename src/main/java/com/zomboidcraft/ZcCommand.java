@@ -478,8 +478,13 @@ public final class ZcCommand {
         try {
             region = com.zomboidcraft.survival.Body.Region.valueOf(part.toUpperCase(java.util.Locale.ROOT));
         } catch (IllegalArgumentException e) {
-            ctx.getSource().sendFailure(Component.literal("No body part called " + part));
-            return 0;
+            // the old six names (left_leg, torso, ...) still work, on the limb's main part
+            try {
+                region = com.zomboidcraft.survival.Body.Zone.valueOf(part.toUpperCase(java.util.Locale.ROOT)).main();
+            } catch (IllegalArgumentException e2) {
+                ctx.getSource().sendFailure(Component.literal("No body part called " + part));
+                return 0;
+            }
         }
         com.zomboidcraft.survival.Body body = com.zomboidcraft.survival.Body.get(player);
         body = switch (kind) {

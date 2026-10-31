@@ -29,7 +29,7 @@ import net.minecraft.world.item.Items;
  * The kit's Clothing page asks for them as menu buttons (combat/Bench.click hands them here).
  */
 public final class Tailoring {
-    public static final int PATCH = 0, RIP = 1;
+    public static final int PATCH = 0, RIP = 1, WASH = 2;
     /** Menu button ids: TAILOR + action * SLOTS + menu slot. */
     public static final int SLOTS = 4096;
 
@@ -47,6 +47,7 @@ public final class Tailoring {
         if (!(player instanceof ServerPlayer server)) return true;
         if (action == PATCH) startPatch(server, menu, slot, carriedEnd);
         else if (action == RIP) startRip(server, slot);
+        else if (action == WASH) Grime.startWash(server, menu, slot, carriedEnd);
         return true;
     }
 
@@ -224,11 +225,8 @@ public final class Tailoring {
             case FOOT -> "foot";
             default -> spot.label;
         };
-        return switch (region) {
-            case LEFT_ARM, LEFT_LEG -> "left " + label;
-            case RIGHT_ARM, RIGHT_LEG -> "right " + label;
-            default -> label;
-        };
+        if (spot.kind == Spot.Kind.HEAD || spot.kind == Spot.Kind.TORSO) return label;
+        return (region.left() ? "left " : "right ") + label;
     }
 
     private static void tell(ServerPlayer player, String s) {

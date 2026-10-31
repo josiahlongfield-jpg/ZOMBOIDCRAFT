@@ -22,9 +22,12 @@ import net.minecraft.world.entity.player.Player;
  */
 public final class Firearms {
     /** Headgear that gets in the way of the sights, and how much it widens the spread (Firearm Headgear Effect). */
-    private static final Map<String, Double> HEADGEAR = Map.of(
-            "gas_mask", 1.3, "welding_goggles", 1.25, "hockey_mask", 1.15, "motorcycle_helmet", 1.15,
-            "riot_helmet", 1.15, "football_helmet", 1.1, "fire_helmet", 1.1, "pilot_helmet", 1.05);
+    private static final Map<String, Double> HEADGEAR = Map.ofEntries(
+            Map.entry("gas_mask", 1.3), Map.entry("welding_goggles", 1.25), Map.entry("hockey_mask", 1.15),
+            Map.entry("motorcycle_helmet", 1.15), Map.entry("riot_helmet", 1.15), Map.entry("football_helmet", 1.1),
+            Map.entry("fire_helmet", 1.1), Map.entry("pilot_helmet", 1.05), Map.entry("cbrn_mask", 1.3),
+            Map.entry("welder_mask", 1.3), Map.entry("scba_mask", 1.2), Map.entry("crusader_great_helm", 1.35),
+            Map.entry("gothic_sallet", 1.15), Map.entry("bomb_disposal_helmet", 1.3));
 
     private Firearms() {
     }
@@ -57,8 +60,7 @@ public final class Firearms {
         double tired = SurvivalStats.get(player).fatigue() / 100.0 * 0.4;
         double winded = Math.max(0, 1 - Stamina.get(player) / Stamina.FULL - 0.5) * 0.5;
         Body body = Body.get(player);
-        int arms = body.parts().get(Body.Region.LEFT_ARM.ordinal()).severity()
-                + body.parts().get(Body.Region.RIGHT_ARM.ordinal()).severity();
+        int arms = body.zone(Body.Zone.LEFT_ARM).severity() + body.zone(Body.Zone.RIGHT_ARM).severity();
         return tired + winded + Math.min(arms, 4) * 0.06;
     }
 

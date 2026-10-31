@@ -24,12 +24,15 @@ public class ZomboidCraft implements ModInitializer {
         ZcConfig.load();
         SurvivalStats.register();
         com.zomboidcraft.survival.Nutrition.register();
+        com.zomboidcraft.survival.Panic.register();
         com.zomboidcraft.survival.Sleep.register();
+        com.zomboidcraft.survival.Treatment.register();
         Skills.register();
         com.zomboidcraft.skills.SkillBooks.register();
         com.zomboidcraft.zombie.ZombieLook.register();
         ModBlocks.register();
         com.zomboidcraft.building.BuildBlocks.register();
+        com.zomboidcraft.building.WoodBlocks.register();
         com.zomboidcraft.world.blocks.CityBlocks.register();
         com.zomboidcraft.world.cars.Cars.register();
         com.zomboidcraft.world.cars.CarNet.register();
@@ -103,6 +106,7 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.combat.Downed.register();
         com.zomboidcraft.zombie.LyingInWait.register();
         com.zomboidcraft.zombie.BeltedDead.register();
+        com.zomboidcraft.world.events.SearchHeli.register();
         com.zomboidcraft.combat.Dismember.register();
         com.zomboidcraft.combat.Deaths.register();
         com.zomboidcraft.zombie.Corpses.register();

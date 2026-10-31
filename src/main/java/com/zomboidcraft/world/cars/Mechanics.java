@@ -385,6 +385,10 @@ public final class Mechanics {
             t /= 3;
         }
         t *= 1 - 0.03 * Math.max(0, level(player) - part.level);
+        // a companion bonded to you lending a hand (NpcTrades)
+        if (com.zomboidcraft.npc.NpcTrades.helper(player, car) != null) {
+            t *= com.zomboidcraft.npc.NpcTrades.HELP_SPEED;
+        }
         return (int) Math.round(t);
     }
 
@@ -399,8 +403,9 @@ public final class Mechanics {
         }
         CarParts.Slot s = CarParts.SLOTS.get(slot);
         String what = label(s.part(), job) + ": " + s.title().toLowerCase(Locale.ROOT);
-        TimedActions.start(player, "car_" + car.getId() + "_" + slot + "_" + job, what, ticks(player, car, slot, job),
-                p -> finish(p, car, slot, job));
+        int ticks = ticks(player, car, slot, job);
+        TimedActions.start(player, "car_" + car.getId() + "_" + slot + "_" + job, what, ticks, p -> finish(p, car, slot, job));
+        com.zomboidcraft.npc.NpcTrades.helpWith(player, car, ticks);
         ServerLevel level = (ServerLevel) player.level();
         level.playSound(null, car.getX(), car.getY(), car.getZ(), job == Job.TOP_UP ? SoundEvents.BUCKET_EMPTY : SoundEvents.CHAIN_PLACE,
                 SoundSource.PLAYERS, 0.6f, 0.9f);
@@ -418,7 +423,7 @@ public final class Mechanics {
         Random rng = new Random(player.getRandom().nextLong());
         Kind kind = CarParts.kind(CarModels.get(car.model()));
         // the chance a job goes wrong: high at the level it's first allowed, falling with each level past it
-        double slip = player.isCreative() ? 0 : Math.max(0.03, 0.3 - 0.05 * (level - part.level));
+        double slip = player.isCreative() ? 0 : Math.max(0.03, 0.3 - 0.05 * (level - part.level) - com.zomboidcraft.npc.NpcTrades.steadier(player, car));
         ServerLevel world = (ServerLevel) player.level();
         String said;
         switch (job) {

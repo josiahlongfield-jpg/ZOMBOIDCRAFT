@@ -109,6 +109,7 @@ final class SandboxOptions {
         // Skills (SURVIVAL): one global multiplier for now
         w.put("MultiplierConfig.Global", b -> b.number("progression.xpMultiplier", 0, 1000).owner("SURVIVAL"));
         // Far-off events (AUDIO): Zomboid's three choices
+        w.put("Helicopter", b -> b.choice("searchHeli.frequency", "never", "once", "sometimes", "often").owner("ENTITY"));
         w.put("MetaEvent", b -> b.choice("world.metaEvents", "never", "sometimes", "often").owner("AUDIO"));
         // Vehicles (VEHICLES)
         w.put("EnableVehicles", b -> b.toggle("world.streetCars").owner("VEHICLES"));
@@ -238,6 +239,9 @@ final class SandboxOptions {
         o.add(of(CHARACTER, "zc.infectionMinutes", "Infection Time")
                 .tip("Minutes from infection to death.")
                 .number("survival.infectionMinutes", 1, 600).owner("SURVIVAL"));
+        o.add(of(CHARACTER, "zc.lacerationInfection", "Laceration Infection Chance")
+                .tip("Chance a zombie laceration infects you (Zomboid: 0.25).")
+                .number("survival.lacerationInfectionChance", 0, 1).owner("SURVIVAL"));
         o.add(of(CHARACTER, "zc.downed", "Downed in Multiplayer")
                 .tip("A killing blow puts you down for a while instead, so a friend can revive you.")
                 .toggle("survival.downed").owner("SURVIVAL"));

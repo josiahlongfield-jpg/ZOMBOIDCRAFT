@@ -29,6 +29,7 @@ public class ZomboidCraftClient implements ClientModInitializer {
     public void onInitializeClient() {
         // medical supports drawn on the body, from the synced worn-medical mask
         com.zomboidcraft.client.clothing.ClothingLayer.medicalMask = com.zomboidcraft.survival.WornMedical::mask;
+        com.zomboidcraft.client.clothing.ClothingMenu.register();
         com.zomboidcraft.client.hud.Hud.register();
         com.zomboidcraft.client.carry.CarryClient.register();
         com.zomboidcraft.client.kit.KitScreen.register();
@@ -85,6 +86,7 @@ public class ZomboidCraftClient implements ClientModInitializer {
         com.zomboidcraft.client.ferry.FerryClient.register();
         com.zomboidcraft.client.lights.LightClient.register();
         com.zomboidcraft.client.survival.SleepClient.register();
+        com.zomboidcraft.client.survival.TreatClient.register();
         com.zomboidcraft.client.lifts.LiftClient.register();
         com.zomboidcraft.client.cars.FlightClient.register();
         com.zomboidcraft.client.sound.Ambience.register();

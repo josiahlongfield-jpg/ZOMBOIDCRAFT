@@ -133,6 +133,8 @@ public final class ZcConfig {
     /** Zomboid's Zombie Lore page, setting for setting: how the dead move, see, hear, remember and hurt (zombie/Lore). */
     public ZombieLore zombieLore = new ZombieLore();
     public ZombiePopulation zombiePopulation = new ZombiePopulation();
+    /** Zomboid's search helicopter (world/events/SearchHeli). */
+    public SearchHeli searchHeli = new SearchHeli();
     /** Driverless trains: the county railway and the downtown subway (TrainCommand, world.trains). */
     public Trains trains = new Trains();
     /** Things you throw: lures, fire, smoke and blasts (combat/throwing). */
@@ -431,6 +433,22 @@ public final class ZcConfig {
         public int herds = 6;
         public int herdMin = 200;
         public int herdMax = 400;
+    }
+
+    /**
+     * Zomboid's Helicopter setting: the search helicopter that finds a survivor and drags every zombie under its path
+     * to them. Once: one day between firstDay and lastDay. Sometimes and Often: again every few weeks or days.
+     */
+    public static class SearchHeli {
+        public enum Frequency { NEVER, ONCE, SOMETIMES, OFTEN }
+
+        public Frequency frequency = Frequency.ONCE;
+        public int firstDay = 6;
+        public int lastDay = 9;
+        /** How long it stays on someone it has found, in-game hours (Zomboid's: up to about four). */
+        public double lockHours = 4;
+        /** How far its noise carries every second while it hovers (blocks). */
+        public double noise = 90;
     }
 
     public static class ZombieLore {
@@ -811,6 +829,8 @@ public final class ZcConfig {
         public double biteChance = 0.12;
         public double scratchChance = 0.30;
         public double scratchInfectionChance = 0.07;
+        /** Zomboid's chance a zombie's laceration (a deeper scratch) carries the infection. */
+        public double lacerationInfectionChance = 0.25;
         /** No longer read: how long the infection takes is zombieLore.mortality now (Zomboid's Infection Mortality). */
         public int infectionMinutes = 40;
         /** Infected players rise as zombies. */
@@ -860,6 +880,14 @@ public final class ZcConfig {
         /** Blows a spiked log wall stands, and the damage its spikes do to a zombie pushing or beating on it. */
         public int spikedWallHits = 24;
         public float spikeDamage = 2f;
+        /** Blows a boarded wooden wall stands at Carpentry 0 (a tenth more for each level of its builder's Carpentry). */
+        public int woodWallHits = 30;
+        /** How many boards a wooden floor reaches out from whatever holds it up. */
+        public int floorSpan = 3;
+        /** How long a floor that's lost its support sags and creaks before it falls in, in seconds. */
+        public int floorSagSeconds = 60;
+        /** How many wooden posts stand one on another. */
+        public int postStack = 3;
         /** Furniture weight: kilograms at or over these are medium (table, bed, sofa) and large (wardrobe, counter, fridge). */
         public double mediumKg = 6;
         public double largeKg = 19;

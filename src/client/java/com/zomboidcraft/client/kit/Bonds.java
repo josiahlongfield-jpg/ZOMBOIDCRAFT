@@ -32,6 +32,9 @@ public final class Bonds {
 
     public static void register() {
         KeyMappingHelper.registerKeyMapping(KEY);
+        // the mechanics screen's times count her helping hands on this side from the companions list
+        java.util.function.BiPredicate<net.minecraft.world.entity.player.Player, NpcEntity> server = com.zomboidcraft.npc.NpcTrades.bonded;
+        com.zomboidcraft.npc.NpcTrades.bonded = (p, n) -> p.level().isClientSide() ? bonded(n) : server.test(p, n);
         ClientPlayNetworking.registerGlobalReceiver(NpcPanel.Bonds.TYPE, (payload, context) -> list = payload.list());
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             for (NpcEntity n : standIns.values()) n.tickCount++;

@@ -25,9 +25,19 @@ import net.minecraft.world.item.ItemStack;
  * server, so the bar fills here and nothing is used up until it's done.
  */
 final class HealthPage {
-    private static final String[] NAMES = {"Head", "Torso", "Left arm", "Right arm", "Left leg", "Right leg"};
-    /** The flat figure, front on (so your right arm is on our left): x, y, w, h in model pixels. */
-    private static final int[][] SHAPE = {{4, 0, 8, 8}, {4, 8, 8, 12}, {12, 8, 4, 12}, {0, 8, 4, 12}, {8, 20, 4, 12}, {4, 20, 4, 12}};
+    /**
+     * The flat figure, front on (so your right arm is on our left): x, y, w, h in model pixels for each of Zomboid's
+     * seventeen parts (Body.Region order), the limbs cut in three down their length.
+     */
+    private static final int[][] SHAPE = {
+            {4, 0, 8, 8}, {4, 8, 8, 1},                    // head, neck
+            {4, 9, 8, 5}, {4, 14, 8, 4}, {4, 18, 8, 2},     // upper torso, lower torso, groin
+            {12, 8, 4, 5}, {0, 8, 4, 5},                    // upper arms
+            {12, 13, 4, 4}, {0, 13, 4, 4},                  // forearms
+            {12, 17, 4, 3}, {0, 17, 4, 3},                  // hands
+            {8, 20, 4, 5}, {4, 20, 4, 5},                   // thighs
+            {8, 25, 4, 5}, {4, 25, 4, 5},                   // shins
+            {8, 30, 4, 2}, {4, 30, 4, 2}};                  // feet
     /** The figure's box height and its scale (gui pixels per block). */
     private static final int FIGURE_H = 214, SCALE = 104;
 
@@ -44,25 +54,31 @@ final class HealthPage {
         Body body = Body.get(player);
         if (selected == null) {
             Region worst = body.worst();
-            selected = worst == null ? Region.TORSO : worst;
+            selected = worst == null ? Region.UPPER_TORSO : worst;
         }
         strip(g, font, player, body, x + 181, y + 33);
 
-        // every part, down the left
+        // all seventeen parts down the left, a small gap between limbs; what the chosen one needs is on the right
         KitDraw.heading(g, font, "Body", x + 37, y + 58, 162, false);
+        int ry = y + 66;
+        Body.Zone zone = null;
         for (Region r : Region.values()) {
+            if (zone != null && r.zone() != zone) ry += 3;
+            zone = r.zone();
             Part p = body.part(r);
-            int ry = y + 66 + r.ordinal() * 36, rx = x + 37, rw = 162, rh = 33;
+            int rx = x + 37, rw = 162, rh = 12;
             boolean on = r == selected, over = screen.hovered(rx, ry, rw, rh, mx, my);
             if (on) g.fill(rx, ry, rx + rw, ry + rh, 0x14E8E4DA);
             KitDraw.frame(g, rx, ry, rw, rh, on ? 0x80E8E4DA : over ? 0x59E8E4DA : 0x00000000);
-            KitDraw.caps(g, font, NAMES[r.ordinal()], rx + 5, ry + 5, KitDraw.BRIGHT, 0.95f);
-            KitDraw.capsRight(g, font, word(p), rx + rw - 5, ry + 5, colour(p), 0.85f);
-            KitDraw.text(g, font, line(player, p), rx + 5, ry + 16, KitDraw.DIM, 0.8f);
-            float healed = p.fine() ? 1 : healed(p);
-            g.fill(rx + 5, ry + rh - 5, rx + rw - 5, ry + rh - 4, 0x1FE8E4DA);
-            g.fill(rx + 5, ry + rh - 5, rx + 5 + Math.round((rw - 10) * healed), ry + rh - 4, p.fine() ? 0xB39CC46A : colour(p));
+            KitDraw.caps(g, font, name(r), rx + 5, ry + 2, p.fine() ? KitDraw.DIM : KitDraw.BRIGHT, 0.8f);
+            KitDraw.capsRight(g, font, word(p), rx + rw - 5, ry + 2, colour(p), 0.75f);
+            if (!p.fine()) {
+                float healed = healed(p);
+                g.fill(rx + 5, ry + rh - 2, rx + rw - 5, ry + rh - 1, 0x1FE8E4DA);
+                g.fill(rx + 5, ry + rh - 2, rx + 5 + Math.round((rw - 10) * healed), ry + rh - 1, colour(p));
+            }
             screen.hot(rx, ry, rw, rh, () -> select(r));
+            ry += rh + 1;
         }
 
         figure(g, body, x + 308, y + 58, mx, my);
@@ -137,7 +153,7 @@ final class HealthPage {
         KitDraw.panel(g, x, py, w, ph);
         Part p = body.part(selected);
         int cx = x + 7, cy = py + 7;
-        KitDraw.caps(g, font, NAMES[selected.ordinal()], cx, cy, KitDraw.BRIGHT, 1.3f);
+        KitDraw.caps(g, font, name(selected), cx, cy, KitDraw.BRIGHT, 1.3f);
         KitDraw.capsRight(g, font, word(p), x + w - 7, cy + 3, colour(p), 0.85f);
         cy += 17;
         cy += KitDraw.wrap(g, font, about(player, p), cx, cy, w - 14, KitDraw.DIM) + 5;
@@ -249,13 +265,6 @@ final class HealthPage {
         return m + " min";
     }
 
-    private static String line(LocalPlayer player, Part p) {
-        if (p.fractured()) return p.splinted() ? "Splinted · knits in " + minutes(player, p) : "No sprinting until it's splinted";
-        if (!p.wounded()) return "Nothing wrong here";
-        if (p.bleeding()) return p.wound().word() + " and bleeding · bind it";
-        return (p.bandaged() ? "Bandaged · heals in " : "Open · heals in ") + minutes(player, p);
-    }
-
     private static String about(LocalPlayer player, Part p) {
         if (p.fractured()) {
             return p.splinted() ? "A broken bone, splinted. It knits in about " + minutes(player, p) + "; you walk a little slower till then."
@@ -271,5 +280,9 @@ final class HealthPage {
         };
         if (p.bleeding()) return what + ", bleeding. Bind it before you lose more blood.";
         return what + (p.bandaged() ? ", bandaged. Heals in about " + minutes(player, p) + "." : ", open. It heals on its own, slowly.");
+    }
+
+    private static String name(Region r) {
+        return Character.toUpperCase(r.label.charAt(0)) + r.label.substring(1);
     }
 }

@@ -170,11 +170,17 @@ final class AirLights {
         return (float) (1 - Math.clamp((d - HAZE_FROM) / (HAZE_FULL - HAZE_FROM), 0, 1));
     }
 
+    /** Which way the searchlight points: where the search helicopter has turned it, or ahead and down. */
+    private static Vector3f aim(CarProp car, Quaternionf q) {
+        return car.searchlightAim().lengthSquared() > 1e-4f ? new Vector3f(car.searchlightAim()).normalize()
+                : q.transform(new Vector3f(SEARCH_DIR));
+    }
+
     /** The searchlight: its lamp, the beam down to where it lands, and a bright patch there. */
     private static void search(ClientLevel level, CarProp car, Quaternionf q, Vec3 pos, float pivot, Vec3 cam, boolean own,
                                CarLights.Quads points, CarLights.Quads beams) {
         Vec3 lamp = place(pos, q, pivot, SEARCH_AT.x, SEARCH_AT.y, SEARCH_AT.z);
-        Vector3f d = q.transform(new Vector3f(SEARCH_DIR));
+        Vector3f d = aim(car, q);
         Vec3 dir = new Vec3(d.x, d.y, d.z);
         BlockHitResult hit = level.clip(new ClipContext(lamp, lamp.add(dir.scale(SEARCH_REACH)), ClipContext.Block.COLLIDER,
                 ClipContext.Fluid.ANY, car));
@@ -267,7 +273,7 @@ final class AirLights {
         for (CarProp car : level.getEntitiesOfClass(CarProp.class, client.player.getBoundingBox().inflate(96), AirLights::searching)) {
             Quaternionf q = car.flight().q;
             Vec3 lamp = place(car.position(), q, car.pivot(), SEARCH_AT.x, SEARCH_AT.y, SEARCH_AT.z);
-            Vector3f d = q.transform(new Vector3f(SEARCH_DIR));
+            Vector3f d = aim(car, q);
             Vec3 dir = new Vec3(d.x, d.y, d.z);
             BlockHitResult hit = level.clip(new ClipContext(lamp, lamp.add(dir.scale(SEARCH_REACH)), ClipContext.Block.COLLIDER,
                     ClipContext.Fluid.NONE, car));

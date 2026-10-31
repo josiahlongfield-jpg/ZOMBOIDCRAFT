@@ -104,11 +104,12 @@ final class ClothingPage {
         KitDraw.capsRight(g, font, "Scratch", rx + rw - 36, ry, KitDraw.FAINT, 0.6f);
         KitDraw.capsRight(g, font, "Bullet", rx + rw, ry, KitDraw.FAINT, 0.6f);
         ry += 8;
-        for (Body.Region r : Body.Region.values()) {
-            KitDraw.text(g, font, cap(r.label), rx, ry, KitDraw.TEXT, 0.8f);
-            guard(g, font, totals.bite().getOrDefault(r, 0f), rx + rw - 108, ry, 36);
-            guard(g, font, totals.scratch().getOrDefault(r, 0f), rx + rw - 72, ry, 36);
-            guard(g, font, totals.bullet().getOrDefault(r, 0f), rx + rw - 36, ry, 36);
+        // one row a limb: the mean over its parts (a jacket without gloves guards most of an arm, not the hand)
+        for (Body.Zone z : Body.Zone.values()) {
+            KitDraw.text(g, font, cap(z.label), rx, ry, KitDraw.TEXT, 0.8f);
+            guard(g, font, zoneMean(totals.bite(), z), rx + rw - 108, ry, 36);
+            guard(g, font, zoneMean(totals.scratch(), z), rx + rw - 72, ry, 36);
+            guard(g, font, zoneMean(totals.bullet(), z), rx + rw - 36, ry, 36);
             ry += 11;
         }
 
@@ -136,6 +137,8 @@ final class ClothingPage {
         hx += KitDraw.hint(g, font, "RMB", "Take off", hx, hy);
         hx += KitDraw.hint(g, font, "P", "Patch", hx, hy);
         hx += KitDraw.hint(g, font, "T", "Rip up", hx, hy);
+        hx += KitDraw.hint(g, font, "W", "Wash", hx, hy);
+        hx += KitDraw.hint(g, font, "H", "Hair", hx, hy);
         screen.pagesAndClose(g, font, hx, hy);
     }
 
@@ -199,7 +202,10 @@ final class ClothingPage {
             if (wear.patchCount() > 0) worn += ", " + wear.patchCount() + (wear.patchCount() == 1 ? " patch" : " patches");
             out.add(worn);
         }
+        com.zomboidcraft.clothing.ClothDirt dirt = com.zomboidcraft.clothing.ClothDirt.of(stack);
+        if (!dirt.describe().isEmpty()) out.add(dirt.describe());
         if (Tailoring.patchable(p) && Tailoring.nextPatch(p, wear) != null) out.add("P to patch: sewing kit, thread, a strip");
+        if (!dirt.clean()) out.add("W to wash: by water, soap for the blood");
         return out;
     }
 
@@ -209,5 +215,12 @@ final class ClothingPage {
 
     private static String cap(String s) {
         return s.isEmpty() ? s : Character.toUpperCase(s.charAt(0)) + s.substring(1);
+    }
+
+    private static float zoneMean(java.util.Map<Body.Region, Float> map, Body.Zone zone) {
+        float sum = 0;
+        java.util.List<Body.Region> parts = zone.parts();
+        for (Body.Region r : parts) sum += map.getOrDefault(r, 0f);
+        return sum / parts.size();
     }
 }

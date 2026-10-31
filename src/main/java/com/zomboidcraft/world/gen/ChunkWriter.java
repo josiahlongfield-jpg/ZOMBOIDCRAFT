@@ -224,6 +224,17 @@ public final class ChunkWriter implements ChunkSink {
         if (!ZcConfig.get().world.streetCars || !(chunk instanceof ProtoChunk proto)) {
             return null;
         }
+        // "wrecked^roof", "wrecked^side": a car left on its roof or its side (LANDSCAPE's road stories)
+        int pose = 0;
+        if (variant != null && variant.indexOf('^') >= 0) {
+            int at = variant.indexOf('^'), end = variant.indexOf('#', at);
+            String p = variant.substring(at + 1, end < 0 ? variant.length() : end);
+            pose = p.equals("roof") ? CarProp.POSE_ROOF : p.equals("side") ? CarProp.POSE_SIDE : 0;
+            variant = variant.substring(0, at) + (end < 0 ? "" : variant.substring(end));
+            if (variant.isEmpty() || variant.startsWith("#")) {
+                variant = "wrecked" + variant;
+            }
+        }
         // "abandoned#jam": a traffic jam's car on the open road (world/county/Jams), left out under Zomboid's Traffic Jam off
         if (variant != null && variant.endsWith("#jam")) {
             if (!ZcConfig.get().world.trafficJams) {
@@ -267,11 +278,12 @@ public final class ChunkWriter implements ChunkSink {
             }
         }
         car.setLook(model.id, variant != null ? variant : Cars.pickVariant(rng));
+        car.setPose(pose);
         car.snapTo(x, ground, z, yaw, 0f);
         proto.addEntity(car);
         int base = (int) Math.ceil(ground - 0.05);
         int lift = (int) Math.round((base - ground) * 100);
-        for (int[] col : Cars.hullColumns(model, x, z, yaw)) {
+        for (int[] col : Cars.hullColumns(model, x, z, yaw, pose)) {
             int[] layers = Cars.layers(col, lift);
             for (int i = 0; i < layers.length; i++) {
                 if (layers[i] != 0 && col[0] >= bx && col[0] <= bx + 15 && col[1] >= bz && col[1] <= bz + 15) {
