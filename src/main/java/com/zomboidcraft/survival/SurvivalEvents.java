@@ -26,9 +26,11 @@ public final class SurvivalEvents {
     public static void register() {
         ServerTickEvents.END_SERVER_TICK.register(SurvivalEvents::onServerTick);
         ServerLivingEntityEvents.AFTER_DAMAGE.register((entity, source, baseDamage, damage, blocked) -> {
-            if (entity instanceof ServerPlayer player && !blocked && damage > 0
-                    && ZombieTypes.isWalker(source.getEntity())) {
-                onZombieHit(player);
+            if (entity instanceof ServerPlayer player && !blocked && damage > 0) {
+                Sleep.wake(player, "Pain jolts you awake.");
+                if (ZombieTypes.isWalker(source.getEntity())) {
+                    onZombieHit(player);
+                }
             }
         });
         ServerLivingEntityEvents.AFTER_DEATH.register((entity, source) -> {
@@ -41,6 +43,10 @@ public final class SurvivalEvents {
     }
 
     private static void onServerTick(MinecraftServer server) {
+        for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+            Needs.holdFoodBar(player);
+        }
+        Sleep.tick(server);
         if (++ticks % 20 != 0) {
             return;
         }
@@ -68,26 +74,18 @@ public final class SurvivalEvents {
                         player.getBoundingBox().inflate(16), ZombieTypes::isWalker).isEmpty()) {
             Skills.addXp(player, Skill.SNEAKING, 1);
         }
-        stats = stats.withThirst(stats.thirst() - thirstDrain);
-        if (stats.thirst() < 20f) {
-            effect(player, MobEffects.SLOWNESS, 0);
-        }
+        stats = stats.withThirst(stats.thirst() - thirstDrain * (Sleep.asleep(player) ? 0.5f : 1f));
         if (stats.thirst() <= 0f && second % 4 == 0) {
             player.hurtServer(level, ModDamageTypes.source(level, ModDamageTypes.THIRST), 1f);
         }
 
-        // Fatigue: a full night's sleep resets it
-        if (player.isSleeping()) {
-            stats = player.getSleepTimer() >= 90 ? stats.withFatigue(0f) : stats.withFatigue(stats.fatigue() - 3f);
+        // Fatigue: rest comes from what you sleep on (Sleep); Zomboid's "sleep needed" off means it never builds
+        if (Sleep.asleep(player)) {
+            stats = stats.withFatigue(Sleep.rest(player, stats.fatigue()));
+        } else if (player.isSleeping()) {
+            stats = stats.withFatigue(stats.fatigue() - Sleep.Bed.GOOD.restPerHour / Needs.hourSeconds());
         } else {
-            stats = stats.withFatigue(stats.fatigue() + (config.fatigue ? (float) config.fatiguePerSecond : 0f));
-        }
-        if (stats.fatigue() > 75f) {
-            effect(player, MobEffects.MINING_FATIGUE, 0);
-        }
-        if (stats.fatigue() > 90f) {
-            effect(player, MobEffects.SLOWNESS, 0);
-            effect(player, MobEffects.WEAKNESS, 0);
+            stats = stats.withFatigue(config.fatigue ? stats.fatigue() + (float) config.fatiguePerSecond : 0f);
         }
 
         // Bleeding and healing are per body part now: see Injuries
@@ -120,6 +118,7 @@ public final class SurvivalEvents {
         }
 
         SurvivalStats.set(player, stats);
+        Needs.tick(player, second);
         Injuries.tick(player, second);
         Medicine.tick(player, second);
         Mood.tick(player, second);

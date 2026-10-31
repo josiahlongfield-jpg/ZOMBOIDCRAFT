@@ -293,7 +293,7 @@ public final class Medicine {
         add(m, "nausea", -40, 100);
         put(m, "weak", 300);
         SurvivalStats.set(player, stats.withThirst(stats.thirst() - 15f));
-        player.getFoodData().setFoodLevel(Math.max(0, player.getFoodData().getFoodLevel() - 4));
+        Needs.lose(player, 0.1f, 300f);
         Noise.emit(level, player.position(), 8);
         player.sendOverlayMessage(Component.literal("You throw up.").withStyle(ChatFormatting.GRAY));
     }

@@ -590,7 +590,7 @@ public final class MedSpecs {
             }
             case "glucose_gel" -> {
                 SurvivalStats.set(player, stats.withFatigue(Math.max(0, stats.fatigue() - 15)));
-                player.getFoodData().eat(2, 0.3f);
+                Needs.gain(player, 0.02f, 100f, 25f, 0f, 0f);
             }
             case "cold_pack" -> m.put("coldpack", 600);
             default -> {

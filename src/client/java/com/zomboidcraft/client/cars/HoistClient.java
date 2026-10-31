@@ -22,6 +22,15 @@ public final class HoistClient {
             Spot s = spot(client, player);
             return s == null ? null : new com.zomboidcraft.client.interact.Interactables.Spot(s.at,
                     com.zomboidcraft.client.interact.Interactables.SIZE);
+        });        // held G: both ways the box or the lever works, rather than Shift for down
+        com.zomboidcraft.client.interact.InteractMenu.provider((client, player, hit, out) -> {
+            Spot s = spot(client, player);
+            if (s == null) return;
+            CarHoist.Use up = s.lever ? CarHoist.Use.PUMP : CarHoist.Use.CONTROL, down = s.lever ? CarHoist.Use.VALVE : CarHoist.Use.CONTROL_DOWN;
+            out.add(com.zomboidcraft.client.interact.InteractMenu.Option.of(s.lever ? "Pump it up" : "Raise the lift",
+                    () -> ClientPlayNetworking.send(new CarHoist.Press(s.hoist.getId(), up.ordinal()))));
+            out.add(com.zomboidcraft.client.interact.InteractMenu.Option.of(s.lever ? "Open the valve" : "Lower the lift",
+                    () -> ClientPlayNetworking.send(new CarHoist.Press(s.hoist.getId(), down.ordinal()))));
         });
     }
 

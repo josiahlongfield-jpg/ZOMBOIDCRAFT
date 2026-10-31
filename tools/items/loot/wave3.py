@@ -1025,6 +1025,7 @@ def table(it):
                                                                               'leaf', '#6a8a3a', '#3a6a2a'),
         'skillbook_aiming': sb('MARKSMAN', '#5a3a2a', '#c23a22'), 'skillbook_maintenance': sb('REPAIR', '#2a5aa8'),
         'skillbook_masonry': sb('BRICKWORK', '#a8502a'), 'skillbook_metalworking': sb('METAL SHOP', '#4a4a4a', '#e07a1a'),
+        'skillbook_electrical': sb('WIRING', '#2a4a8a', '#e8c040'), 'skillbook_plumbing': sb('PLUMBING', '#3a7a8a', '#c8d4e8'),
         'skillbook_piloting': it(book(7.0, 10.0, 1.4), 'FLIGHT', '#1e2a4a', 'wave', '#c8d4e8', band=CREAM),
         'mag_carpentry': it(magazine(), 'WOODWORK', '#c8a070', 'star', '#8a5a2a', band=CREAM),
         'mag_mechanics': it(magazine(), 'MOTOR', '#c23a22', 'heap', '#2a2a2a', band=CREAM),

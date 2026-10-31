@@ -48,6 +48,18 @@ final class SandboxOptions {
         w.put("MetaEvent", b -> b.choice("world.metaEvents", "never", "sometimes", "often").owner("AUDIO"));
         // Vehicles (VEHICLES)
         w.put("EnableVehicles", b -> b.toggle("world.streetCars").owner("VEHICLES"));
+        // Firearms (WEAPONS): combat/Firearms. Use Damage Chance says who a shot strikes just by being aimed at;
+        // jams start at 0 since Josiah cut them on 10-26
+        w.put("FirearmUseDamageChance", b -> b.choice("guns.useDamageChance", "both", "zombies", "off").owner("WEAPONS")
+                .tip("Shots strike what they're aimed at. Both: zombies and players; Zombies: only zombies; Off: Aiming decides if a shot lands."));
+        w.put("FirearmNoiseMultiplier", b -> b.number("guns.noiseMultiplier", 0.2, 2).owner("WEAPONS"));
+        w.put("FirearmJamMultiplier", b -> b.number("guns.jamMultiplier", 0, 10).owner("WEAPONS"));
+        w.put("FirearmMoodleMultiplier", b -> b.number("guns.moodleMultiplier", 0, 10).owner("WEAPONS"));
+        w.put("FirearmWeatherMultiplier", b -> b.number("guns.weatherMultiplier", 0, 10).owner("WEAPONS")
+                .tip("How much wind, rain and fog throw your aim off, out under the sky. Kept light, as the rain never stops."));
+        w.put("FirearmHeadGearEffect", b -> b.toggle("guns.headgearEffect").owner("WEAPONS"));
+        // Fire (WEAPONS, combat/ContainedFire): off keeps a fire to what it was started on and a little round it
+        w.put("FireSpread", b -> b.toggle("throwing.fireZomboid").owner("WEAPONS"));
         return w;
     }
 
@@ -201,8 +213,7 @@ final class SandboxOptions {
                     SandboxGroup group = SandboxGroup.byId(o.get("group").getAsString());
                     SandboxOption.Builder b = of(group, o.get("id").getAsString(), o.get("label").getAsString())
                             .tip(o.get("tooltip").getAsString()).owner(o.get("owner").getAsString());
-                    JsonObject presets = o.getAsJsonObject("presets");
-                    String apocalypse = presets.get("apocalypse").getAsString();
+                    String apocalypse = o.get("default").getAsString();
                     switch (o.get("kind").getAsString()) {
                         case "toggle" -> b.kind(SandboxOption.Kind.TOGGLE);
                         case "number" -> b.kind(SandboxOption.Kind.NUMBER)

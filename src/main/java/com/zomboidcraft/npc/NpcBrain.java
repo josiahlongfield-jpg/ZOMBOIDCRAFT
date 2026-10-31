@@ -398,7 +398,7 @@ final class NpcBrain {
                     0.95f + npc.getRandom().nextFloat() * 0.1f);
             level.sendParticles(ParticleTypes.SMOKE, muzzle.x, muzzle.y, muzzle.z, 2, 0.03, 0.03, 0.03, 0.01);
             level.sendParticles(ParticleTypes.SMALL_FLAME, muzzle.x, muzzle.y, muzzle.z, 1, 0, 0, 0, 0);
-            Noise.emit(level, npc.position(), stats.shotNoise);
+            Noise.emit(level, npc.position(), com.zomboidcraft.combat.Firearms.noise(stats.shotNoise));
             Vec3 end = eye.add(dir.scale(stats.range));
             var block = level.clip(new ClipContext(eye, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, npc));
             Vec3 stop = block.getType() == HitResult.Type.MISS ? end : block.getLocation();

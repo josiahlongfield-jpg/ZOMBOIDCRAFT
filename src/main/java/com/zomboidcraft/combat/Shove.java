@@ -1,6 +1,7 @@
 package com.zomboidcraft.combat;
 
 import com.zomboidcraft.ZcConfig;
+import com.zomboidcraft.zombie.Noise;
 import com.zomboidcraft.zombie.ZombieTypes;
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -13,6 +14,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.zombie.Zombie;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.component.SwingAnimation;
 import net.minecraft.world.phys.Vec3;
 
@@ -51,6 +53,10 @@ public final class Shove {
             Grabs.breakFree(player);
             return;
         }
+        // Zomboid: over a zombie on the ground the shove key stomps it, whatever's in your hands
+        if (config.groundAttacks && stomp(player, level, look, vigour)) {
+            return;
+        }
         boolean any = false;
         double range = config.shoveRange;
         for (Zombie zombie : level.getEntitiesOfClass(Zombie.class, player.getBoundingBox().inflate(range))) {
@@ -86,6 +92,52 @@ public final class Shove {
             level.playSound(null, player.getX(), player.getEyeY(), player.getZ(), ModSounds.SWING, SoundSource.PLAYERS,
                     0.5f, 1.2f);
         }
+    }
+
+    /** Footwear's weight behind a stomp: bare feet weakest, heavy boots strongest (Zomboid B42). */
+    private static final java.util.Map<String, Double> FOOTWEAR = java.util.Map.of(
+            "slippers", 0.8, "sneakers", 1.0, "running_shoes", 1.0, "dress_shoes", 1.05, "rubber_boots", 1.15,
+            "cowboy_boots", 1.25, "hiking_boots", 1.3, "work_boots", 1.45, "combat_boots", 1.5);
+
+    public static double footwear(Player player) {
+        com.zomboidcraft.clothing.Garment g = com.zomboidcraft.clothing.Clothes.of(
+                com.zomboidcraft.clothing.ClothingSlot.FEET.worn(player));
+        return g == null ? 0.7 : FOOTWEAR.getOrDefault(g.id(), 1.0);
+    }
+
+    /** True while a stomp's blow lands, so it counts as a stomp and not a blow with what's in hand (CombatEvents). */
+    static boolean stomping;
+
+    /** Stomps the nearest zombie lying at your feet, if there is one. Quiet, and it costs its own breath. */
+    private static boolean stomp(ServerPlayer player, ServerLevel level, Vec3 look, float vigour) {
+        ZcConfig.Combat config = ZcConfig.get().combat;
+        Zombie target = null;
+        double best = config.stompRange;
+        for (Zombie zombie : level.getEntitiesOfClass(Zombie.class, player.getBoundingBox().inflate(config.stompRange))) {
+            if (!ZombieTypes.isWalker(zombie) || !zombie.isAlive() || !Downed.isLow(zombie)) {
+                continue;
+            }
+            Vec3 to = zombie.position().subtract(player.position()).multiply(1, 0, 1);
+            double dist = to.length();
+            if (dist < best && (dist < 0.6 || to.scale(1 / dist).dot(look) > 0.2)) {
+                best = dist;
+                target = zombie;
+            }
+        }
+        if (target == null) {
+            return false;
+        }
+        Stamina.use(player, config.stompCost);
+        float damage = (float) (config.stompDamage * footwear(player) * (0.6 + 0.4 * vigour));
+        stomping = true;
+        try {
+            target.hurtServer(level, player.damageSources().playerAttack(player), damage);
+        } finally {
+            stomping = false;
+        }
+        Downed.keepDown(target, 10);
+        Noise.emit(level, target.position(), config.stompNoise);
+        return true;
     }
 
     /** Pushes an entity along a direction, less if it resists knockback. */

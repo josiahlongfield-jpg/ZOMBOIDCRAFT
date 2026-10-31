@@ -52,12 +52,53 @@ public final class ContainedFire {
         }
 
         boolean inReach(BlockPos p) {
-            return p.distSqr(origin) <= reach * reach;
+            return ZcConfig.get().throwing.fireZomboid || p.distSqr(origin) <= reach * reach;
         }
     }
 
+    /** Sprays left in a fire extinguisher. */
+    public static final net.minecraft.core.component.DataComponentType<Integer> SPRAYS = net.minecraft.core.Registry.register(
+            net.minecraft.core.registries.BuiltInRegistries.DATA_COMPONENT_TYPE, com.zomboidcraft.ZomboidCraft.id("sprays"),
+            net.minecraft.core.component.DataComponentType.<Integer>builder().persistent(com.mojang.serialization.Codec.INT)
+                    .networkSynchronized(net.minecraft.network.codec.ByteBufCodecs.VAR_INT).build());
+
     public static void register() {
         net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents.END_SERVER_TICK.register(ContainedFire::tick);
+        net.fabricmc.fabric.api.event.player.UseItemCallback.EVENT.register(ContainedFire::spray);
+    }
+
+    /** A fire extinguisher, as in Zomboid: a spray puts out the flames round where it's aimed, a few blocks off. */
+    private static net.minecraft.world.InteractionResult spray(net.minecraft.world.entity.player.Player player,
+                                                               net.minecraft.world.level.Level world,
+                                                               net.minecraft.world.InteractionHand hand) {
+        net.minecraft.world.item.ItemStack held = player.getItemInHand(hand);
+        if (!net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(held.getItem()).getPath().equals("fire_extinguisher")) {
+            return net.minecraft.world.InteractionResult.PASS;
+        }
+        if (!(world instanceof ServerLevel level)) {
+            return net.minecraft.world.InteractionResult.SUCCESS;
+        }
+        ZcConfig.Throwing c = ZcConfig.get().throwing;
+        int left = held.getOrDefault(SPRAYS, c.extinguisherUses);
+        if (left <= 0) {
+            level.playSound(null, player.getX(), player.getEyeY(), player.getZ(), net.minecraft.sounds.SoundEvents.DISPENSER_FAIL,
+                    SoundSource.PLAYERS, 0.6f, 1.4f);
+            return net.minecraft.world.InteractionResult.FAIL;
+        }
+        Vec3 eye = player.getEyePosition();
+        Vec3 end = eye.add(player.getLookAngle().scale(5));
+        var hit = level.clip(new net.minecraft.world.level.ClipContext(eye, end, net.minecraft.world.level.ClipContext.Block.OUTLINE,
+                net.minecraft.world.level.ClipContext.Fluid.NONE, player));
+        Vec3 at = hit.getLocation();
+        douse(level, at, c.fireDouseRadius);
+        level.sendParticles(net.minecraft.core.particles.ParticleTypes.CLOUD, at.x, at.y, at.z, 30, 0.8, 0.4, 0.8, 0.02);
+        level.playSound(null, player.getX(), player.getEyeY(), player.getZ(), net.minecraft.sounds.SoundEvents.FIRE_EXTINGUISH,
+                SoundSource.PLAYERS, 1f, 0.8f);
+        if (!player.hasInfiniteMaterials()) {
+            held.set(SPRAYS, left - 1);
+        }
+        player.getCooldowns().addCooldown(held, 10);
+        return net.minecraft.world.InteractionResult.SUCCESS;
     }
 
     /** Wood, cloth, leaves, paper and the like: whatever Minecraft lets lava light, and anything you'd cut with an axe. */
@@ -130,7 +171,8 @@ public final class ContainedFire {
 
     private static boolean light(Fire fire, BlockPos p, long fuelUntil) {
         ServerLevel level = fire.level;
-        if (fire.flames.size() >= ZcConfig.get().throwing.fireMaxBlocks || !level.getBlockState(p).isAir()
+        ZcConfig.Throwing c = ZcConfig.get().throwing;
+        if (fire.flames.size() >= (c.fireZomboid ? c.fireZomboidMaxBlocks : c.fireMaxBlocks) || !level.getBlockState(p).isAir()
                 || !level.getFluidState(p).isEmpty()) {
             return false;
         }
@@ -170,7 +212,8 @@ public final class ContainedFire {
         ServerLevel level = fire.level;
         RandomSource random = level.getRandom();
         long now = level.getGameTime();
-        boolean dying = now >= fire.endAt;
+        // Zomboid's fire burns as long as it has something to burn; the contained one dies at its time
+        boolean dying = !c.fireZomboid && now >= fire.endAt;
         if ((now / STEP) % (FIRE_SOUND / STEP) == 0 && !fire.flames.isEmpty()) {
             // the roar goes on while it burns: one take every few seconds, from one of its flames
             BlockPos at = fire.flames.keySet().stream().skip(random.nextInt(fire.flames.size())).findFirst().orElse(fire.origin);

@@ -54,6 +54,11 @@ public final class ModItems {
     /** A cheap digital wristwatch: while you have one on you, the HUD shows the time and the day. */
     // What a wall leaves when it's knocked through (building/DigRules), and the torch that cuts steel.
     public static final Item RUBBLE = register("rubble_chunks", Item::new, new Item.Properties().stacksTo(32));
+    // What B42's primitive weapons are made from (combat/SpearItem and the recipes): branches off the trees,
+    // stones out of rubble and gravel, and a stone knapped sharp against another.
+    public static final Item TREE_BRANCH = register("tree_branch", Item::new, new Item.Properties().stacksTo(8));
+    public static final Item STONE = register("stone", Item::new, new Item.Properties().stacksTo(16));
+    public static final Item SHARP_STONE = register("sharp_stone", Item::new, new Item.Properties().stacksTo(16));
     public static final Item SCRAP_METAL = register("scrap_metal", Item::new, new Item.Properties().stacksTo(32));
     public static final Item PROPANE_TORCH = register("propane_torch", Item::new, new Item.Properties().durability(120));
     // What the Build page builds with (building/Build).
@@ -104,6 +109,15 @@ public final class ModItems {
     public static final Item KATANA = weapon("katana", MeleeWeaponItem::new);
     public static final Item FIRE_AXE = weapon("fire_axe", MeleeWeaponItem::new);
     public static final Item SLEDGEHAMMER = weapon("sledgehammer", MeleeWeaponItem::new);
+    // B42's primitive weapons (Josiah 2026-10-31)
+    public static final Item WOODEN_SPEAR = weapon("wooden_spear", com.zomboidcraft.combat.SpearItem::new);
+    public static final Item FIRE_HARDENED_SPEAR = weapon("fire_hardened_spear", com.zomboidcraft.combat.SpearItem::new);
+    public static final Item SPEAR_KNIFE = weapon("spear_knife", com.zomboidcraft.combat.SpearItem::new);
+    public static final Item STONE_AXE = weapon("stone_axe", MeleeWeaponItem::new);
+    public static final Item STONE_HAMMER = weapon("stone_hammer", MeleeWeaponItem::new);
+    public static final Item STONE_KNIFE = weapon("stone_knife", MeleeWeaponItem::new);
+    public static final Item PLANK_NAILS = weapon("plank_nails", MeleeWeaponItem::new);
+    public static final Item CUDGEL_NAILS = weapon("cudgel_nails", MeleeWeaponItem::new);
 
     // The guns (see combat/GunType) and what feeds them.
     public static final Item ASSAULT_RIFLE = gun("assault_rifle", GunType.ASSAULT_RIFLE, 1600);

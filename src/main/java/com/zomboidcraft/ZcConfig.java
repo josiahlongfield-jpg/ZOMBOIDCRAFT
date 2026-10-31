@@ -171,15 +171,23 @@ public final class ZcConfig {
         public double launcherShrapnel = 8;
 
         /**
-         * Fires from blasts, molotovs and flares never break blocks themselves and never run away across the world:
-         * each spreads at most fireReach blocks from where it started, holds at most fireMaxBlocks flames, and
-         * burns out after fireLifeTicks. Left alone it burns wooden and soft blocks (fireBurnChance per check);
-         * rain puts it out (fireRainChance), and so does water.
+         * Fires from blasts, molotovs and flares. fireSpreads is Zomboid's Fire Spread: off, flames stay where they
+         * were lit. With fireZomboid on (Josiah 2026-10-31: Zomboid's spread) a fire creeps on through anything that
+         * burns, room to room and house to house, until it runs out of fuel or is put out, holding at most
+         * fireZomboidMaxBlocks flames. With it off, the old contained fire (Josiah 2026-10-27): each spreads at most
+         * fireReach blocks from where it started, holds at most fireMaxBlocks flames, and burns out after
+         * fireLifeTicks. Either way it burns wooden and soft blocks (fireBurnChance per check); rain puts it out
+         * (fireRainChance), and so do water and a fire extinguisher (extinguisherUses sprays, fireDouseRadius
+         * blocks round where it's aimed).
          */
         public boolean fireSpreads = true;
+        public boolean fireZomboid = true;
+        public int fireZomboidMaxBlocks = 3000;
         public int fireReach = 2;
         public int fireMaxBlocks = 60;
         public int fireLifeTicks = 1200;
+        public int extinguisherUses = 20;
+        public double fireDouseRadius = 2.5;
         public double fireSpreadChance = 0.3;
         public double fireBurnChance = 0.08;
         public double fireRainChance = 0.35;
@@ -610,6 +618,7 @@ public final class ZcConfig {
     public static class Survival {
         public boolean thirst = true;
         public double thirstPerSecond = 0.07;
+        /** Zomboid's "sleep needed": off and you never get tired. */
         public boolean fatigue = true;
         public double fatiguePerSecond = 0.055;
         public boolean bleeding = true;
@@ -626,6 +635,22 @@ public final class ZcConfig {
         /** In multiplayer a killing blow puts you down for this long instead, so a friend can revive you (not alone). */
         public boolean downed = true;
         public int downedSeconds = 60;
+        /** Zomboid hunger in place of Minecraft's food bar (survival/Needs). */
+        public boolean hunger = true;
+        /** Zomboid's "nutrition": calories, carbs, fats and proteins that move your weight. */
+        public boolean nutrition = true;
+        /** Real minutes in one Zomboid day for the needs clock (Zomboid's default day length is one hour). */
+        public double dayMinutes = 60;
+        /** Zomboid's "stats decrease speed": how fast hunger and the calorie burn climb (0.5 slow, 2 fast). */
+        public double statsDecrease = 1.0;
+        /** Calories an adult at rest burns in a Zomboid day; running, loads and cold burn more. */
+        public double caloriesPerDay = 2000;
+        /** How quickly the calorie bank moves your weight (1 = Zomboid's pace, approximately). */
+        public double weightChange = 1.0;
+        /** Hit points a fed, watered, rested body heals in a Zomboid hour (Minecraft's food bar no longer heals). */
+        public double regenPerHour = 3;
+        /** Zomboid's "sleep allowed": whether you can lie down at all. */
+        public boolean sleepAllowed = true;
     }
 
     public static class Building {
@@ -652,6 +677,32 @@ public final class ZcConfig {
         /** Blows a spiked log wall stands, and the damage its spikes do to a zombie pushing or beating on it. */
         public int spikedWallHits = 24;
         public float spikeDamage = 2f;
+        /** Furniture weight: kilograms at or over these are medium (table, bed, sofa) and large (wardrobe, counter, fridge). */
+        public double mediumKg = 6;
+        public double largeKg = 19;
+        /**
+         * Chance a piece breaks as you lift it at skill 0, Zomboid style. Anything that needs a tool to come loose
+         * (a hammer for furniture, a screwdriver for appliances and wired lights) breaks 75% of the time at 0 and
+         * 7.5% less each level, never at 10; a pipe wrench job (sinks, toilets, tubs) is Zomboid's flat 25%, which
+         * here falls 2.5% a level of Plumbing. Small loose things and fridges need no tool and never break.
+         */
+        public double toolBreak = 0.75;
+        public double plumbedBreak = 0.25;
+        /** Scales every piece of furniture's weight. */
+        public double furnitureWeight = 1.0;
+        /** Lifting a piece takes half a second plus this many ticks for every kilogram (8% less a level over the need). */
+        public double liftTicksPerKg = 1.5;
+        /** Placing blocks from the vanilla game in survival: off, every wall comes from the Build page. */
+        public boolean vanillaBlocks = false;
+        /** Earth you may still put down while vanillaBlocks is off, only to fill natural ground back to where it lay. */
+        public java.util.List<String> soil = new java.util.ArrayList<>(java.util.List.of("minecraft:dirt", "minecraft:coarse_dirt",
+                "minecraft:rooted_dirt", "minecraft:grass_block", "minecraft:podzol", "minecraft:mud", "minecraft:farmland"));
+        /** Other vanilla things that still go down while vanillaBlocks is off: seeds and saplings. */
+        public java.util.List<String> plants = new java.util.ArrayList<>(java.util.List.of("minecraft:wheat_seeds",
+                "minecraft:beetroot_seeds", "minecraft:melon_seeds", "minecraft:pumpkin_seeds", "minecraft:carrot",
+                "minecraft:potato", "minecraft:sweet_berries", "minecraft:oak_sapling", "minecraft:spruce_sapling",
+                "minecraft:birch_sapling", "minecraft:jungle_sapling", "minecraft:acacia_sapling", "minecraft:dark_oak_sapling",
+                "minecraft:cherry_sapling", "minecraft:mangrove_propagule", "minecraft:sugar_cane", "minecraft:bamboo"));
     }
 
     public static class Digging {
@@ -663,6 +714,10 @@ public final class ZcConfig {
         public int carpentryLevel = 2;
         public int masonryLevel = 2;
         public int metalworkingLevel = 2;
+        /** Steps up by wall: brick or block facing the outside, poured concrete (bunkers, car parks, cellars), heavy steel (hulls, bulkheads, vaults). */
+        public int outsideMasonryLevel = 5;
+        public int concreteLevel = 8;
+        public int heavySteelLevel = 8;
         /** How far zombies hear each kind of wall coming down, in blocks. */
         public double woodNoise = 16;
         public double masonryNoise = 36;
@@ -936,8 +991,15 @@ public final class ZcConfig {
         public double downedSeconds = 3.5;
         /** Looking down and attacking a zombie on the ground stomps or strikes it hard. */
         public boolean groundAttacks = true;
-        /** Damage of a bare-footed stomp. */
+        /**
+         * Damage of a stomp in ordinary shoes; bare feet do 0.7 of it and heavy boots up to 1.5 (Shove.footwear). The
+         * shove key (V) over a zombie on the ground stomps it whatever's in your hands, within stompRange blocks, for
+         * stompCost endurance and a stompNoise radius.
+         */
         public double stompDamage = 7.0;
+        public double stompRange = 1.6;
+        public double stompCost = 4.0;
+        public double stompNoise = 4.0;
         /** Multiplies weapon damage against zombies on the ground. */
         public double groundAttackMultiplier = 1.8;
         /** Push zombies away with the shove key (V). */
@@ -1499,7 +1561,20 @@ public final class ZcConfig {
         }
 
         public boolean enabled = true;
-        /** Worn guns sometimes jam; clear them with the reload key. */
+        /**
+         * Zomboid's Firearms settings (combat/Firearms). useDamageChance: who a shot strikes just by being aimed at,
+         * "both", "zombies" or "off"; anyone it doesn't cover has to pass an Aiming roll to be hit. noiseMultiplier
+         * (0.2 to 2) scales how far gunshots are heard; jamMultiplier (0 to 10, 0 = no jams) scales the jam chance;
+         * moodleMultiplier and weatherMultiplier (0 to 10, 0 = none) scale how much tiredness, hurt arms and
+         * winded breath, and wind, rain and fog, widen the spread; headgearEffect lets masks and visors widen it.
+         */
+        public String useDamageChance = "both";
+        public double noiseMultiplier = 1.0;
+        public double jamMultiplier = 0.0;
+        public double moodleMultiplier = 1.0;
+        public double weatherMultiplier = 1.0;
+        public boolean headgearEffect = true;
+        /** Worn guns sometimes jam (scaled by jamMultiplier); clear them with the reload key. */
         public boolean jams = true;
         /**
          * Jam chance per shot of a gun in new condition, and how much is added at no condition left (rising with the
