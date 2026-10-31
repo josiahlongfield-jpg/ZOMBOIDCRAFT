@@ -434,7 +434,15 @@ final class Cellar {
         for (int i = 0, n = 1 + rng.nextInt(2); i < n; i++) {
             against("cellar_barrel_side[loot=liquor]");  // on its side, the tap toward the room
         }
+        // now and then a collector's mansion: the suit of gothic armour he bought from a museum, packed away
+        // down here in its steamer trunk (LOOT's shop/museum_armour, the whole set)
+        if (rng.nextDouble() < COLLECTOR) {
+            against("rw_dp_trunk[loot=museum_armour]");
+        }
     }
+
+    /** How many mansion wine cellars hide a collector's trunk of museum armour. */
+    static final double COLLECTOR = 0.12;
 
     /** A prepper's armoury: the safe, the ammo shelves, the bench he loaded at, his supplies. */
     private void armoury() {
