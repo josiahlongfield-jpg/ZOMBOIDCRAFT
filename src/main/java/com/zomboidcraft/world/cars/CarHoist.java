@@ -49,9 +49,10 @@ public class CarHoist extends Entity {
     public static final float[] NOTCHES = {0f, 0.5f, 1.25f, 1.85f};
     public static final String[] NOTCH_NAMES = {"the floor", "wheels free", "chest height", "full height"};
     /** The posts' middles, either side (local x), and their size. */
-    public static final float POST_X = 1.7f, POST_W = 0.3f, POST_D = 0.36f, POST_H = 3.6f;
+    public static final float POST_X = 1.7f, POST_W = 0.3f, POST_D = 0.36f, POST_H = 4.4f;
     /** The biggest car it takes: length and width, metres. */
-    public static final float MAX_LENGTH = 6.6f, MAX_WIDTH = 2.6f;
+    /** Vans, ambulances, step vans and the army's light trucks fit; buses and heavy trucks don't. */
+    public static final float MAX_LENGTH = 7.6f, MAX_WIDTH = 3.0f;
     /** Rise per tick on the motor and per stroke of the hand pump, metres; the valve lets it down this fast a tick. */
     private static final float MOTOR = 0.03f, STROKE = 0.06f, VALVE = 0.012f;
     /** The control box and the pump lever (local, on the first post's outside), where the interact key works them. */
@@ -65,6 +66,8 @@ public class CarHoist extends Entity {
     /** Where the arms reach in to: half the car's track and the distance of its lift points from the middle, metres. */
     private static final EntityDataAccessor<Float> REACH_X = SynchedEntityData.defineId(CarHoist.class, EntityDataSerializers.FLOAT);
     private static final EntityDataAccessor<Float> REACH_Z = SynchedEntityData.defineId(CarHoist.class, EntityDataSerializers.FLOAT);
+    /** How high above the wheels the car's underside is at its lift points: the pads screw up to meet it. */
+    private static final EntityDataAccessor<Float> PAD = SynchedEntityData.defineId(CarHoist.class, EntityDataSerializers.FLOAT);
 
     private UUID carId;
     private boolean armsIn;
@@ -90,6 +93,7 @@ public class CarHoist extends Entity {
         builder.define(CAR, -1);
         builder.define(REACH_X, 0.75f);
         builder.define(REACH_Z, 1.3f);
+        builder.define(PAD, 0.25f);
     }
 
     public float height() {
@@ -106,6 +110,10 @@ public class CarHoist extends Entity {
 
     public float reachZ() {
         return entityData.get(REACH_Z);
+    }
+
+    public float pad() {
+        return entityData.get(PAD);
     }
 
     public int target() {
@@ -164,6 +172,9 @@ public class CarHoist extends Entity {
                 click(level);
                 if (!armsIn) {
                     swingIn(player);
+                } else if (car != null && notch >= topNotch(car)) {
+                    say(player, notch < NOTCHES.length - 1 ? "It's too tall to go higher: its roof would hit the overhead beam."
+                            : "It's at full height.");
                 } else if (notch < NOTCHES.length - 1) {
                     entityData.set(TARGET, notch + 1);
                     say(player, "Up to " + NOTCH_NAMES[notch + 1] + ". Sneak at the box to take it down.");
@@ -189,7 +200,7 @@ public class CarHoist extends Entity {
                     say(player, "Swing the arms under a car first (the control box).");
                     return;
                 }
-                float h = Math.min(NOTCHES[NOTCHES.length - 1], height() + STROKE);
+                float h = Math.min(NOTCHES[topNotch(car)], height() + STROKE);
                 setHeight(h);
                 int at = 0;
                 for (int i = 0; i < NOTCHES.length; i++) {
@@ -277,6 +288,29 @@ public class CarHoist extends Entity {
         return false;
     }
 
+    /** The sill's height above the wheels where the pack has no underside heights: low on cars, higher on trucks. */
+    private static float sill(CarModels.Model m) {
+        return switch (m.kind == null ? "" : m.kind) {
+            case "car" -> m.size[1] > 1.6f ? 0.26f : 0.19f;
+            case "van" -> m.size[1] > 2.4f ? 0.32f : 0.22f;
+            case "truck", "farm", "military", "jeep", "jeep_open" -> 0.34f;
+            case "emergency" -> m.size[1] > 1.8f ? 0.3f : 0.2f;
+            default -> 0.25f;
+        };
+    }
+
+    /** The highest notch a car can go to with its roof clear of the overhead beam. */
+    public static int topNotch(CarProp car) {
+        CarModels.Model m = CarModels.get(car.model());
+        int top = 0;
+        for (int i = 0; i < NOTCHES.length; i++) {
+            if (m == null || NOTCHES[i] + m.size[1] <= POST_H - 0.05f) {
+                top = i;
+            }
+        }
+        return top;
+    }
+
     /** Whether a model goes up on a two-post lift: a road vehicle no longer or wider than the arms reach. */
     public static boolean fits(CarModels.Model m) {
         return m != null && CarParts.applies(m) && m.size[2] <= MAX_LENGTH && m.size[0] <= MAX_WIDTH;
@@ -288,8 +322,31 @@ public class CarHoist extends Entity {
         carTurn = Math.abs(Mth.wrapDegrees(car.getYRot() - getYRot())) > 90 ? 180f : 0f;
         carId = car.getUUID();
         entityData.set(CAR, car.getId());
-        entityData.set(REACH_X, Math.min(m.size[0] / 2 - 0.25f, 0.95f));
-        entityData.set(REACH_Z, Math.max(0.9f, (m.wheelbase > 0.5f ? m.wheelbase : m.size[2] * 0.6f) / 2 - 0.35f));
+        // the lift points: on the sills just inside each wheel, wherever this model's are
+        float wb = m.wheelbase > 0.5f ? m.wheelbase : m.size[2] * 0.6f;
+        float rz = Math.max(0.6f, wb / 2 - 0.55f);
+        float rx = Math.min(0.6f, m.size[0] / 2 - 0.2f);
+        for (float x = m.size[0] / 2; x > 0.45f; x -= 0.05f) {
+            if (m.heightAt(x, rz) > 0.3f && m.heightAt(-x, rz) > 0.3f && m.heightAt(x, -rz) > 0.3f && m.heightAt(-x, -rz) > 0.3f) {
+                rx = x - 0.2f;     // a hand's width in from the body's edge, under the pinch weld
+                break;
+            }
+        }
+        rx = Math.min(rx, POST_X - POST_W / 2 - 0.15f);
+        float under = 0;
+        int n = 0;
+        for (int sx = -1; sx <= 1; sx += 2) {
+            for (int sz = -1; sz <= 1; sz += 2) {
+                float f = m.floorAt(sx * rx, sz * rz);
+                if (f > 0.02f) {
+                    under += f;
+                    n++;
+                }
+            }
+        }
+        entityData.set(REACH_X, rx);
+        entityData.set(REACH_Z, rz);
+        entityData.set(PAD, n > 0 ? under / n : sill(m));
         armsIn = true;
     }
 
@@ -299,7 +356,7 @@ public class CarHoist extends Entity {
      */
     public void raised(CarProp car, int notch) {
         hold(car, CarModels.get(car.model()));
-        notch = Mth.clamp(notch, 0, NOTCHES.length - 1);
+        notch = Mth.clamp(notch, 0, topNotch(car));
         entityData.set(ARMS, 1f);
         entityData.set(TARGET, notch);
         setHeight(NOTCHES[notch]);
@@ -402,7 +459,7 @@ public class CarHoist extends Entity {
     private void posts(ServerLevel server, boolean lay) {
         for (int side = -1; side <= 1; side += 2) {
             Vec3 foot = toWorld(new Vec3(side * POST_X, 0.05, 0));
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < Math.ceil(POST_H); i++) {
                 BlockPos pos = BlockPos.containing(foot.x, foot.y + i, foot.z);
                 if (lay && server.getBlockState(pos).canBeReplaced()) {
                     server.setBlock(pos, Cars.hull(624), 2);
@@ -430,6 +487,7 @@ public class CarHoist extends Entity {
         entityData.set(ARMS, armsIn ? 1f : 0f);
         entityData.set(REACH_X, input.getFloatOr("reach_x", 0.75f));
         entityData.set(REACH_Z, input.getFloatOr("reach_z", 1.3f));
+        entityData.set(PAD, input.getFloatOr("pad", 0.25f));
         String id = input.getStringOr("car", "");
         carId = id.isEmpty() ? null : UUID.fromString(id);
         hullLaid = input.getIntOr("hull", 1) != 0;
@@ -443,6 +501,7 @@ public class CarHoist extends Entity {
         output.putInt("arms_in", armsIn ? 1 : 0);
         output.putFloat("reach_x", reachX());
         output.putFloat("reach_z", reachZ());
+        output.putFloat("pad", pad());
         output.putString("car", carId == null ? "" : carId.toString());
         output.putInt("hull", hullLaid ? 1 : 0);
         output.putFloat("car_turn", carTurn);
