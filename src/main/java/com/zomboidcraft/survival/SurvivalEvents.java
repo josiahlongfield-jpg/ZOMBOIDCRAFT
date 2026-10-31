@@ -121,6 +121,8 @@ public final class SurvivalEvents {
 
         SurvivalStats.set(player, stats);
         Injuries.tick(player, second);
+        Medicine.tick(player, second);
+        Downs.tick(player, second);
     }
 
     private static void onZombieHit(ServerPlayer player) {

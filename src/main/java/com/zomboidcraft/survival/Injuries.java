@@ -32,6 +32,8 @@ public final class Injuries {
 
     public static void register() {
         Body.register();
+        Medicine.register();
+        Downs.register();
         ServerLivingEntityEvents.AFTER_DAMAGE.register((entity, source, baseDamage, damage, blocked) -> {
             if (entity instanceof ServerPlayer player && !blocked && damage > 0 && on(player)) {
                 hurt(player, source, damage);
@@ -136,10 +138,10 @@ public final class Injuries {
             Part p = body.part(r);
             if (r.leg()) {
                 if (p.fractured()) {
-                    legs -= p.splinted() ? 0.12 : 0.25;
+                    legs -= (p.splinted() ? 0.12 : 0.25) * Medicine.legSupport(player, r, true);
                     broken |= !p.splinted();
                 } else if (p.severity() >= 2) {
-                    legs -= 0.05;
+                    legs -= 0.05 * Medicine.legSupport(player, r, false);
                 }
             } else if (r.arm()) {
                 if (p.fractured()) arms -= p.splinted() ? 0.2 : 0.35;
@@ -148,7 +150,7 @@ public final class Injuries {
         }
         modify(player.getAttribute(Attributes.MOVEMENT_SPEED), LEGS, legs);
         modify(player.getAttribute(Attributes.ATTACK_DAMAGE), ARMS, arms);
-        if (broken && player.isSprinting()) player.setSprinting(false);
+        if (broken && player.isSprinting() && !MedSpecs.holds(player, "crutches")) player.setSprinting(false);
     }
 
     private static void modify(AttributeInstance attribute, Identifier id, double amount) {
@@ -164,7 +166,8 @@ public final class Injuries {
     /** True while a leg is broken and not yet splinted: no sprinting. */
     public static boolean cantSprint(net.minecraft.world.entity.player.Player player) {
         Body body = Body.get(player);
-        return body.part(Region.LEFT_LEG).severity() == 3 || body.part(Region.RIGHT_LEG).severity() == 3;
+        return body.part(Region.LEFT_LEG).severity() == 3 || body.part(Region.RIGHT_LEG).severity() == 3
+                || Medicine.painStopsSprint(player) || Downs.downed(player);
     }
 
     /** How shaky your aim is from hurt arms: 0 steady, up to 1 with both broken. */
@@ -175,7 +178,7 @@ public final class Injuries {
             Part p = body.part(r);
             shake += p.fractured() ? (p.splinted() ? 0.3f : 0.5f) : p.severity() >= 2 ? 0.15f : 0;
         }
-        return Math.min(1, shake);
+        return Math.min(1, shake * Medicine.steadiness(player) + Medicine.painShake(player));
     }
 
     private Injuries() {

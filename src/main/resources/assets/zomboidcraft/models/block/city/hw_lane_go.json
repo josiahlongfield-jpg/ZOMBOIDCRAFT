@@ -1,0 +1,110 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hw_go": "zomboidcraft:block/city/hw_go",
+    "hw_grey": "zomboidcraft:block/city/hw_grey",
+    "st_galv": "zomboidcraft:block/city/st_galv",
+    "particle": "zomboidcraft:block/city/hw_go"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        3,
+        10
+      ],
+      "to": [
+        13,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hw_go"
+        },
+        "south": {
+          "texture": "#hw_grey",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#hw_grey"
+        },
+        "west": {
+          "texture": "#hw_grey"
+        },
+        "up": {
+          "texture": "#hw_grey"
+        },
+        "down": {
+          "texture": "#hw_grey"
+        }
+      }
+    },
+    {
+      "from": [
+        2.5,
+        14,
+        9
+      ],
+      "to": [
+        13.5,
+        15,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hw_grey"
+        },
+        "south": {
+          "texture": "#hw_grey",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#hw_grey"
+        },
+        "west": {
+          "texture": "#hw_grey"
+        },
+        "up": {
+          "texture": "#hw_grey"
+        },
+        "down": {
+          "texture": "#hw_grey"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        15,
+        12
+      ],
+      "to": [
+        9,
+        16,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_galv"
+        },
+        "south": {
+          "texture": "#st_galv"
+        },
+        "east": {
+          "texture": "#st_galv"
+        },
+        "west": {
+          "texture": "#st_galv"
+        },
+        "up": {
+          "texture": "#st_galv",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#st_galv"
+        }
+      }
+    }
+  ]
+}

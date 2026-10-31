@@ -29,6 +29,10 @@ public final class QuickUse {
             Treatment.start(player, Treatment.Kind.SPLINT, null);
             return;
         }
+        if (stack.getItem() instanceof MedicalItem med) {
+            MedSpecs.use(player, med.id());
+            return;
+        }
         Consumable consumable = stack.get(DataComponents.CONSUMABLE);
         if (consumable == null) return;
         boolean drink = consumable.animation() == ItemUseAnimation.DRINK;

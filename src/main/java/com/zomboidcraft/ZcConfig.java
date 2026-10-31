@@ -604,6 +604,9 @@ public final class ZcConfig {
         public int infectionMinutes = 40;
         /** Infected players rise as zombies. */
         public boolean reanimate = true;
+        /** In multiplayer a killing blow puts you down for this long instead, so a friend can revive you (not alone). */
+        public boolean downed = true;
+        public int downedSeconds = 60;
     }
 
     public static class Building {
