@@ -106,7 +106,8 @@ WORN_READY = {'t_shirt', 'flannel_shirt', 'hoodie', 'denim_jacket', 'parka', 'je
     chest_rig load_bearing_vest medic_vest bandolier heavy_plate_carrier high_cut_helmet steel_pot_helmet tanker_helmet
     boonie_hat patrol_cap beret ballistic_glasses ballistic_goggles shemagh neck_gaiter elbow_pads knee_pads field_shirt
     combat_trousers tactical_boots denim_strips leather_strips
-    fur_ushanka watch_cap cbrn_mask cbrn_suit combat_shirt fleece_liner wet_weather_jacket flight_coverall sniper_smock arctic_parka snow_overwhites jungle_boots desert_boots arctic_boots flight_gloves shooting_gloves arctic_mittens riot_arm_guards riot_leg_guards wool_commando_sweater shooting_earmuffs chainsaw_chaps beekeeper_suit cut_resistant_gloves shin_guards gaiters football_shoulder_pads hockey_shoulder_pads hockey_neck_guard leather_neck_guard padded_football_pants hockey_pants catchers_vest hockey_gloves chainmail_butcher_glove chainmail_sleeve athletic_cup'''.split())  # clothing batches 2 to 5, then the UI thread's 12 bags
+    fur_ushanka watch_cap cbrn_mask cbrn_suit combat_shirt fleece_liner wet_weather_jacket flight_coverall sniper_smock arctic_parka snow_overwhites jungle_boots desert_boots arctic_boots flight_gloves shooting_gloves arctic_mittens riot_arm_guards riot_leg_guards wool_commando_sweater shooting_earmuffs chainsaw_chaps beekeeper_suit cut_resistant_gloves shin_guards gaiters football_shoulder_pads hockey_shoulder_pads hockey_neck_guard leather_neck_guard padded_football_pants hockey_pants catchers_vest hockey_gloves chainmail_butcher_glove chainmail_sleeve athletic_cup
+    puffer_jacket ski_jacket ski_trousers ski_goggles cardigan blazer gilet tracksuit_top tracksuit_bottoms bathrobe rugby_shirt chef_jacket mechanic_coveralls prison_jumpsuit security_shirt flat_cap fedora straw_hat fingerless_gloves sandals ranger_hat peaked_cap captains_hat chefs_hat surgical_cap visor_cap sweatband winter_earmuffs miner_helmet batting_helmet hockey_helmet riding_helmet boxing_headgear swat_helmet welder_mask dust_mask half_mask_respirator safety_goggles eyepatch monocle prescription_glasses hunting_vest foreman_vest waistcoat leather_biker_vest sheepskin_vest sheepskin_jacket padded_jacket hunting_jacket paramedic_jacket apron leather_apron long_johns socks legwarmers riding_boots bowling_shoes flip_flops boxing_gloves pyjama_top pyjama_bottoms sports_jersey postal_shirt cycling_jersey cycling_shorts wetsuit fishing_waders hunting_cap scrap_cuirass tyre_cuirass scrap_arm_guards scrap_leg_guards scrap_helmet gothic_sallet gothic_cuirass gothic_arm_harness gothic_leg_harness gothic_gauntlets gothic_sabatons bomb_disposal_suit bomb_disposal_helmet shark_mesh_suit motorcycle_leathers scba_set scba_mask bodyguard_suit crusader_great_helm crusader_plate crusader_tabard crusader_pauldrons crusader_cloak crusader_greaves crusader_gauntlets crusader_sabatons'''.split())  # clothing batches 2 to 5, then the UI thread's 12 bags
 KEEP_ON_FARM = set()   # the farm's produce is ours now too
 # tables whose main business is the live waves' stock: it gets at least this share of the main pool, not only the share
 # the stand-ins happened to have
@@ -133,7 +134,9 @@ GEAR = {
 # worn gear still waiting on its model (it would show as the missing texture): kept out until the UI thread says
 GEAR_NO_MODEL = set()   # all of UI's worn gear has body models now (2026-10-29)
 # roster rows the worn gear above stands in for
-NOT_PLACED = {'hunting_knife_sheath'}
+# the black crusader kit only ever turns up whole, in its own table (shop/crusader_kit, stocked by story_loot.py)
+NOT_PLACED = {'hunting_knife_sheath'} | {f'crusader_{p}' for p in (
+    'great_helm', 'plate', 'tabard', 'pauldrons', 'cloak', 'greaves', 'gauntlets', 'sabatons')}
 RW = {'C': 4, 'S': 2, 'R': 1, 'P': 1, 'G': 1}
 
 

@@ -71,8 +71,18 @@ STORIES = {
 }
 
 
-# registered outside the loot roster (ModItems: the throwables)
+# registered outside the loot roster (ModItems: the throwables; the clothing thread's wearables)
 EXTRA = {'road_flare'}
+CLOTHES = {p.stem for p in (ROOT / 'src/main/resources/assets/zomboidcraft/items').glob('*.json')}
+
+
+# whole sets kept together: every piece, every time (a museum's armour case, the crusader kit's resting place)
+SETS = {
+    'crusader_kit': ['crusader_great_helm', 'crusader_plate', 'crusader_tabard', 'crusader_pauldrons',
+                     'crusader_cloak', 'crusader_greaves', 'crusader_gauntlets', 'crusader_sabatons'],
+    'museum_armour': ['gothic_sallet', 'gothic_cuirass', 'gothic_arm_harness', 'gothic_leg_harness',
+                      'gothic_gauntlets', 'gothic_sabatons'],
+}
 
 
 def known():
@@ -97,6 +107,13 @@ def main():
     bad = sorted({i for s, r, p in STORIES.values() for i in [x[0] for x in s] + [x[0] for x in p]} - ok)
     if bad:
         raise SystemExit(f'unknown ids: {bad}')
+    bad = sorted({i for v in SETS.values() for i in v} - ok - CLOTHES)
+    if bad:
+        raise SystemExit(f'unknown ids: {bad}')
+    for name, pieces in SETS.items():
+        out = TABLES / 'shop' / f'{name}.json'
+        out.write_text(json.dumps({'type': 'minecraft:chest', 'pools': [
+            {'rolls': 1, 'entries': [entry(i, 1, 1, 1)]} for i in pieces]}, indent=2) + '\n')
     for name, (sure, rolls, pool) in STORIES.items():
         pools = [{'rolls': 1, 'entries': [entry(i, 1, lo, hi)]} for i, lo, hi in sure]
         if rolls[1] > 0:
@@ -104,7 +121,7 @@ def main():
                           'entries': [entry(*p) for p in pool]})
         out = TABLES / 'shop' / f'story_{name}.json'
         out.write_text(json.dumps({'type': 'minecraft:chest', 'pools': pools}, indent=2) + '\n')
-    print(f'{len(STORIES)} story tables')
+    print(f'{len(STORIES)} story tables, {len(SETS)} sets')
 
 
 if __name__ == '__main__':
