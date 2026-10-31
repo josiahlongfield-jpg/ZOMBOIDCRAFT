@@ -133,7 +133,7 @@ public class LeisureItem extends LootItem {
             if (stack.getCount() > 1) {
                 ItemStack done = stack.split(1);
                 CustomData.update(DataComponents.CUSTOM_DATA, done, tag -> tag.putBoolean("read", true));
-                if (!player.getInventory().add(done)) player.drop(done, false);
+                if (!player.getInventory().add(done)) player.spawnAtLocation((ServerLevel) player.level(), done);
             } else {
                 CustomData.update(DataComponents.CUSTOM_DATA, stack, tag -> tag.putBoolean("read", true));
             }
