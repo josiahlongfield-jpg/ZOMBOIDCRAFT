@@ -842,6 +842,7 @@ public class KitUiTest implements FabricClientGameTest {
         deathCardTest(ctx);
         levelUpTest(ctx);
         gMenuTest(ctx, sp);
+        traitsTest(ctx, sp);
     }
 
     /** Bonding (Josiah 2026-10-30): the prompt on a first G, then K's selection of two companions, sliding, and a pick. */
@@ -1070,6 +1071,50 @@ public class KitUiTest implements FabricClientGameTest {
         });
         ctx.waitTicks(6);
         ctx.takeScreenshot("queue-walked-off");
+    }
+
+    /** SURVIVAL's traits on the UI side: the Skills page box, the header, food tips and a timed transfer. */
+    private static void traitsTest(ClientGameTestContext ctx, TestSingleplayerContext sp) {
+        ctx.runOnClient(mc -> mc.gui.setScreen(null));
+        sp.getServer().runOnServer(s -> {
+            ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+            com.zomboidcraft.survival.character.Traits.apply(p, "carpenter",
+                    List.of("dextrous", "nutritionist", "cats_eyes", "short_sighted", "smoker", "fast_learner"));
+            p.getInventory().setItem(9, new ItemStack(Items.BREAD, 4));
+            p.getInventory().setItem(10, new ItemStack(ModItems.HUNTING_RIFLE));
+        });
+        ctx.waitTicks(10);
+        String tips = ctx.computeOnClient(mc -> {
+            StringBuilder b = new StringBuilder();
+            for (var line : new ItemStack(Items.BREAD).getTooltipLines(net.minecraft.world.item.Item.TooltipContext.EMPTY, mc.player,
+                    net.minecraft.world.item.TooltipFlag.NORMAL)) b.append(line.getString()).append(" | ");
+            return b + " transfer rifle " + KitScreen.transferSeconds(mc.player, new ItemStack(ModItems.HUNTING_RIFLE))
+                    + " s, fog x" + SightTraits.fogScale(mc.player) + ", night " + SightTraits.nightVision(mc.player);
+        });
+        LOG.info("ZCUI traits: {}", tips);
+        ctx.takeScreenshot("traits-world");
+        ctx.getInput().pressKey(InputConstants.KEY_E);
+        ctx.waitTicks(5);
+        ctx.runOnClient(mc -> {
+            if (mc.gui.screen() instanceof KitScreen<?> k) k.open(KitScreen.Page.SKILLS);
+        });
+        ctx.waitTicks(4);
+        ctx.takeScreenshot("traits-skills");
+        ctx.runOnClient(mc -> {
+            if (mc.gui.screen() instanceof KitScreen<?> k) {
+                k.open(KitScreen.Page.PACK);
+                // two shift-clicks: Zomboid's transfer queue, the rifle first
+                for (int i = 0; i < k.getMenu().slots.size(); i++) {
+                    var slot = k.getMenu().slots.get(i);
+                    if (slot.container == mc.player.getInventory() && (slot.getContainerSlot() == 10 || slot.getContainerSlot() == 9)) k.unequip(i);
+                }
+            }
+        });
+        for (int f = 0; f < 8; f++) {
+            ctx.waitTicks(5);
+            ctx.takeScreenshot(String.format("transfer-%02d", f));
+        }
+        ctx.runOnClient(mc -> mc.gui.setScreen(null));
     }
 
     private static void bookTest(TestSingleplayerContext sp) {
