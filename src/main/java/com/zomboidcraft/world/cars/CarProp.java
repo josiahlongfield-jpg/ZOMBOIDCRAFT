@@ -146,6 +146,8 @@ public class CarProp extends Entity {
     private boolean hotwired;
     /** Whether a car's condition has been decided yet ({@link #carCondition}). */
     private boolean worn;
+    /** Whether a road vehicle's tank has been rolled (Zomboid's Chance Has Gas and Initial Gas), the first time it ticks. */
+    private boolean fuelRolled;
     /** Server side: wear owed each part slot below a whole percent, so slow wear adds up. */
     private final double[] partWear = new double[CarParts.SLOTS.size()];
     private double lastSpeedForWear;
@@ -226,6 +228,7 @@ public class CarProp extends Entity {
         entityData.set(BROKEN, input.getIntOr("broken", 0) != 0);
         airFound = input.getIntOr("air_found", 0) != 0;
         entityData.set(FUEL, input.getFloatOr("fuel", 1f));
+        fuelRolled = input.getIntOr("fuel_rolled", 0) != 0;
         entityData.set(BATTERY, input.getIntOr("battery", 1) != 0);
         entityData.set(CONDITION, input.getIntOr("condition", 100));
         windows = input.getFloatOr("windows", windowsWhole());
@@ -278,6 +281,7 @@ public class CarProp extends Entity {
         output.putInt("broken", broken() ? 1 : 0);
         output.putInt("air_found", airFound ? 1 : 0);
         output.putFloat("fuel", fuel());
+        output.putInt("fuel_rolled", fuelRolled ? 1 : 0);
         output.putInt("battery", battery() ? 1 : 0);
         output.putInt("condition", condition());
         output.putFloat("windows", windows);
@@ -1060,6 +1064,13 @@ public class CarProp extends Entity {
 
     /** The starter turns over and the engine catches about three seconds later. */
     private void crank(ServerLevel server) {
+        if (roadCar() && fuel() <= 0) {
+            server.playSound(null, getX(), getY(), getZ(), CarSounds.STALL, SoundSource.NEUTRAL, 1f, 1f);
+            if (getControllingPassenger() instanceof Player player) {
+                player.sendOverlayMessage(Component.literal("It cranks and cranks but won't catch: the tank's dry."));
+            }
+            return;
+        }
         String fault = parts().isEmpty() ? null : CarParts.startFault(parts(), new java.util.Random(random.nextLong()),
                 knowsCars(getControllingPassenger()));
         if (fault != null) {
@@ -1528,6 +1539,12 @@ public class CarProp extends Entity {
             if (!aircraft() && parts().isEmpty()) {
                 rollParts();
             }
+            if (!fuelRolled && !aircraft()) {
+                rollFuel();
+            }
+            if (roadCar()) {
+                burnFuel(server);
+            }
             if (entityData.get(OPEN) && server.getGameTime() % 10 == 0 && !beingSearched(server)) {
                 entityData.set(OPEN, false);
                 server.playSound(null, getX(), getY(), getZ(), SoundEvents.IRON_TRAPDOOR_CLOSE, SoundSource.BLOCKS, 0.6f, 0.7f);
@@ -1750,7 +1767,7 @@ public class CarProp extends Entity {
             wearDriving(moved, speed);
         }
         if (engineOn() && tickCount % 5 == 0 && tickCount - mountedAt > 100) {
-            driver.sendOverlayMessage(Component.literal(Math.round(speed * 72) + " km/h"));
+            driver.sendOverlayMessage(Component.literal(Math.round(speed * 72) + " km/h" + (roadCar() ? "   " + gauge() : "")));
         }
     }
 
@@ -2062,7 +2079,90 @@ public class CarProp extends Entity {
     /** What the tanks hold when full, litres: the real aircraft's internal fuel, or a car's tank. */
     public float fuelCapacity() {
         String m = model();
-        return m.equals("jet_corvid") ? 10300 : m.equals("jet_gyrfalcon") ? 11800 : m.startsWith("heli") ? 1420 : 55;
+        if (m.equals("jet_corvid") || m.equals("jet_gyrfalcon") || m.startsWith("heli")) {
+            return m.equals("jet_corvid") ? 10300 : m.equals("jet_gyrfalcon") ? 11800 : 1420;
+        }
+        CarModels.Model cm = CarModels.get(m);
+        if (cm != null && "bus".equals(cm.kind)) {
+            return 150;
+        }
+        // Zomboid's tanks by class: a small car's, a standard one's, a truck's or van's
+        return switch (CarParts.kind(cm)) {
+            case SPORT -> 40;
+            case HEAVY -> cm != null && ("car".equals(cm.kind) || cm.kind == null) ? 70 : 80;
+            default -> 55;
+        };
+    }
+
+    /** A car, van, truck or bus that runs on the road's fuel (not an aircraft, boat or cart). */
+    public boolean roadCar() {
+        return !aircraft() && CarParts.applies(CarModels.get(model()));
+    }
+
+    /**
+     * The tank as found: Zomboid's Chance Has Gas decides whether there's any in it, Initial Gas how much.
+     * Wrecks and burnt-out shells are dry; a survivor-kept car comes full.
+     */
+    private void rollFuel() {
+        fuelRolled = true;
+        if (!roadCar()) {
+            return;
+        }
+        java.util.Random rng = new java.util.Random(getUUID().getLeastSignificantBits() ^ 0xF0E1L);
+        com.zomboidcraft.ZcConfig.World w = com.zomboidcraft.ZcConfig.get().world;
+        double has = switch (w.carChanceHasGas) {
+            case "low" -> 0.4;
+            case "high" -> 0.8;
+            default -> 0.6;
+        };
+        if (!engineRuns() || rng.nextDouble() >= has) {
+            setFuel(0);
+            return;
+        }
+        double[] range = switch (w.carInitialGas) {
+            case "very_low" -> new double[] {0.02, 0.12};
+            case "normal" -> new double[] {0.15, 0.45};
+            case "high" -> new double[] {0.3, 0.7};
+            case "very_high" -> new double[] {0.5, 0.9};
+            case "full" -> new double[] {1, 1};
+            default -> new double[] {0.05, 0.25};
+        };
+        setFuel((float) (range[0] + rng.nextDouble() * (range[1] - range[0])));
+    }
+
+    /** Server tick: the running engine drinks by how hard it's worked, and a holed tank leaks whether it runs or not. */
+    private void burnFuel(ServerLevel server) {
+        if (fuel() <= 0) {
+            return;
+        }
+        float cap = fuelCapacity();
+        double litres = 0;
+        if (engineOn()) {
+            // about 35 minutes of cruising on a full standard tank; idling a quarter-litre a minute; worn engines drink more
+            double speed = getDeltaMovement().horizontalDistance();
+            double perMinute = 0.25 + 1.2 * Math.pow(Math.min(1.4, speed / 0.83), 1.5);
+            double load = CarParts.kind(CarModels.get(model())) == CarParts.Kind.HEAVY ? 1.6 : 1;
+            double engine = parts().isEmpty() ? 1 : 1 + 0.5 * (1 - CarParts.get(parts(), CarParts.Part.ENGINE, 0) / 100.0);
+            litres += perMinute * load * engine * com.zomboidcraft.ZcConfig.get().world.carGasConsumption / 1200;
+        }
+        int tank = parts().isEmpty() ? 100 : CarParts.get(parts(), CarParts.Part.FUEL_TANK, 0);
+        if (tank >= 0 && tank < 15) {
+            litres += (15 - tank) * 0.0005;     // a holed tank drips away: up to about a litre a minute
+        }
+        setFuel(fuel() - (float) (litres / cap));
+        if (fuel() <= 0 && engineOn()) {
+            entityData.set(ENGINE, false);
+            server.playSound(null, getX(), getY(), getZ(), CarSounds.STALL, SoundSource.NEUTRAL, 1f, 0.9f);
+            if (getControllingPassenger() instanceof Player player) {
+                player.sendOverlayMessage(Component.literal("The engine coughs and dies: out of fuel."));
+            }
+        }
+    }
+
+    /** The dash's fuel gauge, as the driver reads it. */
+    public String gauge() {
+        int eighths = Math.round(fuel() * 8);
+        return "E " + "\u258c".repeat(eighths) + "\u00b7".repeat(8 - eighths) + " F";
     }
 
     public boolean battery() {

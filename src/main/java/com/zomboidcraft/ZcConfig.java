@@ -849,6 +849,12 @@ public final class ZcConfig {
         public String carCrashDamage = "normal";
         /** Zomboid's Damage From Being Hit By A Car: what a player takes when a car runs into them, times this. */
         public double carHitDamage = 1;
+        /** Zomboid's Chance Has Gas: low, normal, high; the share of runners found with fuel in the tank. */
+        public String carChanceHasGas = "normal";
+        /** Zomboid's Initial Gas: very_low, low, normal, high, very_high, full; how much is in a tank that has any. */
+        public String carInitialGas = "low";
+        /** Zomboid's Gas Consumption: how fast engines drink, times this. */
+        public double carGasConsumption = 1;
         /** Car boots and the backs of vans hold loot (tools/cars/car_loot.py); off leaves them empty. */
         public boolean carLoot = true;
         /** The jets' top speed in km/h. Past about 300 the world can't load fast enough to keep up with them. */
