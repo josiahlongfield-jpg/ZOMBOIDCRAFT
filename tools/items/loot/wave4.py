@@ -359,6 +359,16 @@ def iv_kit(m):
     m.box([3.7, 0.05, 2.0], [4.1, 0.15, 2.8], 'red')                       # the wings
 
 
+def hose(m):
+    """A length of rubber hose, coiled flat and taped, one end trailing."""
+    for i, r in enumerate((1.6, 2.0, 2.4)):
+        flat_arc(m, (0, 0), r, 0, 360, 0.42, 0.42, 'rubber', y0=0.0 if i != 1 else 0.3, steps=18)
+    flat(m, (2.4, 0.0), (4.4, -1.4), 0.42, 0.42, 'rubber')
+    for a in (40, 220):
+        flat(m, (1.4 * math.cos(math.radians(a)), 1.4 * math.sin(math.radians(a))),
+             (2.7 * math.cos(math.radians(a)), 2.7 * math.sin(math.radians(a))), 0.5, 0.8, 'strap', y0=-0.05)
+
+
 def manual(w=5.5, l=8.5, t=0.8):
     """A spiral-bound field manual lying flat."""
     def build(m):
@@ -470,6 +480,8 @@ def cough_bottle(m):
 
 def table(it):
     return {
+        'rubber_hose': it(hose, rubber=lambda f: P.paint(f, '#3a3d42', steel_base=0.0, chips=0.0),
+                          strap=A.fabric('#8a8a8a')),
         'cotton_swabs': it(swabs, tint='#e8f0f0', cap=BLUE, cloth=A.fabric('#f4f2ec'), stick=A.flat('#f0f0f0')),
         'cough_syrup': it(cough_bottle, 'COUGH', '#e8e4da', band='#3a8a3a', word_ink='#1e1f20', tint='#7a4a10', liquid='#3a1a08',
                           cap='#e8e4da'),
