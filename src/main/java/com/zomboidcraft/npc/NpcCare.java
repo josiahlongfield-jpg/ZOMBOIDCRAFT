@@ -209,6 +209,12 @@ public final class NpcCare {
 
     /** What she has on her, told to you in chat. */
     static void tellCarrying(NpcEntity npc, ServerPlayer p) {
+        npc.lines.sayLine(npc, NpcLines.Kind.REPLY, NpcWork.pick(npc, "Here's what I've got.", "Have a look.", "Not much, but here."));
+        for (String l : carrying(npc, p.getUUID())) p.sendSystemMessage(Component.literal(l).withStyle(ChatFormatting.GRAY));
+    }
+
+    /** What she has on her, a line each for her hands, her back and her pack (finds held for `you` marked). */
+    public static List<String> carrying(NpcEntity npc, UUID you) {
         List<String> lines = new ArrayList<>();
         ItemStack gun = npc.getMainHandItem();
         GunType t = GunType.of(gun);
@@ -226,11 +232,10 @@ public final class NpcCare {
             if (!pack.isEmpty()) pack.append(", ");
             pack.append(s.getCount() > 1 ? s.getCount() + " " : "").append(s.getHoverName().getString());
             UUID to = offeredTo(s);
-            if (to != null) pack.append(to.equals(p.getUUID()) ? " (held for you)" : " (held for someone)");
+            if (to != null) pack.append(to.equals(you) ? " (held for you)" : " (held for someone)");
         }
         lines.add(pack.isEmpty() ? "Her pack is empty." : "Pack: " + pack);
-        npc.lines.sayLine(npc, NpcLines.Kind.REPLY, NpcWork.pick(npc, "Here's what I've got.", "Have a look.", "Not much, but here."));
-        for (String l : lines) p.sendSystemMessage(Component.literal(l).withStyle(ChatFormatting.GRAY));
+        return lines;
     }
 
     // ---------------------------------------------------------------- what's hers to keep, and what she wants
