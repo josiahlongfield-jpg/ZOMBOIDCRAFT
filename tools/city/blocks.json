@@ -4242216,6 +4242216,1523 @@
    "sound": "WOOD",
    "rotate": "axis",
    "decor": true
+  },
+  "rv_flare": {
+   "model": "boxes",
+   "boxes": [
+    [
+     3,
+     0,
+     7.3,
+     12,
+     1.4,
+     8.7,
+     "rv_flare"
+    ],
+    [
+     2.6,
+     0,
+     7.2,
+     3,
+     1.5,
+     8.8,
+     "home_plastic_black"
+    ],
+    [
+     5,
+     0,
+     10,
+     7,
+     1.2,
+     11.2,
+     "rv_flare"
+    ],
+    [
+     12,
+     0,
+     7.1,
+     13.6,
+     1.6,
+     8.9,
+     "rv_flare_glow"
+    ],
+    [
+     13.6,
+     0.2,
+     7.4,
+     14.6,
+     1.3,
+     8.6,
+     "rv_flare_glow"
+    ]
+   ],
+   "title": "Road Flare",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true,
+   "light": 10
+  },
+  "rv_flare_out": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7,
+     0,
+     7.3,
+     12,
+     1.4,
+     8.7,
+     "rv_flare"
+    ],
+    [
+     2.6,
+     0,
+     7.2,
+     3,
+     1.5,
+     8.8,
+     "home_plastic_black"
+    ],
+    [
+     5,
+     0,
+     10,
+     7,
+     1.2,
+     11.2,
+     "rv_flare"
+    ],
+    [
+     4,
+     0,
+     6.6,
+     7,
+     0.2,
+     9.4,
+     "rv_ash"
+    ]
+   ],
+   "title": "Road Flare",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "rv_jack": {
+   "model": "boxes",
+   "boxes": [
+    [
+     3,
+     0,
+     6,
+     13,
+     0.8,
+     10,
+     "rv_jack"
+    ],
+    [
+     6,
+     6.8,
+     6.5,
+     10,
+     7.6,
+     9.5,
+     "rv_jack"
+    ],
+    [
+     6.8,
+     7.6,
+     7,
+     9.2,
+     8.2,
+     9,
+     "rust"
+    ],
+    [
+     2.9,
+     0.8,
+     6.3,
+     4.1,
+     5.6,
+     6.9,
+     "rv_jack",
+     null,
+     {
+      "axis": "z",
+      "angle": 42,
+      "origin": [
+       3.5,
+       0.8,
+       6.6
+      ]
+     }
+    ],
+    [
+     2.9,
+     0.8,
+     9.1,
+     4.1,
+     5.6,
+     9.7,
+     "rv_jack",
+     null,
+     {
+      "axis": "z",
+      "angle": 42,
+      "origin": [
+       3.5,
+       0.8,
+       9.4
+      ]
+     }
+    ],
+    [
+     11.9,
+     0.8,
+     6.3,
+     13.1,
+     5.6,
+     6.9,
+     "rv_jack",
+     null,
+     {
+      "axis": "z",
+      "angle": -42,
+      "origin": [
+       12.5,
+       0.8,
+       6.6
+      ]
+     }
+    ],
+    [
+     11.9,
+     0.8,
+     9.1,
+     13.1,
+     5.6,
+     9.7,
+     "rv_jack",
+     null,
+     {
+      "axis": "z",
+      "angle": -42,
+      "origin": [
+       12.5,
+       0.8,
+       9.4
+      ]
+     }
+    ],
+    [
+     3.2,
+     3.6,
+     6.2,
+     4.6,
+     4.6,
+     9.8,
+     "rv_jack"
+    ],
+    [
+     11.4,
+     3.6,
+     6.2,
+     12.8,
+     4.6,
+     9.8,
+     "rv_jack"
+    ],
+    [
+     0.2,
+     3.8,
+     7.6,
+     16,
+     4.4,
+     8.4,
+     "rust"
+    ],
+    [
+     0,
+     3.4,
+     7.2,
+     0.6,
+     4.8,
+     8.8,
+     "painted_steel"
+    ]
+   ],
+   "title": "Car Jack",
+   "sound": "METAL",
+   "rotate": "facing",
+   "loot": "story_changing_tire"
+  },
+  "rv_lug_wrench": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     7.4,
+     15,
+     0.9,
+     8.6,
+     "hw_chrome",
+     null,
+     {
+      "axis": "y",
+      "angle": 45,
+      "origin": [
+       8,
+       0,
+       8
+      ]
+     }
+    ],
+    [
+     7.4,
+     0,
+     1,
+     8.6,
+     0.9,
+     15,
+     "hw_chrome",
+     null,
+     {
+      "axis": "y",
+      "angle": 45,
+      "origin": [
+       8,
+       0,
+       8
+      ]
+     }
+    ],
+    [
+     0.6,
+     0,
+     7,
+     2.2,
+     1.4,
+     9,
+     "painted_steel",
+     null,
+     {
+      "axis": "y",
+      "angle": 45,
+      "origin": [
+       8,
+       0,
+       8
+      ]
+     }
+    ],
+    [
+     13.8,
+     0,
+     7,
+     15.4,
+     1.4,
+     9,
+     "painted_steel",
+     null,
+     {
+      "axis": "y",
+      "angle": 45,
+      "origin": [
+       8,
+       0,
+       8
+      ]
+     }
+    ]
+   ],
+   "title": "Wheel Brace",
+   "sound": "METAL",
+   "decor": true
+  },
+  "rv_skid": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     0.12,
+     16,
+     "rv_skid"
+    ]
+   ],
+   "title": "Skid Marks",
+   "sound": "STONE",
+   "rotate": "axis",
+   "decor": true,
+   "render": "cutout"
+  },
+  "rv_fluid": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     0.14,
+     16,
+     "rv_fluid"
+    ]
+   ],
+   "title": "Spilled Oil",
+   "sound": "STONE",
+   "decor": true,
+   "render": "cutout"
+  },
+  "rv_debris": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     2,
+     9,
+     2.4,
+     4,
+     "home_plastic_black",
+     null,
+     {
+      "axis": "y",
+      "angle": 22.5,
+      "origin": [
+       5,
+       0,
+       3
+      ]
+     }
+    ],
+    [
+     1,
+     2.4,
+     2.4,
+     8,
+     3,
+     3.8,
+     "home_plastic_black",
+     null,
+     {
+      "axis": "y",
+      "angle": 22.5,
+      "origin": [
+       5,
+       0,
+       3
+      ]
+     }
+    ],
+    [
+     9,
+     0,
+     9,
+     13,
+     2.6,
+     12,
+     "hw_chrome",
+     null,
+     {
+      "axis": "y",
+      "angle": -22.5,
+      "origin": [
+       11,
+       0,
+       10.5
+      ]
+     }
+    ],
+    [
+     9.4,
+     0.4,
+     8.8,
+     12.6,
+     2.2,
+     9,
+     "glass_shards",
+     null,
+     {
+      "axis": "y",
+      "angle": -22.5,
+      "origin": [
+       11,
+       0,
+       10.5
+      ]
+     }
+    ],
+    [
+     3,
+     0,
+     11,
+     5,
+     0.4,
+     12,
+     "home_plastic_black"
+    ],
+    [
+     12,
+     0,
+     4,
+     13.5,
+     0.3,
+     5,
+     "hw_chrome"
+    ],
+    [
+     0,
+     0,
+     0,
+     16,
+     0.2,
+     16,
+     "glass_shards"
+    ]
+   ],
+   "title": "Car Debris",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "render": "translucent"
+  },
+  "rv_trunk": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4.84,
+     0.0,
+     0,
+     11.16,
+     2.0,
+     16,
+     {
+      "side": "tree_dead_bark",
+      "up": "tree_dead_bark",
+      "down": "tree_dead_bark",
+      "north": "tree_dead_rings",
+      "south": "tree_dead_rings"
+     }
+    ],
+    [
+     3.1,
+     2.0,
+     0,
+     12.9,
+     4.0,
+     16,
+     {
+      "side": "tree_dead_bark",
+      "up": "tree_dead_bark",
+      "down": "tree_dead_bark",
+      "north": "tree_dead_rings",
+      "south": "tree_dead_rings"
+     }
+    ],
+    [
+     2.52,
+     4.0,
+     0,
+     13.48,
+     6.0,
+     16,
+     {
+      "side": "tree_dead_bark",
+      "up": "tree_dead_bark",
+      "down": "tree_dead_bark",
+      "north": "tree_dead_rings",
+      "south": "tree_dead_rings"
+     }
+    ],
+    [
+     2.71,
+     6.0,
+     0,
+     13.29,
+     8.0,
+     16,
+     {
+      "side": "tree_dead_bark",
+      "up": "tree_dead_bark",
+      "down": "tree_dead_bark",
+      "north": "tree_dead_rings",
+      "south": "tree_dead_rings"
+     }
+    ],
+    [
+     3.76,
+     8.0,
+     0,
+     12.24,
+     10.0,
+     16,
+     {
+      "side": "tree_dead_bark",
+      "up": "tree_dead_bark",
+      "down": "tree_dead_bark",
+      "north": "tree_dead_rings",
+      "south": "tree_dead_rings"
+     }
+    ],
+    [
+     5.71,
+     10.0,
+     0,
+     10.29,
+     11.0,
+     16,
+     {
+      "side": "tree_dead_bark",
+      "up": "tree_dead_bark",
+      "down": "tree_dead_bark",
+      "north": "tree_dead_rings",
+      "south": "tree_dead_rings"
+     }
+    ],
+    [
+     10.5,
+     9,
+     4,
+     12,
+     13,
+     5.5,
+     "tree_dead_bark",
+     null,
+     {
+      "axis": "z",
+      "angle": -22.5,
+      "origin": [
+       11.2,
+       9,
+       4.7
+      ]
+     }
+    ]
+   ],
+   "title": "Felled Tree",
+   "sound": "WOOD",
+   "rotate": "axis"
+  },
+  "rv_trunk_crown": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4.84,
+     0.0,
+     8,
+     11.16,
+     2.0,
+     16,
+     "tree_dead_bark"
+    ],
+    [
+     3.1,
+     2.0,
+     8,
+     12.9,
+     4.0,
+     16,
+     "tree_dead_bark"
+    ],
+    [
+     2.52,
+     4.0,
+     8,
+     13.48,
+     6.0,
+     16,
+     "tree_dead_bark"
+    ],
+    [
+     2.71,
+     6.0,
+     8,
+     13.29,
+     8.0,
+     16,
+     "tree_dead_bark"
+    ],
+    [
+     3.76,
+     8.0,
+     8,
+     12.24,
+     10.0,
+     16,
+     "tree_dead_bark"
+    ],
+    [
+     5.71,
+     10.0,
+     8,
+     10.29,
+     11.0,
+     16,
+     "tree_dead_bark"
+    ],
+    [
+     6.5,
+     2,
+     0,
+     8.5,
+     4,
+     9,
+     "tree_dead_bark",
+     null,
+     {
+      "axis": "y",
+      "angle": -22.5,
+      "origin": [
+       7.5,
+       3,
+       8
+      ]
+     }
+    ],
+    [
+     8,
+     4,
+     1,
+     9.5,
+     5.5,
+     9,
+     "tree_dead_bark",
+     null,
+     {
+      "axis": "x",
+      "angle": 22.5,
+      "origin": [
+       8.7,
+       4.7,
+       8
+      ]
+     }
+    ],
+    [
+     2,
+     6,
+     2,
+     4,
+     7.5,
+     10,
+     "tree_dead_bark",
+     null,
+     {
+      "axis": "y",
+      "angle": 22.5,
+      "origin": [
+       3,
+       6.7,
+       8
+      ]
+     }
+    ],
+    [
+     0,
+     0,
+     0,
+     16,
+     12,
+     6,
+     "tree_dead_leaves"
+    ],
+    [
+     10,
+     5,
+     2,
+     16,
+     14,
+     9,
+     "tree_dead_leaves"
+    ]
+   ],
+   "title": "Felled Tree",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "render": "cutout"
+  },
+  "rv_sign_work": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     3,
+     7.6,
+     15,
+     16,
+     7.9,
+     "rv_work",
+     {
+      "up": [
+       0,
+       0,
+       16,
+       1
+      ],
+      "down": [
+       0,
+       0,
+       16,
+       1
+      ],
+      "east": [
+       0,
+       0,
+       1,
+       16
+      ],
+      "west": [
+       0,
+       0,
+       1,
+       16
+      ],
+      "north": [
+       0,
+       0,
+       16,
+       16
+      ],
+      "south": [
+       0,
+       0,
+       16,
+       16
+      ]
+     }
+    ],
+    [
+     7.4,
+     0,
+     6,
+     8.6,
+     9,
+     6.8,
+     "st_galv",
+     null,
+     {
+      "axis": "x",
+      "angle": 15,
+      "origin": [
+       8,
+       0,
+       6.4
+      ]
+     }
+    ],
+    [
+     7.4,
+     0,
+     9.2,
+     8.6,
+     9,
+     10,
+     "st_galv",
+     null,
+     {
+      "axis": "x",
+      "angle": -15,
+      "origin": [
+       8,
+       0,
+       9.6
+      ]
+     }
+    ],
+    [
+     7.4,
+     4,
+     6.5,
+     8.6,
+     4.6,
+     9.5,
+     "st_galv"
+    ],
+    [
+     7,
+     8,
+     7.9,
+     9,
+     12,
+     8.4,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Work Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "render": "cutout"
+  },
+  "rv_closed": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     6,
+     2.6,
+     13.5,
+     10,
+     "hw_white"
+    ],
+    [
+     13.4,
+     0,
+     6,
+     15,
+     13.5,
+     10,
+     "hw_white"
+    ],
+    [
+     0,
+     0,
+     5,
+     3.6,
+     0.8,
+     11,
+     "hw_white"
+    ],
+    [
+     12.4,
+     0,
+     5,
+     16,
+     0.8,
+     11,
+     "hw_white"
+    ],
+    [
+     0,
+     3,
+     7.2,
+     16,
+     5.4,
+     8,
+     "rv_stripes"
+    ],
+    [
+     0,
+     7,
+     7.2,
+     16,
+     9.4,
+     8,
+     "rv_stripes"
+    ],
+    [
+     0,
+     11,
+     7.2,
+     16,
+     13.4,
+     8,
+     "rv_stripes"
+    ]
+   ],
+   "title": "Barricade",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rv_closed_sign": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     6,
+     2.6,
+     13.5,
+     10,
+     "hw_white"
+    ],
+    [
+     13.4,
+     0,
+     6,
+     15,
+     13.5,
+     10,
+     "hw_white"
+    ],
+    [
+     0,
+     0,
+     5,
+     3.6,
+     0.8,
+     11,
+     "hw_white"
+    ],
+    [
+     12.4,
+     0,
+     5,
+     16,
+     0.8,
+     11,
+     "hw_white"
+    ],
+    [
+     0,
+     3,
+     7.2,
+     16,
+     5.4,
+     8,
+     "rv_stripes"
+    ],
+    [
+     0,
+     7,
+     7.2,
+     16,
+     9.4,
+     8,
+     "rv_stripes"
+    ],
+    [
+     0,
+     11,
+     7.2,
+     16,
+     13.4,
+     8,
+     "rv_stripes"
+    ],
+    [
+     0,
+     13.6,
+     7.2,
+     16,
+     16,
+     8,
+     "rv_closed",
+     {
+      "up": [
+       0,
+       0,
+       16,
+       1
+      ],
+      "down": [
+       0,
+       0,
+       16,
+       1
+      ],
+      "east": [
+       0,
+       0,
+       1,
+       16
+      ],
+      "west": [
+       0,
+       0,
+       1,
+       16
+      ],
+      "north": [
+       0,
+       4.5,
+       16,
+       11.5
+      ],
+      "south": [
+       0,
+       4.5,
+       16,
+       11.5
+      ]
+     }
+    ],
+    [
+     1,
+     13.5,
+     7.4,
+     2.6,
+     13.8,
+     7.8,
+     "hw_white"
+    ]
+   ],
+   "title": "Road Closed",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "rv_spool": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4.26,
+     0.0,
+     1,
+     11.74,
+     2.0,
+     3,
+     {
+      "side": "rv_spool_end",
+      "north": "rv_spool_end",
+      "south": "rv_spool_end"
+     }
+    ],
+    [
+     4.26,
+     0.0,
+     13,
+     11.74,
+     2.0,
+     15,
+     {
+      "side": "rv_spool_end",
+      "north": "rv_spool_end",
+      "south": "rv_spool_end"
+     }
+    ],
+    [
+     2.0,
+     2.0,
+     1,
+     14.0,
+     4.0,
+     3,
+     {
+      "side": "rv_spool_end",
+      "north": "rv_spool_end",
+      "south": "rv_spool_end"
+     }
+    ],
+    [
+     2.0,
+     2.0,
+     13,
+     14.0,
+     4.0,
+     15,
+     {
+      "side": "rv_spool_end",
+      "north": "rv_spool_end",
+      "south": "rv_spool_end"
+     }
+    ],
+    [
+     0.93,
+     4.0,
+     1,
+     15.07,
+     6.0,
+     3,
+     {
+      "side": "rv_spool_end",
+      "north": "rv_spool_end",
+      "south": "rv_spool_end"
+     }
+    ],
+    [
+     0.93,
+     4.0,
+     13,
+     15.07,
+     6.0,
+     15,
+     {
+      "side": "rv_spool_end",
+      "north": "rv_spool_end",
+      "south": "rv_spool_end"
+     }
+    ],
+    [
+     0.52,
+     6.0,
+     1,
+     15.48,
+     8.0,
+     3,
+     {
+      "side": "rv_spool_end",
+      "north": "rv_spool_end",
+      "south": "rv_spool_end"
+     }
+    ],
+    [
+     0.52,
+     6.0,
+     13,
+     15.48,
+     8.0,
+     15,
+     {
+      "side": "rv_spool_end",
+      "north": "rv_spool_end",
+      "south": "rv_spool_end"
+     }
+    ],
+    [
+     0.65,
+     8.0,
+     1,
+     15.35,
+     10.0,
+     3,
+     {
+      "side": "rv_spool_end",
+      "north": "rv_spool_end",
+      "south": "rv_spool_end"
+     }
+    ],
+    [
+     0.65,
+     8.0,
+     13,
+     15.35,
+     10.0,
+     15,
+     {
+      "side": "rv_spool_end",
+      "north": "rv_spool_end",
+      "south": "rv_spool_end"
+     }
+    ],
+    [
+     1.37,
+     10.0,
+     1,
+     14.63,
+     12.0,
+     3,
+     {
+      "side": "rv_spool_end",
+      "north": "rv_spool_end",
+      "south": "rv_spool_end"
+     }
+    ],
+    [
+     1.37,
+     10.0,
+     13,
+     14.63,
+     12.0,
+     15,
+     {
+      "side": "rv_spool_end",
+      "north": "rv_spool_end",
+      "south": "rv_spool_end"
+     }
+    ],
+    [
+     2.9,
+     12.0,
+     1,
+     13.1,
+     14.0,
+     3,
+     {
+      "side": "rv_spool_end",
+      "north": "rv_spool_end",
+      "south": "rv_spool_end"
+     }
+    ],
+    [
+     2.9,
+     12.0,
+     13,
+     13.1,
+     14.0,
+     15,
+     {
+      "side": "rv_spool_end",
+      "north": "rv_spool_end",
+      "south": "rv_spool_end"
+     }
+    ],
+    [
+     5.31,
+     14.0,
+     1,
+     10.69,
+     15.0,
+     3,
+     {
+      "side": "rv_spool_end",
+      "north": "rv_spool_end",
+      "south": "rv_spool_end"
+     }
+    ],
+    [
+     5.31,
+     14.0,
+     13,
+     10.69,
+     15.0,
+     15,
+     {
+      "side": "rv_spool_end",
+      "north": "rv_spool_end",
+      "south": "rv_spool_end"
+     }
+    ],
+    [
+     4.81,
+     1.9,
+     3,
+     11.19,
+     3.9,
+     13,
+     "rv_cable"
+    ],
+    [
+     3.04,
+     3.9,
+     3,
+     12.96,
+     5.9,
+     13,
+     "rv_cable"
+    ],
+    [
+     2.43,
+     5.9,
+     3,
+     13.57,
+     7.9,
+     13,
+     "rv_cable"
+    ],
+    [
+     2.58,
+     7.9,
+     3,
+     13.42,
+     9.9,
+     13,
+     "rv_cable"
+    ],
+    [
+     3.55,
+     9.9,
+     3,
+     12.45,
+     11.9,
+     13,
+     "rv_cable"
+    ],
+    [
+     5.48,
+     11.9,
+     3,
+     10.52,
+     13.1,
+     13,
+     "rv_cable"
+    ],
+    [
+     7.4,
+     0,
+     3,
+     8.6,
+     1,
+     16,
+     "rv_cable"
+    ]
+   ],
+   "title": "Cable Drum",
+   "sound": "WOOD",
+   "rotate": "axis"
+  },
+  "rv_tape": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     9.6,
+     7.95,
+     5.4,
+     11.6,
+     8.05,
+     "rv_tape",
+     {
+      "north": [
+       0,
+       4,
+       5.4,
+       12
+      ],
+      "south": [
+       0,
+       4,
+       5.4,
+       12
+      ]
+     }
+    ],
+    [
+     5.4,
+     9.2,
+     7.95,
+     10.6,
+     11.2,
+     8.05,
+     "rv_tape",
+     {
+      "north": [
+       5.4,
+       4,
+       10.6,
+       12
+      ],
+      "south": [
+       5.4,
+       4,
+       10.6,
+       12
+      ]
+     }
+    ],
+    [
+     10.6,
+     9.6,
+     7.95,
+     16,
+     11.6,
+     8.05,
+     "rv_tape",
+     {
+      "north": [
+       10.6,
+       4,
+       16,
+       12
+      ],
+      "south": [
+       10.6,
+       4,
+       16,
+       12
+      ]
+     }
+    ]
+   ],
+   "title": "Police Line",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "rv_case": {
+   "model": "boxes",
+   "boxes": [
+    [
+     2,
+     0,
+     3.5,
+     14,
+     3.4,
+     12.5,
+     {
+      "up": "rv_case_lid",
+      "side": "home_plastic_black",
+      "down": "home_plastic_black"
+     }
+    ],
+    [
+     1.8,
+     1.6,
+     3.3,
+     14.2,
+     2.1,
+     12.7,
+     "home_plastic_black"
+    ],
+    [
+     4,
+     1.4,
+     3,
+     5.5,
+     2.6,
+     3.5,
+     "hw_chrome"
+    ],
+    [
+     10.5,
+     1.4,
+     3,
+     12,
+     2.6,
+     3.5,
+     "hw_chrome"
+    ],
+    [
+     6.5,
+     1,
+     2.4,
+     9.5,
+     1.8,
+     3,
+     "home_plastic_black"
+    ]
+   ],
+   "title": "Police Case",
+   "sound": "METAL",
+   "rotate": "facing",
+   "loot": "story_police_blockade"
+  },
+  "rv_tin": {
+   "model": "boxes",
+   "boxes": [
+    [
+     3.5,
+     0,
+     5,
+     12.5,
+     4,
+     11,
+     "rv_burnt"
+    ],
+    [
+     3.5,
+     4,
+     5,
+     12.5,
+     4.6,
+     11,
+     "rv_burnt",
+     null,
+     {
+      "axis": "x",
+      "angle": -22.5,
+      "origin": [
+       8,
+       4,
+       5
+      ]
+     }
+    ],
+    [
+     7,
+     4.6,
+     7.6,
+     9,
+     5.4,
+     8.4,
+     "rv_burnt"
+    ],
+    [
+     4,
+     0,
+     4,
+     9,
+     0.2,
+     12,
+     "rv_ash"
+    ]
+   ],
+   "title": "Burnt Toolbox",
+   "sound": "METAL",
+   "rotate": "facing",
+   "loot": "story_burnt_car"
   }
  }
 }

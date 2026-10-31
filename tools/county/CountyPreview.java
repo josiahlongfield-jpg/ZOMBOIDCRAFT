@@ -71,6 +71,14 @@ public final class CountyPreview implements ChunkSink {
     public void vehicle(double x, int y, double z, float yaw, String models, long seed) {
         if (!models.startsWith("!")) {
             addCar(x, y, z, yaw, 0, 99, models);
+        } else if (models.startsWith("!body:")) {
+            // a road story's body (the game lays a Corpse): shown as the house kit's body on the ground
+            String[] f = {"south", "west", "north", "east"};
+            String face = f[Math.floorMod(Math.round(yaw / 90f), 4)];
+            int bx = (int) Math.floor(x), bz = (int) Math.floor(z);
+            set(bx, y, bz, "home_corpse_head[facing=" + face + "]");
+        } else if (models.startsWith("!walkers:")) {
+            System.out.println("walkers " + models.substring(9) + " at " + Math.round(x) + " " + Math.round(z));
         }
     }
 

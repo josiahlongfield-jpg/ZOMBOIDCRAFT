@@ -167,6 +167,32 @@ public final class CountyGen {
         }
         vegetation(bx, bz, cols, places, hideouts, out);
         jams(bx, bz, cols, places, roads, out);
+        stories(bx, bz, cols, roads, out);
+    }
+
+    /**
+     * Zomboid's road stories ({@link RoadStories}): each piece stood on the ground where it lands in this chunk
+     * (the story picked a level stretch, so the asphalt has no half steps there), left out on a place, the
+     * railway, a bridge or the water. The cars, bodies and walkers go to the chunk writer.
+     */
+    private void stories(int bx, int bz, Column[] cols, List<Road> roads, ChunkSink out) {
+        RoadStories.place(county, roads, bx, bz, new RoadStories.Out() {
+            @Override
+            public void block(int x, int z, int dy, String block) {
+                Column c = cols[(z - bz) * 16 + (x - bx)];
+                if (!c.built && !c.rail && !c.water && !c.bridge) {
+                    out.set(x, c.top + 1 + dy, z, block);
+                }
+            }
+
+            @Override
+            public void vehicle(double x, double z, float yaw, String models, long seed) {
+                Column c = cols[((int) Math.floor(z) - bz) * 16 + ((int) Math.floor(x) - bx)];
+                if (!c.built && !c.rail && !c.water && !c.bridge) {
+                    out.vehicle(x, c.top + 1, z, yaw, models, seed);
+                }
+            }
+        });
     }
 
     /**
