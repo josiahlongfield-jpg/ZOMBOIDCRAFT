@@ -128,7 +128,7 @@ public class BaseMoveTest implements FabricClientGameTest {
             ServerLevel level = s.overworld();
             yard = origin.offset(20, 1, 2);
             for (int x = -2; x <= 14; x++) {
-                for (int z = -6; z <= 8; z++) level.setBlockAndUpdate(yard.offset(x, -1, z), Blocks.GRASS_BLOCK.defaultBlockState());
+                for (int z = -12; z <= 10; z++) level.setBlockAndUpdate(yard.offset(x, -1, z), Blocks.GRASS_BLOCK.defaultBlockState());
             }
             Skills.addXp(p, Skill.CARPENTRY, Skill.xpForLevel(6));
             p.getInventory().clearContent();
@@ -140,7 +140,7 @@ public class BaseMoveTest implements FabricClientGameTest {
             com.zomboidcraft.ZcConfig.get().building.floorSagSeconds = 9;
         });
         // the wall run along x at z = 4, built from z = 1 looking south
-        standYard(ctx, sp, 4, 0.5, 0f, 25f);
+        standYard(ctx, sp, 3, 0.5, 0f, 25f);
         frame(ctx, "yard");
         build(ctx, sp, Build.CRATE, yard.offset(8, -1, 1), Direction.UP, Direction.SOUTH);
         for (int x = 0; x <= 5; x++) {
@@ -155,7 +155,7 @@ public class BaseMoveTest implements FabricClientGameTest {
         for (int x : new int[] {0, 2, 3, 4}) build(ctx, sp, Build.WOOD_WALL, yard.offset(x, 1, 4), Direction.NORTH, Direction.SOUTH);
         standYard(ctx, sp, 3, -2.5, 0f, 8f);
         frame(ctx, "two-high");
-        standYard(ctx, sp, 4, 0.5, 0f, 25f);
+        standYard(ctx, sp, 3, 0.5, 0f, 25f);
         build(ctx, sp, Build.WOOD_DOOR, yard.offset(1, 0, 4), Direction.NORTH, Direction.SOUTH);
         standYard(ctx, sp, 2, -1.5, 0f, 8f);
         frame(ctx, "door-hung");
