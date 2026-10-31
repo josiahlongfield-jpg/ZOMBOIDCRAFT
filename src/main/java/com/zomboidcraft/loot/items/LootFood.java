@@ -63,7 +63,8 @@ public final class LootFood {
             sp.addEffect(new MobEffectInstance(MobEffects.NAUSEA, 200, 0));
         }
         if (food.alcohol() > 0) {
-            // a drink takes the edge off
+            // a drink takes the edge off, and too many get you drunk
+            com.zomboidcraft.survival.Medicine.drink(sp, food.alcohol());
             com.zomboidcraft.survival.Mood.add(sp, com.zomboidcraft.survival.Mood.Stat.STRESS, -8 * food.alcohol());
             com.zomboidcraft.survival.Mood.add(sp, com.zomboidcraft.survival.Mood.Stat.UNHAPPINESS, -4 * food.alcohol());
         }
