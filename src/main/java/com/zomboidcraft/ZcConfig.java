@@ -30,6 +30,7 @@ public final class ZcConfig {
     public Look look = new Look();
     public World world = new World();
     public Weather weather = new Weather();
+    public Nature nature = new Nature();
     public Combat combat = new Combat();
     /** Shooting limbs off zombies: how much each limb takes before it tears off, and how hard each kind of gun tears. */
     public Limbs limbs = new Limbs();
@@ -781,6 +782,38 @@ public final class ZcConfig {
         public boolean windDamage = true;
         /** Rain and wind cover your noise and fog hides you, for you and the zombies alike. */
         public boolean affectsZombies = true;
+    }
+
+    /**
+     * Project Zomboid's sandbox Nature page, with its own options. The weather ones are run here; farming, foraging,
+     * fishing, clay and erosion settings join this section as those systems are built.
+     */
+    public static class Nature {
+        /**
+         * Zomboid's climate cycle: "normal" (the weather comes and goes), "no_weather" (dry and still under the
+         * clouds), "endless_rain" (rain and downpours only) or "endless_storm" (storms only, with their warnings).
+         * Zomboid's endless snow and blizzard wait until there is snow.
+         */
+        public String climateCycle = "normal";
+        /** Zomboid's fog cycle: "normal" (fog rolls in and out), "no_fog" or "endless_fog" (thick fog day and night). */
+        public String fogCycle = "normal";
+        /**
+         * Zomboid's rain: "very_dry", "dry", "normal", "rainy" or "very_rainy". Shifts how heavy the rain gets and how
+         * often downpours and storms come; drier settings let it ease below weather.minRain. Normal is the mix chosen
+         * for the city: never below moderate, often heavy.
+         */
+        public String rain = "normal";
+        /**
+         * Zomboid's temperature: "very_cold", "cold", "normal", "hot" or "very_hot". Sets the air temperature, which
+         * drops at night, in rain and in wind; it only matters to you when body temperature is on.
+         */
+        public String temperature = "normal";
+        /** Zomboid's max fog intensity, for what you see: "normal", "moderate", "low" or "none". Zombies still go by the real fog. Client side. */
+        public String maxFog = "normal";
+        /** Zomboid's max rain effects intensity, for what you see of the rain: "normal", "moderate" or "low". Client side. */
+        public String maxRainFx = "normal";
+        /** Zomboid's snow on the ground. Not built yet: there is no snow, so this does nothing for now. */
+        public boolean snowOnGround = false;
     }
 
     public static class Look {
