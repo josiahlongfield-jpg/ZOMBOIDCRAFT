@@ -91,6 +91,8 @@ public class CarProp extends Entity {
     private static final EntityDataAccessor<Integer> BELT = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.INT);
     /** Every part's condition, a character a slot ({@link CarParts}); empty until the server first rolls them. */
     private static final EntityDataAccessor<String> PARTS = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.STRING);
+    /** Up on a hoist's arms: every part underneath can be reached, and it can't be driven off. */
+    private static final EntityDataAccessor<Boolean> HOISTED = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.BOOLEAN);
     /** Server: the gunner holds the trigger; rounds due by the rate; ticks till the belt's loaded; rounds fired. */
     boolean turretTrigger;
     int beltBusy, turretShots, fireTicks;
@@ -208,6 +210,7 @@ public class CarProp extends Entity {
         builder.define(TURRET_FIRING, false);
         builder.define(BELT, 0);
         builder.define(PARTS, "");
+        builder.define(HOISTED, false);
     }
 
     @Override
@@ -360,6 +363,26 @@ public class CarProp extends Entity {
             entityData.set(OPEN, true);
             server.playSound(null, getX(), getY(), getZ(), SoundEvents.IRON_TRAPDOOR_OPEN, SoundSource.BLOCKS, 0.6f, 0.7f);
         }
+    }
+
+    public boolean hoisted() {
+        return entityData.get(HOISTED);
+    }
+
+    public void setHoisted(boolean up) {
+        entityData.set(HOISTED, up);
+    }
+
+    /** Whether a point (relative to the car, or in the world) is at its front end, where the bonnet and the engine are. */
+    public boolean atBonnet(Vec3 location) {
+        CarModels.Model m = CarModels.get(model());
+        if (m == null) {
+            return false;
+        }
+        if (location.horizontalDistanceSqr() > m.size[2] * m.size[2]) {
+            location = location.subtract(position());
+        }
+        return local(location).z > m.size[2] / 2 - 1.1;
     }
 
     /** Whether a point (relative to the car, or in the world) is at its back end, where the boot is. */
@@ -1480,6 +1503,10 @@ public class CarProp extends Entity {
     private void drive(Input in) {
         CarModels.Model m = CarModels.get(model());
         if (m == null) {
+            return;
+        }
+        if (hoisted()) {
+            setDeltaMovement(Vec3.ZERO);    // wheels spinning in the air on the hoist's arms
             return;
         }
         double rad = Math.toRadians(getYRot());
