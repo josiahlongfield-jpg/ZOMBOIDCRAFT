@@ -33,8 +33,10 @@ public final class Bench {
     /** Mend a weapon with what's in another carried slot: REPAIR + material slot * 256 + weapon slot. */
     public static final int REPAIR = 100_000_000;
 
-    /** See to a wound from the health page: TREAT + treatment * 8 + body part. */
+    /** See to a wound from the health page: TREAT + treatment * PARTS + body part. */
     public static final int TREAT = 200_000_000;
+    /** Room for every body part in a treat button id. */
+    static final int PARTS = 32;
     /** Patching and ripping clothes (clothing/Tailoring): TAILOR + action * Tailoring.SLOTS + menu slot. */
     public static final int TAILOR = 300_000_000;
 
@@ -54,7 +56,7 @@ public final class Bench {
     }
 
     public static int treatButton(Treatment.Kind kind, Body.Region region) {
-        return TREAT + kind.ordinal() * 8 + region.ordinal();
+        return TREAT + kind.ordinal() * PARTS + region.ordinal();
     }
 
     public static int fitButton(int partSlot, int gunSlot, Attachments.Slot socket) {
@@ -72,10 +74,10 @@ public final class Bench {
         }
         if (id >= TREAT) {
             int n = id - TREAT;
-            if (n / 8 >= Treatment.Kind.values().length || n % 8 >= Body.Region.values().length) return false;
+            if (n / PARTS >= Treatment.Kind.values().length || n % PARTS >= Body.Region.values().length) return false;
             // the server runs it as a timed action; the client waits to hear how the body changed
             if (player instanceof ServerPlayer serverPlayer) {
-                Treatment.start(serverPlayer, Treatment.Kind.values()[n / 8], Body.Region.values()[n % 8]);
+                Treatment.start(serverPlayer, Treatment.Kind.values()[n / PARTS], Body.Region.values()[n % PARTS]);
             }
             return true;
         }

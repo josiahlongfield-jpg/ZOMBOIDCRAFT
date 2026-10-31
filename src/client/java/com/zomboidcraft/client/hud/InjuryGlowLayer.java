@@ -26,13 +26,25 @@ public class InjuryGlowLayer extends RenderLayer<AvatarRenderState, PlayerModel>
     private static final Identifier WHITE = ZomboidCraft.id("textures/effect/injury_glow.png");
     private static final int FULL_BRIGHT = 0xF000F0;
     /** Each part's box in model pixels from its pivot: x, y, z, then width, height, depth. */
+    /** Each body part's box, in its model part's pixels (Body.Region order): the limbs split in three down their length. */
     private static final float[][] BOXES = {
             {-4, -8, -4, 8, 8, 8},   // head
-            {-4, 0, -2, 8, 12, 4},   // torso
-            {-1, -2, -2, 4, 12, 4},  // left arm
-            {-3, -2, -2, 4, 12, 4},  // right arm
-            {-2, 0, -2, 4, 12, 4},   // left leg
-            {-2, 0, -2, 4, 12, 4}};  // right leg
+            {-3, -1.5f, -2.5f, 6, 1.5f, 5}, // neck: a collar at the top of the torso
+            {-4, 0, -2, 8, 6, 4},    // upper torso
+            {-4, 6, -2, 8, 4, 4},    // lower torso
+            {-4, 10, -2, 8, 2, 4},   // groin
+            {-1, -2, -2, 4, 5, 4},   // left upper arm
+            {-3, -2, -2, 4, 5, 4},   // right upper arm
+            {-1, 3, -2, 4, 4, 4},    // left forearm
+            {-3, 3, -2, 4, 4, 4},    // right forearm
+            {-1, 7, -2, 4, 3, 4},    // left hand
+            {-3, 7, -2, 4, 3, 4},    // right hand
+            {-2, 0, -2, 4, 5, 4},    // left thigh
+            {-2, 0, -2, 4, 5, 4},    // right thigh
+            {-2, 5, -2, 4, 5, 4},    // left shin
+            {-2, 5, -2, 4, 5, 4},    // right shin
+            {-2, 10, -2, 4, 2, 4},   // left foot
+            {-2, 10, -2, 4, 2, 4}};  // right foot
     /** Shells outward from the part: how far (pixels) and how strong. */
     private static final float[][] SHELLS = {{0.35f, 0.30f}, {0.8f, 0.18f}, {1.35f, 0.09f}};
 
@@ -67,7 +79,7 @@ public class InjuryGlowLayer extends RenderLayer<AvatarRenderState, PlayerModel>
             if (part.bleeding()) strength *= 0.6f + 0.4f * beat;
             float[] box = BOXES[region.ordinal()];
             pose.pushPose();
-            parts[region.ordinal()].translateAndRotate(pose);
+            parts[region.zone().ordinal()].translateAndRotate(pose);
             float s = strength;
             collector.submitCustomGeometry(pose, type, (p, out) -> {
                 for (float[] shell : SHELLS) {

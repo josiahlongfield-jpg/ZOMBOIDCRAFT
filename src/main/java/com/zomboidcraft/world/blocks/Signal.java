@@ -19,7 +19,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * faces the traffic along z. PHASE: 0 dark (not started yet), 1 north-south green, 2 north-south
  * amber, 3 all red, 4 east-west green, 5 east-west amber; the blockstates pick each head's lens.
  * The world generator marks them for post-processing, so the first neighbour update starts them;
- * a random tick starts any that missed it, and from then on each change schedules the next.
+ * a random tick starts any that missed it, and from then on each change schedules the next. With the district's
+ * power off (power/PowerGrid) a head is dark.
  */
 public final class Signal {
     static final IntegerProperty PHASE = IntegerProperty.create("phase", 0, 5);
@@ -46,6 +47,14 @@ public final class Signal {
 
     static void step(Block block, BlockState state, ServerLevel level, BlockPos pos) {
         long now = level.getGameTime();
+        if (!com.zomboidcraft.power.PowerGrid.hasPower(level, pos)) {
+            // the district's mains are off: the head goes dark, and looks again now and then (a restored substation)
+            if (state.getValue(PHASE) != 0) {
+                level.setBlock(pos, state.setValue(PHASE, 0), Block.UPDATE_CLIENTS);
+            }
+            level.scheduleTick(pos, block, 1200);
+            return;
+        }
         int phase = phase(now);
         if (state.getValue(PHASE) != phase) {
             level.setBlock(pos, state.setValue(PHASE, phase), Block.UPDATE_CLIENTS);

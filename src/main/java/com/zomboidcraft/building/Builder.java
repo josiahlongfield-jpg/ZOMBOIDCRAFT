@@ -101,6 +101,14 @@ public final class Builder {
             case CAR_ALARM -> "Wiring the clock to the alarm";
             case PLANTER -> "Building a planter";
             case SPIKED_WALL -> "Sharpening and driving logs";
+            case CRATE -> "Nailing a crate together";
+            case WALL_FRAME -> "Framing a wall";
+            case WOOD_WALL -> "Boarding the wall";
+            case WINDOW_FRAME -> "Framing a window";
+            case DOOR_FRAME -> "Framing a doorway";
+            case WOOD_DOOR -> "Hanging a door";
+            case POST -> "Setting a post";
+            case FLOOR -> "Laying floorboards";
         };
     }
 
@@ -108,7 +116,7 @@ public final class Builder {
         return switch (build) {
             case METAL_SHEET, WELD_SHEET -> SoundEvents.FIRECHARGE_USE;
             case SANDBAGS -> SoundEvents.SHOVEL_FLATTEN.value();
-            case BOARD, PLANTER, SPIKED_WALL -> SoundEvents.WOOD_HIT;
+            case BOARD, PLANTER, SPIKED_WALL, CRATE, WALL_FRAME, WOOD_WALL, WINDOW_FRAME, DOOR_FRAME, WOOD_DOOR, POST, FLOOR -> SoundEvents.WOOD_HIT;
             default -> SoundEvents.ARMOR_EQUIP_LEATHER.value();
         };
     }
@@ -151,7 +159,11 @@ public final class Builder {
             } else if (build == Build.BOARD) {
                 place = place.setValue(BarricadeBlock.STRENGTH, BarricadeBlock.strengthFor(Skills.level(player, build.skill)));
             }
-            level.setBlockAndUpdate(pos, place);
+            if (build.ordinal() >= Build.CRATE.ordinal()) {
+                WoodBlocks.place(level, pos, place, build.skillLevel(player));
+            } else {
+                level.setBlockAndUpdate(pos, place);
+            }
             if (build == Build.ALARM_CLOCK) {
                 BuildBlocks.AlarmClock.wind(level, pos, timer * 20);
                 say(player, "It'll ring in " + AlarmClockItem.says(timer) + ".");
@@ -216,7 +228,7 @@ public final class Builder {
 
     private static SoundEvent doneSound(Build build) {
         return switch (build) {
-            case BOARD -> ModSounds.HAMMER_NAIL;
+            case BOARD, CRATE, WALL_FRAME, WOOD_WALL, WINDOW_FRAME, DOOR_FRAME, WOOD_DOOR, POST, FLOOR -> ModSounds.HAMMER_NAIL;
             case METAL_SHEET -> SoundEvents.ANVIL_PLACE;
             case TRIPWIRE -> SoundEvents.CHAIN_PLACE;
             case SANDBAGS -> SoundEvents.SAND_PLACE;

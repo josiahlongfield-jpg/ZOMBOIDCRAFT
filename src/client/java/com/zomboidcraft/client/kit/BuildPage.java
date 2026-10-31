@@ -23,7 +23,7 @@ import net.minecraft.world.item.Items;
  */
 final class BuildPage {
     private final KitScreen<?> screen;
-    private Build selected = Build.BOARD;
+    Build selected = Build.BOARD;
 
     BuildPage(KitScreen<?> screen) {
         this.screen = screen;
@@ -39,6 +39,10 @@ final class BuildPage {
             case ALARM_CLOCK, CAR_ALARM -> ModItems.ALARM_CLOCK;
             case PLANTER -> ModItems.CARROT_SEEDS;
             case SPIKED_WALL -> Items.OAK_LOG;
+            case CRATE -> Items.BARREL;
+            case WALL_FRAME, WINDOW_FRAME, DOOR_FRAME, POST -> Items.OAK_FENCE;
+            case WOOD_WALL, FLOOR -> Items.OAK_PLANKS;
+            case WOOD_DOOR -> Items.OAK_DOOR;
         };
     }
 
@@ -47,21 +51,40 @@ final class BuildPage {
         LocalPlayer player = screen.player();
         KitDraw.heading(g, font, "Build", x + 37, y + 33, 262, false);
         KitDraw.textRight(g, font, "From what you carry, bags too", x + 299, y + 41, KitDraw.FAINT, 0.8f);
-        int ry = y + 52;
+        // more builds than fit down the page: the list scrolls, and only rows wholly inside the frame draw
+        int top = y + 52, bottom = y + KitScreen.H - 20;
+        scroll = Math.max(0, Math.min(scroll, listHeight - (bottom - top)));
+        int ry = top - scroll;
         for (Build b : Build.values()) {
-            row(g, font, player, b, x + 37, ry, 262, mx, my);
+            if (ry >= top && ry + ROW <= bottom) row(g, font, player, b, x + 37, ry, 262, mx, my);
             ry += ROW + 2;
+        }
+        listHeight = ry + scroll - top;
+        if (listHeight > bottom - top) {
+            int track = bottom - top, thumb = Math.max(16, track * track / listHeight);
+            int ty = top + (track - thumb) * scroll / Math.max(1, listHeight - track);
+            g.fill(x + 302, top, x + 303, bottom, 0x1AE8E4DA);
+            g.fill(x + 301, ty, x + 304, ty + thumb, 0x80E8E4DA);
         }
         detail(g, font, player, selected, x + 323, y + 33, 256, mx, my);
 
         int hx = x + 37, hy = y + KitScreen.H - 14;
         hx += KitDraw.hint(g, font, "LMB", "Select", hx, hy);
+        hx += KitDraw.hint(g, font, "Wheel", "Scroll", hx, hy);
         screen.pagesAndClose(g, font, hx, hy);
         KitDraw.textRight(g, font, "Building takes time and makes noise", x + 579, hy + 1, KitDraw.FAINT, 0.9f);
     }
 
     /** A row's height: ten builds fit down the page. */
     private static final int ROW = 25;
+    /** How far the list is scrolled, in pixels. */
+    private int scroll, listHeight;
+
+    boolean scrolled(double mx, double my, double sy) {
+        scroll -= (int) Math.signum(sy) * (ROW + 2);
+        if (scroll < 0) scroll = 0;
+        return true;
+    }
 
     private void row(GuiGraphicsExtractor g, Font font, LocalPlayer player, Build b, int x, int y, int w, int mx, int my) {
         boolean on = b == selected, over = screen.hovered(x, y, w, ROW, mx, my);
@@ -107,6 +130,11 @@ final class BuildPage {
             case GROUND -> "On solid ground";
             case CAR -> "On a parked car";
             case MAKE -> "Made in your hands";
+            case WALL -> "In the run of a wall";
+            case FRAME -> "On a wall frame";
+            case DOORWAY -> "In a door frame";
+            case POST -> "As a post, up to three high";
+            case FLOOR -> "As floorboards, three from a support";
         };
         KitDraw.caps(g, font, where, tx, cy + 3, KitDraw.TEXT, 0.75f);
         int level = b.skillLevel(player);

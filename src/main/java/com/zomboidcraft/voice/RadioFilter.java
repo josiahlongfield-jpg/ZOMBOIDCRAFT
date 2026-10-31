@@ -30,7 +30,7 @@ final class RadioFilter {
             lo = 450;
             hi = 2500;
             d = 2.6f;
-        } else if (type == RadioItem.Type.MILITARY) {
+        } else if (type == RadioItem.Type.MILITARY || type == RadioItem.Type.FIELD) {
             lo = 250;
             hi = 3400;
             d = 1.2f;

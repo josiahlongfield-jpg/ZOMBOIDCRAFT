@@ -85,6 +85,26 @@ public final class ZcConfig {
     /** Handheld radios that carry players' voices (through the voice chat mod), and the comms headset. */
     public Radio radio = new Radio();
     public Broadcast broadcast = new Broadcast();
+    public Power power = new Power();
+
+    /** Mains power (power/PowerGrid): Zomboid's Electricity Shutoff, cut district by district. */
+    public static class Power {
+        /**
+         * Zomboid's ElecShutModifier: the day the mains go off, each district at its own hour that day.
+         * -1 is off from the start.
+         */
+        public int shutoffDays = 14;
+        /** The mains never go off (Josiah's always-on toggle). */
+        public boolean alwaysOn = false;
+        /** Zomboid's GeneratorFuelConsumption: litres a generator burns an in-game hour. */
+        public double generatorFuel = 0.1;
+        /** Zomboid's GeneratorTileRange: how far round a generator it powers, in blocks. */
+        public int generatorRange = 20;
+        /** Zomboid's GeneratorVerticalPowerRange: how many floors above and below it powers (5 blocks a floor). */
+        public int generatorFloors = 3;
+        /** Zomboid's AllowExteriorGenerator: generators power spots out in the open too (gas pumps). */
+        public boolean generatorExterior = true;
+    }
     /** How good each found weapon is: its tier, where its stats land inside the model's range, and flaws. */
     public WeaponRolls rolls = new WeaponRolls();
     /** What it takes to dig down and knock walls through, so nobody tunnels under the whole map (building/DigRules). */
@@ -793,6 +813,8 @@ public final class ZcConfig {
         public double biteChance = 0.12;
         public double scratchChance = 0.30;
         public double scratchInfectionChance = 0.07;
+        /** Zomboid's chance a zombie's laceration (a deeper scratch) carries the infection. */
+        public double lacerationInfectionChance = 0.25;
         /** No longer read: how long the infection takes is zombieLore.mortality now (Zomboid's Infection Mortality). */
         public int infectionMinutes = 40;
         /** Infected players rise as zombies. */
@@ -842,6 +864,14 @@ public final class ZcConfig {
         /** Blows a spiked log wall stands, and the damage its spikes do to a zombie pushing or beating on it. */
         public int spikedWallHits = 24;
         public float spikeDamage = 2f;
+        /** Blows a boarded wooden wall stands at Carpentry 0 (a tenth more for each level of its builder's Carpentry). */
+        public int woodWallHits = 30;
+        /** How many boards a wooden floor reaches out from whatever holds it up. */
+        public int floorSpan = 3;
+        /** How long a floor that's lost its support sags and creaks before it falls in, in seconds. */
+        public int floorSagSeconds = 60;
+        /** How many wooden posts stand one on another. */
+        public int postStack = 3;
         /** Furniture weight: kilograms at or over these are medium (table, bed, sofa) and large (wardrobe, counter, fridge). */
         public double mediumKg = 6;
         public double largeKg = 19;

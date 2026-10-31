@@ -16,7 +16,7 @@ import net.minecraft.world.entity.player.Player;
 
 /**
  * What medical kit shows on a player's body, for everyone's client to draw (clothing/ClothingLayer): one bitmask
- * per Body.Region ordinal. Refreshed every second from Body and Ailments (Medicine.tick).
+ * per Body.Zone ordinal (head, torso, arms, legs: the six blocks the layer draws on). Refreshed every second from Body and Ailments (Medicine.tick).
  */
 public final class WornMedical {
     public static final int BANDAGE = 1, PACKED = 2, WRAP = 4, TOURNIQUET = 8, SPLINT = 16, FINGER_SPLINT = 32,
@@ -33,7 +33,7 @@ public final class WornMedical {
         // loading the class registers the attachment
     }
 
-    /** All six parts' bits, by Body.Region ordinal. */
+    /** All six zones' bits, by Body.Zone ordinal. */
     public static int[] mask(Player player) {
         List<Integer> worn = player.getAttachedOrElse(TYPE, NONE);
         int[] out = new int[6];
@@ -41,10 +41,11 @@ public final class WornMedical {
         return out;
     }
 
-    /** The bits on one part (0 when nothing shows). */
+    /** The bits on the zone a part is in (0 when nothing shows). */
     public static int on(Player player, Region part) {
         List<Integer> worn = player.getAttachedOrElse(TYPE, NONE);
-        return part.ordinal() < worn.size() ? worn.get(part.ordinal()) : 0;
+        int i = part.zone().ordinal();
+        return i < worn.size() ? worn.get(i) : 0;
     }
 
     static void refresh(ServerPlayer player) {
@@ -61,12 +62,13 @@ public final class WornMedical {
             if (Medicine.get(m, "sling", r) > 0) bits |= SLING;
             if (p.fractured() && p.splinted()) {
                 int kind = Medicine.get(m, "splintkind", r);
-                bits |= kind == 0 ? (r == Region.HEAD || r == Region.TORSO ? COLLAR : SPLINT) : kind;
+                bits |= kind == 0 ? (r == Region.HEAD || r == Region.NECK ? COLLAR : r.zone() == Body.Zone.TORSO ? 0 : SPLINT) : kind;
             }
-            worn.set(r.ordinal(), bits);
+            int z = r.zone().ordinal();
+            worn.set(z, worn.get(z) | bits);
         }
         if (MedSpecs.carries(player, "knee_brace")) {
-            Region leg = body.part(Region.LEFT_LEG).fine() || !body.part(Region.RIGHT_LEG).fine() ? Region.RIGHT_LEG : Region.LEFT_LEG;
+            Body.Zone leg = body.zone(Body.Zone.LEFT_LEG).fine() || !body.zone(Body.Zone.RIGHT_LEG).fine() ? Body.Zone.RIGHT_LEG : Body.Zone.LEFT_LEG;
             worn.set(leg.ordinal(), worn.get(leg.ordinal()) | KNEE_BRACE);
         }
         if (!worn.equals(player.getAttachedOrElse(TYPE, NONE))) player.setAttached(TYPE, List.copyOf(worn));

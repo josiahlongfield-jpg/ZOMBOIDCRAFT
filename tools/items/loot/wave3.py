@@ -1035,6 +1035,7 @@ def table(it):
         'mag_farming': it(magazine(), 'FARMING', '#6aa03a', 'cow', '#2a2a2a', band=CREAM),
         'mag_hunting': it(magazine(), 'HUNTER', '#6a4a2a', 'fish', '#c8a070', band=CREAM),
         'mag_guns': it(magazine(), 'GUNS', '#1e1f20', 'star', '#c23a22', band='#c8a040'),
+        'mag_generators': it(magazine(), 'GENERATORS', '#d88a20', 'wave', '#1e1f20', band=CREAM),
         'paperback': it(book(4.2, 7.0, 1.0), 'NOVEL', '#7a2a4a', 'star', '#e8c040', band=CREAM),
         'hardback': it(book(6.5, 9.5, 1.6), 'BOOK', '#2a3a2a', **BOOK),
         'bible': it(book(5.5, 8.5, 1.5), 'BIBLE', '#1e1f20', 'cross', '#c8a040', band='#1e1f20', word_ink='#c8a040',

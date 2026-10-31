@@ -571,6 +571,9 @@ final class FarmSite extends Site {
         if (chance() < 0.6) {
             coop(houseLeft ? yw - 12 : 3, yardEnd - 10);
         }
+        if (chance() < 0.35) {
+            smokehouse(houseLeft ? ydx - 14 : ydx + 10, yardEnd + 18);
+        }
         Placer tr = put(3, 12, 0, ydx + 4, yardEnd, 0);
         if (tr != null) {
             Farmstead fs = new Farmstead(tr, rng, hit);
@@ -823,6 +826,7 @@ final class FarmSite extends Site {
         if (wl != null) {
             new Farmstead(wl, rng, hit).well(1, 1);
         }
+        smokehouse(houseLeft ? ydx - 12 : ydx + 8, yardEnd + 4);
         Placer oh = put(2, 3, 0, houseLeft ? 2 : yw - 4, yd - 8, 1);
         if (oh != null) {
             new Farmstead(oh, rng, hit).outhouse(0, 1);
@@ -886,6 +890,14 @@ final class FarmSite extends Site {
         Kit.railFence(yp, rng, yw - 1, 1, yw - 1, yd - 1, false, 0.1);
         yp.vehicle(ydx + (houseLeft ? 4 : -4), 1, yardEnd - 6, (float) (chance() * 360), "pickup", rng.nextLong());
         yardStory();
+    }
+
+    /** The smokehouse at the nearest free yard spot to (x, z), its door to the yard. */
+    private void smokehouse(int x, int z) {
+        Placer sm = put(5, 5, 0, x, z, 1);
+        if (sm != null) {
+            new Farmstead(sm, rng, hit).smokehouse(any("barn_grey", "barn_red", "brick_red"));
+        }
     }
 
     /** A chicken coop and its run at the nearest free yard spot to (x, z), with its hens. */

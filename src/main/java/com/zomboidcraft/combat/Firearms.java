@@ -57,8 +57,7 @@ public final class Firearms {
         double tired = SurvivalStats.get(player).fatigue() / 100.0 * 0.4;
         double winded = Math.max(0, 1 - Stamina.get(player) / Stamina.FULL - 0.5) * 0.5;
         Body body = Body.get(player);
-        int arms = body.parts().get(Body.Region.LEFT_ARM.ordinal()).severity()
-                + body.parts().get(Body.Region.RIGHT_ARM.ordinal()).severity();
+        int arms = body.zone(Body.Zone.LEFT_ARM).severity() + body.zone(Body.Zone.RIGHT_ARM).severity();
         return tired + winded + Math.min(arms, 4) * 0.06;
     }
 

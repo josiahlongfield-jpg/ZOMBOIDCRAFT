@@ -21,7 +21,8 @@ farm photos in refs/farm (barn-interior, dairy-barn, machine-shed, silos).
   fm_ladder / fm_ladder_broken (climbable), fm_saddle_rack, fm_tack_trunk (searchable), fm_lantern / fm_lantern_lit (hanging), fm_chain,
   fm_bedroll, fm_grindstone, fm_anvil, fm_nest_boxes, fm_roost, fm_waterer, fm_feathers, fm_feeder;
 - pens (the animals' furniture, tagged zomboidcraft:animal/*): fm_panel / fm_panel_post (galvanised
-  corral panels), fm_stock_tank and fm_ring_feeder (round, a quarter a block, four round a corner);
+  corral panels), fm_stock_tank and fm_ring_feeder (round, a quarter a block, four round a corner),
+  fm_butcher_hook (the gambrel on its tackle, hung from a beam), fm_meat_rail (a smokehouse rail of hams);
 - the yard: fm_hive / fm_hive_tipped, fm_scarecrow_lo / _hi, fm_firewood (split wood stacked
   between stakes), fm_chop_block (with the axe in it), fm_well (the well's roof, windlass and
   bucket over its round stone curb), fm_outhouse_lo / _hi, fm_girt (a windmill tower's X brace),
@@ -1091,6 +1092,33 @@ def feeder():
             [5, 2.6, 5, 11, 12, 11, red], [4.5, 12, 4.5, 11.5, 13.2, 11.5, red], [7.5, 13.2, 7.5, 8.5, 14.5, 8.5, STEEL]]
 
 
+def butcher_hook():
+    """A butcher's gambrel hung off a beam (refs/farm/butcher-hook; the hanging rig as farms used
+    it): the chain from the beam above to the block and tackle, the hoist chain down to the steel
+    spreader, its ends hooked up, with the hook for the ring in the middle."""
+    b = [[7.6, 12, 7.6, 8.4, 16, 8.4, STEEL],
+         [6.5, 9, 7, 9.5, 12, 9, STEEL], [7, 9.5, 6.6, 9, 11.5, 9.4, "rust"],
+         [7.7, 5, 7.7, 8.3, 9, 8.3, STEEL],
+         [2, 3.6, 7.4, 14, 4.6, 8.6, STEEL],
+         [2, 4.6, 7.4, 2.9, 6.6, 8.6, STEEL], [13.1, 4.6, 7.4, 14, 6.6, 8.6, STEEL],
+         [7.4, 2.4, 7.5, 8.6, 3.6, 8.5, STEEL], [7.4, 1.6, 7.5, 8, 2.4, 8.5, "rust"]]
+    return b
+
+
+def meat_rail():
+    """A smokehouse rail along z (refs/farm/butcher-hook): the pole under the roof, S-hooks on it,
+    hams sewn in cloth sacks and a side of bacon hung to smoke."""
+    b = [[7, 13.5, 0, 9, 15.5, 16, TIMH]]
+    for z, kind in ((3, "sack"), (8, "slab"), (13, "sack")):
+        b.append([7.8, 11, z - 0.3, 8.2, 13.5, z + 0.3, STEEL])
+        if kind == "sack":
+            b.append([6, 4, z - 2, 10, 11, z + 2, "om_burlap"])
+            b.append([6.8, 3, z - 1.2, 9.2, 4, z + 1.2, "om_burlap"])
+        else:
+            b.append([7.2, 4.5, z - 2.2, 8.8, 11, z + 2.2, "fm_leather"])
+    return b
+
+
 def pole():
     """A pole barn's treated post, a knee brace up to the plate on one side (the model's south)."""
     return [[5, 0, 5, 11, 16, 11, TIM], [6, 10, 11, 10, 11.5, 22, TIMH, None, turn("x", -45, (8, 10, 11))]]
@@ -1201,6 +1229,8 @@ def blocks():
     add("fm_stock_tank", stock_tank(), "Stock Tank", "METAL")
     add("fm_ring_feeder", ring_feeder(), "Bale Feeder", "METAL")
     add("fm_feeder", feeder(), "Poultry Feeder", "WOOD", rotate=None)
+    add("fm_butcher_hook", butcher_hook(), "Butcher Hook", "METAL", rotate="axis")
+    add("fm_meat_rail", meat_rail(), "Smokehouse Rail", "WOOD", rotate="axis", decor=True)
     return out
 
 

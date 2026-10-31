@@ -19,6 +19,12 @@ public class BatteryItem extends Item {
         super(properties);
     }
 
+    /** How many AA batteries' worth one of these lasts: a military radio battery pack runs four times as long. */
+    public static int lasts(ItemStack battery) {
+        return net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(battery.getItem()).getPath()
+                .equals("radio_battery_pack") ? 4 : 1;
+    }
+
     @Override
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
         ItemStack head = player.getItemBySlot(EquipmentSlot.HEAD);
