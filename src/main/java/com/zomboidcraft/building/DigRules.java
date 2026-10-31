@@ -217,6 +217,15 @@ public final class DigRules {
         return tierOf(state);
     }
 
+    /**
+     * Whether a swing at a piece of furniture takes it apart for materials (Zomboid's Scrap) rather than lifting it:
+     * crouching with a tool that strips its material. Standing, the same hammer lifts it whole.
+     */
+    private static boolean stripping(BlockState state, Player player, BlockGetter level, BlockPos pos) {
+        Tier strip = propTier(state, level, pos);
+        return player.isShiftKeyDown() && strip != null && fits(strip, player.getMainHandItem());
+    }
+
     public static boolean fits(Tier tier, ItemStack tool) {
         return switch (tier) {
             case WOOD -> tool.is(ModItems.HAMMER) || tool.is(ModItems.CROWBAR) || tool.is(ModItems.FIRE_AXE)
@@ -240,8 +249,7 @@ public final class DigRules {
         Wall wall = wall(state, level, pos);
         if (wall == null) {
             Moving.Piece piece = Moving.piece(state, level, pos);
-            Tier strip = propTier(state, level, pos);
-            if (piece == null || strip != null && fits(strip, player.getMainHandItem())) {
+            if (piece == null || stripping(state, player, level, pos)) {
                 return Float.NaN;  // stripping it down for materials goes at the game's pace
             }
             return Moving.progress(piece, player, level, pos);
@@ -297,12 +305,9 @@ public final class DigRules {
         Wall wall = wall(state, level, pos);
         if (wall == null) {
             Moving.Piece piece = Moving.piece(state, level, pos);
-            Tier strip = propTier(state, level, pos);
-            if (piece != null && !(strip != null && fits(strip, player.getMainHandItem()))) {
+            if (piece != null && !stripping(state, player, level, pos)) {
                 String no = Moving.refusal(piece, player, level, pos);
-                if (no != null) {
-                    say(player, no);
-                }
+                say(player, no != null ? no : Moving.risk(piece, player));
             }
             return;
         }
@@ -330,8 +335,8 @@ public final class DigRules {
         boolean wall = tier != null;
         if (!wall) {
             tier = propTier(state, level, pos);
-            if (tier == null || !fits(tier, tool)) {
-                Moving.Piece piece = Moving.piece(state, level, pos);
+            Moving.Piece piece = Moving.piece(state, level, pos);
+            if (tier == null || !fits(tier, tool) || piece != null && !player.isShiftKeyDown()) {
                 if (piece == null || Moving.refusal(piece, player, level, pos) != null) {
                     return piece != null;  // not liftable yet: it stays put
                 }

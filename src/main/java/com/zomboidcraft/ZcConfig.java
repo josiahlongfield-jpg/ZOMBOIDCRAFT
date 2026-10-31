@@ -636,15 +636,14 @@ public final class ZcConfig {
         /** Furniture weight: kilograms at or over these are medium (table, bed, sofa) and large (wardrobe, counter, fridge). */
         public double mediumKg = 6;
         public double largeKg = 19;
-        /** The level of the material's skill it takes to lift a medium and a large piece (small ones anyone can). */
-        public int mediumLevel = 2;
-        public int largeLevel = 5;
-        /** Plumbing to take out a sink or toilet with a pipe wrench, and a tub or anything big; Electrical for wired fittings. */
-        public int plumbedLevel = 1;
-        /** Plumbed fixtures at or over this weight (a bathtub, a shower tray) count as big. */
-        public double plumbedLargeKg = 34;
-        public int plumbedLargeLevel = 3;
-        public int wiredLevel = 1;
+        /**
+         * Chance a piece breaks as you lift it at skill 0, Zomboid style. Anything that needs a tool to come loose
+         * (a hammer for furniture, a screwdriver for appliances and wired lights) breaks 75% of the time at 0 and
+         * 7.5% less each level, never at 10; a pipe wrench job (sinks, toilets, tubs) is Zomboid's flat 25%, which
+         * here falls 2.5% a level of Plumbing. Small loose things and fridges need no tool and never break.
+         */
+        public double toolBreak = 0.75;
+        public double plumbedBreak = 0.25;
         /** Scales every piece of furniture's weight. */
         public double furnitureWeight = 1.0;
         /** Lifting a piece takes half a second plus this many ticks for every kilogram (8% less a level over the need). */

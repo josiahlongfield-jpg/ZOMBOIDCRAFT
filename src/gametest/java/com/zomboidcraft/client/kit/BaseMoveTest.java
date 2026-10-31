@@ -30,7 +30,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Base customisation wave 1 in a real client: a furnished room, then lifting each piece the way a player does (hold
- * left click), refused until the skill and tool are there, and what it then weighs on you; the steps of knocking
+ * left click), refused without its tool, breaking by Zomboid's chance at low skill and never at 10, and what it then
+ * weighs on you; the steps of knocking
  * through walls; earth that only goes back into the ground; and the Skills page. Screenshots are numbered in order so
  * they stitch into the preview video. Run on CI by .github/workflows/basetest.yml.
  */
@@ -57,32 +58,34 @@ public class BaseMoveTest implements FabricClientGameTest {
             stand(ctx, sp, 4, 1, 60, 30);
             frame(ctx, "room");
 
-            // a chair anyone can lift, by hand
+            LOG.info("ZCBASE break chance by level (tool jobs / pipe wrench): {}", chances());
+            // a chair: small and loose, by hand, never breaks
             lift(ctx, sp, "home_chair", 0);
-            // a sofa end: too heavy at Carpentry 0 ...
+            // a sofa end: furniture, it won't come without a hammer
             lift(ctx, sp, "home_sofa_blue_l", 1);
-            // ... fine at the medium level
-            sp.getServer().runOnServer(s -> Skills.addXp(player(s), Skill.CARPENTRY, 150));
+            // with a hammer at Carpentry 0 it comes, but 75% of the time it comes apart
+            hold(sp, new ItemStack(ModItems.HAMMER));
             lift(ctx, sp, "home_sofa_blue_l", 1);
-            // a sink: plumbed in, first it wants a wrench and Plumbing, then emptying, then it comes
+            lift(ctx, sp, "home_sofa_blue_m", 2);
+            // at Carpentry 10 nothing breaks
+            sp.getServer().runOnServer(s -> Skills.addXp(player(s), Skill.CARPENTRY, Skill.xpForLevel(10)));
+            lift(ctx, sp, "home_sofa_blue_r", 3);
+            lift(ctx, sp, "home_wardrobe", 6);
+            // a sink: plumbed in, it wants a pipe wrench, then emptying, then it comes (25% break at Plumbing 0)
+            hold(sp, ItemStack.EMPTY);
             lift(ctx, sp, "home_sink_white", 4);
-            sp.getServer().runOnServer(s -> {
-                ServerPlayer p = player(s);
-                p.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ModItems.PIPE_WRENCH));
-                Skills.addXp(p, Skill.PLUMBING, 50);
-            });
+            hold(sp, new ItemStack(ModItems.PIPE_WRENCH));
             lift(ctx, sp, "home_sink_white", 4);
             sp.getServer().runOnServer(s -> {
                 if (s.overworld().getBlockEntity(at(4)) instanceof RandomizableContainer c) c.setLootTable(null);
             });
             lift(ctx, sp, "home_sink_white", 4);
-            // the fridge: big metal, needs Metalworking 5
+            lift(ctx, sp, "home_toilet", 7);
+            // the fridge: no tool and it never breaks, it's just heavy
+            hold(sp, ItemStack.EMPTY);
             sp.getServer().runOnServer(s -> {
-                player(s).setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
                 if (s.overworld().getBlockEntity(at(5)) instanceof RandomizableContainer c) c.setLootTable(null);
             });
-            lift(ctx, sp, "home_fridge", 5);
-            sp.getServer().runOnServer(s -> Skills.addXp(player(s), Skill.METALWORKING, 750));
             lift(ctx, sp, "home_fridge", 5);
             String load = sp.getServer().computeOnServer(s -> {
                 ServerPlayer p = player(s);
@@ -95,6 +98,18 @@ public class BaseMoveTest implements FabricClientGameTest {
             soil(ctx, sp);
             pages(ctx);
         }
+    }
+
+    private static void hold(TestSingleplayerContext sp, ItemStack stack) {
+        sp.getServer().runOnServer(s -> player(s).setItemInHand(InteractionHand.MAIN_HAND, stack.copy()));
+    }
+
+    private static String chances() {
+        StringBuilder b = new StringBuilder();
+        for (int l = 0; l <= 10; l++) {
+            b.append(String.format(java.util.Locale.ROOT, " %d:%.1f/%.1f", l, 100 * Moving.chance(0.75, l), 100 * Moving.chance(0.25, l)));
+        }
+        return b.toString();
     }
 
     private static ServerPlayer player(MinecraftServer s) {
@@ -155,6 +170,7 @@ public class BaseMoveTest implements FabricClientGameTest {
             BlockState st = s.overworld().getBlockState(pos);
             Moving.Piece m = Moving.piece(st, s.overworld(), pos);
             return st.getBlock() + " " + m + " refusal=" + (m == null ? "-" : Moving.refusal(m, p, s.overworld(), pos))
+                    + " risk=" + (m == null ? "-" : Moving.risk(m, p))
                     + " progress=" + st.getDestroyProgress(p, s.overworld(), pos);
         });
         LOG.info("ZCBASE lift {} before: {}", name, before);
@@ -166,7 +182,7 @@ public class BaseMoveTest implements FabricClientGameTest {
             ctx.waitTicks(12);
             frame(ctx, "lift-" + name + "-" + k);
         }
-        ctx.waitTicks(40);
+        ctx.waitTicks(70);
         ctx.runOnClient(mc -> mc.options.keyAttack.setDown(false));
         ctx.waitTicks(5);
         String after = sp.getServer().computeOnServer(s -> {
@@ -176,8 +192,9 @@ public class BaseMoveTest implements FabricClientGameTest {
                 ItemStack st = p.getInventory().getItem(j);
                 if (BuiltInRegistries.ITEM.getKey(st.getItem()).getPath().equals(name)) got = st;
             }
+            boolean gone = s.overworld().getBlockState(pos).isAir();
             return "block now " + s.overworld().getBlockState(pos).getBlock() + ", in inventory " + got
-                    + (got.isEmpty() ? "" : " weighing " + Weights.format(Weights.of(got)));
+                    + (got.isEmpty() ? (gone ? " BROKE" : "") : " weighing " + Weights.format(Weights.of(got)));
         });
         LOG.info("ZCBASE lift {} after: {}", name, after);
         frame(ctx, "lift-" + name + "-done");

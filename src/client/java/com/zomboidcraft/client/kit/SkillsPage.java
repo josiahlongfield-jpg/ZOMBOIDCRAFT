@@ -46,44 +46,41 @@ final class SkillsPage {
                     new Perk(0, "6% more back from every repair, each level"),
                     new Perk(10, "120%: better than the kit promises")),
                     l -> "Right now: repairs give back " + Math.round((0.6f + 0.06f * l) * 100) + "%."),
-            new Info(Skill.CARPENTRY, "Building", "Board up windows and doors, strip wooden furniture with a hammer, crowbar or axe, and move it about.", List.of(
+            new Info(Skill.CARPENTRY, "Building", "Board up windows and doors, and move furniture: a hammer gets it loose, "
+                    + "crouch with one to strip it for materials instead.", List.of(
                     new Perk(0, "5% chance to save the nails on every board, and quicker hammering"),
-                    new Perk(0, "Lift small furniture into your pack: chairs, lamps, boxes"),
-                    new Perk(lift().mediumLevel, "Lift tables, beds and sofas"),
+                    new Perk(0, "Furniture lifted with a hammer breaks 75% of the time at level 0, 7.5% less each level"),
                     new Perk(DigRules.Wall.WOOD.level(), "Knock through wooden walls and floors"),
                     new Perk(4, "Reinforced barricades take more hits"),
-                    new Perk(lift().largeLevel, "Lift wardrobes, counters and bookcases"),
-                    new Perk(8, "Heavy barricades")),
+                    new Perk(8, "Heavy barricades"),
+                    new Perk(10, "Furniture never breaks as you lift it")),
                     l -> "Right now: " + (l >= 8 ? "heavy" : l >= 4 ? "reinforced" : "plain") + " barricades, " + 5 * l
-                            + "% of nails saved, " + secs(Math.max(30, 60 - 3 * l)) + " a board, " + lifts(l) + wall(DigRules.Wall.WOOD, l)),
+                            + "% of nails saved, " + secs(Math.max(30, 60 - 3 * l)) + " a board, " + breaks(l, lift().toolBreak, "furniture")
+                            + wall(DigRules.Wall.WOOD, l)),
             new Info(Skill.MASONRY, "Building", "Break up steps, kerbs and brickwork with a sledgehammer. It leaves rubble.", List.of(
                     new Perk(0, "Walls you can break come down 12% quicker"),
                     new Perk(DigRules.Wall.PARTITION.level(), "Knock through brick and plaster walls between rooms"),
-                    new Perk(lift().mediumLevel, "Lift medium stone and ceramic pieces"),
                     new Perk(DigRules.Wall.OUTSIDE.level(), "Knock through outside brickwork: a new doorway, or join two buildings"),
-                    new Perk(lift().largeLevel, "Lift large stone pieces"),
                     new Perk(DigRules.Wall.CONCRETE.level(), "Knock through poured concrete: bunkers, car parks, cellars")),
                     l -> "Right now:" + wall(DigRules.Wall.PARTITION, l).substring(1) + wallAlso(DigRules.Wall.OUTSIDE, l) + wallAlso(DigRules.Wall.CONCRETE, l)),
             new Info(Skill.METALWORKING, "Building", "Cut up metal furniture and fittings with a propane torch. It leaves scrap metal.", List.of(
                     new Perk(0, "Walls you can break come down 12% quicker"),
-                    new Perk(lift().mediumLevel, "Lift metal furniture: filing cabinets, lockers, shelving"),
                     new Perk(DigRules.Wall.STEEL.level(), "Cut through thin steel walls and plating"),
-                    new Perk(lift().largeLevel, "Lift big metal pieces: fridges, freezers, racking"),
                     new Perk(DigRules.Wall.HEAVY_STEEL.level(), "Cut through heavy steel: hulls, bulkheads, vaults")),
                     l -> "Right now:" + wall(DigRules.Wall.STEEL, l).substring(1) + wallAlso(DigRules.Wall.HEAVY_STEEL, l)),
-            new Info(Skill.ELECTRICAL, "Building", "Take down wired fittings with a screwdriver. Every one you take out teaches it.", List.of(
+            new Info(Skill.ELECTRICAL, "Building", "Unhook appliances (stoves, washers, TVs) and take down switches and lights "
+                    + "with a screwdriver. Every one you take out teaches it.", List.of(
                     new Perk(0, "Switch room lights on and off"),
-                    new Perk(lift().wiredLevel, "Take down light switches and wall or ceiling lights, and put them up somewhere new"),
-                    new Perk(0, "Generators and wiring rooms come in a later update")),
-                    l -> l >= lift().wiredLevel ? "Right now: you can move wired fittings with a screwdriver."
-                            : "Right now: too green to touch the wiring (level " + lift().wiredLevel + ")."),
-            new Info(Skill.PLUMBING, "Building", "Unbolt plumbing with a pipe wrench. Every fixture you take out teaches it.", List.of(
-                    new Perk(lift().plumbedLevel, "Take out sinks and toilets"),
-                    new Perk(lift().plumbedLargeLevel, "Take out tubs, showers and anything big"),
-                    new Perk(0, "Hooking them up to water comes in a later update")),
-                    l -> l >= lift().plumbedLargeLevel ? "Right now: any fixture comes out with a pipe wrench."
-                            : l >= lift().plumbedLevel ? "Right now: sinks and toilets come out with a pipe wrench, tubs not yet."
-                            : "Right now: too green to take plumbing out (level " + lift().plumbedLevel + ")."),
+                    new Perk(0, "Anything you unhook breaks 75% of the time at level 0, 7.5% less each level"),
+                    new Perk(0, "Generators and wiring rooms come in a later update"),
+                    new Perk(10, "Nothing you unhook ever breaks")),
+                    l -> "Right now: " + breaks(l, lift().toolBreak, "appliances and lights") + "."),
+            new Info(Skill.PLUMBING, "Building", "Unbolt sinks, toilets and tubs with a pipe wrench. Every fixture you take out "
+                    + "teaches it.", List.of(
+                    new Perk(0, "Fixtures break 25% of the time at level 0 (Zomboid's chance), 2.5% less each level"),
+                    new Perk(0, "Hooking them up to water comes in a later update"),
+                    new Perk(10, "Fixtures never break")),
+                    l -> "Right now: " + breaks(l, lift().plumbedBreak, "fixtures") + "."),
             new Info(Skill.PILOTING, "Survival", "Fly the jets and the helicopter. Time in the air and clean landings teach it; "
                     + "reading a flight manual gets you off the ground in the first place.", List.of(
                     new Perk(0, "Shaky hands: the controls are slow and twitchy"),
@@ -128,9 +125,11 @@ final class SkillsPage {
         return ZcConfig.get().building;
     }
 
-    /** Which sizes of furniture you can lift, as part of a sentence. */
-    private static String lifts(int l) {
-        return l >= lift().largeLevel ? "any furniture lifts" : l >= lift().mediumLevel ? "small and medium furniture lifts" : "small furniture lifts";
+    /** How often what you lift breaks at this level, as part of a sentence. */
+    private static String breaks(int l, double risk, String what) {
+        double chance = com.zomboidcraft.building.Moving.chance(risk, l);
+        return chance <= 0 ? what + " never break" : String.format(Locale.ROOT, "%s break %.1f%% of the time", what, chance * 100)
+                .replace(".0%", "%");
     }
 
     /** What the skill does to a kind of wall, as the rest of a "Right now" sentence: starts with a comma. */
