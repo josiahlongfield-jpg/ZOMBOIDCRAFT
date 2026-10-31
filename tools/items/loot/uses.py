@@ -32,7 +32,7 @@ USES = {
     'laser_rangefinder': 'Reads the range for long shots.',
     'metal_detector': 'Finds buried caches and lost valuables in parks and on beaches.',
     'door_ram': 'Opens a locked door in one go, loudly.',
-    'quiet_generator': "Powers part of a base at half a generator's noise.",
+    'quiet_generator': "A generator heard only close by, with a 20 L tank. Set it down, fill, connect, run.",
     'motion_sensor_kit': 'Set at the base edge: beeps on your radio when something passes.',
     'tactical_floodlight': 'Lights a whole yard, and draws zombies at night.',
     'codebook': 'Decodes military broadcasts that name supply caches.',
@@ -273,7 +273,7 @@ USES = {
     'pry_bar': 'Pries open doors, crates and windows quietly.',
     'toolbox': 'Holds tools; counts as a basic tool set.',
     'mechanic_toolbox': 'Counts as a full mechanic set: fixes any car part.',
-    'portable_generator': 'Powers a base: fridge, lights, radio. Burns fuel; loud.',
+    'portable_generator': 'Set it down, fill it from a gas can, connect it and run it: powers everything within 20 blocks. Loud.',
     'welding_mask': 'Needed to weld metal safely.',
     'welding_rods': 'Metalworking: welds sheet and pipe into walls and armour.',
     'propane_torch': 'Welds with welding rods; cuts metal; lights fires.',
@@ -531,6 +531,7 @@ MAGS = {
     'mag_electronics': 'Teaches the timer, remote trigger, noise maker and base alarm.',
     'mag_farming': 'Teaches making pesticide and fertilizer.',
     'mag_hunting': 'Teaches trap building and butchering big game.',
+    'mag_generators': 'Read it to learn to connect a generator.',
     'mag_guns': 'Teaches gun cleaning and field-stripping: more gun condition per repair (WEAPONS).',
 }
 PAPERS = {

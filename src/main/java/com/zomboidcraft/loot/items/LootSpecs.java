@@ -617,6 +617,7 @@ public final class LootSpecs {
         new LootSpec("mag_farming", "books", Rarity.SCARCE, 6, 0.3, 8, true, null),
         new LootSpec("mag_hunting", "books", Rarity.SCARCE, 6, 0.2, 16, true, null),
         new LootSpec("mag_guns", "books", Rarity.RARE, 12, 0.2, 16, true, null),
+        new LootSpec("mag_generators", "books", Rarity.SCARCE, 8, 0.2, 16, true, null),
         new LootSpec("paperback", "books", Rarity.COMMON, 1, 0.3, 8, true, null),
         new LootSpec("hardback", "books", Rarity.COMMON, 2, 0.8, 8, true, null),
         new LootSpec("bible", "books", Rarity.COMMON, 2, 0.7, 8, true, null),

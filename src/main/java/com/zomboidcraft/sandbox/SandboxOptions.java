@@ -128,6 +128,14 @@ final class SandboxOptions {
         w.put("SirenShutoffHours", b -> b.number("world.sirenShutoffHours", 0, 168).owner("VEHICLES"));
         w.put("PlayerDamageFromCrash", b -> b.toggle("world.playerDamageFromCrash").owner("VEHICLES"));
         w.put("RecentlySurvivorVehicles", b -> b.choice("world.survivorCars", "none", "low", "normal", "high").owner("VEHICLES"));
+        // Power (LOOT): the mains go off on the shutoff day, each district at its own hour
+        w.put("ElecShutModifier", b -> b.number("power.shutoffDays", -1, 1000000000).owner("LOOT")
+                .tip("The day the mains go off, each district at its own hour that day. -1: off from the start."));
+        w.put("GeneratorFuelConsumption", b -> b.number("power.generatorFuel", 0, 100).owner("LOOT"));
+        w.put("GeneratorTileRange", b -> b.number("power.generatorRange", 1, 100).owner("LOOT")
+                .tip("How far round a running generator it powers, in blocks."));
+        w.put("GeneratorVerticalPowerRange", b -> b.number("power.generatorFloors", 1, 15).owner("LOOT"));
+        w.put("AllowExteriorGenerator", b -> b.toggle("power.generatorExterior").owner("LOOT"));
         w.put("TrafficJam", b -> b.toggle("world.trafficJams").owner("LANDSCAPE"));
         w.put("DamageToPlayerFromHitByACar", b -> b.number("world.carHitDamage", 1, 4).owner("VEHICLES"));
         // Firearms (WEAPONS): combat/Firearms. Use Damage Chance says who a shot strikes just by being aimed at;
@@ -174,6 +182,9 @@ final class SandboxOptions {
                 .tip("Pick a town or city and wake inside a building with no dead in it.")
                 .toggle("start.picker").owner("UI"));
 
+        o.add(of(UTILITIES, "zc.powerAlwaysOn", "Power Always On")
+                .tip("The mains never go off, whatever the shutoff day says.")
+                .toggle("power.alwaysOn").owner("LOOT"));
         o.add(of(UTILITIES, "zc.worldEvents", "World Events")
                 .tip("Air-raid sirens, far-off explosions, jets and helicopters crossing the map, heard by everyone.")
                 .toggle("world.worldEvents").owner("AUDIO"));

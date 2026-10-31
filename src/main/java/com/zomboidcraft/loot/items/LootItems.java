@@ -87,6 +87,10 @@ public final class LootItems {
             item = new net.minecraft.world.item.SpyglassItem(props.stacksTo(1));
         } else if (FieldGearItem.KINDS.containsKey(spec.id())) {
             item = new FieldGearItem(props, FieldGearItem.KINDS.get(spec.id()));
+        } else if (com.zomboidcraft.power.Generators.Kind.of(spec.id()) != null) {
+            item = new com.zomboidcraft.power.GeneratorItem(props, com.zomboidcraft.power.Generators.Kind.of(spec.id()));
+        } else if (MagazineItem.TEACHES.containsKey(spec.id())) {
+            item = new MagazineItem(props);
         } else if (spec.id().equals("gas_can")) {
             item = new GasCanItem(props);
         } else if (LeisureItem.FUN.containsKey(spec.id())) {

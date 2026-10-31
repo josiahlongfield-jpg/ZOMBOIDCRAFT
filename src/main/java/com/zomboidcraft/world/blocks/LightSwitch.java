@@ -69,7 +69,14 @@ public final class LightSwitch {
                 BlockState state = player.level().getBlockState(payload.pos());
                 if (!player.isSpectator() && player.blockPosition().distSqr(payload.pos()) < REACH * REACH
                         && state.getBlock() instanceof Switch) {
-                    flip((ServerLevel) player.level(), payload.pos(), state);
+                    ServerLevel level = (ServerLevel) player.level();
+                    if (state.getBlock() != CityBlocks.block(ON) && !com.zomboidcraft.power.PowerGrid.hasPower(level, payload.pos())) {
+                        // the mains are off and no generator reaches: the switch clicks, nothing comes on
+                        level.playSound(null, payload.pos(), SoundEvents.STONE_BUTTON_CLICK_ON, SoundSource.BLOCKS, 0.5f, 1.3f);
+                        player.sendOverlayMessage(net.minecraft.network.chat.Component.literal("No power."));
+                        return;
+                    }
+                    flip(level, payload.pos(), state);
                 }
             });
         });

@@ -703,6 +703,7 @@ mag_electronics | Electronics Hobbyist (recipe) | R | 10 | 0.2 | elec desk
 mag_farming | Farm Almanac (recipe) | S | 6 | 0.3 | farm.3 books
 mag_hunting | Hunting & Trapping (recipe) | S | 6 | 0.2 | camp gun conv
 mag_guns | Gun Digest (finish blueprint) | R | 12 | 0.2 | gun.3 pawn conv
+mag_generators | How to Use Generators | S | 8 | 0.2 | elec garage hard books
 # reading for comfort
 paperback | Paperback Novel | C | 1 | 0.3 | night.3 books desk station bus
 hardback | Hardback Book | C | 2 | 0.8 | desk books mansion
