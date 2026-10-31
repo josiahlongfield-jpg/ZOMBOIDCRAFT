@@ -269,10 +269,12 @@ public class GunLookTest implements FabricClientGameTest {
         LOG.info("ZCGUN reload menu opened {}", opened);
         ctx.waitTicks(5);
         ctx.takeScreenshot("reload-menu");
-        ctx.getInput().pressKey(com.mojang.blaze3d.platform.InputConstants.KEY_RIGHT);
-        ctx.waitTicks(5);
-        ctx.takeScreenshot("reload-menu-sub");
-        ctx.getInput().pressKey(com.mojang.blaze3d.platform.InputConstants.KEY_RETURN);
+        // the menu's own rows are picked with the mouse in play; here the 9mm line's packet is sent as its click does
+        ctx.runOnClient(mc -> mc.gui.setScreen(null));
+        ctx.waitTicks(2);
+        final int bx = x, by = y, bz = z;
+        ctx.runOnClient(mc -> net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.send(
+                new com.zomboidcraft.combat.Reloading.Use(new net.minecraft.core.BlockPos(bx, by, bz), 0)));
         for (int i = 0; i <= 11; i++) {
             ctx.waitTicks(i == 0 ? 10 : 36);
             ctx.takeScreenshot(String.format("reload-load-%02d", i));

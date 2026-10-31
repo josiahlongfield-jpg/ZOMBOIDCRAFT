@@ -50,6 +50,7 @@ public final class ReloadingClient {
             Reloading.Load load = Reloading.LOADS.get(i);
             int n = Reloading.batch(player, load);
             String name = load.round().getName(new ItemStack(load.round())).getString();
+            if (!name.endsWith("s")) name += "s";      // "12 Gauge Shell" reads "Load 6 12 Gauge Shells"
             if (n > 0) {
                 int which = i;
                 loads.add(InteractMenu.Option.timed("Load " + n + " " + name, Reloading.ticks(player, n) / 20f,
@@ -65,11 +66,11 @@ public final class ReloadingClient {
     private static String needs(LocalPlayer player, Reloading.Load load) {
         List<String> parts = new ArrayList<>();
         if (!has(player, load.casing())) {
-            parts.add(load.casing().getName(new ItemStack(load.casing())).getString().toLowerCase(java.util.Locale.ROOT));
+            parts.add(lower(load.casing()));
         }
         if (!has(player, ModItems.PRIMERS)) parts.add("primers");
         if (!has(player, load.head())) {
-            parts.add(load.head().getName(new ItemStack(load.head())).getString().toLowerCase(java.util.Locale.ROOT));
+            parts.add(lower(load.head()));
         }
         if (!has(player, ModItems.SMOKELESS_POWDER)) parts.add("smokeless powder");
         return parts.isEmpty() ? "more powder" : String.join(", ", parts);
@@ -81,5 +82,16 @@ public final class ReloadingClient {
             if (inv.getItem(i).is(item)) return true;
         }
         return false;
+    }
+
+    /** An item's name in a sentence: "Spent .380 ACP Casings" reads "spent .380 ACP casings". */
+    private static String lower(net.minecraft.world.item.Item item) {
+        StringBuilder out = new StringBuilder();
+        for (String w : item.getName(new ItemStack(item)).getString().split(" ")) {
+            boolean title = w.length() > 1 && Character.isUpperCase(w.charAt(0)) && w.substring(1).equals(w.substring(1).toLowerCase(java.util.Locale.ROOT));
+            if (out.length() > 0) out.append(' ');
+            out.append(title ? w.toLowerCase(java.util.Locale.ROOT) : w);
+        }
+        return out.toString();
     }
 }
