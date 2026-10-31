@@ -79,7 +79,8 @@ public final class MeshGuns {
         pose.pushPose();
         pose.scale(1 / 16f, 1 / 16f, 1 / 16f);
         Identifier paint = texture != null ? texture : gun.texture();
-        out.submitCustomGeometry(pose, RenderTypes.entityCutoutCull(paint), (at, buffer) -> solid(p, at, buffer, light));
+        final int shade = tint;
+        out.submitCustomGeometry(pose, RenderTypes.entityCutoutCull(paint), (at, buffer) -> solid(p, at, buffer, light, shade));
         if (inkOn) {
             out.submitCustomGeometry(pose, RenderTypes.entityCutoutCull(paint), (at, buffer) -> ink(p, gun.outline(), at, buffer, light));
         }
@@ -94,6 +95,9 @@ public final class MeshGuns {
      * round the one part it submits (the item renderer draws it there and then) and clears it after.
      */
     public static java.util.List<Identifier> overlays = java.util.List.of();
+
+    /** The colour the next parts are painted through, while set (a wet garment darkens); white is as painted. */
+    public static int tint = 0xFFFFFFFF;
 
     /**
      * A see-through layer over a part: the mesh again, a hair out along its smooth normals, painted with a cut-out
@@ -123,13 +127,17 @@ public final class MeshGuns {
     }
 
     private static void solid(Part p, PoseStack.Pose pose, VertexConsumer out, int light) {
+        solid(p, pose, out, light, 0xFFFFFFFF);
+    }
+
+    private static void solid(Part p, PoseStack.Pose pose, VertexConsumer out, int light, int colour) {
         float[] pos = p.pos(), uv = p.uv(), n = p.normal();
         for (int t = 0; t < p.triangles(); t++) {
             for (int c = 0; c < 4; c++) {
                 int k = Math.min(c, 2);
                 int i = t * 3 + (flipped ? 2 - k : k);     // quads: the last corner twice
                 out.addVertex(pose, pos[i * 3], pos[i * 3 + 1], pos[i * 3 + 2])
-                        .setColor(0xFFFFFFFF)
+                        .setColor(colour)
                         .setUv(uv[i * 2], uv[i * 2 + 1])
                         .setOverlay(OverlayTexture.NO_OVERLAY)
                         .setLight(light)

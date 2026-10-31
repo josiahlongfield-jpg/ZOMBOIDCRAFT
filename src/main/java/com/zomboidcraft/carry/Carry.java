@@ -366,9 +366,9 @@ public final class Carry {
             // a garment's camo shows (clothing/ClothingLoot)
             String camo = stack.get(com.zomboidcraft.clothing.ClothingLoot.CAMO);
             if (camo != null) plain.set(com.zomboidcraft.clothing.ClothingLoot.CAMO, camo);
-            // and how dirty and bloody it looks, in the steps the clothing layer draws (so it resyncs only on a step)
+            // and how dirty, bloody and wet it looks, in the steps the clothing layer draws (so it resyncs only on a step)
             com.zomboidcraft.clothing.ClothDirt grime = com.zomboidcraft.clothing.ClothDirt.of(stack).shown();
-            if (!grime.clean()) plain.set(com.zomboidcraft.clothing.ClothDirt.TYPE, grime);
+            if (!grime.clean() || grime.wet() > 0) plain.set(com.zomboidcraft.clothing.ClothDirt.TYPE, grime);
             now.add(plain);
         }
         // carried weapons keep their parts and finish, so they look the same on you

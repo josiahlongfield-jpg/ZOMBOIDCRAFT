@@ -87,10 +87,15 @@ public record ClothDirt(int dirt, int blood, int wet) {
         return step(blood, true);
     }
 
-    /** What others see: dirt and blood rounded down to their steps, no wetness. */
+    /** 0 dry, 1 damp, 2 soaking wet (the kit card's words). */
+    public int wetStep() {
+        return wet >= 60 ? 2 : wet > 0 ? 1 : 0;
+    }
+
+    /** What others see: dirt and blood rounded down to their steps, and dry, damp or soaked. */
     public ClothDirt shown() {
-        int d = dirtStep(), b = bloodStep();
-        return new ClothDirt(d == 0 ? 0 : DIRT_STEPS[d - 1], b == 0 ? 0 : BLOOD_STEPS[b - 1], 0);
+        int d = dirtStep(), b = bloodStep(), w = wetStep();
+        return new ClothDirt(d == 0 ? 0 : DIRT_STEPS[d - 1], b == 0 ? 0 : BLOOD_STEPS[b - 1], w == 0 ? 0 : w == 1 ? 1 : 60);
     }
 
     private static int clamp(int v) {
