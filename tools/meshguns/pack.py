@@ -38,6 +38,7 @@ SPEC (paths may be relative to the spec file):
                scope or suppressor as an attachment of its own, fitted with the gun so it keeps the gun's scale)}
     roll       degrees to turn it about z before mounting (180: a grip or bipod taken from under a gun, so it stands +y
                like everything on a top rail)
+    clear      true for an optic you look through: the glass on its sight line is left out (see clear_glass)
     sight      for an optic: {"objects": [indices]} or {"groups": [name parts]}, its lens (usually left out of the drawing),
                whose middle is where the eye lines up; or {"at": [x, y, z]} in packed pixels. Written to bounds.json.
                (a piece's box may also hold "group": [name parts] to take only from those groups)
@@ -102,6 +103,41 @@ def group_names(obj, geoms):
     if counts != [len(g.faces) for g in geoms]:
         raise SystemExit(f"{obj}: can't match its groups {list(zip(names, counts))} to {[len(g.faces) for g in geoms]}")
     return names
+
+
+def clear_glass(v, f, sight):
+    """The glass the eye looks through along an optic's sight line (parallel to z through the sight point): each
+    piece of the mesh (faces joined by shared corners: a lens is its own piece, with its own patch of texture) that the
+    line passes through, faces along it and is no wider than a lens. Returns which faces to leave out."""
+    from scipy.sparse import coo_matrix
+    from scipy.sparse.csgraph import connected_components
+    tris = v[f]
+    e1, e2 = tris[:, 1] - tris[:, 0], tris[:, 2] - tris[:, 0]
+    nrm = np.cross(e1, e2)
+    nrm = nrm / np.maximum(np.linalg.norm(nrm, axis=1, keepdims=True), 1e-12)
+    d = np.array([0.0, 0.0, -1.0])
+    p = np.cross(d, e2); det = (e1 * p).sum(1); ok = np.abs(det) > 1e-12
+    inv = np.where(ok, 1 / np.where(ok, det, 1), 0)
+    hit = np.zeros(len(f), bool)
+    # the line itself and a ring round it, so a lens set a little off the middle is found too
+    for a in [None] + list(np.linspace(0, 2 * np.pi, 8, endpoint=False)):
+        off = (0.0, 0.0) if a is None else (0.15 * np.cos(a), 0.15 * np.sin(a))
+        t0 = np.array([sight[0] + off[0], sight[1] + off[1], 1e3]) - tris[:, 0]
+        u = (t0 * p).sum(1) * inv; q = np.cross(t0, e1); w = (q * d).sum(1) * inv
+        hit |= ok & (u >= 0) & (w >= 0) & (u + w <= 1)
+    edges = np.concatenate([f[:, [0, 1]], f[:, [1, 2]]])
+    graph = coo_matrix((np.ones(len(edges)), (edges[:, 0], edges[:, 1])), shape=(len(v), len(v)))
+    _, label = connected_components(graph, directed=False)
+    piece = label[f[:, 0]]
+    drop = np.zeros(len(f), bool)
+    for c in np.unique(piece[hit]):
+        m = piece == c
+        r = np.hypot(tris[m, :, 0] - sight[0], tris[m, :, 1] - sight[1]).max()
+        facing = np.abs(nrm[m, 2]).mean()
+        if facing > 0.6 and r < 2.5:
+            drop |= m
+        print(f"  glass piece of {m.sum()} faces, {r:.2f} px wide, facing {facing:.2f}: {'cleared' if facing > 0.6 and r < 2.5 else 'kept'}")
+    return drop
 
 
 def paint_over(img, box):
@@ -294,6 +330,9 @@ def main(spec_path):
         v = v[:-n_lens]
     elif 'sight' in spec and 'at' in spec['sight']:
         sight = np.asarray(spec['sight']['at'], float)
+    if spec.get('clear') and sight is not None:
+        keep = ~clear_glass(v, f, sight)
+        f, owner = f[keep], owner[keep]
     normals = smooth_normals(v, f)
     centre = v[f].mean(1)
     parts, left = [], np.ones(len(f), bool)

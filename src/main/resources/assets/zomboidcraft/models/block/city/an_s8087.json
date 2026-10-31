@@ -1,0 +1,123 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "an_private_main": "zomboidcraft:block/city/an_private_main",
+    "an_private_rudder": "zomboidcraft:block/city/an_private_rudder",
+    "particle": "zomboidcraft:block/city/an_private_main"
+  },
+  "elements": [
+    {
+      "from": [
+        15.742,
+        8.0,
+        0.0
+      ],
+      "to": [
+        16.0,
+        16.0,
+        2.24
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_private_main",
+          "uv": [
+            0.0,
+            0.0,
+            0.258,
+            8.0
+          ],
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#an_private_main",
+          "uv": [
+            15.742,
+            0.0,
+            16.0,
+            8.0
+          ]
+        },
+        "west": {
+          "texture": "#an_private_rudder",
+          "uv": [
+            0.0,
+            0.0,
+            2.24,
+            8.0
+          ]
+        },
+        "up": {
+          "texture": "#an_private_main",
+          "uv": [
+            15.742,
+            0.0,
+            16.0,
+            2.24
+          ],
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#an_private_main",
+          "uv": [
+            15.742,
+            13.76,
+            16.0,
+            16.0
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        9.438,
+        15.838,
+        0.0
+      ],
+      "to": [
+        16.0,
+        16.0,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_private_main",
+          "uv": [
+            0.0,
+            0.0,
+            6.562,
+            0.162
+          ],
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#an_private_main",
+          "uv": [
+            9.438,
+            0.0,
+            16.0,
+            0.162
+          ],
+          "cullface": "south"
+        },
+        "west": {
+          "texture": "#an_private_main",
+          "uv": [
+            0.0,
+            0.0,
+            16.0,
+            0.162
+          ]
+        },
+        "down": {
+          "texture": "#an_private_main",
+          "uv": [
+            9.438,
+            0.0,
+            16.0,
+            16.0
+          ]
+        }
+      }
+    }
+  ]
+}

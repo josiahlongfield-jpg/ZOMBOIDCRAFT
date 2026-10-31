@@ -6,7 +6,7 @@
 mix.json holds the Mixamo bind pose (metres, feet on y=0, facing +z, x her left), each mesh's skin and every clip
 sampled at 30 fps (each bone's model-space position and turn). SPEC.json says which meshes to keep, the piece each
 belongs to (pieces can be put on and taken off in game), its texture, whether it's drawn both sides, how much of it
-to keep near and far (lods), and how far (m) clothes stand off the skin (push). face.json (optional) is the original model's face rig, dumped by the page that posed her for Mixamo (kept with her
+to keep near and far (lods), and how far (m) clothes stand off the skin (push), and optionally one bone a stiff piece rides whole (bone, e.g. "mixamorigHead"). A mesh with several materials arrives split as "<mesh>.<material>". face.json (optional) is the original model's face rig, dumped by the page that posed her for Mixamo (kept with her
 files in the project's storage, zomboid-mod/assets/woman/tools/): per vertex
 how much follows the jaw and each top eyelid, and their pivots. Mixamo keeps only the body's bones, so those three
 come back here as extra bones under the head, turned by the game (talking, blinking).
@@ -79,12 +79,27 @@ def thin(m, keep):
 
 def add_face(m, face, base):
     """Mixes the face rig's weights (jaw, lid_l, lid_r = bones base..base+2) into a mesh's Mixamo skin."""
-    f = face['meshes'].get(m['name'])
+    f = face['meshes'].get(m['name']) or face['meshes'].get(m['name'].split('.')[0])
     if not f or not f['idx']:
         return
     from scipy.spatial import cKDTree
-    d, j = cKDTree(np.array(f['pos'])).query(m['pos'])
+    fp = np.array(f['pos'])
+    d, j = cKDTree(fp).query(m['pos'])
     hit = d < 2e-4
+    if hit.sum() < 0.5 * len(fp) and f.get('box'):
+        # dumped from Blender (face_dump.py): the same mesh, but Mixamo may have moved or scaled it a little, so line the
+        # two up by the whole mesh's box before matching
+        lo, hi = np.array(f['box'][0]), np.array(f['box'][1])
+        mlo, mhi = m['pos'].min(0), m['pos'].max(0)
+        fp = (fp - lo) / np.maximum(hi - lo, 1e-9) * (mhi - mlo) + mlo
+        d, j = cKDTree(fp).query(m['pos'])
+        hit = d < max(2e-4, 1e-3 * float((mhi - mlo).max()))
+        if len(fp) > face.get('_fit_n', 0):
+            # the pivots move the same way, by the mesh with the most of the face on it
+            face['_fit'], face['_fit_n'] = (lo, hi, mlo, mhi), len(fp)
+    if hit.sum() < 0.5 * len(f['pos']):
+        print(f"  WARNING {m['name']}: only {hit.sum()} of {len(f['pos'])} face vertices found; was face.json made from"
+              " the same pose you uploaded to Mixamo?")
     fw = np.zeros((m['n'], 3))
     fw[hit] = np.array(f['w'])[j[hit]]
     total = fw.sum(1).clip(0, 1)
@@ -138,6 +153,10 @@ def main():
         m = next(x for x in J['meshes'] if x['name'] == g['mesh'])
         m = dict(m)
         m['si'] = np.vectorize(lambda i: remap.get(i, 0))(m['si'])
+        if g.get('bone'):
+            # a stiff piece (face, hair, hat) rides one bone whole, whatever Mixamo guessed for it
+            m['si'] = np.zeros_like(m['si']); m['si'][:, 0] = names.index(g['bone'])
+            m['sw'] = np.zeros_like(m['sw']); m['sw'][:, 0] = 1
         if face:
             add_face(m, face, nb)
         m = thin(m, g.get('lods', [1.0, 0.4])[lod])
@@ -182,6 +201,9 @@ def main():
             inv, par = J['inv'][keep[i]], parent[i]
         else:
             px, py, pz = face_bones[i - nb][2]
+            if face.get('_fit'):
+                lo, hi, mlo, mhi = face['_fit']
+                px, py, pz = (np.array([px, py, pz]) - lo) / np.maximum(hi - lo, 1e-9) * (mhi - mlo) + mlo
             inv, par = np.array([[1, 0, 0, -px], [0, 1, 0, -py], [0, 0, 1, -pz], [0, 0, 0, 1.]]), head
         b = n.encode()
         out.write(struct.pack('>H', len(b)) + b + struct.pack('>b', par) + struct.pack('>12f', *inv[:3].reshape(-1)))

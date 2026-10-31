@@ -104,6 +104,12 @@ public final class CarClient {
                 // a downed friend: revive them, or lift them onto a stretcher
             } else if (com.zomboidcraft.client.npc.NpcClient.interact(client, hit)) {
                 // a companion: follow me, or wait here
+            } else if (com.zomboidcraft.client.kit.FilesClient.interact(client, hit)) {
+                // a file lying in the world: read it
+            } else if (com.zomboidcraft.client.ferry.FerryClient.interact(client, hit)) {
+                // a landing's bell: the ferry's coming in
+            } else if (com.zomboidcraft.client.lights.LightClient.interact(client, hit)) {
+                // a room's light switch
             } else if (player.getMainHandItem().is(com.zomboidcraft.ModItems.CAR_KEY)) {
                 // not at a car, key in hand: its panic button
                 ClientPlayNetworking.send(new CarNet.Use(CarNet.FOB, 0, 0, 0));
@@ -171,16 +177,16 @@ public final class CarClient {
                     continue;
                 }
                 // outside the car on the handle's side, within arm's reach of the door, level with it; a handle
-                // on the middle line is climbed to from behind (the Warthog's gun)
+                // on the middle line (the Warthog's gun, lit on its grips) is climbed to from behind the car
                 boolean back = Math.abs(h[0]) < 0.05f;
-                double out = back ? h[2] - at.z : Math.signum(h[0]) * at.x - Math.abs(h[0]);
+                double out = back ? -m.size[2] / 2 - at.z : Math.signum(h[0]) * at.x - Math.abs(h[0]);
                 if (out < -0.15 || out > (back ? 1.6 : 1.3) || (back ? Math.abs(at.x) > 1.3 : Math.abs(at.z - h[2]) > 1.1)) {
                     continue;
                 }
                 Vec3 to = car.toWorld(h).subtract(eye);
                 double d = to.length();
                 double cos = d < 1e-3 ? 1 : to.dot(look) / d;
-                if (d < DOOR_REACH && cos > bestCos) {
+                if (d < (back ? 3.2 : DOOR_REACH) && cos > bestCos) {
                     bestCos = cos;
                     best = new Target(car, s, h, com.zomboidcraft.client.interact.Interactables.SIZE, seatName(m, s));
                 }

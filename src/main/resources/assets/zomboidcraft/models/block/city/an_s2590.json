@@ -1,0 +1,375 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_chrome": "zomboidcraft:block/city/al_chrome",
+    "al_hub": "zomboidcraft:block/city/al_hub",
+    "al_strut": "zomboidcraft:block/city/al_strut",
+    "al_tyre": "zomboidcraft:block/city/al_tyre",
+    "particle": "zomboidcraft:block/city/al_chrome"
+  },
+  "elements": [
+    {
+      "from": [
+        0.0,
+        12.0,
+        6.24
+      ],
+      "to": [
+        1.76,
+        16.0,
+        9.76
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_chrome",
+          "uv": [
+            14.24,
+            0.0,
+            16.0,
+            4.0
+          ]
+        },
+        "south": {
+          "texture": "#al_chrome",
+          "uv": [
+            0.0,
+            0.0,
+            1.76,
+            4.0
+          ]
+        },
+        "east": {
+          "texture": "#al_chrome",
+          "uv": [
+            6.24,
+            0.0,
+            9.76,
+            4.0
+          ]
+        },
+        "down": {
+          "texture": "#al_chrome",
+          "uv": [
+            0.0,
+            6.24,
+            1.76,
+            9.76
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        0.0,
+        11.52,
+        6.72
+      ],
+      "to": [
+        9.6,
+        14.08,
+        9.28
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_strut",
+          "uv": [
+            6.4,
+            1.92,
+            16.0,
+            4.48
+          ]
+        },
+        "south": {
+          "texture": "#al_strut",
+          "uv": [
+            0.0,
+            1.92,
+            9.6,
+            4.48
+          ]
+        },
+        "east": {
+          "texture": "#al_strut",
+          "uv": [
+            6.72,
+            1.92,
+            9.28,
+            4.48
+          ]
+        },
+        "up": {
+          "texture": "#al_strut",
+          "uv": [
+            0.0,
+            6.72,
+            9.6,
+            9.28
+          ]
+        },
+        "down": {
+          "texture": "#al_strut",
+          "uv": [
+            0.0,
+            6.72,
+            9.6,
+            9.28
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        5.12,
+        0.246,
+        -4.554
+      ],
+      "to": [
+        9.28,
+        25.354,
+        20.554
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_tyre",
+          "uv": [
+            6.72,
+            0,
+            10.88,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#al_tyre",
+          "uv": [
+            5.12,
+            0,
+            9.28,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#al_hub",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#al_hub",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#al_tyre",
+          "uv": [
+            5.12,
+            0,
+            9.28,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#al_tyre",
+          "uv": [
+            5.12,
+            0,
+            9.28,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          7.2,
+          12.8,
+          8.0
+        ],
+        "axis": "x",
+        "angle": 0
+      }
+    },
+    {
+      "from": [
+        5.184,
+        0.246,
+        -4.554
+      ],
+      "to": [
+        9.216,
+        25.354,
+        20.554
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_tyre",
+          "uv": [
+            6.784,
+            0,
+            10.816,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#al_tyre",
+          "uv": [
+            5.184,
+            0,
+            9.216,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#al_tyre",
+          "uv": [
+            5.184,
+            0,
+            9.216,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#al_tyre",
+          "uv": [
+            5.184,
+            0,
+            9.216,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          7.2,
+          12.8,
+          8.0
+        ],
+        "axis": "x",
+        "angle": 22.5
+      }
+    },
+    {
+      "from": [
+        5.184,
+        0.246,
+        -4.554
+      ],
+      "to": [
+        9.216,
+        25.354,
+        20.554
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_tyre",
+          "uv": [
+            6.784,
+            0,
+            10.816,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#al_tyre",
+          "uv": [
+            5.184,
+            0,
+            9.216,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#al_tyre",
+          "uv": [
+            5.184,
+            0,
+            9.216,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#al_tyre",
+          "uv": [
+            5.184,
+            0,
+            9.216,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          7.2,
+          12.8,
+          8.0
+        ],
+        "axis": "x",
+        "angle": 45
+      }
+    },
+    {
+      "from": [
+        5.184,
+        0.246,
+        -4.554
+      ],
+      "to": [
+        9.216,
+        25.354,
+        20.554
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_tyre",
+          "uv": [
+            6.784,
+            0,
+            10.816,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#al_tyre",
+          "uv": [
+            5.184,
+            0,
+            9.216,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#al_tyre",
+          "uv": [
+            5.184,
+            0,
+            9.216,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#al_tyre",
+          "uv": [
+            5.184,
+            0,
+            9.216,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          7.2,
+          12.8,
+          8.0
+        ],
+        "axis": "x",
+        "angle": -22.5
+      }
+    }
+  ]
+}

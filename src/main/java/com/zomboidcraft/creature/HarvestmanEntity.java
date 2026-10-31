@@ -90,6 +90,20 @@ public class HarvestmanEntity extends Mob {
     private static final EntityDataAccessor<Integer> CUT = SynchedEntityData.defineId(HarvestmanEntity.class, EntityDataSerializers.INT);
     /** It's about harming someone (HarvestmanMind.menace): its glow burns red, not blue. */
     private static final EntityDataAccessor<Boolean> MENACE = SynchedEntityData.defineId(HarvestmanEntity.class, EntityDataSerializers.BOOLEAN);
+    /** Its glow put out altogether, skull and all (HarvestmanMind.dark), and how tight it's drawn itself in (tuck). */
+    private static final EntityDataAccessor<Boolean> DARK = SynchedEntityData.defineId(HarvestmanEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Float> TUCK = SynchedEntityData.defineId(HarvestmanEntity.class, EntityDataSerializers.FLOAT);
+    /** In a fight with a player: shot by one in the last half minute (its health bar shows only then, EnemyBars). */
+    private static final EntityDataAccessor<Boolean> ENGAGED = SynchedEntityData.defineId(HarvestmanEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final long ENGAGED_TICKS = 600;
+    private long engagedUntil;
+    /** What it holds (its entity id, or -1), so the client can draw it held (WalkerRenderer) and close its arms round it. */
+    private static final EntityDataAccessor<Integer> HELD = SynchedEntityData.defineId(HarvestmanEntity.class, EntityDataSerializers.INT);
+    /** Client only: who holds each held entity, by its id; and what this one held last tick. */
+    private static final java.util.Map<Integer, HarvestmanEntity> HOLDERS = new java.util.concurrent.ConcurrentHashMap<>();
+    private int heldSeen = -1;
+    /** Which of its two rage screams it gave last (it alternates). */
+    private int rageTake;
     private static final List<EntityDataAccessor<org.joml.Vector3fc>> FEET = List.of(FOOT0, FOOT1, FOOT2, FOOT3);
 
     public static final int HUNT = 0, HOLD = 1, FEED = 2, DEAD = 3;
@@ -106,8 +120,38 @@ public class HarvestmanEntity extends Mob {
     public static final int FEED_TICKS = 200, STRUGGLE = 14;
     public static final double SHAKE_OFF = 120;
     private static final double TURN_RATE = 1.9, ACCEL = 1.8, BRAKE = 2.6;
-    /** Where what it holds has its head: under the point of its body, gripped by the beard. */
-    private static final Vec3 GRIP = new Vec3(0, -0.64, 0.74);
+    /** How fast its body turns on to a new surface (a share a second): slow enough that it pours itself round (SpiderIk). */
+    private static final double TURN_SURF = 4.5;
+    /** Where what it holds has its head: under the point of its body, gripped by the beard (from its centre, its frame). */
+    public static final Vec3 GRIP = new Vec3(0, -0.64, 0.74);
+    /**
+     * A body it carries off is dragged along the floor on its back by the shoulders, feet trailing under it: its feet
+     * this far ahead of its centre (behind, so negative), the top of its head this far from them, tipped this far from
+     * upright (radians). To feed, its feet are drawn up ahead of it (FEED_FEET) and it hauls it up in front of it, its
+     * head to the front edge of its skull (FEED_UP), and lets it down again (FEED_LOW), over and over (feedLean).
+     * SpiderIk poses its arms to these and sets heldLean; WalkerRenderer draws the body tipped by it.
+     */
+    public static final float FEET_SPEED = 1.2f, HELD_FEET = -0.65f, FEED_FEET = 0.6f, HELD_LEN = 1.6f, DRAG_LEAN = 1.22f, FEED_LOW = 1.0f, FEED_UP = 0.44f;
+    /** Where the feet of what it holds are now (ahead of its centre), drawn up as it starts to feed (FEET_SPEED m/s). */
+    private float heldFeet = HELD_FEET;
+    /** Client only: how far what it holds is tipped now (SpiderIk, for WalkerRenderer). */
+    public float heldLean;
+
+    /** How far what it feeds on is tipped, so many seconds into feeding: hauled up, held at its mouth, let down. */
+    public static float feedLean(float t) {
+        float p = (t / 4.5f) % 1f;
+        if (p < 0.45f) {
+            return Mth.lerp(smooth(p / 0.45f), FEED_LOW, FEED_UP);
+        }
+        if (p < 0.75f) {
+            return FEED_UP + 0.04f * (float) Math.sin((p - 0.45f) / 0.3f * Math.PI * 4);
+        }
+        return Mth.lerp(smooth((p - 0.75f) / 0.25f), FEED_UP, FEED_LOW);
+    }
+
+    private static float smooth(float x) {
+        return x * x * (3 - 2 * x);
+    }
 
     /** Client only: the turn last tick and now, eased toward the synced one; and the legs it draws (HarvestmanRig). */
     public final Quaternionf turn = new Quaternionf(), turnO = new Quaternionf();
@@ -215,6 +259,34 @@ public class HarvestmanEntity extends Mob {
         return entityData.get(MENACE);
     }
 
+    public boolean dark() {
+        return entityData.get(DARK);
+    }
+
+    public float tuck() {
+        return entityData.get(TUCK);
+    }
+
+    public boolean engaged() {
+        return entityData.get(ENGAGED);
+    }
+
+    /** What it holds, or null (either side). */
+    public Entity heldEntity() {
+        int id = entityData.get(HELD);
+        return id < 0 ? null : level().getEntity(id);
+    }
+
+    /** Client only: the Harvestman holding an entity, or null. */
+    public static HarvestmanEntity holderOf(Entity e) {
+        HarvestmanEntity h = HOLDERS.get(e.getId());
+        if (h != null && (h.isRemoved() || h.level() != e.level() || h.entityData.get(HELD) != e.getId())) {
+            HOLDERS.remove(e.getId(), h);
+            return null;
+        }
+        return h;
+    }
+
     public float rear() {
         return entityData.get(REAR);
     }
@@ -256,6 +328,10 @@ public class HarvestmanEntity extends Mob {
         builder.define(RAGE, 0);
         builder.define(CUT, 0);
         builder.define(MENACE, false);
+        builder.define(DARK, false);
+        builder.define(TUCK, 0f);
+        builder.define(ENGAGED, false);
+        builder.define(HELD, -1);
     }
 
     /** Where it's looking, or null. */
@@ -303,7 +379,7 @@ public class HarvestmanEntity extends Mob {
         pause = RAGE_TICKS;
         pauseLook = at;
         if (level() instanceof ServerLevel sl) {
-            playSound(sl, centre(), HarvestmanSounds.SCREECH, 1.8f, 0.8f);
+            playTake(sl, centre(), HarvestmanSounds.RAGE, 2f, 1f, rageTake++ & 1);
         }
         return true;
     }
@@ -320,6 +396,16 @@ public class HarvestmanEntity extends Mob {
         turnO.set(turn);
         if (!(level() instanceof ServerLevel level)) {
             turn.slerp(entityData.get(TURN), 0.45f);
+            int heldNow = entityData.get(HELD);
+            if (heldNow != heldSeen) {
+                if (heldSeen >= 0) {
+                    HOLDERS.remove(heldSeen, this);
+                }
+                heldSeen = heldNow;
+            }
+            if (heldNow >= 0) {
+                HOLDERS.put(heldNow, this);
+            }
             // what came in this tick, kept a few ticks so the feet can be drawn as far behind as the body is
             feetSeenAt = (feetSeenAt + 1) & 3;
             for (int i = 0; i < 4; i++) {
@@ -327,6 +413,7 @@ public class HarvestmanEntity extends Mob {
             }
             return;
         }
+        entityData.set(HELD, held == null ? -1 : held.getId());
         if (isDeadOrDying()) {
             return;     // tickDeath lays it down
         }
@@ -343,6 +430,9 @@ public class HarvestmanEntity extends Mob {
         }
         entityData.set(WATCH, mind.watchingId(level));
         entityData.set(MENACE, mind.menace());
+        entityData.set(DARK, mind.dark());
+        entityData.set(TUCK, Mth.approach(tuck(), (float) mind.tuck(), 0.06f));
+        entityData.set(ENGAGED, level.getGameTime() < engagedUntil);
         struck.clear();
         struckAt.clear();
         stepLegs(level, false);
@@ -551,7 +641,7 @@ public class HarvestmanEntity extends Mob {
         if (pause > 0) {
             pause--;
             speed = 0;
-            up = slerp(up, surf, 8 * dt);
+            up = slerp(up, surf, TURN_SURF * dt);
             face(dt, look != null ? look.subtract(c) : pauseLook != null ? pauseLook.subtract(c) : dir);
             stuck = 0;
             lastPos = position();
@@ -644,7 +734,7 @@ public class HarvestmanEntity extends Mob {
             }
         }
         setPos(next.subtract(0, MID, 0));
-        up = slerp(up, pivotT >= 0 ? slerp(pivotFrom, pivotTo, pivotT) : surf, 8 * dt);
+        up = slerp(up, pivotT >= 0 ? slerp(pivotFrom, pivotTo, pivotT) : surf, TURN_SURF * dt);
         if (look != null && (speed < 0.3 || mind.watching())) {
             face(dt, look.subtract(c));
         } else if (speed > 0.05) {
@@ -949,6 +1039,9 @@ public class HarvestmanEntity extends Mob {
         if (isDeadOrDying() || isInvulnerableTo(level, source)) {
             return false;
         }
+        if (source.getEntity() instanceof Player) {
+            engagedUntil = level.getGameTime() + ENGAGED_TICKS;
+        }
         double toHealth = 0;
         boolean eyes = false;
         if (!struck.isEmpty()) {
@@ -1065,6 +1158,19 @@ public class HarvestmanEntity extends Mob {
         level.playSound(null, at.x, at.y, at.z, sound, SoundSource.HOSTILE, volume, pitch);
     }
 
+    /**
+     * One chosen take of a sound with two (by order in sounds.json): the client picks a take with a random seeded from
+     * the packet, its first draw over the takes' weights, so a seed whose first draw is the take we want plays that one.
+     */
+    private void playTake(ServerLevel level, Vec3 at, SoundEvent sound, float volume, float pitch, int take) {
+        long seed = random.nextLong();
+        for (int i = 0; i < 64 && net.minecraft.util.RandomSource.create(seed).nextInt(2) != take; i++) {
+            seed++;
+        }
+        level.playSeededSound(null, at.x, at.y, at.z, net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT.wrapAsHolder(sound),
+                SoundSource.HOSTILE, volume, pitch, seed);
+    }
+
     @Override
     protected void tickDeath() {
         // it doesn't vanish: it lies where it fell, legs splayed, for a long while
@@ -1140,6 +1246,7 @@ public class HarvestmanEntity extends Mob {
         }
         held = prey;
         holdTicks = 0;
+        heldFeet = HELD_FEET;
         feedTicks = 0;
         struggle = 0;
         heldDamage = 0;
@@ -1196,9 +1303,18 @@ public class HarvestmanEntity extends Mob {
         }
         holdTicks++;
         if (!(held instanceof Player)) {
-            // a zombie is just carried
-            Vec3 g = gripPoint();
-            held.setPos(g.x, g.y - 1.6, g.z);
+            // a zombie is dragged along the floor on its back, its feet trailing under it and its head toward its front
+            // (drawn tipped up to its hands, WalkerRenderer); fed on where it lies, hauled up to its mouth
+            heldFeet = Mth.approach(heldFeet, feeding() ? FEED_FEET : HELD_FEET, FEET_SPEED / 20);
+            Vec3 feet = centre().add(fwd.scale(heldFeet));
+            BlockHitResult floor = cast(feet, feet.subtract(0, STAND + 2, 0));
+            held.setPos(floor.getType() != HitResult.Type.MISS ? floor.getLocation() : feet.subtract(0, lift(), 0));
+            float yaw = (float) Math.toDegrees(Math.atan2(-fwd.x, fwd.z)) + 180;
+            held.setYRot(yaw);
+            held.setYHeadRot(yaw);
+            if (held instanceof LivingEntity le) {
+                le.setYBodyRot(yaw);
+            }
             if (held instanceof Mob m) {
                 m.setNoAi(true);
             }

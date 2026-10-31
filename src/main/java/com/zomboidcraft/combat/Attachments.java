@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
@@ -17,6 +18,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -34,7 +36,8 @@ import org.jetbrains.annotations.Nullable;
  * says nothing has what it comes with (its stock), so found guns and guns from before attachments are whole.
  *
  * Fitting also tells the gun's item model what to draw: the custom model data strings hold one model key per
- * slot, in {@link Slot} order, "none" for an empty slot. A fitted optic folds the iron sights down.
+ * slot, in {@link Slot} order, "none" for an empty slot, then the gun's finish, then each slot's part's colour in
+ * the same order and last the flip-up irons' colour ("none": the plain look). A fitted optic folds the irons down.
  */
 public record Attachments(Map<Slot, ItemStack> mounted) {
     public enum Slot implements StringRepresentable {
@@ -171,7 +174,7 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
             Optic optic = optic(gun);
             return optic == null || optic.zoom() >= 1 && !optic.overlay();
         }
-        if (slot == Slot.OPTIC && magnified(gun) && part.getItem() instanceof AttachmentItem item) {
+        if (slot == Slot.OPTIC && hasMagnifier(gun) && part.getItem() instanceof AttachmentItem item) {
             Optic optic = optic(item.modelKey());
             return optic.zoom() >= 1 && !optic.overlay();
         }
@@ -299,31 +302,29 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
 
     // ---- what the parts do ----
 
-    /** The reticle drawn in the middle of the view on a sight the gun stays drawn behind. */
-    public enum Reticle { NONE, DOT, RING, CROSS }
-
     /**
      * What an optic does on the sights: multiplies aimed spread, narrows the view to this share of normal (1: the
-     * gun's own), puts a reticle in the middle, and whether looking through it shows the scope picture in place of
+     * gun's own), how big its reticle (textures/gui/sight/<key>.png, drawn by tools/meshguns/reticles.py) is drawn as
+     * a share of the screen's height (0: none), and whether looking through it shows its eyepiece picture in place of
      * the gun. Keyed by model key, as tools/meshguns/attachments.json lists them.
      */
-    public record Optic(double spread, double zoom, Reticle reticle, boolean overlay) {
+    public record Optic(double spread, double zoom, double sight, boolean overlay) {
     }
 
     private static Optic optic(String key) {
         ZcConfig.Guns cfg = ZcConfig.get().guns;
         return switch (key) {
-            case "red_dot", "mini_dot", "compact_dot" -> new Optic(cfg.redDotAimSpread, 1, Reticle.DOT, false);
-            case "holo" -> new Optic(cfg.holoAimSpread, 1, Reticle.RING, false);
-            case "scope_4x" -> new Optic(cfg.scopeAimSpread, cfg.scopeZoom, Reticle.NONE, true);
-            case "rifle_optic" -> new Optic(cfg.scopeAimSpread, 1 / 2.0, Reticle.DOT, false);
-            case "combat_scope" -> new Optic(cfg.scopeAimSpread, 1 / 3.0, Reticle.DOT, false);
-            case "pistol_scope" -> new Optic(cfg.scopeAimSpread, 1 / 2.0, Reticle.CROSS, false);
-            case "crossbow_scope" -> new Optic(cfg.scopeAimSpread, 1 / 3.0, Reticle.NONE, true);
-            case "hunting_scope" -> new Optic(cfg.scopeAimSpread * 0.8, 1 / 6.0, Reticle.NONE, true);
-            case "precision_scope" -> new Optic(cfg.scopeAimSpread * 0.7, 1 / 8.0, Reticle.NONE, true);
-            case "long_scope" -> new Optic(cfg.scopeAimSpread * 0.6, 1 / 10.0, Reticle.NONE, true);
-            default -> new Optic(1, 1, Reticle.NONE, false);
+            case "red_dot", "mini_dot", "compact_dot" -> new Optic(cfg.redDotAimSpread, 1, 0.02, false);
+            case "holo" -> new Optic(cfg.holoAimSpread, 1, 0.065, false);
+            case "scope_4x" -> new Optic(cfg.scopeAimSpread, cfg.scopeZoom, 0, true);
+            case "rifle_optic" -> new Optic(cfg.scopeAimSpread, 1 / 2.0, 0.35, false);
+            case "combat_scope" -> new Optic(cfg.scopeAimSpread, 1 / 3.0, 0.45, false);     // 10% under the 0.5 its opening (hollow.py) reaches
+            case "pistol_scope" -> new Optic(cfg.scopeAimSpread, 1 / 2.0, 0.2, false);     // only inside its small lens
+            case "crossbow_scope" -> new Optic(cfg.scopeAimSpread, 1 / 3.0, 0, true);
+            case "hunting_scope" -> new Optic(cfg.scopeAimSpread * 0.8, 1 / 6.0, 0, true);
+            case "precision_scope" -> new Optic(cfg.scopeAimSpread * 0.7, 1 / 8.0, 0, true);
+            case "long_scope" -> new Optic(cfg.scopeAimSpread * 0.6, 1 / 10.0, 0, true);
+            default -> new Optic(1, 1, 0, false);
         };
     }
 
@@ -338,9 +339,14 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
         return key == null ? null : optic(key);
     }
 
-    /** A 3x magnifier sits behind the optic: flipped in, it's looked through like a scope. */
-    public static boolean magnified(ItemStack gun) {
+    /** A 3x magnifier is fitted behind the optic, swung in or aside. */
+    public static boolean hasMagnifier(ItemStack gun) {
         return key(gun, Slot.MAGNIFIER) != null;
+    }
+
+    /** The magnifier is swung in behind the optic: the dot or ring in front is seen three times bigger. */
+    public static boolean magnified(ItemStack gun) {
+        return hasMagnifier(gun) && !gun.getOrDefault(GunState.MAGNIFIER_ASIDE, false);
     }
 
     /** Multiplies aimed spread: optics settle the aim, a gun with no stock wanders. */
@@ -398,10 +404,10 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
         return key(gun, Slot.MUZZLE) != null || GunType.of(gun) == GunType.SUPPRESSED_RIFLE;     // its can is built in
     }
 
-    /** Looking down the sights shows the scope picture, not the gun: a scope you look into, or the magnifier. */
+    /** Looking down the sights shows the scope's eyepiece picture, not the gun: a scope you look into. */
     public static boolean scoped(ItemStack gun) {
         Optic optic = optic(gun);
-        return magnified(gun) || optic != null && optic.overlay();
+        return optic != null && optic.overlay();
     }
 
     /** The field of view on the sights, as a share of normal, or a negative number for the gun's own. */
@@ -414,14 +420,75 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
         return zoom < 1 ? zoom : -1;
     }
 
-    /** The reticle drawn over a sight the gun stays drawn behind, NONE when there's no such sight. */
-    public static Reticle reticle(ItemStack gun) {
+    /** The optic's model key, which names the picture or reticle it shows (textures/gui/sight), or null. */
+    public static @Nullable String sightKey(ItemStack gun) {
+        return key(gun, Slot.OPTIC);
+    }
+
+    /** How big the reticle of a sight the gun stays drawn behind shows, as a share of the screen's height: three
+     * times bigger through the magnifier. 0 when there's none to draw. */
+    public static double reticleSize(ItemStack gun) {
         Optic optic = optic(gun);
-        return optic == null || scoped(gun) ? Reticle.NONE : optic.reticle();
+        return optic == null || optic.overlay() ? 0 : optic.sight() * (magnified(gun) ? 3 : 1);
     }
 
     private static boolean stockless(ItemStack gun) {
         return slots(gun).contains(Slot.STOCK) && key(gun, Slot.STOCK) == null;
+    }
+
+    // ---- colours ----
+
+    /**
+     * The colours the bought attachments also came in besides the plain black one, by model key, and the flip-up
+     * irons' besides grey (tools/meshguns packs each as its mesh with "_colour" on the end). Loot picks the plain look
+     * or one of these, evenly, so found parts and guns vary (Josiah 2026-10-30).
+     */
+    private static final Map<String, List<String>> COLOURS = Map.of(
+            "holo", List.of("tan"), "magnifier", List.of("tan"), "stubby_grip", List.of("tan"), "light", List.of("tan"));
+    private static final List<String> IRONS_COLOURS = List.of("dark", "camo", "green");
+    /** The guns whose irons are the flip-up pair (tools/meshguns/guns.json "flip"). */
+    private static final Set<String> FLIP_IRONS = Set.of("assault_rifle", "hunting_rifle", "precision_rifle", "heavy_sniper");
+
+    /** The colour a part came in, or the colour of a gun's irons, for tooltips: null for the plain look. */
+    public static @Nullable String colour(ItemStack stack) {
+        return stack.get(GunState.COLOUR);
+    }
+
+    /** Gives a found part one of the colours it came in, or a found gun's irons and fitted parts theirs. Returns
+     * true if anything changed. */
+    public static boolean paint(ItemStack stack, RandomSource random) {
+        if (stack.getItem() instanceof AttachmentItem item) {
+            return pick(stack, COLOURS.get(item.modelKey()), random);
+        }
+        if (!isModular(stack)) {
+            return false;
+        }
+        boolean irons = FLIP_IRONS.contains(gunId(stack)) && pick(stack, IRONS_COLOURS, random);
+        Map<Slot, ItemStack> next = new EnumMap<>(Slot.class);
+        boolean parts = false;
+        for (Map.Entry<Slot, ItemStack> e : of(stack).mounted().entrySet()) {
+            ItemStack part = e.getValue().copy();
+            parts |= paint(part, random);
+            next.put(e.getKey(), part);
+        }
+        if (parts) {
+            set(stack, new Attachments(next));
+        } else if (irons) {
+            refreshModel(stack);
+        }
+        return irons || parts;
+    }
+
+    private static boolean pick(ItemStack stack, @Nullable List<String> colours, RandomSource random) {
+        if (colours == null) {
+            return false;
+        }
+        int i = random.nextInt(colours.size() + 1);
+        if (i == colours.size()) {
+            return false;       // the plain look
+        }
+        stack.set(GunState.COLOUR, colours.get(i));
+        return true;
     }
 
     // ---- the item model's view ----
@@ -443,15 +510,26 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
         writeModelData(gun, floats.isEmpty() ? 0 : floats.get(0), floats.size() < 2 ? 0 : floats.get(1));
     }
 
-    /** Writes the gun's model data: [floats] reload step and flash, [strings] one model key per slot, then its finish. */
+    /** Writes the gun's model data: [floats] reload step and flash, [strings] one model key per slot, its finish,
+     * one colour per slot, its irons' colour. */
     static void writeModelData(ItemStack gun, float step, float flash) {
         List<String> keys = new ArrayList<>();
         for (Slot slot : Slot.values()) {
             String key = key(gun, slot);
+            if (key != null && slot == Slot.MAGNIFIER && !magnified(gun)) {
+                key += "_aside";        // swung off the sight line on its mount
+            }
             keys.add(key == null ? EMPTY_KEY : key);
         }
         String finish = GunFinish.key(gun);
         keys.add(finish == null ? EMPTY_KEY : finish);
+        Map<Slot, ItemStack> mounted = of(gun).mounted();
+        for (Slot slot : Slot.values()) {
+            String colour = mounted.containsKey(slot) ? mounted.get(slot).get(GunState.COLOUR) : null;
+            keys.add(colour == null ? EMPTY_KEY : colour);
+        }
+        String irons = gun.get(GunState.COLOUR);
+        keys.add(irons == null ? EMPTY_KEY : irons);
         gun.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(List.of(step, flash), List.of(), keys, List.of()));
     }
 

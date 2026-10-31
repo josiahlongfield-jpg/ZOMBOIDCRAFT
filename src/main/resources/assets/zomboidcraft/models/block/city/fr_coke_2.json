@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fr_coke": "zomboidcraft:block/city/fr_coke",
+    "particle": "zomboidcraft:block/city/fr_coke"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        8,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fr_coke",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#fr_coke",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#fr_coke",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#fr_coke",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#fr_coke"
+        },
+        "down": {
+          "texture": "#fr_coke",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

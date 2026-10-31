@@ -1,0 +1,60 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "an_coastal_main": "zomboidcraft:block/city/an_coastal_main",
+    "particle": "zomboidcraft:block/city/an_coastal_main"
+  },
+  "elements": [
+    {
+      "from": [
+        9.822,
+        14.622,
+        0.0
+      ],
+      "to": [
+        16.0,
+        16.0,
+        10.016
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_coastal_main",
+          "uv": [
+            0.0,
+            0.0,
+            6.178,
+            1.378
+          ],
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#an_coastal_main",
+          "uv": [
+            9.822,
+            0.0,
+            16.0,
+            1.378
+          ]
+        },
+        "west": {
+          "texture": "#an_coastal_main",
+          "uv": [
+            0.0,
+            0.0,
+            10.016,
+            1.378
+          ]
+        },
+        "down": {
+          "texture": "#an_coastal_main",
+          "uv": [
+            9.822,
+            5.984,
+            16.0,
+            16.0
+          ]
+        }
+      }
+    }
+  ]
+}

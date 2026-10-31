@@ -38,6 +38,17 @@ import org.joml.Vector3f;
  */
 public class NpcRenderer extends EntityRenderer<NpcEntity, NpcRenderer.State> {
     /** How far the outline shell stands off the body, in blocks. */
+    /**
+     * Set while her page (kit/CompanionScreen) draws her: she stands in her idle, whatever she's doing in the world
+     * (Josiah 2026-10-30), with an animator of her own so the world's isn't disturbed.
+     */
+    public static boolean portrait;
+    /** On her page: which way she faces (180 = at you; dragging turns her) and the pose you asked for (NpcWork action, 0 idle). */
+    public static float portraitYaw = 180f;
+    public static int portraitAction;
+    /** How lit she's drawn on her page (15 full; lower fades the companions either side on the selection screen). */
+    public static int portraitLight = 15;
+    private static final java.util.Map<NpcEntity, NpcSkinAnimator> PORTRAITS = new java.util.WeakHashMap<>();
     private static final float INK = 0.0065f;
     /** How far the shell is pushed back from the eye, so its front sits behind the body. */
     private static final float BACK = INK * 2.5f;
@@ -77,6 +88,8 @@ public class NpcRenderer extends EntityRenderer<NpcEntity, NpcRenderer.State> {
         boolean hurt;
         /** A gun with a stock (not a handgun): held further forward so the stock sits against her shoulder. */
         boolean longGun;
+        /** Her animator (a skinned model only): it keeps how far her gun is nudged out of her body. */
+        NpcSkinAnimator anim;
         final NpcPose.Input pose = new NpcPose.Input();
         final ItemStackRenderState held = new ItemStackRenderState();
     }
@@ -103,11 +116,21 @@ public class NpcRenderer extends EntityRenderer<NpcEntity, NpcRenderer.State> {
         in.move = Mth.clamp(speed * 2.2f, 0f, 1f);
         in.run = Mth.clamp((speed - 0.55f) / 0.35f, 0f, 1f);
         in.phase = entity.walkAnimation.position(partialTick) * 0.6662f;
+        if (portrait) {
+            in.move = in.run = in.phase = 0;
+        }
         in.t = entity.tickCount + partialTick;
-        in.aim = Mth.lerp(partialTick, entity.aimAnimO, entity.aimAnim);
-        in.kick = Mth.lerp(partialTick, entity.kickO, entity.kick);
+        in.aim = portrait ? 0 : Mth.lerp(partialTick, entity.aimAnimO, entity.aimAnim);
+        in.kick = portrait ? 0 : Mth.lerp(partialTick, entity.kickO, entity.kick);
         in.headYaw = Mth.clamp(Mth.wrapDegrees(Mth.rotLerp(partialTick, entity.yHeadRotO, entity.yHeadRot) - state.bodyYaw), -70f, 70f);
         in.headPitch = entity.getXRot(partialTick);
+        if (portrait) {
+            // her page: standing square to you, turned only by your drag, never by what she's doing out in the world
+            state.bodyYaw = portraitYaw;
+            state.hurt = false;
+            if (portraitLight < 15) state.lightCoords = portraitLight << 4 | portraitLight << 20;
+            in.headYaw = in.headPitch = 0;
+        }
         Minecraft.getInstance().getItemModelResolver().updateForTopItem(state.held, entity.getMainHandItem(),
                 ItemDisplayContext.THIRD_PERSON_RIGHT_HAND, entity.level(), entity, entity.getId());
         GunType gun = GunType.of(entity.getMainHandItem());
@@ -116,10 +139,11 @@ public class NpcRenderer extends EntityRenderer<NpcEntity, NpcRenderer.State> {
         state.skinned = null;
         if (state.skin != null) {
             NpcSkin skin = state.skin;
-            if (!(entity.clientAnim instanceof NpcSkinAnimator)) {
+            if (!portrait && !(entity.clientAnim instanceof NpcSkinAnimator)) {
                 entity.clientAnim = new NpcSkinAnimator();
             }
-            NpcSkinAnimator anim = (NpcSkinAnimator) entity.clientAnim;
+            NpcSkinAnimator anim = portrait ? PORTRAITS.computeIfAbsent(entity, e -> new NpcSkinAnimator())
+                    : (NpcSkinAnimator) entity.clientAnim;
             NpcSkinAnimator.Input a = new NpcSkinAnimator.Input();
             a.now = in.t / 20f;
             double vx = entity.getX() - entity.xo, vz = entity.getZ() - entity.zo;
@@ -129,16 +153,39 @@ public class NpcRenderer extends EntityRenderer<NpcEntity, NpcRenderer.State> {
             a.shots = entity.shots();
             a.headYaw = in.headYaw;
             a.headPitch = in.headPitch;
+            a.bodyYaw = state.bodyYaw;
+            a.blasted = entity.blasted();
+            a.y = (float) net.minecraft.util.Mth.lerp(partialTick, entity.yo, entity.getY());
+            a.onGround = entity.onGround();
+            a.hurt = state.hurt;
             a.dead = entity.deathTime > 0 ? (entity.deathTime + partialTick) / 20f : 0;
             a.talking = entity.talking() > 0;
+            a.voice = NpcVoice.level(entity.getId());
             a.id = entity.getId();
+            a.action = entity.action();
+            a.mood = entity.moodBits();
+            a.bond = entity.bondBits();
+            a.portrait = portrait;
+            if (portrait) {
+                a.speed = a.aim = a.headYaw = a.headPitch = a.dead = 0;
+                a.shots = 0;
+                a.talking = a.blasted = a.hurt = false;
+                a.voice = -1;
+                a.onGround = true;
+                a.action = portraitAction;
+                a.mood = a.bond = 0;
+            }
             state.skinned = new Matrix4f[skin.boneNames.length];
             for (int i = 0; i < state.skinned.length; i++) {
                 state.skinned[i] = new Matrix4f();
             }
             anim.pose(skin, a, state.skinned);
             state.hidden = entity.hidden();
+            if (anim.buffers.length != skin.groups.length * 2) {
+                anim.buffers = new Object[skin.groups.length * 2];
+            }
             state.buffers = anim.buffers;
+            state.anim = anim;
         }
     }
 
@@ -147,10 +194,14 @@ public class NpcRenderer extends EntityRenderer<NpcEntity, NpcRenderer.State> {
         if (state.skin != null && state.skinned != null) {
             poseStack.pushPose();
             poseStack.rotateDegrees(Axis.YP, -state.bodyYaw);
+            Grip grip = state.held.isEmpty() ? null : grip(state);
             NpcSkinDraw.submit(state.model, state.skin, state.skinned, state.hidden, state.buffers, state.distanceToCameraSq,
-                    state.lightCoords, OverlayTexture.pack(0, state.hurt ? 3 : 10), poseStack, collector);
-            if (!state.held.isEmpty()) {
-                skinHeld(state.skin, state.skinned, state, poseStack, collector, state.lightCoords);
+                    state.lightCoords, OverlayTexture.pack(0, state.hurt ? 3 : 10), grip == null ? null : grip.line(), poseStack, collector);
+            if (grip != null) {
+                poseStack.pushPose();
+                poseStack.mulPose(grip.at());
+                state.held.submit(poseStack, collector, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
+                poseStack.popPose();
             }
             poseStack.popPose();
             super.submit(state, poseStack, collector, camera);
@@ -229,14 +280,30 @@ public class NpcRenderer extends EntityRenderer<NpcEntity, NpcRenderer.State> {
     /** How far (blocks) a long gun slides forward along her hand from the palm, so its stock meets her shoulder, not passes through it. */
     private static final float LONG_GUN_FORWARD = 0.13f;
 
+    /** Her body as capsules (bone to bone, radius in blocks) her held gun is kept out of. */
+    private static final Object[][] BODY = {
+            {"mixamorigHips", "mixamorigSpine2", 0.10f}, {"mixamorigSpine2", "mixamorigNeck", 0.10f},
+            {"mixamorigSpine2", "mixamorigRightArm", 0.06f}, {"mixamorigSpine2", "mixamorigLeftArm", 0.06f},
+            {"mixamorigHead", "mixamorigHeadTop_End", 0.09f}};
+    /** The most a gun is nudged out of her (blocks), and how far either side of the hand a gun reaches. */
+    private static final float PUSH_MAX = 0.08f;
+
+    /** Where the held item sits this frame (model space), and the gun's line, stock to muzzle, with its thickness. */
+    private record Grip(Matrix4f at, float[] line) {
+    }
+
     /**
      * The held item in a skinned model's right hand: at the palm (between the wrist and the middle finger's root), turned
      * as the hand's turned from its rest, which points along her arm (the T-pose), as if from a hand hanging straight down.
+     * Then kept out of her body: the gun's line is checked against her torso, shoulders and head, and the whole gun slides
+     * out by the deepest it went in, eased from frame to frame so it rests against her instead of passing through.
      */
-    private static void skinHeld(NpcSkin skin, Matrix4f[] skinned, State state, PoseStack poseStack, SubmitNodeCollector collector, int light) {
+    private static Grip grip(State state) {
+        NpcSkin skin = state.skin;
+        Matrix4f[] skinned = state.skinned;
         int hand = skin.bone("mixamorigRightHand"), finger = skin.bone("mixamorigRightHandMiddle1");
         if (hand < 0 || finger < 0) {
-            return;
+            return null;
         }
         Vector3f wristRest = new Matrix4f(skin.inverse[hand]).invert().getTranslation(new Vector3f());
         Vector3f fingerRest = new Matrix4f(skin.inverse[finger]).invert().getTranslation(new Vector3f());
@@ -248,16 +315,61 @@ public class NpcRenderer extends EntityRenderer<NpcEntity, NpcRenderer.State> {
             Vector3f along = skinned[hand].transformDirection(new Vector3f(restDir)).normalize();
             palm.add(along.mul(LONG_GUN_FORWARD));
         }
-        poseStack.pushPose();
-        poseStack.translate(palm.x, palm.y, palm.z);
-        poseStack.mulPose(new Matrix4f().rotation(posed));
         // into the player model's own frame (y down, facing -z), then the game's hand-to-item turn
-        poseStack.mulPose(new Matrix4f().rotationX((float) Math.PI));
-        poseStack.translate(-1f / 16f, -0.06f, -2f / 16f);
-        poseStack.mulPose(new Matrix4f().rotationX((float) (-Math.PI / 2)));
-        poseStack.mulPose(new Matrix4f().rotationY((float) Math.PI));
-        state.held.submit(poseStack, collector, light, OverlayTexture.NO_OVERLAY, 0);
-        poseStack.popPose();
+        Matrix4f at = new Matrix4f().translation(palm).rotate(posed)
+                .rotateX((float) Math.PI).translate(-1f / 16f, -0.06f, -2f / 16f)
+                .rotateX((float) (-Math.PI / 2)).rotateY((float) Math.PI);
+        // the barrel: whichever of the item's axes points most nearly ahead of her (and a little down, at the ready)
+        Vector3f ahead = new Vector3f(0, -0.3f, 1).normalize(), dir = new Vector3f(0, 0, 1);
+        float best = -2;
+        for (int k = 0; k < 6; k++) {
+            Vector3f d = at.transformDirection(new Vector3f(k % 3 == 0 ? 1 : 0, k % 3 == 1 ? 1 : 0, k % 3 == 2 ? 1 : 0)).normalize();
+            if (k >= 3) {
+                d.negate();
+            }
+            if (d.dot(ahead) > best) {
+                best = d.dot(ahead);
+                dir.set(d);
+            }
+        }
+        float back = state.longGun ? 0.30f : 0.04f, front = state.longGun ? 0.55f : 0.18f;
+        Vector3f stock = new Vector3f(palm).fma(-back, dir), muzzle = new Vector3f(palm).fma(front, dir);
+        Vector3f push = new Vector3f(), p = new Vector3f(), c = new Vector3f();
+        for (Object[] cap : BODY) {
+            int b0 = skin.bone((String) cap[0]), b1 = skin.bone((String) cap[1]);
+            if (b0 < 0 || b1 < 0) {
+                continue;
+            }
+            Vector3f a = bonePos(skin, skinned, b0), b = bonePos(skin, skinned, b1);
+            float r = (Float) cap[2];
+            for (int i = 0; i <= 10; i++) {
+                stock.lerp(muzzle, i / 10f, p);
+                closest(a, b, p, c);
+                float d = p.distance(c);
+                if (d < r && d > 1e-4f && r - d > push.length()) {
+                    push.set(p).sub(c).normalize(r - d);
+                }
+            }
+        }
+        if (push.length() > PUSH_MAX) {
+            push.normalize(PUSH_MAX);
+        }
+        Vector3f eased = state.anim != null ? state.anim.gunPush.lerp(push, 0.35f) : push;
+        at = new Matrix4f().translation(eased).mul(at);
+        stock.add(eased);
+        muzzle.add(eased);
+        return new Grip(at, new float[] {stock.x, stock.y, stock.z, muzzle.x, muzzle.y, muzzle.z, state.longGun ? 0.03f : 0.02f});
+    }
+
+    private static Vector3f bonePos(NpcSkin skin, Matrix4f[] skinned, int bone) {
+        return skinned[bone].transformPosition(new Matrix4f(skin.inverse[bone]).invert().getTranslation(new Vector3f()));
+    }
+
+    /** The point on a to b nearest p, into out. */
+    static void closest(Vector3f a, Vector3f b, Vector3f p, Vector3f out) {
+        float abx = b.x - a.x, aby = b.y - a.y, abz = b.z - a.z, len = abx * abx + aby * aby + abz * abz;
+        float t = len < 1e-8f ? 0 : Math.max(0, Math.min(1, ((p.x - a.x) * abx + (p.y - a.y) * aby + (p.z - a.z) * abz) / len));
+        out.set(a.x + abx * t, a.y + aby * t, a.z + abz * t);
     }
 
     /** A posed copy of the mesh's positions and normals. */

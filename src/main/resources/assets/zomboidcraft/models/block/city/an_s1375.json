@@ -1,0 +1,147 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "an_coastal_main": "zomboidcraft:block/city/an_coastal_main",
+    "particle": "zomboidcraft:block/city/an_coastal_main"
+  },
+  "elements": [
+    {
+      "from": [
+        0.0,
+        0.0,
+        12.0
+      ],
+      "to": [
+        0.828,
+        8.0,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_coastal_main",
+          "uv": [
+            15.172,
+            8.0,
+            16.0,
+            16.0
+          ]
+        },
+        "south": {
+          "texture": "#an_coastal_main",
+          "uv": [
+            0.0,
+            8.0,
+            0.828,
+            16.0
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#an_coastal_main",
+          "uv": [
+            16.0,
+            8.0,
+            12.0,
+            16.0
+          ]
+        },
+        "up": {
+          "texture": "#an_coastal_main",
+          "uv": [
+            0.0,
+            12.0,
+            0.828,
+            16.0
+          ]
+        },
+        "down": {
+          "texture": "#an_coastal_main",
+          "uv": [
+            0.0,
+            0.0,
+            0.828,
+            4.0
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        -2.864,
+        -1.977,
+        11.84
+      ],
+      "to": [
+        2.864,
+        9.977,
+        13.76
+      ],
+      "faces": {
+        "north": {
+          "texture": "#an_coastal_main",
+          "uv": [
+            10.272,
+            4.046,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#an_coastal_main",
+          "uv": [
+            0,
+            4.046,
+            5.728,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#an_coastal_main",
+          "uv": [
+            2.24,
+            4.046,
+            4.16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#an_coastal_main",
+          "uv": [
+            11.84,
+            4.046,
+            13.76,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#an_coastal_main",
+          "uv": [
+            0,
+            11.84,
+            5.728,
+            13.76
+          ]
+        },
+        "down": {
+          "texture": "#an_coastal_main",
+          "uv": [
+            0,
+            2.24,
+            5.728,
+            4.16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          0.0,
+          4.0,
+          12.8
+        ],
+        "axis": "x",
+        "angle": 45.0
+      }
+    }
+  ]
+}

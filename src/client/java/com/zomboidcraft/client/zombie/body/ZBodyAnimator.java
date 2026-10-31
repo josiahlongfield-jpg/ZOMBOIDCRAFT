@@ -65,6 +65,10 @@ public final class ZBodyAnimator {
         final ZMove.Pose deathFrom = new ZMove.Pose();
         float deathYaw;
         final ZDeath.Fall fall = new ZDeath.Fall();
+        /** Follow-through (see flow): its springs (surge, sway, head, arms), where each is and how fast, and what drives them. */
+        final float[] spring = new float[4], springV = new float[4];
+        float speed = Float.NaN, accel, yawWas = Float.NaN, turning, yWas = Float.NaN, fallVy;
+        boolean wasGround = true;
     }
 
     /** Shots landing on one zombie (Deaths.Hit): the parts struck, the shot's yaw, how hard, and when (nanoseconds). */
@@ -301,6 +305,9 @@ public final class ZBodyAnimator {
         } else {
             tr.event = 0;
         }
+        if (acting < 0.5f && crawl < 0.5f && !out.lying) {
+            flow(zombie, tr, f.bodyYaw, partialTick, dt, out);
+        }
         // shots jerk it where they land
         float yaw = (float) Math.toRadians(drawYaw);
         for (Hit h : tr.hits) {
@@ -319,6 +326,70 @@ public final class ZBodyAnimator {
             PENDING.values().removeIf(list -> now - list.get(list.size() - 1).at > 1_000_000_000L);
         }
         return newly;
+    }
+
+    /** The springs' stiffness (Hz) and damping: surge and sway of the body, the head, the arms. */
+    private static final float[] SPRING_HZ = {1.4f, 1.2f, 1.8f, 1.2f}, SPRING_DAMP = {0.3f, 0.35f, 0.45f, 0.22f};
+
+    /**
+     * Follow-through over its movement, the same as the companions': it pitches forward and rocks back when it pulls up,
+     * leans into a turn with its head swinging round first, its arms carry on past a stop, and a drop sinks through it.
+     * Springs, so each settles on its own; a few degrees, a little looser than a living body.
+     */
+    private static void flow(Zombie zombie, Track tr, float yaw, float partialTick, float dt, ZMove.Pose out) {
+        if (dt <= 0f) {
+            return;
+        }
+        double vx = zombie.getX() - zombie.xo, vz = zombie.getZ() - zombie.zo;
+        float speed = (float) Math.sqrt(vx * vx + vz * vz) * 20f;
+        if (Float.isNaN(tr.speed)) {
+            tr.speed = speed;
+        }
+        float was = tr.speed;
+        tr.speed += (speed - tr.speed) * Math.min(1f, dt * 8f);
+        tr.accel += ((tr.speed - was) / dt - tr.accel) * Math.min(1f, dt * 10f);
+        if (!Float.isNaN(tr.yawWas)) {
+            float rate = (((yaw - tr.yawWas) % 360f + 540f) % 360f - 180f) / dt;
+            tr.turning += (rate - tr.turning) * Math.min(1f, dt * 6f);
+        }
+        tr.yawWas = yaw;
+        float y = (float) net.minecraft.util.Mth.lerp(partialTick, zombie.yo, zombie.getY());
+        boolean ground = zombie.onGround();
+        if (!Float.isNaN(tr.yWas)) {
+            tr.fallVy = ground ? tr.fallVy * Math.max(0f, 1f - dt * 10f) : Math.min(tr.fallVy, (y - tr.yWas) / dt);
+            if (ground && !tr.wasGround && tr.fallVy < -3f) {
+                float hard = Math.min(1f, (-tr.fallVy - 3f) / 9f) + 0.35f;
+                tr.springV[0] += 1.2f * hard;
+                tr.springV[3] -= 1.0f * hard;
+            }
+        }
+        tr.yWas = y;
+        tr.wasGround = ground;
+
+        // targets in radians: a stop (accel below zero) tips it forward and swings the arms on forward
+        float[] target = {
+                Math.clamp(-tr.accel * 0.02f, -0.14f, 0.14f),
+                Math.clamp(tr.turning * 0.0006f, -0.12f, 0.12f),
+                Math.clamp(-tr.turning * 0.0008f, -0.2f, 0.2f),
+                Math.clamp(tr.accel * 0.035f, -0.25f, 0.25f)};
+        int n = Math.max(1, (int) Math.ceil(dt / 0.01f));
+        float h = dt / n;
+        for (int s = 0; s < 4; s++) {
+            float w = (float) (2 * Math.PI * SPRING_HZ[s]), k = w * w, c = 2 * SPRING_DAMP[s] * w;
+            for (int i = 0; i < n; i++) {
+                tr.springV[s] += (k * (target[s] - tr.spring[s]) - c * tr.springV[s]) * h;
+                tr.spring[s] += tr.springV[s] * h;
+            }
+        }
+        float bow = tr.spring[0], lean = tr.spring[1], lead = tr.spring[2], arms = tr.spring[3];
+        // spine x above zero leans forward, z above zero toward its right; head y below zero turns it right;
+        // a shoulder x below zero swings the arm forward
+        out.rot[ZMove.SPINE * 3] += bow;
+        out.rot[ZMove.SPINE * 3 + 2] += lean;
+        out.rot[ZMove.HEAD * 3] -= bow * 0.5f;
+        out.rot[ZMove.HEAD * 3 + 1] += lead;
+        out.rot[ZMove.SH_R * 3] += arms;
+        out.rot[ZMove.SH_L * 3] += arms;
     }
 
     /**

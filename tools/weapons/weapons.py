@@ -1641,7 +1641,6 @@ def main():
     kit.write_ghost_texture(ASSETS)
     kit.write_flash_texture(ASSETS)
     kit.write_glow_texture(ASSETS)
-    AT.scope_overlay(ASSETS / 'textures/gui/scope_4x.png')
     write_slot_java([rifle, pistol_gun, sg, hr, db, rv, rm, sm, so, mg, la, xb, br, sr, glr] + extra_pistols + extra_bolts)
     rigs = [(rifle, g, holds, RIFLE_FP, rifle_points(rifle, g)),
             (pistol_gun, gp, pistol_hold, PISTOL_FP, pistol_points(pistol_gun, gp)),

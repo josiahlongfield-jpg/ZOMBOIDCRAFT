@@ -1,0 +1,139 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sy_bronze": "zomboidcraft:block/city/sy_bronze",
+    "particle": "zomboidcraft:block/city/sy_bronze"
+  },
+  "elements": [
+    {
+      "from": [
+        -3,
+        6.5,
+        6
+      ],
+      "to": [
+        19,
+        9.5,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sy_bronze",
+          "uv": [
+            0,
+            6.5,
+            16,
+            9.5
+          ]
+        },
+        "south": {
+          "texture": "#sy_bronze",
+          "uv": [
+            0,
+            6.5,
+            16,
+            9.5
+          ]
+        },
+        "east": {
+          "texture": "#sy_bronze"
+        },
+        "west": {
+          "texture": "#sy_bronze"
+        },
+        "up": {
+          "texture": "#sy_bronze",
+          "uv": [
+            0,
+            6,
+            16,
+            8
+          ]
+        },
+        "down": {
+          "texture": "#sy_bronze",
+          "uv": [
+            0,
+            8,
+            16,
+            10
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "z",
+        "angle": 45
+      }
+    },
+    {
+      "from": [
+        -1,
+        6,
+        8
+      ],
+      "to": [
+        17,
+        10,
+        9.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sy_bronze",
+          "uv": [
+            0,
+            6,
+            16,
+            10
+          ]
+        },
+        "south": {
+          "texture": "#sy_bronze",
+          "uv": [
+            0,
+            6,
+            16,
+            10
+          ]
+        },
+        "east": {
+          "texture": "#sy_bronze"
+        },
+        "west": {
+          "texture": "#sy_bronze"
+        },
+        "up": {
+          "texture": "#sy_bronze",
+          "uv": [
+            0,
+            8,
+            16,
+            9.5
+          ]
+        },
+        "down": {
+          "texture": "#sy_bronze",
+          "uv": [
+            0,
+            6.5,
+            16,
+            8
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          8
+        ],
+        "axis": "z",
+        "angle": 45
+      }
+    }
+  ]
+}

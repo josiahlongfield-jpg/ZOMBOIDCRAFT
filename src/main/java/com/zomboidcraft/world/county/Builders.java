@@ -16,7 +16,13 @@ public final class Builders {
             case SUBURB -> new SuburbSite(p, out).build();
             case FARM -> new FarmSite(p, out).build();
             case PORT -> new PortSite(p, out).build();
-            case MILITARY -> new MilitarySite(p, out).build();
+            case MILITARY -> {
+                if (p.variant.equals("ridgeview")) {
+                    new Ridgeview(p, out).build();
+                } else {
+                    new MilitarySite(p, out).build();
+                }
+            }
             case ROADSIDE -> {
                 if (p.variant.equals("depot")) {
                     new DepotSite(p, county, out).build();
@@ -27,7 +33,25 @@ public final class Builders {
                 }
             }
             case HIDEOUT -> new HatchSite(p, county, out).build();
-            case LANDMARK -> new LandmarkSite(p, out).build();
+            case LANDMARK -> {
+                if (p.variant.equals("dam")) {
+                    new Dam(p, county, out).build();
+                } else if (p.variant.equals("boardwalk")) {
+                    new Boardwalk(p, county, out).build();
+                } else if (p.variant.equals("hollis")) {
+                    new Hollis(p, county, out).build();
+                } else if (p.variant.equals("cape")) {
+                    new Cape(p, county, out).build();
+                } else if (p.variant.equals("restarea")) {
+                    new RestArea(p, out).build();
+                } else if (p.variant.equals("tollplaza")) {
+                    new TollPlaza(p, out).build();
+                } else if (p.variant.equals("interchange")) {
+                    new Interchange(p, out).build();
+                } else {
+                    new LandmarkSite(p, out).build();
+                }
+            }
         }
         if (out instanceof Voxels v) {
             finishFlights(v);
@@ -39,6 +63,7 @@ public final class Builders {
             if (p.type != PlaceType.LANDMARK && county != null) {
                 clearFrontage(p, county, v);
             }
+            RoomLights.fit(p, v);
         }
     }
 

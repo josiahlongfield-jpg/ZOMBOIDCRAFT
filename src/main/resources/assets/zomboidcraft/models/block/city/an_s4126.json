@@ -1,0 +1,92 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_belly": "zomboidcraft:block/city/al_belly",
+    "al_strut": "zomboidcraft:block/city/al_strut",
+    "particle": "zomboidcraft:block/city/al_strut"
+  },
+  "elements": [
+    {
+      "from": [
+        7.04,
+        0.0,
+        13.44
+      ],
+      "to": [
+        12.16,
+        16.0,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_strut",
+          "uv": [
+            3.84,
+            0.0,
+            8.96,
+            16.0
+          ]
+        },
+        "east": {
+          "texture": "#al_strut",
+          "uv": [
+            0.0,
+            0.0,
+            2.56,
+            16.0
+          ]
+        },
+        "west": {
+          "texture": "#al_strut",
+          "uv": [
+            13.44,
+            0.0,
+            16.0,
+            16.0
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        12.32,
+        0.0,
+        4.8
+      ],
+      "to": [
+        13.28,
+        16.0,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_belly",
+          "uv": [
+            2.72,
+            0.0,
+            3.68,
+            16.0
+          ]
+        },
+        "east": {
+          "texture": "#al_belly",
+          "uv": [
+            0.0,
+            0.0,
+            11.2,
+            16.0
+          ]
+        },
+        "west": {
+          "texture": "#al_belly",
+          "uv": [
+            4.8,
+            0.0,
+            16.0,
+            16.0
+          ]
+        }
+      }
+    }
+  ]
+}

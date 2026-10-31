@@ -1,0 +1,146 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rl_hose": "zomboidcraft:block/city/rl_hose",
+    "rl_pipe": "zomboidcraft:block/city/rl_pipe",
+    "rl_steel": "zomboidcraft:block/city/rl_steel",
+    "rl_steel_flange": "zomboidcraft:block/city/rl_steel_flange",
+    "particle": "zomboidcraft:block/city/rl_steel_flange"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        6,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rl_steel_flange",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#rl_steel_flange",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#rl_steel_flange",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rl_steel_flange",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rl_steel"
+        },
+        "down": {
+          "texture": "#rl_steel",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        6,
+        3
+      ],
+      "to": [
+        7,
+        10,
+        7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rl_hose"
+        },
+        "south": {
+          "texture": "#rl_hose"
+        },
+        "east": {
+          "texture": "#rl_hose"
+        },
+        "west": {
+          "texture": "#rl_hose"
+        },
+        "up": {
+          "texture": "#rl_hose"
+        },
+        "down": {
+          "texture": "#rl_hose"
+        }
+      }
+    },
+    {
+      "from": [
+        9,
+        6,
+        9
+      ],
+      "to": [
+        13,
+        12,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rl_hose"
+        },
+        "south": {
+          "texture": "#rl_hose"
+        },
+        "east": {
+          "texture": "#rl_hose"
+        },
+        "west": {
+          "texture": "#rl_hose"
+        },
+        "up": {
+          "texture": "#rl_hose"
+        },
+        "down": {
+          "texture": "#rl_hose"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        6,
+        10
+      ],
+      "to": [
+        9,
+        16,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rl_pipe"
+        },
+        "south": {
+          "texture": "#rl_pipe"
+        },
+        "east": {
+          "texture": "#rl_pipe"
+        },
+        "west": {
+          "texture": "#rl_pipe"
+        },
+        "up": {
+          "texture": "#rl_pipe",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#rl_pipe"
+        }
+      }
+    }
+  ]
+}

@@ -50,6 +50,26 @@ final class LandmarkSite extends Site {
 
     @Override
     void build() {
+        if (p.variant.startsWith("camp@")) {
+            new CampBlackPine(p, out).build();
+            return;
+        }
+        if (p.variant.startsWith("shipyard@")) {
+            new Shipyard(p, out).build();
+            return;
+        }
+        if (p.variant.startsWith("ravenrock@")) {
+            new Ravenrock(p, out).build();
+            return;
+        }
+        if (p.variant.startsWith("ranges@")) {
+            new TankRanges(p, out).build();
+            return;
+        }
+        if (p.variant.startsWith("armyfield@")) {
+            new ArmyFieldSite(p, out).build();
+            return;
+        }
         if (p.variant.startsWith("airport@")) {
             new AirportSite(p, out).build();
             return;
@@ -72,6 +92,10 @@ final class LandmarkSite extends Site {
         }
         if (variant("university")) {
             new University(lot(0, 0, w, d, 0), rng, w, d).build();
+            return;
+        }
+        if (variant("foundry")) {
+            new Foundry(lot(0, 0, w, d, 0), rng, w, d).build();
             return;
         }
         if (variant("civic")) {

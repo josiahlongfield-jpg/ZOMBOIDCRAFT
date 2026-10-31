@@ -1,0 +1,50 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_wing_under": "zomboidcraft:block/city/al_wing_under",
+    "particle": "zomboidcraft:block/city/al_wing_under"
+  },
+  "elements": [
+    {
+      "from": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "to": [
+        2.88,
+        1.6,
+        6.72
+      ],
+      "faces": {
+        "south": {
+          "texture": "#al_wing_under",
+          "uv": [
+            0.0,
+            14.4,
+            2.88,
+            16.0
+          ]
+        },
+        "east": {
+          "texture": "#al_wing_under",
+          "uv": [
+            9.28,
+            14.4,
+            16.0,
+            16.0
+          ]
+        },
+        "up": {
+          "texture": "#al_wing_under",
+          "uv": [
+            0.0,
+            0.0,
+            2.88,
+            6.72
+          ]
+        }
+      }
+    }
+  ]
+}

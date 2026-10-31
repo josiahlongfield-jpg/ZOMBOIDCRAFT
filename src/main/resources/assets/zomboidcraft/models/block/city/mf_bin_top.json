@@ -1,0 +1,48 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "mf_bin_rim": "zomboidcraft:block/city/mf_bin_rim",
+    "mf_earth": "zomboidcraft:block/city/mf_earth",
+    "particle": "zomboidcraft:block/city/mf_bin_rim"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#mf_bin_rim",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#mf_bin_rim",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#mf_bin_rim",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#mf_bin_rim",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#mf_earth",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#mf_earth",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

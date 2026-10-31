@@ -185,6 +185,18 @@ public final class ZcConfig {
         public double blastFireChance = 0.35;
     }
 
+    /** Companions: how they feel about you when you first meet. */
+    public Companions companions = new Companions();
+
+    public static class Companions {
+        /** Where a companion you spawn or recruit starts with you, 0..100: she trusts you, likes you and is a little drawn to you. */
+        public double startTrust = 60;
+        public double startAffection = 45;
+        public double startAttraction = 35;
+        /** How far each one is rolled either way, so every companion is a bit different. */
+        public double startSpread = 10;
+    }
+
     public Start start = new Start();
 
     public static class Start {
@@ -295,7 +307,11 @@ public final class ZcConfig {
         public double emptyHouses = 0.5;
         /** Buildings where the dead gathered at the end draw extra indoors: hospital x3, police x2.5, mall x2, fire station and school x1.5. */
         public boolean hotspots = true;
-        /** In-game days before a cleared place fills again; 0 never (Zomboid's respawn setting). */
+        /**
+         * In-game days between breach surges (world/Breach): each one the ring under Ridgeview Labs opens for a minute
+         * and the dead pour out, so cleared places fill again and a lost Harvestman is replaced; 0 never (Zomboid's
+         * respawn setting; the ring only flickers then).
+         */
         public int respawnDays = 0;
         /** The dead out in the open past the real ones are drawn as a still crowd (pictures, no cost to the server)... */
         public boolean crowd = true;
@@ -818,6 +834,14 @@ public final class ZcConfig {
         public boolean hideCrosshairWhenAiming = true;
         /** Your own arms, in your own skin, hold guns in first person. Client side. */
         public boolean firstPersonArms = true;
+        /**
+         * How skinned companions are drawn, to find what shows a shader pack through them: 0 front faces only (sheets get a
+         * back copy), 1 both sides kept (the old way), 2 like 0 but in small batches, 3 like 0 with no cut-out at all on
+         * closed meshes. Client side.
+         */
+        public int companionDraw = 0;
+        /** A companion's own voiced lines (her lines.txt) also show in chat as subtitles. Client side. */
+        public boolean npcSubtitles = true;
     }
 
     public static class Combat {
@@ -1382,12 +1406,21 @@ public final class ZcConfig {
     public static class MinigunStats extends GunStats {
         {
             damage = 12.0;
-            hipSpread = 1.2;
-            aimSpread = 1.2;
+            hipSpread = 0.9;    // zoomed out; aimSpread zoomed in (right-click)
+            aimSpread = 0.35;
             shotNoise = 140.0;
             range = 160.0;
-            autoRpm = 1500.0;
+            autoRpm = 945.0;
         }
+
+        /**
+         * Its rhythm, matched to the recording (Josiah: the old steady 1500 rpm ran far ahead of it): rounds come in
+         * groups of groupRounds, a group every groupTicks ticks, and the sound's loop restarts every loopTicks.
+         * 4 every 5 ticks is about 945 rpm.
+         */
+        public int groupRounds = 4;
+        public int groupTicks = 5;
+        public int loopTicks = 25;
 
         /** Seconds the barrels take to spin up before it fires, and to run down after. */
         public double spinUpSeconds = 0.6;
@@ -1517,7 +1550,7 @@ public final class ZcConfig {
      * are left alone).
      */
     public int defaultsVersion = 0;
-    private static final int DEFAULTS = 15;
+    private static final int DEFAULTS = 16;
 
     private static void upgrade(ZcConfig c) {
         if (c.defaultsVersion < 1) {
@@ -1689,6 +1722,15 @@ public final class ZcConfig {
             // 2026-10-29 (Josiah): three cars, OTTO's included, on both lines
             c.trains.railCars = Math.min(c.trains.railCars, 3);
             c.trains.subwayCars = Math.min(c.trains.subwayCars, 3);
+        }
+        if (c.defaultsVersion < 16) {
+            // 2026-10-30 (Josiah): the Warthog minigun's ring a little tighter, much tighter zoomed in
+            if (c.minigun.hipSpread == 1.2) {
+                c.minigun.hipSpread = 0.9;
+            }
+            if (c.minigun.aimSpread == 1.2) {
+                c.minigun.aimSpread = 0.35;
+            }
         }
         c.defaultsVersion = DEFAULTS;
     }

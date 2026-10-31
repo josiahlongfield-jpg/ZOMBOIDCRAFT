@@ -12,8 +12,8 @@ import java.util.Map;
  * cellars and subways go below). Cars are kept as a list for the chunk that holds each one.
  */
 public final class Voxels implements BlockSink {
-    /** Lowest y a builder may write (basements, tunnels). */
-    public static final int MIN_Y = -32;
+    /** Lowest y a builder may write (basements, tunnels, Black Pine Dam founded in its gorge). */
+    public static final int MIN_Y = -48;
 
     public record Car(double x, int y, double z, float yaw, double minLength, double maxLength, long seed, String models) {}
 

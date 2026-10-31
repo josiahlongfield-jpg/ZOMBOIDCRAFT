@@ -182,6 +182,34 @@ public final class ModSounds {
     public static final SoundEvent FLASHBANG = register("weapon.throw.flashbang", 96f);
     public static final SoundEvent EAR_RING = register("weapon.throw.ear_ring", 4f);
     public static final SoundEvent BLAST = register("weapon.throw.blast", 128f);
+    /**
+     * Wave two, on stand-ins (existing takes pitched) until the audio thread's own recordings land: the .50 a much
+     * heavier boom heard out to 256 blocks, the battle rifle a sharper .308, the
+     * suppressed rifle only ever quiet, the machine pistol and pocket .380 lighter pistols, the launcher a hollow thump.
+     */
+    public static final SoundEvent HEAVY_SNIPER_SHOT = register("weapon.heavy_sniper.shot");
+    public static final SoundEvent HEAVY_SNIPER_SHOT_DISTANT = register("weapon.heavy_sniper.shot_distant", 256f);
+    public static final SoundEvent HEAVY_SNIPER_SHOT_SUPPRESSED = register("weapon.heavy_sniper.shot_suppressed");
+    public static final SoundEvent HEAVY_SNIPER_SHOT_SUPPRESSED_DISTANT = register("weapon.heavy_sniper.shot_suppressed_distant", 64f);
+    public static final SoundEvent BATTLE_RIFLE_SHOT = register("weapon.battle_rifle.shot");
+    public static final SoundEvent BATTLE_RIFLE_SHOT_DISTANT = register("weapon.battle_rifle.shot_distant", 176f);
+    public static final SoundEvent BATTLE_RIFLE_SHOT_SUPPRESSED = register("weapon.battle_rifle.shot_suppressed");
+    public static final SoundEvent BATTLE_RIFLE_SHOT_SUPPRESSED_DISTANT = register("weapon.battle_rifle.shot_suppressed_distant", 48f);
+    public static final SoundEvent SUPPRESSED_RIFLE_SHOT = register("weapon.suppressed_rifle.shot");
+    public static final SoundEvent SUPPRESSED_RIFLE_SHOT_DISTANT = register("weapon.suppressed_rifle.shot_distant", 40f);
+    public static final SoundEvent MACHINE_PISTOL_SHOT = register("weapon.machine_pistol.shot");
+    public static final SoundEvent MACHINE_PISTOL_SHOT_DISTANT = register("weapon.machine_pistol.shot_distant", 96f);
+    public static final SoundEvent MACHINE_PISTOL_SHOT_SUPPRESSED = register("weapon.machine_pistol.shot_suppressed");
+    public static final SoundEvent MACHINE_PISTOL_SHOT_SUPPRESSED_DISTANT = register("weapon.machine_pistol.shot_suppressed_distant", 40f);
+    public static final SoundEvent POCKET_PISTOL_SHOT = register("weapon.pocket_pistol.shot");
+    public static final SoundEvent POCKET_PISTOL_SHOT_DISTANT = register("weapon.pocket_pistol.shot_distant", 80f);
+    public static final SoundEvent GRENADE_LAUNCHER_SHOT = register("weapon.grenade_launcher.shot");
+    public static final SoundEvent GRENADE_LAUNCHER_SHOT_DISTANT = register("weapon.grenade_launcher.shot_distant", 128f);
+    /** The Warthog minigun, Josiah's pick: one round per play, and the barrels running down when the trigger lets go. */
+    public static final SoundEvent MINIGUN_SHOT = register("weapon.minigun.shot", 128f);
+    /** The burst Josiah picked as a seamless 1.26 s loop (five groups of four), restarted while the gun fires. */
+    public static final SoundEvent MINIGUN_LOOP = register("weapon.minigun.loop", 128f);
+    public static final SoundEvent MINIGUN_SPIN_DOWN = register("weapon.minigun.spin_down", 48f);
     public static final SoundEvent BLAST_FAR = register("weapon.throw.blast_far", 256f);
     public static final SoundEvent FIRE_BURN = register("weapon.throw.fire_burn", 16f);
 

@@ -283,15 +283,20 @@ public enum GunType {
             case MAGNUM -> distant ? ModSounds.MAGNUM_SHOT_DISTANT : ModSounds.MAGNUM_SHOT;
             case LEVER_ACTION -> distant ? ModSounds.LEVER_ACTION_SHOT_DISTANT : ModSounds.LEVER_ACTION_SHOT;
             case CROSSBOW -> ModSounds.CROSSBOW_SHOT;
-            // the hunting rifle's .308 recordings: the same round, heavier than the 5.56
-            case BATTLE_RIFLE -> suppressed ? (distant ? ModSounds.HUNTING_RIFLE_SHOT_SUPPRESSED_DISTANT : ModSounds.HUNTING_RIFLE_SHOT_SUPPRESSED)
+            // wave two: each on its own events (stand-ins until the audio thread's takes land)
+            case BATTLE_RIFLE -> suppressed ? (distant ? ModSounds.BATTLE_RIFLE_SHOT_SUPPRESSED_DISTANT : ModSounds.BATTLE_RIFLE_SHOT_SUPPRESSED)
+                    : distant ? ModSounds.BATTLE_RIFLE_SHOT_DISTANT : ModSounds.BATTLE_RIFLE_SHOT;
+            case POCKET_PISTOL -> suppressed ? (distant ? ModSounds.PISTOL_SHOT_SUPPRESSED_DISTANT : ModSounds.PISTOL_SHOT_SUPPRESSED)
+                    : distant ? ModSounds.POCKET_PISTOL_SHOT_DISTANT : ModSounds.POCKET_PISTOL_SHOT;
+            case MACHINE_PISTOL -> suppressed ? (distant ? ModSounds.MACHINE_PISTOL_SHOT_SUPPRESSED_DISTANT : ModSounds.MACHINE_PISTOL_SHOT_SUPPRESSED)
+                    : distant ? ModSounds.MACHINE_PISTOL_SHOT_DISTANT : ModSounds.MACHINE_PISTOL_SHOT;
+            case SUPPRESSED_RIFLE -> distant ? ModSounds.SUPPRESSED_RIFLE_SHOT_DISTANT : ModSounds.SUPPRESSED_RIFLE_SHOT;
+            // Josiah keeps the precision rifle on the hunting rifle's .308 recordings, suppressed and not
+            case PRECISION_RIFLE -> suppressed ? (distant ? ModSounds.HUNTING_RIFLE_SHOT_SUPPRESSED_DISTANT : ModSounds.HUNTING_RIFLE_SHOT_SUPPRESSED)
                     : distant ? ModSounds.HUNTING_RIFLE_SHOT_DISTANT : ModSounds.HUNTING_RIFLE_SHOT;
-            case POCKET_PISTOL, MACHINE_PISTOL -> suppressed ? (distant ? ModSounds.PISTOL_SHOT_SUPPRESSED_DISTANT : ModSounds.PISTOL_SHOT_SUPPRESSED)
-                    : distant ? ModSounds.PISTOL_SHOT_DISTANT : ModSounds.PISTOL_SHOT;
-            case SUPPRESSED_RIFLE -> distant ? ModSounds.RIFLE_SHOT_SUPPRESSED_DISTANT : ModSounds.RIFLE_SHOT_SUPPRESSED;
-            case PRECISION_RIFLE, HEAVY_SNIPER -> suppressed ? (distant ? ModSounds.HUNTING_RIFLE_SHOT_SUPPRESSED_DISTANT : ModSounds.HUNTING_RIFLE_SHOT_SUPPRESSED)
-                    : distant ? ModSounds.HUNTING_RIFLE_SHOT_DISTANT : ModSounds.HUNTING_RIFLE_SHOT;
-            case GRENADE_LAUNCHER -> distant ? ModSounds.SHOTGUN_SHOT_DISTANT : ModSounds.SHOTGUN_SHOT;
+            case HEAVY_SNIPER -> suppressed ? (distant ? ModSounds.HEAVY_SNIPER_SHOT_SUPPRESSED_DISTANT : ModSounds.HEAVY_SNIPER_SHOT_SUPPRESSED)
+                    : distant ? ModSounds.HEAVY_SNIPER_SHOT_DISTANT : ModSounds.HEAVY_SNIPER_SHOT;
+            case GRENADE_LAUNCHER -> distant ? ModSounds.GRENADE_LAUNCHER_SHOT_DISTANT : ModSounds.GRENADE_LAUNCHER_SHOT;
         };
     }
 

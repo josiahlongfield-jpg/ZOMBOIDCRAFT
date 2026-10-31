@@ -1,0 +1,74 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tx_concrete": "zomboidcraft:block/city/tx_concrete",
+    "particle": "zomboidcraft:block/city/tx_concrete"
+  },
+  "elements": [
+    {
+      "from": [
+        -8.243,
+        0,
+        3.757
+      ],
+      "to": [
+        15.757,
+        16,
+        6.757
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tx_concrete",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#tx_concrete",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#tx_concrete"
+        },
+        "west": {
+          "texture": "#tx_concrete"
+        },
+        "up": {
+          "texture": "#tx_concrete",
+          "uv": [
+            0,
+            3.757,
+            16,
+            6.757
+          ]
+        },
+        "down": {
+          "texture": "#tx_concrete",
+          "uv": [
+            0,
+            9.243,
+            16,
+            12.243
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          3.757,
+          8,
+          3.757
+        ],
+        "axis": "y",
+        "angle": 45.0
+      }
+    }
+  ]
+}

@@ -1,0 +1,246 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fr_roller": "zomboidcraft:block/city/fr_roller",
+    "fr_rust": "zomboidcraft:block/city/fr_rust",
+    "fr_slag": "zomboidcraft:block/city/fr_slag",
+    "particle": "zomboidcraft:block/city/fr_rust"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        2,
+        9,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fr_rust",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#fr_rust",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#fr_rust"
+        },
+        "west": {
+          "texture": "#fr_rust",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#fr_rust"
+        },
+        "down": {
+          "texture": "#fr_rust",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        14,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        9,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fr_rust",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#fr_rust",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#fr_rust",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#fr_rust"
+        },
+        "up": {
+          "texture": "#fr_rust"
+        },
+        "down": {
+          "texture": "#fr_rust",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        7,
+        12.5
+      ],
+      "to": [
+        14,
+        9.5,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fr_roller"
+        },
+        "south": {
+          "texture": "#fr_roller"
+        },
+        "east": {
+          "texture": "#fr_roller"
+        },
+        "west": {
+          "texture": "#fr_roller"
+        },
+        "up": {
+          "texture": "#fr_roller"
+        },
+        "down": {
+          "texture": "#fr_roller"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        7,
+        8.5
+      ],
+      "to": [
+        14,
+        9.5,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fr_roller"
+        },
+        "south": {
+          "texture": "#fr_roller"
+        },
+        "east": {
+          "texture": "#fr_roller"
+        },
+        "west": {
+          "texture": "#fr_roller"
+        },
+        "up": {
+          "texture": "#fr_roller"
+        },
+        "down": {
+          "texture": "#fr_roller"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        7,
+        4.5
+      ],
+      "to": [
+        14,
+        9.5,
+        7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fr_roller"
+        },
+        "south": {
+          "texture": "#fr_roller"
+        },
+        "east": {
+          "texture": "#fr_roller"
+        },
+        "west": {
+          "texture": "#fr_roller"
+        },
+        "up": {
+          "texture": "#fr_roller"
+        },
+        "down": {
+          "texture": "#fr_roller"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        7,
+        0.5
+      ],
+      "to": [
+        14,
+        9.5,
+        3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fr_roller"
+        },
+        "south": {
+          "texture": "#fr_roller"
+        },
+        "east": {
+          "texture": "#fr_roller"
+        },
+        "west": {
+          "texture": "#fr_roller"
+        },
+        "up": {
+          "texture": "#fr_roller"
+        },
+        "down": {
+          "texture": "#fr_roller"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        0,
+        0
+      ],
+      "to": [
+        14,
+        1,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fr_slag",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#fr_slag",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#fr_slag"
+        },
+        "west": {
+          "texture": "#fr_slag"
+        },
+        "up": {
+          "texture": "#fr_slag"
+        },
+        "down": {
+          "texture": "#fr_slag",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

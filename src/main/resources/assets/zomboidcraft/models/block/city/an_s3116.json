@@ -1,0 +1,129 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_spinner": "zomboidcraft:block/city/al_spinner",
+    "particle": "zomboidcraft:block/city/al_spinner"
+  },
+  "elements": [
+    {
+      "from": [
+        4.0,
+        6.304,
+        15.6
+      ],
+      "to": [
+        8.0,
+        16.0,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_spinner",
+          "uv": [
+            8.0,
+            0.0,
+            12.0,
+            9.696
+          ]
+        },
+        "east": {
+          "texture": "#al_spinner",
+          "uv": [
+            0.0,
+            0.0,
+            0.4,
+            9.696
+          ]
+        },
+        "west": {
+          "texture": "#al_spinner",
+          "uv": [
+            15.6,
+            0.0,
+            16.0,
+            9.696
+          ]
+        },
+        "up": {
+          "texture": "#al_spinner",
+          "uv": [
+            4.0,
+            15.6,
+            8.0,
+            16.0
+          ],
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#al_spinner",
+          "uv": [
+            4.0,
+            0.0,
+            8.0,
+            0.4
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        8.0,
+        6.304,
+        15.6
+      ],
+      "to": [
+        12.0,
+        16.0,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_spinner",
+          "uv": [
+            4.0,
+            0.0,
+            8.0,
+            9.696
+          ]
+        },
+        "east": {
+          "texture": "#al_spinner",
+          "uv": [
+            0.0,
+            0.0,
+            0.4,
+            9.696
+          ]
+        },
+        "west": {
+          "texture": "#al_spinner",
+          "uv": [
+            15.6,
+            0.0,
+            16.0,
+            9.696
+          ]
+        },
+        "up": {
+          "texture": "#al_spinner",
+          "uv": [
+            8.0,
+            15.6,
+            12.0,
+            16.0
+          ],
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#al_spinner",
+          "uv": [
+            8.0,
+            0.0,
+            12.0,
+            0.4
+          ]
+        }
+      }
+    }
+  ]
+}

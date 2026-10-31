@@ -1,0 +1,209 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_dark": "zomboidcraft:block/city/al_dark",
+    "al_lining": "zomboidcraft:block/city/al_lining",
+    "al_paint": "zomboidcraft:block/city/al_paint",
+    "al_psu": "zomboidcraft:block/city/al_psu",
+    "an_skyline_twinjet_reg_1": "zomboidcraft:block/city/an_skyline_twinjet_reg_1",
+    "particle": "zomboidcraft:block/city/al_paint"
+  },
+  "elements": [
+    {
+      "from": [
+        4.765,
+        -0.997,
+        0
+      ],
+      "to": [
+        7.765,
+        2.753,
+        16
+      ],
+      "faces": {
+        "east": {
+          "texture": "#al_lining",
+          "uv": [
+            0,
+            12.25,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#al_paint",
+          "uv": [
+            0,
+            12.25,
+            16,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          4.765,
+          8.234,
+          8.0
+        ],
+        "axis": "z",
+        "angle": -22.25
+      }
+    },
+    {
+      "from": [
+        4.765,
+        2.753,
+        0
+      ],
+      "to": [
+        7.765,
+        9.753,
+        16
+      ],
+      "faces": {
+        "east": {
+          "texture": "#al_lining",
+          "uv": [
+            0,
+            6.247,
+            16,
+            13.247
+          ]
+        },
+        "west": {
+          "texture": "#an_skyline_twinjet_reg_1",
+          "uv": [
+            0,
+            6.8,
+            16,
+            16.0
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          4.765,
+          8.234,
+          8.0
+        ],
+        "axis": "z",
+        "angle": -22.25
+      }
+    },
+    {
+      "from": [
+        4.765,
+        9.753,
+        0
+      ],
+      "to": [
+        7.765,
+        14.753,
+        16
+      ],
+      "faces": {
+        "east": {
+          "texture": "#al_dark",
+          "uv": [
+            0,
+            1.247,
+            16,
+            6.247
+          ]
+        },
+        "west": {
+          "texture": "#an_skyline_twinjet_reg_1",
+          "uv": [
+            0,
+            0.189,
+            16,
+            6.8
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          4.765,
+          8.234,
+          8.0
+        ],
+        "axis": "z",
+        "angle": -22.25
+      }
+    },
+    {
+      "from": [
+        4.765,
+        14.753,
+        0
+      ],
+      "to": [
+        7.765,
+        17.464,
+        16
+      ],
+      "faces": {
+        "east": {
+          "texture": "#al_dark",
+          "uv": [
+            0,
+            0,
+            16,
+            2.711
+          ]
+        },
+        "west": {
+          "texture": "#al_paint",
+          "uv": [
+            0,
+            0,
+            16,
+            2.711
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          4.765,
+          8.234,
+          8.0
+        ],
+        "axis": "z",
+        "angle": -22.25
+      }
+    },
+    {
+      "from": [
+        15.129,
+        8.0,
+        0
+      ],
+      "to": [
+        16.0,
+        16.0,
+        16
+      ],
+      "faces": {
+        "west": {
+          "texture": "#al_dark",
+          "uv": [
+            0,
+            0.0,
+            16,
+            8.0
+          ]
+        },
+        "down": {
+          "texture": "#al_psu",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    }
+  ]
+}

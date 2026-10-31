@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sb_bulbs": "zomboidcraft:block/city/sb_bulbs",
+    "particle": "zomboidcraft:block/city/sb_bulbs"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        15.2
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sb_bulbs"
+        },
+        "south": {
+          "texture": "#sb_bulbs",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#sb_bulbs",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#sb_bulbs",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#sb_bulbs",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sb_bulbs",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

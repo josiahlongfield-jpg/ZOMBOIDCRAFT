@@ -1,0 +1,249 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ext_black_metal": "zomboidcraft:block/city/ext_black_metal",
+    "rp_glass": {
+      "sprite": "zomboidcraft:block/city/rp_glass",
+      "force_translucent": true
+    },
+    "particle": "zomboidcraft:block/city/rp_glass"
+  },
+  "elements": [
+    {
+      "from": [
+        -9.657,
+        1,
+        2.943
+      ],
+      "to": [
+        14.343,
+        15,
+        3.343
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rp_glass",
+          "uv": [
+            0,
+            1,
+            16,
+            15
+          ]
+        },
+        "south": {
+          "texture": "#rp_glass",
+          "uv": [
+            0,
+            1,
+            16,
+            15
+          ]
+        },
+        "east": {
+          "texture": "#rp_glass"
+        },
+        "west": {
+          "texture": "#rp_glass"
+        },
+        "up": {
+          "texture": "#rp_glass",
+          "uv": [
+            0,
+            2.943,
+            16,
+            3.343
+          ]
+        },
+        "down": {
+          "texture": "#rp_glass",
+          "uv": [
+            0,
+            12.657,
+            16,
+            13.057
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          2.343,
+          8,
+          2.343
+        ],
+        "axis": "y",
+        "angle": 45.0
+      }
+    },
+    {
+      "from": [
+        -9.657,
+        0,
+        2.343
+      ],
+      "to": [
+        14.343,
+        1.2,
+        3.943
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_black_metal",
+          "uv": [
+            0,
+            14.8,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#ext_black_metal",
+          "uv": [
+            0,
+            14.8,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#ext_black_metal"
+        },
+        "west": {
+          "texture": "#ext_black_metal"
+        },
+        "up": {
+          "texture": "#ext_black_metal",
+          "uv": [
+            0,
+            2.343,
+            16,
+            3.943
+          ]
+        },
+        "down": {
+          "texture": "#ext_black_metal",
+          "uv": [
+            0,
+            12.057,
+            16,
+            13.657
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          2.343,
+          8,
+          2.343
+        ],
+        "axis": "y",
+        "angle": 45.0
+      }
+    },
+    {
+      "from": [
+        -9.657,
+        14.8,
+        2.343
+      ],
+      "to": [
+        14.343,
+        16,
+        3.943
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_black_metal",
+          "uv": [
+            0,
+            0,
+            16,
+            1.1999999999999993
+          ]
+        },
+        "south": {
+          "texture": "#ext_black_metal",
+          "uv": [
+            0,
+            0,
+            16,
+            1.1999999999999993
+          ]
+        },
+        "east": {
+          "texture": "#ext_black_metal"
+        },
+        "west": {
+          "texture": "#ext_black_metal"
+        },
+        "up": {
+          "texture": "#ext_black_metal",
+          "uv": [
+            0,
+            2.343,
+            16,
+            3.943
+          ]
+        },
+        "down": {
+          "texture": "#ext_black_metal",
+          "uv": [
+            0,
+            12.057,
+            16,
+            13.657
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          2.343,
+          8,
+          2.343
+        ],
+        "axis": "y",
+        "angle": 45.0
+      }
+    },
+    {
+      "from": [
+        1.743,
+        0,
+        2.443
+      ],
+      "to": [
+        2.943,
+        16,
+        3.843
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_black_metal"
+        },
+        "south": {
+          "texture": "#ext_black_metal"
+        },
+        "east": {
+          "texture": "#ext_black_metal"
+        },
+        "west": {
+          "texture": "#ext_black_metal"
+        },
+        "up": {
+          "texture": "#ext_black_metal"
+        },
+        "down": {
+          "texture": "#ext_black_metal"
+        }
+      },
+      "rotation": {
+        "origin": [
+          2.343,
+          8,
+          2.343
+        ],
+        "axis": "y",
+        "angle": 45.0
+      }
+    }
+  ]
+}

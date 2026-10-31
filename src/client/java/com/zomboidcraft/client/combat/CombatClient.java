@@ -121,7 +121,7 @@ public final class CombatClient {
     }
 
     /** The trigger of the mounted gun this player stands at, as the server last heard it; and the belt last shown. */
-    private static boolean triggerSent;
+    private static boolean triggerSent, zoomSent;
     private static int beltShown = -1;
     private static long beltShownAt;
 
@@ -133,6 +133,12 @@ public final class CombatClient {
             triggerSent = held;
             ClientPlayNetworking.send(new com.zomboidcraft.world.cars.CarNet.Use(held ? com.zomboidcraft.world.cars.CarNet.TRIGGER_ON
                     : com.zomboidcraft.world.cars.CarNet.TRIGGER_OFF, 0, 0, 0));
+        }
+        boolean zoom = at && client.options.keyUse.isDown() && client.gui.screen() == null && !client.isPaused();
+        if (zoom != zoomSent) {
+            zoomSent = zoom;
+            ClientPlayNetworking.send(new com.zomboidcraft.world.cars.CarNet.Use(zoom ? com.zomboidcraft.world.cars.CarNet.ZOOM_ON
+                    : com.zomboidcraft.world.cars.CarNet.ZOOM_OFF, 0, 0, 0));
         }
         if (!at) {
             beltShown = -1;
@@ -207,7 +213,10 @@ public final class CombatClient {
         }
         while (FIRE_MODE.consumeClick()) {
             GunType type = GunType.of(player.getMainHandItem());
-            if (type != null && type.stats().selectFire) {
+            if (type != null && player.isUsingItem() && Attachments.hasMagnifier(player.getMainHandItem())) {
+                // on the sights the key swings the magnifier in or aside instead
+                ClientPlayNetworking.send(new CombatNet.Action(CombatNet.Action.MAGNIFIER));
+            } else if (type != null && type.stats().selectFire) {
                 ClientPlayNetworking.send(new CombatNet.Action(CombatNet.Action.FIRE_MODE));
             }
         }

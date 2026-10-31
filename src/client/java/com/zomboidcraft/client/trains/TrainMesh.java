@@ -55,6 +55,7 @@ final class TrainMesh {
     static final Mat CLOSE_DOORS = Mat.of(6, 0);
     static final Mat TIE_PLATE = Mat.of(6, 1), BALLAST = Mat.of(6, 2), WEED = Mat.of(6, 3), INSULATOR = Mat.of(6, 4),
             RAIL_COVER = Mat.of(6, 5), CLIP = Mat.of(6, 6);
+    static final Mat SEAT_YELLOW = Mat.of(6, 7), WOODGRAIN = Mat.of(6, 8), POLE_YELLOW = Mat.of(6, 9), SYSTEM_MAP = Mat.of(6, 10);
     static final Mat MAP = Mat.of(5, 12), EMERGENCY = Mat.of(5, 13), HAZARD = Mat.of(5, 14), LAMP = Mat.of(5, 15);
 
     /** How a quad is lit: by the world outside, by the car's own lights inside, or glowing itself. */
@@ -216,10 +217,19 @@ final class TrainMesh {
                 double pitch = (run[1] - run[0]) / seats;
                 for (int i = 0; i < seats; i++) {
                     double a = run[0] + pitch * i + 0.02, b = run[0] + pitch * (i + 1) - 0.02;
-                    // cushion, dipped a touch at the front, and the back leaning out from the wall
-                    box(x0 + (side > 0 ? 0.02 : 0), sh - 0.1, a, x1 - (side > 0 ? 0 : 0.02), sh, b, seat, seat, null, seat, seat, seat);
-                    double bx0 = side > 0 ? w - t - 0.14 : -w + t, bx1 = side > 0 ? w - t : -w + t + 0.14;
-                    box(bx0, sh + 0.04, a, bx1, 1.05, b, seat, seat, null, seat, seat, seat);
+                    if (subway) {
+                        // moulded fibreglass buckets, orange and yellow by turns, the back a thin shell off the wall
+                        Mat shell = i % 2 == 0 ? SEAT_ORANGE : SEAT_YELLOW;
+                        box(x0 + (side > 0 ? 0.02 : 0), sh - 0.06, a + 0.01, x1 - (side > 0 ? 0 : 0.02), sh, b - 0.01, shell, shell, shell, shell, shell, shell);
+                        box(x0 + (side > 0 ? 0.02 : 0), sh, a + 0.01, x1 - (side > 0 ? 0 : 0.02), sh + 0.04, a + 0.05, shell, shell, null, shell, shell, shell);
+                        double bx0 = side > 0 ? w - t - 0.1 : -w + t + 0.04, bx1 = side > 0 ? w - t - 0.04 : -w + t + 0.1;
+                        box(bx0, sh + 0.02, a + 0.01, bx1, 0.98, b - 0.01, shell, shell, null, shell, shell, shell);
+                    } else {
+                        // cushion, dipped a touch at the front, and the back leaning out from the wall
+                        box(x0 + (side > 0 ? 0.02 : 0), sh - 0.1, a, x1 - (side > 0 ? 0 : 0.02), sh, b, seat, seat, null, seat, seat, seat);
+                        double bx0 = side > 0 ? w - t - 0.14 : -w + t, bx1 = side > 0 ? w - t : -w + t + 0.14;
+                        box(bx0, sh + 0.04, a, bx1, 1.05, b, seat, seat, null, seat, seat, seat);
+                    }
                     if (i % 2 == 0 && i > 0) {
                         double ax = front0 + (side > 0 ? 0.02 : -0.02);
                         box(Math.min(ax, side > 0 ? x1 : x0), sh, a - 0.04, Math.max(ax, side > 0 ? x1 : x0), sh + 0.22, a,
@@ -227,6 +237,34 @@ final class TrainMesh {
                     }
                 }
             }
+        }
+        // wood-grain draft screens where a bench meets a doorway, a steel rail along the top
+        for (int side = -1; side <= 1; side += 2) {
+            for (double[] run : TrainCar.seatRuns(front)) {
+                for (double end : new double[] {run[0], run[1]}) {
+                    boolean byDoor = false;
+                    for (double d : TrainCar.DOORS) {
+                        byDoor |= Math.abs(Math.abs(end - d) - TrainCar.DOOR_HALF) < 0.6;
+                    }
+                    if (!byDoor) {
+                        continue;
+                    }
+                    double sx0 = side > 0 ? w - t - 0.62 : -w + t, sx1 = side > 0 ? w - t : -w + t + 0.62;
+                    double z0 = end == run[0] ? end - 0.05 : end, z1 = z0 + 0.05;
+                    box(sx0, 0.08, z0, sx1, 1.55, z1, WOODGRAIN, WOODGRAIN, null, null, WOODGRAIN, WOODGRAIN);
+                    box(sx0, 1.55, z0 - 0.01, sx1, 1.6, z1 + 0.01, CHROME, CHROME, CHROME, CHROME, CHROME, CHROME);
+                }
+            }
+        }
+        // the system map on each open end wall, beside the gangway door
+        for (int e = -1; e <= 1; e += 2) {
+            boolean open = e > 0 ? !front : !back;
+            if (!open) {
+                continue;
+            }
+            double z = e > 0 ? h - t : -h + t;
+            box(0.95, 1.05, e > 0 ? z - 0.015 : z, 1.75, 2.25, e > 0 ? z : z + 0.015, null, null, null, null,
+                    e > 0 ? SYSTEM_MAP : null, e > 0 ? null : SYSTEM_MAP);
         }
         interiorDetail(subway, front, w, t, h, ceil, winLow);
         // grab poles by the doors and down the middle, and the overhead rails
@@ -237,7 +275,7 @@ final class TrainMesh {
             }
         }
         for (double z : new double[] {-3.5, 3.5, -9.5}) {
-            pole(0, z);
+            pole(0, z, subway ? POLE_YELLOW : CHROME);
         }
         // a stop button on the pole beside each door, facing in: press it (interact) to be let off
         // and over it a close-doors button, to send the train on its way
@@ -362,9 +400,13 @@ final class TrainMesh {
     }
 
     private void pole(double x, double z) {
+        pole(x, z, CHROME);
+    }
+
+    private void pole(double x, double z, Mat m) {
         byte was = light;
         light = INSIDE;
-        box(x - 0.04, 0, z - 0.04, x + 0.04, TrainCar.CEILING, z + 0.04, CHROME, CHROME, null, null, CHROME, CHROME);
+        box(x - 0.04, 0, z - 0.04, x + 0.04, TrainCar.CEILING, z + 0.04, m, m, null, null, m, m);
         light = was;
     }
 
@@ -487,9 +529,9 @@ final class TrainMesh {
         byte was = light;
         light = INSIDE;
         double end = (front ? TrainCar.CAB : h) - 0.5;
-        // straps: a loop on a strap every 0.7 along both overhead rails
+        // straps (railway cars; the subway's riders hold the rails and poles): a loop on a strap every 0.7
         for (int side = -1; side <= 1; side += 2) {
-            for (double z = -h + 0.7; z < end; z += 0.7) {
+            for (double z = -h + 0.7; z < end && !subway; z += 0.7) {
                 double x = side * 1.05;
                 box(x - 0.012, 2.25, z - 0.025, x + 0.012, 2.55, z + 0.025, RUBBER, RUBBER, null, null, RUBBER, RUBBER);
                 box(x - 0.015, 2.12, z - 0.07, x + 0.015, 2.25, z + 0.07, OTTO_SHELL, OTTO_SHELL, OTTO_SHELL, OTTO_SHELL, OTTO_SHELL, OTTO_SHELL);

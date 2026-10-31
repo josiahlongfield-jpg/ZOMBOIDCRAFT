@@ -4,6 +4,7 @@ import com.zomboidcraft.ModItems;
 import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.combat.GunType;
 import com.zomboidcraft.combat.Guns;
+import com.zomboidcraft.combat.ModSounds;
 import com.zomboidcraft.world.events.AirStrikes;
 import com.zomboidcraft.zombie.Noise;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
@@ -62,6 +63,15 @@ public final class Turret {
     public static float[] turn(CarModels.Turret t, float[] p, float yaw) {
         float x = p[0] - t.yaw[0], z = p[2] - t.yaw[2], c = Mth.cos(yaw), s = Mth.sin(yaw);
         return new float[] {x * c + z * s + t.yaw[0], p[1], -x * s + z * c + t.yaw[2]};
+    }
+
+    /** The gun's spread (degrees, the cone's half-angle): tighter while the gunner's zoomed in. The client's ring uses it too. */
+    public static double spread(boolean zoomed, ZcConfig.MinigunStats stats) {
+        return zoomed ? stats.aimSpread : stats.hipSpread;
+    }
+
+    static double spread(CarProp car, ZcConfig.MinigunStats stats) {
+        return spread(car.turretZoom && gunner(car) != null, stats);
     }
 
     /** The gunner's rider, or null. */
@@ -138,6 +148,7 @@ public final class Turret {
         Player gunner = gunner(car);
         if (!(gunner instanceof ServerPlayer shooter) || shooter.isSpectator()) {
             car.turretTrigger = false;
+            car.turretZoom = false;
         }
         if (car.beltBusy > 0) {
             car.beltBusy--;
@@ -155,24 +166,43 @@ public final class Turret {
         }
         if (!held && was >= 1f && spin < 1f) {
             Vec3 at = car.position().add(0, 2, 0);
-            level.playSound(null, at.x, at.y, at.z, SoundEvents.BEACON_DEACTIVATE, SoundSource.PLAYERS, 0.7f, 1.8f);
+            level.playSound(null, at.x, at.y, at.z, ModSounds.MINIGUN_SPIN_DOWN, SoundSource.PLAYERS, 1f, 1f);
         }
         boolean firing = held && spin >= 1f && car.belt() > 0;
         if (firing != car.turretFiring()) {
             car.setTurretFiring(firing);
+            if (!firing) {
+                stopLoop(car, level);
+            }
         }
         if (held && spin >= 1f && car.belt() <= 0 && level.getGameTime() % 8 == 0 && gunner != null) {
             level.playSound(null, gunner.getX(), gunner.getEyeY(), gunner.getZ(), GunType.ASSAULT_RIFLE.dry(), SoundSource.PLAYERS, 0.8f, 0.7f);
             gunner.sendOverlayMessage(Component.literal("The belt's empty. R loads it from your 5.56 rounds.").withStyle(ChatFormatting.RED));
         }
         if (!firing) {
-            car.turretOwed = 0;
+            car.fireTicks = 0;
             return;
         }
-        car.turretOwed += stats.autoRpm / 1200.0;
-        while (car.turretOwed >= 1 && car.belt() > 0) {
-            car.turretOwed -= 1;
+        // in step with the recording: its loop from the top every loopTicks, and each group of rounds half on the
+        // tick the group's first shot is heard, the rest on the next (the four shots are 45 ms apart)
+        int t = car.fireTicks++;
+        if (t % Math.max(1, stats.loopTicks) == 0) {
+            Vec3 at = car.toWorld(move(m.turret, m.turret.muzzle, yaw(gunner.getYRot(), car.getYRot()), pitch(m.turret, gunner.getXRot())));
+            level.playSound(null, at.x, at.y, at.z, ModSounds.MINIGUN_LOOP, SoundSource.PLAYERS, 1f, 1f);
+        }
+        int g = t % Math.max(1, stats.groupTicks);
+        int rounds = g == 0 ? (stats.groupRounds + 1) / 2 : g == 1 ? stats.groupRounds / 2 : 0;
+        for (int i = 0; i < rounds && car.belt() > 0; i++) {
             round(car, m, (ServerPlayer) gunner, stats, level);
+        }
+    }
+
+    /** The firing loop cut off where it is (the run-down plays over it), for everyone who could hear it. */
+    private static void stopLoop(CarProp car, ServerLevel level) {
+        var stop = new net.minecraft.network.protocol.game.ClientboundStopSoundPacket(
+                net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT.getKey(ModSounds.MINIGUN_LOOP), SoundSource.PLAYERS);
+        for (ServerPlayer p : PlayerLookup.around(level, car.position(), 160)) {
+            p.connection.send(stop);
         }
     }
 
@@ -186,19 +216,14 @@ public final class Turret {
         Vec3 far = eye.add(look.scale(stats.range));
         HitResult seen = level.clip(new ClipContext(eye.add(look.scale(2.5)), far, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, gunner));
         Vec3 aim = (seen.getType() == HitResult.Type.MISS ? far : seen.getLocation()).subtract(muzzle).normalize();
-        double spread = Math.toRadians(stats.hipSpread) * Math.sqrt(gunner.getRandom().nextDouble());
+        double spread = Math.toRadians(spread(car, stats)) * Math.sqrt(gunner.getRandom().nextDouble());
         double a = gunner.getRandom().nextDouble() * Math.PI * 2;
         Vec3 right = aim.cross(new Vec3(0, 1, 0));
         right = right.lengthSqr() < 1e-6 ? new Vec3(1, 0, 0) : right.normalize();
         Vec3 up = right.cross(aim).normalize();
         Vec3 dir = aim.add(right.scale(Math.cos(a) * Math.tan(spread))).add(up.scale(Math.sin(a) * Math.tan(spread))).normalize();
         Vec3 stop = Guns.mountedRound(gunner, muzzle, dir, stats, car, n % 2 == 0);
-        // everyone else hears the distant take, the gunner the close one
-        float pitch = 0.84f + gunner.getRandom().nextFloat() * 0.08f;
-        level.playSound(gunner, muzzle.x, muzzle.y, muzzle.z, GunType.ASSAULT_RIFLE.shot(false, true), SoundSource.PLAYERS, 1f, pitch);
-        gunner.connection.send(new net.minecraft.network.protocol.game.ClientboundSoundPacket(
-                net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT.wrapAsHolder(GunType.ASSAULT_RIFLE.shot(false, false)),
-                SoundSource.PLAYERS, muzzle.x, muzzle.y, muzzle.z, 0.8f, pitch, gunner.getRandom().nextLong()));
+        // the sound is the firing loop's (tick), each round in it
         if (n % 3 == 0) {
             level.playSound(null, muzzle.x, muzzle.y - 0.4, muzzle.z, Guns.casing(GunType.ASSAULT_RIFLE), SoundSource.PLAYERS, 0.35f,
                     0.9f + gunner.getRandom().nextFloat() * 0.25f);

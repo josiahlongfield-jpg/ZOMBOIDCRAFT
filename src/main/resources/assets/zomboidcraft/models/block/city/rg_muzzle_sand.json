@@ -1,0 +1,109 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rg_armour_sand": "zomboidcraft:block/city/rg_armour_sand",
+    "rg_track_top": "zomboidcraft:block/city/rg_track_top",
+    "particle": "zomboidcraft:block/city/rg_armour_sand"
+  },
+  "elements": [
+    {
+      "from": [
+        6.5,
+        1,
+        2
+      ],
+      "to": [
+        9.5,
+        4,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rg_armour_sand"
+        },
+        "south": {
+          "texture": "#rg_armour_sand",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#rg_armour_sand"
+        },
+        "west": {
+          "texture": "#rg_armour_sand"
+        },
+        "up": {
+          "texture": "#rg_armour_sand"
+        },
+        "down": {
+          "texture": "#rg_armour_sand"
+        }
+      }
+    },
+    {
+      "from": [
+        5.5,
+        0,
+        6
+      ],
+      "to": [
+        10.5,
+        5,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rg_armour_sand"
+        },
+        "south": {
+          "texture": "#rg_armour_sand"
+        },
+        "east": {
+          "texture": "#rg_armour_sand"
+        },
+        "west": {
+          "texture": "#rg_armour_sand"
+        },
+        "up": {
+          "texture": "#rg_armour_sand"
+        },
+        "down": {
+          "texture": "#rg_armour_sand",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        0.5,
+        0
+      ],
+      "to": [
+        10,
+        4.5,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rg_track_top",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#rg_armour_sand"
+        },
+        "east": {
+          "texture": "#rg_armour_sand"
+        },
+        "west": {
+          "texture": "#rg_armour_sand"
+        },
+        "up": {
+          "texture": "#rg_armour_sand"
+        },
+        "down": {
+          "texture": "#rg_armour_sand"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_tailplane": "zomboidcraft:block/city/al_tailplane",
+    "al_wing_under": "zomboidcraft:block/city/al_wing_under",
+    "particle": "zomboidcraft:block/city/al_wing_under"
+  },
+  "elements": [
+    {
+      "from": [
+        0.0,
+        2.739,
+        0.0
+      ],
+      "to": [
+        8.0,
+        3.353,
+        1.125
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_wing_under",
+          "uv": [
+            8.0,
+            12.647,
+            16.0,
+            13.261
+          ],
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#al_wing_under",
+          "uv": [
+            0.0,
+            12.647,
+            8.0,
+            13.261
+          ]
+        },
+        "east": {
+          "texture": "#al_wing_under",
+          "uv": [
+            14.875,
+            12.647,
+            16.0,
+            13.261
+          ]
+        },
+        "west": {
+          "texture": "#al_wing_under",
+          "uv": [
+            0.0,
+            12.647,
+            1.125,
+            13.261
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#al_tailplane",
+          "uv": [
+            0.0,
+            0.0,
+            8.0,
+            1.125
+          ]
+        },
+        "down": {
+          "texture": "#al_wing_under",
+          "uv": [
+            0.0,
+            14.875,
+            8.0,
+            16.0
+          ]
+        }
+      }
+    }
+  ]
+}

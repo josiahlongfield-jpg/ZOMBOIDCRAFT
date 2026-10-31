@@ -115,8 +115,8 @@ final class WeaponHud {
         GunType type = GunType.of(gun);
         ItemStack optic = Attachments.get(gun, Attachments.Slot.OPTIC);
         String sights = optic.isEmpty() ? "Iron sights" : optic.getHoverName().getString();
-        if (Attachments.magnified(gun)) {
-            sights += " + magnifier";
+        if (Attachments.hasMagnifier(gun)) {
+            sights += Attachments.magnified(gun) ? " + magnifier" : " + magnifier (aside)";
         }
         return type == null ? sights : type.caliber() + " · " + sights;
     }

@@ -1,0 +1,108 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sg_flesh": "zomboidcraft:block/city/sg_flesh",
+    "sg_mass": "zomboidcraft:block/city/sg_mass",
+    "sg_pod": "zomboidcraft:block/city/sg_pod",
+    "particle": "zomboidcraft:block/city/sg_flesh"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        1
+      ],
+      "to": [
+        15,
+        3,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sg_flesh"
+        },
+        "south": {
+          "texture": "#sg_flesh"
+        },
+        "east": {
+          "texture": "#sg_flesh"
+        },
+        "west": {
+          "texture": "#sg_flesh"
+        },
+        "up": {
+          "texture": "#sg_mass"
+        },
+        "down": {
+          "texture": "#sg_flesh",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        3,
+        3
+      ],
+      "to": [
+        12,
+        6,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sg_flesh"
+        },
+        "south": {
+          "texture": "#sg_flesh"
+        },
+        "east": {
+          "texture": "#sg_flesh"
+        },
+        "west": {
+          "texture": "#sg_flesh"
+        },
+        "up": {
+          "texture": "#sg_mass"
+        },
+        "down": {
+          "texture": "#sg_flesh"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        6,
+        5
+      ],
+      "to": [
+        9,
+        8,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sg_pod"
+        },
+        "south": {
+          "texture": "#sg_pod"
+        },
+        "east": {
+          "texture": "#sg_pod"
+        },
+        "west": {
+          "texture": "#sg_pod"
+        },
+        "up": {
+          "texture": "#sg_pod"
+        },
+        "down": {
+          "texture": "#sg_pod"
+        }
+      }
+    }
+  ]
+}

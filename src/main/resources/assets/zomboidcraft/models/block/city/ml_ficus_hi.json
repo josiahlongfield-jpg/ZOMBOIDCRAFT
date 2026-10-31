@@ -1,0 +1,204 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_foliage": "zomboidcraft:block/city/home_foliage",
+    "tree_maple_bark": "zomboidcraft:block/city/tree_maple_bark",
+    "particle": "zomboidcraft:block/city/tree_maple_bark"
+  },
+  "elements": [
+    {
+      "from": [
+        7.2,
+        0,
+        7.2
+      ],
+      "to": [
+        8.8,
+        6,
+        8.8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tree_maple_bark"
+        },
+        "south": {
+          "texture": "#tree_maple_bark"
+        },
+        "east": {
+          "texture": "#tree_maple_bark"
+        },
+        "west": {
+          "texture": "#tree_maple_bark"
+        },
+        "up": {
+          "texture": "#tree_maple_bark"
+        },
+        "down": {
+          "texture": "#tree_maple_bark",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        0,
+        2
+      ],
+      "to": [
+        9,
+        7,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_foliage"
+        },
+        "south": {
+          "texture": "#home_foliage"
+        },
+        "east": {
+          "texture": "#home_foliage"
+        },
+        "west": {
+          "texture": "#home_foliage"
+        },
+        "up": {
+          "texture": "#home_foliage"
+        },
+        "down": {
+          "texture": "#home_foliage",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        1,
+        6
+      ],
+      "to": [
+        15,
+        8,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_foliage"
+        },
+        "south": {
+          "texture": "#home_foliage"
+        },
+        "east": {
+          "texture": "#home_foliage"
+        },
+        "west": {
+          "texture": "#home_foliage"
+        },
+        "up": {
+          "texture": "#home_foliage"
+        },
+        "down": {
+          "texture": "#home_foliage"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        5,
+        4
+      ],
+      "to": [
+        13,
+        12,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_foliage"
+        },
+        "south": {
+          "texture": "#home_foliage"
+        },
+        "east": {
+          "texture": "#home_foliage"
+        },
+        "west": {
+          "texture": "#home_foliage"
+        },
+        "up": {
+          "texture": "#home_foliage"
+        },
+        "down": {
+          "texture": "#home_foliage"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        10,
+        6
+      ],
+      "to": [
+        11,
+        15,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_foliage"
+        },
+        "south": {
+          "texture": "#home_foliage"
+        },
+        "east": {
+          "texture": "#home_foliage"
+        },
+        "west": {
+          "texture": "#home_foliage"
+        },
+        "up": {
+          "texture": "#home_foliage"
+        },
+        "down": {
+          "texture": "#home_foliage"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        2,
+        10
+      ],
+      "to": [
+        9,
+        8,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_foliage"
+        },
+        "south": {
+          "texture": "#home_foliage"
+        },
+        "east": {
+          "texture": "#home_foliage"
+        },
+        "west": {
+          "texture": "#home_foliage"
+        },
+        "up": {
+          "texture": "#home_foliage"
+        },
+        "down": {
+          "texture": "#home_foliage"
+        }
+      }
+    }
+  ]
+}

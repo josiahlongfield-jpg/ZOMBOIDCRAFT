@@ -1,0 +1,59 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_strut": "zomboidcraft:block/city/al_strut",
+    "particle": "zomboidcraft:block/city/al_strut"
+  },
+  "elements": [
+    {
+      "from": [
+        10.08,
+        0.0,
+        13.12
+      ],
+      "to": [
+        16.0,
+        0.48,
+        15.68
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_strut",
+          "uv": [
+            0.0,
+            15.52,
+            5.92,
+            16.0
+          ]
+        },
+        "south": {
+          "texture": "#al_strut",
+          "uv": [
+            10.08,
+            15.52,
+            16.0,
+            16.0
+          ]
+        },
+        "west": {
+          "texture": "#al_strut",
+          "uv": [
+            13.12,
+            15.52,
+            15.68,
+            16.0
+          ]
+        },
+        "up": {
+          "texture": "#al_strut",
+          "uv": [
+            10.08,
+            13.12,
+            16.0,
+            15.68
+          ]
+        }
+      }
+    }
+  ]
+}

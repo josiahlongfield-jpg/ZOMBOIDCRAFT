@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hw_arm": "zomboidcraft:block/city/hw_arm",
+    "particle": "zomboidcraft:block/city/hw_arm"
+  },
+  "elements": [
+    {
+      "from": [
+        7.5,
+        10.5,
+        0
+      ],
+      "to": [
+        9.5,
+        12,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hw_arm",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#hw_arm",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#hw_arm"
+        },
+        "west": {
+          "texture": "#hw_arm"
+        },
+        "up": {
+          "texture": "#hw_arm"
+        },
+        "down": {
+          "texture": "#hw_arm"
+        }
+      }
+    }
+  ]
+}

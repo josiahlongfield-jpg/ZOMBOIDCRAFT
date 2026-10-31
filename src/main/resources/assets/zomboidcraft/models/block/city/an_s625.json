@@ -1,0 +1,121 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_cowl": "zomboidcraft:block/city/al_cowl",
+    "al_exhaust_plug": "zomboidcraft:block/city/al_exhaust_plug",
+    "al_intake": "zomboidcraft:block/city/al_intake",
+    "particle": "zomboidcraft:block/city/al_cowl"
+  },
+  "elements": [
+    {
+      "from": [
+        7.182,
+        -0.415,
+        1.6
+      ],
+      "to": [
+        9.682,
+        16.956,
+        5.6
+      ],
+      "faces": {
+        "south": {
+          "texture": "#al_cowl",
+          "uv": [
+            7.182,
+            0,
+            9.682,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#al_intake",
+          "uv": [
+            10.4,
+            0,
+            14.4,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#al_cowl",
+          "uv": [
+            1.6,
+            0,
+            5.6,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          7.182,
+          8.271,
+          3.6
+        ],
+        "axis": "z",
+        "angle": -8.25
+      }
+    },
+    {
+      "from": [
+        12.0,
+        2.786,
+        1.6
+      ],
+      "to": [
+        16.0,
+        8.414,
+        5.6
+      ],
+      "faces": {
+        "south": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            12.0,
+            7.586,
+            16.0,
+            13.214
+          ]
+        },
+        "east": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            10.4,
+            7.586,
+            14.4,
+            13.214
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            1.6,
+            7.586,
+            5.6,
+            13.214
+          ]
+        },
+        "up": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            12.0,
+            1.6,
+            16.0,
+            5.6
+          ]
+        },
+        "down": {
+          "texture": "#al_exhaust_plug",
+          "uv": [
+            12.0,
+            10.4,
+            16.0,
+            14.4
+          ]
+        }
+      }
+    }
+  ]
+}

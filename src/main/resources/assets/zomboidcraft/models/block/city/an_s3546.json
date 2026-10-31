@@ -1,0 +1,51 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_cowl": "zomboidcraft:block/city/al_cowl",
+    "al_intake": "zomboidcraft:block/city/al_intake",
+    "particle": "zomboidcraft:block/city/al_cowl"
+  },
+  "elements": [
+    {
+      "from": [
+        -0.602,
+        -2.347,
+        -0.4
+      ],
+      "to": [
+        1.928,
+        0.153,
+        3.6
+      ],
+      "faces": {
+        "up": {
+          "texture": "#al_cowl",
+          "uv": [
+            0,
+            0,
+            2.53,
+            4.0
+          ]
+        },
+        "down": {
+          "texture": "#al_intake",
+          "uv": [
+            0,
+            12.0,
+            2.53,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          0.663,
+          0.153,
+          1.6
+        ],
+        "axis": "z",
+        "angle": -13.475
+      }
+    }
+  ]
+}

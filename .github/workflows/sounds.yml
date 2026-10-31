@@ -20,7 +20,7 @@ jobs:
       fail-fast: false
       matrix:
         group:
-          - thr_ring2
+          - crt_rage
     steps:
       - uses: actions/checkout@v5
       - run: python3 -u tools/audio/fetch_freesound.py raw ${{ matrix.group }}

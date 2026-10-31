@@ -44,7 +44,7 @@ public final class CarHands {
     /** Whether the game's own first-person hand (and what it holds) is left out: both hands are on the wheel. */
     public static boolean hidesFirstPerson() {
         Minecraft mc = Minecraft.getInstance();
-        return mc.player != null && onWheel(mc.player) == BOTH;
+        return mc.player != null && (onWheel(mc.player) == BOTH || com.zomboidcraft.world.cars.Turret.isGunner(mc.player));
     }
 
     /** How far the steering wheel is turned, radians, anticlockwise as the driver sees it. */
@@ -56,6 +56,17 @@ public final class CarHands {
     public static void pose(PlayerModel model, AvatarRenderState state) {
         Minecraft mc = Minecraft.getInstance();
         Entity rider = mc.level == null ? null : mc.level.getEntity(state.id);
+        if (rider != null && com.zomboidcraft.world.cars.Turret.isGunner(rider)) {
+            // at the mounted gun: standing, both hands forward on its grips
+            model.leftLeg.xRot = model.rightLeg.xRot = 0f;
+            model.leftLeg.yRot = model.rightLeg.yRot = 0f;
+            model.leftLeg.zRot = model.rightLeg.zRot = 0f;
+            model.leftArm.xRot = model.rightArm.xRot = -1.35f + model.head.xRot * 0.6f;
+            model.leftArm.yRot = 0.18f;
+            model.rightArm.yRot = -0.18f;
+            model.leftArm.zRot = model.rightArm.zRot = 0f;
+            return;
+        }
         int hands = rider == null ? NONE : onWheel(rider);
         if (hands == NONE || !(rider.getVehicle() instanceof CarProp car)) {
             return;

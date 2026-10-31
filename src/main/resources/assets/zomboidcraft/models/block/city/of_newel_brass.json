@@ -1,0 +1,140 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fit_brass": "zomboidcraft:block/city/fit_brass",
+    "of_iron": "zomboidcraft:block/city/of_iron",
+    "particle": "zomboidcraft:block/city/of_iron"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        0,
+        5
+      ],
+      "to": [
+        11,
+        1.5,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#of_iron"
+        },
+        "south": {
+          "texture": "#of_iron"
+        },
+        "east": {
+          "texture": "#of_iron"
+        },
+        "west": {
+          "texture": "#of_iron"
+        },
+        "up": {
+          "texture": "#of_iron"
+        },
+        "down": {
+          "texture": "#of_iron",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        1.5,
+        6
+      ],
+      "to": [
+        10,
+        13,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#of_iron"
+        },
+        "south": {
+          "texture": "#of_iron"
+        },
+        "east": {
+          "texture": "#of_iron"
+        },
+        "west": {
+          "texture": "#of_iron"
+        },
+        "up": {
+          "texture": "#of_iron"
+        },
+        "down": {
+          "texture": "#of_iron"
+        }
+      }
+    },
+    {
+      "from": [
+        5.5,
+        13,
+        5.5
+      ],
+      "to": [
+        10.5,
+        14,
+        10.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#of_iron"
+        },
+        "south": {
+          "texture": "#of_iron"
+        },
+        "east": {
+          "texture": "#of_iron"
+        },
+        "west": {
+          "texture": "#of_iron"
+        },
+        "up": {
+          "texture": "#of_iron"
+        },
+        "down": {
+          "texture": "#of_iron"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        14,
+        6
+      ],
+      "to": [
+        10,
+        16,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fit_brass"
+        },
+        "south": {
+          "texture": "#fit_brass"
+        },
+        "east": {
+          "texture": "#fit_brass"
+        },
+        "west": {
+          "texture": "#fit_brass"
+        },
+        "up": {
+          "texture": "#fit_brass",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#fit_brass"
+        }
+      }
+    }
+  ]
+}

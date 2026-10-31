@@ -515,6 +515,40 @@ d = ImageDraw.Draw(img)
 for x in range(4, T, 9):
     d.ellipse([x - 2, 14, x + 2, 18], fill=(90, 80, 72, 255))
 put(img, 6, 6)
+img, _ = tile(7, 6)                          # moulded seat, the yellow ones between the orange (R46-style two-tone)
+noise_fill(img, (236, 176, 40), 8, 6900)
+d = ImageDraw.Draw(img)
+d.line([(0, 2), (T, 2)], fill=(250, 214, 110, 255))
+grime(img, 6910, 30)
+put(img, 7, 6)
+img, _ = tile(8, 6)                          # wood-grain laminate: draft screens by the doors
+r8 = random.Random(7000)
+px = img.load()
+for y in range(T):
+    for x in range(T):
+        g = math.sin(y * 0.9 + math.sin(x * 0.25 + r8.random() * 0.3) * 2.2) * 14 + (r8.random() - 0.5) * 10
+        px[x, y] = (clamp(104 + g), clamp(62 + g * 0.7), clamp(36 + g * 0.4), 255)
+grime(img, 7010, 30)
+put(img, 8, 6)
+img, _ = tile(9, 6)                          # yellow-painted grab pole, worn to steel where hands go
+noise_fill(img, (230, 196, 30), 10, 7100)
+d = ImageDraw.Draw(img)
+for y in range(10, 22):
+    for x in range(T):
+        if rng.random() < 0.35:
+            d.point((x, y), fill=(170, 172, 168, 255))
+put(img, 9, 6)
+img, _ = tile(10, 6)                         # the system map in its frame by the doors
+noise_fill(img, (226, 228, 214), 6, 7200)
+d = ImageDraw.Draw(img)
+d.rectangle([0, 0, T - 1, T - 1], outline=(150, 152, 150, 255), width=2)
+d.polygon([(4, 6), (14, 4), (26, 10), (27, 26), (12, 28), (5, 18)], fill=(140, 190, 220, 255))
+d.polygon([(9, 9), (20, 8), (22, 22), (11, 24)], fill=(230, 222, 190, 255))
+for col, pts in [((220, 40, 40, 255), [(6, 14), (16, 12), (24, 18)]), ((40, 120, 200, 255), [(12, 6), (14, 18), (13, 27)]),
+                 ((240, 170, 30, 255), [(8, 24), (18, 20), (25, 12)]), ((40, 160, 70, 255), [(10, 8), (20, 16), (22, 26)])]:
+    d.line(pts, fill=col, width=1)
+grime(img, 7210, 30)
+put(img, 10, 6)
 img, _ = tile(14, 5)                         # hazard stripes
 for y in range(T):
     for x in range(T):

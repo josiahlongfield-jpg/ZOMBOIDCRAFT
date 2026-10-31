@@ -11,7 +11,11 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 
-/** The interact key pressed on an NPC: she follows the player who pressed it, or waits where she is. */
+/**
+ * The interact key pressed on an NPC: she follows the player who pressed it, or waits where she is. Sneaking, it opens
+ * the talk panel instead (client), whose picks come back as Talk: a compliment, a flirt, a gift, a hug, her hand, a kiss,
+ * or about her clothes (NpcWardrobe: LIKE, DISLIKE, SUGGEST + outfit, PUT_ON or TAKE_OFF + piece).
+ */
 public final class NpcNet {
     public record Toggle(int npc) implements CustomPacketPayload {
         public static final Type<Toggle> TYPE = new Type<>(ZomboidCraft.id("npc_toggle"));
@@ -24,8 +28,57 @@ public final class NpcNet {
         }
     }
 
+    public record Talk(int npc, int act) implements CustomPacketPayload {
+        public static final Type<Talk> TYPE = new Type<>(ZomboidCraft.id("npc_talk"));
+        public static final StreamCodec<RegistryFriendlyByteBuf, Talk> CODEC = StreamCodec.composite(
+                ByteBufCodecs.VAR_INT, Talk::npc, ByteBufCodecs.VAR_INT, Talk::act, Talk::new);
+
+        @Override
+        public Type<? extends CustomPacketPayload> type() {
+            return TYPE;
+        }
+    }
+
+    /**
+     * A line from a character's own lines.txt (NpcMoments), to the players near: the client plays her clip
+     * (config/zomboidcraft/npc/MODEL/voice/CLIP.ogg) from her if it has it, and shows the words if subtitles are on.
+     */
+    public record Voice(int npc, String model, String clip, String speaker, String text) implements CustomPacketPayload {
+        public static final Type<Voice> TYPE = new Type<>(ZomboidCraft.id("npc_voice"));
+        public static final StreamCodec<RegistryFriendlyByteBuf, Voice> CODEC = StreamCodec.composite(
+                ByteBufCodecs.VAR_INT, Voice::npc, ByteBufCodecs.STRING_UTF8, Voice::model, ByteBufCodecs.STRING_UTF8, Voice::clip,
+                ByteBufCodecs.STRING_UTF8, Voice::speaker, ByteBufCodecs.STRING_UTF8, Voice::text, Voice::new);
+
+        @Override
+        public Type<? extends CustomPacketPayload> type() {
+            return TYPE;
+        }
+    }
+
     static void register() {
+        PayloadTypeRegistry.clientboundPlay().register(Voice.TYPE, Voice.CODEC);
         PayloadTypeRegistry.serverboundPlay().register(Toggle.TYPE, Toggle.CODEC);
+        PayloadTypeRegistry.serverboundPlay().register(Talk.TYPE, Talk.CODEC);
+        ServerPlayNetworking.registerGlobalReceiver(Talk.TYPE, (payload, context) -> {
+            ServerPlayer player = context.player();
+            player.level().getServer().execute(() -> {
+                if (!(player.level().getEntity(payload.npc()) instanceof NpcEntity npc) || !npc.isAlive() || player.isSpectator()
+                        || npc.distanceToSqr(player) >= 4 * 4) {
+                    return;
+                }
+                npc.attend(player);
+                NpcBond.Act act = NpcBond.Act.of(payload.act());
+                if (act != null) {
+                    npc.bond.act(npc, player, act);
+                } else if (payload.act() == TAKE_GUN) {
+                    takeGun(npc, player);
+                } else if (payload.act() == CALM) {
+                    npc.bond.calm(npc, player);
+                } else if (payload.act() >= NpcWardrobe.LIKE) {
+                    npc.wardrobe.answer(npc, player, payload.act());
+                }
+            });
+        });
         ServerPlayNetworking.registerGlobalReceiver(Toggle.TYPE, (payload, context) -> {
             ServerPlayer player = context.player();
             player.level().getServer().execute(() -> {
@@ -38,6 +91,26 @@ public final class NpcNet {
                         .withStyle(ChatFormatting.GRAY));
             });
         });
+    }
+
+    /** The talk panel's "take her weapon" act: what she holds goes to your hand if it's empty, else your pack, else your feet. */
+    public static final int TAKE_GUN = 50;
+    /** The talk panel's "calm her down" (NpcBond.calm). */
+    public static final int CALM = 51;
+
+    private static void takeGun(NpcEntity npc, ServerPlayer player) {
+        net.minecraft.world.item.ItemStack held = npc.getMainHandItem();
+        if (held.isEmpty()) {
+            player.sendOverlayMessage(Component.literal("She isn't holding anything").withStyle(ChatFormatting.GRAY));
+            return;
+        }
+        npc.setItemSlot(net.minecraft.world.entity.EquipmentSlot.MAINHAND, net.minecraft.world.item.ItemStack.EMPTY);
+        if (player.getMainHandItem().isEmpty()) {
+            player.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, held);
+        } else if (!player.getInventory().add(held)) {
+            player.spawnAtLocation((net.minecraft.server.level.ServerLevel) player.level(), held);
+        }
+        npc.lines.sayLine(npc, NpcLines.Kind.REPLY, NpcWork.pick(npc, "Here. Take it.", "Fine, it's yours.", "Careful, it's loaded."));
     }
 
     private NpcNet() {

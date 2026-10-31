@@ -91,22 +91,40 @@ final class AirportSite extends Site {
         approach();
         signs();
         fence();
+        if (ax1 >= AirportLandside.BX0 && ax0 <= AirportLandside.BX1 && az1 >= AirportLandside.BZ0 && az0 <= AirportLandside.BZ1) {
+            copy(piece("landside", 0x1A2DL, (q, r) -> new AirportLandside(q, r).build()));
+        }
         if (ax1 >= AirportTerminal.BX0 && ax0 <= AirportTerminal.BX1 && az1 >= AirportTerminal.BZ0 && az0 <= AirportTerminal.BZ1) {
             copy(terminal());
+        }
+        if (ax1 >= AirportGates.BX0 && ax0 <= AirportGates.BX1 && az1 >= AirportGates.BZ0 && az0 <= AirportGates.BZ1) {
+            copy(piece("gates", 0x6A7E5L, (q, r) -> new AirportGates(q, r).build()));
+        }
+        if (ax1 >= AirportGrounds.BX0 && ax0 <= AirportGrounds.BX1 && az1 >= AirportGrounds.BZ0 && az0 <= AirportGrounds.BZ1) {
+            copy(piece("grounds", 0x6A0D5L, (q, r) -> new AirportGrounds(q, r).build()));
+        }
+        if (ax1 >= AirportFire.BX0 && ax0 <= AirportFire.BX1 && az1 >= AirportFire.BZ0 && az0 <= AirportFire.BZ1) {
+            copy(piece("fire", 0xF12EL, (q, r) -> new AirportFire(q, r).build()));
+        }
+        if (ax1 >= AirportHangars.BX0 && ax0 <= AirportHangars.BX1 && az1 >= AirportHangars.BZ0 && az0 <= AirportHangars.BZ1) {
+            copy(piece("hangars", 0x4A6EL, (q, r) -> new AirportHangars(q, r).build()));
+        }
+        if (ax1 >= AirportCargo.BX0 && ax0 <= AirportCargo.BX1 && az1 >= AirportCargo.BZ0 && az0 <= AirportCargo.BZ1) {
+            copy(piece("cargo", 0xCA60L, (q, r) -> new AirportCargo(q, r).build()));
         }
     }
 
     // ------------------------------------------------------------------ the big pieces
 
     /**
-     * The pieces too big for one tile (the terminal) are built whole, once, in the frame, then
+     * The pieces too big for one tile (the terminal, the tower and the buildings round it) are built whole, once, in the frame, then
      * each tile copies its part: their builders draw their choices one after another, so a tile
      * building only its own part would draw different ones from its neighbour.
      */
     private static final Map<String, Voxels> PIECES = new LinkedHashMap<>(4, 0.75f, true) {
         @Override
         protected boolean removeEldestEntry(Map.Entry<String, Voxels> eldest) {
-            return size() > 2;
+            return size() > 8;
         }
     };
 
@@ -117,6 +135,20 @@ final class AirportSite extends Site {
             if (v == null) {
                 v = new Voxels();
                 new AirportTerminal(new Placer(v, 0, 0, 0, 0), new SplittableRandom(seed ^ 0x7E2A1L)).build();
+                PIECES.put(key, v);
+            }
+            return v;
+        }
+    }
+
+    /** A piece built whole in the frame once (by build, from its own seed), kept while tiles round it are made. */
+    private Voxels piece(String name, long salt, java.util.function.BiConsumer<Placer, SplittableRandom> build) {
+        String key = name + "@" + rx + "," + rz;
+        synchronized (PIECES) {
+            Voxels v = PIECES.get(key);
+            if (v == null) {
+                v = new Voxels();
+                build.accept(new Placer(v, 0, 0, 0, 0), new SplittableRandom(seed ^ salt));
                 PIECES.put(key, v);
             }
             return v;
@@ -373,10 +405,15 @@ final class AirportSite extends Site {
                 light(Math.min(ax, Airport.HALF_LEN - 1), s * (Airport.HALF_W + 2), "af_light_edge[facing=north]");
             }
         }
-        // the threshold bars, green out to the approach, red back over the runway
-        for (int az = -Airport.HALF_W - 2; az <= Airport.HALF_W + 2; az += 3) {
-            light(-Airport.HALF_LEN - 1, az, "af_light_thr[facing=west]");
-            light(Airport.HALF_LEN, az, "af_light_thr[facing=east]");
+        // the threshold wing bars, green out to the approach, red back over the runway. They stand
+        // on stems, so they run out either side of the paving and leave the runway ends clear for
+        // jets rolling out long
+        for (int w = 2; w <= 11; w += 3) {
+            for (int s = -1; s <= 1; s += 2) {
+                int az = s * (Airport.HALF_W + w);
+                light(-Airport.HALF_LEN - 1, az, "af_light_thr[facing=west]");
+                light(Airport.HALF_LEN, az, "af_light_thr[facing=east]");
+            }
         }
         // the PAPIs, four boxes on the pilot's left 300 m in
         for (int k = 0; k < 4; k++) {
@@ -453,7 +490,10 @@ final class AirportSite extends Site {
             fencePost(ax, Airport.Z1 - 1, true);
         }
         for (int az = Airport.LAND_Z0 + 1; az < Airport.Z1; az++) {
-            fencePost(Airport.X0 + 1, az, false);
+            // the gap for the access road through the west fence
+            if (az < AirportLandside.ACC_Z0 - 1 || az > AirportLandside.ACC_Z1 + 1) {
+                fencePost(Airport.X0 + 1, az, false);
+            }
             fencePost(Airport.X1 - 1, az, false);
         }
     }

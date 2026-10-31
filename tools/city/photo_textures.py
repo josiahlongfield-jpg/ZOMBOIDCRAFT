@@ -1167,14 +1167,48 @@ import gazebo  # noqa: E402
 gazebo.register(sys.modules[__name__])
 import poles  # noqa: E402
 poles.register(sys.modules[__name__])
+import signals  # noqa: E402
+signals.register(sys.modules[__name__])
+import welcome  # noqa: E402
+welcome.register(sys.modules[__name__])
+import roomlights  # noqa: E402
+roomlights.register(sys.modules[__name__])
+import highway  # noqa: E402
+highway.register(sys.modules[__name__])
 import airfield  # noqa: E402
 airfield.register(sys.modules[__name__])
 import airport  # noqa: E402
 airport.register(sys.modules[__name__])
 import airliner  # noqa: E402
 airliner.register(sys.modules[__name__])
+import fleet  # noqa: E402
+fleet.register(sys.modules[__name__])
 import ramp  # noqa: E402
 ramp.register(sys.modules[__name__])
+import lab  # noqa: E402
+lab.register(sys.modules[__name__])
+import spore  # noqa: E402
+spore.register(sys.modules[__name__])
+import airside  # noqa: E402
+airside.register(sys.modules[__name__])
+import armyfield  # noqa: E402
+armyfield.register(sys.modules[__name__])
+import ranges  # noqa: E402
+ranges.register(sys.modules[__name__])
+import prison  # noqa: E402
+prison.register(sys.modules[__name__])
+import dam  # noqa: E402
+dam.register(sys.modules[__name__])
+import shipyard  # noqa: E402
+shipyard.register(sys.modules[__name__])
+import cape  # noqa: E402
+cape.register(sys.modules[__name__])
+import boardwalk  # noqa: E402
+boardwalk.register(sys.modules[__name__])
+import hollis  # noqa: E402
+hollis.register(sys.modules[__name__])
+import foundry  # noqa: E402
+foundry.register(sys.modules[__name__])
 
 
 

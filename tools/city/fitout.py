@@ -361,6 +361,46 @@ def cedar(seed):
     return t
 
 
+def slats(seed):
+    """A feature wall of vertical oak slats, warm, with dark gaps between."""
+    t = F.wood(seed, "oak")
+    F.tone(t, (182, 132, 84), 0.9)
+    for x in range(0, N, 6):
+        area(t, x, 0, x + 2, N, mul=0.35, dh=-0.4)
+    return t
+
+
+def firm_sign(seed):
+    """A law firm's sign: black lacquer, the scales of justice and a name bar in brass."""
+    t = F.plain(seed, (18, 18, 20), 0.02, 0.6)
+    gold = (206, 168, 82)
+    area(t, 31, 10, 33, 40, gold)
+    area(t, 16, 14, 48, 16, gold)
+    for cx in (18, 46):
+        area(t, cx - 6, 26, cx + 6, 28, gold)
+        area(t, cx - 1, 16, cx + 1, 26, gold)
+    area(t, 24, 40, 40, 42, gold)
+    area(t, 10, 48, 54, 52, gold)
+    t.frame(2, (120, 96, 50), h=0.9)
+    return t
+
+
+def iron(seed):
+    """Wrought iron: near-black, hammered, a dull sheen on the high spots."""
+    t = F.plain(seed, (34, 34, 36), 0.1, 0.5)
+    t.speckle(0.08, (70, 70, 74), 0.4, 0.1)
+    return t
+
+
+def roses(seed):
+    """A climbing rose: dense dark leaves, pink blooms scattered through them."""
+    t = F.plain(seed, (46, 92, 40), 0.18, 0.1)
+    t.speckle(0.25, (30, 66, 28), 0.6, 0.1)
+    t.speckle(0.07, (226, 92, 150), 0.95, 0.2)
+    t.speckle(0.03, (250, 170, 200), 0.95, 0.2)
+    return t
+
+
 def textures():
     T = {}
     T["of_rubber"] = lambda: rubber(9901)
@@ -400,6 +440,11 @@ def textures():
     T["of_felt"] = lambda: felt(9974)
     T["of_sheet"] = lambda: sheet(9975)
     T["of_cedar"] = lambda: cedar(9976)
+    T["of_velvet_green"] = lambda: velvet(9977, (30, 86, 50))
+    T["of_slats"] = lambda: slats(9978)
+    T["of_firm_sign"] = lambda: firm_sign(9979)
+    T["of_iron"] = lambda: iron(9980)
+    T["of_roses"] = lambda: roses(9981)
     return T
 
 
@@ -592,7 +637,7 @@ def blocks():
     add("of_sauna_stove", [[2, 0, 2, 14, 9, 14, steel], [3, 9, 3, 13, 12, 13, "pt_stone_rough"], [5, 12, 5, 11, 13, 11, "of_ember"]],
         "Sauna Stove", "METAL", rotate=None, light=7)
     # the pool's lights: a lit lens set in the tile wall, facing into the water
-    add("of_pool_light", [[0, 0, 1, 16, 16, 16, {"all": "of_pool_tile"}], [4, 5, 0, 12, 11, 1, chrome], [5, 6, -0.5, 11, 10, 0, "window_lit"]],
+    add("of_pool_light", [[0, 0, 1, 16, 16, 16, {"all": "of_pool_tile"}], [4, 5, 0, 12, 11, 1, chrome], [5, 6, -0.5, 11, 10, 0, "of_neon_blue"]],
         "Pool Light", "STONE", light=9)
     add("of_car_lift", None, "Car Lift Platform", "METAL", rotate=None, tex={"up": "deck_steel", "side": steel, "down": steel})
     add("of_cedar_wall", None, "Cedar Lining", "WOOD", rotate=None, tex={"all": "of_cedar"})
@@ -663,6 +708,56 @@ def blocks():
             "Fluted Cladding", "METAL")
     # the observatory dome's ribs: standing-seam verdigris copper
     add("of_copper_rib", None, "Copper Dome Rib", "METAL", rotate=None, tex={"side": "cv_copper_seam", "up": "cv_copper_seam", "down": "cv_copper"})
+    # ---- from the tower-interior photos (2026-10-29)
+    marble = {"north": "bk_marble_white", "side": "bk_marble_white", "up": "bk_marble_white", "down": "bk_marble_white"}
+    # the clinic's reception: a marble front on a lit plinth, a wood top overhanging both sides
+    add("of_reception_marble", [[0, 1.5, 2, 16, 14, 16, "home_white"], [0, 1.5, 1.2, 16, 14, 2, marble], [1, 0, 2.5, 15, 1.5, 15, "window_lit"],
+                                [0, 14, 0.5, 16, 15.5, 16, "of_teak"], [0, 9, 13, 16, 10, 16, "of_teak"]], "Reception Desk", "STONE", light=5)
+    # a feature wall of oak slats behind a reception, and the firm's sign on it
+    add("of_slat_wall", [[0, 0, 14, 16, 16, 16, "of_teak"]] + [[x, 0, 12.5, x + 2, 16, 14, "of_slats"] for x in range(1, 16, 3)],
+        "Slatted Wall", "WOOD")
+    add("of_firm_sign", [[1, 4, 14.5, 15, 12, 16, {"north": "of_firm_sign", "side": "of_iron"}]], "Firm Sign", "METAL", decor=True)
+    # the vitals monitor on its stand: five-star base, pole, the monitor, a basket of cuffs
+    add("of_vitals_stand", [[4, 0, 7.4, 12, 0.6, 8.6, chrome], [7.4, 0, 4, 8.6, 0.6, 12, chrome], [7.4, 0.6, 7.4, 8.6, 11, 8.6, chrome],
+                            [5, 10, 6, 11, 15, 10, {"north": "of_screen", "side": "home_plastic_beige", "up": "home_plastic_beige", "down": "home_plastic_beige"}],
+                            [5.5, 6, 8.6, 10.5, 8, 11, steel]], "Vitals Monitor", "METAL")
+    # the gym's elliptical: a low rail, the flywheel housing at the front, two arms and the console
+    add("of_elliptical", [[6, 0, 1, 10, 1.5, 15, "bunk_grey"], [4, 1.5, 9, 6.5, 2.5, 13, black], [9.5, 1.5, 9, 12, 2.5, 13, black],
+                          [5, 0, 1, 11, 6, 5, {"side": "home_plastic_black", "north": "of_plate", "up": "bunk_grey", "down": "bunk_grey"}],
+                          [3.5, 2.5, 3, 4.5, 14, 4, "bunk_grey"], [11.5, 2.5, 3, 12.5, 14, 4, "bunk_grey"], [6, 9, 2, 10, 13, 4, {"north": "of_console", "side": black}]],
+        "Elliptical Trainer", "METAL")
+    # a drinking fountain on the wall: a steel basin on a bracket, the bubbler
+    add("of_drink_fountain", [[3, 7, 9, 13, 10, 16, steel], [7, 2, 14, 9, 7, 16, steel], [7.5, 10, 11, 8.5, 11.5, 12, chrome]], "Drinking Fountain",
+        "METAL")
+    # bar stools in green velvet, after the pub photos: turned wood legs, a brass footrest
+    add("of_stool_velvet", [[4.5, 0, 4.5, 5.5, 10, 5.5, "of_teak"], [10.5, 0, 4.5, 11.5, 10, 5.5, "of_teak"], [4.5, 0, 10.5, 5.5, 10, 11.5, "of_teak"],
+                            [10.5, 0, 10.5, 11.5, 10, 11.5, "of_teak"], [4.5, 4, 4.5, 11.5, 4.6, 11.5, brass],
+                            [3.5, 10, 3.5, 12.5, 13, 12.5, {"up": "of_velvet_green", "side": "of_velvet_green", "down": "of_teak"}]], "Velvet Bar Stool", "WOOD",
+        rotate=None)
+    # the wine cellar's cask on its cradle, lying along z: oak staves, two iron hoops, the head
+    cask = []
+    for i, (h0, h1) in enumerate(((1, 13), (2.5, 14.5), (3.5, 15))):
+        w0 = 8 - (h1 - h0) / 2
+        cask.append([w0, h0, 1 + i * 0.5, 16 - w0, h1, 15 - i * 0.5, "of_teak"])
+    cask += [[2, 0, 3, 14, 1.5, 4, "of_teak"], [2, 0, 12, 14, 1.5, 13, "of_teak"], [1.8, 1, 4.5, 14.2, 15.2, 5, "of_iron"],
+             [1.8, 1, 11, 14.2, 15.2, 11.5, "of_iron"], [7, 6, 0.5, 9, 8, 1, "of_iron"]]
+    add("of_wine_cask", cask, "Wine Cask", "WOOD", rotate="axis", loot="liquor")
+    # the grand stair's balustrade: wrought-iron balusters and scrolls under a brass handrail, along x
+    scroll = [[0, 14, 7, 16, 15.5, 9, brass], [0, 1, 7.5, 16, 2, 8.5, "of_iron"]]
+    scroll += [[x, 2, 7.6, x + 1, 14, 8.4, "of_iron"] for x in (0.5, 7.5, 14.5)]
+    for cx in (4, 11.5):
+        scroll += [[cx - 2.5, 5, 7.7, cx + 2.5, 5.8, 8.3, "of_iron"], [cx - 2.5, 10.2, 7.7, cx + 2.5, 11, 8.3, "of_iron"],
+                   [cx - 3, 5.8, 7.7, cx - 2.2, 10.2, 8.3, "of_iron"], [cx + 2.2, 5.8, 7.7, cx + 3, 10.2, 8.3, "of_iron"],
+                   [cx - 0.4, 7.4, 7.7, cx + 0.4, 8.6, 8.3, brass]]
+    add("of_iron_scroll", scroll, "Iron Balustrade", "METAL", rotate="axis")
+    add("of_newel_brass", [[5, 0, 5, 11, 1.5, 11, "of_iron"], [6, 1.5, 6, 10, 13, 10, "of_iron"], [5.5, 13, 5.5, 10.5, 14, 10.5, "of_iron"],
+                           [6, 14, 6, 10, 16, 10, brass]], "Newel Post", "METAL", rotate=None)
+    # the terrace: a pergola post with a climbing rose round it, and a round timber bench round a planted bed
+    add("of_rose_post", [[6, 0, 6, 10, 16, 10, "of_teak"], [4, 3, 4, 12, 9, 12, "of_roses"], [5, 9, 3.5, 11, 15, 9, "of_roses"],
+                         [3.5, 11, 7, 9, 16, 12.5, "of_roses"]], "Climbing Rose", "GRASS", rotate=None)
+    add("of_planter_bench", [[0, 0, 0, 16, 7, 16, {"side": "of_slats", "up": "of_teak", "down": "of_teak"}], [2, 7, 2, 14, 8, 14, "bp_grass_a"],
+                             [3.5, 8, 3.5, 12.5, 14, 12.5, "of_roses"], [5.5, 14, 5.5, 10.5, 16, 10.5, "of_roses"]], "Planter Bench", "WOOD",
+        rotate=None)
     add("of_finial", [[2, 0, 2, 14, 4, 14, "stone_trim"], [3, 4, 3, 13, 8, 13, "stone_trim"], [4.5, 8, 4.5, 11.5, 12, 11.5, "stone_trim"],
                       [6, 12, 6, 10, 15, 10, "stone_trim"], [7, 15, 7, 9, 16, 9, chrome]], "Finial", "STONE", rotate=None)
     return out

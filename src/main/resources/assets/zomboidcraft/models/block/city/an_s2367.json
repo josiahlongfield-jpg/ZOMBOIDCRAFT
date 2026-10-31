@@ -1,0 +1,136 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_ck_glass": {
+      "sprite": "zomboidcraft:block/city/al_ck_glass",
+      "force_translucent": true
+    },
+    "al_ck_glass_in": {
+      "sprite": "zomboidcraft:block/city/al_ck_glass_in",
+      "force_translucent": true
+    },
+    "al_dark": "zomboidcraft:block/city/al_dark",
+    "al_paint": "zomboidcraft:block/city/al_paint",
+    "particle": "zomboidcraft:block/city/al_paint"
+  },
+  "elements": [
+    {
+      "from": [
+        6.362,
+        12.34,
+        0.0
+      ],
+      "to": [
+        6.612,
+        15.34,
+        2.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_paint",
+          "uv": [
+            9.388,
+            0.66,
+            9.638,
+            3.66
+          ]
+        },
+        "south": {
+          "texture": "#al_dark",
+          "uv": [
+            6.362,
+            0.66,
+            6.612,
+            3.66
+          ]
+        },
+        "up": {
+          "texture": "#al_paint",
+          "uv": [
+            6.362,
+            0.0,
+            6.612,
+            2.0
+          ]
+        },
+        "down": {
+          "texture": "#al_dark",
+          "uv": [
+            6.362,
+            14.0,
+            6.612,
+            16.0
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          11.535,
+          15.34,
+          1.0
+        ],
+        "axis": "z",
+        "angle": -10.325
+      }
+    },
+    {
+      "from": [
+        6.612,
+        12.34,
+        0.0
+      ],
+      "to": [
+        16.708,
+        15.34,
+        2.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_ck_glass",
+          "uv": [
+            0,
+            0.66,
+            10.096,
+            3.66
+          ]
+        },
+        "south": {
+          "texture": "#al_ck_glass_in",
+          "uv": [
+            5.904,
+            0.66,
+            16,
+            3.66
+          ]
+        },
+        "up": {
+          "texture": "#al_ck_glass",
+          "uv": [
+            5.904,
+            0.0,
+            16,
+            2.0
+          ]
+        },
+        "down": {
+          "texture": "#al_ck_glass_in",
+          "uv": [
+            5.904,
+            14.0,
+            16,
+            16.0
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          11.535,
+          15.34,
+          1.0
+        ],
+        "axis": "z",
+        "angle": -10.325
+      }
+    }
+  ]
+}

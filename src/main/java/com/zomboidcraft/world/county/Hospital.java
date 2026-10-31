@@ -379,6 +379,55 @@ final class Hospital {
         b.door(PX1, 1, 37, "fire_door", "east");
         canopy(56, 76, 6, "front");
         canopy(EX0 + 4, PX1 - 2, 4, "er");
+        approach();
+    }
+
+    /**
+     * What the photos have at a hospital's doors and the canopy doesn't: the wheelchairs parked by
+     * the main doors and the walk-in, the bollards keeping the drive off the walk, the ambulance
+     * bays painted out under the emergency canopy, the planters and the flags on the front, the
+     * bike racks by the staff door.
+     */
+    private void approach() {
+        for (int x : new int[] {61, 70, 107, 108, 109}) {
+            if (chance() < 0.8) {
+                set(x, 1, PZ0 - 1, (chance() < 0.25 ? "hs_wheelchair_tipped" : "hs_wheelchair") + "[facing=" + Bldg.DIRS[rng.nextInt(4)] + "]");
+            }
+        }
+        for (int x = 10; x < w - 8; x += 3) {
+            boolean door = x >= 55 && x <= 77 || x >= EX0 + 3;
+            if (!door && get(x, 1, 13) == null) {
+                set(x, 1, 13, "om_bollard");
+            }
+        }
+        // the bays under the emergency canopy: yellow lines across the drive, an ambulance's width apart
+        for (int x = EX0 + 6; x <= PX1 - 3; x += 5) {
+            for (int z = 6; z <= 11; z++) {
+                set(x, 0, z, "road_line_yellow[axis=z]");
+            }
+        }
+        // planters either side of the front canopy with what grew in them, the flags on the lawn corner
+        for (int x : new int[] {49, 53, 79, 85}) {
+            set(x, 1, 14, "om_planter");
+            double r = chance();
+            if (r < 0.6) {
+                set(x, 2, 14, "ml_ficus_lo");
+                set(x, 3, 14, chance() < 0.85 ? "ml_ficus_hi" : "air");
+            } else {
+                set(x, 2, 14, r < 0.85 ? "home_plant_dead" : "mu_fern");
+            }
+        }
+        for (int k = 0; k < 2; k++) {
+            int x = 40 + k * 3;
+            set(x, 1, 2, "cv_flagpole_base");
+            for (int y = 2; y <= 11; y++) {
+                set(x, y, 2, "cv_flagpole");
+            }
+            set(x, 12, 2, "cv_flagpole_top[facing=north]");
+        }
+        for (int z = 40; z <= 46; z += 2) {
+            set(PX0 - 2, 1, z, "sc_bike_rack[axis=x]");
+        }
     }
 
     /**
@@ -428,7 +477,7 @@ final class Hospital {
     static boolean towerWindow(int a, boolean front) {
         if (front) {
             int r = (a - TX0 - 1) % 6;
-            return a > TX0 && a < TX1 && r >= 1 && r <= 3;
+            return a > TX0 && a < TX1 && r <= 4;
         }
         return a >= 30 && a <= 32 || a == 37 || a == 50 || a >= 55 && a <= 57;
     }
@@ -441,6 +490,8 @@ final class Hospital {
                     String f = z == TZ0 ? "north" : "south";
                     if (y <= TROOF && (k == 2 || k == 3) && towerWindow(x, true)) {
                         set(x, y, z, "hs_window_" + (k == 2 ? "lo" : "hi") + (chance() < b.damage * 0.35 ? "_broken" : "") + "[facing=" + f + "]");
+                    } else if (y <= TROOF && k == 1 && towerWindow(x, true)) {
+                        set(x, y, z, "hs_spandrel");
                     } else {
                         set(x, y, z, towerWall(y));
                     }
@@ -454,6 +505,15 @@ final class Hospital {
                     } else {
                         set(x, y, z, towerWall(y));
                     }
+                }
+            }
+        }
+        // the precast fins standing out between the bays up the long faces, the photos' vertical lines
+        for (int x = TX0 + 1; x < TX1; x++) {
+            if ((x - TX0 - 1) % 6 == 5) {
+                for (int y = PROOF + 1; y <= TROOF; y++) {
+                    set(x, y, TZ0 - 1, "hs_precast");
+                    set(x, y, TZ1 + 1, "hs_precast");
                 }
             }
         }
@@ -610,17 +670,7 @@ final class Hospital {
                 set(x, y, TZ0, y == TROOF + 5 ? "stone_trim" : "hs_precast");
             }
         }
-        // the helipad over the tower's east end, its lights; the helicopter that made it here, or what's left
-        int hx = 76, hz = 40;
-        for (int i = 0; i < 49; i++) {
-            set(hx + i % 7, TROOF, hz + i / 7, "hs_pad_h_" + i);
-        }
-        for (int[] c : new int[][] {{hx - 1, hz - 1}, {hx + 7, hz - 1}, {hx - 1, hz + 7}, {hx + 7, hz + 7}}) {
-            set(c[0], TROOF + 1, c[1], (power && chance() < 0.6 ? "fit_numlight_on" : "fit_numlight") + "[facing=north]");
-        }
-        if (chance() < 0.55) {
-            p.vehicle(hx + 3.5, TROOF + 1, hz + 3.5, (float) (chance() * 360), "heli_hornbill", rng.nextLong());
-        }
+        helipad();
         // the units, the vents
         for (int x = 34; x < 50; x += 5) {
             set(x, TROOF + 1, 33, "hvac");
@@ -632,6 +682,71 @@ final class Hospital {
         // the machine room's door out to the roof
         Doors.abandoned(p, rng, LIFTS[0] + 1, TROOF + 1, CORE0 + LIFT_D + 1, Doors.STEEL, "south", Doors.hinge(rng));
         set(LIFTS[0] + 1, TROOF + 3, CORE0 + LIFT_D + 1, "hs_precast");
+    }
+
+    /**
+     * The helipad over the tower's east end, the way the photos have them: a deck raised on steel
+     * legs clear of the roof, the H in its circle in the middle, the grating of the safety shelf
+     * round its edge a step down with the net's rail, the edge lights, the stair up from the roof,
+     * the windsock on its mast; the helicopter that made it here, or what's left of it.
+     */
+    private void helipad() {
+        int x0 = 72, x1 = 88, z0 = 35, z1 = 51, dy = TROOF + 3;
+        for (int x = x0 - 1; x <= x1 + 1; x++) {
+            for (int z = z0 - 1; z <= z1 + 1; z++) {
+                boolean shelf = x < x0 || x > x1 || z < z0 || z > z1;
+                if (shelf) {
+                    set(x, dy - 1, z, "grate");
+                    boolean corner = (x < x0 || x > x1) && (z < z0 || z > z1);
+                    if (corner || (x < x0 || x > x1) != (z < z0 || z > z1)) {
+                        set(x, dy, z, "ext_rail[axis=" + (z < z0 || z > z1 ? "x" : "z") + "]");
+                    }
+                } else {
+                    set(x, dy, z, "hs_deck");
+                }
+                // the legs: a girder every fourth block both ways, the units still under the deck
+                if (!shelf && (x - x0) % 4 == 0 && (z - z0) % 4 == 0) {
+                    for (int y = TROOF + 1; y < dy; y++) {
+                        set(x, y, z, "steel_girder");
+                    }
+                }
+            }
+        }
+        int hx = (x0 + x1) / 2 - 3, hz = (z0 + z1) / 2 - 3;
+        for (int i = 0; i < 49; i++) {
+            set(hx + i % 7, dy, hz + i / 7, "hs_pad_h_" + i);
+        }
+        // the edge lights every fourth block round the deck's rim
+        for (int x = x0; x <= x1; x++) {
+            for (int z = z0; z <= z1; z++) {
+                boolean rim = x == x0 || x == x1 || z == z0 || z == z1;
+                if (rim && (x - x0) % 4 == 0 && (z - z0) % 4 == 0) {
+                    set(x, dy + 1, z, (power && chance() < 0.6 ? "fit_numlight_on" : "fit_numlight") + "[facing=north]");
+                }
+            }
+        }
+        // the stair up from the roof at the deck's west side, the rail gap for it
+        int sz = (z0 + z1) / 2;
+        for (int k = 0; k < 2; k++) {
+            set(x0 - 3, TROOF + 1, sz + k, "steel_stairs[facing=east]");
+            set(x0 - 2, TROOF + 1, sz + k, "steel_girder");
+            set(x0 - 2, TROOF + 2, sz + k, "steel_stairs[facing=east]");
+            set(x0 - 1, dy, sz + k, "steel_stairs[facing=east]");
+        }
+        // the windsock on its mast off the deck's north-east corner, the floods on the stair tower
+        for (int y = TROOF + 1; y <= dy + 3; y++) {
+            set(x1 + 3, y, z0 - 2, "af_windsock_mast");
+        }
+        set(x1 + 3, dy + 4, z0 - 2, "af_windsock[facing=" + Bldg.DIRS[rng.nextInt(4)] + "]");
+        for (int z : new int[] {z0 + 2, z1 - 2}) {
+            for (int y = TROOF + 1; y <= dy + 2; y++) {
+                set(x1 + 3, y, z, "ext_mast");
+            }
+            set(x1 + 3, dy + 3, z, (power && chance() < 0.5 ? "cp_flood_lit" : "cp_flood") + "[facing=west]");
+        }
+        if (chance() < 0.55) {
+            p.vehicle(hx + 3.5, dy + 1, hz + 3.5, (float) (chance() * 360), "heli_hornbill", rng.nextLong());
+        }
     }
 
     // ------------------------------------------------------------------ the names

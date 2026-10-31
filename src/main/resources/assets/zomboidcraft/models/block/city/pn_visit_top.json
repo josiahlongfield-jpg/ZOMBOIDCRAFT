@@ -1,0 +1,216 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "desk_laminate": "zomboidcraft:block/city/desk_laminate",
+    "painted_steel": "zomboidcraft:block/city/painted_steel",
+    "pn_glass": {
+      "sprite": "zomboidcraft:block/city/pn_glass",
+      "force_translucent": true
+    },
+    "pn_paint": "zomboidcraft:block/city/pn_paint",
+    "particle": "zomboidcraft:block/city/desk_laminate"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        1
+      ],
+      "to": [
+        1,
+        9,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#desk_laminate"
+        },
+        "south": {
+          "texture": "#desk_laminate"
+        },
+        "east": {
+          "texture": "#pn_paint"
+        },
+        "west": {
+          "texture": "#pn_paint",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#painted_steel"
+        },
+        "down": {
+          "texture": "#painted_steel",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        15,
+        0,
+        1
+      ],
+      "to": [
+        16,
+        9,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#desk_laminate"
+        },
+        "south": {
+          "texture": "#desk_laminate"
+        },
+        "east": {
+          "texture": "#pn_paint",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#pn_paint"
+        },
+        "up": {
+          "texture": "#painted_steel"
+        },
+        "down": {
+          "texture": "#painted_steel",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        0,
+        7.6
+      ],
+      "to": [
+        15,
+        9,
+        8.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#pn_glass"
+        },
+        "south": {
+          "texture": "#pn_glass"
+        },
+        "east": {
+          "texture": "#pn_glass"
+        },
+        "west": {
+          "texture": "#pn_glass"
+        },
+        "up": {
+          "texture": "#pn_glass"
+        },
+        "down": {
+          "texture": "#pn_glass",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        9,
+        7
+      ],
+      "to": [
+        16,
+        10,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#painted_steel"
+        },
+        "south": {
+          "texture": "#painted_steel"
+        },
+        "east": {
+          "texture": "#painted_steel",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#painted_steel",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#painted_steel"
+        },
+        "down": {
+          "texture": "#painted_steel"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        0,
+        7.2
+      ],
+      "to": [
+        1.6,
+        9,
+        8.8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#painted_steel"
+        },
+        "south": {
+          "texture": "#painted_steel"
+        },
+        "east": {
+          "texture": "#painted_steel"
+        },
+        "west": {
+          "texture": "#painted_steel"
+        },
+        "up": {
+          "texture": "#painted_steel"
+        },
+        "down": {
+          "texture": "#painted_steel",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        14.4,
+        0,
+        7.2
+      ],
+      "to": [
+        15,
+        9,
+        8.8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#painted_steel"
+        },
+        "south": {
+          "texture": "#painted_steel"
+        },
+        "east": {
+          "texture": "#painted_steel"
+        },
+        "west": {
+          "texture": "#painted_steel"
+        },
+        "up": {
+          "texture": "#painted_steel"
+        },
+        "down": {
+          "texture": "#painted_steel",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

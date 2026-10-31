@@ -251,6 +251,23 @@ def lit_spec(spec):
     return s
 
 
+def signal_spec(spec, key):
+    """A traffic signal's model for one of its lit looks (spec["signal"]["on"][key])."""
+    return lit_spec({**spec, "flicker": {"on": spec["signal"]["on"][key]}})
+
+
+def signal_blockstate(name, spec):
+    """Variants for each facing and each of Signal's phases, as spec["signal"]["states"] gives them."""
+    out = {}
+    for f, y in FACING_Y.items():
+        for phase, key in enumerate(spec["signal"]["states"][f]):
+            v = {"model": f"{NS}:block/city/{name}{'_' + key if key else ''}"}
+            if y:
+                v["y"] = y
+            out[f"facing={f},phase={phase}"] = v
+    return {"variants": out}
+
+
 def flicker_blockstate(name, spec):
     """Variants for each turn, lit and dark."""
     out = {}
@@ -355,6 +372,10 @@ def java_line(name, spec, tex_dir):
         flags.append("LOOT")
     if "flicker" in spec:
         flags.append("FLICKER")
+    if "signal" in spec:
+        flags.append("SIGNAL")
+    if spec.get("switch"):
+        flags.append("SWITCH")
     if spec.get("offset"):
         flags.append("OFFSET")
     if model == "cross":
@@ -371,7 +392,7 @@ def java_line(name, spec, tex_dir):
     strength = 0.0 if decor else 0.3 if s == "GLASS" else 1.0 if s in ("WOOD", "WOOL", "GRASS", "GRAVEL") else 2.0
     nums = ", ".join(f"{v:g}" for v in shape)
     flag = " | ".join(flags) or "0"
-    light = spec["flicker"]["light"] if "flicker" in spec else spec.get("light", 0)
+    light = spec["flicker"]["light"] if "flicker" in spec else spec["signal"]["light"] if "signal" in spec else spec.get("light", 0)
     # an empty shape (walk straight through) passes no boxes at all
     line = f'        s("{name}", {kind}, {flag}, {light}, SoundType.{s}, {strength:g}f{", " + nums if nums else ""});'
     if "loot" in spec:
@@ -484,6 +505,11 @@ def main():
             write_json(ASSETS / f"models/block/city/{name}_on.json", model_json(name, lit_spec(spec), tex_dir))
             write_json(ASSETS / f"blockstates/{name}.json", flicker_blockstate(name, spec))
             used.update(textures(lit_spec(spec)))
+        elif "signal" in spec:
+            for key in spec["signal"]["on"]:
+                write_json(ASSETS / f"models/block/city/{name}_{key}.json", model_json(name, signal_spec(spec, key), tex_dir))
+                used.update(textures(signal_spec(spec, key)))
+            write_json(ASSETS / f"blockstates/{name}.json", signal_blockstate(name, spec))
         else:
             write_json(ASSETS / f"blockstates/{name}.json", blockstate(name, spec))
         write_json(ASSETS / f"items/{name}.json", {"model": {"type": "minecraft:model", "model": f"{NS}:block/city/{name}"}})

@@ -1,0 +1,139 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_dark": "zomboidcraft:block/city/al_dark",
+    "al_paint": "zomboidcraft:block/city/al_paint",
+    "an_north_widebody_title_2": "zomboidcraft:block/city/an_north_widebody_title_2",
+    "particle": "zomboidcraft:block/city/an_north_widebody_title_2"
+  },
+  "elements": [
+    {
+      "from": [
+        1.802,
+        7.075,
+        0
+      ],
+      "to": [
+        4.802,
+        8.325,
+        16
+      ],
+      "faces": {
+        "east": {
+          "texture": "#al_dark",
+          "uv": [
+            0,
+            7.675,
+            16,
+            8.925
+          ]
+        },
+        "west": {
+          "texture": "#an_north_widebody_title_2",
+          "uv": [
+            0,
+            0.093,
+            16,
+            0.964
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          1.802,
+          12.076,
+          8.0
+        ],
+        "axis": "z",
+        "angle": -25.075
+      }
+    },
+    {
+      "from": [
+        1.802,
+        8.325,
+        0
+      ],
+      "to": [
+        4.802,
+        17.076,
+        16
+      ],
+      "faces": {
+        "east": {
+          "texture": "#al_dark",
+          "uv": [
+            0,
+            0,
+            16,
+            8.751
+          ]
+        },
+        "west": {
+          "texture": "#al_paint",
+          "uv": [
+            0,
+            0,
+            16,
+            8.751
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          1.802,
+          12.076,
+          8.0
+        ],
+        "axis": "z",
+        "angle": -25.075
+      }
+    },
+    {
+      "from": [
+        3.177,
+        0.0,
+        0
+      ],
+      "to": [
+        16.0,
+        1.6,
+        16
+      ],
+      "faces": {
+        "west": {
+          "texture": "#al_dark",
+          "uv": [
+            0,
+            14.4,
+            16,
+            16.0
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        8.777,
+        1.6,
+        0
+      ],
+      "to": [
+        16.0,
+        9.6,
+        16
+      ],
+      "faces": {
+        "up": {
+          "texture": "#al_dark",
+          "uv": [
+            8.777,
+            0,
+            16.0,
+            16
+          ]
+        }
+      }
+    }
+  ]
+}

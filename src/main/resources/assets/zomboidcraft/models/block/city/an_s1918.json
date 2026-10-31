@@ -1,0 +1,168 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_dark": "zomboidcraft:block/city/al_dark",
+    "al_lining": "zomboidcraft:block/city/al_lining",
+    "al_paint": "zomboidcraft:block/city/al_paint",
+    "al_psu": "zomboidcraft:block/city/al_psu",
+    "an_skyline_twinjet_title_4": "zomboidcraft:block/city/an_skyline_twinjet_title_4",
+    "particle": "zomboidcraft:block/city/al_paint"
+  },
+  "elements": [
+    {
+      "from": [
+        8.256,
+        -1.049,
+        0
+      ],
+      "to": [
+        11.256,
+        3.701,
+        16
+      ],
+      "faces": {
+        "east": {
+          "texture": "#al_paint",
+          "uv": [
+            0,
+            11.25,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#al_lining",
+          "uv": [
+            0,
+            11.25,
+            16,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          11.256,
+          8.182,
+          8.0
+        ],
+        "axis": "z",
+        "angle": 22.2
+      }
+    },
+    {
+      "from": [
+        8.256,
+        3.701,
+        0
+      ],
+      "to": [
+        11.256,
+        9.701,
+        16
+      ],
+      "faces": {
+        "east": {
+          "texture": "#an_skyline_twinjet_title_4",
+          "uv": [
+            0,
+            11.701,
+            16,
+            15.974
+          ]
+        },
+        "west": {
+          "texture": "#al_lining",
+          "uv": [
+            0,
+            6.299,
+            16,
+            12.299
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          11.256,
+          8.182,
+          8.0
+        ],
+        "axis": "z",
+        "angle": 22.2
+      }
+    },
+    {
+      "from": [
+        8.256,
+        9.701,
+        0
+      ],
+      "to": [
+        11.256,
+        17.412,
+        16
+      ],
+      "faces": {
+        "east": {
+          "texture": "#an_skyline_twinjet_title_4",
+          "uv": [
+            0,
+            6.209,
+            16,
+            11.701
+          ]
+        },
+        "west": {
+          "texture": "#al_dark",
+          "uv": [
+            0,
+            0,
+            16,
+            7.711
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          11.256,
+          8.182,
+          8.0
+        ],
+        "axis": "z",
+        "angle": 22.2
+      }
+    },
+    {
+      "from": [
+        0.0,
+        8.0,
+        0
+      ],
+      "to": [
+        0.871,
+        16.0,
+        16
+      ],
+      "faces": {
+        "east": {
+          "texture": "#al_dark",
+          "uv": [
+            0,
+            0.0,
+            16,
+            8.0
+          ]
+        },
+        "down": {
+          "texture": "#al_psu",
+          "uv": [
+            16,
+            0,
+            0,
+            16
+          ]
+        }
+      }
+    }
+  ]
+}

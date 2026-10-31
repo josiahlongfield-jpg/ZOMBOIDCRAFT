@@ -1,0 +1,110 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hw_callbox": "zomboidcraft:block/city/hw_callbox",
+    "hw_yellow": "zomboidcraft:block/city/hw_yellow",
+    "st_galv": "zomboidcraft:block/city/st_galv",
+    "tire": "zomboidcraft:block/city/tire",
+    "particle": "zomboidcraft:block/city/st_galv"
+  },
+  "elements": [
+    {
+      "from": [
+        7.3,
+        0,
+        9
+      ],
+      "to": [
+        8.7,
+        10,
+        10.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_galv"
+        },
+        "south": {
+          "texture": "#st_galv"
+        },
+        "east": {
+          "texture": "#st_galv"
+        },
+        "west": {
+          "texture": "#st_galv"
+        },
+        "up": {
+          "texture": "#st_galv"
+        },
+        "down": {
+          "texture": "#st_galv",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4.5,
+        8,
+        6
+      ],
+      "to": [
+        11.5,
+        15,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hw_callbox"
+        },
+        "south": {
+          "texture": "#hw_yellow"
+        },
+        "east": {
+          "texture": "#hw_yellow"
+        },
+        "west": {
+          "texture": "#hw_yellow"
+        },
+        "up": {
+          "texture": "#hw_yellow"
+        },
+        "down": {
+          "texture": "#hw_yellow"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        15,
+        8
+      ],
+      "to": [
+        9,
+        16,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tire"
+        },
+        "south": {
+          "texture": "#tire"
+        },
+        "east": {
+          "texture": "#tire"
+        },
+        "west": {
+          "texture": "#tire"
+        },
+        "up": {
+          "texture": "#tire",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tire"
+        }
+      }
+    }
+  ]
+}

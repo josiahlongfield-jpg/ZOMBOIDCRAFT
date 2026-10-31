@@ -1,0 +1,110 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fr_ingot": "zomboidcraft:block/city/fr_ingot",
+    "fr_skull": "zomboidcraft:block/city/fr_skull",
+    "particle": "zomboidcraft:block/city/fr_ingot"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        3
+      ],
+      "to": [
+        13,
+        16,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fr_ingot"
+        },
+        "south": {
+          "texture": "#fr_ingot"
+        },
+        "east": {
+          "texture": "#fr_ingot"
+        },
+        "west": {
+          "texture": "#fr_ingot"
+        },
+        "up": {
+          "texture": "#fr_ingot",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#fr_ingot",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        0,
+        2
+      ],
+      "to": [
+        14,
+        2,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fr_ingot"
+        },
+        "south": {
+          "texture": "#fr_ingot"
+        },
+        "east": {
+          "texture": "#fr_ingot"
+        },
+        "west": {
+          "texture": "#fr_ingot"
+        },
+        "up": {
+          "texture": "#fr_ingot"
+        },
+        "down": {
+          "texture": "#fr_ingot",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        15,
+        5
+      ],
+      "to": [
+        11,
+        16,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fr_skull"
+        },
+        "south": {
+          "texture": "#fr_skull"
+        },
+        "east": {
+          "texture": "#fr_skull"
+        },
+        "west": {
+          "texture": "#fr_skull"
+        },
+        "up": {
+          "texture": "#fr_skull",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#fr_skull"
+        }
+      }
+    }
+  ]
+}

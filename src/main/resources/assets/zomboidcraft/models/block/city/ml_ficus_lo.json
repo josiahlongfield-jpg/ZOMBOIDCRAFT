@@ -1,0 +1,205 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_foliage": "zomboidcraft:block/city/home_foliage",
+    "tree_maple_bark": "zomboidcraft:block/city/tree_maple_bark",
+    "particle": "zomboidcraft:block/city/tree_maple_bark"
+  },
+  "elements": [
+    {
+      "from": [
+        7,
+        0,
+        7
+      ],
+      "to": [
+        9,
+        16,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tree_maple_bark"
+        },
+        "south": {
+          "texture": "#tree_maple_bark"
+        },
+        "east": {
+          "texture": "#tree_maple_bark"
+        },
+        "west": {
+          "texture": "#tree_maple_bark"
+        },
+        "up": {
+          "texture": "#tree_maple_bark",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#tree_maple_bark",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        8,
+        9,
+        7.5
+      ],
+      "to": [
+        12,
+        10,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tree_maple_bark"
+        },
+        "south": {
+          "texture": "#tree_maple_bark"
+        },
+        "east": {
+          "texture": "#tree_maple_bark"
+        },
+        "west": {
+          "texture": "#tree_maple_bark"
+        },
+        "up": {
+          "texture": "#tree_maple_bark"
+        },
+        "down": {
+          "texture": "#tree_maple_bark"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        11,
+        6.5
+      ],
+      "to": [
+        8,
+        12,
+        7.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tree_maple_bark"
+        },
+        "south": {
+          "texture": "#tree_maple_bark"
+        },
+        "east": {
+          "texture": "#tree_maple_bark"
+        },
+        "west": {
+          "texture": "#tree_maple_bark"
+        },
+        "up": {
+          "texture": "#tree_maple_bark"
+        },
+        "down": {
+          "texture": "#tree_maple_bark"
+        }
+      }
+    },
+    {
+      "from": [
+        9,
+        9,
+        4
+      ],
+      "to": [
+        14,
+        14,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_foliage"
+        },
+        "south": {
+          "texture": "#home_foliage"
+        },
+        "east": {
+          "texture": "#home_foliage"
+        },
+        "west": {
+          "texture": "#home_foliage"
+        },
+        "up": {
+          "texture": "#home_foliage"
+        },
+        "down": {
+          "texture": "#home_foliage"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        10,
+        5
+      ],
+      "to": [
+        7,
+        15,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_foliage"
+        },
+        "south": {
+          "texture": "#home_foliage"
+        },
+        "east": {
+          "texture": "#home_foliage"
+        },
+        "west": {
+          "texture": "#home_foliage"
+        },
+        "up": {
+          "texture": "#home_foliage"
+        },
+        "down": {
+          "texture": "#home_foliage"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        13,
+        9
+      ],
+      "to": [
+        11,
+        16,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_foliage"
+        },
+        "south": {
+          "texture": "#home_foliage"
+        },
+        "east": {
+          "texture": "#home_foliage"
+        },
+        "west": {
+          "texture": "#home_foliage"
+        },
+        "up": {
+          "texture": "#home_foliage",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#home_foliage"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rg_armour_burnt": "zomboidcraft:block/city/rg_armour_burnt",
+    "particle": "zomboidcraft:block/city/rg_armour_burnt"
+  },
+  "elements": [
+    {
+      "from": [
+        6.5,
+        1,
+        0
+      ],
+      "to": [
+        9.5,
+        4,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rg_armour_burnt",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#rg_armour_burnt",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#rg_armour_burnt"
+        },
+        "west": {
+          "texture": "#rg_armour_burnt"
+        },
+        "up": {
+          "texture": "#rg_armour_burnt"
+        },
+        "down": {
+          "texture": "#rg_armour_burnt"
+        }
+      }
+    }
+  ]
+}

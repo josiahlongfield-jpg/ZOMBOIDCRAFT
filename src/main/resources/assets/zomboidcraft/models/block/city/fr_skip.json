@@ -1,0 +1,241 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "ext_black_metal": "zomboidcraft:block/city/ext_black_metal",
+    "fr_ore": "zomboidcraft:block/city/fr_ore",
+    "fr_rust": "zomboidcraft:block/city/fr_rust",
+    "particle": "zomboidcraft:block/city/fr_rust"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        2,
+        1
+      ],
+      "to": [
+        14,
+        12,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fr_rust"
+        },
+        "south": {
+          "texture": "#fr_rust"
+        },
+        "east": {
+          "texture": "#fr_rust"
+        },
+        "west": {
+          "texture": "#fr_rust"
+        },
+        "up": {
+          "texture": "#fr_rust"
+        },
+        "down": {
+          "texture": "#fr_rust"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        12,
+        2
+      ],
+      "to": [
+        13,
+        13,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fr_ore"
+        },
+        "south": {
+          "texture": "#fr_ore"
+        },
+        "east": {
+          "texture": "#fr_ore"
+        },
+        "west": {
+          "texture": "#fr_ore"
+        },
+        "up": {
+          "texture": "#fr_ore"
+        },
+        "down": {
+          "texture": "#fr_ore"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        0,
+        2
+      ],
+      "to": [
+        3,
+        3,
+        5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_black_metal"
+        },
+        "south": {
+          "texture": "#ext_black_metal"
+        },
+        "east": {
+          "texture": "#ext_black_metal"
+        },
+        "west": {
+          "texture": "#ext_black_metal"
+        },
+        "up": {
+          "texture": "#ext_black_metal"
+        },
+        "down": {
+          "texture": "#ext_black_metal",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        13,
+        0,
+        2
+      ],
+      "to": [
+        15,
+        3,
+        5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_black_metal"
+        },
+        "south": {
+          "texture": "#ext_black_metal"
+        },
+        "east": {
+          "texture": "#ext_black_metal"
+        },
+        "west": {
+          "texture": "#ext_black_metal"
+        },
+        "up": {
+          "texture": "#ext_black_metal"
+        },
+        "down": {
+          "texture": "#ext_black_metal",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        0,
+        11
+      ],
+      "to": [
+        3,
+        3,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_black_metal"
+        },
+        "south": {
+          "texture": "#ext_black_metal"
+        },
+        "east": {
+          "texture": "#ext_black_metal"
+        },
+        "west": {
+          "texture": "#ext_black_metal"
+        },
+        "up": {
+          "texture": "#ext_black_metal"
+        },
+        "down": {
+          "texture": "#ext_black_metal",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        13,
+        0,
+        11
+      ],
+      "to": [
+        15,
+        3,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_black_metal"
+        },
+        "south": {
+          "texture": "#ext_black_metal"
+        },
+        "east": {
+          "texture": "#ext_black_metal"
+        },
+        "west": {
+          "texture": "#ext_black_metal"
+        },
+        "up": {
+          "texture": "#ext_black_metal"
+        },
+        "down": {
+          "texture": "#ext_black_metal",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        12,
+        0
+      ],
+      "to": [
+        9,
+        16,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_black_metal",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#ext_black_metal"
+        },
+        "east": {
+          "texture": "#ext_black_metal"
+        },
+        "west": {
+          "texture": "#ext_black_metal"
+        },
+        "up": {
+          "texture": "#ext_black_metal",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ext_black_metal"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,183 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_lining": "zomboidcraft:block/city/al_lining",
+    "al_paint": "zomboidcraft:block/city/al_paint",
+    "al_win": {
+      "sprite": "zomboidcraft:block/city/al_win",
+      "force_translucent": true
+    },
+    "al_win_in": {
+      "sprite": "zomboidcraft:block/city/al_win_in",
+      "force_translucent": true
+    },
+    "an_coastal_turboprop_title_3": "zomboidcraft:block/city/an_coastal_turboprop_title_3",
+    "particle": "zomboidcraft:block/city/al_paint"
+  },
+  "elements": [
+    {
+      "from": [
+        10.212,
+        -0.553,
+        0
+      ],
+      "to": [
+        13.212,
+        0.697,
+        16
+      ],
+      "faces": {
+        "east": {
+          "texture": "#al_lining",
+          "uv": [
+            0,
+            14.75,
+            16,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#al_paint",
+          "uv": [
+            0,
+            14.75,
+            16,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          10.212,
+          8.135,
+          8.0
+        ],
+        "axis": "z",
+        "angle": -8.6
+      }
+    },
+    {
+      "from": [
+        10.212,
+        0.697,
+        0
+      ],
+      "to": [
+        13.212,
+        10.197,
+        16
+      ],
+      "faces": {
+        "east": {
+          "texture": "#al_win_in",
+          "uv": [
+            0,
+            0.377,
+            16,
+            16.0
+          ]
+        },
+        "west": {
+          "texture": "#al_win",
+          "uv": [
+            0,
+            0.377,
+            16,
+            16.0
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          10.212,
+          8.135,
+          8.0
+        ],
+        "axis": "z",
+        "angle": -8.6
+      }
+    },
+    {
+      "from": [
+        10.212,
+        10.197,
+        0
+      ],
+      "to": [
+        13.212,
+        16.197,
+        16
+      ],
+      "faces": {
+        "east": {
+          "texture": "#al_lining",
+          "uv": [
+            0,
+            0,
+            16,
+            6.0
+          ]
+        },
+        "west": {
+          "texture": "#al_paint",
+          "uv": [
+            0,
+            0,
+            16,
+            6.0
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          10.212,
+          8.135,
+          8.0
+        ],
+        "axis": "z",
+        "angle": -8.6
+      }
+    },
+    {
+      "from": [
+        10.212,
+        16.197,
+        0
+      ],
+      "to": [
+        13.212,
+        16.823,
+        16
+      ],
+      "faces": {
+        "east": {
+          "texture": "#al_lining",
+          "uv": [
+            0,
+            0,
+            16,
+            0.626
+          ]
+        },
+        "west": {
+          "texture": "#an_coastal_turboprop_title_3",
+          "uv": [
+            0,
+            15.195,
+            16,
+            15.882
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          10.212,
+          8.135,
+          8.0
+        ],
+        "axis": "z",
+        "angle": -8.6
+      }
+    }
+  ]
+}

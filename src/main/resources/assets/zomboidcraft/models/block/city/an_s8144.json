@@ -1,0 +1,93 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_lining": "zomboidcraft:block/city/al_lining",
+    "al_paint": "zomboidcraft:block/city/al_paint",
+    "an_charter_bizjet_reg_1": "zomboidcraft:block/city/an_charter_bizjet_reg_1",
+    "particle": "zomboidcraft:block/city/an_charter_bizjet_reg_1"
+  },
+  "elements": [
+    {
+      "from": [
+        2.721,
+        -1.553,
+        0
+      ],
+      "to": [
+        5.721,
+        9.697,
+        16
+      ],
+      "faces": {
+        "east": {
+          "texture": "#an_charter_bizjet_reg_1",
+          "uv": [
+            0,
+            0.222,
+            16,
+            14.795
+          ]
+        },
+        "west": {
+          "texture": "#al_lining",
+          "uv": [
+            0,
+            4.75,
+            16,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          5.721,
+          8.17,
+          8.0
+        ],
+        "axis": "z",
+        "angle": 32.65
+      }
+    },
+    {
+      "from": [
+        2.721,
+        9.697,
+        0
+      ],
+      "to": [
+        5.721,
+        17.893,
+        16
+      ],
+      "faces": {
+        "east": {
+          "texture": "#al_paint",
+          "uv": [
+            0,
+            0,
+            16,
+            8.196
+          ]
+        },
+        "west": {
+          "texture": "#al_lining",
+          "uv": [
+            0,
+            0,
+            16,
+            8.196
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          5.721,
+          8.17,
+          8.0
+        ],
+        "axis": "z",
+        "angle": 32.65
+      }
+    }
+  ]
+}

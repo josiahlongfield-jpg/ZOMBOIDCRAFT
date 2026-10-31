@@ -1,0 +1,137 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_mask": "zomboidcraft:block/city/al_mask",
+    "al_tube": "zomboidcraft:block/city/al_tube",
+    "particle": "zomboidcraft:block/city/al_tube"
+  },
+  "elements": [
+    {
+      "from": [
+        5.385,
+        9.12,
+        4.608
+      ],
+      "to": [
+        5.769,
+        16.0,
+        4.992
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_tube",
+          "uv": [
+            10.231,
+            0.0,
+            10.615,
+            6.88
+          ]
+        },
+        "south": {
+          "texture": "#al_tube",
+          "uv": [
+            5.385,
+            0.0,
+            5.769,
+            6.88
+          ]
+        },
+        "east": {
+          "texture": "#al_tube",
+          "uv": [
+            11.008,
+            0.0,
+            11.392,
+            6.88
+          ]
+        },
+        "west": {
+          "texture": "#al_tube",
+          "uv": [
+            4.608,
+            0.0,
+            4.992,
+            6.88
+          ]
+        },
+        "down": {
+          "texture": "#al_tube",
+          "uv": [
+            5.385,
+            11.008,
+            5.769,
+            11.392
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        4.137,
+        7.2,
+        3.36
+      ],
+      "to": [
+        7.017,
+        9.12,
+        6.24
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_mask",
+          "uv": [
+            8.983,
+            6.88,
+            11.863,
+            8.8
+          ]
+        },
+        "south": {
+          "texture": "#al_mask",
+          "uv": [
+            4.137,
+            6.88,
+            7.017,
+            8.8
+          ]
+        },
+        "east": {
+          "texture": "#al_mask",
+          "uv": [
+            9.76,
+            6.88,
+            12.64,
+            8.8
+          ]
+        },
+        "west": {
+          "texture": "#al_mask",
+          "uv": [
+            3.36,
+            6.88,
+            6.24,
+            8.8
+          ]
+        },
+        "up": {
+          "texture": "#al_mask",
+          "uv": [
+            4.137,
+            3.36,
+            7.017,
+            6.24
+          ]
+        },
+        "down": {
+          "texture": "#al_mask",
+          "uv": [
+            4.137,
+            9.76,
+            7.017,
+            12.64
+          ]
+        }
+      }
+    }
+  ]
+}

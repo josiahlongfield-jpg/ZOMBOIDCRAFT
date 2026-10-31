@@ -1,0 +1,119 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_metal": "zomboidcraft:block/city/al_metal",
+    "an_skyline_main": "zomboidcraft:block/city/an_skyline_main",
+    "particle": "zomboidcraft:block/city/al_metal"
+  },
+  "elements": [
+    {
+      "from": [
+        0.691,
+        0.0,
+        13.023
+      ],
+      "to": [
+        4.559,
+        1.6,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_metal",
+          "uv": [
+            11.441,
+            14.4,
+            15.309,
+            16.0
+          ]
+        },
+        "east": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            0.0,
+            14.4,
+            2.977,
+            16.0
+          ]
+        },
+        "west": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            13.023,
+            14.4,
+            16.0,
+            16.0
+          ]
+        },
+        "up": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            0.691,
+            13.023,
+            4.559,
+            16.0
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        1.529,
+        1.6,
+        15.602
+      ],
+      "to": [
+        5.221,
+        5.6,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_metal",
+          "uv": [
+            10.779,
+            10.4,
+            14.471,
+            14.4
+          ]
+        },
+        "east": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            0.0,
+            10.4,
+            0.398,
+            14.4
+          ]
+        },
+        "west": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            15.602,
+            10.4,
+            16.0,
+            14.4
+          ]
+        },
+        "up": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            1.529,
+            15.602,
+            5.221,
+            16.0
+          ]
+        },
+        "down": {
+          "texture": "#an_skyline_main",
+          "uv": [
+            1.529,
+            0.0,
+            5.221,
+            0.398
+          ]
+        }
+      }
+    }
+  ]
+}

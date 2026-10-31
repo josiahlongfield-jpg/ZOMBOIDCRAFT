@@ -61,6 +61,8 @@ public final class CarAssets {
         List<Rotor> rotors = List.of();
         List<Rotor> turret = List.of();
         byte[] jpeg;
+        /** The texture being decoded off the render thread (a car's JPEG took a frame-long hitch to read in place). */
+        java.util.concurrent.CompletableFuture<NativeImage> decoding;
         Identifier texture;
         /** The car at each level of detail, simplified the first time it's needed. */
         final Ready[] levels = new Ready[CarLod.LEVELS];
@@ -103,17 +105,32 @@ public final class CarAssets {
             }
         }
         if (v.texture == null) {
+            // decoded on a worker; the car isn't drawn until it's ready (a frame or two)
+            if (v.decoding == null) {
+                byte[] jpeg = v.jpeg;
+                v.decoding = java.util.concurrent.CompletableFuture.supplyAsync(() -> {
+                    try {
+                        return decode(jpeg);
+                    } catch (IOException e) {
+                        throw new java.io.UncheckedIOException(e);
+                    }
+                });
+            }
+            if (!v.decoding.isDone()) {
+                return null;
+            }
             Identifier id = ZomboidCraft.id("dynamic/car/" + model + "/" + state);
             try {
-                NativeImage image = decode(v.jpeg);
+                NativeImage image = v.decoding.join();
                 Minecraft.getInstance().getTextureManager().register(id, new DynamicTexture(() -> "ZomboidCraft car " + model, image));
-            } catch (IOException e) {
+            } catch (RuntimeException e) {
                 ZomboidCraft.LOGGER.error("Bad texture in car model {}", model, e);
                 MISSING.add(model);
                 return null;
             }
             v.texture = id;
             v.jpeg = null;
+            v.decoding = null;
         }
         Ready ready = v.levels[level];
         if (ready == null) {
@@ -336,9 +353,12 @@ public final class CarAssets {
             throw new IOException("unreadable texture");
         }
         NativeImage out = new NativeImage(img.getWidth(), img.getHeight(), false);
+        int w = img.getWidth();
+        int[] row = new int[w];
         for (int y = 0; y < img.getHeight(); y++) {
-            for (int x = 0; x < img.getWidth(); x++) {
-                out.setPixel(x, y, 0xFF000000 | img.getRGB(x, y));
+            img.getRGB(0, y, w, 1, row, 0, w);
+            for (int x = 0; x < w; x++) {
+                out.setPixel(x, y, 0xFF000000 | row[x]);
             }
         }
         return out;

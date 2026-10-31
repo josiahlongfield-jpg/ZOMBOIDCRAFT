@@ -1,0 +1,177 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "al_dark": "zomboidcraft:block/city/al_dark",
+    "al_lining": "zomboidcraft:block/city/al_lining",
+    "al_paint": "zomboidcraft:block/city/al_paint",
+    "an_coastal_door_1_0": "zomboidcraft:block/city/an_coastal_door_1_0",
+    "an_coastal_door_1_1": "zomboidcraft:block/city/an_coastal_door_1_1",
+    "particle": "zomboidcraft:block/city/an_coastal_door_1_1"
+  },
+  "elements": [
+    {
+      "from": [
+        8.256,
+        -1.049,
+        0
+      ],
+      "to": [
+        11.256,
+        -0.799,
+        16
+      ],
+      "faces": {
+        "east": {
+          "texture": "#an_coastal_door_1_1",
+          "uv": [
+            0,
+            0.133,
+            16,
+            0.364
+          ]
+        },
+        "west": {
+          "texture": "#al_lining",
+          "uv": [
+            0,
+            15.75,
+            16,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          11.256,
+          8.182,
+          8.0
+        ],
+        "axis": "z",
+        "angle": 22.2
+      }
+    },
+    {
+      "from": [
+        8.256,
+        -0.799,
+        0
+      ],
+      "to": [
+        11.256,
+        9.701,
+        16
+      ],
+      "faces": {
+        "east": {
+          "texture": "#an_coastal_door_1_0",
+          "uv": [
+            0,
+            6.411,
+            16,
+            16.0
+          ]
+        },
+        "west": {
+          "texture": "#al_lining",
+          "uv": [
+            0,
+            5.5,
+            16,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          11.256,
+          8.182,
+          8.0
+        ],
+        "axis": "z",
+        "angle": 22.2
+      }
+    },
+    {
+      "from": [
+        8.256,
+        9.701,
+        0
+      ],
+      "to": [
+        11.256,
+        16.701,
+        16
+      ],
+      "faces": {
+        "east": {
+          "texture": "#an_coastal_door_1_0",
+          "uv": [
+            0,
+            0.0,
+            16,
+            6.411
+          ]
+        },
+        "west": {
+          "texture": "#al_dark",
+          "uv": [
+            0,
+            0,
+            16,
+            7.0
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          11.256,
+          8.182,
+          8.0
+        ],
+        "axis": "z",
+        "angle": 22.2
+      }
+    },
+    {
+      "from": [
+        8.256,
+        16.701,
+        0
+      ],
+      "to": [
+        11.256,
+        17.412,
+        16
+      ],
+      "faces": {
+        "east": {
+          "texture": "#al_paint",
+          "uv": [
+            0,
+            0,
+            16,
+            0.711
+          ]
+        },
+        "west": {
+          "texture": "#al_dark",
+          "uv": [
+            0,
+            0,
+            16,
+            0.711
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          11.256,
+          8.182,
+          8.0
+        ],
+        "axis": "z",
+        "angle": 22.2
+      }
+    }
+  ]
+}

@@ -4,14 +4,17 @@ screen and how they were held kept; every attachment is a bought one too).
 
 guns.json, one entry per bought gun: its mesh, which of the block gun's pieces each mesh part stands in for (null:
 nothing drawn there), its sights ({"part": a mesh part shown while no optic is fitted}, or {"flip": front and rear
-flip-up sights from the attachment pack}, or null), its muzzle's flash point and sight line, and every slot's mount
+flip-up sights from the attachment pack, on the rail clear of everything, and "hide": optics that sit where they lie
+folded, which take them off}, or null), its muzzle's flash point and sight line, and every slot's mount
 on the mesh (item pixels), what fits it and what it comes with ("keys" moves one part elsewhere in the slot, e.g. a
 long launcher back from the grips; "roll" turns a slot's parts, e.g. a pistol's light hung under its frame).
 kit.py lays the gun out from the same file. Every block model the item definitions name for a bought gun becomes its
 mesh, an attachment's mesh or nothing: only the muzzle flash stays.
 
 attachments.json, one entry per attachment model key: its mesh (packed with its clamp at the origin, standing up off
-a top rail; null: none bought yet, nothing drawn), and per-gun stand-ins ("guns": {gun: {"mesh", "scale"}}). On the
+a top rail; null: none bought yet, nothing drawn), per-gun stand-ins ("guns": {gun: {"mesh", "scale"}}) and the other
+colours it came in ("colours": ["tan"], each packed as MESH_colour, picked by the part's zomboidcraft:colour component;
+the flip-up irons' are IRONS_COLOURS, picked by the gun's). On the
 block guns that are left (the double barrel, revolver, lever action, rimfire, sawn-off) attachments are meshes too, at
 the mount points their gun_slots files give.
 
@@ -36,6 +39,12 @@ SLOT_ROLL = {'optic': 0, 'magnifier': 0, 'muzzle': 0, 'stock': 0, 'magazine': 0,
              'side_rail': 90, 'right_rail': -90}
 # a block gun's mount is the top of its rail; a bought attachment's clamp reaches this far past it
 JAWS = 0.4
+# the gun's model data strings (Attachments.writeModelData): a key per slot, the finish, a colour per slot, the irons'
+SLOTS = ['optic', 'muzzle', 'underbarrel', 'side_rail', 'stock', 'magazine', 'bipod', 'right_rail', 'magnifier']
+COLOUR = len(SLOTS) + 1
+IRONS = COLOUR + len(SLOTS)
+IRONS_COLOURS = ['dark', 'camo', 'green']
+MESHES = os.path.join(ASSETS, 'meshes')
 
 
 def _load(name):
@@ -85,6 +94,31 @@ def composite(models):
     return {'type': 'minecraft:composite', 'models': models}
 
 
+def coloured(index, colours, make):
+    """make(None)'s model, or make(colour)'s where the model data string at index names a colour that has a mesh."""
+    cases = [{'when': c, 'model': make(c)} for c in colours]
+    cases = [c for c in cases if c['model'] is not None]
+    if not cases:
+        return make(None)
+    return {'type': 'minecraft:select', 'property': 'minecraft:custom_model_data', 'index': index,
+            'cases': cases, 'fallback': make(None)}
+
+
+def has_mesh(mesh):
+    return os.path.exists(os.path.join(MESHES, mesh + '.zmesh'))
+
+
+def specials(m):
+    """Every mesh special in a model (under selects and composites)."""
+    if isinstance(m, list):
+        return [x for n in m for x in specials(n)]
+    if not isinstance(m, dict):
+        return []
+    if m.get('type') == 'minecraft:special':
+        return [m]
+    return [x for v in m.values() for x in specials(v)]
+
+
 def slot_mounts(gun):
     """{slot: (mount, roll)} for a gun: a bought gun's from guns.json, a block gun's from its gun_slots file."""
     cfg = guns().get(gun)
@@ -103,8 +137,17 @@ def slot_mounts(gun):
     return out
 
 
+# a magnifier swung aside turns on its mount's hinge, off the sight line to the right
+ASIDE_ROLL = -90
+
+
 def attachment(base, key, gun, mounts):
     """An attachment key's model on a gun: its mesh at the slot's mount, or nothing."""
+    if key.endswith('_aside'):
+        m = attachment(base, key.removesuffix('_aside'), gun, mounts)
+        for s in specials(m):
+            s['model']['roll'] = s['model'].get('roll', 0) + ASIDE_ROLL
+        return m
     a = atts().get(key)
     mesh, scale = attachment_mesh(key, gun)
     if not a or a['slot'] not in mounts:
@@ -112,7 +155,9 @@ def attachment(base, key, gun, mounts):
     if mesh is None:
         return EMPTY
     at, roll, keys = mounts[a['slot']]
-    return special(base, mesh, offset=keys.get(key, at), roll=roll, scale=scale)
+    look = lambda c: (special(base, mesh + (f'_{c}' if c else ''), offset=keys.get(key, at), roll=roll, scale=scale)
+                      if not c or has_mesh(f'{mesh}_{c}') else None)
+    return coloured(COLOUR + SLOTS.index(a['slot']), a.get('colours', []), look)
 
 
 def irons(base, cfg, up):
@@ -123,8 +168,9 @@ def irons(base, cfg, up):
         return special(base, cfg['mesh'], sights['part']) if up else EMPTY
     f = sights['flip']
     state = 'up' if up else 'down'
-    return composite([special(base, f'att_irons_front_{state}', offset=f['front']),
-                      special(base, f'att_irons_rear_{state}', offset=f['rear'])])
+    look = lambda c: composite([special(base, f'att_irons_{end}_{state}' + (f'_{c}' if c else ''), offset=f[end])
+                                for end in ('front', 'rear')])
+    return coloured(IRONS, IRONS_COLOURS, look)
 
 
 def swap(node, gun, cfg, mounts, models, left):
@@ -134,8 +180,15 @@ def swap(node, gun, cfg, mounts, models, left):
         return [swap(n, gun, cfg, mounts, models, left) for n in node]
     if not isinstance(node, dict):
         return node
+    if (node.get('type') == 'minecraft:select' and node.get('property') == 'minecraft:custom_model_data'
+            and node.get('index', 0) >= COLOUR and specials(node['fallback'])):
+        node = node['fallback']             # a part's colours, skinned before
     if node.get('type') == 'minecraft:special' and node.get('model', {}).get('type') == 'zomboidcraft:mesh':
         node = {'type': 'minecraft:model', 'model': node['base']}       # skinned before: start again from the block
+    ms = node.get('models') if node.get('type') == 'minecraft:composite' else None
+    if ms and all(m.get('type') == 'minecraft:special' and m.get('model', {}).get('type') == 'zomboidcraft:mesh'
+                  for m in ms) and len({m['base'] for m in ms}) == 1:
+        node = {'type': 'minecraft:model', 'model': ms[0]['base']}     # one block piece skinned as several (flip irons)
     if node.get('type') != 'minecraft:model':
         return {k: swap(v, gun, cfg, mounts, models, left) for k, v in node.items()}
     base = node['model']
@@ -239,7 +292,12 @@ def apply_items(items=ITEMS):
     for key, a in atts().items():
         path = os.path.join(items, a['item'] + '.json')
         if a['mesh'] and os.path.exists(path):
-            write(path, centred(f'zomboidcraft:item/weapon/part/{key}', a['mesh']))
+            base = f'zomboidcraft:item/weapon/part/{key}'
+            cases = [{'when': c, 'model': centred(base, f"{a['mesh']}_{c}")}
+                     for c in a.get('colours', []) if has_mesh(f"{a['mesh']}_{c}")]
+            plain = centred(base, a['mesh'])
+            write(path, {'type': 'minecraft:select', 'property': 'minecraft:component', 'component': 'zomboidcraft:colour',
+                         'cases': cases, 'fallback': plain} if cases else plain)
     for key, a in atts().items():           # the pistol's can is the compact one, smaller
         if key == 'suppressor' and os.path.exists(os.path.join(items, 'pistol_suppressor.json')):
             mesh, scale = attachment_mesh(key, 'pistol')

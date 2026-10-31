@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "fr_ore": "zomboidcraft:block/city/fr_ore",
+    "particle": "zomboidcraft:block/city/fr_ore"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        12,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#fr_ore",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#fr_ore",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#fr_ore",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#fr_ore",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#fr_ore"
+        },
+        "down": {
+          "texture": "#fr_ore",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

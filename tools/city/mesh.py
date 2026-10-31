@@ -246,6 +246,10 @@ class Palette:
             spec = blocks[base]
             if "flicker" in spec and props.get("lit") == "true":
                 spec = lit_spec(spec)
+            if "signal" in spec:
+                key = spec["signal"]["states"][props.get("facing", "north")][int(props.get("phase", 0))]
+                if key:
+                    spec = lit_spec({**spec, "flicker": {"on": spec["signal"]["on"][key]}})
             if "door" in spec:
                 self.models[i] = self.door(spec, props)
                 continue
@@ -436,6 +440,8 @@ def emitted(name, blocks):
     if name == "air":
         return 0
     spec = blocks.get(parse(name)[0], {})
+    if "signal" in spec:
+        return spec["signal"]["light"] if "phase=" in name and "phase=0" not in name else 0
     return spec["flicker"]["light"] if "flicker" in spec and "lit=true" in name else spec.get("light", 0)
 
 
@@ -656,6 +662,7 @@ def main():
     ap.add_argument("--radius", type=float, default=110)
     ap.add_argument("--extra", action="append", default=[])
     ap.add_argument("--flicker-on", action="store_true", help="catch every flickering lamp lit")
+    ap.add_argument("--signal-phase", type=int, default=0, help="catch every traffic signal in this phase (1-5)")
     ap.add_argument("--cars", action="store_true", help="draw the dump's cars and jets from their .zcar models")
     ap.add_argument("--track", help="the county's lines (tools/county/TrackDump.java): draw their rails and sleepers")
     a = ap.parse_args()
@@ -678,6 +685,10 @@ def main():
     if a.flicker_on:
         meta["palette"] = [n if "flicker" not in blocks.get(parse(n)[0], {}) or "lit=" in n
                            else n[:-1] + ",lit=true]" if n.endswith("]") else n + "[lit=true]" for n in meta["palette"]]
+    if a.signal_phase:
+        meta["palette"] = [n if "signal" not in blocks.get(parse(n)[0], {}) or "phase=" in n
+                           else n[:-1] + f",phase={a.signal_phase}]" if n.endswith("]") else n + f"[phase={a.signal_phase}]"
+                           for n in meta["palette"]]
     pal = Palette(meta["palette"], blocks, a.tex_dir)
 
     # near: within the radius of any camera; far: LOD (no interiors, windows solid)

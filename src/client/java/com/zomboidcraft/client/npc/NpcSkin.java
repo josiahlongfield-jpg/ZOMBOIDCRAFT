@@ -30,9 +30,15 @@ import org.joml.Vector3f;
  * Model space: metres, feet on y=0, facing +z, +x her left.
  */
 public final class NpcSkin {
-    /** One mesh: its piece ("body" always shows), texture, both sides or not, cut-out alpha, level (0 near, 1 far). */
+    /**
+     * One mesh: its piece ("body" always shows), texture, both sides or not, cut-out alpha, level (0 near, 1 far).
+     * A model with whole outfits (looks) writes its piece as "piece@look|1,look|0,...": the mesh shows only in those looks,
+     * |1 with her shoes on and |0 with them off (each outfit has its own barefoot version).
+     */
     public static final class Group {
         public final String mesh, piece, texture;
+        /** The looks this mesh belongs to, or null for every look. */
+        public final java.util.Set<String> looks;
         public final boolean bothSides, cutout;
         public final int level, vertices;
         public final float[] pos, normal, uv, weight;
@@ -41,7 +47,9 @@ public final class NpcSkin {
 
         Group(String mesh, String piece, String texture, int flags, int level, int vertices) {
             this.mesh = mesh;
-            this.piece = piece;
+            int at = piece.indexOf('@');
+            this.piece = at < 0 ? piece : piece.substring(0, at);
+            this.looks = at < 0 ? null : java.util.Set.of(piece.substring(at + 1).split(","));
             this.texture = texture;
             this.bothSides = (flags & 1) != 0;
             this.cutout = (flags & 2) != 0;
@@ -52,6 +60,26 @@ public final class NpcSkin {
             uv = new float[vertices * 2];
             joint = new byte[vertices * 4];
             weight = new float[vertices * 4];
+        }
+
+        /**
+         * Turns every triangle to face the way its corners' normals point, so drawing front faces only never drops one that
+         * was wound backwards (her body is drawn culled; see NpcSkinDraw).
+         */
+        void orient() {
+            for (int t = 0; t < tris.length; t += 3) {
+                int a = tris[t] * 3, b = tris[t + 1] * 3, c = tris[t + 2] * 3;
+                float ux = pos[b] - pos[a], uy = pos[b + 1] - pos[a + 1], uz = pos[b + 2] - pos[a + 2];
+                float vx = pos[c] - pos[a], vy = pos[c + 1] - pos[a + 1], vz = pos[c + 2] - pos[a + 2];
+                float fx = uy * vz - uz * vy, fy = uz * vx - ux * vz, fz = ux * vy - uy * vx;
+                float nx = normal[a] + normal[b] + normal[c], ny = normal[a + 1] + normal[b + 1] + normal[c + 1],
+                        nz = normal[a + 2] + normal[b + 2] + normal[c + 2];
+                if (fx * nx + fy * ny + fz * nz < 0) {
+                    int swap = tris[t + 1];
+                    tris[t + 1] = tris[t + 2];
+                    tris[t + 2] = swap;
+                }
+            }
         }
     }
 
@@ -73,10 +101,34 @@ public final class NpcSkin {
     public final Map<String, Clip> clips = new HashMap<>();
     /** How far the heels lift her (metres): she's dropped this much with them off. */
     public final float heel;
+    /** Her height at rest (metres, the top of her highest mesh), so her page can frame her head to foot. */
+    public final float top;
     private final Map<String, byte[]> images = new HashMap<>();
     private final Map<String, Identifier> textures = new HashMap<>();
 
     private static final Map<String, CompletableFuture<NpcSkin>> LOADING = new HashMap<>();
+
+    /** Her outfits (looks), in the file's order, the first her own; empty for a model dressed piece by piece. */
+    public final java.util.List<String> looks = new java.util.ArrayList<>();
+
+    /** Which of her looks to draw for these pieces off: "look=NAME" among them picks one (else her first). */
+    public String lookKey(java.util.Set<String> hidden) {
+        String look = looks.isEmpty() ? "" : looks.get(0);
+        for (String h : hidden) {
+            if (h.startsWith("look=") && looks.contains(h.substring(5))) {
+                look = h.substring(5);
+            }
+        }
+        return look + "|" + (hidden.contains("shoes") ? 0 : 1);
+    }
+
+    /** Whether any of her meshes belongs to this piece (older models have fewer clothes). */
+    public boolean has(String piece) {
+        for (Group g : groups) {
+            if (g.piece.equals(piece)) return true;
+        }
+        return false;
+    }
 
     /** The skinned model with this id, or null while it loads or if there isn't one. Render thread. */
     public static NpcSkin get(String model) {
@@ -130,7 +182,8 @@ public final class NpcSkin {
             if (bytes == null) {
                 return null;
             }
-            id = ZomboidCraft.id("dynamic/npc/" + model + "/" + key.toLowerCase(java.util.Locale.ROOT));
+            // identifiers take only [a-z0-9/._-]: anything else in a model's texture key becomes _
+            id = ZomboidCraft.id("dynamic/npc/" + model + "/" + key.toLowerCase(java.util.Locale.ROOT).replaceAll("[^a-z0-9/._-]", "_"));
             try {
                 Minecraft.getInstance().getTextureManager().register(id, new DynamicTexture(() -> "ZomboidCraft NPC " + model + " " + key, decode(bytes)));
             } catch (IOException e) {
@@ -179,6 +232,7 @@ public final class NpcSkin {
                 for (int i = 0; i < gr.tris.length; i++) {
                     gr.tris[i] = in.readInt();
                 }
+                gr.orient();
                 groups[g] = gr;
             }
             int texCount = in.readInt();
@@ -238,6 +292,16 @@ public final class NpcSkin {
             }
         }
         head = bone("mixamorigHead");
+        for (Group g : groups) {
+            if (g.looks != null) {
+                for (String k : g.looks) {
+                    String look = k.substring(0, k.indexOf('|') < 0 ? k.length() : k.indexOf('|'));
+                    if (!looks.contains(look)) {
+                        looks.add(look);
+                    }
+                }
+            }
+        }
         // the heels' height: how far the body's lowest point sits above the shoes' lowest
         float body = Float.MAX_VALUE, shoes = Float.MAX_VALUE;
         for (Group g : groups) {
@@ -255,6 +319,13 @@ public final class NpcSkin {
             }
         }
         heel = body < Float.MAX_VALUE && shoes < Float.MAX_VALUE ? Math.max(0, body - shoes) : 0;
+        float high = 0;
+        for (Group g : groups) {
+            for (int v = 0; v < g.vertices; v++) {
+                high = Math.max(high, g.pos[v * 3 + 1]);
+            }
+        }
+        top = high > 0.5f ? high : 1.85f;
     }
 
     /** PNG straight in (it keeps its alpha); JPEG through Java's reader. */

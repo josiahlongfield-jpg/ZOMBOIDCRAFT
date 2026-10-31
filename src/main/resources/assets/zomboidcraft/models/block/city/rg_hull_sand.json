@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rg_armour_sand": "zomboidcraft:block/city/rg_armour_sand",
+    "rg_deck_sand": "zomboidcraft:block/city/rg_deck_sand",
+    "particle": "zomboidcraft:block/city/rg_armour_sand"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        13,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rg_armour_sand",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#rg_armour_sand",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#rg_armour_sand",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rg_armour_sand",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rg_deck_sand"
+        },
+        "down": {
+          "texture": "#rg_armour_sand",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

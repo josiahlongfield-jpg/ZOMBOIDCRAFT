@@ -1,245 +1,253 @@
 {
   "parent": "minecraft:block/block",
   "textures": {
-    "al_dark": "zomboidcraft:block/city/al_dark",
-    "al_paint": "zomboidcraft:block/city/al_paint",
-    "particle": "zomboidcraft:block/city/al_dark"
+    "al_fin_50": "zomboidcraft:block/city/al_fin_50",
+    "al_navy": "zomboidcraft:block/city/al_navy",
+    "particle": "zomboidcraft:block/city/al_navy"
   },
   "elements": [
     {
       "from": [
-        2.617,
-        -0.755,
+        13.907,
+        0.0,
         0.0
       ],
       "to": [
-        5.617,
-        16.604,
-        4.0
+        16.0,
+        8.0,
+        8.0
       ],
       "faces": {
         "north": {
-          "texture": "#al_dark",
-          "uv": [
-            10.383,
-            0,
-            13.383,
-            16
-          ]
-        },
-        "south": {
-          "texture": "#al_paint",
-          "uv": [
-            2.617,
-            0,
-            5.617,
-            16
-          ]
-        },
-        "east": {
-          "texture": "#al_dark",
-          "uv": [
-            12.0,
-            0,
-            16.0,
-            16
-          ]
-        },
-        "west": {
-          "texture": "#al_paint",
+          "texture": "#al_navy",
           "uv": [
             0.0,
-            0,
-            4.0,
-            16
-          ]
-        }
-      },
-      "rotation": {
-        "origin": [
-          2.617,
-          7.925,
-          2.0
-        ],
-        "axis": "z",
-        "angle": 8.15
-      }
-    },
-    {
-      "from": [
-        3.812,
-        -0.824,
-        4.0
-      ],
-      "to": [
-        6.812,
-        16.623,
-        8.0
-      ],
-      "faces": {
-        "north": {
-          "texture": "#al_dark",
-          "uv": [
-            9.188,
-            0,
-            12.188,
-            16
-          ]
+            8.0,
+            2.093,
+            16.0
+          ],
+          "cullface": "north"
         },
         "south": {
-          "texture": "#al_paint",
+          "texture": "#al_navy",
           "uv": [
-            3.812,
-            0,
-            6.812,
-            16
-          ]
-        },
-        "east": {
-          "texture": "#al_dark",
-          "uv": [
+            13.907,
             8.0,
-            0,
-            12.0,
-            16
+            16.0,
+            16.0
           ]
         },
         "west": {
-          "texture": "#al_paint",
+          "texture": "#al_fin_50",
           "uv": [
-            4.0,
-            0,
+            0.0,
             8.0,
-            16
+            8.0,
+            16.0
           ]
+        },
+        "up": {
+          "texture": "#al_navy",
+          "uv": [
+            13.907,
+            0.0,
+            16.0,
+            8.0
+          ]
+        },
+        "down": {
+          "texture": "#al_navy",
+          "uv": [
+            13.907,
+            8.0,
+            16.0,
+            16.0
+          ],
+          "cullface": "down"
         }
-      },
-      "rotation": {
-        "origin": [
-          3.812,
-          7.9,
-          6.0
-        ],
-        "axis": "z",
-        "angle": 9.4
       }
     },
     {
       "from": [
-        5.059,
-        -0.885,
+        13.73,
+        0.0,
         8.0
       ],
       "to": [
-        8.059,
-        16.62,
-        12.0
-      ],
-      "faces": {
-        "north": {
-          "texture": "#al_dark",
-          "uv": [
-            7.941,
-            0,
-            10.941,
-            16
-          ]
-        },
-        "south": {
-          "texture": "#al_paint",
-          "uv": [
-            5.059,
-            0,
-            8.059,
-            16
-          ]
-        },
-        "east": {
-          "texture": "#al_dark",
-          "uv": [
-            4.0,
-            0,
-            8.0,
-            16
-          ]
-        },
-        "west": {
-          "texture": "#al_paint",
-          "uv": [
-            8.0,
-            0,
-            12.0,
-            16
-          ]
-        }
-      },
-      "rotation": {
-        "origin": [
-          5.059,
-          7.868,
-          10.0
-        ],
-        "axis": "z",
-        "angle": 10.75
-      }
-    },
-    {
-      "from": [
-        6.354,
-        -0.929,
-        12.0
-      ],
-      "to": [
-        9.354,
-        16.638,
+        16.0,
+        8.0,
         16.0
       ],
       "faces": {
         "north": {
-          "texture": "#al_dark",
+          "texture": "#al_navy",
           "uv": [
-            6.646,
-            0,
-            9.646,
-            16
+            0.0,
+            8.0,
+            2.27,
+            16.0
           ]
         },
         "south": {
-          "texture": "#al_paint",
+          "texture": "#al_navy",
           "uv": [
-            6.354,
-            0,
-            9.354,
-            16
+            13.73,
+            8.0,
+            16.0,
+            16.0
+          ],
+          "cullface": "south"
+        },
+        "west": {
+          "texture": "#al_fin_50",
+          "uv": [
+            8.0,
+            8.0,
+            16.0,
+            16.0
           ]
         },
-        "east": {
-          "texture": "#al_dark",
+        "up": {
+          "texture": "#al_navy",
+          "uv": [
+            13.73,
+            8.0,
+            16.0,
+            16.0
+          ]
+        },
+        "down": {
+          "texture": "#al_navy",
+          "uv": [
+            13.73,
+            0.0,
+            16.0,
+            8.0
+          ],
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        14.227,
+        8.0,
+        0.0
+      ],
+      "to": [
+        16.0,
+        16.0,
+        8.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_navy",
           "uv": [
             0.0,
-            0,
-            4.0,
-            16
+            0.0,
+            1.773,
+            8.0
+          ],
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#al_navy",
+          "uv": [
+            14.227,
+            0.0,
+            16.0,
+            8.0
           ]
         },
         "west": {
-          "texture": "#al_paint",
+          "texture": "#al_fin_50",
           "uv": [
-            12.0,
-            0,
+            0.0,
+            0.0,
+            8.0,
+            8.0
+          ]
+        },
+        "up": {
+          "texture": "#al_navy",
+          "uv": [
+            14.227,
+            0.0,
             16.0,
-            16
+            8.0
+          ],
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#al_navy",
+          "uv": [
+            14.227,
+            8.0,
+            16.0,
+            16.0
           ]
         }
-      },
-      "rotation": {
-        "origin": [
-          6.354,
-          7.855,
-          14.0
-        ],
-        "axis": "z",
-        "angle": 12.175
+      }
+    },
+    {
+      "from": [
+        13.923,
+        8.0,
+        8.0
+      ],
+      "to": [
+        16.0,
+        16.0,
+        16.0
+      ],
+      "faces": {
+        "north": {
+          "texture": "#al_navy",
+          "uv": [
+            0.0,
+            0.0,
+            2.077,
+            8.0
+          ]
+        },
+        "south": {
+          "texture": "#al_navy",
+          "uv": [
+            13.923,
+            0.0,
+            16.0,
+            8.0
+          ],
+          "cullface": "south"
+        },
+        "west": {
+          "texture": "#al_fin_50",
+          "uv": [
+            8.0,
+            0.0,
+            16.0,
+            8.0
+          ]
+        },
+        "up": {
+          "texture": "#al_navy",
+          "uv": [
+            13.923,
+            8.0,
+            16.0,
+            16.0
+          ],
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#al_navy",
+          "uv": [
+            13.923,
+            0.0,
+            16.0,
+            8.0
+          ]
+        }
       }
     }
   ]

@@ -2,26 +2,33 @@ package com.zomboidcraft.client.npc;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.zomboidcraft.ZcConfig;
 import java.util.Set;
 import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.resources.Identifier;
 import org.joml.Matrix4f;
 
 /**
  * Draws a skinned companion (NpcSkin) posed by NpcSkinAnimator: each mesh of the pieces she has on, at full detail up close
- * and the thinned copy further off, every vertex moved by up to four bones. Every mesh is drawn with both sides kept (so
- * culling the wrong side can never show her through herself); sheets (hair, lashes, underwear, bra, stockings) are cut out
- * where their texture is clear.
+ * and the thinned copy further off, every vertex moved by up to four bones. Closed meshes (her body, eyes, teeth, heels) are
+ * drawn front faces only, each triangle turned to face along its normals when loaded (Iris shades a quad by the way it's
+ * wound, so a backwards one went dark); sheets (hair, lashes, underwear, bra, stockings) get a turned back copy as well, and
+ * are cut out where their texture is clear. look.companionDraw picks other ways of drawing her, to find what lets a shader
+ * pack show the world through her.
  * With her heels off she stands on the floor herself.
  */
 final class NpcSkinDraw {
     /** Past this (blocks) she's drawn from the thinned copy. */
     private static final float NEAR = 10f;
+    /** Triangles a submit holds when drawn in small batches (look.companionDraw 2). */
+    private static final int BATCH = 2048;
 
     static void submit(String model, NpcSkin skin, Matrix4f[] bones, Set<String> hidden, Object[] buffers, double distSq,
-                       int light, int overlay, PoseStack poseStack, SubmitNodeCollector collector) {
+                       int light, int overlay, float[] press, PoseStack poseStack, SubmitNodeCollector collector) {
         int level = distSq > NEAR * NEAR ? 1 : 0;
+        int mode = ZcConfig.get().look.companionDraw;
         float[] m = new float[bones.length * 12];
         for (int b = 0; b < bones.length; b++) {
             Matrix4f x = bones[b];
@@ -31,12 +38,14 @@ final class NpcSkinDraw {
             m[o + 8] = x.m02(); m[o + 9] = x.m12(); m[o + 10] = x.m22(); m[o + 11] = x.m32();
         }
         poseStack.pushPose();
-        if (hidden.contains("heels")) {
+        // she's modelled on tiptoe for heels: barefoot (no heels, no boots) she comes down to the ground
+        if (hidden.contains("heels") && hidden.contains("boots")) {
             poseStack.translate(0, -skin.heel, 0);
         }
+        String look = skin.lookKey(hidden);
         for (int g = 0; g < skin.groups.length; g++) {
             NpcSkin.Group gr = skin.groups[g];
-            if (gr.level != level || !gr.piece.equals("body") && hidden.contains(gr.piece)) {
+            if (gr.level != level || !gr.piece.equals("body") && hidden.contains(gr.piece) || gr.looks != null && !gr.looks.contains(look)) {
                 continue;
             }
             Identifier tex = skin.texture(gr.texture, model);
@@ -49,8 +58,21 @@ final class NpcSkinDraw {
             }
             float[] pos = (float[]) buffers[g * 2], normal = (float[]) buffers[g * 2 + 1];
             skin(gr, m, pos, normal);
-            collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(tex),
-                    (pose, out) -> draw(gr, pos, normal, pose, out, light, overlay));
+            if (press != null) {
+                press(gr.vertices, pos, normal, press);
+            }
+            if (mode == 1) {
+                collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(tex),
+                        (pose, out) -> draw(gr, pos, normal, 0, gr.tris.length, false, pose, out, light, overlay));
+                continue;
+            }
+            RenderType type = mode == 3 && !gr.cutout ? RenderTypes.entitySolid(tex) : RenderTypes.entityCutoutCull(tex);
+            int step = mode == 2 ? BATCH * 3 : gr.tris.length;
+            for (int from = 0; from < gr.tris.length; from += step) {
+                int start = from, end = Math.min(gr.tris.length, from + step);
+                collector.submitCustomGeometry(poseStack, type,
+                        (pose, out) -> draw(gr, pos, normal, start, end, gr.bothSides, pose, out, light, overlay));
+            }
         }
         poseStack.popPose();
     }
@@ -91,19 +113,56 @@ final class NpcSkinDraw {
         }
     }
 
-    /** Every triangle as a quad with its last corner repeated. */
-    private static void draw(NpcSkin.Group g, float[] p, float[] n, PoseStack.Pose pose, VertexConsumer out, int light, int overlay) {
+    /** How far around a held gun her skin and clothes give (blocks past its surface), and the deepest they press in. */
+    private static final float PRESS_REACH = 0.035f, PRESS_DEPTH = 0.008f;
+
+    /**
+     * Where her held gun touches her, the skin and clothes under it press in a few millimetres, deepest where it rests
+     * and easing out around it, and come back when it moves off. The gun is a line (stock to muzzle) with a thickness.
+     */
+    private static void press(int vertices, float[] pos, float[] normal, float[] line) {
+        float ax = line[0], ay = line[1], az = line[2], bx = line[3], by = line[4], bz = line[5], reach = line[6] + PRESS_REACH;
+        float minX = Math.min(ax, bx) - reach, maxX = Math.max(ax, bx) + reach, minY = Math.min(ay, by) - reach;
+        float maxY = Math.max(ay, by) + reach, minZ = Math.min(az, bz) - reach, maxZ = Math.max(az, bz) + reach;
+        float abx = bx - ax, aby = by - ay, abz = bz - az, len = abx * abx + aby * aby + abz * abz;
+        if (len < 1e-8f) {
+            return;
+        }
+        for (int v = 0, i = 0; v < vertices; v++, i += 3) {
+            float px = pos[i], py = pos[i + 1], pz = pos[i + 2];
+            if (px < minX || px > maxX || py < minY || py > maxY || pz < minZ || pz > maxZ) {
+                continue;
+            }
+            float t = Math.max(0, Math.min(1, ((px - ax) * abx + (py - ay) * aby + (pz - az) * abz) / len));
+            float dx = px - (ax + abx * t), dy = py - (ay + aby * t), dz = pz - (az + abz * t);
+            float d = (float) Math.sqrt(dx * dx + dy * dy + dz * dz);
+            if (d >= reach) {
+                continue;
+            }
+            float k = 1 - d / reach, dent = k * k * PRESS_DEPTH;
+            pos[i] -= normal[i] * dent;
+            pos[i + 1] -= normal[i + 1] * dent;
+            pos[i + 2] -= normal[i + 2] * dent;
+        }
+    }
+
+    /** Every triangle as a quad with its last corner repeated; a sheet's again wound the other way, facing back. */
+    private static void draw(NpcSkin.Group g, float[] p, float[] n, int from, int to, boolean back, PoseStack.Pose pose,
+                             VertexConsumer out, int light, int overlay) {
         float[] uv = g.uv;
         int[] tris = g.tris;
-        for (int t = 0; t < tris.length; t += 3) {
-            for (int k = 0; k < 4; k++) {
-                int v = tris[t + Math.min(k, 2)], i = v * 3;
-                out.addVertex(pose, p[i], p[i + 1], p[i + 2])
-                        .setColor(0xFFFFFFFF)
-                        .setUv(uv[v * 2], uv[v * 2 + 1])
-                        .setOverlay(overlay)
-                        .setLight(light)
-                        .setNormal(pose, n[i], n[i + 1], n[i + 2]);
+        for (int s = 0; s < (back ? 2 : 1); s++) {
+            float f = s == 0 ? 1 : -1;
+            for (int t = from; t < to; t += 3) {
+                for (int k = 0; k < 4; k++) {
+                    int c = Math.min(k, 2), v = tris[t + (s == 0 ? c : 2 - c)], i = v * 3;
+                    out.addVertex(pose, p[i], p[i + 1], p[i + 2])
+                            .setColor(0xFFFFFFFF)
+                            .setUv(uv[v * 2], uv[v * 2 + 1])
+                            .setOverlay(overlay)
+                            .setLight(light)
+                            .setNormal(pose, f * n[i], f * n[i + 1], f * n[i + 2]);
+                }
             }
         }
     }

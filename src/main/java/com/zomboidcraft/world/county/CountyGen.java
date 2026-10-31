@@ -76,7 +76,7 @@ public final class CountyGen {
             if (hit.road != null && in == null) {
                 int half = hit.road.kind.half;
                 if (hit.distance <= half + 1.5) {
-                    if (Terrain.isWater(natural) || natural < hit.y - 4) {
+                    if (t.wet(x, z, natural) || natural < hit.y - 4) {
                         bridge = true;
                     } else {
                         h = hit.y;
@@ -96,11 +96,12 @@ public final class CountyGen {
             }
             int top = (int) Math.floor(h);
             c.top = top;
-            c.water = top < Terrain.WATER;
+            int sea = t.water(x, z);
+            c.water = top < sea;
             c.built = in != null;
             c.forest = t.forest(x, z);
             c.moisture = t.moisture(x, z);
-            c.shore = !c.water && top <= Terrain.WATER + 1;
+            c.shore = !c.water && top <= sea + 1;
             // the planned city's quays are paved for a walk along the water; the open ground
             // further back, where the city's blocks stop short of the shore, is left as a park
             boolean paved = t.plan != null && !c.water && in == null && !bridge && (hit.road == null || hit.distance > hit.road.kind.half + 1.5)
@@ -121,7 +122,7 @@ public final class CountyGen {
                 quayRail(out, x, z, top, places);
             }
             if (c.water) {
-                out.column(x, z, top + 1, Terrain.WATER - 1, "minecraft:water");
+                out.column(x, z, top + 1, sea - 1, "minecraft:water");
             }
 
             if (bridge) {
@@ -235,6 +236,12 @@ public final class CountyGen {
         if (c.water) {
             double r = rng.nextDouble();
             return r < 0.5 ? "minecraft:mud" : r < 0.8 ? "minecraft:gravel" : "minecraft:clay";
+        }
+        // the reservoir's bathtub ring: the pale band of rock and lime left bare above the water
+        // as it drew down, the way the reservoir photos show it
+        if (!c.water && county.terrain.water(x, z) == Terrain.RESERVOIR && top > Terrain.RESERVOIR && top <= Terrain.RESERVOIR + 4) {
+            double r = rng.nextDouble();
+            return r < 0.45 ? "minecraft:calcite" : r < 0.75 ? "minecraft:diorite" : r < 0.9 ? "minecraft:tuff" : "minecraft:gravel";
         }
         if (c.shore) {
             return rng.nextDouble() < 0.6 ? "minecraft:mud" : "minecraft:coarse_dirt";
@@ -401,7 +408,7 @@ public final class CountyGen {
                     continue;
                 }
                 double gr = county.ground(x, z, places);
-                if (Terrain.isWater(gr) || gr <= Terrain.WATER + 0.5) {
+                if (t.wet(x, z, gr)) {
                     continue;
                 }
                 boolean nearWater = t.river(x, z) > 0.2 || t.lake(x, z) < -0.24;

@@ -91,8 +91,9 @@ public class CarProp extends Entity {
     private static final EntityDataAccessor<Integer> BELT = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.INT);
     /** Server: the gunner holds the trigger; rounds due by the rate; ticks till the belt's loaded; rounds fired. */
     boolean turretTrigger;
-    double turretOwed;
-    int beltBusy, turretShots;
+    int beltBusy, turretShots, fireTicks;
+    /** The gunner is zoomed in (right-click held): the gun's tighter aimed spread. */
+    boolean turretZoom;
     /** How far the gun's barrels have turned (radians), last tick and this one (client side). */
     public float barrels, barrelsO;
 
@@ -489,6 +490,9 @@ public class CarProp extends Entity {
 
     /** Whether someone in a car may fire, aim or swing what they hold: passengers anything, a moving driver only a handgun. */
     public static boolean mayUse(Entity entity, ItemStack stack) {
+        if (Turret.isGunner(entity)) {
+            return false;   // both hands on the mounted gun
+        }
         if (!handsOnWheel(entity)) {
             return true;
         }

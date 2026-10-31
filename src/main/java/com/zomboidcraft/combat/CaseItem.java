@@ -97,6 +97,7 @@ public class CaseItem extends BagItem {
         }
         Rolls.roll(gun, Rolls.CASE, random);     // its tier sets its condition over the wear above
         GunFinish.roll(gun, random);
+        Attachments.paint(gun, random);
         Attachments.refreshModel(gun);      // drawn without its magazine
         load.add(gun);
         if (type.magazine() != null) {
