@@ -50,11 +50,14 @@ public final class LootFood {
             if (random.nextFloat() < 0.4f) {
                 sp.addEffect(new MobEffectInstance(MobEffects.POISON, 100, 0));
             }
+            com.zomboidcraft.survival.Medicine.nausea(sp, 45);
             sp.sendOverlayMessage(Component.literal("That was rotten. You feel sick.").withStyle(ChatFormatting.GRAY));
         } else if (state == Spoil.STALE) {
             sp.addEffect(new MobEffectInstance(MobEffects.HUNGER, 200, 0));
         }
+        com.zomboidcraft.survival.Medicine.ate(sp, stack);
         if (food.is(LootSpec.Food.RAW) && random.nextFloat() < 0.5f) {
+            com.zomboidcraft.survival.Medicine.nausea(sp, 25);
             sp.addEffect(new MobEffectInstance(MobEffects.HUNGER, 400, 0));
             sp.addEffect(new MobEffectInstance(MobEffects.NAUSEA, 200, 0));
         }
