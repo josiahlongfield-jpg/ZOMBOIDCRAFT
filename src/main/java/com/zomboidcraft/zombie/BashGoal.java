@@ -357,7 +357,9 @@ public class BashGoal extends Goal {
         if (now >= 8) {
             int planks = sheet ? 1 : state.getValue(BarricadeBlock.PLANKS);
             if (planks <= 1) {
-                level.destroyBlock(block, false);
+                BlockState left = sheet ? com.zomboidcraft.building.BuildBlocks.afterBash(state) : null;
+                if (left != null) level.setBlockAndUpdate(block, left);
+                else level.destroyBlock(block, false);
                 level.playSound(null, block, sheet ? SoundEvents.ZOMBIE_BREAK_WOODEN_DOOR : SoundEvents.ZOMBIE_BREAK_WOODEN_DOOR,
                         SoundSource.HOSTILE, 1f, sheet ? 0.7f : 1f);
                 return;

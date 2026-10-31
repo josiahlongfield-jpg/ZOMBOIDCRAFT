@@ -290,6 +290,188 @@ def door_assets():
     M.dump({'variants': variants}, ASSETS / 'blockstates/wood_plank_door.json')
 
 
+# ================================================================== wave 2b: stairs, ladder, roof, shutters
+# refs/building/wood: wooden-stairs/06 (open porch steps: treads on sawn stringers, no risers), roof-finished/01-02 (grey
+# three-tab asphalt shingles in staggered courses, curling and cracked where old), shutters/01 (louvred board shutters
+# either side of a window, hung on the outside), wooden-ladders/01 (two rough rails, round-ish rungs let in).
+
+
+def shingle(f):
+    """Grey three-tab asphalt shingles: courses up the slope (model x), tabs staggered, grit, the odd curled tab."""
+    c = P.plain(f, '#4b4d4f', 0.1)
+    grit = f.noise(6.0, 731, 1) > 0.66
+    c = np.where(grit[..., None], c * 1.18, c)
+    if abs(f.n[1]) < 0.5:
+        return P.plain(f, '#3a3b3c', 0.08)
+    course = np.floor(f.X / 2.6)
+    tab = np.floor((f.Z + (course % 2) * 1.6) / 3.2)
+    shade = 1 + (P.fbm(course, tab, 0, 732, 1) - 0.5) * 0.25
+    c = c * shade[..., None]
+    edge = (f.X % 2.6) < 0.35
+    slot = (np.abs(((f.Z + (course % 2) * 1.6) % 3.2)) < 0.25) & ((f.X % 2.6) < 1.3)
+    return np.where((edge | slot)[..., None], c * 0.45, c)
+
+
+def fascia(f):
+    return P.wood(f, light='#b9a68a', dark='#8a7559', ring=2.0, lacquer=0.02) * 0.9
+
+
+def louvre(f):
+    """Board shutter louvres: slats angled down, dark gaps between, old paint worn to grey wood."""
+    c = P.mix(P.col('#5d6e57'), P.col('#8d8270'), np.clip(f.noise(0.9, 741, 3) * 1.3 - 0.2, 0, 1))
+    if abs(f.n[2]) > 0.5:
+        gap = (f.Y % 1.1) < 0.3
+        c = np.where(gap[..., None], c * 0.35, c)
+    return c
+
+
+def shutter_frame(f):
+    return P.mix(P.col('#56664f'), P.col('#8a7f6c'), np.clip(f.noise(0.9, 742, 3) * 1.3 - 0.2, 0, 1))
+
+
+def iron(f):
+    return P.plain(f, '#1e1d1c', 0.1)
+
+
+WOOD.update(shingle=shingle, fascia=fascia, louvre=louvre, sframe=shutter_frame, iron=iron)
+
+
+def build_stairs(m):
+    """Two open treads on sawn stringers, climbing toward +x (the way stairs face)."""
+    for z in (0.75, 15.25):
+        m.seg((0.0, 0.0), (16.0, 16.0), 3.0, 1.5, 'fresh', z=z, over=0.0)
+        m.box([0, 0, z - 0.75], [3.0, 1.0, z + 0.75], 'fresh')            # foot of the stringer, cut level
+    for x0, y in ((0.0, 8.0), (8.0, 16.0)):
+        m.box([x0 - 0.6, y - 1.6, 0.2], [x0 + 8.0, y, 15.8], 'board')       # tread, its nosing over the step below
+        m.box([x0 + 7.4, y - 7.0, 1.5], [x0 + 8.0, y - 1.6, 14.5], 'fresh')  # a cleat under the back of it
+        for z in (0.75, 15.25):
+            for x in (x0 + 1.5, x0 + 5.5):
+                m.box([x - 0.18, y, z - 0.18], [x + 0.18, y + 0.1, z + 0.18], 'nail')
+
+
+def build_roof(m):
+    """A roof section rising toward +x: shingles on boards on a rafter pair, a fascia board at the eave."""
+    m.seg((0.0, 0.8), (16.0, 16.8), 1.4, 16.0, 'shingle', z=8.0, over=0.0)
+    m.seg((0.4, -0.5), (16.4, 15.5), 1.2, 16.0, 'board', z=8.0, over=0.0)
+    for z in (2.0, 14.0):
+        m.seg((0.8, -2.0), (16.0, 13.2), 2.2, 1.5, 'fresh', z=z, over=0.0)
+    m.box([-0.6, -1.4, 0], [0.4, 1.6, 16], 'fascia')
+
+
+def build_ladder(m):
+    """Against the wall on the south side (facing north): two rails, five rungs."""
+    for x in (2.0, 12.5):
+        m.box([x, 0, 14.0], [x + 1.5, 16, 15.6], 'timber')
+    for y in (1.6, 4.8, 8.0, 11.2, 14.4):
+        m.box([3.5, y - 0.45, 14.3], [12.5, y + 0.45, 15.2], 'fresh')
+        for x in (2.75, 13.25):
+            m.box([x - 0.16, y - 0.16, 13.9], [x + 0.16, y + 0.16, 14.0], 'nail')
+
+
+def build_shutters(open_):
+    """A window frame (built along x) with louvred shutters on its outside, -z: shut in the opening, or swung back."""
+    def build(m):
+        build_window(m)
+        if open_:
+            leaves = [(-6.2, -0.2), (16.2, 22.2)]
+            z0, z1 = -1.4, -0.4
+        else:
+            leaves = [(2.0, 8.0), (8.0, 14.0)]
+            z0, z1 = 0.0, 1.2
+        for x0, x1 in leaves:
+            m.box([x0, 5.5, z0], [x1, 12.6, z1], 'sframe')
+            m.box([x0 + 0.8, 6.2, z0 - 0.1], [x1 - 0.8, 11.9, z0 + 0.4], 'louvre')
+            hinge_x = x0 if (open_ and x0 > 0) or (not open_ and x0 < 8) else x1 - 1.6
+            for y in (6.6, 11.2):
+                m.box([hinge_x, y, z0 - 0.15], [hinge_x + 1.6, y + 0.5, z0], 'iron')
+        if not open_:
+            m.box([7.7, 8.6, -0.15], [8.3, 9.4, 0.0], 'iron')                # the hook that holds them shut
+    return build
+
+
+def plank_tex(name, light, dark, boards=4, across=False, shingles=False):
+    """A flat 64px texture for the stair and roof corners, which keep the game's own stair shapes."""
+    W = 64
+    yy, xx = np.mgrid[0:W, 0:W].astype(float)
+    if shingles:
+        course = np.floor(yy / 10.4)
+        tab = np.floor((xx + (course % 2) * 6.4) / 12.8)
+        c = P.mix(P.col('#55575a'), P.col('#3c3d3f'), np.clip(P.fbm(course, tab, 0, 751, 1), 0, 1))
+        c = c * (1 + (P.fbm(xx * 0.9, yy * 0.9, 1, 752, 1) - 0.5) * 0.4)[..., None]
+        dark_ = ((yy % 10.4) < 1.4) | ((((xx + (course % 2) * 6.4) % 12.8) < 1.0) & ((yy % 10.4) < 5))
+        img = np.where(dark_[..., None], c * 0.45, c)
+    else:
+        a, b = (yy, xx) if across else (xx, yy)
+        bw = W / boards
+        bi = np.floor(a / bw)
+        t = np.clip(P.fbm(a * 0.06 + bi * 5.1, b * 0.012, bi, 761, 4) + (P.fbm(a * 0.5, b * 0.05, bi, 762, 2) - 0.5) * 0.5, 0, 1)
+        img = P.mix(P.col(light), P.col(dark), t) * (1 + np.sin(bi * 2.3) * 0.05)[..., None]
+        img = np.where(((a % bw) < 1.0)[..., None], img * 0.5, img)
+    save_rgb(img, ASSETS / f'textures/block/building/{name}.png')
+
+
+def stair_states(name, straight, inner, outer):
+    """Every facing, half and shape, turned the way the game turns its own stairs."""
+    base = {'east': 0, 'south': 90, 'west': 180, 'north': 270}
+    v = {}
+    for facing, b in base.items():
+        for half in ('bottom', 'top'):
+            for shape in ('straight', 'inner_left', 'inner_right', 'outer_left', 'outer_right'):
+                mdl = straight if shape == 'straight' else inner if shape.startswith('inner') else outer
+                left = shape.endswith('left')
+                if shape == 'straight':
+                    y = b
+                elif half == 'bottom':
+                    y = b - 90 if left else b
+                else:
+                    y = b if left else b + 90
+                e = {'model': model(mdl)}
+                if half == 'top':
+                    e['x'] = 180
+                if y % 360:
+                    e['y'] = y % 360
+                if 'x' in e or 'y' in e:
+                    e['uvlock'] = shape != 'straight'
+                v[f'facing={facing},half={half},shape={shape}'] = e
+    return {'variants': v}
+
+
+def wave2b():
+    block_model(build_stairs, 'wood_stairs', 0.25)
+    block_model(build_roof, 'wood_roof', 0.3, px=5)
+    block_model(build_ladder, 'wood_ladder', 0.3)
+    block_model(build_shutters(False), 'wood_window_shutters', 0.3, px=5)
+    block_model(build_shutters(True), 'wood_window_shutters_open', 0.3, px=5)
+    plank_tex('wood_stairs_top', '#a68c66', '#6c5539', boards=4, across=True)
+    plank_tex('wood_stairs_side', '#d6ba8a', '#ad8a5a', boards=2)
+    plank_tex('wood_roof_top', '', '', shingles=True)
+    plank_tex('wood_roof_under', '#b5a07f', '#83704f', boards=4)
+    models = ASSETS / 'models/block/building'
+    for name, top, side in (('wood_stairs', 'wood_stairs_top', 'wood_stairs_side'), ('wood_roof', 'wood_roof_top', 'wood_roof_under')):
+        for kind in ('inner', 'outer'):
+            tx = {k: f'{NS}:block/building/{t}' for k, t in (('top', top), ('bottom', side), ('side', side), ('particle', side))}
+            M.dump({'parent': f'minecraft:block/{kind}_stairs', 'textures': tx}, models / f'{name}_{kind}.json')
+    bs = ASSETS / 'blockstates'
+    for name in ('wood_stairs', 'wood_roof'):
+        M.dump(stair_states(name, name, f'{name}_inner', f'{name}_outer'), bs / f'{name}.json')
+    M.dump({'variants': {f'facing={f}': {'model': model('wood_ladder'), **({'y': y} if y else {})}
+                         for f, y in (('north', 0), ('east', 90), ('south', 180), ('west', 270))}}, bs / 'wood_ladder.json')
+    v = {}
+    for f, y in (('north', 0), ('east', 90), ('south', 180), ('west', 270)):
+        for o in ('false', 'true'):
+            v[f'facing={f},open={o}'] = {'model': model('wood_window_shutters' + ('_open' if o == 'true' else '')), **({'y': y} if y else {})}
+    M.dump({'variants': v}, bs / 'wood_window_shutters.json')
+    for block, items in {'wood_stairs': [('minecraft:oak_planks', 2)], 'wood_roof': [('minecraft:oak_planks', 1)],
+                         'wood_ladder': [('minecraft:oak_planks', 1)],
+                         'wood_window_shutters': [('minecraft:oak_planks', 2), (f'{NS}:hinges', 1)]}.items():
+        table = {'type': 'minecraft:block', 'pools': [{'rolls': 1, 'entries': [{'type': 'minecraft:item', 'name': item,
+                 'functions': [{'function': 'minecraft:set_count', 'count': n}]}],
+                 'conditions': [{'condition': 'minecraft:survives_explosion'}]} for item, n in items]}
+        (DATA / f'{NS}/loot_table/blocks/{block}.json').write_text(json.dumps(table, indent=2) + '\n')
+    merge_lang({f'block.{NS}.wood_stairs': 'Wooden Stairs', f'block.{NS}.wood_roof': 'Shingled Roof',
+                f'block.{NS}.wood_ladder': 'Wooden Ladder', f'block.{NS}.wood_window_shutters': 'Window Shutters'})
+
+
 # ================================================================== writing it out
 
 
@@ -370,6 +552,7 @@ def main():
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(json.dumps(table, indent=2) + '\n')
     merge_lang({f'block.{NS}.{k}': v for k, v in NAMES.items()})
+    wave2b()
 
 
 if __name__ == '__main__':
