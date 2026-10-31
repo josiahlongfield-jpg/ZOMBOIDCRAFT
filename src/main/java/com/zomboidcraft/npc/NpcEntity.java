@@ -135,6 +135,7 @@ public class NpcEntity extends PathfinderMob {
         goalSelector.addGoal(1, new NpcBrain.Flee(this));
         goalSelector.addGoal(2, new NpcBrain.Shoot(this));
         goalSelector.addGoal(3, new NpcWork.Sleep(this));
+        goalSelector.addGoal(3, new NpcTrades.Help(this));
         goalSelector.addGoal(4, new NpcCare.LookAfter(this));
         goalSelector.addGoal(5, new NpcBrain.Forage(this));
         goalSelector.addGoal(5, new NpcCare.Gather(this));

@@ -242,7 +242,7 @@ public final class NpcCare {
 
     /** What she keeps on her when she empties her pack into the stores: finds held for you, her ammo, bandages, unread books. */
     static boolean keeps(NpcEntity npc, ItemStack s) {
-        if (offeredTo(s) != null || s.getItem() instanceof BandageItem) return true;
+        if (offeredTo(s) != null || s.getItem() instanceof BandageItem || NpcTrades.keeps(npc, s)) return true;
         GunType t = NpcBrain.gun(npc);
         if (t != null && ammoFor(t, s)) return true;
         if (s.getItem() instanceof SkillBookItem book) return unread(npc, book.skill().name());

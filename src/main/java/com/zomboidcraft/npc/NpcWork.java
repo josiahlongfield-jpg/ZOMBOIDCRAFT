@@ -58,7 +58,8 @@ import net.minecraft.world.phys.Vec3;
  * patches beaten barricades and walls with planks from the stores; a farmer waters, harvests and replants the planters
  * and crop rows; a cook turns raw food from the stores into cooked over a fire or stove; a scavenger heads out to search
  * the buildings round about and brings back what she finds; a medic patches up whoever's hurt; a hauler tidies whatever's
- * lying about into the stores. The stores are every chest, barrel and shelf within STORE_RADIUS of home.
+ * lying about into the stores; a tailor patches the holes in clothes; a mechanic keeps the cars at home topped up and
+ * swaps their worn parts (NpcTrades). The stores are every chest, barrel and shelf within STORE_RADIUS of home.
  * <p>
  * Her day runs by the clock: a day shift works from six till five, eats and unwinds till nine and sleeps till six; a
  * night shift (guards mostly) the other way round. She sleeps in a bed at home if there's one, dreams badly after a bad
@@ -67,7 +68,7 @@ import net.minecraft.world.phys.Vec3;
 public final class NpcWork {
     public enum Job {
         NONE("no job"), GUARD("guard"), REPAIR("carpenter"), FARM("farmer"), COOK("cook"), SCAVENGE("scavenger"),
-        MEDIC("medic"), HAUL("hauler");
+        MEDIC("medic"), HAUL("hauler"), TAILOR("tailor"), MECHANIC("mechanic");
 
         public final String label;
 
@@ -97,6 +98,9 @@ public final class NpcWork {
     SimpleContainer pack = new SimpleContainer(NpcCare.BASE_PACK);
     /** The backpack she's wearing, or EMPTY. */
     ItemStack bag = ItemStack.EMPTY;
+    /** The car you're working on that she's lending a hand with, till then (NpcTrades.Help). */
+    net.minecraft.world.entity.Entity helpCar;
+    long helpUntil;
     private final NpcEntity npc;
 
     NpcWork(NpcEntity npc) {
@@ -326,6 +330,8 @@ public final class NpcWork {
             case CARPENTRY -> "My boards are holding better these days.";
             case SCAVENGING -> "I'm starting to know where people hid things.";
             case FARMING -> "Turns out I've got a green thumb.";
+            case TAILORING -> "My stitches are actually holding now.";
+            case MECHANICS -> level >= 6 ? "I could strip an engine blindfold." : "Cars are starting to make sense to me.";
         };
     }
 
@@ -341,11 +347,13 @@ public final class NpcWork {
             case SCAVENGE -> scavenge(npc, level);
             case MEDIC -> medic(npc, level);
             case HAUL -> haul(npc, level, false);
+            case TAILOR -> NpcTrades.tailor(this, npc, level);
+            case MECHANIC -> NpcTrades.mechanic(this, npc, level);
         };
     }
 
     /** A trip to the stores to drop off her pack. */
-    private Task depositTask(NpcEntity npc, ServerLevel level, Runnable after) {
+    Task depositTask(NpcEntity npc, ServerLevel level, Runnable after) {
         List<BlockPos> stores = stores(level);
         if (stores.isEmpty()) {
             grumble(npc, "Where am I meant to put all this? We need a chest or something.");
@@ -358,7 +366,7 @@ public final class NpcWork {
     }
 
     /** A trip to the stores to fetch some of something. */
-    private Task fetchTask(NpcEntity npc, ServerLevel level, Predicate<ItemStack> want, int max, String missing) {
+    Task fetchTask(NpcEntity npc, ServerLevel level, Predicate<ItemStack> want, int max, String missing) {
         BlockPos at = storeWith(level, want);
         if (at == null) {
             if (missing != null) grumble(npc, missing);

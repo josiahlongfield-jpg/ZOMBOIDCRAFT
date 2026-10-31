@@ -14,13 +14,14 @@ import net.minecraft.util.RandomSource;
  * curve, kept by the skill's name so every skill the game grows has a place for her too. She gets better the way you do:
  * every shot, bandage, meal, repair, search and harvest earns experience; a skill book she's read multiplies it for that
  * volume's levels (SkillBooks: x3, x5, x8, x12, x16); and working near you she picks up a share of what you learn
- * (ZcConfig companions.watchShare). The six her jobs use today are named below; the rest start at nothing.
+ * (ZcConfig companions.watchShare). The eight her jobs use today are named below; the rest start at nothing.
  */
 public final class NpcSkills {
     /** The skills her work and her fighting use now, by the shared skill each one is. */
     public enum Skill {
         AIM("Aiming", "AIMING"), FIRST_AID("First Aid", "FIRST_AID"), COOKING("Cooking", "COOKING"),
-        CARPENTRY("Carpentry", "CARPENTRY"), SCAVENGING("Foraging", "FORAGING"), FARMING("Agriculture", "AGRICULTURE");
+        CARPENTRY("Carpentry", "CARPENTRY"), SCAVENGING("Foraging", "FORAGING"), FARMING("Agriculture", "AGRICULTURE"),
+        TAILORING("Tailoring", "TAILORING"), MECHANICS("Mechanics", "MECHANICS");
 
         public final String label;
         /** The shared skill's name (com.zomboidcraft.skills.Skill.name()). */
