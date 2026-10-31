@@ -47,7 +47,9 @@ public class HoistFilmTest implements FabricClientGameTest {
                     for (int z = -9; z <= 9; z++) {
                         for (int y = -1; y <= 7; y++) {
                             BlockPos at = b.offset(x, y, z);
-                            level.setBlock(at, y == -1 ? Blocks.SMOOTH_STONE.defaultBlockState()
+                            // a roof against the rain, lit by a grid of ceiling lamps
+                            level.setBlock(at, y == 7 ? (x % 3 == 0 && z % 3 == 0 ? Blocks.SEA_LANTERN : Blocks.SMOOTH_STONE).defaultBlockState()
+                                    : y == -1 ? Blocks.SMOOTH_STONE.defaultBlockState()
                                     : z == 6 && y < 6 || Math.abs(x) == 9 && y < 6 ? Blocks.SMOOTH_STONE.defaultBlockState()
                                     : Blocks.AIR.defaultBlockState(), 2);
                         }
@@ -82,10 +84,10 @@ public class HoistFilmTest implements FabricClientGameTest {
             }
             frames(ctx, 8, 2);
             // 5. the control box and power unit up close
-            shot(sp, 3.2, 1.3, -0.9, 120, 20);
+            shot(sp, 3.2, 1.45, -0.9, 57, 5);
             frames(ctx, 14, 2);
             // the power unit and the hand pump's lever
-            shot(sp, 3.0, 0.9, 0.9, 150, 35);
+            shot(sp, 3.0, 1.3, 0.9, 128, 20);
             frames(ctx, 6, 2);
             // 6. the mechanics screen on the raised car, as a survivor sees it
             sp.getServer().runCommand("gamemode survival @a");

@@ -20,7 +20,9 @@ import net.minecraft.network.chat.Component;
  * yet is greyed with the reason (the level, the tool, the hoist), the same reason the server would give.
  */
 public class MechanicsScreen extends Screen {
-    private static final int W = 420, H = 270, LEFT = 150, ROW = 15;
+    private static final int W = 420, LEFT = 150, ROW = 15;
+    /** As tall as fits: 270, less in a small window (rows scroll). */
+    private int H = 270;
     private static final String[] AREAS = {"Engine bay", "Underneath", "Wheels", "Body"};
 
     private final CarProp car;
@@ -51,6 +53,7 @@ public class MechanicsScreen extends Screen {
     }
 
     private int y() {
+        H = Math.min(270, height - 8);
         return (height - H) / 2;
     }
 
