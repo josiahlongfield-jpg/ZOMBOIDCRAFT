@@ -173,6 +173,18 @@ QUERIES = {
     "thr_pin": ["grenade pin pull", "pulling pin", "cotter pin", "metal pin removal", "split ring", "key ring metal",
                 "safety pin metal click", "grenade arm", "grenade spoon release", "metal clip pull", "lever release spring",
                 "metal ring pull", "weapon foley metal click", "military gear click"],
+    # outbreak broadcasts and far-off events (2026-10-31, PZ review sections 14 and 15)
+    "bc_static": ["radio static", "am radio tuning", "shortwave static", "radio between stations", "radio tuning dial",
+                  "shortwave radio", "radio interference", "numbers station", "old radio static", "ham radio static"],
+    "bc_eas": ["emergency alert system", "emergency broadcast tone", "eas tone", "weather radio alert", "attention signal tone",
+               "emergency broadcast system"],
+    "meta_firefight": ["distant gunfire", "gunfight distant", "firefight distant", "distant machine gun", "gun battle distant",
+                       "war gunfire distant", "distant shootout", "gunshots far away night"],
+    "meta_scream": ["distant scream", "scream far away", "woman scream distant", "man scream distant", "scream for help",
+                    "terrified scream", "scream echo", "blood curdling scream"],
+    "meta_house_alarm": ["burglar alarm", "house alarm", "intruder alarm", "security alarm siren", "alarm bell outside",
+                         "alarm box bell", "two tone alarm", "alarm siren loop"],
+    "meta_keypad": ["keypad beep", "alarm keypad", "security keypad", "keypad code entry", "alarm panel beep"],
     # the Harvestman's rage (2026-10-30): "a monstrous scream"
     "crt_rage": ["monster roar", "monster scream", "creature roar", "demon scream", "beast roar", "monster rage",
                  "creature scream", "monster screech", "horror creature roar", "giant monster", "alien scream", "mutant roar"],
