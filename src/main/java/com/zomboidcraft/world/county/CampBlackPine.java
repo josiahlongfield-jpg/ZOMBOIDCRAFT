@@ -426,6 +426,144 @@ final class CampBlackPine extends FrameSite {
             camp.toilets(70, 20, 5);
             camp.lightTower(124, 24, true);
             road(76, -2, 76, 30, false);
+            keypadBunker(BUNKER_X, BUNKER_Z);
+        }
+
+        // ------------------------------------------------------------------ the coded bunker
+
+        /** The coded bunker's blast door (its two leaves at x .. x + 1) in the frame, the core's floor this far down. */
+        static final int BUNKER_X = 128, BUNKER_Z = 22, BUNKER_FLOOR = -9;
+
+        /**
+         * The bunker the radio gives the code for (417702, world/Keypads; Josiah 2026-10-31: "Hillside bunker by
+         * the radio mast"): a grassed mound south of the cross street by the mast, the concrete portal in its north
+         * face, a long stair down through it to the landing, the blast door with its keypad on the wall beside it,
+         * and under the training ground the Bunker core dressed as the army left it: the guard room, the bunks, the
+         * plant, the store and the armoury past it. Sealed: the code is the only quiet way in (a crowbar the loud one).
+         */
+        private void keypadBunker(int bx, int bz) {
+            int rise = -BUNKER_FLOOR;
+            Placer bp = p.turned(bx, BUNKER_FLOOR, bz, 0);
+            Bunker core = new Bunker(bp, new SplittableRandom(rng.nextLong()), Bunker.Kind.ARMY, Bunker.State.SEALED);
+            core.build();
+            // the landing in front of the blast door: x -1..2, z -5..-1, the stair coming in at its north wall
+            for (int x = -2; x <= 3; x++) {
+                for (int z = -6; z <= -1; z++) {
+                    for (int y = 0; y <= 5; y++) {
+                        boolean room = x >= -1 && x <= 2 && z >= -5 && y >= 1 && y <= 4;
+                        if (z == -6 && x >= 0 && x <= 1 && y >= 1) {
+                            continue;
+                        }
+                        bp.set(x, y, z, room ? "air" : y == 0 ? "bunk_floor_dirty" : y == 5 ? "bunk_concrete"
+                                : y <= 1 ? "bunk_dado" : chance() < 0.15 ? "bunk_paint_flake" : "bunk_paint");
+                    }
+                }
+            }
+            bp.set(2, 2, -1, "bunk_keypad[facing=north]");
+            bp.set(2, 3, -1, "bunk_lamp_red_lit[facing=north]");
+            bp.set(-1, 3, -1, "bunk_lamp_red[facing=north]");
+            bp.set(-1, 1, -4, "bunk_extinguisher[facing=east]");
+            bp.set(2, 1, -5, "bunk_jerry_cans[facing=west]");
+            bp.set(-1, 2, -2, "bunk_radmeter[facing=east]");
+            // the long stair up to the portal, climbing north: two wide between painted walls under a stepped slab
+            int top = -6 - rise;
+            for (int k = 0; k < rise; k++) {
+                int z = -6 - k, y = 1 + k;
+                for (int x = -1; x <= 2; x++) {
+                    boolean wall = x == -1 || x == 2;
+                    bp.set(x, y - 1, z, "bunk_concrete");
+                    for (int h = 0; h <= 4; h++) {
+                        String b = h == 4 ? "bunk_concrete" : wall ? (h <= 1 ? "bunk_dado" : chance() < 0.12 ? "bunk_paint_flake" : "bunk_paint")
+                                : h == 0 ? "stairs_concrete[facing=north]" : "air";
+                        bp.set(x, y + h, z, b);
+                    }
+                    bp.set(x, y + 5, z, "bunk_concrete");
+                }
+                if (k % 4 == 2) {
+                    bp.set(2, y + 3, z, "bunk_lamp_red[facing=west]");
+                }
+            }
+            portal(bp, rise, top);
+            p.mark("bunker sealed army", bx, 1, bz + top);
+            bp.mark("bunker door", 0, 1, 0);
+        }
+
+        /**
+         * The way in at ground level: the stair comes up out of the mound through a concrete headwall facing north
+         * onto an apron by the cross street, its wing walls splayed back into the slope, the stencil and the
+         * warning signs; the mound grassed over the stair and the bunker's head.
+         */
+        private void portal(Placer bp, int rise, int top) {
+            // the portal's throat past the top step: two rows at ground level (bp y = rise), a hood over them
+            int gy = rise, hz = top - 1;
+            for (int z = hz; z <= top; z++) {
+                for (int x = -1; x <= 2; x++) {
+                    boolean wall = x == -1 || x == 2;
+                    bp.set(x, gy, z, "bunk_floor_dirty");
+                    for (int h = 1; h <= 4; h++) {
+                        bp.set(x, gy + h, z, h == 4 ? "bunk_concrete" : wall ? "bunk_concrete" : "air");
+                    }
+                }
+            }
+            // the headwall across the mound's face, the opening two wide and three tall in it
+            for (int x = -5; x <= 6; x++) {
+                int off = (int) Math.ceil(Math.abs(x - 0.5)), h = off <= 4 ? 5 : off == 5 ? 4 : 3;
+                for (int y = 1; y <= h; y++) {
+                    if (x >= 0 && x <= 1 && y <= 3) {
+                        continue;
+                    }
+                    bp.set(x, gy + y, hz, chance() < 0.2 ? "bunk_concrete_damp" : chance() < 0.15 ? "bunk_concrete_crack" : "bunk_concrete");
+                }
+            }
+            // the wing walls, stepping down as they run back out to the apron's corners
+            for (int k = 1; k <= 4; k++) {
+                for (int y = 1; y <= 4 - k + 1; y++) {
+                    bp.set(-5 - (k > 2 ? 1 : 0), gy + y, hz - k, "bunk_concrete");
+                    bp.set(6 + (k > 2 ? 1 : 0), gy + y, hz - k, "bunk_concrete");
+                }
+            }
+            // the apron, the stencil over the opening, the warnings either side, a jerrycan someone left (the refs:
+            // refs/bunker/small-military-bunker-entrance, grey weathered concrete, weeds at the threshold)
+            for (int x = -4; x <= 5; x++) {
+                for (int z = hz - 4; z <= hz - 1; z++) {
+                    bp.set(x, gy, z, chance() < 0.25 ? "bunk_floor_crack" : "concrete_dark");
+                    // the slope's weeds already coming in at the apron's edges and up against the wing walls
+                    boolean edge = x == -4 || x == 5 || z == hz - 4;
+                    bp.set(x, gy + 1, z, edge && chance() < 0.45 ? (chance() < 0.4 ? "weeds_tall" : "grass_tuft") : "air");
+                }
+            }
+            bp.set(0, gy + 4, hz - 1, "bunk_st_restricted[facing=north]");
+            bp.set(-2, gy + 2, hz - 1, "bunk_sign_warning[facing=north]");
+            bp.set(3, gy + 2, hz - 1, "bunk_sign_warning[facing=north]");
+            bp.set(2, gy + 4, hz - 1, "bunk_lamp_red[facing=north]");
+            bp.set(-1, gy + 1, hz - 2, "bunk_jerry_cans[facing=" + dir() + "]");
+            // the mound: earth heaped over the stair and back over the landing, grassed, falling away to the sides
+            for (int x = -12; x <= 13; x++) {
+                for (int z = hz; z <= 0; z++) {
+                    double cx = Math.abs(x - 0.5) / 12.5, along = (z - hz) / (double) (-hz);
+                    double crest = 6.2 * Math.min(1, 0.35 + along * 1.4) * Math.max(0, 1 - Math.pow(cx, 2.2))
+                            * Math.min(1, (0 - z + 3) / 6.0) + (noiseAt(x, z) - 0.5) * 0.8;
+                    int hgt = (int) Math.round(crest);
+                    // never into the way down: the passage's air reads as nothing, so keep under its roof clear
+                    int roof = x < 0 || x > 1 ? 0 : z <= top ? 4 : z <= -6 ? -z - gy : 0;
+                    for (int y = 1; y <= hgt; y++) {
+                        if (y > roof && bp.get(x, gy + y, z) == null) {
+                            bp.set(x, gy + y, z, y == hgt ? (chance() < 0.12 ? "minecraft:moss_block" : "minecraft:grass_block") : "minecraft:dirt");
+                        }
+                    }
+                    if (hgt > roof && chance() < 0.1 && bp.get(x, gy + hgt + 1, z) == null) {
+                        bp.set(x, gy + hgt + 1, z, chance() < 0.3 ? "weeds_tall" : "grass_tuft");
+                    }
+                }
+            }
+            // the vent stack poking out of the mound's top, over the landing
+            for (int y = 1; y <= 7; y++) {
+                bp.setIfAir(4, gy + y, -3, y == 7 ? "bunk_vent_cap" : "bunk_vent_stack");
+            }
+        }
+
+        private double noiseAt(int x, int z) {
+            return noise.fbm(x * 3.1, z * 3.1, 9, 2) * 0.5 + 0.5;
         }
 
         // ------------------------------------------------------------------ the training ground

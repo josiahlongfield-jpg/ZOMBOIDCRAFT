@@ -116,6 +116,9 @@ public final class SitePreview {
         List<Voxels.Car> shown = new ArrayList<>();
         for (Voxels.Car c : v.cars) {
             String models = c.models();
+            if (models != null && models.startsWith("!tool:")) {
+                continue;   // VEHICLES' floor tools are entities the preview has no model for
+            }
             if (models == null || !models.startsWith("!hoist:")) {
                 shown.add(c);
                 continue;

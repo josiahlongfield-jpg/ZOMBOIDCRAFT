@@ -262,6 +262,14 @@ final class AutoShop {
             s.set(g, 1, 6, chance() < 0.5 ? "as_cart[facing=west]" : "as_creeper[facing=north]");
         }
         s.set(g, 4, 1, "as_reels[facing=south]");
+        // VEHICLES' floor tools parked in the strip, free to roll over to the bay's car: the trolley jack by the door,
+        // the engine crane at the back; the shop's one tyre machine and parts washer by its first bay
+        s.shopTool(x0 + 4.5, 1, 2.6, 0, "jack", rng.nextLong());
+        s.shopTool(x0 + 4.5, 1, 7.9, 0, "crane", rng.nextLong());
+        if (number == 1) {
+            s.shopTool(x0 + 4.5, 1, 4.6, 270, "tyre_machine", rng.nextLong());
+            s.shopTool(x0 + 4.5, 1, 5.7, 270, "washer", rng.nextLong());
+        }
     }
 
     /**

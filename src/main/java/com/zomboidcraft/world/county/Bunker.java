@@ -25,7 +25,8 @@ import java.util.SplittableRandom;
  */
 public final class Bunker {
     /** Who built it; each kind dresses the same core its own way. */
-    public enum Kind { TOWER, SHIP, SHELTER, FOREST }
+    /** ARMY: the small coded bunker under Camp Black Pine (CampBlackPine.keypadBunker, world/Keypads). */
+    public enum Kind { TOWER, SHIP, SHELTER, FOREST, ARMY }
 
     /**
      * SEALED: nobody has been in since. LOOTED: a second copy of the map led someone here first.
@@ -79,6 +80,7 @@ public final class Bunker {
             case SHIP -> 0.45;
             case SHELTER -> 0.5;
             case FOREST -> 0.65;
+            case ARMY -> 0.35;
         } + (state == State.LOOTED ? 0.1 : state == State.BREACHED ? 0.2 : 0);
     }
 
@@ -134,16 +136,17 @@ public final class Bunker {
 
     private void plan() {
         ship = kind == Kind.SHIP;
-        boolean small = kind == Kind.FOREST;
+        boolean small = kind == Kind.FOREST || kind == Kind.ARMY;
         cw = small ? 2 : 3;
         damp = switch (kind) {
             case FOREST -> 0.25;
+            case ARMY -> 0.12;
             case SHELTER -> 0.15;
             case SHIP -> 0.1;
             case TOWER -> 0.04;
         };
         int dMin = switch (kind) {
-            case FOREST -> 5;
+            case FOREST, ARMY -> 5;
             case SHELTER -> 8;
             default -> 6;
         };
@@ -265,6 +268,11 @@ public final class Bunker {
                 u.add(Use.MESS);
                 u.add(Use.COMMS);
                 u.add(Use.MED);
+            }
+            case ARMY -> {
+                // the guard room by the door (the radio desk and the map), then the bunks
+                u.add(Use.COMMS);
+                u.add(Use.BUNKS);
             }
         }
         u.add(Use.PLANT);
