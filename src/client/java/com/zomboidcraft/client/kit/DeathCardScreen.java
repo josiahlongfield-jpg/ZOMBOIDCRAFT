@@ -88,9 +88,9 @@ public class DeathCardScreen extends Screen {
         KitDraw.textCentred(g, font, card.x() + ", " + card.z(), cx, my0 + ms - 9, KitDraw.FAINT, 0.6f);
 
         int tx = x + 12 + ms + 10, tw = W - (tx - x) - 12, ty = my0;
-        ty = KitDraw.wrap(g, font, "Died " + (card.place().isEmpty() ? "at " + card.x() + ", " + card.z() : "near " + card.place()) + ".",
+        ty += KitDraw.wrap(g, font, "Died " + (card.place().isEmpty() ? "at " + card.x() + ", " + card.z() : "near " + card.place()) + ".",
                 tx, ty, tw, KitDraw.TEXT) + 3;
-        ty = KitDraw.wrap(g, font, card.rises() ? "You were infected, so your body will rise wearing what you had on."
+        ty += KitDraw.wrap(g, font, card.rises() ? "You were infected, so your body will rise wearing what you had on."
                 : "You weren't infected: your body stays down, with everything on it.", tx, ty, tw,
                 card.rises() ? KitDraw.WARN : KitDraw.DIM) + 3;
         String lost = card.skills().isEmpty() ? "No skills to lose." : "Lost: " + String.join(", ", card.skills().subList(0, Math.min(6, card.skills().size())))
@@ -111,7 +111,9 @@ public class DeathCardScreen extends Screen {
     private void stat(GuiGraphicsExtractor g, int x, int y, int w, String big, String small) {
         KitDraw.frame(g, x, y, w, 32, KitDraw.EDGE);
         g.enableScissor(x + 1, y + 1, x + w - 1, y + 31);
-        KitDraw.caps(g, font, big, x + 6, y + 6, KitDraw.BRIGHT, 1.3f);
+        // a long cause ("Slain by Zombie") shrinks to fit its box instead of running off it
+        float scale = Math.min(1.3f, (w - 12) / Math.max(1f, KitDraw.capsWidth(font, big, 1f)));
+        KitDraw.caps(g, font, big, x + 6, y + 6 + Math.round((1.3f - scale) * 4), KitDraw.BRIGHT, scale);
         KitDraw.caps(g, font, small, x + 6, y + 21, KitDraw.DIM, 0.6f);
         g.disableScissor();
     }
