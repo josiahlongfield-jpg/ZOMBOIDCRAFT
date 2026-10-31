@@ -85,6 +85,26 @@ public final class ZcConfig {
     /** Handheld radios that carry players' voices (through the voice chat mod), and the comms headset. */
     public Radio radio = new Radio();
     public Broadcast broadcast = new Broadcast();
+    public Power power = new Power();
+
+    /** Mains power (power/PowerGrid): Zomboid's Electricity Shutoff, cut district by district. */
+    public static class Power {
+        /**
+         * Zomboid's ElecShutModifier: the day the mains go off, each district at its own hour that day.
+         * -1 is off from the start.
+         */
+        public int shutoffDays = 14;
+        /** The mains never go off (Josiah's always-on toggle). */
+        public boolean alwaysOn = false;
+        /** Zomboid's GeneratorFuelConsumption: litres a generator burns an in-game hour. */
+        public double generatorFuel = 0.1;
+        /** Zomboid's GeneratorTileRange: how far round a generator it powers, in blocks. */
+        public int generatorRange = 20;
+        /** Zomboid's GeneratorVerticalPowerRange: how many floors above and below it powers (5 blocks a floor). */
+        public int generatorFloors = 3;
+        /** Zomboid's AllowExteriorGenerator: generators power spots out in the open too (gas pumps). */
+        public boolean generatorExterior = true;
+    }
     /** How good each found weapon is: its tier, where its stats land inside the model's range, and flaws. */
     public WeaponRolls rolls = new WeaponRolls();
     /** What it takes to dig down and knock walls through, so nobody tunnels under the whole map (building/DigRules). */

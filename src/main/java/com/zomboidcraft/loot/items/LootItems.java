@@ -34,6 +34,7 @@ public final class LootItems {
         Spoil.register();
         LightItem.register();
         InfoItem.register();
+        FieldGearItem.register();
         for (LootSpec spec : LootSpecs.ALL) {
             BY_ID.put(spec.id(), spec);
         }
@@ -56,6 +57,9 @@ public final class LootItems {
         CreativeModeTabEvents.modifyOutputEvent(tools).register(output -> OTHER_TAB.forEach(output::accept));
     }
 
+    /** Looked through like a spyglass: binoculars and the periscope. */
+    private static final java.util.Set<String> SCOPES = java.util.Set.of("binoculars", "military_binoculars", "periscope");
+
     private static void item(LootSpec spec) {
         ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, ZomboidCraft.id(spec.id()));
         Item.Properties props = new Item.Properties().stacksTo(spec.stack()).setId(key);
@@ -73,6 +77,20 @@ public final class LootItems {
         } else if (com.zomboidcraft.survival.MedSpecs.has(spec.id())) {
             com.zomboidcraft.survival.MedSpecs.Med med = com.zomboidcraft.survival.MedSpecs.spec(spec.id());
             item = new com.zomboidcraft.survival.MedicalItem(med.uses() > 0 ? props.durability(med.uses()) : props, spec.id());
+        } else if (spec.id().equals("field_radio")) {
+            item = new com.zomboidcraft.gear.RadioItem(com.zomboidcraft.gear.RadioItem.Type.FIELD, props.stacksTo(1));
+        } else if (spec.id().equals("topo_map_set")) {
+            item = new com.zomboidcraft.world.map.PaperMapItem(com.zomboidcraft.world.map.PaperMaps.Kind.TOPO, props);
+        } else if (spec.id().equals("radio_battery_pack")) {
+            item = new com.zomboidcraft.gear.BatteryItem(props);
+        } else if (SCOPES.contains(spec.id())) {
+            item = new net.minecraft.world.item.SpyglassItem(props.stacksTo(1));
+        } else if (FieldGearItem.KINDS.containsKey(spec.id())) {
+            item = new FieldGearItem(props, FieldGearItem.KINDS.get(spec.id()));
+        } else if (com.zomboidcraft.power.Generators.Kind.of(spec.id()) != null) {
+            item = new com.zomboidcraft.power.GeneratorItem(props, com.zomboidcraft.power.Generators.Kind.of(spec.id()));
+        } else if (MagazineItem.TEACHES.containsKey(spec.id())) {
+            item = new MagazineItem(props);
         } else if (spec.id().equals("gas_can")) {
             item = new GasCanItem(props);
         } else if (LeisureItem.FUN.containsKey(spec.id())) {

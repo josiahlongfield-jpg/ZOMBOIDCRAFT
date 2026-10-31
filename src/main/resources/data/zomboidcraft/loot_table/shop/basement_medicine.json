@@ -691,6 +691,61 @@
               }
             }
           ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:field_wire_spool",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:tripwire_flare",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:folding_cot",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:angle_flashlight",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:radio_battery_pack",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:water_bladder",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:ration_heater",
+          "weight": 2
         }
       ]
     },
@@ -775,6 +830,26 @@
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:cbrn_mask",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:cbrn_suit",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:arctic_parka",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:arctic_boots",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:gas_mask",
           "weight": 1
         },
@@ -801,6 +876,31 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:field_rations_case",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:field_radio",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:quiet_generator",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:codebook",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:bunker_blueprints",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:launch_keys",
           "weight": 1
         }
       ]

@@ -424,6 +424,36 @@
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:watch_cap",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:cut_resistant_gloves",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:hard_hat",
           "weight": 4,
           "functions": [
@@ -535,6 +565,26 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:sound_powered_phone",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:unit_patch_set",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:blast_wall_bag",
           "weight": 2
         },
         {
@@ -706,6 +756,16 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:binoculars",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:chainmail_butcher_glove",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:chainmail_sleeve",
           "weight": 1
         },
         {
