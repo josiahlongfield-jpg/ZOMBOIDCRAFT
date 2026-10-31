@@ -114,14 +114,14 @@ final class LandmarkSite extends Site {
         if (variant("substations")) {
             // the substations' preview yard (SitePreview landmark substations 150 60): a city yard, a town yard, a hamlet's
             Placer q = lot(0, 0, w, d, 0);
-            new Substation(q, rng, PowerGrid.byId("midtown"), 0.5).build(60, 58);
-            new Substation(q.shifted(64, 0, 0), rng, PowerGrid.byId("millbrook"), 0.5).build(44, 38);
-            new Substation(q.shifted(112, 0, 0), rng, PowerGrid.byId("dunmore"), 0.5).build(28, 22);
+            new Substation(q, rng, Districts.byId("midtown"), 0.5).build(60, 58);
+            new Substation(q.shifted(64, 0, 0), rng, Districts.byId("millbrook"), 0.5).build(44, 38);
+            new Substation(q.shifted(112, 0, 0), rng, Districts.byId("dunmore"), 0.5).build(28, 22);
             return;
         }
         if (variant("substation")) {
-            // a city district's substation (PowerGrid): the full yard on its block
-            new Substation(lot(0, 0, w, d, 0), rng, PowerGrid.district(null, p.centreX(), p.centreZ()), chance() * 0.6 + 0.2).build(w, d);
+            // a city district's substation (Districts): the full yard on its block
+            new Substation(lot(0, 0, w, d, 0), rng, Districts.district(null, p.centreX(), p.centreZ()), chance() * 0.6 + 0.2).build(w, d);
             return;
         }
         if (variant("scrapyard")) {

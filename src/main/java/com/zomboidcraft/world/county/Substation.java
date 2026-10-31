@@ -4,7 +4,7 @@ import com.zomboidcraft.world.city.Placer;
 import java.util.SplittableRandom;
 
 /**
- * A power district's substation ({@link PowerGrid}), after refs/power: the city yards like the 230 kV switchyard
+ * A power district's substation ({@link Districts}), after refs/power: the city yards like the 230 kV switchyard
  * by its control house (lattice gantries over the transformers and breakers, chain-link and razor wire, the pale
  * control house with its vents on the roof), the town yards smaller with the brick kiosk and its green double
  * doors, the hamlets an H-pole with the transformer on its platform over a kiosk on a fenced pad.
@@ -17,11 +17,11 @@ import java.util.SplittableRandom;
 final class Substation {
     private final Placer q;
     private final SplittableRandom rng;
-    private final PowerGrid.District district;
+    private final Districts.District district;
     /** How hard the end hit the yard (0..1): breaches in the fence, scorch, weeds. */
     private final double hit;
 
-    Substation(Placer q, SplittableRandom rng, PowerGrid.District district, double hit) {
+    Substation(Placer q, SplittableRandom rng, Districts.District district, double hit) {
         this.q = q;
         this.rng = rng;
         this.district = district;
