@@ -52,7 +52,7 @@ final class Jams {
     }
 
     /** The first (or last) distance along r at which its line passes within the box, or -1 if it never does. */
-    private static double along(Road r, int x0, int z0, int x1, int z1, boolean first) {
+    static double along(Road r, int x0, int z0, int x1, int z1, boolean first) {
         double found = -1;
         for (int i = 0; i < r.xs.length; i++) {
             if (r.xs[i] >= x0 - Road.STEP && r.xs[i] <= x1 + Road.STEP && r.zs[i] >= z0 - Road.STEP && r.zs[i] <= z1 + Road.STEP) {
@@ -65,10 +65,15 @@ final class Jams {
         return found < 0 ? -1 : found + Road.STEP;
     }
 
-    private static void stretch(County county, Road r, int w, double length, int bx, int bz, Out out) {
+    /** A stretch's jam as rolled: how long, where its tail end starts, and the roll's dice for the rest. */
+    private record Roll(double jam, double head, SplittableRandom rng) {
+    }
+
+    /** Stretch w of r's jam, or null when it rolled none. */
+    private static Roll roll(County county, Road r, int w, double length) {
         double a0 = w * STRETCH, a1 = Math.min(length, a0 + STRETCH);
         if (a1 - a0 < 40) {
-            return;
+            return null;
         }
         SplittableRandom rng = new SplittableRandom(Noise.hash(r.seed ^ 0x7A3L, w, 911));
         double fromEnd = Math.min((a0 + a1) / 2, length - (a0 + a1) / 2);
@@ -81,10 +86,38 @@ final class Jams {
             chance = Math.max(chance, 0.55);
         }
         if (rng.nextDouble() >= chance) {
-            return;
+            return null;
         }
         double jam = 22 + rng.nextDouble() * (bridge ? 60 : 44);
         double head = a0 + 6 + rng.nextDouble() * Math.max(1, a1 - a0 - jam - 12);
+        return new Roll(jam, head, rng);
+    }
+
+    /**
+     * Whether a jam lies on r anywhere between a0 and a1 along it (with a car's length to spare), so the road
+     * stories ({@link RoadStories}) keep clear of them.
+     */
+    static boolean jammed(County county, Road r, double a0, double a1) {
+        if (r.kind == Road.Kind.TRACK || r.xs.length < 2) {
+            return false;
+        }
+        double length = (r.xs.length - 1) * (double) Road.STEP;
+        for (int w = (int) Math.floor(Math.max(0, a0) / STRETCH); w <= (int) Math.floor(Math.max(0, a1) / STRETCH); w++) {
+            Roll roll = roll(county, r, w, length);
+            if (roll != null && roll.head - 10 < a1 && roll.head + roll.jam + 10 > a0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static void stretch(County county, Road r, int w, double length, int bx, int bz, Out out) {
+        Roll roll = roll(county, r, w, length);
+        if (roll == null) {
+            return;
+        }
+        SplittableRandom rng = roll.rng;
+        double jam = roll.jam, head = roll.head;
         // which way the queue was headed: mostly away from the nearer town, the way out (forward: along the road)
         boolean forward = (head < length / 2) == rng.nextDouble() < 0.8;
         double[] lanes = r.kind == Road.Kind.HIGHWAY ? new double[] {1.75, 5.25} : new double[] {2};
@@ -156,7 +189,7 @@ final class Jams {
     }
 
     /** {x, z, dx, dz} at distance s along r, or null off its ends. */
-    private static double[] point(Road r, double s) {
+    static double[] point(Road r, double s) {
         if (s < 0) {
             return null;
         }
@@ -173,7 +206,7 @@ final class Jams {
     }
 
     /** Whether the road crosses water or a gully on a bridge somewhere in [a0, a1] (as CountyGen decides it). */
-    private static boolean bridged(County county, Road r, double a0, double a1) {
+    static boolean bridged(County county, Road r, double a0, double a1) {
         for (double s = a0; s < a1; s += 16) {
             double[] q = point(r, s);
             if (q == null) {

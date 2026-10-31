@@ -531,6 +531,12 @@ def vehicles(meta, pal, out, grow):
     index = zcar.models()
     cache, made = {}, {}
     for e in meta.get("cars", []):
+        # VEHICLES' poses ("@wrecked^roof", "^side"): the car turned over about its long axis
+        pose = None
+        if len(e) > 6 and e[6] and "^" in e[6]:
+            head, rest = e[6].split("^", 1)
+            pose = rest.split("#")[0]
+            e = list(e[:6]) + [head + ("#" + rest.split("#", 1)[1] if "#" in rest else "")]
         mid, state = zcar.pick(e, index)
         if mid is None:
             continue
@@ -539,7 +545,17 @@ def vehicles(meta, pal, out, grow):
         v = cache[mid].get(state) or cache[mid]["usable"]
         ox, _, oz = meta.get("origin", [0, 0, 0])
         oy = 0  # blocks keep the dump's own y (see the block corners below), so the cars do too
-        W = zcar.place(v["T"], e[0] + ox, e[1] + oy, e[2] + oz, e[3]) * 16
+        T = v["T"]
+        if pose in ("roof", "side"):
+            T = T.copy()
+            y0, y1 = T[..., 1].min(), T[..., 1].max()
+            x0, x1 = T[..., 0].min(), T[..., 0].max()
+            if pose == "roof":
+                T[..., 0], T[..., 1] = -T[..., 0], y0 + y1 - T[..., 1]
+            else:
+                X, Y = T[..., 0].copy(), T[..., 1].copy()
+                T[..., 0], T[..., 1] = Y - (y0 + y1) / 2, x1 - X
+        W = zcar.place(T, e[0] + ox, e[1] + oy, e[2] + oz, e[3]) * 16
         for glass in (False, True):
             sel = v["glass"] == glass
             if not sel.any():
