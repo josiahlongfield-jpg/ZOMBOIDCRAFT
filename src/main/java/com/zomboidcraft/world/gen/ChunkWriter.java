@@ -126,6 +126,11 @@ public final class ChunkWriter implements ChunkSink {
             FarmHerds.add(chunk, x, y, z, yaw, models);
             return;
         }
+        if (models.startsWith("!body:") || models.startsWith("!walkers:")) {
+            // a road story's dead and its walkers, kept on the chunk until someone comes near (StoryMarks)
+            StoryMarks.add(chunk, x, y, z, yaw, models);
+            return;
+        }
         if (models.startsWith("!tool:")) {
             ShopTool.Kind kind = ShopTool.Kind.of(models.substring(6));
             ShopTool tool = kind == null || !(chunk instanceof ProtoChunk) ? null : Cars.TOOL.create(region.getLevel(), EntitySpawnReason.STRUCTURE);

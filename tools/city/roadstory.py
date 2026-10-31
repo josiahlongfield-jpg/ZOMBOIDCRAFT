@@ -39,7 +39,7 @@ N = P.N
 HERE = Path(__file__).parent
 SANS = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
 ORANGE, WHITE, BLACK, YELLOW = (232, 110, 20), (238, 238, 232), (22, 22, 22), (240, 200, 30)
-STEEL, GALV, RUST, BARK = "painted_steel", "st_galv", "rust", "tree_dead_bark"
+STEEL, GALV, RUST, BARK = "painted_steel", "st_galv", "rust", "tree_oak_bark"
 
 
 # ---------------------------------------------------------------- textures
@@ -272,9 +272,9 @@ def debris():
 
 
 def trunk(crown):
-    """The felled trunk along z: a round log of dead bark; the crown end with its limbs reaching out
-    and up, the twigs dead (refs/stories/road/bandit-road)."""
-    bark = {"side": BARK, "up": BARK, "down": BARK, "north": "tree_dead_rings", "south": "tree_dead_rings"}
+    """The felled trunk along z: a round oak log cut through at the butt; the crown end with its
+    limbs reaching out and up, still in leaf (refs/stories/road/bandit-road)."""
+    bark = {"side": BARK, "up": BARK, "down": BARK, "north": "tree_oak_rings", "south": "tree_oak_rings"}
     b = []
     zr = (0, 16) if not crown else (8, 16)
     for y0, y1, x0, x1 in disc_strips(5.5, 8, 5.5):
@@ -283,7 +283,7 @@ def trunk(crown):
         b += [[6.5, 2, 0, 8.5, 4, 9, BARK, None, turn("y", -22.5, (7.5, 3, 8))],
               [8, 4, 1, 9.5, 5.5, 9, BARK, None, turn("x", 22.5, (8.7, 4.7, 8))],
               [2, 6, 2, 4, 7.5, 10, BARK, None, turn("y", 22.5, (3, 6.7, 8))],
-              [0, 0, 0, 16, 12, 6, "tree_dead_leaves"], [10, 5, 2, 16, 14, 9, "tree_dead_leaves"]]
+              [0, 0, 0, 16, 12, 6, "tree_oak_leaves"], [10, 5, 2, 16, 14, 9, "tree_oak_leaves"]]
     else:
         b += [[10.5, 9, 4, 12, 13, 5.5, BARK, None, turn("z", -22.5, (11.2, 9, 4.7))]]   # a snapped limb
     return b

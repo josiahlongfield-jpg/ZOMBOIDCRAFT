@@ -21,7 +21,7 @@ import java.util.function.DoubleSupplier;
  * box tagged loot=story_&lt;name&gt; for LOOT's tables, and the bodies and the walkers the chunk writer leaves
  * for world.gen.StoryMarks to lay ("!body:outfit;limbs;pose", "!walkers:outfit;count;radius").
  */
-final class RoadStories {
+public final class RoadStories {
     /** The length of road each story roll covers. */
     static final double STRETCH = 256;
     /** A stretch's chance of a story at "sometimes"; the other settings scale it. */
@@ -35,8 +35,13 @@ final class RoadStories {
      */
     static volatile DoubleSupplier rate = () -> Double.parseDouble(System.getProperty("stories.rate", "0.5"));
 
+    /** Hands the generator the world's chance (world.gen.StoryMarks, from the sandbox). */
+    public static void setRate(DoubleSupplier supplier) {
+        rate = supplier;
+    }
+
     /** Zomboid's sandbox choice as a {@link #rate}. */
-    static double rate(String choice) {
+    public static double rate(String choice) {
         if (choice == null) {
             return 0.5;
         }
@@ -564,7 +569,8 @@ final class RoadStories {
             double edge = lane - 2;     // the line between the lanes, where the cones stood
             block(-22, half + 1.5, "rv_sign_work", BACK);
             for (int k = 0; k <= 4; k++) {
-                block(-14 + k * 2, half - (half - edge) * k / 4.0, chance(0.12) ? "hw_drum_down" : "hw_drum", chance(0.12) ? any(4) : NONE);
+                boolean down = chance(0.12);    // one knocked over
+                block(-14 + k * 2, half - (half - edge) * k / 4.0, down ? "hw_drum_down" : "hw_drum", down ? any(4) : NONE);
             }
             for (double s = -5; s <= 16; s += 3) {
                 block(s, edge, "st_cone");
