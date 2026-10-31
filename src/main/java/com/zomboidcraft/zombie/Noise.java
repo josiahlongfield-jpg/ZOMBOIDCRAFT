@@ -54,11 +54,18 @@ public final class Noise {
         com.zomboidcraft.creature.HarvestmanDirector.noise(level, pos, radius);
         // the dead still waiting as records in earshot come out to it too
         com.zomboidcraft.zombie.population.Population.wake(level, pos, radius);
-        double radiusSqr = radius * radius;
-        for (Zombie zombie : level.getEntitiesOfClass(Zombie.class, new AABB(pos, pos).inflate(radius))) {
-            if (ZombieTypes.isWalker(zombie) && zombie.getTarget() == null
-                    && zombie.position().distanceToSqr(pos) <= radiusSqr) {
-                ((NoiseListener) zombie).zomboidcraft$hear(pos);
+        // each hears as its lore rolled (zombieLore hearing): keen ones half as far again, poor ones 60%, and the
+        // less keen walk to somewhere near the sound rather than the spot itself
+        for (Zombie zombie : level.getEntitiesOfClass(Zombie.class, new AABB(pos, pos).inflate(radius * 1.5))) {
+            if (!ZombieTypes.isWalker(zombie) || zombie.getTarget() != null) {
+                continue;
+            }
+            double reach = radius * Lore.hearing(zombie);
+            if (zombie.position().distanceToSqr(pos) <= reach * reach) {
+                double spread = Lore.hearingSpread(zombie);
+                Vec3 heard = spread <= 0 ? pos : pos.add((zombie.getRandom().nextDouble() * 2 - 1) * spread, 0,
+                        (zombie.getRandom().nextDouble() * 2 - 1) * spread);
+                ((NoiseListener) zombie).zomboidcraft$hear(heard);
             }
         }
     }

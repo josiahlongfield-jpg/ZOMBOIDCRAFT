@@ -44,7 +44,8 @@ public abstract class LivingEntityMixin {
     @ModifyVariable(method = "hurtServer", at = @At("HEAD"), argsOnly = true)
     private float zomboidcraft$weaponSkill(float amount, ServerLevel level, DamageSource source) {
         LivingEntity self = (LivingEntity) (Object) this;
-        return Dismember.onlyTheHead(self, source, Combat.modifyDamage(self, source, CombatEvents.meleeDamage(self, source, amount)));
+        float dealt = Combat.modifyDamage(self, source, CombatEvents.meleeDamage(self, source, amount));
+        return Dismember.onlyTheHead(self, source, com.zomboidcraft.zombie.ZombieArmor.apply(self, source, dealt));
     }
 
     /** A blade cuts a zombie without knocking it back; only blunt blows do (CombatEvents.cutJustNow). */

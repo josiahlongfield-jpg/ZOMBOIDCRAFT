@@ -69,7 +69,26 @@ public final class Population {
     public static final AttachmentType<List<Long>> CLEAR = AttachmentRegistry.create(ZomboidCraft.id("clear_zones"),
             builder -> builder.persistent(Codec.LONG.listOf()).initializer(List::of));
     /** How far round a waking spot is kept clear: across the building, and a few floors up and down. */
-    private static final int CLEAR_REACH = 14, CLEAR_BELOW = 4, CLEAR_ABOVE = 10;
+    /**
+     * How much round a chosen spawn stays clear, by Zomboid's Player Spawn Area (zombieLore.spawnArea): the building
+     * and round it 14 blocks out and two floors up, the building alone 8, the room 4 on its own floor, or nothing.
+     */
+    private static int clearReach() {
+        return switch (ZcConfig.get().zombieLore.spawnArea) {
+            case INSIDE_THE_BUILDING_AND_AROUND_IT -> 14;
+            case INSIDE_THE_BUILDING -> 8;
+            case INSIDE_THE_ROOM -> 4;
+            case NONE -> 0;
+        };
+    }
+
+    private static int clearBelow() {
+        return ZcConfig.get().zombieLore.spawnArea == ZcConfig.ZombieLore.SpawnArea.INSIDE_THE_ROOM ? 1 : 4;
+    }
+
+    private static int clearAbove() {
+        return ZcConfig.get().zombieLore.spawnArea == ZcConfig.ZombieLore.SpawnArea.INSIDE_THE_ROOM ? 3 : 10;
+    }
 
     private static final int SURVEY_EVERY = 10;
     /** Chunks at least this far round a player (in chunks) get their dead; further when the crowd reaches further. */
@@ -268,6 +287,9 @@ public final class Population {
      * chunks given their dead later leave it out. Used where a survivor wakes up.
      */
     public static void keepClear(ServerLevel level, BlockPos pos) {
+        if (clearReach() <= 0) {
+            return;
+        }
         List<Long> zones = new ArrayList<>(level.getAttachedOrElse(CLEAR, List.of()));
         zones.add(pos.asLong());
         while (zones.size() > 256) {
@@ -275,8 +297,8 @@ public final class Population {
         }
         level.setAttached(CLEAR, List.copyOf(zones));
         List<BlockPos> one = List.of(pos);
-        for (int cx = (pos.getX() - CLEAR_REACH) >> 4; cx <= (pos.getX() + CLEAR_REACH) >> 4; cx++) {
-            for (int cz = (pos.getZ() - CLEAR_REACH) >> 4; cz <= (pos.getZ() + CLEAR_REACH) >> 4; cz++) {
+        for (int cx = (pos.getX() - clearReach()) >> 4; cx <= (pos.getX() + clearReach()) >> 4; cx++) {
+            for (int cz = (pos.getZ() - clearReach()) >> 4; cz <= (pos.getZ() + clearReach()) >> 4; cz++) {
                 LevelChunk chunk = level.getChunkSource().getChunkNow(cx, cz);
                 Pop pop = chunk == null ? null : chunk.getAttached(POP);
                 if (pop == null) {
@@ -289,8 +311,8 @@ public final class Population {
                 }
             }
         }
-        net.minecraft.world.phys.AABB box = new net.minecraft.world.phys.AABB(pos).inflate(CLEAR_REACH, (CLEAR_ABOVE + CLEAR_BELOW) / 2.0, CLEAR_REACH)
-                .move(0, (CLEAR_ABOVE - CLEAR_BELOW) / 2.0, 0);
+        net.minecraft.world.phys.AABB box = new net.minecraft.world.phys.AABB(pos).inflate(clearReach(), (clearAbove() + clearBelow()) / 2.0, clearReach())
+                .move(0, (clearAbove() - clearBelow()) / 2.0, 0);
         for (Zombie zombie : level.getEntitiesOfClass(Zombie.class, box)) {
             zombie.discard();
         }
@@ -304,8 +326,8 @@ public final class Population {
         List<BlockPos> near = new ArrayList<>();
         for (long l : zones) {
             BlockPos p = BlockPos.of(l);
-            if (p.getX() + CLEAR_REACH >= bx && p.getX() - CLEAR_REACH <= bx + 15 && p.getZ() + CLEAR_REACH >= bz
-                    && p.getZ() - CLEAR_REACH <= bz + 15) {
+            if (p.getX() + clearReach() >= bx && p.getX() - clearReach() <= bx + 15 && p.getZ() + clearReach() >= bz
+                    && p.getZ() - clearReach() <= bz + 15) {
                 near.add(p);
             }
         }
@@ -315,7 +337,7 @@ public final class Population {
     private static boolean cleared(List<BlockPos> zones, int x, int y, int z) {
         for (BlockPos p : zones) {
             int dx = x - p.getX(), dz = z - p.getZ(), dy = y - p.getY();
-            if (dx * dx + dz * dz <= CLEAR_REACH * CLEAR_REACH && dy >= -CLEAR_BELOW && dy <= CLEAR_ABOVE) {
+            if (dx * dx + dz * dz <= clearReach() * clearReach() && dy >= -clearBelow() && dy <= clearAbove()) {
                 return true;
             }
         }

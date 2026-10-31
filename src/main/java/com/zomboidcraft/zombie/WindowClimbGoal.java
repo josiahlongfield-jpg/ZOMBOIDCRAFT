@@ -234,6 +234,9 @@ public class WindowClimbGoal extends Goal {
                 float u = Math.min(time(), ClimbPath.END);
                 Vec3 end = Acts.climbPlace(act, u < 3.5f ? ClimbPath.START : ClimbPath.END);
                 zombie.setPos(u >= ClimbPath.END ? Acts.climbPlace(act, ClimbPath.END) : end);
+                if (u >= ClimbPath.END) {
+                    com.zomboidcraft.combat.Grabs.lungeAfterClimb(zombie);     // in, and at you if you're close
+                }
             }
             Map<Long, Zombie> claims = CLAIMS.get(zombie.level());
             if (claims != null) {

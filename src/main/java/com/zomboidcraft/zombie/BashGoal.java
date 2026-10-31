@@ -31,9 +31,18 @@ public class BashGoal extends Goal {
     private static final java.util.Map<net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level>,
             java.util.Map<Long, long[]>> DENTS = new java.util.HashMap<>();
 
+    /** A tall fence's panel falls once a crowd of at least zombieLore.fenceThumpersRequired leans on it for this many blows. */
+    private static final int FENCE_BLOWS = 600;
+    /** A zombie counts as leaning on a fence for this long after its last blow (ticks). */
+    private static final int FENCE_CROWD_TICKS = 40;
+    /** Who's been at each fence panel lately: zombie id to the tick of its last blow. */
+    private static final java.util.Map<Long, java.util.Map<Integer, Long>> FENCE_CROWDS = new java.util.HashMap<>();
+
     private final Zombie zombie;
     private BlockPos block;
-    private boolean door, glass;
+    private boolean door, glass, fence;
+    /** Not after anyone, just thumping what it walked into (zombieLore environmentalAttacks); it gives up after a while. */
+    private boolean idle;
     private int ticks, hits;
 
     public BashGoal(Zombie zombie) {
@@ -50,7 +59,25 @@ public class BashGoal extends Goal {
     }
 
     private boolean blocking(BlockState state) {
-        return glass ? isWindow(state) : door ? isShutDoor(state) : bashable(state);
+        return glass ? isWindow(state) : fence ? isFence(state) : door ? isShutDoor(state) : bashable(state);
+    }
+
+    /**
+     * A fence a zombie can't get over: chain-link, iron railings, board and picket fences, vanilla fences and bars
+     * (not glass panes). Every one of them stands too tall for the dead to climb, so all count as Zomboid's tall
+     * fences: a crowd big enough knocks a panel down.
+     */
+    public static boolean isFence(BlockState state) {
+        net.minecraft.world.level.block.Block b = state.getBlock();
+        if (b instanceof net.minecraft.world.level.block.FenceBlock) {
+            return true;
+        }
+        if (b instanceof net.minecraft.world.level.block.IronBarsBlock) {
+            return state.getSoundType() != SoundType.GLASS;
+        }
+        String n = blockPath(state);
+        return n.equals("chainlink") || n.equals("cv_iron_fence") || n.equals("fence_boards") || n.equals("rw_fence")
+                || n.equals("sb_fence") || n.equals("barbed_wire") || n.equals("om_wire_wall");
     }
 
     /** Glass in a window or a shop front (not a lamp), or a broken one with shards still in: it gives under enough blows. */
@@ -125,15 +152,46 @@ public class BashGoal extends Goal {
     @Override
     public boolean canUse() {
         ZcConfig.Zombies config = ZcConfig.get().zombies;
-        if (zombie.tickCount % 10 != 0 || !config.bashBarricades && !config.bashDoors || goal() == null) {
+        if (zombie.tickCount % 10 != 0 || !config.bashBarricades && !config.bashDoors) {
             return false;
         }
-        return find(config);
+        idle = goal() == null;
+        if (idle && !(ZcConfig.get().zombieLore.environmentalAttacks && zombie.getRandom().nextInt(6) == 0)) {
+            return false;
+        }
+        if (!find(config)) {
+            return false;
+        }
+        if (door && !glass && !fence && !idle && Lore.opensDoors(zombie) && openDoor()) {
+            return false;       // it let itself in
+        }
+        return true;
+    }
+
+    /**
+     * Zomboid's "navigate and use doors": a door anyone could open by hand, it opens. Locked ones (iron, the
+     * vault and cell doors that need power or a key) it still has to break.
+     */
+    private boolean openDoor() {
+        BlockState state = zombie.level().getBlockState(block);
+        if (!(state.getBlock() instanceof DoorBlock d) || !d.type().canOpenByHand()) {
+            return false;
+        }
+        d.setOpen(zombie, zombie.level(), state, block, true);
+        return true;
     }
 
     @Override
     public boolean canContinueToUse() {
-        return goal() != null && blocking(zombie.level().getBlockState(block))
+        if (idle) {
+            // a thump or a few dozen and it drifts off, unless something gives it a reason to keep at it
+            if (goal() == null && hits >= 3 + Math.floorMod(zombie.getId(), 40)) {
+                return false;
+            }
+        } else if (goal() == null) {
+            return false;
+        }
+        return blocking(zombie.level().getBlockState(block))
                 && zombie.position().distanceToSqr(Vec3.atCenterOf(block)) < 6.25;
     }
 
@@ -173,7 +231,9 @@ public class BashGoal extends Goal {
         Noise.emit(level, center, BANG_NOISE);
         hits++;
         Acts.blow(zombie, block, glass);
-        if (door) {
+        if (fence) {
+            hitFence(level, state);
+        } else if (door) {
             hitDoor(level, state);
         } else {
             hitBarricade(level, state);
@@ -218,6 +278,52 @@ public class BashGoal extends Goal {
             return;
         }
         level.destroyBlockProgress(at.hashCode(), block, (int) Math.min(9, dent[0] * 10 / needed));
+    }
+
+    /**
+     * A blow on a tall fence. One zombie or a handful only rattle it; Zomboid's rule is a crowd, so the blows add up
+     * on the panel only while at least zombieLore.fenceThumpersRequired zombies have been at it in the last two
+     * seconds, faster the bigger the crowd. Then the panel goes, and the posts and wire above it.
+     */
+    private void hitFence(ServerLevel level, BlockState state) {
+        ZcConfig.ZombieLore lore = ZcConfig.get().zombieLore;
+        if (lore.fenceThumpersRequired < 0) {
+            return;
+        }
+        long now = level.getGameTime();
+        java.util.Map<Integer, Long> crowd = FENCE_CROWDS.computeIfAbsent(block.asLong(), k -> new java.util.HashMap<>());
+        crowd.put(zombie.getId(), now);
+        crowd.values().removeIf(at -> now - at > FENCE_CROWD_TICKS);
+        if (FENCE_CROWDS.size() > 1024) {
+            FENCE_CROWDS.values().removeIf(c -> c.values().stream().allMatch(at -> now - at > FENCE_CROWD_TICKS));
+        }
+        if (crowd.size() < Math.max(1, lore.fenceThumpersRequired)) {
+            return;
+        }
+        java.util.Map<Long, long[]> dents = DENTS.computeIfAbsent(level.dimension(), k -> new java.util.HashMap<>());
+        long[] dent = dents.computeIfAbsent(block.asLong(), k -> new long[2]);
+        if (now - dent[1] > DENT_KEPT) {
+            dent[0] = 0;
+        }
+        dent[0] += Math.max(1, Math.round(lore.fenceDamageMultiplier * 10));   // tenths of a blow
+        dent[1] = now;
+        if (dent[0] >= FENCE_BLOWS * 10L) {
+            dents.remove(block.asLong());
+            FENCE_CROWDS.remove(block.asLong());
+            // the panel and whatever of the fence stands over it
+            BlockPos at = block;
+            while (isFence(level.getBlockState(at.below()))) {
+                at = at.below();
+            }
+            for (int i = 0; i < 4 && isFence(level.getBlockState(at)); i++, at = at.above()) {
+                level.destroyBlock(at, false);
+            }
+            level.playSound(null, block, SoundEvents.ZOMBIE_ATTACK_IRON_DOOR, SoundSource.HOSTILE, 1.4f, 0.6f);
+            level.playSound(null, block, SoundEvents.ZOMBIE_BREAK_WOODEN_DOOR, SoundSource.HOSTILE, 1f, 0.7f);
+            Noise.emit(level, Vec3.atCenterOf(block), BANG_NOISE * 2);
+            return;
+        }
+        level.destroyBlockProgress(block.hashCode(), block, (int) Math.min(9, dent[0] / (FENCE_BLOWS * 1L)));
     }
 
     /**
@@ -266,18 +372,27 @@ public class BashGoal extends Goal {
         Vec3 here = zombie.position();
         Vec3 goal = goal();
         BlockPos best = null;
-        boolean bestDoor = false, bestGlass = false;
+        boolean bestDoor = false, bestGlass = false, bestFence = false;
         double bestDist = Double.MAX_VALUE;
+        boolean construction = ZcConfig.get().zombieLore.damageConstruction;
+        boolean fences = ZcConfig.get().zombieLore.fenceThumpersRequired >= 0 && !idle;
         for (BlockPos pos : BlockPos.betweenClosed(feet.offset(-1, 0, -1), feet.offset(1, 1, 1))) {
             BlockState state = zombie.level().getBlockState(pos);
-            boolean isDoor, isGlass = false;
-            if (config.bashBarricades && bashable(state)) {
+            boolean isDoor, isGlass = false, isFence = false;
+            if (config.bashBarricades && construction && bashable(state)) {
                 isDoor = false;
-            } else if (config.bashDoors && (isShutDoor(state) || (isGlass = isWindow(state)))) {
-                Vec3 toDoor = Vec3.atCenterOf(pos).subtract(here);
-                Vec3 toGoal = goal.subtract(here);
-                if (toDoor.dot(toGoal) <= 0 || toGoal.lengthSqr() < toDoor.lengthSqr()) {
-                    continue;  // behind it, or it's already this side of the door
+            } else if (config.bashDoors && (isShutDoor(state) || (isGlass = isWindow(state))
+                    || fences && (isFence = isFence(state)))) {
+                if (goal != null) {
+                    Vec3 toDoor = Vec3.atCenterOf(pos).subtract(here);
+                    Vec3 toGoal = goal.subtract(here);
+                    if (toDoor.dot(toGoal) <= 0 || toGoal.lengthSqr() < toDoor.lengthSqr()) {
+                        continue;  // behind it, or it's already this side of the door
+                    }
+                }
+                if (isFence && !zombie.getNavigation().isDone() && zombie.getNavigation().getPath() != null
+                        && zombie.getNavigation().getPath().canReach()) {
+                    continue;      // it has a way round the fence: it takes it, as Zomboid's do
                 }
                 isDoor = true;
             } else {
@@ -290,11 +405,13 @@ public class BashGoal extends Goal {
                 best = pos.immutable();
                 bestDoor = isDoor;
                 bestGlass = isGlass;
+                bestFence = isFence;
             }
         }
         block = best;
         door = bestDoor;
         glass = bestGlass;
+        fence = bestFence;
         return best != null;
     }
 }
