@@ -205,11 +205,13 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
                 // one corner up on a trolley jack: that corner the full height, the far one still on the floor
                 CarModels.Model m = CarModels.get(state.model);
                 float h = state.jackLift, sx = state.jackCorner % 2 == 0 ? 1 : -1, sz = state.jackCorner < 2 ? 1 : -1;
-                float halfTrack = m == null ? 0.8f : m.size[0] * 0.4f;
-                float halfBase = m == null ? 1.4f : (m.wheelbase > 0.5f ? m.wheelbase : m.size[2] * 0.6f) / 2;
-                poseStack.translate(0, h / 2, 0);
+                // tipped about the middle of its own wheels, which needn't be the model's middle
+                float halfTrack = m == null ? 0.8f : Math.max(0.4f, Math.abs(m.wheel(state.jackCorner)[0]));
+                float halfBase = m == null ? 1.4f : Math.max(0.5f, m.halfBase()), mid = m == null ? 0 : m.axleMid();
+                poseStack.translate(0, h / 2, mid);
                 poseStack.rotateDegrees(Axis.XP, (float) -Math.toDegrees(Math.asin(Math.min(0.5f, h / 4 / halfBase))) * sz);
                 poseStack.rotateDegrees(Axis.ZP, (float) Math.toDegrees(Math.asin(Math.min(0.5f, h / 4 / halfTrack))) * sx);
+                poseStack.translate(0, 0, -mid);
             }
         }
         Turn[] lids = new Turn[car.lids().size()];

@@ -194,9 +194,10 @@ public class ShopTool extends Entity {
         Vec3 at = player.position().subtract(car.position()).yRot((float) Math.toRadians(car.getYRot()));
         int c = (at.z >= 0 ? 0 : 2) + (at.x >= 0 ? 0 : 1);
         float sx = c % 2 == 0 ? 1 : -1, sz = c < 2 ? 1 : -1;
-        float wb = m.wheelbase > 0.5f ? m.wheelbase : m.size[2] * 0.6f;
-        // the jacking point on the sill just inside the wheel; the jack lies across the car, handle out
-        Vec3 point = new Vec3(sx * (m.size[0] / 2 - 0.3), 0, sz * Math.max(0.5, wb / 2 - 0.55)).yRot((float) -Math.toRadians(car.getYRot()));
+        float[] w = m.wheel(c);
+        // the jacking point on the sill just inside that wheel, wherever this model's are; the jack lies across
+        // the car, handle out
+        Vec3 point = new Vec3(sx * Math.max(0.4, Math.abs(w[0]) - 0.05), 0, w[1] - sz * (w[2] + 0.2)).yRot((float) -Math.toRadians(car.getYRot()));
         Vec3 out = new Vec3(sx * 0.45, 0, 0).yRot((float) -Math.toRadians(car.getYRot()));
         Vec3 foot = car.position().add(point).add(out);
         snapTo(foot.x, car.getY(), foot.z, car.getYRot() + (sx > 0 ? 90 : -90), 0);

@@ -122,11 +122,11 @@ public class HoistFilmTest implements FabricClientGameTest {
             }
             use(sp, CarHoist.Use.CONTROL_DOWN);
             frames(ctx, 16, 2);
-            // 8. the shop tools: a jack rolled under the front left corner, the crane wheeled to the nose, the machines
+            // 8. the shop tools: a jack rolled under the front left wheel, the crane wheeled to the nose, the machines facing the bay
             tool(sp, ShopTool.Kind.JACK, -2.2, 1.0, 90);
             tool(sp, ShopTool.Kind.CRANE, 0, 5.2, 180);
-            tool(sp, ShopTool.Kind.TYRE_MACHINE, -6.5, 3.0, 90);
-            tool(sp, ShopTool.Kind.WASHER, -6.5, -2.0, 90);
+            tool(sp, ShopTool.Kind.TYRE_MACHINE, -6.5, 3.0, -90);
+            tool(sp, ShopTool.Kind.WASHER, -6.5, -2.0, -90);
             ctx.waitTicks(10);
             shot(sp, 1.9, 1.6, 1.6, 44, 25);
             work(sp, ShopTool.Kind.JACK);
@@ -136,9 +136,9 @@ public class HoistFilmTest implements FabricClientGameTest {
             work(sp, ShopTool.Kind.CRANE);
             shot(sp, 3.0, 1.8, 2.4, 59, 15);
             frames(ctx, 12, 2);
-            shot(sp, -4.6, 1.6, 3.6, 75, 30);
+            shot(sp, -4.6, 1.7, 3.0, 90, 23);
             frames(ctx, 8, 2);
-            shot(sp, -4.6, 1.6, -1.4, 75, 30);
+            shot(sp, -4.6, 1.7, -2.0, 90, 23);
             frames(ctx, 8, 2);
             shot(sp, 1.9, 1.6, 1.6, 44, 25);
             work(sp, ShopTool.Kind.JACK);
