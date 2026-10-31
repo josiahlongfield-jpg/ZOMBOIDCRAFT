@@ -105,7 +105,7 @@ public final class LightSwitch {
     }
 
     /** The columns of the room round a switch, at its height. */
-    static Set<BlockPos> room(ServerLevel level, BlockPos start) {
+    public static Set<BlockPos> room(ServerLevel level, BlockPos start) {
         Set<BlockPos> seen = new HashSet<>();
         ArrayDeque<BlockPos> queue = new ArrayDeque<>();
         seen.add(start);

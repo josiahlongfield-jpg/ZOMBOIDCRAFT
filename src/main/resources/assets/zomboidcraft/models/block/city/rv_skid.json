@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "rv_skid": "zomboidcraft:block/city/rv_skid",
+    "particle": "zomboidcraft:block/city/rv_skid"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        0.12,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rv_skid",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#rv_skid",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#rv_skid",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#rv_skid",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rv_skid"
+        },
+        "down": {
+          "texture": "#rv_skid",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

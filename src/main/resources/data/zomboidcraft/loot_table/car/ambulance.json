@@ -365,6 +365,26 @@
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:surgical_cap",
+          "weight": 12,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:paramedic_jacket",
+          "weight": 6
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:surgical_mask_worn",
           "weight": 4,
           "functions": [

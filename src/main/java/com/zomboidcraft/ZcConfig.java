@@ -86,6 +86,82 @@ public final class ZcConfig {
     public Radio radio = new Radio();
     public Broadcast broadcast = new Broadcast();
     public Power power = new Power();
+    public Stories stories = new Stories();
+    public Loot loot = new Loot();
+
+    /** Zomboid's Loot sandbox settings (loot/LootSettings), at its Apocalypse values unless Josiah chose otherwise. */
+    public static class Loot {
+        /** Per-category multipliers, 0 to 4: Zomboid's Food, Literature ... Tools. */
+        public double food = 0.8;
+        public double literature = 0.6;
+        public double skillBook = 0.6;
+        public double recipeResource = 0.6;
+        public double medical = 0.6;
+        public double survivalGears = 0.6;
+        public double cannedFood = 0.6;
+        public double weapon = 0.6;
+        public double rangedWeapon = 1.2;
+        public double ammo = 0.6;
+        public double mechanics = 0.6;
+        public double other = 0.8;
+        public double clothing = 0.6;
+        public double container = 0.6;
+        public double key = 0.4;
+        public double media = 0.6;
+        public double memento = 0.6;
+        public double cookware = 0.6;
+        public double material = 0.6;
+        public double farming = 0.6;
+        public double tool = 0.6;
+        /** Zomboid's RollsMultiplier: more rolls on every container. */
+        public double rollsMultiplier = 1;
+        /** Zomboid's rarity factors, read against our tiers (Common, Scarce, Rare, Prized, Grail). */
+        public double insaneFactor = 0.05;
+        public double extremeFactor = 0.2;
+        public double rareFactor = 0.6;
+        public double normalFactor = 1;
+        public double commonFactor = 2;
+        /** Zomboid's ZombiePopLootEffect: more and better loot where the dead crowd round. Josiah picked on. */
+        public double zombiePopLootEffect = 10;
+        /** Item ids (comma-separated) that never turn up as loot. */
+        public String removalList = "";
+        public boolean removeStoryLoot = false;
+        public boolean removeZombieLoot = false;
+        /** Zomboid's Maximum Looted Building Chance (percent), reached after daysUntilMaximumLooted. */
+        public double maximumLooted = 25;
+        public double daysUntilMaximumLooted = 90;
+        /** Zomboid's Rural Building Looted Chance Multiplier. */
+        public double ruralLooted = 0.5;
+        /** Zomboid's Maximum Looted Building Rooms: bigger buildings are never pre-looted. */
+        public double maximumLootedBuildingRooms = 50;
+        /** Zomboid's Months since the Apocalypse (0-12): moves the looted and diminished ramps on. */
+        public String timeSinceApo = "0";
+        /** Zomboid's Maximum Diminished Loot (percent), reached after daysUntilMaximumDiminished. */
+        public double maximumDiminished = 20;
+        public double daysUntilMaximumDiminished = 3650;
+        /** Zomboid's Starter Kit: chips, a water bottle, a small backpack, a baseball bat and a hammer. */
+        public boolean starterKit = false;
+        /** Zomboid's loot respawn: hours after a container was opened that it fills again (0: never). */
+        public double hoursForLootRespawn = 0;
+        public double seenHoursPreventLootRespawn = 0;
+        public int maxItemsForLootRespawn = 5;
+        public boolean constructionPreventsLootRespawn = true;
+    }
+
+    /**
+     * Zomboid's randomized stories (LANDSCAPE places the scenes, LOOT stocks them): never, extremely_rare, rare,
+     * sometimes, often, very_often, always (the map chance has no always).
+     */
+    public static class Stories {
+        /** Road stories: crashes, police blockades, road works. */
+        public String vehicleChance = "rare";
+        /** Zone stories: a campsite in the woods, a picnic in the park. */
+        public String zoneChance = "rare";
+        /** Randomized buildings: burnt out, a stash, the dead inside. */
+        public String survivorHouseChance = "rare";
+        /** How often a looted map has a dead survivor's notes on it. */
+        public String annotatedMapChance = "sometimes";
+    }
 
     /** Mains power (power/PowerGrid): Zomboid's Electricity Shutoff, cut district by district. */
     public static class Power {
@@ -870,11 +946,15 @@ public final class ZcConfig {
         public int floorSpan = 3;
         /** How long a floor that's lost its support sags and creaks before it falls in, in seconds. */
         public int floorSagSeconds = 60;
+        /** Blows shut window shutters stand before they give and leave the bare frame. */
+        public int shutterHits = 12;
         /** How many wooden posts stand one on another. */
         public int postStack = 3;
         /** Furniture weight: kilograms at or over these are medium (table, bed, sofa) and large (wardrobe, counter, fridge). */
         public double mediumKg = 6;
         public double largeKg = 19;
+        /** Large pieces at least this heavy need a hand truck in the other hand to lift (Zomboid's heaviest furniture). */
+        public double handTruckKg = 40;
         /**
          * Chance a piece breaks as you lift it at skill 0, Zomboid style. Anything that needs a tool to come loose
          * (a hammer for furniture, a screwdriver for appliances and wired lights) breaks 75% of the time at 0 and
@@ -980,6 +1060,16 @@ public final class ZcConfig {
         public String survivorCars = "low";
         /** Zomboid's Traffic Jam: wrecked cars piled up along the main roads (laid by the county's road builder). */
         public boolean trafficJams = true;
+        /**
+         * Zomboid's House Alarms Frequency: never, extremely_rare, rare, sometimes, often, very_often; how many houses
+         * are wired with an alarm (a bell box out front). Read when a house is generated.
+         */
+        public String houseAlarms = "sometimes";
+        /**
+         * Zomboid's Alarm Battery Decay (AlarmDecayModifier): days an alarm's battery runs it after the mains go off,
+         * each house's somewhere up to twice this. Below 0: the batteries are flat when the power goes.
+         */
+        public int alarmBatteryDays = 14;
         /** Car boots and the backs of vans hold loot (tools/cars/car_loot.py); off leaves them empty. */
         public boolean carLoot = true;
         /** The jets' top speed in km/h. Past about 300 the world can't load fast enough to keep up with them. */

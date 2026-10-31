@@ -57,6 +57,7 @@ public class ClothingLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
         }
         boolean slim = state.skin != null && state.skin.model() == PlayerModelType.SLIM;
         PlayerModel model = getParentModel();
+        submitGrooming(pose, collector, light, state, player, model, slim);
         for (ClothingSlot slot : ORDER) {
             ItemStack worn = slot.shown(player);
             Garment garment = Clothes.of(worn);
@@ -64,9 +65,16 @@ public class ClothingLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
             if (parts == null) {
                 continue;
             }
-            for (String part : parts) {
-                drawPart(pose, collector, light, state, player, model, slim, garment.id(), part,
-                        worn.get(com.zomboidcraft.clothing.ClothingLoot.CAMO));
+            com.zomboidcraft.client.combat.MeshGuns.overlays = grime(worn);
+            com.zomboidcraft.client.combat.MeshGuns.tint = WET_TINT[com.zomboidcraft.clothing.ClothDirt.of(worn).wetStep()];
+            try {
+                for (String part : parts) {
+                    drawPart(pose, collector, light, state, player, model, slim, garment.id(), part,
+                            worn.get(com.zomboidcraft.clothing.ClothingLoot.CAMO));
+                }
+            } finally {
+                com.zomboidcraft.client.combat.MeshGuns.overlays = List.of();
+                com.zomboidcraft.client.combat.MeshGuns.tint = 0xFFFFFFFF;
             }
         }
         submitMedical(pose, collector, light, state, player, model, slim);
@@ -104,6 +112,53 @@ public class ClothingLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
         pose.scale(1f, -1f, -1f);
         piece.submit(pose, collector, light, OverlayTexture.NO_OVERLAY, state.outlineColor);
         pose.popPose();
+    }
+
+    /**
+     * Hair and beard (clothing/Grooming), under whatever's worn: under a hat only what hangs below its band, under a
+     * full helmet nothing, and no beard under a mask.
+     */
+    private void submitGrooming(PoseStack pose, SubmitNodeCollector collector, int light, AvatarRenderState state,
+                                Player player, PlayerModel model, boolean slim) {
+        com.zomboidcraft.clothing.Grooming.Look look = com.zomboidcraft.clothing.Grooming.look(player);
+        long now = player.level().getGameTime();
+        Garment hat = Clothes.of(ClothingSlot.HAT.shown(player));
+        boolean helm = hat != null && hat.covers().contains(com.zomboidcraft.clothing.Spot.NECK);
+        if (helm) return;
+        String hair = com.zomboidcraft.clothing.Grooming.hair(look, now);
+        if (!hair.equals("own") && !hair.equals("bald")) {
+            String id = "hair_" + hair + (hat != null ? "_c" : "");
+            for (String part : WornParts.PARTS.getOrDefault(id, List.of())) {
+                drawPart(pose, collector, light, state, player, model, slim, id, part, look.colour());
+            }
+        }
+        String beard = com.zomboidcraft.clothing.Grooming.beard(look, now);
+        if (!beard.equals("none") && Clothes.of(ClothingSlot.FACE.shown(player)) == null) {
+            drawPart(pose, collector, light, state, player, model, slim, "beard_" + beard, "head", look.colour());
+        }
+    }
+
+    private static final List<List<net.minecraft.resources.Identifier>> GRIME = new java.util.ArrayList<>();
+
+    /** Dry, damp and soaked: wet cloth goes darker and a touch cooler; soaked also beads and runs (textures/entity/grime/wet). */
+    private static final int[] WET_TINT = {0xFFFFFFFF, 0xFFB9B9C0, 0xFF92949C};
+    private static final net.minecraft.resources.Identifier WET = ZomboidCraft.id("textures/entity/grime/wet.png");
+
+    /** The dirt, blood and soaked layers a worn piece shows (textures/entity/grime, tools/items/gen_grime.py). */
+    private static List<net.minecraft.resources.Identifier> grime(ItemStack worn) {
+        com.zomboidcraft.clothing.ClothDirt d = com.zomboidcraft.clothing.ClothDirt.of(worn);
+        int i = d.dirtStep() * 5 + d.bloodStep() + (d.wetStep() == 2 ? 25 : 0);
+        if (GRIME.isEmpty()) {
+            for (int k = 0; k < 50; k++) {
+                List<net.minecraft.resources.Identifier> l = new java.util.ArrayList<>();
+                int dirt = k % 25 / 5, blood = k % 5;
+                if (dirt > 0) l.add(ZomboidCraft.id("textures/entity/grime/dirt_" + dirt + ".png"));
+                if (blood > 0) l.add(ZomboidCraft.id("textures/entity/grime/blood_" + blood + ".png"));
+                if (k >= 25) l.add(WET);
+                GRIME.add(List.copyOf(l));
+            }
+        }
+        return GRIME.get(i);
     }
 
     /** Whether this layer draws the piece (a rig is a bag too, and the bag layer leaves it to this one). */

@@ -94,6 +94,9 @@ public final class Moving {
     @Nullable
     public static Piece piece(BlockState state, BlockGetter level, BlockPos pos) {
         Block block = state.getBlock();
+        if (block instanceof com.zomboidcraft.decor.DecorBlock d) {
+            return decor(d.spec);
+        }
         if (!(block instanceof CityBlock) || state.getDestroySpeed(level, pos) <= 0f || DigRules.wallTier(state, level, pos) != null
                 || structure(state)) {
             return null;
@@ -114,6 +117,21 @@ public final class Moving {
             case FURNITURE, APPLIANCE, WIRED -> b.toolBreak;
         };
         return new Piece(size, kind, material(block.defaultBlockState()), risk, kg);
+    }
+
+    /**
+     * A decor piece (LOOT's decor/DecorBlock): small ones come up by hand and never break; big ones are furniture
+     * (powered ones appliances), by the same rules as the town's, at their roster weight.
+     */
+    static Piece decor(com.zomboidcraft.decor.Decor.Spec spec) {
+        ZcConfig.Building b = ZcConfig.get().building;
+        double kg = spec.kg() * b.furnitureWeight;
+        Size size = kg >= b.largeKg ? Size.LARGE : kg >= b.mediumKg ? Size.MEDIUM : Size.SMALL;
+        if (!spec.big()) {
+            return new Piece(size, Kind.LOOSE, Skill.CARPENTRY, 0, kg);
+        }
+        Kind kind = spec.power() ? Kind.APPLIANCE : Kind.FURNITURE;
+        return new Piece(size, kind, kind == Kind.APPLIANCE ? Skill.METALWORKING : Skill.CARPENTRY, b.toolBreak, kg);
     }
 
     /** Stonework that isn't a full block (kerbs, steps, a lowered road): it's broken up, never carried off. */
@@ -204,6 +222,13 @@ public final class Moving {
         if (level.getBlockEntity(pos) instanceof BlockEntity be && !empty(be)) {
             return "Empty it out first.";
         }
+        // Zomboid's heaviest pieces go on a hand truck: held in the other hand while you lift
+        // (only once the hand truck exists: until its model is in, heavy pieces lift as before)
+        if (piece.size == Size.LARGE && piece.kg >= ZcConfig.get().building.handTruckKg
+                && BuiltInRegistries.ITEM.containsKey(ZomboidCraft.id("hand_truck"))
+                && !BuiltInRegistries.ITEM.getKey(player.getOffhandItem().getItem()).equals(ZomboidCraft.id("hand_truck"))) {
+            return "Too heavy to carry. You need a hand truck in your other hand.";
+        }
         return null;
     }
 
@@ -247,7 +272,8 @@ public final class Moving {
             player.sendOverlayMessage(net.minecraft.network.chat.Component.literal("It came apart in your hands.")
                     .withStyle(net.minecraft.ChatFormatting.GRAY));
         } else {
-            ItemStack stack = new ItemStack(state.getBlock().asItem());
+            ItemStack stack = state.getBlock() instanceof com.zomboidcraft.decor.DecorBlock d ? d.stack(state)
+                    : new ItemStack(state.getBlock().asItem());
             if (!stack.isEmpty() && !player.getInventory().add(stack)) {
                 net.minecraft.world.level.block.Block.popResource(level, player.blockPosition(), stack);
                 player.sendOverlayMessage(net.minecraft.network.chat.Component.literal("No room to carry it. It's at your feet.")

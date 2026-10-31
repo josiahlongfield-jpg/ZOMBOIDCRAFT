@@ -43,6 +43,9 @@ final class BuildPage {
             case WALL_FRAME, WINDOW_FRAME, DOOR_FRAME, POST -> Items.OAK_FENCE;
             case WOOD_WALL, FLOOR -> Items.OAK_PLANKS;
             case WOOD_DOOR -> Items.OAK_DOOR;
+            case WOOD_STAIRS, ROOF -> Items.OAK_STAIRS;
+            case LADDER -> Items.LADDER;
+            case SHUTTERS -> Items.OAK_TRAPDOOR;
         };
     }
 
@@ -135,6 +138,10 @@ final class BuildPage {
             case DOORWAY -> "In a door frame";
             case POST -> "As a post, up to three high";
             case FLOOR -> "As floorboards, three from a support";
+            case STAIRS -> "On the ground, a floor or a wall";
+            case FACE -> "Against the side of a wall";
+            case ROOF -> "On a wall or post, or beside more roof";
+            case SHUTTER -> "On a window frame you built";
         };
         KitDraw.caps(g, font, where, tx, cy + 3, KitDraw.TEXT, 0.75f);
         int level = b.skillLevel(player);

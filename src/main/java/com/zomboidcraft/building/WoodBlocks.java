@@ -25,7 +25,14 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LadderBlock;
+import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -58,6 +65,11 @@ public final class WoodBlocks {
     public static final Block DOOR = register("wood_plank_door", p -> new DoorBlock(BlockSetType.OAK, p), wood(3f));
     public static final Block POST = register("wood_post", Post::new, wood(2f));
     public static final Block FLOOR = register("wood_floor", Floor::new, wood(2f));
+    // wave 2b: getting up, and keeping the weather and the dead out
+    public static final Block STAIRS = register("wood_stairs", p -> new Stairs(Blocks.OAK_PLANKS.defaultBlockState(), p), wood(2f));
+    public static final Block LADDER = register("wood_ladder", Ladder::new, wood(0.6f));
+    public static final Block ROOF = register("wood_roof", p -> new Stairs(Blocks.OAK_PLANKS.defaultBlockState(), p), wood(2f));
+    public static final Block SHUTTERS = register("wood_window_shutters", Shutters::new, wood(2f));
 
     private static BlockBehaviour.Properties wood(float strength) {
         return BlockBehaviour.Properties.of().strength(strength, 3f).sound(SoundType.WOOD).noOcclusion();
@@ -97,6 +109,7 @@ public final class WoodBlocks {
             level.setBlock(pos.above(), state.setValue(DoorFrame.HALF, DoubleBlockHalf.UPPER), 18);
             return;
         }
+        if (state.is(STAIRS) || state.is(ROOF)) state = Block.updateFromNeighbourShapes(state, level, pos);   // turns a corner to meet the run beside it
         level.setBlockAndUpdate(pos, state);
         if (state.is(FLOOR)) level.scheduleTick(pos, FLOOR, 2);
         if (level.getBlockEntity(pos) instanceof net.minecraft.world.RandomizableContainer crate) crate.setLootTable(null);
@@ -118,8 +131,22 @@ public final class WoodBlocks {
 
     /** The pieces that carry a floor laid on top of them. */
     static boolean holdsUp(BlockState state) {
-        return state.is(WALL_FRAME) || state.is(WALL) || state.is(POST) || state.is(WINDOW_FRAME)
+        return state.is(WALL_FRAME) || state.is(WALL) || state.is(POST) || state.is(WINDOW_FRAME) || state.is(SHUTTERS)
                 || state.is(DOOR_FRAME) && state.getValue(DoorFrame.HALF) == DoubleBlockHalf.UPPER;
+    }
+
+    /**
+     * Whether a roof section at {@code pos} has something to sit on: the ground, a wall, post or floor under it, or a
+     * wall, floor or more roof beside it (a roof runs out from its wall plate like rafters).
+     */
+    public static boolean roofHeld(BlockGetter level, BlockPos pos) {
+        if (base(level, pos.below()) || level.getBlockState(pos.below()).is(ROOF)) return true;
+        for (Direction d : Direction.Plane.HORIZONTAL) {
+            if (level.getBlockState(pos.below().relative(d)).is(ROOF)) return true;     // the next course up the slope
+            BlockState beside = level.getBlockState(pos.relative(d));
+            if (beside.is(ROOF) || beside.is(FLOOR) || holdsUp(beside) || beside.isFaceSturdy(level, pos.relative(d), d.getOpposite())) return true;
+        }
+        return false;
     }
 
     /** How many posts already stand in a column under here. */
@@ -329,6 +356,60 @@ public final class WoodBlocks {
 
         private static int crack(BlockPos pos) {
             return -1000 - (int) (pos.asLong() & 0x3fffffff);
+        }
+    }
+
+    /** Wooden stairs, and the shingled roof sections that share their shape. */
+    public static class Stairs extends StairBlock {
+        public Stairs(BlockState base, Properties properties) {
+            super(base, properties);
+        }
+    }
+
+    /** A plank ladder nailed up against a wall. */
+    public static class Ladder extends LadderBlock {
+        public Ladder(Properties properties) {
+            super(properties);
+        }
+    }
+
+    /**
+     * A window frame with plank shutters hung on its outside ({@code FACING} points out). Open them by hand to look out;
+     * shut, they fill the opening and zombies have to beat them in, and when they give the frame is left bare.
+     */
+    public static class Shutters extends Block {
+        public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
+        public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
+        public static final IntegerProperty DAMAGE = IntegerProperty.create("damage", 0, 7);
+
+        public Shutters(Properties properties) {
+            super(properties);
+            registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(OPEN, false).setValue(DAMAGE, 0));
+        }
+
+        @Override
+        protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+            builder.add(FACING, OPEN, DAMAGE);
+        }
+
+        /** The bare window frame it stands in, the way it faces. */
+        public static BlockState frame(BlockState state) {
+            Direction.Axis axis = state.getValue(FACING).getClockWise().getAxis();
+            return WINDOW_FRAME.defaultBlockState().setValue(Window.AXIS, axis);
+        }
+
+        @Override
+        protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+            return state.getValue(OPEN) ? WINDOW_FRAME.defaultBlockState().setValue(Window.AXIS, state.getValue(FACING).getClockWise().getAxis())
+                    .getShape(level, pos, context) : Shapes.block();
+        }
+
+        @Override
+        protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
+            boolean open = !state.getValue(OPEN);
+            level.setBlock(pos, state.setValue(OPEN, open), Block.UPDATE_ALL);
+            level.playSound(null, pos, open ? SoundEvents.WOODEN_TRAPDOOR_OPEN : SoundEvents.WOODEN_TRAPDOOR_CLOSE, SoundSource.BLOCKS, 1f, 0.85f);
+            return InteractionResult.SUCCESS;
         }
     }
 

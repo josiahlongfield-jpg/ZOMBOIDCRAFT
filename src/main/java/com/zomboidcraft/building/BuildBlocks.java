@@ -71,12 +71,19 @@ public final class BuildBlocks {
         if (state.is(METAL_SHEET)) return MetalSheet.DAMAGE;
         if (state.is(SPIKED_WALL)) return SpikedWall.DAMAGE;
         if (state.is(WoodBlocks.WALL)) return WoodBlocks.Wall.DAMAGE;
+        if (state.is(WoodBlocks.SHUTTERS) && !state.getValue(WoodBlocks.Shutters.OPEN)) return WoodBlocks.Shutters.DAMAGE;
         return null;
+    }
+
+    /** What's left when zombies beat a build in: shutters leave their window frame; anything else, nothing. */
+    public static @Nullable BlockState afterBash(BlockState state) {
+        return state.is(WoodBlocks.SHUTTERS) ? WoodBlocks.Shutters.frame(state) : null;
     }
 
     /** Blows such a build stands. */
     public static int bashHits(BlockState state) {
         if (state.is(WoodBlocks.WALL)) return Math.max(1, WoodBlocks.wallHits(state));
+        if (state.is(WoodBlocks.SHUTTERS)) return Math.max(1, ZcConfig.get().building.shutterHits);
         return Math.max(1, state.is(SPIKED_WALL) ? ZcConfig.get().building.spikedWallHits : ZcConfig.get().building.metalSheetHits);
     }
 

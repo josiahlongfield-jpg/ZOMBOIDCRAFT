@@ -564,6 +564,101 @@ hockey_gloves | Hockey Gloves | S | 10 | 0.6 | sport stadium gym
 chainmail_butcher_glove | Chainmail Butcher Glove | R | 20 | 0.3 | diner factory
 chainmail_sleeve | Chainmail Sleeve | R | 25 | 0.6 | diner factory
 athletic_cup | Athletic Cup | C | 3 | 0.1 | gym school sport
+# clothing wave 2, batches 4-7 (clothing thread)
+puffer_jacket | Puffer Jacket | C | 14 | 1.0 | cloth thrift bed
+ski_jacket | Ski Jacket | S | 18 | 1.1 | sport cloth thrift
+ski_trousers | Ski Trousers | S | 14 | 0.9 | sport cloth thrift
+ski_goggles | Ski Goggles | S | 8 | 0.2 | sport thrift
+cardigan | Cardigan | C | 5 | 0.5 | bed thrift cloth body
+blazer | Blazer | C | 10 | 0.8 | office cloth thrift body
+gilet | Gilet | C | 8 | 0.5 | cloth thrift farm
+tracksuit_top | Tracksuit Top | C | 6 | 0.5 | gym cloth thrift body
+tracksuit_bottoms | Tracksuit Bottoms | C | 5 | 0.5 | gym cloth thrift body
+bathrobe | Bathrobe | C | 4 | 0.9 | bath bed thrift
+rugby_shirt | Rugby Shirt | C | 5 | 0.4 | sport school thrift
+chef_jacket | Chef's Jacket | C | 6 | 0.5 | diner
+mechanic_coveralls | Mechanic's Coveralls | C | 10 | 1.0 | auto garage worktruck body
+prison_jumpsuit | Prison Jumpsuit | S | 4 | 0.6 | police court
+security_shirt | Security Guard Shirt | C | 5 | 0.3 | office bank station
+flat_cap | Flat Cap | C | 3 | 0.1 | thrift farm cloth
+fedora | Fedora | S | 6 | 0.2 | thrift cloth office
+straw_hat | Straw Hat | C | 3 | 0.2 | farm thrift
+fingerless_gloves | Fingerless Gloves | C | 3 | 0.1 | thrift cloth camp
+sandals | Sandals | C | 3 | 0.4 | bed cloth thrift
+ranger_hat | Ranger Hat | S | 8 | 0.3 | camp
+peaked_cap | Peaked Cap | S | 6 | 0.2 | mil station dock
+captains_hat | Captain's Hat | S | 6 | 0.2 | dock thrift
+chefs_hat | Chef's Hat | C | 2 | 0.1 | diner
+surgical_cap | Surgical Cap | C | 1 | 0.05 | hosp amb
+visor_cap | Visor Cap | C | 2 | 0.1 | sport stadium thrift
+sweatband | Sweatband | C | 1 | 0.05 | gym sport
+winter_earmuffs | Winter Earmuffs | C | 3 | 0.1 | cloth thrift bed
+miner_helmet | Miner's Helmet | R | 14 | 0.6 | build factory
+batting_helmet | Batting Helmet | S | 8 | 0.6 | school stadium sport
+hockey_helmet | Hockey Helmet | S | 10 | 0.6 | sport stadium gym
+riding_helmet | Riding Helmet | S | 10 | 0.5 | farm sport
+boxing_headgear | Boxing Headgear | S | 8 | 0.5 | gym sport
+swat_helmet | SWAT Helmet | R | 35 | 1.4 | police.2 pcar
+welder_mask | Welder's Mask | S | 12 | 0.8 | hard factory build
+dust_mask | Dust Mask | C | 1 | 0.02 | hard build garage
+half_mask_respirator | Half-Mask Respirator | S | 10 | 0.3 | hard factory build
+safety_goggles | Safety Goggles | C | 3 | 0.1 | hard school factory garage
+eyepatch | Eyepatch | S | 2 | 0.02 | pharm thrift
+monocle | Monocle | R | 25 | 0.02 | mansion pawn jewel
+prescription_glasses | Prescription Glasses | C | 6 | 0.05 | night desk bed body
+hunting_vest | Hunting Vest | C | 10 | 0.5 | camp gun
+foreman_vest | Foreman's Vest | C | 6 | 0.3 | build worktruck
+waistcoat | Waistcoat | C | 6 | 0.3 | cloth thrift office
+leather_biker_vest | Leather Biker Vest | S | 14 | 0.8 | thrift garage
+sheepskin_vest | Sheepskin Vest | S | 14 | 0.7 | farm thrift
+sheepskin_jacket | Sheepskin Jacket | S | 24 | 1.6 | farm thrift cloth
+padded_jacket | Padded Jacket | C | 14 | 1.1 | cloth thrift worktruck
+hunting_jacket | Hunting Jacket | S | 18 | 1.2 | camp gun
+paramedic_jacket | Paramedic Jacket | S | 16 | 1.0 | amb hosp
+apron | Apron | C | 2 | 0.2 | diner pantry
+leather_apron | Leather Apron | S | 10 | 0.9 | factory hard farm
+long_johns | Long Johns | C | 4 | 0.3 | bed thrift camp
+socks | Socks | C | 1 | 0.05 | bed laund cloth
+legwarmers | Legwarmers | C | 2 | 0.1 | gym thrift
+riding_boots | Riding Boots | S | 18 | 1.2 | farm thrift
+bowling_shoes | Bowling Shoes | C | 4 | 0.6 | thrift sport
+flip_flops | Flip-Flops | C | 1 | 0.2 | bed bath thrift
+boxing_gloves | Boxing Gloves | S | 8 | 0.6 | gym sport
+pyjama_top | Pyjama Top | C | 3 | 0.3 | bed
+pyjama_bottoms | Pyjama Bottoms | C | 3 | 0.3 | bed
+sports_jersey | Sports Jersey | C | 6 | 0.3 | stadium sport thrift
+postal_shirt | Postal Shirt | C | 4 | 0.3 | post
+cycling_jersey | Cycling Jersey | C | 6 | 0.2 | sport thrift
+cycling_shorts | Cycling Shorts | C | 5 | 0.2 | sport thrift
+wetsuit | Wetsuit | S | 20 | 1.5 | dock sport
+fishing_waders | Fishing Waders | S | 16 | 1.8 | camp dock
+hunting_cap | Hunting Cap | C | 4 | 0.1 | camp gun
+scrap_cuirass | Scrap Cuirass | R | 30 | 6.0 | camp bunker
+tyre_cuirass | Tyre Cuirass | R | 25 | 5.0 | camp auto
+scrap_arm_guards | Scrap Arm Guards | R | 15 | 1.5 | camp bunker
+scrap_leg_guards | Scrap Leg Guards | R | 15 | 2.0 | camp bunker
+scrap_helmet | Scrap Helmet | R | 18 | 1.6 | camp bunker
+gothic_sallet | Gothic Sallet | P | 120 | 2.6 | mansion
+gothic_cuirass | Gothic Cuirass | P | 160 | 9.0 | mansion
+gothic_arm_harness | Gothic Arm Harness | P | 110 | 4.0 | mansion
+gothic_leg_harness | Gothic Leg Harness | P | 120 | 5.0 | mansion
+gothic_gauntlets | Gothic Gauntlets | P | 80 | 1.2 | mansion
+gothic_sabatons | Gothic Sabatons | P | 80 | 1.6 | mansion
+bomb_disposal_suit | Bomb Disposal Suit | P | 140 | 30.0 | police mil
+bomb_disposal_helmet | Bomb Disposal Helmet | P | 90 | 4.0 | police mil
+shark_mesh_suit | Shark Mesh Suit | P | 120 | 7.0 | dock
+motorcycle_leathers | Motorcycle Leathers | R | 45 | 3.5 | garage thrift
+scba_set | SCBA Set | P | 90 | 11.0 | fire.2 firetruck
+scba_mask | SCBA Mask | R | 40 | 0.8 | fire.2 firetruck
+bodyguard_suit | Bodyguard Suit | P | 120 | 4.0 | mansion bank
+crusader_great_helm | Black Crusader Great Helm | G | 300 | 3.5 | mansion
+crusader_plate | Black Crusader Plate | G | 400 | 14.0 | mansion
+crusader_tabard | Black Crusader Tabard | G | 150 | 0.8 | mansion
+crusader_pauldrons | Black Crusader Pauldrons | G | 200 | 3.0 | mansion
+crusader_cloak | Black Crusader Cloak | G | 150 | 2.0 | mansion
+crusader_greaves | Black Crusader Greaves | G | 220 | 4.0 | mansion
+crusader_gauntlets | Black Crusader Gauntlets | G | 180 | 1.4 | mansion
+crusader_sabatons | Black Crusader Sabatons | G | 180 | 2.0 | mansion
 # head
 baseball_cap | Baseball Cap | C | 2 | 0.1 | bed cloth thrift stadium body
 trucker_cap | Trucker Cap | C | 2 | 0.1 | worktruck farm thrift body

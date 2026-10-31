@@ -75,6 +75,31 @@ def java_row(r):
             f'{stack(r["kg"])}, {"true" if r["live"] else "false"}, {food}),')
 
 
+# roster category -> Zomboid's loot category (B42 sandbox, Loot: Food, Canned Food, Literature...)
+ZOMBOID_CATS = {
+    'Canned & dry food': 'CannedFood', 'Fresh, fridge & freezer': 'Food', 'Snacks & sweets': 'CannedFood',
+    'Drinks': 'CannedFood', 'Kitchen & cooking': 'Cookware', 'Medical': 'Medical', 'Hygiene & household': 'Other',
+    'Hand tools': 'Tool', 'Building & materials': 'Material', 'Electrical & electronics': 'Other',
+    'Light & fire': 'SurvivalGears', 'Outdoors, camping & farm': 'SurvivalGears', 'Clothing': 'Clothing',
+    'Bags & containers': 'Container', 'Books, magazines & papers': 'Literature', 'Keys, cards & documents': 'Key',
+    'Valuables & trade goods': 'Other', 'Toys, hobbies & personal': 'Memento', 'Vehicle & fuel': 'Mechanics',
+    'Military & service': 'Other', 'Junk & scrap': 'Material',
+}
+
+
+def zomboid_category(r):
+    i, cat = r['id'], r['cat']
+    if i.startswith('skillbook_'):
+        return 'SkillBook'
+    if i.startswith('mag_') and i != 'magazine':
+        return 'RecipeResource'
+    if any(w in i for w in ('vhs', 'cassette', 'mixtape', '_cd', 'vinyl')):
+        return 'Media'
+    if cat == 'Outdoors, camping & farm' and ('seed' in i or str(r['places']).startswith(('farm', "['farm", "[('farm"))):
+        return 'Farming'
+    return ZOMBOID_CATS.get(cat, 'Other')
+
+
 def main():
     rs = rows()
     body = '\n'.join(java_row(r) for r in rs)
@@ -114,6 +139,9 @@ public final class LootSpecs {{
         live = [i for i, r in zip(ids, [x for x in rs if TABS[x['cat']] == tab]) if r['live'] or r['exists']]
         # optional entries: an item another thread owns may not be in this build yet
         p.write_text(json.dumps({'replace': False, 'values': [{'id': i, 'required': False} for i in live]}, indent=2) + '\n')
+    # Zomboid's loot categories (the sandbox's per-category multipliers, loot/LootSettings)
+    cats = {r['id']: zomboid_category(r) for r in rs}
+    (RES / 'data/zomboidcraft/loot_categories.json').write_text(json.dumps(cats, indent=0, sort_keys=True) + '\n')
     print(f'{len(rs)} specs, {sum(r["live"] for r in rs)} registered (waves 1-{LIVE})')
 
 

@@ -4,6 +4,7 @@ import com.zomboidcraft.world.city.Placer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SplittableRandom;
+import java.util.function.DoubleSupplier;
 
 /**
  * A house, drawn in its lot's own coordinates through a {@link Placer}: the front faces north
@@ -47,6 +48,28 @@ public final class House {
     private static final int[][] STEP = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}};
 
     public static final int STOREY = 4;
+
+    /**
+     * Zomboid's House Alarms Frequency as the share of houses wired with an alarm (world.houseAlarms, read when a
+     * house is generated). The game sets it from the sandbox; tools leave the default ("sometimes") or -Dalarms.rate.
+     */
+    private static volatile DoubleSupplier alarmChance = () -> Double.parseDouble(System.getProperty("alarms.rate", "0.08"));
+
+    public static void setAlarmChance(DoubleSupplier chance) {
+        alarmChance = chance;
+    }
+
+    /** Zomboid's frequency names as a share of houses (never .. very_often). */
+    public static double alarmChance(String frequency) {
+        return switch (frequency == null ? "" : frequency) {
+            case "never" -> 0;
+            case "extremely_rare" -> 0.015;
+            case "rare" -> 0.04;
+            case "often" -> 0.15;
+            case "very_often" -> 0.25;
+            default -> 0.08;
+        };
+    }
 
     private final Placer p;
     private final SplittableRandom rng;
@@ -269,6 +292,51 @@ public final class House {
         }
         weather(height);
         story();
+        alarm(height);
+    }
+
+    /**
+     * Zomboid's house alarm, on a share of the houses with power to them: a bell box (an old gong bell or a white
+     * siren box with its blue strobe, refs/alarm/house-alarm-bell-box) under the eaves out front, a keypad
+     * (refs/alarm/alarm-keypad-panel) inside beside the front door, and the house's box marked for the game
+     * ("!alarm:w;d;h;siren;battery", world/gen/HouseAlarms), which rings it when someone gets in. Its dice are
+     * the household's own, so houses without one come out as before.
+     */
+    private void alarm(int height) {
+        if (interior == null || cond == Condition.RUIN || style == Style.TRAILER || style == Style.CABIN) {
+            return;
+        }
+        SplittableRandom dice = new SplittableRandom(interior.seed() * 0x2545F4914F6CDD1DL + 0xA1A2);
+        if (dice.nextDouble() >= alarmChance.getAsDouble()) {
+            return;
+        }
+        boolean siren = dice.nextDouble() < 0.5;
+        double battery = dice.nextDouble();
+        int y = height - 1, z = z0 - 1;
+        boolean hung = false;
+        for (int k : new int[] {2, -2, 3, -3, 1, -1, 4, -4}) {
+            int x = doorX + k;
+            if (x > x0 && x < x1 && p.get(x, y, z) == null && plainWall(x, y, z0)) {
+                p.set(x, y, z, (siren ? "ha_siren_box" : "ha_bell_box") + face("north"));
+                hung = true;
+                break;
+            }
+        }
+        if (!hung) {
+            return;
+        }
+        for (int k : new int[] {1, -1, 2, -2}) {
+            int x = doorX + k;
+            String in = p.get(x, 2, z0 + 2), wall = p.get(x, 2, z0 + 1);
+            if (x > x0 && x < x1 && (in == null || in.equals("air")) && wall != null && wall.startsWith("home_wall")) {
+                p.set(x, 2, z0 + 2, "ha_keypad" + face("south"));
+                break;
+            }
+        }
+        int xb = garageX1 > 0 ? garageX1 : x1;
+        p.vehicle((x0 + xb + 1) / 2.0, 0, (z0 + z1 + 1) / 2.0, 0,
+                "!alarm:" + (xb - x0 + 1) + ";" + (z1 - z0 + 1) + ";" + height + ";" + (siren ? 1 : 0) + ";"
+                        + String.format(java.util.Locale.ROOT, "%.3f", battery), dice.nextLong());
     }
 
     /** Floors, walls with trimmed corners, a foundation course. */

@@ -79,21 +79,65 @@ public final class MeshGuns {
         pose.pushPose();
         pose.scale(1 / 16f, 1 / 16f, 1 / 16f);
         Identifier paint = texture != null ? texture : gun.texture();
-        out.submitCustomGeometry(pose, RenderTypes.entityCutoutCull(paint), (at, buffer) -> solid(p, at, buffer, light));
+        final int shade = tint;
+        out.submitCustomGeometry(pose, RenderTypes.entityCutoutCull(paint), (at, buffer) -> solid(p, at, buffer, light, shade));
         if (inkOn) {
             out.submitCustomGeometry(pose, RenderTypes.entityCutoutCull(paint), (at, buffer) -> ink(p, gun.outline(), at, buffer, light));
+        }
+        for (Identifier over : overlays) {
+            out.submitCustomGeometry(pose, RenderTypes.entityCutoutCull(over), (at, buffer) -> overlay(p, at, buffer, light));
         }
         pose.popPose();
     }
 
+    /**
+     * Layers drawn over the next mesh parts drawn, while set: a worn garment's dirt and blood. ClothingLayer sets it
+     * round the one part it submits (the item renderer draws it there and then) and clears it after.
+     */
+    public static java.util.List<Identifier> overlays = java.util.List.of();
+
+    /** The colour the next parts are painted through, while set (a wet garment darkens); white is as painted. */
+    public static int tint = 0xFFFFFFFF;
+
+    /**
+     * A see-through layer over a part: the mesh again, a hair out along its smooth normals, painted with a cut-out
+     * texture laid on by position rather than the packed uvs (each face takes the texture across the two axes it
+     * faces between), so marks are the same size on every garment. Item pixels -20 to 28 map across the texture.
+     */
+    private static void overlay(Part p, PoseStack.Pose pose, VertexConsumer out, int light) {
+        float[] pos = p.pos(), s = p.smooth(), n = p.normal();
+        final float lift = 0.04f, from = -20f, span = 48f;
+        for (int t = 0; t < p.triangles(); t++) {
+            float ax = Math.abs(n[t * 3]), ay = Math.abs(n[t * 3 + 1]), az = Math.abs(n[t * 3 + 2]);
+            for (int c = 0; c < 4; c++) {
+                int k = Math.min(c, 2);
+                int i = t * 3 + (flipped ? 2 - k : k);
+                float x = pos[i * 3], y = pos[i * 3 + 1], z = pos[i * 3 + 2];
+                // across and down: down the texture is down the part (model y is up)
+                float u = ax >= ay && ax >= az ? z : ay >= az ? x : x;
+                float v = ax >= ay && ax >= az ? -y : ay >= az ? z : -y;
+                out.addVertex(pose, x + s[i * 3] * lift, y + s[i * 3 + 1] * lift, z + s[i * 3 + 2] * lift)
+                        .setColor(0xFFFFFFFF)
+                        .setUv((u - from) / span, (v - from) / span)
+                        .setOverlay(OverlayTexture.NO_OVERLAY)
+                        .setLight(light)
+                        .setNormal(pose, n[t * 3], n[t * 3 + 1], n[t * 3 + 2]);
+            }
+        }
+    }
+
     private static void solid(Part p, PoseStack.Pose pose, VertexConsumer out, int light) {
+        solid(p, pose, out, light, 0xFFFFFFFF);
+    }
+
+    private static void solid(Part p, PoseStack.Pose pose, VertexConsumer out, int light, int colour) {
         float[] pos = p.pos(), uv = p.uv(), n = p.normal();
         for (int t = 0; t < p.triangles(); t++) {
             for (int c = 0; c < 4; c++) {
                 int k = Math.min(c, 2);
                 int i = t * 3 + (flipped ? 2 - k : k);     // quads: the last corner twice
                 out.addVertex(pose, pos[i * 3], pos[i * 3 + 1], pos[i * 3 + 2])
-                        .setColor(0xFFFFFFFF)
+                        .setColor(colour)
                         .setUv(uv[i * 2], uv[i * 2 + 1])
                         .setOverlay(OverlayTexture.NO_OVERLAY)
                         .setLight(light)

@@ -29,6 +29,7 @@ final class Flicker {
     static void flip(Block block, BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         boolean lit = !state.getValue(LIT);
         level.setBlock(pos, state.setValue(LIT, lit), Block.UPDATE_CLIENTS);
+        com.zomboidcraft.zombie.Profiler.FLICKERS.increment();
         boolean dying = (pos.asLong() * 0x9E3779B97F4A7C15L >>> 63) == 0;
         int next;
         if (dying) {
