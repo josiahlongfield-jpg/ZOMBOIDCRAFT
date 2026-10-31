@@ -466,14 +466,16 @@ public final class NpcPanel {
             inv.setItem(slot, left);
             npc.lines.sayLine(npc, NpcLines.Kind.REPLY, "Thanks. I'll hang on to it.");
         } else if (op == TAKE || op == TAKE_WEAPON) {
-            if (!willingToHand(npc, p)) {
-                npc.lines.sayLine(npc, NpcLines.Kind.REPLY, NpcWork.pick(npc, "That's mine.", "Get your own.", "I don't think so."));
-                return;
-            }
             ItemStack stack = op == TAKE_WEAPON ? npc.getMainHandItem()
                     : slot >= 0 && slot < npc.work.pack.getContainerSize() ? npc.work.pack.getItem(slot) : ItemStack.EMPTY;
             if (stack.isEmpty()) return;
+            // what she found and is holding for you is yours for the asking
+            if (!willingToHand(npc, p) && !p.getUUID().equals(NpcCare.offeredTo(stack))) {
+                npc.lines.sayLine(npc, NpcLines.Kind.REPLY, NpcWork.pick(npc, "That's mine.", "Get your own.", "I don't think so."));
+                return;
+            }
             ItemStack copy = stack.copy();
+            NpcCare.clear(copy);    // something she was holding for you is yours once you take it
             if (!inv.add(copy) && copy.getCount() == stack.getCount()) {
                 tell(p, "Your pockets are full");
                 return;

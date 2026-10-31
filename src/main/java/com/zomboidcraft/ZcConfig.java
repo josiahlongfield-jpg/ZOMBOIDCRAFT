@@ -196,6 +196,10 @@ public final class ZcConfig {
         public double startAttraction = 35;
         /** How far each one is rolled either way, so every companion is a bit different. */
         public double startSpread = 10;
+        /** Her gun never runs dry (the old way); off, she loads real rounds from her pack and goes looking for more. */
+        public boolean endlessAmmo = false;
+        /** The share of your experience a bonded companion picks up watching you work nearby (0 turns it off). */
+        public double watchShare = 0.25;
     }
 
     public Start start = new Start();

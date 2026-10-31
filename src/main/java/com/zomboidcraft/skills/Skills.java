@@ -41,6 +41,8 @@ public final class Skills {
     }
 
     public static void addXp(ServerPlayer player, Skill skill, int amount) {
+        // companions working beside you pick some of it up (before your books: hers are her own)
+        com.zomboidcraft.npc.NpcSkills.watched(player, skill, amount);
         double multiplier = ZcConfig.get().progression.xpMultiplier;
         amount = multiplier <= 0 ? 0 : Math.max(1, (int) Math.round(amount * multiplier * SkillBooks.boost(player, skill)
                 * com.zomboidcraft.survival.Mood.learning(player)));
