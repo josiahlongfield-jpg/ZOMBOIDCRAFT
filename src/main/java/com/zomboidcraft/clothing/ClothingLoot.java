@@ -26,7 +26,20 @@ public final class ClothingLoot {
     public static void register() {
         LootTableEvents.MODIFY_DROPS.register((table, context, drops) -> {
             RandomSource random = context.getRandom();
-            for (ItemStack stack : drops) found(stack, random);
+            // a kit found together is in one scheme: the first crusader piece rolls it, the rest follow
+            String scheme = null;
+            for (ItemStack stack : drops) {
+                Garment g = Clothes.of(stack);
+                if (g != null && g.id().startsWith("crusader_") && !stack.has(CAMO)) {
+                    if (scheme == null) {
+                        found(stack, random);
+                        scheme = stack.get(CAMO);
+                        continue;
+                    }
+                    stack.set(CAMO, scheme);
+                }
+                found(stack, random);
+            }
         });
     }
 

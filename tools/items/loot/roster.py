@@ -651,14 +651,19 @@ motorcycle_leathers | Motorcycle Leathers | R | 45 | 3.5 | garage thrift
 scba_set | SCBA Set | P | 90 | 11.0 | fire.2 firetruck
 scba_mask | SCBA Mask | R | 40 | 0.8 | fire.2 firetruck
 bodyguard_suit | Bodyguard Suit | P | 120 | 4.0 | mansion bank
-crusader_great_helm | Black Crusader Great Helm | G | 300 | 3.5 | mansion
-crusader_plate | Black Crusader Plate | G | 400 | 14.0 | mansion
-crusader_tabard | Black Crusader Tabard | G | 150 | 0.8 | mansion
-crusader_pauldrons | Black Crusader Pauldrons | G | 200 | 3.0 | mansion
-crusader_cloak | Black Crusader Cloak | G | 150 | 2.0 | mansion
-crusader_greaves | Black Crusader Greaves | G | 220 | 4.0 | mansion
-crusader_gauntlets | Black Crusader Gauntlets | G | 180 | 1.4 | mansion
-crusader_sabatons | Black Crusader Sabatons | G | 180 | 2.0 | mansion
+crusader_great_helm | Crusader Great Helm | G | 300 | 3.5 | mansion
+crusader_sugarloaf_helm | Crusader Sugarloaf Helm | G | 320 | 3.8 | mansion
+crusader_armet | Crusader Armet | G | 320 | 3.4 | mansion
+crusader_barbute | Crusader Barbute | G | 260 | 2.8 | mansion
+crusader_crowned_helm | Crusader Crowned Helm | G | 360 | 3.9 | mansion
+crusader_winged_helm | Crusader Winged Helm | G | 340 | 3.8 | mansion
+crusader_plate | Crusader Plate | G | 400 | 14.0 | mansion
+crusader_tabard | Crusader Tabard | G | 150 | 0.8 | mansion
+crusader_pauldrons | Crusader Pauldrons | G | 200 | 3.0 | mansion
+crusader_cloak | Crusader Cloak | G | 150 | 2.0 | mansion
+crusader_greaves | Crusader Greaves | G | 220 | 4.0 | mansion
+crusader_gauntlets | Crusader Gauntlets | G | 180 | 1.4 | mansion
+crusader_sabatons | Crusader Sabatons | G | 180 | 2.0 | mansion
 # head
 baseball_cap | Baseball Cap | C | 2 | 0.1 | bed cloth thrift stadium body
 trucker_cap | Trucker Cap | C | 2 | 0.1 | worktruck farm thrift body

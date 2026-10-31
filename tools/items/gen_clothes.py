@@ -4510,35 +4510,289 @@ def sabaton(g, p, s, mat, edge, toe=3.2, point=0.0):
 # ---- the black crusader kit (grail)
 
 
-def build_crusader_great_helm(g):
-    """A flat-topped great helm in blackened plate: a single eye slit, a brass cross over the face, breaths below,
-    brass-edged, with a white and black torse round the crown."""
-    d = 1.0
-    top, bot = -9.6, 0.9
+# ---- crusader heraldry: the kit's colours roll on drop (the camo component), a found kit all in one scheme
+
+
+def rusted(f):
+    """Plate left out for years: dull steel eaten through with rust, worst low down and in the hollows."""
+    c = P.steel(f, 0.42) * 0.8
+    rust = np.clip((f.noise(0.6, 77, 3) - 0.38) * 2.6, 0, 1)
+    pit = np.clip((f.noise(1.8, 91, 2) - 0.55) * 4, 0, 1)
+    c = P.mix(c, P.col('#7a3e1c') * (0.85 + 0.3 * f.noise(2.5, 5, 1))[..., None], rust * 0.8)
+    c = P.mix(c, P.col('#3a1e10'), pit * 0.6)
+    return toon(f, grade(c, 0.2), ink=False)
+
+
+def gilt():
+    """Gold leaf: brighter and yellower than the brass trim."""
+    def fn(f):
+        c = P.brass(f) * np.array([1.08, 1.0, 0.72]) + 0.04
+        return toon(f, grade(c, 0.25), ink=False)
+    return fn
+
+
+# per scheme: plate (kind, colour), trim, then the cloth: surcoat, its cross, cloak, lining, the pauldron badge
+ORDERS = {
+    'black':       dict(plate=('black', '#1c1c22'), ridge=('black', '#26262c'), trim='brass',
+                        cloth='#e6e2d6', cross='#141416', cloak='#16161a', lining='#e6e2d6', badge='#e6e2d6'),
+    'templar':     dict(plate=('steel', None), ridge=('steel', None), trim='brass',
+                        cloth='#ece8de', cross='#9a1a1a', cloak='#e8e4da', lining='#cfc8b8', badge='#9a1a1a'),
+    'hospitaller': dict(plate=('steel', None), ridge=('steel', None), trim='brass',
+                        cloth='#8a1c1c', cross='#ece8de', cloak='#141416', lining='#ece8de', badge='#8a1c1c'),
+    'teutonic':    dict(plate=('steel', None), ridge=('steel', None), trim='steel',
+                        cloth='#ece8de', cross='#141416', cloak='#ece8de', lining='#141416', badge='#141416'),
+    'lazarite':    dict(plate=('steel', None), ridge=('steel', None), trim='brass',
+                        cloth='#ece8de', cross='#2e6a32', cloak='#264e2a', lining='#ece8de', badge='#2e6a32'),
+    'crimson':     dict(plate=('black', '#4a1014'), ridge=('black', '#5c161a'), trim='gilt',
+                        cloth='#141416', cross='#9a1a1a', cloak='#4a1014', lining='#141416', badge='#c8a24a'),
+    'gilded':      dict(plate=('steel', None), ridge=('steel', None), trim='gilt',
+                        cloth='#1e3a78', cross='#d8b04a', cloak='#1e3a78', lining='#e6e2d6', badge='#d8b04a'),
+    'rusted':      dict(plate=('rust', None), ridge=('rust', None), trim='rust',
+                        cloth='#9a9080', cross='#3a3430', cloak='#3a3630', lining='#8a8270', badge='#8a8270'),
+}
+
+
+def shade_hex(h, k):
+    return '#%02x%02x%02x' % tuple(max(0, min(255, int(int(h[i:i + 2], 16) * k))) for i in (1, 3, 5))
+
+
+class Heraldry:
+    """A crusader material painted in whichever ORDERS scheme the variant being made is in. role: plate, ridge,
+    trim, chain (the trim's metal), cloth, cross, cloak, lining, badge (flat), hem (the surcoat's, a shade down),
+    cloak_hem, fold (the cloak's, darker)."""
+
+    def __init__(self, role, **kw):
+        self.role, self.kw = role, kw
+
+    def make(self, name):
+        o, r = ORDERS[name], self.role
+        if r in ('plate', 'ridge'):
+            kind, colour = o[r]
+            return blackened(colour) if kind == 'black' else rusted if kind == 'rust' else metal('steel')
+        if r in ('trim', 'chain'):
+            t = o['trim']
+            return gilt() if t == 'gilt' else rusted if t == 'rust' else metal(t)
+        if r == 'badge':
+            return flat(o['badge'])
+        if r == 'hem':
+            return cloth(shade_hex(o['cloth'], 0.88), **self.kw)
+        if r == 'cloak_hem':
+            dark = sum(int(o['cloak'][i:i + 2], 16) for i in (1, 3, 5)) < 200
+            return cloth(shade_hex(o['cloak'], 1.3 if dark else 0.88), **self.kw)
+        if r == 'fold':
+            return cloth(shade_hex(o['cloak'], 0.7), **self.kw)
+        return cloth(o[r], **self.kw)
+
+
+H = Heraldry
+
+
+def great_helm_body(g, d=1.0, top=-9.6, bot=0.9, breaths='right'):
+    """The great helm's barrel: sides and back, the face with its eye slit split by a bar, a flat top, the trim
+    cross over the face, trim hems and brow rivets. Returns (top, bottom, slit top, slit bottom)."""
     py0, py1 = EYES_HIGH - 0.35, EYES_LOW + 0.35
-    g.box('head', (-4 - d, top, -3.4), (4 + d, bot, 4 + d), 'plate')                          # sides and back
+    g.box('head', (-4 - d, top, -3.4), (4 + d, bot, 4 + d), 'plate')
     eye_open_front(g, -4 - d, -3.4, top, bot, 4 + d, 'plate', port=(3.7, py0, py1))
-    g.box('head', (-0.4, py0, -4 - d), (0.4, py1, -3.4), 'plate')                              # bar splitting the slit
-    g.box('head', (-4 - d + 0.2, top - 0.4, -4 - d + 0.2), (4 + d - 0.2, top, 4 + d - 0.2), 'plate')   # the flat top
-    # the brass cross: brow band and the upright below the slit
-    g.box('head', (-4 - d - 0.05, py0 - 0.7, -4 - d - 0.2), (4 + d + 0.05, py0, -4 - d), 'brass')
-    g.box('head', (-0.55, py1, -4 - d - 0.2), (0.55, bot - 0.4, -4 - d), 'brass')
-    g.box('head', (-0.4, top + 0.6, -4 - d - 0.2), (0.4, py0 - 0.7, -4 - d), 'brass')
-    g.box('head', (-4 - d - 0.1, bot - 0.4, -4 - d - 0.1), (4 + d + 0.1, bot, 4 + d + 0.1), 'brass')   # the hem
-    g.box('head', (-4 - d - 0.1, top, -4 - d - 0.1), (4 + d + 0.1, top + 0.35, 4 + d + 0.1), 'brass')
-    for row, y in enumerate((-2.2, -1.2)):                                                       # breaths, right side only
-        for i in range(4):
-            x = 1.4 + i * 0.75 + (0.35 if row else 0)
-            g.box('head', (x, y, -4 - d - 0.06), (x + 0.3, y + 0.35, -4 - d), 'dark')
-    for i in range(6):                                                                           # rivets round the brow
+    g.box('head', (-0.4, py0, -4 - d), (0.4, py1, -3.4), 'plate')
+    g.box('head', (-4 - d + 0.2, top - 0.4, -4 - d + 0.2), (4 + d - 0.2, top, 4 + d - 0.2), 'plate')
+    g.box('head', (-4 - d - 0.05, py0 - 0.7, -4 - d - 0.2), (4 + d + 0.05, py0, -4 - d), 'trim')
+    g.box('head', (-0.55, py1, -4 - d - 0.2), (0.55, bot - 0.4, -4 - d), 'trim')
+    g.box('head', (-0.4, top + 0.6, -4 - d - 0.2), (0.4, py0 - 0.7, -4 - d), 'trim')
+    g.box('head', (-4 - d - 0.1, bot - 0.4, -4 - d - 0.1), (4 + d + 0.1, bot, 4 + d + 0.1), 'trim')
+    g.box('head', (-4 - d - 0.1, top, -4 - d - 0.1), (4 + d + 0.1, top + 0.35, 4 + d + 0.1), 'trim')
+    sides = {'right': (1,), 'both': (-1, 1)}[breaths]
+    for s in sides:
+        for row, y in enumerate((-2.2, -1.2)):
+            for i in range(4):
+                x = s * (1.4 + i * 0.75 + (0.35 if row else 0))
+                g.box('head', (min(x, x + s * 0.3), y, -4 - d - 0.06), (max(x, x + s * 0.3), y + 0.35, -4 - d), 'dark')
+    for i in range(6):
         x = -4.2 + i * 1.7
-        g.box('head', (x, py0 - 1.3, -4 - d - 0.12), (x + 0.3, py0 - 1.0, -4 - d), 'brass')
-    g.box('head', (-4 - d - 0.35, top - 0.7, -4 - d - 0.35), (4 + d + 0.35, top + 0.1, 4 + d + 0.35), 'torse')   # torse
+        g.box('head', (x, py0 - 1.3, -4 - d - 0.12), (x + 0.3, py0 - 1.0, -4 - d), 'trim')
+    return top, bot, py0, py1
+
+
+def torse(g, d, y):
+    """A twisted wreath of the surcoat's cloth and cross colours round the crown at y."""
+    g.box('head', (-4 - d - 0.35, y - 0.7, -4 - d - 0.35), (4 + d + 0.35, y + 0.1, 4 + d + 0.35), 'cloth')
     for i in range(5):
         x = -4.6 + i * 2.0
-        g.box('head', (x, top - 0.75, -4 - d - 0.4), (x + 1.0, top + 0.15, -4 - d - 0.3), 'torse_b')
-    g.box('head', (-0.35, top - 2.6, -0.35), (0.35, top - 0.7, 0.35), 'brass')                 # a small cross crest
-    g.box('head', (-1.0, top - 2.1, -0.35), (1.0, top - 1.6, 0.35), 'brass')
+        g.box('head', (x, y - 0.75, -4 - d - 0.4), (x + 1.0, y + 0.15, -4 - d - 0.3), 'cross')
+        g.box('head', (x + 1.0, y - 0.75, 4 + d + 0.3), (x + 2.0, y + 0.15, 4 + d + 0.4), 'cross')
+    for z in (-3.6, -1.6, 0.4, 2.4):
+        for s in (-1, 1):
+            x = s * (4 + d + 0.35)
+            g.box('head', (min(x, x + s * 0.1), y - 0.75, z), (max(x, x + s * 0.1), y + 0.15, z + 1.0), 'cross')
+
+
+def cross_crest(g, y):
+    g.box('head', (-0.35, y - 1.9, -0.35), (0.35, y, 0.35), 'trim')
+    g.box('head', (-1.0, y - 1.4, -0.35), (1.0, y - 0.9, 0.35), 'trim')
+
+
+def build_crusader_great_helm(g):
+    """A flat-topped great helm: a single eye slit, a cross over the face, breaths below, trimmed, with a torse
+    in the surcoat's colours round the crown and a small cross crest."""
+    top, *_ = great_helm_body(g)
+    torse(g, 1.0, top)
+    cross_crest(g, top - 0.7)
+
+
+def build_crusader_sugarloaf_helm(g):
+    """A sugarloaf great helm (late 13th century): the barrel rising into a pointed crown, a ridge down the face,
+    breaths in a cross on both cheeks, a torse and a tall fan crest in the cloak's colours."""
+    d = 1.0
+    top, bot, py0, py1 = great_helm_body(g, d=d, top=-8.6, breaths='both')
+    for k, (y0, y1, inset) in enumerate(((-9.6, -8.6, 0.6), (-10.5, -9.6, 1.5), (-11.3, -10.5, 2.6), (-11.9, -11.3, 3.6))):
+        g.box('head', (-4 - d + inset, y0, -4 - d + inset), (4 + d - inset, y1, 4 + d - inset), 'plate')
+    g.box('head', (-0.3, -11.9, -4 - d + 0.2), (0.3, top, -4 - d + 0.6), 'ridge')               # ridge up the brow
+    for k, (y0, y1, inset) in enumerate(((-9.6, -8.6, 0.6), (-10.5, -9.6, 1.5), (-11.3, -10.5, 2.6))):
+        g.box('head', (-0.3, y0, -4 - d + inset - 0.25), (0.3, y1, -4 - d + inset), 'ridge')
+    for s in (-1, 1):                                                                         # cruciform breaths
+        cx = s * 3.0
+        for (dx, dy) in ((0, 0), (0, -0.7), (0, 0.7), (-0.7, 0), (0.7, 0)):
+            g.box('head', (cx + dx - 0.18, -1.0 + dy - 0.18, -4 - d - 0.07), (cx + dx + 0.18, -1.0 + dy + 0.18, -4 - d), 'dark')
+    g.box('head', (-1.9, -12.5, -1.9), (1.9, -11.8, 1.9), 'cloth')                             # a small torse at the tip
+    for (x, z) in ((-1.95, -1.0), (0.0, -1.95), (1.95, 1.0), (0.0, 1.95), (-1.0, 1.95), (1.0, -1.95)):
+        g.box('head', (x - 0.5 if abs(z) > 1.5 else x - 0.05, -12.55, z - 0.05 if abs(z) > 1.5 else z - 0.5),
+              (x + 0.5 if abs(z) > 1.5 else x + 0.05, -11.75, z + 0.05 if abs(z) > 1.5 else z + 0.5), 'cross')
+    # the fan crest, front to back, edged in the trim with studs along its foot
+    for (y0, y1, half) in ((-17.4, -16.6, 1.6), (-16.6, -15.6, 2.6), (-15.6, -14.4, 3.2), (-14.4, -13.4, 3.4), (-13.4, -12.5, 3.0)):
+        g.box('head', (-0.35, y0, -half), (0.35, y1, half), 'cloak')
+    g.box('head', (-0.4, -17.6, -1.7), (0.4, -17.3, 1.7), 'trim')
+    for (y, half) in ((-16.7, 2.7), (-15.7, 3.3), (-14.5, 3.5)):
+        for sz in (-1, 1):
+            za, zb = sorted((sz * half, sz * (half - 0.25)))
+            g.box('head', (-0.4, y, za), (0.4, y + 1.2, zb), 'trim')
+    for z in (-2.4, -1.2, 0.0, 1.2, 2.4):
+        g.box('head', (-0.45, -13.1, z - 0.2), (0.45, -12.7, z + 0.2), 'trim')
+
+
+def build_crusader_armet(g):
+    """An armet: a rounded skull with a comb, cheek plates closing at the chin under a pointed visor with one
+    sight slit and breaths, a reinforcing bevor, and a rondel standing off the back of the neck."""
+    d = 0.8
+    g.box('head', (-4 - d, -8.6, -3.4), (4 + d, 0.6, 4 + d), 'plate')                       # skull, cheeks, nape
+    g.box('head', (-3.8, -9.4, -3.6), (3.8, -8.6, 4.4), 'plate')
+    g.box('head', (-2.6, -10.0, -2.6), (2.6, -9.4, 3.6), 'plate')
+    g.box('head', (-0.35, -10.6, -3.4), (0.35, -9.4, 4.2), 'ridge')                           # the comb
+    g.box('head', (-0.35, -9.6, -4.0), (0.35, -8.6, -3.4), 'ridge')
+    # visor: brow, the sight slit, then the point
+    eye_open_front(g, -5.2, -3.4, -8.6, EYES_LOW + 0.3, 4 + d, 'plate', port=(3.6, EYES_HIGH - 0.3, EYES_LOW + 0.3))
+    g.box('head', (-0.3, EYES_HIGH - 0.3, -5.2), (0.3, EYES_LOW + 0.3, -3.4), 'plate')
+    g.box('head', (-4 - d - 0.05, EYES_HIGH - 0.65, -5.35), (4 + d + 0.05, EYES_HIGH - 0.3, -5.2), 'trim')
+    for k, (zf, half, y0, y1) in enumerate(((-5.7, 4.6, EYES_LOW + 0.3, -0.6), (-6.2, 3.4, EYES_LOW + 0.4, -0.9),
+                                            (-6.6, 2.0, EYES_LOW + 0.5, -1.2), (-6.9, 0.7, EYES_LOW + 0.6, -1.5))):
+        g.box('head', (-half, y0, zf), (half, y1, zf + 0.55), 'plate')
+    g.box('head', (-0.25, EYES_LOW + 0.3, -7.0), (0.25, -1.4, -6.85), 'ridge')                 # ridge down the point
+    for k, (zf, half) in enumerate(((-5.7, 4.6), (-6.2, 3.4))):
+        g.box('head', (-half - 0.05, EYES_LOW + 0.3, zf - 0.05), (half + 0.05, EYES_LOW + 0.55, zf + 0.15), 'trim')
+    for zf, xs in ((-5.77, (2.0, 2.8, 3.6)), (-6.27, (1.2, 2.0, 2.8))):                         # breaths, right side
+        for x in xs:
+            g.box('head', (x - 0.15, -2.1, zf), (x + 0.15, -1.2, zf + 0.08), 'dark')
+    g.box('head', (-4 - d - 0.05, -0.6, -5.4), (4 + d + 0.05, 0.9, -3.4), 'plate')             # the bevor
+    g.box('head', (-4 - d - 0.1, 0.6, -5.5), (4 + d + 0.1, 0.9, 4 + d + 0.1), 'trim')
+    for s in (-1, 1):                                                                         # visor pivots, cheek hinge
+        x = s * (4 + d)
+        g.box('head', (min(x, x + s * 0.3), -6.0, -1.4), (max(x, x + s * 0.3), -5.0, -0.4), 'trim')
+        g.box('head', (min(x, x + s * 0.2), -5.5, -5.2), (max(x, x + s * 0.2), -5.1, -1.0), 'plate')
+        g.box('head', (min(x, x + s * 0.25), -3.0, 2.0), (max(x, x + s * 0.25), -2.0, 3.0), 'trim')
+    g.box('head', (-0.3, -1.2, 4 + d), (0.3, -0.2, 4 + d + 1.2), 'plate')                      # the rondel's stem
+    g.box('head', (-1.6, -2.3, 4 + d + 1.2), (1.6, 0.9, 4 + d + 1.5), 'plate')                 # and its disc
+    g.box('head', (-1.2, -1.9, 4 + d + 1.5), (1.2, 0.5, 4 + d + 1.6), 'trim')
+    g.box('head', (-0.4, -1.1, 4 + d + 1.6), (0.4, -0.3, 4 + d + 1.75), 'badge')
+    for i in range(7):                                                                        # rivets round the brow
+        x = -4.0 + i * 1.3
+        g.box('head', (x, -7.6, -4 - d - 0.1), (x + 0.3, -7.3, -4 - d), 'trim')
+
+
+def build_crusader_barbute(g):
+    """A T-slit barbute: one deep bowl from the crown to the jaw with a medial ridge, the face open in a T over
+    the eyes and down past the mouth, trimmed round the opening, with a rivet line at the brow."""
+    d = 0.9
+    g.box('head', (-4 - d, -8.8, -3.6), (4 + d, 0.8, 4 + d), 'plate')                         # sides and back
+    t_h0, t_h1 = EYES_HIGH - 0.35, EYES_LOW + 0.35                                            # the bar of the T
+    half_bar, half_stem = 3.6, 0.9
+    z0, z1 = -4 - d, -3.6
+    g.box('head', (-4 - d, -8.8, z0), (4 + d, t_h0, z1), 'plate')                             # brow
+    g.box('head', (-4 - d, t_h0, z0), (-half_bar, t_h1, z1), 'plate')
+    g.box('head', (half_bar, t_h0, z0), (4 + d, t_h1, z1), 'plate')
+    g.box('head', (-4 - d, t_h1, z0), (-half_stem, 0.8, z1), 'plate')                         # cheeks either side
+    g.box('head', (half_stem, t_h1, z0), (4 + d, 0.8, z1), 'plate')
+    g.box('head', (-3.8, -9.6, -3.8), (3.8, -8.8, 3.8), 'plate')                              # the crown
+    g.box('head', (-2.4, -10.1, -2.4), (2.4, -9.6, 2.4), 'plate')
+    g.box('head', (-0.35, -10.5, -4.6), (0.35, -9.6, 4.6), 'ridge')                           # medial ridge
+    g.box('head', (-0.35, -9.8, -4 - d - 0.2), (0.35, t_h0 - 0.5, -4 - d), 'ridge')
+    e = -4 - d - 0.15                                                                          # trim round the T
+    g.box('head', (-half_bar - 0.3, t_h0 - 0.3, e), (half_bar + 0.3, t_h0, -4 - d), 'trim')
+    for s in (-1, 1):
+        xa, xb = sorted((s * half_bar, s * (half_bar + 0.3)))
+        g.box('head', (xa, t_h0, e), (xb, t_h1 + 0.3, -4 - d), 'trim')
+        ya, yb = sorted((s * half_bar, s * half_stem))
+        g.box('head', (ya, t_h1, e), (yb, t_h1 + 0.3, -4 - d), 'trim')
+        xa, xb = sorted((s * half_stem, s * (half_stem + 0.3)))
+        g.box('head', (xa, t_h1, e), (xb, 0.8, -4 - d), 'trim')
+    g.box('head', (-4 - d - 0.1, 0.5, -4 - d - 0.1), (4 + d + 0.1, 0.8, 4 + d + 0.1), 'trim')  # the rolled edge
+    for i in range(9):
+        x = -4.3 + i * 1.05
+        g.box('head', (x, -7.4, -4 - d - 0.1), (x + 0.3, -7.1, -4 - d), 'trim')
+    for s in (-1, 1):                                                                         # lining rivets on the cheeks
+        for y in (-2.0, -0.6):
+            x = s * (4 + d)
+            g.box('head', (min(x, x + s * 0.1), y, -2.6), (max(x, x + s * 0.1), y + 0.3, -2.3), 'trim')
+
+
+def build_crusader_crowned_helm(g):
+    """A great helm crowned in the trim's metal, with fleurons, and cloth mantling falling behind in the cloak's
+    colours, lined, cut into scallops."""
+    d = 1.0
+    top, bot, *_ = great_helm_body(g, d=d)
+    g.box('head', (-4 - d - 0.3, top - 1.3, -4 - d - 0.3), (4 + d + 0.3, top + 0.2, 4 + d + 0.3), 'trim')   # crown band
+    jewels = [(-2.6, -4 - d - 0.4), (0.0, -4 - d - 0.4), (2.6, -4 - d - 0.4)]
+    for x, z in jewels:
+        g.box('head', (x - 0.3, top - 0.95, z), (x + 0.3, top - 0.35, z + 0.1), 'cross')
+    ring = [(-4.9, -4.9), (-1.6, -5.3), (1.6, -5.3), (4.9, -4.9), (5.3, -1.6), (5.3, 1.6), (4.9, 4.9), (1.6, 5.3),
+            (-1.6, 5.3), (-4.9, 4.9), (-5.3, 1.6), (-5.3, -1.6)]
+    for i, (x, z) in enumerate(ring):                                                          # fleurons and points
+        h = 2.0 if i % 3 != 0 else 1.2
+        g.box('head', (x - 0.4, top - 1.3 - h, z - 0.4), (x + 0.4, top - 1.3, z + 0.4), 'trim')
+        if h > 1.5:
+            g.box('head', (x - 0.75, top - 2.5, z - 0.25), (x + 0.75, top - 2.0, z + 0.25), 'trim')
+    g.box('head', (-3.6, top - 1.0, -3.6), (3.6, top - 0.4, 3.6), 'cloak')                     # the cap inside
+    cross_crest(g, top - 1.3)
+    # mantling: cloth hanging from the crown down the back, cut into long tongues, lined
+    for i, (x, drop) in enumerate(((-5.2, 2.2), (-3.2, 3.4), (-1.1, 2.6), (1.0, 3.6), (3.1, 2.4), (5.0, 3.0))):
+        w = 1.9 if i not in (0, 5) else 1.2
+        x0, x1 = (x, x + w) if i < 5 else (x - w + 1.2, x + 1.2)
+        g.box('head', (x0, top + 0.4, 4 + d + 0.15), (x1, drop, 4 + d + 0.4 + 0.12 * (i % 2)), 'cloak')
+        g.box('head', (x0 + 0.25, drop, 4 + d + 0.15), (x1 - 0.25, drop + 0.45, 4 + d + 0.4), 'lining')
+        g.box('head', (x0, top + 0.4, 4 + d + 0.4 + 0.12 * (i % 2)), (x0 + 0.2, drop, 4 + d + 0.5 + 0.12 * (i % 2)), 'lining')
+    for s in (-1, 1):                                                                          # and over the sides
+        x = s * (4 + d + 0.15)
+        xa, xb = sorted((x, x + s * 0.3))
+        g.box('head', (xa, top + 0.4, 1.4), (xb, 1.6, 2.6), 'cloak')
+        g.box('head', (xa, top + 0.4, 3.0), (xb, 2.4, 4.6), 'cloak')
+        g.box('head', (xa, 1.6, 1.6), (xb, 2.0, 2.4), 'lining')
+        g.box('head', (xa, 2.4, 3.2), (xb, 2.8, 4.4), 'lining')
+
+
+def build_crusader_winged_helm(g):
+    """A great helm under a pair of heraldic wings (a vol) rising from the torse, feathers in the cloak's colour
+    edged in the trim."""
+    d = 1.0
+    top, *_ = great_helm_body(g, d=d, breaths='both')
+    torse(g, d, top)
+    for s in (-1, 1):
+        for k in range(7):                                                                     # feathers, fanning out
+            x0 = s * (0.6 + k * 0.62)
+            y_top = top - 0.7 - (5.8 - abs(k - 2.2) * 0.8 - k * 0.25)
+            y_bot = top - 0.7 - 0.2 * k
+            xa, xb = sorted((x0, x0 + s * 0.62))
+            g.box('head', (xa, y_top, -0.3 - 0.05 * k), (xb, y_bot, 0.3 + 0.05 * k), 'cloak')
+            g.box('head', (xa, y_top - 0.3, -0.2), (xb, y_top, 0.2), 'lining')
+        xa, xb = sorted((s * 0.5, s * 0.75))
+        g.box('head', (xa, top - 6.4, -0.45), (xb, top - 0.7, 0.45), 'trim')                   # the wing's bone
+    cross_crest(g, top - 0.7)
 
 
 def build_crusader_plate(g):
@@ -4839,22 +5093,26 @@ def build_bodyguard_suit(g):
     g.both(LEGS, leg)
 
 
+HELM_MATS = dict(plate=H('plate'), ridge=H('ridge'), trim=H('trim'), dark=flat('#050505', ink=False), cloth=H('cloth', weave=0.03, stitch=None), cross=H('cross', weave=0.03, stitch=None), cloak=H('cloak', weave=0.05, stitch=None), lining=H('lining', weave=0.05, stitch=None), badge=H('badge'), mail=mesh('#3a3a40'))
+
 GRAIL = {
-    'crusader_great_helm': (build_crusader_great_helm, dict(plate=blackened(), brass=metal('brass'), dark=flat('#050505', ink=False),
-                                                            torse=cloth('#e8e4da', weave=0.03, stitch=None),
-                                                            torse_b=cloth('#141416', weave=0.03, stitch=None)), 0.3),
-    'crusader_plate': (build_crusader_plate, dict(plate=blackened(), ridge=blackened('#26262c'), edge=metal('brass'),
+    'crusader_great_helm': (build_crusader_great_helm, HELM_MATS, 0.3),
+    'crusader_sugarloaf_helm': (build_crusader_sugarloaf_helm, HELM_MATS, 0.3),
+    'crusader_armet': (build_crusader_armet, HELM_MATS, 0.3),
+    'crusader_barbute': (build_crusader_barbute, HELM_MATS, 0.3),
+    'crusader_crowned_helm': (build_crusader_crowned_helm, HELM_MATS, 0.3),
+    'crusader_winged_helm': (build_crusader_winged_helm, HELM_MATS, 0.3),
+    'crusader_plate': (build_crusader_plate, dict(plate=H('plate'), ridge=H('ridge'), edge=H('trim'),
                                                   mail=mesh('#3a3a40')), 0.3),
-    'crusader_tabard': (build_crusader_tabard, dict(linen=cloth('#e6e2d6', weave=0.06), cross=cloth('#141416', weave=0.04, stitch=None),
-                                                    belt=leather('#1e1814'), buckle=metal('brass'), hem=cloth('#d0ccc0'),
+    'crusader_tabard': (build_crusader_tabard, dict(linen=H('cloth', weave=0.06), cross=H('cross', weave=0.04, stitch=None),
+                                                    belt=leather('#1e1814'), buckle=H('trim'), hem=H('hem'),
                                                     grime=flat('#8a8270', ink=False)), 0.35),
-    'crusader_pauldrons': (build_crusader_pauldrons, dict(plate=blackened(), brass=metal('brass'),
-                                                          cross=flat('#e6e2d6')), 0.3),
-    'crusader_cloak': (build_crusader_cloak, dict(wool=cloth('#16161a', weave=0.08), lining=cloth('#e6e2d6'), brass=metal('brass'),
-                                                  chain=metal('brass'), hem=cloth('#202026'), fold=cloth('#0e0e12', weave=0.08)), 0.35),
-    'crusader_greaves': (build_crusader_greaves, dict(plate=blackened(), brass=metal('brass')), 0.3),
-    'crusader_gauntlets': (build_crusader_gauntlets, dict(plate=blackened(), brass=metal('brass')), 0.3),
-    'crusader_sabatons': (build_crusader_sabatons, dict(plate=blackened(), brass=metal('brass'), sole=leather('#1e1814')), 0.3),
+    'crusader_pauldrons': (build_crusader_pauldrons, dict(plate=H('plate'), brass=H('trim'), cross=H('badge')), 0.3),
+    'crusader_cloak': (build_crusader_cloak, dict(wool=H('cloak', weave=0.08), lining=H('lining'), brass=H('trim'),
+                                                  chain=H('trim'), hem=H('cloak_hem'), fold=H('fold', weave=0.08)), 0.35),
+    'crusader_greaves': (build_crusader_greaves, dict(plate=H('plate'), brass=H('trim')), 0.3),
+    'crusader_gauntlets': (build_crusader_gauntlets, dict(plate=H('plate'), brass=H('trim')), 0.3),
+    'crusader_sabatons': (build_crusader_sabatons, dict(plate=H('plate'), brass=H('trim'), sole=leather('#1e1814')), 0.3),
     'gothic_sallet': (build_gothic_sallet, dict(steel=metal('steel'), brass=metal('brass'), dark=flat('#0a0a0a', ink=False),
                                                 flute=metal('steel')), 0.3),
     'gothic_cuirass': (build_gothic_cuirass, dict(steel=metal('steel'), flute=metal('steel'), brass=metal('brass'),
@@ -5486,10 +5744,12 @@ def main(only):
         camos = list(CAMOS) if any(isinstance(v, Camo) for v in mats.values()) else []
         if any(isinstance(v, Tinted) for v in mats.values()):
             camos = list(HAIR_COLOURS)                  # hair: its shades ride the camo component
+        if any(isinstance(v, Heraldry) for v in mats.values()):
+            camos = list(ORDERS)                        # crusader kit: its schemes too
         CAMO_FOR[gid] = [] if gid in GROOMING else camos
 
         def look(name):
-            return dict({k: v.make(name) if isinstance(v, (Camo, Tinted)) else v for k, v in mats.items()},
+            return dict({k: v.make(name) if isinstance(v, (Camo, Tinted, Heraldry)) else v for k, v in mats.items()},
                         _after=worn(wear, low=lo[1] + 4))
         patches = paint(m, look(camos[0] if camos else None), wear, seed)
         img, uvs, T = M.pack(patches)

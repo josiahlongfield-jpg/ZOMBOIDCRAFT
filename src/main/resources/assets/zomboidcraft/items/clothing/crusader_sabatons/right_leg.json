@@ -1,11 +1,109 @@
 {
  "model": {
-  "type": "minecraft:special",
-  "base": "zomboidcraft:item/clothing/crusader_sabatons/right_leg",
-  "model": {
-   "type": "zomboidcraft:mesh",
-   "id": "clothing/crusader_sabatons",
-   "part": "right_leg"
+  "type": "minecraft:select",
+  "property": "minecraft:component",
+  "component": "zomboidcraft:camo",
+  "cases": [
+   {
+    "when": "templar",
+    "model": {
+     "type": "minecraft:special",
+     "base": "zomboidcraft:item/clothing/crusader_sabatons/right_leg",
+     "model": {
+      "type": "zomboidcraft:mesh",
+      "id": "clothing/crusader_sabatons",
+      "part": "right_leg",
+      "texture": "zomboidcraft:textures/item/clothing/crusader_sabatons/camo_templar.png"
+     }
+    }
+   },
+   {
+    "when": "hospitaller",
+    "model": {
+     "type": "minecraft:special",
+     "base": "zomboidcraft:item/clothing/crusader_sabatons/right_leg",
+     "model": {
+      "type": "zomboidcraft:mesh",
+      "id": "clothing/crusader_sabatons",
+      "part": "right_leg",
+      "texture": "zomboidcraft:textures/item/clothing/crusader_sabatons/camo_hospitaller.png"
+     }
+    }
+   },
+   {
+    "when": "teutonic",
+    "model": {
+     "type": "minecraft:special",
+     "base": "zomboidcraft:item/clothing/crusader_sabatons/right_leg",
+     "model": {
+      "type": "zomboidcraft:mesh",
+      "id": "clothing/crusader_sabatons",
+      "part": "right_leg",
+      "texture": "zomboidcraft:textures/item/clothing/crusader_sabatons/camo_teutonic.png"
+     }
+    }
+   },
+   {
+    "when": "lazarite",
+    "model": {
+     "type": "minecraft:special",
+     "base": "zomboidcraft:item/clothing/crusader_sabatons/right_leg",
+     "model": {
+      "type": "zomboidcraft:mesh",
+      "id": "clothing/crusader_sabatons",
+      "part": "right_leg",
+      "texture": "zomboidcraft:textures/item/clothing/crusader_sabatons/camo_lazarite.png"
+     }
+    }
+   },
+   {
+    "when": "crimson",
+    "model": {
+     "type": "minecraft:special",
+     "base": "zomboidcraft:item/clothing/crusader_sabatons/right_leg",
+     "model": {
+      "type": "zomboidcraft:mesh",
+      "id": "clothing/crusader_sabatons",
+      "part": "right_leg",
+      "texture": "zomboidcraft:textures/item/clothing/crusader_sabatons/camo_crimson.png"
+     }
+    }
+   },
+   {
+    "when": "gilded",
+    "model": {
+     "type": "minecraft:special",
+     "base": "zomboidcraft:item/clothing/crusader_sabatons/right_leg",
+     "model": {
+      "type": "zomboidcraft:mesh",
+      "id": "clothing/crusader_sabatons",
+      "part": "right_leg",
+      "texture": "zomboidcraft:textures/item/clothing/crusader_sabatons/camo_gilded.png"
+     }
+    }
+   },
+   {
+    "when": "rusted",
+    "model": {
+     "type": "minecraft:special",
+     "base": "zomboidcraft:item/clothing/crusader_sabatons/right_leg",
+     "model": {
+      "type": "zomboidcraft:mesh",
+      "id": "clothing/crusader_sabatons",
+      "part": "right_leg",
+      "texture": "zomboidcraft:textures/item/clothing/crusader_sabatons/camo_rusted.png"
+     }
+    }
+   }
+  ],
+  "fallback": {
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/crusader_sabatons/right_leg",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/crusader_sabatons",
+    "part": "right_leg"
+   }
   }
  }
 }

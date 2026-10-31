@@ -27,6 +27,8 @@ public final class Firearms {
             Map.entry("motorcycle_helmet", 1.15), Map.entry("riot_helmet", 1.15), Map.entry("football_helmet", 1.1),
             Map.entry("fire_helmet", 1.1), Map.entry("pilot_helmet", 1.05), Map.entry("cbrn_mask", 1.3),
             Map.entry("welder_mask", 1.3), Map.entry("scba_mask", 1.2), Map.entry("crusader_great_helm", 1.35),
+            Map.entry("crusader_sugarloaf_helm", 1.4), Map.entry("crusader_armet", 1.35), Map.entry("crusader_barbute", 1.25),
+            Map.entry("crusader_crowned_helm", 1.35), Map.entry("crusader_winged_helm", 1.35),
             Map.entry("gothic_sallet", 1.15), Map.entry("bomb_disposal_helmet", 1.3));
 
     private Firearms() {
