@@ -59,6 +59,11 @@ public final class House {
         alarmChance = chance;
     }
 
+    /** Zomboid's Randomized Building Chance for the house stories (Interior's tales), on RoadStories.rate's scale. */
+    public static void setStoryRate(DoubleSupplier rate) {
+        Interior.setStoryRate(rate);
+    }
+
     /** Zomboid's frequency names as a share of houses (never .. very_often). */
     public static double alarmChance(String frequency) {
         return switch (frequency == null ? "" : frequency) {
