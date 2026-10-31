@@ -477,7 +477,7 @@ public class SandboxScreen extends Screen {
                 String v = draft.get(o.id);
                 if (v != null && !v.equals(o.defaultValue())) overrides.put(o.id, v);
             }
-            Sandbox.forNewWorld("apocalypse", overrides);
+            Sandbox.forNewWorld(overrides);
         }
         minecraft.gui.setScreen(parent);
     }
