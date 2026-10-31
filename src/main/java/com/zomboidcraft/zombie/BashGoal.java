@@ -13,6 +13,7 @@ import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,19 +33,17 @@ public class BashGoal extends Goal {
             java.util.Map<Long, long[]>> DENTS = new java.util.HashMap<>();
 
     /**
-     * A tall fence's panel falls after this many blows on it while the crowd is big enough: three or four zombies fit
-     * at a panel, so a 25-strong crowd has one down in about forty seconds.
+     * A tall fence's panel falls after this many blows on it while the crowd is big enough: two or three of a crowd
+     * are thumping each panel at a time, so a 25-strong crowd has one down in about half a minute.
      */
-    private static final int FENCE_BLOWS = 120;
-    /** A zombie counts as leaning on a fence for this long after its last blow (ticks). */
-    private static final int FENCE_CROWD_TICKS = 40;
+    private static final int FENCE_BLOWS = 80;
     /**
      * How far along the fence the crowd is counted (blocks, either way). Zomboid's crowd piles onto one tile; ours
      * can't stand inside each other, so the crowd is everyone at this stretch of fence.
      */
     private static final int FENCE_STRETCH = 4;
-    /** Who's been at a fence lately: zombie id to {panel position, tick of its last blow}. */
-    private static final java.util.Map<Integer, long[]> FENCE_CROWDS = new java.util.HashMap<>();
+    /** How far out from the fence, on either side, a zombie counts as pressing on it (blocks). */
+    private static final double FENCE_DEPTH = 3;
 
     private final Zombie zombie;
     private BlockPos block;
@@ -236,7 +235,7 @@ public class BashGoal extends Goal {
         boolean steel = state.getSoundType() != SoundType.WOOD;
         level.playSound(null, block, steel ? SoundEvents.ZOMBIE_ATTACK_IRON_DOOR : SoundEvents.ZOMBIE_ATTACK_WOODEN_DOOR,
                 SoundSource.HOSTILE, 1f, 0.9f + zombie.getRandom().nextFloat() * 0.2f);
-        Noise.emit(level, center, BANG_NOISE);
+        Noise.emitByDead(level, center, BANG_NOISE);
         hits++;
         Acts.blow(zombie, block, glass);
         if (fence) {
@@ -290,8 +289,8 @@ public class BashGoal extends Goal {
 
     /**
      * A blow on a tall fence. One zombie or a handful only rattle it; Zomboid's rule is a crowd, so the blows add up
-     * on the panel only while at least zombieLore.fenceThumpersRequired zombies have been at it in the last two
-     * seconds, faster the bigger the crowd. Then the panel goes, and the posts and wire above it.
+     * on the panel only while at least zombieLore.fenceThumpersRequired zombies are pressed up along that stretch of
+     * fence. Then the panel goes, and the posts and wire above it.
      */
     private void hitFence(ServerLevel level, BlockState state) {
         ZcConfig.ZombieLore lore = ZcConfig.get().zombieLore;
@@ -299,15 +298,13 @@ public class BashGoal extends Goal {
             return;
         }
         long now = level.getGameTime();
-        FENCE_CROWDS.put(zombie.getId(), new long[] {block.asLong(), now});
-        FENCE_CROWDS.values().removeIf(at -> now - at[1] > FENCE_CROWD_TICKS);
-        int crowd = 0;
-        for (long[] at : FENCE_CROWDS.values()) {
-            BlockPos p = BlockPos.of(at[0]);
-            if (Math.abs(p.getX() - block.getX()) <= FENCE_STRETCH && Math.abs(p.getZ() - block.getZ()) <= FENCE_STRETCH
-                    && Math.abs(p.getY() - block.getY()) <= 2) {
-                crowd++;
-            }
+        // the crowd is every walker pressed up along this stretch of fence, thumping it or shoving behind the ones who are
+        int crowd = level.getEntitiesOfClass(Zombie.class, new AABB(block).inflate(FENCE_STRETCH, 2, FENCE_DEPTH),
+                ZombieTypes::isWalker).size();
+        if (Math.abs(block.getX() - zombie.getBlockX()) > Math.abs(block.getZ() - zombie.getBlockZ())) {
+            // a fence running along z: the stretch is along z and the depth across x
+            crowd = level.getEntitiesOfClass(Zombie.class, new AABB(block).inflate(FENCE_DEPTH, 2, FENCE_STRETCH),
+                    ZombieTypes::isWalker).size();
         }
         if (crowd < Math.max(1, lore.fenceThumpersRequired)) {
             return;
@@ -331,7 +328,7 @@ public class BashGoal extends Goal {
             }
             level.playSound(null, block, SoundEvents.ZOMBIE_ATTACK_IRON_DOOR, SoundSource.HOSTILE, 1.4f, 0.6f);
             level.playSound(null, block, SoundEvents.ZOMBIE_BREAK_WOODEN_DOOR, SoundSource.HOSTILE, 1f, 0.7f);
-            Noise.emit(level, Vec3.atCenterOf(block), BANG_NOISE * 2);
+            Noise.emitByDead(level, Vec3.atCenterOf(block), BANG_NOISE * 2);
             return;
         }
         level.destroyBlockProgress(block.hashCode(), block, (int) Math.min(9, dent[0] / FENCE_BLOWS));
