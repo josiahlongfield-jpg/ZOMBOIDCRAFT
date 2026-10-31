@@ -1,0 +1,77 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hw_drum": "zomboidcraft:block/city/hw_drum",
+    "tire": "zomboidcraft:block/city/tire",
+    "particle": "zomboidcraft:block/city/hw_drum"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        2
+      ],
+      "to": [
+        14,
+        10,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hw_drum"
+        },
+        "south": {
+          "texture": "#hw_drum"
+        },
+        "east": {
+          "texture": "#hw_drum"
+        },
+        "west": {
+          "texture": "#hw_drum"
+        },
+        "up": {
+          "texture": "#hw_drum"
+        },
+        "down": {
+          "texture": "#hw_drum",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        0,
+        0
+      ],
+      "to": [
+        15,
+        1.5,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tire",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#tire"
+        },
+        "east": {
+          "texture": "#tire"
+        },
+        "west": {
+          "texture": "#tire"
+        },
+        "up": {
+          "texture": "#tire"
+        },
+        "down": {
+          "texture": "#tire",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

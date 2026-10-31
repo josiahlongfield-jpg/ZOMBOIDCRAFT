@@ -81,7 +81,7 @@ public final class ZcCommand {
                         .then(Commands.literal("config")
                                 .executes(ZcCommand::listConfig)
                                 .then(Commands.literal("reload").executes(ctx -> {
-                                    ZcConfig.load();
+                                    com.zomboidcraft.sandbox.Sandbox.reloadConfig();
                                     ctx.getSource().sendSuccess(() -> Component.literal("Reloaded config/zomboidcraft.json"), true);
                                     return 1;
                                 }))
@@ -338,10 +338,12 @@ public final class ZcCommand {
             ctx.getSource().sendFailure(Component.literal("The mod's weather is off (weather.enabled)"));
             return 0;
         }
+        double air = com.zomboidcraft.world.weather.Climate.airTemp(ctx.getSource().getLevel(),
+                net.minecraft.core.BlockPos.containing(ctx.getSource().getPosition()));
         ctx.getSource().sendSuccess(() -> Component.literal(String.format(
-                "Weather: %s for %d more seconds | rain %.2f thunder %.2f fog %.2f wind %.2f moon %.2f hail %.2f",
+                "Weather: %s for %d more seconds | rain %.2f thunder %.2f fog %.2f wind %.2f moon %.2f hail %.2f | air %.0f°C",
                 WeatherDirector.kind().id, WeatherDirector.secondsLeft(), w.rain(), w.thunder(), w.fog(), w.wind(),
-                w.moon(), w.hail())), false);
+                w.moon(), w.hail(), air)), false);
         return 1;
     }
 
@@ -380,6 +382,7 @@ public final class ZcCommand {
     private static int setConfig(CommandContext<CommandSourceStack> ctx, String key, String value) {
         try {
             ZcConfig.setValue(key, value);
+            com.zomboidcraft.sandbox.Sandbox.configChanged(key);
             ctx.getSource().sendSuccess(() -> Component.literal(key + " set to " + ZcConfig.getValue(key)), true);
             return 1;
         } catch (IllegalArgumentException e) {

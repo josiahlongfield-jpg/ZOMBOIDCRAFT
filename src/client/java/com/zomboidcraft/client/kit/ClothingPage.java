@@ -2,9 +2,12 @@ package com.zomboidcraft.client.kit;
 
 import com.zomboidcraft.carry.QuickSlots;
 import com.zomboidcraft.client.hud.InjuryGlowLayer;
+import com.zomboidcraft.clothing.ClothWear;
 import com.zomboidcraft.clothing.ClothingSlot;
 import com.zomboidcraft.clothing.Clothes;
 import com.zomboidcraft.clothing.Garment;
+import com.zomboidcraft.clothing.Spot;
+import com.zomboidcraft.clothing.Tailoring;
 import com.zomboidcraft.survival.Body;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,14 +21,15 @@ import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Clothing: the eleven places you wear things, head to foot (clothing/ClothingSlot), what each piece does, and what it
- * all adds up to: warmth, rain kept off, armour and how much of a bite or a scratch gets through on each part of you.
- * The survivor stands in the middle, as on the Character page.
+ * Clothing: the fourteen places you wear things, head to foot (clothing/ClothingSlot), what each piece does and how
+ * worn it is, and what it all adds up to: warmth, wind and rain kept out, comfort, speed, armour, and how much of a
+ * bite, a scratch or a bullet gets stopped on each part of you. P patches the piece under the mouse, T rips it up
+ * (clothing/Tailoring). The survivor stands in the middle, as on the Character page.
  */
 final class ClothingPage {
     /** A warm enough outfit for a cold night; the warmth bar fills there. */
     private static final int WARM = 20;
-    private static final int ROW = 22;
+    private static final int ROW = 19;
 
     private final KitScreen<?> screen;
     /** The slot whose piece the right-hand card describes, when nothing is hovered. */
@@ -62,15 +66,18 @@ final class ClothingPage {
             boolean over = screen.hovered(tx, ty, 172, ROW - 2, mx, my);
             if (over) hovered = slot;
             if (slot == selected) g.fill(tx, ty, tx + 172, ty + ROW - 2, 0x14E8E4DA);
-            KitDraw.tile(g, font, stack, tx, ty, 20, 20, over);
-            KitDraw.caps(g, font, slot.label, tx + 25, ty + 2, slot == selected ? KitDraw.LINK : KitDraw.DIM, 0.6f);
+            KitDraw.tile(g, font, stack, tx, ty, 17, 17, over);
+            KitDraw.caps(g, font, slot.label, tx + 22, ty + 1, slot == selected ? KitDraw.LINK : KitDraw.DIM, 0.58f);
             Garment piece = Clothes.of(stack);
             if (stack.isEmpty()) {
-                KitDraw.text(g, font, "Nothing worn", tx + 25, ty + 10, KitDraw.FAINT, 0.85f);
+                KitDraw.text(g, font, "Nothing worn", tx + 22, ty + 8, KitDraw.FAINT, 0.8f);
             } else {
                 String name = stack.getHoverName().getString();
-                KitDraw.text(g, font, name, tx + 25, ty + 10, KitDraw.BRIGHT, KitDraw.width(font, name, 0.85f) > 100 ? 0.7f : 0.85f);
-                KitDraw.textRight(g, font, brief(piece, stack), tx + 170, ty + 2, KitDraw.DIM, 0.62f);
+                KitDraw.text(g, font, name, tx + 22, ty + 8, KitDraw.BRIGHT, KitDraw.width(font, name, 0.8f) > 100 ? 0.66f : 0.8f);
+                KitDraw.textRight(g, font, brief(piece, stack), tx + 170, ty + 1, KitDraw.DIM, 0.58f);
+                if (piece != null && ClothWear.of(stack).holeCount() > 0) {
+                    KitDraw.textRight(g, font, ClothWear.of(stack).holeCount() + " holes", tx + 170, ty + 9, KitDraw.WARN, 0.58f);
+                }
             }
             Slot target = menu.slots.get(menuSlot);
             String label = slot.label;
@@ -86,18 +93,22 @@ final class ClothingPage {
         KitDraw.heading(g, font, "All together", rx, y + 34, rw, true);
         int ry = y + 46;
         ry = stat(g, font, "Warmth", String.valueOf(totals.warmth()), totals.warmth() / (float) WARM, rx, ry, rw);
+        ry = stat(g, font, "Wind kept out", pct(totals.wind()), totals.wind(), rx, ry, rw);
         ry = stat(g, font, "Rain kept off", pct(totals.water()), totals.water(), rx, ry, rw);
+        ry = stat(g, font, "Comfort", pct(1 - totals.discomfort()), 1 - totals.discomfort(), rx, ry, rw);
+        ry = stat(g, font, "Slowed", totals.run() > 0 ? "-" + pct(totals.run()) + " run" : "Not at all", totals.run() * 4, rx, ry, rw);
         ry = stat(g, font, "Armour", String.valueOf(totals.armour()), totals.armour() / 20f, rx, ry, rw);
         ry += 2;
         KitDraw.caps(g, font, "Stops", rx, ry, KitDraw.FAINT, 0.6f);
-        KitDraw.capsRight(g, font, "Bite", rx + rw - 46, ry, KitDraw.FAINT, 0.6f);
-        KitDraw.capsRight(g, font, "Scratch", rx + rw, ry, KitDraw.FAINT, 0.6f);
+        KitDraw.capsRight(g, font, "Bite", rx + rw - 72, ry, KitDraw.FAINT, 0.6f);
+        KitDraw.capsRight(g, font, "Scratch", rx + rw - 36, ry, KitDraw.FAINT, 0.6f);
+        KitDraw.capsRight(g, font, "Bullet", rx + rw, ry, KitDraw.FAINT, 0.6f);
         ry += 8;
         for (Body.Region r : Body.Region.values()) {
-            float bite = totals.bite().getOrDefault(r, 0f), scratch = totals.scratch().getOrDefault(r, 0f);
             KitDraw.text(g, font, cap(r.label), rx, ry, KitDraw.TEXT, 0.8f);
-            guard(g, font, bite, rx + rw - 86, ry, 40);
-            guard(g, font, scratch, rx + rw - 40, ry, 40);
+            guard(g, font, totals.bite().getOrDefault(r, 0f), rx + rw - 108, ry, 36);
+            guard(g, font, totals.scratch().getOrDefault(r, 0f), rx + rw - 72, ry, 36);
+            guard(g, font, totals.bullet().getOrDefault(r, 0f), rx + rw - 36, ry, 36);
             ry += 11;
         }
 
@@ -123,6 +134,8 @@ final class ClothingPage {
         int hx = x + 37, hy = y + KitScreen.H - 14;
         hx += KitDraw.hint(g, font, "LMB", "Change", hx, hy);
         hx += KitDraw.hint(g, font, "RMB", "Take off", hx, hy);
+        hx += KitDraw.hint(g, font, "P", "Patch", hx, hy);
+        hx += KitDraw.hint(g, font, "T", "Rip up", hx, hy);
         screen.pagesAndClose(g, font, hx, hy);
     }
 
@@ -134,8 +147,8 @@ final class ClothingPage {
     }
 
     private static void guard(GuiGraphicsExtractor g, Font font, float v, int x, int y, int w) {
-        g.fill(x, y + 7, x + w - 18, y + 8, 0x33E8E4DA);
-        g.fill(x, y + 7, x + Math.round((w - 18) * v), y + 8, v >= 0.5f ? KitDraw.GOOD : KitDraw.TEXT);
+        g.fill(x, y + 7, x + w - 20, y + 8, 0x33E8E4DA);
+        g.fill(x, y + 7, x + Math.round((w - 20) * v), y + 8, v >= 0.5f ? KitDraw.GOOD : KitDraw.TEXT);
         KitDraw.textRight(g, font, pct(v), x + w, y + 1, v > 0 ? KitDraw.BRIGHT : KitDraw.FAINT, 0.75f);
     }
 
@@ -163,20 +176,30 @@ final class ClothingPage {
             return out;
         }
         if (!p.covers().isEmpty()) {
-            List<String> parts = new ArrayList<>();
-            boolean arms = p.covers().contains(Body.Region.LEFT_ARM), legs = p.covers().contains(Body.Region.LEFT_LEG);
-            if (p.covers().contains(Body.Region.HEAD)) parts.add("head");
-            if (p.covers().contains(Body.Region.TORSO)) parts.add("torso");
-            if (arms) parts.add("arms");
-            if (legs) parts.add("legs");
-            out.add("Covers the " + String.join(", ", parts));
+            List<String> spots = new ArrayList<>();
+            for (Spot spot : p.covers()) spots.add(spot.label);
+            out.add("Covers the " + String.join(", ", spots));
             out.add("Stops " + pct(p.bite()) + " of bites, " + pct(p.scratch()) + " of scratches");
         }
-        if (p.warmth() > 0) out.add("Warmth +" + p.warmth());
+        if (p.bullet() > 0) out.add("Stops " + pct(p.bullet()) + " of bullets");
+        if (p.insulation() > 0) out.add("Warmth +" + p.warmth() + ", keeps out " + pct(p.wind()) + " of the wind");
         if (p.water() > 0) out.add("Keeps off " + pct(p.water()) + " of the rain");
+        if (p.discomfort() > 0) out.add(p.discomfort() >= 0.25f ? "Uncomfortable to wear" : "A little uncomfortable");
+        if (p.run() > 0 || p.swing() > 0) {
+            out.add("Slows you: " + pct(p.run()) + " running" + (p.swing() > 0 ? ", " + pct(p.swing()) + " swinging" : ""));
+        }
         if (p.armour() > 0) out.add("Armour +" + p.armour());
         if (out.isEmpty()) out.add("Looks the part, guards nothing");
-        if (stack.isDamageableItem()) out.add("Condition: " + KitItems.conditionWord(KitItems.condition(stack)));
+        ClothWear wear = ClothWear.of(stack);
+        if (wear.ruined(p)) {
+            out.add("Ruined: guards nothing now");
+        } else {
+            String worn = "Condition " + pct(wear.left(p));
+            if (wear.holeCount() > 0) worn += ", " + wear.holeCount() + (wear.holeCount() == 1 ? " hole" : " holes");
+            if (wear.patchCount() > 0) worn += ", " + wear.patchCount() + (wear.patchCount() == 1 ? " patch" : " patches");
+            out.add(worn);
+        }
+        if (Tailoring.patchable(p) && Tailoring.nextPatch(p, wear) != null) out.add("P to patch: sewing kit, thread, a strip");
         return out;
     }
 

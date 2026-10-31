@@ -33,6 +33,7 @@ import shapes as sh  # noqa: E402
 import gen_java  # noqa: E402
 import wave2  # noqa: E402
 import wave3  # noqa: E402
+import wave4  # noqa: E402
 
 NS = 'zomboidcraft'
 ASSETS = ROOT / 'src/main/resources/assets/zomboidcraft'
@@ -637,6 +638,7 @@ ITEMS = {
 }
 ITEMS.update(wave2.table(it))
 ITEMS.update(wave3.table(it))
+ITEMS.update(wave4.table(it))
 
 
 # ================================================================== output

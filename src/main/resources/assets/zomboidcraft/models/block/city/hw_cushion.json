@@ -1,0 +1,111 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hw_chevron": "zomboidcraft:block/city/hw_chevron",
+    "hw_cushion": "zomboidcraft:block/city/hw_cushion",
+    "st_galv": "zomboidcraft:block/city/st_galv",
+    "particle": "zomboidcraft:block/city/st_galv"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        0
+      ],
+      "to": [
+        14,
+        1,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#st_galv",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#st_galv",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#st_galv"
+        },
+        "west": {
+          "texture": "#st_galv"
+        },
+        "up": {
+          "texture": "#st_galv"
+        },
+        "down": {
+          "texture": "#st_galv",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2.5,
+        1,
+        1
+      ],
+      "to": [
+        13.5,
+        11,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hw_chevron"
+        },
+        "south": {
+          "texture": "#hw_cushion",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#hw_cushion"
+        },
+        "west": {
+          "texture": "#hw_cushion"
+        },
+        "up": {
+          "texture": "#hw_cushion"
+        },
+        "down": {
+          "texture": "#hw_cushion"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        11,
+        2
+      ],
+      "to": [
+        13,
+        11.6,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hw_cushion"
+        },
+        "south": {
+          "texture": "#hw_cushion"
+        },
+        "east": {
+          "texture": "#hw_cushion"
+        },
+        "west": {
+          "texture": "#hw_cushion"
+        },
+        "up": {
+          "texture": "#hw_cushion"
+        },
+        "down": {
+          "texture": "#hw_cushion"
+        }
+      }
+    }
+  ]
+}

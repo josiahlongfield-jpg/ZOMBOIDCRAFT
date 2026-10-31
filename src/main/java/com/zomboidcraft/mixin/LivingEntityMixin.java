@@ -39,12 +39,17 @@ public abstract class LivingEntityMixin {
 
     /**
      * Blows on zombies are cut, and land harder on one on the ground; then the weapon skill bonus against zombies; and
-     * only a shot to the head kills one (Dismember.onlyTheHead).
+     * only a shot to the head kills one (Dismember.onlyTheHead). A bullet into a survivor meets their vest or helmet.
      */
     @ModifyVariable(method = "hurtServer", at = @At("HEAD"), argsOnly = true)
     private float zomboidcraft$weaponSkill(float amount, ServerLevel level, DamageSource source) {
         LivingEntity self = (LivingEntity) (Object) this;
-        return Dismember.onlyTheHead(self, source, Combat.modifyDamage(self, source, CombatEvents.meleeDamage(self, source, amount)));
+        float out = Dismember.onlyTheHead(self, source, Combat.modifyDamage(self, source, CombatEvents.meleeDamage(self, source, amount)));
+        if (self instanceof ServerPlayer player && source.is(com.zomboidcraft.survival.ModDamageTypes.BULLET) && out > 0
+                && !player.isCreative()) {
+            out = com.zomboidcraft.clothing.Clothes.bullet(player, out);
+        }
+        return out;
     }
 
     /** A blade cuts a zombie without knocking it back; only blunt blows do (CombatEvents.cutJustNow). */

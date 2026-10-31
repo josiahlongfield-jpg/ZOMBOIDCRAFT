@@ -221,6 +221,11 @@ public final class ModItems {
     public static final Item MILITARY_RUCKSACK = bag("military_rucksack", com.zomboidcraft.carry.BagSpec.RUCKSACK);
     public static final Item DUFFEL_BAG = bag("duffel_bag", com.zomboidcraft.carry.BagSpec.DUFFEL);
     public static final Item PLATE_CARRIER = bag("plate_carrier", com.zomboidcraft.carry.BagSpec.PLATE_CARRIER);
+    public static final Item CHEST_RIG = bag("chest_rig", com.zomboidcraft.carry.BagSpec.CHEST_RIG);
+    public static final Item LOAD_BEARING_VEST = bag("load_bearing_vest", com.zomboidcraft.carry.BagSpec.LOAD_BEARING_VEST);
+    public static final Item MEDIC_VEST = bag("medic_vest", com.zomboidcraft.carry.BagSpec.MEDIC_VEST);
+    public static final Item BANDOLIER = bag("bandolier", com.zomboidcraft.carry.BagSpec.BANDOLIER);
+    public static final Item HEAVY_PLATE_CARRIER = bag("heavy_plate_carrier", com.zomboidcraft.carry.BagSpec.HEAVY_PLATE_CARRIER);
     public static final Item FANNY_PACK = bag("fanny_pack", com.zomboidcraft.carry.BagSpec.FANNY_PACK);
     public static final Item PURSE = bag("purse", com.zomboidcraft.carry.BagSpec.PURSE);
     public static final Item BRIEFCASE = bag("briefcase", com.zomboidcraft.carry.BagSpec.BRIEFCASE);

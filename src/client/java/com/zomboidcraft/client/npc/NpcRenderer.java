@@ -160,6 +160,7 @@ public class NpcRenderer extends EntityRenderer<NpcEntity, NpcRenderer.State> {
             a.hurt = state.hurt;
             a.dead = entity.deathTime > 0 ? (entity.deathTime + partialTick) / 20f : 0;
             a.talking = entity.talking() > 0;
+            a.voice = NpcVoice.level(entity.getId());
             a.id = entity.getId();
             a.action = entity.action();
             a.mood = entity.moodBits();
@@ -169,6 +170,7 @@ public class NpcRenderer extends EntityRenderer<NpcEntity, NpcRenderer.State> {
                 a.speed = a.aim = a.headYaw = a.headPitch = a.dead = 0;
                 a.shots = 0;
                 a.talking = a.blasted = a.hurt = false;
+                a.voice = -1;
                 a.onGround = true;
                 a.action = portraitAction;
                 a.mood = a.bond = 0;

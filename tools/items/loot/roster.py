@@ -255,6 +255,47 @@ portable_defib | Portable Defibrillator | P | 60 | 3.0 | hosp.3 amb stadium offi
 surgical_set | Surgical Instrument Set | P | 55 | 2.0 | hosp.3 vet
 body_bag | Body Bag | C | 3 | 1.5 | hosp amb police.2 mil
 vet_meds | Veterinary Antibiotics | S | 10 | 0.2 | farm.3
+cotton_swabs | Cotton Swabs | C | 1 | 0.05 | bath pharm hosp
+cough_syrup | Cough Syrup | C | 3 | 0.3 | bath pharm
+eye_drops | Eye Drops | C | 2 | 0.05 | bath pharm
+nasal_spray | Nasal Spray | C | 2 | 0.05 | bath pharm
+hydrocortisone | Hydrocortisone Cream | C | 3 | 0.05 | bath pharm
+butterfly_closures | Butterfly Closures | C | 3 | 0.02 | bath pharm office
+finger_splint | Finger Splint | C | 2 | 0.05 | pharm school
+rehydration_salts | Oral Rehydration Salts | C | 4 | 0.1 | pharm hosp mil
+glucose_gel | Glucose Gel | C | 3 | 0.05 | pharm school gym
+iodine | Iodine Tincture | C | 4 | 0.1 | pharm hosp mil
+medical_scissors | Medical Scissors | C | 3 | 0.1 | hosp amb pharm
+pill_organiser | Pill Organiser | C | 2 | 0.1 | bath
+crutches | Crutches | S | 10 | 2.0 | hosp pharm
+walking_cane | Walking Cane | S | 6 | 0.6 | bed thrift hosp
+knee_brace | Knee Brace | S | 8 | 0.3 | gym pharm
+neck_collar | Neck Collar | S | 12 | 0.3 | amb hosp
+moldable_splint | Moldable Splint | S | 12 | 0.2 | amb mil fire
+pulse_oximeter | Pulse Oximeter | S | 10 | 0.05 | hosp amb
+dental_kit | Dental Kit | S | 10 | 0.3 | hosp pharm
+anti_nausea | Anti-Nausea Pills | S | 6 | 0.05 | pharm hosp
+local_anaesthetic | Local Anaesthetic | S | 12 | 0.1 | hosp vet
+wheelchair | Folding Wheelchair | S | 25 | 12.0 | hosp
+hot_water_bottle | Hot Water Bottle | S | 4 | 0.3 | bed bath
+hemostatic_gauze | Hemostatic Gauze | R | 25 | 0.05 | mil amb police
+chest_seal | Chest Seal | R | 25 | 0.05 | mil amb police
+airway_kit | Airway Kit | R | 20 | 0.3 | amb hosp mil
+iv_kit | IV Starter Kit | R | 25 | 0.2 | hosp amb
+bag_valve_mask | Bag-Valve Mask | R | 22 | 0.5 | amb hosp fire
+stretcher | Folding Stretcher | R | 30 | 7.0 | amb hosp mil
+oxygen_cylinder | Oxygen Cylinder | R | 35 | 3.5 | hosp amb fire
+antivirals | Antiviral Pills | R | 30 | 0.05 | hosp pharm
+wound_stapler | Wound Stapler | R | 30 | 0.2 | hosp amb mil
+field_medic_manual | Field Medic's Manual | R | 15 | 0.4 | mil hosp
+burn_kit | Burn Kit | R | 25 | 0.4 | fire hosp
+drug_guide | Physician's Drug Guide | R | 20 | 1.0 | hosp books
+trauma_bag | Medic's Trauma Bag | P | 70 | 4.0 | amb fire
+ultrasound | Portable Ultrasound | P | 80 | 2.5 | hosp
+blood_typing_kit | Blood Typing Kit | P | 45 | 0.3 | hosp
+forward_surgical_case | Forward Surgical Case | G | 150 | 6.0 | mil carrier
+antique_surgeon_set | Antique Surgeon's Set | G | 180 | 3.0 | mansion
+trial_vials | Clinical Trial Vials | G | 200 | 0.2 | hosp
 """
 
 ROSTER['Hygiene & household'] = """
@@ -463,6 +504,28 @@ plastic_drum* | Plastic Drum | C | 4 | 8.0 | farm factory dock
 """
 
 ROSTER['Clothing'] = """
+chest_rig | Chest Rig | S | 25 | 1.2 | mil.3 bunker police
+load_bearing_vest | Load-Bearing Vest | S | 22 | 1.4 | mil.3 bunker
+medic_vest | Medic Vest | R | 30 | 1.3 | amb.3 mil fire
+bandolier | Ammo Bandolier | S | 12 | 0.4 | gun mil farm
+heavy_plate_carrier | Heavy Plate Carrier | G | 160 | 9.0 | mil bunker.2
+high_cut_helmet | High-Cut Helmet | R | 45 | 1.2 | mil.2 bunker police
+steel_pot_helmet | Steel Pot Helmet | S | 15 | 1.4 | mil thrift pawn attic
+tanker_helmet | Tanker Helmet | R | 30 | 1.0 | mil
+boonie_hat | Boonie Hat | C | 4 | 0.1 | mil.3 camp thrift
+patrol_cap | Patrol Cap | C | 4 | 0.1 | mil.3 thrift
+beret | Beret | S | 6 | 0.1 | mil cloth thrift
+ballistic_glasses | Ballistic Glasses | S | 10 | 0.05 | mil.3 police gun
+ballistic_goggles | Ballistic Goggles | S | 14 | 0.2 | mil.3 police
+shemagh | Shemagh | C | 5 | 0.2 | mil.3 camp thrift
+neck_gaiter | Neck Gaiter | C | 4 | 0.05 | mil sport camp
+elbow_pads | Elbow Pads | S | 10 | 0.3 | mil police sport
+knee_pads | Knee Pads | S | 10 | 0.4 | mil police build sport
+field_shirt | Field Shirt | C | 8 | 0.4 | mil.3 thrift
+combat_trousers | Combat Trousers | C | 10 | 0.6 | mil.3 thrift
+tactical_boots | Tactical Boots | S | 20 | 1.3 | mil.2 police gun
+denim_strips | Denim Strips | C | 1 | 0.05 | laund cloth thrift
+leather_strips | Leather Strips | S | 2 | 0.05 | cloth thrift farm
 # head
 baseball_cap | Baseball Cap | C | 2 | 0.1 | bed cloth thrift stadium body
 trucker_cap | Trucker Cap | C | 2 | 0.1 | worktruck farm thrift body

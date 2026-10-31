@@ -27,6 +27,8 @@ import net.minecraft.world.entity.monster.zombie.Zombie;
 public class ZomboidCraftClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
+        // medical supports drawn on the body, from the synced worn-medical mask
+        com.zomboidcraft.client.clothing.ClothingLayer.medicalMask = com.zomboidcraft.survival.WornMedical::mask;
         com.zomboidcraft.client.hud.Hud.register();
         com.zomboidcraft.client.carry.CarryClient.register();
         com.zomboidcraft.client.kit.KitScreen.register();
@@ -39,6 +41,7 @@ public class ZomboidCraftClient implements ClientModInitializer {
         com.zomboidcraft.client.map.MapPlayers.register();
         com.zomboidcraft.client.kit.WeaponTip.register();
         SkillsHud.register();
+        com.zomboidcraft.client.survival.DownedClient.register();
         // the sky eases toward the weather the server last sent
         ClientTickEvents.END_CLIENT_TICK.register(client ->
                 WeatherView.update(client.player == null ? null : client.player.getAttached(Weather.TYPE)));
@@ -81,6 +84,7 @@ public class ZomboidCraftClient implements ClientModInitializer {
         com.zomboidcraft.client.sound.WorldEventSound.register();
         com.zomboidcraft.client.sound.Score.register();
         com.zomboidcraft.client.weather.WeatherFx.register();
+        com.zomboidcraft.client.sandbox.SandboxClient.register();
         // last, so it can wrap every HUD piece registered above
         com.zomboidcraft.client.camera.CinematicView.register();
         if (ZcConfig.get().look.customZombies) {

@@ -15,6 +15,8 @@ public enum Skill {
     METALWORKING("Metalworking"),
     /** Flying the jets and the helicopter (world/cars/AirReadiness): steadier hands and softer landings. */
     PILOTING("Piloting"),
+    /** Patching clothes: stitches that hold, sewn quicker (clothing/Tailoring). */
+    TAILORING("Tailoring"),
     /** Taking cars apart and putting them back together (world/cars/CarParts): each level unlocks more of the car. */
     MECHANICS("Mechanics");
 

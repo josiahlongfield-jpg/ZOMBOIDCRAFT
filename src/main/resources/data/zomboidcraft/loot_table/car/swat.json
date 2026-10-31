@@ -376,37 +376,72 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:canteen",
-          "weight": 12
+          "weight": 4
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:mess_kit",
-          "weight": 6
+          "weight": 2
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:sterile_bandage",
-          "weight": 6
+          "weight": 2
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:body_bag",
-          "weight": 12
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:rehydration_salts",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:iodine",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:moldable_splint",
+          "weight": 2
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:paracord",
-          "weight": 6
+          "weight": 2
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:barbed_wire_roll",
-          "weight": 6
+          "weight": 2
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:glow_stick",
-          "weight": 12,
+          "weight": 4,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -421,42 +456,182 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:firestarter",
-          "weight": 6
+          "weight": 2
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:sleeping_bag",
-          "weight": 6
+          "weight": 2
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:bedroll",
-          "weight": 12
+          "weight": 4
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:compass",
-          "weight": 6
+          "weight": 2
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:water_purification_tabs",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:chest_rig",
           "weight": 6
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:load_bearing_vest",
+          "weight": 6
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:bandolier",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:steel_pot_helmet",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:boonie_hat",
+          "weight": 12,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:patrol_cap",
+          "weight": 12,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:beret",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:ballistic_glasses",
+          "weight": 6
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:ballistic_goggles",
+          "weight": 6
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:shemagh",
+          "weight": 12,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:neck_gaiter",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:elbow_pads",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:knee_pads",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:field_shirt",
+          "weight": 12,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:combat_trousers",
+          "weight": 12,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:tactical_boots",
+          "weight": 4
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:balaclava",
-          "weight": 6
+          "weight": 2
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:field_jacket",
-          "weight": 18
+          "weight": 6
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:cargo_pants",
-          "weight": 12,
+          "weight": 4,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -471,42 +646,42 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:camo_pants",
-          "weight": 18
+          "weight": 6
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:combat_boots",
-          "weight": 18
+          "weight": 6
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:skillbook_aiming",
-          "weight": 6
+          "weight": 2
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:dog_tags",
-          "weight": 12
+          "weight": 4
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:wheel_chock",
-          "weight": 12
+          "weight": 4
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:signal_mirror",
-          "weight": 6
+          "weight": 2
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:entrenching_tool",
-          "weight": 18
+          "weight": 6
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:poncho",
-          "weight": 12,
+          "weight": 4,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -521,7 +696,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:mil_canteen_cup",
-          "weight": 12,
+          "weight": 4,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -536,7 +711,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:duty_belt",
-          "weight": 18
+          "weight": 6
         }
       ]
     },
@@ -616,6 +791,41 @@
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:hemostatic_gauze",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:chest_seal",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:airway_kit",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:stretcher",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:wound_stapler",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:field_medic_manual",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:forward_surgical_case",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:multitool",
           "weight": 1
         },
@@ -642,6 +852,26 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:water_filter",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:medic_vest",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:heavy_plate_carrier",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:high_cut_helmet",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:tanker_helmet",
           "weight": 1
         },
         {

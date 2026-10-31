@@ -20,7 +20,12 @@ jobs:
       fail-fast: false
       matrix:
         group:
-          - crt_rage
+          - bc_static
+          - bc_eas
+          - meta_firefight
+          - meta_scream
+          - meta_house_alarm
+          - meta_keypad
     steps:
       - uses: actions/checkout@v5
       - run: python3 -u tools/audio/fetch_freesound.py raw ${{ matrix.group }}

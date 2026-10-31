@@ -39,7 +39,24 @@ public final class NpcNet {
         }
     }
 
+    /**
+     * A line from a character's own lines.txt (NpcMoments), to the players near: the client plays her clip
+     * (config/zomboidcraft/npc/MODEL/voice/CLIP.ogg) from her if it has it, and shows the words if subtitles are on.
+     */
+    public record Voice(int npc, String model, String clip, String speaker, String text) implements CustomPacketPayload {
+        public static final Type<Voice> TYPE = new Type<>(ZomboidCraft.id("npc_voice"));
+        public static final StreamCodec<RegistryFriendlyByteBuf, Voice> CODEC = StreamCodec.composite(
+                ByteBufCodecs.VAR_INT, Voice::npc, ByteBufCodecs.STRING_UTF8, Voice::model, ByteBufCodecs.STRING_UTF8, Voice::clip,
+                ByteBufCodecs.STRING_UTF8, Voice::speaker, ByteBufCodecs.STRING_UTF8, Voice::text, Voice::new);
+
+        @Override
+        public Type<? extends CustomPacketPayload> type() {
+            return TYPE;
+        }
+    }
+
     static void register() {
+        PayloadTypeRegistry.clientboundPlay().register(Voice.TYPE, Voice.CODEC);
         PayloadTypeRegistry.serverboundPlay().register(Toggle.TYPE, Toggle.CODEC);
         PayloadTypeRegistry.serverboundPlay().register(Talk.TYPE, Talk.CODEC);
         ServerPlayNetworking.registerGlobalReceiver(Talk.TYPE, (payload, context) -> {

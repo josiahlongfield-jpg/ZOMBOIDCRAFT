@@ -45,11 +45,24 @@ public final class ClothingItems {
             // batch 5: uniforms, armour and aircrew
             "flight_deck_jersey", "police_jacket", "fire_coat", "field_jacket", "ghillie_suit", "ww2_flight_jacket",
             "fur_coat", "bespoke_suit", "poncho", "flak_vest", "police_vest", "survival_vest",
-            "fire_gloves", "fire_pants", "g_suit");
+            "fire_gloves", "fire_pants", "g_suit",
+            // wave 2, military batch 1 (the rigs are bags: ModItems)
+            "high_cut_helmet", "steel_pot_helmet", "tanker_helmet", "boonie_hat", "patrol_cap", "beret",
+            "ballistic_glasses", "ballistic_goggles", "shemagh", "neck_gaiter", "elbow_pads", "knee_pads",
+            "field_shirt", "combat_trousers", "tactical_boots");
+
+    /** What ripping clothes up gives, beside the ripped sheets the loot roster already has (clothing/Tailoring). */
+    public static final List<String> SUPPLIES = List.of("denim_strips", "leather_strips");
 
     private static final List<Item> ITEMS = new ArrayList<>();
 
     public static void register() {
+        ClothWear.register();
+        ClothingLoot.register();
+        for (String id : SUPPLIES) {
+            ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, ZomboidCraft.id(id));
+            ITEMS.add(Registry.register(BuiltInRegistries.ITEM, key, new Item(new Item.Properties().stacksTo(16).setId(key))));
+        }
         for (String id : MADE) {
             Garment g = Clothes.byId(id);
             if (g == null) {
