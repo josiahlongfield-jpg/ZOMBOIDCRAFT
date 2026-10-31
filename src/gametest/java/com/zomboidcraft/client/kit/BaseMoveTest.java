@@ -135,7 +135,10 @@ public class BaseMoveTest implements FabricClientGameTest {
             p.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ModItems.HAMMER));
             p.getInventory().add(new ItemStack(net.minecraft.world.item.Items.OAK_PLANKS, 64));
             p.getInventory().add(new ItemStack(net.minecraft.world.item.Items.OAK_PLANKS, 64));
-            p.getInventory().add(new ItemStack(ModItems.NAILS, 64));
+            for (int i = 0; i < 3; i++) {
+                p.getInventory().add(new ItemStack(ModItems.NAILS, 64));
+                p.getInventory().add(new ItemStack(net.minecraft.world.item.Items.OAK_PLANKS, 64));
+            }
             p.getInventory().add(new ItemStack(BuiltInRegistries.ITEM.getValue(com.zomboidcraft.ZomboidCraft.id("hinges")), 2));
             com.zomboidcraft.ZcConfig.get().building.floorSagSeconds = 9;
         });
