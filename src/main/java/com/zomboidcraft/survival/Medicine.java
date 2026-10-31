@@ -45,6 +45,7 @@ public final class Medicine {
 
     public static void register() {
         Ailments.register();
+        WornMedical.register();
         ServerLivingEntityEvents.AFTER_DAMAGE.register((entity, source, baseDamage, damage, blocked) -> {
             if (entity instanceof ServerPlayer player && !blocked && damage > 0 && on(player)) {
                 hurt(player, source, damage);
@@ -197,6 +198,9 @@ public final class Medicine {
                 m.remove(k("sling", r));
             }
         }
+        for (Region r : Region.values()) {
+            if (!body.part(r).fractured()) m.remove(k("splintkind", r));
+        }
         Body.set(player, body);
 
         // a tourniquet that's left on too long starts doing its own harm
@@ -237,6 +241,7 @@ public final class Medicine {
         pain(player, m, body);
         timers(m);
         Ailments.save(player, m);
+        WornMedical.refresh(player);
     }
 
     /** Colds, smoke, nausea and teeth. */

@@ -387,6 +387,11 @@ public final class MedSpecs {
                     done = "You rest your " + r.label + " in a sling.";
                 } else {
                     body = body.with(r, new Part(p.wound(), p.woundLeft(), p.bleeding(), p.bandaged(), p.fractureLeft(), true));
+                    m.put(Medicine.k("splintkind", r), switch (med.arg()) {
+                        case "arm" -> WornMedical.FINGER_SPLINT;
+                        case "core" -> WornMedical.COLLAR;
+                        default -> WornMedical.MOLDABLE_SPLINT;
+                    });
                     done = "You splint your " + r.label + ".";
                 }
                 xp(player, 12);
