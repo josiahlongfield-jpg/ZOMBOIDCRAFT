@@ -71,6 +71,8 @@ public class CarHoist extends Entity {
     /** Server: whether the motor ran last tick (for the hum) and whether the hull's laid for where the car sits. */
     private boolean running, hullLaid = true, postsLaid;
     private int lost;
+    /** The car's heading on the arms against the lift's: 0 or 180. */
+    private float carTurn;
     /** Client: last tick's height and arms, for smooth drawing. */
     public float heightO, armsO;
 
@@ -227,7 +229,8 @@ public class CarHoist extends Entity {
         for (CarProp c : level().getEntitiesOfClass(CarProp.class, getBoundingBox().inflate(4, 2, 4))) {
             Vec3 at = toLocal(c.position());
             float turn = Mth.wrapDegrees(c.getYRot() - getYRot());
-            if (Math.abs(at.x) < 1.2 && Math.abs(at.z) < 2.5 && Math.abs(at.y) < 0.6 && (Math.abs(turn) < 25 || Math.abs(turn) > 155)) {
+            // anywhere in the bay's box, roughly straight: the arms slide it into place
+            if (Math.abs(at.x) < 1.4 && Math.abs(at.z) < 2.8 && Math.abs(at.y) < 0.6 && (Math.abs(turn) < 40 || Math.abs(turn) > 140)) {
                 found = c;
             }
         }
@@ -240,20 +243,38 @@ public class CarHoist extends Entity {
             say(player, "Too big for a two-post lift.");
             return;
         }
-        Vec3 at = toLocal(found.position());
-        if (Math.abs(at.x) > 0.45 || Math.abs(at.z) > 0.8) {
-            say(player, "It's not centred: the arms won't reach its lift points. Pull it in between the posts.");
-            return;
-        }
         if (found.isVehicle()) {
             say(player, "Someone's still inside it.");
             return;
         }
-        // the car squared up between the posts, the arms reaching for its lift points behind the wheels
-        found.setPos(toWorld(new Vec3(0, 0, at.z)).x, getY(), toWorld(new Vec3(0, 0, at.z)).z);
         hold(found, m);
         level().playSound(null, getX(), getY(), getZ(), SoundEvents.CHAIN_PLACE, SoundSource.BLOCKS, 0.8f, 0.8f);
         say(player, "Arms swung in under the " + found.model().replace('_', ' ') + ". The control box takes it up.");
+    }
+
+    /** Slides and turns the car on the arms a step toward dead centre, square to the bay. Returns whether it's there. */
+    private boolean squareUp(CarProp car) {
+        if (!armsIn) {
+            return true;
+        }
+        Vec3 at = toLocal(car.position());
+        float yaw = getYRot() + carTurn, off = Mth.wrapDegrees(yaw - car.getYRot());
+        double d = Math.hypot(at.x, at.z);
+        if (d < 1e-3 && Math.abs(off) < 0.05f) {
+            return true;
+        }
+        if (hullLaid && level() instanceof ServerLevel server) {
+            Cars.clearHull(server, car);
+            hullLaid = false;
+        }
+        double step = Math.min(d, 0.06);
+        Vec3 to = d < 1e-3 ? Vec3.ZERO : new Vec3(at.x - at.x / d * step, 0, at.z - at.z / d * step);
+        Vec3 w = toWorld(to);
+        car.setPos(w.x, car.getY(), w.z);
+        float turned = car.getYRot() + Mth.clamp(off, -3f, 3f);
+        car.setYRot(turned);
+        car.setYHeadRot(turned);
+        return false;
     }
 
     /** Whether a model goes up on a two-post lift: a road vehicle no longer or wider than the arms reach. */
@@ -263,6 +284,8 @@ public class CarHoist extends Entity {
 
     /** The arms reaching for the car's lift points behind the wheels. */
     private void hold(CarProp car, CarModels.Model m) {
+        // nose either way along the bay, whichever it's nearer
+        carTurn = Math.abs(Mth.wrapDegrees(car.getYRot() - getYRot())) > 90 ? 180f : 0f;
         carId = car.getUUID();
         entityData.set(CAR, car.getId());
         entityData.set(REACH_X, Math.min(m.size[0] / 2 - 0.25f, 0.95f));
@@ -334,7 +357,10 @@ public class CarHoist extends Entity {
             armsIn = false;
             releaseCar();
         }
-        float h = height(), want = arms() < 0.999f ? 0 : NOTCHES[target()];
+        // the arms draw the car square and centred between the posts as they swing in, so their pads meet its
+        // lift points; it goes up only once it's settled there
+        boolean settled = car == null || squareUp(car);
+        float h = height(), want = arms() < 0.999f || !settled ? 0 : NOTCHES[target()];
         boolean moving = Math.abs(want - h) > 0.001f;
         if (moving && car != null) {
             if (hullLaid) {
@@ -362,9 +388,7 @@ public class CarHoist extends Entity {
         }
         running = moving;
         if (car != null && armsIn) {
-            Vec3 at = toLocal(car.position());
-            Vec3 there = toWorld(new Vec3(0, 0, at.z));
-            car.setPos(there.x, getY() + height(), there.z);
+            car.setPos(car.getX(), getY() + height(), car.getZ());
             car.setDeltaMovement(Vec3.ZERO);
             car.setLift(height());
             if (!moving && !hullLaid) {
@@ -409,6 +433,7 @@ public class CarHoist extends Entity {
         String id = input.getStringOr("car", "");
         carId = id.isEmpty() ? null : UUID.fromString(id);
         hullLaid = input.getIntOr("hull", 1) != 0;
+        carTurn = input.getFloatOr("car_turn", 0f);
     }
 
     @Override
@@ -420,6 +445,7 @@ public class CarHoist extends Entity {
         output.putFloat("reach_z", reachZ());
         output.putString("car", carId == null ? "" : carId.toString());
         output.putInt("hull", hullLaid ? 1 : 0);
+        output.putFloat("car_turn", carTurn);
     }
 
     @Override
