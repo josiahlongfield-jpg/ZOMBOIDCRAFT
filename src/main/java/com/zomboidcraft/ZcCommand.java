@@ -46,6 +46,7 @@ public final class ZcCommand {
                                                 .suggests((ctx, b) -> SharedSuggestionProvider.suggest(CarModels.variants(), b))
                                                 .executes(ctx -> car(ctx, StringArgumentType.getString(ctx, "model"),
                                                         StringArgumentType.getString(ctx, "variant"))))))
+                        .then(Commands.literal("hoist").executes(ZcCommand::hoist))
                         .then(Commands.literal("carparts").executes(ctx -> carParts(ctx, null, -1))
                                 .then(Commands.argument("part", StringArgumentType.word())
                                         .suggests((ctx, b) -> SharedSuggestionProvider.suggest(com.zomboidcraft.world.cars.CarParts.names(), b))
@@ -204,6 +205,28 @@ public final class ZcCommand {
     }
 
     /** Drops a car side-on a few blocks in front of you: a random one, or the model and state named. */
+    /**
+     * A two-post car lift set down in front of you, its bay running the way you face (squared to the
+     * compass), centred on the block line so its posts stand in whole blocks: for trying it out, and
+     * for building your own garage.
+     */
+    private static int hoist(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        net.minecraft.server.level.ServerPlayer player = ctx.getSource().getPlayerOrException();
+        float yaw = Math.round(player.getYRot() / 90f) * 90f;
+        net.minecraft.world.phys.Vec3 ahead = net.minecraft.world.phys.Vec3.directionFromRotation(0, yaw).scale(4.5);
+        com.zomboidcraft.world.cars.CarHoist hoist = com.zomboidcraft.world.cars.Cars.HOIST.create(player.level(),
+                net.minecraft.world.entity.EntitySpawnReason.COMMAND);
+        if (hoist == null) {
+            return 0;
+        }
+        double x = Math.round(player.getX() + ahead.x), z = Math.round(player.getZ() + ahead.z);
+        hoist.snapTo(x, Math.floor(player.getY() + 0.01), z, yaw, 0);
+        player.level().addFreshEntity(hoist);
+        ctx.getSource().sendSuccess(() -> Component.literal("A car lift, its bay running the way you face. Drive a car in between the posts, "
+                + "then G on the control box."), false);
+        return 1;
+    }
+
     /**
      * The nearest car's parts (within 8 blocks), listed; or one set (part name, "tire" for all four, "all" for
      * everything) to a condition, -1 to take it off. For trying out worn and missing parts without driving for days.

@@ -57,6 +57,7 @@ public final class CarClient {
         CarProp.clientInput = player -> player instanceof LocalPlayer local ? local.input.keyPresses : Input.EMPTY;
         ClientTickEvents.END_CLIENT_TICK.register(CarClient::tick);
         com.zomboidcraft.client.interact.Interactables.drawsOwn(() -> target != null);
+        HoistClient.register();
         com.zomboidcraft.client.interact.Interactables.finder(CarClient::boot);
         com.zomboidcraft.client.interact.Interactables.finder(CarClient::bonnet);
         CarLights.register();
@@ -94,6 +95,8 @@ public final class CarClient {
                 ClientPlayNetworking.send(new CarNet.Seat(target.car().getId(), target.seat()));
             } else if (inside != null) {
                 ClientPlayNetworking.send(new CarNet.Use(CarNet.GET_OUT, 0, 0, 0));
+            } else if (HoistClient.interact(client, player)) {
+                // a car lift's control box or its pump lever
             } else if (car != null && atBonnet(car, hit, player)) {
                 client.gui.setScreen(new com.zomboidcraft.client.kit.MechanicsScreen(car));
             } else if (car != null) {

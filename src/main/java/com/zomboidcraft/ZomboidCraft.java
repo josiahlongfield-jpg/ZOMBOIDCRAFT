@@ -32,6 +32,7 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.world.cars.Cars.register();
         com.zomboidcraft.world.cars.CarNet.register();
         com.zomboidcraft.world.cars.Mechanics.register();
+        com.zomboidcraft.world.cars.CarHoist.register();
         com.zomboidcraft.world.cars.CarKeys.register();
         com.zomboidcraft.world.cars.CarSounds.register();
         com.zomboidcraft.world.cars.AirSounds.register();

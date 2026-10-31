@@ -91,8 +91,8 @@ public class CarProp extends Entity {
     private static final EntityDataAccessor<Integer> BELT = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.INT);
     /** Every part's condition, a character a slot ({@link CarParts}); empty until the server first rolls them. */
     private static final EntityDataAccessor<String> PARTS = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.STRING);
-    /** Up on a hoist's arms: every part underneath can be reached, and it can't be driven off. */
-    private static final EntityDataAccessor<Boolean> HOISTED = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.BOOLEAN);
+    /** How high a hoist's arms have it, metres (0 on its wheels): up at all, it can't be driven off. */
+    private static final EntityDataAccessor<Float> LIFT = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.FLOAT);
     /** Server: the gunner holds the trigger; rounds due by the rate; ticks till the belt's loaded; rounds fired. */
     boolean turretTrigger;
     int beltBusy, turretShots, fireTicks;
@@ -210,7 +210,7 @@ public class CarProp extends Entity {
         builder.define(TURRET_FIRING, false);
         builder.define(BELT, 0);
         builder.define(PARTS, "");
-        builder.define(HOISTED, false);
+        builder.define(LIFT, 0f);
     }
 
     @Override
@@ -365,12 +365,23 @@ public class CarProp extends Entity {
         }
     }
 
+    /** Up on a hoist at all: its wheels are off the ground. */
     public boolean hoisted() {
-        return entityData.get(HOISTED);
+        return entityData.get(LIFT) > 0.02f;
     }
 
-    public void setHoisted(boolean up) {
-        entityData.set(HOISTED, up);
+    /** Up far enough (a hoist's wheels-free notch) that the wheels and brakes come off without a jack. */
+    public boolean wheelsFree() {
+        return entityData.get(LIFT) >= 0.45f;
+    }
+
+    /** Up high enough to stand under: everything underneath can be reached. */
+    public boolean underReach() {
+        return entityData.get(LIFT) >= 1.2f;
+    }
+
+    public void setLift(float metres) {
+        entityData.set(LIFT, metres);
     }
 
     /** Whether a point (relative to the car, or in the world) is at its front end, where the bonnet and the engine are. */

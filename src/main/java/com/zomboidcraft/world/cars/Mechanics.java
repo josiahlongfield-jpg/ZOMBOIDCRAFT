@@ -279,12 +279,15 @@ public final class Mechanics {
 
     /** Whether the car is up on a hoist (all of it) or this player has a jack for the corners. */
     private static String access(Player player, CarProp car, Part part) {
-        if (!part.lifted || car.hoisted()) {
+        if (!part.lifted || car.underReach()) {
             return null;
         }
         boolean corner = part == Part.TIRE || part == Part.RIM || part == Part.BRAKES;
         if (!corner) {
-            return "Needs the car up on a hoist";
+            return car.hoisted() ? "Take the hoist up to chest height to reach it" : "Needs the car up on a hoist";
+        }
+        if (car.wheelsFree()) {
+            return null;
         }
         if (has(player, "trolley_jack") || part == Part.TIRE && has(player, "car_jack")) {
             return null;
@@ -378,7 +381,7 @@ public final class Mechanics {
         if (job == Job.INSTALL && part == Part.OIL) {
             t = 200;
         }
-        if (part.lifted && car.hoisted()) {
+        if (part.lifted && car.wheelsFree()) {
             t *= 0.6;
         }
         if ((part == Part.TIRE || part == Part.RIM) && has(player, "impact_wrench")) {
