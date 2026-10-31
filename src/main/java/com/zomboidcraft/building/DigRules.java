@@ -180,6 +180,18 @@ public final class DigRules {
         });
         PlayerBlockBreakEvents.BEFORE.register((level, player, pos, state, blockEntity) ->
                 !(player instanceof ServerPlayer server && active(player) && knockDown(server, (ServerLevel) level, pos, state)));
+        MoveNet.register();
+        unlocks();
+    }
+
+    /** The level-up card's lines for the building skills: each wall a level opens, and the levels where nothing breaks. */
+    private static void unlocks() {
+        for (Wall w : Wall.values()) {
+            if (w.level() > 0) com.zomboidcraft.skills.SkillUnlocks.add(w.tier.skill, w.level(), "Knock through " + w.what.toLowerCase(java.util.Locale.ROOT));
+        }
+        com.zomboidcraft.skills.SkillUnlocks.add(Skill.CARPENTRY, 10, "Furniture never breaks as you pick it up");
+        com.zomboidcraft.skills.SkillUnlocks.add(Skill.ELECTRICAL, 10, "Appliances and lights never break as you unhook them");
+        com.zomboidcraft.skills.SkillUnlocks.add(Skill.PLUMBING, 10, "Sinks, toilets and tubs never break as you take them out");
     }
 
     private static boolean active(Player player) {
@@ -209,7 +221,7 @@ public final class DigRules {
 
     /** Furniture and fixtures you can strip down with the tool for their material. */
     @Nullable
-    private static Tier propTier(BlockState state, BlockGetter level, BlockPos pos) {
+    public static Tier propTier(BlockState state, BlockGetter level, BlockPos pos) {
         Block block = state.getBlock();
         if (!(block instanceof CityBlock) || block instanceof EntityBlock || state.getDestroySpeed(level, pos) <= 0f) {
             return null;
@@ -344,6 +356,13 @@ public final class DigRules {
                 return true;
             }
         }
+        strip(player, level, pos, tier, wall);
+        return true;
+    }
+
+    /** Takes a wall down, or a piece of furniture apart for what it's made of (Zomboid's Scrap), with the tool in hand. */
+    static void strip(ServerPlayer player, ServerLevel level, BlockPos pos, Tier tier, boolean wall) {
+        ItemStack tool = player.getMainHandItem();
         ZcConfig.Digging d = ZcConfig.get().digging;
         double share = wall ? 1 : 0.5;
         level.destroyBlock(pos, false, player);
@@ -360,7 +379,6 @@ public final class DigRules {
         Stamina.use(player, tier.endurance(d) * share);
         com.zomboidcraft.combat.Wear.use(tool, player, InteractionHand.MAIN_HAND, wall ? 2 : 1);
         Skills.addXp(player, tier.skill, wall ? 12 : 6);
-        return true;
     }
 
     private static void drop(ServerLevel level, BlockPos pos, ItemStack stack) {

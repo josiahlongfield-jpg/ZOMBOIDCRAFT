@@ -1,0 +1,23 @@
+{
+ "model": {
+  "type": "minecraft:select",
+  "property": "minecraft:display_context",
+  "cases": [
+   {
+    "when": "head",
+    "model": {
+     "type": "minecraft:empty"
+    }
+   }
+  ],
+  "fallback": {
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/cut_resistant_gloves",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/cut_resistant_gloves",
+    "part": "loot"
+   }
+  }
+ }
+}

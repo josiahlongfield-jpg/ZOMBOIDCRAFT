@@ -527,6 +527,43 @@ combat_trousers | Combat Trousers | C | 10 | 0.6 | mil.3 thrift
 tactical_boots | Tactical Boots | S | 20 | 1.3 | mil.2 police gun
 denim_strips | Denim Strips | C | 1 | 0.05 | laund cloth thrift
 leather_strips | Leather Strips | S | 2 | 0.05 | cloth thrift farm
+fur_ushanka | Fur Ushanka | S | 12 | 0.3 | mil cloth thrift
+watch_cap | Watch Cap | C | 3 | 0.1 | mil.3 carrier dock thrift
+cbrn_mask | CBRN Mask | R | 30 | 0.8 | mil.3 bunker.2 police
+cbrn_suit | CBRN Suit | R | 40 | 2.5 | mil.2 bunker.2
+combat_shirt | Combat Shirt | S | 12 | 0.4 | mil.3
+fleece_liner | Fleece Liner | C | 8 | 0.5 | mil.3 camp thrift
+wet_weather_jacket | Wet-Weather Jacket | S | 16 | 0.8 | mil.3 camp
+flight_coverall | Flight Coverall | S | 18 | 1.0 | carrier.3 mil
+sniper_smock | Sniper Smock | R | 25 | 1.0 | mil
+arctic_parka | Arctic Parka | R | 35 | 2.4 | mil bunker
+snow_overwhites | Snow Overwhites | R | 18 | 1.0 | mil
+jungle_boots | Jungle Boots | S | 18 | 1.1 | mil thrift
+desert_boots | Desert Boots | S | 18 | 1.1 | mil.2 thrift
+arctic_boots | Arctic Boots | R | 30 | 2.0 | mil bunker
+flight_gloves | Flight Gloves | S | 10 | 0.1 | carrier.3 mil
+shooting_gloves | Shooting Gloves | S | 10 | 0.1 | gun.3 mil
+arctic_mittens | Arctic Mittens | S | 10 | 0.3 | mil
+riot_arm_guards | Riot Arm Guards | R | 20 | 0.8 | police.3
+riot_leg_guards | Riot Leg Guards | R | 22 | 1.2 | police.3
+wool_commando_sweater | Wool Commando Sweater | S | 14 | 0.7 | mil.2 thrift cloth
+shooting_earmuffs | Shooting Earmuffs | S | 8 | 0.3 | gun.3 police
+chainsaw_chaps | Chainsaw Chaps | S | 18 | 1.4 | farm hard build
+beekeeper_suit | Beekeeper Suit | R | 20 | 1.2 | farm
+cut_resistant_gloves | Cut-Resistant Gloves | C | 5 | 0.1 | diner factory hard
+shin_guards | Shin Guards | C | 5 | 0.3 | sport.3 school gym
+gaiters | Gaiters | C | 6 | 0.3 | camp sport mil
+football_shoulder_pads | Football Shoulder Pads | S | 15 | 2.0 | school.2 stadium.3 gym
+hockey_shoulder_pads | Hockey Shoulder Pads | S | 15 | 1.6 | sport stadium gym
+hockey_neck_guard | Hockey Neck Guard | C | 6 | 0.2 | sport stadium gym
+leather_neck_guard | Leather Neck Guard | S | 8 | 0.3 | thrift farm
+padded_football_pants | Padded Football Pants | S | 12 | 1.2 | school stadium.2 gym
+hockey_pants | Hockey Pants | S | 12 | 1.2 | sport stadium gym
+catchers_vest | Catcher's Chest Protector | S | 12 | 1.0 | school stadium sport
+hockey_gloves | Hockey Gloves | S | 10 | 0.6 | sport stadium gym
+chainmail_butcher_glove | Chainmail Butcher Glove | R | 20 | 0.3 | diner factory
+chainmail_sleeve | Chainmail Sleeve | R | 25 | 0.6 | diner factory
+athletic_cup | Athletic Cup | C | 3 | 0.1 | gym school sport
 # head
 baseball_cap | Baseball Cap | C | 2 | 0.1 | bed cloth thrift stadium body
 trucker_cap | Trucker Cap | C | 2 | 0.1 | worktruck farm thrift body
