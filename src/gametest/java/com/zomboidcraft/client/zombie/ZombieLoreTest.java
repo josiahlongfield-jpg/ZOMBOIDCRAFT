@@ -165,6 +165,23 @@ public class ZombieLoreTest implements FabricClientGameTest {
                     return n;
                 });
                 LOG.info("ZCLORE fence frame {} front panels standing {} of 9", f, left);
+                // what the nearest few are doing
+                sp.getServer().runOnServer(server -> {
+                    int n = 0;
+                    for (Zombie z : server.overworld().getEntitiesOfClass(Zombie.class, new net.minecraft.world.phys.AABB(-6, 98, 1, 6, 104, 4))) {
+                        if (n++ >= 6) {
+                            break;
+                        }
+                        StringBuilder goals = new StringBuilder();
+                        ((com.zomboidcraft.mixin.MobAccessor) z).zomboidcraft$goalSelector().getAvailableGoals().stream()
+                                .filter(g -> g.isRunning()).forEach(g -> goals.append(g.getGoal().getClass().getSimpleName()).append(' '));
+                        var path = z.getNavigation().getPath();
+                        LOG.info("ZCLORE fence zombie at {} heard {} target {} path {} reach {} goals {}",
+                                z.position(), ((com.zomboidcraft.zombie.NoiseListener) z).zomboidcraft$heardAt(), z.getTarget(),
+                                path == null ? "none" : path.getNodeCount() + " nodes, end " + path.getEndNode(),
+                                path != null && path.canReach(), goals);
+                    }
+                });
             }
         }
         sp.getServer().runCommand("kill @e[type=zombie]");
