@@ -81,7 +81,7 @@ public class CrowbarItem extends MeleeWeaponItem {
                 level.playSound(null, clicked, SoundEvents.IRON_TRAPDOOR_OPEN, SoundSource.BLOCKS, 1.5f, 0.4f);
                 level.playSound(null, clicked, SoundEvents.ZOMBIE_ATTACK_IRON_DOOR, SoundSource.BLOCKS, 1.2f, 0.6f);
                 Noise.emit(level, Vec3.atCenterOf(clicked), OPEN_NOISE);
-                held.hurtAndBreak(6, p, hand);
+                com.zomboidcraft.combat.Wear.use(held, p, hand, 6);
             }
         });
         return InteractionResult.CONSUME;

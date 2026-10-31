@@ -233,6 +233,7 @@ final class KitItems {
                 case LONG_BLADE -> "Long blade";
                 case AXE -> "Axe";
                 case HEAVY_BLUNT -> "Heavy blunt";
+                case SPEAR -> "Spear";
             };
             return kind + (spec.twoHanded() ? ", two-handed" : ", one-handed");
         }

@@ -142,7 +142,7 @@ public final class Guns {
         // a worn gun can jam instead of firing
         float wear = gun.isDamageableItem() ? (float) gun.getDamageValue() / gun.getMaxDamage() : 0;
         double jam = config.jamNew + config.jamWorn * wear * wear;
-        if (config.jams && type.canJam() && player.getRandom().nextDouble() < jam * Rolls.multiplier(gun, Stat.RELIABILITY)) {
+        if (config.jams && type.canJam() && player.getRandom().nextDouble() < Firearms.jam(jam) * Rolls.multiplier(gun, Stat.RELIABILITY)) {
             gun.set(GunState.TYPE, g.withJam(true));
             level.playSound(null, player.getX(), player.getEyeY(), player.getZ(), type.dry(), SoundSource.PLAYERS, 0.8f, 0.8f);
             player.sendOverlayMessage(Component.literal("Jammed! Press R to clear it.").withStyle(ChatFormatting.RED));
@@ -165,7 +165,7 @@ public final class Guns {
             level.playSound(player, player.getX(), player.getY(), player.getZ(), casing(type), SoundSource.PLAYERS,
                     0.4f, 0.9f + player.getRandom().nextFloat() * 0.25f);
         }
-        Noise.emit(level, player.position(), stats.shotNoise * (suppressed ? config.suppressedNoise : 1.0));
+        Noise.emit(level, player.position(), Firearms.noise(stats.shotNoise * (suppressed ? config.suppressedNoise : 1.0)));
 
         Vec3 eye = player.getEyePosition();
         Vec3 look = player.getLookAngle();
@@ -195,6 +195,7 @@ public final class Guns {
         double pelletSpread = pelletSpread(type);
         float power = (float) Rolls.multiplier(gun, Stat.DAMAGE);
         Map<LivingEntity, Hit> hits = new java.util.LinkedHashMap<>();
+        Map<net.minecraft.world.entity.Entity, Boolean> struck = new java.util.HashMap<>();     // Firearm Use Damage Chance, rolled once a shot
         boolean ricochet = false;
         boolean nearby = false;     // the crack of a round landing close, for the others round where it struck
         boolean bow = type == GunType.CROSSBOW;
@@ -226,7 +227,8 @@ public final class Guns {
             com.zomboidcraft.world.trains.Trains.shot(level, player, eye, stop);    // OTTO minds being shot at
             // a zombie is hit where its body is drawn, not by its box (see Dismember.shot)
             Dismember.BodyHit hit = Dismember.shot(player, eye, stop,
-                    e -> e instanceof LivingEntity && e.isAlive() && !e.isSpectator() && e.isPickable() && e != player);
+                    e -> e instanceof LivingEntity && e.isAlive() && !e.isSpectator() && e.isPickable() && e != player
+                            && struck.computeIfAbsent(e, t -> Firearms.strikes(player, t)));
             // the panes it went through on the way (only those before whoever it hit), each taking some out of it
             double reached = hit != null ? hit.getLocation().distanceTo(eye) : Double.MAX_VALUE;
             float spent = 1f;
@@ -508,7 +510,7 @@ public final class Guns {
         } else if (aiming && player.isCrouching() && Attachments.hasBipod(gun)) {
             spread *= ZcConfig.get().guns.bipodSpread;
         }
-        return spread + bloom * (aiming ? 0.5 : 1.0);
+        return (spread + bloom * (aiming ? 0.5 : 1.0)) * Firearms.aim(player);
     }
 
     /** How far a shotgun's pellets fan out round the shot's line (degrees), 0 for single bullets. */
@@ -607,7 +609,7 @@ public final class Guns {
         Vec3 muzzle = player.getEyePosition().add(look.scale(0.9)).add(0, aiming ? -0.2 : -0.35, 0);
         com.zomboidcraft.combat.throwing.Thrown.fire(level, player, new ItemStack(ModItems.GRENADE_ROUND), muzzle, aim);
         level.playSound(null, player.getX(), player.getEyeY(), player.getZ(), ModSounds.SHOTGUN_SHOT, SoundSource.PLAYERS, 1f, 0.6f);
-        Noise.emit(level, player.position(), ZcConfig.get().grenadeLauncher.shotNoise);
+        Noise.emit(level, player.position(), Firearms.noise(ZcConfig.get().grenadeLauncher.shotNoise));
     }
 
     /** Pushes a 40mm round into the underbarrel launcher. */

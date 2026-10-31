@@ -11,6 +11,7 @@ import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
@@ -36,8 +37,11 @@ public final class CombatEvents {
             return InteractionResult.PASS;
         });
         ServerLivingEntityEvents.AFTER_DAMAGE.register((entity, source, baseDamage, damage, blocked) -> {
-            if (!blocked && damage > 0 && ZombieTypes.isWalker(entity) && meleeBy(source) instanceof ServerPlayer player) {
-                onMeleeHit(player, entity);
+            if (!blocked && damage > 0 && meleeBy(source) instanceof ServerPlayer player && !Shove.stomping) {
+                Wear.use(player.getMainHandItem(), player, InteractionHand.MAIN_HAND, 1);     // Zomboid's chance a hit
+                if (ZombieTypes.isWalker(entity)) {
+                    onMeleeHit(player, entity);
+                }
             }
         });
     }
@@ -62,8 +66,12 @@ public final class CombatEvents {
             return amount;
         }
         float tough = ZombieTypes.isWalker(target) ? (float) config.zombieMelee : 1f;
+        Wear.migrate(player.getMainHandItem());
+        if (!Shove.stomping && Wear.broken(player.getMainHandItem())) {
+            amount = 1f;    // a broken weapon hits no harder than a fist
+        }
         WeaponSpecs.WeaponSpec spec = Weapons.spec(player.getMainHandItem());
-        if (ZombieTypes.isWalker(target) && spec != null && cuts(spec)) {
+        if (!Shove.stomping && ZombieTypes.isWalker(target) && spec != null && cuts(spec)) {
             cut = target;
             cutAt = target.level().getGameTime();
         }
@@ -71,10 +79,10 @@ public final class CombatEvents {
             return amount * tough;
         }
         Downed.keepDown(target, 8);
-        if (player.getMainHandItem().isEmpty()) {
+        if (Shove.stomping || player.getMainHandItem().isEmpty()) {
             target.level().playSound(null, target.getX(), target.getY(), target.getZ(), ModSounds.STOMP, SoundSource.PLAYERS,
                     1f, 0.9f + player.getRandom().nextFloat() * 0.2f);
-            return (float) Math.max(amount, config.stompDamage) * tough;
+            return (float) (Shove.stomping ? amount : Math.max(amount, config.stompDamage * Shove.footwear(player))) * tough;
         }
         return amount * (float) config.groundAttackMultiplier * tough;
     }
@@ -125,7 +133,7 @@ public final class CombatEvents {
     /** A knife, machete, sword or axe: it cuts rather than batters, so the blow doesn't knock a zombie back. */
     private static boolean cuts(WeaponSpecs.WeaponSpec spec) {
         return spec.kind() == WeaponSpecs.Kind.SHORT_BLADE || spec.kind() == WeaponSpecs.Kind.LONG_BLADE
-                || spec.kind() == WeaponSpecs.Kind.AXE;
+                || spec.kind() == WeaponSpecs.Kind.AXE || spec.kind() == WeaponSpecs.Kind.SPEAR;
     }
 
     /**

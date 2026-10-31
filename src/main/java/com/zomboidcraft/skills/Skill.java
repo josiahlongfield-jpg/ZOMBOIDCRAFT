@@ -14,7 +14,9 @@ public enum Skill {
     /** Cutting through steel with a propane torch (building/DigRules). */
     METALWORKING("Metalworking"),
     /** Flying the jets and the helicopter (world/cars/AirReadiness): steadier hands and softer landings. */
-    PILOTING("Piloting");
+    PILOTING("Piloting"),
+    /** Spears (combat/SpearItem): Zomboid's Spear skill, for the carved and tied-on spears. */
+    SPEAR("Spear");
 
     public static final int MAX_LEVEL = 10;
 

@@ -183,6 +183,8 @@ PLAIN = {  # smoothness, reflectance byte, porosity
     'fibreglass': (0.60, NONMETAL, 2),
     'cord': (0.30, NONMETAL, 40),         # silk cord over ray skin
     'card': (0.18, NONMETAL, 60),
+    'raw_wood': (0.16, NONMETAL, 44),     # bark and fresh-cut wood, B42's primitive weapons
+    'stone': (0.14, NONMETAL, 30),        # knapped stone and flint
 }
 METAL_UNDER = {'steel', 'blade', 'painted', 'cast_iron', 'galvanised', 'chrome', 'brass'}
 RUST = (0.12, NONMETAL, 56)

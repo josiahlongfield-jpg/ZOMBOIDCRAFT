@@ -113,7 +113,8 @@ public final class Rolls {
             stack.set(DataComponents.ITEM_NAME, Component.empty().append(name.copy().withColor(rarity.rgb())));
         }
         Integer base = stack.getItem().components().get(DataComponents.MAX_DAMAGE);
-        if (base != null && base > 0) {
+        // a melee weapon keeps Zomboid's condition; its Durability stretches the chance a hit wears it (Wear)
+        if (base != null && base > 0 && Weapons.spec(stack) == null) {
             float worn = stack.isDamageableItem() ? (float) stack.getDamageValue() / stack.getMaxDamage() : 0;
             int max = Math.max(1, (int) Math.round(base * multiplier(stack, Stat.DURABILITY)));
             stack.set(DataComponents.MAX_DAMAGE, max);
