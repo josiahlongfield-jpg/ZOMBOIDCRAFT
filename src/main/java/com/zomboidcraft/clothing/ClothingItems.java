@@ -68,7 +68,13 @@ public final class ClothingItems {
             "ranger_hat", "peaked_cap", "captains_hat", "chefs_hat", "surgical_cap", "visor_cap", "sweatband",
             "winter_earmuffs", "miner_helmet", "batting_helmet", "hockey_helmet", "riding_helmet", "boxing_headgear",
             "swat_helmet", "welder_mask", "dust_mask", "half_mask_respirator", "safety_goggles", "eyepatch", "monocle",
-            "prescription_glasses");
+            "prescription_glasses",
+            // wave 2, batch 6: the rest of Zomboid's wardrobe, and survivor-made scrap and tyre armour
+            "hunting_vest", "foreman_vest", "waistcoat", "leather_biker_vest", "sheepskin_vest", "sheepskin_jacket",
+            "padded_jacket", "hunting_jacket", "paramedic_jacket", "apron", "leather_apron", "long_johns", "socks",
+            "legwarmers", "riding_boots", "bowling_shoes", "flip_flops", "boxing_gloves", "pyjama_top", "pyjama_bottoms",
+            "sports_jersey", "postal_shirt", "cycling_jersey", "cycling_shorts", "wetsuit", "fishing_waders",
+            "scrap_cuirass", "tyre_cuirass", "scrap_arm_guards", "scrap_leg_guards", "scrap_helmet", "hunting_cap");
 
     /** What ripping clothes up gives, beside the ripped sheets the loot roster already has (clothing/Tailoring). */
     public static final List<String> SUPPLIES = List.of("denim_strips", "leather_strips");
