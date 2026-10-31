@@ -137,6 +137,8 @@ final class ClothingPage {
         hx += KitDraw.hint(g, font, "RMB", "Take off", hx, hy);
         hx += KitDraw.hint(g, font, "P", "Patch", hx, hy);
         hx += KitDraw.hint(g, font, "T", "Rip up", hx, hy);
+        hx += KitDraw.hint(g, font, "W", "Wash", hx, hy);
+        hx += KitDraw.hint(g, font, "H", "Hair", hx, hy);
         screen.pagesAndClose(g, font, hx, hy);
     }
 
@@ -200,7 +202,10 @@ final class ClothingPage {
             if (wear.patchCount() > 0) worn += ", " + wear.patchCount() + (wear.patchCount() == 1 ? " patch" : " patches");
             out.add(worn);
         }
+        com.zomboidcraft.clothing.ClothDirt dirt = com.zomboidcraft.clothing.ClothDirt.of(stack);
+        if (!dirt.describe().isEmpty()) out.add(dirt.describe());
         if (Tailoring.patchable(p) && Tailoring.nextPatch(p, wear) != null) out.add("P to patch: sewing kit, thread, a strip");
+        if (!dirt.clean()) out.add("W to wash: by water, soap for the blood");
         return out;
     }
 

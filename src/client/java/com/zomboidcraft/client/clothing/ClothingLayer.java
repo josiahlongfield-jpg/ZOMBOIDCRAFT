@@ -57,6 +57,7 @@ public class ClothingLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
         }
         boolean slim = state.skin != null && state.skin.model() == PlayerModelType.SLIM;
         PlayerModel model = getParentModel();
+        submitGrooming(pose, collector, light, state, player, model, slim);
         for (ClothingSlot slot : ORDER) {
             ItemStack worn = slot.shown(player);
             Garment garment = Clothes.of(worn);
@@ -104,6 +105,30 @@ public class ClothingLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
         pose.scale(1f, -1f, -1f);
         piece.submit(pose, collector, light, OverlayTexture.NO_OVERLAY, state.outlineColor);
         pose.popPose();
+    }
+
+    /**
+     * Hair and beard (clothing/Grooming), under whatever's worn: under a hat only what hangs below its band, under a
+     * full helmet nothing, and no beard under a mask.
+     */
+    private void submitGrooming(PoseStack pose, SubmitNodeCollector collector, int light, AvatarRenderState state,
+                                Player player, PlayerModel model, boolean slim) {
+        com.zomboidcraft.clothing.Grooming.Look look = com.zomboidcraft.clothing.Grooming.look(player);
+        long now = player.level().getGameTime();
+        Garment hat = Clothes.of(ClothingSlot.HAT.shown(player));
+        boolean helm = hat != null && hat.covers().contains(com.zomboidcraft.clothing.Spot.NECK);
+        if (helm) return;
+        String hair = com.zomboidcraft.clothing.Grooming.hair(look, now);
+        if (!hair.equals("own") && !hair.equals("bald")) {
+            String id = "hair_" + hair + (hat != null ? "_c" : "");
+            for (String part : WornParts.PARTS.getOrDefault(id, List.of())) {
+                drawPart(pose, collector, light, state, player, model, slim, id, part, look.colour());
+            }
+        }
+        String beard = com.zomboidcraft.clothing.Grooming.beard(look, now);
+        if (!beard.equals("none") && Clothes.of(ClothingSlot.FACE.shown(player)) == null) {
+            drawPart(pose, collector, light, state, player, model, slim, "beard_" + beard, "head", look.colour());
+        }
     }
 
     /** Whether this layer draws the piece (a rig is a bag too, and the bag layer leaves it to this one). */
