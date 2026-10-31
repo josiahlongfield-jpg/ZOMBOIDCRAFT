@@ -151,7 +151,8 @@ public final class BeltedDead {
             return;
         }
         // straining at the belt, hands on the glass
-        zombie.swing(zombie.getRandom().nextBoolean() ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND, true);
+        zombie.swing(zombie.getRandom().nextBoolean() ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND,
+                net.minecraft.world.item.component.SwingAnimation.DEFAULT, true);
         level.playSound(null, zombie.getX(), zombie.getEyeY(), zombie.getZ(), SoundEvents.ZOMBIE_ATTACK_WOODEN_DOOR,
                 SoundSource.HOSTILE, 0.35f, 1.7f + zombie.getRandom().nextFloat() * 0.2f);
         if (zombie.getRandom().nextInt(3) == 0) {
