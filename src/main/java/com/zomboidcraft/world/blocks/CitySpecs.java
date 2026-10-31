@@ -26342,5 +26342,8 @@ final class CitySpecs extends CityBlocks.Specs {
         s("sign_ourlady_3", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 0, 16, 16, 1);
         s("sign_ourlady_4", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 0, 16, 16, 1);
         s("sign_ourlady_5", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 0, 16, 16, 1);
+        s("bunk_st_restricted", FACING, SEE_THROUGH | DECOR, 0, SoundType.STONE, 0f, 0, 0, 15.75, 16, 16, 16);
+        s("bunk_keypad", FACING, 0, 0, SoundType.METAL, 2f, 4, 2, 14.5, 12, 14, 16);
+        s("bunk_sign_warning", FACING, DECOR, 0, SoundType.METAL, 0f, 1, 1, 15.5, 15, 15, 16);
     }
 }
