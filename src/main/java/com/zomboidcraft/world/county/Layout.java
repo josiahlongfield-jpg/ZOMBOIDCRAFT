@@ -338,7 +338,7 @@ final class Layout {
             return near(PlaceType.ROADSIDE, "truck_depot", s.x(), s.z(), h);
         }
         if (s.id().startsWith("sub-")) {
-            // a power district's substation (PowerGrid, Substation): a city block inside the wall, a roadside
+            // a power district's substation (Districts, Substation): a city block inside the wall, a roadside
             // yard out in the county as near its pin as the land and the neighbours allow
             return plan.inCore(s.x(), s.z()) ? lot(s, PlaceType.LANDMARK, "substation", 1, 1, h)
                     : near(PlaceType.ROADSIDE, "substation", s.x(), s.z(), h);
