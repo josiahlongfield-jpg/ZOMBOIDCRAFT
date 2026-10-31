@@ -108,6 +108,9 @@ public final class Bunker {
             carve(r);
         }
         surfaces();
+        if (ship) {
+            boxes();
+        }
         openings();
         for (Room r : rooms) {
             dress(r);
@@ -230,6 +233,7 @@ public final class Bunker {
         int dMin = switch (kind) {
             case FOREST, ARMY -> 5;
             case SHELTER -> 8;
+            case SHIP -> 9;     // a forty-foot container's length, end on to the passage
             default -> 6;
         };
         int dLen = small ? 4 : 5;
@@ -243,7 +247,7 @@ public final class Bunker {
         List<Room> side = new ArrayList<>();
         for (Use u : uses()) {
             int len = length(u);
-            int depth = dMin + rng.nextInt(3);
+            int depth = dMin + rng.nextInt(ship ? 2 : 3);
             boolean west = curW < curE || curW == curE && rng.nextBoolean();
             int z0 = west ? curW : curE, z1 = z0 + len - 1;
             Room r = west ? room(u, -2 - depth, z0, -3, z1) : room(u, cw + 2, z0, cw + 1 + depth, z1);
@@ -346,10 +350,14 @@ public final class Bunker {
                 }
             }
             case SHIP -> {
+                // a row of containers either side of the passage, each one a room
                 u.add(Use.BUNKS);
                 u.add(Use.MESS);
+                u.add(Use.BUNKS);
                 u.add(Use.COMMS);
                 u.add(Use.MED);
+                u.add(Use.WASH);
+                u.add(Use.PANTRY);
             }
             case ARMY -> {
                 // the guard room by the door (the radio desk and the map), then the bunks
@@ -362,6 +370,9 @@ public final class Bunker {
     }
 
     private int length(Use u) {
+        if (ship && u != Use.PLANT) {
+            return 4;   // a container's width
+        }
         int big = kind == Kind.SHELTER ? 2 : 0;
         return switch (u) {
             case BUNKS -> 7 + rng.nextInt(3) + big;
@@ -381,11 +392,22 @@ public final class Bunker {
     /** Each room's floor and the paint on its walls. */
     private void palette(Room r) {
         if (ship) {
-            r.lower = "ship_wall_grey";
-            r.upper = "ship_wall_white";
-            r.ground = "deck_steel";
-            if (r.use == Use.PLANT || r.use == Use.STORAGE || r.use == Use.ARMOURY) {
-                r.lower = r.upper = "ship_hold";
+            // in the hold the crew's rooms are shipping containers welded end to end and cut through;
+            // the passage, the plant and the stores are the hold itself, bare plate on its frames
+            switch (r.use) {
+                case BUNKS, MESS, COMMS, MED, PANTRY, ARMOURY -> {
+                    r.lower = r.upper = "container_inside";
+                    r.ground = "container_floor";
+                }
+                case DECON, WASH -> {
+                    r.lower = "ship_wall_grey";
+                    r.upper = "ship_wall_white";
+                    r.ground = "deck_steel";
+                }
+                default -> {
+                    r.lower = r.upper = "ship_hold";
+                    r.ground = "deck_steel";
+                }
             }
             return;
         }
@@ -424,7 +446,8 @@ public final class Bunker {
         for (int x = bx0; x <= bx1; x++) {
             for (int z = bz0; z <= bz1; z++) {
                 for (int y = 0; y <= TOP; y++) {
-                    p.set(x, y, z, y > 0 && y < TOP && rng.nextDouble() < damp * 0.5 ? "bunk_concrete_damp" : "bunk_concrete");
+                    p.set(x, y, z, ship ? "ship_hold"
+                            : y > 0 && y < TOP && rng.nextDouble() < damp * 0.5 ? "bunk_concrete_damp" : "bunk_concrete");
                 }
             }
         }
@@ -441,6 +464,8 @@ public final class Bunker {
                 if (!ship) {
                     double g = patch(x, 3, z);
                     p.set(x, TOP, z, g > 0.72 ? "bunk_ceiling_b" : g > 0.5 ? "bunk_ceiling" : "bunk_concrete");
+                } else if (r.upper.equals("container_inside")) {
+                    p.set(x, TOP, z, "container_inside");
                 }
             }
         }
@@ -460,6 +485,64 @@ public final class Bunker {
                 }
             }
         }
+    }
+
+    private static final String[] BOX_COLOURS = {"orange", "red", "blue", "green", "grey", "white", "red", "blue"};
+
+    /**
+     * In the hold each container room shows the hold its outside: the corrugated side of a box in
+     * its line's colour, and on the end facing the passage the box's cargo doors (the room's own
+     * door cut through them).
+     */
+    private void boxes() {
+        for (Room r : rooms) {
+            if (!r.upper.equals("container_inside")) {
+                continue;
+            }
+            String c = BOX_COLOURS[rng.nextInt(BOX_COLOURS.length)];
+            for (int x = r.x0 - 2; x <= r.x1 + 2; x++) {
+                for (int z = r.z0 - 2; z <= r.z1 + 2; z++) {
+                    if (Math.max(Math.max(r.x0 - x, x - r.x1), Math.max(r.z0 - z, z - r.z1)) != 2 || isCarved(x, z)) {
+                        continue;
+                    }
+                    // only the faces that look into the hold: a passage, the plant, the stores
+                    String face = null;
+                    boolean other = false;
+                    for (int[] d : new int[][] {{1, 0, 1}, {-1, 0, 3}, {0, 1, 2}, {0, -1, 0}}) {
+                        Room o = roomAt(x + d[0], z + d[1]);
+                        if (o == null) {
+                            continue;
+                        }
+                        if (!o.upper.equals("ship_hold")) {
+                            other = true;
+                        } else if (face == null) {
+                            face = o.use == Use.CORRIDOR && (d[0] != 0) == (r.x1 - r.x0 > r.z1 - r.z0)
+                                    ? "container_" + c + "_door[facing=" + FACINGS[d[2]] + "]" : "container_" + c;
+                        }
+                    }
+                    if (face == null || other) {
+                        continue;
+                    }
+                    for (int y = 1; y < TOP; y++) {
+                        p.set(x, y, z, face);
+                    }
+                }
+            }
+        }
+    }
+
+    private static final String[] FACINGS = {"north", "east", "south", "west"};
+
+    private Room roomAt(int x, int z) {
+        if (!isCarved(x, z)) {
+            return null;
+        }
+        for (Room o : rooms) {
+            if (o.in(x, z)) {
+                return o;
+            }
+        }
+        return null;
     }
 
     /** 0..1, in patches a few blocks across, pushed up by how far gone the place is. */
@@ -744,6 +827,13 @@ public final class Bunker {
             } else if ((z - r.z0) % 4 == 0) {
                 r.ceiling(pipesWest ? ex : wx, z, "bunk_beam[axis=x]");
             }
+            if (ship && (z - r.z0) % 4 == 0) {
+                // the hull's frames: a rib up each side of the passage under every beam
+                for (int y = 1; y <= 2; y++) {
+                    r.decor(wx, z, 3, y, "ship_frame");
+                    r.decor(ex, z, 1, y, "ship_frame");
+                }
+            }
         }
         doorSigns(r);
         // arrows back toward the blast door, every so often
@@ -844,7 +934,7 @@ public final class Bunker {
         boolean alongZ = r.d() >= r.w();
         int span = alongZ ? r.d() : r.w(), across = alongZ ? r.w() : r.d();
         int n = Math.max(2, span - 4);
-        for (int line = 2; line < across - 2; line += 3) {
+        for (int line = across <= 5 ? across / 2 : 2; line < Math.max(across - 2, across <= 5 ? across / 2 + 1 : 0); line += 3) {
             for (int i = 2; i < 2 + n; i++) {
                 int x = alongZ ? r.x0 + line : r.x0 + i, z = alongZ ? r.z0 + i : r.z0 + line;
                 r.table(x, z, alongZ);
