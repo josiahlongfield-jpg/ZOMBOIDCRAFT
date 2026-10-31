@@ -54,7 +54,12 @@ public final class ClothingItems {
             "fur_ushanka", "watch_cap", "cbrn_mask", "cbrn_suit", "combat_shirt", "fleece_liner", "wet_weather_jacket",
             "flight_coverall", "sniper_smock", "arctic_parka", "snow_overwhites", "jungle_boots", "desert_boots",
             "arctic_boots", "flight_gloves", "shooting_gloves", "arctic_mittens", "riot_arm_guards", "riot_leg_guards",
-            "wool_commando_sweater");
+            "wool_commando_sweater",
+            // wave 2, batch 3: useful kit, pads and sport armour
+            "headlamp", "shooting_earmuffs", "dog_tags", "chainsaw_chaps", "beekeeper_suit", "cut_resistant_gloves",
+            "shin_guards", "gaiters", "football_shoulder_pads", "hockey_shoulder_pads", "hockey_neck_guard",
+            "leather_neck_guard", "padded_football_pants", "hockey_pants", "catchers_vest", "hockey_gloves",
+            "chainmail_butcher_glove", "chainmail_sleeve", "athletic_cup");
 
     /** What ripping clothes up gives, beside the ripped sheets the loot roster already has (clothing/Tailoring). */
     public static final List<String> SUPPLIES = List.of("denim_strips", "leather_strips");

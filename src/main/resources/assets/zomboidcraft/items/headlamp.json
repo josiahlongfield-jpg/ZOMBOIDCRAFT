@@ -1,11 +1,23 @@
 {
  "model": {
-  "type": "minecraft:special",
-  "base": "zomboidcraft:item/loot/headlamp",
-  "model": {
-   "type": "zomboidcraft:mesh",
-   "id": "loot/headlamp",
-   "part": "body"
+  "type": "minecraft:select",
+  "property": "minecraft:display_context",
+  "cases": [
+   {
+    "when": "head",
+    "model": {
+     "type": "minecraft:empty"
+    }
+   }
+  ],
+  "fallback": {
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/headlamp",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/headlamp",
+    "part": "loot"
+   }
   }
  }
 }
