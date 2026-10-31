@@ -4,6 +4,9 @@ import com.zomboidcraft.barricade.BarricadeBlock;
 import com.zomboidcraft.building.BuildBlocks;
 import com.zomboidcraft.combat.GunType;
 import com.zomboidcraft.survival.BandageItem;
+import com.zomboidcraft.survival.Body;
+import com.zomboidcraft.survival.SplintItem;
+import com.zomboidcraft.survival.Treatment;
 import com.zomboidcraft.survival.Drinks;
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -257,6 +260,7 @@ public final class NpcWork {
     };
     static final Predicate<ItemStack> SEEDS = s -> BuildBlocks.Crop.from(s) != null;
     static final Predicate<ItemStack> BANDAGE = s -> s.getItem() instanceof BandageItem;
+    static final Predicate<ItemStack> SPLINT = s -> s.getItem() instanceof SplintItem;
     static final Map<Item, Item> COOKS = Map.ofEntries(
             Map.entry(Items.BEEF, Items.COOKED_BEEF), Map.entry(Items.PORKCHOP, Items.COOKED_PORKCHOP),
             Map.entry(Items.CHICKEN, Items.COOKED_CHICKEN), Map.entry(Items.MUTTON, Items.COOKED_MUTTON),
@@ -640,6 +644,31 @@ public final class NpcWork {
 
     private Task medic(NpcEntity npc, ServerLevel level) {
         long now = level.getGameTime();
+        int aid = npc.skills.level(NpcSkills.Skill.FIRST_AID);
+        // first, real wounds on the 17 parts (Zomboid's nurse): a bleeding one first, then a break, as a player helper would
+        for (Player p : level.players()) {
+            if (!p.isAlive() || p.isSpectator() || p.distanceToSqr(Vec3.atCenterOf(home)) >= HOME_RADIUS * HOME_RADIUS) continue;
+            Body body = Body.get(p);
+            for (Treatment.Kind kind : Treatment.Kind.values()) {
+                Body.Region region = Treatment.target(body, kind);
+                Predicate<ItemStack> supply = kind == Treatment.Kind.BANDAGE ? BANDAGE : SPLINT;
+                if (region == null || !packHas(supply)) continue;
+                Player patient = p;
+                return new Task(patient.blockPosition(), Treatment.ticks(kind, aid), KNEEL, 2.2, () -> {
+                    if (patient.distanceToSqr(npc) > 9 || !packHas(supply)) return;
+                    if (!Treatment.apply(patient, kind, region, aid)) return;
+                    takeFromPack(supply);
+                    treated.put(patient.getUUID(), now);
+                    if (patient instanceof ServerPlayer sp) sp.sendOverlayMessage(net.minecraft.network.chat.Component.literal(
+                            npc.getName().getString() + " " + (kind == Treatment.Kind.BANDAGE ? "bandages" : "splints") + " your " + region.label + "."));
+                    npc.lines.sayLine(npc, NpcLines.Kind.WORK_DONE, kind == Treatment.Kind.SPLINT
+                            ? pick(npc, "Don't put weight on it.", "Keep it straight. It'll knit.", "There. No running for a while.")
+                            : pick(npc, "Hold still.", "This'll sting.", "There. Try not to do that again."));
+                    level.playSound(null, npc.blockPosition(), SoundEvents.ARMOR_EQUIP_LEATHER.value(), SoundSource.NEUTRAL, 0.8f, 1.2f);
+                    practise(npc, NpcSkills.Skill.FIRST_AID, kind == Treatment.Kind.SPLINT ? 8 : 6);
+                });
+            }
+        }
         Player hurt = null;
         for (Player p : level.players()) {
             if (p.isAlive() && !p.isSpectator() && p.distanceToSqr(Vec3.atCenterOf(home)) < HOME_RADIUS * HOME_RADIUS
@@ -650,15 +679,15 @@ public final class NpcWork {
         }
         boolean self = hurt == null && npc.getHealth() < npc.getMaxHealth() * 0.6f && now - treated.getOrDefault(npc.getUUID(), -1_000_000L) > 20 * 30;
         if (hurt == null && !self) {
-            if (!packHas(BANDAGE)) {
-                BlockPos at = storeWith(level, BANDAGE);
-                if (at != null) return fetchTask(npc, level, BANDAGE, 3, null);
+            for (Predicate<ItemStack> supply : List.of(BANDAGE, SPLINT)) {
+                if (packHas(supply)) continue;
+                BlockPos at = storeWith(level, supply);
+                if (at != null) return fetchTask(npc, level, supply, supply == BANDAGE ? 3 : 1, null);
             }
             // between patients she tidies up, but keeps her bandages on her
             return haul(npc, level, true);
         }
         Player patient = hurt;
-        int aid = npc.skills.level(NpcSkills.Skill.FIRST_AID);
         BlockPos at = patient != null ? patient.blockPosition() : npc.blockPosition();
         return new Task(at, Math.max(30, 100 - aid * 6), KNEEL, 2.2, () -> {
             boolean bandage = !takeFromPack(BANDAGE).isEmpty();
@@ -692,7 +721,7 @@ public final class NpcWork {
                 }
             }
         }
-        if (loose == null) return packEmpty() || keepBandages && packOnly(BANDAGE) ? null : depositTask(npc, level, null);
+        if (loose == null) return packEmpty() || keepBandages && packOnly(BANDAGE.or(SPLINT)) ? null : depositTask(npc, level, null);
         ItemEntity item = loose;
         return new Task(item.blockPosition(), 8, KNEEL, 1.8, () -> {
             if (!item.isAlive()) return;
