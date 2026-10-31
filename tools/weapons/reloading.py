@@ -16,6 +16,7 @@ import numpy as np
 sys.path.insert(0, str(Path(__file__).parent))
 import model as M  # noqa: E402
 import paint as P  # noqa: E402
+import kit  # noqa: E402
 import weapons as W  # noqa: E402
 
 NS, ASSETS, C = W.NS, W.ASSETS, W.C
@@ -129,11 +130,6 @@ def pegboard(f):
     c = P.grime(f, P.plain(f, '#8a6a48', 0.12), 0.4)
     holes = (np.abs((f.X % 1.0) - 0.5) < 0.12) & (np.abs((f.Y % 1.0) - 0.5) < 0.12)
     return np.where(holes[..., None], P.col('#2a2018'), c)
-BENCH_PBR = dict(top='raw_wood', frame='raw_wood', shelf='raw_wood', red='painted', knob='polymer', steel='steel',
-                 chrome='chrome', brass='brass', jug_black='polymer', jug_grey='polymer', cap='polymer', card='card',
-                 card_ammo='card', measure='painted', hopper='polymer', scale='polymer', screen='polymer',
-                 block='polymer', tray='polymer', manual='card', peg='raw_wood', die_green='polymer',
-                 die_red='polymer', die_blue='polymer', funnel='polymer')
 
 
 # ---------------------------------------------------------------- what goes through it (items)
@@ -269,52 +265,48 @@ def items():
     out = []
     for name, title, d, L, neck in CASINGS:
         out.append((name, title, build_casings(d, L, neck), {'brass': BRASS, 'mouth': lambda f: P.plain(f, '#2b2116', 0.1),
-                    'primer': lambda f: P.plain(f, '#c0c3c4', 0.1)}, dict(brass='brass', mouth='polymer', primer='steel')))
+                    'primer': lambda f: P.plain(f, '#c0c3c4', 0.1)}))
     out.append(('spent_hulls', 'Fired Shotgun Hulls', build_hulls, {'brass': BRASS, 'hull': lambda f: P.polymer(f, '#a3241d'),
-                'mouth': lambda f: P.plain(f, '#2b2116', 0.1)}, dict(brass='brass', hull='polymer', mouth='polymer')))
+                'mouth': lambda f: P.plain(f, '#2b2116', 0.1)}))
     out.append(('smokeless_powder', 'Smokeless Powder', build_powder, {'jug': lambda f: P.polymer(f, '#232325'),
-                'cap': lambda f: P.polymer(f, '#a32a22'), 'label': label}, dict(jug='polymer', cap='polymer', label='card')))
+                'cap': lambda f: P.polymer(f, '#a32a22'), 'label': label}))
     out.append(('primers', 'Primers', build_primers, {'carton': lambda f: P.grime(f, P.plain(f, '#c9b27a', 0.1), 0.3),
                 'lid': lambda f: P.grime(f, P.plain(f, '#7a2a22', 0.1), 0.3), 'tray': lambda f: P.plain(f, '#d8d4c8', 0.05),
-                'cup': lambda f: P.steel(f, 0.72, tint='#c9c2a2', spread=0.15), 'label': label},
-                dict(carton='card', lid='card', tray='polymer', cup='brass', label='card')))
+                'cup': lambda f: P.steel(f, 0.72, tint='#c9c2a2', spread=0.15), 'label': label}))
     for name, title, colour, size in HEADS:
         out.append((name, title, build_heads(*size), {'tray': lambda f: P.polymer(f, '#6d7072'),
-                    'jacket': lambda f, c=colour: P.steel(f, 0.62, tint=c, spread=0.2)}, dict(tray='polymer', jacket='brass')))
+                    'jacket': lambda f, c=colour: P.steel(f, 0.62, tint=c, spread=0.2)}))
     out.append(('lead_shot', 'Lead Shot', build_shot, {'bag': lambda f: P.grime(f, P.plain(f, '#cfc6ad', 0.14), 0.4),
-                'tie': lambda f: P.plain(f, '#3a2a1e', 0.1), 'label': label}, dict(bag='card', tie='cloth_tape', label='card')))
+                'tie': lambda f: P.plain(f, '#3a2a1e', 0.1), 'label': label}))
     out.append(('gunsmith_magazine', 'Gunsmith Monthly', build_magazine, {'cover': lambda f: P.grime(f, P.plain(f, '#2c3a4a', 0.1), 0.3),
-                'title': lambda f: P.plain(f, '#d9b23a', 0.05), 'art': lambda f: P.plain(f, '#6b5a44', 0.2), 'steel': STEEL},
-                dict(cover='card', title='card', art='card', steel='steel')))
+                'title': lambda f: P.plain(f, '#d9b23a', 0.05), 'art': lambda f: P.plain(f, '#6b5a44', 0.2), 'steel': STEEL}))
     return out
 
 
-def write_item(name, build, lk, kinds, seed):
-    W.MELEE_PBR[name] = kinds
-    m = M.Model(name)
-    build(m)
+def toon_write(name, build, look, seed, px, centre, display, model_path, gui_light='front'):
+    """Draws and paints a model with the guns' toon painter (kit.paint: an outline round each part's outside,
+    lit tops, shaded undersides, chipped edges), packs its texture and writes its model. centre: where its
+    middle goes (None leaves a block where it was built)."""
+    m = kit.drawn(name, build, look=look, seed=seed)
     lo, hi = m.bounds()
-    m.shift(C - (lo + hi) / 2)
-    m.tidy()
-    uvs, T = W.write_texture(m, lk, 0.25, seed, name)
-    M.dump(M.model_json(m, uvs, f'{NS}:item/weapon/{name}', W.small_display(m, real=(1.0, 1.7))),
-           ASSETS / f'models/item/weapon/{name}.json')
+    shift = np.zeros(3) if centre is None else np.asarray(centre, float) - (lo + hi) / 2
+    img, uvs, T = kit.pack(kit.paint([m], px=px))
+    tex = f'item/weapon/{name}'
+    kit.save_textures(img, ASSETS / f'textures/{tex}.png')
+    fit = kit.shifted_model([m], shift)
+    M.dump({'gui_light': gui_light, 'textures': {'0': f'{NS}:{tex}', 'particle': f'{NS}:{tex}'},
+            'elements': kit.elements(m, 0, uvs, shift), 'display': display(fit)}, ASSETS / model_path)
+
+
+def write_item(name, build, lk, seed):
+    toon_write(name, build, lk, seed, 32, C, lambda fit: W.small_display(fit, real=(1.0, 1.7)),
+               f'models/item/weapon/{name}.json')
     W.item_def(name, W.ref(name))
 
 
 def write_bench():
     name = 'reloading_bench'
-    W.MELEE_PBR[name] = BENCH_PBR
-    m = M.Model(name)
-    build_bench(m)
-    m.tidy()
-    old, W.MELEE_PX = W.MELEE_PX, 8
-    try:
-        uvs, T = W.write_texture(m, BENCH_LOOK, 0.3, 991, name)
-    finally:
-        W.MELEE_PX = old
-    j = M.model_json(m, uvs, f'{NS}:item/weapon/{name}', W.small_display(m), gui_light='side')
-    M.dump(j, ASSETS / f'models/block/{name}.json')
+    toon_write(name, build_bench, BENCH_LOOK, 991, 8, None, W.small_display, f'models/block/{name}.json', 'side')
     M.dump({'variants': {f'facing={d}': {'model': f'{NS}:block/{name}', **({'y': y} if y else {})}
                          for d, y in (('north', 0), ('east', 90), ('south', 180), ('west', 270))}},
            ASSETS / f'blockstates/{name}.json')
@@ -325,8 +317,8 @@ def main():
     lang = {}
     write_bench()
     lang[f'block.{NS}.reloading_bench'] = 'Reloading Bench'
-    for i, (name, title, build, lk, kinds) in enumerate(items()):
-        write_item(name, build, lk, kinds, 1200 + i)
+    for i, (name, title, build, lk) in enumerate(items()):
+        write_item(name, build, lk, 1200 + i)
         lang[f'item.{NS}.{name}'] = title
     W.merge_lang(lang)
     print('\n'.join(sorted(lang.values())))
