@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "as_rack_full": "zomboidcraft:block/city/as_rack_full",
+    "as_tread": "zomboidcraft:block/city/as_tread",
+    "particle": "zomboidcraft:block/city/as_rack_full"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        1
+      ],
+      "to": [
+        16,
+        16,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_rack_full"
+        },
+        "south": {
+          "texture": "#as_tread"
+        },
+        "east": {
+          "texture": "#as_tread",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#as_tread",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#as_tread",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#as_tread",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

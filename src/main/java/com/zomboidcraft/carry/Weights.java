@@ -57,6 +57,17 @@ public final class Weights {
         mod("katana", 1.2);
         mod("fire_axe", 2.2);
         mod("sledgehammer", 4.5);
+        mod("wooden_spear", 2.0);       // B42's primitive weapons, at Zomboid's weights
+        mod("fire_hardened_spear", 2.0);
+        mod("spear_knife", 2.2);
+        mod("stone_axe", 2.0);
+        mod("stone_hammer", 1.0);
+        mod("stone_knife", 0.3);
+        mod("plank_nails", 3.0);
+        mod("cudgel_nails", 6.0);
+        mod("tree_branch", 1.0);
+        mod("stone", 0.3);
+        mod("sharp_stone", 0.2);
         mod("assault_rifle", 3.0);
         mod("rifle_magazine", 0.5);
         mod("rifle_ammo", 0.012);
@@ -176,7 +187,11 @@ public final class Weights {
         if (stack.has(DataComponents.FOOD)) return 0.3;
         if (stack.is(INGOTS)) return 0.3;
         if (stack.is(NUGGETS)) return 0.03;
-        if (stack.getItem() instanceof BlockItem) {
+        if (stack.getItem() instanceof BlockItem block) {
+            // the town's furniture weighs what it really would, so carrying a fridge home is a real load
+            if (block.getBlock() instanceof com.zomboidcraft.world.blocks.CityBlock) {
+                return com.zomboidcraft.building.Moving.kg(block.getBlock());
+            }
             if (stack.is(ItemTags.LOGS)) return 2.0;
             if (stack.is(ItemTags.PLANKS)) return 0.6;
             if (stack.is(ItemTags.WOOL) || stack.is(ItemTags.LEAVES)) return 0.2;

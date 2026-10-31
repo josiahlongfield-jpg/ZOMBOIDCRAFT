@@ -21,7 +21,7 @@ import java.util.function.UnaryOperator;
  * Every setting on the Sandbox page, in page order within each group.
  *
  * Zomboid's own 269 come from data/zomboidcraft/sandbox/zomboid.json (B42.21's list: id, label, tooltip, range and
- * every preset's value), and start as "coming" at Zomboid's Apocalypse value, Josiah's rule. When a thread builds what
+ * its Apocalypse value), and start as "coming" at Zomboid's Apocalypse value, Josiah's rule. When a thread builds what
  * one drives it wires it in {@link #wires()}: the config key, and our own choices or range if they differ. Settings
  * only ZomboidCraft has, and Josiah's fixed rules, are in {@link #ours()}.
  */
@@ -43,9 +43,23 @@ final class SandboxOptions {
         w.put("EnableSnowOnGround", b -> b.toggle("nature.snowOnGround").owner("WEATHER")
                 .tip("There is no snow yet, so this does nothing for now."));
         // Skills (SURVIVAL): one global multiplier for now
-        w.put("MultiplierConfig.Global", b -> b.number("progression.xpMultiplier", 0, 1000).sameScale().owner("SURVIVAL"));
+        w.put("MultiplierConfig.Global", b -> b.number("progression.xpMultiplier", 0, 1000).owner("SURVIVAL"));
+        // Far-off events (AUDIO): Zomboid's three choices
+        w.put("MetaEvent", b -> b.choice("world.metaEvents", "never", "sometimes", "often").owner("AUDIO"));
         // Vehicles (VEHICLES)
         w.put("EnableVehicles", b -> b.toggle("world.streetCars").owner("VEHICLES"));
+        // Firearms (WEAPONS): combat/Firearms. Use Damage Chance says who a shot strikes just by being aimed at;
+        // jams start at 0 since Josiah cut them on 10-26
+        w.put("FirearmUseDamageChance", b -> b.choice("guns.useDamageChance", "both", "zombies", "off").owner("WEAPONS")
+                .tip("Shots strike what they're aimed at. Both: zombies and players; Zombies: only zombies; Off: Aiming decides if a shot lands."));
+        w.put("FirearmNoiseMultiplier", b -> b.number("guns.noiseMultiplier", 0.2, 2).owner("WEAPONS"));
+        w.put("FirearmJamMultiplier", b -> b.number("guns.jamMultiplier", 0, 10).owner("WEAPONS"));
+        w.put("FirearmMoodleMultiplier", b -> b.number("guns.moodleMultiplier", 0, 10).owner("WEAPONS"));
+        w.put("FirearmWeatherMultiplier", b -> b.number("guns.weatherMultiplier", 0, 10).owner("WEAPONS")
+                .tip("How much wind, rain and fog throw your aim off, out under the sky. Kept light, as the rain never stops."));
+        w.put("FirearmHeadGearEffect", b -> b.toggle("guns.headgearEffect").owner("WEAPONS"));
+        // Fire (WEAPONS, combat/ContainedFire): off keeps a fire to what it was started on and a little round it
+        w.put("FireSpread", b -> b.toggle("throwing.fireZomboid").owner("WEAPONS"));
         return w;
     }
 
@@ -87,6 +101,12 @@ final class SandboxOptions {
         o.add(of(UTILITIES, "zc.worldEventMinutes", "Time Between World Events")
                 .tip("About how many minutes between world events.")
                 .number("world.worldEventMinutes", 1, 240).owner("AUDIO"));
+        o.add(of(UTILITIES, "zc.broadcasts", "Outbreak Broadcasts")
+                .tip("News, the emergency broadcast, the military and survivors on the two-way and military radios, as captions.")
+                .toggle("broadcast.enabled").owner("AUDIO"));
+        o.add(of(UTILITIES, "zc.broadcastDayOffset", "Broadcasts Start On Day")
+                .tip("Days already gone on the broadcast timeline when the world starts: 9 or more and the news is already off air.")
+                .number("broadcast.dayOffset", 0, 60).owner("AUDIO"));
 
         o.add(of(LOOT, "zc.lootNeverScales", "Loot Never Scales With Distance")
                 .fixed("true", "Your rule: loot is the same however far you are from where you started."));
@@ -193,8 +213,7 @@ final class SandboxOptions {
                     SandboxGroup group = SandboxGroup.byId(o.get("group").getAsString());
                     SandboxOption.Builder b = of(group, o.get("id").getAsString(), o.get("label").getAsString())
                             .tip(o.get("tooltip").getAsString()).owner(o.get("owner").getAsString());
-                    JsonObject presets = o.getAsJsonObject("presets");
-                    String apocalypse = presets.get("apocalypse").getAsString();
+                    String apocalypse = o.get("default").getAsString();
                     switch (o.get("kind").getAsString()) {
                         case "toggle" -> b.kind(SandboxOption.Kind.TOGGLE);
                         case "number" -> b.kind(SandboxOption.Kind.NUMBER)
@@ -207,7 +226,6 @@ final class SandboxOptions {
                         default -> b.kind(SandboxOption.Kind.TEXT);
                     }
                     b.coming(apocalypse).zomboid(apocalypse);
-                    presets.entrySet().forEach(p -> b.preset(p.getKey(), p.getValue().getAsString()));
                     out.add(b);
                 }
             }

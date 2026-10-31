@@ -1,0 +1,220 @@
+{
+  "_comment": "The outbreak on the radio, Zomboid style: captions with static, no voices. Days count from the world's start (plus broadcast.dayOffset). Each station plays the segment whose days cover today, a line every broadcast.lineSeconds, then waits gap seconds and plays it again. A line starting [EAS] plays the alert tones first; [EOM] the end-of-message bursts; [HUM] the Harvestman's hum on the line; [CUT] the carrier dropping. Approved by Josiah 2026-10-31 (plan doc 98TrFVLzMteUKAXQKM6v9Z).",
+  "stations": [
+    {
+      "id": "wghn",
+      "name": "WGHN 91.2 FM",
+      "colour": "#D8C07A",
+      "radios": ["two_way", "military"],
+      "segments": [
+        {"from": 0, "to": 0, "gap": 240, "lines": [
+          "This is WGHN, Grayhaven's news station. Good evening.",
+          "Officials at Ridgeview Labs say a chemical leak at the site last night is under control.",
+          "Residents within two miles are asked to keep windows shut until further notice.",
+          "In other news, Mercy General reports a sharp rise in admissions for a flu-like illness.",
+          "Doctors say most cases are mild. Stay home if you feel unwell.",
+          "Police were called to Mercy General tonight after a patient attacked two nurses.",
+          "More on that as we have it. This is WGHN."
+        ]},
+        {"from": 1, "to": 1, "gap": 240, "lines": [
+          "WGHN news. It's been a long night in Grayhaven.",
+          "Mercy General has closed its doors to new patients. Police are at the entrance.",
+          "We're getting reports of fights in Downtown and the Old Harbor. Several people are hurt.",
+          "Ridgeview Labs has not answered our calls today.",
+          "The mayor asks everyone to stay calm and stay indoors after dark.",
+          "If someone in your home is sick, keep them in a room on their own. Do not let them bite you.",
+          "I'm sorry. I'm told that last line was read in error. Stay calm. This is WGHN."
+        ]},
+        {"from": 2, "to": 2, "gap": 240, "lines": [
+          "This is WGHN. A curfew is now in force across the city from eight in the evening.",
+          "Grayhaven Stadium has been turned into a quarantine centre for the sick.",
+          "If you are ill, the city asks you to make your own way to the stadium gates.",
+          "The National Guard is on the streets tonight. Do as they tell you.",
+          "Roads to the north-west are closed at the Ridgeview turn.",
+          "We still have no word from the lab. This is WGHN."
+        ]},
+        {"from": 3, "to": 4, "gap": 240, "lines": [
+          "WGHN. Hollis Island is under quarantine as of this morning.",
+          "All ferries to and from the island have stopped. Nobody is to cross.",
+          "The stadium is full. People are being turned away at the gates.",
+          "We've had calls about the sick getting up again after they were declared dead. Officials say these are rumours.",
+          "Lock your doors. Don't open them for anyone you don't know.",
+          "This is WGHN."
+        ]},
+        {"from": 5, "to": 6, "gap": 240, "lines": [
+          "This is WGHN. The official line is that the situation is contained.",
+          "I'll read you what I've been given. The situation is contained.",
+          "We've been asked not to report the calls about tall figures seen near Ridgeview.",
+          "Callers say they are thin, taller than a man, and move without a sound.",
+          "The army says there is nothing out there but the sick. That's what I'm told to tell you.",
+          "Stay indoors. Keep quiet at night. They come to noise.",
+          "This is WGHN."
+        ]},
+        {"from": 7, "to": 7, "gap": 180, "lines": [
+          "WGHN with an evacuation notice. Please write this down.",
+          "Three evacuation points are open now: Grayhaven airport, the carrier in the bay, and Camp Black Pine.",
+          "Bring water, warm clothes and your papers. Leave pets behind. Do not bring the sick.",
+          "Go in daylight if you can. Do not stop for anyone on the road.",
+          "Again: the airport, the carrier, Camp Black Pine. Good luck.",
+          "This is WGHN."
+        ]},
+        {"from": 8, "to": 8, "gap": 180, "lines": [
+          "WGHN. We've lost contact with the airport.",
+          "The carrier isn't answering. Camp Black Pine is saying nothing we can put on air.",
+          "Most of our people have gone home to their families. There are three of us left here.",
+          "If you're still out there, stay where you are. Don't go to the evacuation points.",
+          "Find somewhere high, block the stairs, and keep quiet.",
+          "This is WGHN. We'll stay on as long as we can."
+        ]},
+        {"from": 9, "to": 9, "gap": 300, "lines": [
+          "This is WGHN. It's just me now.",
+          "Something has been at the front doors for an hour. The glass is holding.",
+          "I can hear the fire escape. Something is climbing it. Something heavy.",
+          "If anyone at Ridgeview is listening: whatever you opened, you have to close it.",
+          "The window behind me just",
+          "[CUT]"
+        ]}
+      ]
+    },
+    {
+      "id": "aebs",
+      "name": "Emergency Broadcast 162.55",
+      "colour": "#E06A4E",
+      "radios": ["two_way", "military"],
+      "segments": [
+        {"from": 8, "to": 9999, "gap": 120, "until": "aebs", "lines": [
+          "[EAS] This is the Automated Emergency Broadcast System for Grayhaven County.",
+          "A civil emergency is in effect for the whole county.",
+          "Remain indoors. Do not travel. Evacuation points are closed.",
+          "Avoid loud noises and lights after dark.",
+          "Do not approach the sick or the dead.",
+          "Conditions: rain continuing. Fog expected overnight. Visibility poor near the coast.",
+          "Ridgeview and the area round it are closed. Do not enter for any reason.",
+          "This message will repeat. [EOM]"
+        ]}
+      ]
+    },
+    {
+      "id": "military",
+      "name": "Military 41.25",
+      "colour": "#8FB07A",
+      "radios": ["military"],
+      "segments": [
+        {"from": 2, "to": 4, "gap": 200, "lines": [
+          "All units, all units. Cordon order one is in effect for Ridgeview.",
+          "Nobody in or out of the five-mile line. No exceptions for staff or family.",
+          "Civilians at the line are to be turned back. Use force if they will not go.",
+          "Report any tall contacts to command. Do not engage tall contacts alone.",
+          "Command out."
+        ]},
+        {"from": 5, "to": 7, "gap": 200, "lines": [
+          "All units, order six. Fall back from the Ridgeview line to Camp Black Pine.",
+          "Leave what you can't carry. Burn the aid station.",
+          "Small arms do not stop the tall contacts. Aim for the joints. Then run.",
+          "The breach has not been sealed. Repeat, the breach has not been sealed.",
+          "Command out."
+        ]},
+        {"from": 8, "to": 9999, "gap": 60, "lines": [
+          "This is an automated message for Black Pine personnel.",
+          "Bunker access. Four. One. Seven. Seven. Zero. Two.",
+          "Again. Four. One. Seven. Seven. Zero. Two.",
+          "Message ends."
+        ]}
+      ]
+    },
+    {
+      "id": "ham_dale",
+      "name": "Ham 7.180 (Dale)",
+      "colour": "#B9B2A4",
+      "radios": ["two_way", "military"],
+      "segments": [
+        {"from": 0, "to": 2, "gap": 300, "lines": [
+          "This is Dale out at Kingsbridge. Anyone else hear about the road closures?",
+          "They've shut the Ridgeview turn and the beltway ramps. Trucks with no plates going north all day.",
+          "My brother-in-law works up there. Nobody's picking up. Dale out."
+        ]},
+        {"from": 3, "to": 9, "gap": 300, "lines": [
+          "Dale again, Kingsbridge. I'm not going to the stadium. Neither should you.",
+          "I've been putting things away for years. Everyone laughed. Nobody's laughing now.",
+          "I'm keeping the radio on. If you're out there, talk to me. Dale out."
+        ]},
+        {"from": 10, "to": 13, "gap": 300, "lines": [
+          "Dale here. I'm leaving tonight. They're in the yard and the back door won't take much more.",
+          "Listen. I left supplies in the old Kingsbridge water tower. Food, water, shells, a first aid kit.",
+          "The ladder's chained. The key is under the pump by the tower's feet.",
+          "Somebody use it. Don't let it go to waste. Dale out. God bless."
+        ]},
+        {"from": 14, "to": 9999, "gap": 600, "lines": ["[CUT]"]}
+      ]
+    },
+    {
+      "id": "ham_marcy",
+      "name": "Ham 3.920 (Marcy)",
+      "colour": "#C9A7B8",
+      "radios": ["two_way", "military"],
+      "segments": [
+        {"from": 3, "to": 7, "gap": 240, "lines": [
+          "Is anyone there? This is Marcy on Hollis Island. Please answer.",
+          "They stopped the ferries this morning. There are soldiers on the jetty and they won't let us near it.",
+          "My daughter has a fever. I need antibiotics. Please, anyone.",
+          "I'll try again in an hour."
+        ]},
+        {"from": 8, "to": 11, "gap": 240, "lines": [
+          "This is Marcy, Hollis Island. The soldiers have gone. They left in the night.",
+          "The sick are on the streets. We're upstairs in the house by the old chapel.",
+          "Lily is very quiet now. She sleeps all day.",
+          "If you have a boat, please. I'll keep calling."
+        ]},
+        {"from": 12, "to": 12, "gap": 240, "lines": [
+          "Marcy. Hollis Island. Lily's awake. She's standing at the door.",
+          "She doesn't know me. Lily, it's Mummy. Lily, sweetheart, please",
+          "[CUT]"
+        ]},
+        {"from": 13, "to": 9999, "gap": 600, "lines": ["[CUT]"]}
+      ]
+    },
+    {
+      "id": "ham_ruiz",
+      "name": "Ham 14.270 (Father Ruiz)",
+      "colour": "#A9B9C9",
+      "radios": ["two_way", "military"],
+      "segments": [
+        {"from": 4, "to": 10, "gap": 300, "lines": [
+          "This is Father Ruiz at Our Lady of the Sea, Seabright. The church is open.",
+          "We have water and a little food. Come before dark. We bar the doors at nightfall.",
+          "Bring nobody who is bitten. I am sorry. That is the rule."
+        ]},
+        {"from": 11, "to": 13, "gap": 300, "lines": [
+          "Father Ruiz, Seabright. There is a sound outside at night. A hum, low, like a wire in the wind.",
+          "It goes round the church. It stops at the doors. Then it goes round again.",
+          "The others want to run for it. I've told them to wait for the light. Pray for us."
+        ]},
+        {"from": 14, "to": 14, "gap": 300, "lines": [
+          "Father Ruiz. It's inside. The others opened the vestry door to see.",
+          "[HUM] Can you hear it? It's right outside this room. It's so tall. Lord, it's so tall",
+          "[CUT]"
+        ]},
+        {"from": 15, "to": 9999, "gap": 600, "lines": ["[HUM]"]}
+      ]
+    },
+    {
+      "id": "ham_teo",
+      "name": "Ham 7.233 (Teo)",
+      "colour": "#9FC2A0",
+      "radios": ["two_way", "military"],
+      "segments": [
+        {"from": 6, "to": 15, "gap": 360, "lines": [
+          "Teo here. I'm a welder at Pelican Point. Holed up in the yard with four others.",
+          "The gates hold. They come to the noise from the city, not to us, as long as we're quiet.",
+          "We listen every night. If you're alone, you don't have to be."
+        ]},
+        {"from": 16, "to": 9999, "gap": 360, "lines": [
+          "Teo, Pelican Point Shipyard. Still here. Still breathing.",
+          "If anyone hears this: come to the pump house at the head of the dry dock. Knock three times, then twice.",
+          "We have a boat nearly ready. There's room. Come quietly, come in daylight if there's ever daylight again.",
+          "Teo out. I'll be on again tomorrow. I'm always on again tomorrow."
+        ]}
+      ]
+    }
+  ]
+}

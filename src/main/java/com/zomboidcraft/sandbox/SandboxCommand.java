@@ -13,7 +13,7 @@ import net.minecraft.network.chat.Component;
 
 /**
  * /zc sandbox: opens the Sandbox page. /zc sandbox list [group] shows the world's settings, /zc sandbox set id value
- * changes one, /zc sandbox preset name puts them all to a preset. Ops only, like the rest of /zc.
+ * changes one. Ops only, like the rest of /zc.
  */
 final class SandboxCommand {
     static void register() {
@@ -45,18 +45,14 @@ final class SandboxCommand {
                                                             return b.buildFuture();
                                                         })
                                                         .executes(ctx -> set(ctx, StringArgumentType.getString(ctx, "id"),
-                                                                StringArgumentType.getString(ctx, "value"))))))
-                                .then(Commands.literal("preset")
-                                        .then(Commands.argument("name", StringArgumentType.word())
-                                                .suggests((ctx, b) -> SharedSuggestionProvider.suggest(Sandbox.PRESETS, b))
-                                                .executes(ctx -> preset(ctx, StringArgumentType.getString(ctx, "name"))))))));
+                                                                StringArgumentType.getString(ctx, "value")))))))));
     }
 
     private static int open(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         var player = ctx.getSource().getPlayerOrException();
         Sandbox.sync(player);
         ServerPlayNetworking.send(player, new SandboxNet.Open());
-        ctx.getSource().sendSuccess(() -> Component.literal("World settings: preset " + Sandbox.preset() + ", "
+        ctx.getSource().sendSuccess(() -> Component.literal("World settings: "
                 + Sandbox.options().size() + " settings in " + SandboxGroup.values().length
                 + " groups. /zc sandbox list <group> shows them."), false);
         return 1;
@@ -65,7 +61,7 @@ final class SandboxCommand {
     private static int list(CommandContext<CommandSourceStack> ctx, String groupId) {
         CommandSourceStack src = ctx.getSource();
         if (groupId == null) {
-            StringBuilder text = new StringBuilder("World settings (preset " + Sandbox.preset() + "):");
+            StringBuilder text = new StringBuilder("World settings:");
             for (SandboxGroup g : SandboxGroup.values()) {
                 text.append(String.format("%n  %s (%s): %d", g.label, g.id, Sandbox.options(g).size()));
             }
@@ -90,17 +86,6 @@ final class SandboxCommand {
         try {
             String v = Sandbox.set(id, value);
             ctx.getSource().sendSuccess(() -> Component.literal(Sandbox.option(id).label + " set to " + v), true);
-            return 1;
-        } catch (IllegalArgumentException e) {
-            ctx.getSource().sendFailure(Component.literal(e.getMessage()));
-            return 0;
-        }
-    }
-
-    private static int preset(CommandContext<CommandSourceStack> ctx, String name) {
-        try {
-            Sandbox.applyPreset(name);
-            ctx.getSource().sendSuccess(() -> Component.literal("World settings put to the " + name + " preset"), true);
             return 1;
         } catch (IllegalArgumentException e) {
             ctx.getSource().sendFailure(Component.literal(e.getMessage()));

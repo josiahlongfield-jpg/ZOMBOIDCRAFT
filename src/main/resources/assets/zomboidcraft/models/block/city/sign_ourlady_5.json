@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sign_ourlady_5": "zomboidcraft:block/city/sign_ourlady_5",
+    "particle": "zomboidcraft:block/city/sign_ourlady_5"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sign_ourlady_5",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#sign_ourlady_5"
+        },
+        "east": {
+          "texture": "#sign_ourlady_5",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#sign_ourlady_5",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#sign_ourlady_5",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#sign_ourlady_5",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

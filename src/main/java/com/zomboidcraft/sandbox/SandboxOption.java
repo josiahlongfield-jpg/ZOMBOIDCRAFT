@@ -1,7 +1,6 @@
 package com.zomboidcraft.sandbox;
 
 import com.zomboidcraft.ZcConfig;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -42,7 +41,6 @@ public final class SandboxOption {
     /** Changes only what you see on your own screen: kept per player, not per world. */
     public final boolean client;
     private final String fallback;
-    private final Map<String, String> presets;
 
     private SandboxOption(Builder b) {
         id = b.id;
@@ -58,21 +56,6 @@ public final class SandboxOption {
         owner = b.owner;
         client = b.client;
         fallback = b.fallback;
-        // Apocalypse is always the default; a preset value that doesn't fit what we built (another scale, a choice
-        // we don't have) is left out, so that preset keeps our default there. A wired number keeps Zomboid's other
-        // presets only if its thread says the scales match.
-        Map<String, String> kept = new HashMap<>();
-        b.presets.forEach((preset, value) -> {
-            if (preset.equals("apocalypse") || (key != null && kind == Kind.NUMBER && !b.sameScale)) {
-                return;
-            }
-            try {
-                kept.put(preset, check(value));
-            } catch (IllegalArgumentException e) {
-                // not one we can take
-            }
-        });
-        presets = Map.copyOf(kept);
     }
 
     public boolean coming() {
@@ -84,14 +67,9 @@ public final class SandboxOption {
         return !client && kind != Kind.FIXED;
     }
 
-    /** The Apocalypse value: ours out of the box. */
+    /** Ours out of the box: Zomboid's Apocalypse value unless Josiah changed it or our system works differently. */
     public String defaultValue() {
         return key != null ? ZcConfig.defaultValue(key) : fallback;
-    }
-
-    /** What a preset sets this to. */
-    public String presetValue(String preset) {
-        return presets.getOrDefault(preset, defaultValue());
     }
 
     /** The value the game runs on right now, read from the config. */
@@ -158,8 +136,6 @@ public final class SandboxOption {
         String owner = "COMMANDS";
         boolean client;
         String fallback;
-        boolean sameScale;
-        final Map<String, String> presets = new HashMap<>();
 
         Builder(SandboxGroup group, String id, String label) {
             this.group = group;
@@ -209,12 +185,6 @@ public final class SandboxOption {
             return this;
         }
 
-        /** A wired number whose values mean what Zomboid's do, so Zomboid's presets apply to it as they are. */
-        Builder sameScale() {
-            sameScale = true;
-            return this;
-        }
-
         /** Not built yet: its value is kept in the world for when it is. */
         Builder coming(String value) {
             key = null;
@@ -243,11 +213,6 @@ public final class SandboxOption {
 
         Builder client() {
             client = true;
-            return this;
-        }
-
-        Builder preset(String preset, String value) {
-            presets.put(preset, value);
             return this;
         }
 

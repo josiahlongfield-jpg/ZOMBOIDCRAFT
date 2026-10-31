@@ -44,7 +44,8 @@ public abstract class LivingEntityMixin {
     @ModifyVariable(method = "hurtServer", at = @At("HEAD"), argsOnly = true)
     private float zomboidcraft$weaponSkill(float amount, ServerLevel level, DamageSource source) {
         LivingEntity self = (LivingEntity) (Object) this;
-        float out = Dismember.onlyTheHead(self, source, Combat.modifyDamage(self, source, CombatEvents.meleeDamage(self, source, amount)));
+        float dealt = Combat.modifyDamage(self, source, CombatEvents.meleeDamage(self, source, amount));
+        float out = Dismember.onlyTheHead(self, source, com.zomboidcraft.zombie.ZombieArmor.apply(self, source, dealt));
         if (self instanceof ServerPlayer player && source.is(com.zomboidcraft.survival.ModDamageTypes.BULLET) && out > 0
                 && !player.isCreative()) {
             out = com.zomboidcraft.clothing.Clothes.bullet(player, out);

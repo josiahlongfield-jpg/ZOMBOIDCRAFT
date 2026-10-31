@@ -1,6 +1,5 @@
 package com.zomboidcraft.zombie;
 
-import com.zomboidcraft.ZcConfig;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EntityTypes;
@@ -19,10 +18,9 @@ public final class ZombieTypes {
         return type == EntityTypes.ZOMBIE || type == EntityTypes.HUSK || type == EntityTypes.ZOMBIE_VILLAGER;
     }
 
-    /** A share of zombies run (one in twenty by default). Derived from the UUID so it never changes. */
+    /** Runs once it spots you: zombieLore's speed, rolled from the UUID so it never changes (Lore.pace). */
     public static boolean isSprinter(Entity entity) {
-        return Math.floorMod(entity.getUUID().getLeastSignificantBits(), 10000)
-                < ZcConfig.get().zombies.sprinterChance * 10000;
+        return Lore.pace(entity) == Lore.Pace.SPRINTER;
     }
 
     private ZombieTypes() {

@@ -1,0 +1,190 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "as_engine": "zomboidcraft:block/city/as_engine",
+    "as_rust": "zomboidcraft:block/city/as_rust",
+    "as_scrap": "zomboidcraft:block/city/as_scrap",
+    "particle": "zomboidcraft:block/city/as_scrap"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        1
+      ],
+      "to": [
+        15,
+        5,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_scrap"
+        },
+        "south": {
+          "texture": "#as_scrap"
+        },
+        "east": {
+          "texture": "#as_scrap"
+        },
+        "west": {
+          "texture": "#as_scrap"
+        },
+        "up": {
+          "texture": "#as_scrap"
+        },
+        "down": {
+          "texture": "#as_scrap",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        5,
+        2
+      ],
+      "to": [
+        12,
+        9,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_rust"
+        },
+        "south": {
+          "texture": "#as_rust"
+        },
+        "east": {
+          "texture": "#as_rust"
+        },
+        "west": {
+          "texture": "#as_rust"
+        },
+        "up": {
+          "texture": "#as_rust"
+        },
+        "down": {
+          "texture": "#as_rust"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        9,
+        5
+      ],
+      "to": [
+        10,
+        12,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_engine"
+        },
+        "south": {
+          "texture": "#as_engine"
+        },
+        "east": {
+          "texture": "#as_engine"
+        },
+        "west": {
+          "texture": "#as_engine"
+        },
+        "up": {
+          "texture": "#as_engine"
+        },
+        "down": {
+          "texture": "#as_engine"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        2,
+        6
+      ],
+      "to": [
+        16,
+        3,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_rust"
+        },
+        "south": {
+          "texture": "#as_rust"
+        },
+        "east": {
+          "texture": "#as_rust"
+        },
+        "west": {
+          "texture": "#as_rust"
+        },
+        "up": {
+          "texture": "#as_rust"
+        },
+        "down": {
+          "texture": "#as_rust"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          2,
+          7
+        ],
+        "axis": "y",
+        "angle": 22.5
+      }
+    },
+    {
+      "from": [
+        6,
+        4,
+        0
+      ],
+      "to": [
+        8,
+        12,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_rust"
+        },
+        "south": {
+          "texture": "#as_rust"
+        },
+        "east": {
+          "texture": "#as_rust"
+        },
+        "west": {
+          "texture": "#as_rust"
+        },
+        "up": {
+          "texture": "#as_rust"
+        },
+        "down": {
+          "texture": "#as_rust"
+        }
+      },
+      "rotation": {
+        "origin": [
+          7,
+          4,
+          1
+        ],
+        "axis": "x",
+        "angle": 22.5
+      }
+    }
+  ]
+}

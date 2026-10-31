@@ -46,6 +46,13 @@ public final class ZcCommand {
                                                 .suggests((ctx, b) -> SharedSuggestionProvider.suggest(CarModels.variants(), b))
                                                 .executes(ctx -> car(ctx, StringArgumentType.getString(ctx, "model"),
                                                         StringArgumentType.getString(ctx, "variant"))))))
+                        .then(Commands.literal("hoist").executes(ZcCommand::hoist))
+                        .then(Commands.literal("carparts").executes(ctx -> carParts(ctx, null, -1))
+                                .then(Commands.argument("part", StringArgumentType.word())
+                                        .suggests((ctx, b) -> SharedSuggestionProvider.suggest(com.zomboidcraft.world.cars.CarParts.names(), b))
+                                        .then(Commands.argument("condition", IntegerArgumentType.integer(-1, 100))
+                                                .executes(ctx -> carParts(ctx, StringArgumentType.getString(ctx, "part"),
+                                                        IntegerArgumentType.getInteger(ctx, "condition"))))))
                         .then(Commands.literal("aircraft")
                                 .executes(ctx -> aircraft(ctx, "jet_corvid"))
                                 .then(Commands.argument("model", StringArgumentType.word())
@@ -65,6 +72,7 @@ public final class ZcCommand {
                                                 .suggests((ctx, b) -> SharedSuggestionProvider.suggest(ZOMBIE_KINDS, b))
                                                 .executes(ctx -> zombie(ctx, StringArgumentType.getString(ctx, "outfit"),
                                                         StringArgumentType.getString(ctx, "kind"))))))
+                        .then(Commands.literal("lore").executes(ZcCommand::lore))
                         .then(Commands.literal("weather")
                                 .executes(ZcCommand::weather)
                                 .then(Commands.argument("kind", StringArgumentType.word())
@@ -198,6 +206,58 @@ public final class ZcCommand {
     }
 
     /** Drops a car side-on a few blocks in front of you: a random one, or the model and state named. */
+    /**
+     * A two-post car lift set down in front of you, its bay running the way you face (squared to the
+     * compass), centred on the block line so its posts stand in whole blocks: for trying it out, and
+     * for building your own garage.
+     */
+    private static int hoist(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        net.minecraft.server.level.ServerPlayer player = ctx.getSource().getPlayerOrException();
+        float yaw = Math.round(player.getYRot() / 90f) * 90f;
+        net.minecraft.world.phys.Vec3 ahead = net.minecraft.world.phys.Vec3.directionFromRotation(0, yaw).scale(4.5);
+        com.zomboidcraft.world.cars.CarHoist hoist = com.zomboidcraft.world.cars.Cars.HOIST.create(player.level(),
+                net.minecraft.world.entity.EntitySpawnReason.COMMAND);
+        if (hoist == null) {
+            return 0;
+        }
+        double x = Math.round(player.getX() + ahead.x), z = Math.round(player.getZ() + ahead.z);
+        hoist.snapTo(x, Math.floor(player.getY() + 0.01), z, yaw, 0);
+        player.level().addFreshEntity(hoist);
+        ctx.getSource().sendSuccess(() -> Component.literal("A car lift, its bay running the way you face. Drive a car in between the posts, "
+                + "then G on the control box."), false);
+        return 1;
+    }
+
+    /**
+     * The nearest car's parts (within 8 blocks), listed; or one set (part name, "tire" for all four, "all" for
+     * everything) to a condition, -1 to take it off. For trying out worn and missing parts without driving for days.
+     */
+    private static int carParts(CommandContext<CommandSourceStack> ctx, String part, int condition) throws CommandSyntaxException {
+        net.minecraft.server.level.ServerPlayer player = ctx.getSource().getPlayerOrException();
+        com.zomboidcraft.world.cars.CarProp car = player.level().getEntitiesOfClass(com.zomboidcraft.world.cars.CarProp.class,
+                        player.getBoundingBox().inflate(8), c -> !c.parts().isEmpty()).stream()
+                .min(java.util.Comparator.comparingDouble(c -> c.distanceToSqr(player))).orElse(null);
+        if (car == null) {
+            ctx.getSource().sendFailure(Component.literal("No car with parts within 8 blocks."));
+            return 0;
+        }
+        String parts = car.parts();
+        if (part != null) {
+            java.util.List<Integer> slots = com.zomboidcraft.world.cars.CarParts.slots(part);
+            if (slots.isEmpty()) {
+                ctx.getSource().sendFailure(Component.literal("No part called " + part + "."));
+                return 0;
+            }
+            for (int slot : slots) {
+                parts = com.zomboidcraft.world.cars.CarParts.set(parts, slot, condition);
+            }
+            car.setParts(parts);
+        }
+        String shown = parts;
+        ctx.getSource().sendSuccess(() -> Component.literal(com.zomboidcraft.world.cars.CarParts.describe(car.model(), shown)), false);
+        return 1;
+    }
+
     private static int car(CommandContext<CommandSourceStack> ctx, String model, String variant) throws CommandSyntaxException {
         ServerPlayer player = ctx.getSource().getPlayerOrException();
         java.util.Random rng = new java.util.Random();
@@ -306,6 +366,33 @@ public final class ZcCommand {
             text.append(String.format("%n  %s = %s", key, ZcConfig.getValue(key)));
         }
         ctx.getSource().sendSuccess(() -> Component.literal(text.toString()), false);
+        return 1;
+    }
+
+    /** What the zombie you're looking at rolled under Zomboid's Zombie Lore settings (zombie/Lore). */
+    private static int lore(CommandContext<CommandSourceStack> ctx) throws com.mojang.brigadier.exceptions.CommandSyntaxException {
+        net.minecraft.server.level.ServerPlayer player = ctx.getSource().getPlayerOrException();
+        net.minecraft.world.phys.Vec3 eye = player.getEyePosition(), look = player.getLookAngle();
+        net.minecraft.world.entity.monster.zombie.Zombie best = null;
+        double bestCos = Math.cos(Math.toRadians(8));
+        for (net.minecraft.world.entity.monster.zombie.Zombie z : player.level().getEntitiesOfClass(
+                net.minecraft.world.entity.monster.zombie.Zombie.class, player.getBoundingBox().inflate(48),
+                com.zomboidcraft.zombie.ZombieTypes::isWalker)) {
+            net.minecraft.world.phys.Vec3 to = z.getBoundingBox().getCenter().subtract(eye);
+            double cos = to.normalize().dot(look);
+            if (cos > bestCos) {
+                bestCos = cos;
+                best = z;
+            }
+        }
+        if (best == null) {
+            ctx.getSource().sendFailure(Component.literal("Look at a zombie first."));
+            return 0;
+        }
+        String text = com.zomboidcraft.zombie.Lore.describe(best) + ", armour "
+                + Math.round(com.zomboidcraft.zombie.ZombieArmor.share(best) * 100) + "%, health "
+                + Math.round(best.getHealth()) + "/" + Math.round(best.getMaxHealth());
+        ctx.getSource().sendSuccess(() -> Component.literal(text), false);
         return 1;
     }
 

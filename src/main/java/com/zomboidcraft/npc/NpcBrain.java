@@ -14,6 +14,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.util.DefaultRandomPos;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
@@ -115,7 +116,7 @@ final class NpcBrain {
             if (npc.work.asleep) {
                 return false;
             }
-            armed = gun(npc) != null;
+            armed = NpcCare.armed(npc);
             from = nearestZombie(npc, armed ? FLEE_ARMED : FLEE_UNARMED * npc.mind.flightScale(), false);
             if (from == null) {
                 return false;
@@ -274,6 +275,7 @@ final class NpcBrain {
         private final NpcEntity npc;
         private Zombie target;
         private int raised, cooldown;
+        private ItemStack lastGun;
 
         Shoot(NpcEntity npc) {
             this.npc = npc;
@@ -283,7 +285,7 @@ final class NpcBrain {
         @Override
         public boolean canUse() {
             // asleep she sees nothing; a zombie close by or her own alarm wakes her first
-            if (gun(npc) == null || npc.work.asleep) {
+            if (!NpcCare.armed(npc) || npc.work.asleep) {
                 return false;
             }
             target = nearestZombie(npc, SHOOT_RANGE, true);
@@ -292,7 +294,7 @@ final class NpcBrain {
 
         @Override
         public boolean canContinueToUse() {
-            return gun(npc) != null && target != null && target.isAlive() && target.distanceToSqr(npc) < SHOOT_RANGE * SHOOT_RANGE
+            return NpcCare.armed(npc) && target != null && target.isAlive() && target.distanceToSqr(npc) < SHOOT_RANGE * SHOOT_RANGE
                     && npc.getSensing().hasLineOfSight(target);
         }
 
@@ -328,12 +330,29 @@ final class NpcBrain {
             npc.setYBodyRot(npc.getYHeadRot());
             raised++;
             ZcConfig.GunStats stats = type.stats();
+            boolean endless = ZcConfig.get().companions.endlessAmmo;
+            ItemStack held = npc.getMainHandItem();
+            if (held != lastGun) {
+                // a different gun in her hands (a swap, or one you handed her): count what's in this one
+                lastGun = held;
+                npc.rounds = -1;
+                npc.reloadLeft = 0;
+            }
             if (npc.rounds < 0) {
-                npc.rounds = stats.magazineSize;
+                // endless, a full magazine; else what's really in the gun
+                npc.rounds = endless ? stats.magazineSize : NpcCare.loaded(held);
             }
             if (npc.reloadLeft > 0) {
                 if (--npc.reloadLeft == 0) {
-                    npc.rounds = stats.magazineSize;
+                    npc.rounds = endless ? stats.magazineSize : npc.rounds + NpcCare.draw(npc, type, type.capacity() - npc.rounds);
+                    if (!endless) NpcCare.setLoaded(held, npc.rounds);
+                }
+                return;
+            }
+            if (npc.rounds <= 0) {
+                if (endless || NpcCare.reserve(npc, type) > 0) {
+                    npc.reloadLeft = RELOAD;
+                    npc.say(NpcLines.Kind.RELOAD);
                 }
                 return;
             }
@@ -343,9 +362,16 @@ final class NpcBrain {
             fire(type, stats);
             // a person's pace, not the gun's top rate: short bursts from automatics, aimed shots otherwise
             cooldown = Math.max(type.fireDelay(), 4) + npc.getRandom().nextInt(6);
-            if (--npc.rounds <= 0) {
-                npc.reloadLeft = RELOAD;
-                npc.say(NpcLines.Kind.RELOAD);
+            npc.rounds--;
+            if (!endless) NpcCare.setLoaded(held, npc.rounds);
+            if (npc.rounds <= 0) {
+                if (endless || NpcCare.reserve(npc, type) > 0) {
+                    npc.reloadLeft = RELOAD;
+                    npc.say(NpcLines.Kind.RELOAD);
+                } else {
+                    npc.lines.sayLine(npc, NpcLines.Kind.RELOAD, NpcWork.pick(npc, "I'm out! I've got nothing left!",
+                            "Empty! I need rounds!", "That's my last one!"));
+                }
             }
         }
 
@@ -372,7 +398,7 @@ final class NpcBrain {
                     0.95f + npc.getRandom().nextFloat() * 0.1f);
             level.sendParticles(ParticleTypes.SMOKE, muzzle.x, muzzle.y, muzzle.z, 2, 0.03, 0.03, 0.03, 0.01);
             level.sendParticles(ParticleTypes.SMALL_FLAME, muzzle.x, muzzle.y, muzzle.z, 1, 0, 0, 0, 0);
-            Noise.emit(level, npc.position(), stats.shotNoise);
+            Noise.emit(level, npc.position(), com.zomboidcraft.combat.Firearms.noise(stats.shotNoise));
             Vec3 end = eye.add(dir.scale(stats.range));
             var block = level.clip(new ClipContext(eye, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, npc));
             Vec3 stop = block.getType() == HitResult.Type.MISS ? end : block.getLocation();
@@ -386,67 +412,6 @@ final class NpcBrain {
                     npc.mind.killed(npc);
                     npc.work.practise(npc, NpcSkills.Skill.AIM, 3f);
                 }
-            }
-        }
-    }
-
-    /** Walks over to a gun lying on the ground and takes it, when her hands are empty. */
-    static final class TakeGun extends Goal {
-        private final NpcEntity npc;
-        private ItemEntity item;
-
-        TakeGun(NpcEntity npc) {
-            this.npc = npc;
-            setFlags(EnumSet.of(Flag.MOVE));
-        }
-
-        @Override
-        public boolean canUse() {
-            if (!npc.getMainHandItem().isEmpty() || npc.work.asleep) {
-                return false;
-            }
-            item = null;
-            double best = Double.MAX_VALUE;
-            for (ItemEntity e : npc.level().getEntitiesOfClass(ItemEntity.class, npc.getBoundingBox().inflate(GUN_RANGE),
-                    e -> e.isAlive() && GunType.of(e.getItem()) != null)) {
-                double d = e.distanceToSqr(npc);
-                if (d < best) {
-                    best = d;
-                    item = e;
-                }
-            }
-            return item != null;
-        }
-
-        @Override
-        public boolean canContinueToUse() {
-            return item != null && item.isAlive() && npc.getMainHandItem().isEmpty();
-        }
-
-        @Override
-        public void start() {
-            npc.getNavigation().moveTo(item, 1.2);
-        }
-
-        @Override
-        public void stop() {
-            item = null;
-        }
-
-        @Override
-        public void tick() {
-            if (item == null) {
-                return;
-            }
-            if (item.distanceToSqr(npc) < 1.8 * 1.8) {
-                npc.setItemSlot(EquipmentSlot.MAINHAND, item.getItem().copy());
-                npc.say(NpcLines.Kind.GUN);
-                npc.rounds = -1;
-                npc.reloadLeft = 0;
-                item.discard();
-                item = null;
-            } else if (npc.getNavigation().isDone()) {
-                npc.getNavigation().moveTo(item, 1.2);
             }
         }
     }

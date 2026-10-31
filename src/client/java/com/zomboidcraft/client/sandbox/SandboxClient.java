@@ -9,8 +9,7 @@ import net.minecraft.network.chat.Component;
 
 /**
  * Takes the world's settings from the server, and opens the Sandbox page when /zc sandbox asks. The page itself is the
- * UI's: it sets {@link #opener}, reads Sandbox.groups() / options() / value(), and sends SandboxNet.Set and
- * SandboxNet.Preset (or calls Sandbox.set for a setting marked client, which stays on this PC).
+ * UI's: it sets {@link #opener}, reads Sandbox.groups() / options() / value(), and sends SandboxNet.Set (or calls Sandbox.set for a setting marked client, which stays on this PC).
  */
 public final class SandboxClient {
     /** Opens the Sandbox page; until the page is built it points you at /zc sandbox list. */
@@ -24,7 +23,7 @@ public final class SandboxClient {
 
     public static void register() {
         ClientPlayNetworking.registerGlobalReceiver(SandboxNet.Sync.TYPE, (payload, context) ->
-                context.client().execute(() -> Sandbox.clientSync(payload.preset(), payload.values())));
+                context.client().execute(() -> Sandbox.clientSync(payload.values())));
         ClientPlayNetworking.registerGlobalReceiver(SandboxNet.Open.TYPE, (payload, context) ->
                 context.client().execute(() -> opener.run()));
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> client.execute(Sandbox::clientLeft));

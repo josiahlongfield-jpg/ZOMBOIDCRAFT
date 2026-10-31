@@ -1,0 +1,80 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "as_crusher": "zomboidcraft:block/city/as_crusher",
+    "particle": "zomboidcraft:block/city/as_crusher"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        10,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_crusher",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#as_crusher",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#as_crusher",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#as_crusher",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#as_crusher",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#as_crusher"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        8,
+        0
+      ],
+      "to": [
+        14,
+        10,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_crusher",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#as_crusher",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#as_crusher"
+        },
+        "west": {
+          "texture": "#as_crusher"
+        },
+        "up": {
+          "texture": "#as_crusher"
+        },
+        "down": {
+          "texture": "#as_crusher"
+        }
+      }
+    }
+  ]
+}

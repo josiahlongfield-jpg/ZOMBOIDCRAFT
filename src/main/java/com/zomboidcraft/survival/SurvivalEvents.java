@@ -26,23 +26,34 @@ public final class SurvivalEvents {
     public static void register() {
         ServerTickEvents.END_SERVER_TICK.register(SurvivalEvents::onServerTick);
         ServerLivingEntityEvents.AFTER_DAMAGE.register((entity, source, baseDamage, damage, blocked) -> {
-            if (entity instanceof ServerPlayer player && !blocked && damage > 0
-                    && ZombieTypes.isWalker(source.getEntity())) {
-                onZombieHit(player);
+            if (entity instanceof ServerPlayer player && !blocked && damage > 0) {
+                Sleep.wake(player, "Pain jolts you awake.");
+                if (ZombieTypes.isWalker(source.getEntity())) {
+                    onZombieHit(player);
+                }
             }
         });
         ServerLivingEntityEvents.AFTER_DEATH.register((entity, source) -> {
             Combat.onKill(entity, source);
-            if (entity instanceof ServerPlayer player && SurvivalStats.get(player).infected()
-                    && ZcConfig.get().survival.reanimate) {
-                reanimate(player);
+            ZcConfig.ZombieLore.Transmission spread = ZcConfig.get().zombieLore.transmission;
+            if (entity instanceof ServerPlayer player && ZcConfig.get().survival.reanimate
+                    && spread != ZcConfig.ZombieLore.Transmission.NONE
+                    && (SurvivalStats.get(player).infected() || spread == ZcConfig.ZombieLore.Transmission.EVERYONES_INFECTED)) {
+                rises(player);
             }
         });
     }
 
     private static void onServerTick(MinecraftServer server) {
+        for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+            Needs.holdFoodBar(player);
+        }
+        Sleep.tick(server);
         if (++ticks % 20 != 0) {
             return;
+        }
+        if (!RISING.isEmpty()) {
+            riseDue(server);
         }
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
             if (player.isAlive() && !player.isCreative() && !player.isSpectator()) {
@@ -68,26 +79,18 @@ public final class SurvivalEvents {
                         player.getBoundingBox().inflate(16), ZombieTypes::isWalker).isEmpty()) {
             Skills.addXp(player, Skill.SNEAKING, 1);
         }
-        stats = stats.withThirst(stats.thirst() - thirstDrain);
-        if (stats.thirst() < 20f) {
-            effect(player, MobEffects.SLOWNESS, 0);
-        }
+        stats = stats.withThirst(stats.thirst() - thirstDrain * (Sleep.asleep(player) ? 0.5f : 1f));
         if (stats.thirst() <= 0f && second % 4 == 0) {
             player.hurtServer(level, ModDamageTypes.source(level, ModDamageTypes.THIRST), 1f);
         }
 
-        // Fatigue: a full night's sleep resets it
-        if (player.isSleeping()) {
-            stats = player.getSleepTimer() >= 90 ? stats.withFatigue(0f) : stats.withFatigue(stats.fatigue() - 3f);
+        // Fatigue: rest comes from what you sleep on (Sleep); Zomboid's "sleep needed" off means it never builds
+        if (Sleep.asleep(player)) {
+            stats = stats.withFatigue(Sleep.rest(player, stats.fatigue()));
+        } else if (player.isSleeping()) {
+            stats = stats.withFatigue(stats.fatigue() - Sleep.Bed.GOOD.restPerHour / Needs.hourSeconds());
         } else {
-            stats = stats.withFatigue(stats.fatigue() + (config.fatigue ? (float) config.fatiguePerSecond : 0f));
-        }
-        if (stats.fatigue() > 75f) {
-            effect(player, MobEffects.MINING_FATIGUE, 0);
-        }
-        if (stats.fatigue() > 90f) {
-            effect(player, MobEffects.SLOWNESS, 0);
-            effect(player, MobEffects.WEAKNESS, 0);
+            stats = stats.withFatigue(config.fatigue ? stats.fatigue() + (float) config.fatiguePerSecond : 0f);
         }
 
         // Bleeding and healing are per body part now: see Injuries
@@ -120,6 +123,7 @@ public final class SurvivalEvents {
         }
 
         SurvivalStats.set(player, stats);
+        Needs.tick(player, second);
         Injuries.tick(player, second);
         Medicine.tick(player, second);
         Mood.tick(player, second);
@@ -131,12 +135,18 @@ public final class SurvivalEvents {
         SurvivalStats stats = SurvivalStats.get(player);
         ZcConfig.Survival config = ZcConfig.get().survival;
         float roll = random.nextFloat();
+        // Zomboid's Transmission (zombieLore): bites and scratches, bites only, or nothing from wounds at all (none,
+        // and everyone's infected, where you carry it already and rise whatever kills you)
+        ZcConfig.ZombieLore.Transmission spread = ZcConfig.get().zombieLore.transmission;
+        boolean bites = spread == ZcConfig.ZombieLore.Transmission.BLOOD_AND_SALIVA
+                || spread == ZcConfig.ZombieLore.Transmission.SALIVA_ONLY;
+        boolean scratches = spread == ZcConfig.ZombieLore.Transmission.BLOOD_AND_SALIVA;
         if (roll < config.biteChance) {
             Body.Region where = Injuries.zombieWound(player, true);
             if (where == null) {
                 player.sendOverlayMessage(Component.literal("Your clothes stopped a bite.").withStyle(ChatFormatting.GRAY));
             } else {
-                if (!stats.infected() && config.infection) {
+                if (!stats.infected() && config.infection && bites) {
                     stats = stats.withInfection(0);
                 }
                 player.sendOverlayMessage(Component.literal("You've been bitten on the " + where.label + ".").withStyle(ChatFormatting.DARK_RED));
@@ -146,7 +156,7 @@ public final class SurvivalEvents {
             if (where == null) {
                 player.sendOverlayMessage(Component.literal("Your clothes took the scratch.").withStyle(ChatFormatting.GRAY));
             } else {
-                if (!stats.infected() && config.infection && random.nextFloat() < config.scratchInfectionChance) {
+                if (!stats.infected() && config.infection && scratches && random.nextFloat() < config.scratchInfectionChance) {
                     stats = stats.withInfection(0);
                 }
                 player.sendOverlayMessage(Component.literal("You've been hurt on the " + where.label + ".").withStyle(ChatFormatting.RED));
@@ -155,12 +165,54 @@ public final class SurvivalEvents {
         SurvivalStats.set(player, stats);
     }
 
-    /** An infected player rises again where they fell. */
-    private static void reanimate(ServerPlayer player) {
+    /** Infected bodies waiting to get up: where, whose name, and the server tick they rise. */
+    private record Rising(net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level> level, net.minecraft.core.BlockPos pos,
+            Component name, long at) {
+    }
+
+    private static final java.util.List<Rising> RISING = new java.util.ArrayList<>();
+
+    /**
+     * An infected player rises again where they fell, after Zomboid's Reanimate Time (zombieLore.reanimate) in game
+     * time: instant to a minute is at once, up to 12 hours is up to ten real minutes, 2-3 days 40 to 60, 1-2 weeks
+     * 4 to 8 hours. Kept while the server runs.
+     */
+    private static void rises(ServerPlayer player) {
+        RandomSource random = player.getRandom();
+        int h = SurvivalStats.GAME_HOUR;
+        int wait = switch (ZcConfig.get().zombieLore.reanimate) {
+            case INSTANT, SECONDS_0_30, MINUTES_0_1 -> 0;
+            case HOURS_0_12 -> random.nextInt(12 * h);
+            case DAYS_2_3 -> 48 * h + random.nextInt(24 * h);
+            case WEEKS_1_2 -> 168 * h + random.nextInt(168 * h);
+        };
         ServerLevel level = (ServerLevel) player.level();
-        Zombie zombie = EntityTypes.ZOMBIE.spawn(level, player.blockPosition(), EntitySpawnReason.EVENT);
+        Rising r = new Rising(level.dimension(), player.blockPosition(), player.getName().copy(), level.getServer().getTickCount() + wait * 20L);
+        if (wait == 0) {
+            reanimate(level, r);
+        } else {
+            RISING.add(r);
+        }
+    }
+
+    private static void riseDue(MinecraftServer server) {
+        long now = server.getTickCount();
+        RISING.removeIf(r -> {
+            if (now < r.at()) {
+                return false;
+            }
+            ServerLevel level = server.getLevel(r.level());
+            if (level != null) {
+                reanimate(level, r);
+            }
+            return true;
+        });
+    }
+
+    private static void reanimate(ServerLevel level, Rising r) {
+        Zombie zombie = EntityTypes.ZOMBIE.spawn(level, r.pos(), EntitySpawnReason.EVENT);
         if (zombie != null) {
-            zombie.setCustomName(player.getName().copy());
+            zombie.setCustomName(r.name());
             zombie.setPersistenceRequired();
         }
     }

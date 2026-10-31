@@ -569,6 +569,8 @@ public final class LootSpecs {
         new LootSpec("skillbook_masonry", "books", Rarity.SCARCE, 8, 0.5, 8, true, null),
         new LootSpec("skillbook_metalworking", "books", Rarity.SCARCE, 8, 0.5, 8, true, null),
         new LootSpec("skillbook_piloting", "books", Rarity.RARE, 15, 0.6, 8, true, null),
+        new LootSpec("skillbook_electrical", "books", Rarity.SCARCE, 8, 0.5, 8, true, null),
+        new LootSpec("skillbook_plumbing", "books", Rarity.SCARCE, 8, 0.5, 8, true, null),
         new LootSpec("mag_carpentry", "books", Rarity.SCARCE, 6, 0.2, 16, true, null),
         new LootSpec("mag_mechanics", "books", Rarity.SCARCE, 6, 0.2, 16, true, null),
         new LootSpec("mag_survival", "books", Rarity.RARE, 10, 0.2, 16, true, null),

@@ -44,6 +44,8 @@ public class ZombieSightGoal extends TargetGoal {
 
     @Override
     public void start() {
+        // how long it keeps after you out of sight is its own (zombieLore memory)
+        setUnseenMemoryTicks(Lore.chaseSeconds(zombie) * 20);
         boolean fresh = zombie.getTarget() == null;
         zombie.setTarget(spotted);
         super.start();
@@ -66,8 +68,8 @@ public class ZombieSightGoal extends TargetGoal {
     @Override
     public void stop() {
         LivingEntity lost = zombie.getTarget();
-        if (lost != null && lost.isAlive()) {
-            // Head for where we lost them and look around.
+        if (lost != null && lost.isAlive() && Lore.memory(zombie) != Lore.Recall.NONE) {
+            // Head for where we lost them and look around (one with no memory just forgets).
             ((NoiseListener) zombie).zomboidcraft$hear(lost.position());
         }
         super.stop();

@@ -1,0 +1,108 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "as_grey": "zomboidcraft:block/city/as_grey",
+    "as_lamp": "zomboidcraft:block/city/as_lamp",
+    "as_steel": "zomboidcraft:block/city/as_steel",
+    "particle": "zomboidcraft:block/city/as_steel"
+  },
+  "elements": [
+    {
+      "from": [
+        7.5,
+        10,
+        7.5
+      ],
+      "to": [
+        8.5,
+        16,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_steel"
+        },
+        "south": {
+          "texture": "#as_steel"
+        },
+        "east": {
+          "texture": "#as_steel"
+        },
+        "west": {
+          "texture": "#as_steel"
+        },
+        "up": {
+          "texture": "#as_steel",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#as_steel"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        5,
+        4
+      ],
+      "to": [
+        12,
+        10,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_grey"
+        },
+        "south": {
+          "texture": "#as_grey"
+        },
+        "east": {
+          "texture": "#as_grey"
+        },
+        "west": {
+          "texture": "#as_grey"
+        },
+        "up": {
+          "texture": "#as_grey"
+        },
+        "down": {
+          "texture": "#as_grey"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        4,
+        5
+      ],
+      "to": [
+        11,
+        5,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_lamp"
+        },
+        "south": {
+          "texture": "#as_lamp"
+        },
+        "east": {
+          "texture": "#as_lamp"
+        },
+        "west": {
+          "texture": "#as_lamp"
+        },
+        "up": {
+          "texture": "#as_lamp"
+        },
+        "down": {
+          "texture": "#as_lamp"
+        }
+      }
+    }
+  ]
+}

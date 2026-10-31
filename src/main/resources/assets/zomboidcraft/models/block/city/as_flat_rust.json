@@ -1,0 +1,45 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "as_flat_rust": "zomboidcraft:block/city/as_flat_rust",
+    "as_scrap": "zomboidcraft:block/city/as_scrap",
+    "particle": "zomboidcraft:block/city/as_flat_rust"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0.5
+      ],
+      "to": [
+        16,
+        15.5,
+        15.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_flat_rust"
+        },
+        "south": {
+          "texture": "#as_flat_rust"
+        },
+        "east": {
+          "texture": "#as_flat_rust",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#as_flat_rust",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#as_scrap"
+        },
+        "down": {
+          "texture": "#as_scrap",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}
