@@ -102,7 +102,7 @@ public class RadioItem extends Item {
         Radios.Tuning tuning = Radios.tuning(stack);
         tooltip.accept(Component.literal(type.blurb + ", about " + Math.round(type.range()) + " blocks")
                 .withStyle(ChatFormatting.GRAY));
-        tooltip.accept(Component.literal("Channel " + tuning.channel() + " of " + type.channels() + ", " + (tuning.on() ? "on" : "off"))
+        tooltip.accept(Component.literal(Broadcasts.label(tuning.channel(), type) + ", " + (tuning.on() ? "on" : "off"))
                 .withStyle(tuning.on() ? ChatFormatting.GRAY : ChatFormatting.DARK_GRAY));
         if (ZcConfig.get().radio.batteries) {
             tooltip.accept(Component.literal(stack.has(Headgear.CHARGE) ? Radios.chargeText(stack) : "Battery: not checked yet")

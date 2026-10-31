@@ -106,6 +106,8 @@ FASCIA = [
     ("parking", "box", "PUBLIC PARKING", (28, 64, 150), (242, 242, 236), 5, "black"),
     ("aid", "box", "FEMA AID STATION", (30, 50, 92), (236, 232, 220), 5, "black"),
     ("hardhat", "painted", "HARD HAT AREA - KEEP OUT", (232, 188, 40), (26, 26, 24), 6, "black"),
+    # Seabright's church, where Father Ruiz keeps his ham radio (AUDIO's broadcasts)
+    ("ourlady", "channel", "OUR LADY OF THE SEA", None, (204, 198, 182), 6, "serif"),
 ]
 # hanging neon, a letter per block: id, letters, tube colour. Colours keep to the three a
 # froglight can throw under Photon (the city's Signs/Boards put the matching one over a lit
@@ -518,15 +520,12 @@ def blocks():
 def main():
     path = HERE / "blocks.json"
     data = json.loads(path.read_text())
-    kept = {k: v for k, v in data["blocks"].items()
-            if not k.startswith(("sign_", "blade_", "neon_")) or k == "sign_post"}  # the bare post isn't a board
-    kept.update(blocks())
-    data["blocks"] = kept
-    # one block per line, like the hand-written entries
-    lines = ",\n".join(f"    {json.dumps(k)}: {json.dumps(v)}" for k, v in kept.items())
-    rest = {k: v for k, v in data.items() if k != "blocks"}
-    head = "".join(f'  {json.dumps(k)}: {json.dumps(v)},\n' for k, v in rest.items())
-    path.write_text("{\n" + head + '  "blocks": {\n' + lines + "\n  }\n}\n")
+    made = blocks()
+    # in place: blocks.json is append-only, its order is the registry's
+    data["blocks"] = {k: made.get(k, v) for k, v in data["blocks"].items()
+                      if not k.startswith(("sign_", "blade_", "neon_")) or k == "sign_post" or k in made}  # the bare post isn't a board
+    data["blocks"].update({k: v for k, v in made.items() if k not in data["blocks"]})
+    path.write_text(json.dumps(data, indent=1) + "\n")
     print(f"{len(blocks())} sign blocks in {path}")
 
 

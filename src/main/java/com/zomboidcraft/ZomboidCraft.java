@@ -35,14 +35,18 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.world.cars.CarNet.register();
         com.zomboidcraft.world.cars.Mechanics.register();
         com.zomboidcraft.world.cars.CarHoist.register();
+        com.zomboidcraft.world.cars.ShopTool.register();
+        com.zomboidcraft.world.cars.Fuel.register();
         com.zomboidcraft.world.cars.CarKeys.register();
         com.zomboidcraft.world.cars.CarSounds.register();
         com.zomboidcraft.world.cars.AirSounds.register();
         com.zomboidcraft.world.cars.AirReadiness.register();
         com.zomboidcraft.world.cars.AirNet.register();
         com.zomboidcraft.world.events.WorldEvents.register();
+        com.zomboidcraft.world.events.MetaEvents.register();
         com.zomboidcraft.world.NetherSeal.register();
         com.zomboidcraft.world.files.LabFiles.register();
+        com.zomboidcraft.world.Keypads.register();
         com.zomboidcraft.world.Breach.register();
         com.zomboidcraft.world.SporeHaze.register();
         com.zomboidcraft.world.trains.Trains.register();
@@ -66,6 +70,7 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.spawn.SpawnPicker.register();
         com.zomboidcraft.gear.Headgear.register();
         com.zomboidcraft.gear.Radios.register();
+        com.zomboidcraft.gear.Broadcasts.register();
         com.zomboidcraft.loot.Nearby.register();
         Loot.register();
         com.zomboidcraft.combat.rolls.Rolls.register();

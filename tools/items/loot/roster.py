@@ -401,6 +401,7 @@ fence_posts | Fence Post | C | 1 | 4.0 | farm hard
 cinder_block | Cinder Block | C | 1 | 16.0 | build farm
 propane_cylinder | Propane Cylinder | S | 10 | 15.0 | garage.2 hard camp farm diner
 gas_can | Gas Can | S | 6 | 1.2 | garage.3 trunk farm hard auto
+rubber_hose | Rubber Hose | C | 2 | 0.6 | garage.2 hard farm auto trunk
 """
 
 ROSTER['Electrical & electronics'] = """

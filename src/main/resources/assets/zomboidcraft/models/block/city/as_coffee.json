@@ -1,0 +1,246 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "as_black": "zomboidcraft:block/city/as_black",
+    "as_certs": "zomboidcraft:block/city/as_certs",
+    "as_crt": "zomboidcraft:block/city/as_crt",
+    "as_drawers_black": "zomboidcraft:block/city/as_drawers_black",
+    "as_laminate": "zomboidcraft:block/city/as_laminate",
+    "particle": "zomboidcraft:block/city/as_drawers_black"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        3
+      ],
+      "to": [
+        15,
+        13,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_drawers_black"
+        },
+        "south": {
+          "texture": "#as_laminate"
+        },
+        "east": {
+          "texture": "#as_laminate"
+        },
+        "west": {
+          "texture": "#as_laminate"
+        },
+        "up": {
+          "texture": "#as_laminate"
+        },
+        "down": {
+          "texture": "#as_laminate",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0.5,
+        13,
+        2.5
+      ],
+      "to": [
+        15.5,
+        14,
+        14.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_laminate"
+        },
+        "south": {
+          "texture": "#as_laminate"
+        },
+        "east": {
+          "texture": "#as_laminate"
+        },
+        "west": {
+          "texture": "#as_laminate"
+        },
+        "up": {
+          "texture": "#as_laminate"
+        },
+        "down": {
+          "texture": "#as_laminate"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        14,
+        7
+      ],
+      "to": [
+        7,
+        21,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_black",
+          "uv": [
+            9,
+            0,
+            14,
+            7
+          ]
+        },
+        "south": {
+          "texture": "#as_black",
+          "uv": [
+            2,
+            0,
+            7,
+            7
+          ]
+        },
+        "east": {
+          "texture": "#as_black",
+          "uv": [
+            4,
+            0,
+            9,
+            7
+          ]
+        },
+        "west": {
+          "texture": "#as_black",
+          "uv": [
+            7,
+            0,
+            12,
+            7
+          ]
+        },
+        "up": {
+          "texture": "#as_black"
+        },
+        "down": {
+          "texture": "#as_black"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        14,
+        4
+      ],
+      "to": [
+        6,
+        18,
+        7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_crt",
+          "uv": [
+            10,
+            0,
+            13,
+            4
+          ]
+        },
+        "south": {
+          "texture": "#as_crt",
+          "uv": [
+            3,
+            0,
+            6,
+            4
+          ]
+        },
+        "east": {
+          "texture": "#as_crt",
+          "uv": [
+            9,
+            0,
+            12,
+            4
+          ]
+        },
+        "west": {
+          "texture": "#as_crt",
+          "uv": [
+            4,
+            0,
+            7,
+            4
+          ]
+        },
+        "up": {
+          "texture": "#as_crt"
+        },
+        "down": {
+          "texture": "#as_crt"
+        }
+      }
+    },
+    {
+      "from": [
+        9,
+        14,
+        6
+      ],
+      "to": [
+        14,
+        17,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_certs",
+          "uv": [
+            2,
+            0,
+            7,
+            3
+          ]
+        },
+        "south": {
+          "texture": "#as_certs",
+          "uv": [
+            9,
+            0,
+            14,
+            3
+          ]
+        },
+        "east": {
+          "texture": "#as_certs",
+          "uv": [
+            5,
+            0,
+            10,
+            3
+          ]
+        },
+        "west": {
+          "texture": "#as_certs",
+          "uv": [
+            6,
+            0,
+            11,
+            3
+          ]
+        },
+        "up": {
+          "texture": "#as_certs"
+        },
+        "down": {
+          "texture": "#as_certs"
+        }
+      }
+    }
+  ]
+}

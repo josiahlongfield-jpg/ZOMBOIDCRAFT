@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "as_galv": "zomboidcraft:block/city/as_galv",
+    "as_s_diesel_50": "zomboidcraft:block/city/as_s_diesel_50",
+    "particle": "zomboidcraft:block/city/as_s_diesel_50"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        13.5
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_s_diesel_50"
+        },
+        "south": {
+          "texture": "#as_galv",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#as_galv",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#as_galv",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#as_galv",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#as_galv",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

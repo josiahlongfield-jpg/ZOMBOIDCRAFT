@@ -1,0 +1,46 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "as_shelf_boxes": "zomboidcraft:block/city/as_shelf_boxes",
+    "as_steel": "zomboidcraft:block/city/as_steel",
+    "particle": "zomboidcraft:block/city/as_shelf_boxes"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        1
+      ],
+      "to": [
+        16,
+        16,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_shelf_boxes"
+        },
+        "south": {
+          "texture": "#as_steel"
+        },
+        "east": {
+          "texture": "#as_steel",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#as_steel",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#as_steel",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#as_steel",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

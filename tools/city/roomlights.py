@@ -33,7 +33,7 @@ LAMP = re.compile(r"^(ceiling_light_off|cellar_bulb|bunk_lamp|bunk_lamp_hang|bun
                   r"fit_(tube|red|lantern|globe|globe_down|highbay|surgical|overhead|troffer|downlight|sconce)|"
                   r"fs_lamp_red|tr_sconce|tr_chandelier|cv_table_lamp|cv_lamp_globe|ch_pendant|ch_chandelier|"
                   r"dn_(hang_\d|globe|orb|soffit_tube)|hs_slab_lamp|hs_or_light|un_slab_\w+_lamp|un_table_lamp|"
-                  r"om_lights|rs_lamp|wall_lantern_off|tn_tie_lamp|lx_cube_\w+)$")
+                  r"om_lights|rs_lamp|wall_lantern_off|tn_tie_lamp|lx_cube_\w+|as_highbay|as_strip|as_pit_lamp)$")
 
 
 # ---------------------------------------------------------------- textures

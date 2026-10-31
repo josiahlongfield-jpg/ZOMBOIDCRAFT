@@ -1,0 +1,219 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "as_crt": "zomboidcraft:block/city/as_crt",
+    "as_drawers_black": "zomboidcraft:block/city/as_drawers_black",
+    "as_grey": "zomboidcraft:block/city/as_grey",
+    "as_laminate": "zomboidcraft:block/city/as_laminate",
+    "as_shelf_boxes": "zomboidcraft:block/city/as_shelf_boxes",
+    "particle": "zomboidcraft:block/city/as_drawers_black"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        2
+      ],
+      "to": [
+        16,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_drawers_black"
+        },
+        "south": {
+          "texture": "#as_laminate",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#as_laminate",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#as_laminate",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#as_laminate"
+        },
+        "down": {
+          "texture": "#as_laminate",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        -0.5,
+        14,
+        0
+      ],
+      "to": [
+        16.5,
+        15.5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_laminate",
+          "uv": [
+            0,
+            0.5,
+            16,
+            2
+          ],
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#as_laminate",
+          "uv": [
+            0,
+            0.5,
+            16,
+            2
+          ],
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#as_laminate"
+        },
+        "west": {
+          "texture": "#as_laminate"
+        },
+        "up": {
+          "texture": "#as_laminate",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#as_laminate",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        15.5,
+        9
+      ],
+      "to": [
+        10,
+        22,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_crt",
+          "uv": [
+            6,
+            0,
+            13,
+            6.5
+          ]
+        },
+        "south": {
+          "texture": "#as_grey",
+          "uv": [
+            3,
+            0,
+            10,
+            6.5
+          ]
+        },
+        "east": {
+          "texture": "#as_grey",
+          "uv": [
+            2,
+            0,
+            7,
+            6.5
+          ]
+        },
+        "west": {
+          "texture": "#as_grey",
+          "uv": [
+            9,
+            0,
+            14,
+            6.5
+          ]
+        },
+        "up": {
+          "texture": "#as_grey"
+        },
+        "down": {
+          "texture": "#as_grey"
+        }
+      }
+    },
+    {
+      "from": [
+        11,
+        15.5,
+        4
+      ],
+      "to": [
+        15,
+        18,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_shelf_boxes",
+          "uv": [
+            1,
+            0,
+            5,
+            2.5
+          ]
+        },
+        "south": {
+          "texture": "#as_shelf_boxes",
+          "uv": [
+            11,
+            0,
+            15,
+            2.5
+          ]
+        },
+        "east": {
+          "texture": "#as_shelf_boxes",
+          "uv": [
+            4,
+            0,
+            12,
+            2.5
+          ]
+        },
+        "west": {
+          "texture": "#as_shelf_boxes",
+          "uv": [
+            4,
+            0,
+            12,
+            2.5
+          ]
+        },
+        "up": {
+          "texture": "#as_shelf_boxes"
+        },
+        "down": {
+          "texture": "#as_shelf_boxes"
+        }
+      }
+    }
+  ]
+}

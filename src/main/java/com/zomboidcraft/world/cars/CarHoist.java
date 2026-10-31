@@ -49,9 +49,12 @@ public class CarHoist extends Entity {
     public static final float[] NOTCHES = {0f, 0.5f, 1.25f, 1.85f};
     public static final String[] NOTCH_NAMES = {"the floor", "wheels free", "chest height", "full height"};
     /** The posts' middles, either side (local x), and their size. */
-    public static final float POST_X = 1.7f, POST_W = 0.3f, POST_D = 0.36f, POST_H = 4.4f;
+    public static final float POST_X = 1.7f, POST_W = 0.3f, POST_D = 0.36f, POST_H = 4.9f;
     /** The biggest car it takes: length and width, metres. */
-    /** Vans, ambulances, step vans and the army's light trucks fit; buses and heavy trucks don't. */
+    /**
+     * Vans, ambulances, step vans and the army's light trucks fit; buses and heavy trucks don't. The posts stand
+     * tall enough that the tallest of them (the SWAT van) goes to full height, room to stand under every one.
+     */
     public static final float MAX_LENGTH = 7.6f, MAX_WIDTH = 3.0f;
     /** Rise per tick on the motor and per stroke of the hand pump, metres; the valve lets it down this fast a tick. */
     private static final float MOTOR = 0.03f, STROKE = 0.06f, VALVE = 0.012f;
@@ -268,7 +271,7 @@ public class CarHoist extends Entity {
         if (!armsIn) {
             return true;
         }
-        Vec3 at = toLocal(car.position());
+        Vec3 at = toLocal(car.position()).subtract(spot(car));
         float yaw = getYRot() + carTurn, off = Mth.wrapDegrees(yaw - car.getYRot());
         double d = Math.hypot(at.x, at.z);
         if (d < 1e-3 && Math.abs(off) < 0.05f) {
@@ -280,7 +283,7 @@ public class CarHoist extends Entity {
         }
         double step = Math.min(d, 0.06);
         Vec3 to = d < 1e-3 ? Vec3.ZERO : new Vec3(at.x - at.x / d * step, 0, at.z - at.z / d * step);
-        Vec3 w = toWorld(to);
+        Vec3 w = toWorld(to.add(spot(car)));
         car.setPos(w.x, car.getY(), w.z);
         float turned = car.getYRot() + Mth.clamp(off, -3f, 3f);
         car.setYRot(turned);
@@ -288,8 +291,17 @@ public class CarHoist extends Entity {
         return false;
     }
 
+    /**
+     * Where the car's middle stands in the bay, in the lift's frame: its axles centred between the posts,
+     * as a tech spots a car whose wheels sit forward or back of its middle (a step van's are well back).
+     */
+    private Vec3 spot(CarProp car) {
+        CarModels.Model m = CarModels.get(car.model());
+        return m == null ? Vec3.ZERO : new Vec3(0, 0, (carTurn == 0 ? -1 : 1) * m.axleMid());
+    }
+
     /** The sill's height above the wheels where the pack has no underside heights: low on cars, higher on trucks. */
-    private static float sill(CarModels.Model m) {
+    public static float sill(CarModels.Model m) {
         return switch (m.kind == null ? "" : m.kind) {
             case "car" -> m.size[1] > 1.6f ? 0.26f : 0.19f;
             case "van" -> m.size[1] > 2.4f ? 0.32f : 0.22f;
@@ -313,7 +325,9 @@ public class CarHoist extends Entity {
 
     /** Whether a model goes up on a two-post lift: a road vehicle no longer or wider than the arms reach. */
     public static boolean fits(CarModels.Model m) {
-        return m != null && CarParts.applies(m) && m.size[2] <= MAX_LENGTH && m.size[0] <= MAX_WIDTH;
+        // trailers and wagons have nothing underneath to work on
+        return m != null && CarParts.applies(m) && !m.id.contains("trailer") && !m.id.contains("wagon")
+                && m.size[2] <= MAX_LENGTH && m.size[0] <= MAX_WIDTH;
     }
 
     /** The arms reaching for the car's lift points behind the wheels. */
@@ -323,11 +337,12 @@ public class CarHoist extends Entity {
         carId = car.getUUID();
         entityData.set(CAR, car.getId());
         // the lift points: on the sills just inside each wheel, wherever this model's are
-        float wb = m.wheelbase > 0.5f ? m.wheelbase : m.size[2] * 0.6f;
-        float rz = Math.max(0.6f, wb / 2 - 0.55f);
+        // (the axles are centred between the posts, so the arms reach the same way front and back)
+        float mid = m.axleMid(), r = Math.max(m.wheel(0)[2], m.wheel(2)[2]);
+        float rz = Math.max(0.6f, m.halfBase() - r - 0.2f);
         float rx = Math.min(0.6f, m.size[0] / 2 - 0.2f);
         for (float x = m.size[0] / 2; x > 0.45f; x -= 0.05f) {
-            if (m.heightAt(x, rz) > 0.3f && m.heightAt(-x, rz) > 0.3f && m.heightAt(x, -rz) > 0.3f && m.heightAt(-x, -rz) > 0.3f) {
+            if (m.heightAt(x, mid + rz) > 0.3f && m.heightAt(-x, mid + rz) > 0.3f && m.heightAt(x, mid - rz) > 0.3f && m.heightAt(-x, mid - rz) > 0.3f) {
                 rx = x - 0.2f;     // a hand's width in from the body's edge, under the pinch weld
                 break;
             }
@@ -337,7 +352,7 @@ public class CarHoist extends Entity {
         int n = 0;
         for (int sx = -1; sx <= 1; sx += 2) {
             for (int sz = -1; sz <= 1; sz += 2) {
-                float f = m.floorAt(sx * rx, sz * rz);
+                float f = m.floorAt(sx * rx, mid + sz * rz);
                 if (f > 0.02f) {
                     under += f;
                     n++;
@@ -356,6 +371,11 @@ public class CarHoist extends Entity {
      */
     public void raised(CarProp car, int notch) {
         hold(car, CarModels.get(car.model()));
+        // left square on the arms: no sliding into place first
+        Vec3 w = toWorld(spot(car));
+        car.setPos(w.x, car.getY(), w.z);
+        car.setYRot(getYRot() + carTurn);
+        car.setYHeadRot(getYRot() + carTurn);
         notch = Mth.clamp(notch, 0, topNotch(car));
         entityData.set(ARMS, 1f);
         entityData.set(TARGET, notch);

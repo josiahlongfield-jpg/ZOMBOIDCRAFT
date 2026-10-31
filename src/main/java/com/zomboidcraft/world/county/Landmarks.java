@@ -38,6 +38,15 @@ final class Landmarks {
      * block, its roof a cone (wood) or a dome (steel) to a finial.
      */
     void waterTower(int cx, int cz, boolean steel) {
+        waterTower(cx, cz, steel, false);
+    }
+
+    /**
+     * stash: Dale's tower (AUDIO's broadcasts, Kingsbridge): the hand pump at the ladder's foot (the
+     * key under it, LOOT's), the ladder chained across a third of the way up (LOOT's lock), the
+     * footlocker on the deck by the ladder's head (loot=kingsbridge_stash, LOOT's stock).
+     */
+    void waterTower(int cx, int cz, boolean steel, boolean stash) {
         int legTop = steel ? 22 + rng.nextInt(5) : 14 + rng.nextInt(3);
         int r = steel ? 5 : 3;
         int spread = steel ? 4 : 3;
@@ -111,6 +120,31 @@ final class Landmarks {
             // the town's name in the paint, and someone's later message
             int face = -r - 1;
             p.set(cx - 1, t0 + 4, cz + face, "graffiti_" + rng.nextInt(8) + "[facing=south]");
+        }
+        if (stash) {
+            int lx = cx - spread, lz = cz - spread - 1;
+            p.set(lx - 1, 1, lz, "fm_pump[facing=north]");
+            p.set(lx, legTop / 3, lz, "sy_chain[facing=south]");
+            p.mark("stash_chain", lx, legTop / 3, lz);
+            // the locker on the catwalk nearest the ladder's head, clear of the tank and the rail
+            int hx = lx + (steel ? 1 : 0), hz = lz + (steel ? 1 : 0), bx = 0, bz = 0;
+            double best = 1e9;
+            for (int x = cx - r - 2; x <= cx + r + 2; x++) {
+                for (int z = cz - r - 2; z <= cz + r + 2; z++) {
+                    double dd = Math.hypot(x - hx, z - hz);
+                    if (dd > 0.5 && dd < best && "grate".equals(p.get(x, t0, z)) && p.get(x, t0 + 1, z) == null) {
+                        best = dd;
+                        bx = x;
+                        bz = z;
+                    }
+                }
+            }
+            if (best < 1e9) {
+                p.set(bx, t0 + 1, bz, "bunk_footlocker[facing=" + (Math.abs(bx - cx) > Math.abs(bz - cz) ? (bx < cx ? "west" : "east") : bz < cz ? "north" : "south")
+                        + ",loot=kingsbridge_stash]");
+                p.mark("stash_locker", bx, t0 + 1, bz);
+            }
+            p.mark("stash_pump", lx - 1, 1, lz);
         }
     }
 

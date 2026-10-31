@@ -29,6 +29,8 @@ public final class CarModels {
         public float[][] seats;
         /** Front axle to back axle, metres: how tight the car turns. */
         public float wheelbase;
+        /** Each wheel's centre and radius {x, z, r} in model space (tools/cars/wheels.py); empty on boats and the like. */
+        public float[][] wheels;
         /** The outside door handle each seat is got into by (null where there's none to show), in model space. */
         public float[][] handles;
         /** The steering wheel's rim: centre x, y, z, the normal toward the driver, radius; or null. */
@@ -55,6 +57,37 @@ public final class CarModels {
 
         public float length() {
             return size[2];
+        }
+
+        /**
+         * The wheel at a corner (0 front left, 1 front right, 2 rear left, 3 rear right; left is +x), as
+         * {x, z, r}: the frontmost or rearmost on that side, or a guess from the wheelbase where there are none.
+         */
+        public float[] wheel(int corner) {
+            boolean left = corner % 2 == 0, front = corner < 2;
+            float[] best = null;
+            if (wheels != null) {
+                for (float[] w : wheels) {
+                    if ((w[0] >= 0) == left && (best == null || (front ? w[1] > best[1] : w[1] < best[1]))) {
+                        best = w;
+                    }
+                }
+            }
+            if (best != null) {
+                return best;
+            }
+            float wb = wheelbase > 0.5f ? wheelbase : size[2] * 0.6f;
+            return new float[] {(left ? 1 : -1) * size[0] * 0.4f, (front ? 1 : -1) * wb / 2, 0.35f};
+        }
+
+        /** Halfway between the front and rear axles, along the car: the wheels needn't sit about the model's middle. */
+        public float axleMid() {
+            return (wheel(0)[1] + wheel(2)[1]) / 2;
+        }
+
+        /** Half the distance between the axles. */
+        public float halfBase() {
+            return (wheel(0)[1] - wheel(2)[1]) / 2;
         }
 
         /** Highest point of the body above (lx, lz) in metres, 0 off the car. */

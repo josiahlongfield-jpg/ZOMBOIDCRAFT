@@ -1,0 +1,164 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "as_black": "zomboidcraft:block/city/as_black",
+    "as_crt": "zomboidcraft:block/city/as_crt",
+    "as_crusher": "zomboidcraft:block/city/as_crusher",
+    "particle": "zomboidcraft:block/city/as_crusher"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        2
+      ],
+      "to": [
+        15,
+        12,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_crusher"
+        },
+        "south": {
+          "texture": "#as_crusher"
+        },
+        "east": {
+          "texture": "#as_crusher"
+        },
+        "west": {
+          "texture": "#as_crusher"
+        },
+        "up": {
+          "texture": "#as_crusher"
+        },
+        "down": {
+          "texture": "#as_crusher",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        12,
+        3
+      ],
+      "to": [
+        14,
+        13,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_black"
+        },
+        "south": {
+          "texture": "#as_black"
+        },
+        "east": {
+          "texture": "#as_black"
+        },
+        "west": {
+          "texture": "#as_black"
+        },
+        "up": {
+          "texture": "#as_black"
+        },
+        "down": {
+          "texture": "#as_black"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        6,
+        1.5
+      ],
+      "to": [
+        13,
+        11,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_crt"
+        },
+        "south": {
+          "texture": "#as_crt"
+        },
+        "east": {
+          "texture": "#as_crt"
+        },
+        "west": {
+          "texture": "#as_crt"
+        },
+        "up": {
+          "texture": "#as_crt"
+        },
+        "down": {
+          "texture": "#as_crt"
+        }
+      }
+    },
+    {
+      "from": [
+        12,
+        13,
+        10
+      ],
+      "to": [
+        14,
+        20,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_black",
+          "uv": [
+            2,
+            0,
+            4,
+            7
+          ]
+        },
+        "south": {
+          "texture": "#as_black",
+          "uv": [
+            12,
+            0,
+            14,
+            7
+          ]
+        },
+        "east": {
+          "texture": "#as_black",
+          "uv": [
+            4,
+            0,
+            6,
+            7
+          ]
+        },
+        "west": {
+          "texture": "#as_black",
+          "uv": [
+            10,
+            0,
+            12,
+            7
+          ]
+        },
+        "up": {
+          "texture": "#as_black"
+        },
+        "down": {
+          "texture": "#as_black"
+        }
+      }
+    }
+  ]
+}
