@@ -1,18 +1,93 @@
 {
   "variants": {
-    "facing=north": {
+    "facing=north,phase=0": {
       "model": "zomboidcraft:block/city/ts_flasher"
     },
-    "facing=east": {
+    "facing=north,phase=1": {
+      "model": "zomboidcraft:block/city/ts_flasher_gr"
+    },
+    "facing=north,phase=2": {
+      "model": "zomboidcraft:block/city/ts_flasher_yr"
+    },
+    "facing=north,phase=3": {
+      "model": "zomboidcraft:block/city/ts_flasher_rr"
+    },
+    "facing=north,phase=4": {
+      "model": "zomboidcraft:block/city/ts_flasher_rg"
+    },
+    "facing=north,phase=5": {
+      "model": "zomboidcraft:block/city/ts_flasher_ry"
+    },
+    "facing=east,phase=0": {
       "model": "zomboidcraft:block/city/ts_flasher",
       "y": 90
     },
-    "facing=south": {
+    "facing=east,phase=1": {
+      "model": "zomboidcraft:block/city/ts_flasher_rg",
+      "y": 90
+    },
+    "facing=east,phase=2": {
+      "model": "zomboidcraft:block/city/ts_flasher_ry",
+      "y": 90
+    },
+    "facing=east,phase=3": {
+      "model": "zomboidcraft:block/city/ts_flasher_rr",
+      "y": 90
+    },
+    "facing=east,phase=4": {
+      "model": "zomboidcraft:block/city/ts_flasher_gr",
+      "y": 90
+    },
+    "facing=east,phase=5": {
+      "model": "zomboidcraft:block/city/ts_flasher_yr",
+      "y": 90
+    },
+    "facing=south,phase=0": {
       "model": "zomboidcraft:block/city/ts_flasher",
       "y": 180
     },
-    "facing=west": {
+    "facing=south,phase=1": {
+      "model": "zomboidcraft:block/city/ts_flasher_gr",
+      "y": 180
+    },
+    "facing=south,phase=2": {
+      "model": "zomboidcraft:block/city/ts_flasher_yr",
+      "y": 180
+    },
+    "facing=south,phase=3": {
+      "model": "zomboidcraft:block/city/ts_flasher_rr",
+      "y": 180
+    },
+    "facing=south,phase=4": {
+      "model": "zomboidcraft:block/city/ts_flasher_rg",
+      "y": 180
+    },
+    "facing=south,phase=5": {
+      "model": "zomboidcraft:block/city/ts_flasher_ry",
+      "y": 180
+    },
+    "facing=west,phase=0": {
       "model": "zomboidcraft:block/city/ts_flasher",
+      "y": 270
+    },
+    "facing=west,phase=1": {
+      "model": "zomboidcraft:block/city/ts_flasher_rg",
+      "y": 270
+    },
+    "facing=west,phase=2": {
+      "model": "zomboidcraft:block/city/ts_flasher_ry",
+      "y": 270
+    },
+    "facing=west,phase=3": {
+      "model": "zomboidcraft:block/city/ts_flasher_rr",
+      "y": 270
+    },
+    "facing=west,phase=4": {
+      "model": "zomboidcraft:block/city/ts_flasher_gr",
+      "y": 270
+    },
+    "facing=west,phase=5": {
+      "model": "zomboidcraft:block/city/ts_flasher_yr",
       "y": 270
     }
   }

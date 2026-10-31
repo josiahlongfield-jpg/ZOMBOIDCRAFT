@@ -25850,10 +25850,10 @@ final class CitySpecs extends CityBlocks.Specs {
         s("ts_arm_sign_court", AXIS, 0, 0, SoundType.METAL, 2f, 6.6, 0, 0, 9.4, 8, 16);
         s("ts_arm_sign_elm", AXIS, 0, 0, SoundType.METAL, 2f, 6.6, 0, 0, 9.4, 8, 16);
         s("ts_arm_sign_oak", AXIS, 0, 0, SoundType.METAL, 2f, 6.6, 0, 0, 9.4, 8, 16);
-        s("ts_head", FACING, 0, 0, SoundType.METAL, 2f, 3, 0, 3, 13, 16, 11.5);
-        s("ts_head_swing", FACING, 0, 0, SoundType.METAL, 2f, 3, 0, 3, 13, 16, 13);
+        s("ts_head", FACING, SIGNAL, 8, SoundType.METAL, 2f, 3, 0, 3, 13, 16, 11.5);
+        s("ts_head_swing", FACING, SIGNAL, 8, SoundType.METAL, 2f, 3, 0, 3, 13, 16, 13);
         s("ts_head_down", FACING, 0, 0, SoundType.METAL, 2f, 3, 0, 0, 13, 6, 16);
-        s("ts_flasher", FACING, 0, 0, SoundType.METAL, 2f, 2.6, 4, 2.6, 13.4, 16, 13.4);
+        s("ts_flasher", FACING, SIGNAL, 8, SoundType.METAL, 2f, 3, 0.6, 3, 13, 16, 13);
         s("ts_span", FACING, 0, 0, SoundType.METAL, 2f, 0, 15, 0, 16, 15.5, 16);
         s("ts_cabinet", FACING, 0, 0, SoundType.METAL, 2f, 2, 0, 3, 14, 15.6, 13);
         s("we_clean_l0", FACING, 0, 0, SoundType.WOOD, 1f, 0, 0, 2, 16, 16, 13);

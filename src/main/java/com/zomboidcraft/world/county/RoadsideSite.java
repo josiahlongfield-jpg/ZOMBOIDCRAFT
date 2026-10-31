@@ -587,7 +587,7 @@ final class RoadsideSite extends Site {
         Placer q = lot.placer(out);
         int lw = lot.w(), ld = lot.d();
         int sw = Math.min(high ? 66 : 54, lw - 6), sd = 36;
-        new Civic(q.shifted(2, 0, 0), rng).school(sw, sd, high);
+        new Civic(q.shifted(2, 0, 0), rng).school(sw, sd, high, hit > 0.4);
         // the bus lot beside the school, the yellow buses that never left
         int bx = sw + 4;
         if (lw - bx > 14) {
@@ -693,7 +693,8 @@ final class RoadsideSite extends Site {
             t.tent(x + 2 + k * 9, z + 2, 6, 7, Tents.canvasFor("shelter"), "shelter", 0.2);
         }
         q.set(x + 19, 1, z + 3, "sign_quarantine_0[facing=south]");
-        q.vehicle(x + 9.5, 1, z + 5, 0, "ambulance,ambulance_van,police_suv", rng.nextLong());
+        // parked along the loop west of the tents, clear of them and the barrier
+        q.vehicle(x - 4, 1, z + 5, 270, "ambulance,ambulance_van,police_suv", rng.nextLong());
     }
 
     // ------------------------------------------------------------------ the warehouse

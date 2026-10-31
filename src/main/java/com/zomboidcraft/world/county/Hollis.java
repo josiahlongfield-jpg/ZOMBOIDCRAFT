@@ -227,7 +227,8 @@ final class Hollis extends Site {
                     for (int y = f + 1; y <= f + 3; y++) {
                         set(x, y, -4, "streetlight_pole");
                     }
-                    set(x, f + 4, -4, power && chance() < 0.4 ? "streetlight_head[facing=south]" : "streetlight_head_off[facing=south]");
+                    boolean roll = power && chance() < 0.4;  // the old dead-bulb roll, kept so everything after it lands where it did: every lamp works now
+                    set(x, f + 4, -4, "streetlight_head[facing=south]");
                 }
             }
             // the ramp from the jetty down to the road ashore
