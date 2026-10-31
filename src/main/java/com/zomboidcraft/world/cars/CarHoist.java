@@ -288,6 +288,17 @@ public class CarHoist extends Entity {
         return false;
     }
 
+    /** The sill's height above the wheels where the pack has no underside heights: low on cars, higher on trucks. */
+    private static float sill(CarModels.Model m) {
+        return switch (m.kind == null ? "" : m.kind) {
+            case "car" -> m.size[1] > 1.6f ? 0.26f : 0.19f;
+            case "van" -> m.size[1] > 2.4f ? 0.32f : 0.22f;
+            case "truck", "farm", "military", "jeep", "jeep_open" -> 0.34f;
+            case "emergency" -> m.size[1] > 1.8f ? 0.3f : 0.2f;
+            default -> 0.25f;
+        };
+    }
+
     /** The highest notch a car can go to with its roof clear of the overhead beam. */
     public static int topNotch(CarProp car) {
         CarModels.Model m = CarModels.get(car.model());
@@ -335,7 +346,7 @@ public class CarHoist extends Entity {
         }
         entityData.set(REACH_X, rx);
         entityData.set(REACH_Z, rz);
-        entityData.set(PAD, n > 0 ? under / n : 0.25f);
+        entityData.set(PAD, n > 0 ? under / n : sill(m));
         armsIn = true;
     }
 
