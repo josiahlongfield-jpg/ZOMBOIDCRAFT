@@ -840,6 +840,7 @@ public class KitUiTest implements FabricClientGameTest {
         mechanicsTest(ctx, sp);
         sandboxTest(ctx);
         deathCardTest(ctx);
+        levelUpTest(ctx);
     }
 
     /** Bonding (Josiah 2026-10-30): the prompt on a first G, then K's selection of two companions, sliding, and a pick. */
@@ -1004,6 +1005,19 @@ public class KitUiTest implements FabricClientGameTest {
         ctx.waitTicks(10);
         ctx.takeScreenshot("death-card-fell");
         ctx.runOnClient(mc -> mc.gui.setScreen(null));
+    }
+
+    /** The level-up card (Josiah 2026-10-31): Mechanics 3 opens parts, Aiming 6 only gets better. */
+    private static void levelUpTest(ClientGameTestContext ctx) {
+        ctx.runOnClient(mc -> mc.gui.setScreen(null));
+        ctx.runOnClient(mc -> com.zomboidcraft.client.hud.SkillTape.show(Skill.MECHANICS, 3));
+        for (int f = 0; f < 8; f++) {
+            ctx.waitTicks(3);
+            ctx.takeScreenshot(String.format("levelup-mech-%02d", f));
+        }
+        ctx.runOnClient(mc -> com.zomboidcraft.client.hud.SkillTape.show(Skill.AIMING, 6));
+        ctx.waitTicks(12);
+        ctx.takeScreenshot("levelup-aiming");
     }
 
     private static void bookTest(TestSingleplayerContext sp) {

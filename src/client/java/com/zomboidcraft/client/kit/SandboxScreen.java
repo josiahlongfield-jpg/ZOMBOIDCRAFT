@@ -439,18 +439,13 @@ public class SandboxScreen extends Screen {
             } catch (NumberFormatException e) {
                 return true;
             }
-            double st = step(hovered, v) * (hasShiftDown() ? 10 : 1);
+            double st = step(hovered, v) * (minecraft.hasShiftDown() ? 10 : 1);
             d = Math.clamp(Math.round((d + Math.signum(sy) * st) / st) * st, hovered.min, hovered.max);
             set(hovered, num(Math.round(d * 1000) / 1000.0));
             return true;
         }
         scroll = Math.clamp(scroll - (float) sy * ROW * 2, 0, maxScroll);
         return true;
-    }
-
-    private static boolean hasShiftDown() {
-        var w = Minecraft.getInstance().getWindow();
-        return InputConstants.isKeyDown(w, InputConstants.KEY_LSHIFT) || InputConstants.isKeyDown(w, InputConstants.KEY_RSHIFT);
     }
 
     @Override
