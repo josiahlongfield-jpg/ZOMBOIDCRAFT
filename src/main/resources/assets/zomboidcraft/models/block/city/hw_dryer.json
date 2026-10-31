@@ -1,0 +1,74 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hw_chrome": "zomboidcraft:block/city/hw_chrome",
+    "particle": "zomboidcraft:block/city/hw_chrome"
+  },
+  "elements": [
+    {
+      "from": [
+        4.5,
+        8,
+        12.5
+      ],
+      "to": [
+        11.5,
+        13,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hw_chrome"
+        },
+        "south": {
+          "texture": "#hw_chrome",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#hw_chrome"
+        },
+        "west": {
+          "texture": "#hw_chrome"
+        },
+        "up": {
+          "texture": "#hw_chrome"
+        },
+        "down": {
+          "texture": "#hw_chrome"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        7.2,
+        13
+      ],
+      "to": [
+        9,
+        8,
+        14.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hw_chrome"
+        },
+        "south": {
+          "texture": "#hw_chrome"
+        },
+        "east": {
+          "texture": "#hw_chrome"
+        },
+        "west": {
+          "texture": "#hw_chrome"
+        },
+        "up": {
+          "texture": "#hw_chrome"
+        },
+        "down": {
+          "texture": "#hw_chrome"
+        }
+      }
+    }
+  ]
+}

@@ -90,10 +90,13 @@ public final class WeatherLayers {
     /**
      * How foggy things look. With a steady day the day always looks the same (weather.dayFog: a
      * haze you can still see a fair way through), whatever the weather; only the night brings the
-     * weather's own fog in. The weather's real fog still counts for the zombies' eyes.
+     * weather's own fog in. The weather's real fog still counts for the zombies' eyes; nature.maxFog
+     * caps only what you see.
      */
     private static float fog(Weather w, double night, ZcConfig.Weather c) {
-        return steady(c) ? (float) Mth.lerp(night, c.dayFog, w.fog()) : w.fog();
+        // under the endless fog cycle the day is as thick as the night
+        double day = Climate.fogCycle() == Climate.FogCycle.ENDLESS_FOG ? Math.max(c.dayFog, w.fog()) : c.dayFog;
+        return (steady(c) ? (float) Mth.lerp(night, day, w.fog()) : w.fog()) * Climate.maxFog();
     }
 
     /** The day keeps one look: the same light and the same haze through rain, fog and storms. */

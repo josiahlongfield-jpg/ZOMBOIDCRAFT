@@ -15,6 +15,8 @@ public enum Skill {
     METALWORKING("Metalworking"),
     /** Flying the jets and the helicopter (world/cars/AirReadiness): steadier hands and softer landings. */
     PILOTING("Piloting"),
+    /** Patching clothes: stitches that hold, sewn quicker (clothing/Tailoring). */
+    TAILORING("Tailoring"),
     /** Generators, wiring and lights, and moving lamps and switches (building/Moving, building/Ladder). */
     ELECTRICAL("Electrical"),
     /** Sinks, tubs and toilets: taking them out with a pipe wrench and plumbing them in (building/Moving, building/Ladder). */

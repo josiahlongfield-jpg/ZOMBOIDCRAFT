@@ -1,0 +1,122 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hw_grey": "zomboidcraft:block/city/hw_grey",
+    "hw_lamp_lit": "zomboidcraft:block/city/hw_lamp_lit",
+    "particle": "zomboidcraft:block/city/hw_grey"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        -11,
+        5
+      ],
+      "to": [
+        11,
+        -9,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hw_grey",
+          "uv": [
+            5,
+            14,
+            11,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#hw_grey",
+          "uv": [
+            5,
+            14,
+            11,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#hw_grey",
+          "uv": [
+            5,
+            14,
+            11,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#hw_grey",
+          "uv": [
+            5,
+            14,
+            11,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#hw_grey"
+        },
+        "down": {
+          "texture": "#hw_grey"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        -9,
+        6
+      ],
+      "to": [
+        10,
+        -4,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hw_lamp_lit",
+          "uv": [
+            6,
+            11,
+            10,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#hw_lamp_lit",
+          "uv": [
+            6,
+            11,
+            10,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#hw_lamp_lit",
+          "uv": [
+            6,
+            11,
+            10,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#hw_lamp_lit",
+          "uv": [
+            6,
+            11,
+            10,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#hw_lamp_lit"
+        },
+        "down": {
+          "texture": "#hw_lamp_lit"
+        }
+      }
+    }
+  ]
+}
