@@ -88,8 +88,13 @@ public final class Injuries {
      * reached stopped it (see clothing/Clothes, which wears them down for it).
      */
     public static @org.jetbrains.annotations.Nullable Region zombieWound(ServerPlayer player, boolean bite) {
+        return zombieWound(player, bite, false);
+    }
+
+    /** As above; a crawler reaches your legs and feet rather than your arms and neck. */
+    public static @org.jetbrains.annotations.Nullable Region zombieWound(ServerPlayer player, boolean bite, boolean crawler) {
         RandomSource random = player.getRandom();
-        Region where = Body.zombieTarget(random);
+        Region where = Body.zombieTarget(random, crawler);
         com.zomboidcraft.clothing.Spot spot = com.zomboidcraft.clothing.Spot.roll(where, random);
         if (com.zomboidcraft.clothing.Clothes.stops(player, where, spot, bite ? com.zomboidcraft.clothing.Clothes.Threat.BITE
                 : com.zomboidcraft.clothing.Clothes.Threat.SCRATCH)) {
@@ -194,7 +199,8 @@ public final class Injuries {
             Part p = body.zone(z);
             shake += p.fractured() ? (p.splinted() ? 0.3f : 0.5f) : p.severity() >= 2 ? 0.15f : 0;
         }
-        return Math.min(1, shake * Medicine.steadiness(player) + Medicine.painShake(player) + com.zomboidcraft.survival.Mood.shake(player));
+        return Math.min(1, shake * Medicine.steadiness(player) + Medicine.painShake(player) + com.zomboidcraft.survival.Mood.shake(player)
+                + Panic.shake(player));
     }
 
     private Injuries() {

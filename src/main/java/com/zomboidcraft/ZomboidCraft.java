@@ -24,6 +24,7 @@ public class ZomboidCraft implements ModInitializer {
         ZcConfig.load();
         SurvivalStats.register();
         com.zomboidcraft.survival.Nutrition.register();
+        com.zomboidcraft.survival.Panic.register();
         com.zomboidcraft.survival.Sleep.register();
         Skills.register();
         com.zomboidcraft.skills.SkillBooks.register();

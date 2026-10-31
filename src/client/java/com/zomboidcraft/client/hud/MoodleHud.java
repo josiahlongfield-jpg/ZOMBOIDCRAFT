@@ -7,6 +7,7 @@ import com.zomboidcraft.combat.Stamina;
 import com.zomboidcraft.survival.Ailments;
 import com.zomboidcraft.survival.Body;
 import com.zomboidcraft.survival.Mood;
+import com.zomboidcraft.survival.Panic;
 import com.zomboidcraft.survival.Needs;
 import com.zomboidcraft.survival.Nutrition;
 import com.zomboidcraft.survival.SurvivalStats;
@@ -197,6 +198,7 @@ public final class MoodleHud {
         int drunk = Ailments.get(player, "drunk");
         stage(list, "drunk", "bottle", drunk >= 85 ? 4 : drunk >= 60 ? 3 : drunk >= 30 ? 2 : drunk >= 10 ? 1 : 0,
                 "Tipsy", "Drunk", "Very Drunk", "Hammered");
+        stage(list, "panic", "fear", Panic.stage(Panic.get(player)), "Slight Panic", "Panic", "Strong Panic", "Extreme Panic");
         // Zomboid's mood moodles, from LOOT's Mood (0-100, bands at 25, 50, 75 and 90)
         mood(list, player, "bored", "hourglass", Mood.Stat.BOREDOM, "Slightly Bored", "Bored", "Very Bored", "Extremely Bored");
         mood(list, player, "unhappy", "sad", Mood.Stat.UNHAPPINESS, "A Bit Sad", "Unhappy", "Very Unhappy", "Depressed");
