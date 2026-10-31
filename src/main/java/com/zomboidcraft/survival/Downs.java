@@ -57,6 +57,7 @@ public final class Downs {
 
     /** Players bleeding out right now, so the killing blow doesn't put them down again. */
     private static final java.util.Set<java.util.UUID> FINISHING = new java.util.HashSet<>();
+    private static final java.util.Map<java.util.UUID, Integer> LAST_HIT = new java.util.HashMap<>();
 
     public static boolean downed(Player player) {
         return player.getAttachedOrElse(DOWNED, false);
@@ -81,8 +82,10 @@ public final class Downs {
         ServerLivingEntityEvents.ALLOW_DAMAGE.register((entity, source, amount) -> {
             if (!(entity instanceof ServerPlayer player) || !downed(player)) return true;
             if (source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) return true;
-            if (player.invulnerableTime > 10) return false;
-            player.invulnerableTime = 20;
+            // one hit a second counts, however many hands are on you
+            Integer last = LAST_HIT.get(player.getUUID());
+            if (last != null && player.tickCount - last < 20 && player.tickCount >= last) return false;
+            LAST_HIT.put(player.getUUID(), player.tickCount);
             Ailments.set(player, "downed", Math.max(1, Ailments.get(player, "downed") - 15));
             return false;
         });
