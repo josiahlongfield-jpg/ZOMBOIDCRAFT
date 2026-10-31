@@ -521,6 +521,9 @@ final class AutoYards {
                 s.vehicle(x0 + 3.5, 1, 9.0, 0, truck, rng.nextLong());
             }
             int[] zs = there ? new int[] {5, 13} : new int[] {2, 4};
+            // the hall's one tyre machine and parts washer at the back of this bay, worked from the bay
+            s.shopTool(x0 + 1.5, 1, 16.4, 0, "tyre_machine", rng.nextLong());
+            s.shopTool(x0 + 5.5, 1, 16.4, 0, "washer", rng.nextLong());
             for (int z : zs) {
                 s.set(x0, 1, z, "as_column_lift_lo[facing=east]");
                 s.set(x0, 2, z, "as_column_lift_hi[facing=east]");
@@ -535,6 +538,9 @@ final class AutoYards {
             s.set(x0 + 4, 1, 14, "as_trans[facing=north]");
             s.set(x0, 1, 11, "as_stands[facing=east]");
             s.set(x0 + 6, 1, 16, "as_creeper[facing=west]");
+            // the floor tools: a jack and a crane for the hoist's van, parked along the bay's east side
+            s.shopTool(x0 + 6.5, 1, 3.0, 0, "jack", rng.nextLong());
+            s.shopTool(x0 + 6.5, 1, 8.0, 0, "crane", rng.nextLong());
         }
         // the strip to the east
         int g = x0 + TBAY_W;

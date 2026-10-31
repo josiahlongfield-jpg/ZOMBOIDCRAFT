@@ -739,6 +739,21 @@
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:rubber_hose",
+          "weight": 8,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:d_battery",
           "weight": 8,
           "functions": [
@@ -965,7 +980,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:skillbook_electrical",
-          "weight": 6
+          "weight": 4
         },
         {
           "type": "minecraft:item",

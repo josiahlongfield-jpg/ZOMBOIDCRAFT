@@ -276,6 +276,7 @@ USES = {
     'cinder_block': 'Masonry walls; very strong barricades.',
     'propane_cylinder': 'Fuels the propane torch and barbecues; explodes if shot.',
     'gas_can': 'Carries petrol for cars and generators; molotov fuel.',
+    'rubber_hose': 'Siphons fuel out of a car tank into an empty gas can.',
     # ------------------------------------------------------------ electrical & electronics
     'aa_battery': 'Powers flashlights, radios, NVGs.',
     'd_battery': 'Powers big flashlights and boomboxes.',

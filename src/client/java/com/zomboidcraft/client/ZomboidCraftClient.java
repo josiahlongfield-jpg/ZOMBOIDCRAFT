@@ -33,6 +33,7 @@ public class ZomboidCraftClient implements ClientModInitializer {
         com.zomboidcraft.client.carry.CarryClient.register();
         com.zomboidcraft.client.kit.KitScreen.register();
         com.zomboidcraft.client.kit.FilesClient.register();
+        com.zomboidcraft.client.interact.KeypadScreen.register();
         com.zomboidcraft.client.camera.BreachTremor.register();
         com.zomboidcraft.client.kit.SpawnScreen.register();
         com.zomboidcraft.client.hud.QuickWheel.register();
@@ -42,6 +43,7 @@ public class ZomboidCraftClient implements ClientModInitializer {
         com.zomboidcraft.client.kit.WeaponTip.register();
         SkillsHud.register();
         com.zomboidcraft.client.survival.DownedClient.register();
+        com.zomboidcraft.client.loot.TowerStashClient.register();
         // the sky eases toward the weather the server last sent
         ClientTickEvents.END_CLIENT_TICK.register(client ->
                 WeatherView.update(client.player == null ? null : client.player.getAttached(Weather.TYPE)));
@@ -66,6 +68,7 @@ public class ZomboidCraftClient implements ClientModInitializer {
         EntityRendererRegistry.register(com.zomboidcraft.world.cars.Cars.CAR, com.zomboidcraft.client.cars.CarRenderer::new);
         EntityRendererRegistry.register(com.zomboidcraft.world.cars.Cars.DEBRIS, com.zomboidcraft.client.cars.DebrisRenderer::new);
         EntityRendererRegistry.register(com.zomboidcraft.world.cars.Cars.HOIST, com.zomboidcraft.client.cars.HoistRenderer::new);
+        EntityRendererRegistry.register(com.zomboidcraft.world.cars.Cars.TOOL, com.zomboidcraft.client.cars.ShopToolRenderer::new);
         EntityRendererRegistry.register(com.zomboidcraft.combat.throwing.Throwing.THROWN, com.zomboidcraft.client.throwing.ThrownRenderer::new);
         com.zomboidcraft.client.throwing.ThrowEffects.register();
         EntityRendererRegistry.register(com.zomboidcraft.zombie.Corpses.CORPSE, com.zomboidcraft.client.zombie.body.CorpseRenderer::new);

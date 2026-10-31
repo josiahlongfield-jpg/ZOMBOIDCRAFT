@@ -58,6 +58,7 @@ public final class CarClient {
         ClientTickEvents.END_CLIENT_TICK.register(CarClient::tick);
         com.zomboidcraft.client.interact.Interactables.drawsOwn(() -> target != null);
         HoistClient.register();
+        ShopToolClient.register();
         com.zomboidcraft.client.interact.Interactables.finder(CarClient::boot);
         com.zomboidcraft.client.interact.Interactables.finder(CarClient::bonnet);
         com.zomboidcraft.client.interact.InteractMenu.provider(CarClient::menu);
@@ -133,6 +134,8 @@ public final class CarClient {
             ClientPlayNetworking.send(new CarNet.Use(CarNet.GET_OUT, 0, 0, 0));
         } else if (HoistClient.interact(client, player)) {
             // a car lift's control box or its pump lever
+        } else if (ShopToolClient.interact(client, player)) {
+            // a trolley jack, engine crane, tyre machine or parts washer
         } else if (car != null && atBonnet(car, hit, player)) {
             client.gui.setScreen(new com.zomboidcraft.client.kit.MechanicsScreen(car));
         } else if (car != null) {
@@ -144,10 +147,14 @@ public final class CarClient {
             // a station's call button: the train's on its way
         } else if (com.zomboidcraft.client.survival.DownedClient.interact(client, hit)) {
             // a downed friend: revive them, or lift them onto a stretcher
+        } else if (com.zomboidcraft.client.loot.TowerStashClient.interact(client, hit)) {
+            // the water tower: the key under the pump, the padlocked ladder
         } else if (com.zomboidcraft.client.npc.NpcClient.interact(client, hit)) {
             // a companion: follow me, or wait here
         } else if (com.zomboidcraft.client.kit.FilesClient.interact(client, hit)) {
             // a file lying in the world: read it
+        } else if (com.zomboidcraft.client.interact.KeypadScreen.interact(client, hit)) {
+            // a blast door's keypad: the number pad
         } else if (com.zomboidcraft.client.ferry.FerryClient.interact(client, hit)) {
             // a landing's bell: the ferry's coming in
         } else if (com.zomboidcraft.client.lights.LightClient.interact(client, hit)) {
