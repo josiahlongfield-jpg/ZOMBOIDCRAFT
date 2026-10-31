@@ -4191849,6 +4191849,10924 @@
    ],
    "render": "cutout",
    "light": 10
+  },
+  "hw_rail": {
+   "model": "boxes",
+   "boxes": [
+    [
+     6.5,
+     0,
+     8,
+     9.5,
+     11,
+     11,
+     "st_galv"
+    ],
+    [
+     6.8,
+     6,
+     6,
+     9.2,
+     10,
+     8,
+     "st_galv"
+    ],
+    [
+     0,
+     6.5,
+     4.5,
+     16,
+     10.5,
+     6,
+     {
+      "north": "hw_wbeam",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ]
+   ],
+   "title": "Guardrail",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     4.5,
+     16,
+     11,
+     11
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_rail_span": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     6.5,
+     4.5,
+     16,
+     10.5,
+     6,
+     {
+      "north": "hw_wbeam",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ]
+   ],
+   "title": "Guardrail",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     6,
+     4.5,
+     16,
+     11,
+     6
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_rail_end": {
+   "model": "boxes",
+   "boxes": [
+    [
+     6.5,
+     0,
+     8,
+     9.5,
+     11,
+     11,
+     "st_galv"
+    ],
+    [
+     6.8,
+     6,
+     6,
+     9.2,
+     10,
+     8,
+     "st_galv"
+    ],
+    [
+     0,
+     6.5,
+     4.5,
+     16,
+     10.5,
+     6,
+     {
+      "north": "hw_wbeam",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     },
+     null,
+     {
+      "axis": "y",
+      "angle": -22.5,
+      "origin": [
+       16,
+       8,
+       5
+      ]
+     }
+    ],
+    [
+     -1.5,
+     3,
+     4,
+     2.5,
+     12,
+     7,
+     {
+      "north": "hw_endpad",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     },
+     null,
+     {
+      "axis": "y",
+      "angle": -22.5,
+      "origin": [
+       16,
+       8,
+       5
+      ]
+     }
+    ]
+   ],
+   "title": "Guardrail End",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     4,
+     16,
+     12,
+     11
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_rail_bent": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     5.5,
+     5,
+     9,
+     9.5,
+     6.5,
+     {
+      "north": "hw_wbeam",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     },
+     null,
+     {
+      "axis": "y",
+      "angle": 22.5,
+      "origin": [
+       0,
+       8,
+       5
+      ]
+     }
+    ],
+    [
+     9,
+     4.5,
+     9,
+     16,
+     8.5,
+     10.5,
+     {
+      "north": "hw_wbeam",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     },
+     null,
+     {
+      "axis": "y",
+      "angle": -22.5,
+      "origin": [
+       16,
+       8,
+       9
+      ]
+     }
+    ]
+   ],
+   "title": "Guardrail",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     4,
+     4,
+     16,
+     10,
+     11
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_parapet": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     2.5,
+     16,
+     2.5,
+     13,
+     "hw_conc"
+    ],
+    [
+     0,
+     2.5,
+     4,
+     16,
+     6,
+     13,
+     "hw_conc"
+    ],
+    [
+     0,
+     6,
+     5.5,
+     16,
+     13,
+     13,
+     "hw_conc"
+    ],
+    [
+     0,
+     13,
+     6,
+     16,
+     14,
+     12.5,
+     "hw_conc"
+    ]
+   ],
+   "title": "Bridge Parapet",
+   "sound": "STONE",
+   "shape": [
+    [
+     0,
+     0,
+     2.5,
+     16,
+     14,
+     13
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_parapet_rail": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     2.5,
+     16,
+     2.5,
+     13,
+     "hw_conc"
+    ],
+    [
+     0,
+     2.5,
+     4,
+     16,
+     6,
+     13,
+     "hw_conc"
+    ],
+    [
+     0,
+     6,
+     5.5,
+     16,
+     13,
+     13,
+     "hw_conc"
+    ],
+    [
+     0,
+     13,
+     6,
+     16,
+     14,
+     12.5,
+     "hw_conc"
+    ],
+    [
+     7,
+     14,
+     8.5,
+     9,
+     20,
+     10.5,
+     "st_galv"
+    ],
+    [
+     0,
+     19,
+     8.8,
+     16,
+     21,
+     10.2,
+     "st_galv"
+    ]
+   ],
+   "title": "Bridge Parapet",
+   "sound": "STONE",
+   "shape": [
+    [
+     0,
+     0,
+     2.5,
+     16,
+     24,
+     13
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_girder": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4,
+     0,
+     0,
+     12,
+     3,
+     16,
+     "hw_conc"
+    ],
+    [
+     6.8,
+     3,
+     0,
+     9.2,
+     13,
+     16,
+     "hw_conc"
+    ],
+    [
+     4.5,
+     13,
+     0,
+     11.5,
+     16,
+     16,
+     "hw_conc"
+    ]
+   ],
+   "title": "Bridge Girder",
+   "sound": "STONE",
+   "shape": [
+    [
+     4,
+     0,
+     0,
+     12,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "axis"
+  },
+  "hw_pier": {
+   "model": "boxes",
+   "boxes": [
+    [
+     2,
+     0,
+     2,
+     14,
+     16,
+     14,
+     "hw_conc_col"
+    ]
+   ],
+   "title": "Bridge Pier",
+   "sound": "STONE",
+   "shape": [
+    [
+     2,
+     0,
+     2,
+     14,
+     16,
+     14
+    ]
+   ],
+   "render": "cutout"
+  },
+  "hw_gantry_post": {
+   "model": "boxes",
+   "boxes": [
+    [
+     2,
+     0,
+     2,
+     4,
+     16,
+     4,
+     "st_galv"
+    ],
+    [
+     12,
+     0,
+     2,
+     14,
+     16,
+     4,
+     "st_galv"
+    ],
+    [
+     2,
+     0,
+     12,
+     4,
+     16,
+     14,
+     "st_galv"
+    ],
+    [
+     12,
+     0,
+     12,
+     14,
+     16,
+     14,
+     "st_galv"
+    ],
+    [
+     2,
+     0,
+     2.5,
+     14,
+     1,
+     3.5,
+     "st_galv"
+    ],
+    [
+     2,
+     0,
+     12.5,
+     14,
+     1,
+     13.5,
+     "st_galv"
+    ],
+    [
+     2.5,
+     0,
+     2,
+     3.5,
+     1,
+     14,
+     "st_galv"
+    ],
+    [
+     12.5,
+     0,
+     2,
+     13.5,
+     1,
+     14,
+     "st_galv"
+    ],
+    [
+     2,
+     8,
+     2.5,
+     14,
+     9,
+     3.5,
+     "st_galv"
+    ],
+    [
+     2,
+     8,
+     12.5,
+     14,
+     9,
+     13.5,
+     "st_galv"
+    ],
+    [
+     2.5,
+     8,
+     2,
+     3.5,
+     9,
+     14,
+     "st_galv"
+    ],
+    [
+     12.5,
+     8,
+     2,
+     13.5,
+     9,
+     14,
+     "st_galv"
+    ]
+   ],
+   "title": "Sign Gantry",
+   "sound": "METAL",
+   "shape": [
+    [
+     2,
+     0,
+     2,
+     14,
+     16,
+     14
+    ]
+   ],
+   "render": "cutout"
+  },
+  "hw_gantry_beam": {
+   "model": "boxes",
+   "boxes": [
+    [
+     3,
+     2,
+     0,
+     4.5,
+     3.5,
+     16,
+     "st_galv"
+    ],
+    [
+     12,
+     2,
+     0,
+     13.5,
+     3.5,
+     16,
+     "st_galv"
+    ],
+    [
+     3,
+     13,
+     0,
+     4.5,
+     14.5,
+     16,
+     "st_galv"
+    ],
+    [
+     12,
+     13,
+     0,
+     13.5,
+     14.5,
+     16,
+     "st_galv"
+    ],
+    [
+     3.5,
+     2,
+     15,
+     4.5,
+     14.5,
+     16,
+     "st_galv"
+    ],
+    [
+     12,
+     2,
+     15,
+     13,
+     14.5,
+     16,
+     "st_galv"
+    ],
+    [
+     3,
+     2,
+     15,
+     13.5,
+     3,
+     16,
+     "st_galv"
+    ],
+    [
+     3.5,
+     2,
+     7,
+     4.5,
+     14.5,
+     8,
+     "st_galv"
+    ],
+    [
+     12,
+     2,
+     7,
+     13,
+     14.5,
+     8,
+     "st_galv"
+    ],
+    [
+     3,
+     2,
+     7,
+     13.5,
+     3,
+     8,
+     "st_galv"
+    ]
+   ],
+   "title": "Sign Gantry",
+   "sound": "METAL",
+   "shape": [
+    [
+     3,
+     2,
+     0,
+     13.5,
+     14.5,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "axis"
+  },
+  "hw_gantry_foot": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     1,
+     15,
+     8,
+     15,
+     "hw_conc"
+    ],
+    [
+     2,
+     8,
+     2,
+     3,
+     9.5,
+     3,
+     "st_galv"
+    ],
+    [
+     13,
+     8,
+     2,
+     14,
+     9.5,
+     3,
+     "st_galv"
+    ],
+    [
+     2,
+     8,
+     13,
+     3,
+     9.5,
+     14,
+     "st_galv"
+    ],
+    [
+     13,
+     8,
+     13,
+     14,
+     9.5,
+     14,
+     "st_galv"
+    ],
+    [
+     2,
+     8,
+     2,
+     14,
+     8.5,
+     14,
+     "st_galv"
+    ]
+   ],
+   "title": "Gantry Footing",
+   "sound": "STONE",
+   "shape": [
+    [
+     1,
+     0,
+     1,
+     15,
+     9,
+     15
+    ]
+   ],
+   "render": "cutout"
+  },
+  "hw_sign_leg": {
+   "model": "boxes",
+   "boxes": [
+    [
+     6.5,
+     0,
+     14,
+     9.5,
+     16,
+     16,
+     "st_galv"
+    ]
+   ],
+   "title": "Sign Post",
+   "sound": "METAL",
+   "shape": [
+    [
+     6.5,
+     0,
+     14,
+     9.5,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_sign_leg_wood": {
+   "model": "boxes",
+   "boxes": [
+    [
+     6,
+     0,
+     14,
+     10,
+     16,
+     16,
+     "hw_timber"
+    ]
+   ],
+   "title": "Sign Post",
+   "sound": "WOOD",
+   "shape": [
+    [
+     6,
+     0,
+     14,
+     10,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i495n_00": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i495n_00",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i495n_01": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i495n_01",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i495n_10": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i495n_10",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i495n_11": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i495n_11",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i495n_20": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i495n_20",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i495n_21": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i495n_21",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i495n_30": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i495n_30",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i495n_31": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i495n_31",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i495n_40": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i495n_40",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i495n_41": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i495n_41",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i495s_00": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i495s_00",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i495s_01": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i495s_01",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i495s_10": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i495s_10",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i495s_11": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i495s_11",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i495s_20": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i495s_20",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i495s_21": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i495s_21",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i495s_30": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i495s_30",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i495s_31": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i495s_31",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i495s_40": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i495s_40",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i495s_41": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i495s_41",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i88e_00": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i88e_00",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i88e_01": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i88e_01",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i88e_10": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i88e_10",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i88e_11": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i88e_11",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i88e_20": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i88e_20",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i88e_21": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i88e_21",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i88e_30": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i88e_30",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i88e_31": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i88e_31",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i88e_40": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i88e_40",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i88e_41": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i88e_41",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i88e_q_00": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i88e_q_00",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i88e_q_01": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i88e_q_01",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i88e_q_10": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i88e_q_10",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i88e_q_11": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i88e_q_11",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i88e_q_20": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i88e_q_20",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i88e_q_21": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i88e_q_21",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i88e_q_30": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i88e_q_30",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i88e_q_31": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i88e_q_31",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i88e_q_40": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i88e_q_40",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i88e_q_41": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i88e_q_41",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i88w_00": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i88w_00",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i88w_01": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i88w_01",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i88w_10": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i88w_10",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i88w_11": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i88w_11",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i88w_20": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i88w_20",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i88w_21": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i88w_21",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i88w_30": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i88w_30",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i88w_31": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i88w_31",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i88w_40": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i88w_40",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_i88w_41": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_i88w_41",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_exit_00": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_exit_00",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_exit_10": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_exit_10",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_ramp_00": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_ramp_00",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_keep_00": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_keep_00",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_toll_00": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_toll_00",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_toll_10": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_toll_10",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_toll_20": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_toll_20",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_toll_30": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_toll_30",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_toll_40": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_toll_40",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_toll_50": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_toll_50",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_toll_60": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_toll_60",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_toll_70": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_toll_70",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_toll_80": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_toll_80",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_toll_90": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_toll_90",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_toll_q_00": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_toll_q_00",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_toll_q_10": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_toll_q_10",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_toll_q_20": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_toll_q_20",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_toll_q_30": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_toll_q_30",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_toll_q_40": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_toll_q_40",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_toll_q_50": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_toll_q_50",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_toll_q_60": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_toll_q_60",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_toll_q_70": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_toll_q_70",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_toll_q_80": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_toll_q_80",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_toll_q_90": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_toll_q_90",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_cash_00": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_cash_00",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_cash_10": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_cash_10",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_epass_00": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_epass_00",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_epass_10": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_epass_10",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_change_00": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_change_00",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_change_10": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_change_10",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_closed_00": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_closed_00",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_closed_10": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_closed_10",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_rates_00": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_rates_00",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ],
+    [
+     6.5,
+     0,
+     14,
+     9.5,
+     16,
+     16,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_rates_01": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_rates_01",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ],
+    [
+     6.5,
+     0,
+     14,
+     9.5,
+     16,
+     16,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_rates_10": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_rates_10",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_rates_11": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_rates_11",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_rates_20": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_rates_20",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ],
+    [
+     6.5,
+     0,
+     14,
+     9.5,
+     16,
+     16,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_rates_21": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_rates_21",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ],
+    [
+     6.5,
+     0,
+     14,
+     9.5,
+     16,
+     16,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_plaza_00": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_plaza_00",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ],
+    [
+     6.5,
+     0,
+     14,
+     9.5,
+     16,
+     16,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_plaza_01": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_plaza_01",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ],
+    [
+     6.5,
+     0,
+     14,
+     9.5,
+     16,
+     16,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_plaza_10": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_plaza_10",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_plaza_11": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_plaza_11",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_plaza_20": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_plaza_20",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_plaza_21": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_plaza_21",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_plaza_30": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_plaza_30",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ],
+    [
+     6.5,
+     0,
+     14,
+     9.5,
+     16,
+     16,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_plaza_31": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_plaza_31",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ],
+    [
+     6.5,
+     0,
+     14,
+     9.5,
+     16,
+     16,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_pay_00": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_pay_00",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_pay_10": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_pay_10",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_rest_00": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_rest_00",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ],
+    [
+     6.5,
+     0,
+     14,
+     9.5,
+     16,
+     16,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_rest_01": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_rest_01",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ],
+    [
+     6.5,
+     0,
+     14,
+     9.5,
+     16,
+     16,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_rest_10": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_rest_10",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_rest_11": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_rest_11",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_rest_20": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_rest_20",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_rest_21": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_rest_21",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_rest_30": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_rest_30",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ],
+    [
+     6.5,
+     0,
+     14,
+     9.5,
+     16,
+     16,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_rest_31": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_rest_31",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ],
+    [
+     6.5,
+     0,
+     14,
+     9.5,
+     16,
+     16,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_rest_in_00": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_rest_in_00",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_rest_in_10": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_rest_in_10",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ],
+    [
+     6.5,
+     0,
+     14,
+     9.5,
+     16,
+     16,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_rest_in_20": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_rest_in_20",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_trucks_00": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_trucks_00",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ],
+    [
+     6.5,
+     0,
+     14,
+     9.5,
+     16,
+     16,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_trucks_10": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_trucks_10",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_cars_00": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_cars_00",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_cars_10": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_cars_10",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ],
+    [
+     6.5,
+     0,
+     14,
+     9.5,
+     16,
+     16,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_welcome_00": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_welcome_00",
+      "south": "hw_brown",
+      "east": "hw_brown",
+      "west": "hw_brown",
+      "up": "hw_brown",
+      "down": "hw_brown"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ],
+    [
+     6,
+     0,
+     14,
+     10,
+     16,
+     16,
+     "hw_timber"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_welcome_01": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_welcome_01",
+      "south": "hw_brown",
+      "east": "hw_brown",
+      "west": "hw_brown",
+      "up": "hw_brown",
+      "down": "hw_brown"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ],
+    [
+     6,
+     0,
+     14,
+     10,
+     16,
+     16,
+     "hw_timber"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_welcome_10": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_welcome_10",
+      "south": "hw_brown",
+      "east": "hw_brown",
+      "west": "hw_brown",
+      "up": "hw_brown",
+      "down": "hw_brown"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_welcome_11": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_welcome_11",
+      "south": "hw_brown",
+      "east": "hw_brown",
+      "west": "hw_brown",
+      "up": "hw_brown",
+      "down": "hw_brown"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_welcome_20": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_welcome_20",
+      "south": "hw_brown",
+      "east": "hw_brown",
+      "west": "hw_brown",
+      "up": "hw_brown",
+      "down": "hw_brown"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_welcome_21": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_welcome_21",
+      "south": "hw_brown",
+      "east": "hw_brown",
+      "west": "hw_brown",
+      "up": "hw_brown",
+      "down": "hw_brown"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_welcome_30": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_welcome_30",
+      "south": "hw_brown",
+      "east": "hw_brown",
+      "west": "hw_brown",
+      "up": "hw_brown",
+      "down": "hw_brown"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_welcome_31": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_welcome_31",
+      "south": "hw_brown",
+      "east": "hw_brown",
+      "west": "hw_brown",
+      "up": "hw_brown",
+      "down": "hw_brown"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_welcome_40": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_welcome_40",
+      "south": "hw_brown",
+      "east": "hw_brown",
+      "west": "hw_brown",
+      "up": "hw_brown",
+      "down": "hw_brown"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_welcome_41": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_welcome_41",
+      "south": "hw_brown",
+      "east": "hw_brown",
+      "west": "hw_brown",
+      "up": "hw_brown",
+      "down": "hw_brown"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_welcome_50": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_welcome_50",
+      "south": "hw_brown",
+      "east": "hw_brown",
+      "west": "hw_brown",
+      "up": "hw_brown",
+      "down": "hw_brown"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ],
+    [
+     6,
+     0,
+     14,
+     10,
+     16,
+     16,
+     "hw_timber"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_welcome_51": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_welcome_51",
+      "south": "hw_brown",
+      "east": "hw_brown",
+      "west": "hw_brown",
+      "up": "hw_brown",
+      "down": "hw_brown"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ],
+    [
+     6,
+     0,
+     14,
+     10,
+     16,
+     16,
+     "hw_timber"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_welcome_q_00": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_welcome_q_00",
+      "south": "hw_brown",
+      "east": "hw_brown",
+      "west": "hw_brown",
+      "up": "hw_brown",
+      "down": "hw_brown"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ],
+    [
+     6,
+     0,
+     14,
+     10,
+     16,
+     16,
+     "hw_timber"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_welcome_q_01": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_welcome_q_01",
+      "south": "hw_brown",
+      "east": "hw_brown",
+      "west": "hw_brown",
+      "up": "hw_brown",
+      "down": "hw_brown"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ],
+    [
+     6,
+     0,
+     14,
+     10,
+     16,
+     16,
+     "hw_timber"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_welcome_q_10": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_welcome_q_10",
+      "south": "hw_brown",
+      "east": "hw_brown",
+      "west": "hw_brown",
+      "up": "hw_brown",
+      "down": "hw_brown"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_welcome_q_11": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_welcome_q_11",
+      "south": "hw_brown",
+      "east": "hw_brown",
+      "west": "hw_brown",
+      "up": "hw_brown",
+      "down": "hw_brown"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_welcome_q_20": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_welcome_q_20",
+      "south": "hw_brown",
+      "east": "hw_brown",
+      "west": "hw_brown",
+      "up": "hw_brown",
+      "down": "hw_brown"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_welcome_q_21": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_welcome_q_21",
+      "south": "hw_brown",
+      "east": "hw_brown",
+      "west": "hw_brown",
+      "up": "hw_brown",
+      "down": "hw_brown"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_welcome_q_30": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_welcome_q_30",
+      "south": "hw_brown",
+      "east": "hw_brown",
+      "west": "hw_brown",
+      "up": "hw_brown",
+      "down": "hw_brown"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_welcome_q_31": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_welcome_q_31",
+      "south": "hw_brown",
+      "east": "hw_brown",
+      "west": "hw_brown",
+      "up": "hw_brown",
+      "down": "hw_brown"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_welcome_q_40": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_welcome_q_40",
+      "south": "hw_brown",
+      "east": "hw_brown",
+      "west": "hw_brown",
+      "up": "hw_brown",
+      "down": "hw_brown"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_welcome_q_41": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_welcome_q_41",
+      "south": "hw_brown",
+      "east": "hw_brown",
+      "west": "hw_brown",
+      "up": "hw_brown",
+      "down": "hw_brown"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_welcome_q_50": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_welcome_q_50",
+      "south": "hw_brown",
+      "east": "hw_brown",
+      "west": "hw_brown",
+      "up": "hw_brown",
+      "down": "hw_brown"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ],
+    [
+     6,
+     0,
+     14,
+     10,
+     16,
+     16,
+     "hw_timber"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_welcome_q_51": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_welcome_q_51",
+      "south": "hw_brown",
+      "east": "hw_brown",
+      "west": "hw_brown",
+      "up": "hw_brown",
+      "down": "hw_brown"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ],
+    [
+     6,
+     0,
+     14,
+     10,
+     16,
+     16,
+     "hw_timber"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_next_00": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_next_00",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ],
+    [
+     6.5,
+     0,
+     14,
+     9.5,
+     16,
+     16,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_next_01": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_next_01",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ],
+    [
+     6.5,
+     0,
+     14,
+     9.5,
+     16,
+     16,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_next_10": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_next_10",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_next_11": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_next_11",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_next_20": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_next_20",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_next_21": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_next_21",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_next_30": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_next_30",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ],
+    [
+     6.5,
+     0,
+     14,
+     9.5,
+     16,
+     16,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_next_31": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_next_31",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ],
+    [
+     6.5,
+     0,
+     14,
+     9.5,
+     16,
+     16,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_pet_00": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_pet_00",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ],
+    [
+     6.5,
+     0,
+     14,
+     9.5,
+     16,
+     16,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_info_00": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_info_00",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_info_10": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_info_10",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_rest_closed_00": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_rest_closed_00",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ],
+    [
+     6.5,
+     0,
+     14,
+     9.5,
+     16,
+     16,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_rest_closed_10": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_rest_closed_10",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_rest_closed_20": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_rest_closed_20",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ],
+    [
+     6.5,
+     0,
+     14,
+     9.5,
+     16,
+     16,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_g_mile_00": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     12.5,
+     16,
+     16,
+     14,
+     {
+      "north": "hw_g_mile_00",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ],
+    [
+     0,
+     3,
+     14,
+     16,
+     4.5,
+     15.5,
+     "st_galv"
+    ],
+    [
+     0,
+     11.5,
+     14,
+     16,
+     13,
+     15.5,
+     "st_galv"
+    ],
+    [
+     6.5,
+     0,
+     14,
+     9.5,
+     16,
+     16,
+     "st_galv"
+    ]
+   ],
+   "title": "Road Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_booth_lo": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14,
+     16,
+     16,
+     16,
+     {
+      "north": "hw_booth_steel",
+      "south": "hw_booth_steel",
+      "east": "hw_booth_steel",
+      "west": "hw_booth_steel",
+      "up": "hw_booth_steel",
+      "down": "hw_booth_steel"
+     }
+    ],
+    [
+     0,
+     13,
+     11.5,
+     16,
+     14,
+     14,
+     "st_galv"
+    ]
+   ],
+   "title": "Toll Booth",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     11.5,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_booth_hi": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.5,
+     16,
+     16,
+     15.5,
+     "hw_booth_glass"
+    ],
+    [
+     0,
+     0,
+     14,
+     16,
+     1.5,
+     16,
+     "st_galv"
+    ],
+    [
+     0,
+     14.5,
+     14,
+     16,
+     16,
+     16,
+     "st_galv"
+    ],
+    [
+     0,
+     0,
+     14,
+     1.2,
+     16,
+     16,
+     "st_galv"
+    ],
+    [
+     14.8,
+     0,
+     14,
+     16,
+     16,
+     16,
+     "st_galv"
+    ],
+    [
+     7.4,
+     1.5,
+     13.8,
+     8.6,
+     14.5,
+     14.5,
+     "st_galv"
+    ],
+    [
+     3,
+     0,
+     11.5,
+     13,
+     0.8,
+     14,
+     "st_galv"
+    ]
+   ],
+   "title": "Toll Booth",
+   "sound": "GLASS",
+   "shape": [
+    [
+     0,
+     0,
+     14,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_booth_hi_x": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14.5,
+     16,
+     16,
+     15.5,
+     "hw_booth_glass_x"
+    ],
+    [
+     0,
+     0,
+     14,
+     16,
+     1.5,
+     16,
+     "st_galv"
+    ],
+    [
+     0,
+     14.5,
+     14,
+     16,
+     16,
+     16,
+     "st_galv"
+    ],
+    [
+     0,
+     0,
+     14,
+     1.2,
+     16,
+     16,
+     "st_galv"
+    ],
+    [
+     14.8,
+     0,
+     14,
+     16,
+     16,
+     16,
+     "st_galv"
+    ]
+   ],
+   "title": "Toll Booth",
+   "sound": "GLASS",
+   "shape": [
+    [
+     0,
+     0,
+     14,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_booth_cap": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     4,
+     16,
+     {
+      "north": "hw_booth_roof",
+      "south": "hw_booth_roof",
+      "east": "hw_booth_roof",
+      "west": "hw_booth_roof",
+      "up": "hw_booth_roof",
+      "down": "hw_booth_roof"
+     }
+    ],
+    [
+     -1,
+     3,
+     -1,
+     17,
+     5,
+     17,
+     "hw_booth_roof"
+    ]
+   ],
+   "title": "Toll Booth Roof",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     5,
+     16
+    ]
+   ],
+   "render": "cutout"
+  },
+  "hw_booth_lamp": {
+   "model": "boxes",
+   "boxes": [
+    [
+     5,
+     -11,
+     5,
+     11,
+     -9,
+     11,
+     "hw_grey"
+    ],
+    [
+     6,
+     -9,
+     6,
+     10,
+     -4,
+     10,
+     "hw_lamp"
+    ]
+   ],
+   "title": "Lane Light",
+   "sound": "METAL",
+   "shape": [
+    [
+     5,
+     0,
+     5,
+     11,
+     1,
+     11
+    ]
+   ],
+   "render": "cutout"
+  },
+  "hw_booth_lamp_lit": {
+   "model": "boxes",
+   "boxes": [
+    [
+     5,
+     -11,
+     5,
+     11,
+     -9,
+     11,
+     "hw_grey"
+    ],
+    [
+     6,
+     -9,
+     6,
+     10,
+     -4,
+     10,
+     "hw_lamp_lit"
+    ]
+   ],
+   "title": "Lane Light",
+   "sound": "METAL",
+   "shape": [
+    [
+     5,
+     0,
+     5,
+     11,
+     1,
+     11
+    ]
+   ],
+   "render": "cutout",
+   "light": 8
+  },
+  "hw_canopy": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "down": "hw_soffit_light",
+      "up": "hw_membrane",
+      "north": "hw_fascia",
+      "south": "hw_fascia",
+      "east": "hw_fascia",
+      "west": "hw_fascia"
+     }
+    ]
+   ],
+   "title": "Toll Canopy",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout"
+  },
+  "hw_lane_go": {
+   "model": "boxes",
+   "boxes": [
+    [
+     3,
+     3,
+     10,
+     13,
+     15,
+     16,
+     {
+      "north": "hw_go",
+      "south": "hw_grey",
+      "east": "hw_grey",
+      "west": "hw_grey",
+      "up": "hw_grey",
+      "down": "hw_grey"
+     }
+    ],
+    [
+     2.5,
+     14,
+     9,
+     13.5,
+     15,
+     16,
+     "hw_grey"
+    ],
+    [
+     7,
+     15,
+     12,
+     9,
+     16,
+     14,
+     "st_galv"
+    ]
+   ],
+   "title": "Lane Signal",
+   "sound": "METAL",
+   "shape": [
+    [
+     2.5,
+     3,
+     9,
+     13.5,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_lane_stop": {
+   "model": "boxes",
+   "boxes": [
+    [
+     3,
+     3,
+     10,
+     13,
+     15,
+     16,
+     {
+      "north": "hw_stop",
+      "south": "hw_grey",
+      "east": "hw_grey",
+      "west": "hw_grey",
+      "up": "hw_grey",
+      "down": "hw_grey"
+     }
+    ],
+    [
+     2.5,
+     14,
+     9,
+     13.5,
+     15,
+     16,
+     "hw_grey"
+    ],
+    [
+     7,
+     15,
+     12,
+     9,
+     16,
+     14,
+     "st_galv"
+    ]
+   ],
+   "title": "Lane Signal",
+   "sound": "METAL",
+   "shape": [
+    [
+     2.5,
+     3,
+     9,
+     13.5,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_canopy_lit": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "down": "hw_soffit_lit",
+      "up": "hw_membrane",
+      "north": "hw_fascia",
+      "south": "hw_fascia",
+      "east": "hw_fascia",
+      "west": "hw_fascia"
+     }
+    ]
+   ],
+   "title": "Toll Canopy",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "light": 12
+  },
+  "hw_lane_go_lit": {
+   "model": "boxes",
+   "boxes": [
+    [
+     3,
+     3,
+     10,
+     13,
+     15,
+     16,
+     {
+      "north": "hw_go_lit",
+      "south": "hw_grey",
+      "east": "hw_grey",
+      "west": "hw_grey",
+      "up": "hw_grey",
+      "down": "hw_grey"
+     }
+    ],
+    [
+     2.5,
+     14,
+     9,
+     13.5,
+     15,
+     16,
+     "hw_grey"
+    ],
+    [
+     7,
+     15,
+     12,
+     9,
+     16,
+     14,
+     "st_galv"
+    ]
+   ],
+   "title": "Lane Signal",
+   "sound": "METAL",
+   "shape": [
+    [
+     2.5,
+     3,
+     9,
+     13.5,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "light": 6,
+   "rotate": "facing"
+  },
+  "hw_lane_stop_lit": {
+   "model": "boxes",
+   "boxes": [
+    [
+     3,
+     3,
+     10,
+     13,
+     15,
+     16,
+     {
+      "north": "hw_stop_lit",
+      "south": "hw_grey",
+      "east": "hw_grey",
+      "west": "hw_grey",
+      "up": "hw_grey",
+      "down": "hw_grey"
+     }
+    ],
+    [
+     2.5,
+     14,
+     9,
+     13.5,
+     15,
+     16,
+     "hw_grey"
+    ],
+    [
+     7,
+     15,
+     12,
+     9,
+     16,
+     14,
+     "st_galv"
+    ]
+   ],
+   "title": "Lane Signal",
+   "sound": "METAL",
+   "shape": [
+    [
+     2.5,
+     3,
+     9,
+     13.5,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "light": 6,
+   "rotate": "facing"
+  },
+  "hw_canopy_plain": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "down": "hw_soffit",
+      "up": "hw_membrane",
+      "north": "hw_fascia",
+      "south": "hw_fascia",
+      "east": "hw_fascia",
+      "west": "hw_fascia"
+     }
+    ]
+   ],
+   "title": "Toll Canopy",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16
+    ]
+   ],
+   "render": "cutout"
+  },
+  "hw_cushion": {
+   "model": "boxes",
+   "boxes": [
+    [
+     2,
+     0,
+     0,
+     14,
+     1,
+     16,
+     "st_galv"
+    ],
+    [
+     2.5,
+     1,
+     1,
+     13.5,
+     11,
+     16,
+     {
+      "north": "hw_chevron",
+      "south": "hw_cushion",
+      "east": "hw_cushion",
+      "west": "hw_cushion",
+      "up": "hw_cushion",
+      "down": "hw_cushion"
+     }
+    ],
+    [
+     3,
+     11,
+     2,
+     13,
+     11.6,
+     15,
+     "hw_cushion"
+    ]
+   ],
+   "title": "Crash Cushion",
+   "sound": "METAL",
+   "shape": [
+    [
+     2,
+     0,
+     0,
+     14,
+     12,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_arm_box": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4,
+     0,
+     5,
+     12,
+     13,
+     12,
+     "hw_yellow"
+    ],
+    [
+     5,
+     13,
+     6,
+     11,
+     15,
+     11,
+     "hw_grey"
+    ],
+    [
+     12,
+     10.5,
+     7.5,
+     16,
+     12,
+     9.5,
+     "hw_arm"
+    ]
+   ],
+   "title": "Toll Gate",
+   "sound": "METAL",
+   "shape": [
+    [
+     4,
+     0,
+     5,
+     12,
+     15,
+     12
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_arm": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.5,
+     10.5,
+     0,
+     9.5,
+     12,
+     16,
+     "hw_arm"
+    ]
+   ],
+   "title": "Toll Gate Arm",
+   "sound": "METAL",
+   "shape": [
+    [
+     7.5,
+     10.5,
+     0,
+     9.5,
+     12,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "axis"
+  },
+  "hw_arm_snap": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     6,
+     16,
+     1.5,
+     8,
+     "hw_arm",
+     null,
+     {
+      "axis": "y",
+      "angle": 22.5,
+      "origin": [
+       8,
+       0,
+       7
+      ]
+     }
+    ],
+    [
+     1,
+     0,
+     10,
+     9,
+     1.5,
+     12,
+     "hw_arm",
+     null,
+     {
+      "axis": "y",
+      "angle": -22.5,
+      "origin": [
+       5,
+       0,
+       11
+      ]
+     }
+    ]
+   ],
+   "title": "Toll Gate Arm",
+   "sound": "METAL",
+   "shape": [
+    [
+     0,
+     0,
+     4,
+     16,
+     2,
+     14
+    ]
+   ],
+   "render": "cutout",
+   "decor": true,
+   "rotate": "facing"
+  },
+  "hw_coin": {
+   "model": "boxes",
+   "boxes": [
+    [
+     6.5,
+     0,
+     6.5,
+     9.5,
+     9,
+     9.5,
+     "hw_yellow"
+    ],
+    [
+     3.5,
+     9,
+     3.5,
+     12.5,
+     12,
+     12.5,
+     {
+      "north": "hw_grey",
+      "south": "hw_yellow",
+      "east": "hw_yellow",
+      "west": "hw_yellow",
+      "up": "hw_yellow",
+      "down": "hw_yellow"
+     }
+    ],
+    [
+     4.5,
+     12,
+     4.5,
+     11.5,
+     12.3,
+     11.5,
+     "hw_chrome"
+    ]
+   ],
+   "title": "Exact Change Basket",
+   "sound": "METAL",
+   "shape": [
+    [
+     3.5,
+     0,
+     3.5,
+     12.5,
+     12.5,
+     12.5
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_ticket": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4,
+     0,
+     6,
+     12,
+     14,
+     12,
+     {
+      "north": "hw_grey",
+      "south": "hw_grey",
+      "east": "hw_grey",
+      "west": "hw_grey",
+      "up": "hw_grey",
+      "down": "hw_grey"
+     }
+    ],
+    [
+     5.5,
+     9,
+     5.6,
+     7.5,
+     11,
+     6,
+     "hw_green"
+    ],
+    [
+     8.5,
+     7,
+     5.6,
+     11,
+     8,
+     6,
+     "tire"
+    ]
+   ],
+   "title": "Ticket Machine",
+   "sound": "METAL",
+   "shape": [
+    [
+     4,
+     0,
+     5.6,
+     12,
+     14,
+     12
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_drum": {
+   "model": "boxes",
+   "boxes": [
+    [
+     3,
+     0,
+     3,
+     13,
+     15,
+     13,
+     "hw_drum"
+    ],
+    [
+     2,
+     0,
+     2,
+     14,
+     1.5,
+     14,
+     "tire"
+    ],
+    [
+     5,
+     15,
+     5,
+     11,
+     16,
+     11,
+     "hw_drum"
+    ]
+   ],
+   "title": "Traffic Drum",
+   "sound": "WOOL",
+   "shape": [
+    [
+     2,
+     0,
+     2,
+     14,
+     16,
+     14
+    ]
+   ],
+   "render": "cutout"
+  },
+  "hw_drum_down": {
+   "model": "boxes",
+   "boxes": [
+    [
+     2,
+     0,
+     2,
+     14,
+     10,
+     15,
+     {
+      "north": "hw_drum",
+      "south": "hw_drum",
+      "east": "hw_drum",
+      "west": "hw_drum",
+      "up": "hw_drum",
+      "down": "hw_drum"
+     }
+    ],
+    [
+     1,
+     0,
+     0,
+     15,
+     1.5,
+     2,
+     "tire"
+    ]
+   ],
+   "title": "Traffic Drum",
+   "sound": "WOOL",
+   "shape": [
+    [
+     1,
+     0,
+     0,
+     15,
+     10,
+     15
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_delineator": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.3,
+     0,
+     7.3,
+     8.7,
+     13,
+     8.7,
+     "hw_white"
+    ],
+    [
+     7.1,
+     10,
+     7.1,
+     8.9,
+     12,
+     8.9,
+     "hw_yellow"
+    ]
+   ],
+   "title": "Delineator",
+   "sound": "METAL",
+   "shape": [
+    [
+     7,
+     0,
+     7,
+     9,
+     13,
+     9
+    ]
+   ],
+   "render": "cutout",
+   "decor": true
+  },
+  "hw_chevron": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.3,
+     0,
+     9,
+     8.7,
+     13,
+     10.4,
+     "st_galv"
+    ],
+    [
+     3,
+     4,
+     7.6,
+     13,
+     15,
+     8.6,
+     {
+      "north": "hw_chevron",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ]
+   ],
+   "title": "Curve Sign",
+   "sound": "METAL",
+   "shape": [
+    [
+     3,
+     0,
+     7.6,
+     13,
+     15,
+     10.4
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_marker": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.3,
+     0,
+     9,
+     8.7,
+     8,
+     10.4,
+     "st_galv"
+    ],
+    [
+     5,
+     8,
+     8.4,
+     11,
+     15,
+     9,
+     {
+      "north": "hw_g_mile_00",
+      "south": "st_galv",
+      "east": "st_galv",
+      "west": "st_galv",
+      "up": "st_galv",
+      "down": "st_galv"
+     }
+    ]
+   ],
+   "title": "Mile Marker",
+   "sound": "METAL",
+   "shape": [
+    [
+     5,
+     0,
+     8.4,
+     11,
+     15,
+     10.4
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_callbox": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.3,
+     0,
+     9,
+     8.7,
+     10,
+     10.4,
+     "st_galv"
+    ],
+    [
+     4.5,
+     8,
+     6,
+     11.5,
+     15,
+     9,
+     {
+      "north": "hw_callbox",
+      "south": "hw_yellow",
+      "east": "hw_yellow",
+      "west": "hw_yellow",
+      "up": "hw_yellow",
+      "down": "hw_yellow"
+     }
+    ],
+    [
+     7,
+     15,
+     8,
+     9,
+     16,
+     8.5,
+     "tire"
+    ]
+   ],
+   "title": "Call Box",
+   "sound": "METAL",
+   "shape": [
+    [
+     4.5,
+     0,
+     6,
+     11.5,
+     16,
+     10.4
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_picnic_l": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     9,
+     3,
+     16,
+     10.5,
+     13,
+     "hw_timber"
+    ],
+    [
+     0,
+     5,
+     0,
+     16,
+     6,
+     3,
+     "hw_timber"
+    ],
+    [
+     0,
+     5,
+     13,
+     16,
+     6,
+     16,
+     "hw_timber"
+    ],
+    [
+     1.5,
+     0,
+     0,
+     3.5,
+     5,
+     1.5,
+     "st_galv"
+    ],
+    [
+     1.5,
+     0,
+     14.5,
+     3.5,
+     5,
+     16,
+     "st_galv"
+    ],
+    [
+     1.5,
+     5,
+     1,
+     3.5,
+     6,
+     15,
+     "st_galv"
+    ],
+    [
+     1.5,
+     0,
+     4,
+     3.5,
+     9,
+     5.5,
+     "st_galv"
+    ],
+    [
+     1.5,
+     0,
+     10.5,
+     3.5,
+     9,
+     12,
+     "st_galv"
+    ]
+   ],
+   "title": "Picnic Table",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     10.5,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_picnic_r": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     9,
+     3,
+     16,
+     10.5,
+     13,
+     "hw_timber"
+    ],
+    [
+     0,
+     5,
+     0,
+     16,
+     6,
+     3,
+     "hw_timber"
+    ],
+    [
+     0,
+     5,
+     13,
+     16,
+     6,
+     16,
+     "hw_timber"
+    ],
+    [
+     12.5,
+     0,
+     0,
+     14.5,
+     5,
+     1.5,
+     "st_galv"
+    ],
+    [
+     12.5,
+     0,
+     14.5,
+     14.5,
+     5,
+     16,
+     "st_galv"
+    ],
+    [
+     12.5,
+     5,
+     1,
+     14.5,
+     6,
+     15,
+     "st_galv"
+    ],
+    [
+     12.5,
+     0,
+     4,
+     14.5,
+     9,
+     5.5,
+     "st_galv"
+    ],
+    [
+     12.5,
+     0,
+     10.5,
+     14.5,
+     9,
+     12,
+     "st_galv"
+    ]
+   ],
+   "title": "Picnic Table",
+   "sound": "WOOD",
+   "shape": [
+    [
+     0,
+     0,
+     0,
+     16,
+     10.5,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_grill": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7,
+     0,
+     7,
+     9,
+     9,
+     9,
+     "st_galv"
+    ],
+    [
+     2.5,
+     9,
+     4,
+     13.5,
+     11.5,
+     12,
+     {
+      "north": "hw_grill",
+      "south": "hw_grill",
+      "east": "hw_grill",
+      "west": "hw_grill",
+      "up": "hw_grill",
+      "down": "hw_grill"
+     }
+    ],
+    [
+     2.5,
+     11.5,
+     4,
+     13.5,
+     12,
+     12,
+     "hw_grill"
+    ],
+    [
+     2.5,
+     11.5,
+     11,
+     13.5,
+     15,
+     12,
+     "hw_grill"
+    ]
+   ],
+   "title": "Grill",
+   "sound": "METAL",
+   "shape": [
+    [
+     2.5,
+     0,
+     4,
+     13.5,
+     15,
+     12
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_map_lo": {
+   "model": "boxes",
+   "boxes": [
+    [
+     2,
+     0,
+     6,
+     14,
+     6,
+     13,
+     {
+      "north": "hw_brown",
+      "south": "hw_brown",
+      "east": "hw_brown",
+      "west": "hw_brown",
+      "up": "hw_brown",
+      "down": "hw_brown"
+     }
+    ],
+    [
+     1.5,
+     6,
+     8.5,
+     14.5,
+     16,
+     12,
+     {
+      "north": "hw_map_0",
+      "south": "hw_brown",
+      "east": "hw_brown",
+      "west": "hw_brown",
+      "up": "hw_brown",
+      "down": "hw_brown"
+     }
+    ]
+   ],
+   "title": "Map Case",
+   "sound": "METAL",
+   "shape": [
+    [
+     1.5,
+     0,
+     6,
+     14.5,
+     16,
+     13
+    ]
+   ],
+   "render": "cutout",
+   "light": 6,
+   "rotate": "facing"
+  },
+  "hw_map_hi": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1.5,
+     0,
+     8.5,
+     14.5,
+     13,
+     12,
+     {
+      "north": "hw_map_1",
+      "south": "hw_brown",
+      "east": "hw_brown",
+      "west": "hw_brown",
+      "up": "hw_brown",
+      "down": "hw_brown"
+     }
+    ],
+    [
+     0.5,
+     13,
+     6,
+     15.5,
+     15,
+     14,
+     "hw_brown"
+    ]
+   ],
+   "title": "Map Case",
+   "sound": "METAL",
+   "shape": [
+    [
+     0.5,
+     0,
+     6,
+     15.5,
+     15,
+     14
+    ]
+   ],
+   "render": "cutout",
+   "light": 6,
+   "rotate": "facing"
+  },
+  "hw_urinal": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4.5,
+     3,
+     11,
+     11.5,
+     12,
+     16,
+     {
+      "north": "hw_porcelain",
+      "south": "hw_porcelain",
+      "east": "hw_porcelain",
+      "west": "hw_porcelain",
+      "up": "hw_porcelain",
+      "down": "hw_porcelain"
+     }
+    ],
+    [
+     7,
+     12,
+     14,
+     9,
+     15,
+     16,
+     "hw_chrome"
+    ],
+    [
+     5.5,
+     4,
+     11,
+     10.5,
+     5,
+     13,
+     "hw_chrome"
+    ]
+   ],
+   "title": "Urinal",
+   "sound": "STONE",
+   "shape": [
+    [
+     4.5,
+     3,
+     11,
+     11.5,
+     15,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_dryer": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4.5,
+     8,
+     12.5,
+     11.5,
+     13,
+     16,
+     {
+      "north": "hw_chrome",
+      "south": "hw_chrome",
+      "east": "hw_chrome",
+      "west": "hw_chrome",
+      "up": "hw_chrome",
+      "down": "hw_chrome"
+     }
+    ],
+    [
+     7,
+     7.2,
+     13,
+     9,
+     8,
+     14.5,
+     "hw_chrome"
+    ]
+   ],
+   "title": "Hand Dryer",
+   "sound": "METAL",
+   "shape": [
+    [
+     4.5,
+     7,
+     12.5,
+     11.5,
+     13,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "decor": true,
+   "rotate": "facing"
+  },
+  "hw_bags": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.3,
+     0,
+     7.3,
+     8.7,
+     13,
+     8.7,
+     "hw_green"
+    ],
+    [
+     5,
+     8,
+     5.4,
+     11,
+     12,
+     7.3,
+     {
+      "north": "hw_green",
+      "south": "hw_green",
+      "east": "hw_green",
+      "west": "hw_green",
+      "up": "hw_green",
+      "down": "hw_green"
+     }
+    ],
+    [
+     4.5,
+     12.5,
+     6,
+     11.5,
+     15.5,
+     7.3,
+     "hw_white"
+    ]
+   ],
+   "title": "Pet Waste Station",
+   "sound": "METAL",
+   "shape": [
+    [
+     4.5,
+     0,
+     5.4,
+     11.5,
+     15.5,
+     8.7
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "facing"
+  },
+  "hw_timber_post": {
+   "model": "boxes",
+   "boxes": [
+    [
+     3,
+     0,
+     3,
+     13,
+     16,
+     13,
+     "hw_timber"
+    ]
+   ],
+   "title": "Timber Post",
+   "sound": "WOOD",
+   "shape": [
+    [
+     3,
+     0,
+     3,
+     13,
+     16,
+     13
+    ]
+   ],
+   "render": "cutout"
+  },
+  "hw_timber_beam": {
+   "model": "boxes",
+   "boxes": [
+    [
+     4,
+     3,
+     0,
+     12,
+     13,
+     16,
+     "hw_timber"
+    ]
+   ],
+   "title": "Timber Beam",
+   "sound": "WOOD",
+   "shape": [
+    [
+     4,
+     3,
+     0,
+     12,
+     13,
+     16
+    ]
+   ],
+   "render": "cutout",
+   "rotate": "axis"
+  },
+  "hw_conc": {
+   "tex": "hw_conc",
+   "title": "Concrete",
+   "sound": "STONE"
+  },
+  "hw_deck": {
+   "tex": {
+    "up": "hw_conc",
+    "down": "hw_deck_under",
+    "side": "hw_conc"
+   },
+   "title": "Bridge Deck",
+   "sound": "STONE"
+  },
+  "hw_mse": {
+   "tex": "hw_mse",
+   "title": "Retaining Wall",
+   "sound": "STONE"
+  },
+  "hw_island": {
+   "tex": {
+    "up": "hw_island_top",
+    "down": "hw_conc",
+    "side": "hw_island_side"
+   },
+   "height": 6,
+   "title": "Toll Island",
+   "sound": "STONE"
+  },
+  "hw_ledge": {
+   "tex": "hw_ledge",
+   "title": "Ledgestone",
+   "sound": "STONE"
+  },
+  "hw_capstone": {
+   "tex": {
+    "up": "hw_capstone",
+    "down": "hw_capstone",
+    "side": "hw_ledge"
+   },
+   "title": "Ledgestone",
+   "sound": "STONE"
   }
  }
 }

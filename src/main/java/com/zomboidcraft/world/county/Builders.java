@@ -36,6 +36,12 @@ public final class Builders {
                     new Hollis(p, county, out).build();
                 } else if (p.variant.equals("cape")) {
                     new Cape(p, county, out).build();
+                } else if (p.variant.equals("restarea")) {
+                    new RestArea(p, out).build();
+                } else if (p.variant.equals("tollplaza")) {
+                    new TollPlaza(p, out).build();
+                } else if (p.variant.equals("interchange")) {
+                    new Interchange(p, out).build();
                 } else {
                     new LandmarkSite(p, out).build();
                 }
