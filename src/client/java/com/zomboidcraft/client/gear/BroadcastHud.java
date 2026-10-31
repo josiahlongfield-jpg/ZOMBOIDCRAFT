@@ -37,7 +37,7 @@ public final class BroadcastHud {
 
     private static void render(GuiGraphicsExtractor g, DeltaTracker delta) {
         Minecraft mc = Minecraft.getInstance();
-        if (LINES.isEmpty() || mc.player == null || mc.options.hideGui) {
+        if (LINES.isEmpty() || mc.player == null) {
             return;
         }
         long now = System.currentTimeMillis();
