@@ -32,9 +32,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  */
 public class ReloadingBenchBlock extends Block {
     private static final ResourceKey<Block> KEY = ResourceKey.create(Registries.BLOCK, ZomboidCraft.id("reloading_bench"));
-    public static final Block BENCH = Registry.register(BuiltInRegistries.BLOCK, KEY, new ReloadingBenchBlock(
-            BlockBehaviour.Properties.of().strength(2.5f, 6f).sound(SoundType.WOOD).noOcclusion().setId(KEY)));
-
     public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
     // the top and legs, plus the pegboard along the back
     private static final Map<Direction, VoxelShape> SHAPES = Map.of(
@@ -42,6 +39,9 @@ public class ReloadingBenchBlock extends Block {
             Direction.SOUTH, Shapes.or(Block.box(0, 0, 0.5, 16, 15, 15.5), Block.box(0.5, 15, 0.4, 15.5, 16, 1.2)),
             Direction.WEST, Shapes.or(Block.box(0.5, 0, 0, 15.5, 15, 16), Block.box(14.8, 15, 0.5, 15.6, 16, 15.5)),
             Direction.EAST, Shapes.or(Block.box(0.5, 0, 0, 15.5, 15, 16), Block.box(0.4, 15, 0.5, 1.2, 16, 15.5)));
+    // registered after FACING and SHAPES: the constructor reads them
+    public static final Block BENCH = Registry.register(BuiltInRegistries.BLOCK, KEY, new ReloadingBenchBlock(
+            BlockBehaviour.Properties.of().strength(2.5f, 6f).sound(SoundType.WOOD).noOcclusion().setId(KEY)));
 
     public ReloadingBenchBlock(Properties properties) {
         super(properties);
