@@ -97,6 +97,13 @@ public class ZombieLoreTest implements FabricClientGameTest {
             ctx.takeScreenshot("weapons-front-" + i);
         }
         sp.getServer().runCommand("kill @e[type=zombie]");
+        ctx.waitTicks(5);
+        // the bodies and the blades that fell out of them, shown once, then cleared for the next scene
+        sp.getServer().runCommand("tp @a 0 100.4 -12.5 0 25");
+        ctx.waitTicks(10);
+        ctx.takeScreenshot("weapons-fallen");
+        sp.getServer().runCommand("kill @e[type=zomboidcraft:corpse]");
+        sp.getServer().runCommand("kill @e[type=item]");
         ZcConfig.get().zombieLore.attachedWeaponPercent = 6;
         ctx.waitTicks(10);
     }
