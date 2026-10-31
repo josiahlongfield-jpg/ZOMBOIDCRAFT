@@ -28,7 +28,7 @@ import net.minecraft.world.effect.MobEffects;
  * own (a bad stomach shows as Sick); infection stays hidden until symptoms show.
  */
 public final class MoodleHud {
-    private static final int SIZE = 20, GAP = 3, RIGHT = 8;
+    private static final int SIZE = 14, GAP = 2, RIGHT = 8;
     private static final int GOOD = 4;
     private static final float MILD_SHOWS = 6f, NAME_SHOWS = 3.5f, TREND_SHOWS = 4f;
     private static final int[] LEVEL_INK = {0, 0xFFE8CF7C, 0xFFE69A66, 0xFFCE675B, 0xFF8EB07E};
@@ -93,12 +93,12 @@ public final class MoodleHud {
                         Hud.alpha(p.trend > 0 ? 0xFFE8D9B0 : 0xFF8FBF5E, a));
             }
             if (n > 0) {
-                float w = Hud.capsWidth(font, p.label, 1f, .9f);
+                float w = Hud.capsWidth(font, p.label, 1f, .75f);
                 float tx = x - 6 - w + (1 - n) * 3;
-                Hud.caps(g, font, p.label, tx, y + 3, Hud.alpha(Hud.BONE, n * a), 1f, .9f);
+                Hud.caps(g, font, p.label, tx, y + 1, Hud.alpha(Hud.BONE, n * a), 1f, .75f);
                 if (p.level != GOOD) {
                     for (int i = 0; i < 3; i++) {
-                        int bx = Math.round(x - 6 - (3 - i) * 5 + (1 - n) * 3), by = Math.round(y + 13);
+                        int bx = Math.round(x - 6 - (3 - i) * 5 + (1 - n) * 3), by = Math.round(y + SIZE - 3);
                         g.fill(bx, by, bx + 4, by + 1, Hud.alpha(i < p.level ? LEVEL_INK[p.level] : Hud.BONE_FAINT, n * a));
                     }
                 }
