@@ -125,7 +125,7 @@ public class CrowbarItem extends MeleeWeaponItem {
      * two wide and three tall, "bunk_blast_w" + row and "bunk_blast_e" + row, its e half on the
      * right of the door's facing (east when it faces north), where the hinges are.
      */
-    private static int row(BlockState state) {
+    public static int row(BlockState state) {
         String name = BuiltInRegistries.BLOCK.getKey(state.getBlock()).getPath();
         if (!name.startsWith("bunk_blast_") || name.length() != 13 || !state.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
             return -1;
@@ -141,8 +141,9 @@ public class CrowbarItem extends MeleeWeaponItem {
      * Swings the door the clicked block belongs to in on its hinges: out of its frame, standing
      * open against the wall inside, two blocks deep along its hinge side. Where something stands
      * in the way of the open leaf, the door comes away instead. False when it isn't all there.
+     * A keypad that takes its code swings it the same way (world/Keypads).
      */
-    private static boolean pry(ServerLevel level, BlockPos clicked) {
+    public static boolean pry(ServerLevel level, BlockPos clicked) {
         BlockState state = level.getBlockState(clicked);
         int row = row(state);
         if (row < 0) {

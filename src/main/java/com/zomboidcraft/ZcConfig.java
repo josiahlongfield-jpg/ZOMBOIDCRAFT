@@ -96,6 +96,7 @@ public final class ZcConfig {
     public Population population = new Population();
     /** Zomboid's Zombie Lore page, setting for setting: how the dead move, see, hear, remember and hurt (zombie/Lore). */
     public ZombieLore zombieLore = new ZombieLore();
+    public ZombiePopulation zombiePopulation = new ZombiePopulation();
     /** Driverless trains: the county railway and the downtown subway (TrainCommand, world.trains). */
     public Trains trains = new Trains();
     /** Things you throw: lures, fire, smoke and blasts (combat/throwing). */
@@ -345,6 +346,57 @@ public final class ZcConfig {
      * Fixed rules that are not settings: shots only flinch, only a head hit kills with a gun, crawling only with both
      * legs gone.
      */
+    /**
+     * Zomboid's Zombie Population page (B42), on top of our population engine (zombie/population): the approved
+     * place-by-place table is what Normal means, population.density is Zomboid's Population Multiplier, and the dead
+     * move as Zomboid's do: rallies, migration, following sound, and herds on the roads (Herds). Defaults are Zomboid's
+     * Apocalypse values except respawn, which stays off (Josiah's rule).
+     */
+    public static class ZombiePopulation {
+        public enum Count { INSANE, VERY_HIGH, HIGH, NORMAL, LOW, NONE }
+        public enum Distribution { URBAN_FOCUSED, UNIFORM }
+        public enum Respawn { NONE, LOW, NORMAL, HIGH }
+
+        /** Zombie Count: 4, 3, 2, 1, 0.35 or 0 times the approved table, on top of population.density. */
+        public Count count = Count.NORMAL;
+        /** Urban Focused: the table, place by place. Uniform: the same total spread evenly over the land. */
+        public Distribution distribution = Distribution.URBAN_FOCUSED;
+        /** Patchy clusters: some streets thick, the next thin, the totals the same. */
+        public boolean voronoiNoise = true;
+        /** Presets for the three respawn numbers below, used while those are 0. None stays off (Josiah's rule). */
+        public Respawn respawn = Respawn.NONE;
+        /** The dead drift from crowded chunks into emptier ones (every redistributeHours). */
+        public boolean migrate = true;
+        /** How loud engines, alarms and generators are to the dead. */
+        public double attractionMultiplier = 1;
+        /** Share of the count placed at world start... */
+        public double startMultiplier = 1;
+        /** ...growing to this share by peakDay; the extra walk in as herds from the county's edges. */
+        public double peakMultiplier = 1.5;
+        public int peakDay = 28;
+        /** In-game hours between top-ups of emptied chunks (0 never), how long a chunk must go unseen first, and how much of its first count a top-up restores. */
+        public double respawnHours = 0;
+        public double respawnUnseenHours = 0;
+        public double respawnMultiplier = 0;
+        /** In-game hours between migration steps. */
+        public double redistributeHours = 12;
+        /** Farthest the dead walk toward one sound, real or still records. */
+        public double followSoundDistance = 100;
+        /** Idle dead gather into groups this big, give or take this share... */
+        public int rallyGroupSize = 20;
+        public double rallyGroupSizeVariance = 50;
+        /** ...walking up to this far to join one, groups this far apart, standing this close together (blocks). */
+        public double rallyTravelDistance = 20;
+        public double rallyGroupSeparation = 15;
+        public double rallyGroupRadius = 3;
+        /** Real zombies in one 128-block area before idle extras fold back into records (Zomboid deletes them). */
+        public int countBeforeDelete = 300;
+        /** Ours: herds on the roads at world start, and how many walk in each. */
+        public int herds = 6;
+        public int herdMin = 200;
+        public int herdMax = 400;
+    }
+
     public static class ZombieLore {
         public enum Speed { SPRINTERS, FAST_SHAMBLERS, SHAMBLERS, RANDOM }
         public enum Strength { SUPERHUMAN, NORMAL, WEAK, RANDOM }
@@ -849,6 +901,30 @@ public final class ZcConfig {
         public String carCrashDamage = "normal";
         /** Zomboid's Damage From Being Hit By A Car: what a player takes when a car runs into them, times this. */
         public double carHitDamage = 1;
+        /** Zomboid's Chance Has Gas: low, normal, high; the share of runners found with fuel in the tank. */
+        public String carChanceHasGas = "normal";
+        /** Zomboid's Initial Gas: very_low, low, normal, high, very_high, full; how much is in a tank that has any. */
+        public String carInitialGas = "low";
+        /** Zomboid's Gas Consumption: how fast engines drink, times this. */
+        public double carGasConsumption = 1;
+        /** Zomboid's Fuel Station Gas: pumps never run dry; else each starts with Min to Max of its tank, EmptyChance percent dry. */
+        public boolean fuelStationGasInfinite = false;
+        public double fuelStationGasMin = 0;
+        public double fuelStationGasMax = 0.8;
+        public double fuelStationEmptyChance = 20;
+        /** Zomboid's Locked Vehicle Frequency and Car Alarm: never, extremely_rare, rare, sometimes, often, very_often. */
+        public String carLocked = "sometimes";
+        public String carAlarm = "rare";
+        /** Zomboid's Siren Effects Zombies: an emergency vehicle's siren draws the dead from far off. */
+        public boolean sirenEffectsZombies = true;
+        /** Zomboid's Siren Shutoff Hours: a siren left on dies after this many in-game hours (0 = never). */
+        public double sirenShutoffHours = 0;
+        /** Zomboid's Player Damage From Crash: a crash at speed hurts whoever's inside. */
+        public boolean playerDamageFromCrash = true;
+        /** Zomboid's Recently Survivor Vehicles: none, low, normal, high. */
+        public String survivorCars = "low";
+        /** Zomboid's Traffic Jam: wrecked cars piled up along the main roads (laid by the county's road builder). */
+        public boolean trafficJams = true;
         /** Car boots and the backs of vans hold loot (tools/cars/car_loot.py); off leaves them empty. */
         public boolean carLoot = true;
         /** The jets' top speed in km/h. Past about 300 the world can't load fast enough to keep up with them. */
@@ -2032,10 +2108,15 @@ public final class ZcConfig {
         try {
             String[] parts = key.split("\\.", 2);
             Object group = ZcConfig.class.getField(parts[0]).get(instance);
-            return String.valueOf(group.getClass().getField(parts[1]).get(group));
+            return text(group.getClass().getField(parts[1]).get(group));
         } catch (ReflectiveOperationException | ArrayIndexOutOfBoundsException e) {
             throw new IllegalArgumentException("Unknown setting " + key);
         }
+    }
+
+    /** A setting's value as text; a choice by its lower-case name ("random_normal_poor"), as setValue reads it back. */
+    private static String text(Object value) {
+        return value instanceof Enum<?> e ? e.name().toLowerCase(java.util.Locale.ROOT) : String.valueOf(value);
     }
 
     public static void setValue(String key, String raw) {
@@ -2092,7 +2173,7 @@ public final class ZcConfig {
         if (defaults == null) {
             defaults = new ZcConfig();
         }
-        return String.valueOf(getValue(key, defaults));
+        return text(getValue(key, defaults));
     }
 
     private static Object getValue(String key, ZcConfig from) {

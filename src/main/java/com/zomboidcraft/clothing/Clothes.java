@@ -78,6 +78,10 @@ public final class Clothes {
         c("boonie_hat", HAT, "").warm(0.25f, 0.1f, 0.3f);
         c("patrol_cap", HAT, "").warm(0.15f, 0, 0.1f);
         c("beret", HAT, "").warm(0.2f, 0.1f, 0);
+        c("fur_ushanka", HAT, "H").guard(10, 0).warm(1f, 0.9f, 0.3f).of(LEATHER);
+        c("watch_cap", HAT, "H").warm(0.6f, 0.3f, 0);
+        c("headlamp", HAT, "").of(NONE);
+        c("shooting_earmuffs", HAT, "").warm(0.1f, 0.1f, 0).of(NONE);
         // eyes
         c("welding_goggles", EYES, "").guard(5, 0).of(NONE);
         c("sunglasses", EYES, "").of(NONE);
@@ -88,6 +92,7 @@ public final class Clothes {
         // face
         c("hockey_mask", FACE, "H").guard(50, 30).warm(0.25f, 0.55f, 0).feel(0.1f).of(HARD);
         c("gas_mask", FACE, "H").guard(50, 30).warm(0.75f, 0.6f, 1f).feel(0.3f).of(RUBBER);
+        c("cbrn_mask", FACE, "HN").guard(50, 30).warm(0.8f, 0.8f, 1f).feel(0.35f).of(RUBBER);
         c("bandana", FACE, "").guard(5, 0).warm(0.1f, 0, 0);
         c("balaclava", FACE, "HN").guard(5, 0).warm(1f, 1f, 0.5f);
         c("surgical_mask_worn", FACE, "").guard(5, 0);
@@ -96,9 +101,22 @@ public final class Clothes {
         c("necktie", NECK, "").of(NONE);
         c("shemagh", NECK, "N").guard(10, 0).warm(0.4f, 0.5f, 0);
         c("neck_gaiter", NECK, "N").guard(5, 0).warm(0.3f, 0.3f, 0);
+        c("dog_tags", NECK, "").of(NONE);
+        c("hockey_neck_guard", NECK, "N").guard(60, 40).warm(0.2f, 0.1f, 0).of(HARD);
+        c("leather_neck_guard", NECK, "N").guard(80, 60).warm(0.2f, 0.2f, 0).feel(0.1f).of(LEATHER).lasts(16);
         // pads strapped over the sleeves and trousers
         c("elbow_pads", ARM_GUARDS, "e").guard(60, 40).feel(0.05f).of(HARD);
+        c("riot_arm_guards", ARM_GUARDS, "A").guard(80, 70).feel(0.1f).slow(0, 0.04f).of(HARD).armour(1);
+        c("football_shoulder_pads", ARM_GUARDS, "Tu").guard(40, 25).feel(0.15f).slow(0, 0.05f).of(HARD).armour(1);
+        c("hockey_shoulder_pads", ARM_GUARDS, "Tu").guard(35, 20).feel(0.1f).slow(0, 0.03f).of(HARD).armour(1);
+        c("chainmail_sleeve", ARM_GUARDS, "ef").guard(90, 60).feel(0.05f).of(HARD);
         c("knee_pads", LEG_GUARDS, "k").guard(60, 40).feel(0.05f).of(HARD);
+        c("riot_leg_guards", LEG_GUARDS, "tks").guard(80, 70).feel(0.1f).slow(0.04f, 0).of(HARD).armour(1);
+        c("chainsaw_chaps", LEG_GUARDS, "tks").guard(70, 50).warm(0.2f, 0.1f, 0.2f).feel(0.1f).slow(0.03f, 0).lasts(14);
+        c("shin_guards", LEG_GUARDS, "ks").guard(60, 40).feel(0.05f).of(HARD);
+        c("gaiters", LEG_GUARDS, "s").guard(20, 10).warm(0.2f, 0.4f, 0.8f);
+        // under everything
+        c("athletic_cup", UNDER, "g").guard(30, 20).of(HARD);
         // shirts: the layer next to the skin
         c("t_shirt", SHIRT, "Ta").warm(0.2f, 0.05f, 0);
         c("band_tshirt", SHIRT, "Ta").warm(0.2f, 0.05f, 0);
@@ -113,6 +131,7 @@ public final class Clothes {
         c("wedding_dress", SHIRT, "TAL").guard(10, 0).warm(0.25f, 0.1f, 0).slow(0.05f, 0);
         c("flight_deck_jersey", SHIRT, "TA").guard(10, 0).warm(0.3f, 0.2f, 0);
         c("field_shirt", SHIRT, "TA").guard(20, 10).warm(0.4f, 0.3f, 0.1f).lasts(12);
+        c("combat_shirt", SHIRT, "TA").guard(20, 10).warm(0.25f, 0.15f, 0).lasts(12);
         // jackets, coats and anything worn over the shirt
         c("sweater", JACKET, "TA").guard(10, 0).warm(0.55f, 0.45f, 0);
         c("hoodie", JACKET, "TAH").guard(10, 0).warm(0.6f, 0.25f, 0.1f);
@@ -135,12 +154,21 @@ public final class Clothes {
         c("fur_coat", JACKET, "TAl").guard(20, 10).warm(0.95f, 0.5f, 0.6f).slow(0.02f, 0);
         c("bespoke_suit", JACKET, "TAL").guard(20, 0).warm(0.55f, 0.45f, 0);
         c("poncho", JACKET, "TAH").guard(10, 0).warm(0.15f, 0.8f, 1f).of(RUBBER);
+        c("wool_commando_sweater", JACKET, "TA").guard(15, 5).warm(0.75f, 0.5f, 0.1f);
+        c("fleece_liner", JACKET, "TA").guard(10, 0).warm(0.8f, 0.4f, 0);
+        c("wet_weather_jacket", JACKET, "TAN").guard(20, 10).warm(0.3f, 1f, 1f).lasts(12);
+        c("flight_coverall", JACKET, "TAL").guard(30, 15).warm(0.45f, 0.4f, 0.2f).lasts(12);
+        c("sniper_smock", JACKET, "TAl").guard(40, 20).warm(0.5f, 0.45f, 0.4f).feel(0.1f).lasts(12);
+        c("arctic_parka", JACKET, "TAlH").guard(30, 15).warm(1f, 1f, 0.7f).feel(0.15f).slow(0.03f, 0.04f).lasts(12);
+        c("cbrn_suit", JACKET, "TAL").guard(50, 30).warm(0.6f, 1f, 1f).feel(0.35f).slow(0.06f, 0.05f).lasts(10);
+        c("beekeeper_suit", JACKET, "TAL").guard(20, 5).warm(0.35f, 0.4f, 0.2f).slow(0.03f, 0);
         // vests: over the jacket, and armour
         c("hi_vis_vest", VEST, "T").guard(10, 0).warm(0.1f, 0.05f, 0);
         c("flak_vest", VEST, "T").guard(55, 30).bullet(80).warm(0.6f, 0.25f, 0).feel(0.25f).slow(0.03f, 0.03f).armour(4).lasts(20);
         c("police_vest", VEST, "T").guard(55, 30).bullet(100).warm(0.6f, 0.25f, 0).feel(0.25f).slow(0.03f, 0.03f).armour(5).lasts(20);
         c("plate_carrier", VEST, "T").guard(90, 80).bullet(100).warm(0.4f, 0.2f, 0).feel(0.4f).slow(0.08f, 0.05f).of(HARD).armour(7);
         c("survival_vest", VEST, "T").guard(20, 0).warm(0.3f, 0.2f, 0);
+        c("catchers_vest", VEST, "Tg").guard(40, 25).warm(0.2f, 0.1f, 0).feel(0.1f).armour(1);
         // rigs carry gear (carry/BagSpec) as well as being worn
         c("chest_rig", VEST, "T").guard(10, 5).warm(0.15f, 0.1f, 0).lasts(14);
         c("load_bearing_vest", VEST, "T").guard(20, 10).warm(0.2f, 0.1f, 0).lasts(14);
@@ -153,6 +181,12 @@ public final class Clothes {
         c("winter_gloves", HANDS, "P").guard(5, 0).warm(1f, 1f, 0).slow(0, 0.03f);
         c("rubber_gloves", HANDS, "P").guard(5, 0).warm(0.25f, 0.3f, 1f).of(RUBBER);
         c("tactical_gloves", HANDS, "P").guard(80, 70).bullet(10).warm(0.25f, 0.3f, 0);
+        c("flight_gloves", HANDS, "Pf").guard(30, 15).warm(0.3f, 0.3f, 0).of(LEATHER);
+        c("shooting_gloves", HANDS, "P").guard(20, 10).warm(0.75f, 0.75f, 0.2f);
+        c("arctic_mittens", HANDS, "Pf").guard(30, 15).warm(1f, 1f, 0.7f).slow(0, 0.08f).of(LEATHER);
+        c("cut_resistant_gloves", HANDS, "P").guard(60, 20).warm(0.2f, 0.1f, 0);
+        c("hockey_gloves", HANDS, "Pf").guard(40, 25).warm(0.5f, 0.4f, 0).slow(0, 0.05f);
+        c("chainmail_butcher_glove", HANDS, "P").guard(90, 60).of(HARD);
         c("fire_gloves", HANDS, "Pf").guard(70, 50).warm(0.75f, 0.75f, 0.6f).slow(0, 0.05f).of(LEATHER);
         // belts: what they open is in QuickSlots
         c("leather_belt", BELT, "").of(NONE);
@@ -170,6 +204,9 @@ public final class Clothes {
         c("scrubs_pants", LEGS, "L").warm(0.1f, 0.05f, 0);
         c("camo_pants", LEGS, "L").guard(20, 10).warm(0.3f, 0.1f, 0.2f);
         c("combat_trousers", LEGS, "L").guard(30, 15).warm(0.45f, 0.3f, 0.3f).lasts(12);
+        c("snow_overwhites", LEGS, "L").guard(10, 0).warm(0.35f, 0.7f, 0.6f);
+        c("padded_football_pants", LEGS, "lk").guard(20, 10).warm(0.3f, 0.1f, 0);
+        c("hockey_pants", LEGS, "l").guard(30, 15).warm(0.35f, 0.2f, 0.1f).feel(0.05f);
         c("fire_pants", LEGS, "L").guard(30, 20).warm(0.85f, 0.85f, 0.8f).feel(0.15f).slow(0.04f, 0).armour(1).lasts(16);
         c("leather_chaps", LEGS, "L").guard(40, 20).warm(0.65f, 0.6f, 0).of(LEATHER);
         c("g_suit", LEGS, "L").guard(20, 10).warm(0.3f, 0.3f, 0.2f).feel(0.1f);
@@ -183,6 +220,9 @@ public final class Clothes {
         c("rubber_boots", FEET, "B").guard(100, 100).warm(0.5f, 1f, 1f).of(RUBBER).slow(0.03f, 0);
         c("combat_boots", FEET, "B").guard(100, 100).warm(1f, 1f, 0.8f).of(LEATHER).armour(1).lasts(20);
         c("tactical_boots", FEET, "B").guard(100, 100).warm(0.7f, 0.7f, 0.5f).of(LEATHER).armour(1).lasts(18);
+        c("jungle_boots", FEET, "B").guard(100, 100).warm(0.5f, 0.5f, 0.3f).of(LEATHER).lasts(16);
+        c("desert_boots", FEET, "B").guard(100, 100).warm(0.6f, 0.6f, 0.3f).of(LEATHER).lasts(16);
+        c("arctic_boots", FEET, "B").guard(60, 40).warm(1f, 1f, 0.8f).of(LEATHER).slow(0.03f, 0);
         c("slippers", FEET, "O").warm(0.3f, 0.1f, 0).slow(0.05f, 0);
 
         for (G row : ROWS) BY_ID.put(row.id, row.build());

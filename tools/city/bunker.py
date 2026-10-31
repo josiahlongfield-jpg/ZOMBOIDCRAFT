@@ -386,6 +386,49 @@ def keyswitch(seed):
     return F.wear(t, 0.3, 8)
 
 
+def keypad(seed):
+    """A blast door's code pad: a grey steel box on the wall, the green readout, twelve worn
+    rubber keys in four rows, a red lamp and a green one over them, a hood of grime round its edge."""
+    t = F.steel(seed, (128, 130, 128))
+    F.edges(t, 2, 2, 62, 62, 2)
+    F.area(t, 10, 6, 54, 16, (24, 34, 22))  # the readout's window
+    F.area(t, 12, 8, 52, 14, (60, 96, 52))
+    t.emit[8:14, 12:52] = 0.25
+    for i, x in enumerate((44, 50)):
+        F.disc(t, x, 21, 2, ((150, 30, 26), (40, 120, 40))[i], smooth=0.9, f0=60)
+    for r in range(4):
+        for c in range(3):
+            x0, y0 = 13 + c * 14, 26 + r * 9
+            F.area(t, x0, y0, x0 + 11, y0 + 7, (36, 36, 34))
+            F.area(t, x0 + 1, y0 + 1, x0 + 10, y0 + 6, (62, 62, 58))
+            # the digits most pressed are worn shiny: 4, 1, 7, 0, 2 (the radio's code)
+            if (r, c) in ((1, 0), (0, 0), (2, 0), (3, 1), (0, 1)):
+                F.area(t, x0 + 2, y0 + 2, x0 + 9, y0 + 5, mul=1.3)
+    F.area(t, 0, 60, N, N, mul=0.6)
+    rust_runs(t, 3, 0.3)
+    return F.wear(t, 0.35, 6)
+
+
+def warning_plate(seed):
+    """The plate on the wire and by every door the army didn't want you through: white enamel,
+    WARNING in white on a red band across the top, the words under it in black; rust at the bolts."""
+    t = F.plain(seed, (226, 224, 214), 0.04, 0.6)
+    t.f0[:] = 40
+    F.area(t, 0, 0, N, 18, (168, 34, 30))
+    m = F.text_mask("WARNING", SANS, 11, N, 18, seed=seed)
+    F.paste(t, m, 0, 0, (240, 236, 226))
+    m = F.text_mask("RESTRICTED|AREA", SANS, 9, N, 22, seed=seed + 1)
+    F.paste(t, m, 0, 20, (30, 28, 26))
+    m = F.text_mask("AUTHORIZED|PERSONNEL ONLY", SANS, 6, N, 18, seed=seed + 2)
+    F.paste(t, m, 0, 43, (30, 28, 26))
+    F.edges(t, 1, 1, 63, 63, 1)
+    for x, y in ((4, 4), (59, 4), (4, 59), (59, 59)):
+        F.knob(t, x, y, (150, 146, 136))
+    rust_runs(t, 5, 0.5)
+    chips(t, 0.05, (90, 70, 50))
+    return F.wear(t, 0.3, 4)
+
+
 # ---------------------------------------------------------------- lights and services
 
 def cage_wire(seed):
@@ -2118,6 +2161,9 @@ def textures():
     for i in range(1, 4):
         T[f"bunk_st_b{i}"] = (lambda k: lambda: stencil_sign(6225 + k, f"B{k}", AMBER, 30))(i)
     T["bunk_st_clearance"] = lambda: stencil_sign(6229, "CLEARANCE|6'8\"", WHITE_PAINT, 14)
+    T["bunk_st_restricted"] = lambda: stencil_sign(6230, "NO|ENTRY", STENCIL_RED, 18)
+    T["bunk_keypad"] = lambda: keypad(6231)
+    T["bunk_sign_warning"] = lambda: warning_plate(6232)
     worn = {
         "bunk_paint_b": lambda: worn_paint(6300, "b"), "bunk_paint_leak": lambda: worn_paint(6301, "leak"),
         "bunk_paint_grime": lambda: worn_paint(6302, "grime"), "bunk_paint_stain": lambda: worn_paint(6303, "stain"),
@@ -2226,6 +2272,11 @@ def blocks():
         add(f"bunk_shelter_{k}", [[0, 1, 15.5, 16, 15, 16, f"bunk_shelter_{k}"]], "Fallout Shelter Sign", "METAL",
             decor=True)
     add("bunk_keyswitch", [[5, 4, 15.5, 11, 12, 16, "bunk_keyswitch"]], "Key Switch", "METAL", decor=True)
+    add("bunk_st_restricted", [[0, 0, 15.75, 16, 16, 16, "bunk_st_restricted"]], "Stencil", "STONE", decor=True)
+    # the coded door's pad (world/Keypads): the interact key opens its number pad
+    add("bunk_keypad", [[4, 2, 14.5, 12, 14, 16, {"north": "bunk_keypad", "side": "bunk_grey", "up": "bunk_grey",
+                                                   "down": "bunk_grey"}]], "Keypad", "METAL")
+    add("bunk_sign_warning", [[1, 1, 15.5, 15, 15, 16, "bunk_sign_warning"]], "Warning Sign", "METAL", decor=True)
 
     # lights: dead until the generator runs
     for lit in (False, True):
@@ -2617,20 +2668,10 @@ def main():
     made = blocks()
     # the kit keeps its place in the list (block ids are registered in this order); new pieces go
     # after the last of the old ones
-    kept = {}
-    for k, v in data["blocks"].items():
-        if not k.startswith(PREFIXES):
-            kept[k] = v
-        elif k in made:
-            kept[k] = made[k]
-            if k == next(n for n in reversed(data["blocks"]) if n.startswith(PREFIXES)):
-                kept.update({n: m for n, m in made.items() if n not in data["blocks"]})
-    kept.update({n: m for n, m in made.items() if n not in kept})
-    data["blocks"] = kept
-    lines = ",\n".join(f"    {json.dumps(k)}: {json.dumps(v)}" for k, v in kept.items())
-    rest = {k: v for k, v in data.items() if k != "blocks"}
-    head = "".join(f'  {json.dumps(k)}: {json.dumps(v)},\n' for k, v in rest.items())
-    path.write_text("{\n" + head + '  "blocks": {\n' + lines + "\n  }\n}\n")
+    # in place: blocks.json is append-only, its order is the registry's
+    data["blocks"] = {k: made.get(k, v) for k, v in data["blocks"].items() if not k.startswith(PREFIXES) or k in made}
+    data["blocks"].update({k: v for k, v in made.items() if k not in data["blocks"]})
+    path.write_text(json.dumps(data, indent=1) + "\n")
     print(f"{len(made)} bunker blocks in {path}")
 
 

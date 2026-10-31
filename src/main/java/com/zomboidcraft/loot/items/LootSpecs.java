@@ -341,6 +341,7 @@ public final class LootSpecs {
         new LootSpec("cinder_block", "materials", Rarity.COMMON, 1, 16.0, 1, true, null),
         new LootSpec("propane_cylinder", "materials", Rarity.SCARCE, 10, 15.0, 1, true, null),
         new LootSpec("gas_can", "materials", Rarity.SCARCE, 6, 1.2, 4, true, null),
+        new LootSpec("rubber_hose", "materials", Rarity.COMMON, 2, 0.6, 8, true, null),
         new LootSpec("aa_battery", "electronics", Rarity.COMMON, 2, 0.05, 16, false, null),
         new LootSpec("d_battery", "electronics", Rarity.COMMON, 3, 0.3, 8, true, null),
         new LootSpec("nine_volt", "electronics", Rarity.COMMON, 2, 0.05, 16, true, null),

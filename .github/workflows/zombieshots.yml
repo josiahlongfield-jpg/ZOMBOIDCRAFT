@@ -1,6 +1,6 @@
 name: Zombie shots
 
-# Frames of the zombie behaviour previews in a real client (ZombieLoreTest), pushed to the shots/w8d2gc branch
+# Frames of the zombie behaviour previews in a real client (ZombieLoreTest, ZombieHerdTest: set the test in the "Only the zombie test" step), pushed to the shots/w8d2gc branch
 # for the zombie behaviour thread to stitch into clips.
 on:
   workflow_dispatch:
@@ -24,7 +24,7 @@ jobs:
       # only this test
       - name: Only the zombie test
         run: |
-          sed -i 's/"fabric-client-gametest": \[[^]]*\]/"fabric-client-gametest": ["com.zomboidcraft.client.zombie.ZombieLoreTest"]/' src/gametest/resources/fabric.mod.json
+          sed -i 's/"fabric-client-gametest": \[[^]]*\]/"fabric-client-gametest": ["com.zomboidcraft.client.zombie.ZombieHerdTest"]/' src/gametest/resources/fabric.mod.json
       - name: Shrink block textures for the software renderer
         run: |
           pip install -q pillow
@@ -44,13 +44,13 @@ jobs:
           PY
       - name: Run client test
         run: |
-          xvfb-run -a -s "-screen 0 1920x1080x24" ./gradlew runClientGameTest -Puitest 2>&1 | tee test.log | grep -E "ZCLORE|error:|ERROR|Exception|FAIL|BUILD|Caused" | head -150 || true
+          xvfb-run -a -s "-screen 0 1920x1080x24" ./gradlew runClientGameTest -Puitest 2>&1 | tee test.log | grep -E "ZCLORE|ZCHERD|error:|ERROR|Exception|FAIL|BUILD|Caused" | head -150 || true
       - name: Push the screenshots
         if: always()
         run: |
           mkdir -p /tmp/shots
           find . -path '*screenshots*' -name '*.png' -exec cp {} /tmp/shots/ \; || true
-          grep -E "ZCLORE|Exception|Caused" test.log | head -100 > /tmp/shots/log.txt || true
+          grep -E "ZCLORE|ZCHERD|Exception|Caused" test.log | head -100 > /tmp/shots/log.txt || true
           cd /tmp/shots
           git init -q && git checkout -q -b shots/w8d2gc
           git add -A && git -c user.name=ci -c user.email=ci@localhost commit -qm "zombie shots ${GITHUB_SHA::7}"
