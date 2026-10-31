@@ -346,7 +346,7 @@ public class GunLookTest implements FabricClientGameTest {
                 }
             }
         });
-        sp.getServer().runCommand("tp @a ~ ~ ~ 0 58");
+        sp.getServer().runCommand("execute as @a at @s run tp @s ~ ~ ~ 0 58");     // a bare ~ is the server's spot, not the player's
         ctx.waitTicks(30);
         ctx.takeScreenshot("reload-ground");
         sp.getServer().runCommand("tp @a ~ ~ ~ 0 10");
