@@ -159,7 +159,10 @@ public final class NpcLines {
         return (urgent || now - lastAny >= QUIET) && (prev == null || now - prev >= m.waitTicks());
     }
 
-    /** Speaks one of the moment's lines if it's ready and its chance comes up (checked already when checked is true). */
+    /**
+     * Speaks one of the moment's lines if it's ready and its chance comes up (checked already when checked is true); a
+     * given line (/zc npc say) skips the chance.
+     */
     boolean moment(NpcEntity npc, NpcMoments.Moment m, NpcMoments.Line pick, boolean checked) {
         if (!(npc.level() instanceof ServerLevel level)) {
             return false;
@@ -168,7 +171,7 @@ public final class NpcLines {
             return false;
         }
         long now = level.getGameTime();
-        if (m.chance < 100 && npc.getRandom().nextInt(100) >= m.chance) {
+        if (pick == null && m.chance < 100 && npc.getRandom().nextInt(100) >= m.chance) {
             // a miss still waits its turn, so a 10% moment isn't rolled every second
             lastMoment.put(m.name, now);
             return false;

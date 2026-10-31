@@ -252,6 +252,10 @@ public final class Npcs {
                                         .then(Commands.argument("value", FloatArgumentType.floatArg(0f, 100f))
                                                 .executes(ctx -> feel(ctx, StringArgumentType.getString(ctx, "need"),
                                                         FloatArgumentType.getFloat(ctx, "value"))))))
+                                .then(Commands.literal("lines").executes(Npcs::lines))
+                                .then(Commands.literal("say").then(Commands.argument("moment", StringArgumentType.word())
+                                        .suggests((ctx, b) -> SharedSuggestionProvider.suggest(moments(ctx), b))
+                                        .executes(ctx -> say(ctx, StringArgumentType.getString(ctx, "moment")))))
                                 .then(Commands.literal("name").then(Commands.argument("name", StringArgumentType.greedyString())
                                         .executes(ctx -> name(ctx, StringArgumentType.getString(ctx, "name")))))
                                 .then(Commands.argument("model", StringArgumentType.word())
@@ -418,6 +422,73 @@ public final class Npcs {
 
     private static List<String> names(Enum<?>[] values) {
         return java.util.Arrays.stream(values).map(v -> v.name().toLowerCase(java.util.Locale.ROOT)).toList();
+    }
+
+    /** /zc npc lines: reads her lines.txt again now and says what's in it and anything wrong with it. */
+    private static int lines(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        NpcEntity npc = target(ctx.getSource().getPlayerOrException());
+        if (npc == null) {
+            ctx.getSource().sendFailure(Component.literal("No companion near you"));
+            return 0;
+        }
+        java.nio.file.Path file = NpcMoments.folder(npc.model()).resolve("lines.txt");
+        NpcMoments.Script s = NpcMoments.of(npc.model());
+        if (s == null) {
+            ctx.getSource().sendFailure(Component.literal("No " + file + " (she uses the built-in lines)"));
+            return 0;
+        }
+        StringBuilder b = new StringBuilder(npc.speakerName() + "'s lines.txt: " + s.moments.size() + " moments");
+        int voiced = 0, lines = 0;
+        for (NpcMoments.Moment m : s.moments) {
+            int have = 0;
+            for (NpcMoments.Line l : m.lines) {
+                if (java.nio.file.Files.exists(NpcMoments.folder(npc.model()).resolve("voice").resolve(l.clip() + ".ogg"))) {
+                    have++;
+                }
+            }
+            voiced += have;
+            lines += m.lines.size();
+            b.append("\n [").append(m.name.toUpperCase(java.util.Locale.ROOT)).append("] ").append(m.lines.size())
+                    .append(" lines, ").append(have).append(" voiced");
+        }
+        b.append("\n").append(voiced).append(" of ").append(lines).append(" lines have a clip.");
+        for (String problem : s.problems) {
+            b.append("\n PROBLEM: ").append(problem);
+        }
+        ctx.getSource().sendSuccess(() -> Component.literal(b.toString()), false);
+        return 1;
+    }
+
+    /** /zc npc say MOMENT: the nearest companion says one of that moment's lines now, whatever its when: and wait. */
+    private static int say(CommandContext<CommandSourceStack> ctx, String name) throws CommandSyntaxException {
+        NpcEntity npc = target(ctx.getSource().getPlayerOrException());
+        if (npc == null) {
+            ctx.getSource().sendFailure(Component.literal("No companion near you"));
+            return 0;
+        }
+        NpcMoments.Script s = NpcMoments.of(npc.model());
+        NpcMoments.Moment m = s == null ? null : s.named(name.toLowerCase(java.util.Locale.ROOT));
+        if (m == null || m.lines.isEmpty()) {
+            ctx.getSource().sendFailure(Component.literal(s == null ? "She has no lines.txt" : "No lines under [" + name.toUpperCase(java.util.Locale.ROOT) + "]"));
+            return 0;
+        }
+        NpcMoments.Line line = m.lines.get(npc.getRandom().nextInt(m.lines.size()));
+        npc.lines.lastAny = -1_000_000;
+        npc.lines.lastMoment.remove(m.name);
+        npc.lines.moment(npc, m, line, true);
+        return 1;
+    }
+
+    private static List<String> moments(CommandContext<CommandSourceStack> ctx) {
+        NpcEntity npc = ctx.getSource().getPlayer() == null ? null : target(ctx.getSource().getPlayer());
+        NpcMoments.Script s = npc == null ? null : NpcMoments.of(npc.model());
+        List<String> out = new java.util.ArrayList<>();
+        if (s != null) {
+            for (NpcMoments.Moment m : s.moments) {
+                out.add(m.name);
+            }
+        }
+        return out;
     }
 
     private static int mind(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {

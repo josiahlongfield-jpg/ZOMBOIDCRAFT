@@ -99,7 +99,7 @@ public final class NpcMoments {
         public final Map<String, String> settings = new HashMap<>();
         public final List<String> problems = new ArrayList<>();
 
-        Moment named(String name) {
+        public Moment named(String name) {
             for (Moment m : moments) {
                 if (m.name.equalsIgnoreCase(name)) {
                     return m;
