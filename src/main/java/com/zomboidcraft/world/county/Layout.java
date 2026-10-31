@@ -337,6 +337,12 @@ final class Layout {
             // I-88 Truck & Diesel: a roadside lot by I-88 where Route 4 crosses it, the nearest road off the interstate west of the interchange
             return near(PlaceType.ROADSIDE, "truck_depot", s.x(), s.z(), h);
         }
+        if (s.id().startsWith("sub-")) {
+            // a power district's substation (PowerGrid, Substation): a city block inside the wall, a roadside
+            // yard out in the county as near its pin as the land and the neighbours allow
+            return plan.inCore(s.x(), s.z()) ? lot(s, PlaceType.LANDMARK, "substation", 1, 1, h)
+                    : near(PlaceType.ROADSIDE, "substation", s.x(), s.z(), h);
+        }
         if (s.id().equals("foundry")) {
             // Foundry Row: the Calder Steel works, six blocks along the street by five deep, the Row along its south side
             return lot(s, PlaceType.LANDMARK, "foundry", 6, 5, h);
@@ -409,6 +415,7 @@ final class Layout {
             case "ROADSIDE:warehouse" -> new int[] {104, 136};
             case "ROADSIDE:trailer_lot" -> new int[] {90, 116};
             case "ROADSIDE:truck_depot" -> new int[] {140, 116};
+            case "ROADSIDE:substation" -> new int[] {100, 100};
             default -> new int[] {200, 200};
         };
     }
