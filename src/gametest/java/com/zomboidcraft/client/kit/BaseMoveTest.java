@@ -150,7 +150,14 @@ public class BaseMoveTest implements FabricClientGameTest {
         frame(ctx, "frames-up");
         for (int x : new int[] {0, 2, 3}) build(ctx, sp, Build.WOOD_WALL, yard.offset(x, 0, 4), Direction.NORTH, Direction.SOUTH);
         frame(ctx, "boarded");
+        // a second course on top: walls stand on walls and window frames
+        for (int x : new int[] {0, 2, 3, 4, 5}) build(ctx, sp, Build.WALL_FRAME, yard.offset(x, 0, 4), Direction.UP, Direction.SOUTH);
+        for (int x : new int[] {0, 2, 3, 4}) build(ctx, sp, Build.WOOD_WALL, yard.offset(x, 1, 4), Direction.NORTH, Direction.SOUTH);
+        standYard(ctx, sp, 3, -2.5, 0f, 8f);
+        frame(ctx, "two-high");
+        standYard(ctx, sp, 4, 0.5, 0f, 25f);
         build(ctx, sp, Build.WOOD_DOOR, yard.offset(1, 0, 4), Direction.NORTH, Direction.SOUTH);
+        standYard(ctx, sp, 2, -1.5, 0f, 8f);
         frame(ctx, "door-hung");
         sp.getServer().runOnServer(s -> {
             BlockPos d = yard.offset(1, 0, 4);
@@ -160,7 +167,7 @@ public class BaseMoveTest implements FabricClientGameTest {
             }
         });
         frame(ctx, "door-open");
-        standYard(ctx, sp, 2.5, 7.5, 180f, 15f);
+        standYard(ctx, sp, 2.5, 8.5, 180f, 8f);
         frame(ctx, "wall-inside");
         // walls take a beating: the boards split, then come off
         sp.getServer().runOnServer(s -> {
@@ -168,14 +175,15 @@ public class BaseMoveTest implements FabricClientGameTest {
             level.setBlockAndUpdate(yard.offset(2, 0, 4), level.getBlockState(yard.offset(2, 0, 4)).setValue(WoodBlocks.Wall.DAMAGE, 3));
             level.setBlockAndUpdate(yard.offset(3, 0, 4), level.getBlockState(yard.offset(3, 0, 4)).setValue(WoodBlocks.Wall.DAMAGE, 6));
         });
-        standYard(ctx, sp, 2.5, 1.0, 0f, 15f);
+        standYard(ctx, sp, 2.5, -1.5, 0f, 8f);
         frame(ctx, "walls-damaged");
         // posts and a floor out over open ground at z = -3
-        standYard(ctx, sp, 11, -6.5, -30f, 20f);
+        standYard(ctx, sp, 11, -6.5, 15f, -5f);
         build(ctx, sp, Build.POST, yard.offset(8, -1, -3), Direction.UP, Direction.SOUTH);
         build(ctx, sp, Build.POST, yard.offset(8, 0, -3), Direction.UP, Direction.SOUTH);
         build(ctx, sp, Build.FLOOR, yard.offset(8, 1, -3), Direction.UP, Direction.SOUTH);
         for (int x = 9; x <= 12; x++) build(ctx, sp, Build.FLOOR, yard.offset(x - 1, 2, -3), Direction.EAST, Direction.SOUTH);
+        standYard(ctx, sp, 10, -9.5, 0f, -6f);
         frame(ctx, "floor-out");
         String states = sp.getServer().computeOnServer(s -> {
             StringBuilder b = new StringBuilder();
