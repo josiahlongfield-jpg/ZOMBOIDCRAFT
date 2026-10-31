@@ -1086,6 +1086,7 @@ public class KitUiTest implements FabricClientGameTest {
                     List.of("dextrous", "nutritionist", "cats_eyes", "short_sighted", "smoker", "fast_learner"));
             p.getInventory().setItem(9, new ItemStack(Items.BREAD, 4));
             p.getInventory().setItem(10, new ItemStack(ModItems.HUNTING_RIFLE));
+            p.getInventory().setItem(11, new ItemStack(Items.IRON_BLOCK, 8));
         });
         ctx.waitTicks(10);
         String tips = ctx.computeOnClient(mc -> {
@@ -1110,12 +1111,12 @@ public class KitUiTest implements FabricClientGameTest {
                 // two shift-clicks: Zomboid's transfer queue, the rifle first
                 for (int i = 0; i < k.getMenu().slots.size(); i++) {
                     var slot = k.getMenu().slots.get(i);
-                    if (slot.container == mc.player.getInventory() && (slot.getContainerSlot() == 10 || slot.getContainerSlot() == 9)) k.unequip(i);
+                    if (slot.container == mc.player.getInventory() && slot.getContainerSlot() >= 9 && slot.getContainerSlot() <= 11) k.unequip(i);
                 }
             }
         });
-        for (int f = 0; f < 8; f++) {
-            ctx.waitTicks(5);
+        for (int f = 0; f < 24; f++) {
+            ctx.waitTicks(1);
             ctx.takeScreenshot(String.format("transfer-%02d", f));
         }
         ctx.runOnClient(mc -> mc.player.closeContainer());
