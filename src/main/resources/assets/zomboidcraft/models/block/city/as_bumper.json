@@ -1,0 +1,50 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "as_chrome": "zomboidcraft:block/city/as_chrome",
+    "particle": "zomboidcraft:block/city/as_chrome"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        13
+      ],
+      "to": [
+        16,
+        4,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_chrome"
+        },
+        "south": {
+          "texture": "#as_chrome"
+        },
+        "east": {
+          "texture": "#as_chrome"
+        },
+        "west": {
+          "texture": "#as_chrome"
+        },
+        "up": {
+          "texture": "#as_chrome"
+        },
+        "down": {
+          "texture": "#as_chrome"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          0,
+          15
+        ],
+        "axis": "x",
+        "angle": -22.5
+      }
+    }
+  ]
+}

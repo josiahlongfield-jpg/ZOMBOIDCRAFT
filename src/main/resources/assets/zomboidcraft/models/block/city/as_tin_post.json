@@ -1,0 +1,103 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "as_rust": "zomboidcraft:block/city/as_rust",
+    "as_tin": "zomboidcraft:block/city/as_tin",
+    "particle": "zomboidcraft:block/city/as_tin"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        7
+      ],
+      "to": [
+        16,
+        16,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_tin"
+        },
+        "south": {
+          "texture": "#as_tin"
+        },
+        "east": {
+          "texture": "#as_tin",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#as_tin",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#as_tin",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#as_tin",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        6.5,
+        0,
+        8.5
+      ],
+      "to": [
+        9.5,
+        18,
+        11.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_rust",
+          "uv": [
+            6.5,
+            0,
+            9.5,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#as_rust",
+          "uv": [
+            6.5,
+            0,
+            9.5,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#as_rust",
+          "uv": [
+            4.5,
+            0,
+            7.5,
+            16
+          ]
+        },
+        "west": {
+          "texture": "#as_rust",
+          "uv": [
+            8.5,
+            0,
+            11.5,
+            16
+          ]
+        },
+        "up": {
+          "texture": "#as_rust"
+        },
+        "down": {
+          "texture": "#as_rust",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

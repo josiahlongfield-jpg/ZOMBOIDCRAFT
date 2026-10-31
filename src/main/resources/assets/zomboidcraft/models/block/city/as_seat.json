@@ -1,0 +1,130 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "as_vinyl": "zomboidcraft:block/city/as_vinyl",
+    "particle": "zomboidcraft:block/city/as_vinyl"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        2
+      ],
+      "to": [
+        14,
+        4,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_vinyl"
+        },
+        "south": {
+          "texture": "#as_vinyl"
+        },
+        "east": {
+          "texture": "#as_vinyl"
+        },
+        "west": {
+          "texture": "#as_vinyl"
+        },
+        "up": {
+          "texture": "#as_vinyl"
+        },
+        "down": {
+          "texture": "#as_vinyl",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        4,
+        11
+      ],
+      "to": [
+        14,
+        15,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_vinyl"
+        },
+        "south": {
+          "texture": "#as_vinyl"
+        },
+        "east": {
+          "texture": "#as_vinyl"
+        },
+        "west": {
+          "texture": "#as_vinyl"
+        },
+        "up": {
+          "texture": "#as_vinyl"
+        },
+        "down": {
+          "texture": "#as_vinyl"
+        }
+      }
+    },
+    {
+      "from": [
+        5,
+        15,
+        11.5
+      ],
+      "to": [
+        11,
+        18,
+        13.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_vinyl",
+          "uv": [
+            5,
+            0,
+            11,
+            3
+          ]
+        },
+        "south": {
+          "texture": "#as_vinyl",
+          "uv": [
+            5,
+            0,
+            11,
+            3
+          ]
+        },
+        "east": {
+          "texture": "#as_vinyl",
+          "uv": [
+            2.5,
+            0,
+            4.5,
+            3
+          ]
+        },
+        "west": {
+          "texture": "#as_vinyl",
+          "uv": [
+            11.5,
+            0,
+            13.5,
+            3
+          ]
+        },
+        "up": {
+          "texture": "#as_vinyl"
+        },
+        "down": {
+          "texture": "#as_vinyl"
+        }
+      }
+    }
+  ]
+}

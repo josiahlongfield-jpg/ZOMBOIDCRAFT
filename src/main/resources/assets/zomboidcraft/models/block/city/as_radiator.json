@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "as_black": "zomboidcraft:block/city/as_black",
+    "as_pipes": "zomboidcraft:block/city/as_pipes",
+    "particle": "zomboidcraft:block/city/as_pipes"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        11
+      ],
+      "to": [
+        14,
+        14,
+        13
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_pipes"
+        },
+        "south": {
+          "texture": "#as_black"
+        },
+        "east": {
+          "texture": "#as_black"
+        },
+        "west": {
+          "texture": "#as_black"
+        },
+        "up": {
+          "texture": "#as_black"
+        },
+        "down": {
+          "texture": "#as_black",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

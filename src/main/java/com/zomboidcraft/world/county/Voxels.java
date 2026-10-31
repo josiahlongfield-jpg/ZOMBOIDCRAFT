@@ -84,7 +84,8 @@ public final class Voxels implements BlockSink {
      */
     private void add(Car car) {
         CarSpacing.Bodies bodies = CarSpacing.bodies;
-        if (bodies == null) {
+        if (bodies == null || car.models() != null && car.models().startsWith("!")) {
+            // a lift ("!hoist:notch;models") goes through as it is: the chunk writer picks its car
             cars.add(car);
             return;
         }

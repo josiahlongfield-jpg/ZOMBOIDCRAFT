@@ -1173,6 +1173,8 @@ import roomlights  # noqa: E402
 roomlights.register(sys.modules[__name__])
 import highway  # noqa: E402
 highway.register(sys.modules[__name__])
+import autoshop  # noqa: E402
+autoshop.register(sys.modules[__name__])
 import airfield  # noqa: E402
 airfield.register(sys.modules[__name__])
 import airport  # noqa: E402

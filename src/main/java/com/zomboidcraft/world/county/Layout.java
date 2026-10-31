@@ -329,6 +329,14 @@ final class Layout {
             return lot(new Plan.Spot(s.id(), s.kind(), PlaceType.LANDMARK, "power", 3800, s.z(), s.flags(), s.name()),
                     PlaceType.LANDMARK, "power", 3, 2, h);
         }
+        if (s.id().equals("scrapyard")) {
+            // Calder Salvage: two blocks square across the street from Foundry Row
+            return lot(s, PlaceType.LANDMARK, "scrapyard", 2, 2, h);
+        }
+        if (s.id().equals("truckdepot")) {
+            // I-88 Truck & Diesel: a roadside lot by I-88 where Route 4 crosses it, the nearest road off the interstate west of the interchange
+            return near(PlaceType.ROADSIDE, "truck_depot", s.x(), s.z(), h);
+        }
         if (s.id().equals("foundry")) {
             // Foundry Row: the Calder Steel works, six blocks along the street by five deep, the Row along its south side
             return lot(s, PlaceType.LANDMARK, "foundry", 6, 5, h);
@@ -395,6 +403,7 @@ final class Layout {
             case "ROADSIDE:school" -> new int[] {150, 190};
             case "ROADSIDE:warehouse" -> new int[] {104, 136};
             case "ROADSIDE:trailer_lot" -> new int[] {90, 116};
+            case "ROADSIDE:truck_depot" -> new int[] {140, 116};
             default -> new int[] {200, 200};
         };
     }

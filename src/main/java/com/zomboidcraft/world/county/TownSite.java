@@ -119,6 +119,29 @@ final class TownSite extends Site {
         return lot;
     }
 
+    /**
+     * The town's auto shop ({@link AutoShop}, Josiah 2026-10-31: one in every town, sized to it): a
+     * lot of the kind's size on lane l at the first of the spots along it that fits, either side.
+     */
+    private boolean autoShop(Kit.Lane l, AutoShop.Kind kind, String sign, double... at) {
+        int[] sz = AutoShop.lot(kind);
+        int first = rng.nextBoolean() ? 1 : -1;
+        for (double s : at) {
+            if (s < sz[0] / 2.0 + 4 || s > l.length() - sz[0] / 2.0 - 4) {
+                continue;
+            }
+            for (int side : new int[] {first, -first}) {
+                Kit.Lot lot = civicLot(l, s, side, sz[0], sz[1]);
+                if (lot != null) {
+                    new AutoShop(lot.placer(out), rng, 0.2 + rng.nextDouble() * 0.6).build(kind, lot.w(), lot.d(), sign);
+                    kit.treeless.add(new int[] {lot.x0() - 4, lot.z0() - 4, lot.x0() + lot.sizeX() + 3, lot.z0() + lot.sizeZ() + 3});
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     /** Lawn and weeds over whatever part of a lot nothing was built on. */
     private void yard(Kit.Lot lot, double wild) {
         Kit.lawn(lot.placer(out), rng, 0, 0, lot.w() - 1, lot.d() - 1, wild);
@@ -530,6 +553,11 @@ final class TownSite extends Site {
 
     // ------------------------------------------------------------------ the hamlet
 
+    /** Which way the elevator went along the west-east lane from the crossroads (quadrant 0/2 west). */
+    private static int east0(int quadrant) {
+        return (quadrant & 1) == 0 ? -1 : 1;
+    }
+
     private void hamlet() {
         double[] W = kit.beyond(3), E = kit.beyond(1), N = kit.beyond(0), S = kit.beyond(2);
         double cx = N[0], cz = W[1];
@@ -583,6 +611,12 @@ final class TownSite extends Site {
         Kit.Lot fire = civicLot(ns, sNs + (qPost < 2 ? -36 : 36), (qPost & 1) == 0 ? 1 : -1, 14, 22);
         if (fire != null) {
             fireShed(fire);
+        }
+        // the village garage: one bay, the owner's name over the door, out on the lane from the fire house
+        String owner = new String[] {"holloway", "pruitt", "dean"}[rng.nextInt(3)];
+        double away = qPost < 2 ? 1 : -1;
+        if (!autoShop(ns, AutoShop.Kind.VILLAGE, owner, sNs + away * 40, sNs + away * 58, sNs - away * 50)) {
+            autoShop(we, AutoShop.Kind.VILLAGE, owner, sWe - east0(qElevator) * 50, sWe - east0(qElevator) * 70);
         }
         // the grain elevator out along the lane, the feed store past it
         int east = (qElevator & 1) == 0 ? -1 : 1, south = qElevator >= 2 ? 1 : -1;
@@ -704,6 +738,9 @@ final class TownSite extends Site {
         shops(main, 2, sCross - clear, 0, depth, 3, wanted);
         shops(main, sCross + clear, main.length() - 4, 0, depth, 2, wanted);
         core.add(new int[] {(int) xa - 14, (int) gz - back + 1, (int) mainEnd + 4, (int) gz + back - 1});
+        // the repair shop up the cross street past the alley, where the street opens out
+        autoShop(cross, AutoShop.Kind.REPAIR, "seabright", along(cross, gx, gz - back - 24), along(cross, gx, gz + back + 24),
+                along(cross, gx, 24), along(cross, gx, d - 24));
 
         // past main street on the cross street's east side: the fire station and the sheriff to the
         // north, the elementary school and its buses to the south
@@ -984,6 +1021,11 @@ final class TownSite extends Site {
             new Civic(fire.placer(out), rng).fireStation(19, 26);
             kit.treeless.add(new int[] {fire.x0() - 7, fire.z0() - 7, fire.x0() + fire.sizeX() + 6, fire.z0() + fire.sizeZ() + 6});
         }
+        // the tyre and exhaust centre out on the road in from the south, where the lots are deep
+        String tyres = rng.nextBoolean() ? "roadking" : "kessler";
+        if (!autoShop(inS, AutoShop.Kind.TYRE, tyres, along(inS, cx, cz + outer + pastRing + 26), along(inS, cx, cz + outer + pastRing + 60))) {
+            autoShop(inE, AutoShop.Kind.TYRE, tyres, along(inE, cx + outer + pastRing + 50, cz), along(inE, cx + outer + pastRing + 80, cz));
+        }
         // St. Mary's, the stone church, a block out on the road in from the north where the lots run deep
         int stoneSide = rng.nextBoolean() ? 1 : -1;
         Kit.Lot stone = civicLot(inN, along(inN, cx, cz - outer - pastRing - 8), stoneSide, 23, 50);
@@ -1172,6 +1214,8 @@ final class TownSite extends Site {
             new PostOffice(post.placer(out), rng).build(16, depth - 2);
             postHost(post.placer(out), 16, depth - 2);
         }
+        // the repair shop on main street past the shops opposite the mill
+        autoShop(main, AutoShop.Kind.REPAIR, "millbrook", sCross + clear + 76, sCross - clear - millW - 30, sCross + clear + 110);
         shops(main, Math.max(4, sCross - 110), sCross - clear, 1, depth, 2, wanted);
         shops(main, sCross + clear, Math.min(main.length() - 4, sCross + 90), 1, depth, 2, wanted);
         shops(main, sCross + clear, Math.min(main.length() - 4, sCross + 50), -1, depth + 6, 2, wanted);

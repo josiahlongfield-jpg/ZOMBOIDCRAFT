@@ -1,0 +1,109 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "as_concrete": "zomboidcraft:block/city/as_concrete",
+    "as_pit_curb": "zomboidcraft:block/city/as_pit_curb",
+    "as_pit_wall": "zomboidcraft:block/city/as_pit_wall",
+    "as_yellow": "zomboidcraft:block/city/as_yellow",
+    "particle": "zomboidcraft:block/city/as_pit_wall"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_pit_wall",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#as_concrete",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#as_concrete",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#as_concrete",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#as_pit_curb",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#as_concrete",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        16,
+        0
+      ],
+      "to": [
+        16,
+        17,
+        2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#as_yellow",
+          "uv": [
+            0,
+            0,
+            16,
+            1
+          ],
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#as_yellow",
+          "uv": [
+            0,
+            0,
+            16,
+            1
+          ]
+        },
+        "east": {
+          "texture": "#as_yellow",
+          "uv": [
+            14,
+            0,
+            16,
+            1
+          ],
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#as_yellow",
+          "uv": [
+            0,
+            0,
+            2,
+            1
+          ],
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#as_yellow"
+        },
+        "down": {
+          "texture": "#as_yellow"
+        }
+      }
+    }
+  ]
+}
