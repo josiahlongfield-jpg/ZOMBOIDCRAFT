@@ -49,9 +49,10 @@ public class CarHoist extends Entity {
     public static final float[] NOTCHES = {0f, 0.5f, 1.25f, 1.85f};
     public static final String[] NOTCH_NAMES = {"the floor", "wheels free", "chest height", "full height"};
     /** The posts' middles, either side (local x), and their size. */
-    public static final float POST_X = 1.7f, POST_W = 0.3f, POST_D = 0.36f, POST_H = 3.6f;
+    public static final float POST_X = 1.7f, POST_W = 0.3f, POST_D = 0.36f, POST_H = 4.4f;
     /** The biggest car it takes: length and width, metres. */
-    public static final float MAX_LENGTH = 6.6f, MAX_WIDTH = 2.6f;
+    /** Vans, ambulances, step vans and the army's light trucks fit; buses and heavy trucks don't. */
+    public static final float MAX_LENGTH = 7.6f, MAX_WIDTH = 3.0f;
     /** Rise per tick on the motor and per stroke of the hand pump, metres; the valve lets it down this fast a tick. */
     private static final float MOTOR = 0.03f, STROKE = 0.06f, VALVE = 0.012f;
     /** The control box and the pump lever (local, on the first post's outside), where the interact key works them. */
@@ -164,6 +165,9 @@ public class CarHoist extends Entity {
                 click(level);
                 if (!armsIn) {
                     swingIn(player);
+                } else if (car != null && notch >= topNotch(car)) {
+                    say(player, notch < NOTCHES.length - 1 ? "It's too tall to go higher: its roof would hit the overhead beam."
+                            : "It's at full height.");
                 } else if (notch < NOTCHES.length - 1) {
                     entityData.set(TARGET, notch + 1);
                     say(player, "Up to " + NOTCH_NAMES[notch + 1] + ". Sneak at the box to take it down.");
@@ -189,7 +193,7 @@ public class CarHoist extends Entity {
                     say(player, "Swing the arms under a car first (the control box).");
                     return;
                 }
-                float h = Math.min(NOTCHES[NOTCHES.length - 1], height() + STROKE);
+                float h = Math.min(NOTCHES[topNotch(car)], height() + STROKE);
                 setHeight(h);
                 int at = 0;
                 for (int i = 0; i < NOTCHES.length; i++) {
@@ -277,6 +281,18 @@ public class CarHoist extends Entity {
         return false;
     }
 
+    /** The highest notch a car can go to with its roof clear of the overhead beam. */
+    public static int topNotch(CarProp car) {
+        CarModels.Model m = CarModels.get(car.model());
+        int top = 0;
+        for (int i = 0; i < NOTCHES.length; i++) {
+            if (m == null || NOTCHES[i] + m.size[1] <= POST_H - 0.05f) {
+                top = i;
+            }
+        }
+        return top;
+    }
+
     /** Whether a model goes up on a two-post lift: a road vehicle no longer or wider than the arms reach. */
     public static boolean fits(CarModels.Model m) {
         return m != null && CarParts.applies(m) && m.size[2] <= MAX_LENGTH && m.size[0] <= MAX_WIDTH;
@@ -299,7 +315,7 @@ public class CarHoist extends Entity {
      */
     public void raised(CarProp car, int notch) {
         hold(car, CarModels.get(car.model()));
-        notch = Mth.clamp(notch, 0, NOTCHES.length - 1);
+        notch = Mth.clamp(notch, 0, topNotch(car));
         entityData.set(ARMS, 1f);
         entityData.set(TARGET, notch);
         setHeight(NOTCHES[notch]);
@@ -402,7 +418,7 @@ public class CarHoist extends Entity {
     private void posts(ServerLevel server, boolean lay) {
         for (int side = -1; side <= 1; side += 2) {
             Vec3 foot = toWorld(new Vec3(side * POST_X, 0.05, 0));
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < Math.ceil(POST_H); i++) {
                 BlockPos pos = BlockPos.containing(foot.x, foot.y + i, foot.z);
                 if (lay && server.getBlockState(pos).canBeReplaced()) {
                     server.setBlock(pos, Cars.hull(624), 2);
