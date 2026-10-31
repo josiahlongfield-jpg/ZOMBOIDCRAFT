@@ -58,6 +58,7 @@ public final class Signal {
         int phase = phase(now);
         if (state.getValue(PHASE) != phase) {
             level.setBlock(pos, state.setValue(PHASE, phase), Block.UPDATE_CLIENTS);
+            com.zomboidcraft.zombie.Profiler.SIGNALS.increment();
         }
         level.scheduleTick(pos, block, untilNext(now));
     }

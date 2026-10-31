@@ -49,6 +49,8 @@ public class TrainRenderer extends EntityRenderer<TrainEntity, TrainRenderer.Sta
         boolean talking, eyesOff;
         float headYaw, jaw;
         long seed;
+        /** The camera is by or in the train: its insides cast shadows then (from outside they can't be seen). */
+        boolean close;
     }
 
     public TrainRenderer(EntityRendererProvider.Context context) {
@@ -77,6 +79,9 @@ public class TrainRenderer extends EntityRenderer<TrainEntity, TrainRenderer.Sta
         }
         state.kind = line.kind;
         state.cars = line.cars;
+        net.minecraft.world.entity.Entity eye = net.minecraft.client.Minecraft.getInstance().getCameraEntity();
+        double reach = line.cars * TrainCar.PITCH / 2 + 4;
+        state.close = eye == null || eye.distanceToSqr(train) < reach * reach;
         if (state.at.length != line.cars * 4) {
             state.at = new float[line.cars * 4];
             state.light = new int[line.cars];
@@ -171,8 +176,16 @@ public class TrainRenderer extends EntityRenderer<TrainEntity, TrainRenderer.Sta
             poseStack.pushPose();
             poseStack.translate(state.at[car * 4], state.at[car * 4 + 1], state.at[car * 4 + 2]);
             poseStack.rotateDegrees(Axis.YP, -state.at[car * 4 + 3]);
+            // the shadow map gets the shell only (the profile showed trains drawn whole a second time for it): no
+            // glass or glow, and no insides unless you're by or in the train
+            boolean shadow = com.zomboidcraft.client.zombie.body.ZDetail.shadowPass();
+            int solid = shadow && !state.close ? SHELL : SOLID;
             collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(ATLAS),
-                    (pose, out) -> draw(mesh, state, c, pose, out, light, inside, SOLID));
+                    (pose, out) -> draw(mesh, state, c, pose, out, light, inside, solid));
+            if (shadow) {
+                poseStack.popPose();
+                continue;
+            }
             collector.submitCustomGeometry(poseStack, RenderTypes.entityTranslucent(ATLAS),
                     (pose, out) -> draw(mesh, state, c, pose, out, light, inside, GLASS));
             // what glows, drawn so it glows: with a shader pack the way a beacon's beam is, which the packs light up
@@ -183,7 +196,8 @@ public class TrainRenderer extends EntityRenderer<TrainEntity, TrainRenderer.Sta
         }
     }
 
-    private static final int SOLID = 0, GLASS = 1, GLOWING = 2;
+    /** SHELL: the solid pass without the insides, for the shadow map. */
+    private static final int SOLID = 0, GLASS = 1, GLOWING = 2, SHELL = 3;
 
     /** Whether a quad is drawn in the glow pass. */
     private static boolean glowing(TrainMesh.Quad q, State state, int car) {
@@ -199,7 +213,8 @@ public class TrainRenderer extends EntityRenderer<TrainEntity, TrainRenderer.Sta
         float[] v = new float[3], n = new float[3];
         int insideBlock = (inside >> 4) & 0xF, insideSky = inside & 0xF00000;
         for (TrainMesh.Quad q : mesh.quads) {
-            if (pass == GLOWING ? !glowing(q, state, car) : q.glass != (pass == GLASS)) {
+            if (pass == SHELL ? q.glass || q.light != TrainMesh.OUTSIDE
+                    : pass == GLOWING ? !glowing(q, state, car) : q.glass != (pass == GLASS)) {
                 continue;
             }
             if (pass == SOLID && state.shaders && glowing(q, state, car)) {
