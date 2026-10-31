@@ -14,19 +14,18 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 
 /**
- * The Sandbox page's traffic. The server sends Sync (the world's preset and values) when you join and after every
- * change, and Open when /zc sandbox asks for the page. The page sends Set and Preset; only a host (an operator, like
- * every /zc command) can change the world.
+ * The Sandbox page's traffic. The server sends Sync (the world's values) when you join and after every change, and
+ * Open when /zc sandbox asks for the page. The page sends Set; only a host (an operator, like every /zc command) can
+ * change the world.
  */
 public final class SandboxNet {
     private static final StreamCodec<ByteBuf, Map<String, String>> VALUES =
             ByteBufCodecs.map(HashMap::new, ByteBufCodecs.STRING_UTF8, ByteBufCodecs.STRING_UTF8);
 
-    /** Server to client: the world's preset (or "custom") and every per-world value by setting id. */
-    public record Sync(String preset, Map<String, String> values) implements CustomPacketPayload {
+    /** Server to client: every per-world value by setting id. */
+    public record Sync(Map<String, String> values) implements CustomPacketPayload {
         public static final Type<Sync> TYPE = new Type<>(ZomboidCraft.id("sandbox_sync"));
-        public static final StreamCodec<ByteBuf, Sync> CODEC = StreamCodec.composite(
-                ByteBufCodecs.STRING_UTF8, Sync::preset, VALUES, Sync::values, Sync::new);
+        public static final StreamCodec<ByteBuf, Sync> CODEC = StreamCodec.composite(VALUES, Sync::values, Sync::new);
 
         @Override
         public Type<? extends CustomPacketPayload> type() {
@@ -57,23 +56,10 @@ public final class SandboxNet {
         }
     }
 
-    /** Client to server: the host picks a preset. */
-    public record Preset(String preset) implements CustomPacketPayload {
-        public static final Type<Preset> TYPE = new Type<>(ZomboidCraft.id("sandbox_preset"));
-        public static final StreamCodec<ByteBuf, Preset> CODEC = StreamCodec.composite(
-                ByteBufCodecs.STRING_UTF8, Preset::preset, Preset::new);
-
-        @Override
-        public Type<? extends CustomPacketPayload> type() {
-            return TYPE;
-        }
-    }
-
     static void register() {
         PayloadTypeRegistry.clientboundPlay().register(Sync.TYPE, Sync.CODEC);
         PayloadTypeRegistry.clientboundPlay().register(Open.TYPE, Open.CODEC);
         PayloadTypeRegistry.serverboundPlay().register(Set.TYPE, Set.CODEC);
-        PayloadTypeRegistry.serverboundPlay().register(Preset.TYPE, Preset.CODEC);
         ServerPlayNetworking.registerGlobalReceiver(Set.TYPE, (payload, context) -> {
             ServerPlayer player = context.player();
             player.level().getServer().execute(() -> {
@@ -83,18 +69,6 @@ public final class SandboxNet {
                     } catch (IllegalArgumentException e) {
                         player.sendSystemMessage(Component.literal(e.getMessage()));
                         Sandbox.sync(player);
-                    }
-                }
-            });
-        });
-        ServerPlayNetworking.registerGlobalReceiver(Preset.TYPE, (payload, context) -> {
-            ServerPlayer player = context.player();
-            player.level().getServer().execute(() -> {
-                if (host(player)) {
-                    try {
-                        Sandbox.applyPreset(payload.preset());
-                    } catch (IllegalArgumentException e) {
-                        player.sendSystemMessage(Component.literal(e.getMessage()));
                     }
                 }
             });
