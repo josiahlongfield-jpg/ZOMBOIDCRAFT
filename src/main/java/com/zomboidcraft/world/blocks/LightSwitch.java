@@ -128,6 +128,19 @@ public final class LightSwitch {
         return seen;
     }
 
+    /** A lit room lamp (or a switch left on) as it is with the power gone; null for anything else. */
+    public static BlockState unpowered(BlockState s) {
+        pairs();
+        Block to = s.getBlock() == CityBlocks.block(ON) ? CityBlocks.block(OFF) : dark.get(s.getBlock());
+        return to == null ? null : copy(s, to);
+    }
+
+    /** Is this a lit room lamp or a switch left on? */
+    public static boolean powered(BlockState s) {
+        pairs();
+        return dark.containsKey(s.getBlock()) || s.getBlock() == CityBlocks.block(ON);
+    }
+
     @SuppressWarnings({"unchecked", "rawtypes"})
     private static BlockState copy(BlockState from, Block to) {
         BlockState out = to.defaultBlockState();

@@ -48,10 +48,10 @@ public class GeneratorEntity extends BlockEntity {
         fuel = Math.max(0, fuel - (float) (Generators.fuelPerHour() * k.burn / HOUR));
         long t = level.getGameTime();
         if (t % HOUR == 0) {
-            if (level.random.nextInt(12) == 0) {
+            if (level.getRandom().nextInt(12) == 0) {
                 condition--;
             }
-            if (condition < 20 && level.random.nextInt(20) == 0) {
+            if (condition < 20 && level.getRandom().nextInt(20) == 0) {
                 setRunning(level, false);
                 level.playSound(null, worldPosition, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.8f, 0.6f);
             }

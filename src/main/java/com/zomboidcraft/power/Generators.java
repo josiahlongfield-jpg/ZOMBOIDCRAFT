@@ -173,7 +173,7 @@ public final class Generators {
             CustomData data = stack.get(DataComponents.CUSTOM_DATA);
             var tag = data == null ? null : data.copyTag();
             g.fuel = tag == null ? 0f : tag.getFloatOr("fuel", 0f);
-            g.condition = tag == null || !tag.contains("condition") ? 55 + level.random.nextInt(46) : tag.getIntOr("condition", 100);
+            g.condition = tag == null || !tag.contains("condition") ? 55 + level.getRandom().nextInt(46) : tag.getIntOr("condition", 100);
             g.setChanged();
         }
         level.playSound(null, at, SoundEvents.ANVIL_PLACE, SoundSource.BLOCKS, 0.4f, 0.7f);
@@ -286,9 +286,7 @@ public final class Generators {
                     tag.putInt("condition", condition);
                 });
                 level.removeBlock(pos, false);
-                if (!player.getInventory().add(out)) {
-                    player.drop(out, false);
-                }
+                if (!player.getInventory().add(out)) player.spawnAtLocation(level, out);
             }
         }
     }
