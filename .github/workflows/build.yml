@@ -204,7 +204,7 @@ jobs:
           ! grep -q 'Unknown vanilla block' county.log
           grep -q 'ZomboidCraft county planned' county.log
           grep 'County lines laid for the trains' county.log
-          grep -A16 'World settings (preset' county.log | head -20 || true
+          grep -A16 'World settings:' county.log | head -20 || true
           grep -q 'Climate Cycle = endless_rain' county.log
           grep -q '"ClimateCycle": "endless_rain"' run/world/zomboidcraft_sandbox.json
           grep -q 'Done (' county.log

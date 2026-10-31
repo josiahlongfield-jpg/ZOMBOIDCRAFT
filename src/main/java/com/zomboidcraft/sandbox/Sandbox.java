@@ -30,10 +30,6 @@ import net.minecraft.world.level.storage.LevelResource;
  * Settings that only change what you see (client) stay on each player's PC.
  */
 public final class Sandbox {
-    /** Zomboid B42's presets, in its order. Apocalypse is the default: our settings out of the box. */
-    public static final List<String> PRESETS = List.of("apocalypse", "rising", "outbreak", "extinction", "six_months_later");
-    public static final String CUSTOM = "custom";
-
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final List<SandboxOption> OPTIONS = SandboxOptions.all();
     private static final Map<String, SandboxOption> BY_ID = new LinkedHashMap<>();
@@ -46,16 +42,14 @@ public final class Sandbox {
         }
     }
 
-    /** The world's values by setting id, and the preset they came from (custom once anything is changed). */
+    /** The world's values by setting id. */
     private static final Map<String, String> VALUES = new LinkedHashMap<>();
-    private static String preset = PRESETS.get(0);
     /** The config's own values for the keys a world has covered, put back when it closes and kept in its file. */
     private static final Map<String, String> BASELINE = new HashMap<>();
     private static final Map<String, JsonElement> BASELINE_JSON = new HashMap<>();
     private static Path file;
     private static MinecraftServer server;
     /** Set by the create-world page: what the next new world starts with. */
-    private static String pendingPreset;
     private static Map<String, String> pendingValues;
 
     // ---- the registry, for the Sandbox page ----
@@ -96,22 +90,20 @@ public final class Sandbox {
         return Collections.unmodifiableMap(VALUES);
     }
 
-    public static String preset() {
-        return preset;
-    }
-
-    /** The create-world page calls this before the world starts; the new world takes these, then they're forgotten. */
-    public static void forNewWorld(String presetName, Map<String, String> values) {
-        pendingPreset = presetName;
+    /**
+     * The create-world page calls this before the world starts: the new world starts at the defaults with these
+     * changes (null for none), then they're forgotten.
+     */
+    public static void forNewWorld(Map<String, String> values) {
         pendingValues = values == null ? Map.of() : Map.copyOf(values);
     }
 
-    /** Values a preset gives every per-world setting. */
-    public static Map<String, String> presetValues(String presetName) {
+    /** Every per-world setting at its default. */
+    public static Map<String, String> defaults() {
         Map<String, String> out = new LinkedHashMap<>();
         for (SandboxOption o : OPTIONS) {
             if (o.perWorld()) {
-                out.put(o.id, o.presetValue(presetName));
+                out.put(o.id, o.defaultValue());
             }
         }
         return out;
@@ -131,22 +123,18 @@ public final class Sandbox {
         server = s;
         file = s.getWorldPath(LevelResource.ROOT).resolve("zomboidcraft_sandbox.json");
         VALUES.clear();
-        preset = PRESETS.get(0);
         if (Files.exists(file)) {
             read();
-            pendingPreset = null;
             pendingValues = null;
-        } else if (pendingPreset != null) {
+        } else if (pendingValues != null) {
             // a new world made on the create-world page
-            preset = pendingPreset;
-            VALUES.putAll(presetValues(pendingPreset));
+            VALUES.putAll(defaults());
             pendingValues.forEach((id, v) -> {
                 SandboxOption o = BY_ID.get(id);
                 if (o != null && o.perWorld()) {
                     VALUES.put(id, o.check(v));
                 }
             });
-            pendingPreset = null;
             pendingValues = null;
         } else {
             // a world from before the Sandbox page, or one made without it: it keeps running as it did
@@ -155,7 +143,6 @@ public final class Sandbox {
                     VALUES.put(o.id, o.configValue() != null ? o.configValue() : o.defaultValue());
                 }
             }
-            preset = matching();
         }
         BASELINE.clear();
         BASELINE_JSON.clear();
@@ -205,7 +192,6 @@ public final class Sandbox {
         for (SandboxOption o : OPTIONS) {
             if (o.perWorld() && key.equals(o.key)) {
                 VALUES.put(o.id, ZcConfig.getValue(key));
-                preset = matching();
                 write();
                 syncAll();
             }
@@ -232,25 +218,9 @@ public final class Sandbox {
         if (o.key != null) {
             ZcConfig.applyValue(o.key, v);
         }
-        preset = matching();
         write();
         syncAll();
         return v;
-    }
-
-    /** Puts every per-world setting to a preset's values. */
-    public static void applyPreset(String presetName) {
-        if (!PRESETS.contains(presetName)) {
-            throw new IllegalArgumentException("Presets: " + String.join(", ", PRESETS));
-        }
-        if (server == null) {
-            throw new IllegalArgumentException("No world is open");
-        }
-        VALUES.putAll(presetValues(presetName));
-        preset = presetName;
-        applyAll();
-        write();
-        syncAll();
     }
 
     /** config/zomboidcraft.json is being written: put back the values it had before this world, for the keys it covers. */
@@ -277,25 +247,12 @@ public final class Sandbox {
         }
     }
 
-    /** The preset whose values this world has exactly, or custom. */
-    private static String matching() {
-        for (String p : PRESETS) {
-            if (presetValues(p).entrySet().stream().allMatch(e -> e.getValue().equals(VALUES.get(e.getKey())))) {
-                return p;
-            }
-        }
-        return CUSTOM;
-    }
-
     private static void read() {
         try (Reader reader = Files.newBufferedReader(file)) {
             JsonObject root = GSON.fromJson(reader, JsonObject.class);
-            if (root.has("preset")) {
-                preset = root.get("preset").getAsString();
-            }
             JsonObject values = root.getAsJsonObject("values");
-            // settings added since the world was made start at the world's preset
-            Map<String, String> start = presetValues(PRESETS.contains(preset) ? preset : PRESETS.get(0));
+            // settings added since the world was made start at their default
+            Map<String, String> start = defaults();
             for (SandboxOption o : OPTIONS) {
                 if (!o.perWorld()) {
                     continue;
@@ -326,7 +283,6 @@ public final class Sandbox {
             return;
         }
         JsonObject root = new JsonObject();
-        root.addProperty("preset", preset);
         JsonObject values = new JsonObject();
         VALUES.forEach(values::addProperty);
         root.add("values", values);
@@ -340,7 +296,7 @@ public final class Sandbox {
     // ---- everyone in the world runs on its values ----
 
     static void sync(ServerPlayer player) {
-        ServerPlayNetworking.send(player, new SandboxNet.Sync(preset, new HashMap<>(VALUES)));
+        ServerPlayNetworking.send(player, new SandboxNet.Sync(new HashMap<>(VALUES)));
     }
 
     private static void syncAll() {
@@ -352,7 +308,7 @@ public final class Sandbox {
     }
 
     /** A client joined to someone else's world takes its values (an integrated server already shares them). */
-    public static void clientSync(String presetName, Map<String, String> values) {
+    public static void clientSync(Map<String, String> values) {
         if (server != null) {
             return;
         }
@@ -366,7 +322,6 @@ public final class Sandbox {
         }
         VALUES.clear();
         VALUES.putAll(values);
-        preset = presetName;
         applyAll();
     }
 
