@@ -228,6 +228,13 @@ public final class CarClient {
             out.add(com.zomboidcraft.client.interact.InteractMenu.Option.of("Search it",
                     () -> ClientPlayNetworking.send(new CarNet.Use(car.getId(), (float) at.x, (float) at.y, (float) at.z))));
         }
+        // shove it a block along, away from you, to clear the way past it (world.cars.CarPush)
+        String stuck = com.zomboidcraft.world.cars.CarPush.why(car);
+        if (stuck == null || !"It won't move".equals(stuck)) {
+            out.add(stuck != null ? com.zomboidcraft.client.interact.InteractMenu.Option.no("Push it", stuck)
+                    : com.zomboidcraft.client.interact.InteractMenu.Option.of("Push it",
+                    () -> ClientPlayNetworking.send(new com.zomboidcraft.world.cars.CarPush.Push(car.getId()))));
+        }
         out.add(car.parts().isEmpty()
                 ? com.zomboidcraft.client.interact.InteractMenu.Option.no("Vehicle mechanics", "Nothing on this one to work on")
                 : com.zomboidcraft.client.interact.InteractMenu.Option.of("Vehicle mechanics",
