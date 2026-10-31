@@ -26336,5 +26336,11 @@ final class CitySpecs extends CityBlocks.Specs {
         s("as_floor_drain", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("as_floor_stripe", PLAIN, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 16, 16);
         s("as_pit_steps", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 5.5, 16, 0, 0, 5.5, 16, 11, 16, 0, 0, 11, 16, 16, 16);
+        s("sign_ourlady_0", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 0, 16, 16, 1);
+        s("sign_ourlady_1", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 0, 16, 16, 1);
+        s("sign_ourlady_2", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 0, 16, 16, 1);
+        s("sign_ourlady_3", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 0, 16, 16, 1);
+        s("sign_ourlady_4", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 0, 16, 16, 1);
+        s("sign_ourlady_5", FACING, SEE_THROUGH | DECOR, 0, SoundType.METAL, 0f, 0, 0, 0, 16, 16, 1);
     }
 }

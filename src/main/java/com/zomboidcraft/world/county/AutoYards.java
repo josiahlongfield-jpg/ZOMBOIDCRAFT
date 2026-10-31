@@ -142,7 +142,7 @@ final class AutoYards {
         Placer s = q.shifted(gx1 + 1, 0, sz0 + 2);
         Bldg b = new Bldg(s, rng);
         b.damage = hit;
-        b.walls(0, 0, 4, 4, 1, 3, "sh_cmu_tan");
+        b.walls(0, 0, 4, 4, 1, 4, "sh_cmu_tan");
         for (int x = 1; x <= 3; x++) {
             for (int z = 1; z <= 3; z++) {
                 s.set(x, 0, z, chance() < 0.2 ? "gs_vct_mud" : "gs_vct");
@@ -202,7 +202,7 @@ final class AutoYards {
         for (int x = x0; x <= x1; x++) {
             for (int z = z0; z <= z1; z++) {
                 double r = chance();
-                q.set(x, 0, z, r < 0.15 ? "gs_slab_oil" : r < 0.25 ? "gs_slab_crack" : (x - x0) % 5 == 0 || (z - z0) % 5 == 0 ? "gs_slab_j" : "gs_slab");
+                q.set(x, 0, z, r < 0.15 ? "gs_slab_oil" : r < 0.25 ? "gs_slab_crack" : (x - x0) % 5 == 0 || (z - z0) % 5 == 0 ? "gs_slab_j[facing=north]" : "gs_slab");
             }
         }
         // the crusher: its bed along z, the posts at its corners, the lid raised, the cab at the end
@@ -307,7 +307,7 @@ final class AutoYards {
             for (int i = 0; i < 4; i++) {
                 int ax = x0 + rng.nextInt(Math.max(1, x1 - x0)), az = z + 7 + rng.nextInt(2);
                 if (az < z1) {
-                    q.setIfAir(ax, 1, az, pick("as_hood[facing=north]", "as_bumper[facing=north]", "tire[axis=z]", "as_wheels", "as_cores"));
+                    q.setIfAir(ax, 1, az, pick("as_hood[facing=north]", "as_bumper[facing=north]", "tire[axis=z]", "as_wheels", "as_cores[facing=" + kit.dir() + "]"));
                 }
             }
         }
@@ -347,8 +347,8 @@ final class AutoYards {
             if ((x - x0) % 5 == 0) {
                 continue;
             }
-            q.set(x, 1, z0 + 2, "as_partsbin");
-            q.set(x, 1, z0 + 4, chance() < 0.7 ? "as_partsbin" : pick("as_engine[facing=north]", "as_trans[facing=north]"));
+            q.set(x, 1, z0 + 2, "as_partsbin[facing=" + kit.dir() + "]");
+            q.set(x, 1, z0 + 4, chance() < 0.7 ? "as_partsbin[facing=" + kit.dir() + "]" : pick("as_engine[facing=north]", "as_trans[facing=north]"));
             q.set(x, 1, z1 - 1, pick("as_cardoor[facing=north]", "as_bumper[facing=north]", "as_hood[facing=north]", "as_radiator[facing=north]",
                     "as_seat[facing=north]", "as_wheels"));
         }
@@ -393,7 +393,7 @@ final class AutoYards {
         for (int i = 0; i < 4; i++) {
             double a = rng.nextDouble() * Math.PI * 2;
             int x = cx + (int) Math.round(Math.cos(a) * (r + 2)), z = cz + (int) Math.round(Math.sin(a) * (r + 2));
-            q.setIfAir(x, 1, z, pick("as_partsbin", "as_drum_oil", "as_cores"));
+            q.setIfAir(x, 1, z, pick("as_partsbin[facing=" + kit.dir() + "]", "as_drum_oil", "as_cores[facing=" + kit.dir() + "]"));
         }
     }
 
@@ -410,7 +410,7 @@ final class AutoYards {
         Bldg b = new Bldg(s, rng);
         b.damage = hit;
         // the hall: ribbed steel on a block base, the office inside its west end
-        b.walls(0, 0, xe, dd - 1, 1, TTOP, "as_metal");
+        b.walls(0, 0, xe, dd - 1, 1, TTOP + 1, "as_metal");
         for (int x = 0; x <= xe; x++) {
             for (int z = 0; z < dd; z++) {
                 boolean edge = x == 0 || x == xe || z == 0 || z == dd - 1;

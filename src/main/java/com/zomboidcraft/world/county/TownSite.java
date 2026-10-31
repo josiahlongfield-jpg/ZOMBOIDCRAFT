@@ -709,8 +709,8 @@ final class TownSite extends Site {
         Kit.Lot church = kit.fit(xc - 19, gz, 1, 0, 19, 36);
         if (church != null) {
             kit.lots.add(church);
-            Civic.Church kind = rng.nextBoolean() ? Civic.Church.BRICK : Civic.Church.CHAPEL;
-            church(church, kind, 19, kind == Civic.Church.BRICK ? "methodist" : "church", 0.5);
+            // Our Lady of the Sea: Seabright's (the main_street town's) parish church, Father Ruiz's on the radio
+            church(church, Civic.Church.BRICK, 19, "ourlady", 0.5);
         }
         greenAround((int) xc, (int) gz, green);
 
@@ -839,10 +839,14 @@ final class TownSite extends Site {
 
     /** A water tower on the nearest free ground to (x, z). */
     private void towerNear(int x, int z, boolean steel) {
+        towerNear(x, z, steel, false);
+    }
+
+    private void towerNear(int x, int z, boolean steel, boolean stash) {
         for (int k = 0; k < 40; k++) {
             int tx = x + (k % 7 - 3) * 6, tz = z + (k / 7 - 3) * 6;
             if (kit.free(tx - 7, tz - 7, tx + 7, tz + 7)) {
-                new Landmarks(new Placer(out, 0, 0, 0, 0), rng).waterTower(tx, tz, steel);
+                new Landmarks(new Placer(out, 0, 0, 0, 0), rng).waterTower(tx, tz, steel, stash);
                 kit.claim(tx - 6, tz - 6, tx + 6, tz + 6, Kit.BUILT);
                 for (int dx = -6; dx <= 6; dx++) {
                     for (int dz = -6; dz <= 6; dz++) {
@@ -1035,7 +1039,8 @@ final class TownSite extends Site {
         if (stone != null) {
             church(stone, Civic.Church.STONE, 23, "stmary", 0.5);
         }
-        towerNear((int) (cx - outer - 20), (int) (cz - outer - 20), true);
+        // Kingsbridge's is old Dale's, his supplies up on its deck (AUDIO's broadcasts, LOOT's lock and key)
+        towerNear((int) (cx - outer - 20), (int) (cz - outer - 20), true, Math.hypot(p.centreX() - 800, p.centreZ() - 6400) < 400);
         Homes.Mix town = new Homes.Mix(Homes.Mix.weights(0.1, 0.34, 0.26, 0.1, 0, 0, 0.1, 0.1), 6, 0.4, 0.25, 0.25,
                 0.2, 0.45, 0.06, 0.7, false, false);
         List<Kit.Lane> homesOn = new ArrayList<>(ringRoad);

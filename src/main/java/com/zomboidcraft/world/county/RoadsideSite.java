@@ -889,6 +889,9 @@ final class RoadsideSite extends Site {
         // power down the road, the odd wreck, a fallen pole across the shoulder now and then
         double zr = zAt(road, w / 2.0);
         int side = chance() < 0.5 ? -9 : 9;
+        if (bizSide != 0) {
+            side = -9 * bizSide;    // down the far verge, so no pole stands in the forecourt or a bay's way
+        }
         int pz = (int) Math.round(zr + side);
         if (pz > 2 && pz < d - 3) {
             kit.powerLine(4, pz, w - 5, pz, 8, 20);

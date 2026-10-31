@@ -72,8 +72,15 @@ public final class Fittings {
     }
 
     private static InteractionResult open(Level level, BlockPos pos, Player player) {
-        if (level instanceof ServerLevel && level.getBlockEntity(pos) instanceof Contents
+        if (level instanceof ServerLevel server && level.getBlockEntity(pos) instanceof Contents contents
                 && player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
+            // an auto shop's key board: the first look hangs the keys of the customer cars out front
+            if (!contents.keysHung && BuiltInRegistries.BLOCK.getKey(contents.getBlockState().getBlock()).getPath().endsWith("as_keyboard")) {
+                contents.unpackLootTable(player);
+                com.zomboidcraft.world.cars.CarKeys.board(server, pos, contents);
+                contents.keysHung = true;
+                contents.setChanged();
+            }
             // searched in the field kit, beside the floor and anything else in reach
             // (it plays the fitting's own open and close sounds)
             com.zomboidcraft.loot.Nearby.open(serverPlayer, pos);
@@ -118,6 +125,8 @@ public final class Fittings {
     /** What a fitting holds: a chest's worth of slots, rolled on first look. */
     public static final class Contents extends RandomizableContainerBlockEntity {
         private NonNullList<ItemStack> items = NonNullList.withSize(27, ItemStack.EMPTY);
+        /** A key board that has hung its shop's customer keys (world/cars/CarKeys#board). */
+        boolean keysHung;
 
         Contents(BlockPos pos, BlockState state) {
             super(type, pos, state);
@@ -130,6 +139,9 @@ public final class Fittings {
         @Override
         protected void saveAdditional(ValueOutput output) {
             super.saveAdditional(output);
+            if (keysHung) {
+                output.putBoolean("keys_hung", true);
+            }
             if (!trySaveLootTable(output)) {
                 ContainerHelper.saveAllItems(output, items);
             }
@@ -139,6 +151,7 @@ public final class Fittings {
         protected void loadAdditional(ValueInput input) {
             super.loadAdditional(input);
             lootTable = null;  // a searched fitting saves no table, so it mustn't fall back to its default
+            keysHung = input.getBooleanOr("keys_hung", false);
             items = NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
             if (!tryLoadLootTable(input)) {
                 ContainerHelper.loadAllItems(input, items);

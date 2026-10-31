@@ -183,7 +183,7 @@ final class AutoShop {
 
     /** The walls, floor and ceiling of a shop xe wide (x 0..xe) and dd deep. */
     void shell(Placer s, Bldg b, int xe, int dd, String wall) {
-        b.walls(0, 0, xe, dd - 1, 1, TOP, wall);
+        b.walls(0, 0, xe, dd - 1, 1, TOP + 1, wall);   // up to the roof slab: flat() rings only its parapet
         for (int x = 0; x <= xe; x++) {
             for (int z = 0; z < dd; z++) {
                 boolean edge = x == 0 || x == xe || z == 0 || z == dd - 1;
@@ -217,7 +217,8 @@ final class AutoShop {
         s.set(x0 + 1, TOP, 3, "as_opener[facing=north]");
         s.set(x0 + 1, TOP, 1, "as_rail[axis=z]");
         s.set(x0 + 1, TOP, 2, "as_rail[axis=z]");
-        s.set(x0 + 2, TOP, 5, on("as_highbay", 0.3));
+        // the light at the bay's back, clear of a hoist's beam over its middle (up to 5.15 over the floor)
+        s.set(x0 + 2, TOP, 7, on("as_highbay", 0.3));
         // a drain down the bay's middle, oil where the cars stood
         for (int z = 2; z <= 6; z++) {
             if (chance() < 0.5) {
@@ -289,7 +290,7 @@ final class AutoShop {
                 }
                 case "drums" -> s.set(x, 1, z1, "as_drum_" + pick("oil", "oil", "atf", "coolant"));
                 case "compressor" -> {
-                    s.set(x, 1, z1, "gs_compressor_lo");
+                    s.set(x, 1, z1, "gs_compressor_lo[facing=north]");
                     s.set(x, 2, z1, "gs_compressor_hi[facing=north]");
                 }
                 case "press" -> {
@@ -326,7 +327,7 @@ final class AutoShop {
         // the clutter across the floor: cores, a pulled engine, a transmission, a hood leaning on the wall
         for (int i = 0; i < 3; i++) {
             int x = x0 + rng.nextInt(x1 - x0 + 1);
-            s.setIfAir(x, 1, z0, pick("as_cores", "as_engine[facing=" + dir() + "]", "as_trans[facing=" + dir() + "]",
+            s.setIfAir(x, 1, z0, pick("as_cores[facing=" + dir() + "]", "as_engine[facing=" + dir() + "]", "as_trans[facing=" + dir() + "]",
                     "as_radiator[facing=north]", "tire[axis=x]", "as_bumper[facing=north]"));
         }
         if (chance() < 0.6) {
@@ -356,7 +357,7 @@ final class AutoShop {
         for (int x = x0; x <= x1; x++) {
             for (int z = 1; z < dd - 1; z++) {
                 s.set(x, 0, z, chance() < 0.15 ? "gs_vct_mud" : "gs_vct");
-                s.set(x, 4, z, x % 2 == 1 && z % 3 == 1 ? (power ? "fit_troffer_on" : "fit_troffer") : "fit_ceiling");
+                s.set(x, 4, z, x % 2 == 1 && z % 3 == 1 ? (power ? "fit_troffer_on[axis=x]" : "fit_troffer[axis=x]") : "fit_ceiling");
             }
         }
         int cz = 4;
@@ -460,7 +461,7 @@ final class AutoShop {
         for (int x = x0; x <= x1; x++) {
             for (int z = z0; z < z1; z++) {
                 double r = chance();
-                p.set(x, 0, z, r < 0.12 ? "gs_slab_oil" : r < 0.2 ? "gs_slab_crack" : (x - x0) % 5 == 0 || z % 5 == 0 ? "gs_slab_j" : "gs_slab");
+                p.set(x, 0, z, r < 0.12 ? "gs_slab_oil" : r < 0.2 ? "gs_slab_crack" : (x - x0) % 5 == 0 || z % 5 == 0 ? "gs_slab_j[facing=north]" : "gs_slab");
             }
         }
     }
@@ -627,7 +628,7 @@ final class AutoShop {
             }
         }
         s.set(xe - 1, 1, mz0, "as_tote[facing=west]");
-        s.set(xe - 1, 1, mz1, "gs_compressor_lo");
+        s.set(xe - 1, 1, mz1, "gs_compressor_lo[facing=north]");
         s.set(xe - 1, 2, mz1, "gs_compressor_hi[facing=west]");
         b.flat(0, 0, xe, dd - 1, TOP + 1, "as_metal", 1, "stone_trim");
         roofKit(s, xe, dd);
@@ -671,7 +672,7 @@ final class AutoShop {
             }
         }
         s.set(x0 + 1, 5, dd, "as_sign_bay" + number + "[facing=south]");
-        s.set(x0 + 2, TOP, z0 + 3, on("as_highbay", 0.3));
+        s.set(x0 + 2, TOP, z0 + 6, on("as_highbay", 0.3));
         if (lift) {
             String car = chance() < 0.85 ? customer(false) : null;
             s.vehicle(x0 + 2.0, 1, z0 + BAY_D / 2.0, 180, "!hoist:" + rng.nextInt(4) + (car == null ? "" : ";" + car), rng.nextLong());
