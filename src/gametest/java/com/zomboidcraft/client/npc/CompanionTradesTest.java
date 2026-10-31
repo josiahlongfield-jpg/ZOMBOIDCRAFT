@@ -110,6 +110,9 @@ public class CompanionTradesTest implements FabricClientGameTest {
             sp.getServer().runOnServer(s -> {
                 ServerPlayer p = s.getPlayerList().getPlayers().get(0);
                 p.getInventory().add(item("screwdriver", 1));
+                // a survivor's job (creative finishes it at once): a little Mechanics of your own
+                p.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
+                com.zomboidcraft.skills.Skills.addXp(p, com.zomboidcraft.skills.Skill.MECHANICS, 200);
                 if (s.overworld().getEntity(carId) instanceof CarProp car) {
                     s.getCommands().performPrefixedCommand(s.createCommandSourceStack(), String.format(Locale.ROOT,
                             "tp @a %.2f %.2f %.2f -90 25", car.getX() - 3.4, car.getY(), car.getZ() + 1.2));
@@ -140,8 +143,8 @@ public class CompanionTradesTest implements FabricClientGameTest {
                 mc.gui.setScreen(null);
                 ClientPlayNetworking.send(new Mechanics.Work(carId, tail, Mechanics.Job.REMOVE.ordinal()));
             });
-            for (int i = 0; i < 16; i++) {
-                ctx.waitTicks(8);
+            for (int i = 0; i < 24; i++) {
+                ctx.waitTicks(5);
                 shot(ctx, "help");
             }
             log(sp, c, "after helping");
@@ -202,7 +205,7 @@ public class CompanionTradesTest implements FabricClientGameTest {
         for (String cmd : List.of(
                 "fill ~-14 ~-1 ~-14 ~14 ~-1 ~14 minecraft:smooth_stone", "fill ~-14 ~ ~-14 ~14 ~10 ~14 minecraft:air",
                 "fill ~-14 ~-2 ~-14 ~14 ~-2 ~14 minecraft:stone",
-                "fill ~ ~ ~-8 ~ ~3 ~-8 minecraft:stone_bricks")) {
+                "fill ~ ~ ~-5 ~ ~2 ~-5 minecraft:stone_bricks")) {
             s.getCommands().performPrefixedCommand(s.createCommandSourceStack().withPosition(net.minecraft.world.phys.Vec3.atBottomCenterOf(c)), cmd);
         }
         for (int x = -12; x <= 12; x += 4) {
@@ -229,7 +232,7 @@ public class CompanionTradesTest implements FabricClientGameTest {
 
     /** Up on the stand, looking over the floor. */
     private static String stand(BlockPos c) {
-        return "tp @a " + (c.getX() + 0.5) + " " + (c.getY() + 4) + " " + (c.getZ() - 7.5) + " 0 30";
+        return "tp @a " + (c.getX() + 0.5) + " " + (c.getY() + 3) + " " + (c.getZ() - 4.5) + " 0 32";
     }
 
     private static ItemStack item(String id, int n) {
