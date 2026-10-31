@@ -33,7 +33,7 @@ public class ZombieLoreTest implements FabricClientGameTest {
             }
             ctx.getInput().resizeWindow(1280, 720);
             // a clean picture: no HUD, and night vision against the endless night
-            ctx.runOnClient(mc -> mc.options.hideGui = true);
+            ctx.getInput().pressKey(org.lwjgl.glfw.GLFW.GLFW_KEY_F1);
             sp.getServer().runCommand("effect give @a night_vision infinite 0 true");
             stage(ctx, sp);
             weapons(ctx, sp);
