@@ -56,7 +56,7 @@ public final class ClothingItems {
             "arctic_boots", "flight_gloves", "shooting_gloves", "arctic_mittens", "riot_arm_guards", "riot_leg_guards",
             "wool_commando_sweater",
             // wave 2, batch 3: useful kit, pads and sport armour
-            "headlamp", "shooting_earmuffs", "dog_tags", "chainsaw_chaps", "beekeeper_suit", "cut_resistant_gloves",
+            "shooting_earmuffs", "chainsaw_chaps", "beekeeper_suit", "cut_resistant_gloves",
             "shin_guards", "gaiters", "football_shoulder_pads", "hockey_shoulder_pads", "hockey_neck_guard",
             "leather_neck_guard", "padded_football_pants", "hockey_pants", "catchers_vest", "hockey_gloves",
             "chainmail_butcher_glove", "chainmail_sleeve", "athletic_cup");

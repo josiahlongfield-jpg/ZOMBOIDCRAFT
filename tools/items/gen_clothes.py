@@ -3177,6 +3177,9 @@ def build_athletic_cup(g):
     g.both(LEGS, leg)
 
 
+# worn models for items registered elsewhere (loot/items): their own item model and name stay theirs
+OTHERS_ITEMS = {'headlamp', 'dog_tags'}
+
 KIT_2 = {
     'headlamp': (build_headlamp, dict(band=cloth('#2a2a2c', stitch=None), lamp=plastic('#b83a2a'), lens=plastic('#e8e6d8', gloss=0.5),
                                       button=plastic('#1a1a1a')), 0.35),
@@ -3587,7 +3590,7 @@ def main(only):
         M.dump(whole_json, ASSETS / f'models/item/clothing/{gid}.json')
         mesh_id = f'clothing/{gid}'
         # worn in the head slot, ClothingLayer draws it: vanilla's own head layer gets nothing
-        if gid not in MEDICAL:      # medical pieces are only ever drawn on the body, never an item of their own
+        if gid not in MEDICAL and gid not in OTHERS_ITEMS:   # drawn on the body only; the item is someone else's
             M.dump({'model': {'type': 'minecraft:select', 'property': 'minecraft:display_context',
                               'cases': [{'when': 'head', 'model': {'type': 'minecraft:empty'}}],
                               'fallback': camo_item(ref, mesh_id, 'loot', gid, camos)}}, ASSETS / f'items/{gid}.json')
@@ -3601,7 +3604,7 @@ def main(only):
             M.dump({'model': camo_item(f'{ref}/{part}', mesh_id, part, gid, camos)}, ASSETS / f'items/clothing/{gid}/{part}.json')
             meshes[part] = pj
         write_mesh(mesh_id, meshes, tex)
-        if gid not in MEDICAL:
+        if gid not in MEDICAL and gid not in OTHERS_ITEMS:
             lang[f'item.{NS}.{gid}'] = titles.get(gid, gid.replace('_', ' ').title())
         print(f'{gid}: {len(m.parts)} boxes on {", ".join(parts)}, {T}px')
     lang_path.write_text(json.dumps(lang, indent=2, ensure_ascii=False) + '\n')
