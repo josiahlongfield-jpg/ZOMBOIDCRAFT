@@ -158,7 +158,10 @@ public final class Tailoring {
         Item item = item(out);
         from.set(ItemStack.EMPTY);
         ItemStack strips = new ItemStack(item, count);
-        if (!player.getInventory().add(strips)) player.drop(strips, false);
+        if (!player.getInventory().add(strips)) {
+            player.level().addFreshEntity(new net.minecraft.world.entity.item.ItemEntity(player.level(), player.getX(),
+                    player.getEyeY() - 0.3, player.getZ(), strips));
+        }
         Skills.addXp(player, Skill.TAILORING, 1);
         player.inventoryMenu.broadcastChanges();
         player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.WOOL_BREAK, SoundSource.PLAYERS, 0.8f, 1f);
