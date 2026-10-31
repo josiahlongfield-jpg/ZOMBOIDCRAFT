@@ -72,13 +72,27 @@ public class ZombieLoreTest implements FabricClientGameTest {
         sp.getServer().runCommand("tp @a 0 100 -12.5 0 12");
         ctx.waitTicks(20);
         ctx.takeScreenshot("weapons-back-wide");
-        // each one close, from behind and over the shoulder from the front
+        // what the client sees on each
+        String seen = ctx.computeOnClient(mc -> {
+            StringBuilder b = new StringBuilder();
+            for (var e : mc.level.entitiesForRendering()) {
+                if (e instanceof Zombie z) {
+                    b.append(String.format(" [%.1f: %s]", z.getX(), com.zomboidcraft.zombie.AttachedWeapons.of(z)));
+                }
+            }
+            return b.toString();
+        });
+        LOG.info("ZCLORE client stuck{}", seen);
+        // each one close: from behind, from its side, and from the front
         for (int i = 0; i < 7; i++) {
             double x = -4.5 + i * 1.5;
-            sp.getServer().runCommand("tp @a " + (x + 0.6) + " 100.3 -10.3 -15 18");
+            sp.getServer().runCommand("tp @a " + x + " 100.4 -10.4 0 20");
             ctx.waitTicks(10);
             ctx.takeScreenshot("weapons-back-" + i);
-            sp.getServer().runCommand("tp @a " + (x - 0.6) + " 100.3 -5.7 165 18");
+            sp.getServer().runCommand("tp @a " + (x - 0.75) + " 100.4 -8.4 -60 20");
+            ctx.waitTicks(10);
+            ctx.takeScreenshot("weapons-side-" + i);
+            sp.getServer().runCommand("tp @a " + x + " 100.4 -5.6 180 20");
             ctx.waitTicks(10);
             ctx.takeScreenshot("weapons-front-" + i);
         }
@@ -118,7 +132,11 @@ public class ZombieLoreTest implements FabricClientGameTest {
      * rule (25 to damage a tall fence) they lean on it until a panel goes.
      */
     private static void fence(ClientGameTestContext ctx, TestSingleplayerContext sp) {
-        sp.getServer().runCommand("fill -8 100 2 8 101 2 zomboidcraft:chainlink");
+        // a closed pen of chain-link, so the only way out is through it
+        sp.getServer().runCommand("fill -5 100 2 5 101 2 zomboidcraft:chainlink");
+        sp.getServer().runCommand("fill -5 100 11 5 101 11 zomboidcraft:chainlink");
+        sp.getServer().runCommand("fill -5 100 2 -5 101 11 zomboidcraft:chainlink");
+        sp.getServer().runCommand("fill 5 100 2 5 101 11 zomboidcraft:chainlink");
         sp.getServer().runCommand("tp @a 0 100.5 -7 0 12");
         for (int i = 0; i < 30; i++) {
             double x = -3 + (i % 6) * 1.2, z = 4 + (i / 6) * 1.2;
@@ -133,12 +151,12 @@ public class ZombieLoreTest implements FabricClientGameTest {
             if (f % 15 == 0) {
                 int left = ctx.computeOnClient(mc -> {
                     int n = 0;
-                    for (int x = -8; x <= 8; x++) {
+                    for (int x = -4; x <= 4; x++) {
                         n += mc.level.getBlockState(new BlockPos(x, 100, 2)).isAir() ? 0 : 1;
                     }
                     return n;
                 });
-                LOG.info("ZCLORE fence frame {} panels standing {} of 17", f, left);
+                LOG.info("ZCLORE fence frame {} front panels standing {} of 9", f, left);
             }
         }
         sp.getServer().runCommand("kill @e[type=zombie]");

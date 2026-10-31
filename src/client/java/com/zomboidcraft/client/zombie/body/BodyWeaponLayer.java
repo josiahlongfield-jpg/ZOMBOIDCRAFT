@@ -68,9 +68,10 @@ public class BodyWeaponLayer extends RenderLayer<WalkerRenderState, WalkerModel>
             return;
         }
         up = up.normalize();
-        Vec3 right = axis(m, ZMove.SPINE, 0);
-        right = right.subtract(up.scale(right.dot(up))).normalize();
-        Vec3 front = right.cross(up).normalize();
+        // the body faces -z in model space; the spine's lean comes from the bones
+        Vec3 front = new Vec3(0, 0, -1);
+        front = front.subtract(up.scale(front.dot(up))).normalize();
+        Vec3 right = up.cross(front).normalize();
         double radius = StuckBolts.RADIUS[1];
         Vec3 chest = spine.add(neck.subtract(spine).scale(UP_TORSO));
         Vec3 at, in;
