@@ -87,9 +87,26 @@ public class ZombieHeliTest implements FabricClientGameTest {
                         Vec3 to = heli.subtract(sx, 101.6, sz);
                         yaw = (float) Math.toDegrees(Math.atan2(-to.x, to.z));
                         pitch = (float) -Math.toDegrees(Math.atan2(to.y, Math.sqrt(to.x * to.x + to.z * to.z)));
-                        // keep the ground (and the crowd) in the bottom of the frame
-                        pitch = Math.max(pitch, -35f) + 12f;
+                        pitch = Math.max(pitch, -72f);
                     }
+                    // now and then look down at the dead walking in instead
+                    boolean crowd = frame >= 46 && frame < 62 || frame >= 100 && frame < 110;
+                    if (crowd) {
+                        Vec3 sum = Vec3.ZERO;
+                        int n = 0;
+                        for (Zombie z : server.overworld().getEntitiesOfClass(Zombie.class, new AABB(sx - 60, 95, sz - 60, sx + 60, 110, sz + 60))) {
+                            sum = sum.add(z.position());
+                            n++;
+                        }
+                        if (n > 0) {
+                            Vec3 to = sum.scale(1.0 / n).subtract(sx, 101.6, sz);
+                            yaw = (float) Math.toDegrees(Math.atan2(-to.x, to.z));
+                            pitch = 12;
+                        }
+                    }
+                    // the searchlight shows best in the dark; the crowd needs the night vision
+                    server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), crowd
+                            ? "effect give @a night_vision infinite 0 true" : "effect clear @a night_vision");
                     server.getCommands().performPrefixedCommand(server.createCommandSourceStack(),
                             String.format("tp %s %.2f 100 %.2f %.1f %.1f", p.getName().getString(), sx, sz, yaw, pitch));
                     if (frame % 5 == 0) {
