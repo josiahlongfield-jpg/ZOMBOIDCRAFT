@@ -835,7 +835,61 @@ public class KitUiTest implements FabricClientGameTest {
         ctx.waitTicks(10);
         ctx.takeScreenshot("companion-wheel");
         ctx.runOnClient(mc -> mc.gui.setScreen(null));
+        bondsTest(ctx, sp);
         sp.getServer().runCommand("zc npc clear");
+    }
+
+    /** Bonding (Josiah 2026-10-30): the prompt on a first G, then K's selection of two companions, sliding, and a pick. */
+    private static void bondsTest(ClientGameTestContext ctx, TestSingleplayerContext sp) {
+        sp.getServer().runOnServer(s -> {
+            ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+            var level = (net.minecraft.server.level.ServerLevel) p.level();
+            var npc = com.zomboidcraft.npc.Npcs.NPC.create(level, net.minecraft.world.entity.EntitySpawnReason.COMMAND);
+            var look = p.getLookAngle().multiply(1, 0, 1).normalize();
+            npc.setModel("dark_elf", "raw");
+            npc.snapTo(p.getX() + look.x * 2.2 - look.z * 1.5, p.getY(), p.getZ() + look.z * 2.2 + look.x * 1.5, p.getYRot() + 180f, 0f);
+            npc.born(p);
+            level.addFreshEntity(npc);
+        });
+        ctx.waitTicks(20);
+        ctx.runOnClient(mc -> {
+            var npcs = mc.level.getEntitiesOfClass(com.zomboidcraft.npc.NpcEntity.class, mc.player.getBoundingBox().inflate(8));
+            if (!npcs.isEmpty()) mc.gui.setScreen(new BondPrompt(npcs.get(0), CompanionScreen.Tab.HER));
+        });
+        ctx.waitTicks(10);
+        ctx.takeScreenshot("bonds-prompt");
+        ctx.runOnClient(mc -> {
+            if (mc.gui.screen() instanceof BondPrompt prompt) prompt.answer(true);
+        });
+        ctx.waitTicks(10);
+        ctx.runOnClient(mc -> mc.gui.setScreen(null));
+        // the second one bonded on the server too, then wait for the list to come round
+        sp.getServer().runOnServer(s -> {
+            ServerPlayer p = s.getPlayerList().getPlayers().get(0);
+            ((net.minecraft.server.level.ServerLevel) p.level()).getEntities(com.zomboidcraft.npc.Npcs.NPC, n -> true)
+                    .forEach(n -> n.bonds.add(p.getUUID()));
+        });
+        ctx.waitTicks(50);
+        String bonded = ctx.computeOnClient(mc -> String.valueOf(Bonds.companions(mc).size()));
+        LOG.info("ZCUI bonds: {}", bonded);
+        ctx.runOnClient(mc -> Bonds.open(mc));
+        BondsScreen[] sel = new BondsScreen[1];
+        ctx.runOnClient(mc -> sel[0] = mc.gui.screen() instanceof BondsScreen b ? b : null);
+        for (int f = 0; f < 30 && sel[0] != null; f++) {
+            int at = f;
+            ctx.runOnClient(mc -> {
+                if (at == 8) sel[0].slide(1);
+                if (at == 20) sel[0].slide(-1);
+            });
+            ctx.waitTicks(2);
+            ctx.takeScreenshot(String.format("bonds-clip-%02d", f));
+        }
+        ctx.runOnClient(mc -> {
+            if (sel[0] != null) sel[0].pick();
+        });
+        ctx.waitTicks(20);
+        ctx.takeScreenshot("bonds-clip-30");
+        ctx.runOnClient(mc -> mc.gui.setScreen(null));
     }
 
     private static void bookTest(TestSingleplayerContext sp) {

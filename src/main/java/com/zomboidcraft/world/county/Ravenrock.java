@@ -721,7 +721,8 @@ final class Ravenrock extends FrameSite {
                     set(x, h + 1, 2, "streetlight_pole");
                     set(x, h + 2, 2, "streetlight_pole");
                     set(x, h + 3, 2, "streetlight_pole");
-                    set(x, h + 4, 2, power && chance() < 0.4 ? "streetlight_head[facing=south]" : "streetlight_head_off[facing=south]");
+                    boolean roll = power && chance() < 0.4;  // the old dead-bulb roll, kept so everything after it lands where it did: every lamp works now
+                    set(x, h + 4, 2, "streetlight_head[facing=south]");
                 }
             }
             for (int x = top + 1; x <= DX1; x++) {

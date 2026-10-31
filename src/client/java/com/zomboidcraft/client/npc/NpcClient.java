@@ -30,6 +30,7 @@ public final class NpcClient {
     static void register() {
         com.zomboidcraft.client.kit.CompanionScreen.register();
         NpcVoice.register();
+        com.zomboidcraft.client.kit.Bonds.register();
         // middle-click on her: the order wheel, before the game takes it as pick-block
         net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents.START_CLIENT_TICK.register(client -> {
             if (client.gui.screen() != null || client.player == null) return;
@@ -62,8 +63,10 @@ public final class NpcClient {
             return false;
         }
         NpcWardrobe.Piece piece = piece(client, npc);
-        client.gui.setScreen(new com.zomboidcraft.client.kit.CompanionScreen(npc, piece != null
-                ? com.zomboidcraft.client.kit.CompanionScreen.Tab.GEAR : com.zomboidcraft.client.kit.CompanionScreen.Tab.HER));
+        var tab = piece != null ? com.zomboidcraft.client.kit.CompanionScreen.Tab.GEAR : com.zomboidcraft.client.kit.CompanionScreen.Tab.HER;
+        // the first time: bond with her? (then K brings her page up from anywhere)
+        client.gui.setScreen(com.zomboidcraft.client.kit.Bonds.ask(npc) ? new com.zomboidcraft.client.kit.BondPrompt(npc, tab)
+                : new com.zomboidcraft.client.kit.CompanionScreen(npc, tab));
         return true;
     }
 

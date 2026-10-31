@@ -57,6 +57,7 @@ public final class Builders {
             if (p.type != PlaceType.LANDMARK && county != null) {
                 clearFrontage(p, county, v);
             }
+            RoomLights.fit(p, v);
         }
     }
 

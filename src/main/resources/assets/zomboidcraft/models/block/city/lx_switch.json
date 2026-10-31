@@ -1,0 +1,84 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "lx_plate": "zomboidcraft:block/city/lx_plate",
+    "lx_steel": "zomboidcraft:block/city/lx_steel",
+    "particle": "zomboidcraft:block/city/lx_plate"
+  },
+  "elements": [
+    {
+      "from": [
+        6,
+        5,
+        15.4
+      ],
+      "to": [
+        10,
+        11,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#lx_plate"
+        },
+        "south": {
+          "texture": "#lx_plate",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#lx_plate"
+        },
+        "west": {
+          "texture": "#lx_plate"
+        },
+        "up": {
+          "texture": "#lx_plate"
+        },
+        "down": {
+          "texture": "#lx_plate"
+        }
+      }
+    },
+    {
+      "from": [
+        7.4,
+        7.6,
+        14.2
+      ],
+      "to": [
+        8.6,
+        8.4,
+        15.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#lx_steel"
+        },
+        "south": {
+          "texture": "#lx_steel"
+        },
+        "east": {
+          "texture": "#lx_steel"
+        },
+        "west": {
+          "texture": "#lx_steel"
+        },
+        "up": {
+          "texture": "#lx_steel"
+        },
+        "down": {
+          "texture": "#lx_steel"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          8,
+          15.4
+        ],
+        "axis": "x",
+        "angle": -22.5
+      }
+    }
+  ]
+}

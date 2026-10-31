@@ -1,0 +1,264 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tire": "zomboidcraft:block/city/tire",
+    "we_sale": "zomboidcraft:block/city/we_sale",
+    "we_white": "zomboidcraft:block/city/we_white",
+    "particle": "zomboidcraft:block/city/we_white"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        7
+      ],
+      "to": [
+        2.6,
+        15,
+        8.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#we_white"
+        },
+        "south": {
+          "texture": "#we_white"
+        },
+        "east": {
+          "texture": "#we_white"
+        },
+        "west": {
+          "texture": "#we_white"
+        },
+        "up": {
+          "texture": "#we_white"
+        },
+        "down": {
+          "texture": "#we_white",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0.6,
+        0,
+        6.6
+      ],
+      "to": [
+        3,
+        1,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#we_white"
+        },
+        "south": {
+          "texture": "#we_white"
+        },
+        "east": {
+          "texture": "#we_white"
+        },
+        "west": {
+          "texture": "#we_white"
+        },
+        "up": {
+          "texture": "#we_white"
+        },
+        "down": {
+          "texture": "#we_white",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        14,
+        7.3
+      ],
+      "to": [
+        14.5,
+        15.2,
+        8.3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#we_white"
+        },
+        "south": {
+          "texture": "#we_white"
+        },
+        "east": {
+          "texture": "#we_white"
+        },
+        "west": {
+          "texture": "#we_white"
+        },
+        "up": {
+          "texture": "#we_white"
+        },
+        "down": {
+          "texture": "#we_white"
+        }
+      }
+    },
+    {
+      "from": [
+        14,
+        13.6,
+        7.2
+      ],
+      "to": [
+        14.8,
+        15.4,
+        8.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#we_white"
+        },
+        "south": {
+          "texture": "#we_white"
+        },
+        "east": {
+          "texture": "#we_white"
+        },
+        "west": {
+          "texture": "#we_white"
+        },
+        "up": {
+          "texture": "#we_white"
+        },
+        "down": {
+          "texture": "#we_white"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        6,
+        7.6
+      ],
+      "to": [
+        13,
+        13,
+        8.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#we_sale"
+        },
+        "south": {
+          "texture": "#we_sale"
+        },
+        "east": {
+          "texture": "#we_white"
+        },
+        "west": {
+          "texture": "#we_white"
+        },
+        "up": {
+          "texture": "#we_white"
+        },
+        "down": {
+          "texture": "#we_white"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          14,
+          8
+        ],
+        "axis": "x",
+        "angle": -22.5
+      }
+    },
+    {
+      "from": [
+        4,
+        13,
+        7.8
+      ],
+      "to": [
+        4.4,
+        14,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tire"
+        },
+        "south": {
+          "texture": "#tire"
+        },
+        "east": {
+          "texture": "#tire"
+        },
+        "west": {
+          "texture": "#tire"
+        },
+        "up": {
+          "texture": "#tire"
+        },
+        "down": {
+          "texture": "#tire"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          14,
+          8
+        ],
+        "axis": "x",
+        "angle": -22.5
+      }
+    },
+    {
+      "from": [
+        11.6,
+        13,
+        7.8
+      ],
+      "to": [
+        12,
+        14,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tire"
+        },
+        "south": {
+          "texture": "#tire"
+        },
+        "east": {
+          "texture": "#tire"
+        },
+        "west": {
+          "texture": "#tire"
+        },
+        "up": {
+          "texture": "#tire"
+        },
+        "down": {
+          "texture": "#tire"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          14,
+          8
+        ],
+        "axis": "x",
+        "angle": -22.5
+      }
+    }
+  ]
+}

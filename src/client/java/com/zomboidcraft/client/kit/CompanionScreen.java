@@ -101,11 +101,22 @@ public class CompanionScreen extends Screen {
 
     @Override
     public void tick() {
-        if (!npc.isAlive() || minecraft.player == null || npc.distanceToSqr(minecraft.player) > 8 * 8) onClose();
+        // bonded, her page stays open wherever she is (Bonds)
+        if (!npc.isAlive() || minecraft.player == null || !Bonds.bonded(npc) && npc.distanceToSqr(minecraft.player) > 8 * 8) onClose();
     }
 
     private void hot(int x, int y, int w, int h, Runnable left, @Nullable Runnable right, @Nullable String tip) {
         hots.add(new Hot(x, y, w, h, left, right, tip));
+    }
+
+    /** Back to the selection of everyone you're bonded with, on her. */
+    private void companions() {
+        List<NpcEntity> all = Bonds.companions(minecraft);
+        int at = 0;
+        for (int i = 0; i < all.size(); i++) {
+            if (all.get(i).getUUID().equals(npc.getUUID())) at = i;
+        }
+        minecraft.gui.setScreen(new BondsScreen(at));
     }
 
     private void order(int code) {
@@ -268,7 +279,13 @@ public class CompanionScreen extends Screen {
         ly += 10;
         int[] pc = new int[NpcPanel.POSE_NAMES.length];
         for (int i = 0; i < pc.length; i++) pc[i] = NpcPanel.POSE + i;
-        chips(g, lx, ly, lw, mx, my, NpcPanel.POSE_NAMES, pc, -1);
+        ly = chips(g, lx, ly, lw, mx, my, NpcPanel.POSE_NAMES, pc, -1);
+        ly += 2;
+        KitDraw.heading(g, font, "Bond", lx, ly, lw, false);
+        ly += 10;
+        boolean bonded = Bonds.bonded(npc);
+        chips(g, lx, ly, lw, mx, my, bonded ? new String[] {"All companions", "Unbond"} : new String[] {"Bond with her"},
+                bonded ? new int[] {-4, -3} : new int[] {-3}, -1);
 
         // the right: how she is
         int rx = x + 400, rw = 179, ry = y + 34;
@@ -320,6 +337,7 @@ public class CompanionScreen extends Screen {
         hx += KitDraw.hint(g, font, "Q/R", "Pages", hx, hy);
         hx += KitDraw.hint(g, font, "Drag", "Turn her", hx, hy);
         hx += KitDraw.hint(g, font, "Scroll", "Zoom", hx, hy);
+        if (Bonds.bonded(npc)) hx += KitDraw.hint(g, font, "Bksp", "Companions", hx, hy);
         KitDraw.hint(g, font, "G", "Close", hx, hy);
     }
 
@@ -346,8 +364,13 @@ public class CompanionScreen extends Screen {
             KitDraw.frame(g, cx, y, cw, h, sel ? 0xFFE8E4DA : 0x4DE8E4DA);
             KitDraw.text(g, font, labels[i], cx + 4, y + 3, sel ? 0xFF121314 : KitDraw.TEXT, 0.75f);
             int code = codes[i];
-            hot(cx, y, cw, h, code == -2 ? () -> minecraft.gui.setScreen(new com.zomboidcraft.client.npc.WardrobeScreen(npc, null))
-                    : () -> order(code), null, null);
+            Runnable act = switch (code) {
+                case -2 -> () -> minecraft.gui.setScreen(new com.zomboidcraft.client.npc.WardrobeScreen(npc, null));
+                case -3 -> () -> Bonds.bond(npc, !Bonds.bonded(npc));
+                case -4 -> this::companions;
+                default -> () -> order(code);
+            };
+            hot(cx, y, cw, h, act, null, null);
             cx += cw + 3;
         }
         return y + h + 5;
@@ -456,6 +479,7 @@ public class CompanionScreen extends Screen {
         hx += KitDraw.hint(g, font, "Q/R", "Pages", hx, hy);
         hx += KitDraw.hint(g, font, "Drag", "Turn her", hx, hy);
         hx += KitDraw.hint(g, font, "Scroll", "Zoom", hx, hy);
+        if (Bonds.bonded(npc)) hx += KitDraw.hint(g, font, "Bksp", "Companions", hx, hy);
         KitDraw.hint(g, font, "G", "Close", hx, hy);
     }
 
@@ -482,6 +506,7 @@ public class CompanionScreen extends Screen {
         hx += KitDraw.hint(g, font, "Q/R", "Pages", hx, hy);
         hx += KitDraw.hint(g, font, "Drag", "Turn her", hx, hy);
         hx += KitDraw.hint(g, font, "Scroll", "Zoom", hx, hy);
+        if (Bonds.bonded(npc)) hx += KitDraw.hint(g, font, "Bksp", "Companions", hx, hy);
         KitDraw.hint(g, font, "G", "Close", hx, hy);
     }
 
@@ -532,6 +557,14 @@ public class CompanionScreen extends Screen {
     public boolean keyPressed(KeyEvent event) {
         if (CarClient.INTERACT.matches(event)) {
             onClose();
+            return true;
+        }
+        if (Bonds.KEY.matches(event)) {
+            onClose();
+            return true;
+        }
+        if (event.key() == com.mojang.blaze3d.platform.InputConstants.KEY_BACKSPACE && Bonds.bonded(npc)) {
+            companions();
             return true;
         }
         if (event.key() == com.mojang.blaze3d.platform.InputConstants.KEY_Q) {

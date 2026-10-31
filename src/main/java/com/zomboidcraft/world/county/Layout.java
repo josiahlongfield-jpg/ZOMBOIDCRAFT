@@ -85,6 +85,7 @@ final class Layout {
         planRoads();
         links();
         airportRoad();
+        tieEnds();
         railway.crossRoads(roads);
         for (Road r : roads) {
             index(r);
@@ -1189,6 +1190,289 @@ final class Layout {
             for (int k = 0; k < Math.min(8, n); k++) {
                 r.ys[n - 1 - k] = Terrain.lerp(r.ys[n - 1 - k], hit.road.ys[i], 1 - k / 8.0);
                 r.ys[k] = Terrain.lerp(r.ys[k], tile.level, 1 - k / 8.0);
+            }
+            roads.add(r);
+        }
+    }
+
+    /**
+     * No road stops in the middle of nowhere (Josiah 2026-10-31: every road goes somewhere). A road
+     * end that meets neither a place nor another road loses the tail it ran on past its last
+     * crossing, or, with no crossing near its end, runs on to the nearest road; a place no road
+     * reaches gets a spur to the nearest one, however far. The blown causeway's ends stay as they are.
+     */
+    private void tieEnds() {
+        List<double[]> blown = new ArrayList<>();
+        for (Plan.Line rd : plan.roads) {
+            if (rd.blownAt >= 0) {
+                List<double[]> pts = resample(rd.shape, Road.STEP);
+                blown.add(pts.get((int) Math.round(rd.blownAt * (pts.size() - 1))));
+            }
+        }
+        for (Place p : places) {
+            if (p.tile == null && p.type != PlaceType.LANDMARK && !touched(p)) {
+                spurAny(p);
+            }
+        }
+        openGates();
+        List<Road> add = new ArrayList<>();
+        for (int n = 0; n < roads.size(); n++) {
+            Road r = roads.get(n);
+            for (int end = 0; end < 2; end++) {
+                int e = end == 0 ? 0 : r.xs.length - 1;
+                double x = r.xs[e], z = r.zs[e];
+                if (atPlace(x, z) || meets(r, x, z, 3) != null || Math.abs(x) > 8300 || Math.abs(z) > 8300 || near(blown, x, z, 120)) {
+                    continue;
+                }
+                // the tail past its last crossing, up to 160 blocks of it
+                int cut = -1;
+                for (int k = 1; k <= 40 && k < r.xs.length - 3; k++) {
+                    int i = end == 0 ? k : e - k;
+                    if (meets(r, r.xs[i], r.zs[i], 0) != null) {
+                        cut = i;
+                        break;
+                    }
+                }
+                if (cut >= 0) {
+                    r = end == 0 ? slice(r, cut, r.xs.length - 1) : slice(r, 0, cut);
+                    roads.set(n, r);
+                    swap(n, r);
+                    continue;
+                }
+                // no crossing near: on to the nearest point of another road (a track only onto a track)
+                Road to = null;
+                int i = -1;
+                double best = Double.MAX_VALUE;
+                for (Road o : roads) {
+                    if (o == r || o.kind == Road.Kind.TRACK && r.kind != Road.Kind.TRACK) {
+                        continue;
+                    }
+                    int k = nearestPoint(o, x, z);
+                    double d = Math.hypot(o.xs[k] - x, o.zs[k] - z);
+                    if (d < best) {
+                        best = d;
+                        to = o;
+                        i = k;
+                    }
+                }
+                if (to == null) {
+                    continue;
+                }
+                List<double[]> pts = new ArrayList<>();
+                pts.add(new double[] {x, z});
+                county.wander(pts, x, z, to.xs[i], to.zs[i], Noise.hash(seed ^ 0x71E5L, (int) x, (int) z), 0, 0.1);
+                pts.add(new double[] {to.xs[i], to.zs[i]});
+                Road c = road(r.kind == Road.Kind.HIGHWAY ? Road.Kind.COUNTY : r.kind, pts, null, null, Noise.hash(seed ^ 0x71E6L, (int) x, (int) z));
+                if (c != null) {
+                    // each end at the height of the road it meets
+                    int m = c.ys.length;
+                    for (int k = 0; k < Math.min(8, m); k++) {
+                        c.ys[k] = Terrain.lerp(c.ys[k], r.ys[e], 1 - k / 8.0);
+                        c.ys[m - 1 - k] = Terrain.lerp(c.ys[m - 1 - k], to.ys[i], 1 - k / 8.0);
+                    }
+                    add.add(c);
+                }
+            }
+        }
+        roads.addAll(add);
+    }
+
+    /** The places whose builders run a street out to every gate (Kit.beyond): towns, suburbs, farms, roadside lots. */
+    private static boolean allGates(Place p) {
+        return p.tile == null && (p.type == PlaceType.TOWN || p.type == PlaceType.SUBURB || p.type == PlaceType.FARM
+                || p.type == PlaceType.ROADSIDE);
+    }
+
+    /**
+     * Each gate of a town, suburb, farm or roadside lot that no road comes to gets one, out to the
+     * nearest road on that side, so the street the place runs out to it carries on instead of stopping
+     * at the grass.
+     */
+    private void openGates() {
+        int[][] out = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}};
+        List<Road> add = new ArrayList<>();
+        for (Place p : places) {
+            if (!allGates(p)) {
+                continue;
+            }
+            for (int side = 0; side < 4; side++) {
+                if (side == p.waterSide) {
+                    continue;
+                }
+                int[] g = p.gate(side);
+                if (served(g[0], g[1], add)) {
+                    continue;
+                }
+                double lx = g[0] + out[side][0] * 24, lz = g[1] + out[side][1] * 24;
+                // the nearest road point out on this side (not back past the place)
+                Road to = null;
+                int at = -1;
+                double best = 1500;
+                for (List<Road> list : List.of(roads, add)) {
+                    for (Road r : list) {
+                        for (int i = 0; i < r.xs.length; i += 2) {
+                            double ox = r.xs[i] - g[0], oz = r.zs[i] - g[1];
+                            if (ox * out[side][0] + oz * out[side][1] < 30 || p.contains((int) r.xs[i], (int) r.zs[i], 10)) {
+                                continue;
+                            }
+                            double d = Math.hypot(r.xs[i] - lx, r.zs[i] - lz);
+                            if (d < best) {
+                                best = d;
+                                to = r;
+                                at = i;
+                            }
+                        }
+                    }
+                }
+                if (to == null) {
+                    continue;
+                }
+                List<double[]> pts = new ArrayList<>();
+                pts.add(new double[] {g[0], g[1]});
+                pts.add(new double[] {lx, lz});
+                county.wander(pts, lx, lz, to.xs[at], to.zs[at], Noise.hash(seed ^ 0x6A7EL, g[0], g[1]), 0, 0.12);
+                pts.add(new double[] {to.xs[at], to.zs[at]});
+                Road r = road(p.type == PlaceType.FARM ? Road.Kind.TRACK : Road.Kind.COUNTY, pts, null, null, Noise.hash(seed ^ 0x6A7FL, g[0], g[1]));
+                if (r != null) {
+                    int n = r.ys.length;
+                    for (int k = 0; k < Math.min(8, n); k++) {
+                        r.ys[k] = Terrain.lerp(r.ys[k], p.level, 1 - k / 8.0);
+                        r.ys[n - 1 - k] = Terrain.lerp(r.ys[n - 1 - k], to.ys[at], 1 - k / 8.0);
+                    }
+                    add.add(r);
+                }
+            }
+        }
+        roads.addAll(add);
+    }
+
+    /** Whether some road comes within 30 blocks of a gate. */
+    private boolean served(int gx, int gz, List<Road> more) {
+        for (List<Road> list : List.of(roads, more)) {
+            for (Road r : list) {
+                if (!r.near(gx - 30, gz - 30, gx + 30, gz + 30)) {
+                    continue;
+                }
+                Road.Hit h = new Road.Hit();
+                r.nearest(gx, gz, h);
+                if (h.distance < 30) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private void swap(int n, Road r) {
+        for (int k = 0; k < planRoads.size(); k++) {
+            if (planRoads.get(k).seed == r.seed && planRoads.get(k).kind == r.kind && planRoads.get(k) != r
+                    && planRoads.get(k).from == r.from && planRoads.get(k).to == r.to) {
+                planRoads.set(k, r);
+                return;
+            }
+        }
+    }
+
+    private static Road slice(Road r, int a, int b) {
+        return new Road(r.kind, java.util.Arrays.copyOfRange(r.xs, a, b + 1), java.util.Arrays.copyOfRange(r.zs, a, b + 1),
+                java.util.Arrays.copyOfRange(r.ys, a, b + 1), r.seed, a == 0 ? r.from : null, b == r.xs.length - 1 ? r.to : null);
+    }
+
+    private static int nearestPoint(Road r, double x, double z) {
+        int best = -1;
+        double d = Double.MAX_VALUE;
+        for (int i = 0; i < r.xs.length; i++) {
+            double h = Math.hypot(r.xs[i] - x, r.zs[i] - z);
+            if (h < d) {
+                d = h;
+                best = i;
+            }
+        }
+        return best;
+    }
+
+    private static boolean near(List<double[]> pts, double x, double z, double d) {
+        for (double[] q : pts) {
+            if (Math.hypot(q[0] - x, q[1] - z) < d) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean atPlace(double x, double z) {
+        for (Place p : places) {
+            if (p.contains((int) Math.floor(x), (int) Math.floor(z), 8)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** Another road whose surface reaches (x, z) on r's own, with slack blocks between the edges. */
+    private Road meets(Road r, double x, double z, int slack) {
+        for (Road o : roads) {
+            if (o == r || !o.near((int) x - 30, (int) z - 30, (int) x + 30, (int) z + 30)) {
+                continue;
+            }
+            Road.Hit h = new Road.Hit();
+            o.nearest(x, z, h);
+            if (h.distance <= o.kind.half + r.kind.half + slack) {
+                return o;
+            }
+        }
+        return null;
+    }
+
+    /** Whether a road ends at the place or runs through it. */
+    private boolean touched(Place p) {
+        for (Road r : roads) {
+            if (r.from == p || r.to == p) {
+                return true;
+            }
+            if (!r.near(p.x0 - 12, p.z0 - 12, p.x1 + 12, p.z1 + 12)) {
+                continue;
+            }
+            for (int i = 0; i < r.xs.length; i++) {
+                if (p.contains((int) r.xs[i], (int) r.zs[i], 12)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /** {@link #spur} for a place out past the plan's roads: to the nearest point on any road at all. */
+    private void spurAny(Place a) {
+        double cx = a.centreX() + 0.5, cz = a.centreZ() + 0.5;
+        Road to = null;
+        int at = -1;
+        double best = Double.MAX_VALUE;
+        for (Road r : roads) {
+            int i = nearestPoint(r, cx, cz);
+            double d = Math.hypot(r.xs[i] - cx, r.zs[i] - cz);
+            if (d < best) {
+                best = d;
+                to = r;
+                at = i;
+            }
+        }
+        if (to == null) {
+            return;
+        }
+        double[] target = {to.xs[at], to.zs[at]};
+        int side = gateSide(a, target);
+        int[] g = a.gate(side);
+        int[][] out = {{0, -1}, {1, 0}, {0, 1}, {-1, 0}};
+        List<double[]> pts = new ArrayList<>();
+        pts.add(new double[] {g[0] + out[side][0] * 24, g[1] + out[side][1] * 24});
+        county.wander(pts, pts.get(0)[0], pts.get(0)[1], target[0], target[1], Noise.hash(seed ^ 0x5EE0L, a.centreX(), a.centreZ()), 0, 0.15);
+        pts.add(target);
+        Road r = road(a.type == PlaceType.FARM ? Road.Kind.TRACK : Road.Kind.COUNTY, pts, a, null, Noise.hash(seed ^ 0x5B1L, g[0], g[1]));
+        if (r != null) {
+            int n = r.ys.length;
+            for (int k = 0; k < Math.min(8, n); k++) {
+                r.ys[n - 1 - k] = Terrain.lerp(r.ys[n - 1 - k], to.ys[at], 1 - k / 8.0);
             }
             roads.add(r);
         }

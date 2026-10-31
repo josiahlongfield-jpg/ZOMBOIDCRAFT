@@ -51,7 +51,8 @@ final class Harbour {
 
     /** A street lamp's head on top of its pole, looking facing. */
     String head(double dead, String facing) {
-        return (chance() < dead ? "streetlight_head_off" : "streetlight_head") + "[facing=" + facing + "]";
+        chance();  // the old dead-bulb roll, kept so everything after it lands where it did: every lamp works now
+        return "streetlight_head[facing=" + facing + "]";
     }
 
     /** A straight line of blocks between two points (both included). */

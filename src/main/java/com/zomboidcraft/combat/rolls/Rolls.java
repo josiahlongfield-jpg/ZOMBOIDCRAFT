@@ -330,6 +330,7 @@ public final class Rolls {
             boolean dense = at != null && drops.stream().anyMatch(s -> Rarity.of(s) != null) && dense(context.getLevel(), at);
             for (ItemStack drop : drops) {
                 roll(drop, place, dense, context.getRandom());
+                com.zomboidcraft.combat.Attachments.paint(drop, context.getRandom());
             }
         });
     }

@@ -560,7 +560,8 @@ final class Kit {
             int ax = x + DIR[toward][0], az = z + DIR[toward][1];
             out.set(ax, height, az, "streetlight_arm[facing=" + ((toward & 1) == 1 ? "east" : "south") + "]");
             int hx = ax + DIR[toward][0], hz = az + DIR[toward][1];
-            out.set(hx, height, hz, (rng.nextDouble() < lit ? "streetlight_head" : "streetlight_head_off") + "[facing=" + headFacing + "]");
+            rng.nextDouble();  // the old dead-bulb roll, kept so everything after it lands where it did: every lamp works now
+            out.set(hx, height, hz, "streetlight_head[facing=" + headFacing + "]");
         }
     }
 
@@ -572,8 +573,9 @@ final class Kit {
         out.set(x, 1, z, "lamp_base");
         out.set(x, 2, z, "cv_lamp_post");
         out.set(x, 3, z, "cv_lamp_post");
+        // a globe now and then smashed out; the rest are lit
         if (lit || rng.nextDouble() < 0.85) {
-            out.set(x, 4, z, lit ? "cv_lamp_globe_lit" : "cv_lamp_globe");
+            out.set(x, 4, z, "cv_lamp_globe_lit");
         }
     }
 

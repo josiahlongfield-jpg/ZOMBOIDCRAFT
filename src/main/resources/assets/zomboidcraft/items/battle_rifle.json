@@ -81,17 +81,41 @@
              "type": "minecraft:empty"
             },
             {
-             "type": "minecraft:special",
-             "base": "zomboidcraft:item/weapon/battle_rifle/raised_mag_out/holo",
-             "model": {
-              "type": "zomboidcraft:mesh",
-              "id": "att_holo",
-              "part": "body",
-              "offset": [
-               7.936,
-               9.596,
-               11.958
-              ]
+             "type": "minecraft:select",
+             "property": "minecraft:custom_model_data",
+             "index": 10,
+             "cases": [
+              {
+               "when": "tan",
+               "model": {
+                "type": "minecraft:special",
+                "base": "zomboidcraft:item/weapon/battle_rifle/raised_mag_out/holo",
+                "model": {
+                 "type": "zomboidcraft:mesh",
+                 "id": "att_holo_tan",
+                 "part": "body",
+                 "offset": [
+                  7.936,
+                  9.596,
+                  11.958
+                 ]
+                }
+               }
+              }
+             ],
+             "fallback": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/battle_rifle/raised_mag_out/holo",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_holo",
+               "part": "body",
+               "offset": [
+                7.936,
+                9.596,
+                11.958
+               ]
+              }
              }
             }
            ]
@@ -430,18 +454,43 @@
          {
           "when": "stubby_grip",
           "model": {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/battle_rifle/raised_mag_out/stubby_grip",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_stubby_grip",
-            "part": "body",
-            "offset": [
-             7.94,
-             7.55,
-             4.6
-            ],
-            "roll": 180
+           "type": "minecraft:select",
+           "property": "minecraft:custom_model_data",
+           "index": 12,
+           "cases": [
+            {
+             "when": "tan",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/battle_rifle/raised_mag_out/stubby_grip",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_stubby_grip_tan",
+               "part": "body",
+               "offset": [
+                7.94,
+                7.55,
+                4.6
+               ],
+               "roll": 180
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/battle_rifle/raised_mag_out/stubby_grip",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_stubby_grip",
+             "part": "body",
+             "offset": [
+              7.94,
+              7.55,
+              4.6
+             ],
+             "roll": 180
+            }
            }
           }
          },
@@ -531,18 +580,43 @@
          {
           "when": "light",
           "model": {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/battle_rifle/raised_mag_out/light",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_light",
-            "part": "body",
-            "offset": [
-             6.88,
-             8.5,
-             4.2
-            ],
-            "roll": 90
+           "type": "minecraft:select",
+           "property": "minecraft:custom_model_data",
+           "index": 13,
+           "cases": [
+            {
+             "when": "tan",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/battle_rifle/raised_mag_out/light",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_light_tan",
+               "part": "body",
+               "offset": [
+                6.88,
+                8.5,
+                4.2
+               ],
+               "roll": 90
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/battle_rifle/raised_mag_out/light",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_light",
+             "part": "body",
+             "offset": [
+              6.88,
+              8.5,
+              4.2
+             ],
+             "roll": 90
+            }
            }
           }
          },
@@ -639,35 +713,84 @@
          {
           "when": "magnifier",
           "model": {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/battle_rifle/raised_mag_out/magnifier",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_magnifier",
-            "part": "body",
-            "offset": [
-             7.795,
-             9.596,
-             16.95
-            ]
+           "type": "minecraft:select",
+           "property": "minecraft:custom_model_data",
+           "index": 18,
+           "cases": [
+            {
+             "when": "tan",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/battle_rifle/raised_mag_out/magnifier",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_magnifier_tan",
+               "part": "body",
+               "offset": [
+                7.795,
+                9.596,
+                16.95
+               ]
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/battle_rifle/raised_mag_out/magnifier",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_magnifier",
+             "part": "body",
+             "offset": [
+              7.795,
+              9.596,
+              16.95
+             ]
+            }
            }
           }
          },
          {
           "when": "magnifier_aside",
           "model": {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/battle_rifle/raised_mag_out/magnifier_aside",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_magnifier",
-            "part": "body",
-            "offset": [
-             7.795,
-             9.596,
-             16.95
-            ],
-            "roll": -90
+           "type": "minecraft:select",
+           "property": "minecraft:custom_model_data",
+           "index": 18,
+           "cases": [
+            {
+             "when": "tan",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/battle_rifle/raised_mag_out/magnifier_aside",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_magnifier_tan",
+               "part": "body",
+               "offset": [
+                7.795,
+                9.596,
+                16.95
+               ],
+               "roll": -90
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/battle_rifle/raised_mag_out/magnifier_aside",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_magnifier",
+             "part": "body",
+             "offset": [
+              7.795,
+              9.596,
+              16.95
+             ],
+             "roll": -90
+            }
            }
           }
          },
@@ -756,17 +879,41 @@
              "type": "minecraft:empty"
             },
             {
-             "type": "minecraft:special",
-             "base": "zomboidcraft:item/weapon/battle_rifle/mag_out/holo",
-             "model": {
-              "type": "zomboidcraft:mesh",
-              "id": "att_holo",
-              "part": "body",
-              "offset": [
-               7.936,
-               9.596,
-               11.958
-              ]
+             "type": "minecraft:select",
+             "property": "minecraft:custom_model_data",
+             "index": 10,
+             "cases": [
+              {
+               "when": "tan",
+               "model": {
+                "type": "minecraft:special",
+                "base": "zomboidcraft:item/weapon/battle_rifle/mag_out/holo",
+                "model": {
+                 "type": "zomboidcraft:mesh",
+                 "id": "att_holo_tan",
+                 "part": "body",
+                 "offset": [
+                  7.936,
+                  9.596,
+                  11.958
+                 ]
+                }
+               }
+              }
+             ],
+             "fallback": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/battle_rifle/mag_out/holo",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_holo",
+               "part": "body",
+               "offset": [
+                7.936,
+                9.596,
+                11.958
+               ]
+              }
              }
             }
            ]
@@ -1105,18 +1252,43 @@
          {
           "when": "stubby_grip",
           "model": {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/battle_rifle/mag_out/stubby_grip",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_stubby_grip",
-            "part": "body",
-            "offset": [
-             7.94,
-             7.55,
-             4.6
-            ],
-            "roll": 180
+           "type": "minecraft:select",
+           "property": "minecraft:custom_model_data",
+           "index": 12,
+           "cases": [
+            {
+             "when": "tan",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/battle_rifle/mag_out/stubby_grip",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_stubby_grip_tan",
+               "part": "body",
+               "offset": [
+                7.94,
+                7.55,
+                4.6
+               ],
+               "roll": 180
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/battle_rifle/mag_out/stubby_grip",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_stubby_grip",
+             "part": "body",
+             "offset": [
+              7.94,
+              7.55,
+              4.6
+             ],
+             "roll": 180
+            }
            }
           }
          },
@@ -1206,18 +1378,43 @@
          {
           "when": "light",
           "model": {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/battle_rifle/mag_out/light",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_light",
-            "part": "body",
-            "offset": [
-             6.88,
-             8.5,
-             4.2
-            ],
-            "roll": 90
+           "type": "minecraft:select",
+           "property": "minecraft:custom_model_data",
+           "index": 13,
+           "cases": [
+            {
+             "when": "tan",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/battle_rifle/mag_out/light",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_light_tan",
+               "part": "body",
+               "offset": [
+                6.88,
+                8.5,
+                4.2
+               ],
+               "roll": 90
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/battle_rifle/mag_out/light",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_light",
+             "part": "body",
+             "offset": [
+              6.88,
+              8.5,
+              4.2
+             ],
+             "roll": 90
+            }
            }
           }
          },
@@ -1314,35 +1511,84 @@
          {
           "when": "magnifier",
           "model": {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/battle_rifle/mag_out/magnifier",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_magnifier",
-            "part": "body",
-            "offset": [
-             7.795,
-             9.596,
-             16.95
-            ]
+           "type": "minecraft:select",
+           "property": "minecraft:custom_model_data",
+           "index": 18,
+           "cases": [
+            {
+             "when": "tan",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/battle_rifle/mag_out/magnifier",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_magnifier_tan",
+               "part": "body",
+               "offset": [
+                7.795,
+                9.596,
+                16.95
+               ]
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/battle_rifle/mag_out/magnifier",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_magnifier",
+             "part": "body",
+             "offset": [
+              7.795,
+              9.596,
+              16.95
+             ]
+            }
            }
           }
          },
          {
           "when": "magnifier_aside",
           "model": {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/battle_rifle/mag_out/magnifier_aside",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_magnifier",
-            "part": "body",
-            "offset": [
-             7.795,
-             9.596,
-             16.95
-            ],
-            "roll": -90
+           "type": "minecraft:select",
+           "property": "minecraft:custom_model_data",
+           "index": 18,
+           "cases": [
+            {
+             "when": "tan",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/battle_rifle/mag_out/magnifier_aside",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_magnifier_tan",
+               "part": "body",
+               "offset": [
+                7.795,
+                9.596,
+                16.95
+               ],
+               "roll": -90
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/battle_rifle/mag_out/magnifier_aside",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_magnifier",
+             "part": "body",
+             "offset": [
+              7.795,
+              9.596,
+              16.95
+             ],
+             "roll": -90
+            }
            }
           }
          },
@@ -1438,17 +1684,41 @@
              "type": "minecraft:empty"
             },
             {
-             "type": "minecraft:special",
-             "base": "zomboidcraft:item/weapon/battle_rifle/raised_mag_in/holo",
-             "model": {
-              "type": "zomboidcraft:mesh",
-              "id": "att_holo",
-              "part": "body",
-              "offset": [
-               7.936,
-               9.596,
-               11.958
-              ]
+             "type": "minecraft:select",
+             "property": "minecraft:custom_model_data",
+             "index": 10,
+             "cases": [
+              {
+               "when": "tan",
+               "model": {
+                "type": "minecraft:special",
+                "base": "zomboidcraft:item/weapon/battle_rifle/raised_mag_in/holo",
+                "model": {
+                 "type": "zomboidcraft:mesh",
+                 "id": "att_holo_tan",
+                 "part": "body",
+                 "offset": [
+                  7.936,
+                  9.596,
+                  11.958
+                 ]
+                }
+               }
+              }
+             ],
+             "fallback": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/battle_rifle/raised_mag_in/holo",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_holo",
+               "part": "body",
+               "offset": [
+                7.936,
+                9.596,
+                11.958
+               ]
+              }
              }
             }
            ]
@@ -1787,18 +2057,43 @@
          {
           "when": "stubby_grip",
           "model": {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/battle_rifle/raised_mag_in/stubby_grip",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_stubby_grip",
-            "part": "body",
-            "offset": [
-             7.94,
-             7.55,
-             4.6
-            ],
-            "roll": 180
+           "type": "minecraft:select",
+           "property": "minecraft:custom_model_data",
+           "index": 12,
+           "cases": [
+            {
+             "when": "tan",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/battle_rifle/raised_mag_in/stubby_grip",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_stubby_grip_tan",
+               "part": "body",
+               "offset": [
+                7.94,
+                7.55,
+                4.6
+               ],
+               "roll": 180
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/battle_rifle/raised_mag_in/stubby_grip",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_stubby_grip",
+             "part": "body",
+             "offset": [
+              7.94,
+              7.55,
+              4.6
+             ],
+             "roll": 180
+            }
            }
           }
          },
@@ -1888,18 +2183,43 @@
          {
           "when": "light",
           "model": {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/battle_rifle/raised_mag_in/light",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_light",
-            "part": "body",
-            "offset": [
-             6.88,
-             8.5,
-             4.2
-            ],
-            "roll": 90
+           "type": "minecraft:select",
+           "property": "minecraft:custom_model_data",
+           "index": 13,
+           "cases": [
+            {
+             "when": "tan",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/battle_rifle/raised_mag_in/light",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_light_tan",
+               "part": "body",
+               "offset": [
+                6.88,
+                8.5,
+                4.2
+               ],
+               "roll": 90
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/battle_rifle/raised_mag_in/light",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_light",
+             "part": "body",
+             "offset": [
+              6.88,
+              8.5,
+              4.2
+             ],
+             "roll": 90
+            }
            }
           }
          },
@@ -2030,35 +2350,84 @@
          {
           "when": "magnifier",
           "model": {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/battle_rifle/raised_mag_in/magnifier",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_magnifier",
-            "part": "body",
-            "offset": [
-             7.795,
-             9.596,
-             16.95
-            ]
+           "type": "minecraft:select",
+           "property": "minecraft:custom_model_data",
+           "index": 18,
+           "cases": [
+            {
+             "when": "tan",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/battle_rifle/raised_mag_in/magnifier",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_magnifier_tan",
+               "part": "body",
+               "offset": [
+                7.795,
+                9.596,
+                16.95
+               ]
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/battle_rifle/raised_mag_in/magnifier",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_magnifier",
+             "part": "body",
+             "offset": [
+              7.795,
+              9.596,
+              16.95
+             ]
+            }
            }
           }
          },
          {
           "when": "magnifier_aside",
           "model": {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/battle_rifle/raised_mag_in/magnifier_aside",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_magnifier",
-            "part": "body",
-            "offset": [
-             7.795,
-             9.596,
-             16.95
-            ],
-            "roll": -90
+           "type": "minecraft:select",
+           "property": "minecraft:custom_model_data",
+           "index": 18,
+           "cases": [
+            {
+             "when": "tan",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/battle_rifle/raised_mag_in/magnifier_aside",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_magnifier_tan",
+               "part": "body",
+               "offset": [
+                7.795,
+                9.596,
+                16.95
+               ],
+               "roll": -90
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/battle_rifle/raised_mag_in/magnifier_aside",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_magnifier",
+             "part": "body",
+             "offset": [
+              7.795,
+              9.596,
+              16.95
+             ],
+             "roll": -90
+            }
            }
           }
          },
@@ -2147,17 +2516,41 @@
              "type": "minecraft:empty"
             },
             {
-             "type": "minecraft:special",
-             "base": "zomboidcraft:item/weapon/battle_rifle/mag_in/holo",
-             "model": {
-              "type": "zomboidcraft:mesh",
-              "id": "att_holo",
-              "part": "body",
-              "offset": [
-               7.936,
-               9.596,
-               11.958
-              ]
+             "type": "minecraft:select",
+             "property": "minecraft:custom_model_data",
+             "index": 10,
+             "cases": [
+              {
+               "when": "tan",
+               "model": {
+                "type": "minecraft:special",
+                "base": "zomboidcraft:item/weapon/battle_rifle/mag_in/holo",
+                "model": {
+                 "type": "zomboidcraft:mesh",
+                 "id": "att_holo_tan",
+                 "part": "body",
+                 "offset": [
+                  7.936,
+                  9.596,
+                  11.958
+                 ]
+                }
+               }
+              }
+             ],
+             "fallback": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/battle_rifle/mag_in/holo",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_holo",
+               "part": "body",
+               "offset": [
+                7.936,
+                9.596,
+                11.958
+               ]
+              }
              }
             }
            ]
@@ -2496,18 +2889,43 @@
          {
           "when": "stubby_grip",
           "model": {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/battle_rifle/mag_in/stubby_grip",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_stubby_grip",
-            "part": "body",
-            "offset": [
-             7.94,
-             7.55,
-             4.6
-            ],
-            "roll": 180
+           "type": "minecraft:select",
+           "property": "minecraft:custom_model_data",
+           "index": 12,
+           "cases": [
+            {
+             "when": "tan",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/battle_rifle/mag_in/stubby_grip",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_stubby_grip_tan",
+               "part": "body",
+               "offset": [
+                7.94,
+                7.55,
+                4.6
+               ],
+               "roll": 180
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/battle_rifle/mag_in/stubby_grip",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_stubby_grip",
+             "part": "body",
+             "offset": [
+              7.94,
+              7.55,
+              4.6
+             ],
+             "roll": 180
+            }
            }
           }
          },
@@ -2597,18 +3015,43 @@
          {
           "when": "light",
           "model": {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/battle_rifle/mag_in/light",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_light",
-            "part": "body",
-            "offset": [
-             6.88,
-             8.5,
-             4.2
-            ],
-            "roll": 90
+           "type": "minecraft:select",
+           "property": "minecraft:custom_model_data",
+           "index": 13,
+           "cases": [
+            {
+             "when": "tan",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/battle_rifle/mag_in/light",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_light_tan",
+               "part": "body",
+               "offset": [
+                6.88,
+                8.5,
+                4.2
+               ],
+               "roll": 90
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/battle_rifle/mag_in/light",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_light",
+             "part": "body",
+             "offset": [
+              6.88,
+              8.5,
+              4.2
+             ],
+             "roll": 90
+            }
            }
           }
          },
@@ -2739,35 +3182,84 @@
          {
           "when": "magnifier",
           "model": {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/battle_rifle/mag_in/magnifier",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_magnifier",
-            "part": "body",
-            "offset": [
-             7.795,
-             9.596,
-             16.95
-            ]
+           "type": "minecraft:select",
+           "property": "minecraft:custom_model_data",
+           "index": 18,
+           "cases": [
+            {
+             "when": "tan",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/battle_rifle/mag_in/magnifier",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_magnifier_tan",
+               "part": "body",
+               "offset": [
+                7.795,
+                9.596,
+                16.95
+               ]
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/battle_rifle/mag_in/magnifier",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_magnifier",
+             "part": "body",
+             "offset": [
+              7.795,
+              9.596,
+              16.95
+             ]
+            }
            }
           }
          },
          {
           "when": "magnifier_aside",
           "model": {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/battle_rifle/mag_in/magnifier_aside",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_magnifier",
-            "part": "body",
-            "offset": [
-             7.795,
-             9.596,
-             16.95
-            ],
-            "roll": -90
+           "type": "minecraft:select",
+           "property": "minecraft:custom_model_data",
+           "index": 18,
+           "cases": [
+            {
+             "when": "tan",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/battle_rifle/mag_in/magnifier_aside",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_magnifier_tan",
+               "part": "body",
+               "offset": [
+                7.795,
+                9.596,
+                16.95
+               ],
+               "roll": -90
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/battle_rifle/mag_in/magnifier_aside",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_magnifier",
+             "part": "body",
+             "offset": [
+              7.795,
+              9.596,
+              16.95
+             ],
+             "roll": -90
+            }
            }
           }
          },
@@ -2863,17 +3355,41 @@
              "type": "minecraft:empty"
             },
             {
-             "type": "minecraft:special",
-             "base": "zomboidcraft:item/weapon/battle_rifle/raised_charge/holo",
-             "model": {
-              "type": "zomboidcraft:mesh",
-              "id": "att_holo",
-              "part": "body",
-              "offset": [
-               7.936,
-               9.596,
-               11.958
-              ]
+             "type": "minecraft:select",
+             "property": "minecraft:custom_model_data",
+             "index": 10,
+             "cases": [
+              {
+               "when": "tan",
+               "model": {
+                "type": "minecraft:special",
+                "base": "zomboidcraft:item/weapon/battle_rifle/raised_charge/holo",
+                "model": {
+                 "type": "zomboidcraft:mesh",
+                 "id": "att_holo_tan",
+                 "part": "body",
+                 "offset": [
+                  7.936,
+                  9.596,
+                  11.958
+                 ]
+                }
+               }
+              }
+             ],
+             "fallback": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/battle_rifle/raised_charge/holo",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_holo",
+               "part": "body",
+               "offset": [
+                7.936,
+                9.596,
+                11.958
+               ]
+              }
              }
             }
            ]
@@ -3212,18 +3728,43 @@
          {
           "when": "stubby_grip",
           "model": {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/battle_rifle/raised_charge/stubby_grip",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_stubby_grip",
-            "part": "body",
-            "offset": [
-             7.94,
-             7.55,
-             4.6
-            ],
-            "roll": 180
+           "type": "minecraft:select",
+           "property": "minecraft:custom_model_data",
+           "index": 12,
+           "cases": [
+            {
+             "when": "tan",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/battle_rifle/raised_charge/stubby_grip",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_stubby_grip_tan",
+               "part": "body",
+               "offset": [
+                7.94,
+                7.55,
+                4.6
+               ],
+               "roll": 180
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/battle_rifle/raised_charge/stubby_grip",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_stubby_grip",
+             "part": "body",
+             "offset": [
+              7.94,
+              7.55,
+              4.6
+             ],
+             "roll": 180
+            }
            }
           }
          },
@@ -3313,18 +3854,43 @@
          {
           "when": "light",
           "model": {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/battle_rifle/raised_charge/light",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_light",
-            "part": "body",
-            "offset": [
-             6.88,
-             8.5,
-             4.2
-            ],
-            "roll": 90
+           "type": "minecraft:select",
+           "property": "minecraft:custom_model_data",
+           "index": 13,
+           "cases": [
+            {
+             "when": "tan",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/battle_rifle/raised_charge/light",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_light_tan",
+               "part": "body",
+               "offset": [
+                6.88,
+                8.5,
+                4.2
+               ],
+               "roll": 90
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/battle_rifle/raised_charge/light",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_light",
+             "part": "body",
+             "offset": [
+              6.88,
+              8.5,
+              4.2
+             ],
+             "roll": 90
+            }
            }
           }
          },
@@ -3455,35 +4021,84 @@
          {
           "when": "magnifier",
           "model": {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/battle_rifle/raised_charge/magnifier",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_magnifier",
-            "part": "body",
-            "offset": [
-             7.795,
-             9.596,
-             16.95
-            ]
+           "type": "minecraft:select",
+           "property": "minecraft:custom_model_data",
+           "index": 18,
+           "cases": [
+            {
+             "when": "tan",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/battle_rifle/raised_charge/magnifier",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_magnifier_tan",
+               "part": "body",
+               "offset": [
+                7.795,
+                9.596,
+                16.95
+               ]
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/battle_rifle/raised_charge/magnifier",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_magnifier",
+             "part": "body",
+             "offset": [
+              7.795,
+              9.596,
+              16.95
+             ]
+            }
            }
           }
          },
          {
           "when": "magnifier_aside",
           "model": {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/battle_rifle/raised_charge/magnifier_aside",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_magnifier",
-            "part": "body",
-            "offset": [
-             7.795,
-             9.596,
-             16.95
-            ],
-            "roll": -90
+           "type": "minecraft:select",
+           "property": "minecraft:custom_model_data",
+           "index": 18,
+           "cases": [
+            {
+             "when": "tan",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/battle_rifle/raised_charge/magnifier_aside",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_magnifier_tan",
+               "part": "body",
+               "offset": [
+                7.795,
+                9.596,
+                16.95
+               ],
+               "roll": -90
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/battle_rifle/raised_charge/magnifier_aside",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_magnifier",
+             "part": "body",
+             "offset": [
+              7.795,
+              9.596,
+              16.95
+             ],
+             "roll": -90
+            }
            }
           }
          },
@@ -3572,17 +4187,41 @@
              "type": "minecraft:empty"
             },
             {
-             "type": "minecraft:special",
-             "base": "zomboidcraft:item/weapon/battle_rifle/charge/holo",
-             "model": {
-              "type": "zomboidcraft:mesh",
-              "id": "att_holo",
-              "part": "body",
-              "offset": [
-               7.936,
-               9.596,
-               11.958
-              ]
+             "type": "minecraft:select",
+             "property": "minecraft:custom_model_data",
+             "index": 10,
+             "cases": [
+              {
+               "when": "tan",
+               "model": {
+                "type": "minecraft:special",
+                "base": "zomboidcraft:item/weapon/battle_rifle/charge/holo",
+                "model": {
+                 "type": "zomboidcraft:mesh",
+                 "id": "att_holo_tan",
+                 "part": "body",
+                 "offset": [
+                  7.936,
+                  9.596,
+                  11.958
+                 ]
+                }
+               }
+              }
+             ],
+             "fallback": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/battle_rifle/charge/holo",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_holo",
+               "part": "body",
+               "offset": [
+                7.936,
+                9.596,
+                11.958
+               ]
+              }
              }
             }
            ]
@@ -3921,18 +4560,43 @@
          {
           "when": "stubby_grip",
           "model": {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/battle_rifle/charge/stubby_grip",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_stubby_grip",
-            "part": "body",
-            "offset": [
-             7.94,
-             7.55,
-             4.6
-            ],
-            "roll": 180
+           "type": "minecraft:select",
+           "property": "minecraft:custom_model_data",
+           "index": 12,
+           "cases": [
+            {
+             "when": "tan",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/battle_rifle/charge/stubby_grip",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_stubby_grip_tan",
+               "part": "body",
+               "offset": [
+                7.94,
+                7.55,
+                4.6
+               ],
+               "roll": 180
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/battle_rifle/charge/stubby_grip",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_stubby_grip",
+             "part": "body",
+             "offset": [
+              7.94,
+              7.55,
+              4.6
+             ],
+             "roll": 180
+            }
            }
           }
          },
@@ -4022,18 +4686,43 @@
          {
           "when": "light",
           "model": {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/battle_rifle/charge/light",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_light",
-            "part": "body",
-            "offset": [
-             6.88,
-             8.5,
-             4.2
-            ],
-            "roll": 90
+           "type": "minecraft:select",
+           "property": "minecraft:custom_model_data",
+           "index": 13,
+           "cases": [
+            {
+             "when": "tan",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/battle_rifle/charge/light",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_light_tan",
+               "part": "body",
+               "offset": [
+                6.88,
+                8.5,
+                4.2
+               ],
+               "roll": 90
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/battle_rifle/charge/light",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_light",
+             "part": "body",
+             "offset": [
+              6.88,
+              8.5,
+              4.2
+             ],
+             "roll": 90
+            }
            }
           }
          },
@@ -4164,35 +4853,84 @@
          {
           "when": "magnifier",
           "model": {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/battle_rifle/charge/magnifier",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_magnifier",
-            "part": "body",
-            "offset": [
-             7.795,
-             9.596,
-             16.95
-            ]
+           "type": "minecraft:select",
+           "property": "minecraft:custom_model_data",
+           "index": 18,
+           "cases": [
+            {
+             "when": "tan",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/battle_rifle/charge/magnifier",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_magnifier_tan",
+               "part": "body",
+               "offset": [
+                7.795,
+                9.596,
+                16.95
+               ]
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/battle_rifle/charge/magnifier",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_magnifier",
+             "part": "body",
+             "offset": [
+              7.795,
+              9.596,
+              16.95
+             ]
+            }
            }
           }
          },
          {
           "when": "magnifier_aside",
           "model": {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/battle_rifle/charge/magnifier_aside",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_magnifier",
-            "part": "body",
-            "offset": [
-             7.795,
-             9.596,
-             16.95
-            ],
-            "roll": -90
+           "type": "minecraft:select",
+           "property": "minecraft:custom_model_data",
+           "index": 18,
+           "cases": [
+            {
+             "when": "tan",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/battle_rifle/charge/magnifier_aside",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_magnifier_tan",
+               "part": "body",
+               "offset": [
+                7.795,
+                9.596,
+                16.95
+               ],
+               "roll": -90
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/battle_rifle/charge/magnifier_aside",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_magnifier",
+             "part": "body",
+             "offset": [
+              7.795,
+              9.596,
+              16.95
+             ],
+             "roll": -90
+            }
            }
           }
          },
@@ -4449,18 +5187,43 @@
           {
            "when": "stubby_grip",
            "model": {
-            "type": "minecraft:special",
-            "base": "zomboidcraft:item/weapon/battle_rifle/ads_red_dot/stubby_grip",
-            "model": {
-             "type": "zomboidcraft:mesh",
-             "id": "att_stubby_grip",
-             "part": "body",
-             "offset": [
-              7.94,
-              7.55,
-              4.6
-             ],
-             "roll": 180
+            "type": "minecraft:select",
+            "property": "minecraft:custom_model_data",
+            "index": 12,
+            "cases": [
+             {
+              "when": "tan",
+              "model": {
+               "type": "minecraft:special",
+               "base": "zomboidcraft:item/weapon/battle_rifle/ads_red_dot/stubby_grip",
+               "model": {
+                "type": "zomboidcraft:mesh",
+                "id": "att_stubby_grip_tan",
+                "part": "body",
+                "offset": [
+                 7.94,
+                 7.55,
+                 4.6
+                ],
+                "roll": 180
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/battle_rifle/ads_red_dot/stubby_grip",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_stubby_grip",
+              "part": "body",
+              "offset": [
+               7.94,
+               7.55,
+               4.6
+              ],
+              "roll": 180
+             }
             }
            }
           },
@@ -4550,18 +5313,43 @@
           {
            "when": "light",
            "model": {
-            "type": "minecraft:special",
-            "base": "zomboidcraft:item/weapon/battle_rifle/ads_red_dot/light",
-            "model": {
-             "type": "zomboidcraft:mesh",
-             "id": "att_light",
-             "part": "body",
-             "offset": [
-              6.88,
-              8.5,
-              4.2
-             ],
-             "roll": 90
+            "type": "minecraft:select",
+            "property": "minecraft:custom_model_data",
+            "index": 13,
+            "cases": [
+             {
+              "when": "tan",
+              "model": {
+               "type": "minecraft:special",
+               "base": "zomboidcraft:item/weapon/battle_rifle/ads_red_dot/light",
+               "model": {
+                "type": "zomboidcraft:mesh",
+                "id": "att_light_tan",
+                "part": "body",
+                "offset": [
+                 6.88,
+                 8.5,
+                 4.2
+                ],
+                "roll": 90
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/battle_rifle/ads_red_dot/light",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_light",
+              "part": "body",
+              "offset": [
+               6.88,
+               8.5,
+               4.2
+              ],
+              "roll": 90
+             }
             }
            }
           },
@@ -4692,35 +5480,84 @@
           {
            "when": "magnifier",
            "model": {
-            "type": "minecraft:special",
-            "base": "zomboidcraft:item/weapon/battle_rifle/ads_red_dot/magnifier",
-            "model": {
-             "type": "zomboidcraft:mesh",
-             "id": "att_magnifier",
-             "part": "body",
-             "offset": [
-              7.795,
-              9.596,
-              16.95
-             ]
+            "type": "minecraft:select",
+            "property": "minecraft:custom_model_data",
+            "index": 18,
+            "cases": [
+             {
+              "when": "tan",
+              "model": {
+               "type": "minecraft:special",
+               "base": "zomboidcraft:item/weapon/battle_rifle/ads_red_dot/magnifier",
+               "model": {
+                "type": "zomboidcraft:mesh",
+                "id": "att_magnifier_tan",
+                "part": "body",
+                "offset": [
+                 7.795,
+                 9.596,
+                 16.95
+                ]
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/battle_rifle/ads_red_dot/magnifier",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_magnifier",
+              "part": "body",
+              "offset": [
+               7.795,
+               9.596,
+               16.95
+              ]
+             }
             }
            }
           },
           {
            "when": "magnifier_aside",
            "model": {
-            "type": "minecraft:special",
-            "base": "zomboidcraft:item/weapon/battle_rifle/ads_red_dot/magnifier_aside",
-            "model": {
-             "type": "zomboidcraft:mesh",
-             "id": "att_magnifier",
-             "part": "body",
-             "offset": [
-              7.795,
-              9.596,
-              16.95
-             ],
-             "roll": -90
+            "type": "minecraft:select",
+            "property": "minecraft:custom_model_data",
+            "index": 18,
+            "cases": [
+             {
+              "when": "tan",
+              "model": {
+               "type": "minecraft:special",
+               "base": "zomboidcraft:item/weapon/battle_rifle/ads_red_dot/magnifier_aside",
+               "model": {
+                "type": "zomboidcraft:mesh",
+                "id": "att_magnifier_tan",
+                "part": "body",
+                "offset": [
+                 7.795,
+                 9.596,
+                 16.95
+                ],
+                "roll": -90
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/battle_rifle/ads_red_dot/magnifier_aside",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_magnifier",
+              "part": "body",
+              "offset": [
+               7.795,
+               9.596,
+               16.95
+              ],
+              "roll": -90
+             }
             }
            }
           },
@@ -4780,17 +5617,41 @@
            "type": "minecraft:empty"
           },
           {
-           "type": "minecraft:special",
-           "base": "zomboidcraft:item/weapon/battle_rifle/ads_holo/holo",
-           "model": {
-            "type": "zomboidcraft:mesh",
-            "id": "att_holo",
-            "part": "body",
-            "offset": [
-             7.936,
-             9.596,
-             11.958
-            ]
+           "type": "minecraft:select",
+           "property": "minecraft:custom_model_data",
+           "index": 10,
+           "cases": [
+            {
+             "when": "tan",
+             "model": {
+              "type": "minecraft:special",
+              "base": "zomboidcraft:item/weapon/battle_rifle/ads_holo/holo",
+              "model": {
+               "type": "zomboidcraft:mesh",
+               "id": "att_holo_tan",
+               "part": "body",
+               "offset": [
+                7.936,
+                9.596,
+                11.958
+               ]
+              }
+             }
+            }
+           ],
+           "fallback": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/battle_rifle/ads_holo/holo",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "att_holo",
+             "part": "body",
+             "offset": [
+              7.936,
+              9.596,
+              11.958
+             ]
+            }
            }
           }
          ]
@@ -4967,18 +5828,43 @@
           {
            "when": "stubby_grip",
            "model": {
-            "type": "minecraft:special",
-            "base": "zomboidcraft:item/weapon/battle_rifle/ads_holo/stubby_grip",
-            "model": {
-             "type": "zomboidcraft:mesh",
-             "id": "att_stubby_grip",
-             "part": "body",
-             "offset": [
-              7.94,
-              7.55,
-              4.6
-             ],
-             "roll": 180
+            "type": "minecraft:select",
+            "property": "minecraft:custom_model_data",
+            "index": 12,
+            "cases": [
+             {
+              "when": "tan",
+              "model": {
+               "type": "minecraft:special",
+               "base": "zomboidcraft:item/weapon/battle_rifle/ads_holo/stubby_grip",
+               "model": {
+                "type": "zomboidcraft:mesh",
+                "id": "att_stubby_grip_tan",
+                "part": "body",
+                "offset": [
+                 7.94,
+                 7.55,
+                 4.6
+                ],
+                "roll": 180
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/battle_rifle/ads_holo/stubby_grip",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_stubby_grip",
+              "part": "body",
+              "offset": [
+               7.94,
+               7.55,
+               4.6
+              ],
+              "roll": 180
+             }
             }
            }
           },
@@ -5068,18 +5954,43 @@
           {
            "when": "light",
            "model": {
-            "type": "minecraft:special",
-            "base": "zomboidcraft:item/weapon/battle_rifle/ads_holo/light",
-            "model": {
-             "type": "zomboidcraft:mesh",
-             "id": "att_light",
-             "part": "body",
-             "offset": [
-              6.88,
-              8.5,
-              4.2
-             ],
-             "roll": 90
+            "type": "minecraft:select",
+            "property": "minecraft:custom_model_data",
+            "index": 13,
+            "cases": [
+             {
+              "when": "tan",
+              "model": {
+               "type": "minecraft:special",
+               "base": "zomboidcraft:item/weapon/battle_rifle/ads_holo/light",
+               "model": {
+                "type": "zomboidcraft:mesh",
+                "id": "att_light_tan",
+                "part": "body",
+                "offset": [
+                 6.88,
+                 8.5,
+                 4.2
+                ],
+                "roll": 90
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/battle_rifle/ads_holo/light",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_light",
+              "part": "body",
+              "offset": [
+               6.88,
+               8.5,
+               4.2
+              ],
+              "roll": 90
+             }
             }
            }
           },
@@ -5210,35 +6121,84 @@
           {
            "when": "magnifier",
            "model": {
-            "type": "minecraft:special",
-            "base": "zomboidcraft:item/weapon/battle_rifle/ads_holo/magnifier",
-            "model": {
-             "type": "zomboidcraft:mesh",
-             "id": "att_magnifier",
-             "part": "body",
-             "offset": [
-              7.795,
-              9.596,
-              16.95
-             ]
+            "type": "minecraft:select",
+            "property": "minecraft:custom_model_data",
+            "index": 18,
+            "cases": [
+             {
+              "when": "tan",
+              "model": {
+               "type": "minecraft:special",
+               "base": "zomboidcraft:item/weapon/battle_rifle/ads_holo/magnifier",
+               "model": {
+                "type": "zomboidcraft:mesh",
+                "id": "att_magnifier_tan",
+                "part": "body",
+                "offset": [
+                 7.795,
+                 9.596,
+                 16.95
+                ]
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/battle_rifle/ads_holo/magnifier",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_magnifier",
+              "part": "body",
+              "offset": [
+               7.795,
+               9.596,
+               16.95
+              ]
+             }
             }
            }
           },
           {
            "when": "magnifier_aside",
            "model": {
-            "type": "minecraft:special",
-            "base": "zomboidcraft:item/weapon/battle_rifle/ads_holo/magnifier_aside",
-            "model": {
-             "type": "zomboidcraft:mesh",
-             "id": "att_magnifier",
-             "part": "body",
-             "offset": [
-              7.795,
-              9.596,
-              16.95
-             ],
-             "roll": -90
+            "type": "minecraft:select",
+            "property": "minecraft:custom_model_data",
+            "index": 18,
+            "cases": [
+             {
+              "when": "tan",
+              "model": {
+               "type": "minecraft:special",
+               "base": "zomboidcraft:item/weapon/battle_rifle/ads_holo/magnifier_aside",
+               "model": {
+                "type": "zomboidcraft:mesh",
+                "id": "att_magnifier_tan",
+                "part": "body",
+                "offset": [
+                 7.795,
+                 9.596,
+                 16.95
+                ],
+                "roll": -90
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/battle_rifle/ads_holo/magnifier_aside",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_magnifier",
+              "part": "body",
+              "offset": [
+               7.795,
+               9.596,
+               16.95
+              ],
+              "roll": -90
+             }
             }
            }
           },
@@ -5485,18 +6445,43 @@
           {
            "when": "stubby_grip",
            "model": {
-            "type": "minecraft:special",
-            "base": "zomboidcraft:item/weapon/battle_rifle/ads_mini_dot/stubby_grip",
-            "model": {
-             "type": "zomboidcraft:mesh",
-             "id": "att_stubby_grip",
-             "part": "body",
-             "offset": [
-              7.94,
-              7.55,
-              4.6
-             ],
-             "roll": 180
+            "type": "minecraft:select",
+            "property": "minecraft:custom_model_data",
+            "index": 12,
+            "cases": [
+             {
+              "when": "tan",
+              "model": {
+               "type": "minecraft:special",
+               "base": "zomboidcraft:item/weapon/battle_rifle/ads_mini_dot/stubby_grip",
+               "model": {
+                "type": "zomboidcraft:mesh",
+                "id": "att_stubby_grip_tan",
+                "part": "body",
+                "offset": [
+                 7.94,
+                 7.55,
+                 4.6
+                ],
+                "roll": 180
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/battle_rifle/ads_mini_dot/stubby_grip",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_stubby_grip",
+              "part": "body",
+              "offset": [
+               7.94,
+               7.55,
+               4.6
+              ],
+              "roll": 180
+             }
             }
            }
           },
@@ -5586,18 +6571,43 @@
           {
            "when": "light",
            "model": {
-            "type": "minecraft:special",
-            "base": "zomboidcraft:item/weapon/battle_rifle/ads_mini_dot/light",
-            "model": {
-             "type": "zomboidcraft:mesh",
-             "id": "att_light",
-             "part": "body",
-             "offset": [
-              6.88,
-              8.5,
-              4.2
-             ],
-             "roll": 90
+            "type": "minecraft:select",
+            "property": "minecraft:custom_model_data",
+            "index": 13,
+            "cases": [
+             {
+              "when": "tan",
+              "model": {
+               "type": "minecraft:special",
+               "base": "zomboidcraft:item/weapon/battle_rifle/ads_mini_dot/light",
+               "model": {
+                "type": "zomboidcraft:mesh",
+                "id": "att_light_tan",
+                "part": "body",
+                "offset": [
+                 6.88,
+                 8.5,
+                 4.2
+                ],
+                "roll": 90
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/battle_rifle/ads_mini_dot/light",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_light",
+              "part": "body",
+              "offset": [
+               6.88,
+               8.5,
+               4.2
+              ],
+              "roll": 90
+             }
             }
            }
           },
@@ -5728,35 +6738,84 @@
           {
            "when": "magnifier",
            "model": {
-            "type": "minecraft:special",
-            "base": "zomboidcraft:item/weapon/battle_rifle/ads_mini_dot/magnifier",
-            "model": {
-             "type": "zomboidcraft:mesh",
-             "id": "att_magnifier",
-             "part": "body",
-             "offset": [
-              7.795,
-              9.596,
-              16.95
-             ]
+            "type": "minecraft:select",
+            "property": "minecraft:custom_model_data",
+            "index": 18,
+            "cases": [
+             {
+              "when": "tan",
+              "model": {
+               "type": "minecraft:special",
+               "base": "zomboidcraft:item/weapon/battle_rifle/ads_mini_dot/magnifier",
+               "model": {
+                "type": "zomboidcraft:mesh",
+                "id": "att_magnifier_tan",
+                "part": "body",
+                "offset": [
+                 7.795,
+                 9.596,
+                 16.95
+                ]
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/battle_rifle/ads_mini_dot/magnifier",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_magnifier",
+              "part": "body",
+              "offset": [
+               7.795,
+               9.596,
+               16.95
+              ]
+             }
             }
            }
           },
           {
            "when": "magnifier_aside",
            "model": {
-            "type": "minecraft:special",
-            "base": "zomboidcraft:item/weapon/battle_rifle/ads_mini_dot/magnifier_aside",
-            "model": {
-             "type": "zomboidcraft:mesh",
-             "id": "att_magnifier",
-             "part": "body",
-             "offset": [
-              7.795,
-              9.596,
-              16.95
-             ],
-             "roll": -90
+            "type": "minecraft:select",
+            "property": "minecraft:custom_model_data",
+            "index": 18,
+            "cases": [
+             {
+              "when": "tan",
+              "model": {
+               "type": "minecraft:special",
+               "base": "zomboidcraft:item/weapon/battle_rifle/ads_mini_dot/magnifier_aside",
+               "model": {
+                "type": "zomboidcraft:mesh",
+                "id": "att_magnifier_tan",
+                "part": "body",
+                "offset": [
+                 7.795,
+                 9.596,
+                 16.95
+                ],
+                "roll": -90
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/battle_rifle/ads_mini_dot/magnifier_aside",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_magnifier",
+              "part": "body",
+              "offset": [
+               7.795,
+               9.596,
+               16.95
+              ],
+              "roll": -90
+             }
             }
            }
           },
@@ -6003,18 +7062,43 @@
           {
            "when": "stubby_grip",
            "model": {
-            "type": "minecraft:special",
-            "base": "zomboidcraft:item/weapon/battle_rifle/ads_compact_dot/stubby_grip",
-            "model": {
-             "type": "zomboidcraft:mesh",
-             "id": "att_stubby_grip",
-             "part": "body",
-             "offset": [
-              7.94,
-              7.55,
-              4.6
-             ],
-             "roll": 180
+            "type": "minecraft:select",
+            "property": "minecraft:custom_model_data",
+            "index": 12,
+            "cases": [
+             {
+              "when": "tan",
+              "model": {
+               "type": "minecraft:special",
+               "base": "zomboidcraft:item/weapon/battle_rifle/ads_compact_dot/stubby_grip",
+               "model": {
+                "type": "zomboidcraft:mesh",
+                "id": "att_stubby_grip_tan",
+                "part": "body",
+                "offset": [
+                 7.94,
+                 7.55,
+                 4.6
+                ],
+                "roll": 180
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/battle_rifle/ads_compact_dot/stubby_grip",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_stubby_grip",
+              "part": "body",
+              "offset": [
+               7.94,
+               7.55,
+               4.6
+              ],
+              "roll": 180
+             }
             }
            }
           },
@@ -6104,18 +7188,43 @@
           {
            "when": "light",
            "model": {
-            "type": "minecraft:special",
-            "base": "zomboidcraft:item/weapon/battle_rifle/ads_compact_dot/light",
-            "model": {
-             "type": "zomboidcraft:mesh",
-             "id": "att_light",
-             "part": "body",
-             "offset": [
-              6.88,
-              8.5,
-              4.2
-             ],
-             "roll": 90
+            "type": "minecraft:select",
+            "property": "minecraft:custom_model_data",
+            "index": 13,
+            "cases": [
+             {
+              "when": "tan",
+              "model": {
+               "type": "minecraft:special",
+               "base": "zomboidcraft:item/weapon/battle_rifle/ads_compact_dot/light",
+               "model": {
+                "type": "zomboidcraft:mesh",
+                "id": "att_light_tan",
+                "part": "body",
+                "offset": [
+                 6.88,
+                 8.5,
+                 4.2
+                ],
+                "roll": 90
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/battle_rifle/ads_compact_dot/light",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_light",
+              "part": "body",
+              "offset": [
+               6.88,
+               8.5,
+               4.2
+              ],
+              "roll": 90
+             }
             }
            }
           },
@@ -6246,35 +7355,84 @@
           {
            "when": "magnifier",
            "model": {
-            "type": "minecraft:special",
-            "base": "zomboidcraft:item/weapon/battle_rifle/ads_compact_dot/magnifier",
-            "model": {
-             "type": "zomboidcraft:mesh",
-             "id": "att_magnifier",
-             "part": "body",
-             "offset": [
-              7.795,
-              9.596,
-              16.95
-             ]
+            "type": "minecraft:select",
+            "property": "minecraft:custom_model_data",
+            "index": 18,
+            "cases": [
+             {
+              "when": "tan",
+              "model": {
+               "type": "minecraft:special",
+               "base": "zomboidcraft:item/weapon/battle_rifle/ads_compact_dot/magnifier",
+               "model": {
+                "type": "zomboidcraft:mesh",
+                "id": "att_magnifier_tan",
+                "part": "body",
+                "offset": [
+                 7.795,
+                 9.596,
+                 16.95
+                ]
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/battle_rifle/ads_compact_dot/magnifier",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_magnifier",
+              "part": "body",
+              "offset": [
+               7.795,
+               9.596,
+               16.95
+              ]
+             }
             }
            }
           },
           {
            "when": "magnifier_aside",
            "model": {
-            "type": "minecraft:special",
-            "base": "zomboidcraft:item/weapon/battle_rifle/ads_compact_dot/magnifier_aside",
-            "model": {
-             "type": "zomboidcraft:mesh",
-             "id": "att_magnifier",
-             "part": "body",
-             "offset": [
-              7.795,
-              9.596,
-              16.95
-             ],
-             "roll": -90
+            "type": "minecraft:select",
+            "property": "minecraft:custom_model_data",
+            "index": 18,
+            "cases": [
+             {
+              "when": "tan",
+              "model": {
+               "type": "minecraft:special",
+               "base": "zomboidcraft:item/weapon/battle_rifle/ads_compact_dot/magnifier_aside",
+               "model": {
+                "type": "zomboidcraft:mesh",
+                "id": "att_magnifier_tan",
+                "part": "body",
+                "offset": [
+                 7.795,
+                 9.596,
+                 16.95
+                ],
+                "roll": -90
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/battle_rifle/ads_compact_dot/magnifier_aside",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_magnifier",
+              "part": "body",
+              "offset": [
+               7.795,
+               9.596,
+               16.95
+              ],
+              "roll": -90
+             }
             }
            }
           },
@@ -6521,18 +7679,43 @@
           {
            "when": "stubby_grip",
            "model": {
-            "type": "minecraft:special",
-            "base": "zomboidcraft:item/weapon/battle_rifle/ads_scope_4x/stubby_grip",
-            "model": {
-             "type": "zomboidcraft:mesh",
-             "id": "att_stubby_grip",
-             "part": "body",
-             "offset": [
-              7.94,
-              7.55,
-              4.6
-             ],
-             "roll": 180
+            "type": "minecraft:select",
+            "property": "minecraft:custom_model_data",
+            "index": 12,
+            "cases": [
+             {
+              "when": "tan",
+              "model": {
+               "type": "minecraft:special",
+               "base": "zomboidcraft:item/weapon/battle_rifle/ads_scope_4x/stubby_grip",
+               "model": {
+                "type": "zomboidcraft:mesh",
+                "id": "att_stubby_grip_tan",
+                "part": "body",
+                "offset": [
+                 7.94,
+                 7.55,
+                 4.6
+                ],
+                "roll": 180
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/battle_rifle/ads_scope_4x/stubby_grip",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_stubby_grip",
+              "part": "body",
+              "offset": [
+               7.94,
+               7.55,
+               4.6
+              ],
+              "roll": 180
+             }
             }
            }
           },
@@ -6622,18 +7805,43 @@
           {
            "when": "light",
            "model": {
-            "type": "minecraft:special",
-            "base": "zomboidcraft:item/weapon/battle_rifle/ads_scope_4x/light",
-            "model": {
-             "type": "zomboidcraft:mesh",
-             "id": "att_light",
-             "part": "body",
-             "offset": [
-              6.88,
-              8.5,
-              4.2
-             ],
-             "roll": 90
+            "type": "minecraft:select",
+            "property": "minecraft:custom_model_data",
+            "index": 13,
+            "cases": [
+             {
+              "when": "tan",
+              "model": {
+               "type": "minecraft:special",
+               "base": "zomboidcraft:item/weapon/battle_rifle/ads_scope_4x/light",
+               "model": {
+                "type": "zomboidcraft:mesh",
+                "id": "att_light_tan",
+                "part": "body",
+                "offset": [
+                 6.88,
+                 8.5,
+                 4.2
+                ],
+                "roll": 90
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/battle_rifle/ads_scope_4x/light",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_light",
+              "part": "body",
+              "offset": [
+               6.88,
+               8.5,
+               4.2
+              ],
+              "roll": 90
+             }
             }
            }
           },
@@ -6764,35 +7972,84 @@
           {
            "when": "magnifier",
            "model": {
-            "type": "minecraft:special",
-            "base": "zomboidcraft:item/weapon/battle_rifle/ads_scope_4x/magnifier",
-            "model": {
-             "type": "zomboidcraft:mesh",
-             "id": "att_magnifier",
-             "part": "body",
-             "offset": [
-              7.795,
-              9.596,
-              16.95
-             ]
+            "type": "minecraft:select",
+            "property": "minecraft:custom_model_data",
+            "index": 18,
+            "cases": [
+             {
+              "when": "tan",
+              "model": {
+               "type": "minecraft:special",
+               "base": "zomboidcraft:item/weapon/battle_rifle/ads_scope_4x/magnifier",
+               "model": {
+                "type": "zomboidcraft:mesh",
+                "id": "att_magnifier_tan",
+                "part": "body",
+                "offset": [
+                 7.795,
+                 9.596,
+                 16.95
+                ]
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/battle_rifle/ads_scope_4x/magnifier",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_magnifier",
+              "part": "body",
+              "offset": [
+               7.795,
+               9.596,
+               16.95
+              ]
+             }
             }
            }
           },
           {
            "when": "magnifier_aside",
            "model": {
-            "type": "minecraft:special",
-            "base": "zomboidcraft:item/weapon/battle_rifle/ads_scope_4x/magnifier_aside",
-            "model": {
-             "type": "zomboidcraft:mesh",
-             "id": "att_magnifier",
-             "part": "body",
-             "offset": [
-              7.795,
-              9.596,
-              16.95
-             ],
-             "roll": -90
+            "type": "minecraft:select",
+            "property": "minecraft:custom_model_data",
+            "index": 18,
+            "cases": [
+             {
+              "when": "tan",
+              "model": {
+               "type": "minecraft:special",
+               "base": "zomboidcraft:item/weapon/battle_rifle/ads_scope_4x/magnifier_aside",
+               "model": {
+                "type": "zomboidcraft:mesh",
+                "id": "att_magnifier_tan",
+                "part": "body",
+                "offset": [
+                 7.795,
+                 9.596,
+                 16.95
+                ],
+                "roll": -90
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/battle_rifle/ads_scope_4x/magnifier_aside",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_magnifier",
+              "part": "body",
+              "offset": [
+               7.795,
+               9.596,
+               16.95
+              ],
+              "roll": -90
+             }
             }
            }
           },
@@ -7039,18 +8296,43 @@
           {
            "when": "stubby_grip",
            "model": {
-            "type": "minecraft:special",
-            "base": "zomboidcraft:item/weapon/battle_rifle/ads_combat_scope/stubby_grip",
-            "model": {
-             "type": "zomboidcraft:mesh",
-             "id": "att_stubby_grip",
-             "part": "body",
-             "offset": [
-              7.94,
-              7.55,
-              4.6
-             ],
-             "roll": 180
+            "type": "minecraft:select",
+            "property": "minecraft:custom_model_data",
+            "index": 12,
+            "cases": [
+             {
+              "when": "tan",
+              "model": {
+               "type": "minecraft:special",
+               "base": "zomboidcraft:item/weapon/battle_rifle/ads_combat_scope/stubby_grip",
+               "model": {
+                "type": "zomboidcraft:mesh",
+                "id": "att_stubby_grip_tan",
+                "part": "body",
+                "offset": [
+                 7.94,
+                 7.55,
+                 4.6
+                ],
+                "roll": 180
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/battle_rifle/ads_combat_scope/stubby_grip",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_stubby_grip",
+              "part": "body",
+              "offset": [
+               7.94,
+               7.55,
+               4.6
+              ],
+              "roll": 180
+             }
             }
            }
           },
@@ -7140,18 +8422,43 @@
           {
            "when": "light",
            "model": {
-            "type": "minecraft:special",
-            "base": "zomboidcraft:item/weapon/battle_rifle/ads_combat_scope/light",
-            "model": {
-             "type": "zomboidcraft:mesh",
-             "id": "att_light",
-             "part": "body",
-             "offset": [
-              6.88,
-              8.5,
-              4.2
-             ],
-             "roll": 90
+            "type": "minecraft:select",
+            "property": "minecraft:custom_model_data",
+            "index": 13,
+            "cases": [
+             {
+              "when": "tan",
+              "model": {
+               "type": "minecraft:special",
+               "base": "zomboidcraft:item/weapon/battle_rifle/ads_combat_scope/light",
+               "model": {
+                "type": "zomboidcraft:mesh",
+                "id": "att_light_tan",
+                "part": "body",
+                "offset": [
+                 6.88,
+                 8.5,
+                 4.2
+                ],
+                "roll": 90
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/battle_rifle/ads_combat_scope/light",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_light",
+              "part": "body",
+              "offset": [
+               6.88,
+               8.5,
+               4.2
+              ],
+              "roll": 90
+             }
             }
            }
           },
@@ -7282,35 +8589,84 @@
           {
            "when": "magnifier",
            "model": {
-            "type": "minecraft:special",
-            "base": "zomboidcraft:item/weapon/battle_rifle/ads_combat_scope/magnifier",
-            "model": {
-             "type": "zomboidcraft:mesh",
-             "id": "att_magnifier",
-             "part": "body",
-             "offset": [
-              7.795,
-              9.596,
-              16.95
-             ]
+            "type": "minecraft:select",
+            "property": "minecraft:custom_model_data",
+            "index": 18,
+            "cases": [
+             {
+              "when": "tan",
+              "model": {
+               "type": "minecraft:special",
+               "base": "zomboidcraft:item/weapon/battle_rifle/ads_combat_scope/magnifier",
+               "model": {
+                "type": "zomboidcraft:mesh",
+                "id": "att_magnifier_tan",
+                "part": "body",
+                "offset": [
+                 7.795,
+                 9.596,
+                 16.95
+                ]
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/battle_rifle/ads_combat_scope/magnifier",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_magnifier",
+              "part": "body",
+              "offset": [
+               7.795,
+               9.596,
+               16.95
+              ]
+             }
             }
            }
           },
           {
            "when": "magnifier_aside",
            "model": {
-            "type": "minecraft:special",
-            "base": "zomboidcraft:item/weapon/battle_rifle/ads_combat_scope/magnifier_aside",
-            "model": {
-             "type": "zomboidcraft:mesh",
-             "id": "att_magnifier",
-             "part": "body",
-             "offset": [
-              7.795,
-              9.596,
-              16.95
-             ],
-             "roll": -90
+            "type": "minecraft:select",
+            "property": "minecraft:custom_model_data",
+            "index": 18,
+            "cases": [
+             {
+              "when": "tan",
+              "model": {
+               "type": "minecraft:special",
+               "base": "zomboidcraft:item/weapon/battle_rifle/ads_combat_scope/magnifier_aside",
+               "model": {
+                "type": "zomboidcraft:mesh",
+                "id": "att_magnifier_tan",
+                "part": "body",
+                "offset": [
+                 7.795,
+                 9.596,
+                 16.95
+                ],
+                "roll": -90
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/battle_rifle/ads_combat_scope/magnifier_aside",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_magnifier",
+              "part": "body",
+              "offset": [
+               7.795,
+               9.596,
+               16.95
+              ],
+              "roll": -90
+             }
             }
            }
           },
@@ -7557,18 +8913,43 @@
           {
            "when": "stubby_grip",
            "model": {
-            "type": "minecraft:special",
-            "base": "zomboidcraft:item/weapon/battle_rifle/ads_rifle_optic/stubby_grip",
-            "model": {
-             "type": "zomboidcraft:mesh",
-             "id": "att_stubby_grip",
-             "part": "body",
-             "offset": [
-              7.94,
-              7.55,
-              4.6
-             ],
-             "roll": 180
+            "type": "minecraft:select",
+            "property": "minecraft:custom_model_data",
+            "index": 12,
+            "cases": [
+             {
+              "when": "tan",
+              "model": {
+               "type": "minecraft:special",
+               "base": "zomboidcraft:item/weapon/battle_rifle/ads_rifle_optic/stubby_grip",
+               "model": {
+                "type": "zomboidcraft:mesh",
+                "id": "att_stubby_grip_tan",
+                "part": "body",
+                "offset": [
+                 7.94,
+                 7.55,
+                 4.6
+                ],
+                "roll": 180
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/battle_rifle/ads_rifle_optic/stubby_grip",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_stubby_grip",
+              "part": "body",
+              "offset": [
+               7.94,
+               7.55,
+               4.6
+              ],
+              "roll": 180
+             }
             }
            }
           },
@@ -7658,18 +9039,43 @@
           {
            "when": "light",
            "model": {
-            "type": "minecraft:special",
-            "base": "zomboidcraft:item/weapon/battle_rifle/ads_rifle_optic/light",
-            "model": {
-             "type": "zomboidcraft:mesh",
-             "id": "att_light",
-             "part": "body",
-             "offset": [
-              6.88,
-              8.5,
-              4.2
-             ],
-             "roll": 90
+            "type": "minecraft:select",
+            "property": "minecraft:custom_model_data",
+            "index": 13,
+            "cases": [
+             {
+              "when": "tan",
+              "model": {
+               "type": "minecraft:special",
+               "base": "zomboidcraft:item/weapon/battle_rifle/ads_rifle_optic/light",
+               "model": {
+                "type": "zomboidcraft:mesh",
+                "id": "att_light_tan",
+                "part": "body",
+                "offset": [
+                 6.88,
+                 8.5,
+                 4.2
+                ],
+                "roll": 90
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/battle_rifle/ads_rifle_optic/light",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_light",
+              "part": "body",
+              "offset": [
+               6.88,
+               8.5,
+               4.2
+              ],
+              "roll": 90
+             }
             }
            }
           },
@@ -7800,35 +9206,84 @@
           {
            "when": "magnifier",
            "model": {
-            "type": "minecraft:special",
-            "base": "zomboidcraft:item/weapon/battle_rifle/ads_rifle_optic/magnifier",
-            "model": {
-             "type": "zomboidcraft:mesh",
-             "id": "att_magnifier",
-             "part": "body",
-             "offset": [
-              7.795,
-              9.596,
-              16.95
-             ]
+            "type": "minecraft:select",
+            "property": "minecraft:custom_model_data",
+            "index": 18,
+            "cases": [
+             {
+              "when": "tan",
+              "model": {
+               "type": "minecraft:special",
+               "base": "zomboidcraft:item/weapon/battle_rifle/ads_rifle_optic/magnifier",
+               "model": {
+                "type": "zomboidcraft:mesh",
+                "id": "att_magnifier_tan",
+                "part": "body",
+                "offset": [
+                 7.795,
+                 9.596,
+                 16.95
+                ]
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/battle_rifle/ads_rifle_optic/magnifier",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_magnifier",
+              "part": "body",
+              "offset": [
+               7.795,
+               9.596,
+               16.95
+              ]
+             }
             }
            }
           },
           {
            "when": "magnifier_aside",
            "model": {
-            "type": "minecraft:special",
-            "base": "zomboidcraft:item/weapon/battle_rifle/ads_rifle_optic/magnifier_aside",
-            "model": {
-             "type": "zomboidcraft:mesh",
-             "id": "att_magnifier",
-             "part": "body",
-             "offset": [
-              7.795,
-              9.596,
-              16.95
-             ],
-             "roll": -90
+            "type": "minecraft:select",
+            "property": "minecraft:custom_model_data",
+            "index": 18,
+            "cases": [
+             {
+              "when": "tan",
+              "model": {
+               "type": "minecraft:special",
+               "base": "zomboidcraft:item/weapon/battle_rifle/ads_rifle_optic/magnifier_aside",
+               "model": {
+                "type": "zomboidcraft:mesh",
+                "id": "att_magnifier_tan",
+                "part": "body",
+                "offset": [
+                 7.795,
+                 9.596,
+                 16.95
+                ],
+                "roll": -90
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/battle_rifle/ads_rifle_optic/magnifier_aside",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_magnifier",
+              "part": "body",
+              "offset": [
+               7.795,
+               9.596,
+               16.95
+              ],
+              "roll": -90
+             }
             }
            }
           },
@@ -7919,17 +9374,41 @@
             "type": "minecraft:empty"
            },
            {
-            "type": "minecraft:special",
-            "base": "zomboidcraft:item/weapon/battle_rifle/ads/holo",
-            "model": {
-             "type": "zomboidcraft:mesh",
-             "id": "att_holo",
-             "part": "body",
-             "offset": [
-              7.936,
-              9.596,
-              11.958
-             ]
+            "type": "minecraft:select",
+            "property": "minecraft:custom_model_data",
+            "index": 10,
+            "cases": [
+             {
+              "when": "tan",
+              "model": {
+               "type": "minecraft:special",
+               "base": "zomboidcraft:item/weapon/battle_rifle/ads/holo",
+               "model": {
+                "type": "zomboidcraft:mesh",
+                "id": "att_holo_tan",
+                "part": "body",
+                "offset": [
+                 7.936,
+                 9.596,
+                 11.958
+                ]
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/battle_rifle/ads/holo",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_holo",
+              "part": "body",
+              "offset": [
+               7.936,
+               9.596,
+               11.958
+              ]
+             }
             }
            }
           ]
@@ -8268,18 +9747,43 @@
         {
          "when": "stubby_grip",
          "model": {
-          "type": "minecraft:special",
-          "base": "zomboidcraft:item/weapon/battle_rifle/ads/stubby_grip",
-          "model": {
-           "type": "zomboidcraft:mesh",
-           "id": "att_stubby_grip",
-           "part": "body",
-           "offset": [
-            7.94,
-            7.55,
-            4.6
-           ],
-           "roll": 180
+          "type": "minecraft:select",
+          "property": "minecraft:custom_model_data",
+          "index": 12,
+          "cases": [
+           {
+            "when": "tan",
+            "model": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/battle_rifle/ads/stubby_grip",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_stubby_grip_tan",
+              "part": "body",
+              "offset": [
+               7.94,
+               7.55,
+               4.6
+              ],
+              "roll": 180
+             }
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/battle_rifle/ads/stubby_grip",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "att_stubby_grip",
+            "part": "body",
+            "offset": [
+             7.94,
+             7.55,
+             4.6
+            ],
+            "roll": 180
+           }
           }
          }
         },
@@ -8369,18 +9873,43 @@
         {
          "when": "light",
          "model": {
-          "type": "minecraft:special",
-          "base": "zomboidcraft:item/weapon/battle_rifle/ads/light",
-          "model": {
-           "type": "zomboidcraft:mesh",
-           "id": "att_light",
-           "part": "body",
-           "offset": [
-            6.88,
-            8.5,
-            4.2
-           ],
-           "roll": 90
+          "type": "minecraft:select",
+          "property": "minecraft:custom_model_data",
+          "index": 13,
+          "cases": [
+           {
+            "when": "tan",
+            "model": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/battle_rifle/ads/light",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_light_tan",
+              "part": "body",
+              "offset": [
+               6.88,
+               8.5,
+               4.2
+              ],
+              "roll": 90
+             }
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/battle_rifle/ads/light",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "att_light",
+            "part": "body",
+            "offset": [
+             6.88,
+             8.5,
+             4.2
+            ],
+            "roll": 90
+           }
           }
          }
         },
@@ -8511,35 +10040,84 @@
         {
          "when": "magnifier",
          "model": {
-          "type": "minecraft:special",
-          "base": "zomboidcraft:item/weapon/battle_rifle/ads/magnifier",
-          "model": {
-           "type": "zomboidcraft:mesh",
-           "id": "att_magnifier",
-           "part": "body",
-           "offset": [
-            7.795,
-            9.596,
-            16.95
-           ]
+          "type": "minecraft:select",
+          "property": "minecraft:custom_model_data",
+          "index": 18,
+          "cases": [
+           {
+            "when": "tan",
+            "model": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/battle_rifle/ads/magnifier",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_magnifier_tan",
+              "part": "body",
+              "offset": [
+               7.795,
+               9.596,
+               16.95
+              ]
+             }
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/battle_rifle/ads/magnifier",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "att_magnifier",
+            "part": "body",
+            "offset": [
+             7.795,
+             9.596,
+             16.95
+            ]
+           }
           }
          }
         },
         {
          "when": "magnifier_aside",
          "model": {
-          "type": "minecraft:special",
-          "base": "zomboidcraft:item/weapon/battle_rifle/ads/magnifier_aside",
-          "model": {
-           "type": "zomboidcraft:mesh",
-           "id": "att_magnifier",
-           "part": "body",
-           "offset": [
-            7.795,
-            9.596,
-            16.95
-           ],
-           "roll": -90
+          "type": "minecraft:select",
+          "property": "minecraft:custom_model_data",
+          "index": 18,
+          "cases": [
+           {
+            "when": "tan",
+            "model": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/battle_rifle/ads/magnifier_aside",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_magnifier_tan",
+              "part": "body",
+              "offset": [
+               7.795,
+               9.596,
+               16.95
+              ],
+              "roll": -90
+             }
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/battle_rifle/ads/magnifier_aside",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "att_magnifier",
+            "part": "body",
+            "offset": [
+             7.795,
+             9.596,
+             16.95
+            ],
+            "roll": -90
+           }
           }
          }
         },
@@ -8632,17 +10210,41 @@
             "type": "minecraft:empty"
            },
            {
-            "type": "minecraft:special",
-            "base": "zomboidcraft:item/weapon/battle_rifle/raised_hip/holo",
-            "model": {
-             "type": "zomboidcraft:mesh",
-             "id": "att_holo",
-             "part": "body",
-             "offset": [
-              7.936,
-              9.596,
-              11.958
-             ]
+            "type": "minecraft:select",
+            "property": "minecraft:custom_model_data",
+            "index": 10,
+            "cases": [
+             {
+              "when": "tan",
+              "model": {
+               "type": "minecraft:special",
+               "base": "zomboidcraft:item/weapon/battle_rifle/raised_hip/holo",
+               "model": {
+                "type": "zomboidcraft:mesh",
+                "id": "att_holo_tan",
+                "part": "body",
+                "offset": [
+                 7.936,
+                 9.596,
+                 11.958
+                ]
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/battle_rifle/raised_hip/holo",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_holo",
+              "part": "body",
+              "offset": [
+               7.936,
+               9.596,
+               11.958
+              ]
+             }
             }
            }
           ]
@@ -8981,18 +10583,43 @@
         {
          "when": "stubby_grip",
          "model": {
-          "type": "minecraft:special",
-          "base": "zomboidcraft:item/weapon/battle_rifle/raised_hip/stubby_grip",
-          "model": {
-           "type": "zomboidcraft:mesh",
-           "id": "att_stubby_grip",
-           "part": "body",
-           "offset": [
-            7.94,
-            7.55,
-            4.6
-           ],
-           "roll": 180
+          "type": "minecraft:select",
+          "property": "minecraft:custom_model_data",
+          "index": 12,
+          "cases": [
+           {
+            "when": "tan",
+            "model": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/battle_rifle/raised_hip/stubby_grip",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_stubby_grip_tan",
+              "part": "body",
+              "offset": [
+               7.94,
+               7.55,
+               4.6
+              ],
+              "roll": 180
+             }
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/battle_rifle/raised_hip/stubby_grip",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "att_stubby_grip",
+            "part": "body",
+            "offset": [
+             7.94,
+             7.55,
+             4.6
+            ],
+            "roll": 180
+           }
           }
          }
         },
@@ -9082,18 +10709,43 @@
         {
          "when": "light",
          "model": {
-          "type": "minecraft:special",
-          "base": "zomboidcraft:item/weapon/battle_rifle/raised_hip/light",
-          "model": {
-           "type": "zomboidcraft:mesh",
-           "id": "att_light",
-           "part": "body",
-           "offset": [
-            6.88,
-            8.5,
-            4.2
-           ],
-           "roll": 90
+          "type": "minecraft:select",
+          "property": "minecraft:custom_model_data",
+          "index": 13,
+          "cases": [
+           {
+            "when": "tan",
+            "model": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/battle_rifle/raised_hip/light",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_light_tan",
+              "part": "body",
+              "offset": [
+               6.88,
+               8.5,
+               4.2
+              ],
+              "roll": 90
+             }
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/battle_rifle/raised_hip/light",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "att_light",
+            "part": "body",
+            "offset": [
+             6.88,
+             8.5,
+             4.2
+            ],
+            "roll": 90
+           }
           }
          }
         },
@@ -9224,35 +10876,84 @@
         {
          "when": "magnifier",
          "model": {
-          "type": "minecraft:special",
-          "base": "zomboidcraft:item/weapon/battle_rifle/raised_hip/magnifier",
-          "model": {
-           "type": "zomboidcraft:mesh",
-           "id": "att_magnifier",
-           "part": "body",
-           "offset": [
-            7.795,
-            9.596,
-            16.95
-           ]
+          "type": "minecraft:select",
+          "property": "minecraft:custom_model_data",
+          "index": 18,
+          "cases": [
+           {
+            "when": "tan",
+            "model": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/battle_rifle/raised_hip/magnifier",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_magnifier_tan",
+              "part": "body",
+              "offset": [
+               7.795,
+               9.596,
+               16.95
+              ]
+             }
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/battle_rifle/raised_hip/magnifier",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "att_magnifier",
+            "part": "body",
+            "offset": [
+             7.795,
+             9.596,
+             16.95
+            ]
+           }
           }
          }
         },
         {
          "when": "magnifier_aside",
          "model": {
-          "type": "minecraft:special",
-          "base": "zomboidcraft:item/weapon/battle_rifle/raised_hip/magnifier_aside",
-          "model": {
-           "type": "zomboidcraft:mesh",
-           "id": "att_magnifier",
-           "part": "body",
-           "offset": [
-            7.795,
-            9.596,
-            16.95
-           ],
-           "roll": -90
+          "type": "minecraft:select",
+          "property": "minecraft:custom_model_data",
+          "index": 18,
+          "cases": [
+           {
+            "when": "tan",
+            "model": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/battle_rifle/raised_hip/magnifier_aside",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_magnifier_tan",
+              "part": "body",
+              "offset": [
+               7.795,
+               9.596,
+               16.95
+              ],
+              "roll": -90
+             }
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/battle_rifle/raised_hip/magnifier_aside",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "att_magnifier",
+            "part": "body",
+            "offset": [
+             7.795,
+             9.596,
+             16.95
+            ],
+            "roll": -90
+           }
           }
          }
         },
@@ -9341,17 +11042,41 @@
             "type": "minecraft:empty"
            },
            {
-            "type": "minecraft:special",
-            "base": "zomboidcraft:item/weapon/battle_rifle/hip/holo",
-            "model": {
-             "type": "zomboidcraft:mesh",
-             "id": "att_holo",
-             "part": "body",
-             "offset": [
-              7.936,
-              9.596,
-              11.958
-             ]
+            "type": "minecraft:select",
+            "property": "minecraft:custom_model_data",
+            "index": 10,
+            "cases": [
+             {
+              "when": "tan",
+              "model": {
+               "type": "minecraft:special",
+               "base": "zomboidcraft:item/weapon/battle_rifle/hip/holo",
+               "model": {
+                "type": "zomboidcraft:mesh",
+                "id": "att_holo_tan",
+                "part": "body",
+                "offset": [
+                 7.936,
+                 9.596,
+                 11.958
+                ]
+               }
+              }
+             }
+            ],
+            "fallback": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/battle_rifle/hip/holo",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_holo",
+              "part": "body",
+              "offset": [
+               7.936,
+               9.596,
+               11.958
+              ]
+             }
             }
            }
           ]
@@ -9690,18 +11415,43 @@
         {
          "when": "stubby_grip",
          "model": {
-          "type": "minecraft:special",
-          "base": "zomboidcraft:item/weapon/battle_rifle/hip/stubby_grip",
-          "model": {
-           "type": "zomboidcraft:mesh",
-           "id": "att_stubby_grip",
-           "part": "body",
-           "offset": [
-            7.94,
-            7.55,
-            4.6
-           ],
-           "roll": 180
+          "type": "minecraft:select",
+          "property": "minecraft:custom_model_data",
+          "index": 12,
+          "cases": [
+           {
+            "when": "tan",
+            "model": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/battle_rifle/hip/stubby_grip",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_stubby_grip_tan",
+              "part": "body",
+              "offset": [
+               7.94,
+               7.55,
+               4.6
+              ],
+              "roll": 180
+             }
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/battle_rifle/hip/stubby_grip",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "att_stubby_grip",
+            "part": "body",
+            "offset": [
+             7.94,
+             7.55,
+             4.6
+            ],
+            "roll": 180
+           }
           }
          }
         },
@@ -9791,18 +11541,43 @@
         {
          "when": "light",
          "model": {
-          "type": "minecraft:special",
-          "base": "zomboidcraft:item/weapon/battle_rifle/hip/light",
-          "model": {
-           "type": "zomboidcraft:mesh",
-           "id": "att_light",
-           "part": "body",
-           "offset": [
-            6.88,
-            8.5,
-            4.2
-           ],
-           "roll": 90
+          "type": "minecraft:select",
+          "property": "minecraft:custom_model_data",
+          "index": 13,
+          "cases": [
+           {
+            "when": "tan",
+            "model": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/battle_rifle/hip/light",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_light_tan",
+              "part": "body",
+              "offset": [
+               6.88,
+               8.5,
+               4.2
+              ],
+              "roll": 90
+             }
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/battle_rifle/hip/light",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "att_light",
+            "part": "body",
+            "offset": [
+             6.88,
+             8.5,
+             4.2
+            ],
+            "roll": 90
+           }
           }
          }
         },
@@ -9933,35 +11708,84 @@
         {
          "when": "magnifier",
          "model": {
-          "type": "minecraft:special",
-          "base": "zomboidcraft:item/weapon/battle_rifle/hip/magnifier",
-          "model": {
-           "type": "zomboidcraft:mesh",
-           "id": "att_magnifier",
-           "part": "body",
-           "offset": [
-            7.795,
-            9.596,
-            16.95
-           ]
+          "type": "minecraft:select",
+          "property": "minecraft:custom_model_data",
+          "index": 18,
+          "cases": [
+           {
+            "when": "tan",
+            "model": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/battle_rifle/hip/magnifier",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_magnifier_tan",
+              "part": "body",
+              "offset": [
+               7.795,
+               9.596,
+               16.95
+              ]
+             }
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/battle_rifle/hip/magnifier",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "att_magnifier",
+            "part": "body",
+            "offset": [
+             7.795,
+             9.596,
+             16.95
+            ]
+           }
           }
          }
         },
         {
          "when": "magnifier_aside",
          "model": {
-          "type": "minecraft:special",
-          "base": "zomboidcraft:item/weapon/battle_rifle/hip/magnifier_aside",
-          "model": {
-           "type": "zomboidcraft:mesh",
-           "id": "att_magnifier",
-           "part": "body",
-           "offset": [
-            7.795,
-            9.596,
-            16.95
-           ],
-           "roll": -90
+          "type": "minecraft:select",
+          "property": "minecraft:custom_model_data",
+          "index": 18,
+          "cases": [
+           {
+            "when": "tan",
+            "model": {
+             "type": "minecraft:special",
+             "base": "zomboidcraft:item/weapon/battle_rifle/hip/magnifier_aside",
+             "model": {
+              "type": "zomboidcraft:mesh",
+              "id": "att_magnifier_tan",
+              "part": "body",
+              "offset": [
+               7.795,
+               9.596,
+               16.95
+              ],
+              "roll": -90
+             }
+            }
+           }
+          ],
+          "fallback": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/battle_rifle/hip/magnifier_aside",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "att_magnifier",
+            "part": "body",
+            "offset": [
+             7.795,
+             9.596,
+             16.95
+            ],
+            "roll": -90
+           }
           }
          }
         },

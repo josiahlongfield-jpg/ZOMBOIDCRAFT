@@ -69,6 +69,8 @@ final class School {
     private final boolean lit, shelter, overrun;
     private int w, x1, z1, gx, za, zb, floors, top, gh;
     private boolean high;
+    /** The front loop given over to an aid station: the buses and the parent's car gone from it. */
+    boolean evacuated;
     private final List<Room> rooms = new ArrayList<>();
     /** Per storey, the x of each door through the corridor's front and back walls (no lockers there). */
     private final List<List<Integer>> frontDoors = new ArrayList<>(), backDoors = new ArrayList<>();
@@ -1028,11 +1030,21 @@ final class School {
         for (int i = 0; i < buses; i++) {
             double bx = 6 + i * 13 + chance() * 2;
             if (bx < gx - 6) {
-                p.vehicle(bx, 1, 6.5, 270 + (float) (chance() * 8 - 4), "school_bus", rng.nextLong());
+                // the same dice either way, so an evacuated school is otherwise the same school
+                float yaw = 270 + (float) (chance() * 8 - 4);
+                long seed = rng.nextLong();
+                if (!evacuated) {
+                    p.vehicle(bx, 1, 6.5, yaw, "school_bus", seed);
+                }
             }
         }
         if (chance() < 0.6) {
-            p.vehicle(gx - 5 + chance(), 1, 3.5, 90 + (float) (chance() * 20 - 10), "sedan,hatchback,minivan,wagon,suv", rng.nextLong());
+            double cx = gx - 5 + chance();
+            float yaw = 90 + (float) (chance() * 20 - 10);
+            long seed = rng.nextLong();
+            if (!evacuated) {
+                p.vehicle(cx, 1, 3.5, yaw, "sedan,hatchback,minivan,wagon,suv", seed);
+            }
         }
         p.set(gx - 2, 1, 9, "sc_sign_bus[facing=north]");
         p.set(1, 1, 0, "sc_sign_school[facing=north]");

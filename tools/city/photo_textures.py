@@ -1167,6 +1167,12 @@ import gazebo  # noqa: E402
 gazebo.register(sys.modules[__name__])
 import poles  # noqa: E402
 poles.register(sys.modules[__name__])
+import signals  # noqa: E402
+signals.register(sys.modules[__name__])
+import welcome  # noqa: E402
+welcome.register(sys.modules[__name__])
+import roomlights  # noqa: E402
+roomlights.register(sys.modules[__name__])
 import airfield  # noqa: E402
 airfield.register(sys.modules[__name__])
 import airport  # noqa: E402

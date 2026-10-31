@@ -72,6 +72,52 @@ public final class NpcPanel {
         }
     }
 
+    /**
+     * Bonds with her (or unbonds): bonded, you can open her page from anywhere (Josiah 2026-10-30). Bonding needs you
+     * beside her; unbonding works from anywhere.
+     */
+    public record Bond(int npc, boolean on) implements CustomPacketPayload {
+        public static final Type<Bond> TYPE = new Type<>(ZomboidCraft.id("npc_bond"));
+        public static final StreamCodec<RegistryFriendlyByteBuf, Bond> CODEC = StreamCodec.composite(
+                ByteBufCodecs.VAR_INT, Bond::npc, ByteBufCodecs.BOOL, Bond::on, Bond::new);
+
+        @Override
+        public Type<? extends CustomPacketPayload> type() {
+            return TYPE;
+        }
+    }
+
+    /** One companion you're bonded with: who she is and how she looks, so her page can draw her when she's far away. */
+    public record Bonded(String uuid, int id, String name, String model, String look, String hidden) {
+    }
+
+    /** Everyone you're bonded with that your world has loaded, by name (sent every two seconds). */
+    public record Bonds(List<Bonded> list) implements CustomPacketPayload {
+        public static final Type<Bonds> TYPE = new Type<>(ZomboidCraft.id("npc_bonds"));
+        public static final StreamCodec<RegistryFriendlyByteBuf, Bonds> CODEC = StreamCodec.of((buf, b) -> {
+            buf.writeVarInt(b.list.size());
+            for (Bonded e : b.list) {
+                buf.writeUtf(e.uuid());
+                buf.writeVarInt(e.id());
+                buf.writeUtf(e.name());
+                buf.writeUtf(e.model());
+                buf.writeUtf(e.look());
+                buf.writeUtf(e.hidden());
+            }
+        }, buf -> {
+            List<Bonded> list = new ArrayList<>();
+            for (int i = buf.readVarInt(); i > 0; i--) {
+                list.add(new Bonded(buf.readUtf(), buf.readVarInt(), buf.readUtf(), buf.readUtf(), buf.readUtf(), buf.readUtf()));
+            }
+            return new Bonds(list);
+        });
+
+        @Override
+        public Type<? extends CustomPacketPayload> type() {
+            return TYPE;
+        }
+    }
+
     public record Order(int npc, int code) implements CustomPacketPayload {
         public static final Type<Order> TYPE = new Type<>(ZomboidCraft.id("npc_order"));
         public static final StreamCodec<RegistryFriendlyByteBuf, Order> CODEC = StreamCodec.composite(
@@ -177,6 +223,22 @@ public final class NpcPanel {
         PayloadTypeRegistry.serverboundPlay().register(Order.TYPE, Order.CODEC);
         PayloadTypeRegistry.serverboundPlay().register(Gear.TYPE, Gear.CODEC);
         PayloadTypeRegistry.clientboundPlay().register(State.TYPE, State.CODEC);
+        PayloadTypeRegistry.serverboundPlay().register(Bond.TYPE, Bond.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(Bonds.TYPE, Bonds.CODEC);
+        ServerPlayNetworking.registerGlobalReceiver(Bond.TYPE, (payload, context) -> {
+            ServerPlayer player = context.player();
+            player.level().getServer().execute(() -> {
+                if (!(player.level().getEntity(payload.npc()) instanceof NpcEntity npc) || !npc.isAlive()) return;
+                if (payload.on()) {
+                    if (npc.distanceToSqr(player) > REACH * REACH || !npc.bonds.add(player.getUUID())) return;
+                    npc.mind.remember(npc, "Bonded with " + player.getName().getString(), 0.4f, 0.6f);
+                    tell(player, "Bonded with " + npc.speakerName() + ". Press K to bring up her page from anywhere");
+                } else if (npc.bonds.remove(player.getUUID())) {
+                    tell(player, "Unbonded from " + npc.speakerName());
+                }
+                ServerPlayNetworking.send(player, bonds(player));
+            });
+        });
         ServerPlayNetworking.registerGlobalReceiver(Watch.TYPE, (payload, context) -> {
             ServerPlayer player = context.player();
             player.level().getServer().execute(() -> {
@@ -211,6 +273,9 @@ public final class NpcPanel {
             });
         });
         ServerTickEvents.END_SERVER_TICK.register(server -> {
+            if (server.getTickCount() % 40 == 5) {
+                for (ServerPlayer p : server.getPlayerList().getPlayers()) ServerPlayNetworking.send(p, bonds(p));
+            }
             if (server.getTickCount() % 10 != 0 || watching.isEmpty()) return;
             watching.entrySet().removeIf(e -> {
                 ServerPlayer p = server.getPlayerList().getPlayer(e.getKey());
@@ -225,9 +290,24 @@ public final class NpcPanel {
         });
     }
 
+    /** Her, if she's beside you, or anywhere in your world when you're bonded with her. */
     private static NpcEntity near(ServerPlayer player, int id) {
         if (player.isSpectator() || !(player.level().getEntity(id) instanceof NpcEntity npc) || !npc.isAlive()) return null;
-        return npc.distanceToSqr(player) <= REACH * REACH ? npc : null;
+        return npc.distanceToSqr(player) <= REACH * REACH || npc.bonds.contains(player.getUUID()) ? npc : null;
+    }
+
+    /** The companions bonded with this player that are loaded in their world (others come back as they load). */
+    private static Bonds bonds(ServerPlayer player) {
+        List<Bonded> list = new ArrayList<>();
+        if (player.level() instanceof net.minecraft.server.level.ServerLevel level) {
+            for (NpcEntity npc : level.getEntities(Npcs.NPC, n -> n.isAlive() && n.bonds.contains(player.getUUID()))) {
+                list.add(new Bonded(npc.getUUID().toString(), npc.getId(), npc.getName().getString(), npc.model(), npc.look(),
+                        String.join(",", npc.hidden())));
+            }
+        }
+        // a steady order, so the selection screen doesn't reshuffle
+        list.sort(java.util.Comparator.comparing(Bonded::name).thenComparing(Bonded::uuid));
+        return new Bonds(list);
     }
 
     private static State state(NpcEntity npc) {
