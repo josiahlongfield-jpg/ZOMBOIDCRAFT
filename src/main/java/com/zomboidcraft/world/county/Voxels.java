@@ -112,6 +112,10 @@ public final class Voxels implements BlockSink {
             return;
         }
         // a state pinned after the names ("...@wrecked") goes along with the model picked
+        if (car.models() != null && car.models().startsWith("!hoist")) {
+            cars.add(car);      // the lift; the car it holds is placed with it
+            return;
+        }
         String models = car.models(), state = "";
         int at = models == null ? -1 : models.indexOf('@');
         if (at >= 0) {

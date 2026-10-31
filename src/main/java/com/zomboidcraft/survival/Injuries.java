@@ -182,7 +182,7 @@ public final class Injuries {
             Part p = body.part(r);
             shake += p.fractured() ? (p.splinted() ? 0.3f : 0.5f) : p.severity() >= 2 ? 0.15f : 0;
         }
-        return Math.min(1, shake * Medicine.steadiness(player) + Medicine.painShake(player));
+        return Math.min(1, shake * Medicine.steadiness(player) + Medicine.painShake(player) + com.zomboidcraft.survival.Mood.shake(player));
     }
 
     private Injuries() {

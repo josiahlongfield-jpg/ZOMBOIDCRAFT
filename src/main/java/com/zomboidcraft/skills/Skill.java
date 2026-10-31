@@ -1,6 +1,28 @@
 package com.zomboidcraft.skills;
 
 public enum Skill {
+    // Zomboid B42's skill list (survival thread). Mechanics and Tailoring come from the cars and clothing threads.
+    /** Passive, like Zomboid: starts at 5, trained by running and fighting, wastes away when starving (survival/Passive). */
+    FITNESS("Fitness"),
+    /** Passive: starts at 5, trained by carrying and melee, wastes away when starving. */
+    STRENGTH("Strength"),
+    LIGHTFOOTED("Lightfooted"),
+    NIMBLE("Nimble"),
+    RELOADING("Reloading"),
+    COOKING("Cooking"),
+    AGRICULTURE("Agriculture"),
+    ANIMAL_CARE("Animal Care"),
+    BUTCHERING("Butchering"),
+    FORAGING("Foraging"),
+    FISHING("Fishing"),
+    TRAPPING("Trapping"),
+    TRACKING("Tracking"),
+    ELECTRICAL("Electrical"),
+    CARVING("Carving"),
+    KNAPPING("Knapping"),
+    POTTERY("Pottery"),
+    GLASSMAKING("Glassmaking"),
+    BLACKSMITHING("Blacksmithing"),
     CARPENTRY("Carpentry"),
     FIRST_AID("First Aid"),
     BLUNT("Blunt"),
@@ -17,10 +39,10 @@ public enum Skill {
     PILOTING("Piloting"),
     /** Patching clothes: stitches that hold, sewn quicker (clothing/Tailoring). */
     TAILORING("Tailoring"),
-    /** Generators, wiring and lights, and moving lamps and switches (building/Moving, building/Ladder). */
-    ELECTRICAL("Electrical"),
-    /** Sinks, tubs and toilets: taking them out with a pipe wrench and plumbing them in (building/Moving, building/Ladder). */
-    PLUMBING("Plumbing");
+    /** Ours (Josiah's pick, Zomboid has none): sinks, tubs and toilets out with a pipe wrench (building/Moving). */
+    PLUMBING("Plumbing"),
+    /** Taking cars apart and putting them back together (world/cars/CarParts): each level unlocks more of the car. */
+    MECHANICS("Mechanics");
 
     public static final int MAX_LEVEL = 10;
 
@@ -28,6 +50,11 @@ public enum Skill {
 
     Skill(String displayName) {
         this.displayName = displayName;
+    }
+
+    /** Zomboid's passive skills: everyone starts at level 5, and they can fall again. */
+    public boolean passive() {
+        return this == FITNESS || this == STRENGTH;
     }
 
     public String displayName() {

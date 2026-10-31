@@ -1,0 +1,3087 @@
+{
+ "source": "https://pindrop.gg/project-zomboid/sandbox-settings",
+ "build": "42.21",
+ "options": [
+  {
+   "id": "Zombies",
+   "group": "population",
+   "label": "Zombie Count",
+   "tooltip": "Changing this also sets the \"Population Multiplier\" in Advanced Zombie Options.",
+   "kind": "choice",
+   "count": 6,
+   "default": "normal",
+   "choices": [
+    "normal"
+   ],
+   "owner": "ENTITY"
+  },
+  {
+   "id": "Distribution",
+   "group": "population",
+   "label": "Zombie Distribution",
+   "tooltip": "How zombies are distributed across the map.",
+   "kind": "choice",
+   "count": 2,
+   "default": "urban_focused",
+   "choices": [
+    "urban_focused"
+   ],
+   "owner": "ENTITY",
+   "idChecked": false
+  },
+  {
+   "id": "ZombieVoronoiNoise",
+   "group": "population",
+   "label": "Voronoi Noise",
+   "tooltip": "Controls whether some randomization is applied to zombie distribution.",
+   "kind": "toggle",
+   "default": "true",
+   "owner": "ENTITY"
+  },
+  {
+   "id": "ZombieRespawn",
+   "group": "population",
+   "label": "Zombie Respawn",
+   "tooltip": "How frequently new zombies are added to the world.",
+   "kind": "choice",
+   "count": 4,
+   "default": "none",
+   "choices": [
+    "none"
+   ],
+   "owner": "ENTITY"
+  },
+  {
+   "id": "ZombieMigrate",
+   "group": "population",
+   "label": "Zombie Migration",
+   "tooltip": "Zombie allowed to migrate to empty cells.",
+   "kind": "toggle",
+   "default": "true",
+   "owner": "ENTITY"
+  },
+  {
+   "id": "ZombieAttractionMultiplier",
+   "group": "population",
+   "label": "Zombie Attraction Multiplier",
+   "tooltip": "General engine loudness to zombies.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 100.0,
+   "default": "1",
+   "owner": "ENTITY"
+  },
+  {
+   "id": "ZombieConfig.PopulationMultiplier",
+   "group": "population",
+   "label": "Population Multiplier",
+   "tooltip": "",
+   "kind": "number",
+   "min": 0.0,
+   "max": 4.0,
+   "default": "0.65",
+   "owner": "ENTITY"
+  },
+  {
+   "id": "ZombieConfig.PopulationStartMultiplier",
+   "group": "population",
+   "label": "Population Start Multiplier",
+   "tooltip": "",
+   "kind": "number",
+   "min": 0.0,
+   "max": 4.0,
+   "default": "1",
+   "owner": "ENTITY"
+  },
+  {
+   "id": "ZombieConfig.PopulationPeakMultiplier",
+   "group": "population",
+   "label": "Population Peak Multiplier",
+   "tooltip": "",
+   "kind": "number",
+   "min": 0.0,
+   "max": 4.0,
+   "default": "1.5",
+   "owner": "ENTITY"
+  },
+  {
+   "id": "ZombieConfig.PopulationPeakDay",
+   "group": "population",
+   "label": "Population Peak Day",
+   "tooltip": "",
+   "kind": "number",
+   "min": 1.0,
+   "max": 365.0,
+   "default": "28",
+   "owner": "ENTITY"
+  },
+  {
+   "id": "ZombieConfig.RespawnHours",
+   "group": "population",
+   "label": "Respawn Hours",
+   "tooltip": "",
+   "kind": "number",
+   "min": 0.0,
+   "max": 8760.0,
+   "default": "0",
+   "owner": "ENTITY"
+  },
+  {
+   "id": "ZombieConfig.RespawnUnseenHours",
+   "group": "population",
+   "label": "Respawn Unseen Hours",
+   "tooltip": "",
+   "kind": "number",
+   "min": 0.0,
+   "max": 8760.0,
+   "default": "0",
+   "owner": "ENTITY"
+  },
+  {
+   "id": "ZombieConfig.RespawnMultiplier",
+   "group": "population",
+   "label": "Respawn Multiplier",
+   "tooltip": "",
+   "kind": "number",
+   "min": 0.0,
+   "max": 1.0,
+   "default": "0",
+   "owner": "ENTITY"
+  },
+  {
+   "id": "ZombieConfig.RedistributeHours",
+   "group": "population",
+   "label": "Redistribute Hours",
+   "tooltip": "",
+   "kind": "number",
+   "min": 0.0,
+   "max": 8760.0,
+   "default": "12",
+   "owner": "ENTITY"
+  },
+  {
+   "id": "ZombieConfig.FollowSoundDistance",
+   "group": "population",
+   "label": "Follow Sound Distance",
+   "tooltip": "",
+   "kind": "number",
+   "min": 10.0,
+   "max": 1000.0,
+   "default": "100",
+   "owner": "ENTITY"
+  },
+  {
+   "id": "ZombieConfig.RallyGroupSize",
+   "group": "population",
+   "label": "Rally Group Size",
+   "tooltip": "",
+   "kind": "number",
+   "min": 0.0,
+   "max": 1000.0,
+   "default": "20",
+   "owner": "ENTITY"
+  },
+  {
+   "id": "ZombieConfig.RallyGroupSizeVariance",
+   "group": "population",
+   "label": "Rally Group Size Variance",
+   "tooltip": "",
+   "kind": "number",
+   "min": 0.0,
+   "max": 100.0,
+   "default": "50",
+   "owner": "ENTITY"
+  },
+  {
+   "id": "ZombieConfig.RallyTravelDistance",
+   "group": "population",
+   "label": "Rally Travel Distance",
+   "tooltip": "",
+   "kind": "number",
+   "min": 5.0,
+   "max": 50.0,
+   "default": "20",
+   "owner": "ENTITY"
+  },
+  {
+   "id": "ZombieConfig.RallyGroupSeparation",
+   "group": "population",
+   "label": "Rally Group Separation",
+   "tooltip": "",
+   "kind": "number",
+   "min": 5.0,
+   "max": 25.0,
+   "default": "15",
+   "owner": "ENTITY"
+  },
+  {
+   "id": "ZombieConfig.RallyGroupRadius",
+   "group": "population",
+   "label": "Rally Group Radius",
+   "tooltip": "",
+   "kind": "number",
+   "min": 1.0,
+   "max": 10.0,
+   "default": "3",
+   "owner": "ENTITY"
+  },
+  {
+   "id": "ZombieConfig.ZombiesCountBeforeDelete",
+   "group": "population",
+   "label": "Zombie count before deletion",
+   "tooltip": "How many zombies can occupy a certain area.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 5000.0,
+   "default": "300",
+   "owner": "ENTITY"
+  },
+  {
+   "id": "ZombieLore.Speed",
+   "group": "lore",
+   "label": "Speed",
+   "tooltip": "How fast zombies move.",
+   "kind": "choice",
+   "count": 4,
+   "default": "random",
+   "choices": [
+    "random"
+   ],
+   "owner": "ENTITY",
+   "idChecked": false
+  },
+  {
+   "id": "ZombieLore.SprinterPercentage",
+   "group": "lore",
+   "label": "Random Sprinter Amount",
+   "tooltip": "If Random Speed is enabled, this controls what percentage of zombies are Sprinters. Check the \"Advanced\" box below to use a custom percentage.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 100.0,
+   "default": "0",
+   "owner": "ENTITY"
+  },
+  {
+   "id": "ZombieLore.Strength",
+   "group": "lore",
+   "label": "Strength",
+   "tooltip": "The damage zombies inflict per attack.",
+   "kind": "choice",
+   "count": 4,
+   "default": "normal",
+   "choices": [
+    "normal"
+   ],
+   "owner": "ENTITY",
+   "idChecked": false
+  },
+  {
+   "id": "ZombieLore.Toughness",
+   "group": "lore",
+   "label": "Toughness",
+   "tooltip": "The difficulty of killing a zombie.",
+   "kind": "choice",
+   "count": 4,
+   "default": "random",
+   "choices": [
+    "random"
+   ],
+   "owner": "ENTITY",
+   "idChecked": false
+  },
+  {
+   "id": "ZombieLore.Transmission",
+   "group": "lore",
+   "label": "Transmission",
+   "tooltip": "How the Knox Virus spreads.",
+   "kind": "choice",
+   "count": 4,
+   "default": "blood_and_saliva",
+   "choices": [
+    "blood_and_saliva"
+   ],
+   "owner": "ENTITY",
+   "idChecked": false
+  },
+  {
+   "id": "ZombieLore.Mortality",
+   "group": "lore",
+   "label": "Infection Mortality",
+   "tooltip": "How quickly the infection takes effect.",
+   "kind": "choice",
+   "count": 7,
+   "default": "2_3_days",
+   "choices": [
+    "2_3_days"
+   ],
+   "owner": "ENTITY",
+   "idChecked": false
+  },
+  {
+   "id": "ZombieLore.Reanimate",
+   "group": "lore",
+   "label": "Reanimate Time",
+   "tooltip": "How quickly infected corpses rise as zombies.",
+   "kind": "choice",
+   "count": 6,
+   "default": "0_1_minutes",
+   "choices": [
+    "0_1_minutes"
+   ],
+   "owner": "ENTITY",
+   "idChecked": false
+  },
+  {
+   "id": "ZombieLore.Cognition",
+   "group": "lore",
+   "label": "Cognition",
+   "tooltip": "Zombie intelligence.",
+   "kind": "choice",
+   "count": 4,
+   "default": "basic_navigation",
+   "choices": [
+    "basic_navigation"
+   ],
+   "owner": "ENTITY",
+   "idChecked": false
+  },
+  {
+   "id": "ZombieLore.DoorOpeningPercentage",
+   "group": "lore",
+   "label": "Random Door Opening Amount",
+   "tooltip": "",
+   "kind": "number",
+   "min": 0.0,
+   "max": 100.0,
+   "default": "0",
+   "owner": "ENTITY"
+  },
+  {
+   "id": "ZombieLore.CrawlUnderVehicle",
+   "group": "lore",
+   "label": "Crawl Under Vehicle",
+   "tooltip": "How often zombies can crawl under parked vehicles.",
+   "kind": "choice",
+   "count": 7,
+   "default": "often",
+   "choices": [
+    "often"
+   ],
+   "owner": "ENTITY"
+  },
+  {
+   "id": "ZombieLore.Memory",
+   "group": "lore",
+   "label": "Memory",
+   "tooltip": "How long zombies remember a player after seeing or hearing them.",
+   "kind": "choice",
+   "count": 6,
+   "default": "normal",
+   "choices": [
+    "normal"
+   ],
+   "owner": "ENTITY",
+   "idChecked": false
+  },
+  {
+   "id": "ZombieLore.Sight",
+   "group": "lore",
+   "label": "Sight",
+   "tooltip": "Zombie vision radius.",
+   "kind": "choice",
+   "count": 5,
+   "default": "random_between_normal_and_poor",
+   "choices": [
+    "random_between_normal_and_poor"
+   ],
+   "owner": "ENTITY",
+   "idChecked": false
+  },
+  {
+   "id": "ZombieLore.Hearing",
+   "group": "lore",
+   "label": "Hearing",
+   "tooltip": "Zombie hearing radius.",
+   "kind": "choice",
+   "count": 5,
+   "default": "random_between_normal_and_poor",
+   "choices": [
+    "random_between_normal_and_poor"
+   ],
+   "owner": "ENTITY",
+   "idChecked": false
+  },
+  {
+   "id": "ZombieLore.SpottedLogic",
+   "group": "lore",
+   "label": "New Stealth System",
+   "tooltip": "Activates the new advanced stealth mechanics, which allows you to hide from zombies behind cars, takes traits and weather into account, and much more.",
+   "kind": "toggle",
+   "default": "true",
+   "owner": "ENTITY"
+  },
+  {
+   "id": "ZombieLore.ThumpNoChasing",
+   "group": "lore",
+   "label": "Environmental Attacks",
+   "tooltip": "If zombies that have not seen/heard player can attack doors and constructions while roaming.",
+   "kind": "toggle",
+   "default": "false",
+   "owner": "ENTITY"
+  },
+  {
+   "id": "ZombieLore.ThumpOnConstruction",
+   "group": "lore",
+   "label": "Damage Construction",
+   "tooltip": "If zombies can destroy player constructions and defenses.",
+   "kind": "toggle",
+   "default": "true",
+   "owner": "ENTITY"
+  },
+  {
+   "id": "ZombieLore.ActiveOnly",
+   "group": "lore",
+   "label": "Day/Night Zombie Speed Effect",
+   "tooltip": "Whether zombies are more \"active\" during the day or night. \"Active\" zombies will use the speed set in the \"Speed\" setting. \"Inactive\" zombies will be slower, and tend not to give chase.",
+   "kind": "choice",
+   "count": 3,
+   "default": "both",
+   "choices": [
+    "both"
+   ],
+   "owner": "ENTITY"
+  },
+  {
+   "id": "ZombieLore.TriggerHouseAlarm",
+   "group": "lore",
+   "label": "Zombie House Alarm Triggering",
+   "tooltip": "If zombies trigger house alarms when breaking through windows or doors.",
+   "kind": "toggle",
+   "default": "true",
+   "owner": "ENTITY"
+  },
+  {
+   "id": "ZombieLore.ZombiesDragDown",
+   "group": "lore",
+   "label": "Drag Down",
+   "tooltip": "If multiple attacking zombies can drag you down and kill you. Dependent on zombie strength.",
+   "kind": "toggle",
+   "default": "true",
+   "owner": "ENTITY"
+  },
+  {
+   "id": "ZombieLore.ZombiesCrawlersDragDown",
+   "group": "lore",
+   "label": "Crawlers Drag Down",
+   "tooltip": "If crawler zombies beside a player contribute to the chance of being dragged down and killed by a group of zombies.",
+   "kind": "toggle",
+   "default": "false",
+   "owner": "ENTITY"
+  },
+  {
+   "id": "ZombieLore.ZombiesFenceLunge",
+   "group": "lore",
+   "label": "Zombie Lunge",
+   "tooltip": "If zombies have a chance to lunge at you after climbing over a fence or through a window if you're too close.",
+   "kind": "toggle",
+   "default": "true",
+   "owner": "ENTITY"
+  },
+  {
+   "id": "ZombieLore.ZombiesArmorFactor",
+   "group": "lore",
+   "label": "Zombie Armor Factor",
+   "tooltip": "Serves as a multiplier when determining the effectiveness of armor worn by zombies.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 100.0,
+   "default": "2",
+   "owner": "ENTITY"
+  },
+  {
+   "id": "ZombieLore.ZombiesMaxDefense",
+   "group": "lore",
+   "label": "Maximum Zombie Armor Defense",
+   "tooltip": "The maximum defense percentage that any worn protective garments can provide to a zombie.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 100.0,
+   "default": "85",
+   "owner": "ENTITY"
+  },
+  {
+   "id": "ZombieLore.ChanceOfAttachedWeapon",
+   "group": "lore",
+   "label": "Chance Of Attached Weapon",
+   "tooltip": "Percentage chance of having a random attached weapon.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 100.0,
+   "default": "6",
+   "owner": "ENTITY"
+  },
+  {
+   "id": "ZombieLore.ZombiesFallDamage",
+   "group": "lore",
+   "label": "Zombie Fall Damage Multiplier",
+   "tooltip": "How much damage zombies take when falling from height.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 100.0,
+   "default": "1",
+   "owner": "ENTITY"
+  },
+  {
+   "id": "ZombieLore.DisableFakeDead",
+   "group": "lore",
+   "label": "Fake Dead Zombie Reanimation",
+   "tooltip": "Whether some dead-looking zombies will reanimate and attack the player.",
+   "kind": "choice",
+   "count": 3,
+   "default": "world_zombies",
+   "choices": [
+    "world_zombies"
+   ],
+   "owner": "ENTITY"
+  },
+  {
+   "id": "ZombieLore.PlayerSpawnZombieRemoval",
+   "group": "lore",
+   "label": "Player Spawn Area",
+   "tooltip": "Zombies will not spawn where players spawn.",
+   "kind": "choice",
+   "count": 4,
+   "default": "inside_the_building_and_around_it",
+   "choices": [
+    "inside_the_building_and_around_it"
+   ],
+   "owner": "ENTITY"
+  },
+  {
+   "id": "ZombieLore.FenceThumpersRequired",
+   "group": "lore",
+   "label": "Zombies To Damage Fences",
+   "tooltip": "How many zombies it takes to damage a tall fence.",
+   "kind": "number",
+   "min": -1.0,
+   "max": 100.0,
+   "default": "25",
+   "owner": "ENTITY"
+  },
+  {
+   "id": "ZombieLore.FenceDamageMultiplier",
+   "group": "lore",
+   "label": "Fence Damage Multiplier",
+   "tooltip": "How quickly zombies damage tall fences.",
+   "kind": "number",
+   "min": 0.009999999776482582,
+   "max": 100.0,
+   "default": "1",
+   "owner": "ENTITY"
+  },
+  {
+   "id": "DayLength",
+   "group": "time",
+   "label": "Day Length (in real time)",
+   "tooltip": "",
+   "kind": "choice",
+   "count": 27,
+   "default": "1_hour_30_minutes",
+   "choices": [
+    "1_hour_30_minutes"
+   ],
+   "owner": "COMMANDS"
+  },
+  {
+   "id": "StartYear",
+   "group": "time",
+   "label": "Start Year",
+   "tooltip": "",
+   "kind": "choice",
+   "count": 100,
+   "default": "1",
+   "choices": [
+    "1"
+   ],
+   "owner": "COMMANDS"
+  },
+  {
+   "id": "StartMonth",
+   "group": "time",
+   "label": "Start Month",
+   "tooltip": "Month in which the game starts.",
+   "kind": "choice",
+   "count": 12,
+   "default": "july",
+   "choices": [
+    "july"
+   ],
+   "owner": "COMMANDS"
+  },
+  {
+   "id": "StartDay",
+   "group": "time",
+   "label": "Start Day",
+   "tooltip": "Day of the month in which the games starts.",
+   "kind": "choice",
+   "count": 31,
+   "default": "9",
+   "choices": [
+    "9"
+   ],
+   "owner": "COMMANDS"
+  },
+  {
+   "id": "StartTime",
+   "group": "time",
+   "label": "Start Hour",
+   "tooltip": "Hour of the day in which the game starts.",
+   "kind": "choice",
+   "count": 9,
+   "default": "9_am",
+   "choices": [
+    "9_am"
+   ],
+   "owner": "COMMANDS"
+  },
+  {
+   "id": "DayNightCycle",
+   "group": "time",
+   "label": "Day / Night Cycle",
+   "tooltip": "Whether the time of day changes naturally, or it's always day/night.",
+   "kind": "choice",
+   "count": 3,
+   "default": "normal",
+   "choices": [
+    "normal"
+   ],
+   "owner": "WEATHER"
+  },
+  {
+   "id": "TimeSinceApo",
+   "group": "time",
+   "label": "Months since the Apocalypse",
+   "tooltip": "How long after the end of the world to begin. This will affect starting world erosion and food spoilage. Does not affect the starting date.",
+   "kind": "choice",
+   "count": 13,
+   "default": "0",
+   "choices": [
+    "0"
+   ],
+   "owner": "LOOT"
+  },
+  {
+   "id": "NightDarkness",
+   "group": "time",
+   "label": "Darkness during night",
+   "tooltip": "The level of ambient lighting at night.",
+   "kind": "choice",
+   "count": 4,
+   "default": "normal",
+   "choices": [
+    "normal"
+   ],
+   "owner": "WEATHER"
+  },
+  {
+   "id": "NightLength",
+   "group": "time",
+   "label": "Length of nights",
+   "tooltip": "The time from dusk to dawn.",
+   "kind": "choice",
+   "count": 5,
+   "default": "normal",
+   "choices": [
+    "normal"
+   ],
+   "owner": "WEATHER"
+  },
+  {
+   "id": "WaterShut",
+   "group": "utilities",
+   "label": "Water Shutoff",
+   "tooltip": "How long after the default start date (July 9, 1993) that plumbing fixtures (eg. sinks) stop being infinite sources of water.",
+   "kind": "choice",
+   "count": 9,
+   "default": "0_30_days",
+   "choices": [
+    "0_30_days"
+   ],
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "ElecShut",
+   "group": "utilities",
+   "label": "Electricity Shutoff",
+   "tooltip": "How long after the default start date (July 9, 1993) that the world's electricity turns off for good.",
+   "kind": "choice",
+   "count": 9,
+   "default": "14_30_days",
+   "choices": [
+    "14_30_days"
+   ],
+   "owner": "LANDSCAPE"
+  },
+  {
+   "id": "AlarmDecay",
+   "group": "utilities",
+   "label": "Alarm Battery Decay",
+   "tooltip": "How long alarm batteries can last for after the power shuts off.",
+   "kind": "choice",
+   "count": 6,
+   "default": "0_30_days",
+   "choices": [
+    "0_30_days"
+   ],
+   "owner": "LANDSCAPE"
+  },
+  {
+   "id": "WaterShutModifier",
+   "group": "utilities",
+   "label": "Water Shutoff (WaterShutModifier)",
+   "tooltip": "How long after the default start date (July 9, 1993) that plumbing fixtures (eg. sinks) stop being infinite sources of water.",
+   "kind": "number",
+   "min": -1.0,
+   "max": 1000000000.0,
+   "default": "14",
+   "owner": "SURVIVAL",
+   "idChecked": false
+  },
+  {
+   "id": "ElecShutModifier",
+   "group": "utilities",
+   "label": "Electricity Shutoff (ElecShutModifier)",
+   "tooltip": "How long after the default start date (July 9, 1993) that the world's electricity turns off for good.",
+   "kind": "number",
+   "min": -1.0,
+   "max": 1000000000.0,
+   "default": "14",
+   "owner": "LANDSCAPE",
+   "idChecked": false
+  },
+  {
+   "id": "AlarmDecayModifier",
+   "group": "utilities",
+   "label": "Alarm Battery Decay (AlarmDecayModifier)",
+   "tooltip": "How long alarm batteries can last for after the power shuts off.",
+   "kind": "number",
+   "min": -1.0,
+   "max": 1000000000.0,
+   "default": "14",
+   "owner": "LANDSCAPE",
+   "idChecked": false
+  },
+  {
+   "id": "Alarm",
+   "group": "utilities",
+   "label": "House Alarms Frequency",
+   "tooltip": "How likely the player is to activate a house alarm when breaking into a new house.",
+   "kind": "choice",
+   "count": 6,
+   "default": "sometimes",
+   "choices": [
+    "sometimes"
+   ],
+   "owner": "LANDSCAPE",
+   "idChecked": false
+  },
+  {
+   "id": "LockedHouses",
+   "group": "utilities",
+   "label": "Locked Houses Frequency",
+   "tooltip": "How frequently the doors of homes and buildings will be locked when discovered.",
+   "kind": "choice",
+   "count": 6,
+   "default": "very_often",
+   "choices": [
+    "very_often"
+   ],
+   "owner": "LANDSCAPE"
+  },
+  {
+   "id": "Helicopter",
+   "group": "utilities",
+   "label": "Helicopter",
+   "tooltip": "How regularly a helicopter passes over the Event Zone.",
+   "kind": "choice",
+   "count": 4,
+   "default": "once",
+   "choices": [
+    "once"
+   ],
+   "owner": "ENTITY",
+   "idChecked": false
+  },
+  {
+   "id": "MetaEvent",
+   "group": "utilities",
+   "label": "Meta Event",
+   "tooltip": "How often zombie-attracting metagame events like distant gunshots will occur.",
+   "kind": "choice",
+   "count": 3,
+   "default": "sometimes",
+   "choices": [
+    "sometimes"
+   ],
+   "owner": "AUDIO"
+  },
+  {
+   "id": "SleepingEvent",
+   "group": "utilities",
+   "label": "Sleeping Event",
+   "tooltip": "How often events during the player's sleep, like nightmares, occur.",
+   "kind": "choice",
+   "count": 3,
+   "default": "never",
+   "choices": [
+    "never"
+   ],
+   "owner": "AUDIO"
+  },
+  {
+   "id": "GeneratorFuelConsumption",
+   "group": "utilities",
+   "label": "Generator Fuel Consumption",
+   "tooltip": "How much fuel is consumed by generators per in-game hour.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 100.0,
+   "default": "0.1",
+   "owner": "BASES"
+  },
+  {
+   "id": "GeneratorSpawning",
+   "group": "utilities",
+   "label": "Generators",
+   "tooltip": "The chance of electrical generators spawning on the map.",
+   "kind": "choice",
+   "count": 7,
+   "default": "rare",
+   "choices": [
+    "rare"
+   ],
+   "owner": "BASES"
+  },
+  {
+   "id": "FireSpread",
+   "group": "utilities",
+   "label": "Fire Spread",
+   "tooltip": "If fires spread when started.",
+   "kind": "toggle",
+   "default": "true",
+   "owner": "WEAPONS"
+  },
+  {
+   "id": "AllowExteriorGenerator",
+   "group": "utilities",
+   "label": "Generator Working in Exterior",
+   "tooltip": "If enabled, generators will work on exterior tiles. This will allow, for example, the powering of gas pumps.",
+   "kind": "toggle",
+   "default": "true",
+   "owner": "BASES"
+  },
+  {
+   "id": "SirenShutoffHours",
+   "group": "utilities",
+   "label": "Siren Shutoff Hours",
+   "tooltip": "How many in-game hours before a wailing siren shuts off.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 168.0,
+   "default": "0",
+   "owner": "VEHICLES"
+  },
+  {
+   "id": "GeneratorTileRange",
+   "group": "utilities",
+   "label": "Generator tile range",
+   "tooltip": "",
+   "kind": "number",
+   "min": 1.0,
+   "max": 100.0,
+   "default": "20",
+   "owner": "BASES"
+  },
+  {
+   "id": "GeneratorVerticalPowerRange",
+   "group": "utilities",
+   "label": "Generator vertical range",
+   "tooltip": "How many levels both above and below a generator it can provide with electricity.",
+   "kind": "number",
+   "min": 1.0,
+   "max": 15.0,
+   "default": "3",
+   "owner": "BASES"
+  },
+  {
+   "id": "FoodLootNew",
+   "group": "loot",
+   "label": "Perishable Food",
+   "tooltip": "Any food that can rot or spoil.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 4.0,
+   "default": "0.8",
+   "owner": "LOOT"
+  },
+  {
+   "id": "LiteratureLootNew",
+   "group": "loot",
+   "label": "Other Literature",
+   "tooltip": "All other items that can be read, including books, fliers, and newspapers.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 4.0,
+   "default": "0.6",
+   "owner": "LOOT"
+  },
+  {
+   "id": "SkillBookLoot",
+   "group": "loot",
+   "label": "Skill Books",
+   "tooltip": "Books that provide skill XP multipliers.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 4.0,
+   "default": "0.6",
+   "owner": "LOOT"
+  },
+  {
+   "id": "RecipeResourceLoot",
+   "group": "loot",
+   "label": "Recipe Resources",
+   "tooltip": "Items that teach recipes.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 4.0,
+   "default": "0.6",
+   "owner": "LOOT"
+  },
+  {
+   "id": "MedicalLootNew",
+   "group": "loot",
+   "label": "Medical",
+   "tooltip": "Medicine, bandages and first aid tools.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 4.0,
+   "default": "0.6",
+   "owner": "LOOT"
+  },
+  {
+   "id": "SurvivalGearsLootNew",
+   "group": "loot",
+   "label": "Survival Essentials",
+   "tooltip": "Fishing Rods, Tents, camping gear etc.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 4.0,
+   "default": "0.6",
+   "owner": "LOOT"
+  },
+  {
+   "id": "CannedFoodLootNew",
+   "group": "loot",
+   "label": "Non-Perishable Food",
+   "tooltip": "Canned and dried food, beverages.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 4.0,
+   "default": "0.6",
+   "owner": "LOOT"
+  },
+  {
+   "id": "WeaponLootNew",
+   "group": "loot",
+   "label": "Melee Weapons",
+   "tooltip": "Weapons that are not tools in other categories.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 4.0,
+   "default": "0.6",
+   "owner": "LOOT"
+  },
+  {
+   "id": "RangedWeaponLootNew",
+   "group": "loot",
+   "label": "Ranged Weapons",
+   "tooltip": "Also includes weapon attachments.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 4.0,
+   "default": "1.2",
+   "owner": "LOOT"
+  },
+  {
+   "id": "AmmoLootNew",
+   "group": "loot",
+   "label": "Ammo",
+   "tooltip": "Loose ammo, boxes and magazines.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 4.0,
+   "default": "0.6",
+   "owner": "LOOT"
+  },
+  {
+   "id": "MechanicsLootNew",
+   "group": "loot",
+   "label": "Mechanics",
+   "tooltip": "Vehicle parts and the tools needed to install them.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 4.0,
+   "default": "0.6",
+   "owner": "LOOT"
+  },
+  {
+   "id": "OtherLootNew",
+   "group": "loot",
+   "label": "Other",
+   "tooltip": "Everything else. Also affects foraging for all items in Town/Road zones.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 4.0,
+   "default": "0.8",
+   "owner": "LOOT"
+  },
+  {
+   "id": "ClothingLootNew",
+   "group": "loot",
+   "label": "Clothing",
+   "tooltip": "All wearable items that are not containers.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 4.0,
+   "default": "0.6",
+   "owner": "LOOT"
+  },
+  {
+   "id": "ContainerLootNew",
+   "group": "loot",
+   "label": "Bags",
+   "tooltip": "Backpacks and other wearable/equippable containers, eg. cases.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 4.0,
+   "default": "0.6",
+   "owner": "LOOT"
+  },
+  {
+   "id": "KeyLootNew",
+   "group": "loot",
+   "label": "Keys",
+   "tooltip": "Keys for buildings/cars, key rings, and locks.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 4.0,
+   "default": "0.4",
+   "owner": "LOOT"
+  },
+  {
+   "id": "MediaLootNew",
+   "group": "loot",
+   "label": "Media",
+   "tooltip": "VHS tapes and CDs.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 4.0,
+   "default": "0.6",
+   "owner": "LOOT"
+  },
+  {
+   "id": "MementoLootNew",
+   "group": "loot",
+   "label": "Mementos",
+   "tooltip": "Spiffo items, plushies, and other collectible keepsake items eg. Photos.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 4.0,
+   "default": "0.6",
+   "owner": "LOOT"
+  },
+  {
+   "id": "CookwareLootNew",
+   "group": "loot",
+   "label": "Cooking",
+   "tooltip": "Items that are used in cooking, including those (eg. knives) which can be weapons. Does not include food. Includes both usable and unusable items.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 4.0,
+   "default": "0.6",
+   "owner": "LOOT"
+  },
+  {
+   "id": "MaterialLootNew",
+   "group": "loot",
+   "label": "Material",
+   "tooltip": "Items and weapons that are used as ingredients for crafting or building. This is a general category that does not include items belonging to other categories such as Cookware or Medical. Does not include Tools.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 4.0,
+   "default": "0.6",
+   "owner": "LOOT"
+  },
+  {
+   "id": "FarmingLootNew",
+   "group": "loot",
+   "label": "Farming",
+   "tooltip": "Items and weapons which are used in both animal and plant agriculture, such as Seeds, Trowels, or Shovels.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 4.0,
+   "default": "0.6",
+   "owner": "LOOT"
+  },
+  {
+   "id": "ToolLootNew",
+   "group": "loot",
+   "label": "Tools",
+   "tooltip": "Items and weapons which are Tools but don't fit in other categories such as Mechanics or Farming.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 4.0,
+   "default": "0.6",
+   "owner": "LOOT"
+  },
+  {
+   "id": "RollsMultiplier",
+   "group": "loot",
+   "label": "Rolls Multiplier [!]",
+   "tooltip": "<BHC> [!] It is recommended that you DO NOT change this. [!] <RGB:1,1,1> Can be used to adjust the number of rolls made on loot tables when spawning loot. Will not reduce the number of rolls below 1. Can negatively affect performance if set to high values. It is highly recommended that this not be changed.",
+   "kind": "number",
+   "min": 0.1,
+   "max": 100.0,
+   "default": "1",
+   "owner": "LOOT"
+  },
+  {
+   "id": "LootItemRemovalList",
+   "group": "loot",
+   "label": "Loot Item Removal List",
+   "tooltip": "A comma-separated list of item types that won't spawn as ordinary loot.",
+   "kind": "text",
+   "default": "",
+   "owner": "LOOT"
+  },
+  {
+   "id": "RemoveStoryLoot",
+   "group": "loot",
+   "label": "Remove Unwanted Story Loot",
+   "tooltip": "If enabled, items on the Loot Item Removal List, or that have their rarity set to 'None', will not spawn in randomised world stories.",
+   "kind": "toggle",
+   "default": "false",
+   "owner": "LOOT"
+  },
+  {
+   "id": "RemoveZombieLoot",
+   "group": "loot",
+   "label": "Remove Unwanted Zombie Loot",
+   "tooltip": "If enabled, items on the Loot Item Removal List, or that have their rarity set to 'None', will not spawn worn by, or attached to, zombies.",
+   "kind": "toggle",
+   "default": "false",
+   "owner": "LOOT"
+  },
+  {
+   "id": "ZombiePopLootEffect",
+   "group": "loot",
+   "label": "Zombie Population Loot Effect",
+   "tooltip": "If greater than 0, the spawn of loot is increased relative to the number of nearby zombies, with the effect multiplied by this number.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 20.0,
+   "default": "0",
+   "owner": "LOOT"
+  },
+  {
+   "id": "InsaneLootFactor",
+   "group": "loot",
+   "label": "Insanely Rare Loot Factor",
+   "tooltip": "",
+   "kind": "number",
+   "min": 0.0,
+   "max": 0.2,
+   "default": "0.05",
+   "owner": "LOOT"
+  },
+  {
+   "id": "ExtremeLootFactor",
+   "group": "loot",
+   "label": "Extremely Rare Loot Factor",
+   "tooltip": "",
+   "kind": "number",
+   "min": 0.05,
+   "max": 0.6,
+   "default": "0.2",
+   "owner": "LOOT"
+  },
+  {
+   "id": "RareLootFactor",
+   "group": "loot",
+   "label": "Rare Loot Factor",
+   "tooltip": "",
+   "kind": "number",
+   "min": 0.2,
+   "max": 1.0,
+   "default": "0.6",
+   "owner": "LOOT"
+  },
+  {
+   "id": "NormalLootFactor",
+   "group": "loot",
+   "label": "Normal Loot Factor",
+   "tooltip": "",
+   "kind": "number",
+   "min": 0.6,
+   "max": 2.0,
+   "default": "1",
+   "owner": "LOOT"
+  },
+  {
+   "id": "CommonLootFactor",
+   "group": "loot",
+   "label": "Common Loot Factor",
+   "tooltip": "",
+   "kind": "number",
+   "min": 1.0,
+   "max": 3.0,
+   "default": "2",
+   "owner": "LOOT"
+  },
+  {
+   "id": "AbundantLootFactor",
+   "group": "loot",
+   "label": "Abundant Loot Factor",
+   "tooltip": "",
+   "kind": "number",
+   "min": 2.0,
+   "max": 4.0,
+   "default": "3",
+   "owner": "LOOT"
+  },
+  {
+   "id": "StarterKit",
+   "group": "loot",
+   "label": "Starter Kit",
+   "tooltip": "Spawn with Chips, a Water Bottle, a Small Backpack, a Baseball Bat, and a Hammer.",
+   "kind": "toggle",
+   "default": "false",
+   "owner": "LOOT"
+  },
+  {
+   "id": "SeenHoursPreventLootRespawn",
+   "group": "loot",
+   "label": "Loot Seen Prevent Hours",
+   "tooltip": "When greater than 0, loot will not respawn in zones that have been visited within this number of in-game hours.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 1000000000.0,
+   "default": "0",
+   "owner": "LOOT"
+  },
+  {
+   "id": "HoursForLootRespawn",
+   "group": "loot",
+   "label": "Hours for Loot Respawn",
+   "tooltip": "When greater than 0, after X hours, all containers in towns and trailer parks in the world will respawn loot. To spawn loot a container must have been looted at least once. Loot respawn is not impacted by visibility or subsequent looting.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 1000000000.0,
+   "default": "0",
+   "owner": "LOOT"
+  },
+  {
+   "id": "MaxItemsForLootRespawn",
+   "group": "loot",
+   "label": "Max Items For Loot Respawn",
+   "tooltip": "Containers with a number of items greater, or equal to, this setting will not respawn.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 1000000000.0,
+   "default": "5",
+   "owner": "LOOT"
+  },
+  {
+   "id": "ConstructionPreventsLootRespawn",
+   "group": "loot",
+   "label": "Construction Prevents Loot Respawn",
+   "tooltip": "Items will not respawn in buildings that players have barricaded or built in.",
+   "kind": "toggle",
+   "default": "true",
+   "owner": "LOOT"
+  },
+  {
+   "id": "AnnotatedMapChance",
+   "group": "loot",
+   "label": "Annotated Map Chance",
+   "tooltip": "How often a looted map will have notes on it, written by a deceased survivor.",
+   "kind": "choice",
+   "count": 6,
+   "default": "sometimes",
+   "choices": [
+    "sometimes"
+   ],
+   "owner": "LOOT"
+  },
+  {
+   "id": "SurvivorHouseChance",
+   "group": "loot",
+   "label": "Randomized Building Chance",
+   "tooltip": "The chance of finding randomized buildings on the map (eg. burnt out houses, ones containing loot stashes or dead bodies).",
+   "kind": "choice",
+   "count": 7,
+   "default": "rare",
+   "choices": [
+    "rare"
+   ],
+   "owner": "LOOT"
+  },
+  {
+   "id": "VehicleStoryChance",
+   "group": "loot",
+   "label": "Randomized Road Stories Chance",
+   "tooltip": "The chance of road stories (eg. police roadblocks) spawning.",
+   "kind": "choice",
+   "count": 7,
+   "default": "rare",
+   "choices": [
+    "rare"
+   ],
+   "owner": "LOOT"
+  },
+  {
+   "id": "ZoneStoryChance",
+   "group": "loot",
+   "label": "Randomized Zone Stories Chance",
+   "tooltip": "The chance of stories specific to map zones (eg. a campsite in a forest) spawning.",
+   "kind": "choice",
+   "count": 7,
+   "default": "rare",
+   "choices": [
+    "rare"
+   ],
+   "owner": "LOOT"
+  },
+  {
+   "id": "MaximumLootedBuildingRooms",
+   "group": "loot",
+   "label": "Maximum Looted Building Rooms",
+   "tooltip": "If a building has more than this amount of rooms it will not be looted.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 200.0,
+   "default": "50",
+   "owner": "LOOT"
+  },
+  {
+   "id": "MaximumLooted",
+   "group": "loot",
+   "label": "Maximum Looted Building Chance",
+   "tooltip": "The chance that any building will already be looted when found. Check the \"Advanced\" box below to use a custom number.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 200.0,
+   "default": "25",
+   "owner": "LOOT"
+  },
+  {
+   "id": "DaysUntilMaximumLooted",
+   "group": "loot",
+   "label": "Days Until Max Looted Building Chance",
+   "tooltip": "How long it takes for Maximum Looted Building Chance to be reached.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 3650.0,
+   "default": "90",
+   "owner": "LOOT"
+  },
+  {
+   "id": "RuralLooted",
+   "group": "loot",
+   "label": "Rural Building Looted Chance Multiplier",
+   "tooltip": "The chance that any rural building will already be looted when found. Check the \"Advanced\" box below to use a custom number.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 2.0,
+   "default": "0.5",
+   "owner": "LOOT"
+  },
+  {
+   "id": "MaximumDiminishedLoot",
+   "group": "loot",
+   "label": "Maximum Diminished Loot Percentage",
+   "tooltip": "The maximum loot that won't spawn when Days Until Maximum Diminished Loot is reached. Check the \"Advanced\" box below to use an exact percentage.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 100.0,
+   "default": "20",
+   "owner": "LOOT"
+  },
+  {
+   "id": "DaysUntilMaximumDiminishedLoot",
+   "group": "loot",
+   "label": "Days Until Maximum Diminished Loot",
+   "tooltip": "How long it takes for Maximum Diminished Loot Percentage to be reached.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 3650.0,
+   "default": "3650",
+   "owner": "LOOT"
+  },
+  {
+   "id": "ClimateCycle",
+   "group": "nature",
+   "label": "Climate Cycle",
+   "tooltip": "Whether weather changes or remains at a single state.",
+   "kind": "choice",
+   "count": 6,
+   "default": "normal",
+   "choices": [
+    "normal"
+   ],
+   "owner": "WEATHER"
+  },
+  {
+   "id": "FogCycle",
+   "group": "nature",
+   "label": "Fog Cycle",
+   "tooltip": "Whether fog occurs naturally, never occurs, or is always present.",
+   "kind": "choice",
+   "count": 3,
+   "default": "normal",
+   "choices": [
+    "normal"
+   ],
+   "owner": "WEATHER"
+  },
+  {
+   "id": "Temperature",
+   "group": "nature",
+   "label": "Temperature",
+   "tooltip": "The global temperature.",
+   "kind": "choice",
+   "count": 5,
+   "default": "normal",
+   "choices": [
+    "normal"
+   ],
+   "owner": "WEATHER",
+   "idChecked": false
+  },
+  {
+   "id": "Rain",
+   "group": "nature",
+   "label": "Rain",
+   "tooltip": "How often it rains.",
+   "kind": "choice",
+   "count": 5,
+   "default": "normal",
+   "choices": [
+    "normal"
+   ],
+   "owner": "WEATHER",
+   "idChecked": false
+  },
+  {
+   "id": "ErosionSpeed",
+   "group": "nature",
+   "label": "Erosion Speed",
+   "tooltip": "Number of days until the erosion system (which adds vines, long grass, new trees etc. to the world) will reach 100%% growth.",
+   "kind": "choice",
+   "count": 5,
+   "default": "slow_200_days",
+   "choices": [
+    "slow_200_days"
+   ],
+   "owner": "NONE (no erosion for now)"
+  },
+  {
+   "id": "ErosionDays",
+   "group": "nature",
+   "label": "Erosion Days",
+   "tooltip": "For a custom Erosion Speed. Zero means use the Erosion Speed option. Maximum is 36,500 days (approximately 100 years).",
+   "kind": "number",
+   "min": -1.0,
+   "max": 36500.0,
+   "default": "0",
+   "owner": "NONE (no erosion for now)"
+  },
+  {
+   "id": "Farming",
+   "group": "nature",
+   "label": "Farming Speed",
+   "tooltip": "The speed of plant growth.",
+   "kind": "choice",
+   "count": 5,
+   "default": "normal",
+   "choices": [
+    "normal"
+   ],
+   "owner": "SURVIVAL",
+   "idChecked": false
+  },
+  {
+   "id": "CompostTime",
+   "group": "nature",
+   "label": "Compost Time",
+   "tooltip": "How long it takes for food to break down in a composter.",
+   "kind": "choice",
+   "count": 8,
+   "default": "2_weeks",
+   "choices": [
+    "2_weeks"
+   ],
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "NatureAbundance",
+   "group": "nature",
+   "label": "Nature's Abundance",
+   "tooltip": "The abundance of items found in Foraging mode.",
+   "kind": "choice",
+   "count": 5,
+   "default": "normal",
+   "choices": [
+    "normal"
+   ],
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "PlantResilience",
+   "group": "nature",
+   "label": "Plant Resilience",
+   "tooltip": "How much water plants will lose per day, and their ability to avoid disease.",
+   "kind": "choice",
+   "count": 5,
+   "default": "normal",
+   "choices": [
+    "normal"
+   ],
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "PlantAbundance",
+   "group": "nature",
+   "label": "Farming's Abundance",
+   "tooltip": "The yield of plants when harvested.",
+   "kind": "choice",
+   "count": 5,
+   "default": "normal",
+   "choices": [
+    "normal"
+   ],
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "MaxFogIntensity",
+   "group": "nature",
+   "label": "Maximum Fog Intensity",
+   "tooltip": "Maximum intensity of fog.",
+   "kind": "choice",
+   "count": 4,
+   "default": "normal",
+   "choices": [
+    "normal"
+   ],
+   "owner": "WEATHER"
+  },
+  {
+   "id": "MaxRainFxIntensity",
+   "group": "nature",
+   "label": "Maximum Rain FX Intensity",
+   "tooltip": "Maximum intensity of rain.",
+   "kind": "choice",
+   "count": 3,
+   "default": "normal",
+   "choices": [
+    "normal"
+   ],
+   "owner": "WEATHER"
+  },
+  {
+   "id": "EnableSnowOnGround",
+   "group": "nature",
+   "label": "Snow on Ground",
+   "tooltip": "If snow will accumulate on the ground. If disabled, snow will still show on vegetation and rooftops.",
+   "kind": "toggle",
+   "default": "true",
+   "owner": "WEATHER"
+  },
+  {
+   "id": "FishAbundance",
+   "group": "nature",
+   "label": "Fishing Abundance",
+   "tooltip": "The abundance of fish in rivers and lakes.",
+   "kind": "choice",
+   "count": 5,
+   "default": "poor",
+   "choices": [
+    "poor"
+   ],
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "KillInsideCrops",
+   "group": "nature",
+   "label": "Kill Crops Grown Inside",
+   "tooltip": "When enabled, crops and herbs grown inside buildings will die. Does not affect houseplants.",
+   "kind": "toggle",
+   "default": "true",
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "PlantGrowingSeasons",
+   "group": "nature",
+   "label": "Plant Growing Seasons",
+   "tooltip": "When enabled, the growth of plants is affected by seasons.",
+   "kind": "toggle",
+   "default": "true",
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "PlaceDirtAboveground",
+   "group": "nature",
+   "label": "Farms not on Ground Level [!]",
+   "tooltip": "<BHC> [!] It is recommended that you DO NOT change this. Changing this can result in performance issues. [!] <RGB:1,1,1> When enabled, dirt can be placed, and farming performed on other than the ground level.",
+   "kind": "toggle",
+   "default": "false",
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "FarmingSpeedNew",
+   "group": "nature",
+   "label": "Farming Speed (FarmingSpeedNew)",
+   "tooltip": "The speed of plant growth.",
+   "kind": "number",
+   "min": 0.1,
+   "max": 100.0,
+   "default": "1",
+   "owner": "SURVIVAL",
+   "idChecked": false
+  },
+  {
+   "id": "FarmingAmountNew",
+   "group": "nature",
+   "label": "Farming Abundance",
+   "tooltip": "The abundance of harvested crops.",
+   "kind": "number",
+   "min": 0.1,
+   "max": 10.0,
+   "default": "1",
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "ClayLakeChance",
+   "group": "nature",
+   "label": "Clay chance - Lake",
+   "tooltip": "Chance to turn a dirt floor into a clay floor. Applies to lakes.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 1.0,
+   "default": "0.05",
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "ClayRiverChance",
+   "group": "nature",
+   "label": "Clay chance - River",
+   "tooltip": "Chance to turn a dirt floor into a clay floor. Applies to rivers.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 1.0,
+   "default": "0.05",
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "StatsDecrease",
+   "group": "character",
+   "label": "Stats Decrease",
+   "tooltip": "How fast the player's hunger, thirst, and fatigue will decrease.",
+   "kind": "choice",
+   "count": 5,
+   "default": "normal",
+   "choices": [
+    "normal"
+   ],
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "Nutrition",
+   "group": "character",
+   "label": "Nutrition System",
+   "tooltip": "Nutritional value of food affects the player's condition. Turning this off will stop the player gaining or losing weight.",
+   "kind": "toggle",
+   "default": "true",
+   "owner": "SURVIVAL",
+   "idChecked": false
+  },
+  {
+   "id": "FoodRotSpeed",
+   "group": "character",
+   "label": "Food Spoilage",
+   "tooltip": "How fast that food will spoil, inside or outside of a fridge.",
+   "kind": "choice",
+   "count": 5,
+   "default": "normal",
+   "choices": [
+    "normal"
+   ],
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "FridgeFactor",
+   "group": "character",
+   "label": "Refrigeration Effectiveness",
+   "tooltip": "How effective a fridge will be at keeping food fresh for longer.",
+   "kind": "choice",
+   "count": 6,
+   "default": "normal",
+   "choices": [
+    "normal"
+   ],
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "EndRegen",
+   "group": "character",
+   "label": "Endurance Regeneration",
+   "tooltip": "Recovery from being tired after performing actions.",
+   "kind": "choice",
+   "count": 5,
+   "default": "normal",
+   "choices": [
+    "normal"
+   ],
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "CharacterFreePoints",
+   "group": "character",
+   "label": "Free Trait Points",
+   "tooltip": "Adds free points during character creation.",
+   "kind": "number",
+   "min": -100.0,
+   "max": 100.0,
+   "default": "0",
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "ConstructionBonusPoints",
+   "group": "character",
+   "label": "Player-built Construction Strength",
+   "tooltip": "Gives player-built constructions extra hit points so they are more resistant to zombie damage.",
+   "kind": "choice",
+   "count": 5,
+   "default": "normal",
+   "choices": [
+    "normal"
+   ],
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "BoneFracture",
+   "group": "character",
+   "label": "Bone Fracture",
+   "tooltip": "If survivors can get broken limbs from impacts, zombie damage, falls etc.",
+   "kind": "toggle",
+   "default": "true",
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "InjurySeverity",
+   "group": "character",
+   "label": "Injury Severity",
+   "tooltip": "The impact that injuries have on your body, and their healing time.",
+   "kind": "number",
+   "min": 1,
+   "max": 4,
+   "default": "2",
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "HoursForCorpseRemoval",
+   "group": "character",
+   "label": "Time Before Corpse Removal",
+   "tooltip": "How long, in hours, before dead zombie bodies disappear from the world. If 0, maggots will not spawn on corpses.",
+   "kind": "number",
+   "min": -1.0,
+   "max": 1000000000.0,
+   "default": "216",
+   "owner": "ENTITY"
+  },
+  {
+   "id": "DecayingCorpseHealthImpact",
+   "group": "character",
+   "label": "Decaying Corpse Health Impact",
+   "tooltip": "The impact that nearby decaying bodies has on the player's health and emotions.",
+   "kind": "choice",
+   "count": 5,
+   "default": "normal",
+   "choices": [
+    "normal"
+   ],
+   "owner": "ENTITY"
+  },
+  {
+   "id": "ZombieHealthImpact",
+   "group": "character",
+   "label": "Zombie Health Impact",
+   "tooltip": "Whether nearby \"living\" zombies have the same impact on the player's health and emotions.",
+   "kind": "toggle",
+   "default": "false",
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "BloodLevel",
+   "group": "character",
+   "label": "Blood Level",
+   "tooltip": "How much blood is sprayed on floors and walls by injuries.",
+   "kind": "choice",
+   "count": 5,
+   "default": "normal",
+   "choices": [
+    "normal"
+   ],
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "ClothingDegradation",
+   "group": "character",
+   "label": "Clothing Degradation",
+   "tooltip": "How quickly clothing degrades, becomes dirty, and bloodied.",
+   "kind": "choice",
+   "count": 4,
+   "default": "normal",
+   "choices": [
+    "normal"
+   ],
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "DaysForRottenFoodRemoval",
+   "group": "character",
+   "label": "Rotten Food Removal",
+   "tooltip": "Number of in-game days before rotten food is removed from the map. -1 means rotten food is never removed.",
+   "kind": "number",
+   "min": -1.0,
+   "max": 1000000000.0,
+   "default": "-1",
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "AttackBlockMovements",
+   "group": "character",
+   "label": "Melee Movement Disruption",
+   "tooltip": "If melee attacking slows you down.",
+   "kind": "toggle",
+   "default": "true",
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "AllClothesUnlocked",
+   "group": "character",
+   "label": "All Clothing Unlocked",
+   "tooltip": "Allows you to select from every piece of clothing in the game when customizing your character",
+   "kind": "toggle",
+   "default": "false",
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "EnableTaintedWaterText",
+   "group": "character",
+   "label": "Enable 'Tainted Water' tooltip",
+   "tooltip": "If tainted water will show a warning marking it as such.",
+   "kind": "toggle",
+   "default": "true",
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "MultiHitZombies",
+   "group": "character",
+   "label": "Weapon Multi Hit",
+   "tooltip": "If certain melee weapons will be able to strike multiple zombies in one hit.",
+   "kind": "toggle",
+   "default": "false",
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "RearVulnerability",
+   "group": "character",
+   "label": "Rear Vulnerability",
+   "tooltip": "Chance of being bitten when a zombie attacks from behind.",
+   "kind": "choice",
+   "count": 3,
+   "default": "high",
+   "choices": [
+    "high"
+   ],
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "EnablePoisoning",
+   "group": "character",
+   "label": "Enable Poisoning",
+   "tooltip": "If poison can be added to food.",
+   "kind": "choice",
+   "count": 3,
+   "default": "true",
+   "choices": [
+    "true"
+   ],
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "MaggotSpawn",
+   "group": "character",
+   "label": "Corpse Maggot Spawn",
+   "tooltip": "If/when maggots can spawn in corpses.",
+   "kind": "choice",
+   "count": 3,
+   "default": "in_and_around_bodies",
+   "choices": [
+    "in_and_around_bodies"
+   ],
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "NegativeTraitsPenalty",
+   "group": "character",
+   "label": "Negative Traits Penalty",
+   "tooltip": "If there are diminishing returns on bonus trait points provided from selecting multiple negative traits.",
+   "kind": "choice",
+   "count": 4,
+   "default": "none",
+   "choices": [
+    "none"
+   ],
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "MuscleStrainFactor",
+   "group": "character",
+   "label": "Muscle Strain Factor",
+   "tooltip": "Functions as a multiplier when applying muscle strain from swinging weapons or carrying heavy loads.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 10.0,
+   "default": "0.7",
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "DiscomfortFactor",
+   "group": "character",
+   "label": "Discomfort Factor",
+   "tooltip": "Functions as a multiplier when applying discomfort from worn items.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 10.0,
+   "default": "0.8",
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "WoundInfectionFactor",
+   "group": "character",
+   "label": "Wound Infection Damage Factor",
+   "tooltip": "If greater than zero damage can be taken from serious wound infections.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 10.0,
+   "default": "1",
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "NoBlackClothes",
+   "group": "character",
+   "label": "No Black Clothes",
+   "tooltip": "If true clothing with randomized tints will not be so dark to be virtually black.",
+   "kind": "toggle",
+   "default": "true",
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "EasyClimbing",
+   "group": "character",
+   "label": "Easy Climbing",
+   "tooltip": "Disables the failure chances when climbing sheet ropes or over walls.",
+   "kind": "toggle",
+   "default": "false",
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "MetaKnowledge",
+   "group": "skills",
+   "label": "Media List Meta Knowledge",
+   "tooltip": "If a piece of media hasn't been fully seen or read, this setting determines whether it's displayed fully, displayed as \"???\", or hidden completely.",
+   "kind": "choice",
+   "count": 3,
+   "default": "completely_hidden",
+   "choices": [
+    "completely_hidden"
+   ],
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "SeeNotLearntRecipe",
+   "group": "skills",
+   "label": "See Not Known Recipes",
+   "tooltip": "If true, you will be able to see any recipes that can be done with a station, even if you haven't learnt them yet.",
+   "kind": "toggle",
+   "default": "true",
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "LevelForMediaXPCutoff",
+   "group": "skills",
+   "label": "Maximum Media XP Level",
+   "tooltip": "When a skill is at this level or above, television/VHS/other media will not provide XP for it.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 10.0,
+   "default": "3",
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "LevelForDismantleXPCutoff",
+   "group": "skills",
+   "label": "Maximum Dismantling XP Level",
+   "tooltip": "When a skill is at this level or above, scrapping furniture does not provide XP for the relevant skill. Does not apply to Electrical.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 10.0,
+   "default": "0",
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "LiteratureCooldown",
+   "group": "skills",
+   "label": "Literature Cooldown Days",
+   "tooltip": "Number of days before one can benefit from reading previously read literature items.",
+   "kind": "number",
+   "min": 1.0,
+   "max": 365.0,
+   "default": "45",
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "MinutesPerPage",
+   "group": "skills",
+   "label": "Minutes Per Skill Book Page",
+   "tooltip": "The number of in-game minutes it takes to read one page of a skill book.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 60.0,
+   "default": "2",
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "MultiplierConfig.Global",
+   "group": "skills",
+   "label": "Global Multiplier",
+   "tooltip": "The rate at which all skills level up.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 1000.0,
+   "default": "1",
+   "owner": "SURVIVAL",
+   "idChecked": false
+  },
+  {
+   "id": "MultiplierConfig.GlobalToggle",
+   "group": "skills",
+   "label": "Use Global Multiplier",
+   "tooltip": "When enabled, all skills will use the Global Multiplier.",
+   "kind": "toggle",
+   "default": "true",
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "MultiplierConfig.Fitness",
+   "group": "skills",
+   "label": "Fitness Multiplier",
+   "tooltip": "Rate at which Fitness skill levels up.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 1000.0,
+   "default": "1",
+   "owner": "SURVIVAL",
+   "idChecked": false
+  },
+  {
+   "id": "MultiplierConfig.Strength",
+   "group": "skills",
+   "label": "Strength Multiplier",
+   "tooltip": "Rate at which Strength skill levels up.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 1000.0,
+   "default": "1",
+   "owner": "SURVIVAL",
+   "idChecked": false
+  },
+  {
+   "id": "MultiplierConfig.Sprinting",
+   "group": "skills",
+   "label": "Sprinting Multiplier",
+   "tooltip": "Rate at which Sprinting skill levels up.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 1000.0,
+   "default": "1",
+   "owner": "SURVIVAL",
+   "idChecked": false
+  },
+  {
+   "id": "MultiplierConfig.Lightfoot",
+   "group": "skills",
+   "label": "Lightfooted Multiplier",
+   "tooltip": "Rate at which Lightfooted skill levels up.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 1000.0,
+   "default": "1",
+   "owner": "SURVIVAL",
+   "idChecked": false
+  },
+  {
+   "id": "MultiplierConfig.Nimble",
+   "group": "skills",
+   "label": "Nimble Multiplier",
+   "tooltip": "Rate at which Nimble skill levels up.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 1000.0,
+   "default": "1",
+   "owner": "SURVIVAL",
+   "idChecked": false
+  },
+  {
+   "id": "MultiplierConfig.Sneak",
+   "group": "skills",
+   "label": "Sneaking Multiplier",
+   "tooltip": "Rate at which Sneaking skill levels up.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 1000.0,
+   "default": "1",
+   "owner": "SURVIVAL",
+   "idChecked": false
+  },
+  {
+   "id": "MultiplierConfig.Axe",
+   "group": "skills",
+   "label": "Axe Multiplier",
+   "tooltip": "Rate at which Axe skill levels up.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 1000.0,
+   "default": "1",
+   "owner": "SURVIVAL",
+   "idChecked": false
+  },
+  {
+   "id": "MultiplierConfig.Blunt",
+   "group": "skills",
+   "label": "Long Blunt Multiplier",
+   "tooltip": "Rate at which Long Blunt skill levels up.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 1000.0,
+   "default": "1",
+   "owner": "SURVIVAL",
+   "idChecked": false
+  },
+  {
+   "id": "MultiplierConfig.SmallBlunt",
+   "group": "skills",
+   "label": "Short Blunt Multiplier",
+   "tooltip": "Rate at which Short Blunt skill levels up.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 1000.0,
+   "default": "1",
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "MultiplierConfig.LongBlade",
+   "group": "skills",
+   "label": "Long Blade Multiplier",
+   "tooltip": "Rate at which Long Blade skill levels up.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 1000.0,
+   "default": "1",
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "MultiplierConfig.SmallBlade",
+   "group": "skills",
+   "label": "Short Blade Multiplier",
+   "tooltip": "Rate at which Short Blade skill levels up.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 1000.0,
+   "default": "1",
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "MultiplierConfig.Spear",
+   "group": "skills",
+   "label": "Spear Multiplier",
+   "tooltip": "Rate at which Spear skill levels up.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 1000.0,
+   "default": "1",
+   "owner": "SURVIVAL",
+   "idChecked": false
+  },
+  {
+   "id": "MultiplierConfig.Maintenance",
+   "group": "skills",
+   "label": "Maintenance Multiplier",
+   "tooltip": "Rate at which Maintenance skill levels up.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 1000.0,
+   "default": "1",
+   "owner": "SURVIVAL",
+   "idChecked": false
+  },
+  {
+   "id": "MultiplierConfig.Woodwork",
+   "group": "skills",
+   "label": "Carpentry Multiplier",
+   "tooltip": "Rate at which Carpentry skill levels up.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 1000.0,
+   "default": "1",
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "MultiplierConfig.Cooking",
+   "group": "skills",
+   "label": "Cooking Multiplier",
+   "tooltip": "Rate at which Cooking skill levels up.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 1000.0,
+   "default": "1",
+   "owner": "SURVIVAL",
+   "idChecked": false
+  },
+  {
+   "id": "MultiplierConfig.Farming",
+   "group": "skills",
+   "label": "Agriculture Multiplier",
+   "tooltip": "Rate at which Agriculture skill levels up.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 1000.0,
+   "default": "1",
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "MultiplierConfig.Doctor",
+   "group": "skills",
+   "label": "First Aid Multiplier",
+   "tooltip": "Rate at which First Aid skill levels up.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 1000.0,
+   "default": "1",
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "MultiplierConfig.Electricity",
+   "group": "skills",
+   "label": "Electrical Multiplier",
+   "tooltip": "Rate at which Electrical skill levels up.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 1000.0,
+   "default": "1",
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "MultiplierConfig.MetalWelding",
+   "group": "skills",
+   "label": "Welding Multiplier",
+   "tooltip": "Rate at which Welding skill levels up.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 1000.0,
+   "default": "1",
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "MultiplierConfig.Mechanics",
+   "group": "skills",
+   "label": "Mechanics Multiplier",
+   "tooltip": "Rate at which Mechanics skill levels up.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 1000.0,
+   "default": "1",
+   "owner": "SURVIVAL",
+   "idChecked": false
+  },
+  {
+   "id": "MultiplierConfig.Tailoring",
+   "group": "skills",
+   "label": "Tailoring Multiplier",
+   "tooltip": "Rate at which Tailoring skill levels up.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 1000.0,
+   "default": "1",
+   "owner": "SURVIVAL",
+   "idChecked": false
+  },
+  {
+   "id": "MultiplierConfig.Aiming",
+   "group": "skills",
+   "label": "Aiming Multiplier",
+   "tooltip": "Rate at which Aiming skill levels up.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 1000.0,
+   "default": "1",
+   "owner": "SURVIVAL",
+   "idChecked": false
+  },
+  {
+   "id": "MultiplierConfig.Reloading",
+   "group": "skills",
+   "label": "Reloading Multiplier",
+   "tooltip": "Rate at which Reloading skill levels up.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 1000.0,
+   "default": "1",
+   "owner": "SURVIVAL",
+   "idChecked": false
+  },
+  {
+   "id": "MultiplierConfig.Fishing",
+   "group": "skills",
+   "label": "Fishing Multiplier",
+   "tooltip": "Rate at which Fishing skill levels up.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 1000.0,
+   "default": "1",
+   "owner": "SURVIVAL",
+   "idChecked": false
+  },
+  {
+   "id": "MultiplierConfig.Trapping",
+   "group": "skills",
+   "label": "Trapping Multiplier",
+   "tooltip": "Rate at which Trapping skill levels up.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 1000.0,
+   "default": "1",
+   "owner": "SURVIVAL",
+   "idChecked": false
+  },
+  {
+   "id": "MultiplierConfig.PlantScavenging",
+   "group": "skills",
+   "label": "Foraging Multiplier",
+   "tooltip": "Rate at which Foraging skill levels up.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 1000.0,
+   "default": "1",
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "MultiplierConfig.FlintKnapping",
+   "group": "skills",
+   "label": "Knapping Multiplier",
+   "tooltip": "Rate at which Knapping skill levels up.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 1000.0,
+   "default": "1",
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "MultiplierConfig.Masonry",
+   "group": "skills",
+   "label": "Masonry Multiplier",
+   "tooltip": "Rate at which Masonry skill levels up.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 1000.0,
+   "default": "1",
+   "owner": "SURVIVAL",
+   "idChecked": false
+  },
+  {
+   "id": "MultiplierConfig.Pottery",
+   "group": "skills",
+   "label": "Pottery Multiplier",
+   "tooltip": "Rate at which Pottery skill levels up.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 1000.0,
+   "default": "1",
+   "owner": "SURVIVAL",
+   "idChecked": false
+  },
+  {
+   "id": "MultiplierConfig.Carving",
+   "group": "skills",
+   "label": "Carving Multiplier",
+   "tooltip": "Rate at which Carving skill levels up.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 1000.0,
+   "default": "1",
+   "owner": "SURVIVAL",
+   "idChecked": false
+  },
+  {
+   "id": "MultiplierConfig.Husbandry",
+   "group": "skills",
+   "label": "Animal Care Multiplier",
+   "tooltip": "Rate at which Animal Care skill levels up.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 1000.0,
+   "default": "1",
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "MultiplierConfig.Tracking",
+   "group": "skills",
+   "label": "Tracking Multiplier",
+   "tooltip": "Rate at which Tracking skill levels up.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 1000.0,
+   "default": "1",
+   "owner": "SURVIVAL",
+   "idChecked": false
+  },
+  {
+   "id": "MultiplierConfig.Blacksmith",
+   "group": "skills",
+   "label": "Blacksmithing Multiplier",
+   "tooltip": "Rate at which Blacksmithing skill levels up.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 1000.0,
+   "default": "1",
+   "owner": "SURVIVAL",
+   "idChecked": false
+  },
+  {
+   "id": "MultiplierConfig.Butchering",
+   "group": "skills",
+   "label": "Butchering Multiplier",
+   "tooltip": "Rate at which Butchering skill levels up.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 1000.0,
+   "default": "1",
+   "owner": "SURVIVAL",
+   "idChecked": false
+  },
+  {
+   "id": "MultiplierConfig.Glassmaking",
+   "group": "skills",
+   "label": "Glassmaking Multiplier",
+   "tooltip": "Rate at which Glassmaking skill levels up.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 1000.0,
+   "default": "1",
+   "owner": "SURVIVAL",
+   "idChecked": false
+  },
+  {
+   "id": "EnableVehicles",
+   "group": "vehicles",
+   "label": "Vehicles",
+   "tooltip": "If vehicles will spawn.",
+   "kind": "toggle",
+   "default": "true",
+   "owner": "VEHICLES"
+  },
+  {
+   "id": "CarSpawnRate",
+   "group": "vehicles",
+   "label": "Vehicle Spawn Rate",
+   "tooltip": "How frequently vehicles can be discovered on the map.",
+   "kind": "choice",
+   "count": 5,
+   "default": "low",
+   "choices": [
+    "low"
+   ],
+   "owner": "VEHICLES"
+  },
+  {
+   "id": "VehicleEasyUse",
+   "group": "vehicles",
+   "label": "Easy Use",
+   "tooltip": "Whether found vehicles are locked, need keys to start etc.",
+   "kind": "toggle",
+   "default": "false",
+   "owner": "VEHICLES"
+  },
+  {
+   "id": "InitialGas",
+   "group": "vehicles",
+   "label": "Initial Gas",
+   "tooltip": "How full the gas tank of discovered vehicles will be.",
+   "kind": "choice",
+   "count": 6,
+   "default": "low",
+   "choices": [
+    "low"
+   ],
+   "owner": "VEHICLES"
+  },
+  {
+   "id": "FuelStationGasInfinite",
+   "group": "vehicles",
+   "label": "Infinite Gas Pumps",
+   "tooltip": "If enabled, gas pumps will never run out of fuel",
+   "kind": "toggle",
+   "default": "false",
+   "owner": "VEHICLES"
+  },
+  {
+   "id": "FuelStationGasMin",
+   "group": "vehicles",
+   "label": "Initial Minimum Gas Pump Amount",
+   "tooltip": "The minimum amount of gasoline that can spawn in gas pumps. Check the \"Advanced\" box below to use a custom amount.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 1.0,
+   "default": "0",
+   "owner": "VEHICLES"
+  },
+  {
+   "id": "FuelStationGasMax",
+   "group": "vehicles",
+   "label": "Initial Maximum Gas Pump Amount",
+   "tooltip": "The maximum amount of gasoline that can spawn in gas pumps. Check the \"Advanced\" box below to use a custom amount.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 1.0,
+   "default": "0.8",
+   "owner": "VEHICLES"
+  },
+  {
+   "id": "FuelStationGasEmptyChance",
+   "group": "vehicles",
+   "label": "Initial Gas Pump Empty Chance",
+   "tooltip": "The chance, as a percentage, that individual gas pumps will initially have no fuel.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 100.0,
+   "default": "20",
+   "owner": "VEHICLES"
+  },
+  {
+   "id": "LockedCar",
+   "group": "vehicles",
+   "label": "Locked Vehicle Frequency",
+   "tooltip": "How likely cars will be locked",
+   "kind": "choice",
+   "count": 6,
+   "default": "sometimes",
+   "choices": [
+    "sometimes"
+   ],
+   "owner": "VEHICLES"
+  },
+  {
+   "id": "CarGasConsumption",
+   "group": "vehicles",
+   "label": "Gas Consumption",
+   "tooltip": "How gas-hungry vehicles are.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 100.0,
+   "default": "1",
+   "owner": "VEHICLES"
+  },
+  {
+   "id": "CarGeneralCondition",
+   "group": "vehicles",
+   "label": "General Condition",
+   "tooltip": "General condition discovered vehicles will be in.",
+   "kind": "choice",
+   "count": 5,
+   "default": "normal",
+   "choices": [
+    "normal"
+   ],
+   "owner": "VEHICLES"
+  },
+  {
+   "id": "CarDamageOnImpact",
+   "group": "vehicles",
+   "label": "Car Damage on Impact",
+   "tooltip": "The amount of damage dealt to vehicles that crash.",
+   "kind": "choice",
+   "count": 5,
+   "default": "normal",
+   "choices": [
+    "normal"
+   ],
+   "owner": "VEHICLES"
+  },
+  {
+   "id": "DamageToPlayerFromHitByACar",
+   "group": "vehicles",
+   "label": "Player Damage From Vehicle Impact",
+   "tooltip": "Damage received by the player from being crashed into.",
+   "kind": "number",
+   "min": 1.0,
+   "max": 4,
+   "default": "1",
+   "owner": "VEHICLES"
+  },
+  {
+   "id": "TrafficJam",
+   "group": "vehicles",
+   "label": "Car Wreck Congestion",
+   "tooltip": "If traffic jams consisting of wrecked cars will appear on main roads.",
+   "kind": "toggle",
+   "default": "true",
+   "owner": "VEHICLES"
+  },
+  {
+   "id": "CarAlarm",
+   "group": "vehicles",
+   "label": "Vehicle Alarms Frequency",
+   "tooltip": "How frequently discovered vehicles have active alarms.",
+   "kind": "choice",
+   "count": 6,
+   "default": "rare",
+   "choices": [
+    "rare"
+   ],
+   "owner": "VEHICLES"
+  },
+  {
+   "id": "PlayerDamageFromCrash",
+   "group": "vehicles",
+   "label": "Player Damage from Crash",
+   "tooltip": "If the player can get injured from being in a car accident.",
+   "kind": "toggle",
+   "default": "true",
+   "owner": "VEHICLES"
+  },
+  {
+   "id": "ChanceHasGas",
+   "group": "vehicles",
+   "label": "Chance Has Gas",
+   "tooltip": "The chance of finding a vehicle with gas in its tank.",
+   "kind": "choice",
+   "count": 3,
+   "default": "normal",
+   "choices": [
+    "normal"
+   ],
+   "owner": "VEHICLES"
+  },
+  {
+   "id": "RecentlySurvivorVehicles",
+   "group": "vehicles",
+   "label": "Recent Survivor Vehicles",
+   "tooltip": "Whether a player can discover a car that has been cared for after the Knox infection struck.",
+   "kind": "choice",
+   "count": 4,
+   "default": "low",
+   "choices": [
+    "low"
+   ],
+   "owner": "VEHICLES"
+  },
+  {
+   "id": "SirenEffectsZombies",
+   "group": "vehicles",
+   "label": "Vehicle Sirens Attract Zombies",
+   "tooltip": "If zombies will head towards the sound of vehicle sirens.",
+   "kind": "toggle",
+   "default": "true",
+   "owner": "VEHICLES"
+  },
+  {
+   "id": "FirearmUseDamageChance",
+   "group": "firearms",
+   "label": "Firearms Use Damage Chance",
+   "tooltip": "Replaces Chance-To-Hit mechanics with Chance-To-Damage calculations. This mode prioritizes player aiming.",
+   "kind": "choice",
+   "count": 3,
+   "default": "zombies_only",
+   "choices": [
+    "zombies_only"
+   ],
+   "owner": "WEAPONS"
+  },
+  {
+   "id": "FirearmNoiseMultiplier",
+   "group": "firearms",
+   "label": "Firearm Noise Multiplier",
+   "tooltip": "A multiplier for the distance at which zombies can hear gunshots.",
+   "kind": "number",
+   "min": 0.2,
+   "max": 2.0,
+   "default": "1",
+   "owner": "WEAPONS"
+  },
+  {
+   "id": "FirearmJamMultiplier",
+   "group": "firearms",
+   "label": "Firearm Jam Multiplier",
+   "tooltip": "Multiplier for firearm jamming chance. 0 disables jamming.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 10.0,
+   "default": "1",
+   "owner": "WEAPONS"
+  },
+  {
+   "id": "FirearmMoodleMultiplier",
+   "group": "firearms",
+   "label": "Firearm Moodle Multiplier",
+   "tooltip": "Multiplier for Moodle effects on hit chance. 0 disables Moodle penalty.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 10.0,
+   "default": "1",
+   "owner": "WEAPONS"
+  },
+  {
+   "id": "FirearmWeatherMultiplier",
+   "group": "firearms",
+   "label": "Firearm Weather Multiplier",
+   "tooltip": "Multiplier for the effects of weather (wind, rain and fog) on hit chance. 0 disables weather effect.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 10.0,
+   "default": "1",
+   "owner": "WEAPONS"
+  },
+  {
+   "id": "FirearmHeadGearEffect",
+   "group": "firearms",
+   "label": "Firearm Headgear Effect",
+   "tooltip": "Enable to have headgear like welding masks affect hit chance",
+   "kind": "toggle",
+   "default": "true",
+   "owner": "WEAPONS"
+  },
+  {
+   "id": "AnimalStatsModifier",
+   "group": "animals",
+   "label": "Stats Reduction Speed",
+   "tooltip": "Speed at which animals stats (hunger, thirst etc.) reduce.",
+   "kind": "choice",
+   "count": 6,
+   "default": "normal",
+   "choices": [
+    "normal"
+   ],
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "AnimalMetaStatsModifier",
+   "group": "animals",
+   "label": "Meta Stats Reduction Speed",
+   "tooltip": "Speed at which animals stats (hunger, thirst etc.) reduce while in meta.",
+   "kind": "choice",
+   "count": 6,
+   "default": "normal",
+   "choices": [
+    "normal"
+   ],
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "AnimalPregnancyTime",
+   "group": "animals",
+   "label": "Pregnancy Time",
+   "tooltip": "How long animals will be pregnant for before giving birth.",
+   "kind": "choice",
+   "count": 6,
+   "default": "normal",
+   "choices": [
+    "normal"
+   ],
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "AnimalAgeModifier",
+   "group": "animals",
+   "label": "Aging Modifier Speed",
+   "tooltip": "Speed at which animals age.",
+   "kind": "choice",
+   "count": 6,
+   "default": "normal",
+   "choices": [
+    "normal"
+   ],
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "AnimalMilkIncModifier",
+   "group": "animals",
+   "label": "Milk Increase Speed",
+   "tooltip": "",
+   "kind": "choice",
+   "count": 6,
+   "default": "normal",
+   "choices": [
+    "normal"
+   ],
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "AnimalWoolIncModifier",
+   "group": "animals",
+   "label": "Wool Increase Speed",
+   "tooltip": "",
+   "kind": "choice",
+   "count": 6,
+   "default": "normal",
+   "choices": [
+    "normal"
+   ],
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "AnimalRanchChance",
+   "group": "animals",
+   "label": "Animal Spawn Chance",
+   "tooltip": "The chance of finding animals in farm.",
+   "kind": "choice",
+   "count": 7,
+   "default": "often",
+   "choices": [
+    "often"
+   ],
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "AnimalGrassRegrowTime",
+   "group": "animals",
+   "label": "Grass Regrowth time",
+   "tooltip": "The number of hours grass will regrow after being eaten by an animal or cut by the player.",
+   "kind": "number",
+   "min": 1.0,
+   "max": 9999.0,
+   "default": "240",
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "AnimalMetaPredator",
+   "group": "animals",
+   "label": "Meta Predator",
+   "tooltip": "If a meta (ie. not actually visible in-game) fox may attack your chickens if the hutch's door is left open at night.",
+   "kind": "toggle",
+   "default": "false",
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "AnimalMatingSeason",
+   "group": "animals",
+   "label": "Breeding Season",
+   "tooltip": "If on, animals will only mate during their breeding season (if any). Otherwise they can reproduce/lay eggs all year round.",
+   "kind": "toggle",
+   "default": "true",
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "AnimalEggHatch",
+   "group": "animals",
+   "label": "Egg Hatch Time",
+   "tooltip": "How long before baby animals will hatch from eggs.",
+   "kind": "choice",
+   "count": 6,
+   "default": "normal",
+   "choices": [
+    "normal"
+   ],
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "AnimalSoundAttractZombies",
+   "group": "animals",
+   "label": "Animals Attract Zombies",
+   "tooltip": "If true, animal calls will attract nearby zombies.",
+   "kind": "toggle",
+   "default": "true",
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "AnimalTrackChance",
+   "group": "animals",
+   "label": "Animal Tracks Chance",
+   "tooltip": "The chance of animals leaving tracks.",
+   "kind": "choice",
+   "count": 6,
+   "default": "sometimes",
+   "choices": [
+    "sometimes"
+   ],
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "AnimalPathChance",
+   "group": "animals",
+   "label": "Animal Paths Chance",
+   "tooltip": "The chance of creating a path for animals to be hunted.",
+   "kind": "choice",
+   "count": 6,
+   "default": "sometimes",
+   "choices": [
+    "sometimes"
+   ],
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "MaximumRatIndex",
+   "group": "animals",
+   "label": "Maximum Vermin Index",
+   "tooltip": "The frequency and intensity of eg. rats in infested buildings.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 50.0,
+   "default": "25",
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "DaysUntilMaximumRatIndex",
+   "group": "animals",
+   "label": "Days Until Maximum Vermin Index",
+   "tooltip": "How long it takes for the Maximum Vermin Index to be reached.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 365.0,
+   "default": "90",
+   "owner": "SURVIVAL"
+  },
+  {
+   "id": "WorldItemRemovalList",
+   "group": "map",
+   "label": "World Item Removal List",
+   "tooltip": "A comma-separated list of item types that will be removed after HoursForWorldItemRemoval hours.",
+   "kind": "text",
+   "default": "",
+   "owner": "LANDSCAPE"
+  },
+  {
+   "id": "HoursForWorldItemRemoval",
+   "group": "map",
+   "label": "Hours for Removal List",
+   "tooltip": "Number of hours since an item was dropped on the ground before it is removed. Items are removed the next time that part of the map is loaded. Zero means items are not removed.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 1000000000.0,
+   "default": "24",
+   "owner": "LANDSCAPE"
+  },
+  {
+   "id": "ItemRemovalListBlacklistToggle",
+   "group": "map",
+   "label": "Removal List as Whitelist",
+   "tooltip": "If true, any items *not* in WorldItemRemovalList will be removed.",
+   "kind": "toggle",
+   "default": "false",
+   "owner": "LANDSCAPE"
+  },
+  {
+   "id": "LightBulbLifespan",
+   "group": "map",
+   "label": "Light Bulb Lifespan",
+   "tooltip": "The higher the value, the longer lightbulbs last before breaking. If 0, lightbulbs will never break. Does not affect vehicle headlights.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 1000.0,
+   "default": "2",
+   "owner": "BASES"
+  },
+  {
+   "id": "BloodSplatLifespanDays",
+   "group": "map",
+   "label": "Blood Splat Lifespan Days",
+   "tooltip": "Number of days before old blood splats are removed. Removal happens when map chunks are loaded. 0 means they will never disappear.",
+   "kind": "number",
+   "min": 0.0,
+   "max": 365.0,
+   "default": "0",
+   "owner": "LANDSCAPE"
+  },
+  {
+   "id": "MaximumFireFuelHours",
+   "group": "map",
+   "label": "Maximum Fire Fuel Hours",
+   "tooltip": "The maximum hours of fuel that can be placed in a campfire, wood stove etc.",
+   "kind": "number",
+   "min": 1.0,
+   "max": 168.0,
+   "default": "8",
+   "owner": "LANDSCAPE"
+  },
+  {
+   "id": "Basement.SpawnFrequency",
+   "group": "map",
+   "label": "Basement Spawn Frequency",
+   "tooltip": "How frequently basements spawn at random locations.",
+   "kind": "choice",
+   "count": 7,
+   "default": "sometimes",
+   "choices": [
+    "sometimes"
+   ],
+   "owner": "LANDSCAPE"
+  },
+  {
+   "id": "Map.AllowMiniMap",
+   "group": "map",
+   "label": "Allow Mini-Map",
+   "tooltip": "If enabled, a mini-map window will be available.",
+   "kind": "toggle",
+   "default": "false",
+   "owner": "UI"
+  },
+  {
+   "id": "Map.AllowWorldMap",
+   "group": "map",
+   "label": "Allow World Map",
+   "tooltip": "If enabled, the world map can be accessed.",
+   "kind": "toggle",
+   "default": "true",
+   "owner": "UI"
+  },
+  {
+   "id": "Map.MapAllKnown",
+   "group": "map",
+   "label": "All Known On Start",
+   "tooltip": "If enabled, the world map will be completely filled in on starting the game.",
+   "kind": "toggle",
+   "default": "false",
+   "owner": "UI"
+  },
+  {
+   "id": "Map.MapNeedsLight",
+   "group": "map",
+   "label": "Light Needed To Read Map",
+   "tooltip": "If enabled, maps can't be read unless there's a source of light available.",
+   "kind": "toggle",
+   "default": "true",
+   "owner": "UI"
+  }
+ ]
+}

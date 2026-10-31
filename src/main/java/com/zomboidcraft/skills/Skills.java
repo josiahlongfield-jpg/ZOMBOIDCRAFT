@@ -33,7 +33,7 @@ public final class Skills {
     }
 
     public static int xp(Player player, Skill skill) {
-        return player.getAttachedOrCreate(TYPE).getOrDefault(skill.name(), 0);
+        return player.getAttachedOrCreate(TYPE).getOrDefault(skill.name(), skill.passive() ? Skill.xpForLevel(5) : 0);
     }
 
     public static int level(Player player, Skill skill) {
@@ -41,8 +41,11 @@ public final class Skills {
     }
 
     public static void addXp(ServerPlayer player, Skill skill, int amount) {
+        // companions working beside you pick some of it up (before your books: hers are her own)
+        com.zomboidcraft.npc.NpcSkills.watched(player, skill, amount);
         double multiplier = ZcConfig.get().progression.xpMultiplier;
-        amount = multiplier <= 0 ? 0 : Math.max(1, (int) Math.round(amount * multiplier * SkillBooks.boost(player, skill)));
+        amount = multiplier <= 0 ? 0 : Math.max(1, (int) Math.round(amount * multiplier * SkillBooks.boost(player, skill)
+                * com.zomboidcraft.survival.Mood.learning(player)));
         if (amount <= 0 || player.isCreative()) {
             return;
         }
@@ -52,6 +55,16 @@ public final class Skills {
         updated.put(skill.name(), after);
         player.setAttached(TYPE, updated);
         // the client's skill tape shows a level going up
+    }
+
+    /** Takes XP away (a passive skill wasting from starving or idleness); never below level 0. */
+    public static void loseXp(ServerPlayer player, Skill skill, int amount) {
+        if (amount <= 0 || player.isCreative()) {
+            return;
+        }
+        Map<String, Integer> updated = new HashMap<>(player.getAttachedOrCreate(TYPE));
+        updated.put(skill.name(), Math.max(0, xp(player, skill) - amount));
+        player.setAttached(TYPE, updated);
     }
 
     private Skills() {
