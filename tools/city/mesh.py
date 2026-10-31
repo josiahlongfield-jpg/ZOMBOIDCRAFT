@@ -537,7 +537,8 @@ def vehicles(meta, pal, out, grow):
         if mid not in cache:
             cache[mid] = zcar.read(mid)
         v = cache[mid].get(state) or cache[mid]["usable"]
-        ox, oy, oz = meta.get("origin", [0, 0, 0])
+        ox, _, oz = meta.get("origin", [0, 0, 0])
+        oy = 0  # blocks keep the dump's own y (see the block corners below), so the cars do too
         W = zcar.place(v["T"], e[0] + ox, e[1] + oy, e[2] + oz, e[3]) * 16
         for glass in (False, True):
             sel = v["glass"] == glass

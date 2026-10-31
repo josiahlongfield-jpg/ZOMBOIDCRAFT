@@ -1,0 +1,23 @@
+{
+ "model": {
+  "type": "minecraft:select",
+  "property": "minecraft:display_context",
+  "cases": [
+   {
+    "when": "head",
+    "model": {
+     "type": "minecraft:empty"
+    }
+   }
+  ],
+  "fallback": {
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/hockey_neck_guard",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/hockey_neck_guard",
+    "part": "loot"
+   }
+  }
+ }
+}

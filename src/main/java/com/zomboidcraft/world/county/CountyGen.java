@@ -40,7 +40,7 @@ public final class CountyGen {
     /** What the column-pass found, kept for the vegetation pass. */
     private static final class Column {
         int top;
-        boolean water, road, built, shore, rail;
+        boolean water, road, built, shore, rail, bridge;
         /** Within reach of a railway's middle: no tree crowns hang over the line. */
         boolean lane;
         double forest, moisture;
@@ -128,6 +128,7 @@ public final class CountyGen {
             if (bridge) {
                 deck(out, hit, x, z, top, rng, rails == null || !rails.overTube(x, z));
                 c.road = true;
+                c.bridge = true;
             } else if (hit.road != null && in == null && hit.distance <= hit.road.kind.half + 1.5) {
                 road(out, hit, x, z, h, rng);
                 c.road = true;
@@ -165,6 +166,37 @@ public final class CountyGen {
             rails.lay(out, bx, bz, new RailGen.Columns(tops, road, built));
         }
         vegetation(bx, bz, cols, places, hideouts, out);
+        jams(bx, bz, cols, places, roads, out);
+    }
+
+    /**
+     * The Traffic Jam setting's queues (see {@link Jams}): each car stood on the asphalt where its middle lands in
+     * this chunk, left out where that is off the carriageway, on the railway or inside a place.
+     */
+    private void jams(int bx, int bz, Column[] cols, List<Place> places, List<Road> roads, ChunkSink out) {
+        Jams.place(county, roads, bx, bz, (x, z, yaw, variant, seed) -> {
+            int cx = (int) Math.floor(x), cz = (int) Math.floor(z);
+            Column c = cols[(cz - bz) * 16 + (cx - bx)];
+            if (!c.road || c.built || c.rail) {
+                return;
+            }
+            for (Place p : places) {
+                if (p.contains(cx, cz, 4)) {
+                    return;
+                }
+            }
+            Road.Hit hit = new Road.Hit();
+            for (Road r : roads) {
+                r.nearest(cx + 0.5, cz + 0.5, hit);
+            }
+            if (hit.road == null || hit.road.kind == Road.Kind.TRACK || hit.distance > hit.road.kind.half - 0.6) {
+                return;
+            }
+            // as road() and deck() lay it: a half block on top where the road climbs, none on a bridge's deck
+            int top = (int) Math.floor(hit.y);
+            int y = c.bridge ? top + 1 : top + (hit.y - top >= 0.5 ? 2 : 1);
+            out.vehicle(x, y, z, yaw, Jams.models(variant), seed);
+        });
     }
 
     /**

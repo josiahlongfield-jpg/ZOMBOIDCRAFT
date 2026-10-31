@@ -41,6 +41,7 @@ public abstract class ZombieMixin implements NoiseListener {
         ((MobAccessor) self).zomboidcraft$goalSelector().addGoal(1, new BashGoal(self));
         ((MobAccessor) self).zomboidcraft$goalSelector().addGoal(1, new com.zomboidcraft.zombie.WayInGoal(self));
         ((MobAccessor) self).zomboidcraft$goalSelector().addGoal(3, new InvestigateNoiseGoal(self));
+        ((MobAccessor) self).zomboidcraft$goalSelector().addGoal(6, new com.zomboidcraft.zombie.RallyGoal(self));
         if (ZombieTypes.isWalkerType(self.getType()) && ZcConfig.get().senses.sightEnabled) {
             GoalSelector targets = ((MobAccessor) self).zomboidcraft$targetSelector();
             targets.removeAllGoals(goal -> goal instanceof NearestAttackableTargetGoal<?> nearest

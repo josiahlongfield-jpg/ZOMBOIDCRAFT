@@ -117,7 +117,7 @@ public final class Alarms {
                 level.playSound(null, bell.pos, SoundEvents.BELL_BLOCK, SoundSource.BLOCKS, 2f, 1.7f + RNG.nextFloat() * 0.1f);
             }
             if (bell.left % 40 == 0) {
-                Noise.emit(level, Vec3.atCenterOf(bell.pos), 56);
+                Noise.emitEngine(level, Vec3.atCenterOf(bell.pos), 56);
             }
             return false;
         });

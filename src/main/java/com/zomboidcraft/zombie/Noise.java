@@ -45,6 +45,11 @@ public final class Noise {
         emit(level, pos, radius, false);
     }
 
+    /** An engine, a car alarm or a generator: Zomboid's Zombie Attraction Multiplier scales how far it carries. */
+    public static void emitEngine(ServerLevel level, Vec3 pos, double radius) {
+        emit(level, pos, radius * ZcConfig.get().zombiePopulation.attractionMultiplier, false);
+    }
+
     /**
      * A noise the dead make themselves (thumping a door or fence): it draws in the ones further off, but the ones
      * already at it and after something keep after that, rather than turning to the thump at their elbow.
@@ -66,6 +71,8 @@ public final class Noise {
         com.zomboidcraft.creature.HarvestmanDirector.noise(level, pos, radius);
         // the dead still waiting as records in earshot come out to it too
         com.zomboidcraft.zombie.population.Population.wake(level, pos, radius);
+        // and further off, past where anyone could see them, the herds and the records turn toward a loud one
+        com.zomboidcraft.zombie.population.Herds.noise(level, pos, radius);
         // each hears as its lore rolled (zombieLore hearing): keen ones half as far again, poor ones 60%, and the
         // less keen walk to somewhere near the sound rather than the spot itself
         for (Zombie zombie : level.getEntitiesOfClass(Zombie.class, new AABB(pos, pos).inflate(radius * 1.5))) {
