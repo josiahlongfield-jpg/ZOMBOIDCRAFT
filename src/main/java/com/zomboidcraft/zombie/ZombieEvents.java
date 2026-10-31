@@ -78,6 +78,8 @@ public final class ZombieEvents {
             zombie.getNavigation().getNodeEvaluator().setCanOpenDoors(true);
         }
         com.zomboidcraft.combat.Downed.onLoad(zombie);
+        LyingInWait.onLoad(zombie);
+        BeltedDead.onLoad(zombie);
         AttributeInstance speed = zombie.getAttribute(Attributes.MOVEMENT_SPEED);
         if (speed != null) {
             double amount = switch (Lore.pace(zombie)) {

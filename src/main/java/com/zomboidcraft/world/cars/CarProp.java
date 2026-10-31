@@ -98,6 +98,9 @@ public class CarProp extends Entity {
     /** A trolley jack under one corner ({@link ShopTool}): which (0-3, -1 none) and how high it's lifted. */
     private static final EntityDataAccessor<Integer> JACK = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Float> JACK_LIFT = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.FLOAT);
+    /** How a wreck was left lying: on its wheels, on its roof, or on its side (worldgen's "wrecked^roof"). */
+    private static final EntityDataAccessor<Integer> POSE = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.INT);
+    public static final int POSE_ROOF = 1, POSE_SIDE = 2;
     /** Server: the gunner holds the trigger; rounds due by the rate; ticks till the belt's loaded; rounds fired. */
     boolean turretTrigger;
     int beltBusy, turretShots, fireTicks;
@@ -226,6 +229,7 @@ public class CarProp extends Entity {
         builder.define(LIFT, 0f);
         builder.define(JACK, -1);
         builder.define(JACK_LIFT, 0f);
+        builder.define(POSE, 0);
     }
 
     @Override
@@ -236,6 +240,7 @@ public class CarProp extends Entity {
         airFound = input.getIntOr("air_found", 0) != 0;
         entityData.set(FUEL, input.getFloatOr("fuel", 1f));
         fuelRolled = input.getIntOr("fuel_rolled", 0) != 0;
+        entityData.set(POSE, input.getIntOr("pose", 0));
         lockRolled = input.getIntOr("lock_rolled", 0) != 0;
         locked = input.getIntOr("locked", 0) != 0;
         armed = input.getIntOr("armed", 0) != 0;
@@ -294,6 +299,7 @@ public class CarProp extends Entity {
         output.putInt("air_found", airFound ? 1 : 0);
         output.putFloat("fuel", fuel());
         output.putInt("fuel_rolled", fuelRolled ? 1 : 0);
+        output.putInt("pose", pose());
         output.putInt("lock_rolled", lockRolled ? 1 : 0);
         output.putInt("locked", locked ? 1 : 0);
         output.putInt("armed", armed ? 1 : 0);
@@ -428,6 +434,15 @@ public class CarProp extends Entity {
     }
 
     /** The corner a trolley jack holds up (0 front left, 1 front right, 2 rear left, 3 rear right), or -1. */
+    /** 0 on its wheels, {@link #POSE_ROOF} or {@link #POSE_SIDE}: a wreck that never drives again where it lies. */
+    public int pose() {
+        return entityData.get(POSE);
+    }
+
+    public void setPose(int pose) {
+        entityData.set(POSE, pose);
+    }
+
     public int jackCorner() {
         return entityData.get(JACK);
     }
@@ -486,8 +501,16 @@ public class CarProp extends Entity {
 
     /** Gets in to the seat given (by its door handle), or with -1 the free seat nearest where they stand. */
     public void getIn(Player player, int seat) {
+        if (com.zomboidcraft.zombie.BeltedDead.doorOpened(this, player)) {
+            return;   // the dead driver comes out at you instead
+        }
         if ("burnt".equals(variant())) {
             player.sendOverlayMessage(Component.literal("It's burnt out."));
+            return;
+        }
+        if (pose() != 0) {
+            player.sendOverlayMessage(Component.literal(pose() == POSE_ROOF ? "It's on its roof. Nobody's getting in that way."
+                    : "It's on its side. You can't get in."));
             return;
         }
         if (player.isPassenger() || !canAddPassenger(player)) {
@@ -510,6 +533,17 @@ public class CarProp extends Entity {
             return;
         }
         player.startRiding(this);
+    }
+
+    /** The model's seats (model space, the driver's first), for the dead belted into them. */
+    public float[][] seatSpots() {
+        CarModels.Model m = CarModels.get(model());
+        return m == null || m.seats == null ? new float[0][] : m.seats;
+    }
+
+    /** Where to sit someone in seat s: the next rider added goes there. */
+    public void seatNext(int s) {
+        nextSeat = s;
     }
 
     /** Whether seat s still has a seat in it (Zomboid's seat parts); cars without parts have all theirs. */
@@ -1229,6 +1263,7 @@ public class CarProp extends Entity {
         }
         alarmLeft = ticks;
         entityData.set(ALARM, true);
+        level().playSound(null, getX(), getY(), getZ(), CarSounds.ALARM, SoundSource.NEUTRAL, 2.5f, 1f);
         return true;
     }
 
@@ -1271,8 +1306,8 @@ public class CarProp extends Entity {
             entityData.set(ALARM, false);
             return;
         }
-        if (alarmLeft % 16 == 0) {
-            server.playSound(null, getX(), getY(), getZ(), CarSounds.HORN, SoundSource.NEUTRAL, 2f, 1f);
+        if (alarmLeft % 79 == 0) {
+            server.playSound(null, getX(), getY(), getZ(), CarSounds.ALARM, SoundSource.NEUTRAL, 2.5f, 1f);
         }
         if (alarmLeft % 40 == 0) {
             Noise.emitEngine(server, position(), 56);
@@ -1406,10 +1441,8 @@ public class CarProp extends Entity {
             entityData.set(SIREN, false);     // a Zomboid hour is a Minecraft one: 1000 ticks
             return;
         }
-        if (sirenTicks % 20 == 1) {
-            // a wail rising and falling: the horn bent up and down until AUDIO's siren is in
-            boolean up = sirenTicks / 20 % 2 == 0;
-            server.playSound(null, getX(), getY(), getZ(), CarSounds.HORN, SoundSource.NEUTRAL, 3f, up ? 1.5f : 1.2f);
+        if (sirenTicks % 120 == 1) {
+            server.playSound(null, getX(), getY(), getZ(), CarSounds.SIREN, SoundSource.NEUTRAL, 3f, 1f);
         }
         if (w.sirenEffectsZombies && sirenTicks % 40 == 0) {
             Noise.emitEngine(server, position(), 96);
@@ -1452,7 +1485,8 @@ public class CarProp extends Entity {
 
     @Override
     protected boolean canAddPassenger(Entity passenger) {
-        return passenger instanceof Player && getPassengers().size() < seats() && !"burnt".equals(variant()) && !crashed;
+        return (passenger instanceof Player || com.zomboidcraft.zombie.BeltedDead.belted(passenger))
+                && getPassengers().size() < seats() && !"burnt".equals(variant()) && !crashed;
     }
 
     /** Whoever sits at the wheel drives; a car with only passengers in it goes nowhere. */
@@ -1539,10 +1573,10 @@ public class CarProp extends Entity {
      * through the doors (or round the cockpit), and grow back as they get out.
      */
     private void fit(Entity passenger, boolean in) {
-        if (level().isClientSide() || !(passenger instanceof Player player)) {
+        if (level().isClientSide() || !(passenger instanceof LivingEntity rider)) {
             return;
         }
-        net.minecraft.world.entity.ai.attributes.AttributeInstance scale = player.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.SCALE);
+        net.minecraft.world.entity.ai.attributes.AttributeInstance scale = rider.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.SCALE);
         if (scale == null) {
             return;
         }
@@ -1567,12 +1601,13 @@ public class CarProp extends Entity {
             int packed = entityData.get(SEATS) & ~(0xF << (4 * i));
             entityData.set(SEATS, packed | (Math.max(seat, 0) + 1) << (4 * i));
         }
-        if (first && level() instanceof ServerLevel server) {
+        boolean dead = com.zomboidcraft.zombie.BeltedDead.belted(passenger);
+        if (first && !dead && level() instanceof ServerLevel server) {
             Cars.clearHull(server, this);
             parkPending = false;
             mountedAt = tickCount;
         }
-        if (level() instanceof ServerLevel server) {
+        if (!dead && level() instanceof ServerLevel server) {
             door(server);
         }
         if (passenger instanceof Player player && player.isLocalPlayer()) {
@@ -1770,7 +1805,7 @@ public class CarProp extends Entity {
         if (m == null) {
             return;
         }
-        if (hoisted() || jackCorner() >= 0) {
+        if (hoisted() || jackCorner() >= 0 || pose() != 0) {
             setDeltaMovement(Vec3.ZERO);    // wheels spinning in the air on the hoist's arms, or a corner up on a jack
             return;
         }

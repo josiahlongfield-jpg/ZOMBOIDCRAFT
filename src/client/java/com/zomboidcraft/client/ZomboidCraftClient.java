@@ -44,6 +44,7 @@ public class ZomboidCraftClient implements ClientModInitializer {
         SkillsHud.register();
         com.zomboidcraft.client.survival.DownedClient.register();
         com.zomboidcraft.client.loot.TowerStashClient.register();
+        com.zomboidcraft.client.power.GeneratorClient.register();
         // the sky eases toward the weather the server last sent
         ClientTickEvents.END_CLIENT_TICK.register(client ->
                 WeatherView.update(client.player == null ? null : client.player.getAttached(Weather.TYPE)));
@@ -57,6 +58,7 @@ public class ZomboidCraftClient implements ClientModInitializer {
         RailLights.register();
         com.zomboidcraft.client.gear.HandLights.register();
         com.zomboidcraft.client.building.Placer.register();
+        com.zomboidcraft.client.building.MoveMenu.register();
         com.zomboidcraft.client.zombie.body.Gibs.register();
         com.zomboidcraft.client.zombie.body.CrowdFx.register();
         com.zomboidcraft.client.zombie.body.ZDetail.register();

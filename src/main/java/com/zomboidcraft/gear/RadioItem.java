@@ -30,7 +30,8 @@ public class RadioItem extends Item {
     public enum Type {
         TOY("toy_radio", "A kids' walkie-talkie: not much reach"),
         TWO_WAY("two_way_radio", "A two-way radio"),
-        MILITARY("military_radio", "A military handheld: a long reach");
+        MILITARY("military_radio", "A military handheld: a long reach"),
+        FIELD("field_radio", "A manpack field radio: the longest reach, and it picks up military broadcasts");
 
         public final String key;
         final String blurb;
@@ -47,6 +48,7 @@ public class RadioItem extends Item {
                 case TOY -> cfg.toyRange;
                 case TWO_WAY -> cfg.twoWayRange;
                 case MILITARY -> cfg.militaryRange;
+                case FIELD -> cfg.militaryRange * 3;
             });
         }
 
@@ -55,7 +57,7 @@ public class RadioItem extends Item {
             return Math.max(1, switch (this) {
                 case TOY -> cfg.toyChannels;
                 case TWO_WAY -> cfg.twoWayChannels;
-                case MILITARY -> cfg.militaryChannels;
+                case MILITARY, FIELD -> cfg.militaryChannels;
             });
         }
     }
