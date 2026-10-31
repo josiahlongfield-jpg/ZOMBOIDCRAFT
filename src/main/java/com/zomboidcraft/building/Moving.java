@@ -250,6 +250,8 @@ public final class Moving {
             ItemStack stack = new ItemStack(state.getBlock().asItem());
             if (!stack.isEmpty() && !player.getInventory().add(stack)) {
                 net.minecraft.world.level.block.Block.popResource(level, player.blockPosition(), stack);
+                player.sendOverlayMessage(net.minecraft.network.chat.Component.literal("No room to carry it. It's at your feet.")
+                        .withStyle(net.minecraft.ChatFormatting.GRAY));
             }
         }
         if (piece.kind.skill != null) {

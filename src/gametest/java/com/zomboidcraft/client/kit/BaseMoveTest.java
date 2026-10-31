@@ -70,6 +70,9 @@ public class BaseMoveTest implements FabricClientGameTest {
             // at Carpentry 10 nothing breaks
             sp.getServer().runOnServer(s -> Skills.addXp(player(s), Skill.CARPENTRY, Skill.xpForLevel(10)));
             lift(ctx, sp, "home_sofa_blue_r", 3);
+            sp.getServer().runOnServer(s -> {
+                if (s.overworld().getBlockEntity(at(6)) instanceof RandomizableContainer c) c.setLootTable(null);
+            });
             lift(ctx, sp, "home_wardrobe", 6);
             // a sink: plumbed in, it wants a pipe wrench, then emptying, then it comes (25% break at Plumbing 0)
             hold(sp, ItemStack.EMPTY);
@@ -193,8 +196,10 @@ public class BaseMoveTest implements FabricClientGameTest {
                 if (BuiltInRegistries.ITEM.getKey(st.getItem()).getPath().equals(name)) got = st;
             }
             boolean gone = s.overworld().getBlockState(pos).isAir();
+            boolean dropped = !s.overworld().getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class,
+                    p.getBoundingBox().inflate(4), e -> BuiltInRegistries.ITEM.getKey(e.getItem().getItem()).getPath().equals(name)).isEmpty();
             return "block now " + s.overworld().getBlockState(pos).getBlock() + ", in inventory " + got
-                    + (got.isEmpty() ? (gone ? " BROKE" : "") : " weighing " + Weights.format(Weights.of(got)));
+                    + (got.isEmpty() ? (dropped ? " SET DOWN AT FEET" : gone ? " BROKE" : "") : " weighing " + Weights.format(Weights.of(got)));
         });
         LOG.info("ZCBASE lift {} after: {}", name, after);
         frame(ctx, "lift-" + name + "-done");
