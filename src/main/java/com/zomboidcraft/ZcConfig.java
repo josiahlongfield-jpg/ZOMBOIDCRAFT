@@ -860,6 +860,13 @@ public final class ZcConfig {
         public double fuelStationGasMin = 0;
         public double fuelStationGasMax = 0.8;
         public double fuelStationEmptyChance = 20;
+        /** Zomboid's Locked Vehicle Frequency and Car Alarm: never, extremely_rare, rare, sometimes, often, very_often. */
+        public String carLocked = "sometimes";
+        public String carAlarm = "rare";
+        /** Zomboid's Siren Effects Zombies: an emergency vehicle's siren draws the dead from far off. */
+        public boolean sirenEffectsZombies = true;
+        /** Zomboid's Siren Shutoff Hours: a siren left on dies after this many in-game hours (0 = never). */
+        public double sirenShutoffHours = 0;
         /** Car boots and the backs of vans hold loot (tools/cars/car_loot.py); off leaves them empty. */
         public boolean carLoot = true;
         /** The jets' top speed in km/h. Past about 300 the world can't load fast enough to keep up with them. */

@@ -60,6 +60,10 @@ final class SandboxOptions {
         w.put("FuelStationGasMin", b -> b.number("world.fuelStationGasMin", 0, 1).owner("VEHICLES"));
         w.put("FuelStationGasMax", b -> b.number("world.fuelStationGasMax", 0, 1).owner("VEHICLES"));
         w.put("FuelStationGasEmptyChance", b -> b.number("world.fuelStationEmptyChance", 0, 100).owner("VEHICLES"));
+        w.put("LockedCar", b -> b.choice("world.carLocked", "never", "extremely_rare", "rare", "sometimes", "often", "very_often").owner("VEHICLES"));
+        w.put("CarAlarm", b -> b.choice("world.carAlarm", "never", "extremely_rare", "rare", "sometimes", "often", "very_often").owner("VEHICLES"));
+        w.put("SirenEffectsZombies", b -> b.toggle("world.sirenEffectsZombies").owner("VEHICLES"));
+        w.put("SirenShutoffHours", b -> b.number("world.sirenShutoffHours", 0, 168).owner("VEHICLES"));
         w.put("DamageToPlayerFromHitByACar", b -> b.number("world.carHitDamage", 1, 4).owner("VEHICLES"));
         // Firearms (WEAPONS): combat/Firearms. Use Damage Chance says who a shot strikes just by being aimed at;
         // jams start at 0 since Josiah cut them on 10-26

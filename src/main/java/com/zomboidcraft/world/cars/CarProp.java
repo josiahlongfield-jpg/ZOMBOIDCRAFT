@@ -72,6 +72,8 @@ public class CarProp extends Entity {
     private static final EntityDataAccessor<Integer> SEATS = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.INT);
     /** The alarm's going off (a storm set it off): the horn honks and the lamps flash. */
     private static final EntityDataAccessor<Boolean> ALARM = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.BOOLEAN);
+    /** An emergency vehicle's siren is wailing (double-tap the horn). */
+    private static final EntityDataAccessor<Boolean> SIREN = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.BOOLEAN);
     /** An aircraft's attitude, engine (or rotor) speed, thrust, and the top speed the server allows ({@link Flight}). */
     private static final EntityDataAccessor<org.joml.Quaternionfc> AIR_ATTITUDE = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.QUATERNION);
     private static final EntityDataAccessor<Float> AIR_RPM = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.FLOAT);
@@ -148,6 +150,10 @@ public class CarProp extends Entity {
     private boolean worn;
     /** Whether a road vehicle's tank has been rolled (Zomboid's Chance Has Gas and Initial Gas), the first time it ticks. */
     private boolean fuelRolled;
+    /** Zomboid's Locked Vehicle Frequency and Car Alarm, rolled once: whether the doors are locked, and whether it has an alarm armed. */
+    private boolean lockRolled, locked, armed;
+    /** Ticks the siren has been on (Siren Shutoff Hours), and when the horn was last pressed (a double tap is the siren). */
+    private int sirenTicks, hornPressedAt = -100;
     /** Server side: wear owed each part slot below a whole percent, so slow wear adds up. */
     private final double[] partWear = new double[CarParts.SLOTS.size()];
     private double lastSpeedForWear;
@@ -203,6 +209,7 @@ public class CarProp extends Entity {
         builder.define(GLASS, "");
         builder.define(SEATS, 0);
         builder.define(ALARM, false);
+        builder.define(SIREN, false);
         builder.define(AIR_ATTITUDE, new org.joml.Quaternionf());
         builder.define(AIR_RPM, 0f);
         builder.define(AIR_POWER, 0f);
@@ -229,6 +236,11 @@ public class CarProp extends Entity {
         airFound = input.getIntOr("air_found", 0) != 0;
         entityData.set(FUEL, input.getFloatOr("fuel", 1f));
         fuelRolled = input.getIntOr("fuel_rolled", 0) != 0;
+        lockRolled = input.getIntOr("lock_rolled", 0) != 0;
+        locked = input.getIntOr("locked", 0) != 0;
+        armed = input.getIntOr("armed", 0) != 0;
+        entityData.set(SIREN, input.getIntOr("siren", 0) != 0);
+        sirenTicks = input.getIntOr("siren_ticks", 0);
         entityData.set(BATTERY, input.getIntOr("battery", 1) != 0);
         entityData.set(CONDITION, input.getIntOr("condition", 100));
         windows = input.getFloatOr("windows", windowsWhole());
@@ -282,6 +294,11 @@ public class CarProp extends Entity {
         output.putInt("air_found", airFound ? 1 : 0);
         output.putFloat("fuel", fuel());
         output.putInt("fuel_rolled", fuelRolled ? 1 : 0);
+        output.putInt("lock_rolled", lockRolled ? 1 : 0);
+        output.putInt("locked", locked ? 1 : 0);
+        output.putInt("armed", armed ? 1 : 0);
+        output.putInt("siren", siren() ? 1 : 0);
+        output.putInt("siren_ticks", sirenTicks);
         output.putInt("battery", battery() ? 1 : 0);
         output.putInt("condition", condition());
         output.putFloat("windows", windows);
@@ -351,6 +368,10 @@ public class CarProp extends Entity {
         }
         if (m != null && m.jet() || !(m != null && m.searchedOnly()) && !player.isSecondaryUseActive() && !atBoot(location)) {
             getIn(player);
+            return;
+        }
+        if (locked && !CarKeys.carries(player, this)) {
+            player.sendOverlayMessage(Component.literal("The boot's locked. Get in by a door (sneak and G smashes a window) and pop it."));
             return;
         }
         if (!searched) {
@@ -474,6 +495,9 @@ public class CarProp extends Entity {
         }
         if (seat >= 0 && (seat >= seats() || seatTaken(seat))) {
             player.sendOverlayMessage(Component.literal("Someone's in that seat."));
+            return;
+        }
+        if (locked && !hasPassenger(player) && !breakIn(player)) {
             return;
         }
         nextSeat = seat >= 0 ? seat : nearestFreeSeat(player);
@@ -919,6 +943,7 @@ public class CarProp extends Entity {
         if (catchAt >= 0 && tickCount >= catchAt) {
             catchAt = -1;
             entityData.set(ENGINE, true);
+            stopAlarm();      // started, by key or wires: the alarm's brain gives up
             Noise.emit(server, position(), 24);
         }
         if (doorShutAt >= 0 && tickCount >= doorShutAt) {
@@ -1053,6 +1078,7 @@ public class CarProp extends Entity {
         if (!canStart(player)) {
             hotwireLeft = (int) Math.round(com.zomboidcraft.ZcConfig.get().world.hotwireSeconds * 20);
             hotwirer = player;
+            soundAlarm();
             player.sendOverlayMessage(Component.literal("No key. You pull the panel off under the dash: the wiring looks "
                     + wiring(carCondition()) + "..."));
             return;
@@ -1237,7 +1263,7 @@ public class CarProp extends Entity {
         if (alarmLeft <= 0) {
             return;
         }
-        if (--alarmLeft == 0 || isVehicle()) {
+        if (--alarmLeft == 0) {
             alarmLeft = 0;
             entityData.set(ALARM, false);
             return;
@@ -1250,8 +1276,134 @@ public class CarProp extends Entity {
         }
     }
 
+    // ---------------------------------------------------------------- locks, alarms, sirens (Zomboid's settings)
+
+    private static double share(String often) {
+        return switch (often) {
+            case "never" -> 0;
+            case "extremely_rare" -> 0.03;
+            case "rare" -> 0.1;
+            case "sometimes" -> 0.3;
+            case "often" -> 0.55;
+            case "very_often" -> 0.8;
+            default -> 0.3;
+        };
+    }
+
+    /** Zomboid's Locked Vehicle Frequency and Car Alarm: whether a car that still runs is found locked, and armed. */
+    private void rollLock() {
+        lockRolled = true;
+        if (!roadCar() || !engineRuns()) {
+            return;
+        }
+        java.util.Random rng = new java.util.Random(getUUID().getMostSignificantBits() ^ 0x10C4L);
+        com.zomboidcraft.ZcConfig.World w = com.zomboidcraft.ZcConfig.get().world;
+        rollKey();
+        // keys left in the ignition mean nobody locked up; a shop's customer cars are always locked
+        locked = !w.vehicleEasyUse && keyWhere != CarKeys.IGNITION && (customer || rng.nextDouble() < share(w.carLocked));
+        armed = !w.vehicleEasyUse && rng.nextDouble() < share(w.carAlarm);
+    }
+
+    public boolean locked() {
+        return locked;
+    }
+
+    /**
+     * Someone tries a locked door: their key opens it; sneaking, they smash the nearest window and reach in (glass
+     * everywhere, and an armed alarm goes off). Returns whether they're in.
+     */
+    private boolean breakIn(Player player) {
+        if (CarKeys.carries(player, this)) {
+            locked = false;
+            stopAlarm();
+            level().playSound(null, getX(), getY(), getZ(), SoundEvents.IRON_TRAPDOOR_OPEN, SoundSource.NEUTRAL, 0.5f, 1.8f);
+            player.sendOverlayMessage(Component.literal("You unlock it with the key."));
+            return true;
+        }
+        if (!player.isSecondaryUseActive() || !(level() instanceof ServerLevel server)) {
+            player.sendOverlayMessage(Component.literal("It's locked. Sneak and press G to smash a window and reach in."));
+            return false;
+        }
+        CarGlass.Window[] ws = CarGlass.windows(CarModels.get(model()), variantIndex());
+        CarGlass.Window best = null;
+        double bestD = Double.MAX_VALUE;
+        for (CarGlass.Window w : ws) {
+            if (w != null && panes().closed(w.index())) {
+                Vec3 at = toWorld(new float[]{(float) w.centre().x, (float) w.centre().y, (float) w.centre().z});
+                double d = at.distanceToSqr(player.getEyePosition());
+                if (d < bestD) {
+                    best = w;
+                    bestD = d;
+                }
+            }
+        }
+        if (best != null) {
+            shatter(server, best);
+        }
+        locked = false;
+        soundAlarm();
+        player.sendOverlayMessage(Component.literal(best != null ? "You put the window in and reach for the lock." : "You reach in and pop the lock."));
+        return true;
+    }
+
+    /** A break-in sets off an armed alarm (once: after that its fuse is blown). */
+    private void soundAlarm() {
+        if (armed && tripAlarm(com.zomboidcraft.ZcConfig.get().building.carAlarmSeconds * 20 + 40 * 20)) {
+            armed = false;
+        }
+    }
+
+    /** Police cars, ambulances, fire trucks and the like: the ones with a siren. */
+    public boolean emergency() {
+        CarModels.Model m = CarModels.get(model());
+        String id = model();
+        return m != null && ("emergency".equals(m.kind) || id.startsWith("police") || id.contains("ambulance") || id.contains("fire_truck")
+                || id.startsWith("swat"));
+    }
+
+    public boolean siren() {
+        return entityData.get(SIREN);
+    }
+
+    private void setSiren(Player driver, boolean on) {
+        if (on && (!engineRuns() || !battery())) {
+            driver.sendOverlayMessage(Component.literal("The siren gives a dying squawk: no power."));
+            return;
+        }
+        entityData.set(SIREN, on);
+        sirenTicks = 0;
+        driver.sendOverlayMessage(Component.literal(on ? "Siren on. Double-tap H to kill it." : "Siren off."));
+    }
+
+    /** The siren wails on whether anyone's in or not; zombies come (Siren Effects Zombies) until Siren Shutoff Hours runs out. */
+    private void siren(ServerLevel server) {
+        if (!siren()) {
+            return;
+        }
+        com.zomboidcraft.ZcConfig.World w = com.zomboidcraft.ZcConfig.get().world;
+        sirenTicks++;
+        if (w.sirenShutoffHours > 0 && sirenTicks > w.sirenShutoffHours * 1000) {
+            entityData.set(SIREN, false);     // a Zomboid hour is a Minecraft one: 1000 ticks
+            return;
+        }
+        if (sirenTicks % 20 == 1) {
+            // a wail rising and falling: the horn bent up and down until AUDIO's siren is in
+            boolean up = sirenTicks / 20 % 2 == 0;
+            server.playSound(null, getX(), getY(), getZ(), CarSounds.HORN, SoundSource.NEUTRAL, 3f, up ? 1.5f : 1.2f);
+        }
+        if (w.sirenEffectsZombies && sirenTicks % 40 == 0) {
+            Noise.emit(server, position(), 96);
+        }
+    }
+
     /** The driver leans on the horn: loud, and every zombie in earshot comes. */
     public void honk(Player driver) {
+        if (level() instanceof ServerLevel server && getControllingPassenger() == driver && emergency() && tickCount - hornPressedAt < 10) {
+            hornPressedAt = -100;
+            setSiren(driver, !siren());
+            return;
+        }
+        hornPressedAt = tickCount;
         if (level() instanceof ServerLevel server && getControllingPassenger() == driver && tickCount >= hornFreeAt && !jet()) {
             hornFreeAt = tickCount + 40;
             server.playSound(null, getX(), getY(), getZ(), CarSounds.HORN, SoundSource.NEUTRAL, 1.5f, 1f);
@@ -1545,6 +1697,10 @@ public class CarProp extends Entity {
             if (!fuelRolled && !aircraft()) {
                 rollFuel();
             }
+            if (!lockRolled && !aircraft()) {
+                rollLock();
+            }
+            siren(server);
             if (roadCar()) {
                 burnFuel(server);
             }
