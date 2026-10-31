@@ -265,6 +265,9 @@ final class Interior {
         if (sc0 >= 0) {
             out.append("stairs x ").append(sc0).append(" z ").append(sz0).append('\n');
         }
+        if (tale != null) {
+            out.append("story ").append(tale.name().toLowerCase(java.util.Locale.ROOT)).append(taleDone ? "" : " (no room for it)").append('\n');
+        }
         return out.toString();
     }
 
@@ -1009,6 +1012,7 @@ final class Interior {
         }
         surfaces(f);
         story(f);
+        stories(f);
     }
 
     /** The cell inside each way into a room stays clear, and so does the hall itself. */
@@ -2224,7 +2228,9 @@ final class Interior {
             for (int tries = 0; tries < 8; tries++) {
                 int x = r.a0 + rng.nextInt(r.w()), z = r.b0 + rng.nextInt(r.d());
                 if (occ[x - x0][z - z0][1] == 0 && cellAt(f, x, z) == ROOM) {
-                    put(f, x, 1, z, name + face(rng.nextInt(4)));
+                    String facing = face(rng.nextInt(4));
+                    // a piece that already has properties (a bag with its loot) takes the facing inside them
+                    put(f, x, 1, z, name.endsWith("]") ? name.substring(0, name.length() - 1) + "," + facing.substring(1) : name + facing);
                     break;
                 }
             }
@@ -2412,5 +2418,348 @@ final class Interior {
 
     private String pick(String... options) {
         return options[rng.nextInt(options.length)];
+    }
+
+    // ------------------------------------------------------------------ Zomboid's building stories
+
+    /**
+     * Zomboid's randomized buildings (its RBSafehouse and the dead survivors' RDS scenes): now and then a house
+     * keeps what happened in it. A boarded one may be a survivor's safehouse, the stockpile round a mattress and
+     * whoever held out there; a shut or looted one a poker night, a party, a game on the TV, a drunk, a gunman
+     * who ended it in the bathroom, one of them shut in there or in a bedroom, the dead being eaten, the police
+     * who came, the men who got out of the prison. How often is the sandbox's Randomized Building Chance
+     * (SurvivorHouseChance, {@link #storyRate}). The house's own dice decide whether, so a house without a story
+     * is built exactly as before. The dead and the walkers are marks for world.gen.StoryMarks.
+     */
+    enum Tale {
+        SAFEHOUSE(0), POKER_NIGHT(4), HOUSE_PARTY(4), FOOTBALL_NIGHT(4), DEAD_DRUNK(5), GUNMAN_IN_BATHROOM(3),
+        LOCKED_BATHROOM(5), BEDROOM_ZED(6), ZOMBIES_EATING(5), POLICE_AT_HOUSE(3), PRISON_ESCAPE(3), STUDENT_NIGHT(3);
+
+        final int weight;
+
+        Tale(int weight) {
+            this.weight = weight;
+        }
+    }
+
+    /** A house's chance of a story at "sometimes"; the sandbox's other settings scale it. */
+    static final double TALE_BASE = 0.1;
+    /** The sandbox's Randomized Building Chance as a multiple of {@link #TALE_BASE} (RoadStories.rate's scale). */
+    static volatile java.util.function.DoubleSupplier storyRate =
+            () -> Double.parseDouble(System.getProperty("houses.stories", "0.5"));
+
+    /** Hands the generator the world's chance (world.gen.StoryMarks, from the sandbox). */
+    public static void setStoryRate(java.util.function.DoubleSupplier supplier) {
+        storyRate = supplier;
+    }
+
+    private Tale tale;
+    private boolean taleRolled, taleDone;
+
+    private void stories(int f) {
+        if (!taleRolled) {
+            taleRolled = true;
+            tale = rollTale();
+        }
+        if (tale == null || taleDone) {
+            return;
+        }
+        List<Room> list = rooms.get(f);
+        taleDone = switch (tale) {
+            case SAFEHOUSE -> safehouse(f, list);
+            case POKER_NIGHT -> poker(f, list);
+            case HOUSE_PARTY -> party(f, list, "civilian", 3 + rng.nextInt(3), 2 + rng.nextInt(3), true);
+            case STUDENT_NIGHT -> party(f, list, "hoodie", 2 + rng.nextInt(2), 1 + rng.nextInt(3), false);
+            case FOOTBALL_NIGHT -> football(f, list);
+            case DEAD_DRUNK -> drunk(f, list);
+            case GUNMAN_IN_BATHROOM -> gunman(f, list);
+            case LOCKED_BATHROOM -> lockedIn(f, list, "bath", "bath_half");
+            case BEDROOM_ZED -> lockedIn(f, list, "bed_master", "bed", "bed_kid");
+            case ZOMBIES_EATING -> eating(f, list);
+            case POLICE_AT_HOUSE -> police(f, list);
+            case PRISON_ESCAPE -> escape(f, list);
+        };
+    }
+
+    private Tale rollTale() {
+        if (flat || cond == House.Condition.BURNT || cond == House.Condition.RUIN) {
+            return null;
+        }
+        double rate;
+        try {
+            rate = Math.max(0, storyRate.getAsDouble());
+        } catch (RuntimeException e) {
+            rate = 0.5;
+        }
+        // the household's own dice: whether doesn't touch the house's
+        SplittableRandom dice = new SplittableRandom(seedBits * 0x632BE59BD9B4E019L + 0x5704);
+        if (dice.nextDouble() >= Math.min(1, TALE_BASE * rate)) {
+            return null;
+        }
+        if (cond == House.Condition.BOARDED) {
+            return dice.nextDouble() < 0.75 ? Tale.SAFEHOUSE : null;
+        }
+        int total = 0;
+        for (Tale t : Tale.values()) {
+            total += t.weight;
+        }
+        int roll = dice.nextInt(total);
+        for (Tale t : Tale.values()) {
+            if ((roll -= t.weight) < 0) {
+                return t;
+            }
+        }
+        return null;
+    }
+
+    private Room roomOf(List<Room> list, String... kinds) {
+        for (String k : kinds) {
+            for (Room r : list) {
+                if (r.kind.equals(k)) {
+                    return r;
+                }
+            }
+        }
+        return null;
+    }
+
+    /** Cells the story's dead already lie on. */
+    private final java.util.Set<Long> laid = new java.util.HashSet<>();
+
+    /** Any clear bit of floor in the room, by the walls too (a body takes no block). */
+    private int[] floorCell(int f, Room r) {
+        for (int tries = 0; tries < 40; tries++) {
+            int x = r.a0 + rng.nextInt(r.w()), z = r.b0 + rng.nextInt(r.d());
+            if (inRoom(f, r, x, z) && occ[x - x0][z - z0][1] == 0 && cellAt(f, x, z) == ROOM
+                    && !laid.contains((long) x << 32 ^ (z & 0xffffffffL))) {
+                return new int[] {x, z};
+            }
+        }
+        return null;
+    }
+
+    /** A body for StoryMarks to lay in the room: Zomboid's outfit, maybe missing a limb, a pool of blood. */
+    private boolean corpse(int f, Room r, String outfit) {
+        int[] c = floorCell(f, r);
+        if (c == null) {
+            return false;
+        }
+        laid.add((long) c[0] << 32 ^ (c[1] & 0xffffffffL));
+        int limbs = rng.nextDouble() < 0.2 ? 1 << rng.nextInt(8) : 0;
+        p.vehicle(c[0] + 0.5, f * H + 1, c[1] + 0.5, (float) (rng.nextDouble() * 360), "!body:" + outfit + ";" + limbs + ";0", rng.nextLong());
+        if (rng.nextDouble() < 0.6) {
+            put(f, c[0], 1, c[1], rng.nextBoolean() ? "home_blood_pool" : "blood_splat");
+        }
+        return true;
+    }
+
+    /** Walkers that stand up inside the room (a negative radius keeps them on this floor, not on the roof). */
+    private void walkersIn(int f, Room r, String outfit, int n) {
+        if (n <= 0) {
+            return;
+        }
+        int cx = (r.a0 + r.a1) / 2, cz = (r.b0 + r.b1) / 2;
+        int radius = Math.max(1, Math.min(r.w(), r.d()) / 2);
+        p.vehicle(cx + 0.5, f * H + 1, cz + 0.5, 0, "!walkers:" + outfit + ";" + n + ";" + (-radius), rng.nextLong());
+    }
+
+    private void casings(int f, Room r, int n) {
+        scatter(f, r, "bunk_casings", n);
+    }
+
+    /** RBSafehouse: the survivor's camp in the boarded house, the stockpile round the mattress, and the survivor. */
+    private boolean safehouse(int f, List<Room> list) {
+        Room r = roomOf(list, "living", "den", "dining", "bed_master", "bed");
+        if (r == null) {
+            return false;
+        }
+        // the camp is in the one room; what doesn't fit there spills into the next rooms along
+        List<Room> camp = new ArrayList<>(List.of(r));
+        for (String k : List.of("dining", "den", "kitchen", "living", "hall", "bed_master", "bed")) {
+            Room o = roomOf(list, k);
+            if (o != null && !camp.contains(o)) {
+                camp.add(o);
+            }
+        }
+        for (int i = 0, n = rng.nextBoolean() ? 2 : 1; i < n; i++) {
+            int[] bed = freeCell(f, r);
+            if (bed == null || !put(f, bed[0], 1, bed[1], "home_mattress_floor" + face(rng.nextInt(4)))) {
+                stock(f, camp, "home_mattress_floor");
+            }
+        }
+        stock(f, camp, "bunk_drum_water");
+        if (rng.nextBoolean()) {
+            stock(f, camp, "bunk_drum_water");
+        }
+        stock(f, camp, "cellar_shelf_cans");
+        stock(f, camp, rng.nextBoolean() ? "cellar_shelf_preserves" : "cellar_shelf_medical");
+        if (rng.nextDouble() < 0.45) {
+            stock(f, camp, "bunk_crate_ammo");
+        }
+        stock(f, camp, "home_radio");
+        scatter(f, r, "home_candles", 2);
+        scatter(f, r, "sc_bucket", 1);
+        scatter(f, r, "wf_bags_a[loot=basement_supplies]", 1);
+        decor(f, r, pick("home_note_stadium", "home_note_basement", "home_note_mom", "home_note_bitten"), 2);
+        double end = rng.nextDouble();
+        if (end < 0.4) {
+            corpse(f, r, "survivor");          // the survivor died here
+        } else if (end < 0.7) {
+            walkersIn(f, r, "survivor", 1);    // bitten, and turned in here
+        }
+        return true;
+    }
+
+    /** A piece against a wall of the first of the rooms with space for it. */
+    private int[] stock(int f, List<Room> rooms, String name) {
+        for (Room o : rooms) {
+            int[] at = against(f, o, name);
+            if (at != null) {
+                return at;
+            }
+        }
+        return null;
+    }
+
+    /** RDSPokerNight: the card table out in the room, the bottles, the players dead round it. */
+    private boolean poker(int f, List<Room> list) {
+        Room r = roomOf(list, "dining", "den", "living", "kitchen");
+        if (r == null) {
+            return false;
+        }
+        int[] t = freeCell(f, r);
+        if (t == null || !put(f, t[0], 1, t[1], "of_card_table")) {
+            against(f, r, "of_card_table");
+        }
+        scatter(f, r, "home_bottles_low", 2 + rng.nextInt(2));
+        for (int i = 0, n = 2 + rng.nextInt(3); i < n; i++) {
+            corpse(f, r, "civilian");
+        }
+        if (rng.nextDouble() < 0.4) {
+            casings(f, r, 2);
+        }
+        walkersIn(f, r, "civilian", rng.nextInt(2));
+        return true;
+    }
+
+    /** RDSHouseParty / RDSStudentNight: the drink and the music, the guests dead or still on their feet. */
+    private boolean party(int f, List<Room> list, String outfit, int dead, int walkers, boolean cake) {
+        Room r = roomOf(list, "living", "den", "dining", "kitchen");
+        if (r == null) {
+            return false;
+        }
+        scatter(f, r, "home_bottles_low", 3 + rng.nextInt(3));
+        against(f, r, "home_radio");
+        if (cake) {
+            against(f, r, "dn_ct_cake");
+        }
+        scatter(f, r, "paper", 2);
+        for (int i = 0; i < dead; i++) {
+            corpse(f, r, outfit);
+        }
+        walkersIn(f, r, outfit, walkers);
+        Room k = roomOf(list, "kitchen");
+        if (k != null && k != r) {
+            scatter(f, k, "home_bottles_low", 2);
+        }
+        return true;
+    }
+
+    /** RDSFootballNight: the game on the TV, the beers, the fans dead on the sofa. */
+    private boolean football(int f, List<Room> list) {
+        Room r = roomOf(list, "living", "den");
+        if (r == null) {
+            return false;
+        }
+        scatter(f, r, "home_bottles_low", 3);
+        for (int i = 0, n = 2 + rng.nextInt(2); i < n; i++) {
+            corpse(f, r, rng.nextBoolean() ? "civilian" : "hoodie");
+        }
+        walkersIn(f, r, "civilian", rng.nextInt(2));
+        return true;
+    }
+
+    /** RDSDeadDrunk: one who drank it all away. */
+    private boolean drunk(int f, List<Room> list) {
+        Room r = roomOf(list, "living", "kitchen", "den", "bed_master");
+        if (r == null) {
+            return false;
+        }
+        scatter(f, r, "home_bottles_low", 4 + rng.nextInt(3));
+        corpse(f, r, rng.nextBoolean() ? "civilian" : "office");
+        return true;
+    }
+
+    /** RDSGunmanInBathroom: the family shot in the house, the gunman dead in the bathroom. */
+    private boolean gunman(int f, List<Room> list) {
+        Room bath = roomOf(list, "bath", "bath_half");
+        Room r = roomOf(list, "living", "kitchen", "dining", "den", "bed_master", "bed", "bed_kid", "hall");
+        if (bath == null || r == null) {
+            return false;
+        }
+        corpse(f, bath, "civilian");
+        casings(f, bath, 2);
+        for (int i = 0, n = 1 + rng.nextInt(2); i < n; i++) {
+            corpse(f, r, "civilian");
+        }
+        casings(f, r, 3);
+        return true;
+    }
+
+    /** RDSZombieLockedBathroom / RDSBedroomZed: one of them shut in a room, still there. */
+    private boolean lockedIn(int f, List<Room> list, String... kinds) {
+        Room r = roomOf(list, kinds);
+        if (r == null) {
+            return false;
+        }
+        walkersIn(f, r, "civilian", 1);
+        if (rng.nextDouble() < 0.5) {
+            scatter(f, r, "blood_splat", 1);
+        }
+        Room hall = roomOf(list, "hall");
+        if (hall != null && rng.nextDouble() < 0.4) {
+            decor(f, hall, "home_blood_hand", 2);
+        }
+        return true;
+    }
+
+    /** RDSZombiesEating: the dead on the floor and the ones that are eating them. */
+    private boolean eating(int f, List<Room> list) {
+        Room r = roomOf(list, "kitchen", "living", "dining");
+        if (r == null) {
+            return false;
+        }
+        corpse(f, r, "civilian");
+        scatter(f, r, "blood_splat", 2);
+        walkersIn(f, r, "any", 2 + rng.nextInt(2));
+        return true;
+    }
+
+    /** RDSPoliceAtHouse: the officers who answered the call, dead in the hall, and the one who bit them. */
+    private boolean police(int f, List<Room> list) {
+        Room r = roomOf(list, "hall", "living", "kitchen");
+        if (r == null) {
+            return false;
+        }
+        for (int i = 0, n = 1 + rng.nextInt(2); i < n; i++) {
+            corpse(f, r, "police");
+        }
+        casings(f, r, 3);
+        Room in = roomOf(list, "living", "kitchen", "dining");
+        corpse(f, in != null ? in : r, "civilian");
+        walkersIn(f, in != null ? in : r, rng.nextBoolean() ? "police" : "civilian", 1);
+        return true;
+    }
+
+    /** RDSPrisonEscape: the men who got out of the prison, holed up here in their orange, and what came of it. */
+    private boolean escape(int f, List<Room> list) {
+        Room r = roomOf(list, "living", "kitchen", "den");
+        if (r == null) {
+            return false;
+        }
+        scatter(f, r, "home_clothes_pile", 2);
+        corpse(f, r, rng.nextBoolean() ? "prisoner" : "civilian");
+        walkersIn(f, r, "prisoner", 1 + rng.nextInt(2));
+        return true;
     }
 }
