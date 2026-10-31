@@ -28,6 +28,11 @@ public final class RoadStories {
     static final double BASE = 0.3;
     /** The towns' outskirts, where the police closed the roads. */
     private static final double TOWN_REACH = 320;
+    /**
+     * How far in from the road's edge a story leaves clear, besides the shoulder: the way past it that a car
+     * can still drive: every story leaves room for a car to get past it.
+     */
+    static final double PAST = 3;
 
     /**
      * The world's Randomized Road Stories Chance as a multiple of {@link #BASE}: 0 for never, 1 for sometimes,
@@ -506,17 +511,20 @@ public final class RoadStories {
             walkers(-6, shoulder, "any", chance(0.6) ? 1 : 0, 6);
         }
 
-        /** A pickup with its trailer swung round across the lanes, the load spilled (refs: trailer-crash). */
+        /**
+         * A pickup with its trailer swung round across its lane, the load spilled out over the verge (refs:
+         * trailer-crash). The far lane stays open past it, with only the light boxes lying on it.
+         */
         private void trailerCrash() {
             skid(-18, -4, lane, lane - 1);
             car(5, lane + 0.5, 25 + skew(10), "pickup@wrecked");
-            car(-2.5, lane - 2.5, -55 + skew(15), "horse_trailer@wrecked");
+            car(-2.5, Math.max(lane - 2.5, -half + PAST + 3.2), -55 + skew(10), "horse_trailer@wrecked");
             for (int k = 0; k < 3; k++) {
-                block(-6 + jit(3), -lane + jit(1.5), "fm_bale_one", any(4));
+                block(-6 + jit(3), half + 2.5 + jit(1), "fm_bale_one", any(4));
             }
             block(-4, -lane + 1, loot("cardboard_box"), any(4));
-            block(-5.5, -lane - 0.5, loot("mu_crate_open"), any(4));
-            block(-3, -lane - 1.2, "mu_crate_flat", any(4));
+            block(-5.5, half + 2, loot("mu_crate_open"), any(4));
+            block(-3, half + 3.2, "mu_crate_flat", any(4));
             block(-7, 0, "cardboard_box", any(4));
             wreckage(1, lane - 1, 4, 3);
             if (chance(0.4)) {
@@ -538,10 +546,14 @@ public final class RoadStories {
             walkers(-4, shoulder + 3, "construction", chance(0.5) ? 1 : 0, 5);
         }
 
-        /** A tree felled across the road, a car stopped at it, its people shot, their cases torn open (refs: bandit-road). */
+        /**
+         * A tree felled across the road, a car stopped at it, its people shot, their cases torn open (refs:
+         * bandit-road). It fell short of the far side: the top lies on the verge to the right and the sawn butt
+         * stops in the far lane, so a car can still squeeze past on the far lane's edge and its shoulder.
+         */
         private void banditRoad() {
             double cut = 8;
-            for (double l = -half - 2; l <= half + 1; l += 1) {
+            for (double l = -half + PAST + 0.5; l <= half + 1; l += 1) {
                 block(cut, l, "rv_trunk", ACROSS);
             }
             block(cut, half + 2, "rv_trunk_crown", RIGHT);
@@ -556,7 +568,7 @@ public final class RoadStories {
                     }
                 }
             }
-            block(cut - 1, -half - 2, "debris_chunk", any(4));
+            block(cut + 1, -half + PAST + 0.2, "debris_chunk", any(4));     // the sawn butt's chips
             car(-1, lane - 0.4, skew(6), "car,van,pickup@abandoned");
             int dead = 2 + any(2);
             for (int k = 0; k < dead; k++) {
@@ -569,9 +581,9 @@ public final class RoadStories {
             block(-5, 0.5, "home_clothes_pile");
             block(-3, 1.4, "home_clothes_pile");
             block(-6, -1.2, "paper");
-            block(-4.5, -lane, loot("wf_bags_a"), any(4));
+            block(-4.5, half + 1.5, loot("wf_bags_a"), any(4));
             if (chance(0.5)) {
-                block(-6.5, -lane + 1, loot("wf_bags_a"), any(4));
+                block(-6.5, half + 2.2, loot("wf_bags_a"), any(4));
             }
         }
 
@@ -622,10 +634,21 @@ public final class RoadStories {
          * behind the cars, the officers and the people they held back dead, the line taped.
          */
         private void policeBlockade(boolean shot) {
-            car(0, -lane + 0.4, 62 + skew(10), "police_sedan,police_suv@abandoned");
-            car(0.6, lane - 0.4, 118 + skew(10), "police_sedan,police_suv@abandoned");
-            for (double l : new double[] {-0.5, 0.5, -half - 1, half + 1, -half - 2, half + 2}) {
+            // the cars nosed in from either edge, angled, with the gap between them where they let traffic
+            // through one at a time; the barrier that closed it pulled aside (or knocked flat when it fell)
+            // (on the narrow county roads they stand half on the shoulders, less angled, to leave it)
+            double at = highway ? lane - 0.4 : half + 0.5;
+            float turn = highway ? 62 : 32;
+            car(0, -at, turn + skew(6), "police_sedan,police_suv@abandoned");
+            car(0.6, at, 180 - turn + skew(6), "police_sedan,police_suv@abandoned");
+            double side = highway ? half + 1 : half + 3;    // the barriers out past the cars, closing the verges
+            for (double l : new double[] {-side, side, -side - 1, side + 1}) {
                 block(3, l, shot && chance(0.6) ? "st_barrier_down" : "st_barrier", AHEAD);
+            }
+            if (shot) {
+                block(3, jit(0.6), "st_barrier_down", any(4));
+            } else {
+                block(6, at + 1.6, "st_barrier", ALONG);
             }
             for (double l = -half; l <= half; l += 2) {
                 block(-9 + jit(0.4), l + jit(0.4), shot ? "rv_flare_out" : "rv_flare", any(4));
@@ -633,7 +656,7 @@ public final class RoadStories {
             for (double l = -half + 1; l <= half - 1; l += 2.5) {
                 block(-5, l, "st_cone");
             }
-            block(-3, highway ? 0 : 0.5, "rv_closed_sign", AHEAD);
+            block(-3, half + 1, "rv_closed_sign", AHEAD);
             block(5, -half - 1, loot("rv_case"), any(4));
             if (shot) {
                 for (double l = -half; l <= half; l += 1) {
@@ -659,11 +682,16 @@ public final class RoadStories {
             }
         }
 
-        /** A pile-up with the dead it drew in standing round it (Zomboid's crash horde). */
+        /**
+         * A pile-up with the dead it drew in standing round it (Zomboid's crash horde). On a highway the cars
+         * lie across both ways' lanes; on a county road they piled into one lane, the shoulder and the ditch,
+         * so the other lane gets past.
+         */
         private void crashHorde() {
             int n = 3 + any(2);
             for (int k = 0; k < n; k++) {
-                car(-8 + k * 5 + jit(1), (k % 2 == 0 ? lane : -lane) * 0.8 + jit(1), (k % 2 == 0 ? 0 : 180) + skew(60),
+                double l = highway ? (k % 2 == 0 ? lane : -lane) * 0.8 + jit(1) : (k % 2 == 0 ? lane + 0.8 : half + 1.6) + jit(0.4);
+                car(-8 + k * 5 + jit(1), l, (k % 2 == 0 ? 0 : 180) + skew(highway ? 60 : 30),
                         chance(0.25) ? "car,van,truck@burnt" : "car,van,truck@wrecked");
             }
             wreckage(0, 0, 8, 7);
