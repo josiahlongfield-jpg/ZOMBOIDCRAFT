@@ -369,6 +369,12 @@ public final class ZcConfig {
          * already in the world are removed; its save data is kept, so turning it back on picks up where it left off.
          */
         public boolean harvestman = false;
+        /**
+         * On an NVIDIA card, keep OpenGL buffer storage on (Minecraft 26.3 turns it off there), so Sodium can send chunk
+         * meshes through a mapped buffer instead of waiting on the card for each one. Off restores Minecraft's choice.
+         * Read once at start-up, so a change needs a restart. Client side.
+         */
+        public boolean nvidiaBufferStorage = true;
         /** The nearest this many zombies on screen get every clothing detail (within look.zombieDetailDistance). Client side. */
         public int fullDetailZombies = 12;
         /** The nearest this many get most of it; the rest only the main shapes. Client side. */
