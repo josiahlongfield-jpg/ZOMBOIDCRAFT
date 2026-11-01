@@ -272,17 +272,24 @@ def build(a):
         if af and ar and af != ar:
             cf, cr = (af[0] + af[1]) / 2, (ar[0] + ar[1]) / 2
             k = (fr[0][0][2] - rr[0][0][2]) / (cf - cr)
-            if 0.7 < k < 1.45:
+            if a.body_only and a.body:
+                # the body at the size asked, its arches' middle over the wheels' middle
+                k = a.body / vscale
+                mid_a, mid_w = (cf + cr) / 2, (fr[0][0][2] + rr[0][0][2]) / 2
+                cr, rz = mid_a, mid_w
+            else:
+                rz = rr[0][0][2]
+            if 0.7 < k < 1.6:
                 bodyall = np.array([not str(p).startswith('wheel') for p in part])
                 Pb = P[bodyall]
-                Pb[..., 2] = (Pb[..., 2] - cr) * k + rr[0][0][2]
+                Pb[..., 2] = (Pb[..., 2] - cr) * k + rz
                 Pb[..., 0] *= k
                 ybase = Pb[..., 1].min()
                 Pb[..., 1] = (Pb[..., 1] - ybase) * k + ybase
                 P[bodyall] = Pb
-                _FIT[v.name] = (k, cr, rr[0][0][2], ybase)
+                _FIT[v.name] = (k, cr, rz, ybase)
                 # the tyres grow with the body, so they keep filling their arches (and match the spare)
-                for j, (off, r, f) in enumerate(wheels):
+                for j, (off, r, f) in enumerate(wheels if not a.body_only else []):
                     sel = part == f'wheel{j}'
                     P[sel] = (P[sel] - off) * k + off
                     wheels[j] = (off, r * k, f)
@@ -307,15 +314,27 @@ def build(a):
     wheels = [(off - np.array([0, ground, 0]), r, f) for off, r, f in wheels]
     # --body: the body's size against the model's own (Zomboid draws it at its model scale, the fit above moves it
     # on); the whole vehicle grows with it, so the wheels stay in their arches
-    if a.body:
+    if a.body and not a.body_only:
         now = vscale * (_FIT[v.name][0] if v.name in _FIT else 1.0)
         g = a.body / now
         zc = float(np.mean([off[2] for off, _, _ in wheels]))
-        P[..., 0] *= g
-        P[..., 1] *= g
-        P[..., 2] = (P[..., 2] - zc) * g + zc
-        wheels = [(np.array([off[0] * g, off[1] * g, (off[2] - zc) * g + zc]), r * g, f) for off, r, f in wheels]
-        _GROW[v.name] = (g, zc)
+        if a.body_only:
+            # the frame and tyres stay as the script has them: only the body (and its seats) grows, about the
+            # wheels' middle, standing on the same ground
+            bodyall = np.array([not str(p).startswith('wheel') for p in part])
+            Pb = P[bodyall]
+            yb = Pb[..., 1].min()
+            Pb[..., 0] *= g
+            Pb[..., 1] = (Pb[..., 1] - yb) * g + yb
+            Pb[..., 2] = (Pb[..., 2] - zc) * g + zc
+            P[bodyall] = Pb
+            _GROW[v.name] = (g, zc, yb)
+        else:
+            P[..., 0] *= g
+            P[..., 1] *= g
+            P[..., 2] = (P[..., 2] - zc) * g + zc
+            wheels = [(np.array([off[0] * g, off[1] * g, (off[2] - zc) * g + zc]), r * g, f) for off, r, f in wheels]
+            _GROW[v.name] = (g, zc, 0.0)
         print(f'body at {a.body * 100:.0f}% of its model: everything grown {g:.3f}')
     glass = np.array([any(g in str(p) for g in GLASS) for p in part])
     wheel_of = np.array([int(str(p)[5:]) if str(p).startswith('wheel') else -1 for p in part])
@@ -498,8 +517,8 @@ def write(a, v, P, UV, glass, wheel_of, interior, atlas, wheels):
         pos = b.block('position', 'inside')
         o = fit_point(v, np.array(floats(pos.kv.get('offset', '0 0 0'), 3)) + com) - np.array([0, ground_of(v), 0])
         if v.name in _GROW:
-            g, zc = _GROW[v.name]
-            o = np.array([o[0] * g, o[1] * g, (o[2] - zc) * g + zc])
+            g, zc, yb = _GROW[v.name]
+            o = np.array([o[0] * g, (o[1] - yb) * g + yb, (o[2] - zc) * g + zc])
         eye = [o[0], min(roof - 0.22, o[1] + 0.78), o[2]]
         seats.append([round(float(eye[0] - centre[0]), 3), round(float(eye[1]), 3), round(float(eye[2] - centre[2]), 3)])
         side = 1 if o[0] > 0 else -1
@@ -566,6 +585,7 @@ def main():
     ap.add_argument('--skin', type=int, default=0)
     ap.add_argument('--kind', default='car')
     ap.add_argument('--weight', type=int, default=2)
+    ap.add_argument('--body-only', action='store_true', help='--body grows the body alone, not the frame and tyres')
     ap.add_argument('--body', type=float, help="the body's size against its own model (1.1 = 110%%)")
     ap.add_argument('--skip', nargs='*', default=[])
     ap.add_argument('--toon', action='store_true')
