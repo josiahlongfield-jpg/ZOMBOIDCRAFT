@@ -1229,6 +1229,21 @@
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:string_lights",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:newspaper_bundle",
           "weight": 4
         },
@@ -1321,6 +1336,11 @@
           "type": "minecraft:item",
           "name": "zomboidcraft:metal_detector",
           "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:rotating_beacon",
+          "weight": 1
         }
       ]
     }

@@ -1066,6 +1066,26 @@ launch_keys | Decommissioned Launch Keys | G | 250 | 0.2 | bunker
 cipher_machine | Wartime Cipher Machine | G | 300 | 12.0 | mansion.3 mil
 """
 
+# base decor (wave 4 stage 5; what each piece does is in decor.py), added batch by batch as the photos land
+ROSTER['Decor'] = """
+# lighting and neon
+string_lights | String Lights | C | 4 | 0.4 | bed hard
+lava_lamp | Lava Lamp | S | 15 | 1.5 | bed thrift
+neon_word_sign | Neon Word Sign | S | 20 | 3.0 | liq diner
+neon_beer_sign | Neon Beer Sign | S | 25 | 3.0 | liq
+disco_ball | Disco Ball | S | 18 | 2.0 |
+black_light | Black Light | S | 10 | 0.6 | bed toyshop
+strobe_light | Strobe Light | S | 12 | 0.8 |
+plasma_ball | Plasma Ball | R | 25 | 1.2 | elec school
+neon_wall_shape | Neon Wall Shape | R | 40 | 4.0 |
+rotating_beacon | Rotating Beacon | R | 22 | 2.5 | garage fire police
+aquarium | Aquarium | R | 35 | 30.0 | office
+neon_arrow_sign | Neon Arrow Sign | P | 70 | 25.0 |
+light_up_dance_floor | Light-Up Dance Floor | P | 80 | 12.0 |
+gas_pump_globe | Gas Pump Globe | P | 70 | 3.0 | pawn
+searchlight | Searchlight | P | 90 | 45.0 |
+"""
+
 ROSTER['Junk & scrap'] = """
 tin_can* | Empty Can | C | 0 | 0.05 | trash.3 pantry
 glass_bottle* | Empty Bottle | C | 0 | 0.3 | trash.3 pantry liq
