@@ -37,9 +37,10 @@ final class RifleArms {
         if (!(renderer instanceof AvatarRenderer<?> avatar) || state.skin == null) {
             return;
         }
-        PlayerModel model = avatar.getModel();
-        Identifier skin = state.skin.body().texturePath();
         boolean slim = state.skin.model() == PlayerModelType.SLIM;
+        PlayerModel own = slim ? ArmModels.slim : ArmModels.wide;
+        PlayerModel model = own != null ? own : avatar.getModel();
+        Identifier skin = state.skin.body().texturePath();
         float aspect = (float) mc.getWindow().getWidth() / Math.max(1, mc.getWindow().getHeight());
         Matrix4f frame = new Matrix4f(pose.last().pose());
         arm(pose, out, light, skin, model.rightArm, model.rightSleeve, state.showRightSleeve, slim ? -0.5f : -1f,
