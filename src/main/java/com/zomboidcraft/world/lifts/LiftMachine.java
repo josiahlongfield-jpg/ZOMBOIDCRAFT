@@ -77,9 +77,8 @@ public class LiftMachine extends BlockEntity {
                     lobby = ys.size() - 1;
                 }
             }
-            BlockState in = level.getBlockState(cell);
-            if (!in.isAir() && !in.getCollisionShape(level, cell).isEmpty()) {
-                break;      // the pit's floor
+            if (level.getBlockState(cell).isCollisionShapeFullBlock(level, cell)) {
+                break;      // the pit's floor (rubble or litter that's fallen in is cleared out below)
             }
         }
         if (ys.size() < 2) {
@@ -93,7 +92,7 @@ public class LiftMachine extends BlockEntity {
         }
         int d = 1;
         BlockPos back = new BlockPos(m.getX(), lowest + 1, m.getZ());
-        while (d < 4 && level.getBlockState(back.relative(b, d)).getCollisionShape(level, back.relative(b, d)).isEmpty()) {
+        while (d < 4 && !level.getBlockState(back.relative(b, d)).isCollisionShapeFullBlock(level, back.relative(b, d))) {
             d++;
         }
         int[] landings = new int[ys.size()];
@@ -103,6 +102,50 @@ public class LiftMachine extends BlockEntity {
         // no street floor among them: the bottom one is the base-th floor up (a stair core that starts higher up)
         int base = own.getValue(LiftMachineBlock.BASE);
         return new LiftShaft(m.getX(), m.getY(), m.getZ(), f, w, d, landings, lobby < 0 ? -base : landings.length - 1 - lobby);
+    }
+
+    /**
+     * Empties the shaft of anything that's ended up in it (the city's rubble, litter, vines, loot, dropped
+     * things) and the doorways in front of its landing doors of anything loose (crates and litter too), so the car can be got into
+     * at every floor. Walls (full blocks) in front of the doors are left alone.
+     */
+    private void clearOut(ServerLevel level) {
+        int lo = shaft.landings[0], top = getBlockPos().getY();
+        int cleared = 0;
+        for (int y = lo; y < top; y++) {
+            for (int a = 0; a < shaft.w; a++) {
+                for (int v = 0; v < shaft.d; v++) {
+                    BlockPos p = BlockPos.containing(shaft.wx(a + 0.5, v + 0.5), y, shaft.wz(a + 0.5, v + 0.5));
+                    BlockState s = level.getBlockState(p);
+                    if (!s.isAir() && !s.is(Lifts.MACHINE)) {
+                        level.setBlock(p, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), Block.UPDATE_CLIENTS);
+                        cleared++;
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < shaft.landings.length; i++) {
+            for (int a = 0; a < shaft.w; a++) {
+                BlockPos front = shaft.door(i, a).relative(shaft.f);
+                for (int k = 0; k < 2; k++) {
+                    BlockPos p = front.above(k);
+                    BlockState s = level.getBlockState(p);
+                    if (!s.isAir() && !s.isCollisionShapeFullBlock(level, p) && !s.is(Lifts.BUTTON) && !s.is(Lifts.DOOR)
+                            && !(s.getBlock() instanceof net.minecraft.world.level.block.DoorBlock)) {
+                        level.setBlock(p, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), Block.UPDATE_CLIENTS);
+                        cleared++;
+                    }
+                }
+            }
+        }
+        AABB box = new AABB(shaft.minX, lo, shaft.minZ, shaft.maxX, top, shaft.maxZ);
+        for (Entity e : level.getEntities((Entity) null, box, e -> e instanceof net.minecraft.world.entity.item.ItemEntity)) {
+            e.discard();
+            cleared++;
+        }
+        if (cleared > 0) {
+            com.zomboidcraft.ZomboidCraft.LOGGER.info("Lift at {}: cleared {} things out of its shaft and doorways", getBlockPos().toShortString(), cleared);
+        }
     }
 
     // ------------------------------------------------------------------ running
@@ -119,6 +162,7 @@ public class LiftMachine extends BlockEntity {
                 return;
             }
             scanned = true;
+            clearOut(level);
             start(level);
         }
         yO = y;
