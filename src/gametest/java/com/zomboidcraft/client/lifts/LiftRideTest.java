@@ -47,8 +47,9 @@ public class LiftRideTest implements FabricClientGameTest {
             stand(sp, dx, s.landings[0], dz, yaw(s.f.getOpposite()), 12);
             ctx.waitTicks(10);
             shot(ctx, "landing");
-            LOG.info("ZCLIFT dot at landing: {}, crosshair {}", ctx.computeOnClient(mc -> String.valueOf(dotAt(mc))),
-                    ctx.computeOnClient(mc -> mc.hitResult == null ? "none" : mc.hitResult.getType() + " " + mc.hitResult.getLocation()));
+            String landingDot = ctx.computeOnClient(mc -> String.valueOf(dotAt(mc)));
+            String aim = ctx.computeOnClient(mc -> mc.hitResult == null ? "none" : mc.hitResult.getType() + " " + mc.hitResult.getLocation());
+            LOG.info("ZCLIFT dot at landing: {}, crosshair {}", landingDot, aim);
             ctx.getInput().pressKey(InputConstants.KEY_G);
             for (int i = 0; i < 6; i++) {
                 ctx.waitTicks(10);
@@ -60,7 +61,8 @@ public class LiftRideTest implements FabricClientGameTest {
             stand(sp, cx, s.landings[0], cz, yaw(s.r), 16);
             ctx.waitTicks(10);
             shot(ctx, "in-car");
-            LOG.info("ZCLIFT dot in car: {}", ctx.computeOnClient(mc -> String.valueOf(dotAt(mc))));
+            String dot = ctx.computeOnClient(mc -> String.valueOf(dotAt(mc)));
+            LOG.info("ZCLIFT dot in car: {}", dot);
             ctx.getInput().pressKey(InputConstants.KEY_G);
             ctx.waitTicks(8);
             String screen = ctx.computeOnClient(mc -> mc.gui.screen() == null ? "none" : mc.gui.screen().getClass().getSimpleName());
