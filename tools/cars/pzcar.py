@@ -225,7 +225,7 @@ def build(a):
     widths = []
     for k, wb in enumerate(sorted(v.blocks('wheel'), key=lambda b: ['FrontLeft', 'FrontRight', 'RearLeft', 'RearRight'].index(b.name))):
         off = np.array(floats(wb.kv['offset'], 3)) + com
-        r = float(wb.kv.get('radius', '0.35').rstrip('fF'))
+        r = float(wb.kv.get('radius', '0.35').rstrip('fF')) * a.tyre
         q, u = WP, wm['UV']
         if off[0] < 0:
             q = q * np.array([-1, 1, 1])
@@ -645,6 +645,7 @@ def main():
     ap.add_argument('--body-only', action='store_true', help='--body grows the body alone, not the frame and tyres')
     ap.add_argument('--body', type=float, help="the body's size against its own model (1.1 = 110%%)")
     ap.add_argument('--world', type=float, help="the body at this many times the size Zomboid draws it (the Defender's 130%% is 1.444)")
+    ap.add_argument('--tyre', type=float, default=1.0, help='tyres at this share of the size the script gives them')
     ap.add_argument('--skip', nargs='*', default=[])
     ap.add_argument('--toon', action='store_true')
     ap.add_argument('--preview')
