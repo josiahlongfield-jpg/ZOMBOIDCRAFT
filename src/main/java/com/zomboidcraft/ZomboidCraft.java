@@ -68,6 +68,7 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.combat.SpearItem.register();
         com.zomboidcraft.combat.Reloading.register();
         com.zomboidcraft.combat.ModSounds.register();
+        com.zomboidcraft.zombie.ZedSounds.register();
         com.zomboidcraft.combat.throwing.Throwing.register();
         ModItems.register();
         com.zomboidcraft.decor.Decor.registerBlocks();

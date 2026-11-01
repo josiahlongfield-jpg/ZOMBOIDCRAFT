@@ -198,12 +198,11 @@ public class WindowClimbGoal extends Goal {
         }
         if (!hauled && u >= ClimbPath.HAUL) {
             hauled = true;
-            level.playSound(null, at.x, at.y + 1, at.z, SoundEvents.ZOMBIE_ATTACK_WOODEN_DOOR, SoundSource.HOSTILE, 0.5f,
-                    1.3f + zombie.getRandom().nextFloat() * 0.2f);
+            ZedSounds.play(level, at.x, at.y + 1, at.z, "thump.window", 0.6f);
         }
         if (!landed && u >= ClimbPath.LANDED) {
             landed = true;
-            level.playSound(null, at.x, at.y, at.z, SoundEvents.GENERIC_BIG_FALL, SoundSource.HOSTILE, 1f, 0.75f);
+            ZedSounds.play(level, at.x, at.y, at.z, "climb.window", 1f);
             Noise.emit(level, at, 8);
         }
     }
