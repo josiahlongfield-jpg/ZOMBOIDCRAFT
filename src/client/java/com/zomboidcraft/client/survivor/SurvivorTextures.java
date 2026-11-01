@@ -69,6 +69,16 @@ public final class SurvivorTextures {
         return get(pack, sb.toString(), layers);
     }
 
+    /**
+     * As {@link #body(SurvivorPack, List)}, made at size by size whatever the first layer's size (the many zombies' looks
+     * at 512 rather than their garments' 1024, so a crowd of them fits in the textures kept).
+     */
+    public static Identifier body(SurvivorPack pack, List<Layer> layers, int size) {
+        StringBuilder sb = new StringBuilder(pack.sex).append('@').append(size);
+        for (Layer l : layers) sb.append('|').append(l.mode()).append(l.key()).append('#').append(Integer.toHexString(l.tint()));
+        return get(pack, sb.toString(), layers, size);
+    }
+
     /** A garment's texture: tinted, and in a camo pattern if it has one ("" for none). */
     public static Identifier cloth(SurvivorPack pack, String key, int tint, String camo) {
         List<Layer> layers = camo.isEmpty() ? List.of(new Layer(key, tint)) : List.of(new Layer(key, tint), new Layer(camo, -1, CAMO));
@@ -82,13 +92,17 @@ public final class SurvivorTextures {
     }
 
     private static Identifier get(SurvivorPack pack, String name, List<Layer> layers) {
+        return get(pack, name, layers, 0);
+    }
+
+    private static Identifier get(SurvivorPack pack, String name, List<Layer> layers, int size) {
         Identifier id = MADE.get(name);
         if (id != null || FAILED.contains(name)) return id;
         CompletableFuture<NativeImage> f = MAKING.computeIfAbsent(name, n -> {
             // the bytes are read here, on the render thread; the work happens on a worker
             List<byte[]> data = new ArrayList<>();
             for (Layer l : layers) data.add(l.mode() == CAMO ? camo(l.key()) : pack.skin.raw(l.key()));
-            return CompletableFuture.supplyAsync(() -> compose(data, layers));
+            return CompletableFuture.supplyAsync(() -> compose(data, layers, size));
         });
         if (!f.isDone()) return null;
         MAKING.remove(name);
@@ -114,7 +128,7 @@ public final class SurvivorTextures {
     }
 
     /** Layers laid over the first, each scaled to its size; a tint multiplies a layer's colour. */
-    private static NativeImage compose(List<byte[]> data, List<Layer> layers) {
+    private static NativeImage compose(List<byte[]> data, List<Layer> layers, int size) {
         try {
             int[] base = null, laid = null;   // laid: the alpha of the last layer laid on, which a camo layer paints
             int[] kept = null;
@@ -129,13 +143,16 @@ public final class SurvivorTextures {
                 try (NativeImage img = com.zomboidcraft.client.npc.NpcSkin.decode(bytes)) {
                     int tint = layers.get(i).tint();
                     if (base == null) {
-                        w = img.getWidth();
-                        h = img.getHeight();
+                        int sw = img.getWidth(), sh = img.getHeight();
+                        w = size > 0 ? size : sw;
+                        h = size > 0 ? size * sh / sw : sh;
                         base = new int[w * h];
                         laid = new int[w * h];
+                        boolean same = sw == w && sh == h;
                         for (int y = 0; y < h; y++) {
                             for (int x = 0; x < w; x++) {
-                                base[y * w + x] = tinted(img.getPixel(x, y), tint);
+                                int src = same ? img.getPixel(x, y) : sample(img, (x + 0.5f) * sw / w - 0.5f, (y + 0.5f) * sh / h - 0.5f);
+                                base[y * w + x] = tinted(src, tint);
                                 laid[y * w + x] = base[y * w + x] >>> 24;
                             }
                         }

@@ -92,10 +92,11 @@ public class CorpseRenderer extends EntityRenderer<Corpse, CorpseRenderer.State>
             state.twist = (float) Math.sin(t * 0.23f) * 14f;
             return;
         }
-        if (!state.hidden && state.cuts == 0 && state.missingLimb == 0 && !state.legless
+        if (!state.hidden
                 && com.zomboidcraft.client.survivor.ZedBodies.available()
                 && com.zomboidcraft.client.survivor.ZedBodies.near(state.distanceToCameraSq)) {
-            state.zed = com.zomboidcraft.client.survivor.ZedBodies.corpse(corpse.getId(), state.variant, outfit, d, state.ageInTicks);
+            state.zed = com.zomboidcraft.client.survivor.ZedBodies.corpse(corpse.getId(), state.variant, outfit, d, state.ageInTicks,
+                    state.cuts | ZBodyLayer.missingCuts(state.missingLimb) | (state.legless ? Dismember.KN_R | Dismember.KN_L : 0));
             if (state.zed != null) {
                 return;
             }

@@ -10,6 +10,7 @@ import com.zomboidcraft.ZomboidCraft;
 import com.zomboidcraft.client.npc.NpcSkin;
 import com.zomboidcraft.client.npc.NpcSkinDraw;
 import com.zomboidcraft.combat.Deaths;
+import com.zomboidcraft.combat.Dismember;
 import com.zomboidcraft.zombie.ZombieTypes;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,6 +46,8 @@ public final class ZedBodies {
     /** Zomboid's random clothing tints: worn, everyday colours (as survivors' clothes have them). */
     private static final int[] TINTS = {0x2B3A55, 0x6B2A2A, 0x3E5A3A, 0x7A6A4A, 0x4A4A4E, 0x8C8C88, 0x1E1E22, 0xB8B0A0,
             0x5A3D2A, 0x2F5A6A, 0x7A4A6A, 0xA05A2A, 0x4A5A2A, 0xC8C0B0, 0x6A1E2A, 0x3A3A5A};
+    /** Each zombie's skin and garments are made at this size (their sources run to 1024), so a horde fits in the kept textures. */
+    private static final int TEX = 512;
     /** Zomboid's body parts, as its blood and holes are laid out (tools/pz/zombie_fx.py). */
     private static final String[] PARTS = {"Head", "Chest", "Waist", "Belt", "Crotch", "LeftArm", "RightArm", "LeftLeg", "RightLeg"};
     /** Items whose only texture sits in Zomboid's texture packs, and the loose item worn in their place. */
@@ -97,6 +100,8 @@ public final class ZedBodies {
     public static final class Facts {
         public float age, speed, attack, deathTime, actTime;
         public int hurtTime, act, variant, outfitDamage;
+        /** Limbs lost (Dismember's cut bits, the head's HEAD_GONE among them, and any lost before it rose). */
+        public int cuts;
         public boolean aggressive, low, crawler, sprinter;
         public long death;
         public String outfit;
@@ -334,6 +339,9 @@ public final class ZedBodies {
         float rate = 1;
         if (f.speed < 0.2f) {
             clip = f.aggressive ? "lunge_idle" : "idle";
+        } else if (oneLeg(f.cuts)) {
+            clip = "stumble";   // Zomboid has no hop: it lurches on what's left
+            rate = Math.max(0.6f, f.speed / WALK);
         } else if (f.sprinter && f.speed > 2.2f) {
             String[] runs = {"sprint1", "sprint2", "sprint3", "sprint5", "sprint6"};
             clip = runs[Math.floorMod(variant >> 3, runs.length)];
@@ -356,6 +364,11 @@ public final class ZedBodies {
         e.hurtWas = f.hurtTime;
     }
 
+    private static boolean oneLeg(int cuts) {
+        boolean r = (cuts & Dismember.RIGHT_LEG) != 0, l = (cuts & Dismember.LEFT_LEG) != 0;
+        return r != l;
+    }
+
     // ------------------------------------------------------------------ posing
 
     /**
@@ -366,11 +379,11 @@ public final class ZedBodies {
         SurvivorPack pack = packFor(f.variant);
         if (pack == null) return null;
         Look look = look(pack, f.variant, f.outfit);
-        Identifier body = SurvivorTextures.body(pack, look.paint());
+        Identifier body = SurvivorTextures.body(pack, look.paint(), TEX);
         if (body == null) return null;
         Map<String, Identifier> clothes = new HashMap<>();
         for (Map.Entry<String, List<SurvivorTextures.Layer>> p : look.pieces().entrySet()) {
-            Identifier t = SurvivorTextures.body(pack, p.getValue());
+            Identifier t = SurvivorTextures.body(pack, p.getValue(), TEX);
             if (t == null) return null;
             clothes.put(p.getKey(), t);
         }
@@ -402,6 +415,7 @@ public final class ZedBodies {
         d.entry = e;
         d.age = f.age;
         d.skin = skinOf(pack, e.pos, e.turn);
+        if (f.cuts != 0) collapse(pack, d.skin, f.cuts);
         d.body = body;
         d.clothes = clothes;
         d.hairPiece = look.hairPiece();
@@ -410,7 +424,7 @@ public final class ZedBodies {
         d.beard = look.beardTex() == null ? null : SurvivorTextures.hair(pack, look.beardTex(), look.colour());
         if (d.hair == null) d.hairPiece = null;
         if (d.beard == null) d.beardPiece = null;
-        d.eyes = !ZcConfig.get().look.glowingEyes ? 0 : f.deathTime <= 0 ? 1 : Math.max(0, 1 - f.deathTime / 20f);
+        d.eyes = !ZcConfig.get().look.glowingEyes || (f.cuts & Dismember.HEAD_GONE) != 0 ? 0 : f.deathTime <= 0 ? 1 : Math.max(0, 1 - f.deathTime / 20f);
         d.shiftX = f.shiftX;
         d.shiftY = f.shiftY;
         d.shiftZ = f.shiftZ;
@@ -418,8 +432,9 @@ public final class ZedBodies {
     }
 
     /** A dead zombie's body (zombie.Corpse), lying as its death left it. */
-    public static Drawn corpse(int id, int variant, String outfit, long death, float age) {
+    public static Drawn corpse(int id, int variant, String outfit, long death, float age, int cuts) {
         Facts f = new Facts();
+        f.cuts = cuts;
         f.variant = variant;
         f.outfit = outfit;
         f.death = death;
@@ -435,6 +450,43 @@ public final class ZedBodies {
         double dx = zombie.getX() - zombie.xo, dz = zombie.getZ() - zombie.zo;
         f.speed = (float) Math.sqrt(dx * dx + dz * dz) * 20f;
         f.sprinter = ZombieTypes.isSprinter(zombie);
+    }
+
+    /** The bone a cut takes off at (with everything below it), by Dismember's bits: elbow, shoulder, knee, hip; the head. */
+    private static final int[] CUT_BITS = {Dismember.EL_R, Dismember.EL_L, Dismember.SH_R, Dismember.SH_L, Dismember.KN_R,
+            Dismember.KN_L, Dismember.HIP_R, Dismember.HIP_L, Dismember.HEAD_GONE};
+    private static final String[] CUT_BONES = {"Bip01_R_Forearm", "Bip01_L_Forearm", "Bip01_R_UpperArm", "Bip01_L_UpperArm",
+            "Bip01_R_Calf", "Bip01_L_Calf", "Bip01_R_Thigh", "Bip01_L_Thigh", "Bip01_Head"};
+    private static final Map<SurvivorPack, int[]> CUT_AT = new java.util.WeakHashMap<>();
+
+    /**
+     * A lost limb is gone from the Zomboid body: every bone from the cut down shrinks into the joint it came off at, so
+     * the skin and clothes on it close over into a stump there.
+     */
+    private static void collapse(SurvivorPack pack, Matrix4f[] skin, int cuts) {
+        int[] at = CUT_AT.computeIfAbsent(pack, p -> {
+            int[] b = new int[CUT_BONES.length];
+            for (int i = 0; i < b.length; i++) b[i] = p.skin.bone(CUT_BONES[i]);
+            return b;
+        });
+        int n = skin.length;
+        for (int i = 0; i < CUT_BITS.length; i++) {
+            int bone = at[i];
+            if ((cuts & CUT_BITS[i]) == 0 || bone < 0) continue;
+            // where the joint is now: its rest place carried by its own skinning
+            Vector3f joint = pack.bind[bone].getTranslation(new Vector3f());
+            skin[bone].transformPosition(joint);
+            Matrix4f shrink = new Matrix4f().translation(joint).scale(0.02f).translate(-joint.x, -joint.y, -joint.z);
+            Matrix4f into = new Matrix4f(shrink).mul(skin[bone]);
+            for (int b = 0; b < n; b++) {
+                if (below(pack, b, bone)) skin[b] = into;
+            }
+        }
+    }
+
+    private static boolean below(SurvivorPack pack, int b, int of) {
+        for (int p = b; p >= 0; p = pack.skin.parent[p]) if (p == of) return true;
+        return false;
     }
 
     private static boolean[] upperBody(SurvivorPack pack) {
