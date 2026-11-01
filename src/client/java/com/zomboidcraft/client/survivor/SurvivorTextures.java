@@ -86,9 +86,18 @@ public final class SurvivorTextures {
      * at 512 rather than their garments' 1024, so a crowd of them fits in the textures kept).
      */
     public static Identifier body(SurvivorPack pack, List<Layer> layers, int size) {
+        return get(pack, sized(pack, layers, size), layers, size);
+    }
+
+    /** As {@link #body(SurvivorPack, List, int)} if it's been made already, else null (and nothing is started). */
+    public static Identifier peek(SurvivorPack pack, List<Layer> layers, int size) {
+        return MADE.get(sized(pack, layers, size));
+    }
+
+    private static String sized(SurvivorPack pack, List<Layer> layers, int size) {
         StringBuilder sb = new StringBuilder(pack.sex).append('@').append(size);
         for (Layer l : layers) sb.append('|').append(l.tag());
-        return get(pack, sb.toString(), layers, size);
+        return sb.toString();
     }
 
     /** A garment's texture: tinted, and in a camo pattern if it has one ("" for none). */
