@@ -96,6 +96,39 @@ public final class Survivors {
         return drawn(state) ? last : null;
     }
 
+    /** What a survivor wears this frame: her pack, her composed skin, and her clothes' meshes with their textures. */
+    record Outfit(SurvivorPack pack, Identifier body, Map<String, Identifier> clothes) {
+    }
+
+    /** This player's survivor skin and clothes, or null (no look, no pack, or the skin still being made). */
+    static Outfit outfit(Player player) {
+        Minecraft mc = Minecraft.getInstance();
+        Appearance.Look look = lookOf(player);
+        if (look == null) return null;
+        SurvivorPack pack = SurvivorPack.get(look.sex());
+        if (pack == null) return null;
+        String hair, beard, colour;
+        if (preview != null && player == mc.player) {
+            hair = preview.hair();
+            beard = preview.beard();
+            colour = preview.colour();
+        } else {
+            Grooming.Look g = Grooming.look(player);
+            long now = player.level().getGameTime();
+            hair = Grooming.hair(g, now);
+            beard = Grooming.beard(g, now);
+            colour = g.colour();
+        }
+        SurvivorClothes.Dress dress = SurvivorClothes.dress(pack, player);
+        List<SurvivorTextures.Layer> layers = layers(pack, look, hair, beard, colour);
+        layers.addAll(dress.body());
+        Identifier body = SurvivorTextures.body(pack, layers);
+        if (body == null) return null;
+        Map<String, Identifier> clothes = new HashMap<>();
+        for (SurvivorClothes.Piece c : dress.pieces()) clothes.put(c.piece(), c.texture());
+        return new Outfit(pack, body, clothes);
+    }
+
     /** Whether the player this render state is for is drawn as a survivor. */
     public static boolean drawsAsSurvivor(AvatarRenderState state) {
         Minecraft mc = Minecraft.getInstance();
@@ -147,7 +180,12 @@ public final class Survivors {
         List<SurvivorTextures.Layer> layers = layers(pack, look, hair, beard, colour);
         layers.addAll(dress.body());
         Identifier body = SurvivorTextures.body(pack, layers);
-        if (body == null) return false;   // a moment while it's made: the usual model meanwhile
+        if (body == null) {
+            // a moment while her skin is made: nothing drawn meanwhile, never the Minecraft model
+            HIDDEN.add(model);
+            hide(model, true);
+            return false;
+        }
         SurvivorPack.Style hs = pack.hairFor(hair, hairCut), bs = look.female() ? null : pack.beardFor(beard, beardCut);
         // a hat, helmet or hood replaces the hair outright, so none comes through it; a full mask hides the beard too
         if (dress.hairHidden()) hs = null;
@@ -221,14 +259,48 @@ public final class Survivors {
         boolean slim = state.skin != null && state.skin.model() == PlayerModelType.SLIM;
         boolean leftMain = state.mainArm == HumanoidArm.LEFT;
         boolean[] reached = new boolean[2];
-        if (HoldPoses.posed) {
+        Minecraft mc = Minecraft.getInstance();
+        boolean longGun = HoldPoses.posed && mc.level != null && mc.level.getEntity(state.id) instanceof Player holder
+                && kind(holder.getMainHandItem()).equals("rifle");
+        if (longGun) {
+            // Zomboid's rifle stance leads: the gun is laid between her hands as the clip holds them (grip in the
+            // shooting hand, barrel toward the other), the vanilla arm is put under it, and the other hand takes the
+            // foregrip where the gun really has it
             int gun = leftMain ? 1 : 0;
             ModelPart arm = gun == 0 ? model.rightArm : model.leftArm;
-            Matrix4f item = itemFrame(arm, gun == 1, slim);
-            reachFrame(pack, pos, turn, gun, item);
-            Vector3f sp = fromModel(HoldPoses.supportAt.x / 16f, HoldPoses.supportAt.y / 16f, HoldPoses.supportAt.z / 16f);
-            reachPoint(pack, pos, turn, 1 - gun, sp);
-            reached[0] = reached[1] = true;
+            Matrix4f was = itemFrame(arm, gun == 1, slim);
+            Matrix4f back = new Matrix4f(was).invert();
+            Vector3f support = back.transformPosition(new Vector3f(HoldPoses.supportAt).div(16));
+            Vector3f haveDir = new Vector3f(support).normalize();
+            Vector3f haveUp = back.transformDirection(new Vector3f(0, -1, 0)).normalize();   // model y runs down
+            Vector3f grip = gripAt(pack, pos, turn, gun), other = gripAt(pack, pos, turn, 1 - gun);
+            Vector3f g = toModel(grip.x, grip.y, grip.z), o = toModel(other.x, other.y, other.z);
+            Vector3f wantDir = new Vector3f(o).sub(g);
+            if (support.lengthSquared() > 1e-6f && wantDir.lengthSquared() > 1e-6f) {
+                wantDir.normalize();
+                Quaternionf r = new Quaternionf().rotationTo(haveDir, wantDir);
+                // then turned about the barrel so the sights stay as near up as they can
+                Vector3f up = r.transform(new Vector3f(haveUp));
+                Vector3f wantUp = new Vector3f(0, -1, 0).sub(new Vector3f(wantDir).mul(-wantDir.y));
+                Vector3f upFlat = new Vector3f(up).sub(new Vector3f(wantDir).mul(up.dot(wantDir)));
+                if (wantUp.lengthSquared() > 1e-6f && upFlat.lengthSquared() > 1e-6f) {
+                    wantUp.normalize();
+                    upFlat.normalize();
+                    float ang = (float) Math.atan2(new Vector3f(upFlat).cross(wantUp).dot(wantDir), upFlat.dot(wantUp));
+                    r.premul(new Quaternionf().rotationAxis(ang, wantDir));
+                }
+                Matrix4f item = new Matrix4f().translation(g).rotate(r);
+                Matrix4f armFrame = new Matrix4f(item).mul(inHand(gun == 1).invert());
+                float shift = slim ? (gun == 1 ? -0.5f : 0.5f) : 0;
+                arm.x = armFrame.m30() * 16 - shift;
+                arm.y = armFrame.m31() * 16;
+                arm.z = armFrame.m32() * 16;
+                Vector3f e = new Matrix3f(armFrame).getEulerAnglesZYX(new Vector3f());
+                arm.setRotation(e.x, e.y, e.z);
+                Vector3f sp = item.transformPosition(new Vector3f(support));
+                reachPoint(pack, pos, turn, 1 - gun, fromModel(sp.x, sp.y, sp.z));
+                reached[0] = reached[1] = true;
+            }
         } else if (CarHands.posed > 0) {
             for (int s = CarHands.posed == 2 ? 0 : 1; s < 2; s++) {
                 ModelPart arm = s == 0 ? model.rightArm : model.leftArm;
@@ -452,7 +524,7 @@ public final class Survivors {
     }
 
     /** The bones from the chest up (and the hand props): what an upper-body action moves. */
-    private static boolean[] upperBody(SurvivorPack pack) {
+    static boolean[] upperBody(SurvivorPack pack) {
         int n = pack.skin.boneNames.length;
         boolean[] up = new boolean[n];
         for (int b = 0; b < n; b++) {
@@ -541,6 +613,14 @@ public final class Survivors {
                 .rotate(new Quaternionf().rotationZYX(arm.zRot, arm.yRot, arm.xRot)).mul(inHand(left));
     }
 
+    /** Where her hand's grip is this frame (her space). */
+    static Vector3f gripAt(SurvivorPack pack, float[] pos, float[] turn, int s) {
+        int h = pack.hand[s];
+        if (h < 0) return new Vector3f();
+        Quaternionf hq = new Quaternionf(turn[h * 4], turn[h * 4 + 1], turn[h * 4 + 2], turn[h * 4 + 3]);
+        return hq.transform(new Vector3f(pack.grip[s])).add(pos[h * 3], pos[h * 3 + 1], pos[h * 3 + 2]);
+    }
+
     /** The vanilla arm put where her hand holds things, so whatever it holds is drawn in her hand. */
     private static void armToHand(SurvivorPack pack, float[] pos, float[] turn, int s, ModelPart arm, boolean slim) {
         int h = pack.hand[s];
@@ -558,20 +638,8 @@ public final class Survivors {
         arm.setRotation(e.x, e.y, e.z);
     }
 
-    /** Her hand brought to hold an item frame (vanilla model space): grip there, wrist turned to it. */
-    private static void reachFrame(SurvivorPack pack, float[] pos, float[] turn, int s, Matrix4f item) {
-        int h = pack.hand[s];
-        if (h < 0) return;
-        Quaternionf itemQ = new Quaternionf(FLIP).conjugate().mul(item.getUnnormalizedRotation(new Quaternionf()).normalize());
-        Quaternionf hq = itemQ.mul(new Quaternionf(pack.gripTurn[s]).conjugate(), new Quaternionf());
-        Vector3f grip = fromModel(item.m30(), item.m31(), item.m32());
-        Vector3f wrist = grip.sub(hq.transform(new Vector3f(pack.grip[s])), new Vector3f());
-        reach(pack, pos, turn, s, wrist);
-        setTurnBelow(pack, pos, turn, h, hq);
-    }
-
     /** Her hand's grip brought to a point (her space), the wrist kept as the clip has it. */
-    private static void reachPoint(SurvivorPack pack, float[] pos, float[] turn, int s, Vector3f point) {
+    static void reachPoint(SurvivorPack pack, float[] pos, float[] turn, int s, Vector3f point) {
         int h = pack.hand[s];
         if (h < 0) return;
         Quaternionf hq = new Quaternionf(turn[h * 4], turn[h * 4 + 1], turn[h * 4 + 2], turn[h * 4 + 3]);
@@ -582,7 +650,7 @@ public final class Survivors {
      * Two-bone reach: the shoulder stays, the elbow bends in the plane the clip already bends it in, and the wrist lands
      * on the target (as near as the arm's length allows).
      */
-    private static void reach(SurvivorPack pack, float[] pos, float[] turn, int s, Vector3f target) {
+    static void reach(SurvivorPack pack, float[] pos, float[] turn, int s, Vector3f target) {
         int u = pack.upper[s], f = pack.fore[s], h = pack.hand[s];
         if (u < 0 || f < 0 || h < 0) return;
         Vector3f sh = vec(pos, u), el = vec(pos, f), wr = vec(pos, h);
@@ -607,18 +675,12 @@ public final class Survivors {
         rotateBelow(pack, pos, turn, f, r2);
     }
 
-    /** A bone turned to this turn in model space, the bones below it carried along. */
-    private static void setTurnBelow(SurvivorPack pack, float[] pos, float[] turn, int bone, Quaternionf want) {
-        Quaternionf now = new Quaternionf(turn[bone * 4], turn[bone * 4 + 1], turn[bone * 4 + 2], turn[bone * 4 + 3]);
-        rotateBelow(pack, pos, turn, bone, new Quaternionf(want).mul(now.conjugate()));
-    }
-
     private static Vector3f vec(float[] pos, int b) {
         return new Vector3f(pos[b * 3], pos[b * 3 + 1], pos[b * 3 + 2]);
     }
 
     /** Each bone's pose times its inverse bind: what the skinning wants. */
-    private static Matrix4f[] skinOf(SurvivorPack pack, float[] pos, float[] turn) {
+    static Matrix4f[] skinOf(SurvivorPack pack, float[] pos, float[] turn) {
         int n = pack.skin.boneNames.length;
         Matrix4f[] out = new Matrix4f[n];
         Quaternionf q = new Quaternionf();

@@ -287,6 +287,10 @@ def build(sex, media, ws, out_dir):
         else:
             print(f'  no hair texture {t} (is the base game media in PZ_MEDIA_EXTRA?)')
 
+    # blood, grime and holes per body part (zombie_fx.py)
+    import zombie_fx
+    tex.update(zombie_fx.textures([media, *roots]))
+
     # Zomboid's outfits and our pools of them
     outs = outfits(media, files)[sex]
     zone_defs = zones(files.get('lua/shared/NPCs/ZombiesZoneDefinition.lua'))

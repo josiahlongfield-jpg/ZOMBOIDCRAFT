@@ -59,6 +59,11 @@ final class CarArms {
         Vector3f leftHand = rim(c, up, left, wheel[6], GRIP + follow);
         Vector3f rightHand = rim(c, up, left, wheel[6], -GRIP + follow);
         float s = player.getScale();
+        // a Zomboid survivor's own arms: in the car's frame her front is +z and her left +x
+        if (com.zomboidcraft.client.survivor.SurvivorArms.draw(pose, out, light, player, new Vector3f(eye[0], eye[1], eye[2]),
+                new Vector3f(0, 0, 1), new Vector3f(0, 1, 0), s, hands == CarHands.BOTH ? rightHand : null, leftHand, false)) {
+            return;
+        }
         Vector3f leftShoulder = new Vector3f(eye[0] + 0.21f * s, eye[1] - 0.36f * s, eye[2] - 0.08f * s);
         Vector3f rightShoulder = new Vector3f(eye[0] - 0.21f * s, eye[1] - 0.36f * s, eye[2] - 0.08f * s);
         arm(pose, out, light, texture, model.leftArm, model.leftSleeve, slim ? 0.5f : 1f, leftHand, leftShoulder, c, SLIM * s);
@@ -82,6 +87,10 @@ final class CarArms {
         if (!(renderer instanceof AvatarRenderer<?> avatar)) {
             return;
         }
+        if (com.zomboidcraft.client.survivor.SurvivorArms.draw(pose, out, light, player, new Vector3f(eye[0], eye[1], eye[2]),
+                new Vector3f(0, 0, 1), new Vector3f(0, 1, 0), 1f, rightHand, leftHand, false)) {
+            return;
+        }
         PlayerSkin skin = player.getSkin();
         PlayerModel model = avatar.getModel();
         Identifier texture = skin.body().texturePath();
@@ -103,6 +112,18 @@ final class CarArms {
         LocalPlayer player = mc.player;
         if (player == null || !(mc.getEntityRenderDispatcher().getRenderer(player) instanceof AvatarRenderer<?> avatar)) {
             return;
+        }
+        // a Zomboid survivor's own arms: her eyes over the middle of the shoulders, facing the way they square to
+        Vector3f across = new Vector3f(leftShoulder).sub(rightShoulder);
+        Vector3f upward = new Vector3f(0, 1, 0);
+        Vector3f facing = new Vector3f(across).cross(upward);
+        if (facing.lengthSquared() > 1e-6f) {
+            facing.normalize();
+            Vector3f eyes = new Vector3f(leftShoulder).add(rightShoulder).mul(0.5f).add(0, 0.30f, 0).add(new Vector3f(facing).mul(0.08f));
+            if (com.zomboidcraft.client.survivor.SurvivorArms.draw(pose, out, light, player, eyes, facing, upward, 1f,
+                    rightHand, leftHand, true)) {
+                return;
+            }
         }
         PlayerSkin skin = player.getSkin();
         PlayerModel model = avatar.getModel();

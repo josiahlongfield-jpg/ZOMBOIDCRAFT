@@ -85,21 +85,29 @@ public final class NpcSkinDraw {
     public static void submitWith(NpcSkin skin, Matrix4f[] bones, java.util.function.Predicate<NpcSkin.Group> show,
                                   java.util.function.Function<NpcSkin.Group, Identifier> textures, Object[] buffers,
                                   int light, int overlay, PoseStack poseStack, SubmitNodeCollector collector) {
-        float[] m = new float[bones.length * 12];
-        for (int b = 0; b < bones.length; b++) {
-            Matrix4f x = bones[b];
-            int o = b * 12;
-            m[o] = x.m00(); m[o + 1] = x.m10(); m[o + 2] = x.m20(); m[o + 3] = x.m30();
-            m[o + 4] = x.m01(); m[o + 5] = x.m11(); m[o + 6] = x.m21(); m[o + 7] = x.m31();
-            m[o + 8] = x.m02(); m[o + 9] = x.m12(); m[o + 10] = x.m22(); m[o + 11] = x.m32();
-        }
+        submitWith(skin, bones, 0, show, textures, buffers, light, overlay, poseStack, collector);
+    }
+
+    /** As above, from the meshes of one level of detail (0 full, 1 the thinned copies a pack may carry). */
+    public static void submitWith(NpcSkin skin, Matrix4f[] bones, int level, java.util.function.Predicate<NpcSkin.Group> show,
+                                  java.util.function.Function<NpcSkin.Group, Identifier> textures, Object[] buffers,
+                                  int light, int overlay, PoseStack poseStack, SubmitNodeCollector collector) {
+        // no bones: the buffers were skinned already (skinAll), shared by everyone in that pose
+        float[] m = bones == null ? null : matrices(bones);
         for (int g = 0; g < skin.groups.length; g++) {
             NpcSkin.Group gr = skin.groups[g];
-            if (gr.level != 0 || !show.test(gr)) {
+            if (gr.level != level || !show.test(gr)) {
                 continue;
             }
             Identifier tex = textures.apply(gr);
             if (tex == null) {
+                continue;
+            }
+            if (m == null) {
+                if (buffers[g * 2] == null) continue;
+                float[] pos = (float[]) buffers[g * 2], normal = (float[]) buffers[g * 2 + 1];
+                collector.submitCustomGeometry(poseStack, RenderTypes.entityCutoutCull(tex),
+                        (pose, out) -> draw(gr, pos, normal, 0, gr.tris.length, gr.bothSides, pose, out, light, overlay));
                 continue;
             }
             if (buffers[g * 2] == null) {
@@ -110,6 +118,35 @@ public final class NpcSkinDraw {
             skin(gr, m, pos, normal);
             collector.submitCustomGeometry(poseStack, RenderTypes.entityCutoutCull(tex),
                     (pose, out) -> draw(gr, pos, normal, 0, gr.tris.length, gr.bothSides, pose, out, light, overlay));
+        }
+    }
+
+    private static float[] matrices(Matrix4f[] bones) {
+        float[] m = new float[bones.length * 12];
+        for (int b = 0; b < bones.length; b++) {
+            Matrix4f x = bones[b];
+            int o = b * 12;
+            m[o] = x.m00(); m[o + 1] = x.m10(); m[o + 2] = x.m20(); m[o + 3] = x.m30();
+            m[o + 4] = x.m01(); m[o + 5] = x.m11(); m[o + 6] = x.m21(); m[o + 7] = x.m31();
+            m[o + 8] = x.m02(); m[o + 9] = x.m12(); m[o + 10] = x.m22(); m[o + 11] = x.m32();
+        }
+        return m;
+    }
+
+    /**
+     * Skins every mesh of one level into the buffers (two per group, as submitWith keeps them), for many bodies in the
+     * same pose to be drawn from with submitWith and no bones: a far crowd skinned once, not once a figure.
+     */
+    public static void skinAll(NpcSkin skin, Matrix4f[] bones, int level, Object[] buffers) {
+        float[] m = matrices(bones);
+        for (int g = 0; g < skin.groups.length; g++) {
+            NpcSkin.Group gr = skin.groups[g];
+            if (gr.level != level) continue;
+            if (buffers[g * 2] == null) {
+                buffers[g * 2] = new float[gr.vertices * 3];
+                buffers[g * 2 + 1] = new float[gr.vertices * 3];
+            }
+            skin(gr, m, (float[]) buffers[g * 2], (float[]) buffers[g * 2 + 1]);
         }
     }
 
@@ -182,16 +219,23 @@ public final class NpcSkinDraw {
         }
     }
 
-    /** Every triangle as a quad with its last corner repeated; a sheet's again wound the other way, facing back. */
+    /**
+     * Every triangle paired with a neighbour across a shared edge into one quad (a, b, c, d: its two triangles are just
+     * the pair again, as the quad is drawn), a lone one with its last corner repeated; a sheet's again wound the other
+     * way, facing back. Half the vertices of a triangle each, which is most of a skinned body's drawing cost.
+     */
     private static void draw(NpcSkin.Group g, float[] p, float[] n, int from, int to, boolean back, PoseStack.Pose pose,
                              VertexConsumer out, int light, int overlay) {
         float[] uv = g.uv;
-        int[] tris = g.tris;
+        int[] quads = quads(g);
+        // a batch of the triangles (from, to) is the same share of the quads
+        int nq = quads.length / 4, nt = g.tris.length / 3;
+        int q0 = (int) ((long) (from / 3) * nq / Math.max(1, nt)) * 4, q1 = (int) ((long) (to / 3) * nq / Math.max(1, nt)) * 4;
         for (int s = 0; s < (back ? 2 : 1); s++) {
             float f = s == 0 ? 1 : -1;
-            for (int t = from; t < to; t += 3) {
+            for (int q = q0; q < q1; q += 4) {
                 for (int k = 0; k < 4; k++) {
-                    int c = Math.min(k, 2), v = tris[t + (s == 0 ? c : 2 - c)], i = v * 3;
+                    int v = quads[q + (s == 0 ? k : 3 - k)], i = v * 3;
                     out.addVertex(pose, p[i], p[i + 1], p[i + 2])
                             .setColor(0xFFFFFFFF)
                             .setUv(uv[v * 2], uv[v * 2 + 1])
@@ -201,6 +245,52 @@ public final class NpcSkinDraw {
                 }
             }
         }
+    }
+
+    private static final java.util.Map<NpcSkin.Group, int[]> QUADS = new java.util.WeakHashMap<>();
+
+    /** The group's triangles paired into quads, worked out once. */
+    static int[] quads(NpcSkin.Group g) {
+        int[] have = QUADS.get(g);
+        if (have != null) return have;
+        int[] t = g.tris;
+        int tris = t.length / 3;
+        // each directed edge (from, to) -> the triangle it's in
+        it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap edges = new it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap(tris * 3);
+        edges.defaultReturnValue(-1);
+        for (int i = 0; i < tris; i++) {
+            for (int e = 0; e < 3; e++) edges.putIfAbsent((long) t[i * 3 + e] << 32 | t[i * 3 + (e + 1) % 3] & 0xFFFFFFFFL, i);
+        }
+        boolean[] used = new boolean[tris];
+        int[] out = new int[tris * 4];
+        int n = 0;
+        for (int i = 0; i < tris; i++) {
+            if (used[i]) continue;
+            used[i] = true;
+            int qa = t[i * 3], qb = t[i * 3 + 1], qc = t[i * 3 + 2], qd = qc;
+            for (int e = 0; e < 3; e++) {
+                int a = t[i * 3 + e], b = t[i * 3 + (e + 1) % 3], c = t[i * 3 + (e + 2) % 3];
+                // across the edge c -> a lies a triangle running a -> c: a, b, c then c, d, a make the quad
+                int u = edges.get((long) a << 32 | c & 0xFFFFFFFFL);
+                if (u < 0 || used[u]) continue;
+                int d = -1;
+                for (int k = 0; k < 3; k++) {
+                    int x = t[u * 3 + k];
+                    if (x != a && x != c) d = x;
+                }
+                if (d < 0) continue;
+                used[u] = true;
+                qa = a; qb = b; qc = c; qd = d;
+                break;
+            }
+            out[n++] = qa;
+            out[n++] = qb;
+            out[n++] = qc;
+            out[n++] = qd;
+        }
+        int[] q = java.util.Arrays.copyOf(out, n);
+        QUADS.put(g, q);
+        return q;
     }
 
     private NpcSkinDraw() {

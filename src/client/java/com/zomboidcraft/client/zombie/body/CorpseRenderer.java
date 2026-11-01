@@ -86,16 +86,23 @@ public class CorpseRenderer extends EntityRenderer<Corpse, CorpseRenderer.State>
         if (corpse.pose() != Corpse.FALLEN) {
             // set out by a Harvestman; a hung one turns slowly on its cable
             ZPosed.pose(state.pose, corpse.pose(), state.variant);
+            if (!state.hidden && com.zomboidcraft.client.survivor.ZedBodies.available()) {
+                // Zomboid's body set the same way: sat against the wall, slumped, hanging limp
+                state.zed = com.zomboidcraft.client.survivor.ZedBodies.corpse(corpse.getId(), state.variant, outfit, d, state.ageInTicks,
+                        state.cuts | ZBodyLayer.missingCuts(state.missingLimb), com.zomboidcraft.client.survivor.ZedBodies.level(state.distanceToCameraSq),
+                        com.zomboidcraft.client.survivor.ZedBodies.posedClip(corpse.pose()));
+            }
             state.yaw = corpse.getYRot();
             float t = (corpse.tickCount + partialTick) / 20f + (state.variant & 255) * 0.1f;
             state.swing = (float) Math.sin(t * 0.9f) * 2.5f;
             state.twist = (float) Math.sin(t * 0.23f) * 14f;
             return;
         }
-        if (!state.hidden && state.cuts == 0 && state.missingLimb == 0 && !state.legless
-                && com.zomboidcraft.client.survivor.ZedBodies.available()
-                && com.zomboidcraft.client.survivor.ZedBodies.near(state.distanceToCameraSq)) {
-            state.zed = com.zomboidcraft.client.survivor.ZedBodies.corpse(corpse.getId(), state.variant, outfit, d, state.ageInTicks);
+        if (!state.hidden && com.zomboidcraft.client.survivor.ZedBodies.available()) {
+            // Zomboid's body at any range (fuller near, thinned further off): never the old body with the packs here
+            state.zed = com.zomboidcraft.client.survivor.ZedBodies.corpse(corpse.getId(), state.variant, outfit, d, state.ageInTicks,
+                    state.cuts | ZBodyLayer.missingCuts(state.missingLimb) | (state.legless ? Dismember.KN_R | Dismember.KN_L : 0),
+                    com.zomboidcraft.client.survivor.ZedBodies.level(state.distanceToCameraSq));
             if (state.zed != null) {
                 return;
             }
