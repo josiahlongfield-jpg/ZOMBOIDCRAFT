@@ -61,6 +61,7 @@ public final class Traits {
     public static void register() {
         PayloadTypeRegistry.clientboundPlay().register(CharacterNet.Open.TYPE, CharacterNet.Open.CODEC);
         PayloadTypeRegistry.serverboundPlay().register(CharacterNet.Create.TYPE, CharacterNet.Create.CODEC);
+        Appearance.register();
         ServerPlayNetworking.registerGlobalReceiver(CharacterNet.Create.TYPE, (payload, context) -> {
             ServerPlayer player = context.player();
             player.level().getServer().execute(() -> create(player, payload));

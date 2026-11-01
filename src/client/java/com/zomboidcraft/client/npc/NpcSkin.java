@@ -174,6 +174,16 @@ public final class NpcSkin {
         return -1;
     }
 
+    /** A texture entry's bytes as stored (PNG, JPEG, or other data such as a pack's catalog), or null. Not used up. */
+    public byte[] raw(String key) {
+        return images.get(key);
+    }
+
+    /** Every texture entry's key still held as bytes. */
+    public java.util.Set<String> rawKeys() {
+        return java.util.Collections.unmodifiableSet(images.keySet());
+    }
+
     /** The texture by its key, made into a GPU texture the first time it's asked for. Render thread. */
     public Identifier texture(String key, String model) {
         Identifier id = textures.get(key);
