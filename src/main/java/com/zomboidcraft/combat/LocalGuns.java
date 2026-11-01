@@ -80,7 +80,15 @@ public final class LocalGuns {
     /** Reads the folder again (the files can change while the game runs). */
     public static synchronized void reload() {
         loadedAt = -1;
+        generation++;
         load();
+    }
+
+    private static volatile int generation;
+
+    /** Goes up each time the folder is read again, so the client knows to read the meshes again too. */
+    public static int generation() {
+        return generation;
     }
 
     private static synchronized void load() {

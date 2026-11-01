@@ -57,7 +57,8 @@ public final class MeshGunRenderer implements net.minecraft.client.renderer.spec
             // go on it (its own parts are packed with it); anything else (a loaded bolt) draws as it is
             com.zomboidcraft.combat.LocalGuns.Spec spec = com.zomboidcraft.combat.LocalGuns.get(local);
             if (spec != null && id.equals(spec.anchorMesh)) {
-                MeshGuns.draw(MeshGuns.LOCAL + local, part, pose, out, light, null);
+                // where our part sits (a magazine on its way out, a swung cylinder) its part sits too
+                submit(MeshGuns.LOCAL + local, null, pose, out, light);
                 return;
             }
             if (spec != null && (id.startsWith("att_") || id.startsWith("own_"))) {
@@ -68,8 +69,13 @@ public final class MeshGunRenderer implements net.minecraft.client.renderer.spec
     }
 
     public void submit(PoseStack pose, SubmitNodeCollector out, int light, int overlay, boolean foil, int outline) {
+        submit(id, texture, pose, out, light);
+    }
+
+    private void submit(String mesh, @org.jetbrains.annotations.Nullable net.minecraft.resources.Identifier paint,
+                        PoseStack pose, SubmitNodeCollector out, int light) {
         if (offset.isEmpty() && roll == 0 && pitch == 0 && scale == 1) {
-            MeshGuns.draw(id, part, pose, out, light, texture);
+            MeshGuns.draw(mesh, part, pose, out, light, paint);
             return;
         }
         pose.pushPose();
@@ -85,7 +91,7 @@ public final class MeshGunRenderer implements net.minecraft.client.renderer.spec
         if (scale != 1) {
             pose.scale(scale, scale, scale);
         }
-        MeshGuns.draw(id, part, pose, out, light, texture);
+        MeshGuns.draw(mesh, part, pose, out, light, paint);
         pose.popPose();
     }
 

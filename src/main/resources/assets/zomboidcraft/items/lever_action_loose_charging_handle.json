@@ -7,14 +7,40 @@
    {
     "when": "case_hardened",
     "model": {
-     "type": "minecraft:model",
-     "model": "zomboidcraft:item/weapon/lever_action/case_hardened/charging_handle"
+     "type": "minecraft:condition",
+     "property": "zomboidcraft:local_gun",
+     "on_true": {
+      "type": "minecraft:special",
+      "base": "zomboidcraft:item/weapon/lever_action/case_hardened/charging_handle",
+      "model": {
+       "type": "zomboidcraft:mesh",
+       "id": "block_lever_action",
+       "part": "charging_handle"
+      }
+     },
+     "on_false": {
+      "type": "minecraft:model",
+      "model": "zomboidcraft:item/weapon/lever_action/case_hardened/charging_handle"
+     }
     }
    }
   ],
   "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/weapon/lever_action/charging_handle"
+   "type": "minecraft:condition",
+   "property": "zomboidcraft:local_gun",
+   "on_true": {
+    "type": "minecraft:special",
+    "base": "zomboidcraft:item/weapon/lever_action/charging_handle",
+    "model": {
+     "type": "zomboidcraft:mesh",
+     "id": "block_lever_action",
+     "part": "charging_handle"
+    }
+   },
+   "on_false": {
+    "type": "minecraft:model",
+    "model": "zomboidcraft:item/weapon/lever_action/charging_handle"
+   }
   }
  }
 }

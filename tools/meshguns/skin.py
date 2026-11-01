@@ -173,6 +173,19 @@ def irons(base, cfg, up):
     return coloured(IRONS, IRONS_COLOURS, look)
 
 
+# the block guns a gun kept on the player's computer can ride on (combat/LocalGuns): each block piece asks
+# "zomboidcraft:local_gun" first and draws that gun's mesh part of the same name instead (a lever or charging handle
+# it hasn't got draws nothing); the mesh id is the anchorMesh in the local gun's file
+LOCAL_BLOCK = {'lever_action': 'block_lever_action', 'rimfire': 'block_rimfire'}
+
+
+def local_block(node, gun, name):
+    if gun not in LOCAL_BLOCK:
+        return node
+    return {'type': 'minecraft:condition', 'property': 'zomboidcraft:local_gun',
+            'on_true': special(node['model'], LOCAL_BLOCK[gun], name), 'on_false': node}
+
+
 def swap(node, gun, cfg, mounts, models, left):
     """cfg: the bought gun's guns.json entry (None for a block gun: only its attachments change). left collects the
     names of block models a bought gun still had, which become nothing."""
@@ -180,6 +193,8 @@ def swap(node, gun, cfg, mounts, models, left):
         return [swap(n, gun, cfg, mounts, models, left) for n in node]
     if not isinstance(node, dict):
         return node
+    if node.get('type') == 'minecraft:condition' and node.get('property') == 'zomboidcraft:local_gun':
+        node = node['on_false']             # wrapped for a local gun before: start again from the block piece
     if (node.get('type') == 'minecraft:select' and node.get('property') == 'minecraft:custom_model_data'
             and node.get('index', 0) >= COLOUR and specials(node['fallback'])):
         node = node['fallback']             # a part's colours, skinned before
@@ -216,7 +231,7 @@ def swap(node, gun, cfg, mounts, models, left):
     if cfg:
         left.add(name)
         return EMPTY
-    return node
+    return local_block(node, gun, name)
 
 
 def apply(gun, items=ITEMS):
@@ -224,7 +239,7 @@ def apply(gun, items=ITEMS):
     cfg = guns().get(gun)
     sk = skins().get(gun)
     mounts = slot_mounts(gun)
-    if not cfg and not sk and not mounts:
+    if not cfg and not sk and not mounts and gun not in LOCAL_BLOCK:
         return
     models = sk.get('models', {}) if isinstance(sk, dict) else {}
     melee = sk if isinstance(sk, str) else None

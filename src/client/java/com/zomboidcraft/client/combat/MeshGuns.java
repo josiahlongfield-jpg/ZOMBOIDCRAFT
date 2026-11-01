@@ -53,7 +53,28 @@ public final class MeshGuns {
 
     /** Whether this computer has the mesh of a local gun (its file is there). */
     public static boolean hasLocal(String gun) {
-        return java.nio.file.Files.isRegularFile(com.zomboidcraft.combat.LocalGuns.DIR.resolve(gun + ".zmesh"));
+        // asked for every part of every gun drawn each frame: the disk is looked at again only every few seconds
+        if (localGeneration != com.zomboidcraft.combat.LocalGuns.generation()) {
+            localGeneration = com.zomboidcraft.combat.LocalGuns.generation();
+            forgetLocal();
+        }
+        long now = System.currentTimeMillis();
+        long[] seen = LOCAL_SEEN.get(gun);
+        if (seen == null || now - seen[0] > 5000) {
+            boolean there = java.nio.file.Files.isRegularFile(com.zomboidcraft.combat.LocalGuns.DIR.resolve(gun + ".zmesh"));
+            LOCAL_SEEN.put(gun, seen = new long[] {now, there ? 1 : 0});
+        }
+        return seen[1] == 1;
+    }
+
+    private static int localGeneration;
+    private static final Map<String, long[]> LOCAL_SEEN = new java.util.concurrent.ConcurrentHashMap<>();
+
+    /** Forgets the local guns' meshes, so changed files are read again (/zc localgun reload). Render thread. */
+    public static void forgetLocal() {
+        LOCAL_SEEN.clear();
+        GUNS.keySet().removeIf(k -> k.startsWith(LOCAL));
+        MISSING.removeIf(k -> k.startsWith(LOCAL));
     }
 
     /** The gun, or null if it can't be loaded. Render thread only. */
