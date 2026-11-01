@@ -335,7 +335,7 @@ public final class HarvestmanDirector {
     // ------------------------------------------------------------------------------------------------ the hunt
 
     private static void tick(MinecraftServer s) {
-        if (!loaded) {
+        if (!loaded || !com.zomboidcraft.ZcConfig.get().performance.harvestman) {
             return;
         }
         ServerLevel level = s.overworld();

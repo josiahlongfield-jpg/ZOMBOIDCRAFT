@@ -53,7 +53,11 @@ public final class CarHands {
     }
 
     /** The driver's arms as others see them (and in third person): reaching forward to the wheel, rocking as it turns. */
+    /** Which hands the last pose put on a wheel or grips (0 none, 1 the left, 2 both), for the Zomboid bodies to reach. */
+    public static int posed;
+
     public static void pose(PlayerModel model, AvatarRenderState state) {
+        posed = 0;
         Minecraft mc = Minecraft.getInstance();
         Entity rider = mc.level == null ? null : mc.level.getEntity(state.id);
         if (rider != null && com.zomboidcraft.world.cars.Turret.isGunner(rider)) {
@@ -65,6 +69,7 @@ public final class CarHands {
             model.leftArm.yRot = 0.18f;
             model.rightArm.yRot = -0.18f;
             model.leftArm.zRot = model.rightArm.zRot = 0f;
+            posed = 2;
             return;
         }
         int hands = rider == null ? NONE : onWheel(rider);
@@ -75,10 +80,12 @@ public final class CarHands {
         model.leftArm.xRot = -1.2f - 0.35f * t;
         model.leftArm.yRot = 0.32f;
         model.leftArm.zRot = 0f;
+        posed = 1;
         if (hands == BOTH) {
             model.rightArm.xRot = -1.2f + 0.35f * t;
             model.rightArm.yRot = -0.32f;
             model.rightArm.zRot = 0f;
+            posed = 2;
         }
     }
 

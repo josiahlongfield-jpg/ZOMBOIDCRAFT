@@ -371,7 +371,7 @@ def look_for(name, e):
         look[k] = A.flat(v) if isinstance(v, str) else v
     look['_after'] = [lambda f, c: P.grime(f, c, 0.1 + f.wear * 0.2)]
     # printing needs whole texels per letter pixel: labels on small things get finer texels than the rest
-    look['_px'] = {'label': 16 if e.get('big', 0) <= 12 else 10}
+    look['_px'] = {'label': 16 if e.get('big', 0) <= 12 else 10, **e['mats'].get('_px', {})}
     return look
 
 

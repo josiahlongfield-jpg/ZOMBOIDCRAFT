@@ -35,6 +35,9 @@ public final class Profiler {
             CLIENT_BLOCKS = new java.util.concurrent.atomic.LongAdder(), CLIENT_SECTIONS = new java.util.concurrent.atomic.LongAdder(),
             CLIENT_LIGHT = new java.util.concurrent.atomic.LongAdder(), CLIENT_CHUNKS = new java.util.concurrent.atomic.LongAdder();
 
+    /** How Sodium sends chunk meshes to the graphics card (SodiumUploadMixin); null until Sodium asks. */
+    public static volatile String uploadPath;
+
     /** Who owns a frame, by package: the first match wins, so put the narrower names first. */
     private static final String[][] OWNERS = {
             {"com.zomboidcraft.", "ZomboidCraft"},
@@ -282,6 +285,7 @@ public final class Profiler {
                 FLICKERS.sum(), FLICKERS.sum() / Math.max(0.1, took), SIGNALS.sum()));
         r.append(String.format("Sent to your client: %d single block changes, %d section block changes, %d light updates, %d chunks loaded%n",
                 CLIENT_BLOCKS.sum(), CLIENT_SECTIONS.sum(), CLIENT_LIGHT.sum(), CLIENT_CHUNKS.sum()));
+        r.append("Sodium chunk uploads: ").append(uploadPath == null ? "not seen (Sodium missing or idle)" : uploadPath).append("\n");
         r.append("JVM: ").append(System.getProperty("java.vm.name")).append(' ')
                 .append(System.getProperty("java.version")).append(", args ")
                 .append(ManagementFactory.getRuntimeMXBean().getInputArguments()).append("\n");

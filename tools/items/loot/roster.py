@@ -1089,6 +1089,25 @@ neon_tube_kit | Neon Tube Kit | R | 30 | 2.0 | hard
 marquee_bulb_letters | Marquee Bulb Letters | R | 35 | 1.5 |
 edison_chandelier | Edison Bulb Chandelier | R | 30 | 6.0 | liq diner
 tiffany_lamp | Tiffany-Style Lamp | P | 60 | 4.0 | mansion pawn
+# games and leisure
+dartboard | Dartboard | C | 6 | 1.5 | liq garage bed
+pool_cue | Pool Cue | C | 4 | 0.5 | liq
+chess_set | Chess Set | C | 5 | 1 | bed school books
+foosball_table | Foosball Table | S | 40 | 45 |
+ping_pong_table | Ping Pong Table | S | 35 | 60 |
+poker_chip_case | Poker Chip Case | S | 12 | 2.5 | bed liq pawn
+bowling_ball_pins | Bowling Ball and Pins | S | 15 | 7 |
+punching_bag | Punching Bag | S | 20 | 30 | gym garage
+arcade_cabinet | Arcade Cabinet | R | 80 | 110 |
+pool_table | Pool Table | R | 90 | 300 |
+air_hockey_table | Air Hockey Table | R | 70 | 90 |
+poker_table | Poker Table | R | 60 | 60 |
+home_console | Home Console Bundle | R | 40 | 3 | bed elec pawn
+cocktail_arcade | Cocktail Arcade Table | P | 100 | 70 |
+pinball_machine | Pinball Machine | P | 120 | 110 |
+claw_machine | Claw Machine | P | 90 | 120 |
+skee_ball_lane | Alley Roll Lane | P | 85 | 150 |
+slot_machine | Slot Machine | P | 110 | 80 |
 """
 
 ROSTER['Junk & scrap'] = """

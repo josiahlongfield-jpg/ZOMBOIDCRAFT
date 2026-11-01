@@ -30,6 +30,10 @@ final class CarEngineSound extends AbstractTickableSoundInstance {
 
     /** Keeps a car's engine sounding; called each tick it runs. */
     static void keep(CarProp car) {
+        if (PzEngineSound.has(car)) {
+            PzEngineSound.keep(car);
+            return;
+        }
         CarEngineSound sound = PLAYING.get(car);
         Minecraft client = Minecraft.getInstance();
         if (sound == null || sound.isStopped()) {

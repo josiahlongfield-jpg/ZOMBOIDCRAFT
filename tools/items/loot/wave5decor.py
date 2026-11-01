@@ -633,21 +633,23 @@ def wave3_gold():
     return wave3.GOLD
 
 
+def wrap(it, d):
+    """One look's it() entry from its dict: b the builder, word/base/body routed to it(), the rest materials."""
+    d = dict(d)
+    b = d.pop('b')
+    word, base = d.pop('word', ''), d.pop('base', None)
+    body = d.pop('body', None)
+    e = it(b, word, base, band=base or CREAM, word_ink='#f4f0e4', **d)
+    if body is not None:
+        e['mats']['body'] = body          # mats are applied over the plain body colour
+    return e
+
+
 def looks(it):
-    """{id: [it() entry per look]}."""
-    out = {}
-    for i, ls in _looks().items():
-        es = []
-        for d in ls:
-            d = dict(d)
-            b = d.pop('b')
-            word, base = d.pop('word', ''), d.pop('base', None)
-            body = d.pop('body', None)
-            e = it(b, word, base, band=base or CREAM, word_ink='#f4f0e4', **d)
-            if body is not None:
-                e['mats']['body'] = body          # mats are applied over the plain body colour
-            es.append(e)
-        out[i] = es
+    """{id: [it() entry per look]}, batch 1 (here) and batch 2 (wave5games)."""
+    import wave5games
+    out = {i: [wrap(it, d) for d in ls] for i, ls in _looks().items()}
+    out.update(wave5games.looks(it, wrap))
     return out
 
 

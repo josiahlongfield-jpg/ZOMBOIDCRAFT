@@ -35,6 +35,7 @@ import net.minecraft.world.phys.Vec3;
 public class WalkerRenderer extends HumanoidMobRenderer<Zombie, WalkerRenderState, WalkerModel> {
     private final ZBodyAnimator animator = new ZBodyAnimator();
     private final ZBodyAnimator.Facts facts = new ZBodyAnimator.Facts();
+    private final com.zomboidcraft.client.survivor.ZedBodies.Facts zedFacts = new com.zomboidcraft.client.survivor.ZedBodies.Facts();
     /** Each outfit's new-body skin, clothes atlas and eye mask. */
     private static final java.util.Map<String, Identifier[]> BODY_TEXTURES = new java.util.HashMap<>();
 
@@ -45,6 +46,7 @@ public class WalkerRenderer extends HumanoidMobRenderer<Zombie, WalkerRenderStat
         addLayer(new WalkerAddonLayer(this, new WalkerAddonModel(context.bakeLayer(WalkerAddonModel.LAYER))));
         addLayer(new WalkerEyesLayer(this));
         addLayer(new ZBodyLayer(this));
+        addLayer(new ZedLayer(this));
         addLayer(new com.zomboidcraft.client.zombie.body.BoltsLayer(this));
         addLayer(new com.zomboidcraft.client.zombie.body.BodyWeaponLayer(this, context.getItemModelResolver()));
     }
@@ -88,6 +90,7 @@ public class WalkerRenderer extends HumanoidMobRenderer<Zombie, WalkerRenderStat
                 k -> com.zomboidcraft.zombie.AttachedWeapons.stack(state.bodyWeapon));
         ZcConfig.Look look = ZcConfig.get().look;
         state.zbody = look.newZombies ? ZBodyMesh.get(state.outfit) : null;
+        state.zed = null;
         if (state.zbody != null) {
             // the old model's skins aren't drawn under the new body, so don't build their names every frame
             Identifier[] tex = BODY_TEXTURES.computeIfAbsent(state.outfit, o -> new Identifier[] {
@@ -151,6 +154,7 @@ public class WalkerRenderer extends HumanoidMobRenderer<Zombie, WalkerRenderStat
                 state.hasRedOverlay = false;
                 state.zeyes = null;
             }
+            zed(zombie, state, partialTick);
             if (newly != 0) {
                 // the limb flies off in the pose it was in the moment before
                 Gibs.spawn(state.zbody, state.zskin, state.zkit, ZBodyLayer.pose(state.zbody, animator.before, state.legless),
@@ -159,6 +163,45 @@ public class WalkerRenderer extends HumanoidMobRenderer<Zombie, WalkerRenderStat
             }
         }
         held(zombie, state, partialTick);
+    }
+
+    /**
+     * Near, whole and with the local packs here: drawn as Project Zomboid's own zombie (survivor/ZedBodies) over the
+     * lighter body, which still works out its facing, its fall's heading and its gibs. Dying, it faces the way its
+     * death says, as the body it leaves will.
+     */
+    private void zed(Zombie zombie, WalkerRenderState state, float partialTick) {
+        if (state.cuts != 0 || state.missingLimb != 0 || state.legless || state.heldLean > 0f
+                || !com.zomboidcraft.client.survivor.ZedBodies.available()
+                || !com.zomboidcraft.client.survivor.ZedBodies.near(state.distanceToCameraSq)) {
+            return;
+        }
+        var f = zedFacts;
+        com.zomboidcraft.client.survivor.ZedBodies.fill(f, zombie);
+        f.age = state.ageInTicks;
+        f.variant = state.variant;
+        f.outfit = state.outfit;
+        f.aggressive = state.isAggressive;
+        f.low = facts.low;
+        f.crawler = state.crawler;
+        f.attack = state.swingAnimation;
+        f.hurtTime = zombie.hurtTime;
+        f.deathTime = facts.deathTime;
+        f.death = facts.death;
+        f.act = facts.act == ZMove.CLIMB ? com.zomboidcraft.client.survivor.ZedBodies.CLIMB
+                : facts.act == ZMove.BASH_DOOR ? com.zomboidcraft.client.survivor.ZedBodies.BASH_DOOR
+                : facts.act == ZMove.BASH_WIN ? com.zomboidcraft.client.survivor.ZedBodies.BASH_WIN : 0;
+        f.actTime = facts.actTime;
+        if (zombie.deathTime > 0 && facts.death != 0) {
+            state.bodyRot = Deaths.yaw(facts.death);
+        }
+        // the act's shift is in the world; the body's drawn turned to its facing, so turn it the same
+        float b = (float) Math.toRadians(state.bodyRot), sc = Math.max(0.1f, state.scale);
+        float wx = f.act == 0 ? 0 : facts.shiftX, wy = f.act == 0 ? 0 : facts.shiftY, wz = f.act == 0 ? 0 : facts.shiftZ;
+        f.shiftX = (float) (Math.cos(b) * wx + Math.sin(b) * wz) / sc;
+        f.shiftY = wy / sc;
+        f.shiftZ = (float) (-Math.sin(b) * wx + Math.cos(b) * wz) / sc;
+        state.zed = com.zomboidcraft.client.survivor.ZedBodies.pose(zombie.getId(), f);
     }
 
     /** Per held zombie (by id): how far it's drawn tipped back, and when that was (to ease it upright once let go). */
