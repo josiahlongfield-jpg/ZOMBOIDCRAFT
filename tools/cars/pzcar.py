@@ -221,6 +221,7 @@ def build(a):
     wheels = []
     # wheels hang off the physics chassis, which sits at the centre-of-mass offset; the body model doesn't
     com = np.array(floats(v.kv.get('centerOfMassOffset', '0 0 0'), 3))
+    widths = []
     for k, wb in enumerate(sorted(v.blocks('wheel'), key=lambda b: ['FrontLeft', 'FrontRight', 'RearLeft', 'RearRight'].index(b.name))):
         off = np.array(floats(wb.kv['offset'], 3)) + com
         r = float(wb.kv.get('radius', '0.35').rstrip('fF'))
@@ -236,6 +237,7 @@ def build(a):
         slot_all.append(np.full(len(q), wslot))
         part_all.append(np.full(len(q), f'wheel{k}', object))
         wheels.append((off, r, wb.kv.get('front', 'false').lower() == 'true'))
+        widths.append(num(wb.kv.get('width')) or 0.25)
     if missing:
         print('left out (missing):', *missing, sep='\n  ')
     atlas.pack()
@@ -248,6 +250,27 @@ def build(a):
         m = slots == sl
         UV[m] = atlas.uv(sl, rawUV[m])
     # the ground: the tyres' bottoms
+    # each wheel hangs its suspension's rest length below where it's fixed on (as Zomboid's physics has it), and
+    # never higher than its arch allows: tucked up inside the wheel well with a hand's breadth of air over the tread
+    # the arches are in the painted shell (the chassis, axles and floor in the interior pieces sit inside the wells)
+    skin_slot = atlas.slot.get(find.texture(skin)) if skin else None
+    body = np.array([not str(p).startswith('wheel') for p in part]) & (slots == skin_slot) & ~np.array(
+        [any(g in str(p) for g in GLASS) for p in part])
+    rest = num(v.kv.get('suspensionRestLength')) or 0.2
+    fitted = []
+    for k, (off, r, f) in enumerate(wheels):
+        width = widths[k]
+        y = off[1] - rest
+        top = arch_top(P[body], np.array([off[0], y, off[2]]), r, width)
+        if top is not None:
+            y = min(y, top - 0.03)
+        drop = off[1] - y
+        sel = part == f'wheel{k}'
+        P[sel] = P[sel] - np.array([0, drop, 0])
+        fitted.append((np.array([off[0], y, off[2]]), r, f))
+        if a.debug:
+            print(f'wheel {k}: hung {drop:.3f} m (arch allows centre {top})')
+    wheels = fitted
     ground = min(off[1] - r for off, r, _ in wheels)
     _GROUND[v.name] = ground
     P[..., 1] -= ground
@@ -256,6 +279,33 @@ def build(a):
     wheel_of = np.array([int(str(p)[5:]) if str(p).startswith('wheel') else -1 for p in part])
     interior = np.array([('Seat' in str(p)) or ('GloveBox' in str(p)) for p in part])
     write(a, v, P, UV, glass, wheel_of, interior, atlas, wheels)
+
+
+def column_hits(T, x, z):
+    """Heights where a vertical line through (x, z) crosses the triangles."""
+    a, b, c = T[:, 0], T[:, 1], T[:, 2]
+    d = (b[:, 2] - c[:, 2]) * (a[:, 0] - c[:, 0]) + (c[:, 0] - b[:, 0]) * (a[:, 2] - c[:, 2])
+    ok = np.abs(d) > 1e-12
+    d = np.where(ok, d, 1)
+    l0 = ((b[:, 2] - c[:, 2]) * (x - c[:, 0]) + (c[:, 0] - b[:, 0]) * (z - c[:, 2])) / d
+    l1 = ((c[:, 2] - a[:, 2]) * (x - c[:, 0]) + (a[:, 0] - c[:, 0]) * (z - c[:, 2])) / d
+    l2 = 1 - l0 - l1
+    ins = ok & (l0 >= 0) & (l1 >= 0) & (l2 >= 0)
+    return (l0 * a[:, 1] + l1 * b[:, 1] + l2 * c[:, 1])[ins]
+
+
+def arch_top(T, c, r, width):
+    """The lowest bodywork over a wheel's tread: up columns across the tyre's top half, the lowest hit above its middle."""
+    tops = []
+    for fx in (-0.4, 0.0, 0.4):
+        for fz in (-0.55, -0.3, 0.0, 0.3, 0.55):
+            x, z = c[0] + fx * width, c[2] + fz * r
+            h = column_hits(T, x, z)
+            h = h[h > c[1]]
+            if len(h):
+                # the arch line above this spot, less the tyre's own curve there
+                tops.append(h.min() - np.sqrt(max(r * r - (fz * r) ** 2, 0)))
+    return min(tops) if tops else None
 
 
 def toon(img, p, n, ok):
@@ -444,6 +494,7 @@ def main():
     ap.add_argument('--skip', nargs='*', default=[])
     ap.add_argument('--toon', action='store_true')
     ap.add_argument('--preview')
+    ap.add_argument('--debug', action='store_true')
     a = ap.parse_args()
     a.id = a.id or ('pz_' + a.vehicle.lower())
     build(a)
