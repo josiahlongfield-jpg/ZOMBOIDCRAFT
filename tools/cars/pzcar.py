@@ -560,6 +560,10 @@ def write(a, v, P, UV, glass, wheel_of, interior, atlas, wheels, part=None):
             side = -1
         elif 'Left' in b.name:
             side = 1
+        if 'Middle' in b.name:
+            # the middle of the back bench has no door of its own: climbed into from behind, by the tailgate
+            handles.append([0.0, round(float(hy), 3), round(float(P[..., 2].min() - centre[2] + 0.1), 3)])
+            continue
         handles.append([round(float(side * (half + 0.05)), 3), round(float(hy), 3), round(float(o[2] - centre[2]), 3)])
     fronts = [c for c, _, f in wheels if f]
     rears = [c for c, _, f in wheels if not f]
