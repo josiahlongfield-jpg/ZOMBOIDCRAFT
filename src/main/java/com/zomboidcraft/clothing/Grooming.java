@@ -110,35 +110,55 @@ public final class Grooming {
 
     /** The hair style showing now: the cut, until it grows a length past it. */
     public static String hair(Look look, long now) {
-        int from = HAIR.getOrDefault(look.hair(), 2);
+        int from = orDefault(rank(true, look.hair()), 2);
         int r = grown(from, days(look.hairCut(), now), HAIR_DAYS);
         return r == from ? look.hair() : HAIR_GROWN[r];
     }
 
     public static String beard(Look look, long now) {
-        if (!look.beardGrows() && BEARD.getOrDefault(look.beard(), 0) == 0) return "none";
-        int from = BEARD.getOrDefault(look.beard(), 0);
+        if (!look.beardGrows() && orDefault(rank(false, look.beard()), 0) == 0) return "none";
+        int from = orDefault(rank(false, look.beard()), 0);
         if (!look.beardGrows()) return look.beard();
         int r = grown(from, days(look.beardCut(), now), BEARD_DAYS);
         return r == from ? look.beard() : BEARD_GROWN[r];
     }
 
     public static int hairLength(Look look, long now) {
-        return HAIR.getOrDefault(hair(look, now), 2);
+        return orDefault(rank(true, hair(look, now)), 2);
     }
 
     public static int beardLength(Look look, long now) {
-        return BEARD.getOrDefault(beard(look, now), 0);
+        return orDefault(rank(false, beard(look, now)), 0);
     }
 
     /** What a cut to this style needs in hand, or null when it can't be cut to from here. */
     public static String needs(Look look, long now, boolean isHair, String style) {
-        Integer rank = (isHair ? HAIR : BEARD).get(style);
+        Integer rank = rank(isHair, style);
         if (rank == null || style.equals("own")) return null;
         int length = isHair ? hairLength(look, now) : beardLength(look, now);
         if (rank > length) return null;
         if (rank == 0) return "razor";
         return "scissors";
+    }
+
+    /**
+     * A style's length (0 shaved to 4 long): ours by the tables above; Zomboid's own styles from the survivor packs
+     * (character/Appearance) come as "pz:Name#length", carrying their length since the server has no copy of the packs.
+     */
+    public static Integer rank(boolean isHair, String style) {
+        if (style == null) return null;
+        Integer r = (isHair ? HAIR : BEARD).get(style);
+        if (r != null || !style.startsWith("pz:")) return r;
+        int at = style.lastIndexOf('#');
+        try {
+            return at < 0 ? 2 : Math.max(0, Math.min(4, Integer.parseInt(style.substring(at + 1))));
+        } catch (NumberFormatException e) {
+            return 2;
+        }
+    }
+
+    private static int orDefault(Integer v, int d) {
+        return v == null ? d : v;
     }
 
     // ------------------------------------------------------------------ the server
