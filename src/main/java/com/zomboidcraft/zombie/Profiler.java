@@ -30,7 +30,10 @@ public final class Profiler {
     private static volatile boolean running;
     /** Lit blocks that change their light (each one relights and redraws the chunks round it), counted while sampling. */
     public static final java.util.concurrent.atomic.LongAdder FLICKERS = new java.util.concurrent.atomic.LongAdder(),
-            SIGNALS = new java.util.concurrent.atomic.LongAdder();
+            SIGNALS = new java.util.concurrent.atomic.LongAdder(),
+            /** What the client was sent (ClientPacketListenerMixin): each one makes Sodium rebuild and re-upload a section. */
+            CLIENT_BLOCKS = new java.util.concurrent.atomic.LongAdder(), CLIENT_SECTIONS = new java.util.concurrent.atomic.LongAdder(),
+            CLIENT_LIGHT = new java.util.concurrent.atomic.LongAdder(), CLIENT_CHUNKS = new java.util.concurrent.atomic.LongAdder();
 
     /** Who owns a frame, by package: the first match wins, so put the narrower names first. */
     private static final String[][] OWNERS = {
@@ -213,6 +216,10 @@ public final class Profiler {
         long late = 0, rounds = 0;
         FLICKERS.reset();
         SIGNALS.reset();
+        CLIENT_BLOCKS.reset();
+        CLIENT_SECTIONS.reset();
+        CLIENT_LIGHT.reset();
+        CLIENT_CHUNKS.reset();
         List<Thread> threads = new ArrayList<>();
         List<String> buckets = new ArrayList<>();
         long refound = 0;
@@ -273,6 +280,8 @@ public final class Profiler {
         r.append(String.format("Garbage collection took %.1f%% of the time%n", gcMs / 10.0 / Math.max(0.1, took)));
         r.append(String.format("Flickering lamps changed %d times (%.0f a second), traffic signals %d times%n",
                 FLICKERS.sum(), FLICKERS.sum() / Math.max(0.1, took), SIGNALS.sum()));
+        r.append(String.format("Sent to your client: %d single block changes, %d section block changes, %d light updates, %d chunks loaded%n",
+                CLIENT_BLOCKS.sum(), CLIENT_SECTIONS.sum(), CLIENT_LIGHT.sum(), CLIENT_CHUNKS.sum()));
         r.append("JVM: ").append(System.getProperty("java.vm.name")).append(' ')
                 .append(System.getProperty("java.version")).append(", args ")
                 .append(ManagementFactory.getRuntimeMXBean().getInputArguments()).append("\n");
