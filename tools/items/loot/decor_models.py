@@ -33,7 +33,15 @@ def lit(m):
     return out
 
 
+def px_for(m):
+    """Texels per unit for a placed piece: about half the loot items' density (they all go in the block atlas, a
+    hundred pieces with up to sixteen looks each); lettering keeps its own finer '_px'."""
+    lo, hi = m.bounds()
+    return int(np.clip(round(32.0 / max(hi - lo)), 3, 8))
+
+
 def main():
+    G.px_for = px_for
     specs = json.loads(DECOR.read_text())
     looks = D.looks(G.it)
     names, owner = [], {}
