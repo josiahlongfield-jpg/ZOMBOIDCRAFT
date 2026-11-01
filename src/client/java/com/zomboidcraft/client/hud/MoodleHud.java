@@ -39,13 +39,22 @@ public final class MoodleHud {
     private static final int[] LEVEL_INK = {0, 0xFFE8CF7C, 0xFFE69A66, 0xFFCE675B, 0xFF8EB07E};
 
     /** One moodle this frame: a need, its level (1 mild to 3 severe, or GOOD) and its words. */
-    private record Moodle(String key, String icon, int level, String label) {
+    private record Moodle(String key, String icon, int level, String label, int stage, String pz) {
+        Moodle(String key, String icon, int level, String label) {
+            // three-step moodles end on Zomboid's red: mild, bad, then its fourth (worst) colour
+            this(key, icon, level, label, level == GOOD ? 1 : level == 3 ? 4 : level, PzMoodles.ICONS.get(key));
+        }
+
+        /** The same moodle drawn with another of Zomboid's icons (a broken bone, an upset stomach). */
+        Moodle as(String pzKey) {
+            return new Moodle(key, icon, level, label, stage, PzMoodles.ICONS.get(pzKey));
+        }
     }
 
     /** A moodle on screen, kept a little after it ends so it can fade out. */
     private static final class Plate {
-        String icon, label;
-        int level, trend;
+        String icon, label, pz;
+        int level, stage, trend;
         float since;
         boolean live;
         final Hud.Fade fade = new Hud.Fade(), name = new Hud.Fade();
@@ -73,6 +82,8 @@ public final class MoodleHud {
                 p.since = 0;
             }
             p.icon = m.icon();
+            p.pz = m.pz();
+            p.stage = m.stage();
             p.label = m.label();
             p.live = true;
         }
@@ -92,7 +103,10 @@ public final class MoodleHud {
             }
             float slide = (1 - a) * 4;
             String level = p.level == GOOD ? "good" : String.valueOf(Math.max(1, Math.min(3, p.level)));
-            Hud.sprite(g, Hud.id("moodle/" + p.icon + "_" + level), x + slide, y, SIZE, SIZE, Hud.alpha(0xFFFFFFFF, a));
+            // Zomboid's own icon when the player has it (config/zomboidcraft/moodles), our sprite otherwise
+            if (!PzMoodles.draw(g, p.pz, p.stage, p.level == GOOD, x + slide, y, SIZE, a)) {
+                Hud.sprite(g, Hud.id("moodle/" + p.icon + "_" + level), x + slide, y, SIZE, SIZE, Hud.alpha(0xFFFFFFFF, a));
+            }
             if (p.trend != 0 && p.since < TREND_SHOWS && p.live) {
                 Hud.sprite(g, Hud.id(p.trend > 0 ? "arrow_up" : "arrow_down"), x - 3.5f + slide, y + SIZE / 2f - 2.5f, 5, 5,
                         Hud.alpha(p.trend > 0 ? 0xFFE8D9B0 : 0xFF8FBF5E, a));
@@ -158,7 +172,7 @@ public final class MoodleHud {
             Nutrition n = Nutrition.get(player);
             stage(list, "hunger", "fork", n.hungerStage(), "Peckish", "Hungry", "Very Hungry", "Starving");
             int full = n.fullStage();
-            if (full > 0) list.add(new Moodle("full", "fork", GOOD, full == 2 ? "Stuffed" : "Full"));
+            if (full > 0) list.add(new Moodle("full", "fork", GOOD, full == 2 ? "Stuffed" : "Full", full, PzMoodles.ICONS.get("full")));
         } else {
             add(list, "hunger", "fork", hungerLevel(player.getFoodData().getFoodLevel()), "Peckish", "Hungry", "Starving");
         }
@@ -177,6 +191,9 @@ public final class MoodleHud {
             String icon = part.fractured() ? "bone" : part.wound() == Body.Wound.BURN ? "flame" : "cut";
             String label = Body.describe(worst, part);
             add(list, "injury", icon, part.severity(), label, label, label);
+            if (part.fractured() && !list.isEmpty() && list.get(list.size() - 1).key().equals("injury")) {
+                list.set(list.size() - 1, list.get(list.size() - 1).as("fracture"));
+            }
         }
         // one Sick plate, Zomboid's: the infection, a fevered wound, or a bad stomach (rotten food, poison, nausea)
         float infection = s.infectionProgress();
@@ -189,7 +206,10 @@ public final class MoodleHud {
             if (effect.is(MobEffects.POISON)) stomach = Math.max(stomach, Math.min(3, 2 + effect.getAmplifier()));
             else if (effect.is(MobEffects.HUNGER) || effect.is(MobEffects.NAUSEA)) stomach = Math.max(stomach, Math.min(3, 1 + effect.getAmplifier()));
         }
-        if (stomach > ill) add(list, "ill", "thermo", stomach, "Queasy", "Nauseous", "Sick");
+        if (stomach > ill) {
+            add(list, "ill", "thermo", stomach, "Queasy", "Nauseous", "Sick");
+            if (!list.isEmpty() && list.get(list.size() - 1).key().equals("ill")) list.set(list.size() - 1, list.get(list.size() - 1).as("nauseous"));
+        }
         else add(list, "ill", "thermo", ill, "Queasy", "Feverish", "Gravely ill");
         // Zomboid's pain stages, from wounds, breaks, a bad tooth or a cold (LOOT's Medicine adds it up)
         int pain = Ailments.get(player, "pain");
@@ -229,7 +249,7 @@ public final class MoodleHud {
 
     /** A Zomboid moodle with four stages (1 to 4). */
     private static void stage(List<Moodle> list, String key, String icon, int stage, String... names) {
-        if (stage > 0) list.add(new Moodle(key, icon, Math.min(3, stage), names[stage - 1]));
+        if (stage > 0) list.add(new Moodle(key, icon, Math.min(3, stage), names[stage - 1], stage, PzMoodles.ICONS.get(key)));
     }
 
     private static void add(List<Moodle> list, String key, String icon, int level, String mild, String bad, String severe) {
