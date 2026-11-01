@@ -94,7 +94,7 @@ public class LocalGunFilmTest implements FabricClientGameTest {
     private static void show(ClientGameTestContext ctx, TestSingleplayerContext sp, String id, String anchor) {
         sp.getServer().runCommand("clear @a");
         sp.getServer().runCommand("kill @e[type=zombie]");
-        sp.getServer().runCommand("zc localgun " + id);
+        sp.getServer().runCommand("execute as @a run zc localgun " + id);   // the console is no player
         ctx.runOnClient(mc -> mc.player.getInventory().setSelectedSlot(0));
         sp.getServer().runCommand("tp @a 0 100 -6 0 0");
         ctx.waitTicks(20);
