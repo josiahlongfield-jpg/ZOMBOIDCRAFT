@@ -8,18 +8,15 @@ import java.util.Map;
 import java.util.WeakHashMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
-import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 
 /**
- * A converted Workshop car's engine, played the way Zomboid's FMOD engine events play it: the model's
- * recorded engine (sports, wagon, offroad or van, from the local PZ car sounds pack) as loops taken at
- * fixed revs, an engine-bay layer and an exhaust layer each, an on-load take with the throttle open and
- * an off-load take coasting. The revs climb through five gears with the car's speed; the two takes
- * either side of the revs crossfade, each pitched by how far the revs sit from where it was recorded.
+ * A converted Workshop car's engine: one steady note (Josiah, 2026-11-01), the model's recorded engine
+ * (sports, wagon, offroad or van, from the local PZ car sounds pack) as the on-load take at the revs that
+ * suit it, engine-bay and exhaust layers together, pitched smoothly up with speed and down as it slows.
  */
 final class PzEngineSound {
     /** The revs each band was recorded at (pzsounds.py ENGINES), above the idle loop at IDLE. */
@@ -29,8 +26,8 @@ final class PzEngineSound {
             "offroad", new float[] {1000, 1600, 2200, 2800, 3400, 4000, 4600, 5200},
             "van", new float[] {1000, 1750, 2500, 3250, 4000});
     private static final float IDLE = 800;
-    /** Where each gear tops out, as a share of flat out (the old idle loop's 1.1 blocks a tick). */
-    private static final float[] GEARS = {0.18f, 0.36f, 0.56f, 0.78f, 1.0f};
+    /** Each engine's note: the band whose on-load take carries it best (3000 rpm sports, 2800 offroad, 2000 wagon, 2500 van). */
+    private static final Map<String, Integer> NOTE = Map.of("sports", 3, "offroad", 4, "wagon", 2, "van", 3);
     private static final double FLAT_OUT = 1.1;
     private static final Map<CarProp, Engine> ENGINES = new WeakHashMap<>();
 
@@ -52,9 +49,10 @@ final class PzEngineSound {
         final String set;
         final float[] at;
         final Map<String, Layer> layers = new HashMap<>();
-        float rpm = IDLE, load;
-        int gear = 1, lastTick = -1;
-        double lastSpeed;
+        /** Which recorded band is the car's note: the model's "note" if set, else the take that suits its engine. */
+        final int note;
+        float rpm;
+        int lastTick = -1;
 
         Engine(CarProp car) {
             this.car = car;
@@ -63,6 +61,9 @@ final class PzEngineSound {
             at = new float[bands.length + 1];
             at[0] = IDLE;
             System.arraycopy(bands, 0, at, 1, bands.length);
+            String n = CarModels.get(car.model()).sounds.get("note");
+            note = Mth.clamp(n != null ? Integer.parseInt(n) : NOTE.getOrDefault(set, 2), 1, bands.length);
+            rpm = at[note] * 0.62f;
         }
 
         void tick() {
@@ -70,58 +71,21 @@ final class PzEngineSound {
                 return;
             }
             lastTick = car.tickCount;
+            // one steady note, no gears (Josiah): the engine's own on-load take at the revs that suit it, its
+            // pitch rising smoothly from ticking over to flat out and falling again as the car slows
             double speed = Math.hypot(car.getX() - car.xo, car.getZ() - car.zo);
             float share = (float) Mth.clamp(speed / FLAT_OUT, 0, 1);
-            // a gear change: up when this gear's top is passed, down when the speed falls well into the last
-            int was = gear;
-            while (gear < GEARS.length && share > GEARS[gear - 1]) {
-                gear++;
-            }
-            while (gear > 1 && share < GEARS[gear - 2] * 0.85f) {
-                gear--;
-            }
-            if (gear > was && speed > 0.05) {
-                Minecraft.getInstance().getSoundManager().play(new SimpleSoundInstance(event("gear", 16), SoundSource.NEUTRAL,
-                        0.35f, 1f, SoundInstance.createUnseededRandom(), car.getX(), car.getY(), car.getZ()));
-            }
-            float red = at[at.length - 1];
-            float low = gear == 1 ? IDLE : red * 0.5f;
-            float lo = gear == 1 ? 0 : GEARS[gear - 2];
-            float hi = GEARS[gear - 1];
-            float target = speed < 0.01 ? IDLE : low + (red * 0.95f - low) * Mth.clamp((share - lo) / (hi - lo), 0, 1);
-            rpm += (target - rpm) * 0.2f;
-            // the throttle open while the car gathers speed, shut while it coasts or brakes
-            float pull = speed > 0.01 && speed - lastSpeed > 0.0008 ? 1 : 0;
-            load += (pull - load) * 0.15f;
-            lastSpeed = speed;
-            int i = 0;
-            while (i < at.length - 2 && rpm > at[i + 1]) {
-                i++;
-            }
-            float t = Mth.clamp((rpm - at[i]) / (at[i + 1] - at[i]), 0, 1);
-            Map<String, Float> want = new HashMap<>();
-            for (int k = i; k <= i + 1; k++) {
-                float w = k == i ? 1 - t : t;
-                if (k == 0) {
-                    want.merge("idle", w, Float::sum);
-                } else {
-                    want.merge(k + ".on", w * load, Float::sum);
-                    want.merge(k + ".off", w * (1 - load), Float::sum);
+            float target = 0.62f + 0.98f * share;
+            rpm += (target * at[note] - rpm) * 0.12f;
+            for (String layer : new String[] {"engine", "exhaust"}) {
+                String key = note + ".on." + layer;
+                Layer l = layers.get(key);
+                if (l == null || l.isStopped()) {
+                    l = new Layer(this, key, note);
+                    layers.put(key, l);
+                    Minecraft.getInstance().getSoundManager().play(l);
                 }
-            }
-            for (String band : want.keySet()) {
-                for (String layer : new String[] {"engine", "exhaust"}) {
-                    String key = band + "." + layer;
-                    Layer l = layers.get(key);
-                    if ((l == null || l.isStopped()) && want.get(band) > 0.02f) {
-                        l = new Layer(this, key, band.equals("idle") ? 0 : Integer.parseInt(band.substring(0, band.indexOf('.'))));
-                        layers.put(key, l);
-                        Minecraft.getInstance().getSoundManager().play(l);
-                    }
-                }
-            }
-            for (Layer l : layers.values()) {
-                l.weight = want.getOrDefault(l.band, 0f);
+                l.weight = 0.7f + 0.3f * share;
             }
             layers.values().removeIf(Layer::isStopped);
         }
