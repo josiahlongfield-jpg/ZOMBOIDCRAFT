@@ -87,7 +87,11 @@ public final class CityBlocks {
                 properties.randomTicks().lightLevel(state -> state.getValue(Signal.PHASE) > 0 ? light : 0)
                         .emissiveRendering(state -> state.getValue(Signal.PHASE) > 0);
             } else if (flicker) {
-                properties.randomTicks().lightLevel(state -> state.getValue(Flicker.LIT) ? light : 0)
+                // the fitting flickers but the light it throws holds steady: a change of light relights and redraws
+                // every chunk section round the lamp, and a city's dying lamps flipping 30 times a second made that
+                // over a third of the frame (Josiah's /zc profile, 2026-11-01)
+                int steady = Math.max(1, light * 2 / 3);
+                properties.randomTicks().lightLevel(state -> steady)
                         .emissiveRendering(state -> state.getValue(Flicker.LIT));
             } else if (light > 0) {
                 // lit windows and lamps draw at full brightness, so they read as light sources at night

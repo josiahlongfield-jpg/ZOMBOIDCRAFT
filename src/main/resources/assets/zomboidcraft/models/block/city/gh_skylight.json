@@ -1,0 +1,49 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "gh_skylight": "zomboidcraft:block/city/gh_skylight",
+    "gh_vault": "zomboidcraft:block/city/gh_vault",
+    "rw_tunnel": "zomboidcraft:block/city/rw_tunnel",
+    "particle": "zomboidcraft:block/city/gh_vault"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gh_vault",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#gh_vault",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#gh_vault",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#gh_vault",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#rw_tunnel",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#gh_skylight",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

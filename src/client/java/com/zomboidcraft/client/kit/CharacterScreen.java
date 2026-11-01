@@ -299,10 +299,11 @@ public final class CharacterScreen extends Screen {
         c.x = x;
         c.top = top;
         c.w = w;
-        c.bottom = bottom;
+        // whole rows only: the list ends on a row boundary, so no row is ever cut in half by the frame
+        c.bottom = top + Math.max(ROW + 1, (bottom - top) / (ROW + 1) * (ROW + 1));
         c.rows.clear();
         c.ids.clear();
-        g.enableScissor(x, top, x + w, bottom);
+        g.enableScissor(x, top, x + w, c.bottom);
     }
 
     private void end(GuiGraphicsExtractor g, Column c, int y) {
@@ -409,7 +410,7 @@ public final class CharacterScreen extends Screen {
         for (Column c : columns) {
             if (c.over(mx, my)) {
                 int max = Math.max(0, c.content - (c.bottom - c.top));
-                c.scroll = Math.max(0, Math.min(max, c.scroll - (int) Math.round(sy * ROW * 2)));
+                c.scroll = Math.max(0, Math.min(max, c.scroll - (int) Math.round(sy * 2) * (ROW + 1)));
             }
         }
         return true;

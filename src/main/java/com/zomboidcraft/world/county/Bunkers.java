@@ -12,7 +12,7 @@ import java.util.List;
  * taken from the cache) nearest first.
  */
 public final class Bunkers {
-    public static final List<String> KINDS = List.of("tower", "ship", "shelter", "forest");
+    public static final List<String> KINDS = List.of("tower", "ship", "shelter", "forest", "vault", "subway");
 
     /** One bunker: its kind and state, and in world blocks the way in and its blast door. */
     public record Found(String kind, String state, int x, int y, int z, int doorX, int doorY, int doorZ, Place place) {
@@ -32,14 +32,23 @@ public final class Bunkers {
         if (kind == null || kind.equals("ship")) {
             out.addAll(nearest(places, PlaceType.PORT, x, z, 3));
         }
-        if (kind == null || kind.equals("shelter")) {
+        if (kind == null || kind.equals("shelter") || kind.equals("vault")) {
             out.addAll(nearest(places, PlaceType.TOWN, x, z, 6));
         }
         if (kind == null || kind.equals("forest")) {
-            out.addAll(nearest(county.hideoutsNear(x - radius, z - radius, x + radius, z + radius, 0), PlaceType.HIDEOUT, x, z, 3));
+            out.addAll(nearest(county.hideoutsNear(x - radius, z - radius, x + radius, z + radius, 0).stream()
+                    .filter(p -> !"ghost_station".equals(p.variant)).toList(), PlaceType.HIDEOUT, x, z, 3));
+        }
+        if (kind == null || kind.equals("subway")) {
+            county.ghostStation().filter(p -> Math.hypot(p.centreX() - x, p.centreZ() - z) <= radius).ifPresent(out::add);
         }
         out.sort(Comparator.comparingDouble(p -> Math.hypot(p.centreX() - x, p.centreZ() - z)));
         return out;
+    }
+
+    /** The world column on the ghost station's old platform just inside its arch, or null without one. */
+    public static int[] ghostPlatform(County county) {
+        return GhostSite.platform(county);
     }
 
     private static List<Place> nearest(List<Place> places, PlaceType type, int x, int z, int n) {

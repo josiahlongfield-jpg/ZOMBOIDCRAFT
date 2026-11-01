@@ -160,7 +160,16 @@ final class Civic {
     void library(int w, int d) { new Library(p, rng).build(w, d); }
 
     /** The bank on its corner (see {@link Bank}): w wide, d deep, the portico and steps in its first four rows. */
-    void bank(int w, int d) { new Bank(p, rng).build(w, d); }
+    void bank(int w, int d) {
+        Bank b = new Bank(p, rng);
+        // about one bank in three hides a panic room behind the vault (the bank vault bunker)
+        double r = rng.nextDouble();
+        if (r < 0.35) {
+            r /= 0.35;
+            b.bunker = r < 0.5 ? Bunker.State.SEALED : r < 0.8 ? Bunker.State.LOOTED : Bunker.State.BREACHED;
+        }
+        b.build(w, d);
+    }
 
     /** The fire station (see {@link FireStation}): w wide, d deep, its apron in the first six rows. */
     void fireStation(int w, int d) { new FireStation(p, rng).build(w, d); }

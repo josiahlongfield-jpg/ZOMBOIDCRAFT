@@ -140,6 +140,8 @@ public final class Traits {
         Occupation o = CharacterData.occupation(occupation);
         if (o != null) o.skills().forEach((s, n) -> out.merge(s, n, Integer::sum));
         for (String id : traits) {
+            // the job's own copy of a trait carries no boost of its own in Zomboid (the Chef's Keen Cook)
+            if (o != null && o.traits().contains(id)) continue;
             Trait t = CharacterData.trait(id);
             if (t != null) t.skills().forEach((s, n) -> out.merge(s, n, Integer::sum));
         }
@@ -182,8 +184,8 @@ public final class Traits {
         player.setAttached(Skills.TYPE, xp);
 
         // weight traits set where your weight starts; it moves with what you eat from there
-        float weight = all.contains("obese") ? 105 : all.contains("overweight") ? 92
-                : all.contains("very_underweight") ? 60 : all.contains("underweight") ? 70 : 80;
+        // Zomboid B42: Slow Metabolism starts you at High Weight, Fast Metabolism at Low Weight
+        float weight = all.contains("slow_metabolism") ? 92 : all.contains("fast_metabolism") ? 70 : 80;
         Nutrition n = Nutrition.get(player);
         Nutrition.set(player, n.withWeight(weight));
 
@@ -217,13 +219,13 @@ public final class Traits {
         List<String> out = new ArrayList<>();
         if (p == null) return out;
         for (String id : p.traits()) {
-            if (!Set.of("obese", "overweight", "underweight", "very_underweight", "strong", "stout", "weak", "feeble",
-                    "athletic", "fit", "unfit", "out_of_shape").contains(id)) out.add(id);
+            if (!Set.of("obese", "overweight", "underweight", "emaciated", "strong", "stout", "weak", "feeble",
+                    "athletic", "fit", "unfit").contains(id)) out.add(id);
         }
         float w = Nutrition.get(player).weight();
         if (w > Nutrition.OBESE) out.add("obese");
         else if (w > Nutrition.OVERWEIGHT) out.add("overweight");
-        else if (w < Nutrition.VERY_UNDERWEIGHT) out.add("very_underweight");
+        else if (w < Nutrition.EMACIATED) out.add("emaciated");
         else if (w < Nutrition.UNDERWEIGHT) out.add("underweight");
         int str = Skills.level(player, Skill.STRENGTH), fit = Skills.level(player, Skill.FITNESS);
         if (str >= 9) out.add("strong");
@@ -232,8 +234,7 @@ public final class Traits {
         else if (str <= 4) out.add("feeble");
         if (fit >= 9) out.add("athletic");
         else if (fit >= 6) out.add("fit");
-        else if (fit <= 1) out.add("unfit");
-        else if (fit <= 4) out.add("out_of_shape");
+        else if (fit <= 2) out.add("unfit");
         return out;
     }
 
@@ -255,9 +256,21 @@ public final class Traits {
         else if (b == 1) scale *= 1.75;
         if (p.traits().contains("fast_learner")) scale *= 1.3;
         if (p.traits().contains("slow_learner")) scale *= 0.7;
+        if (p.traits().contains("crafty") && CRAFTING.contains(skill)) scale *= 1.3;
         if (p.traits().contains("reluctant_fighter") && (skill == Skill.BLUNT || skill == Skill.BLADE || skill == Skill.SPEAR
                 || skill == Skill.AIMING)) scale *= 0.75;
         return scale;
+    }
+
+    /** B42's crafting skills, which Crafty learns faster. */
+    private static final Set<Skill> CRAFTING = java.util.EnumSet.of(Skill.CARPENTRY, Skill.CARVING, Skill.KNAPPING, Skill.POTTERY,
+            Skill.GLASSMAKING, Skill.BLACKSMITHING, Skill.METALWORKING, Skill.MASONRY, Skill.TAILORING);
+
+    /** How weight moves for your metabolism: Slow gains half again as fast and loses slower, Fast the other way. */
+    public static float weightScale(Player player, boolean gaining) {
+        if (has(player, "slow_metabolism")) return gaining ? 1.5f : 0.67f;
+        if (has(player, "fast_metabolism")) return gaining ? 0.67f : 1.5f;
+        return 1f;
     }
 
     /** Hunger builds this much faster: Hearty Appetite and Light Eater. */
@@ -283,7 +296,7 @@ public final class Traits {
 
     /** How hard fear lands: Brave much less, Cowardly much more, Desensitized not at all. */
     public static float panicScale(Player player) {
-        if (has(player, "desensitized")) return 0f;
+        if (has(player, "desensitized")) return 0.1f;   // B42: "far less prone to panic"
         return has(player, "brave") ? 0.3f : has(player, "cowardly") ? 2f : 1f;
     }
 

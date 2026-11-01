@@ -75,8 +75,9 @@ public final class ClothingItems {
             "legwarmers", "riding_boots", "bowling_shoes", "flip_flops", "boxing_gloves", "pyjama_top", "pyjama_bottoms",
             "sports_jersey", "postal_shirt", "cycling_jersey", "cycling_shorts", "wetsuit", "fishing_waders",
             "scrap_cuirass", "tyre_cuirass", "scrap_arm_guards", "scrap_leg_guards", "scrap_helmet", "hunting_cap",
-            // wave 2, batch 7: prized and grail (the black crusader kit is our own design)
-            "crusader_great_helm", "crusader_plate", "crusader_tabard", "crusader_pauldrons", "crusader_cloak",
+            // wave 2, batch 7: prized and grail (the crusader kit is our own design, in eight colour schemes)
+            "crusader_great_helm", "crusader_sugarloaf_helm", "crusader_armet", "crusader_barbute", "crusader_crowned_helm",
+            "crusader_winged_helm", "crusader_plate", "crusader_tabard", "crusader_pauldrons", "crusader_cloak",
             "crusader_greaves", "crusader_gauntlets", "crusader_sabatons", "gothic_sallet", "gothic_cuirass",
             "gothic_arm_harness", "gothic_leg_harness", "gothic_gauntlets", "gothic_sabatons", "bomb_disposal_suit",
             "bomb_disposal_helmet", "shark_mesh_suit", "motorcycle_leathers", "scba_set", "scba_mask", "bodyguard_suit");

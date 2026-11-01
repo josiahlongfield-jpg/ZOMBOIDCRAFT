@@ -1,11 +1,109 @@
 {
  "model": {
-  "type": "minecraft:special",
-  "base": "zomboidcraft:item/clothing/gothic_arm_harness/right_arm",
-  "model": {
-   "type": "zomboidcraft:mesh",
-   "id": "clothing/gothic_arm_harness",
-   "part": "right_arm"
+  "type": "minecraft:select",
+  "property": "minecraft:component",
+  "component": "zomboidcraft:camo",
+  "cases": [
+   {
+    "when": "templar",
+    "model": {
+     "type": "minecraft:special",
+     "base": "zomboidcraft:item/clothing/gothic_arm_harness/right_arm",
+     "model": {
+      "type": "zomboidcraft:mesh",
+      "id": "clothing/gothic_arm_harness",
+      "part": "right_arm",
+      "texture": "zomboidcraft:textures/item/clothing/gothic_arm_harness/camo_templar.png"
+     }
+    }
+   },
+   {
+    "when": "hospitaller",
+    "model": {
+     "type": "minecraft:special",
+     "base": "zomboidcraft:item/clothing/gothic_arm_harness/right_arm",
+     "model": {
+      "type": "zomboidcraft:mesh",
+      "id": "clothing/gothic_arm_harness",
+      "part": "right_arm",
+      "texture": "zomboidcraft:textures/item/clothing/gothic_arm_harness/camo_hospitaller.png"
+     }
+    }
+   },
+   {
+    "when": "teutonic",
+    "model": {
+     "type": "minecraft:special",
+     "base": "zomboidcraft:item/clothing/gothic_arm_harness/right_arm",
+     "model": {
+      "type": "zomboidcraft:mesh",
+      "id": "clothing/gothic_arm_harness",
+      "part": "right_arm",
+      "texture": "zomboidcraft:textures/item/clothing/gothic_arm_harness/camo_teutonic.png"
+     }
+    }
+   },
+   {
+    "when": "lazarite",
+    "model": {
+     "type": "minecraft:special",
+     "base": "zomboidcraft:item/clothing/gothic_arm_harness/right_arm",
+     "model": {
+      "type": "zomboidcraft:mesh",
+      "id": "clothing/gothic_arm_harness",
+      "part": "right_arm",
+      "texture": "zomboidcraft:textures/item/clothing/gothic_arm_harness/camo_lazarite.png"
+     }
+    }
+   },
+   {
+    "when": "crimson",
+    "model": {
+     "type": "minecraft:special",
+     "base": "zomboidcraft:item/clothing/gothic_arm_harness/right_arm",
+     "model": {
+      "type": "zomboidcraft:mesh",
+      "id": "clothing/gothic_arm_harness",
+      "part": "right_arm",
+      "texture": "zomboidcraft:textures/item/clothing/gothic_arm_harness/camo_crimson.png"
+     }
+    }
+   },
+   {
+    "when": "gilded",
+    "model": {
+     "type": "minecraft:special",
+     "base": "zomboidcraft:item/clothing/gothic_arm_harness/right_arm",
+     "model": {
+      "type": "zomboidcraft:mesh",
+      "id": "clothing/gothic_arm_harness",
+      "part": "right_arm",
+      "texture": "zomboidcraft:textures/item/clothing/gothic_arm_harness/camo_gilded.png"
+     }
+    }
+   },
+   {
+    "when": "rusted",
+    "model": {
+     "type": "minecraft:special",
+     "base": "zomboidcraft:item/clothing/gothic_arm_harness/right_arm",
+     "model": {
+      "type": "zomboidcraft:mesh",
+      "id": "clothing/gothic_arm_harness",
+      "part": "right_arm",
+      "texture": "zomboidcraft:textures/item/clothing/gothic_arm_harness/camo_rusted.png"
+     }
+    }
+   }
+  ],
+  "fallback": {
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/gothic_arm_harness/right_arm",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/gothic_arm_harness",
+    "part": "right_arm"
+   }
   }
  }
 }

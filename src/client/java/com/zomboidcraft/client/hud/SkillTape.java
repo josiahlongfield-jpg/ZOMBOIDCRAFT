@@ -42,11 +42,19 @@ public final class SkillTape {
             seen = player;
             levels.clear();
         }
+        // one skill going up is a level earned; several at once is a past being set (character creation), not news
+        Skill up = null;
+        int upTo = 0, ups = 0;
         for (Skill s : Skill.values()) {
             int now = Skills.level(player, s);
             Integer before = levels.put(s, now);
-            if (before != null && now > before) show(s, now);
+            if (before != null && now > before) {
+                up = s;
+                upTo = now;
+                ups++;
+            }
         }
+        if (ups == 1) show(up, upTo);
         since += Hud.dt;
         float a = fade.update(since < SHOWS);
         if (a <= 0 || skill == null) return;

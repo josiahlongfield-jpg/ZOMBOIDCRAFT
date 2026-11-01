@@ -820,6 +820,9 @@ final class RailGen {
     // ------------------------------------------------------------------ the subway
 
     private void tunnel(ChunkSink out, Cut c) {
+        if (c.t.ghost != null && c.s >= 2 && c.t.ghost.covers(c.i, c.o, c.t.n)) {
+            return;   // EXCHANGE HALL's side: the old platform bricked off from the track (GhostSite)
+        }
         int x = c.x, z = c.z, Y = c.Y, bed = c.bed;
         double s = c.s;
         int street = Math.max(5, c.t.street[c.i]);

@@ -64,6 +64,10 @@ final class Layout {
     /** The railway and the subway, laid once the city's grid is known. */
     Railway railway;
 
+    long seed() {
+        return seed;
+    }
+
     Layout(County county) {
         this.county = county;
         this.plan = county.terrain.plan;

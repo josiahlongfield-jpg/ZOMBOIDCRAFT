@@ -11,12 +11,110 @@
    }
   ],
   "fallback": {
-   "type": "minecraft:special",
-   "base": "zomboidcraft:item/clothing/gothic_sallet",
-   "model": {
-    "type": "zomboidcraft:mesh",
-    "id": "clothing/gothic_sallet",
-    "part": "loot"
+   "type": "minecraft:select",
+   "property": "minecraft:component",
+   "component": "zomboidcraft:camo",
+   "cases": [
+    {
+     "when": "templar",
+     "model": {
+      "type": "minecraft:special",
+      "base": "zomboidcraft:item/clothing/gothic_sallet",
+      "model": {
+       "type": "zomboidcraft:mesh",
+       "id": "clothing/gothic_sallet",
+       "part": "loot",
+       "texture": "zomboidcraft:textures/item/clothing/gothic_sallet/camo_templar.png"
+      }
+     }
+    },
+    {
+     "when": "hospitaller",
+     "model": {
+      "type": "minecraft:special",
+      "base": "zomboidcraft:item/clothing/gothic_sallet",
+      "model": {
+       "type": "zomboidcraft:mesh",
+       "id": "clothing/gothic_sallet",
+       "part": "loot",
+       "texture": "zomboidcraft:textures/item/clothing/gothic_sallet/camo_hospitaller.png"
+      }
+     }
+    },
+    {
+     "when": "teutonic",
+     "model": {
+      "type": "minecraft:special",
+      "base": "zomboidcraft:item/clothing/gothic_sallet",
+      "model": {
+       "type": "zomboidcraft:mesh",
+       "id": "clothing/gothic_sallet",
+       "part": "loot",
+       "texture": "zomboidcraft:textures/item/clothing/gothic_sallet/camo_teutonic.png"
+      }
+     }
+    },
+    {
+     "when": "lazarite",
+     "model": {
+      "type": "minecraft:special",
+      "base": "zomboidcraft:item/clothing/gothic_sallet",
+      "model": {
+       "type": "zomboidcraft:mesh",
+       "id": "clothing/gothic_sallet",
+       "part": "loot",
+       "texture": "zomboidcraft:textures/item/clothing/gothic_sallet/camo_lazarite.png"
+      }
+     }
+    },
+    {
+     "when": "crimson",
+     "model": {
+      "type": "minecraft:special",
+      "base": "zomboidcraft:item/clothing/gothic_sallet",
+      "model": {
+       "type": "zomboidcraft:mesh",
+       "id": "clothing/gothic_sallet",
+       "part": "loot",
+       "texture": "zomboidcraft:textures/item/clothing/gothic_sallet/camo_crimson.png"
+      }
+     }
+    },
+    {
+     "when": "gilded",
+     "model": {
+      "type": "minecraft:special",
+      "base": "zomboidcraft:item/clothing/gothic_sallet",
+      "model": {
+       "type": "zomboidcraft:mesh",
+       "id": "clothing/gothic_sallet",
+       "part": "loot",
+       "texture": "zomboidcraft:textures/item/clothing/gothic_sallet/camo_gilded.png"
+      }
+     }
+    },
+    {
+     "when": "rusted",
+     "model": {
+      "type": "minecraft:special",
+      "base": "zomboidcraft:item/clothing/gothic_sallet",
+      "model": {
+       "type": "zomboidcraft:mesh",
+       "id": "clothing/gothic_sallet",
+       "part": "loot",
+       "texture": "zomboidcraft:textures/item/clothing/gothic_sallet/camo_rusted.png"
+      }
+     }
+    }
+   ],
+   "fallback": {
+    "type": "minecraft:special",
+    "base": "zomboidcraft:item/clothing/gothic_sallet",
+    "model": {
+     "type": "zomboidcraft:mesh",
+     "id": "clothing/gothic_sallet",
+     "part": "loot"
+    }
    }
   }
  }

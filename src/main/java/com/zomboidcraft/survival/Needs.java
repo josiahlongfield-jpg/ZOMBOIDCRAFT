@@ -68,7 +68,9 @@ public final class Needs {
                 float burn = (float) config.caloriesPerDay / 24f * hour * speed * activity;
                 n = n.plus(-burn, fade(n.carbs(), CARBS_PER_HOUR * hour), fade(n.fats(), FATS_PER_HOUR * hour),
                         fade(n.proteins(), PROTEINS_PER_HOUR * hour));
-                n = n.withWeight(n.weight() + weightChange(n.calories()) * hour * (float) config.weightChange);
+                float change = weightChange(n.calories());
+                change *= com.zomboidcraft.survival.character.Traits.weightScale(player, change > 0);
+                n = n.withWeight(n.weight() + change * hour * (float) config.weightChange);
             }
             Nutrition.set(player, n);
 

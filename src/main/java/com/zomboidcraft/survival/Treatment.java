@@ -108,6 +108,11 @@ public final class Treatment {
      */
     public static boolean treatOther(ServerPlayer helper, Player patient) {
         if (patient == helper || patient.distanceToSqr(helper) > REACH * REACH) return false;
+        if (com.zomboidcraft.survival.character.Traits.has(helper, "hemophobic")) {
+            // Zomboid's Fear of Blood: you can't do first aid on anyone else
+            helper.sendOverlayMessage(Component.literal("You can't bring yourself to look at their wounds.").withStyle(ChatFormatting.GRAY));
+            return false;
+        }
         Body body = Body.get(patient);
         for (Kind kind : Kind.values()) {
             Region r = target(body, kind);
