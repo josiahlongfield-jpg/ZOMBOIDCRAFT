@@ -161,6 +161,7 @@ public final class ZombieEvents {
             boolean moved = before != null && before.distanceToSqr(now) > 0.04;
             double walk = Noise.WALK - 0.3 * Skills.level(player, Skill.SNEAKING);
             double radius = !moved || player.isShiftKeyDown() ? 0 : player.isSprinting() ? Noise.SPRINT : walk;
+            radius *= TraitSenses.footsteps(player);
             Noise.emit((ServerLevel) player.level(), now, radius);
         }
     }
