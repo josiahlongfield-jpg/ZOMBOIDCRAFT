@@ -7,6 +7,12 @@ echo "MC jars: $MC_JARS"
 classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1" | sort -u; }
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
+
+echo "===== persistent mapping"
+for j in $MC_JARS; do unzip -Z1 "$j"; done | grep -E 'blaze3d/opengl/|renderpearl' | grep -iE 'Device|Feature|Capab|Backend' | sort -u | head -40
+for c in $(for j in $MC_JARS; do unzip -Z1 "$j"; done | grep -E '\.class$' | grep -iE '(opengl|renderpearl).*(Device|Feature)' | sed 's/\.class$//;s#/#.#g' | sort -u | head -12); do
+  if javap -cp "$CP" -p -c "$c" 2>/dev/null | grep -qi persistent; then echo "-- $c"; javap -cp "$CP" -p -c "$c" 2>&1 | grep -n -i -B30 -A6 'persistent' | head -120; fi
+done
 echo "===== cats eyes"
 javap -cp "$CP" -p net.minecraft.client.renderer.LightmapRenderStateExtractor 2>&1 | head -30
 javap -cp "$CP" -p net.minecraft.client.renderer.state.LightmapRenderState 2>&1 | head -30
