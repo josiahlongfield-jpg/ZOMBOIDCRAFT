@@ -39,6 +39,10 @@ public final class CarModels {
         public float[] glovebox;
         /** What each lid in the .zcar is, in order: "boot" (the default, also tailgates and back doors) or "bonnet". */
         public String[] lidKinds;
+        /** Zomboid's own recordings this model uses (a converted Workshop car): "engine" (sports, wagon, offroad, van),
+         *  "door" (sports, standard, jeep, van: doors, bonnet, boot, locks) and "horn" (sports, standard), from the
+         *  local PZ car sounds pack. Null for our own cars, which keep CarSounds. */
+        public java.util.Map<String, String> sounds;
 
         /** Whether lid i of this model is its bonnet (opened at the front) rather than a boot lid or back door. */
         public boolean bonnetLid(int i) {
