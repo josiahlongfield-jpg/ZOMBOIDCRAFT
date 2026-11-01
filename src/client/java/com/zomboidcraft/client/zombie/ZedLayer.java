@@ -16,7 +16,8 @@ public class ZedLayer extends RenderLayer<WalkerRenderState, WalkerModel> {
     @Override
     public void submit(PoseStack poseStack, SubmitNodeCollector collector, int light, WalkerRenderState state,
             float yRot, float xRot) {
-        if (state.zed == null || state.isInvisible) {
+        // shader shadows are cast by the cheap body (ZBodyLayer at ZDetail's shadow level), not this one
+        if (state.zed == null || state.isInvisible || com.zomboidcraft.client.zombie.body.ZDetail.shadowPass()) {
             return;
         }
         ZedBodies.submit(state.zed, poseStack, collector, light, LivingEntityRenderer.getOverlayCoords(state, 0f));

@@ -127,7 +127,8 @@ public class CorpseRenderer extends EntityRenderer<Corpse, CorpseRenderer.State>
         poseStack.scale(-1f, -1f, 1f);
         poseStack.translate(0f, -1.501f, 0f);
         if (state.zed != null) {
-            com.zomboidcraft.client.survivor.ZedBodies.submit(state.zed, poseStack, collector, state.lightCoords, OverlayTexture.NO_OVERLAY);
+            // lying flat, its shader shadow is next to nothing: left out of the shadow pass
+            if (!ZDetail.shadowPass()) com.zomboidcraft.client.survivor.ZedBodies.submit(state.zed, poseStack, collector, state.lightCoords, OverlayTexture.NO_OVERLAY);
             poseStack.popPose();
             return;
         }

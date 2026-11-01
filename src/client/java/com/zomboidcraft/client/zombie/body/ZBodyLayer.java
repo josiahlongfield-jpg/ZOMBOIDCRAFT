@@ -46,7 +46,8 @@ public class ZBodyLayer extends RenderLayer<WalkerRenderState, WalkerModel> {
     @Override
     public void submit(PoseStack poseStack, SubmitNodeCollector collector, int light, WalkerRenderState state,
             float yRot, float xRot) {
-        if (state.zbody == null || state.zed != null || state.isInvisible) {
+        // a Zomboid body (ZedLayer) takes its place, except in the shader pack's shadow pass: there the cheap body casts it
+        if (state.zbody == null || state.zed != null && !ZDetail.shadowPass() || state.isInvisible) {
             return;
         }
         int lod = ZDetail.level(state.distanceToCameraSq);
