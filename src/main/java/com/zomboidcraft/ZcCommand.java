@@ -151,17 +151,13 @@ public final class ZcCommand {
             ctx.getSource().sendFailure(Component.literal("No local gun " + id + " in " + com.zomboidcraft.combat.LocalGuns.DIR));
             return 0;
         }
-        net.minecraft.world.item.ItemStack gun = new net.minecraft.world.item.ItemStack(spec.type().item());
-        gun.set(com.zomboidcraft.combat.LocalGuns.ID, id);
-        gun.set(com.zomboidcraft.combat.GunState.TYPE, new com.zomboidcraft.combat.GunState(spec.type().magazine() != null,
-                spec.type().capacity(gun), false));
+        net.minecraft.world.item.ItemStack gun = com.zomboidcraft.combat.LocalGuns.loaded(spec);
         net.minecraft.world.item.ItemStack given = gun.copy();
         player.getInventory().add(given);       // add() empties the stack it's handed: the rest reads gun, its copy
         // two of its own magazines, full, and a stack of its own rounds
-        if (spec.type().magazine() != null) {
-            for (int i = 0; i < 2; i++) {
-                net.minecraft.world.item.ItemStack mag = com.zomboidcraft.combat.LocalGuns.magazineFor(gun, spec.type());
-                mag.set(com.zomboidcraft.combat.GunState.MAG_ROUNDS, spec.type().capacity(gun));
+        for (int i = 0; i < 2; i++) {
+            net.minecraft.world.item.ItemStack mag = com.zomboidcraft.combat.LocalGuns.fullMagazine(gun, spec.type());
+            if (!mag.isEmpty()) {
                 player.getInventory().add(mag);
             }
         }

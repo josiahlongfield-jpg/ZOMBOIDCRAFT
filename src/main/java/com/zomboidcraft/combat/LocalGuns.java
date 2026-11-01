@@ -191,6 +191,24 @@ public final class LocalGuns {
         return mag;
     }
 
+    /** A local gun, loaded with its own rounds. */
+    public static ItemStack loaded(Spec spec) {
+        ItemStack gun = new ItemStack(spec.type().item());
+        gun.set(ID, spec.id);
+        gun.set(GunState.TYPE, new GunState(spec.type().magazine() != null, spec.type().capacity(gun), false));
+        return gun;
+    }
+
+    /** One of a local gun's own magazines, full; empty for a gun without one (a tube or a cylinder). */
+    public static ItemStack fullMagazine(ItemStack gun, GunType type) {
+        if (type.magazine() == null) {
+            return ItemStack.EMPTY;
+        }
+        ItemStack mag = magazineFor(gun, type);
+        mag.set(GunState.MAG_ROUNDS, type.capacity(gun));
+        return mag;
+    }
+
     private LocalGuns() {
     }
 }

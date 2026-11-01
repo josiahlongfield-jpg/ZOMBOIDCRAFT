@@ -383,6 +383,18 @@ public final class ModItems {
                     output.accept(kitted);
                 }
             }
+            // the guns kept on this computer (Brita's), each loaded with one of its own magazines beside it; their
+            // rounds are already in the tab. Read when the tab is built: files added later show after rejoining.
+            com.zomboidcraft.combat.LocalGuns.all().stream()
+                    .sorted(java.util.Comparator.comparing((com.zomboidcraft.combat.LocalGuns.Spec s) -> s.name == null ? s.id : s.name))
+                    .forEach(spec -> {
+                        ItemStack gun = com.zomboidcraft.combat.LocalGuns.loaded(spec);
+                        output.accept(gun);
+                        ItemStack mag = com.zomboidcraft.combat.LocalGuns.fullMagazine(gun, spec.type());
+                        if (!mag.isEmpty()) {
+                            output.accept(mag);
+                        }
+                    });
         });
     }
 
