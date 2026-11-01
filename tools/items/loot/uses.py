@@ -5,6 +5,7 @@ here as well adds what else it's good for. Skills are the game's (Zomboid's set)
 Metalworking, Mechanics, Electrical, Tailoring, Farming, Foraging, Trapping, Fishing, Aiming, Reloading, Maintenance,
 Masonry, Piloting. Recipes are in recipes.py.
 """
+import decor as _decor
 import wave1
 
 USES = {
@@ -586,6 +587,27 @@ PAPERS = {
 }
 
 
+DECOR = {r['id']: r for r in _decor.rows()}
+
+
+def decor_line(d):
+    """A decor piece's purpose line from decor.py: comfort for the room, and what it does when it's working."""
+    bits = [f'Decor: set it down; +{d["comfort"]} comfort to the room it stands in.']
+    if d['toggle']:
+        bits.append('Tap G to switch it on' + (' (needs power).' if d['power'] else '.'))
+    elif d['power']:
+        bits.append('Works while it has power.')
+    if d['light_source']:
+        bits.append(f'Lights the room (level {d["light"]}).')
+    if d['play']:
+        bits.append(f'Play it from the G menu: boredom -{d["play"]}.')
+    if d['noise']:
+        bits.append(f'Loud while on: the dead hear it {d["noise"]} blocks off.')
+    if d['big']:
+        bits.append('Big: moving it takes a tool (and a hand truck if it is heavy).')
+    return ' '.join(bits)
+
+
 def use_line(row):
     """The full purpose line for a roster row."""
     iid = row['id']
@@ -615,6 +637,8 @@ def use_line(row):
         bits.append(MAGS[iid])
     elif iid in PAPERS:
         bits.append(PAPERS[iid])
+    elif iid in DECOR:
+        bits.append(decor_line(DECOR[iid]))
     elif not bits and BY_CAT.get(row['cat']):
         bits.append(BY_CAT[row['cat']])
     return ' '.join(bits)

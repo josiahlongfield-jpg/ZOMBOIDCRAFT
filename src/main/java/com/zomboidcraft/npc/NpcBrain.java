@@ -406,7 +406,8 @@ final class NpcBrain {
             var through = box.clip(eye, stop);
             if (through.isPresent()) {
                 boolean headHit = through.get().y > target.getEyeY() - 0.25;
-                float damage = (float) (stats.damage * (headHit ? stats.headshotMultiplier : 1));
+                float damage = (float) (stats.damage * (headHit
+                        ? ZcConfig.get().combat.headshotFor(type.caliber(), stats.headshotMultiplier) : 1));
                 target.hurtServer(level, ModDamageTypes.source(level, ModDamageTypes.BULLET, npc), damage);
                 if (!target.isAlive()) {
                     npc.mind.killed(npc);

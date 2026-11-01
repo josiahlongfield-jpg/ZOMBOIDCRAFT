@@ -15,18 +15,33 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * their cables. LIT flips on scheduled ticks. Half of them are mostly dark and stutter into light
  * in short bursts; the rest stay on and drop out for a moment now and then. Blocks the world
  * generator placed get no placement callback, so a random tick starts the first flicker, and from
- * then on each flip schedules the next.
+ * then on each flip schedules the next. With performance.flickerLamps off they stay lit instead.
  */
 final class Flicker {
     static final BooleanProperty LIT = BlockStateProperties.LIT;
 
     static void start(Block block, ServerLevel level, BlockPos pos, RandomSource random) {
+        if (!com.zomboidcraft.ZcConfig.get().performance.flickerLamps) {
+            steady(level, pos, level.getBlockState(pos));
+            return;
+        }
         if (!level.getBlockTicks().hasScheduledTick(pos, block)) {
             level.scheduleTick(pos, block, 1 + random.nextInt(10));
         }
     }
 
+    /** With flickering off (performance.flickerLamps): the lamp just stays on, and nothing more is scheduled. */
+    private static void steady(ServerLevel level, BlockPos pos, BlockState state) {
+        if (state.hasProperty(LIT) && !state.getValue(LIT)) {
+            level.setBlock(pos, state.setValue(LIT, true), Block.UPDATE_CLIENTS);
+        }
+    }
+
     static void flip(Block block, BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        if (!com.zomboidcraft.ZcConfig.get().performance.flickerLamps) {
+            steady(level, pos, state);
+            return;
+        }
         boolean lit = !state.getValue(LIT);
         level.setBlock(pos, state.setValue(LIT, lit), Block.UPDATE_CLIENTS);
         com.zomboidcraft.zombie.Profiler.FLICKERS.increment();

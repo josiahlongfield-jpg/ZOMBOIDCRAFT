@@ -98,5 +98,20 @@ public final class Decor {
     public static void register() {
         Comfort.register();
         DecorNet.register();
+        // a piece found in the world comes in one of its looks (the word on a neon sign, a lava lamp's colours...)
+        net.fabricmc.fabric.api.loot.v3.LootTableEvents.MODIFY_DROPS.register((table, context, drops) -> {
+            for (net.minecraft.world.item.ItemStack stack : drops) {
+                if (stack.getItem() instanceof net.minecraft.world.item.BlockItem bi && bi.getBlock() instanceof DecorBlock db
+                        && db.spec.maxLook() > 0) {
+                    int look = context.getLevel().getRandom().nextInt(db.spec.maxLook() + 1);
+                    net.minecraft.world.item.component.CustomData.update(net.minecraft.core.component.DataComponents.CUSTOM_DATA,
+                            stack, tag -> {
+                                if (!tag.contains("look")) {
+                                    tag.putInt("look", look);
+                                }
+                            });
+                }
+            }
+        });
     }
 }
