@@ -102,11 +102,14 @@ public final class MeshGunRenderer implements net.minecraft.client.renderer.spec
         if (b == null) {
             b = new float[] {0.2f, -0.1f, -0.6f, 0.8f, 1.0f, 1.6f};
         }
-        // an attachment's mesh sits round its clamp at the origin: moved to its mount (its turn is left out)
+        // an attachment's mesh sits round its clamp at the origin: moved to its mount (its turn is left out), and
+        // sized as drawn (a round shrunk onto its carton): a dropped item stands on the bottom of these, so unscaled
+        // ones sank the rounds through the floor
         float dx = offset.isEmpty() ? 0 : offset.get(0) / 16, dy = offset.isEmpty() ? 0 : offset.get(1) / 16,
                 dz = offset.isEmpty() ? 0 : offset.get(2) / 16;
         for (int i = 0; i < 8; i++) {
-            out.accept(new Vector3f(b[(i & 1) * 3] + dx, b[1 + (i >> 1 & 1) * 3] + dy, b[2 + (i >> 2 & 1) * 3] + dz));
+            out.accept(new Vector3f(b[(i & 1) * 3] * scale + dx, b[1 + (i >> 1 & 1) * 3] * scale + dy,
+                    b[2 + (i >> 2 & 1) * 3] * scale + dz));
         }
     }
 
