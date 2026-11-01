@@ -20,6 +20,11 @@ public class ZedLayer extends RenderLayer<WalkerRenderState, WalkerModel> {
         if (state.zed == null || state.isInvisible || com.zomboidcraft.client.zombie.body.ZDetail.shadowPass()) {
             return;
         }
-        ZedBodies.submit(state.zed, poseStack, collector, light, LivingEntityRenderer.getOverlayCoords(state, 0f));
+        int overlay = LivingEntityRenderer.getOverlayCoords(state, 0f);
+        // far off, a whole upright one is a picture of its Zomboid self (ZedSprites)
+        if (com.zomboidcraft.client.zombie.body.ZedSprites.submit(poseStack, collector, light, overlay, state)) {
+            return;
+        }
+        ZedBodies.submit(state.zed, poseStack, collector, light, overlay);
     }
 }

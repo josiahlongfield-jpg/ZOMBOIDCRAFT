@@ -108,7 +108,32 @@ public final class CrowdFx {
         float age = (System.nanoTime() / 1_000_000L % 3_600_000L) / 50f;
         int overlay = OverlayTexture.NO_OVERLAY;
         int drawn = 0;
+        boolean zed = com.zomboidcraft.client.survivor.ZedBodies.available();
         for (Group g : groups) {
+            if (zed) {
+                // Josiah's rule: with the Zomboid zombies in, the crowd is Zomboid zombies too (a sheet per look family)
+                Map<ZSprites.Sheet, java.util.List<Integer>> bySheet = new java.util.LinkedHashMap<>();
+                for (int i = 0; i < g.x.length; i++) {
+                    ZSprites.Sheet s = ZedSprites.get(g.variant[i], g.outfit);
+                    if (s != null) {
+                        bySheet.computeIfAbsent(s, k -> new java.util.ArrayList<>()).add(i);
+                    }
+                }
+                for (Map.Entry<ZSprites.Sheet, java.util.List<Integer>> e : bySheet.entrySet()) {
+                    ZSprites.Sheet sheet = e.getKey();
+                    java.util.List<Integer> who = e.getValue();
+                    context.submitNodeCollector().submitCustomGeometry(context.poseStack(), RenderTypes.entityCutout(sheet.texture()),
+                            (pose, out) -> {
+                                for (int i : who) {
+                                    int frame = ZSprites.frame(false, false, 0f, age, g.variant[i]);
+                                    ZSprites.cardAt(sheet, frame, (float) (g.x[i] - eye.x), (float) (g.y[i] - eye.y),
+                                            (float) (g.z[i] - eye.z), g.yaw[i], pose, out, g.light[i], overlay);
+                                }
+                            });
+                    drawn += who.size();
+                }
+                continue;
+            }
             ZSprites.Sheet sheet = ZSprites.get(g.outfit, ZBodyMesh.get(g.outfit + "_low"),
                     ZomboidCraft.id("textures/entity/zbody/low/" + g.outfit + ".png"),
                     ZomboidCraft.id("textures/entity/zbody/kit/" + g.outfit + ".png"));
