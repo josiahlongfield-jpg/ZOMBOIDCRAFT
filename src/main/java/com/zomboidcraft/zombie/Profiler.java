@@ -39,6 +39,10 @@ public final class Profiler {
     public static volatile String uploadPath;
     /** What GlBufferStorageMixin did when the graphics device was made; null if it never ran. */
     public static volatile String bufferStorageFix;
+    /** On while a profile runs: the client's GpuTimer times each part of the frame on the graphics card. */
+    public static volatile boolean gpuTiming;
+    /** The client's GPU timer report (GpuTimer), or null on a dedicated server. */
+    public static volatile java.util.function.Supplier<String> gpuReport;
 
     /** Who owns a frame, by package: the first match wins, so put the narrower names first. */
     private static final String[][] OWNERS = {
@@ -192,6 +196,7 @@ public final class Profiler {
             return false;
         }
         running = true;
+        gpuTiming = true;
         Thread sampler = new Thread(() -> {
             try {
                 done.accept(run(seconds));
@@ -199,6 +204,7 @@ public final class Profiler {
                 done.accept("The profiler failed: " + e);
             } finally {
                 running = false;
+                gpuTiming = false;
             }
         }, "ZomboidCraft profiler");
         sampler.setDaemon(true);
@@ -289,6 +295,10 @@ public final class Profiler {
                 CLIENT_BLOCKS.sum(), CLIENT_SECTIONS.sum(), CLIENT_LIGHT.sum(), CLIENT_CHUNKS.sum()));
         r.append("NVIDIA buffer storage fix: ").append(bufferStorageFix == null ? "did not run" : bufferStorageFix).append("\n");
         r.append("Sodium chunk uploads: ").append(uploadPath == null ? "not seen (Sodium missing or idle)" : uploadPath).append("\n");
+        java.util.function.Supplier<String> gpu = gpuReport;
+        if (gpu != null) {
+            r.append(gpu.get());
+        }
         r.append("JVM: ").append(System.getProperty("java.vm.name")).append(' ')
                 .append(System.getProperty("java.version")).append(", args ")
                 .append(ManagementFactory.getRuntimeMXBean().getInputArguments()).append("\n");

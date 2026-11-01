@@ -8,6 +8,11 @@ classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1"
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
+echo "===== gpu timer targets"
+javap -cp "$CP" -p net.minecraft.client.renderer.LevelRenderer 2>&1 | grep -E "executeSolid|renderLevel| render\(|addMainPass"
+javap -cp "$CP" -p net.minecraft.client.renderer.GameRenderer 2>&1 | grep -E " render\(|renderLevel"
+classes 'FeatureRenderDispatcher' | head
+
 echo "===== persistent mapping 4"
 G=com.mojang.renderpearl.backend.opengl.GlDevice
 javap -cp "$CP" -p -c -constants $G > /tmp/gldev.txt 2>&1
