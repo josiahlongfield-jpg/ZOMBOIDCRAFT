@@ -15,8 +15,10 @@ import net.minecraft.util.Mth;
 
 /**
  * A converted Workshop car's engine: one steady note (Josiah, 2026-11-01), the model's recorded engine
- * (sports, wagon, offroad or van, from the local PZ car sounds pack) as the on-load take at the revs that
- * suit it, engine-bay and exhaust layers together, pitched smoothly up with speed and down as it slows.
+ * (sports, wagon, offroad or van, from the local PZ car sounds pack). The note is the engine's own idle
+ * recording, the same sound its start settles into, so there's no cut from ticking over to pulling away:
+ * engine-bay and exhaust layers together, pitched from 1 at rest up to 1.9 flat out and back as it slows.
+ * A model's "note" in its sounds can pick one of the rev-band takes instead.
  */
 final class PzEngineSound {
     /** The revs each band was recorded at (pzsounds.py ENGINES), above the idle loop at IDLE. */
@@ -26,8 +28,6 @@ final class PzEngineSound {
             "offroad", new float[] {1000, 1600, 2200, 2800, 3400, 4000, 4600, 5200},
             "van", new float[] {1000, 1750, 2500, 3250, 4000});
     private static final float IDLE = 800;
-    /** Each engine's note: the band whose on-load take carries it best (3000 rpm sports, 2800 offroad, 2000 wagon, 2500 van). */
-    private static final Map<String, Integer> NOTE = Map.of("sports", 3, "offroad", 4, "wagon", 2, "van", 3);
     private static final double FLAT_OUT = 1.1;
     private static final Map<CarProp, Engine> ENGINES = new WeakHashMap<>();
 
@@ -62,8 +62,8 @@ final class PzEngineSound {
             at[0] = IDLE;
             System.arraycopy(bands, 0, at, 1, bands.length);
             String n = CarModels.get(car.model()).sounds.get("note");
-            note = Mth.clamp(n != null ? Integer.parseInt(n) : NOTE.getOrDefault(set, 2), 1, bands.length);
-            rpm = at[note] * 0.62f;
+            note = Mth.clamp(n != null ? Integer.parseInt(n) : 0, 0, bands.length);
+            rpm = at[note];
         }
 
         void tick() {
@@ -75,10 +75,10 @@ final class PzEngineSound {
             // pitch rising smoothly from ticking over to flat out and falling again as the car slows
             double speed = Math.hypot(car.getX() - car.xo, car.getZ() - car.zo);
             float share = (float) Mth.clamp(speed / FLAT_OUT, 0, 1);
-            float target = 0.62f + 0.98f * share;
+            float target = 1 + 0.9f * share;
             rpm += (target * at[note] - rpm) * 0.12f;
             for (String layer : new String[] {"engine", "exhaust"}) {
-                String key = note + ".on." + layer;
+                String key = (note == 0 ? "idle" : note + ".on") + "." + layer;
                 Layer l = layers.get(key);
                 if (l == null || l.isStopped()) {
                     l = new Layer(this, key, note);
