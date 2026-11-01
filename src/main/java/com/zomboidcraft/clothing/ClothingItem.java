@@ -19,6 +19,22 @@ public class ClothingItem extends Item {
         super(properties);
     }
 
+    /** The crusader and gothic plate's colour schemes (tools/items/gen_clothes.py ORDERS), named before the piece. */
+    private static final java.util.Map<String, String> ORDERS = java.util.Map.of("black", "Black", "templar", "Templar",
+            "hospitaller", "Hospitaller", "teutonic", "Teutonic", "lazarite", "Lazarite", "crimson", "Crimson",
+            "gilded", "Gilded", "rusted", "Rusted");
+
+    @Override
+    public net.minecraft.network.chat.Component getName(ItemStack stack) {
+        net.minecraft.network.chat.Component name = super.getName(stack);
+        Garment g = Clothes.of(stack);
+        if (g != null && (g.id().startsWith("crusader_") || g.id().startsWith("gothic_"))) {
+            String order = ORDERS.get(stack.getOrDefault(ClothingLoot.CAMO, "black"));
+            if (order != null) return net.minecraft.network.chat.Component.literal(order + " ").append(name);
+        }
+        return name;
+    }
+
     @Override
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
         ItemStack held = player.getItemInHand(hand);

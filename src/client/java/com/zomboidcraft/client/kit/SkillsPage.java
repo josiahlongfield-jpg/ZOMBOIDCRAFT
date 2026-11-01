@@ -13,6 +13,7 @@ import java.util.function.IntFunction;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * The skills page: every skill grouped down the left with its ten level squares, and on the right what the chosen one
@@ -128,7 +129,7 @@ final class SkillsPage {
                     l -> String.format(Locale.ROOT, "Right now: %+.1f kg carry limit, melee %+d%%.", 0.6 * (l - 5), 4 * (l - 5))),
             soon(Skill.LIGHTFOOTED, "Agility", "Walk without making noise and stepping on things that give you away."),
             soon(Skill.NIMBLE, "Agility", "Move faster while aiming and fighting."),
-            soon(Skill.RELOADING, "Firearm", "Load magazines and rounds faster, and rack a jam clear quicker."),
+            soon(Skill.RELOADING, "Firearm", "Load magazines and rounds faster, and rack a jam clear quicker. Handloading brass at a reloading bench already trains it."),
             soon(Skill.COOKING, "Crafting", "Cook dishes on stoves, campfires and barbecues; better cooks make more filling food."),
             soon(Skill.CARVING, "Crafting", "Carve wood and bone into handles, spears and tools."),
             soon(Skill.KNAPPING, "Crafting", "Chip stone into blades, axe heads and arrowheads."),
@@ -232,6 +233,7 @@ final class SkillsPage {
             g.fill(x + 301, ty, x + 304, ty + thumb, 0x80E8E4DA);
         }
         detail(g, font, player, info(selected), x + 323, y + 33, 256);
+        traits(g, font, player, x + 323, y + KitScreen.H - 20 - TRAITS_H, 256, mx, my);
 
         int hx = x + 37, hy = y + KitScreen.H - 14;
         hx += KitDraw.hint(g, font, "LMB", "Select", hx, hy);
@@ -279,6 +281,45 @@ final class SkillsPage {
         });
     }
 
+    private static final int TRAITS_H = 64;
+
+    /**
+     * Who you were and what you're like, as Zomboid's character info shows it: the occupation, then every trait as a
+     * chip, good ones green and bad ones red; weight, Strength and Fitness traits follow the body as it is now.
+     */
+    private void traits(GuiGraphicsExtractor g, Font font, LocalPlayer player, int x, int y, int w, int mx, int my) {
+        KitDraw.heading(g, font, "Occupation and traits", x, y, w, true);
+        int py = y + 9;
+        KitDraw.panel(g, x, py, w, TRAITS_H - 9);
+        var profile = com.zomboidcraft.survival.character.Traits.profile(player);
+        var occupation = profile == null ? null : com.zomboidcraft.survival.character.CharacterData.occupation(profile.occupation());
+        int cx = x + 9, cy = py + 7;
+        KitDraw.caps(g, font, occupation == null ? "Survivor" : occupation.name(), cx, cy, KitDraw.BRIGHT, 1f);
+        cy += 12;
+        List<String> shown = com.zomboidcraft.survival.character.Traits.shown(player);
+        if (shown.isEmpty()) {
+            KitDraw.text(g, font, "No traits", cx, cy + 2, KitDraw.FAINT, 0.75f);
+            return;
+        }
+        int chipX = cx;
+        for (String id : shown) {
+            var t = com.zomboidcraft.survival.character.CharacterData.trait(id);
+            String name = t == null ? id : t.name();
+            int colour = t == null ? KitDraw.DIM : t.positive() ? KitDraw.GOOD : t.negative() ? KitDraw.BAD : KitDraw.DIM;
+            int cw = Math.round(KitDraw.width(font, name, 0.7f)) + 8;
+            if (chipX + cw > x + w - 9) {
+                chipX = cx;
+                cy += 12;
+                if (cy + 10 > py + TRAITS_H - 9) break;
+            }
+            g.fill(chipX, cy, chipX + cw, cy + 10, colour & 0x1FFFFFFF);
+            KitDraw.frame(g, chipX, cy, cw, 10, colour & 0x80FFFFFF);
+            KitDraw.text(g, font, name, chipX + 4, cy + 2, colour, 0.7f);
+            if (t != null && !t.description().isEmpty()) screen.hot(chipX, cy, cw, 10, ItemStack.EMPTY, null, null, t.description(), -1);
+            chipX += cw + 4;
+        }
+    }
+
     private static float part(int xp, int level) {
         if (level >= Skill.MAX_LEVEL) return 1;
         int lo = Skill.xpForLevel(level), hi = Skill.xpForLevel(level + 1);
@@ -289,7 +330,7 @@ final class SkillsPage {
         Skill skill = info.skill();
         int xp = Skills.xp(player, skill), level = Skill.levelForXp(xp);
         KitDraw.heading(g, font, skill.displayName(), x, y, w, true);
-        int py = y + 9, ph = 250;
+        int py = y + 9, ph = KitScreen.H - 20 - TRAITS_H - 6 - py + (y - 33);
         KitDraw.panel(g, x, py, w, ph);
         int cx = x + 9, cy = py + 9;
         KitDraw.caps(g, font, String.valueOf(level), cx, cy, KitDraw.BRIGHT, 3f);

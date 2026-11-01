@@ -37,6 +37,7 @@ public class ZomboidCraftClient implements ClientModInitializer {
         com.zomboidcraft.client.interact.KeypadScreen.register();
         com.zomboidcraft.client.camera.BreachTremor.register();
         com.zomboidcraft.client.kit.SpawnScreen.register();
+        com.zomboidcraft.client.kit.CharacterScreen.register();
         com.zomboidcraft.client.hud.QuickWheel.register();
         com.zomboidcraft.client.map.MapStore.register();
         com.zomboidcraft.client.map.CountyAtlas.register();
@@ -85,6 +86,7 @@ public class ZomboidCraftClient implements ClientModInitializer {
         com.zomboidcraft.client.cars.CarClient.register();
         com.zomboidcraft.client.trains.TrainClient.register();
         com.zomboidcraft.client.ferry.FerryClient.register();
+        com.zomboidcraft.client.combat.ReloadingClient.register();
         com.zomboidcraft.client.lights.LightClient.register();
         com.zomboidcraft.client.alarms.AlarmClient.register();
         com.zomboidcraft.client.power.YardRepairClient.register();
@@ -99,6 +101,7 @@ public class ZomboidCraftClient implements ClientModInitializer {
         com.zomboidcraft.client.sandbox.SandboxClient.register();
         com.zomboidcraft.client.kit.SandboxScreen.register();
         com.zomboidcraft.client.kit.DeathCardScreen.register();
+        com.zomboidcraft.client.kit.FoodTips.register();
         // last, so it can wrap every HUD piece registered above
         com.zomboidcraft.client.camera.CinematicView.register();
         if (ZcConfig.get().look.customZombies) {

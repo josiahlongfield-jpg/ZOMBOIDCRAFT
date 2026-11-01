@@ -40,6 +40,10 @@ public final class NpcPanel {
     /** Job n is JOB + its ordinal. */
     public static final int JOB = 10;
     public static final int DAY_SHIFT = 20, NIGHT_SHIFT = 21;
+    /** Occupation n (CharacterData.occupations() order) is OCCUPATION + n. */
+    public static final int OCCUPATION = 2000;
+    /** How many skills her page lists. */
+    public static final int SKILL_ROWS = 12;
     /** A talk act (NpcBond.Act) is TALK + its ordinal. */
     public static final int TALK = 30;
     /** A pose to hold for a while is POSE + one of {@link #POSES}' indexes. */
@@ -144,7 +148,7 @@ public final class NpcPanel {
     public record State(int npc, float health, float maxHealth, boolean following, boolean home, int job, boolean night,
                         float[] needs, float[] traits, int[] skills, float[] progress, float trust, float affection,
                         String feelings, String mood, ItemStack weapon, List<ItemStack> pack, List<String> diary,
-                        List<String> wears)
+                        List<String> wears, String occupation, String past, List<String> skillRows)
             implements CustomPacketPayload {
         public static final Type<State> TYPE = new Type<>(ZomboidCraft.id("npc_state"));
         public static final StreamCodec<RegistryFriendlyByteBuf, State> CODEC = StreamCodec.of(State::write, State::read);
@@ -189,6 +193,10 @@ public final class NpcPanel {
             for (String d : s.diary) buf.writeUtf(d);
             buf.writeVarInt(s.wears.size());
             for (String w : s.wears) buf.writeUtf(w);
+            buf.writeUtf(s.occupation);
+            buf.writeUtf(s.past);
+            buf.writeVarInt(s.skillRows.size());
+            for (String r : s.skillRows) buf.writeUtf(r);
         }
 
         private static State read(RegistryFriendlyByteBuf buf) {
@@ -210,8 +218,11 @@ public final class NpcPanel {
             for (int i = buf.readVarInt(); i > 0; i--) diary.add(buf.readUtf());
             List<String> wears = new ArrayList<>();
             for (int i = buf.readVarInt(); i > 0; i--) wears.add(buf.readUtf());
+            String occupation = buf.readUtf(), past = buf.readUtf();
+            List<String> rows = new ArrayList<>();
+            for (int i = buf.readVarInt(); i > 0; i--) rows.add(buf.readUtf());
             return new State(npc, health, max, following, home, job, night, needs, traits, skills, progress, trust, affection,
-                    feelings, mood, weapon, pack, diary, wears);
+                    feelings, mood, weapon, pack, diary, wears, occupation, past, rows);
         }
     }
 
@@ -334,7 +345,39 @@ public final class NpcPanel {
         return new State(npc.getId(), npc.getHealth(), npc.getMaxHealth(), npc.following, npc.work.home != null,
                 npc.work.job.ordinal(), npc.work.nightShift, needs, traits, skills, progress, b.trust, b.affection,
                 NpcBond.words(b.trust, b.affection, b.attraction, b.together), npc.mood(), npc.getMainHandItem().copy(), pack, diary,
-                Npcs.dresses(npc.model()) ? List.of() : Npcs.pieces(npc));
+                Npcs.dresses(npc.model()) ? List.of() : Npcs.pieces(npc), npc.skills.occupation(), npc.skills.past(), skillRows(npc));
+    }
+
+    /**
+     * Her skills for the page, best first: "Label|level|progress". What she's any good at, then the ones her jobs use, up to
+     * SKILL_ROWS; passive Fitness and Strength only when they're off the usual five.
+     */
+    static List<String> skillRows(NpcEntity npc) {
+        List<String> keys = new ArrayList<>();
+        for (com.zomboidcraft.skills.Skill k : com.zomboidcraft.skills.Skill.values()) {
+            int l = npc.skills.level(k.name());
+            if (k.passive() ? l != 5 && l > 0 : l > 0) keys.add(k.name());
+        }
+        keys.sort((a, b) -> Integer.compare(npc.skills.level(b), npc.skills.level(a)));
+        for (NpcSkills.Skill k : NpcSkills.Skill.values()) if (!keys.contains(k.key)) keys.add(k.key);
+        List<String> out = new ArrayList<>();
+        for (String k : keys.subList(0, Math.min(SKILL_ROWS, keys.size()))) {
+            String label;
+            try {
+                label = com.zomboidcraft.skills.Skill.valueOf(k).displayName();
+            } catch (IllegalArgumentException e) {
+                label = k;
+            }
+            out.add(label + "|" + npc.skills.level(k) + "|" + String.format(java.util.Locale.ROOT, "%.2f", npc.skills.progress(k)));
+        }
+        return out;
+    }
+
+    private static String pastLine(NpcEntity npc) {
+        var o = com.zomboidcraft.survival.character.CharacterData.occupation(npc.skills.occupation());
+        String job = o == null ? "nothing much" : o.name().toLowerCase(java.util.Locale.ROOT);
+        return NpcWork.pick(npc, "Before all this? I was a " + job + ". Feels like another life.",
+                "I was a " + job + ", once. Some of it's even useful now.", "A " + job + ". Don't laugh.");
     }
 
     // ------------------------------------------------------------------ doing what's asked
@@ -372,6 +415,12 @@ public final class NpcPanel {
             }
             npc.work.job = job;
             if (job != NpcWork.Job.NONE && npc.following) npc.toggleFollow(p);
+        } else if (code >= OCCUPATION && code < OCCUPATION + com.zomboidcraft.survival.character.CharacterData.occupations().size()) {
+            String id = new ArrayList<>(com.zomboidcraft.survival.character.CharacterData.occupations().keySet()).get(code - OCCUPATION);
+            if (id.equals(npc.skills.occupation())) return;
+            npc.skills.occupy(id, npc.getRandom());
+            npc.mind.remember(npc, "Told " + p.getName().getString() + " about life before: " + npc.skills.past(), 0.2f, 0.4f);
+            npc.lines.sayLine(npc, NpcLines.Kind.REPLY, pastLine(npc));
         } else if (code == DAY_SHIFT || code == NIGHT_SHIFT) {
             npc.work.nightShift = code == NIGHT_SHIFT;
         } else if (code >= TALK && code < TALK + NpcBond.Act.values().length) {

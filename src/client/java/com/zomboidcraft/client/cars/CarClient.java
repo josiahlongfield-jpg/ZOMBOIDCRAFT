@@ -174,6 +174,8 @@ public final class CarClient {
             // a room's light switch
         } else if (com.zomboidcraft.client.survival.SleepClient.interact(client, hit)) {
             // a bed, sofa or mattress (or the floor, crouching): lie down and sleep
+        } else if (com.zomboidcraft.client.combat.ReloadingClient.interact(client, hit)) {
+            // a reloading bench: what it can load
         } else if (player.getMainHandItem().is(com.zomboidcraft.ModItems.CAR_KEY)) {
             // not at a car, key in hand: its panic button
             ClientPlayNetworking.send(new CarNet.Use(CarNet.FOB, 0, 0, 0));
@@ -229,6 +231,13 @@ public final class CarClient {
         } else if (t == null) {
             out.add(com.zomboidcraft.client.interact.InteractMenu.Option.of("Search it",
                     () -> ClientPlayNetworking.send(new CarNet.Use(car.getId(), (float) at.x, (float) at.y, (float) at.z))));
+        }
+        // shove it a block along, away from you, to clear the way past it (world.cars.CarPush)
+        String stuck = com.zomboidcraft.world.cars.CarPush.why(car);
+        if (stuck == null || !"It won't move".equals(stuck)) {
+            out.add(stuck != null ? com.zomboidcraft.client.interact.InteractMenu.Option.no("Push it", stuck)
+                    : com.zomboidcraft.client.interact.InteractMenu.Option.of("Push it",
+                    () -> ClientPlayNetworking.send(new com.zomboidcraft.world.cars.CarPush.Push(car.getId()))));
         }
         out.add(car.parts().isEmpty()
                 ? com.zomboidcraft.client.interact.InteractMenu.Option.no("Vehicle mechanics", "Nothing on this one to work on")

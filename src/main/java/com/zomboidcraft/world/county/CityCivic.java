@@ -874,6 +874,8 @@ final class CityCivic {
         for (int x = armoury + 2; x < x1 - 2; x++) {
             p.set(x, 1, z1 - 1, "store_shelf_ammo[facing=north]");
         }
+        // the armourer's reloading bench in the corner by the ammunition
+        p.set(armoury + 1, 1, z1 - 1, "zomboidcraft:reloading_bench[facing=north]");
         b.lights(x0, z0, x1, z1, S - 1, 0.05);
         b.mess(x0 + 1, z0 + 1, x1 - 1, z1 - 1, 1, 0.03);
         // offices upstairs

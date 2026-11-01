@@ -4244092,6 +4244092,1266 @@
    "sound": "STONE",
    "rotate": "facing",
    "decor": true
+  },
+  "bunk_beam": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.25,
+     9,
+     0,
+     8.75,
+     16,
+     16,
+     "bunk_grey"
+    ],
+    [
+     5,
+     8.5,
+     0,
+     11,
+     9,
+     16,
+     "bunk_grey"
+    ]
+   ],
+   "title": "Steel Beam",
+   "sound": "METAL",
+   "rotate": "axis",
+   "decor": true
+  },
+  "bunk_beam_tray": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.25,
+     9,
+     0,
+     8.75,
+     16,
+     16,
+     "bunk_grey"
+    ],
+    [
+     5,
+     8.5,
+     0,
+     11,
+     9,
+     16,
+     "bunk_grey"
+    ],
+    [
+     2,
+     6,
+     0,
+     14,
+     6.5,
+     16,
+     "ext_galv"
+    ],
+    [
+     2,
+     6.5,
+     0,
+     2.5,
+     8,
+     16,
+     "ext_galv"
+    ],
+    [
+     13.5,
+     6.5,
+     0,
+     14,
+     8,
+     16,
+     "ext_galv"
+    ],
+    [
+     3,
+     6.5,
+     0,
+     13,
+     7.5,
+     16,
+     "bunk_cables"
+    ]
+   ],
+   "title": "Steel Beam",
+   "sound": "METAL",
+   "rotate": "axis",
+   "decor": true
+  },
+  "bunk_beam_pipes": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.25,
+     9,
+     0,
+     8.75,
+     16,
+     16,
+     "bunk_grey"
+    ],
+    [
+     5,
+     8.5,
+     0,
+     11,
+     9,
+     16,
+     "bunk_grey"
+    ],
+    [
+     0.5,
+     4,
+     0,
+     4.5,
+     8,
+     16,
+     "bunk_pipe_grey"
+    ],
+    [
+     11.5,
+     4.5,
+     0,
+     14.5,
+     7.5,
+     16,
+     "bunk_pipe_red"
+    ],
+    [
+     1.5,
+     8,
+     7.5,
+     3.5,
+     8.5,
+     8.5,
+     "bunk_grey"
+    ],
+    [
+     12,
+     7.5,
+     7.5,
+     14,
+     8.5,
+     8.5,
+     "bunk_grey"
+    ]
+   ],
+   "title": "Steel Beam",
+   "sound": "METAL",
+   "rotate": "axis",
+   "decor": true
+  },
+  "bunk_beam_duct": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.25,
+     9,
+     0,
+     8.75,
+     16,
+     16,
+     "bunk_grey"
+    ],
+    [
+     5,
+     8.5,
+     0,
+     11,
+     9,
+     16,
+     "bunk_grey"
+    ],
+    [
+     2,
+     2,
+     0,
+     14,
+     8.5,
+     16,
+     "ext_galv"
+    ]
+   ],
+   "title": "Steel Beam",
+   "sound": "METAL",
+   "rotate": "axis",
+   "decor": true
+  },
+  "bunk_haunch": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     4,
+     14.5,
+     16,
+     8,
+     16,
+     "bunk_concrete"
+    ],
+    [
+     0,
+     8,
+     12.5,
+     16,
+     11,
+     16,
+     "bunk_concrete"
+    ],
+    [
+     0,
+     11,
+     10.5,
+     16,
+     13,
+     16,
+     "bunk_concrete"
+    ],
+    [
+     0,
+     13,
+     8,
+     16,
+     14.5,
+     16,
+     "bunk_concrete"
+    ],
+    [
+     0,
+     14.5,
+     5.5,
+     16,
+     15.5,
+     16,
+     "bunk_concrete"
+    ],
+    [
+     0,
+     15.5,
+     2.5,
+     16,
+     16,
+     16,
+     "bunk_concrete"
+    ]
+   ],
+   "title": "Vaulted Concrete",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "bk_deposit_blank": {
+   "tex": {
+    "north": "bk_deposit_blank",
+    "side": "cv_iron",
+    "up": "cv_iron",
+    "down": "cv_iron"
+   },
+   "title": "Safe Deposit Boxes",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "bk_deposit_door": {
+   "door": "steel",
+   "tex": {
+    "top": "bk_deposit_blank",
+    "bottom": "bk_deposit_blank"
+   },
+   "title": "Safe Deposit Boxes"
+  },
+  "gh_tile": {
+   "tex": {
+    "all": "gh_tile"
+   },
+   "title": "Old Subway Tile",
+   "sound": "STONE"
+  },
+  "gh_tile_green": {
+   "tex": {
+    "all": "gh_tile_green"
+   },
+   "title": "Old Subway Tile",
+   "sound": "STONE"
+  },
+  "gh_tile_band": {
+   "tex": {
+    "all": "gh_tile_band"
+   },
+   "title": "Old Subway Tile",
+   "sound": "STONE"
+  },
+  "gh_vault": {
+   "tex": {
+    "down": "gh_vault",
+    "up": "rw_tunnel",
+    "side": "gh_vault"
+   },
+   "title": "Tile Vault",
+   "sound": "STONE"
+  },
+  "gh_vault_rib": {
+   "tex": {
+    "down": "gh_vault_rib",
+    "up": "rw_tunnel",
+    "side": "gh_vault_rib"
+   },
+   "title": "Tile Vault",
+   "sound": "STONE"
+  },
+  "gh_skylight": {
+   "tex": {
+    "down": "gh_skylight",
+    "up": "rw_tunnel",
+    "side": "gh_vault"
+   },
+   "title": "Skylight",
+   "sound": "GLASS"
+  },
+  "gh_haunch": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     4,
+     14.5,
+     16,
+     8,
+     16,
+     "gh_vault"
+    ],
+    [
+     0,
+     8,
+     12.5,
+     16,
+     11,
+     16,
+     "gh_vault"
+    ],
+    [
+     0,
+     11,
+     10.5,
+     16,
+     13,
+     16,
+     "gh_vault"
+    ],
+    [
+     0,
+     13,
+     8,
+     16,
+     14.5,
+     16,
+     "gh_vault"
+    ],
+    [
+     0,
+     14.5,
+     5.5,
+     16,
+     15.5,
+     16,
+     "gh_vault"
+    ],
+    [
+     0,
+     15.5,
+     2.5,
+     16,
+     16,
+     16,
+     "gh_vault"
+    ]
+   ],
+   "title": "Tile Vault",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "gh_fixture": {
+   "model": "boxes",
+   "boxes": [
+    [
+     7.5,
+     8,
+     7.5,
+     8.5,
+     16,
+     8.5,
+     "gh_brass"
+    ],
+    [
+     4,
+     6,
+     4,
+     12,
+     7,
+     12,
+     "gh_brass"
+    ],
+    [
+     6,
+     4,
+     6,
+     10,
+     6,
+     10,
+     "gh_brass"
+    ],
+    [
+     2,
+     3,
+     2,
+     4,
+     5,
+     4,
+     "bunk_glass_off"
+    ],
+    [
+     11,
+     3,
+     2,
+     13,
+     5,
+     4,
+     "bunk_glass_off"
+    ],
+    [
+     2,
+     3,
+     11,
+     4,
+     5,
+     13,
+     "bunk_glass_off"
+    ],
+    [
+     11,
+     3,
+     11,
+     13,
+     5,
+     13,
+     "bunk_glass_off"
+    ],
+    [
+     6.5,
+     3,
+     6.5,
+     8.5,
+     5,
+     8.5,
+     "bunk_glass_off"
+    ]
+   ],
+   "title": "Lamp",
+   "sound": "METAL",
+   "decor": true
+  },
+  "gh_name_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "gh_name_0",
+      "side": "gh_tile",
+      "up": "gh_tile",
+      "down": "gh_tile"
+     }
+    ]
+   ],
+   "title": "Name Mosaic",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "gh_name_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "gh_name_1",
+      "side": "gh_tile",
+      "up": "gh_tile",
+      "down": "gh_tile"
+     }
+    ]
+   ],
+   "title": "Name Mosaic",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "gh_name_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "gh_name_2",
+      "side": "gh_tile",
+      "up": "gh_tile",
+      "down": "gh_tile"
+     }
+    ]
+   ],
+   "title": "Name Mosaic",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "gh_name_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "gh_name_3",
+      "side": "gh_tile",
+      "up": "gh_tile",
+      "down": "gh_tile"
+     }
+    ]
+   ],
+   "title": "Name Mosaic",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "gh_brick": {
+   "tex": {
+    "all": "gh_brick"
+   },
+   "title": "Brick Infill",
+   "sound": "STONE"
+  },
+  "gh_portal_0_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "gh_portal_0_0",
+      "south": "gh_brick",
+      "side": "rw_tunnel",
+      "up": "rw_tunnel",
+      "down": "rw_tunnel"
+     }
+    ]
+   ],
+   "title": "Bricked Arch",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "gh_portal_0_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "gh_portal_0_1",
+      "south": "gh_brick",
+      "side": "rw_tunnel",
+      "up": "rw_tunnel",
+      "down": "rw_tunnel"
+     }
+    ]
+   ],
+   "title": "Bricked Arch",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "gh_portal_0_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "gh_portal_0_2",
+      "south": "gh_brick",
+      "side": "rw_tunnel",
+      "up": "rw_tunnel",
+      "down": "rw_tunnel"
+     }
+    ]
+   ],
+   "title": "Bricked Arch",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "gh_portal_0_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "gh_portal_0_3",
+      "south": "gh_brick",
+      "side": "rw_tunnel",
+      "up": "rw_tunnel",
+      "down": "rw_tunnel"
+     }
+    ]
+   ],
+   "title": "Bricked Arch",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "gh_portal_1_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "gh_portal_1_2",
+      "south": "gh_brick",
+      "side": "rw_tunnel",
+      "up": "rw_tunnel",
+      "down": "rw_tunnel"
+     }
+    ]
+   ],
+   "title": "Bricked Arch",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "gh_portal_1_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "gh_portal_1_3",
+      "south": "gh_brick",
+      "side": "rw_tunnel",
+      "up": "rw_tunnel",
+      "down": "rw_tunnel"
+     }
+    ]
+   ],
+   "title": "Bricked Arch",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "gh_portal_2_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "gh_portal_2_2",
+      "south": "gh_brick",
+      "side": "rw_tunnel",
+      "up": "rw_tunnel",
+      "down": "rw_tunnel"
+     }
+    ]
+   ],
+   "title": "Bricked Arch",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "gh_portal_2_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "gh_portal_2_3",
+      "south": "gh_brick",
+      "side": "rw_tunnel",
+      "up": "rw_tunnel",
+      "down": "rw_tunnel"
+     }
+    ]
+   ],
+   "title": "Bricked Arch",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "gh_portal_3_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "gh_portal_3_0",
+      "south": "gh_brick",
+      "side": "rw_tunnel",
+      "up": "rw_tunnel",
+      "down": "rw_tunnel"
+     }
+    ]
+   ],
+   "title": "Bricked Arch",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "gh_portal_3_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "gh_portal_3_1",
+      "south": "gh_brick",
+      "side": "rw_tunnel",
+      "up": "rw_tunnel",
+      "down": "rw_tunnel"
+     }
+    ]
+   ],
+   "title": "Bricked Arch",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "gh_portal_3_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "gh_portal_3_2",
+      "south": "gh_brick",
+      "side": "rw_tunnel",
+      "up": "rw_tunnel",
+      "down": "rw_tunnel"
+     }
+    ]
+   ],
+   "title": "Bricked Arch",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "gh_portal_3_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "gh_portal_3_3",
+      "south": "gh_brick",
+      "side": "rw_tunnel",
+      "up": "rw_tunnel",
+      "down": "rw_tunnel"
+     }
+    ]
+   ],
+   "title": "Bricked Arch",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "gh_door": {
+   "door": "steel",
+   "tex": {
+    "top": "gh_door_top",
+    "bottom": "gh_door_bottom"
+   },
+   "title": "Steel Door"
+  },
+  "gh_closed": {
+   "model": "boxes",
+   "boxes": [
+    [
+     2,
+     2,
+     15.6,
+     14,
+     14,
+     16,
+     {
+      "north": "gh_closed",
+      "side": "paper"
+     }
+    ]
+   ],
+   "title": "Notice",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "gh_staff": {
+   "model": "boxes",
+   "boxes": [
+    [
+     2,
+     2,
+     15.6,
+     14,
+     14,
+     16,
+     {
+      "north": "gh_staff",
+      "side": "paper"
+     }
+    ]
+   ],
+   "title": "Notice",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "gh_poster_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     15.6,
+     15,
+     16,
+     16,
+     {
+      "north": "gh_poster_0",
+      "side": "paper"
+     }
+    ]
+   ],
+   "title": "Poster",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "gh_poster_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     15.6,
+     15,
+     16,
+     16,
+     {
+      "north": "gh_poster_1",
+      "side": "paper"
+     }
+    ]
+   ],
+   "title": "Poster",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "gh_poster_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     15.6,
+     15,
+     16,
+     16,
+     {
+      "north": "gh_poster_2",
+      "side": "paper"
+     }
+    ]
+   ],
+   "title": "Poster",
+   "sound": "WOOL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "gh_line_map_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     15.4,
+     16,
+     13,
+     16,
+     {
+      "north": "gh_line_map_0",
+      "side": "cv_oak"
+     }
+    ]
+   ],
+   "title": "Line Map",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "gh_line_map_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     3,
+     15.4,
+     16,
+     13,
+     16,
+     {
+      "north": "gh_line_map_1",
+      "side": "cv_oak"
+     }
+    ]
+   ],
+   "title": "Line Map",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "gh_diagram_0": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "gh_diagram_0",
+      "side": "bunk_plate"
+     }
+    ]
+   ],
+   "title": "Track Diagram",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "gh_diagram_1": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "gh_diagram_1",
+      "side": "bunk_plate"
+     }
+    ]
+   ],
+   "title": "Track Diagram",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "gh_diagram_2": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "gh_diagram_2",
+      "side": "bunk_plate"
+     }
+    ]
+   ],
+   "title": "Track Diagram",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "gh_diagram_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "gh_diagram_3",
+      "side": "bunk_plate"
+     }
+    ]
+   ],
+   "title": "Track Diagram",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "gh_diagram_4": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "gh_diagram_4",
+      "side": "bunk_plate"
+     }
+    ]
+   ],
+   "title": "Track Diagram",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "gh_diagram_5": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "gh_diagram_5",
+      "side": "bunk_plate"
+     }
+    ]
+   ],
+   "title": "Track Diagram",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "gh_diagram_6": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "gh_diagram_6",
+      "side": "bunk_plate"
+     }
+    ]
+   ],
+   "title": "Track Diagram",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "gh_diagram_7": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     {
+      "north": "gh_diagram_7",
+      "side": "bunk_plate"
+     }
+    ]
+   ],
+   "title": "Track Diagram",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "gh_console": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     4,
+     16,
+     10,
+     16,
+     {
+      "north": "bunk_plate",
+      "side": "bunk_plate",
+      "up": "gh_diagram_5",
+      "down": "bunk_plate"
+     }
+    ],
+    [
+     0,
+     10,
+     8,
+     16,
+     13,
+     16,
+     {
+      "north": "gh_diagram_6",
+      "side": "bunk_plate",
+      "up": "bunk_plate",
+      "down": "bunk_plate"
+     }
+    ]
+   ],
+   "title": "Control Desk",
+   "sound": "METAL",
+   "rotate": "facing",
+   "loot": "office"
+  },
+  "gh_arch_1_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "gh_arch_1_3",
+      "south": "gh_brick",
+      "side": "rw_tunnel",
+      "up": "rw_tunnel",
+      "down": "rw_tunnel"
+     }
+    ]
+   ],
+   "title": "Bricked Arch",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "gh_arch_2_3": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "gh_arch_2_3",
+      "south": "gh_brick",
+      "side": "rw_tunnel",
+      "up": "rw_tunnel",
+      "down": "rw_tunnel"
+     }
+    ]
+   ],
+   "title": "Bricked Arch",
+   "sound": "STONE",
+   "rotate": "facing"
+  },
+  "gh_infill": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     16,
+     16,
+     {
+      "north": "rw_tunnel",
+      "south": "gh_brick",
+      "side": "rw_tunnel",
+      "up": "rw_tunnel",
+      "down": "rw_tunnel"
+     }
+    ]
+   ],
+   "title": "Brick Infill",
+   "sound": "STONE",
+   "rotate": "facing"
   }
  }
 }

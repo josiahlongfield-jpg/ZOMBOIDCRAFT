@@ -70,8 +70,30 @@ def blood():
         Image.fromarray(img).save(OUT / f'blood_{step}.png')
 
 
+def wet():
+    """Soaked through: beads of water with a bright catch-light and short runs down the cloth (the cloth itself is
+    darkened by ClothingLayer's tint)."""
+    rng = np.random.default_rng(2024)
+    img = np.zeros((N, N, 4), np.uint8)
+    edge, body, glint = (52, 58, 66, 255), (96, 108, 122, 255), (225, 235, 245, 255)
+    for _ in range(50):                          # runs
+        x, y = rng.uniform(0, N), rng.uniform(0, N)
+        ln = rng.uniform(4, 14)
+        for t in np.linspace(0, ln, int(ln * 2) + 2):
+            blob(img, x + 0.6 * np.sin(t * 0.5), y + t, 0.7, rng, edge)
+        blob(img, x, y + ln, 1.4, rng, body)
+    for _ in range(120):                         # beads
+        x, y, r = rng.uniform(0, N), rng.uniform(0, N), rng.uniform(0.7, 1.7)
+        blob(img, x, y, r, rng, edge)
+        blob(img, x, y, r * 0.7, rng, body)
+        if r > 1.1:
+            img[int(y - r * 0.35) % N, int(x - r * 0.35) % N] = glint
+    Image.fromarray(img).save(OUT / 'wet.png')
+
+
 if __name__ == '__main__':
     OUT.mkdir(parents=True, exist_ok=True)
     dirt()
     blood()
+    wet()
     print('grime layers in', OUT)

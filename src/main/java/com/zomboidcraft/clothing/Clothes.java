@@ -68,6 +68,11 @@ public final class Clothes {
         c("motorcycle_helmet", HAT, "HN").guard(100, 100).warm(1f, 1f, 0.9f).feel(0.3f).of(HARD).armour(2);
         // prized and grail headgear
         c("crusader_great_helm", HAT, "HN").guard(100, 100).bullet(15).warm(0.35f, 0.4f, 0.3f).feel(0.3f).of(HARD).armour(3).lasts(30);
+        c("crusader_sugarloaf_helm", HAT, "HN").guard(100, 100).bullet(18).warm(0.35f, 0.4f, 0.3f).feel(0.32f).of(HARD).armour(3).lasts(32);
+        c("crusader_armet", HAT, "HN").guard(100, 100).bullet(16).warm(0.3f, 0.35f, 0.3f).feel(0.25f).of(HARD).armour(3).lasts(30);
+        c("crusader_barbute", HAT, "H").guard(95, 95).bullet(12).warm(0.25f, 0.3f, 0.3f).feel(0.18f).of(HARD).armour(2).lasts(28);
+        c("crusader_crowned_helm", HAT, "HN").guard(100, 100).bullet(15).warm(0.4f, 0.45f, 0.35f).feel(0.32f).of(HARD).armour(3).lasts(30);
+        c("crusader_winged_helm", HAT, "HN").guard(100, 100).bullet(15).warm(0.35f, 0.4f, 0.3f).feel(0.32f).of(HARD).armour(3).lasts(30);
         c("gothic_sallet", HAT, "H").guard(95, 90).bullet(10).warm(0.25f, 0.3f, 0.3f).feel(0.2f).of(HARD).armour(2).lasts(24);
         c("bomb_disposal_helmet", HAT, "HN").guard(100, 100).bullet(60).warm(0.6f, 0.8f, 0.6f).feel(0.35f).slow(0.03f, 0).of(HARD).armour(3).lasts(20);
         c("police_cap", HAT, "").warm(0.1f, 0, 0.2f);

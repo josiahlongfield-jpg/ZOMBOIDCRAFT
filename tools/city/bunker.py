@@ -2632,6 +2632,23 @@ def blocks():
     add("bunk_duct_fallen", [[3, 0, 0, 13, 6, 16, "ext_galv"], [4, 6, 1, 12, 6.2, 15, "bunk_grit"]], "Fallen Duct",
         "METAL", rotate="axis")
 
+    # the steel frame under the slab: an I-beam across the room, some carrying the services
+    # (the ship kit's fit_beam shapes in the bunker's grey steel; runs along z like every axis piece)
+    beam = [[7.25, 9, 0, 8.75, 16, 16, "bunk_grey"], [5, 8.5, 0, 11, 9, 16, "bunk_grey"]]
+    add("bunk_beam", beam, "Steel Beam", "METAL", rotate="axis", decor=True)
+    add("bunk_beam_tray", beam + [[2, 6, 0, 14, 6.5, 16, "ext_galv"], [2, 6.5, 0, 2.5, 8, 16, "ext_galv"],
+                                  [13.5, 6.5, 0, 14, 8, 16, "ext_galv"], [3, 6.5, 0, 13, 7.5, 16, "bunk_cables"]],
+        "Steel Beam", "METAL", rotate="axis", decor=True)
+    add("bunk_beam_pipes", beam + [[0.5, 4, 0, 4.5, 8, 16, "bunk_pipe_grey"], [11.5, 4.5, 0, 14.5, 7.5, 16, "bunk_pipe_red"],
+                                   [1.5, 8, 7.5, 3.5, 8.5, 8.5, "bunk_grey"], [12, 7.5, 7.5, 14, 8.5, 8.5, "bunk_grey"]],
+        "Steel Beam", "METAL", rotate="axis", decor=True)
+    add("bunk_beam_duct", beam + [[2, 2, 0, 14, 8.5, 16, "ext_galv"]], "Steel Beam", "METAL", rotate="axis", decor=True)
+    # the army gallery's vault: the curve from the wall into the crown, cast in the wall's concrete
+    # (the wall at the back, z 16; a quarter round of radius 16 about the front bottom edge)
+    haunch = [[0, y0, z0, 16, y1, 16, "bunk_concrete"] for y0, y1, z0 in
+              ((4, 8, 14.5), (8, 11, 12.5), (11, 13, 10.5), (13, 14.5, 8), (14.5, 15.5, 5.5), (15.5, 16, 2.5))]
+    add("bunk_haunch", haunch, "Vaulted Concrete", "STONE")
+
     # the tower shelter's server hall
     add("bunk_server", [[1, 0, 1, 15, 16, 15, {"north": "bunk_server", "side": "bunk_server_side", "up": "bunk_server_lid",
                                                "down": "bunk_server_lid"}]], "Server Rack", "METAL")

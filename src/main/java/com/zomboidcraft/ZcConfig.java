@@ -912,6 +912,15 @@ public final class ZcConfig {
         public double weightChange = 1.0;
         /** Hit points a fed, watered, rested body heals in a Zomboid hour (Minecraft's food bar no longer heals). */
         public double regenPerHour = 3;
+        /** Zomboid's character creation (occupation and traits) on your first join and after each death. */
+        public boolean characterCreation = true;
+        /** Zomboid's Free Trait Points: added to everyone's budget in character creation (-100 to 100). */
+        public int freeTraitPoints = 0;
+        /**
+         * Zomboid's Negative Traits Penalty: diminishing returns on points from negative traits. "none", or one point
+         * less for every 3 ("one_every_3"), every 2 ("one_every_2") or every negative trait ("one_every_trait").
+         */
+        public String negativeTraitsPenalty = "none";
         /** Zomboid's "sleep allowed": whether you can lie down at all. */
         public boolean sleepAllowed = true;
     }
@@ -1896,6 +1905,8 @@ public final class ZcConfig {
         public double moodleMultiplier = 1.0;
         public double weatherMultiplier = 1.0;
         public boolean headgearEffect = true;
+        /** Every shot drops its spent case (a shotgun's hull) to pick up for the reloading bench (combat/Reloading). */
+        public boolean dropBrass = true;
         /** Worn guns sometimes jam (scaled by jamMultiplier); clear them with the reload key. */
         public boolean jams = true;
         /**

@@ -59,6 +59,11 @@ public final class House {
         alarmChance = chance;
     }
 
+    /** Zomboid's Randomized Building Chance for the house stories (Interior's tales), on RoadStories.rate's scale. */
+    public static void setStoryRate(DoubleSupplier rate) {
+        Interior.setStoryRate(rate);
+    }
+
     /** Zomboid's frequency names as a share of houses (never .. very_often). */
     public static double alarmChance(String frequency) {
         return switch (frequency == null ? "" : frequency) {
@@ -392,12 +397,14 @@ public final class House {
             }
         }
         java.util.function.BiPredicate<Integer, Integer> clear = (x, z) -> x <= gx0 + 1 && Math.abs(z - into) <= 0;
-        String[] back = {"home_workbench", "home_workbench", "home_tool_chest"};
+        // a hunter's garage: the gun cabinet by the freezer and the bench he loaded his own rounds at
+        boolean hunter = rng.nextDouble() < (style == Style.RANCH ? 0.2 : 0.1);
+        String[] back = {"home_workbench", hunter ? "zomboidcraft:reloading_bench" : "home_workbench", "home_tool_chest"};
         for (int i = 0; i < back.length && gx0 + 1 + i < gx1; i++) {
             int x = gx0 + 1 + i;
             if (!clear.test(x, gz1)) {
                 p.set(x, 1, gz1, back[i] + "[facing=north]");
-                if (i < 2) {
+                if (i < 2 && !back[i].equals("zomboidcraft:reloading_bench")) {
                     p.set(x, 2, gz1, "store_pegboard[facing=south]");
                 }
             }
@@ -405,7 +412,7 @@ public final class House {
         p.set(gx1, 1, gz1, "home_boxes");
         p.set(gx1, 2, gz1, "home_boxes");
         String[] side = {"home_garage_shelf", "home_garage_shelf", "home_freezer",
-                rng.nextDouble() < (style == Style.RANCH ? 0.2 : 0.1) ? "home_gun_cabinet" : "home_water_heater"};
+                hunter ? "home_gun_cabinet" : "home_water_heater"};
         for (int i = 0; i < side.length && gz1 - 1 - i > gz0 + 1; i++) {
             int z = gz1 - 1 - i;
             String b = side[i];

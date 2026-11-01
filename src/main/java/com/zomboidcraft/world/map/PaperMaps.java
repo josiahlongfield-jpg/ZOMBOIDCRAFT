@@ -215,6 +215,8 @@ public final class PaperMaps {
             case "ship" -> "Engine room, forward bulkhead. One plate isn't welded.";
             case "shelter" -> "Civil defence shelter. Down through the boiler room.";
             case "forest" -> "Stumps, a vent pipe, a cable post. Look under the leaves.";
+            case "vault" -> "The bank on the square. In the vault, the boxes with no numbers.";
+            case "subway" -> "A transit map. One stop on the loop is crossed out in red.";
             default -> "B4, electrical. Behind the cage, under the floor.";
         };
     }

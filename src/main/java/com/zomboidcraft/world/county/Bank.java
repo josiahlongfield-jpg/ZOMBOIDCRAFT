@@ -32,6 +32,8 @@ final class Bank {
     private final Bldg b;
     private final String brick, name;
     private final boolean robbed, pediment, atmLit;
+    /** The panic room under the vault (the bank vault bunker), or null for none. */
+    Bunker.State bunker;
 
     Bank(Placer p, SplittableRandom rng) {
         this.p = p;
@@ -470,6 +472,9 @@ final class Bank {
                 p.set(x, yy, z1 - 1, (robbed && rng.nextDouble() < 0.3 ? "bk_deposit" : box) + "[facing=north]");
             }
         }
+        if (bunker != null) {
+            panicRoom(x1, zv, z1);
+        }
         p.set(2, y + 1, zv + 1, "store_safe[facing=east]");
         p.set(x1 - 2, y + 1, zv + 1, "cellar_safe[facing=west]");
         p.set(x1 - 2, y + 2, zv + 1, "cellar_safe_top[facing=west]");
@@ -489,6 +494,72 @@ final class Bank {
             p.setIfAir(cx, y + 2, tz, "bk_bags");
             p.setIfAir(2, y + 1, z1 - 2, "bk_bags");
             p.setIfAir(x1 - 2, y + 1, z1 - 2, "bk_bags");
+        }
+    }
+
+    // ------------------------------------------------------------------ the bank vault bunker
+
+    /** How deep under the street the panic room's floor is. */
+    static final int PANIC_FLOOR = -14;
+
+    /**
+     * Behind the vault: three columns of the back wall's deposit boxes have no numbers on them, and
+     * the middle one's lower two rows are a door. Behind it, a hatch in the floor and a ladder down a
+     * lined shaft to the blast door of the panic room a client paid the bank to dig, under the
+     * banking hall and out under the street (Bunker kind VAULT). The robbers who emptied the vault
+     * walked straight past it.
+     */
+    private void panicRoom(int x1, int zv, int z1) {
+        int y = F, zb = z1 - 1;
+        int xs = 3 + rng.nextInt(Math.max(1, x1 - 5));
+        for (int x = xs - 1; x <= xs + 1; x++) {
+            for (int yy = y + 1; yy <= y + 3; yy++) {
+                if (x != xs || yy == y + 3) {
+                    p.set(x, yy, zb, "bk_deposit_blank[facing=north]");
+                }
+            }
+        }
+        Doors.place(p, xs, y + 1, zb, "bk_deposit_door", "south", rng.nextBoolean() ? "left" : "right", false);
+        p.set(xs, y, zb, "bunk_hatch[facing=north,half=top,open=false]");
+        // the core turned to run north from under the back wall: its shaft, at (0, -4) in its frame, under the hatch
+        Placer bp = p.turned(xs, PANIC_FLOOR, zb - 4, 2);
+        Bunker b = new Bunker(bp, new SplittableRandom(rng.nextLong()), Bunker.Kind.VAULT, bunker);
+        int rise = y - PANIC_FLOOR;
+        vestibule(bp, rise);
+        b.build();
+        p.mark("bunker " + bunker.name().toLowerCase(java.util.Locale.ROOT) + " vault", xs, y + 1, zb);
+        bp.mark("bunker door", 0, 1, -2);
+    }
+
+    /** In the bunker's frame: the passage in front of the blast door and the lined shaft up to the hatch. */
+    private void vestibule(Placer bp, int rise) {
+        for (int x = -1; x <= 2; x++) {
+            for (int z = -5; z <= -1; z++) {
+                for (int y = 0; y <= 4; y++) {
+                    boolean room = x >= 0 && x <= 1 && z >= -4 && y >= 1 && y <= 3;
+                    bp.set(x, y, z, room ? "air" : y == 0 ? "bunk_floor" : y == 1 ? "bunk_dado" : "bunk_paint");
+                }
+            }
+        }
+        // the shaft lined up to the ground; through the bank's foundations it's cut in the rubble
+        for (int y = 5; y < -PANIC_FLOOR; y++) {
+            for (int x = -1; x <= 1; x++) {
+                for (int z = -5; z <= -3; z++) {
+                    bp.set(x, y, z, x == 0 && z == -4 ? "air" : "bunk_concrete");
+                }
+            }
+        }
+        for (int y = 1; y < rise; y++) {
+            bp.set(0, y, -4, "bunk_ladder[facing=south]");
+        }
+        boolean sealed = bunker == Bunker.State.SEALED;
+        bp.set(1, 3, -4, sealed ? "bunk_lamp_red_lit[facing=south]" : "bunk_lamp_red[facing=south]");
+        bp.set(0, 2, -2, "bunk_st_restricted[facing=east]");
+        bp.set(1, 2, -1, "bunk_keypad[facing=west]");
+        bp.set(1, 1, -3, bunker == Bunker.State.BREACHED ? "home_blood_drag[facing=north]" : "bunk_grit");
+        if (!sealed) {
+            bp.set(0, 1, -2, "paper");
+            bp.set(1, 1, -2, "bk_notes[facing=north]");
         }
     }
 

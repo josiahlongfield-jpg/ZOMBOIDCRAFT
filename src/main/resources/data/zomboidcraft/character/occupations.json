@@ -1,0 +1,324 @@
+{
+ "note": "Project Zomboid B42 (42.20.3) character creation, from the game's character_professions.txt and character_traits.txt: Zomboid's ids mapped to ours, its weapon skills folded into Blade and Blunt (the larger boost).",
+ "occupations": [
+  {
+   "id": "unemployed",
+   "name": "Unemployed",
+   "points": 8,
+   "skills": {},
+   "traits": [],
+   "description": "Use free trait points to make a custom build for your character."
+  },
+  {
+   "id": "blacksmith",
+   "name": "Blacksmith",
+   "points": -6,
+   "skills": {
+    "BLACKSMITHING": 4,
+    "MAINTENANCE": 1,
+    "BLUNT": 1
+   },
+   "traits": [
+    "blacksmith_knowledge"
+   ],
+   "description": "Can build a stone furnace and work metal."
+  },
+  {
+   "id": "burger_flipper",
+   "name": "Burger Flipper",
+   "points": 2,
+   "skills": {
+    "COOKING": 2,
+    "MAINTENANCE": 1,
+    "BLADE": 1
+   },
+   "traits": [
+    "cook"
+   ],
+   "description": "Cooks fast."
+  },
+  {
+   "id": "burglar",
+   "name": "Burglar",
+   "points": -6,
+   "skills": {
+    "NIMBLE": 2,
+    "SNEAKING": 2,
+    "LIGHTFOOTED": 2
+   },
+   "traits": [
+    "burglar"
+   ],
+   "description": "Quiet, quick, and can hotwire a car."
+  },
+  {
+   "id": "carpenter",
+   "name": "Carpenter",
+   "points": -2,
+   "skills": {
+    "CARPENTRY": 4,
+    "CARVING": 1,
+    "BLUNT": 1,
+    "MASONRY": 1,
+    "MAINTENANCE": 1
+   },
+   "traits": [],
+   "description": "Builds and mends with wood."
+  },
+  {
+   "id": "chef",
+   "name": "Chef",
+   "points": -2,
+   "skills": {
+    "COOKING": 4,
+    "MAINTENANCE": 1,
+    "BLADE": 1,
+    "BUTCHERING": 2
+   },
+   "traits": [
+    "cook"
+   ],
+   "description": "Knows the recipes."
+  },
+  {
+   "id": "construction_worker",
+   "name": "Construction Worker",
+   "points": -2,
+   "skills": {
+    "BLUNT": 2,
+    "MASONRY": 2,
+    "CARPENTRY": 1,
+    "MAINTENANCE": 1
+   },
+   "traits": [],
+   "description": "Swings a hammer all day."
+  },
+  {
+   "id": "diy_expert",
+   "name": "DIY Expert",
+   "points": -2,
+   "skills": {
+    "CARPENTRY": 1,
+    "MAINTENANCE": 2,
+    "BLUNT": 1,
+    "MASONRY": 1
+   },
+   "traits": [
+    "inventive"
+   ],
+   "description": "Keeps tools and things working."
+  },
+  {
+   "id": "doctor",
+   "name": "Doctor",
+   "points": 0,
+   "skills": {
+    "FIRST_AID": 6,
+    "BLADE": 1
+   },
+   "traits": [],
+   "description": "Treats wounds well."
+  },
+  {
+   "id": "electrician",
+   "name": "Electrician",
+   "points": -2,
+   "skills": {
+    "ELECTRICAL": 5
+   },
+   "traits": [],
+   "description": "Can operate generators."
+  },
+  {
+   "id": "engineer",
+   "name": "Engineer",
+   "points": -4,
+   "skills": {
+    "ELECTRICAL": 1,
+    "CARPENTRY": 1,
+    "MASONRY": 1
+   },
+   "traits": [],
+   "description": "Can make traps and explosives. Can operate generators."
+  },
+  {
+   "id": "farmer",
+   "name": "Farmer",
+   "points": 0,
+   "skills": {
+    "AGRICULTURE": 4,
+    "ANIMAL_CARE": 1,
+    "STRENGTH": 1
+   },
+   "traits": [],
+   "description": "Grows food."
+  },
+  {
+   "id": "fire_officer",
+   "name": "Firefighter",
+   "points": 0,
+   "skills": {
+    "SPRINTING": 1,
+    "STRENGTH": 1,
+    "FITNESS": 1,
+    "BLADE": 1
+   },
+   "traits": [],
+   "description": "Fit, strong and handy with an axe."
+  },
+  {
+   "id": "fisherman",
+   "name": "Fishing Guide",
+   "points": -2,
+   "skills": {
+    "FISHING": 3,
+    "FORAGING": 1,
+    "BUTCHERING": 1
+   },
+   "traits": [],
+   "description": "Lives off the water."
+  },
+  {
+   "id": "fitness_instructor",
+   "name": "Fitness Instructor",
+   "points": -6,
+   "skills": {
+    "FITNESS": 3,
+    "SPRINTING": 2,
+    "STRENGTH": 1
+   },
+   "traits": [
+    "nutritionist"
+   ],
+   "description": "Fit, and reads a food label."
+  },
+  {
+   "id": "lumberjack",
+   "name": "Lumberjack",
+   "points": 0,
+   "skills": {
+    "BLADE": 2,
+    "STRENGTH": 1,
+    "MAINTENANCE": 1
+   },
+   "traits": [
+    "axpert"
+   ],
+   "description": "Slightly faster movement through forests and woodland. Less muscle strain from chopping trees."
+  },
+  {
+   "id": "mechanic",
+   "name": "Mechanic",
+   "points": -4,
+   "skills": {
+    "MECHANICS": 4,
+    "METALWORKING": 1
+   },
+   "traits": [
+    "amateur_mechanic"
+   ],
+   "description": "Familiar with the maintenance and repair of all vehicle models on the roads of Kentucky."
+  },
+  {
+   "id": "nurse",
+   "name": "Nurse",
+   "points": 0,
+   "skills": {
+    "FIRST_AID": 3,
+    "LIGHTFOOTED": 1,
+    "FITNESS": 1
+   },
+   "traits": [
+    "night_owl"
+   ],
+   "description": "Patches people up."
+  },
+  {
+   "id": "park_ranger",
+   "name": "Park Ranger",
+   "points": -4,
+   "skills": {
+    "TRAPPING": 1,
+    "FIRST_AID": 1,
+    "FORAGING": 2,
+    "KNAPPING": 1,
+    "CARVING": 1
+   },
+   "traits": [
+    "herbalist"
+   ],
+   "description": "Much faster movement through forests and woodland."
+  },
+  {
+   "id": "police_officer",
+   "name": "Police Officer",
+   "points": -4,
+   "skills": {
+    "AIMING": 4,
+    "RELOADING": 1,
+    "NIMBLE": 1
+   },
+   "traits": [],
+   "description": "Trained with a handgun."
+  },
+  {
+   "id": "rancher",
+   "name": "Rancher",
+   "points": 0,
+   "skills": {
+    "ANIMAL_CARE": 4,
+    "BUTCHERING": 3,
+    "FITNESS": 1
+   },
+   "traits": [],
+   "description": "Raises and butchers livestock."
+  },
+  {
+   "id": "security_guard",
+   "name": "Security Guard",
+   "points": -2,
+   "skills": {
+    "SPRINTING": 2,
+    "LIGHTFOOTED": 1,
+    "BLUNT": 1
+   },
+   "traits": [
+    "night_owl"
+   ],
+   "description": "Used to nights awake."
+  },
+  {
+   "id": "tailor",
+   "name": "Tailor",
+   "points": 2,
+   "skills": {
+    "TAILORING": 4
+   },
+   "traits": [],
+   "description": "Mends and makes clothes."
+  },
+  {
+   "id": "veteran",
+   "name": "Veteran",
+   "points": -8,
+   "skills": {
+    "AIMING": 2,
+    "RELOADING": 2
+   },
+   "traits": [
+    "desensitized"
+   ],
+   "description": "Has seen worse; doesn't panic."
+  },
+  {
+   "id": "metalworker",
+   "name": "Welder",
+   "points": -4,
+   "skills": {
+    "METALWORKING": 4
+   },
+   "traits": [],
+   "description": "Can weld foraged metal to create items and barricades."
+  }
+ ]
+}

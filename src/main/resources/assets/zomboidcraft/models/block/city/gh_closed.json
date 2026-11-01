@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "gh_closed": "zomboidcraft:block/city/gh_closed",
+    "paper": "zomboidcraft:block/city/paper",
+    "particle": "zomboidcraft:block/city/gh_closed"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        2,
+        15.6
+      ],
+      "to": [
+        14,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gh_closed"
+        },
+        "south": {
+          "texture": "#paper",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#paper"
+        },
+        "west": {
+          "texture": "#paper"
+        },
+        "up": {
+          "texture": "#paper"
+        },
+        "down": {
+          "texture": "#paper"
+        }
+      }
+    }
+  ]
+}

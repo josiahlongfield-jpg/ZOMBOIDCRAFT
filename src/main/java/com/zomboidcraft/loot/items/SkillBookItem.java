@@ -34,6 +34,11 @@ public class SkillBookItem extends LootItem {
         this.skill = skill;
     }
 
+    /** Reading time: Fast and Slow Reader change it (survival/character/Traits). */
+    private static int ticks(LivingEntity entity) {
+        return entity instanceof Player p ? Math.round(READ_TICKS * com.zomboidcraft.survival.character.Traits.readScale(p)) : READ_TICKS;
+    }
+
     public Skill skill() {
         return skill;
     }
@@ -42,7 +47,8 @@ public class SkillBookItem extends LootItem {
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
         int lvl = Skills.level(player, skill);
         int volume = SkillBooks.volume(lvl);
-        String no = lvl >= Skill.MAX_LEVEL ? "There's nothing left in this book to teach you."
+        String no = com.zomboidcraft.survival.character.Traits.has(player, "illiterate") ? "You can't read."
+                : lvl >= Skill.MAX_LEVEL ? "There's nothing left in this book to teach you."
                 : SkillBooks.read(player, skill, volume) ? "You've already read Vol " + volume + "." : null;
         if (no != null) {
             if (!level.isClientSide()) {
@@ -59,7 +65,8 @@ public class SkillBookItem extends LootItem {
         if (!(entity instanceof ServerPlayer player)) {
             return;
         }
-        int done = READ_TICKS - remaining;
+        int total = ticks(player);
+        int done = total - remaining;
         if (done > 0 && done % 60 == 0) {
             level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.BOOK_PAGE_TURN, SoundSource.PLAYERS,
                     0.6f, 0.9f + player.getRandom().nextFloat() * 0.2f);
@@ -67,7 +74,7 @@ public class SkillBookItem extends LootItem {
         if (done % 20 == 0) {
             int volume = SkillBooks.volume(Skills.level(player, skill));
             player.sendOverlayMessage(Component.literal("Reading " + skill.displayName() + " Vol " + volume + "... "
-                    + Math.round(100f * done / READ_TICKS) + "%").withStyle(ChatFormatting.GRAY));
+                    + Math.round(100f * done / total) + "%").withStyle(ChatFormatting.GRAY));
         }
     }
 
@@ -90,7 +97,7 @@ public class SkillBookItem extends LootItem {
 
     @Override
     public int getUseDuration(ItemStack stack, LivingEntity entity) {
-        return READ_TICKS;
+        return ticks(entity);
     }
 
     @Override

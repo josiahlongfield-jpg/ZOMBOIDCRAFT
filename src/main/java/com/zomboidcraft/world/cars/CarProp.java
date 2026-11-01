@@ -1002,7 +1002,7 @@ public class CarProp extends Entity {
         String how = keyWhere == CarKeys.IGNITION || com.zomboidcraft.ZcConfig.get().world.vehicleEasyUse ? "The key's in the ignition: C to start it."
                 : CarKeys.carries(player, this) ? "You have the key: C to start it."
                 : hotwired ? "It's been hotwired: C to start it."
-                : "No key: C to hotwire it. The wiring looks " + wiring(carCondition()) + ".";
+                : "No key: C to hotwire it (Electrical 1, Mechanics 2). The wiring looks " + wiring(carCondition()) + ".";
         return how + " L headlights, W/S drive, A/D steer, space handbrake, H horn.";
     }
 
@@ -1116,6 +1116,13 @@ public class CarProp extends Entity {
             return;
         }
         if (!canStart(player)) {
+            // Zomboid: hotwiring takes Electrical 1 and Mechanics 2, unless you were a Burglar
+            if (!player.isCreative() && !com.zomboidcraft.survival.character.Traits.has(player, "burglar")
+                    && (com.zomboidcraft.skills.Skills.level(player, com.zomboidcraft.skills.Skill.ELECTRICAL) < 1
+                    || com.zomboidcraft.skills.Skills.level(player, com.zomboidcraft.skills.Skill.MECHANICS) < 2)) {
+                player.sendOverlayMessage(Component.literal("No key, and you don't know how to hotwire it (Electrical 1 and Mechanics 2)."));
+                return;
+            }
             hotwireLeft = (int) Math.round(com.zomboidcraft.ZcConfig.get().world.hotwireSeconds * 20);
             hotwirer = player;
             soundAlarm();
@@ -1157,7 +1164,8 @@ public class CarProp extends Entity {
 
     /** Whether someone knows enough to tell which part's at fault (Mechanics 1). */
     private static boolean knowsCars(Entity who) {
-        return who instanceof Player p && (p.isCreative() || com.zomboidcraft.skills.Skills.level(p, com.zomboidcraft.skills.Skill.MECHANICS) >= 1);
+        return who instanceof Player p && (p.isCreative() || com.zomboidcraft.skills.Skills.level(p, com.zomboidcraft.skills.Skill.MECHANICS) >= 1
+                || com.zomboidcraft.survival.character.Traits.has(p, "amateur_mechanic"));
     }
 
     /** A tick of hotwiring: the one at it has to stay at the wheel; at the end it starts, or only sparks. */
@@ -1819,6 +1827,16 @@ public class CarProp extends Entity {
         CarParts.Drive d = partDrive();
         double top = topSpeed() * d.top();
         double accel = ACCEL * d.power(), brake = BRAKE * d.brake();
+        // Zomboid's driving traits: Speed Demon gets more out of any car, a Sunday Driver never pushes one
+        if (getControllingPassenger() instanceof Player driver) {
+            if (com.zomboidcraft.survival.character.Traits.has(driver, "speed_demon")) {
+                top *= 1.15;
+                accel *= 1.15;
+            } else if (com.zomboidcraft.survival.character.Traits.has(driver, "sunday_driver")) {
+                top *= 0.6;
+                accel *= 0.7;
+            }
+        }
         boolean runs = engineOn(), ground = onGround();
         boolean stopping = in.backward() && !in.forward() && speed > 0.02 || in.forward() && !in.backward() && speed < -0.02;
         if (runs && (in.backward() && !in.forward() && speed > 0.02 || in.forward() && !in.backward() && speed < -0.02
