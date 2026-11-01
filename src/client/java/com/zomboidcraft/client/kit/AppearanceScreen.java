@@ -340,7 +340,6 @@ public final class AppearanceScreen extends Screen {
         KitDraw.panel(g, fx, panelTop, figW, panelBottom - panelTop);
         if (minecraft.player != null) {
             float tall = p.height;
-            int cx = fx + figW / 2;
             float scale, feet;
             if (close) {
                 scale = (panelBottom - panelTop) / 0.55f;
@@ -349,9 +348,13 @@ public final class AppearanceScreen extends Screen {
                 scale = (panelBottom - panelTop - 16) / tall;
                 feet = panelBottom - 8;
             }
-            int cy = Math.round(feet - (minecraft.player.getBbHeight() / 2 + 0.0625f) * scale), reach = Math.round(3 * scale) + 400;
-            g.enableScissor(fx + 1, panelTop + 1, fx + figW - 1, panelBottom - 1);
-            InventoryScreen.extractEntityInInventoryFollowsMouse(g, cx - reach, cy - reach, cx + reach, cy + reach, Math.round(scale), 0.0625f,
+            // drawn into a picture the panel's size (a bigger one runs the graphics card out of memory): the panel's
+            // middle is the point bbHeight/2 + lift over the feet, so the lift puts her feet where they go
+            int x0 = fx + 1, y0 = panelTop + 1, x1 = fx + figW - 1, y1 = panelBottom - 1;
+            float middle = (y0 + y1) / 2f;
+            float lift = (feet - middle) / scale - minecraft.player.getBbHeight() / 2;
+            g.enableScissor(x0, y0, x1, y1);
+            InventoryScreen.extractEntityInInventoryFollowsMouse(g, x0, y0, x1, y1, Math.round(scale), lift,
                     mx, my, minecraft.player);
             g.disableScissor();
         }

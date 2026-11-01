@@ -96,6 +96,39 @@ public final class Survivors {
         return drawn(state) ? last : null;
     }
 
+    /** What a survivor wears this frame: her pack, her composed skin, and her clothes' meshes with their textures. */
+    record Outfit(SurvivorPack pack, Identifier body, Map<String, Identifier> clothes) {
+    }
+
+    /** This player's survivor skin and clothes, or null (no look, no pack, or the skin still being made). */
+    static Outfit outfit(Player player) {
+        Minecraft mc = Minecraft.getInstance();
+        Appearance.Look look = lookOf(player);
+        if (look == null) return null;
+        SurvivorPack pack = SurvivorPack.get(look.sex());
+        if (pack == null) return null;
+        String hair, beard, colour;
+        if (preview != null && player == mc.player) {
+            hair = preview.hair();
+            beard = preview.beard();
+            colour = preview.colour();
+        } else {
+            Grooming.Look g = Grooming.look(player);
+            long now = player.level().getGameTime();
+            hair = Grooming.hair(g, now);
+            beard = Grooming.beard(g, now);
+            colour = g.colour();
+        }
+        SurvivorClothes.Dress dress = SurvivorClothes.dress(pack, player);
+        List<SurvivorTextures.Layer> layers = layers(pack, look, hair, beard, colour);
+        layers.addAll(dress.body());
+        Identifier body = SurvivorTextures.body(pack, layers);
+        if (body == null) return null;
+        Map<String, Identifier> clothes = new HashMap<>();
+        for (SurvivorClothes.Piece c : dress.pieces()) clothes.put(c.piece(), c.texture());
+        return new Outfit(pack, body, clothes);
+    }
+
     /** Whether the player this render state is for is drawn as a survivor. */
     public static boolean drawsAsSurvivor(AvatarRenderState state) {
         Minecraft mc = Minecraft.getInstance();
@@ -147,7 +180,12 @@ public final class Survivors {
         List<SurvivorTextures.Layer> layers = layers(pack, look, hair, beard, colour);
         layers.addAll(dress.body());
         Identifier body = SurvivorTextures.body(pack, layers);
-        if (body == null) return false;   // a moment while it's made: the usual model meanwhile
+        if (body == null) {
+            // a moment while her skin is made: nothing drawn meanwhile, never the Minecraft model
+            HIDDEN.add(model);
+            hide(model, true);
+            return false;
+        }
         SurvivorPack.Style hs = pack.hairFor(hair, hairCut), bs = look.female() ? null : pack.beardFor(beard, beardCut);
         // a hat, helmet or hood replaces the hair outright, so none comes through it; a full mask hides the beard too
         if (dress.hairHidden()) hs = null;
@@ -486,7 +524,7 @@ public final class Survivors {
     }
 
     /** The bones from the chest up (and the hand props): what an upper-body action moves. */
-    private static boolean[] upperBody(SurvivorPack pack) {
+    static boolean[] upperBody(SurvivorPack pack) {
         int n = pack.skin.boneNames.length;
         boolean[] up = new boolean[n];
         for (int b = 0; b < n; b++) {
@@ -576,7 +614,7 @@ public final class Survivors {
     }
 
     /** Where her hand's grip is this frame (her space). */
-    private static Vector3f gripAt(SurvivorPack pack, float[] pos, float[] turn, int s) {
+    static Vector3f gripAt(SurvivorPack pack, float[] pos, float[] turn, int s) {
         int h = pack.hand[s];
         if (h < 0) return new Vector3f();
         Quaternionf hq = new Quaternionf(turn[h * 4], turn[h * 4 + 1], turn[h * 4 + 2], turn[h * 4 + 3]);
@@ -601,7 +639,7 @@ public final class Survivors {
     }
 
     /** Her hand's grip brought to a point (her space), the wrist kept as the clip has it. */
-    private static void reachPoint(SurvivorPack pack, float[] pos, float[] turn, int s, Vector3f point) {
+    static void reachPoint(SurvivorPack pack, float[] pos, float[] turn, int s, Vector3f point) {
         int h = pack.hand[s];
         if (h < 0) return;
         Quaternionf hq = new Quaternionf(turn[h * 4], turn[h * 4 + 1], turn[h * 4 + 2], turn[h * 4 + 3]);
@@ -612,7 +650,7 @@ public final class Survivors {
      * Two-bone reach: the shoulder stays, the elbow bends in the plane the clip already bends it in, and the wrist lands
      * on the target (as near as the arm's length allows).
      */
-    private static void reach(SurvivorPack pack, float[] pos, float[] turn, int s, Vector3f target) {
+    static void reach(SurvivorPack pack, float[] pos, float[] turn, int s, Vector3f target) {
         int u = pack.upper[s], f = pack.fore[s], h = pack.hand[s];
         if (u < 0 || f < 0 || h < 0) return;
         Vector3f sh = vec(pos, u), el = vec(pos, f), wr = vec(pos, h);
@@ -642,7 +680,7 @@ public final class Survivors {
     }
 
     /** Each bone's pose times its inverse bind: what the skinning wants. */
-    private static Matrix4f[] skinOf(SurvivorPack pack, float[] pos, float[] turn) {
+    static Matrix4f[] skinOf(SurvivorPack pack, float[] pos, float[] turn) {
         int n = pack.skin.boneNames.length;
         Matrix4f[] out = new Matrix4f[n];
         Quaternionf q = new Quaternionf();
