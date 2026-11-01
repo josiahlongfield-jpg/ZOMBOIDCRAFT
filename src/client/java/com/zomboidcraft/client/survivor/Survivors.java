@@ -96,6 +96,12 @@ public final class Survivors {
         return drawn(state) ? last : null;
     }
 
+    /** Whether the player this render state is for is drawn as a survivor. */
+    public static boolean drawsAsSurvivor(AvatarRenderState state) {
+        Minecraft mc = Minecraft.getInstance();
+        return mc.level != null && mc.level.getEntity(state.id) instanceof Player player && !player.isSpectator() && active(player);
+    }
+
     /** Whether this player is drawn as a survivor (they have a look, and this PC has its pack). */
     public static boolean active(Player player) {
         Appearance.Look look = lookOf(player);
