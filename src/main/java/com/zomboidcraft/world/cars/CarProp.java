@@ -2399,9 +2399,12 @@ public class CarProp extends Entity {
 
     /** Spawned by command to drive at once: in full repair, full tank, good battery, unlocked, the key in the ignition. */
     public void readyToDrive() {
+        setCondition(100);
+        worn = true;
+        rollParts();                // at full condition, so nothing missing or failing
+        fuelRolled = true;          // or the first tick's Chance Has Gas roll would drain the tank again
         setFuel(1);
         setBattery(true);
-        setCondition(100);
         keyWhere = CarKeys.IGNITION;
         lockRolled = true;
         locked = false;
