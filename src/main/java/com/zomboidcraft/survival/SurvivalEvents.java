@@ -144,6 +144,8 @@ public final class SurvivalEvents {
         SurvivalStats stats = SurvivalStats.get(player);
         ZcConfig.Survival config = ZcConfig.get().survival;
         float roll = random.nextFloat();
+        // Thin-skinned: zombies get through more often (a bite or scratch a fifth more likely)
+        if (com.zomboidcraft.survival.character.Traits.has(player, "thin_skinned")) roll *= 0.8f;
         // Zomboid's Transmission (zombieLore): bites and scratches, bites only, or nothing from wounds at all (none,
         // and everyone's infected, where you carry it already and rise whatever kills you)
         ZcConfig.ZombieLore.Transmission spread = ZcConfig.get().zombieLore.transmission;
