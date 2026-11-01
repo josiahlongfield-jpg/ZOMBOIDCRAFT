@@ -284,6 +284,8 @@ def build(sex, media, ws, out_dir):
         p = files.get(f'textures/{t}.png')
         if p:
             tex['hairtex/' + t] = sp.png(Image.open(p).convert('RGBA'))
+        else:
+            print(f'  no hair texture {t} (is the base game media in PZ_MEDIA_EXTRA?)')
 
     # Zomboid's outfits and our pools of them
     outs = outfits(media, files)[sex]
