@@ -17,11 +17,11 @@ public final class GpuTimer {
     /** The parts, in report order. */
     public static final String FRAME = "Whole frame (world, hand, HUD)", WORLD = "World (everything but the HUD)",
             SHADOW = "Photon shadow pass (all of it)", SHADOW_TERRAIN = "  shadow pass: blocks and buildings",
-            TERRAIN = "Blocks and buildings, solid (main view)", OBJECTS = "Objects: cars, people, props, guns (main view)",
+            TERRAIN = "Blocks and buildings, solid (main view)", OBJECTS = "Solid pass, blocks and objects together (main view)",
             DEFERRED = "Photon lighting before glass and water (deferred)", TRANSLUCENT = "Glass, water and see-through blocks",
             COMPOSITE = "Photon after-effects and final pass (composite)";
 
-    private static final String[] ORDER = {FRAME, WORLD, SHADOW, SHADOW_TERRAIN, TERRAIN, OBJECTS, DEFERRED, TRANSLUCENT, COMPOSITE};
+    private static final String[] ORDER = {FRAME, WORLD, SHADOW, SHADOW_TERRAIN, OBJECTS, TERRAIN, DEFERRED, TRANSLUCENT, COMPOSITE};
 
     private record Pending(String label, int start, int end, long frame) {}
 
@@ -165,6 +165,11 @@ public final class GpuTimer {
         if (sh != null && st != null) {
             r.append(String.format("  %-58s %7.2f ms%n", "  shadow pass: objects and the rest (shadow minus blocks)",
                     (sh[0] - st[0]) / 1e6 / frames));
+        }
+        long[] so = snap.get(OBJECTS), te = snap.get(TERRAIN);
+        if (so != null && te != null) {
+            r.append(String.format("  %-58s %7.2f ms%n", "  objects: cars, people, props, guns (solid pass minus blocks)",
+                    (so[0] - te[0]) / 1e6 / frames));
         }
         return r.toString();
     }
