@@ -177,6 +177,13 @@ public class LocalGunFilmTest implements FabricClientGameTest {
                     "summon item %.2f 100.1 %.2f {Item:{id:\"zomboidcraft:%s\",count:1},PickupDelay:32767,Age:-32768}",
                     -1.6 + (i % 4) * 1.05, -0.6 + (i / 4) * 0.9, items[i]));
         }
+        ctx.waitTicks(10);
+        sp.getServer().runOnServer(server -> {
+            var all = server.overworld().getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, new AABB(-4, 98, -4, 4, 104, 4));
+            LOG.info("ZCLOCAL rounds on the ground: {}", all.size());
+            all.forEach(e -> LOG.info("ZCLOCAL  {} at {}", e.getItem().getHoverName().getString(), e.position()));
+        });
+        sp.getServer().runCommand("kill @e[type=zomboidcraft:corpse]");
         sp.getServer().runCommand("tp @a 0.2 102.0 -1.4 0 62");
         shots(ctx, "rounds | on the ground: 9mm .380 .38 .44 / .45ACP 5.7 .45Colt .500 / .22 5.56 .308 .30-30 / .50 12g 40mm rocket", 12);
     }
