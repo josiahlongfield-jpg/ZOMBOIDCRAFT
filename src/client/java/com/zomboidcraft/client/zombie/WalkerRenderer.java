@@ -155,8 +155,9 @@ public class WalkerRenderer extends HumanoidMobRenderer<Zombie, WalkerRenderStat
                 state.zeyes = null;
             }
             zed(zombie, state, partialTick);
-            if (newly != 0) {
-                // the limb flies off in the pose it was in the moment before
+            // the limb flies off in the pose it was in the moment before; not with the Zomboid bodies in, as the flying
+            // piece is the old body's (Josiah: no Minecraft-style zombie, or bit of one, ever shows with them)
+            if (newly != 0 && state.zed == null) {
                 Gibs.spawn(state.zbody, state.zskin, state.zkit, ZBodyLayer.pose(state.zbody, animator.before, state.legless),
                         newly, state.cuts & ~newly | ZBodyLayer.missingCuts(state.missingLimb), limbs,
                         state.x, state.y, state.z, state.bodyRot, state.scale, state.variant);

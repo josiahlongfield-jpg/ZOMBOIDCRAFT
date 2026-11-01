@@ -1,7 +1,6 @@
 package com.zomboidcraft.client.zombie.body;
 
 import com.zomboidcraft.ZcConfig;
-import com.zomboidcraft.ZomboidCraft;
 import com.zomboidcraft.zombie.population.CrowdPayload;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,17 +11,14 @@ import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.phys.Vec3;
 
 /**
  * The dead out in the open past the real zombies, as the server's records have them (Population.crowd): no
- * entities, only the far-off pictures (ZSprites), each standing where it is, facing its own way and swaying through
+ * entities, only Zomboid's thinnest bodies (no pictures), each standing where it is, facing its own way and swaying through
  * the standing frames. One batch per outfit. Replaced about once a second; gone if the server stops sending.
  */
 public final class CrowdFx {
@@ -107,7 +103,6 @@ public final class CrowdFx {
         Vec3 eye = cam.pos;
         // in ticks; the standing frames only turn over about once a second, so the wall clock will do
         float age = (System.nanoTime() / 1_000_000L % 3_600_000L) / 50f;
-        int overlay = OverlayTexture.NO_OVERLAY;
         int drawn = 0;
         if (zomboid) {
             // with the Zomboid packs here the crowd is Zomboid's thinnest bodies, never pictures or the old body
@@ -128,24 +123,7 @@ public final class CrowdFx {
             ZDetail.crowd(drawn);
             return;
         }
-        for (Group g : groups) {
-            ZSprites.Sheet sheet = ZSprites.get(g.outfit, ZBodyMesh.get(g.outfit + "_low"),
-                    ZomboidCraft.id("textures/entity/zbody/low/" + g.outfit + ".png"),
-                    ZomboidCraft.id("textures/entity/zbody/kit/" + g.outfit + ".png"));
-            if (sheet == null) {
-                continue;
-            }
-            Identifier tex = sheet.texture();
-            context.submitNodeCollector().submitCustomGeometry(context.poseStack(), RenderTypes.entityCutout(tex),
-                    (pose, out) -> {
-                        for (int i = 0; i < g.x.length; i++) {
-                            int frame = ZSprites.frame(false, false, 0f, age, g.variant[i]);
-                            ZSprites.cardAt(sheet, frame, (float) (g.x[i] - eye.x), (float) (g.y[i] - eye.y),
-                                    (float) (g.z[i] - eye.z), g.yaw[i], pose, out, g.light[i], overlay);
-                        }
-                    });
-            drawn += g.x.length;
-        }
+        // without the Zomboid packs the crowd isn't drawn: no picture zombies, ever (Josiah: a scope shows them up)
         ZDetail.crowd(drawn);
     }
 
