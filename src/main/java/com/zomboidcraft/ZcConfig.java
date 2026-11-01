@@ -375,6 +375,12 @@ public final class ZcConfig {
          * Read once at start-up, so a change needs a restart. Client side.
          */
         public boolean nvidiaBufferStorage = true;
+        /**
+         * Only entities (zombies, cars, corpses, people, props) within this many blocks of the camera cast shader shadows;
+         * further ones are still drawn, just left out of the shadow map, where they cost the most (2026-11-01 GPU timers:
+         * 104 ms of a 262 ms frame). 0 = no limit. Client side.
+         */
+        public double shadowObjectDistance = 24;
         /** The nearest this many zombies on screen get every clothing detail (within look.zombieDetailDistance). Client side. */
         public int fullDetailZombies = 12;
         /** The nearest this many get most of it; the rest only the main shapes. Client side. */
