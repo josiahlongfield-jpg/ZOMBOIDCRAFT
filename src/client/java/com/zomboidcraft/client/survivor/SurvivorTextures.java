@@ -36,7 +36,7 @@ public final class SurvivorTextures {
     }
 
     /** Pixels kept made (about 256 MB): bodies are a megapixel, garments a sixteenth of that. */
-    private static final long KEEP = 64L << 20;
+    private static final long BUDGET = 64L << 20;
     private static long kept;
     private static final Map<String, Integer> SIZE = new java.util.HashMap<>();
     private static final java.util.Set<String> FAILED = new java.util.HashSet<>();
@@ -56,16 +56,28 @@ public final class SurvivorTextures {
     public static final int REVEAL = 4;
 
     /** One layer: a texture key in the pack, a tint (0xRRGGBB, or -1 for none), and how it's laid on. */
-    public record Layer(String key, int tint, int mode) {
+    /**
+     * strength: 0-255, how much of an OVER layer goes on (a zombie's blood and grime, thinner or thicker), or for CUT and
+     * REVEAL how far a graded mask opens (a zombie's tears, small or wide). 255 is the whole layer, as before.
+     */
+    public record Layer(String key, int tint, int mode, int strength) {
         public Layer(String key, int tint) {
             this(key, tint, OVER);
+        }
+
+        public Layer(String key, int tint, int mode) {
+            this(key, tint, mode, 255);
+        }
+
+        String tag() {
+            return mode + key + '#' + Integer.toHexString(tint) + (strength < 255 ? "*" + strength : "");
         }
     }
 
     /** The body's texture for these layers (the first opaque), or null while it's being made. Render thread. */
     public static Identifier body(SurvivorPack pack, List<Layer> layers) {
         StringBuilder sb = new StringBuilder(pack.sex);
-        for (Layer l : layers) sb.append('|').append(l.mode()).append(l.key()).append('#').append(Integer.toHexString(l.tint()));
+        for (Layer l : layers) sb.append('|').append(l.tag());
         return get(pack, sb.toString(), layers);
     }
 
@@ -75,7 +87,7 @@ public final class SurvivorTextures {
      */
     public static Identifier body(SurvivorPack pack, List<Layer> layers, int size) {
         StringBuilder sb = new StringBuilder(pack.sex).append('@').append(size);
-        for (Layer l : layers) sb.append('|').append(l.mode()).append(l.key()).append('#').append(Integer.toHexString(l.tint()));
+        for (Layer l : layers) sb.append('|').append(l.tag());
         return get(pack, sb.toString(), layers, size);
     }
 
@@ -117,7 +129,7 @@ public final class SurvivorTextures {
         int px = image.getWidth() * image.getHeight();
         SIZE.put(name, px);
         kept += px;
-        while (kept > KEEP && MADE.size() > 1) {
+        while (kept > BUDGET && MADE.size() > 1) {
             Map.Entry<String, Identifier> old = MADE.entrySet().iterator().next();
             MADE.remove(old.getKey());
             Integer was = SIZE.remove(old.getKey());
@@ -157,13 +169,13 @@ public final class SurvivorTextures {
                             }
                         }
                     } else if (layers.get(i).mode() == CUT) {
-                        cut(base, w, h, img);
+                        cut(base, w, h, img, layers.get(i).strength());
                     } else if (layers.get(i).mode() == REVEAL) {
-                        if (kept != null) reveal(base, kept, w, h, img);
+                        if (kept != null) reveal(base, kept, w, h, img, layers.get(i).strength());
                     } else if (layers.get(i).mode() == CAMO) {
                         camo(base, laid, w, h, img);
                     } else {
-                        over(base, laid, w, h, img, tint);
+                        over(base, laid, w, h, img, tint, layers.get(i).strength());
                     }
                 }
             }
@@ -187,13 +199,13 @@ public final class SurvivorTextures {
     }
 
     /** The layer sampled (bilinear) at the base's size and laid over it by its alpha. */
-    private static void over(int[] base, int[] laid, int w, int h, NativeImage img, int tint) {
+    private static void over(int[] base, int[] laid, int w, int h, NativeImage img, int tint, int strength) {
         int sw = img.getWidth(), sh = img.getHeight();
         boolean same = sw == w && sh == h;
         for (int y = 0; y < h; y++) {
             for (int x = 0; x < w; x++) {
                 int src = same ? img.getPixel(x, y) : sample(img, (x + 0.5f) * sw / w - 0.5f, (y + 0.5f) * sh / h - 0.5f);
-                int a = src >>> 24;
+                int a = (src >>> 24) * strength / 255;
                 laid[y * w + x] = a;
                 if (a == 0) continue;
                 src = tinted(src, tint);
@@ -222,25 +234,28 @@ public final class SurvivorTextures {
     }
 
     /** Puts back what was kept where the mask is white. */
-    private static void reveal(int[] base, int[] kept, int w, int h, NativeImage mask) {
+    private static void reveal(int[] base, int[] kept, int w, int h, NativeImage mask, int strength) {
         int sw = mask.getWidth(), sh = mask.getHeight();
         for (int y = 0; y < h; y++) {
             for (int x = 0; x < w; x++) {
                 int m = mask.getPixel(Math.min(sw - 1, x * sw / w), Math.min(sh - 1, y * sh / h));
-                if (Math.min(m >>> 24, m & 255) > 127) base[y * w + x] = kept[y * w + x];
+                if (Math.min(m >>> 24, m & 255) > 382 - strength) base[y * w + x] = kept[y * w + x];
             }
         }
     }
 
-    /** Clears the base where the mask is white. */
-    private static void cut(int[] base, int w, int h, NativeImage mask) {
+    /**
+     * Clears the base where the mask is white. A weaker cut needs whiter: a grey-graded mask (a zombie's tears) opens
+     * small at low strength and wider at full; a plain black-and-white one is the same at any.
+     */
+    private static void cut(int[] base, int w, int h, NativeImage mask, int strength) {
         int sw = mask.getWidth(), sh = mask.getHeight();
         for (int y = 0; y < h; y++) {
             for (int x = 0; x < w; x++) {
                 int m = mask.getPixel(Math.min(sw - 1, x * sw / w), Math.min(sh - 1, y * sh / h));
                 // a grey mask reads its red; one with alpha reads that
                 int v = Math.min(m >>> 24, m & 255);
-                if (v > 127) base[y * w + x] &= 0x00FFFFFF;
+                if (v > 382 - strength) base[y * w + x] &= 0x00FFFFFF;
             }
         }
     }

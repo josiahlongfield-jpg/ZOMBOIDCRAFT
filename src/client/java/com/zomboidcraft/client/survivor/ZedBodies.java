@@ -159,6 +159,12 @@ public final class ZedBodies {
         return Math.min(level, Math.clamp(ZcConfig.get().look.maxGore, 0, 3));
     }
 
+    /** How worn out it and its clothes are, 0 near clean to 1 filthy and torn: its own roll, leaning worse the more it's rotted. */
+    public static float wear(int variant) {
+        float r = roll(variant, 13);
+        return Math.clamp(r * 0.78f + 0.075f * rot(variant), 0f, 1f);
+    }
+
     private static SurvivorPack packFor(int variant) {
         String sex = roll(variant, 1) < 0.5f ? "f" : "m";
         SurvivorPack p = SurvivorPack.zombie(sex);
@@ -250,20 +256,29 @@ public final class ZedBodies {
         // through the clothes where the skin (and its wounds) shows back through
         List<SurvivorTextures.Layer> mess = new ArrayList<>(), tears = new ArrayList<>(), rips = new ArrayList<>();
         if (ZcConfig.get().look.roughZombies) {
+            // how worn out it is, its own: some nearly clean, most marked here and there, the long-dead filthy and torn.
+            // Blood, grime and tears all go by it, each part to its own degree, so no two come out alike
+            float wear = wear(variant);
             for (int i = 0; i < PARTS.length; i++) {
                 String part = PARTS[i];
                 float b = roll(variant, 200 + i), g = roll(variant, 220 + i), h = roll(variant, 240 + i);
-                if (b < 0.35f + 0.12f * rot) {
-                    String k = (b < 0.2f + 0.12f * rot ? "zfx/blood2/" : "zfx/blood1/") + part;
-                    if (pack.skin.raw(k) != null) mess.add(new SurvivorTextures.Layer(k, -1));
+                if (b < 0.08f + 0.55f * wear) {
+                    String k = (b < (wear - 0.55f) * 0.8f ? "zfx/blood2/" : "zfx/blood1/") + part;
+                    int strength = (int) (255 * (0.35f + 0.65f * wear) * (0.45f + 0.55f * roll(variant, 260 + i)));
+                    if (pack.skin.raw(k) != null) mess.add(new SurvivorTextures.Layer(k, -1, SurvivorTextures.OVER, strength));
                 }
-                if (g < 0.65f && pack.skin.raw("zfx/grime/" + part) != null) mess.add(new SurvivorTextures.Layer("zfx/grime/" + part, -1));
+                if (g < 0.1f + 0.6f * wear && pack.skin.raw("zfx/grime/" + part) != null) {
+                    int strength = (int) (255 * (0.2f + 0.6f * wear) * (0.4f + 0.6f * roll(variant, 280 + i)));
+                    mess.add(new SurvivorTextures.Layer("zfx/grime/" + part, -1, SurvivorTextures.OVER, strength));
+                }
                 // never through the underwear (crotch, belt, and a woman's chest)
                 boolean decent = part.equals("Crotch") || part.equals("Belt") || part.equals("Head")
                         || part.equals("Chest") && pack.sex.equals("f");
-                if (!decent && h < 0.15f + 0.1f * rot && pack.skin.raw("zfx/hole/" + part) != null) {
-                    tears.add(new SurvivorTextures.Layer("zfx/hole/" + part, -1, SurvivorTextures.REVEAL));
-                    rips.add(new SurvivorTextures.Layer("zfx/hole/" + part, -1, SurvivorTextures.CUT));
+                if (!decent && h < 0.5f * wear - 0.08f && pack.skin.raw("zfx/hole/" + part) != null) {
+                    // small rips on the lightly worn, wide tears on the worst
+                    int open = (int) (255 * (0.5f + 0.5f * wear) * (0.75f + 0.25f * roll(variant, 300 + i)));
+                    tears.add(new SurvivorTextures.Layer("zfx/hole/" + part, -1, SurvivorTextures.REVEAL, open));
+                    rips.add(new SurvivorTextures.Layer("zfx/hole/" + part, -1, SurvivorTextures.CUT, open));
                 }
             }
         }

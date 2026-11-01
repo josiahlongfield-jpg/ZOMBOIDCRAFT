@@ -7,8 +7,8 @@ the zombie packs (never the repo or jar: they're made from Zomboid's files) as:
 
     zfx/blood1/<Part>, zfx/blood2/<Part>   blood on that part, light and soaked (laid over)
     zfx/grime/<Part>                       dirt on that part (laid over)
-    zfx/hole/<Part>                        ragged holes on that part, white where torn (cut from a garment; on the
-                                           body, the skin and underwear show back through: SurvivorTextures.REVEAL)
+    zfx/hole/<Part>                        ragged holes on that part, graded white at their hearts (cut from a garment,
+                                           wider the more worn; on the body the skin shows back through: REVEAL)
 
 ZedBodies rolls which parts get which, per zombie.
 
@@ -16,7 +16,7 @@ ZedBodies rolls which parts get which, per zombie.
 """
 import io, os, struct, sys, zlib
 import numpy as np
-from PIL import Image, ImageFilter
+from PIL import Image, ImageFilter  # noqa: F401
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'npc'))
 from pack import scramble  # noqa: E402
@@ -48,15 +48,16 @@ def tiled(path, reps):
 
 
 def holes(seed):
-    """Ragged tears: blobs of smoothed noise past a high threshold, with frayed edges."""
+    """Ragged tears, graded: white at the heart of each, greying to its edge. A weak cut (a lightly worn zombie) opens
+    only the whitest, small rips; a full one opens them wide (SurvivorTextures cuts where it's whiter than 382 less the
+    layer's strength, so 255 cuts past the middle grey)."""
     r = np.random.default_rng(seed)
     f = np.zeros((SIZE, SIZE), np.float32)
     for octave, w in ((16, 1.0), (48, 0.45), (128, 0.2)):
         n = Image.fromarray((r.random((octave, octave)) * 255).astype(np.uint8)).resize((SIZE, SIZE), Image.BICUBIC)
         f += np.asarray(n, np.float32) / 255 * w
     f /= 1.65
-    m = (f > 0.70).astype(np.uint8) * 255
-    return Image.fromarray(m).filter(ImageFilter.MaxFilter(3)).filter(ImageFilter.MinFilter(3))
+    return ((f - 0.62) / 0.26).clip(0, 1) * 255
 
 
 def textures(roots):
@@ -85,7 +86,7 @@ def textures(roots):
             cover = ((r - k) / 0.25).clip(0, 0.92) if key != 'grime' else src[..., 3] / 255 * k
             a[..., 3] = 255 * cover * mask
             out[f'zfx/{key}/{part}'] = png(Image.fromarray(a.clip(0, 255).astype(np.uint8)))
-        h = np.asarray(holes(1000 + i), np.float32) * (mask > 0.5)
+        h = holes(1000 + i) * (mask > 0.5)
         out[f'zfx/hole/{part}'] = png(Image.fromarray(h.astype(np.uint8)).convert('RGBA'))
     print(f'  roughing-up: {len(out)} textures')
     return out
