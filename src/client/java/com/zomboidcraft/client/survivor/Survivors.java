@@ -684,6 +684,66 @@ public final class Survivors {
         return new Vector3f(pos[b * 3], pos[b * 3 + 1], pos[b * 3 + 2]);
     }
 
+    /** Her torso measured once per pack (her bind pose, metres): where the neck is, and the chest and waist bands. */
+    private record Torso(float neckY, float pelvisY, float[] chest, float[] waist, float[] head) {
+    }
+
+    private static final Map<SurvivorPack, Torso> TORSOS = new java.util.WeakHashMap<>();
+
+    /** Her body's centre (x, z), width and depth at height y, from the body mesh's vertices near it. */
+    private static float[] band(SurvivorPack pack, float y) {
+        float minX = Float.MAX_VALUE, maxX = -Float.MAX_VALUE, minZ = Float.MAX_VALUE, maxZ = -Float.MAX_VALUE;
+        for (com.zomboidcraft.client.npc.NpcSkin.Group g : pack.skin.groups) {
+            if (!g.piece.equals("body")) continue;
+            for (int i = 0; i < g.vertices; i++) {
+                if (Math.abs(g.pos[i * 3 + 1] - y) > 0.025f) continue;
+                float x = g.pos[i * 3], z = g.pos[i * 3 + 2];
+                if (Math.abs(x) > 0.3f) continue;   // not the hands hanging beside her
+                minX = Math.min(minX, x);
+                maxX = Math.max(maxX, x);
+                minZ = Math.min(minZ, z);
+                maxZ = Math.max(maxZ, z);
+            }
+        }
+        if (minX > maxX) return new float[]{0, 0, 0.3f, 0.2f};
+        return new float[]{(minX + maxX) / 2, (minZ + maxZ) / 2, maxX - minX, maxZ - minZ};
+    }
+
+    private static Torso torso(SurvivorPack pack) {
+        Vector3f neck = pack.bind[pack.neck].getTranslation(new Vector3f());
+        Vector3f pelvis = pack.bind[pack.pelvis].getTranslation(new Vector3f());
+        float drop = neck.y - pelvis.y;
+        // Minecraft's chest is 5 px under the neck and its belt line 11, of a 12 px torso
+        return new Torso(neck.y, pelvis.y, band(pack, neck.y - drop * 5 / 12f), band(pack, neck.y - drop * 11 / 12f),
+                band(pack, neck.y + 0.12f));
+    }
+
+    /**
+     * The frame Minecraft's body part gives worn gear (blocks, y down, from the neck, a Minecraft-sized torso) moved
+     * onto a survivor this frame: her chest (part 0, following her upper spine), her waist (1, her pelvis) or her
+     * right thigh (2), sized to her; or Minecraft's head part (3: from the neck, an 8 px head) onto her head. wrap: the piece goes round her (a belt) and takes her width and depth; otherwise
+     * it keeps its shape. Null when this state isn't a survivor drawn.
+     */
+    public static Matrix4f gearFrame(AvatarRenderState state, int part, boolean wrap) {
+        Drawn d = take(state);
+        if (d == null || d.skin == null) return null;
+        SurvivorPack pack = d.pack;
+        int bone = part == 0 ? pack.spine1 : part == 1 ? pack.pelvis : part == 2 ? pack.skin.bone("Bip01_R_Thigh") : pack.head;
+        if (bone < 0 || pack.neck < 0 || pack.pelvis < 0) return null;
+        Torso t = TORSOS.computeIfAbsent(pack, Survivors::torso);
+        if (part == 3) {
+            // sized by her head's height (neck to crown) against Minecraft's 8 px, so a helmet sits round her skull
+            float h = Math.max(0.15f, pack.skin.top - t.neckY()) * K / 0.5f;
+            return new Matrix4f().translation(0, ORIGIN, 0).scale(K, -K, -K).mul(d.skin[bone])
+                    .translate(t.head()[0], t.neckY(), t.head()[1]).scale(h / K, -h / K, -h / K);
+        }
+        float[] b = part == 0 ? t.chest() : t.waist();
+        float sy = (t.neckY() - t.pelvisY()) * K / 0.75f, sx = b[2] * K / 0.5f, sz = b[3] * K / 0.25f;
+        if (!wrap) sx = sy = sz = (sy + sz) / 2;
+        return new Matrix4f().translation(0, ORIGIN, 0).scale(K, -K, -K).mul(d.skin[bone])
+                .translate(b[0], t.neckY(), b[1]).scale(sx / K, -sy / K, -sz / K);
+    }
+
     /** Each bone's pose times its inverse bind: what the skinning wants. */
     static Matrix4f[] skinOf(SurvivorPack pack, float[] pos, float[] turn) {
         int n = pack.skin.boneNames.length;

@@ -47,10 +47,35 @@ public class SurvivorShotsTest implements FabricClientGameTest {
             ctx.waitTicks(20);
             ctx.takeScreenshot("surv-appearance-closeup");
             ctx.runOnClient(mc -> set(mc.gui.screen(), "close", false));
+            com.zomboidcraft.client.survivor.Survivors.Preview chosen = ctx.computeOnClient(mc -> com.zomboidcraft.client.survivor.Survivors.preview);
             ctx.runOnClient(mc -> call(mc.gui.screen(), "finish"));
+            ctx.waitTicks(60);
+            boolean arrived = ctx.computeOnClient(mc -> com.zomboidcraft.survival.character.Appearance.of(mc.player) != null);
+            LOG.info("ZCSURV after Done: the server's copy came back: {}, screen now {}", arrived, ctx.computeOnClient(mc -> String.valueOf(mc.gui.screen())));
+            if (!arrived && chosen != null) {
+                // made on the server the way the page's Done does, so the shots below have her
+                sp.getServer().runOnServer(server -> {
+                    for (var player : server.getPlayerList().getPlayers()) {
+                        try {
+                            Method set = com.zomboidcraft.survival.character.Appearance.class.getDeclaredMethod("set",
+                                    net.minecraft.server.level.ServerPlayer.class, com.zomboidcraft.survival.character.Appearance.Set.class);
+                            set.setAccessible(true);
+                            set.invoke(null, player, new com.zomboidcraft.survival.character.Appearance.Set(chosen.look(), chosen.hair(), chosen.beard(), chosen.colour()));
+                        } catch (ReflectiveOperationException e) {
+                            LOG.error("ZCSURV couldn't set the look on the server", e);
+                        }
+                    }
+                });
+                ctx.waitTicks(40);
+            }
+            // the page done with: not offered again, nothing waiting on it
+            ctx.runOnClient(mc -> {
+                setStatic(AppearanceScreen.class, "offered", true);
+                setStatic(AppearanceScreen.class, "pending", false);
+                mc.gui.setScreen(null);
+            });
             ctx.waitTicks(40);
-            ctx.runOnClient(mc -> mc.gui.setScreen(null));
-            ctx.waitTicks(40);
+            ctx.runOnClient(SurvivorShotsTest::state);
 
             // first person: an empty hand (nothing of her shows), then the rifle at the hip and aimed
             sp.getServer().runCommand("clear @a");
@@ -89,6 +114,10 @@ public class SurvivorShotsTest implements FabricClientGameTest {
             ctx.waitTicks(30);
             ctx.takeScreenshot("surv-tp-front-rifle-aim");
             ctx.getInput().releaseKey(options -> options.keyUse);
+            // from behind: what she wears on her back and belt
+            ctx.runOnClient(mc -> mc.options.setCameraType(CameraType.THIRD_PERSON_BACK));
+            ctx.waitTicks(20);
+            ctx.takeScreenshot("surv-tp-back-rifle");
             ctx.runOnClient(mc -> mc.options.setCameraType(CameraType.FIRST_PERSON));
             ctx.waitTicks(10);
         }
@@ -118,6 +147,16 @@ public class SurvivorShotsTest implements FabricClientGameTest {
             m.invoke(screen);
         } catch (ReflectiveOperationException e) {
             LOG.error("ZCSURV couldn't call {} on {}", method, screen, e);
+        }
+    }
+
+    private static void setStatic(Class<?> c, String field, Object value) {
+        try {
+            Field f = c.getDeclaredField(field);
+            f.setAccessible(true);
+            f.set(null, value);
+        } catch (ReflectiveOperationException e) {
+            LOG.error("ZCSURV couldn't set {}.{}", c.getSimpleName(), field, e);
         }
     }
 

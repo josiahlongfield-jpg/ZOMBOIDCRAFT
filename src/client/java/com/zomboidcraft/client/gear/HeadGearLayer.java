@@ -66,7 +66,13 @@ public class HeadGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
             return;
         }
         pose.pushPose();
-        getParentModel().head.translateAndRotate(pose);
+        // on a Zomboid survivor, her own head (never where Minecraft's would be)
+        org.joml.Matrix4f hers = com.zomboidcraft.client.survivor.Survivors.gearFrame(state, 3, false);
+        if (hers != null) {
+            pose.mulPose(hers);
+        } else {
+            getParentModel().head.translateAndRotate(pose);
+        }
         // vanilla's worn-item head transform with the item models' head scale: one item pixel to one head pixel
         pose.translate(0f, -0.25f, 0f);
         pose.scale(-1f, -1f, 1f);

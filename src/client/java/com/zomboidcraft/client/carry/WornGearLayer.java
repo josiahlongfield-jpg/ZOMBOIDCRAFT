@@ -89,7 +89,7 @@ public class WornGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
             Fit fit = FITS.getOrDefault(BuiltInRegistries.ITEM.getKey(stack.getItem()).getPath(),
                     i == GearStore.BACK ? BACK : i == GearStore.VEST ? CHEST : WAIST);
             pose.pushPose();
-            getParentModel().body.translateAndRotate(pose);
+            onBody(pose, state, fit.down() > 8 ? 1 : 0, false);
             pose.translate(0, fit.down() / 16f, fit.back() / 16f);
             // model space has y down; these turn the item model upright, its front facing away from the back or
             // (turned half round) forward from the chest
@@ -115,7 +115,7 @@ public class WornGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
             if (!BODY_SCALE.contains(worn.get(i).getItem())) continue;
             boolean thigh = worn.get(i).is(com.zomboidcraft.ModItems.THIGH_HOLSTER);
             pose.pushPose();
-            onPart(pose, thigh);
+            onPart(pose, state, thigh, true);
             pose.translate(0, BELT_DOWN / 16f, 0);
             pose.scale(1f, -1f, -1f);
             if (!thigh) pose.scale(out[0], 1f, out[1]);
@@ -144,10 +144,29 @@ public class WornGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
     }
 
     /** Moves to the body, or to the right leg in the body's frame (so a piece built round the waist lines up). */
-    private void onPart(PoseStack pose, boolean leg) {
+    private void onPart(PoseStack pose, AvatarRenderState state, boolean leg, boolean wrap) {
         if (leg) {
+            // a Zomboid survivor's own thigh, never Minecraft's leg
+            org.joml.Matrix4f hers = com.zomboidcraft.client.survivor.Survivors.gearFrame(state, 2, wrap);
+            if (hers != null) {
+                pose.mulPose(hers);
+                return;
+            }
             getParentModel().rightLeg.translateAndRotate(pose);
             pose.translate(-LEG_X / 16f, -LEG_Y / 16f, 0);
+        } else {
+            onBody(pose, state, 1, wrap);
+        }
+    }
+
+    /**
+     * Moves to the body: on a Zomboid survivor, her own chest (part 0) or waist (1), sized to her, so nothing is
+     * placed by the hidden Minecraft model.
+     */
+    private void onBody(PoseStack pose, AvatarRenderState state, int part, boolean wrap) {
+        org.joml.Matrix4f hers = com.zomboidcraft.client.survivor.Survivors.gearFrame(state, part, wrap);
+        if (hers != null) {
+            pose.mulPose(hers);
         } else {
             getParentModel().body.translateAndRotate(pose);
         }
@@ -168,7 +187,7 @@ public class WornGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
         if (length <= 0) return;
         float k = (float) (size / 16f / length);
         pose.pushPose();
-        onPart(pose, leg);
+        onPart(pose, state, leg, false);
         pose.translate(x / 16f, y / 16f, z / 16f);
         pose.scale(-k, -k, k);
         // guns point their muzzle down the thigh; a blade's tip hangs down
@@ -205,7 +224,7 @@ public class WornGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
         float k = (float) ((gun ? 18 : 14) / 16f / length);
         float out = packOut + (float) thick * k / 2 + 0.2f / 16f;
         pose.pushPose();
-        getParentModel().body.translateAndRotate(pose);
+        onBody(pose, state, 0, false);
         pose.translate(0, 6.5f / 16f, out);
         // tall models (a bat on its handle) stand along y: either way the long side runs corner to corner
         float angle = !alongZ && box.getYsize() > box.getXsize() ? SLING_ANGLE - 90 : SLING_ANGLE;
