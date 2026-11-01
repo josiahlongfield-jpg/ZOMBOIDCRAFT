@@ -7,6 +7,12 @@ echo "MC jars: $MC_JARS"
 classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1" | sort -u; }
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
+echo "===== survivor order"
+javap -cp "$CP" -p -c net.minecraft.client.renderer.entity.LivingEntityRenderer 2>&1 | grep -A120 'public void submit(' | grep -E 'invoke|Method|public void' | head -60
+for c in net.minecraft.client.renderer.feature.ModelFeatureRenderer net.minecraft.client.renderer.SubmitNodeStorage net.minecraft.client.renderer.SubmitNodeCollection; do echo "-- $c"; javap -cp "$CP" -p -c $c 2>&1 | grep -E 'setupAnim|Method .*\(|^  [a-z].*\(' | head -40; done
+javap -cp "$CP" -p -c net.minecraft.client.gui.screens.inventory.InventoryScreen 2>&1 | grep -A60 'extractEntityInInventory(' | grep -E 'invoke' | head -30
+for c in net.minecraft.client.gui.render.pip.GuiEntityRenderer; do echo "-- $c"; javap -cp "$CP" -p -c $c 2>&1 | grep -E 'invoke|^  [a-z].*\(' | head -40; done
+classes 'pip/' | head
 echo "===== cats eyes"
 javap -cp "$CP" -p net.minecraft.client.renderer.LightmapRenderStateExtractor 2>&1 | head -30
 javap -cp "$CP" -p net.minecraft.client.renderer.state.LightmapRenderState 2>&1 | head -30
