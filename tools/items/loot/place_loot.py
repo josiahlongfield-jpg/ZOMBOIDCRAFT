@@ -137,6 +137,10 @@ GEAR_NO_MODEL = set()   # all of UI's worn gear has body models now (2026-10-29)
 # the black crusader kit only ever turns up whole, in its own table (shop/crusader_kit, stocked by story_loot.py)
 NOT_PLACED = {'hunting_knife_sheath'} | {f'crusader_{p}' for p in (
     'great_helm', 'plate', 'tabard', 'pauldrons', 'cloak', 'greaves', 'gauntlets', 'sabatons')}
+# car parts only come from the auto shops' shelves (auto_loot.py, with their class) and off cars (Mechanics)
+NOT_PLACED |= {'engine_block', 'alternator', 'starter_motor', 'radiator', 'gearbox', 'fuel_tank', 'fuel_pump',
+               'exhaust', 'steering_rack', 'brake_pads', 'suspension', 'car_tire', 'wheel_rim', 'headlight',
+               'tail_light', 'car_door', 'car_bonnet', 'boot_lid', 'car_horn', 'car_radio', 'car_seat', 'glovebox'}
 RW = {'C': 4, 'S': 2, 'R': 1, 'P': 1, 'G': 1}
 
 

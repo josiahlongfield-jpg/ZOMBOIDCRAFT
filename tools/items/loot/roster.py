@@ -788,6 +788,7 @@ skillbook_masonry | Bricklaying Basics, Vols 1-5 | S-P | 8-60 | 0.5 | books hard
 skillbook_metalworking | Metal Shop, Vols 1-5 | S-P | 8-60 | 0.5 | books factory farm school
 skillbook_piloting | Flight Training Manual, Vols 1-5 | R-G | 15-120 | 0.6 | carrier.3 mil books
 skillbook_electrical | Basic Electronics and Wiring, Vols 1-5 | S-P | 8-60 | 0.5 | books hard elec school
+skillbook_mechanics | Mechanics, Vols 1-5 | S-P | 8-60 | 0.5 | books auto garage
 skillbook_plumbing | Plumbing Made Easy, Vols 1-5 | S-P | 8-60 | 0.5 | books hard build
 # recipe magazines: each teaches one recipe or one finish blueprint
 mag_carpentry | Handyman Magazine (recipe) | S | 6 | 0.2 | desk hard books conv
@@ -963,6 +964,31 @@ jet_fuel_drum* | Jet Fuel Drum | R | 30 | 80.0 | carrier mil
 hydraulic_fluid | Can of Hydraulic Fluid | S | 5 | 1.0 | carrier dock factory
 tie_down_chain | Tie-Down Chain | C | 3 | 4.0 | carrier dock
 wheel_chock | Wheel Chock | C | 2 | 3.0 | carrier mil
+engine_block | Engine Block | R | 60 | 45.0 | auto
+alternator | Alternator | S | 18 | 5.5 | auto
+starter_motor | Starter Motor | S | 16 | 4.5 | auto
+radiator | Radiator | S | 15 | 6.0 | auto
+gearbox | Gearbox | R | 45 | 35.0 | auto
+fuel_tank | Fuel Tank | S | 14 | 12.0 | auto
+fuel_pump | Fuel Pump | S | 12 | 1.5 | auto
+exhaust | Muffler and Exhaust | S | 10 | 9.0 | auto
+steering_rack | Steering Rack | S | 18 | 8.0 | auto
+brake_pads | Brake Pads and Rotor | C | 8 | 6.0 | auto
+suspension | Suspension Strut | S | 14 | 7.0 | auto
+car_tire | Car Tyre | C | 8 | 9.0 | auto
+wheel_rim | Wheel Rim | C | 8 | 8.0 | auto
+headlight | Headlight | C | 6 | 1.5 | auto
+tail_light | Tail Light | C | 5 | 1.0 | auto
+car_door | Car Door | S | 15 | 25.0 | auto
+car_bonnet | Bonnet | S | 12 | 15.0 | auto
+boot_lid | Boot Lid | S | 10 | 12.0 | auto
+car_horn | Car Horn | C | 3 | 0.6 | auto
+car_radio | Car Radio | C | 6 | 1.5 | auto
+car_seat | Car Seat | S | 10 | 18.0 | auto
+glovebox | Glovebox | C | 3 | 1.5 | auto
+auto_manual_standard | Laine's Auto Manual: Standard Models | R | 20 | 0.6 | auto books
+auto_manual_heavy | Laine's Auto Manual: Commercial Models | R | 25 | 0.6 | auto books
+auto_manual_sport | Laine's Auto Manual: Performance Models | R | 25 | 0.6 | auto books
 """
 
 ROSTER['Military & service'] = """
