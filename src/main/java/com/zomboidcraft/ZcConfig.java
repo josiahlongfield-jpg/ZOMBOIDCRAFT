@@ -364,6 +364,11 @@ public final class ZcConfig {
     }
 
     public static class Performance {
+        /**
+         * The Harvestman hunts. Off (Josiah 2026-11-01, "get rid of it for now", for frame rate) none spawn and any
+         * already in the world are removed; its save data is kept, so turning it back on picks up where it left off.
+         */
+        public boolean harvestman = false;
         /** The nearest this many zombies on screen get every clothing detail (within look.zombieDetailDistance). Client side. */
         public int fullDetailZombies = 12;
         /** The nearest this many get most of it; the rest only the main shapes. Client side. */
