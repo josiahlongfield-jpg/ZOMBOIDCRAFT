@@ -59,6 +59,18 @@ public final class MeshGunRenderer implements net.minecraft.client.renderer.spec
             if (spec != null && id.equals(spec.anchorMesh)) {
                 // where our part sits (a magazine on its way out, a swung cylinder) its part sits too
                 submit(MeshGuns.LOCAL + local, null, pose, out, light);
+                if ("body".equals(part) && spec.irons != null) {
+                    // iron sights it came without: our flip-up pair, up, on its rail
+                    for (com.zomboidcraft.combat.LocalGuns.Part p : spec.irons) {
+                        if (p == null || p.mesh == null || p.at == null || p.at.length < 3) {
+                            continue;
+                        }
+                        pose.pushPose();
+                        pose.translate(p.at[0] / 16, p.at[1] / 16, p.at[2] / 16);
+                        MeshGuns.draw(p.mesh, "body", pose, out, light, null);
+                        pose.popPose();
+                    }
+                }
                 return;
             }
             if (spec != null && (id.startsWith("att_") || id.startsWith("own_"))) {

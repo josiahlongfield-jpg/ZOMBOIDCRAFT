@@ -328,7 +328,7 @@ public final class RifleView {
         float t = active ? type.tube ? age - clockStart : anim(age - clockStart) : -1;
         boolean animate = config.guns.reloadAnimation && active;
         float a = smooth(Mth.lerp(partial(age), aimO, aim));
-        Pose sights = sights(optic);
+        Pose sights = aim(optic, gun);
         if (sights == null) {
             a = 0;
         }
@@ -1017,6 +1017,46 @@ public final class RifleView {
         float[] d = rig.sights().getOrDefault(optic, rig.sights().get("irons"));
         // a bead gun is tipped up a little so the bead lands on the eye line
         return new Pose(new Vector3f(d[0] / 16, d[1] / 16, d[2] / 16), new Quaternionf().rotationX(d.length > 4 ? d[4] * Mth.DEG_TO_RAD : 0), d[3]);
+    }
+
+    /**
+     * Where the gun goes on the sights: for a gun kept on this computer on its own iron sights, the eye along its own
+     * sight line ({@link com.zomboidcraft.combat.LocalGuns.Sights}), not our gun's, whose sights sit higher or lower.
+     */
+    private static Pose aim(String optic, ItemStack gun) {
+        Pose ours = sights(optic);
+        com.zomboidcraft.combat.LocalGuns.Spec spec = com.zomboidcraft.combat.LocalGuns.of(gun);
+        if (ours == null || !optic.equals(Attachments.EMPTY_KEY) || spec == null || spec.sights == null
+                || spec.sights.front == null || spec.sights.rear == null) {
+            return ours;
+        }
+        return alongSights(ours, spec.sights.front, spec.sights.rear, spec.sights.eye);
+    }
+
+    /** Eye relief behind the rear sight, item pixels: at least this, and at most the second. */
+    private static final float RELIEF_MIN = 4.5f, RELIEF_MAX = 8f;
+
+    /**
+     * Our gun's pose on the sights moved so a front and rear sight (item pixels) line up on the eye: tipped till the
+     * line runs straight ahead, the eye on it as far behind the rear sight as our gun's eye was (within limits).
+     */
+    static Pose alongSights(Pose ours, float[] front, float[] rear, float eyeAt) {
+        Vector3f f = new Vector3f(front[0], front[1], front[2]), r = new Vector3f(rear[0], rear[1], rear[2]);
+        Vector3f back = new Vector3f(r).sub(f);
+        if (back.z <= 0.01f) {
+            return ours;
+        }
+        back.normalize();
+        // the item pixel our gun's pose puts under the eye (the hand frame's -ARM)
+        Vector3f eye = new Vector3f(-ARM[0], -ARM[1], -ARM[2]).sub(ours.t());
+        new Quaternionf(ours.q()).conjugate().transform(eye);
+        float eyeZ = (eye.z / ours.scale() + 0.5f) * 16;
+        eyeZ = eyeAt > r.z ? eyeAt : Math.min(Math.max(eyeZ, r.z + RELIEF_MIN), r.z + RELIEF_MAX);
+        Vector3f e = new Vector3f(back).mul((eyeZ - r.z) / back.z).add(r);
+        Quaternionf q = new Quaternionf().rotationX((float) Math.atan((f.y - r.y) / (f.z - r.z)));
+        Vector3f p = q.transform(new Vector3f(e).div(16).sub(0.5f, 0.5f, 0.5f).mul(ours.scale()));
+        Vector3f t = new Vector3f(-ARM[0], -ARM[1], -ARM[2]).sub(p);
+        return new Pose(t, q, ours.scale());
     }
 
     /** A display transform: translate (blocks), turn, uniform scale. */

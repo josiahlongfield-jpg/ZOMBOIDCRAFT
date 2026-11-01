@@ -46,6 +46,13 @@ public final class LocalGuns {
         /** The mesh our anchor gun draws (e.g. "pbr_pistol"), which this gun's mesh takes the place of. */
         public String anchorMesh;
         public JsonObject stats;
+        /**
+         * Its iron sights' line, item pixels: the top of the front post (or bead) and the middle of the rear notch or
+         * aperture. Aiming lines the eye up along it (client RifleView); none: the anchor's own sight pose.
+         */
+        public Sights sights;
+        /** Sights it has no mesh of its own for, drawn from our meshes on top of it (our flip-up pair). */
+        public java.util.List<Part> irons;
         /** Resolved: the anchor's numbers with this gun's laid over them. */
         transient ZcConfig.GunStats merged;
         transient GunType type;
@@ -53,6 +60,20 @@ public final class LocalGuns {
         public GunType type() {
             return type;
         }
+    }
+
+    /** A sight line: front and rear points, item pixels [x, y, z]. */
+    public static final class Sights {
+        public float[] front;
+        public float[] rear;
+        /** Where the eye sits along the gun (item pixel z), when the usual eye relief would put a stock or hammer in the way; 0: the usual. */
+        public float eye;
+    }
+
+    /** One of our meshes drawn on the gun: its id and where its origin sits, item pixels. */
+    public static final class Part {
+        public String mesh;
+        public float[] at;
     }
 
     private static final Gson GSON = new Gson();

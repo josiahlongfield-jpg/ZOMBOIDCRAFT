@@ -196,6 +196,11 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
     }
 
     private static Attachments factory(ItemStack gun) {
+        if (gun.get(LocalGuns.ID) != null) {
+            // a gun kept on this computer comes bare, on its own iron sights: our gun's factory optic (a red dot, a
+            // scope) isn't on it and must not draw its reticle (Josiah 2026-11-01)
+            return NONE;
+        }
         String id = gunId(gun);
         Map<Slot, String> comes = id == null ? null : GunSlotData.DEFAULTS.get(id);
         if (comes == null || comes.isEmpty()) {
