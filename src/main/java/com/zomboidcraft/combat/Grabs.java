@@ -16,7 +16,6 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -112,8 +111,7 @@ public final class Grabs {
             speed.addOrUpdateTransientModifier(new AttributeModifier(HELD, -0.85, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
         }
         zombie.getNavigation().stop();
-        player.level().playSound(null, player.getX(), player.getEyeY(), player.getZ(), ModSounds.GRAB, SoundSource.HOSTILE,
-                1f, 0.9f + zombie.getRandom().nextFloat() * 0.2f);
+        com.zomboidcraft.zombie.ZedSounds.say(zombie, com.zomboidcraft.zombie.ZedSounds.State.CHASE, 1f);
         player.sendOverlayMessage(Component.literal("A zombie has hold of you! Mash jump or shove (V) to break free.")
                 .withStyle(ChatFormatting.DARK_RED));
     }
@@ -220,8 +218,7 @@ public final class Grabs {
             zombie.push(to.x * 0.6, 0.2, to.z * 0.6);
         }
         zombie.setTarget(near);
-        level.playSound(null, zombie.getX(), zombie.getEyeY(), zombie.getZ(), SoundEvents.ZOMBIE_AMBIENT,
-                SoundSource.HOSTILE, 1.3f, 0.7f);
+        com.zomboidcraft.zombie.ZedSounds.say(zombie, com.zomboidcraft.zombie.ZedSounds.State.AGGRO, 1f);
         Long freed = FREED_AT.get(near);
         if (ZcConfig.get().combat.grabs && !HOLDS.containsKey(near) && (freed == null || level.getGameTime() - freed > COOLDOWN)
                 && Dismember.hasHands(zombie) && zombie.getRandom().nextFloat() < 0.5f) {
@@ -269,8 +266,7 @@ public final class Grabs {
                     && zombie.getRandom().nextFloat() < config.lungeChance) {
                 Vec3 to = player.position().subtract(zombie.position()).multiply(1, 0, 1).normalize();
                 zombie.push(to.x * 0.55, 0.22, to.z * 0.55);
-                level.playSound(null, zombie.getX(), zombie.getEyeY(), zombie.getZ(), SoundEvents.ZOMBIE_AMBIENT,
-                        SoundSource.HOSTILE, 1.2f, 0.75f);
+                com.zomboidcraft.zombie.ZedSounds.say(zombie, com.zomboidcraft.zombie.ZedSounds.State.AGGRO, 1f);
             }
         }
     }
