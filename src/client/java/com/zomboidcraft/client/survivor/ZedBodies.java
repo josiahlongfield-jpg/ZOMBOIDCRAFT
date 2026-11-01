@@ -430,7 +430,7 @@ public final class ZedBodies {
     // ------------------------------------------------------------------ drawing
 
     /** Each eye in the body's rest pose (metres; +z ahead): its centre and how wide it glows. */
-    private static final float EYE_X = 0.033f, EYE_Y_M = 1.695f, EYE_Y_F = 1.69f, EYE_Z_M = 0.061f, EYE_Z_F = 0.057f, EYE_R = 0.016f;
+    private static final float EYE_X = 0.033f, EYE_Y_M = 1.695f, EYE_Y_F = 1.69f, EYE_Z_M = 0.061f, EYE_Z_F = 0.057f, EYE_R = 0.014f;
 
     /**
      * Draws it, where the walker's (or corpse's) model stands in the pose given: back out of the model's flip and up
