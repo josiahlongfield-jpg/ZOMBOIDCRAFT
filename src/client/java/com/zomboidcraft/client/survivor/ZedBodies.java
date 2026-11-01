@@ -45,6 +45,12 @@ public final class ZedBodies {
     /** Zomboid's random clothing tints: worn, everyday colours (as survivors' clothes have them). */
     private static final int[] TINTS = {0x2B3A55, 0x6B2A2A, 0x3E5A3A, 0x7A6A4A, 0x4A4A4E, 0x8C8C88, 0x1E1E22, 0xB8B0A0,
             0x5A3D2A, 0x2F5A6A, 0x7A4A6A, 0xA05A2A, 0x4A5A2A, 0xC8C0B0, 0x6A1E2A, 0x3A3A5A};
+    /** Items whose only texture sits in Zomboid's texture packs, and the loose item worn in their place. */
+    private static final Map<String, String> STAND_IN = Map.of(
+            "Trousers_DefaultTEXTURE_TINT", "Trousers_WhiteTINT",
+            "Tshirt_SportDECAL", "Tshirt_Sport",
+            "Vest_DefaultTEXTURE", "Tshirt_DefaultDECAL",
+            "Vest_DefaultTEXTURE_TINT", "Tshirt_DefaultTEXTURE_TINT");
     /** How fast each kind of move carries a zombie (metres a second), to step its feet in time. */
     private static final float WALK = 0.9f, FAST = 1.7f, SPRINT = 4.2f, CRAWL = 0.45f;
 
@@ -206,6 +212,11 @@ public final class ZedBodies {
         boolean hairHidden = false, beardHidden = false;
         for (String name : items) {
             SurvivorPack.Cloth c = pack.clothes.get(name);
+            if (c == null || c.piece() == null && c.base().isEmpty()) {
+                // painted only from the game's packed textures, which the pack can't read: Zomboid's nearest loose one
+                String in = STAND_IN.get(name);
+                c = in == null ? null : pack.clothes.get(in);
+            }
             if (c == null) continue;
             int r = (int) (mix(variant * 31L + name.hashCode()) >>> 33);
             int tint = c.tint() || c.hue() ? TINTS[Math.floorMod(r >> 5, TINTS.length)] : -1;
