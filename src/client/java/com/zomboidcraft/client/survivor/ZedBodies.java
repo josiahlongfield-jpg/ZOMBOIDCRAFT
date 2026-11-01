@@ -436,7 +436,9 @@ public final class ZedBodies {
         SurvivorPack pack = packFor(f.variant);
         if (pack == null) return null;
         level = Math.min(level, levels(pack));
-        Look look = look(pack, f.variant, f.outfit);
+        // far off (level 2) it wears one of a few looks its outfit shares, so a horde's textures fit in what's kept
+        // (each its own made them and threw them away every frame); nearer, its own
+        Look look = look(pack, level >= 2 ? shared(f.variant, f.outfit) : f.variant, f.outfit);
         int size = level == 0 ? TEX : TEX_LOW;
         Identifier body = tex(pack, look.paint(), size);
         Map<String, Identifier> clothes = new HashMap<>();
@@ -552,6 +554,11 @@ public final class ZedBodies {
 
     private static final Map<SurvivorPack, Crowd> CROWDS = new java.util.WeakHashMap<>();
 
+    /** One of CROWD_LOOKS looks an outfit's far zombies share (a variant standing for them). */
+    private static int shared(int variant, String outfit) {
+        return outfit.hashCode() * 31 + Math.floorMod(variant, CROWD_LOOKS) * 0x9E3779B1;
+    }
+
     /**
      * Draws one crowd figure as Zomboid's thinnest body, standing and swaying (the pose stack already at its feet,
      * turned its way, in world metres). Each pose is skinned once a frame for the whole crowd. Nothing is drawn while
@@ -559,7 +566,7 @@ public final class ZedBodies {
      */
     public static void submitCrowd(int variant, String outfit, float ageTicks, long frame, PoseStack pose,
                                    SubmitNodeCollector collector, int light) {
-        int v = outfit.hashCode() * 31 + Math.floorMod(variant, CROWD_LOOKS) * 0x9E3779B1;
+        int v = shared(variant, outfit);
         SurvivorPack pack = packFor(v);
         if (pack == null) return;
         int level = Math.min(2, levels(pack));

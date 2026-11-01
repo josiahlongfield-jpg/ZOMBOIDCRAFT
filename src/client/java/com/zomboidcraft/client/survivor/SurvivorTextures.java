@@ -36,7 +36,8 @@ public final class SurvivorTextures {
     }
 
     /** Pixels kept made (about 256 MB): bodies are a megapixel, garments a sixteenth of that. */
-    private static final long BUDGET = 64L << 20;
+    /** Pixels of made textures kept (a horde of Zomboid zombies near and mid range, their corpses, the survivors). */
+    private static final long BUDGET = 128L << 20;
     private static long kept;
     private static final Map<String, Integer> SIZE = new java.util.HashMap<>();
     private static final java.util.Set<String> FAILED = new java.util.HashSet<>();
