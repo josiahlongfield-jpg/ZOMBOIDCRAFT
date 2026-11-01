@@ -92,14 +92,8 @@ public final class NpcSkinDraw {
     public static void submitWith(NpcSkin skin, Matrix4f[] bones, int level, java.util.function.Predicate<NpcSkin.Group> show,
                                   java.util.function.Function<NpcSkin.Group, Identifier> textures, Object[] buffers,
                                   int light, int overlay, PoseStack poseStack, SubmitNodeCollector collector) {
-        float[] m = new float[bones.length * 12];
-        for (int b = 0; b < bones.length; b++) {
-            Matrix4f x = bones[b];
-            int o = b * 12;
-            m[o] = x.m00(); m[o + 1] = x.m10(); m[o + 2] = x.m20(); m[o + 3] = x.m30();
-            m[o + 4] = x.m01(); m[o + 5] = x.m11(); m[o + 6] = x.m21(); m[o + 7] = x.m31();
-            m[o + 8] = x.m02(); m[o + 9] = x.m12(); m[o + 10] = x.m22(); m[o + 11] = x.m32();
-        }
+        // no bones: the buffers were skinned already (skinAll), shared by everyone in that pose
+        float[] m = bones == null ? null : matrices(bones);
         for (int g = 0; g < skin.groups.length; g++) {
             NpcSkin.Group gr = skin.groups[g];
             if (gr.level != level || !show.test(gr)) {
@@ -107,6 +101,13 @@ public final class NpcSkinDraw {
             }
             Identifier tex = textures.apply(gr);
             if (tex == null) {
+                continue;
+            }
+            if (m == null) {
+                if (buffers[g * 2] == null) continue;
+                float[] pos = (float[]) buffers[g * 2], normal = (float[]) buffers[g * 2 + 1];
+                collector.submitCustomGeometry(poseStack, RenderTypes.entityCutoutCull(tex),
+                        (pose, out) -> draw(gr, pos, normal, 0, gr.tris.length, gr.bothSides, pose, out, light, overlay));
                 continue;
             }
             if (buffers[g * 2] == null) {
@@ -117,6 +118,35 @@ public final class NpcSkinDraw {
             skin(gr, m, pos, normal);
             collector.submitCustomGeometry(poseStack, RenderTypes.entityCutoutCull(tex),
                     (pose, out) -> draw(gr, pos, normal, 0, gr.tris.length, gr.bothSides, pose, out, light, overlay));
+        }
+    }
+
+    private static float[] matrices(Matrix4f[] bones) {
+        float[] m = new float[bones.length * 12];
+        for (int b = 0; b < bones.length; b++) {
+            Matrix4f x = bones[b];
+            int o = b * 12;
+            m[o] = x.m00(); m[o + 1] = x.m10(); m[o + 2] = x.m20(); m[o + 3] = x.m30();
+            m[o + 4] = x.m01(); m[o + 5] = x.m11(); m[o + 6] = x.m21(); m[o + 7] = x.m31();
+            m[o + 8] = x.m02(); m[o + 9] = x.m12(); m[o + 10] = x.m22(); m[o + 11] = x.m32();
+        }
+        return m;
+    }
+
+    /**
+     * Skins every mesh of one level into the buffers (two per group, as submitWith keeps them), for many bodies in the
+     * same pose to be drawn from with submitWith and no bones: a far crowd skinned once, not once a figure.
+     */
+    public static void skinAll(NpcSkin skin, Matrix4f[] bones, int level, Object[] buffers) {
+        float[] m = matrices(bones);
+        for (int g = 0; g < skin.groups.length; g++) {
+            NpcSkin.Group gr = skin.groups[g];
+            if (gr.level != level) continue;
+            if (buffers[g * 2] == null) {
+                buffers[g * 2] = new float[gr.vertices * 3];
+                buffers[g * 2 + 1] = new float[gr.vertices * 3];
+            }
+            skin(gr, m, (float[]) buffers[g * 2], (float[]) buffers[g * 2 + 1]);
         }
     }
 

@@ -96,7 +96,8 @@ public final class CrowdFx {
             return;
         }
         ZcConfig c = ZcConfig.get();
-        if (!c.population.crowd || !c.performance.spriteZombies || !c.look.newZombies) {
+        boolean zomboid = com.zomboidcraft.client.survivor.ZedBodies.available();
+        if (!c.population.crowd || !zomboid && (!c.performance.spriteZombies || !c.look.newZombies)) {
             return;
         }
         CameraRenderState cam = context.levelState().cameraRenderState;
@@ -108,6 +109,25 @@ public final class CrowdFx {
         float age = (System.nanoTime() / 1_000_000L % 3_600_000L) / 50f;
         int overlay = OverlayTexture.NO_OVERLAY;
         int drawn = 0;
+        if (zomboid) {
+            // with the Zomboid packs here the crowd is Zomboid's thinnest bodies, never pictures or the old body
+            // (Josiah: a scope would show a picture up)
+            long frame = ++frames;
+            var ps = context.poseStack();
+            for (Group g : groups) {
+                for (int i = 0; i < g.x.length; i++) {
+                    ps.pushPose();
+                    ps.translate((float) (g.x[i] - eye.x), (float) (g.y[i] - eye.y), (float) (g.z[i] - eye.z));
+                    ps.rotateDegrees(com.mojang.math.Axis.YP, -g.yaw[i]);
+                    com.zomboidcraft.client.survivor.ZedBodies.submitCrowd(g.variant[i], g.outfit, age, frame, ps,
+                            context.submitNodeCollector(), g.light[i]);
+                    ps.popPose();
+                }
+                drawn += g.x.length;
+            }
+            ZDetail.crowd(drawn);
+            return;
+        }
         for (Group g : groups) {
             ZSprites.Sheet sheet = ZSprites.get(g.outfit, ZBodyMesh.get(g.outfit + "_low"),
                     ZomboidCraft.id("textures/entity/zbody/low/" + g.outfit + ".png"),
@@ -128,6 +148,8 @@ public final class CrowdFx {
         }
         ZDetail.crowd(drawn);
     }
+
+    private static long frames;
 
     private CrowdFx() {}
 }

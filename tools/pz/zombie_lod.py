@@ -5,7 +5,7 @@ drawn from these thinned meshes instead (same skeleton, same textures, same clip
 horde costs a fraction of the full bodies but still looks like Zomboid's. Mesh records are copied from the full ones, so
 skin weights, UVs and normals are Zomboid's own; only where a vertex sits after a collapse changes.
 
-    python3 -I tools/pz/zombie_lod.py PACK.zsk OUT.zsk [KEEP]     KEEP: share of triangles kept (default 0.2)
+    python3 -I tools/pz/zombie_lod.py PACK.zsk OUT.zsk [KEEP [FAR]]   shares of triangles kept: level 1 (0.2), level 2 (0.07)
 
 Needs meshoptimizer (pip install meshoptimizer). The packs are local only, never in the repo or jar.
 """
@@ -32,7 +32,7 @@ def simplify(out, idx, P, attrs, weights, target, error):
         ctypes.POINTER(ctypes.c_ubyte)(), st(target), ctypes.c_float(error), ctypes.c_uint(0), fp())
 
 
-def thin(rec, tris, keep, joints):
+def thin(rec, tris, keep, joints, least=72):
     """meshoptimizer's simplifier, keeping Zomboid's own vertices (so UVs, normals and skin stay exact; it already
     knows UV seams). Weighed on normals, UVs and where each vertex's bones sit, so it never folds the two legs (or an
     arm and the side) into one: that's what made a thinned pair of trousers into a skirt."""
@@ -47,14 +47,14 @@ def thin(rec, tris, keep, joints):
     weights = np.array([0.5, 0.5, 0.5, 1.0, 1.0, 4.0, 4.0, 4.0], dtype=np.float32)
     idx = np.ascontiguousarray(tris.astype(np.uint32).ravel())
     out = np.zeros_like(idx)
-    target = max(72, int(len(idx) * keep) // 3 * 3)
+    target = max(least, int(len(idx) * keep) // 3 * 3)
     n = simplify(out, idx, P, attrs, weights, target, 1.0)
     used = out[:n]
     keep_v, remap = np.unique(used, return_inverse=True)
     return rec[keep_v].copy(), remap.reshape(-1, 3).astype('>i4')
 
 
-def add_lod(src, dst, keep=0.2):
+def add_lod(src, dst, keep=0.2, far=0.07):
     mid_in, mid_out = os.path.basename(src)[:-4], os.path.basename(dst)[:-4]
     raw = zlib.decompress(scramble(open(src, 'rb').read(), mid_in))
     b = io.BytesIO(raw)
@@ -82,13 +82,16 @@ def add_lod(src, dst, keep=0.2):
     joints = np.array(joints, dtype=np.float32)
     full = [g for g in groups if g[4] == 0]
     lods = []
-    t0 = t1 = 0
+    t0, t1, t2 = 0, 0, 0
     for mesh, piece, tex, flags, level, rec, tris in full:
         if any(piece.startswith(s) or mesh.startswith(s) for s in SMALL):
             continue
-        r2, f2 = thin(rec, tris, keep, joints)
-        lods.append((mesh, piece, tex, flags, 1, r2, f2))
-        t0 += len(tris); t1 += len(f2)
+        r1, f1 = thin(rec, tris, keep, joints)
+        lods.append((mesh, piece, tex, flags, 1, r1, f1))
+        # level 2, the far crowd: still Zomboid's body in 3D (Josiah: no flat pictures, scopes would show them up)
+        r2, f2 = thin(rec, tris, far, joints, 36)
+        lods.append((mesh, piece, tex, flags, 2, r2, f2))
+        t0 += len(tris); t1 += len(f1); t2 += len(f2)
     out = io.BytesIO()
     out.write(b'ZSKN' + struct.pack('>i', 1))
     out.write(struct.pack('>i', len(full) + len(lods)))
@@ -99,8 +102,8 @@ def add_lod(src, dst, keep=0.2):
         out.write(struct.pack('>i', len(tris)) + np.ascontiguousarray(tris, dtype='>i4').tobytes())
     out.write(rest)
     open(dst, 'wb').write(scramble(zlib.compress(out.getvalue(), 9), mid_out))
-    print(f'{dst}: {len(full)} meshes, level 1: {len(lods)} meshes, {t0} -> {t1} triangles, {os.path.getsize(dst) // 1024} KB')
+    print(f'{dst}: {len(full)} meshes, {t0} triangles; level 1 {t1}, level 2 {t2}; {os.path.getsize(dst) // 1024} KB')
 
 
 if __name__ == '__main__':
-    add_lod(sys.argv[1], sys.argv[2], float(sys.argv[3]) if len(sys.argv) > 3 else 0.2)
+    add_lod(sys.argv[1], sys.argv[2], *(float(a) for a in sys.argv[3:5]))

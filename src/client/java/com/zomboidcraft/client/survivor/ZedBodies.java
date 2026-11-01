@@ -143,17 +143,25 @@ public final class ZedBodies {
     public static int level(double distSq) {
         ZcConfig.Look look = ZcConfig.get().look;
         double d = look.pzZombieDistance;
-        return distSq < d * d && distSq < com.zomboidcraft.client.zombie.body.ZDetail.nearestSq(look.pzZombieMax) ? 0 : 1;
+        if (distSq < d * d && distSq < com.zomboidcraft.client.zombie.body.ZDetail.nearestSq(look.pzZombieMax)) return 0;
+        // the far crowd (past the nearest performance.meshZombies and spriteMinDistance, through a scope by how near it
+        // looks): the thinnest Zomboid body, still a model, never a picture (Josiah: a scope would show a picture up)
+        return com.zomboidcraft.client.zombie.body.ZDetail.sprite(distSq) ? 2 : 1;
     }
 
-    private static final Map<SurvivorPack, Boolean> HAS_LOW = new java.util.WeakHashMap<>();
+    private static final Map<SurvivorPack, Integer> LEVELS = new java.util.WeakHashMap<>();
 
-    /** Whether the pack carries the thinned meshes (packs built before them don't: they're drawn full at any range). */
-    private static boolean hasLow(SurvivorPack pack) {
-        return HAS_LOW.computeIfAbsent(pack, p -> {
-            for (NpcSkin.Group g : p.skin.groups) if (g.level == 1) return true;
-            return false;
+    /** The thinnest level the pack carries (packs built before the thinned meshes have only 0: drawn full at any range). */
+    private static int levels(SurvivorPack pack) {
+        return LEVELS.computeIfAbsent(pack, p -> {
+            int most = 0;
+            for (NpcSkin.Group g : p.skin.groups) most = Math.max(most, g.level);
+            return most;
         });
+    }
+
+    private static boolean hasLow(SurvivorPack pack) {
+        return levels(pack) >= 1;
     }
 
     /** A look's texture at the size wanted, or the other size while that's being made, or null. */
@@ -427,7 +435,7 @@ public final class ZedBodies {
     public static Drawn pose(int id, Facts f, int level) {
         SurvivorPack pack = packFor(f.variant);
         if (pack == null) return null;
-        if (!hasLow(pack)) level = 0;
+        level = Math.min(level, levels(pack));
         Look look = look(pack, f.variant, f.outfit);
         int size = level == 0 ? TEX : TEX_LOW;
         Identifier body = tex(pack, look.paint(), size);
@@ -529,6 +537,56 @@ public final class ZedBodies {
         float[] pos = new float[n * 3], turn = new float[n * 4];
         a.pose(pack, upperBody(pack), pos, turn);
         return skinOf(pack, pos, turn);
+    }
+
+    // ------------------------------------------------------------------ the far crowd
+
+    /** Figures out in the open past the real zombies (CrowdFx): a few shared poses, a few looks an outfit. */
+    private static final int CROWD_PHASES = 4, CROWD_LOOKS = 16;
+
+    private static final class Crowd {
+        final Object[][][] buffers = new Object[2][CROWD_PHASES][];
+        int flip;
+        long frame = -1;
+    }
+
+    private static final Map<SurvivorPack, Crowd> CROWDS = new java.util.WeakHashMap<>();
+
+    /**
+     * Draws one crowd figure as Zomboid's thinnest body, standing and swaying (the pose stack already at its feet,
+     * turned its way, in world metres). Each pose is skinned once a frame for the whole crowd. Nothing is drawn while
+     * its look's textures are being made: never another body in its place. frame: the caller's frame count.
+     */
+    public static void submitCrowd(int variant, String outfit, float ageTicks, long frame, PoseStack pose,
+                                   SubmitNodeCollector collector, int light) {
+        int v = outfit.hashCode() * 31 + Math.floorMod(variant, CROWD_LOOKS) * 0x9E3779B1;
+        SurvivorPack pack = packFor(v);
+        if (pack == null) return;
+        int level = Math.min(2, levels(pack));
+        Crowd c = CROWDS.computeIfAbsent(pack, p -> new Crowd());
+        if (c.frame != frame) {
+            c.frame = frame;
+            c.flip ^= 1;
+            for (int p = 0; p < CROWD_PHASES; p++) {
+                if (c.buffers[c.flip][p] == null) c.buffers[c.flip][p] = new Object[pack.skin.groups.length * 2];
+                NpcSkinDraw.skinAll(pack.skin, farPose(pack, "idle", ageTicks / 20f + p * 0.9f), level, c.buffers[c.flip][p]);
+            }
+        }
+        Look look = look(pack, v, outfit);
+        Identifier body = tex(pack, look.paint(), TEX_LOW);
+        if (body == null) return;
+        Map<String, Identifier> clothes = new HashMap<>();
+        for (Map.Entry<String, List<SurvivorTextures.Layer>> p : look.pieces().entrySet()) {
+            Identifier t = tex(pack, p.getValue(), TEX_LOW);
+            if (t == null) return;
+            clothes.put(p.getKey(), t);
+        }
+        Identifier hair = look.hairTex() == null ? null : SurvivorTextures.hair(pack, look.hairTex(), look.colour());
+        String hp = hair == null ? null : look.hairPiece();
+        NpcSkinDraw.submitWith(pack.skin, null, level,
+                g -> g.piece.equals("body") || g.piece.equals(hp) || clothes.containsKey(g.piece),
+                g -> g.piece.equals("body") ? body : g.piece.equals(hp) ? hair : clothes.get(g.piece),
+                c.buffers[c.flip][Math.floorMod(variant >> 4, CROWD_PHASES)], light, OverlayTexture.NO_OVERLAY, pose, collector);
     }
 
     /** A dead zombie's body (zombie.Corpse), lying as its death left it. */
