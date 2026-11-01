@@ -646,7 +646,6 @@ def lid_parts(P, part, body):
     if part is None:
         return out
     pn = np.array([str(p) for p in part])
-    c = P.mean(1)
     for kind, names in LID_PARTS.items():
         sel = np.isin(pn, names) & body
         if not sel.any():
@@ -654,8 +653,15 @@ def lid_parts(P, part, body):
         q = P[sel].reshape(-1, 3)
         lo, hi = q.min(0), q.max(0)
         pad = np.array([0.05, 0.05, 0.3])
-        inside = np.all((c > lo - pad) & (c < hi + pad), axis=1)
-        sel = sel | (inside & body & np.isin(pn, LID_RIDERS))
+        # a rider (rear window, spare tyre on its carrier) goes whole when its own centre is by the lid,
+        # so a tyre that sticks out past the door never leaves half of itself behind
+        for rn in LID_RIDERS:
+            rm = (pn == rn) & body
+            if rm.any():
+                r = P[rm].reshape(-1, 3)
+                rc = (r.min(0) + r.max(0)) / 2
+                if np.all((rc > lo - pad) & (rc < hi + pad)):
+                    sel = sel | rm
         w, h, d = hi - lo
         if kind == 'bonnet':
             # hinged at its back edge by the windscreen, lifting from the front
