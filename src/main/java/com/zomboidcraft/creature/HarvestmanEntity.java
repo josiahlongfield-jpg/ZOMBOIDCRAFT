@@ -392,6 +392,11 @@ public class HarvestmanEntity extends Mob {
 
     @Override
     public void tick() {
+        if (!level().isClientSide() && !com.zomboidcraft.ZcConfig.get().performance.harvestman) {
+            // switched off (performance.harvestman): it leaves the world
+            discard();
+            return;
+        }
         super.tick();
         turnO.set(turn);
         if (!(level() instanceof ServerLevel level)) {
