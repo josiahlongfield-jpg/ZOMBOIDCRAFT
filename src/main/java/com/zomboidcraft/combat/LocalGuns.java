@@ -41,6 +41,8 @@ public final class LocalGuns {
         /** Our gun it handles like, by item id ("pistol", "assault_rifle", ...). */
         public String anchor;
         public String calibre;
+        /** The mesh our anchor gun draws (e.g. "pbr_pistol"), which this gun's mesh takes the place of. */
+        public String anchorMesh;
         public JsonObject stats;
         /** Resolved: the anchor's numbers with this gun's laid over them. */
         transient ZcConfig.GunStats merged;

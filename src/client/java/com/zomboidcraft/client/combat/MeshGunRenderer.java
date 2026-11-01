@@ -10,7 +10,6 @@ import com.zomboidcraft.mixin.client.SpecialModelRenderersAccessor;
 import java.util.List;
 import java.util.function.Consumer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
-import net.minecraft.client.renderer.special.NoDataSpecialModelRenderer;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
@@ -52,14 +51,18 @@ public final class MeshGunRenderer implements net.minecraft.client.renderer.spec
     }
 
     @Override
-    public void submit(@org.jetbrains.annotations.Nullable String local, net.minecraft.world.item.ItemDisplayContext context,
-                       PoseStack pose, SubmitNodeCollector out, int light, int overlay, boolean foil, int outline) {
+    public void submit(@org.jetbrains.annotations.Nullable String local, PoseStack pose, SubmitNodeCollector out, int light, int overlay, boolean foil, int outline) {
         if (local != null) {
-            // our attachments don't go on it (its own parts are packed with it); our gun's parts become its parts
-            if (!id.startsWith("att_") && !id.startsWith("own_")) {
+            // our gun's mesh becomes its mesh (part by part: one it hasn't got draws nothing); our attachments don't
+            // go on it (its own parts are packed with it); anything else (a loaded bolt) draws as it is
+            com.zomboidcraft.combat.LocalGuns.Spec spec = com.zomboidcraft.combat.LocalGuns.get(local);
+            if (spec != null && id.equals(spec.anchorMesh)) {
                 MeshGuns.draw(MeshGuns.LOCAL + local, part, pose, out, light, null);
+                return;
             }
-            return;
+            if (spec != null && (id.startsWith("att_") || id.startsWith("own_"))) {
+                return;
+            }
         }
         submit(pose, out, light, overlay, foil, outline);
     }
