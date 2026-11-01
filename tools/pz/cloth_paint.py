@@ -301,8 +301,11 @@ def paint(img, place, mat, crisp=False, hand=None, seed=0, n=SIZE, overlay=False
 def encode(img, place):
     """As a JPEG where it's solid over all it covers (most garments), else a PNG that keeps its alpha."""
     a = np.asarray(img)[..., 3]
-    if place is not None and place.cov.any() and np.percentile(a[place.cov], 2) > 250:
-        b = io.BytesIO(); img.convert('RGB').save(b, 'JPEG', quality=88, optimize=True)
+    cov = None if place is None else place.cov
+    if cov is not None and cov.shape != a.shape:  # painted at full size, then made smaller
+        cov = np.asarray(Image.fromarray(cov.astype(np.uint8) * 255).resize(a.shape[::-1], Image.NEAREST)) > 127
+    if cov is not None and cov.any() and np.percentile(a[cov], 2) > 250:
+        b = io.BytesIO(); img.convert('RGB').save(b, 'JPEG', quality=84, optimize=True)
         return b.getvalue()
     b = io.BytesIO(); img.save(b, 'PNG', optimize=True)
     return b.getvalue()

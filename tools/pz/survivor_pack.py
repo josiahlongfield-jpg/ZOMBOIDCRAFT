@@ -24,6 +24,9 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 sys.path.insert(0, os.path.join(os.path.dirname(HERE), 'npc'))
 import xfile, fbxbin  # noqa: E402
+# painted texture sizes: the hand-painted pieces, then the rest (keeps a pack under the 25 MB the PC copy takes)
+HAND_SIZE = int(os.environ.get('PZ_PAINT_HAND', '768'))
+REST = int(os.environ.get('PZ_PAINT_REST', '512'))
 from pack import scramble  # noqa: E402
 
 K = 1.89  # Zomboid's man is 0.98 tall: about 1.85 m
@@ -599,6 +602,9 @@ def paint_clothes(made, game, body, tex):
                                               'band', 'rock') + cp.CRISP)
         seed = zlib.crc32(key.encode()) & 0xFFFF
         out = cp.paint(img, place, mat, crisp=crisp, hand=cp.HAND.get(use['rel']), seed=seed, overlay=overlay)
+        size_to = HAND_SIZE if use['rel'] in cp.HAND else REST
+        if size_to < out.width:
+            out = out.resize((size_to, size_to * out.height // out.width), Image.LANCZOS)
         tex[key] = cp.encode(out, None if overlay else place)
         size += len(tex[key])
         if i % 40 == 0:
