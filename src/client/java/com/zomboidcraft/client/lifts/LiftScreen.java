@@ -47,7 +47,7 @@ public class LiftScreen extends net.minecraft.client.gui.screens.Screen {
     }
 
     /** The panel's box: x, y, w, h. */
-    private int[] box(LiftShaft s) {
+    int[] box(LiftShaft s) {
         int n = s.landings.length, cols = cols(n), rows = (n + cols - 1) / cols;
         int w = cols * (CELL + GAP) - GAP + 24, h = rows * (CELL + GAP) - GAP + 24 + 28 + CELL + GAP;
         h = Math.min(h, height - 20);
@@ -55,7 +55,7 @@ public class LiftScreen extends net.minecraft.client.gui.screens.Screen {
     }
 
     /** Where floor i's button is (x, y). */
-    private int[] cell(LiftShaft s, int[] b, int i) {
+    int[] cell(LiftShaft s, int[] b, int i) {
         int n = s.landings.length, cols = cols(n), rows = (n + cols - 1) / cols;
         int row = rows - 1 - i / cols, col = i % cols;
         return new int[] {b[0] + 12 + col * (CELL + GAP), b[1] + 12 + 28 + row * (CELL + GAP)};
@@ -90,7 +90,7 @@ public class LiftScreen extends net.minecraft.client.gui.screens.Screen {
         g.text(font, Hud.text(key), b[0] + b[2] - 12 - font.width(Hud.text(key)), o[1] + 8, DIM, false);
     }
 
-    private int[] doorButtons(LiftShaft s, int[] b) {
+    int[] doorButtons(LiftShaft s, int[] b) {
         int y = b[1] + b[3] - 12 - CELL;
         return new int[] {b[0] + 12, y, b[0] + 12 + CELL + GAP};
     }
