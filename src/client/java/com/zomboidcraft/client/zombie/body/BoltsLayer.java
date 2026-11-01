@@ -40,7 +40,7 @@ public class BoltsLayer extends RenderLayer<WalkerRenderState, WalkerModel> {
     public void submit(PoseStack poseStack, SubmitNodeCollector collector, int light, WalkerRenderState state,
             float yRot, float xRot) {
         List<StuckBolts.Bolt> bolts = state.bolts;
-        if (bolts.isEmpty() || state.zbody == null || state.isInvisible) {
+        if (bolts.isEmpty() || state.zbody == null || state.zed != null || state.isInvisible) {
             return;
         }
         float[] mats = ZBodyLayer.pose(state.zbody, state.zpose, state.legless);

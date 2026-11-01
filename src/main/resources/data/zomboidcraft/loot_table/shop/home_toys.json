@@ -614,6 +614,26 @@
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:black_light",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:fibre_optic_lamp",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:broken_toy",
           "weight": 4,
           "functions": [

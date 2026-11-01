@@ -26,7 +26,7 @@ TABS = {
     'Outdoors, camping & farm': 'tools', 'Clothing': 'clothing', 'Bags & containers': 'clothing',
     'Books, magazines & papers': 'books', 'Keys, cards & documents': 'keys', 'Valuables & trade goods': 'valuables',
     'Toys, hobbies & personal': 'valuables', 'Vehicle & fuel': 'materials', 'Military & service': 'tools',
-    'Junk & scrap': 'materials',
+    'Junk & scrap': 'materials', 'Decor': 'household',
 }
 RAR = {'C': 'COMMON', 'S': 'SCARCE', 'R': 'RARE', 'P': 'PRIZED', 'G': 'GRAIL'}
 # categories in wave 2 (tools, materials, electronics, light, camping, car, kitchen kit); waves up to LIVE are in the game
@@ -128,6 +128,8 @@ public final class LootSpecs {{
             use = uses.use_line(r)
             if use:
                 lang[f'item.{NS}.{r["id"]}.use'] = use
+            if r['id'] in uses.DECOR:                       # set down, it's a block (decor/Decor)
+                lang[f'block.{NS}.decor_{r["id"]}'] = r['name']
     lang_path.write_text(json.dumps(lang, indent=2, ensure_ascii=False) + '\n')
     tags = {}
     for r in rs:

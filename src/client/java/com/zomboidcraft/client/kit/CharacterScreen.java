@@ -402,7 +402,7 @@ public final class CharacterScreen extends Screen {
         if (points() < 0) return;
         ClientPlayNetworking.send(new CharacterNet.Create(occupation, List.copyOf(chosen)));
         offered = null;
-        minecraft.gui.setScreen(null);  // the spawn picker comes up next, if this world has one
+        AppearanceScreen.afterTraits(minecraft);  // then how you look, then the spawn picker if this world has one
     }
 
     @Override

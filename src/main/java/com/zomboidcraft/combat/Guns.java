@@ -251,7 +251,7 @@ public final class Guns {
                 }
             }
             if (hit != null && hit.getEntity() instanceof LivingEntity target) {
-                Pellet struck = pellet(target, hit, eye, stats, power * spent);
+                Pellet struck = pellet(target, hit, eye, stats, power * spent, type);
                 hits.computeIfAbsent(target, t -> new Hit(dir)).add(struck);
                 Dismember.pellet(player, target, hit, dir, struck.tears(), struck.head(), struck.legs(), type);
                 if (!nearby && !bow) {
@@ -364,7 +364,7 @@ public final class Guns {
             }
         }
         if (hit != null && hit.getEntity() instanceof LivingEntity target) {
-            Pellet p = pellet(target, hit, muzzle, stats, spent);
+            Pellet p = pellet(target, hit, muzzle, stats, spent, GunType.ASSAULT_RIFLE);
             Dismember.pellet(shooter, target, hit, dir, p.tears(), p.head(), p.legs(), GunType.ASSAULT_RIFLE);
             hitEntity(level, shooter, target, new Hit(dir).add(p), 1, stats);
             return hit.getLocation();
@@ -409,22 +409,29 @@ public final class Guns {
 
     /**
      * One bullet or pellet striking: where, whether in the head or legs, and how hard (weaker far off for buckshot;
-     * power is the gun's rolled damage).
+     * power is the gun's rolled damage). The head takes its calibre's multiplier (combat.headshotByCalibre); on a
+     * standing zombie the torso takes combat.zombieBodyShots and an arm or leg combat.zombieLimbShots of it.
      */
-    private static Pellet pellet(LivingEntity target, Dismember.BodyHit hit, Vec3 eye, ZcConfig.GunStats stats, float power) {
+    private static Pellet pellet(LivingEntity target, Dismember.BodyHit hit, Vec3 eye, ZcConfig.GunStats stats, float power,
+                                 GunType type) {
         Vec3 at = hit.getLocation();
         boolean downed = Downed.isLow(target);
         // a zombie's head and legs are where its body is drawn, standing or on the ground; anything else's go by height
         // on its box, and not at all once it's down
         boolean head = hit.part >= 0 ? hit.head() : !downed && at.y >= target.getEyeY() - 0.28;
         boolean legs = hit.part >= 0 ? hit.leg() : !downed && at.y < target.getY() + target.getBbHeight() * 0.35;
-        float damage = (float) (stats.damage * power * (head ? stats.headshotMultiplier : legs ? 0.7 : 1));
+        boolean arms = hit.part >= 0 && hit.arm();
+        ZcConfig.Combat combat = ZcConfig.get().combat;
+        boolean walker = !downed && ZombieTypes.isWalker(target);
+        double headX = combat.headshotFor(type == null ? null : type.caliber(), stats.headshotMultiplier);
+        // a limb tears at the bullet's full force on a zombie; anything else still takes a leg hit lighter
+        float damage = (float) (stats.damage * power * (head ? headX : legs && !walker ? 0.7 : 1));
         if (stats instanceof ZcConfig.ShotgunStats sg) {
             double d = eye.distanceTo(at), over = (d - sg.falloffStart) / Math.max(1, stats.range - sg.falloffStart);
             damage *= (float) (1 - 0.75 * Mth.clamp(over, 0, 1));
         }
-        // body hits on a zombie slow it, it takes the head to kill one; a limb still tears at the bullet's full force
-        float body = !head && !downed && ZombieTypes.isWalker(target) ? (float) ZcConfig.get().combat.zombieBodyShots : 1f;
+        // centre mass counts toward the kill in full, an arm or leg only a little (it still comes off)
+        float body = head || !walker ? 1f : (float) (arms || legs ? combat.zombieLimbShots : combat.zombieBodyShots);
         return new Pellet(damage * body, damage, head, legs, at);
     }
 

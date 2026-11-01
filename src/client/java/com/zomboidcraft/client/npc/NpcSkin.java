@@ -174,6 +174,16 @@ public final class NpcSkin {
         return -1;
     }
 
+    /** A texture entry's bytes as stored (PNG, JPEG, or other data such as a pack's catalog), or null. Not used up. */
+    public byte[] raw(String key) {
+        return images.get(key);
+    }
+
+    /** Every texture entry's key still held as bytes. */
+    public java.util.Set<String> rawKeys() {
+        return java.util.Collections.unmodifiableSet(images.keySet());
+    }
+
     /** The texture by its key, made into a GPU texture the first time it's asked for. Render thread. */
     public Identifier texture(String key, String model) {
         Identifier id = textures.get(key);
@@ -329,7 +339,7 @@ public final class NpcSkin {
     }
 
     /** PNG straight in (it keeps its alpha); JPEG through Java's reader. */
-    private static NativeImage decode(byte[] bytes) throws IOException {
+    public static NativeImage decode(byte[] bytes) throws IOException {
         if (bytes.length > 4 && (bytes[0] & 255) == 0x89 && bytes[1] == 'P' && bytes[2] == 'N' && bytes[3] == 'G') {
             return NativeImage.read(new ByteArrayInputStream(bytes));
         }
