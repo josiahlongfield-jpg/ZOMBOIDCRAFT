@@ -77,7 +77,7 @@ public final class HoldPoses {
      * Zomboid bodies (client/survivor) reach their own hands to the weapon there.
      */
     public static boolean posed;
-    public static final Vector3f support = new Vector3f();
+    public static final Vector3f supportAt = new Vector3f();
 
     public static void apply(PlayerModel model, AvatarRenderState state) {
         posed = false;
@@ -243,7 +243,7 @@ public final class HoldPoses {
         float[] a = aim(offPivot, target, HAND_X);
         offArm.setRotation(a[0], a[1] * mirror, 0);
         posed = true;
-        support.set(target.x * mirror, target.y, target.z);
+        supportAt.set(target.x * mirror, target.y, target.z);
     }
 
     private static final float RELOAD_LIFT = 0.25f, RELOAD_TURN = 0.3f;

@@ -210,7 +210,7 @@ public final class Survivors {
             ModelPart arm = gun == 0 ? model.rightArm : model.leftArm;
             Matrix4f item = itemFrame(arm, gun == 1, slim);
             reachFrame(pack, pos, turn, gun, item);
-            Vector3f sp = fromModel(HoldPoses.support.x / 16f, HoldPoses.support.y / 16f, HoldPoses.support.z / 16f);
+            Vector3f sp = fromModel(HoldPoses.supportAt.x / 16f, HoldPoses.supportAt.y / 16f, HoldPoses.supportAt.z / 16f);
             reachPoint(pack, pos, turn, 1 - gun, sp);
             reached[0] = reached[1] = true;
         } else if (CarHands.posed > 0) {

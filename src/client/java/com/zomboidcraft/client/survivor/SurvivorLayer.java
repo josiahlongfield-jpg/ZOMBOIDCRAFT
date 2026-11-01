@@ -1,7 +1,6 @@
 package com.zomboidcraft.client.survivor;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
 import com.zomboidcraft.client.npc.NpcSkinDraw;
 import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityRenderLayerRegistrationCallback;
 import net.minecraft.client.model.player.PlayerModel;
@@ -11,6 +10,7 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.player.AvatarRenderer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
+import org.joml.Matrix4f;
 
 /**
  * Draws a player as their Zomboid survivor (see {@link Survivors}) where Minecraft's hidden model stands: the body in
@@ -37,8 +37,8 @@ public final class SurvivorLayer extends RenderLayer<AvatarRenderState, PlayerMo
         pose.translate(0, 1.501f, 0);
         pose.scale(1 / 0.9375f, 1 / 0.9375f, 1 / 0.9375f);
         pose.scale(-1, -1, 1);
-        if (d.deathTurn != 0) pose.mulPose(Axis.ZP.rotationDegrees(-d.deathTurn));
-        pose.mulPose(Axis.YP.rotationDegrees(180));
+        if (d.deathTurn != 0) pose.mulPose(new Matrix4f().rotationZ((float) Math.toRadians(-d.deathTurn)));
+        pose.mulPose(new Matrix4f().rotationY((float) Math.PI));
         int overlay = LivingEntityRenderer.getOverlayCoords(state, 0);
         NpcSkinDraw.submitWith(d.pack.skin, d.skin,
                 g -> g.piece.equals("body") || g.piece.equals(d.hairPiece) || g.piece.equals(d.beardPiece),
