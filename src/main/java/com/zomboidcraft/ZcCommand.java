@@ -155,7 +155,8 @@ public final class ZcCommand {
         gun.set(com.zomboidcraft.combat.LocalGuns.ID, id);
         gun.set(com.zomboidcraft.combat.GunState.TYPE, new com.zomboidcraft.combat.GunState(spec.type().magazine() != null,
                 spec.type().capacity(gun), false));
-        player.getInventory().add(gun);
+        net.minecraft.world.item.ItemStack given = gun.copy();
+        player.getInventory().add(given);       // add() empties the stack it's handed: the rest reads gun, its copy
         // two of its own magazines, full, and a stack of its own rounds
         if (spec.type().magazine() != null) {
             for (int i = 0; i < 2; i++) {

@@ -177,7 +177,7 @@ public class LocalGunFilmTest implements FabricClientGameTest {
                     "summon item %.2f 100.1 %.2f {Item:{id:\"zomboidcraft:%s\",count:1},PickupDelay:32767,Age:-32768}",
                     -1.6 + (i % 4) * 1.05, -0.6 + (i / 4) * 0.9, items[i]));
         }
-        sp.getServer().runCommand("tp @a 0 103.2 -3.5 0 55");
+        sp.getServer().runCommand("tp @a 0.2 102.0 -1.4 0 62");
         shots(ctx, "rounds | on the ground: 9mm .380 .38 .44 / .45ACP 5.7 .45Colt .500 / .22 5.56 .308 .30-30 / .50 12g 40mm rocket", 12);
     }
 

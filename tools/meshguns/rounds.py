@@ -160,10 +160,10 @@ def write_ours(item, profile, work, sides=24):
             quad = [(z0, r0, a0), (z0, r0, a1), (z1, r1, a1), (z1, r1, a0)]
             base = len(vs)
             vs += [(z, r * math.cos(a), r * math.sin(a)) for z, r, a in quad]
-            if r0 > 1e-6:
-                fs.append((base + 1, base + 3, base + 2, uvi))
+            if r0 > 1e-6:       # wound so the faces look outward (the outline shell is the faces turned inward)
+                fs.append((base + 1, base + 2, base + 3, uvi))
             if r1 > 1e-6:
-                fs.append((base + 1, base + 4, base + 3, uvi))
+                fs.append((base + 1, base + 3, base + 4, uvi))
     obj = os.path.join(work, item + '.obj')
     with open(obj, 'w') as f:
         f.write(f'mtllib {item}.mtl\nusemtl round\n')
@@ -172,8 +172,26 @@ def write_ours(item, profile, work, sides=24):
         f.writelines(f'f {a}/{t} {b}/{t} {c}/{t}\n' for a, b, c, t in fs)
     with open(os.path.join(work, item + '.mtl'), 'w') as f:
         f.write(f'newmtl round\nmap_Kd {item}.png\n')
+    assert outward(obj) > 0, item
     return {'id': f'ammo/{item}', 'obj': obj, 'textures': [os.path.join(work, item + '.png')],
             'axes': lay_along(item, 0), 'box': item, 'outline': 0.02, 'texture': 256}
+
+
+def outward(obj):
+    """Turns the OBJ's faces over if they're wound to look inward (a closed mesh's signed volume comes out negative):
+    drawn culled, an inward mesh shows only its outline shell, a black silhouette."""
+    lines = open(obj).read().splitlines()
+    v = np.array([[float(x) for x in l.split()[1:4]] for l in lines if l.startswith('v ')])
+    vol = 0.0
+    for l in lines:
+        if l.startswith('f '):
+            i = [int(p.split('/')[0]) - 1 for p in l.split()[1:]]
+            for k in range(1, len(i) - 1):
+                vol += np.dot(v[i[0]], np.cross(v[i[k]], v[i[k + 1]]))
+    if vol < 0:
+        out = [('f ' + ' '.join(reversed(l.split()[1:]))) if l.startswith('f ') else l for l in lines]
+        open(obj, 'w').write('\n'.join(out) + '\n')
+    return vol
 
 
 def arsenal_spec(item, mesh, tex, arsenal, brita, work, dest):
@@ -187,6 +205,7 @@ def arsenal_spec(item, mesh, tex, arsenal, brita, work, dest):
         texture = os.path.join(arsenal, f'textures/WorldItems/Bullets_{tex}.png')
     obj = os.path.join(work, item + '_arsenal.obj')
     subprocess.run(['assimp', 'export', src, obj, '-ptv', '-tri', '-jiv'], check=True, capture_output=True)
+    outward(obj)
     v = np.array([[float(x) for x in l.split()[1:4]] for l in open(obj) if l.startswith('v ')])
     ax = int(np.argmax(np.ptp(v, 0)))
     # the narrower end is the tip
