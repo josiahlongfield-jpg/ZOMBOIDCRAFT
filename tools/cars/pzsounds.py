@@ -217,6 +217,37 @@ def plan():
     return ev
 
 
+def peak(path):
+    r = subprocess.run(['ffmpeg', '-hide_banner', '-i', path, '-af', 'volumedetect', '-f', 'null', '-'], capture_output=True, text=True)
+    m = re.search(r'max_volume: (-?[\d.]+) dB', r.stderr)
+    return float(m.group(1)) if m else 0.0
+
+
+def louden(out, sounds, top=-1.0):
+    """Zomboid mixes its car recordings low and lifts them in FMOD; Minecraft can't play a sound above full volume,
+    so the takes are raised here: each one-shot event until its loudest take peaks at top dB, each engine's whole
+    set of loops by one shared amount (so its rev bands still match as they crossfade)."""
+    d = f'{out}/assets/zomboidcraft/sounds/pz/'
+    groups = {}
+    for ev, v in sounds.items():
+        g = '.'.join(ev.split('.')[:3]) if ev.startswith('pz.engine.') and not ev.endswith(('.start', '.fail', '.stop')) else ev
+        if '.idle.' in ev:
+            g += '.idle'    # ticking over has its own lift, or it would be a murmur under the flat-out takes
+        groups.setdefault(g, set()).update(x['name'].split('/')[-1] for x in v['sounds'])
+    done = set()
+    for names in groups.values():
+        names = sorted(names - done)
+        if not names:
+            continue
+        gain = top - max(peak(d + n + '.ogg') for n in names)
+        if gain > 0.5:
+            for n in names:
+                subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', d + n + '.ogg', '-af', f'volume={gain:.1f}dB',
+                                '-c:a', 'libvorbis', '-q:a', '6', d + n + '.tmp.ogg'], check=True)
+                os.replace(d + n + '.tmp.ogg', d + n + '.ogg')
+        done.update(names)
+
+
 def main():
     bank, out = sys.argv[1:3]
     f = open(bank, 'rb')
@@ -246,6 +277,7 @@ def main():
             open(f'{out}/assets/zomboidcraft/sounds/pz/{fn}.ogg', 'wb').write(to_ogg(m, s, hdr[key]))
             names.append(fn)
         sounds['pz.' + event] = {'sounds': [{'name': f'zomboidcraft:pz/{n}'} for n in names]}
+    louden(out, sounds)
     json.dump(sounds, open(f'{out}/assets/zomboidcraft/sounds.json', 'w'), indent=1)
     json.dump({'pack': {'description': "Project Zomboid's own car sounds for ZomboidCraft (local, personal use)",
                         'pack_format': 15, 'supported_formats': [15, 999], 'min_format': 15, 'max_format': 999}},
