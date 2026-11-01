@@ -62,7 +62,12 @@ public final class ZedBodies {
     private static final float WALK = 0.9f, FAST = 1.7f, SPRINT = 4.2f, CRAWL = 0.45f;
 
     /** One zombie's (or corpse's) look, rolled once. */
-    private record Look(SurvivorPack pack, String skin, List<SurvivorTextures.Layer> paint, Map<String, List<SurvivorTextures.Layer>> pieces,
+    /**
+     * paintLow: the body's paint without the clothes' cut-outs, for the thinned meshes, whose coarser legs would carry a
+     * cut-out (skin hidden under the trousers) down past the hem and leave a hole between trouser and shoe.
+     */
+    private record Look(SurvivorPack pack, String skin, List<SurvivorTextures.Layer> paint, List<SurvivorTextures.Layer> paintLow,
+                        Map<String, List<SurvivorTextures.Layer>> pieces,
                         String hairPiece, String hairTex, String beardPiece, String beardTex, String colour, String family) {
     }
 
@@ -332,7 +337,9 @@ public final class ZedBodies {
         SurvivorPack.Style hs = hairHidden || pack.hair.isEmpty() ? null : pack.hair.get(pick(variant, 4, pack.hair.size()));
         SurvivorPack.Style bs = beardHidden || pack.sex.equals("f") || pack.beards.isEmpty() || roll(variant, 5) > 0.45f
                 ? null : pack.beards.get(pick(variant, 6, pack.beards.size()));
-        Look look = new Look(pack, skin, body, pieces, hs == null ? null : hs.piece(), hs == null ? null : groupTex(pack, hs.piece()),
+        List<SurvivorTextures.Layer> bodyLow = new ArrayList<>(body);
+        bodyLow.removeAll(cuts);
+        Look look = new Look(pack, skin, body, bodyLow, pieces, hs == null ? null : hs.piece(), hs == null ? null : groupTex(pack, hs.piece()),
                 bs == null ? null : bs.piece(), bs == null ? null : groupTex(pack, bs.piece()), colour,
                 pack.sex + "|" + (chosen == null ? outfit : chosen));
         LOOKS.put(key, look);
@@ -440,7 +447,9 @@ public final class ZedBodies {
         // (each its own made them and threw them away every frame); nearer, its own
         Look look = look(pack, level >= 2 ? shared(f.variant, f.outfit) : f.variant, f.outfit);
         int size = level == 0 ? TEX : TEX_LOW;
-        Identifier body = tex(pack, look.paint(), size);
+        // the body at its level's size and paint, or while that's being made the other level's (not a frame without it)
+        Identifier body = SurvivorTextures.body(pack, level == 0 ? look.paint() : look.paintLow(), size);
+        if (body == null) body = level == 0 ? SurvivorTextures.peek(pack, look.paintLow(), TEX_LOW) : SurvivorTextures.peek(pack, look.paint(), TEX);
         Map<String, Identifier> clothes = new HashMap<>();
         boolean pending = body == null;
         for (Map.Entry<String, List<SurvivorTextures.Layer>> p : look.pieces().entrySet()) {
@@ -510,7 +519,7 @@ public final class ZedBodies {
         SurvivorPack pack = packFor(variant);
         if (pack == null) return null;
         Look look = look(pack, variant, outfit);
-        Identifier body = tex(pack, look.paint(), TEX_LOW);
+        Identifier body = tex(pack, look.paintLow(), TEX_LOW);
         if (body == null) return null;
         Map<String, Identifier> clothes = new HashMap<>();
         for (Map.Entry<String, List<SurvivorTextures.Layer>> p : look.pieces().entrySet()) {
@@ -580,7 +589,7 @@ public final class ZedBodies {
             }
         }
         Look look = look(pack, v, outfit);
-        Identifier body = tex(pack, look.paint(), TEX_LOW);
+        Identifier body = tex(pack, look.paintLow(), TEX_LOW);
         if (body == null) return;
         Map<String, Identifier> clothes = new HashMap<>();
         for (Map.Entry<String, List<SurvivorTextures.Layer>> p : look.pieces().entrySet()) {

@@ -29,13 +29,15 @@ def simplify(out, idx, P, attrs, weights, target, error):
     return lib.meshopt_simplifyWithAttributes(
         out.ctypes.data_as(up), idx.ctypes.data_as(up), st(len(idx)), P.ctypes.data_as(fp), st(len(P)), st(12),
         attrs.ctypes.data_as(fp), st(attrs.shape[1] * 4), weights.ctypes.data_as(fp), st(len(weights)),
-        ctypes.POINTER(ctypes.c_ubyte)(), st(target), ctypes.c_float(error), ctypes.c_uint(0), fp())
+        ctypes.POINTER(ctypes.c_ubyte)(), st(target), ctypes.c_float(error), ctypes.c_uint(1), fp())   # 1: lock borders
 
 
 def thin(rec, tris, keep, joints, least=72):
     """meshoptimizer's simplifier, keeping Zomboid's own vertices (so UVs, normals and skin stay exact; it already
     knows UV seams). Weighed on normals, UVs and where each vertex's bones sit, so it never folds the two legs (or an
-    arm and the side) into one: that's what made a thinned pair of trousers into a skirt."""
+    arm and the side) into one: that's what made a thinned pair of trousers into a skirt. Open edges (a trouser hem,
+    a sleeve, the hair's fringe) are locked where they are: pulled in, they left the skin cut away under the clothes
+    showing as holes through the legs."""
     if len(tris) < 40:
         return rec, tris
     P = np.ascontiguousarray(rec['p'], dtype=np.float32)
@@ -86,10 +88,12 @@ def add_lod(src, dst, keep=0.2, far=0.07):
     for mesh, piece, tex, flags, level, rec, tris in full:
         if any(piece.startswith(s) or mesh.startswith(s) for s in SMALL):
             continue
-        r1, f1 = thin(rec, tris, keep, joints)
+        # the clothes are small meshes already, and thinned hard they lose whole sleeves: they keep more than the body
+        body = piece == 'body'
+        r1, f1 = thin(rec, tris, keep if body else max(keep, 0.55), joints)
         lods.append((mesh, piece, tex, flags, 1, r1, f1))
         # level 2, the far crowd: still Zomboid's body in 3D (Josiah: no flat pictures, scopes would show them up)
-        r2, f2 = thin(rec, tris, far, joints, 36)
+        r2, f2 = thin(rec, tris, far if body else max(far, 0.35), joints, 36)
         lods.append((mesh, piece, tex, flags, 2, r2, f2))
         t0 += len(tris); t1 += len(f1); t2 += len(f2)
     out = io.BytesIO()
