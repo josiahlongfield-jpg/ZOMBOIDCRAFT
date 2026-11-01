@@ -1893,6 +1893,14 @@ public class CarProp extends Entity {
         vx *= slowed;
         vz *= slowed;
 
+        // litter and small props on the road are knocked aside, not hit like a wall
+        if (ground && Math.abs(speed) > 0.01) {
+            int knocked = ploughCar(new Vec3(vx, 0, vz));
+            if (knocked > 0) {
+                vx *= Math.pow(0.95, knocked);
+                vz *= Math.pow(0.95, knocked);
+            }
+        }
         Vec3 next = position().add(vx, 0, vz);
         if (bodyHits(next, yaw) && !bodyHits(position(), yaw)) {
             vx *= -0.1;
@@ -1936,6 +1944,26 @@ public class CarProp extends Entity {
             }
         }
         return false;
+    }
+
+    /**
+     * Knocks aside the low clutter the car's body (nose to tail, turned with it) runs over in one move: squares
+     * the car's width laid along it, as {@link #bodyHits} checks. Returns how many pieces there were.
+     */
+    private int ploughCar(Vec3 delta) {
+        CarModels.Model m = CarModels.get(model());
+        if (m == null) {
+            return plough(getBoundingBox().expandTowards(delta.x, 0, delta.z), true);
+        }
+        double side = m.size[0] * 0.9, length = m.size[2], r = side / 2;
+        int n = Math.max(1, (int) Math.ceil(length / side)), knocked = 0;
+        double rad = Math.toRadians(getYRot()), fx = -Math.sin(rad), fz = Math.cos(rad);
+        for (int i = 0; i < n; i++) {
+            double t = n == 1 ? 0 : -(length - side) / 2 + (length - side) * i / (n - 1);
+            double cx = getX() + fx * t, cz = getZ() + fz * t;
+            knocked += plough(new AABB(cx - r, getY(), cz - r, cx + r, getY() + 1, cz + r).expandTowards(delta.x, 0, delta.z), true);
+        }
+        return knocked;
     }
 
     /** Living things (riders aside) the car's body is touching. */
@@ -2605,6 +2633,15 @@ public class CarProp extends Entity {
      * once so the aircraft rolls on; the server breaks them for everyone. Returns how many there were.
      */
     int plough(AABB box) {
+        return plough(box, false);
+    }
+
+    /**
+     * small: a car's version. Only low clutter goes (litter, boxes, props no higher than a car's bumper, nothing
+     * holding loot), so the car rolls through what Zomboid lets a car roll through and still stops at furniture,
+     * barriers and walls.
+     */
+    int plough(AABB box, boolean small) {
         int y = Mth.floor(getY() + 0.05), n = 0;
         net.minecraft.core.BlockPos.MutableBlockPos pos = new net.minecraft.core.BlockPos.MutableBlockPos();
         for (int x = Mth.floor(box.minX); x <= Mth.floor(box.maxX); x++) {
@@ -2619,6 +2656,15 @@ public class CarProp extends Entity {
                 boolean ours = id.getNamespace().equals(ZomboidCraft.MOD_ID);
                 if (id.getPath().equals("navy_shuttle") || !ours && state.isCollisionShapeFullBlock(level(), pos)) {
                     continue;
+                }
+                if (small) {
+                    // only what would stop the car: taller than it steps up, no taller than a block, not a full
+                    // block, not holding loot, not what it is standing on
+                    double h = state.getCollisionShape(level(), pos).max(net.minecraft.core.Direction.Axis.Y);
+                    if (!ours || state.hasBlockEntity() || state.isCollisionShapeFullBlock(level(), pos)
+                            || h <= STEP || h > 1.0 || y + h <= getY() + 0.05) {
+                        continue;
+                    }
                 }
                 net.minecraft.core.BlockPos up = pos.above();
                 if (!level().getBlockState(up).getCollisionShape(level(), up).isEmpty()) {
@@ -2643,6 +2689,8 @@ public class CarProp extends Entity {
     public void move(MoverType type, Vec3 delta) {
         if (type == MoverType.PLAYER && aircraft() && flight().grounded && level() instanceof ServerLevel) {
             plough(getBoundingBox().expandTowards(delta.x, 0, delta.z));
+        } else if (type == MoverType.PLAYER && !aircraft() && onGround() && level() instanceof ServerLevel) {
+            ploughCar(delta);
         }
         super.move(type, delta);
     }

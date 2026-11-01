@@ -201,7 +201,8 @@ def build(a):
             ps = float(pm.kv.get('scale', '1').rstrip('fF'))
             P = P * ps
         # half round: nose to +z, left to +x
-        P = P * np.array([-1, 1, -1]) * vscale
+        # (--world keeps the body in the script's own units: Zomboid scales the whole vehicle by the model scale)
+        P = P * np.array([-1, 1, -1]) * (1.0 if a.world else vscale)
         if pm is not None and ('offset' in pm.kv or 'rotate' in pm.kv):
             R = rot_xyz(floats(pm.kv.get('rotate', '0 0 0'), 3))
             P = P @ R.T + np.array(floats(pm.kv.get('offset', '0 0 0'), 3))
@@ -295,12 +296,19 @@ def build(a):
                     wheels[j] = (off, r * k, f)
                 print(f'body fitted to the wheels: arches at {cf:+.2f}/{cr:+.2f}, scaled {k:.3f}')
     fitted = []
+    ys, tops = [], []
     for k, (off, r, f) in enumerate(wheels):
-        width = widths[k]
         y = off[1] - rest
-        top = arch_top(P[body], np.array([off[0], y, off[2]]), r, width)
-        if top is not None:
-            y = top - 0.06
+        top = arch_top(P[body], np.array([off[0], y, off[2]]), r, widths[k])
+        tops.append(top)
+        ys.append(top - 0.06 if top is not None else y)
+    # left and right of an axle hang alike: a stray low piece over one tyre (a mudflap, a lip) must not drop it alone
+    for k, (off, r, f) in enumerate(wheels):
+        for j, (o2, _, _) in enumerate(wheels):
+            if j != k and abs(o2[2] - off[2]) < 0.05 and abs(o2[0] + off[0]) < 0.05:
+                ys[k] = max(ys[k], ys[j])
+    for k, (off, r, f) in enumerate(wheels):
+        y, top = ys[k], tops[k]
         drop = off[1] - y
         sel = part == f'wheel{k}'
         P[sel] = P[sel] - np.array([0, drop, 0])
@@ -314,9 +322,10 @@ def build(a):
     wheels = [(off - np.array([0, ground, 0]), r, f) for off, r, f in wheels]
     # --body: the body's size against the model's own (Zomboid draws it at its model scale, the fit above moves it
     # on); the whole vehicle grows with it, so the wheels stay in their arches
-    if a.body and not a.body_only:
-        now = vscale * (_FIT[v.name][0] if v.name in _FIT else 1.0)
-        g = a.body / now
+    if (a.body or a.world) and not a.body_only:
+        k = _FIT[v.name][0] if v.name in _FIT else 1.0
+        # --world: the body at F times the size Zomboid draws it (script units times the model scale)
+        g = a.world * vscale / k if a.world else a.body / (vscale * k)
         zc = float(np.mean([off[2] for off, _, _ in wheels]))
         if a.body_only:
             # the frame and tyres stay as the script has them: only the body (and its seats) grows, about the
@@ -335,7 +344,7 @@ def build(a):
             P[..., 2] = (P[..., 2] - zc) * g + zc
             wheels = [(np.array([off[0] * g, off[1] * g, (off[2] - zc) * g + zc]), r * g, f) for off, r, f in wheels]
             _GROW[v.name] = (g, zc, 0.0)
-        print(f'body at {a.body * 100:.0f}% of its model: everything grown {g:.3f}')
+        print(f'body at {(a.world * vscale if a.world else a.body) * 100:.0f}% of its model: everything grown {g:.3f}')
     glass = np.array([any(g in str(p) for g in GLASS) for p in part])
     wheel_of = np.array([int(str(p)[5:]) if str(p).startswith('wheel') else -1 for p in part])
     interior = np.array([('Seat' in str(p)) or ('GloveBox' in str(p)) for p in part])
@@ -522,7 +531,7 @@ def write(a, v, P, UV, glass, wheel_of, interior, atlas, wheels, part=None):
             lo_s, hi_s = q.min(0), q.max(0)
             cushion = lo_s[1] + 0.35 * (hi_s[1] - lo_s[1])
             o = np.array([(lo_s[0] + hi_s[0]) / 2, cushion, (lo_s[2] + hi_s[2]) / 2])
-            eye = [o[0], min(roof - 0.18, hi_s[1] + 0.12), o[2] - 0.05]
+            eye = [o[0], min(roof - 0.18, hi_s[1] + 0.12), o[2] + 0.10]
             # whoever sits up front looks out through the middle of the windscreen, not along the roof's edge
             ws = part == 'Windshield'
             if ws.any() and 'Front' in b.name:
@@ -629,6 +638,7 @@ def main():
     ap.add_argument('--weight', type=int, default=2)
     ap.add_argument('--body-only', action='store_true', help='--body grows the body alone, not the frame and tyres')
     ap.add_argument('--body', type=float, help="the body's size against its own model (1.1 = 110%%)")
+    ap.add_argument('--world', type=float, help="the body at this many times the size Zomboid draws it (the Defender's 130%% is 1.444)")
     ap.add_argument('--skip', nargs='*', default=[])
     ap.add_argument('--toon', action='store_true')
     ap.add_argument('--preview')
