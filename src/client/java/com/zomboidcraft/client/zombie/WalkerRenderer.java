@@ -171,7 +171,7 @@ public class WalkerRenderer extends HumanoidMobRenderer<Zombie, WalkerRenderStat
      * death says, as the body it leaves will.
      */
     private void zed(Zombie zombie, WalkerRenderState state, float partialTick) {
-        if (state.cuts != 0 || state.missingLimb != 0 || state.legless || state.heldLean > 0f
+        if (state.heldLean > 0f
                 || !com.zomboidcraft.client.survivor.ZedBodies.available()
                 || !com.zomboidcraft.client.survivor.ZedBodies.near(state.distanceToCameraSq)) {
             return;
@@ -192,6 +192,9 @@ public class WalkerRenderer extends HumanoidMobRenderer<Zombie, WalkerRenderStat
                 : facts.act == ZMove.BASH_DOOR ? com.zomboidcraft.client.survivor.ZedBodies.BASH_DOOR
                 : facts.act == ZMove.BASH_WIN ? com.zomboidcraft.client.survivor.ZedBodies.BASH_WIN : 0;
         f.actTime = facts.actTime;
+        // its lost limbs shrink away on the Zomboid body; a legless one's shins went before it rose
+        f.cuts = state.cuts | ZBodyLayer.missingCuts(state.missingLimb)
+                | (state.legless ? com.zomboidcraft.combat.Dismember.KN_R | com.zomboidcraft.combat.Dismember.KN_L : 0);
         if (zombie.deathTime > 0 && facts.death != 0) {
             state.bodyRot = Deaths.yaw(facts.death);
         }
