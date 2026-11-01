@@ -104,15 +104,15 @@ public final class MoodleHud {
             float slide = (1 - a) * 4;
             String level = p.level == GOOD ? "good" : String.valueOf(Math.max(1, Math.min(3, p.level)));
             // Zomboid's own icon when the player has it (config/zomboidcraft/moodles), our sprite otherwise
-            if (!PzMoodles.draw(g, p.pz, p.stage, p.level == GOOD, x + slide, y, SIZE, a)) {
-                Hud.sprite(g, Hud.id("moodle/" + p.icon + "_" + level), x + slide, y, SIZE, SIZE, Hud.alpha(0xFFFFFFFF, a));
-            }
+            boolean zomboid = PzMoodles.draw(g, p.pz, p.stage, p.level == GOOD, x + slide, y, SIZE, a);
+            if (!zomboid) Hud.sprite(g, Hud.id("moodle/" + p.icon + "_" + level), x + slide, y, SIZE, SIZE, Hud.alpha(0xFFFFFFFF, a));
             if (p.trend != 0 && p.since < TREND_SHOWS && p.live) {
                 Hud.sprite(g, Hud.id(p.trend > 0 ? "arrow_up" : "arrow_down"), x - 3.5f + slide, y + SIZE / 2f - 2.5f, 5, 5,
                         Hud.alpha(p.trend > 0 ? 0xFFE8D9B0 : 0xFF8FBF5E, a));
             }
             // names stay off while a screen is open, so they never write over the kit
-            if (n > 0 && mc.gui.screen() == null) {
+            // Zomboid's own icons speak for themselves (Josiah 2026-11-01): their names only show while peeking (Left Alt)
+            if (n > 0 && mc.gui.screen() == null && (!zomboid || Hud.peek)) {
                 // the name's capitals start level with the plate's top edge and the level bars end on its bottom edge
                 float w = Hud.capsWidth(font, p.label, 1f, LABEL);
                 float tx = x - 6 - w + (1 - n) * 3;
