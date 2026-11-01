@@ -38,6 +38,8 @@ public final class MeshGuns {
     private static final int INK = 0xFF141414;
     /** Test switches (GunLookTest): draw the outline shell; wind every triangle the other way round. */
     public static volatile boolean inkOn = true, flipped = false;
+    /** Set while a picture-in-picture (HUD figure, inventory mirror) draws; guns there skip the ink (PictureInPictureMixin). */
+    public static boolean inPicture;
     private static final Map<String, Gun> GUNS = new HashMap<>();
     private static final Set<String> MISSING = new HashSet<>();
     private static final Map<String, float[]> BOUNDS = new java.util.concurrent.ConcurrentHashMap<>();
@@ -81,7 +83,7 @@ public final class MeshGuns {
         Identifier paint = texture != null ? texture : gun.texture();
         final int shade = tint;
         out.submitCustomGeometry(pose, RenderTypes.entityCutoutCull(paint), (at, buffer) -> solid(p, at, buffer, light, shade));
-        if (inkOn) {
+        if (inkOn && !inPicture) {
             out.submitCustomGeometry(pose, RenderTypes.entityCutoutCull(paint), (at, buffer) -> ink(p, gun.outline(), at, buffer, light));
         }
         for (Identifier over : overlays) {
