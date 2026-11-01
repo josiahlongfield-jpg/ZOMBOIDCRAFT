@@ -339,7 +339,7 @@ public final class NpcSkin {
     }
 
     /** PNG straight in (it keeps its alpha); JPEG through Java's reader. */
-    private static NativeImage decode(byte[] bytes) throws IOException {
+    public static NativeImage decode(byte[] bytes) throws IOException {
         if (bytes.length > 4 && (bytes[0] & 255) == 0x89 && bytes[1] == 'P' && bytes[2] == 'N' && bytes[3] == 'G') {
             return NativeImage.read(new ByteArrayInputStream(bytes));
         }

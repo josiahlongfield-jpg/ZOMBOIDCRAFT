@@ -2,7 +2,6 @@ package com.zomboidcraft.client.survivor;
 
 import com.mojang.blaze3d.platform.NativeImage;
 import com.zomboidcraft.ZomboidCraft;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -118,7 +117,7 @@ public final class SurvivorTextures {
             for (int i = 0; i < data.size(); i++) {
                 byte[] bytes = data.get(i);
                 if (bytes == null) continue;
-                try (NativeImage img = NativeImage.read(new ByteArrayInputStream(bytes))) {
+                try (NativeImage img = com.zomboidcraft.client.npc.NpcSkin.decode(bytes)) {
                     int tint = layers.get(i).tint();
                     if (base == null) {
                         w = img.getWidth();

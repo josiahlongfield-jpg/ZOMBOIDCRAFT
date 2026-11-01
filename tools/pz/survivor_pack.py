@@ -510,15 +510,17 @@ def clothes(F, media, skel, groups, tex, cat):
         for n in (v['pz'] if isinstance(v, dict) else v):
             if n not in want:
                 want.append(n)
-    meshes, masks, made = {}, {}, set()
+    meshes, masks, made = {}, {}, {}
+    game = {}  # piece -> its game mesh, for painting
     cat['clothes'] = {}
 
-    def picture(key, rel):
+    def picture(key, rel, item, piece):
+        """Notes a texture to paint: which item it's for and what it's painted on (a piece, or None: the skin)."""
         p = files.get('textures/' + rel.replace('\\', '/') + '.png')
         if not p:
             return None
-        if key not in made:
-            tex[key] = png(limit(Image.open(p).convert('RGBA'), 512)); made.add(key)
+        use = made.setdefault(key, {'path': p, 'rel': rel.replace('\\', '/').lower(), 'item': item, 'on': set()})
+        use['on'].add(piece)
         return key
 
     for name in want:
@@ -542,11 +544,13 @@ def clothes(F, media, skel, groups, tex, cat):
                         fw[fr['name']] = fr['local'] if fr['parent'] not in fw else fw[fr['parent']] @ fr['local']
                     ms = [static_on(m, fw.get(m['name'], np.eye(4)), skel, bone) for m in ms]
                 pid = 'cloth:' + os.path.basename(path)[:-2].lower()
-                groups.append((os.path.basename(path), pid, '', 3, merged([to_game(m, skel) for m in ms])))
+                gm = merged([to_game(m, skel) for m in ms])
+                groups.append((os.path.basename(path), pid, '', 3, gm))
                 meshes[path] = pid
+                game[pid] = gm
             entry['piece'] = meshes[path]
-            entry['tex'] = [k for k in (picture('cloth/' + t.replace('\\', '/').lower(), t) for t in it['tex']) if k]
-        base = [k for k in (picture('cloth/' + t.replace('\\', '/').lower(), t) for t in it['base']) if k]
+            entry['tex'] = [k for k in (picture('cloth/' + t.replace('\\', '/').lower(), t, name, meshes[path]) for t in it['tex']) if k]
+        base = [k for k in (picture('cloth/' + t.replace('\\', '/').lower(), t, name, None) for t in it['base']) if k]
         if base:
             entry['base'] = base
         # the skin it hides: its m_Masks parts from its own mask folder, else the body's
@@ -569,8 +573,38 @@ def clothes(F, media, skel, groups, tex, cat):
                 tex[key] = img
                 entry['mask'] = key
         cat['clothes'][name] = entry
-    n_mesh = len(meshes)
-    print(f"  clothes: {len(cat['clothes'])} items, {n_mesh} models, {len(made)} textures, {len(masks)} masks")
+    paint_clothes(made, game, groups[0][4], tex)
+    print(f"  clothes: {len(cat['clothes'])} items, {len(meshes)} models, {len(made)} textures, {len(masks)} masks")
+
+
+def paint_clothes(made, game, body, tex):
+    """Each clothing texture painted again at 4x for these bodies (cloth_paint.py), on the meshes that wear it; plain
+    (Zomboid's own, as it is) with PZ_PLAIN=1."""
+    import cloth_paint as cp
+    plain = os.environ.get('PZ_PLAIN') == '1'
+    places = {}
+    size = 0
+    for i, (key, use) in enumerate(made.items()):
+        img = Image.open(use['path']).convert('RGBA')
+        if plain:
+            tex[key] = png(limit(img, 512)); continue
+        overlay = None in use['on']
+        on = [p for p in use['on'] if p is not None]
+        pk = 'body' if overlay else tuple(sorted(on))
+        if pk not in places:
+            places[pk] = cp.Place([body] if overlay else [game[p] for p in on])
+        place = places[pk]
+        mat = cp.MATERIAL.get(use['rel']) or cp.material(use['item'], use['rel'])
+        crisp = any(w in use['rel'] for w in ('print', 'logo', 'stripe', 'check', 'tartan', 'hawaiian', 'flag', 'text',
+                                              'band', 'rock') + cp.CRISP)
+        seed = zlib.crc32(key.encode()) & 0xFFFF
+        out = cp.paint(img, place, mat, crisp=crisp, hand=cp.HAND.get(use['rel']), seed=seed, overlay=overlay)
+        tex[key] = cp.encode(out, None if overlay else place)
+        size += len(tex[key])
+        if i % 40 == 0:
+            print(f'    painted {i + 1}/{len(made)} ({size // 1024} KB so far)')
+    if not plain:
+        print(f'    clothes painted: {len(made)} textures, {size // 1024} KB')
 
 
 # ---------------------------------------------------------------- the pack
