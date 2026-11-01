@@ -1,0 +1,453 @@
+#!/usr/bin/env python3
+"""Turns a Project Zomboid vehicle (a Workshop mod's scripts, FBX models and textures) into a ZomboidCraft vehicle.
+
+    python3 tools/cars/pzcar.py VEHICLE OUT_DIR --scripts DIR [DIR ...] --assets DIR [DIR ...]
+        [--id ID] [--skin N] [--kind car] [--skip PART ...] [--toon] [--preview DIR]
+
+VEHICLE is the script's vehicle name (e.g. 89defender110). --scripts are the mod's script folders (the B42 version
+folder first, then common/, then any library it leans on, such as damnlib); --assets are folders searched, by file
+name, for the FBX models and PNG textures the scripts name. This writes OUT_DIR/ID.zcar and ID.json, which go in
+config/zomboidcraft/vehicles/ on each computer that's to have it (CarModels.LOCAL). The mod's files are other
+people's work kept for Josiah's own copy: neither they nor what's made from them go in this repository or the jar.
+
+How Zomboid builds a vehicle, and so how this does:
+  - the vehicle's own `model` (its body, scaled and offset), then every part's first model (doors, hood, glass,
+    seats, bumpers...), parts pulled in through `template = ...` lines as Zomboid does; armour and the other
+    add-ons the mod only fits now and then are left off (--skip adds to them)
+  - a model's mesh is `file|node` in an FBX; with no texture of its own it wears the vehicle's skin (--skin picks
+    which of the vehicle's paints), and invertX mirrors it (the right-hand seats)
+  - meshes are modelled nose toward -z with the left at -x: turned half round they face our way (nose +z, +x left)
+  - the four wheels are the tyre part's first model, set at the script's wheel offsets (right side mirrored)
+  - window and windshield parts are glass
+
+Looks: usable (the skin as Zomboid shows it), abandoned (the mod's own rust texture worked in, dust and streaks),
+wrecked (the mod's damage texture, scorching, half the glass gone) and burnt (charred, no glass). --toon paints the
+same car in the mod's character style instead: flat bands, lit tops, shaded undersides and inked part edges.
+"""
+import argparse
+import io
+import json
+import os
+import struct
+import sys
+import zlib
+
+import numpy as np
+from PIL import Image, ImageFilter
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
+import fbx  # noqa: E402
+from pzscript import Scripts, floats  # noqa: E402
+from pack import CELL, VARIANTS, heights, java_hash, scramble  # noqa: E402
+from aircraft import texels, weather  # noqa: E402
+from wreck import fbm, sstep  # noqa: E402
+
+# parts the mods fit only some of the time (random spawns, player builds): left off the stock car
+SKIP = ('Armor', 'Snorkel', 'Roofrack', 'Cage', 'Tarp', 'HardCover', 'Mag', 'Gun', 'Turret', 'Trailer')
+GLASS = ('Window', 'Windshield')
+UP = 2  # the 512px Zomboid textures are doubled so the weathering has room to sit
+
+
+class Finder:
+    """Files by name, any case, under the asset folders."""
+
+    def __init__(self, dirs):
+        self.by = {}
+        for d in dirs:
+            for root, _, files in os.walk(d):
+                for f in files:
+                    self.by.setdefault(f.lower(), os.path.join(root, f))
+
+    def mesh(self, path):
+        base = path.replace('\\', '/').split('/')[-1].lower()
+        for ext in ('.fbx', '.x'):
+            if base + ext in self.by:
+                return self.by[base + ext]
+        return self.by.get(base)
+
+    def texture(self, path):
+        base = path.replace('\\', '/').split('/')[-1].lower()
+        return self.by.get(base + '.png') or self.by.get(base)
+
+
+def skips(name, extra):
+    return any(k.lower() in name.lower() for k in SKIP + tuple(extra))
+
+
+def collect(s, v, extra):
+    """(part, model definition, the part's model block or None) for everything on the stock vehicle."""
+    out = [('Body', s.models[v.block('model').kv['file']], None)]
+    for pname, p in v.parts.items():
+        if skips(pname, extra) or pname.startswith('Tire'):
+            continue
+        ms = p.blocks('model')
+        if not ms:
+            continue
+        # most parts list their variants and fit one; a few (the body's interior pieces on the glove box) list
+        # pieces that all show at once
+        chosen = ms if pname == 'GloveBox' else ms[:1]
+        for m in chosen:
+            f = m.kv.get('file')
+            if f in s.models:
+                out.append((pname, s.models[f], m))
+    return out
+
+
+def rot_xyz(r):
+    rx, ry, rz = np.radians(r)
+    X = np.array([[1, 0, 0], [0, np.cos(rx), -np.sin(rx)], [0, np.sin(rx), np.cos(rx)]])
+    Y = np.array([[np.cos(ry), 0, np.sin(ry)], [0, 1, 0], [-np.sin(ry), 0, np.cos(ry)]])
+    Z = np.array([[np.cos(rz), -np.sin(rz), 0], [np.sin(rz), np.cos(rz), 0], [0, 0, 1]])
+    return Z @ Y @ X
+
+
+class Atlas:
+    """Packs the textures the car wears into one image; each gets a rectangle, UVs are moved into it."""
+
+    def __init__(self):
+        self.images, self.slot = [], {}
+
+    def add(self, key, img):
+        if key not in self.slot:
+            self.slot[key] = len(self.images)
+            self.images.append(img.convert('RGB'))
+        return self.slot[key]
+
+    def pack(self):
+        ims = [im.resize((im.width * UP, im.height * UP), Image.BICUBIC) for im in self.images]
+        side = max(im.width for im in ims)
+        # shelves of the widest texture's width
+        cols = 2 if len(ims) > 1 else 1
+        W = side * cols
+        x = y = row = 0
+        self.rect = []
+        for im in ims:
+            if x + im.width > W:
+                x, y, row = 0, y + row, 0
+            self.rect.append((x, y, im.width, im.height))
+            x += im.width
+            row = max(row, im.height)
+        H = y + row
+        H = 1 << int(np.ceil(np.log2(max(H, 1))))
+        W = 1 << int(np.ceil(np.log2(W)))
+        self.image = Image.new('RGB', (W, H), (40, 40, 40))
+        for im, (x, y, _, _) in zip(ims, self.rect):
+            self.image.paste(im, (x, y))
+        self.W, self.H = W, H
+
+    def uv(self, slot, UV):
+        x, y, w, h = self.rect[slot]
+        u = np.clip(UV[..., 0], 0, 1)
+        v = np.clip(1 - UV[..., 1], 0, 1)
+        # half a texel in from the rectangle's edge, so the neighbour never bleeds in
+        u = (x + 0.5 + u * (w - 1)) / self.W
+        v = (y + 0.5 + v * (h - 1)) / self.H
+        return np.stack([u, v], -1)
+
+
+def build(a):
+    s = Scripts(a.scripts)
+    v = s.vehicle(a.vehicle)
+    find = Finder(a.assets)
+    vm = v.block('model').kv
+    vscale = float(vm.get('scale', '1').rstrip('fF'))
+    voff = np.array(floats(vm.get('offset', '0 0 0'), 3))
+    skins = [b.kv['texture'] for b in v.blocks('skin') if 'texture' in b.kv]
+    skin = skins[a.skin % len(skins)] if skins else v.kv.get('texture')
+    atlas = Atlas()
+    cache = {}
+
+    def mesh_of(spec):
+        fname, _, node = spec.partition('|')
+        path = find.mesh(fname)
+        if path is None:
+            raise FileNotFoundError(f'no model file for {fname}')
+        if path not in cache:
+            cache[path] = {k.lower(): m for k, m in fbx.load(path).items()}
+        ms = cache[path]
+        if node:
+            m = ms.get(node.lower())
+            if m is None:
+                raise KeyError(f'{node} not in {os.path.basename(path)}')
+            return m
+        return {'P': np.concatenate([m['P'] for m in ms.values()]), 'UV': np.concatenate([m['UV'] for m in ms.values()])}
+
+    def texture_slot(name):
+        path = find.texture(name)
+        if path is None:
+            raise FileNotFoundError(f'no texture {name}')
+        return atlas.add(path, Image.open(path))
+
+    P_all, UV_all, slot_all, part_all = [], [], [], []
+    missing = []
+    for pname, mdef, pm in collect(s, v, a.skip):
+        spec = mdef.kv.get('mesh')
+        if not spec:
+            continue
+        try:
+            m = mesh_of(spec)
+            tex = mdef.kv.get('texture') or skin
+            slot = texture_slot(tex)
+        except (FileNotFoundError, KeyError) as e:
+            missing.append(f'{pname}: {e}')
+            continue
+        P = m['P'] * float(mdef.kv.get('scale', '1').rstrip('fF'))
+        UV = m['UV']
+        if mdef.kv.get('invertX', '').upper() == 'TRUE':
+            P = P * np.array([-1, 1, 1])
+            P, UV = P[:, ::-1], UV[:, ::-1]
+        if pm is not None:
+            ps = float(pm.kv.get('scale', '1').rstrip('fF'))
+            P = P * ps
+        # half round: nose to +z, left to +x
+        P = P * np.array([-1, 1, -1]) * vscale
+        if pm is not None and ('offset' in pm.kv or 'rotate' in pm.kv):
+            R = rot_xyz(floats(pm.kv.get('rotate', '0 0 0'), 3))
+            P = P @ R.T + np.array(floats(pm.kv.get('offset', '0 0 0'), 3))
+        P = P + voff
+        P_all.append(P)
+        UV_all.append(UV)
+        slot_all.append(np.full(len(P), slot))
+        part_all.append(np.full(len(P), pname, object))
+    # the wheels
+    tyre = v.parts.get('TireFrontLeft')
+    wdef = s.models[tyre.blocks('model')[0].kv['file']] if tyre is not None else None
+    wm = mesh_of(wdef.kv['mesh'])
+    wslot = texture_slot(wdef.kv.get('texture'))
+    WP = wm['P'] * float(wdef.kv.get('scale', '1').rstrip('fF'))
+    WP = WP - (WP.reshape(-1, 3).max(0) + WP.reshape(-1, 3).min(0)) / 2
+    WP = WP * np.array([-1, 1, -1])
+    wheels = []
+    # wheels hang off the physics chassis, which sits at the centre-of-mass offset; the body model doesn't
+    com = np.array(floats(v.kv.get('centerOfMassOffset', '0 0 0'), 3))
+    for k, wb in enumerate(sorted(v.blocks('wheel'), key=lambda b: ['FrontLeft', 'FrontRight', 'RearLeft', 'RearRight'].index(b.name))):
+        off = np.array(floats(wb.kv['offset'], 3)) + com
+        r = float(wb.kv.get('radius', '0.35').rstrip('fF'))
+        q, u = WP, wm['UV']
+        if off[0] < 0:
+            q = q * np.array([-1, 1, 1])
+            q, u = q[:, ::-1], u[:, ::-1]
+        # the mesh's own radius against the script's: the script's wins, it's what Zomboid rolls on
+        mr = (WP[..., 1].max() - WP[..., 1].min()) / 2
+        q = q * (r / mr) if mr > 0 else q
+        P_all.append(q + off)
+        UV_all.append(u)
+        slot_all.append(np.full(len(q), wslot))
+        part_all.append(np.full(len(q), f'wheel{k}', object))
+        wheels.append((off, r, wb.kv.get('front', 'false').lower() == 'true'))
+    if missing:
+        print('left out (missing):', *missing, sep='\n  ')
+    atlas.pack()
+    P = np.concatenate(P_all)
+    part = np.concatenate(part_all)
+    slots = np.concatenate(slot_all)
+    UV = np.zeros(P.shape[:2] + (2,))
+    rawUV = np.concatenate(UV_all)
+    for sl in np.unique(slots):
+        m = slots == sl
+        UV[m] = atlas.uv(sl, rawUV[m])
+    # the ground: the tyres' bottoms
+    ground = min(off[1] - r for off, r, _ in wheels)
+    _GROUND[v.name] = ground
+    P[..., 1] -= ground
+    wheels = [(off - np.array([0, ground, 0]), r, f) for off, r, f in wheels]
+    glass = np.array([any(g in str(p) for g in GLASS) for p in part])
+    wheel_of = np.array([int(str(p)[5:]) if str(p).startswith('wheel') else -1 for p in part])
+    interior = np.array([('Seat' in str(p)) or ('GloveBox' in str(p)) for p in part])
+    write(a, v, P, UV, glass, wheel_of, interior, atlas, wheels)
+
+
+def toon(img, p, n, ok):
+    """Flat painted bands, lit tops and shaded undersides, inked along the edges of each UV island."""
+    a = np.asarray(img, float)
+    # bands: a light blur then each channel stepped
+    soft = np.asarray(img.filter(ImageFilter.MedianFilter(5)), float)
+    lum = soft @ np.array([0.3, 0.59, 0.11])
+    band = np.round(lum / 255 * 6) / 6 * 255
+    col = soft * (band / np.maximum(lum, 1))[..., None]
+    out = col.copy()
+    nn = np.zeros(a.shape)
+    nn[ok] = n
+    out = out * (1 + 0.08 * (nn[..., 1] > 0.6))[..., None] * (1 - 0.15 * (nn[..., 1] < -0.4))[..., None]
+    # ink where the island ends
+    edge = ~ok
+    grow = np.zeros_like(edge)
+    for dy, dx in ((0, 1), (0, -1), (1, 0), (-1, 0), (1, 1), (-1, -1), (1, -1), (-1, 1)):
+        grow |= np.roll(edge, (dy * 2, dx * 2), (0, 1))
+    inked = ok & grow
+    out[inked] = (11, 11, 13)
+    out[~ok] = a[~ok]
+    return Image.fromarray(np.clip(out, 0, 255).astype(np.uint8))
+
+
+def write(a, v, P, UV, glass, wheel_of, interior, atlas, wheels):
+    W, H = atlas.W, atlas.H
+    base = np.asarray(atlas.image, float)
+    body = wheel_of < 0
+    tri, bary = texels(P, UV * np.array([W, H]), W, H)
+    ok = tri >= 0
+    t, w = tri[ok], bary[ok]
+    pts = (P[t] * w[:, :, None]).sum(1)
+    nrm = np.cross(P[t, 1] - P[t, 0], P[t, 2] - P[t, 0])
+    nrm /= np.maximum(np.linalg.norm(nrm, axis=1, keepdims=True), 1e-12)
+    cls = np.where(interior[t], 'interior', np.where(glass[t], 'glass', 'body'))
+    # the mod's rust texture, laid where the skin is (same UVs, same rectangle)
+    rust = None
+    rk = v.kv.get('textureRust')
+    dmg = v.kv.get('textureDamage2Shell') or v.kv.get('textureDamage1Shell')
+    find = Finder(a.assets)
+
+    def over(name):
+        path = find.texture(name) if name else None
+        if not path:
+            return None
+        im = Image.open(path).convert('RGBA')
+        im = im.resize((im.width * UP, im.height * UP), Image.BICUBIC)
+        layer = np.zeros((H, W, 4))
+        skin_slot = atlas.slot.get(find.texture([b.kv['texture'] for b in v.blocks('skin')][a.skin % max(1, len(v.blocks('skin')))]))
+        if skin_slot is None:
+            return None
+        x, y, w_, h_ = atlas.rect[skin_slot]
+        layer[y:y + h_, x:x + w_] = np.asarray(im.resize((w_, h_)), float)
+        return layer
+
+    rust, damage = over(rk), over(dmg)
+    centre = np.array([(P[..., 0].min() + P[..., 0].max()) / 2, 0, (P[..., 2].min() + P[..., 2].max()) / 2])
+
+    buf = io.BytesIO()
+    buf.write(b'ZCAR')
+    buf.write(struct.pack('>ii', 3, len(VARIANTS)))
+    for state in VARIANTS:
+        rng = np.random.default_rng(java_hash(a.id + state) & 0xFFFFF)
+        img = base.copy()
+        if a.toon:
+            img = np.asarray(toon(Image.fromarray(base.astype(np.uint8)), pts, nrm, ok), float)
+        col = img[ok]
+        if state == 'burnt':
+            lum = col @ np.array([0.3, 0.59, 0.11])
+            shade = np.clip(lum / max(np.median(lum), 1), 0.35, 1.8)
+            col = weather(pts, nrm, col, cls, state, rng, ()) * shade[:, None] ** 0.7
+        elif state != 'usable':
+            if rust is not None:
+                r = rust[ok]
+                amt = {'abandoned': 0.75, 'wrecked': 0.55}[state]
+                al = (r[:, 3:4] / 255) * amt * (cls != 'glass')[:, None]
+                col = col * (1 - al) + r[:, :3] * al
+            if state == 'wrecked' and damage is not None:
+                d = damage[ok]
+                al = (d[:, 3:4] / 255) * (cls == 'body')[:, None]
+                col = col * (1 - al) + d[:, :3] * al
+            col = weather(pts, nrm, col, cls, state, rng, ())
+        img[ok] = col
+        im = Image.fromarray(np.clip(img, 0, 255).astype(np.uint8))
+        keep = np.ones(len(P), bool)
+        if state == 'wrecked':
+            keep &= ~(glass & (rng.random(len(P)) < 0.5))
+        if state == 'burnt':
+            keep &= ~glass
+        jpg = io.BytesIO()
+        im.save(jpg, 'JPEG', quality=88, subsampling=0)
+        jpg = jpg.getvalue()
+        nb = state.encode()
+        buf.write(struct.pack('>H', len(nb)))
+        buf.write(nb)
+        buf.write(struct.pack('>i', len(jpg)))
+        buf.write(jpg)
+        m = keep & body
+        mesh(buf, P[m], UV[m], glass[m], centre)
+        buf.write(struct.pack('>i', 0))  # lids
+        buf.write(struct.pack('>i', 4))
+        for k, (c, r, steers) in enumerate(wheels):
+            buf.write(struct.pack('>4fb', *(np.asarray(c) - centre), r, 1 if steers else 0))
+            mm = keep & (wheel_of == k)
+            mesh(buf, P[mm], UV[mm], glass[mm], centre)
+        if a.preview:
+            os.makedirs(a.preview, exist_ok=True)
+            im.save(os.path.join(a.preview, f'{a.id}_{state}.jpg'), quality=90)
+        print(f'  {state}: {keep.sum()} triangles, texture {len(jpg) // 1024} KB', flush=True)
+    blob = scramble(zlib.compress(buf.getvalue(), 9), a.id)
+    os.makedirs(a.out, exist_ok=True)
+    with open(os.path.join(a.out, a.id + '.zcar'), 'wb') as f:
+        f.write(blob)
+    Q = P[body] - centre
+    glo, nx, nz, grid = heights(Q)
+    lo, hi = P.reshape(-1, 3).min(0), P.reshape(-1, 3).max(0)
+    size = hi - lo
+    roof = hi[1]
+    seats, handles = [], []
+    # a seat named again later (the vehicle's own after its template's) is the one Zomboid keeps
+    last = {}
+    for b in v.blocks('passenger'):
+        if '*' not in b.name and b.block('position', 'inside') is not None:
+            last[b.name] = b
+    com = np.array(floats(v.kv.get('centerOfMassOffset', '0 0 0'), 3))
+    for b in last.values():
+        pos = b.block('position', 'inside')
+        o = np.array(floats(pos.kv.get('offset', '0 0 0'), 3)) + com - np.array([0, ground_of(v), 0])
+        eye = [o[0], min(roof - 0.22, o[1] + 0.78), o[2]]
+        seats.append([round(float(eye[0] - centre[0]), 3), round(float(eye[1]), 3), round(float(eye[2] - centre[2]), 3)])
+        side = 1 if o[0] > 0 else -1
+        handles.append([round(float(side * (size[0] / 2 + 0.05)), 3), round(float(o[1] + 0.45), 3), round(float(o[2] - centre[2]), 3)])
+    fronts = [c for c, _, f in wheels if f]
+    rears = [c for c, _, f in wheels if not f]
+    wb = float(np.mean([c[2] for c in fronts]) - np.mean([c[2] for c in rears])) if fronts and rears else 2.5
+    row = {'id': a.id, 'kind': a.kind, 'weight': a.weight, 'size': [round(float(x), 3) for x in size],
+           'cell': CELL, 'x0': round(float(glo[0]), 3), 'z0': round(float(glo[2]), 3), 'nx': nx, 'nz': nz,
+           'heights': [int(round(h * 100)) for h in grid.ravel()],
+           'seats': seats, 'handles': handles, 'wheelbase': round(wb, 3),
+           'wheels': [[round(float(c[0] - centre[0]), 3), round(float(c[2] - centre[2]), 3), round(float(r), 3)]
+                      for c, r, _ in wheels],
+           'zomboid': {'vehicle': a.vehicle, 'mass': num(v.kv.get('mass')), 'engineForce': num(v.kv.get('engineForce')),
+                       'maxSpeed': num(v.kv.get('maxSpeed')), 'seats': num(v.kv.get('seats')),
+                       'engine': (v.block('sound').kv.get('engine') if v.block('sound') else None),
+                       'horn': (v.block('sound').kv.get('horn') if v.block('sound') else None)}}
+    with open(os.path.join(a.out, a.id + '.json'), 'w') as f:
+        json.dump(row, f, separators=(',', ':'))
+    print(f'{a.id:20s} {len(blob) // 1024:5d} KB  {size[0]:.2f} x {size[1]:.2f} x {size[2]:.2f} m, {len(seats)} seats', flush=True)
+
+
+_GROUND = {}
+
+
+def ground_of(v):
+    return _GROUND.get(v.name, 0.0)
+
+
+def num(s):
+    if s is None:
+        return None
+    try:
+        return float(str(s).rstrip('fF'))
+    except ValueError:
+        return None
+
+
+def mesh(buf, T, UV, glass, centre):
+    order = np.concatenate([np.where(~glass)[0], np.where(glass)[0]])
+    Q = np.round((T[order] - centre) * 1000).astype('>i2').reshape(-1, 3)
+    U = np.round(np.clip(UV[order], 0, 1) * 65535).astype('>u2').reshape(-1, 2)
+    buf.write(struct.pack('>ii', int((~glass).sum()), int(glass.sum())))
+    buf.write(np.concatenate([Q.view('>u2'), U], 1).astype('>u2').tobytes())
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument('vehicle')
+    ap.add_argument('out')
+    ap.add_argument('--scripts', nargs='+', required=True)
+    ap.add_argument('--assets', nargs='+', required=True)
+    ap.add_argument('--id')
+    ap.add_argument('--skin', type=int, default=0)
+    ap.add_argument('--kind', default='car')
+    ap.add_argument('--weight', type=int, default=2)
+    ap.add_argument('--skip', nargs='*', default=[])
+    ap.add_argument('--toon', action='store_true')
+    ap.add_argument('--preview')
+    a = ap.parse_args()
+    a.id = a.id or ('pz_' + a.vehicle.lower())
+    build(a)
+
+
+if __name__ == '__main__':
+    main()
