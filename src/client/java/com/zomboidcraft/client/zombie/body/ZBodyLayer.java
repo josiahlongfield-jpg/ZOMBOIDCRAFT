@@ -46,7 +46,7 @@ public class ZBodyLayer extends RenderLayer<WalkerRenderState, WalkerModel> {
     @Override
     public void submit(PoseStack poseStack, SubmitNodeCollector collector, int light, WalkerRenderState state,
             float yRot, float xRot) {
-        if (state.zbody == null || state.isInvisible) {
+        if (state.zbody == null || state.zed != null || state.isInvisible) {
             return;
         }
         int lod = ZDetail.level(state.distanceToCameraSq);

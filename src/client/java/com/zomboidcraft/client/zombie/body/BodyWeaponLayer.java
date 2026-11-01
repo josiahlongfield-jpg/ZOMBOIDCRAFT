@@ -53,7 +53,7 @@ public class BodyWeaponLayer extends RenderLayer<WalkerRenderState, WalkerModel>
     @Override
     public void submit(PoseStack pose, SubmitNodeCollector collector, int light, WalkerRenderState state, float yRot, float xRot) {
         AttachedWeapons.Stuck stuck = state.bodyWeapon;
-        if (stuck == null || state.zbody == null || state.isInvisible) {
+        if (stuck == null || state.zbody == null || state.zed != null || state.isInvisible) {
             return;
         }
         ItemStack stack = state.bodyWeaponStack;

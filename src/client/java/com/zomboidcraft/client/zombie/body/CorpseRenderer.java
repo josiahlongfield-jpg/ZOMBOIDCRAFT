@@ -31,6 +31,8 @@ public class CorpseRenderer extends EntityRenderer<Corpse, CorpseRenderer.State>
         int cuts, missingLimb, variant;
         boolean legless, hidden, hung;
         float yaw, size = 1f, swing, twist;
+        /** Drawn as Project Zomboid's own body (survivor/ZedBodies), lying as its death left it; null when not. */
+        com.zomboidcraft.client.survivor.ZedBodies.Drawn zed;
     }
 
     private final ZDeath death = new ZDeath();
@@ -65,6 +67,7 @@ public class CorpseRenderer extends EntityRenderer<Corpse, CorpseRenderer.State>
         int from = corpse.from();
         Entity zombie = from < 0 ? null : corpse.level().getEntity(from);
         state.hidden = state.mesh == null || zombie != null && !zombie.isRemoved();
+        state.zed = null;
         if (state.mesh == null) {
             return;
         }
@@ -88,6 +91,14 @@ public class CorpseRenderer extends EntityRenderer<Corpse, CorpseRenderer.State>
             state.swing = (float) Math.sin(t * 0.9f) * 2.5f;
             state.twist = (float) Math.sin(t * 0.23f) * 14f;
             return;
+        }
+        if (!state.hidden && state.cuts == 0 && state.missingLimb == 0 && !state.legless
+                && com.zomboidcraft.client.survivor.ZedBodies.available()
+                && com.zomboidcraft.client.survivor.ZedBodies.near(state.distanceToCameraSq)) {
+            state.zed = com.zomboidcraft.client.survivor.ZedBodies.corpse(corpse.getId(), state.variant, outfit, d, state.ageInTicks);
+            if (state.zed != null) {
+                return;
+            }
         }
         ZDeath.Fall fall = falls.computeIfAbsent(corpse.getId(), id -> new ZDeath.Fall());
         fall.set(Deaths.kind(d), Deaths.heading(d), Deaths.force(d), Deaths.part(d), Deaths.seed(d),
@@ -115,6 +126,11 @@ public class CorpseRenderer extends EntityRenderer<Corpse, CorpseRenderer.State>
         poseStack.rotateDegrees(Axis.YP, 180f - state.yaw);
         poseStack.scale(-1f, -1f, 1f);
         poseStack.translate(0f, -1.501f, 0f);
+        if (state.zed != null) {
+            com.zomboidcraft.client.survivor.ZedBodies.submit(state.zed, poseStack, collector, state.lightCoords, OverlayTexture.NO_OVERLAY);
+            poseStack.popPose();
+            return;
+        }
         // lying flat, so it gets less detail sooner than one standing
         double distSq = state.distanceToCameraSq;
         int lod = Math.max(ZDetail.level(distSq), distSq < 10 * 10 ? ZDetail.FULL : distSq < 24 * 24 ? ZDetail.MID : ZDetail.LOW);
