@@ -37,6 +37,13 @@ public final class CarModels {
         public float[] steering;
         /** The middle of the glovebox's lid, or null. */
         public float[] glovebox;
+        /** What each lid in the .zcar is, in order: "boot" (the default, also tailgates and back doors) or "bonnet". */
+        public String[] lidKinds;
+
+        /** Whether lid i of this model is its bonnet (opened at the front) rather than a boot lid or back door. */
+        public boolean bonnetLid(int i) {
+            return lidKinds != null && i < lidKinds.length && "bonnet".equals(lidKinds[i]);
+        }
         /**
          * The body's underside over each cell in centimetres, or null: a jet's wings stand clear
          * of the deck, so its hull leaves the room under them open to walk through.

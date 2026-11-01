@@ -460,6 +460,10 @@ def write(a, v, P, UV, glass, wheel_of, interior, atlas, wheels, part=None):
 
     rust, damage = over(rk), over(dmg)
     centre = np.array([(P[..., 0].min() + P[..., 0].max()) / 2, 0, (P[..., 2].min() + P[..., 2].max()) / 2])
+    lids = lid_parts(P, part, body)
+    on_lid = np.zeros(len(P), bool)
+    for _, sel, _, _, _ in lids:
+        on_lid |= sel
 
     buf = io.BytesIO()
     buf.write(b'ZCAR')
@@ -500,9 +504,13 @@ def write(a, v, P, UV, glass, wheel_of, interior, atlas, wheels, part=None):
         buf.write(nb)
         buf.write(struct.pack('>i', len(jpg)))
         buf.write(jpg)
-        m = keep & body
+        m = keep & body & ~on_lid
         mesh(buf, P[m], UV[m], glass[m], centre)
-        buf.write(struct.pack('>i', 0))  # lids
+        buf.write(struct.pack('>i', len(lids)))
+        for kind, sel, pivot, y_axis, angle in lids:
+            buf.write(struct.pack('>b4f', 1 if y_axis else 0, *(pivot - centre), angle))
+            mm = keep & sel
+            mesh(buf, P[mm], UV[mm], glass[mm], centre)
         buf.write(struct.pack('>i', 4))
         for k, (c, r, steers) in enumerate(wheels):
             buf.write(struct.pack('>4fb', *(np.asarray(c) - centre), r, 1 if steers else 0))
@@ -577,9 +585,20 @@ def write(a, v, P, UV, glass, wheel_of, interior, atlas, wheels, part=None):
             side = 1
         if 'Middle' in b.name:
             # the middle of the back bench has no door of its own: climbed into from behind, by the tailgate
-            handles.append([0.0, round(float(hy), 3), round(float(P[..., 2].min() - centre[2] + 0.1), 3)])
+            # the middle of the back bench has no door of its own: in by the right-hand back door, aimed a little
+            # further forward than that door's own seat (the back of the car is the boot's)
+            handles.append(None)    # filled in below, once the right-hand back door's handle is known
             continue
         handles.append([round(float(side * (half + 0.05)), 3), round(float(hy), 3), round(float(o[2] - centre[2]), 3)])
+    right = [h for h in handles if h is not None and h[0] < -0.05]
+    back_right = min(right, key=lambda h: h[2]) if right else [round(float(-size[0] / 2 - 0.05), 3), 1.0, 0.0]
+    handles = [h if h is not None else [back_right[0], back_right[1], round(back_right[2] + 0.35, 3)] for h in handles]
+    glovebox = None
+    ws = part == 'Windshield' if part is not None else None
+    if ws is not None and ws.any() and len(seats) > 1:
+        # in front of the front passenger, under the dash top, a little back from the windscreen's foot
+        wq = P[ws].reshape(-1, 3)
+        glovebox = [seats[1][0], round(float(wq[:, 1].min() - 0.25), 3), round(float(wq[:, 2].max() - 0.35 - centre[2]), 3)]
     fronts = [c for c, _, f in wheels if f]
     rears = [c for c, _, f in wheels if not f]
     wb = float(np.mean([c[2] for c in fronts]) - np.mean([c[2] for c in rears])) if fronts and rears else 2.5
@@ -587,6 +606,7 @@ def write(a, v, P, UV, glass, wheel_of, interior, atlas, wheels, part=None):
            'cell': CELL, 'x0': round(float(glo[0]), 3), 'z0': round(float(glo[2]), 3), 'nx': nx, 'nz': nz,
            'heights': [int(round(h * 100)) for h in grid.ravel()],
            'seats': seats, 'handles': handles, 'wheelbase': round(wb, 3),
+           'glovebox': glovebox, 'lidKinds': [k for k, _, _, _, _ in lids] or None,
            'wheels': [[round(float(c[0] - centre[0]), 3), round(float(c[2] - centre[2]), 3), round(float(r), 3)]
                       for c, r, _ in wheels],
            'zomboid': {'vehicle': a.vehicle, 'mass': num(v.kv.get('mass')), 'engineForce': num(v.kv.get('engineForce')),
@@ -613,6 +633,46 @@ def fit_point(v, p):
 
 def ground_of(v):
     return _GROUND.get(v.name, 0.0)
+
+
+LID_PARTS = {'bonnet': ('EngineDoor',), 'boot': ('TrunkDoor',)}
+# what rides on a boot door or bonnet and swings with it: a back door's window, a spare wheel hung on it
+LID_RIDERS = ('WindshieldRear', 'DAMNSpareTire', 'WindowBackLeft', 'WindowBackRight')
+
+
+def lid_parts(P, part, body):
+    """The bonnet and the boot lid (or back door) as lids: (kind, triangles, hinge, turns about y, full swing)."""
+    out = []
+    if part is None:
+        return out
+    pn = np.array([str(p) for p in part])
+    for kind, names in LID_PARTS.items():
+        sel = np.isin(pn, names) & body
+        if not sel.any():
+            continue
+        q = P[sel].reshape(-1, 3)
+        lo, hi = q.min(0), q.max(0)
+        pad = np.array([0.05, 0.05, 0.3])
+        # a rider (rear window, spare tyre on its carrier) goes whole when its own centre is by the lid,
+        # so a tyre that sticks out past the door never leaves half of itself behind
+        for rn in LID_RIDERS:
+            rm = (pn == rn) & body
+            if rm.any():
+                r = P[rm].reshape(-1, 3)
+                rc = (r.min(0) + r.max(0)) / 2
+                if np.all((rc > lo - pad) & (rc < hi + pad)):
+                    sel = sel | rm
+        w, h, d = hi - lo
+        if kind == 'bonnet':
+            # hinged at its back edge by the windscreen, lifting from the front
+            out.append((kind, sel, np.array([0.0, hi[1], lo[2]]), False, -1.1))
+        elif h > 0.6 * w and d < 0.5 * h:
+            # an upright back door: hinged down its right-hand edge, swinging out and round
+            out.append((kind, sel, np.array([lo[0], 0.0, lo[2]]), True, 1.6))
+        else:
+            # a boot lid: hinged at its front edge under the back window, lifting from the back
+            out.append((kind, sel, np.array([0.0, hi[1], hi[2]]), False, 1.2))
+    return out
 
 
 def num(s):

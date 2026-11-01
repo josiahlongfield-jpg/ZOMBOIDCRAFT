@@ -62,6 +62,8 @@ public class CarProp extends Entity {
     private static final EntityDataAccessor<String> VARIANT = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.STRING);
     /** Someone has the boot open; clients swing the lid or back doors up while it is. */
     private static final EntityDataAccessor<Boolean> OPEN = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.BOOLEAN);
+    /** The bonnet is up (opened and closed by hand, as in Zomboid); engine-bay jobs need it. */
+    private static final EntityDataAccessor<Boolean> BONNET = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.BOOLEAN);
     /** The engine is running: it drives, and clients play its loop. */
     private static final EntityDataAccessor<Boolean> ENGINE = SynchedEntityData.defineId(CarProp.class, EntityDataSerializers.BOOLEAN);
     /** The windows are smashed in: clients leave the glass out, and zombies can reach whoever's inside. */
@@ -120,6 +122,8 @@ public class CarProp extends Entity {
     private boolean searched;
     /** How far the boot is open, 0 to 1, last tick and this one (client side). */
     public float lidOpen, lidOpenO;
+    /** How far the bonnet is up, 0 to 1, last tick and this one (client side). */
+    public float bonnetOpen, bonnetOpenO;
     /** How far the wheels have rolled (metres) and the front wheels' steer (radians, left +), for drawing. */
     public double rolled, rolledO;
     public float steer, steerO;
@@ -209,6 +213,7 @@ public class CarProp extends Entity {
         builder.define(MODEL, "sedan");
         builder.define(VARIANT, "usable");
         builder.define(OPEN, false);
+        builder.define(BONNET, false);
         builder.define(ENGINE, false);
         builder.define(SMASHED, false);
         builder.define(GLASS, "");
@@ -245,6 +250,8 @@ public class CarProp extends Entity {
         fuelRolled = input.getIntOr("fuel_rolled", 0) != 0;
         entityData.set(POSE, input.getIntOr("pose", 0));
         lockRolled = input.getIntOr("lock_rolled", 0) != 0;
+        entityData.set(OPEN, input.getIntOr("boot_open", 0) != 0);
+        entityData.set(BONNET, input.getIntOr("bonnet_open", 0) != 0);
         locked = input.getIntOr("locked", 0) != 0;
         armed = input.getIntOr("armed", 0) != 0;
         entityData.set(SIREN, input.getIntOr("siren", 0) != 0);
@@ -304,6 +311,8 @@ public class CarProp extends Entity {
         output.putInt("fuel_rolled", fuelRolled ? 1 : 0);
         output.putInt("pose", pose());
         output.putInt("lock_rolled", lockRolled ? 1 : 0);
+        output.putInt("boot_open", entityData.get(OPEN) ? 1 : 0);
+        output.putInt("bonnet_open", entityData.get(BONNET) ? 1 : 0);
         output.putInt("locked", locked ? 1 : 0);
         output.putInt("armed", armed ? 1 : 0);
         output.putInt("siren", siren() ? 1 : 0);
@@ -386,6 +395,10 @@ public class CarProp extends Entity {
             player.sendOverlayMessage(Component.literal("The boot's locked. Get in by a door (sneak and G smashes a window) and pop it."));
             return;
         }
+        if (!(m != null && m.searchedOnly()) && !entityData.get(OPEN)) {
+            setBoot(true);      // as in Zomboid, the boot is opened first, then searched
+            return;
+        }
         if (!searched) {
             searched = true;
             if (!"burnt".equals(variant()) && com.zomboidcraft.ZcConfig.get().world.carLoot) {
@@ -410,6 +423,46 @@ public class CarProp extends Entity {
         if (!entityData.get(OPEN)) {
             entityData.set(OPEN, true);
             server.playSound(null, getX(), getY(), getZ(), SoundEvents.IRON_TRAPDOOR_OPEN, SoundSource.BLOCKS, 0.6f, 0.7f);
+        }
+    }
+
+    public boolean bootOpen() {
+        return entityData.get(OPEN);
+    }
+
+    public boolean bonnetOpen() {
+        return entityData.get(BONNET);
+    }
+
+    /** Opens or shuts the boot by hand (server). */
+    public void setBoot(boolean open) {
+        if (entityData.get(OPEN) != open && level() instanceof ServerLevel server) {
+            entityData.set(OPEN, open);
+            server.playSound(null, getX(), getY(), getZ(), open ? SoundEvents.IRON_TRAPDOOR_OPEN : SoundEvents.IRON_TRAPDOOR_CLOSE,
+                    SoundSource.BLOCKS, 0.6f, 0.7f);
+        }
+    }
+
+    /** Lifts or drops the bonnet by hand (server). */
+    public void setBonnet(boolean open) {
+        if (entityData.get(BONNET) != open && level() instanceof ServerLevel server) {
+            entityData.set(BONNET, open);
+            server.playSound(null, getX(), getY(), getZ(), open ? SoundEvents.IRON_TRAPDOOR_OPEN : SoundEvents.IRON_TRAPDOOR_CLOSE,
+                    SoundSource.BLOCKS, 0.6f, open ? 0.9f : 0.8f);
+        }
+    }
+
+    /** Someone outside toggles the boot (a locked car's boot stays shut to anyone without its key) or the bonnet. */
+    public void toggleLid(Player player, boolean bonnet) {
+        if (isVehicle() && hasPassenger(player) || aircraft()) {
+            return;
+        }
+        if (bonnet) {
+            setBonnet(!bonnetOpen());
+        } else if (!bootOpen() && locked && !CarKeys.carries(player, this)) {
+            player.sendOverlayMessage(Component.literal("The boot's locked. Get in by a door (sneak and G smashes a window) and pop it."));
+        } else {
+            setBoot(!bootOpen());
         }
     }
 
@@ -1731,6 +1784,7 @@ public class CarProp extends Entity {
             return;     // server side, a flyby is flown by WorldEvents
         }
         lidOpenO = lidOpen;
+        bonnetOpenO = bonnetOpen;
         rolledO = rolled;
         steerO = steer;
         if (level().isClientSide()) {
@@ -1770,7 +1824,8 @@ public class CarProp extends Entity {
             if (roadCar()) {
                 burnFuel(server);
             }
-            if (entityData.get(OPEN) && server.getGameTime() % 10 == 0 && !beingSearched(server)) {
+            CarModels.Model lm = CarModels.get(model());
+            if (lm != null && lm.searchedOnly() && entityData.get(OPEN) && server.getGameTime() % 10 == 0 && !beingSearched(server)) {
                 entityData.set(OPEN, false);
                 server.playSound(null, getX(), getY(), getZ(), SoundEvents.IRON_TRAPDOOR_CLOSE, SoundSource.BLOCKS, 0.6f, 0.7f);
             }
@@ -1798,6 +1853,7 @@ public class CarProp extends Entity {
             }
         } else {
             lidOpen = Math.clamp(lidOpen + (entityData.get(OPEN) ? 0.08f : -0.1f), 0f, 1f);
+            bonnetOpen = Math.clamp(bonnetOpen + (entityData.get(BONNET) ? 0.08f : -0.1f), 0f, 1f);
             wheels();
             if (aircraft()) {
                 Flight f = flight();

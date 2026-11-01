@@ -144,7 +144,11 @@ public final class CarClient {
         } else if (FuelClient.interact(client, hit)) {
             // a gas pump: fill the can in hand, or the car parked beside it
         } else if (car != null && atBonnet(car, hit, player)) {
-            client.gui.setScreen(new com.zomboidcraft.client.kit.MechanicsScreen(car));
+            if (car.bonnetOpen()) {
+                client.gui.setScreen(new com.zomboidcraft.client.kit.MechanicsScreen(car));
+            } else {
+                ClientPlayNetworking.send(new CarNet.Seat(car.getId(), CarNet.Seat.BONNET));     // lift it first, as in Zomboid
+            }
         } else if (car != null) {
             Vec3 at = hit.getLocation().subtract(car.position());
             ClientPlayNetworking.send(new CarNet.Use(car.getId(), (float) at.x, (float) at.y, (float) at.z));
@@ -225,7 +229,21 @@ public final class CarClient {
                     () -> ClientPlayNetworking.send(new CarNet.Seat(door.car().getId(), door.seat()))));
         }
         Vec3 at = hit.getLocation().subtract(car.position());
-        if (car.atBoot(at)) {
+        CarModels.Model cm = CarModels.get(car.model());
+        boolean lids = cm != null && !cm.searchedOnly() && !cm.jet() && !car.aircraft();
+        if (lids) {
+            out.add(com.zomboidcraft.client.interact.InteractMenu.Option.of(car.bootOpen() ? "Close the boot" : "Open the boot",
+                    () -> ClientPlayNetworking.send(new CarNet.Seat(car.getId(), CarNet.Seat.BOOT))));
+            if (car.bootOpen()) {
+                Vec3 back = car.toWorld(new float[]{0, 0.5f, -cm.size[2] / 2}).subtract(car.position());
+                out.add(com.zomboidcraft.client.interact.InteractMenu.Option.of("Search the boot",
+                        () -> ClientPlayNetworking.send(new CarNet.Use(car.getId(), (float) back.x, (float) back.y, (float) back.z))));
+            }
+            if (!car.parts().isEmpty()) {
+                out.add(com.zomboidcraft.client.interact.InteractMenu.Option.of(car.bonnetOpen() ? "Close the bonnet" : "Open the bonnet",
+                        () -> ClientPlayNetworking.send(new CarNet.Seat(car.getId(), CarNet.Seat.BONNET))));
+            }
+        } else if (car.atBoot(at)) {
             out.add(com.zomboidcraft.client.interact.InteractMenu.Option.of("Open the trunk",
                     () -> ClientPlayNetworking.send(new CarNet.Use(car.getId(), (float) at.x, (float) at.y, (float) at.z))));
         } else if (t == null) {

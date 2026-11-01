@@ -43,6 +43,8 @@ public final class CarNet {
     public record Seat(int car, int seat) implements CustomPacketPayload {
         /** Not a seat: open the glovebox, from a front seat. */
         public static final int GLOVEBOX = -1;
+        /** Not a seat: open or shut the boot, or the bonnet, from outside. */
+        public static final int BOOT = -2, BONNET = -3;
         public static final Type<Seat> TYPE = new Type<>(ZomboidCraft.id("car_seat"));
         public static final StreamCodec<RegistryFriendlyByteBuf, Seat> CODEC = StreamCodec.composite(
                 ByteBufCodecs.VAR_INT, Seat::car, ByteBufCodecs.VAR_INT, Seat::seat, Seat::new);
@@ -59,6 +61,14 @@ public final class CarNet {
             ServerPlayer player = context.player();
             player.level().getServer().execute(() -> {
                 if (!(player.level().getEntity(payload.car()) instanceof CarProp car) || player.isSpectator()) {
+                    return;
+                }
+                if (payload.seat() == Seat.BOOT || payload.seat() == Seat.BONNET) {
+                    CarModels.Model m = CarModels.get(car.model());
+                    double reach = (m == null ? 3 : m.size[2] / 2) + 3;
+                    if (player.getVehicle() == null && car.position().distanceToSqr(player.position()) < reach * reach) {
+                        car.toggleLid(player, payload.seat() == Seat.BONNET);
+                    }
                     return;
                 }
                 if (player.getVehicle() == car) {
