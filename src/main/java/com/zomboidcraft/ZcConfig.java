@@ -1244,6 +1244,13 @@ public final class ZcConfig {
         public boolean customZombies = true;
         /** The new zombie bodies: Zomboid-shaped, in worn 3D clothes, with the new movements. Off draws the older model. Client side. */
         public boolean newZombies = true;
+        /**
+         * Zombies near you drawn with Project Zomboid's own bodies, rotting skins, clothes and moves, where this PC has
+         * the local Zomboid zombie packs (config/zomboidcraft/npc/pz_zombie_f.zsk and pz_zombie_m.zsk). Client side.
+         */
+        public boolean pzZombies = true;
+        /** Blocks within which zombies are drawn with the Zomboid bodies; past it they keep the lighter body. Client side. */
+        public double pzZombieDistance = 24;
         /** Blocks within which zombies show every small clothing detail; further out the smallest bits are left off, and past 2.5 times this only the main shapes stay. Client side. */
         public double zombieDetailDistance = 16;
         /** 256px zombie skins with shine and bump maps for shader packs; off uses the 64px skins. */
