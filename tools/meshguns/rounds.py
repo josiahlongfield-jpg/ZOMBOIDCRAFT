@@ -109,6 +109,9 @@ ROUNDS = {
 # new items with no carton of their own: their display transforms come from this one's
 NEW = {'acp45_ammo', 'fn57_ammo', 'colt45_ammo', 'sw500_ammo', 'pg7v_rocket'}
 ASSETS = skin.ASSETS
+# a round fills the inventory slot like the carton did, but held or dropped it's the size of a round, not a box
+SCALES = {'firstperson_righthand': 0.45, 'firstperson_lefthand': 0.45, 'thirdperson_righthand': 0.55,
+          'thirdperson_lefthand': 0.55, 'ground': 0.4}
 WEAPON_MODELS = os.path.join(ASSETS, 'models/item/weapon')
 
 
@@ -231,7 +234,10 @@ def write_items():
         path = os.path.join(ASSETS, 'items', item + '.json')
         if not os.path.exists(path):
             json.dump({}, open(path, 'w'))
-        skin.write(path, skin.centred(base_model(item), f'ammo/{item}'))
+        base, mesh = base_model(item), f'ammo/{item}'
+        cases = [{'when': ctx, 'model': skin.centred(base, mesh, scale=k)} for ctx, k in SCALES.items()]
+        skin.write(path, {'type': 'minecraft:select', 'property': 'minecraft:display_context', 'cases': cases,
+                          'fallback': skin.centred(base, mesh)})
 
 
 def main():
