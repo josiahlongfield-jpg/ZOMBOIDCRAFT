@@ -206,7 +206,7 @@ def build(a):
         if pm is not None and ('offset' in pm.kv or 'rotate' in pm.kv):
             R = rot_xyz(floats(pm.kv.get('rotate', '0 0 0'), 3))
             P = P @ R.T + np.array(floats(pm.kv.get('offset', '0 0 0'), 3))
-        P = P + voff
+        P = P + (voff / vscale if a.world else voff)   # the model offset is in world units, after the model scale
         P_all.append(P)
         UV_all.append(UV)
         slot_all.append(np.full(len(P), slot))
@@ -258,6 +258,7 @@ def build(a):
     body = np.array([not str(p).startswith('wheel') for p in part]) & (slots == skin_slot) & ~np.array(
         [any(g in str(p) for g in GLASS) for p in part])
     rest = num(v.kv.get('suspensionRestLength')) or 0.2
+    travel = (num(v.kv.get('maxSuspensionTravelCm')) or 10) / 100
     # the body is laid over the wheels where its own arches are: Zomboid's model scale and offset don't always put
     # them over the script's wheels (the Defender's arches came out 0.9 of its wheelbase), so the body is scaled and
     # slid until the arch centres sit over the wheel centres
@@ -301,7 +302,12 @@ def build(a):
         y = off[1] - rest
         top = arch_top(P[body], np.array([off[0], y, off[2]]), r, widths[k])
         tops.append(top)
-        ys.append(top - 0.06 if top is not None else y)
+        y = top - 0.06 if top is not None else y
+        if a.world:
+            # never below the suspension's full travel: a car modelled with its tyres tucked into the
+            # wings (most of them) keeps them there
+            y = max(y, off[1] - travel / vscale)
+        ys.append(y)
     # left and right of an axle hang alike: a stray low piece over one tyre (a mudflap, a lip) must not drop it alone
     for k, (off, r, f) in enumerate(wheels):
         for j, (o2, _, _) in enumerate(wheels):
