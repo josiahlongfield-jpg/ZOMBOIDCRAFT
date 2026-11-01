@@ -305,6 +305,18 @@ def build(a):
     _GROUND[v.name] = ground
     P[..., 1] -= ground
     wheels = [(off - np.array([0, ground, 0]), r, f) for off, r, f in wheels]
+    # --body: the body's size against the model's own (Zomboid draws it at its model scale, the fit above moves it
+    # on); the whole vehicle grows with it, so the wheels stay in their arches
+    if a.body:
+        now = vscale * (_FIT[v.name][0] if v.name in _FIT else 1.0)
+        g = a.body / now
+        zc = float(np.mean([off[2] for off, _, _ in wheels]))
+        P[..., 0] *= g
+        P[..., 1] *= g
+        P[..., 2] = (P[..., 2] - zc) * g + zc
+        wheels = [(np.array([off[0] * g, off[1] * g, (off[2] - zc) * g + zc]), r * g, f) for off, r, f in wheels]
+        _GROW[v.name] = (g, zc)
+        print(f'body at {a.body * 100:.0f}% of its model: everything grown {g:.3f}')
     glass = np.array([any(g in str(p) for g in GLASS) for p in part])
     wheel_of = np.array([int(str(p)[5:]) if str(p).startswith('wheel') else -1 for p in part])
     interior = np.array([('Seat' in str(p)) or ('GloveBox' in str(p)) for p in part])
@@ -485,6 +497,9 @@ def write(a, v, P, UV, glass, wheel_of, interior, atlas, wheels):
     for b in last.values():
         pos = b.block('position', 'inside')
         o = fit_point(v, np.array(floats(pos.kv.get('offset', '0 0 0'), 3)) + com) - np.array([0, ground_of(v), 0])
+        if v.name in _GROW:
+            g, zc = _GROW[v.name]
+            o = np.array([o[0] * g, o[1] * g, (o[2] - zc) * g + zc])
         eye = [o[0], min(roof - 0.22, o[1] + 0.78), o[2]]
         seats.append([round(float(eye[0] - centre[0]), 3), round(float(eye[1]), 3), round(float(eye[2] - centre[2]), 3)])
         side = 1 if o[0] > 0 else -1
@@ -509,6 +524,7 @@ def write(a, v, P, UV, glass, wheel_of, interior, atlas, wheels):
 
 _GROUND = {}
 _FIT = {}
+_GROW = {}
 
 
 def fit_point(v, p):
@@ -550,6 +566,7 @@ def main():
     ap.add_argument('--skin', type=int, default=0)
     ap.add_argument('--kind', default='car')
     ap.add_argument('--weight', type=int, default=2)
+    ap.add_argument('--body', type=float, help="the body's size against its own model (1.1 = 110%%)")
     ap.add_argument('--skip', nargs='*', default=[])
     ap.add_argument('--toon', action='store_true')
     ap.add_argument('--preview')
