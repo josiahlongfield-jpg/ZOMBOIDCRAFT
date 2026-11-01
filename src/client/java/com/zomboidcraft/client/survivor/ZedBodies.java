@@ -48,6 +48,8 @@ public final class ZedBodies {
             0x5A3D2A, 0x2F5A6A, 0x7A4A6A, 0xA05A2A, 0x4A5A2A, 0xC8C0B0, 0x6A1E2A, 0x3A3A5A};
     /** Each zombie's skin and garments are made at this size (their sources run to 1024), so a horde fits in the kept textures. */
     private static final int TEX = 512;
+    /** The lighter level's textures: a quarter of the pixels, so a horde's worth fit in the textures kept. */
+    private static final int TEX_LOW = 256;
     /** Zomboid's body parts, as its blood and holes are laid out (tools/pz/zombie_fx.py). */
     private static final String[] PARTS = {"Head", "Chest", "Waist", "Belt", "Crotch", "LeftArm", "RightArm", "LeftLeg", "RightLeg"};
     /** Items whose only texture sits in Zomboid's texture packs, and the loose item worn in their place. */
@@ -61,7 +63,7 @@ public final class ZedBodies {
 
     /** One zombie's (or corpse's) look, rolled once. */
     private record Look(SurvivorPack pack, String skin, List<SurvivorTextures.Layer> paint, Map<String, List<SurvivorTextures.Layer>> pieces,
-                        String hairPiece, String hairTex, String beardPiece, String beardTex, String colour) {
+                        String hairPiece, String hairTex, String beardPiece, String beardTex, String colour, String family) {
     }
 
     /** What the layer draws this frame. */
@@ -74,6 +76,10 @@ public final class ZedBodies {
         Map<String, Identifier> clothes;
         /** How bright the eyes glow (0 out). */
         float eyes;
+        /** Which meshes: 0 Zomboid's full ones, 1 the thinned copies (zombie_lod.py) past the nearest few. */
+        int level;
+        /** Its textures aren't made yet: nothing is drawn this frame (never the old body in its place). */
+        boolean pending;
         /** How far off its place the body is drawn (blocks, in its own turned frame): climbing, beating on a door. */
         float shiftX, shiftY, shiftZ;
         float age;
@@ -106,6 +112,8 @@ public final class ZedBodies {
         public long death;
         public String outfit;
         public float shiftX, shiftY, shiftZ;
+        /** A clip it's set in and held at the end of, over anything else (a body a Harvestman has set out). */
+        public String posed;
     }
 
     /** Acts (as ZMove numbers them). */
@@ -127,12 +135,31 @@ public final class ZedBodies {
         return ZcConfig.get().look.pzZombies && (SurvivorPack.zombieInstalled("f") || SurvivorPack.zombieInstalled("m"));
     }
 
-    /** Whether something this far from the camera (squared blocks) is near enough to be drawn as Zomboid's. */
-    public static boolean near(double distSq) {
+    /**
+     * Which level of Zomboid's body something this far from the camera (squared blocks) gets: 0, the full one, within
+     * look.pzZombieDistance and only for the nearest look.pzZombieMax (each is a few thousand skinned triangles a
+     * frame); 1, the thinned one, for every other. Josiah's rule: with the Zomboid zombies in, no other body is seen.
+     */
+    public static int level(double distSq) {
         ZcConfig.Look look = ZcConfig.get().look;
         double d = look.pzZombieDistance;
-        // and only the nearest few: each is a few thousand skinned triangles a frame
-        return distSq < d * d && distSq < com.zomboidcraft.client.zombie.body.ZDetail.nearestSq(look.pzZombieMax);
+        return distSq < d * d && distSq < com.zomboidcraft.client.zombie.body.ZDetail.nearestSq(look.pzZombieMax) ? 0 : 1;
+    }
+
+    private static final Map<SurvivorPack, Boolean> HAS_LOW = new java.util.WeakHashMap<>();
+
+    /** Whether the pack carries the thinned meshes (packs built before them don't: they're drawn full at any range). */
+    private static boolean hasLow(SurvivorPack pack) {
+        return HAS_LOW.computeIfAbsent(pack, p -> {
+            for (NpcSkin.Group g : p.skin.groups) if (g.level == 1) return true;
+            return false;
+        });
+    }
+
+    /** A look's texture at the size wanted, or the other size while that's being made, or null. */
+    private static Identifier tex(SurvivorPack pack, List<SurvivorTextures.Layer> layers, int size) {
+        Identifier t = SurvivorTextures.body(pack, layers, size);
+        return t != null ? t : SurvivorTextures.peek(pack, layers, size == TEX ? TEX_LOW : TEX);
     }
 
     // ------------------------------------------------------------------ the look
@@ -298,7 +325,8 @@ public final class ZedBodies {
         SurvivorPack.Style bs = beardHidden || pack.sex.equals("f") || pack.beards.isEmpty() || roll(variant, 5) > 0.45f
                 ? null : pack.beards.get(pick(variant, 6, pack.beards.size()));
         Look look = new Look(pack, skin, body, pieces, hs == null ? null : hs.piece(), hs == null ? null : groupTex(pack, hs.piece()),
-                bs == null ? null : bs.piece(), bs == null ? null : groupTex(pack, bs.piece()), colour);
+                bs == null ? null : bs.piece(), bs == null ? null : groupTex(pack, bs.piece()), colour,
+                pack.sex + "|" + (chosen == null ? outfit : chosen));
         LOOKS.put(key, look);
         return look;
     }
@@ -324,6 +352,10 @@ public final class ZedBodies {
 
     private static void choose(Entry e, SurvivorPack pack, Facts f, int variant) {
         SurvivorAnimator a = e.anim;
+        if (f.posed != null) {
+            a.act(pack, f.posed, 1, false, true);
+            return;
+        }
         if (f.deathTime > 0) {
             a.act(pack, deathClip(f.death), 1, false, true);
             return;
@@ -392,17 +424,19 @@ public final class ZedBodies {
      * This zombie's Zomboid body this frame, or null to leave it to the lighter one (no pack, too far, a texture still
      * being made). id keys its animation: the entity's id.
      */
-    public static Drawn pose(int id, Facts f) {
+    public static Drawn pose(int id, Facts f, int level) {
         SurvivorPack pack = packFor(f.variant);
         if (pack == null) return null;
+        if (!hasLow(pack)) level = 0;
         Look look = look(pack, f.variant, f.outfit);
-        Identifier body = SurvivorTextures.body(pack, look.paint(), TEX);
-        if (body == null) return null;
+        int size = level == 0 ? TEX : TEX_LOW;
+        Identifier body = tex(pack, look.paint(), size);
         Map<String, Identifier> clothes = new HashMap<>();
+        boolean pending = body == null;
         for (Map.Entry<String, List<SurvivorTextures.Layer>> p : look.pieces().entrySet()) {
-            Identifier t = SurvivorTextures.body(pack, p.getValue(), TEX);
-            if (t == null) return null;
-            clothes.put(p.getKey(), t);
+            Identifier t = tex(pack, p.getValue(), size);
+            if (t == null) pending = true;
+            else clothes.put(p.getKey(), t);
         }
         Entry e = ENTRIES.computeIfAbsent(id, k -> new Entry());
         e.seen = System.currentTimeMillis();
@@ -430,6 +464,8 @@ public final class ZedBodies {
         Drawn d = new Drawn();
         d.pack = pack;
         d.entry = e;
+        d.level = level;
+        d.pending = pending;
         d.age = f.age;
         d.skin = skinOf(pack, e.pos, e.turn);
         if (f.cuts != 0) collapse(pack, d.skin, f.cuts);
@@ -448,16 +484,78 @@ public final class ZedBodies {
         return d;
     }
 
+    // ------------------------------------------------------------------ for far-off pictures
+
+    /**
+     * One zombie's look as its thinned (level 1) meshes, for pictures made from it (a far-off card): the pack, which
+     * meshes it wears, each one's texture, and its family (sex and Zomboid outfit: looks alike enough to share a
+     * picture sheet far off).
+     */
+    public record Far(SurvivorPack pack, java.util.function.Predicate<NpcSkin.Group> show,
+                      java.util.function.Function<NpcSkin.Group, Identifier> textures, String family, String look) {
+    }
+
+    /** The far look of a zombie (its variant and our outfit), or null while its textures are being made. Render thread. */
+    public static Far far(int variant, String outfit) {
+        SurvivorPack pack = packFor(variant);
+        if (pack == null) return null;
+        Look look = look(pack, variant, outfit);
+        Identifier body = tex(pack, look.paint(), TEX_LOW);
+        if (body == null) return null;
+        Map<String, Identifier> clothes = new HashMap<>();
+        for (Map.Entry<String, List<SurvivorTextures.Layer>> p : look.pieces().entrySet()) {
+            Identifier t = tex(pack, p.getValue(), TEX_LOW);
+            if (t == null) return null;
+            clothes.put(p.getKey(), t);
+        }
+        Identifier hair = look.hairTex() == null ? null : SurvivorTextures.hair(pack, look.hairTex(), look.colour());
+        Identifier beard = look.beardTex() == null ? null : SurvivorTextures.hair(pack, look.beardTex(), look.colour());
+        String hp = hair == null ? null : look.hairPiece(), bp = beard == null ? null : look.beardPiece();
+        int level = hasLow(pack) ? 1 : 0;
+        return new Far(pack,
+                g -> g.level == level && (g.piece.equals("body") || g.piece.equals(hp) || g.piece.equals(bp) || clothes.containsKey(g.piece)),
+                g -> g.piece.equals("body") ? body : g.piece.equals(hp) ? hair : g.piece.equals(bp) ? beard : clothes.get(g.piece),
+                look.family(), pack.sex + "|" + variant + "|" + outfit);
+    }
+
+    /**
+     * The skinning matrices (one per bone, rest to posed, in the body's own metres: y up, +z ahead, feet at 0) for a
+     * clip of the pack's at a time (seconds; it loops), as ZedBodies would pose it. NpcSkinDraw.skin's input.
+     */
+    public static Matrix4f[] farPose(SurvivorPack pack, String clip, float seconds) {
+        SurvivorAnimator a = new SurvivorAnimator();
+        a.set(pack, clip, Math.max(0, seconds));
+        int n = pack.skin.boneNames.length;
+        float[] pos = new float[n * 3], turn = new float[n * 4];
+        a.pose(pack, upperBody(pack), pos, turn);
+        return skinOf(pack, pos, turn);
+    }
+
     /** A dead zombie's body (zombie.Corpse), lying as its death left it. */
-    public static Drawn corpse(int id, int variant, String outfit, long death, float age, int cuts) {
+    public static Drawn corpse(int id, int variant, String outfit, long death, float age, int cuts, int level) {
+        return corpse(id, variant, outfit, death, age, cuts, level, null);
+    }
+
+    /** A body set out in a pose (Corpse.SAT, SLUMPED, HUNG): sat against a wall, slumped on its knees, hanging limp. */
+    public static String posedClip(int pose) {
+        return switch (pose) {
+            case 1 -> "wall_dead";
+            case 2 -> "knees_in";
+            case 3 -> "idle";
+            default -> null;
+        };
+    }
+
+    public static Drawn corpse(int id, int variant, String outfit, long death, float age, int cuts, int level, String posed) {
         Facts f = new Facts();
+        f.posed = posed;
         f.cuts = cuts;
         f.variant = variant;
         f.outfit = outfit;
         f.death = death;
         f.deathTime = 1000;
         f.age = age;
-        Drawn d = pose(id, f);
+        Drawn d = pose(id, f, level);
         if (d != null) d.eyes = 0;
         return d;
     }
@@ -546,12 +644,13 @@ public final class ZedBodies {
      * at its hips into the body's own metres, feet on the ground.
      */
     public static void submit(Drawn d, PoseStack pose, SubmitNodeCollector collector, int light, int overlay) {
+        if (d.pending) return;
         pose.pushPose();
         pose.translate(0, 1.501f, 0);
         pose.scale(-1, -1, 1);
         pose.mulPose(new Matrix4f().rotationY((float) Math.PI));
         if (d.shiftX != 0 || d.shiftY != 0 || d.shiftZ != 0) pose.translate(d.shiftX, d.shiftY, d.shiftZ);
-        NpcSkinDraw.submitWith(d.pack.skin, d.skin,
+        NpcSkinDraw.submitWith(d.pack.skin, d.skin, d.level,
                 g -> g.piece.equals("body") || g.piece.equals(d.hairPiece) || g.piece.equals(d.beardPiece) || d.clothes.containsKey(g.piece),
                 g -> g.piece.equals("body") ? d.body : g.piece.equals(d.hairPiece) ? d.hair
                         : g.piece.equals(d.beardPiece) ? d.beard : d.clothes.get(g.piece),

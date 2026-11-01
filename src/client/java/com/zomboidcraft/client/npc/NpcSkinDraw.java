@@ -85,6 +85,13 @@ public final class NpcSkinDraw {
     public static void submitWith(NpcSkin skin, Matrix4f[] bones, java.util.function.Predicate<NpcSkin.Group> show,
                                   java.util.function.Function<NpcSkin.Group, Identifier> textures, Object[] buffers,
                                   int light, int overlay, PoseStack poseStack, SubmitNodeCollector collector) {
+        submitWith(skin, bones, 0, show, textures, buffers, light, overlay, poseStack, collector);
+    }
+
+    /** As above, from the meshes of one level of detail (0 full, 1 the thinned copies a pack may carry). */
+    public static void submitWith(NpcSkin skin, Matrix4f[] bones, int level, java.util.function.Predicate<NpcSkin.Group> show,
+                                  java.util.function.Function<NpcSkin.Group, Identifier> textures, Object[] buffers,
+                                  int light, int overlay, PoseStack poseStack, SubmitNodeCollector collector) {
         float[] m = new float[bones.length * 12];
         for (int b = 0; b < bones.length; b++) {
             Matrix4f x = bones[b];
@@ -95,7 +102,7 @@ public final class NpcSkinDraw {
         }
         for (int g = 0; g < skin.groups.length; g++) {
             NpcSkin.Group gr = skin.groups[g];
-            if (gr.level != 0 || !show.test(gr)) {
+            if (gr.level != level || !show.test(gr)) {
                 continue;
             }
             Identifier tex = textures.apply(gr);

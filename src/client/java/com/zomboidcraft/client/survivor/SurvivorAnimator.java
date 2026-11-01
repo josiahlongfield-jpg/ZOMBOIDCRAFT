@@ -46,6 +46,15 @@ final class SurvivorAnimator {
         baseT = moving(was) && moving(clip) && to != null ? phase * to.seconds() : 0;
     }
 
+    /** Straight into a clip at a time (seconds), nothing blended in: a still picture of it (ZedBodies.farPose). */
+    void set(SurvivorPack pack, String clip, float t) {
+        base = pack.skin.clips.containsKey(clip) ? clip : "idle";
+        baseT = t;
+        rate = 1;
+        was = null;
+        fade = 1;
+    }
+
     /** Plays a clip once over the base: the upper body only, or all of her; held on its last frame if asked. */
     void act(SurvivorPack pack, String clip, float rate, boolean upper, boolean hold) {
         if (pack.skin.clips.get(clip) == null) return;

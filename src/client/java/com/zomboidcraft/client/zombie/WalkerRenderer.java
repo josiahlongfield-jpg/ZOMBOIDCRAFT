@@ -166,14 +166,14 @@ public class WalkerRenderer extends HumanoidMobRenderer<Zombie, WalkerRenderStat
     }
 
     /**
-     * Near, whole and with the local packs here: drawn as Project Zomboid's own zombie (survivor/ZedBodies) over the
+     * With the local packs here, at any range: drawn as Project Zomboid's own zombie (survivor/ZedBodies) over the
      * lighter body, which still works out its facing, its fall's heading and its gibs. Dying, it faces the way its
      * death says, as the body it leaves will.
      */
     private void zed(Zombie zombie, WalkerRenderState state, float partialTick) {
-        if (state.heldLean > 0f
-                || !com.zomboidcraft.client.survivor.ZedBodies.available()
-                || !com.zomboidcraft.client.survivor.ZedBodies.near(state.distanceToCameraSq)) {
+        // at any range, held or not: with the packs here no other body is ever seen (Josiah's rule); further off it's
+        // the thinned Zomboid body
+        if (!com.zomboidcraft.client.survivor.ZedBodies.available()) {
             return;
         }
         var f = zedFacts;
@@ -204,7 +204,8 @@ public class WalkerRenderer extends HumanoidMobRenderer<Zombie, WalkerRenderStat
         f.shiftX = (float) (Math.cos(b) * wx + Math.sin(b) * wz) / sc;
         f.shiftY = wy / sc;
         f.shiftZ = (float) (-Math.sin(b) * wx + Math.cos(b) * wz) / sc;
-        state.zed = com.zomboidcraft.client.survivor.ZedBodies.pose(zombie.getId(), f);
+        state.zed = com.zomboidcraft.client.survivor.ZedBodies.pose(zombie.getId(), f,
+                com.zomboidcraft.client.survivor.ZedBodies.level(state.distanceToCameraSq));
     }
 
     /** Per held zombie (by id): how far it's drawn tipped back, and when that was (to ease it upright once let go). */
