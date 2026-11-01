@@ -14,7 +14,8 @@ import org.joml.Matrix4f;
 
 /**
  * Draws a player as their Zomboid survivor (see {@link Survivors}) where Minecraft's hidden model stands: the body in
- * its composed skin, and the hair and beard showing now, tinted. Turned back out of the vanilla model's space (its
+ * its composed skin, the hair and beard showing now, tinted, and Zomboid's clothes for what they wear
+ * ({@link SurvivorClothes}). Turned back out of the vanilla model's space (its
  * flip, its 0.9375 scale and its origin up at the hips) into the survivor's own metres, feet on the ground. Vanilla's
  * tip-over on death is taken back off: Zomboid's own fall plays instead.
  */
@@ -41,8 +42,9 @@ public final class SurvivorLayer extends RenderLayer<AvatarRenderState, PlayerMo
         pose.mulPose(new Matrix4f().rotationY((float) Math.PI));
         int overlay = LivingEntityRenderer.getOverlayCoords(state, 0);
         NpcSkinDraw.submitWith(d.pack.skin, d.skin,
-                g -> g.piece.equals("body") || g.piece.equals(d.hairPiece) || g.piece.equals(d.beardPiece),
-                g -> g.piece.equals("body") ? d.body : g.piece.equals(d.hairPiece) ? d.hairTex : d.beardTex,
+                g -> g.piece.equals("body") || g.piece.equals(d.hairPiece) || g.piece.equals(d.beardPiece) || d.clothes.containsKey(g.piece),
+                g -> g.piece.equals("body") ? d.body : g.piece.equals(d.hairPiece) ? d.hairTex
+                        : g.piece.equals(d.beardPiece) ? d.beardTex : d.clothes.get(g.piece),
                 Survivors.buffers(d), light, overlay, pose, collector);
         pose.popPose();
     }

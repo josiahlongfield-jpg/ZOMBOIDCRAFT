@@ -55,6 +55,15 @@ public final class SurvivorPack {
     public record Faces(List<String> names, int tones) {
     }
 
+    /**
+     * One of Zomboid's clothingItems: its model (a piece, or null when it's only paint on the skin) and the textures it
+     * comes in, the body textures of a painted-on one, the skin it hides (a mask texture), whether Zomboid gives it a
+     * random tint or hue, and its hat category (which hair goes under it).
+     */
+    public record Cloth(String id, String piece, List<String> textures, List<String> base, String mask, boolean tint,
+                        boolean hue, String hat) {
+    }
+
     public final String sex;
     public final NpcSkin skin;
     public final float height;
@@ -62,6 +71,7 @@ public final class SurvivorPack {
     public final Map<String, Faces> faces = new LinkedHashMap<>();
     public final List<Style> hair = new ArrayList<>(), beards = new ArrayList<>();
     public final Map<String, Style> hairById = new HashMap<>(), beardById = new HashMap<>();
+    public final Map<String, Cloth> clothes = new HashMap<>();
     public final List<Option> stubble = new ArrayList<>(), bodyHair = new ArrayList<>(), eyes = new ArrayList<>(),
             lips = new ArrayList<>(), paint = new ArrayList<>();
 
@@ -145,6 +155,15 @@ public final class SurvivorPack {
         options(arr(makeup, "eyes"), eyes);
         options(arr(makeup, "lips"), lips);
         options(arr(makeup, "face"), paint);
+        if (cat.has("clothes")) {
+            for (Map.Entry<String, JsonElement> c : cat.getAsJsonObject("clothes").entrySet()) {
+                JsonObject o = c.getValue().getAsJsonObject();
+                clothes.put(c.getKey(), new Cloth(c.getKey(), o.has("piece") ? o.get("piece").getAsString() : null,
+                        strings(arr(o, "tex")), strings(arr(o, "base")), o.has("mask") ? o.get("mask").getAsString() : null,
+                        o.has("tint") && o.get("tint").getAsBoolean(), o.has("hue") && o.get("hue").getAsBoolean(),
+                        o.has("hat") ? o.get("hat").getAsString() : null));
+            }
+        }
 
         head = skin.bone("Bip01_Head");
         neck = skin.bone("Bip01_Neck");
@@ -198,6 +217,12 @@ public final class SurvivorPack {
 
     private static JsonArray arr(JsonObject o, String key) {
         return o.has(key) && o.get(key).isJsonArray() ? o.getAsJsonArray(key) : new JsonArray();
+    }
+
+    private static List<String> strings(JsonArray a) {
+        List<String> out = new ArrayList<>();
+        for (JsonElement e : a) out.add(e.getAsString());
+        return List.copyOf(out);
     }
 
     private static void options(JsonArray a, List<Option> out) {

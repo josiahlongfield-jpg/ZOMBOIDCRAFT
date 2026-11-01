@@ -74,6 +74,8 @@ public final class Survivors {
         Matrix4f[] skin;
         Identifier body, hairTex, beardTex;
         String hairPiece, beardPiece;
+        /** The garments' meshes drawn, by piece, with their textures. */
+        Map<String, Identifier> clothes = Map.of();
         float deathTurn;
     }
 
@@ -135,9 +137,22 @@ public final class Survivors {
             hairCut = g.hair();
             beardCut = g.beard();
         }
-        Identifier body = SurvivorTextures.body(pack, layers(pack, look, hair, beard, colour));
+        SurvivorClothes.Dress dress = SurvivorClothes.dress(pack, player);
+        List<SurvivorTextures.Layer> layers = layers(pack, look, hair, beard, colour);
+        layers.addAll(dress.body());
+        Identifier body = SurvivorTextures.body(pack, layers);
         if (body == null) return false;   // a moment while it's made: the usual model meanwhile
         SurvivorPack.Style hs = pack.hairFor(hair, hairCut), bs = look.female() ? null : pack.beardFor(beard, beardCut);
+        // under a hat, Zomboid's hat version of the style (its "alternate" for the hat's category), or none at all
+        if (dress.hat() != null) {
+            String cat = dress.hat();
+            if (cat.startsWith("nohair")) hs = null;
+            else if (hs != null && hs.hats().containsKey(cat)) {
+                SurvivorPack.Style alt = pack.hairById.get(hs.hats().get(cat));
+                if (alt != null) hs = alt;
+            }
+            if (cat.endsWith("nobeard")) bs = null;
+        }
 
         Entry e = ENTRIES.computeIfAbsent(state.id, id -> new Entry());
         e.seen = System.currentTimeMillis();
@@ -171,6 +186,8 @@ public final class Survivors {
         d.beardPiece = bs == null ? null : bs.piece();
         d.hairTex = hs == null ? null : texOf(pack, hs.piece(), colour);
         d.beardTex = bs == null ? null : texOf(pack, bs.piece(), colour);
+        d.clothes = new HashMap<>();
+        for (SurvivorClothes.Piece c : dress.pieces()) d.clothes.put(c.piece(), c.texture());
         d.deathTurn = state.deathTime > 0 ? Math.min(1, (float) Math.sqrt((state.deathTime - 1) / 20f * 1.6f)) * 90f : 0;
         last = d;
 

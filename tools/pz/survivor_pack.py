@@ -417,6 +417,162 @@ def pretty(s):
     return s.replace('_', ' ').strip()
 
 
+# ---------------------------------------------------------------- Zomboid's clothes
+CLOTHES_MAP = os.path.join(os.path.dirname(os.path.dirname(HERE)), 'src/main/resources/assets/zomboidcraft/survivor/clothes_map.json')
+REGIONS = ['Head', 'Torso', 'Pelvis', 'LeftArm', 'LeftHand', 'RightArm', 'RightHand', 'LeftLeg', 'LeftFoot', 'RightLeg',
+           'RightFoot', 'Dress', 'Chest', 'Waist', 'Belt', 'Crotch']  # Zomboid's mask parts, by m_Masks number
+WHOLE = {'Torso': ('Chest', 'Waist'), 'Pelvis': ('Belt', 'Crotch')}  # the two that are other parts together
+
+
+class Files:
+    """Zomboid's files by path whatever their case (its XMLs don't keep to the files' own), under one or more media
+    folders (PZ_MEDIA may list several, split by the system's path separator)."""
+
+    def __init__(self, roots):
+        self.ix = {}
+        for root in roots:
+            for dp, _, fn in os.walk(root):
+                for f in fn:
+                    p = os.path.join(dp, f)
+                    self.ix.setdefault(os.path.relpath(p, root).replace('\\', '/').lower(), p)
+
+    def get(self, rel):
+        rel = rel.replace('\\', '/').strip().lower()
+        if rel.startswith('media/'):
+            rel = rel[6:]
+        return self.ix.get(rel)
+
+
+def x_model(files, m):
+    """A clothingItem's model path (relative to models_X, with or without .x, "media/" or an "x:" in front)."""
+    m = (m or '').replace('\\', '/').strip()
+    if not m or m.lower() == 'null':
+        return None
+    if m.lower().startswith('x:'):
+        m = m[2:]
+    if m.lower().startswith('media/'):
+        m = m[6:]
+    if m.lower().startswith('models_x/'):
+        m = m[9:]
+    if not m.lower().endswith('.x'):
+        m += '.x'
+    return files.get('models_X/' + m)
+
+
+def item_xml(path):
+    t = open(path, encoding='utf-8-sig').read()
+    g = lambda k: [x.strip() for x in re.findall(r'<%s>(.*?)</%s>' % (k, k), t, re.S)]
+    one = lambda k: (g(k) or [''])[0]
+    return {'male': one('m_MaleModel'), 'female': one('m_FemaleModel'), 'tex': g('textureChoices'),
+            'base': g('m_BaseTextures'), 'masks': [int(x) for x in g('m_Masks') if x.isdigit()],
+            'masks_folder': one('m_MasksFolder'), 'tint': one('m_AllowRandomTint') == 'true',
+            'hue': one('m_AllowRandomHue') == 'true', 'hat': one('m_HatCategory'), 'bone': one('m_AttachBone'),
+            'static': one('m_Static') == 'true', 'decal': one('m_DecalGroup')}
+
+
+def merged(meshes):
+    """Game meshes as one."""
+    if len(meshes) == 1:
+        return meshes[0]
+    out = {k: np.concatenate([m[k] for m in meshes]) for k in ('pos', 'normal', 'uv', 'si', 'sw')}
+    at, tris = 0, []
+    for m in meshes:
+        tris.append(m['tris'] + at); at += len(m['pos'])
+    out['tris'] = np.concatenate(tris)
+    return out
+
+
+def static_on(m, frame, skel, bone):
+    """A static piece (a hat, glasses, a greave) is modelled in its bone's own space: put where that bone is at rest and
+    carried by it alone."""
+    b = skel.ix[bone]
+    M = skel.bind[b] @ frame
+    n = len(m['pos'])
+    m = dict(m)
+    m['pos'] = (M @ np.hstack([m['pos'], np.ones((n, 1))]).T).T[:, :3]
+    nr = (M[:3, :3] @ m['normal'].T).T
+    m['normal'] = nr / (np.linalg.norm(nr, axis=1, keepdims=True) + 1e-9)
+    m['w'] = [{bone: 1.0} for _ in range(n)]
+    m['off'] = {bone: skel.off[b]}
+    return m
+
+
+def clothes(F, media, skel, groups, tex, cat):
+    """Every Zomboid clothingItem our wearables are drawn with (clothes_map.json): its model for her (Kate's) or him
+    (Bob's), each texture it comes in, the body textures of the ones that are only paint on the skin (shirts, shoes,
+    gloves), and the skin it hides (its masks, as one picture). The catalog's "clothes" says which is which."""
+    roots = [r for r in os.environ.get('PZ_MEDIA_EXTRA', '').split(os.pathsep) if r]
+    files = Files([media, *roots])
+    want = []
+    for v in json.load(open(CLOTHES_MAP, encoding='utf-8')).values():
+        if isinstance(v, str):
+            continue
+        for n in (v['pz'] if isinstance(v, dict) else v):
+            if n not in want:
+                want.append(n)
+    meshes, masks, made = {}, {}, set()
+    cat['clothes'] = {}
+
+    def picture(key, rel):
+        p = files.get('textures/' + rel.replace('\\', '/') + '.png')
+        if not p:
+            return None
+        if key not in made:
+            tex[key] = png(limit(Image.open(p).convert('RGBA'), 512)); made.add(key)
+        return key
+
+    for name in want:
+        px = files.get(f'clothing/clothingItems/{name}.xml')
+        if not px:
+            print(f'  no clothingItem {name}'); continue
+        it = item_xml(px)
+        entry = {'tint': it['tint'], 'hue': it['hue']}
+        if it['hat']:
+            entry['hat'] = it['hat']
+        if it['decal']:
+            entry['decal'] = it['decal']
+        path = x_model(files, it['female'] if F else it['male']) or x_model(files, it['male'] if F else it['female'])
+        if path:
+            if path not in meshes:
+                root, ms = x_meshes(path)
+                if it['static']:
+                    bone = it['bone'] if it['bone'] in skel.ix else 'Bip01_Head'
+                    fw = {}
+                    for fr in frames(root):
+                        fw[fr['name']] = fr['local'] if fr['parent'] not in fw else fw[fr['parent']] @ fr['local']
+                    ms = [static_on(m, fw.get(m['name'], np.eye(4)), skel, bone) for m in ms]
+                pid = 'cloth:' + os.path.basename(path)[:-2].lower()
+                groups.append((os.path.basename(path), pid, '', 3, merged([to_game(m, skel) for m in ms])))
+                meshes[path] = pid
+            entry['piece'] = meshes[path]
+            entry['tex'] = [k for k in (picture('cloth/' + t.replace('\\', '/').lower(), t) for t in it['tex']) if k]
+        base = [k for k in (picture('cloth/' + t.replace('\\', '/').lower(), t) for t in it['base']) if k]
+        if base:
+            entry['base'] = base
+        # the skin it hides: its m_Masks parts from its own mask folder, else the body's
+        folder = it['masks_folder'] or 'media/textures/Body/Masks'
+        if it['masks'] and folder.lower() != 'none':
+            parts = []
+            for i in it['masks']:
+                if 0 <= i < len(REGIONS):
+                    parts += WHOLE.get(REGIONS[i], (REGIONS[i],))
+            hide = None
+            for part in dict.fromkeys(parts):
+                p = files.get(f'{folder}/{part}.png') or files.get(f'textures/Body/Masks/{part}.png')
+                if not p:
+                    continue
+                a = np.asarray(Image.open(p).convert('RGBA').resize((256, 256), Image.NEAREST))[..., 3] > 128
+                hide = a if hide is None else hide | a
+            if hide is not None and hide.any():
+                img = png(Image.fromarray((hide * 255).astype('uint8')))
+                key = masks.setdefault(img, f'mask/{len(masks)}')
+                tex[key] = img
+                entry['mask'] = key
+        cat['clothes'][name] = entry
+    n_mesh = len(meshes)
+    print(f"  clothes: {len(cat['clothes'])} items, {n_mesh} models, {len(made)} textures, {len(masks)} masks")
+
+
 # ---------------------------------------------------------------- the pack
 CLIPS = {  # game name: Zomboid clip (Kate's own for women where Zomboid has one)
     'idle': ('Bob_Idle', 'Kate_Idle'), 'idle_1': ('Bob_IdleExt01',), 'idle_2': ('Bob_IdleExt02',), 'idle_3': ('Bob_IdleExt03',),
@@ -532,6 +688,8 @@ def build(sex, media, ws, out_dir):
             cat['beard'].append({'id': name, 'name': pretty(name), 'piece': hid, **binfo})
     for t in hair_tex:
         tex['hairtex/' + t] = png(Image.open(f'{media}/textures/{t}.png').convert('RGBA'))
+
+    clothes(F, media, skel, groups, tex, cat)
 
     # skins: per pack, tone and build (muscle), men also with a hairy body ("a")
     uw = black_set(f'{tomb_tex}/{G}Body01.png', media, G)
