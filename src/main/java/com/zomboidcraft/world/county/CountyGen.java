@@ -253,7 +253,7 @@ public final class CountyGen {
     /** True within a hideout's clearing (reach blocks from its hatch). */
     private static boolean cleared(List<Place> hideouts, int x, int z, double reach) {
         for (Place p : hideouts) {
-            if (Math.hypot(x - p.centreX(), z - p.centreZ()) <= reach) {
+            if (!"ghost_station".equals(p.variant) && Math.hypot(x - p.centreX(), z - p.centreZ()) <= reach) {
                 return true;
             }
         }

@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "gh_staff": "zomboidcraft:block/city/gh_staff",
+    "paper": "zomboidcraft:block/city/paper",
+    "particle": "zomboidcraft:block/city/gh_staff"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        2,
+        15.6
+      ],
+      "to": [
+        14,
+        14,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gh_staff"
+        },
+        "south": {
+          "texture": "#paper",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#paper"
+        },
+        "west": {
+          "texture": "#paper"
+        },
+        "up": {
+          "texture": "#paper"
+        },
+        "down": {
+          "texture": "#paper"
+        }
+      }
+    }
+  ]
+}
