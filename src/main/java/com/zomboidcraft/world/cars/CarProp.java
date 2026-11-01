@@ -6,6 +6,7 @@ import com.zomboidcraft.zombie.Noise;
 import java.util.List;
 import java.util.function.Function;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -179,6 +180,17 @@ public class CarProp extends Entity {
 
     /** Called on the client every tick a car's engine runs, to keep its sound going; the client sets this. */
     public static java.util.function.Consumer<CarProp> engineSound = car -> { };
+
+    /** This model's own Zomboid recording of a sound (see CarSounds.of), or ours. */
+    private net.minecraft.core.Holder<net.minecraft.sounds.SoundEvent> zs(String kind, String what, net.minecraft.sounds.SoundEvent ours) {
+        return CarSounds.of(CarModels.get(model()), kind, what, ours);
+    }
+
+    /** Whether this model plays Zomboid's recordings of that kind (a converted Workshop car). */
+    public boolean sounded(String kind) {
+        CarModels.Model m = CarModels.get(model());
+        return m != null && m.sounds != null && m.sounds.containsKey(kind);
+    }
 
     /** The local player's driving keys; the client sets this, a server never needs it. */
     public static Function<Player, Input> clientInput = p -> Input.EMPTY;
@@ -422,7 +434,8 @@ public class CarProp extends Entity {
         player.openMenu(new SimpleMenuProvider((id, inventory, p) -> ChestMenu.threeRows(id, inventory, boot), Component.literal(title)));
         if (!entityData.get(OPEN)) {
             entityData.set(OPEN, true);
-            server.playSound(null, getX(), getY(), getZ(), SoundEvents.IRON_TRAPDOOR_OPEN, SoundSource.BLOCKS, 0.6f, 0.7f);
+            server.playSound(null, getX(), getY(), getZ(), zs("door", "trunk.%.open", SoundEvents.IRON_TRAPDOOR_OPEN), SoundSource.BLOCKS,
+                    sounded("door") ? 1f : 0.6f, sounded("door") ? 1f : 0.7f);
         }
     }
 
@@ -438,8 +451,9 @@ public class CarProp extends Entity {
     public void setBoot(boolean open) {
         if (entityData.get(OPEN) != open && level() instanceof ServerLevel server) {
             entityData.set(OPEN, open);
-            server.playSound(null, getX(), getY(), getZ(), open ? SoundEvents.IRON_TRAPDOOR_OPEN : SoundEvents.IRON_TRAPDOOR_CLOSE,
-                    SoundSource.BLOCKS, 0.6f, 0.7f);
+            server.playSound(null, getX(), getY(), getZ(), open ? zs("door", "trunk.%.open", SoundEvents.IRON_TRAPDOOR_OPEN)
+                    : zs("door", "trunk.%.close", SoundEvents.IRON_TRAPDOOR_CLOSE), SoundSource.BLOCKS,
+                    sounded("door") ? 1f : 0.6f, sounded("door") ? 1f : 0.7f);
         }
     }
 
@@ -447,8 +461,9 @@ public class CarProp extends Entity {
     public void setBonnet(boolean open) {
         if (entityData.get(BONNET) != open && level() instanceof ServerLevel server) {
             entityData.set(BONNET, open);
-            server.playSound(null, getX(), getY(), getZ(), open ? SoundEvents.IRON_TRAPDOOR_OPEN : SoundEvents.IRON_TRAPDOOR_CLOSE,
-                    SoundSource.BLOCKS, 0.6f, open ? 0.9f : 0.8f);
+            server.playSound(null, getX(), getY(), getZ(), open ? zs("door", "hood.%.open", SoundEvents.IRON_TRAPDOOR_OPEN)
+                    : zs("door", "hood.%.close", SoundEvents.IRON_TRAPDOOR_CLOSE), SoundSource.BLOCKS,
+                    sounded("door") ? 1f : 0.6f, sounded("door") ? 1f : open ? 0.9f : 0.8f);
         }
     }
 
@@ -1041,7 +1056,7 @@ public class CarProp extends Entity {
         }
         if (doorShutAt >= 0 && tickCount >= doorShutAt) {
             doorShutAt = -1;
-            server.playSound(null, getX(), getY(), getZ(), aircraft() ? AirSounds.CANOPY : CarSounds.DOOR_CLOSE, SoundSource.NEUTRAL, 1f,
+            server.playSound(null, getX(), getY(), getZ(), aircraft() ? BuiltInRegistries.SOUND_EVENT.wrapAsHolder(AirSounds.CANOPY) : zs("door", "door.%.close", CarSounds.DOOR_CLOSE), SoundSource.NEUTRAL, 1f,
                     0.95f + random.nextFloat() * 0.1f);
         }
     }
@@ -1155,6 +1170,9 @@ public class CarProp extends Entity {
             entityData.set(ENGINE, false);
             catchAt = -1;
             server.playSound(null, getX(), getY(), getZ(), SoundEvents.LEVER_CLICK, SoundSource.NEUTRAL, 0.5f, 0.6f);
+            if (sounded("engine")) {
+                server.playSound(null, getX(), getY(), getZ(), zs("engine", "engine.%.stop", CarSounds.STALL), SoundSource.NEUTRAL, 1f, 1f);
+            }
             player.sendOverlayMessage(Component.literal("Engine off."));
             return;
         }
@@ -1164,7 +1182,7 @@ public class CarProp extends Entity {
             return;
         }
         if (!engineRuns()) {
-            server.playSound(null, getX(), getY(), getZ(), CarSounds.STALL, SoundSource.NEUTRAL, 1f, 1f);
+            server.playSound(null, getX(), getY(), getZ(), zs("engine", "engine.%.fail", CarSounds.STALL), SoundSource.NEUTRAL, 1f, 1f);
             player.sendOverlayMessage(Component.literal("It won't start."));
             return;
         }
@@ -1194,7 +1212,7 @@ public class CarProp extends Entity {
     /** The starter turns over and the engine catches about three seconds later. */
     private void crank(ServerLevel server) {
         if (roadCar() && fuel() <= 0) {
-            server.playSound(null, getX(), getY(), getZ(), CarSounds.STALL, SoundSource.NEUTRAL, 1f, 1f);
+            server.playSound(null, getX(), getY(), getZ(), zs("engine", "engine.%.fail", CarSounds.STALL), SoundSource.NEUTRAL, 1f, 1f);
             if (getControllingPassenger() instanceof Player player) {
                 player.sendOverlayMessage(Component.literal("It cranks and cranks but won't catch: the tank's dry."));
             }
@@ -1203,13 +1221,13 @@ public class CarProp extends Entity {
         String fault = parts().isEmpty() ? null : CarParts.startFault(parts(), new java.util.Random(random.nextLong()),
                 knowsCars(getControllingPassenger()));
         if (fault != null) {
-            server.playSound(null, getX(), getY(), getZ(), CarSounds.STALL, SoundSource.NEUTRAL, 1f, 1f);
+            server.playSound(null, getX(), getY(), getZ(), zs("engine", "engine.%.fail", CarSounds.STALL), SoundSource.NEUTRAL, 1f, 1f);
             if (getControllingPassenger() instanceof Player player) {
                 player.sendOverlayMessage(Component.literal(fault + " C to try again."));
             }
             return;
         }
-        server.playSound(null, getX(), getY(), getZ(), CarSounds.START, SoundSource.NEUTRAL, 1f, 1f);
+        server.playSound(null, getX(), getY(), getZ(), zs("engine", "engine.%.start", CarSounds.START), SoundSource.NEUTRAL, 1f, 1f);
         catchAt = tickCount + 58;
         wear(CarParts.Part.STARTER, 0, 0.15);
         wear(CarParts.Part.SPARK_PLUGS, 0, 0.1);
@@ -1237,7 +1255,7 @@ public class CarProp extends Entity {
         }
         hotwireLeft = -1;
         if (random.nextDouble() < hotwireFail()) {
-            server.playSound(null, getX(), getY(), getZ(), CarSounds.STALL, SoundSource.NEUTRAL, 1f, 1f);
+            server.playSound(null, getX(), getY(), getZ(), zs("engine", "engine.%.fail", CarSounds.STALL), SoundSource.NEUTRAL, 1f, 1f);
             player.sendOverlayMessage(Component.literal(carCondition() < 55 ? "A spark, a cough, then nothing. The old wiring fights you: C to try again."
                     : "A spark, a cough, then nothing. C to try again."));
             return;
@@ -1304,12 +1322,13 @@ public class CarProp extends Entity {
         }
         player.openMenu(new SimpleMenuProvider((id, inventory, p) -> new net.minecraft.world.inventory.HopperMenu(id, inventory, glovebox),
                 Component.literal("Glovebox")));
-        server.playSound(null, getX(), getY(), getZ(), SoundEvents.WOODEN_TRAPDOOR_OPEN, SoundSource.NEUTRAL, 0.5f, 1.3f);
+        server.playSound(null, getX(), getY(), getZ(), zs("door", "glovebox.open", SoundEvents.WOODEN_TRAPDOOR_OPEN), SoundSource.NEUTRAL,
+                sounded("door") ? 1f : 0.5f, sounded("door") ? 1f : 1.3f);
     }
 
     /** A door opens to let someone in or out, and swings shut behind them. */
     private void door(ServerLevel server) {
-        server.playSound(null, getX(), getY(), getZ(), aircraft() ? AirSounds.CANOPY : CarSounds.DOOR_OPEN, SoundSource.NEUTRAL, 1f,
+        server.playSound(null, getX(), getY(), getZ(), aircraft() ? BuiltInRegistries.SOUND_EVENT.wrapAsHolder(AirSounds.CANOPY) : zs("door", "door.%.open", CarSounds.DOOR_OPEN), SoundSource.NEUTRAL, 1f,
                 0.95f + random.nextFloat() * 0.1f);
         doorShutAt = tickCount + 14;
     }
@@ -1523,7 +1542,7 @@ public class CarProp extends Entity {
         hornPressedAt = tickCount;
         if (level() instanceof ServerLevel server && getControllingPassenger() == driver && tickCount >= hornFreeAt && !jet()) {
             hornFreeAt = tickCount + 40;
-            server.playSound(null, getX(), getY(), getZ(), CarSounds.HORN, SoundSource.NEUTRAL, 1.5f, 1f);
+            server.playSound(null, getX(), getY(), getZ(), zs("horn", "horn.%", CarSounds.HORN), SoundSource.NEUTRAL, 1.5f, 1f);
             Noise.emitEngine(server, position(), 48);
         }
     }
@@ -2050,7 +2069,8 @@ public class CarProp extends Entity {
                 hit.knockback(Math.min(2.5, speed * 2.5), -away.x, -away.z, source, damage);
                 if (speed > 0.35) {
                     Downed.knockDown(hit);
-                    server.playSound(null, hit.getX(), hit.getY(), hit.getZ(), CarSounds.CRASH, SoundSource.NEUTRAL, 0.6f,
+                    server.playSound(null, hit.getX(), hit.getY(), hit.getZ(), zs("door", "hit.zombie", CarSounds.CRASH), SoundSource.NEUTRAL,
+                            sounded("door") ? 1f : 0.6f,
                             1.1f + random.nextFloat() * 0.2f);
                 }
             }
@@ -2067,8 +2087,8 @@ public class CarProp extends Entity {
         // a sudden stop from speed is a crash: walls, other cars. Two slow ticks in a row, since the
         // driver's moves arrive unevenly and one tick can see none
         if (speedBefore > 0.35 && lastSpeed < speedBefore * 0.45 && speed < speedBefore * 0.45) {
-            server.playSound(null, getX(), getY(), getZ(), CarSounds.CRASH, SoundSource.NEUTRAL,
-                    (float) Math.min(1.5, speedBefore * 1.4), 0.9f + random.nextFloat() * 0.2f);
+            server.playSound(null, getX(), getY(), getZ(), zs("door", speedBefore > 0.7 ? "crash.heavy" : "crash.light", CarSounds.CRASH),
+                    SoundSource.NEUTRAL, (float) Math.min(1.5, speedBefore * 1.4), 0.9f + random.nextFloat() * 0.2f);
             Noise.emitEngine(server, position(), 30);
             crashHurt(server, speedBefore);
             if (!parts().isEmpty()) {
@@ -2379,9 +2399,12 @@ public class CarProp extends Entity {
 
     /** Spawned by command to drive at once: in full repair, full tank, good battery, unlocked, the key in the ignition. */
     public void readyToDrive() {
+        setCondition(100);
+        worn = true;
+        rollParts();                // at full condition, so nothing missing or failing
+        fuelRolled = true;          // or the first tick's Chance Has Gas roll would drain the tank again
         setFuel(1);
         setBattery(true);
-        setCondition(100);
         keyWhere = CarKeys.IGNITION;
         lockRolled = true;
         locked = false;
@@ -2529,7 +2552,8 @@ public class CarProp extends Entity {
         setFuel(fuel() - (float) (litres / cap));
         if (fuel() <= 0 && engineOn()) {
             entityData.set(ENGINE, false);
-            server.playSound(null, getX(), getY(), getZ(), CarSounds.STALL, SoundSource.NEUTRAL, 1f, 0.9f);
+            server.playSound(null, getX(), getY(), getZ(), zs("engine", "engine.%.stop", CarSounds.STALL), SoundSource.NEUTRAL, 1f,
+                    sounded("engine") ? 1f : 0.9f);
             if (getControllingPassenger() instanceof Player player) {
                 player.sendOverlayMessage(Component.literal("The engine coughs and dies: out of fuel."));
             }

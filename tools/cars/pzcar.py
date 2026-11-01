@@ -602,7 +602,8 @@ def write(a, v, P, UV, glass, wheel_of, interior, atlas, wheels, part=None):
     fronts = [c for c, _, f in wheels if f]
     rears = [c for c, _, f in wheels if not f]
     wb = float(np.mean([c[2] for c in fronts]) - np.mean([c[2] for c in rears])) if fronts and rears else 2.5
-    row = {'id': a.id, 'kind': a.kind, 'weight': a.weight, 'size': [round(float(x), 3) for x in size],
+    row = {'sounds': pz_sounds(v),
+           'id': a.id, 'kind': a.kind, 'weight': a.weight, 'size': [round(float(x), 3) for x in size],
            'cell': CELL, 'x0': round(float(glo[0]), 3), 'z0': round(float(glo[2]), 3), 'nx': nx, 'nz': nz,
            'heights': [int(round(h * 100)) for h in grid.ravel()],
            'seats': seats, 'handles': handles, 'wheelbase': round(wb, 3),
@@ -638,6 +639,31 @@ def ground_of(v):
 LID_PARTS = {'bonnet': ('EngineDoor',), 'boot': ('TrunkDoor',)}
 # what rides on a boot door or bonnet and swings with it: a back door's window, a spare wheel hung on it
 LID_RIDERS = ('WindshieldRear', 'DAMNSpareTire', 'WindowBackLeft', 'WindowBackRight')
+
+
+def pz_sounds(v):
+    """Which of Zomboid's recorded sets the car's script names: engine (sports, wagon, offroad, van), door (doors,
+    bonnet, boot, locks: sports, standard, jeep, van) and horn (sports, standard), for the local PZ car sounds pack
+    (pzsounds.py). Zomboid has no recorded jeep horn; its jeep horn event plays the standard one."""
+    snd = v.block('sound')
+    engine = (snd.kv.get('engine') if snd else '') or ''
+    horn = (snd.kv.get('horn') if snd else '') or ''
+    door = ''
+
+    def walk(b):
+        nonlocal door
+        for k, val in getattr(b, 'items', []) or b.kv.items():
+            if k == 'sound' and str(val).startswith('VehicleDoorOpen') and not door:
+                door = str(val)
+        for kid in b.kids:
+            walk(kid)
+    for part in v.parts.values():
+        walk(part)
+    e = engine.lower()
+    return {'engine': 'sports' if 'sport' in e else 'offroad' if 'offroad' in e else
+            'van' if any(w in e for w in ('van', 'truck', 'bus')) else 'wagon',
+            'door': next((k for k in ('sports', 'jeep', 'van') if k in door.lower()), 'standard'),
+            'horn': 'sports' if 'sport' in horn.lower() else 'standard'}
 
 
 def lid_parts(P, part, body):

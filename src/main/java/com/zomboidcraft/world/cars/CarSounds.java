@@ -1,6 +1,7 @@
 package com.zomboidcraft.world.cars;
 
 import com.zomboidcraft.ZomboidCraft;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
@@ -21,6 +22,24 @@ public final class CarSounds {
     public static final SoundEvent ALARM = register("car.alarm", 160f);
     public static final SoundEvent DOOR_OPEN = register("car.door.open", 16f);
     public static final SoundEvent DOOR_CLOSE = register("car.door.close", 16f);
+
+    /**
+     * Zomboid's own recording of a sound for this model, from the local "ZomboidCraft PZ Car Sounds" pack: the
+     * pz.&lt;what&gt; event with % replaced by the model's set of that kind (models.json "sounds"), carrying our
+     * sound's range. Models without that kind of set, and our own cars, get our sound.
+     */
+    public static Holder<SoundEvent> of(CarModels.Model m, String kind, String what, SoundEvent ours) {
+        String set = m == null || m.sounds == null ? null : m.sounds.get(kind);
+        if (set == null) {
+            return BuiltInRegistries.SOUND_EVENT.wrapAsHolder(ours);
+        }
+        return Holder.direct(SoundEvent.createFixedRangeEvent(pz(what.replace("%", set)), ours.fixedRange().orElse(16f)));
+    }
+
+    /** The id of a pz.* event in the local pack. */
+    public static Identifier pz(String what) {
+        return ZomboidCraft.id("pz." + what);
+    }
 
     public static void register() {
         // Loading the class registers the sounds.
