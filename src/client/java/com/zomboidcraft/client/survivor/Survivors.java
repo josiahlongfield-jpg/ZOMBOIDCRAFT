@@ -561,7 +561,7 @@ public final class Survivors {
     }
 
     /** Turns a bone and everything below it about the bone, in model space. */
-    private static void rotateBelow(SurvivorPack pack, float[] pos, float[] turn, int bone, Quaternionf r) {
+    static void rotateBelow(SurvivorPack pack, float[] pos, float[] turn, int bone, Quaternionf r) {
         float px = pos[bone * 3], py = pos[bone * 3 + 1], pz = pos[bone * 3 + 2];
         Vector3f d = new Vector3f();
         Quaternionf q = new Quaternionf();
@@ -651,6 +651,11 @@ public final class Survivors {
      * on the target (as near as the arm's length allows).
      */
     static void reach(SurvivorPack pack, float[] pos, float[] turn, int s, Vector3f target) {
+        reach(pack, pos, turn, s, target, null);
+    }
+
+    /** The same reach, with the elbow bending toward pole (her space) when one is given. */
+    static void reach(SurvivorPack pack, float[] pos, float[] turn, int s, Vector3f target, Vector3f pole) {
         int u = pack.upper[s], f = pack.fore[s], h = pack.hand[s];
         if (u < 0 || f < 0 || h < 0) return;
         Vector3f sh = vec(pos, u), el = vec(pos, f), wr = vec(pos, h);
@@ -659,7 +664,7 @@ public final class Survivors {
         float d = Math.max(Math.abs(a - b) + 1e-3f, Math.min(a + b - 1e-3f, toT.length()));
         if (toT.lengthSquared() < 1e-8f) return;
         Vector3f dir = new Vector3f(toT).normalize();
-        Vector3f bend = new Vector3f(el).sub(sh);
+        Vector3f bend = pole != null ? new Vector3f(pole).sub(sh) : new Vector3f(el).sub(sh);
         bend.sub(new Vector3f(dir).mul(bend.dot(dir)));
         if (bend.lengthSquared() < 1e-8f) bend.set(s == 0 ? -0.3f : 0.3f, -1, -0.2f).sub(new Vector3f(dir).mul(dir.dot(0, -1, 0)));
         bend.normalize();

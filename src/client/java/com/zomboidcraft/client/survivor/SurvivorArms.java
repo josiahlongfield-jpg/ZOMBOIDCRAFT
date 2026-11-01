@@ -41,6 +41,17 @@ public final class SurvivorArms {
      */
     public static boolean draw(PoseStack pose, SubmitNodeCollector out, int light, Player player, Vector3f eye, Vector3f forward,
                                Vector3f up, float scale, Vector3f rightHand, Vector3f leftHand, boolean aiming) {
+        return draw(pose, out, light, player, eye, forward, up, scale, rightHand, leftHand, null, null, aiming);
+    }
+
+    /**
+     * The same, each hand also turned to hold: elbow[s] points from that hand back toward its elbow, and palm[s] is
+     * the side Minecraft's arm puts toward her left (her right palm, the back of her left hand), both in the caller's
+     * frame. A null entry (or array) leaves that hand as Zomboid's clip turns it.
+     */
+    public static boolean draw(PoseStack pose, SubmitNodeCollector out, int light, Player player, Vector3f eye, Vector3f forward,
+                               Vector3f up, float scale, Vector3f rightHand, Vector3f leftHand, Vector3f[] elbow,
+                               Vector3f[] palm, boolean aiming) {
         Survivors.Outfit o = player == null ? null : Survivors.outfit(player);
         if (o == null) return false;
         SurvivorPack pack = o.pack();
@@ -68,26 +79,66 @@ public final class SurvivorArms {
 
         Vector3f[] want = {rightHand == null ? null : back.transformPosition(new Vector3f(rightHand)),
                 leftHand == null ? null : back.transformPosition(new Vector3f(leftHand))};
-        // the leading hand first: if it can't reach, she steps in (only her arms show, so the body just moves up)
-        int first = want[0] != null ? 0 : 1;
-        for (int k = 0; k < 2; k++) {
-            int s = k == 0 ? first : 1 - first;
-            if (want[s] == null || pack.upper[s] < 0 || pack.fore[s] < 0 || pack.hand[s] < 0) continue;
-            int sh = pack.upper[s], el = pack.fore[s], wr = pack.hand[s];
-            Vector3f shoulder = new Vector3f(pos[sh * 3], pos[sh * 3 + 1], pos[sh * 3 + 2]);
-            float reachLen = shoulder.distance(pos[el * 3], pos[el * 3 + 1], pos[el * 3 + 2])
-                    + new Vector3f(pos[el * 3], pos[el * 3 + 1], pos[el * 3 + 2]).distance(pos[wr * 3], pos[wr * 3 + 1], pos[wr * 3 + 2])
-                    + pack.grip[s].length();
-            float d = shoulder.distance(want[s]);
-            if (k == 0 && d > reachLen * 0.95f) {
-                Vector3f step = new Vector3f(want[s]).sub(shoulder).mul(1 - reachLen * 0.95f / d);
+        // each hand's turn (her space), where it's given
+        Quaternionf[] hold = new Quaternionf[2];
+        Vector3f[] towardElbow = new Vector3f[2];
+        for (int s = 0; s < 2; s++) {
+            if (want[s] == null || elbow == null || palm == null || elbow[s] == null || palm[s] == null) continue;
+            Vector3f z = back.transformDirection(new Vector3f(elbow[s])).normalize();
+            Vector3f x = back.transformDirection(new Vector3f(palm[s])).negate();
+            x.sub(new Vector3f(z).mul(x.dot(z)));
+            if (x.lengthSquared() < 1e-6f) continue;
+            x.normalize();
+            Vector3f y = new Vector3f(z).cross(x);
+            // the item frame's columns (x her right, y ahead, z up the forearm) back to the hand bone's own turn
+            Quaternionf item = new Quaternionf().setFromNormalized(new Matrix3f(x, y, z));
+            hold[s] = item.mul(new Quaternionf(pack.gripTurn[s]).conjugate(), new Quaternionf()).normalize();
+            towardElbow[s] = z;
+        }
+        // where the grips are out of her reach, she steps in (only her arms show, so the body just moves); a few
+        // rounds so that bringing one shoulder in doesn't leave the other short
+        for (int round = 0; round < 3; round++) {
+            for (int s = 0; s < 2; s++) {
+                if (want[s] == null || pack.upper[s] < 0 || pack.fore[s] < 0 || pack.hand[s] < 0) continue;
+                int sh = pack.upper[s], el = pack.fore[s], wr = pack.hand[s];
+                Vector3f shoulder = new Vector3f(pos[sh * 3], pos[sh * 3 + 1], pos[sh * 3 + 2]);
+                float reachLen = shoulder.distance(pos[el * 3], pos[el * 3 + 1], pos[el * 3 + 2])
+                        + new Vector3f(pos[el * 3], pos[el * 3 + 1], pos[el * 3 + 2]).distance(pos[wr * 3], pos[wr * 3 + 1], pos[wr * 3 + 2])
+                        + pack.grip[s].length();
+                float d = shoulder.distance(want[s]);
+                if (d <= reachLen * 0.93f) continue;
+                Vector3f step = new Vector3f(want[s]).sub(shoulder).mul(1 - reachLen * 0.93f / d);
                 for (int b = 0; b < n; b++) {
                     pos[b * 3] += step.x;
                     pos[b * 3 + 1] += step.y;
                     pos[b * 3 + 2] += step.z;
                 }
             }
-            Survivors.reachPoint(pack, pos, turn, s, want[s]);
+        }
+        for (int s = 0; s < 2; s++) {
+            if (want[s] == null || pack.upper[s] < 0 || pack.fore[s] < 0 || pack.hand[s] < 0) continue;
+            if (hold[s] == null) {
+                Survivors.reachPoint(pack, pos, turn, s, want[s]);
+                continue;
+            }
+            int el = pack.fore[s], h = pack.hand[s];
+            // the wrist where the turned hand's grip lands on the point, the elbow bent back the way the grip wants
+            Vector3f wrist = new Vector3f(want[s]).sub(hold[s].transform(new Vector3f(pack.grip[s])));
+            float forearm = new Vector3f(pos[el * 3], pos[el * 3 + 1], pos[el * 3 + 2]).distance(pos[h * 3], pos[h * 3 + 1], pos[h * 3 + 2]);
+            Vector3f pole = new Vector3f(towardElbow[s]).mul(forearm).add(wrist);
+            Survivors.reach(pack, pos, turn, s, wrist, pole);
+            // half the wrist's roll taken by the forearm, so it doesn't wring
+            Vector3f axis = new Vector3f(pos[h * 3] - pos[el * 3], pos[h * 3 + 1] - pos[el * 3 + 1], pos[h * 3 + 2] - pos[el * 3 + 2]).normalize();
+            Quaternionf now = new Quaternionf(turn[h * 4], turn[h * 4 + 1], turn[h * 4 + 2], turn[h * 4 + 3]);
+            Quaternionf change = new Quaternionf(hold[s]).mul(now.conjugate());
+            float along = change.x * axis.x + change.y * axis.y + change.z * axis.z;
+            Quaternionf roll = new Quaternionf(axis.x * along, axis.y * along, axis.z * along, change.w);
+            if (roll.lengthSquared() > 1e-8f) {
+                roll.normalize();
+                Survivors.rotateBelow(pack, pos, turn, el, new Quaternionf().slerp(roll, 0.5f));
+            }
+            now.set(turn[h * 4], turn[h * 4 + 1], turn[h * 4 + 2], turn[h * 4 + 3]);
+            Survivors.rotateBelow(pack, pos, turn, h, new Quaternionf(hold[s]).mul(now.conjugate()).normalize());
         }
 
         Matrix4f[] skin = Survivors.skinOf(pack, pos, turn);
@@ -134,13 +185,16 @@ public final class SurvivorArms {
     }
 
     /**
-     * Minecraft's own first-person arm (an empty hand, a map): her arm instead, its hand where Minecraft's fist is.
+     * Minecraft's own first-person arm: none at all for an empty hand, her arm (its hand where Minecraft's fist is)
+     * for a map.
      * pose is the vanilla arm's frame. Returns whether hers was drawn.
      */
     public static boolean vanillaHand(PoseStack pose, SubmitNodeCollector out, int light, HumanoidArm arm) {
         Minecraft mc = Minecraft.getInstance();
         Player player = mc.player;
         if (player == null) return false;
+        // an empty hand: Zomboid never holds a bare arm up in front of her, so nothing is drawn (and no Minecraft arm)
+        if (player.getMainHandItem().isEmpty()) return shown(player);
         Matrix4f frame = new Matrix4f(pose.last().pose());
         Matrix4f back = new Matrix4f(frame).invert();
         // the eye and the view's axes, in the arm's frame
