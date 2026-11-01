@@ -257,13 +257,43 @@ def build(a):
     body = np.array([not str(p).startswith('wheel') for p in part]) & (slots == skin_slot) & ~np.array(
         [any(g in str(p) for g in GLASS) for p in part])
     rest = num(v.kv.get('suspensionRestLength')) or 0.2
+    # the body is laid over the wheels where its own arches are: Zomboid's model scale and offset don't always put
+    # them over the script's wheels (the Defender's arches came out 0.9 of its wheelbase), so the body is scaled and
+    # slid until the arch centres sit over the wheel centres
+    fr = [w for w in wheels if w[2]]
+    rr = [w for w in wheels if not w[2]]
+    if fr and rr:
+        x = abs(fr[0][0][0])
+        runs = arches(P[body], x)
+
+        def near(z):
+            return min(runs, key=lambda rn: abs((rn[0] + rn[1]) / 2 - z)) if runs else None
+        af, ar = near(fr[0][0][2]), near(rr[0][0][2])
+        if af and ar and af != ar:
+            cf, cr = (af[0] + af[1]) / 2, (ar[0] + ar[1]) / 2
+            k = (fr[0][0][2] - rr[0][0][2]) / (cf - cr)
+            if 0.7 < k < 1.45:
+                bodyall = np.array([not str(p).startswith('wheel') for p in part])
+                Pb = P[bodyall]
+                Pb[..., 2] = (Pb[..., 2] - cr) * k + rr[0][0][2]
+                Pb[..., 0] *= k
+                ybase = Pb[..., 1].min()
+                Pb[..., 1] = (Pb[..., 1] - ybase) * k + ybase
+                P[bodyall] = Pb
+                _FIT[v.name] = (k, cr, rr[0][0][2], ybase)
+                # the tyres grow with the body, so they keep filling their arches (and match the spare)
+                for j, (off, r, f) in enumerate(wheels):
+                    sel = part == f'wheel{j}'
+                    P[sel] = (P[sel] - off) * k + off
+                    wheels[j] = (off, r * k, f)
+                print(f'body fitted to the wheels: arches at {cf:+.2f}/{cr:+.2f}, scaled {k:.3f}')
     fitted = []
     for k, (off, r, f) in enumerate(wheels):
         width = widths[k]
         y = off[1] - rest
         top = arch_top(P[body], np.array([off[0], y, off[2]]), r, width)
         if top is not None:
-            y = min(y, top - 0.03)
+            y = top - 0.06
         drop = off[1] - y
         sel = part == f'wheel{k}'
         P[sel] = P[sel] - np.array([0, drop, 0])
@@ -292,6 +322,26 @@ def column_hits(T, x, z):
     l2 = 1 - l0 - l1
     ins = ok & (l0 >= 0) & (l1 >= 0) & (l2 >= 0)
     return (l0 * a[:, 1] + l1 * b[:, 1] + l2 * c[:, 1])[ins]
+
+
+def arches(T, x, step=0.025):
+    """The wheel openings along one side: runs where the body's underside rises well above its sills."""
+    lo, hi = T[..., 2].min(), T[..., 2].max()
+    zs = np.arange(lo, hi, step)
+    under = np.array([(lambda h: h.min() if len(h) else np.nan)(column_hits(T, x, z)) for z in zs])
+    sill = np.nanpercentile(under, 25)
+    high = under >= sill + 0.12            # risen (open air past the ends doesn't count)
+    runs, start = [], None
+    for k, hgt in enumerate(high):
+        if hgt and start is None:
+            start = k
+        if (not hgt or k == len(high) - 1) and start is not None:
+            end = k if not hgt else k + 1
+            seg = under[start:end]
+            if np.isfinite(seg).any():       # a gap with some body over it: an arch, not air past the bumper
+                runs.append((zs[start], zs[end - 1]))
+            start = None
+    return runs
 
 
 def arch_top(T, c, r, width):
@@ -434,7 +484,7 @@ def write(a, v, P, UV, glass, wheel_of, interior, atlas, wheels):
     com = np.array(floats(v.kv.get('centerOfMassOffset', '0 0 0'), 3))
     for b in last.values():
         pos = b.block('position', 'inside')
-        o = np.array(floats(pos.kv.get('offset', '0 0 0'), 3)) + com - np.array([0, ground_of(v), 0])
+        o = fit_point(v, np.array(floats(pos.kv.get('offset', '0 0 0'), 3)) + com) - np.array([0, ground_of(v), 0])
         eye = [o[0], min(roof - 0.22, o[1] + 0.78), o[2]]
         seats.append([round(float(eye[0] - centre[0]), 3), round(float(eye[1]), 3), round(float(eye[2] - centre[2]), 3)])
         side = 1 if o[0] > 0 else -1
@@ -458,6 +508,15 @@ def write(a, v, P, UV, glass, wheel_of, interior, atlas, wheels):
 
 
 _GROUND = {}
+_FIT = {}
+
+
+def fit_point(v, p):
+    """A point given in Zomboid's vehicle space, moved as the body was when it was fitted over the wheels."""
+    if v.name not in _FIT:
+        return p
+    k, cr, wz, ybase = _FIT[v.name]
+    return np.array([p[0] * k, (p[1] - ybase) * k + ybase, (p[2] - cr) * k + wz])
 
 
 def ground_of(v):
