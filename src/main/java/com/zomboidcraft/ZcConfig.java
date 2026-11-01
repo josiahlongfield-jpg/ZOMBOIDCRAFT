@@ -391,6 +391,12 @@ public final class ZcConfig {
         public double spriteMinDistance = 24;
         /** A readout over the hotbar: FPS, zombies loaded and drawn at each detail, pieces drawn a frame. Client side. */
         public boolean showStats = false;
+        /**
+         * Lamps on dying circuits flicker. Off (the default since 2026-11-01) they stay lit: every flicker rebuilds the
+         * chunk section round the lamp, and a city's worth flipping 25 times a second took two thirds of the frame.
+         * {@code /zc flicker on|off}.
+         */
+        public boolean flickerLamps = false;
     }
 
     /**
