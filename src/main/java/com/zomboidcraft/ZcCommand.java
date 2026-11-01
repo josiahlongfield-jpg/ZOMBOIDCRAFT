@@ -43,7 +43,8 @@ public final class ZcCommand {
                                         .suggests((ctx, b) -> SharedSuggestionProvider.suggest(CarModels.all().keySet(), b))
                                         .executes(ctx -> car(ctx, StringArgumentType.getString(ctx, "model"), null))
                                         .then(Commands.argument("variant", StringArgumentType.word())
-                                                .suggests((ctx, b) -> SharedSuggestionProvider.suggest(CarModels.variants(), b))
+                                                .suggests((ctx, b) -> SharedSuggestionProvider.suggest(java.util.stream.Stream.concat(
+                                                        java.util.stream.Stream.of("ready"), CarModels.variants().stream()), b))
                                                 .executes(ctx -> car(ctx, StringArgumentType.getString(ctx, "model"),
                                                         StringArgumentType.getString(ctx, "variant"))))))
                         .then(Commands.literal("hoist").executes(ZcCommand::hoist))
@@ -286,6 +287,10 @@ public final class ZcCommand {
         ServerPlayer player = ctx.getSource().getPlayerOrException();
         java.util.Random rng = new java.util.Random();
         CarModels.Model m = model == null ? CarModels.pick(rng, c -> !c.boat() && !c.farm() && !c.military()) : CarModels.get(model);
+        boolean ready = "ready".equals(variant);
+        if (ready) {
+            variant = "usable";
+        }
         if (m == null || (variant != null && !CarModels.variants().contains(variant))) {
             ctx.getSource().sendFailure(Component.literal("Unknown car: " + model + (variant == null ? "" : " " + variant)));
             return 0;
@@ -294,8 +299,11 @@ public final class ZcCommand {
         double yaw = Math.toRadians(player.getYRot());
         double reach = m.size[0] / 2 + 2.5;
         double x = player.getX() - Math.sin(yaw) * reach, z = player.getZ() + Math.cos(yaw) * reach;
-        Cars.spawn((ServerLevel) player.level(), x, player.getY(), z, player.getYRot() + 90, m.id, look, true);
-        ctx.getSource().sendSuccess(() -> Component.literal("Spawned " + m.id + " (" + look + ")"), false);
+        com.zomboidcraft.world.cars.CarProp car = Cars.spawn((ServerLevel) player.level(), x, player.getY(), z, player.getYRot() + 90, m.id, look, true);
+        if (ready && car != null) {
+            car.readyToDrive();
+        }
+        ctx.getSource().sendSuccess(() -> Component.literal("Spawned " + m.id + " (" + (ready ? "ready to drive" : look) + ")"), false);
         return 1;
     }
 

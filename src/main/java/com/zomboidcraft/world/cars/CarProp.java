@@ -2321,6 +2321,17 @@ public class CarProp extends Entity {
         return !flyby && super.shouldBeSaved();
     }
 
+    /** Spawned by command to drive at once: in full repair, full tank, good battery, unlocked, the key in the ignition. */
+    public void readyToDrive() {
+        setFuel(1);
+        setBattery(true);
+        setCondition(100);
+        keyWhere = CarKeys.IGNITION;
+        lockRolled = true;
+        locked = false;
+        armed = false;
+    }
+
     public void readyToFly() {
         airFound = true;
         setFuel(1);
