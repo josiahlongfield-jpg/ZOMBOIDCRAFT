@@ -1245,7 +1245,7 @@ public final class ZcConfig {
          */
         public boolean pzZombies = true;
         /** Blocks within which zombies are drawn with the Zomboid bodies; past it they keep the lighter body. Client side. */
-        public double pzZombieDistance = 40;
+        public double pzZombieDistance = 24;
         /** Blocks within which zombies show every small clothing detail; further out the smallest bits are left off, and past 2.5 times this only the main shapes stay. Client side. */
         public double zombieDetailDistance = 16;
         /** 256px zombie skins with shine and bump maps for shader packs; off uses the 64px skins. */
