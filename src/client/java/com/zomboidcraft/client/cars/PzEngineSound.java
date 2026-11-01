@@ -15,19 +15,11 @@ import net.minecraft.util.Mth;
 
 /**
  * A converted Workshop car's engine: one steady note (Josiah, 2026-11-01), the model's recorded engine
- * (sports, wagon, offroad or van, from the local PZ car sounds pack). The note is the engine's own idle
- * recording, the same sound its start settles into, so there's no cut from ticking over to pulling away:
- * engine-bay and exhaust layers together, pitched from 1 at rest up to 1.9 flat out and back as it slows.
- * A model's "note" in its sounds can pick one of the rev-band takes instead.
+ * (sports, wagon, offroad or van, from the local PZ car sounds pack). The note is the settled idle cut from
+ * the end of the engine's own start recording (pzsounds.py NOTE_CUT), so there's no cut from starting to
+ * ticking over to pulling away: pitched from 1 at rest up to 1.9 flat out and back as it slows.
  */
 final class PzEngineSound {
-    /** The revs each band was recorded at (pzsounds.py ENGINES), above the idle loop at IDLE. */
-    private static final Map<String, float[]> BANDS = Map.of(
-            "sports", new float[] {1000, 2000, 3000, 4000, 5000, 6000},
-            "wagon", new float[] {1000, 2000, 3000, 4000},
-            "offroad", new float[] {1000, 1600, 2200, 2800, 3400, 4000, 4600, 5200},
-            "van", new float[] {1000, 1750, 2500, 3250, 4000});
-    private static final float IDLE = 800;
     private static final double FLAT_OUT = 1.1;
     private static final Map<CarProp, Engine> ENGINES = new WeakHashMap<>();
 
@@ -35,8 +27,8 @@ final class PzEngineSound {
     static boolean has(CarProp car) {
         CarModels.Model m = CarModels.get(car.model());
         String set = m == null || m.sounds == null ? null : m.sounds.get("engine");
-        return set != null && BANDS.containsKey(set)
-                && Minecraft.getInstance().getSoundManager().getSoundEvent(CarSounds.pz("engine." + set + ".idle.engine")) != null;
+        return set != null
+                && Minecraft.getInstance().getSoundManager().getSoundEvent(CarSounds.pz("engine." + set + ".note")) != null;
     }
 
     /** Called each tick the car's engine runs. */
@@ -47,46 +39,34 @@ final class PzEngineSound {
     private static final class Engine {
         final CarProp car;
         final String set;
-        final float[] at;
         final Map<String, Layer> layers = new HashMap<>();
-        /** Which recorded band is the car's note: the model's "note" if set, else the take that suits its engine. */
-        final int note;
-        float rpm;
-        int lastTick = -1;
+        float pitchNow = 1;
+        int lastTick = -100, running;
 
         Engine(CarProp car) {
             this.car = car;
             this.set = CarModels.get(car.model()).sounds.get("engine");
-            float[] bands = BANDS.get(set);
-            at = new float[bands.length + 1];
-            at[0] = IDLE;
-            System.arraycopy(bands, 0, at, 1, bands.length);
-            String n = CarModels.get(car.model()).sounds.get("note");
-            note = Mth.clamp(n != null ? Integer.parseInt(n) : 0, 0, bands.length);
-            rpm = at[note];
         }
 
         void tick() {
             if (car.tickCount == lastTick) {
                 return;
             }
+            running = car.tickCount - lastTick > 2 ? 0 : running + 1;      // a fresh start after a gap
             lastTick = car.tickCount;
-            // one steady note, no gears (Josiah): the engine's own on-load take at the revs that suit it, its
-            // pitch rising smoothly from ticking over to flat out and falling again as the car slows
+            // one steady note (Josiah): the settled idle cut from the end of this engine's own start recording
+            // (pz.engine.<set>.note), so the start runs straight into it; its pitch rises smoothly with speed
+            // and falls as the car slows. It fades in under the start's own tail as the engine catches.
             double speed = Math.hypot(car.getX() - car.xo, car.getZ() - car.zo);
             float share = (float) Mth.clamp(speed / FLAT_OUT, 0, 1);
-            float target = 1 + 0.9f * share;
-            rpm += (target * at[note] - rpm) * 0.12f;
-            for (String layer : new String[] {"engine", "exhaust"}) {
-                String key = (note == 0 ? "idle" : note + ".on") + "." + layer;
-                Layer l = layers.get(key);
-                if (l == null || l.isStopped()) {
-                    l = new Layer(this, key, note);
-                    layers.put(key, l);
-                    Minecraft.getInstance().getSoundManager().play(l);
-                }
-                l.weight = 0.7f + 0.3f * share;
+            pitchNow += (1 + 0.9f * share - pitchNow) * 0.12f;
+            Layer l = layers.get("note");
+            if (l == null || l.isStopped()) {
+                l = new Layer(this, "note");
+                layers.put("note", l);
+                Minecraft.getInstance().getSoundManager().play(l);
             }
+            l.weight = Math.min(1, running / 40f) * (0.75f + 0.25f * share);
             layers.values().removeIf(Layer::isStopped);
         }
 
@@ -98,16 +78,12 @@ final class PzEngineSound {
     /** One recorded loop: its loudness is its share of the mix, its pitch the revs over its own. */
     private static final class Layer extends AbstractTickableSoundInstance {
         final Engine engine;
-        final String band;
-        final int index;
         float weight;
         int silent;
 
-        Layer(Engine engine, String key, int index) {
+        Layer(Engine engine, String key) {
             super(engine.event("engine." + engine.set + "." + key, 40), SoundSource.NEUTRAL, SoundInstance.createUnseededRandom());
             this.engine = engine;
-            this.band = key.substring(0, key.lastIndexOf('.'));
-            this.index = index;
             this.looping = true;
             this.delay = 0;
             this.volume = 0;
@@ -135,7 +111,7 @@ final class PzEngineSound {
             silent = weight < 0.01f ? silent + 1 : 0;
             follow();
             volume = weight;
-            pitch = Mth.clamp(engine.rpm / engine.at[index], 0.5f, 2f);
+            pitch = Mth.clamp(engine.pitchNow, 0.5f, 2f);
         }
     }
 

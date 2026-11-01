@@ -248,6 +248,30 @@ def louden(out, sounds, top=-1.0):
         done.update(names)
 
 
+# Where each engine's start recording has settled to a steady idle, before its fade-out (seconds): the cut
+# that becomes the car's single engine note (Josiah: the end of the start, pitched with speed).
+NOTE_CUT = {'sports': (4.2, 6.0), 'offroad': (2.6, 4.0), 'wagon': (2.4, 4.4), 'van': (1.9, 3.2)}
+
+
+def notes(out, sounds, rate=48000, fade=0.25):
+    """engine.<set>.note: the settled end of the start, its tail crossfaded over its head so it loops seamlessly."""
+    import numpy as np
+    d = f'{out}/assets/zomboidcraft/sounds/pz/'
+    for key, (a, b) in NOTE_CUT.items():
+        src = sounds[f'pz.engine.{key}.start']['sounds'][0]['name'].split('/')[-1]
+        pcm = np.frombuffer(subprocess.run(['ffmpeg', '-v', 'error', '-i', d + src + '.ogg', '-ac', '1', '-ar', str(rate),
+                                            '-f', 'f32le', '-'], capture_output=True, check=True).stdout, np.float32)
+        seg = pcm[int(a * rate):int(b * rate)].copy()
+        n = int(fade * rate)
+        ramp = np.linspace(0, 1, n, dtype=np.float32)
+        seg[:n] = seg[:n] * ramp + seg[-n:] * (1 - ramp)
+        seg = seg[:-n]
+        name = f'note_{key}'
+        subprocess.run(['ffmpeg', '-v', 'error', '-y', '-f', 'f32le', '-ar', str(rate), '-ac', '1', '-i', '-',
+                        '-c:a', 'libvorbis', '-q:a', '6', d + name + '.ogg'], input=seg.tobytes(), check=True)
+        sounds[f'pz.engine.{key}.note'] = {'sounds': [{'name': f'zomboidcraft:pz/{name}'}]}
+
+
 def main():
     bank, out = sys.argv[1:3]
     f = open(bank, 'rb')
@@ -278,6 +302,7 @@ def main():
             names.append(fn)
         sounds['pz.' + event] = {'sounds': [{'name': f'zomboidcraft:pz/{n}'} for n in names]}
     louden(out, sounds)
+    notes(out, sounds)
     json.dump(sounds, open(f'{out}/assets/zomboidcraft/sounds.json', 'w'), indent=1)
     json.dump({'pack': {'description': "Project Zomboid's own car sounds for ZomboidCraft (local, personal use)",
                         'pack_format': 15, 'supported_formats': [15, 999], 'min_format': 15, 'max_format': 999}},
