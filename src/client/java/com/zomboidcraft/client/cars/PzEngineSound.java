@@ -8,29 +8,18 @@ import java.util.Map;
 import java.util.WeakHashMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
-import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 
 /**
- * A converted Workshop car's engine, played the way Zomboid's FMOD engine events play it: the model's
- * recorded engine (sports, wagon, offroad or van, from the local PZ car sounds pack) as loops taken at
- * fixed revs, an engine-bay layer and an exhaust layer each, an on-load take with the throttle open and
- * an off-load take coasting. The revs climb through five gears with the car's speed; the two takes
- * either side of the revs crossfade, each pitched by how far the revs sit from where it was recorded.
+ * A converted Workshop car's engine: one steady note (Josiah, 2026-11-01), the model's recorded engine
+ * (sports, wagon, offroad or van, from the local PZ car sounds pack). The note is the settled idle cut from
+ * the end of the engine's own start recording (pzsounds.py NOTE_CUT), so there's no cut from starting to
+ * ticking over to pulling away: pitched from 1 at rest up to 1.9 flat out and back as it slows.
  */
 final class PzEngineSound {
-    /** The revs each band was recorded at (pzsounds.py ENGINES), above the idle loop at IDLE. */
-    private static final Map<String, float[]> BANDS = Map.of(
-            "sports", new float[] {1000, 2000, 3000, 4000, 5000, 6000},
-            "wagon", new float[] {1000, 2000, 3000, 4000},
-            "offroad", new float[] {1000, 1600, 2200, 2800, 3400, 4000, 4600, 5200},
-            "van", new float[] {1000, 1750, 2500, 3250, 4000});
-    private static final float IDLE = 800;
-    /** Where each gear tops out, as a share of flat out (the old idle loop's 1.1 blocks a tick). */
-    private static final float[] GEARS = {0.18f, 0.36f, 0.56f, 0.78f, 1.0f};
     private static final double FLAT_OUT = 1.1;
     private static final Map<CarProp, Engine> ENGINES = new WeakHashMap<>();
 
@@ -38,8 +27,8 @@ final class PzEngineSound {
     static boolean has(CarProp car) {
         CarModels.Model m = CarModels.get(car.model());
         String set = m == null || m.sounds == null ? null : m.sounds.get("engine");
-        return set != null && BANDS.containsKey(set)
-                && Minecraft.getInstance().getSoundManager().getSoundEvent(CarSounds.pz("engine." + set + ".idle.engine")) != null;
+        return set != null
+                && Minecraft.getInstance().getSoundManager().getSoundEvent(CarSounds.pz("engine." + set + ".note")) != null;
     }
 
     /** Called each tick the car's engine runs. */
@@ -50,79 +39,34 @@ final class PzEngineSound {
     private static final class Engine {
         final CarProp car;
         final String set;
-        final float[] at;
         final Map<String, Layer> layers = new HashMap<>();
-        float rpm = IDLE, load;
-        int gear = 1, lastTick = -1;
-        double lastSpeed;
+        float pitchNow = 1;
+        int lastTick = -100, running;
 
         Engine(CarProp car) {
             this.car = car;
             this.set = CarModels.get(car.model()).sounds.get("engine");
-            float[] bands = BANDS.get(set);
-            at = new float[bands.length + 1];
-            at[0] = IDLE;
-            System.arraycopy(bands, 0, at, 1, bands.length);
         }
 
         void tick() {
             if (car.tickCount == lastTick) {
                 return;
             }
+            running = car.tickCount - lastTick > 2 ? 0 : running + 1;      // a fresh start after a gap
             lastTick = car.tickCount;
+            // one steady note (Josiah): the settled idle cut from the end of this engine's own start recording
+            // (pz.engine.<set>.note), so the start runs straight into it; its pitch rises smoothly with speed
+            // and falls as the car slows. It fades in under the start's own tail as the engine catches.
             double speed = Math.hypot(car.getX() - car.xo, car.getZ() - car.zo);
             float share = (float) Mth.clamp(speed / FLAT_OUT, 0, 1);
-            // a gear change: up when this gear's top is passed, down when the speed falls well into the last
-            int was = gear;
-            while (gear < GEARS.length && share > GEARS[gear - 1]) {
-                gear++;
+            pitchNow += (1 + 0.9f * share - pitchNow) * 0.12f;
+            Layer l = layers.get("note");
+            if (l == null || l.isStopped()) {
+                l = new Layer(this, "note");
+                layers.put("note", l);
+                Minecraft.getInstance().getSoundManager().play(l);
             }
-            while (gear > 1 && share < GEARS[gear - 2] * 0.85f) {
-                gear--;
-            }
-            if (gear > was && speed > 0.05) {
-                Minecraft.getInstance().getSoundManager().play(new SimpleSoundInstance(event("gear", 16), SoundSource.NEUTRAL,
-                        0.35f, 1f, SoundInstance.createUnseededRandom(), car.getX(), car.getY(), car.getZ()));
-            }
-            float red = at[at.length - 1];
-            float low = gear == 1 ? IDLE : red * 0.5f;
-            float lo = gear == 1 ? 0 : GEARS[gear - 2];
-            float hi = GEARS[gear - 1];
-            float target = speed < 0.01 ? IDLE : low + (red * 0.95f - low) * Mth.clamp((share - lo) / (hi - lo), 0, 1);
-            rpm += (target - rpm) * 0.2f;
-            // the throttle open while the car gathers speed, shut while it coasts or brakes
-            float pull = speed > 0.01 && speed - lastSpeed > 0.0008 ? 1 : 0;
-            load += (pull - load) * 0.15f;
-            lastSpeed = speed;
-            int i = 0;
-            while (i < at.length - 2 && rpm > at[i + 1]) {
-                i++;
-            }
-            float t = Mth.clamp((rpm - at[i]) / (at[i + 1] - at[i]), 0, 1);
-            Map<String, Float> want = new HashMap<>();
-            for (int k = i; k <= i + 1; k++) {
-                float w = k == i ? 1 - t : t;
-                if (k == 0) {
-                    want.merge("idle", w, Float::sum);
-                } else {
-                    want.merge(k + ".on", w * load, Float::sum);
-                    want.merge(k + ".off", w * (1 - load), Float::sum);
-                }
-            }
-            for (String band : want.keySet()) {
-                for (String layer : new String[] {"engine", "exhaust"}) {
-                    String key = band + "." + layer;
-                    Layer l = layers.get(key);
-                    if ((l == null || l.isStopped()) && want.get(band) > 0.02f) {
-                        l = new Layer(this, key, band.equals("idle") ? 0 : Integer.parseInt(band.substring(0, band.indexOf('.'))));
-                        layers.put(key, l);
-                        Minecraft.getInstance().getSoundManager().play(l);
-                    }
-                }
-            }
-            for (Layer l : layers.values()) {
-                l.weight = want.getOrDefault(l.band, 0f);
-            }
+            l.weight = Math.min(1, running / 40f) * (0.75f + 0.25f * share);
             layers.values().removeIf(Layer::isStopped);
         }
 
@@ -134,16 +78,12 @@ final class PzEngineSound {
     /** One recorded loop: its loudness is its share of the mix, its pitch the revs over its own. */
     private static final class Layer extends AbstractTickableSoundInstance {
         final Engine engine;
-        final String band;
-        final int index;
         float weight;
         int silent;
 
-        Layer(Engine engine, String key, int index) {
+        Layer(Engine engine, String key) {
             super(engine.event("engine." + engine.set + "." + key, 40), SoundSource.NEUTRAL, SoundInstance.createUnseededRandom());
             this.engine = engine;
-            this.band = key.substring(0, key.lastIndexOf('.'));
-            this.index = index;
             this.looping = true;
             this.delay = 0;
             this.volume = 0;
@@ -171,7 +111,7 @@ final class PzEngineSound {
             silent = weight < 0.01f ? silent + 1 : 0;
             follow();
             volume = weight;
-            pitch = Mth.clamp(engine.rpm / engine.at[index], 0.5f, 2f);
+            pitch = Mth.clamp(engine.pitchNow, 0.5f, 2f);
         }
     }
 

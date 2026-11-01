@@ -29,7 +29,9 @@ public final class SurvivalEvents {
             if (entity instanceof ServerPlayer player && !blocked && damage > 0) {
                 Sleep.wake(player, "Pain jolts you awake.");
                 if (ZombieTypes.isWalker(source.getEntity())) {
-                    onZombieHit(player, com.zomboidcraft.combat.Downed.isCrawler(source.getEntity()));
+                    // Zomboid's swing cry with every blow that lands
+                    com.zomboidcraft.zombie.ZedSounds.say(source.getEntity(), com.zomboidcraft.zombie.ZedSounds.State.SWING, 1f);
+                    onZombieHit(player, com.zomboidcraft.combat.Downed.isCrawler(source.getEntity()), source.getEntity());
                 }
             }
         });
@@ -138,7 +140,7 @@ public final class SurvivalEvents {
         Downs.tick(player, second);
     }
 
-    private static void onZombieHit(ServerPlayer player, boolean crawler) {
+    private static void onZombieHit(ServerPlayer player, boolean crawler, net.minecraft.world.entity.Entity zombie) {
         Panic.hit(player);
         RandomSource random = player.getRandom();
         SurvivalStats stats = SurvivalStats.get(player);
@@ -161,6 +163,11 @@ public final class SurvivalEvents {
                     stats = stats.withInfection(0);
                 }
                 player.sendOverlayMessage(Component.literal("You've been bitten on the " + where.label + ".").withStyle(ChatFormatting.DARK_RED));
+                // Zomboid's bite: the zombie's own bite in its voice, and the tearing neck bite when it's the neck
+                com.zomboidcraft.zombie.ZedSounds.say(zombie, com.zomboidcraft.zombie.ZedSounds.State.BITE, 1f);
+                if (where == Body.Region.NECK) {
+                    com.zomboidcraft.zombie.ZedSounds.play(player.level(), player.getX(), player.getEyeY(), player.getZ(), "bite.neck", 1f);
+                }
             }
         } else if (roll < config.biteChance + config.scratchChance) {
             // Thick Skinned: a quarter of scratches don't break the skin; Thin-skinned: none of them fail to
@@ -178,6 +185,7 @@ public final class SurvivalEvents {
                     stats = stats.withInfection(0);
                 }
                 player.sendOverlayMessage(Component.literal("You've been hurt on the " + where.label + ".").withStyle(ChatFormatting.RED));
+                com.zomboidcraft.zombie.ZedSounds.play(player.level(), player.getX(), player.getEyeY() - 0.4, player.getZ(), "scratch", 0.9f);
             }
         }
         SurvivalStats.set(player, stats);

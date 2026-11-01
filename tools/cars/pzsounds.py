@@ -217,6 +217,61 @@ def plan():
     return ev
 
 
+def peak(path):
+    r = subprocess.run(['ffmpeg', '-hide_banner', '-i', path, '-af', 'volumedetect', '-f', 'null', '-'], capture_output=True, text=True)
+    m = re.search(r'max_volume: (-?[\d.]+) dB', r.stderr)
+    return float(m.group(1)) if m else 0.0
+
+
+def louden(out, sounds, top=-1.0):
+    """Zomboid mixes its car recordings low and lifts them in FMOD; Minecraft can't play a sound above full volume,
+    so the takes are raised here: each one-shot event until its loudest take peaks at top dB, each engine's whole
+    set of loops by one shared amount (so its rev bands still match as they crossfade)."""
+    d = f'{out}/assets/zomboidcraft/sounds/pz/'
+    groups = {}
+    for ev, v in sounds.items():
+        g = '.'.join(ev.split('.')[:3]) if ev.startswith('pz.engine.') and not ev.endswith(('.start', '.fail', '.stop')) else ev
+        if '.idle.' in ev:
+            g += '.idle'    # ticking over has its own lift, or it would be a murmur under the flat-out takes
+        groups.setdefault(g, set()).update(x['name'].split('/')[-1] for x in v['sounds'])
+    done = set()
+    for names in groups.values():
+        names = sorted(names - done)
+        if not names:
+            continue
+        gain = top - max(peak(d + n + '.ogg') for n in names)
+        if gain > 0.5:
+            for n in names:
+                subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', d + n + '.ogg', '-af', f'volume={gain:.1f}dB',
+                                '-c:a', 'libvorbis', '-q:a', '6', d + n + '.tmp.ogg'], check=True)
+                os.replace(d + n + '.tmp.ogg', d + n + '.ogg')
+        done.update(names)
+
+
+# Where each engine's start recording has settled to a steady idle, before its fade-out (seconds): the cut
+# that becomes the car's single engine note (Josiah: the end of the start, pitched with speed).
+NOTE_CUT = {'sports': (4.2, 6.0), 'offroad': (2.6, 4.0), 'wagon': (2.4, 4.4), 'van': (1.9, 3.2)}
+
+
+def notes(out, sounds, rate=48000, fade=0.25):
+    """engine.<set>.note: the settled end of the start, its tail crossfaded over its head so it loops seamlessly."""
+    import numpy as np
+    d = f'{out}/assets/zomboidcraft/sounds/pz/'
+    for key, (a, b) in NOTE_CUT.items():
+        src = sounds[f'pz.engine.{key}.start']['sounds'][0]['name'].split('/')[-1]
+        pcm = np.frombuffer(subprocess.run(['ffmpeg', '-v', 'error', '-i', d + src + '.ogg', '-ac', '1', '-ar', str(rate),
+                                            '-f', 'f32le', '-'], capture_output=True, check=True).stdout, np.float32)
+        seg = pcm[int(a * rate):int(b * rate)].copy()
+        n = int(fade * rate)
+        ramp = np.linspace(0, 1, n, dtype=np.float32)
+        seg[:n] = seg[:n] * ramp + seg[-n:] * (1 - ramp)
+        seg = seg[:-n]
+        name = f'note_{key}'
+        subprocess.run(['ffmpeg', '-v', 'error', '-y', '-f', 'f32le', '-ar', str(rate), '-ac', '1', '-i', '-',
+                        '-c:a', 'libvorbis', '-q:a', '6', d + name + '.ogg'], input=seg.tobytes(), check=True)
+        sounds[f'pz.engine.{key}.note'] = {'sounds': [{'name': f'zomboidcraft:pz/{name}'}]}
+
+
 def main():
     bank, out = sys.argv[1:3]
     f = open(bank, 'rb')
@@ -246,6 +301,8 @@ def main():
             open(f'{out}/assets/zomboidcraft/sounds/pz/{fn}.ogg', 'wb').write(to_ogg(m, s, hdr[key]))
             names.append(fn)
         sounds['pz.' + event] = {'sounds': [{'name': f'zomboidcraft:pz/{n}'} for n in names]}
+    louden(out, sounds)
+    notes(out, sounds)
     json.dump(sounds, open(f'{out}/assets/zomboidcraft/sounds.json', 'w'), indent=1)
     json.dump({'pack': {'description': "Project Zomboid's own car sounds for ZomboidCraft (local, personal use)",
                         'pack_format': 15, 'supported_formats': [15, 999], 'min_format': 15, 'max_format': 999}},

@@ -19,14 +19,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Pseudo
 @Mixin(targets = "net.caffeinemc.mods.sodium.client.gpu.arena.staging.MojangStagingBuffer", remap = false)
 public abstract class SodiumUploadMixin {
-    /** Sodium's fallback limit, returned only on the unmapped path. */
-    private static final long FALLBACK_LIMIT = 25_600_000L;
     /** Bytes of chunk mesh written per frame on the unmapped path: about 240 MB a second at 60 FPS. */
     private static final long CAP = 4_000_000L;
 
     @Inject(method = "getUploadSizeLimit(J)J", at = @At("RETURN"), cancellable = true, require = 0)
     private void zomboidcraft$capUploads(long frameDuration, CallbackInfoReturnable<Long> cir) {
-        boolean fallback = cir.getReturnValueJ() == FALLBACK_LIMIT;
+        // Sodium's MojangStagingBuffer names itself "Fallback" without a mapped staging buffer (the mapped one's limit
+        // can come out at the same 25.6 MB, so the number alone doesn't tell them apart)
+        boolean fallback = "Fallback".equals(this.toString());
         Profiler.uploadPath = fallback ? "direct writes (no persistent mapping), capped to 4 MB a frame" : "mapped staging buffer";
         if (fallback) {
             cir.setReturnValue(CAP);
