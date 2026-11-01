@@ -1,6 +1,16 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/weapon/rimfire_ammo"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/weapon/rimfire_ammo",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "ammo/rimfire_ammo",
+   "part": "body",
+   "offset": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  }
  }
 }

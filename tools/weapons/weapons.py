@@ -1894,6 +1894,11 @@ def main():
     for name in kit.mesh_skins():       # ammo and parts with a bought mesh, which no gun or melee pass rewrites
         kit.mesh_skin(name, ASSETS)
     kit._meshskin().apply_items(str(ASSETS / 'items'))     # every attachment's, magazine's and stock's own item
+    # the ammo is single rounds, not the cartons above (Josiah 2026-11-01): tools/meshguns/rounds.py packs them
+    import importlib.util
+    sp = importlib.util.spec_from_file_location('rounds', ROOT / 'tools/meshguns/rounds.py')
+    rounds = importlib.util.module_from_spec(sp); sp.loader.exec_module(rounds)
+    rounds.write_items()
     print('\n'.join(summary))
     if preview:
         write_preview(preview)

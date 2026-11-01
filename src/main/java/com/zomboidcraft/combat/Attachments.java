@@ -170,6 +170,12 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
     /** The magnifier only sits behind a red dot or holo sight (or open rails): never with a scope in front of it. */
     private static boolean goesWith(ItemStack gun, ItemStack part) {
         Slot slot = slotOf(part);
+        // a gun kept on this computer takes only its own magazine (its own parts come with Brita's attachments, Josiah
+        // 2026-11-01: only what Brita or Arsenal give that gun), and its magazines go in nothing else
+        if (gun.get(LocalGuns.ID) != null || part.get(LocalGuns.ID) != null) {
+            GunType type = GunType.of(gun);
+            return slot == Slot.MAGAZINE && type != null && LocalGuns.magFits(part, gun, type);
+        }
         if (slot == Slot.MAGNIFIER) {
             Optic optic = optic(gun);
             return optic == null || optic.zoom() >= 1 && !optic.overlay();
@@ -207,7 +213,7 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
             if (!g.mag() || magazine(gun) == null) {
                 return ItemStack.EMPTY;     // out, or a tube gun's shells, which live in the gun
             }
-            ItemStack mag = new ItemStack(magazine(gun));
+            ItemStack mag = LocalGuns.magazineFor(gun, GunType.of(gun) == null ? GunType.ASSAULT_RIFLE : GunType.of(gun));
             mag.set(GunState.MAG_ROUNDS, g.rounds());
             return mag;
         }

@@ -41,6 +41,8 @@ public final class LocalGuns {
         /** Our gun it handles like, by item id ("pistol", "assault_rifle", ...). */
         public String anchor;
         public String calibre;
+        /** The item it fires, by id ("acp45_ammo"); none: the anchor's. */
+        public String ammo;
         /** The mesh our anchor gun draws (e.g. "pbr_pistol"), which this gun's mesh takes the place of. */
         public String anchorMesh;
         public JsonObject stats;
@@ -157,6 +159,36 @@ public final class LocalGuns {
     public static String calibre(ItemStack stack, GunType type) {
         Spec s = of(stack);
         return s != null && s.calibre != null ? s.calibre : type.caliber();
+    }
+
+    /** The round a stack (a local gun, or one of its magazines) takes: its own, else its type's. */
+    public static net.minecraft.world.item.Item ammo(ItemStack stack, GunType type) {
+        Spec s = of(stack);
+        if (s != null && s.ammo != null) {
+            var item = BuiltInRegistries.ITEM.getOptional(ZomboidCraft.id(s.ammo));
+            if (item.isPresent()) {
+                return item.get();
+            }
+        }
+        return type.ammo();
+    }
+
+    /**
+     * Whether a magazine goes in a gun: each local gun takes only its own (Josiah 2026-11-01: every Brita gun its own
+     * magazine, like Arsenal), which is the anchor's magazine item carrying the gun's id; ours take only plain ones.
+     */
+    public static boolean magFits(ItemStack mag, ItemStack gun, GunType type) {
+        return type.magazine() != null && mag.is(type.magazine()) && java.util.Objects.equals(mag.get(ID), gun.get(ID));
+    }
+
+    /** An empty magazine for a gun: its own for a local one. */
+    public static ItemStack magazineFor(ItemStack gun, GunType type) {
+        ItemStack mag = new ItemStack(type.magazine());
+        String id = gun.get(ID);
+        if (id != null) {
+            mag.set(ID, id);
+        }
+        return mag;
     }
 
     private LocalGuns() {

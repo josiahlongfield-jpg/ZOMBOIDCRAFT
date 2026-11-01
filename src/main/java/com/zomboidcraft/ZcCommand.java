@@ -156,6 +156,16 @@ public final class ZcCommand {
         gun.set(com.zomboidcraft.combat.GunState.TYPE, new com.zomboidcraft.combat.GunState(spec.type().magazine() != null,
                 spec.type().capacity(gun), false));
         player.getInventory().add(gun);
+        // two of its own magazines, full, and a stack of its own rounds
+        if (spec.type().magazine() != null) {
+            for (int i = 0; i < 2; i++) {
+                net.minecraft.world.item.ItemStack mag = com.zomboidcraft.combat.LocalGuns.magazineFor(gun, spec.type());
+                mag.set(com.zomboidcraft.combat.GunState.MAG_ROUNDS, spec.type().capacity(gun));
+                player.getInventory().add(mag);
+            }
+        }
+        net.minecraft.world.item.Item ammo = com.zomboidcraft.combat.LocalGuns.ammo(gun, spec.type());
+        player.getInventory().add(new net.minecraft.world.item.ItemStack(ammo, new net.minecraft.world.item.ItemStack(ammo).getMaxStackSize()));
         ctx.getSource().sendSuccess(() -> Component.literal("Gave you " + gun.getHoverName().getString()), false);
         return 1;
     }

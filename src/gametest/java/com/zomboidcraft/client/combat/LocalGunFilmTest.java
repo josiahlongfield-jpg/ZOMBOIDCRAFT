@@ -50,9 +50,9 @@ public class LocalGunFilmTest implements FabricClientGameTest {
             ctx.waitTicks(20);
 
             ctx.runOnClient(mc -> standIn(mc, "standin_500", "Stand-in .500 revolver (local)", "pistol", "pbr_pistol", "pbr_magnum", ".500 S&W",
-                    "{\"damage\": 30.0, \"magazineSize\": 5, \"recoil\": 2.5}"));
+                    "{\"damage\": 30.0, \"magazineSize\": 5, \"recoil\": 2.5}", "sw500_ammo"));
             ctx.runOnClient(mc -> standIn(mc, "standin_rimfire", "Stand-in SMG on the rimfire (local)", "rimfire", "block_rimfire", "pbr_smg", ".22 LR",
-                    "{\"magazineSize\": 50}"));
+                    "{\"magazineSize\": 50}", null));
             sp.getServer().runCommand("zc localgun reload");
             ctx.waitTicks(5);
 
@@ -72,11 +72,13 @@ public class LocalGunFilmTest implements FabricClientGameTest {
             ctx.waitTicks(5);
             friend(ctx, sp, "standin_500", "pistol");
             friend(ctx, sp, "standin_rimfire", "rimfire");
+            rounds(ctx, sp);
         }
     }
 
     /** A local gun's two files, as the converter writes Brita's: its spec, and a mesh of ours scrambled under its id. */
-    private static void standIn(Minecraft mc, String id, String name, String anchor, String anchorMesh, String mesh, String calibre, String stats) {
+    private static void standIn(Minecraft mc, String id, String name, String anchor, String anchorMesh, String mesh, String calibre, String stats,
+                               String ammo) {
         try (InputStream in = mc.getResourceManager().open(ZomboidCraft.id("meshes/" + mesh + ".zmesh"))) {
             byte[] data = in.readAllBytes();
             CarAssets.unscramble(data, mesh);                       // the stream is xor: once off with our id,
@@ -85,7 +87,8 @@ public class LocalGunFilmTest implements FabricClientGameTest {
             Files.write(LocalGuns.DIR.resolve(id + ".zmesh"), data);
             Files.writeString(LocalGuns.DIR.resolve(id + ".json"), "{\"id\": \"" + id + "\", \"name\": \"" + name
                     + "\", \"anchor\": \"" + anchor + "\", \"anchorMesh\": \"" + anchorMesh + "\", \"calibre\": \"" + calibre
-                    + "\", \"stats\": " + stats + "}", StandardCharsets.UTF_8);
+                    + "\", " + (ammo == null ? "" : "\"ammo\": \"" + ammo + "\", ") + "\"stats\": " + stats + "}",
+                    StandardCharsets.UTF_8);
         } catch (java.io.IOException e) {
             throw new RuntimeException(e);
         }
@@ -130,6 +133,52 @@ public class LocalGunFilmTest implements FabricClientGameTest {
                 break;
             }
         }
+        // what /zc localgun handed over beside it: its own magazines and rounds; then a reload from its own magazine
+        sp.getServer().runOnServer(server -> {
+            ServerPlayer p = server.getPlayerList().getPlayers().getFirst();
+            for (int i = 0; i < 9; i++) {
+                var st = p.getInventory().getItem(i);
+                if (!st.isEmpty()) {
+                    LOG.info("ZCLOCAL {} slot {}: {} x{} {}", id, i, st.getHoverName().getString(), st.getCount(),
+                            st.get(GunState.MAG_ROUNDS) == null ? "" : "(" + st.get(GunState.MAG_ROUNDS) + " rounds)");
+                }
+            }
+            Guns.reload(p);
+        });
+        shots(ctx, name[0] + " | reloading from its own magazine", 24);
+        sp.getServer().runOnServer(server -> {
+            var st = server.getPlayerList().getPlayers().getFirst().getMainHandItem().get(GunState.TYPE);
+            LOG.info("ZCLOCAL {} after the reload: {}", id, st);
+        });
+    }
+
+    /** Every ammo item, one held at a time with the hotbar showing them, then lying on the ground. */
+    private static void rounds(ClientGameTestContext ctx, TestSingleplayerContext sp) {
+        String[] items = {"pistol_ammo", "pocket_ammo", "revolver_ammo", "magnum_ammo", "acp45_ammo", "fn57_ammo",
+                "colt45_ammo", "sw500_ammo", "rimfire_ammo", "rifle_ammo", "hunting_rifle_ammo", "lever_ammo", "heavy_ammo",
+                "shotgun_shell", "grenade_round", "pg7v_rocket"};
+        sp.getServer().runCommand("kill @e[type=zombie]");
+        sp.getServer().runCommand("tp @a 0 100 -3 0 20");
+        for (int page = 0; page < items.length; page += 8) {
+            sp.getServer().runCommand("clear @a");
+            for (int i = page; i < Math.min(items.length, page + 8); i++) {
+                sp.getServer().runCommand("give @a zomboidcraft:" + items[i] + " 12");
+            }
+            for (int i = 0; i < 8 && page + i < items.length; i++) {
+                int slot = i;
+                ctx.runOnClient(mc -> mc.player.getInventory().setSelectedSlot(slot));
+                shots(ctx, "rounds | " + items[page + i] + " in hand", 4);
+            }
+        }
+        sp.getServer().runCommand("clear @a");
+        sp.getServer().runCommand("kill @e[type=item]");
+        for (int i = 0; i < items.length; i++) {
+            sp.getServer().runCommand(String.format(java.util.Locale.ROOT,
+                    "summon item %.2f 100.1 %.2f {Item:{id:\"zomboidcraft:%s\",count:1},PickupDelay:32767,Age:-32768}",
+                    -1.6 + (i % 4) * 1.05, -0.6 + (i / 4) * 0.9, items[i]));
+        }
+        sp.getServer().runCommand("tp @a 0 103.2 -3.5 0 55");
+        shots(ctx, "rounds | on the ground: 9mm .380 .38 .44 / .45ACP 5.7 .45Colt .500 / .22 5.56 .308 .30-30 / .50 12g 40mm rocket", 12);
     }
 
     private static void friend(ClientGameTestContext ctx, TestSingleplayerContext sp, String id, String anchor) {

@@ -1,6 +1,16 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/weapon/revolver_ammo"
+  "type": "minecraft:special",
+  "base": "zomboidcraft:item/weapon/revolver_ammo",
+  "model": {
+   "type": "zomboidcraft:mesh",
+   "id": "ammo/revolver_ammo",
+   "part": "body",
+   "offset": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  }
  }
 }

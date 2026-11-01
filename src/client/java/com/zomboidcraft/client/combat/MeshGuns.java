@@ -48,6 +48,13 @@ public final class MeshGuns {
     private static final Set<String> MISSING = new HashSet<>();
     private static final Map<String, float[]> BOUNDS = new java.util.concurrent.ConcurrentHashMap<>();
 
+    /**
+     * Meshes of ours this computer draws from its own file instead, packed under the same id (scrambled with it):
+     * config/zomboidcraft/meshes/&lt;id&gt;.zmesh. Whoever hasn't got one sees the mod's.
+     */
+    public static final java.nio.file.Path OVERRIDES = net.fabricmc.loader.api.FabricLoader.getInstance().getConfigDir()
+            .resolve("zomboidcraft").resolve("meshes");
+
     /** Mesh ids of guns kept on this computer start with this: "local/" + the gun's file name. */
     public static final String LOCAL = "local/";
 
@@ -73,8 +80,8 @@ public final class MeshGuns {
     /** Forgets the local guns' meshes, so changed files are read again (/zc localgun reload). Render thread. */
     public static void forgetLocal() {
         LOCAL_SEEN.clear();
-        GUNS.keySet().removeIf(k -> k.startsWith(LOCAL));
-        MISSING.removeIf(k -> k.startsWith(LOCAL));
+        GUNS.clear();          // the overrides too, so a changed round file is read again
+        MISSING.clear();
     }
 
     /** The gun, or null if it can't be loaded. Render thread only. */
@@ -232,6 +239,9 @@ public final class MeshGuns {
         if (id.startsWith(LOCAL)) {
             // a gun kept on this computer, not in the mod (combat/LocalGuns)
             data = java.nio.file.Files.readAllBytes(com.zomboidcraft.combat.LocalGuns.DIR.resolve(id.substring(LOCAL.length()) + ".zmesh"));
+        } else if (java.nio.file.Files.isRegularFile(OVERRIDES.resolve(id + ".zmesh"))) {
+            // one of ours kept differently on this computer (Arsenal's rounds for the ammo, tools/meshguns/rounds.py)
+            data = java.nio.file.Files.readAllBytes(OVERRIDES.resolve(id + ".zmesh"));
         } else {
             try (InputStream in = Minecraft.getInstance().getResourceManager().open(ZomboidCraft.id("meshes/" + id + ".zmesh"))) {
                 data = in.readAllBytes();

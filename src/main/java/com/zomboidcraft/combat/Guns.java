@@ -717,7 +717,7 @@ public final class Guns {
             setModelData(gun, 3, 0);
             return;
         }
-        int best = bestMagazine(player, type);
+        int best = bestMagazine(player, type, gun);
         if (best < 0 && !player.hasInfiniteMaterials()) {
             player.sendOverlayMessage(Component.literal(g.mag() && g.rounds() > 0 ? "No fuller magazine to swap in."
                     : "No loaded magazines. Load one: hold right-click with it.").withStyle(ChatFormatting.GRAY));
@@ -733,7 +733,7 @@ public final class Guns {
         st.needsCharge = !g.mag() || g.rounds() == 0;
         // the old magazine comes out with whatever is left in it
         if (g.mag()) {
-            ItemStack old = new ItemStack(type.magazine());
+            ItemStack old = LocalGuns.magazineFor(gun, type);
             old.set(GunState.MAG_ROUNDS, g.rounds());
             if (!player.getInventory().add(old)) {
                 player.spawnAtLocation(level(player), old);
@@ -746,11 +746,11 @@ public final class Guns {
 
     /** A tube gun: raised to the loading port, then shells go in one by one (see tickLoading). */
     private static void startLoading(ServerPlayer player, ItemStack gun, GunType type, State st, GunState g) {
-        if (g.rounds() >= type.capacity()) {
+        if (g.rounds() >= type.capacity(gun)) {
             player.sendOverlayMessage(Component.literal("It's full.").withStyle(ChatFormatting.GRAY));
             return;
         }
-        if (countAmmo(player, type) == 0 && !player.hasInfiniteMaterials()) {
+        if (countAmmo(player, type, gun) == 0 && !player.hasInfiniteMaterials()) {
             player.sendOverlayMessage(Component.literal("You have no " + type.caliber() + " " + type.rounds() + ".").withStyle(ChatFormatting.GRAY));
             return;
         }
@@ -765,7 +765,7 @@ public final class Guns {
             // thrown open: the empties come out as the barrels drop
             sound(player, type.magOut());
             st.caseAt = player.level().getGameTime() + type.raise / 2;
-            st.empties = Math.max(0, type.capacity() - g.rounds());
+            st.empties = Math.max(0, type.capacity(gun) - g.rounds());
         }
     }
 
@@ -777,13 +777,13 @@ public final class Guns {
         if (!st.loadStopped) {
             int t = st.reloadTick - type.raise;
             if (t > 0 && t % type.perShell == 0) {
-                if (takeAmmo(player, type) || player.hasInfiniteMaterials()) {
+                if (takeAmmo(player, type, gun) || player.hasInfiniteMaterials()) {
                     GunState g = gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG);
                     gun.set(GunState.TYPE, g.withRounds(g.rounds() + 1));
                     sound(player, type.magIn());
                 }
-                if (gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG).rounds() >= type.capacity()
-                        || countAmmo(player, type) == 0 && !player.hasInfiniteMaterials()) {
+                if (gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG).rounds() >= type.capacity(gun)
+                        || countAmmo(player, type, gun) == 0 && !player.hasInfiniteMaterials()) {
                     stopLoading(st);
                 }
             }
@@ -826,22 +826,24 @@ public final class Guns {
     }
 
     /** Loose rounds or shells of this gun's kind in the inventory. */
-    private static int countAmmo(ServerPlayer player, GunType type) {
+    private static int countAmmo(ServerPlayer player, GunType type, ItemStack gun) {
+        net.minecraft.world.item.Item ammo = LocalGuns.ammo(gun, type);
         Inventory inv = player.getInventory();
         int n = 0;
         for (int i = 0; i < inv.getContainerSize(); i++) {
-            if (inv.getItem(i).is(type.ammo())) {
+            if (inv.getItem(i).is(ammo)) {
                 n += inv.getItem(i).getCount();
             }
         }
         return n;
     }
 
-    private static boolean takeAmmo(ServerPlayer player, GunType type) {
+    private static boolean takeAmmo(ServerPlayer player, GunType type, ItemStack gun) {
+        net.minecraft.world.item.Item ammo = LocalGuns.ammo(gun, type);
         Inventory inv = player.getInventory();
         for (int i = 0; i < inv.getContainerSize(); i++) {
             ItemStack s = inv.getItem(i);
-            if (s.is(type.ammo())) {
+            if (s.is(ammo)) {
                 s.shrink(1);
                 return true;
             }
@@ -849,12 +851,12 @@ public final class Guns {
         return false;
     }
 
-    private static int bestMagazine(ServerPlayer player, GunType type) {
+    private static int bestMagazine(ServerPlayer player, GunType type, ItemStack gun) {
         Inventory inv = player.getInventory();
         int best = -1, most = 0;
         for (int i = 0; i < inv.getContainerSize(); i++) {
             ItemStack s = inv.getItem(i);
-            if (s.is(type.magazine()) && MagazineItem.rounds(s) > most) {
+            if (LocalGuns.magFits(s, gun, type) && MagazineItem.rounds(s) > most) {
                 most = MagazineItem.rounds(s);
                 best = i;
             }
@@ -927,14 +929,14 @@ public final class Guns {
     }
 
     private static void insertMagazine(ServerPlayer player, ItemStack gun, GunType type) {
-        int best = bestMagazine(player, type);
+        int best = bestMagazine(player, type, gun);
         int rounds;
         if (best >= 0) {
             ItemStack mag = player.getInventory().getItem(best);
             rounds = MagazineItem.rounds(mag);
             mag.shrink(1);
         } else if (player.hasInfiniteMaterials()) {
-            rounds = type.capacity();
+            rounds = type.capacity(gun);
         } else {
             return;
         }

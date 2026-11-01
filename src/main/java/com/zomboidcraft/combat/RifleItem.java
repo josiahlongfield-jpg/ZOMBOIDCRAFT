@@ -53,7 +53,7 @@ public class RifleItem extends Item {
     /** Rounds in a magazine for this gun. */
     public static int capacity(ItemStack gun) {
         GunType type = GunType.of(gun);
-        return (type == null ? GunType.ASSAULT_RIFLE : type).capacity();
+        return (type == null ? GunType.ASSAULT_RIFLE : type).capacity(gun);
     }
 
     @Override
