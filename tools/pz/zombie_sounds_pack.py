@@ -131,12 +131,13 @@ def main():
         table['pz.zombie.' + k] = [write(s, 'zombie/' + k.replace('.', '/') + '/' + str(i + 1))
                                    for i, s in enumerate(sorted(lst, key=lambda x: x['name']))]
     # horde beds: Zomboid's own voices, layered into a crowd
-    beds = {'dormant': ['idle'], 'angry': ['aggro', 'chase']}
+    # as long as HordeSounds replays each: the murmur every 14 s, the roar every 10 s
+    beds = {'dormant': (['idle'], 14), 'angry': (['aggro', 'chase'], 10)}
     rnd = random.Random(42)
     hb = os.path.join(out, 'assets', 'zomboidcraft', 'sounds', 'pz', 'horde')
     os.makedirs(hb, exist_ok=True)
     horde = {}
-    for bed, states in beds.items():
+    for bed, (states, secs) in beds.items():
         clips = [os.path.join(snd, 'zombie', p.split('pz/zombie/')[1] + '.ogg')
                  for v in VOICES if not v.startswith('s') for st in states for p in made.get((v, st), [])]
         horde[bed] = []
@@ -145,10 +146,10 @@ def main():
             inputs, filt = [], []
             for i, c in enumerate(pick):
                 inputs += ['-i', c]
-                delay = rnd.randint(0, 9000)
+                delay = rnd.randint(0, (secs - 1) * 1000)
                 filt.append(f'[{i}]adelay={delay},volume={rnd.uniform(0.35, 0.8):.2f},aecho=0.6:0.4:{rnd.randint(40, 90)}:0.25[a{i}]')
             mix = ''.join(f'[a{i}]' for i in range(len(pick)))
-            filt.append(f'{mix}amix=inputs={len(pick)}:normalize=0,atrim=0:10,afade=t=in:d=0.6,afade=t=out:st=9.2:d=0.8,'
+            filt.append(f'{mix}amix=inputs={len(pick)}:normalize=0,atrim=0:{secs},afade=t=in:d=0.6,afade=t=out:st={secs - 0.8}:d=0.8,'
                         f'lowpass=f={3800 if bed == "dormant" else 6000},dynaudnorm[out]')
             dst = os.path.join(hb, f'{bed}_{take + 1}.ogg')
             subprocess.run(['ffmpeg', '-v', 'error', '-y', *inputs, '-filter_complex', ';'.join(filt), '-map', '[out]',
