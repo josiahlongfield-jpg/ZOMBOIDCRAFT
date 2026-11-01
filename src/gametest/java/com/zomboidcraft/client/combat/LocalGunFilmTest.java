@@ -49,10 +49,10 @@ public class LocalGunFilmTest implements FabricClientGameTest {
             sp.getServer().runCommand("kill @e[type=!player]");
             ctx.waitTicks(20);
 
-            standIn("standin_500", "Stand-in .500 revolver (local)", "pistol", "pbr_pistol", "pbr_magnum", ".500 S&W",
-                    "{\"damage\": 30.0, \"magazineSize\": 5, \"recoil\": 2.5}");
-            standIn("standin_rimfire", "Stand-in SMG on the rimfire (local)", "rimfire", "block_rimfire", "pbr_smg", ".22 LR",
-                    "{\"magazineSize\": 50}");
+            ctx.runOnClient(mc -> standIn(mc, "standin_500", "Stand-in .500 revolver (local)", "pistol", "pbr_pistol", "pbr_magnum", ".500 S&W",
+                    "{\"damage\": 30.0, \"magazineSize\": 5, \"recoil\": 2.5}"));
+            ctx.runOnClient(mc -> standIn(mc, "standin_rimfire", "Stand-in SMG on the rimfire (local)", "rimfire", "block_rimfire", "pbr_smg", ".22 LR",
+                    "{\"magazineSize\": 50}"));
             sp.getServer().runCommand("zc localgun reload");
             ctx.waitTicks(5);
 
@@ -76,8 +76,8 @@ public class LocalGunFilmTest implements FabricClientGameTest {
     }
 
     /** A local gun's two files, as the converter writes Brita's: its spec, and a mesh of ours scrambled under its id. */
-    private static void standIn(String id, String name, String anchor, String anchorMesh, String mesh, String calibre, String stats) {
-        try (InputStream in = Minecraft.getInstance().getResourceManager().open(ZomboidCraft.id("meshes/" + mesh + ".zmesh"))) {
+    private static void standIn(Minecraft mc, String id, String name, String anchor, String anchorMesh, String mesh, String calibre, String stats) {
+        try (InputStream in = mc.getResourceManager().open(ZomboidCraft.id("meshes/" + mesh + ".zmesh"))) {
             byte[] data = in.readAllBytes();
             CarAssets.unscramble(data, mesh);                       // the stream is xor: once off with our id,
             CarAssets.unscramble(data, MeshGuns.LOCAL + id);        // once on with the local one
