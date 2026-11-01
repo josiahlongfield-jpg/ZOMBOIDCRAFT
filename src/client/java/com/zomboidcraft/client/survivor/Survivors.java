@@ -143,16 +143,9 @@ public final class Survivors {
         Identifier body = SurvivorTextures.body(pack, layers);
         if (body == null) return false;   // a moment while it's made: the usual model meanwhile
         SurvivorPack.Style hs = pack.hairFor(hair, hairCut), bs = look.female() ? null : pack.beardFor(beard, beardCut);
-        // under a hat, Zomboid's hat version of the style (its "alternate" for the hat's category), or none at all
-        if (dress.hat() != null) {
-            String cat = dress.hat();
-            if (cat.startsWith("nohair")) hs = null;
-            else if (hs != null && hs.hats().containsKey(cat)) {
-                SurvivorPack.Style alt = pack.hairById.get(hs.hats().get(cat));
-                if (alt != null) hs = alt;
-            }
-            if (cat.endsWith("nobeard")) bs = null;
-        }
+        // a hat, helmet or hood replaces the hair outright, so none comes through it; a full mask hides the beard too
+        if (dress.hairHidden()) hs = null;
+        if (dress.hat() != null && dress.hat().endsWith("nobeard")) bs = null;
 
         Entry e = ENTRIES.computeIfAbsent(state.id, id -> new Entry());
         e.seen = System.currentTimeMillis();

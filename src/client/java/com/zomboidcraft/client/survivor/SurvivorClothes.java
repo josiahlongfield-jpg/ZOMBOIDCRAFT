@@ -38,9 +38,12 @@ public final class SurvivorClothes {
     public record Piece(String piece, Identifier texture) {
     }
 
-    /** All a survivor wears: meshes, body layers (painted-on garments, then the skin hidden), and the hat category. */
-    public record Dress(List<Piece> pieces, List<SurvivorTextures.Layer> body, String hat, boolean ready) {
-        static final Dress NONE = new Dress(List.of(), List.of(), null, true);
+    /**
+     * All a survivor wears: meshes, body layers (painted-on garments, then the skin hidden), the hat category, and
+     * whether the hair is hidden (Josiah's call: any hat, helmet or hood replaces the hair, so none pokes through).
+     */
+    public record Dress(List<Piece> pieces, List<SurvivorTextures.Layer> body, String hat, boolean hairHidden, boolean ready) {
+        static final Dress NONE = new Dress(List.of(), List.of(), null, false, true);
     }
 
     /** Inner to outer: what's over is painted (and drawn) after what's under. */
@@ -110,7 +113,7 @@ public final class SurvivorClothes {
         Map<String, Piece> pieces = new LinkedHashMap<>();
         List<SurvivorTextures.Layer> paint = new ArrayList<>(), cuts = new ArrayList<>();
         String hat = null;
-        boolean ready = true;
+        boolean ready = true, hairHidden = false;
         long who = player.getUUID().getLeastSignificantBits() ^ player.getUUID().getMostSignificantBits();
         for (ClothingSlot slot : ORDER) {
             ItemStack stack = slot.shown(player);
@@ -141,11 +144,16 @@ public final class SurvivorClothes {
                     if (!camo.isEmpty()) paint.add(new SurvivorTextures.Layer(camo, -1, SurvivorTextures.CAMO));
                 }
                 if (c.mask() != null) cuts.add(new SurvivorTextures.Layer(c.mask(), -1, SurvivorTextures.CUT));
-                if (c.hat() != null && !c.hat().isEmpty()) hat = c.hat();
+                if (c.hat() != null && !c.hat().isEmpty()) {
+                    hat = c.hat();
+                    // a face piece that only clears the beard (a respirator) leaves the hair; anything over the head hides it
+                    if (!c.hat().equals("nobeard")) hairHidden = true;
+                }
+                if (slot == ClothingSlot.HAT && c.piece() != null) hairHidden = true;
             }
         }
         List<SurvivorTextures.Layer> body = new ArrayList<>(paint);
         body.addAll(cuts);
-        return new Dress(List.copyOf(pieces.values()), body, hat, ready);
+        return new Dress(List.copyOf(pieces.values()), body, hat, hairHidden, ready);
     }
 }
