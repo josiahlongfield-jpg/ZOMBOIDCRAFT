@@ -138,7 +138,7 @@ MATERIALS = ('denim', 'cotton', 'knit', 'ripstop', 'leather', 'nylon', 'rubber',
 
 def material(item, texture):
     """A clothingItem's material, by Zomboid's names for it and its texture."""
-    s = (item + ' ' + texture).lower()
+    s = (item + ' ' + texture).lower().replace('trousersmesh', 'trousers')  # Zomboid's name for a modelled pair
     rules = [
         ('glass', ('glasses', 'goggles', 'monocle', 'visor')),
         ('metal', ('metal', 'chainmail', 'steel', 'armour_scrap', 'scrap', 'greave', 'vambrace', 'cuirass', 'tyre')),
@@ -199,9 +199,9 @@ def weave(mat, n, base, seed):
         f *= 0.84 + 0.26 * np.sin(row * np.pi) ** 0.6
         f *= 0.92 + 0.12 * noise(n, 40, 3, seed)
     elif mat == 'ripstop':
-        grid = ((xs % 13) < 1.1) | ((ys % 13) < 1.1)
+        grid = ((xs % 9) < 1.0) | ((ys % 9) < 1.0)
         f *= 0.95 + 0.08 * (np.sin((xs - ys) * 2 * np.pi / 2.5) * 0.5 + 0.5)
-        f *= np.where(grid, 1.1, 1.0)
+        f *= np.where(grid, 1.035, 1.0)
         f *= 0.95 + 0.1 * noise(n, 50, 3, seed)
     elif mat == 'leather':
         g = noise(n, 180, 2, seed)
@@ -720,7 +720,17 @@ def _dress_shirt(c, p, thread):
     f = _front(p)
     c = mix(c, c * 0.85, outline(f & (np.abs(x) < 0.012) & (y > 1.0), 1))
     c = _buttons(c, p, 0.0, np.arange(1.03, 1.47, 0.065), 0.0045, (0.92, 0.92, 0.9))
-    c = mix(c, c * 0.88, _box(p, -0.08, 1.33, 0.06, 0.07, f) & outline(_box(p, -0.08, 1.33, 0.06, 0.07, f), 1))
+    # Zomboid paints its pockets as smudged outlines with drips under them: clear the chest, then sew real ones
+    reg = f & (np.abs(x) > 0.016) & (np.abs(x) < 0.18) & (y > 1.17) & (y < 1.44)
+    if reg.any():
+        lum = luma(c)
+        fine = lum / np.maximum(blur(lum, 2.5), 0.02)
+        broad = blur(lum, p.n / 30)
+        med = np.median(c[f], 0)
+        fill = med[None, None] * np.clip(broad / max(np.median(broad[f]), 0.02), 0.85, 1.1)[..., None] * fine[..., None]
+        c = mix(c, fill, np.clip(blur(reg.astype(np.float32), 3) * 1.5, 0, 1) * reg)
+    for sx in (-1, 1):
+        c = _pocket(c, p, _box(p, sx * 0.085, 1.325, 0.07, 0.08, f), thread, None, 0.86)
     cuff = _sleeve_end(p, 0.05)
     return mix(c, c * 0.85, outline(cuff, 1))
 
