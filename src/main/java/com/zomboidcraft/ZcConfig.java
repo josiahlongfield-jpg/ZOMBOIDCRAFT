@@ -1246,6 +1246,8 @@ public final class ZcConfig {
         public boolean pzZombies = true;
         /** Blocks within which zombies are drawn with the Zomboid bodies; past it they keep the lighter body. Client side. */
         public double pzZombieDistance = 24;
+        /** At most this many zombies (the nearest) are drawn with the Zomboid bodies at once; their corpses count by the same line. Client side. */
+        public int pzZombieMax = 10;
         /** Zomboid zombies roughed up as Zomboid's are: blood and grime by body part, and holes torn through their clothes. Client side. */
         public boolean roughZombies = true;
         /** Blocks within which zombies show every small clothing detail; further out the smallest bits are left off, and past 2.5 times this only the main shapes stay. Client side. */

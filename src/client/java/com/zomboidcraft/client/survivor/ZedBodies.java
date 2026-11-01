@@ -129,8 +129,10 @@ public final class ZedBodies {
 
     /** Whether something this far from the camera (squared blocks) is near enough to be drawn as Zomboid's. */
     public static boolean near(double distSq) {
-        double d = ZcConfig.get().look.pzZombieDistance;
-        return distSq < d * d;
+        ZcConfig.Look look = ZcConfig.get().look;
+        double d = look.pzZombieDistance;
+        // and only the nearest few: each is a few thousand skinned triangles a frame
+        return distSq < d * d && distSq < com.zomboidcraft.client.zombie.body.ZDetail.nearestSq(look.pzZombieMax);
     }
 
     // ------------------------------------------------------------------ the look
