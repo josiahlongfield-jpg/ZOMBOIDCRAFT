@@ -183,8 +183,17 @@ public class LocalGunFilmTest implements FabricClientGameTest {
             LOG.info("ZCLOCAL rounds on the ground: {}", all.size());
             all.forEach(e -> LOG.info("ZCLOCAL  {} at {}", e.getItem().getHoverName().getString(), e.position()));
         });
+        // a vanilla item and one of our gun meshes beside them, to tell a ground-drawing fault from a rounds one
+        sp.getServer().runCommand("summon item -2.6 100.1 -0.6 {Item:{id:\"minecraft:diamond\",count:1},PickupDelay:32767,Age:-32768}");
+        sp.getServer().runCommand("summon item 2.6 100.1 -0.6 {Item:{id:\"zomboidcraft:pistol\",count:1},PickupDelay:32767,Age:-32768}");
         sp.getServer().runCommand("kill @e[type=zomboidcraft:corpse]");
-        sp.getServer().runCommand("tp @a 0.2 102.0 -1.4 0 62");
+        sp.getServer().runCommand("tp @a 0.2 100.0 -2.6 0 50");
+        ctx.waitTicks(10);
+        ctx.runOnClient(mc -> {
+            var seen = mc.level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, new AABB(-4, 98, -4, 4, 104, 4));
+            LOG.info("ZCLOCAL client sees {} items on the ground", seen.size());
+            seen.forEach(e -> LOG.info("ZCLOCAL  client {} at {} invisible={}", e.getItem().getHoverName().getString(), e.position(), e.isInvisible()));
+        });
         shots(ctx, "rounds | on the ground: 9mm .380 .38 .44 / .45ACP 5.7 .45Colt .500 / .22 5.56 .308 .30-30 / .50 12g 40mm rocket", 12);
     }
 
