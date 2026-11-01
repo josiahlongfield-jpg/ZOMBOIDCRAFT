@@ -101,7 +101,7 @@ public class RifleItem extends Item {
                 return false;
             }
             carried.set(Attachments.unmount(self, filled));
-            player.playSound(type.magOut(), 0.6f, 1.3f);
+            player.playSound(LocalGuns.sound(self, type.magOut()), 0.6f, 1.3f);
             return true;
         }
         if (!Attachments.canMount(self, other)) {
@@ -117,7 +117,7 @@ public class RifleItem extends Item {
         if (old != null && !old.isEmpty()) {
             carried.set(old);
         }
-        player.playSound(type.magIn(), 0.6f, 1.3f);
+        player.playSound(LocalGuns.sound(self, type.magIn()), 0.6f, 1.3f);
         return true;
     }
 

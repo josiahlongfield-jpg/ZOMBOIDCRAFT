@@ -135,7 +135,7 @@ public final class Guns {
         ServerLevel level = (ServerLevel) player.level();
         GunState g = gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG);
         if (g.jammed() || !g.mag() || g.rounds() <= 0) {
-            level.playSound(null, player.getX(), player.getEyeY(), player.getZ(), type.dry(), SoundSource.PLAYERS, 0.8f, 1f);
+            level.playSound(null, player.getX(), player.getEyeY(), player.getZ(), LocalGuns.sound(gun, type.dry()), SoundSource.PLAYERS, 0.8f, 1f);
             if (g.jammed()) {
                 player.sendOverlayMessage(Component.literal("Jammed! Press R to clear it.").withStyle(ChatFormatting.RED));
             }
@@ -146,7 +146,7 @@ public final class Guns {
         double jam = config.jamNew + config.jamWorn * wear * wear;
         if (config.jams && type.canJam() && player.getRandom().nextDouble() < Firearms.jam(jam) * Rolls.multiplier(gun, Stat.RELIABILITY)) {
             gun.set(GunState.TYPE, g.withJam(true));
-            level.playSound(null, player.getX(), player.getEyeY(), player.getZ(), type.dry(), SoundSource.PLAYERS, 0.8f, 0.8f);
+            level.playSound(null, player.getX(), player.getEyeY(), player.getZ(), LocalGuns.sound(gun, type.dry()), SoundSource.PLAYERS, 0.8f, 0.8f);
             player.sendOverlayMessage(Component.literal("Jammed! Press R to clear it.").withStyle(ChatFormatting.RED));
             return;
         }
@@ -464,7 +464,8 @@ public final class Guns {
 
     /** A shot as each other player hears it: the close bang near the shooter, fading into the far-off take with distance. */
     private static void bang(ServerLevel level, ServerPlayer shooter, GunType type, boolean suppressed, float volume, float pitch) {
-        SoundEvent close = type.shot(suppressed, false), far = type.shot(suppressed, true);
+        ItemStack gun = shooter.getMainHandItem();
+        SoundEvent close = LocalGuns.sound(gun, type.shot(suppressed, false)), far = LocalGuns.sound(gun, type.shot(suppressed, true));
         double range = Math.max(close.getRange(volume), far.getRange(volume));
         long seed = shooter.getRandom().nextLong();
         double x = shooter.getX(), y = shooter.getEyeY(), z = shooter.getZ();
@@ -956,6 +957,8 @@ public final class Guns {
     }
 
     private static void sound(ServerPlayer player, net.minecraft.sounds.SoundEvent sound) {
+        // the gun in hand's own take of it, for one kept on this computer (LocalGuns)
+        sound = LocalGuns.sound(player.getMainHandItem(), sound);
         player.level().playSound(null, player.getX(), player.getY(), player.getZ(), sound, SoundSource.PLAYERS, 0.9f, 1f);
     }
 

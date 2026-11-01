@@ -191,6 +191,26 @@ public final class LocalGuns {
         return mag;
     }
 
+    /** Where a local gun's own sounds live: weapon.local/<gun>/<our event>, e.g. weapon.local/colt1911/weapon.pistol.shot. */
+    public static final String SOUND_PREFIX = "weapon.local/";
+
+    /**
+     * The sound a gun makes for one of its anchor's events: a local gun's own, played under its own name so the sound
+     * pack on this computer (config of his profile's resource packs) can give it Brita's recording, keeping the
+     * anchor's hearing range. A client without that recording hears the anchor's (client SoundManagerMixin).
+     */
+    public static net.minecraft.sounds.SoundEvent sound(ItemStack gun, net.minecraft.sounds.SoundEvent ours) {
+        String id = gun.get(ID);
+        net.minecraft.resources.Identifier key = id == null ? null : BuiltInRegistries.SOUND_EVENT.getKey(ours);
+        if (key == null) {
+            return ours;
+        }
+        net.minecraft.resources.Identifier name = ZomboidCraft.id(SOUND_PREFIX + id.toLowerCase(java.util.Locale.ROOT)
+                .replaceAll("[^a-z0-9_.-]", "_") + "/" + key.getPath());
+        return ours.fixedRange().isPresent() ? net.minecraft.sounds.SoundEvent.createFixedRangeEvent(name, ours.fixedRange().get())
+                : net.minecraft.sounds.SoundEvent.createVariableRangeEvent(name);
+    }
+
     /** A local gun, loaded with its own rounds. */
     public static ItemStack loaded(Spec spec) {
         ItemStack gun = new ItemStack(spec.type().item());

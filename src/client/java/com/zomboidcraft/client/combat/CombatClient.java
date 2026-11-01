@@ -301,7 +301,7 @@ public final class CombatClient {
         // at your ears, so it doesn't stay behind where you fired as you strafe
         // on full auto the pitch barely varies, so the string of shots sounds even
         float vary = auto ? 0.02f : 0.1f;
-        EarSound.play(type.shot(suppressed, false), SoundSource.PLAYERS,
+        EarSound.play(com.zomboidcraft.combat.LocalGuns.sound(gun, type.shot(suppressed, false)), SoundSource.PLAYERS,
                 suppressed ? (float) config.suppressedVolume : 1.4f,
                 (suppressed ? (float) stats.suppressedPitch : 1f) * (1f - vary / 2 + player.getRandom().nextFloat() * vary));
         // the case comes out with the shot, here, rather than when the server's tick gets to it
