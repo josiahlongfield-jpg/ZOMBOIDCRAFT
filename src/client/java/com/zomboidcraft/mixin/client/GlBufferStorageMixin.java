@@ -21,6 +21,9 @@ public abstract class GlBufferStorageMixin {
     @ModifyExpressionValue(method = "<init>", require = 0,
             at = @At(value = "INVOKE", target = "Lcom/mojang/renderpearl/backend/opengl/GlHeuristics;isNvidia()Z"))
     private boolean zomboidcraft$keepBufferStorage(boolean nvidia) {
-        return nvidia && !ZcConfig.get().performance.nvidiaBufferStorage;
+        boolean keep = ZcConfig.get().performance.nvidiaBufferStorage;
+        com.zomboidcraft.zombie.Profiler.bufferStorageFix = "ran at start-up (NVIDIA card: " + (nvidia ? "yes" : "no")
+                + ", buffer storage kept on: " + (nvidia && keep ? "yes" : nvidia ? "no, switched off in config" : "not needed") + ")";
+        return nvidia && !keep;
     }
 }

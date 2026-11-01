@@ -37,6 +37,8 @@ public final class Profiler {
 
     /** How Sodium sends chunk meshes to the graphics card (SodiumUploadMixin); null until Sodium asks. */
     public static volatile String uploadPath;
+    /** What GlBufferStorageMixin did when the graphics device was made; null if it never ran. */
+    public static volatile String bufferStorageFix;
 
     /** Who owns a frame, by package: the first match wins, so put the narrower names first. */
     private static final String[][] OWNERS = {
@@ -285,6 +287,7 @@ public final class Profiler {
                 FLICKERS.sum(), FLICKERS.sum() / Math.max(0.1, took), SIGNALS.sum()));
         r.append(String.format("Sent to your client: %d single block changes, %d section block changes, %d light updates, %d chunks loaded%n",
                 CLIENT_BLOCKS.sum(), CLIENT_SECTIONS.sum(), CLIENT_LIGHT.sum(), CLIENT_CHUNKS.sum()));
+        r.append("NVIDIA buffer storage fix: ").append(bufferStorageFix == null ? "did not run" : bufferStorageFix).append("\n");
         r.append("Sodium chunk uploads: ").append(uploadPath == null ? "not seen (Sodium missing or idle)" : uploadPath).append("\n");
         r.append("JVM: ").append(System.getProperty("java.vm.name")).append(' ')
                 .append(System.getProperty("java.version")).append(", args ")
