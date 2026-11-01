@@ -50,6 +50,10 @@ public final class SurvivorTextures {
     public static final int CUT = 1;
     /** One of our camo patterns (key: its name), laid over what's under it in that layer's own light and shade. */
     public static final int CAMO = 2;
+    /** Remembers the picture as made so far (its key is unused): what a REVEAL layer brings back. */
+    public static final int KEEP = 3;
+    /** Where the mask is white, the picture goes back to how it was at the KEEP layer (a torn hole showing skin). */
+    public static final int REVEAL = 4;
 
     /** One layer: a texture key in the pack, a tint (0xRRGGBB, or -1 for none), and how it's laid on. */
     public record Layer(String key, int tint, int mode) {
@@ -113,8 +117,13 @@ public final class SurvivorTextures {
     private static NativeImage compose(List<byte[]> data, List<Layer> layers) {
         try {
             int[] base = null, laid = null;   // laid: the alpha of the last layer laid on, which a camo layer paints
+            int[] kept = null;
             int w = 0, h = 0;
             for (int i = 0; i < data.size(); i++) {
+                if (layers.get(i).mode() == KEEP) {
+                    if (base != null) kept = base.clone();
+                    continue;
+                }
                 byte[] bytes = data.get(i);
                 if (bytes == null) continue;
                 try (NativeImage img = com.zomboidcraft.client.npc.NpcSkin.decode(bytes)) {
@@ -132,6 +141,8 @@ public final class SurvivorTextures {
                         }
                     } else if (layers.get(i).mode() == CUT) {
                         cut(base, w, h, img);
+                    } else if (layers.get(i).mode() == REVEAL) {
+                        if (kept != null) reveal(base, kept, w, h, img);
                     } else if (layers.get(i).mode() == CAMO) {
                         camo(base, laid, w, h, img);
                     } else {
@@ -191,6 +202,17 @@ public final class SurvivorTextures {
                 return null;
             }
         });
+    }
+
+    /** Puts back what was kept where the mask is white. */
+    private static void reveal(int[] base, int[] kept, int w, int h, NativeImage mask) {
+        int sw = mask.getWidth(), sh = mask.getHeight();
+        for (int y = 0; y < h; y++) {
+            for (int x = 0; x < w; x++) {
+                int m = mask.getPixel(Math.min(sw - 1, x * sw / w), Math.min(sh - 1, y * sh / h));
+                if (Math.min(m >>> 24, m & 255) > 127) base[y * w + x] = kept[y * w + x];
+            }
+        }
     }
 
     /** Clears the base where the mask is white. */

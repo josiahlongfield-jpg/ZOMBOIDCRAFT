@@ -45,6 +45,8 @@ public final class ZedBodies {
     /** Zomboid's random clothing tints: worn, everyday colours (as survivors' clothes have them). */
     private static final int[] TINTS = {0x2B3A55, 0x6B2A2A, 0x3E5A3A, 0x7A6A4A, 0x4A4A4E, 0x8C8C88, 0x1E1E22, 0xB8B0A0,
             0x5A3D2A, 0x2F5A6A, 0x7A4A6A, 0xA05A2A, 0x4A5A2A, 0xC8C0B0, 0x6A1E2A, 0x3A3A5A};
+    /** Zomboid's body parts, as its blood and holes are laid out (tools/pz/zombie_fx.py). */
+    private static final String[] PARTS = {"Head", "Chest", "Waist", "Belt", "Crotch", "LeftArm", "RightArm", "LeftLeg", "RightLeg"};
     /** Items whose only texture sits in Zomboid's texture packs, and the loose item worn in their place. */
     private static final Map<String, String> STAND_IN = Map.of(
             "Trousers_DefaultTEXTURE_TINT", "Trousers_WhiteTINT",
@@ -55,7 +57,7 @@ public final class ZedBodies {
     private static final float WALK = 0.9f, FAST = 1.7f, SPRINT = 4.2f, CRAWL = 0.45f;
 
     /** One zombie's (or corpse's) look, rolled once. */
-    private record Look(SurvivorPack pack, String skin, List<SurvivorTextures.Layer> paint, Map<String, String[]> pieces,
+    private record Look(SurvivorPack pack, String skin, List<SurvivorTextures.Layer> paint, Map<String, List<SurvivorTextures.Layer>> pieces,
                         String hairPiece, String hairTex, String beardPiece, String beardTex, String colour) {
     }
 
@@ -146,7 +148,7 @@ public final class ZedBodies {
     /** How far gone it is: 0 fresh to 3 bones showing (Zomboid's three wound levels over the clean body), capped by gore. */
     public static int rot(int variant) {
         float r = roll(variant, 11);
-        int level = r < 0.3f ? 0 : r < 0.6f ? 1 : r < 0.85f ? 2 : 3;
+        int level = r < 0.15f ? 0 : r < 0.45f ? 1 : r < 0.75f ? 2 : 3;
         return Math.min(level, Math.clamp(ZcConfig.get().look.maxGore, 0, 3));
     }
 
@@ -208,7 +210,7 @@ public final class ZedBodies {
         }
         items.sort(java.util.Comparator.comparingInt(ZedBodies::layer));
         List<SurvivorTextures.Layer> paint = new ArrayList<>(), cuts = new ArrayList<>();
-        Map<String, String[]> pieces = new LinkedHashMap<>();
+        Map<String, List<SurvivorTextures.Layer>> pieces = new LinkedHashMap<>();
         boolean hairHidden = false, beardHidden = false;
         for (String name : items) {
             SurvivorPack.Cloth c = pack.clothes.get(name);
@@ -221,7 +223,7 @@ public final class ZedBodies {
             int r = (int) (mix(variant * 31L + name.hashCode()) >>> 33);
             int tint = c.tint() || c.hue() ? TINTS[Math.floorMod(r >> 5, TINTS.length)] : -1;
             if (c.piece() != null && !c.textures().isEmpty()) {
-                pieces.put(c.piece(), new String[]{c.textures().get(Math.floorMod(r, c.textures().size())), Integer.toString(tint)});
+                pieces.put(c.piece(), new ArrayList<>(List.of(new SurvivorTextures.Layer(c.textures().get(Math.floorMod(r, c.textures().size())), tint))));
             }
             if (!c.base().isEmpty()) paint.add(new SurvivorTextures.Layer(c.base().get(Math.floorMod(r, c.base().size())), tint));
             if (c.mask() != null) cuts.add(new SurvivorTextures.Layer(c.mask(), -1, SurvivorTextures.CUT));
@@ -233,16 +235,46 @@ public final class ZedBodies {
             if (name.startsWith("Hat_") && c.piece() != null) hairHidden = true;
         }
         List<SurvivorTextures.Layer> body = new ArrayList<>();
+        String skin = "zed/" + (1 + pick(variant, 7, 4)) + "/" + rot;
+        if (pack.skin.raw(skin) == null) skin = "zed/1/0";
+        body.add(new SurvivorTextures.Layer(skin, -1));
         if (pack.skin.raw("uw") != null) body.add(new SurvivorTextures.Layer("uw", -1));   // never bare
+        // roughed up as Zomboid's are: blood and grime by body part, on the skin and over the clothes, and holes torn
+        // through the clothes where the skin (and its wounds) shows back through
+        List<SurvivorTextures.Layer> mess = new ArrayList<>(), tears = new ArrayList<>(), rips = new ArrayList<>();
+        if (ZcConfig.get().look.roughZombies) {
+            for (int i = 0; i < PARTS.length; i++) {
+                String part = PARTS[i];
+                float b = roll(variant, 200 + i), g = roll(variant, 220 + i), h = roll(variant, 240 + i);
+                if (b < 0.35f + 0.12f * rot) {
+                    String k = (b < 0.2f + 0.12f * rot ? "zfx/blood2/" : "zfx/blood1/") + part;
+                    if (pack.skin.raw(k) != null) mess.add(new SurvivorTextures.Layer(k, -1));
+                }
+                if (g < 0.65f && pack.skin.raw("zfx/grime/" + part) != null) mess.add(new SurvivorTextures.Layer("zfx/grime/" + part, -1));
+                // never through the underwear (crotch, belt, and a woman's chest)
+                boolean decent = part.equals("Crotch") || part.equals("Belt") || part.equals("Head")
+                        || part.equals("Chest") && pack.sex.equals("f");
+                if (!decent && h < 0.15f + 0.1f * rot && pack.skin.raw("zfx/hole/" + part) != null) {
+                    tears.add(new SurvivorTextures.Layer("zfx/hole/" + part, -1, SurvivorTextures.REVEAL));
+                    rips.add(new SurvivorTextures.Layer("zfx/hole/" + part, -1, SurvivorTextures.CUT));
+                }
+            }
+        }
+        body.addAll(mess);
+        body.add(new SurvivorTextures.Layer("keep", -1, SurvivorTextures.KEEP));
         body.addAll(paint);
+        body.addAll(mess);
         body.addAll(cuts);
+        body.addAll(tears);
+        for (List<SurvivorTextures.Layer> l : pieces.values()) {
+            l.addAll(mess);
+            l.addAll(rips);
+        }
         // its hair and beard: any of Zomboid's, in a shade of its own
         String colour = HAIR[pick(variant, 3, HAIR.length)];
         SurvivorPack.Style hs = hairHidden || pack.hair.isEmpty() ? null : pack.hair.get(pick(variant, 4, pack.hair.size()));
         SurvivorPack.Style bs = beardHidden || pack.sex.equals("f") || pack.beards.isEmpty() || roll(variant, 5) > 0.45f
                 ? null : pack.beards.get(pick(variant, 6, pack.beards.size()));
-        String skin = "zed/" + (1 + pick(variant, 7, 4)) + "/" + rot;
-        if (pack.skin.raw(skin) == null) skin = "zed/1/0";
         Look look = new Look(pack, skin, body, pieces, hs == null ? null : hs.piece(), hs == null ? null : groupTex(pack, hs.piece()),
                 bs == null ? null : bs.piece(), bs == null ? null : groupTex(pack, bs.piece()), colour);
         LOOKS.put(key, look);
@@ -334,14 +366,11 @@ public final class ZedBodies {
         SurvivorPack pack = packFor(f.variant);
         if (pack == null) return null;
         Look look = look(pack, f.variant, f.outfit);
-        List<SurvivorTextures.Layer> layers = new ArrayList<>();
-        layers.add(new SurvivorTextures.Layer(look.skin(), -1));
-        layers.addAll(look.paint());
-        Identifier body = SurvivorTextures.body(pack, layers);
+        Identifier body = SurvivorTextures.body(pack, look.paint());
         if (body == null) return null;
         Map<String, Identifier> clothes = new HashMap<>();
-        for (Map.Entry<String, String[]> p : look.pieces().entrySet()) {
-            Identifier t = SurvivorTextures.cloth(pack, p.getValue()[0], Integer.parseInt(p.getValue()[1]), "");
+        for (Map.Entry<String, List<SurvivorTextures.Layer>> p : look.pieces().entrySet()) {
+            Identifier t = SurvivorTextures.body(pack, p.getValue());
             if (t == null) return null;
             clothes.put(p.getKey(), t);
         }
