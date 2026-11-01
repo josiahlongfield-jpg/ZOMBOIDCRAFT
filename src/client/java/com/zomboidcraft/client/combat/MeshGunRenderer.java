@@ -23,7 +23,7 @@ import org.joml.Vector3fc;
  * <pre>{"type": "minecraft:special", "base": "zomboidcraft:item/weapon/shotgun/hip/body",
  *  "model": {"type": "zomboidcraft:mesh", "id": "pbr_shotgun", "part": "body"}}</pre>
  */
-public final class MeshGunRenderer implements NoDataSpecialModelRenderer {
+public final class MeshGunRenderer implements net.minecraft.client.renderer.special.SpecialModelRenderer<String> {
     private final String id;
     private final String part;
     private final List<Float> offset;
@@ -44,7 +44,26 @@ public final class MeshGunRenderer implements NoDataSpecialModelRenderer {
         SpecialModelRenderersAccessor.zomboidcraft$types().put(ZomboidCraft.id("mesh"), Unbaked.MAP_CODEC);
     }
 
+    /** A gun kept on this computer (combat/LocalGuns) draws its own mesh in place of ours. */
     @Override
+    public @org.jetbrains.annotations.Nullable String extractArgument(net.minecraft.world.item.ItemStack stack) {
+        String local = stack.get(com.zomboidcraft.combat.LocalGuns.ID);
+        return local != null && MeshGuns.hasLocal(local) ? local : null;
+    }
+
+    @Override
+    public void submit(@org.jetbrains.annotations.Nullable String local, net.minecraft.world.item.ItemDisplayContext context,
+                       PoseStack pose, SubmitNodeCollector out, int light, int overlay, boolean foil, int outline) {
+        if (local != null) {
+            // our attachments don't go on it (its own parts are packed with it); our gun's parts become its parts
+            if (!id.startsWith("att_") && !id.startsWith("own_")) {
+                MeshGuns.draw(MeshGuns.LOCAL + local, part, pose, out, light, null);
+            }
+            return;
+        }
+        submit(pose, out, light, overlay, foil, outline);
+    }
+
     public void submit(PoseStack pose, SubmitNodeCollector out, int light, int overlay, boolean foil, int outline) {
         if (offset.isEmpty() && roll == 0 && pitch == 0 && scale == 1) {
             MeshGuns.draw(id, part, pose, out, light, texture);
@@ -90,7 +109,7 @@ public final class MeshGunRenderer implements NoDataSpecialModelRenderer {
      * packed in the mesh, laid out the same (a garment's camo: tools/items/gen_clothes.py).
      */
     public record Unbaked(String id, String part, List<Float> offset, float roll, float pitch, float scale, String texture)
-            implements SpecialModelRenderer.Unbaked<Void> {
+            implements SpecialModelRenderer.Unbaked<String> {
         public static final MapCodec<Unbaked> MAP_CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
                 Codec.STRING.fieldOf("id").forGetter(Unbaked::id),
                 Codec.STRING.optionalFieldOf("part", "body").forGetter(Unbaked::part),
@@ -107,7 +126,7 @@ public final class MeshGunRenderer implements NoDataSpecialModelRenderer {
         }
 
         @Override
-        public SpecialModelRenderer<Void> bake(SpecialModelRenderer.BakingContext context) {
+        public SpecialModelRenderer<String> bake(SpecialModelRenderer.BakingContext context) {
             return new MeshGunRenderer(id, part, offset, roll, pitch, scale, texture);
         }
     }

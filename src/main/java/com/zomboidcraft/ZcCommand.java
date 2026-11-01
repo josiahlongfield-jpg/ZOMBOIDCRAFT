@@ -123,6 +123,17 @@ public final class ZcCommand {
                                                         java.util.List.of("scratch", "cut", "bite", "burn", "break"), builder))
                                                 .executes(ctx -> injure(ctx, StringArgumentType.getString(ctx, "part"),
                                                         StringArgumentType.getString(ctx, "kind"))))))
+                        .then(Commands.literal("localgun")
+                                .then(Commands.literal("reload").executes(ctx -> {
+                                    com.zomboidcraft.combat.LocalGuns.reload();
+                                    ctx.getSource().sendSuccess(() -> Component.literal("Local guns: "
+                                            + com.zomboidcraft.combat.LocalGuns.all().size()), false);
+                                    return 1;
+                                }))
+                                .then(Commands.argument("id", StringArgumentType.word())
+                                        .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
+                                                com.zomboidcraft.combat.LocalGuns.all().stream().map(g -> g.id), builder))
+                                        .executes(ctx -> giveLocalGun(ctx, StringArgumentType.getString(ctx, "id")))))
                         .then(Commands.literal("roll")
                                 .then(Commands.argument("tier", IntegerArgumentType.integer(1, 5))
                                         .executes(ctx -> reroll(ctx, IntegerArgumentType.getInteger(ctx, "tier")))))
@@ -130,6 +141,23 @@ public final class ZcCommand {
                             com.zomboidcraft.survival.Body.set(ctx.getSource().getPlayerOrException(), com.zomboidcraft.survival.Body.FRESH);
                             return show(ctx);
                         }))));
+    }
+
+    /** Gives you a gun kept on this computer (config/zomboidcraft/guns), loaded. */
+    private static int giveLocalGun(CommandContext<CommandSourceStack> ctx, String id) throws CommandSyntaxException {
+        ServerPlayer player = ctx.getSource().getPlayerOrException();
+        var spec = com.zomboidcraft.combat.LocalGuns.get(id);
+        if (spec == null) {
+            ctx.getSource().sendFailure(Component.literal("No local gun " + id + " in " + com.zomboidcraft.combat.LocalGuns.DIR));
+            return 0;
+        }
+        net.minecraft.world.item.ItemStack gun = new net.minecraft.world.item.ItemStack(spec.type().item());
+        gun.set(com.zomboidcraft.combat.LocalGuns.ID, id);
+        gun.set(com.zomboidcraft.combat.GunState.TYPE, new com.zomboidcraft.combat.GunState(spec.type().magazine() != null,
+                spec.type().capacity(gun), false));
+        player.getInventory().add(gun);
+        ctx.getSource().sendSuccess(() -> Component.literal("Gave you " + gun.getHoverName().getString()), false);
+        return 1;
     }
 
     /** Rolls the weapon in your hand again at a tier, to try one out. */

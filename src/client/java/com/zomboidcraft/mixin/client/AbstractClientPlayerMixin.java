@@ -26,7 +26,7 @@ public abstract class AbstractClientPlayerMixin {
         GunType type = firstPerson && self.isUsingItem() ? GunType.of(self.getUseItem()) : null;
         if (type != null) {
             double optic = Attachments.aimZoom(self.getUseItem());
-            double zoom = optic > 0 ? optic : type.stats().aimZoom;
+            double zoom = optic > 0 ? optic : type.stats(self.getUseItem()).aimZoom;
             cir.setReturnValue(cir.getReturnValueF() * (float) zoom);
         }
     }

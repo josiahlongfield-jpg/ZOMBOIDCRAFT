@@ -216,7 +216,7 @@ public final class CombatClient {
             if (type != null && player.isUsingItem() && Attachments.hasMagnifier(player.getMainHandItem())) {
                 // on the sights the key swings the magnifier in or aside instead
                 ClientPlayNetworking.send(new CombatNet.Action(CombatNet.Action.MAGNIFIER));
-            } else if (type != null && type.stats().selectFire) {
+            } else if (type != null && type.stats(player.getMainHandItem()).selectFire) {
                 ClientPlayNetworking.send(new CombatNet.Action(CombatNet.Action.FIRE_MODE));
             }
         }
@@ -250,10 +250,10 @@ public final class CombatClient {
         ZcConfig.Guns config = ZcConfig.get().guns;
         // each world keeps its own clock, so a last shot "after" now was fired in another world
         GunType type = GunType.of(gun);
-        ZcConfig.GunStats stats = type.stats();
+        ZcConfig.GunStats stats = type.stats(gun);
         boolean auto = Guns.fullAuto(gun);
         double ms = System.nanoTime() / 1e6;
-        if (auto ? ms < autoNextMs : now >= lastShot && now - lastShot < type.fireDelay()) {
+        if (auto ? ms < autoNextMs : now >= lastShot && now - lastShot < type.fireDelay(gun)) {
             return;
         }
         if (Guns.launcherOn(gun)) {
@@ -294,7 +294,7 @@ public final class CombatClient {
             return;     // the server answers with the dry click
         }
         // the spread blooms as the server's does (Guns.fire), so the crosshair's ring is where the next shot can go
-        bloom = Guns.bloomed(bloom(type), auto, stats);
+        bloom = Guns.bloomed(bloom(type, gun), auto, stats);
         bloomAt = System.nanoTime();
         boolean suppressed = Attachments.suppressed(gun);
         // at your ears, so it doesn't stay behind where you fired as you strafe
@@ -325,6 +325,15 @@ public final class CombatClient {
             bloom = 0;
         }
         return Guns.bloomNow(bloom, (System.nanoTime() - bloomAt) / 1e9, type.stats());
+    }
+
+    /** The same, by the stack's own numbers (a local gun has its own). */
+    public static double bloom(GunType type, ItemStack gun) {
+        if (type != bloomGun) {
+            bloomGun = type;
+            bloom = 0;
+        }
+        return Guns.bloomNow(bloom, (System.nanoTime() - bloomAt) / 1e9, type.stats(gun));
     }
 
     /** The rest of the kick lands next tick, then the muzzle settles part of the way back. */

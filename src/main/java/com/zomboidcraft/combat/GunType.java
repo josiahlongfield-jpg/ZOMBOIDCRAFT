@@ -256,6 +256,23 @@ public enum GunType {
         };
     }
 
+    /** This stack's numbers: a gun kept on this computer has its own (see LocalGuns), else the type's. */
+    public ZcConfig.GunStats stats(net.minecraft.world.item.ItemStack stack) {
+        return LocalGuns.stats(stack, this);
+    }
+
+    public int pellets(net.minecraft.world.item.ItemStack stack) {
+        return stats(stack) instanceof ZcConfig.ShotgunStats s ? Math.max(1, s.pellets) : 1;
+    }
+
+    public int capacity(net.minecraft.world.item.ItemStack stack) {
+        return Math.max(1, stats(stack).magazineSize);
+    }
+
+    public int fireDelay(net.minecraft.world.item.ItemStack stack) {
+        return Math.max(stats(stack).fireDelayTicks, cycleAfterShot + cycle);
+    }
+
     /** Pellets per shot: a shotgun's buckshot, or one bullet. */
     public int pellets() {
         return stats() instanceof ZcConfig.ShotgunStats s ? Math.max(1, s.pellets) : 1;

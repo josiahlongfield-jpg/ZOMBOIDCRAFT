@@ -48,6 +48,14 @@ public final class MeshGuns {
     private static final Set<String> MISSING = new HashSet<>();
     private static final Map<String, float[]> BOUNDS = new java.util.concurrent.ConcurrentHashMap<>();
 
+    /** Mesh ids of guns kept on this computer start with this: "local/" + the gun's file name. */
+    public static final String LOCAL = "local/";
+
+    /** Whether this computer has the mesh of a local gun (its file is there). */
+    public static boolean hasLocal(String gun) {
+        return java.nio.file.Files.isRegularFile(com.zomboidcraft.combat.LocalGuns.DIR.resolve(gun + ".zmesh"));
+    }
+
     /** The gun, or null if it can't be loaded. Render thread only. */
     static Gun get(String id) {
         if (MISSING.contains(id)) {
@@ -200,8 +208,13 @@ public final class MeshGuns {
 
     private static Gun read(String id, boolean texture) throws IOException {
         byte[] data;
-        try (InputStream in = Minecraft.getInstance().getResourceManager().open(ZomboidCraft.id("meshes/" + id + ".zmesh"))) {
-            data = in.readAllBytes();
+        if (id.startsWith(LOCAL)) {
+            // a gun kept on this computer, not in the mod (combat/LocalGuns)
+            data = java.nio.file.Files.readAllBytes(com.zomboidcraft.combat.LocalGuns.DIR.resolve(id.substring(LOCAL.length()) + ".zmesh"));
+        } else {
+            try (InputStream in = Minecraft.getInstance().getResourceManager().open(ZomboidCraft.id("meshes/" + id + ".zmesh"))) {
+                data = in.readAllBytes();
+            }
         }
         CarAssets.unscramble(data, id);
         try (DataInputStream in = new DataInputStream(new InflaterInputStream(new ByteArrayInputStream(data)))) {
@@ -250,7 +263,7 @@ public final class MeshGuns {
             if (!texture) {
                 return new Gun(parts, null, outline, lo, hi);
             }
-            Identifier name = ZomboidCraft.id("dynamic/mesh/" + id);
+            Identifier name = ZomboidCraft.id("dynamic/mesh/" + id.toLowerCase(java.util.Locale.ROOT));
             NativeImage image = NativeImage.read(new ByteArrayInputStream(png));
             Minecraft.getInstance().getTextureManager().register(name, new DynamicTexture(() -> "ZomboidCraft mesh " + id, image));
             return new Gun(parts, name, outline, lo, hi);

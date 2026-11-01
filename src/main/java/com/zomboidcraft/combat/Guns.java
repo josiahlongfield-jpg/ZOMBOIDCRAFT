@@ -102,7 +102,7 @@ public final class Guns {
         if (!config.enabled || type == null || player.isSpectator() || !com.zomboidcraft.world.cars.CarProp.mayUse(player, gun)) {
             return;
         }
-        ZcConfig.GunStats stats = type.stats();
+        ZcConfig.GunStats stats = type.stats(gun);
         State st = state(player);
         long now = player.level().getGameTime();
         if (launcherOn(gun)) {
@@ -112,7 +112,7 @@ public final class Guns {
         boolean auto = fullAuto(gun);
         // full auto is timed on the shooter's clock, between ticks: take a little slack for shots that land in the same
         // tick; the rate still holds on average
-        if (auto ? now < st.autoNext - 2.0 : now - st.lastShot < type.fireDelay()) {
+        if (auto ? now < st.autoNext - 2.0 : now - st.lastShot < type.fireDelay(gun)) {
             return;
         }
         if (st.reloadTick >= 0) {
@@ -194,8 +194,8 @@ public final class Guns {
 
         // each pellet (one bullet, or a shotgun's buckshot) flies on its own; the hits on each target add up into
         // one blow, since a target only takes the first of several hits in the same moment
-        int pellets = type.pellets();
-        double pelletSpread = pelletSpread(type);
+        int pellets = type.pellets(gun);
+        double pelletSpread = pelletSpread(type, gun);
         float power = (float) Rolls.multiplier(gun, Stat.DAMAGE);
         Map<LivingEntity, Hit> hits = new java.util.LinkedHashMap<>();
         Map<net.minecraft.world.entity.Entity, Boolean> aimed = new java.util.HashMap<>();     // Firearm Use Damage Chance, rolled once a shot
@@ -251,7 +251,7 @@ public final class Guns {
                 }
             }
             if (hit != null && hit.getEntity() instanceof LivingEntity target) {
-                Pellet struck = pellet(target, hit, eye, stats, power * spent, type);
+                Pellet struck = pellet(target, hit, eye, stats, power * spent, LocalGuns.calibre(gun, type));
                 hits.computeIfAbsent(target, t -> new Hit(dir)).add(struck);
                 Dismember.pellet(player, target, hit, dir, struck.tears(), struck.head(), struck.legs(), type);
                 if (!nearby && !bow) {
@@ -364,7 +364,7 @@ public final class Guns {
             }
         }
         if (hit != null && hit.getEntity() instanceof LivingEntity target) {
-            Pellet p = pellet(target, hit, muzzle, stats, spent, GunType.ASSAULT_RIFLE);
+            Pellet p = pellet(target, hit, muzzle, stats, spent, GunType.ASSAULT_RIFLE.caliber());
             Dismember.pellet(shooter, target, hit, dir, p.tears(), p.head(), p.legs(), GunType.ASSAULT_RIFLE);
             hitEntity(level, shooter, target, new Hit(dir).add(p), 1, stats);
             return hit.getLocation();
@@ -413,7 +413,7 @@ public final class Guns {
      * standing zombie the torso takes combat.zombieBodyShots and an arm or leg combat.zombieLimbShots of it.
      */
     private static Pellet pellet(LivingEntity target, Dismember.BodyHit hit, Vec3 eye, ZcConfig.GunStats stats, float power,
-                                 GunType type) {
+                                 String calibre) {
         Vec3 at = hit.getLocation();
         boolean downed = Downed.isLow(target);
         // a zombie's head and legs are where its body is drawn, standing or on the ground; anything else's go by height
@@ -423,7 +423,7 @@ public final class Guns {
         boolean arms = hit.part >= 0 && hit.arm();
         ZcConfig.Combat combat = ZcConfig.get().combat;
         boolean walker = !downed && ZombieTypes.isWalker(target);
-        double headX = combat.headshotFor(type == null ? null : type.caliber(), stats.headshotMultiplier);
+        double headX = combat.headshotFor(calibre, stats.headshotMultiplier);
         // a limb tears at the bullet's full force on a zombie; anything else still takes a leg hit lighter
         float damage = (float) (stats.damage * power * (head ? headX : legs && !walker ? 0.7 : 1));
         if (stats instanceof ZcConfig.ShotgunStats sg) {
@@ -511,7 +511,7 @@ public final class Guns {
      * draws the same number.
      */
     public static double spread(Player player, ItemStack gun, GunType type, boolean aiming, double bloom) {
-        ZcConfig.GunStats stats = type.stats();
+        ZcConfig.GunStats stats = type.stats(gun);
         int aimLevel = Skills.level(player, Skill.AIMING);
         double spread = (aiming ? stats.aimSpread * Attachments.aimSpreadFactor(gun) : stats.hipSpread * Attachments.hipSpreadFactor(gun))
                 * (1 - 0.05 * aimLevel) * Rolls.multiplier(gun, Stat.ACCURACY);
@@ -526,6 +526,11 @@ public final class Guns {
     /** How far a shotgun's pellets fan out round the shot's line (degrees), 0 for single bullets. */
     public static double pelletSpread(GunType type) {
         return type.pellets() > 1 && type.stats() instanceof ZcConfig.ShotgunStats sg ? sg.pelletSpread : 0;
+    }
+
+    /** The same for this stack (a local gun has its own numbers). */
+    public static double pelletSpread(GunType type, ItemStack gun) {
+        return type.pellets(gun) > 1 && type.stats(gun) instanceof ZcConfig.ShotgunStats sg ? sg.pelletSpread : 0;
     }
 
     /** The bloom left after seconds without a shot: it closes back toward nothing. */
@@ -552,7 +557,7 @@ public final class Guns {
     /** The gun has a full-auto setting and is set to it. */
     public static boolean fullAuto(ItemStack gun) {
         GunType type = GunType.of(gun);
-        return type != null && type.stats().selectFire && gun.getOrDefault(GunState.FULL_AUTO, false) && !launcherOn(gun);
+        return type != null && type.stats(gun).selectFire && gun.getOrDefault(GunState.FULL_AUTO, false) && !launcherOn(gun);
     }
 
     /**
@@ -572,7 +577,7 @@ public final class Guns {
         ItemStack gun = player.getMainHandItem();
         GunType type = GunType.of(gun);
         boolean launcher = type != null && Attachments.hasLauncher(gun);
-        if (type == null || !type.stats().selectFire && !launcher) {
+        if (type == null || !type.stats(gun).selectFire && !launcher) {
             return;
         }
         String mode;
@@ -580,7 +585,7 @@ public final class Guns {
             gun.set(GunState.LAUNCHER_ON, false);
             gun.set(GunState.FULL_AUTO, false);
             mode = "Semi-auto";
-        } else if (type.stats().selectFire && !gun.getOrDefault(GunState.FULL_AUTO, false)) {
+        } else if (type.stats(gun).selectFire && !gun.getOrDefault(GunState.FULL_AUTO, false)) {
             gun.set(GunState.FULL_AUTO, true);
             mode = "Full auto";
         } else if (launcher) {
@@ -694,7 +699,7 @@ public final class Guns {
             return;
         }
         State st = state(player);
-        if (st.reloadTick >= 0 || type.bolt && player.level().getGameTime() - st.lastShot < type.fireDelay()) {
+        if (st.reloadTick >= 0 || type.bolt && player.level().getGameTime() - st.lastShot < type.fireDelay(gun)) {
             return;     // already reloading, or the bolt is still being worked after a shot
         }
         GunState g = gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG);

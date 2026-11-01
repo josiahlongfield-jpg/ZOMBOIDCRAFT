@@ -27,6 +27,13 @@ import net.minecraft.world.level.Level;
  * the item's own side: aiming is "using" the item, which the item model turns into the sight picture.
  */
 public class RifleItem extends Item {
+    /** A gun kept on this computer goes by its own name (LocalGuns). */
+    @Override
+    public net.minecraft.network.chat.Component getName(ItemStack stack) {
+        LocalGuns.Spec local = LocalGuns.of(stack);
+        return local != null && local.name != null ? net.minecraft.network.chat.Component.literal(local.name) : super.getName(stack);
+    }
+
     private final GunType type;
 
     public RifleItem(GunType type, Properties properties) {
@@ -127,10 +134,10 @@ public class RifleItem extends Item {
         if (type.tube) {
             String what = type.rounds();        // a revolver holds rounds, the shotguns shells
             tooltip.accept(Component.literal(Character.toUpperCase(what.charAt(0)) + what.substring(1) + ": " + gun.rounds()
-                    + "/" + type.capacity()).withStyle(ChatFormatting.GRAY));
+                    + "/" + type.capacity(stack)).withStyle(ChatFormatting.GRAY));
         } else {
             tooltip.accept(gun.mag()
-                    ? Component.literal("Magazine: " + gun.rounds() + "/" + type.capacity()).withStyle(ChatFormatting.GRAY)
+                    ? Component.literal("Magazine: " + gun.rounds() + "/" + type.capacity(stack)).withStyle(ChatFormatting.GRAY)
                     : Component.literal("No magazine").withStyle(ChatFormatting.DARK_RED));
         }
         if (gun.jammed()) {
@@ -165,7 +172,7 @@ public class RifleItem extends Item {
         if (type == GunType.LEVER_ACTION) {
             tooltip.accept(Component.literal("Lever action: the lever is worked after every shot").withStyle(ChatFormatting.DARK_GRAY));
         }
-        if (type.stats().selectFire) {
+        if (type.stats(stack).selectFire) {
             tooltip.accept(Component.literal("X: semi / full auto (" + (Guns.fullAuto(stack) ? "full auto" : "semi-auto") + ")")
                     .withStyle(ChatFormatting.DARK_GRAY));
         }
