@@ -115,9 +115,19 @@ SCALES = {'firstperson_righthand': 0.45, 'firstperson_lefthand': 0.45, 'thirdper
 WEAPON_MODELS = os.path.join(ASSETS, 'models/item/weapon')
 
 
+# items whose own model is kept for something else: the shotgun's loose shell model is a single shell (it is drawn
+# going into the gun), so the shell round sits on a carton of its own like the rest
+MODEL = {'shotgun_shell': 'shotgun_shell_box'}
+
+
+def model_name(item):
+    return MODEL.get(item, item)
+
+
 def base_model(item):
     """The plain model the round is fitted onto and keeps the display transforms of: the old carton (a new item gets
     a copy of the 9mm's)."""
+    item = model_name(item)
     path = os.path.join(WEAPON_MODELS, item + '.json')
     if not os.path.exists(path):
         m = json.load(open(os.path.join(WEAPON_MODELS, 'pistol_ammo.json')))
@@ -130,7 +140,7 @@ def lay_along(item, length_axis, tip_positive=True):
     """pack.py axes that turn the source round (its length along source axis length_axis, tip toward + when
     tip_positive) to lie along the base model's longest side, tip toward +: box fitting matches that side to the
     mesh's own extent along it."""
-    lo, hi = pack.model_elements(item)
+    lo, hi = pack.model_elements(model_name(item))
     a = int(np.argmax(np.asarray(hi) - np.asarray(lo)))
     s = '+' if tip_positive else '-'
     o = '+' if tip_positive else '-'           # two axes turned over together: a half turn, never a mirror
@@ -177,7 +187,7 @@ def write_ours(item, profile, work, sides=24):
         f.write(f'newmtl round\nmap_Kd {item}.png\n')
     assert outward(obj) > 0, item
     return {'id': f'ammo/{item}', 'obj': obj, 'textures': [os.path.join(work, item + '.png')],
-            'axes': lay_along(item, 0), 'box': item, 'outline': 0.02, 'texture': 256}
+            'axes': lay_along(item, 0), 'box': model_name(item), 'outline': 0.02, 'texture': 256}
 
 
 def outward(obj):
@@ -215,7 +225,7 @@ def arsenal_spec(item, mesh, tex, arsenal, brita, work, dest):
     t = (v[:, ax] - v[:, ax].min()) / np.ptp(v[:, ax])
     rad = np.linalg.norm(np.delete(v - v.mean(0), ax, axis=1), axis=1)
     tip_hi = rad[t > 0.9].mean() < rad[t < 0.1].mean()
-    return {'id': f'ammo/{item}', 'obj': obj, 'textures': [texture], 'axes': lay_along(item, ax, tip_hi), 'box': item,
+    return {'id': f'ammo/{item}', 'obj': obj, 'textures': [texture], 'axes': lay_along(item, ax, tip_hi), 'box': model_name(item),
             'outline': 0.02, 'texture': 512, 'dest': os.path.join(dest, 'ammo', item + '.zmesh')}
 
 
