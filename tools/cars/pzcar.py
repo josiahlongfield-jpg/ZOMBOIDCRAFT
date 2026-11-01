@@ -339,7 +339,7 @@ def build(a):
     glass = np.array([any(g in str(p) for g in GLASS) for p in part])
     wheel_of = np.array([int(str(p)[5:]) if str(p).startswith('wheel') else -1 for p in part])
     interior = np.array([('Seat' in str(p)) or ('GloveBox' in str(p)) for p in part])
-    write(a, v, P, UV, glass, wheel_of, interior, atlas, wheels)
+    write(a, v, P, UV, glass, wheel_of, interior, atlas, wheels, part)
 
 
 def column_hits(T, x, z):
@@ -412,7 +412,7 @@ def toon(img, p, n, ok):
     return Image.fromarray(np.clip(out, 0, 255).astype(np.uint8))
 
 
-def write(a, v, P, UV, glass, wheel_of, interior, atlas, wheels):
+def write(a, v, P, UV, glass, wheel_of, interior, atlas, wheels, part=None):
     W, H = atlas.W, atlas.H
     base = np.asarray(atlas.image, float)
     body = wheel_of < 0
@@ -514,15 +514,53 @@ def write(a, v, P, UV, glass, wheel_of, interior, atlas, wheels):
             last[b.name] = b
     com = np.array(floats(v.kv.get('centerOfMassOffset', '0 0 0'), 3))
     for b in last.values():
-        pos = b.block('position', 'inside')
-        o = fit_point(v, np.array(floats(pos.kv.get('offset', '0 0 0'), 3)) + com) - np.array([0, ground_of(v), 0])
-        if v.name in _GROW:
-            g, zc, yb = _GROW[v.name]
-            o = np.array([o[0] * g, (o[1] - yb) * g + yb, (o[2] - zc) * g + zc])
-        eye = [o[0], min(roof - 0.22, o[1] + 0.78), o[2]]
+        seat = None if part is None else (part == 'Seat' + b.name)
+        if seat is not None and seat.any():
+            # sat where the mod's own seat model is: eyes a little over its backrest, the door handle on the
+            # bodywork beside it at hand height (the mirrors left out of the width)
+            q = P[seat].reshape(-1, 3)
+            lo_s, hi_s = q.min(0), q.max(0)
+            cushion = lo_s[1] + 0.35 * (hi_s[1] - lo_s[1])
+            o = np.array([(lo_s[0] + hi_s[0]) / 2, cushion, (lo_s[2] + hi_s[2]) / 2])
+            eye = [o[0], min(roof - 0.18, hi_s[1] + 0.12), o[2] - 0.05]
+            # whoever sits up front looks out through the middle of the windscreen, not along the roof's edge
+            ws = part == 'Windshield'
+            if ws.any() and 'Front' in b.name:
+                wq = P[ws].reshape(-1, 3)
+                eye[1] = min(eye[1], wq[:, 1].min() + 0.45 * (wq[:, 1].max() - wq[:, 1].min()))
+                front_eye = eye[1]
+            shell = P[(wheel_of < 0) & ~interior & ~glass].reshape(-1, 3)
+            near = shell[(np.abs(shell[:, 2] - o[2]) < 0.35) & (shell[:, 1] > cushion) & (shell[:, 1] < cushion + 0.6)]
+            half = np.abs(near[:, 0]).max() if len(near) else size[0] / 2
+            hy = cushion
+            # the seat's own door (the middle one in the back gets in by the door on its right): its handle sits
+            # toward the door's back edge, a little under halfway up
+            name = b.name.replace('Middle', 'Right')
+            door = part == 'Door' + name
+            if door.any():
+                dq = P[door].reshape(-1, 3)
+                dlo, dhi = dq.min(0), dq.max(0)
+                half = max(abs(dlo[0]), abs(dhi[0]))
+                hy = dlo[1] + 0.45 * (dhi[1] - dlo[1])
+                o = np.array([o[0], o[1], dlo[2] + 0.2])
+        else:
+            pos = b.block('position', 'inside')
+            o = fit_point(v, np.array(floats(pos.kv.get('offset', '0 0 0'), 3))) - np.array([0, ground_of(v), 0])
+            if v.name in _GROW:
+                g, zc, yb = _GROW[v.name]
+                o = np.array([o[0] * g, (o[1] - yb) * g + yb, (o[2] - zc) * g + zc])
+            eye = [o[0], min(roof - 0.22, o[1] + 0.78), o[2]]
+            half = size[0] / 2
+            hy = o[1] + 0.45
         seats.append([round(float(eye[0] - centre[0]), 3), round(float(eye[1]), 3), round(float(eye[2] - centre[2]), 3)])
-        side = 1 if o[0] > 0 else -1
-        handles.append([round(float(side * (size[0] / 2 + 0.05)), 3), round(float(o[1] + 0.45), 3), round(float(o[2] - centre[2]), 3)])
+        if seats and len(seats) > 2 and seats[0][1] < seats[-1][1]:
+            seats[-1][1] = seats[0][1]
+        side = 1 if o[0] > 0.05 else -1
+        if 'Right' in b.name:
+            side = -1
+        elif 'Left' in b.name:
+            side = 1
+        handles.append([round(float(side * (half + 0.05)), 3), round(float(hy), 3), round(float(o[2] - centre[2]), 3)])
     fronts = [c for c, _, f in wheels if f]
     rears = [c for c, _, f in wheels if not f]
     wb = float(np.mean([c[2] for c in fronts]) - np.mean([c[2] for c in rears])) if fronts and rears else 2.5
