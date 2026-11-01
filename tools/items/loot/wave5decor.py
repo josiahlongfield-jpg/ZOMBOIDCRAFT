@@ -443,6 +443,122 @@ def searchlight(m, k=0):
         m.seg((x, c - 7.6), (x, c - 10.0), 0.4, 0.4, 'grip', z=6.0, plane='xy')
 
 
+FIBRE = [('#f070b0', '#60c0f0', '#f0f0a0'), ('#40e060', '#2a6ae8', '#f0f0f0'), ('#a060f0', '#f040a0', '#60f0f0'),
+         ('#f03a2a', '#f0c020', '#f8f0e0'), ('#2ae0c0', '#a060f0', '#f070b0'), ('#e8f0ff', '#60a0f0', '#a060f0')]
+
+
+def fibre_optic_lamp(m):
+    """A fibre-optic lamp: the clear cone base with the coloured wheel turning under it, and the spray of fine
+    fibres fanning up and out from its top, each tip a point of light."""
+    m.rod(0.0, 0.6, 2.2, 'dark')
+    for y, r in ((0.6, 1.9), (1.4, 1.6), (2.2, 1.3), (3.0, 1.0)):
+        m.rod(y, y + 0.8, r, 'glow2')                                       # lit cone
+    m.rod(3.8, 4.4, 0.6, 'dark')                                            # collar
+    for i in range(40):
+        a = math.radians(i * 137.5)
+        reach = 3.0 + 2.5 * ((i * 7) % 10) / 10
+        lift = 6.0 + 4.0 * ((i * 3) % 10) / 10
+        tip = (reach * math.cos(a), 4.4 + lift - reach * 0.35, reach * math.sin(a))
+        mid = (tip[0] * 0.35, 4.4 + lift * 0.75, tip[2] * 0.35)
+        for p0, p1 in (((0.0, 4.4, 0.0), mid), (mid, tip)):
+            L = math.dist(p0, p1)
+            mx, my, mz = [(a_ + b_) / 2 for a_, b_ in zip(p0, p1)]
+            yaw = math.degrees(math.atan2(-(p1[2] - p0[2]), p1[0] - p0[0]))
+            pitch = math.degrees(math.atan2(p1[1] - p0[1], math.hypot(p1[0] - p0[0], p1[2] - p0[2])))
+            m.box([mx - L / 2, my - 0.03, mz - 0.03], [mx + L / 2, my + 0.03, mz + 0.03], 'lens',
+                  rot=dict(axis='y', angle=yaw, origin=[mx, my, mz]))
+            del pitch
+        blob(m, tip, (0.12, 0.12, 0.12), GLOW[i % 3])
+
+
+TUBES = ['#f03a2a', '#2ab0f0', '#40e060', '#f0c020', '#f070b0', '#a060f0', '#f8f0e0', '#f06a1a']
+
+
+def neon_tube_kit(m):
+    """A box of straight neon tubes from a sign shop: the long glass tubes with their electrode caps lying in
+    the open cardboard carton, the coil of GTO cable and the little transformer."""
+    m.box([-11.0, 0.0, -3.4], [11.0, 2.4, 3.4], 'cardboard')
+    m.box([-11.0, 2.4, -3.4], [11.0, 2.6, -3.0], 'cardboard')
+    for j, z in enumerate((-2.4, -1.2, 0.0, 1.2, 2.4)):
+        m.rod(-10.0, 10.0, 0.42, 'glow', cx=2.0 + (j % 2) * 0.3, cz=z, axis=0)
+        for x in (-10.6, 10.0):
+            m.rod(x, x + 0.6, 0.48, 'dark', cx=2.0 + (j % 2) * 0.3, cz=z, axis=0)
+    for i in range(10):                                                      # cable coil
+        a0, a1 = math.radians(i * 36), math.radians(i * 36 + 36)
+        flat(m, (12.8 + 1.4 * math.cos(a0), 1.6 * math.sin(a0)), (12.8 + 1.4 * math.cos(a1), 1.6 * math.sin(a1)),
+             0.2, 0.2, 'wire')
+    m.box([11.4, 0.0, -3.2], [14.0, 1.8, -1.6], 'frame')                      # transformer
+    m.box([-3.0, 1.0, 3.4], [3.0, 2.0, 3.45], 'label')
+
+
+MARQUEE = 'ABCDEHLMNOPRSTUW'
+
+
+def marquee_bulb_letters(m, k=0):
+    """A marquee letter: the letter's shape as a shallow painted metal can with a row of round bulbs down its
+    face, stood up on its two little feet."""
+    ch = MARQUEE[k]
+    w, rows = A.glyph(ch)
+    px = 3.0
+    on = {(c, r_) for r_ in range(5) for c in range(w) if rows[r_][c] == '1'}
+    x0 = -w * px / 2
+    for (c, r_) in on:
+        x, y = x0 + c * px, 1.0 + (4 - r_) * px
+        m.box([x, y, -1.2], [x + px, y + px, 0.0], 'body')                    # the can
+        m.box([x, y, 0.0], [x + px, y + px, 0.15], 'face')
+        blob(m, (x + px / 2, y + px / 2, 0.55), (0.55, 0.55, 0.45), 'glow')    # bulb
+        m.rod(0.15, 0.3, 0.65, 'metal', cx=x + px / 2, cz=y + px / 2, axis=2)  # socket ring
+    for x in (x0 + 0.6, -x0 - 0.6):
+        m.box([x - 0.4, 0.0, -2.0], [x + 0.4, 1.0, 0.8], 'dark')               # feet
+
+
+def edison_chandelier(m, k=0):
+    """An industrial chandelier of bare filament bulbs: the round ceiling plate (lying here as its stand), the
+    cloth cords dropping to brass sockets at different lengths, the long squirrel-cage bulbs glowing amber."""
+    m.rod(0.0, 0.8, 5.5, 'metal')                                              # the plate as a base
+    m.rod(0.8, 1.6, 1.0, 'metal')
+    m.rod(1.6, 18.0, 0.35, 'metal')                                            # the stem it hangs from
+    m.rod(18.0, 18.8, 4.5, 'metal')                                            # canopy
+    n = (5, 7, 9)[k]
+    for i in range(n):
+        a = math.radians(i * 360 / n)
+        x, z = 3.4 * math.cos(a), 3.4 * math.sin(a)
+        drop = 4.0 + 3.0 * ((i * 5) % 7) / 6
+        m.rod(18.0 - drop, 18.0, 0.12, 'cord', cx=x, cz=z)                      # cord
+        m.rod(18.0 - drop - 1.0, 18.0 - drop, 0.4, 'brass', cx=x, cz=z)         # socket
+        blob(m, (x, 18.0 - drop - 2.4, z), (0.65, 1.4, 0.65), 'glass')          # bulb
+        m.rod(18.0 - drop - 3.4, 18.0 - drop - 1.2, 0.08, 'glow', cx=x, cz=z)    # filament
+
+
+TIFFANY = [('#3a8a3a', '#e8c040', '#c83a3a'), ('#2a6ae8', '#60c0f0', '#e8e0a0'), ('#c8602a', '#f0c020', '#3a7a3a'),
+           ('#8a2a6a', '#e070b0', '#e8c040'), ('#2a7a6a', '#f0a020', '#e8e4c8'), ('#a8281f', '#f0c040', '#2a4a8a')]
+
+
+def tiffany_lamp(m):
+    """A Tiffany-style table lamp: the bronze base and stem, the cone shade of leaded glass in panels with a
+    flower border, the bronze cap and finial, two pull chains."""
+    m.rod(0.0, 0.6, 3.6, 'bronze')                                              # base
+    blob(m, (0.0, 2.2, 0.0), (2.6, 2.0, 2.6), 'bronze')
+    m.rod(3.0, 10.0, 0.45, 'bronze')
+    for y, r in ((10.0, 7.6), (11.0, 6.8), (12.0, 5.8), (13.0, 4.6), (14.0, 3.3), (15.0, 2.0)):
+        n = int(r * 3)
+        for i in range(n):                                                      # leaded panels
+            a = math.radians(i * 360 / n)
+            g = ('glow', 'glow2', 'glow3')[(i + int(y)) % 3] if y < 12.0 else 'glow2'
+            x, z = r * math.cos(a), r * math.sin(a)
+            m.box([x - r * 1.05 * math.pi / n, y, z - 0.25], [x + r * 1.05 * math.pi / n, y + 1.0, z + 0.25], g,
+                  rot=dict(axis='y', angle=-math.degrees(a) - 90, origin=[x, y + 0.5, z]))
+    for y, r in ((11.0, 6.8), (13.0, 4.6)):                                     # lead lines
+        for i in range(24):
+            a0, a1 = math.radians(i * 15), math.radians(i * 15 + 15)
+            flat(m, (r * math.cos(a0), r * math.sin(a0)), (r * math.cos(a1), r * math.sin(a1)), 0.15, 0.08, 'bronze',
+                 y0=y)
+    m.rod(16.0, 16.6, 1.6, 'bronze')                                            # cap
+    m.rod(16.6, 17.6, 0.3, 'bronze')                                            # finial
+    for x in (-0.6, 0.6):
+        m.rod(7.5, 10.0, 0.06, 'brass', cx=x, cz=0.8)                           # pull chains
+
+
 # ================================================================== tables
 
 
@@ -493,6 +609,22 @@ def _looks():
                                   trim=paint(c), metal=A.steel) for k, (w, c) in enumerate(GLOBE)]
     out['searchlight'] = [dict(b=searchlight, body=paint('#4a5236'), metal=A.steel, glow=neon('#f8f4e0'),
                                grip=A.plastic('#1e1f20'))]
+    out['fibre_optic_lamp'] = [dict(b=fibre_optic_lamp, glow=neon(a), glow2=neon(b2), glow3=neon(c),
+                                    dark=A.plastic('#1e1f20'), lens=A.flat('#d8e4f0', 0.02)) for a, b2, c in FIBRE]
+    out['neon_tube_kit'] = [dict(b=neon_tube_kit, word='NEON', base='#c8a070', glow=neon(c), dark=A.plastic('#1e1f20'),
+                                 cardboard=A.cardboard, wire=A.plastic('#e8e4da'), frame=A.plastic('#2a2a2a'))
+                            for c in TUBES]
+    out['marquee_bulb_letters'] = [dict(b=lambda m, k=k: marquee_bulb_letters(m, k),
+                                        body=paint(('#a8281f', '#1e1f20', '#e8e4da', '#2a4a8a')[k % 4]),
+                                        face=paint(('#c8402a', '#2a2a2a', '#f0ece0', '#3a5aa0')[k % 4]),
+                                        glow=neon('#fff0c0'), metal=A.chrome, dark=A.plastic('#1e1f20'))
+                                   for k in range(len(MARQUEE))]
+    out['edison_chandelier'] = [dict(b=lambda m, k=k: edison_chandelier(m, k), metal=paint('#2a2a2a'),
+                                     cord=A.fabric('#2a2422'), brass=P.brass, glass=A.glass('#e8c890'),
+                                     glow=neon('#f8b040')) for k in range(3)]
+    out['tiffany_lamp'] = [dict(b=tiffany_lamp, glow=A.glass(a, a, 1.0), glow2=A.glass(b2, b2, 1.0),
+                                glow3=A.glass(c, c, 1.0), bronze=lambda f: P.paint(f, '#5a4a2a', steel_base=0.5, chips=0.4),
+                                brass=P.brass) for a, b2, c in TIFFANY]
     return out
 
 

@@ -1084,6 +1084,11 @@ neon_arrow_sign | Neon Arrow Sign | P | 70 | 25.0 |
 light_up_dance_floor | Light-Up Dance Floor | P | 80 | 12.0 |
 gas_pump_globe | Gas Pump Globe | P | 70 | 3.0 | pawn
 searchlight | Searchlight | P | 90 | 45.0 |
+fibre_optic_lamp | Fibre Optic Lamp | C | 6 | 0.8 | kids thrift
+neon_tube_kit | Neon Tube Kit | R | 30 | 2.0 | hard
+marquee_bulb_letters | Marquee Bulb Letters | R | 35 | 1.5 |
+edison_chandelier | Edison Bulb Chandelier | R | 30 | 6.0 | liq diner
+tiffany_lamp | Tiffany-Style Lamp | P | 60 | 4.0 | mansion pawn
 """
 
 ROSTER['Junk & scrap'] = """
