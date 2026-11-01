@@ -26,7 +26,10 @@ public final class SurvivorLayer extends RenderLayer<AvatarRenderState, PlayerMo
 
     public static void register() {
         LivingEntityRenderLayerRegistrationCallback.EVENT.register((type, renderer, helper, context) -> {
-            if (renderer instanceof AvatarRenderer<?> avatar) helper.register(new SurvivorLayer(avatar));
+            if (renderer instanceof AvatarRenderer<?> avatar) {
+                helper.register(new SurvivorLayer(avatar));
+                com.zomboidcraft.client.combat.ArmModels.bake(context);
+            }
         });
     }
 
