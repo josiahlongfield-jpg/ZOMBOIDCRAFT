@@ -8,10 +8,12 @@ classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1"
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
-echo "===== persistent mapping"
-for j in $MC_JARS; do unzip -Z1 "$j"; done | grep -E 'blaze3d/opengl/|renderpearl' | grep -iE 'Device|Feature|Capab|Backend' | sort -u | head -40
-for c in $(for j in $MC_JARS; do unzip -Z1 "$j"; done | grep -E '\.class$' | grep -iE '(opengl|renderpearl).*(Device|Feature)' | sed 's/\.class$//;s#/#.#g' | sort -u | head -12); do
-  if javap -cp "$CP" -p -c "$c" 2>/dev/null | grep -qi persistent; then echo "-- $c"; javap -cp "$CP" -p -c "$c" 2>&1 | grep -n -i -B30 -A6 'persistent' | head -120; fi
+echo "===== persistent mapping 2"
+for j in $MC_JARS; do unzip -Z1 "$j"; done | grep -E '^com/mojang/(blaze3d/opengl|renderpearl/backend/(gl|opengl))' | sort -u | head -80
+for c in $(for j in $MC_JARS; do unzip -Z1 "$j"; done | grep -E '\.class$' | grep -E '^com/mojang/(blaze3d/opengl|renderpearl/backend/(gl|opengl))' | sed 's/\.class$//;s#/#.#g' | sort -u); do
+  out=$(javap -cp "$CP" -p -c "$c" 2>/dev/null)
+  if echo "$out" | grep -q 'DeviceFeatures."<init>"'; then echo "-- $c"; echo "$out" | grep -n -B70 -A3 'DeviceFeatures."<init>"' | grep -vE ' (aload|astore|dup|pop)' | head -150; fi
+  if echo "$out" | grep -qiE 'buffer_storage|persistent'; then echo "-- refs in $c"; echo "$out" | grep -n -iE -B4 -A4 'buffer_storage|persistent' | head -40; fi
 done
 echo "===== cats eyes"
 javap -cp "$CP" -p net.minecraft.client.renderer.LightmapRenderStateExtractor 2>&1 | head -30
