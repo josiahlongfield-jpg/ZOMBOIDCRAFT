@@ -8,13 +8,14 @@ classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1"
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
-echo "===== persistent mapping 2"
-for j in $MC_JARS; do unzip -Z1 "$j"; done | grep -E '^com/mojang/(blaze3d/opengl|renderpearl/backend/(gl|opengl))' | sort -u | head -80
-for c in $(for j in $MC_JARS; do unzip -Z1 "$j"; done | grep -E '\.class$' | grep -E '^com/mojang/(blaze3d/opengl|renderpearl/backend/(gl|opengl))' | sed 's/\.class$//;s#/#.#g' | sort -u); do
-  out=$(javap -cp "$CP" -p -c "$c" 2>/dev/null)
-  if echo "$out" | grep -q 'DeviceFeatures."<init>"'; then echo "-- $c"; echo "$out" | grep -n -B70 -A3 'DeviceFeatures."<init>"' | grep -vE ' (aload|astore|dup|pop)' | head -150; fi
-  if echo "$out" | grep -qiE 'buffer_storage|persistent'; then echo "-- refs in $c"; echo "$out" | grep -n -iE -B4 -A4 'buffer_storage|persistent' | head -40; fi
-done
+echo "===== persistent mapping 3"
+G=com.mojang.renderpearl.backend.opengl.GlDevice
+javap -cp "$CP" -p -c -constants $G > /tmp/gldev.txt 2>&1
+awk '/^  [a-z].*\(.*\);$|^  static \{\};$/{m=$0} /USE_GL_ARB_buffer_storage|USE_GL_ARB_direct_state_access/{print NR": ["m"] "$0}' /tmp/gldev.txt | head -40
+for M in $(awk '/^  [a-z].*\(.*\);$|^  static \{\};$/{m=NR} /putstatic.*USE_GL_ARB_buffer_storage/{print m}' /tmp/gldev.txt | sort -u); do echo "--- method at $M"; sed -n "${M},\$p" /tmp/gldev.txt | awk 'NR>1 && /^  [a-z].*\(.*\);$|^  static \{\};$/{exit} {print}' | grep -vE ' (aload|astore|dup|pop)$' | head -120; done
+javap -cp "$CP" -p -c -constants com.mojang.renderpearl.backend.opengl.BufferStorage 2>&1 | head -60
+javap -cp "$CP" -p -c -constants com.mojang.renderpearl.api.device.HintsAndWorkarounds 2>&1 | head -30
+grep -n -i "nvidia\|vendor\|getProperty\|Boolean.getBoolean" /tmp/gldev.txt | head -20
 echo "===== cats eyes"
 javap -cp "$CP" -p net.minecraft.client.renderer.LightmapRenderStateExtractor 2>&1 | head -30
 javap -cp "$CP" -p net.minecraft.client.renderer.state.LightmapRenderState 2>&1 | head -30
