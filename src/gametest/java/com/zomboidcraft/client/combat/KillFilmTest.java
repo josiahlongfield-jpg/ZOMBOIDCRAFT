@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 public class KillFilmTest implements FabricClientGameTest {
     private static final Logger LOG = LoggerFactory.getLogger("ZCKILL");
     private static int frame;
+    private static String outfit = "civilian";
 
     private enum Aim {
         HEAD(1.72, 0), TORSO(1.2, 0), LEGS(0.5, 0.13);
@@ -47,12 +48,19 @@ public class KillFilmTest implements FabricClientGameTest {
             ctx.getInput().resizeWindow(1280, 720);
             sp.getServer().runCommand("effect give @a night_vision infinite 0 true");
             stage(ctx, sp);
+            // every one standing for its turn: none playing dead, none spawned crawling
+            ZcConfig.get().zombieLore.fakeDead = ZcConfig.ZombieLore.FakeDead.OFF;
+            ZcConfig.get().combat.crawlerSpawnChance = 0;
             LOG.info("ZCKILL rules torso x{} limbs x{} onlyHeadshots {}", ZcConfig.get().combat.zombieBodyShots,
                     ZcConfig.get().combat.zombieLimbShots, ZcConfig.get().combat.onlyHeadshotsKill);
             scene(ctx, sp, "pistol", "9mm pistol", ZcConfig.ZombieLore.Toughness.NORMAL, Aim.HEAD, 5, true, 6);
             scene(ctx, sp, "pistol", "9mm pistol", ZcConfig.ZombieLore.Toughness.NORMAL, Aim.TORSO, 5, true, 8);
             scene(ctx, sp, "pistol", "9mm pistol", ZcConfig.ZombieLore.Toughness.NORMAL, Aim.LEGS, 5, true, 12);
             scene(ctx, sp, "pistol", "9mm pistol", ZcConfig.ZombieLore.Toughness.TOUGH, Aim.HEAD, 5, true, 6);
+            outfit = "soldier";     // Zomboid's zombie armour: the flak vest turns part of a body shot, never a headshot
+            scene(ctx, sp, "pistol", "9mm pistol", ZcConfig.ZombieLore.Toughness.NORMAL, Aim.TORSO, 5, true, 12);
+            scene(ctx, sp, "pistol", "9mm pistol", ZcConfig.ZombieLore.Toughness.NORMAL, Aim.HEAD, 5, true, 6);
+            outfit = "civilian";
             scene(ctx, sp, "rimfire", ".22 rifle", ZcConfig.ZombieLore.Toughness.NORMAL, Aim.HEAD, 5, true, 6);
             scene(ctx, sp, "assault_rifle", "5.56 rifle", ZcConfig.ZombieLore.Toughness.TOUGH, Aim.HEAD, 6, true, 6);
             scene(ctx, sp, "assault_rifle", "5.56 rifle", ZcConfig.ZombieLore.Toughness.NORMAL, Aim.TORSO, 6, true, 6);
@@ -91,6 +99,14 @@ public class KillFilmTest implements FabricClientGameTest {
         ZcConfig.get().zombieLore.toughness = tough;
         sp.getServer().runCommand("summon zombie 0 100 0 {NoAI:1b,Rotation:[180f,0f]}");
         sp.getServer().runCommand("give @a zomboidcraft:" + gun);
+        String wear = outfit;
+        sp.getServer().runOnServer(server -> {
+            for (Zombie z : server.overworld().getEntitiesOfClass(Zombie.class, new AABB(-3, 98, -3, 3, 104, 3))) {
+                z.setAttached(com.zomboidcraft.zombie.ZombieLook.OUTFIT, wear);
+                LOG.info("ZCKILL zombie outfit {} armour share {} vanilla armour {} pose {}", wear,
+                        com.zomboidcraft.zombie.ZombieArmor.share(z), z.getArmorValue(), z.getPose());
+            }
+        });
         ctx.waitTicks(20);
         ctx.runOnClient(mc -> mc.player.getInventory().setSelectedSlot(0));
         // the player's eye on a line to the aim point
@@ -103,7 +119,7 @@ public class KillFilmTest implements FabricClientGameTest {
             p.getMainHandItem().set(GunState.TYPE, new GunState(true, 30, false));
         });
         ctx.waitTicks(20);
-        String tag = label + " | " + aim.name().toLowerCase() + " | " + tough.name().toLowerCase() + " zombie | "
+        String tag = label + " | " + aim.name().toLowerCase() + " | " + tough.name().toLowerCase() + " " + outfit + " zombie | "
                 + (int) range + " blocks | " + (aiming ? "aimed" : "hip");
         float[] hp = health(sp);
         LOG.info("ZCKILL scene {} max hp {}", tag, hp[1]);
