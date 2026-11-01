@@ -57,8 +57,12 @@ public class LiftRideTest implements FabricClientGameTest {
             }
             log(sp, ctx, "after G on the doors");
             // 2. into the car, facing the panel on its right-hand wall
-            double cx = s.wx(s.w / 2.0, s.d / 2.0), cz = s.wz(s.w / 2.0, s.d / 2.0);
-            stand(sp, cx, s.landings[0], cz, yaw(s.r), 16);
+            double cx = s.wx(s.w / 2.0, 1.1), cz = s.wz(s.w / 2.0, 1.1);
+            // the panel's middle: on the right-hand wall as you face the doors, by them
+            double px = s.wx(s.w - 0.11, 0.45) - cx, pz = s.wz(s.w - 0.11, 0.45) - cz, py = 1.38 - 1.62;
+            float lookYaw = (float) Math.toDegrees(Math.atan2(-px, pz));
+            float lookPitch = (float) -Math.toDegrees(Math.atan2(py, Math.hypot(px, pz)));
+            stand(sp, cx, s.landings[0], cz, lookYaw, lookPitch);
             ctx.waitTicks(10);
             shot(ctx, "in-car");
             String dot = ctx.computeOnClient(mc -> String.valueOf(dotAt(mc)));
