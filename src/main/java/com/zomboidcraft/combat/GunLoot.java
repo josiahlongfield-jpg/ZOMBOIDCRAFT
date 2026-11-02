@@ -159,9 +159,10 @@ public final class GunLoot {
             case "car/swat" -> SWAT;
             case "shop/army", "car/military" -> ARMY;
             case "shop/security" -> SECURITY;
-            case "shop/home_guns", "shop/farm" -> HUNTING;
+            case "shop/home_guns" -> HUNTING;     // a hunter's gun cabinet, in town or on a farm
             case "shop/basement_guns", "car/survivor" -> SURPLUS;
-            case "shop/storage" -> STORAGE;
+            // shop/storage is every crate, box and counter's default, not a storage unit (the county has none yet), and
+            // Arsenal stocks no farm containers: neither takes guns
             default -> null;
         };
         if (place != null && at != null && !ARMY.equals(place) && !path.startsWith("car/")) {
