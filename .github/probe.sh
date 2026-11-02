@@ -7,6 +7,9 @@ echo "MC jars: $MC_JARS"
 classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1" | sort -u; }
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
+echo "===== LOOT recipe map (temporary)"
+javap -cp "$CP" -p net.minecraft.world.item.crafting.RecipeMap 2>&1 | head -30
+javap -cp "$CP" -p net.minecraft.world.item.crafting.RecipeManager 2>&1 | grep -E "prepare|apply|RecipeMap|recipes" | head -20
 
 echo "===== gpu timer targets"
 javap -cp "$CP" -p net.minecraft.client.renderer.LevelRenderer 2>&1 | grep -E "executeSolid|renderLevel| render\(|addMainPass"
