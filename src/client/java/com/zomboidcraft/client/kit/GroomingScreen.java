@@ -7,17 +7,19 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 /**
- * Hair and beard (H on the kit's Clothing page): your survivor turning in the middle, the styles you can cut to now
+ * Hair and beard (H on the kit's Clothing page): your survivor in the middle (drag to turn them), the styles you can cut to now
  * either side (scissors cut, a razor shaves), your hair colour along the bottom, and whether you grow a beard. Styles
  * longer than your hair is now are greyed out until it grows.
  */
 public class GroomingScreen extends Screen {
     private final Screen back;
     private Look shown;
+    /** You in the middle, turned by dragging. */
+    private final SpinFigure figure = new SpinFigure();
 
     public GroomingScreen(Screen back) {
         super(Component.literal("Hair and beard"));
@@ -158,7 +160,26 @@ public class GroomingScreen extends Screen {
         KitDraw.capsCentred(g, font, "Hair colour", width / 2f, height - 60, KitDraw.LINK, 0.8f);
         KitDraw.textCentred(g, font, "Scissors cut, a razor shaves. It grows back over the weeks.", width / 2f, height - 22, KitDraw.DIM, 0.8f);
         int cx = width / 2;
-        InventoryScreen.extractEntityInInventoryFollowsMouse(g, cx - 90, 40, cx + 90, height - 70, 110, 0.0625f, mx, my, minecraft.player);
+        figure.draw(g, cx - 90, 40, cx + 90, height - 70, 110, minecraft.player);
+    }
+
+    @Override
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        if (super.mouseClicked(event, doubleClick)) return true;
+        int cx = width / 2;
+        return event.button() == 0 && figure.pressed(event.x(), event.y(), cx - 90, 40, cx + 90, height - 70);
+    }
+
+    @Override
+    public boolean mouseDragged(MouseButtonEvent event, double dx, double dy) {
+        figure.dragged(event.x());
+        return figure.dragging() || super.mouseDragged(event, dx, dy);
+    }
+
+    @Override
+    public boolean mouseReleased(MouseButtonEvent event) {
+        figure.released();
+        return super.mouseReleased(event);
     }
 
     @Override
