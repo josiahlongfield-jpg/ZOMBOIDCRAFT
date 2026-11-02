@@ -9,6 +9,11 @@ sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
 
+echo "===== stitcher padding 2"
+javap -cp "$CP" -p -c net.minecraft.client.renderer.texture.SpriteLoader 2>&1 | grep -A80 'Preparations stitch(' | sed -n '60,140p'
+javap -cp "$CP" -p -c net.minecraft.client.renderer.texture.Stitcher 2>&1 | grep -A30 'Stitcher(int, int, int, int)'
+javap -cp "$CP" -p -c net.minecraft.client.renderer.texture.SpriteLoader 2>&1 | grep -B5 -A30 'getStitchedSprites(net' | head -60
+
 echo "===== stitcher padding"
 javap -cp "$CP" -p net.minecraft.client.renderer.texture.Stitcher 2>&1 | head -30
 javap -cp "$CP" -p -c net.minecraft.client.renderer.texture.Stitcher 2>&1 | grep -B2 -A40 'void registerSprite' | head -60
