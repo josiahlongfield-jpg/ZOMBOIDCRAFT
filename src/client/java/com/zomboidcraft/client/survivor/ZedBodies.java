@@ -50,6 +50,7 @@ public final class ZedBodies {
     private static final int TEX = 512;
     /** The lighter level's textures: a quarter of the pixels, so a horde's worth fit in the textures kept. */
     private static final int TEX_LOW = 256;
+    private static long lastSweep;
     /** Zomboid's body parts, as its blood and holes are laid out (tools/pz/zombie_fx.py). */
     private static final String[] PARTS = {"Head", "Chest", "Waist", "Belt", "Crotch", "LeftArm", "RightArm", "LeftLeg", "RightLeg"};
     /** Items whose only texture sits in Zomboid's texture packs, and the loose item worn in their place. */
@@ -483,7 +484,13 @@ public final class ZedBodies {
             }
             e.anim.pose(pack, e.upper, e.pos, e.turn);
         }
-        if (ENTRIES.size() > 256) ENTRIES.values().removeIf(x -> System.currentTimeMillis() - x.seen > 5_000);
+        // forget zombies not seen for 5 s, once a second at most (with a horde over 256 this swept every entry for
+        // every zombie drawn, 5% of the frame in Josiah's 600-zombie profile)
+        long now = System.currentTimeMillis();
+        if (ENTRIES.size() > 256 && now - lastSweep > 1_000) {
+            lastSweep = now;
+            ENTRIES.values().removeIf(x -> now - x.seen > 5_000);
+        }
 
         Drawn d = new Drawn();
         d.pack = pack;

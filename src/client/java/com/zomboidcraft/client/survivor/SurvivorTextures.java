@@ -37,10 +37,10 @@ public final class SurvivorTextures {
 
     /** Pixels kept made (about 256 MB): bodies are a megapixel, garments a sixteenth of that. */
     /** Pixels of made textures kept (a horde of Zomboid zombies near and mid range, their corpses, the survivors). */
-    // 128M pixels (512 MB on the card) filled Josiah's 12 GB card with Photon on (2026-11-02, 11.3 of 12 GB in use);
-    // 64M pixels (256 MB) still holds a downtown horde: the nearest 10 in their own looks at 512, the rest in the shared
-    // crowd looks at 256
-    private static final long BUDGET = 64L << 20;
+    // 128M pixels (512 MB): a 600-zombie horde's shared looks (8 an outfit, at 256 far and 512 for the nearest) need
+    // about 110M; at 64M they were thrown away and made again nonstop (551 in 30 s, Josiah's profile 2026-11-02).
+    // The card has room for it since the item and block sheets were cut
+    private static final long BUDGET = 128L << 20;
 
     public static int madeCount() {
         return made;

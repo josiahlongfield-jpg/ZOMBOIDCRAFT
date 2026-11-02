@@ -94,6 +94,9 @@ public final class NpcSkinDraw {
                                   int light, int overlay, PoseStack poseStack, SubmitNodeCollector collector) {
         // no bones: the buffers were skinned already (skinAll), shared by everyone in that pose
         float[] m = bones == null ? null : matrices(bones);
+        // the lightest level (far zombies, 16+ blocks) draws a garment's outside only: its inside shows only looking
+        // into an open coat, and drawing every sheet twice was a third of a far zombie's corners (2026-11-02 horde)
+        boolean insides = level < 2;
         for (int g = 0; g < skin.groups.length; g++) {
             NpcSkin.Group gr = skin.groups[g];
             if (gr.level != level || !show.test(gr)) {
@@ -107,7 +110,7 @@ public final class NpcSkinDraw {
                 if (buffers[g * 2] == null) continue;
                 float[] pos = (float[]) buffers[g * 2], normal = (float[]) buffers[g * 2 + 1];
                 collector.submitCustomGeometry(poseStack, RenderTypes.entityCutoutCull(tex),
-                        (pose, out) -> draw(gr, pos, normal, 0, gr.tris.length, gr.bothSides, pose, out, light, overlay));
+                        (pose, out) -> draw(gr, pos, normal, 0, gr.tris.length, gr.bothSides && insides, pose, out, light, overlay));
                 continue;
             }
             if (buffers[g * 2] == null) {
@@ -117,7 +120,7 @@ public final class NpcSkinDraw {
             float[] pos = (float[]) buffers[g * 2], normal = (float[]) buffers[g * 2 + 1];
             skin(gr, m, pos, normal);
             collector.submitCustomGeometry(poseStack, RenderTypes.entityCutoutCull(tex),
-                    (pose, out) -> draw(gr, pos, normal, 0, gr.tris.length, gr.bothSides, pose, out, light, overlay));
+                    (pose, out) -> draw(gr, pos, normal, 0, gr.tris.length, gr.bothSides && insides, pose, out, light, overlay));
         }
     }
 
