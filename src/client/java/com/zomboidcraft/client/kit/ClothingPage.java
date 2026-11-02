@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
@@ -49,7 +48,7 @@ final class ClothingPage {
         g.fill(x + 236, y + 312, x + 380, y + 318, 0x40000000);
         InjuryGlowLayer.capturing = true;
         try {
-            InventoryScreen.extractEntityInInventoryFollowsMouse(g, x + 222, y + 62, x + 394, y + 322, 112, 0.0625f, mx, my, player);
+            screen.figure.draw(g, x + 222, y + 62, x + 394, y + 322, 112, player);
         } finally {
             InjuryGlowLayer.capturing = false;
         }

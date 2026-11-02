@@ -111,6 +111,26 @@ public class KitUiTest implements FabricClientGameTest {
                 ctx.takeScreenshot("page-" + page.toLowerCase());
             }
 
+            // the figure stands still facing out whatever the mouse does, and a drag on it turns it round
+            ctx.runOnClient(mc -> {
+                if (mc.gui.screen() instanceof KitScreen<?> k) k.open(KitScreen.Page.CHARACTER);
+            });
+            ctx.waitTicks(3);
+            ctx.takeScreenshot("figure-front");
+            for (int step = 0; step <= 48; step++) {
+                final int s = step;
+                ctx.runOnClient(mc -> {
+                    if (!(mc.gui.screen() instanceof KitScreen<?> k)) return;
+                    double fx = k.left() + 308, fy = k.top() + 190;
+                    if (s == 0) k.mouseClicked(new MouseButtonEvent(fx, fy, new MouseButtonInfo(0, 0)), false);
+                    else if (s < 48) k.mouseDragged(new MouseButtonEvent(fx + s * 4.7, fy, new MouseButtonInfo(0, 0)), 4.7, 0);
+                    else k.mouseReleased(new MouseButtonEvent(fx + s * 4.7, fy, new MouseButtonInfo(0, 0)));
+                });
+                ctx.waitTicks(1);
+                ctx.takeScreenshot(String.format("figure-spin-%02d", step));
+            }
+            LOG.info("ZCUI figure spun");
+
             // right click on the first tab should not switch
             if (!tabs.isEmpty()) {
                 click(ctx, tabs.get(0)[0], tabs.get(0)[1], 1);

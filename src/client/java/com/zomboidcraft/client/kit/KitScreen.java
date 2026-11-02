@@ -77,6 +77,8 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
 
     final CharacterPage character = new CharacterPage(this);
     final ClothingPage clothing = new ClothingPage(this);
+    /** You on the Character and Clothing pages, turned by dragging (shared, so it stays turned between them). */
+    final SpinFigure figure = new SpinFigure();
     final PackPage pack = new PackPage(this);
     final SuppliesPage supplies = new SuppliesPage(this);
     final BenchPage bench = new BenchPage(this);
@@ -510,6 +512,9 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
                 return true;
             }
         }
+        // a press on you (anywhere nothing else answered) turns you round as the mouse drags
+        if ((page == Page.CHARACTER || page == Page.CLOTHING) && menu.getCarried().isEmpty())
+            figure.pressed(mx, my, leftPos + 222, topPos + 62, leftPos + 394, topPos + 322);
         return true;
     }
 
@@ -523,6 +528,7 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
             if (h.click() != null) h.click().run();
         }
         pressed = null;
+        figure.released();
         if (page == Page.MAP) map.released(event.x(), event.y());
         if (page == Page.BENCH) bench.released();
         return true;
@@ -541,6 +547,7 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
             }
             return true;
         }
+        figure.dragged(event.x());
         if (page == Page.MAP) map.dragged(event.x(), event.y());
         if (page == Page.BENCH) bench.dragged(event.x(), event.y());
         return true;
