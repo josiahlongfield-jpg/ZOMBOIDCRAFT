@@ -114,6 +114,7 @@ public final class DecorEntity extends BaseContainerBlockEntity {
     @Override
     protected AbstractContainerMenu createMenu(int id, Inventory inventory) {
         return items.size() == 27 ? ChestMenu.threeRows(id, inventory, this)
-                : items.size() == 18 ? ChestMenu.twoRows(id, inventory, this) : ChestMenu.oneRow(id, inventory, this);
+                : items.size() == 18 ? new ChestMenu(net.minecraft.world.inventory.MenuType.GENERIC_9x2, id, inventory, this, 2)
+                : new ChestMenu(net.minecraft.world.inventory.MenuType.GENERIC_9x1, id, inventory, this, 1);
     }
 }

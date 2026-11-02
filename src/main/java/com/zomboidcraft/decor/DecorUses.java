@@ -165,7 +165,7 @@ public final class DecorUses {
         }
         if (!e.getItem(0).isEmpty()) {
             ItemStack back = e.removeItemNoUpdate(0);
-            if (!player.getInventory().add(back)) player.drop(back, false);
+            if (!player.getInventory().add(back)) net.minecraft.world.level.block.Block.popResource(level, player.blockPosition(), back);
             e.setChanged();
             level.setBlock(pos, s.setValue(DecorBlock.ON, false), 3);
             say(player, "You take the clothes back off it.");
@@ -431,7 +431,6 @@ public final class DecorUses {
             if (z.distanceToSqr(at) > 2.5) {
                 z.getNavigation().moveTo(at.x, at.y, at.z, 1.0);
             } else {
-                z.swing(net.minecraft.world.InteractionHand.MAIN_HAND);
                 z.getLookControl().setLookAt(at);
             }
         }
@@ -501,7 +500,7 @@ public final class DecorUses {
         Item item = BuiltInRegistries.ITEM.getValue(ZomboidCraft.id(id));
         if (item == Items.AIR) return false;
         ItemStack s = new ItemStack(item);
-        if (!player.getInventory().add(s)) player.drop(s, false);
+        if (!player.getInventory().add(s)) net.minecraft.world.level.block.Block.popResource(player.level(), player.blockPosition(), s);
         return true;
     }
 
