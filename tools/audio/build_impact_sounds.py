@@ -67,6 +67,10 @@ def trim(a):
     return a
 
 
+# Josiah 2026-11-02: strikes on surfaces were too loud, "reduce by at least 30%"; 0.6 is 40% quieter (zombie hits untouched)
+STRIKE_VOLUME = 0.6
+
+
 def main():
     fs_dir, sx_dir = Path(sys.argv[1]), Path(sys.argv[2])
     fs = json.loads((fs_dir / "manifest.json").read_text())
@@ -100,11 +104,13 @@ def main():
             a *= 10 ** (-1 / 20) / max(np.abs(a).max(), 1e-6)
             subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "f32le", "-ar", str(RATE), "-ac", "1", "-i", "-",
                             "-c:a", "libvorbis", "-q:a", "6", str(out / f"{i}.ogg")], input=a.tobytes(), check=True)
-            names.append({"name": f"zomboidcraft:{folder}/{i}", "attenuation_distance": rng})
+            names.append({"name": f"zomboidcraft:{folder}/{i}", "attenuation_distance": rng, **({"volume": STRIKE_VOLUME} if event.startswith("weapon.bullet") else {})})
         ours[event] = {"sounds": names}
         print(event, len(takes), "takes", [round(len(t) / RATE, 2) for t in takes])
     # Josiah 08:14: the shooter hears the same fleshy hits on zombies they shoot, further off (Guns.hitEntity)
-    ours["weapon.bullet.whizz"] = {"sounds": [dict(s, attenuation_distance=48) for s in ours["weapon.bullet.impact.nearby"]["sounds"]]}
+    # the whizz shares the nearby takes but is a round going past, not a strike, so it keeps full volume
+    ours["weapon.bullet.whizz"] = {"sounds": [{k: v for k, v in dict(s, attenuation_distance=48).items() if k != "volume"}
+                                              for s in ours["weapon.bullet.impact.nearby"]["sounds"]]}
     sj.write_text(json.dumps(ours, indent=2) + "\n")
 
     path = ROOT / "CREDITS.md"
