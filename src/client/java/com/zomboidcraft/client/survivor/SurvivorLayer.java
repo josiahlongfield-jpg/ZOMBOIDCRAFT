@@ -43,6 +43,9 @@ public final class SurvivorLayer extends RenderLayer<AvatarRenderState, PlayerMo
         pose.scale(-1, -1, 1);
         if (d.deathTurn != 0) pose.mulPose(new Matrix4f().rotationZ((float) Math.toRadians(-d.deathTurn)));
         pose.mulPose(new Matrix4f().rotationY((float) Math.PI));
+        // turned round on the appearance page as far as she's been dragged
+        float spin = com.zomboidcraft.client.kit.AppearanceScreen.spinOf(state);
+        if (spin != 0) pose.mulPose(new Matrix4f().rotationY((float) Math.toRadians(spin)));
         int overlay = LivingEntityRenderer.getOverlayCoords(state, 0);
         NpcSkinDraw.submitWith(d.pack.skin, d.skin,
                 g -> g.piece.equals("body") || g.piece.equals(d.hairPiece) || g.piece.equals(d.beardPiece) || d.clothes.containsKey(g.piece),

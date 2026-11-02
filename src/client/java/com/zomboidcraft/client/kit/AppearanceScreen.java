@@ -42,8 +42,22 @@ public final class AppearanceScreen extends Screen {
     private float spin;
     private boolean turning;
     private int[] figure;
-    /** The turn for the figure being drawn right now (InventoryScreenMixin adds it to her body's), 0 otherwise. */
+    /** The turn for the figure being drawn right now, 0 otherwise; and the figure's render state with its turn. */
     public static float drawSpin;
+    private static Object spunState;
+    private static float spunBy;
+
+    /** InventoryScreenMixin: a figure's render state was just made; it's the page's if one is being drawn now. */
+    public static void noteFigure(Object state) {
+        if (drawSpin == 0) return;
+        spunState = state;
+        spunBy = drawSpin;
+    }
+
+    /** How far (degrees) the survivor layer turns this figure: the page's dragged turn for its figure, else 0. */
+    public static float spinOf(Object state) {
+        return state != null && state == spunState ? spunBy : 0;
+    }
     private String bodyHair = "", eyes = "", lips = "", paint = "";
     private final List<Row> rows = new ArrayList<>();
     private int[] done, random, zoom;

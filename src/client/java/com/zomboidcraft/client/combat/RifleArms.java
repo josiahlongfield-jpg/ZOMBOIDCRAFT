@@ -31,10 +31,11 @@ final class RifleArms {
     private static final float REACH = 10.5f, FIST = 1.5f, HAND_END = 10f;
 
     static void draw(PoseStack pose, SubmitNodeCollector out, int light, LocalPlayer player, AvatarRenderState state,
-                     RifleView.Hand right, RifleView.Hand left, float width, Quaternionf gun) {
-        // a Zomboid survivor's own arms, never Minecraft's: the hand camera's eye is its origin, looking down -z
-        if (com.zomboidcraft.client.survivor.SurvivorArms.draw(pose, out, light, player, new Vector3f(), new Vector3f(0, 0, -1),
-                new Vector3f(0, 1, 0), 1f, right.at(), left == null ? null : left.at(), gun, true)) {
+                     RifleView.Hand right, RifleView.Hand left, float width, Quaternionf gun, float gunScale, float span) {
+        // a Zomboid survivor's own arms, never Minecraft's: the hand frame sits at vanilla's arm offset from the eye
+        if (com.zomboidcraft.client.survivor.SurvivorArms.drawGun(pose, out, light, player,
+                new Vector3f(-GunRigs.ARM[0], -GunRigs.ARM[1], -GunRigs.ARM[2]), right.at(), left == null ? null : left.at(),
+                right.elbow(), left == null ? null : left.elbow(), gun, gunScale, span)) {
             return;
         }
         Minecraft mc = Minecraft.getInstance();

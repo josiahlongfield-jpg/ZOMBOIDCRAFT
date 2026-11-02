@@ -279,6 +279,16 @@ public final class Survivors {
             if (haveDir.lengthSquared() < 1e-6f) haveDir.set(support);
             haveDir.normalize();
             Vector3f haveUp = back.transformDirection(new Vector3f(0, -1, 0)).normalize();   // model y runs down
+            // better: the gun's own barrel and sights in the item frame, from the item model's third-person turn for
+            // this hold (the support line runs from the magazine well up to the handguard, well off the barrel when
+            // shouldered, and laying that along her hands stood the gun on end)
+            Player holderNow = (Player) mc.level.getEntity(state.id);
+            boolean shouldered = state.isUsingItem && state.useItemHand == InteractionHand.MAIN_HAND;
+            Quaternionf shown = display(holderNow.getMainHandItem(), shouldered ? "ads" : HoldPoses.raised(holderNow) ? "raised_hip" : "hip");
+            if (shown != null) {
+                haveDir = shown.transform(new Vector3f(0, 0, -1)).normalize();
+                haveUp = shown.transform(new Vector3f(0, 1, 0)).normalize();
+            }
             Vector3f grip = gripAt(pack, pos, turn, gun), other = gripAt(pack, pos, turn, 1 - gun);
             Vector3f g = toModel(grip.x, grip.y, grip.z), o = toModel(other.x, other.y, other.z);
             Vector3f wantDir = new Vector3f(o).sub(g);
@@ -606,6 +616,30 @@ public final class Survivors {
 
     private static Vector3f fromModel(float x, float y, float z) {
         return new Vector3f(x / K, (ORIGIN - y) / K, -z / K);
+    }
+
+    private static final Map<String, java.util.Optional<Quaternionf>> DISPLAYS = new HashMap<>();
+
+    /**
+     * The turn a gun's item model is given in a third-person hand for a hold ("hip", "raised_hip" or "ads"): its
+     * models/item/weapon/GUN/HOLD/body.json display.thirdperson_righthand rotation. Null if there's none.
+     */
+    static Quaternionf display(ItemStack stack, String hold) {
+        Identifier item = net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(stack.getItem());
+        String key = item.getPath() + "/" + hold;
+        return DISPLAYS.computeIfAbsent(key, k -> {
+            Identifier file = Identifier.fromNamespaceAndPath(item.getNamespace(), "models/item/weapon/" + k + "/body.json");
+            var resource = Minecraft.getInstance().getResourceManager().getResource(file);
+            if (resource.isEmpty()) return java.util.Optional.empty();
+            try (java.io.Reader reader = resource.get().openAsReader()) {
+                com.google.gson.JsonArray r = com.google.gson.JsonParser.parseReader(reader).getAsJsonObject()
+                        .getAsJsonObject("display").getAsJsonObject("thirdperson_righthand").getAsJsonArray("rotation");
+                return java.util.Optional.of(new Quaternionf().rotationXYZ((float) Math.toRadians(r.get(0).getAsFloat()),
+                        (float) Math.toRadians(r.get(1).getAsFloat()), (float) Math.toRadians(r.get(2).getAsFloat())));
+            } catch (Exception e) {
+                return java.util.Optional.empty();
+            }
+        }).orElse(null);
     }
 
     /** Her space turned into vanilla's: a half turn about x. */

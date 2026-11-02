@@ -357,6 +357,9 @@ public final class RifleView {
             }
         }
         aimShown = step == 0 ? a : 0;
+        if (com.zomboidcraft.client.survivor.SurvivorArms.pistolHeld(player)) {
+            want = atArmsLength(want);
+        }
 
         pose.pushPose();
         // hurt arms shake the sights: up to three times the sway with both broken
@@ -422,10 +425,31 @@ public final class RifleView {
             }
             RifleArms.draw(pose, out, light, player, state.avatarRenderState, right,
                     player.getOffhandItem().isEmpty() && !com.zomboidcraft.client.cars.CarHands.leftOnWheel(player) ? left : null,
-                    want.scale / rig.hipScale() * 0.6f, want.q());
+                    want.scale / rig.hipScale() * 0.6f, want.q(), want.scale,
+                    new Vector3f(rig.support()[0], rig.support()[1], rig.support()[2])
+                            .distance(rig.grip()[0], rig.grip()[1], rig.grip()[2]) / 16f * want.scale);
         }
         pose.popPose();
         return true;
+    }
+
+    /** A survivor's pistol's display scale: a little bigger than life, as her hands are drawn with it. */
+    private static final float SURVIVOR_PISTOL_SCALE = 0.6f;
+    /** How far ahead of the eye a survivor holds a pistol's grip (hand-camera blocks), arms out as Zomboid holds it. */
+    private static final float SURVIVOR_PISTOL_REACH = 0.56f;
+
+    /**
+     * A survivor's pistol: the view's picture of it made smaller about the eye (so its sights stay where they were) and
+     * then pushed out along the eye line to arm's length. The view shows a pistol three times life size up by the face,
+     * which her real hands could only hold as a fist filling the screen.
+     */
+    private static Pose atArmsLength(Pose gun) {
+        Vector3f eye = new Vector3f(-ARM[0], -ARM[1], -ARM[2]);
+        float f = SURVIVOR_PISTOL_SCALE / gun.scale();
+        Pose small = new Pose(new Vector3f(gun.t()).sub(eye).mul(f).add(eye), new Quaternionf(gun.q()), gun.scale() * f);
+        float gripZ = small.point(rig.grip()).z + ARM[2];
+        small.t().add(0, 0, -SURVIVOR_PISTOL_REACH - gripZ);
+        return small;
     }
 
     /** The slow drift of a held breath while aiming, so the sights are never quite dead still: a turn about the eye. */

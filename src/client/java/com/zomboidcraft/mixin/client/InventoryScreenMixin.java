@@ -19,10 +19,8 @@ public abstract class InventoryScreenMixin {
             at = @At("RETURN"), require = 1)
     private static void zomboidcraft$noteFigure(LivingEntity entity, CallbackInfoReturnable<EntityRenderState> cir) {
         InjuryGlowLayer.noted(cir.getReturnValue());
-        // the appearance page's figure, turned as far as you've dragged her
-        if (com.zomboidcraft.client.kit.AppearanceScreen.drawSpin != 0
-                && cir.getReturnValue() instanceof net.minecraft.client.renderer.entity.state.LivingEntityRenderState l) {
-            l.bodyRot += com.zomboidcraft.client.kit.AppearanceScreen.drawSpin;
-        }
+        // the appearance page's figure: the survivor layer turns her as far as you've dragged her (the inventory drawing
+        // sets the state's own body turn itself after this, so that can't carry it)
+        com.zomboidcraft.client.kit.AppearanceScreen.noteFigure(cir.getReturnValue());
     }
 }

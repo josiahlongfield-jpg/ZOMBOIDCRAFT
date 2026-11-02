@@ -1,6 +1,7 @@
 package com.zomboidcraft.client.survivor;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.zomboidcraft.client.npc.NpcSkin;
 import com.zomboidcraft.client.npc.NpcSkinDraw;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -41,31 +42,19 @@ public final class SurvivorArms {
      */
     public static boolean draw(PoseStack pose, SubmitNodeCollector out, int light, Player player, Vector3f eye, Vector3f forward,
                                Vector3f up, float scale, Vector3f rightHand, Vector3f leftHand, boolean aiming) {
-        return draw(pose, out, light, player, eye, forward, up, scale, rightHand, leftHand, null, aiming);
+        return drawPlain(pose, out, light, player, eye, forward, up, scale, rightHand, leftHand, aiming);
     }
 
-    /**
-     * The same, for a gun: gun is its turn in the caller's frame (barrel along -z, sights up +y), or null. With a gun
-     * her arms are her third-person ones: Zomboid's aim stance carried whole onto the gun (see carry).
-     */
-    public static boolean draw(PoseStack pose, SubmitNodeCollector out, int light, Player player, Vector3f eye, Vector3f forward,
-                               Vector3f up, float scale, Vector3f rightHand, Vector3f leftHand, Quaternionf gun, boolean aiming) {
+    private static boolean drawPlain(PoseStack pose, SubmitNodeCollector out, int light, Player player, Vector3f eye, Vector3f forward,
+                                     Vector3f up, float scale, Vector3f rightHand, Vector3f leftHand, boolean aiming) {
         Survivors.Outfit o = player == null ? null : Survivors.outfit(player);
         if (o == null) return false;
         SurvivorPack pack = o.pack();
         int n = pack.skin.boneNames.length;
         float[] pos = new float[n * 3], turn = new float[n * 4];
         String kind = Survivors.kind(player.getMainHandItem());
-        // a gun is held the way she holds it in third person when she brings it up: Zomboid's aim stance, the whole of it
-        String clip = gun != null || aiming ? (kind.equals("pistol") ? "pistol_aim" : "rifle_aim") : "idle";
-        if (animPack != pack || !clip.equals(animClip)) {
-            animPack = pack;
-            animClip = clip;
-            upper = Survivors.upperBody(pack);
-            ANIM.base(pack, clip, 0);
-            ANIM.advance(pack, 10);   // straight into it: the clip stands still (rate 0), the fade from the last one done
-        }
-        ANIM.pose(pack, upper, pos, turn);
+        String clip = !aiming ? "idle" : kind.equals("pistol") ? "pistol_aim" : "rifle_aim";
+        stand(pack, clip, pos, turn);
 
         // her frame into the caller's: eyes on the eye, her front along forward, her up along up, her left to the left
         Vector3f f = new Vector3f(forward).normalize();
@@ -79,7 +68,7 @@ public final class SurvivorArms {
 
         Vector3f[] want = {rightHand == null ? null : back.transformPosition(new Vector3f(rightHand)),
                 leftHand == null ? null : back.transformPosition(new Vector3f(leftHand))};
-        if (gun == null || want[0] == null || !carry(pack, pos, turn, kind, want, gun, back)) reachFor(pack, pos, turn, want);
+        reachFor(pack, pos, turn, want);
 
         Matrix4f[] skin = Survivors.skinOf(pack, pos, turn);
         // all but the arms drawn in to the nearer shoulder, so nothing else of her shows
@@ -115,29 +104,80 @@ public final class SurvivorArms {
         return true;
     }
 
+    /** Her pose from a clip, stood still in it (rate 0), straight into it with no fade from the last. */
+    private static void stand(SurvivorPack pack, String clip, float[] pos, float[] turn) {
+        if (animPack != pack || !clip.equals(animClip)) {
+            animPack = pack;
+            animClip = clip;
+            upper = Survivors.upperBody(pack);
+            ANIM.base(pack, clip, 0);
+            ANIM.advance(pack, 10);
+        }
+        ANIM.pose(pack, upper, pos, turn);
+    }
+
+    /** How big a pistol of ours is drawn at its real size (its display scale). */
+    private static final float PISTOL_REAL = 0.434f;
+    /** A pistol's hand sits this far (metres) lower on the grip than its middle, so the slide and sights show over it. */
+    private static final float PISTOL_DROP = 0.025f;
+
+    /** Whether this player's first-person gun is held as a survivor's pistol (RifleView then shows it at arm's length). */
+    public static boolean pistolHeld(Player player) {
+        return shown(player) && Survivors.kind(player.getMainHandItem()).equals("pistol");
+    }
+
     /**
-     * A gun held as she holds it in third person: her whole aim stance carried, unbent, so her shooting palm closes on
-     * the gun's grip and the clip's own gun (from her shooting palm toward her other palm, or straight ahead for a
-     * pistol) lies along this one. Her arms keep the clip's shape and size; only the other hand then comes the last
-     * bit onto the handguard (or wherever the gun has it, a magazine in a reload), as it does in third person.
+     * Her arms on a gun in first person (RifleView's hand frame): Zomboid's own aim hold, the one she has in third
+     * person, carried whole onto the gun, drawn as big as the gun is drawn (the view shows guns bigger than life, so
+     * her arms are made the same amount bigger, which is how the hold keeps its shape: nothing stretched or bent to
+     * fit). Her shooting palm closes on the grip; the other hand is already on the handguard by the hold itself and
+     * only reaches the last bit, or goes where the view sends it (a magazine, the handle). Each forearm then runs off
+     * screen the way the view lays it, the hand keeping its grip; only her forearms and hands are drawn.
+     * <p>
+     * eye is the eye in the hand frame; rightHand/leftHand the grips; the elbows the way each forearm runs back from
+     * its hand (null left hand: not drawn); gun the gun's turn (barrel -z, sights +y); gunScale its display scale;
+     * span how far apart the gun has its grip and handguard (hand-frame blocks).
      */
-    private static boolean carry(SurvivorPack pack, float[] pos, float[] turn, String kind, Vector3f[] want, Quaternionf gun, Matrix4f back) {
-        if (pack.hand[0] < 0) return false;
-        boolean pistol = kind.equals("pistol");
-        Vector3f barrel = back.transformDirection(gun.transform(new Vector3f(0, 0, -1)));
-        Vector3f sights = back.transformDirection(gun.transform(new Vector3f(0, 1, 0)));
+    public static boolean drawGun(PoseStack pose, SubmitNodeCollector out, int light, Player player, Vector3f eye,
+                                  Vector3f rightHand, Vector3f leftHand, Vector3f rightElbow, Vector3f leftElbow,
+                                  Quaternionf gun, float gunScale, float span) {
+        Survivors.Outfit o = player == null ? null : Survivors.outfit(player);
+        if (o == null || rightHand == null) return false;
+        SurvivorPack pack = o.pack();
+        if (pack.hand[0] < 0 || pack.hand[1] < 0 || pack.fore[0] < 0 || pack.fore[1] < 0) return false;
+        int n = pack.skin.boneNames.length;
+        float[] pos = new float[n * 3], turn = new float[n * 4];
+        boolean pistol = Survivors.kind(player.getMainHandItem()).equals("pistol");
+        stand(pack, pistol ? "pistol_aim" : "rifle_aim", pos, turn);
+        Vector3f palmR = palm(pack, pos, turn, 0), palmL = palm(pack, pos, turn, 1);
+        // her size: the gun's grip-to-handguard as far as her palms are apart in the hold (a pistol: as much bigger
+        // than life as it's drawn)
+        float apart = palmR.distance(palmL);
+        float k = pistol || apart < 0.05f || span <= 0 ? gunScale / PISTOL_REAL : span / apart;
+        int head = pack.head;
+        Vector3f eyes = new Vector3f(pos[head * 3], pos[head * 3 + 1] + 0.09f, pos[head * 3 + 2] + 0.09f);
+        // her front along -z, her up +y, her left -x
+        Matrix4f place = new Matrix4f().translation(eye).mul(new Matrix4f().set(new Matrix3f(new Vector3f(-1, 0, 0),
+                new Vector3f(0, 1, 0), new Vector3f(0, 0, -1)))).scale(k).translate(-eyes.x, -eyes.y, -eyes.z);
+        Matrix4f back = new Matrix4f(place).invert();
+        Vector3f grip = back.transformPosition(new Vector3f(rightHand));
+        Vector3f other = leftHand == null ? null : back.transformPosition(new Vector3f(leftHand));
+        Vector3f barrel = back.transformDirection(gun.transform(new Vector3f(0, 0, -1))).normalize();
+        Vector3f sights = back.transformDirection(gun.transform(new Vector3f(0, 1, 0))).normalize();
+
+        // the hold carried onto the gun: the clip's own (unseen) gun runs from her shooting palm toward her other palm,
+        // or straight ahead for a pistol, sights up
         Quaternionf thisGun = gunFrame(barrel, sights);
-        Vector3f palmR = palm(pack, pos, turn, 0);
-        Vector3f clipAlong = pistol || pack.hand[1] < 0 ? new Vector3f(0, 0, 1) : palm(pack, pos, turn, 1).sub(palmR);
-        Quaternionf clipGun = gunFrame(clipAlong, new Vector3f(0, 1, 0));
+        Quaternionf clipGun = gunFrame(pistol ? new Vector3f(0, 0, 1) : new Vector3f(palmL).sub(palmR), new Vector3f(0, 1, 0));
         if (thisGun == null || clipGun == null) return false;
         Quaternionf onto = new Quaternionf(thisGun).mul(clipGun.conjugate()).normalize();
-        int n = pack.skin.boneNames.length;
+        Vector3f at = new Vector3f(grip);
+        if (pistol) at.sub(new Vector3f(sights).mul(PISTOL_DROP));
         Vector3f p = new Vector3f();
         Quaternionf q = new Quaternionf();
         for (int b = 0; b < n; b++) {
             p.set(pos[b * 3], pos[b * 3 + 1], pos[b * 3 + 2]).sub(palmR);
-            onto.transform(p).add(want[0]);
+            onto.transform(p).add(at);
             pos[b * 3] = p.x;
             pos[b * 3 + 1] = p.y;
             pos[b * 3 + 2] = p.z;
@@ -148,17 +188,119 @@ public final class SurvivorArms {
             turn[b * 4 + 2] = q.z;
             turn[b * 4 + 3] = q.w;
         }
-        if (want[1] != null && pack.hand[1] >= 0) {
-            // the nearest point of the gun's hold for that hand (a stretch of handguard along the barrel; just the
-            // point for a pistol or a reach to a magazine), reached for only when the clip's palm isn't already there
-            Vector3f along = new Vector3f(barrel).normalize().mul(pistol ? 0.01f : 0.08f);
-            Vector3f a0 = new Vector3f(want[1]).sub(along), seg = new Vector3f(along).mul(2);
-            Vector3f palmL = palm(pack, pos, turn, 1);
-            float t = Math.max(0, Math.min(1, new Vector3f(palmL).sub(a0).dot(seg) / seg.lengthSquared()));
-            Vector3f at = new Vector3f(a0).add(new Vector3f(seg).mul(t));
-            if (palmL.distance(at) > 0.03f) Survivors.reachPoint(pack, pos, turn, 1, at);
+        if (other != null) {
+            // the other hand: the nearest of the gun's hold to its palm (a stretch of handguard along the barrel, or
+            // the one point the view gives, a magazine or the handle), reached for only when the palm isn't on it
+            Vector3f along = new Vector3f(barrel).mul(pistol ? 0.01f : 0.08f);
+            Vector3f a0 = new Vector3f(other).sub(along), seg = new Vector3f(along).mul(2);
+            Vector3f pl = palm(pack, pos, turn, 1);
+            float t = Math.max(0, Math.min(1, new Vector3f(pl).sub(a0).dot(seg) / seg.lengthSquared()));
+            Vector3f to = new Vector3f(a0).add(new Vector3f(seg).mul(t));
+            if (pl.distance(to) > 0.03f) Survivors.reachPoint(pack, pos, turn, 1, to);
         }
+        // each forearm laid off screen the way the view runs it, turned about the wrist, the hand keeping its grip
+        for (int s = 0; s < 2; s++) {
+            Vector3f elbow = s == 0 ? rightElbow : leftElbow;
+            if (elbow == null || (s == 1 && other == null)) continue;
+            Vector3f e = back.transformDirection(new Vector3f(elbow));
+            if (e.lengthSquared() < 1e-8f) continue;
+            int f = pack.fore[s], h = pack.hand[s];
+            Vector3f wrist = new Vector3f(pos[h * 3], pos[h * 3 + 1], pos[h * 3 + 2]);
+            Vector3f have = new Vector3f(pos[f * 3], pos[f * 3 + 1], pos[f * 3 + 2]).sub(wrist);
+            if (have.lengthSquared() < 1e-8f) continue;
+            Quaternionf kept = new Quaternionf(turn[h * 4], turn[h * 4 + 1], turn[h * 4 + 2], turn[h * 4 + 3]);
+            turnAbout(pack, pos, turn, f, wrist, new Quaternionf().rotationTo(have.normalize(), e.normalize()));
+            Quaternionf now = new Quaternionf(turn[h * 4], turn[h * 4 + 1], turn[h * 4 + 2], turn[h * 4 + 3]);
+            turnAbout(pack, pos, turn, h, wrist, new Quaternionf(kept).mul(now.conjugate()).normalize());
+        }
+
+        Matrix4f[] skin = Survivors.skinOf(pack, pos, turn);
+        int[][] cut = forearms(pack, other != null);
+        if (buffersPack != pack) {
+            buffersPack = pack;
+            buffers = new Object[2][];
+        }
+        buffer = 1 - buffer;
+        if (buffers[buffer] == null) buffers[buffer] = new Object[pack.skin.groups.length * 2];
+        pose.pushPose();
+        pose.mulPose(place);
+        NpcSkinDraw.submitWith(pack.skin, skin,
+                g -> g.piece.equals("body") || o.clothes().containsKey(g.piece),
+                g -> g.piece.equals("body") ? o.body() : o.clothes().get(g.piece),
+                g -> cut[index(pack, g)],
+                buffers[buffer], light, OverlayTexture.NO_OVERLAY, pose, out);
+        pose.popPose();
         return true;
+    }
+
+    /** Turns a bone and everything below it about a point (her space). */
+    private static void turnAbout(SurvivorPack pack, float[] pos, float[] turn, int bone, Vector3f pivot, Quaternionf r) {
+        Vector3f d = new Vector3f();
+        Quaternionf q = new Quaternionf();
+        for (int b = 0; b < pos.length / 3; b++) {
+            boolean under = false;
+            for (int p = b; p >= 0 && !under; p = pack.skin.parent[p]) under = p == bone;
+            if (!under) continue;
+            d.set(pos[b * 3], pos[b * 3 + 1], pos[b * 3 + 2]).sub(pivot);
+            r.transform(d).add(pivot);
+            pos[b * 3] = d.x;
+            pos[b * 3 + 1] = d.y;
+            pos[b * 3 + 2] = d.z;
+            q.set(turn[b * 4], turn[b * 4 + 1], turn[b * 4 + 2], turn[b * 4 + 3]);
+            new Quaternionf(r).mul(q, q).normalize();
+            turn[b * 4] = q.x;
+            turn[b * 4 + 1] = q.y;
+            turn[b * 4 + 2] = q.z;
+            turn[b * 4 + 3] = q.w;
+        }
+    }
+
+    private static int index(SurvivorPack pack, NpcSkin.Group g) {
+        NpcSkin.Group[] all = pack.skin.groups;
+        for (int i = 0; i < all.length; i++) if (all[i] == g) return i;
+        return 0;
+    }
+
+    private static final java.util.Map<SurvivorPack, int[][][]> FOREARMS = new java.util.WeakHashMap<>();
+
+    /**
+     * Each piece's triangles that are all forearm, hand and fingers (both arms, or the right only): what first person
+     * shows of her. Cutting the rest away (rather than drawing it in to the shoulders) leaves no strips across the view.
+     */
+    private static int[][] forearms(SurvivorPack pack, boolean both) {
+        int[][][] cached = FOREARMS.computeIfAbsent(pack, p -> new int[2][][]);
+        int which = both ? 1 : 0;
+        if (cached[which] != null) return cached[which];
+        boolean[] keep = new boolean[pack.skin.boneNames.length];
+        for (int s = 0; s < (both ? 2 : 1); s++) {
+            for (String part : new String[]{"Forearm", "Hand", "Finger0", "Finger1", "Finger01", "Finger11"}) {
+                int b = pack.skin.bone("Bip01_" + (s == 0 ? "R" : "L") + "_" + part);
+                if (b >= 0) keep[b] = true;
+            }
+        }
+        NpcSkin.Group[] groups = pack.skin.groups;
+        int[][] out = new int[groups.length][];
+        for (int i = 0; i < groups.length; i++) {
+            NpcSkin.Group g = groups[i];
+            float[] on = new float[g.vertices];
+            for (int v = 0; v < g.vertices; v++) {
+                for (int j = 0; j < 4; j++) {
+                    int b = g.joint[v * 4 + j] & 0xFF;
+                    if (b < keep.length && keep[b]) on[v] += g.weight[v * 4 + j];
+                }
+            }
+            int[] t = g.tris, kept = new int[t.length];
+            int c = 0;
+            for (int x = 0; x + 2 < t.length; x += 3) {
+                if (on[t[x]] < 0.5f || on[t[x + 1]] < 0.5f || on[t[x + 2]] < 0.5f) continue;
+                kept[c++] = t[x];
+                kept[c++] = t[x + 1];
+                kept[c++] = t[x + 2];
+            }
+            out[i] = java.util.Arrays.copyOf(kept, c);
+        }
+        cached[which] = out;
+        return out;
     }
 
     /** The middle of her palm this frame (her space). */

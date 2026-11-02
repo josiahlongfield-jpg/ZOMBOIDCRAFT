@@ -63,7 +63,7 @@ public final class NpcSkinDraw {
             }
             if (mode == 1) {
                 collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(tex),
-                        (pose, out) -> draw(gr, pos, normal, 0, gr.tris.length, false, pose, out, light, overlay));
+                        (pose, out) -> draw(gr, gr.tris, pos, normal, 0, gr.tris.length, false, pose, out, light, overlay));
                 continue;
             }
             RenderType type = mode == 3 && !gr.cutout ? RenderTypes.entitySolid(tex) : RenderTypes.entityCutoutCull(tex);
@@ -71,7 +71,7 @@ public final class NpcSkinDraw {
             for (int from = 0; from < gr.tris.length; from += step) {
                 int start = from, end = Math.min(gr.tris.length, from + step);
                 collector.submitCustomGeometry(poseStack, type,
-                        (pose, out) -> draw(gr, pos, normal, start, end, gr.bothSides, pose, out, light, overlay));
+                        (pose, out) -> draw(gr, gr.tris, pos, normal, start, end, gr.bothSides, pose, out, light, overlay));
             }
         }
         poseStack.popPose();
@@ -84,6 +84,14 @@ public final class NpcSkinDraw {
      */
     public static void submitWith(NpcSkin skin, Matrix4f[] bones, java.util.function.Predicate<NpcSkin.Group> show,
                                   java.util.function.Function<NpcSkin.Group, Identifier> textures, Object[] buffers,
+                                  int light, int overlay, PoseStack poseStack, SubmitNodeCollector collector) {
+        submitWith(skin, bones, show, textures, g -> g.tris, buffers, light, overlay, poseStack, collector);
+    }
+
+    /** The same, drawing only the triangles trisOf gives for each group (its own index list, or a part of it). */
+    public static void submitWith(NpcSkin skin, Matrix4f[] bones, java.util.function.Predicate<NpcSkin.Group> show,
+                                  java.util.function.Function<NpcSkin.Group, Identifier> textures,
+                                  java.util.function.Function<NpcSkin.Group, int[]> trisOf, Object[] buffers,
                                   int light, int overlay, PoseStack poseStack, SubmitNodeCollector collector) {
         float[] m = new float[bones.length * 12];
         for (int b = 0; b < bones.length; b++) {
@@ -106,10 +114,14 @@ public final class NpcSkinDraw {
                 buffers[g * 2] = new float[gr.vertices * 3];
                 buffers[g * 2 + 1] = new float[gr.vertices * 3];
             }
+            int[] tris = trisOf.apply(gr);
+            if (tris == null || tris.length == 0) {
+                continue;
+            }
             float[] pos = (float[]) buffers[g * 2], normal = (float[]) buffers[g * 2 + 1];
             skin(gr, m, pos, normal);
             collector.submitCustomGeometry(poseStack, RenderTypes.entityCutoutCull(tex),
-                    (pose, out) -> draw(gr, pos, normal, 0, gr.tris.length, gr.bothSides, pose, out, light, overlay));
+                    (pose, out) -> draw(gr, tris, pos, normal, 0, tris.length, gr.bothSides, pose, out, light, overlay));
         }
     }
 
@@ -183,10 +195,9 @@ public final class NpcSkinDraw {
     }
 
     /** Every triangle as a quad with its last corner repeated; a sheet's again wound the other way, facing back. */
-    private static void draw(NpcSkin.Group g, float[] p, float[] n, int from, int to, boolean back, PoseStack.Pose pose,
+    private static void draw(NpcSkin.Group g, int[] tris, float[] p, float[] n, int from, int to, boolean back, PoseStack.Pose pose,
                              VertexConsumer out, int light, int overlay) {
         float[] uv = g.uv;
-        int[] tris = g.tris;
         for (int s = 0; s < (back ? 2 : 1); s++) {
             float f = s == 0 ? 1 : -1;
             for (int t = from; t < to; t += 3) {
