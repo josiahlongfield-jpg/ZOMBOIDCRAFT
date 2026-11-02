@@ -20,8 +20,8 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 /**
- * Zomboid's appearance page, after the traits: your survivor in the middle, turning to the mouse (or close up on the
- * face), and down the left everything the body mods offer. Woman or man; the skin (Tomb's Player Body, Tomb's Goth,
+ * Zomboid's appearance page, after the traits: your survivor in the middle, head to foot or close up on the face, and
+ * turned round as you drag them, and down the left everything the body mods offer. Woman or man; the skin (Tomb's Player Body, Tomb's Goth,
  * Detailed Player Texture or Evil's Ink for women, Tomb's or Goth for men), its tone and build (normal, toned or strong),
  * a hairy body for men; the face; Zomboid's own hair styles and Tomb's Goth ones, or a shaved head or stubble; the hair
  * colour; beards and stubble; body hair; eye make-up, lipstick and face paint. Every woman wears Tomb's black bra and
@@ -38,6 +38,12 @@ public final class AppearanceScreen extends Screen {
     private String sex = "f", pack = "tomb", build = "normal", face = "", hair = "", colour = "dark_brown", beard = "none";
     private int tone = 1;
     private boolean hairy, close;
+    /** How far she's turned by dragging her (degrees), in both views; and whether she's held to be turned. */
+    private float spin;
+    private boolean turning;
+    private int[] figure;
+    /** The turn for the figure being drawn right now (InventoryScreenMixin adds it to her body's), 0 otherwise. */
+    public static float drawSpin;
     private String bodyHair = "", eyes = "", lips = "", paint = "";
     private final List<Row> rows = new ArrayList<>();
     private int[] done, random, zoom;
@@ -353,10 +359,17 @@ public final class AppearanceScreen extends Screen {
             int x0 = fx + 1, y0 = panelTop + 1, x1 = fx + figW - 1, y1 = panelBottom - 1;
             float middle = (y0 + y1) / 2f;
             float lift = (feet - middle) / scale - minecraft.player.getBbHeight() / 2;
+            figure = new int[]{x0, y0, x1 - x0, y1 - y0};
             g.enableScissor(x0, y0, x1, y1);
-            // she faces you, standing straight (not turned after the mouse, which is over the choices to her left)
-            InventoryScreen.extractEntityInInventoryFollowsMouse(g, x0, y0, x1, y1, Math.round(scale), lift,
-                    (x0 + x1) / 2f, middle, minecraft.player);
+            // she faces you, standing straight (not turned after the mouse, which is over the choices to her left),
+            // turned round as far as you've dragged her
+            drawSpin = spin;
+            try {
+                InventoryScreen.extractEntityInInventoryFollowsMouse(g, x0, y0, x1, y1, Math.round(scale), lift,
+                        (x0 + x1) / 2f, middle, minecraft.player);
+            } finally {
+                drawSpin = 0;
+            }
             g.disableScissor();
         }
 
@@ -391,6 +404,7 @@ public final class AppearanceScreen extends Screen {
         int hx = pad;
         hx += KitDraw.hint(g, font, "LMB", "Change", hx, height - 15);
         hx += KitDraw.hint(g, font, "Scroll", "Change", hx, height - 15);
+        hx += KitDraw.hint(g, font, "Drag", "Turn", hx, height - 15);
         hx += KitDraw.hint(g, font, "Enter", "Done", hx, height - 15);
         KitDraw.hint(g, font, "Esc", "Game menu", hx, height - 15);
     }
@@ -419,7 +433,22 @@ public final class AppearanceScreen extends Screen {
             randomise();
         } else if (zoom != null && KitDraw.in(mx, my, zoom[0], zoom[1], zoom[2], zoom[3])) {
             close = !close;
+        } else if (figure != null && event.button() == 0 && KitDraw.in(mx, my, figure[0], figure[1], figure[2], figure[3])) {
+            // take hold of her to turn her round, whole body or close up
+            turning = true;
         }
+        return true;
+    }
+
+    @Override
+    public boolean mouseDragged(MouseButtonEvent event, double dx, double dy) {
+        if (turning) spin = (spin + (float) dx * 1.4f) % 360f;
+        return true;
+    }
+
+    @Override
+    public boolean mouseReleased(MouseButtonEvent event) {
+        turning = false;
         return true;
     }
 

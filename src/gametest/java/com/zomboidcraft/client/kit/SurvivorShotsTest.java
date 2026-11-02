@@ -46,7 +46,19 @@ public class SurvivorShotsTest implements FabricClientGameTest {
             ctx.runOnClient(mc -> set(mc.gui.screen(), "close", true));
             ctx.waitTicks(20);
             ctx.takeScreenshot("surv-appearance-closeup");
+            // turned round by dragging, close up and whole body
+            for (float turn : new float[] {90, 180}) {
+                ctx.runOnClient(mc -> set(mc.gui.screen(), "spin", turn));
+                ctx.waitTicks(10);
+                ctx.takeScreenshot("surv-appearance-closeup-turn" + (int) turn);
+            }
             ctx.runOnClient(mc -> set(mc.gui.screen(), "close", false));
+            for (float turn : new float[] {90, 180}) {
+                ctx.runOnClient(mc -> set(mc.gui.screen(), "spin", turn));
+                ctx.waitTicks(10);
+                ctx.takeScreenshot("surv-appearance-turn" + (int) turn);
+            }
+            ctx.runOnClient(mc -> set(mc.gui.screen(), "spin", 0f));
             com.zomboidcraft.client.survivor.Survivors.Preview chosen = ctx.computeOnClient(mc -> com.zomboidcraft.client.survivor.Survivors.preview);
             ctx.runOnClient(mc -> call(mc.gui.screen(), "finish"));
             ctx.waitTicks(60);
