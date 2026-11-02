@@ -654,6 +654,8 @@ def looks(it):
     out.update(wave5furn.looks(it, wrap))
     import wave5wall
     out.update(wave5wall.looks(it, wrap))
+    import wave5music
+    out.update(wave5music.looks(it, wrap))
     return out
 
 

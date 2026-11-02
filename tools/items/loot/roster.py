@@ -1142,6 +1142,20 @@ stuffed_owl | Stuffed Owl | R | 25 | 1.5 | mansion pawn
 signed_jersey_frame | Signed Jersey Frame | P | 70 | 4 | stadium mansion
 stained_glass_panel | Stained Glass Panel | P | 60 | 8 | church pawn
 film_prop_display | Film Prop Display | G | 200 | 20 | mansion
+vinyl_record | Vinyl Record | C | 3 | 0.2 | bed thrift
+record_player | Record Player | S | 25 | 5 | bed thrift
+karaoke_machine | Karaoke Machine | S | 20 | 6 | liq bed
+big_crt_tv | Big CRT TV | S | 30 | 35 | bed
+accordion | Accordion | S | 20 | 8 | thrift bed
+stereo_system | Stereo System | R | 40 | 12 | bed elec
+guitar_amp | Electric Guitar and Amp | R | 60 | 25 | bed
+drum_kit | Drum Kit | R | 70 | 40 | school
+dj_turntables | DJ Turntables | R | 50 | 15 | 
+projector_screen | Projector and Screen | R | 45 | 20 | school
+jukebox | Jukebox | P | 120 | 110 | 
+upright_piano | Upright Piano | P | 100 | 200 | 
+gramophone | Gramophone | P | 60 | 8 | mansion pawn
+reel_to_reel | Reel-to-Reel Deck | P | 55 | 18 | 
 """
 
 ROSTER['Junk & scrap'] = """
