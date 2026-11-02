@@ -65,7 +65,6 @@ public final class Reloading {
             new Load(ModItems.MAGNUM_AMMO, ModItems.SPENT_44, ModItems.BULLETS_44, 1),
             new Load(ModItems.RIFLE_AMMO, ModItems.SPENT_556, ModItems.BULLETS_556, 1),
             new Load(ModItems.HUNTING_RIFLE_AMMO, ModItems.SPENT_308, ModItems.BULLETS_30, 1),
-            new Load(ModItems.LEVER_AMMO, ModItems.SPENT_3030, ModItems.BULLETS_30, 1),
             new Load(ModItems.HEAVY_AMMO, ModItems.SPENT_50, ModItems.BULLETS_50, 3),
             new Load(ModItems.SHOTGUN_SHELL, ModItems.SPENT_HULLS, ModItems.LEAD_SHOT, 1));
 
@@ -74,7 +73,7 @@ public final class Reloading {
             ModItems.PISTOL_AMMO, ModItems.SPENT_9MM, ModItems.POCKET_AMMO, ModItems.SPENT_380,
             ModItems.REVOLVER_AMMO, ModItems.SPENT_38, ModItems.MAGNUM_AMMO, ModItems.SPENT_44,
             ModItems.RIFLE_AMMO, ModItems.SPENT_556, ModItems.HUNTING_RIFLE_AMMO, ModItems.SPENT_308,
-            ModItems.LEVER_AMMO, ModItems.SPENT_3030, ModItems.HEAVY_AMMO, ModItems.SPENT_50,
+            ModItems.HEAVY_AMMO, ModItems.SPENT_50,
             ModItems.SHOTGUN_SHELL, ModItems.SPENT_HULLS);
 
     /** From a player's game: load a batch of LOADS[load] at the bench at pos, or pick the bench up (load -1). */

@@ -867,8 +867,8 @@ final class CityCivic {
             for (int y = 1; y < S; y++) {
                 p.set(armoury, y, z, "concrete_panel");
             }
-            p.set(x1 - 1, 1, z, "store_gun_rack[facing=west]");
-            p.set(x1 - 1, 2, z, "store_gun_rack[facing=west]");
+            p.set(x1 - 1, 1, z, "store_gun_rack[facing=west,loot=police]");     // the station's own armoury, not a shop's
+            p.set(x1 - 1, 2, z, "store_gun_rack[facing=west,loot=police]");
         }
         Doors.place(p, armoury, 1, cz + 2, "bunk_door_steel", "west", "right", chance() < 0.5);
         for (int x = armoury + 2; x < x1 - 2; x++) {

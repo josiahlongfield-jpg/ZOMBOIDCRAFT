@@ -349,10 +349,15 @@ public final class ModItems {
     public static void register() {
         ResourceKey<CreativeModeTab> combat = ResourceKey.create(Registries.CREATIVE_MODE_TAB, Identifier.withDefaultNamespace("combat"));
         CreativeModeTabEvents.modifyOutputEvent(combat).register(output -> {
-            ALL.forEach(output::accept);
+            // our guns from before the Brita pack are gone (combat/Retired): only the Heavy Sniper and its kit show
+            ALL.stream().filter(item -> !com.zomboidcraft.combat.Retired.id(BuiltInRegistries.ITEM.getKey(item).getPath()))
+                    .forEach(output::accept);
             // each gun loaded and ready to try out, a full magazine for it (a box of shells for the shotgun), and each
             // with everything on it
             for (GunType type : GunType.values()) {
+                if (com.zomboidcraft.combat.Retired.GUNS.contains(type.id())) {
+                    continue;
+                }
                 ItemStack gun = new ItemStack(type.item());
                 gun.set(GunState.TYPE, GunState.EMPTY_MAG.withRounds(type.capacity()));
                 List<GunFinish.Finish> finishes = GunFinish.of(type);

@@ -2401,8 +2401,8 @@ public final class Floors {
             }
 
             void armoury() {
-                several(Math.max(3, r.area() / 3), false, "bunk_crate_ammo[facing=%s]", "bunk_crate_gun[facing=%s]", "pk_military_crate[facing=%s]",
-                        "bunk_gun_rack[facing=%s]");
+                several(Math.max(3, r.area() / 3), false, "bunk_crate_ammo[facing=%s,loot=army]", "bunk_crate_gun[facing=%s,loot=army]",
+                        "pk_military_crate[facing=%s]", "bunk_gun_rack[facing=%s,loot=army]");
             }
 
             void morgue() {

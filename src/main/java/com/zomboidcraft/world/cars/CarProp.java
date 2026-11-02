@@ -414,7 +414,8 @@ public class CarProp extends Entity {
         if (!searched) {
             searched = true;
             if (!"burnt".equals(variant()) && com.zomboidcraft.ZcConfig.get().world.carLoot) {
-                ResourceKey<LootTable> key = ResourceKey.create(Registries.LOOT_TABLE, ZomboidCraft.id("car/" + lootTable()));
+                ResourceKey<LootTable> key = ResourceKey.create(Registries.LOOT_TABLE,
+                        ZomboidCraft.id("car/" + com.zomboidcraft.combat.GunLoot.carTable(server, position(), lootTable())));
                 LootTable table = server.getServer().reloadableRegistries().getLootTable(key);
                 LootParams params = new LootParams.Builder(server).withParameter(LootContextParams.ORIGIN, position())
                         .withLuck(player.getLuck()).withParameter(LootContextParams.THIS_ENTITY, player)

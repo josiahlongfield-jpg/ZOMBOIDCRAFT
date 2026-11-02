@@ -164,6 +164,15 @@ public final class Fittings {
             }
         }
 
+        /** An army base's gun racks and crates roll the army's table, whatever the generator named (combat/GunLoot). */
+        @Override
+        public void unpackLootTable(@org.jetbrains.annotations.Nullable Player player) {
+            if (lootTable != null && level instanceof net.minecraft.server.level.ServerLevel server) {
+                lootTable = com.zomboidcraft.combat.GunLoot.redirect(server, worldPosition, lootTable);
+            }
+            super.unpackLootTable(player);
+        }
+
         @Override
         public int getContainerSize() {
             return 27;

@@ -349,7 +349,7 @@ final class MallWings {
         for (int z = NZ0 + 5; z < zm - 2; z++) {
             set(x1, 1, z, "filing_cabinet[facing=west]");
         }
-        set(x1, 1, zm - 2, "home_gun_cabinet[facing=west]");
+        set(x1, 1, zm - 2, "home_gun_cabinet[facing=west,loot=security]");
         set(x1, 2, zm - 2, "home_gun_cabinet_top[facing=west]");
         set(x0, 1, zm - 3, "trade_folding_chair[facing=east]");
         for (int y = 1; y <= 2; y++) {

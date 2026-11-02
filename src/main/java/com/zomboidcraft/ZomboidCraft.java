@@ -61,6 +61,7 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.world.blocks.LightSwitch.register();
         com.zomboidcraft.combat.GunState.register();
         com.zomboidcraft.combat.LocalGuns.register();
+        com.zomboidcraft.combat.Retired.register();
         com.zomboidcraft.combat.Attachments.register();
         com.zomboidcraft.combat.GunFinish.register();
         com.zomboidcraft.combat.Repairs.register();
@@ -74,6 +75,7 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.decor.Decor.registerBlocks();
         com.zomboidcraft.loot.items.LootItems.register();
         com.zomboidcraft.decor.Decor.register();
+        com.zomboidcraft.combat.GunLoot.register();      // before LootSettings and Rolls: they thin and tier its guns
         com.zomboidcraft.loot.LootSettings.register();
         com.zomboidcraft.power.Generators.register();
         com.zomboidcraft.power.PowerGrid.register();

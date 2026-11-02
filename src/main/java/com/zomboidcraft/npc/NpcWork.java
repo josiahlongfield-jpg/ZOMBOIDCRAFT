@@ -96,6 +96,11 @@ public final class NpcWork {
     boolean nightShift;
     /** What she carries: nine slots, more with a backpack on (NpcCare.kit). */
     SimpleContainer pack = new SimpleContainer(NpcCare.BASE_PACK);
+
+    /** A companion's pack, for the sweep that takes our retired guns out of the world (combat/Retired). */
+    public static net.minecraft.world.Container pack(NpcEntity npc) {
+        return npc.work.pack;
+    }
     /** The backpack she's wearing, or EMPTY. */
     ItemStack bag = ItemStack.EMPTY;
     /** The car you're working on that she's lending a hand with, till then (NpcTrades.Help). */

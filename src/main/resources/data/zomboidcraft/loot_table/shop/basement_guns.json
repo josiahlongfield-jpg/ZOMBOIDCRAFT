@@ -10,21 +10,6 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "zomboidcraft:shotgun",
-          "weight": 3,
-          "functions": [
-            {
-              "function": "minecraft:set_damage",
-              "damage": {
-                "type": "minecraft:uniform",
-                "min": 0.05,
-                "max": 0.5
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
           "name": "zomboidcraft:shotgun_shell",
           "weight": 10,
           "functions": [
@@ -34,21 +19,6 @@
                 "type": "minecraft:uniform",
                 "min": 6,
                 "max": 24
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:hunting_rifle",
-          "weight": 3,
-          "functions": [
-            {
-              "function": "minecraft:set_damage",
-              "damage": {
-                "type": "minecraft:uniform",
-                "min": 0.05,
-                "max": 0.5
               }
             }
           ]
@@ -70,39 +40,6 @@
         },
         {
           "type": "minecraft:item",
-          "name": "zomboidcraft:hunting_rifle_magazine",
-          "weight": 3
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:hunting_rifle_magazine",
-          "weight": 1,
-          "functions": [
-            {
-              "function": "minecraft:set_components",
-              "components": {
-                "zomboidcraft:mag_rounds": 3
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:pistol",
-          "weight": 3,
-          "functions": [
-            {
-              "function": "minecraft:set_damage",
-              "damage": {
-                "type": "minecraft:uniform",
-                "min": 0.05,
-                "max": 0.5
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
           "name": "zomboidcraft:pistol_ammo",
           "weight": 9,
           "functions": [
@@ -112,24 +49,6 @@
                 "type": "minecraft:uniform",
                 "min": 6,
                 "max": 24
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:pistol_magazine",
-          "weight": 3
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:pistol_magazine",
-          "weight": 1,
-          "functions": [
-            {
-              "function": "minecraft:set_components",
-              "components": {
-                "zomboidcraft:mag_rounds": 8
               }
             }
           ]
@@ -148,46 +67,6 @@
               }
             }
           ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:rifle_magazine",
-          "weight": 2
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:assault_rifle",
-          "weight": 1,
-          "functions": [
-            {
-              "function": "minecraft:set_damage",
-              "damage": {
-                "type": "minecraft:uniform",
-                "min": 0.05,
-                "max": 0.5
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:red_dot_sight",
-          "weight": 2
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:scope_4x",
-          "weight": 1
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:weapon_light",
-          "weight": 2
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:laser_sight",
-          "weight": 1
         },
         {
           "type": "minecraft:item",
@@ -290,21 +169,6 @@
         },
         {
           "type": "minecraft:item",
-          "name": "zomboidcraft:rimfire",
-          "weight": 3,
-          "functions": [
-            {
-              "function": "minecraft:set_damage",
-              "damage": {
-                "type": "minecraft:uniform",
-                "min": 0.05,
-                "max": 0.5
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
           "name": "zomboidcraft:rimfire_ammo",
           "weight": 8,
           "functions": [
@@ -314,36 +178,6 @@
                 "type": "minecraft:uniform",
                 "min": 10,
                 "max": 50
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:sawn_off",
-          "weight": 2,
-          "functions": [
-            {
-              "function": "minecraft:set_damage",
-              "damage": {
-                "type": "minecraft:uniform",
-                "min": 0.1,
-                "max": 0.6
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:magnum",
-          "weight": 1,
-          "functions": [
-            {
-              "function": "minecraft:set_damage",
-              "damage": {
-                "type": "minecraft:uniform",
-                "min": 0.05,
-                "max": 0.5
               }
             }
           ]
@@ -365,64 +199,6 @@
         },
         {
           "type": "minecraft:item",
-          "name": "zomboidcraft:smg_magazine",
-          "weight": 1,
-          "functions": [
-            {
-              "function": "minecraft:set_components",
-              "components": {
-                "zomboidcraft:mag_rounds": 30
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:lever_action",
-          "weight": 2,
-          "functions": [
-            {
-              "function": "minecraft:set_damage",
-              "damage": {
-                "type": "minecraft:uniform",
-                "min": 0.05,
-                "max": 0.5
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:lever_ammo",
-          "weight": 4,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 6,
-                "max": 30
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:crossbow",
-          "weight": 1,
-          "functions": [
-            {
-              "function": "minecraft:set_damage",
-              "damage": {
-                "type": "minecraft:uniform",
-                "min": 0.05,
-                "max": 0.5
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
           "name": "zomboidcraft:crossbow_bolt",
           "weight": 3,
           "functions": [
@@ -435,54 +211,6 @@
               }
             }
           ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:battle_rifle",
-          "weight": 1,
-          "functions": [
-            {
-              "function": "minecraft:set_damage",
-              "damage": {
-                "type": "minecraft:uniform",
-                "min": 0.05,
-                "max": 0.5
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:battle_rifle_magazine",
-          "weight": 1,
-          "functions": [
-            {
-              "function": "minecraft:set_components",
-              "components": {
-                "zomboidcraft:mag_rounds": 20
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:precision_rifle",
-          "weight": 1,
-          "functions": [
-            {
-              "function": "minecraft:set_damage",
-              "damage": {
-                "type": "minecraft:uniform",
-                "min": 0.05,
-                "max": 0.5
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:precision_rifle_magazine",
-          "weight": 1
         },
         {
           "type": "minecraft:item",
@@ -506,87 +234,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "zomboidcraft:grenade_round",
-          "weight": 1,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 1,
-                "max": 3
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:mini_red_dot",
-          "weight": 2
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:compact_red_dot",
-          "weight": 2
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:magnifier",
-          "weight": 1
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:angled_grip",
-          "weight": 2
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:stubby_grip",
-          "weight": 2
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:skeleton_grip",
-          "weight": 1
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:tactical_grip",
-          "weight": 1
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:compact_light",
-          "weight": 2
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:combat_scope",
-          "weight": 1
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:rifle_scope",
-          "weight": 1
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:hunting_scope",
-          "weight": 1
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:precision_scope",
-          "weight": 1
-        },
-        {
-          "type": "minecraft:item",
           "name": "zomboidcraft:long_range_scope",
-          "weight": 1
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:crossbow_scope",
           "weight": 1
         },
         {
@@ -617,32 +265,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "zomboidcraft:assault_rifle",
-          "weight": 3
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:rifle_suppressor",
-          "weight": 1
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:pistol_suppressor",
-          "weight": 1
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:scope_4x",
-          "weight": 2
-        },
-        {
-          "type": "minecraft:item",
           "name": "zomboidcraft:katana",
-          "weight": 1
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:revolver",
           "weight": 1
         },
         {
@@ -653,41 +276,6 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:nvg_white",
-          "weight": 1
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:smg",
-          "weight": 2
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:magnum",
-          "weight": 1
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:battle_rifle",
-          "weight": 1
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:machine_pistol",
-          "weight": 1
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:suppressed_rifle",
-          "weight": 1
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:heavy_sniper",
-          "weight": 1
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:grenade_launcher",
           "weight": 1
         },
         {

@@ -25,24 +25,6 @@
         },
         {
           "type": "minecraft:item",
-          "name": "zomboidcraft:rifle_magazine",
-          "weight": 57
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:rifle_magazine",
-          "weight": 38,
-          "functions": [
-            {
-              "function": "minecraft:set_components",
-              "components": {
-                "zomboidcraft:mag_rounds": 12
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
           "name": "zomboidcraft:pistol_ammo",
           "weight": 152,
           "functions": [
@@ -58,54 +40,6 @@
         },
         {
           "type": "minecraft:item",
-          "name": "zomboidcraft:pistol_magazine",
-          "weight": 57
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:pistol_magazine",
-          "weight": 38,
-          "functions": [
-            {
-              "function": "minecraft:set_components",
-              "components": {
-                "zomboidcraft:mag_rounds": 15
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:pistol",
-          "weight": 38,
-          "functions": [
-            {
-              "function": "minecraft:set_damage",
-              "damage": {
-                "type": "minecraft:uniform",
-                "min": 0.1,
-                "max": 0.6
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:shotgun",
-          "weight": 57,
-          "functions": [
-            {
-              "function": "minecraft:set_damage",
-              "damage": {
-                "type": "minecraft:uniform",
-                "min": 0.1,
-                "max": 0.6
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
           "name": "zomboidcraft:shotgun_shell",
           "weight": 114,
           "functions": [
@@ -115,21 +49,6 @@
                 "type": "minecraft:uniform",
                 "min": 4,
                 "max": 12
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:revolver",
-          "weight": 19,
-          "functions": [
-            {
-              "function": "minecraft:set_damage",
-              "damage": {
-                "type": "minecraft:uniform",
-                "min": 0.2,
-                "max": 0.7
               }
             }
           ]
@@ -786,17 +705,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "zomboidcraft:assault_rifle",
-          "weight": 2
-        },
-        {
-          "type": "minecraft:item",
           "name": "zomboidcraft:nvg_gen3",
-          "weight": 1
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:smg",
           "weight": 1
         },
         {

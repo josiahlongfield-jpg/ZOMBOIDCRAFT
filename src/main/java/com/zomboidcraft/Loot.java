@@ -58,7 +58,7 @@ public final class Loot {
     }
 
     /** True inside a military base or quarantine zone, or the naval wharf with its carrier. */
-    private static boolean guarded(ServerLevel level, Vec3 at) {
+    public static boolean guarded(ServerLevel level, Vec3 at) {
         if (!(level.getChunkSource().getGenerator() instanceof CountyChunkGenerator)) {
             return false;
         }

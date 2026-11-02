@@ -10,26 +10,6 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "zomboidcraft:pistol",
-          "weight": 16,
-          "functions": [
-            {
-              "function": "minecraft:set_damage",
-              "damage": {
-                "type": "minecraft:uniform",
-                "min": 0.1,
-                "max": 0.6
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:pistol_magazine",
-          "weight": 24
-        },
-        {
-          "type": "minecraft:item",
           "name": "zomboidcraft:pistol_ammo",
           "weight": 48,
           "functions": [
@@ -39,21 +19,6 @@
                 "type": "minecraft:uniform",
                 "min": 4,
                 "max": 16
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:shotgun",
-          "weight": 12,
-          "functions": [
-            {
-              "function": "minecraft:set_damage",
-              "damage": {
-                "type": "minecraft:uniform",
-                "min": 0.1,
-                "max": 0.6
               }
             }
           ]
@@ -75,21 +40,6 @@
         },
         {
           "type": "minecraft:item",
-          "name": "zomboidcraft:revolver",
-          "weight": 8,
-          "functions": [
-            {
-              "function": "minecraft:set_damage",
-              "damage": {
-                "type": "minecraft:uniform",
-                "min": 0.2,
-                "max": 0.7
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
           "name": "zomboidcraft:revolver_ammo",
           "weight": 20,
           "functions": [
@@ -102,11 +52,6 @@
               }
             }
           ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:weapon_light",
-          "weight": 8
         },
         {
           "type": "minecraft:item",
@@ -365,53 +310,8 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "zomboidcraft:pistol",
-          "weight": 3,
-          "functions": [
-            {
-              "function": "minecraft:set_damage",
-              "damage": {
-                "type": "minecraft:uniform",
-                "min": 0.05,
-                "max": 0.4
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:shotgun",
-          "weight": 2,
-          "functions": [
-            {
-              "function": "minecraft:set_damage",
-              "damage": {
-                "type": "minecraft:uniform",
-                "min": 0.05,
-                "max": 0.4
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
           "name": "zomboidcraft:ammo_can",
           "weight": 2
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:assault_rifle",
-          "weight": 1,
-          "functions": [
-            {
-              "function": "minecraft:set_damage",
-              "damage": {
-                "type": "minecraft:uniform",
-                "min": 0.2,
-                "max": 0.7
-              }
-            }
-          ]
         },
         {
           "type": "minecraft:item",
