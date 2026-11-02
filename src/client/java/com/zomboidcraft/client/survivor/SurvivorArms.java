@@ -45,9 +45,8 @@ public final class SurvivorArms {
     }
 
     /**
-     * The same, each hand also turned to hold: elbow[s] points from that hand back toward its elbow, and palm[s] is
-     * the side Minecraft's arm puts toward her left (her right palm, the back of her left hand), both in the caller's
-     * frame. A null entry (or array) leaves that hand as Zomboid's clip turns it.
+     * The same, for a gun held in both hands (elbow and palm are Minecraft's arm hints, kept for callers; her hands
+     * take Zomboid's own grip from the clip instead, turned onto the gun between rightHand and leftHand).
      */
     public static boolean draw(PoseStack pose, SubmitNodeCollector out, int light, Player player, Vector3f eye, Vector3f forward,
                                Vector3f up, float scale, Vector3f rightHand, Vector3f leftHand, Vector3f[] elbow,
@@ -57,7 +56,8 @@ public final class SurvivorArms {
         SurvivorPack pack = o.pack();
         int n = pack.skin.boneNames.length;
         float[] pos = new float[n * 3], turn = new float[n * 4];
-        String clip = aiming ? "rifle_aim" : "idle";
+        String kind = Survivors.kind(player.getMainHandItem());
+        String clip = !aiming ? "idle" : kind.equals("pistol") ? "pistol_aim" : "rifle_aim";
         if (animPack != pack || !clip.equals(animClip)) {
             animPack = pack;
             animClip = clip;
@@ -79,21 +79,24 @@ public final class SurvivorArms {
 
         Vector3f[] want = {rightHand == null ? null : back.transformPosition(new Vector3f(rightHand)),
                 leftHand == null ? null : back.transformPosition(new Vector3f(leftHand))};
-        // each hand's turn (her space), where it's given
+        // each hand's turn (her space): Zomboid's own grip from the clip, carried over to where this gun really lies.
+        // The clip holds an unseen long gun from her shooting hand to her other hand; the gun here runs from its grip
+        // to its foregrip. Turning the clip's gun onto this one turns both her hands with it, so they keep Zomboid's
+        // hold (fingers round the grip, the other hand under the handguard). A pistol is held as the clip holds it.
         Quaternionf[] hold = new Quaternionf[2];
-        Vector3f[] towardElbow = new Vector3f[2];
-        for (int s = 0; s < 2; s++) {
-            if (want[s] == null || elbow == null || palm == null || elbow[s] == null || palm[s] == null) continue;
-            Vector3f z = back.transformDirection(new Vector3f(elbow[s])).normalize();
-            Vector3f x = back.transformDirection(new Vector3f(palm[s])).negate();
-            x.sub(new Vector3f(z).mul(x.dot(z)));
-            if (x.lengthSquared() < 1e-6f) continue;
-            x.normalize();
-            Vector3f y = new Vector3f(z).cross(x);
-            // the item frame's columns (x her right, y ahead, z up the forearm) back to the hand bone's own turn
-            Quaternionf item = new Quaternionf().setFromNormalized(new Matrix3f(x, y, z));
-            hold[s] = item.mul(new Quaternionf(pack.gripTurn[s]).conjugate(), new Quaternionf()).normalize();
-            towardElbow[s] = z;
+        if (want[0] != null && want[1] != null && !kind.equals("pistol")) {
+            Vector3f upHers = back.transformDirection(new Vector3f(up));
+            Quaternionf clipGun = gunFrame(new Vector3f(Survivors.gripAt(pack, pos, turn, 1)).sub(Survivors.gripAt(pack, pos, turn, 0)),
+                    new Vector3f(0, 1, 0));
+            Quaternionf thisGun = gunFrame(new Vector3f(want[1]).sub(want[0]), upHers);
+            if (clipGun != null && thisGun != null) {
+                Quaternionf onto = new Quaternionf(thisGun).mul(clipGun.conjugate());
+                for (int s = 0; s < 2; s++) {
+                    int h = pack.hand[s];
+                    if (h < 0) continue;
+                    hold[s] = new Quaternionf(onto).mul(new Quaternionf(turn[h * 4], turn[h * 4 + 1], turn[h * 4 + 2], turn[h * 4 + 3])).normalize();
+                }
+            }
         }
         // where the grips are out of her reach, she steps in (only her arms show, so the body just moves); a few
         // rounds so that bringing one shoulder in doesn't leave the other short
@@ -122,11 +125,9 @@ public final class SurvivorArms {
                 continue;
             }
             int el = pack.fore[s], h = pack.hand[s];
-            // the wrist where the turned hand's grip lands on the point, the elbow bent back the way the grip wants
+            // the wrist where the turned hand's grip lands on the point, the elbow bent as the clip bends it
             Vector3f wrist = new Vector3f(want[s]).sub(hold[s].transform(new Vector3f(pack.grip[s])));
-            float forearm = new Vector3f(pos[el * 3], pos[el * 3 + 1], pos[el * 3 + 2]).distance(pos[h * 3], pos[h * 3 + 1], pos[h * 3 + 2]);
-            Vector3f pole = new Vector3f(towardElbow[s]).mul(forearm).add(wrist);
-            Survivors.reach(pack, pos, turn, s, wrist, pole);
+            Survivors.reach(pack, pos, turn, s, wrist);
             // half the wrist's roll taken by the forearm, so it doesn't wring
             Vector3f axis = new Vector3f(pos[h * 3] - pos[el * 3], pos[h * 3 + 1] - pos[el * 3 + 1], pos[h * 3 + 2] - pos[el * 3 + 2]).normalize();
             Quaternionf now = new Quaternionf(turn[h * 4], turn[h * 4 + 1], turn[h * 4 + 2], turn[h * 4 + 3]);
@@ -173,6 +174,17 @@ public final class SurvivorArms {
                 buffers[buffer], light, OverlayTexture.NO_OVERLAY, pose, out);
         pose.popPose();
         return true;
+    }
+
+    /** A gun's turn from the way it points and the way up is (null if they're the same line). */
+    private static Quaternionf gunFrame(Vector3f along, Vector3f up) {
+        if (along.lengthSquared() < 1e-8f) return null;
+        Vector3f a = new Vector3f(along).normalize();
+        Vector3f u = new Vector3f(up).sub(new Vector3f(a).mul(up.dot(a)));
+        if (u.lengthSquared() < 1e-6f) return null;
+        u.normalize();
+        Vector3f side = new Vector3f(a).cross(u);
+        return new Quaternionf().setFromNormalized(new Matrix3f(a, u, side));
     }
 
     /** Which shoulder a bone is nearer (0 right, 1 left). */

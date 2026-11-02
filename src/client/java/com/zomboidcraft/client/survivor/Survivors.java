@@ -693,12 +693,24 @@ public final class Survivors {
     /** Her body's centre (x, z), width and depth at height y, from the body mesh's vertices near it. */
     private static float[] band(SurvivorPack pack, float y) {
         float minX = Float.MAX_VALUE, maxX = -Float.MAX_VALUE, minZ = Float.MAX_VALUE, maxZ = -Float.MAX_VALUE;
+        // her arms and hands hang beside her hips: only the trunk and legs are measured
+        boolean[] arm = new boolean[pack.skin.boneNames.length];
+        for (int s = 0; s < 2; s++) {
+            int root = pack.clavicle[s] >= 0 ? pack.clavicle[s] : pack.upper[s];
+            if (root < 0) continue;
+            for (int b = 0; b < arm.length; b++) arm[b] |= below(pack, b, root);
+        }
         for (com.zomboidcraft.client.npc.NpcSkin.Group g : pack.skin.groups) {
             if (!g.piece.equals("body")) continue;
+            vertex:
             for (int i = 0; i < g.vertices; i++) {
                 if (Math.abs(g.pos[i * 3 + 1] - y) > 0.025f) continue;
+                for (int k = 0; k < 4; k++) {
+                    int j = g.joint[i * 4 + k] & 0xFF;
+                    if (j < arm.length && arm[j] && g.weight[i * 4 + k] > 0.05f) continue vertex;
+                }
                 float x = g.pos[i * 3], z = g.pos[i * 3 + 2];
-                if (Math.abs(x) > 0.3f) continue;   // not the hands hanging beside her
+                if (Math.abs(x) > 0.3f) continue;
                 minX = Math.min(minX, x);
                 maxX = Math.max(maxX, x);
                 minZ = Math.min(minZ, z);
