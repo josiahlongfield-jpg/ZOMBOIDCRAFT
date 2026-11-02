@@ -381,6 +381,12 @@ public final class ZcConfig {
          * 104 ms of a 262 ms frame). 0 = no limit. Client side.
          */
         public double shadowObjectDistance = 24;
+        /**
+         * Whether entities (zombies, cars, people, props) cast shader shadows at all. Off by default (Josiah 2026-11-02:
+         * a night game doesn't need them); the blocks still go through the shadow pass, which Photon's coloured lights
+         * need. On uses shadowObjectDistance and shadowZombies. Client side.
+         */
+        public boolean entityShadows = false;
         /** Of the zombies within shadowObjectDistance, only the nearest this many cast shader shadows. Client side. */
         public int shadowZombies = 12;
         /** The nearest this many zombies on screen get every clothing detail (within look.zombieDetailDistance). Client side. */

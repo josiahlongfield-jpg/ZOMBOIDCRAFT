@@ -24,8 +24,16 @@ public abstract class ShadowCasterMixin {
         if (!cir.getReturnValueZ()) {
             return;
         }
+        if (!ZDetail.shadowPass()) {
+            return;
+        }
+        // Josiah 2026-11-02: "get rid of shadows entirely, its a night based game"
+        if (!ZcConfig.get().performance.entityShadows) {
+            cir.setReturnValue(false);
+            return;
+        }
         double reach = ZcConfig.get().performance.shadowObjectDistance;
-        if (reach <= 0 || !ZDetail.shadowPass()) {
+        if (reach <= 0) {
             return;
         }
         double d = entity.distanceToSqr(camX, camY, camZ);
