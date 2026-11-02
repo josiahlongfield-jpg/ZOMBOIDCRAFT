@@ -77,8 +77,37 @@ public final class MeshGuns {
     private static int localGeneration;
     private static final Map<String, long[]> LOCAL_SEEN = new java.util.concurrent.ConcurrentHashMap<>();
 
+    private static final Map<String, Float> UNDERSIDES = new HashMap<>();
+
+    /**
+     * The underside of a gun's handguard over a point (item pixels): the lowest of the mesh within a pixel and a half
+     * either side of x and three quarters of one along z, no lower than a little under y. NaN if the mesh can't be read
+     * or has nothing there. Render thread.
+     */
+    public static float underside(String id, float x, float y, float z) {
+        String key = id + '|' + Math.round(x * 10) + '|' + Math.round(y * 10) + '|' + Math.round(z * 10);
+        Float have = UNDERSIDES.get(key);
+        if (have != null) return have;
+        Gun gun = get(id);
+        float low = Float.NaN;
+        if (gun != null) {
+            for (Part part : gun.parts().values()) {
+                float[] p = part.pos();
+                for (int i = 0; i + 2 < p.length; i += 3) {
+                    if (Math.abs(p[i] - x) < 1.6f && Math.abs(p[i + 2] - z) < 0.75f && p[i + 1] > y - 0.3f
+                            && !(p[i + 1] >= low)) {
+                        low = p[i + 1];
+                    }
+                }
+            }
+        }
+        UNDERSIDES.put(key, low);
+        return low;
+    }
+
     /** Forgets the local guns' meshes, so changed files are read again (/zc localgun reload). Render thread. */
     public static void forgetLocal() {
+        UNDERSIDES.clear();
         LOCAL_SEEN.clear();
         GUNS.clear();          // the overrides too, so a changed round file is read again
         MISSING.clear();

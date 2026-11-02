@@ -357,8 +357,10 @@ public final class RifleView {
             }
         }
         aimShown = step == 0 ? a : 0;
-        if (com.zomboidcraft.client.survivor.SurvivorArms.pistolHeld(player)) {
-            want = atArmsLength(want);
+        // a Zomboid survivor: the gun drawn at her size, where her own aim hold puts it, not her arms at the gun's
+        float[] hold = config.look.firstPersonArms ? com.zomboidcraft.client.survivor.SurvivorArms.hold(player) : null;
+        if (hold != null) {
+            want = seat(want, a, sights, hold, com.zomboidcraft.client.survivor.SurvivorArms.pistolHeld(player));
         }
 
         pose.pushPose();
@@ -423,33 +425,75 @@ public final class RifleView {
             if (animate && rig.cylinder()) {
                 right = right.lerp(new Hand(right.at(), RIGHT_LOAD, RIGHT_HINT), openAmount(age));
             }
+            boolean offFree = player.getOffhandItem().isEmpty() && !com.zomboidcraft.client.cars.CarHands.leftOnWheel(player);
+            // her off hand on a handguard cups its underside (the support point is a vanilla arm's, a little below it)
+            Vector3f guard = null;
+            if (hold != null && offFree && !animate && !rig.supportGrip() && !foregrip) {
+                float[] s = rig.support();
+                float under = MeshGuns.underside(meshOf(gun), s[0], s[1], s[2] + pump);
+                guard = want.point(new Vector3f(s[0], Float.isNaN(under) ? s[1] + GUARD_LIFT : under, s[2] + pump));
+            }
             RifleArms.draw(pose, out, light, player, state.avatarRenderState, right,
-                    player.getOffhandItem().isEmpty() && !com.zomboidcraft.client.cars.CarHands.leftOnWheel(player) ? left : null,
+                    offFree ? left : null,
                     want.scale / rig.hipScale() * 0.6f, want.q(), want.scale,
                     new Vector3f(rig.support()[0], rig.support()[1], rig.support()[2])
-                            .distance(rig.grip()[0], rig.grip()[1], rig.grip()[2]) / 16f * want.scale);
+                            .distance(rig.grip()[0], rig.grip()[1], rig.grip()[2]) / 16f * want.scale, guard);
         }
         pose.popPose();
         return true;
     }
 
-    /** A survivor's pistol's display scale: a little bigger than life, as her hands are drawn with it. */
-    private static final float SURVIVOR_PISTOL_SCALE = 0.6f;
-    /** How far ahead of the eye a survivor holds a pistol's grip (hand-camera blocks), arms out as Zomboid holds it. */
-    private static final float SURVIVOR_PISTOL_REACH = 0.56f;
+    /** How far (item pixels) a handguard's underside is above the support point when the gun's mesh can't say. */
+    private static final float GUARD_LIFT = 1.2f;
+    /** Where on the sight line (metres ahead of the eye) a survivor's gun is put on her eye. */
+    private static final float SURVIVOR_SIGHT_AHEAD = 0.3f;
+    /** A survivor's long gun at the hip: her aim hold moved off the eye (metres: right, up, back) and turned in. */
+    private static final Vector3f SURVIVOR_HIP = new Vector3f(0.1f, -0.08f, 0f);
+    private static final float SURVIVOR_HIP_YAW = 6f, SURVIVOR_HIP_ROLL = -4f;
+    /** A survivor's pistol at the hip: her aim hold moved off the eye. */
+    private static final Vector3f SURVIVOR_PISTOL_HIP = new Vector3f(0.08f, -0.1f, 0f);
 
     /**
-     * A survivor's pistol: the view's picture of it made smaller about the eye (so its sights stay where they were) and
-     * then pushed out along the eye line to arm's length. The view shows a pistol three times life size up by the face,
-     * which her real hands could only hold as a fist filling the screen.
+     * The gun drawn at a survivor's size and where her own hold puts it (Josiah 2026-11-02: "sizing the gun to suit
+     * her third person arms ... like it would be in project zomboid"). hold is SurvivorArms.hold: her shooting palm
+     * from her eye and how far apart her palms are. The gun is made as big as puts its grip and handguard that far
+     * apart (a pistol: its real size). On the sights it lies as our sights pose lays it, the sight line on her eye and
+     * the grip as far ahead as her palm; at the hip the same, moved down and right and turned in. Whatever the view does
+     * to the gun from its own hip and sights poses (a reload, the laser pointed) is done the same about hers.
      */
-    private static Pose atArmsLength(Pose gun) {
-        Vector3f eye = new Vector3f(-ARM[0], -ARM[1], -ARM[2]);
-        float f = SURVIVOR_PISTOL_SCALE / gun.scale();
-        Pose small = new Pose(new Vector3f(gun.t()).sub(eye).mul(f).add(eye), new Quaternionf(gun.q()), gun.scale() * f);
-        float gripZ = small.point(rig.grip()).z + ARM[2];
-        small.t().add(0, 0, -SURVIVOR_PISTOL_REACH - gripZ);
-        return small;
+    private static Pose seat(Pose want, float a, Pose sightsPose, float[] hold, boolean pistol) {
+        Pose ads = sightsPose != null ? sightsPose : sights(Attachments.EMPTY_KEY);
+        Pose hip = hip(0, 0, 0);
+        if (ads == null) ads = hip;
+        float[] g = rig.grip(), s = rig.support();
+        float span = new Vector3f(s[0], s[1], s[2]).distance(g[0], g[1], g[2]) / 16f;
+        float size = pistol || span < 0.05f ? com.zomboidcraft.client.survivor.SurvivorArms.PISTOL_REAL : hold[3] / span;
+        // a point of the sight line, in the gun's own units (from the item's middle, one unit its display scale)
+        Vector3f onLine = new Vector3f(0, 0, -SURVIVOR_SIGHT_AHEAD).sub(ARM[0], ARM[1], ARM[2]).sub(ads.t());
+        new Quaternionf(ads.q()).conjugate().transform(onLine).div(ads.scale());
+        Vector3f pA = ads.q().transform(new Vector3f(onLine).mul(size), new Vector3f());
+        Vector3f pG = ads.q().transform(new Vector3f(g[0], g[1], g[2]).div(16).sub(0.5f, 0.5f, 0.5f).mul(size), new Vector3f());
+        Vector3f t = new Vector3f(-pA.x - ARM[0], -pA.y - ARM[1], hold[2] - pG.z - ARM[2]);
+        Pose onSights = new Pose(t, new Quaternionf(ads.q()), size);
+        Pose atHip = pistol ? new Pose(new Vector3f(t).add(SURVIVOR_PISTOL_HIP), new Quaternionf(ads.q()), size)
+                : new Pose(new Vector3f(t).add(SURVIVOR_HIP), new Quaternionf().rotationXYZ(0, SURVIVOR_HIP_YAW * Mth.DEG_TO_RAD,
+                        SURVIVOR_HIP_ROLL * Mth.DEG_TO_RAD).mul(ads.q()), size);
+        return carried(want, hip.lerp(ads, a), atHip.lerp(onSights, a));
+    }
+
+    /** want moved the way from has to move to become to (turned, scaled and shifted with it). */
+    private static Pose carried(Pose want, Pose from, Pose to) {
+        float k = to.scale() / from.scale();
+        Quaternionf r = new Quaternionf(to.q()).mul(new Quaternionf(from.q()).conjugate()).normalize();
+        Vector3f t = r.transform(new Vector3f(want.t()).sub(from.t())).mul(k).add(to.t());
+        return new Pose(t, new Quaternionf(r).mul(want.q()).normalize(), want.scale() * k);
+    }
+
+    /** The mesh a gun is drawn with: a gun kept on this computer its own, ours otherwise. */
+    private static String meshOf(ItemStack gun) {
+        String local = gun.get(com.zomboidcraft.combat.LocalGuns.ID);
+        if (local != null && MeshGuns.hasLocal(local)) return MeshGuns.LOCAL + local;
+        return "heavy_sniper".equals(type.id()) ? "heavy_sniper_mesh" : "pbr_" + type.id();
     }
 
     /** The slow drift of a held breath while aiming, so the sights are never quite dead still: a turn about the eye. */

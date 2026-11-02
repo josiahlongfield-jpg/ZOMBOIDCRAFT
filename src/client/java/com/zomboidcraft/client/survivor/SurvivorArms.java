@@ -117,30 +117,63 @@ public final class SurvivorArms {
     }
 
     /** How big a pistol of ours is drawn at its real size (its display scale). */
-    private static final float PISTOL_REAL = 0.434f;
-    /** A pistol's hand sits this far (metres) lower on the grip than its middle, so the slide and sights show over it. */
-    private static final float PISTOL_DROP = 0.025f;
+    public static final float PISTOL_REAL = 0.434f;
+    /** A pistol's hands sit this far (metres) lower on the grip than its middle, so the slide and sights show over them. */
+    private static final float PISTOL_DROP = 0.03f;
+    /**
+     * Zomboid's pistol hold has both hands flat together, fingers up; each is turned this far (degrees) about its palm
+     * so the fingers wrap round the grip, the off hand's over the shooting hand's, the way a pistol is really held.
+     */
+    private static final float PISTOL_WRAP = 70f;
+    /**
+     * The off hand cupping a handguard: palm up against its underside, the fingers this far (degrees) round from the
+     * barrel toward the gun's right so they curl up its right side, the thumb along its left.
+     */
+    private static final float CUP_TURN = 60f;
+    /** How far (metres) the cupped palm sits under the handguard. */
+    private static final float CUP_GAP = 0.01f;
 
-    /** Whether this player's first-person gun is held as a survivor's pistol (RifleView then shows it at arm's length). */
+    /** Whether this player's first-person gun is held as a survivor's pistol. */
     public static boolean pistolHeld(Player player) {
         return shown(player) && Survivors.kind(player.getMainHandItem()).equals("pistol");
     }
 
     /**
+     * Her own aim hold (Zomboid's rifle_aim, or pistol_aim with a pistol), life size, seen from her eyes: where her
+     * shooting palm is (x right, y up, -z ahead, metres) and how far apart her palms are. RifleView sizes and places the
+     * gun to this, so the gun is drawn at her size rather than her arms at the gun's. Null if she isn't shown.
+     */
+    public static float[] hold(Player player) {
+        Survivors.Outfit o = player == null ? null : Survivors.outfit(player);
+        if (o == null) return null;
+        SurvivorPack pack = o.pack();
+        if (pack.hand[0] < 0 || pack.hand[1] < 0 || pack.head < 0) return null;
+        int n = pack.skin.boneNames.length;
+        float[] pos = new float[n * 3], turn = new float[n * 4];
+        stand(pack, pistolHeld(player) ? "pistol_aim" : "rifle_aim", pos, turn);
+        Vector3f palmR = palm(pack, pos, turn, 0), palmL = palm(pack, pos, turn, 1);
+        int head = pack.head;
+        Vector3f eyes = new Vector3f(pos[head * 3], pos[head * 3 + 1] + 0.09f, pos[head * 3 + 2] + 0.09f);
+        // her front along -z, her up +y, her left -x
+        Vector3f r = new Vector3f(palmR).sub(eyes);
+        return new float[] {-r.x, r.y, -r.z, palmR.distance(palmL)};
+    }
+
+    /**
      * Her arms on a gun in first person (RifleView's hand frame): Zomboid's own aim hold, the one she has in third
-     * person, carried whole onto the gun, drawn as big as the gun is drawn (the view shows guns bigger than life, so
-     * her arms are made the same amount bigger, which is how the hold keeps its shape: nothing stretched or bent to
-     * fit). Her shooting palm closes on the grip; the other hand is already on the handguard by the hold itself and
-     * only reaches the last bit, or goes where the view sends it (a magazine, the handle). Each forearm then runs off
-     * screen the way the view lays it, the hand keeping its grip; only her forearms and hands are drawn.
+     * person, carried whole onto the gun. RifleView draws the gun at her size and where her hold puts it (see
+     * {@link #hold}), so her arms come out life size here and nothing is stretched or bent to fit. Her shooting palm
+     * closes on the grip; the other hand cups the handguard, or goes where the view sends it (a magazine, the handle).
+     * Only her forearms and hands are drawn.
      * <p>
-     * eye is the eye in the hand frame; rightHand/leftHand the grips; the elbows the way each forearm runs back from
-     * its hand (null left hand: not drawn); gun the gun's turn (barrel -z, sights +y); gunScale its display scale;
-     * span how far apart the gun has its grip and handguard (hand-frame blocks).
+     * eye is the eye in the hand frame; rightHand/leftHand the grips (null left hand: not drawn); the elbows are
+     * the vanilla arms' and go unused; gun the gun's turn (barrel -z, sights +y); gunScale its display scale;
+     * span how far apart the gun has its grip and handguard (hand-frame blocks); guard, if given, the underside of the
+     * handguard the off hand cups (hand frame), otherwise it goes to leftHand as it is.
      */
     public static boolean drawGun(PoseStack pose, SubmitNodeCollector out, int light, Player player, Vector3f eye,
                                   Vector3f rightHand, Vector3f leftHand, Vector3f rightElbow, Vector3f leftElbow,
-                                  Quaternionf gun, float gunScale, float span) {
+                                  Quaternionf gun, float gunScale, float span, Vector3f guard) {
         Survivors.Outfit o = player == null ? null : Survivors.outfit(player);
         if (o == null || rightHand == null) return false;
         SurvivorPack pack = o.pack();
@@ -188,7 +221,23 @@ public final class SurvivorArms {
             turn[b * 4 + 2] = q.z;
             turn[b * 4 + 3] = q.w;
         }
-        if (other != null) {
+        if (other != null && guard != null && !pistol) {
+            // the off hand cups the handguard: palm up against it, fingers round its right side, thumb along its left
+            Vector3f up = new Vector3f(sights).sub(new Vector3f(barrel).mul(sights.dot(barrel))).normalize();
+            Vector3f right = new Vector3f(barrel).cross(up).normalize();
+            if (right.dot(back.transformDirection(new Vector3f(1, 0, 0))) < 0) right.negate();
+            float th = (float) Math.toRadians(CUP_TURN);
+            Vector3f x = new Vector3f(barrel).mul((float) Math.cos(th)).add(new Vector3f(right).mul((float) Math.sin(th)));
+            Vector3f z = new Vector3f(up).negate();
+            Vector3f y = new Vector3f(z).cross(x);
+            Quaternionf cup = new Quaternionf().setFromNormalized(new Matrix3f(x, y, z));
+            int h = pack.hand[1], f = pack.fore[1];
+            Quaternionf has = new Quaternionf(turn[h * 4], turn[h * 4 + 1], turn[h * 4 + 2], turn[h * 4 + 3]);
+            turnAbout(pack, pos, turn, f, palm(pack, pos, turn, 1), new Quaternionf(cup).mul(has.conjugate()).normalize());
+            Vector3f to = back.transformPosition(new Vector3f(guard)).sub(new Vector3f(up).mul(CUP_GAP / k));
+            Vector3f by = to.sub(palm(pack, pos, turn, 1));
+            moveBelow(pack, pos, f, by);
+        } else if (other != null) {
             // the other hand: the nearest of the gun's hold to its palm (a stretch of handguard along the barrel, or
             // the one point the view gives, a magazine or the handle), reached for only when the palm isn't on it
             Vector3f along = new Vector3f(barrel).mul(pistol ? 0.01f : 0.08f);
@@ -198,22 +247,17 @@ public final class SurvivorArms {
             Vector3f to = new Vector3f(a0).add(new Vector3f(seg).mul(t));
             if (pl.distance(to) > 0.03f) Survivors.reachPoint(pack, pos, turn, 1, to);
         }
-        // each forearm laid off screen the way the view runs it, turned about the wrist, the hand keeping its grip
-        for (int s = 0; s < 2; s++) {
-            Vector3f elbow = s == 0 ? rightElbow : leftElbow;
-            if (elbow == null || (s == 1 && other == null)) continue;
-            Vector3f e = back.transformDirection(new Vector3f(elbow));
-            if (e.lengthSquared() < 1e-8f) continue;
-            int f = pack.fore[s], h = pack.hand[s];
-            Vector3f wrist = new Vector3f(pos[h * 3], pos[h * 3 + 1], pos[h * 3 + 2]);
-            Vector3f have = new Vector3f(pos[f * 3], pos[f * 3 + 1], pos[f * 3 + 2]).sub(wrist);
-            if (have.lengthSquared() < 1e-8f) continue;
-            Quaternionf kept = new Quaternionf(turn[h * 4], turn[h * 4 + 1], turn[h * 4 + 2], turn[h * 4 + 3]);
-            turnAbout(pack, pos, turn, f, wrist, new Quaternionf().rotationTo(have.normalize(), e.normalize()));
-            Quaternionf now = new Quaternionf(turn[h * 4], turn[h * 4 + 1], turn[h * 4 + 2], turn[h * 4 + 3]);
-            turnAbout(pack, pos, turn, h, wrist, new Quaternionf(kept).mul(now.conjugate()).normalize());
+        if (pistol) {
+            // fingers wrapped round the grip rather than flat together pointing up
+            for (int s = 0; s < (other != null ? 2 : 1); s++) {
+                int h = pack.hand[s];
+                Vector3f pc = palm(pack, pos, turn, s);
+                Vector3f normal = new Quaternionf(turn[h * 4], turn[h * 4 + 1], turn[h * 4 + 2], turn[h * 4 + 3])
+                        .transform(new Vector3f(0, 0, 1));
+                turnAbout(pack, pos, turn, h, pc, new Quaternionf().rotationAxis(
+                        (float) Math.toRadians(s == 0 ? PISTOL_WRAP : -PISTOL_WRAP), normal.normalize()));
+            }
         }
-
         Matrix4f[] skin = Survivors.skinOf(pack, pos, turn);
         int[][] cut = forearms(pack, other != null);
         if (buffersPack != pack) {
@@ -231,6 +275,18 @@ public final class SurvivorArms {
                 buffers[buffer], light, OverlayTexture.NO_OVERLAY, pose, out);
         pose.popPose();
         return true;
+    }
+
+    /** Moves a bone and everything below it (her space). */
+    private static void moveBelow(SurvivorPack pack, float[] pos, int bone, Vector3f by) {
+        for (int b = 0; b < pos.length / 3; b++) {
+            boolean under = false;
+            for (int p = b; p >= 0 && !under; p = pack.skin.parent[p]) under = p == bone;
+            if (!under) continue;
+            pos[b * 3] += by.x;
+            pos[b * 3 + 1] += by.y;
+            pos[b * 3 + 2] += by.z;
+        }
     }
 
     /** Turns a bone and everything below it about a point (her space). */
