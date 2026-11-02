@@ -638,12 +638,17 @@ public final class Survivors {
         arm.setRotation(e.x, e.y, e.z);
     }
 
-    /** Her hand's grip brought to a point (her space), the wrist kept as the clip has it. */
+    /**
+     * The middle of her palm brought to a point (her space), the wrist kept as the clip has it (twice over, as the
+     * reach turns the hand with the forearm).
+     */
     static void reachPoint(SurvivorPack pack, float[] pos, float[] turn, int s, Vector3f point) {
         int h = pack.hand[s];
         if (h < 0) return;
-        Quaternionf hq = new Quaternionf(turn[h * 4], turn[h * 4 + 1], turn[h * 4 + 2], turn[h * 4 + 3]);
-        reach(pack, pos, turn, s, new Vector3f(point).sub(hq.transform(new Vector3f(pack.grip[s]))));
+        for (int k = 0; k < 2; k++) {
+            Quaternionf hq = new Quaternionf(turn[h * 4], turn[h * 4 + 1], turn[h * 4 + 2], turn[h * 4 + 3]);
+            reach(pack, pos, turn, s, new Vector3f(point).sub(hq.transform(new Vector3f(pack.fist[s]))));
+        }
     }
 
     /**
