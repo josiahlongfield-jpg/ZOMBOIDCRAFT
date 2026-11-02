@@ -10,7 +10,6 @@ import com.zomboidcraft.mixin.client.SpecialModelRenderersAccessor;
 import java.util.List;
 import java.util.function.Consumer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
-import net.minecraft.client.renderer.special.NoDataSpecialModelRenderer;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import org.joml.Vector3f;
 import org.joml.Vector3fc;
@@ -23,7 +22,7 @@ import org.joml.Vector3fc;
  * <pre>{"type": "minecraft:special", "base": "zomboidcraft:item/weapon/shotgun/hip/body",
  *  "model": {"type": "zomboidcraft:mesh", "id": "pbr_shotgun", "part": "body"}}</pre>
  */
-public final class MeshGunRenderer implements NoDataSpecialModelRenderer {
+public final class MeshGunRenderer implements net.minecraft.client.renderer.special.SpecialModelRenderer<String> {
     private final String id;
     private final String part;
     private final List<Float> offset;
@@ -44,10 +43,51 @@ public final class MeshGunRenderer implements NoDataSpecialModelRenderer {
         SpecialModelRenderersAccessor.zomboidcraft$types().put(ZomboidCraft.id("mesh"), Unbaked.MAP_CODEC);
     }
 
+    /** A gun kept on this computer (combat/LocalGuns) draws its own mesh in place of ours. */
     @Override
+    public @org.jetbrains.annotations.Nullable String extractArgument(net.minecraft.world.item.ItemStack stack) {
+        String local = stack.get(com.zomboidcraft.combat.LocalGuns.ID);
+        return local != null && MeshGuns.hasLocal(local) ? local : null;
+    }
+
+    @Override
+    public void submit(@org.jetbrains.annotations.Nullable String local, PoseStack pose, SubmitNodeCollector out, int light, int overlay, boolean foil, int outline) {
+        if (local != null) {
+            // our gun's mesh becomes its mesh (part by part: one it hasn't got draws nothing); our attachments don't
+            // go on it (its own parts are packed with it); anything else (a loaded bolt) draws as it is
+            com.zomboidcraft.combat.LocalGuns.Spec spec = com.zomboidcraft.combat.LocalGuns.get(local);
+            if (spec != null && id.equals(spec.anchorMesh)) {
+                // where our part sits (a magazine on its way out, a swung cylinder) its part sits too
+                submit(MeshGuns.LOCAL + local, null, pose, out, light);
+                if ("body".equals(part) && spec.irons != null) {
+                    // iron sights it came without: our flip-up pair, up, on its rail
+                    for (com.zomboidcraft.combat.LocalGuns.Part p : spec.irons) {
+                        if (p == null || p.mesh == null || p.at == null || p.at.length < 3) {
+                            continue;
+                        }
+                        pose.pushPose();
+                        pose.translate(p.at[0] / 16, p.at[1] / 16, p.at[2] / 16);
+                        MeshGuns.draw(p.mesh, "body", pose, out, light, null);
+                        pose.popPose();
+                    }
+                }
+                return;
+            }
+            if (spec != null && (id.startsWith("att_") || id.startsWith("own_"))) {
+                return;
+            }
+        }
+        submit(pose, out, light, overlay, foil, outline);
+    }
+
     public void submit(PoseStack pose, SubmitNodeCollector out, int light, int overlay, boolean foil, int outline) {
+        submit(id, texture, pose, out, light);
+    }
+
+    private void submit(String mesh, @org.jetbrains.annotations.Nullable net.minecraft.resources.Identifier paint,
+                        PoseStack pose, SubmitNodeCollector out, int light) {
         if (offset.isEmpty() && roll == 0 && pitch == 0 && scale == 1) {
-            MeshGuns.draw(id, part, pose, out, light, texture);
+            MeshGuns.draw(mesh, part, pose, out, light, paint);
             return;
         }
         pose.pushPose();
@@ -63,7 +103,7 @@ public final class MeshGunRenderer implements NoDataSpecialModelRenderer {
         if (scale != 1) {
             pose.scale(scale, scale, scale);
         }
-        MeshGuns.draw(id, part, pose, out, light, texture);
+        MeshGuns.draw(mesh, part, pose, out, light, paint);
         pose.popPose();
     }
 
@@ -74,11 +114,14 @@ public final class MeshGunRenderer implements NoDataSpecialModelRenderer {
         if (b == null) {
             b = new float[] {0.2f, -0.1f, -0.6f, 0.8f, 1.0f, 1.6f};
         }
-        // an attachment's mesh sits round its clamp at the origin: moved to its mount (its turn is left out)
+        // an attachment's mesh sits round its clamp at the origin: moved to its mount (its turn is left out), and
+        // sized as drawn (a round shrunk onto its carton): a dropped item stands on the bottom of these, so unscaled
+        // ones sank the rounds through the floor
         float dx = offset.isEmpty() ? 0 : offset.get(0) / 16, dy = offset.isEmpty() ? 0 : offset.get(1) / 16,
                 dz = offset.isEmpty() ? 0 : offset.get(2) / 16;
         for (int i = 0; i < 8; i++) {
-            out.accept(new Vector3f(b[(i & 1) * 3] + dx, b[1 + (i >> 1 & 1) * 3] + dy, b[2 + (i >> 2 & 1) * 3] + dz));
+            out.accept(new Vector3f(b[(i & 1) * 3] * scale + dx, b[1 + (i >> 1 & 1) * 3] * scale + dy,
+                    b[2 + (i >> 2 & 1) * 3] * scale + dz));
         }
     }
 
@@ -90,7 +133,7 @@ public final class MeshGunRenderer implements NoDataSpecialModelRenderer {
      * packed in the mesh, laid out the same (a garment's camo: tools/items/gen_clothes.py).
      */
     public record Unbaked(String id, String part, List<Float> offset, float roll, float pitch, float scale, String texture)
-            implements SpecialModelRenderer.Unbaked<Void> {
+            implements SpecialModelRenderer.Unbaked<String> {
         public static final MapCodec<Unbaked> MAP_CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
                 Codec.STRING.fieldOf("id").forGetter(Unbaked::id),
                 Codec.STRING.optionalFieldOf("part", "body").forGetter(Unbaked::part),
@@ -107,7 +150,7 @@ public final class MeshGunRenderer implements NoDataSpecialModelRenderer {
         }
 
         @Override
-        public SpecialModelRenderer<Void> bake(SpecialModelRenderer.BakingContext context) {
+        public SpecialModelRenderer<String> bake(SpecialModelRenderer.BakingContext context) {
             return new MeshGunRenderer(id, part, offset, roll, pitch, scale, texture);
         }
     }

@@ -72,7 +72,15 @@ public final class HoldPoses {
         }
     }
 
+    /**
+     * Whether the last apply posed the arms round a weapon, and where it put the off hand's grip (model pixels): the
+     * Zomboid bodies (client/survivor) reach their own hands to the weapon there.
+     */
+    public static boolean posed;
+    public static final Vector3f supportAt = new Vector3f();
+
     public static void apply(PlayerModel model, AvatarRenderState state) {
+        posed = false;
         if (!ZcConfig.get().combat.weaponHolds || state.isVisuallySwimming || state.isFallFlying
                 || state.hasPose(Pose.SLEEPING) || state.hasPose(Pose.SPIN_ATTACK)) {
             return;
@@ -234,6 +242,8 @@ public final class HoldPoses {
         }
         float[] a = aim(offPivot, target, HAND_X);
         offArm.setRotation(a[0], a[1] * mirror, 0);
+        posed = true;
+        supportAt.set(target.x * mirror, target.y, target.z);
     }
 
     private static final float RELOAD_LIFT = 0.25f, RELOAD_TURN = 0.3f;

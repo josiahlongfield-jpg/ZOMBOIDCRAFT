@@ -1,12 +1,10 @@
 package com.zomboidcraft.zombie;
 
 import com.zomboidcraft.ZcConfig;
-import com.zomboidcraft.combat.ModSounds;
 import java.util.ArrayDeque;
 import java.util.Map;
 import java.util.WeakHashMap;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -54,8 +52,7 @@ public final class ZombieVoice {
         }
         recent.addLast(new Scream(at, now));
         LAST_SCREAM.put(zombie, now);
-        level.playSound(null, zombie.getX(), zombie.getEyeY(), zombie.getZ(), ModSounds.ZOMBIE_ALERT, SoundSource.HOSTILE,
-                1f, 0.9f + zombie.getRandom().nextFloat() * 0.2f);
+        ZedSounds.say(zombie, ZedSounds.State.AGGRO, 1f);
     }
 
     /** Ticks until the next snarl, picked fresh after each one. */
@@ -69,7 +66,6 @@ public final class ZombieVoice {
         if (!ZcConfig.get().zombies.chaseSnarls || zombie.isSilent()) {
             return;
         }
-        zombie.level().playSound(null, zombie.getX(), zombie.getEyeY(), zombie.getZ(), ModSounds.ZOMBIE_CHASE,
-                SoundSource.HOSTILE, 0.9f, 0.9f + zombie.getRandom().nextFloat() * 0.2f);
+        ZedSounds.say(zombie, ZedSounds.State.CHASE, 0.9f);
     }
 }

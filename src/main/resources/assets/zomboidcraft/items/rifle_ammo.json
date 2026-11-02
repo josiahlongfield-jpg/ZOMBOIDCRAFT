@@ -1,6 +1,112 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/weapon/rifle_ammo"
+  "type": "minecraft:select",
+  "property": "minecraft:display_context",
+  "cases": [
+   {
+    "when": "firstperson_righthand",
+    "model": {
+     "type": "minecraft:special",
+     "base": "zomboidcraft:item/weapon/rifle_ammo",
+     "model": {
+      "type": "zomboidcraft:mesh",
+      "id": "ammo/rifle_ammo",
+      "part": "body",
+      "offset": [
+       4.4,
+       4.4,
+       4.4
+      ],
+      "scale": 0.45
+     }
+    }
+   },
+   {
+    "when": "firstperson_lefthand",
+    "model": {
+     "type": "minecraft:special",
+     "base": "zomboidcraft:item/weapon/rifle_ammo",
+     "model": {
+      "type": "zomboidcraft:mesh",
+      "id": "ammo/rifle_ammo",
+      "part": "body",
+      "offset": [
+       4.4,
+       4.4,
+       4.4
+      ],
+      "scale": 0.45
+     }
+    }
+   },
+   {
+    "when": "thirdperson_righthand",
+    "model": {
+     "type": "minecraft:special",
+     "base": "zomboidcraft:item/weapon/rifle_ammo",
+     "model": {
+      "type": "zomboidcraft:mesh",
+      "id": "ammo/rifle_ammo",
+      "part": "body",
+      "offset": [
+       3.6,
+       3.6,
+       3.6
+      ],
+      "scale": 0.55
+     }
+    }
+   },
+   {
+    "when": "thirdperson_lefthand",
+    "model": {
+     "type": "minecraft:special",
+     "base": "zomboidcraft:item/weapon/rifle_ammo",
+     "model": {
+      "type": "zomboidcraft:mesh",
+      "id": "ammo/rifle_ammo",
+      "part": "body",
+      "offset": [
+       3.6,
+       3.6,
+       3.6
+      ],
+      "scale": 0.55
+     }
+    }
+   },
+   {
+    "when": "ground",
+    "model": {
+     "type": "minecraft:special",
+     "base": "zomboidcraft:item/weapon/rifle_ammo",
+     "model": {
+      "type": "zomboidcraft:mesh",
+      "id": "ammo/rifle_ammo",
+      "part": "body",
+      "offset": [
+       4.8,
+       4.8,
+       4.8
+      ],
+      "scale": 0.4
+     }
+    }
+   }
+  ],
+  "fallback": {
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/weapon/rifle_ammo",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "ammo/rifle_ammo",
+    "part": "body",
+    "offset": [
+     0.0,
+     0.0,
+     0.0
+    ]
+   }
+  }
  }
 }

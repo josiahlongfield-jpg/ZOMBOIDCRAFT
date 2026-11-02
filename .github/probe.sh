@@ -7,6 +7,22 @@ echo "MC jars: $MC_JARS"
 classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1" | sort -u; }
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
+
+echo "===== gpu timer targets"
+javap -cp "$CP" -p net.minecraft.client.renderer.LevelRenderer 2>&1 | grep -E "executeSolid|renderLevel| render\(|addMainPass"
+javap -cp "$CP" -p net.minecraft.client.renderer.GameRenderer 2>&1 | grep -E " render\(|renderLevel"
+classes 'FeatureRenderDispatcher' | head
+
+echo "===== persistent mapping 4"
+G=com.mojang.renderpearl.backend.opengl.GlDevice
+javap -cp "$CP" -p -c -constants $G > /tmp/gldev.txt 2>&1
+grep -n "BufferStorage.create\|isNvidia" /tmp/gldev.txt
+for L in $(grep -n "BufferStorage.create\|isNvidia" /tmp/gldev.txt | cut -d: -f1); do echo "--- at $L"; sed -n "$((L-45)),$((L+3))p" /tmp/gldev.txt | grep -vE ' (aload|astore|dup|pop)(_[0-9])?$'; done
+H=com.mojang.renderpearl.backend.opengl.GlHeuristics
+javap -cp "$CP" -p -c -constants $H > /tmp/glh.txt 2>&1
+grep -n "^  [a-z].*(.*);$" /tmp/glh.txt
+grep -n -A30 "boolean isNvidia()" /tmp/glh.txt | head -40
+grep -n -B3 -A40 "writeToBufferIsSlow\|HintsAndWorkarounds.\"<init>\"" /tmp/glh.txt | grep -vE ' (aload|astore|dup|pop)(_[0-9])?$' | head -90
 echo "===== cats eyes"
 javap -cp "$CP" -p net.minecraft.client.renderer.LightmapRenderStateExtractor 2>&1 | head -30
 javap -cp "$CP" -p net.minecraft.client.renderer.state.LightmapRenderState 2>&1 | head -30

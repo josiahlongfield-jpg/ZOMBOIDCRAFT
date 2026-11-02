@@ -48,6 +48,42 @@ public final class MeshGuns {
     private static final Set<String> MISSING = new HashSet<>();
     private static final Map<String, float[]> BOUNDS = new java.util.concurrent.ConcurrentHashMap<>();
 
+    /**
+     * Meshes of ours this computer draws from its own file instead, packed under the same id (scrambled with it):
+     * config/zomboidcraft/meshes/&lt;id&gt;.zmesh. Whoever hasn't got one sees the mod's.
+     */
+    public static final java.nio.file.Path OVERRIDES = net.fabricmc.loader.api.FabricLoader.getInstance().getConfigDir()
+            .resolve("zomboidcraft").resolve("meshes");
+
+    /** Mesh ids of guns kept on this computer start with this: "local/" + the gun's file name. */
+    public static final String LOCAL = "local/";
+
+    /** Whether this computer has the mesh of a local gun (its file is there). */
+    public static boolean hasLocal(String gun) {
+        // asked for every part of every gun drawn each frame: the disk is looked at again only every few seconds
+        if (localGeneration != com.zomboidcraft.combat.LocalGuns.generation()) {
+            localGeneration = com.zomboidcraft.combat.LocalGuns.generation();
+            forgetLocal();
+        }
+        long now = System.currentTimeMillis();
+        long[] seen = LOCAL_SEEN.get(gun);
+        if (seen == null || now - seen[0] > 5000) {
+            boolean there = java.nio.file.Files.isRegularFile(com.zomboidcraft.combat.LocalGuns.DIR.resolve(gun + ".zmesh"));
+            LOCAL_SEEN.put(gun, seen = new long[] {now, there ? 1 : 0});
+        }
+        return seen[1] == 1;
+    }
+
+    private static int localGeneration;
+    private static final Map<String, long[]> LOCAL_SEEN = new java.util.concurrent.ConcurrentHashMap<>();
+
+    /** Forgets the local guns' meshes, so changed files are read again (/zc localgun reload). Render thread. */
+    public static void forgetLocal() {
+        LOCAL_SEEN.clear();
+        GUNS.clear();          // the overrides too, so a changed round file is read again
+        MISSING.clear();
+    }
+
     /** The gun, or null if it can't be loaded. Render thread only. */
     static Gun get(String id) {
         if (MISSING.contains(id)) {
@@ -200,8 +236,16 @@ public final class MeshGuns {
 
     private static Gun read(String id, boolean texture) throws IOException {
         byte[] data;
-        try (InputStream in = Minecraft.getInstance().getResourceManager().open(ZomboidCraft.id("meshes/" + id + ".zmesh"))) {
-            data = in.readAllBytes();
+        if (id.startsWith(LOCAL)) {
+            // a gun kept on this computer, not in the mod (combat/LocalGuns)
+            data = java.nio.file.Files.readAllBytes(com.zomboidcraft.combat.LocalGuns.DIR.resolve(id.substring(LOCAL.length()) + ".zmesh"));
+        } else if (java.nio.file.Files.isRegularFile(OVERRIDES.resolve(id + ".zmesh"))) {
+            // one of ours kept differently on this computer (Arsenal's rounds for the ammo, tools/meshguns/rounds.py)
+            data = java.nio.file.Files.readAllBytes(OVERRIDES.resolve(id + ".zmesh"));
+        } else {
+            try (InputStream in = Minecraft.getInstance().getResourceManager().open(ZomboidCraft.id("meshes/" + id + ".zmesh"))) {
+                data = in.readAllBytes();
+            }
         }
         CarAssets.unscramble(data, id);
         try (DataInputStream in = new DataInputStream(new InflaterInputStream(new ByteArrayInputStream(data)))) {
@@ -250,7 +294,7 @@ public final class MeshGuns {
             if (!texture) {
                 return new Gun(parts, null, outline, lo, hi);
             }
-            Identifier name = ZomboidCraft.id("dynamic/mesh/" + id);
+            Identifier name = ZomboidCraft.id("dynamic/mesh/" + id.toLowerCase(java.util.Locale.ROOT));
             NativeImage image = NativeImage.read(new ByteArrayInputStream(png));
             Minecraft.getInstance().getTextureManager().register(name, new DynamicTexture(() -> "ZomboidCraft mesh " + id, image));
             return new Gun(parts, name, outline, lo, hi);

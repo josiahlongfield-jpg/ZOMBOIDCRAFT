@@ -27,6 +27,7 @@ import net.minecraft.world.entity.monster.zombie.Zombie;
 public class ZomboidCraftClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
+        com.zomboidcraft.client.perf.GpuTimer.install();
         // medical supports drawn on the body, from the synced worn-medical mask
         com.zomboidcraft.client.clothing.ClothingLayer.medicalMask = com.zomboidcraft.survival.WornMedical::mask;
         com.zomboidcraft.client.clothing.ClothingMenu.register();
@@ -38,6 +39,8 @@ public class ZomboidCraftClient implements ClientModInitializer {
         com.zomboidcraft.client.camera.BreachTremor.register();
         com.zomboidcraft.client.kit.SpawnScreen.register();
         com.zomboidcraft.client.kit.CharacterScreen.register();
+        com.zomboidcraft.client.kit.AppearanceScreen.register();
+        com.zomboidcraft.client.survivor.SurvivorLayer.register();
         com.zomboidcraft.client.hud.QuickWheel.register();
         com.zomboidcraft.client.map.MapStore.register();
         com.zomboidcraft.client.map.CountyAtlas.register();

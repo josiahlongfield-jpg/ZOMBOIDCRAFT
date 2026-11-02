@@ -310,6 +310,9 @@ public final class Mechanics {
         if (c == -2) {
             return "This car doesn't have one";
         }
+        if (part.area == CarParts.Area.ENGINE && !car.bonnetOpen()) {
+            return "Open the bonnet first";      // as in Zomboid: the engine bay is reached with the hood up
+        }
         int level = level(player);
         int need = job == Job.TOP_UP ? 0 : part.level;
         if (level < need) {

@@ -60,6 +60,7 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.world.ferry.Ferries.register();
         com.zomboidcraft.world.blocks.LightSwitch.register();
         com.zomboidcraft.combat.GunState.register();
+        com.zomboidcraft.combat.LocalGuns.register();
         com.zomboidcraft.combat.Attachments.register();
         com.zomboidcraft.combat.GunFinish.register();
         com.zomboidcraft.combat.Repairs.register();
@@ -67,6 +68,7 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.combat.SpearItem.register();
         com.zomboidcraft.combat.Reloading.register();
         com.zomboidcraft.combat.ModSounds.register();
+        com.zomboidcraft.zombie.ZedSounds.register();
         com.zomboidcraft.combat.throwing.Throwing.register();
         ModItems.register();
         com.zomboidcraft.decor.Decor.registerBlocks();

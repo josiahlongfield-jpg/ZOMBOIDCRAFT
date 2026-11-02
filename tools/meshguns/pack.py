@@ -25,6 +25,8 @@ SPEC (paths may be relative to the spec file):
     shift      [x, y, z] item pixels to move the fitted mesh by (a crossbow, which has no flash to put its bore on)
     box        instead of fit, one of our plain item models (models/item/weapon/<box>.json, e.g. "machete"): the mesh is
                scaled to that model's longest side and centred on it, for melee weapons and other things with no muzzle
+    dest       an absolute path to write to instead of the mod's meshes folder, for a gun kept on the player's computer
+               (combat/LocalGuns: Brita's pack, which must never go in the repo); bounds.json is left alone
     asis       true when the OBJ is already in item model space (cut from a mesh fitted elsewhere, e.g. a launcher taken off
                a bought rifle): no turning or fitting
     outline    outline thickness in item pixels (default 0.03; small things want less)
@@ -367,10 +369,16 @@ def main(spec_path):
         out.write(rec[pf.reshape(-1)].tobytes())
         print(f"  {name}: {len(pf)} triangles")
     data = scramble(zlib.compress(out.getvalue(), 9), spec['id'])
+    lo, hi = v[np.unique(f)].min(0), v[np.unique(f)].max(0)
+    if spec.get('dest'):
+        # a gun kept on the player's computer (combat/LocalGuns): written outside the mod, never into bounds.json
+        os.makedirs(os.path.dirname(spec['dest']), exist_ok=True)
+        open(spec['dest'], 'wb').write(data)
+        print(f"{spec['id']}: fitted to {spec.get('fit') or 'itself'}, {lo.round(2)} .. {hi.round(2)} px, wrote {spec['dest']}")
+        return
     dest = os.path.join(ROOT, 'src/main/resources/assets/zomboidcraft/meshes', spec['id'] + '.zmesh')
     os.makedirs(os.path.dirname(dest), exist_ok=True)
     open(dest, 'wb').write(data)
-    lo, hi = v[np.unique(f)].min(0), v[np.unique(f)].max(0)
     bounds = json.load(open(BOUNDS)) if os.path.exists(BOUNDS) else {}
     bounds[spec['id']] = [[round(float(x), 3) for x in lo], [round(float(x), 3) for x in hi]]
     if sight is not None:

@@ -55,6 +55,8 @@ public class ClothingLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
         if (state.isInvisible || mc.level == null || !(mc.level.getEntity(state.id) instanceof Player player)) {
             return;
         }
+        // a Zomboid survivor body wears Zomboid's own clothes (client/survivor), not these boxes
+        if (com.zomboidcraft.client.survivor.Survivors.drawn(state)) return;
         boolean slim = state.skin != null && state.skin.model() == PlayerModelType.SLIM;
         PlayerModel model = getParentModel();
         submitGrooming(pose, collector, light, state, player, model, slim);

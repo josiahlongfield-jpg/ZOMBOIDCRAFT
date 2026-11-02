@@ -59,6 +59,12 @@ public class HeadGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
         if (!(head.getItem() instanceof HeadGearItem)) {
             return;
         }
+        // a Zomboid survivor wears Zomboid's own helmet for it (client/survivor/SurvivorClothes)
+        com.zomboidcraft.clothing.Garment worn = com.zomboidcraft.clothing.Clothes.of(head);
+        if (com.zomboidcraft.client.survivor.Survivors.drawn(state) && worn != null
+                && com.zomboidcraft.client.survivor.SurvivorClothes.covered(worn.id())) {
+            return;
+        }
         pose.pushPose();
         getParentModel().head.translateAndRotate(pose);
         // vanilla's worn-item head transform with the item models' head scale: one item pixel to one head pixel

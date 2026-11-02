@@ -6,10 +6,12 @@
     "AbstractClientPlayerMixin",
     "ClientLevelTrainMixin",
     "PlayerModelMixin",
+    "LivingEntityRendererSurvivorMixin",
     "GuiMixin",
     "SlotAccessor",
     "SpecialModelRenderersAccessor",
     "SoundEngineMixin",
+    "SoundManagerLocalMixin",
     "SoundBufferLibraryMixin",
     "FirstPersonHandsRendererMixin",
     "FirstPersonHandsAndItemsMixin",
@@ -23,10 +25,18 @@
     "VoicePttMixin",
     "VoicePttProcessorMixin",
     "FirstPersonWheelHandsMixin",
+    "FirstPersonSurvivorHandMixin",
     "FogRendererMixin",
     "LightmapCatsEyesMixin",
     "PictureInPictureMixin",
-    "ClientPacketListenerMixin"
+    "ClientPacketListenerMixin",
+    "SodiumUploadMixin",
+    "GpuTimerGameRendererMixin",
+    "GpuTimerLevelRendererMixin",
+    "GpuTimerIrisMixin",
+    "GpuTimerSodiumMixin",
+    "ShadowCasterMixin",
+    "GlBufferStorageMixin"
   ],
   "injectors": {
     "defaultRequire": 0

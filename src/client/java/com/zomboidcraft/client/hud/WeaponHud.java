@@ -118,7 +118,7 @@ final class WeaponHud {
         if (Attachments.hasMagnifier(gun)) {
             sights += Attachments.magnified(gun) ? " + magnifier" : " + magnifier (aside)";
         }
-        return type == null ? sights : type.caliber() + " · " + sights;
+        return type == null ? sights : com.zomboidcraft.combat.LocalGuns.calibre(gun, type) + " · " + sights;
     }
 
     private static void melee(GuiGraphicsExtractor g, Font font, ItemStack hand, float right, int bottom, float a) {

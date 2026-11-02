@@ -1,6 +1,19 @@
 {
  "model": {
-  "type": "minecraft:model",
-  "model": "zomboidcraft:item/weapon/rimfire/charging_handle"
+  "type": "minecraft:condition",
+  "property": "zomboidcraft:local_gun",
+  "on_true": {
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/weapon/rimfire/charging_handle",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "block_rimfire",
+    "part": "charging_handle"
+   }
+  },
+  "on_false": {
+   "type": "minecraft:model",
+   "model": "zomboidcraft:item/weapon/rimfire/charging_handle"
+  }
  }
 }
