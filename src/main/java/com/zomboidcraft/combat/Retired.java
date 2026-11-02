@@ -4,7 +4,7 @@ import com.zomboidcraft.ZomboidCraft;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import net.fabricmc.fabric.api.entity.event.v1.ServerEntityEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
