@@ -94,7 +94,7 @@ public class SurvivorShotsTest implements FabricClientGameTest {
             sp.getServer().runCommand("tp @a ~ ~ ~ 0 10");
             ctx.waitTicks(30);
             ctx.takeScreenshot("surv-fp-empty");
-            sp.getServer().runCommand("give @a zomboidcraft:assault_rifle");
+            give(sp, "assault_rifle");
             ctx.waitTicks(20);
             ctx.runOnClient(mc -> mc.player.getInventory().setSelectedSlot(0));
             ctx.waitTicks(30);
@@ -106,7 +106,7 @@ public class SurvivorShotsTest implements FabricClientGameTest {
             ctx.waitTicks(10);
             for (String gun : new String[] {"pistol", "shotgun"}) {
                 sp.getServer().runCommand("clear @a");
-                sp.getServer().runCommand("give @a zomboidcraft:" + gun);
+                give(sp, gun);
                 ctx.waitTicks(30);
                 ctx.takeScreenshot("surv-fp-" + gun + "-hip");
                 ctx.getInput().holdKey(options -> options.keyUse);
@@ -117,14 +117,16 @@ public class SurvivorShotsTest implements FabricClientGameTest {
             }
             // and her from the front, rifle in hand
             sp.getServer().runCommand("clear @a");
-            sp.getServer().runCommand("give @a zomboidcraft:assault_rifle");
+            give(sp, "assault_rifle");
             ctx.waitTicks(20);
             ctx.runOnClient(mc -> mc.options.setCameraType(CameraType.THIRD_PERSON_FRONT));
             ctx.waitTicks(20);
             ctx.takeScreenshot("surv-tp-front-rifle");
+            ctx.runOnClient(mc -> LOG.info("ZCSURV  third-person hold: {}", com.zomboidcraft.client.survivor.Survivors.debugHold));
             ctx.getInput().holdKey(options -> options.keyUse);
             ctx.waitTicks(30);
             ctx.takeScreenshot("surv-tp-front-rifle-aim");
+            ctx.runOnClient(mc -> LOG.info("ZCSURV  third-person hold: {}", com.zomboidcraft.client.survivor.Survivors.debugHold));
             ctx.getInput().releaseKey(options -> options.keyUse);
             // from behind: what she wears on her back and belt
             ctx.runOnClient(mc -> mc.options.setCameraType(CameraType.THIRD_PERSON_BACK));
@@ -133,6 +135,30 @@ public class SurvivorShotsTest implements FabricClientGameTest {
             ctx.runOnClient(mc -> mc.options.setCameraType(CameraType.FIRST_PERSON));
             ctx.waitTicks(10);
         }
+    }
+
+    /**
+     * One of our gun types in hand. A plain one of ours is retired (combat/Retired) and would vanish, so it carries a
+     * local gun's id: the first gun of that type this PC keeps (a Brita gun, drawn with its own mesh), or a made-up one
+     * (drawn with ours).
+     */
+    private static void give(net.fabricmc.fabric.api.client.gametest.v1.context.TestSingleplayerContext sp, String type) {
+        sp.getServer().runOnServer(server -> {
+            var p = server.getPlayerList().getPlayers().getFirst();
+            String id = "preview_" + type;
+            for (com.zomboidcraft.combat.LocalGuns.Spec spec : com.zomboidcraft.combat.LocalGuns.all()) {
+                if (spec.type() != null && spec.type().id().equals(type)) {
+                    id = spec.id;
+                    break;
+                }
+            }
+            var gun = new net.minecraft.world.item.ItemStack(net.minecraft.core.registries.BuiltInRegistries.ITEM
+                    .getValue(com.zomboidcraft.ZomboidCraft.id(type)));
+            gun.set(com.zomboidcraft.combat.LocalGuns.ID, id);
+            gun.set(com.zomboidcraft.combat.GunState.TYPE, new com.zomboidcraft.combat.GunState(true, 5, false));
+            p.getInventory().add(gun);
+            com.zomboidcraft.ZomboidCraft.LOGGER.info("ZCSURV  holding {} as {}", type, id);
+        });
     }
 
     /** What the survivor code makes of the local player right now, for when a shot shows the wrong thing. */

@@ -246,6 +246,8 @@ public final class Survivors {
     }
 
     private static float[][] work;
+    /** What the last third-person long-gun hold did (the survivor shots log it). */
+    public static String debugHold = "";
 
     /**
      * After the weapon holds and car hands: her hands go where they put the vanilla hands (a weapon, a wheel), or else
@@ -262,6 +264,7 @@ public final class Survivors {
         Minecraft mc = Minecraft.getInstance();
         boolean longGun = HoldPoses.posed && mc.level != null && mc.level.getEntity(state.id) instanceof Player holder
                 && kind(holder.getMainHandItem()).equals("rifle");
+        debugHold = "posed=" + HoldPoses.posed + " longGun=" + longGun;
         if (longGun) {
             // Zomboid's rifle stance leads: the gun is laid between her hands as the clip holds them (grip in the
             // shooting hand, barrel toward the other), the vanilla arm is put under it, and the other hand takes the
@@ -306,6 +309,8 @@ public final class Survivors {
                     r.premul(new Quaternionf().rotationAxis(ang, wantDir));
                 }
                 Matrix4f item = new Matrix4f().translation(g).rotate(r);
+                debugHold += " display=" + (shown != null) + " haveDir=" + haveDir + " wantDir=" + wantDir
+                        + " barrel=" + r.transform(new Vector3f(haveDir)) + " up=" + r.transform(new Vector3f(haveUp));
                 Matrix4f armFrame = new Matrix4f(item).mul(inHand(gun == 1).invert());
                 float shift = slim ? (gun == 1 ? -0.5f : 0.5f) : 0;
                 arm.x = armFrame.m30() * 16 - shift;
