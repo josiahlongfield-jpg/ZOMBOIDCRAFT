@@ -234,6 +234,9 @@ public final class NpcSkinDraw {
         // a batch of the triangles (from, to) is the same share of the quads
         int nq = quads.length / 4, nt = g.tris.length / 3;
         int q0 = (int) ((long) (from / 3) * nq / Math.max(1, nt)) * 4, q1 = (int) ((long) (to / 3) * nq / Math.max(1, nt)) * 4;
+        if (FastVerts.write(out, pose, quads, q0, q1, back, p, n, uv, light, overlay)) {
+            return;
+        }
         for (int s = 0; s < (back ? 2 : 1); s++) {
             float f = s == 0 ? 1 : -1;
             for (int q = q0; q < q1; q += 4) {
