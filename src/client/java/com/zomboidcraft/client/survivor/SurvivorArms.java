@@ -107,10 +107,11 @@ public final class SurvivorArms {
                 Vector3f shoulder = new Vector3f(pos[sh * 3], pos[sh * 3 + 1], pos[sh * 3 + 2]);
                 float reachLen = shoulder.distance(pos[el * 3], pos[el * 3 + 1], pos[el * 3 + 2])
                         + new Vector3f(pos[el * 3], pos[el * 3 + 1], pos[el * 3 + 2]).distance(pos[wr * 3], pos[wr * 3 + 1], pos[wr * 3 + 2])
-                        + pack.grip[s].length();
+                        + pack.fist[s].length();
                 float d = shoulder.distance(want[s]);
-                if (d <= reachLen * 0.93f) continue;
-                Vector3f step = new Vector3f(want[s]).sub(shoulder).mul(1 - reachLen * 0.93f / d);
+                // a little bend left in the elbow, so the arm doesn't look drawn out
+                if (d <= reachLen * 0.82f) continue;
+                Vector3f step = new Vector3f(want[s]).sub(shoulder).mul(1 - reachLen * 0.82f / d);
                 for (int b = 0; b < n; b++) {
                     pos[b * 3] += step.x;
                     pos[b * 3 + 1] += step.y;
@@ -120,13 +121,17 @@ public final class SurvivorArms {
         }
         for (int s = 0; s < 2; s++) {
             if (want[s] == null || pack.upper[s] < 0 || pack.fore[s] < 0 || pack.hand[s] < 0) continue;
+            int el = pack.fore[s], h = pack.hand[s];
             if (hold[s] == null) {
-                Survivors.reachPoint(pack, pos, turn, s, want[s]);
+                // the clip's own wrist: the fist's middle brought onto the grip (twice, as the reach turns the hand)
+                for (int k = 0; k < 2; k++) {
+                    Quaternionf now = new Quaternionf(turn[h * 4], turn[h * 4 + 1], turn[h * 4 + 2], turn[h * 4 + 3]);
+                    Survivors.reach(pack, pos, turn, s, new Vector3f(want[s]).sub(now.transform(new Vector3f(pack.fist[s]))));
+                }
                 continue;
             }
-            int el = pack.fore[s], h = pack.hand[s];
-            // the wrist where the turned hand's grip lands on the point, the elbow bent as the clip bends it
-            Vector3f wrist = new Vector3f(want[s]).sub(hold[s].transform(new Vector3f(pack.grip[s])));
+            // the wrist where the turned hand's fist closes round the point, the elbow bent as the clip bends it
+            Vector3f wrist = new Vector3f(want[s]).sub(hold[s].transform(new Vector3f(pack.fist[s])));
             Survivors.reach(pack, pos, turn, s, wrist);
             // half the wrist's roll taken by the forearm, so it doesn't wring
             Vector3f axis = new Vector3f(pos[h * 3] - pos[el * 3], pos[h * 3 + 1] - pos[el * 3 + 1], pos[h * 3 + 2] - pos[el * 3 + 2]).normalize();

@@ -111,7 +111,10 @@ public class WornGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
         // gen_holsters.py): they only need moving down to it
         // over trousers or a shirt tail the belt sits out on the cloth (clothing/ClothingLayer's waistband)
         float[] out = com.zomboidcraft.client.clothing.ClothingLayer.beltOut(player);
-        for (int i = GearStore.BELT; i <= GearStore.SHEATH && i < worn.size(); i++) {
+        // Zomboid draws no belt (its Belt has no model), and these straps are boxes round Minecraft's square waist:
+        // a survivor wears none of them, only what hangs from them (the holstered gun, the sheathed blade)
+        boolean survivor = com.zomboidcraft.client.survivor.Survivors.drawn(state);
+        for (int i = GearStore.BELT; i <= GearStore.SHEATH && i < worn.size() && !survivor; i++) {
             if (!BODY_SCALE.contains(worn.get(i).getItem())) continue;
             boolean thigh = worn.get(i).is(com.zomboidcraft.ModItems.THIGH_HOLSTER);
             pose.pushPose();

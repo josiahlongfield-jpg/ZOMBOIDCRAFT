@@ -86,6 +86,8 @@ public final class SurvivorPack {
      */
     public final Vector3f[] grip = {new Vector3f(), new Vector3f()};
     public final Quaternionf[] gripTurn = {new Quaternionf(), new Quaternionf()};
+    /** The middle of each palm (hand and thumb; the fingers curl and move), in the hand bone's own frame: a grip goes through it. */
+    public final Vector3f[] fist = {new Vector3f(), new Vector3f()};
     /** Her pelvis at rest (for seated clips that sit her on the seat). */
     public final Vector3f pelvisRest = new Vector3f();
 
@@ -183,12 +185,48 @@ public final class SurvivorPack {
         for (int i = 0; i < bind.length; i++) bind[i] = new Matrix4f(skin.inverse[i]).invertAffine();
         if (pelvis >= 0) bind[pelvis].getTranslation(pelvisRest);
         grips();
+        fists();
     }
 
     /**
      * From the first frame of her idle: the palm a few centimetres past the wrist, and the turn from the hand's frame
      * to the item frame there (up the forearm, ahead, and to her right), so a held thing turns with her wrist.
      */
+    /** Each palm's middle from the body mesh: the vertices on its hand and thumb, into the hand's frame. Zomboid's hand
+     * bone sits well back in the wrist, so a point measured off the forearm line would put the hand a palm too far on. */
+    private void fists() {
+        for (int s = 0; s < 2; s++) {
+            if (hand[s] < 0) continue;
+            String side = s == 0 ? "R" : "L";
+            boolean[] on = new boolean[skin.boneNames.length];
+            for (String part : new String[]{"Hand", "Finger0"}) {
+                int b = skin.bone("Bip01_" + side + "_" + part);
+                if (b >= 0) on[b] = true;
+            }
+            Vector3f sum = new Vector3f();
+            int count = 0;
+            for (NpcSkin.Group g : skin.groups) {
+                if (!g.piece.equals("body")) continue;
+                for (int i = 0; i < g.vertices; i++) {
+                    float w = 0;
+                    for (int k = 0; k < 4; k++) {
+                        int j = g.joint[i * 4 + k] & 0xFF;
+                        if (j < on.length && on[j]) w += g.weight[i * 4 + k];
+                    }
+                    if (w < 0.6f) continue;
+                    sum.add(g.pos[i * 3], g.pos[i * 3 + 1], g.pos[i * 3 + 2]);
+                    count++;
+                }
+            }
+            if (count == 0) {
+                fist[s].set(grip[s]);
+                continue;
+            }
+            sum.div(count);
+            skin.inverse[hand[s]].transformPosition(sum, fist[s]);
+        }
+    }
+
     private void grips() {
         NpcSkin.Clip idle = skin.clips.get("idle");
         if (idle == null || hand[0] < 0 || fore[0] < 0) return;
