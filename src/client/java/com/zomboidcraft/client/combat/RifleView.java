@@ -422,7 +422,7 @@ public final class RifleView {
             }
             RifleArms.draw(pose, out, light, player, state.avatarRenderState, right,
                     player.getOffhandItem().isEmpty() && !com.zomboidcraft.client.cars.CarHands.leftOnWheel(player) ? left : null,
-                    want.scale / rig.hipScale() * 0.6f);
+                    want.scale / rig.hipScale() * 0.6f, want.q());
         }
         pose.popPose();
         return true;

@@ -354,8 +354,9 @@ public final class AppearanceScreen extends Screen {
             float middle = (y0 + y1) / 2f;
             float lift = (feet - middle) / scale - minecraft.player.getBbHeight() / 2;
             g.enableScissor(x0, y0, x1, y1);
+            // she faces you, standing straight (not turned after the mouse, which is over the choices to her left)
             InventoryScreen.extractEntityInInventoryFollowsMouse(g, x0, y0, x1, y1, Math.round(scale), lift,
-                    mx, my, minecraft.player);
+                    (x0 + x1) / 2f, middle, minecraft.player);
             g.disableScissor();
         }
 
