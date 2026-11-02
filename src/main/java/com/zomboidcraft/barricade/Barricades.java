@@ -11,7 +11,7 @@ public final class Barricades {
     public static void register() {
         PlayerBlockBreakEvents.AFTER.register((level, player, pos, state, blockEntity) -> {
             if (state.is(ModBlocks.BARRICADE) && !player.hasInfiniteMaterials()) {
-                Block.popResource(level, pos, new ItemStack(Items.OAK_PLANKS, state.getValue(BarricadeBlock.PLANKS)));
+                Block.popResource(level, pos, com.zomboidcraft.loot.NoVanilla.ours(net.minecraft.world.item.Items.OAK_PLANKS, state.getValue(BarricadeBlock.PLANKS)));
             }
         });
     }

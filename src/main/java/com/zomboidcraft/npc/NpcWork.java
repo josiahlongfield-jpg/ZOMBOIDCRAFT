@@ -260,7 +260,8 @@ public final class NpcWork {
     static final Predicate<ItemStack> DRINK = s -> Drinks.thirstValue(s) > 0 && s.get(DataComponents.FOOD) == null;
     static final Predicate<ItemStack> WATER = s -> {
         PotionContents p = s.get(DataComponents.POTION_CONTENTS);
-        return s.is(Items.POTION) && p != null && p.is(Potions.WATER);
+        return s.is(Items.POTION) && p != null && p.is(Potions.WATER)
+                || net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(s.getItem()).equals(com.zomboidcraft.ZomboidCraft.id("water_bottle"));
     };
     static final Predicate<ItemStack> SEEDS = s -> BuildBlocks.Crop.from(s) != null;
     static final Predicate<ItemStack> BANDAGE = s -> s.getItem() instanceof BandageItem;
@@ -271,7 +272,7 @@ public final class NpcWork {
             Map.entry(Items.RABBIT, Items.COOKED_RABBIT), Map.entry(Items.COD, Items.COOKED_COD),
             Map.entry(Items.SALMON, Items.COOKED_SALMON), Map.entry(Items.POTATO, Items.BAKED_POTATO),
             Map.entry(Items.KELP, Items.DRIED_KELP));
-    static final Predicate<ItemStack> RAW = s -> COOKS.containsKey(s.getItem());
+    static final Predicate<ItemStack> RAW = com.zomboidcraft.loot.items.Cooking::raw;
 
     /** What a scavenger brings back first: food and drink, medical, ammo and guns, materials, seeds; then anything. */
     static int worth(ItemStack s) {
@@ -505,7 +506,7 @@ public final class NpcWork {
                         BlockState bs = level.getBlockState(b);
                         level.setBlockAndUpdate(b, bs.setValue(BuildBlocks.RainBarrel.LEVEL, bs.getValue(BuildBlocks.RainBarrel.LEVEL) - 1));
                     } else {
-                        pack.addItem(new ItemStack(Items.GLASS_BOTTLE));
+                        pack.addItem(com.zomboidcraft.loot.NoVanilla.ours(Items.GLASS_BOTTLE, 1));
                     }
                     level.setBlockAndUpdate(at, s.setValue(BuildBlocks.Planter.WET, true));
                     level.playSound(null, at, SoundEvents.BOTTLE_EMPTY, SoundSource.BLOCKS, 1f, 1f);
@@ -562,13 +563,12 @@ public final class NpcWork {
                 int made = 0;
                 for (int i = 0; i < pack.getContainerSize(); i++) {
                     ItemStack s = pack.getItem(i);
-                    Item cooked = COOKS.get(s.getItem());
-                    if (cooked == null) continue;
+                    if (!RAW.test(s)) continue;
                     int n = s.getCount();
                     // a good cook wastes nothing and stretches it further
                     int extra = 0;
                     for (int k = 0; k < n; k++) if (npc.getRandom().nextInt(25) < cooking) extra++;
-                    pack.setItem(i, new ItemStack(cooked, n + extra));
+                    pack.setItem(i, com.zomboidcraft.loot.items.Cooking.cook(s, n + extra));
                     made += n + extra;
                 }
                 level.playSound(null, npc.blockPosition(), SoundEvents.CAMPFIRE_CRACKLE, SoundSource.BLOCKS, 1f, 1f);

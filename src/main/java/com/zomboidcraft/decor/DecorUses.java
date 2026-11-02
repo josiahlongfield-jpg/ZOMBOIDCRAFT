@@ -50,13 +50,6 @@ public final class DecorUses {
     static final Set<String> TICKS = Set.of("chime", "stove_heat", "cold_store", "beacon", "decoy", "dress_decoy",
             "blacklight", "coloured_light", "spots");
 
-    /** Raw food a stove cooks, as the companions' cooking (npc/NpcWork). */
-    private static final Map<Item, Item> COOKS = Map.ofEntries(
-            Map.entry(Items.BEEF, Items.COOKED_BEEF), Map.entry(Items.PORKCHOP, Items.COOKED_PORKCHOP),
-            Map.entry(Items.CHICKEN, Items.COOKED_CHICKEN), Map.entry(Items.MUTTON, Items.COOKED_MUTTON),
-            Map.entry(Items.RABBIT, Items.COOKED_RABBIT), Map.entry(Items.COD, Items.COOKED_COD),
-            Map.entry(Items.SALMON, Items.COOKED_SALMON), Map.entry(Items.POTATO, Items.BAKED_POTATO),
-            Map.entry(Items.KELP, Items.DRIED_KELP));
     /** Ticks of fire one piece of fuel gives. */
     private static final int LOG = 2400, PLANK = 800, STICK = 200, COAL = 3200;
     private static final List<String> TOYS = List.of("toy_car", "toy_truck", "toy_radio", "broken_toy");
@@ -118,15 +111,14 @@ public final class DecorUses {
                 return;
             }
         }
-        say(player, "You need wood or coal to burn: logs, planks, sticks.");
+        say(player, "You need something to burn: firewood, planks or charcoal.");
     }
 
     private static int burn(ItemStack s) {
         if (s.is(ItemTags.LOGS_THAT_BURN)) return LOG;
         if (s.is(ItemTags.PLANKS)) return PLANK;
-        if (s.is(Items.STICK)) return STICK;
-        if (s.is(Items.COAL) || s.is(Items.CHARCOAL)) return COAL;
         String path = BuiltInRegistries.ITEM.getKey(s.getItem()).getPath();
+        if (path.equals("charcoal")) return COAL;
         return path.contains("firewood") || path.contains("log") ? LOG : path.contains("plank") ? PLANK : 0;
     }
 
@@ -136,7 +128,7 @@ public final class DecorUses {
             say(player, "Light the stove first.");
             return;
         }
-        if (!has(player, s -> COOKS.containsKey(s.getItem()))) {
+        if (!has(player, com.zomboidcraft.loot.items.Cooking::raw)) {
             say(player, "You've nothing raw to cook.");
             return;
         }
@@ -145,11 +137,10 @@ public final class DecorUses {
             int skill = Skills.level(p, Skill.COOKING);
             for (int i = 0; i < p.getInventory().getContainerSize(); i++) {
                 ItemStack s = p.getInventory().getItem(i);
-                Item cooked = COOKS.get(s.getItem());
-                if (cooked == null) continue;
+                if (!com.zomboidcraft.loot.items.Cooking.raw(s)) continue;
                 int n = s.getCount(), extra = 0;
                 for (int k = 0; k < n; k++) if (p.getRandom().nextInt(25) < skill) extra++;
-                p.getInventory().setItem(i, new ItemStack(cooked, Math.min(cooked.getDefaultMaxStackSize(), n + extra)));
+                p.getInventory().setItem(i, com.zomboidcraft.loot.items.Cooking.cook(s, n + extra));
                 made += n;
             }
             Skills.addXp(p, Skill.COOKING, 3 + made);

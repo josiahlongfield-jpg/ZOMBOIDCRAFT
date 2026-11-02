@@ -157,7 +157,7 @@ public final class HarvestmanNights {
                 level.setBlockAndUpdate(at, s.setValue(BarricadeBlock.PLANKS, planks - 1));
             }
             Vec3 p = Vec3.atBottomCenterOf(at).add(0, 0.1, 0);
-            drop(level, p, new ItemStack(Items.OAK_PLANKS));
+            drop(level, p, com.zomboidcraft.loot.NoVanilla.ours(net.minecraft.world.item.Items.OAK_PLANKS, 1));
             level.playSound(null, p.x, p.y + 1, p.z, SoundEvents.WOOD_HIT, SoundSource.BLOCKS, 0.4f, 0.6f);
             level.playSound(null, p.x, p.y + 1, p.z, HarvestmanSounds.CREAK, SoundSource.HOSTILE, 0.5f, 0.8f);
             return true;

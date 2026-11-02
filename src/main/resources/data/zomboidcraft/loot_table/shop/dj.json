@@ -9,53 +9,28 @@
       },
       "entries": [
         {
-          "type": "minecraft:item",
-          "name": "minecraft:music_disc_cat",
-          "weight": 2
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:music_disc_stal",
-          "weight": 2
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:music_disc_mall",
-          "weight": 2
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:music_disc_far",
-          "weight": 2
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:music_disc_wait",
-          "weight": 2
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:music_disc_chirp",
-          "weight": 2
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:music_disc_blocks",
-          "weight": 2
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:music_disc_strad",
-          "weight": 2
-        },
-        {
           "type": "minecraft:empty",
           "weight": 4
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:vinyl_record",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:cassette_tape",
-          "weight": 2,
+          "weight": 4,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -70,12 +45,12 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:mixtape",
-          "weight": 2
+          "weight": 4
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:headphones",
-          "weight": 2,
+          "weight": 4,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -90,12 +65,12 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:vodka",
-          "weight": 2
+          "weight": 4
         },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:cigarettes",
-          "weight": 2,
+          "weight": 4,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -110,7 +85,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:cash_bundle",
-          "weight": 2,
+          "weight": 4,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -125,7 +100,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:glow_stick",
-          "weight": 2,
+          "weight": 4,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -140,7 +115,7 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:lighter",
-          "weight": 2,
+          "weight": 4,
           "functions": [
             {
               "function": "minecraft:set_count",

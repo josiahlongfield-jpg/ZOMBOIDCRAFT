@@ -297,7 +297,7 @@ public final class Moving {
         ItemStack bits = switch (made) {
             case METALWORKING -> new ItemStack(ModItems.SCRAP_METAL, n);
             case MASONRY -> new ItemStack(ModItems.RUBBLE, n);
-            default -> new ItemStack(net.minecraft.world.item.Items.OAK_PLANKS, n);
+            default -> com.zomboidcraft.loot.NoVanilla.ours(net.minecraft.world.item.Items.OAK_PLANKS, n);
         };
         net.minecraft.world.level.block.Block.popResource(level, pos, bits);
         if (made == Skill.CARPENTRY && random.nextFloat() < 0.5f) {
