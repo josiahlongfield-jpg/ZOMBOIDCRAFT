@@ -39,7 +39,9 @@ import net.minecraft.world.phys.Vec3;
 public final class Sleep {
     /** What you're lying on: rest gained per Zomboid hour, as Zomboid's bed qualities. */
     public enum Bed {
-        FLOOR("the floor", 6f), BAD("a poor bed", 8f), AVERAGE("a decent bed", 11f), GOOD("a good bed", 14f);
+        FLOOR("the floor", 6f), BAD("a poor bed", 8f), AVERAGE("a decent bed", 11f), GOOD("a good bed", 14f),
+        /** A waterbed (decor): nothing sleeps better. */
+        BEST("the waterbed", 17f);
 
         public final String label;
         /** Fatigue (0..100) shed per Zomboid hour. */
@@ -115,6 +117,16 @@ public final class Sleep {
     /** What a block is to sleep on, or null when it isn't furniture you could sleep on. */
     public static Bed bedOf(BlockState state) {
         if (state.getBlock() instanceof BedBlock) return Bed.GOOD;
+        switch (com.zomboidcraft.decor.DecorUses.bed(state)) {   // the hammock, the recliner, the waterbed
+            case 1 -> {
+                return Bed.AVERAGE;
+            }
+            case 3 -> {
+                return Bed.BEST;
+            }
+            default -> {
+            }
+        }
         String path = BuiltInRegistries.BLOCK.getKey(state.getBlock()).getPath();
         if (path.contains("bed_soil")) return null;
         if (path.contains("cot") && !path.contains("wainscot") || path.contains("bedroll") || path.contains("mattress")

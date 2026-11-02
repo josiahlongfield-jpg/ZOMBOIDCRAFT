@@ -266,6 +266,10 @@ public final class Moving {
      */
     static void pickUp(ServerPlayer player, ServerLevel level, BlockPos pos, BlockState state, Piece piece) {
         boolean broke = player.getRandom().nextDouble() < piece.breakChance(player);
+        if (level.getBlockEntity(pos) instanceof com.zomboidcraft.decor.DecorEntity held) {
+            // what was in the vending machine, on the bar, in the stove: out on the floor first
+            net.minecraft.world.Containers.dropContents(level, pos, held);
+        }
         level.removeBlock(pos, false);
         if (broke) {
             scraps(level, pos, piece, player.getRandom());

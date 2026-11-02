@@ -87,12 +87,27 @@ public final class Decor {
             ResourceKey<Block> key = ResourceKey.create(Registries.BLOCK, ZomboidCraft.id("decor_" + d.id()));
             BlockBehaviour.Properties p = BlockBehaviour.Properties.of().setId(key).strength(-1f, 4f).noOcclusion()
                     .forceSolidOff().sound(d.kg() >= 20 ? SoundType.WOOD : SoundType.LANTERN);
-            if (d.lightSource()) {
-                int light = d.light();
-                p.lightLevel(s -> s.getValue(DecorBlock.ON) ? light : 0);
+            int light = d.lightSource() ? d.light() : glowOf(d.special());
+            boolean someLooks = "glows".equals(d.special());   // only the posters printed in day-glo ink
+            if (light > 0) {
+                p.lightLevel(s -> s.getValue(DecorBlock.ON) && (!someLooks || s.getValue(DecorBlock.LOOK) % 2 == 0) ? light : 0);
             }
-            BLOCKS.put(d.id(), Registry.register(BuiltInRegistries.BLOCK, key, new DecorBlock(p, d)));
+            boolean holds = d.special() != null && DecorUses.HOLDS.contains(d.special());
+            BLOCKS.put(d.id(), Registry.register(BuiltInRegistries.BLOCK, key,
+                    holds ? new DecorBlock.Holding(p, d) : new DecorBlock(p, d)));
         }
+        DecorEntity.register(BLOCKS.values().stream().filter(b -> b instanceof DecorBlock.Holding).toList());
+    }
+
+    /** Light from a piece that isn't a lamp: a stove's fire, the sun through stained glass, a poster under black light. */
+    private static int glowOf(String special) {
+        if (special == null) return 0;
+        return switch (special) {
+            case "stove_heat" -> 10;
+            case "coloured_light" -> 9;
+            case "glows" -> 4;
+            default -> 0;
+        };
     }
 
     public static void register() {

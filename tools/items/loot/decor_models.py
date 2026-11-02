@@ -26,10 +26,15 @@ FACING = {'south': 0, 'west': 90, 'north': 180, 'east': 270}   # the model's fro
 DECOR = Path(__file__).resolve().parents[3] / 'src/main/resources/data/zomboidcraft/decor.json'
 
 
-def lit(m):
+# what else lights up when a piece is ON: day-glo posters under a black light (the even looks), sun through stained glass
+LIGHTS = {'glows': ('print',), 'coloured_light': ('glasspane',)}
+
+
+def lit(m, special=None, k=0):
     """The ON copy: every glow part lights itself."""
+    extra = LIGHTS.get(special, ()) if special != 'glows' or k % 2 == 0 else ()
     out = copy.copy(m)
-    out.parts = [dict(p, light=15) if p.get('mat') in D.GLOW else p for p in m.parts]
+    out.parts = [dict(p, light=15) if p.get('mat') in D.GLOW or p.get('mat') in extra else p for p in m.parts]
     return out
 
 
@@ -61,7 +66,8 @@ def main():
             lo, hi = m.bounds()
             # standing on the block's floor, centred across it
             shift = np.array([8.0 - (lo[0] + hi[0]) / 2, -lo[1], 8.0 - (lo[2] + hi[2]) / 2])
-            for suffix, mm in (('', m), ('_on', lit(m))):
+            i, k = owner[n]
+            for suffix, mm in (('', m), ('_on', lit(m, specs[i].get('special'), k))):
                 M.dump({'textures': {'0': f'{NS}:{tex}', 'particle': f'{NS}:{tex}'},
                         'elements': kit.elements(mm, mi, uvs, shift)}, ASSETS / f'models/block/decor/{n}{suffix}.json')
         print(f'{sheet}: {len(gn)} looks, {T}px')

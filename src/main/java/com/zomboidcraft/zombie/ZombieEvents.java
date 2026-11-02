@@ -162,6 +162,7 @@ public final class ZombieEvents {
             double walk = Noise.WALK - 0.3 * Skills.level(player, Skill.SNEAKING);
             double radius = !moved || player.isShiftKeyDown() ? 0 : player.isSprinting() ? Noise.SPRINT : walk;
             radius *= TraitSenses.footsteps(player);
+            radius *= com.zomboidcraft.decor.DecorUses.footsteps(player);   // a rug underfoot
             Noise.emit((ServerLevel) player.level(), now, radius);
         }
     }

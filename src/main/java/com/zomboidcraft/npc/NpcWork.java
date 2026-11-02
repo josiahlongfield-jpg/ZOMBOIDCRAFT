@@ -545,7 +545,8 @@ public final class NpcWork {
         BlockPos heat = null;
         for (BlockPos p : BlockPos.betweenClosed(home.offset(-HOME_RADIUS, -3, -HOME_RADIUS), home.offset(HOME_RADIUS, 3, HOME_RADIUS))) {
             BlockState s = level.getBlockState(p);
-            if (s.is(BlockTags.CAMPFIRES) && s.getValue(CampfireBlock.LIT) || s.getBlock() instanceof AbstractFurnaceBlock) {
+            if (s.is(BlockTags.CAMPFIRES) && s.getValue(CampfireBlock.LIT) || s.getBlock() instanceof AbstractFurnaceBlock
+                    || com.zomboidcraft.decor.DecorUses.litStove(s)) {
                 heat = p.immutable();
                 break;
             }

@@ -396,6 +396,7 @@ def wood_stove(m, k=0):
         m.rod(12.8, 13.0, 1.8, 'iron', cx=x, cz=z)
         m.box([x - 0.3, 13.0, z - 0.1], [x + 0.3, 13.3, z + 0.1], 'trim')
     m.box([-8.6, 5.0, 5.4], [-3.6, 11.0, 5.8], 'iron')                            # firebox door
+    m.box([-8.0, 6.0, 5.8], [-4.2, 7.0, 5.9], 'glow')                             # the draught, embers showing
     m.rod(5.8, 6.2, 0.9, 'trim', cx=-6.1, cz=9.6, axis=2)
     m.box([-3.0, 4.0, 5.4], [8.4, 11.4, 5.8], 'door')                             # oven door
     m.rod(5.8, 6.1, 0.8, 'dial', cx=2.7, cz=9.8, axis=2)
@@ -642,7 +643,8 @@ def _looks():
                                            (wood('#c9a77a', '#8a6440'), wood('#a8865a', '#6a4a28'), P.brass),
                                            (paint('#1e1f20'), paint('#2a2a2a'), A.chrome))]
     out['wood_stove'] = [dict(b=wood_stove, iron=lambda f: P.cast_iron(f), body=bd, door=dr, trim=A.chrome,
-                              dial=dial('#f0ece0'), kettle=A.flat('#c8c8c0', 0.08), pot=paint('#2a2a2a'))
+                              dial=dial('#f0ece0'), kettle=A.flat('#c8c8c0', 0.08), pot=paint('#2a2a2a'),
+                              glow=A.flat('#b8481a', 0.1))
                          for bd, dr in ((lambda f: P.cast_iron(f), lambda f: P.cast_iron(f)),
                                         (paint('#e8dcc0'), paint('#3a6a4a')), (paint('#5a6a7a'), paint('#3a4a5a')))]
     out['persian_rug'] = [dict(b=persian_rug, rug=rug(f_, b_, a_, i_), fringe=A.fabric('#e8dcc8'), _px={'rug': 6})
