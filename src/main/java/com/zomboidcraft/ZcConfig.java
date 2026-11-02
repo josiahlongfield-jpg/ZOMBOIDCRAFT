@@ -376,6 +376,17 @@ public final class ZcConfig {
          */
         public boolean nvidiaBufferStorage = true;
         /**
+         * Zomboid bodies (zombies, corpses, survivors) are written into the draw buffer whole vertices at a time, with
+         * Iris's shader extras worked out as they go, instead of corner by corner and then read back by Iris (30% of the
+         * frame with 600 zombies, 2026-11-02). Looks the same. Off: the old way. Client side.
+         */
+        public boolean fastBodyVertices = true;
+        /**
+         * Zombies drawn at the lightest level (past the nearest 30 or so, or 16+ blocks off) are posed every other frame,
+         * half of them on each; in between, last frame's pose is drawn where the zombie now stands. Client side.
+         */
+        public boolean farZombieHalfRate = true;
+        /**
          * Only entities (zombies, cars, corpses, people, props) within this many blocks of the camera cast shader shadows;
          * further ones are still drawn, just left out of the shadow map, where they cost the most (2026-11-01 GPU timers:
          * 104 ms of a 262 ms frame). 0 = no limit. Client side.

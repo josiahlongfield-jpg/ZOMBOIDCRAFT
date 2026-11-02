@@ -50,6 +50,7 @@ public final class ZedBodies {
     private static final int TEX = 512;
     /** The lighter level's textures: a quarter of the pixels, so a horde's worth fit in the textures kept. */
     private static final int TEX_LOW = 256;
+    private static long lastSweep;
     /** Zomboid's body parts, as its blood and holes are laid out (tools/pz/zombie_fx.py). */
     private static final String[] PARTS = {"Head", "Chest", "Waist", "Belt", "Crotch", "LeftArm", "RightArm", "LeftLeg", "RightLeg"};
     /** Items whose only texture sits in Zomboid's texture packs, and the loose item worn in their place. */
@@ -88,6 +89,8 @@ public final class ZedBodies {
         /** How far off its place the body is drawn (blocks, in its own turned frame): climbing, beating on a door. */
         float shiftX, shiftY, shiftZ;
         float age;
+        /** Last frame's pose is drawn again from its skinned buffers (a far zombie on its off frame). */
+        boolean reuse;
     }
 
     static final class Entry {
@@ -106,6 +109,12 @@ public final class ZedBodies {
         int buffer;
         float submitAge = Float.NaN;
         final ZedHop.State hop = new ZedHop.State();
+        /** The bones it was last drawn with, and the frame, level and cuts they were posed for. */
+        Matrix4f[] lastSkin;
+        long posedFrame = Long.MIN_VALUE;
+        int posedLevel = -1, posedCuts;
+        /** Which of the two buffers that pose was skinned into (-1: none yet). */
+        int skinnedBuffer = -1;
     }
 
     /** What a zombie is doing this frame, as the renderer knows it. */
@@ -448,10 +457,11 @@ public final class ZedBodies {
         SurvivorPack pack = packFor(f.variant);
         if (pack == null) return null;
         level = Math.min(level, levels(pack));
-        // past the nearest few (level 1 and 2) it wears one of a few looks its outfit shares: a horde's textures fit in
-        // what's kept, and zombies in the same look are drawn together in one go instead of one by one (each in its
-        // own textures was most of the card's frame downtown); the nearest, its own
-        Look look = look(pack, level >= 1 ? shared(f.variant, f.outfit) : f.variant, f.outfit);
+        // every zombie wears one of the few looks its outfit shares, near ones too: a horde's textures fit in what's
+        // kept, zombies in the same look are drawn together in one go, and a zombie keeps its look as it comes close.
+        // Each nearest zombie in its own look made textures nonstop in a horde (351 in 30 s with 600 zombies, Josiah's
+        // profile 2026-11-02), each one landing on a full graphics card and freezing frames
+        Look look = look(pack, shared(f.variant, f.outfit), f.outfit);
         int size = level == 0 ? TEX : TEX_LOW;
         // the body at its level's size and paint, or while that's being made the other level's (not a frame without it)
         Identifier body = SurvivorTextures.body(pack, level == 0 ? look.paint() : look.paintLow(), size);
@@ -471,7 +481,13 @@ public final class ZedBodies {
             e.buffers[0] = e.buffers[1] = null;
             e.upper = upperBody(pack);
         }
-        if (e.pos == null || f.age != e.age) {
+        // a far zombie (the lightest level) is posed and skinned every other frame, half of them on each: on its off
+        // frame last frame's body is drawn again where it now stands. With a horde most zombies are far, and posing
+        // and skinning them was a fifth of the frame (2026-11-02, 600 zombies)
+        long frame = com.zomboidcraft.zombie.Profiler.frameNo;
+        boolean reuse = level >= 2 && ZcConfig.get().performance.farZombieHalfRate && e.pos != null && e.lastSkin != null
+                && e.posedFrame == frame - 1 && e.posedLevel == level && e.posedCuts == f.cuts && ((frame + id) & 1) != 0;
+        if (!reuse && (e.pos == null || f.age != e.age)) {
             float dt = Float.isNaN(e.age) ? 0 : Math.max(0, Math.min(0.25f, (f.age - e.age) / 20f));
             if (Float.isNaN(e.age) && f.deathTime > 0) dt = 10;   // a body first seen lying: already down
             e.age = f.age;
@@ -486,7 +502,13 @@ public final class ZedBodies {
             ZedHop.apply(pack, e.hop, e.pos, e.turn, f.cuts,
                     f.posed == null && f.deathTime <= 0 && f.act == 0 && !f.low, f.speed, dt);
         }
-        if (ENTRIES.size() > 256) ENTRIES.values().removeIf(x -> System.currentTimeMillis() - x.seen > 5_000);
+        // forget zombies not seen for 5 s, once a second at most (with a horde over 256 this swept every entry for
+        // every zombie drawn, 5% of the frame in Josiah's 600-zombie profile)
+        long now = System.currentTimeMillis();
+        if (ENTRIES.size() > 256 && now - lastSweep > 1_000) {
+            lastSweep = now;
+            ENTRIES.values().removeIf(x -> now - x.seen > 5_000);
+        }
 
         Drawn d = new Drawn();
         d.pack = pack;
@@ -494,8 +516,19 @@ public final class ZedBodies {
         d.level = level;
         d.pending = pending;
         d.age = f.age;
-        d.skin = skinOf(pack, e.pos, e.turn);
-        if (f.cuts != 0) collapse(pack, d.skin, f.cuts);
+        if (reuse) {
+            d.skin = e.lastSkin;
+            d.reuse = true;
+        } else {
+            d.skin = skinOf(pack, e.pos, e.turn);
+            if (f.cuts != 0) collapse(pack, d.skin, f.cuts);
+            e.lastSkin = d.skin;
+            e.posedFrame = frame;
+            e.posedLevel = level;
+            e.posedCuts = f.cuts;
+            // not drawn this frame (its textures are being made): nothing skinned to draw again next frame
+            if (pending) e.posedFrame = Long.MIN_VALUE;
+        }
         d.body = body;
         d.clothes = clothes;
         d.hairPiece = look.hairPiece();
@@ -561,7 +594,7 @@ public final class ZedBodies {
     // ------------------------------------------------------------------ the far crowd
 
     /** Figures out in the open past the real zombies (CrowdFx): a few shared poses, a few looks an outfit. */
-    private static final int CROWD_PHASES = 4, CROWD_LOOKS = 16;
+    private static final int CROWD_PHASES = 4, CROWD_LOOKS = 8;
 
     private static final class Crowd {
         final Object[][][] buffers = new Object[2][CROWD_PHASES][];
@@ -732,11 +765,16 @@ public final class ZedBodies {
         pose.scale(-1, -1, 1);
         pose.mulPose(new Matrix4f().rotationY((float) Math.PI));
         if (d.shiftX != 0 || d.shiftY != 0 || d.shiftZ != 0) pose.translate(d.shiftX, d.shiftY, d.shiftZ);
-        NpcSkinDraw.submitWith(d.pack.skin, d.skin, d.level,
+        Object[] buf = buffers(d);
+        Entry e = d.entry;
+        // on a far zombie's off frame its buffers still hold last frame's skinned body: drawn as they are (no bones)
+        boolean again = d.reuse && e.buffer == e.skinnedBuffer;
+        if (!again) e.skinnedBuffer = e.buffer;
+        NpcSkinDraw.submitWith(d.pack.skin, again ? null : d.skin, d.level,
                 g -> g.piece.equals("body") || g.piece.equals(d.hairPiece) || g.piece.equals(d.beardPiece) || d.clothes.containsKey(g.piece),
                 g -> g.piece.equals("body") ? d.body : g.piece.equals(d.hairPiece) ? d.hair
                         : g.piece.equals(d.beardPiece) ? d.beard : d.clothes.get(g.piece),
-                buffers(d), light, overlay, pose, collector);
+                buf, light, overlay, pose, collector);
         int head = d.pack.head;
         if (d.eyes > 0.01f && head >= 0) {
             Matrix4f m = d.skin[head];

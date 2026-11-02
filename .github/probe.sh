@@ -8,6 +8,33 @@ classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1"
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
+echo "===== compile errors"
+grep -E "error:|warning: \[removal\]" -A3 build.log | head -80
+
+echo "===== vertex formats"
+for c in com.mojang.renderpearl.api.GpuFormat com.mojang.renderpearl.api.vertex.VertexFormat com.mojang.renderpearl.api.vertex.VertexFormatElement; do echo "-- $c"; javap -cp "$CP" -p "$c" 2>&1 | grep -vE 'lambda\$' | head -60; done
+javap -cp "$CP" -p -c com.mojang.blaze3d.vertex.DefaultVertexFormat 2>&1 | grep -A200 'static {}' | grep -E 'ldc|getstatic|putstatic' | head -120
+
+echo "===== stitcher padding 2"
+javap -cp "$CP" -p -c net.minecraft.client.renderer.texture.SpriteLoader 2>&1 | grep -A80 'Preparations stitch(' | sed -n '60,140p'
+javap -cp "$CP" -p -c net.minecraft.client.renderer.texture.Stitcher 2>&1 | grep -A30 'Stitcher(int, int, int, int)'
+javap -cp "$CP" -p -c net.minecraft.client.renderer.texture.SpriteLoader 2>&1 | grep -B5 -A30 'getStitchedSprites(net' | head -60
+
+echo "===== stitcher padding"
+javap -cp "$CP" -p net.minecraft.client.renderer.texture.Stitcher 2>&1 | head -30
+javap -cp "$CP" -p -c net.minecraft.client.renderer.texture.Stitcher 2>&1 | grep -B2 -A40 'void registerSprite' | head -60
+javap -cp "$CP" -p 'net.minecraft.client.renderer.texture.Stitcher$Holder' 2>&1 | head
+javap -cp "$CP" -p net.minecraft.client.renderer.texture.SpriteLoader 2>&1 | head -30
+javap -cp "$CP" -p -c net.minecraft.client.renderer.texture.SpriteLoader 2>&1 | grep -E 'Stitcher|padding|Padding|ldc|bipush|iconst|invokestatic' | head -60
+
+echo "===== vanilla atlases"
+for j in $MC_JARS; do for a in blocks items; do unzip -p "$j" "assets/minecraft/atlases/$a.json" 2>/dev/null | head -c 3000; echo; done; done
+
+echo "===== pip reuse"
+for c in net.minecraft.client.gui.render.pip.PictureInPictureRenderer net.minecraft.client.gui.render.pip.GuiEntityRenderer net.minecraft.client.gui.render.state.pip.GuiEntityRenderState net.minecraft.client.gui.render.state.pip.PictureInPictureRenderState; do echo "-- $c"; javap -cp "$CP" -p "$c" 2>&1 | grep -vE 'lambda\$' | head -40; done
+javap -cp "$CP" -p -c net.minecraft.client.gui.render.pip.PictureInPictureRenderer 2>&1 | grep -A60 'void prepare(' | grep -E 'invoke|if|getfield' | head -40
+classes 'Stitcher' | head
+javap -cp "$CP" -p -c net.minecraft.client.renderer.texture.Stitcher 2>&1 | grep -A80 'boolean expand' | head -90
 
 echo "===== block shape census"
 classes '(BlockStateModel|BlockModelPart|BlockModelShaper|BlockStateModelSet|ModelManager)\.class' | head
