@@ -125,14 +125,6 @@ public final class SurvivorArms {
      * so the fingers wrap round the grip, the off hand's over the shooting hand's, the way a pistol is really held.
      */
     private static final float PISTOL_WRAP = 70f;
-    /**
-     * The off hand cupping a handguard: palm up against its underside, the fingers this far (degrees) round from the
-     * barrel toward the gun's right so they curl up its right side, the thumb along its left.
-     */
-    private static final float CUP_TURN = 60f;
-    /** How far (metres) the cupped palm sits under the handguard. */
-    private static final float CUP_GAP = 0.01f;
-
     /** Whether this player's first-person gun is held as a survivor's pistol. */
     public static boolean pistolHeld(Player player) {
         return shown(player) && Survivors.kind(player.getMainHandItem()).equals("pistol");
@@ -163,13 +155,13 @@ public final class SurvivorArms {
      * Her arms on a gun in first person (RifleView's hand frame): Zomboid's own aim hold, the one she has in third
      * person, carried whole onto the gun. RifleView draws the gun at her size and where her hold puts it (see
      * {@link #hold}), so her arms come out life size here and nothing is stretched or bent to fit. Her shooting palm
-     * closes on the grip; the other hand cups the handguard, or goes where the view sends it (a magazine, the handle).
+     * closes on the grip; the other hand is on the handguard by the hold itself, or goes where the view sends it.
      * Only her forearms and hands are drawn.
      * <p>
      * eye is the eye in the hand frame; rightHand/leftHand the grips (null left hand: not drawn); the elbows are
      * the vanilla arms' and go unused; gun the gun's turn (barrel -z, sights +y); gunScale its display scale;
-     * span how far apart the gun has its grip and handguard (hand-frame blocks); guard, if given, the underside of the
-     * handguard the off hand cups (hand frame), otherwise it goes to leftHand as it is.
+     * span how far apart the gun has its grip and handguard (hand-frame blocks); guard, if given, where her front palm holds
+     * the handguard (hand frame): her hold is laid along grip-to-handguard and sized to it.
      */
     public static boolean drawGun(PoseStack pose, SubmitNodeCollector out, int light, Player player, Vector3f eye,
                                   Vector3f rightHand, Vector3f leftHand, Vector3f rightElbow, Vector3f leftElbow,
@@ -186,6 +178,8 @@ public final class SurvivorArms {
         // her size: the gun's grip-to-handguard as far as her palms are apart in the hold (a pistol: as much bigger
         // than life as it's drawn)
         float apart = palmR.distance(palmL);
+        // (a long gun with its handguard given: as far apart as its grip and handguard, which RifleView made her size)
+        if (guard != null && !pistol) span = new Vector3f(guard).distance(rightHand);
         float k = pistol || apart < 0.05f || span <= 0 ? gunScale / PISTOL_REAL : span / apart;
         int head = pack.head;
         Vector3f eyes = new Vector3f(pos[head * 3], pos[head * 3 + 1] + 0.09f, pos[head * 3 + 2] + 0.09f);
@@ -200,7 +194,9 @@ public final class SurvivorArms {
 
         // the hold carried onto the gun: the clip's own (unseen) gun runs from her shooting palm toward her other palm,
         // or straight ahead for a pistol, sights up
-        Quaternionf thisGun = gunFrame(barrel, sights);
+        // (a long gun: her palms' line onto its grip-to-handguard line, so both hands land on it)
+        Quaternionf thisGun = gunFrame(guard != null && !pistol
+                ? back.transformPosition(new Vector3f(guard)).sub(grip) : barrel, sights);
         Quaternionf clipGun = gunFrame(pistol ? new Vector3f(0, 0, 1) : new Vector3f(palmL).sub(palmR), new Vector3f(0, 1, 0));
         if (thisGun == null || clipGun == null) return false;
         Quaternionf onto = new Quaternionf(thisGun).mul(clipGun.conjugate()).normalize();
@@ -221,23 +217,7 @@ public final class SurvivorArms {
             turn[b * 4 + 2] = q.z;
             turn[b * 4 + 3] = q.w;
         }
-        if (other != null && guard != null && !pistol) {
-            // the off hand cups the handguard: palm up against it, fingers round its right side, thumb along its left
-            Vector3f up = new Vector3f(sights).sub(new Vector3f(barrel).mul(sights.dot(barrel))).normalize();
-            Vector3f right = new Vector3f(barrel).cross(up).normalize();
-            if (right.dot(back.transformDirection(new Vector3f(1, 0, 0))) < 0) right.negate();
-            float th = (float) Math.toRadians(CUP_TURN);
-            Vector3f x = new Vector3f(barrel).mul((float) Math.cos(th)).add(new Vector3f(right).mul((float) Math.sin(th)));
-            Vector3f z = new Vector3f(up).negate();
-            Vector3f y = new Vector3f(z).cross(x);
-            Quaternionf cup = new Quaternionf().setFromNormalized(new Matrix3f(x, y, z));
-            int h = pack.hand[1], f = pack.fore[1];
-            Quaternionf has = new Quaternionf(turn[h * 4], turn[h * 4 + 1], turn[h * 4 + 2], turn[h * 4 + 3]);
-            turnAbout(pack, pos, turn, f, palm(pack, pos, turn, 1), new Quaternionf(cup).mul(has.conjugate()).normalize());
-            Vector3f to = back.transformPosition(new Vector3f(guard)).sub(new Vector3f(up).mul(CUP_GAP / k));
-            Vector3f by = to.sub(palm(pack, pos, turn, 1));
-            moveBelow(pack, pos, f, by);
-        } else if (other != null) {
+        if (other != null) {
             // the other hand: the nearest of the gun's hold to its palm (a stretch of handguard along the barrel, or
             // the one point the view gives, a magazine or the handle), reached for only when the palm isn't on it
             Vector3f along = new Vector3f(barrel).mul(pistol ? 0.01f : 0.08f);
@@ -275,18 +255,6 @@ public final class SurvivorArms {
                 buffers[buffer], light, OverlayTexture.NO_OVERLAY, pose, out);
         pose.popPose();
         return true;
-    }
-
-    /** Moves a bone and everything below it (her space). */
-    private static void moveBelow(SurvivorPack pack, float[] pos, int bone, Vector3f by) {
-        for (int b = 0; b < pos.length / 3; b++) {
-            boolean under = false;
-            for (int p = b; p >= 0 && !under; p = pack.skin.parent[p]) under = p == bone;
-            if (!under) continue;
-            pos[b * 3] += by.x;
-            pos[b * 3 + 1] += by.y;
-            pos[b * 3 + 2] += by.z;
-        }
     }
 
     /** Turns a bone and everything below it about a point (her space). */
