@@ -39,7 +39,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  */
 public final class CityBlocks {
     private static final Map<String, Block> BLOCKS = new LinkedHashMap<>();
-    private static final Map<String, BlockState> CACHE = new HashMap<>();
+    private static final Map<String, BlockState> CACHE = new java.util.concurrent.ConcurrentHashMap<>();
     private static final List<Block> FITTINGS = new ArrayList<>();
     /**
      * Since 26.3 Minecraft asks this tag, not the block's shape, whether a block stops rain (the
