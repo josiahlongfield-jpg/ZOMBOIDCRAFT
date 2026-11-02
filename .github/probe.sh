@@ -9,6 +9,13 @@ sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
 
+echo "===== stitcher padding"
+javap -cp "$CP" -p net.minecraft.client.renderer.texture.Stitcher 2>&1 | head -30
+javap -cp "$CP" -p -c net.minecraft.client.renderer.texture.Stitcher 2>&1 | grep -B2 -A40 'void registerSprite' | head -60
+javap -cp "$CP" -p 'net.minecraft.client.renderer.texture.Stitcher$Holder' 2>&1 | head
+javap -cp "$CP" -p net.minecraft.client.renderer.texture.SpriteLoader 2>&1 | head -30
+javap -cp "$CP" -p -c net.minecraft.client.renderer.texture.SpriteLoader 2>&1 | grep -E 'Stitcher|padding|Padding|ldc|bipush|iconst|invokestatic' | head -60
+
 echo "===== vanilla atlases"
 for j in $MC_JARS; do for a in blocks items; do unzip -p "$j" "assets/minecraft/atlases/$a.json" 2>/dev/null | head -c 3000; echo; done; done
 
