@@ -689,6 +689,8 @@ public final class Survivors {
     }
 
     private static final Map<SurvivorPack, Torso> TORSOS = new java.util.WeakHashMap<>();
+    /** Where Minecraft's belt line is under the neck (blocks): WornGearLayer's BELT_DOWN, 10.9 px. */
+    private static final float BELT_LINE = 10.9f / 16f;
 
     /** Her body's centre (x, z), width and depth at height y, from the body mesh's vertices near it. */
     private static float[] band(SurvivorPack pack, float y) {
@@ -725,8 +727,9 @@ public final class Survivors {
         Vector3f neck = pack.bind[pack.neck].getTranslation(new Vector3f());
         Vector3f pelvis = pack.bind[pack.pelvis].getTranslation(new Vector3f());
         float drop = neck.y - pelvis.y;
-        // Minecraft's chest is 5 px under the neck and its belt line 11, of a 12 px torso
-        return new Torso(neck.y, pelvis.y, band(pack, neck.y - drop * 5 / 12f), band(pack, neck.y - drop * 11 / 12f),
+        // Minecraft's chest is 5 px under the neck; a belt goes round her waist a hand above the hip joints, over the
+        // small of her back (lower down it would stand off her behind)
+        return new Torso(neck.y, pelvis.y, band(pack, neck.y - drop * 5 / 12f), band(pack, pelvis.y + 0.09f),
                 band(pack, neck.y + 0.12f));
     }
 
@@ -751,6 +754,7 @@ public final class Survivors {
         }
         float[] b = part == 0 ? t.chest() : t.waist();
         float sy = (t.neckY() - t.pelvisY()) * K / 0.75f, sx = b[2] * K / 0.5f, sz = b[3] * K / 0.25f;
+        if (wrap && part != 0) sy = (t.neckY() - t.pelvisY() - 0.09f) * K / BELT_LINE;   // the belt line onto her waist
         if (!wrap) sx = sy = sz = (sy + sz) / 2;
         return new Matrix4f().translation(0, ORIGIN, 0).scale(K, -K, -K).mul(d.skin[bone])
                 .translate(b[0], t.neckY(), b[1]).scale(sx / K, -sy / K, -sz / K);
