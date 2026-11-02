@@ -55,8 +55,8 @@ STORIES = {
         ('shotgun_shell', 3, 4, 10), ('handcuffs', 2, 1, 1), ('zip_ties', 2, 1, 3), ('police_cap', 2, 1, 1),
         ('whistle', 2, 1, 1), ('traffic_cone', 2, 1, 2), ('bandage', 2, 1, 2)]),
     'police_blockade_shooting': ([('pistol_ammo', 6, 18)], (3, 5), [
-        ('shotgun_shell', 4, 4, 12), ('pistol', 2, 1, 1), ('pistol_magazine', 3, 1, 1), ('police_vest', 2, 1, 1),
-        ('road_flare', 3, 1, 3), ('two_way_radio', 2, 1, 1), ('flashlight', 2, 1, 1), ('shotgun', 1, 1, 1),
+        ('shotgun_shell', 4, 4, 12), ('police_vest', 2, 1, 1),
+        ('road_flare', 3, 1, 3), ('two_way_radio', 2, 1, 1), ('flashlight', 2, 1, 1),
         ('tourniquet', 2, 1, 1), ('bandage', 3, 1, 2), ('handcuffs', 1, 1, 1)]),
     'trailer_crash': ([], (4, 6), [
         ('carrot_seeds', 3, 1, 2), ('corn_seeds', 3, 1, 2), ('beet_seeds', 2, 1, 2), ('lettuce_seeds', 2, 1, 2),

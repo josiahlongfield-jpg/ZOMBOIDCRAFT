@@ -1066,6 +1066,112 @@ launch_keys | Decommissioned Launch Keys | G | 250 | 0.2 | bunker
 cipher_machine | Wartime Cipher Machine | G | 300 | 12.0 | mansion.3 mil
 """
 
+# base decor (wave 4 stage 5; what each piece does is in decor.py), added batch by batch as the photos land
+ROSTER['Decor'] = """
+# lighting and neon
+string_lights | String Lights | C | 4 | 0.4 | bed hard
+lava_lamp | Lava Lamp | S | 15 | 1.5 | bed thrift
+neon_word_sign | Neon Word Sign | S | 20 | 3.0 | liq diner
+neon_beer_sign | Neon Beer Sign | S | 25 | 3.0 | liq
+disco_ball | Disco Ball | S | 18 | 2.0 |
+black_light | Black Light | S | 10 | 0.6 | bed toyshop
+strobe_light | Strobe Light | S | 12 | 0.8 |
+plasma_ball | Plasma Ball | R | 25 | 1.2 | elec school
+neon_wall_shape | Neon Wall Shape | R | 40 | 4.0 |
+rotating_beacon | Rotating Beacon | R | 22 | 2.5 | garage fire police
+aquarium | Aquarium | R | 35 | 30.0 | office
+neon_arrow_sign | Neon Arrow Sign | P | 70 | 25.0 |
+light_up_dance_floor | Light-Up Dance Floor | P | 80 | 12.0 |
+gas_pump_globe | Gas Pump Globe | P | 70 | 3.0 | pawn
+searchlight | Searchlight | P | 90 | 45.0 |
+fibre_optic_lamp | Fibre Optic Lamp | C | 6 | 0.8 | kids thrift
+neon_tube_kit | Neon Tube Kit | R | 30 | 2.0 | hard
+marquee_bulb_letters | Marquee Bulb Letters | R | 35 | 1.5 |
+edison_chandelier | Edison Bulb Chandelier | R | 30 | 6.0 | liq diner
+tiffany_lamp | Tiffany-Style Lamp | P | 60 | 4.0 | mansion pawn
+# games and leisure
+dartboard | Dartboard | C | 6 | 1.5 | liq garage bed
+pool_cue | Pool Cue | C | 4 | 0.5 | liq
+chess_set | Chess Set | C | 5 | 1 | bed school books
+foosball_table | Foosball Table | S | 40 | 45 |
+ping_pong_table | Ping Pong Table | S | 35 | 60 |
+poker_chip_case | Poker Chip Case | S | 12 | 2.5 | bed liq pawn
+bowling_ball_pins | Bowling Ball and Pins | S | 15 | 7 |
+punching_bag | Punching Bag | S | 20 | 30 | gym garage
+arcade_cabinet | Arcade Cabinet | R | 80 | 110 |
+pool_table | Pool Table | R | 90 | 300 |
+air_hockey_table | Air Hockey Table | R | 70 | 90 |
+poker_table | Poker Table | R | 60 | 60 |
+home_console | Home Console Bundle | R | 40 | 3 | bed elec pawn
+cocktail_arcade | Cocktail Arcade Table | P | 100 | 70 |
+pinball_machine | Pinball Machine | P | 120 | 110 |
+claw_machine | Claw Machine | P | 90 | 120 |
+skee_ball_lane | Alley Roll Lane | P | 85 | 150 |
+slot_machine | Slot Machine | P | 110 | 80 |
+# furniture and comfort
+bean_bag | Bean Bag | C | 8 | 4 | bed
+bar_stools | Bar Stools | C | 6 | 6 |
+hand_truck | Hand Truck | S | 20 | 14 | factory hard dock
+recliner | Recliner | S | 30 | 40 | thrift
+hammock | Hammock | S | 15 | 3 | bed camp
+velvet_rope_stands | Velvet Rope Stands | S | 12 | 12 | bank
+mounted_deer_head | Mounted Deer Head | S | 25 | 8 | camp liq
+waterbed | Waterbed | R | 50 | 90 |
+barber_chair | Barber Chair | R | 45 | 70 |
+diner_booth | Diner Booth | R | 40 | 60 |
+home_bar | Home Bar | R | 50 | 70 |
+wood_stove | Wood Stove | R | 45 | 120 | hard
+persian_rug | Persian Rug | R | 40 | 12 | mansion pawn
+vending_machine | Vending Machine | R | 60 | 250 |
+massage_chair | Massage Chair | P | 80 | 80 |
+grandfather_clock | Grandfather Clock | P | 90 | 60 | mansion
+stuffed_bear | Stuffed Bear | P | 100 | 150 |
+theatre_throne | Theatre Throne | G | 150 | 45 |
+band_poster | Band Poster | C | 2 | 0.1 | bed
+movie_poster | Movie Poster | C | 2 | 0.1 | bed
+wall_calendar | Wall Calendar | C | 1 | 0.2 | bed office desk
+pennant_set | Pennant Set | C | 3 | 0.2 | school stadium
+tin_sign | Tin Sign | S | 8 | 0.8 | garage diner pawn
+licence_plate_set | Licence Plate Collection | S | 10 | 3 | garage auto
+butterfly_display | Butterfly Display | S | 12 | 1 | bed
+spray_paint_kit | Spray Paint Kit | S | 6 | 1.5 | hard
+framed_gold_record | Framed Gold Record | R | 40 | 2 | mansion
+mounted_swordfish | Mounted Swordfish | R | 35 | 10 | dock liq
+antique_map | Antique Map | R | 30 | 0.5 | books mansion
+stuffed_owl | Stuffed Owl | R | 25 | 1.5 | mansion pawn
+signed_jersey_frame | Signed Jersey Frame | P | 70 | 4 | stadium mansion
+stained_glass_panel | Stained Glass Panel | P | 60 | 8 | church pawn
+film_prop_display | Film Prop Display | G | 200 | 20 | mansion
+vinyl_record | Vinyl Record | C | 3 | 0.2 | bed thrift
+record_player | Record Player | S | 25 | 5 | bed thrift
+karaoke_machine | Karaoke Machine | S | 20 | 6 | liq bed
+big_crt_tv | Big CRT TV | S | 30 | 35 | bed
+accordion | Accordion | S | 20 | 8 | thrift bed
+stereo_system | Stereo System | R | 40 | 12 | bed elec
+guitar_amp | Electric Guitar and Amp | R | 60 | 25 | bed
+drum_kit | Drum Kit | R | 70 | 40 | school
+dj_turntables | DJ Turntables | R | 50 | 15 | 
+projector_screen | Projector and Screen | R | 45 | 20 | school
+jukebox | Jukebox | P | 120 | 110 | 
+upright_piano | Upright Piano | P | 100 | 200 | 
+gramophone | Gramophone | P | 60 | 8 | mansion pawn
+reel_to_reel | Reel-to-Reel Deck | P | 55 | 18 | 
+bobblehead | Bobblehead | C | 3 | 0.3 | stadium office glove
+mannequin | Mannequin | C | 5 | 9 | cloth
+cardboard_cutout | Cardboard Cutout | C | 3 | 2 | 
+lucky_cat | Lucky Cat Statue | C | 4 | 0.8 | diner
+garden_gnome | Garden Gnome | C | 3 | 2 | farm hard
+ship_in_bottle | Ship in a Bottle | S | 12 | 1 | dock pawn
+desk_globe | Desk Globe | S | 15 | 2.5 | books school office
+gumball_machine | Gumball Machine | S | 15 | 8 | diner laund
+model_train_set | Model Train Set | R | 45 | 6 | toyshop bed
+diving_helmet | Diving Helmet | P | 90 | 15 | dock pawn
+fossil | Fossil | P | 70 | 6 | 
+carousel_horse | Carousel Horse | G | 180 | 40 | 
+suit_of_armour | Suit of Armour | G | 220 | 30 | mansion
+meteorite | Meteorite Fragment | G | 250 | 4 | 
+"""
+
 ROSTER['Junk & scrap'] = """
 tin_can* | Empty Can | C | 0 | 0.05 | trash.3 pantry
 glass_bottle* | Empty Bottle | C | 0 | 0.3 | trash.3 pantry liq

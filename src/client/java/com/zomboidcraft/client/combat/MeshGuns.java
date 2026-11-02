@@ -29,7 +29,11 @@ import net.minecraft.resources.Identifier;
  */
 public final class MeshGuns {
     /** Triangles in item pixels (muzzle toward -z), uvs, each triangle's flat normal and each corner's smooth one. */
-    record Part(int triangles, float[] pos, float[] uv, float[] normal, float[] smooth) {
+    record Part(int triangles, float[] pos, float[] uv, float[] normal, float[] smooth, int[] quads) {
+        /** Quads drawn: pairs of triangles sharing an edge, and the rest as a triangle with its last corner twice. */
+        int quadCount() {
+            return quads.length / 5;
+        }
     }
 
     record Gun(Map<String, Part> parts, Identifier texture, float outline, float[] lo, float[] hi) {
@@ -38,9 +42,47 @@ public final class MeshGuns {
     private static final int INK = 0xFF141414;
     /** Test switches (GunLookTest): draw the outline shell; wind every triangle the other way round. */
     public static volatile boolean inkOn = true, flipped = false;
+    /** Set while a picture-in-picture (HUD figure, inventory mirror) draws; guns there skip the ink (PictureInPictureMixin). */
+    public static boolean inPicture;
     private static final Map<String, Gun> GUNS = new HashMap<>();
     private static final Set<String> MISSING = new HashSet<>();
     private static final Map<String, float[]> BOUNDS = new java.util.concurrent.ConcurrentHashMap<>();
+
+    /**
+     * Meshes of ours this computer draws from its own file instead, packed under the same id (scrambled with it):
+     * config/zomboidcraft/meshes/&lt;id&gt;.zmesh. Whoever hasn't got one sees the mod's.
+     */
+    public static final java.nio.file.Path OVERRIDES = net.fabricmc.loader.api.FabricLoader.getInstance().getConfigDir()
+            .resolve("zomboidcraft").resolve("meshes");
+
+    /** Mesh ids of guns kept on this computer start with this: "local/" + the gun's file name. */
+    public static final String LOCAL = "local/";
+
+    /** Whether this computer has the mesh of a local gun (its file is there). */
+    public static boolean hasLocal(String gun) {
+        // asked for every part of every gun drawn each frame: the disk is looked at again only every few seconds
+        if (localGeneration != com.zomboidcraft.combat.LocalGuns.generation()) {
+            localGeneration = com.zomboidcraft.combat.LocalGuns.generation();
+            forgetLocal();
+        }
+        long now = System.currentTimeMillis();
+        long[] seen = LOCAL_SEEN.get(gun);
+        if (seen == null || now - seen[0] > 5000) {
+            boolean there = java.nio.file.Files.isRegularFile(com.zomboidcraft.combat.LocalGuns.DIR.resolve(gun + ".zmesh"));
+            LOCAL_SEEN.put(gun, seen = new long[] {now, there ? 1 : 0});
+        }
+        return seen[1] == 1;
+    }
+
+    private static int localGeneration;
+    private static final Map<String, long[]> LOCAL_SEEN = new java.util.concurrent.ConcurrentHashMap<>();
+
+    /** Forgets the local guns' meshes, so changed files are read again (/zc localgun reload). Render thread. */
+    public static void forgetLocal() {
+        LOCAL_SEEN.clear();
+        GUNS.clear();          // the overrides too, so a changed round file is read again
+        MISSING.clear();
+    }
 
     /** The gun, or null if it can't be loaded. Render thread only. */
     static Gun get(String id) {
@@ -81,7 +123,7 @@ public final class MeshGuns {
         Identifier paint = texture != null ? texture : gun.texture();
         final int shade = tint;
         out.submitCustomGeometry(pose, RenderTypes.entityCutoutCull(paint), (at, buffer) -> solid(p, at, buffer, light, shade));
-        if (inkOn) {
+        if (inkOn && !inPicture) {
             out.submitCustomGeometry(pose, RenderTypes.entityCutoutCull(paint), (at, buffer) -> ink(p, gun.outline(), at, buffer, light));
         }
         for (Identifier over : overlays) {
@@ -132,10 +174,11 @@ public final class MeshGuns {
 
     private static void solid(Part p, PoseStack.Pose pose, VertexConsumer out, int light, int colour) {
         float[] pos = p.pos(), uv = p.uv(), n = p.normal();
-        for (int t = 0; t < p.triangles(); t++) {
+        int[] q = p.quads();
+        for (int f = 0, quads = p.quadCount(); f < quads; f++) {
             for (int c = 0; c < 4; c++) {
-                int k = Math.min(c, 2);
-                int i = t * 3 + (flipped ? 2 - k : k);     // quads: the last corner twice
+                int k = flipped ? (4 - c) & 3 : c;     // a b c d, or a d c b the other way round
+                int i = q[f * 5 + k], t = k == 3 ? q[f * 5 + 4] : i / 3;
                 out.addVertex(pose, pos[i * 3], pos[i * 3 + 1], pos[i * 3 + 2])
                         .setColor(colour)
                         .setUv(uv[i * 2], uv[i * 2 + 1])
@@ -152,10 +195,11 @@ public final class MeshGuns {
      */
     private static void ink(Part p, float outline, PoseStack.Pose pose, VertexConsumer out, int light) {
         float[] pos = p.pos(), uv = p.uv(), s = p.smooth(), n = p.normal();
-        for (int t = 0; t < p.triangles(); t++) {
+        int[] q = p.quads();
+        for (int f = 0, quads = p.quadCount(); f < quads; f++) {
             for (int c = 0; c < 4; c++) {
-                int k = Math.min(c, 2);
-                int i = t * 3 + (flipped ? k : 2 - k);
+                int k = flipped ? c : (4 - c) & 3;     // wound the other way from the solid
+                int i = q[f * 5 + k], t = k == 3 ? q[f * 5 + 4] : i / 3;
                 out.addVertex(pose, pos[i * 3] + s[i * 3] * outline, pos[i * 3 + 1] + s[i * 3 + 1] * outline,
                                 pos[i * 3 + 2] + s[i * 3 + 2] * outline)
                         .setColor(INK)
@@ -192,8 +236,16 @@ public final class MeshGuns {
 
     private static Gun read(String id, boolean texture) throws IOException {
         byte[] data;
-        try (InputStream in = Minecraft.getInstance().getResourceManager().open(ZomboidCraft.id("meshes/" + id + ".zmesh"))) {
-            data = in.readAllBytes();
+        if (id.startsWith(LOCAL)) {
+            // a gun kept on this computer, not in the mod (combat/LocalGuns)
+            data = java.nio.file.Files.readAllBytes(com.zomboidcraft.combat.LocalGuns.DIR.resolve(id.substring(LOCAL.length()) + ".zmesh"));
+        } else if (java.nio.file.Files.isRegularFile(OVERRIDES.resolve(id + ".zmesh"))) {
+            // one of ours kept differently on this computer (Arsenal's rounds for the ammo, tools/meshguns/rounds.py)
+            data = java.nio.file.Files.readAllBytes(OVERRIDES.resolve(id + ".zmesh"));
+        } else {
+            try (InputStream in = Minecraft.getInstance().getResourceManager().open(ZomboidCraft.id("meshes/" + id + ".zmesh"))) {
+                data = in.readAllBytes();
+            }
         }
         CarAssets.unscramble(data, id);
         try (DataInputStream in = new DataInputStream(new InflaterInputStream(new ByteArrayInputStream(data)))) {
@@ -237,16 +289,86 @@ public final class MeshGuns {
                     normal[t * 3 + 1] = ny / len;
                     normal[t * 3 + 2] = nz / len;
                 }
-                parts.put(name, new Part(tris, pos, uv, normal, smooth));
+                parts.put(name, new Part(tris, pos, uv, normal, smooth, pair(tris, pos, uv, smooth, normal)));
             }
             if (!texture) {
                 return new Gun(parts, null, outline, lo, hi);
             }
-            Identifier name = ZomboidCraft.id("dynamic/mesh/" + id);
+            Identifier name = ZomboidCraft.id("dynamic/mesh/" + id.toLowerCase(java.util.Locale.ROOT));
             NativeImage image = NativeImage.read(new ByteArrayInputStream(png));
             Minecraft.getInstance().getTextureManager().register(name, new DynamicTexture(() -> "ZomboidCraft mesh " + id, image));
             return new Gun(parts, name, outline, lo, hi);
         }
+    }
+
+    /**
+     * Pairs triangles into quads to halve the corners sent each frame (the profile, 2026-11-01: the held gun was a
+     * third of the frame, and Iris adds a cost per corner). A quad a b c d draws as a b c and c d a, so triangle
+     * a b c pairs with one that runs c d a: the same two triangles, drawn exactly as before. Only near-flat pairs
+     * (normals within ~18 degrees) are joined, since d takes the second triangle's normal and the rest the first's.
+     * Each quad is five ints: the corners a b c d and the triangle whose normal d takes; a triangle left alone
+     * repeats its last corner as d.
+     */
+    static int[] pair(int tris, float[] pos, float[] uv, float[] smooth, float[] normal) {
+        // corners that are the same point, paint and normal share an id
+        int[] id = new int[tris * 3];
+        Map<String, Integer> ids = new HashMap<>();
+        for (int i = 0; i < tris * 3; i++) {
+            String key = Float.floatToIntBits(pos[i * 3]) + "," + Float.floatToIntBits(pos[i * 3 + 1]) + ","
+                    + Float.floatToIntBits(pos[i * 3 + 2]) + "," + Float.floatToIntBits(uv[i * 2]) + ","
+                    + Float.floatToIntBits(uv[i * 2 + 1]) + "," + Float.floatToIntBits(smooth[i * 3]) + ","
+                    + Float.floatToIntBits(smooth[i * 3 + 1]) + "," + Float.floatToIntBits(smooth[i * 3 + 2]);
+            id[i] = ids.computeIfAbsent(key, k -> ids.size());
+        }
+        // each directed edge (from corner, to corner) -> the triangle and the corner it starts at
+        Map<Long, Integer> edges = new HashMap<>();
+        for (int t = 0; t < tris; t++) {
+            for (int e = 0; e < 3; e++) {
+                int from = id[t * 3 + e], to = id[t * 3 + (e + 1) % 3];
+                edges.putIfAbsent((long) from << 32 | to & 0xFFFFFFFFL, t * 3 + e);
+            }
+        }
+        boolean[] used = new boolean[tris];
+        int[] out = new int[tris * 5];
+        int n = 0;
+        for (int t = 0; t < tris; t++) {
+            if (used[t]) {
+                continue;
+            }
+            used[t] = true;
+            int found = -1, start = 0;
+            for (int e = 0; e < 3 && found < 0; e++) {
+                // the edge from corner e+2 back to e (c -> a, with a = e) is shared if a triangle runs a -> c
+                int a = t * 3 + e, c = t * 3 + (e + 2) % 3;
+                Integer other = edges.get((long) id[a] << 32 | id[c] & 0xFFFFFFFFL);
+                if (other == null || used[other / 3]) {
+                    continue;
+                }
+                int u = other / 3;
+                float dot = normal[t * 3] * normal[u * 3] + normal[t * 3 + 1] * normal[u * 3 + 1] + normal[t * 3 + 2] * normal[u * 3 + 2];
+                if (dot < 0.95f) {
+                    continue;
+                }
+                found = other;
+                start = e;
+            }
+            int a = t * 3 + start, b = t * 3 + (start + 1) % 3, c = t * 3 + (start + 2) % 3;
+            out[n * 5] = a;
+            out[n * 5 + 1] = b;
+            out[n * 5 + 2] = c;
+            if (found >= 0) {
+                int u = found / 3;
+                used[u] = true;
+                // the other triangle runs a -> c -> d from corner found
+                out[n * 5 + 3] = u * 3 + (found % 3 + 2) % 3;
+                out[n * 5 + 4] = u;
+            } else {
+                out[n * 5 + 3] = c;
+                out[n * 5 + 4] = t;
+            }
+            n++;
+        }
+        return java.util.Arrays.copyOf(out, n * 5);
     }
 
     private MeshGuns() {

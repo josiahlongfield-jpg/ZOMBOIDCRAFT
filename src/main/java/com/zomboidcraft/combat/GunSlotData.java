@@ -82,8 +82,8 @@ public final class GunSlotData {
                 Map.entry(Attachments.Slot.MAGAZINE, List.of("precision_rifle_magazine")),
                 Map.entry(Attachments.Slot.BIPOD, List.of("bipod")))),
         Map.entry("heavy_sniper", Map.ofEntries(
-                Map.entry(Attachments.Slot.OPTIC, List.of("red_dot_sight", "holo_sight", "mini_red_dot", "compact_red_dot", "scope_4x", "combat_scope", "rifle_scope", "precision_scope", "hunting_scope", "long_range_scope")),
-                Map.entry(Attachments.Slot.MUZZLE, List.of("sniper_suppressor", "rifle_suppressor")),
+                Map.entry(Attachments.Slot.OPTIC, List.of("long_range_scope")),
+                Map.entry(Attachments.Slot.MUZZLE, List.of("sniper_suppressor")),
                 Map.entry(Attachments.Slot.MAGAZINE, List.of("heavy_sniper_magazine")),
                 Map.entry(Attachments.Slot.BIPOD, List.of("bipod")))));
 

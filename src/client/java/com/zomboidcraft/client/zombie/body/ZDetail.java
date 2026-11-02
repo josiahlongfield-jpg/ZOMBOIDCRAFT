@@ -38,6 +38,8 @@ public final class ZDetail {
     private static boolean irisAsked;
     private static Object iris;
     private static Method shadowPass;
+    /** How many walkers were counted last tick. */
+    private static int walkers;
 
     public static void register() {
         ClientTickEvents.END_CLIENT_TICK.register(ZDetail::tick);
@@ -66,6 +68,7 @@ public final class ZDetail {
             }
         }
         Arrays.sort(dist, 0, n);
+        walkers = n;
         if (++readoutTicks >= 20) {
             readoutTicks = 0;
             if (perf.showStats && mc.player != null) {
@@ -85,9 +88,20 @@ public final class ZDetail {
                 : Double.MAX_VALUE;
     }
 
+    /** A squared distance as near as it looks through the current zoom (a 4x scope makes 40 blocks look like 10). */
+    public static double zoomed(double distanceSq) {
+        return distanceSq / zoomSq;
+    }
+
     /** Whether a zombie this far (squared) from the camera is drawn as a picture (ZSprites), in either pass. */
     public static boolean sprite(double distanceSq) {
         return distanceSq / zoomSq >= spriteSq;
+    }
+
+    /** Just past the k-th nearest walker to the camera (squared blocks, not scaled by zoom), as of the last tick. */
+    public static double nearestSq(int k) {
+        double d = nth(walkers, k);
+        return d == Double.MAX_VALUE ? d : d * zoomSq;
     }
 
     /** Just past the k-th nearest: everything nearer is inside it. */

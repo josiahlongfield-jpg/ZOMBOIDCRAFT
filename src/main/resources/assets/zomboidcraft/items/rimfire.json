@@ -13,8 +13,21 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/rimfire/raised_mag_out/body"
+        "type": "minecraft:condition",
+        "property": "zomboidcraft:local_gun",
+        "on_true": {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/rimfire/raised_mag_out/body",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "block_rimfire",
+          "part": "body"
+         }
+        },
+        "on_false": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/rimfire/raised_mag_out/body"
+        }
        },
        {
         "type": "minecraft:select",
@@ -28,8 +41,21 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/rimfire/raised_mag_out/charging_handle"
+         "type": "minecraft:condition",
+         "property": "zomboidcraft:local_gun",
+         "on_true": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/rimfire/raised_mag_out/charging_handle",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "block_rimfire",
+           "part": "charging_handle"
+          }
+         },
+         "on_false": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/rimfire/raised_mag_out/charging_handle"
+         }
         }
        },
        {
@@ -167,8 +193,21 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/rimfire/mag_out/body"
+        "type": "minecraft:condition",
+        "property": "zomboidcraft:local_gun",
+        "on_true": {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/rimfire/mag_out/body",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "block_rimfire",
+          "part": "body"
+         }
+        },
+        "on_false": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/rimfire/mag_out/body"
+        }
        },
        {
         "type": "minecraft:select",
@@ -182,8 +221,21 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/rimfire/mag_out/charging_handle"
+         "type": "minecraft:condition",
+         "property": "zomboidcraft:local_gun",
+         "on_true": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/rimfire/mag_out/charging_handle",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "block_rimfire",
+           "part": "charging_handle"
+          }
+         },
+         "on_false": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/rimfire/mag_out/charging_handle"
+         }
         }
        },
        {
@@ -328,8 +380,21 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/rimfire/raised_mag_in/body"
+        "type": "minecraft:condition",
+        "property": "zomboidcraft:local_gun",
+        "on_true": {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/rimfire/raised_mag_in/body",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "block_rimfire",
+          "part": "body"
+         }
+        },
+        "on_false": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/rimfire/raised_mag_in/body"
+        }
        },
        {
         "type": "minecraft:select",
@@ -343,8 +408,21 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/rimfire/raised_mag_in/charging_handle"
+         "type": "minecraft:condition",
+         "property": "zomboidcraft:local_gun",
+         "on_true": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/rimfire/raised_mag_in/charging_handle",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "block_rimfire",
+           "part": "charging_handle"
+          }
+         },
+         "on_false": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/rimfire/raised_mag_in/charging_handle"
+         }
         }
        },
        {
@@ -484,8 +562,21 @@
          {
           "when": "mag",
           "model": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/rimfire/raised_mag_in/mag"
+           "type": "minecraft:condition",
+           "property": "zomboidcraft:local_gun",
+           "on_true": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/rimfire/raised_mag_in/mag",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "block_rimfire",
+             "part": "mag"
+            }
+           },
+           "on_false": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/rimfire/raised_mag_in/mag"
+           }
           }
          },
          {
@@ -496,8 +587,21 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/rimfire/raised_mag_in/mag"
+         "type": "minecraft:condition",
+         "property": "zomboidcraft:local_gun",
+         "on_true": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/rimfire/raised_mag_in/mag",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "block_rimfire",
+           "part": "mag"
+          }
+         },
+         "on_false": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/rimfire/raised_mag_in/mag"
+         }
         }
        }
       ]
@@ -506,8 +610,21 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/rimfire/mag_in/body"
+        "type": "minecraft:condition",
+        "property": "zomboidcraft:local_gun",
+        "on_true": {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/rimfire/mag_in/body",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "block_rimfire",
+          "part": "body"
+         }
+        },
+        "on_false": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/rimfire/mag_in/body"
+        }
        },
        {
         "type": "minecraft:select",
@@ -521,8 +638,21 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/rimfire/mag_in/charging_handle"
+         "type": "minecraft:condition",
+         "property": "zomboidcraft:local_gun",
+         "on_true": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/rimfire/mag_in/charging_handle",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "block_rimfire",
+           "part": "charging_handle"
+          }
+         },
+         "on_false": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/rimfire/mag_in/charging_handle"
+         }
         }
        },
        {
@@ -662,8 +792,21 @@
          {
           "when": "mag",
           "model": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/rimfire/mag_in/mag"
+           "type": "minecraft:condition",
+           "property": "zomboidcraft:local_gun",
+           "on_true": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/rimfire/mag_in/mag",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "block_rimfire",
+             "part": "mag"
+            }
+           },
+           "on_false": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/rimfire/mag_in/mag"
+           }
           }
          },
          {
@@ -674,8 +817,21 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/rimfire/mag_in/mag"
+         "type": "minecraft:condition",
+         "property": "zomboidcraft:local_gun",
+         "on_true": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/rimfire/mag_in/mag",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "block_rimfire",
+           "part": "mag"
+          }
+         },
+         "on_false": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/rimfire/mag_in/mag"
+         }
         }
        }
       ]
@@ -691,8 +847,21 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/rimfire/raised_charge/body"
+        "type": "minecraft:condition",
+        "property": "zomboidcraft:local_gun",
+        "on_true": {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/rimfire/raised_charge/body",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "block_rimfire",
+          "part": "body"
+         }
+        },
+        "on_false": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/rimfire/raised_charge/body"
+        }
        },
        {
         "type": "minecraft:select",
@@ -706,8 +875,21 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/rimfire/raised_charge/charging_handle"
+         "type": "minecraft:condition",
+         "property": "zomboidcraft:local_gun",
+         "on_true": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/rimfire/raised_charge/charging_handle",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "block_rimfire",
+           "part": "charging_handle"
+          }
+         },
+         "on_false": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/rimfire/raised_charge/charging_handle"
+         }
         }
        },
        {
@@ -847,8 +1029,21 @@
          {
           "when": "mag",
           "model": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/rimfire/raised_charge/mag"
+           "type": "minecraft:condition",
+           "property": "zomboidcraft:local_gun",
+           "on_true": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/rimfire/raised_charge/mag",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "block_rimfire",
+             "part": "mag"
+            }
+           },
+           "on_false": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/rimfire/raised_charge/mag"
+           }
           }
          },
          {
@@ -859,8 +1054,21 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/rimfire/raised_charge/mag"
+         "type": "minecraft:condition",
+         "property": "zomboidcraft:local_gun",
+         "on_true": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/rimfire/raised_charge/mag",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "block_rimfire",
+           "part": "mag"
+          }
+         },
+         "on_false": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/rimfire/raised_charge/mag"
+         }
         }
        }
       ]
@@ -869,8 +1077,21 @@
       "type": "minecraft:composite",
       "models": [
        {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/rimfire/charge/body"
+        "type": "minecraft:condition",
+        "property": "zomboidcraft:local_gun",
+        "on_true": {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/rimfire/charge/body",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "block_rimfire",
+          "part": "body"
+         }
+        },
+        "on_false": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/rimfire/charge/body"
+        }
        },
        {
         "type": "minecraft:select",
@@ -884,8 +1105,21 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/rimfire/charge/charging_handle"
+         "type": "minecraft:condition",
+         "property": "zomboidcraft:local_gun",
+         "on_true": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/rimfire/charge/charging_handle",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "block_rimfire",
+           "part": "charging_handle"
+          }
+         },
+         "on_false": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/rimfire/charge/charging_handle"
+         }
         }
        },
        {
@@ -1025,8 +1259,21 @@
          {
           "when": "mag",
           "model": {
-           "type": "minecraft:model",
-           "model": "zomboidcraft:item/weapon/rimfire/charge/mag"
+           "type": "minecraft:condition",
+           "property": "zomboidcraft:local_gun",
+           "on_true": {
+            "type": "minecraft:special",
+            "base": "zomboidcraft:item/weapon/rimfire/charge/mag",
+            "model": {
+             "type": "zomboidcraft:mesh",
+             "id": "block_rimfire",
+             "part": "mag"
+            }
+           },
+           "on_false": {
+            "type": "minecraft:model",
+            "model": "zomboidcraft:item/weapon/rimfire/charge/mag"
+           }
           }
          },
          {
@@ -1037,8 +1284,21 @@
          }
         ],
         "fallback": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/rimfire/charge/mag"
+         "type": "minecraft:condition",
+         "property": "zomboidcraft:local_gun",
+         "on_true": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/rimfire/charge/mag",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "block_rimfire",
+           "part": "mag"
+          }
+         },
+         "on_false": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/rimfire/charge/mag"
+         }
         }
        }
       ]
@@ -1053,8 +1313,21 @@
     "type": "minecraft:composite",
     "models": [
      {
-      "type": "minecraft:model",
-      "model": "zomboidcraft:item/weapon/rimfire/ads/body"
+      "type": "minecraft:condition",
+      "property": "zomboidcraft:local_gun",
+      "on_true": {
+       "type": "minecraft:special",
+       "base": "zomboidcraft:item/weapon/rimfire/ads/body",
+       "model": {
+        "type": "zomboidcraft:mesh",
+        "id": "block_rimfire",
+        "part": "body"
+       }
+      },
+      "on_false": {
+       "type": "minecraft:model",
+       "model": "zomboidcraft:item/weapon/rimfire/ads/body"
+      }
      },
      {
       "type": "minecraft:select",
@@ -1068,8 +1341,21 @@
        }
       ],
       "fallback": {
-       "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/rimfire/ads/charging_handle"
+       "type": "minecraft:condition",
+       "property": "zomboidcraft:local_gun",
+       "on_true": {
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/rimfire/ads/charging_handle",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "block_rimfire",
+         "part": "charging_handle"
+        }
+       },
+       "on_false": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/rimfire/ads/charging_handle"
+       }
       }
      },
      {
@@ -1209,8 +1495,21 @@
        {
         "when": "mag",
         "model": {
-         "type": "minecraft:model",
-         "model": "zomboidcraft:item/weapon/rimfire/ads/mag"
+         "type": "minecraft:condition",
+         "property": "zomboidcraft:local_gun",
+         "on_true": {
+          "type": "minecraft:special",
+          "base": "zomboidcraft:item/weapon/rimfire/ads/mag",
+          "model": {
+           "type": "zomboidcraft:mesh",
+           "id": "block_rimfire",
+           "part": "mag"
+          }
+         },
+         "on_false": {
+          "type": "minecraft:model",
+          "model": "zomboidcraft:item/weapon/rimfire/ads/mag"
+         }
         }
        },
        {
@@ -1221,8 +1520,21 @@
        }
       ],
       "fallback": {
-       "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/rimfire/ads/mag"
+       "type": "minecraft:condition",
+       "property": "zomboidcraft:local_gun",
+       "on_true": {
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/rimfire/ads/mag",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "block_rimfire",
+         "part": "mag"
+        }
+       },
+       "on_false": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/rimfire/ads/mag"
+       }
       }
      }
     ]
@@ -1234,8 +1546,21 @@
      "type": "minecraft:composite",
      "models": [
       {
-       "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/rimfire/raised_hip/body"
+       "type": "minecraft:condition",
+       "property": "zomboidcraft:local_gun",
+       "on_true": {
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/rimfire/raised_hip/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "block_rimfire",
+         "part": "body"
+        }
+       },
+       "on_false": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/rimfire/raised_hip/body"
+       }
       },
       {
        "type": "minecraft:select",
@@ -1249,8 +1574,21 @@
         }
        ],
        "fallback": {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/rimfire/raised_hip/charging_handle"
+        "type": "minecraft:condition",
+        "property": "zomboidcraft:local_gun",
+        "on_true": {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/rimfire/raised_hip/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "block_rimfire",
+          "part": "charging_handle"
+         }
+        },
+        "on_false": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/rimfire/raised_hip/charging_handle"
+        }
        }
       },
       {
@@ -1390,8 +1728,21 @@
         {
          "when": "mag",
          "model": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/rimfire/raised_hip/mag"
+          "type": "minecraft:condition",
+          "property": "zomboidcraft:local_gun",
+          "on_true": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/rimfire/raised_hip/mag",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "block_rimfire",
+            "part": "mag"
+           }
+          },
+          "on_false": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/rimfire/raised_hip/mag"
+          }
          }
         },
         {
@@ -1402,8 +1753,21 @@
         }
        ],
        "fallback": {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/rimfire/raised_hip/mag"
+        "type": "minecraft:condition",
+        "property": "zomboidcraft:local_gun",
+        "on_true": {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/rimfire/raised_hip/mag",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "block_rimfire",
+          "part": "mag"
+         }
+        },
+        "on_false": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/rimfire/raised_hip/mag"
+        }
        }
       }
      ]
@@ -1412,8 +1776,21 @@
      "type": "minecraft:composite",
      "models": [
       {
-       "type": "minecraft:model",
-       "model": "zomboidcraft:item/weapon/rimfire/hip/body"
+       "type": "minecraft:condition",
+       "property": "zomboidcraft:local_gun",
+       "on_true": {
+        "type": "minecraft:special",
+        "base": "zomboidcraft:item/weapon/rimfire/hip/body",
+        "model": {
+         "type": "zomboidcraft:mesh",
+         "id": "block_rimfire",
+         "part": "body"
+        }
+       },
+       "on_false": {
+        "type": "minecraft:model",
+        "model": "zomboidcraft:item/weapon/rimfire/hip/body"
+       }
       },
       {
        "type": "minecraft:select",
@@ -1427,8 +1804,21 @@
         }
        ],
        "fallback": {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/rimfire/hip/charging_handle"
+        "type": "minecraft:condition",
+        "property": "zomboidcraft:local_gun",
+        "on_true": {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/rimfire/hip/charging_handle",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "block_rimfire",
+          "part": "charging_handle"
+         }
+        },
+        "on_false": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/rimfire/hip/charging_handle"
+        }
        }
       },
       {
@@ -1568,8 +1958,21 @@
         {
          "when": "mag",
          "model": {
-          "type": "minecraft:model",
-          "model": "zomboidcraft:item/weapon/rimfire/hip/mag"
+          "type": "minecraft:condition",
+          "property": "zomboidcraft:local_gun",
+          "on_true": {
+           "type": "minecraft:special",
+           "base": "zomboidcraft:item/weapon/rimfire/hip/mag",
+           "model": {
+            "type": "zomboidcraft:mesh",
+            "id": "block_rimfire",
+            "part": "mag"
+           }
+          },
+          "on_false": {
+           "type": "minecraft:model",
+           "model": "zomboidcraft:item/weapon/rimfire/hip/mag"
+          }
          }
         },
         {
@@ -1580,8 +1983,21 @@
         }
        ],
        "fallback": {
-        "type": "minecraft:model",
-        "model": "zomboidcraft:item/weapon/rimfire/hip/mag"
+        "type": "minecraft:condition",
+        "property": "zomboidcraft:local_gun",
+        "on_true": {
+         "type": "minecraft:special",
+         "base": "zomboidcraft:item/weapon/rimfire/hip/mag",
+         "model": {
+          "type": "zomboidcraft:mesh",
+          "id": "block_rimfire",
+          "part": "mag"
+         }
+        },
+        "on_false": {
+         "type": "minecraft:model",
+         "model": "zomboidcraft:item/weapon/rimfire/hip/mag"
+        }
        }
       }
      ]

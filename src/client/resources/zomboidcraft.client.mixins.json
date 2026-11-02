@@ -11,6 +11,7 @@
     "SlotAccessor",
     "SpecialModelRenderersAccessor",
     "SoundEngineMixin",
+    "SoundManagerLocalMixin",
     "SoundBufferLibraryMixin",
     "FirstPersonHandsRendererMixin",
     "FirstPersonHandsAndItemsMixin",
@@ -26,7 +27,16 @@
     "FirstPersonWheelHandsMixin",
     "FirstPersonSurvivorHandMixin",
     "FogRendererMixin",
-    "LightmapCatsEyesMixin"
+    "LightmapCatsEyesMixin",
+    "PictureInPictureMixin",
+    "ClientPacketListenerMixin",
+    "SodiumUploadMixin",
+    "GpuTimerGameRendererMixin",
+    "GpuTimerLevelRendererMixin",
+    "GpuTimerIrisMixin",
+    "GpuTimerSodiumMixin",
+    "ShadowCasterMixin",
+    "GlBufferStorageMixin"
   ],
   "injectors": {
     "defaultRequire": 0

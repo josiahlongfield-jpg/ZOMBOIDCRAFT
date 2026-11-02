@@ -1,0 +1,21 @@
+package com.zomboidcraft.mixin;
+
+import com.google.common.collect.Multimap;
+import java.util.Map;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeMap;
+import net.minecraft.world.item.crafting.RecipeType;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Invoker;
+
+/** RecipeMap's private constructor, for {@link RecipeManagerMixin}. */
+@Mixin(RecipeMap.class)
+public interface RecipeMapInvoker {
+    @Invoker("<init>")
+    static RecipeMap zomboidcraft$make(Multimap<RecipeType<?>, RecipeHolder<?>> byType,
+                                       Map<ResourceKey<Recipe<?>>, RecipeHolder<?>> byKey) {
+        throw new AssertionError();
+    }
+}

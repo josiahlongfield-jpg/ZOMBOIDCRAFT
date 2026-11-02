@@ -108,7 +108,7 @@ public final class Sight {
         if (player.isCrouching()) {
             range *= config.crouchSight;
         }
-        return range * (1 - 0.03 * Skills.level(player, Skill.SNEAKING));
+        return range * (1 - 0.03 * Skills.level(player, Skill.SNEAKING)) * TraitSenses.sight(player);
     }
 
     private static boolean inCone(Mob zombie, Player player, double coneDegrees) {

@@ -91,7 +91,34 @@ public final class SurvivorPack {
     /** Her pelvis at rest (for seated clips that sit her on the seat). */
     public final Vector3f pelvisRest = new Vector3f();
 
-    private static final Map<String, SurvivorPack> PACKS = new HashMap<>();
+    private static final Map<String, SurvivorPack> PACKS = new HashMap<>(), ZOMBIES = new HashMap<>();
+    /** The pack's catalog as read (zombie packs keep their skins, outfits and pools here: see ZedBodies). */
+    public JsonObject catalog = new JsonObject();
+
+    /**
+     * The zombie pack for "f" or "m" (tools/pz/zombie_pack.py: Zomboid's zombie skins, outfits and moves on the same
+     * body), or null while it loads or if this PC hasn't got it. Render thread.
+     */
+    public static SurvivorPack zombie(String sex) {
+        SurvivorPack p = ZOMBIES.get(sex);
+        if (p != null) return p;
+        String model = "pz_zombie_" + ("m".equals(sex) ? "m" : "f");
+        NpcSkin skin = NpcSkin.get(model);
+        if (skin == null) return null;
+        try {
+            p = new SurvivorPack(sex, skin);
+        } catch (RuntimeException e) {
+            ZomboidCraft.LOGGER.error("Bad zombie pack {}", model, e);
+            return null;
+        }
+        ZOMBIES.put(sex, p);
+        return p;
+    }
+
+    /** Whether this PC has a zombie pack for "f" or "m" (it may still be loading). */
+    public static boolean zombieInstalled(String sex) {
+        return NpcSkin.exists("pz_zombie_" + ("m".equals(sex) ? "m" : "f"));
+    }
 
     /** The pack for "f" or "m", or null while it loads or if this PC hasn't got it. Render thread. */
     public static SurvivorPack get(String sex) {
@@ -127,6 +154,7 @@ public final class SurvivorPack {
         this.skin = skin;
         byte[] raw = skin.raw("catalog");
         JsonObject cat = raw == null ? new JsonObject() : JsonParser.parseString(new String(raw, StandardCharsets.UTF_8)).getAsJsonObject();
+        catalog = cat;
         height = cat.has("height") ? cat.get("height").getAsFloat() : 1.75f;
         for (JsonElement e : arr(cat, "packs")) {
             JsonObject o = e.getAsJsonObject();

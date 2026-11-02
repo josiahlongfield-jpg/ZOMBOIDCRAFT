@@ -41,13 +41,15 @@ final class TrackRenderer {
             return;
         }
         Vec3 eye = cam.pos;
+        // no further than the chunks you can see (2026-11-01 profile: track out to 176 blocks at render distance 8)
+        final double range = Math.min(RANGE, mc.options.getEffectiveRenderDistance() * 16);
         for (Line line : Trains.lines(true).values()) {
             Route r = line.route;
             // the stretch of line near the camera: walk the whole loop coarsely, draw finely where it's close
             double len = r.length();
             boolean any = false;
             for (double s = 0; s < len && !any; s += 16) {
-                any = near(r, s, eye, RANGE + 16);
+                any = near(r, s, eye, range + 16);
             }
             if (!any) {
                 continue;
@@ -55,7 +57,7 @@ final class TrackRenderer {
             context.submitNodeCollector().submitCustomGeometry(context.poseStack(), RenderTypes.entityCutout(TrainRenderer.ATLAS),
                     (pose, out) -> {
                         for (double s0 = 0; s0 < len; s0 += 16) {
-                            if (!near(r, s0, eye, RANGE + 16)) {
+                            if (!near(r, s0, eye, range + 16)) {
                                 continue;
                             }
                             for (double s = s0; s < Math.min(len, s0 + 16); s += 1) {

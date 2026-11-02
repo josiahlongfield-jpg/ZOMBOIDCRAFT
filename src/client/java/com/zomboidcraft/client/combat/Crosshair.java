@@ -87,10 +87,10 @@ public final class Crosshair {
                     * mc.getWindow().getHeight() / 2);
             target = Math.max(target, px);
         } else if (type != null) {
-            ZcConfig.GunStats stats = type.stats();
+            ZcConfig.GunStats stats = type.stats(held);
             // the same cone the server shoots inside (Guns.fire), bloom and all, and buckshot's fan round it
-            double spread = com.zomboidcraft.combat.Guns.spread(player, held, type, aiming, CombatClient.bloom(type))
-                    + com.zomboidcraft.combat.Guns.pelletSpread(type);
+            double spread = com.zomboidcraft.combat.Guns.spread(player, held, type, aiming, CombatClient.bloom(type, held))
+                    + com.zomboidcraft.combat.Guns.pelletSpread(type, held);
             double fov = mc.options.fov().get() * (aiming ? stats.aimZoom : 1.0);
             float px = (float) (Math.tan(Math.toRadians(spread)) / Math.tan(Math.toRadians(fov / 2))
                     * mc.getWindow().getHeight() / 2);

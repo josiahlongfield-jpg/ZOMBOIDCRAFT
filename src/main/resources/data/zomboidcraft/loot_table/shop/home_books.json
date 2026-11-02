@@ -579,6 +579,31 @@
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:chess_set",
+          "weight": 8
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:wall_calendar",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:desk_globe",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:rubber_band_ball",
           "weight": 4,
           "functions": [
@@ -705,6 +730,11 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:auto_manual_sport",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:antique_map",
           "weight": 2
         }
       ]

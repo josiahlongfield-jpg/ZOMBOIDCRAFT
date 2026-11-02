@@ -47,18 +47,19 @@ public class LiftScreen extends net.minecraft.client.gui.screens.Screen {
     }
 
     /** The panel's box: x, y, w, h. */
-    private int[] box(LiftShaft s) {
+    int[] box(LiftShaft s) {
         int n = s.landings.length, cols = cols(n), rows = (n + cols - 1) / cols;
-        int w = cols * (CELL + GAP) - GAP + 24, h = rows * (CELL + GAP) - GAP + 24 + 28 + CELL + GAP;
+        int w = Math.max(110, cols * (CELL + GAP) - GAP + 24), h = rows * (CELL + GAP) - GAP + 24 + 28 + CELL + GAP;
         h = Math.min(h, height - 20);
         return new int[] {(width - w) / 2, (height - h) / 2, w, h};
     }
 
     /** Where floor i's button is (x, y). */
-    private int[] cell(LiftShaft s, int[] b, int i) {
+    int[] cell(LiftShaft s, int[] b, int i) {
         int n = s.landings.length, cols = cols(n), rows = (n + cols - 1) / cols;
         int row = rows - 1 - i / cols, col = i % cols;
-        return new int[] {b[0] + 12 + col * (CELL + GAP), b[1] + 12 + 28 + row * (CELL + GAP)};
+        int left = b[0] + (b[2] - (cols * (CELL + GAP) - GAP)) / 2;
+        return new int[] {left + col * (CELL + GAP), b[1] + 12 + 28 + row * (CELL + GAP)};
     }
 
     @Override
@@ -84,22 +85,25 @@ public class LiftScreen extends net.minecraft.client.gui.screens.Screen {
         }
         // door open and door close
         int[] o = doorButtons(s, b);
-        button(g, o[0], o[1], "◀▶", false, in(mouseX, mouseY, o[0], o[1], CELL, CELL));
-        button(g, o[2], o[1], "▶◀", false, in(mouseX, mouseY, o[2], o[1], CELL, CELL));
-        String key = "[" + CarClient.INTERACT.getTranslatedKeyMessage().getString() + "] close";
-        g.text(font, Hud.text(key), b[0] + b[2] - 12 - font.width(Hud.text(key)), o[1] + 8, DIM, false);
+        button(g, o[0], o[1], o[3], "Open", false, in(mouseX, mouseY, o[0], o[1], o[3], CELL));
+        button(g, o[2], o[1], o[3], "Close", false, in(mouseX, mouseY, o[2], o[1], o[3], CELL));
     }
 
-    private int[] doorButtons(LiftShaft s, int[] b) {
-        int y = b[1] + b[3] - 12 - CELL;
-        return new int[] {b[0] + 12, y, b[0] + 12 + CELL + GAP};
+    /** The door buttons under the floors, side by side across the panel: open's x, y, close's x, each one's width. */
+    int[] doorButtons(LiftShaft s, int[] b) {
+        int y = b[1] + b[3] - 12 - CELL, bw = (b[2] - 24 - GAP) / 2;
+        return new int[] {b[0] + 12, y, b[0] + 12 + bw + GAP, bw};
     }
 
     private void button(GuiGraphicsExtractor g, int x, int y, String label, boolean lit, boolean over) {
-        g.fill(x, y, x + CELL, y + CELL, over ? 0x33E8E4DA : 0x1AE8E4DA);
-        frame(g, x, y, CELL, CELL, lit ? Hud.AMBER : over ? LINE : EDGE);
+        button(g, x, y, CELL, label, lit, over);
+    }
+
+    private void button(GuiGraphicsExtractor g, int x, int y, int bw, String label, boolean lit, boolean over) {
+        g.fill(x, y, x + bw, y + CELL, over ? 0x33E8E4DA : 0x1AE8E4DA);
+        frame(g, x, y, bw, CELL, lit ? Hud.AMBER : over ? LINE : EDGE);
         int w = font.width(Hud.text(label));
-        g.text(font, Hud.text(label), x + (CELL - w) / 2, y + (CELL - 8) / 2, lit ? Hud.AMBER : TEXT, false);
+        g.text(font, Hud.text(label), x + (bw - w) / 2, y + (CELL - 8) / 2, lit ? Hud.AMBER : TEXT, false);
     }
 
     private static void frame(GuiGraphicsExtractor g, int x, int y, int w, int h, int colour) {
@@ -128,9 +132,9 @@ public class LiftScreen extends net.minecraft.client.gui.screens.Screen {
             }
         }
         int[] o = doorButtons(s, b);
-        if (in(event.x(), event.y(), o[0], o[1], CELL, CELL)) {
+        if (in(event.x(), event.y(), o[0], o[1], o[3], CELL)) {
             ClientPlayNetworking.send(new Lifts.Pick(car.getId(), -1));
-        } else if (in(event.x(), event.y(), o[2], o[1], CELL, CELL)) {
+        } else if (in(event.x(), event.y(), o[2], o[1], o[3], CELL)) {
             ClientPlayNetworking.send(new Lifts.Pick(car.getId(), -2));
         }
         return true;

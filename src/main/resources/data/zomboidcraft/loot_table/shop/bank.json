@@ -15,21 +15,6 @@
         },
         {
           "type": "minecraft:item",
-          "name": "zomboidcraft:revolver",
-          "weight": 1,
-          "functions": [
-            {
-              "function": "minecraft:set_damage",
-              "damage": {
-                "type": "minecraft:uniform",
-                "min": 0.1,
-                "max": 0.6
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
           "name": "zomboidcraft:revolver_ammo",
           "weight": 1,
           "functions": [
@@ -106,6 +91,11 @@
           "type": "minecraft:item",
           "name": "zomboidcraft:silver_coin",
           "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:velvet_rope_stands",
+          "weight": 2
         }
       ]
     },
@@ -118,11 +108,6 @@
         }
       ],
       "entries": [
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:holo_sight",
-          "weight": 1
-        },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:bodyguard_suit",

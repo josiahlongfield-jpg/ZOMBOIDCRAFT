@@ -21,8 +21,6 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.Pose;
@@ -316,8 +314,7 @@ public final class LyingInWait {
         if (!Downed.isCrawler(zombie)) {
             zombie.setPose(Pose.STANDING);
         }
-        zombie.level().playSound(null, zombie.getX(), zombie.getY() + 0.5, zombie.getZ(), SoundEvents.ZOMBIE_AMBIENT,
-                SoundSource.HOSTILE, 1.3f, 0.7f);
+        ZedSounds.say(zombie, ZedSounds.State.REANIMATE, 1.2f);
         if (at == null || at.isCreative() || at.isSpectator()) {
             return;
         }

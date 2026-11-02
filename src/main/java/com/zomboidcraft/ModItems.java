@@ -190,6 +190,12 @@ public final class ModItems {
     public static final Item HEAVY_AMMO = register("heavy_ammo", Item::new, new Item.Properties().stacksTo(20));
     public static final Item GRENADE_LAUNCHER = gun("grenade_launcher", GunType.GRENADE_LAUNCHER, 900);
     public static final Item GRENADE_ROUND = register("grenade_round", Item::new, new Item.Properties().stacksTo(12));
+    // the calibres Brita's guns brought (Josiah 2026-11-01: each of their guns fires its own round; combat/LocalGuns)
+    public static final Item ACP45_AMMO = register("acp45_ammo", Item::new, new Item.Properties().stacksTo(50));
+    public static final Item FN57_AMMO = register("fn57_ammo", Item::new, new Item.Properties().stacksTo(50));
+    public static final Item COLT45_AMMO = register("colt45_ammo", Item::new, new Item.Properties().stacksTo(50));
+    public static final Item SW500_AMMO = register("sw500_ammo", Item::new, new Item.Properties().stacksTo(20));
+    public static final Item PG7V_ROCKET = register("pg7v_rocket", Item::new, new Item.Properties().stacksTo(4));
 
     // Things to throw (combat/throwing): lures, fire and smoke, and blasts. The tin can and the alarm clock are
     // thrown too (see TIN_CAN and ALARM_CLOCK).
@@ -343,10 +349,15 @@ public final class ModItems {
     public static void register() {
         ResourceKey<CreativeModeTab> combat = ResourceKey.create(Registries.CREATIVE_MODE_TAB, Identifier.withDefaultNamespace("combat"));
         CreativeModeTabEvents.modifyOutputEvent(combat).register(output -> {
-            ALL.forEach(output::accept);
+            // our guns from before the Brita pack are gone (combat/Retired): only the Heavy Sniper and its kit show
+            ALL.stream().filter(item -> !com.zomboidcraft.combat.Retired.id(BuiltInRegistries.ITEM.getKey(item).getPath()))
+                    .forEach(output::accept);
             // each gun loaded and ready to try out, a full magazine for it (a box of shells for the shotgun), and each
             // with everything on it
             for (GunType type : GunType.values()) {
+                if (com.zomboidcraft.combat.Retired.GUNS.contains(type.id())) {
+                    continue;
+                }
                 ItemStack gun = new ItemStack(type.item());
                 gun.set(GunState.TYPE, GunState.EMPTY_MAG.withRounds(type.capacity()));
                 List<GunFinish.Finish> finishes = GunFinish.of(type);
@@ -377,6 +388,18 @@ public final class ModItems {
                     output.accept(kitted);
                 }
             }
+            // the guns kept on this computer (Brita's), each loaded with one of its own magazines beside it; their
+            // rounds are already in the tab. Read when the tab is built: files added later show after rejoining.
+            com.zomboidcraft.combat.LocalGuns.all().stream()
+                    .sorted(java.util.Comparator.comparing((com.zomboidcraft.combat.LocalGuns.Spec s) -> s.name == null ? s.id : s.name))
+                    .forEach(spec -> {
+                        ItemStack gun = com.zomboidcraft.combat.LocalGuns.loaded(spec);
+                        output.accept(gun);
+                        ItemStack mag = com.zomboidcraft.combat.LocalGuns.fullMagazine(gun, spec.type());
+                        if (!mag.isEmpty()) {
+                            output.accept(mag);
+                        }
+                    });
         });
     }
 

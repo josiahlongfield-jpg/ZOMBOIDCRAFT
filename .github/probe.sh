@@ -7,10 +7,27 @@ echo "MC jars: $MC_JARS"
 classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1" | sort -u; }
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
-echo "===== fp arms"
-javap -cp "$CP" -p net.minecraft.client.renderer.FirstPersonHandsAndItemsRenderer 2>&1 | head -60
-javap -cp "$CP" -p -c net.minecraft.client.renderer.FirstPersonHandsAndItemsRenderer 2>&1 | grep -E 'Method .*(Arm|Hand|Map)|^  [a-z].*\(' | head -60
-javap -cp "$CP" -p net.minecraft.client.renderer.entity.player.AvatarRenderer 2>&1 | grep -iE 'hand|arm' | head
+
+
+echo "===== block shape census"
+classes '(BlockStateModel|BlockModelPart|BlockModelShaper|BlockStateModelSet|ModelManager)\.class' | head
+for c in net.minecraft.client.renderer.block.model.BlockStateModel net.minecraft.client.renderer.block.model.BlockModelPart net.minecraft.client.renderer.block.BlockModelShaper net.minecraft.client.resources.model.ModelManager net.minecraft.client.renderer.block.BlockRenderDispatcher net.minecraft.world.level.chunk.PalettedContainer net.minecraft.world.level.chunk.PalettedContainerRO net.minecraft.client.multiplayer.ClientChunkCache net.minecraft.world.level.chunk.LevelChunkSection; do echo "-- $c"; javap -cp "$CP" -p "$c" 2>&1 | grep -vE 'lambda\$' | grep -iE "quad|part|model|count|getState|getChunk|storage|class|interface|hasOnly|isEmpty" | head -30; done
+classes 'BlockStateModel|ModelManager|BlockRenderDispatcher|BlockModelShaper|BlockModelSet' | head -20
+
+echo "===== gpu timer targets 2"
+javap -cp "$CP" -p 'net.minecraft.client.renderer.feature.FeatureRenderDispatcher$PreparedFrame' 2>&1 | grep -E "execute|render"
+javap -cp "$CP" -p net.minecraft.client.renderer.LevelRenderer 2>&1 | grep -iE "particle|weather|sky|cloud|translucent"
+
+echo "===== persistent mapping 4"
+G=com.mojang.renderpearl.backend.opengl.GlDevice
+javap -cp "$CP" -p -c -constants $G > /tmp/gldev.txt 2>&1
+grep -n "BufferStorage.create\|isNvidia" /tmp/gldev.txt
+for L in $(grep -n "BufferStorage.create\|isNvidia" /tmp/gldev.txt | cut -d: -f1); do echo "--- at $L"; sed -n "$((L-45)),$((L+3))p" /tmp/gldev.txt | grep -vE ' (aload|astore|dup|pop)(_[0-9])?$'; done
+H=com.mojang.renderpearl.backend.opengl.GlHeuristics
+javap -cp "$CP" -p -c -constants $H > /tmp/glh.txt 2>&1
+grep -n "^  [a-z].*(.*);$" /tmp/glh.txt
+grep -n -A30 "boolean isNvidia()" /tmp/glh.txt | head -40
+grep -n -B3 -A40 "writeToBufferIsSlow\|HintsAndWorkarounds.\"<init>\"" /tmp/glh.txt | grep -vE ' (aload|astore|dup|pop)(_[0-9])?$' | head -90
 echo "===== cats eyes"
 javap -cp "$CP" -p net.minecraft.client.renderer.LightmapRenderStateExtractor 2>&1 | head -30
 javap -cp "$CP" -p net.minecraft.client.renderer.state.LightmapRenderState 2>&1 | head -30

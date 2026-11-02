@@ -82,7 +82,32 @@ public class DecorBlock extends Block {
     }
 
     @Override
+    public void setPlacedBy(net.minecraft.world.level.Level level, BlockPos pos, BlockState state,
+                            net.minecraft.world.entity.LivingEntity placer, ItemStack stack) {
+        super.setPlacedBy(level, pos, state, placer, stack);
+        if (level instanceof ServerLevel server) {
+            keepTicking(server, pos);
+        }
+    }
+
+    /** A piece that acts on its own (DecorUses.TICKS) keeps a tick coming. */
+    void keepTicking(ServerLevel level, BlockPos pos) {
+        if (spec.special() != null && DecorUses.TICKS.contains(spec.special()) && !level.getBlockTicks().hasScheduledTick(pos, this)) {
+            level.scheduleTick(pos, this, spec.special().equals("chime") ? DecorUses.toNextHour(level) : 20);
+        }
+    }
+
+    @Override
+    public void stepOn(net.minecraft.world.level.Level level, BlockPos pos, BlockState state, net.minecraft.world.entity.Entity entity) {
+        super.stepOn(level, pos, state, entity);
+        if (level instanceof ServerLevel server && DecorUses.is(this, "step_alarm")) {
+            DecorUses.stepped(server, pos, state, entity);
+        }
+    }
+
+    @Override
     protected void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        keepTicking(level, pos);   // pieces the world placed start their own clocks here
         boolean on = state.getValue(ON);
         boolean can = powered(level, pos);
         if (on && !can) {
@@ -94,6 +119,13 @@ public class DecorBlock extends Block {
 
     @Override
     protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        if (spec.special() != null && DecorUses.TICKS.contains(spec.special())) {
+            int next = DecorUses.tick(state, level, pos, this, random);
+            if (next > 0) {
+                level.scheduleTick(pos, this, next);
+            }
+            return;
+        }
         if (!state.getValue(ON) || spec.noise() <= 0) {
             return;
         }
@@ -111,9 +143,23 @@ public class DecorBlock extends Block {
             return false;
         }
         level.setBlock(pos, state.setValue(ON, on), Block.UPDATE_CLIENTS);
-        if (on && spec.noise() > 0) {
+        if (spec.special() != null && DecorUses.TICKS.contains(spec.special())) {
+            level.scheduleTick(pos, this, 2);   // the black light, beacon, disco ball: act on it now
+        } else if (on && spec.noise() > 0) {
             level.scheduleTick(pos, this, 20);
         }
         return true;
+    }
+
+    /** A piece that holds things (DecorUses.HOLDS): a home bar, vending machine, gumball machine, stove, mannequin. */
+    public static class Holding extends DecorBlock implements net.minecraft.world.level.block.EntityBlock {
+        public Holding(Properties properties, Decor.Spec spec) {
+            super(properties, spec);
+        }
+
+        @Override
+        public net.minecraft.world.level.block.entity.BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+            return new DecorEntity(pos, state);
+        }
     }
 }

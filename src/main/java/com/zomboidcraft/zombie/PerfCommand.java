@@ -26,6 +26,9 @@ public final class PerfCommand {
                 Commands.literal("zc")
                         .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                         .then(Commands.literal("perf").executes(PerfCommand::perf))
+                        .then(Commands.literal("flicker")
+                                .then(Commands.literal("on").executes(ctx -> flicker(ctx, true)))
+                                .then(Commands.literal("off").executes(ctx -> flicker(ctx, false))))
                         .then(Commands.literal("profile")
                                 .executes(ctx -> profile(ctx, 30))
                                 .then(Commands.argument("seconds", IntegerArgumentType.integer(5, 300))
@@ -68,6 +71,16 @@ public final class PerfCommand {
         String pop = com.zomboidcraft.zombie.population.Population.stats();
         ctx.getSource().sendSuccess(() -> Component.literal(line + "\n" + pop + "\n" + readout), false);
         return walkers;
+    }
+
+    /** Lamps on dying circuits flicker or stay lit (performance.flickerLamps); each flicker rebuilds a chunk section. */
+    private static int flicker(CommandContext<CommandSourceStack> ctx, boolean on) {
+        ZcConfig.get().performance.flickerLamps = on;
+        ZcConfig.save();
+        ctx.getSource().sendSuccess(() -> Component.literal(on
+                ? "Lamps on dying circuits flicker again (each flicker redraws the chunk round it, so cities cost more)"
+                : "Flickering lamps stay lit (they settle as they next tick)"), false);
+        return 1;
     }
 
     private static int profile(CommandContext<CommandSourceStack> ctx, int seconds) {

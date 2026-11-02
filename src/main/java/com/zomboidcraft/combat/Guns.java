@@ -102,7 +102,7 @@ public final class Guns {
         if (!config.enabled || type == null || player.isSpectator() || !com.zomboidcraft.world.cars.CarProp.mayUse(player, gun)) {
             return;
         }
-        ZcConfig.GunStats stats = type.stats();
+        ZcConfig.GunStats stats = type.stats(gun);
         State st = state(player);
         long now = player.level().getGameTime();
         if (launcherOn(gun)) {
@@ -112,7 +112,7 @@ public final class Guns {
         boolean auto = fullAuto(gun);
         // full auto is timed on the shooter's clock, between ticks: take a little slack for shots that land in the same
         // tick; the rate still holds on average
-        if (auto ? now < st.autoNext - 2.0 : now - st.lastShot < type.fireDelay()) {
+        if (auto ? now < st.autoNext - 2.0 : now - st.lastShot < type.fireDelay(gun)) {
             return;
         }
         if (st.reloadTick >= 0) {
@@ -135,7 +135,7 @@ public final class Guns {
         ServerLevel level = (ServerLevel) player.level();
         GunState g = gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG);
         if (g.jammed() || !g.mag() || g.rounds() <= 0) {
-            level.playSound(null, player.getX(), player.getEyeY(), player.getZ(), type.dry(), SoundSource.PLAYERS, 0.8f, 1f);
+            level.playSound(null, player.getX(), player.getEyeY(), player.getZ(), LocalGuns.sound(gun, type.dry()), SoundSource.PLAYERS, 0.8f, 1f);
             if (g.jammed()) {
                 player.sendOverlayMessage(Component.literal("Jammed! Press R to clear it.").withStyle(ChatFormatting.RED));
             }
@@ -146,7 +146,7 @@ public final class Guns {
         double jam = config.jamNew + config.jamWorn * wear * wear;
         if (config.jams && type.canJam() && player.getRandom().nextDouble() < Firearms.jam(jam) * Rolls.multiplier(gun, Stat.RELIABILITY)) {
             gun.set(GunState.TYPE, g.withJam(true));
-            level.playSound(null, player.getX(), player.getEyeY(), player.getZ(), type.dry(), SoundSource.PLAYERS, 0.8f, 0.8f);
+            level.playSound(null, player.getX(), player.getEyeY(), player.getZ(), LocalGuns.sound(gun, type.dry()), SoundSource.PLAYERS, 0.8f, 0.8f);
             player.sendOverlayMessage(Component.literal("Jammed! Press R to clear it.").withStyle(ChatFormatting.RED));
             return;
         }
@@ -194,8 +194,8 @@ public final class Guns {
 
         // each pellet (one bullet, or a shotgun's buckshot) flies on its own; the hits on each target add up into
         // one blow, since a target only takes the first of several hits in the same moment
-        int pellets = type.pellets();
-        double pelletSpread = pelletSpread(type);
+        int pellets = type.pellets(gun);
+        double pelletSpread = pelletSpread(type, gun);
         float power = (float) Rolls.multiplier(gun, Stat.DAMAGE);
         Map<LivingEntity, Hit> hits = new java.util.LinkedHashMap<>();
         Map<net.minecraft.world.entity.Entity, Boolean> aimed = new java.util.HashMap<>();     // Firearm Use Damage Chance, rolled once a shot
@@ -251,7 +251,7 @@ public final class Guns {
                 }
             }
             if (hit != null && hit.getEntity() instanceof LivingEntity target) {
-                Pellet struck = pellet(target, hit, eye, stats, power * spent);
+                Pellet struck = pellet(target, hit, eye, stats, power * spent, LocalGuns.calibre(gun, type));
                 hits.computeIfAbsent(target, t -> new Hit(dir)).add(struck);
                 Dismember.pellet(player, target, hit, dir, struck.tears(), struck.head(), struck.legs(), type);
                 if (!nearby && !bow) {
@@ -364,7 +364,7 @@ public final class Guns {
             }
         }
         if (hit != null && hit.getEntity() instanceof LivingEntity target) {
-            Pellet p = pellet(target, hit, muzzle, stats, spent);
+            Pellet p = pellet(target, hit, muzzle, stats, spent, GunType.ASSAULT_RIFLE.caliber());
             Dismember.pellet(shooter, target, hit, dir, p.tears(), p.head(), p.legs(), GunType.ASSAULT_RIFLE);
             hitEntity(level, shooter, target, new Hit(dir).add(p), 1, stats);
             return hit.getLocation();
@@ -409,22 +409,29 @@ public final class Guns {
 
     /**
      * One bullet or pellet striking: where, whether in the head or legs, and how hard (weaker far off for buckshot;
-     * power is the gun's rolled damage).
+     * power is the gun's rolled damage). The head takes its calibre's multiplier (combat.headshotByCalibre); on a
+     * standing zombie the torso takes combat.zombieBodyShots and an arm or leg combat.zombieLimbShots of it.
      */
-    private static Pellet pellet(LivingEntity target, Dismember.BodyHit hit, Vec3 eye, ZcConfig.GunStats stats, float power) {
+    private static Pellet pellet(LivingEntity target, Dismember.BodyHit hit, Vec3 eye, ZcConfig.GunStats stats, float power,
+                                 String calibre) {
         Vec3 at = hit.getLocation();
         boolean downed = Downed.isLow(target);
         // a zombie's head and legs are where its body is drawn, standing or on the ground; anything else's go by height
         // on its box, and not at all once it's down
         boolean head = hit.part >= 0 ? hit.head() : !downed && at.y >= target.getEyeY() - 0.28;
         boolean legs = hit.part >= 0 ? hit.leg() : !downed && at.y < target.getY() + target.getBbHeight() * 0.35;
-        float damage = (float) (stats.damage * power * (head ? stats.headshotMultiplier : legs ? 0.7 : 1));
+        boolean arms = hit.part >= 0 && hit.arm();
+        ZcConfig.Combat combat = ZcConfig.get().combat;
+        boolean walker = !downed && ZombieTypes.isWalker(target);
+        double headX = combat.headshotFor(calibre, stats.headshotMultiplier);
+        // a limb tears at the bullet's full force on a zombie; anything else still takes a leg hit lighter
+        float damage = (float) (stats.damage * power * (head ? headX : legs && !walker ? 0.7 : 1));
         if (stats instanceof ZcConfig.ShotgunStats sg) {
             double d = eye.distanceTo(at), over = (d - sg.falloffStart) / Math.max(1, stats.range - sg.falloffStart);
             damage *= (float) (1 - 0.75 * Mth.clamp(over, 0, 1));
         }
-        // body hits on a zombie slow it, it takes the head to kill one; a limb still tears at the bullet's full force
-        float body = !head && !downed && ZombieTypes.isWalker(target) ? (float) ZcConfig.get().combat.zombieBodyShots : 1f;
+        // centre mass counts toward the kill in full, an arm or leg only a little (it still comes off)
+        float body = head || !walker ? 1f : (float) (arms || legs ? combat.zombieLimbShots : combat.zombieBodyShots);
         return new Pellet(damage * body, damage, head, legs, at);
     }
 
@@ -457,7 +464,8 @@ public final class Guns {
 
     /** A shot as each other player hears it: the close bang near the shooter, fading into the far-off take with distance. */
     private static void bang(ServerLevel level, ServerPlayer shooter, GunType type, boolean suppressed, float volume, float pitch) {
-        SoundEvent close = type.shot(suppressed, false), far = type.shot(suppressed, true);
+        ItemStack gun = shooter.getMainHandItem();
+        SoundEvent close = LocalGuns.sound(gun, type.shot(suppressed, false)), far = LocalGuns.sound(gun, type.shot(suppressed, true));
         double range = Math.max(close.getRange(volume), far.getRange(volume));
         long seed = shooter.getRandom().nextLong();
         double x = shooter.getX(), y = shooter.getEyeY(), z = shooter.getZ();
@@ -504,7 +512,7 @@ public final class Guns {
      * draws the same number.
      */
     public static double spread(Player player, ItemStack gun, GunType type, boolean aiming, double bloom) {
-        ZcConfig.GunStats stats = type.stats();
+        ZcConfig.GunStats stats = type.stats(gun);
         int aimLevel = Skills.level(player, Skill.AIMING);
         double spread = (aiming ? stats.aimSpread * Attachments.aimSpreadFactor(gun) : stats.hipSpread * Attachments.hipSpreadFactor(gun))
                 * (1 - 0.05 * aimLevel) * Rolls.multiplier(gun, Stat.ACCURACY);
@@ -519,6 +527,11 @@ public final class Guns {
     /** How far a shotgun's pellets fan out round the shot's line (degrees), 0 for single bullets. */
     public static double pelletSpread(GunType type) {
         return type.pellets() > 1 && type.stats() instanceof ZcConfig.ShotgunStats sg ? sg.pelletSpread : 0;
+    }
+
+    /** The same for this stack (a local gun has its own numbers). */
+    public static double pelletSpread(GunType type, ItemStack gun) {
+        return type.pellets(gun) > 1 && type.stats(gun) instanceof ZcConfig.ShotgunStats sg ? sg.pelletSpread : 0;
     }
 
     /** The bloom left after seconds without a shot: it closes back toward nothing. */
@@ -545,7 +558,7 @@ public final class Guns {
     /** The gun has a full-auto setting and is set to it. */
     public static boolean fullAuto(ItemStack gun) {
         GunType type = GunType.of(gun);
-        return type != null && type.stats().selectFire && gun.getOrDefault(GunState.FULL_AUTO, false) && !launcherOn(gun);
+        return type != null && type.stats(gun).selectFire && gun.getOrDefault(GunState.FULL_AUTO, false) && !launcherOn(gun);
     }
 
     /**
@@ -565,7 +578,7 @@ public final class Guns {
         ItemStack gun = player.getMainHandItem();
         GunType type = GunType.of(gun);
         boolean launcher = type != null && Attachments.hasLauncher(gun);
-        if (type == null || !type.stats().selectFire && !launcher) {
+        if (type == null || !type.stats(gun).selectFire && !launcher) {
             return;
         }
         String mode;
@@ -573,7 +586,7 @@ public final class Guns {
             gun.set(GunState.LAUNCHER_ON, false);
             gun.set(GunState.FULL_AUTO, false);
             mode = "Semi-auto";
-        } else if (type.stats().selectFire && !gun.getOrDefault(GunState.FULL_AUTO, false)) {
+        } else if (type.stats(gun).selectFire && !gun.getOrDefault(GunState.FULL_AUTO, false)) {
             gun.set(GunState.FULL_AUTO, true);
             mode = "Full auto";
         } else if (launcher) {
@@ -687,7 +700,7 @@ public final class Guns {
             return;
         }
         State st = state(player);
-        if (st.reloadTick >= 0 || type.bolt && player.level().getGameTime() - st.lastShot < type.fireDelay()) {
+        if (st.reloadTick >= 0 || type.bolt && player.level().getGameTime() - st.lastShot < type.fireDelay(gun)) {
             return;     // already reloading, or the bolt is still being worked after a shot
         }
         GunState g = gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG);
@@ -705,7 +718,7 @@ public final class Guns {
             setModelData(gun, 3, 0);
             return;
         }
-        int best = bestMagazine(player, type);
+        int best = bestMagazine(player, type, gun);
         if (best < 0 && !player.hasInfiniteMaterials()) {
             player.sendOverlayMessage(Component.literal(g.mag() && g.rounds() > 0 ? "No fuller magazine to swap in."
                     : "No loaded magazines. Load one: hold right-click with it.").withStyle(ChatFormatting.GRAY));
@@ -721,7 +734,7 @@ public final class Guns {
         st.needsCharge = !g.mag() || g.rounds() == 0;
         // the old magazine comes out with whatever is left in it
         if (g.mag()) {
-            ItemStack old = new ItemStack(type.magazine());
+            ItemStack old = LocalGuns.magazineFor(gun, type);
             old.set(GunState.MAG_ROUNDS, g.rounds());
             if (!player.getInventory().add(old)) {
                 player.spawnAtLocation(level(player), old);
@@ -734,11 +747,11 @@ public final class Guns {
 
     /** A tube gun: raised to the loading port, then shells go in one by one (see tickLoading). */
     private static void startLoading(ServerPlayer player, ItemStack gun, GunType type, State st, GunState g) {
-        if (g.rounds() >= type.capacity()) {
+        if (g.rounds() >= type.capacity(gun)) {
             player.sendOverlayMessage(Component.literal("It's full.").withStyle(ChatFormatting.GRAY));
             return;
         }
-        if (countAmmo(player, type) == 0 && !player.hasInfiniteMaterials()) {
+        if (countAmmo(player, type, gun) == 0 && !player.hasInfiniteMaterials()) {
             player.sendOverlayMessage(Component.literal("You have no " + type.caliber() + " " + type.rounds() + ".").withStyle(ChatFormatting.GRAY));
             return;
         }
@@ -753,7 +766,7 @@ public final class Guns {
             // thrown open: the empties come out as the barrels drop
             sound(player, type.magOut());
             st.caseAt = player.level().getGameTime() + type.raise / 2;
-            st.empties = Math.max(0, type.capacity() - g.rounds());
+            st.empties = Math.max(0, type.capacity(gun) - g.rounds());
         }
     }
 
@@ -765,13 +778,13 @@ public final class Guns {
         if (!st.loadStopped) {
             int t = st.reloadTick - type.raise;
             if (t > 0 && t % type.perShell == 0) {
-                if (takeAmmo(player, type) || player.hasInfiniteMaterials()) {
+                if (takeAmmo(player, type, gun) || player.hasInfiniteMaterials()) {
                     GunState g = gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG);
                     gun.set(GunState.TYPE, g.withRounds(g.rounds() + 1));
                     sound(player, type.magIn());
                 }
-                if (gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG).rounds() >= type.capacity()
-                        || countAmmo(player, type) == 0 && !player.hasInfiniteMaterials()) {
+                if (gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG).rounds() >= type.capacity(gun)
+                        || countAmmo(player, type, gun) == 0 && !player.hasInfiniteMaterials()) {
                     stopLoading(st);
                 }
             }
@@ -814,22 +827,24 @@ public final class Guns {
     }
 
     /** Loose rounds or shells of this gun's kind in the inventory. */
-    private static int countAmmo(ServerPlayer player, GunType type) {
+    private static int countAmmo(ServerPlayer player, GunType type, ItemStack gun) {
+        net.minecraft.world.item.Item ammo = LocalGuns.ammo(gun, type);
         Inventory inv = player.getInventory();
         int n = 0;
         for (int i = 0; i < inv.getContainerSize(); i++) {
-            if (inv.getItem(i).is(type.ammo())) {
+            if (inv.getItem(i).is(ammo)) {
                 n += inv.getItem(i).getCount();
             }
         }
         return n;
     }
 
-    private static boolean takeAmmo(ServerPlayer player, GunType type) {
+    private static boolean takeAmmo(ServerPlayer player, GunType type, ItemStack gun) {
+        net.minecraft.world.item.Item ammo = LocalGuns.ammo(gun, type);
         Inventory inv = player.getInventory();
         for (int i = 0; i < inv.getContainerSize(); i++) {
             ItemStack s = inv.getItem(i);
-            if (s.is(type.ammo())) {
+            if (s.is(ammo)) {
                 s.shrink(1);
                 return true;
             }
@@ -837,12 +852,12 @@ public final class Guns {
         return false;
     }
 
-    private static int bestMagazine(ServerPlayer player, GunType type) {
+    private static int bestMagazine(ServerPlayer player, GunType type, ItemStack gun) {
         Inventory inv = player.getInventory();
         int best = -1, most = 0;
         for (int i = 0; i < inv.getContainerSize(); i++) {
             ItemStack s = inv.getItem(i);
-            if (s.is(type.magazine()) && MagazineItem.rounds(s) > most) {
+            if (LocalGuns.magFits(s, gun, type) && MagazineItem.rounds(s) > most) {
                 most = MagazineItem.rounds(s);
                 best = i;
             }
@@ -915,14 +930,14 @@ public final class Guns {
     }
 
     private static void insertMagazine(ServerPlayer player, ItemStack gun, GunType type) {
-        int best = bestMagazine(player, type);
+        int best = bestMagazine(player, type, gun);
         int rounds;
         if (best >= 0) {
             ItemStack mag = player.getInventory().getItem(best);
             rounds = MagazineItem.rounds(mag);
             mag.shrink(1);
         } else if (player.hasInfiniteMaterials()) {
-            rounds = type.capacity();
+            rounds = type.capacity(gun);
         } else {
             return;
         }
@@ -942,6 +957,8 @@ public final class Guns {
     }
 
     private static void sound(ServerPlayer player, net.minecraft.sounds.SoundEvent sound) {
+        // the gun in hand's own take of it, for one kept on this computer (LocalGuns)
+        sound = LocalGuns.sound(player.getMainHandItem(), sound);
         player.level().playSound(null, player.getX(), player.getY(), player.getZ(), sound, SoundSource.PLAYERS, 0.9f, 1f);
     }
 

@@ -34,6 +34,8 @@ import net.minecraft.world.phys.AABB;
 public class LiftRenderer extends EntityRenderer<LiftCar, LiftRenderer.State> {
     static final Identifier ATLAS = ZomboidCraft.id("textures/entity/lift/atlas.png");
     private static final int FULL = 0xF000F0;
+    /** Blocks across past which a lift isn't drawn. */
+    private static final double FAR = 40;
     /** Tiles in the atlas (8 x 8 of 64 px; see tools/lifts/paint.py). */
     static final int WALL = 0, WOOD = 1, FLOOR = 2, CEIL = 3, LIGHT = 4, DOOR = 5, ROOF = 6, RAIL = 7, PANEL = 8,
             BTN_OFF = 9, BTN_ON = 10, SEG_ON = 11, SEG_OFF = 12, BEZEL = 13, CABLE = 14, BEAM = 15, KICK = 16, SILL = 17,
@@ -54,6 +56,8 @@ public class LiftRenderer extends EntityRenderer<LiftCar, LiftRenderer.State> {
         boolean shaders;
         /** The landings near enough to draw their indicators. */
         int lo, hi;
+        /** Too far across to see: a lift is inside its building, so it's left undrawn. */
+        boolean far;
     }
 
     public LiftRenderer(EntityRendererProvider.Context context) {
@@ -81,6 +85,13 @@ public class LiftRenderer extends EntityRenderer<LiftCar, LiftRenderer.State> {
         LiftShaft s = car.shaft();
         state.shaft = s;
         if (s == null) {
+            return;
+        }
+        // a lift is shut in its building, so past FAR across it can't be seen; the profile (2026-11-01) had every
+        // lift in a downtown drawn each frame, an eighth of the frame
+        net.minecraft.world.entity.player.Player me = Minecraft.getInstance().player;
+        state.far = me != null && Math.hypot(me.getX() - s.centreX(), me.getZ() - s.centreZ()) > FAR;
+        if (state.far) {
             return;
         }
         double y = car.yAt(partialTick);
@@ -119,7 +130,8 @@ public class LiftRenderer extends EntityRenderer<LiftCar, LiftRenderer.State> {
 
     @Override
     public void submit(State state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState camera) {
-        if (state.shaft == null) {
+        // no shadow: the lift is indoors
+        if (state.shaft == null || state.far || com.zomboidcraft.client.zombie.body.ZDetail.shadowPass()) {
             return;
         }
         collector.submitCustomGeometry(poseStack, RenderTypes.entityCutout(ATLAS), (pose, out) -> draw(state, pose, out, false));

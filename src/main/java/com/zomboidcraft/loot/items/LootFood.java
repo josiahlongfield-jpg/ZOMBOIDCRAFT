@@ -63,7 +63,7 @@ public final class LootFood {
             com.zomboidcraft.survival.Mood.add(sp, com.zomboidcraft.survival.Mood.Stat.UNHAPPINESS, -10);
             com.zomboidcraft.survival.Mood.add(sp, com.zomboidcraft.survival.Mood.Stat.BOREDOM, -5);
         }
-        if (food.is(LootSpec.Food.RAW) && random.nextFloat() < 0.5f) {
+        if (food.is(LootSpec.Food.RAW) && !Cooking.cooked(stack) && random.nextFloat() < 0.5f) {
             com.zomboidcraft.survival.Medicine.nausea(sp, 25);
             sp.addEffect(new MobEffectInstance(MobEffects.HUNGER, 400, 0));
             sp.addEffect(new MobEffectInstance(MobEffects.NAUSEA, 200, 0));

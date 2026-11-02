@@ -36,7 +36,21 @@ public final class SurvivorTextures {
     }
 
     /** Pixels kept made (about 256 MB): bodies are a megapixel, garments a sixteenth of that. */
-    private static final long KEEP = 64L << 20;
+    /** Pixels of made textures kept (a horde of Zomboid zombies near and mid range, their corpses, the survivors). */
+    // 128M pixels (512 MB on the card) filled Josiah's 12 GB card with Photon on (2026-11-02, 11.3 of 12 GB in use);
+    // 64M pixels (256 MB) still holds a downtown horde: the nearest 10 in their own looks at 512, the rest in the shared
+    // crowd looks at 256
+    private static final long BUDGET = 64L << 20;
+
+    public static int madeCount() {
+        return made;
+    }
+
+    /** For /zc profile: how many textures have been made so far, and how many MB are kept on the card now. */
+    public static String stats() {
+        return String.format("Zomboid body textures: %d made since start, %d kept, %d MB on the card (cap %d MB)", made, MADE.size(),
+                kept * 4 >> 20, BUDGET * 4 >> 20);
+    }
     private static long kept;
     private static final Map<String, Integer> SIZE = new java.util.HashMap<>();
     private static final java.util.Set<String> FAILED = new java.util.HashSet<>();
@@ -50,19 +64,54 @@ public final class SurvivorTextures {
     public static final int CUT = 1;
     /** One of our camo patterns (key: its name), laid over what's under it in that layer's own light and shade. */
     public static final int CAMO = 2;
+    /** Remembers the picture as made so far (its key is unused): what a REVEAL layer brings back. */
+    public static final int KEEP = 3;
+    /** Where the mask is white, the picture goes back to how it was at the KEEP layer (a torn hole showing skin). */
+    public static final int REVEAL = 4;
 
     /** One layer: a texture key in the pack, a tint (0xRRGGBB, or -1 for none), and how it's laid on. */
-    public record Layer(String key, int tint, int mode) {
+    /**
+     * strength: 0-255, how much of an OVER layer goes on (a zombie's blood and grime, thinner or thicker), or for CUT and
+     * REVEAL how far a graded mask opens (a zombie's tears, small or wide). 255 is the whole layer, as before.
+     */
+    public record Layer(String key, int tint, int mode, int strength) {
         public Layer(String key, int tint) {
             this(key, tint, OVER);
+        }
+
+        public Layer(String key, int tint, int mode) {
+            this(key, tint, mode, 255);
+        }
+
+        String tag() {
+            return mode + key + '#' + Integer.toHexString(tint) + (strength < 255 ? "*" + strength : "");
         }
     }
 
     /** The body's texture for these layers (the first opaque), or null while it's being made. Render thread. */
     public static Identifier body(SurvivorPack pack, List<Layer> layers) {
         StringBuilder sb = new StringBuilder(pack.sex);
-        for (Layer l : layers) sb.append('|').append(l.mode()).append(l.key()).append('#').append(Integer.toHexString(l.tint()));
+        for (Layer l : layers) sb.append('|').append(l.tag());
         return get(pack, sb.toString(), layers);
+    }
+
+    /**
+     * As {@link #body(SurvivorPack, List)}, made at size by size whatever the first layer's size (the many zombies' looks
+     * at 512 rather than their garments' 1024, so a crowd of them fits in the textures kept).
+     */
+    public static Identifier body(SurvivorPack pack, List<Layer> layers, int size) {
+        return get(pack, sized(pack, layers, size), layers, size);
+    }
+
+    /** As {@link #body(SurvivorPack, List, int)} if it's been made already, else null (and nothing is started). */
+    public static Identifier peek(SurvivorPack pack, List<Layer> layers, int size) {
+        return MADE.get(sized(pack, layers, size));
+    }
+
+    private static String sized(SurvivorPack pack, List<Layer> layers, int size) {
+        StringBuilder sb = new StringBuilder(pack.sex).append('@').append(size);
+        for (Layer l : layers) sb.append('|').append(l.tag());
+        return sb.toString();
     }
 
     /** A garment's texture: tinted, and in a camo pattern if it has one ("" for none). */
@@ -78,13 +127,17 @@ public final class SurvivorTextures {
     }
 
     private static Identifier get(SurvivorPack pack, String name, List<Layer> layers) {
+        return get(pack, name, layers, 0);
+    }
+
+    private static Identifier get(SurvivorPack pack, String name, List<Layer> layers, int size) {
         Identifier id = MADE.get(name);
         if (id != null || FAILED.contains(name)) return id;
         CompletableFuture<NativeImage> f = MAKING.computeIfAbsent(name, n -> {
             // the bytes are read here, on the render thread; the work happens on a worker
             List<byte[]> data = new ArrayList<>();
             for (Layer l : layers) data.add(l.mode() == CAMO ? camo(l.key()) : pack.skin.raw(l.key()));
-            return CompletableFuture.supplyAsync(() -> compose(data, layers));
+            return CompletableFuture.supplyAsync(() -> compose(data, layers, size));
         });
         if (!f.isDone()) return null;
         MAKING.remove(name);
@@ -99,7 +152,7 @@ public final class SurvivorTextures {
         int px = image.getWidth() * image.getHeight();
         SIZE.put(name, px);
         kept += px;
-        while (kept > KEEP && MADE.size() > 1) {
+        while (kept > BUDGET && MADE.size() > 1) {
             Map.Entry<String, Identifier> old = MADE.entrySet().iterator().next();
             MADE.remove(old.getKey());
             Integer was = SIZE.remove(old.getKey());
@@ -110,32 +163,42 @@ public final class SurvivorTextures {
     }
 
     /** Layers laid over the first, each scaled to its size; a tint multiplies a layer's colour. */
-    private static NativeImage compose(List<byte[]> data, List<Layer> layers) {
+    private static NativeImage compose(List<byte[]> data, List<Layer> layers, int size) {
         try {
             int[] base = null, laid = null;   // laid: the alpha of the last layer laid on, which a camo layer paints
+            int[] kept = null;
             int w = 0, h = 0;
             for (int i = 0; i < data.size(); i++) {
+                if (layers.get(i).mode() == KEEP) {
+                    if (base != null) kept = base.clone();
+                    continue;
+                }
                 byte[] bytes = data.get(i);
                 if (bytes == null) continue;
                 try (NativeImage img = com.zomboidcraft.client.npc.NpcSkin.decode(bytes)) {
                     int tint = layers.get(i).tint();
                     if (base == null) {
-                        w = img.getWidth();
-                        h = img.getHeight();
+                        int sw = img.getWidth(), sh = img.getHeight();
+                        w = size > 0 ? size : sw;
+                        h = size > 0 ? size * sh / sw : sh;
                         base = new int[w * h];
                         laid = new int[w * h];
+                        boolean same = sw == w && sh == h;
                         for (int y = 0; y < h; y++) {
                             for (int x = 0; x < w; x++) {
-                                base[y * w + x] = tinted(img.getPixel(x, y), tint);
+                                int src = same ? img.getPixel(x, y) : sample(img, (x + 0.5f) * sw / w - 0.5f, (y + 0.5f) * sh / h - 0.5f);
+                                base[y * w + x] = tinted(src, tint);
                                 laid[y * w + x] = base[y * w + x] >>> 24;
                             }
                         }
                     } else if (layers.get(i).mode() == CUT) {
-                        cut(base, w, h, img);
+                        cut(base, w, h, img, layers.get(i).strength());
+                    } else if (layers.get(i).mode() == REVEAL) {
+                        if (kept != null) reveal(base, kept, w, h, img, layers.get(i).strength());
                     } else if (layers.get(i).mode() == CAMO) {
                         camo(base, laid, w, h, img);
                     } else {
-                        over(base, laid, w, h, img, tint);
+                        over(base, laid, w, h, img, tint, layers.get(i).strength());
                     }
                 }
             }
@@ -159,13 +222,13 @@ public final class SurvivorTextures {
     }
 
     /** The layer sampled (bilinear) at the base's size and laid over it by its alpha. */
-    private static void over(int[] base, int[] laid, int w, int h, NativeImage img, int tint) {
+    private static void over(int[] base, int[] laid, int w, int h, NativeImage img, int tint, int strength) {
         int sw = img.getWidth(), sh = img.getHeight();
         boolean same = sw == w && sh == h;
         for (int y = 0; y < h; y++) {
             for (int x = 0; x < w; x++) {
                 int src = same ? img.getPixel(x, y) : sample(img, (x + 0.5f) * sw / w - 0.5f, (y + 0.5f) * sh / h - 0.5f);
-                int a = src >>> 24;
+                int a = (src >>> 24) * strength / 255;
                 laid[y * w + x] = a;
                 if (a == 0) continue;
                 src = tinted(src, tint);
@@ -193,15 +256,29 @@ public final class SurvivorTextures {
         });
     }
 
-    /** Clears the base where the mask is white. */
-    private static void cut(int[] base, int w, int h, NativeImage mask) {
+    /** Puts back what was kept where the mask is white. */
+    private static void reveal(int[] base, int[] kept, int w, int h, NativeImage mask, int strength) {
+        int sw = mask.getWidth(), sh = mask.getHeight();
+        for (int y = 0; y < h; y++) {
+            for (int x = 0; x < w; x++) {
+                int m = mask.getPixel(Math.min(sw - 1, x * sw / w), Math.min(sh - 1, y * sh / h));
+                if (Math.min(m >>> 24, m & 255) > 382 - strength) base[y * w + x] = kept[y * w + x];
+            }
+        }
+    }
+
+    /**
+     * Clears the base where the mask is white. A weaker cut needs whiter: a grey-graded mask (a zombie's tears) opens
+     * small at low strength and wider at full; a plain black-and-white one is the same at any.
+     */
+    private static void cut(int[] base, int w, int h, NativeImage mask, int strength) {
         int sw = mask.getWidth(), sh = mask.getHeight();
         for (int y = 0; y < h; y++) {
             for (int x = 0; x < w; x++) {
                 int m = mask.getPixel(Math.min(sw - 1, x * sw / w), Math.min(sh - 1, y * sh / h));
                 // a grey mask reads its red; one with alpha reads that
                 int v = Math.min(m >>> 24, m & 255);
-                if (v > 127) base[y * w + x] &= 0x00FFFFFF;
+                if (v > 382 - strength) base[y * w + x] &= 0x00FFFFFF;
             }
         }
     }

@@ -13,6 +13,8 @@ public class CarRenderState extends EntityRenderState {
     public float jackLift;
     /** How far the boot is open, eased, 0 to 1. */
     public float open;
+    /** How far the bonnet is up, 0 to 1, eased. */
+    public float bonnet;
     /** How far the wheels have rolled (metres), and the front wheels' steer (radians, left +). */
     public double rolled;
     public float steer;
@@ -26,6 +28,8 @@ public class CarRenderState extends EntityRenderState {
     public float[] wound = new float[0];
     /** How coarse a copy of the mesh to draw, from how far off the car is ({@link CarLod}). */
     public int lod;
+    /** Squared distance from the camera entity (for the shadow cut-off). */
+    public double eyeDistSq;
     /** The headlights (and tail lights) are switched on; the engine's running, so the dash is lit; the brake or reversing lights. */
     public boolean lights, dash, braking, reversing;
     /** How dark it is round the car, 0 (day) to 1 (night), and whether a shader pack draws the glow. */

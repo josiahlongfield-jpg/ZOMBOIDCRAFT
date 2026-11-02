@@ -319,7 +319,7 @@ final class HospitalDepts {
             }
         }
         for (int x = x0 + 1; x < x1; x += 2) {
-            set(x, y + 1, z1 - 1, kind.equals("security") ? "hs_locker[facing=north]" : "filing_cabinet[facing=north]");
+            set(x, y + 1, z1 - 1, kind.equals("security") ? "hs_locker[facing=north,loot=security]" : "filing_cabinet[facing=north]");
             if (kind.equals("security")) {
                 set(x, y + 2, z1 - 1, "hs_locker_top[facing=north]");
             }

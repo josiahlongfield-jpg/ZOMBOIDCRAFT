@@ -216,6 +216,11 @@ public final class Grooming {
                     ? new Look(cut.style(), t, now2.beard(), now2.beardCut(), now2.colour(), now2.beardGrows())
                     : new Look(now2.hair(), now2.hairCut(), cut.style(), t, now2.colour(), now2.beardGrows()));
             p.level().playSound(null, p.getX(), p.getY(), p.getZ(), SoundEvents.SHEEP_SHEAR, SoundSource.PLAYERS, 0.7f, 1.3f);
+            if (com.zomboidcraft.decor.DecorUses.barberNear(p)) {
+                // done properly, in the barber's chair: it lifts you
+                com.zomboidcraft.survival.Mood.add(p, com.zomboidcraft.survival.Mood.Stat.UNHAPPINESS, -10);
+                com.zomboidcraft.survival.Mood.add(p, com.zomboidcraft.survival.Mood.Stat.STRESS, -5);
+            }
         });
     }
 

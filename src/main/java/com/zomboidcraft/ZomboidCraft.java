@@ -60,6 +60,8 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.world.ferry.Ferries.register();
         com.zomboidcraft.world.blocks.LightSwitch.register();
         com.zomboidcraft.combat.GunState.register();
+        com.zomboidcraft.combat.LocalGuns.register();
+        com.zomboidcraft.combat.Retired.register();
         com.zomboidcraft.combat.Attachments.register();
         com.zomboidcraft.combat.GunFinish.register();
         com.zomboidcraft.combat.Repairs.register();
@@ -67,11 +69,13 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.combat.SpearItem.register();
         com.zomboidcraft.combat.Reloading.register();
         com.zomboidcraft.combat.ModSounds.register();
+        com.zomboidcraft.zombie.ZedSounds.register();
         com.zomboidcraft.combat.throwing.Throwing.register();
         ModItems.register();
         com.zomboidcraft.decor.Decor.registerBlocks();
         com.zomboidcraft.loot.items.LootItems.register();
         com.zomboidcraft.decor.Decor.register();
+        com.zomboidcraft.combat.GunLoot.register();      // before LootSettings and Rolls: they thin and tier its guns
         com.zomboidcraft.loot.LootSettings.register();
         com.zomboidcraft.power.Generators.register();
         com.zomboidcraft.power.PowerGrid.register();
@@ -133,6 +137,8 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.world.gen.Worldgen.register();
         com.zomboidcraft.world.gen.CountyCommand.register();
         com.zomboidcraft.world.gen.CountyRails.register();
+        // last of every loot hook: nothing vanilla gets out of a loot table
+        com.zomboidcraft.loot.NoVanilla.register();
         LOGGER.info("The dead walk.");
     }
 }

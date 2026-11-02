@@ -585,7 +585,7 @@ final class ArenaRooms {
         }
         alongWalls(r, (c, f) -> {
             double q = a.chance();
-            a.set(c[0], EV + 1, c[1], (q < 0.6 ? "fs_locker" : "home_gun_cabinet") + "[facing=" + f + "]");
+            a.set(c[0], EV + 1, c[1], (q < 0.6 ? "fs_locker" : "home_gun_cabinet") + "[facing=" + f + ",loot=security]");
             a.set(c[0], EV + 2, c[1], (q < 0.6 ? "fs_locker_top" : "home_gun_cabinet_top") + "[facing=" + f + "]");
         }, 2);
     }

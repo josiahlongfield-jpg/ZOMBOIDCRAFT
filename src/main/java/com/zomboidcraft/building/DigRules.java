@@ -369,7 +369,7 @@ public final class DigRules {
         RandomSource random = player.getRandom();
         switch (tier) {
             case WOOD -> {
-                drop(level, pos, new ItemStack(Items.OAK_PLANKS, wall && random.nextBoolean() ? 2 : 1));
+                drop(level, pos, com.zomboidcraft.loot.NoVanilla.ours(net.minecraft.world.item.Items.OAK_PLANKS, wall && random.nextBoolean() ? 2 : 1));
                 if (random.nextFloat() < (wall ? 0.3f : 0.4f)) drop(level, pos, new ItemStack(ModItems.NAILS, 1 + random.nextInt(2)));
             }
             case MASONRY -> drop(level, pos, new ItemStack(ModItems.RUBBLE, wall ? 1 + random.nextInt(2) : 1));

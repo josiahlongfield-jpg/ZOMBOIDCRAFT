@@ -43,7 +43,8 @@ public final class ZcCommand {
                                         .suggests((ctx, b) -> SharedSuggestionProvider.suggest(CarModels.all().keySet(), b))
                                         .executes(ctx -> car(ctx, StringArgumentType.getString(ctx, "model"), null))
                                         .then(Commands.argument("variant", StringArgumentType.word())
-                                                .suggests((ctx, b) -> SharedSuggestionProvider.suggest(CarModels.variants(), b))
+                                                .suggests((ctx, b) -> SharedSuggestionProvider.suggest(java.util.stream.Stream.concat(
+                                                        java.util.stream.Stream.of("ready"), CarModels.variants().stream()), b))
                                                 .executes(ctx -> car(ctx, StringArgumentType.getString(ctx, "model"),
                                                         StringArgumentType.getString(ctx, "variant"))))))
                         .then(Commands.literal("hoist").executes(ZcCommand::hoist))
@@ -122,6 +123,17 @@ public final class ZcCommand {
                                                         java.util.List.of("scratch", "cut", "bite", "burn", "break"), builder))
                                                 .executes(ctx -> injure(ctx, StringArgumentType.getString(ctx, "part"),
                                                         StringArgumentType.getString(ctx, "kind"))))))
+                        .then(Commands.literal("localgun")
+                                .then(Commands.literal("reload").executes(ctx -> {
+                                    com.zomboidcraft.combat.LocalGuns.reload();
+                                    ctx.getSource().sendSuccess(() -> Component.literal("Local guns: "
+                                            + com.zomboidcraft.combat.LocalGuns.all().size()), false);
+                                    return 1;
+                                }))
+                                .then(Commands.argument("id", StringArgumentType.word())
+                                        .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
+                                                com.zomboidcraft.combat.LocalGuns.all().stream().map(g -> g.id), builder))
+                                        .executes(ctx -> giveLocalGun(ctx, StringArgumentType.getString(ctx, "id")))))
                         .then(Commands.literal("roll")
                                 .then(Commands.argument("tier", IntegerArgumentType.integer(1, 5))
                                         .executes(ctx -> reroll(ctx, IntegerArgumentType.getInteger(ctx, "tier")))))
@@ -129,6 +141,30 @@ public final class ZcCommand {
                             com.zomboidcraft.survival.Body.set(ctx.getSource().getPlayerOrException(), com.zomboidcraft.survival.Body.FRESH);
                             return show(ctx);
                         }))));
+    }
+
+    /** Gives you a gun kept on this computer (config/zomboidcraft/guns), loaded. */
+    private static int giveLocalGun(CommandContext<CommandSourceStack> ctx, String id) throws CommandSyntaxException {
+        ServerPlayer player = ctx.getSource().getPlayerOrException();
+        var spec = com.zomboidcraft.combat.LocalGuns.get(id);
+        if (spec == null) {
+            ctx.getSource().sendFailure(Component.literal("No local gun " + id + " in " + com.zomboidcraft.combat.LocalGuns.DIR));
+            return 0;
+        }
+        net.minecraft.world.item.ItemStack gun = com.zomboidcraft.combat.LocalGuns.loaded(spec);
+        net.minecraft.world.item.ItemStack given = gun.copy();
+        player.getInventory().add(given);       // add() empties the stack it's handed: the rest reads gun, its copy
+        // two of its own magazines, full, and a stack of its own rounds
+        for (int i = 0; i < 2; i++) {
+            net.minecraft.world.item.ItemStack mag = com.zomboidcraft.combat.LocalGuns.fullMagazine(gun, spec.type());
+            if (!mag.isEmpty()) {
+                player.getInventory().add(mag);
+            }
+        }
+        net.minecraft.world.item.Item ammo = com.zomboidcraft.combat.LocalGuns.ammo(gun, spec.type());
+        player.getInventory().add(new net.minecraft.world.item.ItemStack(ammo, new net.minecraft.world.item.ItemStack(ammo).getMaxStackSize()));
+        ctx.getSource().sendSuccess(() -> Component.literal("Gave you " + gun.getHoverName().getString()), false);
+        return 1;
     }
 
     /** Rolls the weapon in your hand again at a tier, to try one out. */
@@ -286,6 +322,10 @@ public final class ZcCommand {
         ServerPlayer player = ctx.getSource().getPlayerOrException();
         java.util.Random rng = new java.util.Random();
         CarModels.Model m = model == null ? CarModels.pick(rng, c -> !c.boat() && !c.farm() && !c.military()) : CarModels.get(model);
+        boolean ready = "ready".equals(variant);
+        if (ready) {
+            variant = "usable";
+        }
         if (m == null || (variant != null && !CarModels.variants().contains(variant))) {
             ctx.getSource().sendFailure(Component.literal("Unknown car: " + model + (variant == null ? "" : " " + variant)));
             return 0;
@@ -294,8 +334,11 @@ public final class ZcCommand {
         double yaw = Math.toRadians(player.getYRot());
         double reach = m.size[0] / 2 + 2.5;
         double x = player.getX() - Math.sin(yaw) * reach, z = player.getZ() + Math.cos(yaw) * reach;
-        Cars.spawn((ServerLevel) player.level(), x, player.getY(), z, player.getYRot() + 90, m.id, look, true);
-        ctx.getSource().sendSuccess(() -> Component.literal("Spawned " + m.id + " (" + look + ")"), false);
+        com.zomboidcraft.world.cars.CarProp car = Cars.spawn((ServerLevel) player.level(), x, player.getY(), z, player.getYRot() + 90, m.id, look, true);
+        if (ready && car != null) {
+            car.readyToDrive();
+        }
+        ctx.getSource().sendSuccess(() -> Component.literal("Spawned " + m.id + " (" + (ready ? "ready to drive" : look) + ")"), false);
         return 1;
     }
 

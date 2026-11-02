@@ -17,8 +17,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySpawnReason;
@@ -153,11 +151,9 @@ public final class BeltedDead {
         // straining at the belt, hands on the glass
         zombie.swing(zombie.getRandom().nextBoolean() ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND,
                 net.minecraft.world.item.component.SwingAnimation.DEFAULT, true);
-        level.playSound(null, zombie.getX(), zombie.getEyeY(), zombie.getZ(), SoundEvents.ZOMBIE_ATTACK_WOODEN_DOOR,
-                SoundSource.HOSTILE, 0.35f, 1.7f + zombie.getRandom().nextFloat() * 0.2f);
+        ZedSounds.play(level, zombie.getX(), zombie.getEyeY(), zombie.getZ(), "thump.car_window", 0.6f);
         if (zombie.getRandom().nextInt(3) == 0) {
-            level.playSound(null, zombie.getX(), zombie.getEyeY(), zombie.getZ(), SoundEvents.ZOMBIE_AMBIENT,
-                    SoundSource.HOSTILE, 0.9f, 0.8f);
+            ZedSounds.say(zombie, ZedSounds.State.CHASE, 0.9f);
             Noise.emit(level, zombie.position(), 12);
         }
     }
@@ -185,8 +181,7 @@ public final class BeltedDead {
         if (at instanceof ServerPlayer player && player.distanceTo(zombie) < 2.5 && zombie.getRandom().nextFloat() < 0.5f) {
             Grabs.seize(player, zombie, false);
         }
-        zombie.level().playSound(null, zombie.getX(), zombie.getEyeY(), zombie.getZ(), SoundEvents.ZOMBIE_AMBIENT,
-                SoundSource.HOSTILE, 1.3f, 0.7f);
+        ZedSounds.say(zombie, ZedSounds.State.AGGRO, 1.2f);
     }
 
     /** Rolls each car near a player once: about one abandoned or wrecked car in twenty gets a dead driver. */

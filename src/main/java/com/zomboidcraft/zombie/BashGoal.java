@@ -1,5 +1,7 @@
 package com.zomboidcraft.zombie;
 
+import com.zomboidcraft.combat.Surface;
+
 import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.ModBlocks;
 import com.zomboidcraft.barricade.BarricadeBlock;
@@ -232,9 +234,8 @@ public class BashGoal extends Goal {
             return;
         }
         BlockState state = level.getBlockState(block);
-        boolean steel = state.getSoundType() != SoundType.WOOD;
-        level.playSound(null, block, steel ? SoundEvents.ZOMBIE_ATTACK_IRON_DOOR : SoundEvents.ZOMBIE_ATTACK_WOODEN_DOOR,
-                SoundSource.HOSTILE, 1f, 0.9f + zombie.getRandom().nextFloat() * 0.2f);
+        // Zomboid's thump for what it's beating on, now and then the heavier splintering one
+        ZedSounds.play(level, block, ZedSounds.thump(state, zombie.getRandom().nextInt(4) == 0), 1f);
         Noise.emitByDead(level, center, BANG_NOISE);
         hits++;
         Acts.blow(zombie, block, glass);
@@ -276,12 +277,11 @@ public class BashGoal extends Goal {
             BlockState next = glass ? broken(state) : null;
             if (next != null && !next.isAir()) {
                 level.setBlockAndUpdate(block, next);
-                level.playSound(null, block, SoundEvents.GLASS_BREAK, SoundSource.HOSTILE, 1f, 1f);
+                ZedSounds.play(level, block, "break.window", 1f);
                 return;
             }
             level.destroyBlock(block, false);
-            level.playSound(null, block, glass ? SoundEvents.GLASS_BREAK : SoundEvents.ZOMBIE_BREAK_WOODEN_DOOR,
-                    SoundSource.HOSTILE, 1f, 1f);
+            ZedSounds.play(level, block, glass ? "break.window" : "break.door", 1f);
             return;
         }
         level.destroyBlockProgress(at.hashCode(), block, (int) Math.min(9, dent[0] * 10 / needed));
@@ -326,8 +326,7 @@ public class BashGoal extends Goal {
             for (int i = 0; i < 4 && isFence(level.getBlockState(at)); i++, at = at.above()) {
                 level.destroyBlock(at, false);
             }
-            level.playSound(null, block, SoundEvents.ZOMBIE_ATTACK_IRON_DOOR, SoundSource.HOSTILE, 1.4f, 0.6f);
-            level.playSound(null, block, SoundEvents.ZOMBIE_BREAK_WOODEN_DOOR, SoundSource.HOSTILE, 1f, 0.7f);
+            ZedSounds.play(level, block, ZedSounds.thump(state, false).equals("thump.chainlink") ? "break.chainlink" : "break.door", 1.4f);
             Noise.emitByDead(level, Vec3.atCenterOf(block), BANG_NOISE * 2);
             return;
         }
@@ -360,8 +359,7 @@ public class BashGoal extends Goal {
                 BlockState left = sheet ? com.zomboidcraft.building.BuildBlocks.afterBash(state) : null;
                 if (left != null) level.setBlockAndUpdate(block, left);
                 else level.destroyBlock(block, false);
-                level.playSound(null, block, sheet ? SoundEvents.ZOMBIE_BREAK_WOODEN_DOOR : SoundEvents.ZOMBIE_BREAK_WOODEN_DOOR,
-                        SoundSource.HOSTILE, 1f, sheet ? 0.7f : 1f);
+                ZedSounds.play(level, block, sheet && Surface.of(state) == Surface.METAL ? "break.barricade_metal" : "break.barricade", 1f);
                 return;
             }
             level.setBlockAndUpdate(block, state.setValue(BarricadeBlock.PLANKS, planks - 1).setValue(damage, 0));

@@ -40,14 +40,21 @@ public class MagazineItem extends Item {
         return stack.getOrDefault(GunState.MAG_ROUNDS, 0);
     }
 
+    /** A local gun's own magazine is named after it. */
+    @Override
+    public Component getName(ItemStack stack) {
+        LocalGuns.Spec spec = LocalGuns.of(stack);
+        return spec != null && spec.name != null ? Component.literal(spec.name + " Magazine") : super.getName(stack);
+    }
+
     @Override
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         boolean unloading = player.isShiftKeyDown();
-        if (unloading ? rounds(stack) == 0 : rounds(stack) >= type.capacity() || countAmmo(player) == 0) {
+        if (unloading ? rounds(stack) == 0 : rounds(stack) >= type.capacity(stack) || countAmmo(player, stack) == 0) {
             if (!level.isClientSide()) {
                 player.sendOverlayMessage(Component.literal(unloading ? "The magazine is empty."
-                        : rounds(stack) >= type.capacity() ? "The magazine is full." : "You have no " + type.caliber() + " rounds.")
+                        : rounds(stack) >= type.capacity(stack) ? "The magazine is full." : "You have no " + LocalGuns.calibre(stack, type) + " rounds.")
                         .withStyle(ChatFormatting.GRAY));
             }
             return InteractionResult.FAIL;
@@ -69,12 +76,12 @@ public class MagazineItem extends Item {
                 return;
             }
             stack.set(GunState.MAG_ROUNDS, rounds - 1);
-            ItemStack round = new ItemStack(type.ammo());
+            ItemStack round = new ItemStack(LocalGuns.ammo(stack, type));
             if (!player.getInventory().add(round)) {
                 player.spawnAtLocation((ServerLevel) level, round);
             }
         } else {
-            if (rounds >= type.capacity() || !takeAmmo(player, 1)) {
+            if (rounds >= type.capacity(stack) || !takeAmmo(player, stack, 1)) {
                 player.stopUsingItem();
                 return;
             }
@@ -106,7 +113,7 @@ public class MagazineItem extends Item {
 
     @Override
     public int getBarWidth(ItemStack stack) {
-        return Math.round(13f * rounds(stack) / type.capacity());
+        return Math.round(13f * rounds(stack) / type.capacity(stack));
     }
 
     @Override
@@ -117,32 +124,34 @@ public class MagazineItem extends Item {
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display,
                                 Consumer<Component> tooltip, TooltipFlag flag) {
-        tooltip.accept(Component.literal("Rounds: " + rounds(stack) + "/" + type.capacity()).withStyle(ChatFormatting.GRAY));
+        tooltip.accept(Component.literal("Rounds: " + rounds(stack) + "/" + type.capacity(stack)).withStyle(ChatFormatting.GRAY));
         tooltip.accept(Component.literal("Hold right-click to load, sneak to unload").withStyle(ChatFormatting.DARK_GRAY));
     }
 
-    int countAmmo(Player player) {
+    int countAmmo(Player player, ItemStack mag) {
+        net.minecraft.world.item.Item ammo = LocalGuns.ammo(mag, type);
         if (player.hasInfiniteMaterials()) {
             return Integer.MAX_VALUE;
         }
         int n = 0;
         Inventory inv = player.getInventory();
         for (int i = 0; i < inv.getContainerSize(); i++) {
-            if (inv.getItem(i).is(type.ammo())) {
+            if (inv.getItem(i).is(ammo)) {
                 n += inv.getItem(i).getCount();
             }
         }
         return n;
     }
 
-    boolean takeAmmo(Player player, int amount) {
+    boolean takeAmmo(Player player, ItemStack mag, int amount) {
+        net.minecraft.world.item.Item ammo = LocalGuns.ammo(mag, type);
         if (player.hasInfiniteMaterials()) {
             return true;
         }
         Inventory inv = player.getInventory();
         for (int i = 0; i < inv.getContainerSize() && amount > 0; i++) {
             ItemStack s = inv.getItem(i);
-            if (s.is(type.ammo())) {
+            if (s.is(ammo)) {
                 int take = Math.min(amount, s.getCount());
                 s.shrink(take);
                 amount -= take;

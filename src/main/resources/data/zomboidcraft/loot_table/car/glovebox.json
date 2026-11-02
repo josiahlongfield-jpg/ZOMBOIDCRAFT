@@ -364,6 +364,21 @@
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:bobblehead",
+          "weight": 12,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:fast_food_wrapper",
           "weight": 12,
           "functions": [

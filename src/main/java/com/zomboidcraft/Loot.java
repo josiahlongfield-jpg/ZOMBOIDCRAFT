@@ -58,7 +58,7 @@ public final class Loot {
     }
 
     /** True inside a military base or quarantine zone, or the naval wharf with its carrier. */
-    private static boolean guarded(ServerLevel level, Vec3 at) {
+    public static boolean guarded(ServerLevel level, Vec3 at) {
         if (!(level.getChunkSource().getGenerator() instanceof CountyChunkGenerator)) {
             return false;
         }
@@ -88,7 +88,7 @@ public final class Loot {
         maybe(random, drops, 0.008f, ModItems.MILITARY_RUCKSACK, 1, 1);
         maybe(random, drops, 0.006f, ModItems.PLATE_CARRIER, 1, 1);
         if (random.nextFloat() < 0.25f) {
-            drops.add(PotionContents.createItemStack(Items.POTION, Potions.WATER));
+            drops.add(com.zomboidcraft.loot.NoVanilla.ours(Items.POTION, 1));
         }
     }
 
@@ -113,7 +113,7 @@ public final class Loot {
         maybe(random, drops, 0.01f, ModItems.FANNY_PACK, 1, 1);
         maybe(random, drops, 0.006f, ModItems.HIKING_BACKPACK, 1, 1);
         if (random.nextFloat() < 0.02f) {
-            drops.add(PotionContents.createItemStack(Items.POTION, Potions.WATER));
+            drops.add(com.zomboidcraft.loot.NoVanilla.ours(Items.POTION, 1));
         }
     }
 

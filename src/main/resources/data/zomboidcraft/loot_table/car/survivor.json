@@ -277,21 +277,6 @@
         },
         {
           "type": "minecraft:item",
-          "name": "zomboidcraft:pistol",
-          "weight": 2,
-          "functions": [
-            {
-              "function": "minecraft:set_damage",
-              "damage": {
-                "type": "minecraft:uniform",
-                "min": 0.2,
-                "max": 0.7
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
           "name": "zomboidcraft:pistol_ammo",
           "weight": 4,
           "functions": [
@@ -301,36 +286,6 @@
                 "type": "minecraft:uniform",
                 "min": 4,
                 "max": 15
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:shotgun",
-          "weight": 1,
-          "functions": [
-            {
-              "function": "minecraft:set_damage",
-              "damage": {
-                "type": "minecraft:uniform",
-                "min": 0.2,
-                "max": 0.7
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:double_barrel",
-          "weight": 1,
-          "functions": [
-            {
-              "function": "minecraft:set_damage",
-              "damage": {
-                "type": "minecraft:uniform",
-                "min": 0.2,
-                "max": 0.7
               }
             }
           ]
