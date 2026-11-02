@@ -67,8 +67,8 @@ def trim(a):
     return a
 
 
-# Josiah 2026-11-02: strikes on surfaces were too loud, "reduce by at least 30%"; 0.6 is 40% quieter (zombie hits untouched)
-STRIKE_VOLUME = 0.6
+# Josiah 2026-11-02: strikes on surfaces were too loud, "reduce by at least 30%", then "drop it by another 30%": 0.6 x 0.7 = 0.42 (zombie hits untouched)
+STRIKE_VOLUME = 0.42
 
 
 def main():
