@@ -105,6 +105,7 @@ public final class ZedBodies {
         final Object[][] buffers = new Object[2][];
         int buffer;
         float submitAge = Float.NaN;
+        final ZedHop.State hop = new ZedHop.State();
     }
 
     /** What a zombie is doing this frame, as the renderer knows it. */
@@ -407,8 +408,9 @@ public final class ZedBodies {
         if (f.speed < 0.2f) {
             clip = f.aggressive ? "lunge_idle" : "idle";
         } else if (oneLeg(f.cuts)) {
-            clip = "stumble";   // Zomboid has no hop: it lurches on what's left
-            rate = Math.max(0.6f, f.speed / WALK);
+            // Zomboid's one-legged lurch (stumble) is a trip onto the floor: on its own it lay down and got up every
+            // step. It stands in Zomboid's own stance and ZedHop hops it on the leg it has.
+            clip = f.aggressive ? "lunge_idle" : "idle";
         } else if (f.sprinter && f.speed > 2.2f) {
             String[] runs = {"sprint1", "sprint2", "sprint3", "sprint5", "sprint6"};
             clip = runs[Math.floorMod(variant >> 3, runs.length)];
@@ -481,6 +483,8 @@ public final class ZedBodies {
                 e.turn = new float[n * 4];
             }
             e.anim.pose(pack, e.upper, e.pos, e.turn);
+            ZedHop.apply(pack, e.hop, e.pos, e.turn, f.cuts,
+                    f.posed == null && f.deathTime <= 0 && f.act == 0 && !f.low, f.speed, dt);
         }
         if (ENTRIES.size() > 256) ENTRIES.values().removeIf(x -> System.currentTimeMillis() - x.seen > 5_000);
 

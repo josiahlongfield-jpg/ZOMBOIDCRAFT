@@ -8,10 +8,15 @@ classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1"
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
-echo "===== gpu timer targets"
-javap -cp "$CP" -p net.minecraft.client.renderer.LevelRenderer 2>&1 | grep -E "executeSolid|renderLevel| render\(|addMainPass"
-javap -cp "$CP" -p net.minecraft.client.renderer.GameRenderer 2>&1 | grep -E " render\(|renderLevel"
-classes 'FeatureRenderDispatcher' | head
+
+echo "===== block shape census"
+classes '(BlockStateModel|BlockModelPart|BlockModelShaper|BlockStateModelSet|ModelManager)\.class' | head
+for c in net.minecraft.client.renderer.block.model.BlockStateModel net.minecraft.client.renderer.block.model.BlockModelPart net.minecraft.client.renderer.block.BlockModelShaper net.minecraft.client.resources.model.ModelManager net.minecraft.client.renderer.block.BlockRenderDispatcher net.minecraft.world.level.chunk.PalettedContainer net.minecraft.world.level.chunk.PalettedContainerRO net.minecraft.client.multiplayer.ClientChunkCache net.minecraft.world.level.chunk.LevelChunkSection; do echo "-- $c"; javap -cp "$CP" -p "$c" 2>&1 | grep -vE 'lambda\$' | grep -iE "quad|part|model|count|getState|getChunk|storage|class|interface|hasOnly|isEmpty" | head -30; done
+classes 'BlockStateModel|ModelManager|BlockRenderDispatcher|BlockModelShaper|BlockModelSet' | head -20
+
+echo "===== gpu timer targets 2"
+javap -cp "$CP" -p 'net.minecraft.client.renderer.feature.FeatureRenderDispatcher$PreparedFrame' 2>&1 | grep -E "execute|render"
+javap -cp "$CP" -p net.minecraft.client.renderer.LevelRenderer 2>&1 | grep -iE "particle|weather|sky|cloud|translucent"
 
 echo "===== persistent mapping 4"
 G=com.mojang.renderpearl.backend.opengl.GlDevice

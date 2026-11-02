@@ -159,7 +159,7 @@ public final class StandIns {
         }
     }
 
-    private static final Map<String, BlockState> CACHE = new HashMap<>();
+    private static final Map<String, BlockState> CACHE = new java.util.concurrent.ConcurrentHashMap<>();
 
     private StandIns() {
     }
