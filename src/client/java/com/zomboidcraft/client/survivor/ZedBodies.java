@@ -89,6 +89,8 @@ public final class ZedBodies {
         /** How far off its place the body is drawn (blocks, in its own turned frame): climbing, beating on a door. */
         float shiftX, shiftY, shiftZ;
         float age;
+        /** Last frame's pose is drawn again from its skinned buffers (a far zombie on its off frame). */
+        boolean reuse;
     }
 
     static final class Entry {
@@ -106,6 +108,12 @@ public final class ZedBodies {
         final Object[][] buffers = new Object[2][];
         int buffer;
         float submitAge = Float.NaN;
+        /** The bones it was last drawn with, and the frame, level and cuts they were posed for. */
+        Matrix4f[] lastSkin;
+        long posedFrame = Long.MIN_VALUE;
+        int posedLevel = -1, posedCuts;
+        /** Which of the two buffers that pose was skinned into (-1: none yet). */
+        int skinnedBuffer = -1;
     }
 
     /** What a zombie is doing this frame, as the renderer knows it. */
@@ -471,7 +479,13 @@ public final class ZedBodies {
             e.buffers[0] = e.buffers[1] = null;
             e.upper = upperBody(pack);
         }
-        if (e.pos == null || f.age != e.age) {
+        // a far zombie (the lightest level) is posed and skinned every other frame, half of them on each: on its off
+        // frame last frame's body is drawn again where it now stands. With a horde most zombies are far, and posing
+        // and skinning them was a fifth of the frame (2026-11-02, 600 zombies)
+        long frame = com.zomboidcraft.zombie.Profiler.frameNo;
+        boolean reuse = level >= 2 && ZcConfig.get().performance.farZombieHalfRate && e.pos != null && e.lastSkin != null
+                && e.posedFrame == frame - 1 && e.posedLevel == level && e.posedCuts == f.cuts && ((frame + id) & 1) != 0;
+        if (!reuse && (e.pos == null || f.age != e.age)) {
             float dt = Float.isNaN(e.age) ? 0 : Math.max(0, Math.min(0.25f, (f.age - e.age) / 20f));
             if (Float.isNaN(e.age) && f.deathTime > 0) dt = 10;   // a body first seen lying: already down
             e.age = f.age;
@@ -498,8 +512,19 @@ public final class ZedBodies {
         d.level = level;
         d.pending = pending;
         d.age = f.age;
-        d.skin = skinOf(pack, e.pos, e.turn);
-        if (f.cuts != 0) collapse(pack, d.skin, f.cuts);
+        if (reuse) {
+            d.skin = e.lastSkin;
+            d.reuse = true;
+        } else {
+            d.skin = skinOf(pack, e.pos, e.turn);
+            if (f.cuts != 0) collapse(pack, d.skin, f.cuts);
+            e.lastSkin = d.skin;
+            e.posedFrame = frame;
+            e.posedLevel = level;
+            e.posedCuts = f.cuts;
+            // not drawn this frame (its textures are being made): nothing skinned to draw again next frame
+            if (pending) e.posedFrame = Long.MIN_VALUE;
+        }
         d.body = body;
         d.clothes = clothes;
         d.hairPiece = look.hairPiece();
@@ -736,11 +761,16 @@ public final class ZedBodies {
         pose.scale(-1, -1, 1);
         pose.mulPose(new Matrix4f().rotationY((float) Math.PI));
         if (d.shiftX != 0 || d.shiftY != 0 || d.shiftZ != 0) pose.translate(d.shiftX, d.shiftY, d.shiftZ);
-        NpcSkinDraw.submitWith(d.pack.skin, d.skin, d.level,
+        Object[] buf = buffers(d);
+        Entry e = d.entry;
+        // on a far zombie's off frame its buffers still hold last frame's skinned body: drawn as they are (no bones)
+        boolean again = d.reuse && e.buffer == e.skinnedBuffer;
+        if (!again) e.skinnedBuffer = e.buffer;
+        NpcSkinDraw.submitWith(d.pack.skin, again ? null : d.skin, d.level,
                 g -> g.piece.equals("body") || g.piece.equals(d.hairPiece) || g.piece.equals(d.beardPiece) || d.clothes.containsKey(g.piece),
                 g -> g.piece.equals("body") ? d.body : g.piece.equals(d.hairPiece) ? d.hair
                         : g.piece.equals(d.beardPiece) ? d.beard : d.clothes.get(g.piece),
-                buffers(d), light, overlay, pose, collector);
+                buf, light, overlay, pose, collector);
         int head = d.pack.head;
         if (d.eyes > 0.01f && head >= 0) {
             Matrix4f m = d.skin[head];
