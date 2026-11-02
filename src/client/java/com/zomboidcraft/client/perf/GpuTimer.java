@@ -25,6 +25,11 @@ public final class GpuTimer {
 
     private record Pending(String label, int start, int end, long frame) {}
 
+    private record Slow(long frame, long ns, Map<String, Long> parts) {}
+
+    /** Each frame's parts while they come in, and the slowest whole frames of this profile. */
+    private static final Map<Long, Map<String, Long>> perFrame = new java.util.HashMap<>();
+    private static final java.util.List<Slow> worst = new java.util.ArrayList<>();
     private static final ArrayDeque<Integer> free = new ArrayDeque<>();
     private static final ArrayDeque<Pending> pending = new ArrayDeque<>();
     private static final Map<String, int[]> open = new LinkedHashMap<>();
@@ -54,6 +59,8 @@ public final class GpuTimer {
             synchronized (GpuTimer.class) {
                 totals.clear();
                 framesTimed = 0;
+                worst.clear();
+                perFrame.clear();
             }
         }
         wasOn = now;
@@ -123,8 +130,21 @@ public final class GpuTimer {
                 long t0 = GL33C.glGetQueryObjecti64(p.start, GL15C.GL_QUERY_RESULT);
                 long t1 = GL33C.glGetQueryObjecti64(p.end, GL15C.GL_QUERY_RESULT);
                 long[] t = totals.computeIfAbsent(p.label, k -> new long[2]);
-                t[0] += Math.max(0, t1 - t0);
+                long ns = Math.max(0, t1 - t0);
+                t[0] += ns;
                 t[1]++;
+                Map<String, Long> parts = perFrame.computeIfAbsent(p.frame, k -> new LinkedHashMap<>());
+                parts.merge(p.label, ns, Long::sum);
+                if (p.label.equals(FRAME)) {
+                    // the whole frame is the last part asked for in it: everything else of that frame is in by now
+                    perFrame.remove(p.frame);
+                    if (ns >= 100_000_000L) {
+                        worst.add(new Slow(p.frame, ns, parts));
+                        worst.sort((a, b) -> Long.compare(b.ns, a.ns));
+                        if (worst.size() > 8) worst.remove(worst.size() - 1);
+                    }
+                    if (perFrame.size() > 64) perFrame.clear();
+                }
             }
             pending.poll();
             free.add(p.start);
@@ -139,10 +159,12 @@ public final class GpuTimer {
         }
         Map<String, long[]> snap;
         long frames;
+        java.util.List<Slow> slow;
         synchronized (GpuTimer.class) {
             snap = new LinkedHashMap<>();
             totals.forEach((k, v) -> snap.put(k, v.clone()));
             frames = framesTimed;
+            slow = new java.util.ArrayList<>(worst);
         }
         if (frames == 0 || snap.isEmpty()) {
             return "Graphics card timers: no frames timed\n";
@@ -166,6 +188,19 @@ public final class GpuTimer {
         if (sh != null && st != null) {
             r.append(String.format("  %-58s %7.2f ms%n", "  shadow pass: objects and the rest (shadow minus blocks)",
                     (sh[0] - st[0]) / 1e6 / frames));
+        }
+        if (!slow.isEmpty()) {
+            r.append("-- The slowest frames on the card (100 ms or more), part by part\n");
+            for (Slow w : slow) {
+                r.append(String.format("  frame %d: %.0f ms:", w.frame, w.ns / 1e6));
+                for (String k : ORDER) {
+                    Long v = w.parts.get(k);
+                    if (v != null && !k.equals(FRAME)) {
+                        r.append(String.format(" %s %.0f;", k.trim().replaceAll(" \\(.*\\)", ""), v / 1e6));
+                    }
+                }
+                r.append('\n');
+            }
         }
         long[] so = snap.get(OBJECTS), te = snap.get(TERRAIN);
         if (so != null && te != null) {
