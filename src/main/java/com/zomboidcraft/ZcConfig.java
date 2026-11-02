@@ -382,6 +382,11 @@ public final class ZcConfig {
          */
         public boolean fastBodyVertices = true;
         /**
+         * Zombies drawn at the lightest level (past the nearest 30 or so, or 16+ blocks off) are posed every other frame,
+         * half of them on each; in between, last frame's pose is drawn where the zombie now stands. Client side.
+         */
+        public boolean farZombieHalfRate = true;
+        /**
          * Only entities (zombies, cars, corpses, people, props) within this many blocks of the camera cast shader shadows;
          * further ones are still drawn, just left out of the shadow map, where they cost the most (2026-11-01 GPU timers:
          * 104 ms of a 262 ms frame). 0 = no limit. Client side.
