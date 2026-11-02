@@ -24,11 +24,24 @@ public abstract class ShadowCasterMixin {
         if (!cir.getReturnValueZ()) {
             return;
         }
-        double reach = ZcConfig.get().performance.shadowObjectDistance;
-        if (reach <= 0 || !ZDetail.shadowPass()) {
+        if (!ZDetail.shadowPass()) {
             return;
         }
-        if (entity.distanceToSqr(camX, camY, camZ) > reach * reach) {
+        // Josiah 2026-11-02: "get rid of shadows entirely, its a night based game"
+        if (!ZcConfig.get().performance.entityShadows) {
+            cir.setReturnValue(false);
+            return;
+        }
+        double reach = ZcConfig.get().performance.shadowObjectDistance;
+        if (reach <= 0) {
+            return;
+        }
+        double d = entity.distanceToSqr(camX, camY, camZ);
+        if (d > reach * reach) {
+            cir.setReturnValue(false);
+        } else if (com.zomboidcraft.zombie.ZombieTypes.isWalker(entity)
+                && d > ZDetail.nearestSq(ZcConfig.get().performance.shadowZombies)) {
+            // in a horde only the nearest few cast one (downtown: zombie shadows were 33 ms of the card's frame)
             cir.setReturnValue(false);
         }
     }

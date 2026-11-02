@@ -46,6 +46,7 @@ public final class GpuTimer {
 
     /** At the start of a frame: collect finished answers, reset the pass flags. */
     public static void frameStart() {
+        Profiler.frameNo++;
         inShadow = false;
         afterDeferred = false;
         boolean now = on();

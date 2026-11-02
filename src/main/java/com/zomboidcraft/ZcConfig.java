@@ -381,6 +381,14 @@ public final class ZcConfig {
          * 104 ms of a 262 ms frame). 0 = no limit. Client side.
          */
         public double shadowObjectDistance = 24;
+        /**
+         * Whether entities (zombies, cars, people, props) cast shader shadows at all. Off by default (Josiah 2026-11-02:
+         * a night game doesn't need them); the blocks still go through the shadow pass, which Photon's coloured lights
+         * need. On uses shadowObjectDistance and shadowZombies. Client side.
+         */
+        public boolean entityShadows = false;
+        /** Of the zombies within shadowObjectDistance, only the nearest this many cast shader shadows. Client side. */
+        public int shadowZombies = 12;
         /** The nearest this many zombies on screen get every clothing detail (within look.zombieDetailDistance). Client side. */
         public int fullDetailZombies = 12;
         /** The nearest this many get most of it; the rest only the main shapes. Client side. */
@@ -1265,6 +1273,10 @@ public final class ZcConfig {
         public double pzZombieDistance = 24;
         /** At most this many zombies (the nearest) are drawn with the Zomboid bodies at once; their corpses count by the same line. Client side. */
         public int pzZombieMax = 10;
+        /** The next this many nearest zombies within pzMidDistance get the thinned Zomboid body; the rest the thinnest one (still a 3D Zomboid body). Client side. */
+        public int pzMidZombies = 20;
+        /** Blocks (as near as they look through a scope) within which the thinned Zomboid body is used. Client side. */
+        public double pzMidDistance = 16;
         /** Zomboid zombies roughed up as Zomboid's are: blood and grime by body part, and holes torn through their clothes. Client side. */
         public boolean roughZombies = true;
         /** Blocks within which zombies show every small clothing detail; further out the smallest bits are left off, and past 2.5 times this only the main shapes stay. Client side. */
