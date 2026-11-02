@@ -446,10 +446,11 @@ public final class ZedBodies {
         SurvivorPack pack = packFor(f.variant);
         if (pack == null) return null;
         level = Math.min(level, levels(pack));
-        // past the nearest few (level 1 and 2) it wears one of a few looks its outfit shares: a horde's textures fit in
-        // what's kept, and zombies in the same look are drawn together in one go instead of one by one (each in its
-        // own textures was most of the card's frame downtown); the nearest, its own
-        Look look = look(pack, level >= 1 ? shared(f.variant, f.outfit) : f.variant, f.outfit);
+        // every zombie wears one of the few looks its outfit shares, near ones too: a horde's textures fit in what's
+        // kept, zombies in the same look are drawn together in one go, and a zombie keeps its look as it comes close.
+        // Each nearest zombie in its own look made textures nonstop in a horde (351 in 30 s with 600 zombies, Josiah's
+        // profile 2026-11-02), each one landing on a full graphics card and freezing frames
+        Look look = look(pack, shared(f.variant, f.outfit), f.outfit);
         int size = level == 0 ? TEX : TEX_LOW;
         // the body at its level's size and paint, or while that's being made the other level's (not a frame without it)
         Identifier body = SurvivorTextures.body(pack, level == 0 ? look.paint() : look.paintLow(), size);
@@ -557,7 +558,7 @@ public final class ZedBodies {
     // ------------------------------------------------------------------ the far crowd
 
     /** Figures out in the open past the real zombies (CrowdFx): a few shared poses, a few looks an outfit. */
-    private static final int CROWD_PHASES = 4, CROWD_LOOKS = 16;
+    private static final int CROWD_PHASES = 4, CROWD_LOOKS = 8;
 
     private static final class Crowd {
         final Object[][][] buffers = new Object[2][CROWD_PHASES][];

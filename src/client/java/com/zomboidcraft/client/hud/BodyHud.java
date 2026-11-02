@@ -69,26 +69,9 @@ final class BodyHud {
         // tucks away down and to the left
         float drop = (1 - a) * (1 - a);
         int x = Math.round(LEFT - drop * 20), y = Math.round(g.guiHeight() - BOTTOM - H + drop * (H + 20));
-        float hurt = Math.max(0, 1 - f);
-        Hud.sprite(g, Hud.id("glow"), x - 8, y + 10, W + 16, H - 6, Hud.alpha(0xFFB01408, a * Math.min(.85f, hurt * 1.1f)));
-        Hud.sprite(g, Hud.id("shadow"), x + 6, y + H - 8, W - 12, 8, Hud.alpha(0xFFFFFFFF, a));
-
-        // where you look, relative to your body: the head turns first and the body follows, as yours does
-        float pt = delta.getGameTimeDeltaPartialTick(true);
-        float turn = Mth.wrapDegrees(Mth.lerp(pt, player.yHeadRotO, player.yHeadRot) - Mth.lerp(pt, player.yBodyRotO, player.yBodyRot));
-        float wantYaw = Mth.clamp(-(turn * 0.5f) / 40f, -1.2f, 1.2f);
-        float wantPitch = Mth.clamp(-player.getXRot(pt) / 40f, -0.9f, 0.9f);
-        float ease = Math.min(1, Hud.dt * 10);
-        yaw += (wantYaw - yaw) * ease;
-        pitch += (wantPitch - pitch) * ease;
-        float cx = x + W / 2f, cy = y + H / 2f;
-        InjuryGlowLayer.capturing = true;
-        try {
-            InventoryScreen.extractEntityInInventoryFollowsMouse(g, x, y, x + W, y + H, 34, 0.0625f,
-                    cx - 40 * (float) Math.tan(yaw), cy - 40 * (float) Math.tan(pitch), player);
-        } finally {
-            InjuryGlowLayer.capturing = false;
-        }
+        // the 3D figure of you that stood here is gone from the HUD (Josiah 2026-11-02: redrawing it every frame was an
+        // eighth of the game's main thread; the inventory and character pages keep it). The injury word stays
+        float cx = x + W / 2f;
 
         Font font = mc.font;
         // the worst injury names itself; otherwise a word for your health
