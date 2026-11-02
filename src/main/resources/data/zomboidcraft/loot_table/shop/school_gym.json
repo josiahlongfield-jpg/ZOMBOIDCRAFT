@@ -869,6 +869,21 @@
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:pennant_set",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:portable_defib",
           "weight": 1
         },
@@ -890,6 +905,11 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:championship_ring",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:signed_jersey_frame",
           "weight": 1
         }
       ]

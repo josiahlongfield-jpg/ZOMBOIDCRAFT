@@ -652,6 +652,8 @@ def looks(it):
     out.update(wave5games.looks(it, wrap))
     import wave5furn
     out.update(wave5furn.looks(it, wrap))
+    import wave5wall
+    out.update(wave5wall.looks(it, wrap))
     return out
 
 

@@ -1127,6 +1127,21 @@ massage_chair | Massage Chair | P | 80 | 80 |
 grandfather_clock | Grandfather Clock | P | 90 | 60 | mansion
 stuffed_bear | Stuffed Bear | P | 100 | 150 |
 theatre_throne | Theatre Throne | G | 150 | 45 |
+band_poster | Band Poster | C | 2 | 0.1 | bed
+movie_poster | Movie Poster | C | 2 | 0.1 | bed
+wall_calendar | Wall Calendar | C | 1 | 0.2 | bed office desk
+pennant_set | Pennant Set | C | 3 | 0.2 | school stadium
+tin_sign | Tin Sign | S | 8 | 0.8 | garage diner pawn
+licence_plate_set | Licence Plate Collection | S | 10 | 3 | garage auto
+butterfly_display | Butterfly Display | S | 12 | 1 | bed
+spray_paint_kit | Spray Paint Kit | S | 6 | 1.5 | hard
+framed_gold_record | Framed Gold Record | R | 40 | 2 | mansion
+mounted_swordfish | Mounted Swordfish | R | 35 | 10 | dock liq
+antique_map | Antique Map | R | 30 | 0.5 | books mansion
+stuffed_owl | Stuffed Owl | R | 25 | 1.5 | mansion pawn
+signed_jersey_frame | Signed Jersey Frame | P | 70 | 4 | stadium mansion
+stained_glass_panel | Stained Glass Panel | P | 60 | 8 | church pawn
+film_prop_display | Film Prop Display | G | 200 | 20 | mansion
 """
 
 ROSTER['Junk & scrap'] = """
