@@ -28,7 +28,12 @@ public abstract class ShadowCasterMixin {
         if (reach <= 0 || !ZDetail.shadowPass()) {
             return;
         }
-        if (entity.distanceToSqr(camX, camY, camZ) > reach * reach) {
+        double d = entity.distanceToSqr(camX, camY, camZ);
+        if (d > reach * reach) {
+            cir.setReturnValue(false);
+        } else if (com.zomboidcraft.zombie.ZombieTypes.isWalker(entity)
+                && d > ZDetail.nearestSq(ZcConfig.get().performance.shadowZombies)) {
+            // in a horde only the nearest few cast one (downtown: zombie shadows were 33 ms of the card's frame)
             cir.setReturnValue(false);
         }
     }

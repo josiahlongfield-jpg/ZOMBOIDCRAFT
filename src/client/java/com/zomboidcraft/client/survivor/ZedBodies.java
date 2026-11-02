@@ -149,9 +149,12 @@ public final class ZedBodies {
         ZcConfig.Look look = ZcConfig.get().look;
         double d = look.pzZombieDistance;
         if (distSq < d * d && distSq < com.zomboidcraft.client.zombie.body.ZDetail.nearestSq(look.pzZombieMax)) return 0;
-        // the far crowd (past the nearest performance.meshZombies and spriteMinDistance, through a scope by how near it
-        // looks): the thinnest Zomboid body, still a model, never a picture (Josiah: a scope would show a picture up)
-        return com.zomboidcraft.client.zombie.body.ZDetail.sprite(distSq) ? 2 : 1;
+        // the thinned body only for the next nearest few close by (through a scope by how near it looks); every other
+        // zombie gets the thinnest Zomboid body, still a model, never a picture (Josiah: a scope would show a picture
+        // up). 2026-11-02 downtown profile: level-1 bodies, each in its own textures, were 65 ms of the card's frame
+        double m = look.pzMidDistance, seen = com.zomboidcraft.client.zombie.body.ZDetail.zoomed(distSq);
+        if (seen < m * m && distSq < com.zomboidcraft.client.zombie.body.ZDetail.nearestSq(look.pzMidZombies)) return 1;
+        return 2;
     }
 
     private static final Map<SurvivorPack, Integer> LEVELS = new java.util.WeakHashMap<>();
@@ -443,9 +446,10 @@ public final class ZedBodies {
         SurvivorPack pack = packFor(f.variant);
         if (pack == null) return null;
         level = Math.min(level, levels(pack));
-        // far off (level 2) it wears one of a few looks its outfit shares, so a horde's textures fit in what's kept
-        // (each its own made them and threw them away every frame); nearer, its own
-        Look look = look(pack, level >= 2 ? shared(f.variant, f.outfit) : f.variant, f.outfit);
+        // past the nearest few (level 1 and 2) it wears one of a few looks its outfit shares: a horde's textures fit in
+        // what's kept, and zombies in the same look are drawn together in one go instead of one by one (each in its
+        // own textures was most of the card's frame downtown); the nearest, its own
+        Look look = look(pack, level >= 1 ? shared(f.variant, f.outfit) : f.variant, f.outfit);
         int size = level == 0 ? TEX : TEX_LOW;
         // the body at its level's size and paint, or while that's being made the other level's (not a frame without it)
         Identifier body = SurvivorTextures.body(pack, level == 0 ? look.paint() : look.paintLow(), size);

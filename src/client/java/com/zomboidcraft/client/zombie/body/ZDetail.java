@@ -88,6 +88,11 @@ public final class ZDetail {
                 : Double.MAX_VALUE;
     }
 
+    /** A squared distance as near as it looks through the current zoom (a 4x scope makes 40 blocks look like 10). */
+    public static double zoomed(double distanceSq) {
+        return distanceSq / zoomSq;
+    }
+
     /** Whether a zombie this far (squared) from the camera is drawn as a picture (ZSprites), in either pass. */
     public static boolean sprite(double distanceSq) {
         return distanceSq / zoomSq >= spriteSq;
