@@ -1156,6 +1156,20 @@ jukebox | Jukebox | P | 120 | 110 |
 upright_piano | Upright Piano | P | 100 | 200 | 
 gramophone | Gramophone | P | 60 | 8 | mansion pawn
 reel_to_reel | Reel-to-Reel Deck | P | 55 | 18 | 
+bobblehead | Bobblehead | C | 3 | 0.3 | stadium office glove
+mannequin | Mannequin | C | 5 | 9 | cloth
+cardboard_cutout | Cardboard Cutout | C | 3 | 2 | 
+lucky_cat | Lucky Cat Statue | C | 4 | 0.8 | diner
+garden_gnome | Garden Gnome | C | 3 | 2 | farm hard
+ship_in_bottle | Ship in a Bottle | S | 12 | 1 | dock pawn
+desk_globe | Desk Globe | S | 15 | 2.5 | books school office
+gumball_machine | Gumball Machine | S | 15 | 8 | diner laund
+model_train_set | Model Train Set | R | 45 | 6 | toyshop bed
+diving_helmet | Diving Helmet | P | 90 | 15 | dock pawn
+fossil | Fossil | P | 70 | 6 | 
+carousel_horse | Carousel Horse | G | 180 | 40 | 
+suit_of_armour | Suit of Armour | G | 220 | 30 | mansion
+meteorite | Meteorite Fragment | G | 250 | 4 | 
 """
 
 ROSTER['Junk & scrap'] = """
