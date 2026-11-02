@@ -9,6 +9,9 @@ sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
 
+echo "===== vanilla atlases"
+for j in $MC_JARS; do for a in blocks items; do unzip -p "$j" "assets/minecraft/atlases/$a.json" 2>/dev/null | head -c 3000; echo; done; done
+
 echo "===== pip reuse"
 for c in net.minecraft.client.gui.render.pip.PictureInPictureRenderer net.minecraft.client.gui.render.pip.GuiEntityRenderer net.minecraft.client.gui.render.state.pip.GuiEntityRenderState net.minecraft.client.gui.render.state.pip.PictureInPictureRenderState; do echo "-- $c"; javap -cp "$CP" -p "$c" 2>&1 | grep -vE 'lambda\$' | head -40; done
 javap -cp "$CP" -p -c net.minecraft.client.gui.render.pip.PictureInPictureRenderer 2>&1 | grep -A60 'void prepare(' | grep -E 'invoke|if|getfield' | head -40
