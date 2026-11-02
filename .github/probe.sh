@@ -8,16 +8,12 @@ classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1"
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
-echo "===== buffer builder fast path"
-for c in com.mojang.blaze3d.vertex.BufferBuilder com.mojang.blaze3d.vertex.ByteBufferBuilder com.mojang.blaze3d.vertex.VertexFormat com.mojang.blaze3d.vertex.VertexFormatElement com.mojang.blaze3d.vertex.DefaultVertexFormat; do echo "-- $c"; javap -cp "$CP" -p "$c" 2>&1 | grep -vE 'lambda\$' | head -70; done
-javap -cp "$CP" -p -c com.mojang.blaze3d.vertex.BufferBuilder 2>&1 | grep -A40 -E 'endLastVertex\(\);|long beginVertex|addVertex\(float, float, float\);' | head -120
-javap -cp "$CP" -p -c com.mojang.blaze3d.vertex.DefaultVertexFormat 2>&1 | grep -A40 'static {}' | grep -B2 -A2 -E 'ENTITY|NEW_ENTITY' | head -40
-javap -cp "$CP" -p net.minecraft.client.renderer.SubmitNodeCollector 2>&1 | head -40
-javap -cp "$CP" -p 'net.minecraft.client.renderer.SubmitNodeCollector$CustomGeometryRenderer' 2>&1 | head
-classes 'feature/CustomFeatureRenderer' | head
-javap -cp "$CP" -p -c net.minecraft.client.renderer.feature.CustomFeatureRenderer 2>&1 | grep -E 'invoke|getBuffer' | head -30
+echo "===== compile errors"
+grep -E "error:|warning: \[removal\]" -A3 build.log | head -80
 
-
+echo "===== vertex formats"
+for c in com.mojang.renderpearl.api.GpuFormat com.mojang.renderpearl.api.vertex.VertexFormat com.mojang.renderpearl.api.vertex.VertexFormatElement; do echo "-- $c"; javap -cp "$CP" -p "$c" 2>&1 | grep -vE 'lambda\$' | head -60; done
+javap -cp "$CP" -p -c com.mojang.blaze3d.vertex.DefaultVertexFormat 2>&1 | grep -A200 'static {}' | grep -E 'ldc|getstatic|putstatic' | head -120
 
 echo "===== stitcher padding 2"
 javap -cp "$CP" -p -c net.minecraft.client.renderer.texture.SpriteLoader 2>&1 | grep -A80 'Preparations stitch(' | sed -n '60,140p'
