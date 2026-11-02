@@ -271,7 +271,13 @@ public final class Survivors {
             Matrix4f was = itemFrame(arm, gun == 1, slim);
             Matrix4f back = new Matrix4f(was).invert();
             Vector3f support = back.transformPosition(new Vector3f(HoldPoses.supportAt).div(16));
-            Vector3f haveDir = new Vector3f(support).normalize();
+            // the gun's own line, from its handguard's back end to its front (parallel to the barrel), in the gun's
+            // frame: the grip-to-support line bends with wherever the support point fell and stood the gun on end
+            Vector3f from = back.transformPosition(new Vector3f(HoldPoses.supportFrom).div(16));
+            Vector3f to = back.transformPosition(new Vector3f(HoldPoses.supportTo).div(16));
+            Vector3f haveDir = new Vector3f(to).sub(from);
+            if (haveDir.lengthSquared() < 1e-6f) haveDir.set(support);
+            haveDir.normalize();
             Vector3f haveUp = back.transformDirection(new Vector3f(0, -1, 0)).normalize();   // model y runs down
             Vector3f grip = gripAt(pack, pos, turn, gun), other = gripAt(pack, pos, turn, 1 - gun);
             Vector3f g = toModel(grip.x, grip.y, grip.z), o = toModel(other.x, other.y, other.z);
@@ -297,7 +303,12 @@ public final class Survivors {
                 arm.z = armFrame.m32() * 16;
                 Vector3f e = new Matrix3f(armFrame).getEulerAnglesZYX(new Vector3f());
                 arm.setRotation(e.x, e.y, e.z);
-                Vector3f sp = item.transformPosition(new Vector3f(support));
+                // the other hand takes the handguard where it comes nearest her palm
+                Vector3f a0 = item.transformPosition(new Vector3f(from)), a1 = item.transformPosition(new Vector3f(to));
+                Vector3f palm = toModel(other.x, other.y, other.z);
+                Vector3f seg = new Vector3f(a1).sub(a0);
+                float tt = seg.lengthSquared() < 1e-8f ? 0 : Math.max(0, Math.min(1, new Vector3f(palm).sub(a0).dot(seg) / seg.lengthSquared()));
+                Vector3f sp = seg.lengthSquared() < 1e-8f ? item.transformPosition(new Vector3f(support)) : new Vector3f(a0).add(seg.mul(tt));
                 reachPoint(pack, pos, turn, 1 - gun, fromModel(sp.x, sp.y, sp.z));
                 reached[0] = reached[1] = true;
             }

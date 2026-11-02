@@ -93,6 +93,9 @@ public final class SurvivorArms {
                 for (int s = 0; s < 2; s++) {
                     int h = pack.hand[s];
                     if (h < 0 || want[s] == null) continue;
+                    // a long gun's other hand keeps the clip's wrist instead (turned whole, it bent back like a
+                    // waiter's): it comes up under the handguard however her forearm has to reach it
+                    if (s == 1 && !kind.equals("pistol")) continue;
                     hold[s] = new Quaternionf(onto).mul(new Quaternionf(turn[h * 4], turn[h * 4 + 1], turn[h * 4 + 2], turn[h * 4 + 3])).normalize();
                 }
             }
@@ -115,8 +118,8 @@ public final class SurvivorArms {
                 float reachLen = shoulder.distance(pos[el * 3], pos[el * 3 + 1], pos[el * 3 + 2])
                         + new Vector3f(pos[el * 3], pos[el * 3 + 1], pos[el * 3 + 2]).distance(pos[wr * 3], pos[wr * 3 + 1], pos[wr * 3 + 2]);
                 float d = shoulder.distance(wristAt[s]);
-                if (d <= reachLen * 0.85f) continue;
-                Vector3f step = new Vector3f(wristAt[s]).sub(shoulder).mul(1 - reachLen * 0.85f / d);
+                if (d <= reachLen * 0.78f) continue;
+                Vector3f step = new Vector3f(wristAt[s]).sub(shoulder).mul(1 - reachLen * 0.78f / d);
                 for (int b = 0; b < n; b++) {
                     pos[b * 3] += step.x;
                     pos[b * 3 + 1] += step.y;

@@ -78,6 +78,8 @@ public final class HoldPoses {
      */
     public static boolean posed;
     public static final Vector3f supportAt = new Vector3f();
+    /** The two ends of the stretch the off hand may hold (the handguard, from back to front), in model pixels. */
+    public static final Vector3f supportFrom = new Vector3f(), supportTo = new Vector3f();
 
     public static void apply(PlayerModel model, AvatarRenderState state) {
         posed = false;
@@ -244,6 +246,8 @@ public final class HoldPoses {
         offArm.setRotation(a[0], a[1] * mirror, 0);
         posed = true;
         supportAt.set(target.x * mirror, target.y, target.z);
+        supportFrom.set(p0.x * mirror, p0.y, p0.z);
+        supportTo.set(p1.x * mirror, p1.y, p1.z);
     }
 
     private static final float RELOAD_LIFT = 0.25f, RELOAD_TURN = 0.3f;
