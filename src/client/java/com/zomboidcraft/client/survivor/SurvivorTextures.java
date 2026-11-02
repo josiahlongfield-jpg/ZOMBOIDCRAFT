@@ -37,7 +37,20 @@ public final class SurvivorTextures {
 
     /** Pixels kept made (about 256 MB): bodies are a megapixel, garments a sixteenth of that. */
     /** Pixels of made textures kept (a horde of Zomboid zombies near and mid range, their corpses, the survivors). */
-    private static final long BUDGET = 128L << 20;
+    // 128M pixels (512 MB on the card) filled Josiah's 12 GB card with Photon on (2026-11-02, 11.3 of 12 GB in use);
+    // 64M pixels (256 MB) still holds a downtown horde: the nearest 10 in their own looks at 512, the rest in the shared
+    // crowd looks at 256
+    private static final long BUDGET = 64L << 20;
+
+    public static int madeCount() {
+        return made;
+    }
+
+    /** For /zc profile: how many textures have been made so far, and how many MB are kept on the card now. */
+    public static String stats() {
+        return String.format("Zomboid body textures: %d made since start, %d kept, %d MB on the card (cap %d MB)", made, MADE.size(),
+                kept * 4 >> 20, BUDGET * 4 >> 20);
+    }
     private static long kept;
     private static final Map<String, Integer> SIZE = new java.util.HashMap<>();
     private static final java.util.Set<String> FAILED = new java.util.HashSet<>();

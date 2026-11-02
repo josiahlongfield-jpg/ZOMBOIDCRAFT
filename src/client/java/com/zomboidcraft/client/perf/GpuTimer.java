@@ -45,6 +45,44 @@ public final class GpuTimer {
         Profiler.gpuReport = GpuTimer::report;
     }
 
+    /** NVIDIA's memory report (GL_NVX_gpu_memory_info), in KB: card total, free now, evictions so far, KB evicted so far. */
+    private static long vramTotal, vramFree, vramMinFree = Long.MAX_VALUE, vramEvictions, vramEvicted, vramStartEvictions = -1,
+            vramStartEvicted;
+    private static boolean vramChecked, vramOk;
+    private static int madeAtStart;
+
+    private static void vram() {
+        try {
+            if (!vramChecked) {
+                vramChecked = true;
+                vramOk = org.lwjgl.opengl.GL.getCapabilities().GL_NVX_gpu_memory_info;
+            }
+            if (!vramOk) return;
+            vramTotal = org.lwjgl.opengl.GL11C.glGetInteger(0x9048);
+            vramFree = org.lwjgl.opengl.GL11C.glGetInteger(0x9049);
+            vramEvictions = org.lwjgl.opengl.GL11C.glGetInteger(0x904A);
+            vramEvicted = org.lwjgl.opengl.GL11C.glGetInteger(0x904B);
+            vramMinFree = Math.min(vramMinFree, vramFree);
+            if (vramStartEvictions < 0) {
+                vramStartEvictions = vramEvictions;
+                vramStartEvicted = vramEvicted;
+            }
+        } catch (Throwable t) {
+            vramOk = false;
+        }
+    }
+
+    private static String vramReport() {
+        if (!vramOk || vramStartEvictions < 0) {
+            return "Graphics card memory: not reported (needs an NVIDIA card)\n";
+        }
+        return String.format("Graphics card memory: %d MB on the card, %d MB free at the end, %d MB free at the lowest;"
+                        + " %d evictions during the profile (%d MB pushed out to normal RAM)%s%n",
+                vramTotal / 1024, vramFree / 1024, vramMinFree / 1024, vramEvictions - vramStartEvictions,
+                (vramEvicted - vramStartEvicted) / 1024,
+                vramEvictions > vramStartEvictions ? "  <- THE CARD IS FULL: things are being swapped out, which freezes frames" : "");
+    }
+
     private static boolean on() {
         return Profiler.gpuTiming && !broken;
     }
@@ -61,7 +99,13 @@ public final class GpuTimer {
                 framesTimed = 0;
                 worst.clear();
                 perFrame.clear();
+                vramMinFree = Long.MAX_VALUE;
+                vramStartEvictions = -1;
+                madeAtStart = com.zomboidcraft.client.survivor.SurvivorTextures.madeCount();
             }
+        }
+        if (now && (frame & 31) == 0) {
+            vram();
         }
         wasOn = now;
         frame++;
@@ -170,6 +214,9 @@ public final class GpuTimer {
             return "Graphics card timers: no frames timed\n";
         }
         StringBuilder r = new StringBuilder("\n==================== Graphics card time per frame (GPU timers) ====================\n");
+        r.append(vramReport());
+        r.append(com.zomboidcraft.client.survivor.SurvivorTextures.stats()).append(String.format(" (%d made during the profile)%n",
+                com.zomboidcraft.client.survivor.SurvivorTextures.madeCount() - madeAtStart));
         r.append(String.format("%d frames timed. Milliseconds on the card per frame, averaged; parts overlap (the shadow and"
                 + " lighting lines are inside World, World inside Whole frame).%n", frames));
         long[] whole = snap.get(FRAME);
