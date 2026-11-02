@@ -9,6 +9,12 @@ sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
 
+echo "===== pip reuse"
+for c in net.minecraft.client.gui.render.pip.PictureInPictureRenderer net.minecraft.client.gui.render.pip.GuiEntityRenderer net.minecraft.client.gui.render.state.pip.GuiEntityRenderState net.minecraft.client.gui.render.state.pip.PictureInPictureRenderState; do echo "-- $c"; javap -cp "$CP" -p "$c" 2>&1 | grep -vE 'lambda\$' | head -40; done
+javap -cp "$CP" -p -c net.minecraft.client.gui.render.pip.PictureInPictureRenderer 2>&1 | grep -A60 'void prepare(' | grep -E 'invoke|if|getfield' | head -40
+classes 'Stitcher' | head
+javap -cp "$CP" -p -c net.minecraft.client.renderer.texture.Stitcher 2>&1 | grep -A80 'boolean expand' | head -90
+
 echo "===== block shape census"
 classes '(BlockStateModel|BlockModelPart|BlockModelShaper|BlockStateModelSet|ModelManager)\.class' | head
 for c in net.minecraft.client.renderer.block.model.BlockStateModel net.minecraft.client.renderer.block.model.BlockModelPart net.minecraft.client.renderer.block.BlockModelShaper net.minecraft.client.resources.model.ModelManager net.minecraft.client.renderer.block.BlockRenderDispatcher net.minecraft.world.level.chunk.PalettedContainer net.minecraft.world.level.chunk.PalettedContainerRO net.minecraft.client.multiplayer.ClientChunkCache net.minecraft.world.level.chunk.LevelChunkSection; do echo "-- $c"; javap -cp "$CP" -p "$c" 2>&1 | grep -vE 'lambda\$' | grep -iE "quad|part|model|count|getState|getChunk|storage|class|interface|hasOnly|isEmpty" | head -30; done
