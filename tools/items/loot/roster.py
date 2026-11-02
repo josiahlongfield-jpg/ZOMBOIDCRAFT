@@ -1108,6 +1108,25 @@ pinball_machine | Pinball Machine | P | 120 | 110 |
 claw_machine | Claw Machine | P | 90 | 120 |
 skee_ball_lane | Alley Roll Lane | P | 85 | 150 |
 slot_machine | Slot Machine | P | 110 | 80 |
+# furniture and comfort
+bean_bag | Bean Bag | C | 8 | 4 | bed
+bar_stools | Bar Stools | C | 6 | 6 |
+hand_truck | Hand Truck | S | 20 | 14 | factory hard dock
+recliner | Recliner | S | 30 | 40 | thrift
+hammock | Hammock | S | 15 | 3 | bed camp
+velvet_rope_stands | Velvet Rope Stands | S | 12 | 12 | bank
+mounted_deer_head | Mounted Deer Head | S | 25 | 8 | camp liq
+waterbed | Waterbed | R | 50 | 90 |
+barber_chair | Barber Chair | R | 45 | 70 |
+diner_booth | Diner Booth | R | 40 | 60 |
+home_bar | Home Bar | R | 50 | 70 |
+wood_stove | Wood Stove | R | 45 | 120 | hard
+persian_rug | Persian Rug | R | 40 | 12 | mansion pawn
+vending_machine | Vending Machine | R | 60 | 250 |
+massage_chair | Massage Chair | P | 80 | 80 |
+grandfather_clock | Grandfather Clock | P | 90 | 60 | mansion
+stuffed_bear | Stuffed Bear | P | 100 | 150 |
+theatre_throne | Theatre Throne | G | 150 | 45 |
 """
 
 ROSTER['Junk & scrap'] = """

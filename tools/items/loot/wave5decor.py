@@ -650,6 +650,8 @@ def looks(it):
     import wave5games
     out = {i: [wrap(it, d) for d in ls] for i, ls in _looks().items()}
     out.update(wave5games.looks(it, wrap))
+    import wave5furn
+    out.update(wave5furn.looks(it, wrap))
     return out
 
 

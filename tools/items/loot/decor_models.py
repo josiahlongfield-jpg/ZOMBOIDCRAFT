@@ -43,7 +43,7 @@ def px_for(m):
 def main():
     G.px_for = px_for
     specs = json.loads(DECOR.read_text())
-    looks = D.looks(G.it)
+    looks = {i: es for i, es in D.looks(G.it).items() if specs.get(i, {}).get('special') != 'hand_truck'}  # a tool, no block
     names, owner = [], {}
     for i, es in looks.items():
         if i not in specs:
