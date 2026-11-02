@@ -9,7 +9,7 @@ sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 echo "===== LOOT recipe map (temporary)"
 javap -cp "$CP" -p net.minecraft.world.item.crafting.RecipeMap 2>&1 | head -30
-javap -cp "$CP" -p net.minecraft.world.item.crafting.RecipeManager 2>&1 | grep -E "prepare|apply|RecipeMap|recipes" | head -20
+javap -cp "$CP" -p -c net.minecraft.world.item.crafting.RecipeManager 2>&1 | grep -E "RecipeMap.create|^  [a-z].*\\(" | head -30
 
 echo "===== gpu timer targets"
 javap -cp "$CP" -p net.minecraft.client.renderer.LevelRenderer 2>&1 | grep -E "executeSolid|renderLevel| render\(|addMainPass"
