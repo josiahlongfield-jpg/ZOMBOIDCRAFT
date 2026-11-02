@@ -10,7 +10,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(AbstractClientPlayer.class)
 public abstract class AbstractClientPlayerMixin {
-    /** Aiming down a gun's sights narrows the view a little, in first person; a scope by its magnification. */
+    /** Aiming down a magnified scope narrows the view by its magnification, in first person. Iron sights, red dots
+     * and every other unmagnified sight stay at true 1x, the world unchanged (Josiah 2026-11-02). */
     @Inject(method = "getFieldOfViewModifier", at = @At("RETURN"), cancellable = true)
     private void zomboidcraft$aimZoom(boolean firstPerson, float effectScale, CallbackInfoReturnable<Float> cir) {
         AbstractClientPlayer self = (AbstractClientPlayer) (Object) this;
@@ -26,8 +27,9 @@ public abstract class AbstractClientPlayerMixin {
         GunType type = firstPerson && self.isUsingItem() ? GunType.of(self.getUseItem()) : null;
         if (type != null) {
             double optic = Attachments.aimZoom(self.getUseItem());
-            double zoom = optic > 0 ? optic : type.stats(self.getUseItem()).aimZoom;
-            cir.setReturnValue(cir.getReturnValueF() * (float) zoom);
+            if (optic > 0) {
+                cir.setReturnValue(cir.getReturnValueF() * (float) optic);
+            }
         }
     }
 }
