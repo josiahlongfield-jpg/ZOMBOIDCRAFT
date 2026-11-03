@@ -1,6 +1,7 @@
 package com.zomboidcraft.client.survivor;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.zomboidcraft.client.npc.NpcSkin;
 import com.zomboidcraft.client.npc.NpcSkinDraw;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -122,6 +123,216 @@ public final class SurvivorArms {
                 buffers[buffer], light, OverlayTexture.NO_OVERLAY, pose, out);
         pose.popPose();
         return true;
+    }
+
+    /** The arm bones a posed gun gives, by name without "Bip01_", then each side's four fingers split from Finger1. */
+    public static final String[] POSED = {"R_UpperArm", "R_Forearm", "R_Hand", "R_Finger0", "R_Finger1",
+            "L_UpperArm", "L_Forearm", "L_Hand", "L_Finger0", "L_Finger1"};
+    private static final String[] FINGERS = {"index", "middle", "ring", "little"};
+
+    /** A pack's meshes with each finger of Finger1 following a bone of its own, worked out once a pack. */
+    private record Split(NpcSkin.Group[] groups, int[] side) {
+    }
+
+    private static final java.util.Map<SurvivorPack, Split> SPLITS = new java.util.WeakHashMap<>();
+    private static Object[][] posedBuffers = new Object[2][];
+    private static int posedBuffer;
+    private static SurvivorPack posedPack;
+
+    /**
+     * Her arms exactly as posed for a gun (the posing tool, Josiah 2026-11-03): each bone's place and turn (blocks, the
+     * frame of pose), by its name in {@link #POSED} and R_Finger1_index etc. for the split fingers. A side without its
+     * bones isn't drawn. Returns false (nothing drawn) when this player isn't drawn as a survivor.
+     */
+    public static boolean drawPosed(PoseStack pose, SubmitNodeCollector out, int light, Player player,
+                                    java.util.Map<String, Matrix4f> bones) {
+        Survivors.Outfit o = player == null ? null : Survivors.outfit(player);
+        if (o == null) return false;
+        SurvivorPack pack = o.pack();
+        NpcSkin skin = pack.skin;
+        int n = skin.boneNames.length;
+        Split split = SPLITS.computeIfAbsent(pack, SurvivorArms::split);
+        Matrix4f[] m = new Matrix4f[n + 8];
+        boolean[] on = new boolean[2];
+        Vector3f[] shoulder = new Vector3f[2];
+        for (int s = 0; s < 2; s++) {
+            String side = s == 0 ? "R_" : "L_";
+            Matrix4f up = bones.get(side + "UpperArm");
+            if (up == null) continue;
+            on[s] = true;
+            shoulder[s] = up.getTranslation(new Vector3f());
+            for (String part : new String[]{"UpperArm", "Forearm", "Hand", "Finger0", "Finger1"}) {
+                int b = skin.bone("Bip01_" + side + part);
+                Matrix4f w = bones.get(side + part);
+                if (b >= 0 && w != null) m[b] = new Matrix4f(w).mul(skin.inverse[b]);
+            }
+            int f1 = skin.bone("Bip01_" + side + "Finger1");
+            for (int k = 0; k < 4; k++) {
+                Matrix4f w = bones.get(side + "Finger1_" + FINGERS[k]);
+                if (w == null) w = bones.get(side + "Finger1");
+                m[n + s * 4 + k] = w == null || f1 < 0 ? null : new Matrix4f(w).mul(skin.inverse[f1]);
+            }
+        }
+        if (!on[0] && !on[1]) return false;
+        // everything else drawn in to its shoulder (a side not drawn, to the other one), so only her arms show
+        for (int b = 0; b < n + 8; b++) {
+            if (m[b] != null) continue;
+            int s = b < n ? split.side[b] : (b - n) / 4;
+            if (!on[s]) s = 1 - s;
+            Vector3f at = shoulder[s];
+            m[b] = new Matrix4f().zero().m30(at.x).m31(at.y).m32(at.z).m33(1);
+        }
+        // a side not drawn: its arm drawn in too
+        for (int s = 0; s < 2; s++) {
+            if (on[s]) continue;
+            Vector3f at = shoulder[1 - s];
+            for (String part : new String[]{"UpperArm", "Forearm", "Hand", "Finger0", "Finger1"}) {
+                int b = skin.bone("Bip01_" + (s == 0 ? "R_" : "L_") + part);
+                if (b >= 0) m[b] = new Matrix4f().zero().m30(at.x).m31(at.y).m32(at.z).m33(1);
+            }
+            for (int k = 0; k < 4; k++) m[n + s * 4 + k] = new Matrix4f().zero().m30(at.x).m31(at.y).m32(at.z).m33(1);
+        }
+        if (posedPack != pack) {
+            posedPack = pack;
+            posedBuffers = new Object[2][];
+        }
+        posedBuffer = 1 - posedBuffer;
+        if (posedBuffers[posedBuffer] == null) posedBuffers[posedBuffer] = new Object[split.groups.length * 2];
+        NpcSkinDraw.submitGroups(split.groups, m, 0,
+                g -> g.piece.equals("body") || o.clothes().containsKey(g.piece),
+                g -> g.piece.equals("body") ? o.body() : o.clothes().get(g.piece),
+                posedBuffers[posedBuffer], light, OverlayTexture.NO_OVERLAY, pose, out);
+        return true;
+    }
+
+    /**
+     * Zomboid's four fingers are one bone (Finger1); the posing tool splits them by where each vertex lies across the
+     * hand (its Finger1-local y: four clusters, the index finger at +y on the right hand, -y on the left) and curls each
+     * on its own. The same split here: vertices mostly off Finger1 (under 5%) stay on it.
+     */
+    private static Split split(SurvivorPack pack) {
+        NpcSkin skin = pack.skin;
+        int n = skin.boneNames.length;
+        int[] f1 = {skin.bone("Bip01_R_Finger1"), skin.bone("Bip01_L_Finger1")};
+        // the clusters from her bare body; clothes (gloves) take the nearest
+        float[][] centre = new float[2][];
+        for (int s = 0; s < 2; s++) {
+            if (f1[s] < 0) continue;
+            it.unimi.dsi.fastutil.floats.FloatArrayList ys = new it.unimi.dsi.fastutil.floats.FloatArrayList();
+            for (NpcSkin.Group g : skin.groups) {
+                if (!g.piece.equals("body") || g.level != 0) continue;
+                for (int v = 0; v < g.vertices; v++) {
+                    float y = fingerY(skin, g, v, f1[s]);
+                    if (!Float.isNaN(y)) ys.add(y);
+                }
+            }
+            if (ys.size() < 8) continue;
+            float[] a = ys.toFloatArray();
+            java.util.Arrays.sort(a);
+            float[] c = {a[a.length / 8], a[a.length * 3 / 8], a[a.length * 5 / 8], a[a.length * 7 / 8]};
+            for (int it = 0; it < 50; it++) {
+                float[] sum = new float[4];
+                int[] cnt = new int[4];
+                for (float y : a) {
+                    int k = nearest(c, y);
+                    sum[k] += y;
+                    cnt[k]++;
+                }
+                for (int k = 0; k < 4; k++) if (cnt[k] > 0) c[k] = sum[k] / cnt[k];
+            }
+            centre[s] = c;
+        }
+        boolean[] lowerBones = new boolean[256];
+        boolean[] armBones = new boolean[256];
+        for (String sd : new String[]{"R_", "L_"}) {
+            for (String part : new String[]{"UpperArm", "Forearm", "Hand", "Finger0", "Finger1"}) {
+                int b = skin.bone("Bip01_" + sd + part);
+                if (b >= 0) {
+                    armBones[b] = true;
+                    lowerBones[b] = !part.equals("UpperArm");
+                }
+            }
+        }
+        lowerBones[255] = false;
+        armOnly = armBones;
+        NpcSkin.Group[] groups = new NpcSkin.Group[skin.groups.length];
+        for (int i = 0; i < groups.length; i++) {
+            NpcSkin.Group g = skin.groups[i];
+            byte[] j = g.joint.clone();
+            for (int v = 0; v < g.vertices; v++) {
+                for (int s = 0; s < 2; s++) {
+                    if (centre[s] == null) continue;
+                    float y = fingerY(skin, g, v, f1[s]);
+                    if (Float.isNaN(y)) continue;
+                    // the clusters run up y: on the right hand the highest is the index finger, on the left the lowest
+                    int k = nearest(centre[s], y);
+                    int finger = s == 0 ? 3 - k : k;
+                    for (int q = 0; q < 4; q++) {
+                        if ((j[v * 4 + q] & 255) == f1[s] && g.weight[v * 4 + q] > 0) j[v * 4 + q] = (byte) (n + s * 4 + finger);
+                    }
+                }
+            }
+            NpcSkin.Group c = g.withJoints(j);
+            // only her forearms, hands and fingers, as the tool draws them: the upper arms would sit by her cheek on
+            // the sights (a triangle stays if each corner follows those bones wholly, mostly the forearm or below)
+            it.unimi.dsi.fastutil.ints.IntArrayList keep = new it.unimi.dsi.fastutil.ints.IntArrayList();
+            for (int t = 0; t + 2 < g.tris.length; t += 3) {
+                if (lower(lowerBones, g, g.tris[t]) && lower(lowerBones, g, g.tris[t + 1]) && lower(lowerBones, g, g.tris[t + 2])) {
+                    keep.add(g.tris[t]);
+                    keep.add(g.tris[t + 1]);
+                    keep.add(g.tris[t + 2]);
+                }
+            }
+            c.tris = keep.toIntArray();
+            groups[i] = c;
+        }
+        // which shoulder each bone is nearer at rest, for drawing the rest of her in
+        int[] side = new int[n];
+        Vector3f r = rest(skin, skin.bone("Bip01_R_UpperArm")), l = rest(skin, skin.bone("Bip01_L_UpperArm"));
+        for (int b = 0; b < n; b++) {
+            Vector3f p = rest(skin, b);
+            side[b] = r == null ? 1 : l == null ? 0 : p.distanceSquared(r) <= p.distanceSquared(l) ? 0 : 1;
+        }
+        return new Split(groups, side);
+    }
+
+    private static boolean[] armOnly;
+
+    /** Whether a vertex follows only her arm bones and mostly one from the forearm down. */
+    private static boolean lower(boolean[] lowerBones, NpcSkin.Group g, int v) {
+        float arm = 0, best = -1;
+        int top = -1;
+        for (int q = 0; q < 4; q++) {
+            float w = g.weight[v * 4 + q];
+            if (w <= 0) continue;
+            int b = g.joint[v * 4 + q] & 255;
+            if (armOnly[b]) arm += w;
+            if (w > best) {
+                best = w;
+                top = b;
+            }
+        }
+        return arm > 0.99f && top >= 0 && lowerBones[top];
+    }
+
+    /** A vertex's y in Finger1's own frame at rest, if it follows that bone by 5% or more; else NaN. */
+    private static float fingerY(NpcSkin skin, NpcSkin.Group g, int v, int bone) {
+        for (int q = 0; q < 4; q++) {
+            if ((g.joint[v * 4 + q] & 255) == bone && g.weight[v * 4 + q] >= 0.05f) {
+                return skin.inverse[bone].transformPosition(new Vector3f(g.pos[v * 3], g.pos[v * 3 + 1], g.pos[v * 3 + 2])).y;
+            }
+        }
+        return Float.NaN;
+    }
+
+    private static int nearest(float[] c, float y) {
+        int best = 0;
+        for (int k = 1; k < c.length; k++) if (Math.abs(c[k] - y) < Math.abs(c[best] - y)) best = k;
+        return best;
+    }
+
+    private static Vector3f rest(NpcSkin skin, int b) {
+        return b < 0 ? null : new Matrix4f(skin.inverse[b]).invert().getTranslation(new Vector3f());
     }
 
     /** Which shoulder a bone is nearer (0 right, 1 left). */

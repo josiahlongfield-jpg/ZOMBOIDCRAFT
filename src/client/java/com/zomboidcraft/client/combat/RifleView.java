@@ -329,6 +329,12 @@ public final class RifleView {
         boolean animate = config.guns.reloadAnimation && active;
         float a = smooth(Mth.lerp(partial(age), aimO, aim));
         Pose sights = aim(optic, gun);
+        // a local gun Josiah posed in the posing tool: his hip and sights poses (on its iron sights)
+        GunPoses.Gun posed = optic.equals(Attachments.EMPTY_KEY) && com.zomboidcraft.combat.LocalGuns.of(gun) != null
+                ? GunPoses.of(gun.get(com.zomboidcraft.combat.LocalGuns.ID)) : null;
+        if (posed != null && sights != null) {
+            sights = posed.ads().gun();
+        }
         if (sights == null) {
             a = 0;
         }
@@ -340,6 +346,10 @@ public final class RifleView {
         if (work > 0) {
             float[] c = rig.charge();
             want = worked(hip(c[0] * work, c[1] * work, bump(bolt, BOLT_HOME, 2.5f) * 1.2f), work);
+        }
+        if (posed != null) {
+            // every move of ours (a reload, a bolt worked) made from his hip pose rather than our gun's
+            want = GunPoses.pose(GunPoses.matrix(want).mul(GunPoses.matrix(hip(0, 0, 0)).invert()).mul(GunPoses.matrix(posed.hip().gun())));
         }
         float p = smooth(Mth.lerp(partial(age), pointO, point));
         if (p > 0) {
@@ -402,6 +412,12 @@ public final class RifleView {
         if (animate) {
             drawLoose(pose, out, light, player, want, t, step, age);
         }
+        boolean leftFree = player.getOffhandItem().isEmpty() && !com.zomboidcraft.client.cars.CarHands.leftOnWheel(player);
+        if (config.look.firstPersonArms && !state.avatarRenderState.isInvisible && posed != null && !animate && bolt < 0
+                && lever <= 1e-3f && step == 0 && posedArms(pose, out, light, player, posed, want, a, rig.pump() ? pulled : 0, leftFree)) {
+            pose.popPose();
+            return true;
+        }
         if (config.look.firstPersonArms && !state.avatarRenderState.isInvisible) {
             boolean foregrip = optionalKey(gun, 2).equals("foregrip");
             float pump = rig.pump() ? pulled : 0;
@@ -421,11 +437,32 @@ public final class RifleView {
                 right = right.lerp(new Hand(right.at(), RIGHT_LOAD, RIGHT_HINT), openAmount(age));
             }
             RifleArms.draw(pose, out, light, player, state.avatarRenderState, right,
-                    player.getOffhandItem().isEmpty() && !com.zomboidcraft.client.cars.CarHands.leftOnWheel(player) ? left : null,
+                    leftFree ? left : null,
                     want.scale / rig.hipScale() * 0.6f);
         }
         pose.popPose();
         return true;
+    }
+
+    /**
+     * Her arms as Josiah posed them for this gun, blended from the hip to the sights as the gun is, carried along with
+     * whatever moved the gun from there (the laser's turn, the sway) and the front hand riding a pump. False if she
+     * isn't drawn as a survivor (the usual arms then).
+     */
+    private static boolean posedArms(PoseStack pose, SubmitNodeCollector out, int light, LocalPlayer player, GunPoses.Gun posed,
+                                     Pose want, float a, float pump, boolean leftFree) {
+        Matrix4f move = GunPoses.matrix(want).mul(GunPoses.matrix(posed.hip().gun().lerp(posed.ads().gun(), a)).invert());
+        java.util.Map<String, Matrix4f> bones = GunPoses.bones(posed, a, move);
+        Vector3f slide = want.q().transform(new Vector3f(0, 0, pump / 16 * want.scale()));
+        bones.entrySet().removeIf(e -> !leftFree && e.getKey().startsWith("L_"));
+        if (pump != 0) {
+            for (var e : bones.entrySet()) {
+                if (e.getKey().startsWith("L_")) {
+                    e.getValue().translateLocal(slide);
+                }
+            }
+        }
+        return com.zomboidcraft.client.survivor.SurvivorArms.drawPosed(pose, out, light, player, bones);
     }
 
     /** The slow drift of a held breath while aiming, so the sights are never quite dead still: a turn about the eye. */

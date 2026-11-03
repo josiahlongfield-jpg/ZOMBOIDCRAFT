@@ -62,6 +62,28 @@ public final class NpcSkin {
             weight = new float[vertices * 4];
         }
 
+        /** The same mesh with its vertices following other bones (an index past the pack's bones is the caller's own). */
+        public Group withJoints(byte[] joints) {
+            return new Group(this, joints);
+        }
+
+        private Group(Group o, byte[] joints) {
+            mesh = o.mesh;
+            piece = o.piece;
+            looks = o.looks;
+            texture = o.texture;
+            bothSides = o.bothSides;
+            cutout = o.cutout;
+            level = o.level;
+            vertices = o.vertices;
+            pos = o.pos;
+            normal = o.normal;
+            uv = o.uv;
+            weight = o.weight;
+            joint = joints;
+            tris = o.tris;
+        }
+
         /**
          * Turns every triangle to face the way its corners' normals point, so drawing front faces only never drops one that
          * was wound backwards (her body is drawn culled; see NpcSkinDraw).

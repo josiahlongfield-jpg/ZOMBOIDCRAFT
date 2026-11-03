@@ -92,6 +92,13 @@ public final class NpcSkinDraw {
     public static void submitWith(NpcSkin skin, Matrix4f[] bones, int level, java.util.function.Predicate<NpcSkin.Group> show,
                                   java.util.function.Function<NpcSkin.Group, Identifier> textures, Object[] buffers,
                                   int light, int overlay, PoseStack poseStack, SubmitNodeCollector collector) {
+        submitGroups(skin.groups, bones, level, show, textures, buffers, light, overlay, poseStack, collector);
+    }
+
+    /** As above, from a set of meshes of the caller's (a pack's own, or copies following extra bones). */
+    public static void submitGroups(NpcSkin.Group[] groups, Matrix4f[] bones, int level, java.util.function.Predicate<NpcSkin.Group> show,
+                                    java.util.function.Function<NpcSkin.Group, Identifier> textures, Object[] buffers,
+                                    int light, int overlay, PoseStack poseStack, SubmitNodeCollector collector) {
         // no bones: the buffers were skinned already (skinAll), shared by everyone in that pose
         float[] m = bones == null ? null : matrices(bones);
         // the lightest level (far zombies, 16+ blocks) draws a garment's outside only: its inside shows only looking
@@ -100,8 +107,8 @@ public final class NpcSkinDraw {
         // the skinning and the vertices are done on a worker while the frame is gathered; the draw only copies them in
         BodyJob job = ZcConfig.get().performance.parallelBodies
                 ? new BodyJob(m, poseStack.last(), light, overlay, com.zomboidcraft.zombie.Profiler.frameNo) : null;
-        for (int g = 0; g < skin.groups.length; g++) {
-            NpcSkin.Group gr = skin.groups[g];
+        for (int g = 0; g < groups.length; g++) {
+            NpcSkin.Group gr = groups[g];
             if (gr.level != level || !show.test(gr)) {
                 continue;
             }
