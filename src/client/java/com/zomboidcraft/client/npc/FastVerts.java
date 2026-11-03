@@ -36,7 +36,7 @@ public final class FastVerts {
     }
 
     /** Byte offsets of each part of one vertex layout (-1: not in it). */
-    private record Layout(int stride, int pos, int color, int uv0, int uv1, int uv2, int normal, int entity, int midTex,
+    record Layout(int stride, int pos, int color, int uv0, int uv1, int uv2, int normal, int entity, int midTex,
                           int tangent) {
         boolean extended() {
             return midTex >= 0;
@@ -135,6 +135,7 @@ public final class FastVerts {
         if (!a.zomboidcraft$building() || a.zomboidcraft$topology() != PrimitiveTopology.QUADS) return false;
         Layout l = layout(a.zomboidcraft$format());
         if (l == NONE) return false;
+        seen(l);
         int nq = (q1 - q0) / 4 * (back ? 2 : 1);
         if (nq <= 0) return true;
         try {
@@ -144,7 +145,8 @@ public final class FastVerts {
             }
             int stride = l.stride, count = nq * 4, length = count * stride;
             long dst = a.zomboidcraft$buffer().reserve(length);
-            fill(dst, l, pose, quads, q0, q1, back, p, n, uv, light, overlay);
+            int[] ids = ids(l);
+            fill(dst, l, pose.pose(), pose.normal(), quads, q0, q1, back, p, n, uv, light, overlay, ids[0], ids[1], ids[2]);
             int v = a.zomboidcraft$vertices() + count;
             a.zomboidcraft$setVertices(v);
             a.zomboidcraft$setVertexPointer(dst + length - stride);
@@ -162,22 +164,96 @@ public final class FastVerts {
         }
     }
 
-    private static void fill(long dst, Layout l, PoseStack.Pose pose, int[] quads, int q0, int q1, boolean back, float[] p,
-                             float[] n, float[] uv, int light, int overlay) {
-        Matrix4f m = pose.pose();
-        Matrix3f nm = pose.normal();
+    /** Iris's ids of what's being drawn now (render thread), all 0 for a layout without them. Remembered for jobs. */
+    private static int[] ids(Layout l) {
+        if (!l.extended()) return NO_IDS;
+        if (!irisLooked) findIris();
+        int[] ids = {irisId(irisEntity), irisId(irisBlockEntity), irisId(irisItem)};
+        lastIds = ids;
+        return ids;
+    }
+
+    private static final int[] NO_IDS = {0, 0, 0};
+    /**
+     * The layouts bodies' buffers were last seen in, with Iris's widened one and without (a shader pack's world, or no
+     * pack and the menus), and Iris's ids then: what a job on another thread writes in.
+     */
+    private static volatile Layout lastExtended, lastPlain;
+    private static volatile long extendedFrame = Long.MIN_VALUE;
+    static volatile int[] lastIds = NO_IDS;
+
+    private static void seen(Layout l) {
+        if (l.extended()) {
+            lastExtended = l;
+            extendedFrame = com.zomboidcraft.zombie.Profiler.frameNo;
+        } else {
+            lastPlain = l;
+        }
+    }
+
+    /** The layout a body drawn this frame most likely goes into: Iris's while a shader pack was drawing lately. */
+    static Layout guess() {
+        return extendedFrame >= com.zomboidcraft.zombie.Profiler.frameNo - 2 ? lastExtended : lastPlain;
+    }
+
+    /** The layout this consumer takes bodies in (render thread), or null if it can't take them whole. Remembered. */
+    static Layout layoutOf(VertexConsumer out) {
+        if (!(out instanceof BufferBuilder bb) || !ZcConfig.get().performance.fastBodyVertices) return null;
+        BufferBuilderAccessor a = (BufferBuilderAccessor) bb;
+        if (!a.zomboidcraft$building() || a.zomboidcraft$topology() != PrimitiveTopology.QUADS) return null;
+        Layout l = layout(a.zomboidcraft$format());
+        if (l == NONE) return null;
+        seen(l);
+        return l;
+    }
+
+    /** Bytes a group's quads take written in a layout (four vertices a quad, twice if both sides). */
+    static int bytes(Layout l, int quadIndices, boolean back) {
+        return quadIndices / 4 * (back ? 2 : 1) * 4 * l.stride;
+    }
+
+    /**
+     * Copies vertices a job wrote (in layout l, Iris's ids as given) into the consumer. False (nothing copied) if it
+     * doesn't take that layout now: the caller writes them afresh.
+     */
+    static boolean copy(VertexConsumer out, Layout l, long src, int bytes, int[] idsUsed) {
+        if (l == null || layoutOf(out) != l) return false;
+        BufferBuilder bb = (BufferBuilder) out;
+        BufferBuilderAccessor a = (BufferBuilderAccessor) bb;
+        if (bytes <= 0) return true;
+        if (a.zomboidcraft$vertices() > 0 && !(bb == last && a.zomboidcraft$vertices() == lastVertices)) {
+            a.zomboidcraft$endLastVertex();
+        }
+        int stride = l.stride, count = bytes / stride;
+        long dst = a.zomboidcraft$buffer().reserve(bytes);
+        MemoryUtil.memCopy(src, dst, bytes);
+        if (l.extended()) {
+            int[] now = ids(l);
+            if (now[0] != idsUsed[0] || now[1] != idsUsed[1] || now[2] != idsUsed[2]) {
+                for (long at = dst + l.entity, end = dst + bytes; at < end; at += stride) {
+                    MemoryUtil.memPutShort(at, (short) now[0]);
+                    MemoryUtil.memPutShort(at + 2, (short) now[1]);
+                    MemoryUtil.memPutShort(at + 4, (short) now[2]);
+                }
+            }
+        }
+        int v = a.zomboidcraft$vertices() + count;
+        a.zomboidcraft$setVertices(v);
+        a.zomboidcraft$setVertexPointer(dst + bytes - stride);
+        a.zomboidcraft$setElementsToFill(0);
+        last = bb;
+        lastVertices = v;
+        return true;
+    }
+
+    /** Writes the quads as write does, into memory at dst (any thread: reads only what it's given). */
+    static void fill(long dst, Layout l, Matrix4f m, Matrix3f nm, int[] quads, int q0, int q1, boolean back, float[] p,
+                     float[] n, float[] uv, int light, int overlay, int ent, int blockEnt, int item) {
         float m00 = m.m00(), m01 = m.m01(), m02 = m.m02(), m10 = m.m10(), m11 = m.m11(), m12 = m.m12();
         float m20 = m.m20(), m21 = m.m21(), m22 = m.m22(), m30 = m.m30(), m31 = m.m31(), m32 = m.m32();
         float n00 = nm.m00(), n01 = nm.m01(), n02 = nm.m02(), n10 = nm.m10(), n11 = nm.m11(), n12 = nm.m12();
         float n20 = nm.m20(), n21 = nm.m21(), n22 = nm.m22();
         boolean ext = l.extended();
-        int ent = 0, blockEnt = 0, item = 0;
-        if (ext) {
-            if (!irisLooked) findIris();
-            ent = irisId(irisEntity);
-            blockEnt = irisId(irisBlockEntity);
-            item = irisId(irisItem);
-        }
         int stride = l.stride;
         float[] x = new float[4], y = new float[4], z = new float[4], u = new float[4], w = new float[4];
         int[] vi = new int[4];

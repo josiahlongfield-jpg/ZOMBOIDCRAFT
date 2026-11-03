@@ -387,6 +387,11 @@ public final class ZcConfig {
          */
         public boolean farZombieHalfRate = true;
         /**
+         * Zomboid bodies are skinned and written out on worker threads (half the cores) while the frame is gathered,
+         * and only copied in when it's drawn, instead of all on the render thread. Client side.
+         */
+        public boolean parallelBodies = true;
+        /**
          * Only entities (zombies, cars, corpses, people, props) within this many blocks of the camera cast shader shadows;
          * further ones are still drawn, just left out of the shadow map, where they cost the most (2026-11-01 GPU timers:
          * 104 ms of a 262 ms frame). 0 = no limit. Client side.
