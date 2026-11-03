@@ -31,6 +31,7 @@ import org.jetbrains.annotations.Nullable;
  * frame is copied aside after the shader pack is done with it, and the HUD lays the last world view under the last
  * lens view. look.scopeView "mix" is the fallback he picked first: up to 4x the lens is the middle of the normal view
  * blown up, from 6x the whole view is zoomed and blurred outside the lens. "picture" is the old full-screen eyepiece.
+ * With a shader pack on, pip turns into mix with the whole view zoomed at every power (see mode()).
  */
 public final class ScopeView {
     private static final Identifier RING = ZomboidCraft.id("dynamic/scope_ring");
@@ -46,7 +47,17 @@ public final class ScopeView {
 
     private static Mode mode() {
         String m = ZcConfig.get().look.scopeView;
-        return "mix".equalsIgnoreCase(m) ? Mode.MIX : "picture".equalsIgnoreCase(m) ? Mode.PICTURE : Mode.PIP;
+        if ("picture".equalsIgnoreCase(m)) {
+            return Mode.PICTURE;
+        }
+        // a shader pack (Photon) can't take turns: it blends each frame into the next (its exposure and smoothing), and
+        // the kept frames don't show over its picture, so the raw zoomed and normal frames flicker (Josiah 2026-11-03)
+        return "mix".equalsIgnoreCase(m) || RailLights.shaderPackOn() ? Mode.MIX : Mode.PIP;
+    }
+
+    /** With a shader pack the whole view zooms at every power and the lens is drawn from it 1:1, so nothing rests on the HUD's copy. */
+    private static boolean zoomAll(double m) {
+        return m >= 6 || RailLights.shaderPackOn();
     }
 
     /** The held scope's magnification while looking through it in first person, or 0. */
@@ -88,7 +99,7 @@ public final class ScopeView {
         }
         boolean zoomed = switch (mode()) {
             case PIP -> lensFrame;
-            case MIX -> m >= 6;
+            case MIX -> zoomAll(m);
             case PICTURE -> false;
         };
         if (!zoomed) {
@@ -153,7 +164,7 @@ public final class ScopeView {
         double size = Math.max(0.15, Math.min(0.95, ZcConfig.get().look.scopeLens));
         int r = (int) Math.round(size * h / 2), cx = w / 2, cy = h / 2;
         // a magnified view drawn 1:1 from a zoomed frame, or the middle of a normal one blown up
-        double crop = mode == Mode.MIX && m < 6 ? m : 1;
+        double crop = mode == Mode.MIX && !zoomAll(m) ? m : 1;
         GpuTextureView view = lens.getColorTextureView();
         int step = Math.max(1, r / 90);
         for (int y = cy - r; y < cy + r; y += step) {
