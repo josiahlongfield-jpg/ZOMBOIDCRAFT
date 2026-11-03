@@ -90,30 +90,53 @@ public final class FastVerts {
 
     // ------------------------------------------------------------------ Iris's "which entity is this" (by name, optional)
 
-    private static MethodHandle irisEntity, irisBlockEntity, irisItem;
-    private static Object irisState;
-    private static boolean irisLooked;
+    /**
+     * Iris's getters, bound to its one state object, in constants the JIT can call straight (a plain field of method
+     * handles was 5% of the frame in Josiah's 2026-11-03 horde profile). Each null if Iris isn't there.
+     */
+    private static final class Iris {
+        static final MethodHandle ENTITY, BLOCK_ENTITY, ITEM;
 
-    private static int irisId(MethodHandle h) {
-        if (h == null) return 0;
-        try {
-            return (int) h.invoke(irisState);
-        } catch (Throwable t) {
-            return 0;
+        static {
+            MethodHandle e = null, b = null, i = null;
+            try {
+                Class<?> c = Class.forName("net.irisshaders.iris.uniforms.CapturedRenderingState");
+                Object state = c.getField("INSTANCE").get(null);
+                MethodHandles.Lookup l = MethodHandles.publicLookup();
+                MethodType t = MethodType.methodType(int.class);
+                e = l.findVirtual(c, "getCurrentRenderedEntity", t).bindTo(state);
+                b = l.findVirtual(c, "getCurrentRenderedBlockEntity", t).bindTo(state);
+                i = l.findVirtual(c, "getCurrentRenderedItem", t).bindTo(state);
+            } catch (Throwable t) {
+                e = b = i = null;
+            }
+            ENTITY = e;
+            BLOCK_ENTITY = b;
+            ITEM = i;
         }
-    }
 
-    private static void findIris() {
-        irisLooked = true;
-        try {
-            Class<?> c = Class.forName("net.irisshaders.iris.uniforms.CapturedRenderingState");
-            irisState = c.getField("INSTANCE").get(null);
-            MethodHandles.Lookup l = MethodHandles.publicLookup();
-            irisEntity = l.findVirtual(c, "getCurrentRenderedEntity", MethodType.methodType(int.class));
-            irisBlockEntity = l.findVirtual(c, "getCurrentRenderedBlockEntity", MethodType.methodType(int.class));
-            irisItem = l.findVirtual(c, "getCurrentRenderedItem", MethodType.methodType(int.class));
-        } catch (Throwable t) {
-            irisEntity = irisBlockEntity = irisItem = null;
+        static int entity() {
+            try {
+                return ENTITY == null ? 0 : (int) ENTITY.invokeExact();
+            } catch (Throwable t) {
+                return 0;
+            }
+        }
+
+        static int blockEntity() {
+            try {
+                return BLOCK_ENTITY == null ? 0 : (int) BLOCK_ENTITY.invokeExact();
+            } catch (Throwable t) {
+                return 0;
+            }
+        }
+
+        static int item() {
+            try {
+                return ITEM == null ? 0 : (int) ITEM.invokeExact();
+            } catch (Throwable t) {
+                return 0;
+            }
         }
     }
 
@@ -167,8 +190,10 @@ public final class FastVerts {
     /** Iris's ids of what's being drawn now (render thread), all 0 for a layout without them. Remembered for jobs. */
     private static int[] ids(Layout l) {
         if (!l.extended()) return NO_IDS;
-        if (!irisLooked) findIris();
-        int[] ids = {irisId(irisEntity), irisId(irisBlockEntity), irisId(irisItem)};
+        int e = Iris.entity(), b = Iris.blockEntity(), i = Iris.item();
+        int[] was = lastIds;
+        if (was[0] == e && was[1] == b && was[2] == i) return was;
+        int[] ids = {e, b, i};
         lastIds = ids;
         return ids;
     }

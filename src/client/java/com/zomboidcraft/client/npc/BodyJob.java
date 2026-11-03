@@ -114,18 +114,68 @@ final class BodyJob implements Runnable {
         if (!started) {
             // drawn straight away, before the job was started (a collector that draws as it's given things): done here
             if (bones != null) NpcSkinDraw.skin(p.group(), bones, p.pos(), p.normal());
-            NpcSkinDraw.drawSkinned(p.group(), p.pos(), p.normal(), p.back(), at, out, light, overlay);
+            NpcSkinDraw.drawSkinned(p.group(), p.pos(), p.normal(), p.back(), at != null ? at : own(), out, light, overlay);
             left.decrementAndGet();
             return;
         }
         task.join();
         try {
             if (!(written && FastVerts.copy(out, layout, mem + offset[i], offset[i + 1] - offset[i], ids))) {
-                NpcSkinDraw.drawSkinned(p.group(), p.pos(), p.normal(), p.back(), at, out, light, overlay);
+                NpcSkinDraw.drawSkinned(p.group(), p.pos(), p.normal(), p.back(), at != null ? at : own(), out, light, overlay);
             }
         } finally {
             if (left.decrementAndGet() == 0) free();
         }
+    }
+
+    /** Its own pose, for drawing the old way when it was handed in with others (a batch's pose is the first one's). */
+    private PoseStack.Pose own() {
+        PoseStack ps = new PoseStack();
+        ps.last().pose().set(pose);
+        ps.last().normal().set(normal);
+        return ps.last();
+    }
+
+    // ------------------------------------------------------------------ one submit per texture
+
+    /**
+     * Every body mesh with the same texture handed to the same collector this frame, drawn by one submit: a horde
+     * submitted thousands of little ones, and sorting them into their render types was 14% of the frame (Minecraft
+     * comparing render types, 2026-11-03 profile). The meshes still each carry their own pose.
+     */
+    static final class Batch {
+        private final List<BodyJob> jobs = new ArrayList<>();
+        private final it.unimi.dsi.fastutil.ints.IntArrayList index = new it.unimi.dsi.fastutil.ints.IntArrayList();
+        private boolean emitted;
+
+        void emit(VertexConsumer out) {
+            emitted = true;
+            for (int k = 0; k < jobs.size(); k++) jobs.get(k).emit(index.getInt(k), null, out);
+        }
+    }
+
+    private static final java.util.Map<Object, java.util.Map<Object, Batch>> BATCHES = new java.util.IdentityHashMap<>();
+    private static long batchFrame = Long.MIN_VALUE;
+
+    /**
+     * The batch to add mesh i of job to (render thread); null when one was opened, and the caller must hand it to the
+     * collector with the given submit.
+     */
+    static Batch batch(Object collector, Object key, long frame, java.util.function.Consumer<Batch> submit, BodyJob job, int i) {
+        if (frame != batchFrame) {
+            batchFrame = frame;
+            BATCHES.clear();
+        }
+        java.util.Map<Object, Batch> byKey = BATCHES.computeIfAbsent(collector, k -> new java.util.HashMap<>());
+        Batch b = byKey.get(key);
+        if (b == null || b.emitted) {
+            b = new Batch();
+            byKey.put(key, b);
+            submit.accept(b);
+        }
+        b.jobs.add(job);
+        b.index.add(i);
+        return b;
     }
 
     /** A job whose meshes weren't all drawn (a frame cut short): waited for and let go. */

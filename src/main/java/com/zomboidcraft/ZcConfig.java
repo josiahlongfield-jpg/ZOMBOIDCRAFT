@@ -392,6 +392,11 @@ public final class ZcConfig {
          */
         public boolean parallelBodies = true;
         /**
+         * With parallelBodies: every body mesh in the same texture is handed to Minecraft as one draw a frame, instead of
+         * one per zombie per mesh. Client side.
+         */
+        public boolean batchBodies = true;
+        /**
          * Only entities (zombies, cars, corpses, people, props) within this many blocks of the camera cast shader shadows;
          * further ones are still drawn, just left out of the shadow map, where they cost the most (2026-11-01 GPU timers:
          * 104 ms of a 262 ms frame). 0 = no limit. Client side.
