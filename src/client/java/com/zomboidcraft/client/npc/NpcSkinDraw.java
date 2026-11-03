@@ -97,6 +97,9 @@ public final class NpcSkinDraw {
         // the lightest level (far zombies, 16+ blocks) draws a garment's outside only: its inside shows only looking
         // into an open coat, and drawing every sheet twice was a third of a far zombie's corners (2026-11-02 horde)
         boolean insides = level < 2;
+        // the skinning and the vertices are done on a worker while the frame is gathered; the draw only copies them in
+        BodyJob job = ZcConfig.get().performance.parallelBodies
+                ? new BodyJob(m, poseStack.last(), light, overlay, com.zomboidcraft.zombie.Profiler.frameNo) : null;
         for (int g = 0; g < skin.groups.length; g++) {
             NpcSkin.Group gr = skin.groups[g];
             if (gr.level != level || !show.test(gr)) {
@@ -104,6 +107,17 @@ public final class NpcSkinDraw {
             }
             Identifier tex = textures.apply(gr);
             if (tex == null) {
+                continue;
+            }
+            if (job != null) {
+                if (m == null && buffers[g * 2] == null) continue;
+                if (buffers[g * 2] == null) {
+                    buffers[g * 2] = new float[gr.vertices * 3];
+                    buffers[g * 2 + 1] = new float[gr.vertices * 3];
+                }
+                int i = job.add(new BodyJob.Part(gr, quads(gr), (float[]) buffers[g * 2], (float[]) buffers[g * 2 + 1],
+                        gr.bothSides && insides));
+                collector.submitCustomGeometry(poseStack, RenderTypes.entityCutoutCull(tex), (pose, out) -> job.emit(i, pose, out));
                 continue;
             }
             if (m == null) {
@@ -122,6 +136,16 @@ public final class NpcSkinDraw {
             collector.submitCustomGeometry(poseStack, RenderTypes.entityCutoutCull(tex),
                     (pose, out) -> draw(gr, pos, normal, 0, gr.tris.length, gr.bothSides && insides, pose, out, light, overlay));
         }
+        if (job != null) {
+            job.start();
+            BodyJob.track(job);
+        }
+    }
+
+    /** A group already skinned, drawn whole (a job's fallback when the buffer's layout changed under it). */
+    static void drawSkinned(NpcSkin.Group g, float[] pos, float[] normal, boolean back, PoseStack.Pose pose, VertexConsumer out,
+                            int light, int overlay) {
+        draw(g, pos, normal, 0, g.tris.length, back, pose, out, light, overlay);
     }
 
     private static float[] matrices(Matrix4f[] bones) {
@@ -154,7 +178,7 @@ public final class NpcSkinDraw {
     }
 
     /** Each vertex by its bones (each a 3x4 in m, row by row: x', y', z'), weighted. */
-    private static void skin(NpcSkin.Group g, float[] m, float[] pos, float[] normal) {
+    static void skin(NpcSkin.Group g, float[] m, float[] pos, float[] normal) {
         float[] p = g.pos, n = g.normal, w = g.weight;
         byte[] j = g.joint;
         for (int v = 0; v < g.vertices; v++) {
