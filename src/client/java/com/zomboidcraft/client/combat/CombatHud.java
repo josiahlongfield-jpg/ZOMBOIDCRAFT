@@ -42,6 +42,10 @@ public final class CombatHud {
             }
             return;
         }
+        if (ScopeView.active()) {
+            ScopeView.draw(graphics);
+            return;
+        }
         int x = (w - h) / 2;
         graphics.blit(RenderPipelines.GUI_TEXTURED, sight, x, 0, 0, 0, h, h, h, h);
         graphics.fill(0, 0, x, h, BLACK);

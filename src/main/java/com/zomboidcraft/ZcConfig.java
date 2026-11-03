@@ -1319,6 +1319,16 @@ public final class ZcConfig {
         public boolean shoulderCam = true;
         /** Aiming a 4x scope over the shoulder looks through it in first person, and goes back after. */
         public boolean scopeFromShoulder = true;
+        /**
+         * How a magnified scope is seen: "pip" only the lens is zoomed, the world round it stays its own size (frames
+         * take turns between the two views); "mix" crops the middle up to 4x and zooms the whole view from 6x; "picture"
+         * is the old full-screen eyepiece. Client side.
+         */
+        public String scopeView = "pip";
+        /** The scope lens's size on screen, as a share of the screen's height (0.15 to 0.95). Client side. */
+        public double scopeLens = 0.5;
+        /** Turn the lens picture the right way up if it shows upside down on your graphics card. Client side. */
+        public boolean scopeFlip = true;
         /** From the hip with a gun, the crosshair is a dot in a ring the size of the gun's spread right now. Client side. */
         public boolean spreadCrosshair = true;
         /**

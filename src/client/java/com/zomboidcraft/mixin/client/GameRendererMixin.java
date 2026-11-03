@@ -3,11 +3,15 @@ package com.zomboidcraft.mixin.client;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.zomboidcraft.client.combat.RifleView;
+import com.zomboidcraft.client.combat.ScopeView;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.resources.Identifier;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -22,8 +26,22 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 @Mixin(GameRenderer.class)
 public abstract class GameRendererMixin {
+    @Shadow @Final private RenderTarget mainRenderTarget;
+
     @Unique
     private float zomboidcraft$bob;
+
+    /** A magnified scope keeps the finished frame (shader pack included) for its lens or the world round it. */
+    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/GameRenderer;applyPostEffects()V", shift = At.Shift.AFTER))
+    private void zomboidcraft$scopeCapture(CallbackInfo ci) {
+        ScopeView.capture((GameRenderer) (Object) this, mainRenderTarget);
+    }
+
+    /** At the end of each frame the scope decides whose turn the next one is, before its camera is set up. */
+    @Inject(method = "render", at = @At("RETURN"))
+    private void zomboidcraft$scopeNextFrame(CallbackInfo ci) {
+        ScopeView.beginFrame();
+    }
 
     /** The bob's rocking: the view and the gun turn together, so it never pulls the sights off what they're on. */
     @Inject(method = "bobView", at = @At("HEAD"))

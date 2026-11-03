@@ -27,7 +27,7 @@ public abstract class AbstractClientPlayerMixin {
         GunType type = firstPerson && self.isUsingItem() ? GunType.of(self.getUseItem()) : null;
         if (type != null) {
             double optic = Attachments.aimZoom(self.getUseItem());
-            if (optic > 0) {
+            if (optic > 0 && !com.zomboidcraft.client.combat.ScopeView.active()) {
                 cir.setReturnValue(cir.getReturnValueF() * (float) optic);
             }
         }
