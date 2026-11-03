@@ -117,7 +117,12 @@ public final class NpcSkinDraw {
                 }
                 int i = job.add(new BodyJob.Part(gr, quads(gr), (float[]) buffers[g * 2], (float[]) buffers[g * 2 + 1],
                         gr.bothSides && insides));
-                collector.submitCustomGeometry(poseStack, RenderTypes.entityCutoutCull(tex), (pose, out) -> job.emit(i, pose, out));
+                if (ZcConfig.get().performance.batchBodies) {
+                    BodyJob.batch(collector, tex, job.frame, b -> collector.submitCustomGeometry(poseStack,
+                            RenderTypes.entityCutoutCull(tex), (pose, out) -> b.emit(out)), job, i);
+                } else {
+                    collector.submitCustomGeometry(poseStack, RenderTypes.entityCutoutCull(tex), (pose, out) -> job.emit(i, pose, out));
+                }
                 continue;
             }
             if (m == null) {
@@ -146,6 +151,20 @@ public final class NpcSkinDraw {
     static void drawSkinned(NpcSkin.Group g, float[] pos, float[] normal, boolean back, PoseStack.Pose pose, VertexConsumer out,
                             int light, int overlay) {
         draw(g, pos, normal, 0, g.tris.length, back, pose, out, light, overlay);
+    }
+
+    /** Bones as skin() takes them (3x4 each, row by row). */
+    public static float[] boneMatrices(Matrix4f[] bones) {
+        return matrices(bones);
+    }
+
+    /** Skins one mesh (index g of its pack) into the buffers, as skinAll does for every one. */
+    public static void skinGroup(NpcSkin.Group gr, float[] m, Object[] buffers, int g) {
+        if (buffers[g * 2] == null) {
+            buffers[g * 2] = new float[gr.vertices * 3];
+            buffers[g * 2 + 1] = new float[gr.vertices * 3];
+        }
+        skin(gr, m, (float[]) buffers[g * 2], (float[]) buffers[g * 2 + 1]);
     }
 
     private static float[] matrices(Matrix4f[] bones) {
