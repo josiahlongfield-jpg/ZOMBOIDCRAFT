@@ -103,6 +103,33 @@ public final class MeshGuns {
         return gun;
     }
 
+    /**
+     * A local gun whole (every part where it rests, and the iron sights it came without), the pose at the item
+     * model's corner: what the item model would show, drawn where the caller wants it (a survivor's posed third-person
+     * hold, which places the gun itself rather than through the item's display transform).
+     */
+    public static void drawLocal(String local, PoseStack pose, SubmitNodeCollector out, int light) {
+        Gun gun = get(LOCAL + local);
+        if (gun == null) {
+            return;
+        }
+        for (String part : gun.parts().keySet()) {
+            draw(LOCAL + local, part, pose, out, light, null);
+        }
+        com.zomboidcraft.combat.LocalGuns.Spec spec = com.zomboidcraft.combat.LocalGuns.get(local);
+        if (spec != null && spec.irons != null) {
+            for (com.zomboidcraft.combat.LocalGuns.Part p : spec.irons) {
+                if (p == null || p.mesh == null || p.at == null || p.at.length < 3) {
+                    continue;
+                }
+                pose.pushPose();
+                pose.translate(p.at[0] / 16, p.at[1] / 16, p.at[2] / 16);
+                draw(p.mesh, "body", pose, out, light, null);
+                pose.popPose();
+            }
+        }
+    }
+
     /** Draws one part of a gun with the pose at the item model's corner (one unit a block, as a block model draws). */
     public static void draw(String id, String part, PoseStack pose, SubmitNodeCollector out, int light) {
         draw(id, part, pose, out, light, null);

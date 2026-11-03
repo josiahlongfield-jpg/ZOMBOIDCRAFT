@@ -23,18 +23,33 @@ import org.joml.Vector3f;
  * this computer from the tool's numbers, never shipped), already in the hand frame: blocks, x right, y up, z back, the eye at
  * -ARM. A gun without a file keeps our anchor gun's pose and arms.
  */
-final class GunPoses {
+public final class GunPoses {
     /** One pose: the gun, and each arm bone's place and turn (by its name without "Bip01_"). */
     record Posed(RifleView.Pose gun, Map<String, Matrix4f> bones) {
     }
 
-    /** Both of a gun's poses. */
-    record Gun(Posed hip, Posed ads) {
+    /** Both of a gun's first-person poses, and its third-person ones when the file has them (else null). */
+    record Gun(Posed hip, Posed ads, @Nullable Posed tpReady, @Nullable Posed tpAim) {
+    }
+
+    /**
+     * A third-person pose: the gun (item pixels / 16 to her Bip01_Spine1's frame) and her arm bones by their full
+     * names (Bip01_R_Hand, and Bip01_R_Finger1_index etc. for the split fingers), each in Spine1's frame, in her
+     * pack's space (metres, facing +z).
+     */
+    public record Third(Matrix4f gun, Map<String, Matrix4f> bones) {
+    }
+
+    /** The third-person pose Josiah set for this local gun, aimed or ready; null for a gun without one. */
+    public static @Nullable Third third(@Nullable String id, boolean aim) {
+        Gun g = of(id);
+        Posed p = g == null ? null : aim ? g.tpAim() : g.tpReady();
+        return p == null ? null : new Third(matrix(p.gun()), p.bones());
     }
 
     private static final Path DIR = LocalGuns.DIR.resolve("poses");
     private static final Map<String, Gun> CACHE = new HashMap<>();
-    private static final Gun NONE = new Gun(null, null);
+    private static final Gun NONE = new Gun(null, null, null, null);
     private static int generation = -1;
 
     static @Nullable Gun of(@Nullable String id) {
@@ -57,7 +72,8 @@ final class GunPoses {
         try (Reader r = Files.newBufferedReader(f, StandardCharsets.UTF_8)) {
             JsonObject o = JsonParser.parseReader(r).getAsJsonObject();
             Posed hip = posed(o.getAsJsonObject("hip")), ads = posed(o.getAsJsonObject("ads"));
-            return hip == null || ads == null ? NONE : new Gun(hip, ads);
+            return hip == null || ads == null ? NONE
+                    : new Gun(hip, ads, posed(o.getAsJsonObject("tpready")), posed(o.getAsJsonObject("tpaim")));
         } catch (RuntimeException | java.io.IOException e) {
             ZomboidCraft.LOGGER.error("Couldn't read gun poses {}", f, e);
             return NONE;

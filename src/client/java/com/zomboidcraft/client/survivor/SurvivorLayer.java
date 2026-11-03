@@ -44,11 +44,18 @@ public final class SurvivorLayer extends RenderLayer<AvatarRenderState, PlayerMo
         if (d.deathTurn != 0) pose.mulPose(new Matrix4f().rotationZ((float) Math.toRadians(-d.deathTurn)));
         pose.mulPose(new Matrix4f().rotationY((float) Math.PI));
         int overlay = LivingEntityRenderer.getOverlayCoords(state, 0);
-        NpcSkinDraw.submitWith(d.pack.skin, d.skin,
+        NpcSkinDraw.submitGroups(d.groups != null ? d.groups : d.pack.skin.groups, d.skin, 0,
                 g -> g.piece.equals("body") || g.piece.equals(d.hairPiece) || g.piece.equals(d.beardPiece) || d.clothes.containsKey(g.piece),
                 g -> g.piece.equals("body") ? d.body : g.piece.equals(d.hairPiece) ? d.hairTex
                         : g.piece.equals(d.beardPiece) ? d.beardTex : d.clothes.get(g.piece),
                 Survivors.buffers(d), light, overlay, pose, collector);
+        if (d.gun != null && d.gunAt != null) {
+            // the posed gun, in her own space like her bones
+            pose.pushPose();
+            pose.mulPose(d.gunAt);
+            com.zomboidcraft.client.combat.MeshGuns.drawLocal(d.gun, pose, collector, light);
+            pose.popPose();
+        }
         pose.popPose();
     }
 }

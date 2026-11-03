@@ -131,7 +131,15 @@ public final class SurvivorArms {
     private static final String[] FINGERS = {"index", "middle", "ring", "little"};
 
     /** A pack's meshes with each finger of Finger1 following a bone of its own, worked out once a pack. */
-    private record Split(NpcSkin.Group[] groups, int[] side) {
+    private record Split(NpcSkin.Group[] groups, NpcSkin.Group[] whole, int[] side) {
+    }
+
+    /**
+     * Her whole body's meshes with the four fingers split off Finger1 as in {@link #split}: bones n + side * 4 + finger
+     * (index, middle, ring, little; side 0 right), for the third-person posed guns.
+     */
+    static NpcSkin.Group[] wholeSplit(SurvivorPack pack) {
+        return SPLITS.computeIfAbsent(pack, SurvivorArms::split).whole();
     }
 
     private static final java.util.Map<SurvivorPack, Split> SPLITS = new java.util.WeakHashMap<>();
@@ -255,7 +263,7 @@ public final class SurvivorArms {
         }
         lowerBones[255] = false;
         armOnly = armBones;
-        NpcSkin.Group[] groups = new NpcSkin.Group[skin.groups.length];
+        NpcSkin.Group[] groups = new NpcSkin.Group[skin.groups.length], whole = new NpcSkin.Group[skin.groups.length];
         for (int i = 0; i < groups.length; i++) {
             NpcSkin.Group g = skin.groups[i];
             byte[] j = g.joint.clone();
@@ -272,6 +280,7 @@ public final class SurvivorArms {
                     }
                 }
             }
+            whole[i] = g.withJoints(j);
             NpcSkin.Group c = g.withJoints(j);
             // only her forearms, hands and fingers, as the tool draws them: the upper arms would sit by her cheek on
             // the sights (a triangle stays if each corner follows those bones wholly, mostly the forearm or below)
@@ -293,7 +302,7 @@ public final class SurvivorArms {
             Vector3f p = rest(skin, b);
             side[b] = r == null ? 1 : l == null ? 0 : p.distanceSquared(r) <= p.distanceSquared(l) ? 0 : 1;
         }
-        return new Split(groups, side);
+        return new Split(groups, whole, side);
     }
 
     private static boolean[] armOnly;

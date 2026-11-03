@@ -77,6 +77,10 @@ public final class Survivors {
         /** The garments' meshes drawn, by piece, with their textures. */
         Map<String, Identifier> clothes = Map.of();
         float deathTurn;
+        /** Posed third-person gun (Josiah's poses): her meshes with split fingers, and the gun she holds and where. */
+        com.zomboidcraft.client.npc.NpcSkin.Group[] groups;
+        String gun;
+        Matrix4f gunAt;
     }
 
     private static final Map<Integer, Entry> ENTRIES = new HashMap<>();
@@ -260,6 +264,12 @@ public final class Survivors {
         boolean leftMain = state.mainArm == HumanoidArm.LEFT;
         boolean[] reached = new boolean[2];
         Minecraft mc = Minecraft.getInstance();
+        if (HoldPoses.posed && !leftMain && mc.level != null && mc.level.getEntity(state.id) instanceof Player holder
+                && posedGun(model, state, d, pack, pos, turn, holder)) {
+            work = null;
+            hide(model, true);
+            return;
+        }
         boolean longGun = HoldPoses.posed && mc.level != null && mc.level.getEntity(state.id) instanceof Player holder
                 && kind(holder.getMainHandItem()).equals("rifle");
         if (longGun) {
@@ -320,11 +330,86 @@ public final class Survivors {
     }
 
     /**
+     * A local gun Josiah posed in third person (the posing tool, 2026-11-03): her arms and fingers bone by bone and the
+     * gun as he set them, laid off her chest (Bip01_Spine1) wherever the clip has it, and turned up and down with her
+     * eyes while aiming. The gun is drawn by SurvivorLayer itself, so vanilla's held item is shrunk away. False (nothing
+     * changed) when the held gun has no third-person pose.
+     */
+    private static boolean posedGun(PlayerModel model, AvatarRenderState state, Drawn d, SurvivorPack pack, float[] pos,
+                                    float[] turn, Player holder) {
+        ItemStack stack = holder.getMainHandItem();
+        String id = stack.get(com.zomboidcraft.combat.LocalGuns.ID);
+        if (id == null || com.zomboidcraft.combat.LocalGuns.of(stack) == null) return false;
+        boolean aim = state.isUsingItem && state.useItemHand == InteractionHand.MAIN_HAND || HoldPoses.raised(holder);
+        com.zomboidcraft.client.combat.GunPoses.Third third = com.zomboidcraft.client.combat.GunPoses.third(id, aim);
+        int ref = pack.skin.bone("Bip01_Spine1");
+        if (third == null || ref < 0) return false;
+        Matrix4f spine = new Matrix4f().translationRotate(pos[ref * 3], pos[ref * 3 + 1], pos[ref * 3 + 2],
+                new Quaternionf(turn[ref * 4], turn[ref * 4 + 1], turn[ref * 4 + 2], turn[ref * 4 + 3]));
+        if (aim) {
+            // the shouldered gun follows her eyes up and down, turning about her chest
+            float pitch = Math.max(-80, Math.min(80, state.xRot));
+            Vector3f c = spine.getTranslation(new Vector3f());
+            spine = new Matrix4f().translation(c).rotateX((float) Math.toRadians(pitch)).translate(-c.x, -c.y, -c.z).mul(spine);
+        }
+        int n = pack.skin.boneNames.length;
+        Matrix4f[] fingers = new Matrix4f[8];
+        Quaternionf q = new Quaternionf();
+        Vector3f t = new Vector3f();
+        for (Map.Entry<String, Matrix4f> e : third.bones().entrySet()) {
+            Matrix4f w = new Matrix4f(spine).mul(e.getValue());
+            String name = e.getKey();
+            int f = name.indexOf("_Finger1_");
+            if (f >= 0) {
+                int s = name.startsWith("Bip01_R_") ? 0 : 1, k = switch (name.substring(f + 9)) {
+                    case "index" -> 0;
+                    case "middle" -> 1;
+                    case "ring" -> 2;
+                    default -> 3;
+                };
+                fingers[s * 4 + k] = w;
+                continue;
+            }
+            int b = pack.skin.bone(name);
+            if (b < 0) continue;
+            w.getTranslation(t);
+            w.getUnnormalizedRotation(q).normalize();
+            pos[b * 3] = t.x;
+            pos[b * 3 + 1] = t.y;
+            pos[b * 3 + 2] = t.z;
+            turn[b * 4] = q.x;
+            turn[b * 4 + 1] = q.y;
+            turn[b * 4 + 2] = q.z;
+            turn[b * 4 + 3] = q.w;
+        }
+        Matrix4f[] skin = skinOf(pack, pos, turn), all = java.util.Arrays.copyOf(skin, n + 8);
+        for (int s = 0; s < 2; s++) {
+            int f1 = pack.skin.bone(s == 0 ? "Bip01_R_Finger1" : "Bip01_L_Finger1");
+            for (int k = 0; k < 4; k++) {
+                all[n + s * 4 + k] = fingers[s * 4 + k] != null && f1 >= 0 ? new Matrix4f(fingers[s * 4 + k]).mul(pack.skin.inverse[f1])
+                        : f1 >= 0 ? new Matrix4f(skin[f1]) : new Matrix4f();
+            }
+        }
+        d.skin = all;
+        d.groups = SurvivorArms.wholeSplit(pack);
+        d.gun = id;
+        d.gunAt = new Matrix4f(spine).mul(third.gun());
+        // vanilla's held item (placed by its display transform) gives way to the gun drawn where he set it
+        ModelPart arm = model.rightArm;
+        arm.xScale = arm.yScale = arm.zScale = 1e-4f;
+        SHRUNK.add(model);
+        return true;
+    }
+
+    private static final java.util.Set<PlayerModel> SHRUNK = java.util.Collections.newSetFromMap(new java.util.WeakHashMap<>());
+
+    /**
      * Minecraft's own parts hidden while a survivor is drawn over them; shown again (and the arms put back) before the
      * model is posed for the next player drawn with it.
      */
     public static void hide(PlayerModel model, boolean hidden) {
         if (!hidden) {
+            if (SHRUNK.remove(model)) model.rightArm.xScale = model.rightArm.yScale = model.rightArm.zScale = 1;
             if (!HIDDEN.remove(model)) return;
             model.rightArm.resetPose();
             model.leftArm.resetPose();
