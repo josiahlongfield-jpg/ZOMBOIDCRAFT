@@ -47,19 +47,51 @@ public final class MeshGunRenderer implements net.minecraft.client.renderer.spec
     @Override
     public @org.jetbrains.annotations.Nullable String extractArgument(net.minecraft.world.item.ItemStack stack) {
         String local = stack.get(com.zomboidcraft.combat.LocalGuns.ID);
-        return local != null && MeshGuns.hasLocal(local) ? local : null;
+        if (local != null && MeshGuns.hasLocal(local)) {
+            return LocalAttachments.argument(stack, local);
+        }
+        // a sight or grip kept on this computer: its own mesh, at the middle of the block
+        String part = com.zomboidcraft.combat.LocalParts.of(stack);
+        return part != null && com.zomboidcraft.combat.LocalParts.get(part) != null ? "part:" + part : null;
     }
 
     @Override
     public void submit(@org.jetbrains.annotations.Nullable String local, PoseStack pose, SubmitNodeCollector out, int light, int overlay, boolean foil, int outline) {
+        if (local != null && local.startsWith("part:")) {
+            String mesh = LocalAttachments.mesh(local.substring(5));
+            float[] b = MeshGuns.bounds(mesh);
+            if (id.startsWith("att_") && b != null) {
+                // at our part's place, sized to about our part's (the real sizes would be a speck or a log)
+                float reach = Math.max(b[3] - b[0], Math.max(b[4] - b[1], b[5] - b[2])), s = 0.7f / Math.max(0.02f, reach);
+                pose.pushPose();
+                if (!offset.isEmpty()) {
+                    pose.translate(offset.get(0) / 16, offset.get(1) / 16, offset.get(2) / 16);
+                }
+                pose.scale(s, s, s);
+                pose.translate(-(b[0] + b[3]) / 2, 0, -(b[2] + b[5]) / 2);
+                MeshGuns.draw(mesh, "body", pose, out, light, null);
+                pose.popPose();
+            }
+            return;
+        }
+        String optic = null, grip = null;
+        if (local != null) {
+            String[] bits = local.split("\\|", -1);
+            local = bits[0];
+            optic = bits.length > 1 && !bits[1].isEmpty() ? bits[1] : null;
+            grip = bits.length > 2 && !bits[2].isEmpty() ? bits[2] : null;
+        }
         if (local != null) {
             // our gun's mesh becomes its mesh (part by part: one it hasn't got draws nothing); our attachments don't
             // go on it (its own parts are packed with it); anything else (a loaded bolt) draws as it is
             com.zomboidcraft.combat.LocalGuns.Spec spec = com.zomboidcraft.combat.LocalGuns.get(local);
             if (spec != null && id.equals(spec.anchorMesh)) {
                 // where our part sits (a magazine on its way out, a swung cylinder) its part sits too
-                submit(MeshGuns.LOCAL + local, null, pose, out, light);
-                if ("body".equals(part) && spec.irons != null) {
+                submit(LocalAttachments.gunMesh(local, optic), null, pose, out, light);
+                if ("body".equals(part)) {
+                    LocalAttachments.drawParts(local, optic, grip, pose, out, light);
+                }
+                if ("body".equals(part) && spec.irons != null && optic == null) {
                     // iron sights it came without: our flip-up pair, up, on its rail
                     for (com.zomboidcraft.combat.LocalGuns.Part p : spec.irons) {
                         if (p == null || p.mesh == null || p.at == null || p.at.length < 3) {

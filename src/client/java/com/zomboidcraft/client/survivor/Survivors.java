@@ -79,7 +79,7 @@ public final class Survivors {
         float deathTurn;
         /** Posed third-person gun (Josiah's poses): her meshes with split fingers, and the gun she holds and where. */
         com.zomboidcraft.client.npc.NpcSkin.Group[] groups;
-        String gun;
+        ItemStack gun;
         Matrix4f gunAt;
     }
 
@@ -341,7 +341,8 @@ public final class Survivors {
         String id = stack.get(com.zomboidcraft.combat.LocalGuns.ID);
         if (id == null || com.zomboidcraft.combat.LocalGuns.of(stack) == null) return false;
         boolean aim = state.isUsingItem && state.useItemHand == InteractionHand.MAIN_HAND || HoldPoses.raised(holder);
-        com.zomboidcraft.client.combat.GunPoses.Third third = com.zomboidcraft.client.combat.GunPoses.third(id, aim);
+        com.zomboidcraft.client.combat.GunPoses.Third third = com.zomboidcraft.client.combat.GunPoses.third(id, aim,
+                com.zomboidcraft.combat.LocalParts.fitted(stack, com.zomboidcraft.combat.Attachments.Slot.UNDERBARREL));
         int ref = pack.skin.bone("Bip01_Spine1");
         if (third == null || ref < 0) return false;
         Matrix4f spine = new Matrix4f().translationRotate(pos[ref * 3], pos[ref * 3 + 1], pos[ref * 3 + 2],
@@ -392,7 +393,7 @@ public final class Survivors {
         }
         d.skin = all;
         d.groups = SurvivorArms.wholeSplit(pack);
-        d.gun = id;
+        d.gun = stack;
         d.gunAt = new Matrix4f(spine).mul(third.gun());
         // vanilla's held item (placed by its display transform) gives way to the gun drawn where he set it
         ModelPart arm = model.rightArm;

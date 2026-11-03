@@ -154,7 +154,7 @@ public final class ScopeView {
             // a shader pack: nothing kept from the frame (it doesn't show over the pack's picture, Josiah 2026-11-03);
             // the whole view is zoomed already, so the lens is the view itself, the world round it shaded
             int w = g.guiWidth(), h = g.guiHeight();
-            double size = Math.max(0.15, Math.min(0.95, ZcConfig.get().look.scopeLens));
+            double size = lensSize();
             int r = (int) Math.round(size * h / 2), cx = w / 2, cy = h / 2, shade = 0x9A000000;
             g.fill(0, 0, w, Math.max(0, cy - r), shade);
             g.fill(0, Math.min(h, cy + r), w, h, shade);
@@ -179,7 +179,7 @@ public final class ScopeView {
         }
         g.fill(0, 0, w, h, 0x30000000);     // the world outside a touch darker, the eye on the lens
 
-        double size = Math.max(0.15, Math.min(0.95, ZcConfig.get().look.scopeLens));
+        double size = lensSize();
         int r = (int) Math.round(size * h / 2), cx = w / 2, cy = h / 2;
         // a magnified view drawn 1:1 from a zoomed frame, or the middle of a normal one blown up
         double crop = mode == Mode.MIX && !zoomAll(m) ? m : 1;
@@ -204,8 +204,19 @@ public final class ScopeView {
         ring(g, cx, cy, r);
     }
 
-    /** A plain duplex: thick posts from the edge, a fine cross in the middle. */
+    /** The lens's share of the screen's height: a sight of Josiah's pack its eyepiece's real size, else the setting. */
+    private static double lensSize() {
+        double own = LocalAttachments.lens;
+        return Math.max(0.15, Math.min(0.95, own > 0 ? own : ZcConfig.get().look.scopeLens));
+    }
+
+    /** The scope's own reticle (a sight of Josiah's pack), or a plain duplex: thick posts from the edge, a fine cross. */
     private static void reticle(GuiGraphicsExtractor g, int cx, int cy, int r) {
+        Identifier own = LocalAttachments.reticle;
+        if (own != null) {
+            g.blit(RenderPipelines.GUI_TEXTURED, own, cx - r, cy - r, 0, 0, r * 2, r * 2, r * 2, r * 2);
+            return;
+        }
         int ink = 0xF0080808, fine = Math.max(1, r / 200), thick = Math.max(2, r / 45), in = r * 2 / 5;
         g.fill(cx - in, cy - fine / 2, cx + in, cy - fine / 2 + fine, ink);
         g.fill(cx - fine / 2, cy - in, cx - fine / 2 + fine, cy + in, ink);

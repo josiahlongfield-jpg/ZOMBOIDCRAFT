@@ -104,19 +104,20 @@ public final class MeshGuns {
     }
 
     /**
-     * A local gun whole (every part where it rests, and the iron sights it came without), the pose at the item
-     * model's corner: what the item model would show, drawn where the caller wants it (a survivor's posed third-person
-     * hold, which places the gun itself rather than through the item's display transform).
+     * A local gun's mesh whole (every part where it rests) and, for ironsOf (the gun's id; null with a sight on), the iron
+     * sights it came without, the pose at the item model's corner: what the item model would show, drawn where the caller
+     * wants it (a survivor's posed third-person hold, which places the gun itself rather than through the item's display
+     * transform).
      */
-    public static void drawLocal(String local, PoseStack pose, SubmitNodeCollector out, int light) {
-        Gun gun = get(LOCAL + local);
+    public static void drawLocal(String mesh, @org.jetbrains.annotations.Nullable String ironsOf, PoseStack pose, SubmitNodeCollector out, int light) {
+        Gun gun = get(mesh);
         if (gun == null) {
             return;
         }
         for (String part : gun.parts().keySet()) {
-            draw(LOCAL + local, part, pose, out, light, null);
+            draw(mesh, part, pose, out, light, null);
         }
-        com.zomboidcraft.combat.LocalGuns.Spec spec = com.zomboidcraft.combat.LocalGuns.get(local);
+        com.zomboidcraft.combat.LocalGuns.Spec spec = ironsOf == null ? null : com.zomboidcraft.combat.LocalGuns.get(ironsOf);
         if (spec != null && spec.irons != null) {
             for (com.zomboidcraft.combat.LocalGuns.Part p : spec.irons) {
                 if (p == null || p.mesh == null || p.at == null || p.at.length < 3) {

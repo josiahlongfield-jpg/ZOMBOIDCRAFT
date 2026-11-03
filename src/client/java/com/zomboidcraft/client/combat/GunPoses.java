@@ -29,8 +29,24 @@ public final class GunPoses {
     }
 
     /** Both of a gun's first-person poses, and its third-person ones when the file has them (else null). */
-    record Gun(Posed hip, Posed ads, @Nullable Posed tpReady, @Nullable Posed tpAim) {
+    record Gun(Posed hip, Posed ads, @Nullable Posed tpReady, @Nullable Posed tpAim, Att att) {
     }
+
+    /**
+     * Where Josiah placed each sight and grip on this gun in the posing tool: the gun's model units per metre (a part's
+     * metres times this), each sight's mount (item pixels) and its sights pose (the gun and both arms), each grip's
+     * mount and the front hand on it in every pose (L_ bones; third person by full name).
+     */
+    record Att(float k, Map<String, OpticPose> optics, Map<String, GripPose> grips) {
+    }
+
+    record OpticPose(float[] mount, Posed ads) {
+    }
+
+    record GripPose(float[] mount, Map<String, Map<String, Matrix4f>> hands) {
+    }
+
+    private static final Att NO_ATT = new Att(0, Map.of(), Map.of());
 
     /**
      * A third-person pose: the gun (item pixels / 16 to her Bip01_Spine1's frame) and her arm bones by their full
@@ -41,15 +57,16 @@ public final class GunPoses {
     }
 
     /** The third-person pose Josiah set for this local gun, aimed or ready; null for a gun without one. */
-    public static @Nullable Third third(@Nullable String id, boolean aim) {
+    public static @Nullable Third third(@Nullable String id, boolean aim, @Nullable String grip) {
         Gun g = of(id);
+        if (g != null && grip != null) g = with(g, null, grip);
         Posed p = g == null ? null : aim ? g.tpAim() : g.tpReady();
         return p == null ? null : new Third(matrix(p.gun()), p.bones());
     }
 
     private static final Path DIR = LocalGuns.DIR.resolve("poses");
     private static final Map<String, Gun> CACHE = new HashMap<>();
-    private static final Gun NONE = new Gun(null, null, null, null);
+    private static final Gun NONE = new Gun(null, null, null, null, NO_ATT);
     private static int generation = -1;
 
     static @Nullable Gun of(@Nullable String id) {
@@ -73,11 +90,93 @@ public final class GunPoses {
             JsonObject o = JsonParser.parseReader(r).getAsJsonObject();
             Posed hip = posed(o.getAsJsonObject("hip")), ads = posed(o.getAsJsonObject("ads"));
             return hip == null || ads == null ? NONE
-                    : new Gun(hip, ads, posed(o.getAsJsonObject("tpready")), posed(o.getAsJsonObject("tpaim")));
+                    : new Gun(hip, ads, posed(o.getAsJsonObject("tpready")), posed(o.getAsJsonObject("tpaim")), att(o));
         } catch (RuntimeException | java.io.IOException e) {
             ZomboidCraft.LOGGER.error("Couldn't read gun poses {}", f, e);
             return NONE;
         }
+    }
+
+    private static Att att(JsonObject o) {
+        if (!o.has("k")) {
+            return NO_ATT;
+        }
+        Map<String, OpticPose> optics = new HashMap<>();
+        Map<String, GripPose> grips = new HashMap<>();
+        JsonObject os = o.getAsJsonObject("optics"), gs = o.getAsJsonObject("grips");
+        if (os != null) {
+            for (Map.Entry<String, JsonElement> e : os.entrySet()) {
+                JsonObject v = e.getValue().getAsJsonObject();
+                Posed ads = posed(v.getAsJsonObject("ads"));
+                if (ads != null) optics.put(e.getKey(), new OpticPose(floats(v.getAsJsonArray("mount")), ads));
+            }
+        }
+        if (gs != null) {
+            for (Map.Entry<String, JsonElement> e : gs.entrySet()) {
+                JsonObject v = e.getValue().getAsJsonObject();
+                Map<String, Map<String, Matrix4f>> hands = new HashMap<>();
+                for (String m : new String[]{"hip", "ads", "tpready", "tpaim"}) {
+                    JsonObject h = v.getAsJsonObject(m);
+                    if (h != null) hands.put(m, bones(h));
+                }
+                grips.put(e.getKey(), new GripPose(floats(v.getAsJsonArray("mount")), hands));
+            }
+        }
+        return new Att(o.get("k").getAsFloat(), optics, grips);
+    }
+
+    private static Map<String, Matrix4f> bones(JsonObject b) {
+        Map<String, Matrix4f> bones = new HashMap<>();
+        for (Map.Entry<String, JsonElement> e : b.entrySet()) {
+            float[] v = floats(e.getValue().getAsJsonArray());
+            bones.put(e.getKey(), new Matrix4f().translationRotate(v[0], v[1], v[2], new Quaternionf(v[3], v[4], v[5], v[6]).normalize()));
+        }
+        return bones;
+    }
+
+    /**
+     * The gun's poses with a sight and a grip of the posing tool's on it (either may be null): the sights pose the
+     * sight gives (its own line, both arms carried with the gun), and the front hand on the grip, on the sights carried
+     * along with the gun from where the grip alone put it. Null when this gun has no pose for that sight.
+     */
+    static @Nullable Gun with(Gun g, @Nullable String optic, @Nullable String grip) {
+        if (optic == null && grip == null) {
+            return g;
+        }
+        OpticPose op = optic == null ? null : g.att().optics().get(optic);
+        if (optic != null && op == null) {
+            return null;
+        }
+        GripPose gp = grip == null ? null : g.att().grips().get(grip);
+        Posed ads = op == null ? g.ads() : op.ads();
+        Posed hip = g.hip();
+        Posed tpr = g.tpReady(), tpa = g.tpAim();
+        if (gp != null) {
+            hip = hand(hip, gp.hands().get("hip"), null);
+            // the grip's front hand was set on the gun's iron-sights pose: carried along to the sight's
+            Matrix4f carry = matrix(ads.gun()).mul(matrix(g.ads().gun()).invert());
+            ads = hand(ads, gp.hands().get("ads"), carry);
+            tpr = tpr == null ? null : hand(tpr, gp.hands().get("tpready"), null);
+            tpa = tpa == null ? null : hand(tpa, gp.hands().get("tpaim"), null);
+        }
+        return new Gun(hip, ads, tpr, tpa, g.att());
+    }
+
+    private static Posed hand(Posed p, @Nullable Map<String, Matrix4f> left, @Nullable Matrix4f carry) {
+        if (left == null) {
+            return p;
+        }
+        Map<String, Matrix4f> bones = new HashMap<>(p.bones());
+        for (Map.Entry<String, Matrix4f> e : left.entrySet()) {
+            bones.put(e.getKey(), carry == null ? e.getValue() : new Matrix4f(carry).mul(e.getValue()));
+        }
+        return new Posed(p.gun(), bones);
+    }
+
+    /** A local gun's sight and grip mounts and scale, or null for a gun without them. */
+    public static @Nullable Att att(@Nullable String id) {
+        Gun g = of(id);
+        return g == null || g.att().k() <= 0 ? null : g.att();
     }
 
     private static @Nullable Posed posed(@Nullable JsonObject o) {

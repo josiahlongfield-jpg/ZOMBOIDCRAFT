@@ -164,7 +164,14 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
 
     /** Whether the part can be fitted now: attachments are on in settings and it fits the gun. */
     public static boolean canMount(ItemStack gun, ItemStack part) {
-        return ZcConfig.get().guns.attachments && !part.isEmpty() && fits(gun, part.getItem()) && goesWith(gun, part);
+        if (!ZcConfig.get().guns.attachments || part.isEmpty()) {
+            return false;
+        }
+        // a part kept on this computer goes only on the local guns its file names (and fits no gun of ours)
+        if (part.get(LocalParts.ID) != null) {
+            return LocalParts.fits(gun, part);
+        }
+        return fits(gun, part.getItem()) && goesWith(gun, part);
     }
 
     /** The magnifier only sits behind a red dot or holo sight (or open rails): never with a scope in front of it. */
@@ -346,6 +353,13 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
 
     /** The optic on the gun, or null on its own sights. */
     public static @Nullable Optic optic(ItemStack gun) {
+        LocalParts.Meta local = LocalParts.get(LocalParts.fitted(gun, Slot.OPTIC));
+        if (local != null) {
+            // a sight from Josiah's pack: a scope shows its zoomed picture in its eyepiece; a red dot's or holo's own lit
+            // reticle is drawn in it, so nothing on the HUD
+            ZcConfig.Guns cfg = ZcConfig.get().guns;
+            return local.mag > 1 ? new Optic(cfg.scopeAimSpread, 1 / local.mag, 0, true) : new Optic(cfg.redDotAimSpread, 1, 0, false);
+        }
         String key = key(gun, Slot.OPTIC);
         return key == null ? null : optic(key);
     }

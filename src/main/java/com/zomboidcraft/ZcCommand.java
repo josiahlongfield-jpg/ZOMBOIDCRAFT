@@ -130,6 +130,10 @@ public final class ZcCommand {
                                             + com.zomboidcraft.combat.LocalGuns.all().size()), false);
                                     return 1;
                                 }))
+                                .then(Commands.literal("part").then(Commands.argument("part", StringArgumentType.word())
+                                        .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
+                                                com.zomboidcraft.combat.LocalParts.ids(), builder))
+                                        .executes(ctx -> giveLocalPart(ctx, StringArgumentType.getString(ctx, "part")))))
                                 .then(Commands.argument("id", StringArgumentType.word())
                                         .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
                                                 com.zomboidcraft.combat.LocalGuns.all().stream().map(g -> g.id), builder))
@@ -141,6 +145,19 @@ public final class ZcCommand {
                             com.zomboidcraft.survival.Body.set(ctx.getSource().getPlayerOrException(), com.zomboidcraft.survival.Body.FRESH);
                             return show(ctx);
                         }))));
+    }
+
+    /** Gives you a sight or grip kept on this computer (config/zomboidcraft/guns/parts), for the local guns. */
+    private static int giveLocalPart(CommandContext<CommandSourceStack> ctx, String id) throws CommandSyntaxException {
+        ServerPlayer player = ctx.getSource().getPlayerOrException();
+        net.minecraft.world.item.ItemStack part = com.zomboidcraft.combat.LocalParts.make(id);
+        if (part.isEmpty()) {
+            ctx.getSource().sendFailure(Component.literal("No local part " + id + " in config/zomboidcraft/guns/parts"));
+            return 0;
+        }
+        player.getInventory().add(part);
+        ctx.getSource().sendSuccess(() -> Component.literal("Gave " + part.getHoverName().getString()), false);
+        return 1;
     }
 
     /** Gives you a gun kept on this computer (config/zomboidcraft/guns), loaded. */

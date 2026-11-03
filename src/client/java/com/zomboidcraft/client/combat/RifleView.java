@@ -330,11 +330,18 @@ public final class RifleView {
         float a = smooth(Mth.lerp(partial(age), aimO, aim));
         Pose sights = aim(optic, gun);
         // a local gun Josiah posed in the posing tool: his hip and sights poses (on its iron sights)
-        GunPoses.Gun posed = optic.equals(Attachments.EMPTY_KEY) && com.zomboidcraft.combat.LocalGuns.of(gun) != null
+        // with a sight or grip of his kept on this computer, the sights pose that sight gives and the front hand on it
+        String localOptic = com.zomboidcraft.combat.LocalParts.fitted(gun, Attachments.Slot.OPTIC);
+        String localGrip = com.zomboidcraft.combat.LocalParts.fitted(gun, Attachments.Slot.UNDERBARREL);
+        GunPoses.Gun posed = (optic.equals(Attachments.EMPTY_KEY) || localOptic != null) && com.zomboidcraft.combat.LocalGuns.of(gun) != null
                 ? GunPoses.of(gun.get(com.zomboidcraft.combat.LocalGuns.ID)) : null;
+        if (posed != null) {
+            posed = GunPoses.with(posed, localOptic, localGrip);
+        }
         if (posed != null && sights != null) {
             sights = posed.ads().gun();
         }
+        LocalAttachments.aiming(gun, posed, localOptic, sights, a);
         if (sights == null) {
             a = 0;
         }
@@ -379,7 +386,9 @@ public final class RifleView {
         pose.pushPose();
         want.apply(pose);
         shown.unapply(pose);
+        LocalAttachments.firstPerson = true;
         drawGun.run();
+        LocalAttachments.firstPerson = false;
         pose.popPose();
 
         // the model leaves the handle, slide or pump to us in first person

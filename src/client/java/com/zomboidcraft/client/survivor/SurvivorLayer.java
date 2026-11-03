@@ -53,7 +53,7 @@ public final class SurvivorLayer extends RenderLayer<AvatarRenderState, PlayerMo
             // the posed gun, in her own space like her bones
             pose.pushPose();
             pose.mulPose(d.gunAt);
-            com.zomboidcraft.client.combat.MeshGuns.drawLocal(d.gun, pose, collector, light);
+            com.zomboidcraft.client.combat.LocalAttachments.drawWhole(d.gun, pose, collector, light);
             pose.popPose();
         }
         pose.popPose();
