@@ -598,6 +598,9 @@ public final class ZedBodies {
 
     private static final class Crowd {
         final Object[][][] buffers = new Object[2][CROWD_PHASES][];
+        /** The frame each mesh of each pose was last skinned for: only meshes someone in the crowd wears get skinned. */
+        final long[][][] skinned = new long[2][CROWD_PHASES][];
+        final float[][] bones = new float[CROWD_PHASES][];
         int flip;
         long frame = -1;
     }
@@ -624,9 +627,15 @@ public final class ZedBodies {
         if (c.frame != frame) {
             c.frame = frame;
             c.flip ^= 1;
+            // each pose's bones once a frame; its meshes are skinned as the figures wearing them come up (skinning
+            // every mesh the pack has, 4 poses x 229 meshes, was a tenth of the frame, 2026-11-03 horde profile)
             for (int p = 0; p < CROWD_PHASES; p++) {
-                if (c.buffers[c.flip][p] == null) c.buffers[c.flip][p] = new Object[pack.skin.groups.length * 2];
-                NpcSkinDraw.skinAll(pack.skin, farPose(pack, "idle", ageTicks / 20f + p * 0.9f), level, c.buffers[c.flip][p]);
+                if (c.buffers[c.flip][p] == null) {
+                    c.buffers[c.flip][p] = new Object[pack.skin.groups.length * 2];
+                    c.skinned[c.flip][p] = new long[pack.skin.groups.length];
+                    java.util.Arrays.fill(c.skinned[c.flip][p], -1);
+                }
+                c.bones[p] = NpcSkinDraw.boneMatrices(farPose(pack, "idle", ageTicks / 20f + p * 0.9f));
             }
         }
         Look look = look(pack, v, outfit);
@@ -640,10 +649,20 @@ public final class ZedBodies {
         }
         Identifier hair = look.hairTex() == null ? null : SurvivorTextures.hair(pack, look.hairTex(), look.colour());
         String hp = hair == null ? null : look.hairPiece();
-        NpcSkinDraw.submitWith(pack.skin, null, level,
-                g -> g.piece.equals("body") || g.piece.equals(hp) || clothes.containsKey(g.piece),
+        int phase = Math.floorMod(variant >> 4, CROWD_PHASES);
+        Object[] buf = c.buffers[c.flip][phase];
+        long[] done = c.skinned[c.flip][phase];
+        java.util.function.Predicate<NpcSkin.Group> wears = g -> g.piece.equals("body") || g.piece.equals(hp) || clothes.containsKey(g.piece);
+        for (int g = 0; g < pack.skin.groups.length; g++) {
+            NpcSkin.Group gr = pack.skin.groups[g];
+            if (gr.level == level && done[g] != frame && wears.test(gr)) {
+                NpcSkinDraw.skinGroup(gr, c.bones[phase], buf, g);
+                done[g] = frame;
+            }
+        }
+        NpcSkinDraw.submitWith(pack.skin, null, level, wears,
                 g -> g.piece.equals("body") ? body : g.piece.equals(hp) ? hair : clothes.get(g.piece),
-                c.buffers[c.flip][Math.floorMod(variant >> 4, CROWD_PHASES)], light, OverlayTexture.NO_OVERLAY, pose, collector);
+                buf, light, OverlayTexture.NO_OVERLAY, pose, collector);
     }
 
     /** A dead zombie's body (zombie.Corpse), lying as its death left it. */
