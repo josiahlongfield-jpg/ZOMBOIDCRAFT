@@ -112,7 +112,7 @@ public final class ScopeView {
 
     /** After the frame is finished (shader pack included), before the HUD: keep it for the lens or the world view. */
     public static void capture(GameRenderer renderer, RenderTarget main) {
-        if (!active()) {
+        if (!active() || RailLights.shaderPackOn()) {
             return;
         }
         try {
@@ -150,6 +150,24 @@ public final class ScopeView {
     public static void draw(GuiGraphicsExtractor g) {
         double m = magnification();
         Mode mode = mode();
+        if (m > 1 && RailLights.shaderPackOn()) {
+            // a shader pack: nothing kept from the frame (it doesn't show over the pack's picture, Josiah 2026-11-03);
+            // the whole view is zoomed already, so the lens is the view itself, the world round it shaded
+            int w = g.guiWidth(), h = g.guiHeight();
+            double size = Math.max(0.15, Math.min(0.95, ZcConfig.get().look.scopeLens));
+            int r = (int) Math.round(size * h / 2), cx = w / 2, cy = h / 2, shade = 0x9A000000;
+            g.fill(0, 0, w, Math.max(0, cy - r), shade);
+            g.fill(0, Math.min(h, cy + r), w, h, shade);
+            for (int y = Math.max(0, cy - r); y < Math.min(h, cy + r); y++) {
+                double dy = y + 0.5 - cy;
+                int half = (int) Math.round(Math.sqrt(Math.max(0, (double) r * r - dy * dy)));
+                g.fill(0, y, cx - half, y + 1, shade);
+                g.fill(cx + half, y, w, y + 1, shade);
+            }
+            reticle(g, cx, cy, r);
+            ring(g, cx, cy, r);
+            return;
+        }
         if (m <= 1 || lens == null || !lensReady) {
             return;
         }
