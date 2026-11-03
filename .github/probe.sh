@@ -11,6 +11,19 @@ sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 echo "===== compile errors"
 grep -E "error:|warning: \[removal\]" -A3 build.log | head -80
 
+echo "===== scope pip (weapons)"
+classes '(RenderTarget|TextureTarget|GpuDevice|CommandEncoder|GpuTexture|GpuTextureView|GuiGraphics|RenderPipelines|GameRenderer|RenderSystem|TextureFormat|FilterMode|AddressMode|GpuSampler|SamplerCache)\.class$'
+for c in $(classes '(RenderTarget|TextureTarget|GpuDevice|CommandEncoder|GpuTexture|GpuTextureView|TextureFormat)\.class$' | sed 's/\.class$//; s#/#.#g'); do echo "-- $c"; javap -cp "$CP" -p "$c" 2>&1 | grep -vE 'lambda\$' | head -60; done
+javap -cp "$CP" -p net.minecraft.client.Minecraft 2>&1 | grep -iE "rendertarget|getMainRender"
+javap -cp "$CP" -p net.minecraft.client.renderer.GameRenderer 2>&1 | grep -vE 'lambda\$' | head -80
+javap -cp "$CP" -p -c net.minecraft.client.renderer.GameRenderer 2>&1 | grep -A400 ' void render(' | grep -E 'invoke' | head -80
+javap -cp "$CP" -p -c net.minecraft.client.renderer.GameRenderer 2>&1 | grep -A500 ' void renderLevel(' | grep -E 'invoke' | head -90
+javap -cp "$CP" -p net.minecraft.client.gui.GuiGraphics 2>&1 | grep -E "blit|submit|fill\(" | head -40
+javap -cp "$CP" -p net.minecraft.client.renderer.RenderPipelines 2>&1 | grep -iE "gui|blit|textured" | head -30
+for c in $(classes '(RenderSystem|GpuSampler|SamplerCache|FilterMode|AddressMode)\.class$' | sed 's/\.class$//; s#/#.#g'); do echo "-- $c"; javap -cp "$CP" -p "$c" 2>&1 | grep -vE 'lambda\$' | grep -iE "device|sampler|filter|address|static" | head -30; done
+classes 'gui/render/(state/)?(BlitRenderState|GuiRenderState|TextureSetup)\.class$'
+for c in net.minecraft.client.gui.render.TextureSetup net.minecraft.client.gui.render.state.BlitRenderState; do echo "-- $c"; javap -cp "$CP" -p "$c" 2>&1 | head -30; done
+
 echo "===== vertex formats"
 for c in com.mojang.renderpearl.api.GpuFormat com.mojang.renderpearl.api.vertex.VertexFormat com.mojang.renderpearl.api.vertex.VertexFormatElement; do echo "-- $c"; javap -cp "$CP" -p "$c" 2>&1 | grep -vE 'lambda\$' | head -60; done
 javap -cp "$CP" -p -c com.mojang.blaze3d.vertex.DefaultVertexFormat 2>&1 | grep -A200 'static {}' | grep -E 'ldc|getstatic|putstatic' | head -120
