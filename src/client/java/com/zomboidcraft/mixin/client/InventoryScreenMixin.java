@@ -3,6 +3,8 @@ package com.zomboidcraft.mixin.client;
 import com.zomboidcraft.client.hud.InjuryGlowLayer;
 import com.zomboidcraft.client.kit.SpinFigure;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.world.entity.LivingEntity;
@@ -25,6 +27,14 @@ public abstract class InventoryScreenMixin {
             at = @At("RETURN"), require = 1)
     private static void zomboidcraft$noteFigure(LivingEntity entity, CallbackInfoReturnable<EntityRenderState> cir) {
         InjuryGlowLayer.noted(cir.getReturnValue());
+        // your own figure on a page while you're still a spectator (a new survivor before they wake): drawn as your
+        // survivor, not the spectator's floating Minecraft head (Josiah 2026-11-04)
+        Minecraft mc = Minecraft.getInstance();
+        if (cir.getReturnValue() instanceof AvatarRenderState avatar && entity == mc.player && mc.gui.screen() != null
+                && avatar.isSpectator) {
+            avatar.isSpectator = false;
+            com.zomboidcraft.client.survivor.Survivors.screenFigure = avatar;
+        }
         if (SpinFigure.drawing && cir.getReturnValue() instanceof LivingEntityRenderState living) {
             // idle: no walking stride carried over from the moment the kit was opened
             living.walkAnimationPos = 0;
