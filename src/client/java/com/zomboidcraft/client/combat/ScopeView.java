@@ -105,6 +105,9 @@ public final class ScopeView {
     /** At the start of each frame: whose turn it is. */
     public static void beginFrame() {
         frame++;
+        if (active() && RailLights.shaderPackOn() && cropWithShaders()) {
+            return;     // A keeps its lens copy across the frame line: the HUD is gathered before the next copy is made
+        }
         if (!active() || mode() != Mode.PIP) {
             outerReady = lensReady = lensFrame = false;
             return;
@@ -135,6 +138,24 @@ public final class ScopeView {
     /** After the frame is finished (shader pack included), before the HUD: keep it for the lens or the world view. */
     public static void capture(GameRenderer renderer, RenderTarget main) {
         mainTarget = main;
+        if (active() && RailLights.shaderPackOn() && cropWithShaders() && magnification() > 1) {
+            // A: copied here, once the world (and the pack's passes) are on the main picture. The HUD's own pass is
+            // gathered before the world is drawn in 26.3, so a copy made from there was of a cleared picture: the
+            // black lens Josiah saw under Photon (2026-11-04)
+            try {
+                lens = copy(lens, main, "ZomboidCraft scope lens");
+                lensReady = true;
+            } catch (RuntimeException e) {
+                ZomboidCraft.LOGGER.warn("Scope view: couldn't copy the shader pack's picture ({}), using the dark ring", e.toString());
+                cropFailed = true;
+                LocalPlayer player = Minecraft.getInstance().player;
+                if (player != null) {
+                    player.sendOverlayMessage(net.minecraft.network.chat.Component.literal(
+                            "Scope A didn't work with this shader pack, showing B (the dark ring) instead"));
+                }
+            }
+            return;
+        }
         if (!active() || RailLights.shaderPackOn()) {
             return;
         }
@@ -174,21 +195,9 @@ public final class ScopeView {
         double m = magnification();
         Mode mode = mode();
         if (m > 1 && RailLights.shaderPackOn() && cropWithShaders()) {
-            // A: the pack has finished the frame by the time the HUD is drawn, so the lens is copied from it here
-            if (mainTarget == null) {
+            // A: the lens is the copy capture() made of the finished world picture
+            if (lens == null || !lensReady) {
                 return;     // not a single frame drawn yet
-            }
-            try {
-                lens = copy(lens, mainTarget, "ZomboidCraft scope lens");
-                lensReady = true;
-            } catch (RuntimeException e) {
-                ZomboidCraft.LOGGER.warn("Scope view: couldn't copy the shader pack's picture ({}), using the dark ring", e.toString());
-                cropFailed = true;
-                LocalPlayer player = Minecraft.getInstance().player;
-                if (player != null) {
-                    player.sendOverlayMessage(net.minecraft.network.chat.Component.literal(
-                            "Scope A didn't work with this shader pack, showing B (the dark ring) instead"));
-                }
             }
         }
         if (m > 1 && RailLights.shaderPackOn() && !cropWithShaders()) {

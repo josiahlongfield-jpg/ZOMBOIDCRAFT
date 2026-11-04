@@ -867,11 +867,19 @@ public final class Guns {
 
     private static void tick(MinecraftServer server) {
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
+            ItemStack gun = player.getMainHandItem();
+            // a hand-loaded gun handed out before 2026-11-04 by /zc localgun with no "magazine" in: it could never fire
+            GunType tube = GunType.of(gun);
+            if (tube != null && tube.tube) {
+                GunState g = gun.get(GunState.TYPE);
+                if (g != null && !g.mag()) {
+                    gun.set(GunState.TYPE, new GunState(true, g.rounds(), g.jammed()));
+                }
+            }
             State st = STATES.get(player);
             if (st == null) {
                 continue;
             }
-            ItemStack gun = player.getMainHandItem();
             if (st.flashLeft > 0 && --st.flashLeft == 0 && GunType.isGun(gun)) {
                 setModelData(gun, -1, 0);
             }

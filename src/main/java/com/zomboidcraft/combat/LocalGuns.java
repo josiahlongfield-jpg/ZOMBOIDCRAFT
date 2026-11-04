@@ -47,6 +47,11 @@ public final class LocalGuns {
         public String anchorMesh;
         public JsonObject stats;
         /**
+         * Taken out of the game (Josiah 2026-11-04, the DShK): the file stays only to say so. No such gun is made, and
+         * any copy of it or its magazines already in a world vanishes like our old guns (combat/Retired).
+         */
+        public boolean removed;
+        /**
          * Its iron sights' line, item pixels: the top of the front post (or bead) and the middle of the rear notch or
          * aperture. Aiming lines the eye up along it (client RifleView); none: the anchor's own sight pose.
          */
@@ -78,6 +83,7 @@ public final class LocalGuns {
 
     private static final Gson GSON = new Gson();
     private static final Map<String, Spec> SPECS = new HashMap<>();
+    private static final java.util.Set<String> REMOVED = new java.util.HashSet<>();
     private static long loadedAt = -1;
 
     public static void register() {
@@ -93,6 +99,12 @@ public final class LocalGuns {
     public static @Nullable Spec get(String id) {
         load();
         return SPECS.get(id);
+    }
+
+    /** Whether a local gun was taken out of the game (its file says "removed"). */
+    public static boolean removed(String id) {
+        load();
+        return REMOVED.contains(id);
     }
 
     public static java.util.Collection<Spec> all() {
@@ -120,6 +132,7 @@ public final class LocalGuns {
         }
         loadedAt = System.currentTimeMillis();
         SPECS.clear();
+        REMOVED.clear();
         if (!Files.isDirectory(DIR)) {
             return;
         }
@@ -130,6 +143,10 @@ public final class LocalGuns {
                 }
                 try (Reader r = Files.newBufferedReader(f, StandardCharsets.UTF_8)) {
                     Spec s = GSON.fromJson(r, Spec.class);
+                    if (s != null && s.id != null && s.removed) {
+                        REMOVED.add(s.id);
+                        continue;
+                    }
                     if (s == null || s.id == null || s.anchor == null) {
                         continue;
                     }
@@ -236,7 +253,9 @@ public final class LocalGuns {
     public static ItemStack loaded(Spec spec) {
         ItemStack gun = new ItemStack(spec.type().item());
         gun.set(ID, spec.id);
-        gun.set(GunState.TYPE, new GunState(spec.type().magazine() != null, spec.type().capacity(gun), false));
+        // a gun loaded by hand (a cylinder, a tube, a crossbow's rail) counts as having its "magazine" in for good: false
+        // there left the S&W 500, the 870, the Winchester, the crossbow and the RPG clicking dry for ever (2026-11-04)
+        gun.set(GunState.TYPE, new GunState(true, spec.type().capacity(gun), false));
         return gun;
     }
 

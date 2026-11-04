@@ -51,10 +51,19 @@ public final class Retired {
         return GUNS.contains(path) || ATTACHMENTS.contains(path) || MAGAZINES.contains(path) || ROUNDS.contains(path);
     }
 
-    /** Whether a stack is one of ours that went: never a Brita gun or one of its magazines (they carry its id). */
+    /**
+     * Whether a stack is one of ours that went: never a Brita gun or one of its magazines (they carry its id), nor a
+     * sight or grip of his (combat/LocalParts); a local gun he took out of the game (and its magazines) does go.
+     */
     public static boolean is(ItemStack stack) {
-        if (stack.isEmpty() || stack.has(LocalGuns.ID)) {
+        if (stack.isEmpty()) {
             return false;
+        }
+        if (stack.has(LocalParts.ID)) {
+            return false;       // a sight or grip of his kept on this computer rides on our red dot or foregrip item
+        }
+        if (stack.has(LocalGuns.ID)) {
+            return LocalGuns.removed(stack.get(LocalGuns.ID));    // a local gun he took out, or one of its magazines
         }
         return id(BuiltInRegistries.ITEM.getKey(stack.getItem()).getPath());
     }

@@ -43,7 +43,7 @@ import org.jetbrains.annotations.Nullable;
  * <ul>
  *   <li>count: the guns one container of that place holds on average, with Arsenal's whole set;</li>
  *   <li>guns: each of our guns' chance there in Arsenal (its kill switches, the region and the crossover applied);</li>
- *   <li>extras: its rounds and magazines, {item or mag, p, min, max}.</li>
+ *   <li>extras: its rounds, magazines and sights or grips, {item, mag or part, p, min, max}.</li>
  * </ul>
  * and rarity gives each gun's letter (C S R P G: ×1, ×½, ×¼, ×1/10, ×1/25 against the others). Without the file only the
  * Heavy Sniper is there, at its own small chances (below), never scaled up to a full set.
@@ -89,8 +89,10 @@ public final class GunLoot {
     public static final class Extra {
         /** One of our items (a round), or */
         public String item;
-        /** a gun's own magazine, by the gun's id. */
+        /** a gun's own magazine, by the gun's id, or */
         public String mag;
+        /** a sight or grip kept on this computer (combat/LocalParts), by its id. */
+        public String part;
         public double p;
         public int min = 1, max = 1;
     }
@@ -257,6 +259,11 @@ public final class GunLoot {
                 GunType type = anyGun == null ? null : GunType.of(anyGun);
                 if (type != null && type.magazine() != null) {
                     out.add(LocalGuns.magazineFor(anyGun, type));
+                }
+            } else if (x.part != null) {
+                ItemStack part = LocalParts.make(x.part);
+                if (!part.isEmpty()) {
+                    out.add(part);
                 }
             } else if (x.item != null) {
                 Item item = BuiltInRegistries.ITEM.getOptional(ZomboidCraft.id(x.item)).orElse(null);
