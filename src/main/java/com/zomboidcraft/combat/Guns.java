@@ -69,6 +69,11 @@ public final class Guns {
         double bloom;
         long bloomAt;
         int reloadTick = -1;
+        /**
+         * Reload ticks per game tick: a local gun with Josiah's own reload runs its reload at that reload's length
+         * (LocalGuns.reloadPace); carried over in paceLeft.
+         */
+        float pace = 1, paceLeft;
         /** The gun being reloaded: putting it away (or swapping to another kind) stops the reload. */
         GunType reloading;
         boolean needsCharge;
@@ -713,6 +718,8 @@ public final class Guns {
             gun.set(GunState.TYPE, new GunState(g.mag(), Math.max(0, g.rounds() - 1), false));
             player.stopUsingItem();
             st.reloadTick = type.jamClear;
+            st.pace = 1;
+            st.paceLeft = 0;
             st.reloading = type;
             st.needsCharge = true;
             setModelData(gun, 3, 0);
@@ -732,6 +739,8 @@ public final class Guns {
         st.reloadTick = 0;
         st.reloading = type;
         st.needsCharge = !g.mag() || g.rounds() == 0;
+        st.pace = LocalGuns.reloadPace(gun, type, st.needsCharge, 0);
+        st.paceLeft = 0;
         // the old magazine comes out with whatever is left in it
         if (g.mag()) {
             ItemStack old = LocalGuns.magazineFor(gun, type);
@@ -761,6 +770,12 @@ public final class Guns {
         st.needsCharge = !type.opens && g.rounds() == 0;
         st.loadStopped = false;
         st.loading = gun;
+        int going = type.capacity(gun) - g.rounds();
+        if (!player.hasInfiniteMaterials()) {
+            going = Math.min(going, countAmmo(player, type, gun));
+        }
+        st.pace = LocalGuns.reloadPace(gun, type, st.needsCharge, going);
+        st.paceLeft = 0;
         setModelData(gun, st.needsCharge ? 1.5f : 1, 0);
         if (type.opens) {
             // thrown open: the empties come out as the barrels drop
@@ -918,22 +933,32 @@ public final class Guns {
                 st.reloadTick = -1;
                 continue;
             }
-            if (type.tube) {
-                tickLoading(player, gun, type, st);
-                continue;
+            // a slower or quicker reload steps the game's reload ticks less or more than once a tick
+            st.paceLeft += st.pace;
+            int steps = (int) st.paceLeft;
+            st.paceLeft -= steps;
+            for (int i = 0; i < steps && st.reloadTick >= 0; i++) {
+                if (type.tube) {
+                    tickLoading(player, gun, type, st);
+                } else {
+                    tickReload(player, gun, type, st);
+                }
             }
-            st.reloadTick++;
-            if (st.reloadTick == type.magIn) {
-                insertMagazine(player, gun, type);
-                setModelData(gun, 2, 0);
-                sound(player, type.magIn());
-            } else if (st.reloadTick == type.charge && st.needsCharge) {
-                setModelData(gun, 3, 0);
-                sound(player, type.charged());
-            } else if (st.reloadTick >= (st.needsCharge ? type.chargeDone : type.tacticalDone)) {
-                setModelData(gun, 0, 0);
-                st.reloadTick = -1;
-            }
+        }
+    }
+
+    private static void tickReload(ServerPlayer player, ItemStack gun, GunType type, State st) {
+        st.reloadTick++;
+        if (st.reloadTick == type.magIn) {
+            insertMagazine(player, gun, type);
+            setModelData(gun, 2, 0);
+            sound(player, type.magIn());
+        } else if (st.reloadTick == type.charge && st.needsCharge) {
+            setModelData(gun, 3, 0);
+            sound(player, type.charged());
+        } else if (st.reloadTick >= (st.needsCharge ? type.chargeDone : type.tacticalDone)) {
+            setModelData(gun, 0, 0);
+            st.reloadTick = -1;
         }
     }
 

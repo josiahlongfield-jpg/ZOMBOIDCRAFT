@@ -112,6 +112,82 @@ public final class LocalGuns {
         return SPECS.values();
     }
 
+    private static final Map<String, Float> CLIP_TICKS = new java.util.concurrent.ConcurrentHashMap<>();
+    private static int clipGeneration = -1;
+
+    /**
+     * How long Josiah's own reload for this gun runs (game ticks, from reloads/<id>.json's first-person view), or 0
+     * when it has none. Read once per folder read, skipping over the frames.
+     */
+    public static float clipTicks(@Nullable String id) {
+        if (id == null) {
+            return 0;
+        }
+        if (clipGeneration != generation) {
+            clipGeneration = generation;
+            CLIP_TICKS.clear();
+        }
+        return CLIP_TICKS.computeIfAbsent(id, LocalGuns::readClipTicks);
+    }
+
+    private static float readClipTicks(String id) {
+        Path f = DIR.resolve("reloads").resolve(id + ".json");
+        if (!Files.isRegularFile(f)) {
+            return 0f;
+        }
+        try (com.google.gson.stream.JsonReader r = new com.google.gson.stream.JsonReader(Files.newBufferedReader(f, StandardCharsets.UTF_8))) {
+            r.beginObject();
+            while (r.hasNext()) {
+                if (!r.nextName().equals("views")) {
+                    r.skipValue();
+                    continue;
+                }
+                r.beginObject();
+                while (r.hasNext()) {
+                    if (!r.nextName().equals("fp")) {
+                        r.skipValue();
+                        continue;
+                    }
+                    r.beginObject();
+                    while (r.hasNext()) {
+                        if (r.nextName().equals("dur")) {
+                            return (float) Math.max(0, r.nextDouble() * 20);
+                        }
+                        r.skipValue();
+                    }
+                    return 0f;
+                }
+                return 0f;
+            }
+        } catch (Exception e) {
+            ZomboidCraft.LOGGER.error("Couldn't read the reload length in {}", f, e);
+        }
+        return 0f;
+    }
+
+    /**
+     * A reload's length in the game's own timing (ticks): a magazine gun's, with or without the handle worked; a
+     * hand-loaded gun's with n rounds going in, then shut or worked (as Guns runs them).
+     */
+    public static float gameReloadTicks(GunType type, boolean charge, int n) {
+        if (!type.tube) {
+            return charge ? type.chargeDone : type.tacticalDone;
+        }
+        return type.raise + Math.max(1, n) * type.perShell + (type.opens ? 1 + type.close : charge ? 2 + type.cycle : 1);
+    }
+
+    /**
+     * How many of the game's reload ticks pass each real tick, so a local gun with its own reload takes exactly as
+     * long as that reload runs (Josiah 2026-11-04: "Your clip lengths"); 1 for every other gun.
+     */
+    public static float reloadPace(ItemStack gun, GunType type, boolean charge, int n) {
+        float clip = clipTicks(gun.get(ID));
+        if (clip <= 0) {
+            return 1;
+        }
+        return Math.clamp(gameReloadTicks(type, charge, n) / clip, 0.2f, 5f);
+    }
+
     /** Reads the folder again (the files can change while the game runs). */
     public static synchronized void reload() {
         loadedAt = -1;

@@ -337,7 +337,7 @@ public final class ReloadClips {
 
     /** Each holder's reload as seen from its gun's model data: when it began and how long it should take. */
     private static final class Track {
-        float start = -1, stopAt = -1, estimate;
+        float start = -1, stopAt = -1, estimate, pace = 1;
         int lastStep;
         boolean jam, charge;
         String gun;
@@ -374,13 +374,17 @@ public final class ReloadClips {
                 t.jam = step == 3;
                 t.charge = raw > 1.25f;
                 GunState st = gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG);
+                int n = 0;
                 if (type.tube) {
-                    int n = Math.max(1, type.capacity(gun) - st.rounds());
+                    n = Math.max(1, type.capacity(gun) - st.rounds());
                     if (holder == Minecraft.getInstance().player) n = Math.max(1, Math.min(n, ammo(holder, gun, type)));
                     t.estimate = type.raise + n * type.perShell + finish(type, t.charge);
                 } else {
                     t.estimate = t.charge ? type.chargeDone : type.tacticalDone;
                 }
+                // the server runs this gun's reload at his clip's length (Guns, LocalGuns.reloadPace): the same here
+                t.pace = LocalGuns.reloadPace(gun, type, t.charge, n);
+                t.estimate /= t.pace;
             } else if (type.tube && t.start >= 0 && t.stopAt < 0 && step != 1) {
                 t.stopAt = age;
             }
@@ -395,7 +399,7 @@ public final class ReloadClips {
             u = Math.min(0.92f, since / Math.max(1, t.estimate));
         } else {
             float atStop = Math.min(0.92f, (t.stopAt - t.start) / Math.max(1, t.estimate));
-            u = atStop + (1 - atStop) * (age - t.stopAt) / Math.max(1, finish(type, t.charge));
+            u = atStop + (1 - atStop) * (age - t.stopAt) / Math.max(1, finish(type, t.charge) / t.pace);
         }
         if (u >= 1 || (!type.tube && step == 0 && since > 2)) {
             t.start = -1;
