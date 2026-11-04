@@ -400,6 +400,12 @@ public final class ModItems {
                             output.accept(mag);
                         }
                     });
+            // their sights and grips kept on this computer too (guns/parts/parts.json): sights first, then grips
+            com.zomboidcraft.combat.LocalParts.ids().stream().sorted()
+                    .map(com.zomboidcraft.combat.LocalParts::make)
+                    .filter(s -> !s.isEmpty())
+                    .sorted(java.util.Comparator.comparing((ItemStack s) -> s.is(FOREGRIP)))
+                    .forEach(output::accept);
         });
     }
 
