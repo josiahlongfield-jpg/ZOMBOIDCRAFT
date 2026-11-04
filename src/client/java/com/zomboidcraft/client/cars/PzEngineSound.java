@@ -41,6 +41,7 @@ final class PzEngineSound {
         final String set;
         final Map<String, Layer> layers = new HashMap<>();
         float pitchNow = 1;
+        double speedNow;
         int lastTick = -100, running;
 
         Engine(CarProp car) {
@@ -57,16 +58,20 @@ final class PzEngineSound {
             // one steady note (Josiah): the settled idle cut from the end of this engine's own start recording
             // (pz.engine.<set>.note), so the start runs straight into it; its pitch rises smoothly with speed
             // and falls as the car slows. It fades in under the start's own tail as the engine catches.
+            // the speed is smoothed over about half a second before it sets the pitch, so the tick-to-tick wobble in
+            // the car's movement doesn't make the note hunt up and down (Josiah 2026-11-04)
             double speed = Math.hypot(car.getX() - car.xo, car.getZ() - car.zo);
-            float share = (float) Mth.clamp(speed / FLAT_OUT, 0, 1);
-            pitchNow += (1 + 0.9f * share - pitchNow) * 0.12f;
+            speedNow += (speed - speedNow) * 0.1;
+            float share = (float) Mth.clamp(speedNow / FLAT_OUT, 0, 1);
+            pitchNow += (1 + 0.9f * share - pitchNow) * 0.08f;
             Layer l = layers.get("note");
             if (l == null || l.isStopped()) {
                 l = new Layer(this, "note");
                 layers.put("note", l);
                 Minecraft.getInstance().getSoundManager().play(l);
             }
-            l.weight = Math.min(1, running / 40f) * (0.75f + 0.25f * share);
+            // louder as it pulls away (Josiah 2026-11-04): ticking over at 0.6, full volume from about half speed
+            l.weight = Math.min(1, running / 40f) * (0.6f + 0.4f * Math.min(1, share * 2));
             layers.values().removeIf(Layer::isStopped);
         }
 

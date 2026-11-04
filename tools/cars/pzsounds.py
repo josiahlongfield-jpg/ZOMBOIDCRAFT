@@ -253,6 +253,24 @@ def louden(out, sounds, top=-1.0):
 NOTE_CUT = {'sports': (4.2, 6.0), 'offroad': (2.6, 4.0), 'wagon': (2.4, 4.4), 'van': (1.9, 3.2)}
 
 
+# Every engine note is brought to the same loudness (Josiah 2026-11-04: the R34's was 11 dB under the Defender's),
+# never peaking above -1 dB.
+NOTE_LOUDNESS = -12.0
+
+
+def steady(seg, rate, window=0.06):
+    """Irons out the swell left in a cut that hasn't quite settled (Josiah 2026-11-04: the Defender's note "hunts"):
+    divides by the loop's own slow loudness, measured round the loop so the join stays smooth, then sets the level."""
+    import numpy as np
+    h = int(window * rate)
+    sq = np.concatenate([seg[-h:], seg, seg[:h]]) ** 2
+    env = np.sqrt(np.convolve(sq, np.ones(2 * h) / (2 * h), mode='same')[h:-h] + 1e-10)
+    out = seg * np.clip(np.median(env) / env, 0.5, 2.5)
+    rms = 20 * np.log10(np.sqrt(np.mean(out ** 2)) + 1e-9)
+    gain = min(NOTE_LOUDNESS - rms, -1.0 - 20 * np.log10(np.abs(out).max() + 1e-9))
+    return (out * 10 ** (gain / 20)).astype(np.float32)
+
+
 def notes(out, sounds, rate=48000, fade=0.25):
     """engine.<set>.note: the settled end of the start, its tail crossfaded over its head so it loops seamlessly."""
     import numpy as np
@@ -265,7 +283,7 @@ def notes(out, sounds, rate=48000, fade=0.25):
         n = int(fade * rate)
         ramp = np.linspace(0, 1, n, dtype=np.float32)
         seg[:n] = seg[:n] * ramp + seg[-n:] * (1 - ramp)
-        seg = seg[:-n]
+        seg = steady(seg[:-n], rate)
         name = f'note_{key}'
         subprocess.run(['ffmpeg', '-v', 'error', '-y', '-f', 'f32le', '-ar', str(rate), '-ac', '1', '-i', '-',
                         '-c:a', 'libvorbis', '-q:a', '6', d + name + '.ogg'], input=seg.tobytes(), check=True)
