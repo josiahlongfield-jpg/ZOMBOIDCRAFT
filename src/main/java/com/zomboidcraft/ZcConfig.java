@@ -382,11 +382,6 @@ public final class ZcConfig {
          */
         public boolean fastBodyVertices = true;
         /**
-         * Zombies drawn at the lightest level (past the nearest 30 or so, or 16+ blocks off) are posed every other frame,
-         * half of them on each; in between, last frame's pose is drawn where the zombie now stands. Client side.
-         */
-        public boolean farZombieHalfRate = true;
-        /**
          * Zomboid bodies are skinned and written out on worker threads (half the cores) while the frame is gathered,
          * and only copied in when it's drawn, instead of all on the render thread. Client side.
          */
