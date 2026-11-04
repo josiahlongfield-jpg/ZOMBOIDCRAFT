@@ -31,7 +31,9 @@ import org.jetbrains.annotations.Nullable;
  * frame is copied aside after the shader pack is done with it, and the HUD lays the last world view under the last
  * lens view. look.scopeView "mix" is the fallback he picked first: up to 4x the lens is the middle of the normal view
  * blown up, from 6x the whole view is zoomed and blurred outside the lens. "picture" is the old full-screen eyepiece.
- * With a shader pack on, pip turns into mix with the whole view zoomed at every power (see mode()).
+ * With a shader pack on, pip turns into mix, and look.scopeShaders picks between two looks (Josiah 2026-11-04, a test
+ * of both): "crop" (A) keeps the world live at its own size and the lens is the middle of the finished picture blown
+ * up, copied at the HUD after the pack is done; "ring" (B) zooms the whole view and darkens the world round the lens.
  */
 public final class ScopeView {
     private static final Identifier RING = ZomboidCraft.id("dynamic/scope_ring");
@@ -42,6 +44,8 @@ public final class ScopeView {
     private static boolean outerReady;
     private static boolean lensReady;
     private static boolean ringMade;
+    /** The copy of the finished picture failed with this shader pack; the dark ring stands in for the session. */
+    private static boolean cropFailed;
 
     private enum Mode { PIP, MIX, PICTURE }
 
@@ -57,7 +61,23 @@ public final class ScopeView {
 
     /** With a shader pack the whole view zooms at every power and the lens is drawn from it 1:1, so nothing rests on the HUD's copy. */
     private static boolean zoomAll(double m) {
-        return m >= 6 || RailLights.shaderPackOn();
+        return RailLights.shaderPackOn() ? !cropWithShaders() : m >= 6;
+    }
+
+    /** With a shader pack: the live view with the middle blown up in the lens (A), rather than the dark ring (B). */
+    private static boolean cropWithShaders() {
+        return !cropFailed && !"ring".equalsIgnoreCase(ZcConfig.get().look.scopeShaders);
+    }
+
+    /** The scope style key: swaps A and B, keeps the choice, and says which is on. */
+    public static String switchStyle() {
+        ZcConfig.Look look = ZcConfig.get().look;
+        boolean toRing = !"ring".equalsIgnoreCase(look.scopeShaders);
+        look.scopeShaders = toRing ? "ring" : "crop";
+        cropFailed = false;
+        ZcConfig.save();
+        String name = toRing ? "Scope B: dark scope ring, whole view zoomed" : "Scope A: live view, zoomed centre in the lens";
+        return RailLights.shaderPackOn() ? name : name + " (used with a shader pack on; without one the lens is true picture-in-picture)";
     }
 
     /** The held scope's magnification while looking through it in first person, or 0. */
@@ -150,12 +170,27 @@ public final class ScopeView {
     public static void draw(GuiGraphicsExtractor g) {
         double m = magnification();
         Mode mode = mode();
-        if (m > 1 && RailLights.shaderPackOn()) {
-            // a shader pack: nothing kept from the frame (it doesn't show over the pack's picture, Josiah 2026-11-03);
-            // the whole view is zoomed already, so the lens is the view itself, the world round it shaded
+        if (m > 1 && RailLights.shaderPackOn() && cropWithShaders()) {
+            // A: the pack has finished the frame by the time the HUD is drawn, so the lens is copied from it here
+            try {
+                lens = copy(lens, Minecraft.getInstance().getMainRenderTarget(), "ZomboidCraft scope lens");
+                lensReady = true;
+            } catch (RuntimeException e) {
+                ZomboidCraft.LOGGER.warn("Scope view: couldn't copy the shader pack's picture ({}), using the dark ring", e.toString());
+                cropFailed = true;
+                LocalPlayer player = Minecraft.getInstance().player;
+                if (player != null) {
+                    player.sendOverlayMessage(net.minecraft.network.chat.Component.literal(
+                            "Scope A didn't work with this shader pack, showing B (the dark ring) instead"));
+                }
+            }
+        }
+        if (m > 1 && RailLights.shaderPackOn() && !cropWithShaders()) {
+            // B: the whole view is zoomed already, so the lens is the view itself, the world round it darkened like a
+            // scope tube (Josiah 2026-11-04)
             int w = g.guiWidth(), h = g.guiHeight();
             double size = lensSize();
-            int r = (int) Math.round(size * h / 2), cx = w / 2, cy = h / 2, shade = 0x9A000000;
+            int r = (int) Math.round(size * h / 2), cx = w / 2, cy = h / 2, shade = 0xEA050505;
             g.fill(0, 0, w, Math.max(0, cy - r), shade);
             g.fill(0, Math.min(h, cy + r), w, h, shade);
             for (int y = Math.max(0, cy - r); y < Math.min(h, cy + r); y++) {
@@ -198,10 +233,20 @@ public final class ScopeView {
                 v0 = 1 - v0;
                 v1 = 1 - v1;
             }
-            g.blit(view, linear, x0, y, x1, y1, u0, u1, v0, v1);
+            lensBlit(g, view, linear, x0, y, x1, y1, u0, u1, v0, v1);
         }
         reticle(g, cx, cy, r);
         ring(g, cx, cy, r);
+    }
+
+    /**
+     * The lens picture is drawn without blending: a shader pack can leave the picture's alpha at nothing, and a
+     * blended copy of it would never show (what hid the lens under Photon, 2026-11-03).
+     */
+    private static void lensBlit(GuiGraphicsExtractor g, GpuTextureView view, GpuSampler sampler, int x0, int y0, int x1, int y1,
+            float u0, float u1, float v0, float v1) {
+        ((com.zomboidcraft.mixin.client.GuiGraphicsBlitInvoker) g).zomboidcraft$innerBlit(RenderPipelines.GUI_OPAQUE_TEXTURED_BACKGROUND,
+                view, sampler, x0, y0, x1, y1, u0, u1, v0, v1, -1);
     }
 
     /** The lens's share of the screen's height: a sight of Josiah's pack its eyepiece's real size, else the setting. */

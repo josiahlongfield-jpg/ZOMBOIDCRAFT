@@ -45,6 +45,7 @@ public final class CombatClient {
     public static final KeyMapping LASER = new KeyMapping("key.zomboidcraft.laser", InputConstants.KEY_J, CATEGORY);
     public static final KeyMapping FIRE_MODE = new KeyMapping("key.zomboidcraft.fire_mode", InputConstants.KEY_X, CATEGORY);
     public static final KeyMapping SHOULDER = new KeyMapping("key.zomboidcraft.shoulder", InputConstants.KEY_O, CATEGORY);
+    public static final KeyMapping SCOPE_STYLE = new KeyMapping("key.zomboidcraft.scope_style", InputConstants.KEY_U, CATEGORY);
 
     private static long lastShot = -100;
     /**
@@ -75,6 +76,7 @@ public final class CombatClient {
         KeyMappingHelper.registerKeyMapping(LASER);
         KeyMappingHelper.registerKeyMapping(FIRE_MODE);
         KeyMappingHelper.registerKeyMapping(SHOULDER);
+        KeyMappingHelper.registerKeyMapping(SCOPE_STYLE);
         ClientPreAttackCallback.EVENT.register((client, player, clicks) -> {
             if (com.zomboidcraft.world.cars.Turret.isGunner(player)) {
                 return true;    // at a mounted gun the button works its trigger (see gunner)
@@ -233,6 +235,9 @@ public final class CombatClient {
         }
         while (SHOULDER.consumeClick()) {
             com.zomboidcraft.client.camera.ShoulderCam.swapShoulder();
+        }
+        while (SCOPE_STYLE.consumeClick()) {
+            player.sendOverlayMessage(net.minecraft.network.chat.Component.literal(ScopeView.switchStyle()));
         }
         // a broken leg with no splint won't take a sprint
         if (player.isSprinting() && !player.isCreative() && com.zomboidcraft.survival.Injuries.cantSprint(player)) {
