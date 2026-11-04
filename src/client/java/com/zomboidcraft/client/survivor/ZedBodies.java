@@ -479,12 +479,11 @@ public final class ZedBodies {
             e.buffers[0] = e.buffers[1] = null;
             e.upper = upperBody(pack);
         }
-        // a far zombie (the lightest level) is posed and skinned every other frame, half of them on each: on its off
-        // frame last frame's body is drawn again where it now stands. With a horde most zombies are far, and posing
-        // and skinning them was a fifth of the frame (2026-11-02, 600 zombies)
+        // every zombie is posed every frame. Posing far ones every other frame (2026-11-02) made the horde move like a
+        // flip-book (Josiah 2026-11-04: "like 2d sprite movement made from static images"); the skinning that made it
+        // worth it runs on worker threads now (BodyJob)
         long frame = com.zomboidcraft.zombie.Profiler.frameNo;
-        boolean reuse = level >= 2 && ZcConfig.get().performance.farZombieHalfRate && e.pos != null && e.lastSkin != null
-                && e.posedFrame == frame - 1 && e.posedLevel == level && e.posedCuts == f.cuts && ((frame + id) & 1) != 0;
+        boolean reuse = false;
         if (!reuse && (e.pos == null || f.age != e.age)) {
             float dt = Float.isNaN(e.age) ? 0 : Math.max(0, Math.min(0.25f, (f.age - e.age) / 20f));
             if (Float.isNaN(e.age) && f.deathTime > 0) dt = 10;   // a body first seen lying: already down
