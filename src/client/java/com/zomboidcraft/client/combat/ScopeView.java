@@ -175,10 +175,10 @@ public final class ScopeView {
         Mode mode = mode();
         if (m > 1 && RailLights.shaderPackOn() && cropWithShaders()) {
             // A: the pack has finished the frame by the time the HUD is drawn, so the lens is copied from it here
+            if (mainTarget == null) {
+                return;     // not a single frame drawn yet
+            }
             try {
-                if (mainTarget == null) {
-                    throw new IllegalStateException("no main picture yet");
-                }
                 lens = copy(lens, mainTarget, "ZomboidCraft scope lens");
                 lensReady = true;
             } catch (RuntimeException e) {
