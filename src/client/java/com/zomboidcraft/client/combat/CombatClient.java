@@ -45,7 +45,7 @@ public final class CombatClient {
     public static final KeyMapping LASER = new KeyMapping("key.zomboidcraft.laser", InputConstants.KEY_J, CATEGORY);
     public static final KeyMapping FIRE_MODE = new KeyMapping("key.zomboidcraft.fire_mode", InputConstants.KEY_X, CATEGORY);
     public static final KeyMapping SHOULDER = new KeyMapping("key.zomboidcraft.shoulder", InputConstants.KEY_O, CATEGORY);
-    public static final KeyMapping SCOPE_STYLE = new KeyMapping("key.zomboidcraft.scope_style", InputConstants.KEY_U, CATEGORY);
+    public static final KeyMapping SCOPE_STYLE = new KeyMapping("key.zomboidcraft.scope_style", InputConstants.KEY_SEMICOLON, CATEGORY);
 
     private static long lastShot = -100;
     /**
