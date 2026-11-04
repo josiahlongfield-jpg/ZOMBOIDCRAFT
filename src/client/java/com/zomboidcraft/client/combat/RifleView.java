@@ -375,6 +375,32 @@ public final class RifleView {
         }
         aimShown = step == 0 ? a : 0;
 
+        // Josiah's own reload for this gun (the reload editor), when this computer has it: the gun, its moving pieces
+        // and her arms as he set them, stretched over the game's reload
+        ReloadClips.Clip clip = posed != null && config.guns.reloadAnimation ? ReloadClips.of(gun.get(com.zomboidcraft.combat.LocalGuns.ID)) : null;
+        float clipU = clip == null ? -1 : ReloadClips.progress(player, gun, age);
+        ReloadClips.At clipAt = clipU >= 0 ? ReloadClips.at(clip, "fp", clipU) : null;
+        if (clipAt != null) {
+            aimShown = 0;
+            rail = null;
+            pose.pushPose();
+            ReloadClips.draw(clip, clipAt, pose, out, light);
+            pose.pushPose();
+            pose.mulPose(new Matrix4f(clipAt.gun()).scale(16));     // item pixels to the item model's blocks
+            LocalAttachments.drawParts(gun.get(com.zomboidcraft.combat.LocalGuns.ID), localOptic, localGrip, pose, out, light);
+            pose.popPose();
+            if (config.look.firstPersonArms && !state.avatarRenderState.isInvisible) {
+                boolean free = player.getOffhandItem().isEmpty() && !com.zomboidcraft.client.cars.CarHands.leftOnWheel(player);
+                java.util.Map<String, Matrix4f> held = GunPoses.bones(posed, 0, new Matrix4f());
+                float w = ReloadClips.blend(clipU, ReloadClips.dur(clip, "fp"));
+                java.util.Map<String, Matrix4f> bones = ReloadClips.mix(held, clipAt.bones(), w);
+                bones.entrySet().removeIf(e -> !free && e.getKey().startsWith("L_"));
+                com.zomboidcraft.client.survivor.SurvivorArms.drawPosed(pose, out, light, player, bones);
+            }
+            pose.popPose();
+            return true;
+        }
+
         pose.pushPose();
         // hurt arms shake the sights: up to three times the sway with both broken
         var me = net.minecraft.client.Minecraft.getInstance().player;

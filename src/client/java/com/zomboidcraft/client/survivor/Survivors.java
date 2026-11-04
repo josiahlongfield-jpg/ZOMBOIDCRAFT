@@ -81,6 +81,9 @@ public final class Survivors {
         com.zomboidcraft.client.npc.NpcSkin.Group[] groups;
         ItemStack gun;
         Matrix4f gunAt;
+        /** Mid-reload: the clip's frame (the gun and its moving pieces), drawn from her Spine1's frame. */
+        com.zomboidcraft.client.combat.ReloadClips.ThirdAt reload;
+        Matrix4f spine;
     }
 
     private static final Map<Integer, Entry> ENTRIES = new HashMap<>();
@@ -341,10 +344,20 @@ public final class Survivors {
         String id = stack.get(com.zomboidcraft.combat.LocalGuns.ID);
         if (id == null || com.zomboidcraft.combat.LocalGuns.of(stack) == null) return false;
         boolean aim = state.isUsingItem && state.useItemHand == InteractionHand.MAIN_HAND || HoldPoses.raised(holder);
+        // Josiah's reload for this gun, when this computer has it: standing still the standing one, on the move the
+        // one with the gun kept up in the aim (his rule, 2026-11-03)
+        boolean moving = holder.getDeltaMovement().horizontalDistanceSqr() > 1e-4;
+        com.zomboidcraft.client.combat.ReloadClips.ThirdAt clip = com.zomboidcraft.client.combat.ReloadClips.third(holder, stack,
+                state.ageInTicks, moving);
+        if (clip != null) aim = moving;
         com.zomboidcraft.client.combat.GunPoses.Third third = com.zomboidcraft.client.combat.GunPoses.third(id, aim,
                 com.zomboidcraft.combat.LocalParts.fitted(stack, com.zomboidcraft.combat.Attachments.Slot.UNDERBARREL));
         int ref = pack.skin.bone("Bip01_Spine1");
         if (third == null || ref < 0) return false;
+        if (clip != null) {
+            third = new com.zomboidcraft.client.combat.GunPoses.Third(new Matrix4f(clip.at().gun()).scale(16),
+                    com.zomboidcraft.client.combat.ReloadClips.mix(third.bones(), clip.at().bones(), clip.w()));
+        }
         Matrix4f spine = new Matrix4f().translationRotate(pos[ref * 3], pos[ref * 3 + 1], pos[ref * 3 + 2],
                 new Quaternionf(turn[ref * 4], turn[ref * 4 + 1], turn[ref * 4 + 2], turn[ref * 4 + 3]));
         if (aim) {
@@ -395,6 +408,8 @@ public final class Survivors {
         d.groups = SurvivorArms.wholeSplit(pack);
         d.gun = stack;
         d.gunAt = new Matrix4f(spine).mul(third.gun());
+        d.reload = clip;
+        d.spine = spine;
         // vanilla's held item (placed by its display transform) gives way to the gun drawn where he set it
         ModelPart arm = model.rightArm;
         arm.xScale = arm.yScale = arm.zScale = 1e-4f;

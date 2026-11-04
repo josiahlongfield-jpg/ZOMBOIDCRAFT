@@ -49,7 +49,13 @@ public final class SurvivorLayer extends RenderLayer<AvatarRenderState, PlayerMo
                 g -> g.piece.equals("body") ? d.body : g.piece.equals(d.hairPiece) ? d.hairTex
                         : g.piece.equals(d.beardPiece) ? d.beardTex : d.clothes.get(g.piece),
                 Survivors.buffers(d), light, overlay, pose, collector);
-        if (d.gun != null && d.gunAt != null) {
+        if (d.gun != null && d.reload != null && d.spine != null) {
+            // mid-reload: the gun and its moving pieces as Josiah's clip has them
+            pose.pushPose();
+            pose.mulPose(d.spine);
+            com.zomboidcraft.client.combat.ReloadClips.drawThird(d.reload, d.gun, pose, collector, light);
+            pose.popPose();
+        } else if (d.gun != null && d.gunAt != null) {
             // the posed gun, in her own space like her bones
             pose.pushPose();
             pose.mulPose(d.gunAt);
