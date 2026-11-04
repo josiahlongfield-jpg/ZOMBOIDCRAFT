@@ -121,6 +121,16 @@ public final class LocalAttachments {
         }
     }
 
+    /**
+     * The fitted scope's own reticle, for the scope view, straight from the fitted sight: the held gun isn't always
+     * drawn while looking through it, so aiming() may not have run (Josiah saw the plain duplex in his scope, 2026-11-04).
+     */
+    static @Nullable Identifier reticleOf(ItemStack gun) {
+        String optic = LocalParts.fitted(gun, com.zomboidcraft.combat.Attachments.Slot.OPTIC);
+        LocalParts.Meta m = LocalParts.get(optic);
+        return m == null || m.mag <= 1 ? null : reticle(optic);
+    }
+
     /** A scope's own reticle picture, read once from its file. */
     private static @Nullable Identifier reticle(String optic) {
         return RETICLES.computeIfAbsent(optic, id -> {

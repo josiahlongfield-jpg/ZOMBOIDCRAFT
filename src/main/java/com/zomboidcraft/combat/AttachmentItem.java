@@ -50,7 +50,11 @@ public class AttachmentItem extends Item {
             tooltip.accept(Component.literal(colour.substring(0, 1).toUpperCase(Locale.ROOT) + colour.substring(1))
                     .withStyle(ChatFormatting.GRAY));
         }
-        tooltip.accept(Component.literal(slotName(slot) + ". Fits: " + String.join(", ", gunsFitted(this)))
+        LocalParts.Meta local = LocalParts.get(LocalParts.of(stack));
+        List<String> fitted = local == null ? gunsFitted(this) : local.mount.stream()
+                .map(g -> { LocalGuns.Spec spec = LocalGuns.get(g); return spec != null && spec.name != null ? spec.name : g; })
+                .sorted().toList();
+        tooltip.accept(Component.literal(slotName(slot) + ". Fits: " + (fitted.isEmpty() ? "nothing yet" : String.join(", ", fitted)))
                 .withStyle(ChatFormatting.GRAY));
         if (!ZcConfig.get().guns.attachments) {
             tooltip.accept(Component.literal("Attachments are turned off in settings").withStyle(ChatFormatting.DARK_RED));

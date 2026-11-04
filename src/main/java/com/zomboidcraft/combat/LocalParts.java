@@ -106,6 +106,17 @@ public final class LocalParts {
         return "optic".equals(m.kind) ? slot == Attachments.Slot.OPTIC : "grip".equals(m.kind) && slot == Attachments.Slot.UNDERBARREL;
     }
 
+    /** Whether any local part of this computer goes on this local gun in this slot. */
+    public static synchronized boolean takes(String gunId, Attachments.Slot slot) {
+        String kind = slot == Attachments.Slot.OPTIC ? "optic" : slot == Attachments.Slot.UNDERBARREL ? "grip" : null;
+        if (kind == null) return false;
+        get("");
+        for (Meta m : metas.values()) {
+            if (kind.equals(m.kind) && m.mount.contains(gunId)) return true;
+        }
+        return false;
+    }
+
     /** The local part fitted in a gun's slot, or null. */
     public static @Nullable String fitted(ItemStack gun, Attachments.Slot slot) {
         if (gun.get(LocalGuns.ID) == null) return null;

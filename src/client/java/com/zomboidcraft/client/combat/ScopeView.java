@@ -272,7 +272,8 @@ public final class ScopeView {
 
     /** The scope's own reticle (a sight of Josiah's pack), or a plain duplex: thick posts from the edge, a fine cross. */
     private static void reticle(GuiGraphicsExtractor g, int cx, int cy, int r) {
-        Identifier own = LocalAttachments.reticle;
+        LocalPlayer player = Minecraft.getInstance().player;
+        Identifier own = player == null ? LocalAttachments.reticle : LocalAttachments.reticleOf(player.getUseItem());
         if (own != null) {
             g.blit(RenderPipelines.GUI_TEXTURED, own, cx - r, cy - r, 0, 0, r * 2, r * 2, r * 2, r * 2);
             return;

@@ -61,14 +61,22 @@ public final class MeshGunRenderer implements net.minecraft.client.renderer.spec
             String mesh = LocalAttachments.mesh(local.substring(5));
             float[] b = MeshGuns.bounds(mesh);
             if (id.startsWith("att_") && b != null) {
-                // at our part's place, sized to about our part's (the real sizes would be a speck or a log)
-                float reach = Math.max(b[3] - b[0], Math.max(b[4] - b[1], b[5] - b[2])), s = 0.7f / Math.max(0.02f, reach);
+                // in our part's place and to our part's size, centre on centre: the item model's display (a red dot's
+                // is scaled up ~3x in a slot) is made for ours, so a bigger one overflowed the slot as a blank box
+                float[] o = MeshGuns.bounds(id);
+                if (o == null) {
+                    o = new float[] {-0.08f, 0, -0.08f, 0.08f, 0.16f, 0.08f};
+                }
+                float reach = Math.max(b[3] - b[0], Math.max(b[4] - b[1], b[5] - b[2]));
+                float ours = Math.max(o[3] - o[0], Math.max(o[4] - o[1], o[5] - o[2]));
+                float s = ours / Math.max(0.005f, reach);
                 pose.pushPose();
                 if (!offset.isEmpty()) {
                     pose.translate(offset.get(0) / 16, offset.get(1) / 16, offset.get(2) / 16);
                 }
+                pose.translate((o[0] + o[3]) / 2, (o[1] + o[4]) / 2, (o[2] + o[5]) / 2);
                 pose.scale(s, s, s);
-                pose.translate(-(b[0] + b[3]) / 2, 0, -(b[2] + b[5]) / 2);
+                pose.translate(-(b[0] + b[3]) / 2, -(b[1] + b[4]) / 2, -(b[2] + b[5]) / 2);
                 MeshGuns.draw(mesh, "body", pose, out, light, null);
                 pose.popPose();
             }

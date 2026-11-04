@@ -132,15 +132,28 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
     /** The slots this gun has, in order. */
     public static List<Slot> slots(ItemStack gun) {
         String id = gunId(gun);
+        String local = gun.get(LocalGuns.ID);
         List<Slot> out = new ArrayList<>();
         if (id != null) {
             for (Slot slot : Slot.values()) {
-                if (GunSlotData.FITS.get(id).containsKey(slot)) {
+                if (GunSlotData.FITS.get(id).containsKey(slot) || local != null && LocalParts.takes(local, slot)) {
                     out.add(slot);
                 }
             }
         }
         return out;
+    }
+
+    /**
+     * Whether a part you carry is offered for this gun (the bench's lists): a local part on the local guns its file
+     * names, anything else as it fits now. The bench used our own fit lists only, so a local gun's sights and grips
+     * never showed there (Josiah 2026-11-04: "couldn't attach").
+     */
+    public static boolean offered(ItemStack gun, ItemStack part) {
+        if (part.get(LocalParts.ID) != null || gun.get(LocalGuns.ID) != null) {
+            return part.get(LocalParts.ID) != null ? LocalParts.fits(gun, part) : goesWith(gun, part);
+        }
+        return fits(gun, part.getItem());
     }
 
     /** The slot a part goes in, or null if it isn't a gun part. */
