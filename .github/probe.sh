@@ -11,6 +11,14 @@ sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 echo "===== compile errors"
 grep -E "error:|warning: \[removal\]" -A3 build.log | head -80
 
+echo "===== scope crop under shaders (alpha)"
+javap -cp "$CP" -p net.minecraft.client.renderer.RenderPipelines 2>&1 | grep -iE "GUI|SNIPPET|BLIT" | head -40
+classes 'RenderPipeline(\$Builder)?\.class$|BlendFunction\.class$|ColorTargetState\.class$'
+for c in $(classes 'RenderPipeline(\$Builder)?\.class$' | sed 's/\.class$//; s#/#.#g'); do echo "-- $c"; javap -cp "$CP" -p "$c" 2>&1 | grep -iE "blend|with|build|color|write" | head -40; done
+javap -cp "$CP" -p -c net.minecraft.client.renderer.RenderPipelines 2>&1 | grep -B2 -A14 'gui_opaque\|pipeline/gui_textured"' | grep -E "ldc|invoke|getstatic|putstatic" | head -40
+javap -cp "$CP" -p net.minecraft.client.gui.GuiGraphicsExtractor 2>&1 | grep -iE "blit" | head -30
+javap -cp "$CP" -p com.mojang.blaze3d.pipeline.RenderTarget 2>&1 | grep -iE "copy|blit|clear" | head
+
 echo "===== scope pip 2 (weapons)"
 javap -cp "$CP" -p net.minecraft.client.renderer.GameRenderer 2>&1 | grep -iE "fov|projection|camera"
 classes '/Camera\.class$|CameraRenderState\.class$|DynamicTexture\.class$|AbstractTexture\.class$|GuiGraphicsExtractor\.class$'
