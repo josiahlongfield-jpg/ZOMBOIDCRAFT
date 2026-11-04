@@ -132,13 +132,25 @@ public final class Survivors {
     /** Whether the player this render state is for is drawn as a survivor. */
     public static boolean drawsAsSurvivor(AvatarRenderState state) {
         Minecraft mc = Minecraft.getInstance();
-        return mc.level != null && mc.level.getEntity(state.id) instanceof Player player && !player.isSpectator() && active(player);
+        return mc.level != null && mc.level.getEntity(state.id) instanceof Player player && !hiddenSpectator(player, state) && active(player);
     }
 
     /** Whether this player is drawn as a survivor (they have a look, and this PC has its pack). */
     public static boolean active(Player player) {
         Appearance.Look look = lookOf(player);
         return look != null && SurvivorPack.get(look.sex()) != null;
+    }
+
+    /**
+     * Your own figure on a page's panel (the appearance page): a new survivor waits as a spectator until they wake
+     * (SpawnPicker), and a spectator is drawn as a bare floating Minecraft head. That figure is drawn as your survivor
+     * all the same (InventoryScreenMixin notes it and takes the spectator flag off its render state).
+     */
+    public static Object screenFigure;
+
+    /** A spectator in the world stays unseen; only your own figure on a page is drawn while you're spectating. */
+    static boolean hiddenSpectator(Player player, AvatarRenderState state) {
+        return player.isSpectator() && (state == null || state != screenFigure);
     }
 
     static Appearance.Look lookOf(Player player) {
@@ -156,7 +168,7 @@ public final class Survivors {
     public static boolean before(PlayerModel model, AvatarRenderState state) {
         if (last != null && last.state == state) last = null;
         Minecraft mc = Minecraft.getInstance();
-        if (mc.level == null || !(mc.level.getEntity(state.id) instanceof Player player) || player.isSpectator()) return false;
+        if (mc.level == null || !(mc.level.getEntity(state.id) instanceof Player player) || hiddenSpectator(player, state)) return false;
         Appearance.Look look = lookOf(player);
         if (look == null) return false;
         SurvivorPack pack = SurvivorPack.get(look.sex());
