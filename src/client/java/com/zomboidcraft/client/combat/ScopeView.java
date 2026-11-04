@@ -46,6 +46,8 @@ public final class ScopeView {
     private static boolean ringMade;
     /** The copy of the finished picture failed with this shader pack; the dark ring stands in for the session. */
     private static boolean cropFailed;
+    /** The game's main picture (it lives in the GameRenderer), copied from for A at the HUD. */
+    private static @Nullable RenderTarget mainTarget;
 
     private enum Mode { PIP, MIX, PICTURE }
 
@@ -132,6 +134,7 @@ public final class ScopeView {
 
     /** After the frame is finished (shader pack included), before the HUD: keep it for the lens or the world view. */
     public static void capture(GameRenderer renderer, RenderTarget main) {
+        mainTarget = main;
         if (!active() || RailLights.shaderPackOn()) {
             return;
         }
@@ -172,8 +175,11 @@ public final class ScopeView {
         Mode mode = mode();
         if (m > 1 && RailLights.shaderPackOn() && cropWithShaders()) {
             // A: the pack has finished the frame by the time the HUD is drawn, so the lens is copied from it here
+            if (mainTarget == null) {
+                return;     // not a single frame drawn yet
+            }
             try {
-                lens = copy(lens, Minecraft.getInstance().getMainRenderTarget(), "ZomboidCraft scope lens");
+                lens = copy(lens, mainTarget, "ZomboidCraft scope lens");
                 lensReady = true;
             } catch (RuntimeException e) {
                 ZomboidCraft.LOGGER.warn("Scope view: couldn't copy the shader pack's picture ({}), using the dark ring", e.toString());
