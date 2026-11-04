@@ -35,6 +35,8 @@ public abstract class InventoryScreenMixin {
         if (cir.getReturnValue() instanceof AvatarRenderState avatar && entity == mc.player && mc.gui.screen() != null
                 && avatar.isSpectator) {
             avatar.isSpectator = false;
+            // a spectator also counts as invisible, which the survivor layer skips (Josiah 10:47: "nothing there at all")
+            avatar.isInvisible = false;
             com.zomboidcraft.client.survivor.Survivors.screenFigure = avatar;
         }
         if (SpinFigure.drawing && cir.getReturnValue() instanceof LivingEntityRenderState living) {
