@@ -12,7 +12,7 @@ import java.util.List;
  * taken from the cache) nearest first.
  */
 public final class Bunkers {
-    public static final List<String> KINDS = List.of("tower", "floor", "ship", "shelter", "forest", "mine", "silo", "container", "vault", "subway");
+    public static final List<String> KINDS = List.of("tower", "floor", "ship", "shelter", "forest", "mine", "silo", "container", "offshore", "vault", "subway");
 
     /** One bunker: its kind and state, and in world blocks the way in and its blast door. */
     public record Found(String kind, String state, int x, int y, int z, int doorX, int doorY, int doorZ, Place place) {
@@ -46,6 +46,9 @@ public final class Bunkers {
             out.addAll(nearest(county.hideoutsNear(x - radius, z - radius, x + radius, z + radius, 0).stream()
                     .filter(p -> "mine_adit".equals(p.variant)).toList(), PlaceType.HIDEOUT, x, z, 3));
         }
+        if (kind == null || kind.equals("offshore")) {
+            county.offshoreShip().filter(p -> Math.hypot(p.centreX() - x, p.centreZ() - z) <= radius).ifPresent(out::add);
+        }
         if (kind == null || kind.equals("subway")) {
             county.ghostStation().filter(p -> Math.hypot(p.centreX() - x, p.centreZ() - z) <= radius).ifPresent(out::add);
         }
@@ -56,6 +59,11 @@ public final class Bunkers {
     /** The world column on the ghost station's old platform just inside its arch, or null without one. */
     public static int[] ghostPlatform(County county) {
         return GhostSite.platform(county);
+    }
+
+    /** The name of the ship at anchor off the coast, as the marked maps give it. */
+    public static String offshoreName(County county) {
+        return county.offshoreShip().map(OffshoreSite::name).orElse("ship");
     }
 
     /** In world blocks, the floor of an old mine's cutting in front of its boarded portal. */
