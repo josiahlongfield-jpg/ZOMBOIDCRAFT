@@ -1,0 +1,107 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_grille": "zomboidcraft:block/city/bunk_grille",
+    "ext_galv": "zomboidcraft:block/city/ext_galv",
+    "particle": "zomboidcraft:block/city/ext_galv"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        15,
+        2
+      ],
+      "to": [
+        14,
+        16,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_galv"
+        },
+        "south": {
+          "texture": "#ext_galv"
+        },
+        "east": {
+          "texture": "#ext_galv"
+        },
+        "west": {
+          "texture": "#ext_galv"
+        },
+        "up": {
+          "texture": "#ext_galv",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#ext_galv"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        14,
+        4
+      ],
+      "to": [
+        12,
+        15,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#ext_galv"
+        },
+        "south": {
+          "texture": "#ext_galv"
+        },
+        "east": {
+          "texture": "#ext_galv"
+        },
+        "west": {
+          "texture": "#ext_galv"
+        },
+        "up": {
+          "texture": "#ext_galv"
+        },
+        "down": {
+          "texture": "#ext_galv"
+        }
+      }
+    },
+    {
+      "from": [
+        5.5,
+        13,
+        5.5
+      ],
+      "to": [
+        10.5,
+        14,
+        10.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_grille"
+        },
+        "south": {
+          "texture": "#bunk_grille"
+        },
+        "east": {
+          "texture": "#bunk_grille"
+        },
+        "west": {
+          "texture": "#bunk_grille"
+        },
+        "up": {
+          "texture": "#bunk_grille"
+        },
+        "down": {
+          "texture": "#bunk_grille"
+        }
+      }
+    }
+  ]
+}

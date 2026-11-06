@@ -1111,6 +1111,8 @@ import glassline  # noqa: E402
 glassline.register(sys.modules[__name__])
 import ghost  # noqa: E402
 ghost.register(sys.modules[__name__])
+import shelter  # noqa: E402
+shelter.register(sys.modules[__name__])
 import fitout  # noqa: E402
 fitout.register(sys.modules[__name__])
 import mall  # noqa: E402

@@ -50,7 +50,9 @@ public final class Bunker {
     private static final Set<String> LOOT = Set.of("bunk_first_aid", "bunk_footlocker", "bunk_locker", "bunk_locker_top",
             "bunk_range", "bunk_sink", "bunk_counter", "bunk_desk", "bunk_radio_desk", "bunk_medcab", "bunk_rack_boxes",
             "bunk_rack_drums", "bunk_rack_crates", "bunk_crate_ration", "bunk_crate_ammo", "bunk_crate_gun", "bunk_tins",
-            "bunk_gun_rack", "bunk_pegboard");
+            "bunk_gun_rack", "bunk_pegboard", "cd_cubby");
+
+    private static final String[] SHELTER_PAINT = {"cd_wall_yellow", "cd_wall_green", "cd_wall_orange"};
 
     private final Placer p;
     private final SplittableRandom rng;
@@ -442,6 +444,12 @@ public final class Bunker {
             }
             return;
         }
+        if (kind == Kind.FOREST && (r.use == Use.BUNKS || r.use == Use.MESS || r.use == Use.MED)) {
+            // the survivalist lined the rooms he lived in himself: rough boards on the walls and the floor
+            r.lower = r.upper = "fh_boards";
+            r.ground = "floor_boards";
+            return;
+        }
         boolean bare = kind == Kind.FOREST;
         if (kind == Kind.VAULT && (r.use == Use.CORRIDOR || r.use == Use.COMMS || r.use == Use.PANTRY)) {
             // the client's money shows everywhere but the plant and the stores: panelling and carpet
@@ -454,6 +462,13 @@ public final class Bunker {
             // built by the transit authority with what it built its stations with: green dado, cream tile
             r.lower = "gh_tile_green";
             r.upper = "gh_tile";
+            return;
+        }
+        if (kind == Kind.SHELTER && (r.use == Use.BUNKS || r.use == Use.MESS || r.use == Use.MED || r.use == Use.COMMAND
+                || r.use == Use.PANTRY)) {
+            // the public shelter's rooms each painted their own bright colour, to keep spirits up
+            String c = SHELTER_PAINT[rng.nextInt(SHELTER_PAINT.length)];
+            r.lower = r.upper = c;
             return;
         }
         if (kind == Kind.ARMY && r.use == Use.CORRIDOR) {
@@ -937,6 +952,10 @@ public final class Bunker {
 
     /** Steel bunks two high with a footlocker at each foot, and wall lockers between them. */
     private void bunks(Room r) {
+        if (kind == Kind.SHELTER) {
+            shelterBunks(r);
+            return;
+        }
         int beds = 0;
         for (int s0 = rng.nextInt(4), k = 0; k < 4; k++) {
             int s = (s0 + k) & 3;
@@ -950,8 +969,9 @@ public final class Bunker {
                     continue;
                 }
                 boolean top = rng.nextDouble() < 0.85;
-                String[] head = top ? new String[] {"bunk_bed_head", "bunk_bed_head_top"} : new String[] {"bunk_bed_head"};
-                String[] foot = top ? new String[] {"bunk_bed_foot", "bunk_bed_foot_top"} : new String[] {"bunk_bed_foot"};
+                String bed = kind == Kind.FOREST ? "fh_bunk_" : "bunk_bed_";
+                String[] head = top ? new String[] {bed + "head", bed + "head_top"} : new String[] {bed + "head"};
+                String[] foot = top ? new String[] {bed + "foot", bed + "foot_top"} : new String[] {bed + "foot"};
                 boolean locker = rng.nextDouble() < 0.6;
                 if (locker ? r.run(c[0], c[1], s, head, foot, new String[] {"bunk_footlocker"}) : r.run(c[0], c[1], s, head, foot)) {
                     beds++;
@@ -977,7 +997,8 @@ public final class Bunker {
                 }
                 continue;
             }
-            String[] head = {"bunk_bed_head", "bunk_bed_head_top"}, foot = {"bunk_bed_foot", "bunk_bed_foot_top"};
+            String bed = kind == Kind.FOREST ? "fh_bunk_" : "bunk_bed_";
+            String[] head = {bed + "head", bed + "head_top"}, foot = {bed + "foot", bed + "foot_top"};
             if (acrossX) {
                 r.runFree(i, zc, 0, head, foot);
                 r.runFree(i, zc + 1, 2, head, foot);
@@ -988,6 +1009,54 @@ public final class Bunker {
         }
         for (int i = 0; i < 2; i++) {
             r.against("bunk_locker", "bunk_locker_top");
+        }
+        r.wallDecor(2, "bunk_lamp");
+        r.scatter("home_clothes_pile", rng.nextInt(3));
+    }
+
+    /**
+     * The public shelter's dormitory: grey steel bunks three high round the walls and in rows down the
+     * room, open shelves of folded blankets between, the round air diffusers in the ceiling.
+     */
+    private void shelterBunks(Room r) {
+        String[] head = {"cd_bunk_head", "cd_bunk_head_top"}, foot = {"cd_bunk_foot", "cd_bunk_foot_top"};
+        String[] shelf = {"cd_cubby", "cd_cubby_top"};
+        int beds = 0;
+        for (int s0 = rng.nextInt(4), k = 0; k < 4; k++) {
+            int s = (s0 + k) & 3;
+            if (s == r.toCorridor) {
+                continue;
+            }
+            for (int[] c : r.along(s)) {
+                if (beds % 3 == 2 && r.place(c[0], c[1], s, shelf)) {
+                    beds++;
+                    continue;
+                }
+                if (r.run(c[0], c[1], s, head, foot)) {
+                    beds++;
+                }
+            }
+        }
+        boolean acrossX = r.d() >= r.w();
+        int zc = (r.z0 + r.z1) / 2, xc = (r.x0 + r.x1) / 2;
+        int from = acrossX ? r.x0 + 3 : r.z0 + 3, to = acrossX ? r.x1 - 3 : r.z1 - 3;
+        for (int i = from, n = 0; i <= to; i++, n++) {
+            if (n % 4 == 3) {
+                continue;  // a gap to get between them
+            }
+            if (acrossX) {
+                r.runFree(i, zc, 0, head, foot);
+                r.runFree(i, zc + 1, 2, head, foot);
+            } else {
+                r.runFree(xc, i, 3, head, foot);
+                r.runFree(xc + 1, i, 1, head, foot);
+            }
+        }
+        r.against(shelf);
+        for (int x = r.x0 + 2; x <= r.x1 - 1; x += 4) {
+            for (int z = r.z0 + 2; z <= r.z1 - 1; z += 4) {
+                r.ceiling(x, z, "cd_diffuser");
+            }
         }
         r.wallDecor(2, "bunk_lamp");
         r.scatter("home_clothes_pile", rng.nextInt(3));
@@ -1138,8 +1207,16 @@ public final class Bunker {
         if (r.w() * r.d() > 60 && rng.nextBoolean()) {
             r.pair("bunk_gen_engine", "bunk_gen_alternator");
         }
-        r.against("bunk_filter", "bunk_filter_top");
-        r.against("bunk_filter", "bunk_filter_top");
+        if (kind == Kind.SHELTER) {
+            // the public shelter breathes through its ventilators (cranked by hand when the power goes)
+            // and has its way out through the escape hatch if the stair is buried
+            r.against("cd_vent", "cd_vent_top");
+            r.against("cd_vent", "cd_vent_top");
+            r.wallDecor(1, "cd_escape");
+        } else {
+            r.against("bunk_filter", "bunk_filter_top");
+            r.against("bunk_filter", "bunk_filter_top");
+        }
         r.rowStack(new String[] {"bunk_tank", "bunk_tank_top"}, new String[] {"bunk_tank", "bunk_tank_top"},
                 new String[] {"bunk_tank", "bunk_tank_top"});
         r.rowStack(new String[] {"bunk_switchboard", "bunk_switchboard_top"}, new String[] {"bunk_switchboard", "bunk_switchboard_top"});
