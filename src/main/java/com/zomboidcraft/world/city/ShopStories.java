@@ -101,6 +101,28 @@ public final class ShopStories {
         }
     }
 
+    /**
+     * A building's own story dice at the Randomized Building Chance, or null when it gets none: for
+     * builders that tell their own (the school's overrun rooms) and only need to know whether, and
+     * the random numbers to tell it with. The building's w by d frame from p is its seed.
+     */
+    public static SplittableRandom dice(Placer p, int w, int d) {
+        return roll(p, w, d);
+    }
+
+    /** A body for StoryMarks at (x, y, z) in p's frame: its outfit, now and then a limb gone. */
+    public static void body(Placer p, SplittableRandom rng, double x, int y, double z, String outfit) {
+        int limbs = rng.nextDouble() < 0.2 ? 1 << rng.nextInt(8) : 0;
+        p.vehicle(x, y, z, (float) (rng.nextDouble() * 360), "!body:" + outfit + ";" + limbs + ";0", rng.nextLong());
+    }
+
+    /** n walkers that stand up within radius of (x, y, z) indoors, on that floor (StoryMarks). */
+    public static void walkersIndoors(Placer p, SplittableRandom rng, double x, int y, double z, String outfit, int n, int radius) {
+        if (n > 0) {
+            p.vehicle(x, y, z, 0, "!walkers:" + outfit + ";" + n + ";" + (-Math.max(1, radius)), rng.nextLong());
+        }
+    }
+
     /** The shop's dice if it has a story, else null. */
     private static SplittableRandom roll(Placer p, int w, int d) {
         SplittableRandom dice = new SplittableRandom(seed(p, w, d));
@@ -314,8 +336,7 @@ public final class ShopStories {
         if (c == null) {
             return;
         }
-        int limbs = rng.nextDouble() < 0.2 ? 1 << rng.nextInt(8) : 0;
-        p.vehicle(c[0] + 0.5, 1, c[1] + 0.5, (float) (rng.nextDouble() * 360), "!body:" + outfit + ";" + limbs + ";0", rng.nextLong());
+        body(p, rng, c[0] + 0.5, 1, c[1] + 0.5, outfit);
         if (rng.nextDouble() < 0.6) {
             put(c[0], c[1], rng.nextBoolean() ? "home_blood_pool" : "blood_splat");
         } else {
@@ -327,7 +348,7 @@ public final class ShopStories {
     private void walkers(String outfit, int n) {
         int cx = (left + right) / 2, cz = (1 + back) / 2;
         int radius = Math.max(1, Math.min(right - left, back) / 2);
-        p.vehicle(cx + 0.5, 1, cz + 0.5, 0, "!walkers:" + outfit + ";" + n + ";" + (-radius), rng.nextLong());
+        walkersIndoors(p, rng, cx + 0.5, 1, cz + 0.5, outfit, n, radius);
     }
 
     /** A clear floor cell in the box, off the doorway, not yet used by this story. */
