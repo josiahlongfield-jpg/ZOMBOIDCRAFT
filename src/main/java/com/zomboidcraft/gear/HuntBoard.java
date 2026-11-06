@@ -15,6 +15,8 @@ import java.util.UUID;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
+import net.fabricmc.fabric.api.event.Event;
+import net.fabricmc.fabric.api.event.EventFactory;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
@@ -145,9 +147,26 @@ public final class HuntBoard {
                 "Reaper, you've got a civilian with you. Get " + name + " to an extraction point. There's a crate in it for you.");
     }
 
-    /** That survivor reached an extraction point. */
-    public static void escortDelivered(MinecraftServer server, UUID survivor) {
-        done(server, "escort:" + survivor, "Civilian's in. Resupply crate is on the pad. Overwatch out.");
+    /** A survivor reached an extraction point: LOOT drops the resupply crate there (C7). */
+    @FunctionalInterface
+    public interface Escorted {
+        void escorted(MinecraftServer server, UUID survivor, BlockPos extraction);
+    }
+
+    public static final Event<Escorted> ESCORTED = EventFactory.createArrayBacked(Escorted.class, cbs -> (server, survivor, at) -> {
+        for (Escorted cb : cbs) {
+            cb.escorted(server, survivor, at);
+        }
+    });
+
+    /** That survivor reached the extraction point at {@code extraction}. */
+    public static void escortDelivered(MinecraftServer server, UUID survivor, BlockPos extraction) {
+        Entry e = find(server, "escort:" + survivor);
+        if (e == null || "done".equals(e.status)) {
+            return;
+        }
+        done(server, e.id, "Civilian's in. Resupply crate is on the pad. Overwatch out.");
+        ESCORTED.invoker().escorted(server, survivor, extraction);
     }
 
     /** The board's entries (a copy), for anyone who needs them server-side. */
