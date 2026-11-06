@@ -225,6 +225,9 @@ public final class MeshGuns {
         float[] pos = p.pos(), uv = p.uv(), s = p.smooth(), n = p.normal();
         int[] q = p.quads();
         for (int f = 0, quads = p.quadCount(); f < quads; f++) {
+            if (bare(s, q, f)) {
+                continue;       // no smooth normal (a local gun's iron sights): no ink, as on the posing page
+            }
             for (int c = 0; c < 4; c++) {
                 int k = flipped ? c : (4 - c) & 3;     // wound the other way from the solid
                 int i = q[f * 5 + k], t = k == 3 ? q[f * 5 + 4] : i / 3;
@@ -237,6 +240,17 @@ public final class MeshGuns {
                         .setNormal(pose, -n[t * 3], -n[t * 3 + 1], -n[t * 3 + 2]);
             }
         }
+    }
+
+    /** Whether every corner of quad f has no smooth normal (a pair only joins corners alike, so it's all or none). */
+    private static boolean bare(float[] s, int[] q, int f) {
+        for (int c = 0; c < 4; c++) {
+            int i = q[f * 5 + c];
+            if (s[i * 3] != 0 || s[i * 3 + 1] != 0 || s[i * 3 + 2] != 0) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -273,6 +287,23 @@ public final class MeshGuns {
         } else {
             try (InputStream in = Minecraft.getInstance().getResourceManager().open(ZomboidCraft.id("meshes/" + id + ".zmesh"))) {
                 data = in.readAllBytes();
+            }
+        }
+        // a local gun's iron sights (what its no-irons copy lacks) get no ink, as on the posing page: the outline
+        // shell round their thin plates and peep rings drew black patches over them (Josiah, 2026-11-06)
+        java.util.Set<String> plain = null;
+        if (id.startsWith(LOCAL) && !id.endsWith(NO_IRONS)
+                && java.nio.file.Files.isRegularFile(com.zomboidcraft.combat.LocalGuns.DIR.resolve(id.substring(LOCAL.length()) + NO_IRONS + ".zmesh"))) {
+            try {
+                plain = new HashSet<>();
+                for (Part p : read(id + NO_IRONS, false).parts().values()) {
+                    for (int t = 0; t < p.triangles(); t++) {
+                        plain.add(key(p.pos(), t));
+                    }
+                }
+            } catch (Exception e) {
+                ZomboidCraft.LOGGER.warn("Couldn't read the no-irons copy of {}", id, e);
+                plain = null;
             }
         }
         CarAssets.unscramble(data, id);
@@ -317,6 +348,13 @@ public final class MeshGuns {
                     normal[t * 3 + 1] = ny / len;
                     normal[t * 3 + 2] = nz / len;
                 }
+                if (plain != null) {
+                    for (int t = 0; t < tris; t++) {
+                        if (!plain.contains(key(pos, t))) {
+                            java.util.Arrays.fill(smooth, t * 9, t * 9 + 9, 0f);     // an iron sight: no ink
+                        }
+                    }
+                }
                 parts.put(name, new Part(tris, pos, uv, normal, smooth, pair(tris, pos, uv, smooth, normal)));
             }
             if (!texture) {
@@ -327,6 +365,18 @@ public final class MeshGuns {
             Minecraft.getInstance().getTextureManager().register(name, new DynamicTexture(() -> "ZomboidCraft mesh " + id, image));
             return new Gun(parts, name, outline, lo, hi);
         }
+    }
+
+    /** A local gun's copy without its iron sights: its file name ends with this. */
+    static final String NO_IRONS = "_noirons";
+
+    /** A triangle's corners as the file has them (thousandths of an item pixel), to find it in another mesh. */
+    private static String key(float[] pos, int t) {
+        StringBuilder b = new StringBuilder(64);
+        for (int i = t * 9; i < t * 9 + 9; i++) {
+            b.append(Math.round(pos[i] * 1000)).append(',');
+        }
+        return b.toString();
     }
 
     /**
