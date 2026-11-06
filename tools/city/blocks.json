@@ -4245352,6 +4245352,1181 @@
    "title": "Brick Infill",
    "sound": "STONE",
    "rotate": "facing"
+  },
+  "fh_boards": {
+   "tex": {
+    "side": "fh_boards",
+    "up": "floor_boards",
+    "down": "floor_boards"
+   },
+   "title": "Plank Wall",
+   "sound": "WOOD"
+  },
+  "fh_bunk_head": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     14.5,
+     2.5,
+     16,
+     16,
+     "sy_timber"
+    ],
+    [
+     13.5,
+     0,
+     14.5,
+     15,
+     16,
+     16,
+     "sy_timber"
+    ],
+    [
+     1,
+     3,
+     0,
+     2.5,
+     4.5,
+     16,
+     "sy_timber"
+    ],
+    [
+     13.5,
+     3,
+     0,
+     15,
+     4.5,
+     16,
+     "sy_timber"
+    ],
+    [
+     2.5,
+     4,
+     0,
+     13.5,
+     7,
+     16,
+     {
+      "up": "bunk_mattress",
+      "side": "bunk_mattress",
+      "down": "sy_timber"
+     }
+    ],
+    [
+     2.5,
+     9,
+     15,
+     13.5,
+     10.5,
+     16,
+     "sy_timber"
+    ],
+    [
+     3.5,
+     7,
+     11,
+     12.5,
+     9,
+     15,
+     "home_pillow"
+    ],
+    [
+     2.5,
+     7,
+     0,
+     13.5,
+     7.6,
+     11,
+     "bunk_blanket"
+    ]
+   ],
+   "title": "Bunk",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "fh_bunk_head_top": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     14.5,
+     2.5,
+     14,
+     16,
+     "sy_timber"
+    ],
+    [
+     13.5,
+     0,
+     14.5,
+     15,
+     14,
+     16,
+     "sy_timber"
+    ],
+    [
+     1,
+     3,
+     0,
+     2.5,
+     4.5,
+     16,
+     "sy_timber"
+    ],
+    [
+     13.5,
+     3,
+     0,
+     15,
+     4.5,
+     16,
+     "sy_timber"
+    ],
+    [
+     2.5,
+     4,
+     0,
+     13.5,
+     7,
+     16,
+     {
+      "up": "bunk_mattress",
+      "side": "bunk_mattress",
+      "down": "sy_timber"
+     }
+    ],
+    [
+     2.5,
+     9,
+     15,
+     13.5,
+     10.5,
+     16,
+     "sy_timber"
+    ],
+    [
+     3.5,
+     7,
+     11,
+     12.5,
+     9,
+     15,
+     "home_pillow"
+    ],
+    [
+     2.5,
+     7,
+     0,
+     13.5,
+     7.6,
+     11,
+     "bunk_blanket"
+    ],
+    [
+     13.5,
+     9,
+     0,
+     15,
+     10.5,
+     16,
+     "sy_timber"
+    ]
+   ],
+   "title": "Bunk",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "fh_bunk_foot": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     0,
+     2.5,
+     16,
+     1.5,
+     "sy_timber"
+    ],
+    [
+     13.5,
+     0,
+     0,
+     15,
+     16,
+     1.5,
+     "sy_timber"
+    ],
+    [
+     1,
+     3,
+     0,
+     2.5,
+     4.5,
+     16,
+     "sy_timber"
+    ],
+    [
+     13.5,
+     3,
+     0,
+     15,
+     4.5,
+     16,
+     "sy_timber"
+    ],
+    [
+     2.5,
+     4,
+     0,
+     13.5,
+     7,
+     16,
+     {
+      "up": "bunk_mattress",
+      "side": "bunk_mattress",
+      "down": "sy_timber"
+     }
+    ],
+    [
+     2.5,
+     7,
+     1,
+     13.5,
+     9,
+     6,
+     "bunk_blanket"
+    ],
+    [
+     2.5,
+     9,
+     0,
+     13.5,
+     10.5,
+     1,
+     "sy_timber"
+    ],
+    [
+     2.5,
+     7,
+     6,
+     13.5,
+     7.6,
+     16,
+     "bunk_blanket"
+    ]
+   ],
+   "title": "Bunk",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "fh_bunk_foot_top": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     0,
+     2.5,
+     14,
+     1.5,
+     "sy_timber"
+    ],
+    [
+     13.5,
+     0,
+     0,
+     15,
+     14,
+     1.5,
+     "sy_timber"
+    ],
+    [
+     1,
+     3,
+     0,
+     2.5,
+     4.5,
+     16,
+     "sy_timber"
+    ],
+    [
+     13.5,
+     3,
+     0,
+     15,
+     4.5,
+     16,
+     "sy_timber"
+    ],
+    [
+     2.5,
+     4,
+     0,
+     13.5,
+     7,
+     16,
+     {
+      "up": "bunk_mattress",
+      "side": "bunk_mattress",
+      "down": "sy_timber"
+     }
+    ],
+    [
+     2.5,
+     7,
+     1,
+     13.5,
+     9,
+     6,
+     "bunk_blanket"
+    ],
+    [
+     2.5,
+     9,
+     0,
+     13.5,
+     10.5,
+     1,
+     "sy_timber"
+    ],
+    [
+     2.5,
+     7,
+     6,
+     13.5,
+     7.6,
+     16,
+     "bunk_blanket"
+    ],
+    [
+     13.5,
+     9,
+     0,
+     15,
+     10.5,
+     16,
+     "sy_timber"
+    ]
+   ],
+   "title": "Bunk",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "cd_wall_yellow": {
+   "tex": {
+    "side": "cd_wall_yellow",
+    "up": "bunk_concrete",
+    "down": "bunk_concrete"
+   },
+   "title": "Painted Wall",
+   "sound": "STONE"
+  },
+  "cd_wall_green": {
+   "tex": {
+    "side": "cd_wall_green",
+    "up": "bunk_concrete",
+    "down": "bunk_concrete"
+   },
+   "title": "Painted Wall",
+   "sound": "STONE"
+  },
+  "cd_wall_orange": {
+   "tex": {
+    "side": "cd_wall_orange",
+    "up": "bunk_concrete",
+    "down": "bunk_concrete"
+   },
+   "title": "Painted Wall",
+   "sound": "STONE"
+  },
+  "cd_bunk_head": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     14.5,
+     2.5,
+     16,
+     16,
+     "bunk_grey"
+    ],
+    [
+     13.5,
+     0,
+     14.5,
+     15,
+     16,
+     16,
+     "bunk_grey"
+    ],
+    [
+     1,
+     1.5,
+     0,
+     2.5,
+     3,
+     16,
+     "bunk_grey"
+    ],
+    [
+     13.5,
+     1.5,
+     0,
+     15,
+     3,
+     16,
+     "bunk_grey"
+    ],
+    [
+     2.5,
+     2,
+     0,
+     13.5,
+     5,
+     16,
+     {
+      "up": "bunk_mattress",
+      "side": "bunk_mattress",
+      "down": "bunk_grey"
+     }
+    ],
+    [
+     3.5,
+     5,
+     11,
+     12.5,
+     6.5,
+     15,
+     "home_pillow"
+    ],
+    [
+     2.5,
+     5,
+     0,
+     13.5,
+     5.5,
+     11,
+     "bunk_blanket"
+    ],
+    [
+     1,
+     9.5,
+     0,
+     2.5,
+     11,
+     16,
+     "bunk_grey"
+    ],
+    [
+     13.5,
+     9.5,
+     0,
+     15,
+     11,
+     16,
+     "bunk_grey"
+    ],
+    [
+     2.5,
+     10,
+     0,
+     13.5,
+     13,
+     16,
+     {
+      "up": "bunk_mattress",
+      "side": "bunk_mattress",
+      "down": "bunk_grey"
+     }
+    ],
+    [
+     3.5,
+     13,
+     11,
+     12.5,
+     14.5,
+     15,
+     "home_pillow"
+    ],
+    [
+     2.5,
+     13,
+     0,
+     13.5,
+     13.5,
+     11,
+     "bunk_blanket"
+    ]
+   ],
+   "title": "Shelter Bunk",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "cd_bunk_head_top": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     14.5,
+     2.5,
+     13,
+     16,
+     "bunk_grey"
+    ],
+    [
+     13.5,
+     0,
+     14.5,
+     15,
+     13,
+     16,
+     "bunk_grey"
+    ],
+    [
+     1,
+     3.5,
+     0,
+     2.5,
+     5,
+     16,
+     "bunk_grey"
+    ],
+    [
+     13.5,
+     3.5,
+     0,
+     15,
+     5,
+     16,
+     "bunk_grey"
+    ],
+    [
+     2.5,
+     4,
+     0,
+     13.5,
+     7,
+     16,
+     {
+      "up": "bunk_mattress",
+      "side": "bunk_mattress",
+      "down": "bunk_grey"
+     }
+    ],
+    [
+     13.5,
+     10,
+     0,
+     15,
+     11,
+     16,
+     "bunk_grey"
+    ],
+    [
+     3.5,
+     7,
+     11,
+     12.5,
+     8.5,
+     15,
+     "home_pillow"
+    ],
+    [
+     2.5,
+     7,
+     0,
+     13.5,
+     7.5,
+     11,
+     "bunk_blanket"
+    ]
+   ],
+   "title": "Shelter Bunk",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "cd_bunk_foot": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     0,
+     2.5,
+     16,
+     1.5,
+     "bunk_grey"
+    ],
+    [
+     13.5,
+     0,
+     0,
+     15,
+     16,
+     1.5,
+     "bunk_grey"
+    ],
+    [
+     1,
+     1.5,
+     0,
+     2.5,
+     3,
+     16,
+     "bunk_grey"
+    ],
+    [
+     13.5,
+     1.5,
+     0,
+     15,
+     3,
+     16,
+     "bunk_grey"
+    ],
+    [
+     2.5,
+     2,
+     0,
+     13.5,
+     5,
+     16,
+     {
+      "up": "bunk_mattress",
+      "side": "bunk_mattress",
+      "down": "bunk_grey"
+     }
+    ],
+    [
+     2.5,
+     5,
+     1,
+     13.5,
+     6.5,
+     5,
+     "bunk_blanket"
+    ],
+    [
+     2.5,
+     5,
+     5,
+     13.5,
+     5.5,
+     16,
+     "bunk_blanket"
+    ],
+    [
+     1,
+     9.5,
+     0,
+     2.5,
+     11,
+     16,
+     "bunk_grey"
+    ],
+    [
+     13.5,
+     9.5,
+     0,
+     15,
+     11,
+     16,
+     "bunk_grey"
+    ],
+    [
+     2.5,
+     10,
+     0,
+     13.5,
+     13,
+     16,
+     {
+      "up": "bunk_mattress",
+      "side": "bunk_mattress",
+      "down": "bunk_grey"
+     }
+    ],
+    [
+     2.5,
+     13,
+     1,
+     13.5,
+     14.5,
+     5,
+     "bunk_blanket"
+    ],
+    [
+     2.5,
+     13,
+     5,
+     13.5,
+     13.5,
+     16,
+     "bunk_blanket"
+    ]
+   ],
+   "title": "Shelter Bunk",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "cd_bunk_foot_top": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     0,
+     2.5,
+     13,
+     1.5,
+     "bunk_grey"
+    ],
+    [
+     13.5,
+     0,
+     0,
+     15,
+     13,
+     1.5,
+     "bunk_grey"
+    ],
+    [
+     1,
+     3.5,
+     0,
+     2.5,
+     5,
+     16,
+     "bunk_grey"
+    ],
+    [
+     13.5,
+     3.5,
+     0,
+     15,
+     5,
+     16,
+     "bunk_grey"
+    ],
+    [
+     2.5,
+     4,
+     0,
+     13.5,
+     7,
+     16,
+     {
+      "up": "bunk_mattress",
+      "side": "bunk_mattress",
+      "down": "bunk_grey"
+     }
+    ],
+    [
+     13.5,
+     10,
+     0,
+     15,
+     11,
+     16,
+     "bunk_grey"
+    ],
+    [
+     2.5,
+     7,
+     1,
+     13.5,
+     8.5,
+     5,
+     "bunk_blanket"
+    ],
+    [
+     2.5,
+     7,
+     5,
+     13.5,
+     7.5,
+     16,
+     "bunk_blanket"
+    ]
+   ],
+   "title": "Shelter Bunk",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "cd_cubby": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     2,
+     1,
+     16,
+     16,
+     "bunk_grey"
+    ],
+    [
+     15,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "bunk_grey"
+    ],
+    [
+     7.5,
+     0,
+     2,
+     8.5,
+     16,
+     16,
+     "bunk_grey"
+    ],
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     "bunk_grey"
+    ],
+    [
+     0,
+     0,
+     2,
+     16,
+     1,
+     15,
+     "bunk_grey"
+    ],
+    [
+     0,
+     8,
+     2,
+     16,
+     9,
+     15,
+     "bunk_grey"
+    ],
+    [
+     1.5,
+     1,
+     4,
+     7.0,
+     3.5,
+     14,
+     "bunk_blanket"
+    ],
+    [
+     2,
+     3.5,
+     6,
+     6.5,
+     5,
+     13,
+     "home_pillow"
+    ],
+    [
+     1.5,
+     9,
+     4,
+     7.0,
+     11.5,
+     14,
+     "bunk_blanket"
+    ],
+    [
+     2,
+     11.5,
+     6,
+     6.5,
+     13,
+     13,
+     "home_pillow"
+    ],
+    [
+     9.0,
+     1,
+     4,
+     14.5,
+     3.5,
+     14,
+     "bunk_blanket"
+    ],
+    [
+     9.5,
+     3.5,
+     6,
+     14,
+     5,
+     13,
+     "home_pillow"
+    ],
+    [
+     9.0,
+     9,
+     4,
+     14.5,
+     11.5,
+     14,
+     "bunk_blanket"
+    ],
+    [
+     9.5,
+     11.5,
+     6,
+     14,
+     13,
+     13,
+     "home_pillow"
+    ]
+   ],
+   "title": "Blanket Shelves",
+   "sound": "METAL",
+   "rotate": "facing",
+   "loot": "home_wardrobe"
+  },
+  "cd_cubby_top": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     2,
+     1,
+     16,
+     16,
+     "bunk_grey"
+    ],
+    [
+     15,
+     0,
+     2,
+     16,
+     16,
+     16,
+     "bunk_grey"
+    ],
+    [
+     7.5,
+     0,
+     2,
+     8.5,
+     16,
+     16,
+     "bunk_grey"
+    ],
+    [
+     0,
+     0,
+     15,
+     16,
+     16,
+     16,
+     "bunk_grey"
+    ],
+    [
+     0,
+     8,
+     2,
+     16,
+     9,
+     15,
+     "bunk_grey"
+    ],
+    [
+     0,
+     15,
+     2,
+     16,
+     16,
+     15,
+     "bunk_grey"
+    ],
+    [
+     1.5,
+     9,
+     4,
+     7.0,
+     11.5,
+     14,
+     "bunk_blanket"
+    ],
+    [
+     2,
+     11.5,
+     6,
+     6.5,
+     13,
+     13,
+     "home_pillow"
+    ],
+    [
+     9.0,
+     9,
+     4,
+     14.5,
+     11.5,
+     14,
+     "bunk_blanket"
+    ],
+    [
+     9.5,
+     11.5,
+     6,
+     14,
+     13,
+     13,
+     "home_pillow"
+    ]
+   ],
+   "title": "Blanket Shelves",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "cd_vent": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     2,
+     15,
+     1.5,
+     15,
+     "bunk_grey"
+    ],
+    [
+     1.5,
+     1.5,
+     4,
+     14.5,
+     15,
+     14,
+     {
+      "north": "cd_vent_front",
+      "side": "bunk_grey",
+      "up": "bunk_grey",
+      "down": "bunk_grey"
+     }
+    ],
+    [
+     3,
+     7,
+     2.5,
+     4,
+     8,
+     4,
+     "bunk_grey"
+    ]
+   ],
+   "title": "Ventilator",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "cd_vent_top": {
+   "model": "boxes",
+   "boxes": [
+    [
+     3,
+     0,
+     5,
+     13,
+     9,
+     13,
+     {
+      "north": "bunk_grey",
+      "side": "bunk_grey",
+      "up": "ext_galv",
+      "down": "bunk_grey"
+     }
+    ],
+    [
+     5.5,
+     9,
+     7,
+     10.5,
+     16,
+     12,
+     "ext_galv"
+    ],
+    [
+     4.5,
+     2,
+     4,
+     11.5,
+     7,
+     5,
+     "bunk_grey"
+    ]
+   ],
+   "title": "Ventilator",
+   "sound": "METAL",
+   "rotate": "facing"
+  },
+  "cd_escape": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     0,
+     14,
+     16,
+     16,
+     16,
+     {
+      "north": "cd_escape",
+      "side": "bunk_grey"
+     }
+    ]
+   ],
+   "title": "Escape Hatch",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true
+  },
+  "cd_diffuser": {
+   "model": "boxes",
+   "boxes": [
+    [
+     2,
+     15,
+     2,
+     14,
+     16,
+     14,
+     "ext_galv"
+    ],
+    [
+     4,
+     14,
+     4,
+     12,
+     15,
+     12,
+     "ext_galv"
+    ],
+    [
+     5.5,
+     13,
+     5.5,
+     10.5,
+     14,
+     10.5,
+     "bunk_grille"
+    ]
+   ],
+   "title": "Air Diffuser",
+   "sound": "METAL",
+   "decor": true
   }
  }
 }
