@@ -424,6 +424,17 @@ public final class ZcConfig {
          */
         public double idleThinkDistance = 32;
         /**
+         * Walkers further than this many blocks from every player don't shove each other apart (a packed horde off
+         * where nobody can see it cost a sixth of the server tick looking for neighbours). 0 turns it off.
+         */
+        public double farPushDistance = 32;
+        /**
+         * At most this many zombie groans, steps and door blows play at once on your computer, the nearest kept.
+         * Minecraft has about 247 sound channels; 800 zombies filled them and a gunshot found none (Josiah,
+         * 2026-11-06: "no sound was coming from my gun"). Client side.
+         */
+        public int zombieSoundCap = 48;
+        /**
          * Zombies beyond the nearest meshZombies (and past spriteMinDistance) are drawn as a picture of their baked body
          * turned to face you, one card instead of a few hundred pieces. Client side.
          */
