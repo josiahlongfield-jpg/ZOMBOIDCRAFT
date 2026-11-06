@@ -56,6 +56,14 @@ public final class OperatorView {
     private static final String OUT = "mag_out_0", IN = "mag_in_0", CHARGE = "reload_charge_0";
     /** A gun's own empty reload, when its model has one (the PM: the slide locked back). */
     private static final String EMPTY_OUT = "empty_out", EMPTY_IN = "empty_in", EMPTY_CHARGE = "empty_charge";
+    /**
+     * A gun loaded a round at a time (the 870's tube, the MP-18 broken open): raised or opened, a round in over each
+     * load_shell (played again for every round; the game puts each in partway through it), then the finish or close,
+     * and onto an empty pump gun the pump (reload_charge_0).
+     */
+    private static final String LOAD_START = "load_start", LOAD_SHELL = "load_shell", LOAD_END = "load_end";
+    /** Loading round by round, and whether it started onto an empty chamber (so ends with the pump). */
+    private static boolean loadingRounds, loadEmpty;
     /** The first-person model drawn last (another gun drawn starts over from its draw). */
     private static String drawn;
     /** The holographic sight's mesh (its bone in the pack), and how far ahead of the eye its sight sits when aiming. */
@@ -117,6 +125,7 @@ public final class OperatorView {
         if (clip == null || slot != lastSlot || lastDrawn < 0 || now - lastDrawn > 0.3f || now < lastDrawn) {
             queue.clear();
             reloading = false;
+            loadingRounds = false;
             play(skin, DRAW, now, 0);
             aim = 0;
             sound(player, gun, "draw");
@@ -126,7 +135,26 @@ public final class OperatorView {
 
         // the game's reload: its first step starts Tarkov's reload; an empty gun's ends with the charging handle
         float step = step(gun);
-        if (lastStep == 0 && step >= 1 && !reloading) {
+        com.zomboidcraft.combat.GunType type = com.zomboidcraft.combat.GunType.of(gun);
+        boolean byRound = type != null && type.tube && skin.clips.containsKey(LOAD_START);
+        if (byRound && lastStep == 0 && step >= 1 && step < 2 && !reloading) {
+            reloading = true;
+            loadingRounds = true;
+            loadEmpty = step > 1.25f;
+            queue.clear();
+            queue.add(LOAD_SHELL);
+            play(skin, LOAD_START, now, 0.12f);
+        } else if (byRound && loadingRounds && (step < 1 || step >= 2)) {
+            // the last round in (or the trigger pulled): the finish, then the pump onto an empty chamber
+            // (a round's clip runs to its end first: the game puts each round in partway through it)
+            loadingRounds = false;
+            queue.clear();
+            queue.add(LOAD_END);
+            if (loadEmpty && !type.opens) queue.add(CHARGE);
+            if (!LOAD_SHELL.equals(clip)) play(skin, queue.poll(), now, 0.08f);
+        } else if (byRound) {
+            // a hand-loaded gun's own loading runs above; nothing of the magazine reload below
+        } else if (lastStep == 0 && step >= 1 && !reloading) {
             reloading = true;
             queue.clear();
             boolean empty = step > 1.25f && step < 2;
@@ -157,6 +185,8 @@ public final class OperatorView {
         if (c == null) return false;
         if (!IDLE.equals(clip) && now - clipStart >= c.seconds()) {
             String next = queue.poll();
+            // another round still going in: its clip again
+            if (next == null && loadingRounds && LOAD_SHELL.equals(clip)) next = LOAD_SHELL;
             if (next == null) {
                 reloading = false;
                 next = IDLE;

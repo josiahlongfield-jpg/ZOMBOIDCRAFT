@@ -130,7 +130,7 @@ public final class Guns {
             // the trigger stops the loading: with a shell chambered it goes off at once, onto an empty chamber
             // the pump is worked first; a gun open to load is shut first
             if (st.needsCharge || type.opens) {
-                stopLoading(st);
+                stopLoading(gun, type, st);
                 return;
             }
             endReload(gun, st);
@@ -807,6 +807,9 @@ public final class Guns {
             going = Math.min(going, countAmmo(player, type, gun));
         }
         st.pace = LocalGuns.reloadPace(gun, type, st.needsCharge, going);
+        // a gun with its own loading clips runs each part at its own clip's pace (the raise first)
+        float own = LocalGuns.tubePace(gun, type, 0, st.needsCharge);
+        if (own > 0) st.pace = own;
         st.paceLeft = 0;
         setModelData(gun, st.needsCharge ? 1.5f : 1, 0);
         if (type.opens) {
@@ -824,6 +827,11 @@ public final class Guns {
         }
         if (!st.loadStopped) {
             int t = st.reloadTick - type.raise;
+            if (t == 0) {
+                // raised (or opened): the rounds at their own clip's pace
+                float own = LocalGuns.tubePace(gun, type, 1, st.needsCharge);
+                if (own > 0) st.pace = own;
+            }
             if (t > 0 && t % type.perShell == 0) {
                 if (takeAmmo(player, type, gun) || player.hasInfiniteMaterials()) {
                     GunState g = gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG);
@@ -832,7 +840,7 @@ public final class Guns {
                 }
                 if (gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG).rounds() >= type.capacity(gun)
                         || countAmmo(player, type, gun) == 0 && !player.hasInfiniteMaterials()) {
-                    stopLoading(st);
+                    stopLoading(gun, type, st);
                 }
             }
             return;
@@ -854,6 +862,9 @@ public final class Guns {
             endReload(gun, st);
         } else if (since == 1) {
             setModelData(gun, 3, 0);
+            // the pump at its own clip's pace, after the finish
+            float own = LocalGuns.tubePace(gun, type, 3, true);
+            if (own > 0) st.pace = own;
         } else if (since == 1 + type.cycle / 2) {
             sound(player, type.charged());
         } else if (since >= 1 + type.cycle) {
@@ -862,9 +873,16 @@ public final class Guns {
         }
     }
 
-    private static void stopLoading(State st) {
+    private static void stopLoading(ItemStack gun, GunType type, State st) {
         st.loadStopped = true;
         st.stopTick = st.reloadTick;
+        float own = LocalGuns.tubePace(gun, type, 2, st.needsCharge);
+        if (own > 0) {
+            // the finish at its clip's pace, told to the operator's first person at once (2.5) so its finish clip starts
+            // as the last round goes in, not a finish later
+            st.pace = own;
+            setModelData(gun, 2.5f, 0);
+        }
     }
 
     private static void endReload(ItemStack gun, State st) {

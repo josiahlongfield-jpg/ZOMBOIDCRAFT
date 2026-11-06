@@ -63,6 +63,12 @@ public final class LocalGuns {
          * reload animations (the operator's rifle, 2026-11-06): the game's reload is paced to them like a clip's.
          */
         public float[] reload;
+        /**
+         * For a gun loaded a round at a time with its own clips (the operator's Remington 870 and MP-18, 2026-11-06), its
+         * lengths in seconds: [the raise (or the opening), each round, the finish (or the close), the pump onto an empty
+         * gun]. The game's loading runs each part at that part's own pace, so every round goes in as its clip ends.
+         */
+        public float[] tube;
         /** Its can is part of the gun (the operator's kitted M4A1): it fires quiet with no muzzle attachment of ours. */
         public boolean suppressed;
         /**
@@ -236,6 +242,34 @@ public final class LocalGuns {
             return 1;
         }
         return Math.clamp(gameReloadTicks(type, charge, n) / clip, 0.2f, 5f);
+    }
+
+    /**
+     * The pace of one part of a hand-loaded gun's loading, for a gun with its own clips (Spec.tube): 0 the raise or
+     * opening, 1 the rounds, 2 the finish or close, 3 the pump onto an empty chamber. -1 for a gun without them.
+     */
+    public static float tubePace(ItemStack gun, GunType type, int part, boolean charge) {
+        Spec spec = of(gun);
+        if (spec == null || spec.tube == null || spec.tube.length < 3 || !type.tube) {
+            return -1;
+        }
+        float game, own;
+        if (part == 0) {
+            game = type.raise;
+            own = spec.tube[0];
+        } else if (part == 1) {
+            game = type.perShell;
+            own = spec.tube[1];
+        } else if (part == 2) {
+            // the finish (a pump gun's first tick of it), or the close
+            game = type.opens ? 1 + type.close : 1;
+            own = spec.tube[2];
+        } else {
+            // the pump onto an empty chamber, after the finish
+            game = 1 + type.cycle;
+            own = spec.tube.length > 3 ? spec.tube[3] : 0;
+        }
+        return own <= 0 ? 1 : Math.clamp(game / (own * 20), 0.05f, 20f);
     }
 
     /** Reads the folder again (the files can change while the game runs). */
