@@ -6,13 +6,13 @@ import java.util.List;
 
 /**
  * Finds the hidden bunkers near a spot. Each one leaves two marks in its place's blocks: "bunker
- * STATE KIND" where you get in (a tower's hatch in its electrical room, the bricked-up stair door of a tower's missing floor, a ship's false plate, the
+ * STATE KIND" where you get in (a tower's hatch in its electrical room, the bricked-up stair door of a tower's missing floor, a ship's false plate, the doors of a box in a container yard's stacks, the
  * top of a shelter's stairs, a forest hatch, a mine's boarded portal, the hatch in a farm's old silo) and "bunker door" at its blast door straight after.
  * Only building a place shows whether it has one, so the places that may hold one are built (or
  * taken from the cache) nearest first.
  */
 public final class Bunkers {
-    public static final List<String> KINDS = List.of("tower", "floor", "ship", "shelter", "forest", "mine", "silo", "vault", "subway");
+    public static final List<String> KINDS = List.of("tower", "floor", "ship", "shelter", "forest", "mine", "silo", "container", "vault", "subway");
 
     /** One bunker: its kind and state, and in world blocks the way in and its blast door. */
     public record Found(String kind, String state, int x, int y, int z, int doorX, int doorY, int doorZ, Place place) {
@@ -20,7 +20,7 @@ public final class Bunkers {
 
     /**
      * The places within radius of (x, z) that may hold a bunker of a kind (null: any), nearest
-     * first: downtowns (towers, and the old cities' shelters), ports (ships), towns (shelters) and
+     * first: downtowns (towers, and the old cities' shelters), ports (ships, container yards), towns (shelters) and
      * hideouts (forest hatches, old mines) and farms (silos).
      */
     public static List<Place> candidates(County county, int x, int z, String kind, int radius) {
@@ -29,7 +29,7 @@ public final class Bunkers {
         if (kind == null || kind.equals("tower") || kind.equals("floor") || kind.equals("shelter")) {
             out.addAll(nearest(places, PlaceType.DOWNTOWN, x, z, 3));
         }
-        if (kind == null || kind.equals("ship")) {
+        if (kind == null || kind.equals("ship") || kind.equals("container")) {
             out.addAll(nearest(places, PlaceType.PORT, x, z, 3));
         }
         if (kind == null || kind.equals("shelter") || kind.equals("vault")) {
