@@ -119,10 +119,10 @@ public class StrikeFilmTest implements FabricClientGameTest {
      * ten to eighteen high with alleys between them, from 160 blocks south of the mark to 60 north.
      */
     private static void street(ServerLevel level) {
-        BlockState road = Blocks.GRAY_CONCRETE.defaultBlockState(), walk = Blocks.SMOOTH_STONE.defaultBlockState();
+        BlockState road = Blocks.POLISHED_ANDESITE.defaultBlockState(), walk = Blocks.SMOOTH_STONE.defaultBlockState();
         BlockState air = Blocks.AIR.defaultBlockState();
         BlockState[] walls = {Blocks.BRICKS.defaultBlockState(), Blocks.STONE_BRICKS.defaultBlockState(),
-                Blocks.LIGHT_GRAY_CONCRETE.defaultBlockState(), Blocks.SANDSTONE.defaultBlockState()};
+                Blocks.STONE.defaultBlockState(), Blocks.SANDSTONE.defaultBlockState()};
         BlockPos.MutableBlockPos p = new BlockPos.MutableBlockPos();
         for (int z = -170; z <= 70; z++) {
             for (int x = -26; x <= 26; x++) {
