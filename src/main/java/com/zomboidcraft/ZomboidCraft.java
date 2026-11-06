@@ -90,6 +90,7 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.gear.Broadcasts.register();
         com.zomboidcraft.gear.CommandNet.register();
         com.zomboidcraft.gear.HuntBoard.register();
+        com.zomboidcraft.gear.StrikeRadio.register();
         com.zomboidcraft.loot.Nearby.register();
         Loot.register();
         com.zomboidcraft.combat.rolls.Rolls.register();

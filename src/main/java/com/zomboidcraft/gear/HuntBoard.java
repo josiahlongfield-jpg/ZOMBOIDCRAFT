@@ -355,6 +355,7 @@ public final class HuntBoard {
             log.add(o);
         }
         root.add("log", log);
+        root.add("strike", StrikeRadio.json(player));
         ServerPlayNetworking.send(player, new Sync(root.toString()));
     }
 

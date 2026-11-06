@@ -10,7 +10,8 @@ import net.minecraft.client.Minecraft;
 /**
  * The hunt board as this client last heard it, for the UI thread's page: {@link #board()} is the server's JSON,
  * {total, hears, entries:[{id, kind, title, where, doneWhen, gives, caption, status, credit, time, doneAt, seen}],
- * log:[{text, time}]}. {@link #hears()} says whether the player can open it (a comms headset, or a live military or
+ * log:[{text, time}], strike:{ready, readyAt, bonus, mine, pending?:{type, mark, names}, last?:{type, day, kills,
+ * friendlies}}}. {@link #hears()} says whether the player can open it (a comms headset, or a live military or
  * field radio); {@link #seen} drops an entry's "New" tag.
  */
 public final class HuntBoardClient {
