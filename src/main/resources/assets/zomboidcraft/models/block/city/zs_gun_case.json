@@ -1,0 +1,108 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_plastic_black": "zomboidcraft:block/city/home_plastic_black",
+    "zs_gun_case": "zomboidcraft:block/city/zs_gun_case",
+    "particle": "zomboidcraft:block/city/zs_gun_case"
+  },
+  "elements": [
+    {
+      "from": [
+        0.5,
+        0,
+        6
+      ],
+      "to": [
+        15.5,
+        2.6,
+        10.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#zs_gun_case"
+        },
+        "south": {
+          "texture": "#zs_gun_case"
+        },
+        "east": {
+          "texture": "#zs_gun_case"
+        },
+        "west": {
+          "texture": "#zs_gun_case"
+        },
+        "up": {
+          "texture": "#zs_gun_case"
+        },
+        "down": {
+          "texture": "#zs_gun_case",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        2.6,
+        7.6
+      ],
+      "to": [
+        10,
+        3.2,
+        8.8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_plastic_black"
+        },
+        "south": {
+          "texture": "#home_plastic_black"
+        },
+        "east": {
+          "texture": "#home_plastic_black"
+        },
+        "west": {
+          "texture": "#home_plastic_black"
+        },
+        "up": {
+          "texture": "#home_plastic_black"
+        },
+        "down": {
+          "texture": "#home_plastic_black"
+        }
+      }
+    },
+    {
+      "from": [
+        15.5,
+        0.4,
+        6.8
+      ],
+      "to": [
+        16,
+        2.2,
+        9.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#zs_gun_case"
+        },
+        "south": {
+          "texture": "#zs_gun_case"
+        },
+        "east": {
+          "texture": "#zs_gun_case",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#zs_gun_case"
+        },
+        "up": {
+          "texture": "#zs_gun_case"
+        },
+        "down": {
+          "texture": "#zs_gun_case"
+        }
+      }
+    }
+  ]
+}

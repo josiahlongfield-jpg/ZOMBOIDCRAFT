@@ -33,7 +33,8 @@ import net.minecraft.world.phys.Vec3;
  * so they never time out) and the walkers stand up there, dressed for the story. Each mark goes once.
  * <p>
  * Also hands the sandbox's Randomized Road Stories Chance (VehicleStoryChance, LOOT's wiring) and Randomized
- * Building Chance (SurvivorHouseChance, the house stories) to the generator.
+ * Building Chance (SurvivorHouseChance, the house stories) and Randomized Zone Stories Chance (ZoneStoryChance, the zone
+ * stories) to the generator.
  */
 public final class StoryMarks {
     /** A body or a knot of walkers at (x, y, z). */
@@ -64,6 +65,7 @@ public final class StoryMarks {
 
     public static void register() {
         RoadStories.setRate(() -> RoadStories.rate(com.zomboidcraft.sandbox.Sandbox.value("VehicleStoryChance")));
+        com.zomboidcraft.world.county.ZoneStories.setRate(() -> RoadStories.rate(com.zomboidcraft.sandbox.Sandbox.value("ZoneStoryChance")));
         com.zomboidcraft.world.county.House.setStoryRate(() -> RoadStories.rate(com.zomboidcraft.sandbox.Sandbox.value("SurvivorHouseChance")));
         ServerTickEvents.END_SERVER_TICK.register(StoryMarks::tick);
     }

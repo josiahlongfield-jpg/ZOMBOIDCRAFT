@@ -1,0 +1,172 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "sb_towel_a": "zomboidcraft:block/city/sb_towel_a",
+    "yd_cord": "zomboidcraft:block/city/yd_cord",
+    "zs_tote": "zomboidcraft:block/city/zs_tote",
+    "particle": "zomboidcraft:block/city/zs_tote"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        6
+      ],
+      "to": [
+        13,
+        8,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#zs_tote"
+        },
+        "south": {
+          "texture": "#zs_tote"
+        },
+        "east": {
+          "texture": "#zs_tote"
+        },
+        "west": {
+          "texture": "#zs_tote"
+        },
+        "up": {
+          "texture": "#zs_tote"
+        },
+        "down": {
+          "texture": "#zs_tote",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4.5,
+        8,
+        7.6
+      ],
+      "to": [
+        5.5,
+        11,
+        8.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#yd_cord"
+        },
+        "south": {
+          "texture": "#yd_cord"
+        },
+        "east": {
+          "texture": "#yd_cord"
+        },
+        "west": {
+          "texture": "#yd_cord"
+        },
+        "up": {
+          "texture": "#yd_cord"
+        },
+        "down": {
+          "texture": "#yd_cord"
+        }
+      }
+    },
+    {
+      "from": [
+        10.5,
+        8,
+        7.6
+      ],
+      "to": [
+        11.5,
+        11,
+        8.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#yd_cord"
+        },
+        "south": {
+          "texture": "#yd_cord"
+        },
+        "east": {
+          "texture": "#yd_cord"
+        },
+        "west": {
+          "texture": "#yd_cord"
+        },
+        "up": {
+          "texture": "#yd_cord"
+        },
+        "down": {
+          "texture": "#yd_cord"
+        }
+      }
+    },
+    {
+      "from": [
+        5.5,
+        10.4,
+        7.6
+      ],
+      "to": [
+        10.5,
+        11,
+        8.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#yd_cord"
+        },
+        "south": {
+          "texture": "#yd_cord"
+        },
+        "east": {
+          "texture": "#yd_cord"
+        },
+        "west": {
+          "texture": "#yd_cord"
+        },
+        "up": {
+          "texture": "#yd_cord"
+        },
+        "down": {
+          "texture": "#yd_cord"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        7,
+        6.6
+      ],
+      "to": [
+        10,
+        9.4,
+        9.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sb_towel_a"
+        },
+        "south": {
+          "texture": "#sb_towel_a"
+        },
+        "east": {
+          "texture": "#sb_towel_a"
+        },
+        "west": {
+          "texture": "#sb_towel_a"
+        },
+        "up": {
+          "texture": "#sb_towel_a"
+        },
+        "down": {
+          "texture": "#sb_towel_a"
+        }
+      }
+    }
+  ]
+}

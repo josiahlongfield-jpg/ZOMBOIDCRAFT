@@ -173,10 +173,11 @@ public final class CountyGen {
     /**
      * Zomboid's road stories ({@link RoadStories}): each piece stood on the ground where it lands in this chunk
      * (the story picked a level stretch, so the asphalt has no half steps there), left out on a place, the
-     * railway, a bridge or the water. The cars, bodies and walkers go to the chunk writer.
+     * railway, a bridge or the water. The cars, bodies and walkers go to the chunk writer. Then the zone stories
+     * ({@link ZoneStories}), out in the country on the same terms.
      */
     private void stories(int bx, int bz, Column[] cols, List<Road> roads, ChunkSink out) {
-        RoadStories.place(county, roads, bx, bz, new RoadStories.Out() {
+        RoadStories.Out put = new RoadStories.Out() {
             @Override
             public void block(int x, int z, int dy, String block) {
                 Column c = cols[(z - bz) * 16 + (x - bx)];
@@ -192,7 +193,9 @@ public final class CountyGen {
                     out.vehicle(x, c.top + 1, z, yaw, models, seed);
                 }
             }
-        });
+        };
+        RoadStories.place(county, roads, bx, bz, put);
+        ZoneStories.place(county, bx, bz, put);
     }
 
     /**
@@ -444,6 +447,9 @@ public final class CountyGen {
         int g0 = Math.floorDiv(bx - TREE_REACH, TREE_GRID), g1 = Math.floorDiv(bx + 15 + TREE_REACH, TREE_GRID);
         int h0 = Math.floorDiv(bz - TREE_REACH, TREE_GRID), h1 = Math.floorDiv(bz + 15 + TREE_REACH, TREE_GRID);
         List<Road> roads = county.roadsNear(bx - 24, bz - 24, bx + 40, bz + 40);
+        // the zone stories' ground: no tree stands in it, no long grass grows over it
+        List<ZoneStories.Scene> camps = ZoneStories.near(county, bx - TREE_REACH - TREE_GRID - 24, bz - TREE_REACH - TREE_GRID - 24,
+                bx + 15 + TREE_REACH + TREE_GRID + 24, bz + 15 + TREE_REACH + TREE_GRID + 24);
         for (int gx = g0; gx <= g1; gx++) {
             for (int gz = h0; gz <= h1; gz++) {
                 SplittableRandom rng = new SplittableRandom(Noise.hash(county.seed ^ 0x7EEEL, gx, gz));
@@ -463,7 +469,7 @@ public final class CountyGen {
                 for (Road r : roads) {
                     r.nearest(x, z, hit);
                 }
-                if (blocked || cleared(hideouts, x, z, County.CLEARING + 2) || (hit.road != null && hit.distance < hit.road.kind.half + 4)
+                if (blocked || cleared(hideouts, x, z, County.CLEARING + 2) || ZoneStories.inside(camps, x, z, 3) || (hit.road != null && hit.distance < hit.road.kind.half + 4)
                         || RailGen.distance(county, x + 0.5, z + 0.5, 10) < 9) {
                     continue;
                 }
@@ -510,6 +516,14 @@ public final class CountyGen {
             SplittableRandom rng = new SplittableRandom(Noise.hash(county.seed ^ 0x6A55L, x, z));
             double r = rng.nextDouble();
             int y = col.top + 1;
+            if (ZoneStories.inside(camps, x, z, 0)) {
+                // a camp's ground is trodden: short grass and leaf litter, nothing tall over what they left
+                if (!col.shore && r < 0.3) {
+                    out.set(x, y, z, col.forest > 0.55 && r < 0.15 ? "minecraft:leaf_litter[segment_amount=" + (1 + rng.nextInt(4))
+                            + ",facing=" + DIRS[rng.nextInt(4)] + "]" : "minecraft:short_grass");
+                }
+                continue;
+            }
             if (col.shore) {
                 if (r < 0.25) {
                     out.set(x, y, z, "minecraft:tall_grass[half=lower]");

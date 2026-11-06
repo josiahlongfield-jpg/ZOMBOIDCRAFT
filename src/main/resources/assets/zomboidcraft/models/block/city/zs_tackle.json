@@ -1,0 +1,204 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hw_chrome": "zomboidcraft:block/city/hw_chrome",
+    "zs_tackle": "zomboidcraft:block/city/zs_tackle",
+    "zs_tray": "zomboidcraft:block/city/zs_tray",
+    "particle": "zomboidcraft:block/city/zs_tackle"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        5
+      ],
+      "to": [
+        13,
+        4.5,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#zs_tackle"
+        },
+        "south": {
+          "texture": "#zs_tackle"
+        },
+        "east": {
+          "texture": "#zs_tackle"
+        },
+        "west": {
+          "texture": "#zs_tackle"
+        },
+        "up": {
+          "texture": "#zs_tray"
+        },
+        "down": {
+          "texture": "#zs_tackle",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        4.5,
+        11.6
+      ],
+      "to": [
+        13,
+        9.5,
+        12.3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#zs_tackle"
+        },
+        "south": {
+          "texture": "#zs_tackle"
+        },
+        "east": {
+          "texture": "#zs_tackle"
+        },
+        "west": {
+          "texture": "#zs_tackle"
+        },
+        "up": {
+          "texture": "#zs_tackle"
+        },
+        "down": {
+          "texture": "#zs_tackle"
+        }
+      }
+    },
+    {
+      "from": [
+        3.4,
+        4.5,
+        3.4
+      ],
+      "to": [
+        12.6,
+        5.8,
+        6.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#zs_tackle"
+        },
+        "south": {
+          "texture": "#zs_tackle"
+        },
+        "east": {
+          "texture": "#zs_tackle"
+        },
+        "west": {
+          "texture": "#zs_tackle"
+        },
+        "up": {
+          "texture": "#zs_tray"
+        },
+        "down": {
+          "texture": "#zs_tackle"
+        }
+      }
+    },
+    {
+      "from": [
+        3.4,
+        5.4,
+        6.6
+      ],
+      "to": [
+        12.6,
+        6.8,
+        9.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#zs_tackle"
+        },
+        "south": {
+          "texture": "#zs_tackle"
+        },
+        "east": {
+          "texture": "#zs_tackle"
+        },
+        "west": {
+          "texture": "#zs_tackle"
+        },
+        "up": {
+          "texture": "#zs_tray"
+        },
+        "down": {
+          "texture": "#zs_tackle"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        4.5,
+        6
+      ],
+      "to": [
+        3.4,
+        6.2,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hw_chrome"
+        },
+        "south": {
+          "texture": "#hw_chrome"
+        },
+        "east": {
+          "texture": "#hw_chrome"
+        },
+        "west": {
+          "texture": "#hw_chrome"
+        },
+        "up": {
+          "texture": "#hw_chrome"
+        },
+        "down": {
+          "texture": "#hw_chrome"
+        }
+      }
+    },
+    {
+      "from": [
+        12.6,
+        4.5,
+        6
+      ],
+      "to": [
+        13,
+        6.2,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hw_chrome"
+        },
+        "south": {
+          "texture": "#hw_chrome"
+        },
+        "east": {
+          "texture": "#hw_chrome"
+        },
+        "west": {
+          "texture": "#hw_chrome"
+        },
+        "up": {
+          "texture": "#hw_chrome"
+        },
+        "down": {
+          "texture": "#hw_chrome"
+        }
+      }
+    }
+  ]
+}
