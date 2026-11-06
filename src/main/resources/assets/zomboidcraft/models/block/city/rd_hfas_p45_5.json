@@ -1,0 +1,75 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_plate_rust": "zomboidcraft:block/city/bunk_plate_rust",
+    "hf_armour_streak": "zomboidcraft:block/city/hf_armour_streak",
+    "particle": "zomboidcraft:block/city/hf_armour_streak"
+  },
+  "elements": [
+    {
+      "from": [
+        -5.414,
+        0,
+        6.586
+      ],
+      "to": [
+        18.586,
+        16,
+        9.586
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hf_armour_streak",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#bunk_plate_rust",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#hf_armour_streak"
+        },
+        "west": {
+          "texture": "#hf_armour_streak"
+        },
+        "up": {
+          "texture": "#bunk_plate_rust",
+          "uv": [
+            0,
+            6.586,
+            16,
+            9.586
+          ]
+        },
+        "down": {
+          "texture": "#bunk_plate_rust",
+          "uv": [
+            0,
+            6.414,
+            16,
+            9.414
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          6.586,
+          8,
+          6.586
+        ],
+        "axis": "y",
+        "angle": 45.0
+      }
+    }
+  ]
+}
