@@ -71,10 +71,10 @@ public final class Rooms {
     // ---------------------------------------------------------------- traffic
 
     /** The corner readout, sent on walking into a counted room (type -1: you've left it). */
-    public record Status(int type, int grade, String next) implements CustomPacketPayload {
+    public record Status(int room, int grade, String next) implements CustomPacketPayload {
         public static final Type<Status> TYPE = new Type<>(ZomboidCraft.id("base_room_status"));
         public static final StreamCodec<RegistryFriendlyByteBuf, Status> CODEC = StreamCodec.of((buf, s) -> {
-            buf.writeVarInt(s.type);
+            buf.writeVarInt(s.room);
             buf.writeVarInt(s.grade);
             buf.writeUtf(s.next);
         }, buf -> new Status(buf.readVarInt(), buf.readVarInt(), buf.readUtf()));

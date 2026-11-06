@@ -25,7 +25,7 @@ public final class BaseClient {
     public static void register() {
         ClientPlayNetworking.registerGlobalReceiver(Claims.Sync.TYPE, (payload, context) -> Claims.clientView(payload.claims()));
         ClientPlayNetworking.registerGlobalReceiver(Rooms.Status.TYPE, (payload, context) ->
-                context.client().execute(() -> RoomTape.show(payload.type(), payload.grade(), payload.next())));
+                context.client().execute(() -> RoomTape.show(payload.room(), payload.grade(), payload.next())));
         ClientPlayNetworking.registerGlobalReceiver(Rooms.Report.TYPE, (payload, context) -> {
             report = List.copyOf(payload.lines());
             reportAt = System.currentTimeMillis();
