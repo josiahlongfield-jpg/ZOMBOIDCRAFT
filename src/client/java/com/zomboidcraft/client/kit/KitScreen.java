@@ -646,8 +646,8 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
         KitDraw.caps(g, font, player.getName().getString(), x + 36, y + 7, KitDraw.BRIGHT, 1.3f);
         long day = minecraft.level == null ? 1 : Math.floorDiv(minecraft.level.getDefaultClockTime(), 24000L) + 1;
         var profile = com.zomboidcraft.survival.character.Traits.profile(player);
-        var job = profile == null ? null : com.zomboidcraft.survival.character.CharacterData.occupation(profile.occupation());
-        KitDraw.text(g, font, (job == null ? "Survivor" : job.name()) + " · day " + day, x + 36, y + 19, KitDraw.DIM, 0.9f);
+        var job = profile == null ? null : com.zomboidcraft.survival.character.Traits.occupationName(profile.occupation());
+        KitDraw.text(g, font, (job == null ? "Survivor" : job) + " · day " + day, x + 36, y + 19, KitDraw.DIM, 0.9f);
 
         // Q · pages · E
         String[] labels = new String[Page.values().length];

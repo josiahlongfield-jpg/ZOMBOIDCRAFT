@@ -962,8 +962,11 @@ public final class ZcConfig {
         public boolean nutrition = true;
         /** Real minutes in one Zomboid day for the needs clock (Zomboid's default day length is one hour). */
         public double dayMinutes = 60;
-        /** Zomboid's "stats decrease speed": how fast hunger and the calorie burn climb (0.5 slow, 2 fast). */
-        public double statsDecrease = 1.0;
+        /**
+         * Zomboid's Stats Decrease: how fast hunger, thirst, tiredness and the calorie burn climb. very_fast, fast, normal,
+         * slow or very_slow. Marines default to slow (Josiah 2026-11-06): needs are upkeep, not desperation.
+         */
+        public String statsDecreaseSpeed = "slow";
         /** Calories an adult at rest burns in a Zomboid day; running, loads and cold burn more. */
         public double caloriesPerDay = 2000;
         /** How quickly the calorie bank moves your weight (1 = Zomboid's pace, approximately). */
@@ -972,6 +975,8 @@ public final class ZcConfig {
         public double regenPerHour = 3;
         /** Zomboid's character creation (occupation and traits) on your first join and after each death. */
         public boolean characterCreation = true;
+        /** Players are marines: a specialist role and two trait picks instead of Zomboid's civilian jobs (NPCs stay civilians). */
+        public boolean marines = true;
         /** Zomboid's Free Trait Points: added to everyone's budget in character creation (-100 to 100). */
         public int freeTraitPoints = 0;
         /**
