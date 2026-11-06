@@ -130,16 +130,11 @@ public final class OperatorView {
             reloading = true;
             queue.clear();
             boolean empty = step > 1.25f && step < 2;
-            if (empty && skin.clips.containsKey(EMPTY_OUT)) {
-                // a gun with its own empty reload (the PM's slide locked back: out, in, the slide let go)
-                queue.add(EMPTY_IN);
-                queue.add(EMPTY_CHARGE);
-                play(skin, EMPTY_OUT, now, 0.12f);
-            } else {
-                queue.add(IN);
-                if (empty) queue.add(CHARGE);
-                play(skin, OUT, now, 0.12f);
-            }
+            // onto an empty gun, a gun's own empty reload where its model has one (the PM's slide locked back: its own
+            // out and in, then the slide let go; the Glock's own slide release after its usual out and in)
+            queue.add(empty ? own(skin, EMPTY_IN, IN) : IN);
+            if (empty) queue.add(own(skin, EMPTY_CHARGE, CHARGE));
+            play(skin, empty ? own(skin, EMPTY_OUT, OUT) : OUT, now, 0.12f);
         } else if (step == 0 && reloading && remaining(skin, now) > 0.35f) {
             // called off (or done well early): back to the idle
             reloading = false;
@@ -301,6 +296,11 @@ public final class OperatorView {
     /** Whether the operator's first person is drawing the rifle now (RifleView leaves its own arms off). */
     public static boolean busy() {
         return reloading;
+    }
+
+    /** A model's own clip where it has one, else the usual. */
+    private static String own(NpcSkin skin, String clip, String usual) {
+        return skin.clips.containsKey(clip) ? clip : usual;
     }
 
     private static void play(NpcSkin skin, String name, float at, float fade) {
