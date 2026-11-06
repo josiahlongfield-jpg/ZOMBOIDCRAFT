@@ -611,7 +611,9 @@ final class CampBlackPine extends FrameSite {
             }
             double cx = x + s / 2.0 + 0.5, cz = z + s / 2.0 + 0.5;
             Round.wall(p, cx, cz, 3.6, deck + 1, deck + 6, "wtw", 0);
-            Round.roof(p, cx, cz, 3.6, Round.cone(3.6), deck + 7, "wtw");
+            int top = Round.roof(p, cx, cz, 3.6, Round.cone(3.6), deck + 7, "wtw");
+            // the red obstruction light on its peak (refs/camp/water-tower-mil)
+            set(x + s / 2, top, z + s / 2, "aviation_light");
             for (int y = 1; y <= deck; y++) {
                 set(x + s / 2, y, z + s + 1, "ladder[facing=south]");
             }
@@ -661,6 +663,11 @@ final class CampBlackPine extends FrameSite {
                 if (alongX) {
                     camp.boom(gx - 4, gz + inZ * 2, 8, chance() < 0.4);
                 }
+                // the gate's signal on its post by the booth: red to whoever comes up the road
+                int lx = gx + (alongX ? 5 : -inX * 2), lz = gz + (alongX ? -inZ * 2 : 5);
+                String out = g[2] == 0 ? "north" : g[2] == 1 ? "east" : g[2] == 2 ? "south" : "west";
+                set(lx, 1, lz, "cp_post");
+                set(lx, 2, lz, "hw_lane_stop_lit[facing=" + out + "]");
                 for (int k = -1; k <= 1; k += 2) {
                     int jx = alongX ? gx + k * 6 : gx + inX * 2, jz = alongX ? gz + inZ * 2 : gz + k * 6;
                     set(jx, 1, jz, "jersey_barrier[facing=" + (alongX ? "north" : "east") + "]");
