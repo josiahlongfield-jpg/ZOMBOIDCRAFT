@@ -291,7 +291,7 @@ public class BaseMoveTest implements FabricClientGameTest {
                 barracks.getX() + 17.5, barracks.getY() + 1, barracks.getZ() + 6.5, 180f, 40f));
         ctx.waitTicks(10);
         yard = barracks;
-        LOG.info("ZCBASE grow check: {}", sp.getServer().computeOnServer(s -> {
+        LOG.info("ZCBASE grow check: {}", sp.getServer().<String>computeOnServer(s -> {
             ServerPlayer p = player(s);
             Build.Spot spot = Build.POST.spot(s.overworld(), barracks.offset(17, 0, 4), Direction.UP, Direction.NORTH);
             return "at " + p.blockPosition() + " missing " + Build.POST.missing(p) + " spot " + spot.ok() + " " + spot.problem() + " " + spot.pos()
