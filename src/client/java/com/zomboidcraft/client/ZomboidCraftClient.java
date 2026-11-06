@@ -41,6 +41,8 @@ public class ZomboidCraftClient implements ClientModInitializer {
         com.zomboidcraft.client.kit.CharacterScreen.register();
         com.zomboidcraft.client.kit.AppearanceScreen.register();
         com.zomboidcraft.client.survivor.SurvivorLayer.register();
+        com.zomboidcraft.client.operator.OperatorLayer.register();
+        com.zomboidcraft.client.operator.OperatorView.register();
         com.zomboidcraft.client.hud.QuickWheel.register();
         com.zomboidcraft.client.map.MapStore.register();
         com.zomboidcraft.client.map.CountyAtlas.register();

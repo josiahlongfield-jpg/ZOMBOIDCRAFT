@@ -139,7 +139,8 @@ public final class Survivors {
     /** Whether the player this render state is for is drawn as a survivor. */
     public static boolean drawsAsSurvivor(AvatarRenderState state) {
         Minecraft mc = Minecraft.getInstance();
-        return mc.level != null && mc.level.getEntity(state.id) instanceof Player player && !hiddenSpectator(player, state) && active(player);
+        return mc.level != null && mc.level.getEntity(state.id) instanceof Player player && !hiddenSpectator(player, state) && active(player)
+                && !com.zomboidcraft.client.operator.Operator.active(player);
     }
 
     /** Whether this player is drawn as a survivor (they have a look, and this PC has its pack). */
@@ -431,13 +432,25 @@ public final class Survivors {
 
     private static final java.util.Set<PlayerModel> SHRUNK = java.util.Collections.newSetFromMap(new java.util.WeakHashMap<>());
 
+    /** As hide below, for a figure someone else's layer draws whole (the Tarkov operator): held items shrunk away too. */
+    public static void hideAll(PlayerModel model) {
+        HIDDEN.add(model);
+        SHRUNK.add(model);
+        model.rightArm.xScale = model.rightArm.yScale = model.rightArm.zScale = 0;
+        model.leftArm.xScale = model.leftArm.yScale = model.leftArm.zScale = 0;
+        hide(model, true);
+    }
+
     /**
      * Minecraft's own parts hidden while a survivor is drawn over them; shown again (and the arms put back) before the
      * model is posed for the next player drawn with it.
      */
     public static void hide(PlayerModel model, boolean hidden) {
         if (!hidden) {
-            if (SHRUNK.remove(model)) model.rightArm.xScale = model.rightArm.yScale = model.rightArm.zScale = 1;
+            if (SHRUNK.remove(model)) {
+                model.rightArm.xScale = model.rightArm.yScale = model.rightArm.zScale = 1;
+                model.leftArm.xScale = model.leftArm.yScale = model.leftArm.zScale = 1;
+            }
             if (!HIDDEN.remove(model)) return;
             model.rightArm.resetPose();
             model.leftArm.resetPose();

@@ -56,7 +56,7 @@ public class HeadGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
             return;
         }
         ItemStack head = player.getItemBySlot(EquipmentSlot.HEAD);
-        if (!(head.getItem() instanceof HeadGearItem)) {
+        if (!(head.getItem() instanceof HeadGearItem) || com.zomboidcraft.client.operator.Operator.drawn(state)) {
             return;
         }
         // a Zomboid survivor wears Zomboid's own helmet for it (client/survivor/SurvivorClothes)

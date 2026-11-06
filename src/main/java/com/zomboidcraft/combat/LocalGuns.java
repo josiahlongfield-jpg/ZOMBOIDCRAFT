@@ -58,6 +58,13 @@ public final class LocalGuns {
         public Sights sights;
         /** Sights it has no mesh of its own for, drawn from our meshes on top of it (our flip-up pair). */
         public java.util.List<Part> irons;
+        /**
+         * Its own reload lengths in seconds, [onto a chambered round, onto an empty gun], for a gun that brings its own
+         * reload animations (the operator's rifle, 2026-11-06): the game's reload is paced to them like a clip's.
+         */
+        public float[] reload;
+        /** Its can is part of the gun (the operator's kitted M4A1): it fires quiet with no muzzle attachment of ours. */
+        public boolean suppressed;
         /** Resolved: the anchor's numbers with this gun's laid over them. */
         transient ZcConfig.GunStats merged;
         transient GunType type;
@@ -181,7 +188,9 @@ public final class LocalGuns {
      * long as that reload runs (Josiah 2026-11-04: "Your clip lengths"); 1 for every other gun.
      */
     public static float reloadPace(ItemStack gun, GunType type, boolean charge, int n) {
-        float clip = clipTicks(gun.get(ID));
+        Spec spec = of(gun);
+        float clip = spec != null && spec.reload != null && spec.reload.length >= 2 ? spec.reload[charge ? 1 : 0] * 20
+                : clipTicks(gun.get(ID));
         if (clip <= 0) {
             return 1;
         }
@@ -345,7 +354,15 @@ public final class LocalGuns {
      * magazine): each a share of the clip (0 to 1), or below 0 for none; release plays only the handle's release (a
      * bolt catch dropped rather than a handle pulled).
      */
-    public record Cues(float magOut, float magIn, float charge, boolean release) {
+    public record Cues(float magOut, float magIn, float charge, boolean release, @Nullable Cues tactical) {
+        public Cues(float magOut, float magIn, float charge, boolean release) {
+            this(magOut, magIn, charge, release, null);
+        }
+
+        /** The cues for this reload: a reload onto a chambered round has its own when the file gives them ("tactical"). */
+        public Cues forCharge(boolean charge) {
+            return charge || tactical == null ? this : tactical;
+        }
     }
 
     private static final Map<String, java.util.Optional<Cues>> CUES = new java.util.concurrent.ConcurrentHashMap<>();
@@ -374,8 +391,15 @@ public final class LocalGuns {
                 return java.util.Optional.empty();
             }
             java.util.function.Function<String, Float> at = k -> o.has(k) ? o.get(k).getAsFloat() / dur : -1f;
+            Cues tactical = null;
+            if (o.has("tactical")) {
+                com.google.gson.JsonObject t = o.getAsJsonObject("tactical");
+                float td = t.get("dur").getAsFloat();
+                java.util.function.Function<String, Float> tat = k -> t.has(k) && td > 0 ? t.get(k).getAsFloat() / td : -1f;
+                tactical = new Cues(tat.apply("mag_out"), tat.apply("mag_in"), -1f, false);
+            }
             return java.util.Optional.of(new Cues(at.apply("mag_out"), at.apply("mag_in"), at.apply("charge"),
-                    o.has("charge_sound") && o.get("charge_sound").getAsString().equals("release")));
+                    o.has("charge_sound") && o.get("charge_sound").getAsString().equals("release"), tactical));
         } catch (Exception e) {
             ZomboidCraft.LOGGER.error("Couldn't read the reload sound cues in {}", f, e);
             return java.util.Optional.empty();

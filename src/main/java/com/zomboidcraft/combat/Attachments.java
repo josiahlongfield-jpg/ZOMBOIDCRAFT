@@ -439,7 +439,9 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
     }
 
     public static boolean suppressed(ItemStack gun) {
-        return key(gun, Slot.MUZZLE) != null || GunType.of(gun) == GunType.SUPPRESSED_RIFLE;     // its can is built in
+        LocalGuns.Spec local = LocalGuns.of(gun);
+        return key(gun, Slot.MUZZLE) != null || GunType.of(gun) == GunType.SUPPRESSED_RIFLE     // its can is built in
+                || local != null && local.suppressed;
     }
 
     /** Looking down the sights shows the scope's eyepiece picture, not the gun: a scope you look into. */

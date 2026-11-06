@@ -289,6 +289,12 @@ public final class RifleView {
                 || state.avatarRenderState == null) {
             return false;
         }
+        // the Tarkov operator's own arms and rifle, every move Tarkov's clip (client/operator)
+        if (com.zomboidcraft.client.operator.OperatorView.submit(pose, out, light, state, gun)) {
+            aimShown = 0;
+            rail = null;
+            return true;
+        }
         use(gunType);
         ZcConfig config = ZcConfig.get();
         float age = state.avatarRenderState.ageInTicks;
@@ -571,6 +577,7 @@ public final class RifleView {
      * shows from the next frame drawn.
      */
     public static void fired(LocalPlayer player, boolean flash) {
+        com.zomboidcraft.client.operator.OperatorView.fired();
         hammerShot = System.nanoTime();
         hammer = 0;
         shotTick = player.tickCount;

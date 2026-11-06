@@ -24,6 +24,8 @@ public abstract class PlayerModelMixin {
     @Inject(method = "setupAnim(Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;)V", at = @At("TAIL"))
     private void zomboidcraft$weaponHold(AvatarRenderState state, CallbackInfo ci) {
         PlayerModel model = (PlayerModel) (Object) this;
+        // the Tarkov operator draws the whole figure himself (client/operator): none of the vanilla model shows
+        if (com.zomboidcraft.client.operator.Operator.hideVanilla(model, state)) return;
         boolean survivor = Survivors.before(model, state);
         HoldPoses.apply(model, state);
         com.zomboidcraft.client.cars.CarHands.pose(model, state);

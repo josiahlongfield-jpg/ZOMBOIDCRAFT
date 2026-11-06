@@ -769,7 +769,7 @@ public final class Guns {
      * ticks as the client stretches it: the magazine out, in, and the handle (or bolt catch) once each.
      */
     private static void cueSounds(ServerPlayer player, ItemStack gun, GunType type, State st) {
-        LocalGuns.Cues c = st.cues;
+        LocalGuns.Cues c = st.cues.forCharge(st.needsCharge);
         float u = st.reloadTick / (float) Math.max(1, st.needsCharge ? type.chargeDone : type.tacticalDone);
         if (c.magOut() >= 0 && u >= c.magOut() && (st.cuesPlayed & 8) == 0 && st.reloadTick > 0) {
             st.cuesPlayed |= 8;
