@@ -283,8 +283,8 @@ public class BaseMoveTest implements FabricClientGameTest {
             Skills.addXp(p, Skill.CARPENTRY, Skill.xpForLevel(6));
             p.getInventory().clearContent();
             p.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ModItems.HAMMER));
-            p.getInventory().add(new ItemStack(ModItems.NAILS, 32));
-            p.getInventory().add(new ItemStack(net.minecraft.world.item.Items.OAK_PLANKS, 32));
+            p.getInventory().add(new ItemStack(net.minecraft.world.item.Items.OAK_PLANKS, 16));
+            p.getInventory().add(new ItemStack(ModItems.NAILS, 16));
         });
         String before = sp.getServer().computeOnServer(s -> String.valueOf(com.zomboidcraft.building.base.Claims.baseOf(s.overworld(), player(s).getUUID()).max()));
         sp.getServer().runCommand(String.format(java.util.Locale.ROOT, "tp @a %.2f %d %.2f %.1f %.1f",
