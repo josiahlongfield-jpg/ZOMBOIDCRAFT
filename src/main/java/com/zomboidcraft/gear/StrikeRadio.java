@@ -40,10 +40,10 @@ public final class StrikeRadio {
     private static final double GRID_REACH = 400;
 
     /** C2S: call this strike on this mark ("laser", "smoke" or "grid"); confirm answers a danger close hold. */
-    public record Call(String type, String mark, boolean confirm) implements CustomPacketPayload {
+    public record Call(String strike, String mark, boolean confirm) implements CustomPacketPayload {
         public static final Type<Call> TYPE = new Type<>(ZomboidCraft.id("strike_call"));
         public static final StreamCodec<RegistryFriendlyByteBuf, Call> CODEC = StreamCodec.composite(
-                ByteBufCodecs.STRING_UTF8, Call::type, ByteBufCodecs.STRING_UTF8, Call::mark, ByteBufCodecs.BOOL, Call::confirm, Call::new);
+                ByteBufCodecs.STRING_UTF8, Call::strike, ByteBufCodecs.STRING_UTF8, Call::mark, ByteBufCodecs.BOOL, Call::confirm, Call::new);
 
         @Override
         public Type<? extends CustomPacketPayload> type() {
@@ -109,7 +109,7 @@ public final class StrikeRadio {
             mark = held.at instanceof StrikeCalls.Laser ? StrikeCalls.laser(p) : held.at;
         } else {
             try {
-                type = StrikeCalls.StrikeType.valueOf(c.type().toUpperCase(Locale.ROOT));
+                type = StrikeCalls.StrikeType.valueOf(c.strike().toUpperCase(Locale.ROOT));
             } catch (IllegalArgumentException e) {
                 return;
             }
