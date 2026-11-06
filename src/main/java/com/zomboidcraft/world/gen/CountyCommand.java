@@ -125,6 +125,13 @@ public final class CountyCommand {
                 return 1;
             }
         }
+        if (p.type == PlaceType.HIDEOUT && "mine_adit".equals(p.variant)) {
+            // in the cutting, in front of the boards
+            int[] at = Bunkers.mineFront(p);
+            src.getServer().getCommands().performPrefixedCommand(src, "tp @s " + at[0] + ".5 " + (p.level + 1) + " " + at[1] + ".5");
+            src.sendSuccess(() -> Component.literal("At the boarded portal of " + p), false);
+            return 1;
+        }
         if (p.type == PlaceType.HIDEOUT) {
             // nothing is levelled round a hideout: stand by the hatch, the only ground it knows
             src.getServer().getCommands().performPrefixedCommand(src, "tp @s " + p.centreX() + ".5 " + (p.level + 2) + " " + (p.centreZ() + 3) + ".5");
@@ -158,6 +165,7 @@ public final class CountyCommand {
                     case "ship" -> "at the false plate in the engine room's forward bulkhead";
                     case "shelter" -> "at the top of the stairs down to the boiler room";
                     case "forest" -> "on the hatch under the leaves";
+                    case "mine" -> "in the cutting, at the boards across the old portal";
                     case "vault" -> "at the deposit boxes with no numbers in the bank's vault";
                     case "subway" -> "behind the steel door in the bricked-up arch, on the old platform";
                     default -> "on the hatch in the electrical room";
@@ -165,6 +173,7 @@ public final class CountyCommand {
                 String in = switch (b.kind()) {
                     case "ship" -> "in the ship at ";
                     case "forest" -> "in the woods at ";
+                    case "mine" -> "in the hills at ";
                     case "vault" -> "under the bank in ";
                     case "subway" -> "under the subway: ";
                     default -> "under ";

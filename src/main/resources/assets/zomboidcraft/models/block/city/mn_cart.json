@@ -1,0 +1,206 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_plate_rust": "zomboidcraft:block/city/bunk_plate_rust",
+    "rust": "zomboidcraft:block/city/rust",
+    "particle": "zomboidcraft:block/city/rust"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        3,
+        1
+      ],
+      "to": [
+        14,
+        13,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rust"
+        },
+        "south": {
+          "texture": "#rust"
+        },
+        "east": {
+          "texture": "#rust"
+        },
+        "west": {
+          "texture": "#rust"
+        },
+        "up": {
+          "texture": "#rust"
+        },
+        "down": {
+          "texture": "#rust"
+        }
+      }
+    },
+    {
+      "from": [
+        1.5,
+        12,
+        0.5
+      ],
+      "to": [
+        14.5,
+        13.5,
+        15.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#rust"
+        },
+        "south": {
+          "texture": "#rust"
+        },
+        "east": {
+          "texture": "#rust"
+        },
+        "west": {
+          "texture": "#rust"
+        },
+        "up": {
+          "texture": "#rust"
+        },
+        "down": {
+          "texture": "#rust"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        0,
+        2.5
+      ],
+      "to": [
+        2.5,
+        4,
+        6.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_plate_rust"
+        },
+        "south": {
+          "texture": "#bunk_plate_rust"
+        },
+        "east": {
+          "texture": "#bunk_plate_rust"
+        },
+        "west": {
+          "texture": "#bunk_plate_rust"
+        },
+        "up": {
+          "texture": "#bunk_plate_rust"
+        },
+        "down": {
+          "texture": "#bunk_plate_rust",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        13.5,
+        0,
+        2.5
+      ],
+      "to": [
+        15,
+        4,
+        6.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_plate_rust"
+        },
+        "south": {
+          "texture": "#bunk_plate_rust"
+        },
+        "east": {
+          "texture": "#bunk_plate_rust"
+        },
+        "west": {
+          "texture": "#bunk_plate_rust"
+        },
+        "up": {
+          "texture": "#bunk_plate_rust"
+        },
+        "down": {
+          "texture": "#bunk_plate_rust",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        0,
+        9.5
+      ],
+      "to": [
+        2.5,
+        4,
+        13.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_plate_rust"
+        },
+        "south": {
+          "texture": "#bunk_plate_rust"
+        },
+        "east": {
+          "texture": "#bunk_plate_rust"
+        },
+        "west": {
+          "texture": "#bunk_plate_rust"
+        },
+        "up": {
+          "texture": "#bunk_plate_rust"
+        },
+        "down": {
+          "texture": "#bunk_plate_rust",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        13.5,
+        0,
+        9.5
+      ],
+      "to": [
+        15,
+        4,
+        13.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#bunk_plate_rust"
+        },
+        "south": {
+          "texture": "#bunk_plate_rust"
+        },
+        "east": {
+          "texture": "#bunk_plate_rust"
+        },
+        "west": {
+          "texture": "#bunk_plate_rust"
+        },
+        "up": {
+          "texture": "#bunk_plate_rust"
+        },
+        "down": {
+          "texture": "#bunk_plate_rust",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

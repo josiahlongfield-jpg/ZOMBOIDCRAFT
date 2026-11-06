@@ -253,7 +253,9 @@ public final class CountyGen {
     /** True within a hideout's clearing (reach blocks from its hatch). */
     private static boolean cleared(List<Place> hideouts, int x, int z, double reach) {
         for (Place p : hideouts) {
-            if (!"ghost_station".equals(p.variant) && Math.hypot(x - p.centreX(), z - p.centreZ()) <= reach) {
+            // a mine's spoil and cutting run further out from its portal than a hatch's clues
+            double r = "mine_adit".equals(p.variant) ? reach + 16 : reach;
+            if (!"ghost_station".equals(p.variant) && Math.hypot(x - p.centreX(), z - p.centreZ()) <= r) {
                 return true;
             }
         }

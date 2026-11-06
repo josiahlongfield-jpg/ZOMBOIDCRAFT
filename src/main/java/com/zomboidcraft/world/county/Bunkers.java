@@ -7,12 +7,12 @@ import java.util.List;
 /**
  * Finds the hidden bunkers near a spot. Each one leaves two marks in its place's blocks: "bunker
  * STATE KIND" where you get in (a tower's hatch in its electrical room, a ship's false plate, the
- * top of a shelter's stairs, a forest hatch) and "bunker door" at its blast door straight after.
+ * top of a shelter's stairs, a forest hatch, a mine's boarded portal) and "bunker door" at its blast door straight after.
  * Only building a place shows whether it has one, so the places that may hold one are built (or
  * taken from the cache) nearest first.
  */
 public final class Bunkers {
-    public static final List<String> KINDS = List.of("tower", "ship", "shelter", "forest", "vault", "subway");
+    public static final List<String> KINDS = List.of("tower", "ship", "shelter", "forest", "mine", "vault", "subway");
 
     /** One bunker: its kind and state, and in world blocks the way in and its blast door. */
     public record Found(String kind, String state, int x, int y, int z, int doorX, int doorY, int doorZ, Place place) {
@@ -21,7 +21,7 @@ public final class Bunkers {
     /**
      * The places within radius of (x, z) that may hold a bunker of a kind (null: any), nearest
      * first: downtowns (towers, and the old cities' shelters), ports (ships), towns (shelters) and
-     * hideouts (forest hatches).
+     * hideouts (forest hatches, old mines).
      */
     public static List<Place> candidates(County county, int x, int z, String kind, int radius) {
         List<Place> places = county.placesNear(x - radius, z - radius, x + radius, z + radius, 0);
@@ -37,7 +37,11 @@ public final class Bunkers {
         }
         if (kind == null || kind.equals("forest")) {
             out.addAll(nearest(county.hideoutsNear(x - radius, z - radius, x + radius, z + radius, 0).stream()
-                    .filter(p -> !"ghost_station".equals(p.variant)).toList(), PlaceType.HIDEOUT, x, z, 3));
+                    .filter(p -> "forest_hatch".equals(p.variant)).toList(), PlaceType.HIDEOUT, x, z, 3));
+        }
+        if (kind == null || kind.equals("mine")) {
+            out.addAll(nearest(county.hideoutsNear(x - radius, z - radius, x + radius, z + radius, 0).stream()
+                    .filter(p -> "mine_adit".equals(p.variant)).toList(), PlaceType.HIDEOUT, x, z, 3));
         }
         if (kind == null || kind.equals("subway")) {
             county.ghostStation().filter(p -> Math.hypot(p.centreX() - x, p.centreZ() - z) <= radius).ifPresent(out::add);
@@ -49,6 +53,11 @@ public final class Bunkers {
     /** The world column on the ghost station's old platform just inside its arch, or null without one. */
     public static int[] ghostPlatform(County county) {
         return GhostSite.platform(county);
+    }
+
+    /** In world blocks, the floor of an old mine's cutting in front of its boarded portal. */
+    public static int[] mineFront(Place p) {
+        return MineSite.front(p);
     }
 
     private static List<Place> nearest(List<Place> places, PlaceType type, int x, int z, int n) {
