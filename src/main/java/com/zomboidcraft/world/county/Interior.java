@@ -2433,7 +2433,9 @@ final class Interior {
      */
     enum Tale {
         SAFEHOUSE(0), POKER_NIGHT(4), HOUSE_PARTY(4), FOOTBALL_NIGHT(4), DEAD_DRUNK(5), GUNMAN_IN_BATHROOM(3),
-        LOCKED_BATHROOM(5), BEDROOM_ZED(6), ZOMBIES_EATING(5), POLICE_AT_HOUSE(3), PRISON_ESCAPE(3), STUDENT_NIGHT(3);
+        LOCKED_BATHROOM(5), BEDROOM_ZED(6), ZOMBIES_EATING(5), POLICE_AT_HOUSE(3), PRISON_ESCAPE(3), STUDENT_NIGHT(3),
+        BANDIT_RAID(3), BATHROOM_ZED(4), CORPSE_PSYCHO(1), GUNSLINGER(2), SKELETON_PSYCHO(1), STAG_DO(2), TIN_FOIL_HAT(2),
+        PRISON_ESCAPE_POLICE(2);
 
         final int weight;
 
@@ -2478,6 +2480,14 @@ final class Interior {
             case ZOMBIES_EATING -> eating(f, list);
             case POLICE_AT_HOUSE -> police(f, list);
             case PRISON_ESCAPE -> escape(f, list);
+            case BANDIT_RAID -> bandits(f, list);
+            case BATHROOM_ZED -> bathroomZed(f, list);
+            case CORPSE_PSYCHO -> psycho(f, list, false);
+            case SKELETON_PSYCHO -> psycho(f, list, true);
+            case GUNSLINGER -> gunslinger(f, list);
+            case STAG_DO -> party(f, list, "civilian", 2 + rng.nextInt(3), 2 + rng.nextInt(2), false);
+            case TIN_FOIL_HAT -> tinFoil(f, list);
+            case PRISON_ESCAPE_POLICE -> escape(f, list) && police(f, list);
         };
     }
 
@@ -2760,6 +2770,94 @@ final class Interior {
         scatter(f, r, "home_clothes_pile", 2);
         corpse(f, r, rng.nextBoolean() ? "prisoner" : "civilian");
         walkersIn(f, r, "prisoner", 1 + rng.nextInt(2));
+        return true;
+    }
+
+    /** RDSBanditRaid: raiders came for what the family had; the family dead, the casings, the house turned over. */
+    private boolean bandits(int f, List<Room> list) {
+        Room r = roomOf(list, "living", "kitchen", "dining", "hall");
+        if (r == null) {
+            return false;
+        }
+        for (int i = 0, n = 2 + rng.nextInt(2); i < n; i++) {
+            corpse(f, r, "civilian");
+        }
+        casings(f, r, 4 + rng.nextInt(3));
+        scatter(f, r, "home_clothes_pile", 1);
+        scatter(f, r, "paper", 2);
+        corpse(f, r, "survivor");
+        Room k = roomOf(list, "kitchen");
+        if (k != null) {
+            scatter(f, k, "paper", 2);
+        }
+        walkersIn(f, r, "survivor", rng.nextInt(2));
+        return true;
+    }
+
+    /** RDSBathroomZed: one of them came in and got no further than the bathroom. */
+    private boolean bathroomZed(int f, List<Room> list) {
+        Room r = roomOf(list, "bath", "bath_half");
+        if (r == null) {
+            return false;
+        }
+        scatter(f, r, "blood_splat", 1);
+        walkersIn(f, r, "civilian", 1);
+        return true;
+    }
+
+    /**
+     * RDSCorpsePsycho / RDSSkeletonPsycho: someone in this house kept the dead. The bodies laid out
+     * in a bedroom with the blood under them, or long gone to bones; he's still about.
+     */
+    private boolean psycho(int f, List<Room> list, boolean bones) {
+        Room r = roomOf(list, "bed", "bed_kid", "den", "bed_master");
+        if (r == null) {
+            return false;
+        }
+        for (int i = 0, n = 3 + rng.nextInt(3); i < n; i++) {
+            if (bones) {
+                scatter(f, r, "fm_bones", 1);
+            } else {
+                corpse(f, r, rng.nextBoolean() ? "civilian" : "hoodie");
+            }
+        }
+        scatter(f, r, "blood_splat", bones ? 1 : 3);
+        walkersIn(f, r, "civilian", 1);
+        return true;
+    }
+
+    /** RDSGunslinger: a man who kept a lot of guns and used them at the end; his case, the casings everywhere. */
+    private boolean gunslinger(int f, List<Room> list) {
+        Room r = roomOf(list, "bed_master", "den", "living", "bed");
+        if (r == null) {
+            return false;
+        }
+        corpse(f, r, "civilian");
+        casings(f, r, 6 + rng.nextInt(4));
+        scatter(f, r, "zs_gun_case", 1 + rng.nextInt(2));
+        Room h = roomOf(list, "hall", "living", "kitchen");
+        if (h != null && h != r) {
+            casings(f, h, 3);
+            corpse(f, h, "civilian");
+        }
+        return true;
+    }
+
+    /** RDSTinFoilHat: he saw it coming: the papers, the radio, the tins, and him in the middle of it. */
+    private boolean tinFoil(int f, List<Room> list) {
+        Room r = roomOf(list, "den", "living", "bed");
+        if (r == null) {
+            return false;
+        }
+        scatter(f, r, "paper", 5 + rng.nextInt(4));
+        against(f, r, "home_radio");
+        scatter(f, r, "bunk_tins", 1 + rng.nextInt(2));
+        scatter(f, r, "bunk_jerry_cans", 1);
+        if (rng.nextBoolean()) {
+            corpse(f, r, "civilian");
+        } else {
+            walkersIn(f, r, "civilian", 1);
+        }
         return true;
     }
 }
