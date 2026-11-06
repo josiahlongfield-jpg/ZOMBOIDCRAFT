@@ -14,7 +14,6 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
@@ -40,7 +39,9 @@ public final class AppearanceScreen extends Screen {
     private boolean hairy, close;
     private String bodyHair = "", eyes = "", lips = "", paint = "";
     private final List<Row> rows = new ArrayList<>();
-    private int[] done, random, zoom;
+    private int[] done, random, zoom, figure;
+    /** She stands still facing out and turns as you drag her (Josiah 2026-11-06), whole body and close up. */
+    private final SpinFigure spin = new SpinFigure();
     private boolean ready;
 
     /** One option: its name, the choices (ids and names) and which is picked. */
@@ -354,8 +355,8 @@ public final class AppearanceScreen extends Screen {
             float middle = (y0 + y1) / 2f;
             float lift = (feet - middle) / scale - minecraft.player.getBbHeight() / 2;
             g.enableScissor(x0, y0, x1, y1);
-            InventoryScreen.extractEntityInInventoryFollowsMouse(g, x0, y0, x1, y1, Math.round(scale), lift,
-                    mx, my, minecraft.player);
+            figure = new int[]{x0, y0, x1, y1};
+            spin.draw(g, x0, y0, x1, y1, Math.round(scale), lift, minecraft.player);
             g.disableScissor();
         }
 
@@ -390,6 +391,7 @@ public final class AppearanceScreen extends Screen {
         int hx = pad;
         hx += KitDraw.hint(g, font, "LMB", "Change", hx, height - 15);
         hx += KitDraw.hint(g, font, "Scroll", "Change", hx, height - 15);
+        hx += KitDraw.hint(g, font, "Drag", "Turn", hx, height - 15);
         hx += KitDraw.hint(g, font, "Enter", "Done", hx, height - 15);
         KitDraw.hint(g, font, "Esc", "Game menu", hx, height - 15);
     }
@@ -418,7 +420,22 @@ public final class AppearanceScreen extends Screen {
             randomise();
         } else if (zoom != null && KitDraw.in(mx, my, zoom[0], zoom[1], zoom[2], zoom[3])) {
             close = !close;
+        } else if (figure != null && event.button() == 0) {
+            // take hold of her to turn her round
+            spin.pressed(mx, my, figure[0], figure[1], figure[2], figure[3]);
         }
+        return true;
+    }
+
+    @Override
+    public boolean mouseDragged(MouseButtonEvent event, double dx, double dy) {
+        spin.dragged(event.x());
+        return true;
+    }
+
+    @Override
+    public boolean mouseReleased(MouseButtonEvent event) {
+        spin.released();
         return true;
     }
 
