@@ -88,6 +88,11 @@ public final class LocalGuns {
         /** The sight's mesh in that model, whose reticle is drawn on its glass, and how wide its reticle texture spans (MOA). */
         public String sight;
         public float reticleMoa = 152.4f;
+        /**
+         * Its sight's magnification (the SVDS's PSO 4x, the SV-98's S&B at 5x): above 1 the operator's first person
+         * looks through it as a lens (client ScopeView), its reticle the sight's own; 0 for a red dot or irons.
+         */
+        public float zoom;
         /** Resolved: the anchor's numbers with this gun's laid over them. */
         transient ZcConfig.GunStats merged;
         transient GunType type;

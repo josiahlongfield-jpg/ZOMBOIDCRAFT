@@ -240,12 +240,31 @@ public final class OperatorView {
         LocalGuns.Spec spec = LocalGuns.of(gun);
         int scope = skin.bone(spec != null && spec.sight != null ? spec.sight : SCOPE);
         float lit = Operator.smooth((aim - 0.5f) / 0.5f);
-        if (sightAt != null && scope >= 0 && lit > 0) {
+        // (a magnified sight's reticle is in its lens instead, ScopeView)
+        if (sightAt != null && scope >= 0 && lit > 0 && (spec == null || spec.zoom <= 1)) {
             float moa = spec != null && spec.fp != null ? spec.reticleMoa : 152.4f;
             reticle(skin, model, new Matrix4f(bones[scope]).mul(sightAt), lit, moa, pose, out);
         }
         pose.popPose();
         return true;
+    }
+
+    /**
+     * The magnification of a Tarkov gun's own sight while it is held in the operator's first person (its file's zoom),
+     * or 0: a red dot, irons, or no operator model for it on this PC.
+     */
+    public static double magnification(ItemStack gun) {
+        LocalGuns.Spec spec = LocalGuns.of(gun);
+        if (spec == null || spec.fp == null || spec.zoom <= 1) return 0;
+        String model = Operator.fpModel(gun);
+        return model != null && NpcSkin.get(model) != null ? spec.zoom : 0;
+    }
+
+    /** That sight's reticle (its lens's mark texture in the model), or null for the plain one. */
+    public static net.minecraft.resources.Identifier scopeReticle(ItemStack gun) {
+        String model = Operator.fpModel(gun);
+        NpcSkin skin = model == null ? null : NpcSkin.get(model);
+        return skin == null ? null : skin.texture("reticle", model);
     }
 
     /** The sight's own red reticle, glowing, on its line of sight (sight frame: x right, y up, looking down -z). */

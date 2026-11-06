@@ -90,7 +90,15 @@ public final class ScopeView {
             return 0;
         }
         ItemStack gun = player.getUseItem();
-        if (!GunType.isGun(gun) || !Attachments.scoped(gun) || CombatClient.reloading(gun)) {
+        if (!GunType.isGun(gun) || CombatClient.reloading(gun)) {
+            return 0;
+        }
+        // a Tarkov gun's own magnified sight, looked through in the operator's first person
+        double own = com.zomboidcraft.client.operator.OperatorView.magnification(gun);
+        if (own > 1) {
+            return own;
+        }
+        if (!Attachments.scoped(gun)) {
             return 0;
         }
         double z = Attachments.aimZoom(gun);
@@ -274,6 +282,10 @@ public final class ScopeView {
     private static void reticle(GuiGraphicsExtractor g, int cx, int cy, int r) {
         LocalPlayer player = Minecraft.getInstance().player;
         Identifier own = player == null ? LocalAttachments.reticle : LocalAttachments.reticleOf(player.getUseItem());
+        if (player != null && com.zomboidcraft.client.operator.OperatorView.magnification(player.getUseItem()) > 1) {
+            // a Tarkov scope's own reticle (its lens's mark texture, across the whole lens), or the plain duplex
+            own = com.zomboidcraft.client.operator.OperatorView.scopeReticle(player.getUseItem());
+        }
         if (own != null) {
             g.blit(RenderPipelines.GUI_TEXTURED, own, cx - r, cy - r, 0, 0, r * 2, r * 2, r * 2, r * 2);
             return;
