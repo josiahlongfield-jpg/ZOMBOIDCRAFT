@@ -2,6 +2,7 @@ package com.zomboidcraft.world.county;
 
 import com.zomboidcraft.world.city.Doors;
 import com.zomboidcraft.world.city.Placer;
+import com.zomboidcraft.world.city.ShopStories;
 import com.zomboidcraft.world.city.Shops;
 import java.util.SplittableRandom;
 
@@ -43,6 +44,11 @@ final class Trades {
     /** Whether a hotel this size has its stairs inside, at the back (else it's the back porches). */
     static boolean innerStair(int w, int d) {
         return w >= 9 && d >= 14;
+    }
+
+    /** Zomboid's building story for the trade's floor, if its dice give it one (world.city.ShopStories). */
+    void story(String trade) {
+        ShopStories.tellTrade(p, trade, 1, r, partition() - 1, door, pair);
     }
 
     /** The partition the back rooms sit behind, or the back wall when the shop's too shallow for them. */

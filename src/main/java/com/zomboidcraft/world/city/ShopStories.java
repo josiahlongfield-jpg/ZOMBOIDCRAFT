@@ -19,7 +19,11 @@ import java.util.function.DoubleSupplier;
  * what got in still inside;
  * <li>STAFF_LAST_STAND (RBCafe, RBPizzaWhirled): the staff locked themselves in the kitchen end of
  * a diner or a pizza place. Plates broken, chairs over, the staff dead behind the counter and
- * their customers on their feet.
+ * their customers on their feet;
+ * <li>BAR (RBBar): the bar kept serving at the end. Bottles everywhere, chairs over, the drinkers
+ * dead at their tables or up and walking;
+ * <li>HAIR_SALON (RBHairSalon): the barber and whoever was in the chair, turned among the towels
+ * and the spilt tonic.
  * </ul>
  * Each shop rolls on its own dice, from where it stands, so a shop without a story builds exactly
  * as before and comes out the same whichever chunk builds it. The bodies and walkers are marks
@@ -27,7 +31,7 @@ import java.util.function.DoubleSupplier;
  */
 public final class ShopStories {
     enum Tale {
-        LOOTED(5), TRASHED(3), GUNSTORE_SIEGE(0), STAFF_LAST_STAND(0);
+        LOOTED(5), TRASHED(3), GUNSTORE_SIEGE(0), STAFF_LAST_STAND(0), BAR(0), HAIR_SALON(0);
 
         final int weight;
 
@@ -52,14 +56,38 @@ public final class ShopStories {
     private final boolean pairDoor;
     private final Set<Long> taken = new HashSet<>();
 
-    private ShopStories(Placer p, SplittableRandom rng, int w, int d) {
+    private ShopStories(Placer p, SplittableRandom rng, int left, int right, int back, int door, boolean pairDoor) {
         this.p = p;
         this.rng = rng;
-        this.left = 1;
-        this.right = w - 2;
-        this.back = d - 6;
-        this.door = w / 2;
-        this.pairDoor = w >= 12;
+        this.left = left;
+        this.right = right;
+        this.back = back;
+        this.door = door;
+        this.pairDoor = pairDoor;
+    }
+
+    /**
+     * Rolls and tells a story over a main-street trade's floor that isn't a {@link Shops} fit-out
+     * (world.county.Trades): "bar" or "barber" have their own, anything else is looted or trashed.
+     * The floor runs x left..right, z 1..back, the door at x door on z = 0.
+     */
+    public static void tellTrade(Placer p, String trade, int left, int right, int back, int door, boolean pairDoor) {
+        if (right - left < 4 || back < 4) {
+            return;
+        }
+        SplittableRandom dice = roll(p, right + 2, back + 6);
+        if (dice == null) {
+            return;
+        }
+        Tale tale = switch (trade) {
+            case "bar" -> dice.nextDouble() < 0.7 ? Tale.BAR : null;
+            case "barber" -> dice.nextDouble() < 0.7 ? Tale.HAIR_SALON : null;
+            default -> null;
+        };
+        if (tale == null) {
+            tale = dice.nextDouble() < 0.6 ? Tale.LOOTED : Tale.TRASHED;
+        }
+        new ShopStories(p, dice, left, right, back, door, pairDoor).tell(forced(tale));
     }
 
     /** Rolls and tells a story over the fitted-out floor of a w by d shop of the type (called by {@link Shops#fitOut}). */
@@ -67,6 +95,36 @@ public final class ShopStories {
         if (w < 6 || d < 9) {
             return;
         }
+        SplittableRandom dice = roll(p, w, d);
+        if (dice != null) {
+            new ShopStories(p, dice, 1, w - 2, d - 6, w / 2, w >= 12).tell(forced(pick(dice, type)));
+        }
+    }
+
+    /**
+     * A building's own story dice at the Randomized Building Chance, or null when it gets none: for
+     * builders that tell their own (the school's overrun rooms) and only need to know whether, and
+     * the random numbers to tell it with. The building's w by d frame from p is its seed.
+     */
+    public static SplittableRandom dice(Placer p, int w, int d) {
+        return roll(p, w, d);
+    }
+
+    /** A body for StoryMarks at (x, y, z) in p's frame: its outfit, now and then a limb gone. */
+    public static void body(Placer p, SplittableRandom rng, double x, int y, double z, String outfit) {
+        int limbs = rng.nextDouble() < 0.2 ? 1 << rng.nextInt(8) : 0;
+        p.vehicle(x, y, z, (float) (rng.nextDouble() * 360), "!body:" + outfit + ";" + limbs + ";0", rng.nextLong());
+    }
+
+    /** n walkers that stand up within radius of (x, y, z) indoors, on that floor (StoryMarks). */
+    public static void walkersIndoors(Placer p, SplittableRandom rng, double x, int y, double z, String outfit, int n, int radius) {
+        if (n > 0) {
+            p.vehicle(x, y, z, 0, "!walkers:" + outfit + ";" + n + ";" + (-Math.max(1, radius)), rng.nextLong());
+        }
+    }
+
+    /** The shop's dice if it has a story, else null. */
+    private static SplittableRandom roll(Placer p, int w, int d) {
         SplittableRandom dice = new SplittableRandom(seed(p, w, d));
         double r;
         try {
@@ -74,20 +132,23 @@ public final class ShopStories {
         } catch (RuntimeException e) {
             r = 0.5;
         }
-        if (dice.nextDouble() >= Math.min(1, BASE * r)) {
-            return;
-        }
-        Tale tale = pick(dice, type);
-        String force = System.getProperty("shops.tale");  // previews: tell this one wherever it fits
-        if (force != null) {
-            tale = Tale.valueOf(force);
-        }
-        ShopStories s = new ShopStories(p, dice, w, d);
+        return dice.nextDouble() < Math.min(1, BASE * r) ? dice : null;
+    }
+
+    /** The tale, unless a preview asks for another (-Dshops.tale) to be told wherever it fits. */
+    private static Tale forced(Tale tale) {
+        String force = System.getProperty("shops.tale");
+        return force != null ? Tale.valueOf(force) : tale;
+    }
+
+    private void tell(Tale tale) {
         switch (tale) {
-            case LOOTED -> s.looted();
-            case TRASHED -> s.trashed();
-            case GUNSTORE_SIEGE -> s.siege();
-            case STAFF_LAST_STAND -> s.lastStand();
+            case LOOTED -> looted();
+            case TRASHED -> trashed();
+            case GUNSTORE_SIEGE -> siege();
+            case STAFF_LAST_STAND -> lastStand();
+            case BAR -> bar();
+            case HAIR_SALON -> salon();
         }
     }
 
@@ -202,6 +263,29 @@ public final class ShopStories {
         walkers("civilian", 2 + rng.nextInt(3));
     }
 
+    /** RBBar. */
+    private void bar() {
+        scatter("home_bottles_low", 4 + rng.nextInt(4));
+        scatter("glass_shards", 3 + rng.nextInt(3));
+        scatter("home_chair_tipped", 2 + rng.nextInt(3));
+        scatter("store_spill", 2 + rng.nextInt(3));
+        scatter("blood_splat", 1 + rng.nextInt(3));
+        for (int i = 0, n = 2 + rng.nextInt(3); i < n; i++) {
+            body("civilian", left, 2, right, back);
+        }
+        walkers("civilian", 2 + rng.nextInt(3));
+    }
+
+    /** RBHairSalon. */
+    private void salon() {
+        scatter("store_spill", 2 + rng.nextInt(3));
+        scatter("paper", 2 + rng.nextInt(3));
+        scatter("blood_splat", 1 + rng.nextInt(2));
+        scatter("home_chair_tipped", rng.nextInt(2));
+        body("civilian", left, 2, right, back);
+        walkers("civilian", 1 + rng.nextInt(2));
+    }
+
     // ---------------------------------------------------------------- pieces
 
     /** Pulls one standing shelf over onto the floor beside it; false if the one tried can't fall. */
@@ -252,8 +336,7 @@ public final class ShopStories {
         if (c == null) {
             return;
         }
-        int limbs = rng.nextDouble() < 0.2 ? 1 << rng.nextInt(8) : 0;
-        p.vehicle(c[0] + 0.5, 1, c[1] + 0.5, (float) (rng.nextDouble() * 360), "!body:" + outfit + ";" + limbs + ";0", rng.nextLong());
+        body(p, rng, c[0] + 0.5, 1, c[1] + 0.5, outfit);
         if (rng.nextDouble() < 0.6) {
             put(c[0], c[1], rng.nextBoolean() ? "home_blood_pool" : "blood_splat");
         } else {
@@ -265,7 +348,7 @@ public final class ShopStories {
     private void walkers(String outfit, int n) {
         int cx = (left + right) / 2, cz = (1 + back) / 2;
         int radius = Math.max(1, Math.min(right - left, back) / 2);
-        p.vehicle(cx + 0.5, 1, cz + 0.5, 0, "!walkers:" + outfit + ";" + n + ";" + (-radius), rng.nextLong());
+        walkersIndoors(p, rng, cx + 0.5, 1, cz + 0.5, outfit, n, radius);
     }
 
     /** A clear floor cell in the box, off the doorway, not yet used by this story. */
