@@ -42,6 +42,10 @@ public class StrikeFilmTest implements FabricClientGameTest {
                 sp.getServer().runCommand(c);
             }
             ZcConfig.get().world.worldEvents = false;
+            // a clear day, so the strike shows from down the street
+            ZcConfig.get().weather.enabled = false;
+            ZcConfig.get().weather.fog = false;
+            ZcConfig.get().weather.endlessNight = false;
             ZcConfig.get().zombieLore.fakeDead = ZcConfig.ZombieLore.FakeDead.OFF;
             ctx.getInput().resizeWindow(1280, 720);
             sp.getServer().runCommand("effect give @a night_vision infinite 0 true");
@@ -58,7 +62,7 @@ public class StrikeFilmTest implements FabricClientGameTest {
 
             // 1. the laser: from the roof, held on the crowd; bombs in from behind him, down the street
             crowd(sp);
-            stand(sp, 11.5, Y + 12, -84.5, new Vec3(0.5, Y, 0.5));
+            stand(sp, 8.6, Y + 12, -72.6, new Vec3(0.5, Y, 0.5));
             ctx.waitTicks(30);
             sp.getConnection().waitForChunksRender();
             ctx.getInput().holdKey(options -> options.keyUse);
@@ -85,7 +89,7 @@ public class StrikeFilmTest implements FabricClientGameTest {
             sp.getServer().runCommand("kill @e[type=zomboidcraft:corpse]");
             crowd(sp);
             sp.getServer().runOnServer(server -> StrikeCalls.smoke(server.overworld(), new Vec3(0.5, Y, 0.5), "red", 2400));
-            stand(sp, 11.5, Y + 12, -72.5, new Vec3(0.5, Y + 2, 0.5));
+            stand(sp, 8.6, Y + 12, -72.6, new Vec3(0.5, Y + 2, 0.5));
             ctx.runOnClient(mc -> mc.player.getInventory().setSelectedSlot(1));
             ctx.waitTicks(40);
             frames(ctx, 20, 3);
@@ -131,9 +135,13 @@ public class StrikeFilmTest implements FabricClientGameTest {
                 int block = Math.floorDiv(z + 170, 17), along = Math.floorMod(z + 170, 17);
                 boolean house = Math.abs(x) >= 8 && Math.abs(x) <= 20 && along < 14;
                 int height = 10 + Math.floorMod(block * 7 + (x < 0 ? 3 : 0), 9);
-                // the operator's roof
-                if (x > 0 && z >= -92 && z <= -78) {
+                if (x > 0 && z >= -100 && z <= -71) {
+                    // the operator's roof, at the street's edge
+                    house = x >= 8 && x <= 20;
                     height = 12;
+                } else if (x > 0 && z > -71 && z <= 10) {
+                    // lower blocks between him and the mark, under his line of sight
+                    height = 10;
                 }
                 BlockState wall = walls[Math.floorMod(block + (x < 0 ? 1 : 0), walls.length)];
                 for (int y = Y; y < Y + 30; y++) {
