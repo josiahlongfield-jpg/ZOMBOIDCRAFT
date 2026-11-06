@@ -22,7 +22,10 @@ fishing-trip, bbq-party, beach-party, music-fest, baseball).
   (searchable, loot=story_<x>_camp); zs_tote (loot=story_beach_party); zs_cooler
   (loot=story_bbq_party); zs_fest_pack (loot=story_music_fest); zs_kitbag (loot=story_baseball);
 - zs_base, zs_home, zs_rubber, zs_bat, zs_glove, zs_bench (axis), zs_fence / zs_fence_top: a
-  sandlot diamond and its backstop (refs: baseball 01, 03, 07); zs_log: a log to sit on (axis).
+  sandlot diamond and its backstop (refs: baseball 01, 03, 07); zs_log: a log to sit on (axis);
+- zs_fire: a camp or burn fire gone out, the ring of stones, ash and the charred ends of the logs;
+  zs_fire_lit: the same still burning, the coals glowing and low flames over the logs (light 15, as bright as a campfire)
+  (refs: forest-camp, hunter-camp). They stand in the cell above the ground, like the fire ring.
 
     python3 tools/city/zonestory.py      rewrites the zs_ entries in blocks.json
 
@@ -223,6 +226,49 @@ def gun_case(seed):
     return t
 
 
+def embers(seed):
+    """A fire's bed: grey-white ash, the coals in it glowing orange and yellow at their hearts."""
+    t = F.plain(seed, (118, 112, 106), 0.14, 0.3)
+    rng = t.rng
+    for _ in range(70):
+        x, y, r = rng.uniform(0, N), rng.uniform(0, N), rng.uniform(1.5, 3.5)
+        if rng.random() < 0.45:
+            F.disc(t, x, y, r, (214, 84, 22), dh=0.1)
+            F.disc(t, x, y, r * 0.45, (255, 186, 70))
+        else:
+            F.disc(t, x, y, r, (34, 28, 26), dh=0.1)
+    t.speckle(0.04, (60, 56, 52), 0.6, 0.0)
+    return t
+
+
+def char_hot(seed):
+    """A burning log's skin: charred black in checks, orange glowing in the cracks between."""
+    t = F.plain(seed, (34, 28, 26), 0.1, 0.25)
+    cracks = np.abs(P.fbm(t.rng)) < 0.045
+    t.c[cracks] = t.c[cracks] * 0.2 + np.array((232, 98, 24), np.float32) * 0.8
+    t.speckle(0.02, (255, 180, 60), 0.8, 0.0)
+    return t
+
+
+def flame(seed):
+    """Low flames on a cutout: three tongues off the bed, yellow at the root going orange, red at the tips."""
+    t = F.plain(seed, (255, 170, 40), 0.05, 0.0)
+    rng = np.random.default_rng(seed)
+    yy, xx = np.mgrid[0:N, 0:N]
+    keep = np.zeros((N, N), bool)
+    for cx, w, top in ((18, 12, 18), (34, 15, 6), (49, 11, 22)):
+        cx += rng.uniform(-2, 2)
+        frac = np.clip((N - 1 - yy) / (N - 1 - top), 0, 1)       # 0 at the root, 1 at the tip
+        half = w * (1 - frac) ** 0.7 * (1 + 0.15 * np.sin(yy * 0.5 + cx))
+        keep |= (np.abs(xx - cx) < half) & (yy >= top)
+    up = np.clip((N - 1 - yy) / (N - 1.0), 0, 1)[..., None]
+    root, mid, tip = (np.array(c, np.float32) for c in ((255, 236, 140), (250, 140, 30), (200, 50, 20)))
+    col = np.where(up < 0.45, root + (mid - root) * (up / 0.45), mid + (tip - mid) * ((up - 0.45) / 0.55))
+    t.c[:] = col
+    t.alpha = np.where(keep, 255, 0).astype(np.float32)
+    return t
+
+
 def textures():
     out = {}
     for i, (c, rgb) in enumerate(COLOURS.items()):
@@ -247,6 +293,9 @@ def textures():
         "zs_fest": lambda: fest(89211),
         "zs_bat_wood": lambda: bat_wood(89212),
         "zs_gun_case": lambda: gun_case(89213),
+        "zs_embers": lambda: embers(89214),
+        "zs_char_hot": lambda: char_hot(89215),
+        "zs_flame": lambda: flame(89216),
     })
     return out
 
@@ -505,6 +554,33 @@ def log():
     return [[x0, y0, 0.5, x1, y1, 15.5, bark] for y0, y1, x0, x1 in disc_strips(3.6, 8, 3.6, step=1.8)]
 
 
+def ring():
+    """Eight stones round the pit, turned every way (as yard.py's fire ring)."""
+    b = []
+    for k in range(8):
+        a = k * math.pi / 4
+        x, z = 8 + math.cos(a) * 6.2, 8 + math.sin(a) * 6.2
+        w = 2.4 + (k % 3) * 0.4
+        stone = [round(x - w, 2), 0, round(z - 1.6, 2), round(x + w, 2), 2.2 + (k % 2) * 0.8, round(z + 1.6, 2), "pt_stone_rough"]
+        b.append(stone + [None, turn("y", (-45, -22.5, 22.5, 45)[k % 4], (round(x, 2), 0, round(z, 2)))])
+    return b
+
+
+def fire(lit):
+    """The fire inside its ring: the bed, two logs crossed over it, burnt through or still burning
+    with low flames standing over them on two crossed planes."""
+    log = {"side": "zs_char_hot" if lit else "fm_char", "north": "fm_char", "south": "fm_char"}
+    b = ring() + [[2.5, 0, 2.5, 13.5, 0.6, 13.5, "zs_embers" if lit else "yd_ash"],
+                  [6.5, 0.6, 2.5, 9.5, 3.2, 13.5, log, None, turn("y", 45, (8, 1.9, 8))],
+                  [6.5, 3.2, 3.5, 9.5, 5.6, 12.5, log, None, turn("y", -45, (8, 4.4, 8))]]
+    if not lit:
+        b.append([5, 0.6, 9, 8, 1.8, 12, "yd_ash"])
+        return b
+    for a in (45, -45):
+        b.append([3, 1, 7.99, 13, 13, 8.01, "zs_flame", None, turn("y", a, (8, 7, 8))])
+    return b
+
+
 def blocks():
     out = {}
 
@@ -555,6 +631,8 @@ def blocks():
     add("zs_fence", fence(False), "Backstop", "METAL", render="cutout")
     add("zs_fence_top", fence(True), "Backstop", "METAL", render="cutout")
     add("zs_log", log(), "Log", "WOOD", rotate="axis")
+    add("zs_fire", fire(False), "Fire Pit", "STONE", rotate=None, decor=True)
+    add("zs_fire_lit", fire(True), "Campfire", "STONE", rotate=None, decor=True, render="cutout", light=15)
     return out
 
 

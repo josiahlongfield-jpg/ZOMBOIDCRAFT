@@ -875,8 +875,7 @@ final class DowntownSite extends Site {
                     continue;
                 }
                 double r = chance();
-                out.set(x, 0, z, r < 0.5 ? "minecraft:polished_andesite" : r < 0.8 ? "minecraft:stone_bricks"
-                        : r < 0.92 ? "minecraft:cracked_stone_bricks" : "minecraft:moss_block");
+                out.set(x, 0, z, r < 0.8 ? "cc_plaza" : r < 0.92 ? "cc_plaza_b" : "minecraft:moss_block");
                 kit.use[z * w + x] = Kit.LOT;
             }
         }
@@ -1049,7 +1048,7 @@ final class DowntownSite extends Site {
                     int top = (int) Math.round(h * (1 - Math.hypot(dx, dz) / (r + 0.5)) + chance() * 0.6);
                     for (int y = 1; y <= top; y++) {
                         if (kit.inside(x + dx, z + dz)) {
-                            out.set(x + dx, y, z + dz, chance() < 0.8 ? "rubble" : chance() < 0.5 ? "minecraft:iron_bars" : "debris_chunk");
+                            out.set(x + dx, y, z + dz, chance() < 0.8 ? "rubble" : chance() < 0.5 ? "rebar" : "debris_chunk");
                         }
                     }
                 }

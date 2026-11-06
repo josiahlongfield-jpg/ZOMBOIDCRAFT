@@ -16,14 +16,14 @@ public final class ShopLights {
             return "front_lampbox_dead";
         }
         double r = rng.nextDouble();
-        return r < 0.72 ? "minecraft:pearlescent_froglight" : r < 0.86 ? "minecraft:verdant_froglight" : "minecraft:ochre_froglight";
+        return r < 0.72 ? "minecraft:pearlescent_froglight" : r < 0.86 ? "minecraft:verdant_froglight" : "front_lampbox_lit";
     }
 
     /** The lamp box under a lit neon blade, in its tubes' colour (see tools/city/signs.py BLADES). */
     public static String bladeGlow(String blade) {
         return switch (blade) {
             case "drugs", "wash", "cash" -> "minecraft:verdant_froglight";
-            case "pawn", "eat", "rialto", "cafe", "guns", "pizza" -> "minecraft:ochre_froglight";
+            case "pawn", "eat", "rialto", "cafe", "guns", "pizza" -> "front_lampbox_lit";
             default -> "minecraft:pearlescent_froglight";
         };
     }
