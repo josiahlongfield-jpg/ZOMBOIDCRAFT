@@ -115,7 +115,7 @@ public final class RailLights {
      * A player's body has just been posed holding a gun: its laser and light lenses, in the player model's pixels
      * (y down, facing -z), are put into the world the way the renderer puts the model there.
      */
-    static void seen(net.minecraft.client.renderer.entity.state.AvatarRenderState state, Vector3f laser, Vector3f light) {
+    public static void seen(net.minecraft.client.renderer.entity.state.AvatarRenderState state, Vector3f laser, Vector3f light) {
         SEEN.put(state.id, new Seen(fromFeet(state, laser), fromFeet(state, light), System.nanoTime()));
     }
 
@@ -485,7 +485,7 @@ public final class RailLights {
      * Whether a shader pack is drawing the world (asked of Iris, when it is installed). Shader packs draw the glow as
      * a solid surface and drop its faint parts, so it's drawn differently for them.
      */
-    static boolean shaderPackOn() {
+    public static boolean shaderPackOn() {
         if (!irisAsked) {
             irisAsked = true;
             try {

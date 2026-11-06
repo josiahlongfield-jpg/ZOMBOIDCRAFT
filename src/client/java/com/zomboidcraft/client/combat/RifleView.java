@@ -291,9 +291,8 @@ public final class RifleView {
         }
         // the Tarkov operator's own arms and rifle, every move Tarkov's clip (client/operator)
         if (com.zomboidcraft.client.operator.OperatorView.submit(pose, out, light, state, gun)) {
-            aimShown = 0;
-            rail = null;
-            return true;
+            aimShown = com.zomboidcraft.client.operator.OperatorView.aimShown();
+            return true;        // its rail (laser and light lenses) set by operatorRail
         }
         use(gunType);
         ZcConfig config = ZcConfig.get();
@@ -1587,6 +1586,8 @@ public final class RifleView {
 
     /** How much of the walking bob and look sway to keep this frame: all of it at the hip, aimSway on the sights. */
     public static float bobScale() {
+        // the Tarkov operator's rifle moves only as Tarkov's clips move it: none of Minecraft's walking bob or hand lag
+        if (com.zomboidcraft.client.operator.OperatorView.steady()) return 0;
         float sway = (float) ZcConfig.get().guns.aimSway;
         return 1 - (1 - Mth.clamp(sway, 0, 1)) * aimShown;
     }
@@ -1596,6 +1597,7 @@ public final class RifleView {
      * since a sight a few inches from the eye shifted by it points well off what it was on.
      */
     public static float bobShiftScale() {
+        if (com.zomboidcraft.client.operator.OperatorView.steady()) return 0;
         float sway = Mth.clamp((float) ZcConfig.get().guns.aimSway, 0, 1);
         return 1 - (1 - sway * sway) * aimShown;
     }
@@ -1613,6 +1615,12 @@ public final class RifleView {
     }
 
     public record Rail(Vector3f laser, Vector3f light, Vector3f bore, float onTarget) {
+    }
+
+    /** The operator's rifle's rail this frame, as it's drawn in first person (null: it has none). */
+    public static void operatorRail(Rail drawn) {
+        rail = drawn;
+        railDrawn = System.nanoTime();
     }
 
     /** How far off what's under the crosshair is this frame, so a pointed gun's rail lines up on it. */

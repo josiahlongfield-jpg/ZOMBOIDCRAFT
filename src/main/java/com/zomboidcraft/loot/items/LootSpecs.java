@@ -940,6 +940,8 @@ public final class LootSpecs {
         new LootSpec("footlocker", "tools", Rarity.SCARCE, 14, 9.0, 1, true, null),
         new LootSpec("field_radio", "tools", Rarity.RARE, 40, 7.5, 1, true, null),
         new LootSpec("laser_rangefinder", "tools", Rarity.RARE, 35, 0.8, 8, true, null),
+        new LootSpec("laser_designator", "tools", Rarity.RARE, 60, 1.6, 4, true, null),
+        new LootSpec("lab_research_drive", "tools", Rarity.PRIZED, 0, 0.3, 8, true, null),
         new LootSpec("metal_detector", "tools", Rarity.RARE, 30, 2.5, 4, true, null),
         new LootSpec("door_ram", "tools", Rarity.RARE, 30, 6.0, 1, true, null),
         new LootSpec("quiet_generator", "tools", Rarity.RARE, 50, 60.0, 1, true, null),

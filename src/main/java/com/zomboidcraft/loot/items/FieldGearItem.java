@@ -60,7 +60,7 @@ public class FieldGearItem extends LootItem {
         for (ServerPlayer sp : server.getPlayerList().getPlayers()) {
             if (!(sp.getMainHandItem().getItem() instanceof FieldGearItem gear)) continue;
             String text = switch (gear.kind) {
-                case RANGEFINDER -> range(sp);
+                case RANGEFINDER -> (com.zomboidcraft.world.events.StrikeCalls.lasing(sp) ? "Lasing   " : "") + range(sp);
                 case LENSATIC -> bearing(sp);
                 default -> null;
             };
@@ -83,10 +83,27 @@ public class FieldGearItem extends LootItem {
     }
 
     @Override
+    public net.minecraft.world.item.ItemUseAnimation getUseAnimation(ItemStack stack) {
+        return net.minecraft.world.item.ItemUseAnimation.NONE;
+    }
+
+    @Override
+    public int getUseDuration(ItemStack stack, net.minecraft.world.entity.LivingEntity entity) {
+        return kind == Kind.RANGEFINDER ? 72000 : 0;
+    }
+
+    @Override
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
+        if (kind == Kind.RANGEFINDER) {
+            // held down, it lases (both sides, so letting go is heard): the spot a radio operator calls a strike on
+            // (world/events/StrikeCalls)
+            player.startUsingItem(hand);
+            return InteractionResult.CONSUME;
+        }
         if (!(player instanceof ServerPlayer sp) || TimedActions.busy(player)) return InteractionResult.CONSUME;
         ItemStack stack = player.getItemInHand(hand);
         switch (kind) {
+
             case DRUM -> {
                 if (player.getCooldowns().isOnCooldown(stack)) return InteractionResult.FAIL;
                 player.getCooldowns().addCooldown(stack, 30);

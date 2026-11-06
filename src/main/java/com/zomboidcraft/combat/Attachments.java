@@ -134,8 +134,13 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
         String id = gunId(gun);
         String local = gun.get(LocalGuns.ID);
         List<Slot> out = new ArrayList<>();
+        LocalGuns.Spec spec = local == null ? null : LocalGuns.get(local);
+        boolean kitted = spec != null && spec.kit != null;     // its parts are its own: only its magazine changes
         if (id != null) {
             for (Slot slot : Slot.values()) {
+                if (kitted && slot != Slot.MAGAZINE) {
+                    continue;
+                }
                 if (GunSlotData.FITS.get(id).containsKey(slot) || local != null && LocalParts.takes(local, slot)) {
                     out.add(slot);
                 }
@@ -373,6 +378,10 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
             ZcConfig.Guns cfg = ZcConfig.get().guns;
             return local.mag > 1 ? new Optic(cfg.scopeAimSpread, 1 / local.mag, 0, true) : new Optic(cfg.redDotAimSpread, 1, 0, false);
         }
+        if (LocalGuns.kitHas(gun, "sight")) {
+            // a holo or red dot built onto the gun (the operator's EOTech): it settles the aim, no zoom
+            return new Optic(ZcConfig.get().guns.redDotAimSpread, 1, 0, false);
+        }
         String key = key(gun, Slot.OPTIC);
         return key == null ? null : optic(key);
     }
@@ -413,18 +422,19 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
     }
 
     public static boolean hasLight(ItemStack gun) {
-        return key(gun, Slot.SIDE_RAIL) != null;        // the weapon light or the compact one
+        return key(gun, Slot.SIDE_RAIL) != null        // the weapon light or the compact one
+                || LocalGuns.kitHas(gun, "light");
     }
 
     public static boolean hasLaser(ItemStack gun) {
-        return has(gun, Slot.RIGHT_RAIL, "laser");
+        return has(gun, Slot.RIGHT_RAIL, "laser") || LocalGuns.kitHas(gun, "laser");
     }
 
     /** Multiplies the kick: any grip tames it, no stock makes it worse. */
     public static double recoilFactor(ItemStack gun) {
         ZcConfig.Guns cfg = ZcConfig.get().guns;
         String under = key(gun, Slot.UNDERBARREL);
-        boolean grip = under != null && !under.equals("launcher");
+        boolean grip = under != null && !under.equals("launcher") || LocalGuns.kitHas(gun, "foregrip");
         return (grip ? cfg.foregripRecoil : 1.0) * (stockless(gun) ? cfg.noStockRecoil : 1.0);
     }
 
@@ -441,7 +451,7 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
     public static boolean suppressed(ItemStack gun) {
         LocalGuns.Spec local = LocalGuns.of(gun);
         return key(gun, Slot.MUZZLE) != null || GunType.of(gun) == GunType.SUPPRESSED_RIFLE     // its can is built in
-                || local != null && local.suppressed;
+                || local != null && (local.suppressed || local.has("suppressor"));
     }
 
     /** Looking down the sights shows the scope's eyepiece picture, not the gun: a scope you look into. */

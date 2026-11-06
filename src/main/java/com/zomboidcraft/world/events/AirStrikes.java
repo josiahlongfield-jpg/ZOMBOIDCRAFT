@@ -108,6 +108,29 @@ public final class AirStrikes {
     private AirStrikes() {
     }
 
+    // ------------------------------------------------------------------ a radio operator's strikes (StrikeCalls)
+
+    /** A radio operator calls a strike in: see {@link StrikeCalls#call}. */
+    public static StrikeCalls.CallResult call(ServerLevel level, ServerPlayer caller, StrikeCalls.StrikeType type, StrikeCalls.Mark mark,
+            Vec3 direction, int delayTicks, boolean confirmedDangerClose) {
+        return StrikeCalls.call(level, caller, type, mark, direction, delayTicks, confirmedDangerClose);
+    }
+
+    /** The operator waves their strike off: see {@link StrikeCalls#abort}. */
+    public static boolean abort(ServerPlayer caller) {
+        return StrikeCalls.abort(caller);
+    }
+
+    /** Hears every moment of every called strike: see {@link StrikeCalls#listen}. */
+    public static void listen(java.util.function.Consumer<StrikeCalls.Update> listener) {
+        StrikeCalls.listen(listener);
+    }
+
+    /** A base's air support now, for the hunt board: see {@link StrikeCalls#status}. */
+    public static StrikeCalls.Status status(ServerLevel level, String base) {
+        return StrikeCalls.status(level, base);
+    }
+
     // ------------------------------------------------------------------ planning
 
     /**
@@ -117,8 +140,9 @@ public final class AirStrikes {
      */
     static List<Run> plan(ServerLevel level, WorldEvents.Kind kind, ServerPlayer near, boolean force) {
         ZcConfig.World cfg = ZcConfig.get().world;
-        RandomSource random = level.getRandom();
-        double clear = kind == WorldEvents.Kind.BOMB ? 22 : kind == WorldEvents.Kind.STRAFE ? 14 : 6;
+        // Josiah 2026-11-06 (A7): the strikes nobody called keep well clear of everyone; only the test command
+        // brings one in close
+        double clear = !force ? RANDOM_CLEAR : kind == WorldEvents.Kind.BOMB ? 22 : kind == WorldEvents.Kind.STRAFE ? 14 : 6;
         Vec3 target = crowd(level, near, clear, Math.max(1, cfg.airStrikeCrowd));
         if (target == null) {
             if (!force) {
@@ -129,25 +153,62 @@ public final class AirStrikes {
             Vec3 p = near.position().add(look.scale(clear + 40));
             target = new Vec3(p.x, WorldEvents.surface(level, p.x, p.z, near.getY()), p.z);
         }
-        // Josiah 09:46: low over a city they line up with the street and never fly into anything, so the run comes
-        // in along whichever way has the least in its way (down the street, in town), raised to clear what's left
-        // (for a jet, how high its low pass has to be over the target's stretch; for the Apache, over its way in)
+        Vec3 dir = heading(level, kind, target, null, force);
+        return dir == null ? List.of() : runs(level, kind, target, dir, 0, null);
+    }
+
+    /**
+     * The way in for a strike on target. Josiah 09:46: low over a city they line up with the street and never fly
+     * into anything, so the run comes in along whichever way has the least in its way (down the street, in town),
+     * raised to clear what's left (for a jet, how high its low pass has to be over the target's stretch; for the
+     * Apache, over its way in). Given a wanted way in (a radio operator's, StrikeCalls), the clear way nearest it.
+     * Null when every way is walled in by towers (the shells and bombs would only hit roofs), unless forced.
+     */
+    static Vec3 heading(ServerLevel level, WorldEvents.Kind kind, Vec3 target, Vec3 want, boolean force) {
         boolean jet = kind != WorldEvents.Kind.HUNT;
+        if (want != null) {
+            want = want.multiply(1, 0, 1);
+            if (want.lengthSqr() < 1e-6) {
+                want = null;
+            } else if (!jet) {
+                return want.normalize();
+            } else {
+                want = want.normalize();
+            }
+        }
+        RandomSource random = level.getRandom();
         double from = jet ? -450 : -600, to = jet ? 250 : -30;
-        Vec3 dir = null;
-        double lift = Double.MAX_VALUE, offset = random.nextDouble() * Math.PI * 2;
+        Vec3 lowest = null, nearest = null;
+        double lift = Double.MAX_VALUE, turn = Double.MAX_VALUE;
+        double offset = want != null ? Math.atan2(want.z, want.x) : random.nextDouble() * Math.PI * 2;
         for (int i = 0; i < HEADINGS; i++) {
             double a = offset + i * Math.PI * 2 / HEADINGS;
             Vec3 d = new Vec3(Math.cos(a), 0, Math.sin(a));
-            double l = lift(level, target, d, FLAT, LEVEL, from, to, 8) + random.nextDouble() * 2;
+            double l = lift(level, target, d, FLAT, LEVEL, from, to, 8) + (want == null ? random.nextDouble() * 2 : 0);
             if (l < lift) {
                 lift = l;
-                dir = d;
+                lowest = d;
+            }
+            if (want != null && (l <= MAX_LIFT || !jet)) {
+                double off = Math.acos(Math.clamp(d.dot(want), -1, 1));
+                if (off < turn - 1e-6) {
+                    turn = off;
+                    nearest = d;
+                }
             }
         }
-        if (lift > MAX_LIFT && jet && !force) {
-            return List.of();       // walled in by towers: the shells and bombs would only hit roofs
+        if (want != null) {
+            return nearest;
         }
+        return lift > MAX_LIFT && jet && !force ? null : lowest;
+    }
+
+    /**
+     * The aircraft for a strike of this kind on target, coming in along dir, starting delay seconds from now: one
+     * jet or a pair, or the Apache. A called strike's runs report to its call.
+     */
+    static List<Run> runs(ServerLevel level, WorldEvents.Kind kind, Vec3 target, Vec3 dir, double delay, StrikeCalls.Call call) {
+        RandomSource random = level.getRandom();
         List<Run> runs = new ArrayList<>();
         long now = level.getGameTime();
         switch (kind) {
@@ -155,22 +216,25 @@ public final class AirStrikes {
                 String model = WorldEvents.jet(random);
                 // each breaks away one way or the other after its run, a pair splitting (Josiah 20:19)
                 int side = random.nextBoolean() ? 1 : -1;
-                runs.add(strafe(level, target, dir, model, now, 0, side, random));
+                runs.add(strafe(level, target, dir, model, now, delay, side, random, call != null));
                 if (random.nextInt(10) < 4) {
                     // a wingman a few seconds behind down the same street, its shells walked a little to one side
-                    runs.add(strafe(level, target, dir, model, now, 4 + random.nextDouble() * 3, -side, random));
+                    runs.add(strafe(level, target, dir, model, now, delay + 4 + random.nextDouble() * 3, -side, random, call != null));
                 }
             }
             case BOMB -> {
                 String model = WorldEvents.jet(random);
                 int side = random.nextBoolean() ? 1 : -1;
-                runs.add(bomb(level, target, dir, model, now, 0, 0, side, random));
+                runs.add(bomb(level, target, dir, model, now, delay, 0, side, random));
                 if (random.nextInt(10) < 5) {
                     // the wingman's stick beside the leader's, and it breaks the other way
-                    runs.add(bomb(level, target, dir, model, now, 2.5 + random.nextDouble() * 1.5, -side * 5, -side, random));
+                    runs.add(bomb(level, target, dir, model, now, delay + 2.5 + random.nextDouble() * 1.5, -side * 5, -side, random));
                 }
             }
-            default -> runs.add(hunt(level, target, dir, now, random));
+            default -> runs.add(hunt(level, target, dir, now, delay, random));
+        }
+        for (Run run : runs) {
+            run.call = call;
         }
         return runs;
     }
@@ -299,6 +363,8 @@ public final class AirStrikes {
     /** How many ways in a strike tries, half a jet's span and the rotor's reach (blocks), and the highest a low pass goes. */
     private static final int HEADINGS = 36;
     private static final double WING = 8, ROTOR = 7, MAX_LIFT = 70;
+    /** How far from every player a strike nobody called keeps (Josiah 2026-11-06, A7). */
+    private static final double RANDOM_CLEAR = 80;
     /** A run's whole length either side of the target, and a level line along it for the way in (see plan). */
     private static final double REACH = 1800;
     private static final double[] FLAT = {-REACH, REACH}, LEVEL = {0, 0};
@@ -322,7 +388,7 @@ public final class AirStrikes {
      * the pull up and the break to side.
      */
     private static Run strafe(ServerLevel level, Vec3 target, Vec3 dir, String model, long now, double delay, int side,
-            RandomSource random) {
+            RandomSource random, boolean called) {
         double speed = 85 + random.nextDouble() * 12;
         double low = Math.max(16 + random.nextDouble() * 6, lift(level, target, dir, FLAT, LEVEL, -300, 250, 8));
         StrikeFlight.Plan plan = StrikeFlight.strafe(level, target, dir, speed, Math.toRadians(14 + random.nextDouble() * 3), low,
@@ -335,7 +401,8 @@ public final class AirStrikes {
         double held = Math.round(delay / STEP) * STEP;
         run.fireFrom = held + plan.fireFrom();
         run.fireTo = held + plan.fireTo();
-        double offset = (random.nextDouble() * 2 - 1) * 3;
+        // a called run walks its shells right down the middle of the mark
+        double offset = (random.nextDouble() * 2 - 1) * (called ? 0.6 : 3);
         Vec3 across = new Vec3(-dir.z, 0, dir.x);
         run.lineFrom = target.add(dir.scale(-StrikeFlight.LINE / 2)).add(across.scale(offset)).add(0, 0.5, 0);
         run.lineTo = target.add(dir.scale(StrikeFlight.LINE / 2)).add(across.scale(-offset)).add(0, 0.5, 0);
@@ -374,7 +441,7 @@ public final class AirStrikes {
      * open ground on it) and up over them where there isn't, drifting nearer and further and nearly stopping now
      * and then, bursts of its chain gun picking the dead off; then away, nose down to gather speed, and climbing.
      */
-    private static Run hunt(ServerLevel level, Vec3 target, Vec3 dir, long now, RandomSource random) {
+    private static Run hunt(ServerLevel level, Vec3 target, Vec3 dir, long now, double delay, RandomSource random) {
         // the circle with the least in the way: mostly over the street, between the buildings
         double radius = 34, best = Double.MAX_VALUE;
         for (double r = 20; r <= 50; r += 6) {
@@ -460,10 +527,11 @@ public final class AirStrikes {
         }
         // up over anything in the way of its rotor, and back down between the buildings after
         clear(level, path, ROTOR, 5, 2.5);
-        Run hunt = new Run(event(WorldEvents.Kind.HUNT, path, "heli_hornbill", now, 0), target, dir);
-        hunt.huntFrom = huntFrom;
-        hunt.huntTo = huntTo;
-        hunt.nextBurst = huntFrom;
+        Run hunt = new Run(event(WorldEvents.Kind.HUNT, path, "heli_hornbill", now, delay), target, dir);
+        double held = Math.round(delay / STEP) * STEP;
+        hunt.huntFrom = held + huntFrom;
+        hunt.huntTo = held + huntTo;
+        hunt.nextBurst = hunt.huntFrom;
         return hunt;
     }
 
@@ -485,14 +553,66 @@ public final class AirStrikes {
         /** The hunt: from when to when it's over the horde, its next burst and the one it's firing at now. */
         double huntFrom, huntTo, nextBurst, burstEnd;
         Zombie mark;
+        /** A radio operator's strike (StrikeCalls): its call, whether it was waved off, and where it's aiming now. */
+        StrikeCalls.Call call;
+        boolean aborted, released;
+        Vec3 aim;
+        /** What it did: the dead it killed and the players it hurt. */
+        int kills;
+        final java.util.Set<String> hurt = new java.util.LinkedHashSet<>();
 
         Run(WorldEvents.Event event, Vec3 target, Vec3 dir) {
             this.event = event;
             this.target = target;
             this.dir = dir;
+            this.aim = target;
+        }
+
+        /** Seconds in when its guns open or its first bomb goes: the release. */
+        double release() {
+            return switch (event.kind()) {
+                case STRAFE -> fireFrom;
+                case BOMB -> release.length > 0 ? release[0] : 0;
+                default -> huntFrom;
+            };
+        }
+
+        /** Seconds in when it's done: the last shell or bomb down, or the Apache leaving. */
+        double done() {
+            return switch (event.kind()) {
+                case STRAFE -> fireTo + 2;
+                case BOMB -> (release.length > 0 ? release[release.length - 1] : 0) + 6;
+                default -> huntTo;
+            };
+        }
+
+        /** The moment it lets go: a called strike reads its mark now; false if the call has been called off. */
+        private boolean letGo() {
+            if (released) {
+                return !aborted;
+            }
+            released = true;
+            if (call == null) {
+                return true;
+            }
+            Vec3 at = call.release(this);
+            if (at == null) {
+                aborted = true;
+                return false;
+            }
+            aim = at;
+            return true;
         }
 
         void tick(ServerLevel level, double t) {
+            if (aborted) {
+                for (var it = bombs.iterator(); it.hasNext(); ) {
+                    if (it.next().fall(level)) {
+                        it.remove();
+                    }
+                }
+                return;
+            }
             if (fireFrom >= 0 && t >= fireFrom && t <= fireTo) {
                 strafe(level, t);
             }
@@ -515,25 +635,41 @@ public final class AirStrikes {
             Vec3 at = event.at(t), v = event.velocity(t).normalize();
             Vec3 muzzle = at.add(v.scale(7));
             if (!fired) {
+                if (!letGo()) {
+                    return;
+                }
+                // the mark read now (a laser held on it): the line walked over to where it is
+                Vec3 shift = aim.subtract(target).multiply(1, 0, 1);
+                lineFrom = lineFrom.add(shift);
+                lineTo = lineTo.add(shift);
                 fired = true;
                 sound(level, muzzle, CANNON, 4f);
             }
             double f = (t - fireFrom) / Math.max(0.05, fireTo - fireFrom);
-            Vec3 aim = lineFrom.add(lineTo.subtract(lineFrom).scale(f));
+            Vec3 onLine = lineFrom.add(lineTo.subtract(lineFrom).scale(f));
             rounds += ZcConfig.get().world.strikeCannonRate / 20.0;
             int shots = (int) rounds;
             rounds -= shots;
             for (int i = 0; i < shots; i++) {
-                round(level, muzzle, aim, 3.2, 1.9, 3.2, 14, i == 0);
+                round(level, muzzle, onLine, 3.2, 1.9, 3.2, 14, i == 0, this);
             }
         }
 
         /** Lets the next bomb go from under the jet. */
         private void drop(ServerLevel level, double t) {
+            if (!letGo()) {
+                return;
+            }
             Vec3 at = event.at(t).add(0, -1.5, 0), v = event.velocity(t);
             RandomSource random = level.getRandom();
             Vec3 vel = v.add(random.nextGaussian() * 0.6, 0, random.nextGaussian() * 0.6);
-            bombs.add(new Falling(at, vel));
+            if (call != null) {
+                // a guided bomb: steered over to the mark as read at release, as far as it moved since the call
+                Vec3 shift = aim.subtract(target);
+                double h = Math.max(1, at.y - aim.y), fall = (vel.y + Math.sqrt(vel.y * vel.y + 2 * G * h)) / G;
+                vel = vel.add(shift.x / fall, 0, shift.z / fall);
+            }
+            bombs.add(new Falling(at, vel, this));
             Bomb packet = new Bomb((float) at.x, (float) at.y, (float) at.z, (float) vel.x, (float) vel.y, (float) vel.z);
             for (ServerPlayer player : PlayerLookup.around(level, at, TELL)) {
                 ServerPlayNetworking.send(player, packet);
@@ -542,6 +678,9 @@ public final class AirStrikes {
 
         /** Over the horde: bursts of the chain gun at one zombie after another, a breather between them. */
         private void hunt(ServerLevel level, double t) {
+            if (!letGo()) {
+                return;
+            }
             Vec3 at = event.at(t);
             float yaw = event.yaw(t);
             double rad = Math.toRadians(yaw);
@@ -549,6 +688,13 @@ public final class AirStrikes {
             Vec3 muzzle = at.add(ahead.scale(3.6)).add(0, -0.6, 0);
             RandomSource random = level.getRandom();
             if (t >= nextBurst && t > burstEnd) {
+                if (call != null) {
+                    // a laser held on the horde moves its fire round (as far as 30 blocks from the first mark)
+                    Vec3 spot = call.liveSpot();
+                    if (spot != null && spot.distanceTo(target) <= StrikeCalls.DRIFT) {
+                        aim = spot;
+                    }
+                }
                 mark = pick(level, muzzle);
                 if (mark == null) {
                     nextBurst = t + 1;
@@ -573,7 +719,7 @@ public final class AirStrikes {
             int shots = (int) rounds;
             rounds -= shots;
             for (int i = 0; i < shots; i++) {
-                round(level, muzzle, mark.position().add(0, 1, 0), 1.4, 1.5, 2.6, 10, true);
+                round(level, muzzle, mark.position().add(0, 1, 0), 1.4, 1.5, 2.6, 10, true, this);
             }
         }
 
@@ -581,9 +727,14 @@ public final class AirStrikes {
         private Zombie pick(ServerLevel level, Vec3 muzzle) {
             Zombie best = null;
             double bestD = Double.MAX_VALUE;
-            for (Zombie z : level.getEntitiesOfClass(Zombie.class, new AABB(target, target).inflate(50, 30, 50),
+            // a called Apache works only round its mark
+            double reach = call != null ? 20 : 50;
+            for (Zombie z : level.getEntitiesOfClass(Zombie.class, new AABB(aim, aim).inflate(reach, 30, reach),
                     z -> z.isAlive() && ZombieTypes.isWalker(z))) {
-                double d = z.position().distanceToSqr(target) * (0.6 + 0.8 * level.getRandom().nextDouble());
+                if (call != null && z.position().distanceToSqr(aim) > reach * reach) {
+                    continue;
+                }
+                double d = z.position().distanceToSqr(aim) * (0.6 + 0.8 * level.getRandom().nextDouble());
                 if (d >= bestD || nextToPlayer(level, z.position(), 2.5)) {
                     continue;
                 }
@@ -614,7 +765,7 @@ public final class AirStrikes {
      * heart, less further off); the ground there throws up dust and a flash. A tracer if told.
      */
     private static void round(ServerLevel level, Vec3 muzzle, Vec3 aim, double spread, double kill, double hurt, float damage,
-            boolean tracer) {
+            boolean tracer, Run tally) {
         RandomSource random = level.getRandom();
         Vec3 to = aim.add((random.nextDouble() * 2 - 1) * spread, (random.nextDouble() * 2 - 1) * spread * 0.3,
                 (random.nextDouble() * 2 - 1) * spread);
@@ -639,7 +790,7 @@ public final class AirStrikes {
             level.sendParticles(new BlockParticleOption(ParticleTypes.BLOCK, state), true, false, up.x, up.y, up.z, 14, 0.4, 0.4, 0.4, 0.25);
         }
         level.sendParticles(ParticleTypes.LARGE_SMOKE, false, false, up.x, up.y, up.z, 2, 0.3, 0.3, 0.3, 0.03);
-        burst(level, up, kill, hurt, damage, 0.55);
+        burst(level, up, kill, hurt, damage, 0.55, tally);
     }
 
     /**
@@ -647,7 +798,7 @@ public final class AirStrikes {
      * open the worse), and a player within hurt blocks takes up to damage, less further off and a lot less
      * behind cover. Nothing else is touched.
      */
-    private static void burst(ServerLevel level, Vec3 centre, double kill, double hurt, float damage, double tear) {
+    private static void burst(ServerLevel level, Vec3 centre, double kill, double hurt, float damage, double tear, Run tally) {
         DamageSource source = new DamageSource(level.registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE)
                 .getOrThrow(ModDamageTypes.AIR_STRIKE), centre);
         double reach = Math.max(kill, hurt);
@@ -659,6 +810,9 @@ public final class AirStrikes {
                     double strength = 1 - d / kill;
                     Dismember.blast(zombie, centre, tear + (1 - tear) * strength);
                     zombie.hurtServer(level, source, zombie.getMaxHealth() * 50);
+                    if (tally != null && !zombie.isAlive()) {
+                        tally.kills++;
+                    }
                 }
             } else if (e instanceof ServerPlayer player && d < hurt) {
                 boolean covered = level.clip(new ClipContext(centre, player.getEyePosition(), ClipContext.Block.COLLIDER,
@@ -666,6 +820,9 @@ public final class AirStrikes {
                 float dealt = (float) (damage * Math.pow(1 - d / hurt, 1.2) * (covered ? 0.25 : 1));
                 if (dealt > 0.5f) {
                     player.hurtServer(level, source, dealt);
+                    if (tally != null) {
+                        tally.hurt.add(player.getName().getString());
+                    }
                 }
             }
         }
@@ -675,10 +832,12 @@ public final class AirStrikes {
     private static final class Falling {
         Vec3 pos, vel;
         int age;
+        final Run run;
 
-        Falling(Vec3 pos, Vec3 vel) {
+        Falling(Vec3 pos, Vec3 vel, Run run) {
             this.pos = pos;
             this.vel = vel;
+            this.run = run;
         }
 
         /** One tick of its fall; true once it's gone off (or fallen out of the world, or taken too long). */
@@ -699,13 +858,13 @@ public final class AirStrikes {
                 level.sendParticles(ParticleTypes.SMOKE, false, false, pos.x, pos.y, pos.z, 1, 0.05, 0.05, 0.05, 0);
                 return false;
             }
-            explode(level, hit.getLocation().add(normal(hit).scale(0.5)));
+            explode(level, hit.getLocation().add(normal(hit).scale(0.5)), run);
             return true;
         }
     }
 
     /** A bomb going off: fire and smoke, the blast heard near and far, and everything caught in it (no blocks). */
-    private static void explode(ServerLevel level, Vec3 at) {
+    private static void explode(ServerLevel level, Vec3 at, Run tally) {
         ZcConfig.World cfg = ZcConfig.get().world;
         level.sendParticles(ParticleTypes.EXPLOSION_EMITTER, true, true, at.x, at.y + 1, at.z, 2, 1.5, 0.8, 1.5, 0);
         level.sendParticles(ParticleTypes.EXPLOSION, true, true, at.x, at.y + 1, at.z, 16, 3, 1.5, 3, 0);
@@ -722,7 +881,7 @@ public final class AirStrikes {
             player.connection.send(new ClientboundSoundPacket(BuiltInRegistries.SOUND_EVENT.wrapAsHolder(sound), SoundSource.NEUTRAL,
                     at.x, at.y, at.z, 2.5f, 0.9f + level.getRandom().nextFloat() * 0.2f, level.getRandom().nextLong()));
         }
-        burst(level, at, cfg.strikeBombKill, cfg.strikeBombHurt, (float) cfg.strikeBombDamage, 0.3);
+        burst(level, at, cfg.strikeBombKill, cfg.strikeBombHurt, (float) cfg.strikeBombDamage, 0.3, tally);
     }
 
     private static Vec3 normal(BlockHitResult hit) {

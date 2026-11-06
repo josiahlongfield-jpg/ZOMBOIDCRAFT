@@ -1182,6 +1182,12 @@ public final class ZcConfig {
         public double strikeBombHurt = 7;
         public double strikeBombDamage = 30;
         /**
+         * A radio operator's called strikes (world/events/StrikeCalls, Josiah 2026-11-06): one each strikeCallMinutes
+         * for a base (20, an in-game day), strikeCallCommsCut less with a comms post there.
+         */
+        public double strikeCallMinutes = 20;
+        public double strikeCallCommsCut = 1 / 3.0;
+        /**
          * Where a car's key is, as shares: left in the ignition, in the glovebox, on a zombie that dies near the car
          * (each death nearby has carKeyDrop of being the one); the rest are lost, and the car has to be hotwired.
          */

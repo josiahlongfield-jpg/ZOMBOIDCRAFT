@@ -1,7 +1,10 @@
 package com.zomboidcraft.client.operator;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.zomboidcraft.client.combat.RailLights;
 import com.zomboidcraft.client.npc.NpcSkin;
+import com.zomboidcraft.combat.Attachments;
+import com.zomboidcraft.combat.LocalGuns;
 import com.zomboidcraft.client.npc.NpcSkinDraw;
 import net.fabricmc.fabric.api.client.rendering.v1.LivingEntityRenderLayerRegistrationCallback;
 import net.minecraft.client.Minecraft;
@@ -13,7 +16,9 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.player.AvatarRenderer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 /**
  * Draws a player as the Tarkov operator ({@link Operator}) where the hidden vanilla model stands: body, head, helmet and
@@ -43,6 +48,7 @@ public final class OperatorLayer extends RenderLayer<AvatarRenderState, PlayerMo
         Matrix4f[] bones = Operator.pose(skin, state, player);
         if (bones == null) return;
         boolean rifle = Operator.holdsRifle(player.getMainHandItem());
+        if (rifle) rail(skin, bones, player.getMainHandItem(), state);
         pose.pushPose();
         pose.translate(0, 1.501f, 0);
         pose.scale(1 / 0.9375f, 1 / 0.9375f, 1 / 0.9375f);
@@ -56,5 +62,26 @@ public final class OperatorLayer extends RenderLayer<AvatarRenderState, PlayerMo
         NpcSkinDraw.submitGroups(skin.groups, bones, 0, g -> !g.piece.equals("gun") || rifle,
                 g -> skin.texture(g.texture, Operator.MODEL), Operator.buffers(state, skin), light, overlay, pose, collector);
         pose.popPose();
+    }
+
+    /**
+     * Where his rifle's laser and light lenses are, for RailLights to shine them from (in the player model's pixels:
+     * vanilla's model space, y down, facing -z, the way it reads the posed arms' rifles).
+     */
+    private static void rail(NpcSkin skin, Matrix4f[] bones, ItemStack gun, AvatarRenderState state) {
+        LocalGuns.Spec spec = LocalGuns.of(gun);
+        int weapon = skin.bone("weapon");
+        if (spec == null || spec.rail == null || weapon < 0 || !(Attachments.lightOn(gun) || Attachments.laserOn(gun))) return;
+        Vector3f laser = lens(bones[weapon], spec.rail.laser), light = lens(bones[weapon], spec.rail.light);
+        if (laser == null) laser = light;
+        if (light == null) light = laser;
+        if (laser != null) RailLights.seen(state, laser, light);
+    }
+
+    private static Vector3f lens(Matrix4f weapon, LocalGuns.Device d) {
+        if (d == null || d.third == null) return null;
+        // his metres (feet on the ground, facing +z) into vanilla's model pixels, the way submit draws him
+        Vector3f m = weapon.transformPosition(new Vector3f(d.third[0], d.third[1], d.third[2]));
+        return new Vector3f(m.x / 0.9375f, 1.501f - m.y / 0.9375f, -m.z / 0.9375f).mul(16);
     }
 }
