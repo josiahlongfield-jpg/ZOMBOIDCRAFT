@@ -291,12 +291,13 @@ public class BaseMoveTest implements FabricClientGameTest {
                 barracks.getX() + 17.5, barracks.getY() + 1, barracks.getZ() + 6.5, 180f, 40f));
         ctx.waitTicks(10);
         yard = barracks;
-        LOG.info("ZCBASE grow check: {}", sp.getServer().<String>computeOnServer(s -> {
+        String growCheck = sp.getServer().computeOnServer(s -> {
             ServerPlayer p = player(s);
             Build.Spot spot = Build.POST.spot(s.overworld(), barracks.offset(17, 0, 4), Direction.UP, Direction.NORTH);
             return "at " + p.blockPosition() + " missing " + Build.POST.missing(p) + " spot " + spot.ok() + " " + spot.problem() + " " + spot.pos()
                     + " claim " + com.zomboidcraft.building.base.Claims.refusal(s.overworld(), spot.pos() == null ? p.blockPosition() : spot.pos(), p);
-        }));
+        });
+        LOG.info("ZCBASE grow check: {}", growCheck);
         build(ctx, sp, Build.POST, barracks.offset(17, 0, 4), Direction.UP, Direction.NORTH);
         String after = sp.getServer().computeOnServer(s -> String.valueOf(com.zomboidcraft.building.base.Claims.baseOf(s.overworld(), player(s).getUUID()).max()));
         LOG.info("ZCBASE grow: max corner {} -> {}", before, after);
