@@ -214,6 +214,9 @@ public final class PaperMaps {
         if (kind.equals("offshore")) {
             return "The " + Bunkers.offshoreName(gen.county()) + ", at anchor and listing. Swim out; her pilot ladder is down.";
         }
+        if (kind.equals("fort")) {
+            return Bunkers.fortName(gen.county()) + ". The rusty ports face the sea. Under the far magazine.";
+        }
         return hint(kind);
     }
 

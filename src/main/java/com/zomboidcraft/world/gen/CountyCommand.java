@@ -172,6 +172,7 @@ public final class CountyCommand {
                     case "floor" -> "on the stair landing at the bricked-up door of the missing floor";
                     case "vault" -> "at the deposit boxes with no numbers in the bank's vault";
                     case "subway" -> "behind the steel door in the bricked-up arch, on the old platform";
+                    case "fort" -> "on the hatch among the old shot in the far magazine (swim out to the landing stage on its shore side)";
                     default -> "on the hatch in the electrical room";
                 };
                 String in = switch (b.kind()) {
@@ -184,6 +185,7 @@ public final class CountyCommand {
                     case "floor" -> "high in a tower in ";
                     case "vault" -> "under the bank in ";
                     case "subway" -> "under the subway: ";
+                    case "fort" -> "under " + Bunkers.fortName(county) + ", out in the bay: ";
                     default -> "under ";
                 };
                 src.sendSuccess(() -> Component.literal("The " + b.kind() + " bunker " + in + p + " (" + b.state() + "): " + where), false);

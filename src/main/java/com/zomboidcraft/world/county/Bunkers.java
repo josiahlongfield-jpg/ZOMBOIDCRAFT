@@ -12,7 +12,7 @@ import java.util.List;
  * taken from the cache) nearest first.
  */
 public final class Bunkers {
-    public static final List<String> KINDS = List.of("tower", "floor", "ship", "shelter", "forest", "mine", "silo", "container", "offshore", "vault", "subway");
+    public static final List<String> KINDS = List.of("tower", "floor", "ship", "shelter", "forest", "mine", "silo", "container", "offshore", "vault", "subway", "fort");
 
     /** One bunker: its kind and state, and in world blocks the way in and its blast door. */
     public record Found(String kind, String state, int x, int y, int z, int doorX, int doorY, int doorZ, Place place) {
@@ -49,6 +49,9 @@ public final class Bunkers {
         if (kind == null || kind.equals("offshore")) {
             county.offshoreShip().filter(p -> Math.hypot(p.centreX() - x, p.centreZ() - z) <= radius).ifPresent(out::add);
         }
+        if (kind == null || kind.equals("fort")) {
+            county.harbourFort().filter(p -> Math.hypot(p.centreX() - x, p.centreZ() - z) <= radius).ifPresent(out::add);
+        }
         if (kind == null || kind.equals("subway")) {
             county.ghostStation().filter(p -> Math.hypot(p.centreX() - x, p.centreZ() - z) <= radius).ifPresent(out::add);
         }
@@ -64,6 +67,11 @@ public final class Bunkers {
     /** The name of the ship at anchor off the coast, as the marked maps give it. */
     public static String offshoreName(County county) {
         return county.offshoreShip().map(OffshoreSite::name).orElse("ship");
+    }
+
+    /** The name of the old sea fort in the bay, as the marked maps give it. */
+    public static String fortName(County county) {
+        return county.harbourFort().map(FortSite::name).orElse("fort");
     }
 
     /** In world blocks, the floor of an old mine's cutting in front of its boarded portal. */

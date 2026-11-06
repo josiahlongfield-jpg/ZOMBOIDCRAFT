@@ -1,0 +1,75 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hf_granite": "zomboidcraft:block/city/hf_granite",
+    "hf_granite_tide": "zomboidcraft:block/city/hf_granite_tide",
+    "particle": "zomboidcraft:block/city/hf_granite_tide"
+  },
+  "elements": [
+    {
+      "from": [
+        -2.235,
+        0,
+        9.848
+      ],
+      "to": [
+        19.765,
+        16,
+        12.848
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hf_granite_tide",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#hf_granite",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#hf_granite_tide"
+        },
+        "west": {
+          "texture": "#hf_granite_tide"
+        },
+        "up": {
+          "texture": "#hf_granite",
+          "uv": [
+            0,
+            9.848,
+            16,
+            12.848
+          ]
+        },
+        "down": {
+          "texture": "#hf_granite",
+          "uv": [
+            0,
+            3.1519999999999992,
+            16,
+            6.151999999999999
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8.765,
+          8,
+          9.848
+        ],
+        "axis": "y",
+        "angle": 22.5
+      }
+    }
+  ]
+}

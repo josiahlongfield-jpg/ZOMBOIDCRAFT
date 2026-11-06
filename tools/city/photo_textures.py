@@ -1225,6 +1225,8 @@ import foundry  # noqa: E402
 foundry.register(sys.modules[__name__])
 import zonestory  # noqa: E402
 zonestory.register(sys.modules[__name__])
+import harbourfort  # noqa: E402
+harbourfort.register(sys.modules[__name__])
 
 
 

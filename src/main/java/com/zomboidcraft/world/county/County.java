@@ -539,6 +539,21 @@ public final class County {
         return o;
     }
 
+    private volatile Optional<Place> fort;
+
+    /**
+     * The old sea fort on its shoal in the bay with a bunker under it (FortSite), as a hideout of its
+     * own. Empty in the endless county.
+     */
+    public Optional<Place> harbourFort() {
+        Optional<Place> o = fort;
+        if (o == null) {
+            o = Optional.ofNullable(FortSite.place(this, Noise.hash(seed ^ 0xF047L, 5, 6)));
+            fort = o;
+        }
+        return o;
+    }
+
     /** Every hideout whose footprint plus margin touches the box. */
     public List<Place> hideoutsNear(int x0, int z0, int x1, int z1, int margin) {
         List<Place> out = new ArrayList<>();
@@ -548,6 +563,11 @@ public final class County {
             }
         });
         offshoreShip().ifPresent(p -> {
+            if (p.x0 - margin <= x1 && p.x1 + margin >= x0 && p.z0 - margin <= z1 && p.z1 + margin >= z0) {
+                out.add(p);
+            }
+        });
+        harbourFort().ifPresent(p -> {
             if (p.x0 - margin <= x1 && p.x1 + margin >= x0 && p.z0 - margin <= z1 && p.z1 + margin >= z0) {
                 out.add(p);
             }

@@ -1,0 +1,74 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hf_port_lo": "zomboidcraft:block/city/hf_port_lo",
+    "particle": "zomboidcraft:block/city/hf_port_lo"
+  },
+  "elements": [
+    {
+      "from": [
+        -1.172,
+        0,
+        10.828
+      ],
+      "to": [
+        22.828,
+        16,
+        13.828
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hf_port_lo",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#hf_port_lo",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#hf_port_lo"
+        },
+        "west": {
+          "texture": "#hf_port_lo"
+        },
+        "up": {
+          "texture": "#hf_port_lo",
+          "uv": [
+            0,
+            10.828,
+            16,
+            13.828
+          ]
+        },
+        "down": {
+          "texture": "#hf_port_lo",
+          "uv": [
+            0,
+            2.1720000000000006,
+            16,
+            5.172000000000001
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          10.828,
+          8,
+          10.828
+        ],
+        "axis": "y",
+        "angle": 45.0
+      }
+    }
+  ]
+}
