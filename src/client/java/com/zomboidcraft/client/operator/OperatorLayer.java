@@ -47,8 +47,10 @@ public final class OperatorLayer extends RenderLayer<AvatarRenderState, PlayerMo
         NpcSkin skin = Operator.skin();
         Matrix4f[] bones = Operator.pose(skin, state, player);
         if (bones == null) return;
-        boolean rifle = Operator.holdsRifle(player.getMainHandItem());
-        if (rifle) rail(skin, bones, player.getMainHandItem(), state);
+        ItemStack held = player.getMainHandItem();
+        boolean rifle = Operator.holdsM4(held);
+        String model = rifle ? null : Operator.fpModel(held);
+        if (rifle || model != null) rail(skin, bones, held, state);
         pose.pushPose();
         pose.translate(0, 1.501f, 0);
         pose.scale(1 / 0.9375f, 1 / 0.9375f, 1 / 0.9375f);
@@ -61,7 +63,31 @@ public final class OperatorLayer extends RenderLayer<AvatarRenderState, PlayerMo
         int overlay = LivingEntityRenderer.getOverlayCoords(state, 0);
         NpcSkinDraw.submitGroups(skin.groups, bones, 0, g -> !g.piece.equals("gun") || rifle,
                 g -> skin.texture(g.texture, Operator.MODEL), Operator.buffers(state, skin), light, overlay, pose, collector);
+        // any other Tarkov gun: its own pieces from its first-person model, on his weapon bone
+        NpcSkin gun = model == null ? null : NpcSkin.get(model);
+        int weapon = skin.bone("weapon");
+        Matrix4f[] gunBones = gun == null || weapon < 0 ? null : Operator.held(gun, bones[weapon]);
+        if (gunBones != null) {
+            NpcSkinDraw.submitGroups(gun.groups, gunBones, 0, g -> g.piece.equals("gun"), g -> gun.texture(g.texture, model),
+                    gunBuffers(state.id, gun), light, overlay, pose, collector);
+        }
         pose.popPose();
+    }
+
+    private static final java.util.Map<Integer, Object[][]> GUN_BUFFERS = new java.util.HashMap<>();
+    private static final java.util.Map<Integer, int[]> GUN_FLIP = new java.util.HashMap<>();
+
+    /** Double-buffered skinning buffers for one player's held gun (sized to that gun's model). */
+    private static Object[] gunBuffers(int id, NpcSkin gun) {
+        Object[][] b = GUN_BUFFERS.computeIfAbsent(id, k -> new Object[2][]);
+        int[] flip = GUN_FLIP.computeIfAbsent(id, k -> new int[1]);
+        flip[0] = 1 - flip[0];
+        if (b[flip[0]] == null || b[flip[0]].length != gun.groups.length * 2) b[flip[0]] = new Object[gun.groups.length * 2];
+        if (GUN_BUFFERS.size() > 64) {
+            GUN_BUFFERS.clear();
+            GUN_FLIP.clear();
+        }
+        return b[flip[0]];
     }
 
     /**

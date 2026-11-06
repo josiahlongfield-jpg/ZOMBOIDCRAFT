@@ -272,8 +272,36 @@ public final class Operator {
         return x * x * (3 - 2 * x);
     }
 
-    /** Whether a held stack is the operator's rifle. */
+    /** Whether a held stack is one of the operator's Tarkov guns (the M4A1, or any local gun with its own first person). */
     public static boolean holdsRifle(net.minecraft.world.item.ItemStack stack) {
+        return fpModel(stack) != null;
+    }
+
+    /** Whether it's the M4A1 his third-person model carries on its own bone. */
+    public static boolean holdsM4(net.minecraft.world.item.ItemStack stack) {
         return GUN.equals(stack.get(com.zomboidcraft.combat.LocalGuns.ID));
+    }
+
+    /** The first-person model for a held Tarkov gun (config/zomboidcraft/npc/NAME.zsk), or null for any other stack. */
+    public static String fpModel(net.minecraft.world.item.ItemStack stack) {
+        if (stack == null || stack.isEmpty()) return null;
+        com.zomboidcraft.combat.LocalGuns.Spec spec = com.zomboidcraft.combat.LocalGuns.of(stack);
+        if (spec != null && spec.fp != null) return spec.fp;
+        return holdsM4(stack) ? OperatorView.MODEL : null;
+    }
+
+    /**
+     * The skinning matrices of a held Tarkov gun's own pieces in third person: each where its first-person model's
+     * "held" pose puts it on the gun's root, hung on his weapon bone. Null when it isn't loaded or has no such pose.
+     */
+    static Matrix4f[] held(NpcSkin gun, Matrix4f weaponBone) {
+        NpcSkin.Clip c = gun.clips.get("held");
+        if (c == null) return null;
+        int n = gun.boneNames.length;
+        float[] pos = new float[n * 3], turn = new float[n * 4];
+        sample(c, 0, HOLD, pos, turn);
+        Matrix4f[] out = bones(gun, pos, turn);
+        for (Matrix4f m : out) new Matrix4f(weaponBone).mul(m, m);
+        return out;
     }
 }

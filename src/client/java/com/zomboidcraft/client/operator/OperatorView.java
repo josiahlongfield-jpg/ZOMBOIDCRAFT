@@ -54,14 +54,19 @@ public final class OperatorView {
 
     private static final String IDLE = "idle_armed", FIRE = "fire", DRAW = "hands_in", LOOK = "look";
     private static final String OUT = "mag_out_0", IN = "mag_in_0", CHARGE = "reload_charge_0";
+    /** A gun's own empty reload, when its model has one (the PM: the slide locked back). */
+    private static final String EMPTY_OUT = "empty_out", EMPTY_IN = "empty_in", EMPTY_CHARGE = "empty_charge";
+    /** The first-person model drawn last (another gun drawn starts over from its draw). */
+    private static String drawn;
     /** The holographic sight's mesh (its bone in the pack), and how far ahead of the eye its sight sits when aiming. */
     private static final String SCOPE = "scope_all_eotech_exps3_LOD0";
     private static final float EYE = 0.10f;
     /**
      * The reticle, drawn on the sight's glass (0.2 m out from its eye point, just this side of the lens) so it only
-     * ever shows in the window: its texture spans 2.54 degrees there, so the ring is the real sight's 68 MOA.
+     * ever shows in the window: the EOTech's texture spans 2.54 degrees there, so the ring is the real sight's 68 MOA
+     * (another gun's sight gives its own span, LocalGuns.Spec.reticleMoa).
      */
-    private static final float RETICLE_AT = 0.195f, RETICLE_SIZE = 0.0443f * RETICLE_AT;
+    private static final float RETICLE_AT = 0.195f;
 
     private static String clip = null;
     private static float clipStart;
@@ -87,15 +92,17 @@ public final class OperatorView {
      * False when the held gun isn't the operator's rifle or this PC hasn't got its file.
      */
     public static boolean submit(PoseStack pose, SubmitNodeCollector out, int light, PlayerRenderState state, ItemStack gun) {
-        if (!Operator.holdsRifle(gun)) return false;
-        NpcSkin skin = NpcSkin.get(MODEL);
+        String model = Operator.fpModel(gun);
+        if (model == null) return false;
+        NpcSkin skin = NpcSkin.get(model);
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
         if (skin == null || player == null || state.avatarRenderState == null) return false;
         if (state.avatarRenderState.isInvisible) return true;
         float now = state.avatarRenderState.ageInTicks / 20f;
         int n = skin.boneNames.length;
-        if (pos == null || pos.length != n * 3) {
+        if (pos == null || pos.length != n * 3 || !model.equals(drawn)) {
+            drawn = model;
             pos = new float[n * 3];
             turn = new float[n * 4];
             fromPos = new float[n * 3];
@@ -112,7 +119,7 @@ public final class OperatorView {
             reloading = false;
             play(skin, DRAW, now, 0);
             aim = 0;
-            sound(player, "draw");
+            sound(player, gun, "draw");
         }
         lastSlot = slot;
         lastDrawn = now;
@@ -122,9 +129,17 @@ public final class OperatorView {
         if (lastStep == 0 && step >= 1 && !reloading) {
             reloading = true;
             queue.clear();
-            queue.add(IN);
-            if (step > 1.25f && step < 2) queue.add(CHARGE);
-            play(skin, OUT, now, 0.12f);
+            boolean empty = step > 1.25f && step < 2;
+            if (empty && skin.clips.containsKey(EMPTY_OUT)) {
+                // a gun with its own empty reload (the PM's slide locked back: out, in, the slide let go)
+                queue.add(EMPTY_IN);
+                queue.add(EMPTY_CHARGE);
+                play(skin, EMPTY_OUT, now, 0.12f);
+            } else {
+                queue.add(IN);
+                if (empty) queue.add(CHARGE);
+                play(skin, OUT, now, 0.12f);
+            }
         } else if (step == 0 && reloading && remaining(skin, now) > 0.35f) {
             // called off (or done well early): back to the idle
             reloading = false;
@@ -195,25 +210,28 @@ public final class OperatorView {
         if (BUFFERS[buffer] == null || BUFFERS[buffer].length != skin.groups.length * 2) {
             BUFFERS[buffer] = new Object[skin.groups.length * 2];
         }
-        NpcSkinDraw.submitGroups(skin.groups, bones, 0, g -> true, g -> skin.texture(g.texture, MODEL), BUFFERS[buffer],
+        NpcSkinDraw.submitGroups(skin.groups, bones, 0, g -> true, g -> skin.texture(g.texture, model), BUFFERS[buffer],
                 light, net.minecraft.client.renderer.texture.OverlayTexture.NO_OVERLAY, pose, out);
-        int scope = skin.bone(SCOPE);
+        LocalGuns.Spec spec = LocalGuns.of(gun);
+        int scope = skin.bone(spec != null && spec.sight != null ? spec.sight : SCOPE);
         float lit = Operator.smooth((aim - 0.5f) / 0.5f);
         if (sightAt != null && scope >= 0 && lit > 0) {
-            reticle(skin, new Matrix4f(bones[scope]).mul(sightAt), lit, pose, out);
+            float moa = spec != null && spec.fp != null ? spec.reticleMoa : 152.4f;
+            reticle(skin, model, new Matrix4f(bones[scope]).mul(sightAt), lit, moa, pose, out);
         }
         pose.popPose();
         return true;
     }
 
     /** The sight's own red reticle, glowing, on its line of sight (sight frame: x right, y up, looking down -z). */
-    private static void reticle(NpcSkin skin, Matrix4f sight, float lit, PoseStack pose, SubmitNodeCollector out) {
-        net.minecraft.resources.Identifier tex = skin.texture("reticle", MODEL);
+    private static void reticle(NpcSkin skin, String model, Matrix4f sight, float lit, float moa, PoseStack pose,
+                                SubmitNodeCollector out) {
+        net.minecraft.resources.Identifier tex = skin.texture("reticle", model);
         if (tex == null) return;
         boolean shaders = com.zomboidcraft.client.combat.RailLights.shaderPackOn();
         int c = Math.round(255 * lit);
         int colour = 0xFF000000 | c << 16 | c << 8 | c;
-        float h = RETICLE_SIZE / 2, z = -RETICLE_AT;
+        float h = (float) (Math.toRadians(moa / 60.0) * RETICLE_AT) / 2, z = -RETICLE_AT;
         pose.pushPose();
         pose.mulPose(sight);
         out.submitCustomGeometry(pose, shaders ? net.minecraft.client.renderer.rendertype.RenderTypes.beaconBeam(tex, true)
@@ -276,7 +294,8 @@ public final class OperatorView {
     /** Whether the operator's rifle is in hand and drawn by Tarkov's clips (Minecraft's bob and hand lag are left off). */
     public static boolean steady() {
         LocalPlayer player = Minecraft.getInstance().player;
-        return player != null && Operator.holdsRifle(player.getMainHandItem()) && NpcSkin.get(MODEL) != null;
+        String model = player == null ? null : Operator.fpModel(player.getMainHandItem());
+        return model != null && NpcSkin.get(model) != null;
     }
 
     /** Whether the operator's first person is drawing the rifle now (RifleView leaves its own arms off). */
@@ -315,9 +334,11 @@ public final class OperatorView {
     }
 
     /** A sound of the rifle's own from the Tarkov sound pack (weapon.local/tarkov_m4a1/NAME), heard only here. */
-    private static void sound(LocalPlayer player, String name) {
+    private static void sound(LocalPlayer player, ItemStack gun, String name) {
+        LocalGuns.Spec spec = LocalGuns.of(gun);
+        String id = spec != null && spec.id != null ? spec.id : Operator.GUN;
         SoundEvent e = SoundEvent.createVariableRangeEvent(ZomboidCraft.id(com.zomboidcraft.combat.LocalGuns.SOUND_PREFIX
-                + Operator.GUN + "/" + name));
+                + id.toLowerCase(java.util.Locale.ROOT) + "/" + name));
         player.level().playLocalSound(player.getX(), player.getEyeY(), player.getZ(), e, SoundSource.PLAYERS, 0.8f, 1f, false);
     }
 }

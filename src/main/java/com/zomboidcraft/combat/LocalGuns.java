@@ -74,6 +74,14 @@ public final class LocalGuns {
         public java.util.List<String> kit;
         /** Where its own laser and light shine from (client RailLights). */
         public Rail rail;
+        /**
+         * Its Tarkov first person (2026-11-06, the batch after the M4A1): the model in config/zomboidcraft/npc drawing
+         * Tarkov's arms and this gun with its clips ("operator_tarkov_pm"); none: the M4A1's or our own.
+         */
+        public String fp;
+        /** The sight's mesh in that model, whose reticle is drawn on its glass, and how wide its reticle texture spans (MOA). */
+        public String sight;
+        public float reticleMoa = 152.4f;
         /** Resolved: the anchor's numbers with this gun's laid over them. */
         transient ZcConfig.GunStats merged;
         transient GunType type;
