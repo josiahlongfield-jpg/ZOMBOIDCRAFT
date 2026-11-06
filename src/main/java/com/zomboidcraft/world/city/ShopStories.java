@@ -110,6 +110,18 @@ public final class ShopStories {
         return roll(p, w, d);
     }
 
+    /** As {@link #dice(Placer, int, int)}, salted (a tower's floor number) so each storey rolls its own. */
+    public static SplittableRandom dice(Placer p, int w, int d, long salt) {
+        SplittableRandom dice = new SplittableRandom(seed(p, w, d) ^ salt * 0xD1B54A32D192ED03L);
+        double r;
+        try {
+            r = Math.max(0, rate.getAsDouble());
+        } catch (RuntimeException e) {
+            r = 0.5;
+        }
+        return dice.nextDouble() < Math.min(1, BASE * r) ? dice : null;
+    }
+
     /** A body for StoryMarks at (x, y, z) in p's frame: its outfit, now and then a limb gone. */
     public static void body(Placer p, SplittableRandom rng, double x, int y, double z, String outfit) {
         int limbs = rng.nextDouble() < 0.2 ? 1 << rng.nextInt(8) : 0;
