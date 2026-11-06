@@ -31,6 +31,7 @@ public final class RoomTape {
         float a = fade.update(since < SHOWS);
         if (a <= 0 || type == null) return;
         Minecraft mc = Minecraft.getInstance();
+        if (mc.gui.screen() != null) return;
         Font font = mc.font;
         String title = type.label;
         String sub = grade == RoomType.Grade.NONE ? "Not fitted yet" : grade.label;

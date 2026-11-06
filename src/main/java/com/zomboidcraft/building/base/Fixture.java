@@ -48,7 +48,7 @@ public enum Fixture {
         if (LightSwitch.powered(s)) return LAMP_LIT;
         if (LightSwitch.dark(s)) return LAMP;
         String p = BuiltInRegistries.BLOCK.getKey(s.getBlock()).getPath();
-        if (p.endsWith("_top") || p.contains("_top_") || p.contains("_foot")) return null;
+        if (p.matches(".*_(top|foot)(_.*)?")) return null;
         if (p.startsWith("hs_bed_head") || p.equals("bunk_medbed_head") || p.startsWith("hs_gurney") && !p.contains("bag")) return HOSPITAL_BED;
         if (p.contains("footlocker")) return FOOTLOCKER;
         if (p.equals("home_wood_stove")) return WOOD_STOVE;
@@ -62,7 +62,7 @@ public enum Fixture {
                 || p.equals("store_shelf_pharmacy") || p.equals("hs_cart_med") || p.equals("hs_cabinet") || p.equals("hs_cabinet_lo")) {
             return MEDICAL;
         }
-        if (p.startsWith("fit_surgical") || p.equals("hs_or_table")) return SURGICAL;
+        if (p.contains("surgical_table") || p.equals("hs_or_table")) return SURGICAL;
         if (p.contains("gun_bench") || p.equals("pw_vise_bench")) return GUN_BENCH;
         if (p.contains("gun_rack") || p.contains("gun_cabinet")) return GUN_RACK;
         if (p.contains("ammo") || p.equals("bunk_locker") || p.equals("sh_locker") || p.equals("fit_dc_locker")) return AMMO;

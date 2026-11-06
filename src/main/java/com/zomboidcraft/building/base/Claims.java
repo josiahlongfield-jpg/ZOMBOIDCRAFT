@@ -246,7 +246,7 @@ public final class Claims {
         if (mine == null) return "Claim a base first.";
         if (who.equals(player.getUUID())) return null;
         ServerPlayer other = level.getServer().getPlayerList().getPlayer(who);
-        String name = other != null ? other.getName().getString() : "them";
+        String name = other != null ? other.getName().getString() : "A squad member";
         if (in == mine.squad().contains(who)) return in ? name + " is already in your squad." : name + " isn't in your squad.";
         List<Claim> now = new ArrayList<>(all(level));
         now.set(now.indexOf(mine), mine.withSquad(who, name, in));

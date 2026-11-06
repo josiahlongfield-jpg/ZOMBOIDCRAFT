@@ -191,7 +191,7 @@ public class BaseMoveTest implements FabricClientGameTest {
         });
         ctx.waitTicks(20);
         sp.getConnection().waitForChunksRender();
-        standIn(ctx, sp, 2, 2, 180f, 20f);
+        standIn(ctx, sp, 2, 1, 0f, 22f);
         frame(ctx, "barracks-unclaimed");
         LOG.info("ZCBASE before claim: {}", reading(sp));
         menu(ctx, "gmenu-claim");
@@ -211,13 +211,13 @@ public class BaseMoveTest implements FabricClientGameTest {
             put(s.overworld(), 2, 1, 7, "bunk_footlocker");
             put(s.overworld(), 4, 1, 7, "bunk_footlocker");
         });
-        standIn(ctx, sp, 3, 3, 150f, 25f);
-        standIn(ctx, sp, 2, 2, 180f, 20f);
+        standIn(ctx, sp, 7, 3, 0f, 22f);
+        standIn(ctx, sp, 2, 1, 0f, 22f);
         ctx.waitTicks(25);
         LOG.info("ZCBASE bunk with footlockers: {}", reading(sp));
         frame(ctx, "bunk-full");
 
-        // the med bay, middle: a stocked first-aid cabinet and a hospital bed, then the surgery
+        // the med bay, middle: a stocked first-aid cabinet and a hospital bed, then the light on and a sink (the surgical table is still to make)
         sp.getServer().runOnServer(s -> {
             ServerLevel level = s.overworld();
             put(level, 7, 1, 7, "bunk_st_medical");
@@ -229,22 +229,21 @@ public class BaseMoveTest implements FabricClientGameTest {
             put(level, 9, 1, 7, "hs_bed_foot");
             level.setBlockAndUpdate(barracks.offset(8, 5, 4), CityBlocks.resolve("ceiling_light_off"));
         });
-        standIn(ctx, sp, 8, 2, 180f, 20f);
+        standIn(ctx, sp, 8, 1, 0f, 22f);
         ctx.waitTicks(25);
         LOG.info("ZCBASE med bay, light off: {}", reading(sp));
         frame(ctx, "medbay-basic");
         sp.getServer().runOnServer(s -> s.overworld().setBlockAndUpdate(barracks.offset(8, 5, 4), CityBlocks.resolve("ceiling_light")));
-        standIn(ctx, sp, 7, 2, 180f, 20f);
+        standIn(ctx, sp, 7, 1, 10f, 22f);
         ctx.waitTicks(25);
         LOG.info("ZCBASE med bay, light on: {}", reading(sp));
         sp.getServer().runOnServer(s -> {
-            put(s.overworld(), 6, 1, 1, "fit_surgical");
             put(s.overworld(), 10, 1, 1, "hs_sink");
         });
-        standIn(ctx, sp, 8, 3, 0f, 20f);
+        standIn(ctx, sp, 8, 2, 0f, 22f);
         ctx.waitTicks(25);
-        LOG.info("ZCBASE med bay, surgery: {}", reading(sp));
-        frame(ctx, "medbay-full");
+        LOG.info("ZCBASE med bay, sink: {}", reading(sp));
+        frame(ctx, "medbay-equipped");
 
         // the kitchen, east: a wood stove and a counter, then a fridge and sink, then the pantry
         sp.getServer().runOnServer(s -> {
@@ -256,7 +255,7 @@ public class BaseMoveTest implements FabricClientGameTest {
             put(level, 15, 1, 1, "store_shelf_grocery");
             put(level, 14, 1, 1, "store_shelf_grocery");
         });
-        standIn(ctx, sp, 13, 3, 180f, 20f);
+        standIn(ctx, sp, 13, 2, 0f, 22f);
         ctx.waitTicks(25);
         LOG.info("ZCBASE kitchen, two shelves: {}", reading(sp));
         frame(ctx, "kitchen-equipped");
@@ -292,6 +291,12 @@ public class BaseMoveTest implements FabricClientGameTest {
                 barracks.getX() + 17.5, barracks.getY() + 1, barracks.getZ() + 6.5, 180f, 40f));
         ctx.waitTicks(10);
         yard = barracks;
+        LOG.info("ZCBASE grow check: {}", sp.getServer().computeOnServer(s -> {
+            ServerPlayer p = player(s);
+            Build.Spot spot = Build.POST.spot(s.overworld(), barracks.offset(17, 0, 4), Direction.UP, Direction.NORTH);
+            return "at " + p.blockPosition() + " missing " + Build.POST.missing(p) + " spot " + spot.ok() + " " + spot.problem() + " " + spot.pos()
+                    + " claim " + com.zomboidcraft.building.base.Claims.refusal(s.overworld(), spot.pos() == null ? p.blockPosition() : spot.pos(), p);
+        }));
         build(ctx, sp, Build.POST, barracks.offset(17, 0, 4), Direction.UP, Direction.NORTH);
         String after = sp.getServer().computeOnServer(s -> String.valueOf(com.zomboidcraft.building.base.Claims.baseOf(s.overworld(), player(s).getUUID()).max()));
         LOG.info("ZCBASE grow: max corner {} -> {}", before, after);

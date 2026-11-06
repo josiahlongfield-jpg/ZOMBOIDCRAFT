@@ -640,6 +640,9 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
         drawTransfers(g);
     }
 
+    /** Space between page names on the top bar (eleven pages since the Base page). */
+    private static final int TAB_GAP = 9;
+
     /** The top bar: who you are, the pages, and the time and weather. */
     private void top(GuiGraphicsExtractor g, int x, int y, int mx, int my) {
         LocalPlayer player = minecraft.player;
@@ -657,7 +660,7 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
         float total = 0;
         for (Page p : Page.values()) {
             labels[p.ordinal()] = p.label;
-            total += KitDraw.capsWidth(font, p.label, 1f) + 14;
+            total += KitDraw.capsWidth(font, p.label, 1f) + TAB_GAP;
         }
         total += 2 * 13;
         float px = x + W / 2f - total / 2f;
@@ -673,9 +676,9 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
             if (on) g.fill(Math.round(px), y + 20, Math.round(px + w), y + 21, KitDraw.TEXT);
             if (p.open) hot(Math.round(px) - 2, y + 7, Math.round(w) + 4, 14, () -> open(p));
             else hot(Math.round(px) - 2, y + 7, Math.round(w) + 4, 14, ItemStack.EMPTY, null, null, "Not built yet", -1);
-            px += w + 14;
+            px += w + TAB_GAP;
         }
-        px += 7 - 14 + 6;
+        px += 7 - TAB_GAP + 6;
         KitDraw.key(g, font, "R", Math.round(px), y + 9, KitDraw.DIM);
         hot(Math.round(px), y + 9, 10, 10, () -> flip(1));
 
