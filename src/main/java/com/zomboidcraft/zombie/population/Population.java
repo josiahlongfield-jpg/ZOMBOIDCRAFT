@@ -133,6 +133,7 @@ public final class Population {
         net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry.clientboundPlay().register(CrowdPayload.TYPE, CrowdPayload.CODEC);
         ServerTickEvents.END_SERVER_TICK.register(Population::tick);
         Herds.register();
+        DistrictDead.register();
         ServerLifecycleEvents.SERVER_STOPPED.register(server -> {
             QUEUE.clear();
             ZONES.clear();
@@ -328,7 +329,10 @@ public final class Population {
             recs = merged;
             given = old.given();
         }
-        chunk.setAttached(POP, new Pop(recs, given, day(level), old == null ? 0 : old.seen()));
+        setPop(chunk, new Pop(recs, given, day(level), old == null ? 0 : old.seen()));
+        if (old == null) {
+            DistrictDead.firstGiven(chunk, given, places);
+        }
         placed += recs.length - (old == null ? 0 : old.recs().length);
         return true;
     }
@@ -360,7 +364,7 @@ public final class Population {
                 int bx = cx << 4, bz = cz << 4;
                 int[] kept = Arrays.stream(pop.recs()).filter(r -> !cleared(one, bx + (r & 15), y(r), bz + (r >> 4 & 15))).toArray();
                 if (kept.length != pop.recs().length) {
-                    chunk.setAttached(POP, pop.with(kept));
+                    setPop(chunk, pop.with(kept));
                 }
             }
         }
@@ -737,7 +741,7 @@ public final class Population {
                         } else if (r <= reach) {
                             chunks.put(key, chunk);
                             if (seenStep) {
-                                chunk.setAttached(POP, new Pop(pop.recs(), pop.given(), pop.day(), now));
+                                setPop(chunk, new Pop(pop.recs(), pop.given(), pop.day(), now));
                             }
                         }
                     }
@@ -816,8 +820,15 @@ public final class Population {
                     kept[k++] = recs[i];
                 }
             }
-            e.getKey().setAttached(POP, pop.with(kept));
+            setPop(e.getKey(), pop.with(kept));
         }
+    }
+
+    /** Sets a chunk's records, keeping its district's count of the dead in step. */
+    private static void setPop(LevelChunk chunk, Pop pop) {
+        Pop old = chunk.getAttached(POP);
+        chunk.setAttached(POP, pop);
+        DistrictDead.records(chunk, pop.recs().length - (old == null ? 0 : old.recs().length));
     }
 
     private static boolean spawn(ServerLevel level, BlockPos pos, int rec, Vec3 woke) {
@@ -833,6 +844,7 @@ public final class Population {
         }
         zombie.setYRot(zombie.getRandom().nextFloat() * 360);
         zombie.setYHeadRot(zombie.getYRot());
+        DistrictDead.cameOut(level, zombie);
         if (woke != null) {
             ((NoiseListener) zombie).zomboidcraft$hear(woke);
         } else {
@@ -892,7 +904,8 @@ public final class Population {
             }
             int[] recs = Arrays.copyOf(pop.recs(), pop.recs().length + 1);
             recs[recs.length - 1] = rec;
-            chunk.setAttached(POP, pop.with(recs));
+            setPop(chunk, pop.with(recs));
+            DistrictDead.leave(level, z);
             z.discard();
             folded++;
         }
@@ -968,7 +981,7 @@ public final class Population {
                     n++;
                 }
                 if (k != recs.length) {
-                    chunk.setAttached(POP, pop.with(Arrays.copyOf(kept, k)));
+                    setPop(chunk, pop.with(Arrays.copyOf(kept, k)));
                 }
             }
         }
@@ -1074,12 +1087,12 @@ public final class Population {
             kept[k++] = recs[i];
         }
         int[] gone = Arrays.copyOf(kept, k);
-        chunk.setAttached(POP, pop.with(gone));
+        setPop(chunk, pop.with(gone));
         int[] into = Arrays.copyOf(bestPop.recs(), bestPop.recs().length + arrived.size());
         for (int i = 0; i < arrived.size(); i++) {
             into[bestPop.recs().length + i] = arrived.get(i);
         }
-        best.setAttached(POP, bestPop.with(into));
+        setPop(best, bestPop.with(into));
         return arrived.size();
     }
 
