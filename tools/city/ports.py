@@ -204,6 +204,18 @@ def prism(seed, lit):
     return t
 
 
+def prism_lit(seed, rgb):
+    """A harbour light's lens burning its colour: the prisms tinted through, the bull's-eye white-hot."""
+    t = F.plain(seed, rgb, 0.04, 0.95)
+    hi = tuple(min(255, int(v * 0.5 + 128)) for v in rgb)
+    for y in range(0, N, 6):
+        t.rect(0, y, N, y + 1, col=hi, h=1.0)
+        t.rect(0, y + 4, N, y + 6, col=tuple(int(v * 0.8) for v in rgb), h=0.5)
+    t.rect(N // 2 - 6, N // 2 - 6, N // 2 + 6, N // 2 + 6, col=(255, 248, 236), h=1.0)
+    t.emit[:] = 0.9
+    return t
+
+
 def rock(seed, rgb, weed):
     """Armour stone: quarried granite, grey, lichen high up and weed and barnacles at the tide line."""
     t = F.mat("Rock036", rgb, 1.0, span=2, seed=seed)
@@ -265,6 +277,8 @@ def textures():
            "tk_slip": lambda: slip(49363), "lh_white": lambda: lh_paint(49370, (222, 220, 210)),
            "lh_red": lambda: lh_paint(49371, (164, 46, 38)), "lh_cap": lambda: paint(49372, (40, 44, 42)),
            "lh_prism": lambda: prism(49373, False), "lh_prism_lit": lambda: prism(49374, True),
+           "lh_prism_red_lit": lambda: prism_lit(49375, (255, 46, 34)),
+           "lh_prism_green_lit": lambda: prism_lit(49376, (40, 255, 110)),
            "bw_rock": lambda: rock(49380, (108, 106, 100), False), "bw_rock_weed": lambda: rock(49381, (86, 84, 78), True),
            "bw_concrete": lambda: slip(49382), "wt_stave": lambda: staves(49396), "wt_roof": lambda: tank_roof(49397)}
     for i, (m, (mat_, rgb, _)) in enumerate(BULK.items()):

@@ -99,7 +99,7 @@ final class AirportHangars extends Grounds {
             }
         }
         for (int x = x0 + 6; x <= x1 - 6; x += 12) {
-            set(x, h + 3, z1 + 1, (power && chance() < 0.4 ? "cp_flood_lit" : "cp_flood") + "[facing=south]");
+            set(x, h + 3, z1 + 1, (power && chance() <= 1 ? "cp_flood_lit" : "cp_flood") + "[facing=south]");
         }
         // the skylight strips along the roof, every eight, between the trusses
         for (int x = x0 + 8; x < x1 - 4; x += 8) {

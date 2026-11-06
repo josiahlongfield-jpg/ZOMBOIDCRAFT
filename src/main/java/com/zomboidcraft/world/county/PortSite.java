@@ -978,7 +978,8 @@ final class PortSite extends Site {
         boolean fromWest = chance() < 0.5;
         int bx0 = fromWest ? 0 : lw - bwEnd, bx1 = fromWest ? bwEnd : lw - 1;
         hb.breakwater(bx0, bx1, 8, 5, -1);
-        hb.lighthouse(fromWest ? bx1 - 2 : bx0 + 2, 8, 0, 14);
+        // the breakwater's head light: green to the side a ship keeps it on coming in, red the other
+        hb.lighthouse(fromWest ? bx1 - 2 : bx0 + 2, 8, 0, 14, fromWest ? "rd_lens_green_lit" : "rd_lens_red_lit");
         // the jetties, boats along them
         int jetties = 3 + rng.nextInt(3);
         int spacing = lw / (jetties + 1);

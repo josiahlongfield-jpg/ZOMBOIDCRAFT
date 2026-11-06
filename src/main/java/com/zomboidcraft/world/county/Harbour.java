@@ -210,9 +210,14 @@ final class Harbour {
     /**
      * The lighthouse on (cx, cz) from y up: a round tower tapering as it climbs, banded white and red,
      * the newel and its ladder up the middle; the gallery on top with its ring of railing, the
-     * lantern's glazing round the lens (lit, or dead), the domed cap and its vent and rod.
+     * lantern's glazing round the lens burning, the domed cap and its vent and rod.
      */
     void lighthouse(int cx, int cz, int y, int h) {
+        lighthouse(cx, cz, y, h, "rd_lens_lit");
+    }
+
+    /** The lighthouse with the lens it burns: rd_lens_lit, or a harbour mouth's red or green. */
+    void lighthouse(int cx, int cz, int y, int h, String lens) {
         double ox = cx + 0.5, oz = cz + 0.5, top = 2.8;
         for (int yy = y; yy < y + h; yy++) {
             double r = 3.6 - (3.6 - top) * (yy - y) / Math.max(1, h - 1);
@@ -239,7 +244,8 @@ final class Harbour {
         }
         Round.wall(p, ox, oz, top + 1.4, g + 1, g + 1, "rail", 0);
         Round.wall(p, ox, oz, 1.9, g + 1, g + 2, "glaze", 0);
-        p.set(cx, g + 1, cz, chance() < 0.4 + hit * 0.3 ? "rd_lens" : "rd_lens_lit");
+        chance();  // the old dead-lens roll, kept so everything after it lands where it did: the light burns
+        p.set(cx, g + 1, cz, lens);
         int cap = Round.roof(p, ox, oz, 2.3, "mm", g + 3, "lhcap");
         p.set(cx, cap, cz, "rd_finial");
     }

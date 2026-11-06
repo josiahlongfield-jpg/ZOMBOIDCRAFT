@@ -190,6 +190,21 @@ def tap_glow(seed):
     return t
 
 
+def iron_hot(seed):
+    """The last cast still cooling in the runner: a dark crust broken over iron burning orange,
+    hottest down the middle (refs/industry/blast-furnace-cast-house, foundry-ladle-pour)."""
+    t = F.plain(seed, (52, 34, 26), 0.08, 0.3)
+    yy, xx = np.mgrid[0:N, 0:N]
+    core = np.clip(1 - np.abs(xx - N / 2) / (N * 0.45), 0, 1)
+    crust = P.fbm(t.rng, ((4, 1.0), (8, 0.6), (16, 0.3)))
+    hot = np.clip(core * 1.6 - (crust + 0.2) * 0.9, 0, 1)
+    t.c = t.c * (1 - hot[..., None]) + np.array((255, 128, 30), np.float32) * hot[..., None]
+    t.c = np.where((hot > 0.75)[..., None], t.c * 0.6 + np.array((255, 214, 120), np.float32) * 0.4, t.c)
+    t.crack(10, 0.1, (255, 150, 50))
+    t.emit = np.maximum(t.emit, np.clip(hot * 1.2, 0, 1))
+    return t
+
+
 def basket(seed):
     """A wash house basket: wire mesh, a man's clothes still in it, the boots on top."""
     t = F.plain(seed, (90, 92, 96), 0.05, 0.4)
@@ -316,6 +331,7 @@ def textures():
         "fr_coil_end": lambda: coil_end(61013),
         "fr_roller": lambda: roller(61014),
         "fr_tap_glow": lambda: tap_glow(61015),
+        "fr_iron_hot": lambda: iron_hot(61016),
         "fr_basket": lambda: basket(61016),
         "fr_cards": lambda: cards(61017),
     }
@@ -340,10 +356,10 @@ RUST, SKULL, SAND, STEEL, DARK = "fr_rust", "fr_skull", "fr_castsand", "ext_blac
 CLAY = "concrete_dark"
 
 
-def runner():
-    # the sand bed, the trough down its middle (along z), the iron hard in it
+def runner(hot=False):
+    # the sand bed, the trough down its middle (along z), the iron hard in it, or still glowing
     return [[0, 0, 0, 16, 12, 16, SAND], [0, 12, 0, 5, 14, 16, SAND], [11, 12, 0, 16, 14, 16, SAND],
-            [5, 9, 0, 11, 11, 16, SKULL]]
+            [5, 9, 0, 11, 11, 16, "fr_iron_hot" if hot else SKULL]]
 
 
 def tuyere():
@@ -467,6 +483,7 @@ def blocks():
         for n in (1, 2, 3):
             add(f"fr_{m}_{n}", [[0, 0, 0, 16, 4 * n, 16, f"fr_{m}"]], title, snd, rotate=None, shape=[[0, 0, 0, 16, 4 * n, 16]])
     add("fr_runner", runner(), "Iron Runner", "SAND", rotate="axis", shape=[[0, 0, 0, 16, 14, 16]])
+    add("fr_runner_hot", runner(True), "Iron Runner", "SAND", rotate="axis", shape=[[0, 0, 0, 16, 14, 16]], light=11)
     add("fr_tuyere", tuyere(), "Tuyere", "METAL", decor=True)
     add("fr_tap", tap(False), "Iron Notch", "STONE", shape=[[0, 0, 11, 16, 16, 16]])
     add("fr_tap_lit", tap(True), "Iron Notch", "STONE", light=9, shape=[[0, 0, 11, 16, 16, 16]])

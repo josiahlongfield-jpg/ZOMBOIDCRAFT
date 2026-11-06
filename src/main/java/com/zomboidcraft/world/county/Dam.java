@@ -805,6 +805,8 @@ final class Dam extends Site {
                     set(x1, 6, z, "dm_parapet[facing=east]");
                 }
                 set(ux, 6, TOWER_Z, "bd_vent");
+                // the obstruction light on the tower's lake corner, red over the water
+                set(x0, 7, z0, "aviation_light");
                 // inside: the hoist over the gate's well, the panel, the hatch
                 set(ux, 1, TOWER_Z - 1, "dm_hoist[facing=south]");
                 set(x0 + 1, 1, z0 + 1, "pw_vb_lo[facing=east]");

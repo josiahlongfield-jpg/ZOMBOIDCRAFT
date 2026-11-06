@@ -188,9 +188,10 @@ def glazex(turn, depth):
     return out
 
 
-def lens(lit):
-    """The light: a Fresnel lens's drum of glass prisms on its pedestal, the bull's-eye, a cap."""
-    pr = "lh_prism_lit" if lit else "lh_prism"
+def lens(lit, colour=None):
+    """The light: a Fresnel lens's drum of glass prisms on its pedestal, the bull's-eye, a cap; a
+    harbour mouth's light burns red or green (colour)."""
+    pr = f"lh_prism_{colour}_lit" if colour else "lh_prism_lit" if lit else "lh_prism"
     c = [8, 8, 8]
     return [[5, 0, 5, 11, 3, 11, "lh_cap"], [6.5, 3, 6.5, 9.5, 4, 9.5, GALV],
             [3, 4, 3, 13, 14, 13, pr], [3, 4, 3, 13, 14, 13, pr, None, {"axis": "y", "angle": 45, "origin": c}],
@@ -269,6 +270,8 @@ def blocks():
             add(f"rd_tglaze_{k}_{i}", glaze(t, d, "rp_glass", "ext_black_metal", False), "Tower Cab Glazing", "GLASS", render="translucent")
     add("rd_lens", lens(False), "Lighthouse Lens", "GLASS", rotate=None)
     add("rd_lens_lit", lens(True), "Lighthouse Lens", "GLASS", rotate=None, light=15)
+    add("rd_lens_red_lit", lens(True, "red"), "Harbour Light", "GLASS", rotate=None, light=15)
+    add("rd_lens_green_lit", lens(True, "green"), "Harbour Light", "GLASS", rotate=None, light=15)
     add("rd_cage", cage(), "Caged Ladder", "METAL", climb=True)
     add("rd_finial", finial(), "Silo Cap", "METAL", rotate=None)
     add("rd_bin_cap", bin_cap(), "Bin Cap", "METAL", rotate=None)

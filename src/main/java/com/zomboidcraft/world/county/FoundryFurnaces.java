@@ -226,7 +226,9 @@ final class FoundryFurnaces {
         // the notch, the main trough with its skimmer, the iron runners to the spouts, the slag runner
         set(cx + 5, FLOOR + 1, cz, (i == 0 ? "fr_tap_lit" : "fr_tap") + "[facing=east]");
         for (int x = cx + 6; x <= cx + 16; x++) {
-            set(x, FLOOR, cz, x == cx + 12 ? "fr_skull" : "fr_runner[axis=x]");
+            // the furnace still in blast: her last cast cooling in the trough, orange out to the skimmer
+            String runner = i == 0 && x < cx + 12 ? "fr_runner_hot" : "fr_runner";
+            set(x, FLOOR, cz, x == cx + 12 ? "fr_skull" : runner + "[axis=x]");
         }
         for (int z = cz; z <= z1 + 5; z++) {
             set(cx + 16, FLOOR, z, "fr_runner[axis=z]");
