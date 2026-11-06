@@ -138,7 +138,9 @@ public final class Builder {
         if (build.where == Build.Where.MAKE) return true;
         if (player.position().distanceToSqr(Vec3.atCenterOf(hit)) > (REACH + 1) * (REACH + 1)) return say(player, "That's too far away.");
         Build.Spot spot = build.spot(player.level(), hit, face, looking);
-        return spot.ok() || say(player, spot.problem());
+        if (!spot.ok()) return say(player, spot.problem());
+        String claimed = com.zomboidcraft.building.base.Claims.refusal(player.level(), spot.pos(), player);
+        return claimed == null || say(player, claimed);
     }
 
     private static boolean say(ServerPlayer player, String text) {
@@ -182,6 +184,7 @@ public final class Builder {
                 BuildBlocks.AlarmClock.wind(level, pos, timer * 20);
                 say(player, "It'll ring in " + AlarmClockItem.says(timer) + ".");
             }
+            com.zomboidcraft.building.base.Claims.grow(level, pos, player);
             at = Vec3.atCenterOf(pos);
             level.playSound(null, pos, doneSound(build), SoundSource.PLAYERS, 1f, 0.92f + level.getRandom().nextFloat() * 0.16f);
         }

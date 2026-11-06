@@ -57,7 +57,7 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
     public static final KeyMapping MAP_KEY = new KeyMapping("key.zomboidcraft.map", InputConstants.KEY_M, CATEGORY);
 
     enum Page {
-        CHARACTER("Character", true), CLOTHING("Clothing", true), PACK("Pack", true), SUPPLIES("Supplies", true), BENCH("Bench", true), BUILD("Build", true), HEALTH("Health", true), SKILLS("Skills", true),
+        CHARACTER("Character", true), CLOTHING("Clothing", true), PACK("Pack", true), SUPPLIES("Supplies", true), BENCH("Bench", true), BUILD("Build", true), BASE("Base", true), HEALTH("Health", true), SKILLS("Skills", true),
         FILES("Files", true), MAP("Map", true);
 
         final String label;
@@ -83,6 +83,7 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
     final SuppliesPage supplies = new SuppliesPage(this);
     final BenchPage bench = new BenchPage(this);
     final BuildPage build = new BuildPage(this);
+    final BasePage base = new BasePage(this);
     final HealthPage health = new HealthPage(this);
     final SkillsPage skills = new SkillsPage(this);
     final MapPage map = new MapPage(this);
@@ -560,6 +561,7 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
         if (page == Page.MAP && map.scrolled(mx, my, sy)) return true;
         if (page == Page.SKILLS && skills.scrolled(mx, my, sy)) return true;
         if (page == Page.BUILD && build.scrolled(mx, my, sy)) return true;
+        if (page == Page.BASE && base.scrolled(mx, my, sy)) return true;
         return true;
     }
 
@@ -628,6 +630,7 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
             case SUPPLIES -> supplies.draw(g, x, y, mouseX, mouseY);
             case BENCH -> bench.draw(g, x, y, mouseX, mouseY);
             case BUILD -> build.draw(g, x, y, mouseX, mouseY);
+            case BASE -> base.draw(g, x, y, mouseX, mouseY);
             case HEALTH -> health.draw(g, x, y, mouseX, mouseY);
             case SKILLS -> skills.draw(g, x, y, mouseX, mouseY);
             case FILES -> files.draw(g, x, y, mouseX, mouseY);

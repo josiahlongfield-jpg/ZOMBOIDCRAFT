@@ -113,6 +113,7 @@ public final class Hud {
         MoodleHud.render(g, top);
         WeaponHud.render(g, delta);
         SkillTape.render(g);
+        RoomTape.render(g);
         GrabHud.render(g);
         HeldHud.render(g);
         if (active()) {

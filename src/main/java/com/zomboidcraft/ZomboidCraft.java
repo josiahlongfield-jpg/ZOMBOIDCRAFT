@@ -34,6 +34,7 @@ public class ZomboidCraft implements ModInitializer {
         ModBlocks.register();
         com.zomboidcraft.building.BuildBlocks.register();
         com.zomboidcraft.building.WoodBlocks.register();
+        com.zomboidcraft.building.base.Bases.register();
         com.zomboidcraft.world.blocks.CityBlocks.register();
         com.zomboidcraft.world.cars.Cars.register();
         com.zomboidcraft.world.cars.CarNet.register();

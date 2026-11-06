@@ -58,6 +58,10 @@ public class BaseMoveTest implements FabricClientGameTest {
             sp.getServer().runOnServer(BaseMoveTest::room);
             ctx.waitTicks(40);
             sp.getConnection().waitForChunksRender();
+            if (ROOMS) {
+                rooms(ctx, sp);
+                return;
+            }
             stand(ctx, sp, 4, 1, 60, 30);
             frame(ctx, "room");
 
@@ -109,6 +113,199 @@ public class BaseMoveTest implements FabricClientGameTest {
             soil(ctx, sp);
             pages(ctx);
         }
+    }
+
+    /** Rooms plan step 1: the base claim and the room check, filmed. Set false to film the wood building waves again. */
+    private static final boolean ROOMS = true;
+
+    /** The barracks: a block south of the first room, three rooms in a row with plank doors between them. */
+    private static BlockPos barracks;
+
+    private static void put(ServerLevel level, int x, int y, int z, String name) {
+        BlockState st = CityBlocks.resolve(name.contains("[") ? name : name + "[facing=south]");
+        if (st == null) st = CityBlocks.resolve(name);
+        if (st == null) {
+            LOG.info("ZCBASE missing block {}", name);
+            return;
+        }
+        level.setBlockAndUpdate(barracks.offset(x, y, z), st);
+    }
+
+    private static void barracks(MinecraftServer s) {
+        ServerLevel level = s.overworld();
+        barracks = origin.offset(0, 0, 12);
+        BlockState floor = CityBlocks.resolve("home_floor_oak"), wall = CityBlocks.resolve("home_wall_cream"),
+                brick = CityBlocks.resolve("brick_red"), ceiling = CityBlocks.resolve("home_floor_oak");
+        for (int x = -1; x <= 17; x++) {
+            for (int z = -1; z <= 9; z++) {
+                level.setBlockAndUpdate(barracks.offset(x, 0, z), floor);
+                boolean in = x >= 0 && x <= 16 && z >= 0 && z <= 8;
+                level.setBlockAndUpdate(barracks.offset(x, 5, z), in ? ceiling : Blocks.AIR.defaultBlockState());
+                for (int y = 1; y <= 4; y++) {
+                    boolean edge = x == 0 || x == 16 || z == 0 || z == 8;
+                    boolean part = x == 5 || x == 11;
+                    level.setBlockAndUpdate(barracks.offset(x, y, z), !in ? Blocks.AIR.defaultBlockState() : edge ? brick : part ? wall : Blocks.AIR.defaultBlockState());
+                }
+            }
+        }
+        // the front door on the north wall of the bunk room, and doors through both partitions
+        door(level, barracks.offset(2, 1, 0), Direction.SOUTH);
+        door(level, barracks.offset(5, 1, 4), Direction.EAST);
+        door(level, barracks.offset(11, 1, 4), Direction.EAST);
+        // a ceiling lamp in each room
+        for (int x : new int[] {2, 8, 13}) level.setBlockAndUpdate(barracks.offset(x, 5, 4), CityBlocks.resolve("ceiling_light"));
+    }
+
+    private static void door(ServerLevel level, BlockPos lower, Direction facing) {
+        BlockState d = WoodBlocks.DOOR.defaultBlockState().setValue(net.minecraft.world.level.block.DoorBlock.FACING, facing);
+        level.setBlock(lower, d.setValue(net.minecraft.world.level.block.DoorBlock.HALF, net.minecraft.world.level.block.state.properties.DoubleBlockHalf.LOWER), 18);
+        level.setBlock(lower.above(), d.setValue(net.minecraft.world.level.block.DoorBlock.HALF, net.minecraft.world.level.block.state.properties.DoubleBlockHalf.UPPER), 18);
+    }
+
+    /** Stands in the barracks at (x, z). */
+    private static void standIn(ClientGameTestContext ctx, TestSingleplayerContext sp, double x, double z, float yaw, float pitch) {
+        sp.getServer().runCommand(String.format(java.util.Locale.ROOT, "tp @a %.2f %d %.2f %.1f %.1f",
+                barracks.getX() + x + 0.5, barracks.getY() + 1, barracks.getZ() + z + 0.5, yaw, pitch));
+        ctx.waitTicks(10);
+    }
+
+    /** What the room check reads where the player stands, for the log. */
+    private static String reading(TestSingleplayerContext sp) {
+        return sp.getServer().computeOnServer(s -> {
+            var r = com.zomboidcraft.building.base.Rooms.read(s.overworld(), player(s));
+            return r == null ? "no room" : r.title() + " (next: " + r.next + ", floor " + r.floor() + ", powered " + r.powered() + ", " + r.fixtures() + ")";
+        });
+    }
+
+    private static void rooms(ClientGameTestContext ctx, TestSingleplayerContext sp) {
+        sp.getServer().runOnServer(BaseMoveTest::barracks);
+        sp.getServer().runOnServer(s -> {
+            ServerLevel level = s.overworld();
+            // the bunk room, west: two bunks to start with
+            put(level, 1, 1, 6, "bunk_bed_head");
+            put(level, 1, 1, 7, "bunk_bed_foot");
+            put(level, 3, 1, 6, "bunk_bed_head");
+            put(level, 3, 1, 7, "bunk_bed_foot");
+        });
+        ctx.waitTicks(20);
+        sp.getConnection().waitForChunksRender();
+        standIn(ctx, sp, 2, 2, 180f, 20f);
+        frame(ctx, "barracks-unclaimed");
+        LOG.info("ZCBASE before claim: {}", reading(sp));
+        menu(ctx, "gmenu-claim");
+        String lines = ctx.computeOnClient(mc -> String.valueOf(com.zomboidcraft.client.interact.InteractMenu.collect(mc, mc.player, mc.hitResult)
+                .stream().map(o -> o.label() + (o.can() ? "" : " [" + o.why() + "]")).toList()));
+        LOG.info("ZCBASE g menu indoors: {}", lines);
+        String claimed = sp.getServer().computeOnServer(s -> {
+            String said = com.zomboidcraft.building.base.Claims.claim(s.overworld(), player(s));
+            var c = com.zomboidcraft.building.base.Claims.baseOf(s.overworld(), player(s).getUUID());
+            return said + " box " + (c == null ? "none" : c.min() + " to " + c.max());
+        });
+        LOG.info("ZCBASE claim: {}", claimed);
+        ctx.waitTicks(25);
+        LOG.info("ZCBASE bunk two beds: {}", reading(sp));
+        frame(ctx, "bunk-basic");
+        sp.getServer().runOnServer(s -> {
+            put(s.overworld(), 2, 1, 7, "bunk_footlocker");
+            put(s.overworld(), 4, 1, 7, "bunk_footlocker");
+        });
+        standIn(ctx, sp, 3, 3, 150f, 25f);
+        standIn(ctx, sp, 2, 2, 180f, 20f);
+        ctx.waitTicks(25);
+        LOG.info("ZCBASE bunk with footlockers: {}", reading(sp));
+        frame(ctx, "bunk-full");
+
+        // the med bay, middle: a stocked first-aid cabinet and a hospital bed, then the surgery
+        sp.getServer().runOnServer(s -> {
+            ServerLevel level = s.overworld();
+            put(level, 7, 1, 7, "bunk_st_medical");
+            if (level.getBlockEntity(barracks.offset(7, 1, 7)) instanceof net.minecraft.world.Container box) {
+                if (box instanceof RandomizableContainer rc) rc.setLootTable(null);
+                box.setItem(0, new ItemStack(net.minecraft.world.item.Items.PAPER, 4));
+            }
+            put(level, 9, 1, 6, "hs_bed_head");
+            put(level, 9, 1, 7, "hs_bed_foot");
+            level.setBlockAndUpdate(barracks.offset(8, 5, 4), CityBlocks.resolve("ceiling_light_off"));
+        });
+        standIn(ctx, sp, 8, 2, 180f, 20f);
+        ctx.waitTicks(25);
+        LOG.info("ZCBASE med bay, light off: {}", reading(sp));
+        frame(ctx, "medbay-basic");
+        sp.getServer().runOnServer(s -> s.overworld().setBlockAndUpdate(barracks.offset(8, 5, 4), CityBlocks.resolve("ceiling_light")));
+        standIn(ctx, sp, 7, 2, 180f, 20f);
+        ctx.waitTicks(25);
+        LOG.info("ZCBASE med bay, light on: {}", reading(sp));
+        sp.getServer().runOnServer(s -> {
+            put(s.overworld(), 6, 1, 1, "fit_surgical");
+            put(s.overworld(), 10, 1, 1, "hs_sink");
+        });
+        standIn(ctx, sp, 8, 3, 0f, 20f);
+        ctx.waitTicks(25);
+        LOG.info("ZCBASE med bay, surgery: {}", reading(sp));
+        frame(ctx, "medbay-full");
+
+        // the kitchen, east: a wood stove and a counter, then a fridge and sink, then the pantry
+        sp.getServer().runOnServer(s -> {
+            ServerLevel level = s.overworld();
+            put(level, 12, 1, 7, "home_wood_stove");
+            put(level, 13, 1, 7, "home_counter_oak");
+            put(level, 14, 1, 7, "home_fridge");
+            put(level, 15, 1, 7, "home_sink_oak");
+            put(level, 15, 1, 1, "store_shelf_grocery");
+            put(level, 14, 1, 1, "store_shelf_grocery");
+        });
+        standIn(ctx, sp, 13, 3, 180f, 20f);
+        ctx.waitTicks(25);
+        LOG.info("ZCBASE kitchen, two shelves: {}", reading(sp));
+        frame(ctx, "kitchen-equipped");
+
+        // someone outside the squad can't touch it; let in, they can
+        String guard = sp.getServer().computeOnServer(s -> {
+            ServerLevel level = s.overworld();
+            var other = net.fabricmc.fabric.api.entity.FakePlayer.get(level, new com.mojang.authlib.GameProfile(java.util.UUID.randomUUID(), "Rook"));
+            other.setGameMode(GameType.SURVIVAL);
+            BlockPos bed = barracks.offset(1, 1, 6);
+            StringBuilder b = new StringBuilder();
+            b.append(" stranger may edit=").append(com.zomboidcraft.building.base.Claims.mayEdit(level, bed, other))
+                    .append(" (").append(com.zomboidcraft.building.base.Claims.refusal(level, bed, other)).append(")");
+            b.append(" | moving: ").append(Moving.refusal(Moving.piece(level.getBlockState(bed), level, bed), other, level, bed));
+            b.append(" | ").append(com.zomboidcraft.building.base.Claims.squad(level, player(s), other.getUUID(), true));
+            b.append(" | squad may edit=").append(com.zomboidcraft.building.base.Claims.mayEdit(level, bed, other));
+            b.append(" | outside may edit=").append(com.zomboidcraft.building.base.Claims.mayEdit(level, barracks.offset(30, 1, 4), other));
+            return b.toString();
+        });
+        LOG.info("ZCBASE protection:{}", guard);
+
+        // building onto it grows the claim: a wall frame against the east wall, outside
+        sp.getServer().runOnServer(s -> {
+            ServerPlayer p = player(s);
+            Skills.addXp(p, Skill.CARPENTRY, Skill.xpForLevel(6));
+            p.getInventory().clearContent();
+            p.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ModItems.HAMMER));
+            p.getInventory().add(new ItemStack(ModItems.NAILS, 32));
+            p.getInventory().add(new ItemStack(net.minecraft.world.item.Items.OAK_PLANKS, 32));
+        });
+        String before = sp.getServer().computeOnServer(s -> String.valueOf(com.zomboidcraft.building.base.Claims.baseOf(s.overworld(), player(s).getUUID()).max()));
+        sp.getServer().runCommand(String.format(java.util.Locale.ROOT, "tp @a %.2f %d %.2f %.1f %.1f",
+                barracks.getX() + 17.5, barracks.getY() + 1, barracks.getZ() + 6.5, 180f, 40f));
+        ctx.waitTicks(10);
+        yard = barracks;
+        build(ctx, sp, Build.WALL_FRAME, barracks.offset(17, 0, 4), Direction.UP, Direction.NORTH);
+        String after = sp.getServer().computeOnServer(s -> String.valueOf(com.zomboidcraft.building.base.Claims.baseOf(s.overworld(), player(s).getUUID()).max()));
+        LOG.info("ZCBASE grow: max corner {} -> {}", before, after);
+
+        // the base page
+        standIn(ctx, sp, 13, 3, 180f, 20f);
+        ctx.getInput().pressKey(InputConstants.KEY_E);
+        ctx.waitTicks(10);
+        ctx.runOnClient(mc -> {
+            if (mc.gui.screen() instanceof KitScreen<?> k) k.open(KitScreen.Page.BASE);
+        });
+        frame(ctx, "base-page");
+        String report = ctx.computeOnClient(mc -> String.valueOf(com.zomboidcraft.client.building.BaseClient.report));
+        LOG.info("ZCBASE base page: {}", report);
+        ctx.runOnClient(mc -> mc.gui.setScreen(null));
+        ctx.waitTicks(5);
     }
 
     /** Wave 1 (lifting, the G menu, walls, soil, the Skills page) is merged; set true to film it again. */
