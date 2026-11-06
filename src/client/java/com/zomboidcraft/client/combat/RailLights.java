@@ -485,7 +485,7 @@ public final class RailLights {
      * Whether a shader pack is drawing the world (asked of Iris, when it is installed). Shader packs draw the glow as
      * a solid surface and drop its faint parts, so it's drawn differently for them.
      */
-    static boolean shaderPackOn() {
+    public static boolean shaderPackOn() {
         if (!irisAsked) {
             irisAsked = true;
             try {

@@ -53,6 +53,14 @@ public final class OperatorView {
 
     private static final String IDLE = "idle_armed", FIRE = "fire", DRAW = "hands_in", LOOK = "look";
     private static final String OUT = "mag_out_0", IN = "mag_in_0", CHARGE = "reload_charge_0";
+    /** The holographic sight's mesh (its bone in the pack), and how far ahead of the eye its sight sits when aiming. */
+    private static final String SCOPE = "scope_all_eotech_exps3_LOD0";
+    private static final float EYE = 0.10f;
+    /**
+     * The reticle, drawn a metre out along the sight line (a holographic reticle looks to sit out at the target): its
+     * texture spans 2.54 degrees, so the ring is the real sight's 68 MOA.
+     */
+    private static final float RETICLE_AT = 1f, RETICLE_SIZE = 0.0443f;
 
     private static String clip = null;
     private static float clipStart;
@@ -164,13 +172,20 @@ public final class OperatorView {
 
         pose.pushPose();
         pose.translate(-ARM[0], -ARM[1], -ARM[2]);
+        // Tarkov's clips hold the rifle canted up off the eye line; the whole rig is turned about the sight so the
+        // sight looks straight down the middle of the screen (Josiah 2026-11-06: it must point at the crosshair). Aiming
+        // then slides it, unturned, until the sight sits on the eye (the pack's "ads": the sight 10 cm ahead of the eye)
         NpcSkin.Clip ads = skin.clips.get("ads");
-        if (ads != null && aim > 0) {
-            float a = Operator.smooth(aim);
+        Matrix4f sightAt = null;
+        if (ads != null) {
             Quaternionf q = new Quaternionf(ads.turn()[0], ads.turn()[1], ads.turn()[2], ads.turn()[3]);
-            Quaternionf qa = new Quaternionf().slerp(q, a);
-            Vector3f t = new Vector3f(ads.at()[0], ads.at()[1], ads.at()[2]).mul(a);
-            pose.mulPose(new Matrix4f().translationRotate(t.x, t.y, t.z, qa));
+            Matrix4f onEye = new Matrix4f().translationRotate(ads.at()[0], ads.at()[1], ads.at()[2], q);
+            // the sight in the rig (eye frame) at rest, and the eye-line turn about it
+            sightAt = new Matrix4f(onEye).invert().translate(0, 0, -EYE);
+            Vector3f p = sightAt.getTranslation(new Vector3f());
+            Vector3f hip = new Vector3f(p).sub(q.transform(new Vector3f(p)));
+            Vector3f t = hip.lerp(new Vector3f(ads.at()[0], ads.at()[1], ads.at()[2]), Operator.smooth(aim), new Vector3f());
+            pose.mulPose(new Matrix4f().translationRotate(t.x, t.y, t.z, q));
         }
         Matrix4f[] bones = Operator.bones(skin, pos, turn);
         buffer = 1 - buffer;
@@ -179,8 +194,35 @@ public final class OperatorView {
         }
         NpcSkinDraw.submitGroups(skin.groups, bones, 0, g -> true, g -> skin.texture(g.texture, MODEL), BUFFERS[buffer],
                 light, net.minecraft.client.renderer.texture.OverlayTexture.NO_OVERLAY, pose, out);
+        int scope = skin.bone(SCOPE);
+        float lit = Operator.smooth((aim - 0.5f) / 0.5f);
+        if (sightAt != null && scope >= 0 && lit > 0) {
+            reticle(skin, new Matrix4f(bones[scope]).mul(sightAt), lit, pose, out);
+        }
         pose.popPose();
         return true;
+    }
+
+    /** The sight's own red reticle, glowing, on its line of sight (sight frame: x right, y up, looking down -z). */
+    private static void reticle(NpcSkin skin, Matrix4f sight, float lit, PoseStack pose, SubmitNodeCollector out) {
+        net.minecraft.resources.Identifier tex = skin.texture("reticle", MODEL);
+        if (tex == null) return;
+        boolean shaders = com.zomboidcraft.client.combat.RailLights.shaderPackOn();
+        int c = Math.round(255 * lit);
+        int colour = 0xFF000000 | c << 16 | c << 8 | c;
+        float h = RETICLE_SIZE / 2, z = -RETICLE_AT;
+        pose.pushPose();
+        pose.mulPose(sight);
+        out.submitCustomGeometry(pose, shaders ? net.minecraft.client.renderer.rendertype.RenderTypes.beaconBeam(tex, true)
+                : net.minecraft.client.renderer.rendertype.RenderTypes.eyes(tex), (p, v) -> {
+            float[][] corners = {{-h, -h, 0, 1}, {h, -h, 1, 1}, {h, h, 1, 0}, {-h, h, 0, 0}};
+            for (float[] k : corners) {
+                v.addVertex(p, k[0], k[1], z).setColor(colour).setUv(k[2], k[3])
+                        .setOverlay(net.minecraft.client.renderer.texture.OverlayTexture.NO_OVERLAY).setLight(0xF000F0)
+                        .setNormal(p, 0, 0, 1);
+            }
+        });
+        pose.popPose();
     }
 
     /** Whether the operator's first person is drawing the rifle now (RifleView leaves its own arms off). */
