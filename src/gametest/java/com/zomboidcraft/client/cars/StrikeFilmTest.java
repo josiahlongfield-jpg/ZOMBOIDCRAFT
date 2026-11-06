@@ -82,7 +82,7 @@ public class StrikeFilmTest implements FabricClientGameTest {
             // the jets coming in from behind him, then (laser still held on the mark) closer in across the street
             ctx.waitTicks(Math.max(0, eta - 170));
             frames(ctx, 30, 3);
-            stand(sp, -8.6, Y + 15, -25.5, new Vec3(0.5, Y + 0.5, 0.5));
+            hover(sp, -3.5, Y + 15, -27.5, new Vec3(0.5, Y + 0.5, 0.5));
             frames(ctx, 130, 2);
             ctx.getInput().releaseKey(options -> options.keyUse);
             ctx.waitTicks(120);
@@ -109,7 +109,7 @@ public class StrikeFilmTest implements FabricClientGameTest {
             });
             ctx.waitTicks(Math.max(0, eta - 160));
             frames(ctx, 30, 3);
-            stand(sp, -8.6, Y + 15, -25.5, new Vec3(0.5, Y + 1, 0.5));
+            hover(sp, -3.5, Y + 15, -27.5, new Vec3(0.5, Y + 1, 0.5));
             frames(ctx, 100, 2);
             ctx.waitTicks(80);
             count(sp, "after the gun run");
@@ -178,9 +178,18 @@ public class StrikeFilmTest implements FabricClientGameTest {
 
     /** The operator (the camera) standing at x y z, looking at a point. */
     private static void stand(TestSingleplayerContext sp, double x, double y, double z, Vec3 look) {
+        place(sp, x, y, z, look, false);
+    }
+
+    /** The camera up in the air over the street at x y z (closer in for the impacts), looking at a point. */
+    private static void hover(TestSingleplayerContext sp, double x, double y, double z, Vec3 look) {
+        place(sp, x, y, z, look, true);
+    }
+
+    private static void place(TestSingleplayerContext sp, double x, double y, double z, Vec3 look, boolean flying) {
         sp.getServer().runOnServer(server -> {
             ServerPlayer p = server.getPlayerList().getPlayers().getFirst();
-            p.getAbilities().flying = false;
+            p.getAbilities().flying = flying;
             p.onUpdateAbilities();
             double dx = look.x - x, dy = look.y - (y + p.getEyeHeight()), dz = look.z - z;
             float yaw = (float) Math.toDegrees(Math.atan2(-dx, dz)), pitch = (float) -Math.toDegrees(Math.atan2(dy, Math.hypot(dx, dz)));
