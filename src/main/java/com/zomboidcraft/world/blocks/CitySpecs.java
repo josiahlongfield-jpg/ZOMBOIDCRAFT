@@ -26776,5 +26776,6 @@ final class CitySpecs extends CityBlocks.Specs {
         s("rd_lens_red_lit", PLAIN, 0, 15, SoundType.GLASS, 0.3f, 5, 0, 5, 11, 3, 11, 6.5, 3, 6.5, 9.5, 4, 9.5, 3, 4, 3, 13, 14, 13, 3, 4, 3, 13, 14, 13, 4, 14, 4, 12, 15.5, 12, 6, 15.5, 6, 10, 16, 10);
         s("rd_lens_green_lit", PLAIN, 0, 15, SoundType.GLASS, 0.3f, 5, 0, 5, 11, 3, 11, 6.5, 3, 6.5, 9.5, 4, 9.5, 3, 4, 3, 13, 14, 13, 3, 4, 3, 13, 14, 13, 4, 14, 4, 12, 15.5, 12, 6, 15.5, 6, 10, 16, 10);
         s("fr_runner_hot", AXIS, 0, 11, SoundType.SAND, 2f, 0, 0, 0, 16, 14, 16);
+        s("af_light_pad", FACING, DECOR, 11, SoundType.METAL, 0f, 5.5, 0, 5.5, 10.5, 13, 10.5);
     }
 }
