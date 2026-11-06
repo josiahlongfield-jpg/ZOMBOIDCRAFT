@@ -219,6 +219,22 @@ public final class Rooms {
         return evaluate(level, start, claim, fl);
     }
 
+    /** Why a spot does or doesn't read as a room, for tests and the log. */
+    public static String explain(ServerLevel level, BlockPos start, Claim claim) {
+        if (!open(level, start)) return "start not open: " + level.getBlockState(start);
+        Flood fl = flood(level, start, claim);
+        StringBuilder b = new StringBuilder("cells " + fl.cells.size() + ", walls " + fl.walls.size() + ", outdoor " + fl.outdoor
+                + ", sky at start " + level.canSeeSky(start));
+        int skies = 0, outside = 0;
+        for (BlockPos c : fl.cells) if (level.canSeeSky(c)) skies++;
+        b.append(", sky cells ").append(skies);
+        EnumMap<Fixture, Integer> got = new EnumMap<>(Fixture.class);
+        Set<BlockPos> read = new HashSet<>();
+        for (BlockPos w : fl.walls) tally(level, w, level.getBlockState(w), got, read);
+        b.append(", wall fixtures ").append(got).append(", type ").append(typeOf(got));
+        return b.toString();
+    }
+
     private static @Nullable Room evaluate(ServerLevel level, BlockPos start, Claim claim, Flood fl) {
         ZcConfig.Building cfg = ZcConfig.get().building;
         Set<BlockPos> cells = fl.cells, walls = fl.walls;
