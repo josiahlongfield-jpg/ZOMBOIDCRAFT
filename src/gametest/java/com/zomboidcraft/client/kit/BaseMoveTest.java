@@ -173,7 +173,7 @@ public class BaseMoveTest implements FabricClientGameTest {
     private static String reading(TestSingleplayerContext sp) {
         return sp.getServer().computeOnServer(s -> {
             var r = com.zomboidcraft.building.base.Rooms.read(s.overworld(), player(s));
-            return r == null ? "no room" : r.title() + " (next: " + r.next + ", floor " + r.floor() + ", powered " + r.powered() + ", " + r.fixtures() + ")";
+            return r == null ? "no room" : r.title() + " (next: " + r.next() + ", floor " + r.floor() + ", powered " + r.powered() + ", " + r.fixtures() + ")";
         });
     }
 
