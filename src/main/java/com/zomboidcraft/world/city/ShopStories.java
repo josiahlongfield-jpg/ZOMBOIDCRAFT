@@ -23,7 +23,10 @@ import java.util.function.DoubleSupplier;
  * <li>BAR (RBBar): the bar kept serving at the end. Bottles everywhere, chairs over, the drinkers
  * dead at their tables or up and walking;
  * <li>HAIR_SALON (RBHairSalon): the barber and whoever was in the chair, turned among the towels
- * and the spilt tonic.
+ * and the spilt tonic;
+ * <li>BURNT (RBBurnt): a fire went through it. Walls blackened, shelves burnt where they stood or
+ * fallen, the floor scorched, ash and rubble, glass blown out of the front, what's left of the
+ * people who were in it.
  * </ul>
  * Each shop rolls on its own dice, from where it stands, so a shop without a story builds exactly
  * as before and comes out the same whichever chunk builds it. The bodies and walkers are marks
@@ -31,7 +34,7 @@ import java.util.function.DoubleSupplier;
  */
 public final class ShopStories {
     enum Tale {
-        LOOTED(5), TRASHED(3), GUNSTORE_SIEGE(0), STAFF_LAST_STAND(0), BAR(0), HAIR_SALON(0);
+        LOOTED(5), TRASHED(3), BURNT(2), GUNSTORE_SIEGE(0), STAFF_LAST_STAND(0), BAR(0), HAIR_SALON(0);
 
         final int weight;
 
@@ -85,7 +88,8 @@ public final class ShopStories {
             default -> null;
         };
         if (tale == null) {
-            tale = dice.nextDouble() < 0.6 ? Tale.LOOTED : Tale.TRASHED;
+            double t = dice.nextDouble();
+            tale = t < 0.5 ? Tale.LOOTED : t < 0.8 ? Tale.TRASHED : Tale.BURNT;
         }
         new ShopStories(p, dice, left, right, back, door, pairDoor).tell(forced(tale));
     }
@@ -161,6 +165,7 @@ public final class ShopStories {
             case STAFF_LAST_STAND -> lastStand();
             case BAR -> bar();
             case HAIR_SALON -> salon();
+            case BURNT -> burnt();
         }
     }
 
@@ -296,6 +301,70 @@ public final class ShopStories {
         scatter("home_chair_tipped", rng.nextInt(2));
         body("civilian", left, 2, right, back);
         walkers("civilian", 1 + rng.nextInt(2));
+    }
+
+    /** Walls that blacken in a fire, and what they become. */
+    private static final Set<String> SOOTS = Set.of("plaster_sage", "plaster_cream", "plaster_blue", "plaster_rose",
+            "brick_buff", "brick_orange", "brick_red", "brick_dark", "concrete_panel", "concrete_dark", "stone_trim", "drywall",
+            "siding_white", "siding_blue", "siding_sage", "siding_yellow", "siding_grey", "siding_brown", "siding_red",
+            "sh_cmu_tan", "ch_ashlar", "st_precast", "st_precast_b", "st_precast_plain");
+
+    /** RBBurnt. */
+    private void burnt() {
+        // the walls round the floor blackened, more of them the higher up the smoke went
+        for (int y = 1; y <= 4; y++) {
+            for (int x = left - 1; x <= right + 1; x++) {
+                for (int z = 0; z <= back + 1; z++) {
+                    boolean edge = x == left - 1 || x == right + 1 || z == 0 || z == back + 1;
+                    String b = edge ? p.get(x, y, z) : null;
+                    if (b != null && SOOTS.contains(b) && rng.nextDouble() < 0.45 + 0.12 * y) {
+                        p.set(x, y, z, b + "_soot");
+                    }
+                }
+            }
+        }
+        // the fittings: burnt away where they stood, or fallen and charred, the rest scorched black
+        for (int x = left; x <= right; x++) {
+            for (int z = 1; z <= back; z++) {
+                String b = p.get(x, 1, z);
+                if (b == null || !b.startsWith("store_") || b.startsWith("store_shelf_fallen")) {
+                    continue;
+                }
+                double v = rng.nextDouble();
+                if (v < 0.65) {
+                    p.set(x, 1, z, v < 0.3 ? "rubble_pile" : "fm_char_logs");
+                    String up = p.get(x, 2, z);
+                    if (up != null && up.startsWith("store_")) {
+                        p.set(x, 2, z, "air");
+                    }
+                    taken.add(key(x, z));
+                }
+            }
+        }
+        for (int i = 0, n = 1 + rng.nextInt(2); i < n; i++) {
+            pullShelf();
+        }
+        scatter("scorch", 6 + rng.nextInt(6));
+        scatter("rubble_pile", 2 + rng.nextInt(3));
+        scatter("bunk_grit", 3 + rng.nextInt(3));
+        for (int x = left; x <= right; x++) {
+            if (rng.nextDouble() < 0.7) {
+                p.setIfAir(x, 1, 1, "glass_shards");
+            }
+        }
+        // the ones it caught: their bones in the ash, and one who got as far as the door
+        for (int i = 0, n = 1 + rng.nextInt(2); i < n; i++) {
+            int[] c = cell(left, 3, right, back);
+            if (c != null) {
+                put(c[0], c[1], "fm_bones[facing=" + side() + "]");
+            }
+        }
+        if (rng.nextDouble() < 0.5) {
+            body("civilian", door - 2, 2, door + 2, 4);
+        }
+        if (rng.nextDouble() < 0.3) {
+            walkers("civilian", 1);
+        }
     }
 
     // ---------------------------------------------------------------- pieces
