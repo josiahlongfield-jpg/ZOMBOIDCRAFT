@@ -17,6 +17,8 @@ public abstract class FirstPersonSurvivorHandMixin {
     @Inject(method = "renderPlayerHand", at = @At("HEAD"), cancellable = true, require = 1)
     private void zomboidcraft$survivorHand(PoseStack pose, SubmitNodeCollector out, int light, HumanoidArm arm,
                                            PlayerRenderState state, CallbackInfo ci) {
-        if (SurvivorArms.vanillaHand(pose, out, light, arm)) ci.cancel();
+        // the Tarkov operator shows no arm with nothing in his hands (Josiah 2026-11-06: no bent Zomboid arm on screen)
+        if (com.zomboidcraft.client.operator.Operator.active(net.minecraft.client.Minecraft.getInstance().player)
+                || SurvivorArms.vanillaHand(pose, out, light, arm)) ci.cancel();
     }
 }

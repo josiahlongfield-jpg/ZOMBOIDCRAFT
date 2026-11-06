@@ -414,9 +414,16 @@ def zmesh(mesh_id, mesh, img, outline=OUTLINE):
 
 
 def item_json(name):
-    """The item model: the mesh, drawn under the block model so its display transforms carry over."""
-    return {'model': {'type': 'minecraft:special', 'base': f'{G.NS}:item/loot/{name}',
-                      'model': {'type': f'{G.NS}:mesh', 'id': f'loot/{name}', 'part': 'body'}}}
+    """The item model: the mesh, drawn under the block model so its display transforms carry over. An item with
+    looks (ITEMS keys name__look, e.g. smoke_canister__red) picks the look's mesh by its custom model data string."""
+    def mesh(n):
+        return {'type': 'minecraft:special', 'base': f'{G.NS}:item/loot/{name}',
+                'model': {'type': f'{G.NS}:mesh', 'id': f'loot/{n}', 'part': 'body'}}
+    looks = sorted(n.split('__', 1)[1] for n in G.ITEMS if n.startswith(name + '__'))
+    if not looks:
+        return {'model': mesh(name)}
+    return {'model': {'type': 'minecraft:select', 'property': 'minecraft:custom_model_data', 'index': 0,
+                      'cases': [{'when': k, 'model': mesh(f'{name}__{k}')} for k in looks], 'fallback': mesh(name)}}
 
 
 def main():
@@ -426,7 +433,7 @@ def main():
     a = ap.parse_args()
     import gen_java
     live = {r['id'] for r in gen_java.rows() if r['live']}
-    names = [n for n in G.ITEMS if n in live and re.search(a.only, n)]
+    names = [n for n in G.ITEMS if n.split('__')[0] in live and re.search(a.only, n)]
     out = Path(a.out) if a.out else None
     total = 0
     for name in names:
@@ -442,7 +449,8 @@ def main():
             dest = MESHES / 'loot' / f'{name}.zmesh'
             dest.parent.mkdir(parents=True, exist_ok=True)
             dest.write_bytes(data)
-            M.dump(item_json(name), G.ASSETS / f'items/{name}.json')
+            if '__' not in name:
+                M.dump(item_json(name), G.ASSETS / f'items/{name}.json')
             total += len(data)
         print(name, len(mesh.v) // 3, 'tris', f'{T}px')
     if not out:

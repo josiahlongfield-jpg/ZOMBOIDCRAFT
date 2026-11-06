@@ -3,6 +3,7 @@ package com.zomboidcraft.client.operator;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.zomboidcraft.ZomboidCraft;
+import com.zomboidcraft.combat.LocalGuns;
 import com.zomboidcraft.client.npc.NpcSkin;
 import com.zomboidcraft.client.npc.NpcSkinDraw;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -53,6 +54,14 @@ public final class OperatorView {
 
     private static final String IDLE = "idle_armed", FIRE = "fire", DRAW = "hands_in", LOOK = "look";
     private static final String OUT = "mag_out_0", IN = "mag_in_0", CHARGE = "reload_charge_0";
+    /** The holographic sight's mesh (its bone in the pack), and how far ahead of the eye its sight sits when aiming. */
+    private static final String SCOPE = "scope_all_eotech_exps3_LOD0";
+    private static final float EYE = 0.10f;
+    /**
+     * The reticle, drawn on the sight's glass (0.2 m out from its eye point, just this side of the lens) so it only
+     * ever shows in the window: its texture spans 2.54 degrees there, so the ring is the real sight's 68 MOA.
+     */
+    private static final float RETICLE_AT = 0.195f, RETICLE_SIZE = 0.0443f * RETICLE_AT;
 
     private static String clip = null;
     private static float clipStart;
@@ -164,14 +173,23 @@ public final class OperatorView {
 
         pose.pushPose();
         pose.translate(-ARM[0], -ARM[1], -ARM[2]);
+        // Tarkov's clips hold the rifle canted up off the eye line; the whole rig is turned about the sight so the
+        // sight looks straight down the middle of the screen (Josiah 2026-11-06: it must point at the crosshair). Aiming
+        // then slides it, unturned, until the sight sits on the eye (the pack's "ads": the sight 10 cm ahead of the eye)
         NpcSkin.Clip ads = skin.clips.get("ads");
-        if (ads != null && aim > 0) {
-            float a = Operator.smooth(aim);
+        Matrix4f sightAt = null, hold = new Matrix4f();
+        if (ads != null) {
             Quaternionf q = new Quaternionf(ads.turn()[0], ads.turn()[1], ads.turn()[2], ads.turn()[3]);
-            Quaternionf qa = new Quaternionf().slerp(q, a);
-            Vector3f t = new Vector3f(ads.at()[0], ads.at()[1], ads.at()[2]).mul(a);
-            pose.mulPose(new Matrix4f().translationRotate(t.x, t.y, t.z, qa));
+            Matrix4f onEye = new Matrix4f().translationRotate(ads.at()[0], ads.at()[1], ads.at()[2], q);
+            // the sight in the rig (eye frame) at rest, and the eye-line turn about it
+            sightAt = new Matrix4f(onEye).invert().translate(0, 0, -EYE);
+            Vector3f p = sightAt.getTranslation(new Vector3f());
+            Vector3f hip = new Vector3f(p).sub(q.transform(new Vector3f(p)));
+            Vector3f t = hip.lerp(new Vector3f(ads.at()[0], ads.at()[1], ads.at()[2]), Operator.smooth(aim), new Vector3f());
+            hold.translationRotate(t.x, t.y, t.z, q);
+            pose.mulPose(hold);
         }
+        rail(skin, gun, hold, free && !reloading);
         Matrix4f[] bones = Operator.bones(skin, pos, turn);
         buffer = 1 - buffer;
         if (BUFFERS[buffer] == null || BUFFERS[buffer].length != skin.groups.length * 2) {
@@ -179,8 +197,86 @@ public final class OperatorView {
         }
         NpcSkinDraw.submitGroups(skin.groups, bones, 0, g -> true, g -> skin.texture(g.texture, MODEL), BUFFERS[buffer],
                 light, net.minecraft.client.renderer.texture.OverlayTexture.NO_OVERLAY, pose, out);
+        int scope = skin.bone(SCOPE);
+        float lit = Operator.smooth((aim - 0.5f) / 0.5f);
+        if (sightAt != null && scope >= 0 && lit > 0) {
+            reticle(skin, new Matrix4f(bones[scope]).mul(sightAt), lit, pose, out);
+        }
         pose.popPose();
         return true;
+    }
+
+    /** The sight's own red reticle, glowing, on its line of sight (sight frame: x right, y up, looking down -z). */
+    private static void reticle(NpcSkin skin, Matrix4f sight, float lit, PoseStack pose, SubmitNodeCollector out) {
+        net.minecraft.resources.Identifier tex = skin.texture("reticle", MODEL);
+        if (tex == null) return;
+        boolean shaders = com.zomboidcraft.client.combat.RailLights.shaderPackOn();
+        int c = Math.round(255 * lit);
+        int colour = 0xFF000000 | c << 16 | c << 8 | c;
+        float h = RETICLE_SIZE / 2, z = -RETICLE_AT;
+        pose.pushPose();
+        pose.mulPose(sight);
+        out.submitCustomGeometry(pose, shaders ? net.minecraft.client.renderer.rendertype.RenderTypes.beaconBeam(tex, true)
+                : net.minecraft.client.renderer.rendertype.RenderTypes.eyes(tex), (p, v) -> {
+            float[][] corners = {{-h, -h, 0, 1}, {h, -h, 1, 1}, {h, h, 1, 0}, {-h, h, 0, 0}};
+            for (float[] k : corners) {
+                v.addVertex(p, k[0], k[1], z).setColor(colour).setUv(k[2], k[3])
+                        .setOverlay(net.minecraft.client.renderer.texture.OverlayTexture.NO_OVERLAY).setLight(0xF000F0)
+                        .setNormal(p, 0, 0, 1);
+            }
+        });
+        pose.popPose();
+    }
+
+    /**
+     * Where the rifle's own laser and light lenses are this frame, from the eye as the rig is drawn, for RailLights: on
+     * whatever is under the crosshair while the hands are free, out along the barrel while they're busy.
+     */
+    private static void rail(NpcSkin skin, ItemStack gun, Matrix4f hold, boolean free) {
+        LocalGuns.Spec spec = LocalGuns.of(gun);
+        LocalGuns.Rail rail = spec == null ? null : spec.rail;
+        if (rail == null) {
+            com.zomboidcraft.client.combat.RifleView.operatorRail(null);
+            return;
+        }
+        Vector3f laser = lens(skin, hold, rail.laser), light = lens(skin, hold, rail.light);
+        LocalGuns.Device way = rail.laser != null ? rail.laser : rail.light;
+        Vector3f bore = way == null || way.dir == null ? new Vector3f(0, 0, -1) : along(skin, hold, way);
+        if (laser == null) laser = light != null ? light : new Vector3f();
+        if (light == null) light = laser;
+        com.zomboidcraft.client.combat.RifleView.operatorRail(
+                new com.zomboidcraft.client.combat.RifleView.Rail(laser, light, bore, free ? 1 : 0));
+    }
+
+    /** A lens on a bone of the rig, from the eye. */
+    private static Vector3f lens(NpcSkin skin, Matrix4f hold, LocalGuns.Device d) {
+        int b = d == null || d.at == null ? -1 : skin.bone(d.bone);
+        if (b < 0) return null;
+        return boneNow(b, hold).transformPosition(new Vector3f(d.at[0], d.at[1], d.at[2]));
+    }
+
+    /** The way a lens shines, from the eye. */
+    private static Vector3f along(NpcSkin skin, Matrix4f hold, LocalGuns.Device d) {
+        int b = skin.bone(d.bone);
+        if (b < 0) return new Vector3f(0, 0, -1);
+        return boneNow(b, hold).transformDirection(new Vector3f(d.dir[0], d.dir[1], d.dir[2])).normalize();
+    }
+
+    /** A bone of the rig as drawn this frame (its own frame, not its skinning matrix), from the eye. */
+    private static Matrix4f boneNow(int b, Matrix4f hold) {
+        Quaternionf q = new Quaternionf(turn[b * 4], turn[b * 4 + 1], turn[b * 4 + 2], turn[b * 4 + 3]);
+        return new Matrix4f(hold).mul(new Matrix4f().translationRotate(pos[b * 3], pos[b * 3 + 1], pos[b * 3 + 2], q));
+    }
+
+    /** How far onto the sights the operator is (0 at the hip, 1 on the sights). */
+    public static float aimShown() {
+        return Operator.smooth(aim);
+    }
+
+    /** Whether the operator's rifle is in hand and drawn by Tarkov's clips (Minecraft's bob and hand lag are left off). */
+    public static boolean steady() {
+        LocalPlayer player = Minecraft.getInstance().player;
+        return player != null && Operator.holdsRifle(player.getMainHandItem()) && NpcSkin.get(MODEL) != null;
     }
 
     /** Whether the operator's first person is drawing the rifle now (RifleView leaves its own arms off). */

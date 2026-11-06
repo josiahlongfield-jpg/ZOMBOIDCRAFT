@@ -213,6 +213,7 @@ public final class WorldEvents {
     public static void register() {
         PayloadTypeRegistry.clientboundPlay().register(Event.TYPE, Event.CODEC);
         AirStrikes.register();
+        StrikeCalls.register();
         ServerTickEvents.END_SERVER_TICK.register(WorldEvents::tick);
         // someone joining mid-event still hears the rest of it
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> server.execute(() -> {
@@ -262,6 +263,18 @@ public final class WorldEvents {
         }
     }
 
+    /** Puts a strike's aircraft in the air and tells everyone. */
+    static void launch(ServerLevel level, List<AirStrikes.Run> runs) {
+        for (AirStrikes.Run run : runs) {
+            Running r = new Running(run.event);
+            r.strike = run;
+            RUNNING.add(r);
+            for (ServerPlayer player : level.players()) {
+                ServerPlayNetworking.send(player, run.event);
+            }
+        }
+    }
+
     /** Ticks until the next event: worldEventMinutes on average, anywhere from half to one and a half times it. */
     private static int gap(ZcConfig.World cfg, RandomSource random) {
         double minutes = Math.max(0.5, cfg.worldEventMinutes) * (0.5 + random.nextDouble());
@@ -294,18 +307,12 @@ public final class WorldEvents {
     public static Event start(ServerLevel level, Kind kind, ServerPlayer near, boolean force) {
         RandomSource random = level.getRandom();
         if (kind == Kind.STRAFE || kind == Kind.BOMB || kind == Kind.HUNT) {
-            List<AirStrikes.Run> runs = AirStrikes.plan(level, kind, near, force);
+            // the radio operator's strike has the sky to itself while it's on (Josiah 2026-11-06, A7)
+            List<AirStrikes.Run> runs = !force && StrikeCalls.live() ? List.of() : AirStrikes.plan(level, kind, near, force);
             if (runs.isEmpty()) {
                 kind = kind == Kind.HUNT ? Kind.HELI : Kind.JET;
             } else {
-                for (AirStrikes.Run run : runs) {
-                    Running r = new Running(run.event);
-                    r.strike = run;
-                    RUNNING.add(r);
-                    for (ServerPlayer player : level.players()) {
-                        ServerPlayNetworking.send(player, run.event);
-                    }
-                }
+                launch(level, runs);
                 Event e = runs.get(0).event;
                 ZomboidCraft.LOGGER.info("World event {} at {} {} {}", kind.name().toLowerCase(Locale.ROOT), (int) runs.get(0).target.x,
                         (int) runs.get(0).target.y, (int) runs.get(0).target.z);
