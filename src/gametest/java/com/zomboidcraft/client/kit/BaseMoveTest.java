@@ -283,7 +283,7 @@ public class BaseMoveTest implements FabricClientGameTest {
             Skills.addXp(p, Skill.CARPENTRY, Skill.xpForLevel(6));
             p.getInventory().clearContent();
             p.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ModItems.HAMMER));
-            p.getInventory().add(new ItemStack(net.minecraft.world.item.Items.OAK_PLANKS, 16));
+            p.getInventory().add(new ItemStack(BuiltInRegistries.ITEM.getValue(com.zomboidcraft.ZomboidCraft.id("plank")), 16));
             p.getInventory().add(new ItemStack(ModItems.NAILS, 16));
         });
         String before = sp.getServer().computeOnServer(s -> String.valueOf(com.zomboidcraft.building.base.Claims.baseOf(s.overworld(), player(s).getUUID()).max()));
@@ -342,11 +342,11 @@ public class BaseMoveTest implements FabricClientGameTest {
             p.getInventory().add(new ItemStack(BuiltInRegistries.ITEM.getValue(com.zomboidcraft.ZomboidCraft.id("padlock")), 1));
             p.getInventory().add(new ItemStack(BuiltInRegistries.ITEM.getValue(com.zomboidcraft.ZomboidCraft.id("screws")), 4));
             Skills.addXp(p, Skill.CARPENTRY, Skill.xpForLevel(8));
-            p.getInventory().add(new ItemStack(net.minecraft.world.item.Items.OAK_PLANKS, 64));
-            p.getInventory().add(new ItemStack(net.minecraft.world.item.Items.OAK_PLANKS, 64));
+            p.getInventory().add(new ItemStack(BuiltInRegistries.ITEM.getValue(com.zomboidcraft.ZomboidCraft.id("plank")), 64));
+            p.getInventory().add(new ItemStack(BuiltInRegistries.ITEM.getValue(com.zomboidcraft.ZomboidCraft.id("plank")), 64));
             for (int i = 0; i < 3; i++) {
                 p.getInventory().add(new ItemStack(ModItems.NAILS, 64));
-                p.getInventory().add(new ItemStack(net.minecraft.world.item.Items.OAK_PLANKS, 64));
+                p.getInventory().add(new ItemStack(BuiltInRegistries.ITEM.getValue(com.zomboidcraft.ZomboidCraft.id("plank")), 64));
             }
             com.zomboidcraft.ZcConfig.get().building.floorSagSeconds = 9;
         });
@@ -475,8 +475,8 @@ public class BaseMoveTest implements FabricClientGameTest {
             p.getInventory().add(new ItemStack(BuiltInRegistries.ITEM.getValue(com.zomboidcraft.ZomboidCraft.id("padlock")), 1));
             p.getInventory().add(new ItemStack(BuiltInRegistries.ITEM.getValue(com.zomboidcraft.ZomboidCraft.id("screws")), 4));
             p.getInventory().add(new ItemStack(ModItems.NAILS, 64));
-            for (int i = 0; i < 2; i++) p.getInventory().add(new ItemStack(net.minecraft.world.item.Items.OAK_PLANKS, 64));
-            LOG.info("ZCBASE 2c load: {} planks", com.zomboidcraft.building.Materials.count(p, st -> st.is(net.minecraft.world.item.Items.OAK_PLANKS)));
+            for (int i = 0; i < 2; i++) p.getInventory().add(new ItemStack(BuiltInRegistries.ITEM.getValue(com.zomboidcraft.ZomboidCraft.id("plank")), 64));
+            LOG.info("ZCBASE 2c load: {} planks", com.zomboidcraft.building.Materials.count(p, st -> BuiltInRegistries.ITEM.getKey(st.getItem()).getPath().equals("plank")));
         });
         standYard(ctx, sp, 3, 0.5, 0f, 25f);
         build(ctx, sp, Build.REINFORCE, yard.offset(0, 0, 4), Direction.NORTH, Direction.SOUTH);
