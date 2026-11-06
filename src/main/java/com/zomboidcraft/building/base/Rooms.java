@@ -184,7 +184,7 @@ public final class Rooms {
         Set<BlockPos> walls = new HashSet<>();
         cells.add(start);
         queue.add(start);
-        boolean outdoor = level.canSeeSky(start);
+        boolean outdoor = Claims.sky(level, start);
         while (!queue.isEmpty()) {
             BlockPos p = queue.poll();
             for (Direction d : Direction.Plane.HORIZONTAL) {
@@ -198,7 +198,7 @@ public final class Rooms {
                     outdoor = true;
                     continue;
                 }
-                if (level.canSeeSky(q)) outdoor = true;
+                if (Claims.sky(level, q)) outdoor = true;
                 cells.add(q);
                 if (cells.size() > cfg.roomMaxFloor) {
                     outdoor = true;
@@ -224,9 +224,9 @@ public final class Rooms {
         if (!open(level, start)) return "start not open: " + level.getBlockState(start);
         Flood fl = flood(level, start, claim);
         StringBuilder b = new StringBuilder("cells " + fl.cells.size() + ", walls " + fl.walls.size() + ", outdoor " + fl.outdoor
-                + ", sky at start " + level.canSeeSky(start));
+                + ", sky at start " + Claims.sky(level, start));
         int skies = 0, outside = 0;
-        for (BlockPos c : fl.cells) if (level.canSeeSky(c)) skies++;
+        for (BlockPos c : fl.cells) if (Claims.sky(level, c)) skies++;
         b.append(", sky cells ").append(skies);
         EnumMap<Fixture, Integer> got = new EnumMap<>(Fixture.class);
         Set<BlockPos> read = new HashSet<>();
@@ -490,7 +490,7 @@ public final class Rooms {
                 if (out.size() >= 40) return out;
                 if (done.contains(p)) continue;
                 BlockPos at = p.immutable();
-                if (!open(level, at) || level.getBlockState(at.below()).getCollisionShape(level, at.below()).isEmpty() || level.canSeeSky(at)) continue;
+                if (!open(level, at) || level.getBlockState(at.below()).getCollisionShape(level, at.below()).isEmpty() || Claims.sky(level, at)) continue;
                 Flood fl = flood(level, at, claim);
                 done.addAll(fl.cells);
                 Room r = fl.outdoor ? null : evaluate(level, at, claim, fl);

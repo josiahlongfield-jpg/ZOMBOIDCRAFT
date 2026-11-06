@@ -49,7 +49,7 @@ public final class BaseClient {
                 }
                 return;
             }
-            if (client.level.canSeeSky(player.blockPosition())) return;
+            if (Claims.sky(client.level, player.blockPosition())) return;
             Claim here = Claims.at(client.level, player.blockPosition());
             if (here == null) {
                 out.add(Option.timed(mine == null ? "Claim this building as your base" : "Move your base to this building", 0,

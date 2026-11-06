@@ -278,7 +278,7 @@ public class BaseMoveTest implements FabricClientGameTest {
         });
         LOG.info("ZCBASE protection:{}", guard);
 
-        // building onto it grows the claim: a wall frame against the east wall, outside
+        // building onto it grows the claim: a post against the east wall, outside
         sp.getServer().runOnServer(s -> {
             ServerPlayer p = player(s);
             Skills.addXp(p, Skill.CARPENTRY, Skill.xpForLevel(6));
@@ -292,7 +292,7 @@ public class BaseMoveTest implements FabricClientGameTest {
                 barracks.getX() + 17.5, barracks.getY() + 1, barracks.getZ() + 6.5, 180f, 40f));
         ctx.waitTicks(10);
         yard = barracks;
-        build(ctx, sp, Build.WALL_FRAME, barracks.offset(17, 0, 4), Direction.UP, Direction.NORTH);
+        build(ctx, sp, Build.POST, barracks.offset(17, 0, 4), Direction.UP, Direction.NORTH);
         String after = sp.getServer().computeOnServer(s -> String.valueOf(com.zomboidcraft.building.base.Claims.baseOf(s.overworld(), player(s).getUUID()).max()));
         LOG.info("ZCBASE grow: max corner {} -> {}", before, after);
 

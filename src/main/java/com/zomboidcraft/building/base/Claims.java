@@ -324,11 +324,20 @@ public final class Claims {
         return new BlockPos[]{new BlockPos(x0 - 1, y0 - 1, z0 - 1), new BlockPos(x1 + 1, y1 + 1, z1 + 1)};
     }
 
+    /**
+     * Open to the sky: nothing at all overhead, up to the top of the world. Not the sky light, which leaks down
+     * through a ceiling lamp or a pane and would call a lit room outdoors.
+     */
+    public static boolean sky(Level level, BlockPos p) {
+        // the surface heightmap is one above the highest block of any kind in the column
+        return p.getY() >= level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.WORLD_SURFACE, p.getX(), p.getZ());
+    }
+
     /** Open (or a door) and with a roof over it. */
     private static boolean inside(ServerLevel level, BlockPos p) {
         BlockState s = level.getBlockState(p);
         boolean open = s.getBlock() instanceof DoorBlock || s.getCollisionShape(level, p).isEmpty();
-        return open && !level.canSeeSky(p);
+        return open && !sky(level, p);
     }
 
     private Claims() {
