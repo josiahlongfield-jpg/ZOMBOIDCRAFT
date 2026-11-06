@@ -1,0 +1,59 @@
+[08:42:53] [main/WARN] (FabricLoader/Mixin) Error loading class: de/maxhenkel/voicechat/voice/client/PTTKeyHandler (java.lang.ClassNotFoundException: de/maxhenkel/voicechat/voice/client/PTTKeyHandler)
+[08:42:53] [main/WARN] (FabricLoader/Mixin) Error loading class: de/maxhenkel/voicechat/voice/client/PTTMicrophoneProcessor (java.lang.ClassNotFoundException: de/maxhenkel/voicechat/voice/client/PTTMicrophoneProcessor)
+[08:42:53] [main/WARN] (FabricLoader/Mixin) Error loading class: net/caffeinemc/mods/sodium/client/gpu/arena/staging/MojangStagingBuffer (java.lang.ClassNotFoundException: net/caffeinemc/mods/sodium/client/gpu/arena/staging/MojangStagingBuffer)
+[08:42:53] [main/WARN] (FabricLoader/Mixin) Error loading class: net/irisshaders/iris/pipeline/IrisRenderingPipeline (java.lang.ClassNotFoundException: net/irisshaders/iris/pipeline/IrisRenderingPipeline)
+[08:42:53] [main/WARN] (FabricLoader/Mixin) Error loading class: net/caffeinemc/mods/sodium/client/render/chunk/DefaultChunkRenderer (java.lang.ClassNotFoundException: net/caffeinemc/mods/sodium/client/render/chunk/DefaultChunkRenderer)
+[08:42:54] [main/INFO] (FabricLoader/MixinExtras|Service) Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.5.5).
+[08:42:56] [Datafixer Bootstrap #0/INFO] (Minecraft) 307 Datafixer optimizations took 557 milliseconds
+--
+com.mojang.renderpearl.api.device.BackendCreationException: Failed to create window for OpenGL context: Couldn't find matching GLX visual
+	at knot//com.mojang.renderpearl.backend.opengl.GlDevice.<init>(GlDevice.java:83)
+	at knot//com.mojang.renderpearl.backend.opengl.GlBackend.createDevice(GlBackend.java:68)
+--
+[08:43:11] [Download-1/INFO] (Minecraft) Could not authorize you against Realms server: java.lang.RuntimeException: Failed to parse into SignedJWT: FabricMC
+[08:43:12] [Render thread/INFO] (Minecraft) Reloading ResourceManager: vanilla, vanilla, fabric-advancement-api-v1, fabric-api, fabric-api-base, fabric-api-lookup-api-v1, fabric-biome-api-v1, fabric-block-api-v1, fabric-block-getter-api-v2, fabric-client-gametest-api-v1, fabric-command-api-v2, fabric-content-registries-v0, fabric-convention-tags-v2, fabric-crash-report-info-v1, fabric-creative-tab-api-v1, fabric-data-attachment-api-v1, fabric-data-generation-api-v1, fabric-debug-api-v1, fabric-dimensions-v1, fabric-entity-events-v1, fabric-events-interaction-v0, fabric-game-rule-api-v1, fabric-gametest-api-v1, fabric-item-api-v1, fabric-key-mapping-api-v1, fabric-lifecycle-events-v1, fabric-loot-api-v3, fabric-menu-api-v1, fabric-message-api-v1, fabric-model-loading-api-v1, fabric-networking-api-v1, fabric-object-builder-api-v1, fabric-particles-v1, fabric-permission-api-v1, fabric-recipe-api-v1, fabric-registry-sync-v0, fabric-renderer-api-v1, fabric-renderer-indigo, fabric-rendering-fluids-v1, fabric-rendering-v1, fabric-resource-conditions-api-v1, fabric-resource-loader-v0, fabric-resource-loader-v1, fabric-screen-api-v1, fabric-serialization-api-v1, fabric-sound-api-v1, fabric-tag-api-v1, fabric-transfer-api-v1, fabric-transitive-access-wideners-v1, fabricloader, zomboidcraft
+[08:43:12] [Render thread/ERROR] (ModNioPackResources) Invalid path in mod resource-pack zomboidcraft: zomboidcraft:font/barlow_condensed_OFL.txt, ignoring
+--
+com.google.gson.JsonParseException: 'to' specifier exceeds the allowed boundaries: ( 1.600E+1  4.800E+1  1.000E+1)
+	at knot//net.minecraft.client.resources.model.cuboid.CuboidModelElement$Deserializer.getPosition(CuboidModelElement.java:156)
+	at knot//net.minecraft.client.resources.model.cuboid.CuboidModelElement$Deserializer.deserialize(CuboidModelElement.java:58)
+--
+com.google.gson.JsonParseException: 'to' specifier exceeds the allowed boundaries: ( 1.600E+1  3.350E+1  3.500E+0)
+	at knot//net.minecraft.client.resources.model.cuboid.CuboidModelElement$Deserializer.getPosition(CuboidModelElement.java:156)
+	at knot//net.minecraft.client.resources.model.cuboid.CuboidModelElement$Deserializer.deserialize(CuboidModelElement.java:58)
+--
+ALSA lib conf.c:5211:(_snd_config_evaluate) [error.core] function snd_func_card_inum returned error: No such file or directory
+ALSA lib confmisc.c:422:(snd_func_concat) [error.core] error evaluating strings
+ALSA lib conf.c:5211:(_snd_config_evaluate) [error.core] function snd_func_concat returned error: No such file or directory
+ALSA lib confmisc.c:1342:(snd_func_refer) [error.core] error evaluating name
+ALSA lib conf.c:5211:(_snd_config_evaluate) [error.core] function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:5734:(snd_config_expand) [error.core] Evaluate error: No such file or directory
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM default
+ALSA lib confmisc.c:855:(parse_card) [error.core] cannot find card '0'
+ALSA lib conf.c:5211:(_snd_config_evaluate) [error.core] function snd_func_card_inum returned error: No such file or directory
+ALSA lib confmisc.c:422:(snd_func_concat) [error.core] error evaluating strings
+ALSA lib conf.c:5211:(_snd_config_evaluate) [error.core] function snd_func_concat returned error: No such file or directory
+ALSA lib confmisc.c:1342:(snd_func_refer) [error.core] error evaluating name
+[08:43:26] [Render thread/ERROR] (Minecraft) Error starting SoundSystem. Turning off sounds & music
+--
+java.lang.IllegalStateException: Failed to open OpenAL device
+	at knot//com.mojang.blaze3d.audio.Library.openDeviceOrFallback(Library.java:274)
+	at knot//com.mojang.blaze3d.audio.Library.init(Library.java:149)
+--
+ALSA lib conf.c:5211:(_snd_config_evaluate) [error.core] function snd_func_refer returned error: No such file or directory
+	at knot//net.minecraft.client.Minecraft.wrapMethod$bhc000$fabric-client-gametest-api-v1$onRun(Minecraft.java:6728)
+ALSA lib conf.c:5734:(snd_config_expand) [error.core] Evaluate error: No such file or directory
+	at knot//net.minecraft.client.Minecraft.run(Minecraft.java)
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM default
+--
+[08:43:31] [Download-1/INFO] (Minecraft) Could not authorize you against Realms server: java.lang.RuntimeException: Failed to parse into SignedJWT: FabricMC
+[08:43:35] [Worker-Main-3/INFO] (Minecraft) Loaded 1866 advancements
+[08:43:36] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.GenericMessageScreen@4caf2745
+--
+com.mojang.renderpearl.api.device.SurfaceException: Failed to acquire image, swapchain out of date
+	at knot//com.mojang.renderpearl.backend.vulkan.VulkanGpuSurface.acquireNextTexture(VulkanGpuSurface.java:277)
+	at knot//com.mojang.renderpearl.frontend.FrontendGpuSurface.acquireNextTexture(FrontendGpuSurface.java:71)
+--
+com.mojang.renderpearl.api.device.SurfaceException: Failed to acquire image, swapchain out of date
+	at knot//com.mojang.renderpearl.backend.vulkan.VulkanGpuSurface.acquireNextTexture(VulkanGpuSurface.java:277)
+	at knot//com.mojang.renderpearl.frontend.FrontendGpuSurface.acquireNextTexture(FrontendGpuSurface.java:71)
