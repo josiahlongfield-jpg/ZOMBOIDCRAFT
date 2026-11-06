@@ -4246527,6 +4246527,291 @@
    "title": "Air Diffuser",
    "sound": "METAL",
    "decor": true
+  },
+  "mn_post_old": {
+   "model": "boxes",
+   "boxes": [
+    [
+     3,
+     0,
+     3,
+     13,
+     16,
+     13,
+     {
+      "side": "mn_timber_old",
+      "up": "mn_end_old",
+      "down": "mn_end_old"
+     }
+    ]
+   ],
+   "title": "Mine Prop",
+   "sound": "WOOD"
+  },
+  "mn_cap_old": {
+   "model": "boxes",
+   "boxes": [
+    [
+     3,
+     0,
+     0,
+     13,
+     10,
+     16,
+     {
+      "side": "mn_beam_old",
+      "up": "mn_timber_old",
+      "down": "mn_timber_old",
+      "north": "mn_end_old",
+      "south": "mn_end_old"
+     }
+    ]
+   ],
+   "title": "Mine Cap",
+   "sound": "WOOD",
+   "rotate": "axis"
+  },
+  "mn_post_new": {
+   "model": "boxes",
+   "boxes": [
+    [
+     3,
+     0,
+     3,
+     13,
+     16,
+     13,
+     {
+      "side": "mn_timber_new",
+      "up": "mn_end_new",
+      "down": "mn_end_new"
+     }
+    ]
+   ],
+   "title": "Mine Prop",
+   "sound": "WOOD"
+  },
+  "mn_cap_new": {
+   "model": "boxes",
+   "boxes": [
+    [
+     3,
+     0,
+     0,
+     13,
+     10,
+     16,
+     {
+      "side": "mn_beam_new",
+      "up": "mn_timber_new",
+      "down": "mn_timber_new",
+      "north": "mn_end_new",
+      "south": "mn_end_new"
+     }
+    ]
+   ],
+   "title": "Mine Cap",
+   "sound": "WOOD",
+   "rotate": "axis"
+  },
+  "mn_boards": {
+   "model": "boxes",
+   "boxes": [
+    [
+     0,
+     13,
+     14,
+     16,
+     16,
+     16,
+     "mn_beam_old"
+    ],
+    [
+     0,
+     8.5,
+     14,
+     16,
+     11.5,
+     16,
+     "mn_beam_old"
+    ],
+    [
+     0,
+     4,
+     14.2,
+     16,
+     6.5,
+     16,
+     "mn_beam_old"
+    ],
+    [
+     1,
+     0,
+     14.4,
+     11,
+     2.5,
+     16,
+     "mn_beam_old"
+    ]
+   ],
+   "title": "Boards",
+   "sound": "WOOD",
+   "rotate": "facing"
+  },
+  "mn_rail": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     0,
+     1,
+     15,
+     1.5,
+     4,
+     "mn_timber_old"
+    ],
+    [
+     1,
+     0,
+     9,
+     15,
+     1.5,
+     12,
+     "mn_timber_old"
+    ],
+    [
+     3.5,
+     1.5,
+     0,
+     4.5,
+     2.7,
+     16,
+     "rust"
+    ],
+    [
+     11.5,
+     1.5,
+     0,
+     12.5,
+     2.7,
+     16,
+     "rust"
+    ]
+   ],
+   "title": "Mine Rail",
+   "sound": "METAL",
+   "rotate": "axis",
+   "decor": true
+  },
+  "mn_cart": {
+   "model": "boxes",
+   "boxes": [
+    [
+     2,
+     3,
+     1,
+     14,
+     13,
+     15,
+     {
+      "side": "rust",
+      "up": "rust",
+      "down": "rust"
+     }
+    ],
+    [
+     1.5,
+     12,
+     0.5,
+     14.5,
+     13.5,
+     15.5,
+     "rust"
+    ],
+    [
+     1,
+     0,
+     2.5,
+     2.5,
+     4,
+     6.5,
+     "bunk_plate_rust"
+    ],
+    [
+     13.5,
+     0,
+     2.5,
+     15,
+     4,
+     6.5,
+     "bunk_plate_rust"
+    ],
+    [
+     1,
+     0,
+     9.5,
+     2.5,
+     4,
+     13.5,
+     "bunk_plate_rust"
+    ],
+    [
+     13.5,
+     0,
+     9.5,
+     15,
+     4,
+     13.5,
+     "bunk_plate_rust"
+    ]
+   ],
+   "title": "Ore Cart",
+   "sound": "METAL",
+   "rotate": "axis"
+  },
+  "mn_sign": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     2,
+     14.5,
+     15,
+     12,
+     16,
+     {
+      "north": "mn_sign",
+      "side": "mn_timber_old"
+     }
+    ]
+   ],
+   "title": "Sign",
+   "sound": "WOOD",
+   "rotate": "facing",
+   "decor": true
+  },
+  "mn_joist_new": {
+   "model": "boxes",
+   "boxes": [
+    [
+     3,
+     8,
+     0,
+     13,
+     16,
+     16,
+     {
+      "side": "mn_beam_new",
+      "up": "mn_timber_new",
+      "down": "mn_timber_new",
+      "north": "mn_end_new",
+      "south": "mn_end_new"
+     }
+    ]
+   ],
+   "title": "Joist",
+   "sound": "WOOD",
+   "rotate": "axis"
   }
  }
 }

@@ -68,6 +68,8 @@ public final class Bunker {
     private boolean[][] carved;
     private double damp;
     private boolean ship;
+    /** A FOREST bunker dug past the cave-in of an old mine (see MineSite): see {@link #inMine}. */
+    private boolean mine;
     private Room decon, corridor, storage, armoury;
     /** How far gone the place is (0 clean .. 1 rotten), and the noise that spreads the wear in patches. */
     private double wear;
@@ -92,6 +94,19 @@ public final class Bunker {
     }
 
     /** {x0, z0, x1, z1}: the outside of the walls, in the bunker's frame. */
+    /**
+     * Dresses this FOREST bunker as the prepper's one in the old mine: the rock left bare in the
+     * passage and the stores, which he never lined, and his own new pine caps under the ceilings
+     * in place of steel beams.
+     */
+    public Bunker inMine() {
+        mine = true;
+        for (Room r : rooms) {
+            palette(r);
+        }
+        return this;
+    }
+
     public int[] bounds() {
         return new int[] {bx0, bz0, bx1, bz1};
     }
@@ -448,6 +463,12 @@ public final class Bunker {
             // the survivalist lined the rooms he lived in himself: rough boards on the walls and the floor
             r.lower = r.upper = "fh_boards";
             r.ground = "floor_boards";
+            return;
+        }
+        if (mine && (r.use == Use.CORRIDOR || r.use == Use.STORAGE || r.use == Use.PANTRY)) {
+            // where he only passed or kept things, the hill's own rock
+            r.lower = r.upper = "pt_stone_rough";
+            r.ground = "bunk_floor_dirty";
             return;
         }
         boolean bare = kind == Kind.FOREST;
@@ -860,6 +881,14 @@ public final class Bunker {
         String carry = pick("bunk_beam_pipes", "bunk_beam_tray", "bunk_beam_duct");
         for (int i = 3; i < span - 1; i += 3) {
             boolean services = i == 3 || rng.nextDouble() < 0.25;
+            if (mine && r.use != Use.PLANT) {
+                // his own sawn pine, the caps he put up all the way in from the cave-in
+                int across = alongZ ? r.w() : r.d();
+                for (int j = 0; j < across; j++) {
+                    r.ceiling(alongZ ? r.x0 + j : r.x0 + i, alongZ ? r.z0 + i : r.z0 + j, "mn_joist_new[axis=" + ax + "]");
+                }
+                continue;
+            }
             int across = alongZ ? r.w() : r.d();
             for (int j = 0; j < across; j++) {
                 int x = alongZ ? r.x0 + j : r.x0 + i, z = alongZ ? r.z0 + i : r.z0 + j;
