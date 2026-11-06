@@ -621,7 +621,7 @@ public final class StrikeCalls {
                     kills += run.kills;
                     hurt.addAll(run.hurt);
                 }
-                base(c.base).last = new Last(c.type, BlockPos.containing(c.aim), level.getDayTime() / 24000L + 1, kills, hurt.size());
+                base(c.base).last = new Last(c.type, BlockPos.containing(c.aim), Math.floorDiv(level.getDefaultClockTime(), 24000L) + 1, kills, hurt.size());
                 save();
                 c.tell(Moment.RESULT, kills, List.copyOf(hurt), null);
             }
