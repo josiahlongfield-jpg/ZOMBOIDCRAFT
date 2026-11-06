@@ -65,6 +65,15 @@ public final class LocalGuns {
         public float[] reload;
         /** Its can is part of the gun (the operator's kitted M4A1): it fires quiet with no muzzle attachment of ours. */
         public boolean suppressed;
+        /**
+         * The parts built onto it in its own file (the operator's kitted M4A1, 2026-11-06): any of "sight", "suppressor",
+         * "laser", "light", "foregrip", "stock". Such a gun takes none of our parts, only its magazines, and each part
+         * does its job: the sight settles the aim, the can quiets it, the grip tames the kick, the laser and light
+         * switch on (keys J and L).
+         */
+        public java.util.List<String> kit;
+        /** Where its own laser and light shine from (client RailLights). */
+        public Rail rail;
         /** Resolved: the anchor's numbers with this gun's laid over them. */
         transient ZcConfig.GunStats merged;
         transient GunType type;
@@ -72,6 +81,30 @@ public final class LocalGuns {
         public GunType type() {
             return type;
         }
+
+        public boolean has(String part) {
+            return kit != null && kit.contains(part);
+        }
+    }
+
+    /** A gun's own laser and light. */
+    public static final class Rail {
+        public Device laser, light;
+    }
+
+    /**
+     * One lens on a gun's rail: the first-person rig's bone (by name) it rides on, the lens there and the way it shines
+     * (metres, that bone's frame), and the lens on the third-person rifle (metres, its "weapon" bone's frame).
+     */
+    public static final class Device {
+        public String bone;
+        public float[] at, dir, third;
+    }
+
+    /** Whether the gun is one of these with that part built on. */
+    public static boolean kitHas(ItemStack gun, String part) {
+        Spec spec = of(gun);
+        return spec != null && spec.has(part);
     }
 
     /** A sight line: front and rear points, item pixels [x, y, z]. */

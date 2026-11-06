@@ -1,11 +1,66 @@
 {
  "model": {
-  "type": "minecraft:special",
-  "base": "zomboidcraft:item/loot/smoke_canister",
-  "model": {
-   "type": "zomboidcraft:mesh",
-   "id": "loot/smoke_canister",
-   "part": "body"
+  "type": "minecraft:select",
+  "property": "minecraft:custom_model_data",
+  "index": 0,
+  "cases": [
+   {
+    "when": "green",
+    "model": {
+     "type": "minecraft:special",
+     "base": "zomboidcraft:item/loot/smoke_canister",
+     "model": {
+      "type": "zomboidcraft:mesh",
+      "id": "loot/smoke_canister__green",
+      "part": "body"
+     }
+    }
+   },
+   {
+    "when": "red",
+    "model": {
+     "type": "minecraft:special",
+     "base": "zomboidcraft:item/loot/smoke_canister",
+     "model": {
+      "type": "zomboidcraft:mesh",
+      "id": "loot/smoke_canister__red",
+      "part": "body"
+     }
+    }
+   },
+   {
+    "when": "violet",
+    "model": {
+     "type": "minecraft:special",
+     "base": "zomboidcraft:item/loot/smoke_canister",
+     "model": {
+      "type": "zomboidcraft:mesh",
+      "id": "loot/smoke_canister__violet",
+      "part": "body"
+     }
+    }
+   },
+   {
+    "when": "yellow",
+    "model": {
+     "type": "minecraft:special",
+     "base": "zomboidcraft:item/loot/smoke_canister",
+     "model": {
+      "type": "zomboidcraft:mesh",
+      "id": "loot/smoke_canister__yellow",
+      "part": "body"
+     }
+    }
+   }
+  ],
+  "fallback": {
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/loot/smoke_canister",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "loot/smoke_canister",
+    "part": "body"
+   }
   }
  }
 }
