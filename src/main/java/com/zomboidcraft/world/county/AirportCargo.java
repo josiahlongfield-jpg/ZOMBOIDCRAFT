@@ -89,7 +89,7 @@ final class AirportCargo extends Grounds {
                 }
                 set(x, 6, CZ1, "ml_precast_band");
             }
-            set(dx - 1, 7, CZ1 + 1, (power && chance() < 0.4 ? "cp_flood_lit" : "cp_flood") + "[facing=south]");
+            set(dx - 1, 7, CZ1 + 1, (power && chance() <= 1 ? "cp_flood_lit" : "cp_flood") + "[facing=south]");
             if (chance() < 0.75) {
                 int z = CZ1 + 4 + rng.nextInt(4);
                 set(dx + 2, 1, z, "rp_dolly_front[facing=south]");
@@ -109,7 +109,7 @@ final class AirportCargo extends Grounds {
             }
             set(dx - 1, 1, CZ0 - 1, "vessel_bollard");
             set(dx + 4, 1, CZ0 - 1, "vessel_bollard");
-            set(dx + 1, 6, CZ0 - 1, (power && chance() < 0.4 ? "cp_flood_lit" : "cp_flood") + "[facing=north]");
+            set(dx + 1, 6, CZ0 - 1, (power && chance() <= 1 ? "cp_flood_lit" : "cp_flood") + "[facing=north]");
             if (chance() < 0.55) {
                 p.vehicle(dx + 2.0, 1, CZ0 - 6.0, 180f, "box_truck,moving_truck,step_van", rng.nextLong());
             }

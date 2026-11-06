@@ -742,7 +742,7 @@ final class Hospital {
             for (int y = TROOF + 1; y <= dy + 2; y++) {
                 set(x1 + 3, y, z, "ext_mast");
             }
-            set(x1 + 3, dy + 3, z, (power && chance() < 0.5 ? "cp_flood_lit" : "cp_flood") + "[facing=west]");
+            set(x1 + 3, dy + 3, z, (power && chance() <= 1 ? "cp_flood_lit" : "cp_flood") + "[facing=west]");
         }
         if (chance() < 0.55) {
             p.vehicle(hx + 3.5, dy + 1, hz + 3.5, (float) (chance() * 360), "heli_hornbill", rng.nextLong());

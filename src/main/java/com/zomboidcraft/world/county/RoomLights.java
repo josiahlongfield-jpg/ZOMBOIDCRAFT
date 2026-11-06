@@ -33,6 +33,8 @@ final class RoomLights {
     private static final String[] FACING = {"north", "east", "south", "west"};
     private static Map<String, String> dark;
     private static Set<String> lamps;
+    /** The outdoor lights and lit signs, dark name to lit (data/zomboidcraft/lamps_out.txt). */
+    private static Map<String, String> outdoor;
 
     private final Voxels v;
     private final boolean modern;
@@ -64,7 +66,7 @@ final class RoomLights {
     private void run() {
         List<String> pal = v.palette();
         // every room lamp under a roof starts dark
-        List<int[]> lit = new ArrayList<>(), doors = new ArrayList<>(), cubes = new ArrayList<>();
+        List<int[]> lit = new ArrayList<>(), doors = new ArrayList<>(), cubes = new ArrayList<>(), out = new ArrayList<>();
         v.forEach((x, y, z, id) -> {
             if (id == 0) {
                 return;
@@ -74,6 +76,8 @@ final class RoomLights {
                 cubes.add(new int[] {x, y, z});
             } else if (dark.containsKey(base)) {
                 lit.add(new int[] {x, y, z, id});
+            } else if (outdoor.containsKey(base)) {
+                out.add(new int[] {x, y, z, id});
             } else if (b.contains("half=lower") && base.contains("door") && !base.contains("trapdoor")) {
                 doors.add(new int[] {x, y, z, id});
             }
@@ -87,9 +91,32 @@ final class RoomLights {
                 v.set(l[0], l[1], l[2], dark.get(base(b)) + b.substring(base(b).length()));
             }
         }
+        // every outdoor light and lit sign a builder left dark burns, out from under a roof
+        // (Josiah 2026-11-06: the landmarks want their light, coloured ones their colour)
+        for (int[] o : out) {
+            if (!roofed(o[0], o[1], o[2])) {
+                String b = pal.get(o[3]);
+                v.set(o[0], o[1], o[2], outdoor.get(base(b)) + b.substring(base(b).length()));
+            }
+        }
         for (int[] d : doors) {
             door(d[0], d[1], d[2], pal.get(d[3]));
         }
+    }
+
+    /**
+     * Under a roof, not just under the arm or beam a lamp hangs from, or another lamp stacked over
+     * it: covered here and at three of the four cells two out round it.
+     */
+    private boolean roofed(int x, int y, int z) {
+        if (!covered(x, y, z, 24)) {
+            return false;
+        }
+        int n = 0;
+        for (int[] d : DIRS) {
+            n += covered(x + 2 * d[0], y, z + 2 * d[1], 24) ? 1 : 0;
+        }
+        return n >= 3;
     }
 
     /** A switch on each side of a door that opens into a room, unless that room has one. */
@@ -264,6 +291,21 @@ final class RoomLights {
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
+        Map<String, String> on = new HashMap<>();
+        try (InputStream in = RoomLights.class.getResourceAsStream("/data/zomboidcraft/lamps_out.txt")) {
+            if (in != null) {
+                BufferedReader r = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
+                for (String line; (line = r.readLine()) != null; ) {
+                    String[] f = line.trim().split(" ");
+                    if (f.length == 2 && !line.startsWith("#")) {
+                        on.put(f[0], f[1]);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+        outdoor = on;
         lamps = all;
         dark = off;
     }

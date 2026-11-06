@@ -28,9 +28,14 @@ final class Camp {
         return lamp(rng, dead, "cp_flood", "north");
     }
 
-    /** One of the camp kit's lamps (cp_flood, cp_flood_hang, cp_flood_bar) facing that way, lit or dead. */
+    /**
+     * One of the camp kit's lamps (cp_flood, cp_flood_hang, cp_flood_bar) facing that way, lit. The
+     * old dead-bulb roll is still drawn so everything after it lands where it did: every lamp works
+     * now (Josiah 2026-11-06, the landmarks want their light); dead is kept for the callers.
+     */
     static String lamp(SplittableRandom rng, double dead, String kind, String facing) {
-        return kind + (rng.nextDouble() < dead ? "" : "_lit") + "[facing=" + facing + "]";
+        rng.nextDouble();
+        return kind + "_lit[facing=" + facing + "]";
     }
 
     private final Placer p;

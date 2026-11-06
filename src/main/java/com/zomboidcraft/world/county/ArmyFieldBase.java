@@ -222,7 +222,7 @@ final class ArmyFieldBase extends Grounds {
         }
         // the floods over the door, the lamps hung down the middle
         for (int x = x0 + 8; x <= x1 - 8; x += 12) {
-            set(x, VDOOR + 2, VZ1 + 1, (power && chance() < 0.4 ? "cp_flood_lit" : "cp_flood") + "[facing=south]");
+            set(x, VDOOR + 2, VZ1 + 1, (power && chance() <= 1 ? "cp_flood_lit" : "cp_flood") + "[facing=south]");
         }
         for (int z = VZ0 + 6; z < VZ1; z += 10) {
             set((int) cx, (int) (cy + r) - 2, z, Camp.lamp(rng, 0.5, "cp_flood_hang", "south"));
