@@ -31,4 +31,12 @@ public abstract class SoundEngineMixin {
             cir.setReturnValue(cir.getReturnValueF() * factor);
         }
     }
+
+    /** Zombie sounds keep to their share of the channels, so a gunshot always finds one (ZombieSoundCap). */
+    @Inject(method = "play", at = @At("HEAD"), cancellable = true)
+    private void zomboidcraft$zombieShare(SoundInstance sound, CallbackInfoReturnable<SoundEngine.PlayResult> cir) {
+        if (!com.zomboidcraft.client.sound.ZombieSoundCap.allow((SoundEngine) (Object) this, sound)) {
+            cir.setReturnValue(SoundEngine.PlayResult.NOT_STARTED);
+        }
+    }
 }
