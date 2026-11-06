@@ -57,10 +57,10 @@ public final class OperatorView {
     private static final String SCOPE = "scope_all_eotech_exps3_LOD0";
     private static final float EYE = 0.10f;
     /**
-     * The reticle, drawn a metre out along the sight line (a holographic reticle looks to sit out at the target): its
-     * texture spans 2.54 degrees, so the ring is the real sight's 68 MOA.
+     * The reticle, drawn on the sight's glass (0.2 m out from its eye point, just this side of the lens) so it only
+     * ever shows in the window: its texture spans 2.54 degrees there, so the ring is the real sight's 68 MOA.
      */
-    private static final float RETICLE_AT = 1f, RETICLE_SIZE = 0.0443f;
+    private static final float RETICLE_AT = 0.195f, RETICLE_SIZE = 0.0443f * RETICLE_AT;
 
     private static String clip = null;
     private static float clipStart;
@@ -223,6 +223,17 @@ public final class OperatorView {
             }
         });
         pose.popPose();
+    }
+
+    /** How far onto the sights the operator is (0 at the hip, 1 on the sights). */
+    public static float aimShown() {
+        return Operator.smooth(aim);
+    }
+
+    /** Whether the operator's rifle is in hand and drawn by Tarkov's clips (Minecraft's bob and hand lag are left off). */
+    public static boolean steady() {
+        LocalPlayer player = Minecraft.getInstance().player;
+        return player != null && Operator.holdsRifle(player.getMainHandItem()) && NpcSkin.get(MODEL) != null;
     }
 
     /** Whether the operator's first person is drawing the rifle now (RifleView leaves its own arms off). */
