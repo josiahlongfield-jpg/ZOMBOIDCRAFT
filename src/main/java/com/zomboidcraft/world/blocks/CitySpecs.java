@@ -13523,13 +13523,8 @@ final class CitySpecs extends CityBlocks.Specs {
         s("af_apron_j", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 14, 16);
         s("af_apron_jj", FACING, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 14, 16);
         s("af_apron_lead", AXIS, 0, 0, SoundType.STONE, 2f, 0, 0, 0, 16, 14, 16);
-        s("af_light_edge", FACING, 0, 0, SoundType.METAL, 2f, 5.5, 0, 5.5, 10.5, 13, 10.5);
-        s("af_light_twy", FACING, 0, 0, SoundType.METAL, 2f, 5.5, 0, 5.5, 10.5, 13, 10.5);
-        s("af_light_thr", FACING, 0, 0, SoundType.METAL, 2f, 5.5, 0, 5.5, 10.5, 13, 10.5);
         s("af_light_broken", FACING, 0, 0, SoundType.METAL, 2f, 5.5, 0, 5.5, 10.5, 3, 16);
         s("af_als_mast", PLAIN, 0, 0, SoundType.METAL, 2f, 5, 0, 5, 11, 16, 11);
-        s("af_als_bar", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 5.6, 16, 6, 9.4);
-        s("af_papi", FACING, 0, 0, SoundType.METAL, 2f, 1, 0, 2.5, 15, 11.6, 14.5);
         s("af_sign_hold_0", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 6, 16, 15, 10);
         s("af_sign_hold_1", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 6, 16, 15, 10);
         s("af_sign_loc_a", FACING, 0, 0, SoundType.METAL, 2f, 0, 0, 6, 16, 15, 10);
@@ -26772,5 +26767,11 @@ final class CitySpecs extends CityBlocks.Specs {
         s("hf_shot", PLAIN, DECOR, 0, SoundType.METAL, 0f, 2, 0, 2, 6, 4, 6, 2, 0, 6.4, 6, 4, 10.4, 2, 0, 10.8, 6, 4, 14.8, 6.4, 0, 2, 10.4, 4, 6, 6.4, 0, 6.4, 10.4, 4, 10.4, 6.4, 0, 10.8, 10.4, 4, 14.8, 10.8, 0, 2, 14.8, 4, 6, 10.8, 0, 6.4, 14.8, 4, 10.4, 10.8, 0, 10.8, 14.8, 4, 14.8, 4.2, 3.6, 4.2, 8.2, 7.6, 8.2, 4.2, 3.6, 8.6, 8.2, 7.6, 12.6, 8.6, 3.6, 4.2, 12.6, 7.6, 8.2, 8.6, 3.6, 8.6, 12.6, 7.6, 12.6, 6.4, 7.2, 6.4, 10.4, 11.2, 10.4);
         s("hf_gun", FACING, 0, 0, SoundType.METAL, 2f, 1, 0, 0, 15, 14, 16);
         s("hf_gun_muzzle", FACING, 0, 0, SoundType.METAL, 2f, 1, 0, 0, 15, 13.5, 16);
+        s("af_light_edge", FACING, DECOR, 13, SoundType.METAL, 0f, 5.5, 0, 5.5, 10.5, 13, 10.5);
+        s("af_light_twy", FACING, DECOR, 11, SoundType.METAL, 0f, 5.5, 0, 5.5, 10.5, 13, 10.5);
+        s("af_light_thr", FACING, DECOR, 13, SoundType.METAL, 0f, 5.5, 0, 5.5, 10.5, 13, 10.5);
+        s("af_als_bar", FACING, DECOR, 15, SoundType.METAL, 0f, 0, 0, 5.6, 16, 6, 9.4);
+        s("af_papi", FACING, DECOR, 13, SoundType.METAL, 0f, 1, 0, 2.5, 15, 11.6, 14.5);
+        s("af_papi_red", FACING, DECOR, 13, SoundType.METAL, 0f, 1, 0, 2.5, 15, 11.6, 14.5);
     }
 }

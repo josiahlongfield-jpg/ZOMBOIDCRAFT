@@ -1,8 +1,8 @@
 {
   "parent": "minecraft:block/block",
   "textures": {
-    "af_lens_green": "zomboidcraft:block/city/af_lens_green",
-    "af_lens_red": "zomboidcraft:block/city/af_lens_red",
+    "af_lens_green_lit": "zomboidcraft:block/city/af_lens_green_lit",
+    "af_lens_red_lit": "zomboidcraft:block/city/af_lens_red_lit",
     "ext_black_metal": "zomboidcraft:block/city/ext_black_metal",
     "st_galv": "zomboidcraft:block/city/st_galv",
     "particle": "zomboidcraft:block/city/st_galv"
@@ -150,16 +150,16 @@
       ],
       "faces": {
         "north": {
-          "texture": "#af_lens_green"
+          "texture": "#af_lens_green_lit"
         },
         "south": {
-          "texture": "#af_lens_red"
+          "texture": "#af_lens_red_lit"
         },
         "east": {
-          "texture": "#af_lens_green"
+          "texture": "#af_lens_green_lit"
         },
         "west": {
-          "texture": "#af_lens_green"
+          "texture": "#af_lens_green_lit"
         },
         "up": {
           "texture": "#ext_black_metal"

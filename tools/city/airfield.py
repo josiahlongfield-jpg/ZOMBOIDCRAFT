@@ -166,6 +166,9 @@ def textures():
     out["af_sock"] = lambda: sock(49530)
     for k, col, seed in (("blue", (40, 70, 150), 49535), ("green", (40, 120, 70), 49536), ("red", (150, 40, 36), 49537)):
         out[f"af_lens_{k}"] = lambda col=col, seed=seed: lens(seed, col)
+    for k, col, seed in (("white", (255, 238, 205), 49538), ("blue", (64, 112, 255), 49539),
+                         ("green", (80, 255, 130), 49540), ("red", (255, 52, 40), 49541)):
+        out[f"af_lens_{k}_lit"] = lambda col=col, seed=seed: lens_lit(seed, col)
     return out
 
 
@@ -174,6 +177,19 @@ def lens(seed, col):
     t = F.plain(seed, col, 0.04, 0.85)
     t.f0[:] = 40
     t.grime(0.2, (60, 60, 56))
+    return t
+
+
+def lens_lit(seed, col):
+    """The same glass with its lamp burning: the colour saturated and hot, near white in the
+    middle where the filament shows through, a little dust still on it."""
+    t = F.plain(seed, col, 0.03, 0.9)
+    yy, xx = np.mgrid[0:N, 0:N]
+    core = np.clip(1.0 - np.hypot(xx - N / 2, yy - N / 2) / (N * 0.42), 0, 1) ** 1.5
+    t.c = t.c * (1 - 0.55 * core[..., None]) + np.array((255, 250, 240), np.float32) * 0.55 * core[..., None]
+    t.grime(0.06, (90, 90, 84))
+    t.f0[:] = 40
+    t.emit[:] = np.clip(0.7 + 0.3 * core, 0, 1)
     return t
 
 
@@ -259,20 +275,22 @@ def als_mast():
 
 
 def als_bar():
-    """The bar of five lamps across the mast's top, aimed down the approach (north)."""
+    """The bar of five lamps across the mast's top, aimed down the approach (north), burning white."""
     b = [[0, 2, 7, 16, 3.2, 9, METAL], [7, 0, 7, 9, 2, 9, METAL]]
     for x in (0.5, 3.6, 6.7, 9.8, 12.9):
         b += [[x, 3.2, 6, x + 2.6, 6, 9.4, "ext_black_metal"],
-              [x + 0.3, 3.5, 5.6, x + 2.3, 5.7, 6, {"north": "lamp_glass", "side": "ext_black_metal", "up": "ext_black_metal",
+              [x + 0.3, 3.5, 5.6, x + 2.3, 5.7, 6, {"north": "af_lens_white_lit", "side": "ext_black_metal", "up": "ext_black_metal",
                                                     "down": "ext_black_metal"}]]
     return b
 
 
-def papi():
+def papi(lens="af_lens_white_lit"):
+    """A PAPI unit, its three lamps showing white or red: the two units nearest the runway show red
+    and the two out from it white, as a pilot on the glide path sees them."""
     box = {"north": "ext_black_metal", "side": "ext_alu", "up": "ext_alu", "down": "ext_alu"}
     b = [[1, 4, 3, 15, 11, 14, box], [1, 11, 2.5, 15, 11.6, 14.5, "ext_alu"]]
     for x in (2.5, 7, 11.5):
-        b.append([x, 6, 2.6, x + 2, 9, 3, "lamp_glass"])
+        b.append([x, 6, 2.6, x + 2, 9, 3, lens])
     for x, z in ((2, 5), (13, 5), (2, 12), (13, 12)):
         b.append([x, 0, z, x + 1, 4, z + 1, METAL])
     return b
@@ -339,17 +357,20 @@ def blocks():
     ground("af_apron_jj", "af_apron_jj", "Apron", "facing")
     ground("af_apron_lead", "af_apron_lead", "Apron", "axis")
 
-    lens = {"side": "lamp_glass", "up": "ext_black_metal", "down": "ext_black_metal"}
-    blue = {"side": "af_lens_blue", "up": "ext_black_metal", "down": "ext_black_metal"}
-    thr = {"north": "af_lens_green", "south": "af_lens_red", "side": "af_lens_green", "up": "ext_black_metal", "down": "ext_black_metal"}
+    # every runway lamp burns (Josiah 2026-11-06: lights stay lights, and their colour should show)
+    lens = {"side": "af_lens_white_lit", "up": "ext_black_metal", "down": "ext_black_metal"}
+    blue = {"side": "af_lens_blue_lit", "up": "ext_black_metal", "down": "ext_black_metal"}
+    thr = {"north": "af_lens_green_lit", "south": "af_lens_red_lit", "side": "af_lens_green_lit", "up": "ext_black_metal",
+           "down": "ext_black_metal"}
     small = [[5.5, 0, 5.5, 10.5, 13, 10.5]]
-    add("af_light_edge", light(lens), "Runway Light", small)
-    add("af_light_twy", light(blue), "Taxiway Light", small)
-    add("af_light_thr", light(thr), "Threshold Light", small)
+    add("af_light_edge", light(lens), "Runway Light", small, light=13)
+    add("af_light_twy", light(blue), "Taxiway Light", small, light=11)
+    add("af_light_thr", light(thr), "Threshold Light", small, light=13)
     add("af_light_broken", broken_light(), "Runway Light", [[5.5, 0, 5.5, 10.5, 3, 16]])
     add("af_als_mast", als_mast(), "Approach Light Mast", [[5, 0, 5, 11, 16, 11]], rotate=None)
-    add("af_als_bar", als_bar(), "Approach Lights", [[0, 0, 5.6, 16, 6, 9.4]])
-    add("af_papi", papi(), "PAPI", [[1, 0, 2.5, 15, 11.6, 14.5]])
+    add("af_als_bar", als_bar(), "Approach Lights", [[0, 0, 5.6, 16, 6, 9.4]], light=15)
+    add("af_papi", papi(), "PAPI", [[1, 0, 2.5, 15, 11.6, 14.5]], light=13)
+    add("af_papi_red", papi("af_lens_red_lit"), "PAPI", [[1, 0, 2.5, 15, 11.6, 14.5]], light=13)
     for k in SIGNS:
         add(f"af_sign_{k}", sign_panel(f"af_sign_{k}"), "Airfield Sign", [[0, 0, 6, 16, 15, 10]])
     add("af_sign_end", sign_end(), "Airfield Sign", [[0, 4, 6, 1.2, 15, 10]])

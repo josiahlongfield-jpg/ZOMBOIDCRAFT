@@ -617715,7 +617715,7 @@
      12.4,
      9.4,
      {
-      "side": "lamp_glass",
+      "side": "af_lens_white_lit",
       "up": "ext_black_metal",
       "down": "ext_black_metal"
      }
@@ -617743,7 +617743,9 @@
     ]
    ],
    "rotate": "facing",
-   "render": "cutout"
+   "render": "cutout",
+   "light": 13,
+   "decor": true
   },
   "af_light_twy": {
    "model": "boxes",
@@ -617792,7 +617794,7 @@
      12.4,
      9.4,
      {
-      "side": "af_lens_blue",
+      "side": "af_lens_blue_lit",
       "up": "ext_black_metal",
       "down": "ext_black_metal"
      }
@@ -617820,7 +617822,9 @@
     ]
    ],
    "rotate": "facing",
-   "render": "cutout"
+   "render": "cutout",
+   "light": 11,
+   "decor": true
   },
   "af_light_thr": {
    "model": "boxes",
@@ -617869,9 +617873,9 @@
      12.4,
      9.4,
      {
-      "north": "af_lens_green",
-      "south": "af_lens_red",
-      "side": "af_lens_green",
+      "north": "af_lens_green_lit",
+      "south": "af_lens_red_lit",
+      "side": "af_lens_green_lit",
       "up": "ext_black_metal",
       "down": "ext_black_metal"
      }
@@ -617899,7 +617903,9 @@
     ]
    ],
    "rotate": "facing",
-   "render": "cutout"
+   "render": "cutout",
+   "light": 13,
+   "decor": true
   },
   "af_light_broken": {
    "model": "boxes",
@@ -618156,7 +618162,7 @@
      5.7,
      6,
      {
-      "north": "lamp_glass",
+      "north": "af_lens_white_lit",
       "side": "ext_black_metal",
       "up": "ext_black_metal",
       "down": "ext_black_metal"
@@ -618179,7 +618185,7 @@
      5.7,
      6,
      {
-      "north": "lamp_glass",
+      "north": "af_lens_white_lit",
       "side": "ext_black_metal",
       "up": "ext_black_metal",
       "down": "ext_black_metal"
@@ -618202,7 +618208,7 @@
      5.7,
      6,
      {
-      "north": "lamp_glass",
+      "north": "af_lens_white_lit",
       "side": "ext_black_metal",
       "up": "ext_black_metal",
       "down": "ext_black_metal"
@@ -618225,7 +618231,7 @@
      5.7,
      6,
      {
-      "north": "lamp_glass",
+      "north": "af_lens_white_lit",
       "side": "ext_black_metal",
       "up": "ext_black_metal",
       "down": "ext_black_metal"
@@ -618248,7 +618254,7 @@
      5.7,
      6,
      {
-      "north": "lamp_glass",
+      "north": "af_lens_white_lit",
       "side": "ext_black_metal",
       "up": "ext_black_metal",
       "down": "ext_black_metal"
@@ -618268,7 +618274,9 @@
     ]
    ],
    "rotate": "facing",
-   "render": "cutout"
+   "render": "cutout",
+   "light": 15,
+   "decor": true
   },
   "af_papi": {
    "model": "boxes",
@@ -618303,7 +618311,7 @@
      4.5,
      9,
      3,
-     "lamp_glass"
+     "af_lens_white_lit"
     ],
     [
      7,
@@ -618312,7 +618320,7 @@
      9,
      9,
      3,
-     "lamp_glass"
+     "af_lens_white_lit"
     ],
     [
      11.5,
@@ -618321,7 +618329,7 @@
      13.5,
      9,
      3,
-     "lamp_glass"
+     "af_lens_white_lit"
     ],
     [
      2,
@@ -618373,7 +618381,9 @@
     ]
    ],
    "rotate": "facing",
-   "render": "cutout"
+   "render": "cutout",
+   "light": 13,
+   "decor": true
   },
   "af_sign_hold_0": {
    "model": "boxes",
@@ -4259859,6 +4259869,113 @@
    "sound": "METAL",
    "rotate": "facing",
    "render": "cutout"
+  },
+  "af_papi_red": {
+   "model": "boxes",
+   "boxes": [
+    [
+     1,
+     4,
+     3,
+     15,
+     11,
+     14,
+     {
+      "north": "ext_black_metal",
+      "side": "ext_alu",
+      "up": "ext_alu",
+      "down": "ext_alu"
+     }
+    ],
+    [
+     1,
+     11,
+     2.5,
+     15,
+     11.6,
+     14.5,
+     "ext_alu"
+    ],
+    [
+     2.5,
+     6,
+     2.6,
+     4.5,
+     9,
+     3,
+     "af_lens_red_lit"
+    ],
+    [
+     7,
+     6,
+     2.6,
+     9,
+     9,
+     3,
+     "af_lens_red_lit"
+    ],
+    [
+     11.5,
+     6,
+     2.6,
+     13.5,
+     9,
+     3,
+     "af_lens_red_lit"
+    ],
+    [
+     2,
+     0,
+     5,
+     3,
+     4,
+     6,
+     "st_galv"
+    ],
+    [
+     13,
+     0,
+     5,
+     14,
+     4,
+     6,
+     "st_galv"
+    ],
+    [
+     2,
+     0,
+     12,
+     3,
+     4,
+     13,
+     "st_galv"
+    ],
+    [
+     13,
+     0,
+     12,
+     14,
+     4,
+     13,
+     "st_galv"
+    ]
+   ],
+   "title": "PAPI",
+   "sound": "METAL",
+   "shape": [
+    [
+     1,
+     0,
+     2.5,
+     15,
+     11.6,
+     14.5
+    ]
+   ],
+   "rotate": "facing",
+   "render": "cutout",
+   "light": 13,
+   "decor": true
   }
  }
 }
