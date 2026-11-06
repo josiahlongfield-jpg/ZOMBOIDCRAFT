@@ -299,8 +299,8 @@ public final class MarineScreen extends Screen {
         }
         int legend = 10;
         float avail = bottom - legend - y - 4;
-        float rad = Math.max(16, Math.min((right - left) / 2f - 30, avail / 2f - 9));
-        float cy = y + 4 + avail / 2f;
+        float rad = Math.max(16, Math.min((right - left) / 2f - 30, avail / 2f - 15));
+        float cy = y + 2 + avail / 2f;
         radar(g, cx, cy, rad);
 
         if (info != null) {
