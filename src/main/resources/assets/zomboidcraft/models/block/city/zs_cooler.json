@@ -1,0 +1,139 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hw_white": "zomboidcraft:block/city/hw_white",
+    "zs_cooler_red": "zomboidcraft:block/city/zs_cooler_red",
+    "particle": "zomboidcraft:block/city/zs_cooler_red"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        0,
+        4
+      ],
+      "to": [
+        14,
+        8,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#zs_cooler_red"
+        },
+        "south": {
+          "texture": "#zs_cooler_red"
+        },
+        "east": {
+          "texture": "#zs_cooler_red"
+        },
+        "west": {
+          "texture": "#zs_cooler_red"
+        },
+        "up": {
+          "texture": "#zs_cooler_red"
+        },
+        "down": {
+          "texture": "#zs_cooler_red",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        1.8,
+        8,
+        3.8
+      ],
+      "to": [
+        14.2,
+        9.6,
+        12.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hw_white"
+        },
+        "south": {
+          "texture": "#hw_white"
+        },
+        "east": {
+          "texture": "#hw_white"
+        },
+        "west": {
+          "texture": "#hw_white"
+        },
+        "up": {
+          "texture": "#hw_white"
+        },
+        "down": {
+          "texture": "#hw_white"
+        }
+      }
+    },
+    {
+      "from": [
+        0.8,
+        5,
+        7
+      ],
+      "to": [
+        2,
+        6,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hw_white"
+        },
+        "south": {
+          "texture": "#hw_white"
+        },
+        "east": {
+          "texture": "#hw_white"
+        },
+        "west": {
+          "texture": "#hw_white"
+        },
+        "up": {
+          "texture": "#hw_white"
+        },
+        "down": {
+          "texture": "#hw_white"
+        }
+      }
+    },
+    {
+      "from": [
+        14,
+        5,
+        7
+      ],
+      "to": [
+        15.2,
+        6,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hw_white"
+        },
+        "south": {
+          "texture": "#hw_white"
+        },
+        "east": {
+          "texture": "#hw_white"
+        },
+        "west": {
+          "texture": "#hw_white"
+        },
+        "up": {
+          "texture": "#hw_white"
+        },
+        "down": {
+          "texture": "#hw_white"
+        }
+      }
+    }
+  ]
+}

@@ -728,7 +728,7 @@ final class MilitarySite extends Site {
             }
         }
         // the overflow: white tents for the sick
-        tentGrid(med, "minecraft:white_wool", 6 + rng.nextInt(10));
+        tentGrid(med, "white", 6 + rng.nextInt(10));
         int[] f = room(back, 20, 13, 3, false);
         if (f != null) {
             camp(f[0] + 1, f[1] + 3, 0).fuelTanks(0, 0, 2);
@@ -758,7 +758,7 @@ final class MilitarySite extends Site {
                 }
             }
         }
-        tentGrid(q, chance() < 0.8 ? "tarp_green" : "minecraft:white_wool", 24 + rng.nextInt(24));
+        tentGrid(q, chance() < 0.8 ? "tarp_green" : "white", 24 + rng.nextInt(24));
     }
 
     // ------------------------------------------------------------------ the depot

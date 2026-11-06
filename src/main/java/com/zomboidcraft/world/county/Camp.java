@@ -730,7 +730,7 @@ final class Camp {
                 }
             }
         }
-        p.set(cx, 1, cz, "minecraft:campfire[lit=" + (chance() < 0.2) + "]");
+        p.set(cx, 1, cz, chance() < 0.2 ? "zs_fire_lit" : "zs_fire");
         for (int i = 0; i < 3; i++) {
             p.setIfAir(cx + r + 2, 1, cz - 1 + i, i == 1 ? "bunk_jerry_cans[facing=west]" : "barrel");
         }
@@ -744,7 +744,13 @@ final class Camp {
         for (int i = 0; i < len; i++) {
             for (int k = 0; k < 4; k++) {
                 p.set(x + i, 0, z + k, "air");
-                p.set(x + i, -1, z + k, chance() < 0.3 ? "minecraft:white_concrete_powder" : "minecraft:coarse_dirt");
+                if (chance() < 0.3) {
+                    // lime thrown thin over the trodden floor
+                    p.set(x + i, -1, z + k, "qs_lime");
+                    p.set(x + i, -2, z + k, "minecraft:coarse_dirt");
+                } else {
+                    p.set(x + i, -1, z + k, "minecraft:coarse_dirt");
+                }
                 if (i < len * 0.7 && chance() < 0.75) {
                     p.set(x + i, -1, z + k, "bunk_bodybag[facing=" + (k % 2 == 0 ? "east" : "west") + "]");
                     p.set(x + i, -2, z + k, "minecraft:coarse_dirt");

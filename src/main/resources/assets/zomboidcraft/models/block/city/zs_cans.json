@@ -1,0 +1,191 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hw_chrome": "zomboidcraft:block/city/hw_chrome",
+    "zs_can": "zomboidcraft:block/city/zs_can",
+    "particle": "zomboidcraft:block/city/zs_can"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        3
+      ],
+      "to": [
+        4.4,
+        2.4,
+        4.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#zs_can"
+        },
+        "south": {
+          "texture": "#zs_can"
+        },
+        "east": {
+          "texture": "#zs_can"
+        },
+        "west": {
+          "texture": "#zs_can"
+        },
+        "up": {
+          "texture": "#hw_chrome"
+        },
+        "down": {
+          "texture": "#hw_chrome",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        8,
+        0,
+        9
+      ],
+      "to": [
+        10.6,
+        1.3,
+        10.3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#zs_can"
+        },
+        "south": {
+          "texture": "#zs_can"
+        },
+        "east": {
+          "texture": "#zs_can"
+        },
+        "west": {
+          "texture": "#zs_can"
+        },
+        "up": {
+          "texture": "#hw_chrome"
+        },
+        "down": {
+          "texture": "#hw_chrome"
+        }
+      },
+      "rotation": {
+        "origin": [
+          9,
+          0,
+          9.6
+        ],
+        "axis": "y",
+        "angle": 22.5
+      }
+    },
+    {
+      "from": [
+        11,
+        0,
+        4
+      ],
+      "to": [
+        13,
+        0.6,
+        6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#zs_can"
+        },
+        "south": {
+          "texture": "#zs_can"
+        },
+        "east": {
+          "texture": "#zs_can"
+        },
+        "west": {
+          "texture": "#zs_can"
+        },
+        "up": {
+          "texture": "#hw_chrome"
+        },
+        "down": {
+          "texture": "#hw_chrome",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        0,
+        11
+      ],
+      "to": [
+        6.6,
+        1.3,
+        12.3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#zs_can"
+        },
+        "south": {
+          "texture": "#zs_can"
+        },
+        "east": {
+          "texture": "#zs_can"
+        },
+        "west": {
+          "texture": "#zs_can"
+        },
+        "up": {
+          "texture": "#hw_chrome"
+        },
+        "down": {
+          "texture": "#hw_chrome"
+        }
+      },
+      "rotation": {
+        "origin": [
+          5,
+          0,
+          11.6
+        ],
+        "axis": "y",
+        "angle": -45
+      }
+    },
+    {
+      "from": [
+        12,
+        0,
+        12
+      ],
+      "to": [
+        13.4,
+        2.4,
+        13.4
+      ],
+      "faces": {
+        "north": {
+          "texture": "#zs_can"
+        },
+        "south": {
+          "texture": "#zs_can"
+        },
+        "east": {
+          "texture": "#zs_can"
+        },
+        "west": {
+          "texture": "#zs_can"
+        },
+        "up": {
+          "texture": "#hw_chrome"
+        },
+        "down": {
+          "texture": "#hw_chrome",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

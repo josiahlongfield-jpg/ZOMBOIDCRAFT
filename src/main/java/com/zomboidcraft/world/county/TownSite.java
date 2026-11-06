@@ -288,7 +288,7 @@ final class TownSite extends Site {
         for (int i = 0; i < fires; i++) {
             int fx = cx + (rng.nextBoolean() ? 3 : -3) + rng.nextInt(2), fz = cz + rng.nextInt(5) - 2;
             if (inside(fx, fz)) {
-                out.set(fx, 1, fz, "minecraft:campfire[lit=true]");
+                out.set(fx, 1, fz, "zs_fire_lit");
             }
         }
     }

@@ -1,0 +1,92 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_plastic_black": "zomboidcraft:block/city/home_plastic_black",
+    "zs_rod": "zomboidcraft:block/city/zs_rod",
+    "particle": "zomboidcraft:block/city/zs_rod"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        7.7
+      ],
+      "to": [
+        16,
+        0.6,
+        8.3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#zs_rod"
+        },
+        "south": {
+          "texture": "#zs_rod"
+        },
+        "east": {
+          "texture": "#zs_rod"
+        },
+        "west": {
+          "texture": "#zs_rod"
+        },
+        "up": {
+          "texture": "#zs_rod"
+        },
+        "down": {
+          "texture": "#zs_rod"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          0,
+          8
+        ],
+        "axis": "y",
+        "angle": 45
+      }
+    },
+    {
+      "from": [
+        10,
+        0,
+        8.3
+      ],
+      "to": [
+        11.5,
+        1.4,
+        9.8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_plastic_black"
+        },
+        "south": {
+          "texture": "#home_plastic_black"
+        },
+        "east": {
+          "texture": "#home_plastic_black"
+        },
+        "west": {
+          "texture": "#home_plastic_black"
+        },
+        "up": {
+          "texture": "#home_plastic_black"
+        },
+        "down": {
+          "texture": "#home_plastic_black"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          0,
+          8
+        ],
+        "axis": "y",
+        "angle": 45
+      }
+    }
+  ]
+}

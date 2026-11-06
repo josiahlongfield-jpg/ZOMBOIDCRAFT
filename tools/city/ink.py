@@ -105,6 +105,8 @@ EDGES = {
 JOINS = {
     "bunk_bed_head": {"north"}, "bunk_bed_head_top": {"north"}, "bunk_bed_foot": {"south"},
     "bunk_bed_foot_top": {"south"}, "bunk_gen_engine": {"east"}, "bunk_gen_alternator": {"west"},
+    "cd_bunk_head": {"north"}, "cd_bunk_head_top": {"north"}, "cd_bunk_foot": {"south"}, "cd_bunk_foot_top": {"south"},
+    "fh_bunk_head": {"north"}, "fh_bunk_head_top": {"north"}, "fh_bunk_foot": {"south"}, "fh_bunk_foot_top": {"south"},
 }
 
 

@@ -22,10 +22,15 @@ public final class SpinFigure {
 
     /** Draws {@code who} inside the box, standing still and turned however far it has been dragged. */
     public void draw(GuiGraphicsExtractor g, int x1, int y1, int x2, int y2, int scale, LivingEntity who) {
+        draw(g, x1, y1, x2, y2, scale, 0.0625f, who);
+    }
+
+    /** The same, lifted by {@code lift} (blocks) in its box: the appearance page puts her feet where it wants them. */
+    public void draw(GuiGraphicsExtractor g, int x1, int y1, int x2, int y2, int scale, float lift, LivingEntity who) {
         drawing = true;
         yaw = turn;
         try {
-            InventoryScreen.extractEntityInInventoryFollowsMouse(g, x1, y1, x2, y2, scale, 0.0625f,
+            InventoryScreen.extractEntityInInventoryFollowsMouse(g, x1, y1, x2, y2, scale, lift,
                     (x1 + x2) / 2f, (y1 + y2) / 2f, who);
         } finally {
             drawing = false;

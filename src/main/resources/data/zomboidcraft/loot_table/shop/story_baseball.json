@@ -1,0 +1,84 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:baseball",
+          "weight": 1,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 3
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "rolls": {
+        "type": "minecraft:uniform",
+        "min": 2,
+        "max": 4
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:baseball_bat",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:baseball_glove",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:baseball_cap",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:batting_helmet",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:sunflower_seeds",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:water_bottle",
+          "weight": 3,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:soda_bottle",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:juice_box",
+          "weight": 2
+        }
+      ]
+    }
+  ]
+}

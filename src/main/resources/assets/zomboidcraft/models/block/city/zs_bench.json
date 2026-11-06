@@ -1,0 +1,143 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "yd_board_grey": "zomboidcraft:block/city/yd_board_grey",
+    "particle": "zomboidcraft:block/city/yd_board_grey"
+  },
+  "elements": [
+    {
+      "from": [
+        5,
+        4,
+        0
+      ],
+      "to": [
+        10,
+        5,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#yd_board_grey",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#yd_board_grey",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#yd_board_grey"
+        },
+        "west": {
+          "texture": "#yd_board_grey"
+        },
+        "up": {
+          "texture": "#yd_board_grey"
+        },
+        "down": {
+          "texture": "#yd_board_grey"
+        }
+      }
+    },
+    {
+      "from": [
+        5.5,
+        0,
+        1
+      ],
+      "to": [
+        9.5,
+        4,
+        2.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#yd_board_grey"
+        },
+        "south": {
+          "texture": "#yd_board_grey"
+        },
+        "east": {
+          "texture": "#yd_board_grey"
+        },
+        "west": {
+          "texture": "#yd_board_grey"
+        },
+        "up": {
+          "texture": "#yd_board_grey"
+        },
+        "down": {
+          "texture": "#yd_board_grey",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        5.5,
+        0,
+        13.5
+      ],
+      "to": [
+        9.5,
+        4,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#yd_board_grey"
+        },
+        "south": {
+          "texture": "#yd_board_grey"
+        },
+        "east": {
+          "texture": "#yd_board_grey"
+        },
+        "west": {
+          "texture": "#yd_board_grey"
+        },
+        "up": {
+          "texture": "#yd_board_grey"
+        },
+        "down": {
+          "texture": "#yd_board_grey",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        1.2,
+        0
+      ],
+      "to": [
+        8,
+        2,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#yd_board_grey",
+          "cullface": "north"
+        },
+        "south": {
+          "texture": "#yd_board_grey",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#yd_board_grey"
+        },
+        "west": {
+          "texture": "#yd_board_grey"
+        },
+        "up": {
+          "texture": "#yd_board_grey"
+        },
+        "down": {
+          "texture": "#yd_board_grey"
+        }
+      }
+    }
+  ]
+}

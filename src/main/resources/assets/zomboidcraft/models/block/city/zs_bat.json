@@ -1,0 +1,180 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "zs_bat_wood": "zomboidcraft:block/city/zs_bat_wood",
+    "particle": "zomboidcraft:block/city/zs_bat_wood"
+  },
+  "elements": [
+    {
+      "from": [
+        0.5,
+        0,
+        7.5
+      ],
+      "to": [
+        16,
+        1.0,
+        8.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#zs_bat_wood"
+        },
+        "south": {
+          "texture": "#zs_bat_wood"
+        },
+        "east": {
+          "texture": "#zs_bat_wood"
+        },
+        "west": {
+          "texture": "#zs_bat_wood"
+        },
+        "up": {
+          "texture": "#zs_bat_wood"
+        },
+        "down": {
+          "texture": "#zs_bat_wood"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          0,
+          8
+        ],
+        "axis": "y",
+        "angle": 45
+      }
+    },
+    {
+      "from": [
+        9,
+        0,
+        7.2
+      ],
+      "to": [
+        16.5,
+        1.6,
+        8.8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#zs_bat_wood",
+          "uv": [
+            0,
+            14.4,
+            7.5,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#zs_bat_wood",
+          "uv": [
+            8.5,
+            14.4,
+            16,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#zs_bat_wood"
+        },
+        "west": {
+          "texture": "#zs_bat_wood"
+        },
+        "up": {
+          "texture": "#zs_bat_wood",
+          "uv": [
+            8.5,
+            7.2,
+            16,
+            8.8
+          ]
+        },
+        "down": {
+          "texture": "#zs_bat_wood",
+          "uv": [
+            8.5,
+            7.199999999999999,
+            16,
+            8.8
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          0,
+          8
+        ],
+        "axis": "y",
+        "angle": 45
+      }
+    },
+    {
+      "from": [
+        -0.2,
+        0,
+        7.2
+      ],
+      "to": [
+        0.6,
+        1.4,
+        8.8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#zs_bat_wood",
+          "uv": [
+            15.200000000000001,
+            14.6,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#zs_bat_wood",
+          "uv": [
+            0,
+            14.6,
+            0.8,
+            16
+          ]
+        },
+        "east": {
+          "texture": "#zs_bat_wood"
+        },
+        "west": {
+          "texture": "#zs_bat_wood"
+        },
+        "up": {
+          "texture": "#zs_bat_wood",
+          "uv": [
+            0,
+            7.2,
+            0.8,
+            8.8
+          ]
+        },
+        "down": {
+          "texture": "#zs_bat_wood",
+          "uv": [
+            0,
+            7.199999999999999,
+            0.8,
+            8.8
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          0,
+          8
+        ],
+        "axis": "y",
+        "angle": 45
+      }
+    }
+  ]
+}

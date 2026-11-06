@@ -379,10 +379,10 @@ final class TownHall {
         if (lit) {
             for (int y = dial0 + 1; y <= dial0 + 2; y++) {
                 for (int i = 2; i <= 3; i++) {
-                    p.set(i, y, tz, "minecraft:ochre_froglight");
-                    p.set(i, y, tz1, "minecraft:ochre_froglight");
-                    p.set(0, y, tz + i, "minecraft:ochre_froglight");
-                    p.set(tx1, y, tz + i, "minecraft:ochre_froglight");
+                    p.set(i, y, tz, "front_glow_panel");
+                    p.set(i, y, tz1, "front_glow_panel");
+                    p.set(0, y, tz + i, "front_glow_panel");
+                    p.set(tx1, y, tz + i, "front_glow_panel");
                 }
             }
         }

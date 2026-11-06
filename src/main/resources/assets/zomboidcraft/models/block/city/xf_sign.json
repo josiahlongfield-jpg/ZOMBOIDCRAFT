@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "bunk_plate": "zomboidcraft:block/city/bunk_plate",
+    "xf_sign": "zomboidcraft:block/city/xf_sign",
+    "particle": "zomboidcraft:block/city/xf_sign"
+  },
+  "elements": [
+    {
+      "from": [
+        2,
+        3,
+        15
+      ],
+      "to": [
+        14,
+        13,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#xf_sign"
+        },
+        "south": {
+          "texture": "#bunk_plate",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#bunk_plate"
+        },
+        "west": {
+          "texture": "#bunk_plate"
+        },
+        "up": {
+          "texture": "#bunk_plate"
+        },
+        "down": {
+          "texture": "#bunk_plate"
+        }
+      }
+    }
+  ]
+}

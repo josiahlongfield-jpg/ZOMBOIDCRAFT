@@ -51,10 +51,37 @@ final class BigShip {
     private Ships.Hull h;
     private int len, hb, deck, tank, lwl;
     private String hull, deckCol, deckBlock, name;
+    /** A name given her before she's drawn (null: one is picked); and how far aft stays dry if she floods. */
+    private String given;
+    private int dryEnd;
     /** The house from x0 to x1 along her, hw either side of the keel line, levels decks under the bridge. */
     private int x0, x1, hw, levels;
     /** Where the forecastle starts, and its deck. */
     private int fc, fcTop;
+
+    /** A ship's name as her owners would give it, from a random of its own. */
+    static String shipName(SplittableRandom r) {
+        return NAME_A[r.nextInt(NAME_A.length)] + " " + NAME_B[r.nextInt(NAME_B.length)];
+    }
+
+    /** Gives her this name (on her bows and stern) instead of picking one. */
+    BigShip named(String n) {
+        given = n;
+        return this;
+    }
+
+    /** Her name, once she's drawn. */
+    String name() {
+        return name;
+    }
+
+    /**
+     * Once she's drawn: the last x (from the stern) of the engine room and the bunker behind its false
+     * plate, which have their own bulkheads; the holds forward of it are what floods if she does.
+     */
+    int dryEnd() {
+        return dryEnd;
+    }
 
     BigShip(Placer p, SplittableRandom rng, double hit, int quayZ) {
         this.p = p;
@@ -98,6 +125,7 @@ final class BigShip {
         }
         int holdEnd = holds(bay0, bays, engineEnd, bunker != null && big ? 64 : 0);
         int[] bunkerBox = bunker != null && big ? bunker(bunker, engineEnd, holdEnd) : null;
+        dryEnd = bunkerBox != null ? Math.max(engineEnd, bunkerBox[2]) : engineEnd;
         cargo(bay0, bays, engineEnd, big ? 4 : 2, big ? 7 : 4, bunkerBox);
         breakwater(fc - 3);
         boolean burnt = chance() < hit * 0.45;
@@ -271,7 +299,7 @@ final class BigShip {
         deckCol = DECKS[rng.nextInt(DECKS.length)];
         deckBlock = "vessel_deck_" + deckCol;
         String a = NAME_A[rng.nextInt(NAME_A.length)], b = NAME_B[rng.nextInt(NAME_B.length)];
-        name = a + " " + b;
+        name = given != null ? given : a + " " + b;
     }
 
     // ------------------------------------------------------------------ the hull

@@ -123,6 +123,24 @@ public final class Tower {
         }
     }
 
+    /**
+     * A floor this tower could give up to a security firm's strongpoint (the missing floor), or -1:
+     * a whole office floor a third to two thirds of the way up, below any setback, in a tower of ten
+     * floors or more.
+     */
+    public int strongpointFloor(SplittableRandom g) {
+        if (floors < 10 || triplex) {
+            return -1;
+        }
+        int lo = Math.max(3, floors / 3), hi = Math.min(2 * floors / 3, setbackFloor - 1);
+        return hi < lo ? -1 : lo + g.nextInt(hi - lo + 1);
+    }
+
+    /** Turns finished floor k into the strongpoint ({@link Strongpoint}): state 0 sealed, 1 looted, 2 breached. */
+    public void strongpoint(int k, SplittableRandom g, int state) {
+        new Strongpoint(p, g, w, d, floorY(k), cx0, cz0, coreX0(), state).build();
+    }
+
     private static int floorY(int k) {
         return k == 0 ? 0 : LOBBY + (k - 1) * FLOOR;
     }

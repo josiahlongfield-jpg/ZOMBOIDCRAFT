@@ -358,10 +358,10 @@ final class Courthouse {
             // the lamps set in the wall behind each dial's middle, amber through the glass
             for (int y = base + 3; y <= base + 4; y++) {
                 for (int i = 2; i <= 3; i++) {
-                    p.set(tx + i, y, tz, "minecraft:ochre_froglight");
-                    p.set(tx + i, y, tz + t - 1, "minecraft:ochre_froglight");
-                    p.set(tx, y, tz + i, "minecraft:ochre_froglight");
-                    p.set(tx + t - 1, y, tz + i, "minecraft:ochre_froglight");
+                    p.set(tx + i, y, tz, "front_glow_panel");
+                    p.set(tx + i, y, tz + t - 1, "front_glow_panel");
+                    p.set(tx, y, tz + i, "front_glow_panel");
+                    p.set(tx + t - 1, y, tz + i, "front_glow_panel");
                 }
             }
         }

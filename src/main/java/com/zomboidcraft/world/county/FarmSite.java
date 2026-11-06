@@ -399,6 +399,10 @@ final class FarmSite extends Site {
         return wts;
     }
 
+    /** How often a farm's old silo hides the family's shelter. */
+    private static final double SILO_BUNKER = 0.15;
+    private boolean siloDug;
+
     /** The big barn with its lean-to and silos beside it, its doors toward the barnyard. */
     private int[] barnComplex(int bw, int bd, String wall, String roof, boolean gambrel, Farmstead.Use use, int silos,
                               Farmstead.Silo kind, boolean leanTo, int px, int pz) {
@@ -422,6 +426,11 @@ final class FarmSite extends Site {
         for (int i = 0; i < silos; i++) {
             int h = 18 + rng.nextInt(9);
             fs.silo(-sr - 3, bd - sr - 2 - i * (2 * sr + 6), sr, h, kind);
+        }
+        // now and then the family dug their shelter under the old silo (its own random: the farm is unchanged)
+        if (silos > 0 && kind != Farmstead.Silo.BLUE && !siloDug
+                && new java.util.SplittableRandom(p.seed ^ 0x5110L).nextDouble() < SILO_BUNKER) {
+            siloDug = SiloBunker.dig(bp, -sr - 3, bd - sr - 2, sr, p.seed ^ 0x5111L, w, d);
         }
         // the barnyard apron in front of the doors
         for (int x = bw / 2 - 4; x <= bw / 2 + 3; x++) {
