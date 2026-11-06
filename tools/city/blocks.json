@@ -4246875,6 +4246875,67 @@
      "cm_brass"
     ]
    ]
+  },
+  "xf_plate": {
+   "tex": "xf_plate",
+   "title": "Steel Plate",
+   "sound": "METAL"
+  },
+  "xf_slit": {
+   "model": "boxes",
+   "title": "Steel Plate",
+   "sound": "METAL",
+   "boxes": [
+    [
+     0,
+     0,
+     0,
+     16,
+     8,
+     16,
+     "xf_plate"
+    ],
+    [
+     0,
+     10,
+     0,
+     16,
+     16,
+     16,
+     "xf_plate"
+    ]
+   ]
+  },
+  "xf_bricked": {
+   "tex": "xf_bricked",
+   "title": "Bricked-Up Door",
+   "sound": "STONE"
+  },
+  "xf_sign": {
+   "model": "boxes",
+   "title": "Sign",
+   "sound": "METAL",
+   "rotate": "facing",
+   "decor": true,
+   "boxes": [
+    [
+     2,
+     3,
+     15,
+     14,
+     13,
+     16,
+     {
+      "north": "xf_sign",
+      "side": "bunk_plate"
+     }
+    ]
+   ]
+  },
+  "xf_bricked_plain": {
+   "tex": "xf_bricked_plain",
+   "title": "Bricked-Up Door",
+   "sound": "STONE"
   }
  }
 }

@@ -1115,6 +1115,8 @@ import shelter  # noqa: E402
 shelter.register(sys.modules[__name__])
 import mine  # noqa: E402
 mine.register(sys.modules[__name__])
+import strongpoint  # noqa: E402
+strongpoint.register(sys.modules[__name__])
 import fitout  # noqa: E402
 fitout.register(sys.modules[__name__])
 import mall  # noqa: E402
