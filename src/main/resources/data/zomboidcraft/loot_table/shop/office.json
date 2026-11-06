@@ -574,6 +574,41 @@
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:wall_calendar",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:bobblehead",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:desk_globe",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:rubber_band_ball",
           "weight": 4,
           "functions": [
@@ -660,6 +695,11 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:motion_sensor_kit",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:aquarium",
           "weight": 1
         }
       ]

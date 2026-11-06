@@ -7,17 +7,19 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 /**
- * Hair and beard (H on the kit's Clothing page): your survivor turning in the middle, the styles you can cut to now
+ * Hair and beard (H on the kit's Clothing page): your survivor in the middle (drag to turn them), the styles you can cut to now
  * either side (scissors cut, a razor shaves), your hair colour along the bottom, and whether you grow a beard. Styles
  * longer than your hair is now are greyed out until it grows.
  */
 public class GroomingScreen extends Screen {
     private final Screen back;
     private Look shown;
+    /** You in the middle, turned by dragging. */
+    private final SpinFigure figure = new SpinFigure();
 
     public GroomingScreen(Screen back) {
         super(Component.literal("Hair and beard"));
@@ -37,6 +39,7 @@ public class GroomingScreen extends Screen {
         int col = 104, gap = 2, bh = 16;
         int lx = 16, rx = width - 16 - col, y0 = 56;
         int i = 0;
+        if (zomboid(lx, rx, y0, col, gap, bh, now)) return;
         for (Map.Entry<String, Integer> e : Grooming.HAIR.entrySet()) {
             if (e.getKey().equals("own")) continue;
             String need = Grooming.needs(shown, now, true, e.getKey());
@@ -69,6 +72,73 @@ public class GroomingScreen extends Screen {
         }
     }
 
+    /**
+     * A Zomboid survivor body cuts to Zomboid's own styles: what the style showing now can be trimmed to (its
+     * trimChoices), or shaved; a beard the same. Returns false for the usual body.
+     */
+    private boolean zomboid(int lx, int rx, int y0, int col, int gap, int bh, long now) {
+        com.zomboidcraft.survival.character.Appearance.Look look = com.zomboidcraft.survival.character.Appearance.of(minecraft.player);
+        com.zomboidcraft.client.survivor.SurvivorPack pack = look == null ? null : com.zomboidcraft.client.survivor.SurvivorPack.get(look.sex());
+        if (pack == null) return false;
+        com.zomboidcraft.client.survivor.SurvivorPack.Style hairNow = pack.hairFor(Grooming.hair(shown, now), shown.hair());
+        java.util.List<String[]> hair = new java.util.ArrayList<>();   // {label, style}
+        if (hairNow != null) {
+            hair.add(new String[]{hairNow.name() + " (tidy)", hairNow.key()});
+            for (String t : hairNow.trim()) {
+                com.zomboidcraft.client.survivor.SurvivorPack.Style s = pack.hairById.get(t);
+                if (s != null) hair.add(new String[]{s.name(), s.key()});
+                else if (t.equalsIgnoreCase("bald")) hair.add(new String[]{"Shave it", "bald"});
+            }
+        }
+        if (hair.stream().noneMatch(h -> h[1].equals("bald"))) hair.add(new String[]{"Shave it", "bald"});
+        int i = 0;
+        for (String[] h : hair) {
+            String need = Grooming.needs(shown, now, true, h[1]);
+            Button b = Button.builder(Component.literal(h[0] + (need != null && need.equals("razor") ? " (razor)" : "")),
+                    x -> ClientPlayNetworking.send(new Grooming.Cut(true, h[1]))).bounds(lx, y0 + i * (bh + gap), col, bh).build();
+            b.active = need != null;
+            addRenderableWidget(b);
+            i++;
+        }
+        i = 0;
+        if (!look.female()) {
+            com.zomboidcraft.client.survivor.SurvivorPack.Style beardNow = pack.beardFor(Grooming.beard(shown, now), shown.beard());
+            java.util.List<String[]> beard = new java.util.ArrayList<>();
+            if (beardNow != null) {
+                beard.add(new String[]{beardNow.name() + " (tidy)", beardNow.key()});
+                for (String t : beardNow.trim()) {
+                    com.zomboidcraft.client.survivor.SurvivorPack.Style s = pack.beardById.get(t);
+                    if (s != null) beard.add(new String[]{s.name(), s.key()});
+                }
+            }
+            beard.add(new String[]{"Clean shave", "none"});
+            for (String[] h : beard) {
+                String need = Grooming.needs(shown, now, false, h[1]);
+                Button b = Button.builder(Component.literal(h[0] + (need != null && need.equals("razor") ? " (razor)" : "")),
+                        x -> ClientPlayNetworking.send(new Grooming.Cut(false, h[1]))).bounds(rx, y0 + i * (bh + gap), col, bh).build();
+                b.active = need != null;
+                addRenderableWidget(b);
+                i++;
+            }
+            addRenderableWidget(Button.builder(Component.literal(shown.beardGrows() ? "Beard grows: yes" : "Beard grows: no"),
+                    x -> ClientPlayNetworking.send(new Grooming.Beard(!shown.beardGrows())))
+                    .bounds(rx, y0 + i * (bh + gap) + 6, col, bh).build());
+        }
+        colours(gap, bh);
+        return true;
+    }
+
+    private void colours(int gap, int bh) {
+        int cw = 54, total = Grooming.COLOURS.size() * (cw + gap) - gap, cx = (width - total) / 2, cy = height - 46;
+        for (int k = 0; k < Grooming.COLOURS.size(); k++) {
+            String c = Grooming.COLOURS.get(k);
+            Button b = Button.builder(Component.literal(label(c)), x -> ClientPlayNetworking.send(new Grooming.Colour(c)))
+                    .bounds(cx + k * (cw + gap), cy, cw, bh).build();
+            b.active = !c.equals(shown.colour());
+            addRenderableWidget(b);
+        }
+    }
+
     @Override
     public void tick() {
         if (minecraft.player != null && !Grooming.look(minecraft.player).equals(shown)) rebuildWidgets();
@@ -90,7 +160,26 @@ public class GroomingScreen extends Screen {
         KitDraw.capsCentred(g, font, "Hair colour", width / 2f, height - 60, KitDraw.LINK, 0.8f);
         KitDraw.textCentred(g, font, "Scissors cut, a razor shaves. It grows back over the weeks.", width / 2f, height - 22, KitDraw.DIM, 0.8f);
         int cx = width / 2;
-        InventoryScreen.extractEntityInInventoryFollowsMouse(g, cx - 90, 40, cx + 90, height - 70, 110, 0.0625f, mx, my, minecraft.player);
+        figure.draw(g, cx - 90, 40, cx + 90, height - 70, 110, minecraft.player);
+    }
+
+    @Override
+    public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        if (super.mouseClicked(event, doubleClick)) return true;
+        int cx = width / 2;
+        return event.button() == 0 && figure.pressed(event.x(), event.y(), cx - 90, 40, cx + 90, height - 70);
+    }
+
+    @Override
+    public boolean mouseDragged(MouseButtonEvent event, double dx, double dy) {
+        figure.dragged(event.x());
+        return figure.dragging() || super.mouseDragged(event, dx, dy);
+    }
+
+    @Override
+    public boolean mouseReleased(MouseButtonEvent event) {
+        figure.released();
+        return super.mouseReleased(event);
     }
 
     @Override
@@ -99,6 +188,7 @@ public class GroomingScreen extends Screen {
     }
 
     private static String label(String id) {
+        if (id.startsWith("pz:")) id = id.substring(3, id.lastIndexOf('#') < 0 ? id.length() : id.lastIndexOf('#'));
         String s = id.replace('_', ' ');
         return Character.toUpperCase(s.charAt(0)) + s.substring(1);
     }

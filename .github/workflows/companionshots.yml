@@ -24,7 +24,7 @@ jobs:
       - run: sudo apt-get update -q && sudo apt-get install -y -q xvfb xserver-xorg-core xserver-xorg-video-dummy mesa-utils libgl1-mesa-dri libglx-mesa0 libegl-mesa0 mesa-vulkan-drivers > /dev/null
       - name: Only the companion test
         run: |
-          sed -i 's/"fabric-client-gametest": \[[^]]*\]/"fabric-client-gametest": ["com.zomboidcraft.client.npc.CompanionTradesTest"]/' src/gametest/resources/fabric.mod.json
+          sed -i 's/"fabric-client-gametest": \[[^]]*\]/"fabric-client-gametest": ["com.zomboidcraft.client.npc.CompanionPastTest"]/' src/gametest/resources/fabric.mod.json
       - name: Shrink block textures for the software renderer
         run: |
           pip install -q pillow

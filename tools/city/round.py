@@ -12,7 +12,9 @@ and depth 0..8.
 - walls: stave (concrete staves), stave_hoop (with its steel hoop), blue (glass-lined), bin
   (corrugated grain bin), brick; wood (a water tower's timber staves, wood_hoop with its iron hoop),
   wtw / wtb (a steel water tower's white or blue shell); soot (a smokestack's blackened lip);
-  twr / twd (a control tower's pale concrete shaft, the dark band under its cab);
+  twr / twd (a control tower's pale concrete shaft, the dark band under its cab); hfg / hfgw (the
+  harbour fort's granite, and in its splash zone), hfa / hfas (its iron armour, rust-streaked under
+  a port), hfpl / hfpu (a gun port's sill and lintel, the opening cut out: harbourfort.py's textures);
 - rd_tglaze: a control tower cab's tall tinted panes in black frames (rd_glaze the lighthouse's);
 - a roof's tiers: rd_{galv,blue,tinred}_{s,m}_{turn}_{depth}, a block-high ring of four courses
   stepping in 2 px (s, steep) or 4 px (m, 45 degrees) each, filled flat behind; the top of the roof
@@ -34,14 +36,18 @@ WALLS = {"stave": "silo_stave", "blue": "silo_blue", "bin": "bin_ribbed", "brick
          "field": "fm_fieldstone", "tank": "ext_galv", "crib": "fm_mesh", "paddock": "fm_ring_boards",
          "oil": "tk_oil", "oilrust": "tk_oil_rust", "slip": "tk_slip", "lhw": "lh_white", "lhr": "lh_red",
          "wood": "wt_stave", "wtw": "tank_white", "wtb": "tank_blue", "soot": "brick_dark_soot",
-         "twr": "tx_concrete", "twd": "ext_black_metal"}
+         "twr": "tx_concrete", "twd": "ext_black_metal",
+         "hfg": "hf_granite", "hfgw": "hf_granite_tide", "hfa": "hf_armour", "hfas": "hf_armour_streak",
+         "hfpl": "hf_port_lo", "hfpu": "hf_port_hi"}
 # what each wall shows inside (a stock tank and a corn crib's mesh are the same both sides)
-INNER = {"wood": "wt_stave", "tank": "ext_galv", "crib": "fm_mesh", "field": "fm_fieldstone", "paddock": "fm_ring_boards",
+INNER = {"hfg": "hf_granite", "hfgw": "hf_granite", "hfa": "bunk_plate_rust", "hfas": "bunk_plate_rust",
+         "hfpl": "hf_port_lo", "hfpu": "hf_port_hi", "wood": "wt_stave", "tank": "ext_galv", "crib": "fm_mesh", "field": "fm_fieldstone", "paddock": "fm_ring_boards",
          "twr": "tx_concrete"}
 TITLES = {"stave": "Stave Silo", "blue": "Silo", "bin": "Grain Bin", "brick": "Brick Silo", "field": "Stone Curb",
           "tank": "Stock Tank", "crib": "Corn Crib", "paddock": "Round Pen", "oil": "Fuel Tank", "oilrust": "Fuel Tank",
           "slip": "Grain Silo", "lhw": "Lighthouse", "lhr": "Lighthouse", "wood": "Water Tank",
-          "wtw": "Water Tank", "wtb": "Water Tank", "soot": "Smokestack", "twr": "Control Tower", "twd": "Control Tower"}
+          "wtw": "Water Tank", "wtb": "Water Tank", "soot": "Smokestack", "twr": "Control Tower", "twd": "Control Tower",
+          "hfg": "Granite", "hfgw": "Granite", "hfa": "Iron Armour", "hfas": "Iron Armour", "hfpl": "Gun Port", "hfpu": "Gun Port"}
 TIERS = {"galv": "ext_galv", "blue": "silo_blue", "tinred": "ext_tin_red_tread", "oil": "tk_oil_roof", "lhcap": "lh_cap",
          "wood": "wt_roof", "wtw": "tank_white", "wtb": "tank_blue", "twr": "tx_concrete"}
 GALV = "ext_galv"
@@ -182,9 +188,10 @@ def glazex(turn, depth):
     return out
 
 
-def lens(lit):
-    """The light: a Fresnel lens's drum of glass prisms on its pedestal, the bull's-eye, a cap."""
-    pr = "lh_prism_lit" if lit else "lh_prism"
+def lens(lit, colour=None):
+    """The light: a Fresnel lens's drum of glass prisms on its pedestal, the bull's-eye, a cap; a
+    harbour mouth's light burns red or green (colour)."""
+    pr = f"lh_prism_{colour}_lit" if colour else "lh_prism_lit" if lit else "lh_prism"
     c = [8, 8, 8]
     return [[5, 0, 5, 11, 3, 11, "lh_cap"], [6.5, 3, 6.5, 9.5, 4, 9.5, GALV],
             [3, 4, 3, 13, 14, 13, pr], [3, 4, 3, 13, 14, 13, pr, None, {"axis": "y", "angle": 45, "origin": c}],
@@ -238,9 +245,9 @@ def blocks():
     for k, t in TURNS.items():
         for i, d in enumerate(DEPTHS):
             for mat, tex in WALLS.items():
-                extra = {"render": "cutout"} if mat in ("crib", "paddock") else {}
+                extra = {"render": "cutout"} if mat in ("crib", "paddock", "hfpl", "hfpu") else {}
                 add(f"rd_{mat}_{k}_{i}", panel(t, d, tex, INNER.get(mat, INSIDE), thick=1 if mat in ("tank", "crib", "paddock", "oil", "oilrust", "wtw", "wtb") else 3),
-                    TITLES[mat], "METAL" if mat in ("blue", "bin", "tank", "crib", "oil", "oilrust", "wtw", "wtb")
+                    TITLES[mat], "METAL" if mat in ("blue", "bin", "tank", "crib", "oil", "oilrust", "wtw", "wtb", "hfa", "hfas", "hfpl", "hfpu")
                     else "WOOD" if mat in ("paddock", "wood") else "STONE", **extra)
             add(f"rd_stave_hoop_{k}_{i}", panel(t, d, WALLS["stave"], hoop=True), "Stave Silo", "STONE")
             add(f"rd_wood_hoop_{k}_{i}", panel(t, d, WALLS["wood"], INNER.get("wood", INSIDE), hoop=True), "Water Tank", "WOOD")
@@ -263,6 +270,8 @@ def blocks():
             add(f"rd_tglaze_{k}_{i}", glaze(t, d, "rp_glass", "ext_black_metal", False), "Tower Cab Glazing", "GLASS", render="translucent")
     add("rd_lens", lens(False), "Lighthouse Lens", "GLASS", rotate=None)
     add("rd_lens_lit", lens(True), "Lighthouse Lens", "GLASS", rotate=None, light=15)
+    add("rd_lens_red_lit", lens(True, "red"), "Harbour Light", "GLASS", rotate=None, light=15)
+    add("rd_lens_green_lit", lens(True, "green"), "Harbour Light", "GLASS", rotate=None, light=15)
     add("rd_cage", cage(), "Caged Ladder", "METAL", climb=True)
     add("rd_finial", finial(), "Silo Cap", "METAL", rotate=None)
     add("rd_bin_cap", bin_cap(), "Bin Cap", "METAL", rotate=None)

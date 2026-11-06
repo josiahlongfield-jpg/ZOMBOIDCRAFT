@@ -1,0 +1,45 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "gh_poster_2": "zomboidcraft:block/city/gh_poster_2",
+    "paper": "zomboidcraft:block/city/paper",
+    "particle": "zomboidcraft:block/city/gh_poster_2"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        15.6
+      ],
+      "to": [
+        15,
+        16,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#gh_poster_2"
+        },
+        "south": {
+          "texture": "#paper",
+          "cullface": "south"
+        },
+        "east": {
+          "texture": "#paper"
+        },
+        "west": {
+          "texture": "#paper"
+        },
+        "up": {
+          "texture": "#paper",
+          "cullface": "up"
+        },
+        "down": {
+          "texture": "#paper",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

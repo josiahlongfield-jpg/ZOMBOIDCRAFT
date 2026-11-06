@@ -289,6 +289,12 @@ public final class RifleView {
                 || state.avatarRenderState == null) {
             return false;
         }
+        // the Tarkov operator's own arms and rifle, every move Tarkov's clip (client/operator)
+        if (com.zomboidcraft.client.operator.OperatorView.submit(pose, out, light, state, gun)) {
+            aimShown = 0;
+            rail = null;
+            return true;
+        }
         use(gunType);
         ZcConfig config = ZcConfig.get();
         float age = state.avatarRenderState.ageInTicks;
@@ -328,7 +334,20 @@ public final class RifleView {
         float t = active ? type.tube ? age - clockStart : anim(age - clockStart) : -1;
         boolean animate = config.guns.reloadAnimation && active;
         float a = smooth(Mth.lerp(partial(age), aimO, aim));
-        Pose sights = sights(optic);
+        Pose sights = aim(optic, gun);
+        // a local gun Josiah posed in the posing tool: his hip and sights poses (on its iron sights)
+        // with a sight or grip of his kept on this computer, the sights pose that sight gives and the front hand on it
+        String localOptic = com.zomboidcraft.combat.LocalParts.fitted(gun, Attachments.Slot.OPTIC);
+        String localGrip = com.zomboidcraft.combat.LocalParts.fitted(gun, Attachments.Slot.UNDERBARREL);
+        GunPoses.Gun posed = (optic.equals(Attachments.EMPTY_KEY) || localOptic != null) && com.zomboidcraft.combat.LocalGuns.of(gun) != null
+                ? GunPoses.of(gun.get(com.zomboidcraft.combat.LocalGuns.ID)) : null;
+        if (posed != null) {
+            posed = GunPoses.with(posed, localOptic, localGrip);
+        }
+        if (posed != null && sights != null) {
+            sights = posed.ads().gun();
+        }
+        LocalAttachments.aiming(gun, posed, localOptic, sights, a);
         if (sights == null) {
             a = 0;
         }
@@ -340,6 +359,10 @@ public final class RifleView {
         if (work > 0) {
             float[] c = rig.charge();
             want = worked(hip(c[0] * work, c[1] * work, bump(bolt, BOLT_HOME, 2.5f) * 1.2f), work);
+        }
+        if (posed != null) {
+            // every move of ours (a reload, a bolt worked) made from his hip pose rather than our gun's
+            want = GunPoses.pose(GunPoses.matrix(want).mul(GunPoses.matrix(hip(0, 0, 0)).invert()).mul(GunPoses.matrix(posed.hip().gun())));
         }
         float p = smooth(Mth.lerp(partial(age), pointO, point));
         if (p > 0) {
@@ -358,6 +381,32 @@ public final class RifleView {
         }
         aimShown = step == 0 ? a : 0;
 
+        // Josiah's own reload for this gun (the reload editor), when this computer has it: the gun, its moving pieces
+        // and her arms as he set them, stretched over the game's reload
+        ReloadClips.Clip clip = posed != null && config.guns.reloadAnimation ? ReloadClips.of(gun.get(com.zomboidcraft.combat.LocalGuns.ID)) : null;
+        float clipU = clip == null ? -1 : ReloadClips.progress(player, gun, age);
+        ReloadClips.At clipAt = clipU >= 0 ? ReloadClips.at(clip, "fp", clipU) : null;
+        if (clipAt != null) {
+            aimShown = 0;
+            rail = null;
+            pose.pushPose();
+            ReloadClips.draw(clip, clipAt, pose, out, light);
+            pose.pushPose();
+            pose.mulPose(new Matrix4f(clipAt.gun()).scale(16));     // item pixels to the item model's blocks
+            LocalAttachments.drawParts(gun.get(com.zomboidcraft.combat.LocalGuns.ID), localOptic, localGrip, pose, out, light);
+            pose.popPose();
+            if (config.look.firstPersonArms && !state.avatarRenderState.isInvisible) {
+                boolean free = player.getOffhandItem().isEmpty() && !com.zomboidcraft.client.cars.CarHands.leftOnWheel(player);
+                java.util.Map<String, Matrix4f> held = GunPoses.bones(posed, 0, new Matrix4f());
+                float w = ReloadClips.blend(clipU, ReloadClips.dur(clip, "fp"));
+                java.util.Map<String, Matrix4f> bones = ReloadClips.mix(held, clipAt.bones(), w);
+                bones.entrySet().removeIf(e -> !free && e.getKey().startsWith("L_"));
+                com.zomboidcraft.client.survivor.SurvivorArms.drawPosed(pose, out, light, player, bones);
+            }
+            pose.popPose();
+            return true;
+        }
+
         pose.pushPose();
         // hurt arms shake the sights: up to three times the sway with both broken
         var me = net.minecraft.client.Minecraft.getInstance().player;
@@ -369,7 +418,9 @@ public final class RifleView {
         pose.pushPose();
         want.apply(pose);
         shown.unapply(pose);
+        LocalAttachments.firstPerson = true;
         drawGun.run();
+        LocalAttachments.firstPerson = false;
         pose.popPose();
 
         // the model leaves the handle, slide or pump to us in first person
@@ -402,6 +453,12 @@ public final class RifleView {
         if (animate) {
             drawLoose(pose, out, light, player, want, t, step, age);
         }
+        boolean leftFree = player.getOffhandItem().isEmpty() && !com.zomboidcraft.client.cars.CarHands.leftOnWheel(player);
+        if (config.look.firstPersonArms && !state.avatarRenderState.isInvisible && posed != null && !animate && bolt < 0
+                && lever <= 1e-3f && step == 0 && posedArms(pose, out, light, player, posed, want, a, rig.pump() ? pulled : 0, leftFree)) {
+            pose.popPose();
+            return true;
+        }
         if (config.look.firstPersonArms && !state.avatarRenderState.isInvisible) {
             boolean foregrip = optionalKey(gun, 2).equals("foregrip");
             float pump = rig.pump() ? pulled : 0;
@@ -421,11 +478,32 @@ public final class RifleView {
                 right = right.lerp(new Hand(right.at(), RIGHT_LOAD, RIGHT_HINT), openAmount(age));
             }
             RifleArms.draw(pose, out, light, player, state.avatarRenderState, right,
-                    player.getOffhandItem().isEmpty() && !com.zomboidcraft.client.cars.CarHands.leftOnWheel(player) ? left : null,
+                    leftFree ? left : null,
                     want.scale / rig.hipScale() * 0.6f);
         }
         pose.popPose();
         return true;
+    }
+
+    /**
+     * Her arms as Josiah posed them for this gun, blended from the hip to the sights as the gun is, carried along with
+     * whatever moved the gun from there (the laser's turn, the sway) and the front hand riding a pump. False if she
+     * isn't drawn as a survivor (the usual arms then).
+     */
+    private static boolean posedArms(PoseStack pose, SubmitNodeCollector out, int light, LocalPlayer player, GunPoses.Gun posed,
+                                     Pose want, float a, float pump, boolean leftFree) {
+        Matrix4f move = GunPoses.matrix(want).mul(GunPoses.matrix(posed.hip().gun().lerp(posed.ads().gun(), a)).invert());
+        java.util.Map<String, Matrix4f> bones = GunPoses.bones(posed, a, move);
+        Vector3f slide = want.q().transform(new Vector3f(0, 0, pump / 16 * want.scale()));
+        bones.entrySet().removeIf(e -> !leftFree && e.getKey().startsWith("L_"));
+        if (pump != 0) {
+            for (var e : bones.entrySet()) {
+                if (e.getKey().startsWith("L_")) {
+                    e.getValue().translateLocal(slide);
+                }
+            }
+        }
+        return com.zomboidcraft.client.survivor.SurvivorArms.drawPosed(pose, out, light, player, bones);
     }
 
     /** The slow drift of a held breath while aiming, so the sights are never quite dead still: a turn about the eye. */
@@ -499,6 +577,7 @@ public final class RifleView {
      * shows from the next frame drawn.
      */
     public static void fired(LocalPlayer player, boolean flash) {
+        com.zomboidcraft.client.operator.OperatorView.fired();
         hammerShot = System.nanoTime();
         hammer = 0;
         shotTick = player.tickCount;
@@ -1017,6 +1096,46 @@ public final class RifleView {
         float[] d = rig.sights().getOrDefault(optic, rig.sights().get("irons"));
         // a bead gun is tipped up a little so the bead lands on the eye line
         return new Pose(new Vector3f(d[0] / 16, d[1] / 16, d[2] / 16), new Quaternionf().rotationX(d.length > 4 ? d[4] * Mth.DEG_TO_RAD : 0), d[3]);
+    }
+
+    /**
+     * Where the gun goes on the sights: for a gun kept on this computer on its own iron sights, the eye along its own
+     * sight line ({@link com.zomboidcraft.combat.LocalGuns.Sights}), not our gun's, whose sights sit higher or lower.
+     */
+    private static Pose aim(String optic, ItemStack gun) {
+        Pose ours = sights(optic);
+        com.zomboidcraft.combat.LocalGuns.Spec spec = com.zomboidcraft.combat.LocalGuns.of(gun);
+        if (ours == null || !optic.equals(Attachments.EMPTY_KEY) || spec == null || spec.sights == null
+                || spec.sights.front == null || spec.sights.rear == null) {
+            return ours;
+        }
+        return alongSights(ours, spec.sights.front, spec.sights.rear, spec.sights.eye);
+    }
+
+    /** Eye relief behind the rear sight, item pixels: at least this, and at most the second. */
+    private static final float RELIEF_MIN = 4.5f, RELIEF_MAX = 8f;
+
+    /**
+     * Our gun's pose on the sights moved so a front and rear sight (item pixels) line up on the eye: tipped till the
+     * line runs straight ahead, the eye on it as far behind the rear sight as our gun's eye was (within limits).
+     */
+    static Pose alongSights(Pose ours, float[] front, float[] rear, float eyeAt) {
+        Vector3f f = new Vector3f(front[0], front[1], front[2]), r = new Vector3f(rear[0], rear[1], rear[2]);
+        Vector3f back = new Vector3f(r).sub(f);
+        if (back.z <= 0.01f) {
+            return ours;
+        }
+        back.normalize();
+        // the item pixel our gun's pose puts under the eye (the hand frame's -ARM)
+        Vector3f eye = new Vector3f(-ARM[0], -ARM[1], -ARM[2]).sub(ours.t());
+        new Quaternionf(ours.q()).conjugate().transform(eye);
+        float eyeZ = (eye.z / ours.scale() + 0.5f) * 16;
+        eyeZ = eyeAt > r.z ? eyeAt : Math.min(Math.max(eyeZ, r.z + RELIEF_MIN), r.z + RELIEF_MAX);
+        Vector3f e = new Vector3f(back).mul((eyeZ - r.z) / back.z).add(r);
+        Quaternionf q = new Quaternionf().rotationX((float) Math.atan((f.y - r.y) / (f.z - r.z)));
+        Vector3f p = q.transform(new Vector3f(e).div(16).sub(0.5f, 0.5f, 0.5f).mul(ours.scale()));
+        Vector3f t = new Vector3f(-ARM[0], -ARM[1], -ARM[2]).sub(p);
+        return new Pose(t, q, ours.scale());
     }
 
     /** A display transform: translate (blocks), turn, uniform scale. */

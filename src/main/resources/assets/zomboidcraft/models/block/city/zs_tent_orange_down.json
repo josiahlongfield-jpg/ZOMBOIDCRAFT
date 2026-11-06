@@ -1,0 +1,245 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "painted_steel": "zomboidcraft:block/city/painted_steel",
+    "zs_nylon_orange": "zomboidcraft:block/city/zs_nylon_orange",
+    "particle": "zomboidcraft:block/city/zs_nylon_orange"
+  },
+  "elements": [
+    {
+      "from": [
+        0.5,
+        0,
+        1
+      ],
+      "to": [
+        15.5,
+        1,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#zs_nylon_orange"
+        },
+        "south": {
+          "texture": "#zs_nylon_orange"
+        },
+        "east": {
+          "texture": "#zs_nylon_orange"
+        },
+        "west": {
+          "texture": "#zs_nylon_orange"
+        },
+        "up": {
+          "texture": "#zs_nylon_orange"
+        },
+        "down": {
+          "texture": "#zs_nylon_orange",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        1,
+        3
+      ],
+      "to": [
+        9,
+        2.8,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#zs_nylon_orange"
+        },
+        "south": {
+          "texture": "#zs_nylon_orange"
+        },
+        "east": {
+          "texture": "#zs_nylon_orange"
+        },
+        "west": {
+          "texture": "#zs_nylon_orange"
+        },
+        "up": {
+          "texture": "#zs_nylon_orange"
+        },
+        "down": {
+          "texture": "#zs_nylon_orange"
+        }
+      }
+    },
+    {
+      "from": [
+        7,
+        1,
+        6
+      ],
+      "to": [
+        14,
+        2.2,
+        13.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#zs_nylon_orange"
+        },
+        "south": {
+          "texture": "#zs_nylon_orange"
+        },
+        "east": {
+          "texture": "#zs_nylon_orange"
+        },
+        "west": {
+          "texture": "#zs_nylon_orange"
+        },
+        "up": {
+          "texture": "#zs_nylon_orange"
+        },
+        "down": {
+          "texture": "#zs_nylon_orange"
+        }
+      }
+    },
+    {
+      "from": [
+        3,
+        1,
+        9
+      ],
+      "to": [
+        8,
+        1.6,
+        14
+      ],
+      "faces": {
+        "north": {
+          "texture": "#zs_nylon_orange"
+        },
+        "south": {
+          "texture": "#zs_nylon_orange"
+        },
+        "east": {
+          "texture": "#zs_nylon_orange"
+        },
+        "west": {
+          "texture": "#zs_nylon_orange"
+        },
+        "up": {
+          "texture": "#zs_nylon_orange"
+        },
+        "down": {
+          "texture": "#zs_nylon_orange"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        0.4,
+        7.6
+      ],
+      "to": [
+        17,
+        1,
+        8.2
+      ],
+      "faces": {
+        "north": {
+          "texture": "#painted_steel",
+          "uv": [
+            0,
+            15,
+            16,
+            15.6
+          ]
+        },
+        "south": {
+          "texture": "#painted_steel",
+          "uv": [
+            0,
+            15,
+            16,
+            15.6
+          ]
+        },
+        "east": {
+          "texture": "#painted_steel"
+        },
+        "west": {
+          "texture": "#painted_steel"
+        },
+        "up": {
+          "texture": "#painted_steel",
+          "uv": [
+            0,
+            7.6,
+            16,
+            8.2
+          ]
+        },
+        "down": {
+          "texture": "#painted_steel",
+          "uv": [
+            0,
+            7.800000000000001,
+            16,
+            8.4
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          0,
+          8
+        ],
+        "axis": "y",
+        "angle": 22.5
+      }
+    },
+    {
+      "from": [
+        7.7,
+        1,
+        7.7
+      ],
+      "to": [
+        8.3,
+        11,
+        8.3
+      ],
+      "faces": {
+        "north": {
+          "texture": "#painted_steel"
+        },
+        "south": {
+          "texture": "#painted_steel"
+        },
+        "east": {
+          "texture": "#painted_steel"
+        },
+        "west": {
+          "texture": "#painted_steel"
+        },
+        "up": {
+          "texture": "#painted_steel"
+        },
+        "down": {
+          "texture": "#painted_steel"
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          1,
+          8
+        ],
+        "axis": "x",
+        "angle": 22.5
+      }
+    }
+  ]
+}

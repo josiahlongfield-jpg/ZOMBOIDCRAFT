@@ -57,9 +57,12 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         Entity eye = mc.getCameraEntity();
         // a jet with its engines running is drawn whole three times further off, so its moving surfaces show
         double far = car.aircraft() && car.flight().rpm > 0.3f ? 9 : 1;
-        state.lod = eye == null || car.hasPassenger(eye) ? 0 : CarLod.level(car.distanceToSqr(eye) / far);
+        state.eyeDistSq = eye == null || car.hasPassenger(eye) ? 0 : car.distanceToSqr(eye) / far;
+        state.lod = eye == null || car.hasPassenger(eye) ? 0 : CarLod.level(state.eyeDistSq);
         float t = car.lidOpenO + (car.lidOpen - car.lidOpenO) * partialTick;
         state.open = t * t * (3 - 2 * t);
+        float b = car.bonnetOpenO + (car.bonnetOpen - car.bonnetOpenO) * partialTick;
+        state.bonnet = b * b * (3 - 2 * b);
         state.rolled = car.rolledO + (car.rolled - car.rolledO) * partialTick;
         state.steer = car.steerO + (car.steer - car.steerO) * partialTick;
         state.lights = CarLights.on(car);
@@ -170,7 +173,13 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
         // the shadow map only needs a car's outline: a near car casts it from a coarser copy (the profile showed every
         // parked car drawn twice at full detail), unless you're sitting in it
         int lod = state.lod;
-        if (lod < SHADOW_LOD && !state.inside && com.zomboidcraft.client.zombie.body.ZDetail.shadowPass()) {
+        boolean shadow = com.zomboidcraft.client.zombie.body.ZDetail.shadowPass();
+        // past SHADOW_REACH a car casts none (2026-11-01 profile: city car shadows were 9% of the frame); up there
+        // the shadow map's texels are bigger than the car's shadow detail anyway
+        if (shadow && !state.inside && state.eyeDistSq > SHADOW_REACH * SHADOW_REACH) {
+            return;
+        }
+        if (lod < SHADOW_LOD && !state.inside && shadow) {
             state.lod = SHADOW_LOD;
         }
         try {
@@ -182,6 +191,8 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
 
     /** The coarsest copy a car casts its shadow from ({@link CarLod}: 0.16 m grid, close enough not to show). */
     private static final int SHADOW_LOD = 2;
+    /** Blocks out to which cars cast shadows. */
+    private static final double SHADOW_REACH = 40;
 
     private void draw(CarRenderState state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState camera) {
         CarAssets.Ready car;
@@ -227,9 +238,10 @@ public class CarRenderer extends EntityRenderer<CarProp, CarRenderState> {
                 poseStack.translate(0, 0, -mid);
             }
         }
+        com.zomboidcraft.world.cars.CarModels.Model lidModel = com.zomboidcraft.world.cars.CarModels.get(state.model);
         Turn[] lids = new Turn[car.lids().size()];
         for (int i = 0; i < lids.length; i++) {
-            lids[i] = lid(car.lids().get(i), state.open);
+            lids[i] = lid(car.lids().get(i), lidModel != null && lidModel.bonnetLid(i) ? state.bonnet : state.open);
         }
         Turn[] wheels = new Turn[car.wheels().size()];
         for (int i = 0; i < wheels.length; i++) {

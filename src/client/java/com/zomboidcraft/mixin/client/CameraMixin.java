@@ -12,6 +12,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Camera.class)
 public abstract class CameraMixin {
@@ -50,5 +51,11 @@ public abstract class CameraMixin {
         if (out.position != null) {
             setPosition(out.position);
         }
+    }
+
+    /** Through a magnified scope, the lens's turns are drawn zoomed exactly the scope's power (ScopeView). */
+    @Inject(method = "calculateFov", at = @At("RETURN"), cancellable = true)
+    private void zomboidcraft$scopeFov(float partialTick, CallbackInfoReturnable<Float> cir) {
+        cir.setReturnValue(com.zomboidcraft.client.combat.ScopeView.fov(cir.getReturnValueF()));
     }
 }

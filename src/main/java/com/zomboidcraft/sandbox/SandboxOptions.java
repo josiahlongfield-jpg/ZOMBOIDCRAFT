@@ -106,6 +106,10 @@ final class SandboxOptions {
         w.put("MaxRainFxIntensity", b -> b.choice("nature.maxRainFx", "normal", "moderate", "low").owner("WEATHER").client());
         w.put("EnableSnowOnGround", b -> b.toggle("nature.snowOnGround").owner("WEATHER")
                 .tip("There is no snow yet, so this does nothing for now."));
+        // Character creation (SURVIVAL): survival/character/Traits
+        w.put("CharacterFreePoints", b -> b.number("survival.freeTraitPoints", -100, 100).owner("SURVIVAL"));
+        w.put("NegativeTraitsPenalty", b -> b.choice("survival.negativeTraitsPenalty", "none", "one_every_3", "one_every_2",
+                "one_every_trait").owner("SURVIVAL"));
         // Skills (SURVIVAL): one global multiplier for now
         w.put("MultiplierConfig.Global", b -> b.number("progression.xpMultiplier", 0, 1000).owner("SURVIVAL"));
         // Far-off events (AUDIO): Zomboid's three choices
@@ -243,8 +247,9 @@ final class SandboxOptions {
         o.add(of(LORE, "zc.beltedDead", "Dead Belted Into Cars")
                 .tip("Percent of abandoned and wrecked cars with a dead driver still belted in, waiting for someone to open the door.")
                 .number("zombieLore.beltedPercent", 0, 100).owner("ENTITY"));
-        o.add(of(LORE, "zc.onlyHeadshotsKill", "Only Headshots Kill")
-                .fixed("true", "Your rule: body and limb shots wear a zombie down, only the head kills it."));
+        o.add(of(LORE, "zc.calibreKills", "Calibre-Based Kills")
+                .fixed("true", "Your rule: headshots kill quickest, how many it takes going by calibre; torso shots kill too, "
+                        + "and arms and legs count only 30% toward it (they still come off)."));
         o.add(of(LORE, "zc.shotsFlinch", "Shots Only Flinch")
                 .fixed("true", "Your rule: guns make zombies flinch, only blunt melee knocks them back."));
         o.add(of(LORE, "zc.crawlNeedsBothLegs", "Crawl Only Without Legs")
@@ -301,6 +306,9 @@ final class SandboxOptions {
         o.add(of(CHARACTER, "zc.lacerationInfection", "Laceration Infection Chance")
                 .tip("Chance a zombie laceration infects you (Zomboid: 0.25).")
                 .number("survival.lacerationInfectionChance", 0, 1).owner("SURVIVAL"));
+        o.add(of(CHARACTER, "zc.characterCreation", "Character Creation")
+                .tip("Choose an occupation and traits on your first join and after each death, as in Zomboid.")
+                .toggle("survival.characterCreation").owner("SURVIVAL"));
         o.add(of(CHARACTER, "zc.downed", "Downed in Multiplayer")
                 .tip("A killing blow puts you down for a while instead, so a friend can revive you.")
                 .toggle("survival.downed").owner("SURVIVAL"));

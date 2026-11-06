@@ -7,14 +7,40 @@
    {
     "when": "case_hardened",
     "model": {
-     "type": "minecraft:model",
-     "model": "zomboidcraft:item/weapon/lever_action/case_hardened/slide"
+     "type": "minecraft:condition",
+     "property": "zomboidcraft:local_gun",
+     "on_true": {
+      "type": "minecraft:special",
+      "base": "zomboidcraft:item/weapon/lever_action/case_hardened/slide",
+      "model": {
+       "type": "zomboidcraft:mesh",
+       "id": "block_lever_action",
+       "part": "slide"
+      }
+     },
+     "on_false": {
+      "type": "minecraft:model",
+      "model": "zomboidcraft:item/weapon/lever_action/case_hardened/slide"
+     }
     }
    }
   ],
   "fallback": {
-   "type": "minecraft:model",
-   "model": "zomboidcraft:item/weapon/lever_action/slide"
+   "type": "minecraft:condition",
+   "property": "zomboidcraft:local_gun",
+   "on_true": {
+    "type": "minecraft:special",
+    "base": "zomboidcraft:item/weapon/lever_action/slide",
+    "model": {
+     "type": "zomboidcraft:mesh",
+     "id": "block_lever_action",
+     "part": "slide"
+    }
+   },
+   "on_false": {
+    "type": "minecraft:model",
+    "model": "zomboidcraft:item/weapon/lever_action/slide"
+   }
   }
  }
 }

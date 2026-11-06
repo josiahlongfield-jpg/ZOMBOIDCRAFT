@@ -266,6 +266,10 @@ public final class Moving {
      */
     static void pickUp(ServerPlayer player, ServerLevel level, BlockPos pos, BlockState state, Piece piece) {
         boolean broke = player.getRandom().nextDouble() < piece.breakChance(player);
+        if (level.getBlockEntity(pos) instanceof com.zomboidcraft.decor.DecorEntity held) {
+            // what was in the vending machine, on the bar, in the stove: out on the floor first
+            net.minecraft.world.Containers.dropContents(level, pos, held);
+        }
         level.removeBlock(pos, false);
         if (broke) {
             scraps(level, pos, piece, player.getRandom());
@@ -293,7 +297,7 @@ public final class Moving {
         ItemStack bits = switch (made) {
             case METALWORKING -> new ItemStack(ModItems.SCRAP_METAL, n);
             case MASONRY -> new ItemStack(ModItems.RUBBLE, n);
-            default -> new ItemStack(net.minecraft.world.item.Items.OAK_PLANKS, n);
+            default -> com.zomboidcraft.loot.NoVanilla.ours(net.minecraft.world.item.Items.OAK_PLANKS, n);
         };
         net.minecraft.world.level.block.Block.popResource(level, pos, bits);
         if (made == Skill.CARPENTRY && random.nextFloat() < 0.5f) {

@@ -143,7 +143,7 @@ NAMES = {
     'bowling_ball_pins': 'Bowling Ball and Pins', 'punching_bag': 'Punching Bag', 'arcade_cabinet': 'Arcade Cabinet',
     'pool_table': 'Pool Table', 'air_hockey_table': 'Air Hockey Table', 'poker_table': 'Poker Table',
     'home_console': 'Home Console Bundle', 'cocktail_arcade': 'Cocktail Arcade Table',
-    'pinball_machine': 'Pinball Machine', 'claw_machine': 'Claw Machine', 'skee_ball_lane': 'Skee-Ball Lane',
+    'pinball_machine': 'Pinball Machine', 'claw_machine': 'Claw Machine', 'skee_ball_lane': 'Alley Roll Lane',
     'slot_machine': 'Slot Machine', 'bean_bag': 'Bean Bag', 'bar_stools': 'Bar Stools', 'hand_truck': 'Hand Truck',
     'recliner': 'Recliner', 'hammock': 'Hammock', 'velvet_rope_stands': 'Velvet Rope Stands',
     'mounted_deer_head': 'Mounted Deer Head', 'waterbed': 'Waterbed', 'barber_chair': 'Barber Chair',

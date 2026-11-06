@@ -39,6 +39,10 @@ public final class Comfort {
             if (level.canSeeSky(head)) {
                 continue;
             }
+            int calm = DecorUses.calmNear(level, player.blockPosition());
+            if (calm > 0) {
+                Mood.add(player, Mood.Stat.STRESS, -calm);   // watching the fish, the plasma ball's crawling light
+            }
             int c = Math.min(MAX, of(level, head));
             if (c <= 0) {
                 continue;

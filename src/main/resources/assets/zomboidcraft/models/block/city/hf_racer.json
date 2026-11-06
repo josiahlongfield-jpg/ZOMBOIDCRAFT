@@ -1,0 +1,79 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "hf_iron": "zomboidcraft:block/city/hf_iron",
+    "particle": "zomboidcraft:block/city/hf_iron"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        2.5
+      ],
+      "to": [
+        16,
+        0.6,
+        4.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hf_iron"
+        },
+        "south": {
+          "texture": "#hf_iron"
+        },
+        "east": {
+          "texture": "#hf_iron",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#hf_iron",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#hf_iron"
+        },
+        "down": {
+          "texture": "#hf_iron",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        0,
+        0,
+        11.5
+      ],
+      "to": [
+        16,
+        0.6,
+        13.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hf_iron"
+        },
+        "south": {
+          "texture": "#hf_iron"
+        },
+        "east": {
+          "texture": "#hf_iron",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#hf_iron",
+          "cullface": "west"
+        },
+        "up": {
+          "texture": "#hf_iron"
+        },
+        "down": {
+          "texture": "#hf_iron",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

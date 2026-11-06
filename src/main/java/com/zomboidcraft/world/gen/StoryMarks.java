@@ -32,7 +32,9 @@ import net.minecraft.world.phys.Vec3;
  * until a player comes within {@link #REACH} chunks, when the bodies are laid through the corpses system (kept,
  * so they never time out) and the walkers stand up there, dressed for the story. Each mark goes once.
  * <p>
- * Also hands the sandbox's Randomized Road Stories Chance (VehicleStoryChance, LOOT's wiring) to the generator.
+ * Also hands the sandbox's Randomized Road Stories Chance (VehicleStoryChance, LOOT's wiring) and Randomized
+ * Building Chance (SurvivorHouseChance, the house stories) and Randomized Zone Stories Chance (ZoneStoryChance, the zone
+ * stories) to the generator.
  */
 public final class StoryMarks {
     /** A body or a knot of walkers at (x, y, z). */
@@ -63,6 +65,9 @@ public final class StoryMarks {
 
     public static void register() {
         RoadStories.setRate(() -> RoadStories.rate(com.zomboidcraft.sandbox.Sandbox.value("VehicleStoryChance")));
+        com.zomboidcraft.world.county.ZoneStories.setRate(() -> RoadStories.rate(com.zomboidcraft.sandbox.Sandbox.value("ZoneStoryChance")));
+        com.zomboidcraft.world.county.House.setStoryRate(() -> RoadStories.rate(com.zomboidcraft.sandbox.Sandbox.value("SurvivorHouseChance")));
+        com.zomboidcraft.world.city.ShopStories.setRate(() -> RoadStories.rate(com.zomboidcraft.sandbox.Sandbox.value("SurvivorHouseChance")));
         ServerTickEvents.END_SERVER_TICK.register(StoryMarks::tick);
     }
 
@@ -138,11 +143,23 @@ public final class StoryMarks {
             return;
         }
         RandomSource r = level.getRandom();
+        boolean indoors = m.radius < 0;     // a house story's: they stand up on that floor, not on the roof
+        int radius = Math.abs(m.radius);
         for (int i = 0; i < m.count; i++) {
-            double a = r.nextDouble() * Math.PI * 2, d = r.nextDouble() * m.radius;
-            int x = (int) Math.floor(m.x + Math.cos(a) * d), z = (int) Math.floor(m.z + Math.sin(a) * d);
-            BlockPos pos = new BlockPos(x, level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z), z);
-            if (!level.isPositionEntityTicking(pos) || !level.getFluidState(pos.below()).isEmpty()) {
+            BlockPos pos = null;
+            for (int tries = 0; tries < (indoors ? 8 : 1) && pos == null; tries++) {
+                double a = r.nextDouble() * Math.PI * 2, d = r.nextDouble() * radius;
+                int x = (int) Math.floor(m.x + Math.cos(a) * d), z = (int) Math.floor(m.z + Math.sin(a) * d);
+                BlockPos at = indoors ? new BlockPos(x, m.y, z)
+                        : new BlockPos(x, level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, x, z), z);
+                if (indoors && !(level.getBlockState(at).getCollisionShape(level, at).isEmpty()
+                        && level.getBlockState(at.above()).getCollisionShape(level, at.above()).isEmpty()
+                        && !level.getBlockState(at.below()).getCollisionShape(level, at.below()).isEmpty())) {
+                    continue;   // furniture or a wall there
+                }
+                pos = at;
+            }
+            if (pos == null || !level.isPositionEntityTicking(pos) || !level.getFluidState(pos.below()).isEmpty()) {
                 continue;
             }
             Zombie zombie = EntityTypes.ZOMBIE.spawn(level, pos, EntitySpawnReason.EVENT);

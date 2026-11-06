@@ -56,7 +56,13 @@ public class HeadGearLayer extends RenderLayer<AvatarRenderState, PlayerModel> {
             return;
         }
         ItemStack head = player.getItemBySlot(EquipmentSlot.HEAD);
-        if (!(head.getItem() instanceof HeadGearItem)) {
+        if (!(head.getItem() instanceof HeadGearItem) || com.zomboidcraft.client.operator.Operator.drawn(state)) {
+            return;
+        }
+        // a Zomboid survivor wears Zomboid's own helmet for it (client/survivor/SurvivorClothes)
+        com.zomboidcraft.clothing.Garment worn = com.zomboidcraft.clothing.Clothes.of(head);
+        if (com.zomboidcraft.client.survivor.Survivors.drawn(state) && worn != null
+                && com.zomboidcraft.client.survivor.SurvivorClothes.covered(worn.id())) {
             return;
         }
         pose.pushPose();

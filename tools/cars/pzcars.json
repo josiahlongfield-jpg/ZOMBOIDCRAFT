@@ -1,0 +1,31 @@
+{
+  "_about": "Every converted Workshop car and the edits made to it, so a rebuild or a new car repeats them. pzbatch.py runs pzcar.py from this. 'defaults' apply to every car unless the car says otherwise.",
+  "defaults": {
+    "world": 1.444,
+    "tyre": 1.0,
+    "skin": 0,
+    "weight": 0,
+    "build": "B42",
+    "libs": ["3171167894/damnlib"],
+    "notes": [
+      "world 1.444: the car at the Defender's approved size against Zomboid's own (Defender = 130% of its model)",
+      "seats 15 cm forward of the seat mesh centre, front eyes at mid-windscreen (in pzcar.py)",
+      "every seat gets its own door handle; a doorless middle seat is entered by the tailgate",
+      "wheels never drop past the suspension's travel; both wheels of an axle hang alike",
+      "look as-is (no toon paint)"
+    ]
+  },
+  "cars": {
+    "pz_89defender110": {
+      "mod": "3570973322/89defender", "vehicle": "89defender110", "skin": 3,
+      "body": 1.3, "world": null,
+      "edits": ["approved pilot: body fitted over the wheels by its arches, whole car grown so the body is 130% of its model (Josiah 2026-11-01)",
+                "built with the older --body sizing; same look as world 1.444"]
+    },
+    "pz_r34": {
+      "mod": "3759256921/B42SkylineGTRR34_Fixed", "vehicle": "tr_nsgtrr34", "tyre": 0.88,
+      "edits": ["tyres 88% of the script's size (Josiah: wheels too big, 2026-11-01)",
+                "mod uses older Zomboid units (model scale 2.13), handled by --world"]
+    }
+  }
+}

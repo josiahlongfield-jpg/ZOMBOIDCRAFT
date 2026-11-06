@@ -127,8 +127,8 @@ final class HollisStation {
         c.sign("office", dx, 4, pz1 + 1, "south");
         // the hall, the stair, the offices
         int hz = (z0 + z1) / 2;
-        b.stair(dx, z1 - 2, 0, 5, "north", "minecraft:oak");
-        b.stair(dx + 1, z1 - 2, 0, 5, "north", "minecraft:oak");
+        b.stair(dx, z1 - 2, 0, 5, "north", "home_stairs_oak");
+        b.stair(dx + 1, z1 - 2, 0, 5, "north", "home_stairs_oak");
         for (int y : new int[] {0, 5}) {
             for (int x = x0 + 1; x < x1; x++) {
                 if (x == dx - 6 || x == dx + 7) {
@@ -222,6 +222,7 @@ final class HollisStation {
         int sx = x1 + 4, sz = (z0 + z1) / 2;
         Round.wall(c.p, sx + 0.5, sz + 0.5, 2.4, 0, 30, "brick", 0);
         Round.wall(c.p, sx + 0.5, sz + 0.5, 2.4, 31, 36, "soot", 0);
+        set(sx + 2, 37, sz, "aviation_light");  // the red on its lip, for the helicopters
         for (int x = x1 + 1; x <= sx - 2; x++) {
             set(x, 6, sz, "vessel_pipe[axis=x]");
         }
@@ -254,7 +255,7 @@ final class HollisStation {
         }
         int dx = (x0 + x1) / 2;
         b.door(dx, 1, z1, Doors.FLAT, "south");
-        b.stair(x0 + 2, z0 + 2, 0, 5, "east", "minecraft:oak");
+        b.stair(x0 + 2, z0 + 2, 0, 5, "east", "home_stairs_oak");
         // the veranda: boards, posts, a rail, the roof at the first floor, across the front and down the east side
         for (int x = x0 - 1; x <= x1 + 3; x++) {
             for (int z = z0; z <= z1 + 3; z++) {
@@ -336,8 +337,8 @@ final class HollisStation {
         }
         int dx = (x0 + x1) / 2;
         b.doors(dx, 1, z1, Doors.FLAT, "south");
-        b.stair(x1 - 2, z1 - 2, 0, 5, "north", "minecraft:oak");
-        b.stair(x1 - 3, z1 - 2, 0, 5, "north", "minecraft:oak");
+        b.stair(x1 - 2, z1 - 2, 0, 5, "north", "home_stairs_oak");
+        b.stair(x1 - 3, z1 - 2, 0, 5, "north", "home_stairs_oak");
         path(dx, z1 + 1, dx + 1, Hollis.ROAD0 - 2);
     }
 

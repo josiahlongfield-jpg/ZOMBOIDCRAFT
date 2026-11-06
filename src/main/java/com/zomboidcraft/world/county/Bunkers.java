@@ -6,13 +6,13 @@ import java.util.List;
 
 /**
  * Finds the hidden bunkers near a spot. Each one leaves two marks in its place's blocks: "bunker
- * STATE KIND" where you get in (a tower's hatch in its electrical room, a ship's false plate, the
- * top of a shelter's stairs, a forest hatch) and "bunker door" at its blast door straight after.
+ * STATE KIND" where you get in (a tower's hatch in its electrical room, the bricked-up stair door of a tower's missing floor, a ship's false plate, the doors of a box in a container yard's stacks, the
+ * top of a shelter's stairs, a forest hatch, a mine's boarded portal, the hatch in a farm's old silo) and "bunker door" at its blast door straight after.
  * Only building a place shows whether it has one, so the places that may hold one are built (or
  * taken from the cache) nearest first.
  */
 public final class Bunkers {
-    public static final List<String> KINDS = List.of("tower", "ship", "shelter", "forest");
+    public static final List<String> KINDS = List.of("tower", "floor", "ship", "shelter", "forest", "mine", "silo", "container", "offshore", "vault", "subway", "fort");
 
     /** One bunker: its kind and state, and in world blocks the way in and its blast door. */
     public record Found(String kind, String state, int x, int y, int z, int doorX, int doorY, int doorZ, Place place) {
@@ -20,26 +20,63 @@ public final class Bunkers {
 
     /**
      * The places within radius of (x, z) that may hold a bunker of a kind (null: any), nearest
-     * first: downtowns (towers, and the old cities' shelters), ports (ships), towns (shelters) and
-     * hideouts (forest hatches).
+     * first: downtowns (towers, and the old cities' shelters), ports (ships, container yards), towns (shelters) and
+     * hideouts (forest hatches, old mines) and farms (silos).
      */
     public static List<Place> candidates(County county, int x, int z, String kind, int radius) {
         List<Place> places = county.placesNear(x - radius, z - radius, x + radius, z + radius, 0);
         List<Place> out = new ArrayList<>();
-        if (kind == null || kind.equals("tower") || kind.equals("shelter")) {
+        if (kind == null || kind.equals("tower") || kind.equals("floor") || kind.equals("shelter")) {
             out.addAll(nearest(places, PlaceType.DOWNTOWN, x, z, 3));
         }
-        if (kind == null || kind.equals("ship")) {
+        if (kind == null || kind.equals("ship") || kind.equals("container")) {
             out.addAll(nearest(places, PlaceType.PORT, x, z, 3));
         }
-        if (kind == null || kind.equals("shelter")) {
+        if (kind == null || kind.equals("shelter") || kind.equals("vault")) {
             out.addAll(nearest(places, PlaceType.TOWN, x, z, 6));
         }
         if (kind == null || kind.equals("forest")) {
-            out.addAll(nearest(county.hideoutsNear(x - radius, z - radius, x + radius, z + radius, 0), PlaceType.HIDEOUT, x, z, 3));
+            out.addAll(nearest(county.hideoutsNear(x - radius, z - radius, x + radius, z + radius, 0).stream()
+                    .filter(p -> "forest_hatch".equals(p.variant)).toList(), PlaceType.HIDEOUT, x, z, 3));
+        }
+        if (kind == null || kind.equals("silo")) {
+            out.addAll(nearest(places, PlaceType.FARM, x, z, 4));
+        }
+        if (kind == null || kind.equals("mine")) {
+            out.addAll(nearest(county.hideoutsNear(x - radius, z - radius, x + radius, z + radius, 0).stream()
+                    .filter(p -> "mine_adit".equals(p.variant)).toList(), PlaceType.HIDEOUT, x, z, 3));
+        }
+        if (kind == null || kind.equals("offshore")) {
+            county.offshoreShip().filter(p -> Math.hypot(p.centreX() - x, p.centreZ() - z) <= radius).ifPresent(out::add);
+        }
+        if (kind == null || kind.equals("fort")) {
+            county.harbourFort().filter(p -> Math.hypot(p.centreX() - x, p.centreZ() - z) <= radius).ifPresent(out::add);
+        }
+        if (kind == null || kind.equals("subway")) {
+            county.ghostStation().filter(p -> Math.hypot(p.centreX() - x, p.centreZ() - z) <= radius).ifPresent(out::add);
         }
         out.sort(Comparator.comparingDouble(p -> Math.hypot(p.centreX() - x, p.centreZ() - z)));
         return out;
+    }
+
+    /** The world column on the ghost station's old platform just inside its arch, or null without one. */
+    public static int[] ghostPlatform(County county) {
+        return GhostSite.platform(county);
+    }
+
+    /** The name of the ship at anchor off the coast, as the marked maps give it. */
+    public static String offshoreName(County county) {
+        return county.offshoreShip().map(OffshoreSite::name).orElse("ship");
+    }
+
+    /** The name of the old sea fort in the bay, as the marked maps give it. */
+    public static String fortName(County county) {
+        return county.harbourFort().map(FortSite::name).orElse("fort");
+    }
+
+    /** In world blocks, the floor of an old mine's cutting in front of its boarded portal. */
+    public static int[] mineFront(Place p) {
+        return MineSite.front(p);
     }
 
     private static List<Place> nearest(List<Place> places, PlaceType type, int x, int z, int n) {

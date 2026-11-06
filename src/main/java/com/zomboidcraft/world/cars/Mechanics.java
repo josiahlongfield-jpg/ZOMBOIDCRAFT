@@ -153,7 +153,9 @@ public final class Mechanics {
     }
 
     public static boolean knows(Player player, Kind kind) {
-        return player.isCreative() || player.getAttachedOrCreate(MANUALS).contains(manual(kind));
+        // the Mechanic occupation's Amateur Mechanic knows every model's parts without the manuals
+        return player.isCreative() || com.zomboidcraft.survival.character.Traits.has(player, "amateur_mechanic")
+                || player.getAttachedOrCreate(MANUALS).contains(manual(kind));
     }
 
     /** The jobs anyone can do without a manual: what you'd do at the roadside. */
@@ -307,6 +309,9 @@ public final class Mechanics {
         int c = CarParts.get(parts, slot);
         if (c == -2) {
             return "This car doesn't have one";
+        }
+        if (part.area == CarParts.Area.ENGINE && !car.bonnetOpen()) {
+            return "Open the bonnet first";      // as in Zomboid: the engine bay is reached with the hood up
         }
         int level = level(player);
         int need = job == Job.TOP_UP ? 0 : part.level;

@@ -15,8 +15,6 @@ import java.util.SplittableRandom;
  * sandbagged, the school's buses abandoned in the loop.
  */
 final class Civic {
-    private static final String[] GLASS = {"minecraft:red_stained_glass_pane", "minecraft:blue_stained_glass_pane",
-            "minecraft:yellow_stained_glass_pane", "minecraft:purple_stained_glass_pane", "minecraft:green_stained_glass_pane"};
     private static final String[] ROOFS = {"minecraft:deepslate_tile", "minecraft:cobbled_deepslate", "minecraft:blackstone",
             "minecraft:dark_oak", "minecraft:tuff_brick"};
 
@@ -160,7 +158,16 @@ final class Civic {
     void library(int w, int d) { new Library(p, rng).build(w, d); }
 
     /** The bank on its corner (see {@link Bank}): w wide, d deep, the portico and steps in its first four rows. */
-    void bank(int w, int d) { new Bank(p, rng).build(w, d); }
+    void bank(int w, int d) {
+        Bank b = new Bank(p, rng);
+        // about one bank in three hides a panic room behind the vault (the bank vault bunker)
+        double r = rng.nextDouble();
+        if (r < 0.35) {
+            r /= 0.35;
+            b.bunker = r < 0.5 ? Bunker.State.SEALED : r < 0.8 ? Bunker.State.LOOTED : Bunker.State.BREACHED;
+        }
+        b.build(w, d);
+    }
 
     /** The fire station (see {@link FireStation}): w wide, d deep, its apron in the first six rows. */
     void fireStation(int w, int d) { new FireStation(p, rng).build(w, d); }

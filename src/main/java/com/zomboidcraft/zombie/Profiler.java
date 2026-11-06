@@ -30,7 +30,22 @@ public final class Profiler {
     private static volatile boolean running;
     /** Lit blocks that change their light (each one relights and redraws the chunks round it), counted while sampling. */
     public static final java.util.concurrent.atomic.LongAdder FLICKERS = new java.util.concurrent.atomic.LongAdder(),
-            SIGNALS = new java.util.concurrent.atomic.LongAdder();
+            SIGNALS = new java.util.concurrent.atomic.LongAdder(),
+            /** What the client was sent (ClientPacketListenerMixin): each one makes Sodium rebuild and re-upload a section. */
+            CLIENT_BLOCKS = new java.util.concurrent.atomic.LongAdder(), CLIENT_SECTIONS = new java.util.concurrent.atomic.LongAdder(),
+            CLIENT_LIGHT = new java.util.concurrent.atomic.LongAdder(), CLIENT_CHUNKS = new java.util.concurrent.atomic.LongAdder();
+
+    /** How Sodium sends chunk meshes to the graphics card (SodiumUploadMixin); null until Sodium asks. */
+    public static volatile String uploadPath;
+    /** What GlBufferStorageMixin did when the graphics device was made; null if it never ran. */
+    public static volatile String bufferStorageFix;
+    /** Frames drawn so far; the client bumps it at the start of each frame (GpuTimer.frameStart). */
+    public static volatile long frameNo;
+
+    /** On while a profile runs: the client's GpuTimer times each part of the frame on the graphics card. */
+    public static volatile boolean gpuTiming;
+    /** The client's GPU timer report (GpuTimer), or null on a dedicated server. */
+    public static volatile java.util.function.Supplier<String> gpuReport;
 
     /** Who owns a frame, by package: the first match wins, so put the narrower names first. */
     private static final String[][] OWNERS = {
@@ -136,6 +151,73 @@ public final class Profiler {
         }
     }
 
+    /** What a render-thread sample was doing, short: our deepest line (if any) and the top frame. */
+    private static String hitchKey(StackTraceElement[] stack) {
+        String top = method(stack[0]);
+        String mod = null;
+        for (StackTraceElement f : stack) {
+            if (f.getClassName().startsWith("com.zomboidcraft.")) {
+                return method(f) + " (line " + f.getLineNumber() + ")  <- top: " + top;
+            }
+            String o = owner(f.getClassName());
+            if (mod == null && (o.equals("Sodium") || o.equals("Iris") || o.equals("Particle Rain"))) {
+                mod = o + " " + method(f);
+            }
+        }
+        return (mod != null ? mod : "") + "  <- top: " + top + (stack.length > 1 ? " <- " + method(stack[1]) : "")
+                + (stack.length > 2 ? " <- " + method(stack[2]) : "");
+    }
+
+    /**
+     * Freezes: frames the render thread spent 150 ms or more on, longest first, with what it was doing in them. The
+     * averages above hide a quarter-second stall among thousands of normal frames; this shows them one by one.
+     */
+    private static String hitches(List<Long> frames, List<Long> times, List<String> keys) {
+        StringBuilder r = new StringBuilder("\n==================== Freezes (frames of 150 ms or more) ====================\n");
+        if (frames.isEmpty() || frames.get(0).equals(frames.get(frames.size() - 1))) {
+            return r.append("No frame count from the client (dedicated server or no frames drawn).\n").toString();
+        }
+        record Hitch(long frame, long ms, Map<String, Integer> keys) {}
+        List<Hitch> list = new ArrayList<>();
+        Map<String, Integer> all = new HashMap<>();
+        int i = 0;
+        while (i < frames.size()) {
+            int j = i;
+            while (j < frames.size() && frames.get(j).equals(frames.get(i))) {
+                j++;
+            }
+            long ms = (times.get(j - 1) - times.get(i)) / 1_000_000L;
+            if (ms >= 150 && i > 0 && j < frames.size()) {
+                Map<String, Integer> k = new HashMap<>();
+                for (int n = i; n < j; n++) {
+                    k.merge(keys.get(n), 1, Integer::sum);
+                    all.merge(keys.get(n), 1, Integer::sum);
+                }
+                list.add(new Hitch(frames.get(i), ms, k));
+            }
+            i = j;
+        }
+        long total = list.stream().mapToLong(Hitch::ms).sum();
+        r.append(String.format("%d freezes, %.1f s frozen in all%n", list.size(), total / 1000.0));
+        if (list.isEmpty()) {
+            return r.toString();
+        }
+        int samples = all.values().stream().mapToInt(Integer::intValue).sum();
+        r.append("-- Across all freezes, what the render thread was doing\n");
+        for (Map.Entry<String, Integer> e : top(all, 15)) {
+            r.append(String.format("%6.2f%%  %s%n", 100.0 * e.getValue() / samples, e.getKey()));
+        }
+        list.sort((a, b) -> Long.compare(b.ms, a.ms));
+        for (Hitch h : list.subList(0, Math.min(8, list.size()))) {
+            int n = h.keys.values().stream().mapToInt(Integer::intValue).sum();
+            r.append(String.format("-- Freeze of about %d ms (frame %d)%n", h.ms, h.frame));
+            for (Map.Entry<String, Integer> e : top(h.keys, 5)) {
+                r.append(String.format("%6.1f%%  %s%n", 100.0 * e.getValue() / n, e.getKey()));
+            }
+        }
+        return r.toString();
+    }
+
     private static String owner(String cls) {
         for (String[] o : OWNERS) {
             if (cls.startsWith(o[0])) {
@@ -184,6 +266,7 @@ public final class Profiler {
             return false;
         }
         running = true;
+        gpuTiming = true;
         Thread sampler = new Thread(() -> {
             try {
                 done.accept(run(seconds));
@@ -191,6 +274,7 @@ public final class Profiler {
                 done.accept("The profiler failed: " + e);
             } finally {
                 running = false;
+                gpuTiming = false;
             }
         }, "ZomboidCraft profiler");
         sampler.setDaemon(true);
@@ -213,8 +297,14 @@ public final class Profiler {
         long late = 0, rounds = 0;
         FLICKERS.reset();
         SIGNALS.reset();
+        CLIENT_BLOCKS.reset();
+        CLIENT_SECTIONS.reset();
+        CLIENT_LIGHT.reset();
+        CLIENT_CHUNKS.reset();
         List<Thread> threads = new ArrayList<>();
         List<String> buckets = new ArrayList<>();
+        List<Long> hitchFrames = new ArrayList<>(), hitchTimes = new ArrayList<>();
+        List<String> hitchKeys = new ArrayList<>();
         long refound = 0;
         while (System.nanoTime() < end) {
             long now = System.nanoTime();
@@ -238,8 +328,14 @@ public final class Profiler {
                     continue;
                 }
                 Thread.State state = t.getState();
+                long frame = frameNo;
                 StackTraceElement[] stack = t.getStackTrace();
                 tallies.computeIfAbsent(buckets.get(i), Tally::new).add(state, stack);
+                if (buckets.get(i).startsWith("Render") && stack.length > 0) {
+                    hitchFrames.add(frame);
+                    hitchKeys.add(hitchKey(stack));
+                    hitchTimes.add(now);
+                }
             }
             rounds++;
             long spent = System.nanoTime() - now;
@@ -273,6 +369,15 @@ public final class Profiler {
         r.append(String.format("Garbage collection took %.1f%% of the time%n", gcMs / 10.0 / Math.max(0.1, took)));
         r.append(String.format("Flickering lamps changed %d times (%.0f a second), traffic signals %d times%n",
                 FLICKERS.sum(), FLICKERS.sum() / Math.max(0.1, took), SIGNALS.sum()));
+        r.append(String.format("Sent to your client: %d single block changes, %d section block changes, %d light updates, %d chunks loaded%n",
+                CLIENT_BLOCKS.sum(), CLIENT_SECTIONS.sum(), CLIENT_LIGHT.sum(), CLIENT_CHUNKS.sum()));
+        r.append("NVIDIA buffer storage fix: ").append(bufferStorageFix == null ? "did not run" : bufferStorageFix).append("\n");
+        r.append("Sodium chunk uploads: ").append(uploadPath == null ? "not seen (Sodium missing or idle)" : uploadPath).append("\n");
+        r.append(hitches(hitchFrames, hitchTimes, hitchKeys));
+        java.util.function.Supplier<String> gpu = gpuReport;
+        if (gpu != null) {
+            r.append(gpu.get());
+        }
         r.append("JVM: ").append(System.getProperty("java.vm.name")).append(' ')
                 .append(System.getProperty("java.version")).append(", args ")
                 .append(ManagementFactory.getRuntimeMXBean().getInputArguments()).append("\n");

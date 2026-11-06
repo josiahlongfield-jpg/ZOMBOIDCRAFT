@@ -32,7 +32,19 @@ public final class Builders {
                     new RoadsideSite(p, out).build();
                 }
             }
-            case HIDEOUT -> new HatchSite(p, county, out).build();
+            case HIDEOUT -> {
+                if ("ghost_station".equals(p.variant)) {
+                    new GhostSite(p, county, out).build();
+                } else if ("mine_adit".equals(p.variant)) {
+                    new MineSite(p, county, out).build();
+                } else if ("offshore_ship".equals(p.variant)) {
+                    new OffshoreSite(p, county, out).build();
+                } else if ("harbour_fort".equals(p.variant)) {
+                    new FortSite(p, county, out).build();
+                } else {
+                    new HatchSite(p, county, out).build();
+                }
+            }
             case LANDMARK -> {
                 if (p.variant.equals("dam")) {
                     new Dam(p, county, out).build();

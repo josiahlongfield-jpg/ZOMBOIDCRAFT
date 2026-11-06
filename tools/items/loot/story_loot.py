@@ -55,8 +55,8 @@ STORIES = {
         ('shotgun_shell', 3, 4, 10), ('handcuffs', 2, 1, 1), ('zip_ties', 2, 1, 3), ('police_cap', 2, 1, 1),
         ('whistle', 2, 1, 1), ('traffic_cone', 2, 1, 2), ('bandage', 2, 1, 2)]),
     'police_blockade_shooting': ([('pistol_ammo', 6, 18)], (3, 5), [
-        ('shotgun_shell', 4, 4, 12), ('pistol', 2, 1, 1), ('pistol_magazine', 3, 1, 1), ('police_vest', 2, 1, 1),
-        ('road_flare', 3, 1, 3), ('two_way_radio', 2, 1, 1), ('flashlight', 2, 1, 1), ('shotgun', 1, 1, 1),
+        ('shotgun_shell', 4, 4, 12), ('police_vest', 2, 1, 1),
+        ('road_flare', 3, 1, 3), ('two_way_radio', 2, 1, 1), ('flashlight', 2, 1, 1),
         ('tourniquet', 2, 1, 1), ('bandage', 3, 1, 2), ('handcuffs', 1, 1, 1)]),
     'trailer_crash': ([], (4, 6), [
         ('carrot_seeds', 3, 1, 2), ('corn_seeds', 3, 1, 2), ('beet_seeds', 2, 1, 2), ('lettuce_seeds', 2, 1, 2),
@@ -76,9 +76,11 @@ EXTRA = {'road_flare'}
 CLOTHES = {p.stem for p in (ROOT / 'src/main/resources/assets/zomboidcraft/items').glob('*.json')}
 
 
-# whole sets kept together: every piece, every time (a museum's armour case, the crusader kit's resting place)
+# whole sets kept together: every piece, every time (a museum's armour case, the crusader kit's resting place);
+# a list in a set is one piece, whichever of them rolls (the crusader kit's helm)
 SETS = {
-    'crusader_kit': ['crusader_great_helm', 'crusader_plate', 'crusader_tabard', 'crusader_pauldrons',
+    'crusader_kit': [['crusader_great_helm', 'crusader_sugarloaf_helm', 'crusader_armet', 'crusader_barbute',
+                      'crusader_crowned_helm', 'crusader_winged_helm'], 'crusader_plate', 'crusader_tabard', 'crusader_pauldrons',
                      'crusader_cloak', 'crusader_greaves', 'crusader_gauntlets', 'crusader_sabatons'],
     'museum_armour': ['gothic_sallet', 'gothic_cuirass', 'gothic_arm_harness', 'gothic_leg_harness',
                       'gothic_gauntlets', 'gothic_sabatons'],
@@ -107,13 +109,13 @@ def main():
     bad = sorted({i for s, r, p in STORIES.values() for i in [x[0] for x in s] + [x[0] for x in p]} - ok)
     if bad:
         raise SystemExit(f'unknown ids: {bad}')
-    bad = sorted({i for v in SETS.values() for i in v} - ok - CLOTHES)
+    bad = sorted({i for v in SETS.values() for p in v for i in (p if isinstance(p, list) else [p])} - ok - CLOTHES)
     if bad:
         raise SystemExit(f'unknown ids: {bad}')
     for name, pieces in SETS.items():
         out = TABLES / 'shop' / f'{name}.json'
         out.write_text(json.dumps({'type': 'minecraft:chest', 'pools': [
-            {'rolls': 1, 'entries': [entry(i, 1, 1, 1)]} for i in pieces]}, indent=2) + '\n')
+            {'rolls': 1, 'entries': [entry(i, 1, 1, 1) for i in (p if isinstance(p, list) else [p])]} for p in pieces]}, indent=2) + '\n')
     for name, (sure, rolls, pool) in STORIES.items():
         pools = [{'rolls': 1, 'entries': [entry(i, 1, lo, hi)]} for i, lo, hi in sure]
         if rolls[1] > 0:

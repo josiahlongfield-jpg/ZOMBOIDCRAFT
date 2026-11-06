@@ -1,11 +1,109 @@
 {
  "model": {
-  "type": "minecraft:special",
-  "base": "zomboidcraft:item/clothing/crusader_tabard/left_leg",
-  "model": {
-   "type": "zomboidcraft:mesh",
-   "id": "clothing/crusader_tabard",
-   "part": "left_leg"
+  "type": "minecraft:select",
+  "property": "minecraft:component",
+  "component": "zomboidcraft:camo",
+  "cases": [
+   {
+    "when": "templar",
+    "model": {
+     "type": "minecraft:special",
+     "base": "zomboidcraft:item/clothing/crusader_tabard/left_leg",
+     "model": {
+      "type": "zomboidcraft:mesh",
+      "id": "clothing/crusader_tabard",
+      "part": "left_leg",
+      "texture": "zomboidcraft:textures/item/clothing/crusader_tabard/camo_templar.png"
+     }
+    }
+   },
+   {
+    "when": "hospitaller",
+    "model": {
+     "type": "minecraft:special",
+     "base": "zomboidcraft:item/clothing/crusader_tabard/left_leg",
+     "model": {
+      "type": "zomboidcraft:mesh",
+      "id": "clothing/crusader_tabard",
+      "part": "left_leg",
+      "texture": "zomboidcraft:textures/item/clothing/crusader_tabard/camo_hospitaller.png"
+     }
+    }
+   },
+   {
+    "when": "teutonic",
+    "model": {
+     "type": "minecraft:special",
+     "base": "zomboidcraft:item/clothing/crusader_tabard/left_leg",
+     "model": {
+      "type": "zomboidcraft:mesh",
+      "id": "clothing/crusader_tabard",
+      "part": "left_leg",
+      "texture": "zomboidcraft:textures/item/clothing/crusader_tabard/camo_teutonic.png"
+     }
+    }
+   },
+   {
+    "when": "lazarite",
+    "model": {
+     "type": "minecraft:special",
+     "base": "zomboidcraft:item/clothing/crusader_tabard/left_leg",
+     "model": {
+      "type": "zomboidcraft:mesh",
+      "id": "clothing/crusader_tabard",
+      "part": "left_leg",
+      "texture": "zomboidcraft:textures/item/clothing/crusader_tabard/camo_lazarite.png"
+     }
+    }
+   },
+   {
+    "when": "crimson",
+    "model": {
+     "type": "minecraft:special",
+     "base": "zomboidcraft:item/clothing/crusader_tabard/left_leg",
+     "model": {
+      "type": "zomboidcraft:mesh",
+      "id": "clothing/crusader_tabard",
+      "part": "left_leg",
+      "texture": "zomboidcraft:textures/item/clothing/crusader_tabard/camo_crimson.png"
+     }
+    }
+   },
+   {
+    "when": "gilded",
+    "model": {
+     "type": "minecraft:special",
+     "base": "zomboidcraft:item/clothing/crusader_tabard/left_leg",
+     "model": {
+      "type": "zomboidcraft:mesh",
+      "id": "clothing/crusader_tabard",
+      "part": "left_leg",
+      "texture": "zomboidcraft:textures/item/clothing/crusader_tabard/camo_gilded.png"
+     }
+    }
+   },
+   {
+    "when": "rusted",
+    "model": {
+     "type": "minecraft:special",
+     "base": "zomboidcraft:item/clothing/crusader_tabard/left_leg",
+     "model": {
+      "type": "zomboidcraft:mesh",
+      "id": "clothing/crusader_tabard",
+      "part": "left_leg",
+      "texture": "zomboidcraft:textures/item/clothing/crusader_tabard/camo_rusted.png"
+     }
+    }
+   }
+  ],
+  "fallback": {
+   "type": "minecraft:special",
+   "base": "zomboidcraft:item/clothing/crusader_tabard/left_leg",
+   "model": {
+    "type": "zomboidcraft:mesh",
+    "id": "clothing/crusader_tabard",
+    "part": "left_leg"
+   }
   }
  }
 }

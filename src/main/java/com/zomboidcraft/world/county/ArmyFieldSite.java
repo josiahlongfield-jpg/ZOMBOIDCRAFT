@@ -240,6 +240,12 @@ final class ArmyFieldSite extends FrameSite {
                 light(L, s * (W + w), "af_light_thr[facing=east]");
             }
         }
+        // the PAPIs on the pilot's left 300 m in, red nearest the runway and white out from it
+        for (int k = 0; k < 4; k++) {
+            String papi = k < 2 ? "af_papi_red" : "af_papi";
+            a.set(-L + 300, 1, -(W + 15) - k * 9, papi + "[facing=west]");
+            a.set(L - 300, 1, W + 15 + k * 9, papi + "[facing=east]");
+        }
         int lim = ArmyField.CONNECTORS[ArmyField.CONNECTORS.length - 1];
         for (int ax = -lim - ArmyField.TWY_HALF; ax <= lim + ArmyField.TWY_HALF; ax += 30) {
             for (int s = -1; s <= 1; s += 2) {

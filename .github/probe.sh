@@ -7,6 +7,83 @@ echo "MC jars: $MC_JARS"
 classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1" | sort -u; }
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
+
+echo "===== compile errors"
+grep -E "error:|warning: \[removal\]" -A3 build.log | head -80
+
+echo "===== scope crop under shaders (alpha)"
+javap -cp "$CP" -p net.minecraft.client.renderer.RenderPipelines 2>&1 | grep -iE "GUI|SNIPPET|BLIT" | head -40
+classes 'RenderPipeline(\$Builder)?\.class$|BlendFunction\.class$|ColorTargetState\.class$'
+for c in $(classes 'RenderPipeline(\$Builder)?\.class$' | sed 's/\.class$//; s#/#.#g'); do echo "-- $c"; javap -cp "$CP" -p "$c" 2>&1 | grep -iE "blend|with|build|color|write" | head -40; done
+javap -cp "$CP" -p -c net.minecraft.client.renderer.RenderPipelines 2>&1 | grep -B2 -A14 'gui_opaque\|pipeline/gui_textured"' | grep -E "ldc|invoke|getstatic|putstatic" | head -40
+javap -cp "$CP" -p net.minecraft.client.gui.GuiGraphicsExtractor 2>&1 | grep -iE "blit" | head -30
+javap -cp "$CP" -p com.mojang.blaze3d.pipeline.RenderTarget 2>&1 | grep -iE "copy|blit|clear" | head
+
+echo "===== scope pip 2 (weapons)"
+javap -cp "$CP" -p net.minecraft.client.renderer.GameRenderer 2>&1 | grep -iE "fov|projection|camera"
+classes '/Camera\.class$|CameraRenderState\.class$|DynamicTexture\.class$|AbstractTexture\.class$|GuiGraphicsExtractor\.class$'
+for c in net.minecraft.client.Camera net.minecraft.client.renderer.state.level.CameraRenderState net.minecraft.client.renderer.texture.DynamicTexture net.minecraft.client.renderer.texture.AbstractTexture; do echo "-- $c"; javap -cp "$CP" -p "$c" 2>&1 | grep -vE 'lambda\$' | head -70; done
+javap -cp "$CP" -p net.minecraft.client.gui.GuiGraphicsExtractor 2>&1 | grep -iE "blit|pose|fill\(|enableScissor|submit|innerBlit|guiWidth" | head -50
+javap -cp "$CP" -p net.minecraft.client.Minecraft 2>&1 | grep -iE "RenderTarget"
+javap -cp "$CP" -p -c net.minecraft.client.renderer.GameRenderer 2>&1 | grep -B2 -A60 'float getFov\|getFov(' | grep -E "invoke|getfield|fload|fmul|Method|private|public" | head -60
+javap -cp "$CP" -p -c net.minecraft.client.Minecraft 2>&1 | grep -B3 -A30 "mainRenderTarget = \|new.*MainTarget\|TextureTarget" | grep -E "invoke|new|ldc|getstatic" | head -20
+javap -cp "$CP" -p com.mojang.blaze3d.pipeline.MainTarget 2>&1 | head -20
+javap -cp "$CP" -p com.mojang.renderpearl.api.GpuFormat 2>&1 | grep -E "static final" | head -20
+
+echo "===== vertex formats"
+for c in com.mojang.renderpearl.api.GpuFormat com.mojang.renderpearl.api.vertex.VertexFormat com.mojang.renderpearl.api.vertex.VertexFormatElement; do echo "-- $c"; javap -cp "$CP" -p "$c" 2>&1 | grep -vE 'lambda\$' | head -60; done
+javap -cp "$CP" -p -c com.mojang.blaze3d.vertex.DefaultVertexFormat 2>&1 | grep -A200 'static {}' | grep -E 'ldc|getstatic|putstatic' | head -120
+
+echo "===== stitcher padding 2"
+javap -cp "$CP" -p -c net.minecraft.client.renderer.texture.SpriteLoader 2>&1 | grep -A80 'Preparations stitch(' | sed -n '60,140p'
+javap -cp "$CP" -p -c net.minecraft.client.renderer.texture.Stitcher 2>&1 | grep -A30 'Stitcher(int, int, int, int)'
+javap -cp "$CP" -p -c net.minecraft.client.renderer.texture.SpriteLoader 2>&1 | grep -B5 -A30 'getStitchedSprites(net' | head -60
+
+echo "===== stitcher padding"
+javap -cp "$CP" -p net.minecraft.client.renderer.texture.Stitcher 2>&1 | head -30
+javap -cp "$CP" -p -c net.minecraft.client.renderer.texture.Stitcher 2>&1 | grep -B2 -A40 'void registerSprite' | head -60
+javap -cp "$CP" -p 'net.minecraft.client.renderer.texture.Stitcher$Holder' 2>&1 | head
+javap -cp "$CP" -p net.minecraft.client.renderer.texture.SpriteLoader 2>&1 | head -30
+javap -cp "$CP" -p -c net.minecraft.client.renderer.texture.SpriteLoader 2>&1 | grep -E 'Stitcher|padding|Padding|ldc|bipush|iconst|invokestatic' | head -60
+
+echo "===== vanilla atlases"
+for j in $MC_JARS; do for a in blocks items; do unzip -p "$j" "assets/minecraft/atlases/$a.json" 2>/dev/null | head -c 3000; echo; done; done
+
+echo "===== pip reuse"
+for c in net.minecraft.client.gui.render.pip.PictureInPictureRenderer net.minecraft.client.gui.render.pip.GuiEntityRenderer net.minecraft.client.gui.render.state.pip.GuiEntityRenderState net.minecraft.client.gui.render.state.pip.PictureInPictureRenderState; do echo "-- $c"; javap -cp "$CP" -p "$c" 2>&1 | grep -vE 'lambda\$' | head -40; done
+javap -cp "$CP" -p -c net.minecraft.client.gui.render.pip.PictureInPictureRenderer 2>&1 | grep -A60 'void prepare(' | grep -E 'invoke|if|getfield' | head -40
+classes 'Stitcher' | head
+javap -cp "$CP" -p -c net.minecraft.client.renderer.texture.Stitcher 2>&1 | grep -A80 'boolean expand' | head -90
+
+echo "===== block shape census"
+classes '(BlockStateModel|BlockModelPart|BlockModelShaper|BlockStateModelSet|ModelManager)\.class' | head
+for c in net.minecraft.client.renderer.block.model.BlockStateModel net.minecraft.client.renderer.block.model.BlockModelPart net.minecraft.client.renderer.block.BlockModelShaper net.minecraft.client.resources.model.ModelManager net.minecraft.client.renderer.block.BlockRenderDispatcher net.minecraft.world.level.chunk.PalettedContainer net.minecraft.world.level.chunk.PalettedContainerRO net.minecraft.client.multiplayer.ClientChunkCache net.minecraft.world.level.chunk.LevelChunkSection; do echo "-- $c"; javap -cp "$CP" -p "$c" 2>&1 | grep -vE 'lambda\$' | grep -iE "quad|part|model|count|getState|getChunk|storage|class|interface|hasOnly|isEmpty" | head -30; done
+classes 'BlockStateModel|ModelManager|BlockRenderDispatcher|BlockModelShaper|BlockModelSet' | head -20
+
+echo "===== gpu timer targets 2"
+javap -cp "$CP" -p 'net.minecraft.client.renderer.feature.FeatureRenderDispatcher$PreparedFrame' 2>&1 | grep -E "execute|render"
+javap -cp "$CP" -p net.minecraft.client.renderer.LevelRenderer 2>&1 | grep -iE "particle|weather|sky|cloud|translucent"
+
+echo "===== persistent mapping 4"
+G=com.mojang.renderpearl.backend.opengl.GlDevice
+javap -cp "$CP" -p -c -constants $G > /tmp/gldev.txt 2>&1
+grep -n "BufferStorage.create\|isNvidia" /tmp/gldev.txt
+for L in $(grep -n "BufferStorage.create\|isNvidia" /tmp/gldev.txt | cut -d: -f1); do echo "--- at $L"; sed -n "$((L-45)),$((L+3))p" /tmp/gldev.txt | grep -vE ' (aload|astore|dup|pop)(_[0-9])?$'; done
+H=com.mojang.renderpearl.backend.opengl.GlHeuristics
+javap -cp "$CP" -p -c -constants $H > /tmp/glh.txt 2>&1
+grep -n "^  [a-z].*(.*);$" /tmp/glh.txt
+grep -n -A30 "boolean isNvidia()" /tmp/glh.txt | head -40
+grep -n -B3 -A40 "writeToBufferIsSlow\|HintsAndWorkarounds.\"<init>\"" /tmp/glh.txt | grep -vE ' (aload|astore|dup|pop)(_[0-9])?$' | head -90
+echo "===== cats eyes"
+javap -cp "$CP" -p net.minecraft.client.renderer.LightmapRenderStateExtractor 2>&1 | head -30
+javap -cp "$CP" -p net.minecraft.client.renderer.state.LightmapRenderState 2>&1 | head -30
+javap -cp "$CP" -p -c net.minecraft.client.renderer.LightmapRenderStateExtractor 2>&1 | grep -B8 -A8 -i 'nightvision' | head -60
+echo "===== traits fog"
+classes '(fog|Fog|Lightmap|LightTexture)' | head -40
+for c in net.minecraft.client.renderer.fog.FogRenderer net.minecraft.client.renderer.fog.FogData net.minecraft.client.renderer.fog.environment.FogEnvironment net.minecraft.client.renderer.fog.environment.AtmosphericFogEnvironment net.minecraft.client.renderer.LightTexture net.minecraft.client.renderer.Lightmap; do echo "-- $c"; javap -cp "$CP" -p "$c" 2>&1 | grep -vE 'lambda\$' | head -40; done
+javap -cp "$CP" -p net.minecraft.client.renderer.GameRenderer 2>&1 | grep -i 'nightvision'
+javap -cp "$CP" -p -c net.minecraft.client.renderer.fog.environment.AtmosphericFogEnvironment 2>&1 | grep -A40 'void setupFog' | head -60
+
 echo "===== npc voice2"
 for c in com.mojang.blaze3d.audio.SoundBuffer net.minecraft.client.sounds.FloatSampleSource 'net.minecraft.client.resources.sounds.Sound$Type' net.minecraft.util.valueproviders.SampledFloat; do echo "-- $c"; javap -cp "$CP" -p "$c" 2>&1 | grep -vE 'lambda\$' | head -30; done
 javap -cp "$CP" -p net.minecraft.client.resources.sounds.Sound 2>&1 | grep 'Sound(' | tr ',' '\n'

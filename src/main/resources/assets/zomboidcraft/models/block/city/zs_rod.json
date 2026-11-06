@@ -1,0 +1,238 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_plastic_black": "zomboidcraft:block/city/home_plastic_black",
+    "hw_chrome": "zomboidcraft:block/city/hw_chrome",
+    "tree_oak_bark": "zomboidcraft:block/city/tree_oak_bark",
+    "zs_rod": "zomboidcraft:block/city/zs_rod",
+    "particle": "zomboidcraft:block/city/zs_rod"
+  },
+  "elements": [
+    {
+      "from": [
+        7.7,
+        0.5,
+        -8
+      ],
+      "to": [
+        8.3,
+        1.1,
+        15
+      ],
+      "faces": {
+        "north": {
+          "texture": "#zs_rod"
+        },
+        "south": {
+          "texture": "#zs_rod"
+        },
+        "east": {
+          "texture": "#zs_rod",
+          "uv": [
+            0,
+            14.9,
+            16,
+            15.5
+          ]
+        },
+        "west": {
+          "texture": "#zs_rod",
+          "uv": [
+            0,
+            14.9,
+            16,
+            15.5
+          ]
+        },
+        "up": {
+          "texture": "#zs_rod",
+          "uv": [
+            7.7,
+            0,
+            8.3,
+            16
+          ]
+        },
+        "down": {
+          "texture": "#zs_rod",
+          "uv": [
+            7.7,
+            0,
+            8.3,
+            16
+          ]
+        }
+      },
+      "rotation": {
+        "origin": [
+          8,
+          0.5,
+          15
+        ],
+        "axis": "x",
+        "angle": 22.5
+      }
+    },
+    {
+      "from": [
+        7.6,
+        0,
+        4.2
+      ],
+      "to": [
+        8.4,
+        4.4,
+        5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tree_oak_bark"
+        },
+        "south": {
+          "texture": "#tree_oak_bark"
+        },
+        "east": {
+          "texture": "#tree_oak_bark"
+        },
+        "west": {
+          "texture": "#tree_oak_bark"
+        },
+        "up": {
+          "texture": "#tree_oak_bark"
+        },
+        "down": {
+          "texture": "#tree_oak_bark",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        6.8,
+        3.6,
+        4.2
+      ],
+      "to": [
+        7.5,
+        5.6,
+        5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tree_oak_bark"
+        },
+        "south": {
+          "texture": "#tree_oak_bark"
+        },
+        "east": {
+          "texture": "#tree_oak_bark"
+        },
+        "west": {
+          "texture": "#tree_oak_bark"
+        },
+        "up": {
+          "texture": "#tree_oak_bark"
+        },
+        "down": {
+          "texture": "#tree_oak_bark"
+        }
+      }
+    },
+    {
+      "from": [
+        8.5,
+        3.6,
+        4.2
+      ],
+      "to": [
+        9.2,
+        5.6,
+        5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tree_oak_bark"
+        },
+        "south": {
+          "texture": "#tree_oak_bark"
+        },
+        "east": {
+          "texture": "#tree_oak_bark"
+        },
+        "west": {
+          "texture": "#tree_oak_bark"
+        },
+        "up": {
+          "texture": "#tree_oak_bark"
+        },
+        "down": {
+          "texture": "#tree_oak_bark"
+        }
+      }
+    },
+    {
+      "from": [
+        8.3,
+        0.8,
+        11.2
+      ],
+      "to": [
+        9.8,
+        2.4,
+        12.6
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_plastic_black"
+        },
+        "south": {
+          "texture": "#home_plastic_black"
+        },
+        "east": {
+          "texture": "#home_plastic_black"
+        },
+        "west": {
+          "texture": "#home_plastic_black"
+        },
+        "up": {
+          "texture": "#home_plastic_black"
+        },
+        "down": {
+          "texture": "#home_plastic_black"
+        }
+      }
+    },
+    {
+      "from": [
+        9.8,
+        1.4,
+        11.7
+      ],
+      "to": [
+        10.6,
+        1.8,
+        12.1
+      ],
+      "faces": {
+        "north": {
+          "texture": "#hw_chrome"
+        },
+        "south": {
+          "texture": "#hw_chrome"
+        },
+        "east": {
+          "texture": "#hw_chrome"
+        },
+        "west": {
+          "texture": "#hw_chrome"
+        },
+        "up": {
+          "texture": "#hw_chrome"
+        },
+        "down": {
+          "texture": "#hw_chrome"
+        }
+      }
+    }
+  ]
+}

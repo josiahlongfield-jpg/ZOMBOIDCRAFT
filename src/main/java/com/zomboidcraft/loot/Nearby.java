@@ -172,7 +172,8 @@ public final class Nearby {
     }
 
     private static boolean searchable(BlockEntity entity) {
-        return entity instanceof Fittings.Contents || entity instanceof ChestBlockEntity || entity instanceof BarrelBlockEntity;
+        return entity instanceof Fittings.Contents || entity instanceof ChestBlockEntity || entity instanceof BarrelBlockEntity
+                || entity instanceof com.zomboidcraft.decor.DecorEntity;
     }
 
     /** True when nothing solid stands between your eyes and the block (the block itself doesn't count). */

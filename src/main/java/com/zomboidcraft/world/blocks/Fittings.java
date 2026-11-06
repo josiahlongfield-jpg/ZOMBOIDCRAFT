@@ -72,6 +72,12 @@ public final class Fittings {
     }
 
     private static InteractionResult open(Level level, BlockPos pos, Player player) {
+        if (level instanceof ServerLevel && player.isShiftKeyDown() && player instanceof net.minecraft.server.level.ServerPlayer sp
+                && BuiltInRegistries.BLOCK.getKey(level.getBlockState(pos).getBlock()).getPath().endsWith("workbench")) {
+            // crouch at a workbench to work at it: the 3x3 bench (there's no vanilla crafting table: Josiah 2026-11-02)
+            com.zomboidcraft.building.BenchMenu.open(sp, pos);
+            return InteractionResult.SUCCESS;
+        }
         if (level instanceof ServerLevel server && level.getBlockEntity(pos) instanceof Contents contents
                 && player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
             // an auto shop's key board: the first look hangs the keys of the customer cars out front
@@ -156,6 +162,15 @@ public final class Fittings {
             if (!tryLoadLootTable(input)) {
                 ContainerHelper.loadAllItems(input, items);
             }
+        }
+
+        /** An army base's gun racks and crates roll the army's table, whatever the generator named (combat/GunLoot). */
+        @Override
+        public void unpackLootTable(@org.jetbrains.annotations.Nullable Player player) {
+            if (lootTable != null && level instanceof net.minecraft.server.level.ServerLevel server) {
+                lootTable = com.zomboidcraft.combat.GunLoot.redirect(server, worldPosition, lootTable);
+            }
+            super.unpackLootTable(player);
         }
 
         @Override

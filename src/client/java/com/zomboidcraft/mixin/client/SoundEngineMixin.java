@@ -18,8 +18,25 @@ public abstract class SoundEngineMixin {
     private void zomboidcraft$groupVolume(SoundInstance sound, CallbackInfoReturnable<Float> cir) {
         // near a Harvestman the animals and the night's insects fall quiet
         float factor = SoundVolumes.factor(sound.getIdentifier()) * com.zomboidcraft.client.creature.HarvestmanPresence.hush(sound);
+        // your character's ears: Keen Hearing, Hard of Hearing, Deaf
+        var player = net.minecraft.client.Minecraft.getInstance().player;
+        if (player != null && sound.getSource() != net.minecraft.sounds.SoundSource.MUSIC
+                && sound.getSource() != net.minecraft.sounds.SoundSource.MASTER && !sound.isRelative()) {
+            SoundVolumes.Group group = SoundVolumes.groupOf(sound.getIdentifier());
+            boolean dead = group == SoundVolumes.Group.ZOMBIE_VOICES || group == SoundVolumes.Group.HORDES
+                    || group == SoundVolumes.Group.ZOMBIE_STEPS || group == SoundVolumes.Group.DOOR_BASHING;
+            factor *= dead ? com.zomboidcraft.zombie.TraitSenses.zombieSounds(player) : com.zomboidcraft.zombie.TraitSenses.world(player);
+        }
         if (factor != 1f) {
             cir.setReturnValue(cir.getReturnValueF() * factor);
+        }
+    }
+
+    /** Zombie sounds keep to their share of the channels, so a gunshot always finds one (ZombieSoundCap). */
+    @Inject(method = "play", at = @At("HEAD"), cancellable = true)
+    private void zomboidcraft$zombieShare(SoundInstance sound, CallbackInfoReturnable<SoundEngine.PlayResult> cir) {
+        if (!com.zomboidcraft.client.sound.ZombieSoundCap.allow((SoundEngine) (Object) this, sound)) {
+            cir.setReturnValue(SoundEngine.PlayResult.NOT_STARTED);
         }
     }
 }

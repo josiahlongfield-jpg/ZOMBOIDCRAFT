@@ -87,6 +87,7 @@ public final class Shove {
             }
             level.playSound(null, zombie.getX(), zombie.getEyeY(), zombie.getZ(), ModSounds.SHOVE, SoundSource.PLAYERS,
                     0.9f, 0.9f + player.getRandom().nextFloat() * 0.2f);
+            com.zomboidcraft.zombie.ZedSounds.say(zombie, com.zomboidcraft.zombie.ZedSounds.State.PUSHED, 1f);
         }
         if (!any) {
             level.playSound(null, player.getX(), player.getEyeY(), player.getZ(), ModSounds.SWING, SoundSource.PLAYERS,

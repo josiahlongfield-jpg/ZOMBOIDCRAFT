@@ -157,8 +157,8 @@ public class HammerItem extends MeleeWeaponItem {
         } else {
             level.setBlockAndUpdate(pos, state.setValue(BarricadeBlock.PLANKS, planks - 1));
         }
-        if (!player.getInventory().add(new ItemStack(Items.OAK_PLANKS))) {
-            net.minecraft.world.level.block.Block.popResource(level, player.blockPosition(), new ItemStack(Items.OAK_PLANKS));
+        if (!player.getInventory().add(com.zomboidcraft.loot.NoVanilla.ours(net.minecraft.world.item.Items.OAK_PLANKS, 1))) {
+            net.minecraft.world.level.block.Block.popResource(level, player.blockPosition(), com.zomboidcraft.loot.NoVanilla.ours(net.minecraft.world.item.Items.OAK_PLANKS, 1));
         }
         level.playSound(null, pos, SoundEvents.WOOD_HIT, SoundSource.PLAYERS, 0.9f, 0.8f);
         Noise.emit(level, Vec3.atCenterOf(pos), HAMMER_NOISE / 2);

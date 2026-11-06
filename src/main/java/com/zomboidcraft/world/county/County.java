@@ -511,9 +511,72 @@ public final class County {
         return hideouts.computeIfAbsent(key(cx, cz), k -> Optional.ofNullable(planHideout(cx, cz)));
     }
 
+    private volatile Optional<Place> ghostStation;
+
+    /**
+     * EXCHANGE HALL, the subway's closed stop, as a hideout of its own: the old platform beside the
+     * tunnel and the control bunker under the street (GhostSite). Empty in the endless county.
+     */
+    public Optional<Place> ghostStation() {
+        Optional<Place> g = ghostStation;
+        if (g == null) {
+            if (tracks().isEmpty()) {
+                return Optional.empty();   // not laid yet (or never): ask again later
+            }
+            g = Optional.ofNullable(GhostSite.place(this, Noise.hash(seed ^ 0x6057L, 1, 2)));
+            ghostStation = g;
+        }
+        return g;
+    }
+
+    private volatile Optional<Place> offshore;
+
+    /**
+     * The container ship at anchor off the coast with a bunker in her (OffshoreSite), as a hideout of
+     * its own. Empty in the endless county.
+     */
+    public Optional<Place> offshoreShip() {
+        Optional<Place> o = offshore;
+        if (o == null) {
+            o = Optional.ofNullable(OffshoreSite.place(this, Noise.hash(seed ^ 0x0FF5L, 3, 4)));
+            offshore = o;
+        }
+        return o;
+    }
+
+    private volatile Optional<Place> fort;
+
+    /**
+     * The old sea fort on its shoal in the bay with a bunker under it (FortSite), as a hideout of its
+     * own. Empty in the endless county.
+     */
+    public Optional<Place> harbourFort() {
+        Optional<Place> o = fort;
+        if (o == null) {
+            o = Optional.ofNullable(FortSite.place(this, Noise.hash(seed ^ 0xF047L, 5, 6)));
+            fort = o;
+        }
+        return o;
+    }
+
     /** Every hideout whose footprint plus margin touches the box. */
     public List<Place> hideoutsNear(int x0, int z0, int x1, int z1, int margin) {
         List<Place> out = new ArrayList<>();
+        ghostStation().ifPresent(p -> {
+            if (p.x0 - margin <= x1 && p.x1 + margin >= x0 && p.z0 - margin <= z1 && p.z1 + margin >= z0) {
+                out.add(p);
+            }
+        });
+        offshoreShip().ifPresent(p -> {
+            if (p.x0 - margin <= x1 && p.x1 + margin >= x0 && p.z0 - margin <= z1 && p.z1 + margin >= z0) {
+                out.add(p);
+            }
+        });
+        harbourFort().ifPresent(p -> {
+            if (p.x0 - margin <= x1 && p.x1 + margin >= x0 && p.z0 - margin <= z1 && p.z1 + margin >= z0) {
+                out.add(p);
+            }
+        });
         int reach = HIDE_REACH + margin;
         for (int cx = Math.floorDiv(x0 - reach, CELL); cx <= Math.floorDiv(x1 + reach, CELL); cx++) {
             for (int cz = Math.floorDiv(z0 - reach, CELL); cz <= Math.floorDiv(z1 + reach, CELL); cz++) {
@@ -528,20 +591,89 @@ public final class County {
     }
 
     private Place planHideout(int cx, int cz) {
-        if (rand(0x41DEL, cx, cz) > 0.05 || Math.abs(cx) <= 1 && Math.abs(cz) <= 1) {
+        double roll = rand(0x41DEL, cx, cz);
+        if (roll > 0.14 || Math.abs(cx) <= 1 && Math.abs(cz) <= 1) {
             return null;
         }
         long h = Noise.hash(seed ^ 0x41DE0L, cx, cz);
-        for (int i = 0; i < 24; i++) {
-            int x = cx * CELL + 100 + (int) (Noise.unit(Noise.mix(h + i * 2L)) * (CELL - 200));
-            int z = cz * CELL + 100 + (int) (Noise.unit(Noise.mix(h + i * 2L + 1)) * (CELL - 200));
-            if (hatchFits(x, z)) {
+        if (roll <= 0.05) {
+            for (int i = 0; i < 24; i++) {
+                int x = cx * CELL + 100 + (int) (Noise.unit(Noise.mix(h + i * 2L)) * (CELL - 200));
+                int z = cz * CELL + 100 + (int) (Noise.unit(Noise.mix(h + i * 2L + 1)) * (CELL - 200));
+                if (hatchFits(x, z)) {
+                    int level = (int) Math.floor(terrain.height(x, z));
+                    return new Place(PlaceType.HIDEOUT, "forest_hatch", x - HIDE_REACH, z - HIDE_REACH, x + HIDE_REACH,
+                            z + HIDE_REACH, level, Noise.mix(h ^ i), -1, -1);
+                }
+            }
+        }
+        // up in the Black Pine hills, where the ground is too steep for a hatch: an old mine's adit
+        long hm = Noise.hash(seed ^ 0xADD17L, cx, cz);
+        for (int i = 0; i < 32; i++) {
+            int x = cx * CELL + 100 + (int) (Noise.unit(Noise.mix(hm + i * 2L)) * (CELL - 200));
+            int z = cz * CELL + 100 + (int) (Noise.unit(Noise.mix(hm + i * 2L + 1)) * (CELL - 200));
+            int q = mineFits(x, z, Noise.mix(hm ^ i));
+            if (q >= 0) {
                 int level = (int) Math.floor(terrain.height(x, z));
-                return new Place(PlaceType.HIDEOUT, "forest_hatch", x - HIDE_REACH, z - HIDE_REACH, x + HIDE_REACH,
-                        z + HIDE_REACH, level, Noise.mix(h ^ i), -1, -1);
+                return new Place(PlaceType.HIDEOUT, "mine_adit", x - MINE_REACH, z - MINE_REACH, x + MINE_REACH,
+                        z + MINE_REACH, level, Noise.mix(hm ^ i), q, -1);
             }
         }
         return null;
+    }
+
+    /** How far a mine's footprint reaches from its portal: the spoil tip out front, the bunker deep in the hill. */
+    public static final int MINE_REACH = 80;
+
+    /**
+     * Whether an old mine's portal can stand at (x, z), and which way its adit runs into the hill (the
+     * quarter turn of its frame, whose +z points in), or -1: deep in the Black Pine mountains, on a
+     * hillside steep enough to drive an adit into, the ground falling away in front for the spoil and
+     * standing high over everywhere the bunker may run, far from any place and off the roads.
+     */
+    private int mineFits(int x, int z, long salt) {
+        if (Plan.depth(terrain.plan.mountains, x, z) < 60) {
+            return -1;
+        }
+        double g = terrain.height(x, z);
+        if (g < terrain.water(x, z) + 6) {
+            return -1;
+        }
+        int[][] in = {{0, 1}, {-1, 0}, {0, -1}, {1, 0}}, side = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
+        int start = (int) (Noise.unit(salt) * 4);
+        for (int k = 0; k < 4; k++) {
+            int q = (start + k) & 3, ix = in[q][0], iz = in[q][1], sx = side[q][0], sz = side[q][1];
+            if (terrain.height(x + ix * 8, z + iz * 8) < g + 4 || terrain.height(x + ix * 16, z + iz * 16) < g + 8
+                    || terrain.height(x - ix * 10, z - iz * 10) > g + 0.5) {
+                continue;
+            }
+            // square on to the slope, not across a spur
+            if (Math.abs(terrain.height(x + sx * 4, z + sz * 4) - g) > 2.5 || Math.abs(terrain.height(x - sx * 4, z - sz * 4) - g) > 2.5) {
+                continue;
+            }
+            boolean cover = true;
+            for (int a = 20; a <= 74 && cover; a += 6) {
+                for (int b = -30; b <= 30; b += 6) {
+                    double hx = x + ix * a + sx * b, hz = z + iz * a + sz * b;
+                    if (terrain.height(hx, hz) < g + 4 || terrain.riverChannel(hx, hz)) {
+                        cover = false;
+                        break;
+                    }
+                }
+            }
+            if (!cover) {
+                continue;
+            }
+            if (!placesNear(x - 120, z - 120, x + 120, z + 120, 0).isEmpty()) {
+                return -1;
+            }
+            Road.Hit hit = new Road.Hit();
+            for (Road r : roadsNear(x - 80, z - 80, x + 80, z + 80)) {
+                r.nearest(x + 0.5, z + 0.5, hit);
+            }
+            return hit.distance > 60 ? q : -1;
+        }
+        return -1;
     }
 
     private boolean hatchFits(int x, int z) {

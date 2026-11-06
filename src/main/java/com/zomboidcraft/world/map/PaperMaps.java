@@ -204,10 +204,20 @@ public final class PaperMaps {
             if (known == null) stack.set(BunkerMapItem.TARGET, target);
             ServerPlayNetworking.send(player, (MapNet.Reveal) found[1]);
             player.sendOverlayMessage(Component.literal("Somewhere is ringed in red. It's on your map now (M)."));
-            player.sendSystemMessage(Component.literal("Pencilled beside the ring: \"" + hint(Target.parse(target).kind()) + "\"")
+            player.sendSystemMessage(Component.literal("Pencilled beside the ring: \"" + hint(gen, Target.parse(target).kind()) + "\"")
                     .withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
         }));
         return true;
+    }
+
+    private static String hint(CountyGen gen, String kind) {
+        if (kind.equals("offshore")) {
+            return "The " + Bunkers.offshoreName(gen.county()) + ", at anchor and listing. Swim out; her pilot ladder is down.";
+        }
+        if (kind.equals("fort")) {
+            return Bunkers.fortName(gen.county()) + ". The rusty ports face the sea. Under the far magazine.";
+        }
+        return hint(kind);
     }
 
     private static String hint(String kind) {
@@ -215,6 +225,12 @@ public final class PaperMaps {
             case "ship" -> "Engine room, forward bulkhead. One plate isn't welded.";
             case "shelter" -> "Civil defence shelter. Down through the boiler room.";
             case "forest" -> "Stumps, a vent pipe, a cable post. Look under the leaves.";
+            case "mine" -> "Old workings in the Black Pine hills. New props behind the boards.";
+            case "silo" -> "The old silo nobody fills. Why does it have a new lock?";
+            case "container" -> "Container yard. Follow the cable. The box is locked from the inside.";
+            case "floor" -> "The floor that isn't there. Count the windows.";
+            case "vault" -> "The bank on the square. In the vault, the boxes with no numbers.";
+            case "subway" -> "A transit map. One stop on the loop is crossed out in red.";
             default -> "B4, electrical. Behind the cage, under the floor.";
         };
     }
@@ -234,7 +250,7 @@ public final class PaperMaps {
             if (found.isEmpty()) continue;
             Bunkers.Found b = found.get(rng.nextInt(found.size()));
             // a ring about 80 blocks across in a town, 150 in the woods, the bunker somewhere inside it
-            int r = b.kind().equals("forest") ? 75 : 40;
+            int r = b.kind().equals("forest") || b.kind().equals("mine") ? 75 : 40;
             double a = rng.nextDouble() * Math.PI * 2, off = rng.nextDouble() * 0.6 * r;
             int ringX = b.x() + (int) Math.round(Math.cos(a) * off), ringZ = b.z() + (int) Math.round(Math.sin(a) * off);
             return String.join(",", b.kind(), b.state(), Integer.toString(b.x()), Integer.toString(b.z()),

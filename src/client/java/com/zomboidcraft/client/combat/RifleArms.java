@@ -32,14 +32,20 @@ final class RifleArms {
 
     static void draw(PoseStack pose, SubmitNodeCollector out, int light, LocalPlayer player, AvatarRenderState state,
                      RifleView.Hand right, RifleView.Hand left, float width) {
+        // a Zomboid survivor's own arms, never Minecraft's: the hand camera's eye is its origin, looking down -z
+        if (com.zomboidcraft.client.survivor.SurvivorArms.draw(pose, out, light, player, new Vector3f(), new Vector3f(0, 0, -1),
+                new Vector3f(0, 1, 0), 1f, right.at(), left == null ? null : left.at(), true)) {
+            return;
+        }
         Minecraft mc = Minecraft.getInstance();
         EntityRenderer<?, ?> renderer = mc.getEntityRenderDispatcher().getRenderer(player);
         if (!(renderer instanceof AvatarRenderer<?> avatar) || state.skin == null) {
             return;
         }
-        PlayerModel model = avatar.getModel();
-        Identifier skin = state.skin.body().texturePath();
         boolean slim = state.skin.model() == PlayerModelType.SLIM;
+        PlayerModel own = slim ? ArmModels.slim : ArmModels.wide;
+        PlayerModel model = own != null ? own : avatar.getModel();
+        Identifier skin = state.skin.body().texturePath();
         float aspect = (float) mc.getWindow().getWidth() / Math.max(1, mc.getWindow().getHeight());
         Matrix4f frame = new Matrix4f(pose.last().pose());
         arm(pose, out, light, skin, model.rightArm, model.rightSleeve, state.showRightSleeve, slim ? -0.5f : -1f,

@@ -144,7 +144,11 @@ public final class CarClient {
         } else if (FuelClient.interact(client, hit)) {
             // a gas pump: fill the can in hand, or the car parked beside it
         } else if (car != null && atBonnet(car, hit, player)) {
-            client.gui.setScreen(new com.zomboidcraft.client.kit.MechanicsScreen(car));
+            if (car.bonnetOpen()) {
+                client.gui.setScreen(new com.zomboidcraft.client.kit.MechanicsScreen(car));
+            } else {
+                ClientPlayNetworking.send(new CarNet.Seat(car.getId(), CarNet.Seat.BONNET));     // lift it first, as in Zomboid
+            }
         } else if (car != null) {
             Vec3 at = hit.getLocation().subtract(car.position());
             ClientPlayNetworking.send(new CarNet.Use(car.getId(), (float) at.x, (float) at.y, (float) at.z));
@@ -174,6 +178,8 @@ public final class CarClient {
             // a room's light switch
         } else if (com.zomboidcraft.client.survival.SleepClient.interact(client, hit)) {
             // a bed, sofa or mattress (or the floor, crouching): lie down and sleep
+        } else if (com.zomboidcraft.client.combat.ReloadingClient.interact(client, hit)) {
+            // a reloading bench: what it can load
         } else if (player.getMainHandItem().is(com.zomboidcraft.ModItems.CAR_KEY)) {
             // not at a car, key in hand: its panic button
             ClientPlayNetworking.send(new CarNet.Use(CarNet.FOB, 0, 0, 0));
@@ -223,12 +229,33 @@ public final class CarClient {
                     () -> ClientPlayNetworking.send(new CarNet.Seat(door.car().getId(), door.seat()))));
         }
         Vec3 at = hit.getLocation().subtract(car.position());
-        if (car.atBoot(at)) {
+        CarModels.Model cm = CarModels.get(car.model());
+        boolean lids = cm != null && !cm.searchedOnly() && !cm.jet() && !car.aircraft();
+        if (lids) {
+            out.add(com.zomboidcraft.client.interact.InteractMenu.Option.of(car.bootOpen() ? "Close the boot" : "Open the boot",
+                    () -> ClientPlayNetworking.send(new CarNet.Seat(car.getId(), CarNet.Seat.BOOT))));
+            if (car.bootOpen()) {
+                Vec3 back = car.toWorld(new float[]{0, 0.5f, -cm.size[2] / 2}).subtract(car.position());
+                out.add(com.zomboidcraft.client.interact.InteractMenu.Option.of("Search the boot",
+                        () -> ClientPlayNetworking.send(new CarNet.Use(car.getId(), (float) back.x, (float) back.y, (float) back.z))));
+            }
+            if (!car.parts().isEmpty()) {
+                out.add(com.zomboidcraft.client.interact.InteractMenu.Option.of(car.bonnetOpen() ? "Close the bonnet" : "Open the bonnet",
+                        () -> ClientPlayNetworking.send(new CarNet.Seat(car.getId(), CarNet.Seat.BONNET))));
+            }
+        } else if (car.atBoot(at)) {
             out.add(com.zomboidcraft.client.interact.InteractMenu.Option.of("Open the trunk",
                     () -> ClientPlayNetworking.send(new CarNet.Use(car.getId(), (float) at.x, (float) at.y, (float) at.z))));
         } else if (t == null) {
             out.add(com.zomboidcraft.client.interact.InteractMenu.Option.of("Search it",
                     () -> ClientPlayNetworking.send(new CarNet.Use(car.getId(), (float) at.x, (float) at.y, (float) at.z))));
+        }
+        // shove it a block along, away from you, to clear the way past it (world.cars.CarPush)
+        String stuck = com.zomboidcraft.world.cars.CarPush.why(car);
+        if (stuck == null || !"It won't move".equals(stuck)) {
+            out.add(stuck != null ? com.zomboidcraft.client.interact.InteractMenu.Option.no("Push it", stuck)
+                    : com.zomboidcraft.client.interact.InteractMenu.Option.of("Push it",
+                    () -> ClientPlayNetworking.send(new com.zomboidcraft.world.cars.CarPush.Push(car.getId()))));
         }
         out.add(car.parts().isEmpty()
                 ? com.zomboidcraft.client.interact.InteractMenu.Option.no("Vehicle mechanics", "Nothing on this one to work on")

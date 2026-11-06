@@ -5,6 +5,7 @@ import com.zomboidcraft.world.city.Doors;
 import com.zomboidcraft.world.city.Placer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.SplittableRandom;
 
 /**
  * A port on the water, in three kinds:
@@ -38,6 +39,8 @@ final class PortSite extends Site {
     /** The lane along the quay's back, from the side gates, at this local z. */
     private int mainZ;
     private Kit.Style main;
+    /** How often a container terminal has the smugglers' tunnel under its yard (see ContainerTunnel). */
+    private static final double TUNNEL = 0.35;
 
     PortSite(Place p, BlockSink out) {
         super(p, out);
@@ -299,6 +302,7 @@ final class PortSite extends Site {
         int cols = 3 + rng.nextInt(2);
         int bw = cols * 13 - 1, pitchX = bw + 12, pitchZ = 30;
         String rtg = any("steel_yellow", "steel_yellow", "steel_red");
+        List<int[]> blocks = new ArrayList<>();
         for (int bz = yz0 + 2; bz + 22 <= yz1; bz += pitchZ) {
             for (int bx = 6; bx + bw + 6 <= lw; bx += pitchX) {
                 if (Math.abs(bx + bw / 2 - gateX) < bw / 2 + 10) {
@@ -309,6 +313,7 @@ final class PortSite extends Site {
                 }
                 kit.claim(bx - 2, bz - 1, bx + bw + 2, bz + 19, Kit.BUILT);
                 hb(bx, bz, 0).stacks(0, 0, cols, 6, 2 + rng.nextInt(3));
+                blocks.add(new int[] {bx, bz});
                 if (chance() < 0.75) {
                     int at = rng.nextInt(Math.max(1, cols)) * 13;
                     hb(bx + at - 1, bz - 2, 0).rtg(13, 21, 16, rtg);
@@ -373,6 +378,36 @@ final class PortSite extends Site {
             hb(e[0], e[1], 0).stacks(0, 0, 2, 3, 5);
         }
         litter(2, quay + 2, lw - 3, ld - 3, 60);
+        tunnel(blocks, cols, shed);
+    }
+
+    /**
+     * Now and then, the smugglers' tunnel: one box in the middle of a block of stacks (the block
+     * nearest the shed, if there is one) has a hatch through its floor. Its own random, so the
+     * terminal is laid out as before.
+     */
+    private void tunnel(List<int[]> blocks, int cols, int[] shed) {
+        SplittableRandom r = new SplittableRandom(p.seed ^ 0xC07A1L);
+        if (blocks.isEmpty() || r.nextDouble() >= TUNNEL) {
+            return;
+        }
+        List<int[]> order = new ArrayList<>(blocks);
+        if (shed != null) {
+            order.sort(java.util.Comparator.comparingDouble(b -> Math.hypot(b[0] - shed[0], b[1] - shed[1])));
+        } else {
+            java.util.Collections.shuffle(order, new java.util.Random(r.nextLong()));
+        }
+        String[] colours = {"container_red", "container_blue", "container_green", "container_orange"};
+        for (int[] b : order) {
+            for (int t = 0; t < 4; t++) {
+                int c = cols >= 3 ? 1 + r.nextInt(cols - 2) : 1;
+                int row = 1 + r.nextInt(4);
+                if (ContainerTunnel.dig(f, b[0] + c * 13, b[1] + row * 3, colours[r.nextInt(colours.length)],
+                        colours[r.nextInt(colours.length)], r.nextLong(), lw, ld, quay + 6)) {
+                    return;
+                }
+            }
+        }
     }
 
     // ------------------------------------------------------------------ the naval wharf
@@ -943,7 +978,8 @@ final class PortSite extends Site {
         boolean fromWest = chance() < 0.5;
         int bx0 = fromWest ? 0 : lw - bwEnd, bx1 = fromWest ? bwEnd : lw - 1;
         hb.breakwater(bx0, bx1, 8, 5, -1);
-        hb.lighthouse(fromWest ? bx1 - 2 : bx0 + 2, 8, 0, 14);
+        // the breakwater's head light: green to the side a ship keeps it on coming in, red the other
+        hb.lighthouse(fromWest ? bx1 - 2 : bx0 + 2, 8, 0, 14, fromWest ? "rd_lens_green_lit" : "rd_lens_red_lit");
         // the jetties, boats along them
         int jetties = 3 + rng.nextInt(3);
         int spacing = lw / (jetties + 1);

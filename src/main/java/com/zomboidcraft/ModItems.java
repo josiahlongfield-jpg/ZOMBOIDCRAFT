@@ -58,6 +58,33 @@ public final class ModItems {
     // stones out of rubble and gravel, and a stone knapped sharp against another.
     public static final Item TREE_BRANCH = register("tree_branch", Item::new, new Item.Properties().stacksTo(8));
     public static final Item STONE = register("stone", Item::new, new Item.Properties().stacksTo(16));
+    // Handloading (combat/Reloading): spent brass picked up after a fight, and what a bench turns it back into rounds with.
+    public static final Item SPENT_9MM = register("spent_9mm", Item::new, new Item.Properties());
+    public static final Item SPENT_380 = register("spent_380", Item::new, new Item.Properties());
+    public static final Item SPENT_38 = register("spent_38", Item::new, new Item.Properties());
+    public static final Item SPENT_44 = register("spent_44", Item::new, new Item.Properties());
+    public static final Item SPENT_556 = register("spent_556", Item::new, new Item.Properties());
+    public static final Item SPENT_308 = register("spent_308", Item::new, new Item.Properties());
+    public static final Item SPENT_3030 = register("spent_3030", Item::new, new Item.Properties());
+    public static final Item SPENT_50 = register("spent_50", Item::new, new Item.Properties().stacksTo(32));
+    public static final Item SPENT_HULLS = register("spent_hulls", Item::new, new Item.Properties());
+    /** A jug of powder: its durability is the charges left in it (one a round, three for a .50). */
+    public static final Item SMOKELESS_POWDER = register("smokeless_powder", Item::new, new Item.Properties().durability(100));
+    public static final Item PRIMERS = register("primers", Item::new, new Item.Properties().stacksTo(100));
+    public static final Item BULLETS_9MM = register("bullets_9mm", Item::new, new Item.Properties().stacksTo(100));
+    public static final Item BULLETS_38 = register("bullets_38", Item::new, new Item.Properties().stacksTo(100));
+    public static final Item BULLETS_44 = register("bullets_44", Item::new, new Item.Properties().stacksTo(100));
+    public static final Item BULLETS_556 = register("bullets_556", Item::new, new Item.Properties().stacksTo(100));
+    public static final Item BULLETS_30 = register("bullets_30", Item::new, new Item.Properties().stacksTo(100));
+    public static final Item BULLETS_50 = register("bullets_50", Item::new, new Item.Properties().stacksTo(50));
+    /** A bag of lead shot: its durability is the shells' worth left in it. */
+    public static final Item LEAD_SHOT = register("lead_shot", Item::new, new Item.Properties().durability(40));
+    public static final Item GUNSMITH_MAGAZINE = register("gunsmith_magazine",
+            p -> new com.zomboidcraft.loot.items.SkillBookItem(p, com.zomboidcraft.skills.Skill.RELOADING),
+            new Item.Properties().stacksTo(1));
+    public static final Item RELOADING_BENCH = register("reloading_bench",
+            p -> new net.minecraft.world.item.BlockItem(com.zomboidcraft.combat.ReloadingBenchBlock.BENCH, p.useBlockDescriptionPrefix()),
+            new Item.Properties().stacksTo(1));
     public static final Item SHARP_STONE = register("sharp_stone", Item::new, new Item.Properties().stacksTo(16));
     public static final Item SCRAP_METAL = register("scrap_metal", Item::new, new Item.Properties().stacksTo(32));
     public static final Item PROPANE_TORCH = register("propane_torch", Item::new, new Item.Properties().durability(120));
@@ -163,6 +190,12 @@ public final class ModItems {
     public static final Item HEAVY_AMMO = register("heavy_ammo", Item::new, new Item.Properties().stacksTo(20));
     public static final Item GRENADE_LAUNCHER = gun("grenade_launcher", GunType.GRENADE_LAUNCHER, 900);
     public static final Item GRENADE_ROUND = register("grenade_round", Item::new, new Item.Properties().stacksTo(12));
+    // the calibres Brita's guns brought (Josiah 2026-11-01: each of their guns fires its own round; combat/LocalGuns)
+    public static final Item ACP45_AMMO = register("acp45_ammo", Item::new, new Item.Properties().stacksTo(50));
+    public static final Item FN57_AMMO = register("fn57_ammo", Item::new, new Item.Properties().stacksTo(50));
+    public static final Item COLT45_AMMO = register("colt45_ammo", Item::new, new Item.Properties().stacksTo(50));
+    public static final Item SW500_AMMO = register("sw500_ammo", Item::new, new Item.Properties().stacksTo(20));
+    public static final Item PG7V_ROCKET = register("pg7v_rocket", Item::new, new Item.Properties().stacksTo(4));
 
     // Things to throw (combat/throwing): lures, fire and smoke, and blasts. The tin can and the alarm clock are
     // thrown too (see TIN_CAN and ALARM_CLOCK).
@@ -316,10 +349,15 @@ public final class ModItems {
     public static void register() {
         ResourceKey<CreativeModeTab> combat = ResourceKey.create(Registries.CREATIVE_MODE_TAB, Identifier.withDefaultNamespace("combat"));
         CreativeModeTabEvents.modifyOutputEvent(combat).register(output -> {
-            ALL.forEach(output::accept);
+            // our guns from before the Brita pack are gone (combat/Retired): only the Heavy Sniper and its kit show
+            ALL.stream().filter(item -> !com.zomboidcraft.combat.Retired.id(BuiltInRegistries.ITEM.getKey(item).getPath()))
+                    .forEach(output::accept);
             // each gun loaded and ready to try out, a full magazine for it (a box of shells for the shotgun), and each
             // with everything on it
             for (GunType type : GunType.values()) {
+                if (com.zomboidcraft.combat.Retired.GUNS.contains(type.id())) {
+                    continue;
+                }
                 ItemStack gun = new ItemStack(type.item());
                 gun.set(GunState.TYPE, GunState.EMPTY_MAG.withRounds(type.capacity()));
                 List<GunFinish.Finish> finishes = GunFinish.of(type);
@@ -350,6 +388,24 @@ public final class ModItems {
                     output.accept(kitted);
                 }
             }
+            // the guns kept on this computer (Brita's), each loaded with one of its own magazines beside it; their
+            // rounds are already in the tab. Read when the tab is built: files added later show after rejoining.
+            com.zomboidcraft.combat.LocalGuns.all().stream()
+                    .sorted(java.util.Comparator.comparing((com.zomboidcraft.combat.LocalGuns.Spec s) -> s.name == null ? s.id : s.name))
+                    .forEach(spec -> {
+                        ItemStack gun = com.zomboidcraft.combat.LocalGuns.loaded(spec);
+                        output.accept(gun);
+                        ItemStack mag = com.zomboidcraft.combat.LocalGuns.fullMagazine(gun, spec.type());
+                        if (!mag.isEmpty()) {
+                            output.accept(mag);
+                        }
+                    });
+            // their sights and grips kept on this computer too (guns/parts/parts.json): sights first, then grips
+            com.zomboidcraft.combat.LocalParts.ids().stream().sorted()
+                    .map(com.zomboidcraft.combat.LocalParts::make)
+                    .filter(s -> !s.isEmpty())
+                    .sorted(java.util.Comparator.comparing((ItemStack s) -> s.is(FOREGRIP)))
+                    .forEach(output::accept);
         });
     }
 

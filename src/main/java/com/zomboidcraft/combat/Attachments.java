@@ -132,15 +132,28 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
     /** The slots this gun has, in order. */
     public static List<Slot> slots(ItemStack gun) {
         String id = gunId(gun);
+        String local = gun.get(LocalGuns.ID);
         List<Slot> out = new ArrayList<>();
         if (id != null) {
             for (Slot slot : Slot.values()) {
-                if (GunSlotData.FITS.get(id).containsKey(slot)) {
+                if (GunSlotData.FITS.get(id).containsKey(slot) || local != null && LocalParts.takes(local, slot)) {
                     out.add(slot);
                 }
             }
         }
         return out;
+    }
+
+    /**
+     * Whether a part you carry is offered for this gun (the bench's lists): a local part on the local guns its file
+     * names, anything else as it fits now. The bench used our own fit lists only, so a local gun's sights and grips
+     * never showed there (Josiah 2026-11-04: "couldn't attach").
+     */
+    public static boolean offered(ItemStack gun, ItemStack part) {
+        if (part.get(LocalParts.ID) != null || gun.get(LocalGuns.ID) != null) {
+            return part.get(LocalParts.ID) != null ? LocalParts.fits(gun, part) : goesWith(gun, part);
+        }
+        return fits(gun, part.getItem());
     }
 
     /** The slot a part goes in, or null if it isn't a gun part. */
@@ -164,12 +177,25 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
 
     /** Whether the part can be fitted now: attachments are on in settings and it fits the gun. */
     public static boolean canMount(ItemStack gun, ItemStack part) {
-        return ZcConfig.get().guns.attachments && !part.isEmpty() && fits(gun, part.getItem()) && goesWith(gun, part);
+        if (!ZcConfig.get().guns.attachments || part.isEmpty()) {
+            return false;
+        }
+        // a part kept on this computer goes only on the local guns its file names (and fits no gun of ours)
+        if (part.get(LocalParts.ID) != null) {
+            return LocalParts.fits(gun, part);
+        }
+        return fits(gun, part.getItem()) && goesWith(gun, part);
     }
 
     /** The magnifier only sits behind a red dot or holo sight (or open rails): never with a scope in front of it. */
     private static boolean goesWith(ItemStack gun, ItemStack part) {
         Slot slot = slotOf(part);
+        // a gun kept on this computer takes only its own magazine (its own parts come with Brita's attachments, Josiah
+        // 2026-11-01: only what Brita or Arsenal give that gun), and its magazines go in nothing else
+        if (gun.get(LocalGuns.ID) != null || part.get(LocalGuns.ID) != null) {
+            GunType type = GunType.of(gun);
+            return slot == Slot.MAGAZINE && type != null && LocalGuns.magFits(part, gun, type);
+        }
         if (slot == Slot.MAGNIFIER) {
             Optic optic = optic(gun);
             return optic == null || optic.zoom() >= 1 && !optic.overlay();
@@ -190,6 +216,11 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
     }
 
     private static Attachments factory(ItemStack gun) {
+        if (gun.get(LocalGuns.ID) != null) {
+            // a gun kept on this computer comes bare, on its own iron sights: our gun's factory optic (a red dot, a
+            // scope) isn't on it and must not draw its reticle (Josiah 2026-11-01)
+            return NONE;
+        }
         String id = gunId(gun);
         Map<Slot, String> comes = id == null ? null : GunSlotData.DEFAULTS.get(id);
         if (comes == null || comes.isEmpty()) {
@@ -207,7 +238,7 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
             if (!g.mag() || magazine(gun) == null) {
                 return ItemStack.EMPTY;     // out, or a tube gun's shells, which live in the gun
             }
-            ItemStack mag = new ItemStack(magazine(gun));
+            ItemStack mag = LocalGuns.magazineFor(gun, GunType.of(gun) == null ? GunType.ASSAULT_RIFLE : GunType.of(gun));
             mag.set(GunState.MAG_ROUNDS, g.rounds());
             return mag;
         }
@@ -335,6 +366,13 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
 
     /** The optic on the gun, or null on its own sights. */
     public static @Nullable Optic optic(ItemStack gun) {
+        LocalParts.Meta local = LocalParts.get(LocalParts.fitted(gun, Slot.OPTIC));
+        if (local != null) {
+            // a sight from Josiah's pack: a scope shows its zoomed picture in its eyepiece; a red dot's or holo's own lit
+            // reticle is drawn in it, so nothing on the HUD
+            ZcConfig.Guns cfg = ZcConfig.get().guns;
+            return local.mag > 1 ? new Optic(cfg.scopeAimSpread, 1 / local.mag, 0, true) : new Optic(cfg.redDotAimSpread, 1, 0, false);
+        }
         String key = key(gun, Slot.OPTIC);
         return key == null ? null : optic(key);
     }
@@ -401,7 +439,9 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
     }
 
     public static boolean suppressed(ItemStack gun) {
-        return key(gun, Slot.MUZZLE) != null || GunType.of(gun) == GunType.SUPPRESSED_RIFLE;     // its can is built in
+        LocalGuns.Spec local = LocalGuns.of(gun);
+        return key(gun, Slot.MUZZLE) != null || GunType.of(gun) == GunType.SUPPRESSED_RIFLE     // its can is built in
+                || local != null && local.suppressed;
     }
 
     /** Looking down the sights shows the scope's eyepiece picture, not the gun: a scope you look into. */

@@ -716,12 +716,15 @@ final class Hospital {
         for (int i = 0; i < 49; i++) {
             set(hx + i % 7, dy, hz + i / 7, "hs_pad_h_" + i);
         }
-        // the edge lights every fourth block round the deck's rim
+        // the green edge lights every fourth block round the deck's rim, all burning
         for (int x = x0; x <= x1; x++) {
             for (int z = z0; z <= z1; z++) {
                 boolean rim = x == x0 || x == x1 || z == z0 || z == z1;
                 if (rim && (x - x0) % 4 == 0 && (z - z0) % 4 == 0) {
-                    set(x, dy + 1, z, (power && chance() < 0.6 ? "fit_numlight_on" : "fit_numlight") + "[facing=north]");
+                    if (power) {
+                        chance();  // the old dead-bulb roll, kept so everything after it lands where it did
+                    }
+                    set(x, dy + 1, z, "af_light_pad[facing=north]");
                 }
             }
         }
@@ -742,7 +745,7 @@ final class Hospital {
             for (int y = TROOF + 1; y <= dy + 2; y++) {
                 set(x1 + 3, y, z, "ext_mast");
             }
-            set(x1 + 3, dy + 3, z, (power && chance() < 0.5 ? "cp_flood_lit" : "cp_flood") + "[facing=west]");
+            set(x1 + 3, dy + 3, z, (power && chance() <= 1 ? "cp_flood_lit" : "cp_flood") + "[facing=west]");
         }
         if (chance() < 0.55) {
             p.vehicle(hx + 3.5, dy + 1, hz + 3.5, (float) (chance() * 360), "heli_hornbill", rng.nextLong());

@@ -28,9 +28,14 @@ final class Camp {
         return lamp(rng, dead, "cp_flood", "north");
     }
 
-    /** One of the camp kit's lamps (cp_flood, cp_flood_hang, cp_flood_bar) facing that way, lit or dead. */
+    /**
+     * One of the camp kit's lamps (cp_flood, cp_flood_hang, cp_flood_bar) facing that way, lit. The
+     * old dead-bulb roll is still drawn so everything after it lands where it did: every lamp works
+     * now (Josiah 2026-11-06, the landmarks want their light); dead is kept for the callers.
+     */
     static String lamp(SplittableRandom rng, double dead, String kind, String facing) {
-        return kind + (rng.nextDouble() < dead ? "" : "_lit") + "[facing=" + facing + "]";
+        rng.nextDouble();
+        return kind + "_lit[facing=" + facing + "]";
     }
 
     private final Placer p;
@@ -583,6 +588,10 @@ final class Camp {
         for (int[] c : new int[][] {{0, 0}, {14, 0}, {0, 14}, {14, 14}}) {
             p.set(x + c[0], 1, z + c[1], flood(rng, 0.6));
         }
+        // the green perimeter lights round the ring, still burning on the pad's own battery
+        for (int[] c : new int[][] {{7, 0}, {14, 7}, {7, 14}, {0, 7}, {2, 2}, {12, 2}, {12, 12}, {2, 12}}) {
+            p.set(x + c[0], 1, z + c[1], "af_light_pad[facing=north]");
+        }
     }
 
     /**
@@ -730,7 +739,7 @@ final class Camp {
                 }
             }
         }
-        p.set(cx, 1, cz, "minecraft:campfire[lit=" + (chance() < 0.2) + "]");
+        p.set(cx, 1, cz, chance() < 0.2 ? "zs_fire_lit" : "zs_fire");
         for (int i = 0; i < 3; i++) {
             p.setIfAir(cx + r + 2, 1, cz - 1 + i, i == 1 ? "bunk_jerry_cans[facing=west]" : "barrel");
         }
@@ -744,7 +753,13 @@ final class Camp {
         for (int i = 0; i < len; i++) {
             for (int k = 0; k < 4; k++) {
                 p.set(x + i, 0, z + k, "air");
-                p.set(x + i, -1, z + k, chance() < 0.3 ? "minecraft:white_concrete_powder" : "minecraft:coarse_dirt");
+                if (chance() < 0.3) {
+                    // lime thrown thin over the trodden floor
+                    p.set(x + i, -1, z + k, "qs_lime");
+                    p.set(x + i, -2, z + k, "minecraft:coarse_dirt");
+                } else {
+                    p.set(x + i, -1, z + k, "minecraft:coarse_dirt");
+                }
                 if (i < len * 0.7 && chance() < 0.75) {
                     p.set(x + i, -1, z + k, "bunk_bodybag[facing=" + (k % 2 == 0 ? "east" : "west") + "]");
                     p.set(x + i, -2, z + k, "minecraft:coarse_dirt");

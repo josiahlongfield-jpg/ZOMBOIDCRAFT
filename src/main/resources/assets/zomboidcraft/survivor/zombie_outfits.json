@@ -1,0 +1,18 @@
+{
+  "_doc": "Our zombie outfits (zombie/ZombieLook) as Zomboid's own. zone: one of Zomboid's ZombiesZoneDefinition zones, its entries at their own chances (entries tied to a room left out); fill: whatever chance the zone leaves goes to the Default zone, as Zomboid does. outfits: Zomboid outfit names with weights, used alone. Names only: the zones and outfits themselves are read from Zomboid's files into the local pack (tools/pz/zombie_pack.py).",
+  "civilian": {"zone": "Default"},
+  "hoodie": {"zone": "Young", "fill": true},
+  "office": {"zone": "Offices", "fill": true},
+  "farmer": {"zone": "Farm"},
+  "construction": {"zone": "ConstructionSite"},
+  "jogger": {"outfits": {"FitnessInstructor": 60, "StreetSports": 20, "Cyclist": 10, "ShellSuit_Black": 2, "ShellSuit_Blue": 2, "ShellSuit_Green": 2, "ShellSuit_Pink": 2, "ShellSuit_Teal": 2}},
+  "police": {"outfits": {"Police": 40, "Detective": 10, "PoliceState": 5, "PoliceRiot": 2, "Police_SWAT": 1}},
+  "nurse": {"outfits": {"Nurse": 1}},
+  "doctor": {"outfits": {"Doctor": 1}},
+  "patient": {"outfits": {"HospitalPatient": 50, "HospitalPatientBathrobe": 50}},
+  "security": {"outfits": {"Security": 60, "MallSecurity": 30, "AirportSecurityTarmac": 10}},
+  "soldier": {"outfits": {"ArmyCamoGreen": 5, "ArmyCamoDesert": 5, "ArmyInstructor": 2, "Ghillie": 1}},
+  "firefighter": {"outfits": {"Fireman": 80, "FiremanFullSuit": 20}},
+  "prisoner": {"outfits": {"Inmate": 70, "InmateKhaki": 20, "InmateEscaped": 10}},
+  "survivor": {"outfits": {"Survivalist": 10, "Survivalist02": 10, "Survivalist03": 10, "Survivalist04": 10, "Survivalist05": 10, "Hunter": 10}}
+}

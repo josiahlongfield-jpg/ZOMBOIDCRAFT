@@ -215,7 +215,7 @@ public final class BuildBlocks {
         @Override
         protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player,
                                               InteractionHand hand, BlockHitResult hit) {
-            if (!stack.is(Items.GLASS_BOTTLE)) {
+            if (!stack.is(Items.GLASS_BOTTLE) && !com.zomboidcraft.loot.NoVanilla.is(stack, "glass_bottle")) {
                 return InteractionResult.TRY_WITH_EMPTY_HAND;
             }
             int now = state.getValue(LEVEL);
@@ -223,7 +223,7 @@ public final class BuildBlocks {
                 return InteractionResult.FAIL;
             }
             if (!level.isClientSide()) {
-                ItemStack water = PotionContents.createItemStack(Items.POTION, Potions.WATER);
+                ItemStack water = com.zomboidcraft.loot.NoVanilla.ours(Items.POTION, 1);
                 player.setItemInHand(hand, ItemUtils.createFilledResult(stack, player, water));
                 level.setBlockAndUpdate(pos, state.setValue(LEVEL, now - 1));
                 level.playSound(null, pos, SoundEvents.BOTTLE_FILL, SoundSource.BLOCKS, 1f, 1f);
@@ -371,9 +371,9 @@ public final class BuildBlocks {
 
         public net.minecraft.world.item.Item produce() {
             return switch (this) {
-                case CARROT -> Items.CARROT;
-                case POTATO -> Items.POTATO;
-                default -> Items.BEETROOT;
+                case CARROT -> com.zomboidcraft.loot.NoVanilla.item("carrot");
+                case POTATO -> com.zomboidcraft.loot.NoVanilla.item("potato");
+                default -> com.zomboidcraft.loot.NoVanilla.item("onion");
             };
         }
 
@@ -446,11 +446,11 @@ public final class BuildBlocks {
                 }
                 return InteractionResult.SUCCESS;
             }
-            boolean water = stack.is(Items.POTION) && stack.get(net.minecraft.core.component.DataComponents.POTION_CONTENTS) != null
+            boolean water = com.zomboidcraft.loot.NoVanilla.is(stack, "water_bottle") || stack.is(Items.POTION) && stack.get(net.minecraft.core.component.DataComponents.POTION_CONTENTS) != null
                     && stack.get(net.minecraft.core.component.DataComponents.POTION_CONTENTS).is(Potions.WATER);
             if (water && !state.getValue(WET)) {
                 if (!level.isClientSide()) {
-                    player.setItemInHand(hand, ItemUtils.createFilledResult(stack, player, new ItemStack(Items.GLASS_BOTTLE)));
+                    player.setItemInHand(hand, ItemUtils.createFilledResult(stack, player, com.zomboidcraft.loot.NoVanilla.ours(Items.GLASS_BOTTLE, 1)));
                     level.setBlockAndUpdate(pos, state.setValue(WET, true));
                     level.playSound(null, pos, SoundEvents.BOTTLE_EMPTY, SoundSource.BLOCKS, 1f, 1f);
                 }

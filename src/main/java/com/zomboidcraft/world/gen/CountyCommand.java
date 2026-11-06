@@ -135,6 +135,22 @@ public final class CountyCommand {
             return 0;
         }
         Place p = list.get(0);
+        if ("ghost_station".equals(p.variant)) {
+            // on the old platform, just inside the arch from the track
+            int[] at = Bunkers.ghostPlatform(county);
+            if (at != null) {
+                src.getServer().getCommands().performPrefixedCommand(src, "tp @s " + at[0] + ".5 " + (p.level + 1) + " " + at[1] + ".5");
+                src.sendSuccess(() -> Component.literal("On the old platform of " + p), false);
+                return 1;
+            }
+        }
+        if (p.type == PlaceType.HIDEOUT && "mine_adit".equals(p.variant)) {
+            // in the cutting, in front of the boards
+            int[] at = Bunkers.mineFront(p);
+            src.getServer().getCommands().performPrefixedCommand(src, "tp @s " + at[0] + ".5 " + (p.level + 1) + " " + at[1] + ".5");
+            src.sendSuccess(() -> Component.literal("At the boarded portal of " + p), false);
+            return 1;
+        }
         if (p.type == PlaceType.HIDEOUT) {
             // nothing is levelled round a hideout: stand by the hatch, the only ground it knows
             src.getServer().getCommands().performPrefixedCommand(src, "tp @s " + p.centreX() + ".5 " + (p.level + 2) + " " + (p.centreZ() + 3) + ".5");
@@ -168,11 +184,27 @@ public final class CountyCommand {
                     case "ship" -> "at the false plate in the engine room's forward bulkhead";
                     case "shelter" -> "at the top of the stairs down to the boiler room";
                     case "forest" -> "on the hatch under the leaves";
+                    case "mine" -> "in the cutting, at the boards across the old portal";
+                    case "silo" -> "on the hatch in the floor of the old silo";
+                    case "container" -> "in the gap between the stacks, at the doors of the box with the cable";
+                    case "offshore" -> "at the false plate in her engine room (swim out and climb the pilot ladder on her low side)";
+                    case "floor" -> "on the stair landing at the bricked-up door of the missing floor";
+                    case "vault" -> "at the deposit boxes with no numbers in the bank's vault";
+                    case "subway" -> "behind the steel door in the bricked-up arch, on the old platform";
+                    case "fort" -> "on the hatch among the old shot in the far magazine (swim out to the landing stage on its shore side)";
                     default -> "on the hatch in the electrical room";
                 };
                 String in = switch (b.kind()) {
                     case "ship" -> "in the ship at ";
                     case "forest" -> "in the woods at ";
+                    case "mine" -> "in the hills at ";
+                    case "silo" -> "under the silo at ";
+                    case "container" -> "under the container yard at ";
+                    case "offshore" -> "in the " + Bunkers.offshoreName(county) + ", at anchor: ";
+                    case "floor" -> "high in a tower in ";
+                    case "vault" -> "under the bank in ";
+                    case "subway" -> "under the subway: ";
+                    case "fort" -> "under " + Bunkers.fortName(county) + ", out in the bay: ";
                     default -> "under ";
                 };
                 src.sendSuccess(() -> Component.literal("The " + b.kind() + " bunker " + in + p + " (" + b.state() + "): " + where), false);

@@ -277,14 +277,16 @@ public final class Rolls {
             return switch (name) {
                 case "home_guns", "basement_guns" -> GUN_CABINET;
                 case "guns", "pawn" -> GUN_SHOP;
+                case "army" -> MILITARY;
+                case "police", "security" -> POLICE;
                 case "farm" -> FARM;
                 default -> name.startsWith("home_") || name.startsWith("basement_") ? HOME : STORE;
             };
         }
         if (path.startsWith("car/")) {
             return switch (name) {
-                case "police" -> POLICE;
-                case "swat" -> MILITARY;
+                case "police", "swat" -> POLICE;     // a SWAT van is the police's, not the army's
+                case "military" -> MILITARY;
                 default -> VEHICLE;
             };
         }

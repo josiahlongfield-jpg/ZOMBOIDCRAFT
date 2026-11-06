@@ -1094,6 +1094,36 @@
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:string_lights",
+          "weight": 8,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:hand_truck",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:spray_paint_kit",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:garden_gnome",
+          "weight": 8
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:pipe_offcut",
           "weight": 4,
           "functions": [
@@ -1186,6 +1216,16 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:metal_detector",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:neon_tube_kit",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:wood_stove",
           "weight": 2
         }
       ]

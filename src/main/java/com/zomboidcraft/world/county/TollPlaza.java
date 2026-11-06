@@ -523,7 +523,7 @@ final class TollPlaza extends Site {
             out.set(bx + 4, 1, z, chance() < 0.4 ? "hw_drum_down[facing=" + Hwy.FACING[rng.nextInt(4)] + "]" : "hw_drum");
         }
         out.set(bx - 1, 1, islandZ(0) - 1, "cp_flood_lit[facing=east]");
-        out.set(bx - 1, 1, CZ - 7, "cp_flood[facing=east]");
+        out.set(bx - 1, 1, CZ - 7, "cp_flood_lit[facing=east]");
         for (int z = gap - 1; z <= gap + 3; z += 4) {
             out.set(bx + 2, 1, z, "st_cone");
         }

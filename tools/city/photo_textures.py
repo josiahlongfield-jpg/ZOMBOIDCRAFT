@@ -1109,6 +1109,14 @@ import transit  # noqa: E402
 transit.register(sys.modules[__name__])
 import glassline  # noqa: E402
 glassline.register(sys.modules[__name__])
+import ghost  # noqa: E402
+ghost.register(sys.modules[__name__])
+import shelter  # noqa: E402
+shelter.register(sys.modules[__name__])
+import mine  # noqa: E402
+mine.register(sys.modules[__name__])
+import strongpoint  # noqa: E402
+strongpoint.register(sys.modules[__name__])
 import fitout  # noqa: E402
 fitout.register(sys.modules[__name__])
 import mall  # noqa: E402
@@ -1215,6 +1223,10 @@ import hollis  # noqa: E402
 hollis.register(sys.modules[__name__])
 import foundry  # noqa: E402
 foundry.register(sys.modules[__name__])
+import zonestory  # noqa: E402
+zonestory.register(sys.modules[__name__])
+import harbourfort  # noqa: E402
+harbourfort.register(sys.modules[__name__])
 
 
 

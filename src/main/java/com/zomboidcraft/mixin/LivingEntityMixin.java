@@ -102,4 +102,23 @@ public abstract class LivingEntityMixin {
             cir.setReturnValue(cir.getReturnValue() * (float) ZcConfig.get().look.voicePitch);
         }
     }
+
+    /**
+     * Walkers far from every player don't shove each other apart: a horde packed off where nobody can see it spent a
+     * sixth of the server tick finding its neighbours (800 zombies, 2026-11-06 profile). Close up they push as before.
+     */
+    @Inject(method = "pushEntities", at = @At("HEAD"), cancellable = true)
+    private void zomboidcraft$noFarPushing(CallbackInfo ci) {
+        LivingEntity self = (LivingEntity) (Object) this;
+        double far = ZcConfig.get().performance.farPushDistance;
+        if (far <= 0 || !ZombieTypes.isWalker(self)) {
+            return;
+        }
+        for (net.minecraft.world.entity.player.Player player : self.level().players()) {
+            if (!player.isSpectator() && player.distanceToSqr(self) < far * far) {
+                return;
+            }
+        }
+        ci.cancel();
+    }
 }

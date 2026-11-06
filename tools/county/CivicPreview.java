@@ -27,7 +27,7 @@ import java.util.SplittableRandom;
  * go below it). Each lot's x range goes to stderr.
  */
 public final class CivicPreview {
-    private static final int LEVEL = 12, M = 12;
+    private static final int LEVEL = Integer.getInteger("level", 12), M = Integer.getInteger("margin", 12);
 
     public static void main(String[] args) throws IOException {
         String out = args[0];

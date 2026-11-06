@@ -329,9 +329,9 @@ final class NpcBrain {
             npc.getLookControl().setLookAt(target, 60f, 60f);
             npc.setYBodyRot(npc.getYHeadRot());
             raised++;
-            ZcConfig.GunStats stats = type.stats();
-            boolean endless = ZcConfig.get().companions.endlessAmmo;
             ItemStack held = npc.getMainHandItem();
+            ZcConfig.GunStats stats = type.stats(held);
+            boolean endless = ZcConfig.get().companions.endlessAmmo;
             if (held != lastGun) {
                 // a different gun in her hands (a swap, or one you handed her): count what's in this one
                 lastGun = held;
@@ -406,7 +406,8 @@ final class NpcBrain {
             var through = box.clip(eye, stop);
             if (through.isPresent()) {
                 boolean headHit = through.get().y > target.getEyeY() - 0.25;
-                float damage = (float) (stats.damage * (headHit ? stats.headshotMultiplier : 1));
+                float damage = (float) (stats.damage * (headHit
+                        ? ZcConfig.get().combat.headshotFor(com.zomboidcraft.combat.LocalGuns.calibre(npc.getMainHandItem(), type), stats.headshotMultiplier) : 1));
                 target.hurtServer(level, ModDamageTypes.source(level, ModDamageTypes.BULLET, npc), damage);
                 if (!target.isAlive()) {
                     npc.mind.killed(npc);

@@ -29,21 +29,20 @@ import org.jetbrains.annotations.Nullable;
 public enum Build {
     BOARD("Board up", Where.OPENING, Skill.CARPENTRY, 0, 50, 6, 16,
             "Nail a plank across a window or doorway. Up to four boards, and zombies have to knock each one off.",
-            tool("Hammer", ModItems.HAMMER), need("Plank", s -> s.is(ItemTags.PLANKS), 1, Items.OAK_PLANKS), need("Nails", ModItems.NAILS, 2)),
+            tool("Hammer", ModItems.HAMMER), planks(1), need("Nails", ModItems.NAILS, 2)),
     METAL_SHEET("Metal sheet", Where.OPENING, Skill.METALWORKING, 0, 100, 10, 12,
             "Tack a steel sheet over a window or doorway. Several times tougher than planks, but you can't see or shoot through it.",
             tool("Propane torch", ModItems.PROPANE_TORCH), need("Metal sheet", ModItems.METAL_SHEET, 1)),
     TRIPWIRE("Tin-can tripwire", Where.GROUND, Skill.CARPENTRY, 0, 40, 3, 0,
             "String strung across a gap with cans on it. Anything walking through sets them rattling, so you hear it coming. Zombies hear it too.",
-            null, need("String", Items.STRING, 2), need("Tin cans", ModItems.TIN_CAN, 3)),
+            null, need("Rope", s -> is(s, "rope"), 1, ours("rope")), need("Tin cans", ModItems.TIN_CAN, 3)),
     RAIN_BARREL("Rain barrel", Where.GROUND, Skill.CARPENTRY, 0, 80, 8, 8,
             "A drum under a tarp funnel. It fills while it rains, faster in a storm. Fill bottles from it.",
             null, need("Plastic drum", ModItems.PLASTIC_DRUM, 1), need("Tarp", ModItems.TARP, 1)),
     SANDBAGS("Sandbag wall", Where.GROUND, Skill.MASONRY, 0, 100, 6, 6,
             "Fill sandbags with earth and stack them waist high. Crawlers can't get past, and walkers slow down climbing over.",
             tool("Shovel", ModItems.SHOVEL), need("Empty sandbags", ModItems.EMPTY_SANDBAG, 4),
-            need("Dirt, sand, gravel or rubble", s -> s.is(Items.DIRT) || s.is(Items.COARSE_DIRT) || s.is(Items.SAND)
-                    || s.is(Items.GRAVEL) || s.is(Items.ROOTED_DIRT) || s.is(ModItems.RUBBLE), 4, Items.DIRT)),
+            need("Rubble or earth", s -> s.is(ModItems.RUBBLE), 4, ModItems.RUBBLE)),
     ALARM_CLOCK("Alarm clock decoy", Where.GROUND, null, 0, 20, 0, 0,
             "Set it down in a street and walk away. When it rings, everything in earshot goes to it instead of you. "
                     + "Right-click the clock first to choose when (10 seconds to 5 minutes).",
@@ -55,12 +54,12 @@ public enum Build {
     PLANTER("Planter box", Where.GROUND, Skill.CARPENTRY, 0, 120, 10, 14,
             "A raised bed of planks full of earth. Plant a seed packet in it and keep it wet (rain, or pour a bottle of water on); "
                     + "it's ripe in about four days. Up on a roof it's out of reach.",
-            tool("Hammer", ModItems.HAMMER), need("Planks", s -> s.is(ItemTags.PLANKS), 4, Items.OAK_PLANKS), need("Nails", ModItems.NAILS, 4),
-            need("Dirt", s -> s.is(Items.DIRT) || s.is(Items.COARSE_DIRT) || s.is(Items.ROOTED_DIRT), 4, Items.DIRT)),
+            tool("Hammer", ModItems.HAMMER), planks(4), need("Nails", ModItems.NAILS, 4),
+            need("Earth (rubble)", s -> s.is(ModItems.RUBBLE), 2, ModItems.RUBBLE), need("Bag of fertilizer", s -> is(s, "fertilizer"), 1, ours("fertilizer"))),
     SPIKED_WALL("Spiked log wall", Where.GROUND, Skill.CARPENTRY, 1, 160, 14, 18,
             "Logs sharpened to points and driven in side by side, too tall to climb. Zombies pushing on it or beating at it "
                     + "tear themselves on the spikes.",
-            tool("Axe", s -> s.is(ModItems.FIRE_AXE) || s.is(ItemTags.AXES), ModItems.FIRE_AXE), need("Logs", s -> s.is(ItemTags.LOGS), 3, Items.OAK_LOG)),
+            tool("Axe", s -> s.is(ModItems.FIRE_AXE), ModItems.FIRE_AXE), need("Firewood logs", s -> is(s, "firewood"), 3, ours("firewood"))),
     WELD_SHEET("Metal sheet from scrap", Where.MAKE, Skill.METALWORKING, 1, 120, 10, 10,
             "Cut and weld scrap into a flat sheet you can put over a window.",
             tool("Propane torch", ModItems.PROPANE_TORCH), need("Scrap metal", ModItems.SCRAP_METAL, 4)),
@@ -201,8 +200,16 @@ public enum Build {
 
     /** Planks: the game's own, or the loot plank from a hardware store or a lumber pile. */
     private static Need planks(int count) {
-        return need("Planks", s -> s.is(ItemTags.PLANKS) || BuiltInRegistries.ITEM.getKey(s.getItem()).equals(com.zomboidcraft.ZomboidCraft.id("plank")),
-                count, Items.OAK_PLANKS);
+        return need("Planks", s -> is(s, "plank"), count, ours("plank"));
+    }
+
+    /** One of our own items by id (never a vanilla one: Josiah 2026-11-02). */
+    private static boolean is(ItemStack s, String id) {
+        return BuiltInRegistries.ITEM.getKey(s.getItem()).equals(com.zomboidcraft.ZomboidCraft.id(id));
+    }
+
+    private static Item ours(String id) {
+        return BuiltInRegistries.ITEM.getOptional(com.zomboidcraft.ZomboidCraft.id(id)).orElse(ModItems.RUBBLE);
     }
 
     private static Need tool(String label, Item item) {

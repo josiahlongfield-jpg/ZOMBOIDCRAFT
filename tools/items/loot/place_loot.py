@@ -52,7 +52,7 @@ EXTRA = {
     # the hotel penthouse terrace grill and outdoor kitchen, and the nightclub DJ booth (floor fit-out thread)
     'shop/grill': ['charcoal', 'lighter_fluid', 'matches', 'lighter', 'spatula', 'cast_iron_skillet', 'aluminium_foil',
                    'paper_towels', 'hot_dogs', 'steak', 'canned_beer', 'bottled_beer'],
-    'shop/dj': ['cassette_tape', 'mixtape', 'headphones', 'champagne', 'vodka', 'cigarettes', 'cash_bundle', 'glow_stick',
+    'shop/dj': ['vinyl_record', 'cassette_tape', 'mixtape', 'headphones', 'champagne', 'vodka', 'cigarettes', 'cash_bundle', 'glow_stick',
                 'lighter'],
 }
 # the vanilla stand-ins the live waves replace, wherever they are. Vanilla things that still do something our items
@@ -88,6 +88,10 @@ SWAP = {f'minecraft:{a}': f'{NS}:{b}' for a, b in (
     ('leather_chestplate', 'denim_jacket'), ('leather_leggings', 'jeans'), ('leather_boots', 'work_boots'),
     ('leather_helmet', 'baseball_cap'), ('iron_chestplate', 'plate_carrier'), ('diamond_chestplate', 'plate_carrier'),
     ('iron_leggings', 'work_pants'), ('iron_boots', 'work_boots'))}
+# no vanilla item ever (Josiah 2026-11-02): the music discs become our records
+SWAP.update({f'minecraft:music_disc_{n}': f'{NS}:vinyl_record' for n in (
+    '13', 'cat', 'blocks', 'chirp', 'far', 'mall', 'mellohi', 'stal', 'strad', 'ward', '11', 'wait', 'pigstep',
+    'otherside', '5', 'relic', 'creator', 'creator_music_box', 'precipice', 'tears', 'lava_chicken')})
 # the clothing thread's garments that are registered with worn models: placed by their roster places like ours
 WORN_READY = {'t_shirt', 'flannel_shirt', 'hoodie', 'denim_jacket', 'parka', 'jeans', 'work_pants', 'sneakers',
               'work_boots', 'baseball_cap', 'beanie', 'work_gloves', 'sunglasses', 'bandana'} | set('''
@@ -137,6 +141,10 @@ GEAR_NO_MODEL = set()   # all of UI's worn gear has body models now (2026-10-29)
 # the black crusader kit only ever turns up whole, in its own table (shop/crusader_kit, stocked by story_loot.py)
 NOT_PLACED = {'hunting_knife_sheath'} | {f'crusader_{p}' for p in (
     'great_helm', 'plate', 'tabard', 'pauldrons', 'cloak', 'greaves', 'gauntlets', 'sabatons')}
+# car parts only come from the auto shops' shelves (auto_loot.py, with their class) and off cars (Mechanics)
+NOT_PLACED |= {'engine_block', 'alternator', 'starter_motor', 'radiator', 'gearbox', 'fuel_tank', 'fuel_pump',
+               'exhaust', 'steering_rack', 'brake_pads', 'suspension', 'car_tire', 'wheel_rim', 'headlight',
+               'tail_light', 'car_door', 'car_bonnet', 'boot_lid', 'car_horn', 'car_radio', 'car_seat', 'glovebox'}
 RW = {'C': 4, 'S': 2, 'R': 1, 'P': 1, 'G': 1}
 
 

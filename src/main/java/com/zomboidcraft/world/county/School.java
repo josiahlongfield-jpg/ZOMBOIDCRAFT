@@ -2,6 +2,7 @@ package com.zomboidcraft.world.county;
 
 import com.zomboidcraft.world.city.Doors;
 import com.zomboidcraft.world.city.Placer;
+import com.zomboidcraft.world.city.ShopStories;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SplittableRandom;
@@ -67,6 +68,8 @@ final class School {
     private final Bldg b;
     private final String brick, key, dado;
     private final boolean lit, shelter, overrun;
+    /** Zomboid's RBSchool: where the school was overrun and its story dice say so, its dead and its walkers are put out (StoryMarks). */
+    private java.util.SplittableRandom story;
     private int w, x1, z1, gx, za, zb, floors, top, gh;
     private boolean high;
     /** The front loop given over to an aid station: the buses and the parent's car gone from it. */
@@ -110,6 +113,7 @@ final class School {
         floors = high ? 2 : 1;
         top = floors * ST;
         gh = high ? 11 : 9;
+        story = overrun ? com.zomboidcraft.world.city.ShopStories.dice(p, w, d) : null;
         grounds();
         shell();
         for (int f = 0; f < floors; f++) {
@@ -470,6 +474,19 @@ final class School {
                             chance() < 0.5 ? "home_blood_pool" : "blood_splat");
                 }
                 b.mess(x0 + 1, Math.min(r.z0(), r.z1()), rx1 - 1, Math.max(r.z0(), r.z1()), y, 0.1);
+                if (story != null) {
+                    // the teacher and the children who didn't get out, and those who got up again
+                    int lo = Math.min(r.z0(), r.z1()), hi = Math.max(r.z0(), r.z1());
+                    for (int i = 0, n = 1 + story.nextInt(3); i < n; i++) {
+                        int bx = x0 + 1 + story.nextInt(Math.max(1, rx1 - x0 - 1)), bz = lo + story.nextInt(hi - lo + 1);
+                        String there = p.get(bx, y, bz);
+                        if (there == null || there.equals("air") || there.contains("blood") || there.equals("paper")) {
+                            ShopStories.body(p, story, bx + 0.5, y, bz + 0.5, i == 0 && story.nextBoolean() ? "office" : "civilian");
+                        }
+                    }
+                    ShopStories.walkersIndoors(p, story, (x0 + rx1) / 2 + 0.5, y, zc + 0.5, "civilian", 1 + story.nextInt(2),
+                            Math.min(rx1 - x0, hi - lo) / 2);
+                }
             }
             default -> b.mess(x0 + 1, Math.min(r.z0(), r.z1()), rx1 - 1, Math.max(r.z0(), r.z1()), y, 0.02);
         }
@@ -923,6 +940,10 @@ final class School {
      * where it was overrun, the cots thrown about, the body bags, the casings.
      */
     private void shelter(int cx0, int cx1, int kz, int sl, int sr, int bt, int bb, int dz) {
+        if (story != null) {
+            ShopStories.walkersIndoors(p, story, (cx0 + cx1) / 2 + 0.5, 1, (bt + bb) / 2 + 0.5, "civilian", 2 + story.nextInt(3),
+                    Math.min(cx1 - cx0, bb - bt) / 2);
+        }
         for (int x = cx0 + 2; x <= cx1 - (high ? 3 : 1); x += 2) {
             for (int z = bt + 1; z + 1 < bb; z += 3) {
                 if (chance() < 0.12) {
@@ -930,6 +951,9 @@ final class School {
                 }
                 if (overrun && chance() < 0.3) {
                     p.set(x, 1, z, chance() < 0.5 ? "bunk_bodybag[facing=" + DIRS[rng.nextInt(4)] + "]" : "home_blood_pool");
+                    if (story != null && story.nextDouble() < 0.4) {
+                        ShopStories.body(p, story, x + 1.5, 1, z + 0.5, "civilian");
+                    }
                     continue;
                 }
                 boolean messy = chance() < 0.4;

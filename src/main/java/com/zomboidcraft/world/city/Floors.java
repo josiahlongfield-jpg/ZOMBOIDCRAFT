@@ -2401,8 +2401,8 @@ public final class Floors {
             }
 
             void armoury() {
-                several(Math.max(3, r.area() / 3), false, "bunk_crate_ammo[facing=%s]", "bunk_crate_gun[facing=%s]", "pk_military_crate[facing=%s]",
-                        "bunk_gun_rack[facing=%s]");
+                several(Math.max(3, r.area() / 3), false, "bunk_crate_ammo[facing=%s,loot=army]", "bunk_crate_gun[facing=%s,loot=army]",
+                        "pk_military_crate[facing=%s]", "bunk_gun_rack[facing=%s,loot=army]");
             }
 
             void morgue() {
@@ -2464,6 +2464,62 @@ public final class Floors {
             return false;
         }
 
+        /**
+         * Zomboid's building stories for a floor of offices (RBOffice: the staff who stayed at their
+         * desks, dead where they sat or up and walking among them) or a clinic (RBClinic: the doctors
+         * and nurses with the patients they were treating), on the floor's own story dice at the
+         * Randomized Building Chance. Bodies and walkers are StoryMarks marks.
+         */
+        void story() {
+            if (state == State.BURNT) {
+                return;
+            }
+            boolean clinic = type == Type.MEDICAL || type == Type.DENTAL;
+            boolean office = switch (type) {
+                case OPEN_OFFICE, CUBICLES, CELLULAR, LAW, CALL_CENTRE, NEWSROOM, RECORDS, COMPUTERS, EXECUTIVE, SUITES, GOVERNMENT -> true;
+                default -> false;
+            };
+            if (!clinic && !office) {
+                return;
+            }
+            SplittableRandom dice = ShopStories.dice(f.p, f.w, f.d, f.y);
+            if (dice == null) {
+                return;
+            }
+            List<int[]> free = new ArrayList<>();
+            for (int i = 0; i < f.g.length; i++) {
+                byte v = f.g[i];
+                int x = i % f.w, z = i / f.w;
+                String there = f.p.get(x, f.y + 1, z);
+                if ((v == Floorplan.OPEN || v == Floorplan.ROOM) && (there == null || there.equals("air"))) {
+                    free.add(new int[] {x, z});
+                }
+            }
+            if (free.size() < 12) {
+                return;
+            }
+            String[] dead = clinic ? new String[] {"doctor", "nurse", "patient", "patient"} : new String[] {"office", "office", "office", "security"};
+            String[] up = clinic ? new String[] {"patient", "nurse", "doctor"} : new String[] {"office"};
+            int n = 2 + dice.nextInt(clinic ? 4 : 3);
+            for (int i = 0; i < n; i++) {
+                int[] c = free.remove(dice.nextInt(free.size()));
+                ShopStories.body(f.p, dice, c[0] + 0.5, f.y + 1, c[1] + 0.5, dead[dice.nextInt(dead.length)]);
+                if (dice.nextDouble() < 0.6) {
+                    f.set(c[0], 1, c[1], dice.nextBoolean() ? "home_blood_pool" : "blood_splat");
+                }
+            }
+            for (int i = 0, g = 1 + dice.nextInt(2); i < g; i++) {
+                int[] c = free.get(dice.nextInt(free.size()));
+                ShopStories.walkersIndoors(f.p, dice, c[0] + 0.5, f.y + 1, c[1] + 0.5, up[dice.nextInt(up.length)], 1 + dice.nextInt(3), 4);
+            }
+            for (int i = 0, k = 4 + dice.nextInt(5); i < k && !free.isEmpty(); i++) {
+                int[] c = free.remove(dice.nextInt(free.size()));
+                String[] litter = clinic ? new String[] {"blood_splat", "paper", "home_pills[facing=north]", "glass_shards"}
+                        : new String[] {"paper", "paper", "blood_splat", "home_chair_tipped[facing=east]"};
+                f.set(c[0], 1, c[1], litter[dice.nextInt(litter.length)]);
+            }
+        }
+
         void aftermath() {
             double junk = switch (state) {
                 case ABANDONED -> 0.01;
@@ -2492,6 +2548,7 @@ public final class Floors {
                     }
                 }
             }
+            story();
             if (state == State.BARRICADED) {
                 // the way in from the stairs blocked with furniture, a gap left to squeeze through
                 int n = 0;

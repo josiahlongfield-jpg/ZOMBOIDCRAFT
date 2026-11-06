@@ -415,10 +415,12 @@ final class AirportSite extends Site {
                 light(Airport.HALF_LEN, az, "af_light_thr[facing=east]");
             }
         }
-        // the PAPIs, four boxes on the pilot's left 300 m in
+        // the PAPIs, four boxes on the pilot's left 300 m in, the two nearest the runway red and the
+        // two out from it white: on the glide path
         for (int k = 0; k < 4; k++) {
-            a.set(-Airport.HALF_LEN + 300, 1, -(Airport.HALF_W + 15) - k * 9, "af_papi[facing=west]");
-            a.set(Airport.HALF_LEN - 300, 1, Airport.HALF_W + 15 + k * 9, "af_papi[facing=east]");
+            String papi = k < 2 ? "af_papi_red" : "af_papi";
+            a.set(-Airport.HALF_LEN + 300, 1, -(Airport.HALF_W + 15) - k * 9, papi + "[facing=west]");
+            a.set(Airport.HALF_LEN - 300, 1, Airport.HALF_W + 15 + k * 9, papi + "[facing=east]");
         }
         // the windsocks by each end
         for (int s = -1; s <= 1; s += 2) {

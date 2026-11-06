@@ -149,21 +149,6 @@
         },
         {
           "type": "minecraft:item",
-          "name": "zomboidcraft:lever_ammo",
-          "weight": 16,
-          "functions": [
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 3,
-                "max": 12
-              }
-            }
-          ]
-        },
-        {
-          "type": "minecraft:item",
           "name": "zomboidcraft:crossbow_bolt",
           "weight": 16,
           "functions": [
@@ -859,6 +844,11 @@
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:skillbook_mechanics",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:mag_mechanics",
           "weight": 2
         },
@@ -1136,6 +1126,21 @@
           "type": "minecraft:item",
           "name": "zomboidcraft:survival_field_manual",
           "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:hammock",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:mounted_deer_head",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:licence_plate_set",
+          "weight": 2
         }
       ]
     },
@@ -1148,36 +1153,6 @@
         }
       ],
       "entries": [
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:assault_rifle",
-          "weight": 1
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:pistol",
-          "weight": 2
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:shotgun",
-          "weight": 1
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:double_barrel",
-          "weight": 1
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:revolver",
-          "weight": 2
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:hunting_rifle",
-          "weight": 1
-        },
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:machete",
@@ -1202,36 +1177,6 @@
           "type": "minecraft:item",
           "name": "zomboidcraft:ammo_can",
           "weight": 1
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:rimfire",
-          "weight": 2
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:magnum",
-          "weight": 1
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:sawn_off",
-          "weight": 1
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:lever_action",
-          "weight": 1
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:crossbow",
-          "weight": 1
-        },
-        {
-          "type": "minecraft:item",
-          "name": "zomboidcraft:pocket_pistol",
-          "weight": 2
         },
         {
           "type": "minecraft:item",
@@ -1306,6 +1251,21 @@
         {
           "type": "minecraft:item",
           "name": "zomboidcraft:mag_survival",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:auto_manual_standard",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:auto_manual_heavy",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:auto_manual_sport",
           "weight": 1
         },
         {

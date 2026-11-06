@@ -10,16 +10,6 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:music_disc_cat",
-          "weight": 12
-        },
-        {
-          "type": "minecraft:item",
-          "name": "minecraft:music_disc_13",
-          "weight": 12
-        },
-        {
-          "type": "minecraft:item",
           "name": "zomboidcraft:school_backpack",
           "weight": 24
         },
@@ -614,6 +604,26 @@
         },
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:black_light",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:fibre_optic_lamp",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:broken_toy",
           "weight": 4,
           "functions": [
@@ -662,6 +672,11 @@
           "type": "minecraft:item",
           "name": "zomboidcraft:rc_car",
           "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "zomboidcraft:model_train_set",
+          "weight": 1
         }
       ]
     }

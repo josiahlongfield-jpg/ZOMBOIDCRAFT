@@ -345,9 +345,10 @@ def vault_tiles(seed):
             cut(shut, None, 0.6, 225, 3))
 
 
-def deposit(seed, pried):
+def deposit(seed, pried, blank=False):
     """A wall of safe deposit boxes: little nickel doors four across and six down, two keyholes and
-    a number each; pried: the robbers' work, half the doors gone, a few hanging."""
+    a number each; pried: the robbers' work, half the doors gone, a few hanging; blank: the same
+    doors with no number plates (the false front a panic room hides behind)."""
     t = F.plain(seed, (150, 152, 148), 0.04, 0.6)
     t.f0[:] = 200
     rng = t.rng
@@ -366,7 +367,8 @@ def deposit(seed, pried):
             F.gap(t, x0, y0, x0 + 16, y1, dark=0.45)
             disc(t, x0 + 5, y0 + 6, 1.2, (30, 30, 30))
             disc(t, x0 + 11, y0 + 6, 1.2, (30, 30, 30))
-            area(t, x0 + 6, y0 + 2, x0 + 10, y0 + 4, (176, 146, 80), f0=200)
+            if not blank:
+                area(t, x0 + 6, y0 + 2, x0 + 10, y0 + 4, (176, 146, 80), f0=200)
     t.grime(0.2)
     return t
 
@@ -541,6 +543,7 @@ def textures():
             T[f"bk_vault_{name}_{i}"] = lambda k=k, i=i: vt(k, i)
     T["bk_deposit"] = lambda: deposit(9840, False)
     T["bk_deposit_pried"] = lambda: deposit(9841, True)
+    T["bk_deposit_blank"] = lambda: deposit(9840, False, True)
     T["bk_notes"] = lambda: notes(9842)
     T["bk_bag"] = lambda: bag(9843)
     T["bk_atm"] = lambda: atm(9844, False)
@@ -620,6 +623,10 @@ def blocks():
             "Vault Door", "METAL", render="cutout")
         add(f"bk_vault_shut_{i}", None, "Vault Door", "METAL", tex={"north": f"bk_vault_shut_{i}", "side": steel, "up": steel, "down": steel})
     add("bk_deposit", None, "Safe Deposit Boxes", "METAL", tex={"north": "bk_deposit", "side": steel, "up": steel, "down": steel}, loot="bank")
+    # the bank vault bunker's false front: boxes with no numbers, the middle two a door
+    add("bk_deposit_blank", None, "Safe Deposit Boxes", "METAL", tex={"north": "bk_deposit_blank", "side": steel, "up": steel, "down": steel})
+    out["bk_deposit_door"] = {"door": "steel", "tex": {"top": "bk_deposit_blank", "bottom": "bk_deposit_blank"},
+                              "title": "Safe Deposit Boxes"}
     add("bk_deposit_pried", None, "Safe Deposit Boxes", "METAL", tex={"north": "bk_deposit_pried", "side": steel, "up": steel, "down": steel})
     add("bk_notes", [[0, 0, 0, 16, 0.25, 16, {"up": "bk_notes", "down": "bk_notes", "side": "bk_notes"}]], "Banknotes", "WOOL",
         render="cutout", decor=True)
@@ -661,9 +668,10 @@ def blocks():
 def main():
     path = HERE / "blocks.json"
     data = json.loads(path.read_text())
-    kept = {k: v for k, v in data["blocks"].items() if not k.startswith("bk_")}
     made = blocks()
-    kept.update(made)
+    # in place: blocks.json is append-only, its order is the registry's; new pieces go at the end
+    kept = {k: made.get(k, v) for k, v in data["blocks"].items() if not k.startswith("bk_") or k in made}
+    kept.update({k: v for k, v in made.items() if k not in kept})
     data["blocks"] = kept
     path.write_text(json.dumps(data, indent=1) + "\n")
     print(f"{len(made)} bank blocks in {path}")

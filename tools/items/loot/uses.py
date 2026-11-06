@@ -5,6 +5,7 @@ here as well adds what else it's good for. Skills are the game's (Zomboid's set)
 Metalworking, Mechanics, Electrical, Tailoring, Farming, Foraging, Trapping, Fishing, Aiming, Reloading, Maintenance,
 Masonry, Piloting. Recipes are in recipes.py.
 """
+import decor as _decor
 import wave1
 
 USES = {
@@ -461,6 +462,31 @@ USES = {
     'fishing_trophy': 'Trade.',
     # ------------------------------------------------------------ vehicle
     'spare_tire': 'Replaces a flat tyre (Mechanics, jack and tire iron).',
+    'engine_block': 'Car part: the engine. Mechanics 8 and the engine crane; fits its own class only.',
+    'gearbox': 'Car part: the gearbox. Fitted from under the car, Mechanics 7; fits its own class only.',
+    'car_tire': 'Car part: a tyre. Fits any car; jack the wheel up first.',
+    'car_door': 'Car part: a door. Fits its own class; a missing door lets walkers reach you.',
+    'car_seat': 'Car part: a seat. A missing or broken seat cannot be sat in.',
+    'glovebox': 'Car part: the glovebox. Without one there is nowhere to keep things up front.',
+    'auto_manual_standard': 'Read it to work on standard cars beyond roadside jobs (Mechanics XP too).',
+    'auto_manual_heavy': 'Read it to work on trucks, vans and buses beyond roadside jobs (Mechanics XP too).',
+    'auto_manual_sport': 'Read it to work on sports cars beyond roadside jobs (Mechanics XP too).',
+    'alternator': 'Car part: fits a car of its class from the Mechanics screen (G on a car); its condition is how long it lasts.',
+    'starter_motor': 'Car part: fits a car of its class from the Mechanics screen (G on a car); its condition is how long it lasts.',
+    'radiator': 'Car part: fits a car of its class from the Mechanics screen (G on a car); its condition is how long it lasts.',
+    'fuel_tank': 'Car part: fits a car of its class from the Mechanics screen (G on a car); its condition is how long it lasts.',
+    'fuel_pump': 'Car part: fits a car of its class from the Mechanics screen (G on a car); its condition is how long it lasts.',
+    'exhaust': 'Car part: fits a car of its class from the Mechanics screen (G on a car); its condition is how long it lasts.',
+    'steering_rack': 'Car part: fits a car of its class from the Mechanics screen (G on a car); its condition is how long it lasts.',
+    'brake_pads': 'Car part: fits a car of its class from the Mechanics screen (G on a car); its condition is how long it lasts.',
+    'suspension': 'Car part: fits a car of its class from the Mechanics screen (G on a car); its condition is how long it lasts.',
+    'wheel_rim': 'Car part: fits a car of its class from the Mechanics screen (G on a car); its condition is how long it lasts.',
+    'headlight': 'Car part: fits a car of its class from the Mechanics screen (G on a car); its condition is how long it lasts.',
+    'tail_light': 'Car part: fits a car of its class from the Mechanics screen (G on a car); its condition is how long it lasts.',
+    'car_bonnet': 'Car part: fits a car of its class from the Mechanics screen (G on a car); its condition is how long it lasts.',
+    'boot_lid': 'Car part: fits a car of its class from the Mechanics screen (G on a car); its condition is how long it lasts.',
+    'car_horn': 'Car part: fits a car of its class from the Mechanics screen (G on a car); its condition is how long it lasts.',
+    'car_radio': 'Car part: fits a car of its class from the Mechanics screen (G on a car); its condition is how long it lasts.',
     'tire_iron': 'Takes wheels off; a decent blunt weapon.', 'car_jack': 'Lifts a car to change a wheel.',
     'motor_oil': 'Tops up the engine: stops it wearing out.', 'antifreeze': 'Keeps the radiator working.',
     'brake_fluid': 'Fixes soft brakes.', 'spark_plugs': 'Repairs an engine that won\'t start.',
@@ -522,6 +548,7 @@ SKILLBOOKS = {
     'skillbook_aiming': 'Aiming', 'skillbook_maintenance': 'Maintenance', 'skillbook_masonry': 'Masonry',
     'skillbook_metalworking': 'Metalworking', 'skillbook_piloting': 'Piloting',
     'skillbook_electrical': 'Electrical', 'skillbook_plumbing': 'Plumbing',
+    'skillbook_mechanics': 'Mechanics',
 }
 MAGS = {
     'mag_carpentry': 'Teaches the recipes for log walls, sturdy doors and reinforced barricades.',
@@ -560,6 +587,27 @@ PAPERS = {
 }
 
 
+DECOR = {r['id']: r for r in _decor.rows()}
+
+
+def decor_line(d):
+    """A decor piece's purpose line from decor.py: comfort for the room, and what it does when it's working."""
+    bits = [f'Decor: set it down; +{d["comfort"]} comfort to the room it stands in.']
+    if d['toggle']:
+        bits.append('Tap G to switch it on' + (' (needs power).' if d['power'] else '.'))
+    elif d['power']:
+        bits.append('Works while it has power.')
+    if d['light_source']:
+        bits.append(f'Lights the room (level {d["light"]}).')
+    if d['play']:
+        bits.append(f'Play it from the G menu: boredom -{d["play"]}.')
+    if d['noise']:
+        bits.append(f'Loud while on: the dead hear it {d["noise"]} blocks off.')
+    if d['big']:
+        bits.append('Big: moving it takes a tool (and a hand truck if it is heavy).')
+    return ' '.join(bits)
+
+
 def use_line(row):
     """The full purpose line for a roster row."""
     iid = row['id']
@@ -589,6 +637,8 @@ def use_line(row):
         bits.append(MAGS[iid])
     elif iid in PAPERS:
         bits.append(PAPERS[iid])
+    elif iid in DECOR:
+        bits.append(decor_line(DECOR[iid]))
     elif not bits and BY_CAT.get(row['cat']):
         bits.append(BY_CAT[row['cat']])
     return ' '.join(bits)

@@ -1,0 +1,108 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_plastic_black": "zomboidcraft:block/city/home_plastic_black",
+    "zs_kitbag": "zomboidcraft:block/city/zs_kitbag",
+    "particle": "zomboidcraft:block/city/zs_kitbag"
+  },
+  "elements": [
+    {
+      "from": [
+        1,
+        0,
+        4.5
+      ],
+      "to": [
+        15,
+        4.5,
+        10.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#zs_kitbag"
+        },
+        "south": {
+          "texture": "#zs_kitbag"
+        },
+        "east": {
+          "texture": "#zs_kitbag"
+        },
+        "west": {
+          "texture": "#zs_kitbag"
+        },
+        "up": {
+          "texture": "#zs_kitbag"
+        },
+        "down": {
+          "texture": "#zs_kitbag",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        6,
+        4.5,
+        7
+      ],
+      "to": [
+        10,
+        5.1,
+        8
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_plastic_black"
+        },
+        "south": {
+          "texture": "#home_plastic_black"
+        },
+        "east": {
+          "texture": "#home_plastic_black"
+        },
+        "west": {
+          "texture": "#home_plastic_black"
+        },
+        "up": {
+          "texture": "#home_plastic_black"
+        },
+        "down": {
+          "texture": "#home_plastic_black"
+        }
+      }
+    },
+    {
+      "from": [
+        15,
+        1.5,
+        6
+      ],
+      "to": [
+        16,
+        3,
+        9
+      ],
+      "faces": {
+        "north": {
+          "texture": "#zs_kitbag"
+        },
+        "south": {
+          "texture": "#zs_kitbag"
+        },
+        "east": {
+          "texture": "#zs_kitbag",
+          "cullface": "east"
+        },
+        "west": {
+          "texture": "#zs_kitbag"
+        },
+        "up": {
+          "texture": "#zs_kitbag"
+        },
+        "down": {
+          "texture": "#zs_kitbag"
+        }
+      }
+    }
+  ]
+}

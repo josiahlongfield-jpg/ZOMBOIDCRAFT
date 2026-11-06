@@ -62,6 +62,28 @@ public final class NpcSkin {
             weight = new float[vertices * 4];
         }
 
+        /** The same mesh with its vertices following other bones (an index past the pack's bones is the caller's own). */
+        public Group withJoints(byte[] joints) {
+            return new Group(this, joints);
+        }
+
+        private Group(Group o, byte[] joints) {
+            mesh = o.mesh;
+            piece = o.piece;
+            looks = o.looks;
+            texture = o.texture;
+            bothSides = o.bothSides;
+            cutout = o.cutout;
+            level = o.level;
+            vertices = o.vertices;
+            pos = o.pos;
+            normal = o.normal;
+            uv = o.uv;
+            weight = o.weight;
+            joint = joints;
+            tris = o.tris;
+        }
+
         /**
          * Turns every triangle to face the way its corners' normals point, so drawing front faces only never drops one that
          * was wound backwards (her body is drawn culled; see NpcSkinDraw).
@@ -172,6 +194,16 @@ public final class NpcSkin {
             }
         }
         return -1;
+    }
+
+    /** A texture entry's bytes as stored (PNG, JPEG, or other data such as a pack's catalog), or null. Not used up. */
+    public byte[] raw(String key) {
+        return images.get(key);
+    }
+
+    /** Every texture entry's key still held as bytes. */
+    public java.util.Set<String> rawKeys() {
+        return java.util.Collections.unmodifiableSet(images.keySet());
     }
 
     /** The texture by its key, made into a GPU texture the first time it's asked for. Render thread. */
@@ -329,7 +361,7 @@ public final class NpcSkin {
     }
 
     /** PNG straight in (it keeps its alpha); JPEG through Java's reader. */
-    private static NativeImage decode(byte[] bytes) throws IOException {
+    public static NativeImage decode(byte[] bytes) throws IOException {
         if (bytes.length > 4 && (bytes[0] & 255) == 0x89 && bytes[1] == 'P' && bytes[2] == 'N' && bytes[3] == 'G') {
             return NativeImage.read(new ByteArrayInputStream(bytes));
         }

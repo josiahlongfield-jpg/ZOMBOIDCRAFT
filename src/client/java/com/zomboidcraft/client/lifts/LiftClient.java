@@ -28,8 +28,13 @@ public final class LiftClient {
         Interactables.blocks(state -> state.is(Lifts.BUTTON) || state.is(Lifts.DOOR) && !state.getValue(com.zomboidcraft.world.lifts.LiftDoorBlock.OPEN));
         Interactables.finder((client, player) -> {
             LiftCar car = LiftPhysics.inside(player);
-            Vec3 at = car == null ? null : panel(car, player.getEyePosition(), player.getViewVector(1f));
-            return at == null ? null : new Interactables.Spot(at, 0f);
+            if (car == null || panel(car, player.getEyePosition(), player.getViewVector(1f)) == null) {
+                return null;
+            }
+            // one dot for the whole panel, in the middle of it, wherever on it you look
+            LiftShaft s = car.shaft();
+            double u = s.w - 0.13, v = 0.45;
+            return new Interactables.Spot(new Vec3(s.wx(u, v), car.carY() + 1.38, s.wz(u, v)), 0f);
         });
     }
 

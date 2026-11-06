@@ -280,6 +280,11 @@ public final class Dismember {
             return part == HEAD;
         }
 
+        /** It went into a walker's upper arm or forearm. */
+        public boolean arm() {
+            return part >= 4 && part < 8;
+        }
+
         /** It went into a walker's thigh or shin. */
         public boolean leg() {
             return part >= 8;

@@ -156,6 +156,21 @@ def lampbox(seed):
     return t
 
 
+def lampbox_lit(seed):
+    """A shop's light box still lit: the same milky glass glowing warm from the tube inside, brightest
+    across the middle, the dead flies and the years' dirt showing dark against it."""
+    t = F.plain(seed, (255, 214, 150), 0.03, 0.55)
+    glow = 1 - 0.18 * np.abs(np.linspace(-1, 1, N))
+    t.c *= glow[:, None, None]
+    rng = t.rng
+    for _ in range(14):
+        disc(t, rng.uniform(6, N - 6), rng.uniform(N - 12, N - 4), rng.uniform(0.6, 1.2), (70, 50, 30))
+    area(t, 0, 0, N, 3, (40, 40, 40), smooth=0.3)
+    area(t, 0, N - 3, N, N, (40, 40, 40), smooth=0.3)
+    t.grime(0.15, (150, 110, 60))
+    return t
+
+
 def textures():
     T = {}
     for y in YEARS:
@@ -171,6 +186,7 @@ def textures():
         T[f"front_tin_{c}"] = lambda rgb=rgb, i=i: tin(8120 + i, rgb)
     T["front_boards"] = lambda: E.paint(8125, (112, 98, 80), 0.5)
     T["front_lampbox"] = lambda: lampbox(8126)
+    T["front_lampbox_lit"] = lambda: lampbox_lit(8127)
     return T
 
 
@@ -189,7 +205,7 @@ def mirror_x(boxes):
 def blocks():
     out = {}
 
-    def add(name, boxes, title, sound, rotate="facing", decor=False, render=None, tex=None):
+    def add(name, boxes, title, sound, rotate="facing", decor=False, render=None, tex=None, light=0):
         # a piece of boxes, or a plain cube with its faces' textures
         spec = {"model": "boxes", "boxes": boxes} if boxes else {"tex": tex}
         spec.update(title=title, sound=sound)
@@ -199,6 +215,8 @@ def blocks():
             spec["decor"] = True
         if render:
             spec["render"] = render
+        if light:
+            spec["light"] = light
         out[name] = spec
 
     # ---- the brick table under a parapet's cornice: three courses stepping out, dentils in the middle one
@@ -292,10 +310,14 @@ def blocks():
                                    [0, 0, 5, 16, 6, 11, "ext_trim_brown"], [0, 3, 0, 16, 8, 1.5, "ext_fascia"]]
         + [[x, 6, 0, x + 1.5, 8, 16, "ext_trim_brown"] for x in (2, 10)], "Plank Canopy", "WOOD")
 
-    # ---- a shop's light box gone dark (the lit ones are froglights, for the colour Photon gives them)
-    add("front_lampbox_dead", [[1, 1, 1, 15, 15, 15, {"side": "front_lampbox", "up": "ext_black_metal", "down": "ext_black_metal"}],
-                               [0, 14, 0, 16, 16, 16, "ext_black_metal"], [0, 0, 0, 16, 1.5, 16, "ext_black_metal"]],
-        "Light Box", "GLASS", rotate=None)
+    # ---- a shop's light box gone dark, and an amber one still lit (the purple and green ones stay
+    # froglights, for the colour Photon gives them; amber is the shader's own lamp colour)
+    for k, glass, light in (("dead", "front_lampbox", 0), ("lit", "front_lampbox_lit", 15)):
+        add(f"front_lampbox_{k}", [[1, 1, 1, 15, 15, 15, {"side": glass, "up": "ext_black_metal", "down": "ext_black_metal"}],
+                                   [0, 14, 0, 16, 16, 16, "ext_black_metal"], [0, 0, 0, 16, 1.5, 16, "ext_black_metal"]],
+            "Light Box", "GLASS", rotate=None, light=light)
+    # ---- the same lit glass as a whole block: a clock dial's lamp in the wall behind it
+    add("front_glow_panel", None, "Lamp Panel", "GLASS", rotate=None, tex="front_lampbox_lit", light=15)
 
     # ---- a frame front's painted trim, and the cap board along a false front's top
     for c, t in (("white", "ext_trim_white"), ("brown", "ext_trim_brown")):

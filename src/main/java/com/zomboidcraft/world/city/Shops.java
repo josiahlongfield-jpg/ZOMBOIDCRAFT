@@ -133,6 +133,7 @@ public final class Shops {
             put(x, 2, back, "air");
         }
         mess();
+        ShopStories.tell(p, type, w, d);
     }
 
     // ---------------------------------------------------------------- the room
@@ -371,6 +372,15 @@ public final class Shops {
         for (int x = left + 1; x < right; x++) {
             put(x, 2, back, board + "[facing=south]");
             put(x, 1, back, shelf + "[facing=north]");
+        }
+        if (type == Type.GUNS) {
+            // the gunsmith's corner behind the counter: a reloading bench against the back wall
+            for (int x = left + 2; x < till; x++) {
+                if (!backDoors.contains(x) && !backDoors.contains(x - 1) && !backDoors.contains(x + 1)) {
+                    put(x, 1, back, "zomboidcraft:reloading_bench[facing=north]");
+                    break;
+                }
+            }
         }
         if (type == Type.PAWN) {
             openSign();

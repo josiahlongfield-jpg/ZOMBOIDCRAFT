@@ -10,6 +10,25 @@
       "entries": [
         {
           "type": "minecraft:item",
+          "name": "zomboidcraft:brake_pads",
+          "weight": 4,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1,
+                "max": 2
+              }
+            },
+            {
+              "function": "minecraft:set_custom_data",
+              "tag": "{car_part:'brake_pads',kind:'heavy'}"
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
           "name": "zomboidcraft:brake_fluid",
           "weight": 4,
           "functions": [

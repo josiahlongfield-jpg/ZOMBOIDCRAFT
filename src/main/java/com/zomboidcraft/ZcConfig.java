@@ -364,6 +364,47 @@ public final class ZcConfig {
     }
 
     public static class Performance {
+        /**
+         * The Harvestman hunts. Off (Josiah 2026-11-01, "get rid of it for now", for frame rate) none spawn and any
+         * already in the world are removed; its save data is kept, so turning it back on picks up where it left off.
+         */
+        public boolean harvestman = false;
+        /**
+         * On an NVIDIA card, keep OpenGL buffer storage on (Minecraft 26.3 turns it off there), so Sodium can send chunk
+         * meshes through a mapped buffer instead of waiting on the card for each one. Off restores Minecraft's choice.
+         * Read once at start-up, so a change needs a restart. Client side.
+         */
+        public boolean nvidiaBufferStorage = true;
+        /**
+         * Zomboid bodies (zombies, corpses, survivors) are written into the draw buffer whole vertices at a time, with
+         * Iris's shader extras worked out as they go, instead of corner by corner and then read back by Iris (30% of the
+         * frame with 600 zombies, 2026-11-02). Looks the same. Off: the old way. Client side.
+         */
+        public boolean fastBodyVertices = true;
+        /**
+         * Zomboid bodies are skinned and written out on worker threads (half the cores) while the frame is gathered,
+         * and only copied in when it's drawn, instead of all on the render thread. Client side.
+         */
+        public boolean parallelBodies = true;
+        /**
+         * With parallelBodies: every body mesh in the same texture is handed to Minecraft as one draw a frame, instead of
+         * one per zombie per mesh. Client side.
+         */
+        public boolean batchBodies = true;
+        /**
+         * Only entities (zombies, cars, corpses, people, props) within this many blocks of the camera cast shader shadows;
+         * further ones are still drawn, just left out of the shadow map, where they cost the most (2026-11-01 GPU timers:
+         * 104 ms of a 262 ms frame). 0 = no limit. Client side.
+         */
+        public double shadowObjectDistance = 24;
+        /**
+         * Whether entities (zombies, cars, people, props) cast shader shadows at all. Off by default (Josiah 2026-11-02:
+         * a night game doesn't need them); the blocks still go through the shadow pass, which Photon's coloured lights
+         * need. On uses shadowObjectDistance and shadowZombies. Client side.
+         */
+        public boolean entityShadows = false;
+        /** Of the zombies within shadowObjectDistance, only the nearest this many cast shader shadows. Client side. */
+        public int shadowZombies = 12;
         /** The nearest this many zombies on screen get every clothing detail (within look.zombieDetailDistance). Client side. */
         public int fullDetailZombies = 12;
         /** The nearest this many get most of it; the rest only the main shapes. Client side. */
@@ -383,6 +424,17 @@ public final class ZcConfig {
          */
         public double idleThinkDistance = 32;
         /**
+         * Walkers further than this many blocks from every player don't shove each other apart (a packed horde off
+         * where nobody can see it cost a sixth of the server tick looking for neighbours). 0 turns it off.
+         */
+        public double farPushDistance = 32;
+        /**
+         * At most this many zombie groans, steps and door blows play at once on your computer, the nearest kept.
+         * Minecraft has about 247 sound channels; 800 zombies filled them and a gunshot found none (Josiah,
+         * 2026-11-06: "no sound was coming from my gun"). Client side.
+         */
+        public int zombieSoundCap = 48;
+        /**
          * Zombies beyond the nearest meshZombies (and past spriteMinDistance) are drawn as a picture of their baked body
          * turned to face you, one card instead of a few hundred pieces. Client side.
          */
@@ -391,6 +443,12 @@ public final class ZcConfig {
         public double spriteMinDistance = 24;
         /** A readout over the hotbar: FPS, zombies loaded and drawn at each detail, pieces drawn a frame. Client side. */
         public boolean showStats = false;
+        /**
+         * Lamps on dying circuits flicker. Off (the default since 2026-11-01) they stay lit: every flicker rebuilds the
+         * chunk section round the lamp, and a city's worth flipping 25 times a second took two thirds of the frame.
+         * {@code /zc flicker on|off}.
+         */
+        public boolean flickerLamps = false;
     }
 
     /**
@@ -912,6 +970,15 @@ public final class ZcConfig {
         public double weightChange = 1.0;
         /** Hit points a fed, watered, rested body heals in a Zomboid hour (Minecraft's food bar no longer heals). */
         public double regenPerHour = 3;
+        /** Zomboid's character creation (occupation and traits) on your first join and after each death. */
+        public boolean characterCreation = true;
+        /** Zomboid's Free Trait Points: added to everyone's budget in character creation (-100 to 100). */
+        public int freeTraitPoints = 0;
+        /**
+         * Zomboid's Negative Traits Penalty: diminishing returns on points from negative traits. "none", or one point
+         * less for every 3 ("one_every_3"), every 2 ("one_every_2") or every negative trait ("one_every_trait").
+         */
+        public String negativeTraitsPenalty = "none";
         /** Zomboid's "sleep allowed": whether you can lie down at all. */
         public boolean sleepAllowed = true;
     }
@@ -1226,6 +1293,21 @@ public final class ZcConfig {
         public boolean customZombies = true;
         /** The new zombie bodies: Zomboid-shaped, in worn 3D clothes, with the new movements. Off draws the older model. Client side. */
         public boolean newZombies = true;
+        /**
+         * Zombies near you drawn with Project Zomboid's own bodies, rotting skins, clothes and moves, where this PC has
+         * the local Zomboid zombie packs (config/zomboidcraft/npc/pz_zombie_f.zsk and pz_zombie_m.zsk). Client side.
+         */
+        public boolean pzZombies = true;
+        /** Blocks within which zombies are drawn with the Zomboid bodies; past it they keep the lighter body. Client side. */
+        public double pzZombieDistance = 24;
+        /** At most this many zombies (the nearest) are drawn with the Zomboid bodies at once; their corpses count by the same line. Client side. */
+        public int pzZombieMax = 10;
+        /** The next this many nearest zombies within pzMidDistance get the thinned Zomboid body; the rest the thinnest one (still a 3D Zomboid body). Client side. */
+        public int pzMidZombies = 20;
+        /** Blocks (as near as they look through a scope) within which the thinned Zomboid body is used. Client side. */
+        public double pzMidDistance = 16;
+        /** Zomboid zombies roughed up as Zomboid's are: blood and grime by body part, and holes torn through their clothes. Client side. */
+        public boolean roughZombies = true;
         /** Blocks within which zombies show every small clothing detail; further out the smallest bits are left off, and past 2.5 times this only the main shapes stay. Client side. */
         public double zombieDetailDistance = 16;
         /** 256px zombie skins with shine and bump maps for shader packs; off uses the 64px skins. */
@@ -1255,6 +1337,22 @@ public final class ZcConfig {
         public boolean shoulderCam = true;
         /** Aiming a 4x scope over the shoulder looks through it in first person, and goes back after. */
         public boolean scopeFromShoulder = true;
+        /**
+         * How a magnified scope is seen: "pip" only the lens is zoomed, the world round it stays its own size (frames
+         * take turns between the two views); "mix" crops the middle up to 4x and zooms the whole view from 6x; "picture"
+         * is the old full-screen eyepiece. Client side.
+         */
+        public String scopeView = "pip";
+        /**
+         * With a shader pack (Photon) on, which scope look is used (Josiah 2026-11-04, a test of both): "crop" keeps the
+         * world live at its own size and the lens shows the middle of the picture blown up; "ring" zooms the whole view
+         * and darkens everything outside the lens like a scope tube. The scope style key switches them. Client side.
+         */
+        public String scopeShaders = "crop";
+        /** The scope lens's size on screen, as a share of the screen's height (0.15 to 0.95). Client side. */
+        public double scopeLens = 0.5;
+        /** Turn the lens picture the right way up if it shows upside down on your graphics card. Client side. */
+        public boolean scopeFlip = true;
         /** From the hip with a gun, the crosshair is a dot in a ring the size of the gun's spread right now. Client side. */
         public boolean spreadCrosshair = true;
         /**
@@ -1288,17 +1386,58 @@ public final class ZcConfig {
         /** Multiplies every melee weapon's damage (needs a restart). */
         public double meleeDamage = 1.0;
         /**
-         * Zombies die like Zomboid's: a bullet anywhere but the head (on one still standing) does this much of its
-         * damage, so body hits slow them and headshots kill; hand-to-hand blows and stomps on them do zombieMelee.
+         * How much of a bullet's damage a zombie's torso (centre mass) takes. Since 2026-11-01 (Josiah) body shots kill
+         * again: full damage to the chest, belly and pelvis, so enough of them drop it; headshots are just quicker.
+         * Hand-to-hand blows and stomps on them do zombieMelee.
          */
-        public double zombieBodyShots = 0.33;
+        public double zombieBodyShots = 1.0;
         /**
-         * Only a shot to the head kills a zombie: body and limb shots wear it down and take it apart, but one with
-         * every limb shot off still wriggles on the ground, and a crawler keeps coming, until it's shot in the head.
-         * Any bullet or bolt in the head finishes it. Blows, stomps, fire and explosions kill as before.
+         * How much of a bullet's damage an arm or leg passes on to a zombie's health. Limbs still tear at the bullet's
+         * full force (so they come off as easily as before), they just do little toward the kill.
          */
-        public boolean onlyHeadshotsKill = true;
+        public double zombieLimbShots = 0.3;
+        /**
+         * A headshot's damage is the bullet's damage times its calibre's value here, so a 9mm one-taps a normal zombie
+         * and a .22 takes two. A calibre not listed uses the gun's own headshotMultiplier.
+         */
+        public java.util.Map<String, Double> headshotByCalibre = calibres();
+        /**
+         * Only a shot to the head kills a zombie (off since 2026-11-01): body and limb shots wear it down and take it
+         * apart, but one with every limb shot off still wriggles on the ground until it's shot in the head.
+         * Blows, stomps, fire and explosions kill as before.
+         */
+        public boolean onlyHeadshotsKill = false;
         public double zombieMelee = 0.5;
+
+        /** The head multiplier for a calibre: this world's table, then the default table, then the gun's own. */
+        public double headshotFor(String calibre, double fallback) {
+            Double v = calibre == null || headshotByCalibre == null ? null : headshotByCalibre.get(calibre);
+            if (v == null && calibre != null) {
+                v = calibres().get(calibre);
+            }
+            return v != null ? v : fallback;
+        }
+
+        /** 2026-11-01 (Josiah): head values by calibre, so how many shots a kill takes goes with the round. */
+        public static java.util.Map<String, Double> calibres() {
+            java.util.Map<String, Double> m = new java.util.LinkedHashMap<>();
+            m.put(".22 LR", 2.2);
+            m.put(".380 ACP", 2.5);
+            m.put(".38 Special", 3.2);
+            m.put("9mm", 3.0);
+            m.put("5.7x28mm", 3.0);
+            m.put(".45 ACP", 3.0);
+            m.put("5.56mm", 2.6);
+            m.put(".44 Magnum", 2.5);
+            m.put(".45 Colt", 2.5);
+            m.put(".500 S&W", 2.5);
+            m.put(".30-30", 2.5);
+            m.put(".308", 2.5);
+            m.put(".50 BMG", 2.0);
+            m.put("crossbow", 2.5);
+            m.put("12 gauge", 3.0);
+            return m;
+        }
         /** Weapons lose condition with each hit and break (needs a restart). */
         public boolean weaponWear = true;
         /** Swinging, shoving and sprinting tire you; tired swings are slower and weaker. */
@@ -1898,6 +2037,8 @@ public final class ZcConfig {
         public double moodleMultiplier = 1.0;
         public double weatherMultiplier = 1.0;
         public boolean headgearEffect = true;
+        /** Every shot drops its spent case (a shotgun's hull) to pick up for the reloading bench (combat/Reloading). */
+        public boolean dropBrass = true;
         /** Worn guns sometimes jam (scaled by jamMultiplier); clear them with the reload key. */
         public boolean jams = true;
         /**
@@ -2008,7 +2149,7 @@ public final class ZcConfig {
      * are left alone).
      */
     public int defaultsVersion = 0;
-    private static final int DEFAULTS = 17;
+    private static final int DEFAULTS = 18;
 
     private static void upgrade(ZcConfig c) {
         if (c.defaultsVersion < 1) {
@@ -2193,6 +2334,13 @@ public final class ZcConfig {
         if (c.defaultsVersion < 17) {
             // 2026-10-31: the sprinter share moved to Zomboid's lore page (zombieLore.sprinterPercent), kept as it was
             c.zombieLore.sprinterPercent = Math.round(c.zombies.sprinterChance * 1000) / 10.0;
+        }
+        if (c.defaultsVersion < 18) {
+            // 2026-11-01 (Josiah): calibre-based kills. Torso shots count in full again, limbs 30%, the head by calibre
+            c.combat.onlyHeadshotsKill = false;
+            if (c.combat.zombieBodyShots == 0.33) {
+                c.combat.zombieBodyShots = 1.0;
+            }
         }
         c.defaultsVersion = DEFAULTS;
     }

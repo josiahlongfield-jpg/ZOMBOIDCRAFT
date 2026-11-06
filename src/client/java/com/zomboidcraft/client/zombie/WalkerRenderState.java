@@ -25,6 +25,8 @@ public class WalkerRenderState extends ZombieRenderState {
     public boolean legless;
     /** The new body for this outfit, or null to draw the old model. */
     public ZBodyMesh zbody;
+    /** Drawn as Project Zomboid's own zombie (ZedLayer), in place of zbody; null when not. */
+    public com.zomboidcraft.client.survivor.ZedBodies.Drawn zed;
     public Identifier zskin;
     /** The outfit's baked far-off body (clothes painted on, only the big pieces 3D) and its atlas, or null. */
     public ZBodyMesh zlow;
