@@ -1,0 +1,141 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "home_plastic_black": "zomboidcraft:block/city/home_plastic_black",
+    "zs_fest": "zomboidcraft:block/city/zs_fest",
+    "particle": "zomboidcraft:block/city/zs_fest"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        4
+      ],
+      "to": [
+        13,
+        5,
+        12
+      ],
+      "faces": {
+        "north": {
+          "texture": "#zs_fest"
+        },
+        "south": {
+          "texture": "#zs_fest"
+        },
+        "east": {
+          "texture": "#zs_fest"
+        },
+        "west": {
+          "texture": "#zs_fest"
+        },
+        "up": {
+          "texture": "#zs_fest"
+        },
+        "down": {
+          "texture": "#zs_fest",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4,
+        5,
+        5
+      ],
+      "to": [
+        12,
+        6,
+        11
+      ],
+      "faces": {
+        "north": {
+          "texture": "#zs_fest"
+        },
+        "south": {
+          "texture": "#zs_fest"
+        },
+        "east": {
+          "texture": "#zs_fest"
+        },
+        "west": {
+          "texture": "#zs_fest"
+        },
+        "up": {
+          "texture": "#zs_fest"
+        },
+        "down": {
+          "texture": "#zs_fest"
+        }
+      }
+    },
+    {
+      "from": [
+        1,
+        0,
+        6
+      ],
+      "to": [
+        3,
+        0.6,
+        7
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_plastic_black"
+        },
+        "south": {
+          "texture": "#home_plastic_black"
+        },
+        "east": {
+          "texture": "#home_plastic_black"
+        },
+        "west": {
+          "texture": "#home_plastic_black"
+        },
+        "up": {
+          "texture": "#home_plastic_black"
+        },
+        "down": {
+          "texture": "#home_plastic_black",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        13,
+        0,
+        9
+      ],
+      "to": [
+        15,
+        0.6,
+        10
+      ],
+      "faces": {
+        "north": {
+          "texture": "#home_plastic_black"
+        },
+        "south": {
+          "texture": "#home_plastic_black"
+        },
+        "east": {
+          "texture": "#home_plastic_black"
+        },
+        "west": {
+          "texture": "#home_plastic_black"
+        },
+        "up": {
+          "texture": "#home_plastic_black"
+        },
+        "down": {
+          "texture": "#home_plastic_black",
+          "cullface": "down"
+        }
+      }
+    }
+  ]
+}

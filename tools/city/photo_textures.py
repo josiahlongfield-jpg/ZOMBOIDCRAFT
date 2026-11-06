@@ -1223,6 +1223,8 @@ import hollis  # noqa: E402
 hollis.register(sys.modules[__name__])
 import foundry  # noqa: E402
 foundry.register(sys.modules[__name__])
+import zonestory  # noqa: E402
+zonestory.register(sys.modules[__name__])
 
 
 

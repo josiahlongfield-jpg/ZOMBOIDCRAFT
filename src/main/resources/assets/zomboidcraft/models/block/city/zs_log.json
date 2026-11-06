@@ -1,0 +1,139 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "tree_oak_bark": "zomboidcraft:block/city/tree_oak_bark",
+    "tree_oak_rings": "zomboidcraft:block/city/tree_oak_rings",
+    "particle": "zomboidcraft:block/city/tree_oak_rings"
+  },
+  "elements": [
+    {
+      "from": [
+        5.62,
+        0.0,
+        0.5
+      ],
+      "to": [
+        10.38,
+        1.8,
+        15.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tree_oak_rings"
+        },
+        "south": {
+          "texture": "#tree_oak_rings"
+        },
+        "east": {
+          "texture": "#tree_oak_bark"
+        },
+        "west": {
+          "texture": "#tree_oak_bark"
+        },
+        "up": {
+          "texture": "#tree_oak_bark"
+        },
+        "down": {
+          "texture": "#tree_oak_bark",
+          "cullface": "down"
+        }
+      }
+    },
+    {
+      "from": [
+        4.51,
+        1.8,
+        0.5
+      ],
+      "to": [
+        11.49,
+        3.6,
+        15.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tree_oak_rings"
+        },
+        "south": {
+          "texture": "#tree_oak_rings"
+        },
+        "east": {
+          "texture": "#tree_oak_bark"
+        },
+        "west": {
+          "texture": "#tree_oak_bark"
+        },
+        "up": {
+          "texture": "#tree_oak_bark"
+        },
+        "down": {
+          "texture": "#tree_oak_bark"
+        }
+      }
+    },
+    {
+      "from": [
+        4.51,
+        3.6,
+        0.5
+      ],
+      "to": [
+        11.49,
+        5.4,
+        15.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tree_oak_rings"
+        },
+        "south": {
+          "texture": "#tree_oak_rings"
+        },
+        "east": {
+          "texture": "#tree_oak_bark"
+        },
+        "west": {
+          "texture": "#tree_oak_bark"
+        },
+        "up": {
+          "texture": "#tree_oak_bark"
+        },
+        "down": {
+          "texture": "#tree_oak_bark"
+        }
+      }
+    },
+    {
+      "from": [
+        5.62,
+        5.4,
+        0.5
+      ],
+      "to": [
+        10.38,
+        7.2,
+        15.5
+      ],
+      "faces": {
+        "north": {
+          "texture": "#tree_oak_rings"
+        },
+        "south": {
+          "texture": "#tree_oak_rings"
+        },
+        "east": {
+          "texture": "#tree_oak_bark"
+        },
+        "west": {
+          "texture": "#tree_oak_bark"
+        },
+        "up": {
+          "texture": "#tree_oak_bark"
+        },
+        "down": {
+          "texture": "#tree_oak_bark"
+        }
+      }
+    }
+  ]
+}
