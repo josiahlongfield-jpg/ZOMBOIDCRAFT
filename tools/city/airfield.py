@@ -366,6 +366,9 @@ def blocks():
     add("af_light_edge", light(lens), "Runway Light", small, light=13)
     add("af_light_twy", light(blue), "Taxiway Light", small, light=11)
     add("af_light_thr", light(thr), "Threshold Light", small, light=13)
+    # a helipad's perimeter: the green ring a pilot puts down inside
+    green = {"side": "af_lens_green_lit", "up": "ext_black_metal", "down": "ext_black_metal"}
+    add("af_light_pad", light(green), "Helipad Light", small, light=11)
     add("af_light_broken", broken_light(), "Runway Light", [[5.5, 0, 5.5, 10.5, 3, 16]])
     add("af_als_mast", als_mast(), "Approach Light Mast", [[5, 0, 5, 11, 16, 11]], rotate=None)
     add("af_als_bar", als_bar(), "Approach Lights", [[0, 0, 5.6, 16, 6, 9.4]], light=15)

@@ -588,6 +588,10 @@ final class Camp {
         for (int[] c : new int[][] {{0, 0}, {14, 0}, {0, 14}, {14, 14}}) {
             p.set(x + c[0], 1, z + c[1], flood(rng, 0.6));
         }
+        // the green perimeter lights round the ring, still burning on the pad's own battery
+        for (int[] c : new int[][] {{7, 0}, {14, 7}, {7, 14}, {0, 7}, {2, 2}, {12, 2}, {12, 12}, {2, 12}}) {
+            p.set(x + c[0], 1, z + c[1], "af_light_pad[facing=north]");
+        }
     }
 
     /**

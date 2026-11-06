@@ -222,6 +222,7 @@ final class HollisStation {
         int sx = x1 + 4, sz = (z0 + z1) / 2;
         Round.wall(c.p, sx + 0.5, sz + 0.5, 2.4, 0, 30, "brick", 0);
         Round.wall(c.p, sx + 0.5, sz + 0.5, 2.4, 31, 36, "soot", 0);
+        set(sx + 2, 37, sz, "aviation_light");  // the red on its lip, for the helicopters
         for (int x = x1 + 1; x <= sx - 2; x++) {
             set(x, 6, sz, "vessel_pipe[axis=x]");
         }

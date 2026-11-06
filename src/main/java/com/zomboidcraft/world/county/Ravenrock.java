@@ -104,6 +104,7 @@ final class Ravenrock extends FrameSite {
             walks();
             recYard();
             towers();
+            wallFloods();
             breach();
             checkpoint();
             village();
@@ -315,6 +316,35 @@ final class Ravenrock extends FrameSite {
             set(x, 1, z + 2, "air");
             set(x, 2, z + 2, "air");
             Doors.abandoned(p, rng, x, 1, z + 2, "bunk_door_steel", "south", "left");
+        }
+
+        /**
+         * The floods on the wall's inner face, under the coping every 25 blocks, looking down into
+         * the yard; none within five of a tower, nor where a building already stands against the
+         * wall. No rolls, so nothing after them moves.
+         */
+        private void wallFloods() {
+            int[] tx = {WX0 + 1, 30, WX1 - 1};
+            for (int x = WX0 + 12; x <= WX1 - 12; x += 25) {
+                final int fx = x;
+                if (java.util.Arrays.stream(tx).anyMatch(t -> Math.abs(t - fx) <= 5)) {
+                    continue;
+                }
+                flood(x, WZ0 + 2, "south");
+                flood(x, WZ1 - 2, "north");
+            }
+            for (int z = WZ0 + 12; z <= WZ1 - 12; z += 25) {
+                flood(WX0 + 2, z, "east");
+                if (Math.abs(z) > 5) {
+                    flood(WX1 - 2, z, "west");
+                }
+            }
+        }
+
+        private void flood(int x, int z, String facing) {
+            if (empty(x, 8, z) && empty(x, 7, z)) {
+                set(x, 8, z, "cp_flood_lit[facing=" + facing + "]");
+            }
         }
 
         // ------------------------------------------------------------------ the walks and the yard
@@ -618,7 +648,8 @@ final class Ravenrock extends FrameSite {
             }
             double cx = x + s / 2.0 + 0.5, cz = z + s / 2.0 + 0.5;
             Round.wall(p, cx, cz, 3.6, deck + 1, deck + 6, "wtw", 0);
-            Round.roof(p, cx, cz, 3.6, Round.cone(3.6), deck + 7, "wtw");
+            int top = Round.roof(p, cx, cz, 3.6, Round.cone(3.6), deck + 7, "wtw");
+            set(x + s / 2, top, z + s / 2, "aviation_light");
             for (int y = 1; y <= deck; y++) {
                 set(x + s / 2, y, z + s + 1, "ladder[facing=south]");
             }
