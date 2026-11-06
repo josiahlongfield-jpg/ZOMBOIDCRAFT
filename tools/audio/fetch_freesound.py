@@ -185,6 +185,11 @@ QUERIES = {
     "meta_house_alarm": ["burglar alarm", "house alarm", "intruder alarm", "security alarm siren", "alarm bell outside",
                          "alarm box bell", "two tone alarm", "alarm siren loop"],
     # VEHICLES' emergency sirens and car alarms (2026-10-31): US police/ambulance wail, classic cycling car alarm
+    # the command net (2026-11-06): a crisp tone before Overwatch speaks, and a chime for a new hunt board tasking
+    "cmd_tone": ["radio squelch", "radio beep", "military radio", "radio roger beep", "walkie talkie beep", "radio click",
+                 "push to talk", "radio chirp", "comms beep", "digital radio"],
+    "cmd_chime": ["notification military", "tactical notification", "hud alert", "data received", "computer beep alert",
+                  "incoming message", "terminal beep", "mission update", "radar ping", "message alert"],
     "car_siren": ["police siren", "ambulance siren", "american police siren", "us siren wail", "siren wail loop",
                   "police car siren", "emergency siren yelp", "fire truck siren", "siren close"],
     "car_alarm": ["car alarm", "car alarm loop", "vehicle alarm", "auto alarm", "car alarm siren", "car security alarm",

@@ -20,8 +20,8 @@ jobs:
       fail-fast: false
       matrix:
         group:
-          - car_siren
-          - car_alarm
+          - cmd_tone
+          - cmd_chime
     steps:
       - uses: actions/checkout@v5
       - run: python3 -u tools/audio/fetch_freesound.py raw ${{ matrix.group }}
