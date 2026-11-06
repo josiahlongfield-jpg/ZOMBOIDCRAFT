@@ -776,6 +776,16 @@ def signal_mirror(m):
     m.rod(0.2, 0.24, 0.25, 'dark')
 
 
+SMOKE_COLOURS = {'red': '#c02a1a', 'green': '#3a9a3a', 'yellow': '#e8c820', 'violet': '#8a3aa8'}
+
+
+def smoke_can(m):
+    """An M18 signal smoke: the olive can with its colour painted round the top and on the words."""
+    grenade_can(m)
+    m.rod(4.0, 4.8, 1.23, 'paint')
+    m.rod(-0.02, 0.3, 1.23, 'paint')
+
+
 def grenade_can(m):
     m.rod(0, 4.8, 1.2, 'label')
     m.rod(4.8, 5.4, 0.6, 'metal')
@@ -1193,6 +1203,10 @@ def table(it):
                              cloth=A.fabric('#c8a040')),
         'signal_mirror': it(signal_mirror, lens=A.flat('#c8dce0', 0.03)),
         'smoke_canister': it(grenade_can, 'SMOKE', '#4a5a3a', band='#e8e4da', style='band'),
+        # its colours (Josiah's command net, 2026-11-06): M18s are olive cans with the colour on the top and the words
+        **{f'smoke_canister__{c}': it(smoke_can, c.upper(), '#4a5a3a', band='#4a5a3a', word_ink=h,
+                                      style='band', paint=A.plastic(h))
+           for c, h in SMOKE_COLOURS.items()},
         'entrenching_tool': it(e_tool, metal=lambda f: P.paint(f, '#4a5a3a', steel_base=0.4, chips=0.4),
                                wood=A.flat('#6a4a2a')),
         'mil_canteen_cup': it(canteen_cup, metal=A.alu),

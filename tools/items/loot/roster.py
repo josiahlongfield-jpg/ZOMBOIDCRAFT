@@ -1044,6 +1044,8 @@ survival_field_manual | Survival Field Manual | S | 6 | 0.4 | mil.3 books camp
 footlocker | Footlocker | S | 14 | 9.0 | mil.3
 field_radio | Field Radio | R | 40 | 7.5 | mil.3 carrier bunker
 laser_rangefinder | Laser Rangefinder | R | 35 | 0.8 | mil gun
+laser_designator | Laser Target Designator | R | 60 | 1.6 | mil gun carrier
+lab_research_drive | Lab Research Drive | P | 0 | 0.3 | mil
 metal_detector | Metal Detector | R | 30 | 2.5 | mil hard pawn garage
 door_ram | Hydraulic Door Ram | R | 30 | 6.0 | police.3 fire mil
 quiet_generator | Quiet Field Generator | R | 50 | 60.0 | mil.3 bunker
