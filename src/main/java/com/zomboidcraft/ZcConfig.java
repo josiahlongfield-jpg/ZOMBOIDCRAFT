@@ -1020,8 +1020,20 @@ public final class ZcConfig {
         public int floorSagSeconds = 60;
         /** Blows shut window shutters stand before they give and leave the bare frame. */
         public int shutterHits = 12;
+        /** How many times a plain wooden wall's blows a reinforced one stands. */
+        public double reinforcedWallFactor = 2.0;
         /** How many wooden posts stand one on another. */
         public int postStack = 3;
+        /** Base claims (Zomboid's safehouse): only the owner and their squad change anything inside a claimed building. */
+        public boolean claims = true;
+        /** How far a claimed building reaches from where you stand, in blocks, and the most open space it can hold. */
+        public int claimRange = 40;
+        public int claimMaxCells = 12000;
+        /** A build this close to your claim (in blocks) grows the claim to take it in. */
+        public int claimGrowReach = 4;
+        /** A room is at least this many blocks across each way, and no more than this many blocks of floor. */
+        public int roomMinSide = 3;
+        public int roomMaxFloor = 400;
         /** Furniture weight: kilograms at or over these are medium (table, bed, sofa) and large (wardrobe, counter, fridge). */
         public double mediumKg = 6;
         public double largeKg = 19;

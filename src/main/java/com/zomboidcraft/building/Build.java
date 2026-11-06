@@ -110,13 +110,46 @@ public enum Build {
             "Plank shutters hung outside a window frame you built. Open them by hand to look out; shut, zombies have to "
                     + "beat them in, and the frame's left bare when they give.",
             hammer(), planks(2), need("Nails", ModItems.NAILS, 2),
-            need("Door hinges", s -> BuiltInRegistries.ITEM.getKey(s.getItem()).equals(com.zomboidcraft.ZomboidCraft.id("hinges")), 1, ModItems.NAILS));
+            hinges(1)),
+    // wave 2c
+    REINFORCE("Reinforce a wall", Where.REINFORCE, Skill.CARPENTRY, 7, 200, 14, 20,
+            "Planks nailed crossways over both faces of a wooden wall. Twice the blows to beat down: what a carpenter who "
+                    + "knows the work puts up where the horde will come.",
+            hammer(), planks(4), need("Nails", ModItems.NAILS, 6)),
+    PADLOCK("Padlock a door", Where.LOCK, Skill.CARPENTRY, 2, 100, 4, 6,
+            "A hasp screwed to a plank door you hung, and a padlock through it. Nobody opens it by hand; you get the key, "
+                    + "and it locks and unlocks from either side.",
+            hammer(), item("Padlock", "padlock", 1), item("Screws", "screws", 2)),
+    WOOD_FENCE("Wooden fence", Where.FENCE, Skill.CARPENTRY, 2, 60, 4, 6,
+            "Posts and rails, chest high. Keeps animals in and slows the dead, though they'll push it over in numbers.",
+            hammer(), planks(1), need("Nails", ModItems.NAILS, 1)),
+    WOOD_GATE("Wooden gate", Where.FENCE, Skill.CARPENTRY, 3, 100, 6, 8,
+            "A braced gate hung in a fence run. Opens by hand.",
+            hammer(), planks(2), need("Nails", ModItems.NAILS, 2), hinges(1)),
+    HIDDEN_DOOR("Hidden door", Where.HIDDEN, Skill.CARPENTRY, 8, 300, 20, 26,
+            "A door boarded to match the wall it's in, two blocks tall. Push it and it swings back; zombies, and anyone "
+                    + "who doesn't know, see only wall.",
+            hammer(), planks(6), need("Nails", ModItems.NAILS, 6), hinges(2)),
+    WATCHTOWER("Lookout tower", Where.TOWER, Skill.CARPENTRY, 6, 600, 30, 40,
+            "Four legs three high, a platform with a rail and a ladder up one leg, all in one go. See them coming from "
+                    + "over the rooftops.",
+            hammer(), planks(24), need("Nails", ModItems.NAILS, 24));
+
+    /** Door hinges, from the hardware store. */
+    private static Need hinges(int n) {
+        return item("Door hinges", "hinges", n);
+    }
+
+    /** One of the loot items by its id (zomboidcraft:id), shown with nails as its icon until the item's there. */
+    private static Need item(String label, String id, int n) {
+        return need(label, s -> BuiltInRegistries.ITEM.getKey(s.getItem()).equals(com.zomboidcraft.ZomboidCraft.id(id)), n, ModItems.NAILS);
+    }
 
     /**
      * Where a build goes: on a window or doorway, on open ground, on a parked car, into your pack; or for wood
      * building, in the run of a wall, onto a wall frame, into a door frame, as a post, or as a floor.
      */
-    public enum Where { OPENING, GROUND, CAR, MAKE, WALL, FRAME, DOORWAY, POST, FLOOR, STAIRS, FACE, ROOF, SHUTTER }
+    public enum Where { OPENING, GROUND, CAR, MAKE, WALL, FRAME, DOORWAY, POST, FLOOR, STAIRS, FACE, ROOF, SHUTTER, REINFORCE, LOCK, FENCE, HIDDEN, TOWER }
 
     /** Something a build uses up (or, for the tool, only needs on you). */
     public record Need(String label, Predicate<ItemStack> fits, int count, Item icon) {
@@ -281,6 +314,37 @@ public enum Build {
                 Direction facing = looking.getAxis() != axis ? looking : Direction.fromAxisAndDirection(
                         axis == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X, Direction.AxisDirection.POSITIVE);
                 return new Spot(lower.immutable(), WoodBlocks.DOOR.defaultBlockState().setValue(DoorBlock.FACING, facing), "");
+            }
+            case REINFORCE -> {
+                if (!there.is(WoodBlocks.WALL)) return Spot.no("Look at a wooden wall you built.");
+                return new Spot(hit, WoodBlocks.REINFORCED.defaultBlockState().setValue(WoodBlocks.Wall.AXIS, there.getValue(WoodBlocks.Wall.AXIS))
+                        .setValue(WoodBlocks.Wall.DAMAGE, there.getValue(WoodBlocks.Wall.DAMAGE)), "");
+            }
+            case LOCK -> {
+                if (!there.is(WoodBlocks.DOOR)) return Spot.no("Look at a plank door you hung.");
+                BlockPos lower = there.getValue(DoorBlock.HALF) == net.minecraft.world.level.block.state.properties.DoubleBlockHalf.LOWER ? hit : hit.below();
+                if (level instanceof net.minecraft.server.level.ServerLevel server && WoodBlocks.hasPadlock(server, lower)) return Spot.no("It's got a padlock on it already.");
+                return new Spot(lower.immutable(), level.getBlockState(lower), "");
+            }
+            case FENCE -> {
+                BlockPos pos = there.canBeReplaced() ? hit : hit.relative(face);
+                if (!level.getBlockState(pos).canBeReplaced()) return Spot.no("Something's in the way.");
+                if (!WoodBlocks.base(level, pos.below())) return Spot.no("Needs the ground or a floor under it.");
+                if (this == WOOD_GATE) {
+                    return new Spot(pos.immutable(), WoodBlocks.GATE.defaultBlockState().setValue(net.minecraft.world.level.block.FenceGateBlock.FACING, looking), "");
+                }
+                return new Spot(pos.immutable(), WoodBlocks.FENCE.defaultBlockState(), "");
+            }
+            case HIDDEN -> {
+                BlockPos pos = there.canBeReplaced() ? hit : hit.relative(face);
+                if (!level.getBlockState(pos).canBeReplaced() || !level.getBlockState(pos.above()).canBeReplaced()) return Spot.no("Needs two blocks of room.");
+                if (!WoodBlocks.base(level, pos.below())) return Spot.no("Needs the ground, a floor or a wall under it.");
+                return new Spot(pos.immutable(), WoodBlocks.HIDDEN_DOOR.defaultBlockState().setValue(WoodBlocks.HiddenDoor.FACING, looking), "");
+            }
+            case TOWER -> {
+                BlockPos pos = there.canBeReplaced() ? hit : hit.relative(face);
+                if (!WoodBlocks.towerFits(level, pos, looking)) return Spot.no("Needs a clear 3 by 3, five high, on solid ground, and room for the ladder.");
+                return new Spot(pos.immutable(), WoodBlocks.POST.defaultBlockState(), "");
             }
             case SHUTTER -> {
                 if (!there.is(WoodBlocks.WINDOW_FRAME)) return Spot.no("Look at a window frame you built.");
