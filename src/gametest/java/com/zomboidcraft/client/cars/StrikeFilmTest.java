@@ -79,8 +79,11 @@ public class StrikeFilmTest implements FabricClientGameTest {
                 LOG.info("ZCSTRIKE call bombs confirmed: {} {} eta {}", r.accepted(), r.reason(), r.etaTicks());
                 eta = r.etaTicks();
             });
-            ctx.waitTicks(Math.max(0, eta - 150));
-            frames(ctx, 140, 2);
+            // the jets coming in from behind him, then (laser still held on the mark) closer in across the street
+            ctx.waitTicks(Math.max(0, eta - 170));
+            frames(ctx, 30, 3);
+            stand(sp, -8.6, Y + 15, -25.5, new Vec3(0.5, Y + 0.5, 0.5));
+            frames(ctx, 130, 2);
             ctx.getInput().releaseKey(options -> options.keyUse);
             ctx.waitTicks(120);
             count(sp, "after the bombs");
@@ -104,8 +107,10 @@ public class StrikeFilmTest implements FabricClientGameTest {
                 StrikeCalls.Status s = StrikeCalls.status(p.level(), StrikeCalls.BASE.apply(p));
                 LOG.info("ZCSTRIKE status ready {} left {} of {} bonus {}", s.ready(), s.ticksLeft(), s.cycleTicks(), s.bonus());
             });
-            ctx.waitTicks(Math.max(0, eta - 130));
-            frames(ctx, 110, 2);
+            ctx.waitTicks(Math.max(0, eta - 160));
+            frames(ctx, 30, 3);
+            stand(sp, -8.6, Y + 15, -25.5, new Vec3(0.5, Y + 1, 0.5));
+            frames(ctx, 100, 2);
             ctx.waitTicks(80);
             count(sp, "after the gun run");
             sp.getServer().runOnServer(server -> {
