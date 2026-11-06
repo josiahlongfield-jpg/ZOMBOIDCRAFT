@@ -67,6 +67,7 @@ public final class StoryMarks {
         RoadStories.setRate(() -> RoadStories.rate(com.zomboidcraft.sandbox.Sandbox.value("VehicleStoryChance")));
         com.zomboidcraft.world.county.ZoneStories.setRate(() -> RoadStories.rate(com.zomboidcraft.sandbox.Sandbox.value("ZoneStoryChance")));
         com.zomboidcraft.world.county.House.setStoryRate(() -> RoadStories.rate(com.zomboidcraft.sandbox.Sandbox.value("SurvivorHouseChance")));
+        com.zomboidcraft.world.city.ShopStories.setRate(() -> RoadStories.rate(com.zomboidcraft.sandbox.Sandbox.value("SurvivorHouseChance")));
         ServerTickEvents.END_SERVER_TICK.register(StoryMarks::tick);
     }
 

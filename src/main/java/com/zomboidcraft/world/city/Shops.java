@@ -133,6 +133,7 @@ public final class Shops {
             put(x, 2, back, "air");
         }
         mess();
+        ShopStories.tell(p, type, w, d);
     }
 
     // ---------------------------------------------------------------- the room
