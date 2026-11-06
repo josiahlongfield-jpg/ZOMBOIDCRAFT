@@ -26455,5 +26455,6 @@ final class CitySpecs extends CityBlocks.Specs {
         s("mn_cap_old", AXIS, 0, 0, SoundType.WOOD, 1f, 3, 0, 0, 13, 10, 16);
         s("mn_cap_new", AXIS, 0, 0, SoundType.WOOD, 1f, 3, 0, 0, 13, 10, 16);
         s("mn_joist_new", AXIS, 0, 0, SoundType.WOOD, 1f, 3, 8, 0, 13, 16, 16);
+        s("sl_padlock", FACING, DECOR, 0, SoundType.METAL, 0f, 5.5, 6, 15.6, 10.5, 12, 16.6, 7, 6.5, 14.8, 9, 8, 15.6, 6.9, 6.2, 14.4, 7.6, 8.4, 15, 8.4, 6.2, 14.4, 9.1, 8.4, 15, 6.9, 8.4, 14.4, 9.1, 9, 15, 6.3, 2.6, 14, 9.7, 6.2, 15.2);
     }
 }

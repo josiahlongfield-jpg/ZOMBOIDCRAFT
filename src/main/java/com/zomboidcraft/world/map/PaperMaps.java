@@ -216,6 +216,7 @@ public final class PaperMaps {
             case "shelter" -> "Civil defence shelter. Down through the boiler room.";
             case "forest" -> "Stumps, a vent pipe, a cable post. Look under the leaves.";
             case "mine" -> "Old workings in the Black Pine hills. New props behind the boards.";
+            case "silo" -> "The old silo nobody fills. Why does it have a new lock?";
             case "vault" -> "The bank on the square. In the vault, the boxes with no numbers.";
             case "subway" -> "A transit map. One stop on the loop is crossed out in red.";
             default -> "B4, electrical. Behind the cage, under the floor.";

@@ -7,12 +7,12 @@ import java.util.List;
 /**
  * Finds the hidden bunkers near a spot. Each one leaves two marks in its place's blocks: "bunker
  * STATE KIND" where you get in (a tower's hatch in its electrical room, a ship's false plate, the
- * top of a shelter's stairs, a forest hatch, a mine's boarded portal) and "bunker door" at its blast door straight after.
+ * top of a shelter's stairs, a forest hatch, a mine's boarded portal, the hatch in a farm's old silo) and "bunker door" at its blast door straight after.
  * Only building a place shows whether it has one, so the places that may hold one are built (or
  * taken from the cache) nearest first.
  */
 public final class Bunkers {
-    public static final List<String> KINDS = List.of("tower", "ship", "shelter", "forest", "mine", "vault", "subway");
+    public static final List<String> KINDS = List.of("tower", "ship", "shelter", "forest", "mine", "silo", "vault", "subway");
 
     /** One bunker: its kind and state, and in world blocks the way in and its blast door. */
     public record Found(String kind, String state, int x, int y, int z, int doorX, int doorY, int doorZ, Place place) {
@@ -21,7 +21,7 @@ public final class Bunkers {
     /**
      * The places within radius of (x, z) that may hold a bunker of a kind (null: any), nearest
      * first: downtowns (towers, and the old cities' shelters), ports (ships), towns (shelters) and
-     * hideouts (forest hatches, old mines).
+     * hideouts (forest hatches, old mines) and farms (silos).
      */
     public static List<Place> candidates(County county, int x, int z, String kind, int radius) {
         List<Place> places = county.placesNear(x - radius, z - radius, x + radius, z + radius, 0);
@@ -38,6 +38,9 @@ public final class Bunkers {
         if (kind == null || kind.equals("forest")) {
             out.addAll(nearest(county.hideoutsNear(x - radius, z - radius, x + radius, z + radius, 0).stream()
                     .filter(p -> "forest_hatch".equals(p.variant)).toList(), PlaceType.HIDEOUT, x, z, 3));
+        }
+        if (kind == null || kind.equals("silo")) {
+            out.addAll(nearest(places, PlaceType.FARM, x, z, 4));
         }
         if (kind == null || kind.equals("mine")) {
             out.addAll(nearest(county.hideoutsNear(x - radius, z - radius, x + radius, z + radius, 0).stream()

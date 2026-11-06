@@ -166,6 +166,7 @@ public final class CountyCommand {
                     case "shelter" -> "at the top of the stairs down to the boiler room";
                     case "forest" -> "on the hatch under the leaves";
                     case "mine" -> "in the cutting, at the boards across the old portal";
+                    case "silo" -> "on the hatch in the floor of the old silo";
                     case "vault" -> "at the deposit boxes with no numbers in the bank's vault";
                     case "subway" -> "behind the steel door in the bricked-up arch, on the old platform";
                     default -> "on the hatch in the electrical room";
@@ -174,6 +175,7 @@ public final class CountyCommand {
                     case "ship" -> "in the ship at ";
                     case "forest" -> "in the woods at ";
                     case "mine" -> "in the hills at ";
+                    case "silo" -> "under the silo at ";
                     case "vault" -> "under the bank in ";
                     case "subway" -> "under the subway: ";
                     default -> "under ";

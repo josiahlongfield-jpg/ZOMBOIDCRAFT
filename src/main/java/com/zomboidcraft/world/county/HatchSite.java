@@ -67,7 +67,7 @@ final class HatchSite extends Site {
             }
             Placer bp = host.turned(c - s[0], floor, c - s[1], q);
             Bunker bunker = new Bunker(bp, new SplittableRandom(seed), Bunker.Kind.FOREST, state);
-            antechamber(bp, -floor, state);
+            antechamber(bp, rng, -floor, state);
             bunker.build();
             clearing(bp, -floor, state);
             out.mark("bunker " + state.name().toLowerCase(Locale.ROOT) + " forest", c, 1, c);
@@ -99,8 +99,9 @@ final class HatchSite extends Site {
      * In the bunker's frame: the antechamber in front of the blast door (x -1..2, z -5..-1), and the
      * lined shaft over its north-west corner with a ladder up its north wall to the hatch, rise
      * rows up. The owner kept his stores here, and in a sealed bunker his tripwire is still strung.
+     * The silo's shelter (SiloBunker) is reached the same way.
      */
-    private void antechamber(Placer bp, int rise, Bunker.State state) {
+    static void antechamber(Placer bp, SplittableRandom rng, int rise, Bunker.State state) {
         for (int x = -2; x <= 3; x++) {
             for (int z = -6; z <= -1; z++) {
                 for (int y = 0; y <= 4; y++) {
