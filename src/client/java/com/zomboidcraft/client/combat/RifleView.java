@@ -291,7 +291,7 @@ public final class RifleView {
         }
         // the Tarkov operator's own arms and rifle, every move Tarkov's clip (client/operator)
         if (com.zomboidcraft.client.operator.OperatorView.submit(pose, out, light, state, gun)) {
-            aimShown = 0;
+            aimShown = com.zomboidcraft.client.operator.OperatorView.aimShown();
             rail = null;
             return true;
         }
@@ -1587,6 +1587,8 @@ public final class RifleView {
 
     /** How much of the walking bob and look sway to keep this frame: all of it at the hip, aimSway on the sights. */
     public static float bobScale() {
+        // the Tarkov operator's rifle moves only as Tarkov's clips move it: none of Minecraft's walking bob or hand lag
+        if (com.zomboidcraft.client.operator.OperatorView.steady()) return 0;
         float sway = (float) ZcConfig.get().guns.aimSway;
         return 1 - (1 - Mth.clamp(sway, 0, 1)) * aimShown;
     }
@@ -1596,6 +1598,7 @@ public final class RifleView {
      * since a sight a few inches from the eye shifted by it points well off what it was on.
      */
     public static float bobShiftScale() {
+        if (com.zomboidcraft.client.operator.OperatorView.steady()) return 0;
         float sway = Mth.clamp((float) ZcConfig.get().guns.aimSway, 0, 1);
         return 1 - (1 - sway * sway) * aimShown;
     }
