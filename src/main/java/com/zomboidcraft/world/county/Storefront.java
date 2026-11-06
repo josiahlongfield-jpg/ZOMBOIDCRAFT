@@ -528,6 +528,7 @@ final class Storefront {
             default -> trades.vacant();
         }
         b.mess(1, 1, w - 2, d - 2, 1, 0.06);
+        trades.story(trade == Trade.TAVERN ? "bar" : trade == Trade.BARBER ? "barber" : trade.name().toLowerCase(java.util.Locale.ROOT));
     }
 
     // ------------------------------------------------------------------ weathering
