@@ -372,7 +372,7 @@ public final class CountyGen {
             out.set(x, y, z, "concrete_dark");
             out.set(x, y + 1, z, "railing[facing=" + facing(hit) + "]");
         } else {
-            out.set(x, y, z, hit.road.kind == Road.Kind.TRACK ? "minecraft:spruce_planks" : weathered(rng, 0.3));
+            out.set(x, y, z, hit.road.kind == Road.Kind.TRACK ? (rng.nextDouble() < 0.3 ? "wf_deck_b" : "wf_deck") : weathered(rng, 0.3));
         }
         if (piers && Math.floorMod((int) hit.along, 24) < 2 && s < half - 1) {
             out.column(x, z, ground + 1, y - 2, "concrete_dark");

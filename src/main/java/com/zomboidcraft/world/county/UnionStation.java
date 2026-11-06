@@ -322,7 +322,7 @@ final class UnionStation {
         if (clockLit) {
             for (int x = 25; x <= 26; x++) {
                 for (int y = 23; y <= 24; y++) {
-                    set(x, y, 9, "minecraft:ochre_froglight");
+                    set(x, y, 9, "front_glow_panel");
                 }
             }
         }

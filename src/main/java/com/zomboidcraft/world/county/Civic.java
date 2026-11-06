@@ -15,8 +15,6 @@ import java.util.SplittableRandom;
  * sandbagged, the school's buses abandoned in the loop.
  */
 final class Civic {
-    private static final String[] GLASS = {"minecraft:red_stained_glass_pane", "minecraft:blue_stained_glass_pane",
-            "minecraft:yellow_stained_glass_pane", "minecraft:purple_stained_glass_pane", "minecraft:green_stained_glass_pane"};
     private static final String[] ROOFS = {"minecraft:deepslate_tile", "minecraft:cobbled_deepslate", "minecraft:blackstone",
             "minecraft:dark_oak", "minecraft:tuff_brick"};
 

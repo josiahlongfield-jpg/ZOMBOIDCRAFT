@@ -102,7 +102,7 @@ final class CityCivic {
             return "ceiling_light_off";
         }
         double r = chance();
-        return r < 0.7 ? "minecraft:pearlescent_froglight" : r < 0.85 ? "minecraft:verdant_froglight" : "minecraft:ochre_froglight";
+        return r < 0.7 ? "minecraft:pearlescent_froglight" : r < 0.85 ? "minecraft:verdant_froglight" : "ceiling_light";
     }
 
     /** A cast-iron lamp post with a glowing head, for plazas, squares and forecourts. */
@@ -360,7 +360,7 @@ final class CityCivic {
         int x = 1;
         camp.hospital(x, 1, 10, len);
         x += 11;
-        String[] canvas = {"minecraft:white_wool", "minecraft:white_wool", "minecraft:light_gray_wool", "minecraft:light_blue_wool"};
+        String[] canvas = {"white", "white", "grey", "blue"};
         while (x + 6 <= lw - 10) {
             camp.tent(x, 1, Math.min(10, len), canvas[rng.nextInt(canvas.length)], true);
             x += 8;
@@ -430,7 +430,7 @@ final class CityCivic {
         for (int i = 0; i < 2; i++) {
             int tx = x0 + 4 + i * 8;
             if (tx + 6 < cx - 2) {
-                camp.tent(tx, z1 - 13, 8, i == 0 ? "minecraft:white_wool" : "minecraft:light_gray_wool", true);
+                camp.tent(tx, z1 - 13, 8, i == 0 ? "white" : "grey", true);
             }
         }
     }
@@ -573,7 +573,7 @@ final class CityCivic {
             // triage tents and the body bags in the side yard; dumpsters and gas on the other side
             Camp side = new Camp(p, rng, hit);
             for (int z = z0 + 2; z + 10 <= z1 - 8; z += 12) {
-                side.tent(1, z, 10, "minecraft:white_wool", true);
+                side.tent(1, z, 10, "white", true);
             }
             for (int z = z1 - 6; z < z1; z++) {
                 for (int x = 1; x < x0 - 1; x++) {
@@ -1343,7 +1343,7 @@ final class CityCivic {
     private String subwayLamp() {
         double r = chance();
         return r < 0.3 ? "ceiling_light_off" : r < 0.65 ? "minecraft:verdant_froglight" : r < 0.92 ? "minecraft:pearlescent_froglight"
-                : "minecraft:ochre_froglight";
+                : "ceiling_light";
     }
 
     /** The sidewalk's rows on one side (s = 1 south, -1 north) of the street at cz, as their z, or null. */

@@ -349,7 +349,7 @@ final class RoadsideSite extends Site {
             for (int x = 1; x <= bx1; x++) {
                 q.set(x, 8, bz - 1, "front_coping_metal");
                 for (int z = bz; z < bz + 10; z++) {
-                    q.set(x, 8, z, Bldg.full(roof));
+                    q.set(x, 8, z, "roof");
                 }
             }
             // the stair up at the end, two wide in line with the walkway, climbing onto a landing at its end
