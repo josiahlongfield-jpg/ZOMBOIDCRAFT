@@ -585,9 +585,29 @@ final class DowntownSite extends Site {
         Placer pl = lotOn(b, side, along, tw, td);
         Tower t = new Tower(pl, rng, tw, td, floors, true, towerStyle(), rng.nextInt(4));
         t.build();
+        missingFloor(t, boxOn(b, side, along, tw, td));
         garage(pl, t, tw, td, boxOn(b, side, along, tw, td));
         civic.chandeliers(pl, tw, td, Tower.LOBBY);
         ruin(boxOn(b, side, along, tw, td), Tower.height(floors) + 12);
+    }
+
+    /** How often a tall tower hides the missing floor. */
+    private static final double MISSING_FLOOR = 0.06;
+
+    /**
+     * Now and then a security firm took a floor half way up a tall tower for its strongpoint (the
+     * missing floor, {@link Tower#strongpoint}); its own random, so the street is drawn as before.
+     */
+    private void missingFloor(Tower t, int[] box) {
+        SplittableRandom g = new SplittableRandom(Noise.hash(p.seed ^ 0x5F10L, box[0], box[1]));
+        if (g.nextDouble() >= MISSING_FLOOR) {
+            return;
+        }
+        int k = t.strongpointFloor(g);
+        if (k > 0) {
+            double r = g.nextDouble();
+            t.strongpoint(k, g, r < 0.45 ? 0 : r < 0.7 ? 1 : 2);
+        }
     }
 
     /**
