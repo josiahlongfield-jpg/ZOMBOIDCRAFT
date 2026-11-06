@@ -190,6 +190,9 @@ public final class Broadcasts {
     }
 
     private static boolean tunedTo(ServerPlayer player, int channel, Station station) {
+        if (CommandNet.LOOP_ID.equals(station.id())) {
+            return CommandNet.hears(player);     // the command net: every headset, and military or field radios
+        }
         Inventory inventory = player.getInventory();
         for (int i = 0; i < inventory.getContainerSize(); i++) {
             ItemStack stack = inventory.getItem(i);

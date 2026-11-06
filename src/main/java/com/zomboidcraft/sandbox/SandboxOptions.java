@@ -282,6 +282,9 @@ final class SandboxOptions {
         o.add(of(UTILITIES, "zc.broadcastDayOffset", "Broadcasts Start On Day")
                 .tip("Days already gone on the broadcast timeline when the world starts: 9 or more and the news is already off air.")
                 .number("broadcast.dayOffset", 0, 60).owner("AUDIO"));
+        o.add(of(UTILITIES, "zc.huntDistrictClear", "District Cleared At")
+                .tip("A district is ticked off the hunt board when its walkers fall to this share of what it started with.")
+                .number("hunt.districtClear", 0, 0.5).owner("AUDIO"));
 
         o.add(of(LOOT, "zc.lootNeverScales", "Loot Never Scales With Distance")
                 .fixed("true", "Your rule: loot is the same however far you are from where you started."));

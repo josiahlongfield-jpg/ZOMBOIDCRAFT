@@ -85,6 +85,7 @@ public final class ZcConfig {
     /** Handheld radios that carry players' voices (through the voice chat mod), and the comms headset. */
     public Radio radio = new Radio();
     public Broadcast broadcast = new Broadcast();
+    public Hunt hunt = new Hunt();
     public Power power = new Power();
     public Stories stories = new Stories();
     public Loot loot = new Loot();
@@ -713,6 +714,12 @@ public final class ZcConfig {
     }
 
     /** The outbreak on the radio (world/Broadcasts): news, the emergency broadcast, the military and the hams. */
+    /** The hunt board (Josiah 2026-11-06). */
+    public static class Hunt {
+        /** A district is clear when its walkers fall to this share of what it started with (C6: 10%). */
+        public double districtClear = 0.10;
+    }
+
     public static class Broadcast {
         /** Broadcasts on the two-way and military radios. Off: they only carry voices. */
         public boolean enabled = true;
