@@ -187,6 +187,7 @@ public final class CountyCommand {
                     case "mine" -> "in the cutting, at the boards across the old portal";
                     case "silo" -> "on the hatch in the floor of the old silo";
                     case "container" -> "in the gap between the stacks, at the doors of the box with the cable";
+                    case "offshore" -> "at the false plate in her engine room (swim out and climb the pilot ladder on her low side)";
                     case "floor" -> "on the stair landing at the bricked-up door of the missing floor";
                     case "vault" -> "at the deposit boxes with no numbers in the bank's vault";
                     case "subway" -> "behind the steel door in the bricked-up arch, on the old platform";
@@ -198,6 +199,7 @@ public final class CountyCommand {
                     case "mine" -> "in the hills at ";
                     case "silo" -> "under the silo at ";
                     case "container" -> "under the container yard at ";
+                    case "offshore" -> "in the " + Bunkers.offshoreName(county) + ", at anchor: ";
                     case "floor" -> "high in a tower in ";
                     case "vault" -> "under the bank in ";
                     case "subway" -> "under the subway: ";

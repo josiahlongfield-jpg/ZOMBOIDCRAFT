@@ -204,10 +204,17 @@ public final class PaperMaps {
             if (known == null) stack.set(BunkerMapItem.TARGET, target);
             ServerPlayNetworking.send(player, (MapNet.Reveal) found[1]);
             player.sendOverlayMessage(Component.literal("Somewhere is ringed in red. It's on your map now (M)."));
-            player.sendSystemMessage(Component.literal("Pencilled beside the ring: \"" + hint(Target.parse(target).kind()) + "\"")
+            player.sendSystemMessage(Component.literal("Pencilled beside the ring: \"" + hint(gen, Target.parse(target).kind()) + "\"")
                     .withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
         }));
         return true;
+    }
+
+    private static String hint(CountyGen gen, String kind) {
+        if (kind.equals("offshore")) {
+            return "The " + Bunkers.offshoreName(gen.county()) + ", at anchor and listing. Swim out; her pilot ladder is down.";
+        }
+        return hint(kind);
     }
 
     private static String hint(String kind) {

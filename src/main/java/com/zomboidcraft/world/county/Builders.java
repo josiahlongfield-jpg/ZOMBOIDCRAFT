@@ -37,6 +37,8 @@ public final class Builders {
                     new GhostSite(p, county, out).build();
                 } else if ("mine_adit".equals(p.variant)) {
                     new MineSite(p, county, out).build();
+                } else if ("offshore_ship".equals(p.variant)) {
+                    new OffshoreSite(p, county, out).build();
                 } else {
                     new HatchSite(p, county, out).build();
                 }

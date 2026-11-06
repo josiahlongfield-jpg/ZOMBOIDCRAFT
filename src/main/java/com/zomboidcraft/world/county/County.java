@@ -529,10 +529,30 @@ public final class County {
         return g;
     }
 
+    private volatile Optional<Place> offshore;
+
+    /**
+     * The container ship at anchor off the coast with a bunker in her (OffshoreSite), as a hideout of
+     * its own. Empty in the endless county.
+     */
+    public Optional<Place> offshoreShip() {
+        Optional<Place> o = offshore;
+        if (o == null) {
+            o = Optional.ofNullable(OffshoreSite.place(this, Noise.hash(seed ^ 0x0FF5L, 3, 4)));
+            offshore = o;
+        }
+        return o;
+    }
+
     /** Every hideout whose footprint plus margin touches the box. */
     public List<Place> hideoutsNear(int x0, int z0, int x1, int z1, int margin) {
         List<Place> out = new ArrayList<>();
         ghostStation().ifPresent(p -> {
+            if (p.x0 - margin <= x1 && p.x1 + margin >= x0 && p.z0 - margin <= z1 && p.z1 + margin >= z0) {
+                out.add(p);
+            }
+        });
+        offshoreShip().ifPresent(p -> {
             if (p.x0 - margin <= x1 && p.x1 + margin >= x0 && p.z0 - margin <= z1 && p.z1 + margin >= z0) {
                 out.add(p);
             }
