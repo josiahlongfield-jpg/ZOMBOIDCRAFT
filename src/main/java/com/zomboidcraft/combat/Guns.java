@@ -77,6 +77,9 @@ public final class Guns {
         /** The gun being reloaded: putting it away (or swapping to another kind) stops the reload. */
         GunType reloading;
         boolean needsCharge;
+        /** A local gun's reload sounds timed to his clip (LocalGuns.Cues), and which have played (bits 1, 2, 4). */
+        @org.jetbrains.annotations.Nullable LocalGuns.Cues cues;
+        int cuesPlayed;
         int flashLeft;
         /** A tube gun's loading: stopped (full, out of shells or the trigger pulled) at stopTick, on this stack. */
         boolean loadStopped;
@@ -751,7 +754,36 @@ public final class Guns {
             gun.set(GunState.TYPE, new GunState(false, 0, false));
         }
         setModelData(gun, st.needsCharge ? 1.5f : 1, 0);
-        sound(player, type.magOut());
+        st.cues = LocalGuns.cues(gun.get(LocalGuns.ID));
+        st.cuesPlayed = 0;
+        if (st.cues == null || st.cues.magOut() < 0) {
+            sound(player, type.magOut());
+        } else {
+            st.cuesPlayed = 1;
+            cueSounds(player, gun, type, st);
+        }
+    }
+
+    /**
+     * A local gun's reload sounds at the moments of his clip (LocalGuns.Cues), the clip stretched over this reload's
+     * ticks as the client stretches it: the magazine out, in, and the handle (or bolt catch) once each.
+     */
+    private static void cueSounds(ServerPlayer player, ItemStack gun, GunType type, State st) {
+        LocalGuns.Cues c = st.cues;
+        float u = st.reloadTick / (float) Math.max(1, st.needsCharge ? type.chargeDone : type.tacticalDone);
+        if (c.magOut() >= 0 && u >= c.magOut() && (st.cuesPlayed & 8) == 0 && st.reloadTick > 0) {
+            st.cuesPlayed |= 8;
+            sound(player, type.magOut());
+        }
+        if (c.magIn() >= 0 && u >= c.magIn() && (st.cuesPlayed & 2) == 0) {
+            st.cuesPlayed |= 2;
+            sound(player, type.magIn());
+        }
+        if (st.needsCharge && c.charge() >= 0 && u >= c.charge() && (st.cuesPlayed & 4) == 0) {
+            st.cuesPlayed |= 4;
+            player.level().playSound(null, player.getX(), player.getY(), player.getZ(),
+                    LocalGuns.sound(gun, type.charged(), c.release() ? LocalGuns.RELEASE : ""), SoundSource.PLAYERS, 0.9f, 1f);
+        }
     }
 
     /** A tube gun: raised to the loading port, then shells go in one by one (see tickLoading). */
@@ -949,13 +981,21 @@ public final class Guns {
 
     private static void tickReload(ServerPlayer player, ItemStack gun, GunType type, State st) {
         st.reloadTick++;
+        boolean cued = st.cues != null;
+        if (cued) {
+            cueSounds(player, gun, type, st);
+        }
         if (st.reloadTick == type.magIn) {
             insertMagazine(player, gun, type);
             setModelData(gun, 2, 0);
-            sound(player, type.magIn());
+            if (!cued || st.cues.magIn() < 0) {
+                sound(player, type.magIn());
+            }
         } else if (st.reloadTick == type.charge && st.needsCharge) {
             setModelData(gun, 3, 0);
-            sound(player, type.charged());
+            if (!cued || st.cues.charge() < 0) {
+                sound(player, type.charged());
+            }
         } else if (st.reloadTick >= (st.needsCharge ? type.chargeDone : type.tacticalDone)) {
             setModelData(gun, 0, 0);
             st.reloadTick = -1;

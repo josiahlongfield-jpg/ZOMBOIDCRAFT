@@ -22,7 +22,12 @@ public abstract class SoundManagerLocalMixin {
         if (cir.getReturnValue() == null && id.getNamespace().equals(ZomboidCraft.MOD_ID)
                 && id.getPath().startsWith(LocalGuns.SOUND_PREFIX)) {
             String ours = id.getPath().substring(id.getPath().lastIndexOf('/') + 1);
-            cir.setReturnValue(((SoundManager) (Object) this).getSoundEvent(ZomboidCraft.id(ours)));
+            WeighedSoundEvents found = ((SoundManager) (Object) this).getSoundEvent(ZomboidCraft.id(ours));
+            if (found == null && ours.endsWith(LocalGuns.RELEASE)) {
+                // a handle's release alone (LocalGuns.Cues) falls back to the whole handle sound
+                found = ((SoundManager) (Object) this).getSoundEvent(ZomboidCraft.id(ours.substring(0, ours.length() - LocalGuns.RELEASE.length())));
+            }
+            cir.setReturnValue(found);
         }
     }
 }

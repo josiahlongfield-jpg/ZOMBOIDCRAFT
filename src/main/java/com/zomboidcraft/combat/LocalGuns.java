@@ -325,6 +325,63 @@ public final class LocalGuns {
                 : net.minecraft.sounds.SoundEvent.createVariableRangeEvent(name);
     }
 
+    /** Added to an event's name for the release half of a handle sound alone (a bolt catch dropped, Cues). */
+    public static final String RELEASE = "_release";
+
+    /** sound(gun, ours), its name with a suffix (RELEASE): a part of the recording the pack keeps under its own name. */
+    public static net.minecraft.sounds.SoundEvent sound(ItemStack gun, net.minecraft.sounds.SoundEvent ours, String suffix) {
+        net.minecraft.sounds.SoundEvent s = sound(gun, ours);
+        if (s == ours || suffix.isEmpty()) {
+            return s;
+        }
+        net.minecraft.resources.Identifier name = s.location().withSuffix(suffix);
+        return s.fixedRange().isPresent() ? net.minecraft.sounds.SoundEvent.createFixedRangeEvent(name, s.fixedRange().get())
+                : net.minecraft.sounds.SoundEvent.createVariableRangeEvent(name);
+    }
+
+    /**
+     * When a local gun's reload makes its sounds, from reloads/&lt;id&gt;.cues.json beside his clip (Josiah 2026-11-06: the
+     * game's fixed reload ticks played the AR-15's handle sound on its bolt-catch slap and the Honey Badger's at the
+     * magazine): each a share of the clip (0 to 1), or below 0 for none; release plays only the handle's release (a
+     * bolt catch dropped rather than a handle pulled).
+     */
+    public record Cues(float magOut, float magIn, float charge, boolean release) {
+    }
+
+    private static final Map<String, java.util.Optional<Cues>> CUES = new java.util.concurrent.ConcurrentHashMap<>();
+    private static int cuesGeneration = -1;
+
+    public static @Nullable Cues cues(@Nullable String id) {
+        if (id == null) {
+            return null;
+        }
+        if (cuesGeneration != generation) {
+            cuesGeneration = generation;
+            CUES.clear();
+        }
+        return CUES.computeIfAbsent(id, LocalGuns::readCues).orElse(null);
+    }
+
+    private static java.util.Optional<Cues> readCues(String id) {
+        Path f = DIR.resolve("reloads").resolve(id + ".cues.json");
+        if (!Files.isRegularFile(f)) {
+            return java.util.Optional.empty();
+        }
+        try (java.io.Reader r = Files.newBufferedReader(f, StandardCharsets.UTF_8)) {
+            com.google.gson.JsonObject o = com.google.gson.JsonParser.parseReader(r).getAsJsonObject();
+            float dur = o.get("dur").getAsFloat();
+            if (dur <= 0) {
+                return java.util.Optional.empty();
+            }
+            java.util.function.Function<String, Float> at = k -> o.has(k) ? o.get(k).getAsFloat() / dur : -1f;
+            return java.util.Optional.of(new Cues(at.apply("mag_out"), at.apply("mag_in"), at.apply("charge"),
+                    o.has("charge_sound") && o.get("charge_sound").getAsString().equals("release")));
+        } catch (Exception e) {
+            ZomboidCraft.LOGGER.error("Couldn't read the reload sound cues in {}", f, e);
+            return java.util.Optional.empty();
+        }
+    }
+
     /** A local gun, loaded with its own rounds. */
     public static ItemStack loaded(Spec spec) {
         ItemStack gun = new ItemStack(spec.type().item());
