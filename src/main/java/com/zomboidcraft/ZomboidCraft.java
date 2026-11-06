@@ -139,6 +139,7 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.world.gen.CountyCommand.register();
         com.zomboidcraft.world.gen.CountyRails.register();
         // last of every loot hook: nothing vanilla gets out of a loot table
+        com.zomboidcraft.loot.CommandNet.register();
         com.zomboidcraft.loot.NoVanilla.register();
         LOGGER.info("The dead walk.");
     }
