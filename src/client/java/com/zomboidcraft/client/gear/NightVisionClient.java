@@ -75,6 +75,12 @@ public final class NightVisionClient {
         return m.goggles().getItem() instanceof NightVisionItem nv ? nv.generation() : null;
     }
 
+    /** Whether the local player is looking through powered night vision now (an IR laser's beam shows). */
+    public static boolean viewing() {
+        Headgear.Mounted m = down(Minecraft.getInstance().player);
+        return m != null && Headgear.hasPower(m.goggles());
+    }
+
     /** Whether the battery is in its last stretch, when the tube flickers. */
     private static boolean dying(Headgear.Mounted m) {
         return ZcConfig.get().nightVision.batteries && Headgear.chargeFraction(m.goggles()) < 0.08f;
