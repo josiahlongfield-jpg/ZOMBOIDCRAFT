@@ -3,6 +3,7 @@ package com.zomboidcraft.client.operator;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.zomboidcraft.ZomboidCraft;
+import com.zomboidcraft.combat.LocalGuns;
 import com.zomboidcraft.client.npc.NpcSkin;
 import com.zomboidcraft.client.npc.NpcSkinDraw;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -176,7 +177,7 @@ public final class OperatorView {
         // sight looks straight down the middle of the screen (Josiah 2026-11-06: it must point at the crosshair). Aiming
         // then slides it, unturned, until the sight sits on the eye (the pack's "ads": the sight 10 cm ahead of the eye)
         NpcSkin.Clip ads = skin.clips.get("ads");
-        Matrix4f sightAt = null;
+        Matrix4f sightAt = null, hold = new Matrix4f();
         if (ads != null) {
             Quaternionf q = new Quaternionf(ads.turn()[0], ads.turn()[1], ads.turn()[2], ads.turn()[3]);
             Matrix4f onEye = new Matrix4f().translationRotate(ads.at()[0], ads.at()[1], ads.at()[2], q);
@@ -185,8 +186,10 @@ public final class OperatorView {
             Vector3f p = sightAt.getTranslation(new Vector3f());
             Vector3f hip = new Vector3f(p).sub(q.transform(new Vector3f(p)));
             Vector3f t = hip.lerp(new Vector3f(ads.at()[0], ads.at()[1], ads.at()[2]), Operator.smooth(aim), new Vector3f());
-            pose.mulPose(new Matrix4f().translationRotate(t.x, t.y, t.z, q));
+            hold.translationRotate(t.x, t.y, t.z, q);
+            pose.mulPose(hold);
         }
+        rail(skin, gun, hold, free && !reloading);
         Matrix4f[] bones = Operator.bones(skin, pos, turn);
         buffer = 1 - buffer;
         if (BUFFERS[buffer] == null || BUFFERS[buffer].length != skin.groups.length * 2) {
@@ -223,6 +226,46 @@ public final class OperatorView {
             }
         });
         pose.popPose();
+    }
+
+    /**
+     * Where the rifle's own laser and light lenses are this frame, from the eye as the rig is drawn, for RailLights: on
+     * whatever is under the crosshair while the hands are free, out along the barrel while they're busy.
+     */
+    private static void rail(NpcSkin skin, ItemStack gun, Matrix4f hold, boolean free) {
+        LocalGuns.Spec spec = LocalGuns.of(gun);
+        LocalGuns.Rail rail = spec == null ? null : spec.rail;
+        if (rail == null) {
+            com.zomboidcraft.client.combat.RifleView.operatorRail(null);
+            return;
+        }
+        Vector3f laser = lens(skin, hold, rail.laser), light = lens(skin, hold, rail.light);
+        LocalGuns.Device way = rail.laser != null ? rail.laser : rail.light;
+        Vector3f bore = way == null || way.dir == null ? new Vector3f(0, 0, -1) : along(skin, hold, way);
+        if (laser == null) laser = light != null ? light : new Vector3f();
+        if (light == null) light = laser;
+        com.zomboidcraft.client.combat.RifleView.operatorRail(
+                new com.zomboidcraft.client.combat.RifleView.Rail(laser, light, bore, free ? 1 : 0));
+    }
+
+    /** A lens on a bone of the rig, from the eye. */
+    private static Vector3f lens(NpcSkin skin, Matrix4f hold, LocalGuns.Device d) {
+        int b = d == null || d.at == null ? -1 : skin.bone(d.bone);
+        if (b < 0) return null;
+        return boneNow(b, hold).transformPosition(new Vector3f(d.at[0], d.at[1], d.at[2]));
+    }
+
+    /** The way a lens shines, from the eye. */
+    private static Vector3f along(NpcSkin skin, Matrix4f hold, LocalGuns.Device d) {
+        int b = skin.bone(d.bone);
+        if (b < 0) return new Vector3f(0, 0, -1);
+        return boneNow(b, hold).transformDirection(new Vector3f(d.dir[0], d.dir[1], d.dir[2])).normalize();
+    }
+
+    /** A bone of the rig as drawn this frame (its own frame, not its skinning matrix), from the eye. */
+    private static Matrix4f boneNow(int b, Matrix4f hold) {
+        Quaternionf q = new Quaternionf(turn[b * 4], turn[b * 4 + 1], turn[b * 4 + 2], turn[b * 4 + 3]);
+        return new Matrix4f(hold).mul(new Matrix4f().translationRotate(pos[b * 3], pos[b * 3 + 1], pos[b * 3 + 2], q));
     }
 
     /** How far onto the sights the operator is (0 at the hip, 1 on the sights). */

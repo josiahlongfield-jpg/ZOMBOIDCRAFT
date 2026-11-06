@@ -292,8 +292,7 @@ public final class RifleView {
         // the Tarkov operator's own arms and rifle, every move Tarkov's clip (client/operator)
         if (com.zomboidcraft.client.operator.OperatorView.submit(pose, out, light, state, gun)) {
             aimShown = com.zomboidcraft.client.operator.OperatorView.aimShown();
-            rail = null;
-            return true;
+            return true;        // its rail (laser and light lenses) set by operatorRail
         }
         use(gunType);
         ZcConfig config = ZcConfig.get();
@@ -1616,6 +1615,12 @@ public final class RifleView {
     }
 
     public record Rail(Vector3f laser, Vector3f light, Vector3f bore, float onTarget) {
+    }
+
+    /** The operator's rifle's rail this frame, as it's drawn in first person (null: it has none). */
+    public static void operatorRail(Rail drawn) {
+        rail = drawn;
+        railDrawn = System.nanoTime();
     }
 
     /** How far off what's under the crosshair is this frame, so a pointed gun's rail lines up on it. */
