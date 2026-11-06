@@ -93,6 +93,11 @@ public final class LocalGuns {
          * looks through it as a lens (client ScopeView), its reticle the sight's own; 0 for a red dot or irons.
          */
         public float zoom;
+        /**
+         * Handed to each new life, loaded with only the magazine in it and one spare (the starter kit, Josiah
+         * 2026-11-06: the PM).
+         */
+        public boolean starter;
         /** Resolved: the anchor's numbers with this gun's laid over them. */
         transient ZcConfig.GunStats merged;
         transient GunType type;

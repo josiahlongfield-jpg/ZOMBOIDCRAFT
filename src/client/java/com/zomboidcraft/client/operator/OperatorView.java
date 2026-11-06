@@ -90,6 +90,13 @@ public final class OperatorView {
     private static final Object[][] BUFFERS = new Object[2][];
     private static int buffer;
 
+    /** Whether the inspect key was pressed since last asked (a blade or grenade in hand, OperatorHands). */
+    static boolean takeInspect() {
+        boolean asked = inspectAsked;
+        inspectAsked = false;
+        return asked;
+    }
+
     /** A shot went off (CombatClient, through RifleView.fired): the recoil clip plays from its start. */
     public static void fired() {
         shot = true;

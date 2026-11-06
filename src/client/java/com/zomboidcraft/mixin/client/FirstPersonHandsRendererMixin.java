@@ -23,6 +23,11 @@ public abstract class FirstPersonHandsRendererMixin {
                                     int outline, Operation<Void> original, @Local(argsOnly = true) PlayerRenderState state,
                                     @Local(argsOnly = true) InteractionHand hand, @Local(argsOnly = true) ItemStack stack) {
         Runnable draw = () -> original.call(item, pose, out, light, overlay, outline);
+        // a Tarkov blade or grenade: Tarkov's arms and the weapon with its own clips (client/operator)
+        if (hand == InteractionHand.MAIN_HAND
+                && com.zomboidcraft.client.operator.OperatorHands.submit(pose, out, light, state, stack)) {
+            return;
+        }
         if (hand != InteractionHand.MAIN_HAND || !RifleView.submit(item, pose, out, light, state, stack, draw)) {
             draw.run();
         }

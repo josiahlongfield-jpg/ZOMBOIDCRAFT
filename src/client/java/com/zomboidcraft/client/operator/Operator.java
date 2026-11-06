@@ -282,12 +282,13 @@ public final class Operator {
         return GUN.equals(stack.get(com.zomboidcraft.combat.LocalGuns.ID));
     }
 
-    /** The first-person model for a held Tarkov gun (config/zomboidcraft/npc/NAME.zsk), or null for any other stack. */
+    /** The first-person model for a held Tarkov gun, blade or grenade (config/zomboidcraft/npc/NAME.zsk), or null for any other stack. */
     public static String fpModel(net.minecraft.world.item.ItemStack stack) {
         if (stack == null || stack.isEmpty()) return null;
         com.zomboidcraft.combat.LocalGuns.Spec spec = com.zomboidcraft.combat.LocalGuns.of(stack);
         if (spec != null && spec.fp != null) return spec.fp;
-        return holdsM4(stack) ? OperatorView.MODEL : null;
+        if (holdsM4(stack)) return OperatorView.MODEL;
+        return OperatorHands.model(stack);      // a Tarkov blade or grenade
     }
 
     /**

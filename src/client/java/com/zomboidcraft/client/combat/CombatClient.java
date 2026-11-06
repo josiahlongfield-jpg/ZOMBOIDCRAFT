@@ -91,7 +91,8 @@ public final class CombatClient {
                 }
                 return true;    // a gun never punches or digs
             }
-            if (clicks > 0 && hand.getItem() instanceof MeleeWeaponItem && player.getAttackStrengthScale(0f) > 0.9f) {
+            if (clicks > 0 && hand.getItem() instanceof MeleeWeaponItem && player.getAttackStrengthScale(0f) > 0.9f
+                    && !com.zomboidcraft.client.operator.OperatorHands.swung(hand)) {     // a Tarkov blade: its own swing
                 WeaponSpecs.WeaponSpec spec = Weapons.spec(hand);
                 boolean heavy = spec != null && (spec.twoHanded() || spec.kind() == WeaponSpecs.Kind.HEAVY_BLUNT);
                 EarSound.play(heavy ? ModSounds.SWING_HEAVY : ModSounds.SWING, SoundSource.PLAYERS, 0.6f,

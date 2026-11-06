@@ -400,6 +400,10 @@ public final class ModItems {
                             output.accept(mag);
                         }
                     });
+            // the blades and grenades kept on this computer (config/zomboidcraft/hands)
+            com.zomboidcraft.combat.LocalHands.all().stream()
+                    .sorted(java.util.Comparator.comparing((com.zomboidcraft.combat.LocalHands.Spec s) -> s.name == null ? s.id : s.name))
+                    .forEach(spec -> output.accept(com.zomboidcraft.combat.LocalHands.make(spec)));
             // their sights and grips kept on this computer too (guns/parts/parts.json): sights first, then grips
             com.zomboidcraft.combat.LocalParts.ids().stream().sorted()
                     .map(com.zomboidcraft.combat.LocalParts::make)
