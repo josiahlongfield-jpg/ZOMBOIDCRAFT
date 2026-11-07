@@ -97,6 +97,7 @@ public class AttachmentItem extends Item {
             case GAS_BLOCK -> "Gas block";
             case REAR_SIGHT -> "Rear sight";
             case FRONT_SIGHT -> "Front sight";
+            case BUTTPAD -> "Butt pad";
         };
     }
 }

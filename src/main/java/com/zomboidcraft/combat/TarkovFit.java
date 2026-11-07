@@ -44,7 +44,7 @@ public final class TarkovFit {
     /** The order parts go on: what others hang from first. */
     private static final Attachments.Slot[] ORDER = {
             Attachments.Slot.RECEIVER, Attachments.Slot.BARREL, Attachments.Slot.GAS_BLOCK, Attachments.Slot.HANDGUARD,
-            Attachments.Slot.PISTOL_GRIP, Attachments.Slot.STOCK, Attachments.Slot.CHARGING, Attachments.Slot.MUZZLE,
+            Attachments.Slot.PISTOL_GRIP, Attachments.Slot.STOCK, Attachments.Slot.BUTTPAD, Attachments.Slot.CHARGING, Attachments.Slot.MUZZLE,
             Attachments.Slot.SUPPRESSOR, Attachments.Slot.REAR_SIGHT, Attachments.Slot.FRONT_SIGHT, Attachments.Slot.OPTIC,
             Attachments.Slot.PIGGYBACK, Attachments.Slot.UNDERBARREL, Attachments.Slot.SIDE_RAIL, Attachments.Slot.RIGHT_RAIL,
             Attachments.Slot.BIPOD};
@@ -356,12 +356,14 @@ public final class TarkovFit {
     private static List<List<Link>> routes(String sp, TarkovParts.Port port, String id, TarkovParts.Part p,
                                            Attachments.Slot socket, Map<Attachments.Slot, String> fitted, int depth) {
         List<List<Link>> out = new ArrayList<>();
+        // a part that fits here straight away can still go on further out, over mounts (the MCX kit's T-1 sits on
+        // its spacer, not on the bare mount): both ways are offered and the scoring picks
         if (port.filter.contains(id)) {
             out.add(new ArrayList<>(List.of(new Link(sp, id))));
             if (depth == 0) out.get(0).clear();
-            return out;
         }
-        if (depth >= 2) return out;
+        // three links deep at most (a dovetail mount, a QD base and 35 mm rings for the VSK-94's Mark 5HD)
+        if (depth >= 3) return out;
         for (String m : port.filter) {
             TarkovParts.Part mp = TarkovParts.get(m);
             if (mp == null || !link(mp, p, socket, fitted)) continue;
@@ -379,7 +381,7 @@ public final class TarkovFit {
     }
 
     private static boolean link(TarkovParts.Part m, TarkovParts.Part p, Attachments.Slot socket, Map<Attachments.Slot, String> fitted) {
-        if (m.is("Mount")) return true;
+        if (m.is("Mount") || m.slot() == null) return true;     // a mount, or a link with no bench slot of its own (a spacer)
         if (m.slot() != null && m.slot() == p.slot() && m.slot() != Attachments.Slot.OPTIC) return true;
         return socket == Attachments.Slot.SUPPRESSOR && !fitted.containsKey(Attachments.Slot.MUZZLE)
                 && (m.is("MuzzleCombo") || m.is("FlashHider"));

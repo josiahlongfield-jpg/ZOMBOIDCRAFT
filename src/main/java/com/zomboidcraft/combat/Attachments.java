@@ -44,7 +44,9 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
         // RIGHT_RAIL and MAGNIFIER came later: they go last so the model data's key order stays as it was
         OPTIC, MUZZLE, UNDERBARREL, SIDE_RAIL, STOCK, MAGAZINE, BIPOD, RIGHT_RAIL, MAGNIFIER,
         // the Tarkov guns' own (2026-11-07, every part pulled for them fits at the bench): never in the model data
-        PIGGYBACK, SUPPRESSOR, HANDGUARD, PISTOL_GRIP, BARREL, RECEIVER, CHARGING, GAS_BLOCK, REAR_SIGHT, FRONT_SIGHT;
+        PIGGYBACK, SUPPRESSOR, HANDGUARD, PISTOL_GRIP, BARREL, RECEIVER, CHARGING, GAS_BLOCK, REAR_SIGHT, FRONT_SIGHT,
+        // a butt pad or cheek rest on whatever stock is fitted (Josiah 2026-11-07: every pulled part reachable)
+        BUTTPAD;
 
         /** The slots our item models know, in their model data order. */
         public static final List<Slot> MODEL = List.of(OPTIC, MUZZLE, UNDERBARREL, SIDE_RAIL, STOCK, MAGAZINE, BIPOD,
