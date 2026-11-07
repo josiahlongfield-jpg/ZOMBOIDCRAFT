@@ -12,7 +12,9 @@ import com.zomboidcraft.skills.Skill;
 import com.zomboidcraft.skills.Skills;
 import net.minecraft.client.player.LocalPlayer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -218,22 +220,51 @@ final class BenchPage {
             return;
         }
         AbstractContainerMenu menu = screen.menu();
-        int block = Math.min(33, 270 / sockets.size());
-        int tile = Math.min(20, block - 11);
-        int cy = y + 11;
+        // a Tarkov gun has up to twenty sockets: the ones with a part on or one you carry get a row, the rest a line
+        List<Attachments.Slot> rows = new ArrayList<>();
+        List<String> idle = new ArrayList<>();
+        Map<Attachments.Slot, List<Integer>> spares = new HashMap<>();
         for (Attachments.Slot socket : sockets) {
-            ItemStack fitted = Attachments.get(weapon, socket);
             List<Integer> spare = new ArrayList<>();
             for (int i : screen.carried()) {
                 ItemStack s = menu.slots.get(i).getItem();
                 if (i != slot && !s.isEmpty() && Attachments.offeredIn(weapon, s, socket)) spare.add(i);
             }
-            KitDraw.caps(g, font, AttachmentItem.slotName(socket), x, cy, KitDraw.DIM, 0.62f);
+            spares.put(socket, spare);
+            if (sockets.size() <= 8 || !Attachments.get(weapon, socket).isEmpty() || !spare.isEmpty()) rows.add(socket);
+            else idle.add(AttachmentItem.slotName(socket));
+        }
+        int idleH = idle.isEmpty() ? 0 : 10 + 9 * Math.max(1, (int) Math.ceil(String.join(", ", idle).length() / 32.0));
+        boolean compact = rows.size() > 8;
+        int block = compact ? Math.max(15, Math.min(24, (270 - idleH) / Math.max(1, rows.size())))
+                : Math.min(33, (270 - idleH) / Math.max(1, rows.size()));
+        int tile = compact ? block - 3 : Math.min(20, block - 11);
+        int cy = y + 11;
+        for (Attachments.Slot socket : rows) {
+            if (cy + block > y + 11 + 270 - idleH) break;
+            ItemStack fitted = Attachments.get(weapon, socket);
+            List<Integer> spare = spares.get(socket);
+            String name = AttachmentItem.slotName(socket);
             String what = fitted.isEmpty() ? "empty" : fitted.getHoverName().getString();
-            float lw = KitDraw.capsWidth(font, AttachmentItem.slotName(socket), 0.62f) + 4;
-            if (KitDraw.width(font, what, 0.8f) > 135 - lw) what = font.plainSubstrByWidth(what, (int) ((130 - lw) / 0.8f)) + "..";
-            KitDraw.text(g, font, what, x + lw, cy - 1, fitted.isEmpty() ? KitDraw.FAINT : KitDraw.TEXT, 0.8f);
-            int ty = cy + 8;
+            int ty, ax, room;
+            if (compact) {
+                // one line: the fitted part's tile, its socket and name beside it, then what you carry for it
+                ty = cy;
+                room = Math.min(spare.size(), 3);
+                ax = x + 139 - room * (tile + 2);
+                KitDraw.caps(g, font, name, x + tile + 4, cy + 1, KitDraw.DIM, 0.55f);
+                float nw = ax - (x + tile + 4) - 3;
+                if (KitDraw.width(font, what, 0.7f) > nw) what = font.plainSubstrByWidth(what, (int) ((nw - 6) / 0.7f)) + "..";
+                KitDraw.text(g, font, what, x + tile + 4, cy + tile - 7, fitted.isEmpty() ? KitDraw.FAINT : KitDraw.TEXT, 0.7f);
+            } else {
+                KitDraw.caps(g, font, name, x, cy, KitDraw.DIM, 0.62f);
+                float lw = KitDraw.capsWidth(font, name, 0.62f) + 4;
+                if (KitDraw.width(font, what, 0.8f) > 135 - lw) what = font.plainSubstrByWidth(what, (int) ((130 - lw) / 0.8f)) + "..";
+                KitDraw.text(g, font, what, x + lw, cy - 1, fitted.isEmpty() ? KitDraw.FAINT : KitDraw.TEXT, 0.8f);
+                ty = cy + 8;
+                ax = x + tile + 7;
+                room = (139 - tile - 7) / (tile + 3);
+            }
             // the fitted part, ringed in brass: click to take it off
             boolean over = screen.hovered(x, ty, tile, tile, mx, my);
             KitDraw.tile(g, font, fitted, x, ty, tile, tile, over);
@@ -244,9 +275,7 @@ final class BenchPage {
                     screen.button(Bench.takeOffButton(gunSlot, socket));
                 }, null, null, -1);
             }
-            g.fill(x + tile + 3, ty + 2, x + tile + 4, ty + tile - 2, 0x33E8E4DA);
-            int ax = x + tile + 7;
-            int room = (139 - tile - 7) / (tile + 3);
+            if (!compact) g.fill(x + tile + 3, ty + 2, x + tile + 4, ty + tile - 2, 0x33E8E4DA);
             for (int k = 0; k < spare.size() && k < room; k++) {
                 int from = spare.get(k);
                 ItemStack part = menu.slots.get(from).getItem();
@@ -255,11 +284,19 @@ final class BenchPage {
                 KitDraw.tile(g, font, part, ax, ty, tile, tile, on);
                 int gunSlot = slot;
                 screen.hot(ax, ty, tile, tile, part, () -> screen.button(Bench.fitButton(from, gunSlot, socket)), null, null, -1);
-                ax += tile + 3;
+                ax += tile + (compact ? 2 : 3);
             }
-            if (spare.size() > room) KitDraw.text(g, font, "+" + (spare.size() - room), ax - 2, ty + tile / 2 - 4, KitDraw.DIM, 0.8f);
-            if (spare.isEmpty()) KitDraw.text(g, font, "none carried", ax, ty + tile / 2 - 3, KitDraw.FAINT, 0.8f);
+            if (spare.size() > room) {
+                if (compact) KitDraw.textRight(g, font, "+" + (spare.size() - room), x + 139, ty + tile + 1, KitDraw.DIM, 0.6f);
+                else KitDraw.text(g, font, "+" + (spare.size() - room), ax - 2, ty + tile / 2 - 4, KitDraw.DIM, 0.8f);
+            }
+            if (spare.isEmpty() && !compact) KitDraw.text(g, font, "none carried", ax, ty + tile / 2 - 3, KitDraw.FAINT, 0.8f);
             cy += block;
+        }
+        if (!idle.isEmpty()) {
+            cy += 2;
+            KitDraw.caps(g, font, "Also takes (none carried)", x, cy, KitDraw.DIM, 0.55f);
+            KitDraw.wrap(g, font, String.join(", ", idle), x, cy + 8, 139, KitDraw.FAINT);
         }
     }
 
