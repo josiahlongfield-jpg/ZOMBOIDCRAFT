@@ -69,6 +69,8 @@ public final class GunLoot {
     private static final Map<String, Double> HEAVY_ALONE = Map.of(ARMY, 0.02, HUNTING, 0.004, STORAGE, 0.004,
             GUNSHOP, 0.002, SWAT, 0.002, SURPLUS, 0.002, PAWN, 0.001, POLICE, 0.001, SECURITY, 0.0005);
 
+    /** How often a gun with its can built in (the AS VAL, the VSK-94) turns up against the others. */
+    static final double BUILT_IN_CAN = 0.25;
     private static final Map<String, Double> RARITY = Map.of("C", 1.0, "S", 0.5, "R", 0.25, "P", 0.1, "G", 0.04);
 
     /** Tables an army base's racks and crates roll: an armoury there gets the army's, not a shop's or a cellar's. */
@@ -237,6 +239,8 @@ public final class GunLoot {
         for (var e : spot.guns.entrySet()) {
             if (e.getValue() > 0 && here(e.getKey())) {
                 double w = e.getValue() * RARITY.getOrDefault(d.rarity.getOrDefault(e.getKey(), "C"), 1.0);
+                // found guns carry no can (Josiah 2026-11-07); one whose can is built in turns up a quarter as often
+                if (TarkovFit.builtInCan(LocalGuns.get(e.getKey()))) w *= BUILT_IN_CAN;
                 pool.put(e.getKey(), w);
                 total += w;
             }
@@ -285,7 +289,7 @@ public final class GunLoot {
 
     /**
      * A Tarkov part or two with found guns (Josiah 2026-11-07: looted parts are fitted at the bench): a quarter of the
-     * time one, sometimes a second; sights and cans turn up half as often as grips, stocks and the rest.
+     * time one, sometimes a second; sights turn up half as often as grips, stocks and the rest, cans an eighth as often.
      */
     static List<ItemStack> tarkovParts(RandomSource random) {
         List<String> pool;
@@ -309,8 +313,10 @@ public final class GunLoot {
             for (int tries = 0; tries < 4; tries++) {
                 String id = pool.get(random.nextInt(pool.size()));
                 TarkovParts.Part p = TarkovParts.get(id);
-                boolean rare = p != null && (p.slot() == Attachments.Slot.OPTIC || p.slot() == Attachments.Slot.SUPPRESSOR);
-                if (rare && random.nextBoolean()) continue;
+                boolean sight = p != null && p.slot() == Attachments.Slot.OPTIC;
+                boolean can = p != null && p.slot() == Attachments.Slot.SUPPRESSOR;
+                // cans are quite rare (Josiah 2026-11-07): one in eight as often as a grip or a stock; sights one in two
+                if (sight && random.nextBoolean() || can && random.nextInt(8) != 0) continue;
                 ItemStack s = TarkovParts.make(id);
                 if (!s.isEmpty()) out.add(s);
                 break;

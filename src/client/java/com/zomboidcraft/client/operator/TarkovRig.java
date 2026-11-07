@@ -89,6 +89,30 @@ final class TarkovRig {
         return hide;
     }
 
+    /**
+     * Lays the kit's flip-up irons flat while a sight is on the gun (Tarkov folds them; Josiah 2026-11-07: the MCX's
+     * and SCAR's irons stood behind their holo sights): each fold turns its bone's frame about its hinge in this pose.
+     */
+    static void fold(LocalGuns.Spec spec, TarkovFit.Assembly a, NpcSkin skin, float[] pos, float[] turn) {
+        if (spec.tarkov.folds == null || spec.tarkov.folds.isEmpty() || !TarkovFit.folded(a)) return;
+        Quaternionf q = new Quaternionf();
+        org.joml.Vector3f t = new org.joml.Vector3f();
+        for (LocalGuns.Fold f : spec.tarkov.folds) {
+            int b = f.bone == null ? -1 : skin.bone(f.bone);
+            if (b < 0 || b * 4 + 3 >= turn.length) continue;
+            Matrix4f m = bone(pos, turn, b).mul(f.matrix());
+            m.getTranslation(t);
+            m.getUnnormalizedRotation(q).normalize();
+            pos[b * 3] = t.x;
+            pos[b * 3 + 1] = t.y;
+            pos[b * 3 + 2] = t.z;
+            turn[b * 4] = q.x;
+            turn[b * 4 + 1] = q.y;
+            turn[b * 4 + 2] = q.z;
+            turn[b * 4 + 3] = q.w;
+        }
+    }
+
     /** Whether a group of the gun's model shows: arms always, a gun mesh unless its kit part is off. */
     static boolean shows(NpcSkin.Group g, boolean[] hidden) {
         if (hidden == null || !"gun".equals(g.piece) || g.joint == null || g.joint.length == 0) return true;
@@ -105,6 +129,7 @@ final class TarkovRig {
      */
     static void draw(TarkovFit.Assembly a, Map<String, Matrix4f> frames, @Nullable Matrix4f pre, String key, int light,
                      int overlay, PoseStack pose, SubmitNodeCollector out) {
+        boolean folded = TarkovFit.folded(a);
         for (TarkovFit.Node n : a.nodes()) {
             if (n.kit()) continue;
             TarkovParts.Part p = TarkovParts.get(n.item());
@@ -119,7 +144,9 @@ final class TarkovRig {
             flip[0] = 1 - flip[0];
             if (b[flip[0]] == null || b[flip[0]].length != part.groups.length * 2) b[flip[0]] = new Object[part.groups.length * 2];
             String model = p.model;
-            NpcSkinDraw.submitGroups(part.groups, new Matrix4f[] {m}, 0, g -> true, g -> part.texture(g.texture, model),
+            // a flip-up's leaf (its model's second bone) lies folded while a sight is on the gun
+            Matrix4f leaf = p.fold != null && folded ? new Matrix4f(m).mul(p.fold.matrix()) : m;
+            NpcSkinDraw.submitGroups(part.groups, new Matrix4f[] {m, leaf}, 0, g -> true, g -> part.texture(g.texture, model),
                     b[flip[0]], light, overlay, pose, out);
         }
         if (BUFFERS.size() > 512) {

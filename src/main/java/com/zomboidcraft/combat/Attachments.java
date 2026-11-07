@@ -44,7 +44,9 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
         // RIGHT_RAIL and MAGNIFIER came later: they go last so the model data's key order stays as it was
         OPTIC, MUZZLE, UNDERBARREL, SIDE_RAIL, STOCK, MAGAZINE, BIPOD, RIGHT_RAIL, MAGNIFIER,
         // the Tarkov guns' own (2026-11-07, every part pulled for them fits at the bench): never in the model data
-        PIGGYBACK, SUPPRESSOR, HANDGUARD, PISTOL_GRIP, BARREL, RECEIVER, CHARGING, GAS_BLOCK, REAR_SIGHT, FRONT_SIGHT;
+        PIGGYBACK, SUPPRESSOR, HANDGUARD, PISTOL_GRIP, BARREL, RECEIVER, CHARGING, GAS_BLOCK, REAR_SIGHT, FRONT_SIGHT,
+        // a butt pad or cheek rest on whatever stock is fitted (Josiah 2026-11-07: every pulled part reachable)
+        BUTTPAD;
 
         /** The slots our item models know, in their model data order. */
         public static final List<Slot> MODEL = List.of(OPTIC, MUZZLE, UNDERBARREL, SIDE_RAIL, STOCK, MAGAZINE, BIPOD,
@@ -270,6 +272,9 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
             // a Tarkov gun comes with its kit, each part in its bench slot
             Map<Slot, ItemStack> parts = new EnumMap<>(Slot.class);
             TarkovFit.kitSockets(tk).forEach((slot, id) -> {
+                // a can is a rare find of its own (Josiah 2026-11-07): the gun turns up without its kit's, unless the can
+                // is part of the gun in Tarkov (the AS VAL's barrel-suppressor, the VSK-94's)
+                if (slot == Slot.SUPPRESSOR && !TarkovFit.builtIn(tk, id)) return;
                 ItemStack p = TarkovParts.make(id);
                 if (!p.isEmpty()) parts.put(slot, p);
             });

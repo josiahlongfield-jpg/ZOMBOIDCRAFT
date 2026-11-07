@@ -160,6 +160,25 @@ public final class LocalGuns {
         public java.util.List<KitPart> kit;
         public String aimPath;
         public int aimIndex;
+        /** The kit's flip-up irons: each lies folded while a sight is on the gun, as Tarkov folds them (Josiah 2026-11-07). */
+        public java.util.List<Fold> folds;
+    }
+
+    /**
+     * A flip-up iron's fold: its bone in the first-person model (or a part model's second bone), the hinge in that
+     * bone's frame, the axis it turns about and how far (degrees) to lie flat, a rear one forward, a front one back.
+     */
+    public static final class Fold {
+        public String bone;
+        public float[] hinge, axis;
+        public float angle;
+
+        /** The turn about the hinge, in the bone's own frame. */
+        public org.joml.Matrix4f matrix() {
+            return new org.joml.Matrix4f().translation(hinge[0], hinge[1], hinge[2])
+                    .rotate((float) Math.toRadians(angle), axis[0], axis[1], axis[2])
+                    .translate(-hinge[0], -hinge[1], -hinge[2]);
+        }
     }
 
     /**
@@ -424,7 +443,13 @@ public final class LocalGuns {
                 tree.add(e.getKey(), e.getValue());
             }
         }
-        return GSON.fromJson(tree, anchor.getClass());
+        // a magazine-fed shotgun (the AA-12) keeps its anchor's magazine reload but fires buckshot: its own "pellets"
+        // make its numbers a shotgun's (the spread and falloff not given take the shotgun's defaults)
+        Class<? extends ZcConfig.GunStats> kind = anchor.getClass();
+        if (own != null && own.has("pellets") && own.get("pellets").getAsInt() > 1 && !(anchor instanceof ZcConfig.ShotgunStats)) {
+            kind = ZcConfig.ShotgunStats.class;
+        }
+        return GSON.fromJson(tree, kind);
     }
 
     /** The numbers a stack fires with: a local gun's own, else its type's. */

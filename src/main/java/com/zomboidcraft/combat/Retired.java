@@ -46,21 +46,40 @@ public final class Retired {
     private Retired() {
     }
 
+    /**
+     * Our melee weapons, gone for Tarkov's (Josiah 2026-11-07: "all of them will need to be tarkov ones"). The types
+     * stay registered because each Tarkov blade is one underneath (its anchor: the Ka-Bar a kitchen knife, the Freeman
+     * crowbar a crowbar, so it does the crowbar's jobs too); only a plain one goes. The hammer, frying pan and pipe
+     * wrench have no Tarkov twin and stay as tools that can't hit (CombatEvents).
+     */
+    public static final Set<String> MELEE = Set.of("kitchen_knife", "crowbar", "lead_pipe", "golf_club", "hockey_stick",
+            "baseball_bat", "spiked_bat", "shovel", "machete", "tomahawk", "katana", "fire_axe", "sledgehammer",
+            "wooden_spear", "fire_hardened_spear", "spear_knife", "stone_axe", "stone_hammer", "stone_knife",
+            "plank_nails", "cudgel_nails");
+    /** The tools that stay but never hit. */
+    public static final Set<String> TOOLS_ONLY = Set.of("hammer", "frying_pan", "pipe_wrench");
+
     /** Whether an item id (its path) is one that went. */
     public static boolean id(String path) {
-        return GUNS.contains(path) || ATTACHMENTS.contains(path) || MAGAZINES.contains(path) || ROUNDS.contains(path);
+        return GUNS.contains(path) || ATTACHMENTS.contains(path) || MAGAZINES.contains(path) || ROUNDS.contains(path)
+                || MELEE.contains(path);
     }
 
     /**
-     * Whether a stack is one of ours that went: never a Brita gun or one of its magazines (they carry its id), nor a
-     * sight or grip of his (combat/LocalParts); a local gun he took out of the game (and its magazines) does go.
+     * Whether a stack is one of ours that went: a local gun he took out of the game (its file says "removed", as every
+     * Brita gun's does since 2026-11-07) and its magazines, or a sight or grip of his whose part file is gone.
      */
     public static boolean is(ItemStack stack) {
         if (stack.isEmpty()) {
             return false;
         }
         if (stack.has(LocalParts.ID)) {
-            return false;       // a sight or grip of his kept on this computer rides on our red dot or foregrip item
+            // a sight or grip of his kept on this computer rides on our red dot or foregrip item; one whose file has gone
+            // (his pack parts went with the Brita guns, Josiah 2026-11-07) goes too
+            return LocalParts.get(stack.get(LocalParts.ID)) == null;
+        }
+        if (stack.has(LocalHands.ID)) {
+            return false;       // a Tarkov blade on its anchor
         }
         if (stack.has(LocalGuns.ID)) {
             return LocalGuns.removed(stack.get(LocalGuns.ID));    // a local gun he took out, or one of its magazines
@@ -76,7 +95,8 @@ public final class Retired {
         if (is(stack)) {
             return ItemStack.EMPTY;
         }
-        ItemStack out = null;
+        ItemStack out = padMoved(stack);
+        if (out != null) stack = out;
         // a kept gun (the Heavy Sniper) with one of our old parts fitted keeps the gun and loses the part
         Attachments fitted = stack.get(Attachments.TYPE);
         if (fitted != null && fitted.mounted().values().stream().anyMatch(Retired::is)) {
@@ -108,6 +128,31 @@ public final class Retired {
         }
         out = out == null ? stack.copy() : out;
         out.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(items));
+        return out;
+    }
+
+    /**
+     * A Tarkov gun saved before butt pads had their own bench slot (2026-11-07) kept its pad in the stock slot: the pad
+     * moves to its own slot and the gun's kit stock goes back under it. Null if nothing changed.
+     */
+    private static @org.jetbrains.annotations.Nullable ItemStack padMoved(ItemStack gun) {
+        Attachments fitted = gun.get(Attachments.TYPE);
+        if (fitted == null) return null;
+        ItemStack pad = fitted.mounted().get(Attachments.Slot.STOCK);
+        String padId = pad == null ? null : TarkovParts.of(pad);
+        TarkovParts.Part p = padId == null ? null : TarkovParts.get(padId);
+        if (p == null || p.slot() != Attachments.Slot.BUTTPAD || fitted.mounted().containsKey(Attachments.Slot.BUTTPAD)) return null;
+        java.util.Map<Attachments.Slot, ItemStack> now = new java.util.EnumMap<>(Attachments.Slot.class);
+        now.putAll(fitted.mounted());
+        now.remove(Attachments.Slot.STOCK);
+        now.put(Attachments.Slot.BUTTPAD, pad);
+        String stock = TarkovFit.kitSockets(LocalGuns.of(gun)).get(Attachments.Slot.STOCK);
+        if (stock != null) {
+            ItemStack s = TarkovParts.make(stock);
+            if (!s.isEmpty()) now.put(Attachments.Slot.STOCK, s);
+        }
+        ItemStack out = gun.copy();
+        out.set(Attachments.TYPE, new Attachments(now));
         return out;
     }
 

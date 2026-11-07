@@ -289,7 +289,9 @@ public enum GunType {
                     : distant ? ModSounds.RIFLE_SHOT_DISTANT : ModSounds.RIFLE_SHOT;
             case PISTOL -> suppressed ? (distant ? ModSounds.PISTOL_SHOT_SUPPRESSED_DISTANT : ModSounds.PISTOL_SHOT_SUPPRESSED)
                     : distant ? ModSounds.PISTOL_SHOT_DISTANT : ModSounds.PISTOL_SHOT;
-            case SHOTGUN -> distant ? ModSounds.SHOTGUN_SHOT_DISTANT : ModSounds.SHOTGUN_SHOT;
+            // a can on a shotgun (a Tarkov 870's Salvo 12) plays the quiet rifle events, which its own sound pack fills
+            case SHOTGUN -> suppressed ? (distant ? ModSounds.RIFLE_SHOT_SUPPRESSED_DISTANT : ModSounds.RIFLE_SHOT_SUPPRESSED)
+                    : distant ? ModSounds.SHOTGUN_SHOT_DISTANT : ModSounds.SHOTGUN_SHOT;
             case HUNTING_RIFLE -> suppressed ? (distant ? ModSounds.HUNTING_RIFLE_SHOT_SUPPRESSED_DISTANT : ModSounds.HUNTING_RIFLE_SHOT_SUPPRESSED)
                     : distant ? ModSounds.HUNTING_RIFLE_SHOT_DISTANT : ModSounds.HUNTING_RIFLE_SHOT;
             case DOUBLE_BARREL -> distant ? ModSounds.DOUBLE_BARREL_SHOT_DISTANT : ModSounds.DOUBLE_BARREL_SHOT;
@@ -307,7 +309,9 @@ public enum GunType {
                     : distant ? ModSounds.POCKET_PISTOL_SHOT_DISTANT : ModSounds.POCKET_PISTOL_SHOT;
             case MACHINE_PISTOL -> suppressed ? (distant ? ModSounds.MACHINE_PISTOL_SHOT_SUPPRESSED_DISTANT : ModSounds.MACHINE_PISTOL_SHOT_SUPPRESSED)
                     : distant ? ModSounds.MACHINE_PISTOL_SHOT_DISTANT : ModSounds.MACHINE_PISTOL_SHOT;
-            case SUPPRESSED_RIFLE -> distant ? ModSounds.SUPPRESSED_RIFLE_SHOT_DISTANT : ModSounds.SUPPRESSED_RIFLE_SHOT;
+            // its can off (a Tarkov SR-3M's comes off at the bench): the loud rifle events, which its own sound pack fills
+            case SUPPRESSED_RIFLE -> !suppressed ? (distant ? ModSounds.RIFLE_SHOT_DISTANT : ModSounds.RIFLE_SHOT)
+                    : distant ? ModSounds.SUPPRESSED_RIFLE_SHOT_DISTANT : ModSounds.SUPPRESSED_RIFLE_SHOT;
             // Josiah keeps the precision rifle on the hunting rifle's .308 recordings, suppressed and not
             case PRECISION_RIFLE -> suppressed ? (distant ? ModSounds.HUNTING_RIFLE_SHOT_SUPPRESSED_DISTANT : ModSounds.HUNTING_RIFLE_SHOT_SUPPRESSED)
                     : distant ? ModSounds.HUNTING_RIFLE_SHOT_DISTANT : ModSounds.HUNTING_RIFLE_SHOT;

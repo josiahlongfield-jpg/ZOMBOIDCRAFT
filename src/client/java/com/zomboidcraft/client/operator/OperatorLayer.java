@@ -73,6 +73,15 @@ public final class OperatorLayer extends RenderLayer<AvatarRenderState, PlayerMo
             com.zomboidcraft.combat.TarkovFit.Assembly built = com.zomboidcraft.combat.TarkovFit.tarkov(spec)
                     ? com.zomboidcraft.combat.TarkovFit.of(held) : null;
             boolean[] hidden = built == null ? null : TarkovRig.hidden(spec, built, gun);
+            if (built != null && spec.tarkov.folds != null && !spec.tarkov.folds.isEmpty()) {
+                // its flip-up irons folded under a sight, as in first person
+                float[][] fp = Operator.heldPose(gun);
+                if (fp != null) {
+                    TarkovRig.fold(spec, built, gun, fp[0], fp[1]);
+                    gunBones = Operator.bones(gun, fp[0], fp[1]);
+                    for (Matrix4f m : gunBones) new Matrix4f(bones[weapon]).mul(m, m);
+                }
+            }
             NpcSkinDraw.submitGroups(gun.groups, gunBones, 0, g -> g.piece.equals("gun") && TarkovRig.shows(g, hidden),
                     g -> gun.texture(g.texture, model), gunBuffers(state.id, gun), light, overlay, pose, collector);
             float[][] hp = built == null ? null : Operator.heldPose(gun);
