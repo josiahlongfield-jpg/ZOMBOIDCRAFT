@@ -330,6 +330,7 @@ public final class OperatorView {
         }
         if (built != null) tarkovRail(built, frames, hold, free && !reloading);
         else rail(skin, gun, hold, free && !reloading);
+        if (built != null) TarkovRig.fold(spec, built, skin, pos, turn);
         Matrix4f[] bones = Operator.bones(skin, pos, turn);
         pivot(spec, skin, hold);
         buffer = 1 - buffer;

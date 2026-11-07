@@ -32,7 +32,9 @@ public abstract class SlotMixin {
     @Inject(method = "mayPlace", at = @At("HEAD"), cancellable = true)
     private void zomboidcraft$lockedPocket(net.minecraft.world.item.ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
         if (container instanceof Inventory inventory && (Carry.locked(inventory.player, getContainerSlot())
-                || Carry.weapon(stack) && Carry.pocket(inventory.player, getContainerSlot()))) {
+                || (Carry.weapon(stack) || !com.zomboidcraft.carry.grid.ItemSize.pocketable(stack))
+                && Carry.pocket(inventory.player, getContainerSlot()))) {
+            // Tarkov's pockets take one-cell things only (Josiah 2026-11-07)
             cir.setReturnValue(false);
         } else if (container instanceof Inventory inventory && Inventory.isHotbarSlot(getContainerSlot())
                 && !com.zomboidcraft.carry.QuickSlots.fits(inventory.player, getContainerSlot(), stack)) {

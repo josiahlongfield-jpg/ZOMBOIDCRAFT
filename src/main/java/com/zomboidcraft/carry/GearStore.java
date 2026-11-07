@@ -30,7 +30,17 @@ public final class GearStore {
     public static final int LEG_GUARDS = 13;
     /** Long johns, thermals and socks, under everything. */
     public static final int UNDER = 14;
-    public static final int SIZE = 15;
+    /**
+     * Tarkov's worn slots that Zomboid had no place for (Josiah 2026-11-07: Tarkov's slots, special slots stay): a
+     * headset, an armband, body armour apart from the rig, and three special slots. Headwear, top and trousers are
+     * the armour slots; eyewear, face cover, rig and backpack are the ones above.
+     */
+    public static final int EARPIECE = 15;
+    public static final int ARMBAND = 16;
+    public static final int ARMOUR = 17;
+    public static final int SPECIAL = 18;
+    public static final int SPECIAL_COUNT = 3;
+    public static final int SIZE = 21;
 
     public static final Codec<GearStore> CODEC = ItemStack.OPTIONAL_CODEC.listOf().xmap(GearStore::new, GearStore::list);
 

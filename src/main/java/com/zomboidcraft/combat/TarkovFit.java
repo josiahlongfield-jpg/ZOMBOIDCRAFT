@@ -44,7 +44,7 @@ public final class TarkovFit {
     /** The order parts go on: what others hang from first. */
     private static final Attachments.Slot[] ORDER = {
             Attachments.Slot.RECEIVER, Attachments.Slot.BARREL, Attachments.Slot.GAS_BLOCK, Attachments.Slot.HANDGUARD,
-            Attachments.Slot.PISTOL_GRIP, Attachments.Slot.STOCK, Attachments.Slot.CHARGING, Attachments.Slot.MUZZLE,
+            Attachments.Slot.PISTOL_GRIP, Attachments.Slot.STOCK, Attachments.Slot.BUTTPAD, Attachments.Slot.CHARGING, Attachments.Slot.MUZZLE,
             Attachments.Slot.SUPPRESSOR, Attachments.Slot.REAR_SIGHT, Attachments.Slot.FRONT_SIGHT, Attachments.Slot.OPTIC,
             Attachments.Slot.PIGGYBACK, Attachments.Slot.UNDERBARREL, Attachments.Slot.SIDE_RAIL, Attachments.Slot.RIGHT_RAIL,
             Attachments.Slot.BIPOD};
@@ -80,6 +80,43 @@ public final class TarkovFit {
     public static @Nullable Assembly of(ItemStack gun) {
         LocalGuns.Spec spec = LocalGuns.of(gun);
         return tarkov(spec) ? resolve(spec, fitted(gun)) : null;
+    }
+
+    /** Whether the gun as built carries a sight, so its flip-up irons lie folded (Tarkov folds them under an optic). */
+    public static boolean folded(Assembly a) {
+        for (Node n : a.nodes()) {
+            TarkovParts.Part p = TarkovParts.get(n.item());
+            if (p != null && p.sight()) return true;
+        }
+        return false;
+    }
+
+    /** Whether a gun's can is part of the gun itself (the AS VAL's, the VSK-94's): such guns are rarer finds. */
+    public static boolean builtInCan(@Nullable LocalGuns.Spec spec) {
+        if (!tarkov(spec)) return false;
+        for (LocalGuns.KitPart k : spec.tarkov.kit) {
+            TarkovParts.Part p = TarkovParts.get(k.item);
+            if (p != null && p.is("Silencer") && builtIn(spec, k.item)) return true;
+        }
+        return false;
+    }
+
+    /** Whether a kit part can't come off in Tarkov: the slot it sits in on its parent is a required one. */
+    public static boolean builtIn(LocalGuns.Spec spec, String item) {
+        if (!tarkov(spec)) return false;
+        for (LocalGuns.KitPart k : spec.tarkov.kit) {
+            if (!k.item.equals(item)) continue;
+            int cut = k.path.lastIndexOf('/');
+            if (cut < 0) continue;
+            String parentPath = k.path.substring(0, cut), slot = k.path.substring(cut + 1);
+            for (LocalGuns.KitPart parent : spec.tarkov.kit) {
+                if (!parent.path.equals(parentPath)) continue;
+                TarkovParts.Part pp = TarkovParts.get(parent.item);
+                TarkovParts.Port port = pp == null ? null : pp.slots.get(slot);
+                if (port != null && port.required) return true;
+            }
+        }
+        return false;
     }
 
     /** What a Tarkov gun comes with, by bench slot: its kit's parts (a second sight rides piggyback, a second device on the other rail). */
@@ -319,12 +356,14 @@ public final class TarkovFit {
     private static List<List<Link>> routes(String sp, TarkovParts.Port port, String id, TarkovParts.Part p,
                                            Attachments.Slot socket, Map<Attachments.Slot, String> fitted, int depth) {
         List<List<Link>> out = new ArrayList<>();
+        // a part that fits here straight away can still go on further out, over mounts (the MCX kit's T-1 sits on
+        // its spacer, not on the bare mount): both ways are offered and the scoring picks
         if (port.filter.contains(id)) {
             out.add(new ArrayList<>(List.of(new Link(sp, id))));
             if (depth == 0) out.get(0).clear();
-            return out;
         }
-        if (depth >= 2) return out;
+        // three links deep at most (a dovetail mount, a QD base and 35 mm rings for the VSK-94's Mark 5HD)
+        if (depth >= 3) return out;
         for (String m : port.filter) {
             TarkovParts.Part mp = TarkovParts.get(m);
             if (mp == null || !link(mp, p, socket, fitted)) continue;
@@ -342,7 +381,7 @@ public final class TarkovFit {
     }
 
     private static boolean link(TarkovParts.Part m, TarkovParts.Part p, Attachments.Slot socket, Map<Attachments.Slot, String> fitted) {
-        if (m.is("Mount")) return true;
+        if (m.is("Mount") || m.slot() == null) return true;     // a mount, or a link with no bench slot of its own (a spacer)
         if (m.slot() != null && m.slot() == p.slot() && m.slot() != Attachments.Slot.OPTIC) return true;
         return socket == Attachments.Slot.SUPPRESSOR && !fitted.containsKey(Attachments.Slot.MUZZLE)
                 && (m.is("MuzzleCombo") || m.is("FlashHider"));

@@ -178,8 +178,20 @@ public final class Carry {
             if (spec == null || !spec.holds().test(stack)) {
                 continue;       // nothing worn here, or a case or can that won't take it
             }
-            // top up matching stacks, then fill empty slots
+            // top up matching stacks, then lay the rest in the first place its footprint fits (Tarkov's grids)
             for (int pass = 0; pass < 2 && !stack.isEmpty(); pass++) {
+                if (pass == 1) {
+                    while (!stack.isEmpty()) {
+                        ItemStack lay = stack.copyWithCount(Math.min(stack.getCount(), stack.getMaxStackSize()));
+                        int at = com.zomboidcraft.carry.grid.Grids.firstFit(bag, spec.shape(), lay);
+                        if (at < 0 || at >= bag.usableSlots()) {
+                            break;
+                        }
+                        stack.shrink(lay.getCount());
+                        bag.setItem(at, lay);
+                    }
+                    continue;
+                }
                 for (int i = 0; i < bag.usableSlots() && !stack.isEmpty(); i++) {
                     ItemStack there = bag.getItem(i);
                     boolean merge = pass == 0 && !there.isEmpty() && ItemStack.isSameItemSameComponents(there, stack);
@@ -205,15 +217,12 @@ public final class Carry {
         return stack.getCount() < before;
     }
 
-    /** How many of this stack one bag slot could hold in all, by stack size and by the bag's weight limit. */
+    /**
+     * How many of this stack one bag slot could hold in all. Tarkov's bags hold what their cells fit with no weight
+     * limit of their own (Josiah 2026-11-07: Tarkov's inventory as it is), so only the stack size counts.
+     */
     static int room(BagContainer bag, BagSpec spec, int slot, ItemStack stack) {
-        double unit = Weights.unit(stack);
-        int max = stack.getMaxStackSize();
-        if (unit <= 0) {
-            return max;
-        }
-        double room = spec.capacity() - bag.contentsWeight(slot);
-        return Math.max(0, Math.min(max, (int) Math.floor(room / unit + 1e-6)));
+        return stack.getMaxStackSize();
     }
 
     // ---------------------------------------------------------------- weight

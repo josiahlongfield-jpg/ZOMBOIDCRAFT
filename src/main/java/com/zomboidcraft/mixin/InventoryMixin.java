@@ -39,14 +39,17 @@ public abstract class InventoryMixin {
             Inventory self = (Inventory) (Object) this;
             ItemStack adding = zomboidcraft$adding;
             slot = -1;
-            for (int i = Inventory.getSelectionSize(); i < Inventory.INVENTORY_SIZE && slot < 0; i++) {
+            // Tarkov's pockets: one-cell things only; bigger ones go on to the bags
+            boolean pocketable = adding == null || com.zomboidcraft.carry.grid.ItemSize.pocketable(adding);
+            for (int i = Inventory.getSelectionSize(); pocketable && i < Inventory.INVENTORY_SIZE && slot < 0; i++) {
                 if (self.getItem(i).isEmpty() && !Carry.locked(player, i)) slot = i;
             }
             for (int i = 0; adding == null && slot < 0 && i < Inventory.getSelectionSize(); i++) {
                 if (self.getItem(i).isEmpty() && QuickSlots.open(player, i)) slot = i;
             }
             cir.setReturnValue(slot);
-        } else if (Carry.locked(player, slot)) {
+        } else if (Carry.locked(player, slot) || zomboidcraft$adding != null && Carry.pocket(player, slot)
+                && !com.zomboidcraft.carry.grid.ItemSize.pocketable(zomboidcraft$adding)) {
             cir.setReturnValue(-1);
         }
     }

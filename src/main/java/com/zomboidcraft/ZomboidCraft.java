@@ -87,6 +87,8 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.clothing.ClothingItems.register();
         com.zomboidcraft.loot.items.LootHooks.register();
         com.zomboidcraft.carry.Carry.register();
+        com.zomboidcraft.carry.grid.ItemSize.register();
+        com.zomboidcraft.carry.grid.GridNet.register();
         com.zomboidcraft.spawn.SpawnPicker.register();
         com.zomboidcraft.gear.Headgear.register();
         com.zomboidcraft.gear.Radios.register();
@@ -144,6 +146,7 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.world.gen.CountyRails.register();
         // last of every loot hook: nothing vanilla gets out of a loot table
         com.zomboidcraft.loot.CommandNet.register();
+        com.zomboidcraft.loot.TarkovMelee.register();
         com.zomboidcraft.loot.NoVanilla.register();
         LOGGER.info("The dead walk.");
     }

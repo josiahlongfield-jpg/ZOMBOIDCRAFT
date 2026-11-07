@@ -57,7 +57,7 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
     public static final KeyMapping MAP_KEY = new KeyMapping("key.zomboidcraft.map", InputConstants.KEY_M, CATEGORY);
 
     enum Page {
-        CHARACTER("Character", true), CLOTHING("Clothing", true), PACK("Pack", true), SUPPLIES("Supplies", true), BENCH("Bench", true), BUILD("Build", true), BASE("Base", true), HEALTH("Health", true), SKILLS("Skills", true),
+        GEAR("Gear", true), CHARACTER("Character", true), CLOTHING("Clothing", true), PACK("Pack", true), SUPPLIES("Supplies", true), BENCH("Bench", true), BUILD("Build", true), BASE("Base", true), HEALTH("Health", true), SKILLS("Skills", true),
         FILES("Files", true), MAP("Map", true);
 
         final String label;
@@ -69,12 +69,13 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
         }
     }
 
-    Page page = Page.CHARACTER;
+    Page page = Page.GEAR;
     /** The page a key asked for, for the screen the server is about to open; null when a container opened it. */
     private static @Nullable Page requested;
     /** Shift was held for the click being handled. */
     boolean shift;
 
+    final GearPage gear = new GearPage(this);
     final CharacterPage character = new CharacterPage(this);
     final ClothingPage clothing = new ClothingPage(this);
     /** You on the Character and Clothing pages, turned by dragging (shared, so it stays turned between them). */
@@ -122,7 +123,7 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
 
     private static void tick(Minecraft mc) {
         while (OPEN.consumeClick()) {
-            if (mc.gui.screen() == null) open(mc, Page.CHARACTER);
+            if (mc.gui.screen() == null) open(mc, Page.GEAR);
         }
         while (MAP_KEY.consumeClick()) {
             if (mc.gui.screen() == null) open(mc, Page.MAP);
@@ -155,7 +156,7 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
         Minecraft mc = Minecraft.getInstance();
         LocalPlayer player = mc.player;
         if (player == null || !ZcConfig.get().look.fieldKitInventory || player.hasInfiniteMaterials()) return vanilla;
-        open(mc, Page.CHARACTER);
+        open(mc, Page.GEAR);
         return null;
     }
 
@@ -163,7 +164,8 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
         super(menu, inventory, title, W, H);
         // a key asked for a page (the kit key always asks for Character, wherever it was closed); searching a container
         // opens on the pack, with that container showing
-        page = requested != null ? requested : menu instanceof NearbyMenu ? Page.PACK : Page.CHARACTER;
+        // Tarkov's gear tab first, for the kit key and for searching alike (Josiah 2026-11-07)
+        page = requested != null ? requested : Page.GEAR;
         requested = null;
     }
 
@@ -579,6 +581,12 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
             flip(-1);
             return true;
         }
+        if (event.key() == InputConstants.KEY_R && !menu.getCarried().isEmpty()) {
+            // Tarkov: R while dragging turns the thing a quarter; the server turns its copy too
+            com.zomboidcraft.carry.grid.ItemSize.turn(menu.getCarried());
+            ClientPlayNetworking.send(new com.zomboidcraft.carry.grid.GridNet.Turn());
+            return true;
+        }
         if (event.key() == InputConstants.KEY_R) {
             flip(1);
             return true;
@@ -624,6 +632,7 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
         int x = leftPos, y = topPos;
         top(g, x, y, mouseX, mouseY);
         switch (page) {
+            case GEAR -> gear.draw(g, x, y, mouseX, mouseY);
             case CHARACTER -> character.draw(g, x, y, mouseX, mouseY);
             case CLOTHING -> clothing.draw(g, x, y, mouseX, mouseY);
             case PACK -> pack.draw(g, x, y, mouseX, mouseY);
@@ -640,8 +649,8 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
         drawTransfers(g);
     }
 
-    /** Space between page names on the top bar (eleven pages since the Base page). */
-    private static final int TAB_GAP = 9;
+    /** Space between page names on the top bar (twelve pages since the Tarkov gear tab). */
+    private static final int TAB_GAP = 6;
 
     /** The top bar: who you are, the pages, and the time and weather. */
     private void top(GuiGraphicsExtractor g, int x, int y, int mx, int my) {

@@ -106,7 +106,7 @@ final class KitCard {
 
         BagSpec bag = BagItem.spec(stack);
         String weight = "Weight " + Weights.format(Weights.of(stack));
-        if (bag != null) weight += "  ·  holds " + Weights.format(bag.capacity()) + " in " + bag.slots() + " slots";
+        if (bag != null) weight += "  ·  " + bag.cellsText();
         KitDraw.text(g, font, weight, x + 7, cy, KitDraw.DIM, 0.85f);
         cy += 12;
         if (!finish.isEmpty()) {

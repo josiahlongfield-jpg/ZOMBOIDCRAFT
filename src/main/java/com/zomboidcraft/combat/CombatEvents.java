@@ -31,6 +31,16 @@ public final class CombatEvents {
 
     public static void register() {
         AttackEntityCallback.EVENT.register((player, level, hand, target, hit) -> {
+            // a plain hammer, frying pan, pipe wrench, kitchen knife, crowbar, shovel, axe or sledgehammer is a tool, not a
+            // weapon (Josiah 2026-11-07: only Tarkov melee hits)
+            net.minecraft.world.item.ItemStack held = player.getItemInHand(hand);
+            if (!held.has(LocalHands.ID) && Retired.toolOnly(
+                    net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(held.getItem()).getPath())) {
+                if (player instanceof ServerPlayer sp) {
+                    sp.sendOverlayMessage(net.minecraft.network.chat.Component.literal("That's a tool, not a weapon").withStyle(net.minecraft.ChatFormatting.GRAY));
+                }
+                return InteractionResult.FAIL;
+            }
             if (player instanceof ServerPlayer serverPlayer && ZombieTypes.isWalker(target)) {
                 Stamina.onSwing(serverPlayer);
             }
