@@ -15,6 +15,17 @@ public abstract class AbstractClientPlayerMixin {
     @Inject(method = "getFieldOfViewModifier", at = @At("RETURN"), cancellable = true)
     private void zomboidcraft$aimZoom(boolean firstPerson, float effectScale, CallbackInfoReturnable<Float> cir) {
         AbstractClientPlayer self = (AbstractClientPlayer) (Object) this;
+        // Tarkov's paces (combat/Gait) change the speed, not the view: the view narrows and widens as Minecraft's own
+        // walk and sprint would have it
+        net.minecraft.world.entity.ai.attributes.AttributeInstance speed =
+                self.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED);
+        net.minecraft.world.entity.ai.attributes.AttributeModifier pace = speed == null ? null : speed.getModifier(com.zomboidcraft.combat.Gait.PACE);
+        float walking = self.getAbilities().getWalkingSpeed();
+        if (pace != null && walking > 0 && effectScale > 0) {
+            float r = (float) (speed.getValue() / walking), m = (float) (1 + pace.amount());
+            float had = 1 + effectScale * ((r + 1) / 2 - 1), want = 1 + effectScale * ((r / m + 1) / 2 - 1);
+            if (had > 0.01f) cir.setReturnValue(cir.getReturnValueF() * want / had);
+        }
         // at a mounted gun, right-click narrows the view down the barrels
         if (self.getVehicle() instanceof com.zomboidcraft.world.cars.CarProp car && com.zomboidcraft.world.cars.Turret.isGunner(self)) {
             net.minecraft.client.Minecraft mc = net.minecraft.client.Minecraft.getInstance();

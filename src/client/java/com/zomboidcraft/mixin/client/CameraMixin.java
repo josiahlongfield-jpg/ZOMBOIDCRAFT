@@ -39,6 +39,7 @@ public abstract class CameraMixin {
         }
         CameraRig.Out out = CameraRig.apply((Camera) (Object) this, entity, partialTick);
         if (out == null) {
+            zomboidcraft$bob(entity, partialTick);
             return;
         }
         rotation.set(out.rotation);
@@ -51,6 +52,29 @@ public abstract class CameraMixin {
         if (out.position != null) {
             setPosition(out.position);
         }
+    }
+
+    /**
+     * In first person with a Tarkov gun, blade or grenade in hand, the eye bobs as Tarkov's player's head does walking,
+     * running and sprinting (client/operator/TarkovMotion); the hands are drawn from the eye and keep to it.
+     */
+    @org.spongepowered.asm.mixin.Unique
+    private void zomboidcraft$bob(Entity entity, float partialTick) {
+        com.zomboidcraft.client.operator.TarkovMotion.update(partialTick);
+        Vector3f shift = com.zomboidcraft.client.operator.TarkovMotion.cameraShift();
+        Quaternionf turn = com.zomboidcraft.client.operator.TarkovMotion.cameraTurn();
+        if (shift.lengthSquared() < 1e-10f && Math.abs(turn.w) > 0.999999f) {
+            return;
+        }
+        Vector3f moved = new Vector3f(shift).rotate(rotation);
+        rotation.mul(turn);
+        new Vector3f(0, 0, -1).rotate(rotation, forwards);
+        new Vector3f(0, 1, 0).rotate(rotation, up);
+        new Vector3f(-1, 0, 0).rotate(rotation, left);
+        xRot = (float) Math.toDegrees(-Math.asin(Math.max(-1, Math.min(1, forwards.y))));
+        yRot = (float) Math.toDegrees(Math.atan2(-forwards.x, forwards.z));
+        matrixPropertiesDirty |= 3;
+        setPosition(entity.getEyePosition(partialTick).add(moved.x, moved.y, moved.z));
     }
 
     /** Through a magnified scope, the lens's turns are drawn zoomed exactly the scope's power (ScopeView). */

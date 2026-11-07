@@ -2045,6 +2045,8 @@ public final class ZcConfig {
         }
 
         public boolean enabled = true;
+        /** Tarkov's walk and sprint paces on foot (combat/Gait): 2.5 and 6.2 m/s, in place of Minecraft's 4.3 and 5.6. */
+        public boolean tarkovPace = true;
         /**
          * Zomboid's Firearms settings (combat/Firearms). useDamageChance: who a shot strikes just by being aimed at,
          * "both", "zombies" or "off"; anyone it doesn't cover has to pass an Aiming roll to be hit. noiseMultiplier

@@ -285,6 +285,8 @@ public final class OperatorView {
 
         pose.pushPose();
         pose.translate(-ARM[0], -ARM[1], -ARM[2]);
+        // the body's own motion walking, running and sprinting (Tarkov's player: the rifle against the eye)
+        pose.mulPose(TarkovMotion.gun());
         pose.scale(WIDEN, WIDEN, 1);
         // Tarkov's clips hold the rifle canted up off the eye line; the whole rig is turned about the sight so the
         // sight looks straight down the middle of the screen (Josiah 2026-11-06: it must point at the crosshair). Aiming
@@ -584,12 +586,12 @@ public final class OperatorView {
             if (p == null || f == null) continue;
             Matrix4f at = new Matrix4f(hold).mul(f);
             if (laser == null && p.laser != null && p.laser.at != null) {
-                laser = at.transformPosition(new Vector3f(p.laser.at[0], p.laser.at[1], p.laser.at[2])).mul(WIDEN, WIDEN, 1);
-                if (p.laser.dir != null) bore = at.transformDirection(new Vector3f(p.laser.dir[0], p.laser.dir[1], p.laser.dir[2])).normalize();
+                laser = TarkovMotion.gun().transformPosition(at.transformPosition(new Vector3f(p.laser.at[0], p.laser.at[1], p.laser.at[2])).mul(WIDEN, WIDEN, 1));
+                if (p.laser.dir != null) bore = TarkovMotion.gun().transformDirection(at.transformDirection(new Vector3f(p.laser.dir[0], p.laser.dir[1], p.laser.dir[2]))).normalize();
             }
             if (light == null && p.light != null && p.light.at != null) {
-                light = at.transformPosition(new Vector3f(p.light.at[0], p.light.at[1], p.light.at[2])).mul(WIDEN, WIDEN, 1);
-                if (bore == null && p.light.dir != null) bore = at.transformDirection(new Vector3f(p.light.dir[0], p.light.dir[1], p.light.dir[2])).normalize();
+                light = TarkovMotion.gun().transformPosition(at.transformPosition(new Vector3f(p.light.at[0], p.light.at[1], p.light.at[2])).mul(WIDEN, WIDEN, 1));
+                if (bore == null && p.light.dir != null) bore = TarkovMotion.gun().transformDirection(at.transformDirection(new Vector3f(p.light.dir[0], p.light.dir[1], p.light.dir[2]))).normalize();
             }
         }
         if (laser == null && light == null) {
@@ -607,14 +609,14 @@ public final class OperatorView {
         int b = d == null || d.at == null ? -1 : skin.bone(d.bone);
         if (b < 0) return null;
         Vector3f at = boneNow(b, hold).transformPosition(new Vector3f(d.at[0], d.at[1], d.at[2]));
-        return at.mul(WIDEN, WIDEN, 1);   // where the widened rig draws it
+        return TarkovMotion.gun().transformPosition(at.mul(WIDEN, WIDEN, 1));   // where the widened rig draws it
     }
 
     /** The way a lens shines, from the eye. */
     private static Vector3f along(NpcSkin skin, Matrix4f hold, LocalGuns.Device d) {
         int b = skin.bone(d.bone);
         if (b < 0) return new Vector3f(0, 0, -1);
-        return boneNow(b, hold).transformDirection(new Vector3f(d.dir[0], d.dir[1], d.dir[2])).normalize();
+        return TarkovMotion.gun().transformDirection(boneNow(b, hold).transformDirection(new Vector3f(d.dir[0], d.dir[1], d.dir[2]))).normalize();
     }
 
     /** A bone of the rig as drawn this frame (its own frame, not its skinning matrix), from the eye. */

@@ -182,6 +182,8 @@ public final class Operator {
     }
 
     private static final Map<Integer, Body> BODIES = new HashMap<>();
+    /** The paces (blocks a tick) Tarkov's walk, run and sprint clips were made at. */
+    private static final float WALK_PACE = 2.5f / 20, RUN_PACE = 3.36f / 20, SPRINT_PACE = 6.2f / 20;
     private static boolean[] upper;
     private static NpcSkin upperFor;
 
@@ -208,23 +210,33 @@ public final class Operator {
             e.lastX = player.getX();
             e.lastZ = player.getZ();
         }
+        // Tarkov's own walk, run and sprint, each played at the pace its feet were made for (their root motion: walk
+        // 2.5 m/s, run 3.36, sprint 6.2; blocks a tick here), so the steps match the ground going by
         String want;
         float rate;
-        if (e.speed < 0.03f || player.isPassenger()) {
+        boolean sprint = player.isSprinting() && skin.clips.containsKey("sprint");
+        if (e.speed < 0.02f || player.isPassenger()) {
             want = "idle";
             rate = 1;
-        } else if (player.isSprinting() || e.speed > 0.25f) {
+        } else if (sprint || !skin.clips.containsKey("sprint") && (player.isSprinting() || e.speed > 0.25f)) {
+            want = sprint ? "sprint" : "run";
+            rate = Math.max(0.6f, Math.min(1.5f, e.speed / (sprint ? SPRINT_PACE : 0.28f)));
+        } else if (e.speed > (WALK_PACE + RUN_PACE) / 2 && skin.clips.containsKey("sprint")) {
             want = "run";
-            rate = Math.max(0.7f, Math.min(1.4f, e.speed / 0.28f));
+            rate = Math.max(0.6f, Math.min(1.5f, e.speed / RUN_PACE));
         } else {
             want = "walk";
-            rate = Math.max(0.45f, Math.min(1.3f, e.speed / 0.216f));
+            rate = Math.max(0.4f, Math.min(1.5f, e.speed / (skin.clips.containsKey("sprint") ? WALK_PACE : 0.216f)));
         }
         if (!want.equals(e.clip) && skin.clips.containsKey(want)) {
+            NpcSkin.Clip old = skin.clips.get(e.clip), next = skin.clips.get(want);
+            float stride = 0;
+            // from one gait to another the feet keep their place in the stride
+            if (!"idle".equals(e.clip) && old != null && old.seconds() > 0) stride = (e.t % old.seconds()) / old.seconds();
             e.from = e.clip;
             e.fromT = e.t;
             e.clip = want;
-            e.t = 0;
+            e.t = stride * next.seconds();
             e.fade = 0;
         }
         e.rate = rate;
