@@ -147,6 +147,7 @@ public final class OperatorHands {
         pose.pushPose();
         pose.last().pose().identity();
         pose.last().normal().identity();
+        pose.scale(OperatorView.WIDEN, OperatorView.WIDEN, 1);   // at Tarkov's field of view, as the guns are
         org.joml.Matrix4f[] bones = Operator.bones(skin, pos, turn);
         buffer = 1 - buffer;
         if (BUFFERS[buffer] == null || BUFFERS[buffer].length != skin.groups.length * 2) {

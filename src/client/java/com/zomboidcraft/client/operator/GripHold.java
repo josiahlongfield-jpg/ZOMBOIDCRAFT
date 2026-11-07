@@ -9,8 +9,10 @@ import org.joml.Vector3f;
  * Tarkov's own left-hand hold on a Tarkov gun's fitted foregrip or handguard (GripPose: a hand skeleton saved in the
  * part's prefab, exported per gun into its guns/ID.json "holds"; Josiah 2026-11-07: "when a grip is looted in game
  * it's actually used by the player model"). While the clip has the left hand on the gun, near the hold, the arm
- * reaches it (two-bone IK about the shoulder and elbow), the palm takes the hold's turn and each finger its own; as a
- * reload takes the hand away it lets go. Everything is in the first-person model's space, as the clips are baked.
+ * reaches it (two-bone IK about the shoulder and elbow), the palm takes the hold's turn and each finger its own. It
+ * holds only while the clip keeps the hand where the idle has it on that part, so a reload (the hand off to the
+ * magazine) lets go at once rather than dragging the hand back toward the grip. Everything is in the first-person
+ * model's space, as the clips are baked.
  */
 final class GripHold {
     private GripHold() {
@@ -18,8 +20,8 @@ final class GripHold {
 
     private static final String UPPER = "Base HumanLUpperarm", ELBOW = "Base HumanLForearm1", PALM = "Base HumanLPalm";
     private static final String[] ARM = {UPPER, ELBOW, "Base HumanLForearm2", "Base HumanLForearm3", PALM};
-    /** Fully on the hold within this of it; let go beyond the far one (metres, the animated palm to the hold). */
-    private static final float NEAR = 0.09f, FAR = 0.20f;
+    /** Fully on the hold within this of the idle's hand spot on the part; let go beyond the far one (metres). */
+    private static final float NEAR = 0.025f, FAR = 0.06f;
 
     /** One model's left arm, by bone index. */
     private static final class Rig {
@@ -30,6 +32,20 @@ final class GripHold {
         int[] digit, parent;
         String[] name;
         float[] localPos, localTurn;
+        /** Where the idle's palm sits on each part (its bone's frame), by part bone. */
+        final java.util.Map<Integer, Vector3f> idle = new java.util.HashMap<>();
+    }
+
+    /** The idle's palm on a part, in that part's frame (from the model's idle, its first frame); null without one. */
+    private static Vector3f idleSpot(Rig r, int part) {
+        return r.idle.computeIfAbsent(part, b -> {
+            NpcSkin.Clip c = r.skin.clips.get("idle_armed");
+            if (c == null) return null;
+            int n = r.skin.boneNames.length;
+            float[] p = new float[n * 3], t = new float[n * 4];
+            Operator.sample(c, 0, Operator.HOLD, p, t);
+            return rot(t, b).conjugate().transform(at(p, r.palm).sub(at(p, b)));
+        });
     }
 
     private static Rig rig;
@@ -105,14 +121,9 @@ final class GripHold {
         Quaternionf tq = new Quaternionf();
         on(pos, turn, part, hold.palm, tp, tq);
         Vector3f pp = at(pos, r.palm);
-        float d = pp.distance(tp);
-        LocalGuns.Hold g = spec.guard != null && !spec.guard.equals(bone) ? spec.holds.get(spec.guard) : null;
-        int gb = g == null ? -1 : skin.bone(spec.guard);
-        if (gb >= 0 && g.palm != null && g.palm.length >= 7) {
-            Vector3f gp = new Vector3f();
-            on(pos, turn, gb, g.palm, gp, new Quaternionf());
-            d = Math.min(d, pp.distance(gp));
-        }
+        Vector3f spot = idleSpot(r, part);
+        if (spot == null) return 0;
+        float d = rot(turn, part).conjugate().transform(new Vector3f(pp).sub(at(pos, part))).distance(spot);
         float w = Math.max(0, Math.min(1, 1 - (d - NEAR) / (FAR - NEAR)));
         if (w <= 0) return 0;
         float k = Operator.smooth(w);

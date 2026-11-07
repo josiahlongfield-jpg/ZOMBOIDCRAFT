@@ -66,9 +66,20 @@ public final class OperatorView {
     private static boolean loadingRounds, loadEmpty;
     /** The first-person model drawn last (another gun drawn starts over from its draw). */
     private static String drawn;
-    /** The holographic sight's mesh (its bone in the pack), and how far ahead of the eye its sight sits when aiming. */
+    /**
+     * The holographic sight's mesh (its bone in the pack), and how far ahead of the eye the pack's "ads" puts the sight's
+     * aim point. Tarkov puts the eye right on that point (its mod_aim_camera, already the sight's eye relief behind
+     * the glass), so aiming slides the rig that much further back (Josiah 2026-11-07: the guns sat too far away).
+     */
     private static final String SCOPE = "scope_all_eotech_exps3_LOD0";
     private static final float EYE = 0.10f;
+    /**
+     * Tarkov's own first-person field of view (its default, vertical degrees). Minecraft draws what's in hand at 70, which
+     * made the rig look small and far off; drawing it wider about the eye by this much (x and y, not depth) shows it
+     * exactly as a 50 degree view would.
+     */
+    private static final float FOV = 50f;
+    static final float WIDEN = (float) (Math.tan(Math.toRadians(70 / 2.0)) / Math.tan(Math.toRadians(FOV / 2.0)));
     /**
      * The reticle, drawn on the sight's glass (0.2 m out from its eye point, just this side of the lens) so it only
      * ever shows in the window: the EOTech's texture spans 2.54 degrees there, so the ring is the real sight's 68 MOA
@@ -222,6 +233,7 @@ public final class OperatorView {
 
         pose.pushPose();
         pose.translate(-ARM[0], -ARM[1], -ARM[2]);
+        pose.scale(WIDEN, WIDEN, 1);
         // Tarkov's clips hold the rifle canted up off the eye line; the whole rig is turned about the sight so the
         // sight looks straight down the middle of the screen (Josiah 2026-11-06: it must point at the crosshair). Aiming
         // then slides it, unturned, until the sight sits on the eye (the pack's "ads": the sight 10 cm ahead of the eye)
@@ -234,7 +246,7 @@ public final class OperatorView {
             sightAt = new Matrix4f(onEye).invert().translate(0, 0, -EYE);
             Vector3f p = sightAt.getTranslation(new Vector3f());
             Vector3f hip = new Vector3f(p).sub(q.transform(new Vector3f(p)));
-            Vector3f t = hip.lerp(new Vector3f(ads.at()[0], ads.at()[1], ads.at()[2]), Operator.smooth(aim), new Vector3f());
+            Vector3f t = hip.lerp(new Vector3f(ads.at()[0], ads.at()[1], ads.at()[2] + EYE), Operator.smooth(aim), new Vector3f());
             hold.translationRotate(t.x, t.y, t.z, q);
             pose.mulPose(hold);
         }
@@ -323,7 +335,8 @@ public final class OperatorView {
     private static Vector3f lens(NpcSkin skin, Matrix4f hold, LocalGuns.Device d) {
         int b = d == null || d.at == null ? -1 : skin.bone(d.bone);
         if (b < 0) return null;
-        return boneNow(b, hold).transformPosition(new Vector3f(d.at[0], d.at[1], d.at[2]));
+        Vector3f at = boneNow(b, hold).transformPosition(new Vector3f(d.at[0], d.at[1], d.at[2]));
+        return at.mul(WIDEN, WIDEN, 1);   // where the widened rig draws it
     }
 
     /** The way a lens shines, from the eye. */
