@@ -163,7 +163,8 @@ public final class Population {
         if (ZONES.size() >= 16) {
             ZONES.remove(0);
         }
-        ZONES.add(new Zone(pos, radius, level.getGameTime() + 100));
+        // ten seconds of pouring out of the doors and stairwells after a loud one
+        ZONES.add(new Zone(pos, radius, level.getGameTime() + 200));
     }
 
     private static void tick(MinecraftServer server) {
@@ -541,7 +542,7 @@ public final class Population {
     }
 
     private static int seedRadius(ZcConfig.Population cfg) {
-        return Math.clamp((int) Math.ceil((cfg.crowd ? cfg.crowdRange : 0) / 16), SEED_RADIUS, 16);
+        return Math.clamp((int) Math.ceil((cfg.crowd ? cfg.crowdRange : 0) / 16), SEED_RADIUS, 20);
     }
 
     // ---- the crowd: records out in the open round each player, for the client to draw as pictures

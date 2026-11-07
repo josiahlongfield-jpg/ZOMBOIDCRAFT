@@ -460,11 +460,11 @@ public final class ZcConfig {
         /** Multiplies every place's count (Zomboid's population setting): 0.25 to 4. */
         public double density = 1.0;
         /** At most this many real zombies at once, shared by every player (where autoCap starts)... */
-        public int realCap = 250;
+        public int realCap = 500;
         /** ...moved up while the server keeps its ticks under tickTarget ms and down when it doesn't, within these. */
         public boolean autoCap = true;
-        public int capMin = 120;
-        public int capMax = 800;
+        public int capMin = 300;
+        public int capMax = 1500;
         public double tickTarget = 40;
         /** Zombies out in the open become real within this many blocks of a player. */
         public double streetRange = 96;
@@ -475,7 +475,7 @@ public final class ZcConfig {
         /** Real zombies left idle this far beyond those ranges go back to being records. */
         public double foldMargin = 16;
         /** How many become real in one go (twice a second), so a crowd arrives without a stall. */
-        public int perStep = 24;
+        public int perStep = 48;
         /** Share of houses (in towns, suburbs and farms) with nobody left in them. */
         public double emptyHouses = 0.5;
         /** Buildings where the dead gathered at the end draw extra indoors: hospital x3, police x2.5, mall x2, fire station and school x1.5. */
@@ -489,9 +489,9 @@ public final class ZcConfig {
         /** The dead out in the open past the real ones are drawn as a still crowd (pictures, no cost to the server)... */
         public boolean crowd = true;
         /** ...this far round each player (blocks; the server's view distance bounds it too)... */
-        public double crowdRange = 192;
+        public double crowdRange = 320;
         /** ...at most this many, nearest first, and none nearer than this (those are real, or about to be). */
-        public int crowdMax = 3000;
+        public int crowdMax = 8000;
         public double crowdMinDistance = 40;
     }
 
@@ -539,18 +539,18 @@ public final class ZcConfig {
         /** Farthest the dead walk toward one sound, real or still records. */
         public double followSoundDistance = 100;
         /** Idle dead gather into groups this big, give or take this share... */
-        public int rallyGroupSize = 20;
+        public int rallyGroupSize = 40;
         public double rallyGroupSizeVariance = 50;
         /** ...walking up to this far to join one, groups this far apart, standing this close together (blocks). */
         public double rallyTravelDistance = 20;
         public double rallyGroupSeparation = 15;
         public double rallyGroupRadius = 3;
         /** Real zombies in one 128-block area before idle extras fold back into records (Zomboid deletes them). */
-        public int countBeforeDelete = 300;
+        public int countBeforeDelete = 800;
         /** Ours: herds on the roads at world start, and how many walk in each. */
-        public int herds = 6;
-        public int herdMin = 200;
-        public int herdMax = 400;
+        public int herds = 15;
+        public int herdMin = 500;
+        public int herdMax = 1500;
     }
 
     /**
@@ -2172,7 +2172,7 @@ public final class ZcConfig {
      * are left alone).
      */
     public int defaultsVersion = 0;
-    private static final int DEFAULTS = 18;
+    private static final int DEFAULTS = 19;
 
     private static void upgrade(ZcConfig c) {
         if (c.defaultsVersion < 1) {
@@ -2364,6 +2364,24 @@ public final class ZcConfig {
             if (c.combat.zombieBodyShots == 0.33) {
                 c.combat.zombieBodyShots = 1.0;
             }
+        }
+        if (c.defaultsVersion < 19) {
+            // 2026-11-07 (Josiah): keep the 908,000 dead and make it feel that way, swamped by massive hordes, as long
+            // as the server holds up: more real at once (the tuner still backs off past tickTarget), bigger rallies
+            // and herds, the far crowd drawn further
+            ZcConfig.Population p = c.population;
+            if (p.realCap == 250) p.realCap = 500;
+            if (p.capMin == 120) p.capMin = 300;
+            if (p.capMax == 800) p.capMax = 1500;
+            if (p.perStep == 24) p.perStep = 48;
+            if (p.crowdRange == 192) p.crowdRange = 320;
+            if (p.crowdMax == 3000) p.crowdMax = 8000;
+            ZcConfig.ZombiePopulation zp = c.zombiePopulation;
+            if (zp.rallyGroupSize == 20) zp.rallyGroupSize = 40;
+            if (zp.countBeforeDelete == 300) zp.countBeforeDelete = 800;
+            if (zp.herds == 6) zp.herds = 15;
+            if (zp.herdMin == 200) zp.herdMin = 500;
+            if (zp.herdMax == 400) zp.herdMax = 1500;
         }
         c.defaultsVersion = DEFAULTS;
     }
