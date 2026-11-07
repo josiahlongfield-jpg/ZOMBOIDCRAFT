@@ -286,7 +286,7 @@ public final class OperatorView {
         pose.pushPose();
         pose.translate(-ARM[0], -ARM[1], -ARM[2]);
         // the body's own motion walking, running and sprinting (Tarkov's player: the rifle against the eye)
-        pose.mulPose(TarkovMotion.gun());
+        pose.mulPose(TarkovMotion.gun(PIVOT));
         pose.scale(WIDEN, WIDEN, 1);
         // Tarkov's clips hold the rifle canted up off the eye line; the whole rig is turned about the sight so the
         // sight looks straight down the middle of the screen (Josiah 2026-11-06: it must point at the crosshair). Aiming
@@ -331,6 +331,7 @@ public final class OperatorView {
         if (built != null) tarkovRail(built, frames, hold, free && !reloading);
         else rail(skin, gun, hold, free && !reloading);
         Matrix4f[] bones = Operator.bones(skin, pos, turn);
+        pivot(spec, skin, hold);
         buffer = 1 - buffer;
         if (BUFFERS[buffer] == null || BUFFERS[buffer].length != skin.groups.length * 2) {
             BUFFERS[buffer] = new Object[skin.groups.length * 2];
@@ -602,6 +603,27 @@ public final class OperatorView {
         if (light == null) light = laser;
         com.zomboidcraft.client.combat.RifleView.operatorRail(new com.zomboidcraft.client.combat.RifleView.Rail(laser, light,
                 bore == null ? new Vector3f(0, 0, -1) : bore, free ? 1 : 0));
+    }
+
+    /**
+     * Where the rifle's root is drawn (from the eye, widened as drawn), for the body's motion to turn it about: a Tarkov
+     * gun's base part, as it sits this frame (used from the next frame on; it moves smoothly). Others keep about where
+     * a rifle's receiver sits at the hip.
+     */
+    private static final Vector3f PIVOT = new Vector3f(0.1f, -0.15f, -0.33f);
+
+    private static void pivot(@Nullable LocalGuns.Spec spec, NpcSkin skin, Matrix4f hold) {
+        int b = -1;
+        if (spec != null && spec.tarkov != null && spec.tarkov.kit != null) {
+            for (LocalGuns.KitPart k : spec.tarkov.kit) {
+                if ("".equals(k.path) && k.bone != null) b = skin.bone(k.bone);
+            }
+        }
+        if (b < 0) {
+            PIVOT.set(0.1f, -0.15f, -0.33f);
+            return;
+        }
+        boneNow(b, hold).getTranslation(PIVOT).mul(WIDEN, WIDEN, 1);
     }
 
     /** A lens on a bone of the rig, from the eye. */

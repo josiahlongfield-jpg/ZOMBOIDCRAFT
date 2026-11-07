@@ -28,6 +28,9 @@ public final class OperatorHands {
     private OperatorHands() {
     }
 
+    /** About where the right hand holds a blade or grenade, from the eye: the body's motion turns them about it. */
+    private static final org.joml.Vector3f HAND = new org.joml.Vector3f(0.15f, -0.2f, -0.35f);
+
     private static final String IDLE = "idle_armed", DRAW = "hands_in", LOOK = "look";
     private static final String SWING_0 = "swing_0", SWING_1 = "swing_1";
     private static final String PIN = "pin", HOLD = "hold", THROW = "throw";
@@ -147,7 +150,7 @@ public final class OperatorHands {
         pose.pushPose();
         pose.last().pose().identity();
         pose.last().normal().identity();
-        pose.mulPose(TarkovMotion.gun());   // the body's own motion walking and running, as with the guns
+        pose.mulPose(TarkovMotion.gun(HAND));   // the body's own motion walking and running, as with the guns, about the hand
         pose.scale(OperatorView.WIDEN, OperatorView.WIDEN, 1);   // at Tarkov's field of view, as the guns are
         org.joml.Matrix4f[] bones = Operator.bones(skin, pos, turn);
         buffer = 1 - buffer;

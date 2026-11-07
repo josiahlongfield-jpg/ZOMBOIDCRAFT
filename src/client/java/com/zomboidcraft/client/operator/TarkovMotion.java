@@ -75,6 +75,8 @@ public final class TarkovMotion {
     private static float pace;
     private static final Vector3f CAM_T = new Vector3f();
     private static final Quaternionf CAM_Q = new Quaternionf();
+    private static final Vector3f GUN_T = new Vector3f();
+    private static final Quaternionf GUN_Q = new Quaternionf();
     private static final Matrix4f GUN = new Matrix4f();
 
     /**
@@ -87,6 +89,8 @@ public final class TarkovMotion {
         Data d = data();
         CAM_T.zero();
         CAM_Q.identity();
+        GUN_T.zero();
+        GUN_Q.identity();
         GUN.identity();
         if (d == null || player == null || !mc.options.getCameraType().isFirstPerson() || !OperatorView.steady()) {
             lastTime = Float.NaN;
@@ -138,8 +142,8 @@ public final class TarkovMotion {
         }
         CAM_T.mul(camScale);
         CAM_Q.set(new Quaternionf().slerp(norm(cq), camScale));
-        gt.mul(gunScale);
-        GUN.translationRotate(gt.x, gt.y, gt.z, new Quaternionf().slerp(norm(gq), gunScale));
+        GUN_T.set(gt).mul(gunScale);
+        GUN_Q.set(new Quaternionf().slerp(norm(gq), gunScale));
     }
 
     private static Quaternionf norm(Quaternionf q) {
@@ -164,7 +168,16 @@ public final class TarkovMotion {
         return CAM_Q;
     }
 
-    /** How the rifle (arms and all) moves against the camera this frame, about the eye. */
+    /**
+     * How the rifle (arms and all) moves against the camera this frame: Tarkov's clips move the rifle's own root (its
+     * displacement and its turn about itself), so the turn goes about where the rifle's root is drawn now (camera space,
+     * as drawn). Kept for {@link #gun()} until the next call.
+     */
+    public static Matrix4f gun(Vector3f pivot) {
+        return GUN.translation(pivot.x + GUN_T.x, pivot.y + GUN_T.y, pivot.z + GUN_T.z).rotate(GUN_Q).translate(-pivot.x, -pivot.y, -pivot.z);
+    }
+
+    /** The rifle's motion as last worked out by {@link #gun(Vector3f)} (for the lights and lenses drawn with it). */
     public static Matrix4f gun() {
         return GUN;
     }
