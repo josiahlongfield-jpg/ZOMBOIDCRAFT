@@ -132,7 +132,7 @@ public final class DecorUses {
             say(player, "You've nothing raw to cook.");
             return;
         }
-        TimedActions.start(player, "decor_cook:" + pos.asLong(), "Cooking", 200, p -> {
+        TimedActions.start(player, "decor_cook:" + pos.asLong(), "Cooking", Math.round(200 * com.zomboidcraft.building.base.RoomEffects.cookScale(player)), p -> {
             int made = 0;
             int skill = Skills.level(p, Skill.COOKING);
             for (int i = 0; i < p.getInventory().getContainerSize(); i++) {
@@ -143,7 +143,7 @@ public final class DecorUses {
                 p.getInventory().setItem(i, com.zomboidcraft.loot.items.Cooking.cook(s, n + extra));
                 made += n;
             }
-            Skills.addXp(p, Skill.COOKING, 3 + made);
+            Skills.addXp(p, Skill.COOKING, Math.round((3 + made) * com.zomboidcraft.building.base.RoomEffects.cookXp(p)));
             level.playSound(null, pos, SoundEvents.CAMPFIRE_CRACKLE, SoundSource.BLOCKS, 1f, 1f);
             say(p, "Hot food.");
         });

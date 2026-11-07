@@ -130,6 +130,8 @@ public final class Injuries {
         int firstAid = Skills.level(player, Skill.FIRST_AID);
         boolean fastHealer = com.zomboidcraft.survival.character.Traits.has(player, "fast_healer");
         boolean slowHealer = com.zomboidcraft.survival.character.Traits.has(player, "slow_healer");
+        // asleep in a hospital bed in an Equipped med bay: half again as quick
+        boolean hospital = com.zomboidcraft.building.base.RoomEffects.hospitalRest(player);
         for (Region r : Region.values()) {
             Part p = body.part(r);
             if (p.fine()) continue;
@@ -138,6 +140,7 @@ public final class Injuries {
             int mend = p.bandaged() ? bound : 1;
             // Fast Healer: half again as quick; Slow Healer: a third of the time nothing mends
             if (fastHealer && random.nextBoolean()) mend++;
+            if (hospital && random.nextBoolean()) mend++;
             if (slowHealer && random.nextInt(3) == 0) mend = 0;
             int woundLeft = p.wounded() ? Math.max(0, p.woundLeft() - mend) : 0;
             Wound wound = woundLeft == 0 ? Wound.NONE : p.wound();

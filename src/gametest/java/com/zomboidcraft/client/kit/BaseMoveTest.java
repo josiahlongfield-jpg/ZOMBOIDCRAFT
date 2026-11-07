@@ -60,6 +60,7 @@ public class BaseMoveTest implements FabricClientGameTest {
             sp.getConnection().waitForChunksRender();
             if (ROOMS) {
                 rooms(ctx, sp);
+                effects(ctx, sp);
                 return;
             }
             stand(ctx, sp, 4, 1, 60, 30);
@@ -314,6 +315,95 @@ public class BaseMoveTest implements FabricClientGameTest {
         LOG.info("ZCBASE base page: {}", report);
         ctx.runOnClient(mc -> mc.gui.setScreen(null));
         ctx.waitTicks(5);
+    }
+
+    /** What the room does for the player where they stand, for the log. */
+    private static String effectsHere(TestSingleplayerContext sp) {
+        return sp.getServer().computeOnServer(s -> {
+            ServerPlayer p = player(s);
+            ServerLevel level = s.overworld();
+            return "bunk=" + com.zomboidcraft.building.base.RoomEffects.bunk(p)
+                    + " rest x" + com.zomboidcraft.building.base.RoomEffects.restScale(p)
+                    + " wake stress -" + com.zomboidcraft.building.base.RoomEffects.wakeStressRelief(p)
+                    + " sound sleep " + com.zomboidcraft.building.base.RoomEffects.soundSleep(p)
+                    + " | treat x" + com.zomboidcraft.building.base.RoomEffects.treatScale(p)
+                    + " hospital rest " + com.zomboidcraft.building.base.RoomEffects.hospitalRest(p)
+                    + " | cook time x" + com.zomboidcraft.building.base.RoomEffects.cookScale(p)
+                    + " cook xp x" + com.zomboidcraft.building.base.RoomEffects.cookXp(p)
+                    + " counter keeps cold " + com.zomboidcraft.building.base.RoomEffects.keepsCold(p, level, barracks.offset(13, 1, 7))
+                    + " far crate keeps cold " + com.zomboidcraft.building.base.RoomEffects.keepsCold(p, level, barracks.offset(30, 1, 4));
+        });
+    }
+
+    private static String sleeper(TestSingleplayerContext sp) {
+        return sp.getServer().computeOnServer(s -> {
+            ServerPlayer p = player(s);
+            return "asleep " + com.zomboidcraft.survival.Sleep.asleep(p)
+                    + " fatigue " + Math.round(com.zomboidcraft.survival.SurvivalStats.get(p).fatigue())
+                    + " stress " + com.zomboidcraft.survival.Mood.get(p, com.zomboidcraft.survival.Mood.Stat.STRESS)
+                    + " boredom " + com.zomboidcraft.survival.Mood.get(p, com.zomboidcraft.survival.Mood.Stat.BOREDOM)
+                    + " unhappy " + com.zomboidcraft.survival.Mood.get(p, com.zomboidcraft.survival.Mood.Stat.UNHAPPINESS);
+        });
+    }
+
+    /** Rooms step 2: what the bunk room, med bay and kitchen do. */
+    private static void effects(ClientGameTestContext ctx, TestSingleplayerContext sp) {
+        sp.getServer().runCommand("gamemode survival @a");
+        // each room, as it stands, lights on
+        standIn(ctx, sp, 2, 4, 180f, 20f);
+        ctx.waitTicks(25);
+        LOG.info("ZCBASE fx bunk, light on: {} | {}", reading(sp), effectsHere(sp));
+        sp.getServer().runOnServer(s -> s.overworld().setBlockAndUpdate(barracks.offset(2, 5, 4), CityBlocks.resolve("ceiling_light_off")));
+        ctx.waitTicks(25);
+        LOG.info("ZCBASE fx bunk, light off: {} | {}", reading(sp), effectsHere(sp));
+        standIn(ctx, sp, 8, 3, 180f, 20f);
+        ctx.waitTicks(25);
+        LOG.info("ZCBASE fx med bay: {} | {}", reading(sp), effectsHere(sp));
+        standIn(ctx, sp, 13, 3, 180f, 20f);
+        ctx.waitTicks(25);
+        LOG.info("ZCBASE fx kitchen: {} | {}", reading(sp), effectsHere(sp));
+        standIn(ctx, sp, 30, 4, 180f, 20f);
+        ctx.waitTicks(25);
+        LOG.info("ZCBASE fx outside: {} | {}", reading(sp), effectsHere(sp));
+
+        // a night in the bunk room, lights off: tired, on edge and bored going in
+        sp.getServer().runOnServer(s -> {
+            ServerPlayer p = player(s);
+            com.zomboidcraft.survival.SurvivalStats.set(p, com.zomboidcraft.survival.SurvivalStats.get(p).withFatigue(60f));
+            com.zomboidcraft.survival.Mood.add(p, com.zomboidcraft.survival.Mood.Stat.STRESS, 40);
+            com.zomboidcraft.survival.Mood.add(p, com.zomboidcraft.survival.Mood.Stat.BOREDOM, 50);
+            com.zomboidcraft.survival.Mood.add(p, com.zomboidcraft.survival.Mood.Stat.UNHAPPINESS, 30);
+        });
+        standIn(ctx, sp, 1, 4, 180f, 30f);
+        ctx.waitTicks(25);
+        LOG.info("ZCBASE fx before sleep: {}", sleeper(sp));
+        BlockPos bunk = barracks.offset(1, 1, 6);
+        ctx.runOnClient(mc -> net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.send(new com.zomboidcraft.survival.Sleep.LieDown(bunk)));
+        ctx.waitTicks(30);
+        String wakes = sp.getServer().computeOnServer(s -> "inside base " + com.zomboidcraft.building.base.RoomEffects.canWake(player(s), barracks.offset(8, 1, 4))
+                + ", outside " + com.zomboidcraft.building.base.RoomEffects.canWake(player(s), barracks.offset(40, 1, 4)));
+        LOG.info("ZCBASE fx asleep: {} | {} | can wake: {}", sleeper(sp), effectsHere(sp), wakes);
+        frame(ctx, "bunk-asleep");
+        for (int i = 0; i < 90; i++) {
+            ctx.waitTicks(20);
+            boolean up = sp.getServer().computeOnServer(s -> !com.zomboidcraft.survival.Sleep.asleep(player(s)));
+            if (i % 10 == 0 || up) LOG.info("ZCBASE fx night {}: {}", i, sleeper(sp));
+            if (up) break;
+        }
+        LOG.info("ZCBASE fx woke: {}", sleeper(sp));
+        frame(ctx, "bunk-woke");
+
+        // the hospital bed in the med bay
+        sp.getServer().runOnServer(s -> com.zomboidcraft.survival.SurvivalStats.set(player(s), com.zomboidcraft.survival.SurvivalStats.get(player(s)).withFatigue(60f)));
+        standIn(ctx, sp, 9, 4, 180f, 30f);
+        ctx.waitTicks(25);
+        BlockPos hospital = barracks.offset(9, 1, 6);
+        ctx.runOnClient(mc -> net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking.send(new com.zomboidcraft.survival.Sleep.LieDown(hospital)));
+        ctx.waitTicks(30);
+        LOG.info("ZCBASE fx hospital bed: {} | {}", sleeper(sp), effectsHere(sp));
+        frame(ctx, "medbay-hospital-bed");
+        sp.getServer().runOnServer(s -> com.zomboidcraft.survival.Sleep.wake(player(s), "You get up."));
+        ctx.waitTicks(10);
     }
 
     /** Wave 1 (lifting, the G menu, walls, soil, the Skills page) is merged; set true to film it again. */
