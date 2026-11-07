@@ -106,9 +106,10 @@ final class GripHold {
     }
 
     /**
-     * Puts the left hand on the gun's hold, as far as the clip has it there; returns how far on (0 to 1).
+     * Puts the left hand on the gun's hold, as far as the clip has it there (always through the inspect: Tarkov keeps
+     * the left hand on the fitted grip while the gun is turned over, Josiah 2026-11-07); returns how far on (0 to 1).
      */
-    static float apply(NpcSkin skin, LocalGuns.Spec spec, float[] pos, float[] turn) {
+    static float apply(NpcSkin skin, LocalGuns.Spec spec, float[] pos, float[] turn, boolean always) {
         LocalGuns.Hold hold = of(spec);
         if (hold == null || hold.palm == null || hold.palm.length < 7) return 0;
         String bone = spec.grip != null && spec.holds.get(spec.grip) == hold ? spec.grip : spec.guard;
@@ -124,7 +125,7 @@ final class GripHold {
         Vector3f spot = idleSpot(r, part);
         if (spot == null) return 0;
         float d = rot(turn, part).conjugate().transform(new Vector3f(pp).sub(at(pos, part))).distance(spot);
-        float w = Math.max(0, Math.min(1, 1 - (d - NEAR) / (FAR - NEAR)));
+        float w = always ? 1 : Math.max(0, Math.min(1, 1 - (d - NEAR) / (FAR - NEAR)));
         if (w <= 0) return 0;
         float k = Operator.smooth(w);
         Vector3f target = new Vector3f(pp).lerp(tp, k);
