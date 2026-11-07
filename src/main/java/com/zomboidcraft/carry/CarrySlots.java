@@ -42,6 +42,9 @@ public final class CarrySlots {
             if (clothing != null && clothing.gear == gear) {
                 return true;
             }
+            if (gear >= GearStore.EARPIECE) {
+                return com.zomboidcraft.carry.grid.TarkovSlots.fits(gear, stack);
+            }
             if (gear > GearStore.WRIST) {
                 return false;
             }

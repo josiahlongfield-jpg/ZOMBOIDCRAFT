@@ -133,7 +133,7 @@ final class PackPage {
             // Tarkov's bags: no weight cap, just cells; the header gives what it weighs and how many cells it has
             KitDraw.capsRight(g, font, Weights.format(inside) + "  ·  " + spec.cells() + " cells", x + LW, ty + 1, KitDraw.DIM, 0.75f);
             g.fill(x, ty + 11, x + LW, ty + 12, KitDraw.LINE);
-            cells(g, font, bag, x, y + GRID_Y, LW, GRID_H, mx, my);
+            cells(g, font, bag, x, y + GRID_Y, LW, GRID_H, 24, mx, my);
         } else if (tab == Tab.POCKETS && tabs.contains(Tab.POCKETS) || tab == Tab.LOOSE && tabs.contains(Tab.LOOSE)) {
             boolean loose = tab == Tab.LOOSE;
             for (int i = InventoryMenu.INV_SLOT_START; i < InventoryMenu.INV_SLOT_END; i++) {
@@ -201,7 +201,12 @@ final class PackPage {
 
     // ------------------------------------------------------------------ the world's side
 
-    private void nearby(GuiGraphicsExtractor g, Font font, NearbyMenu near, int x, int y, int mx, int my) {
+    void nearby(GuiGraphicsExtractor g, Font font, NearbyMenu near, int x, int y, int mx, int my) {
+        nearby(g, font, near, x, y, RW, mx, my);
+    }
+
+    /** The floor and containers in reach, {@code RW} wide. */
+    void nearby(GuiGraphicsExtractor g, Font font, NearbyMenu near, int x, int y, int RW, int mx, int my) {
         AbstractContainerMenu menu = screen.menu();
         List<Nearby.Source> sources = near.sources();
         KitDraw.heading(g, font, "Nearby", x, y + 40, RW, true);
@@ -285,7 +290,7 @@ final class PackPage {
      * the cells it covers. A press anywhere on an item picks it up; while carrying, the cell under the mouse is where its
      * top left goes, shown green where it fits and red where it doesn't (R turns it).
      */
-    private void cells(GuiGraphicsExtractor g, Font font, BagContainer bag, int x, int y, int w, int h, int mx, int my) {
+    void cells(GuiGraphicsExtractor g, Font font, BagContainer bag, int x, int y, int w, int h, int maxT, int mx, int my) {
         AbstractContainerMenu menu = screen.menu();
         com.zomboidcraft.carry.grid.GridShape shape = bag.spec().shape();
         int cellCount = Math.min(shape.cells(), bag.usableSlots());
@@ -297,7 +302,7 @@ final class PackPage {
             }
         }
         // the biggest cell that lays every grid out in the space, grids left to right, wrapping
-        int t = 24;
+        int t = maxT;
         int[][] at = null;
         for (; t >= 8; t--) {
             at = layout(shape, t, w);
