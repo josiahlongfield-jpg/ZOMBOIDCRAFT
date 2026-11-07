@@ -34,6 +34,7 @@ public class ZomboidCraft implements ModInitializer {
         ModBlocks.register();
         com.zomboidcraft.building.BuildBlocks.register();
         com.zomboidcraft.building.WoodBlocks.register();
+        com.zomboidcraft.building.base.Bases.register();
         com.zomboidcraft.world.blocks.CityBlocks.register();
         com.zomboidcraft.world.cars.Cars.register();
         com.zomboidcraft.world.cars.CarNet.register();
@@ -62,6 +63,8 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.combat.GunState.register();
         com.zomboidcraft.combat.LocalGuns.register();
         com.zomboidcraft.combat.LocalParts.register();
+        com.zomboidcraft.combat.TarkovParts.register();
+        com.zomboidcraft.combat.LocalHands.register();
         com.zomboidcraft.combat.Retired.register();
         com.zomboidcraft.combat.Attachments.register();
         com.zomboidcraft.combat.GunFinish.register();
@@ -129,6 +132,7 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.npc.Npcs.register();
         com.zomboidcraft.combat.StuckBolts.register();
         com.zomboidcraft.combat.Stamina.register();
+        com.zomboidcraft.combat.Gait.register();
         com.zomboidcraft.combat.GunRaise.register();
         com.zomboidcraft.combat.Grabs.register();
         com.zomboidcraft.combat.CombatEvents.register();
@@ -139,6 +143,7 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.world.gen.CountyCommand.register();
         com.zomboidcraft.world.gen.CountyRails.register();
         // last of every loot hook: nothing vanilla gets out of a loot table
+        com.zomboidcraft.loot.CommandNet.register();
         com.zomboidcraft.loot.NoVanilla.register();
         LOGGER.info("The dead walk.");
     }

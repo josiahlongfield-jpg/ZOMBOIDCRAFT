@@ -182,6 +182,8 @@ public final class Operator {
     }
 
     private static final Map<Integer, Body> BODIES = new HashMap<>();
+    /** The paces (blocks a tick) Tarkov's walk, run and sprint clips were made at. */
+    private static final float WALK_PACE = 2.5f / 20, RUN_PACE = 3.36f / 20, SPRINT_PACE = 6.2f / 20;
     private static boolean[] upper;
     private static NpcSkin upperFor;
 
@@ -208,23 +210,33 @@ public final class Operator {
             e.lastX = player.getX();
             e.lastZ = player.getZ();
         }
+        // Tarkov's own walk, run and sprint, each played at the pace its feet were made for (their root motion: walk
+        // 2.5 m/s, run 3.36, sprint 6.2; blocks a tick here), so the steps match the ground going by
         String want;
         float rate;
-        if (e.speed < 0.03f || player.isPassenger()) {
+        boolean sprint = player.isSprinting() && skin.clips.containsKey("sprint");
+        if (e.speed < 0.02f || player.isPassenger()) {
             want = "idle";
             rate = 1;
-        } else if (player.isSprinting() || e.speed > 0.25f) {
+        } else if (sprint || !skin.clips.containsKey("sprint") && (player.isSprinting() || e.speed > 0.25f)) {
+            want = sprint ? "sprint" : "run";
+            rate = Math.max(0.6f, Math.min(1.5f, e.speed / (sprint ? SPRINT_PACE : 0.28f)));
+        } else if (e.speed > (WALK_PACE + RUN_PACE) / 2 && skin.clips.containsKey("sprint")) {
             want = "run";
-            rate = Math.max(0.7f, Math.min(1.4f, e.speed / 0.28f));
+            rate = Math.max(0.6f, Math.min(1.5f, e.speed / RUN_PACE));
         } else {
             want = "walk";
-            rate = Math.max(0.45f, Math.min(1.3f, e.speed / 0.216f));
+            rate = Math.max(0.4f, Math.min(1.5f, e.speed / (skin.clips.containsKey("sprint") ? WALK_PACE : 0.216f)));
         }
         if (!want.equals(e.clip) && skin.clips.containsKey(want)) {
+            NpcSkin.Clip old = skin.clips.get(e.clip), next = skin.clips.get(want);
+            float stride = 0;
+            // from one gait to another the feet keep their place in the stride
+            if (!"idle".equals(e.clip) && old != null && old.seconds() > 0) stride = (e.t % old.seconds()) / old.seconds();
             e.from = e.clip;
             e.fromT = e.t;
             e.clip = want;
-            e.t = 0;
+            e.t = stride * next.seconds();
             e.fade = 0;
         }
         e.rate = rate;
@@ -272,8 +284,47 @@ public final class Operator {
         return x * x * (3 - 2 * x);
     }
 
-    /** Whether a held stack is the operator's rifle. */
+    /** Whether a held stack is one of the operator's Tarkov guns (the M4A1, or any local gun with its own first person). */
     public static boolean holdsRifle(net.minecraft.world.item.ItemStack stack) {
+        return fpModel(stack) != null;
+    }
+
+    /** Whether it's the M4A1 his third-person model carries on its own bone. */
+    public static boolean holdsM4(net.minecraft.world.item.ItemStack stack) {
         return GUN.equals(stack.get(com.zomboidcraft.combat.LocalGuns.ID));
+    }
+
+    /** The first-person model for a held Tarkov gun, blade or grenade (config/zomboidcraft/npc/NAME.zsk), or null for any other stack. */
+    public static String fpModel(net.minecraft.world.item.ItemStack stack) {
+        if (stack == null || stack.isEmpty()) return null;
+        com.zomboidcraft.combat.LocalGuns.Spec spec = com.zomboidcraft.combat.LocalGuns.of(stack);
+        if (spec != null && spec.fp != null) return spec.fp;
+        if (holdsM4(stack)) return OperatorView.MODEL;
+        return OperatorHands.model(stack);      // a Tarkov blade or grenade
+    }
+
+    /**
+     * The skinning matrices of a held Tarkov gun's own pieces in third person: each where its first-person model's
+     * "held" pose puts it on the gun's root, hung on his weapon bone. Null when it isn't loaded or has no such pose.
+     */
+    /** The bone frames (places and turns) of a gun's model in its "held" pose, or null without one. */
+    static float[][] heldPose(NpcSkin gun) {
+        NpcSkin.Clip c = gun.clips.get("held");
+        if (c == null) return null;
+        int n = gun.boneNames.length;
+        float[] pos = new float[n * 3], turn = new float[n * 4];
+        sample(c, 0, HOLD, pos, turn);
+        return new float[][] {pos, turn};
+    }
+
+    static Matrix4f[] held(NpcSkin gun, Matrix4f weaponBone) {
+        NpcSkin.Clip c = gun.clips.get("held");
+        if (c == null) return null;
+        int n = gun.boneNames.length;
+        float[] pos = new float[n * 3], turn = new float[n * 4];
+        sample(c, 0, HOLD, pos, turn);
+        Matrix4f[] out = bones(gun, pos, turn);
+        for (Matrix4f m : out) new Matrix4f(weaponBone).mul(m, m);
+        return out;
     }
 }

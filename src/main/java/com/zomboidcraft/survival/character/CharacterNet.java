@@ -15,13 +15,15 @@ public final class CharacterNet {
      * @param again        after a death, rather than the first time in this world
      * @param free         Zomboid's Free Trait Points
      * @param penaltyEvery Negative Traits Penalty: one point less for every this many negative traits (0 for none)
+     * @param marine       marine creation (a role and trait picks, {@link MarineData}) instead of Zomboid's civilian one
      */
-    public record Open(boolean again, int free, int penaltyEvery) implements CustomPacketPayload {
+    public record Open(boolean again, int free, int penaltyEvery, boolean marine) implements CustomPacketPayload {
         public static final Type<Open> TYPE = new Type<>(ZomboidCraft.id("character_open"));
         public static final StreamCodec<RegistryFriendlyByteBuf, Open> CODEC = StreamCodec.composite(
                 ByteBufCodecs.BOOL, Open::again,
                 ByteBufCodecs.VAR_INT, Open::free,
                 ByteBufCodecs.VAR_INT, Open::penaltyEvery,
+                ByteBufCodecs.BOOL, Open::marine,
                 Open::new);
 
         @Override
@@ -30,7 +32,7 @@ public final class CharacterNet {
         }
     }
 
-    /** The survivor: an occupation and the traits bought on top of what it gives. */
+    /** The survivor: an occupation (or a marine role, "marine:<id>") and the traits bought on top of what it gives. */
     public record Create(String occupation, List<String> traits) implements CustomPacketPayload {
         public static final Type<Create> TYPE = new Type<>(ZomboidCraft.id("character_create"));
         public static final StreamCodec<RegistryFriendlyByteBuf, Create> CODEC = StreamCodec.composite(

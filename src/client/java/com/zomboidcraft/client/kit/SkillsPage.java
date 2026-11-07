@@ -292,9 +292,9 @@ final class SkillsPage {
         int py = y + 9;
         KitDraw.panel(g, x, py, w, TRAITS_H - 9);
         var profile = com.zomboidcraft.survival.character.Traits.profile(player);
-        var occupation = profile == null ? null : com.zomboidcraft.survival.character.CharacterData.occupation(profile.occupation());
+        var occupation = profile == null ? null : com.zomboidcraft.survival.character.Traits.occupationName(profile.occupation());
         int cx = x + 9, cy = py + 7;
-        KitDraw.caps(g, font, occupation == null ? "Survivor" : occupation.name(), cx, cy, KitDraw.BRIGHT, 1f);
+        KitDraw.caps(g, font, occupation == null ? "Survivor" : occupation, cx, cy, KitDraw.BRIGHT, 1f);
         cy += 12;
         List<String> shown = com.zomboidcraft.survival.character.Traits.shown(player);
         if (shown.isEmpty()) {

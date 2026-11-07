@@ -86,7 +86,22 @@ public final class LootSettings {
     private static final String[] STARTER = {"chips_bag", "water_bottle", "school_backpack", "baseball_bat", "hammer"};
 
     private static void kit(net.minecraft.server.level.ServerPlayer player) {
-        if (!ZcConfig.get().loot.starterKit || player.getAttachedOrElse(KIT, false) || player.isSpectator()) {
+        if (player.getAttachedOrElse(KIT, false) || player.isSpectator()) {
+            return;
+        }
+        // the Tarkov starter kit where its files are on this computer (Josiah 2026-11-06: the combat knife and the PM
+        // with only its magazine in it and one spare), whatever Zomboid's Starter Kit setting says
+        java.util.List<ItemStack> tarkov = tarkovKit();
+        if (!tarkov.isEmpty()) {
+            player.setAttached(KIT, true);
+            for (ItemStack stack : tarkov) {
+                if (!player.getInventory().add(stack)) {
+                    player.spawnAtLocation((ServerLevel) player.level(), stack);
+                }
+            }
+            return;
+        }
+        if (!ZcConfig.get().loot.starterKit) {
             return;
         }
         player.setAttached(KIT, true);
@@ -99,6 +114,23 @@ public final class LootSettings {
                 }
             }
         }
+    }
+
+    /** The local guns and blades marked starter: each gun loaded with its magazine in and one spare beside it. */
+    static java.util.List<ItemStack> tarkovKit() {
+        java.util.List<ItemStack> out = new java.util.ArrayList<>();
+        com.zomboidcraft.combat.LocalHands.all().stream().filter(h -> h.starter)
+                .sorted(java.util.Comparator.comparing(h -> h.id))
+                .forEach(h -> out.add(com.zomboidcraft.combat.LocalHands.make(h)));
+        com.zomboidcraft.combat.LocalGuns.all().stream().filter(g -> g.starter)
+                .sorted(java.util.Comparator.comparing(g -> g.id))
+                .forEach(g -> {
+                    ItemStack gun = com.zomboidcraft.combat.LocalGuns.loaded(g);
+                    out.add(gun);
+                    ItemStack spare = com.zomboidcraft.combat.LocalGuns.fullMagazine(gun, g.type());
+                    if (!spare.isEmpty()) out.add(spare);
+                });
+        return out;
     }
 
     public static void register() {

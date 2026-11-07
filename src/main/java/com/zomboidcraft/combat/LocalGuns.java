@@ -63,8 +63,65 @@ public final class LocalGuns {
          * reload animations (the operator's rifle, 2026-11-06): the game's reload is paced to them like a clip's.
          */
         public float[] reload;
+        /**
+         * For a gun loaded a round at a time with its own clips (the operator's Remington 870 and MP-18, 2026-11-06), its
+         * lengths in seconds: [the raise (or the opening), each round, the finish (or the close), the pump onto an empty
+         * gun]. The game's loading runs each part at that part's own pace, so every round goes in as its clip ends.
+         */
+        public float[] tube;
         /** Its can is part of the gun (the operator's kitted M4A1): it fires quiet with no muzzle attachment of ours. */
         public boolean suppressed;
+        /**
+         * The parts built onto it in its own file (the operator's kitted M4A1, 2026-11-06): any of "sight", "suppressor",
+         * "laser", "light", "foregrip", "stock". Such a gun takes none of our parts, only its magazines, and each part
+         * does its job: the sight settles the aim, the can quiets it, the grip tames the kick, the laser and light
+         * switch on (keys J and L).
+         */
+        public java.util.List<String> kit;
+        /** Where its own laser and light shine from (client RailLights). */
+        public Rail rail;
+        /**
+         * Its Tarkov first person (2026-11-06, the batch after the M4A1): the model in config/zomboidcraft/npc drawing
+         * Tarkov's arms and this gun with its clips ("operator_tarkov_pm"); none: the M4A1's or our own.
+         */
+        public String fp;
+        /** The sight's mesh in that model, whose reticle is drawn on its glass, and how wide its reticle texture spans (MOA). */
+        public String sight;
+        public float reticleMoa = 152.4f;
+        /**
+         * Its sight's magnification (the SVDS's PSO 4x, the SV-98's S&B at 5x): above 1 the operator's first person
+         * looks through it as a lens (client ScopeView), its reticle the sight's own; 0 for a red dot or irons.
+         */
+        public float zoom;
+        /**
+         * The sight's own modes, Tarkov's Zooms for it (the HHS-1's magnifier 3x then 1x, a 5-25x scope's 5 and 25): the
+         * sight-mode key steps through them; none: zoom alone.
+         */
+        public float[] zooms;
+        /**
+         * The other sights built on that the switch-sight key turns to, in order after the main one (Tarkov's change
+         * sight: the MDR's ACOG to the RMR riding on it, Josiah 2026-11-07; any sight with one, looted ones too). The Nth
+         * (from 1) draws its model's texture "reticle_N"; none: the one sight.
+         */
+        public java.util.List<AltSight> alt;
+        /**
+         * Handed to each new life, loaded with only the magazine in it and one spare (the starter kit, Josiah
+         * 2026-11-06: the PM).
+         */
+        public boolean starter;
+        /**
+         * Tarkov's own left-hand holds (each foregrip's and handguard's GripPose, Josiah 2026-11-07: a looted grip must
+         * actually be held), by the part's bone in the first-person model: the palm on that part and the fingers' turns.
+         * The fitted foregrip's hold wins, else the handguard's (client GripHold).
+         */
+        public java.util.Map<String, Hold> holds;
+        /** The foregrip and the handguard built on (their bones, keys of holds); none: no such part. */
+        public String grip, guard;
+        /**
+         * A Tarkov gun built from parts (2026-11-07, bench fitting): its base and its kit as a tree; none: a gun whose
+         * parts are fixed. Its parts then come off and go on at the bench (combat/TarkovFit).
+         */
+        public Tarkov tarkov;
         /** Resolved: the anchor's numbers with this gun's laid over them. */
         transient ZcConfig.GunStats merged;
         transient GunType type;
@@ -72,6 +129,74 @@ public final class LocalGuns {
         public GunType type() {
             return type;
         }
+
+        public boolean has(String part) {
+            return kit != null && kit.contains(part);
+        }
+    }
+
+    /**
+     * One left-hand hold: the palm on its part (metres and a turn x, y, z, w in that part's bone frame) and each
+     * finger bone's own turn from its parent ("Base HumanLDigit11": x, y, z, w).
+     */
+    public static final class Hold {
+        public float[] palm;
+        public java.util.Map<String, float[]> fingers;
+    }
+
+    /**
+     * One more sight on a gun, as the main one is given: its mesh, magnification (0 or 1: a red dot), its modes, reticle
+     * span, and where its eye point (its mod_aim_camera) sits from the main sight's: metres and a turn x, y, z, w in the
+     * main one's aim frame (x right, y up, looking down -z).
+     */
+    /**
+     * A Tarkov gun's kit tree: Tarkov's id of its base, each kit part where it sits, and which of their eye points the
+     * first-person model's "ads" was made on (the kit part's path and that part's eye point, from 0).
+     */
+    public static final class Tarkov {
+        public String base;
+        public java.util.List<KitPart> kit;
+        public String aimPath;
+        public int aimIndex;
+    }
+
+    /**
+     * One kit part: its path (slot names from the gun down, "" for the base), its Tarkov id, the bone of its own main
+     * mesh in the first-person model and where that bone sits in the frame of the slot holding the part (metres and a
+     * turn x, y, z, qx, qy, qz, qw), and all the bones that are its meshes (hidden once it's swapped out).
+     */
+    public static final class KitPart {
+        public String path, item, bone;
+        public float[] at;
+        public java.util.List<String> bones;
+    }
+
+    public static final class AltSight {
+        public String sight;
+        public float zoom;
+        public float[] zooms;
+        public float reticleMoa = 152.4f;
+        public float[] aim;
+    }
+
+    /** A gun's own laser and light. */
+    public static final class Rail {
+        public Device laser, light;
+    }
+
+    /**
+     * One lens on a gun's rail: the first-person rig's bone (by name) it rides on, the lens there and the way it shines
+     * (metres, that bone's frame), and the lens on the third-person rifle (metres, its "weapon" bone's frame).
+     */
+    public static final class Device {
+        public String bone;
+        public float[] at, dir, third;
+    }
+
+    /** Whether the gun is one of these with that part built on. */
+    public static boolean kitHas(ItemStack gun, String part) {
+        Spec spec = of(gun);
+        return spec != null && spec.has(part);
     }
 
     /** A sight line: front and rear points, item pixels [x, y, z]. */
@@ -195,6 +320,34 @@ public final class LocalGuns {
             return 1;
         }
         return Math.clamp(gameReloadTicks(type, charge, n) / clip, 0.2f, 5f);
+    }
+
+    /**
+     * The pace of one part of a hand-loaded gun's loading, for a gun with its own clips (Spec.tube): 0 the raise or
+     * opening, 1 the rounds, 2 the finish or close, 3 the pump onto an empty chamber. -1 for a gun without them.
+     */
+    public static float tubePace(ItemStack gun, GunType type, int part, boolean charge) {
+        Spec spec = of(gun);
+        if (spec == null || spec.tube == null || spec.tube.length < 3 || !type.tube) {
+            return -1;
+        }
+        float game, own;
+        if (part == 0) {
+            game = type.raise;
+            own = spec.tube[0];
+        } else if (part == 1) {
+            game = type.perShell;
+            own = spec.tube[1];
+        } else if (part == 2) {
+            // the finish (a pump gun's first tick of it), or the close
+            game = type.opens ? 1 + type.close : 1;
+            own = spec.tube[2];
+        } else {
+            // the pump onto an empty chamber, after the finish
+            game = 1 + type.cycle;
+            own = spec.tube.length > 3 ? spec.tube[3] : 0;
+        }
+        return own <= 0 ? 1 : Math.clamp(game / (own * 20), 0.05f, 20f);
     }
 
     /** Reads the folder again (the files can change while the game runs). */

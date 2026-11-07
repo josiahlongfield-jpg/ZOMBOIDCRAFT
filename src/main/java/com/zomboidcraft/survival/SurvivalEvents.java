@@ -83,7 +83,7 @@ public final class SurvivalEvents {
             Skills.addXp(player, Skill.SNEAKING, 1);
         }
         stats = stats.withThirst(stats.thirst() - thirstDrain * (Sleep.asleep(player) ? 0.5f : 1f)
-                * com.zomboidcraft.survival.character.Traits.thirstScale(player));
+                * com.zomboidcraft.survival.character.Traits.thirstScale(player) * Needs.statsSpeed());
         if (stats.thirst() <= 0f && second % 4 == 0) {
             player.hurtServer(level, ModDamageTypes.source(level, ModDamageTypes.THIRST), 1f);
         }
@@ -95,7 +95,7 @@ public final class SurvivalEvents {
             stats = stats.withFatigue(stats.fatigue() - Sleep.Bed.GOOD.restPerHour / Needs.hourSeconds());
         } else {
             stats = stats.withFatigue(config.fatigue ? stats.fatigue() + (float) config.fatiguePerSecond
-                    * com.zomboidcraft.survival.character.Traits.fatigueScale(player) : 0f);
+                    * com.zomboidcraft.survival.character.Traits.fatigueScale(player) * Needs.statsSpeed() : 0f);
         }
 
         // Bleeding and healing are per body part now: see Injuries

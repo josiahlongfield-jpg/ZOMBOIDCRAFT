@@ -747,9 +747,8 @@ def main():
                     M.dump({'gui_light': 'front', 'textures': {'0': f'{NS}:{tex}', 'particle': f'{NS}:{tex}'},
                             'elements': els, 'display': disp}, ASSETS / f'models/item/loot/{n}.json')
                     if (ASSETS / f'meshes/loot/{n}.zmesh').exists():     # drawn as a toon mesh (mesh.py)
-                        M.dump({'model': {'type': 'minecraft:special', 'base': f'{NS}:item/loot/{n}',
-                                          'model': {'type': f'{NS}:mesh', 'id': f'loot/{n}', 'part': 'body'}}},
-                               ASSETS / f'items/{n}.json')
+                        import mesh as MS                      # (looks pick their mesh: mesh.item_json)
+                        M.dump(MS.item_json(n), ASSETS / f'items/{n}.json')
                     else:
                         M.dump({'model': kit.ref(f'loot/{n}')}, ASSETS / f'items/{n}.json')
             print(f'{sheet}: {len(gn)} items, {T}px  ({time.time() - t0:.0f}s)')

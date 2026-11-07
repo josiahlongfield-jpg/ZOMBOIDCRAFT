@@ -211,6 +211,10 @@ public final class Moving {
     /** Whether you can lift it now, and if not, why. Null means yes. */
     @Nullable
     public static String refusal(Piece piece, Player player, BlockGetter level, BlockPos pos) {
+        if (level instanceof net.minecraft.world.level.Level lv) {
+            String claimed = com.zomboidcraft.building.base.Claims.refusal(lv, pos, player);
+            if (claimed != null) return claimed;
+        }
         if (!hasTool(piece.kind, player.getMainHandItem())) {
             return switch (piece.kind) {
                 case PLUMBED -> "It's plumbed in. Take it out with a pipe wrench.";

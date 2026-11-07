@@ -230,6 +230,42 @@ def rangefinder(m):
     m.box([-2.8, 0.4, -2.6], [2.8, 0.8, -2.4], 'strap')
 
 
+def designator(m):
+    """A laser target designator (the SOFLAM / DHY-307 kind from the photos): a ribbed olive box, the big laser
+    objective and the smaller sighting lens up front, the rubber eyecup at the back, the keypad panel on the side,
+    the carry handle and the tripod shoe underneath."""
+    m.box([-4.6, 0.8, -3.6], [4.6, 5.6, 3.6], 'body')
+    for z in (-3.0, -1.8, -0.6, 0.6, 1.8, 3.0):          # the cooling ribs down the left side
+        m.box([-5.0, 1.2, z - 0.25], [-4.6, 5.2, z + 0.25], 'dark')
+    m.rod(3.6, 4.6, 1.7, 'dark', cx=1.6, cz=3.4, axis=2)    # the laser objective
+    m.rod(4.6, 4.65, 1.4, 'glass', cx=1.6, cz=3.4, axis=2)
+    m.rod(3.6, 4.2, 1.0, 'dark', cx=-2.2, cz=3.6, axis=2)   # the sighting lens
+    m.rod(4.2, 4.25, 0.8, 'glass', cx=-2.2, cz=3.6, axis=2)
+    m.rod(-4.8, -3.6, 0.9, 'rubber', cx=-1.6, cz=3.8, axis=2)   # the eyecup
+    m.box([4.6, 1.6, -2.8], [4.8, 4.6, 1.0], 'dark')      # the keypad panel
+    for y in (2.0, 2.8, 3.6):
+        for z in (-2.2, -1.2, -0.2):
+            m.box([4.8, y, z], [4.95, y + 0.5, z + 0.6], 'rubber')
+    m.box([4.8, 4.0, 0.4], [4.95, 4.4, 0.9], 'red')       # the fire key
+    m.box([-3.4, 5.6, -0.6], [-2.8, 6.8, 0.6], 'dark')    # the carry handle
+    m.box([2.8, 5.6, -0.6], [3.4, 6.8, 0.6], 'dark')
+    m.box([-3.4, 6.8, -0.6], [3.4, 7.3, 0.6], 'rubber')
+    m.box([-1.2, 0, -1.2], [1.2, 0.8, 1.2], 'metal')      # the tripod shoe
+    m.box([-4.4, 1.0, -3.8], [1.0, 2.6, -3.6], 'label')   # the data plate
+
+
+def data_drive(m):
+    """A rugged portable drive (photo 01): the orange rubber bumper all round, the top in a grid of rubber tiles, the
+    lab's label on the front and the cable port."""
+    blob(m, (0, 1.2, 0), (4.8, 1.2, 3.4), 'body')
+    m.box([-3.9, 1.6, -2.5], [3.9, 2.5, 2.5], 'dark')
+    for i, x in enumerate((-3.8, -1.85, 0.1, 2.05)):
+        for z in (-2.4, -0.75, 0.9):
+            m.box([x, 2.5, z], [x + 1.75, 2.75, z + 1.5], 'tile')
+    m.box([-3.4, 0.5, 3.15], [1.8, 1.8, 3.4], 'label')
+    m.box([2.6, 0.8, 3.1], [3.6, 1.3, 3.45], 'metal')
+
+
 def detector(m):
     """A metal detector lying down: the search coil, the telescopic shaft, the control box, grip and arm cuff."""
     blob(m, (-9.0, 0.3, 0), (3.2, 0.3, 2.4), 'body')
@@ -529,6 +565,10 @@ def table(it):
         'field_radio': it(field_radio, 'RT-841', OD, band=OD2, word_ink='#e8e4da', body=OD, metal=OD_METAL),
         'laser_rangefinder': it(rangefinder, body=OD, tint='#4a6a80', red=A.plastic('#b02a1a'),
                                 strap=A.fabric('#2a2a2a')),
+        'laser_designator': it(designator, 'LTD-7 DESIGNATOR', '#c8c0a0', word_ink='#1e1f20', body=OD,
+                               tint='#5a7a90', red=A.plastic('#b02a1a'), rubber=A.flat('#1e1f20'), metal=OD_METAL),
+        'lab_research_drive': it(data_drive, 'RIDGEVIEW LAB', '#efe8d6', band='#a8281f', word_ink='#1e1f20',
+                                 body='#d8601a', tile=A.plastic('#c0501a'), dark=A.flat('#3a2a20'), metal=A.steel),
         'metal_detector': it(detector, body='#2a2a2a', alu=A.alu),
         'door_ram': it(door_ram, body='#d8a020', metal=A.steel, red=A.plastic('#b02a1a')),
         'quiet_generator': it(quiet_gen, 'TQG 3KW', TAN, band='#5a4a2a', word_ink='#1e1f20', body=TAN, metal=A.steel),

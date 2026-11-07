@@ -80,7 +80,12 @@ public final class Traits {
     /** Opens character creation for a survivor who hasn't got a past yet. */
     public static void offer(ServerPlayer player, boolean again) {
         if (!ZcConfig.get().survival.characterCreation || player.hasAttached(TYPE) || !county(player)) return;
-        ServerPlayNetworking.send(player, new CharacterNet.Open(again, ZcConfig.get().survival.freeTraitPoints, penaltyEvery()));
+        ServerPlayNetworking.send(player, new CharacterNet.Open(again, ZcConfig.get().survival.freeTraitPoints, penaltyEvery(), marines()));
+    }
+
+    /** Players are marines (a role and two trait picks) unless the Marine Squad setting is off. */
+    public static boolean marines() {
+        return ZcConfig.get().survival.marines;
     }
 
     /** Only in the planned county's overworld, where the spawn picker runs too (test and vanilla worlds skip it). */
@@ -135,24 +140,66 @@ public final class Traits {
         return null;
     }
 
-    /** Skill levels the occupation and traits add (negative for Weak, Unfit and the like). */
+    /**
+     * Skill levels the occupation and traits add (negative for Weak, Unfit and the like). For a marine it's the role and
+     * the picked traits: the base training isn't a boost, so it doesn't speed learning.
+     */
     public static Map<Skill, Integer> bonuses(String occupation, List<String> traits) {
         Map<Skill, Integer> out = new EnumMap<>(Skill.class);
         Occupation o = CharacterData.occupation(occupation);
+        MarineData.Role role = MarineData.role(occupation);
         if (o != null) o.skills().forEach((s, n) -> out.merge(s, n, Integer::sum));
+        if (role != null) role.skills().forEach((s, n) -> out.merge(s, n, Integer::sum));
         for (String id : traits) {
             // the job's own copy of a trait carries no boost of its own in Zomboid (the Chef's Keen Cook)
             if (o != null && o.traits().contains(id)) continue;
+            if (role != null && role.traits().contains(id)) continue;
             Trait t = CharacterData.trait(id);
             if (t != null) t.skills().forEach((s, n) -> out.merge(s, n, Integer::sum));
         }
         return out;
     }
 
+    /**
+     * A marine's starting levels: the base training, plus the role, plus the picked traits, each skill capped at 10.
+     * The screen draws these and {@link #apply} gives them, so the two always agree.
+     */
+    public static Map<Skill, Integer> marineLevels(String roleId, List<String> picked) {
+        Map<Skill, Integer> out = new EnumMap<>(MarineData.base());
+        bonuses(MarineData.PREFIX + roleId, picked).forEach((s, n) -> out.merge(s, n, Integer::sum));
+        out.replaceAll((s, n) -> Math.max(0, Math.min(Skill.MAX_LEVEL, n)));
+        return out;
+    }
+
+    /** The traits a marine may keep from a request: on the list, no repeats, no more than the picks allowed. */
+    public static List<String> marinePicks(List<String> asked) {
+        List<String> out = new ArrayList<>();
+        for (String id : asked) {
+            if (out.size() >= MarineData.picks()) break;
+            if (MarineData.traits().contains(id) && !out.contains(id)) out.add(id);
+        }
+        return out;
+    }
+
+    /** The name a profile's occupation shows under: "Marine · Corpsman", a civilian job, or null for none. */
+    public static String occupationName(String occupation) {
+        MarineData.Role role = MarineData.role(occupation);
+        if (role != null) return "Marine · " + role.name();
+        Occupation o = CharacterData.occupation(occupation);
+        return o == null ? null : o.name();
+    }
+
     // ------------------------------------------------------------------ creating the survivor
 
     private static void create(ServerPlayer player, CharacterNet.Create create) {
         if (!ZcConfig.get().survival.characterCreation || player.hasAttached(TYPE)) return;
+        if (marines()) {
+            // a marine: a known role (the rifleman if the packet names none) and up to the allowed picks
+            MarineData.Role role = MarineData.role(create.occupation());
+            if (role == null) role = MarineData.roles().values().iterator().next();
+            apply(player, MarineData.PREFIX + role.id(), marinePicks(create.traits()));
+            return;
+        }
         String occupation = CharacterData.occupation(create.occupation()) != null ? create.occupation() : CharacterData.UNEMPLOYED;
         List<String> chosen = new ArrayList<>();
         for (String id : create.traits()) {
@@ -167,17 +214,25 @@ public final class Traits {
     /** Gives a player this past: their traits, their starting skills and where their weight starts. */
     public static void apply(ServerPlayer player, String occupation, List<String> chosen) {
         Occupation o = CharacterData.occupation(occupation);
+        MarineData.Role role = MarineData.role(occupation);
         List<String> all = new ArrayList<>(chosen);
         if (o != null) for (String free : o.traits()) if (!all.contains(free)) all.add(free);
+        if (role != null) for (String free : role.traits()) if (!all.contains(free)) all.add(free);
         Profile profile = new Profile(occupation, List.copyOf(all));
         player.setAttached(TYPE, profile);
         BOOSTS.remove(player.getUUID());
 
         // starting skills: a level for each point, on top of 5 for Fitness and Strength
         Map<String, Integer> xp = new HashMap<>(player.getAttachedOrCreate(Skills.TYPE));
-        for (Map.Entry<Skill, Integer> e : bonuses(occupation, all).entrySet()) {
+        Map<Skill, Integer> levels = new EnumMap<>(Skill.class);
+        if (role != null) {
+            levels.putAll(marineLevels(role.id(), chosen));
+        } else {
+            bonuses(occupation, all).forEach((s, n) -> levels.put(s, (s.passive() ? 5 : 0) + n));
+        }
+        for (Map.Entry<Skill, Integer> e : levels.entrySet()) {
             Skill skill = e.getKey();
-            int level = Math.max(0, Math.min(Skill.MAX_LEVEL, (skill.passive() ? 5 : 0) + e.getValue()));
+            int level = Math.max(0, Math.min(Skill.MAX_LEVEL, e.getValue()));
             int want = Skill.xpForLevel(level);
             // a survivor already partway through life (the first time creation runs in an old world) keeps what's learned
             xp.put(skill.name(), skill.passive() ? want : Math.max(want, Skills.xp(player, skill)));
@@ -190,8 +245,9 @@ public final class Traits {
         Nutrition n = Nutrition.get(player);
         Nutrition.set(player, n.withWeight(weight));
 
-        player.sendSystemMessage(Component.literal("You were a " + (o == null ? "survivor" : o.name())
-                + (all.isEmpty() ? "." : ": " + names(all) + ".")).withStyle(ChatFormatting.GRAY));
+        String who = role != null ? "You're a marine, " + role.name().toLowerCase(java.util.Locale.ROOT)
+                : "You were a " + (o == null ? "survivor" : o.name());
+        player.sendSystemMessage(Component.literal(who + (all.isEmpty() ? "." : ": " + names(all) + ".")).withStyle(ChatFormatting.GRAY));
     }
 
     private static String names(List<String> ids) {
@@ -295,8 +351,16 @@ public final class Traits {
         return has(player, "restless_sleeper") ? 0.7f : 1f;
     }
 
-    /** How hard fear lands: Brave much less, Cowardly much more, Desensitized not at all. */
+    /**
+     * How hard fear lands: Brave much less, Cowardly much more, Desensitized not at all. Marines are trained for it:
+     * fear lands at a quarter, Brave halves that again, and a Desensitized marine barely notices.
+     */
     public static float panicScale(Player player) {
+        Profile p = player.getAttached(TYPE);
+        if (p != null && MarineData.marine(p.occupation())) {
+            if (has(player, "desensitized")) return 0.05f;
+            return has(player, "brave") ? 0.125f : 0.25f;
+        }
         if (has(player, "desensitized")) return 0.1f;   // B42: "far less prone to panic"
         return has(player, "brave") ? 0.3f : has(player, "cowardly") ? 2f : 1f;
     }

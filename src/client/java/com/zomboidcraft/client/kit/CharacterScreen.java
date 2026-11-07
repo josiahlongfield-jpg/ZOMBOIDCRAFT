@@ -63,13 +63,19 @@ public final class CharacterScreen extends Screen {
         });
     }
 
+    /** Your survivor (or marine) is made: the offer is spent. */
+    static void made() {
+        offered = null;
+    }
+
     /** Whether you're still to make your survivor: the spawn picker waits until you have. */
     public static boolean pending() {
         return offered != null;
     }
 
     private static void show(Minecraft mc) {
-        if (!(mc.gui.screen() instanceof CharacterScreen) && mc.level != null) mc.gui.setScreen(new CharacterScreen(offered));
+        if (mc.level == null || mc.gui.screen() instanceof CharacterScreen || mc.gui.screen() instanceof MarineScreen) return;
+        mc.gui.setScreen(offered.marine() ? new MarineScreen(offered) : new CharacterScreen(offered));
     }
 
     public CharacterScreen(CharacterNet.Open open) {

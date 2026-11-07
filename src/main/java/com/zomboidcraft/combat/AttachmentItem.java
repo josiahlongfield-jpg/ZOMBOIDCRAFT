@@ -87,6 +87,16 @@ public class AttachmentItem extends Item {
             case BIPOD -> "Bipod";
             case RIGHT_RAIL -> "Right rail";
             case MAGNIFIER -> "Magnifier";
+            case PIGGYBACK -> "Second sight";
+            case SUPPRESSOR -> "Suppressor";
+            case HANDGUARD -> "Handguard";
+            case PISTOL_GRIP -> "Pistol grip";
+            case BARREL -> "Barrel";
+            case RECEIVER -> "Receiver";
+            case CHARGING -> "Charging handle";
+            case GAS_BLOCK -> "Gas block";
+            case REAR_SIGHT -> "Rear sight";
+            case FRONT_SIGHT -> "Front sight";
         };
     }
 }

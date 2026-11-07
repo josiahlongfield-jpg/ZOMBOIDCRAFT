@@ -126,6 +126,7 @@ public final class ZcCommand {
                         .then(Commands.literal("localgun")
                                 .then(Commands.literal("reload").executes(ctx -> {
                                     com.zomboidcraft.combat.LocalGuns.reload();
+                                    com.zomboidcraft.combat.LocalHands.reload();
                                     ctx.getSource().sendSuccess(() -> Component.literal("Local guns: "
                                             + com.zomboidcraft.combat.LocalGuns.all().size()), false);
                                     return 1;
@@ -136,7 +137,8 @@ public final class ZcCommand {
                                         .executes(ctx -> giveLocalPart(ctx, StringArgumentType.getString(ctx, "part")))))
                                 .then(Commands.argument("id", StringArgumentType.word())
                                         .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
-                                                com.zomboidcraft.combat.LocalGuns.all().stream().map(g -> g.id), builder))
+                                                java.util.stream.Stream.concat(com.zomboidcraft.combat.LocalGuns.all().stream().map(g -> g.id),
+                                                        com.zomboidcraft.combat.LocalHands.all().stream().map(h -> h.id)), builder))
                                         .executes(ctx -> giveLocalGun(ctx, StringArgumentType.getString(ctx, "id")))))
                         .then(Commands.literal("roll")
                                 .then(Commands.argument("tier", IntegerArgumentType.integer(1, 5))
@@ -164,6 +166,16 @@ public final class ZcCommand {
     private static int giveLocalGun(CommandContext<CommandSourceStack> ctx, String id) throws CommandSyntaxException {
         ServerPlayer player = ctx.getSource().getPlayerOrException();
         var spec = com.zomboidcraft.combat.LocalGuns.get(id);
+        var hands = spec == null ? com.zomboidcraft.combat.LocalHands.get(id) : null;
+        if (hands != null) {
+            // a blade or grenade kept on this computer (config/zomboidcraft/hands): a grenade comes as a few
+            net.minecraft.world.item.ItemStack made = com.zomboidcraft.combat.LocalHands.make(hands);
+            made.setCount(Math.min(4, made.getMaxStackSize()));
+            String name = made.getHoverName().getString();
+            player.getInventory().add(made);
+            ctx.getSource().sendSuccess(() -> Component.literal("Gave you " + name), false);
+            return 1;
+        }
         if (spec == null) {
             ctx.getSource().sendFailure(Component.literal("No local gun " + id + " in " + com.zomboidcraft.combat.LocalGuns.DIR));
             return 0;

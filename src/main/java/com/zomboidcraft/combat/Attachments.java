@@ -42,7 +42,13 @@ import org.jetbrains.annotations.Nullable;
 public record Attachments(Map<Slot, ItemStack> mounted) {
     public enum Slot implements StringRepresentable {
         // RIGHT_RAIL and MAGNIFIER came later: they go last so the model data's key order stays as it was
-        OPTIC, MUZZLE, UNDERBARREL, SIDE_RAIL, STOCK, MAGAZINE, BIPOD, RIGHT_RAIL, MAGNIFIER;
+        OPTIC, MUZZLE, UNDERBARREL, SIDE_RAIL, STOCK, MAGAZINE, BIPOD, RIGHT_RAIL, MAGNIFIER,
+        // the Tarkov guns' own (2026-11-07, every part pulled for them fits at the bench): never in the model data
+        PIGGYBACK, SUPPRESSOR, HANDGUARD, PISTOL_GRIP, BARREL, RECEIVER, CHARGING, GAS_BLOCK, REAR_SIGHT, FRONT_SIGHT;
+
+        /** The slots our item models know, in their model data order. */
+        public static final List<Slot> MODEL = List.of(OPTIC, MUZZLE, UNDERBARREL, SIDE_RAIL, STOCK, MAGAZINE, BIPOD,
+                RIGHT_RAIL, MAGNIFIER);
 
         public static final Codec<Slot> CODEC = StringRepresentable.fromEnum(Slot::values);
         public static final StreamCodec<io.netty.buffer.ByteBuf, Slot> STREAM_CODEC =
@@ -74,7 +80,8 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
             if (!stack.isEmpty() && slot != Slot.MAGAZINE) {
                 // a part saved in another slot (the laser shared the side rail with the light before it had
                 // its own on the right) moves to its own
-                Slot own = stack.getItem() instanceof AttachmentItem item ? item.slot() : slot;
+                // its own (a Tarkov part keeps the slot it was fitted in: a sight may ride piggyback)
+                Slot own = stack.getItem() instanceof AttachmentItem item && !(item instanceof TarkovPartItem) ? item.slot() : slot;
                 if (!copy.containsKey(own)) {
                     copy.put(own, stack.copyWithCount(1));
                 }
@@ -134,8 +141,19 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
         String id = gunId(gun);
         String local = gun.get(LocalGuns.ID);
         List<Slot> out = new ArrayList<>();
+        LocalGuns.Spec spec = local == null ? null : LocalGuns.get(local);
+        if (TarkovFit.tarkov(spec)) {
+            // a Tarkov gun: every slot a part pulled for it can fill, and its magazine
+            out.addAll(TarkovFit.sockets(spec));
+            if (id != null && GunSlotData.FITS.get(id).containsKey(Slot.MAGAZINE)) out.add(Slot.MAGAZINE);
+            return out;
+        }
+        boolean kitted = spec != null && spec.kit != null;     // its parts are its own: only its magazine changes
         if (id != null) {
             for (Slot slot : Slot.values()) {
+                if (kitted && slot != Slot.MAGAZINE) {
+                    continue;
+                }
                 if (GunSlotData.FITS.get(id).containsKey(slot) || local != null && LocalParts.takes(local, slot)) {
                     out.add(slot);
                 }
@@ -150,14 +168,40 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
      * never showed there (Josiah 2026-11-04: "couldn't attach").
      */
     public static boolean offered(ItemStack gun, ItemStack part) {
+        if (part.get(TarkovParts.ID) != null) {
+            Slot s = slotOf(part);
+            return s != null && TarkovFit.canFit(gun, s, TarkovParts.of(part));
+        }
         if (part.get(LocalParts.ID) != null || gun.get(LocalGuns.ID) != null) {
             return part.get(LocalParts.ID) != null ? LocalParts.fits(gun, part) : goesWith(gun, part);
         }
         return fits(gun, part.getItem());
     }
 
+    /**
+     * Whether a part you carry is offered for this slot of the gun (the bench): a Tarkov sight also rides piggyback and a
+     * Tarkov light or laser goes on either rail.
+     */
+    public static boolean offeredIn(ItemStack gun, ItemStack part, Slot socket) {
+        String tk = TarkovParts.of(part);
+        if (tk != null) {
+            return ZcConfig.get().guns.attachments && TarkovFit.canFit(gun, socket, tk);
+        }
+        return slotOf(part) == socket && offered(gun, part);
+    }
+
+    /** Whether the part goes in that slot at all, whatever gun (a Tarkov sight also rides piggyback). */
+    public static boolean goesIn(ItemStack part, Slot socket) {
+        TarkovParts.Part tk = TarkovParts.part(part);
+        return tk != null ? TarkovFit.goesIn(tk, socket) : slotOf(part) == socket;
+    }
+
     /** The slot a part goes in, or null if it isn't a gun part. */
     public static @Nullable Slot slotOf(ItemStack part) {
+        TarkovParts.Part tk = TarkovParts.part(part);
+        if (tk != null) {
+            return tk.slot();
+        }
         if (part.getItem() instanceof AttachmentItem item) {
             return item.slot();
         }
@@ -179,6 +223,11 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
     public static boolean canMount(ItemStack gun, ItemStack part) {
         if (!ZcConfig.get().guns.attachments || part.isEmpty()) {
             return false;
+        }
+        // a Tarkov part goes on a Tarkov gun, where Tarkov lets it
+        if (part.get(TarkovParts.ID) != null) {
+            Slot s = slotOf(part);
+            return s != null && TarkovFit.canFit(gun, s, TarkovParts.of(part));
         }
         // a part kept on this computer goes only on the local guns its file names (and fits no gun of ours)
         if (part.get(LocalParts.ID) != null) {
@@ -216,6 +265,16 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
     }
 
     private static Attachments factory(ItemStack gun) {
+        LocalGuns.Spec tk = LocalGuns.of(gun);
+        if (TarkovFit.tarkov(tk)) {
+            // a Tarkov gun comes with its kit, each part in its bench slot
+            Map<Slot, ItemStack> parts = new EnumMap<>(Slot.class);
+            TarkovFit.kitSockets(tk).forEach((slot, id) -> {
+                ItemStack p = TarkovParts.make(id);
+                if (!p.isEmpty()) parts.put(slot, p);
+            });
+            return parts.isEmpty() ? NONE : new Attachments(parts);
+        }
         if (gun.get(LocalGuns.ID) != null) {
             // a gun kept on this computer comes bare, on its own iron sights: our gun's factory optic (a red dot, a
             // scope) isn't on it and must not draw its reticle (Josiah 2026-11-01)
@@ -275,10 +334,18 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
      * The caller takes the one fitted item out of wherever it came from.
      */
     public static @Nullable ItemStack mount(ItemStack gun, ItemStack part) {
-        if (!canMount(gun, part)) {
+        return mount(gun, part, slotOf(part));
+    }
+
+    /** As above, into this slot (a Tarkov sight riding piggyback, a Tarkov device on the right rail). */
+    public static @Nullable ItemStack mount(ItemStack gun, ItemStack part, @Nullable Slot slot) {
+        if (slot == null) {
             return null;
         }
-        Slot slot = slotOf(part);
+        String tk = TarkovParts.of(part);
+        if (tk != null ? !ZcConfig.get().guns.attachments || !TarkovFit.canFit(gun, slot, tk) : slot != slotOf(part) || !canMount(gun, part)) {
+            return null;
+        }
         if (slot == Slot.MAGAZINE) {
             ItemStack old = get(gun, Slot.MAGAZINE);
             GunState g = gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG);
@@ -305,8 +372,8 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
             return old;
         }
         Attachments now = of(gun);
-        if (!now.mounted().containsKey(slot)) {
-            return ItemStack.EMPTY;
+        if (!now.mounted().containsKey(slot) || !TarkovFit.canRemove(gun, slot)) {
+            return ItemStack.EMPTY;     // (a Tarkov gun's barrel or receiver is swapped, never left off)
         }
         Map<Slot, ItemStack> next = new EnumMap<>(Slot.class);
         next.putAll(now.mounted());
@@ -366,12 +433,24 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
 
     /** The optic on the gun, or null on its own sights. */
     public static @Nullable Optic optic(ItemStack gun) {
+        TarkovFit.Assembly tk = TarkovFit.of(gun);
+        if (tk != null) {
+            // a Tarkov sight: a scope settles the aim like a scope, a dot like a dot; its picture is the operator's
+            // first person's own (OperatorView), so no zoom or eyepiece here
+            float z = TarkovFit.sightZoom(tk);
+            ZcConfig.Guns cfg = ZcConfig.get().guns;
+            return tk.bySocket().get(Slot.OPTIC) == null ? null : new Optic(z > 1 ? cfg.scopeAimSpread : cfg.redDotAimSpread, 1, 0, false);
+        }
         LocalParts.Meta local = LocalParts.get(LocalParts.fitted(gun, Slot.OPTIC));
         if (local != null) {
             // a sight from Josiah's pack: a scope shows its zoomed picture in its eyepiece; a red dot's or holo's own lit
             // reticle is drawn in it, so nothing on the HUD
             ZcConfig.Guns cfg = ZcConfig.get().guns;
             return local.mag > 1 ? new Optic(cfg.scopeAimSpread, 1 / local.mag, 0, true) : new Optic(cfg.redDotAimSpread, 1, 0, false);
+        }
+        if (LocalGuns.kitHas(gun, "sight")) {
+            // a holo or red dot built onto the gun (the operator's EOTech): it settles the aim, no zoom
+            return new Optic(ZcConfig.get().guns.redDotAimSpread, 1, 0, false);
         }
         String key = key(gun, Slot.OPTIC);
         return key == null ? null : optic(key);
@@ -413,23 +492,32 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
     }
 
     public static boolean hasLight(ItemStack gun) {
-        return key(gun, Slot.SIDE_RAIL) != null;        // the weapon light or the compact one
+        TarkovFit.Assembly tk = TarkovFit.of(gun);
+        if (tk != null) return TarkovFit.shines(tk, true);
+        return key(gun, Slot.SIDE_RAIL) != null        // the weapon light or the compact one
+                || LocalGuns.kitHas(gun, "light");
     }
 
     public static boolean hasLaser(ItemStack gun) {
-        return has(gun, Slot.RIGHT_RAIL, "laser");
+        TarkovFit.Assembly tk = TarkovFit.of(gun);
+        if (tk != null) return TarkovFit.shines(tk, false);
+        return has(gun, Slot.RIGHT_RAIL, "laser") || LocalGuns.kitHas(gun, "laser");
     }
 
     /** Multiplies the kick: any grip tames it, no stock makes it worse. */
     public static double recoilFactor(ItemStack gun) {
         ZcConfig.Guns cfg = ZcConfig.get().guns;
         String under = key(gun, Slot.UNDERBARREL);
-        boolean grip = under != null && !under.equals("launcher");
+        TarkovFit.Assembly tk = TarkovFit.of(gun);
+        boolean grip = tk != null ? tk.bySocket().containsKey(Slot.UNDERBARREL)
+                : under != null && !under.equals("launcher") || LocalGuns.kitHas(gun, "foregrip");
         return (grip ? cfg.foregripRecoil : 1.0) * (stockless(gun) ? cfg.noStockRecoil : 1.0);
     }
 
     /** A bipod is folded down on the gun: crouched, it steadies the aim and soaks up the kick. */
     public static boolean hasBipod(ItemStack gun) {
+        TarkovFit.Assembly tk = TarkovFit.of(gun);
+        if (tk != null) return tk.bySocket().containsKey(Slot.BIPOD);
         return key(gun, Slot.BIPOD) != null;
     }
 
@@ -439,9 +527,11 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
     }
 
     public static boolean suppressed(ItemStack gun) {
+        TarkovFit.Assembly tk = TarkovFit.of(gun);
+        if (tk != null) return TarkovFit.anyOf(tk, "Silencer") != null;
         LocalGuns.Spec local = LocalGuns.of(gun);
         return key(gun, Slot.MUZZLE) != null || GunType.of(gun) == GunType.SUPPRESSED_RIFLE     // its can is built in
-                || local != null && local.suppressed;
+                || local != null && (local.suppressed || local.has("suppressor"));
     }
 
     /** Looking down the sights shows the scope's eyepiece picture, not the gun: a scope you look into. */
@@ -473,6 +563,8 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
     }
 
     private static boolean stockless(ItemStack gun) {
+        TarkovFit.Assembly tk = TarkovFit.of(gun);
+        if (tk != null) return slots(gun).contains(Slot.STOCK) && TarkovFit.anyOf(tk, "Stock") == null;
         return slots(gun).contains(Slot.STOCK) && key(gun, Slot.STOCK) == null;
     }
 
@@ -554,7 +646,7 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
      * one colour per slot, its irons' colour. */
     static void writeModelData(ItemStack gun, float step, float flash) {
         List<String> keys = new ArrayList<>();
-        for (Slot slot : Slot.values()) {
+        for (Slot slot : Slot.MODEL) {
             String key = key(gun, slot);
             if (key != null && slot == Slot.MAGNIFIER && !magnified(gun)) {
                 key += "_aside";        // swung off the sight line on its mount
@@ -564,7 +656,7 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
         String finish = GunFinish.key(gun);
         keys.add(finish == null ? EMPTY_KEY : finish);
         Map<Slot, ItemStack> mounted = of(gun).mounted();
-        for (Slot slot : Slot.values()) {
+        for (Slot slot : Slot.MODEL) {
             String colour = mounted.containsKey(slot) ? mounted.get(slot).get(GunState.COLOUR) : null;
             keys.add(colour == null ? EMPTY_KEY : colour);
         }
