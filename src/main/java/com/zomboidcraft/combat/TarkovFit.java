@@ -210,57 +210,76 @@ public final class TarkovFit {
                 if (k.item.equals(item)) kitPaths.computeIfAbsent(s, x -> new ArrayList<>()).add(k.path);
             }
         });
-        for (Attachments.Slot socket : ORDER) {
-            String id = fitted.get(socket);
-            TarkovParts.Part p = TarkovParts.get(id);
-            if (p == null) continue;
-            List<Link> best = null;
-            String bestPath = null;
-            double bestScore = Double.MAX_VALUE;
-            int order = 0;
-            Node optic = bySocket.get(Attachments.Slot.OPTIC);
-            for (Node n : List.copyOf(nodes.values())) {
-                TarkovParts.Part np = TarkovParts.get(n.item());
-                if (np == null) continue;
-                for (Map.Entry<String, TarkovParts.Port> e : np.slots.entrySet()) {
-                    String sp = n.path() + "/" + e.getKey();
-                    if (nodes.containsKey(sp)) continue;
-                    for (List<Link> chain : routes(sp, e.getValue(), id, p, socket, fitted, 0)) {
-                        String target = chain.isEmpty() ? sp : chain.get(chain.size() - 1).path;
-                        chain = chain.isEmpty() ? chain : chain.subList(0, chain.size() - 1);
-                        if (conflicts(id, nodes) || chain.stream().anyMatch(l -> conflicts(l.item, nodes))) continue;
-                        double score = order++ + 100.0 * chain.size();
-                        if (id.equals(kitAt.get(target))) score -= 10000;
-                        else if (kitPaths.getOrDefault(socket, List.of()).contains(target)) score -= 5000;
-                        for (Link l : chain) {
-                            if (l.item.equals(kitAt.get(l.path))) score -= 2000;
-                        }
-                        if (socket == Attachments.Slot.PIGGYBACK && optic != null && target.startsWith(optic.path() + "/")) score -= 3000;
-                        if (socket == Attachments.Slot.OPTIC && target.substring(target.lastIndexOf('/') + 1).startsWith("mod_scope")) score -= 500;
-                        if (score < bestScore) {
-                            bestScore = score;
-                            best = chain;
-                            bestPath = target;
+        Set<String> kitItems = new HashSet<>(kitAt.values());
+        // parts whose kit place hangs under another's go after it (the SV-98's chassis before its handguard), the rest
+        // in ORDER; a part with no place yet goes round again once the rest are on
+        List<Attachments.Slot> todo = new ArrayList<>();
+        for (Attachments.Slot s : ORDER) {
+            if (TarkovParts.get(fitted.get(s)) != null) todo.add(s);
+        }
+        java.util.function.ToIntFunction<Attachments.Slot> kitDepth = s -> {
+            List<String> ps = kitPaths.get(s);
+            return ps == null || ps.isEmpty() ? 99 : depth(ps.get(0));
+        };
+        todo.sort(java.util.Comparator.comparingInt(kitDepth).thenComparingInt(s -> List.of(ORDER).indexOf(s)));
+        while (!todo.isEmpty()) {
+            List<Attachments.Slot> left = new ArrayList<>();
+            for (Attachments.Slot socket : todo) {
+                String id = fitted.get(socket);
+                TarkovParts.Part p = TarkovParts.get(id);
+                List<Link> best = null;
+                String bestPath = null;
+                double bestScore = Double.MAX_VALUE;
+                int order = 0;
+                Node optic = bySocket.get(Attachments.Slot.OPTIC);
+                for (Node n : List.copyOf(nodes.values())) {
+                    TarkovParts.Part np = TarkovParts.get(n.item());
+                    if (np == null) continue;
+                    for (Map.Entry<String, TarkovParts.Port> e : np.slots.entrySet()) {
+                        String sp = n.path() + "/" + e.getKey();
+                        if (nodes.containsKey(sp)) continue;
+                        for (List<Link> chain : routes(sp, e.getValue(), id, p, socket, fitted, 0)) {
+                            String target = chain.isEmpty() ? sp : chain.get(chain.size() - 1).path;
+                            chain = chain.isEmpty() ? chain : chain.subList(0, chain.size() - 1);
+                            if (conflicts(id, nodes, kitItems) || chain.stream().anyMatch(l -> conflicts(l.item, nodes, kitItems))) continue;
+                            double score = order++ + 100.0 * chain.size();
+                            if (id.equals(kitAt.get(target))) score -= 10000;
+                            else if (kitPaths.getOrDefault(socket, List.of()).contains(target)) score -= 5000;
+                            for (Link l : chain) {
+                                if (l.item.equals(kitAt.get(l.path))) score -= 2000;
+                            }
+                            if (socket == Attachments.Slot.PIGGYBACK && optic != null && target.startsWith(optic.path() + "/")) score -= 3000;
+                            if (socket == Attachments.Slot.OPTIC && target.substring(target.lastIndexOf('/') + 1).startsWith("mod_scope")) score -= 500;
+                            if (score < bestScore) {
+                                bestScore = score;
+                                best = chain;
+                                bestPath = target;
+                            }
                         }
                     }
                 }
+                if (bestPath == null) {
+                    left.add(socket);
+                    continue;
+                }
+                for (Link l : best) add(nodes, kitAt, l.path, l.item, null);
+                bySocket.put(socket, add(nodes, kitAt, bestPath, id, socket));
             }
-            if (bestPath == null) {
+            if (left.size() == todo.size()) {
                 complete = false;
-                continue;
+                break;
             }
-            for (Link l : best) add(nodes, kitAt, l.path, l.item, null);
-            bySocket.put(socket, add(nodes, kitAt, bestPath, id, socket));
+            todo = left;
         }
         // the kit's own parts that are no bench part (rail covers, eyecups, its magazine) stay where their parent is
         Set<String> benched = new HashSet<>(kitSockets(spec).values());
         for (LocalGuns.KitPart k : spec.tarkov.kit) {
             if (k.path.isEmpty() || nodes.containsKey(k.path) || benched.contains(k.item)) continue;
             TarkovParts.Part p = TarkovParts.get(k.item);
-            if (p == null || p.is("Mount")) continue;
+            if (p == null) continue;
             String parent = k.path.substring(0, k.path.lastIndexOf('/'));
             Node pn = nodes.get(parent);
-            if (pn == null || !pn.kit() || conflicts(k.item, nodes)) continue;
+            if (pn == null || !pn.kit() || conflicts(k.item, nodes, kitItems)) continue;
             add(nodes, kitAt, k.path, k.item, null);
         }
         Map<String, Node> byPath = new LinkedHashMap<>();
@@ -329,9 +348,12 @@ public final class TarkovFit {
                 && (m.is("MuzzleCombo") || m.is("FlashHider"));
     }
 
-    private static boolean conflicts(String id, Map<String, Node> nodes) {
+    /** Whether a part clashes with one on the gun (Tarkov's conflicting items); the kit's own parts never clash with each other. */
+    private static boolean conflicts(String id, Map<String, Node> nodes, Set<String> kitItems) {
         TarkovParts.Part p = TarkovParts.get(id);
+        boolean kitPart = kitItems.contains(id);
         for (Node n : nodes.values()) {
+            if (kitPart && kitItems.contains(n.item())) continue;
             if (p != null && p.conflicts.contains(n.item())) return true;
             TarkovParts.Part np = TarkovParts.get(n.item());
             if (np != null && np.conflicts.contains(id)) return true;
