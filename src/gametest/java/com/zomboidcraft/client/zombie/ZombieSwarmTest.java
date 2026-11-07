@@ -84,8 +84,13 @@ public class ZombieSwarmTest implements FabricClientGameTest {
             sp.getServer().runCommand("effect give @a night_vision infinite 0 true");
             sp.getServer().runCommand("effect give @a resistance infinite 10 true");
             sp.getServer().runCommand("effect give @a saturation infinite 10 true");
-            sp.getServer().runCommand(String.format("tp @a %d %d %d 0 25", at[0], at[1] + 10, at[2]));
-            sp.getServer().runCommand(String.format("setblock %d %d %d minecraft:barrier", at[0], at[1] + 9, at[2]));
+            // a perch over the rooftops: everything round it, looking down on the streets
+            int top = sp.getServer().computeOnServer(server -> server.overworld().getHeight(
+                    net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING, at[0], at[2]));
+            int perch = top + 22;
+            LOG.info("ZCSWARM roofs at {}, perch at {}", top, perch);
+            sp.getServer().runCommand(String.format("setblock %d %d %d minecraft:barrier", at[0], perch - 1, at[2]));
+            sp.getServer().runCommand(String.format("tp @a %d %d %d 0 50", at[0], perch, at[2]));
             sp.getServer().runCommand("gamemode survival @a");
             ctx.waitTicks(20);
             ctx.runOnClient(ZombieSwarmTest::skipRoster);
@@ -97,7 +102,7 @@ public class ZombieSwarmTest implements FabricClientGameTest {
                         Noise.emit(server.overworld(), p.position(), 90);
                     });
                 }
-                sp.getServer().runCommand(String.format("tp @a %d %d %d %.1f %d", at[0], at[1] + 10, at[2], (f * 2.25f) % 360, f < 80 ? 35 : 60));
+                sp.getServer().runCommand(String.format("tp @a %d %d %d %.1f %d", at[0], perch, at[2], (f * 2.25f) % 360, f < 80 ? 40 : 65));
                 ctx.waitTicks(10);
                 ctx.takeScreenshot(String.format("swarm-%03d", f));
                 if (f % 4 == 0) {
