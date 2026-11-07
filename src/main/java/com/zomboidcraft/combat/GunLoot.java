@@ -273,6 +273,49 @@ public final class GunLoot {
                 }
             }
         }
+        if (extras) {
+            out.addAll(tarkovParts(random));
+        }
+        return out;
+    }
+
+    /** Tarkov parts that fit some Tarkov gun on this computer, rolled for found gun loot. */
+    private static List<String> tarkovPool;
+    private static int tarkovPoolFor = -1;
+
+    /**
+     * A Tarkov part or two with found guns (Josiah 2026-11-07: looted parts are fitted at the bench): a quarter of the
+     * time one, sometimes a second; sights and cans turn up half as often as grips, stocks and the rest.
+     */
+    static List<ItemStack> tarkovParts(RandomSource random) {
+        List<String> pool;
+        synchronized (GunLoot.class) {
+            if (tarkovPoolFor != LocalGuns.generation() || tarkovPool == null) {
+                tarkovPoolFor = LocalGuns.generation();
+                List<String> ids = new ArrayList<>();
+                for (var e : TarkovParts.all().entrySet()) {
+                    if (e.getValue().slot() == null || e.getValue().slot() == Attachments.Slot.MAGAZINE) continue;
+                    if (LocalGuns.all().stream().anyMatch(s -> TarkovFit.reaches(s, e.getKey()))) ids.add(e.getKey());
+                }
+                ids.sort(null);
+                tarkovPool = ids;
+            }
+            pool = tarkovPool;
+        }
+        List<ItemStack> out = new ArrayList<>();
+        if (pool.isEmpty()) return out;
+        int n = random.nextDouble() < 0.25 ? (random.nextDouble() < 0.2 ? 2 : 1) : 0;
+        for (int i = 0; i < n; i++) {
+            for (int tries = 0; tries < 4; tries++) {
+                String id = pool.get(random.nextInt(pool.size()));
+                TarkovParts.Part p = TarkovParts.get(id);
+                boolean rare = p != null && (p.slot() == Attachments.Slot.OPTIC || p.slot() == Attachments.Slot.SUPPRESSOR);
+                if (rare && random.nextBoolean()) continue;
+                ItemStack s = TarkovParts.make(id);
+                if (!s.isEmpty()) out.add(s);
+                break;
+            }
+        }
         return out;
     }
 

@@ -21,6 +21,11 @@ import net.minecraft.world.item.component.CustomModelData;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
+import com.zomboidcraft.combat.TarkovFit;
+import com.zomboidcraft.combat.TarkovParts;
+import java.util.List;
+import java.util.Map;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -58,17 +63,20 @@ public final class OperatorView {
                 inspectAsked = true;
             }
             while (SWITCH_SIGHT.consumeClick()) {
-                LocalGuns.Spec spec = mc.player == null ? null : LocalGuns.of(mc.player.getMainHandItem());
-                if (spec != null && spec.id != null && spec.alt != null && !spec.alt.isEmpty()) {
-                    SIGHTS.put(spec.id, (sightIndex(spec) + 1) % (spec.alt.size() + 1));
+                ItemStack held = mc.player == null ? ItemStack.EMPTY : mc.player.getMainHandItem();
+                LocalGuns.Spec spec = LocalGuns.of(held);
+                int n = sightCount(held);
+                if (spec != null && spec.id != null && n > 1) {
+                    SIGHTS.put(spec.id, (sightIndex(held) + 1) % n);
                 }
             }
             while (SIGHT_MODE.consumeClick()) {
-                LocalGuns.Spec spec = mc.player == null ? null : LocalGuns.of(mc.player.getMainHandItem());
-                int i = sightIndex(spec);
-                float[] z = zoomsOf(spec, i);
-                if (spec != null && spec.id != null && z != null && z.length > 1) {
-                    MODES.put(spec.id + "#" + i, (modeIndex(spec, i) + 1) % z.length);
+                ItemStack held = mc.player == null ? ItemStack.EMPTY : mc.player.getMainHandItem();
+                LocalGuns.Spec spec = LocalGuns.of(held);
+                int i = sightIndex(held);
+                int n = modeCount(held, i);
+                if (spec != null && spec.id != null && n > 1) {
+                    MODES.put(modeKey(held, i), (modeIndex(held, i) + 1) % n);
                 }
             }
         });
@@ -254,8 +262,19 @@ public final class OperatorView {
             System.arraycopy(tmpPos, 0, pos, 0, pos.length);
             System.arraycopy(tmpTurn, 0, turn, 0, turn.length);
         }
-        // the left hand on the fitted foregrip or handguard, Tarkov's own hold for it
-        GripHold.apply(skin, LocalGuns.of(gun), pos, turn, LOOK.equals(clip));
+        // the gun as built at the bench (a Tarkov gun): where each part sits in this pose
+        LocalGuns.Spec spec = LocalGuns.of(gun);
+        TarkovFit.Assembly built = TarkovFit.tarkov(spec) ? TarkovFit.of(gun) : null;
+        Map<String, Matrix4f> frames = built == null ? null : TarkovRig.frames(spec, built, skin, pos, turn);
+        // the left hand on the fitted foregrip or handguard, Tarkov's own hold for it (one fitted at the bench too)
+        if (built != null) {
+            TarkovRig.Grip grip = TarkovRig.grip(spec, built);
+            Matrix4f on = grip == null ? null : frames.get(grip.path()), gate = grip == null ? null : frames.get(grip.gate());
+            Vector3f spot = on == null || gate == null ? null : idleSpot(skin, spec, built, grip);
+            if (spot != null) GripHold.apply(skin, grip.hold(), on, gate, spot, pos, turn, LOOK.equals(clip));
+        } else {
+            GripHold.apply(skin, spec, pos, turn, LOOK.equals(clip));
+        }
 
         // on the sights while aiming, unless the hands are busy
         boolean using = player.isUsingItem() && player.getUseItem() == gun;
@@ -273,8 +292,8 @@ public final class OperatorView {
         // The hip always goes by the main sight; aiming goes onto the sight switched to (its eye point found from the
         // main one's, turned as its mount turns it), and a switch while aimed carries the rig from the one sight to the
         // other (Tarkov's change sight: the MDR's ACOG up to its RMR)
-        LocalGuns.Spec spec = LocalGuns.of(gun);
-        int sight = sightIndex(spec);
+        List<TarkovRig.Sight> sights = built == null ? null : TarkovRig.sights(built);
+        int sight = sightIndex(gun);
         if (spec != gunSwitched) {
             gunSwitched = spec;
             sightShown = sight;
@@ -288,15 +307,16 @@ public final class OperatorView {
         float k = switchAt < 0 ? 1 : Operator.smooth((now - switchAt) / SWITCH_TIME);
         NpcSkin.Clip ads = skin.clips.get("ads");
         Matrix4f sightAt = null, hold = new Matrix4f();
+        Matrix4f eyeMain = built == null ? null : TarkovRig.mainEye(spec, skin, pos, turn);
         if (ads != null) {
-            Matrix4f main = onEye(ads), on = onEye(main, spec, sight);
+            Matrix4f main = onEye(ads), on = built != null ? onEye(main, eyeMain, sights, sight, frames) : onEye(main, spec, sight);
             Quaternionf q = main.getUnnormalizedRotation(new Quaternionf()).normalize();
             Vector3f p = new Matrix4f(main).invert().translate(0, 0, -EYE).getTranslation(new Vector3f());
             Vector3f hipAt = new Vector3f(p).sub(q.transform(new Vector3f(p)));
             Vector3f eyeAt = on.getTranslation(new Vector3f()).add(0, 0, EYE);
             Quaternionf aimTurn = on.getUnnormalizedRotation(new Quaternionf()).normalize();
             if (k < 1) {
-                Matrix4f from = onEye(main, spec, sightFrom);
+                Matrix4f from = built != null ? onEye(main, eyeMain, sights, sightFrom, frames) : onEye(main, spec, sightFrom);
                 from.getTranslation(new Vector3f()).add(0, 0, EYE).lerp(eyeAt, k, eyeAt);
                 from.getUnnormalizedRotation(new Quaternionf()).normalize().slerp(aimTurn, k, aimTurn);
             }
@@ -306,20 +326,37 @@ public final class OperatorView {
             pose.mulPose(hold);
             sightAt = new Matrix4f(on).invert().translate(0, 0, -EYE);
         }
-        rail(skin, gun, hold, free && !reloading);
+        if (built != null) tarkovRail(built, frames, hold, free && !reloading);
+        else rail(skin, gun, hold, free && !reloading);
         Matrix4f[] bones = Operator.bones(skin, pos, turn);
         buffer = 1 - buffer;
         if (BUFFERS[buffer] == null || BUFFERS[buffer].length != skin.groups.length * 2) {
             BUFFERS[buffer] = new Object[skin.groups.length * 2];
         }
-        NpcSkinDraw.submitGroups(skin.groups, bones, 0, g -> true, g -> skin.texture(g.texture, model), BUFFERS[buffer],
-                light, net.minecraft.client.renderer.texture.OverlayTexture.NO_OVERLAY, pose, out);
+        boolean[] hidden = built == null ? null : TarkovRig.hidden(spec, built, skin);
+        NpcSkinDraw.submitGroups(skin.groups, bones, 0, g -> TarkovRig.shows(g, hidden), g -> skin.texture(g.texture, model),
+                BUFFERS[buffer], light, net.minecraft.client.renderer.texture.OverlayTexture.NO_OVERLAY, pose, out);
+        if (built != null) {
+            // the parts fitted at the bench, each from its own model where it sits on the gun
+            TarkovRig.draw(built, frames, null, "fp", light, net.minecraft.client.renderer.texture.OverlayTexture.NO_OVERLAY, pose, out);
+            float lit = Operator.smooth((aim - 0.5f) / 0.5f) * Operator.smooth((k - 0.6f) / 0.4f);
+            TarkovRig.Sight s = sights.isEmpty() ? null : sights.get(Math.min(sight, sights.size() - 1));
+            TarkovParts.Mode mode = s == null ? null : mode(gun, sight);
+            Matrix4f eye = s == null ? null : TarkovRig.eye(s, frames);
+            // a dot or holo (or a scope at 1x) shows its own reticle on its glass; a magnified one's is in its lens
+            if (eye != null && mode != null && mode.reticle != null && mode.zoom <= 1 && lit > 0 && s.part().model != null) {
+                NpcSkin partSkin = NpcSkin.get(s.part().model);
+                if (partSkin != null) reticle(partSkin, s.part().model, mode.reticle, eye, lit, mode.moa > 0 ? mode.moa : 122, pose, out);
+            }
+            pose.popPose();
+            return true;
+        }
         String sightMesh = sight == 0 || spec == null ? (spec != null && spec.sight != null ? spec.sight : SCOPE)
                 : spec.alt.get(sight - 1).sight;
         int scope = skin.bone(sightMesh);
         float lit = Operator.smooth((aim - 0.5f) / 0.5f) * Operator.smooth((k - 0.6f) / 0.4f);
         // (a magnified sight's reticle is in its lens instead, ScopeView)
-        if (sightAt != null && scope >= 0 && lit > 0 && zoomOf(spec, sight) <= 1) {
+        if (sightAt != null && scope >= 0 && lit > 0 && zoomOf(gun, sight) <= 1) {
             float moa = spec == null || spec.fp == null ? 152.4f
                     : sight == 0 ? spec.reticleMoa : spec.alt.get(sight - 1).reticleMoa;
             reticle(skin, model, reticleTex(sight), new Matrix4f(bones[scope]).mul(sightAt), lit, moa, pose, out);
@@ -328,39 +365,86 @@ public final class OperatorView {
         return true;
     }
 
-    /** The sight a gun is switched to: 0 its main one, N its Nth other (LocalGuns.Spec.alt). */
-    static int sightIndex(LocalGuns.Spec spec) {
-        if (spec == null || spec.id == null || spec.alt == null || spec.alt.isEmpty()) return 0;
+    /** The sights of a Tarkov gun as built (combat/TarkovFit), or null for any other gun. */
+    private static @Nullable List<TarkovRig.Sight> tarkovSights(ItemStack gun) {
+        TarkovFit.Assembly a = TarkovFit.of(gun);
+        return a == null ? null : TarkovRig.sights(a);
+    }
+
+    /** How many sights the switch-sight key steps through on this gun. */
+    private static int sightCount(ItemStack gun) {
+        List<TarkovRig.Sight> t = tarkovSights(gun);
+        if (t != null) return Math.max(1, t.size());
+        LocalGuns.Spec spec = LocalGuns.of(gun);
+        return spec == null || spec.alt == null ? 1 : spec.alt.size() + 1;
+    }
+
+    /** The sight a gun is switched to: 0 its main one, N its Nth other (a Tarkov gun's as built, else LocalGuns.Spec.alt). */
+    static int sightIndex(ItemStack gun) {
+        LocalGuns.Spec spec = LocalGuns.of(gun);
+        if (spec == null || spec.id == null) return 0;
         int i = SIGHTS.getOrDefault(spec.id, 0);
-        return i < 0 || i > spec.alt.size() ? 0 : i;
+        return i < 0 || i >= sightCount(gun) ? 0 : i;
     }
 
     /** The sight the lens shows: mid-switch it stays on the old one until the rig is nearly on the new. */
-    private static int shownSight(LocalGuns.Spec spec) {
+    private static int shownSight(ItemStack gun) {
+        LocalGuns.Spec spec = LocalGuns.of(gun);
         boolean switching = switchAt >= 0 && spec == gunSwitched && sightFrom != sightShown
                 && lastNow - switchAt < SWITCH_TIME * 0.6f;
-        return switching ? sightFrom : sightIndex(spec);
+        return switching ? Math.min(sightFrom, sightCount(gun) - 1) : sightIndex(gun);
     }
 
-    /** A sight's modes (its zooms), or null with only the one. */
+    /** A Tarkov sight's modes (its zooms and reticles), or null for any other gun. */
+    private static @Nullable List<TarkovParts.Mode> tarkovModes(ItemStack gun, int sight) {
+        List<TarkovRig.Sight> t = tarkovSights(gun);
+        if (t == null || t.isEmpty()) return null;
+        return t.get(Math.min(sight, t.size() - 1)).eye().modes;
+    }
+
+    /** Another gun's sight's zooms (its file's), or null with only the one. */
     private static float[] zoomsOf(LocalGuns.Spec spec, int sight) {
         if (spec == null) return null;
         if (sight == 0 || spec.alt == null || sight > spec.alt.size()) return spec.zooms;
         return spec.alt.get(sight - 1).zooms;
     }
 
-    private static int modeIndex(LocalGuns.Spec spec, int sight) {
-        float[] z = zoomsOf(spec, sight);
-        if (spec == null || spec.id == null || z == null || z.length < 2) return 0;
-        int m = MODES.getOrDefault(spec.id + "#" + sight, 0);
-        return m < 0 || m >= z.length ? 0 : m;
+    private static int modeCount(ItemStack gun, int sight) {
+        List<TarkovParts.Mode> m = tarkovModes(gun, sight);
+        if (m != null) return m.size();
+        float[] z = zoomsOf(LocalGuns.of(gun), sight);
+        return z == null ? 1 : z.length;
+    }
+
+    /** The key a sight's mode is kept under: the gun file, its sight, and for a Tarkov gun that sight's part. */
+    private static String modeKey(ItemStack gun, int sight) {
+        LocalGuns.Spec spec = LocalGuns.of(gun);
+        List<TarkovRig.Sight> t = tarkovSights(gun);
+        String part = t == null || t.isEmpty() ? "" : "#" + t.get(Math.min(sight, t.size() - 1)).path();
+        return (spec == null ? "" : spec.id) + "#" + sight + part;
+    }
+
+    private static int modeIndex(ItemStack gun, int sight) {
+        int n = modeCount(gun, sight);
+        if (n < 2) return 0;
+        int m = MODES.getOrDefault(modeKey(gun, sight), 0);
+        return m < 0 || m >= n ? 0 : m;
+    }
+
+    /** A Tarkov sight's mode now, or null for any other gun. */
+    private static @Nullable TarkovParts.Mode mode(ItemStack gun, int sight) {
+        List<TarkovParts.Mode> m = tarkovModes(gun, sight);
+        return m == null || m.isEmpty() ? null : m.get(modeIndex(gun, sight));
     }
 
     /** A sight's magnification in its mode now (0 or 1: a red dot or irons). */
-    private static float zoomOf(LocalGuns.Spec spec, int sight) {
+    private static float zoomOf(ItemStack gun, int sight) {
+        TarkovParts.Mode tm = mode(gun, sight);
+        if (tarkovSights(gun) != null) return tm == null ? 0 : tm.zoom;
+        LocalGuns.Spec spec = LocalGuns.of(gun);
         if (spec == null) return 0;
         float[] z = zoomsOf(spec, sight);
-        if (z != null && z.length > 0) return z[modeIndex(spec, sight)];
+        if (z != null && z.length > 0) return z[modeIndex(gun, sight)];
         return sight == 0 || spec.alt == null || sight > spec.alt.size() ? spec.zoom : spec.alt.get(sight - 1).zoom;
     }
 
@@ -387,24 +471,65 @@ public final class OperatorView {
     }
 
     /**
-     * The magnification of a Tarkov gun's own sight while it is held in the operator's first person (its file's zoom),
+     * The same for a sight on a Tarkov gun as built: from where its eye point is now from the model's own main one (both
+     * in the model's space this frame), as for another sight on the gun.
+     */
+    private static Matrix4f onEye(Matrix4f main, @Nullable Matrix4f eyeMain, List<TarkovRig.Sight> sights, int sight,
+                                  Map<String, Matrix4f> frames) {
+        if (eyeMain == null || sights == null || sights.isEmpty()) return new Matrix4f(main);
+        Matrix4f eye = TarkovRig.eye(sights.get(Math.min(sight, sights.size() - 1)), frames);
+        if (eye == null) return new Matrix4f(main);
+        Matrix4f rel = new Matrix4f(eyeMain).invert().mul(eye);
+        return new Matrix4f().translation(0, 0, -EYE).mul(rel.invert()).translate(0, 0, EYE).mul(main);
+    }
+
+    /** Where the idle (its first frame) has the palm on a hold's gate frame, kept for the gun as built. */
+    private static TarkovFit.Assembly spotFor;
+    private static NpcSkin spotSkin;
+    private static Vector3f spot;
+
+    private static @Nullable Vector3f idleSpot(NpcSkin skin, LocalGuns.Spec spec, TarkovFit.Assembly built, TarkovRig.Grip grip) {
+        if (built == spotFor && skin == spotSkin) return spot;
+        spotFor = built;
+        spotSkin = skin;
+        spot = null;
+        NpcSkin.Clip c = skin.clips.get(IDLE);
+        if (c == null) return null;
+        int n = skin.boneNames.length;
+        float[] p = new float[n * 3], t = new float[n * 4];
+        Operator.sample(c, 0, Operator.HOLD, p, t);
+        Matrix4f gate = TarkovRig.frames(spec, built, skin, p, t).get(grip.gate());
+        if (gate == null) return null;
+        spot = gate.invert().transformPosition(GripHold.idlePalm(skin, p));
+        return spot;
+    }
+
+    /**
+     * The magnification of a Tarkov gun's own sight while it is held in the operator's first person (its mode's zoom),
      * or 0: a red dot, irons, or no operator model for it on this PC.
      */
     public static double magnification(ItemStack gun) {
         LocalGuns.Spec spec = LocalGuns.of(gun);
         if (spec == null || spec.fp == null) return 0;
-        int i = shownSight(spec);
-        float zoom = zoomOf(spec, i);
+        float zoom = zoomOf(gun, shownSight(gun));
         if (zoom <= 1) return 0;
         String model = Operator.fpModel(gun);
         return model != null && NpcSkin.get(model) != null ? zoom : 0;
     }
 
-    /** That sight's reticle (its lens's mark texture in the model), or null for the plain one. */
+    /** That sight's reticle (its lens's mark texture), or null for the plain one. */
     public static net.minecraft.resources.Identifier scopeReticle(ItemStack gun) {
+        List<TarkovRig.Sight> t = tarkovSights(gun);
+        if (t != null) {
+            int i = shownSight(gun);
+            TarkovParts.Mode m = mode(gun, i);
+            TarkovParts.Part p = t.isEmpty() ? null : t.get(Math.min(i, t.size() - 1)).part();
+            NpcSkin ps = p == null || p.model == null || m == null || m.reticle == null ? null : NpcSkin.get(p.model);
+            return ps == null ? null : ps.texture(m.reticle, p.model);
+        }
         String model = Operator.fpModel(gun);
         NpcSkin skin = model == null ? null : NpcSkin.get(model);
-        return skin == null ? null : skin.texture(reticleTex(shownSight(LocalGuns.of(gun))), model);
+        return skin == null ? null : skin.texture(reticleTex(shownSight(gun)), model);
     }
 
     /** The sight's own red reticle, glowing, on its line of sight (sight frame: x right, y up, looking down -z). */
@@ -448,6 +573,33 @@ public final class OperatorView {
         if (light == null) light = laser;
         com.zomboidcraft.client.combat.RifleView.operatorRail(
                 new com.zomboidcraft.client.combat.RifleView.Rail(laser, light, bore, free ? 1 : 0));
+    }
+
+    /** The same for a Tarkov gun as built: the laser and light of whatever device is fitted, where it sits now. */
+    private static void tarkovRail(TarkovFit.Assembly built, Map<String, Matrix4f> frames, Matrix4f hold, boolean free) {
+        Vector3f laser = null, light = null, bore = null;
+        for (TarkovFit.Node n : built.nodes()) {
+            TarkovParts.Part p = TarkovParts.get(n.item());
+            Matrix4f f = frames.get(n.path());
+            if (p == null || f == null) continue;
+            Matrix4f at = new Matrix4f(hold).mul(f);
+            if (laser == null && p.laser != null && p.laser.at != null) {
+                laser = at.transformPosition(new Vector3f(p.laser.at[0], p.laser.at[1], p.laser.at[2])).mul(WIDEN, WIDEN, 1);
+                if (p.laser.dir != null) bore = at.transformDirection(new Vector3f(p.laser.dir[0], p.laser.dir[1], p.laser.dir[2])).normalize();
+            }
+            if (light == null && p.light != null && p.light.at != null) {
+                light = at.transformPosition(new Vector3f(p.light.at[0], p.light.at[1], p.light.at[2])).mul(WIDEN, WIDEN, 1);
+                if (bore == null && p.light.dir != null) bore = at.transformDirection(new Vector3f(p.light.dir[0], p.light.dir[1], p.light.dir[2])).normalize();
+            }
+        }
+        if (laser == null && light == null) {
+            com.zomboidcraft.client.combat.RifleView.operatorRail(null);
+            return;
+        }
+        if (laser == null) laser = light;
+        if (light == null) light = laser;
+        com.zomboidcraft.client.combat.RifleView.operatorRail(new com.zomboidcraft.client.combat.RifleView.Rail(laser, light,
+                bore == null ? new Vector3f(0, 0, -1) : bore, free ? 1 : 0));
     }
 
     /** A lens on a bone of the rig, from the eye. */

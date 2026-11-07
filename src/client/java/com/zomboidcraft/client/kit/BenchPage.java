@@ -186,7 +186,7 @@ final class BenchPage {
         AbstractContainerMenu menu = screen.menu();
         for (int i : screen.carried()) {
             ItemStack s = menu.slots.get(i).getItem();
-            if (i != gunSlot && !s.isEmpty() && Attachments.slotOf(s) == socket && Attachments.offered(weapon, s)) {
+            if (i != gunSlot && !s.isEmpty() && Attachments.offeredIn(weapon, s, socket)) {
                 int from = i;
                 return () -> screen.button(Bench.fitButton(from, gunSlot, socket));
             }
@@ -226,7 +226,7 @@ final class BenchPage {
             List<Integer> spare = new ArrayList<>();
             for (int i : screen.carried()) {
                 ItemStack s = menu.slots.get(i).getItem();
-                if (i != slot && !s.isEmpty() && Attachments.slotOf(s) == socket && Attachments.offered(weapon, s)) spare.add(i);
+                if (i != slot && !s.isEmpty() && Attachments.offeredIn(weapon, s, socket)) spare.add(i);
             }
             KitDraw.caps(g, font, AttachmentItem.slotName(socket), x, cy, KitDraw.DIM, 0.62f);
             String what = fitted.isEmpty() ? "empty" : fitted.getHoverName().getString();

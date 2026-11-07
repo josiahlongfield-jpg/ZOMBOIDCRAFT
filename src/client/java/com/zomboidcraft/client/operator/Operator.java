@@ -295,6 +295,16 @@ public final class Operator {
      * The skinning matrices of a held Tarkov gun's own pieces in third person: each where its first-person model's
      * "held" pose puts it on the gun's root, hung on his weapon bone. Null when it isn't loaded or has no such pose.
      */
+    /** The bone frames (places and turns) of a gun's model in its "held" pose, or null without one. */
+    static float[][] heldPose(NpcSkin gun) {
+        NpcSkin.Clip c = gun.clips.get("held");
+        if (c == null) return null;
+        int n = gun.boneNames.length;
+        float[] pos = new float[n * 3], turn = new float[n * 4];
+        sample(c, 0, HOLD, pos, turn);
+        return new float[][] {pos, turn};
+    }
+
     static Matrix4f[] held(NpcSkin gun, Matrix4f weaponBone) {
         NpcSkin.Clip c = gun.clips.get("held");
         if (c == null) return null;

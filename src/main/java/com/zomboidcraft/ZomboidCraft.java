@@ -63,6 +63,7 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.combat.GunState.register();
         com.zomboidcraft.combat.LocalGuns.register();
         com.zomboidcraft.combat.LocalParts.register();
+        com.zomboidcraft.combat.TarkovParts.register();
         com.zomboidcraft.combat.LocalHands.register();
         com.zomboidcraft.combat.Retired.register();
         com.zomboidcraft.combat.Attachments.register();

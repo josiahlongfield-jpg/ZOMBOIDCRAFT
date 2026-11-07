@@ -256,6 +256,9 @@ public final class ModItems {
     public static final Item COMPACT_LIGHT = part("compact_light", Attachments.Slot.SIDE_RAIL);
     public static final Item SNIPER_SUPPRESSOR = part("sniper_suppressor", Attachments.Slot.MUZZLE);
     public static final Item BIPOD = part("bipod", Attachments.Slot.BIPOD);
+    /** A Tarkov part kept on this computer (combat/TarkovParts): which one, and its bench slot, from its id. */
+    public static final Item TARKOV_PART = register("tarkov_part", com.zomboidcraft.combat.TarkovPartItem::new,
+            new Item.Properties().stacksTo(1));
 
     private static Item part(String name, Attachments.Slot slot) {
         String key = GunSlotData.MODEL_KEYS.get(name);
@@ -404,6 +407,13 @@ public final class ModItems {
             com.zomboidcraft.combat.LocalHands.all().stream()
                     .sorted(java.util.Comparator.comparing((com.zomboidcraft.combat.LocalHands.Spec s) -> s.name == null ? s.id : s.name))
                     .forEach(spec -> output.accept(com.zomboidcraft.combat.LocalHands.make(spec)));
+            // the Tarkov guns' parts kept on this computer (guns/tarkov/parts.json), by bench slot then name
+            com.zomboidcraft.combat.TarkovParts.all().keySet().stream()
+                    .map(com.zomboidcraft.combat.TarkovParts::make)
+                    .filter(st -> !st.isEmpty())
+                    .sorted(java.util.Comparator.comparing((ItemStack st) -> com.zomboidcraft.combat.TarkovParts.part(st).slot().ordinal())
+                            .thenComparing(st -> st.getHoverName().getString()))
+                    .forEach(output::accept);
             // their sights and grips kept on this computer too (guns/parts/parts.json): sights first, then grips
             com.zomboidcraft.combat.LocalParts.ids().stream().sorted()
                     .map(com.zomboidcraft.combat.LocalParts::make)

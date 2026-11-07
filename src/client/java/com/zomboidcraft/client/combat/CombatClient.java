@@ -105,6 +105,7 @@ public final class CombatClient {
         RaisedProperty.register();
         LocalGunProperty.register();
         MeshGunRenderer.register();
+        TarkovPartRenderer.register();
         LevelRenderEvents.COLLECT_SUBMITS.register(context -> autoFire(Minecraft.getInstance()));
     }
 

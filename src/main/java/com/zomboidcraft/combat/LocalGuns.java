@@ -117,6 +117,11 @@ public final class LocalGuns {
         public java.util.Map<String, Hold> holds;
         /** The foregrip and the handguard built on (their bones, keys of holds); none: no such part. */
         public String grip, guard;
+        /**
+         * A Tarkov gun built from parts (2026-11-07, bench fitting): its base and its kit as a tree; none: a gun whose
+         * parts are fixed. Its parts then come off and go on at the bench (combat/TarkovFit).
+         */
+        public Tarkov tarkov;
         /** Resolved: the anchor's numbers with this gun's laid over them. */
         transient ZcConfig.GunStats merged;
         transient GunType type;
@@ -144,6 +149,28 @@ public final class LocalGuns {
      * span, and where its eye point (its mod_aim_camera) sits from the main sight's: metres and a turn x, y, z, w in the
      * main one's aim frame (x right, y up, looking down -z).
      */
+    /**
+     * A Tarkov gun's kit tree: Tarkov's id of its base, each kit part where it sits, and which of their eye points the
+     * first-person model's "ads" was made on (the kit part's path and that part's eye point, from 0).
+     */
+    public static final class Tarkov {
+        public String base;
+        public java.util.List<KitPart> kit;
+        public String aimPath;
+        public int aimIndex;
+    }
+
+    /**
+     * One kit part: its path (slot names from the gun down, "" for the base), its Tarkov id, the bone of its own main
+     * mesh in the first-person model and where that bone sits in the frame of the slot holding the part (metres and a
+     * turn x, y, z, qx, qy, qz, qw), and all the bones that are its meshes (hidden once it's swapped out).
+     */
+    public static final class KitPart {
+        public String path, item, bone;
+        public float[] at;
+        public java.util.List<String> bones;
+    }
+
     public static final class AltSight {
         public String sight;
         public float zoom;

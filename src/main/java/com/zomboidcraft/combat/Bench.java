@@ -28,7 +28,7 @@ public final class Bench {
     /** Fit a part straight from a carried slot: FIT + (part slot * 256 + gun slot) * SOCKETS + socket. */
     public static final int FIT = 1_000_000;
     /** Room for each gun's sockets in a button id: more than there are attachment slots. */
-    static final int SOCKETS = 16;
+    static final int SOCKETS = 32;
 
     /** Mend a weapon with what's in another carried slot: REPAIR + material slot * 256 + weapon slot. */
     public static final int REPAIR = 100_000_000;
@@ -125,8 +125,8 @@ public final class Bench {
         ItemStack held = menu.getCarried();
         boolean fitting = !held.isEmpty();
         if (fitting) {
-            if (Attachments.slotOf(held) != socket) return false;
-            ItemStack old = Attachments.mount(gun, held);
+            if (!Attachments.goesIn(held, socket)) return false;
+            ItemStack old = Attachments.mount(gun, held, socket);
             if (old == null) return false;
             held.shrink(1);
             if (!old.isEmpty()) {
@@ -153,8 +153,8 @@ public final class Bench {
         if (gun.isEmpty()) return false;
         Slot from = menu.slots.get(partSlot);
         ItemStack part = from.getItem();
-        if (part.isEmpty() || Attachments.slotOf(part) != socket || !from.mayPickup(player)) return false;
-        ItemStack old = Attachments.mount(gun, part);
+        if (part.isEmpty() || !Attachments.goesIn(part, socket) || !from.mayPickup(player)) return false;
+        ItemStack old = Attachments.mount(gun, part, socket);
         if (old == null) return false;
         part.shrink(1);
         if (part.isEmpty()) {

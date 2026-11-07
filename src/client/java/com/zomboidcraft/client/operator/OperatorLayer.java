@@ -68,8 +68,19 @@ public final class OperatorLayer extends RenderLayer<AvatarRenderState, PlayerMo
         int weapon = skin.bone("weapon");
         Matrix4f[] gunBones = gun == null || weapon < 0 ? null : Operator.held(gun, bones[weapon]);
         if (gunBones != null) {
-            NpcSkinDraw.submitGroups(gun.groups, gunBones, 0, g -> g.piece.equals("gun"), g -> gun.texture(g.texture, model),
-                    gunBuffers(state.id, gun), light, overlay, pose, collector);
+            // a Tarkov gun as built at the bench: its swapped-out kit pieces hidden, its fitted parts drawn
+            LocalGuns.Spec spec = LocalGuns.of(held);
+            com.zomboidcraft.combat.TarkovFit.Assembly built = com.zomboidcraft.combat.TarkovFit.tarkov(spec)
+                    ? com.zomboidcraft.combat.TarkovFit.of(held) : null;
+            boolean[] hidden = built == null ? null : TarkovRig.hidden(spec, built, gun);
+            NpcSkinDraw.submitGroups(gun.groups, gunBones, 0, g -> g.piece.equals("gun") && TarkovRig.shows(g, hidden),
+                    g -> gun.texture(g.texture, model), gunBuffers(state.id, gun), light, overlay, pose, collector);
+            float[][] hp = built == null ? null : Operator.heldPose(gun);
+            if (hp != null) {
+                java.util.Map<String, Matrix4f> frames = TarkovRig.frames(spec, built, gun, hp[0], hp[1]);
+                TarkovRig.draw(built, frames, bones[weapon], "tp" + state.id, light, overlay, pose, collector);
+                tarkovRail(built, frames, bones[weapon], held, state);
+            }
         }
         pose.popPose();
     }
@@ -97,11 +108,34 @@ public final class OperatorLayer extends RenderLayer<AvatarRenderState, PlayerMo
     private static void rail(NpcSkin skin, Matrix4f[] bones, ItemStack gun, AvatarRenderState state) {
         LocalGuns.Spec spec = LocalGuns.of(gun);
         int weapon = skin.bone("weapon");
-        if (spec == null || spec.rail == null || weapon < 0 || !(Attachments.lightOn(gun) || Attachments.laserOn(gun))) return;
+        if (spec == null || spec.rail == null || com.zomboidcraft.combat.TarkovFit.tarkov(spec) || weapon < 0 || !(Attachments.lightOn(gun) || Attachments.laserOn(gun))) return;
         Vector3f laser = lens(bones[weapon], spec.rail.laser), light = lens(bones[weapon], spec.rail.light);
         if (laser == null) laser = light;
         if (light == null) light = laser;
         if (laser != null) RailLights.seen(state, laser, light);
+    }
+
+    /** The same for a Tarkov gun as built: whatever fitted device has a laser or light, where it sits on the gun. */
+    private static void tarkovRail(com.zomboidcraft.combat.TarkovFit.Assembly built, java.util.Map<String, Matrix4f> frames,
+                                   Matrix4f weapon, ItemStack gun, AvatarRenderState state) {
+        if (!(Attachments.lightOn(gun) || Attachments.laserOn(gun))) return;
+        Vector3f laser = null, light = null;
+        for (com.zomboidcraft.combat.TarkovFit.Node n : built.nodes()) {
+            com.zomboidcraft.combat.TarkovParts.Part p = com.zomboidcraft.combat.TarkovParts.get(n.item());
+            Matrix4f f = frames.get(n.path());
+            if (p == null || f == null) continue;
+            Matrix4f at = new Matrix4f(weapon).mul(f);
+            if (laser == null && p.laser != null && p.laser.at != null) laser = pixels(at.transformPosition(new Vector3f(p.laser.at[0], p.laser.at[1], p.laser.at[2])));
+            if (light == null && p.light != null && p.light.at != null) light = pixels(at.transformPosition(new Vector3f(p.light.at[0], p.light.at[1], p.light.at[2])));
+        }
+        if (laser == null) laser = light;
+        if (light == null) light = laser;
+        if (laser != null) RailLights.seen(state, laser, light);
+    }
+
+    /** His metres (feet on the ground, facing +z) into vanilla's model pixels, the way submit draws him. */
+    private static Vector3f pixels(Vector3f m) {
+        return new Vector3f(m.x / 0.9375f, 1.501f - m.y / 0.9375f, -m.z / 0.9375f).mul(16);
     }
 
     private static Vector3f lens(Matrix4f weapon, LocalGuns.Device d) {

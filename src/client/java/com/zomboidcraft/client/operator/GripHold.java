@@ -2,6 +2,7 @@ package com.zomboidcraft.client.operator;
 
 import com.zomboidcraft.client.npc.NpcSkin;
 import com.zomboidcraft.combat.LocalGuns;
+import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
@@ -126,8 +127,37 @@ final class GripHold {
         if (spot == null) return 0;
         float d = rot(turn, part).conjugate().transform(new Vector3f(pp).sub(at(pos, part))).distance(spot);
         float w = always ? 1 : Math.max(0, Math.min(1, 1 - (d - NEAR) / (FAR - NEAR)));
+        return reach(r, hold, tp, tq, w, pos, turn);
+    }
+
+    /**
+     * The same for a Tarkov gun as built at the bench (client TarkovRig): the hold on its part's slot frame now, judged
+     * against where the idle has the palm on the gate frame (the kit's part in that place, which moves with the clips
+     * as the hand does).
+     */
+    static float apply(NpcSkin skin, LocalGuns.Hold hold, Matrix4f holdFrame, Matrix4f gateNow, Vector3f idleSpot,
+                       float[] pos, float[] turn, boolean always) {
+        if (hold == null || hold.palm == null || hold.palm.length < 7) return 0;
+        Rig r = rig(skin);
+        if (r.upper < 0 || r.elbow < 0 || r.palm < 0) return 0;
+        Vector3f tp = holdFrame.transformPosition(new Vector3f(hold.palm[0], hold.palm[1], hold.palm[2]));
+        Quaternionf tq = holdFrame.getUnnormalizedRotation(new Quaternionf()).normalize()
+                .mul(new Quaternionf(hold.palm[3], hold.palm[4], hold.palm[5], hold.palm[6])).normalize();
+        Vector3f palmNow = new Matrix4f(gateNow).invert().transformPosition(at(pos, r.palm));
+        float d = palmNow.distance(idleSpot);
+        float w = always ? 1 : Math.max(0, Math.min(1, 1 - (d - NEAR) / (FAR - NEAR)));
+        return reach(r, hold, tp, tq, w, pos, turn);
+    }
+
+    /** The palm (in model space) of a model's idle, its first frame: for judging a hold against. */
+    static Vector3f idlePalm(NpcSkin skin, float[] pos) {
+        return at(pos, rig(skin).palm);
+    }
+
+    private static float reach(Rig r, LocalGuns.Hold hold, Vector3f tp, Quaternionf tq, float w, float[] pos, float[] turn) {
         if (w <= 0) return 0;
         float k = Operator.smooth(w);
+        Vector3f pp = at(pos, r.palm);
         Vector3f target = new Vector3f(pp).lerp(tp, k);
 
         // the fingers' own turns and places from their parents, before the arm moves
