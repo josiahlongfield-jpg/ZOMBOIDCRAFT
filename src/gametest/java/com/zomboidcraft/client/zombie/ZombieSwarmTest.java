@@ -38,7 +38,7 @@ public class ZombieSwarmTest implements FabricClientGameTest {
             }
         }).create()) {
             sp.getConnection().waitForChunksRender();
-            for (String c : new String[] {"gamemode creative @a", "time set 13000", "weather clear", "gamerule doDaylightCycle false",
+            for (String c : new String[] {"gamemode creative @a", "time set 18000", "weather clear", "gamerule doDaylightCycle false",
                     "zc config nature.climateCycle no_weather", "zc config nature.fogCycle no_fog", "zc config searchHeli.frequency never",
                     "zc config survival.characterCreation false", "zc config start.picker false",
                     "difficulty normal"}) {
@@ -84,13 +84,32 @@ public class ZombieSwarmTest implements FabricClientGameTest {
             sp.getServer().runCommand("effect give @a night_vision infinite 0 true");
             sp.getServer().runCommand("effect give @a resistance infinite 10 true");
             sp.getServer().runCommand("effect give @a saturation infinite 10 true");
-            // a perch over the rooftops: everything round it, looking down on the streets
-            int top = sp.getServer().computeOnServer(server -> server.overworld().getHeight(
-                    net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING, at[0], at[2]));
-            int perch = top + 22;
-            LOG.info("ZCSWARM roofs at {}, perch at {}", top, perch);
-            sp.getServer().runCommand(String.format("setblock %d %d %d minecraft:barrier", at[0], perch - 1, at[2]));
-            sp.getServer().runCommand(String.format("tp @a %d %d %d 0 50", at[0], perch, at[2]));
+            // a perch in the open street, just out of reach: an open stretch near the middle, looking along it
+            int[] street = sp.getServer().computeOnServer(server -> {
+                var level = server.overworld();
+                var hm = net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES;
+                for (int r = 4; r <= 80; r += 2) {
+                    for (int k = 0; k < 32; k++) {
+                        double t = k * Math.PI / 16;
+                        int x = at[0] + (int) Math.round(Math.cos(t) * r), z = at[2] + (int) Math.round(Math.sin(t) * r);
+                        int ground = level.getHeight(hm, x, z);
+                        boolean open = ground <= at[1] + 2;
+                        for (int dx = -4; dx <= 4 && open; dx += 2) {
+                            for (int dz = -4; dz <= 4 && open; dz += 2) {
+                                open = Math.abs(level.getHeight(hm, x + dx, z + dz) - ground) <= 1;
+                            }
+                        }
+                        if (open) {
+                            return new int[] {x, ground, z};
+                        }
+                    }
+                }
+                return new int[] {at[0], at[1], at[2]};
+            });
+            int perch = street[1] + 4;
+            LOG.info("ZCSWARM street at {} {} {}, perch at {}", street[0], street[1], street[2], perch);
+            sp.getServer().runCommand(String.format("setblock %d %d %d minecraft:barrier", street[0], perch - 1, street[2]));
+            sp.getServer().runCommand(String.format("tp @a %d %d %d 0 20", street[0], perch, street[2]));
             sp.getServer().runCommand("gamemode survival @a");
             ctx.waitTicks(20);
             ctx.runOnClient(ZombieSwarmTest::skipRoster);
@@ -102,7 +121,7 @@ public class ZombieSwarmTest implements FabricClientGameTest {
                         Noise.emit(server.overworld(), p.position(), 90);
                     });
                 }
-                sp.getServer().runCommand(String.format("tp @a %d %d %d %.1f %d", at[0], perch, at[2], (f * 2.25f) % 360, f < 80 ? 40 : 65));
+                sp.getServer().runCommand(String.format("tp @a %d %d %d %.1f %d", street[0], perch, street[2], (f * 2.25f) % 360, f < 80 ? 20 : 40));
                 ctx.waitTicks(10);
                 ctx.takeScreenshot(String.format("swarm-%03d", f));
                 if (f % 4 == 0) {
