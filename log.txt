@@ -1,0 +1,90 @@
+[12:13:54] [main/WARN] (FabricLoader/Mixin) Error loading class: de/maxhenkel/voicechat/voice/client/PTTKeyHandler (java.lang.ClassNotFoundException: de/maxhenkel/voicechat/voice/client/PTTKeyHandler)
+[12:13:54] [main/WARN] (FabricLoader/Mixin) Error loading class: de/maxhenkel/voicechat/voice/client/PTTMicrophoneProcessor (java.lang.ClassNotFoundException: de/maxhenkel/voicechat/voice/client/PTTMicrophoneProcessor)
+[12:13:54] [main/WARN] (FabricLoader/Mixin) Error loading class: net/caffeinemc/mods/sodium/client/gpu/arena/staging/MojangStagingBuffer (java.lang.ClassNotFoundException: net/caffeinemc/mods/sodium/client/gpu/arena/staging/MojangStagingBuffer)
+[12:13:54] [main/WARN] (FabricLoader/Mixin) Error loading class: net/irisshaders/iris/pipeline/IrisRenderingPipeline (java.lang.ClassNotFoundException: net/irisshaders/iris/pipeline/IrisRenderingPipeline)
+[12:13:54] [main/WARN] (FabricLoader/Mixin) Error loading class: net/caffeinemc/mods/sodium/client/render/chunk/DefaultChunkRenderer (java.lang.ClassNotFoundException: net/caffeinemc/mods/sodium/client/render/chunk/DefaultChunkRenderer)
+[12:13:55] [main/INFO] (FabricLoader/MixinExtras|Service) Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.5.5).
+[12:13:56] [Datafixer Bootstrap #0/INFO] (Minecraft) 307 Datafixer optimizations took 327 milliseconds
+--
+com.mojang.renderpearl.api.device.BackendCreationException: Failed to create window for OpenGL context: Couldn't find matching GLX visual
+	at knot//com.mojang.renderpearl.backend.opengl.GlDevice.<init>(GlDevice.java:83)
+	at knot//com.mojang.renderpearl.backend.opengl.GlBackend.createDevice(GlBackend.java:68)
+--
+[12:14:06] [Download-2/INFO] (Minecraft) Could not authorize you against Realms server: java.lang.RuntimeException: Failed to parse into SignedJWT: FabricMC
+[12:14:07] [Worker-Main-2/INFO] (Minecraft) Found unifont_all_no_pua-17.0.01.hex, loading
+[12:14:07] [Worker-Main-1/INFO] (Minecraft) Found unifont_pua-17.0.01.hex, loading
+--
+com.google.gson.JsonParseException: 'to' specifier exceeds the allowed boundaries: ( 1.600E+1  4.800E+1  1.000E+1)
+	at knot//net.minecraft.client.resources.model.cuboid.CuboidModelElement$Deserializer.getPosition(CuboidModelElement.java:156)
+	at knot//net.minecraft.client.resources.model.cuboid.CuboidModelElement$Deserializer.deserialize(CuboidModelElement.java:58)
+--
+com.google.gson.JsonParseException: 'to' specifier exceeds the allowed boundaries: ( 1.600E+1  3.350E+1  3.500E+0)
+	at knot//net.minecraft.client.resources.model.cuboid.CuboidModelElement$Deserializer.getPosition(CuboidModelElement.java:156)
+	at knot//net.minecraft.client.resources.model.cuboid.CuboidModelElement$Deserializer.deserialize(CuboidModelElement.java:58)
+--
+ALSA lib conf.c:5211:(_snd_config_evaluate) [error.core] function snd_func_card_inum returned error: No such file or directory
+ALSA lib confmisc.c:422:(snd_func_concat) [error.core] error evaluating strings
+ALSA lib conf.c:5211:(_snd_config_evaluate) [error.core] function snd_func_concat returned error: No such file or directory
+ALSA lib confmisc.c:1342:(snd_func_refer) [error.core] error evaluating name
+ALSA lib conf.c:5211:(_snd_config_evaluate) [error.core] function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:5734:(snd_config_expand) [error.core] Evaluate error: No such file or directory
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM default
+ALSA lib confmisc.c:855:(parse_card) [error.core] cannot find card '0'
+ALSA lib conf.c:5211:(_snd_config_evaluate) [error.core] function snd_func_card_inum returned error: No such file or directory
+ALSA lib confmisc.c:422:(snd_func_concat) [error.core] error evaluating strings
+ALSA lib conf.c:5211:(_snd_config_evaluate) [error.core] function snd_func_concat returned error: No such file or directory
+ALSA lib confmisc.c:1342:(snd_func_refer) [error.core] error evaluating name
+ALSA lib conf.c:5211:(_snd_config_evaluate) [error.core] function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:5734:(snd_config_expand) [error.core] Evaluate error: No such file or directory
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) [error.pcm] Unknown PCM default
+[12:14:16] [Render thread/ERROR] (Minecraft) Error starting SoundSystem. Turning off sounds & music
+--
+java.lang.IllegalStateException: Failed to open OpenAL device
+	at knot//com.mojang.blaze3d.audio.Library.openDeviceOrFallback(Library.java:274)
+	at knot//com.mojang.blaze3d.audio.Library.init(Library.java:149)
+--
+[12:14:19] [Download-2/INFO] (Minecraft) Could not authorize you against Realms server: java.lang.RuntimeException: Failed to parse into SignedJWT: FabricMC
+[12:14:23] [Worker-Main-2/INFO] (Minecraft) Loaded 1866 advancements
+[12:14:23] [Render thread/INFO] (fabric-client-gametest-api-v1) World loading finished: null screen: net.minecraft.client.gui.screens.GenericMessageScreen@4ba28373
+--
+com.mojang.renderpearl.api.device.SurfaceException: Failed to acquire image, swapchain out of date
+	at knot//com.mojang.renderpearl.backend.vulkan.VulkanGpuSurface.acquireNextTexture(VulkanGpuSurface.java:277)
+	at knot//com.mojang.renderpearl.frontend.FrontendGpuSurface.acquireNextTexture(FrontendGpuSurface.java:71)
+--
+[12:14:32] [Test thread/INFO] (ZCLIFT) ZCLIFT built: server [car y 100.00 at 0 doors 0.00 calls 00000000000000000000 | player 0.50 100.00 0.50] client [car y 100.00 calls 00000000000000000000 | player 0.50 100.00 0.50 screen none]
+[12:14:33] [Test thread/INFO] (ZCLIFT) ZCLIFT dot at landing: Spot[at=(0.5, 101.5, -2.0), size=0.025], crosshair BLOCK (1.102182113692187E-16, 101.42874719685659, -2.0)
+[12:14:37] [Test thread/INFO] (ZCLIFT) ZCLIFT after G on the doors: server [car y 100.00 at 0 doors 1.00 calls 00000000000000000000 | player 0.00 100.00 -1.10] client [car y 100.00 calls 00000000000000000000 | player 0.00 100.00 -1.10 screen none]
+[12:14:37] [Test thread/INFO] (ZCLIFT) ZCLIFT dot in car: Spot[at=(-0.8700000000000001, 101.38, -3.45), size=0.0]
+[12:14:37] [Render thread/INFO] (zomboidcraft) Lift window opened for car 2 (20 floors); screen now com.zomboidcraft.client.lifts.LiftScreen
+[12:14:38] [Test thread/INFO] (ZCLIFT) ZCLIFT screen after G at the panel: LiftScreen
+[12:14:38] [Render thread/INFO] (zomboidcraft) Lift window: mouse button 0 at 213.5, 62.4512099921936
+[12:14:38] [Render thread/INFO] (zomboidcraft) Lift window: click on 19 (car 2)
+[12:14:38] [Test thread/INFO] (ZCLIFT) ZCLIFT click at gui 213,62 -> window 640.0,187.3536299765808
+[12:14:38] [Test thread/INFO] (ZCLIFT) ZCLIFT after clicking the top floor: server [car y 100.00 at 0 doors 0.67 calls 00000000000000000001 | player 0.00 100.00 -4.10] client [car y 100.00 calls 00000000000000000001 | player 0.00 100.00 -4.10 screen LiftScreen]
+[12:14:41] [Test thread/INFO] (ZCLIFT) ZCLIFT riding up 4: server [car y 108.04 at -1 doors 0.00 calls 00000000000000000001 | player 0.00 107.32 -4.10] client [car y 107.56 calls 00000000000000000001 | player 0.00 107.56 -4.10 screen LiftScreen]
+[12:14:44] [Test thread/INFO] (ZCLIFT) ZCLIFT riding up 9: server [car y 122.44 at -1 doors 0.00 calls 00000000000000000001 | player 0.00 121.72 -4.10] client [car y 121.96 calls 00000000000000000001 | player 0.00 121.96 -4.10 screen LiftScreen]
+[12:14:47] [Test thread/INFO] (ZCLIFT) ZCLIFT riding up 14: server [car y 136.84 at -1 doors 0.00 calls 00000000000000000001 | player 0.00 136.12 -4.10] client [car y 136.36 calls 00000000000000000001 | player 0.00 136.36 -4.10 screen LiftScreen]
+[12:14:50] [Test thread/INFO] (ZCLIFT) ZCLIFT riding up 19: server [car y 151.24 at -1 doors 0.00 calls 00000000000000000001 | player 0.00 150.52 -4.10] client [car y 150.76 calls 00000000000000000001 | player 0.00 150.76 -4.10 screen LiftScreen]
+[12:14:53] [Test thread/INFO] (ZCLIFT) ZCLIFT riding up 24: server [car y 165.64 at -1 doors 0.00 calls 00000000000000000001 | player 0.00 164.92 -4.10] client [car y 165.16 calls 00000000000000000001 | player 0.00 165.16 -4.10 screen LiftScreen]
+[12:14:56] [Test thread/INFO] (ZCLIFT) ZCLIFT riding up 29: server [car y 176.00 at 19 doors 0.22 calls 00000000000000000000 | player 0.00 175.99 -4.10] client [car y 176.00 calls 00000000000000000000 | player 0.00 176.00 -4.10 screen LiftScreen]
+[12:14:59] [Test thread/INFO] (ZCLIFT) ZCLIFT riding up 34: server [car y 176.00 at 19 doors 1.00 calls 00000000000000000000 | player 0.00 176.00 -4.10] client [car y 176.00 calls 00000000000000000000 | player 0.00 176.00 -4.10 screen LiftScreen]
+[12:14:59] [Server thread/INFO] (Minecraft) Player Player0 standing on air - force-sending blocks below
+[12:15:02] [Test thread/INFO] (ZCLIFT) ZCLIFT riding up 39: server [car y 176.00 at 19 doors 0.00 calls 00000000000000000000 | player 0.00 176.00 -4.10] client [car y 176.00 calls 00000000000000000000 | player 0.00 176.00 -4.10 screen LiftScreen]
+[12:15:05] [Test thread/INFO] (ZCLIFT) ZCLIFT riding up 44: server [car y 176.00 at 19 doors 0.00 calls 00000000000000000000 | player 0.00 176.00 -4.10] client [car y 176.00 calls 00000000000000000000 | player 0.00 176.00 -4.10 screen LiftScreen]
+[12:15:08] [Test thread/INFO] (ZCLIFT) ZCLIFT riding up 49: server [car y 176.00 at 19 doors 0.00 calls 00000000000000000000 | player 0.00 176.00 -4.10] client [car y 176.00 calls 00000000000000000000 | player 0.00 176.00 -4.10 screen LiftScreen]
+[12:15:10] [Server thread/INFO] (Minecraft) Player Player0 standing on air - force-sending blocks below
+[12:15:12] [Test thread/INFO] (ZCLIFT) ZCLIFT after Enter on the ground floor: server [car y 175.71 at -1 doors 0.00 calls 10000000000000000000 | player 0.00 175.88 -4.10] client [car y 175.83 calls 10000000000000000000 | player 0.00 175.83 -4.10 screen LiftScreen]
+[12:15:15] [Test thread/INFO] (ZCLIFT) ZCLIFT riding down 4: server [car y 163.16 at -1 doors 0.00 calls 10000000000000000000 | player 0.00 163.88 -4.10] client [car y 163.64 calls 10000000000000000000 | player 0.00 163.64 -4.10 screen LiftScreen]
+[12:15:18] [Test thread/INFO] (ZCLIFT) ZCLIFT riding down 9: server [car y 148.76 at -1 doors 0.00 calls 10000000000000000000 | player 0.00 149.48 -4.10] client [car y 149.24 calls 10000000000000000000 | player 0.00 149.24 -4.10 screen LiftScreen]
+[12:15:20] [Server thread/INFO] (Minecraft) Player Player0 standing on air - force-sending blocks below
+[12:15:21] [Test thread/INFO] (ZCLIFT) ZCLIFT riding down 14: server [car y 134.36 at -1 doors 0.00 calls 10000000000000000000 | player 0.00 135.08 -4.10] client [car y 134.84 calls 10000000000000000000 | player 0.00 134.84 -4.10 screen LiftScreen]
+[12:15:24] [Test thread/INFO] (ZCLIFT) ZCLIFT riding down 19: server [car y 119.96 at -1 doors 0.00 calls 10000000000000000000 | player 0.00 120.68 -4.10] client [car y 120.44 calls 10000000000000000000 | player 0.00 120.44 -4.10 screen LiftScreen]
+[12:15:27] [Test thread/INFO] (ZCLIFT) ZCLIFT riding down 24: server [car y 105.56 at -1 doors 0.00 calls 10000000000000000000 | player 0.00 106.28 -4.10] client [car y 106.04 calls 10000000000000000000 | player 0.00 106.04 -4.10 screen LiftScreen]
+[12:15:30] [Test thread/INFO] (ZCLIFT) ZCLIFT riding down 29: server [car y 100.00 at 0 doors 1.00 calls 00000000000000000000 | player 0.00 100.00 -4.10] client [car y 100.00 calls 00000000000000000000 | player 0.00 100.00 -4.10 screen LiftScreen]
+[12:15:33] [Test thread/INFO] (ZCLIFT) ZCLIFT riding down 34: server [car y 100.00 at 0 doors 1.00 calls 00000000000000000000 | player 0.00 100.00 -4.10] client [car y 100.00 calls 00000000000000000000 | player 0.00 100.00 -4.10 screen LiftScreen]
+[12:15:36] [Test thread/INFO] (ZCLIFT) ZCLIFT riding down 39: server [car y 100.00 at 0 doors 0.00 calls 00000000000000000000 | player 0.00 100.00 -4.10] client [car y 100.00 calls 00000000000000000000 | player 0.00 100.00 -4.10 screen LiftScreen]
+[12:15:39] [Test thread/INFO] (ZCLIFT) ZCLIFT riding down 44: server [car y 100.00 at 0 doors 0.00 calls 00000000000000000000 | player 0.00 100.00 -4.10] client [car y 100.00 calls 00000000000000000000 | player 0.00 100.00 -4.10 screen LiftScreen]
+[12:15:42] [Test thread/INFO] (ZCLIFT) ZCLIFT riding down 49: server [car y 100.00 at 0 doors 0.00 calls 00000000000000000000 | player 0.00 100.00 -4.10] client [car y 100.00 calls 00000000000000000000 | player 0.00 100.00 -4.10 screen LiftScreen]
+[12:15:42] [Test thread/INFO] (ZCLIFT) ZCLIFT frames 111
+[12:15:42] [Server thread/INFO] (Minecraft) Player0 lost connection: Disconnected
+[12:15:42] [Server thread/INFO] (Minecraft) System chat: Player0 left the game
