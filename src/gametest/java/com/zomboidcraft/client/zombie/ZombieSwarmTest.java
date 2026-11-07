@@ -46,6 +46,12 @@ public class ZombieSwarmTest implements FabricClientGameTest {
             }
             // the roster and spawn picker open on a county world's first join: out of the way for the camera
             ctx.waitTicks(20);
+            sp.getServer().runOnServer(server -> {
+                for (var p : server.getPlayerList().getPlayers()) {
+                    p.setAttached(com.zomboidcraft.spawn.SpawnPicker.SPAWNED, true);
+                    p.removeAttached(com.zomboidcraft.spawn.SpawnPicker.HELD);
+                }
+            });
             ctx.runOnClient(ZombieSwarmTest::skipRoster);
             ctx.getInput().resizeWindow(1280, 720);
             ctx.getInput().pressKey(com.mojang.blaze3d.platform.InputConstants.KEY_F1);
@@ -108,8 +114,11 @@ public class ZombieSwarmTest implements FabricClientGameTest {
             var made = com.zomboidcraft.client.kit.CharacterScreen.class.getDeclaredMethod("made");
             made.setAccessible(true);
             made.invoke(null);
+            var offered = com.zomboidcraft.client.kit.SpawnScreen.class.getDeclaredField("offered");
+            offered.setAccessible(true);
+            offered.set(null, null);
         } catch (ReflectiveOperationException e) {
-            LOG.warn("ZCSWARM couldn't skip the roster", e);
+            LOG.warn("ZCSWARM couldn't skip the roster or picker", e);
         }
         mc.gui.setScreen(null);
     }
