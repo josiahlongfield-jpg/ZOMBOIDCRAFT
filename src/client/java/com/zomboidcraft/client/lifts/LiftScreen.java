@@ -129,7 +129,7 @@ public class LiftScreen extends net.minecraft.client.gui.screens.Screen {
     /** The left button's state last tick, read straight off the mouse (see {@link #tick}). */
     private boolean wasDown = true;
     /** Game time of the last press handled, so a click seen both ways counts once. */
-    private long pressedAt = Long.MIN_VALUE;
+    private long pressedAt = -1000;
 
     /**
      * Reads the mouse itself each tick as well as taking the screen's click events: in some setups the clicks
