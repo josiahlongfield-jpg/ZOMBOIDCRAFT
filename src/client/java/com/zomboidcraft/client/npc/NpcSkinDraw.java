@@ -52,10 +52,7 @@ public final class NpcSkinDraw {
             if (tex == null) {
                 continue;
             }
-            if (buffers[g * 2] == null) {
-                buffers[g * 2] = new float[gr.vertices * 3];
-                buffers[g * 2 + 1] = new float[gr.vertices * 3];
-            }
+            fit(buffers, g, gr);
             float[] pos = (float[]) buffers[g * 2], normal = (float[]) buffers[g * 2 + 1];
             skin(gr, m, pos, normal);
             if (press != null) {
@@ -117,11 +114,8 @@ public final class NpcSkinDraw {
                 continue;
             }
             if (job != null) {
-                if (m == null && buffers[g * 2] == null) continue;
-                if (buffers[g * 2] == null) {
-                    buffers[g * 2] = new float[gr.vertices * 3];
-                    buffers[g * 2 + 1] = new float[gr.vertices * 3];
-                }
+                if (m == null && !fits(buffers, g, gr)) continue;
+                fit(buffers, g, gr);
                 int i = job.add(new BodyJob.Part(gr, quads(gr), (float[]) buffers[g * 2], (float[]) buffers[g * 2 + 1],
                         gr.bothSides && insides));
                 if (ZcConfig.get().performance.batchBodies) {
@@ -133,16 +127,13 @@ public final class NpcSkinDraw {
                 continue;
             }
             if (m == null) {
-                if (buffers[g * 2] == null) continue;
+                if (!fits(buffers, g, gr)) continue;
                 float[] pos = (float[]) buffers[g * 2], normal = (float[]) buffers[g * 2 + 1];
                 collector.submitCustomGeometry(poseStack, RenderTypes.entityCutoutCull(tex),
                         (pose, out) -> draw(gr, pos, normal, 0, gr.tris.length, gr.bothSides && insides, pose, out, light, overlay));
                 continue;
             }
-            if (buffers[g * 2] == null) {
-                buffers[g * 2] = new float[gr.vertices * 3];
-                buffers[g * 2 + 1] = new float[gr.vertices * 3];
-            }
+            fit(buffers, g, gr);
             float[] pos = (float[]) buffers[g * 2], normal = (float[]) buffers[g * 2 + 1];
             skin(gr, m, pos, normal);
             collector.submitCustomGeometry(poseStack, RenderTypes.entityCutoutCull(tex),
@@ -160,6 +151,22 @@ public final class NpcSkinDraw {
         draw(g, pos, normal, 0, g.tris.length, back, pose, out, light, overlay);
     }
 
+    /**
+     * Whether a group's skinned buffers are there and the size of this group: the same buffers can come round to another
+     * model with as many groups (the first-person gun or blade changed), whose group g has more vertices (2026-11-07 crash).
+     */
+    private static boolean fits(Object[] buffers, int g, NpcSkin.Group gr) {
+        return buffers[g * 2] instanceof float[] p && p.length == gr.vertices * 3;
+    }
+
+    /** Makes a group's skinned buffers (anew if missing or sized for another model's group). */
+    private static void fit(Object[] buffers, int g, NpcSkin.Group gr) {
+        if (!fits(buffers, g, gr)) {
+            buffers[g * 2] = new float[gr.vertices * 3];
+            buffers[g * 2 + 1] = new float[gr.vertices * 3];
+        }
+    }
+
     /** Bones as skin() takes them (3x4 each, row by row). */
     public static float[] boneMatrices(Matrix4f[] bones) {
         return matrices(bones);
@@ -167,10 +174,7 @@ public final class NpcSkinDraw {
 
     /** Skins one mesh (index g of its pack) into the buffers, as skinAll does for every one. */
     public static void skinGroup(NpcSkin.Group gr, float[] m, Object[] buffers, int g) {
-        if (buffers[g * 2] == null) {
-            buffers[g * 2] = new float[gr.vertices * 3];
-            buffers[g * 2 + 1] = new float[gr.vertices * 3];
-        }
+        fit(buffers, g, gr);
         skin(gr, m, (float[]) buffers[g * 2], (float[]) buffers[g * 2 + 1]);
     }
 
@@ -195,10 +199,7 @@ public final class NpcSkinDraw {
         for (int g = 0; g < skin.groups.length; g++) {
             NpcSkin.Group gr = skin.groups[g];
             if (gr.level != level) continue;
-            if (buffers[g * 2] == null) {
-                buffers[g * 2] = new float[gr.vertices * 3];
-                buffers[g * 2 + 1] = new float[gr.vertices * 3];
-            }
+            fit(buffers, g, gr);
             skin(gr, m, (float[]) buffers[g * 2], (float[]) buffers[g * 2 + 1]);
         }
     }
