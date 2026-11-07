@@ -94,6 +94,17 @@ public final class LocalGuns {
          */
         public float zoom;
         /**
+         * The sight's own modes, Tarkov's Zooms for it (the HHS-1's magnifier 3x then 1x, a 5-25x scope's 5 and 25): the
+         * sight-mode key steps through them; none: zoom alone.
+         */
+        public float[] zooms;
+        /**
+         * The other sights built on that the switch-sight key turns to, in order after the main one (Tarkov's change
+         * sight: the MDR's ACOG to the RMR riding on it, Josiah 2026-11-07; any sight with one, looted ones too). The Nth
+         * (from 1) draws its model's texture "reticle_N"; none: the one sight.
+         */
+        public java.util.List<AltSight> alt;
+        /**
          * Handed to each new life, loaded with only the magazine in it and one spare (the starter kit, Josiah
          * 2026-11-06: the PM).
          */
@@ -126,6 +137,19 @@ public final class LocalGuns {
     public static final class Hold {
         public float[] palm;
         public java.util.Map<String, float[]> fingers;
+    }
+
+    /**
+     * One more sight on a gun, as the main one is given: its mesh, magnification (0 or 1: a red dot), its modes, reticle
+     * span, and where its eye point (its mod_aim_camera) sits from the main sight's: metres and a turn x, y, z, w in the
+     * main one's aim frame (x right, y up, looking down -z).
+     */
+    public static final class AltSight {
+        public String sight;
+        public float zoom;
+        public float[] zooms;
+        public float reticleMoa = 152.4f;
+        public float[] aim;
     }
 
     /** A gun's own laser and light. */
