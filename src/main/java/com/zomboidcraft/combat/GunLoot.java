@@ -285,7 +285,7 @@ public final class GunLoot {
 
     /**
      * A Tarkov part or two with found guns (Josiah 2026-11-07: looted parts are fitted at the bench): a quarter of the
-     * time one, sometimes a second; sights and cans turn up half as often as grips, stocks and the rest.
+     * time one, sometimes a second; sights turn up half as often as grips, stocks and the rest, cans an eighth as often.
      */
     static List<ItemStack> tarkovParts(RandomSource random) {
         List<String> pool;
@@ -309,8 +309,10 @@ public final class GunLoot {
             for (int tries = 0; tries < 4; tries++) {
                 String id = pool.get(random.nextInt(pool.size()));
                 TarkovParts.Part p = TarkovParts.get(id);
-                boolean rare = p != null && (p.slot() == Attachments.Slot.OPTIC || p.slot() == Attachments.Slot.SUPPRESSOR);
-                if (rare && random.nextBoolean()) continue;
+                boolean sight = p != null && p.slot() == Attachments.Slot.OPTIC;
+                boolean can = p != null && p.slot() == Attachments.Slot.SUPPRESSOR;
+                // cans are quite rare (Josiah 2026-11-07): one in eight as often as a grip or a stock; sights one in two
+                if (sight && random.nextBoolean() || can && random.nextInt(8) != 0) continue;
                 ItemStack s = TarkovParts.make(id);
                 if (!s.isEmpty()) out.add(s);
                 break;

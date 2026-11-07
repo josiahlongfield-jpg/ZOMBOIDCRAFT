@@ -82,6 +82,24 @@ public final class TarkovFit {
         return tarkov(spec) ? resolve(spec, fitted(gun)) : null;
     }
 
+    /** Whether a kit part can't come off in Tarkov: the slot it sits in on its parent is a required one. */
+    public static boolean builtIn(LocalGuns.Spec spec, String item) {
+        if (!tarkov(spec)) return false;
+        for (LocalGuns.KitPart k : spec.tarkov.kit) {
+            if (!k.item.equals(item)) continue;
+            int cut = k.path.lastIndexOf('/');
+            if (cut < 0) continue;
+            String parentPath = k.path.substring(0, cut), slot = k.path.substring(cut + 1);
+            for (LocalGuns.KitPart parent : spec.tarkov.kit) {
+                if (!parent.path.equals(parentPath)) continue;
+                TarkovParts.Part pp = TarkovParts.get(parent.item);
+                TarkovParts.Port port = pp == null ? null : pp.slots.get(slot);
+                if (port != null && port.required) return true;
+            }
+        }
+        return false;
+    }
+
     /** What a Tarkov gun comes with, by bench slot: its kit's parts (a second sight rides piggyback, a second device on the other rail). */
     public static Map<Attachments.Slot, String> kitSockets(LocalGuns.Spec spec) {
         Map<Attachments.Slot, String> out = new EnumMap<>(Attachments.Slot.class);
