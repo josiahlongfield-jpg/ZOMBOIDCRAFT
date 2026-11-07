@@ -76,11 +76,6 @@ public class ZombieSwarmTest implements FabricClientGameTest {
             sp.getServer().runCommand(String.format("tp @a %d %d %d", at[0], at[1] + 40, at[2]));
             ctx.waitTicks(100);
             sp.getConnection().waitForChunksRender();
-            // let the dead be placed round us before the street view
-            for (int i = 0; i < 12; i++) {
-                ctx.waitTicks(20);
-                log(sp, "settle " + i);
-            }
             sp.getServer().runCommand("effect give @a night_vision infinite 0 true");
             sp.getServer().runCommand("effect give @a resistance infinite 10 true");
             sp.getServer().runCommand("effect give @a saturation infinite 10 true");
@@ -88,14 +83,14 @@ public class ZombieSwarmTest implements FabricClientGameTest {
             int[] street = sp.getServer().computeOnServer(server -> {
                 var level = server.overworld();
                 var hm = net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES;
-                for (int r = 4; r <= 80; r += 2) {
+                for (int r = 4; r <= 120; r += 2) {
                     for (int k = 0; k < 32; k++) {
                         double t = k * Math.PI / 16;
                         int x = at[0] + (int) Math.round(Math.cos(t) * r), z = at[2] + (int) Math.round(Math.sin(t) * r);
                         int ground = level.getHeight(hm, x, z);
                         boolean open = ground <= at[1] + 2;
-                        for (int dx = -4; dx <= 4 && open; dx += 2) {
-                            for (int dz = -4; dz <= 4 && open; dz += 2) {
+                        for (int dx = -8; dx <= 8 && open; dx += 2) {
+                            for (int dz = -8; dz <= 8 && open; dz += 2) {
                                 open = Math.abs(level.getHeight(hm, x + dx, z + dz) - ground) <= 1;
                             }
                         }
@@ -106,10 +101,17 @@ public class ZombieSwarmTest implements FabricClientGameTest {
                 }
                 return new int[] {at[0], at[1], at[2]};
             });
-            int perch = street[1] + 4;
+            int perch = street[1] + 6;
             LOG.info("ZCSWARM street at {} {} {}, perch at {}", street[0], street[1], street[2], perch);
             sp.getServer().runCommand(String.format("setblock %d %d %d minecraft:barrier", street[0], perch - 1, street[2]));
             sp.getServer().runCommand(String.format("tp @a %d %d %d 0 20", street[0], perch, street[2]));
+            ctx.waitTicks(40);
+            sp.getConnection().waitForChunksRender();
+            // let the dead round the street be placed and wake before the camera rolls
+            for (int i = 0; i < 12; i++) {
+                ctx.waitTicks(20);
+                log(sp, "settle " + i);
+            }
             sp.getServer().runCommand("gamemode survival @a");
             ctx.waitTicks(20);
             ctx.runOnClient(ZombieSwarmTest::skipRoster);
@@ -121,7 +123,7 @@ public class ZombieSwarmTest implements FabricClientGameTest {
                         Noise.emit(server.overworld(), p.position(), 90);
                     });
                 }
-                sp.getServer().runCommand(String.format("tp @a %d %d %d %.1f %d", street[0], perch, street[2], (f * 2.25f) % 360, f < 80 ? 20 : 40));
+                sp.getServer().runCommand(String.format("tp @a %d %d %d %.1f %d", street[0], perch, street[2], (f * 2.25f) % 360, f < 80 ? 25 : 45));
                 ctx.waitTicks(10);
                 ctx.takeScreenshot(String.format("swarm-%03d", f));
                 if (f % 4 == 0) {
