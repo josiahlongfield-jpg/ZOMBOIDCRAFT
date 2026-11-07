@@ -422,7 +422,13 @@ public final class LocalGuns {
                 tree.add(e.getKey(), e.getValue());
             }
         }
-        return GSON.fromJson(tree, anchor.getClass());
+        // a magazine-fed shotgun (the AA-12) keeps its anchor's magazine reload but fires buckshot: its own "pellets"
+        // make its numbers a shotgun's (the spread and falloff not given take the shotgun's defaults)
+        Class<? extends ZcConfig.GunStats> kind = anchor.getClass();
+        if (own != null && own.has("pellets") && own.get("pellets").getAsInt() > 1 && !(anchor instanceof ZcConfig.ShotgunStats)) {
+            kind = ZcConfig.ShotgunStats.class;
+        }
+        return GSON.fromJson(tree, kind);
     }
 
     /** The numbers a stack fires with: a local gun's own, else its type's. */
