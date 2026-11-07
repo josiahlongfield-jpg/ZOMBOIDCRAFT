@@ -52,6 +52,7 @@ final class PackPage {
 
         int hx = x + LX, hy = y + KitScreen.H - 14;
         hx += KitDraw.hint(g, font, "Drag", "Move", hx, hy);
+        hx += KitDraw.hint(g, font, "R", "Turn", hx, hy);
         hx += KitDraw.hint(g, font, "RMB", "Half", hx, hy);
         hx += KitDraw.hint(g, font, "Shift+LMB", "Quick move", hx, hy);
         hx += KitDraw.hint(g, font, "Shift+RMB", "Drop", hx, hy);
@@ -126,17 +127,13 @@ final class PackPage {
         int cols = 9;
         if (bag != null) {
             BagSpec spec = bag.spec();
-            cols = spec.columns();
-            for (int i = 0; i < menu.slots.size(); i++) {
-                if (menu.slots.get(i) instanceof CarrySlots.BagSlot s && s.bag == bag && s.open()) grid.add(i);
-            }
             double inside = bag.contentsWeight(-1);
             String name = bag.bag().getHoverName().getString();
             KitDraw.caps(g, font, name, x, ty, KitDraw.BRIGHT, KitDraw.capsWidth(font, name, 1f) > LW - 70 ? 0.8f : 1f);
-            float full = (float) Math.min(1, inside / spec.capacity());
-            KitDraw.capsRight(g, font, Weights.format(inside) + " / " + Weights.format(spec.capacity()), x + LW, ty + 1,
-                    full >= 1 ? KitDraw.WARN : KitDraw.DIM, 0.75f);
-            KitDraw.bar(g, x, ty + 11, LW, 1, full, Float.NaN);
+            // Tarkov's bags: no weight cap, just cells; the header gives what it weighs and how many cells it has
+            KitDraw.capsRight(g, font, Weights.format(inside) + "  ·  " + spec.cells() + " cells", x + LW, ty + 1, KitDraw.DIM, 0.75f);
+            g.fill(x, ty + 11, x + LW, ty + 12, KitDraw.LINE);
+            cells(g, font, bag, x, y + GRID_Y, LW, GRID_H, mx, my);
         } else if (tab == Tab.POCKETS && tabs.contains(Tab.POCKETS) || tab == Tab.LOOSE && tabs.contains(Tab.LOOSE)) {
             boolean loose = tab == Tab.LOOSE;
             for (int i = InventoryMenu.INV_SLOT_START; i < InventoryMenu.INV_SLOT_END; i++) {
@@ -279,6 +276,110 @@ final class PackPage {
         }
         KitDraw.text(g, font, "›", x + 2 * (t + 2) + 10, y + 10 + t - 4, KitDraw.DIM, 1.2f);
         tile(g, font, InventoryMenu.RESULT_SLOT, x + 2 * (t + 2) + 30, y + 10 + (t + 2) / 2, t, mx, my, false);
+    }
+
+    // ------------------------------------------------------------------ Tarkov grids
+
+    /**
+     * A worn bag as Tarkov draws it (Josiah 2026-11-07): its grids of cells side by side, each item one tile over all
+     * the cells it covers. A press anywhere on an item picks it up; while carrying, the cell under the mouse is where its
+     * top left goes, shown green where it fits and red where it doesn't (R turns it).
+     */
+    private void cells(GuiGraphicsExtractor g, Font font, BagContainer bag, int x, int y, int w, int h, int mx, int my) {
+        AbstractContainerMenu menu = screen.menu();
+        com.zomboidcraft.carry.grid.GridShape shape = bag.spec().shape();
+        int cellCount = Math.min(shape.cells(), bag.usableSlots());
+        int[] menuSlot = new int[cellCount];
+        java.util.Arrays.fill(menuSlot, -1);
+        for (int i = 0; i < menu.slots.size(); i++) {
+            if (menu.slots.get(i) instanceof CarrySlots.BagSlot s && s.bag == bag && s.getContainerSlot() < cellCount) {
+                menuSlot[s.getContainerSlot()] = i;
+            }
+        }
+        // the biggest cell that lays every grid out in the space, grids left to right, wrapping
+        int t = 24;
+        int[][] at = null;
+        for (; t >= 8; t--) {
+            at = layout(shape, t, w);
+            if (at != null && at[at.length - 1][2] <= h) break;
+        }
+        if (at == null) return;
+        ItemStack carried = menu.getCarried();
+        int hoverCell = -1;
+        for (int k = 0; k < shape.grids().size(); k++) {
+            com.zomboidcraft.carry.grid.GridShape.Grid gr = shape.grids().get(k);
+            int gx = x + at[k][0], gy = y + at[k][1];
+            g.fill(gx - 1, gy - 1, gx + gr.w() * t + 1, gy + gr.h() * t + 1, 0xFF000000);
+            for (int cy = 0; cy < gr.h(); cy++) {
+                for (int cx = 0; cx < gr.w(); cx++) {
+                    int px = gx + cx * t, py = gy + cy * t;
+                    g.fill(px, py, px + t, py + t, 0xE00D0E0E);
+                    KitDraw.frame(g, px, py, t, t, 0x14FFFFFF);
+                    int cell = shape.slot(k, cx, cy);
+                    if (cell >= cellCount || menuSlot[cell] < 0) continue;
+                    if (screen.hovered(px, py, t, t, mx, my)) hoverCell = cell;
+                    int owner = com.zomboidcraft.carry.grid.Grids.owner(bag, shape, cell);
+                    // carrying: the cell itself is the drop spot, unless it lies under a stack this one tops up
+                    int target = owner >= 0 && (carried.isEmpty() || ItemStack.isSameItemSameComponents(carried, bag.getItem(owner)))
+                            ? owner : cell;
+                    int slot = menuSlot[target];
+                    ItemStack card = owner >= 0 ? bag.getItem(owner) : ItemStack.EMPTY;
+                    screen.hot(px, py, t, t, card, () -> screen.slotClick(slot, 0), () -> screen.slotClick(slot, 1), null, slot);
+                }
+            }
+            // the items, each over its whole footprint
+            for (int cy = 0; cy < gr.h(); cy++) {
+                for (int cx = 0; cx < gr.w(); cx++) {
+                    int cell = shape.slot(k, cx, cy);
+                    if (cell >= cellCount) continue;
+                    ItemStack stack = bag.getItem(cell);
+                    if (stack.isEmpty()) continue;
+                    int[] size = com.zomboidcraft.carry.grid.ItemSize.of(stack);
+                    int iw = Math.min(size[0], gr.w() - cx) * t, ih = Math.min(size[1], gr.h() - cy) * t;
+                    int px = gx + cx * t, py = gy + cy * t;
+                    KitDraw.tile(g, font, stack, px + 1, py + 1, iw - 2, ih - 2, screen.hovered(px, py, iw, ih, mx, my));
+                }
+            }
+        }
+        // where the carried thing would go
+        if (!carried.isEmpty() && hoverCell >= 0) {
+            com.zomboidcraft.carry.grid.GridShape.Cell c = shape.cell(hoverCell);
+            com.zomboidcraft.carry.grid.GridShape.Grid gr = shape.grids().get(c.grid());
+            int[] size = com.zomboidcraft.carry.grid.ItemSize.of(carried);
+            int owner = com.zomboidcraft.carry.grid.Grids.owner(bag, shape, hoverCell);
+            boolean merge = owner >= 0 && ItemStack.isSameItemSameComponents(carried, bag.getItem(owner));
+            int anchor = merge ? owner : hoverCell;
+            com.zomboidcraft.carry.grid.GridShape.Cell a = shape.cell(anchor);
+            int[] fp = merge ? com.zomboidcraft.carry.grid.ItemSize.of(bag.getItem(owner)) : size;
+            boolean ok = merge || menuSlot[anchor] >= 0 && menu.slots.get(menuSlot[anchor]).mayPlace(carried);
+            int px = x + at[c.grid()][0] + a.x() * t, py = y + at[c.grid()][1] + a.y() * t;
+            int ew = Math.min(fp[0], gr.w() - a.x()) * t, eh = Math.min(fp[1], gr.h() - a.y()) * t;
+            g.fill(px, py, px + ew, py + eh, ok ? 0x557FBF4D : 0x55C4452F);
+            KitDraw.frame(g, px, py, ew, eh, ok ? 0xFF7FBF4D : 0xFFC4452F);
+        }
+    }
+
+    /** Where each grid goes at cell size t inside width w: {x, y, bottom}; null when one is wider than w. */
+    private static int[][] layout(com.zomboidcraft.carry.grid.GridShape shape, int t, int w) {
+        int n = shape.grids().size();
+        int[][] at = new int[n][3];
+        int cx = 0, cy = 0, rowH = 0, gap = 3;
+        for (int k = 0; k < n; k++) {
+            com.zomboidcraft.carry.grid.GridShape.Grid gr = shape.grids().get(k);
+            int gw = gr.w() * t, gh = gr.h() * t;
+            if (gw > w) return null;
+            if (cx > 0 && cx + gw > w) {
+                cx = 0;
+                cy += rowH + gap;
+                rowH = 0;
+            }
+            at[k][0] = cx;
+            at[k][1] = cy;
+            rowH = Math.max(rowH, gh);
+            cx += gw + gap;
+        }
+        for (int k = 0; k < n; k++) at[k][2] = cy + rowH;
+        return at;
     }
 
     // ------------------------------------------------------------------ tiles

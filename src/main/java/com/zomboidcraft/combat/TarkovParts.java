@@ -54,6 +54,8 @@ public final class TarkovParts {
         public Map<String, Port> slots = new LinkedHashMap<>();
         public List<String> conflicts = List.of();
         public int capacity;
+        /** Its size in inventory cells, Tarkov's Width and Height (w, h); none: one cell. */
+        public int[] cells;
         public float[] fireport;
         /** Tarkov's left-hand holds on it: wrapped round it (a grip's), cradled under it (a forend's). */
         public LocalGuns.Hold hold, cradle;

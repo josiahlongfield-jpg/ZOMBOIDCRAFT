@@ -26,7 +26,7 @@ public final class CarryClient {
             }
             BagSpec bag = BagItem.spec(stack);
             if (bag != null) {
-                lines.add(Component.literal(bag.slots() + " slots, holds " + Weights.format(bag.capacity())
+                lines.add(Component.literal(bag.cellsText()
                         + (bag.reduction() > 0 ? ", carries " + Math.round(bag.reduction() * 100) + "% lighter" : ""))
                         .withStyle(ChatFormatting.GRAY));
                 lines.add(Component.literal("Worn: " + bag.wear().label + (bag.wear() == com.zomboidcraft.carry.Wear.HAND

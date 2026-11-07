@@ -38,6 +38,8 @@ public final class LocalGuns {
     public static final class Spec {
         public String id;
         public String name;
+        /** Its size in inventory cells, Tarkov's Width and Height (w, h); none: sized by its kind (carry/grid/ItemSize). */
+        public int[] cells;
         /** Our gun it handles like, by item id ("pistol", "assault_rifle", ...). */
         public String anchor;
         public String calibre;

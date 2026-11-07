@@ -82,7 +82,9 @@ public final class CarrySlots {
         public boolean mayPlace(ItemStack stack) {
             BagSpec spec = bag.spec();
             return open() && stack.getItem().canFitInsideContainerItems() && spec != null && spec.holds().test(stack)
-                    && getMaxStackSize(stack) > 0;
+                    && getMaxStackSize(stack) > 0
+                    // Tarkov's grids: its whole footprint inside one grid, over no one else's cells
+                    && com.zomboidcraft.carry.grid.Grids.fits(bag, spec.shape(), getContainerSlot(), stack, getContainerSlot());
         }
 
         @Override
@@ -91,13 +93,8 @@ public final class CarrySlots {
             if (spec == null || !open()) {
                 return 0;
             }
-            double unit = Weights.unit(stack);
-            int vanilla = super.getMaxStackSize(stack);
-            if (unit <= 0) {
-                return vanilla;
-            }
-            double room = spec.capacity() - bag.contentsWeight(getContainerSlot());
-            return Math.max(0, Math.min(vanilla, (int) Math.floor(room / unit + 1e-6)));
+            // no weight limit per bag in Tarkov: cells are the limit
+            return super.getMaxStackSize(stack);
         }
 
         @Override

@@ -579,6 +579,12 @@ public class KitScreen<M extends AbstractContainerMenu> extends AbstractContaine
             flip(-1);
             return true;
         }
+        if (event.key() == InputConstants.KEY_R && !menu.getCarried().isEmpty()) {
+            // Tarkov: R while dragging turns the thing a quarter; the server turns its copy too
+            com.zomboidcraft.carry.grid.ItemSize.turn(menu.getCarried());
+            ClientPlayNetworking.send(new com.zomboidcraft.carry.grid.GridNet.Turn());
+            return true;
+        }
         if (event.key() == InputConstants.KEY_R) {
             flip(1);
             return true;

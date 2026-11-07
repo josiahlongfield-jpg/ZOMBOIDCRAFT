@@ -46,15 +46,54 @@ public record BagSpec(Wear wear, int slots, int columns, double capacity, double
         this(wear, slots, columns, capacity, reduction, weight, Holds.ANYTHING);
     }
 
-    /** The most slots any bag worn this way can have; the menu always carries this many. */
+    /**
+     * The most cells any bag worn this way can have; the menu always carries this many. Tarkov's biggest packs run to
+     * about fifty cells and its biggest rigs to about twenty-five.
+     */
     public static int maxSlots(Wear wear) {
         return switch (wear) {
-            case BACK -> 24;
-            case VEST -> 6;
-            case WAIST -> 3;
+            case BACK -> 64;
+            case VEST -> 32;
+            case WAIST -> 8;
             // anything held in the off hand opens there, so it fits the biggest pack
-            case HAND -> 24;
+            case HAND -> 64;
         };
+    }
+
+    /** Tarkov layouts given to particular bags (a rig's pouches), by the spec itself. */
+    private static final java.util.Map<BagSpec, com.zomboidcraft.carry.grid.GridShape> LAYOUTS = new java.util.IdentityHashMap<>();
+
+    /** Gives this bag Tarkov's own grid layout in place of a plain block of its slots. Returns the spec. */
+    public BagSpec laidOut(com.zomboidcraft.carry.grid.GridShape shape) {
+        LAYOUTS.put(this, shape);
+        return this;
+    }
+
+    /**
+     * Its grids, as in Tarkov (Josiah 2026-11-07): its own layout when it has one, else its slots as one block
+     * {@code columns} wide. Its cells are its slots.
+     */
+    public com.zomboidcraft.carry.grid.GridShape shape() {
+        com.zomboidcraft.carry.grid.GridShape own = LAYOUTS.get(this);
+        if (own != null) {
+            return own;
+        }
+        return com.zomboidcraft.carry.grid.GridShape.block(columns, slots);
+    }
+
+    /** Its grids in words: "5x7 grid" or "7 pouches, 20 cells". */
+    public String cellsText() {
+        com.zomboidcraft.carry.grid.GridShape shape = shape();
+        if (shape.grids().size() == 1) {
+            com.zomboidcraft.carry.grid.GridShape.Grid g = shape.grids().get(0);
+            return g.w() + "x" + g.h() + " grid";
+        }
+        return shape.grids().size() + " pouches, " + shape.cells() + " cells";
+    }
+
+    /** How many cells it has, capped to what the menu carries for bags worn its way. */
+    public int cells() {
+        return Math.min(shape().cells(), maxSlots(wear));
     }
 
     /** What a bag will take. */

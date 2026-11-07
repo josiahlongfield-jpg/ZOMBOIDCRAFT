@@ -50,7 +50,7 @@ public final class BagContainer implements Container {
         bound = bag;
         boundContents = contents;
         BagSpec spec = BagItem.spec(bag);
-        items = NonNullList.withSize(spec == null ? 0 : spec.slots(), ItemStack.EMPTY);
+        items = NonNullList.withSize(spec == null ? 0 : spec.cells(), ItemStack.EMPTY);
         if (contents != null) {
             contents.copyInto(items);
         }
