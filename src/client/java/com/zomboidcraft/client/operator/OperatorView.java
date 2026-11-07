@@ -210,6 +210,8 @@ public final class OperatorView {
             System.arraycopy(tmpPos, 0, pos, 0, pos.length);
             System.arraycopy(tmpTurn, 0, turn, 0, turn.length);
         }
+        // the left hand on the fitted foregrip or handguard, Tarkov's own hold for it
+        GripHold.apply(skin, LocalGuns.of(gun), pos, turn);
 
         // on the sights while aiming, unless the hands are busy
         boolean using = player.isUsingItem() && player.getUseItem() == gun;

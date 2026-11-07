@@ -98,6 +98,14 @@ public final class LocalGuns {
          * 2026-11-06: the PM).
          */
         public boolean starter;
+        /**
+         * Tarkov's own left-hand holds (each foregrip's and handguard's GripPose, Josiah 2026-11-07: a looted grip must
+         * actually be held), by the part's bone in the first-person model: the palm on that part and the fingers' turns.
+         * The fitted foregrip's hold wins, else the handguard's (client GripHold).
+         */
+        public java.util.Map<String, Hold> holds;
+        /** The foregrip and the handguard built on (their bones, keys of holds); none: no such part. */
+        public String grip, guard;
         /** Resolved: the anchor's numbers with this gun's laid over them. */
         transient ZcConfig.GunStats merged;
         transient GunType type;
@@ -109,6 +117,15 @@ public final class LocalGuns {
         public boolean has(String part) {
             return kit != null && kit.contains(part);
         }
+    }
+
+    /**
+     * One left-hand hold: the palm on its part (metres and a turn x, y, z, w in that part's bone frame) and each
+     * finger bone's own turn from its parent ("Base HumanLDigit11": x, y, z, w).
+     */
+    public static final class Hold {
+        public float[] palm;
+        public java.util.Map<String, float[]> fingers;
     }
 
     /** A gun's own laser and light. */
