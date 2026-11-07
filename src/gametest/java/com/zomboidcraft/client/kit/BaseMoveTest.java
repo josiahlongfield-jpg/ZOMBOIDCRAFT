@@ -396,7 +396,10 @@ public class BaseMoveTest implements FabricClientGameTest {
         frame(ctx, "bunk-woke");
 
         // the hospital bed in the med bay
-        sp.getServer().runOnServer(s -> com.zomboidcraft.survival.SurvivalStats.set(player(s), com.zomboidcraft.survival.SurvivalStats.get(player(s)).withFatigue(60f)));
+        sp.getServer().runOnServer(s -> {
+            com.zomboidcraft.survival.Sleep.wake(player(s), null);
+            com.zomboidcraft.survival.SurvivalStats.set(player(s), com.zomboidcraft.survival.SurvivalStats.get(player(s)).withFatigue(60f));
+        });
         standIn(ctx, sp, 9, 4, 180f, 30f);
         ctx.waitTicks(25);
         BlockPos hospital = barracks.offset(9, 1, 6);
