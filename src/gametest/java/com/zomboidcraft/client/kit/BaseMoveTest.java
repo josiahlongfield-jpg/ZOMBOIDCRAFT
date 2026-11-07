@@ -384,11 +384,13 @@ public class BaseMoveTest implements FabricClientGameTest {
                 + ", outside " + com.zomboidcraft.building.base.RoomEffects.canWake(player(s), barracks.offset(40, 1, 4)));
         LOG.info("ZCBASE fx asleep: {} | {} | can wake: {}", sleeper(sp), effectsHere(sp), wakes);
         frame(ctx, "bunk-asleep");
-        for (int i = 0; i < 90; i++) {
+        // the test server doesn't fast-forward the night, so: twenty seconds of rest, then near rested to see the waking
+        ctx.waitTicks(400);
+        LOG.info("ZCBASE fx after 20s asleep: {}", sleeper(sp));
+        sp.getServer().runOnServer(s -> com.zomboidcraft.survival.SurvivalStats.set(player(s), com.zomboidcraft.survival.SurvivalStats.get(player(s)).withFatigue(2.5f)));
+        for (int i = 0; i < 15; i++) {
             ctx.waitTicks(20);
-            boolean up = sp.getServer().computeOnServer(s -> !com.zomboidcraft.survival.Sleep.asleep(player(s)));
-            if (i % 10 == 0 || up) LOG.info("ZCBASE fx night {}: {}", i, sleeper(sp));
-            if (up) break;
+            if (sp.getServer().computeOnServer(s -> !com.zomboidcraft.survival.Sleep.asleep(player(s)))) break;
         }
         LOG.info("ZCBASE fx woke: {}", sleeper(sp));
         frame(ctx, "bunk-woke");

@@ -88,8 +88,8 @@ public final class Mood {
         int boredom = m.getOrDefault(Stat.BOREDOM.key, 0);
 
         // boredom: idle builds it, worst inside; trouble and moving about wear it off
-        if (player.isSleeping()) {
-            // nothing
+        if (player.isSleeping() || Sleep.asleep(player)) {
+            // nothing: asleep in a bed of ours too
         } else if (near > 0) {
             change(m, Stat.BOREDOM, -6);
         } else if (!busy) {
