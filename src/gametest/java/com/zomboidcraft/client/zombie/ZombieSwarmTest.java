@@ -40,9 +40,13 @@ public class ZombieSwarmTest implements FabricClientGameTest {
             sp.getConnection().waitForChunksRender();
             for (String c : new String[] {"gamemode creative @a", "time set 13000", "weather clear", "gamerule doDaylightCycle false",
                     "zc config nature.climateCycle no_weather", "zc config nature.fogCycle no_fog", "zc config searchHeli.frequency never",
+                    "zc config survival.characterCreation false", "zc config start.picker false",
                     "difficulty normal"}) {
                 sp.getServer().runCommand(c);
             }
+            // the roster and spawn picker open on a county world's first join: out of the way for the camera
+            ctx.waitTicks(20);
+            ctx.runOnClient(mc -> mc.gui.setScreen(null));
             ctx.getInput().resizeWindow(1280, 720);
             ctx.getInput().pressKey(com.mojang.blaze3d.platform.InputConstants.KEY_F1);
             int[] at = sp.getServer().computeOnServer(server -> {
@@ -78,6 +82,7 @@ public class ZombieSwarmTest implements FabricClientGameTest {
             sp.getServer().runCommand(String.format("setblock %d %d %d minecraft:barrier", at[0], at[1] + 9, at[2]));
             sp.getServer().runCommand("gamemode survival @a");
             ctx.waitTicks(20);
+            ctx.runOnClient(mc -> mc.gui.setScreen(null));
             for (int f = 0; f < 160; f++) {
                 if (f % 12 == 0) {
                     // a rifle shot, as loud as one (Guns' shotNoise)
