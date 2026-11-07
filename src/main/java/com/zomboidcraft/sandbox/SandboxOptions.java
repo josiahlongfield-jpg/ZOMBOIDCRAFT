@@ -106,6 +106,8 @@ final class SandboxOptions {
         w.put("MaxRainFxIntensity", b -> b.choice("nature.maxRainFx", "normal", "moderate", "low").owner("WEATHER").client());
         w.put("EnableSnowOnGround", b -> b.toggle("nature.snowOnGround").owner("WEATHER")
                 .tip("There is no snow yet, so this does nothing for now."));
+        // Needs (SURVIVAL): survival/Needs
+        w.put("StatsDecrease", b -> b.choice("survival.statsDecreaseSpeed", "very_fast", "fast", "normal", "slow", "very_slow").owner("SURVIVAL"));
         // Character creation (SURVIVAL): survival/character/Traits
         w.put("CharacterFreePoints", b -> b.number("survival.freeTraitPoints", -100, 100).owner("SURVIVAL"));
         w.put("NegativeTraitsPenalty", b -> b.choice("survival.negativeTraitsPenalty", "none", "one_every_3", "one_every_2",
@@ -309,6 +311,9 @@ final class SandboxOptions {
         o.add(of(CHARACTER, "zc.characterCreation", "Character Creation")
                 .tip("Choose an occupation and traits on your first join and after each death, as in Zomboid.")
                 .toggle("survival.characterCreation").owner("SURVIVAL"));
+        o.add(of(CHARACTER, "zc.marines", "Marine Squad")
+                .tip("Players are marines: a specialist role and two traits. Off gives Zomboid's civilian jobs and traits.")
+                .toggle("survival.marines").owner("SURVIVAL"));
         o.add(of(CHARACTER, "zc.downed", "Downed in Multiplayer")
                 .tip("A killing blow puts you down for a while instead, so a friend can revive you.")
                 .toggle("survival.downed").owner("SURVIVAL"));

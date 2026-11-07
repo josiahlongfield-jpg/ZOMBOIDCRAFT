@@ -141,6 +141,12 @@ public final class LightSwitch {
         return dark.containsKey(s.getBlock()) || s.getBlock() == CityBlocks.block(ON);
     }
 
+    /** Is this a room lamp that's switched off (or dark with the power gone)? */
+    public static boolean dark(BlockState s) {
+        pairs();
+        return lit.containsKey(s.getBlock());
+    }
+
     @SuppressWarnings({"unchecked", "rawtypes"})
     private static BlockState copy(BlockState from, Block to) {
         BlockState out = to.defaultBlockState();

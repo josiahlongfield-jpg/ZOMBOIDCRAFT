@@ -962,8 +962,11 @@ public final class ZcConfig {
         public boolean nutrition = true;
         /** Real minutes in one Zomboid day for the needs clock (Zomboid's default day length is one hour). */
         public double dayMinutes = 60;
-        /** Zomboid's "stats decrease speed": how fast hunger and the calorie burn climb (0.5 slow, 2 fast). */
-        public double statsDecrease = 1.0;
+        /**
+         * Zomboid's Stats Decrease: how fast hunger, thirst, tiredness and the calorie burn climb. very_fast, fast, normal,
+         * slow or very_slow. Marines default to slow (Josiah 2026-11-06): needs are upkeep, not desperation.
+         */
+        public String statsDecreaseSpeed = "slow";
         /** Calories an adult at rest burns in a Zomboid day; running, loads and cold burn more. */
         public double caloriesPerDay = 2000;
         /** How quickly the calorie bank moves your weight (1 = Zomboid's pace, approximately). */
@@ -972,6 +975,8 @@ public final class ZcConfig {
         public double regenPerHour = 3;
         /** Zomboid's character creation (occupation and traits) on your first join and after each death. */
         public boolean characterCreation = true;
+        /** Players are marines: a specialist role and two trait picks instead of Zomboid's civilian jobs (NPCs stay civilians). */
+        public boolean marines = true;
         /** Zomboid's Free Trait Points: added to everyone's budget in character creation (-100 to 100). */
         public int freeTraitPoints = 0;
         /**
@@ -1015,8 +1020,20 @@ public final class ZcConfig {
         public int floorSagSeconds = 60;
         /** Blows shut window shutters stand before they give and leave the bare frame. */
         public int shutterHits = 12;
+        /** How many times a plain wooden wall's blows a reinforced one stands. */
+        public double reinforcedWallFactor = 2.0;
         /** How many wooden posts stand one on another. */
         public int postStack = 3;
+        /** Base claims (Zomboid's safehouse): only the owner and their squad change anything inside a claimed building. */
+        public boolean claims = true;
+        /** How far a claimed building reaches from where you stand, in blocks, and the most open space it can hold. */
+        public int claimRange = 40;
+        public int claimMaxCells = 12000;
+        /** A build this close to your claim (in blocks) grows the claim to take it in. */
+        public int claimGrowReach = 4;
+        /** A room is at least this many blocks across each way, and no more than this many blocks of floor. */
+        public int roomMinSide = 3;
+        public int roomMaxFloor = 400;
         /** Furniture weight: kilograms at or over these are medium (table, bed, sofa) and large (wardrobe, counter, fridge). */
         public double mediumKg = 6;
         public double largeKg = 19;
@@ -1169,6 +1186,12 @@ public final class ZcConfig {
         public double strikeBombKill = 9;
         public double strikeBombHurt = 7;
         public double strikeBombDamage = 30;
+        /**
+         * A radio operator's called strikes (world/events/StrikeCalls, Josiah 2026-11-06): one each strikeCallMinutes
+         * for a base (20, an in-game day), strikeCallCommsCut less with a comms post there.
+         */
+        public double strikeCallMinutes = 20;
+        public double strikeCallCommsCut = 1 / 3.0;
         /**
          * Where a car's key is, as shares: left in the ignition, in the glovebox, on a zombie that dies near the car
          * (each death nearby has carKeyDrop of being the one); the rest are lost, and the car has to be hotwired.

@@ -62,7 +62,7 @@ public final class WoodBlocks {
             BlockBehaviour.Properties.of().strength(3f, 3f).sound(SoundType.WOOD));
     public static final Block WINDOW_FRAME = register("wood_window_frame", Window::new, wood(2f));
     public static final Block DOOR_FRAME = register("wood_door_frame", DoorFrame::new, wood(2f));
-    public static final Block DOOR = register("wood_plank_door", p -> new DoorBlock(BlockSetType.OAK, p), wood(3f));
+    public static final Block DOOR = register("wood_plank_door", p -> new LockDoor(BlockSetType.OAK, p), wood(3f));
     public static final Block POST = register("wood_post", Post::new, wood(2f));
     public static final Block FLOOR = register("wood_floor", Floor::new, wood(2f));
     // wave 2b: getting up, and keeping the weather and the dead out
@@ -70,6 +70,12 @@ public final class WoodBlocks {
     public static final Block LADDER = register("wood_ladder", Ladder::new, wood(0.6f));
     public static final Block ROOF = register("wood_roof", p -> new Stairs(Blocks.OAK_PLANKS.defaultBlockState(), p), wood(2f));
     public static final Block SHUTTERS = register("wood_window_shutters", Shutters::new, wood(2f));
+    // wave 2c: holding the line
+    public static final Block REINFORCED = register("wood_wall_reinforced", Wall::new, wood(4f));
+    public static final Block FENCE = register("wood_fence", net.minecraft.world.level.block.FenceBlock::new, wood(2f));
+    public static final Block GATE = register("wood_gate", p -> new net.minecraft.world.level.block.FenceGateBlock(
+            net.minecraft.world.level.block.state.properties.WoodType.OAK, p), wood(2f));
+    public static final Block HIDDEN_DOOR = register("wood_hidden_door", HiddenDoor::new, wood(3f));
 
     private static BlockBehaviour.Properties wood(float strength) {
         return BlockBehaviour.Properties.of().strength(strength, 3f).sound(SoundType.WOOD).noOcclusion();
@@ -97,7 +103,12 @@ public final class WoodBlocks {
      * crate emptied of the stock its city twin would roll. Called once the build's materials are used up.
      */
     static void place(ServerLevel level, BlockPos pos, BlockState state, int carpentry) {
-        if (state.is(WALL)) state = state.setValue(Wall.STRENGTH, Math.min(10, carpentry));
+        if (state.is(WALL) || state.is(REINFORCED)) state = state.setValue(Wall.STRENGTH, Math.min(10, carpentry));
+        if (state.is(HIDDEN_DOOR)) {
+            level.setBlock(pos, state.setValue(HiddenDoor.HALF, DoubleBlockHalf.LOWER), 18);
+            level.setBlock(pos.above(), state.setValue(HiddenDoor.HALF, DoubleBlockHalf.UPPER), 18);
+            return;
+        }
         if (state.is(DOOR)) {
             // into the frame: both halves at once, without the halves seeing each other half-built
             level.setBlock(pos, state.setValue(DoorBlock.HALF, DoubleBlockHalf.LOWER), 18);
@@ -109,7 +120,7 @@ public final class WoodBlocks {
             level.setBlock(pos.above(), state.setValue(DoorFrame.HALF, DoubleBlockHalf.UPPER), 18);
             return;
         }
-        if (state.is(STAIRS) || state.is(ROOF)) state = Block.updateFromNeighbourShapes(state, level, pos);   // turns a corner to meet the run beside it
+        if (state.is(STAIRS) || state.is(ROOF) || state.is(FENCE) || state.is(GATE)) state = Block.updateFromNeighbourShapes(state, level, pos);   // turns a corner to meet the run beside it
         level.setBlockAndUpdate(pos, state);
         if (state.is(FLOOR)) level.scheduleTick(pos, FLOOR, 2);
         if (level.getBlockEntity(pos) instanceof net.minecraft.world.RandomizableContainer crate) crate.setLootTable(null);
@@ -118,7 +129,8 @@ public final class WoodBlocks {
     /** A finished wall: the blows it stands, more for a better carpenter. */
     public static int wallHits(BlockState state) {
         int base = ZcConfig.get().building.woodWallHits;
-        return (int) Math.round(base * (1 + 0.1 * state.getValue(Wall.STRENGTH)));
+        double reinforced = state.is(REINFORCED) ? ZcConfig.get().building.reinforcedWallFactor : 1.0;
+        return (int) Math.round(base * reinforced * (1 + 0.1 * state.getValue(Wall.STRENGTH)));
     }
 
     // ---------------------------------------------------------------- what holds what up
@@ -131,7 +143,7 @@ public final class WoodBlocks {
 
     /** The pieces that carry a floor laid on top of them. */
     static boolean holdsUp(BlockState state) {
-        return state.is(WALL_FRAME) || state.is(WALL) || state.is(POST) || state.is(WINDOW_FRAME) || state.is(SHUTTERS)
+        return state.is(WALL_FRAME) || state.is(WALL) || state.is(REINFORCED) || state.is(HIDDEN_DOOR) || state.is(POST) || state.is(WINDOW_FRAME) || state.is(SHUTTERS)
                 || state.is(DOOR_FRAME) && state.getValue(DoorFrame.HALF) == DoubleBlockHalf.UPPER;
     }
 
@@ -370,6 +382,198 @@ public final class WoodBlocks {
     public static class Ladder extends LadderBlock {
         public Ladder(Properties properties) {
             super(properties);
+        }
+
+        /** A wall behind it, or a post: a lookout tower's ladder is nailed to its leg. */
+        @Override
+        protected boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
+            return super.canSurvive(state, level, pos) || level.getBlockState(pos.relative(state.getValue(FACING).getOpposite())).is(POST);
+        }
+    }
+
+    private static void say(Player player, String text) {
+        if (player instanceof ServerPlayer sp) sp.sendOverlayMessage(Component.literal(text).withStyle(ChatFormatting.GRAY));
+    }
+
+    /** The lock id a padlocked door's key carries: where the door hangs. */
+    public static String lockId(BlockPos lower) {
+        return "door:" + lower.asLong();
+    }
+
+    /**
+     * The plank door, which can take a padlock: locked, nobody opens it by hand; the key it was fitted with (use it on
+     * either side) locks and unlocks it. Zombies don't care either way, they beat it in.
+     */
+    public static class LockDoor extends DoorBlock {
+        public static final BooleanProperty LOCKED = BooleanProperty.create("locked");
+
+        public LockDoor(BlockSetType type, Properties properties) {
+            super(type, properties);
+            registerDefaultState(defaultBlockState().setValue(LOCKED, false));
+        }
+
+        @Override
+        protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+            super.createBlockStateDefinition(builder);
+            builder.add(LOCKED);
+        }
+
+        @Override
+        protected InteractionResult useItemOn(net.minecraft.world.item.ItemStack stack, BlockState state, Level level, BlockPos pos, Player player,
+                                              net.minecraft.world.InteractionHand hand, BlockHitResult hit) {
+            BlockPos lower = state.getValue(HALF) == DoubleBlockHalf.LOWER ? pos : pos.below();
+            var data = stack.get(net.minecraft.core.component.DataComponents.CUSTOM_DATA);
+            String lock = data == null ? "" : data.copyTag().getStringOr("lock", "");
+            if (!lock.startsWith("door:")) return InteractionResult.TRY_WITH_EMPTY_HAND;
+            if (!level.isClientSide()) {
+                String no = !lock.equals(lockId(lower)) ? "Wrong key." : !hasPadlock(level, lower) ? "There's no padlock on it." : null;
+                if (no != null) {
+                    say(player, no);
+                    return InteractionResult.SUCCESS;
+                }
+                boolean locked = !state.getValue(LOCKED);
+                BlockState now = level.getBlockState(lower);
+                level.setBlock(lower, now.setValue(LOCKED, locked).setValue(OPEN, false), Block.UPDATE_ALL);
+                level.playSound(null, pos, locked ? SoundEvents.IRON_TRAPDOOR_CLOSE : SoundEvents.IRON_TRAPDOOR_OPEN, SoundSource.BLOCKS, 0.8f, 1.6f);
+                say(player, locked ? "Locked." : "Unlocked.");
+            }
+            return InteractionResult.SUCCESS;
+        }
+
+        @Override
+        protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
+            if (state.getValue(LOCKED)) {
+                if (!level.isClientSide()) {
+                    say(player, "It's padlocked.");
+                    level.playSound(null, pos, SoundEvents.CHAIN_HIT, SoundSource.BLOCKS, 0.6f, 1.4f);
+                }
+                return InteractionResult.SUCCESS;
+            }
+            return super.useWithoutItem(state, level, pos, player, hit);
+        }
+    }
+
+    /** Whether the door at {@code lower} has had a padlock fitted (one fitting, then its key locks and unlocks it). */
+    static boolean hasPadlock(Level level, BlockPos lower) {
+        return level instanceof ServerLevel server && server.getAttachedOrElse(PADLOCKS, java.util.List.<Long>of()).contains(lower.asLong());
+    }
+
+    /** Doors in this level with a padlock fitted. */
+    public static final net.fabricmc.fabric.api.attachment.v1.AttachmentType<java.util.List<Long>> PADLOCKS =
+            net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry.create(ZomboidCraft.id("door_padlocks"),
+                    b -> b.persistent(com.mojang.serialization.Codec.LONG.listOf()).initializer(java.util.List::of));
+
+    /** Fits a padlock to the plank door at {@code lower}, locks it, and gives the fitter its key. */
+    static void padlock(ServerLevel level, BlockPos lower, ServerPlayer player) {
+        java.util.List<Long> now = new java.util.ArrayList<>(level.getAttachedOrElse(PADLOCKS, java.util.List.of()));
+        if (!now.contains(lower.asLong())) now.add(lower.asLong());
+        level.setAttached(PADLOCKS, java.util.List.copyOf(now));
+        BlockState door = level.getBlockState(lower);
+        if (door.is(DOOR)) level.setBlock(lower, door.setValue(LockDoor.LOCKED, true).setValue(DoorBlock.OPEN, false), Block.UPDATE_ALL);
+        var item = com.zomboidcraft.loot.items.LootItems.item("padlock_key");
+        if (item == null) return;
+        net.minecraft.world.item.ItemStack key = new net.minecraft.world.item.ItemStack(item);
+        net.minecraft.world.item.component.CustomData.update(net.minecraft.core.component.DataComponents.CUSTOM_DATA, key, tag -> tag.putString("lock", lockId(lower)));
+        key.set(net.minecraft.core.component.DataComponents.CUSTOM_NAME, Component.literal("Door Key (" + lower.getX() + ", " + lower.getY() + ", " + lower.getZ() + ")")
+                .withStyle(st -> st.withItalic(false)));
+        if (!player.getInventory().add(key)) player.spawnAtLocation(level, key);
+        player.sendOverlayMessage(Component.literal("Padlocked. The key's yours: don't lose it.").withStyle(ChatFormatting.GRAY));
+    }
+
+    /**
+     * A door that looks like the wall it's in, two blocks tall: boards to match outside and in. Push it and it swings
+     * back flat against the jamb; zombies never take it for a way in.
+     */
+    public static class HiddenDoor extends Block {
+        public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
+        public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
+        public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
+
+        public HiddenDoor(Properties properties) {
+            super(properties);
+            registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(HALF, DoubleBlockHalf.LOWER).setValue(OPEN, false));
+        }
+
+        @Override
+        protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+            builder.add(FACING, HALF, OPEN);
+        }
+
+        @Override
+        protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+            if (!state.getValue(OPEN)) return Shapes.block();
+            // swung back against the left jamb as you push through it
+            return switch (state.getValue(FACING)) {
+                case NORTH -> Block.box(0, 0, 0, 3, 16, 16);
+                case SOUTH -> Block.box(13, 0, 0, 16, 16, 16);
+                case EAST -> Block.box(0, 0, 0, 16, 16, 3);
+                default -> Block.box(0, 0, 13, 16, 16, 16);
+            };
+        }
+
+        @Override
+        protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
+            boolean open = !state.getValue(OPEN);
+            BlockPos lower = state.getValue(HALF) == DoubleBlockHalf.LOWER ? pos : pos.below();
+            for (BlockPos p : new BlockPos[] {lower, lower.above()}) {
+                BlockState s = level.getBlockState(p);
+                if (s.is(this)) level.setBlock(p, s.setValue(OPEN, open), Block.UPDATE_CLIENTS | 16);
+            }
+            level.playSound(null, pos, open ? SoundEvents.WOODEN_DOOR_OPEN : SoundEvents.WOODEN_DOOR_CLOSE, SoundSource.BLOCKS, 0.7f, 0.7f);
+            return InteractionResult.SUCCESS;
+        }
+
+        @Override
+        protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess ticks, BlockPos pos,
+                                         Direction direction, BlockPos neighbourPos, BlockState neighbour, RandomSource random) {
+            boolean lower = state.getValue(HALF) == DoubleBlockHalf.LOWER;
+            if (direction == (lower ? Direction.UP : Direction.DOWN) && !neighbour.is(this)) return Blocks.AIR.defaultBlockState();
+            return state;
+        }
+    }
+
+    /**
+     * A lookout tower in front of {@code anchor}, its near side facing back toward the builder: four posts three high,
+     * a 3x3 floor on them, a rail round it but for the corner the ladder comes up at, and the ladder on that leg.
+     */
+    public static boolean towerFits(Level level, BlockPos anchor, Direction looking) {
+        for (BlockPos p : towerBlocks(anchor, looking).keySet()) {
+            if (!level.getBlockState(p).canBeReplaced()) return false;
+        }
+        Direction right = looking.getClockWise();
+        for (int[] c : new int[][] {{0, 0}, {2, 0}, {0, 2}, {2, 2}}) {
+            BlockPos leg = anchor.relative(right, c[0]).relative(looking, c[1]);
+            if (!base(level, leg.below())) return false;
+        }
+        return true;
+    }
+
+    public static java.util.Map<BlockPos, BlockState> towerBlocks(BlockPos anchor, Direction looking) {
+        java.util.Map<BlockPos, BlockState> out = new java.util.LinkedHashMap<>();
+        Direction right = looking.getClockWise();
+        for (int[] c : new int[][] {{0, 0}, {2, 0}, {0, 2}, {2, 2}}) {
+            for (int y = 0; y < 3; y++) out.put(anchor.relative(right, c[0]).relative(looking, c[1]).above(y).immutable(), POST.defaultBlockState());
+        }
+        for (int a = 0; a < 3; a++) {
+            for (int b = 0; b < 3; b++) out.put(anchor.relative(right, a).relative(looking, b).above(3).immutable(), FLOOR.defaultBlockState());
+        }
+        for (int a = 0; a < 3; a++) {
+            for (int b = 0; b < 3; b++) {
+                if (a == 1 && b == 1 || a == 0 && b == 0) continue;     // the middle, and the gap the ladder comes up at
+                out.put(anchor.relative(right, a).relative(looking, b).above(4).immutable(), FENCE.defaultBlockState());
+            }
+        }
+        for (int y = 0; y < 4; y++) {
+            out.put(anchor.relative(looking.getOpposite()).above(y).immutable(), LADDER.defaultBlockState().setValue(LadderBlock.FACING, looking.getOpposite()));
+        }
+        return out;
+    }
+
+    static void tower(ServerLevel level, BlockPos anchor, Direction looking) {
+        for (var e : towerBlocks(anchor, looking).entrySet()) level.setBlock(e.getKey(), e.getValue(), Block.UPDATE_CLIENTS);
+        for (BlockPos p : towerBlocks(anchor, looking).keySet()) {
+            BlockState s = level.getBlockState(p);
+            level.setBlock(p, Block.updateFromNeighbourShapes(s, level, p), Block.UPDATE_ALL);
         }
     }
 

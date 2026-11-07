@@ -54,13 +54,24 @@ public final class Needs {
         if (food.getSaturationLevel() != 0f) food.setSaturation(0f);
     }
 
+    /** Zomboid's Stats Decrease as a multiplier on hunger, thirst and tiredness (our steps: 2, 1.5, 1, 0.5, 0.25). */
+    public static float statsSpeed() {
+        return switch (ZcConfig.get().survival.statsDecreaseSpeed) {
+            case "very_fast" -> 2f;
+            case "fast" -> 1.5f;
+            case "very_slow" -> 0.25f;
+            case "slow" -> 0.5f;
+            default -> 1f;
+        };
+    }
+
     /** Once a second for each surviving player (SurvivalEvents.tickPlayer). */
     static void tick(ServerPlayer player, int second) {
         ZcConfig.Survival config = ZcConfig.get().survival;
         SurvivalStats stats = SurvivalStats.get(player);
         if (on()) {
             Nutrition n = Nutrition.get(player);
-            float hour = 1f / hourSeconds(), speed = (float) config.statsDecrease;
+            float hour = 1f / hourSeconds(), speed = statsSpeed();
             float activity = activity(player);
             n = n.withHunger(n.hunger() + HUNGER_PER_HOUR * hour * speed * (0.6f + 0.4f * activity)
                     * com.zomboidcraft.survival.character.Traits.hungerScale(player));

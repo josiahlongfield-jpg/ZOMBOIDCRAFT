@@ -61,6 +61,11 @@ public final class Mood {
         save(player, m);
     }
 
+    private static boolean marine(Player player) {
+        var p = player.getAttached(com.zomboidcraft.survival.character.Traits.TYPE);
+        return p != null && com.zomboidcraft.survival.character.MarineData.marine(p.occupation());
+    }
+
     private static void change(Map<String, Integer> m, Stat stat, int tenths) {
         m.put(stat.key, Math.max(0, Math.min(1000, m.getOrDefault(stat.key, 0) + tenths)));
     }
@@ -88,7 +93,10 @@ public final class Mood {
         } else if (near > 0) {
             change(m, Stat.BOREDOM, -6);
         } else if (!busy) {
-            change(m, Stat.BOREDOM, indoors ? 3 : 2);
+            // a marine is trained to wait (Josiah's marine direction, 2026-11-06): boredom builds at half the pace
+            int gain = indoors ? 3 : 2;
+            if (marine(player)) gain = level.getRandom().nextBoolean() ? gain / 2 : (gain + 1) / 2;
+            change(m, Stat.BOREDOM, gain);
         } else {
             change(m, Stat.BOREDOM, -1);
         }

@@ -38,7 +38,7 @@ public class SurvivalLookTest implements FabricClientGameTest {
             shot(ctx, "start");
 
             // wave 3: character creation. A veteran who's Strong and Fast Learner, paid for by Smoker and Hard of Hearing
-            ctx.runOnClient(mc -> mc.gui.setScreen(new CharacterScreen(new com.zomboidcraft.survival.character.CharacterNet.Open(false, 0, 0))));
+            ctx.runOnClient(mc -> mc.gui.setScreen(new CharacterScreen(new com.zomboidcraft.survival.character.CharacterNet.Open(false, 0, 0, false))));
             ctx.waitTicks(5);
             shot(ctx, "character");
             ctx.runOnClient(mc -> {
@@ -56,7 +56,43 @@ public class SurvivalLookTest implements FabricClientGameTest {
             });
             ctx.waitTicks(5);
             shot(ctx, "character");
+            // marine creation: the corpsman who's Brave and a Fast Learner, then a combat engineer who's Strong and Handy
+            ctx.runOnClient(mc -> mc.gui.setScreen(new MarineScreen(new com.zomboidcraft.survival.character.CharacterNet.Open(false, 0, 0, true))));
+            ctx.runOnClient(mc -> {
+                if (mc.gui.screen() instanceof MarineScreen m) {
+                    m.choose("corpsman", java.util.List.of("brave", "fast_learner"));
+                    m.settle();
+                }
+            });
+            ctx.waitTicks(5);
+            shot(ctx, "marine");
+            ctx.runOnClient(mc -> {
+                if (mc.gui.screen() instanceof MarineScreen m) m.choose("combat_engineer", java.util.List.of("strong", "handy"));
+            });
+            ctx.waitTicks(1);
+            shot(ctx, "marine-easing");
+            ctx.waitTicks(20);
+            shot(ctx, "marine");
+            ctx.runOnClient(mc -> {
+                if (mc.gui.screen() instanceof MarineScreen m) {
+                    m.choose("pointman", java.util.List.of("athletic", "keen_hearing"));
+                    m.settle();
+                }
+            });
+            ctx.waitTicks(5);
+            shot(ctx, "marine");
             ctx.runOnClient(mc -> mc.gui.setScreen(null));
+            sp.getServer().runOnServer(server -> {
+                ServerPlayer p = server.getPlayerList().getPlayers().get(0);
+                p.removeAttached(com.zomboidcraft.survival.character.Traits.TYPE);
+                com.zomboidcraft.survival.character.Traits.apply(p, "marine:pointman", java.util.List.of("athletic", "brave"));
+                LOG.info("marine fitness {} sneaking {} aiming {} occupation {} panic {} xp-sneak {}", com.zomboidcraft.skills.Skills.level(p, Skill.FITNESS),
+                        com.zomboidcraft.skills.Skills.level(p, Skill.SNEAKING), com.zomboidcraft.skills.Skills.level(p, Skill.AIMING),
+                        com.zomboidcraft.survival.character.Traits.occupationName(com.zomboidcraft.survival.character.Traits.profile(p).occupation()),
+                        com.zomboidcraft.survival.character.Traits.panicScale(p), com.zomboidcraft.survival.character.Traits.xpScale(p, Skill.SNEAKING));
+                p.removeAttached(com.zomboidcraft.survival.character.Traits.TYPE);
+            });
+            ctx.waitTicks(5);
             sp.getServer().runOnServer(server -> {
                 ServerPlayer p = server.getPlayerList().getPlayers().get(0);
                 com.zomboidcraft.survival.character.Traits.apply(p, "veteran", java.util.List.of("strong", "fast_learner", "smoker", "hard_of_hearing"));

@@ -46,6 +46,12 @@ final class BuildPage {
             case WOOD_STAIRS, ROOF -> Items.OAK_STAIRS;
             case LADDER -> Items.LADDER;
             case SHUTTERS -> Items.OAK_TRAPDOOR;
+            case REINFORCE -> Items.STRIPPED_OAK_LOG;
+            case PADLOCK -> Items.TRIPWIRE_HOOK;
+            case WOOD_FENCE -> Items.OAK_FENCE;
+            case WOOD_GATE -> Items.OAK_FENCE_GATE;
+            case HIDDEN_DOOR -> Items.BOOKSHELF;
+            case WATCHTOWER -> Items.LADDER;
         };
     }
 
@@ -142,6 +148,11 @@ final class BuildPage {
             case FACE -> "Against the side of a wall";
             case ROOF -> "On a wall or post, or beside more roof";
             case SHUTTER -> "On a window frame you built";
+            case REINFORCE -> "On a wooden wall you built";
+            case LOCK -> "On a plank door you hung";
+            case FENCE -> "On the ground or a floor";
+            case HIDDEN -> "In the run of a wall, two high";
+            case TOWER -> "On a clear 3 by 3 of ground";
         };
         KitDraw.caps(g, font, where, tx, cy + 3, KitDraw.TEXT, 0.75f);
         int level = b.skillLevel(player);

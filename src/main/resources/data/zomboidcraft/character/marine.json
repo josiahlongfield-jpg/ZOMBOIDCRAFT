@@ -1,0 +1,89 @@
+{
+ "_note": "Marine character creation (Josiah 2026-11-06). Every marine gets the base training; a role adds Zomboid B42's own job boosts on top (where a role mixes jobs, a skill both give takes the larger). Skills cap at 10. Traits: this many picks from this list, no costs, no negatives.",
+ "base": {
+  "FITNESS": 7,
+  "STRENGTH": 7,
+  "AIMING": 4,
+  "RELOADING": 4,
+  "SNEAKING": 2,
+  "MAINTENANCE": 2,
+  "FIRST_AID": 1,
+  "BLADE": 2
+ },
+ "picks": 2,
+ "traits": ["brave", "fast_learner", "strong", "athletic", "keen_hearing", "eagle_eyed", "light_eater", "needs_less_sleep", "handy", "organized"],
+ "roles": [
+  {
+   "id": "rifleman",
+   "name": "Rifleman",
+   "code": "RFL",
+   "from": "Veteran + Security Guard",
+   "skills": {"AIMING": 2, "RELOADING": 2, "SPRINTING": 2, "LIGHTFOOTED": 1, "BLUNT": 1},
+   "traits": ["desensitized", "night_owl"],
+   "description": "The backbone of the purge. Steady aim, fast reloads, never rattled by a horde."
+  },
+  {
+   "id": "corpsman",
+   "name": "Corpsman",
+   "code": "DOC",
+   "from": "Doctor",
+   "skills": {"FIRST_AID": 6, "BLADE": 1},
+   "traits": [],
+   "description": "The squad medic. Patches bites and bullet wounds in the field and treats others faster."
+  },
+  {
+   "id": "combat_engineer",
+   "name": "Combat engineer",
+   "code": "ENG",
+   "from": "Construction + Electrician + Metalworker",
+   "skills": {"ELECTRICAL": 5, "METALWORKING": 4, "MASONRY": 2, "BLUNT": 2, "CARPENTRY": 1, "MAINTENANCE": 1},
+   "traits": [],
+   "description": "Builds the base. Walls, wiring, welding and fortifications go up fastest under this marine."
+  },
+  {
+   "id": "motor_transport",
+   "name": "Motor transport",
+   "code": "MTR",
+   "from": "Mechanic",
+   "skills": {"MECHANICS": 4, "METALWORKING": 1},
+   "traits": ["amateur_mechanic"],
+   "description": "Keeps the convoy rolling. Repairs, salvages and hotwires the squad's vehicles."
+  },
+  {
+   "id": "marksman",
+   "name": "Marksman",
+   "code": "MKS",
+   "from": "Veteran + Hunter trait",
+   "skills": {"AIMING": 2, "RELOADING": 2, "TRACKING": 1, "SNEAKING": 1, "BLADE": 1, "BUTCHERING": 1},
+   "traits": ["desensitized", "hunter"],
+   "description": "Picks off targets from range and reads tracks to find the next nest."
+  },
+  {
+   "id": "pointman",
+   "name": "Pointman",
+   "code": "PNT",
+   "from": "Burglar + Fitness Instructor",
+   "skills": {"FITNESS": 3, "NIMBLE": 2, "SNEAKING": 2, "LIGHTFOOTED": 2, "SPRINTING": 2, "STRENGTH": 1},
+   "traits": ["burglar", "nutritionist"],
+   "description": "First through the door. Quiet, quick and hard to catch."
+  },
+  {
+   "id": "radio_operator",
+   "name": "Radio operator",
+   "code": "RTO",
+   "from": "Electrician + Engineer",
+   "skills": {"ELECTRICAL": 5, "CARPENTRY": 1, "MASONRY": 1},
+   "traits": [],
+   "description": "Holds the command net. The only marine who can call in an air strike."
+  },
+  {
+   "id": "logistics",
+   "name": "Logistics",
+   "code": "LOG",
+   "from": "Chef + Farmer",
+   "skills": {"COOKING": 4, "AGRICULTURE": 4, "BUTCHERING": 2, "ANIMAL_CARE": 1, "MAINTENANCE": 1, "BLADE": 1, "STRENGTH": 1},
+   "traits": ["cook"],
+   "description": "Keeps the squad fed. Cooks, farms and butchers so the base can last."
+  }
+ ]
+}

@@ -67,6 +67,7 @@ public class ZomboidCraftClient implements ClientModInitializer {
         com.zomboidcraft.client.gear.HandLights.register();
         com.zomboidcraft.client.building.Placer.register();
         com.zomboidcraft.client.building.MoveMenu.register();
+        com.zomboidcraft.client.building.BaseClient.register();
         com.zomboidcraft.client.zombie.body.Gibs.register();
         com.zomboidcraft.client.zombie.body.CrowdFx.register();
         com.zomboidcraft.client.zombie.body.ZDetail.register();
