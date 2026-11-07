@@ -49,20 +49,37 @@ public final class Retired {
     /**
      * Our melee weapons, gone for Tarkov's (Josiah 2026-11-07: "all of them will need to be tarkov ones"). The types
      * stay registered because each Tarkov blade is one underneath (its anchor: the Ka-Bar a kitchen knife, the Freeman
-     * crowbar a crowbar, so it does the crowbar's jobs too); only a plain one goes. The hammer, frying pan and pipe
-     * wrench have no Tarkov twin and stay as tools that can't hit (CombatEvents).
+     * crowbar a crowbar, so it does the crowbar's jobs too); only a plain one goes.
      */
-    public static final Set<String> MELEE = Set.of("kitchen_knife", "crowbar", "lead_pipe", "golf_club", "hockey_stick",
-            "baseball_bat", "spiked_bat", "shovel", "machete", "tomahawk", "katana", "fire_axe", "sledgehammer",
-            "wooden_spear", "fire_hardened_spear", "spear_knife", "stone_axe", "stone_hammer", "stone_knife",
-            "plank_nails", "cudgel_nails");
-    /** The tools that stay but never hit. */
+    public static final Set<String> MELEE = Set.of("lead_pipe", "golf_club", "hockey_stick", "baseball_bat",
+            "spiked_bat", "machete", "tomahawk", "katana", "wooden_spear", "fire_hardened_spear", "spear_knife",
+            "stone_axe", "stone_hammer", "stone_knife", "plank_nails", "cudgel_nails");
+    /**
+     * Tools with a Tarkov twin (the kitchen knife, crowbar, shovel, fire axe and sledgehammer: Josiah 2026-11-07, "weapons
+     * go, tools stay" and the twins take their jobs). A plain one stays as a tool that can't hit until a Tarkov blade
+     * anchored on it is on this computer; then the Tarkov one does its jobs and the plain one goes.
+     */
+    public static final Set<String> TWIN_TOOLS = Set.of("kitchen_knife", "crowbar", "shovel", "fire_axe", "sledgehammer");
+    /** The tools that stay but never hit (the hammer, frying pan and pipe wrench have no Tarkov twin). */
     public static final Set<String> TOOLS_ONLY = Set.of("hammer", "frying_pan", "pipe_wrench");
+
+    /** Whether a plain one of this tool can't hit: no Tarkov twin, or (gone anyway) one that has one. */
+    public static boolean toolOnly(String path) {
+        return TOOLS_ONLY.contains(path) || TWIN_TOOLS.contains(path);
+    }
+
+    /** Whether a Tarkov blade on this computer is one of this item underneath (its anchor). */
+    static boolean twinHere(String path) {
+        for (LocalHands.Spec s : LocalHands.all()) {
+            if (path.equals(s.anchor)) return true;
+        }
+        return false;
+    }
 
     /** Whether an item id (its path) is one that went. */
     public static boolean id(String path) {
         return GUNS.contains(path) || ATTACHMENTS.contains(path) || MAGAZINES.contains(path) || ROUNDS.contains(path)
-                || MELEE.contains(path);
+                || MELEE.contains(path) || TWIN_TOOLS.contains(path) && twinHere(path);
     }
 
     /**
