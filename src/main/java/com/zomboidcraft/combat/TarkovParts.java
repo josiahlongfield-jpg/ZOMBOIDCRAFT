@@ -59,6 +59,8 @@ public final class TarkovParts {
         public LocalGuns.Hold hold, cradle;
         public Device laser, light;
         public List<Aim> aims;
+        /** A flip-up iron's fold (its model's second bone, "fold", is the part that flips). */
+        public LocalGuns.Fold fold;
         transient Attachments.Slot slot;
 
         public Attachments.@Nullable Slot slot() {

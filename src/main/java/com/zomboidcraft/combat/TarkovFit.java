@@ -82,6 +82,25 @@ public final class TarkovFit {
         return tarkov(spec) ? resolve(spec, fitted(gun)) : null;
     }
 
+    /** Whether the gun as built carries a sight, so its flip-up irons lie folded (Tarkov folds them under an optic). */
+    public static boolean folded(Assembly a) {
+        for (Node n : a.nodes()) {
+            TarkovParts.Part p = TarkovParts.get(n.item());
+            if (p != null && p.sight()) return true;
+        }
+        return false;
+    }
+
+    /** Whether a gun's can is part of the gun itself (the AS VAL's, the VSK-94's): such guns are rarer finds. */
+    public static boolean builtInCan(@Nullable LocalGuns.Spec spec) {
+        if (!tarkov(spec)) return false;
+        for (LocalGuns.KitPart k : spec.tarkov.kit) {
+            TarkovParts.Part p = TarkovParts.get(k.item);
+            if (p != null && p.is("Silencer") && builtIn(spec, k.item)) return true;
+        }
+        return false;
+    }
+
     /** Whether a kit part can't come off in Tarkov: the slot it sits in on its parent is a required one. */
     public static boolean builtIn(LocalGuns.Spec spec, String item) {
         if (!tarkov(spec)) return false;
