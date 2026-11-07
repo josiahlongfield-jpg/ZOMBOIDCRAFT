@@ -46,7 +46,7 @@ public class ZombieSwarmTest implements FabricClientGameTest {
             }
             // the roster and spawn picker open on a county world's first join: out of the way for the camera
             ctx.waitTicks(20);
-            ctx.runOnClient(mc -> mc.gui.setScreen(null));
+            ctx.runOnClient(ZombieSwarmTest::skipRoster);
             ctx.getInput().resizeWindow(1280, 720);
             ctx.getInput().pressKey(com.mojang.blaze3d.platform.InputConstants.KEY_F1);
             int[] at = sp.getServer().computeOnServer(server -> {
@@ -82,7 +82,7 @@ public class ZombieSwarmTest implements FabricClientGameTest {
             sp.getServer().runCommand(String.format("setblock %d %d %d minecraft:barrier", at[0], at[1] + 9, at[2]));
             sp.getServer().runCommand("gamemode survival @a");
             ctx.waitTicks(20);
-            ctx.runOnClient(mc -> mc.gui.setScreen(null));
+            ctx.runOnClient(ZombieSwarmTest::skipRoster);
             for (int f = 0; f < 160; f++) {
                 if (f % 12 == 0) {
                     // a rifle shot, as loud as one (Guns' shotNoise)
@@ -100,6 +100,18 @@ public class ZombieSwarmTest implements FabricClientGameTest {
             }
             sp.getServer().runCommand("gamemode creative @a");
         }
+    }
+
+    /** The roster reopens itself until a survivor is made: spend the offer, then close it. */
+    private static void skipRoster(net.minecraft.client.Minecraft mc) {
+        try {
+            var made = com.zomboidcraft.client.kit.CharacterScreen.class.getDeclaredMethod("made");
+            made.setAccessible(true);
+            made.invoke(null);
+        } catch (ReflectiveOperationException e) {
+            LOG.warn("ZCSWARM couldn't skip the roster", e);
+        }
+        mc.gui.setScreen(null);
     }
 
     private static void log(TestSingleplayerContext sp, String when) {
