@@ -109,8 +109,23 @@ public final class CrowdFx {
             // (Josiah: a scope would show a picture up)
             long frame = ++frames;
             var ps = context.poseStack();
+            // only the figures in front of you: the crowd was drawn all round, behind you included, and with a few
+            // thousand of them it was a sixth of the frame (2026-11-08 profile). A cone a little wider than the
+            // screen's corners, so nothing pops at the edges; a scope narrows the view, so the cone still covers it.
+            Vec3 look = mc.player != null ? mc.player.getViewVector(1f) : null;
+            double aspect = mc.getWindow().getHeight() > 0 ? (double) mc.getWindow().getWidth() / mc.getWindow().getHeight() : 1.78;
+            double halfV = Math.toRadians(mc.options.fov().get() * 1.15 / 2.0);
+            double cone = Math.cos(Math.min(Math.PI * 0.95, Math.atan(Math.tan(halfV) * Math.sqrt(1 + aspect * aspect)) + Math.toRadians(10)));
             for (Group g : groups) {
                 for (int i = 0; i < g.x.length; i++) {
+                    if (look != null) {
+                        double dx = g.x[i] - eye.x, dy = g.y[i] + 1 - eye.y, dz = g.z[i] - eye.z;
+                        double d = Math.sqrt(dx * dx + dy * dy + dz * dz);
+                        if (d > 4 && (dx * look.x + dy * look.y + dz * look.z) < cone * d) {
+                            continue;
+                        }
+                    }
+                    drawn++;
                     ps.pushPose();
                     ps.translate((float) (g.x[i] - eye.x), (float) (g.y[i] - eye.y), (float) (g.z[i] - eye.z));
                     ps.rotateDegrees(com.mojang.math.Axis.YP, -g.yaw[i]);
@@ -118,7 +133,6 @@ public final class CrowdFx {
                             context.submitNodeCollector(), g.light[i]);
                     ps.popPose();
                 }
-                drawn += g.x.length;
             }
             ZDetail.crowd(drawn);
             return;
