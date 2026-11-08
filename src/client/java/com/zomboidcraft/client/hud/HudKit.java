@@ -48,6 +48,8 @@ final class HudKit {
 
     /** Window pixels per layout unit, and where the layout's corner sits, for this frame. */
     float s, ox, oy;
+    /** The layout's size (kit.json "layout"; the HUDs use 1280x720, the character screens 1920x1080). */
+    final float lw, lh;
     private int madeW = -1, madeH = -1;
 
     private record Tex(Identifier id, int w, int h) {}
@@ -58,6 +60,9 @@ final class HudKit {
         this.name = name;
         this.dir = dir;
         this.json = json;
+        JsonArray layout = arr(json, "layout");
+        this.lw = layout != null && layout.size() == 2 ? layout.get(0).getAsFloat() : 1280;
+        this.lh = layout != null && layout.size() == 2 ? layout.get(1).getAsFloat() : 720;
     }
 
     /** The kit of that name, or null when its files aren't on this computer (looked for again every ten seconds). */
@@ -100,9 +105,9 @@ final class HudKit {
     void begin() {
         var window = Minecraft.getInstance().getWindow();
         int w = window.getWidth(), h = window.getHeight();
-        s = Math.min(w / 1280f, h / 720f);
-        ox = (w - 1280 * s) / 2;
-        oy = (h - 720 * s) / 2;
+        s = Math.min(w / lw, h / lh);
+        ox = (w - lw * s) / 2;
+        oy = (h - lh * s) / 2;
         if (w != madeW || h != madeH) {
             madeW = w;
             madeH = h;
@@ -142,10 +147,15 @@ final class HudKit {
 
     /** A picture over a box of the layout (layout units). */
     void image(GuiGraphicsExtractor g, String file, double x, double y, double w, double h, int colour) {
+        image(g, file, file, x, y, w, h, colour);
+    }
+
+    /** As {@link #image}, kept under its own slot, so one picture drawn at two sizes isn't remade every frame. */
+    void image(GuiGraphicsExtractor g, String slot, String file, double x, double y, double w, double h, int colour) {
         if ((colour >>> 24) < 3) return;
         int x0 = Math.round(px(x)), y0 = Math.round(py(y));
         int tw = Math.max(1, Math.round((float) w * s)), th = Math.max(1, Math.round((float) h * s));
-        Tex t = scaled(file, tw, th);
+        Tex t = scaled(slot, file, tw, th);
         if (t == null) return;
         g.blit(RenderPipelines.GUI_TEXTURED, t.id, x0, y0, 0, 0, t.w, t.h, t.w, t.h, colour);
     }
@@ -160,9 +170,63 @@ final class HudKit {
      * run of it starting at source column {@code u} drawn {@code w} pixels wide at (x, y): the compass tape.
      */
     void strip(GuiGraphicsExtractor g, String file, int texW, int texH, int x, int y, float u, int w, int colour) {
-        Tex t = scaled(file, texW, texH);
+        Tex t = scaled(file, file, texW, texH);
         if (t == null || w <= 0 || (colour >>> 24) < 3) return;
         g.blit(RenderPipelines.GUI_TEXTURED, t.id, x, y, u, 0, w, t.h, t.w, t.h, colour);
+    }
+
+    /**
+     * A picture made once at texW x texH window pixels (under its own slot) and drawn stretched over w x h window
+     * pixels at (x, y): a figure that grows as its card does, remade only when the window size changes.
+     */
+    void picture(GuiGraphicsExtractor g, String slot, String file, int x, int y, int w, int h, int texW, int texH, int colour) {
+        if (w <= 0 || h <= 0 || (colour >>> 24) < 3) return;
+        Tex t = scaled(slot, file, Math.max(1, texW), Math.max(1, texH));
+        if (t == null) return;
+        g.blit(RenderPipelines.GUI_TEXTURED, t.id, x, y, 0, 0, w, h, w, h, colour);
+    }
+
+    /**
+     * A nine-slice frame (Reach's card): {@code file} is a template whose corners are {@code ix} x {@code iy} of its own
+     * pixels, one template pixel to a layout unit. Corners are drawn 1:1 and the edges and middle stretched, over the
+     * window-pixel box (x, y, w, h).
+     */
+    void nine(GuiGraphicsExtractor g, String file, int x, int y, int w, int h, int ix, int iy, int colour) {
+        if (w <= 0 || h <= 0 || (colour >>> 24) < 3) return;
+        BufferedImage src = source(file);
+        if (src == null) return;
+        int tw = Math.max(3, Math.round(src.getWidth() * s)), th = Math.max(3, Math.round(src.getHeight() * s));
+        Tex t = scaled(file, file, tw, th);
+        if (t == null) return;
+        int cx = Math.min(Math.round(ix * s), Math.min(w / 2, tw / 2 - 1)), cy = Math.min(Math.round(iy * s), Math.min(h / 2, th / 2 - 1));
+        int[] sx = {0, cx, tw - cx, tw}, sy = {0, cy, th - cy, th};
+        int[] dx = {x, x + cx, x + w - cx, x + w}, dy = {y, y + cy, y + h - cy, y + h};
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                int dw = dx[i + 1] - dx[i], dh = dy[j + 1] - dy[j], sw = sx[i + 1] - sx[i], sh = sy[j + 1] - sy[j];
+                if (dw <= 0 || dh <= 0 || sw <= 0 || sh <= 0) continue;
+                // stretch the source cell over the destination: texture size scaled so the cell spans dw x dh
+                int texW = Math.max(1, Math.round(tw * (float) dw / sw)), texH = Math.max(1, Math.round(th * (float) dh / sh));
+                float u = sx[i] * (float) dw / sw, v = sy[j] * (float) dh / sh;
+                g.blit(RenderPipelines.GUI_TEXTURED, t.id, dx[i], dy[j], u, v, dw, dh, texW, texH, colour);
+            }
+        }
+    }
+
+    /**
+     * A picture filling a box of the layout (layout units) the way a framed portrait does: scaled to cover it, the
+     * overflow cut off evenly on both sides.
+     */
+    void cover(GuiGraphicsExtractor g, String slot, String file, double x, double y, double w, double h, int colour) {
+        if ((colour >>> 24) < 3) return;
+        BufferedImage src = source(file);
+        if (src == null) return;
+        int bw = Math.max(1, Math.round((float) w * s)), bh = Math.max(1, Math.round((float) h * s));
+        float k = Math.max(bw / (float) src.getWidth(), bh / (float) src.getHeight());
+        int tw = Math.max(bw, Math.round(src.getWidth() * k)), th = Math.max(bh, Math.round(src.getHeight() * k));
+        Tex t = scaled(slot, file, tw, th);
+        if (t == null) return;
+        g.blit(RenderPipelines.GUI_TEXTURED, t.id, Math.round(px(x)), Math.round(py(y)), (tw - bw) / 2f, (th - bh) / 2f, bw, bh, tw, th, colour);
     }
 
     /** A plain rectangle in layout units. */
@@ -178,13 +242,20 @@ final class HudKit {
      */
     float text(GuiGraphicsExtractor g, String slot, String fontKey, String text, double x, double y, double alignX, double alignY,
                boolean metric, int colour) {
+        return text(g, slot, fontKey, text, x, y, alignX, alignY, metric, colour, 0);
+    }
+
+    /** As above, with {@code tracking} layout units added between letters (Reach's spaced capitals). */
+    float text(GuiGraphicsExtractor g, String slot, String fontKey, String text, double x, double y, double alignX, double alignY,
+               boolean metric, int colour, float tracking) {
         if (text == null || text.isEmpty() || (colour >>> 24) < 3) return 0;
         JsonObject font = obj(obj(json, "fonts"), fontKey);
         if (font == null) return 0;
         JsonObject glyphs = font.getAsJsonObject("glyphs");
         TextTex t = texts.get(slot);
-        if (t == null || !text.equals(t.text)) {
-            t = makeText(slot, t == null ? null : t.id, font, glyphs, text);
+        String keyText = tracking == 0 ? text : text + "\u0000" + tracking;
+        if (t == null || !keyText.equals(t.text)) {
+            t = makeText(slot, t == null ? null : t.id, font, glyphs, text, tracking);
             if (t == null) return 0;
             texts.put(slot, t);
         }
@@ -193,6 +264,7 @@ final class HudKit {
         for (int i = 0; i < text.length(); i++) {
             JsonObject gl = obj(glyphs, String.valueOf(text.charAt(i)));
             if (gl == null) continue;
+            if (i > 0) pen += tracking;
             l = Math.min(l, pen + f(gl, "l"));
             r = Math.max(r, pen + f(gl, "r"));
             top = Math.min(top, f(gl, "t"));
@@ -215,7 +287,7 @@ final class HudKit {
     }
 
     /** Lays the glyphs out at the font's own (2x) size, then resizes the line to window pixels. */
-    private @Nullable TextTex makeText(String slot, @Nullable Identifier id, JsonObject font, JsonObject glyphs, String text) {
+    private @Nullable TextTex makeText(String slot, @Nullable Identifier id, JsonObject font, JsonObject glyphs, String text, float tracking) {
         BufferedImage atlas = source(font.get("file").getAsString());
         if (atlas == null) return null;
         float pen = 0, bx0 = Float.MAX_VALUE, by0 = Float.MAX_VALUE, bx1 = -Float.MAX_VALUE, by1 = -Float.MAX_VALUE;
@@ -224,6 +296,7 @@ final class HudKit {
             JsonObject gl = obj(glyphs, String.valueOf(text.charAt(i)));
             at[i] = Float.NaN;
             if (gl == null) continue;
+            if (i > 0) pen += tracking;
             at[i] = pen;
             float gx = pen + f(gl, "ox"), gy = f(gl, "oy");
             bx0 = Math.min(bx0, gx);
@@ -248,21 +321,42 @@ final class HudKit {
         int tw = Math.max(1, Math.round(iw / 2f * s)), th = Math.max(1, Math.round(ih / 2f * s));
         if (id == null) id = id("text/" + slot);
         upload(id, resize(line, tw, th));
-        return new TextTex(id, text, tw, th, bx0, by0);
+        return new TextTex(id, tracking == 0 ? text : text + "\u0000" + tracking, tw, th, bx0, by0);
+    }
+
+    /** How wide a line of a font is, layout units (advances plus tracking), for wrapping and placing. */
+    float measure(String fontKey, String text, float tracking) {
+        JsonObject font = obj(obj(json, "fonts"), fontKey);
+        if (font == null || text == null) return 0;
+        JsonObject glyphs = font.getAsJsonObject("glyphs");
+        float pen = 0;
+        for (int i = 0; i < text.length(); i++) {
+            JsonObject gl = obj(glyphs, String.valueOf(text.charAt(i)));
+            if (gl == null) continue;
+            if (i > 0) pen += tracking;
+            pen += f(gl, "adv");
+        }
+        return pen;
+    }
+
+    /** A picture's own size in pixels (0 x 0 when it's missing). */
+    int[] size(String file) {
+        BufferedImage src = source(file);
+        return src == null ? new int[] {0, 0} : new int[] {src.getWidth(), src.getHeight()};
     }
 
     // ------------------------------------------------------------------ pictures
 
-    /** A picture of the kit resized to exactly w x h window pixels (made once per window size). */
-    private @Nullable Tex scaled(String file, int w, int h) {
-        Tex t = textures.get(file);
+    /** A picture of the kit resized to exactly w x h window pixels, kept under a slot (made again when the size changes). */
+    private @Nullable Tex scaled(String slot, String file, int w, int h) {
+        Tex t = textures.get(slot);
         if (t != null && t.w == w && t.h == h) return t;
         BufferedImage src = source(file);
         if (src == null) return null;
-        Identifier id = t != null ? t.id : id(file);
+        Identifier id = t != null ? t.id : id(slot);
         upload(id, resize(src, w, h));
         Tex made = new Tex(id, w, h);
-        textures.put(file, made);
+        textures.put(slot, made);
         return made;
     }
 

@@ -64,7 +64,7 @@ public final class CharacterScreen extends Screen {
     }
 
     /** Your survivor (or marine) is made: the offer is spent. */
-    static void made() {
+    public static void made() {
         offered = null;
     }
 
@@ -74,8 +74,11 @@ public final class CharacterScreen extends Screen {
     }
 
     private static void show(Minecraft mc) {
-        if (mc.level == null || mc.gui.screen() instanceof CharacterScreen || mc.gui.screen() instanceof MarineScreen) return;
-        mc.gui.setScreen(offered.marine() ? new MarineScreen(offered) : new CharacterScreen(offered));
+        if (mc.level == null || mc.gui.screen() instanceof CharacterScreen || mc.gui.screen() instanceof MarineScreen
+                || mc.gui.screen() instanceof com.zomboidcraft.client.hud.SoldierScreen) return;
+        // Endless Night's new soldier when its art is on this computer (round 5, Josiah 2026-11-08), else the marine screen
+        if (com.zomboidcraft.client.hud.SoldierScreen.ready()) mc.gui.setScreen(new com.zomboidcraft.client.hud.SoldierScreen(offered));
+        else mc.gui.setScreen(offered.marine() ? new MarineScreen(offered) : new CharacterScreen(offered));
     }
 
     public CharacterScreen(CharacterNet.Open open) {
