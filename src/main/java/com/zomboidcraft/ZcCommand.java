@@ -457,7 +457,7 @@ public final class ZcCommand {
     }
 
     private static int listConfig(CommandContext<CommandSourceStack> ctx) {
-        StringBuilder text = new StringBuilder("ZomboidCraft settings (/zc config <name> <value> to change):");
+        StringBuilder text = new StringBuilder("Endless Night settings (/zc config <name> <value> to change):");
         for (String key : ZcConfig.keys()) {
             text.append(String.format("%n  %s = %s", key, ZcConfig.getValue(key)));
         }

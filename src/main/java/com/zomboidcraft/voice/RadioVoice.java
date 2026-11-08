@@ -63,7 +63,7 @@ public class RadioVoice implements VoicechatPlugin {
     private void started(VoicechatServerStartedEvent event) {
         VoicechatServerApi api = event.getVoicechat();
         VolumeCategory radios = api.volumeCategoryBuilder().setId(CATEGORY).setName("Radios")
-                .setDescription("Voices coming over ZomboidCraft radios").setIcon(icon()).build();
+                .setDescription("Voices coming over Endless Night radios").setIcon(icon()).build();
         api.registerVolumeCategory(radios);
         ZomboidCraft.LOGGER.info("ZomboidCraft radios are carrying voices through Simple Voice Chat");
     }

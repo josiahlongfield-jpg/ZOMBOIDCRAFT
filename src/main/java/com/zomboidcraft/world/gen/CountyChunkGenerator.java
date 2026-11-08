@@ -182,6 +182,6 @@ public final class CountyChunkGenerator extends ChunkGenerator {
     public void addDebugScreenInfo(List<String> info, RandomState random, BlockPos pos, SamplerContext context) {
         County county = gen(random.seed(), isPlanned()).county();
         List<Place> near = county.placesNear(pos.getX(), pos.getZ(), pos.getX(), pos.getZ(), 0);
-        info.add("ZomboidCraft: " + (near.isEmpty() ? "countryside" : near.get(0).toString()));
+        info.add("Endless Night: " + (near.isEmpty() ? "countryside" : near.get(0).toString()));
     }
 }

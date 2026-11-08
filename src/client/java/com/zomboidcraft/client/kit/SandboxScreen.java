@@ -88,7 +88,7 @@ public class SandboxScreen extends Screen {
                 Screens.getWidgets(screen).add(Button.builder(Component.literal("Sandbox settings"),
                         b -> client.gui.setScreen(new SandboxScreen(screen))).bounds(6, 6, 110, 20).build());
             } else if (screen instanceof CreateWorldScreen) {
-                Screens.getWidgets(screen).add(Button.builder(Component.literal("ZomboidCraft sandbox"),
+                Screens.getWidgets(screen).add(Button.builder(Component.literal("Endless Night sandbox"),
                         b -> client.gui.setScreen(forNewWorld(screen))).bounds(w - 136, 6, 130, 20).build());
             }
         });
@@ -265,7 +265,7 @@ public class SandboxScreen extends Screen {
         int colour;
         if (hovered != null) {
             line = (hovered.tooltip == null || hovered.tooltip.isBlank() ? hovered.label : hovered.tooltip)
-                    + (hovered.zomboidDefault != null ? "   Zomboid: " + shown(hovered, hovered.zomboidDefault) : "   ZomboidCraft only")
+                    + (hovered.zomboidDefault != null ? "   Zomboid: " + shown(hovered, hovered.zomboidDefault) : "   Endless Night only")
                     + (hovered.coming() && hovered.owner != null ? "   Coming with " + hovered.owner : "")
                     + (hovered.client ? "   Your screen only" : "");
             colour = KitDraw.TEXT;

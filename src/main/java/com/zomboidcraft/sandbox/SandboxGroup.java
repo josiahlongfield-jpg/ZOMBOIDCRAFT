@@ -14,7 +14,7 @@ public enum SandboxGroup {
     FIREARMS("firearms", "Firearms"),
     ANIMALS("animals", "Animals and Rats"),
     MAP("map", "Map, Basements and Clean-up"),
-    ZOMBOIDCRAFT("zomboidcraft", "ZomboidCraft Only");
+    ZOMBOIDCRAFT("zomboidcraft", "Endless Night Only");
 
     public final String id;
     public final String label;

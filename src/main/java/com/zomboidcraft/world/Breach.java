@@ -232,7 +232,7 @@ public final class Breach {
         long now = level.getGameTime();
         BreachSite.Found b = site();
         int days = ZcConfig.get().population.respawnDays;
-        String where = b == null ? "no breach in this world (needs a ZomboidCraft County world)" : "breach at " + b.x() + " " + b.y() + " " + b.z();
+        String where = b == null ? "no breach in this world (needs an Endless Night County world)" : "breach at " + b.x() + " " + b.y() + " " + b.z();
         String text = String.format("%s. Respawning %s. Next %s in %.1f in-game hours. Last surge: %s.", where,
                 days > 0 ? "every " + days + " days" : "off", days > 0 ? "surge" : "flicker", (next - now) / 1000.0,
                 lastSurgeDay < 0 ? "none yet" : "day " + lastSurgeDay);
