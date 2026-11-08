@@ -129,6 +129,8 @@ public final class OperatorView {
 
     private static String clip = null;
     private static float clipStart;
+    /** How fast the clip playing now runs (the fire clip: one turn of the action at the gun's rate of fire). */
+    private static float clipSpeed = 1;
     private static final Deque<String> queue = new ArrayDeque<>();
     private static boolean reloading;
     private static float lastDrawn = -1;
@@ -232,7 +234,10 @@ public final class OperatorView {
 
         if (shot) {
             shot = false;
-            if (!reloading && !DRAW.equals(clip)) play(skin, FIRE, now, 0.03f);
+            if (!reloading && !DRAW.equals(clip)) {
+                play(skin, FIRE, now, 0.03f);
+                clipSpeed = fireSpeed(skin.clips.get(clip), gun);
+            }
         }
         if (inspectAsked) {
             inspectAsked = false;
@@ -242,7 +247,7 @@ public final class OperatorView {
         // a clip run out: the next in the queue, or the idle
         NpcSkin.Clip c = skin.clips.get(clip);
         if (c == null) return false;
-        if (!IDLE.equals(clip) && now - clipStart >= c.seconds()) {
+        if (!IDLE.equals(clip) && now - clipStart >= c.seconds() / clipSpeed) {
             String next = queue.poll();
             // another round still going in: its clip again
             if (next == null && loadingRounds && LOAD_SHELL.equals(clip)) next = LOAD_SHELL;
@@ -250,11 +255,11 @@ public final class OperatorView {
                 reloading = false;
                 next = IDLE;
             }
-            play(skin, next, clipStart + c.seconds(), next.equals(IDLE) ? 0.15f : 0.05f);
+            play(skin, next, clipStart + c.seconds() / clipSpeed, next.equals(IDLE) ? 0.15f : 0.05f);
             c = skin.clips.get(clip);
             if (c == null) return false;
         }
-        Operator.sample(c, now - clipStart, IDLE.equals(clip) ? Operator.LOOP : Operator.HOLD, pos, turn);
+        Operator.sample(c, (now - clipStart) * clipSpeed, IDLE.equals(clip) ? Operator.LOOP : Operator.HOLD, pos, turn);
         if (fadeLen > 0 && now - fadeStart < fadeLen) {
             System.arraycopy(fromPos, 0, tmpPos, 0, tmpPos.length);
             System.arraycopy(fromTurn, 0, tmpTurn, 0, tmpTurn.length);
@@ -682,12 +687,32 @@ public final class OperatorView {
         }
         clip = name;
         clipStart = at;
+        clipSpeed = 1;
     }
+
+    /**
+     * How fast a gun's fire clip runs. Tarkov's fire clips are one turn of the action (slide, bolt, hammer, trigger)
+     * drawn out to about a second, which Tarkov plays in the time between two shots at the gun's rate of fire: its
+     * full-auto rate when set to it, else its single-shot rate (450 a minute for nearly every gun). Played as stored
+     * they ran six to fourteen times too slow, the slide still coming back long after the shot was heard (Josiah
+     * 2026-11-07). A bolt worked by hand (the SV-98's cycle) and a pump (the 870's) are the shooter's own hands, and
+     * play at their own speed.
+     */
+    private static float fireSpeed(NpcSkin.Clip c, ItemStack gun) {
+        com.zomboidcraft.combat.GunType type = com.zomboidcraft.combat.GunType.of(gun);
+        if (c == null || c.seconds() <= 0 || type == null || type.manual() || type.tube) return 1;
+        double rpm = com.zomboidcraft.combat.Guns.fullAuto(gun) ? type.stats(gun).autoRpm : SINGLE_RPM;
+        float cycle = (float) (60.0 / Math.max(60.0, rpm));
+        return Math.max(1, c.seconds() / cycle);
+    }
+
+    /** Tarkov's single-shot rate of fire, nearly every gun's (SingleFireRate): one turn of the action in 0.13 s. */
+    private static final double SINGLE_RPM = 450;
 
     /** Seconds left of the clips still to play. */
     private static float remaining(NpcSkin skin, float now) {
         NpcSkin.Clip c = skin.clips.get(clip);
-        float left = c == null ? 0 : Math.max(0, c.seconds() - (now - clipStart));
+        float left = c == null ? 0 : Math.max(0, c.seconds() / clipSpeed - (now - clipStart));
         for (String q : queue) {
             NpcSkin.Clip k = skin.clips.get(q);
             if (k != null) left += k.seconds();

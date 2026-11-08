@@ -19,6 +19,8 @@ import org.slf4j.LoggerFactory;
  */
 public class LiftRideTest implements FabricClientGameTest {
     private static final Logger LOG = LoggerFactory.getLogger("ZCLIFT");
+    /** As tall as the city's towers get, so the floor window has its full grid. */
+    private static final int FLOORS = 20;
     private int frame;
 
     @Override
@@ -27,12 +29,12 @@ public class LiftRideTest implements FabricClientGameTest {
             sp.getConnection().waitForChunksRender();
             for (String c : new String[] {"gamemode survival @a", "time set noon", "weather clear", "gamerule doDaylightCycle false",
                     "gamerule doMobSpawning false", "effect give @a resistance 9999 4 true",
-                    "fill -10 99 -16 10 99 6 stone", "fill -10 100 -16 10 130 6 air", "tp @a 0 100 0 180 0"}) {
+                    "fill -10 99 -16 10 99 6 stone", "fill -10 100 -16 10 160 6 air", "fill -10 161 -16 10 200 6 air", "tp @a 0 100 0 180 0"}) {
                 sp.getServer().runCommand(c);
             }
             ctx.getInput().resizeWindow(1280, 720);
             ctx.waitTicks(10);
-            sp.getServer().runCommand("execute as @p at @p run zc lift test 4");
+            sp.getServer().runCommand("execute as @p at @p run zc lift test " + FLOORS);
             ctx.waitTicks(60);
             log(sp, ctx, "built");
             LiftShaft s = sp.getServer().computeOnServer(server -> LiftCar.loaded(false).isEmpty() ? null : LiftCar.loaded(false).get(0).shaft());
@@ -81,7 +83,7 @@ public class LiftRideTest implements FabricClientGameTest {
                 shot(ctx, "clicked-top");
                 log(sp, ctx, "after clicking the top floor");
             }
-            for (int i = 0; i < 30; i++) {
+            for (int i = 0; i < 50; i++) {
                 ctx.waitTicks(10);
                 shot(ctx, "ride-up");
                 if (i % 5 == 4) {
@@ -98,7 +100,7 @@ public class LiftRideTest implements FabricClientGameTest {
                 ctx.getInput().pressKey(InputConstants.KEY_G);
                 ctx.waitTicks(8);
             }
-            for (int i = 0; i < 6; i++) {
+            for (int i = 0; i < FLOORS + 2; i++) {
                 ctx.getInput().pressKey(InputConstants.KEY_DOWN);
                 ctx.waitTicks(2);
             }
@@ -106,7 +108,7 @@ public class LiftRideTest implements FabricClientGameTest {
             ctx.waitTicks(6);
             shot(ctx, "keys-ground");
             log(sp, ctx, "after Enter on the ground floor");
-            for (int i = 0; i < 30; i++) {
+            for (int i = 0; i < 50; i++) {
                 ctx.waitTicks(10);
                 shot(ctx, "ride-down");
                 if (i % 5 == 4) {

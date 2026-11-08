@@ -92,6 +92,8 @@ public final class LiftClient {
         LiftCar car = client.player == null ? null : LiftPhysics.inside(client.player);
         if (car != null && panel(car, client.player.getEyePosition(), client.player.getViewVector(1f)) != null) {
             client.gui.setScreen(new LiftScreen(car));
+            com.zomboidcraft.ZomboidCraft.LOGGER.info("Lift window opened for car {} ({} floors); screen now {}", car.getId(),
+                    car.shaft().landings.length, client.gui.screen() == null ? "none" : client.gui.screen().getClass().getName());
             return true;
         }
         return false;

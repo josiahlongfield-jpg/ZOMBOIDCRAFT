@@ -80,13 +80,13 @@ public class LiftScreen extends net.minecraft.client.gui.screens.Screen {
         g.fill(b[0] + 12, b[1] + 24, b[0] + b[2] - 12, b[1] + 25, LINE);
         for (int i = 0; i < s.landings.length; i++) {
             int[] c = cell(s, b, i);
-            boolean lit = car.called(i), over = i == sel || in(mouseX, mouseY, c[0], c[1], CELL, CELL);
+            boolean lit = car.called(i) || i == sent && now() - sentAt < 10, over = i == sel || in(mouseX, mouseY, c[0], c[1], CELL, CELL) || in(hover[0], hover[1], c[0], c[1], CELL, CELL);
             button(g, c[0], c[1], s.label(i), lit, over);
         }
         // door open and door close
         int[] o = doorButtons(s, b);
-        button(g, o[0], o[1], o[3], "Open", false, in(mouseX, mouseY, o[0], o[1], o[3], CELL));
-        button(g, o[2], o[1], o[3], "Close", false, in(mouseX, mouseY, o[2], o[1], o[3], CELL));
+        button(g, o[0], o[1], o[3], "Open", false, in(mouseX, mouseY, o[0], o[1], o[3], CELL) || in(hover[0], hover[1], o[0], o[1], o[3], CELL));
+        button(g, o[2], o[1], o[3], "Close", false, in(mouseX, mouseY, o[2], o[1], o[3], CELL) || in(hover[0], hover[1], o[2], o[1], o[3], CELL));
     }
 
     /** The door buttons under the floors, side by side across the panel: open's x, y, close's x, each one's width. */
@@ -106,6 +106,10 @@ public class LiftScreen extends net.minecraft.client.gui.screens.Screen {
         g.text(font, Hud.text(label), x + (bw - w) / 2, y + (CELL - 8) / 2, lit ? Hud.AMBER : TEXT, false);
     }
 
+    private long now() {
+        return minecraft.level == null ? 0 : minecraft.level.getGameTime();
+    }
+
     private static void frame(GuiGraphicsExtractor g, int x, int y, int w, int h, int colour) {
         g.fill(x, y, x + w, y + 1, colour);
         g.fill(x, y + h - 1, x + w, y + h, colour);
@@ -119,25 +123,85 @@ public class LiftScreen extends net.minecraft.client.gui.screens.Screen {
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
+        com.zomboidcraft.ZomboidCraft.LOGGER.info("Lift window: mouse button {} at {}, {}", event.button(), event.x(), event.y());
+        if (event.button() == 0) {
+            press(event.x(), event.y(), "click");
+        }
+        return true;
+    }
+
+    /** The left button's state last tick, read straight off the mouse (see {@link #tick}). */
+    private boolean wasDown = true;
+    /** Game time of the last press handled, so a click seen both ways counts once. */
+    private long pressedAt = -1000;
+
+    /**
+     * Reads the mouse itself each tick as well as taking the screen's click events: in some setups the clicks
+     * never reach the screen (the pointer moves but nothing lights or answers), so a press of the left button
+     * over a floor is picked up here too.
+     */
+    @Override
+    public void tick() {
+        double[] at = pointer();
+        hover = at;
+        // a mouse still held by the game (cursor shown, but clicks going to the world): let go of it, and take
+        // the attack key's press as a click meanwhile
+        if (minecraft.mouseHandler.isMouseGrabbed()) {
+            if (!grabLogged) {
+                grabLogged = true;
+                com.zomboidcraft.ZomboidCraft.LOGGER.info("Lift window: the game still had the mouse grabbed; releasing it");
+            }
+            minecraft.mouseHandler.releaseMouse();
+        }
+        boolean down = minecraft.mouseHandler.isLeftPressed() || minecraft.options.keyAttack.isDown();
+        if (down && !wasDown) {
+            press(at[0], at[1], "poll");
+        }
+        wasDown = down;
+    }
+
+    private boolean grabLogged;
+
+    /** Where the pointer is, in the screen's own (GUI) units. */
+    private double[] pointer() {
+        var w = minecraft.getWindow();
+        double f = (double) w.getGuiScaledWidth() / Math.max(1, w.getScreenWidth());
+        return new double[] {minecraft.mouseHandler.xpos() * f, minecraft.mouseHandler.ypos() * f};
+    }
+
+    private double[] hover = {-1, -1};
+    /** The last button sent and when, so it shows pressed for a moment whatever the server says. */
+    private int sent = Integer.MIN_VALUE;
+    private long sentAt = -1000;
+
+    /** A press at (x, y): the floor or door button under it, if any. */
+    private void press(double x, double y, String how) {
         LiftShaft s = car.shaft();
-        if (s == null || event.button() != 0) {
-            return true;
+        long now = minecraft.level == null ? 0 : minecraft.level.getGameTime();
+        if (s == null || now - pressedAt < 3) {
+            return;
         }
         int[] b = box(s);
+        int pick = Integer.MIN_VALUE;
         for (int i = 0; i < s.landings.length; i++) {
             int[] c = cell(s, b, i);
-            if (in(event.x(), event.y(), c[0], c[1], CELL, CELL)) {
-                ClientPlayNetworking.send(new Lifts.Pick(car.getId(), i));
-                return true;
+            if (in(x, y, c[0], c[1], CELL, CELL)) {
+                pick = i;
             }
         }
         int[] o = doorButtons(s, b);
-        if (in(event.x(), event.y(), o[0], o[1], o[3], CELL)) {
-            ClientPlayNetworking.send(new Lifts.Pick(car.getId(), -1));
-        } else if (in(event.x(), event.y(), o[2], o[1], o[3], CELL)) {
-            ClientPlayNetworking.send(new Lifts.Pick(car.getId(), -2));
+        if (in(x, y, o[0], o[1], o[3], CELL)) {
+            pick = -1;
+        } else if (in(x, y, o[2], o[1], o[3], CELL)) {
+            pick = -2;
         }
-        return true;
+        if (pick != Integer.MIN_VALUE) {
+            pressedAt = now;
+            com.zomboidcraft.ZomboidCraft.LOGGER.info("Lift window: {} on {} (car {})", how, pick, car.getId());
+            ClientPlayNetworking.send(new Lifts.Pick(car.getId(), pick));
+            sent = pick;
+            sentAt = now;
+        }
     }
 
     @Override
