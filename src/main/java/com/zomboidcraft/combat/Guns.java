@@ -909,6 +909,12 @@ public final class Guns {
                 }
             }
             State st = STATES.get(player);
+            // a gun put away (or left by a rejoin) mid-reload kept its reload step: your client then took it as still
+            // reloading, so aiming kept your normal sensitivity and a scope didn't zoom until the next reload ended
+            // (Josiah 2026-11-08). With no reload going, any step left on the gun in hand is cleared.
+            if (GunType.isGun(gun) && (st == null || st.reloadTick < 0) && reloadStep(gun) > 0) {
+                setModelData(gun, 0, 0);
+            }
             if (st == null) {
                 continue;
             }
@@ -995,6 +1001,12 @@ public final class Guns {
         }
         gun.set(GunState.TYPE, new GunState(true, rounds, false));
         Skills.addXp(player, Skill.RELOADING, 1);
+    }
+
+    /** The reload step in the gun's custom model data (0: none). */
+    private static float reloadStep(ItemStack gun) {
+        CustomModelData data = gun.get(DataComponents.CUSTOM_MODEL_DATA);
+        return data == null || data.floats().isEmpty() ? 0 : data.floats().get(0);
     }
 
     /** Sets the reload step (or -1 to keep it) and the flash in the gun's custom model data, keeping its attachments. */
