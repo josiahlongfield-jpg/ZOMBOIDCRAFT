@@ -11,6 +11,17 @@ sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 echo "===== compile errors"
 grep -E "error:|warning: \[removal\]" -A3 build.log | head -80
 
+echo "===== horde server cost (FPS thread)"
+javap -cp "$CP" -p net.minecraft.world.entity.LivingEntity 2>&1 | grep -E " travel|aiStep|travelInAir|applyEffectsFromBlocks|pushEntities|isImmobile" | head
+javap -cp "$CP" -p -c net.minecraft.world.entity.LivingEntity 2>&1 | awk '/public void aiStep\(\);/,/^$/' | grep -E "invoke(virtual|special|static|interface)" | head -80
+javap -cp "$CP" -p -c net.minecraft.world.entity.LivingEntity 2>&1 | awk '/void travel\(/,/^$/' | grep -E "invoke|Method" | head -30
+javap -cp "$CP" -p net.minecraft.world.entity.Entity 2>&1 | grep -E "collide|canBeCollidedWith|applyEffectsFromBlocks|checkSupportingBlock| move\(|isInWater|isInLava|onGround|getOnPos" | head -30
+javap -cp "$CP" -p -c net.minecraft.world.entity.Entity 2>&1 | awk '/Vec3 collide\(net/,/^$/' | grep -E "invoke" | head -40
+javap -cp "$CP" -p net.minecraft.world.level.EntityGetter 2>&1 | grep -iE "collision" | head
+for c in net.minecraft.world.entity.ai.navigation.PathNavigation net.minecraft.world.level.pathfinder.Path net.minecraft.world.level.pathfinder.Node; do echo "-- $c"; javap -cp "$CP" -p "$c" 2>&1 | grep -vE 'lambda\$' | head -80; done
+javap -cp "$CP" -p -c net.minecraft.world.entity.ai.navigation.PathNavigation 2>&1 | awk '/Path createPath\(java.util.Set<net.minecraft.core.BlockPos>, int, boolean, int, float\)/,/^$/' | grep -E "invoke|getfield" | head -40
+for c in $(classes 'ServerEntityEvents.*\.class$' | sed 's/\.class$//; s#/#.#g'); do javap -cp "$CP" "$c" 2>&1 | head -20; done
+
 echo "===== scope crop under shaders (alpha)"
 javap -cp "$CP" -p net.minecraft.client.renderer.RenderPipelines 2>&1 | grep -iE "GUI|SNIPPET|BLIT" | head -40
 classes 'RenderPipeline(\$Builder)?\.class$|BlendFunction\.class$|ColorTargetState\.class$'
