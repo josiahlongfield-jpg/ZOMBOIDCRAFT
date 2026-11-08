@@ -138,6 +138,8 @@ public final class OperatorView {
     private static float lastStep;
     private static boolean shot, inspectAsked;
     private static float aim, aimAt = -1;
+    /** How far onto the sights (raw, of 1) a magnified scope's lens takes over from the gun. */
+    private static final float ON_SIGHT = 0.92f;
     private static float[] pos, turn, fromPos, fromTurn, tmpPos, tmpTurn;
     private static float fadeStart, fadeLen;
     private static final Object[][] BUFFERS = new Object[2][];
@@ -183,7 +185,13 @@ public final class OperatorView {
 
         // brought up: a new pick of the rifle (another slot, or not drawn for a moment)
         int slot = player.getInventory().getSelectedSlot();
-        if (clip == null || slot != lastSlot || lastDrawn < 0 || now - lastDrawn > 0.3f || now < lastDrawn) {
+        // A hitch in the frames isn't a new pick: at 0.3 s a stall (chunks loading) brought the rifle up again mid-reload
+        // and the reload played no clip at all (Josiah 2026-11-08, "randomly the reload animation doesn't work")
+        float gap = lastDrawn < 0 ? Float.MAX_VALUE : now - lastDrawn;
+        boolean busy = reloading || step(gun) != 0;
+        if (clip == null || slot != lastSlot || now < lastDrawn || gap > (busy ? 3f : 1f)) {
+            // a reload still going when it comes back up starts its clips over below
+            lastStep = 0;
             queue.clear();
             reloading = false;
             loadingRounds = false;
@@ -215,6 +223,11 @@ public final class OperatorView {
             if (!LOAD_SHELL.equals(clip)) play(skin, queue.poll(), now, 0.08f);
         } else if (byRound) {
             // a hand-loaded gun's own loading runs above; nothing of the magazine reload below
+        } else if (lastStep == 0 && step >= 3 && !reloading) {
+            // a jam cleared: only the charging handle, no magazine
+            reloading = true;
+            queue.clear();
+            play(skin, own(skin, EMPTY_CHARGE, CHARGE), now, 0.12f);
         } else if (lastStep == 0 && step >= 1 && !reloading) {
             reloading = true;
             queue.clear();
@@ -224,7 +237,7 @@ public final class OperatorView {
             queue.add(empty ? own(skin, EMPTY_IN, IN) : IN);
             if (empty) queue.add(own(skin, EMPTY_CHARGE, CHARGE));
             play(skin, empty ? own(skin, EMPTY_OUT, OUT) : OUT, now, 0.12f);
-        } else if (step == 0 && reloading && remaining(skin, now) > 0.35f) {
+        } else if (step == 0 && reloading && (remaining(skin, now) > 0.35f || IDLE.equals(clip))) {
             // called off (or done well early): back to the idle
             reloading = false;
             queue.clear();
@@ -342,12 +355,47 @@ public final class OperatorView {
         if (BUFFERS[buffer] == null || BUFFERS[buffer].length != skin.groups.length * 2) {
             BUFFERS[buffer] = new Object[skin.groups.length * 2];
         }
-        boolean[] hidden = built == null ? null : TarkovRig.hidden(spec, built, skin);
-        NpcSkinDraw.submitGroups(skin.groups, bones, 0, g -> TarkovRig.shows(g, hidden), g -> skin.texture(g.texture, model),
-                BUFFERS[buffer], light, net.minecraft.client.renderer.texture.OverlayTexture.NO_OVERLAY, pose, out);
+        boolean[] kitHidden = built == null ? null : TarkovRig.hidden(spec, built, skin);
+        // looking through a magnified scope the lens is the middle of this same frame blown up, so the scope itself
+        // (and anything on it) isn't drawn then: drawn, the lens showed the inside of its own tube and its back glass
+        // (Josiah 2026-11-08, every scope). The rest of the gun stays round the lens. A gun whose scope can't be told
+        // apart from the rest isn't drawn at all.
+        boolean through = com.zomboidcraft.client.combat.ScopeView.active();
+        String skipPart = null;
+        boolean drawGun = true;
+        boolean[] hidden = kitHidden;
+        if (through && com.zomboidcraft.client.combat.ScopeView.lensFromThisFrame()) {
+            // the lens is cut from this frame: the whole gun (and the hands on it) stays out of the picture, or the
+            // pieces near the eye are blown up across the lens
+            drawGun = false;
+        } else if (through) {
+            TarkovRig.Sight looked = built == null || sights.isEmpty() ? null : sights.get(Math.min(sightShown, sights.size() - 1));
+            TarkovFit.Node node = looked == null ? null : built.at(looked.path());
+            if (node == null) {
+                drawGun = false;
+            } else if (node.kit()) {
+                boolean[] scope = TarkovRig.kitBones(spec, skin, looked.path());
+                if (scope == null) {
+                    drawGun = false;
+                } else {
+                    hidden = kitHidden == null ? scope : kitHidden.clone();
+                    for (int b = 0; b < scope.length; b++) hidden[b] |= scope[b];
+                }
+            } else {
+                skipPart = looked.path();
+            }
+        }
+        if (drawGun) {
+            boolean[] shownHidden = hidden;
+            NpcSkinDraw.submitGroups(skin.groups, bones, 0, g -> TarkovRig.shows(g, shownHidden), g -> skin.texture(g.texture, model),
+                    BUFFERS[buffer], light, net.minecraft.client.renderer.texture.OverlayTexture.NO_OVERLAY, pose, out);
+        }
         if (built != null) {
             // the parts fitted at the bench, each from its own model where it sits on the gun
-            TarkovRig.draw(built, frames, null, "fp", light, net.minecraft.client.renderer.texture.OverlayTexture.NO_OVERLAY, pose, out);
+            if (drawGun) {
+                TarkovRig.draw(built, frames, null, "fp", light, net.minecraft.client.renderer.texture.OverlayTexture.NO_OVERLAY,
+                        pose, out, skipPart);
+            }
             float lit = Operator.smooth((aim - 0.5f) / 0.5f) * Operator.smooth((k - 0.6f) / 0.4f);
             TarkovRig.Sight s = sights.isEmpty() ? null : sights.get(Math.min(sight, sights.size() - 1));
             TarkovParts.Mode mode = s == null ? null : mode(gun, sight);
@@ -520,6 +568,8 @@ public final class OperatorView {
     public static double magnification(ItemStack gun) {
         LocalGuns.Spec spec = LocalGuns.of(gun);
         if (spec == null || spec.fp == null) return 0;
+        // only once the eye is on the sight: on the way up the lens would show the scope's tube still coming to the eye
+        if (aim < ON_SIGHT) return 0;
         float zoom = zoomOf(gun, shownSight(gun));
         if (zoom <= 1) return 0;
         String model = Operator.fpModel(gun);
@@ -676,7 +726,18 @@ public final class OperatorView {
     }
 
     private static void play(NpcSkin skin, String name, float at, float fade) {
-        if (!skin.clips.containsKey(name)) name = IDLE;
+        // a clip this model hasn't got: on to the next one queued, or the idle with the reload over. Dropping to the
+        // idle with the reload still marked going left it marked for good (the idle never runs out), and no reload
+        // played its clips again until the gun was put away
+        while (!skin.clips.containsKey(name)) {
+            String next = queue.poll();
+            if (next == null) {
+                name = IDLE;
+                reloading = false;
+                break;
+            }
+            name = next;
+        }
         if (clip != null && fade > 0) {
             System.arraycopy(pos, 0, fromPos, 0, pos.length);
             System.arraycopy(turn, 0, fromTurn, 0, turn.length);

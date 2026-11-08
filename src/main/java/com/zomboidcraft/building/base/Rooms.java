@@ -168,6 +168,12 @@ public final class Rooms {
         BlockPos feet = player.blockPosition();
         Claim claim = Claims.at(level, feet);
         if (claim == null || !claim.member(player)) return null;
+        // lying on a bed (or stood on a low piece) the feet are in furniture: read the room from the floor beside it
+        if (!open(level, feet)) {
+            for (Direction d : Direction.Plane.HORIZONTAL) {
+                if (open(level, feet.relative(d))) return find(level, feet.relative(d), claim);
+            }
+        }
         return find(level, feet, claim);
     }
 

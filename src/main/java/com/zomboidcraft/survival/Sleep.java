@@ -216,9 +216,17 @@ public final class Sleep {
         if (!s.asleep()) return fatigue;
         Bed bed = Bed.values()[Math.min(s.bed(), Bed.values().length - 1)];
         fatigue = Math.max(RESTED, fatigue - bed.restPerHour / Needs.hourSeconds()
-                * com.zomboidcraft.survival.character.Traits.restScale(player));
+                * com.zomboidcraft.survival.character.Traits.restScale(player)
+                * com.zomboidcraft.building.base.RoomEffects.restScale(player));
+        // a Full bunk room, lights off: boredom and unhappiness ease through the night
+        if (com.zomboidcraft.building.base.RoomEffects.soundSleep(player)) {
+            if (Mood.get(player, Mood.Stat.BOREDOM) > 0) Mood.add(player, Mood.Stat.BOREDOM, -1);
+            if (Mood.get(player, Mood.Stat.UNHAPPINESS) > 0) Mood.add(player, Mood.Stat.UNHAPPINESS, -1);
+        }
         if (fatigue <= RESTED) {
-            wake(player, "You wake up rested.");
+            int relief = com.zomboidcraft.building.base.RoomEffects.wakeStressRelief(player);
+            if (relief > 0) Mood.add(player, Mood.Stat.STRESS, -relief);
+            wake(player, relief > 0 ? "You wake up rested and settled." : "You wake up rested.");
         } else if (zombieNear(player, 8) && player.getRandom().nextInt(4) == 0) {
             wake(player, "Something woke you. It's close.");
         } else if (Nutrition.get(player).hungerStage() >= 4 || SurvivalStats.get(player).thirst() <= 16) {
@@ -228,7 +236,9 @@ public final class Sleep {
     }
 
     private static boolean zombieNear(ServerPlayer player, double range) {
-        return !player.level().getEntitiesOfClass(Zombie.class, player.getBoundingBox().inflate(range), ZombieTypes::isWalker).isEmpty();
+        // asleep in a Full bunk room, only the dead inside the base wake you
+        return !player.level().getEntitiesOfClass(Zombie.class, player.getBoundingBox().inflate(range), z -> ZombieTypes.isWalker(z)
+                && (!asleep(player) || com.zomboidcraft.building.base.RoomEffects.canWake(player, z.blockPosition()))).isEmpty();
     }
 
     private static void say(ServerPlayer player, String text) {

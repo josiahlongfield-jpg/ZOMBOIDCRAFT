@@ -80,7 +80,7 @@ public class LiftScreen extends net.minecraft.client.gui.screens.Screen {
         g.fill(b[0] + 12, b[1] + 24, b[0] + b[2] - 12, b[1] + 25, LINE);
         for (int i = 0; i < s.landings.length; i++) {
             int[] c = cell(s, b, i);
-            boolean lit = car.called(i), over = i == sel || in(mouseX, mouseY, c[0], c[1], CELL, CELL) || in(hover[0], hover[1], c[0], c[1], CELL, CELL);
+            boolean lit = car.called(i) || i == sent && now() - sentAt < 10, over = i == sel || in(mouseX, mouseY, c[0], c[1], CELL, CELL) || in(hover[0], hover[1], c[0], c[1], CELL, CELL);
             button(g, c[0], c[1], s.label(i), lit, over);
         }
         // door open and door close
@@ -104,6 +104,10 @@ public class LiftScreen extends net.minecraft.client.gui.screens.Screen {
         frame(g, x, y, bw, CELL, lit ? Hud.AMBER : over ? LINE : EDGE);
         int w = font.width(Hud.text(label));
         g.text(font, Hud.text(label), x + (bw - w) / 2, y + (CELL - 8) / 2, lit ? Hud.AMBER : TEXT, false);
+    }
+
+    private long now() {
+        return minecraft.level == null ? 0 : minecraft.level.getGameTime();
     }
 
     private static void frame(GuiGraphicsExtractor g, int x, int y, int w, int h, int colour) {
@@ -140,12 +144,23 @@ public class LiftScreen extends net.minecraft.client.gui.screens.Screen {
     public void tick() {
         double[] at = pointer();
         hover = at;
-        boolean down = minecraft.mouseHandler.isLeftPressed();
+        // a mouse still held by the game (cursor shown, but clicks going to the world): let go of it, and take
+        // the attack key's press as a click meanwhile
+        if (minecraft.mouseHandler.isMouseGrabbed()) {
+            if (!grabLogged) {
+                grabLogged = true;
+                com.zomboidcraft.ZomboidCraft.LOGGER.info("Lift window: the game still had the mouse grabbed; releasing it");
+            }
+            minecraft.mouseHandler.releaseMouse();
+        }
+        boolean down = minecraft.mouseHandler.isLeftPressed() || minecraft.options.keyAttack.isDown();
         if (down && !wasDown) {
             press(at[0], at[1], "poll");
         }
         wasDown = down;
     }
+
+    private boolean grabLogged;
 
     /** Where the pointer is, in the screen's own (GUI) units. */
     private double[] pointer() {
@@ -155,6 +170,9 @@ public class LiftScreen extends net.minecraft.client.gui.screens.Screen {
     }
 
     private double[] hover = {-1, -1};
+    /** The last button sent and when, so it shows pressed for a moment whatever the server says. */
+    private int sent = Integer.MIN_VALUE;
+    private long sentAt = -1000;
 
     /** A press at (x, y): the floor or door button under it, if any. */
     private void press(double x, double y, String how) {
@@ -181,6 +199,8 @@ public class LiftScreen extends net.minecraft.client.gui.screens.Screen {
             pressedAt = now;
             com.zomboidcraft.ZomboidCraft.LOGGER.info("Lift window: {} on {} (car {})", how, pick, car.getId());
             ClientPlayNetworking.send(new Lifts.Pick(car.getId(), pick));
+            sent = pick;
+            sentAt = now;
         }
     }
 

@@ -63,6 +63,11 @@ public final class LootHooks {
                 continue;
             }
             int where = container instanceof BlockEntity be ? where(BuiltInRegistries.BLOCK.getKey(be.getBlockState().getBlock()).getPath()) : Spoil.OUT;
+            // a cupboard in an Equipped kitchen keeps food as a fridge does (base rooms)
+            if (where == Spoil.OUT && container instanceof BlockEntity be
+                    && com.zomboidcraft.building.base.RoomEffects.keepsCold(player, player.level(), be.getBlockPos())) {
+                where = Spoil.FRIDGE;
+            }
             if (Spoil.update(slot.getItem(), now, where)) {
                 slot.setChanged();
             }

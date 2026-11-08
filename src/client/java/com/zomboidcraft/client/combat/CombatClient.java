@@ -106,6 +106,7 @@ public final class CombatClient {
         LocalGunProperty.register();
         MeshGunRenderer.register();
         TarkovPartRenderer.register();
+        com.zomboidcraft.client.operator.TarkovGunIcon.register();
         LevelRenderEvents.COLLECT_SUBMITS.register(context -> autoFire(Minecraft.getInstance()));
     }
 

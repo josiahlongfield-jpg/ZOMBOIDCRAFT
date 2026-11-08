@@ -170,7 +170,7 @@ public final class Treatment {
                 ModSounds.BANDAGE, SoundSource.PLAYERS, 0.6f, kind == Kind.BANDAGE ? 1.1f : 0.85f);
         String whose = self ? "" : patient.getName().getString() + "'s ";
         TimedActions.start(player, "treat:" + kind + ":" + part + ":" + patient.getId(), kind.verb + " " + whose + part.label,
-                ticks(kind, firstAid), p -> finish(p, patient, kind, part));
+                Math.round(ticks(kind, firstAid) * com.zomboidcraft.building.base.RoomEffects.treatScale(player)), p -> finish(p, patient, kind, part));
         if (!self && patient instanceof ServerPlayer sp) {
             sp.sendOverlayMessage(Component.literal(player.getName().getString() + " is " + kind.verb.toLowerCase(java.util.Locale.ROOT)
                     + " your " + part.label + ".").withStyle(ChatFormatting.GRAY));

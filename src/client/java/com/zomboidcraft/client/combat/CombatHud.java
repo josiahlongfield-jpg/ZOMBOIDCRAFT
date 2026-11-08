@@ -28,6 +28,12 @@ public final class CombatHud {
             return;
         }
         ItemStack gun = player.getUseItem();
+        if (ScopeView.active()) {
+            // a magnified scope's lens: a Tarkov gun's sight is no attachment of ours, so it has no sight key and isn't
+            // "scoped" here, and returning before this left its scope with no zoom at all (Josiah 2026-11-08)
+            ScopeView.draw(graphics);
+            return;
+        }
         String key = Attachments.sightKey(gun);
         if (key == null) {
             return;
@@ -40,10 +46,6 @@ public final class CombatHud {
                 size = Math.max(size, 2);
                 graphics.blit(RenderPipelines.GUI_TEXTURED, sight, (w - size) / 2, (h - size) / 2, 0, 0, size, size, size, size);
             }
-            return;
-        }
-        if (ScopeView.active()) {
-            ScopeView.draw(graphics);
             return;
         }
         int x = (w - h) / 2;
