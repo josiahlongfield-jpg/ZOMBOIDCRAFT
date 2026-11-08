@@ -11,7 +11,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import com.mojang.brigadier.arguments.StringArgumentType;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.builder.RequiredArgumentBuilder;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
@@ -77,12 +79,12 @@ public final class HudSettings {
         // /zchud spartan|operator|classic|reload: its own word, since a client-side /zc would stand in front of the
         // server's /zc commands
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registry) -> dispatcher.register(
-                ClientCommandManager.literal("zchud")
+                LiteralArgumentBuilder.<FabricClientCommandSource>literal("zchud")
                         .executes(ctx -> {
                             ctx.getSource().sendFeedback(Component.literal(status()));
                             return 1;
                         })
-                        .then(ClientCommandManager.argument("style", StringArgumentType.word())
+                        .then(RequiredArgumentBuilder.<FabricClientCommandSource, String>argument("style", StringArgumentType.word())
                                 .suggests((ctx, b) -> SharedSuggestionProvider.suggest(List.of("spartan", "operator", "classic", "reload"), b))
                                 .executes(ctx -> {
                                     String word = StringArgumentType.getString(ctx, "style").toLowerCase(java.util.Locale.ROOT);
