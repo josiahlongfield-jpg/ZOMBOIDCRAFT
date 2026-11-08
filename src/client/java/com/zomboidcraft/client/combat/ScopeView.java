@@ -31,7 +31,7 @@ import org.jetbrains.annotations.Nullable;
  * frame is copied aside after the shader pack is done with it, and the HUD lays the last world view under the last
  * lens view. look.scopeView "mix" is the fallback he picked first: up to 4x the lens is the middle of the normal view
  * blown up, from 6x the whole view is zoomed and blurred outside the lens. "picture" is the old full-screen eyepiece.
- * With a shader pack on, pip turns into mix, and look.scopeShaders picks between two looks (Josiah 2026-11-04, a test
+ * With a shader pack on, pip turns into mix, and look.scopeShaderLook picks between two looks (Josiah 2026-11-04, a test
  * of both): "crop" (A) keeps the world live at its own size and the lens is the middle of the finished picture blown
  * up, copied at the HUD after the pack is done; "ring" (B) zooms the whole view and darkens the world round the lens.
  */
@@ -68,14 +68,14 @@ public final class ScopeView {
 
     /** With a shader pack: the live view with the middle blown up in the lens (A), rather than the dark ring (B). */
     private static boolean cropWithShaders() {
-        return !cropFailed && !"ring".equalsIgnoreCase(ZcConfig.get().look.scopeShaders);
+        return !cropFailed && !"ring".equalsIgnoreCase(ZcConfig.get().look.scopeShaderLook);
     }
 
     /** The scope style key: swaps A and B, keeps the choice, and says which is on. */
     public static String switchStyle() {
         ZcConfig.Look look = ZcConfig.get().look;
-        boolean toRing = !"ring".equalsIgnoreCase(look.scopeShaders);
-        look.scopeShaders = toRing ? "ring" : "crop";
+        boolean toRing = !"ring".equalsIgnoreCase(look.scopeShaderLook);
+        look.scopeShaderLook = toRing ? "ring" : "crop";
         cropFailed = false;
         ZcConfig.save();
         String name = toRing ? "Scope B: dark scope ring, whole view zoomed" : "Scope A: live view, zoomed centre in the lens";

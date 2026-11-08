@@ -1368,8 +1368,10 @@ public final class ZcConfig {
          * With a shader pack (Photon) on, which scope look is used (Josiah 2026-11-04, a test of both): "crop" keeps the
          * world live at its own size and the lens shows the middle of the picture blown up; "ring" zooms the whole view
          * and darkens everything outside the lens like a scope tube. The scope style key switches them. Client side.
+         * "ring" by default since 2026-11-08: under Photon the lens copy for "crop" came out black (or never drew), the
+         * third try at it, so his old "crop" choice (the field was scopeShaders) isn't carried over.
          */
-        public String scopeShaders = "crop";
+        public String scopeShaderLook = "ring";
         /** The scope lens's size on screen, as a share of the screen's height (0.15 to 0.95). Client side. */
         public double scopeLens = 0.5;
         /** Turn the lens picture the right way up if it shows upside down on your graphics card. Client side. */
