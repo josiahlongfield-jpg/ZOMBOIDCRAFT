@@ -80,6 +80,17 @@ public final class Guns {
         /** A local gun's reload sounds timed to his clip (LocalGuns.Cues), and which have played (bits 1, 2, 4). */
         @org.jetbrains.annotations.Nullable LocalGuns.Cues cues;
         int cuesPlayed;
+        /** Tarkov's own reload sounds (LocalGuns.Cue): the reload playing and how far into it they've played. */
+        String cuePart = "";
+        float cuePrev = -1;
+        /**
+         * A hand-loaded gun's Tarkov sounds still to come, at game times: they follow first person's clips (which run on
+         * their own clock, a little apart from the game's loading steps), for this gun in hand.
+         */
+        final java.util.PriorityQueue<Later> later = new java.util.PriorityQueue<>(java.util.Comparator.comparingLong(Later::at));
+        ItemStack laterGun = ItemStack.EMPTY;
+        /** When the loading started (game time), first person's raise clip with it. */
+        long loadT0;
         int flashLeft;
         /** A tube gun's loading: stopped (full, out of shells or the trigger pulled) at stopTick, on this stack. */
         boolean loadStopped;
@@ -89,6 +100,9 @@ public final class Guns {
         long cycleAt = -1, caseAt = -1;
         /** The fired cases an opened gun throws out when caseAt comes (the live rounds stay in). */
         int empties;
+    }
+
+    private record Later(long at, net.minecraft.sounds.SoundEvent sound) {
     }
 
     private static final Map<ServerPlayer, State> STATES = new WeakHashMap<>();
@@ -130,8 +144,11 @@ public final class Guns {
             // the trigger stops the loading: with a shell chambered it goes off at once, onto an empty chamber
             // the pump is worked first; a gun open to load is shut first
             if (st.needsCharge || type.opens) {
-                stopLoading(gun, type, st);
+                stopLoading(player, gun, type, st);
                 return;
+            }
+            if (ownLoad(st)) {
+                scheduleEnd(player, gun, type, st);
             }
             endReload(gun, st);
         }
@@ -753,7 +770,9 @@ public final class Guns {
         setModelData(gun, st.needsCharge ? 1.5f : 1, 0);
         st.cues = LocalGuns.cues(gun.get(LocalGuns.ID));
         st.cuesPlayed = 0;
-        if (st.cues == null || st.cues.magOut() < 0) {
+        st.cuePart = "";
+        st.later.clear();
+        if (st.cues == null || st.cues.magOut() < 0 && !st.cues.forCharge(st.needsCharge).own()) {
             sound(player, type.magOut());
         } else {
             st.cuesPlayed = 1;
@@ -768,6 +787,11 @@ public final class Guns {
     private static void cueSounds(ServerPlayer player, ItemStack gun, GunType type, State st) {
         LocalGuns.Cues c = st.cues.forCharge(st.needsCharge);
         float u = st.reloadTick / (float) Math.max(1, st.needsCharge ? type.chargeDone : type.tacticalDone);
+        if (c.own()) {
+            // Tarkov's own: every sound its reload clips play, each at its moment
+            playCues(player, gun, st, "reload", c.sounds(), u);
+            return;
+        }
         if (c.magOut() >= 0 && u >= c.magOut() && (st.cuesPlayed & 8) == 0 && st.reloadTick > 0) {
             st.cuesPlayed |= 8;
             sound(player, type.magOut());
@@ -780,6 +804,63 @@ public final class Guns {
             st.cuesPlayed |= 4;
             player.level().playSound(null, player.getX(), player.getY(), player.getZ(),
                     LocalGuns.sound(gun, type.charged(), c.release() ? LocalGuns.RELEASE : ""), SoundSource.PLAYERS, 0.9f, 1f);
+        }
+    }
+
+    /** Plays the sounds of this part from where it had got to up to share (0 to 1) of it; a new part starts at 0. */
+    private static void playCues(ServerPlayer player, ItemStack gun, State st, String part, java.util.List<LocalGuns.Cue> cues,
+            float share) {
+        if (!part.equals(st.cuePart)) {
+            st.cuePart = part;
+            st.cuePrev = -1;
+        }
+        for (LocalGuns.Cue q : cues) {
+            if (q.at() > st.cuePrev && q.at() <= share) {
+                tarkov(player, gun, q.name());
+            }
+        }
+        st.cuePrev = Math.max(st.cuePrev, share);
+    }
+
+    private static void tarkov(ServerPlayer player, ItemStack gun, String name) {
+        player.level().playSound(null, player.getX(), player.getY(), player.getZ(), LocalGuns.tarkovSound(gun, name),
+                SoundSource.PLAYERS, 0.9f, 1f);
+    }
+
+    /** Whether this hand-loaded gun plays Tarkov's own loading sounds (start, shell, end, pump). */
+    private static boolean ownLoad(State st) {
+        return st.cues != null && st.cues.ownLoad();
+    }
+
+    /**
+     * A part's sounds by the clock: its clip starting at start seconds after the loading began, as first person plays
+     * it (the raise, each round's clip in turn while rounds go in, the finish once the round clip playing has run out,
+     * then the pump). They stop if the gun is put away.
+     */
+    private static void schedule(ItemStack gun, State st, String part, float start) {
+        float secs = st.cues.loadSeconds(part);
+        st.laterGun = gun;
+        for (LocalGuns.Cue q : st.cues.load(part)) {
+            st.later.add(new Later(st.loadT0 + Math.round((start + q.at() * secs) * 20), LocalGuns.tarkovSound(gun, q.name())));
+        }
+    }
+
+    /** The finish (and onto an empty pump gun, the pump) as first person plays them once the loading stops now. */
+    private static void scheduleEnd(ServerPlayer player, ItemStack gun, GunType type, State st) {
+        float raise = st.cues.loadSeconds("start"), round = st.cues.loadSeconds("shell"), end = st.cues.loadSeconds("end");
+        float e = (player.level().getGameTime() - st.loadT0) / 20f;
+        float at;
+        if (e < raise || round <= 0) {
+            // stopped while still being raised: first person goes straight to the finish
+            at = e;
+            st.later.clear();
+        } else {
+            // the round clip playing runs to its end first
+            at = raise + (float) Math.ceil((e - raise) / round - 0.001f) * round;
+        }
+        schedule(gun, st, "end", at);
+        if (!type.opens && st.needsCharge) {
+            schedule(gun, st, "pump", at + end);
         }
     }
 
@@ -799,6 +880,9 @@ public final class Guns {
         st.needsCharge = !type.opens && g.rounds() == 0;
         st.loadStopped = false;
         st.loading = gun;
+        st.cues = LocalGuns.cues(gun.get(LocalGuns.ID));
+        st.cuePart = "";
+        st.later.clear();
         int going = type.capacity(gun) - g.rounds();
         if (!player.hasInfiniteMaterials()) {
             going = Math.min(going, countAmmo(player, type, gun));
@@ -809,7 +893,11 @@ public final class Guns {
         if (own > 0) st.pace = own;
         st.paceLeft = 0;
         setModelData(gun, st.needsCharge ? 1.5f : 1, 0);
-        if (type.opens) {
+        if (ownLoad(st)) {
+            // Tarkov's own: the opening (and the empties pulled out) are in its raise clip's sounds
+            st.loadT0 = player.level().getGameTime();
+            schedule(gun, st, "start", 0);
+        } else if (type.opens) {
             // thrown open: the empties come out as the barrels drop
             sound(player, type.magOut());
             st.caseAt = player.level().getGameTime() + type.raise / 2;
@@ -822,8 +910,13 @@ public final class Guns {
         if (type == GunType.CROSSBOW && st.reloadTick == GunType.COCK_AT) {
             sound(player, type.charged());      // the whole draw, as the hand takes the string; it seats COCK_SEAT later
         }
+        boolean own = ownLoad(st);
         if (!st.loadStopped) {
             int t = st.reloadTick - type.raise;
+            if (own && t == 0) {
+                // the first round's clip, after the raise
+                schedule(gun, st, "shell", st.cues.loadSeconds("start"));
+            }
             if (t == 0) {
                 // raised (or opened): the rounds at their own clip's pace
                 float own = LocalGuns.tubePace(gun, type, 1, st.needsCharge);
@@ -833,11 +926,16 @@ public final class Guns {
                 if (takeAmmo(player, type, gun) || player.hasInfiniteMaterials()) {
                     GunState g = gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG);
                     gun.set(GunState.TYPE, g.withRounds(g.rounds() + 1));
-                    sound(player, type.magIn());
+                    if (!own) {
+                        sound(player, type.magIn());
+                    }
                 }
                 if (gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG).rounds() >= type.capacity(gun)
                         || countAmmo(player, type, gun) == 0 && !player.hasInfiniteMaterials()) {
-                    stopLoading(gun, type, st);
+                    stopLoading(player, gun, type, st);
+                } else if (own) {
+                    // another round: its clip again
+                    schedule(gun, st, "shell", st.cues.loadSeconds("start") + t / type.perShell * st.cues.loadSeconds("shell"));
                 }
             }
             return;
@@ -847,7 +945,7 @@ public final class Guns {
             // shut again: snapped closed halfway through
             if (since == 1) {
                 setModelData(gun, 3, 0);
-            } else if (since == 1 + type.close / 2) {
+            } else if (since == 1 + type.close / 2 && !own) {
                 sound(player, type.charged());
             } else if (since >= 1 + type.close) {
                 endReload(gun, st);
@@ -862,7 +960,7 @@ public final class Guns {
             // the pump at its own clip's pace, after the finish
             float own = LocalGuns.tubePace(gun, type, 3, true);
             if (own > 0) st.pace = own;
-        } else if (since == 1 + type.cycle / 2) {
+        } else if (since == 1 + type.cycle / 2 && !own) {
             sound(player, type.charged());
         } else if (since >= 1 + type.cycle) {
             endReload(gun, st);
@@ -870,9 +968,12 @@ public final class Guns {
         }
     }
 
-    private static void stopLoading(ItemStack gun, GunType type, State st) {
+    private static void stopLoading(ServerPlayer player, ItemStack gun, GunType type, State st) {
         st.loadStopped = true;
         st.stopTick = st.reloadTick;
+        if (ownLoad(st)) {
+            scheduleEnd(player, gun, type, st);
+        }
         float own = LocalGuns.tubePace(gun, type, 2, st.needsCharge);
         if (own > 0) {
             // the finish at its clip's pace, told to the operator's first person at once (2.5) so its finish clip starts
@@ -943,6 +1044,16 @@ public final class Guns {
                     st.empties = 0;
                 }
             }
+            if (!st.later.isEmpty()) {
+                if (!ItemStack.isSameItem(gun, st.laterGun)) {
+                    st.later.clear();
+                }
+                long now = player.level().getGameTime();
+                while (!st.later.isEmpty() && st.later.peek().at() <= now) {
+                    player.level().playSound(null, player.getX(), player.getY(), player.getZ(), st.later.poll().sound(),
+                            SoundSource.PLAYERS, 0.9f, 1f);
+                }
+            }
             if (st.reloadTick < 0) {
                 continue;
             }
@@ -972,18 +1083,19 @@ public final class Guns {
     private static void tickReload(ServerPlayer player, ItemStack gun, GunType type, State st) {
         st.reloadTick++;
         boolean cued = st.cues != null;
+        boolean own = cued && st.cues.forCharge(st.needsCharge).own();
         if (cued) {
             cueSounds(player, gun, type, st);
         }
         if (st.reloadTick == type.magIn) {
             insertMagazine(player, gun, type);
             setModelData(gun, 2, 0);
-            if (!cued || st.cues.magIn() < 0) {
+            if (!own && (!cued || st.cues.magIn() < 0)) {
                 sound(player, type.magIn());
             }
         } else if (st.reloadTick == type.charge && st.needsCharge) {
             setModelData(gun, 3, 0);
-            if (!cued || st.cues.charge() < 0) {
+            if (!own && (!cued || st.cues.charge() < 0)) {
                 sound(player, type.charged());
             }
         } else if (st.reloadTick >= (st.needsCharge ? type.chargeDone : type.tacticalDone)) {
