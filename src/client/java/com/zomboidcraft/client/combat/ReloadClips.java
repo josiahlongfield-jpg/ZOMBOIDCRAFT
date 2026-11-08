@@ -415,13 +415,8 @@ public final class ReloadClips {
 
     private static int ammo(Entity holder, ItemStack gun, GunType type) {
         if (!(holder instanceof net.minecraft.world.entity.player.Player p)) return 99;
-        net.minecraft.world.item.Item round = LocalGuns.ammo(gun, type);
-        int n = 0;
-        for (int i = 0; i < p.getInventory().getContainerSize(); i++) {
-            ItemStack s = p.getInventory().getItem(i);
-            if (s.is(round)) n += s.getCount();
-        }
-        return p.hasInfiniteMaterials() ? 99 : n;
+        // the rounds carried for it (combat/AmmoPouch, synced to your own client)
+        return p.hasInfiniteMaterials() ? 99 : com.zomboidcraft.combat.AmmoPouch.carried(p, LocalGuns.ammo(gun, type));
     }
 
     private static float step(ItemStack gun) {

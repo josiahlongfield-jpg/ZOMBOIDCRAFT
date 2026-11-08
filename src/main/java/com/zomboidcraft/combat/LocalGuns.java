@@ -596,14 +596,13 @@ public final class LocalGuns {
         return gun;
     }
 
-    /** One of a local gun's own magazines, full; empty for a gun without one (a tube or a cylinder). */
+    /**
+     * A magazine's worth of a gun's own rounds, loose: there are no magazine items any more, and rounds handed to you
+     * go into what you carry (combat/AmmoPouch; Josiah 2026-11-08).
+     */
     public static ItemStack fullMagazine(ItemStack gun, GunType type) {
-        if (type.magazine() == null) {
-            return ItemStack.EMPTY;
-        }
-        ItemStack mag = magazineFor(gun, type);
-        mag.set(GunState.MAG_ROUNDS, type.capacity(gun));
-        return mag;
+        net.minecraft.world.item.Item ammo = ammo(gun, type);
+        return new ItemStack(ammo, Math.max(1, Math.min(type.capacity(gun), new ItemStack(ammo).getMaxStackSize())));
     }
 
     private LocalGuns() {

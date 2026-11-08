@@ -84,19 +84,21 @@ public class CaseItem extends BagItem {
         Attachments.paint(gun, random);
         Attachments.refreshModel(gun);      // drawn without its magazine
         load.add(gun);
-        if (type.magazine() != null) {
-            int mags = type.handgun() ? 1 : 1 + random.nextInt(Math.max(1, cfg.maxMagazines));
-            int cap = type.capacity(gun);
-            for (int i = 0; i < mags; i++) {
-                ItemStack mag = LocalGuns.magazineFor(gun, type);
-                mag.set(GunState.MAG_ROUNDS, random.nextDouble() < cfg.fullMagazineChance ? cap : random.nextInt(cap + 1));
-                load.add(mag);
-            }
-        }
         Item ammo = LocalGuns.ammo(gun, type);
         int loose = type == GunType.GRENADE_LAUNCHER ? 1 + random.nextInt(3) : type.tube ? 6 + random.nextInt(13)
                 : type == GunType.HEAVY_SNIPER ? 3 + random.nextInt(6) : 10 + random.nextInt(21);
-        load.add(new ItemStack(ammo, Math.min(loose, new ItemStack(ammo).getMaxStackSize())));
+        if (type.magazine() != null) {
+            // what its magazines held, loose: there are no magazine items any more (combat/AmmoPouch)
+            int mags = type.handgun() ? 1 : 1 + random.nextInt(Math.max(1, cfg.maxMagazines));
+            int cap = type.capacity(gun);
+            for (int i = 0; i < mags; i++) {
+                loose += random.nextDouble() < cfg.fullMagazineChance ? cap : random.nextInt(cap + 1);
+            }
+        }
+        int max = new ItemStack(ammo).getMaxStackSize();
+        for (; loose > 0; loose -= max) {
+            load.add(new ItemStack(ammo, Math.min(loose, max)));
+        }
         return load;
     }
 

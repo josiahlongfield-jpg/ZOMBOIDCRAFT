@@ -116,7 +116,7 @@ public final class LootSettings {
         }
     }
 
-    /** The local guns and blades marked starter: each gun loaded with its magazine in and one spare beside it. */
+    /** The local guns and blades marked starter: each gun loaded, and one spare magazine's worth of its rounds. */
     static java.util.List<ItemStack> tarkovKit() {
         java.util.List<ItemStack> out = new java.util.ArrayList<>();
         com.zomboidcraft.combat.LocalHands.all().stream().filter(h -> h.starter)

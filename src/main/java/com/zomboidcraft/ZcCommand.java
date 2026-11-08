@@ -183,15 +183,9 @@ public final class ZcCommand {
         net.minecraft.world.item.ItemStack gun = com.zomboidcraft.combat.LocalGuns.loaded(spec);
         net.minecraft.world.item.ItemStack given = gun.copy();
         player.getInventory().add(given);       // add() empties the stack it's handed: the rest reads gun, its copy
-        // two of its own magazines, full, and a stack of its own rounds
-        for (int i = 0; i < 2; i++) {
-            net.minecraft.world.item.ItemStack mag = com.zomboidcraft.combat.LocalGuns.fullMagazine(gun, spec.type());
-            if (!mag.isEmpty()) {
-                player.getInventory().add(mag);
-            }
-        }
+        // rounds for it, into what you carry (as many as you can: combat/AmmoPouch)
         net.minecraft.world.item.Item ammo = com.zomboidcraft.combat.LocalGuns.ammo(gun, spec.type());
-        player.getInventory().add(new net.minecraft.world.item.ItemStack(ammo, new net.minecraft.world.item.ItemStack(ammo).getMaxStackSize()));
+        com.zomboidcraft.combat.AmmoPouch.add(player, ammo, com.zomboidcraft.combat.AmmoPouch.cap(ammo), false);
         ctx.getSource().sendSuccess(() -> Component.literal("Gave you " + gun.getHoverName().getString()), false);
         return 1;
     }

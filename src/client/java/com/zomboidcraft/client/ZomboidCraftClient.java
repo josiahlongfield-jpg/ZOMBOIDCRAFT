@@ -92,7 +92,6 @@ public class ZomboidCraftClient implements ClientModInitializer {
         com.zomboidcraft.client.cars.CarClient.register();
         com.zomboidcraft.client.trains.TrainClient.register();
         com.zomboidcraft.client.ferry.FerryClient.register();
-        com.zomboidcraft.client.combat.ReloadingClient.register();
         com.zomboidcraft.client.lights.LightClient.register();
         com.zomboidcraft.client.alarms.AlarmClient.register();
         com.zomboidcraft.client.power.YardRepairClient.register();

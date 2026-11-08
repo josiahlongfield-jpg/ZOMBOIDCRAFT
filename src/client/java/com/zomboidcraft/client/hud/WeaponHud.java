@@ -1,6 +1,7 @@
 package com.zomboidcraft.client.hud;
 
 import com.zomboidcraft.client.combat.CombatClient;
+import com.zomboidcraft.combat.AmmoPouch;
 import com.zomboidcraft.combat.Attachments;
 import com.zomboidcraft.combat.GunState;
 import com.zomboidcraft.combat.GunType;
@@ -28,6 +29,7 @@ final class WeaponHud {
     private static ItemStack last = ItemStack.EMPTY;
     private static int lastSlot = -1;
     private static float since = 99;
+    private static int lastCarried = -1;
     private static boolean lastSwing;
 
     static void render(GuiGraphicsExtractor g, DeltaTracker delta) {
@@ -52,9 +54,15 @@ final class WeaponHud {
         boolean urgent = false;
         GunState state = null;
         int capacity = 0;
+        int carried = 0;
         if (gun) {
             state = hand.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG);
             capacity = RifleItem.capacity(hand);
+            GunType type = GunType.of(hand);
+            carried = AmmoPouch.carried(player, com.zomboidcraft.combat.LocalGuns.ammo(hand, type));
+            // rounds picked up (or used) bring it up too
+            if (carried != lastCarried) since = 0;
+            lastCarried = carried;
             urgent = state.jammed() || CombatClient.reloading(hand) || !state.mag() || state.rounds() <= capacity / 5
                     || player.isUsingItem() && GunType.isGun(player.getUseItem());
         }
@@ -64,11 +72,15 @@ final class WeaponHud {
         Font font = mc.font;
         int right = g.guiWidth() - RIGHT;
         int bottom = g.guiHeight() - BOTTOM;
-        if (gun) gun(g, font, hand, state, capacity, right + drift, bottom, a);
+        if (gun) gun(g, font, hand, state, capacity, carried, right + drift, bottom, a);
         else melee(g, font, hand, right + drift, bottom, a);
     }
 
-    private static void gun(GuiGraphicsExtractor g, Font font, ItemStack hand, GunState state, int capacity,
+    /**
+     * The rounds in the gun big, and the rounds carried for it small beside them (combat/AmmoPouch; Josiah
+     * 2026-11-08); both red when you're out.
+     */
+    private static void gun(GuiGraphicsExtractor g, Font font, ItemStack hand, GunState state, int capacity, int carried,
                             float right, int bottom, float a) {
         // the magazine, filled to the rounds left with the top round showing
         float mx = right - 10, my = bottom - 30;
@@ -91,19 +103,22 @@ final class WeaponHud {
         boolean jammed = state.jammed();
         boolean reloading = CombatClient.reloading(hand);
         boolean tube = GunType.of(hand) != null && GunType.of(hand).tube;
-        String caption = jammed ? "Jammed, press R" : reloading ? (tube ? "Loading shells" : "Reloading") : !state.mag() ? "No magazine, press R"
-                : state.rounds() == 0 ? "Empty, press R" : caliber(hand);
+        GunType type = GunType.of(hand);
+        int loaded = state.mag() ? state.rounds() : 0;
+        boolean out = loaded == 0 && carried == 0;
+        String caption = jammed ? "Jammed, press R" : reloading ? (tube ? "Loading shells" : "Reloading")
+                : out && type != null ? "No " + com.zomboidcraft.combat.LocalGuns.calibre(hand, type) + " " + type.rounds() + " left"
+                : !state.mag() ? "No magazine, press R" : state.rounds() == 0 ? "Empty, press R" : caliber(hand);
         float cw = Hud.capsWidth(font, caption, 1.2f, .75f);
-        int captionInk = jammed ? 0xFFE03020 : state.mag() && state.rounds() == 0 || !state.mag() ? 0xFFE07A5A : Hud.BONE_DIM;
+        int captionInk = jammed ? 0xFFE03020 : loaded == 0 ? 0xFFE07A5A : Hud.BONE_DIM;
         float tr = state.mag() ? mx - 5 : right;
         Hud.caps(g, font, caption, tr - cw, bottom - 6, Hud.alpha(captionInk, a), 1.2f, .75f);
 
-        if (!state.mag()) return;
-        String small = "/ " + capacity;
+        String small = "/ " + carried;
         float sw = Hud.capsWidth(font, small, .5f, 1f);
-        Hud.caps(g, font, small, tr - sw, bottom - 18, Hud.alpha(Hud.BONE_DIM, a), .5f, 1f);
-        Component rounds = Hud.big(String.valueOf(state.rounds()));
-        int ink = state.rounds() == 0 ? Hud.RED : state.rounds() <= capacity / 5 ? 0xFFE4A46A : Hud.BONE;
+        Hud.caps(g, font, small, tr - sw, bottom - 18, Hud.alpha(carried == 0 ? Hud.RED : Hud.BONE_DIM, a), .5f, 1f);
+        Component rounds = Hud.big(String.valueOf(loaded));
+        int ink = loaded == 0 ? Hud.RED : loaded <= capacity / 5 ? 0xFFE4A46A : Hud.BONE;
         Matrix3x2fStack pose = g.pose();
         pose.pushMatrix();
         pose.translate(tr - sw - 2 - font.width(rounds), bottom - 29);

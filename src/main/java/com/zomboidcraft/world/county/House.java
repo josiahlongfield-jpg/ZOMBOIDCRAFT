@@ -397,14 +397,14 @@ public final class House {
             }
         }
         java.util.function.BiPredicate<Integer, Integer> clear = (x, z) -> x <= gx0 + 1 && Math.abs(z - into) <= 0;
-        // a hunter's garage: the gun cabinet by the freezer and the bench he loaded his own rounds at
+        // a hunter's garage: the gun cabinet by the freezer
         boolean hunter = rng.nextDouble() < (style == Style.RANCH ? 0.2 : 0.1);
-        String[] back = {"home_workbench", hunter ? "zomboidcraft:reloading_bench" : "home_workbench", "home_tool_chest"};
+        String[] back = {"home_workbench", "home_workbench", "home_tool_chest"};
         for (int i = 0; i < back.length && gx0 + 1 + i < gx1; i++) {
             int x = gx0 + 1 + i;
             if (!clear.test(x, gz1)) {
                 p.set(x, 1, gz1, back[i] + "[facing=north]");
-                if (i < 2 && !back[i].equals("zomboidcraft:reloading_bench")) {
+                if (i < 2) {
                     p.set(x, 2, gz1, "store_pegboard[facing=south]");
                 }
             }

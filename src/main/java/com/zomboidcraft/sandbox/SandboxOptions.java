@@ -331,6 +331,11 @@ final class SandboxOptions {
                 .tip("Aircraft are found low on fuel, with a flat battery and worn out, and burn fuel as they fly.")
                 .toggle("world.aircraftService").owner("VEHICLES"));
 
+        o.add(of(FIREARMS, "zc.spareMagazines", "Spare Magazines Carried")
+                .tip("Rounds you can carry for each calibre, in spare magazines' worth of the biggest magazine that takes it. "
+                        + "Every reload puts in a full magazine from them. 0: no limit.")
+                .number("guns.spareMagazines", 0, 50).owner("WEAPONS"));
+
         o.add(of(MAP, "zc.corpseMinutes", "Body Removal")
                 .tip("Minutes a body lies before it's gone; 0 keeps them for good.")
                 .number("corpses.minutes", 0, 10080).owner("ENTITY"));

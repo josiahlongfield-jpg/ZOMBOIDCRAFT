@@ -6,7 +6,6 @@ import com.zomboidcraft.carry.Carry;
 import com.zomboidcraft.carry.CarrySlots;
 import com.zomboidcraft.carry.Weights;
 import com.zomboidcraft.ModItems;
-import com.zomboidcraft.combat.MagazineItem;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.EnumMap;
@@ -146,11 +145,13 @@ final class SuppliesPage {
         int rounds = 0, nails = 0, medical = 0, food = 0;
         for (Entry e : all) {
             if (KitItems.ammo(e.stack())) rounds += e.count();
-            if (e.stack().getItem() instanceof MagazineItem) rounds += MagazineItem.rounds(e.stack()) * e.count();
             if (e.stack().is(ModItems.NAILS)) nails += e.count();
             if (e.category() == KitItems.Category.MEDICAL) medical += e.count();
             if (e.category() == KitItems.Category.FOOD) food += e.count();
         }
+        // rounds are carried as a count, not as items (combat/AmmoPouch)
+        var me = net.minecraft.client.Minecraft.getInstance().player;
+        if (me != null) rounds += com.zomboidcraft.combat.AmmoPouch.total(me);
         String[] labels = {"Rounds", "Nails", "Medical", "Food"};
         int[] values = {rounds, nails, medical, food};
         int cx = x + 181;

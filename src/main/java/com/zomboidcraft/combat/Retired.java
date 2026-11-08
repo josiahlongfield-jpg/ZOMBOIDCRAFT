@@ -112,6 +112,12 @@ public final class Retired {
         if (is(stack)) {
             return ItemStack.EMPTY;
         }
+        if (stack.getItem() instanceof MagazineItem mag) {
+            // no magazines any more (Josiah 2026-11-08, combat/AmmoPouch): one found is its rounds, loose
+            int n = MagazineItem.rounds(stack) * stack.getCount();
+            net.minecraft.world.item.Item ammo = LocalGuns.ammo(stack, mag.type());
+            return n <= 0 ? ItemStack.EMPTY : new ItemStack(ammo, Math.min(n, new ItemStack(ammo).getMaxStackSize()));
+        }
         ItemStack out = padMoved(stack);
         if (out != null) stack = out;
         // a kept gun (the Heavy Sniper) with one of our old parts fitted keeps the gun and loses the part

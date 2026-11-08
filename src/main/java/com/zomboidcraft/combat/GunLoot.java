@@ -262,7 +262,9 @@ public final class GunLoot {
                 ItemStack anyGun = here(x.mag) ? gun(x.mag, false) : null;
                 GunType type = anyGun == null ? null : GunType.of(anyGun);
                 if (type != null && type.magazine() != null) {
-                    out.add(LocalGuns.magazineFor(anyGun, type));
+                    // a spare magazine's find is its rounds, loose (no magazine items: combat/AmmoPouch)
+                    ItemStack rounds = LocalGuns.fullMagazine(anyGun, type);
+                    out.add(rounds.copyWithCount(1 + random.nextInt(rounds.getCount())));
                 }
             } else if (x.part != null) {
                 ItemStack part = LocalParts.make(x.part);

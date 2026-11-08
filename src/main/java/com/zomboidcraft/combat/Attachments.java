@@ -368,13 +368,8 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
     /** Takes the part off a slot and returns it (empty if there was none). */
     public static ItemStack unmount(ItemStack gun, Slot slot) {
         if (slot == Slot.MAGAZINE) {
-            ItemStack old = get(gun, Slot.MAGAZINE);
-            if (!old.isEmpty()) {
-                GunState g = gun.getOrDefault(GunState.TYPE, GunState.EMPTY_MAG);
-                gun.set(GunState.TYPE, new GunState(false, 0, g.jammed()));
-                refreshModel(gun);
-            }
-            return old;
+            // no magazine items any more (combat/AmmoPouch, Josiah 2026-11-08): it only comes out at a reload
+            return ItemStack.EMPTY;
         }
         Attachments now = of(gun);
         if (!now.mounted().containsKey(slot) || !TarkovFit.canRemove(gun, slot)) {
@@ -387,10 +382,10 @@ public record Attachments(Map<Slot, ItemStack> mounted) {
         return old.copy();
     }
 
-    /** The first filled slot, optic first and the magazine last: what a bare right-click takes off. */
+    /** The first filled slot, optic first (never the magazine): what a bare right-click takes off. */
     public static @Nullable Slot firstFilled(ItemStack gun) {
         for (Slot slot : slots(gun)) {
-            if (key(gun, slot) != null) {
+            if (slot != Slot.MAGAZINE && key(gun, slot) != null) {
                 return slot;
             }
         }

@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
- * Pickups put bags straight on, skip the locked pockets (and keep weapons out of all of them) and spill into worn
+ * Pickups count rounds and magazines into what you carry (combat/AmmoPouch), put bags straight on, skip the locked pockets (and keep weapons out of all of them) and spill into worn
  * bags; worn gear drops with everything
  * else on death.
  */
@@ -69,6 +69,11 @@ public abstract class InventoryMixin {
     @Inject(method = "add(ILnet/minecraft/world/item/ItemStack;)Z", at = @At("HEAD"), cancellable = true)
     private void zomboidcraft$routePickup(int slot, ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
         zomboidcraft$adding = null;
+        // rounds and magazines are carried as a count, never as items, up to its cap; what's over stays put
+        if (!player.level().isClientSide() && com.zomboidcraft.combat.AmmoPouch.counted(stack)) {
+            cir.setReturnValue(com.zomboidcraft.combat.AmmoPouch.absorb(player, stack));
+            return;
+        }
         if (slot == -1 && Carry.wear(player, stack)) {
             cir.setReturnValue(true);
             return;
@@ -119,6 +124,9 @@ public abstract class InventoryMixin {
 
     @Inject(method = "dropAll", at = @At("TAIL"))
     private void zomboidcraft$dropGear(CallbackInfo ci) {
+        if (!player.level().isClientSide()) {
+            com.zomboidcraft.combat.AmmoPouch.dropAll(player);
+        }
         Carry.gear(player).takeAll(stack -> {
             // scattered round where you fell, like the rest of your things
             ItemEntity dropped = new ItemEntity(player.level(), player.getX(), player.getEyeY() - 0.3, player.getZ(), stack);

@@ -174,7 +174,6 @@ public final class Guns {
             // the shooter's own client plays its case in time with the shot; the server's tick would bunch them
             level.playSound(player, player.getX(), player.getY(), player.getZ(), casing(type), SoundSource.PLAYERS,
                     0.4f, 0.9f + player.getRandom().nextFloat() * 0.25f);
-            Reloading.eject(player, type, 1);
         }
         Noise.emit(level, player.position(), Firearms.noise(stats.shotNoise * (suppressed ? config.suppressedNoise : 1.0)));
 
@@ -728,14 +727,14 @@ public final class Guns {
             setModelData(gun, 3, 0);
             return;
         }
-        int best = bestMagazine(player, type, gun);
-        if (best < 0 && !player.hasInfiniteMaterials()) {
-            player.sendOverlayMessage(Component.literal(g.mag() && g.rounds() > 0 ? "No fuller magazine to swap in."
-                    : "No loaded magazines. Load one: hold right-click with it.").withStyle(ChatFormatting.GRAY));
+        // every reload puts a full magazine in from what you carry (combat/AmmoPouch; Josiah 2026-11-08)
+        if (g.mag() && g.rounds() >= type.capacity(gun)) {
+            player.sendOverlayMessage(Component.literal("It's full.").withStyle(ChatFormatting.GRAY));
             return;
         }
-        if (best >= 0 && g.mag() && MagazineItem.rounds(player.getInventory().getItem(best)) <= g.rounds()) {
-            player.sendOverlayMessage(Component.literal("No fuller magazine to swap in.").withStyle(ChatFormatting.GRAY));
+        if (countAmmo(player, type, gun) == 0 && !player.hasInfiniteMaterials()) {
+            player.sendOverlayMessage(Component.literal("No " + LocalGuns.calibre(gun, type) + " " + type.rounds() + " left.")
+                    .withStyle(ChatFormatting.GRAY));
             return;
         }
         player.stopUsingItem();
@@ -744,12 +743,10 @@ public final class Guns {
         st.needsCharge = !g.mag() || g.rounds() == 0;
         st.pace = LocalGuns.reloadPace(gun, type, st.needsCharge, 0);
         st.paceLeft = 0;
-        // the old magazine comes out with whatever is left in it
+        // the old magazine comes out, and what's left in it goes back with the rest you carry
         if (g.mag()) {
-            ItemStack old = LocalGuns.magazineFor(gun, type);
-            old.set(GunState.MAG_ROUNDS, g.rounds());
-            if (!player.getInventory().add(old)) {
-                player.spawnAtLocation(level(player), old);
+            if (!player.hasInfiniteMaterials()) {
+                AmmoPouch.add(player, LocalGuns.ammo(gun, type), g.rounds(), true);
             }
             gun.set(GunState.TYPE, new GunState(false, 0, false));
         }
@@ -891,43 +888,13 @@ public final class Guns {
         st.loading = ItemStack.EMPTY;
     }
 
-    /** Loose rounds or shells of this gun's kind in the inventory. */
+    /** Rounds or shells of this gun's kind carried (combat/AmmoPouch). */
     private static int countAmmo(ServerPlayer player, GunType type, ItemStack gun) {
-        net.minecraft.world.item.Item ammo = LocalGuns.ammo(gun, type);
-        Inventory inv = player.getInventory();
-        int n = 0;
-        for (int i = 0; i < inv.getContainerSize(); i++) {
-            if (inv.getItem(i).is(ammo)) {
-                n += inv.getItem(i).getCount();
-            }
-        }
-        return n;
+        return AmmoPouch.carried(player, LocalGuns.ammo(gun, type));
     }
 
     private static boolean takeAmmo(ServerPlayer player, GunType type, ItemStack gun) {
-        net.minecraft.world.item.Item ammo = LocalGuns.ammo(gun, type);
-        Inventory inv = player.getInventory();
-        for (int i = 0; i < inv.getContainerSize(); i++) {
-            ItemStack s = inv.getItem(i);
-            if (s.is(ammo)) {
-                s.shrink(1);
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private static int bestMagazine(ServerPlayer player, GunType type, ItemStack gun) {
-        Inventory inv = player.getInventory();
-        int best = -1, most = 0;
-        for (int i = 0; i < inv.getContainerSize(); i++) {
-            ItemStack s = inv.getItem(i);
-            if (LocalGuns.magFits(s, gun, type) && MagazineItem.rounds(s) > most) {
-                most = MagazineItem.rounds(s);
-                best = i;
-            }
-        }
-        return best;
+        return AmmoPouch.take(player, LocalGuns.ammo(gun, type), 1) == 1;
     }
 
     private static void tick(MinecraftServer server) {
@@ -967,7 +934,6 @@ public final class Guns {
                     // a shotgun hull lands with a dull plastic bounce, a brass case with a ring
                     player.level().playSound(null, player.getX(), player.getY(), player.getZ(), casing(held),
                             SoundSource.PLAYERS, 0.4f, 0.85f + player.getRandom().nextFloat() * 0.2f);
-                    Reloading.eject(player, held, held.opens ? st.empties : 1);
                     st.empties = 0;
                 }
             }
@@ -1020,20 +986,15 @@ public final class Guns {
         }
     }
 
+    /** A full magazine from what's carried, or what's left if there's less (none: the gun stays empty). */
     private static void insertMagazine(ServerPlayer player, ItemStack gun, GunType type) {
-        int best = bestMagazine(player, type, gun);
-        int rounds;
-        if (best >= 0) {
-            ItemStack mag = player.getInventory().getItem(best);
-            rounds = MagazineItem.rounds(mag);
-            mag.shrink(1);
-        } else if (player.hasInfiniteMaterials()) {
-            rounds = type.capacity(gun);
-        } else {
+        int rounds = player.hasInfiniteMaterials() ? type.capacity(gun)
+                : AmmoPouch.take(player, LocalGuns.ammo(gun, type), type.capacity(gun));
+        if (rounds <= 0) {
             return;
         }
         gun.set(GunState.TYPE, new GunState(true, rounds, false));
-        Skills.addXp(player, Skill.AIMING, 1);
+        Skills.addXp(player, Skill.RELOADING, 1);
     }
 
     /** Sets the reload step (or -1 to keep it) and the flash in the gun's custom model data, keeping its attachments. */
