@@ -244,5 +244,12 @@ jobs:
             --prerelease --title "Playtest build" --target "$GITHUB_SHA" \
             --notes "Everything in progress, merged together, from ${GITHUB_SHA::7}. Endless Night (formerly ZomboidCraft). Delete any older zomboidcraft-*.jar or endless-night-*.jar from your mods folder, then add this one. Needs Fabric Loader and Fabric API."
           # the link Josiah uses must answer, or this build is not done
-          sleep 10
-          curl -sfIL -o /dev/null "https://github.com/$GITHUB_REPOSITORY/releases/download/playtest-build/endless-night-playtest.jar"
+          # GitHub can take a few minutes before a new 500 MB asset answers on the download link (504 meanwhile)
+          for i in $(seq 1 20); do
+            sleep 15
+            if curl -sfIL -o /dev/null "https://github.com/$GITHUB_REPOSITORY/releases/download/playtest-build/endless-night-playtest.jar"; then
+              echo "download link answers"; exit 0
+            fi
+            echo "download link not answering yet ($i)"
+          done
+          exit 1
