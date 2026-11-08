@@ -162,7 +162,22 @@ public final class ZcCommand {
         return 1;
     }
 
-    /** Gives you a gun kept on this computer (config/zomboidcraft/guns), loaded. */
+    /**
+     * Puts what the command gives straight into your hand. Handed to add(), a weapon went to whichever quick slot or bag
+     * it fitted, so what you were holding (your PM, an old blade) stayed in your hand and looked like what you'd been
+     * given (Josiah 2026-11-08). What you held goes into your pockets or bags, or at your feet.
+     */
+    private static void inHand(ServerPlayer player, net.minecraft.world.item.ItemStack stack) {
+        var inv = player.getInventory();
+        int slot = inv.getSelectedSlot();
+        net.minecraft.world.item.ItemStack held = inv.getItem(slot).copy();
+        inv.setItem(slot, stack.copyAndClear());
+        if (!held.isEmpty() && !inv.add(held) && !held.isEmpty()) {
+            player.spawnAtLocation((net.minecraft.server.level.ServerLevel) player.level(), held);
+        }
+    }
+
+    /** Gives you a gun kept on this computer (config/zomboidcraft/guns), loaded, in your hand. */
     private static int giveLocalGun(CommandContext<CommandSourceStack> ctx, String id) throws CommandSyntaxException {
         ServerPlayer player = ctx.getSource().getPlayerOrException();
         var spec = com.zomboidcraft.combat.LocalGuns.get(id);
@@ -172,7 +187,7 @@ public final class ZcCommand {
             net.minecraft.world.item.ItemStack made = com.zomboidcraft.combat.LocalHands.make(hands);
             made.setCount(Math.min(4, made.getMaxStackSize()));
             String name = made.getHoverName().getString();
-            player.getInventory().add(made);
+            inHand(player, made);
             ctx.getSource().sendSuccess(() -> Component.literal("Gave you " + name), false);
             return 1;
         }
@@ -182,7 +197,7 @@ public final class ZcCommand {
         }
         net.minecraft.world.item.ItemStack gun = com.zomboidcraft.combat.LocalGuns.loaded(spec);
         net.minecraft.world.item.ItemStack given = gun.copy();
-        player.getInventory().add(given);       // add() empties the stack it's handed: the rest reads gun, its copy
+        inHand(player, given);
         // rounds for it, into what you carry (as many as you can: combat/AmmoPouch)
         net.minecraft.world.item.Item ammo = com.zomboidcraft.combat.LocalGuns.ammo(gun, spec.type());
         com.zomboidcraft.combat.AmmoPouch.add(player, ammo, com.zomboidcraft.combat.AmmoPouch.cap(ammo), false);
