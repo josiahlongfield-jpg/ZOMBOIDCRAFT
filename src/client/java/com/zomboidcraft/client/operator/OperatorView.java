@@ -356,6 +356,18 @@ public final class OperatorView {
             BUFFERS[buffer] = new Object[skin.groups.length * 2];
         }
         boolean[] kitHidden = built == null ? null : TarkovRig.hidden(spec, built, skin);
+        if (spec != null && spec.shown != null && !spec.shown.isEmpty()) {
+            // a piece seen only in some clips (the MP-18's round and case): hidden outside its moments
+            float t = (now - clipStart) * clipSpeed;
+            boolean[] h = kitHidden == null ? new boolean[skin.boneNames.length] : kitHidden.clone();
+            for (Map.Entry<String, Map<String, float[]>> e : spec.shown.entrySet()) {
+                int b = skin.bone(e.getKey());
+                if (b < 0 || b >= h.length) continue;
+                float[] span = e.getValue() == null ? null : e.getValue().get(clip);
+                h[b] = span == null || span.length < 2 || t < span[0] || t > span[1];
+            }
+            kitHidden = h;
+        }
         // looking through a magnified scope the lens is the middle of this same frame blown up, so the scope itself
         // (and anything on it) isn't drawn then: drawn, the lens showed the inside of its own tube and its back glass
         // (Josiah 2026-11-08, every scope). The rest of the gun stays round the lens. A gun whose scope can't be told

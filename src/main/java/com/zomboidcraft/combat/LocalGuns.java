@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Registry;
@@ -71,6 +72,12 @@ public final class LocalGuns {
          * gun]. The game's loading runs each part at that part's own pace, so every round goes in as its clip ends.
          */
         public float[] tube;
+        /**
+         * Pieces of its first-person model seen only while certain clips play (Josiah 2026-11-08: the MP-18's round has to
+         * go into the chamber): by bone, the clips and the seconds of each, [from, to], it shows in. The MP-18's case
+         * comes out as it opens; the round goes from the hand into the chamber.
+         */
+        public Map<String, Map<String, float[]>> shown;
         /** Its can is part of the gun (the operator's kitted M4A1): it fires quiet with no muzzle attachment of ours. */
         public boolean suppressed;
         /**
@@ -533,16 +540,76 @@ public final class LocalGuns {
      * game's fixed reload ticks played the AR-15's handle sound on its bolt-catch slap and the Honey Badger's at the
      * magazine): each a share of the clip (0 to 1), or below 0 for none; release plays only the handle's release (a
      * bolt catch dropped rather than a handle pulled).
+     * <p>
+     * A file with Tarkov's own sounds (Josiah 2026-11-08: "make sure every piece of audio for the reload is present")
+     * lists every one its clips play, in sounds: [share of the reload, name], each played as the gun's sound
+     * tk.&lt;name&gt; (Tarkov's own takes of it, in the sound pack); those replace the three above. A gun loaded a round at
+     * a time gives them by part instead (load: start, shell, end, pump; each a share of that part).
      */
-    public record Cues(float magOut, float magIn, float charge, boolean release, @Nullable Cues tactical) {
+    public record Cues(float magOut, float magIn, float charge, boolean release, @Nullable Cues tactical,
+            List<Cue> sounds, Map<String, LoadPart> load) {
         public Cues(float magOut, float magIn, float charge, boolean release) {
-            this(magOut, magIn, charge, release, null);
+            this(magOut, magIn, charge, release, null, List.of(), Map.of());
         }
 
         /** The cues for this reload: a reload onto a chambered round has its own when the file gives them ("tactical"). */
         public Cues forCharge(boolean charge) {
             return charge || tactical == null ? this : tactical;
         }
+
+        /** Whether this reload plays Tarkov's own sounds (in place of the magazine out, in and handle). */
+        public boolean own() {
+            return !sounds.isEmpty();
+        }
+
+        /** A part of a hand-loaded gun's loading with Tarkov's own sounds (start, shell, end, pump), or none. */
+        public List<Cue> load(String part) {
+            LoadPart p = load.get(part);
+            return p == null ? List.of() : p.sounds();
+        }
+
+        /** How long that part's clip runs (seconds), or 0. */
+        public float loadSeconds(String part) {
+            LoadPart p = load.get(part);
+            return p == null ? 0 : p.dur();
+        }
+
+        /** Whether the gun is loaded a round at a time with Tarkov's own sounds. */
+        public boolean ownLoad() {
+            return !load.isEmpty();
+        }
+    }
+
+    /** A part of a hand-loaded gun's loading: its clip's length (seconds) and its sounds, each a share of it. */
+    public record LoadPart(float dur, List<Cue> sounds) {
+    }
+
+    /** One of Tarkov's reload sounds: when (a share of the reload, or of the part), and its name ("MagOut"). */
+    public record Cue(float at, String name) {
+    }
+
+    /** The prefix of a Tarkov reload sound under a gun's own sounds (weapon.local/&lt;gun&gt;/tk.&lt;name&gt;). */
+    public static final String TARKOV = "tk.";
+
+    /** One of Tarkov's own reload sounds for this gun (Cue.name), from the sound pack on this computer. */
+    public static net.minecraft.sounds.SoundEvent tarkovSound(ItemStack gun, String name) {
+        String id = gun.get(ID);
+        String g = id == null ? "none" : id.toLowerCase(java.util.Locale.ROOT).replaceAll("[^a-z0-9_.-]", "_");
+        return net.minecraft.sounds.SoundEvent.createVariableRangeEvent(ZomboidCraft.id(SOUND_PREFIX + g + "/" + TARKOV
+                + name.toLowerCase(java.util.Locale.ROOT).replaceAll("[^a-z0-9_.-]", "_")));
+    }
+
+    private static List<Cue> cueList(com.google.gson.JsonElement e, float dur) {
+        if (e == null || !e.isJsonArray()) {
+            return List.of();
+        }
+        List<Cue> out = new java.util.ArrayList<>();
+        for (com.google.gson.JsonElement x : e.getAsJsonArray()) {
+            com.google.gson.JsonArray a = x.getAsJsonArray();
+            out.add(new Cue(a.get(0).getAsFloat() / dur, a.get(1).getAsString()));
+        }
+        out.sort(java.util.Comparator.comparingDouble(Cue::at));
+        return List.copyOf(out);
     }
 
     private static final Map<String, java.util.Optional<Cues>> CUES = new java.util.concurrent.ConcurrentHashMap<>();
@@ -576,10 +643,22 @@ public final class LocalGuns {
                 com.google.gson.JsonObject t = o.getAsJsonObject("tactical");
                 float td = t.get("dur").getAsFloat();
                 java.util.function.Function<String, Float> tat = k -> t.has(k) && td > 0 ? t.get(k).getAsFloat() / td : -1f;
-                tactical = new Cues(tat.apply("mag_out"), tat.apply("mag_in"), -1f, false);
+                tactical = new Cues(tat.apply("mag_out"), tat.apply("mag_in"), -1f, false, null,
+                        td > 0 ? cueList(t.get("sounds"), td) : List.of(), Map.of());
+            }
+            // a hand-loaded gun's parts, each its own clip: the times are seconds into that part
+            Map<String, LoadPart> load = new java.util.HashMap<>();
+            if (o.has("load")) {
+                com.google.gson.JsonObject l = o.getAsJsonObject("load");
+                for (String part : l.keySet()) {
+                    com.google.gson.JsonObject p = l.getAsJsonObject(part);
+                    float pd = p.get("dur").getAsFloat();
+                    if (pd > 0) load.put(part, new LoadPart(pd, cueList(p.get("sounds"), pd)));
+                }
             }
             return java.util.Optional.of(new Cues(at.apply("mag_out"), at.apply("mag_in"), at.apply("charge"),
-                    o.has("charge_sound") && o.get("charge_sound").getAsString().equals("release"), tactical));
+                    o.has("charge_sound") && o.get("charge_sound").getAsString().equals("release"), tactical,
+                    cueList(o.get("sounds"), dur), Map.copyOf(load)));
         } catch (Exception e) {
             ZomboidCraft.LOGGER.error("Couldn't read the reload sound cues in {}", f, e);
             return java.util.Optional.empty();
