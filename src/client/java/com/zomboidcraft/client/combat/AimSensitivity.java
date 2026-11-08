@@ -25,6 +25,7 @@ import net.minecraft.client.gui.components.OptionsList;
 import net.minecraft.client.gui.screens.options.MouseSettingsScreen;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * Mouse sensitivity of its own while aiming down a gun's sights, and another through the 4x scope, set on the same
@@ -66,7 +67,10 @@ public final class AimSensitivity {
             return 1;
         }
         double look = speed(mc.options.sensitivity().get());
-        return look <= 0 ? 1 : speed(Attachments.aimZoom(player.getUseItem()) > 0 ? scope : sights) / look;
+        // a magnified Tarkov sight counts as a scope too (its zoom isn't one of our optics')
+        ItemStack gun = player.getUseItem();
+        boolean scoped = Attachments.aimZoom(gun) > 0 || com.zomboidcraft.client.operator.OperatorView.magnification(gun) > 1;
+        return look <= 0 ? 1 : speed(scoped ? scope : sights) / look;
     }
 
     /** How the game turns a Sensitivity slider value into turning speed. */
