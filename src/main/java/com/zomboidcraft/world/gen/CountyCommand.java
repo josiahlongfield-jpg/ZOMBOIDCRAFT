@@ -73,7 +73,7 @@ public final class CountyCommand {
         if (level.getChunkSource().getGenerator() instanceof CountyChunkGenerator) {
             return CountyChunkGenerator.gen(level.getSeed()).county();
         }
-        src.sendFailure(Component.literal("This world isn't a ZomboidCraft County world (pick that world type when creating it)."));
+        src.sendFailure(Component.literal("This world isn't an Endless Night County world (pick that world type when creating it)."));
         return null;
     }
 

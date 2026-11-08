@@ -49,7 +49,7 @@ public final class Profiler {
 
     /** Who owns a frame, by package: the first match wins, so put the narrower names first. */
     private static final String[][] OWNERS = {
-            {"com.zomboidcraft.", "ZomboidCraft"},
+            {"com.zomboidcraft.", "Endless Night"},
             {"net.caffeinemc.", "Sodium"},
             {"me.jellysquid.", "Sodium"},
             {"net.irisshaders.", "Iris"},
@@ -113,7 +113,7 @@ public final class Profiler {
             String who = null;
             for (StackTraceElement f : stack) {
                 String o = owner(f.getClassName());
-                if (o.equals("ZomboidCraft") || o.equals("Sodium") || o.equals("Iris") || o.equals("Particle Rain")
+                if (o.equals("Endless Night") || o.equals("Sodium") || o.equals("Iris") || o.equals("Particle Rain")
                         || o.equals("Continuity") || o.equals("e4mc")) {
                     who = o;
                     break;
@@ -248,7 +248,7 @@ public final class Profiler {
             return "Sodium chunk builders (all together)";
         }
         if (n.startsWith("ZC ") || n.startsWith("zomboidcraft") || n.startsWith("ZomboidCraft")) {
-            return "ZomboidCraft background threads (all together)";
+            return "Endless Night background threads (all together)";
         }
         return null;
     }
@@ -352,7 +352,7 @@ public final class Profiler {
         double took = (System.nanoTime() - start) / 1e9;
 
         StringBuilder r = new StringBuilder();
-        r.append("ZomboidCraft profile, ").append(LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+        r.append("Endless Night profile, ").append(LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
                 .append(String.format("%nSampled %.1f s, %d rounds (about every %.1f ms; %d ran late)%n", took, rounds,
                         took * 1000 / Math.max(1, rounds), late));
         Runtime rt = Runtime.getRuntime();

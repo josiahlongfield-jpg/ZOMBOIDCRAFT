@@ -74,7 +74,7 @@ public final class Harvestmen {
     private static int spawn(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
         if (!com.zomboidcraft.ZcConfig.get().performance.harvestman) {
             ctx.getSource().sendFailure(net.minecraft.network.chat.Component.literal(
-                    "The Harvestman is switched off (performance.harvestman in the ZomboidCraft config)"));
+                    "The Harvestman is switched off (performance.harvestman in the Endless Night config)"));
             return 0;
         }
         ServerPlayer player = ctx.getSource().getPlayerOrException();

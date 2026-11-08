@@ -124,7 +124,7 @@ public final class SpawnPicker {
                             ServerPlayer player = ctx.getSource().getPlayerOrException();
                             if (!applies(player)) {
                                 ctx.getSource().sendFailure(net.minecraft.network.chat.Component.literal(
-                                        "The spawn picker only runs in a planned ZomboidCraft County world (and start.picker on)."));
+                                        "The spawn picker only runs in a planned Endless Night County world (and start.picker on)."));
                                 return 0;
                             }
                             player.removeAttached(SPAWNED);
