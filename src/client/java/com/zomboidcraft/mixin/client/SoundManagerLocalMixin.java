@@ -22,7 +22,15 @@ public abstract class SoundManagerLocalMixin {
         if (cir.getReturnValue() == null && id.getNamespace().equals(ZomboidCraft.MOD_ID)
                 && id.getPath().startsWith(LocalGuns.SOUND_PREFIX)) {
             String ours = id.getPath().substring(id.getPath().lastIndexOf('/') + 1);
-            WeighedSoundEvents found = ((SoundManager) (Object) this).getSoundEvent(ZomboidCraft.id(ours));
+            WeighedSoundEvents found = null;
+            if (id.getPath().endsWith(LocalGuns.RELEASE)) {
+                // a handle's release alone: this gun's own whole handle sound first. Going straight to ours played the
+                // old stand-in (or nothing) for every Tarkov gun's slide or bolt going home on an empty reload, since
+                // no Tarkov pack has a separate release (Josiah 2026-11-08)
+                found = ((SoundManager) (Object) this).getSoundEvent(ZomboidCraft.id(
+                        id.getPath().substring(0, id.getPath().length() - LocalGuns.RELEASE.length())));
+            }
+            if (found == null) found = ((SoundManager) (Object) this).getSoundEvent(ZomboidCraft.id(ours));
             if (found == null && ours.endsWith(LocalGuns.RELEASE)) {
                 // a handle's release alone (LocalGuns.Cues) falls back to the whole handle sound
                 found = ((SoundManager) (Object) this).getSoundEvent(ZomboidCraft.id(ours.substring(0, ours.length() - LocalGuns.RELEASE.length())));
