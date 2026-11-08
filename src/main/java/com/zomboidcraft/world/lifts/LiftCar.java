@@ -51,9 +51,14 @@ public class LiftCar extends Entity {
     }
 
     /** The cars loaded on one side. */
+    private static int asks;
+
     public static List<LiftCar> loaded(boolean client) {
         List<LiftCar> list = client ? CLIENT : SERVER;
-        list.removeIf(Entity::isRemoved);
+        // every entity asks each tick (LiftPhysics): sweep out the gone ones now and then, not on every ask
+        if (!list.isEmpty() && (++asks & 255) == 0) {
+            list.removeIf(Entity::isRemoved);
+        }
         return list;
     }
 

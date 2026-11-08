@@ -107,6 +107,14 @@ public abstract class LivingEntityMixin {
      * Walkers far from every player don't shove each other apart: a horde packed off where nobody can see it spent a
      * sixth of the server tick finding its neighbours (800 zombies, 2026-11-06 profile). Close up they push as before.
      */
+    /** A walker standing still skips its move (Resting, performance.restingWalkers). */
+    @Inject(method = "travel", at = @At("HEAD"), cancellable = true)
+    private void zomboidcraft$rest(net.minecraft.world.phys.Vec3 input, CallbackInfo ci) {
+        if (com.zomboidcraft.zombie.perf.Resting.rest((LivingEntity) (Object) this, input)) {
+            ci.cancel();
+        }
+    }
+
     @Inject(method = "pushEntities", at = @At("HEAD"), cancellable = true)
     private void zomboidcraft$noFarPushing(CallbackInfo ci) {
         LivingEntity self = (LivingEntity) (Object) this;

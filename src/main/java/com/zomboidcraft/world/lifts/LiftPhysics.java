@@ -48,7 +48,7 @@ public final class LiftPhysics {
         }
         for (LiftCar car : cars) {
             LiftShaft s = car.shaft();
-            if (s == null || car.level() != e.level() || !s.over(e.getX(), e.getZ(), 0)) {
+            if (s == null || car.isRemoved() || car.level() != e.level() || !s.over(e.getX(), e.getZ(), 0)) {
                 continue;
             }
             double was = car.carYO(), now = car.carY(), moved = now - was;
@@ -83,7 +83,7 @@ public final class LiftPhysics {
         double my = move.y;
         for (LiftCar car : cars) {
             LiftShaft s = car.shaft();
-            if (s == null || car.level() != e.level()
+            if (s == null || car.isRemoved() || car.level() != e.level()
                     || !s.overlaps(box.minX + Math.min(move.x, 0), box.minZ + Math.min(move.z, 0), box.maxX + Math.max(move.x, 0), box.maxZ + Math.max(move.z, 0))) {
                 continue;
             }

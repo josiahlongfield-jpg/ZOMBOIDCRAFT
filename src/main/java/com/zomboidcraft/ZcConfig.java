@@ -429,6 +429,23 @@ public final class ZcConfig {
          */
         public double farPushDistance = 32;
         /**
+         * A walker standing still on solid ground (nothing pushing it, nowhere to go) skips Minecraft's movement and
+         * block collision that tick: it stays exactly where it is, but costs next to nothing. Once every ten ticks it
+         * runs the full check anyway, and anything that moves it (a push, a hit, a jump, an escalator) wakes it at once.
+         */
+        public boolean restingWalkers = true;
+        /**
+         * Walkers skip Minecraft's search for solid entities to bump into (boats, minecarts, shulkers) while none are
+         * loaded: our cars, lifts and trains aren't that kind, so the search always came back empty (7% of the tick).
+         */
+        public boolean quietCollisions = true;
+        /**
+         * Walkers in a horde heading for the same spot share one path: a zombie standing where another planned from a
+         * moment ago walks that path instead of planning its own. Also, a far zombie only re-plans for a noise that
+         * moved a fair way compared with how far off it is.
+         */
+        public boolean sharedPaths = true;
+        /**
          * At most this many zombie groans, steps and door blows play at once on your computer, the nearest kept.
          * Minecraft has about 247 sound channels; 800 zombies filled them and a gunshot found none (Josiah,
          * 2026-11-06: "no sound was coming from my gun"). Client side.

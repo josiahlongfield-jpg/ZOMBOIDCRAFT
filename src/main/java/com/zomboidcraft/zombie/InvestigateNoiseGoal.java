@@ -66,7 +66,8 @@ public class InvestigateNoiseGoal extends Goal {
         ticks++;
         Vec3 latest = ears.zomboidcraft$heardAt();
         if (latest != null && !latest.equals(spot) && ticks - pathedAt >= REPATH_TICKS
-                && (latest.distanceToSqr(spot) > MOVED * MOVED || zombie.getNavigation().isDone())) {
+                && (latest.distanceToSqr(spot) > sq(com.zomboidcraft.zombie.perf.SharedPaths.replanAfter(zombie.position().distanceTo(latest), MOVED))
+                        || zombie.getNavigation().isDone())) {
             // a fresh path only when the noise is somewhere new: footsteps and banging come twice a second, and a
             // crowd planning a path to each one is what slows a big horde down
             destination = latest;
@@ -82,6 +83,10 @@ public class InvestigateNoiseGoal extends Goal {
                 zombie.getNavigation().moveTo(destination.x, destination.y, destination.z, 1.0);
             }
         }
+    }
+
+    private static double sq(double d) {
+        return d * d;
     }
 
     /**

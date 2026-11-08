@@ -67,4 +67,13 @@ if (project.hasProperty('uitest')) {
             eula = true
         }
     }
+    // the horde benchmark's second run (-Pbenchlithium): the same test with Lithium loaded
+    if (project.hasProperty('benchlithium')) {
+        repositories {
+            maven { url = 'https://api.modrinth.com/maven' }
+        }
+        dependencies {
+            runtimeOnly "maven.modrinth:lithium:${project.property('benchlithium')}"
+        }
+    }
 }

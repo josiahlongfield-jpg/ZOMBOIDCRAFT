@@ -109,6 +109,7 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.zombie.Acts.register();
         ZombieSpawner.register();
         com.zomboidcraft.zombie.PerfCommand.register();
+        com.zomboidcraft.zombie.perf.QuietCollisions.register();
         com.zomboidcraft.zombie.population.Population.register();
         com.zomboidcraft.world.gen.FarmHerds.register();
         com.zomboidcraft.world.gen.StoryMarks.register();
