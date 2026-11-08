@@ -353,7 +353,11 @@ public final class OperatorView {
         String skipPart = null;
         boolean drawGun = true;
         boolean[] hidden = kitHidden;
-        if (through) {
+        if (through && com.zomboidcraft.client.combat.ScopeView.lensFromThisFrame()) {
+            // the lens is cut from this frame: the whole gun (and the hands on it) stays out of the picture, or the
+            // pieces near the eye are blown up across the lens
+            drawGun = false;
+        } else if (through) {
             TarkovRig.Sight looked = built == null || sights.isEmpty() ? null : sights.get(Math.min(sightShown, sights.size() - 1));
             TarkovFit.Node node = looked == null ? null : built.at(looked.path());
             if (node == null) {

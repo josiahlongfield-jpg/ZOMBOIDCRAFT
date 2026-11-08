@@ -110,6 +110,15 @@ public final class ScopeView {
         return mode() != Mode.PICTURE && magnification() > 1;
     }
 
+    /**
+     * The lens is cut from this frame (A, B, mix, or a picture-in-picture lens turn): then nothing of the gun may be in
+     * it. The first-person gun is drawn at its own field of view, so the parts on the sight line (an M1A's rear sight,
+     * the mount under the scope) filled the lens at 1x however far the world was zoomed (Josiah 2026-11-08).
+     */
+    public static boolean lensFromThisFrame() {
+        return active() && !(mode() == Mode.PIP && !lensFrame);
+    }
+
     /** At the start of each frame: whose turn it is. */
     public static void beginFrame() {
         frame++;
@@ -243,6 +252,15 @@ public final class ScopeView {
         double crop = mode == Mode.MIX && !zoomAll(m) ? m : 1;
         GpuTextureView view = lens.getColorTextureView();
         int step = Math.max(1, r / 90);
+        // an opaque black disc first, then the picture added over it: whatever alpha the shader pack left in the copy,
+        // the lens shows the picture's colour exactly
+        for (int y = cy - r; y < cy + r; y += step) {
+            double dy = y + step / 2.0 - cy;
+            int half = (int) Math.round(Math.sqrt(Math.max(0, (double) r * r - dy * dy)));
+            if (half > 0) {
+                g.fill(cx - half, y, cx + half, Math.min(cy + r, y + step), 0xFF000000);
+            }
+        }
         for (int y = cy - r; y < cy + r; y += step) {
             double dy = y + step / 2.0 - cy;
             int half = (int) Math.round(Math.sqrt(Math.max(0, (double) r * r - dy * dy)));
@@ -263,12 +281,14 @@ public final class ScopeView {
     }
 
     /**
-     * The lens picture is drawn without blending: a shader pack can leave the picture's alpha at nothing, and a
-     * blended copy of it would never show (what hid the lens under Photon, 2026-11-03).
+     * The lens picture is added onto the black disc (premultiplied: colour + what's under it times 1 - alpha): a shader
+     * pack can leave the picture's alpha at nothing, and a plain blended copy would never show (Photon, 2026-11-03).
+     * Not the opaque background pipeline: that one is fixed to the plain colour format, and with Photon's picture the
+     * lens it drew never showed at all, so the scope looked straight through at 1x (Josiah 2026-11-08).
      */
     private static void lensBlit(GuiGraphicsExtractor g, GpuTextureView view, GpuSampler sampler, int x0, int y0, int x1, int y1,
             float u0, float u1, float v0, float v1) {
-        ((com.zomboidcraft.mixin.client.GuiGraphicsBlitInvoker) g).zomboidcraft$innerBlit(RenderPipelines.GUI_OPAQUE_TEXTURED_BACKGROUND,
+        ((com.zomboidcraft.mixin.client.GuiGraphicsBlitInvoker) g).zomboidcraft$innerBlit(RenderPipelines.GUI_TEXTURED_PREMULTIPLIED_ALPHA,
                 view, sampler, x0, y0, x1, y1, u0, u1, v0, v1, -1);
     }
 
