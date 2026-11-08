@@ -113,6 +113,27 @@ final class TarkovRig {
         }
     }
 
+    /**
+     * The model's bones of the kit part at {@code path} and every kit part on it (a kit scope being looked through), or
+     * null when the kit doesn't say which bones they are.
+     */
+    static boolean[] kitBones(LocalGuns.Spec spec, NpcSkin skin, String path) {
+        boolean[] hide = new boolean[skin.boneNames.length];
+        boolean any = false;
+        for (LocalGuns.KitPart k : spec.tarkov.kit) {
+            if (k.path == null || !(k.path.equals(path) || k.path.startsWith(path + "/"))) continue;
+            if (k.bones == null) return null;
+            for (String name : k.bones) {
+                int b = skin.bone(name);
+                if (b >= 0) {
+                    hide[b] = true;
+                    any = true;
+                }
+            }
+        }
+        return any ? hide : null;
+    }
+
     /** Whether a group of the gun's model shows: arms always, a gun mesh unless its kit part is off. */
     static boolean shows(NpcSkin.Group g, boolean[] hidden) {
         if (hidden == null || !"gun".equals(g.piece) || g.joint == null || g.joint.length == 0) return true;
@@ -129,9 +150,16 @@ final class TarkovRig {
      */
     static void draw(TarkovFit.Assembly a, Map<String, Matrix4f> frames, @Nullable Matrix4f pre, String key, int light,
                      int overlay, PoseStack pose, SubmitNodeCollector out) {
+        draw(a, frames, pre, key, light, overlay, pose, out, null);
+    }
+
+    /** The same, leaving out the part at {@code skip} and everything on it (a scope being looked through). */
+    static void draw(TarkovFit.Assembly a, Map<String, Matrix4f> frames, @Nullable Matrix4f pre, String key, int light,
+                     int overlay, PoseStack pose, SubmitNodeCollector out, @Nullable String skip) {
         boolean folded = TarkovFit.folded(a);
         for (TarkovFit.Node n : a.nodes()) {
             if (n.kit()) continue;
+            if (skip != null && (n.path().equals(skip) || n.path().startsWith(skip + "/"))) continue;
             TarkovParts.Part p = TarkovParts.get(n.item());
             Matrix4f f = frames.get(n.path());
             if (p == null || p.model == null || f == null) continue;

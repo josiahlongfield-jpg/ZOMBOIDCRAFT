@@ -138,6 +138,8 @@ public final class OperatorView {
     private static float lastStep;
     private static boolean shot, inspectAsked;
     private static float aim, aimAt = -1;
+    /** How far onto the sights (raw, of 1) a magnified scope's lens takes over from the gun. */
+    private static final float ON_SIGHT = 0.92f;
     private static float[] pos, turn, fromPos, fromTurn, tmpPos, tmpTurn;
     private static float fadeStart, fadeLen;
     private static final Object[][] BUFFERS = new Object[2][];
@@ -342,12 +344,43 @@ public final class OperatorView {
         if (BUFFERS[buffer] == null || BUFFERS[buffer].length != skin.groups.length * 2) {
             BUFFERS[buffer] = new Object[skin.groups.length * 2];
         }
-        boolean[] hidden = built == null ? null : TarkovRig.hidden(spec, built, skin);
-        NpcSkinDraw.submitGroups(skin.groups, bones, 0, g -> TarkovRig.shows(g, hidden), g -> skin.texture(g.texture, model),
-                BUFFERS[buffer], light, net.minecraft.client.renderer.texture.OverlayTexture.NO_OVERLAY, pose, out);
+        boolean[] kitHidden = built == null ? null : TarkovRig.hidden(spec, built, skin);
+        // looking through a magnified scope the lens is the middle of this same frame blown up, so the scope itself
+        // (and anything on it) isn't drawn then: drawn, the lens showed the inside of its own tube and its back glass
+        // (Josiah 2026-11-08, every scope). The rest of the gun stays round the lens. A gun whose scope can't be told
+        // apart from the rest isn't drawn at all.
+        boolean through = com.zomboidcraft.client.combat.ScopeView.active();
+        String skipPart = null;
+        boolean drawGun = true;
+        boolean[] hidden = kitHidden;
+        if (through) {
+            TarkovRig.Sight looked = built == null || sights.isEmpty() ? null : sights.get(Math.min(sightShown, sights.size() - 1));
+            TarkovFit.Node node = looked == null ? null : built.at(looked.path());
+            if (node == null) {
+                drawGun = false;
+            } else if (node.kit()) {
+                boolean[] scope = TarkovRig.kitBones(spec, skin, looked.path());
+                if (scope == null) {
+                    drawGun = false;
+                } else {
+                    hidden = kitHidden == null ? scope : kitHidden.clone();
+                    for (int b = 0; b < scope.length; b++) hidden[b] |= scope[b];
+                }
+            } else {
+                skipPart = looked.path();
+            }
+        }
+        if (drawGun) {
+            boolean[] shownHidden = hidden;
+            NpcSkinDraw.submitGroups(skin.groups, bones, 0, g -> TarkovRig.shows(g, shownHidden), g -> skin.texture(g.texture, model),
+                    BUFFERS[buffer], light, net.minecraft.client.renderer.texture.OverlayTexture.NO_OVERLAY, pose, out);
+        }
         if (built != null) {
             // the parts fitted at the bench, each from its own model where it sits on the gun
-            TarkovRig.draw(built, frames, null, "fp", light, net.minecraft.client.renderer.texture.OverlayTexture.NO_OVERLAY, pose, out);
+            if (drawGun) {
+                TarkovRig.draw(built, frames, null, "fp", light, net.minecraft.client.renderer.texture.OverlayTexture.NO_OVERLAY,
+                        pose, out, skipPart);
+            }
             float lit = Operator.smooth((aim - 0.5f) / 0.5f) * Operator.smooth((k - 0.6f) / 0.4f);
             TarkovRig.Sight s = sights.isEmpty() ? null : sights.get(Math.min(sight, sights.size() - 1));
             TarkovParts.Mode mode = s == null ? null : mode(gun, sight);
@@ -520,6 +553,8 @@ public final class OperatorView {
     public static double magnification(ItemStack gun) {
         LocalGuns.Spec spec = LocalGuns.of(gun);
         if (spec == null || spec.fp == null) return 0;
+        // only once the eye is on the sight: on the way up the lens would show the scope's tube still coming to the eye
+        if (aim < ON_SIGHT) return 0;
         float zoom = zoomOf(gun, shownSight(gun));
         if (zoom <= 1) return 0;
         String model = Operator.fpModel(gun);
