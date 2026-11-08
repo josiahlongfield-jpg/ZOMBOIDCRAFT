@@ -85,6 +85,9 @@ def add_lod(src, dst, keep=0.2, far=0.07, crowd=0.045):
         joints.append(np.linalg.inv(m)[:3, 3])
     joints = np.array(joints, dtype=np.float32)
     full = [g for g in groups if g[4] == 0]
+    # a pack that has its levels 1 and 2 already keeps them as they are (they may have been worked on since) and only
+    # gets level 3 made afresh
+    kept = [g for g in groups if g[4] in (1, 2)]
     lods = []
     t0, t1, t2, t3 = 0, 0, 0, 0
     for mesh, piece, tex, flags, level, rec, tris in full:
@@ -92,17 +95,21 @@ def add_lod(src, dst, keep=0.2, far=0.07, crowd=0.045):
             continue
         # the clothes are small meshes already, and thinned hard they lose whole sleeves: they keep more than the body
         body = piece == 'body'
-        r1, f1 = thin(rec, tris, keep if body else max(keep, 0.55), joints)
-        lods.append((mesh, piece, tex, flags, 1, r1, f1))
-        # level 2, the far crowd: still Zomboid's body in 3D (Josiah: no flat pictures, scopes would show them up)
-        r2, f2 = thin(rec, tris, far if body else max(far, 0.35), joints, 36)
-        lods.append((mesh, piece, tex, flags, 2, r2, f2))
+        if not kept:
+            r1, f1 = thin(rec, tris, keep if body else max(keep, 0.55), joints)
+            lods.append((mesh, piece, tex, flags, 1, r1, f1))
+            # level 2, the far crowd: still Zomboid's body in 3D (Josiah: no flat pictures, scopes would show them up)
+            r2, f2 = thin(rec, tris, far if body else max(far, 0.35), joints, 36)
+            lods.append((mesh, piece, tex, flags, 2, r2, f2))
+        else:
+            f1 = f2 = ()
         # level 3, the far crowd only where a figure is small on screen (never through a scope's zoom)
         r3, f3 = thin(rec, tris, crowd if body else max(crowd, 0.2), joints, 24)
         lods.append((mesh, piece, tex, flags, 3, r3, f3))
         t0 += len(tris); t1 += len(f1); t2 += len(f2); t3 += len(f3)
     out = io.BytesIO()
     out.write(b'ZSKN' + struct.pack('>i', 1))
+    lods = kept + lods
     out.write(struct.pack('>i', len(full) + len(lods)))
     s = lambda x: struct.pack('>H', len(x.encode())) + x.encode()
     for mesh, piece, tex, flags, level, rec, tris in full + lods:
