@@ -210,6 +210,49 @@ jobs:
           grep -q 'Done (' county.log
           ! grep -E 'Exception in server tick|Encountered an unexpected exception|crash report|zomboidcraft.*Exception|Failed to (load|parse)' county.log
 
+      # Boot a fresh Reach world on a made-up level (a floor, a walled room and a ramp: no Halo files in CI): the
+      # tall dimension type loads, the walls file is read and laid, and the start spot is set up.
+      - name: Reach world smoke test
+        run: |
+          rm -rf run/world
+          pip install --quiet numpy
+          mkdir -p run/config/zomboidcraft/reach/world
+          python3 tools/reach/testlevel.py build/reach_test.npz
+          python3 tools/reach/voxelize.py run/config/zomboidcraft/reach/world/test.zrv build/reach_test.npz --offset 1000,-600,1000
+          echo '{"spawn": [1010.5, -598, 1010.5, 0]}' > run/config/zomboidcraft/reach/reach.json
+          sed -i '/^level-type=/d; /^level-seed=/d' run/server.properties
+          printf 'level-type=zomboidcraft\\:reach\nlevel-seed=777\n' >> run/server.properties
+          grep level- run/server.properties
+          trap 'echo "----- reach server.log"; grep -E "Reach|reach|WARN|ERROR|Exception|Done" reach.log | head -n 120' EXIT
+          rm -f console3 && mkfifo console3
+          ./gradlew runServer --args=nogui < console3 > reach.log 2>&1 &
+          pid=$!
+          exec 5> console3
+          for i in $(seq 1 120); do
+            if grep -q 'Done (' reach.log; then echo "Server started"; break; fi
+            if ! kill -0 $pid 2>/dev/null; then break; fi
+            sleep 5
+          done
+          echo 'forceload add 990 990 1040 1040' >&5
+          sleep 20
+          echo 'execute if block 1010 -600 1010 zomboidcraft:reach_solid run say reach floor here' >&5
+          echo 'execute if block 1030 -598 1010 zomboidcraft:reach_solid run say reach wall here' >&5
+          echo 'execute unless block 1010 -597 1010 zomboidcraft:reach_solid run say reach room is open' >&5
+          echo 'execute if block 1010 -1020 1010 minecraft:air run say reach world goes deep' >&5
+          sleep 3
+          echo 'stop' >&5
+          for i in $(seq 1 24); do kill -0 $pid 2>/dev/null || break; sleep 5; done
+          exec 5>&-
+          kill $pid 2>/dev/null || true
+          pkill -f 'net.fabricmc' || true
+          grep -q 'Reach world: 1 level files' reach.log
+          grep -q 'reach floor here' reach.log
+          grep -q 'reach wall here' reach.log
+          grep -q 'reach room is open' reach.log
+          grep -q 'reach world goes deep' reach.log
+          grep -q 'Done (' reach.log
+          ! grep -E 'Exception in server tick|Encountered an unexpected exception|crash report|zomboidcraft.*Exception|Failed to (load|parse)' reach.log
+
       - uses: actions/upload-artifact@v4
         if: success()
         with:
