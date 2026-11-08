@@ -72,6 +72,12 @@ public final class LocalGuns {
          * gun]. The game's loading runs each part at that part's own pace, so every round goes in as its clip ends.
          */
         public float[] tube;
+        /**
+         * Pieces of its first-person model seen only while certain clips play (Josiah 2026-11-08: the MP-18's round has to
+         * go into the chamber): by bone, the clips and the seconds of each, [from, to], it shows in. The MP-18's case
+         * comes out as it opens; the round goes from the hand into the chamber.
+         */
+        public Map<String, Map<String, float[]>> shown;
         /** Its can is part of the gun (the operator's kitted M4A1): it fires quiet with no muzzle attachment of ours. */
         public boolean suppressed;
         /**
