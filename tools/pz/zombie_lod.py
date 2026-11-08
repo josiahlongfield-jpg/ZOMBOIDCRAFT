@@ -5,7 +5,9 @@ drawn from these thinned meshes instead (same skeleton, same textures, same clip
 horde costs a fraction of the full bodies but still looks like Zomboid's. Mesh records are copied from the full ones, so
 skin weights, UVs and normals are Zomboid's own; only where a vertex sits after a collapse changes.
 
-    python3 -I tools/pz/zombie_lod.py PACK.zsk OUT.zsk [KEEP [FAR]]   shares of triangles kept: level 1 (0.2), level 2 (0.07)
+    python3 -I tools/pz/zombie_lod.py PACK.zsk OUT.zsk [KEEP [FAR [CROWD]]]
+    shares of triangles kept: level 1 (0.2), level 2 (0.07), level 3 (0.045, the far crowd past look.crowdLightDistance;
+    clothes keep 0.2 there; 2026-11-08 preview performance/crowd-lod: lighter broke hands and heads)
 
 Needs meshoptimizer (pip install meshoptimizer). The packs are local only, never in the repo or jar.
 """
@@ -56,7 +58,7 @@ def thin(rec, tris, keep, joints, least=72):
     return rec[keep_v].copy(), remap.reshape(-1, 3).astype('>i4')
 
 
-def add_lod(src, dst, keep=0.2, far=0.07):
+def add_lod(src, dst, keep=0.2, far=0.07, crowd=0.045):
     mid_in, mid_out = os.path.basename(src)[:-4], os.path.basename(dst)[:-4]
     raw = zlib.decompress(scramble(open(src, 'rb').read(), mid_in))
     b = io.BytesIO(raw)
@@ -84,7 +86,7 @@ def add_lod(src, dst, keep=0.2, far=0.07):
     joints = np.array(joints, dtype=np.float32)
     full = [g for g in groups if g[4] == 0]
     lods = []
-    t0, t1, t2 = 0, 0, 0
+    t0, t1, t2, t3 = 0, 0, 0, 0
     for mesh, piece, tex, flags, level, rec, tris in full:
         if any(piece.startswith(s) or mesh.startswith(s) for s in SMALL):
             continue
@@ -95,7 +97,10 @@ def add_lod(src, dst, keep=0.2, far=0.07):
         # level 2, the far crowd: still Zomboid's body in 3D (Josiah: no flat pictures, scopes would show them up)
         r2, f2 = thin(rec, tris, far if body else max(far, 0.35), joints, 36)
         lods.append((mesh, piece, tex, flags, 2, r2, f2))
-        t0 += len(tris); t1 += len(f1); t2 += len(f2)
+        # level 3, the far crowd only where a figure is small on screen (never through a scope's zoom)
+        r3, f3 = thin(rec, tris, crowd if body else max(crowd, 0.2), joints, 24)
+        lods.append((mesh, piece, tex, flags, 3, r3, f3))
+        t0 += len(tris); t1 += len(f1); t2 += len(f2); t3 += len(f3)
     out = io.BytesIO()
     out.write(b'ZSKN' + struct.pack('>i', 1))
     out.write(struct.pack('>i', len(full) + len(lods)))
@@ -106,8 +111,8 @@ def add_lod(src, dst, keep=0.2, far=0.07):
         out.write(struct.pack('>i', len(tris)) + np.ascontiguousarray(tris, dtype='>i4').tobytes())
     out.write(rest)
     open(dst, 'wb').write(scramble(zlib.compress(out.getvalue(), 9), mid_out))
-    print(f'{dst}: {len(full)} meshes, {t0} triangles; level 1 {t1}, level 2 {t2}; {os.path.getsize(dst) // 1024} KB')
+    print(f'{dst}: {len(full)} meshes, {t0} triangles; level 1 {t1}, level 2 {t2}, level 3 {t3}; {os.path.getsize(dst) // 1024} KB')
 
 
 if __name__ == '__main__':
-    add_lod(sys.argv[1], sys.argv[2], *(float(a) for a in sys.argv[3:5]))
+    add_lod(sys.argv[1], sys.argv[2], *(float(a) for a in sys.argv[3:6]))

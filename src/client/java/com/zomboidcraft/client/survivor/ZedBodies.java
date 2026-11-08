@@ -617,11 +617,15 @@ public final class ZedBodies {
      * its look's textures are being made: never another body in its place. frame: the caller's frame count.
      */
     public static void submitCrowd(int variant, String outfit, float ageTicks, long frame, PoseStack pose,
-                                   SubmitNodeCollector collector, int light) {
+                                   SubmitNodeCollector collector, int light, double distSq) {
         int v = shared(variant, outfit);
         SurvivorPack pack = packFor(v);
         if (pack == null) return;
-        int level = Math.min(2, levels(pack));
+        // level 3, the crowd's own lighter mesh, only where a figure is small on screen as seen (a scope's zoom
+        // brings it near, and it keeps level 2): Josiah 2026-11-08, "as long as I won't notice through scopes"
+        double far = ZcConfig.get().look.crowdLightDistance;
+        int level = levels(pack) >= 3 && far > 0 && com.zomboidcraft.client.zombie.body.ZDetail.zoomed(distSq) >= far * far
+                ? 3 : Math.min(2, levels(pack));
         Crowd c = CROWDS.computeIfAbsent(pack, p -> new Crowd());
         if (c.frame != frame) {
             c.frame = frame;

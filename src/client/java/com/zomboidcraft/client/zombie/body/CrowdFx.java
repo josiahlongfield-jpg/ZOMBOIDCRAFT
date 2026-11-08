@@ -118,9 +118,10 @@ public final class CrowdFx {
             double cone = Math.cos(Math.min(Math.PI * 0.95, Math.atan(Math.tan(halfV) * Math.sqrt(1 + aspect * aspect)) + Math.toRadians(10)));
             for (Group g : groups) {
                 for (int i = 0; i < g.x.length; i++) {
+                    double dx = g.x[i] - eye.x, dy = g.y[i] + 1 - eye.y, dz = g.z[i] - eye.z;
+                    double d2 = dx * dx + dy * dy + dz * dz;
                     if (look != null) {
-                        double dx = g.x[i] - eye.x, dy = g.y[i] + 1 - eye.y, dz = g.z[i] - eye.z;
-                        double d = Math.sqrt(dx * dx + dy * dy + dz * dz);
+                        double d = Math.sqrt(d2);
                         if (d > 4 && (dx * look.x + dy * look.y + dz * look.z) < cone * d) {
                             continue;
                         }
@@ -130,7 +131,7 @@ public final class CrowdFx {
                     ps.translate((float) (g.x[i] - eye.x), (float) (g.y[i] - eye.y), (float) (g.z[i] - eye.z));
                     ps.rotateDegrees(com.mojang.math.Axis.YP, -g.yaw[i]);
                     com.zomboidcraft.client.survivor.ZedBodies.submitCrowd(g.variant[i], g.outfit, age, frame, ps,
-                            context.submitNodeCollector(), g.light[i]);
+                            context.submitNodeCollector(), g.light[i], d2);
                     ps.popPose();
                 }
             }

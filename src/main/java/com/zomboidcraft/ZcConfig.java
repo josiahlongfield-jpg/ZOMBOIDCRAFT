@@ -1327,6 +1327,11 @@ public final class ZcConfig {
         public int pzMidZombies = 20;
         /** Blocks (as near as they look through a scope) within which the thinned Zomboid body is used. Client side. */
         public double pzMidDistance = 16;
+        /**
+         * The far crowd past this many blocks (as near as it looks through a scope) is drawn with the packs' lightest
+         * mesh, level 3: a figure there is under 40 pixels tall. 0 keeps the crowd on level 2. Client side.
+         */
+        public double crowdLightDistance = 48;
         /** Zomboid zombies roughed up as Zomboid's are: blood and grime by body part, and holes torn through their clothes. Client side. */
         public boolean roughZombies = true;
         /** Blocks within which zombies show every small clothing detail; further out the smallest bits are left off, and past 2.5 times this only the main shapes stay. Client side. */
