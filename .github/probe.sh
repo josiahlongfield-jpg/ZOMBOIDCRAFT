@@ -8,6 +8,7 @@ classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1"
 sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
+if [ -f .github/probe-reach ]; then
 echo "===== reach world (dimension type, presets, render hooks)"
 for j in $MC_JARS; do
   for f in data/minecraft/dimension_type/overworld.json data/minecraft/dimension_type/overworld_caves.json data/minecraft/worldgen/world_preset/normal.json data/minecraft/worldgen/world_preset/flat.json data/minecraft/tags/worldgen/world_preset/normal.json data/minecraft/worldgen/biome/plains.json; do
@@ -18,6 +19,8 @@ classes 'dimension/DimensionType\.class$|SnowLayerBlock\.class$|LevelRenderEvent
 for c in $(classes 'LevelRenderEvents\.class$|LevelRenderContext\.class$|GpuDevice\.class$|GpuBuffer\.class$|RenderPass\.class$|CommandEncoder\.class$|level/block/SnowLayerBlock\.class$' | sed 's/\.class$//; s#/#.#g'); do echo "-- $c"; javap -cp "$CP" -p "$c" 2>&1 | grep -vE 'lambda\$' | head -70; done
 javap -cp "$CP" -p net.minecraft.world.level.dimension.DimensionType 2>&1 | head -60
 javap -cp "$CP" -p net.minecraft.world.entity.ai.attributes.Attributes 2>&1 | grep -iE "step|gravity|fall|safe" | head
+exit 0
+fi
 
 echo "===== compile errors"
 grep -E "error:|warning: \[removal\]" -A3 build.log | head -80
