@@ -55,8 +55,8 @@ public final class Hud {
         });
         // Minecraft's own pieces step aside while the field kit is up, and come back in creative or with it off
         HudElementRegistry.replaceElement(VanillaHudElements.HOTBAR, vanilla -> (g, delta) -> {
-            if (active()) BeltHud.render(g, delta);
-            else vanilla.extractRenderState(g, delta);
+            if (!active()) vanilla.extractRenderState(g, delta);
+            else if (classic()) BeltHud.render(g, delta);     // Reach and Tarkov show no belt
         });
         hide(VanillaHudElements.HEALTH_BAR);
         hide(VanillaHudElements.ARMOR_BAR);
@@ -93,6 +93,11 @@ public final class Hud {
         return ZcConfig.get().look.fieldKitHud && player != null && !player.isSpectator();
     }
 
+    /** True while the old field kit is the HUD (not Reach's or Tarkov's). */
+    public static boolean classic() {
+        return HudSettings.style() == HudSettings.Style.CLASSIC;
+    }
+
     /** The blood at the screen's edge and your figure, drawn before the rest. */
     private static void under(GuiGraphicsExtractor g, DeltaTracker delta) {
         long now = System.nanoTime();
@@ -102,30 +107,43 @@ public final class Hud {
         RainHud.render(g);
         if (!active()) return;
         BodyHud.vignette(g, delta);
-        BodyHud.render(g, delta);
+        if (classic()) BodyHud.render(g, delta);
     }
 
     private static void over(GuiGraphicsExtractor g, DeltaTracker delta) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null || player.isSpectator()) return;
         com.zomboidcraft.client.survival.SleepClient.render(g, dt);
-        int top = WatchHud.render(g);
-        MoodleHud.render(g, top);
-        WeaponHud.render(g, delta);
-        SkillTape.render(g);
+        // Reach's and Tarkov's HUDs retire the moodles, watch, weapon card, skill tape and senses (HUD doc, 2026-11-08)
+        HudSettings.Style style = active() ? HudSettings.style() : HudSettings.Style.CLASSIC;
+        if (style == HudSettings.Style.CLASSIC) {
+            int top = WatchHud.render(g);
+            MoodleHud.render(g, top);
+            WeaponHud.render(g, delta);
+            SkillTape.render(g);
+        } else if (style == HudSettings.Style.SPARTAN) {
+            ReachHud.render(g);
+        } else {
+            TarkovHud.render(g);
+        }
         RoomTape.render(g);
         GrabHud.render(g);
         HeldHud.render(g);
         if (active()) {
             ActionHud.render(g);
-            SensesHud.render(g);
+            if (style == HudSettings.Style.CLASSIC) SensesHud.render(g);
             QuickWheel.render(g, delta);
         }
-        if (peek && active()) {
+        if (peek && active() && style == HudSettings.Style.CLASSIC) {
             Font font = Minecraft.getInstance().font;
             Component c = KitArt.stencil("CHECKING YOUR KIT");
             g.text(font, c, (g.guiWidth() - font.width(c)) / 2, 10, 0xC8E8DEC4, true);
         }
+    }
+
+    /** Reach's reticle in place of the crosshair; false when it has nothing to draw. */
+    public static boolean reachReticle(GuiGraphicsExtractor g, LocalPlayer player) {
+        return ReachHud.reticle(g, player);
     }
 
     // ------------------------------------------------------------------ drawing helpers

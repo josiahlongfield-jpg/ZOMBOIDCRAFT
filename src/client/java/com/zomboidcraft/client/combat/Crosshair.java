@@ -27,6 +27,14 @@ public final class Crosshair {
                 spreadReticle(graphics, player);
                 return;
             }
+            // a Spartan sees Reach's reticle for the gun in hand (gone on the sights, like the crosshair)
+            if (player != null && GunType.isGun(player.getMainHandItem())
+                    && !(player.isUsingItem() && GunType.isGun(player.getUseItem()))
+                    && com.zomboidcraft.client.hud.Hud.active()
+                    && com.zomboidcraft.client.hud.HudSettings.style() == com.zomboidcraft.client.hud.HudSettings.Style.SPARTAN
+                    && com.zomboidcraft.client.hud.Hud.reachReticle(graphics, player)) {
+                return;
+            }
             if (look.spreadCrosshair && player != null && GunType.isGun(player.getMainHandItem())
                     && !(player.isUsingItem() && GunType.isGun(player.getUseItem()))) {
                 spreadReticle(graphics, player);     // from the hip: the ring is where the shots go
