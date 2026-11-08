@@ -21,11 +21,12 @@ import org.joml.Vector3fc;
 
 /**
  * The "zomboidcraft:tarkov_part" special item model: a Tarkov part in hand, in a slot or on the ground draws its own
- * model (config/zomboidcraft/npc/tkp_ID.zsk), turned muzzle-right and up-up, fitted into the middle of the block.
+ * model (config/zomboidcraft/npc/tkp_ID.zsk), turned muzzle-right and up-up, fitted into the middle of the block. Its base
+ * (item/tarkov_icon) shows that block as the whole slot: the foregrip's base it had blew it up 4x past the slot's edge.
  */
 public final class TarkovPartRenderer implements SpecialModelRenderer<String> {
     /** How much of the block the part fills along its longest side, and where its middle sits. */
-    private static final float FILL = 0.72f, MID_Y = 0.5f;
+    private static final float FILL = 0.86f, MID_Y = 0.5f;
     /** Tarkov's part frame (its muzzle way -y, up +z) into the item's (muzzle +x, up +y). */
     private static final Matrix4f TURN = new Matrix4f(
             0, 0, -1, 0,

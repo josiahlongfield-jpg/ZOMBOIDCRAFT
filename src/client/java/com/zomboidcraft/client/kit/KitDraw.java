@@ -107,6 +107,13 @@ final class KitDraw {
             g.fillGradient(x, y, x + w, y + h * 2 / 5, 0x12FFFFFF, 0x00FFFFFF);
             float size = Math.min(w, h) - (w > 2 * h ? 2 : Math.max(4, h / 5));
             if (w > 2 * h) size = h * 1.05f;
+            float aspect = com.zomboidcraft.client.operator.TarkovGunIcon.aspect(stack);
+            if (aspect > 0) {
+                // a Tarkov gun's picture is a long strip across its square icon: sized so the strip fills its cells
+                // (Tarkov's inventory) inside a 2-pixel border, not shrunk to the cells' height
+                float pad = 4, fill = 0.94f;
+                size = Math.min((w - pad) / (fill * Math.min(1, 1 / aspect)), (h - pad) / (fill * Math.min(1, aspect)));
+            }
             item(g, stack, x + w / 2f - size / 2, y + h / 2f - size / 2, size);
             if (stack.isDamageableItem()) {
                 float left = KitItems.condition(stack);
