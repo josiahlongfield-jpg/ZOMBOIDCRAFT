@@ -144,39 +144,23 @@ public class LiftScreen extends net.minecraft.client.gui.screens.Screen {
     public void tick() {
         double[] at = pointer();
         hover = at;
-        boolean down = minecraft.mouseHandler.isLeftPressed() || glfwLeftDown();
+        // a mouse still held by the game (cursor shown, but clicks going to the world): let go of it, and take
+        // the attack key's press as a click meanwhile
+        if (minecraft.mouseHandler.isMouseGrabbed()) {
+            if (!grabLogged) {
+                grabLogged = true;
+                com.zomboidcraft.ZomboidCraft.LOGGER.info("Lift window: the game still had the mouse grabbed; releasing it");
+            }
+            minecraft.mouseHandler.releaseMouse();
+        }
+        boolean down = minecraft.mouseHandler.isLeftPressed() || minecraft.options.keyAttack.isDown();
         if (down && !wasDown) {
             press(at[0], at[1], "poll");
         }
         wasDown = down;
     }
 
-    private static java.lang.reflect.Method handleMethod;
-    private static boolean handleLooked;
-
-    /** The left button straight from the window system, past anything in the game that might swallow it. */
-    private boolean glfwLeftDown() {
-        try {
-            if (!handleLooked) {
-                handleLooked = true;
-                for (java.lang.reflect.Method m : minecraft.getWindow().getClass().getMethods()) {
-                    if (m.getParameterCount() == 0 && m.getReturnType() == long.class
-                            && (m.getName().equals("handle") || m.getName().equals("getWindow"))) {
-                        handleMethod = m;
-                    }
-                }
-                com.zomboidcraft.ZomboidCraft.LOGGER.info("Lift window: window handle via {}", handleMethod);
-            }
-            if (handleMethod == null) {
-                return false;
-            }
-            long h = (long) handleMethod.invoke(minecraft.getWindow());
-            return org.lwjgl.glfw.GLFW.glfwGetMouseButton(h, org.lwjgl.glfw.GLFW.GLFW_MOUSE_BUTTON_LEFT) == org.lwjgl.glfw.GLFW.GLFW_PRESS;
-        } catch (ReflectiveOperationException | RuntimeException e) {
-            handleMethod = null;
-            return false;
-        }
-    }
+    private boolean grabLogged;
 
     /** Where the pointer is, in the screen's own (GUI) units. */
     private double[] pointer() {
