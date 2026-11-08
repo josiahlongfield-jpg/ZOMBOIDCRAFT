@@ -74,6 +74,7 @@ final class HudKit {
         if (tried != null && now - tried < 10_000) return null;
         Path dir = ROOT.resolve(name);
         Path file = dir.resolve("kit.json");
+        unpack(name, dir, file);
         if (!Files.isRegularFile(file)) {
             MISSING.put(name, now);
             return null;
@@ -87,6 +88,50 @@ final class HudKit {
             ZomboidCraft.LOGGER.warn("Couldn't read the {} HUD kit at {}", name, file, e);
             MISSING.put(name, now);
             return null;
+        }
+    }
+
+    /**
+     * A kit can arrive as {@code hud/<name>.zip}, or split as {@code <name>.zip.001}, {@code .002}... (the pieces of one
+     * zip, in order): it's unpacked into {@code hud/<name>/} when the folder has no kit yet or the zip is newer.
+     */
+    private static void unpack(String name, Path dir, Path kitJson) {
+        java.util.List<Path> parts = new java.util.ArrayList<>();
+        Path whole = ROOT.resolve(name + ".zip");
+        if (Files.isRegularFile(whole)) parts.add(whole);
+        else {
+            for (int i = 1; i < 1000; i++) {
+                Path p = ROOT.resolve(String.format(Locale.ROOT, "%s.zip.%03d", name, i));
+                if (!Files.isRegularFile(p)) break;
+                parts.add(p);
+            }
+        }
+        if (parts.isEmpty()) return;
+        try {
+            long newest = 0;
+            for (Path p : parts) newest = Math.max(newest, Files.getLastModifiedTime(p).toMillis());
+            if (Files.isRegularFile(kitJson) && Files.getLastModifiedTime(kitJson).toMillis() >= newest) return;
+            java.util.Vector<java.io.InputStream> streams = new java.util.Vector<>();
+            for (Path p : parts) streams.add(Files.newInputStream(p));
+            int count = 0;
+            try (var zip = new java.util.zip.ZipInputStream(new java.io.BufferedInputStream(new java.io.SequenceInputStream(streams.elements())))) {
+                java.util.zip.ZipEntry e;
+                while ((e = zip.getNextEntry()) != null) {
+                    Path out = dir.resolve(e.getName()).normalize();
+                    if (!out.startsWith(dir)) continue;          // nothing outside the kit's own folder
+                    if (e.isDirectory()) {
+                        Files.createDirectories(out);
+                        continue;
+                    }
+                    Files.createDirectories(out.getParent());
+                    Files.copy(zip, out, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                    count++;
+                }
+            }
+            if (Files.isRegularFile(kitJson)) Files.setLastModifiedTime(kitJson, java.nio.file.attribute.FileTime.fromMillis(System.currentTimeMillis()));
+            ZomboidCraft.LOGGER.info("Unpacked the {} kit ({} files) from {}", name, count, parts.get(0).getFileName());
+        } catch (Exception ex) {
+            ZomboidCraft.LOGGER.warn("Couldn't unpack the {} kit", name, ex);
         }
     }
 
