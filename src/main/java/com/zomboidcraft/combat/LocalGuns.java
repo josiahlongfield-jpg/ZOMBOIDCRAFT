@@ -547,7 +547,7 @@ public final class LocalGuns {
      * a time gives them by part instead (load: start, shell, end, pump; each a share of that part).
      */
     public record Cues(float magOut, float magIn, float charge, boolean release, @Nullable Cues tactical,
-            List<Cue> sounds, Map<String, Part> load) {
+            List<Cue> sounds, Map<String, LoadPart> load) {
         public Cues(float magOut, float magIn, float charge, boolean release) {
             this(magOut, magIn, charge, release, null, List.of(), Map.of());
         }
@@ -564,13 +564,13 @@ public final class LocalGuns {
 
         /** A part of a hand-loaded gun's loading with Tarkov's own sounds (start, shell, end, pump), or none. */
         public List<Cue> load(String part) {
-            Part p = load.get(part);
+            LoadPart p = load.get(part);
             return p == null ? List.of() : p.sounds();
         }
 
         /** How long that part's clip runs (seconds), or 0. */
         public float loadSeconds(String part) {
-            Part p = load.get(part);
+            LoadPart p = load.get(part);
             return p == null ? 0 : p.dur();
         }
 
@@ -581,7 +581,7 @@ public final class LocalGuns {
     }
 
     /** A part of a hand-loaded gun's loading: its clip's length (seconds) and its sounds, each a share of it. */
-    public record Part(float dur, List<Cue> sounds) {
+    public record LoadPart(float dur, List<Cue> sounds) {
     }
 
     /** One of Tarkov's reload sounds: when (a share of the reload, or of the part), and its name ("MagOut"). */
@@ -647,13 +647,13 @@ public final class LocalGuns {
                         td > 0 ? cueList(t.get("sounds"), td) : List.of(), Map.of());
             }
             // a hand-loaded gun's parts, each its own clip: the times are seconds into that part
-            Map<String, Part> load = new java.util.HashMap<>();
+            Map<String, LoadPart> load = new java.util.HashMap<>();
             if (o.has("load")) {
                 com.google.gson.JsonObject l = o.getAsJsonObject("load");
                 for (String part : l.keySet()) {
                     com.google.gson.JsonObject p = l.getAsJsonObject(part);
                     float pd = p.get("dur").getAsFloat();
-                    if (pd > 0) load.put(part, new Part(pd, cueList(p.get("sounds"), pd)));
+                    if (pd > 0) load.put(part, new LoadPart(pd, cueList(p.get("sounds"), pd)));
                 }
             }
             return java.util.Optional.of(new Cues(at.apply("mag_out"), at.apply("mag_in"), at.apply("charge"),
