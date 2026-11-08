@@ -2,7 +2,6 @@ package com.zomboidcraft.client.zombie;
 
 import com.zomboidcraft.ZcConfig;
 import com.zomboidcraft.zombie.Noise;
-import com.zomboidcraft.zombie.ZombieSpawner;
 import com.zomboidcraft.zombie.ZombieTypes;
 import com.zomboidcraft.zombie.perf.HordeStats;
 import java.util.Locale;
@@ -30,7 +29,7 @@ import org.slf4j.LoggerFactory;
 public class HordeBenchTest implements FabricClientGameTest {
     private static final Logger LOG = LoggerFactory.getLogger("ZCBENCH");
     private static final int COUNT = Integer.getInteger("zc.bench.count", 800);
-    private static final int YARD = 70, FLOOR = 99;
+    private static final int YARD = 56, FLOOR = 99;
 
     @Override
     public void runTest(ClientGameTestContext ctx) {
@@ -44,7 +43,8 @@ public class HordeBenchTest implements FabricClientGameTest {
             }
             ctx.getInput().resizeWindow(320, 180);
             ctx.runOnClient(mc -> {
-                mc.options.renderDistance().set(4);
+                mc.options.renderDistance().set(6);
+                mc.options.simulationDistance().set(6);
                 mc.options.framerateLimit().set(10);
             });
             sp.getServer().runCommand("tp @a 0 " + (FLOOR + 5) + " 0 0 -90");
@@ -56,7 +56,20 @@ public class HordeBenchTest implements FabricClientGameTest {
             ctx.waitTicks(20);
             sp.getServer().runOnServer(server -> {
                 ServerPlayer p = server.getPlayerList().getPlayers().getFirst();
-                int made = ZombieSpawner.spawnAround((ServerLevel) p.level(), p, COUNT, 40);
+                // straight onto the yard (the spawner's own rules turn down a stone floor this high under open sky)
+                ServerLevel level = (ServerLevel) p.level();
+                java.util.Random r = new java.util.Random(8_00);
+                int made = 0;
+                for (int i = 0; i < COUNT * 3 && made < COUNT; i++) {
+                    double a = r.nextDouble() * Math.PI * 2, d = 12 + r.nextDouble() * (YARD - 16);
+                    BlockPos at = BlockPos.containing(Math.cos(a) * d, FLOOR + 1, Math.sin(a) * d);
+                    if (!level.getBlockState(at).isAir() || !level.getBlockState(at.above()).isAir()) {
+                        continue;
+                    }
+                    if (net.minecraft.world.entity.EntityTypes.ZOMBIE.spawn(level, at, net.minecraft.world.entity.EntitySpawnReason.EVENT) != null) {
+                        made++;
+                    }
+                }
                 LOG.info("ZCBENCH spawned {} of {} walkers", made, COUNT);
             });
             ctx.waitTicks(200);
