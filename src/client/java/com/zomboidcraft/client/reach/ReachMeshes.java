@@ -59,7 +59,9 @@ import org.joml.Matrix4f;
  * come from the same level's collision (see ReachSolid).
  *
  * <p>config/zomboidcraft/reach/reach.json lists them: {"levels": [{"dir": "C:\\...\\world\\m20", "offset": [x, y, z],
- * "yaw": 0}]}. Every .glb in that folder is drawn (a .glb split into .part00, .part01... is joined back up).
+ * "yaw": 0}]}. Every .glb in that folder is drawn (a .glb split into .part00, .part01... is joined back up). The land
+ * between the levels (world/land.zrh, see ReachLand) is drawn too, and each level's own far land (its _000 piece) is
+ * cut to where that level sits in this world.
  */
 public final class ReachMeshes {
     private static final Path DIR = FabricLoader.getInstance().getConfigDir().resolve("zomboidcraft").resolve("reach");
@@ -217,11 +219,17 @@ public final class ReachMeshes {
                     Path textures = Files.isDirectory(dir) ? dir : dir.toAbsolutePath().getParent();
                     for (Path glb : pieces(dir)) {
                         try {
-                            READY.add(read(glb, textures, yaw, ox, oy, oz));
+                            READY.add(read(glb, textures, yaw, ox, oy, oz, glb.getFileName().toString().contains("_000")));
                         } catch (IOException | RuntimeException ex) {
                             ZomboidCraft.LOGGER.warn("Reach world: couldn't read {}: {}", glb, ex.toString());
                         }
                     }
+                }
+                com.zomboidcraft.world.reach.ReachLand land = com.zomboidcraft.world.reach.ReachLand.get();
+                if (land != null) {
+                    ReachGlb.Level ground = ReachLandMesh.build(land);
+                    ZomboidCraft.LOGGER.info("Reach world: land between the levels, {} triangles", ground.triangles());
+                    READY.add(new Loaded("land", ground, new NativeImage[ground.materials().size()][], 0, 0, 0));
                 }
             } catch (IOException | RuntimeException ex) {
                 ZomboidCraft.LOGGER.warn("Reach world: couldn't read {}: {}", cfg, ex.toString());
@@ -272,8 +280,13 @@ public final class ReachMeshes {
         return out;
     }
 
-    private static Loaded read(Path glb, Path textures, float yaw, float ox, float oy, float oz) throws IOException {
+    private static Loaded read(Path glb, Path textures, float yaw, float ox, float oy, float oz, boolean surroundings)
+            throws IOException {
         ReachGlb.Level level = ReachGlb.read(glb, textures, yaw, ox, oy, oz);
+        com.zomboidcraft.world.reach.ReachLand land = com.zomboidcraft.world.reach.ReachLand.get();
+        if (surroundings && land != null) {
+            level = ReachLandMesh.clip(level, land);   // the level's own far land only where it meets this world's land
+        }
         NativeImage[][] images = new NativeImage[level.materials().size()][];
         for (int m = 0; m < images.length; m++) {
             ReachGlb.Material mat = level.materials().get(m);
