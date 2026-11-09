@@ -26,16 +26,18 @@ classes 'dimension/DimensionType\.class$|SnowLayerBlock\.class$|LevelRenderEvent
 for c in $(classes 'LevelRenderEvents\.class$|LevelRenderContext\.class$|GpuDevice\.class$|GpuBuffer\.class$|RenderPass\.class$|CommandEncoder\.class$|level/block/SnowLayerBlock\.class$' | sed 's/\.class$//; s#/#.#g'); do echo "-- $c"; javap -cp "$CP" -p "$c" 2>&1 | grep -vE 'lambda\$' | head -70; done
 javap -cp "$CP" -p net.minecraft.world.level.dimension.DimensionType 2>&1 | head -60
 javap -cp "$CP" -p net.minecraft.world.entity.ai.attributes.Attributes 2>&1 | grep -iE "step|gravity|fall|safe" | head
-echo "===== reach far pass 2: camera projection"
-javap -cp "$CP" -p net.minecraft.client.Camera 2>&1 | grep -vE 'lambda\$' | grep -iE "projection|far|depth|fov|near|frustum|setup|update|Matrix" | head -40
-javap -cp "$CP" -p -c net.minecraft.client.Camera 2>&1 | grep -B3 -A1 -E "setupPerspective|getDepthFar|renderDistance|zFar" | head -60
-javap -cp "$CP" -p net.minecraft.client.renderer.state.level.CameraRenderState 2>&1 | head -40
-javap -cp "$CP" -p -c net.minecraft.client.renderer.GameRenderer 2>&1 | grep -B12 "levelProjectionMatrixBuffer:Lnet" | grep -E "invoke|getfield|Method|ldc" | head -40
-javap -cp "$CP" -p -c net.minecraft.client.renderer.GameRenderer 2>&1 | grep -E "^  [a-z].*\(|Camera\.|getDepthFar|renderDistance|setupPerspective" | head -80
-javap -cp "$CP" -p com.mojang.blaze3d.systems.RenderSystem 2>&1 | grep -iE "depth" | head
-grep -rl "DEPTH32\|D32" /dev/null
-for c in $(classes 'renderpearl/api/textures/.*Format\.class$|blaze3d/.*/GpuFormat\.class$' | sed 's/\.class$//; s#/#.#g'); do echo "-- $c"; javap -cp "$CP" -p "$c" 2>&1 | grep -iE "depth" | head; done
-javap -cp "$CP" -p -c com.mojang.blaze3d.pipeline.RenderTarget 2>&1 | grep -E "GpuFormat|DEPTH" | head
+echo "===== reach skies: environment attributes"
+classes 'attribute/EnvironmentAttribute[A-Za-z]*\.class$|/fog/[A-Za-z]*\.class$|/fog/environment/[A-Za-z]*\.class$|SkyRenderer\.class$'
+for c in $(classes 'attribute/EnvironmentAttributes\.class$' | sed 's/\.class$//; s#/#.#g'); do echo "-- $c"; javap -cp "$CP" -p "$c" 2>&1 | grep -vE 'lambda\$' | head -120; javap -cp "$CP" -p -c "$c" 2>&1 | grep -E 'ldc +#[0-9]+ +// String' | head -120; done
+for c in $(classes 'attribute/EnvironmentAttributeSystem\.class$|attribute/EnvironmentAttributeReader\.class$|attribute/EnvironmentAttribute\.class$|attribute/EnvironmentAttributeLayer[A-Za-z]*\.class$' | sed 's/\.class$//; s#/#.#g'); do echo "-- $c"; javap -cp "$CP" -p "$c" 2>&1 | grep -vE 'lambda\$' | head -50; done
+for c in $(classes '/fog/FogRenderer\.class$|/fog/FogData\.class$|/fog/environment/AtmosphericFogEnvironment\.class$|/fog/environment/FogEnvironment\.class$' | sed 's/\.class$//; s#/#.#g'); do echo "-- $c"; javap -cp "$CP" -p "$c" 2>&1 | grep -vE 'lambda\$' | head -50; done
+javap -cp "$CP" -p -c net.minecraft.client.renderer.fog.environment.AtmosphericFogEnvironment 2>&1 | grep -E "invoke|getstatic|getfield|putfield|ldc" | head -60
+javap -cp "$CP" -p -c net.minecraft.client.renderer.fog.FogRenderer 2>&1 | grep -E "^  [a-z].*\(|EnvironmentAttribute|getstatic.*Attributes" | head -60
+for c in $(classes 'SkyRenderer\.class$|renderer/state/level/SkyRenderState\.class$' | sed 's/\.class$//; s#/#.#g'); do echo "-- $c"; javap -cp "$CP" -p "$c" 2>&1 | grep -vE 'lambda\$' | head -40; done
+javap -cp "$CP" -p -c net.minecraft.client.renderer.SkyRenderer 2>&1 | grep -E "getstatic.*EnvironmentAttributes|getValue" | head -30
+javap -cp "$CP" -p -c net.minecraft.client.renderer.LevelRenderer 2>&1 | grep -E "getstatic.*EnvironmentAttributes|environmentAttributes|getValue" | head -30
+javap -cp "$CP" -p -c net.minecraft.client.renderer.LightTexture net.minecraft.client.renderer.Lightmap 2>&1 | grep -E "getstatic.*EnvironmentAttributes|^  [a-z].*\(" | head -30
+for j in $MC_JARS; do for f in data/minecraft/worldgen/biome/plains.json data/minecraft/worldgen/biome/desert.json data/minecraft/worldgen/biome/snowy_plains.json data/minecraft/worldgen/biome/swamp.json; do if unzip -l "$j" "$f" >/dev/null 2>&1; then echo "-- $f"; unzip -p "$j" "$f" | head -60; fi; done; done
 exit 0
 fi
 
