@@ -30,7 +30,8 @@ final class MenuSlides {
     private static final float HOLD = 9f, FADE = 1.6f, OVERSCAN = 1.08f;
 
     private final List<Path> files;
-    private final Identifier[] ids = {ZomboidCraft.id("menu_slide_a"), ZomboidCraft.id("menu_slide_b")};
+    private final Identifier[] ids = new Identifier[2];
+    private int made;
     /** Per graphics slot: its size, and which picture it holds (for the drift direction); null/-1 when empty. */
     private final int[][] sizes = new int[2][];
     private final int[] holds = {-1, -1};
@@ -132,7 +133,7 @@ final class MenuSlides {
     /** One picture, drifting slowly from one side of its overscan to the other over its time on screen. */
     private void drift(GuiGraphicsExtractor g, int slot, float time, float alpha, int tint) {
         int[] s = sizes[slot];
-        if (s == null || alpha <= 0.004f) return;
+        if (s == null || ids[slot] == null || alpha <= 0.004f) return;
         float k = Math.max(0, Math.min(1, time / (HOLD + FADE)));
         boolean right = holds[slot] % 2 == 0;
         float u = (s[0] - ww) * (right ? k : 1 - k), v = (s[1] - wh) * 0.5f;
@@ -150,7 +151,11 @@ final class MenuSlides {
         for (int y = 0; y < img.getHeight(); y++) {
             for (int x = 0; x < img.getWidth(); x++) out.setPixel(x, y, img.getRGB(x, y) | 0xFF000000);
         }
-        Minecraft.getInstance().getTextureManager().register(ids[slot], new DynamicTexture(() -> "Endless Night menu slide", out));
+        // a fresh id each time, the old picture let go a few frames later (a draw queued this frame may still use it)
+        Identifier id = ZomboidCraft.id("menu_slide/" + (++made));
+        Minecraft.getInstance().getTextureManager().register(id, new DynamicTexture(() -> "Endless Night menu slide", out));
+        if (ids[slot] != null) HudKit.retire(ids[slot]);
+        ids[slot] = id;
         sizes[slot] = new int[] {img.getWidth(), img.getHeight()};
     }
 

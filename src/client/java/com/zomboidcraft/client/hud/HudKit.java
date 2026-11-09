@@ -148,6 +148,7 @@ final class HudKit {
 
     /** Fits the layout to the window for this frame; a new window size remakes the pictures as they're next drawn. */
     void begin() {
+        releaseRetired();
         var window = Minecraft.getInstance().getWindow();
         int w = window.getWidth(), h = window.getHeight();
         s = Math.min(w / lw, h / lh);
@@ -364,8 +365,7 @@ final class HudKit {
         }
         g2.dispose();
         int tw = Math.max(1, Math.round(iw / 2f * s)), th = Math.max(1, Math.round(ih / 2f * s));
-        if (id == null) id = id("text/" + slot);
-        upload(id, resize(line, tw, th));
+        id = upload(id("text/" + slot), id, resize(line, tw, th));
         return new TextTex(id, tracking == 0 ? text : text + "\u0000" + tracking, tw, th, bx0, by0);
     }
 
@@ -398,8 +398,7 @@ final class HudKit {
         if (t != null && t.w == w && t.h == h) return t;
         BufferedImage src = source(file);
         if (src == null) return null;
-        Identifier id = t != null ? t.id : id(slot);
-        upload(id, resize(src, w, h));
+        Identifier id = upload(id(slot), t != null ? t.id : null, resize(src, w, h));
         Tex made = new Tex(id, w, h);
         textures.put(slot, made);
         return made;
@@ -446,13 +445,36 @@ final class HudKit {
         return out;
     }
 
-    private static void upload(Identifier id, BufferedImage img) {
+    /**
+     * Uploads a picture under a fresh id (the base id plus a count) and returns it. The picture it replaces is let go a
+     * few frames later, not at once: a draw already queued this frame still points at it, and freeing it there let the
+     * graphics card hand its slot to the next picture made, so one picture showed another's (Josiah 2026-11-09 08:20, the
+     * main menu's highlight bar showing a stretched "MULTIPLAYER").
+     */
+    private static Identifier upload(Identifier base, @Nullable Identifier old, BufferedImage img) {
         NativeImage out = new NativeImage(img.getWidth(), img.getHeight(), false);
         for (int y = 0; y < img.getHeight(); y++) {
             for (int x = 0; x < img.getWidth(); x++) out.setPixel(x, y, img.getRGB(x, y));     // getRGB un-premultiplies
         }
-        // registering under the same id again replaces (and frees) the picture made for the old window size
+        Identifier id = ZomboidCraft.id(base.getPath() + "/v" + (++made));
         Minecraft.getInstance().getTextureManager().register(id, new DynamicTexture(() -> "ZomboidCraft HUD " + id, out));
+        if (old != null) retire(old);
+        return id;
+    }
+
+    private static long made;
+    private static final java.util.ArrayDeque<Object[]> RETIRED = new java.util.ArrayDeque<>();
+
+    /** Lets a picture go once a few more frames have been drawn (no draw still queued can point at it then). */
+    static void retire(Identifier id) {
+        RETIRED.add(new Object[] {id, System.nanoTime()});
+    }
+
+    private static void releaseRetired() {
+        long now = System.nanoTime();
+        while (!RETIRED.isEmpty() && now - (long) RETIRED.peek()[1] > 250_000_000L) {
+            Minecraft.getInstance().getTextureManager().release((Identifier) RETIRED.poll()[0]);
+        }
     }
 
     private Identifier id(String file) {
