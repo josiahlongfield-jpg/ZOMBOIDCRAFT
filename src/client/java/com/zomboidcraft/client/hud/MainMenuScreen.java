@@ -60,6 +60,13 @@ public final class MainMenuScreen extends Screen {
     private double lastMx = Double.NaN, lastMy = Double.NaN;
     private final @Nullable LastWorld lastWorld = LastWorld.read();
     private final JsonObject soldier = readSoldier();
+    private final MenuSlides slides = new MenuSlides();
+    /** Which of your soldiers stands in the gap: false your Spartan, true your Tarkov operator (Q switches). */
+    private boolean operator = "operator".equals(soldier.has("side") ? soldier.get("side").getAsString() : "");
+    /** The left panel sits this far left of Reach's own spot, to leave room for the soldier (Josiah 00:54). */
+    private static final float L = -150;
+    /** MY SQUAD's left edge: 100 in from the right, as the menu is from the left (Josiah 00:58); the soldier between. */
+    private static final float SQUAD_X = 1340, FIG_X = 1080;
 
     public MainMenuScreen() {
         super(Component.literal("Endless Night"));
@@ -118,49 +125,54 @@ public final class MainMenuScreen extends Screen {
         lastMx = mx;
         lastMy = my;
 
-        // the night street behind it all, darker toward the menu side, and the rain
-        k.picture(g, "mm_bg", "mm/bg.jpg", 0, 0, ww, wh, ww, wh, HudKit.argb(255, 158, 158, 158));
+        // the Reach world's landmarks one after another (or the kit's street while there are none), darker toward the
+        // menu side, and the rain
+        if (!slides.draw(g, ww, wh, dt, HudKit.argb(255, 158, 158, 158))) {
+            k.picture(g, "mm_bg", "mm/bg.jpg", 0, 0, ww, wh, ww, wh, HudKit.argb(255, 158, 158, 158));
+        }
         k.picture(g, "mm_shade", "mm/shade.png", 0, 0, ww, wh, 480, 270, 0xFFFFFFFF);
         rain(g, ww, wh, 0.55f);
-        // your soldier, standing centre right as the lobby art has its Spartans
-        shadow(g, 1300, 985, 360, 34);
-        figure(g, "fig/menu_six.png", "mm_fig", 1300, 1000, 750);
+        // your soldier, standing in the gap between the menu and the squad (main-menu-v3b, approved 01:00)
+        shadow(g, FIG_X, 985, 360, 34);
+        String fig = operator && k.size("fig/menu_op.png")[1] > 0 ? "fig/menu_op.png" : "fig/menu_six.png";
+        figure(g, fig, "mm_fig_" + fig, FIG_X, 1000, 760);
         rain(g, ww, wh, 0.35f);
 
         // the picked item's picture in its frame, with its icon
         Item it = ITEMS.get(sel);
-        float bx = 250, by = 68, bw = 700, bh = 262;
+        float bx = 250 + L, by = 68, bw = 700, bh = 262;
         k.cover(g, "mm_prev", "mm/bg.jpg", bx, by, bw, bh, HudKit.argb(255, 218, 218, 218));
         outline(g, bx - 2, by - 2, bw + 4, bh + 4, 3, 0xFF0A0A0C);
         outline(g, bx - 4, by - 4, bw + 8, bh + 8, 2, HudKit.argb(220, 225, 225, 225));
         k.image(g, "mm_icon_" + it.icon(), "mm/icon_" + it.icon() + ".png", bx + 14, by + 22, 140, 140, 0xFFFFFFFF);
 
         // the wings, the title and the line under it, MAIN MENU down the side
-        k.image(g, "mm/icon_wings.png", 140, 336, 112, 112, HudKit.argb(200, 255, 255, 255));
-        k.text(g, "mm_title", "light_84", "ENDLESS NIGHT", 262, 342, 0, 0, true, argb(225, 228, 232), 1);
-        k.text(g, "mm_sub", "med_26", subline(), 264, 455, 0, 0, true, DIM, 0);
+        k.image(g, "mm/icon_wings.png", 4, 342, 100, 100, HudKit.argb(200, 255, 255, 255));
+        k.text(g, "mm_title", "light_84", "ENDLESS NIGHT", 262 + L, 342, 0, 0, true, argb(225, 228, 232), 1);
+        k.text(g, "mm_sub", "med_26", subline(), 264 + L, 455, 0, 0, true, DIM, 0);
         int[] v = k.size("mm/mainmenu_v.png");
-        if (v[1] > 0) k.image(g, "mm/mainmenu_v.png", 172, 470, v[0] / 2f, v[1] / 2f, HudKit.argb(150, 120, 122, 126));
+        if (v[1] > 0) k.image(g, "mm/mainmenu_v.png", 172 + L, 470, v[0] / 2f, v[1] / 2f, HudKit.argb(150, 120, 122, 126));
 
         // Ready, the list and the description
-        k.text(g, "mm_ready", "med_28", "Ready", 264, 548, 0, 0, true, WHITE, 0);
-        fadeline(g, 250, 588, 720, 90);
+        k.text(g, "mm_ready", "med_28", "Ready", 264 + L, 548, 0, 0, true, WHITE, 0);
+        fadeline(g, 250 + L, 588, 720, 90);
         float y = 604;
         for (int i = 0; i < ITEMS.size(); i++) {
             Item item = ITEMS.get(i);
-            if (moved && inside(lx, ly, 252, y - 3, 700, 36)) sel = i;
-            hits.add(new float[] {252, y - 3, 952, y + 33, i});
-            if (i == sel) highlight(g, 252, y - 3, 700, 36);
-            k.text(g, "mm_row" + i, "med_25", item.name(), 266, y, 0, 0, true, !item.ready() ? SOON : i == sel ? WHITE : ROW, 1);
+            if (moved && inside(lx, ly, 252 + L, y - 3, 700, 36)) sel = i;
+            hits.add(new float[] {252 + L, y - 3, 952 + L, y + 33, i});
+            if (i == sel) highlight(g, 252 + L, y - 3, 700, 36);
+            k.text(g, "mm_row" + i, "med_25", item.name(), 266 + L, y, 0, 0, true, !item.ready() ? SOON : i == sel ? WHITE : ROW, 1);
             String value = value(i);
-            if (!value.isEmpty()) k.text(g, "mm_val" + i + value, "med_24", value, 940, y, 1, 0, true, item.ready() ? VALUE : SOON, 1);
+            if (!value.isEmpty()) k.text(g, "mm_val" + i + value, "med_24", value, 940 + L, y, 1, 0, true, item.ready() ? VALUE : SOON, 1);
             y += 38;
         }
-        fadeline(g, 250, y + 6, 720, 90);
-        k.text(g, "mm_desc" + sel, "med_25", description(sel), 264, y + 20, 0, 0, true, DIM, 0);
+        fadeline(g, 250 + L, y + 6, 720, 90);
+        k.text(g, "mm_desc" + sel, "med_25", description(sel), 264 + L, y + 20, 0, 0, true, DIM, 0);
 
         squad(g);
         prompts(g);
+        toggle(g, lx, ly, moved);
         HudKit.end(g);
     }
 
@@ -200,7 +212,7 @@ public final class MainMenuScreen extends Screen {
 
     /** Reach's MY PARTY box: the header, the lobby line, your own row in your armour's colour with your emblem. */
     private void squad(GuiGraphicsExtractor g) {
-        float px = 1190;
+        float px = SQUAD_X;
         k.fill(g, px, 96, px + 400, 134, HudKit.argb(235, 40, 40, 42));
         k.text(g, "mm_sq", "med_26", "MY SQUAD", px + 8, 101, 0, 0, true, WHITE, 0);
         k.fill(g, px + 30, 138, px + 480, 180, HudKit.argb(200, 70, 70, 72));
@@ -224,8 +236,31 @@ public final class MainMenuScreen extends Screen {
         return new int[] {95, 100, 60};
     }
 
+    /** SPARTAN | OPERATOR under the squad's right edge, Q (or a click) switching who stands in the gap. */
+    private void toggle(GuiGraphicsExtractor g, double lx, double ly, boolean moved) {
+        String[] labels = {"SPARTAN", "OPERATOR"};
+        float[] ws = new float[2];
+        float tw = 6;
+        for (int i = 0; i < 2; i++) tw += ws[i] = k.measure("med_24", labels[i], 2) + 44;
+        float right = SQUAD_X + 480, x0 = right - tw, y = 1010;
+        k.fill(g, x0, y, right, y + 44, HudKit.argb(200, 20, 22, 26));
+        outline(g, x0, y, tw, 44, 2, HudKit.argb(160, 200, 205, 210));
+        float x = x0 + 3;
+        for (int i = 0; i < 2; i++) {
+            boolean on = (i == 1) == operator;
+            hits.add(new float[] {x, y, x + ws[i], y + 44, 100 + i});
+            if (on) highlight(g, x, y + 3, ws[i], 38);
+            k.text(g, "mm_tg" + i, "med_24", labels[i], x + ws[i] / 2, y + 9, 0.5f, 0, true, on ? WHITE : argb(150, 156, 164), 2);
+            x += ws[i];
+        }
+        float kw = k.measure("med_18", "Q", 0) + 20, kx = x0 - kw - 12;
+        k.nine(g, "mm/pill.png", Math.round(k.px(kx)), Math.round(k.py(y + 7)), Math.round(kw * k.s), Math.round(30 * k.s), 15, 15,
+                HudKit.argb(230, 200, 200, 200));
+        k.text(g, "mm_tq", "med_18", "Q", kx + 10, y + 10, 0, 0, true, argb(30, 30, 30), 0);
+    }
+
     private void prompts(GuiGraphicsExtractor g) {
-        float x = 262, y = 1012;
+        float x = 262 + L, y = 1012;
         String[][] keys = {{"ENTER", "Select"}, {"ESC", "Back"}, {"TAB", "Change Squad"}, {"F1", "Menu"}};
         int[][] cols = {{90, 170, 70}, {190, 60, 60}, {210, 180, 50}, {200, 200, 200}};
         for (int i = 0; i < keys.length; i++) {
@@ -302,6 +337,10 @@ public final class MainMenuScreen extends Screen {
         double lx = (event.x() * window.getGuiScale() - k.ox) / k.s, ly = (event.y() * window.getGuiScale() - k.oy) / k.s;
         for (float[] h : hits) {
             if (lx >= h[0] && lx < h[2] && ly >= h[1] && ly < h[3]) {
+                if (h[4] >= 100) {
+                    operator = h[4] == 101;
+                    return true;
+                }
                 sel = (int) h[4];
                 activate();
                 return true;
@@ -316,6 +355,7 @@ public final class MainMenuScreen extends Screen {
         if (key == InputConstants.KEY_UP || key == InputConstants.KEY_W) sel = Math.floorMod(sel - 1, ITEMS.size());
         else if (key == InputConstants.KEY_DOWN || key == InputConstants.KEY_S) sel = Math.floorMod(sel + 1, ITEMS.size());
         else if (key == InputConstants.KEY_RETURN || key == InputConstants.KEY_NUMPADENTER || key == InputConstants.KEY_SPACE) activate();
+        else if (key == InputConstants.KEY_Q) operator = !operator;
         else if (key == InputConstants.KEY_F1) {
             bypass = true;
             minecraft.gui.setScreen(new TitleScreen());
