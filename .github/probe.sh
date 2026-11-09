@@ -11,24 +11,9 @@ sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 if [ -f .github/probe-reach ]; then
 echo "===== compile errors"
 grep -E "error:" -A3 build.log | head -80
-echo "===== reach world (dimension type, presets, render hooks)"
-for j in $MC_JARS; do
-  for f in data/minecraft/dimension_type/overworld.json data/minecraft/dimension_type/overworld_caves.json data/minecraft/worldgen/world_preset/normal.json data/minecraft/worldgen/world_preset/flat.json data/minecraft/tags/worldgen/world_preset/normal.json data/minecraft/worldgen/biome/plains.json; do
-    if unzip -l "$j" "$f" >/dev/null 2>&1; then echo "-- $f ($j)"; unzip -p "$j" "$f"; echo; fi
-  done
-done
-classes 'dimension/DimensionType\.class$|SnowLayerBlock\.class$|LevelRenderEvents\.class$|LevelRenderContext\.class$|GpuDevice\.class$|GpuBuffer\.class$|RenderPass\.class$|CommandEncoder\.class$|attribute/Attributes\.class$'
-for c in $(classes 'LevelRenderEvents\.class$|LevelRenderContext\.class$|GpuDevice\.class$|GpuBuffer\.class$|RenderPass\.class$|CommandEncoder\.class$|level/block/SnowLayerBlock\.class$' | sed 's/\.class$//; s#/#.#g'); do echo "-- $c"; javap -cp "$CP" -p "$c" 2>&1 | grep -vE 'lambda\$' | head -70; done
-javap -cp "$CP" -p net.minecraft.world.level.dimension.DimensionType 2>&1 | head -60
-#!/usr/bin/env bash
-# Prints Minecraft / Fabric API class names and signatures to help fix compile errors.
-MC_JARS=$(find ~/.gradle/caches/fabric-loom -name 'minecraft-*.jar' 2>/dev/null)
-FAPI_JARS=$(find ~/.gradle/caches/modules-2 -path '*net.fabricmc.fabric-api*' -name '*.jar' ! -name '*sources*' 2>/dev/null)
-CP=$(echo $MC_JARS $FAPI_JARS | tr ' ' ':')
-echo "MC jars: $MC_JARS"
-classes() { for j in $MC_JARS $FAPI_JARS; do unzip -Z1 "$j"; done | grep -E "$1" | sort -u; }
-sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
-
+grep -E "What went wrong" -A10 build.log | head -30
+if grep -q "error:" build.log; then exit 0; fi
+fi
 
 if [ -f .github/probe-reach ]; then
 echo "===== reach world (dimension type, presets, render hooks)"
