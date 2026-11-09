@@ -26,10 +26,17 @@ classes 'dimension/DimensionType\.class$|SnowLayerBlock\.class$|LevelRenderEvent
 for c in $(classes 'LevelRenderEvents\.class$|LevelRenderContext\.class$|GpuDevice\.class$|GpuBuffer\.class$|RenderPass\.class$|CommandEncoder\.class$|level/block/SnowLayerBlock\.class$' | sed 's/\.class$//; s#/#.#g'); do echo "-- $c"; javap -cp "$CP" -p "$c" 2>&1 | grep -vE 'lambda\$' | head -70; done
 javap -cp "$CP" -p net.minecraft.world.level.dimension.DimensionType 2>&1 | head -60
 javap -cp "$CP" -p net.minecraft.world.entity.ai.attributes.Attributes 2>&1 | grep -iE "step|gravity|fall|safe" | head
-echo "===== reach mipmaps: how vanilla writes texture mip levels"
-for c in net.minecraft.client.renderer.texture.SpriteContents net.minecraft.client.renderer.texture.DynamicTexture net.minecraft.client.renderer.texture.TextureAtlas net.minecraft.client.renderer.texture.SimpleTexture net.minecraft.client.renderer.texture.ReloadableTexture net.minecraft.client.renderer.texture.MipmapGenerator; do echo "-- code $c"; javap -cp "$CP" -p -c "$c" 2>&1 | grep -E "^  [a-z].*\\(|writeToTexture|createTexture|getRepeat|getClampToEdge|USAGE|iconst|bipush|iload|invokestatic.*Mipmap|generateMipLevels" | grep -vE 'lambda\\$' | head -90; done
-javap -cp "$CP" -p net.minecraft.client.renderer.texture.MipmapGenerator net.minecraft.client.renderer.texture.MipmapStrategy 2>&1 | head -30
-javap -cp "$CP" -p -c com.mojang.renderpearl.frontend.FrontendCommandEncoder 2>&1 | awk '/writeToTexture\(com.mojang.renderpearl.api.textures.GpuTexture, com.mojang.blaze3d.platform.NativeImage, int, int, int, int\)/,/^$/' | head -60
+echo "===== reach far pass: projection far plane, depth, sky order"
+javap -cp "$CP" -p net.minecraft.client.renderer.GameRenderer 2>&1 | grep -iE "far|depth|projection|renderDistance|getFov|near" | head -30
+javap -cp "$CP" -p -c net.minecraft.client.renderer.GameRenderer 2>&1 | awk '/ getDepthFar\(\);|float getDepthFar/,/^$/' | head -20
+for c in $(classes 'renderer/Projection\.class$|renderer/ProjectionMatrixBuffer\.class$|CachedPerspectiveProjectionMatrixBuffer\.class$|PerspectiveProjectionMatrixBuffer\.class$|state/CameraRenderState\.class$|state/LevelRenderState\.class$|renderer/SkyRenderer\.class$' | sed 's/\.class$//; s#/#.#g'); do echo "-- $c"; javap -cp "$CP" -p "$c" 2>&1 | grep -vE 'lambda\$' | head -60; done
+javap -cp "$CP" -p com.mojang.blaze3d.systems.RenderSystem 2>&1 | grep -iE "projection|depth|uniform" | head -30
+javap -cp "$CP" -p net.minecraft.client.renderer.LevelRenderer 2>&1 | grep -iE "execute|sky|render\(|addMainPass|frustum|cull|clear" | grep -vE 'lambda\$' | head -40
+javap -cp "$CP" -p -c net.minecraft.client.renderer.LevelRenderer 2>&1 | awk '/void executeSolid\(/,/^$/' | grep -E "invoke" | head -30
+javap -cp "$CP" -p -c net.minecraft.client.renderer.GameRenderer 2>&1 | grep -E "getDepthFar|Projection|setProjection|ProjectionMatrix" | head -30
+classes 'TextureFormat\.class$|DepthTestFunction\.class$'
+javap -cp "$CP" -p com.mojang.renderpearl.api.textures.TextureFormat 2>&1 | head -20
+javap -cp "$CP" -p com.mojang.renderpearl.api.commands.CommandEncoder 2>&1 | grep -iE "clear|depth" | head
 exit 0
 fi
 
