@@ -10,11 +10,14 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.MeshData;
 import com.mojang.renderpearl.api.buffers.GpuBuffer;
+import com.mojang.renderpearl.api.GpuFormat;
 import com.mojang.renderpearl.api.buffers.GpuBufferSlice;
+import com.mojang.renderpearl.api.commands.CommandEncoder;
 import com.mojang.renderpearl.api.commands.RenderPass;
 import com.mojang.renderpearl.api.pipeline.IndexType;
 import com.mojang.renderpearl.api.textures.FilterMode;
 import com.mojang.renderpearl.api.textures.GpuSampler;
+import com.mojang.renderpearl.api.textures.GpuTexture;
 import com.mojang.renderpearl.api.textures.GpuTextureView;
 import com.mojang.renderpearl.api.vertex.VertexFormat;
 import com.zomboidcraft.ZomboidCraft;
@@ -63,7 +66,7 @@ public final class ReachMeshes {
     private static final int FULL_LIGHT = 0xF000F0;
 
     /** A level piece read from disk, waiting for the render thread to upload it. */
-    private record Loaded(String name, ReachGlb.Level level, NativeImage[] images, float ox, float oy, float oz) {
+    private record Loaded(String name, ReachGlb.Level level, NativeImage[][] images, float ox, float oy, float oz) {
     }
 
     /** One level piece on the graphics card. */
@@ -71,7 +74,7 @@ public final class ReachMeshes {
         String name;
         GpuBuffer vertices, indices;
         double ox, oy, oz;
-        Identifier[] textures;
+        GpuTexture[] textures;
         GpuTextureView[] views;
         boolean[] blend;
         final List<Draw> draws = new ArrayList<>();
@@ -90,9 +93,11 @@ public final class ReachMeshes {
 
     /** Set while collecting a frame in the Reach world, for the solid pass that follows. */
     private static boolean armed;
-    private static Vec3 eye;
     private static Frustum frustum;
+    private static PreparedRenderType prepared;
+    private static final List<GpuBufferSlice> TRANSFORMS = new ArrayList<>();
     private static int drawnTriangles;
+    private static boolean toldView;
 
     private ReachMeshes() {
     }
@@ -131,8 +136,23 @@ public final class ReachMeshes {
         if (cam == null || cam.pos == null || LEVELS.isEmpty()) {
             return;
         }
-        eye = cam.pos;
+        Vec3 eye = cam.pos;
         frustum = cam.cullFrustum;
+        // the same camera turn the game gives its own mobs; written now, before the frame's passes open
+        Matrix4f view = RenderSystem.getModelViewMatrixCopy();
+        if (view.equals(new Matrix4f(), 1e-6f) && cam.viewRotationMatrix != null) {
+            view = new Matrix4f(cam.viewRotationMatrix);
+        }
+        if (!toldView) {
+            toldView = true;
+            ZomboidCraft.LOGGER.info("Reach world: drawing levels with view {} (camera turn {})", view, cam.viewRotationMatrix);
+        }
+        prepared = RenderTypes.entityCutout(whiteTexture()).prepare();
+        TRANSFORMS.clear();
+        for (Uploaded u : LEVELS) {
+            Matrix4f mv = new Matrix4f(view).translate((float) (u.ox - eye.x), (float) (u.oy - eye.y), (float) (u.oz - eye.z));
+            TRANSFORMS.add(RenderSystem.getDynamicUniforms().writeTransform(mv, new Matrix4f()));
+        }
         armed = true;
     }
 
@@ -144,19 +164,15 @@ public final class ReachMeshes {
         armed = false;
         drawnTriangles = 0;
         try {
-            RenderType type = RenderTypes.entityCutout(white);
-            PreparedRenderType prepared = type.prepare();
             pass.setPipeline(RenderSystem.getCompiledPipeline(prepared.pipeline()));
             RenderSystem.bindDefaultUniforms(pass);
             for (PreparedRenderType.Texture t : prepared.textures()) {
                 pass.setUniform(t.name(), t.textureView(), t.sampler());
             }
-            GpuSampler repeat = RenderSystem.getSamplerCache().getRepeat(FilterMode.LINEAR);
-            Matrix4f view = RenderSystem.getModelViewMatrixCopy();
-            for (Uploaded u : LEVELS) {
-                Matrix4f mv = new Matrix4f(view).translate((float) (u.ox - eye.x), (float) (u.oy - eye.y), (float) (u.oz - eye.z));
-                GpuBufferSlice transform = RenderSystem.getDynamicUniforms().writeTransform(mv, new Matrix4f());
-                pass.setUniform("DynamicTransforms", transform);
+            GpuSampler repeat = RenderSystem.getSamplerCache().getRepeat(FilterMode.LINEAR, true);
+            for (int li = 0; li < LEVELS.size() && li < TRANSFORMS.size(); li++) {
+                Uploaded u = LEVELS.get(li);
+                pass.setUniform("DynamicTransforms", TRANSFORMS.get(li));
                 pass.setVertexBuffer(0, u.vertices.slice());
                 pass.setIndexBuffer(u.indices, IndexType.INT);
                 int bound = -1;
@@ -257,7 +273,7 @@ public final class ReachMeshes {
 
     private static Loaded read(Path glb, float yaw, float ox, float oy, float oz) throws IOException {
         ReachGlb.Level level = ReachGlb.read(glb, yaw, ox, oy, oz);
-        NativeImage[] images = new NativeImage[level.materials().size()];
+        NativeImage[][] images = new NativeImage[level.materials().size()][];
         for (int m = 0; m < images.length; m++) {
             ReachGlb.Material mat = level.materials().get(m);
             if (mat.png() == null) {
@@ -273,7 +289,7 @@ public final class ReachMeshes {
                         }
                     }
                 }
-                images[m] = img;
+                images[m] = mips(img);
             } catch (IOException | RuntimeException e) {
                 images[m] = null;
             }
@@ -281,6 +297,37 @@ public final class ReachMeshes {
         ZomboidCraft.LOGGER.info("Reach world: read {} ({} triangles, {} materials)", glb.getFileName(), level.triangles(),
                 level.materials().size());
         return new Loaded(glb.getFileName().toString(), level, images, ox, oy, oz);
+    }
+
+    /** The picture and its smaller copies down to 1x1 (each half the last, 2x2 averaged), so far surfaces don't sparkle. */
+    private static NativeImage[] mips(NativeImage top) {
+        List<NativeImage> out = new ArrayList<>();
+        out.add(top);
+        NativeImage last = top;
+        while (last.getWidth() > 1 || last.getHeight() > 1) {
+            int w = Math.max(1, last.getWidth() / 2), h = Math.max(1, last.getHeight() / 2);
+            NativeImage next = new NativeImage(w, h, false);
+            int lw = last.getWidth(), lh = last.getHeight();
+            for (int y = 0; y < h; y++) {
+                for (int x = 0; x < w; x++) {
+                    int x0 = Math.min(lw - 1, x * 2), x1 = Math.min(lw - 1, x * 2 + 1);
+                    int y0 = Math.min(lh - 1, y * 2), y1 = Math.min(lh - 1, y * 2 + 1);
+                    next.setPixel(x, y, average(last.getPixel(x0, y0), last.getPixel(x1, y0), last.getPixel(x0, y1), last.getPixel(x1, y1)));
+                }
+            }
+            out.add(next);
+            last = next;
+        }
+        return out.toArray(new NativeImage[0]);
+    }
+
+    private static int average(int a, int b, int c, int d) {
+        int out = 0;
+        for (int s = 0; s < 32; s += 8) {
+            int sum = ((a >>> s) & 0xFF) + ((b >>> s) & 0xFF) + ((c >>> s) & 0xFF) + ((d >>> s) & 0xFF);
+            out |= ((sum + 2) / 4) << s;
+        }
+        return out;
     }
 
     // ---------------------------------------------------------------- upload (render thread)
@@ -316,20 +363,28 @@ public final class ReachMeshes {
         u.oy = l.oy();
         u.oz = l.oz();
         List<ReachGlb.Material> mats = l.level().materials();
-        u.textures = new Identifier[mats.size()];
+        u.textures = new GpuTexture[mats.size()];
         u.views = new GpuTextureView[mats.size()];
         u.blend = new boolean[mats.size()];
-        String key = Integer.toHexString(l.name().hashCode() & 0x7fffffff);
+        GpuTextureView blankView = mc.getTextureManager().getTexture(blank).getTextureView();
+        CommandEncoder encoder = RenderSystem.getDevice().createCommandEncoder();
         for (int m = 0; m < mats.size(); m++) {
-            Identifier id = blank;
-            if (l.images()[m] != null) {
-                id = ZomboidCraft.id("reach/" + key + "/" + m);
-                String label = "Reach " + l.name() + " " + mats.get(m).name();
-                mc.getTextureManager().register(id, new DynamicTexture(() -> label, l.images()[m]));
-            }
-            u.textures[m] = id;
-            u.views[m] = mc.getTextureManager().getTexture(id).getTextureView();
             u.blend[m] = mats.get(m).blend();
+            NativeImage[] chain = l.images()[m];
+            if (chain == null) {
+                u.views[m] = blankView;
+                continue;
+            }
+            String label = "Reach " + l.name() + " " + mats.get(m).name();
+            GpuTexture tex = RenderSystem.getDevice().createTexture(() -> label,
+                    GpuTexture.USAGE_COPY_DST | GpuTexture.USAGE_TEXTURE_BINDING, GpuFormat.RGBA8_UNORM,
+                    chain[0].getWidth(), chain[0].getHeight(), 1, chain.length);
+            for (int level = 0; level < chain.length; level++) {
+                encoder.writeToTexture(tex, chain[level], level, 0, 0, 0);
+                chain[level].close();
+            }
+            u.textures[m] = tex;
+            u.views[m] = RenderSystem.getDevice().createTextureView(tex);
         }
 
         // vertices relative to the level's offset (kept small so floats stay sharp), in the entity vertex layout
@@ -398,14 +453,25 @@ public final class ReachMeshes {
             if (u.indices != null) {
                 u.indices.close();
             }
-            for (Identifier id : u.textures) {
-                if (id != null && !id.equals(white)) {
-                    mc.getTextureManager().release(id);
+            for (int m = 0; m < u.textures.length; m++) {
+                if (u.textures[m] != null) {
+                    u.views[m].close();
+                    u.textures[m].close();
                 }
             }
         }
         LEVELS.clear();
-        READY.clear();
+        TRANSFORMS.clear();
+        Loaded left;
+        while ((left = READY.poll()) != null) {
+            for (NativeImage[] chain : left.images()) {
+                if (chain != null) {
+                    for (NativeImage img : chain) {
+                        img.close();
+                    }
+                }
+            }
+        }
         loadedOnce = false;
     }
 }
