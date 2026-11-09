@@ -88,8 +88,12 @@ public final class ReachMeshes {
     private record Draw(int material, int indexCount, int firstIndex, int baseVertex, AABB box, int lod) {
     }
 
-    /** Beyond this many blocks from the camera (to a tile's middle) the land's coarse mesh is drawn instead of the fine one. */
-    private static final double LOD_SWITCH = 1024;
+    /**
+     * Beyond this many blocks from the camera (to a tile's middle) the land's coarse mesh is drawn instead of the fine one.
+     * Off by default (Josiah 2026-11-09: full detail everywhere first, judge the cost in game); turn it on with the Java
+     * option -Dzomboidcraft.reach.landLod=1024 (or any distance in blocks) if the graphics card struggles.
+     */
+    private static final double LOD_SWITCH = Double.parseDouble(System.getProperty("zomboidcraft.reach.landLod", "1e9"));
 
     private static final ConcurrentLinkedQueue<Loaded> READY = new ConcurrentLinkedQueue<>();
     private static final List<Uploaded> LEVELS = new ArrayList<>();
