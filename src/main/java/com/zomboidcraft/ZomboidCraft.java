@@ -143,6 +143,7 @@ public class ZomboidCraft implements ModInitializer {
         com.zomboidcraft.world.MobFilter.register();
         com.zomboidcraft.world.weather.WeatherDirector.register();
         com.zomboidcraft.world.gen.Worldgen.register();
+        com.zomboidcraft.world.reach.ReachWorld.register();    // the Halo Reach world type, beside the county
         com.zomboidcraft.world.gen.CountyCommand.register();
         com.zomboidcraft.world.gen.CountyRails.register();
         // last of every loot hook: nothing vanilla gets out of a loot table
