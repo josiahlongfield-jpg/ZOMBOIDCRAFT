@@ -87,6 +87,7 @@ public class ZomboidCraftClient implements ClientModInitializer {
         com.zomboidcraft.client.npc.NpcRenderer.register();
         com.zomboidcraft.client.zombie.body.ZBodyAnimator.register();
         SoundSliders.register();
+        com.zomboidcraft.client.hud.MainMenuScreen.register();
         com.zomboidcraft.client.interact.Interactables.register();
         com.zomboidcraft.client.hud.EnemyBars.register();
         com.zomboidcraft.client.cars.CarClient.register();

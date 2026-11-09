@@ -104,6 +104,47 @@ public final class SoldierScreen extends Screen {
     /** The mouse picks what it moves over; held still, it leaves the keys' choice alone. */
     private double lastMx = Double.NaN, lastMy = Double.NaN;
     private boolean moved;
+    /** Opened from the main menu's ARMORY: only the armour pages, and back returns there. */
+    private @Nullable Screen menu;
+
+    /** The Armory on its own, from the main menu: starts from the saved armour and saves it again on the way out. */
+    static SoldierScreen armoryFrom(Screen parent) {
+        SoldierScreen s = new SoldierScreen(null);
+        s.menu = parent;
+        s.page = Page.ARMORY;
+        JsonObject o = readSaved();
+        if (o.has("armour") && o.get("armour").isJsonObject()) {
+            JsonObject armour = o.getAsJsonObject("armour");
+            for (String c : ARMORY.keySet()) {
+                String key = c.toLowerCase(java.util.Locale.ROOT);
+                if (!armour.has(key)) continue;
+                List<Object[]> items = ARMORY.get(c);
+                if (items.isEmpty()) {
+                    try {
+                        int v = armour.get(key).getAsInt();
+                        if (c.startsWith("PRIMARY")) s.primary = v;
+                        else s.secondary = v;
+                    } catch (RuntimeException ignored) {
+                    }
+                    continue;
+                }
+                String name = armour.get(key).getAsString();
+                for (int i = 0; i < items.size(); i++) if (items.get(i)[0].equals(name)) s.equipped.put(c, i);
+            }
+        }
+        s.item = s.equipped.get(List.copyOf(ARMORY.keySet()).get(0));
+        return s;
+    }
+
+    private static JsonObject readSaved() {
+        Path file = FabricLoader.getInstance().getConfigDir().resolve("zomboidcraft/soldier.json");
+        try {
+            if (Files.exists(file)) return com.google.gson.JsonParser.parseString(Files.readString(file, StandardCharsets.UTF_8)).getAsJsonObject();
+        } catch (Exception e) {
+            ZomboidCraft.LOGGER.warn("Couldn't read {}", file, e);
+        }
+        return new JsonObject();
+    }
 
     public SoldierScreen(CharacterNet.Open open) {
         super(Component.literal("New soldier"));
@@ -262,7 +303,7 @@ public final class SoldierScreen extends Screen {
     }
 
     private void armory(GuiGraphicsExtractor g) {
-        header(g, "NEW SOLDIER  /  NOBLE SIX", "ARMORY");
+        header(g, menu != null ? "MAIN MENU  /  NOBLE SIX" : "NEW SOLDIER  /  NOBLE SIX", "ARMORY");
         List<String> cats = List.copyOf(ARMORY.keySet());
         for (int i = 0; i < cats.size(); i++) {
             float y = 230 + 52 * i;
@@ -643,12 +684,16 @@ public final class SoldierScreen extends Screen {
                 loadout = NOBLES.get(noble).loadout();
                 page = Page.LOADOUT;
             }
-            case ARMORY -> page = Page.NOBLE;
+            case ARMORY -> { if (menu != null) leaveArmory(); else page = Page.NOBLE; }
             case LOADOUT, OPERATOR -> finish();
         }
     }
 
     private void back() {
+        if (menu != null) {
+            leaveArmory();
+            return;
+        }
         switch (page) {
             case SIDE -> minecraft.gui.setScreen(new net.minecraft.client.gui.screens.PauseScreen(true));
             case NOBLE, OPERATOR -> page = Page.SIDE;
@@ -667,25 +712,41 @@ public final class SoldierScreen extends Screen {
         minecraft.gui.setScreen(null);     // then where you wake
     }
 
+    /** Back to the main menu, keeping the armour (and leaving the rest of the saved soldier as it was). */
+    private void leaveArmory() {
+        JsonObject o = readSaved();
+        o.add("armour", armour());
+        write(o);
+        minecraft.gui.setScreen(menu);
+    }
+
+    private JsonObject armour() {
+        JsonObject armour = new JsonObject();
+        equipped.forEach((c, i) -> {
+            List<Object[]> items = ARMORY.get(c);
+            if (!items.isEmpty()) armour.addProperty(c.toLowerCase(java.util.Locale.ROOT), (String) items.get(i)[0]);
+        });
+        armour.addProperty("primary colour", primary);
+        armour.addProperty("secondary colour", secondary);
+        return armour;
+    }
+
     private void save() {
         JsonObject o = new JsonObject();
         o.addProperty("side", side == 0 ? "spartan" : "operator");
         if (side == 0) {
             o.addProperty("noble", NOBLES.get(noble).id());
             o.addProperty("loadout", loadout(loadout).name());
-            JsonObject armour = new JsonObject();
-            equipped.forEach((c, i) -> {
-                List<Object[]> items = ARMORY.get(c);
-                if (!items.isEmpty()) armour.addProperty(c.toLowerCase(java.util.Locale.ROOT), (String) items.get(i)[0]);
-            });
-            armour.addProperty("primary colour", primary);
-            armour.addProperty("secondary colour", secondary);
-            o.add("armour", armour);
+            o.add("armour", armour());
         } else {
             o.addProperty("faction", faction == 0 ? "usec" : "bear");
             o.addProperty("face", face);
             o.addProperty("voice", voice + 1);
         }
+        write(o);
+    }
+
+    private static void write(JsonObject o) {
         Path file = FabricLoader.getInstance().getConfigDir().resolve("zomboidcraft/soldier.json");
         try {
             Files.createDirectories(file.getParent());
