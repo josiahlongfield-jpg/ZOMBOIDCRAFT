@@ -112,6 +112,10 @@ public final class ReachGlb {
                 png = g.image(ref.get("index").getAsInt());
                 uvTransforms[m] = textureTransform(ref);
             }
+            if (png == null && !pbr.has("baseColorFactor")) {
+                // no picture and no colour (Halo's blended ground, until its textures are baked): weathered rock grey
+                color = 0xFF7A766E;
+            }
             String alpha = mat.has("alphaMode") ? mat.get("alphaMode").getAsString() : "OPAQUE";
             materials.add(new Material(mat.has("name") ? mat.get("name").getAsString() : "material " + m, png, color,
                     alpha.equals("MASK"), alpha.equals("BLEND")));
