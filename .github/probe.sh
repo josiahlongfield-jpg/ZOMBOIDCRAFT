@@ -9,6 +9,8 @@ sig() { echo "----- $1"; javap -cp "$CP" -protected "$1" 2>&1 | grep -E "$2"; }
 
 
 if [ -f .github/probe-reach ]; then
+echo "===== compile errors"
+grep -E "error:" -A3 build.log | head -80
 echo "===== reach world (dimension type, presets, render hooks)"
 for j in $MC_JARS; do
   for f in data/minecraft/dimension_type/overworld.json data/minecraft/dimension_type/overworld_caves.json data/minecraft/worldgen/world_preset/normal.json data/minecraft/worldgen/world_preset/flat.json data/minecraft/tags/worldgen/world_preset/normal.json data/minecraft/worldgen/biome/plains.json; do

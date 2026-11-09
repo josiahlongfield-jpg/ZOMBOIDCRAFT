@@ -28,12 +28,11 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.material.PushReaction;
 
 /**
  * The Halo Reach world type ("zomboidcraft:reach", Josiah 2026-11-08): registers its generator and invisible-wall
- * block, puts a newcomer at the world's start spot, and lets everyone in it step up a whole block (the walls follow
- * the level's floors to a sixteenth, so a slope or stair rises up to a block from one column to the next).
+ * block, puts a newcomer at the world's start spot, and lets everyone in it step up a little higher than usual (the
+ * walls follow the level's floors in half-block quarters, so a slope or stair rises in small steps you walk up).
  *
  * <p>Everything Halo stays on the player's computer under config/zomboidcraft/reach (personal use only, never in
  * the mod): world/*.zrv are the walls, reach.json the start spot ({"spawn": [x, y, z, yaw]}).
@@ -44,7 +43,7 @@ public final class ReachWorld {
     private static final ResourceKey<Block> SOLID_KEY = ResourceKey.create(Registries.BLOCK, ZomboidCraft.id("reach_solid"));
     public static final Block SOLID = Registry.register(BuiltInRegistries.BLOCK, SOLID_KEY, new ReachSolid(BlockBehaviour.Properties.of()
             .strength(-1f, 3600000f).noOcclusion().noLootTable().noTerrainParticles().forceSolidOn()
-            .pushReaction(PushReaction.BLOCK).isSuffocating((state, level, pos) -> false)
+            .isSuffocating((state, level, pos) -> false)
             .isViewBlocking((state, level, pos) -> false).setId(SOLID_KEY)));
 
     /** Whether this player has been put at the start spot of this world yet. */

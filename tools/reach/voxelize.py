@@ -1,16 +1,17 @@
 """Turns a level's collision (triangles in metres, x east, y up, z south) into the Reach world's invisible walls.
 
-Every 1 m block a collision triangle passes through becomes solid; the top block of each solid run keeps the height
-the surface actually reaches inside it, in sixteenths (the reach_floor block's layers), so floors and slopes sit
-where the level's own floors are rather than on whole blocks. Nothing is filled in or flattened: cliffs, canyons,
+Every 1 m block a collision triangle passes through becomes solid; the top block of each solid run keeps, for each of
+its four quarters (half a block each way), the height the surface actually reaches inside that quarter in eighths of
+a block, so floors and slopes sit where the level's own floors are rather than on whole blocks. Nothing is filled in or flattened: cliffs, canyons,
 ledges and every storey of a building stay where the level puts them.
 
 Input: one or more .npz files with V (n,3 float metres) and T (m,3+ int) as the layout copies keep them. The level
 is turned by --yaw degrees about the vertical and moved by --offset x,y,z (blocks) into its place in the world.
 Output (.zrv, read by com.zomboidcraft.world.reach.ReachVoxels):
-    'ZRV1', int version 1, int chunk count, then per chunk: int cx, int cz, int offset, int length;
+    'ZRV1', int version 2, int chunk count, then per chunk: int cx, int cz, int offset, int length;
     each chunk's data, zlib-compressed: for the 256 columns (index lz * 16 + lx) a ushort run count, then per run
-    a short first y, a ushort length and a byte top layer (1..16; the blocks under it are whole). Big-endian.
+    a short first y, a ushort length and a ushort top: the top block's four quarter heights in eighths (0..8), four
+    bits each, north-west lowest, then north-east, south-west, south-east (the blocks under it are whole). Big-endian.
 
 Personal use only: the .npz and .zrv files come from the player's own copy of the game and stay on their computer.
 """
@@ -62,53 +63,41 @@ def samples(V, T, step=STEP, batch=6_000_000):
 
 
 def voxels(V, T):
-    """The solid blocks as a dict-like pair: keys (x, y, z ints) and the top of the surface inside each (0..1]."""
+    """The solid blocks (x, y, z ints) and, per block, the top of the surface inside each quarter (0..1, -1 = none)."""
     keys, tops = [], []
     for P in samples(V, T):
         q = np.floor(P).astype(np.int64)
         frac = P[:, 1] - q[:, 1]
-        k = (q[:, 0] + (1 << 20)) << 42 | (q[:, 2] + (1 << 20)) << 21 | (q[:, 1] + (1 << 20))
+        quarter = (np.floor(P[:, 0] * 2).astype(np.int64) & 1) + 2 * (np.floor(P[:, 2] * 2).astype(np.int64) & 1)
+        k = ((q[:, 0] + (1 << 18)) << 40 | (q[:, 2] + (1 << 18)) << 21 | (q[:, 1] + (1 << 20))) * 4 + quarter
         uk, inv = np.unique(k, return_inverse=True)
-        m = np.zeros(len(uk))
+        m = np.full(len(uk), -1.0)
         np.maximum.at(m, inv, frac)
         keys.append(uk)
         tops.append(m)
     k = np.concatenate(keys)
     t = np.concatenate(tops)
     uk, inv = np.unique(k, return_inverse=True)
-    m = np.zeros(len(uk))
+    m = np.full(len(uk), -1.0)
     np.maximum.at(m, inv, t)
-    x = (uk >> 42) - (1 << 20)
-    z = ((uk >> 21) & ((1 << 21) - 1)) - (1 << 20)
-    y = (uk & ((1 << 21) - 1)) - (1 << 20)
-    return x, y, z, m
+    block, quarter = uk // 4, uk % 4
+    ub, binv = np.unique(block, return_inverse=True)
+    quarters = np.full((len(ub), 4), -1.0)
+    quarters[binv, quarter] = m
+    x = (ub >> 40) - (1 << 18)
+    z = ((ub >> 21) & ((1 << 19) - 1)) - (1 << 18)
+    y = (ub & ((1 << 21) - 1)) - (1 << 20)
+    return x, y, z, quarters
 
 
-def runs(x, y, z, top):
-    """Per column, the solid runs (first y, length, top layer); keys sorted by column then y."""
-    order = np.lexsort((y, z, x))
-    x, y, z, top = x[order], y[order], z[order], top[order]
-    cols = {}
-    start = 0
-    n = len(x)
-    while start < n:
-        end = start
-        while end + 1 < n and x[end + 1] == x[start] and z[end + 1] == z[start]:
-            end += 1
-        col = []
-        r0 = start
-        for i in range(start, end + 1):
-            last = i == end or y[i + 1] != y[i] + 1
-            if last:
-                layer = int(np.clip(np.ceil(top[i] * 16), 1, 16))
-                col.append((int(y[r0]), int(y[i] - y[r0] + 1), layer))
-                r0 = i + 1
-        cols[(int(x[start]), int(z[start]))] = col
-        start = end + 1
-    return cols
+def pack(quarters):
+    """Four quarter tops (0..1, -1 = no surface there) as eighths in four nibbles."""
+    h = np.where(quarters < 0, 0, np.clip(np.ceil(quarters * 8), 1, 8)).astype(np.int64)
+    return h[:, 0] | h[:, 1] << 4 | h[:, 2] << 8 | h[:, 3] << 12
 
 
 def runs_fast(x, y, z, top):
+    """Per column, the solid runs (first y, length, packed quarter tops of the run's top block)."""
     order = np.lexsort((y, z, x))
     x, y, z, top = x[order], y[order], z[order], top[order]
     newcol = np.ones(len(x), bool)
@@ -117,7 +106,7 @@ def runs_fast(x, y, z, top):
     brk[1:] |= y[1:] != y[:-1] + 1
     starts = np.nonzero(brk)[0]
     ends = np.append(starts[1:], len(x)) - 1
-    layer = np.clip(np.ceil(top[ends] * 16), 1, 16).astype(int)
+    layer = top[ends]
     cols = {}
     for s, e, l in zip(starts, ends, layer):
         cols.setdefault((int(x[s]), int(z[s])), []).append((int(y[s]), int(e - s + 1), int(l)))
@@ -135,11 +124,11 @@ def write(path, cols):
             col = cc.get(i, ())
             out += struct.pack('>H', len(col))
             for y0, length, layer in col:
-                out += struct.pack('>hHB', y0, length, layer)
+                out += struct.pack('>hHH', y0, length, layer)
         blobs.append((cx, cz, zlib.compress(bytes(out), 9)))
     head = 4 + 4 + 4 + 16 * len(blobs)
     with open(path, 'wb') as f:
-        f.write(b'ZRV1' + struct.pack('>ii', 1, len(blobs)))
+        f.write(b'ZRV1' + struct.pack('>ii', 2, len(blobs)))
         off = head
         for cx, cz, b in blobs:
             f.write(struct.pack('>iiii', cx, cz, off, len(b)))
@@ -155,15 +144,16 @@ def main():
     ap.add_argument('npz', nargs='+')
     ap.add_argument('--yaw', type=float, default=0)
     ap.add_argument('--offset', default='0,0,0')
-    ap.add_argument('--npy', help='also save the solid blocks (x, y, z, layer) for previews')
+    ap.add_argument('--npy', help='also save the solid blocks (x, y, z, packed quarter tops) for previews')
     a = ap.parse_args()
     V, T = load(a.npz)
     V = place(V, a.yaw, [float(v) for v in a.offset.split(',')])
-    x, y, z, top = voxels(V, T)
+    x, y, z, quarters = voxels(V, T)
+    top = pack(quarters)
     cols = runs_fast(x, y, z, top)
     n = write(a.out, cols)
     if a.npy:
-        np.save(a.npy, np.stack([x, y, z, np.clip(np.ceil(top * 16), 1, 16)], axis=1).astype(np.int32))
+        np.save(a.npy, np.stack([x, y, z, top], axis=1).astype(np.int32))
     print(f'{len(x)} solid blocks in {len(cols)} columns, {n} chunks -> {a.out}')
 
 

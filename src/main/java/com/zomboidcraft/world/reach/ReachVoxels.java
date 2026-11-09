@@ -19,12 +19,12 @@ import java.util.zip.Inflater;
  * copy of the game and are never shipped). Each file is already in world blocks; where two files reach the same
  * chunk, both are laid.
  *
- * <p>File layout: 'ZRV1', int version, int chunk count, then per chunk int cx, int cz, int offset, int length; each
+ * <p>File layout: 'ZRV1', int version 2, int chunk count, then per chunk int cx, int cz, int offset, int length; each
  * chunk's zlib data is, for the 256 columns (lz * 16 + lx), a ushort run count and per run a short first y, a ushort
- * length and a byte top layer (1..16). Big-endian.
+ * length and a ushort top: the top block's quarter heights in eighths, four bits each, north-west lowest. Big-endian.
  */
 public final class ReachVoxels {
-    /** One solid run in one column: blocks y0 .. y0 + length - 1, the last one `top` sixteenths tall. */
+    /** One solid run in one column: blocks y0 .. y0 + length - 1, the last one's quarters `top` (see ReachSolid). */
     public record Run(int y0, int length, int top) {
     }
 
@@ -87,7 +87,11 @@ public final class ReachVoxels {
                 ZomboidCraft.LOGGER.warn("Not a Reach world file: {}", f);
                 return false;
             }
-            in.readInt();   // version 1
+            int version = in.readInt();
+            if (version != 2) {
+                ZomboidCraft.LOGGER.warn("Reach world file {} is version {}, wants 2: make it again with tools/reach/voxelize.py", f, version);
+                return false;
+            }
             int count = in.readInt();
             for (int i = 0; i < count; i++) {
                 int cx = in.readInt(), cz = in.readInt(), off = in.readInt(), len = in.readInt();
@@ -131,11 +135,11 @@ public final class ReachVoxels {
                 for (int c = 0; c < 256; c++) {
                     int runs = d.readUnsignedShort();
                     for (int r = 0; r < runs; r++) {
-                        int y0 = d.readShort(), len = d.readUnsignedShort(), top = d.readUnsignedByte();
+                        int y0 = d.readShort(), len = d.readUnsignedShort(), top = d.readUnsignedShort();
                         if (cols[c] == null) {
                             cols[c] = new ArrayList<>(2);
                         }
-                        cols[c].add(new Run(y0, len, Math.max(1, Math.min(16, top))));
+                        cols[c].add(new Run(y0, len, top));
                     }
                 }
             } catch (IOException | DataFormatException e) {

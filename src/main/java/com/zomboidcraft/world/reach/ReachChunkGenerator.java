@@ -67,7 +67,8 @@ public final class ReachChunkGenerator extends ChunkGenerator {
             return;
         }
         int min = chunk.getMinY(), max = chunk.getMaxY();
-        BlockState whole = ReachWorld.SOLID.defaultBlockState();
+        ReachSolid solid = (ReachSolid) ReachWorld.SOLID;
+        BlockState whole = solid.defaultBlockState();
         for (int c = 0; c < 256; c++) {
             List<ReachVoxels.Run> runs = cols[c];
             if (runs == null) {
@@ -78,12 +79,15 @@ public final class ReachChunkGenerator extends ChunkGenerator {
                 int last = r.y0() + r.length() - 1;
                 for (int y = Math.max(min, r.y0()); y <= Math.min(max, last); y++) {
                     LevelChunkSection section = chunk.getSection(chunk.getSectionIndex(y));
-                    BlockState state = y == last ? whole.setValue(ReachSolid.LAYERS, r.top()) : whole;
+                    int code = y == last ? r.top() : ReachSolid.WHOLE;
                     BlockState old = section.getBlockState(lx, y & 15, lz);
-                    if (old.is(ReachWorld.SOLID) && old.getValue(ReachSolid.LAYERS) >= state.getValue(ReachSolid.LAYERS)) {
-                        continue;   // another level file already made this block at least as tall
+                    if (old.is(ReachWorld.SOLID)) {
+                        code = ReachSolid.max(code, ReachSolid.code(old));   // another level file reaches this block too
                     }
-                    section.setBlockState(lx, y & 15, lz, state, false);
+                    if (code == 0) {
+                        continue;
+                    }
+                    section.setBlockState(lx, y & 15, lz, code == ReachSolid.WHOLE ? whole : solid.state(code), false);
                 }
             }
         }
