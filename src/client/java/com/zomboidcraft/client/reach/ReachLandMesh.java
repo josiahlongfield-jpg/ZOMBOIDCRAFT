@@ -200,17 +200,27 @@ final class ReachLandMesh {
 
     /**
      * A level's surrounding Halo land (its _000 piece) cut to where that level's land is in this world: triangles over
-     * the new land, and the sky and far-horizon pieces (any edge over 1.5 km), are dropped.
+     * the new land, and the sky and far-horizon pieces (any edge over 1.5 km, and Halo's painted far ranges and
+ * glaciers, which moved into this world would stand in the air over the neighbouring regions), are dropped.
      */
+    /**
+     * Halo's far-horizon scenery, by material name. Where a piece of it stands on this world's land it stays; where it
+     * would hang in the air it goes, and the world's own horizon (ReachHorizon) takes its place.
+     */
+    private static final java.util.regex.Pattern FAR_SCENERY = java.util.regex.Pattern.compile(
+            "glacier|background_mountain|distant_mountain|crater_mountain|distant_ridge|far_ridge", java.util.regex.Pattern.CASE_INSENSITIVE);
+
     static ReachGlb.Level clip(ReachGlb.Level level, ReachLand land) {
         List<ReachGlb.Batch> out = new ArrayList<>();
         for (ReachGlb.Batch b : level.batches()) {
+            boolean scenery = FAR_SCENERY.matcher(level.materials().get(b.material).name()).find();
             int[] keep = new int[b.index.length];
             int k = 0;
             for (int t = 0; t < b.index.length; t += 3) {
                 int i0 = b.index[t] * 3, i1 = b.index[t + 1] * 3, i2 = b.index[t + 2] * 3;
                 float cx = (b.pos[i0] + b.pos[i1] + b.pos[i2]) / 3, cz = (b.pos[i0 + 2] + b.pos[i1 + 2] + b.pos[i2 + 2]) / 3;
-                if (edge(b.pos, i0, i1) > 1500 || edge(b.pos, i1, i2) > 1500 || edge(b.pos, i2, i0) > 1500) {
+                float longest = Math.max(edge(b.pos, i0, i1), Math.max(edge(b.pos, i1, i2), edge(b.pos, i2, i0)));
+                if (longest > 1500) {
                     continue;
                 }
                 if (!land.covers(cx, cz) || ReachLand.kind(land.flagsAt(cx, cz)) == ReachLand.LAND) {
@@ -220,6 +230,9 @@ final class ReachLandMesh {
                 keep[k++] = b.index[t + 1];
                 keep[k++] = b.index[t + 2];
             }
+            if (scenery && !grounded(land, b.pos, keep, k)) {
+                continue;
+            }
             if (k == b.index.length) {
                 out.add(b);
             } else if (k > 0) {
@@ -227,6 +240,28 @@ final class ReachLandMesh {
             }
         }
         return new ReachGlb.Level(level.materials(), out);
+    }
+
+    /**
+     * Whether most of these triangles sit on the ground: a painted far range or glacier that stands on this world's
+     * land stays (Sword Base's glacier, the farm's crater walls), one left hanging in the air goes.
+     */
+    private static boolean grounded(ReachLand land, float[] p, int[] index, int count) {
+        if (count == 0) {
+            return false;
+        }
+        int on = 0;
+        for (int t = 0; t < count; t += 3) {
+            float low = Float.MAX_VALUE;
+            for (int k = 0; k < 3; k++) {
+                int v = index[t + k] * 3;
+                low = Math.min(low, p[v + 1] - land.height(p[v], p[v + 2]));
+            }
+            if (low < 30) {
+                on++;
+            }
+        }
+        return on * 10 >= count / 3;  // a tenth touching the ground: tall walls of rock and ice count, floating cards don't
     }
 
     private static float edge(float[] p, int a, int b) {

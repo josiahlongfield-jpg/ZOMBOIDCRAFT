@@ -52,13 +52,20 @@ public abstract class FogRendererMixin {
         float end = com.zomboidcraft.client.reach.ReachFar.FOG_END;
         fog.renderDistanceStart = Math.max(fog.renderDistanceStart, start);
         fog.renderDistanceEnd = Math.max(fog.renderDistanceEnd, end);
+        // the region's own fog (thick over stormy Exodus, light over Sword Base), thinning as you climb
+        var sky = com.zomboidcraft.client.reach.ReachSkyState.current();
+        if (sky != null) {
+            start = sky.fogStart;
+            end = sky.fogEnd;
+        }
         var fluid = camera.getFluidInCamera();
         boolean open = fluid == net.minecraft.world.level.material.FogType.ATMOSPHERIC
                 || fluid == net.minecraft.world.level.material.FogType.NONE;
         if (open && !player.hasEffect(net.minecraft.world.effect.MobEffects.BLINDNESS)
                 && !player.hasEffect(net.minecraft.world.effect.MobEffects.DARKNESS)) {
-            fog.environmentalStart = Math.max(fog.environmentalStart, start);
-            fog.environmentalEnd = Math.max(fog.environmentalEnd, end);
+            // the region's fog is the weather here (its storms and smoke are written into it)
+            fog.environmentalStart = sky != null ? start : Math.max(fog.environmentalStart, start);
+            fog.environmentalEnd = sky != null ? end : Math.max(fog.environmentalEnd, end);
         }
     }
 }
