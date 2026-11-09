@@ -25,6 +25,16 @@ public abstract class ReachFarPlaneMixin {
         return ReachFar.far(far);
     }
 
+    /**
+     * And the near plane a little further out (0.05 to 0.2 m), which keeps the depth buffer sharp enough to tell
+     * far buildings and the coast apart kilometres away. Hands and held guns have their own projection.
+     */
+    @ModifyArg(method = "update", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/client/Camera;setupPerspective(FFFFF)V"), index = 0)
+    private float zomboidcraft$reachNear(float near) {
+        return ReachFar.near(near);
+    }
+
     @Inject(method = "createProjectionMatrixForCulling", at = @At("HEAD"))
     private void zomboidcraft$reachCullFar(CallbackInfoReturnable<Matrix4f> cir) {
         depthFar = ReachFar.far(depthFar);

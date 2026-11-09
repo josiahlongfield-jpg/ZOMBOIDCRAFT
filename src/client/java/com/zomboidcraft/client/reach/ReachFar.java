@@ -6,17 +6,18 @@ import net.minecraft.client.Minecraft;
 /**
  * The Reach world's far drawing distance. The game only draws out to about four times the render distance (some
  * 500 m at render distance 8), so the Reach land, cities and ships past that would stop in a hard line. In the Reach
- * world the camera's far plane and cull frustum go out past the whole 16 km map instead, and the distance fog is
+ * world the camera's far plane and cull frustum go out past the whole 16 km map and its horizon instead, and the distance fog is
  * stretched to match, so far skylines fade into haze rather than end. Nothing else changes: the game's own blocks and
  * mobs still stop at the render distance, which is fine there because the walls you walk on are invisible.
  *
  * <p>Tunable for testing: {@code -Dzomboidcraft.reach.far=<blocks>} (0 turns the far pass off),
- * {@code -Dzomboidcraft.reach.fogStart} and {@code -Dzomboidcraft.reach.fogEnd}.
+ * {@code -Dzomboidcraft.reach.near}, {@code -Dzomboidcraft.reach.fogStart} and {@code -Dzomboidcraft.reach.fogEnd}.
  */
 public final class ReachFar {
-    public static final float FAR = Float.parseFloat(System.getProperty("zomboidcraft.reach.far", "32000"));
+    public static final float FAR = Float.parseFloat(System.getProperty("zomboidcraft.reach.far", "48000"));
     public static final float FOG_START = Float.parseFloat(System.getProperty("zomboidcraft.reach.fogStart", "900"));
     public static final float FOG_END = Float.parseFloat(System.getProperty("zomboidcraft.reach.fogEnd", "22000"));
+    public static final float NEAR = Float.parseFloat(System.getProperty("zomboidcraft.reach.near", "0.2"));
     private static boolean told;
 
     private ReachFar() {
@@ -37,5 +38,10 @@ public final class ReachFar {
             ZomboidCraft.LOGGER.info("Reach world: far plane {} -> {} blocks, fog {}..{}", vanilla, FAR, FOG_START, FOG_END);
         }
         return FAR;
+    }
+
+    /** The camera's near plane: pushed out a little with the far one so the depth buffer keeps its precision. */
+    public static float near(float vanilla) {
+        return active() && NEAR > vanilla ? NEAR : vanilla;
     }
 }

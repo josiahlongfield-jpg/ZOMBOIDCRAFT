@@ -9,7 +9,7 @@ import java.util.List;
  * approved climate map (snow in the north fading through tundra and green to dry grass and desert in the south, rock
  * where it is steep), plus the sea surface. Built in 256 m tiles so the ones off screen are skipped. Inside the levels'
  * own surroundings their real Halo land is drawn instead; this only covers the new land, overlapping the edge by one
- * cell so there is no gap.
+ * cell so there is no gap. Past the map's own edge {@link ReachHorizon} carries the land on to the horizon.
  *
  * <p>Each tile is made twice: with 8 m cells for near the camera and 32 m cells for far away (Batch.lod 1 and 2), so
  * the whole 16 km can be drawn out to the horizon without drawing millions of small triangles in the distance.
@@ -19,8 +19,8 @@ final class ReachLandMesh {
     static final int FAR_STEP = 8;    // samples per far mesh cell (32 m)
     static final int TILE_SAMPLES = 64; // samples per tile side (256 m), the same for both
 
-    private static final int[] CLIMATE = {0xFF5F7F45, 0xFFE4E9EE, 0xFF8C9486, 0xFF5F7F45, 0xFF8E8457, 0xFFC6AC7E};
-    private static final int ROCK = 0xFF7E7A74, SEA_COLOUR = 0xFF2E5468;
+    static final int[] CLIMATE = {0xFF5F7F45, 0xFFE4E9EE, 0xFF8C9486, 0xFF5F7F45, 0xFF8E8457, 0xFFC6AC7E};
+    static final int ROCK = 0xFF7E7A74, SEA_COLOUR = 0xFF2E5468;
 
     private ReachLandMesh() {
     }
@@ -49,7 +49,17 @@ final class ReachLandMesh {
                 }
             }
         }
+        ReachHorizon.build(land, batches);
         return new ReachGlb.Level(mats, batches);
+    }
+
+    /** The last sample index the land's meshes reach at this step (the tiles round the far edge down). */
+    static int end(ReachLand land, int step) {
+        int last = land.samples() - 1, end = 0;
+        for (int s = 0; s < last; s += TILE_SAMPLES) {
+            end = s + Math.max(1, Math.min(TILE_SAMPLES, last - s) / step) * step;
+        }
+        return end;
     }
 
     private static boolean drawn(ReachLand land, int ci, int cj, int step) {
@@ -162,7 +172,7 @@ final class ReachLandMesh {
     }
 
     /** Climate colour, rock on steep ground, with a little variation so it doesn't read as flat paint. */
-    private static int colour(ReachLand land, int si, int sj, float up) {
+    static int colour(ReachLand land, int si, int sj, float up) {
         int base = CLIMATE[Math.min(CLIMATE.length - 1, ReachLand.climate(land.flags(si, sj)))];
         float rock = Math.max(0, Math.min(1, (0.8f - up) / 0.25f));
         int c = mix(base, ROCK, rock);
@@ -171,7 +181,7 @@ final class ReachLandMesh {
         return scale(c, vary);
     }
 
-    private static int mix(int a, int b, float t) {
+    static int mix(int a, int b, float t) {
         int out = 0xFF000000;
         for (int s = 0; s < 24; s += 8) {
             float x = (a >>> s) & 0xFF, y = (b >>> s) & 0xFF;
@@ -180,7 +190,7 @@ final class ReachLandMesh {
         return out;
     }
 
-    private static int scale(int c, float f) {
+    static int scale(int c, float f) {
         int out = 0xFF000000;
         for (int s = 0; s < 24; s += 8) {
             out |= Math.min(255, Math.round(((c >>> s) & 0xFF) * f)) << s;
