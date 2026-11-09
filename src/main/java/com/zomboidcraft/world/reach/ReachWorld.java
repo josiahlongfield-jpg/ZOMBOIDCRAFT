@@ -44,7 +44,7 @@ public final class ReachWorld {
     public static final Block SOLID = Registry.register(BuiltInRegistries.BLOCK, SOLID_KEY, new ReachSolid(BlockBehaviour.Properties.of()
             .strength(-1f, 3600000f).noOcclusion().noLootTable().noTerrainParticles().forceSolidOn()
             .isSuffocating((state, level, pos) -> false)
-            .isViewBlocking((state, level, pos) -> false).setId(SOLID_KEY)));
+            .isViewBlocking((state, level, pos, box) -> false).setId(SOLID_KEY)));
 
     /** Whether this player has been put at the start spot of this world yet. */
     public static final AttachmentType<Boolean> PLACED = AttachmentRegistry.create(ZomboidCraft.id("reach_placed"),
