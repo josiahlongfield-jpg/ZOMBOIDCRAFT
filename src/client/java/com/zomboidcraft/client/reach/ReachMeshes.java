@@ -59,7 +59,8 @@ import org.joml.Matrix4f;
  * come from the same level's collision (see ReachSolid).
  *
  * <p>config/zomboidcraft/reach/reach.json lists them: {"levels": [{"dir": "C:\\...\\world\\m20", "offset": [x, y, z],
- * "yaw": 0}]}. Every .glb in that folder is drawn (a .glb split into .part00, .part01... is joined back up). The land
+ * "yaw": 0, "only": ["optional piece names"]}]}. Every .glb in that folder is drawn, or just the pieces named in
+ * "only" (a .glb split into .part00, .part01... is joined back up). The land
  * between the levels (world/land.zrh, see ReachLand) is drawn too, and each level's own far land (its _000 piece) is
  * cut to where that level sits in this world.
  */
@@ -217,7 +218,16 @@ public final class ReachMeshes {
                     float ox = off == null ? 0 : off.get(0).getAsFloat(), oy = off == null ? 0 : off.get(1).getAsFloat(),
                             oz = off == null ? 0 : off.get(2).getAsFloat();
                     Path textures = Files.isDirectory(dir) ? dir : dir.toAbsolutePath().getParent();
+                    List<String> only = new ArrayList<>();
+                    if (l.has("only")) {
+                        for (JsonElement o : l.getAsJsonArray("only")) {
+                            only.add(o.getAsString());
+                        }
+                    }
                     for (Path glb : pieces(dir)) {
+                        if (!only.isEmpty() && only.stream().noneMatch(o -> glb.getFileName().toString().contains(o))) {
+                            continue;   // a level placed for one part only (Lone Wolf's arena, not its whole map)
+                        }
                         try {
                             READY.add(read(glb, textures, yaw, ox, oy, oz, glb.getFileName().toString().contains("_000")));
                         } catch (IOException | RuntimeException ex) {
