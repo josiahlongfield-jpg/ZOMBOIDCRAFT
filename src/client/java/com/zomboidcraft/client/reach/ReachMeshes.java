@@ -214,9 +214,10 @@ public final class ReachMeshes {
                     JsonArray off = l.has("offset") ? l.getAsJsonArray("offset") : null;
                     float ox = off == null ? 0 : off.get(0).getAsFloat(), oy = off == null ? 0 : off.get(1).getAsFloat(),
                             oz = off == null ? 0 : off.get(2).getAsFloat();
+                    Path textures = Files.isDirectory(dir) ? dir : dir.toAbsolutePath().getParent();
                     for (Path glb : pieces(dir)) {
                         try {
-                            READY.add(read(glb, yaw, ox, oy, oz));
+                            READY.add(read(glb, textures, yaw, ox, oy, oz));
                         } catch (IOException | RuntimeException ex) {
                             ZomboidCraft.LOGGER.warn("Reach world: couldn't read {}: {}", glb, ex.toString());
                         }
@@ -271,8 +272,8 @@ public final class ReachMeshes {
         return out;
     }
 
-    private static Loaded read(Path glb, float yaw, float ox, float oy, float oz) throws IOException {
-        ReachGlb.Level level = ReachGlb.read(glb, yaw, ox, oy, oz);
+    private static Loaded read(Path glb, Path textures, float yaw, float ox, float oy, float oz) throws IOException {
+        ReachGlb.Level level = ReachGlb.read(glb, textures, yaw, ox, oy, oz);
         NativeImage[][] images = new NativeImage[level.materials().size()][];
         for (int m = 0; m < images.length; m++) {
             ReachGlb.Material mat = level.materials().get(m);
@@ -391,7 +392,8 @@ public final class ReachMeshes {
         VertexFormat format = RenderTypes.entityCutout(blank).format();
         int vertexCount = 0, indexCount = 0;
         List<ReachGlb.Batch> batches = new ArrayList<>(l.level().batches());
-        batches.sort(Comparator.comparingInt(b -> b.material));
+        // by material, then by 32-block patch: neighbouring batches of one material merge into one draw
+        batches.sort(Comparator.comparingInt((ReachGlb.Batch b) -> b.material).thenComparingLong(ReachMeshes::patch));
         for (ReachGlb.Batch b : batches) {
             vertexCount += b.vertices();
             indexCount += b.index.length;
@@ -401,6 +403,7 @@ public final class ReachMeshes {
         BufferBuilder out = new BufferBuilder(bytes, RenderTypes.entityCutout(blank).primitiveTopology(), format);
         ByteBuffer index = ByteBuffer.allocateDirect(Math.max(4, indexCount * 4)).order(ByteOrder.nativeOrder());
         int baseVertex = 0, firstIndex = 0;
+        long lastPatch = Long.MIN_VALUE;
         for (ReachGlb.Batch b : batches) {
             ReachGlb.Material mat = mats.get(b.material);
             int tint = mat.png() == null ? mat.color() : mat.color() | 0xFF000000;
@@ -411,10 +414,17 @@ public final class ReachMeshes {
                         b.normal[i * 3], b.normal[i * 3 + 1], b.normal[i * 3 + 2]);
             }
             for (int ix : b.index) {
-                index.putInt(ix);
+                index.putInt(ix + baseVertex);   // absolute, so merged runs draw from vertex 0
             }
-            u.draws.add(new Draw(b.material, b.index.length, firstIndex, baseVertex,
-                    new AABB(b.minX, b.minY, b.minZ, b.maxX, b.maxY, b.maxZ)));
+            Draw last = u.draws.isEmpty() ? null : u.draws.get(u.draws.size() - 1);
+            AABB box = new AABB(b.minX, b.minY, b.minZ, b.maxX, b.maxY, b.maxZ);
+            if (last != null && last.material == b.material && lastPatch == patch(b)) {
+                u.draws.set(u.draws.size() - 1, new Draw(b.material, last.indexCount + b.index.length, last.firstIndex, 0,
+                        last.box.minmax(box)));
+            } else {
+                u.draws.add(new Draw(b.material, b.index.length, firstIndex, 0, box));
+            }
+            lastPatch = patch(b);
             u.triangles += b.index.length / 3;
             baseVertex += b.vertices();
             firstIndex += b.index.length;
@@ -432,6 +442,15 @@ public final class ReachMeshes {
         u.indices = RenderSystem.getDevice().createBuffer(() -> "Reach " + l.name() + " indices", GpuBuffer.USAGE_INDEX, index);
         ZomboidCraft.LOGGER.info("Reach world: {} on the graphics card ({} triangles)", l.name(), u.triangles);
         return u;
+    }
+
+    /** Which 32-block patch a batch's middle is in (huge batches, like sky and far land, each get their own). */
+    private static long patch(ReachGlb.Batch b) {
+        if (b.maxX - b.minX > 64 || b.maxZ - b.minZ > 64) {
+            return Long.MAX_VALUE - System.identityHashCode(b);
+        }
+        long x = (long) Math.floor((b.minX + b.maxX) / 64), z = (long) Math.floor((b.minZ + b.maxZ) / 64);
+        return x << 32 ^ (z & 0xFFFFFFFFL);
     }
 
     private static int multiply(int a, int b) {

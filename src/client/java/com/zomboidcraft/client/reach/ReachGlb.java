@@ -81,6 +81,11 @@ public final class ReachGlb {
 
     /** Reads a .glb and places it: turned by yaw degrees (as tools/reach/voxelize.py turns the walls), then moved. */
     public static Level read(Path file, float yaw, float ox, float oy, float oz) throws IOException {
+        return read(file, file.toAbsolutePath().getParent(), yaw, ox, oy, oz);
+    }
+
+    /** As above, with the folder its tex/ pictures are found in (a joined-up split file lives somewhere else). */
+    public static Level read(Path file, Path textureDir, float yaw, float ox, float oy, float oz) throws IOException {
         ByteBuffer all = ByteBuffer.wrap(Files.readAllBytes(file)).order(ByteOrder.LITTLE_ENDIAN);
         if (all.getInt(0) != 0x46546C67) {
             throw new IOException("not a glb: " + file);
@@ -88,7 +93,7 @@ public final class ReachGlb {
         int jsonLength = all.getInt(12);
         JsonObject json = JsonParser.parseString(new String(all.array(), 20, jsonLength, StandardCharsets.UTF_8)).getAsJsonObject();
         int binStart = 20 + jsonLength + 8;
-        Glb g = new Glb(json, all, binStart, file.getParent());
+        Glb g = new Glb(json, all, binStart, textureDir);
 
         List<Material> materials = new ArrayList<>();
         float[][] uvTransforms = new float[size(json, "materials") + 1][];
@@ -397,8 +402,17 @@ public final class ReachGlb {
                 }
                 if (img.has("uri")) {
                     String uri = java.net.URLDecoder.decode(img.get("uri").getAsString(), StandardCharsets.UTF_8);
-                    Path p = dir.resolve(uri).normalize();
-                    return p.startsWith(dir) && Files.isRegularFile(p) ? Files.readAllBytes(p) : null;
+                    // next to the level file, or in the shared tex/ folder one up (levels share their pictures)
+                    for (Path base : new Path[]{dir, dir.getParent()}) {
+                        if (base == null) {
+                            continue;
+                        }
+                        Path p = base.resolve(uri).normalize();
+                        if (p.startsWith(base) && Files.isRegularFile(p)) {
+                            return Files.readAllBytes(p);
+                        }
+                    }
+                    return null;
                 }
             } catch (IOException | RuntimeException e) {
                 return null;
