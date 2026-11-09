@@ -22,6 +22,10 @@ public abstract class FogRendererMixin {
                                           CallbackInfoReturnable<FogData> cir) {
         var player = Minecraft.getInstance().player;
         if (player == null) return;
+        if (com.zomboidcraft.client.reach.ReachFar.active()) {
+            reachFog(camera, player, cir.getReturnValue());
+            return;
+        }
         float scale = com.zomboidcraft.client.kit.SightTraits.fogScale(player);
         if (scale == 1f) return;
         FogData fog = cir.getReturnValue();
@@ -36,6 +40,25 @@ public abstract class FogRendererMixin {
             fog.environmentalEnd = Math.min(fog.environmentalEnd * scale, renderDistance * 16f);
             fog.renderDistanceStart = Math.min(fog.renderDistanceStart, renderDistance * 16f);
             fog.renderDistanceEnd = Math.min(fog.renderDistanceEnd, renderDistance * 16f);
+        }
+    }
+
+    /**
+     * The Reach world's far haze: the edge-of-render-distance fog moves out to the far drawing distance so far
+     * skylines and ships fade instead of being cut off. Water, lava, snow and blindness keep their own short fog.
+     */
+    private static void reachFog(Camera camera, net.minecraft.world.entity.player.Player player, FogData fog) {
+        float start = com.zomboidcraft.client.reach.ReachFar.FOG_START;
+        float end = com.zomboidcraft.client.reach.ReachFar.FOG_END;
+        fog.renderDistanceStart = Math.max(fog.renderDistanceStart, start);
+        fog.renderDistanceEnd = Math.max(fog.renderDistanceEnd, end);
+        var fluid = camera.getFluidInCamera();
+        boolean open = fluid == net.minecraft.world.level.material.FogType.ATMOSPHERIC
+                || fluid == net.minecraft.world.level.material.FogType.NONE;
+        if (open && !player.hasEffect(net.minecraft.world.effect.MobEffects.BLINDNESS)
+                && !player.hasEffect(net.minecraft.world.effect.MobEffects.DARKNESS)) {
+            fog.environmentalStart = Math.max(fog.environmentalStart, start);
+            fog.environmentalEnd = Math.max(fog.environmentalEnd, end);
         }
     }
 }
