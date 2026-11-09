@@ -94,7 +94,7 @@ public final class ReachWorld {
             return;
         }
         if (on) {
-            step.addOrUpdateTransientModifier(new AttributeModifier(STEP, 0.45, AttributeModifier.Operation.ADD_VALUE));
+            step.addOrUpdateTransientModifier(new AttributeModifier(STEP, 0.15, AttributeModifier.Operation.ADD_VALUE));
         } else {
             step.removeModifier(STEP);
         }
