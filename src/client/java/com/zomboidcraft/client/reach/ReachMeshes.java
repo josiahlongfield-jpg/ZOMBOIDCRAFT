@@ -84,9 +84,12 @@ public final class ReachMeshes {
         int triangles;
     }
 
-    /** One batch: a material, a run of indices and the box it fills (for culling). */
-    private record Draw(int material, int indexCount, int firstIndex, int baseVertex, AABB box) {
+    /** One batch: a material, a run of indices, the box it fills (for culling) and its detail level (Batch.lod). */
+    private record Draw(int material, int indexCount, int firstIndex, int baseVertex, AABB box, int lod) {
     }
+
+    /** Beyond this many blocks from the camera (to a tile's middle) the land's coarse mesh is drawn instead of the fine one. */
+    private static final double LOD_SWITCH = 1024;
 
     private static final ConcurrentLinkedQueue<Loaded> READY = new ConcurrentLinkedQueue<>();
     private static final List<Uploaded> LEVELS = new ArrayList<>();
@@ -97,6 +100,7 @@ public final class ReachMeshes {
     /** Set while collecting a frame in the Reach world, for the solid pass that follows. */
     private static boolean armed;
     private static Frustum frustum;
+    private static double eyeX, eyeZ;
     private static PreparedRenderType prepared;
     private static final List<GpuBufferSlice> TRANSFORMS = new ArrayList<>();
     private static int drawnTriangles;
@@ -141,6 +145,8 @@ public final class ReachMeshes {
         }
         Vec3 eye = cam.pos;
         frustum = cam.cullFrustum;
+        eyeX = eye.x;
+        eyeZ = eye.z;
         // the same camera turn the game gives its own mobs; written now, before the frame's passes open
         Matrix4f view = RenderSystem.getModelViewMatrixCopy();
         if (view.equals(new Matrix4f(), 1e-6f) && cam.viewRotationMatrix != null) {
@@ -180,7 +186,7 @@ public final class ReachMeshes {
                 pass.setIndexBuffer(u.indices, IndexType.INT);
                 int bound = -1;
                 for (Draw d : u.draws) {
-                    if (u.blend[d.material] || (frustum != null && !frustum.isVisible(d.box))) {
+                    if (u.blend[d.material] || !nearEnough(d) || (frustum != null && !frustum.isVisible(d.box))) {
                         continue;
                     }
                     if (d.material != bound) {
@@ -195,6 +201,16 @@ public final class ReachMeshes {
             ZomboidCraft.LOGGER.error("Reach world: drawing the levels failed, turning them off", e);
             unload();
         }
+    }
+
+    /** Whether a draw's detail level fits its distance: fine land near the camera, coarse land beyond LOD_SWITCH. */
+    private static boolean nearEnough(Draw d) {
+        if (d.lod == 0) {
+            return true;
+        }
+        double dx = (d.box.minX + d.box.maxX) / 2 - eyeX, dz = (d.box.minZ + d.box.maxZ) / 2 - eyeZ;
+        boolean near = dx * dx + dz * dz < LOD_SWITCH * LOD_SWITCH;
+        return near == (d.lod == 1);
     }
 
     // ---------------------------------------------------------------- loading
@@ -416,7 +432,8 @@ public final class ReachMeshes {
         int vertexCount = 0, indexCount = 0;
         List<ReachGlb.Batch> batches = new ArrayList<>(l.level().batches());
         // by material, then by 32-block patch: neighbouring batches of one material merge into one draw
-        batches.sort(Comparator.comparingInt((ReachGlb.Batch b) -> b.material).thenComparingLong(ReachMeshes::patch));
+        batches.sort(Comparator.comparingInt((ReachGlb.Batch b) -> b.material).thenComparingInt(b -> b.lod)
+                .thenComparingLong(ReachMeshes::patch));
         for (ReachGlb.Batch b : batches) {
             vertexCount += b.vertices();
             indexCount += b.index.length;
@@ -441,11 +458,11 @@ public final class ReachMeshes {
             }
             Draw last = u.draws.isEmpty() ? null : u.draws.get(u.draws.size() - 1);
             AABB box = new AABB(b.minX, b.minY, b.minZ, b.maxX, b.maxY, b.maxZ);
-            if (last != null && last.material == b.material && lastPatch == patch(b)) {
+            if (last != null && last.material == b.material && last.lod == b.lod && lastPatch == patch(b)) {
                 u.draws.set(u.draws.size() - 1, new Draw(b.material, last.indexCount + b.index.length, last.firstIndex, 0,
-                        last.box.minmax(box)));
+                        last.box.minmax(box), b.lod));
             } else {
-                u.draws.add(new Draw(b.material, b.index.length, firstIndex, 0, box));
+                u.draws.add(new Draw(b.material, b.index.length, firstIndex, 0, box, b.lod));
             }
             lastPatch = patch(b);
             u.triangles += b.index.length / 3;

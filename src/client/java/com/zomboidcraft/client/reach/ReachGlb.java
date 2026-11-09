@@ -35,6 +35,8 @@ public final class ReachGlb {
         public final int[] color;
         public final int[] index;
         public final float minX, minY, minZ, maxX, maxY, maxZ;
+        /** Detail level: 0 drawn at any distance, 1 only near the camera, 2 only far from it (the land's two meshes). */
+        public int lod;
 
         Batch(int material, float[] pos, float[] uv, float[] normal, int[] color, int[] index) {
             this.material = material;

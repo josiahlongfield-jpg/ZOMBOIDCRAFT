@@ -10,10 +10,14 @@ import java.util.List;
  * where it is steep), plus the sea surface. Built in 256 m tiles so the ones off screen are skipped. Inside the levels'
  * own surroundings their real Halo land is drawn instead; this only covers the new land, overlapping the edge by one
  * cell so there is no gap.
+ *
+ * <p>Each tile is made twice: with 8 m cells for near the camera and 32 m cells for far away (Batch.lod 1 and 2), so
+ * the whole 16 km can be drawn out to the horizon without drawing millions of small triangles in the distance.
  */
 final class ReachLandMesh {
-    static final int STEP = 2;        // samples per mesh cell (land samples are 4 m apart: cells of 8 m)
-    static final int TILE = 32;       // cells per tile side
+    static final int STEP = 2;        // samples per near mesh cell (land samples are 4 m apart: cells of 8 m)
+    static final int FAR_STEP = 8;    // samples per far mesh cell (32 m)
+    static final int TILE_SAMPLES = 64; // samples per tile side (256 m), the same for both
 
     private static final int[] CLIMATE = {0xFF5F7F45, 0xFFE4E9EE, 0xFF8C9486, 0xFF5F7F45, 0xFF8E8457, 0xFFC6AC7E};
     private static final int ROCK = 0xFF7E7A74, SEA_COLOUR = 0xFF2E5468;
@@ -26,14 +30,20 @@ final class ReachLandMesh {
         List<ReachGlb.Material> mats = List.of(new ReachGlb.Material("land", null, 0xFFFFFFFF, false, false),
                 new ReachGlb.Material("sea", null, 0xFFFFFFFF, false, false));
         List<ReachGlb.Batch> batches = new ArrayList<>();
-        int cells = (land.samples() - 1) / STEP;
-        for (int tz = 0; tz < cells; tz += TILE) {
-            for (int tx = 0; tx < cells; tx += TILE) {
-                ReachGlb.Batch ground = tile(land, tx, tz, Math.min(TILE, cells - tx), Math.min(TILE, cells - tz));
-                if (ground != null) {
-                    batches.add(ground);
+        int last = land.samples() - 1;
+        for (int sz = 0; sz < last; sz += TILE_SAMPLES) {
+            for (int sx = 0; sx < last; sx += TILE_SAMPLES) {
+                int ws = Math.min(TILE_SAMPLES, last - sx), hs = Math.min(TILE_SAMPLES, last - sz);
+                for (int lod = 1; lod <= 2; lod++) {
+                    int step = lod == 1 ? STEP : FAR_STEP;
+                    ReachGlb.Batch ground = tile(land, sx / step, sz / step, Math.max(1, ws / step), Math.max(1, hs / step), step);
+                    if (ground != null) {
+                        ground.lod = lod;
+                        batches.add(ground);
+                    }
                 }
-                ReachGlb.Batch sea = sea(land, tx, tz, Math.min(TILE, cells - tx), Math.min(TILE, cells - tz));
+                // the sea is flat, so its coarse quads serve near and far
+                ReachGlb.Batch sea = sea(land, sx / FAR_STEP, sz / FAR_STEP, Math.max(1, ws / FAR_STEP), Math.max(1, hs / FAR_STEP), FAR_STEP);
                 if (sea != null) {
                     batches.add(sea);
                 }
@@ -42,11 +52,11 @@ final class ReachLandMesh {
         return new ReachGlb.Level(mats, batches);
     }
 
-    private static boolean drawn(ReachLand land, int ci, int cj) {
+    private static boolean drawn(ReachLand land, int ci, int cj, int step) {
         // a cell is ours if any sample in or right beside it is new land
-        for (int dj = -STEP; dj <= 2 * STEP; dj += STEP) {
-            for (int di = -STEP; di <= 2 * STEP; di += STEP) {
-                if (ReachLand.kind(land.flags(ci * STEP + di, cj * STEP + dj)) == ReachLand.LAND) {
+        for (int dj = -step; dj <= 2 * step; dj += Math.max(2, step / 2)) {
+            for (int di = -step; di <= 2 * step; di += Math.max(2, step / 2)) {
+                if (ReachLand.kind(land.flags(ci * step + di, cj * step + dj)) == ReachLand.LAND) {
                     return true;
                 }
             }
@@ -54,12 +64,12 @@ final class ReachLandMesh {
         return false;
     }
 
-    private static ReachGlb.Batch tile(ReachLand land, int tx, int tz, int w, int h) {
+    private static ReachGlb.Batch tile(ReachLand land, int tx, int tz, int w, int h, int step) {
         boolean[] use = new boolean[w * h];
         int used = 0;
         for (int j = 0; j < h; j++) {
             for (int i = 0; i < w; i++) {
-                if (drawn(land, tx + i, tz + j)) {
+                if (drawn(land, tx + i, tz + j, step)) {
                     use[j * w + i] = true;
                     used++;
                 }
@@ -71,16 +81,16 @@ final class ReachLandMesh {
         int vw = w + 1, vh = h + 1;
         float[] pos = new float[vw * vh * 3], uv = new float[vw * vh * 2], normal = new float[vw * vh * 3];
         int[] color = new int[vw * vh];
-        float c = land.cell() * STEP;
+        float c = land.cell() * step;
         for (int j = 0; j < vh; j++) {
             for (int i = 0; i < vw; i++) {
-                int si = (tx + i) * STEP, sj = (tz + j) * STEP, v = j * vw + i;
+                int si = (tx + i) * step, sj = (tz + j) * step, v = j * vw + i;
                 float y = land.sample(si, sj);
                 pos[v * 3] = land.firstX() + si * land.cell();
                 pos[v * 3 + 1] = y;
                 pos[v * 3 + 2] = land.firstZ() + sj * land.cell();
-                float dx = (land.sample(si + STEP, sj) - land.sample(si - STEP, sj)) / (2 * c);
-                float dz = (land.sample(si, sj + STEP) - land.sample(si, sj - STEP)) / (2 * c);
+                float dx = (land.sample(si + step, sj) - land.sample(si - step, sj)) / (2 * c);
+                float dz = (land.sample(si, sj + step) - land.sample(si, sj - step)) / (2 * c);
                 float len = (float) Math.sqrt(dx * dx + 1 + dz * dz);
                 normal[v * 3] = -dx / len;
                 normal[v * 3 + 1] = 1 / len;
@@ -107,14 +117,14 @@ final class ReachLandMesh {
         return new ReachGlb.Batch(0, pos, uv, normal, color, index);
     }
 
-    private static ReachGlb.Batch sea(ReachLand land, int tx, int tz, int w, int h) {
+    private static ReachGlb.Batch sea(ReachLand land, int tx, int tz, int w, int h, int step) {
         List<int[]> quads = new ArrayList<>();
         for (int j = 0; j < h; j++) {
             for (int i = 0; i < w; i++) {
-                int si = (tx + i) * STEP, sj = (tz + j) * STEP;
+                int si = (tx + i) * step, sj = (tz + j) * step;
                 boolean wet = false, below = false;
-                for (int dj = 0; dj <= STEP; dj += STEP) {
-                    for (int di = 0; di <= STEP; di += STEP) {
+                for (int dj = 0; dj <= step; dj += Math.max(1, step / 4)) {
+                    for (int di = 0; di <= step; di += Math.max(1, step / 4)) {
                         wet |= ReachLand.wet(land.flags(si + di, sj + dj));
                         below |= land.sample(si + di, sj + dj) < ReachLand.SEA;
                     }
@@ -127,7 +137,7 @@ final class ReachLandMesh {
         if (quads.isEmpty()) {
             return null;
         }
-        float c = land.cell() * STEP;
+        float c = land.cell() * step;
         float[] pos = new float[quads.size() * 12], uv = new float[quads.size() * 8], normal = new float[quads.size() * 12];
         int[] color = new int[quads.size() * 4], index = new int[quads.size() * 6];
         for (int q = 0; q < quads.size(); q++) {
