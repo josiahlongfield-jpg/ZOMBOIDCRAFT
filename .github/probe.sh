@@ -26,17 +26,16 @@ classes 'dimension/DimensionType\.class$|SnowLayerBlock\.class$|LevelRenderEvent
 for c in $(classes 'LevelRenderEvents\.class$|LevelRenderContext\.class$|GpuDevice\.class$|GpuBuffer\.class$|RenderPass\.class$|CommandEncoder\.class$|level/block/SnowLayerBlock\.class$' | sed 's/\.class$//; s#/#.#g'); do echo "-- $c"; javap -cp "$CP" -p "$c" 2>&1 | grep -vE 'lambda\$' | head -70; done
 javap -cp "$CP" -p net.minecraft.world.level.dimension.DimensionType 2>&1 | head -60
 javap -cp "$CP" -p net.minecraft.world.entity.ai.attributes.Attributes 2>&1 | grep -iE "step|gravity|fall|safe" | head
-echo "===== reach far pass: projection far plane, depth, sky order"
-javap -cp "$CP" -p net.minecraft.client.renderer.GameRenderer 2>&1 | grep -iE "far|depth|projection|renderDistance|getFov|near" | head -30
-javap -cp "$CP" -p -c net.minecraft.client.renderer.GameRenderer 2>&1 | awk '/ getDepthFar\(\);|float getDepthFar/,/^$/' | head -20
-for c in $(classes 'renderer/Projection\.class$|renderer/ProjectionMatrixBuffer\.class$|CachedPerspectiveProjectionMatrixBuffer\.class$|PerspectiveProjectionMatrixBuffer\.class$|state/CameraRenderState\.class$|state/LevelRenderState\.class$|renderer/SkyRenderer\.class$' | sed 's/\.class$//; s#/#.#g'); do echo "-- $c"; javap -cp "$CP" -p "$c" 2>&1 | grep -vE 'lambda\$' | head -60; done
-javap -cp "$CP" -p com.mojang.blaze3d.systems.RenderSystem 2>&1 | grep -iE "projection|depth|uniform" | head -30
-javap -cp "$CP" -p net.minecraft.client.renderer.LevelRenderer 2>&1 | grep -iE "execute|sky|render\(|addMainPass|frustum|cull|clear" | grep -vE 'lambda\$' | head -40
-javap -cp "$CP" -p -c net.minecraft.client.renderer.LevelRenderer 2>&1 | awk '/void executeSolid\(/,/^$/' | grep -E "invoke" | head -30
-javap -cp "$CP" -p -c net.minecraft.client.renderer.GameRenderer 2>&1 | grep -E "getDepthFar|Projection|setProjection|ProjectionMatrix" | head -30
-classes 'TextureFormat\.class$|DepthTestFunction\.class$'
-javap -cp "$CP" -p com.mojang.renderpearl.api.textures.TextureFormat 2>&1 | head -20
-javap -cp "$CP" -p com.mojang.renderpearl.api.commands.CommandEncoder 2>&1 | grep -iE "clear|depth" | head
+echo "===== reach far pass 2: camera projection"
+javap -cp "$CP" -p net.minecraft.client.Camera 2>&1 | grep -vE 'lambda\$' | grep -iE "projection|far|depth|fov|near|frustum|setup|update|Matrix" | head -40
+javap -cp "$CP" -p -c net.minecraft.client.Camera 2>&1 | grep -B3 -A1 -E "setupPerspective|getDepthFar|renderDistance|zFar" | head -60
+javap -cp "$CP" -p net.minecraft.client.renderer.state.level.CameraRenderState 2>&1 | head -40
+javap -cp "$CP" -p -c net.minecraft.client.renderer.GameRenderer 2>&1 | grep -B12 "levelProjectionMatrixBuffer:Lnet" | grep -E "invoke|getfield|Method|ldc" | head -40
+javap -cp "$CP" -p -c net.minecraft.client.renderer.GameRenderer 2>&1 | grep -E "^  [a-z].*\(|Camera\.|getDepthFar|renderDistance|setupPerspective" | head -80
+javap -cp "$CP" -p com.mojang.blaze3d.systems.RenderSystem 2>&1 | grep -iE "depth" | head
+grep -rl "DEPTH32\|D32" /dev/null
+for c in $(classes 'renderpearl/api/textures/.*Format\.class$|blaze3d/.*/GpuFormat\.class$' | sed 's/\.class$//; s#/#.#g'); do echo "-- $c"; javap -cp "$CP" -p "$c" 2>&1 | grep -iE "depth" | head; done
+javap -cp "$CP" -p -c com.mojang.blaze3d.pipeline.RenderTarget 2>&1 | grep -E "GpuFormat|DEPTH" | head
 exit 0
 fi
 
