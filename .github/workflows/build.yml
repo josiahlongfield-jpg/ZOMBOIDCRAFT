@@ -63,7 +63,7 @@ jobs:
 
       # When the build fails, print the real class layout and signatures.
       - name: Probe Minecraft classes
-        if: failure()
+        if: failure() || hashFiles('.github/probe-now') != ''
         run: .github/probe.sh
 
       # Boot a dedicated server with the mod to prove it loads and the mixins apply.
