@@ -26,14 +26,13 @@ classes 'dimension/DimensionType\.class$|SnowLayerBlock\.class$|LevelRenderEvent
 for c in $(classes 'LevelRenderEvents\.class$|LevelRenderContext\.class$|GpuDevice\.class$|GpuBuffer\.class$|RenderPass\.class$|CommandEncoder\.class$|level/block/SnowLayerBlock\.class$' | sed 's/\.class$//; s#/#.#g'); do echo "-- $c"; javap -cp "$CP" -p "$c" 2>&1 | grep -vE 'lambda\$' | head -70; done
 javap -cp "$CP" -p net.minecraft.world.level.dimension.DimensionType 2>&1 | head -60
 javap -cp "$CP" -p net.minecraft.world.entity.ai.attributes.Attributes 2>&1 | grep -iE "step|gravity|fall|safe" | head
-echo "===== reach render: terrain context, chunk layer draw, render type draw, uniforms"
-for c in $(classes 'LevelTerrainRenderContext\.class$|ChunkSectionsToRender\.class$|rendertype/RenderType\.class$|rendertype/RenderSetup\.class$|DynamicUniforms\.class$|systems/RenderSystem\.class$|GpuBufferSlice\.class$|RenderPassDescriptor\.class$|vertex/VertexFormat\.class$|ProjectionMatrixBuffer\.class$|CachedPerspectiveProjectionMatrixBuffer\.class$|textures/GpuSampler\.class$|textures/AddressMode\.class$|textures/FilterMode\.class$|pipeline/IndexType\.class$|GlobalSettingsUniform\.class$|TextureManager\.class$|AbstractTexture\.class$|FogRenderer\.class$' | sed 's/\.class$//; s#/#.#g'); do echo "-- $c"; javap -cp "$CP" -p "$c" 2>&1 | grep -vE 'lambda\$' | head -90; done
-for c in $(classes 'ChunkSectionsToRender\.class$|rendertype/RenderType\.class$' | sed 's/\.class$//; s#/#.#g'); do echo "-- code $c"; javap -cp "$CP" -p -c "$c" 2>&1 | grep -E "^  [a-z].*\(|invoke|ldc|getstatic|getfield" | grep -vE 'lambda\$' | head -260; done
-javap -cp "$CP" -p net.minecraft.client.renderer.RenderPipelines 2>&1 | grep -iE "ENTITY_(SOLID|CUTOUT)|SOLID_TERRAIN|CUTOUT_TERRAIN|TERRAIN" | head -20
-javap -cp "$CP" -p com.mojang.blaze3d.vertex.DefaultVertexFormat 2>&1 | head -30
-javap -cp "$CP" -p net.minecraft.client.renderer.state.level.LevelRenderState 2>&1 | head -40
-javap -cp "$CP" -p net.minecraft.client.renderer.state.level.CameraRenderState 2>&1 | head -40
-javap -cp "$CP" -p net.minecraft.client.renderer.LevelRenderer 2>&1 | grep -iE "section|layer|terrain|frustum|cull" | head -40
+echo "===== reach mesh: how vanilla draws a render type, targets, textures, transforms"
+for c in net.minecraft.client.renderer.rendertype.PreparedRenderType 'net.minecraft.client.renderer.rendertype.PreparedRenderType$Texture' net.minecraft.client.renderer.DynamicGpuData com.mojang.blaze3d.systems.SamplerCache com.mojang.renderpearl.api.textures.GpuTexture com.mojang.renderpearl.api.textures.GpuTextureView com.mojang.renderpearl.api.GpuFormat com.mojang.blaze3d.pipeline.RenderTarget com.mojang.renderpearl.api.pipeline.RenderPipeline com.mojang.blaze3d.platform.NativeImage net.minecraft.client.renderer.texture.AbstractTexture net.minecraft.client.renderer.texture.DynamicTexture net.minecraft.client.renderer.texture.TextureManager 'net.minecraft.client.renderer.RenderPipelines' com.mojang.blaze3d.vertex.MeshData com.mojang.blaze3d.vertex.ByteBufferBuilder com.mojang.blaze3d.vertex.BufferBuilder; do echo "-- $c"; javap -cp "$CP" -p "$c" 2>&1 | grep -vE 'lambda\$|static final .*RenderPipeline [A-Z_]+;' | head -70; done
+javap -cp "$CP" -p net.minecraft.client.Minecraft 2>&1 | grep -iE "RenderTarget|gameRenderer|textureManager" | head
+javap -cp "$CP" -p net.minecraft.client.renderer.GameRenderer 2>&1 | grep -iE "lightmap|overlay|GpuTextureView|camera" | head
+javap -cp "$CP" -p net.minecraft.client.renderer.LevelRenderer 2>&1 | grep -iE "RenderTarget|getMain|translucent|entityOutline|weather" | head -20
+for c in net.minecraft.client.renderer.rendertype.PreparedRenderType net.minecraft.client.renderer.DynamicGpuData; do echo "-- code $c"; javap -cp "$CP" -p -c "$c" 2>&1 | grep -E "^  [a-z].*\(|invoke|ldc " | grep -vE 'lambda\$' | head -200; done
+for c in $(classes 'MeshData\.class$|rendertype/RenderType\.class$|feature/.*Dispatcher.*\.class$|CustomGeometry.*\.class$' | sed 's/\.class$//; s#/#.#g'); do echo "-- drawers $c"; javap -cp "$CP" -p -c "$c" 2>&1 | grep -E "^  [a-z].*\(|RenderPass\.|createRenderPass|bindDefaultUniforms|writeTransform|getMainRenderTarget|getColorTextureView|getDepthTextureView" | grep -vE 'lambda\$' | head -120; done
 exit 0
 fi
 
