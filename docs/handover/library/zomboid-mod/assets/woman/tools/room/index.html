@@ -1,0 +1,173 @@
+<title>Companion Test Room</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600&family=Barlow:wght@400;500;600&display=swap">
+<style>
+/* Layout: one-screen test bench. The room fills the left; the companion's mind panel scrolls on the right (stacks under the room on phones). */
+:root{
+  --bg:#0b0c0e; --glass:rgba(12,13,15,.96); --edge:rgba(232,228,218,.18); --line:rgba(232,228,218,.10);
+  --text:#e8e4da; --bright:#f2efe8; --dim:rgba(232,228,218,.68); --faint:rgba(232,228,218,.30);
+  --good:#8fc46a; --bad:#d0675e; --warn:#d9a33a; --gold:#e0c25e; --rare:#7faedb;
+  --display:'Barlow Condensed','Arial Narrow',sans-serif; --body:'Barlow',system-ui,sans-serif;
+  color-scheme:dark;
+}
+html,body{height:100%}
+body{background:var(--bg);color:var(--text);font:400 14px/1.45 var(--body);overflow:hidden}
+.app{height:100%;display:grid;grid-template-columns:minmax(0,1fr) 380px}
+.stage{position:relative;min-width:0;min-height:0;background:#08090a}
+.stage canvas{display:block;width:100%;height:100%}
+.hud{position:absolute;left:max(14px,env(safe-area-inset-left,0px));top:12px;display:flex;flex-direction:column;gap:2px;pointer-events:none}
+.hud .name{font:600 26px/1 var(--display);letter-spacing:.04em;text-transform:uppercase;color:var(--bright)}
+.hud .mood{font:500 15px var(--display);letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
+.hud .traits{color:var(--dim);font-size:13px}
+.hint{position:absolute;left:max(14px,env(safe-area-inset-left,0px));bottom:10px;color:var(--faint);font-size:12px;pointer-events:none}
+.bubble{position:absolute;transform:translate(-50%,-100%);max-width:240px;background:var(--glass);border:1px solid var(--edge);color:var(--bright);padding:6px 10px;border-radius:3px;font-size:13px;pointer-events:none;white-space:normal;text-align:center}
+.bubble::after{content:"";position:absolute;left:50%;bottom:-6px;width:10px;height:10px;background:var(--glass);border-right:1px solid var(--edge);border-bottom:1px solid var(--edge);transform:translateX(-50%) rotate(45deg)}
+.loading{position:absolute;inset:0;display:grid;place-items:center;font:500 15px var(--display);letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+aside{background:var(--glass);border-left:1px solid var(--edge);overflow-y:auto;min-width:0;padding-block:12px 24px;padding-left:16px;padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:16px}
+h2{display:flex;align-items:center;gap:10px;margin:0 0 8px;font:500 13px var(--display);letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
+h2::after{content:"";flex:1;height:1px;background:var(--edge)}
+.row{display:flex;flex-wrap:wrap;gap:6px}
+button{font:500 13px var(--display);letter-spacing:.1em;text-transform:uppercase;color:var(--text);background:rgba(232,228,218,.04);border:1px solid var(--edge);border-radius:2px;padding:6px 10px;cursor:pointer}
+button:hover{border-color:var(--dim);color:var(--bright)}
+button[aria-pressed="true"]{background:var(--text);color:#1d1b16;border-color:var(--text)}
+button.warn{border-color:rgba(208,103,94,.55)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.meter{display:grid;grid-template-columns:92px minmax(0,1fr) 30px;align-items:center;gap:8px;font-size:13px}
+.meter label{color:var(--dim)}
+.meter output{text-align:right;font-variant-numeric:tabular-nums;color:var(--bright)}
+input[type=range]{width:100%;accent-color:var(--gold);margin:0}
+.meter.need input[type=range]{accent-color:var(--warn)}
+.trait{display:grid;grid-template-columns:76px minmax(0,1fr) 76px;align-items:center;gap:8px;font-size:12px;color:var(--dim)}
+.trait span:last-child{text-align:right}
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.stat{border:1px solid var(--line);padding:6px 8px}
+.stat b{display:block;font:600 18px var(--display);color:var(--bright);font-variant-numeric:tabular-nums}
+.stat small{color:var(--faint);letter-spacing:.12em;text-transform:uppercase;font:500 11px var(--display)}
+ol.list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px;max-height:200px;overflow-y:auto}
+ol.list li{display:grid;grid-template-columns:8px minmax(0,1fr) auto;gap:8px;align-items:baseline;font-size:13px;border-bottom:1px solid var(--line);padding-bottom:4px}
+ol.list li i{width:8px;height:8px;border-radius:50%;align-self:center}
+ol.list li small{color:var(--faint);font-variant-numeric:tabular-nums}
+.chat{font-size:13px;display:flex;flex-direction:column;gap:3px;max-height:160px;overflow-y:auto}
+.chat div{color:var(--bright)}
+.chat div span{color:var(--faint)}
+.note{color:var(--faint);font-size:12px;margin:0}
+.hud .doing{color:var(--text);font-size:13px;margin-top:2px}
+.clock{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.clock b{font:600 24px/1 var(--display);color:var(--bright);font-variant-numeric:tabular-nums;letter-spacing:.03em}
+.clock span{color:var(--gold);font:500 13px var(--display);letter-spacing:.12em;text-transform:uppercase}
+.meter.skill{row-gap:2px}
+.meter.skill .xp{grid-column:2/3;height:3px;background:var(--line)}
+.meter.skill .xp i{display:block;height:100%;width:0;background:var(--gold)}
+.stats.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+select,input[type=text]{font:500 13px var(--body);background:#121316;color:var(--text);border:1px solid var(--edge);border-radius:2px;padding:5px 8px}
+input[type=text]{width:100%}
+@media (max-width:820px){
+  body{overflow:auto}
+  .app{grid-template-columns:1fr;grid-template-rows:62vh auto;height:auto}
+  aside{border-left:0;border-top:1px solid var(--edge);overflow:visible;padding-left:max(16px,env(safe-area-inset-left,0px))}
+}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+</style>
+
+<div class="app">
+  <div class="stage" id="stage">
+    <div class="loading" id="loading">Loading her model…</div>
+    <div class="hud" aria-live="polite"><div class="name" id="hudName">Companion</div><div class="mood" id="hudMood">steady</div><div class="traits" id="hudTraits"></div><div class="doing" id="hudDoing"></div></div>
+    <div class="hint">Click the floor to walk there. G: follow or wait. Drag to look around.</div>
+  </div>
+  <aside>
+    <section>
+      <h2>Her</h2>
+      <div class="row" style="margin-bottom:8px"><input type="text" id="name" value="Companion" aria-label="Her name"></div>
+      <div class="row">
+        <button id="bFollow" aria-pressed="true" title="G in game">Following</button>
+        <button id="bGun" aria-pressed="true">Rifle</button>
+        <button id="bLights" aria-pressed="true">Lights</button>
+        <select id="rate" aria-label="Needs speed"><option value="1">Time: real</option><option value="10" selected>Time: 10x</option><option value="60">Time: 60x</option></select>
+      </div>
+      <div class="row" style="margin-top:6px" id="outfit"></div>
+    </section>
+    <section>
+      <h2>Her and you</h2>
+      <p class="note" id="bondWords" style="color:var(--text);font-size:13px;margin-bottom:8px"></p>
+      <div id="bond" style="display:flex;flex-direction:column;gap:6px"></div>
+      <div class="row" id="acts" style="margin-top:8px"></div>
+      <div class="row" style="margin-top:6px"><button id="bTogether">Together / apart</button><button id="eRival" aria-pressed="false">Another companion near you</button></div>
+      <p class="note" style="margin-top:6px">In game: sneak and press G on her. She says yes or no by how she feels about you and how she's doing; pushing after a no costs you.</p>
+    </section>
+    <section>
+      <h2>Her clothes</h2>
+      <p class="note" id="wearing" style="color:var(--text);font-size:13px;margin-bottom:6px"></p>
+      <div class="row"><button id="oLike">Looks great on you</button><button id="oDislike">Not my favourite</button>
+        <select id="oSuggest" aria-label="Suggest an outfit"></select></div>
+      <p class="note" style="margin-top:6px">Each piece (in game: the green dot on it, G):</p>
+      <div class="row" id="pieceBtns" style="margin-top:4px"></div>
+      <p class="note" id="tastes" style="margin-top:6px"></p>
+      <p class="note" style="margin-top:6px">She dresses herself: work clothes and boots for work or out with you, something nicer when she's free or feeling romantic, a sweater when she's low, the slip dress for bed, boots after running in heels. In game: sneak + G, "Her outfit..." to answer or suggest an outfit; G on the green dot on any piece she's wearing to ask her to take it off or put another on. Her bra counts as a top; it and her underwear stay on.</p>
+    </section>
+    <section>
+      <h2>Her day</h2>
+      <div class="clock"><b id="clockTime">Day 1, 09:00</b><span id="clockPhase">work hours</span></div>
+      <div class="row">
+        <select id="job" aria-label="Her job"></select>
+        <button id="bShift" aria-pressed="false">Day shift</button>
+        <button id="bFire" aria-pressed="true">Campfire lit</button>
+      </div>
+      <div class="row" style="margin-top:6px"><button id="skipWork">Skip to work hours</button><button id="skipFree">Skip to free time</button><button id="skipSleep">Skip to bedtime</button></div>
+      <p class="note" style="margin-top:8px">Pick a job and she stays home to do it in her work hours, eats and sits with you in her free time, and goes to bed at bedtime. G (or Following) takes her with you instead. Until her Mixamo clips arrive, working plays her idle and sleeping lays her down with the end of her fall.</p>
+    </section>
+    <section>
+      <h2>Skills</h2>
+      <div id="skills" style="display:flex;flex-direction:column;gap:6px"></div>
+      <p class="note" style="margin-top:6px">They grow as she works; drag one to set it, like /zc npc skill.</p>
+    </section>
+    <section>
+      <h2>Stores</h2>
+      <div class="stats three" id="stores"></div>
+      <p class="note" id="pack" style="margin-top:6px">Her pack: empty</p>
+      <p class="note" id="barricadeNote"></p>
+      <div class="row" style="margin-top:6px"><button id="bStock">Stock the chest</button><button id="bEmpty">Empty it</button></div>
+    </section>
+    <section>
+      <h2>Happenings</h2>
+      <div class="row">
+        <button id="eZombie">Zombie</button><button id="eHorde">Horde of 5</button><button id="eHarv" class="warn">Harvestman</button>
+        <button id="eHurt" class="warn">Hurt her</button><button id="eHeal">Patch her up</button>
+        <button id="eFood">Drop food</button><button id="eWater">Drop water</button>
+        <button id="eBash" class="warn">Beat in the window</button><button id="eYouHurt" class="warn">You get hurt</button><button id="eRestock">Restock outside</button>
+        <button id="eLeave">Leave her alone</button><button id="eRevive">New companion</button>
+      </div>
+    </section>
+    <section>
+      <h2>How it shows</h2>
+      <div class="stats">
+        <div class="stat"><small>Pace</small><b id="sPace">100%</b></div>
+        <div class="stat"><small>Aim shake</small><b id="sWobble">1.0x</b></div>
+        <div class="stat"><small>Runs from</small><b id="sFlee">3.0 m</b></div>
+        <div class="stat"><small>Health</small><b id="sHp">30 / 30</b></div>
+        <div class="stat"><small>Your health</small><b id="sYou">20 / 20</b></div>
+      </div>
+    </section>
+    <section>
+      <h2>Feelings</h2>
+      <div id="needs" style="display:flex;flex-direction:column;gap:6px"></div>
+      <p class="note" style="margin-top:6px">Drag a bar to set it, the way /zc npc feel does in game.</p>
+    </section>
+    <section>
+      <h2>Traits</h2>
+      <div id="traits" style="display:flex;flex-direction:column;gap:8px"></div>
+      <div class="row" style="margin-top:8px"><button id="bRoll">Roll new traits</button></div>
+    </section>
+    <section>
+      <h2>Diary</h2>
+      <ol class="list" id="diary"></ol>
+    </section>
+    <section>
+      <h2>Chat</h2>
+      <div class="chat" id="chat"></div>
+    </section>
+  </aside>
+</div>
+
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+<script type="module" src="app.js"></script>

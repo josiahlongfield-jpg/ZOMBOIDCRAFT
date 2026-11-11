@@ -1,0 +1,515 @@
+<title>Reload Editor</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Workshop bench: three views on top, a key timeline under them, the key's sliders on the side (stacked on a phone). Single dark look. */
+:root {
+  --bg: #15171a; --panel: #1d2024; --line: #2c3036; --fg: #e4e6e9; --dim: #8c939c; --accent: #e0a64a; --sel: #f2c46d;
+  --bad: #e25d4f; --good: #6fbf73; --lane: #23272c; --ui: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace; color-scheme: dark;
+}
+html, body { min-height: 100%; }
+body { background: var(--bg); color: var(--fg); font-family: var(--ui); font-size: 13px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 10px; box-sizing: border-box; }
+* { box-sizing: border-box; }
+button, select, input { font: inherit; color: var(--fg); background: var(--panel); border: 1px solid var(--line); border-radius: 5px; }
+button { padding: 5px 10px; cursor: pointer; }
+button:hover { border-color: var(--dim); }
+button:focus-visible, select:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+button.on { background: var(--accent); color: #1a1408; border-color: var(--accent); }
+button:disabled { opacity: .4; cursor: default; }
+select { padding: 5px 6px; }
+.bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 10px; }
+.bar h1 { font-size: 15px; margin: 0 8px 0 0; letter-spacing: .02em; }
+.status { color: var(--dim); font-size: 12px; margin-left: auto; }
+.status.bad { color: var(--bad); }
+.tnum { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+/* the views stay on screen while the sliders scroll under them (Josiah 2026-11-04) */
+.views { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; position: sticky; top: 0; z-index: 5; background: var(--bg); padding-block: 4px 6px; }
+.view { position: relative; background: #0d0e10; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; aspect-ratio: 16 / 10; max-width: 100%; cursor: pointer; }
+.view.active { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.view canvas { width: 100%; height: 100%; display: block; }
+.view .lbl { position: absolute; left: 8px; top: 6px; font-size: 12px; background: rgba(13,14,16,.7); padding: 2px 6px; border-radius: 4px; pointer-events: none; }
+.view .warn { position: absolute; left: 8px; bottom: 6px; font-size: 12px; color: var(--bad); background: rgba(13,14,16,.75); padding: 2px 6px; border-radius: 4px; pointer-events: none; }
+.vtabs { display: none; gap: 6px; margin-bottom: 8px; }
+.main { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 10px; margin-top: 10px; }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 10px; min-width: 0; }
+.panel h2 { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--dim); margin: 0 0 8px; font-weight: 600; }
+.transport { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-bottom: 8px; }
+.tl { position: relative; user-select: none; touch-action: none; }
+.row { display: grid; grid-template-columns: 96px minmax(0, 1fr); align-items: center; height: 26px; }
+.row .name { color: var(--dim); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 6px; cursor: pointer; }
+.row.cur .name { color: var(--fg); }
+.lane { position: relative; height: 18px; background: var(--lane); border-radius: 3px; }
+.key { position: absolute; top: 2px; width: 14px; height: 14px; margin-left: -7px; transform: rotate(45deg) scale(.8); background: var(--dim); border: 1px solid #0006; cursor: grab; }
+.key.ev { transform: none; width: 6px; margin-left: -3px; border-radius: 2px; background: #7aa6d8; }
+.key.sel { background: var(--sel); box-shadow: 0 0 0 2px #0008; z-index: 2; }
+.ruler { height: 18px; position: relative; color: var(--dim); font-size: 10px; }
+.ruler span { position: absolute; transform: translateX(-50%); }
+.head { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--accent); pointer-events: none; z-index: 3; }
+.scrub { height: 20px; margin-left: 96px; position: relative; cursor: ew-resize; background: var(--lane); border-radius: 3px; margin-bottom: 4px; }
+.field { display: grid; grid-template-columns: 92px minmax(0, 1fr) 64px; gap: 6px; align-items: center; margin: 4px 0; }
+.field label { color: var(--dim); font-size: 12px; }
+.field input[type=number] { width: 100%; padding: 3px 4px; font-family: var(--mono); font-size: 12px; }
+.field input[type=range] { width: 100%; accent-color: var(--accent); background: none; border: 0; }
+.grp { border-top: 1px solid var(--line); margin-top: 8px; padding-top: 6px; }
+.grp > div:first-child { font-size: 12px; margin-bottom: 2px; }
+.btns { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.note { color: var(--dim); font-size: 12px; line-height: 1.45; }
+.confirm { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; margin-top: 6px; color: var(--bad); }
+@media (max-width: 900px) {
+  .main { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 700px) {
+  html, body { height: auto; min-height: 100%; }
+  .vtabs { display: flex; flex-wrap: wrap; }
+  .views { grid-template-columns: minmax(0, 1fr); position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); padding-block: 4px 6px; }
+  .view { aspect-ratio: 16 / 9; }
+  body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+  .view:not(.active) { display: none; }
+  .row { grid-template-columns: 70px minmax(0, 1fr); }
+  .scrub { margin-left: 70px; }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto; } }
+</style>
+
+<div class="bar">
+  <h1>Reload Editor</h1>
+  <select id="gun" aria-label="Gun"></select>
+  <button id="undo" title="Undo">Undo</button>
+  <button id="redo" title="Redo">Redo</button>
+  <span class="status" id="status">Loading…</span>
+</div>
+<div class="vtabs" id="vtabs"></div>
+<div class="views" id="views"></div>
+<div class="main">
+  <div class="panel">
+    <div class="transport">
+      <button id="play">Play</button>
+      <select id="speed" aria-label="Speed"><option value="1">Full speed</option><option value="0.5">Half speed</option><option value="0.25">Quarter speed</option></select>
+      <button id="prevk" title="Previous key">◀ key</button>
+      <button id="nextk" title="Next key">key ▶</button>
+      <span class="tnum" id="time">0.00 s</span>
+      <span class="note" id="editing"></span>
+    </div>
+    <div class="scrub" id="scrub"><div class="head" id="head0"></div></div>
+    <div class="tl" id="tl"></div>
+    <div class="btns">
+      <button id="addk">Add key at playhead</button>
+      <button id="delk">Delete key</button>
+      <label class="note">Clip length <input id="dur" type="number" step="0.05" min="0.5" max="10" style="width:64px"> s</label>
+      <label class="note">Arm <select id="solver" title="How the arms are solved in this view"><option value="natural">Natural (whole arm moves together)</option><option value="plain">Plain (older)</option></select></label>
+    </div>
+  </div>
+  <div class="panel" id="insp"></div>
+</div>
+
+<script type="importmap">{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }</script>
+<script src="engine.js"></script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+const E = window.REngine;
+const VIEWS = { fp: 'First person', tp: 'Third person, standing', ta: 'Third person, aimed (moving)' };
+const VK = Object.keys(VIEWS);
+const $ = id => document.getElementById(id);
+const f32 = b => { const s = atob(b), u = new Uint8Array(s.length); for (let i = 0; i < s.length; i++) u[i] = s.charCodeAt(i); return new Float32Array(u.buffer); };
+const clone = o => JSON.parse(JSON.stringify(o));
+const NAMES = { AR57_PDW: 'AR-57 PDW', Colt1911: 'Colt 1911', AAC_Honey: 'AAC Honey Badger', L86: 'L86 LSW', M2Carbine: 'M2 Carbine', AssaultRifle2: 'M14-type rifle',
+  American180: 'American-180', M870_CQB: 'Remington 870 CQB', Winchester1866: 'Winchester 1866', SW_M500: 'S&W Model 500', BOAR: 'Big Boar .50', RPG_7: 'RPG-7',
+  TenPointTurbo_XLT: 'TenPoint crossbow', DSHK: 'DShK', Bush_AR15_MOE: 'AR-15 (Bushmaster MOE)' };
+const partName = n => ({ mag: 'Old mag', mag2: 'New mag', slide: 'Slide', pump: 'Pump', handle: 'Charging handle', lever: 'Lever', hammer: 'Hammer', cyl: 'Cylinder', spent: 'Empty cases',
+  load: 'New rounds', sl: 'Speedloader', bolt: 'Bolt', rnd: 'Round', rocket: 'Rocket', strL: 'String left', strR: 'String right', cover: 'Feed cover', belt: 'Belt' }[n]
+  || (/^sh\d$/.test(n) ? 'Shell ' + (+n[2] + 1) : /^rd\d$/.test(n) ? 'Round ' + (+n[2] + 1) : n));
+
+// ------------------------------------------------------------------ state
+let S = null, kit = null, gid = null, data = null, baked = {}, active = 'tp', t = 0, playing = false, sel = { track: 'L', i: 0 };
+let undo = [], redo = [], db = null, saveTimer = null, dirty = false, confirmReset = false;
+const store = { get: k => { try { return localStorage.getItem(k); } catch { return null; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch {} } };
+
+function flatten(spec, view, legacy) {
+  const s = clone(spec);
+  const flat = k => { const o = E.resolve(k, view); delete o.fp; delete o.tp; delete o.ta; return o; };
+  for (const tr of ['gun', 'L', 'R']) if (s[tr]) s[tr] = s[tr].map(([tt, k]) => [tt, flat(k)]);
+  if (!s.R) s.R = [[0, { k: 'rest' }], [s.dur, { k: 'rest' }]];
+  if (!s.L) s.L = [[0, { k: 'rest' }], [s.dur, { k: 'rest' }]];
+  s.moves = s.moves || {}; s.events = s.events || [];
+  if (view === 'ta' && !legacy && !spec.gun.some(([, k]) => k.ta)) s.gun = s.gun.map(([tt]) => [tt, {}]);
+  if (spec.armfitByView && spec.armfitByView[view]) s.armfit = clone(spec.armfitByView[view]);
+  delete s.armfitByView;   // aimed reload: the gun stays up in the aim
+  return s;
+}
+const fresh = () => Object.fromEntries(VK.map(v => [v, flatten(kit.spec, v)]));
+const spec = () => data[active];
+
+// ------------------------------------------------------------------ views (three.js)
+const R3 = {};
+function makeViews() {
+  const host = $('views'); host.innerHTML = ''; $('vtabs').innerHTML = '';
+  for (const v of VK) {
+    const d = document.createElement('div'); d.className = 'view'; d.id = 'v_' + v;
+    d.innerHTML = `<canvas></canvas><div class="lbl">${VIEWS[v]}</div><div class="warn" hidden></div>`;
+    host.appendChild(d);
+    const r = new THREE.WebGLRenderer({ canvas: d.querySelector('canvas'), antialias: true }); r.setClearColor(0x2a2d31); r.outputColorSpace = THREE.SRGBColorSpace;
+    const cam = new THREE.PerspectiveCamera(v === 'fp' ? 70 : 40, 16 / 10, 0.03, 50);
+    let ctl = null;
+    if (v === 'tp') { cam.position.set(-0.42, 1.5, 1.65); }
+    if (v === 'ta') { cam.position.set(1.25, 1.5, 1.95); }
+    if (v !== 'fp') { ctl = new OrbitControls(cam, d.querySelector('canvas')); ctl.target.set(v === 'tp' ? 0.05 : 0.0, v === 'tp' ? 1.1 : 1.2, v === 'tp' ? 0.15 : 0.1); ctl.enableDamping = false; ctl.update(); ctl.addEventListener('change', () => draw(v)); }
+    const sc = new THREE.Scene(); sc.add(new THREE.HemisphereLight(0xffffff, 0x404030, 0.9));
+    const dl = new THREE.DirectionalLight(0xffffff, 0.8); dl.position.set(0.3, 1, 0.5); sc.add(dl);
+    if (v !== 'fp') { const g = new THREE.Mesh(new THREE.CircleGeometry(1.4, 40), new THREE.MeshLambertMaterial({ color: 0x3a3d40 })); g.rotation.x = -Math.PI / 2; sc.add(g); }
+    const dot = new THREE.Mesh(new THREE.SphereGeometry(v === 'fp' ? 0.012 : 0.018, 12, 8), new THREE.MeshBasicMaterial({ color: 0xf2c46d, depthTest: false })); dot.renderOrder = 9; sc.add(dot);
+    R3[v] = { div: d, r, cam, ctl, sc, dot, parts: {}, body: null };
+    d.addEventListener('pointerdown', () => setActive(v));
+    const b = document.createElement('button'); b.textContent = VIEWS[v]; b.onclick = () => setActive(v); b.id = 'tab_' + v; $('vtabs').appendChild(b);
+  }
+  new ResizeObserver(() => { for (const v of VK) size(v); drawAll(); }).observe(host);
+}
+function size(v) { const o = R3[v], w = o.div.clientWidth, h = o.div.clientHeight; if (!w || !h) return; o.r.setPixelRatio(Math.min(2, devicePixelRatio)); o.r.setSize(w, h, false); o.cam.aspect = w / h; o.cam.updateProjectionMatrix(); }
+let skinTex = null, gunTex = null, P = null, J = null, Wt = null, UV = null;
+async function texFrom(b64) { const t = await new THREE.TextureLoader().loadAsync('data:image/png;base64,' + b64); t.flipY = false; t.colorSpace = THREE.SRGBColorSpace; t.magFilter = THREE.NearestFilter; return t; }
+async function buildScenes() {
+  gunTex = await texFrom(kit.tex);
+  for (const v of VK) {
+    const o = R3[v];
+    for (const m of Object.values(o.parts)) { o.sc.remove(m); m.geometry.dispose(); }
+    o.parts = {};
+    for (const [name, g0] of Object.entries(kit.groups)) {
+      const g = g0.clone ? kit.groups[g0.clone] : g0; const geo = new THREE.BufferGeometry();
+      geo.setAttribute('position', new THREE.BufferAttribute(f32(g.p), 3)); let mat;
+      if (g.u) { geo.setAttribute('uv', new THREE.BufferAttribute(f32(g.u), 2)); mat = new THREE.MeshLambertMaterial({ map: gunTex, side: THREE.DoubleSide, alphaTest: 0.1 }); }
+      else { geo.setAttribute('color', new THREE.BufferAttribute(f32(g.c), 3)); mat = new THREE.MeshLambertMaterial({ vertexColors: true, side: THREE.DoubleSide }); }
+      geo.computeVertexNormals();
+      const m = new THREE.Mesh(geo, mat); m.matrixAutoUpdate = false; m.frustumCulled = false; o.sc.add(m); o.parts[name] = m;
+    }
+    if (!o.body) {
+      const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(P.length), 3)); geo.setAttribute('uv', new THREE.BufferAttribute(UV, 2));
+      geo.setIndex(Array.from(f32(v === 'fp' ? (S.trA2 || S.trA) : S.trB)));
+      o.body = new THREE.Mesh(geo, new THREE.MeshLambertMaterial({ map: skinTex, side: THREE.DoubleSide })); o.body.frustumCulled = false; o.sc.add(o.body);
+    }
+  }
+}
+function frameAt(v) { const fr = baked[v].frames; return fr[Math.min(fr.length - 1, Math.max(0, Math.round(t * 30)))]; }
+function draw(v) {
+  const o = R3[v]; if (!o || !baked[v]) return; const fr = frameAt(v), rig = baked[v].rig;
+  for (const [n, m] of Object.entries(o.parts)) { const M = fr.g[n]; m.visible = !!M; if (M) m.matrix.fromArray(M); }
+  const B = rig.skin(fr.bones), pos = o.body.geometry.attributes.position.array, nv = P.length / 3;
+  for (let i = 0; i < nv; i++) {
+    const x = P[i * 3], y = P[i * 3 + 1], z = P[i * 3 + 2]; let ox = 0, oy = 0, oz = 0;
+    for (let k = 0; k < 4; k++) { const w = Wt[i * 4 + k]; if (!w) continue; const q = J[i * 4 + k] * 16;
+      ox += w * (B[q] * x + B[q + 4] * y + B[q + 8] * z + B[q + 12]); oy += w * (B[q + 1] * x + B[q + 5] * y + B[q + 9] * z + B[q + 13]); oz += w * (B[q + 2] * x + B[q + 6] * y + B[q + 10] * z + B[q + 14]); }
+    pos[i * 3] = ox; pos[i * 3 + 1] = oy; pos[i * 3 + 2] = oz;
+  }
+  o.body.geometry.attributes.position.needsUpdate = true; o.body.geometry.computeVertexNormals();
+  const hs = sel.track === 'L' || sel.track === 'R' ? sel.track : null;
+  o.dot.visible = !!hs && v === active; if (hs) o.dot.position.fromArray(fr.tgt[hs]);
+  const w = o.div.querySelector('.warn'); const bad = ['L', 'R'].filter(s => fr.miss[s] > 0.02);
+  w.hidden = !bad.length; w.textContent = bad.map(s => `${s === 'L' ? 'Left' : 'Right'} hand can't reach (${Math.round(fr.miss[s] * 100)} cm short)`).join(' · ');
+  o.r.render(o.sc, o.cam);
+}
+const drawAll = () => VK.forEach(draw);
+
+// ------------------------------------------------------------------ baking + edits
+let bakeQueued = false;
+function rebake(only) { for (const v of only ? [only] : VK) baked[v] = E.bake(S, kit, data[v], v); }
+function changed(v = active) {
+  dirty = true;
+  if (!bakeQueued) { bakeQueued = true; requestAnimationFrame(() => { bakeQueued = false; rebake(v); drawAll(); drawTimeline(); }); }
+  scheduleSave();
+}
+function snapshot() { undo.push(JSON.stringify(data)); if (undo.length > 80) undo.shift(); redo = []; syncUndo(); }
+function syncUndo() { $('undo').disabled = !undo.length; $('redo').disabled = !redo.length; }
+$('undo').onclick = () => { if (!undo.length) return; redo.push(JSON.stringify(data)); data = JSON.parse(undo.pop()); afterJump(); };
+$('redo').onclick = () => { if (!redo.length) return; undo.push(JSON.stringify(data)); data = JSON.parse(redo.pop()); afterJump(); };
+function afterJump() { syncUndo(); rebake(); clampSel(); drawAll(); drawTimeline(); inspector(); dirty = true; scheduleSave(); }
+
+// ------------------------------------------------------------------ saving (online, per gun)
+function setStatus(s, bad) { const el = $('status'); el.textContent = s; el.classList.toggle('bad', !!bad); }
+function scheduleSave() { clearTimeout(saveTimer); setStatus('Unsaved changes'); saveTimer = setTimeout(save, 1200); }
+async function save() {
+  if (!gid || !dirty) return; const body = JSON.stringify(data); store.set('reload:' + gid, body);
+  if (!db) { setStatus('Saved on this device only'); dirty = false; return; }
+  setStatus('Saving…');
+  try { await db.doc('reloads/' + gid).set({ json: body, t: Date.now() }); dirty = false; setStatus('Saved online'); }
+  catch (e) { setStatus('Online save failed, kept on this device (' + (e && (e.code || e.message) || 'error') + ')', true); }
+}
+addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden' && dirty) save(); });
+
+// ------------------------------------------------------------------ timeline
+function tracks() {
+  const s = spec(); const out = [['gun', 'Gun'], ['L', 'Left hand'], ['R', 'Right hand']];
+  for (const n of Object.keys(s.moves)) out.push(['m:' + n, partName(n)]);
+  out.push(['ev', 'Events']); return out;
+}
+function keysOf(track) { const s = spec(); if (track === 'gun' || track === 'L' || track === 'R') return s[track]; if (track.startsWith('m:')) return s.moves[track.slice(2)]; return s.events; }
+function clampSel() { const k = keysOf(sel.track); if (!k) { sel = { track: 'L', i: 0 }; return; } sel.i = Math.max(0, Math.min(sel.i, k.length - 1)); }
+function drawTimeline() {
+  const s = spec(), tl = $('tl'); tl.innerHTML = '';
+  const ru = document.createElement('div'); ru.className = 'row'; ru.innerHTML = '<div></div><div class="ruler"></div>';
+  for (let x = 0; x <= s.dur + 1e-6; x += s.dur > 4 ? 1 : 0.5) { const sp = document.createElement('span'); sp.style.left = (x / s.dur * 100) + '%'; sp.textContent = x.toFixed(1); ru.lastChild.appendChild(sp); }
+  tl.appendChild(ru);
+  for (const [id, label] of tracks()) {
+    const row = document.createElement('div'); row.className = 'row' + (sel.track === id ? ' cur' : '');
+    const nm = document.createElement('div'); nm.className = 'name'; nm.textContent = label; nm.title = label; nm.onclick = () => { sel = { track: id, i: 0 }; clampSel(); refreshSel(); };
+    const lane = document.createElement('div'); lane.className = 'lane'; row.append(nm, lane);
+    keysOf(id).forEach((k, i) => {
+      const d = document.createElement('div'); d.className = 'key' + (id === 'ev' ? ' ev' : '') + (sel.track === id && sel.i === i ? ' sel' : '');
+      d.style.left = (k[0] / s.dur * 100) + '%'; d.title = id === 'ev' ? evLabel(k) : `${k[0].toFixed(2)} s`;
+      d.onpointerdown = ev => startDrag(ev, id, i, lane);
+      lane.appendChild(d);
+    });
+    tl.appendChild(row);
+  }
+  const hd = document.createElement('div'); hd.className = 'head'; hd.id = 'head1'; tl.appendChild(hd); placeHead();
+  $('dur').value = s.dur; $('solver').value = s.solver === 'natural' ? 'natural' : 'plain';
+}
+function placeHead() {
+  const s = spec(), tl = $('tl'), lane = tl.querySelector('.lane'); $('time').textContent = t.toFixed(2) + ' s';
+  const sc = $('scrub'); $('head0').style.left = (t / s.dur * 100) + '%';
+  const h = $('head1'); if (h && lane) { const r = lane.getBoundingClientRect(), tr = tl.getBoundingClientRect(); h.style.left = (r.left - tr.left + t / s.dur * r.width) + 'px'; }
+}
+function evLabel(e) {
+  const p = partName(e[1]), h = e[3] === 'L' ? 'left hand' : 'right hand';
+  return `${e[0].toFixed(2)} s · ` + ({ grab: `${p}: picked up by ${h}`, drop: `${p}: let go, falls`, show: `${p}: appears in ${h}`, seat: `${p}: locks into the gun`, hide: `${p}: hidden` }[e[2]] || `${p}: ${e[2]}`);
+}
+function sortTrack(id) {
+  const k = keysOf(id), cur = k[sel.i]; k.sort((a, b) => a[0] - b[0]); if (sel.track === id) sel.i = k.indexOf(cur);
+}
+function startDrag(ev, id, i, lane) {
+  ev.preventDefault(); ev.stopPropagation(); sel = { track: id, i }; refreshSel();
+  const k = keysOf(id)[i], r = lane.getBoundingClientRect(), s = spec(); const t0 = k[0], x0 = ev.clientX; let moved = false;
+  const mv = e => {
+    const dt = (e.clientX - x0) / r.width * s.dur; if (!moved && Math.abs(e.clientX - x0) < 3) return;
+    if (!moved) { snapshot(); moved = true; }
+    setKeyTime(id, k, Math.round(Math.max(0, Math.min(s.dur, t0 + dt)) * 100) / 100); t = k[0]; changed(); drawTimeline(); inspector();
+  };
+  const up = () => { removeEventListener('pointermove', mv); removeEventListener('pointerup', up); if (!moved) { t = k[0]; drawAll(); placeHead(); } };
+  addEventListener('pointermove', mv); addEventListener('pointerup', up);
+}
+function setKeyTime(id, k, nt) {
+  if (id === 'ev' && k[2] === 'seat') for (const e of spec().events) if (e[1] === k[1] && e[2] === 'show' && e[4] === '@' && Math.abs(e[5] - k[0]) < 1e-6) e[5] = nt;
+  k[0] = nt; sortTrack(id);
+}
+function scrubTo(e) { const r = $('scrub').getBoundingClientRect(); t = Math.max(0, Math.min(spec().dur, (e.clientX - r.left) / r.width * spec().dur)); drawAll(); placeHead(); }
+$('scrub').onpointerdown = e => { scrubTo(e); const mv = ev => scrubTo(ev), up = () => { removeEventListener('pointermove', mv); removeEventListener('pointerup', up); }; addEventListener('pointermove', mv); addEventListener('pointerup', up); };
+
+// ------------------------------------------------------------------ playback
+let last = 0;
+function tick(now) {
+  if (!playing) return; const dt = Math.min(0.1, (now - last) / 1000); last = now;
+  t += dt * +$('speed').value; if (t > spec().dur) t = 0; drawAll(); placeHead(); requestAnimationFrame(tick);
+}
+$('play').onclick = () => { playing = !playing; $('play').textContent = playing ? 'Pause' : 'Play'; $('play').classList.toggle('on', playing); if (playing) { last = performance.now(); requestAnimationFrame(tick); } };
+function stepKey(dir) {
+  const ts = keysOf(sel.track).map(k => k[0]); const n = dir > 0 ? ts.find(x => x > t + 1e-3) : [...ts].reverse().find(x => x < t - 1e-3);
+  if (n === undefined) return; t = n; sel.i = keysOf(sel.track).findIndex(k => k[0] === n); refreshSel();
+}
+$('prevk').onclick = () => stepKey(-1); $('nextk').onclick = () => stepKey(1);
+
+// ------------------------------------------------------------------ inspector
+function setActive(v) {
+  if (v === active) return; active = v; clampSel();
+  for (const k of VK) { R3[k].div.classList.toggle('active', k === v); $('tab_' + k).classList.toggle('on', k === v); }
+  if (t > spec().dur) t = spec().dur;
+  $('editing').textContent = 'Editing: ' + VIEWS[v]; drawTimeline(); inspector(); drawAll();
+}
+function refreshSel() { drawTimeline(); inspector(); drawAll(); }
+function nudge(label, get, setv, span, step, unit, abs) {
+  // slider centred on the value it had when picked up, number box for exact values
+  const f = document.createElement('div'); f.className = 'field';
+  const id = 'f' + Math.random().toString(36).slice(2, 8);
+  f.innerHTML = `<label for="${id}">${label}</label><input type="range" aria-label="${label}"><input id="${id}" type="number" step="${step}">`;
+  const [rg, nb] = f.querySelectorAll('input'); let started = false;
+  const centre = () => { const v = get(); if (abs) { rg.min = abs[0]; rg.max = abs[1]; } else { rg.min = v - span; rg.max = v + span; } rg.step = step; rg.value = v; nb.value = +v.toFixed(3); };
+  centre();
+  rg.oninput = () => { if (!started) { snapshot(); started = true; } setv(+rg.value); nb.value = (+rg.value).toFixed(3) * 1; changed(); };
+  rg.onchange = () => { started = false; centre(); };
+  nb.onchange = () => { if (isNaN(+nb.value)) return; snapshot(); setv(+nb.value); centre(); changed(); };
+  f.title = unit; return f;
+}
+function vecFields(box, title, obj, key, def, scale, unit, span, step, axes) {
+  const g = document.createElement('div'); g.className = 'grp'; g.innerHTML = `<div>${title} <span class="note">(${unit})</span></div>`;
+  axes.forEach((ax, j) => g.appendChild(nudge(ax, () => (obj[key] || def)[j] * scale, v => { if (!obj[key]) obj[key] = def.slice(); obj[key][j] = +(v / scale).toFixed(5); }, span, step, unit)));
+  box.appendChild(g);
+}
+// Josiah's joint and finger turns on a hand key (o.fk; the engine's userPose), degrees, sliders -120..120
+function fkVec(box, title, o, key, n, labels, finger) {
+  const g = document.createElement('div'); g.className = 'grp'; g.innerHTML = `<div>${title} <span class="note">(degrees)</span></div>`;
+  const base = make => { let f = o.fk; if (!f) { if (!make) return {}; f = o.fk = {}; } if (!finger) return f; if (!f.f) { if (!make) return {}; f.f = {}; } return f.f; };
+  labels.forEach((lab, j) => g.appendChild(nudge(lab, () => { const v = base(false)[key]; return n === 1 ? (+v || 0) : ((v || [])[j] || 0); },
+    v => { const b = base(true); if (n === 1) b[key] = +v.toFixed(1); else { if (!Array.isArray(b[key])) b[key] = new Array(n).fill(0); b[key][j] = +v.toFixed(1); } }, 0, 1, 'degrees', [-120, 120])));
+  box.appendChild(g);
+}
+const GUNAX = ['Right / left', 'Up / down', 'Back / forward'];
+const BODYAX = ['Her left / right', 'Up / down', 'Forward / back'];
+const EYEAX = ['Right / left', 'Up / down', 'Back / forward'];
+const ROT = ['Tilt (pitch)', 'Turn (yaw)', 'Roll'];
+function inspector() {
+  const box = $('insp'); box.innerHTML = ''; clampSel();
+  const s = spec(), id = sel.track, ks = keysOf(id), k = ks[sel.i];
+  const h = document.createElement('h2'); h.textContent = (tracks().find(x => x[0] === id) || [, ''])[1] + (id === 'ev' ? '' : ` · key ${sel.i + 1} of ${ks.length}`); box.appendChild(h);
+  if (!k) { box.insertAdjacentHTML('beforeend', '<p class="note">No keys on this row.</p>'); return; }
+  box.appendChild(nudge('Time (s)', () => k[0], v => setKeyTime(id, k, Math.max(0, Math.min(s.dur, +v.toFixed(2)))), 0.5, 0.01, 's'));
+  if (id === 'ev') { box.insertAdjacentHTML('beforeend', `<p class="note">${evLabel(k).split(' · ')[1]}</p><p class="note">Drag the blue marks on the Events row to change when things are picked up, dropped or locked in.</p>`); return; }
+  const o = k[1];
+  if (id === 'gun') {
+    if (o.abs) vecFields(box, 'Grip held at', o.abs, 'grip', [0, 0, 0], 100, active === 'fp' ? 'cm from the eye' : 'cm, her body', 15, 0.5, active === 'fp' ? EYEAX : BODYAX);
+    vecFields(box, 'Move', o, 'd', [0, 0, 0], 100, 'cm, along the gun', 15, 0.5, GUNAX);
+    vecFields(box, 'Turn about the grip', o, 'r', [0, 0, 0], 1, 'degrees', 45, 1, ROT);
+  } else if (id === 'L' || id === 'R') {
+    const g = document.createElement('div'); g.className = 'field';
+    g.innerHTML = `<label for="kind">Hand is</label><select id="kind" style="grid-column: span 2"><option value="gun">On the gun (follows it)</option><option value="rest">In its aim-pose spot</option><option value="body">At her body (pouch, belt)</option>${o.k === 'mid' ? '<option value="mid">Following the movement (changes add on top)</option>' : ''}</select>`;
+    box.appendChild(g); const sk = g.querySelector('select'); sk.value = o.k || 'rest';
+    sk.onchange = () => { snapshot(); ks[sel.i][1] = convertHand(id, k, sk.value); changed(); inspector(); };
+    const kind = o.k || 'rest';
+    if (kind === 'mid') box.insertAdjacentHTML('beforeend', '<p class="note">This hand keeps moving exactly as it did here. Anything you set below is added on top, fading in from the key before and out by the next one.</p>');
+    if (kind === 'gun' && o.p) vecFields(box, 'Palm on the gun at', o, 'p', [8, 8, 8], 1, 'gun pixels', 3, 0.05, GUNAX);
+    else if (kind === 'body') { if (o.p) vecFields(box, 'Palm at', o, 'p', [0, 1, 0], 100, active === 'fp' ? 'cm from the eye' : 'cm, her body', 15, 0.5, active === 'fp' ? EYEAX : BODYAX); else vecFields(box, 'Palm moved', o, 'd', [0, 0, 0], 100, 'cm', 15, 0.5, EYEAX); }
+    else vecFields(box, 'Palm moved', o, 'dpx', [0, 0, 0], 1, 'gun pixels', 3, 0.05, GUNAX);
+    vecFields(box, 'Hand turn', o, o.fwd ? 'r2' : 'r', [0, 0, 0], 1, 'degrees', 45, 1, ROT);
+    const c = document.createElement('div'); c.className = 'grp'; c.innerHTML = '<div>Fingers</div>';
+    c.appendChild(nudge('Curl, all four', () => o.curl || 0, v => { o.curl = +v.toFixed(1); }, 0, 1, 'degrees', [-40, 90]));
+    c.appendChild(nudge('Open flat (0 to 1)', () => o.flat || 0, v => { o.flat = +v.toFixed(2); }, 0, 0.01, 'share', [0, 1])); box.appendChild(c);
+    fkVec(box, 'Thumb', o, 'th', 3, ['Curl', 'Spread', 'Roll'], true);
+    fkVec(box, 'Index finger', o, 'i', 2, ['Curl', 'Spread'], true);
+    fkVec(box, 'Middle finger', o, 'm', 2, ['Curl', 'Spread'], true);
+    fkVec(box, 'Ring finger', o, 'r', 2, ['Curl', 'Spread'], true);
+    fkVec(box, 'Little finger', o, 'p', 2, ['Curl', 'Spread'], true);
+    const jn = document.createElement('p'); jn.className = 'note';
+    jn.textContent = 'Arm joints turn the joint itself, so everything past it moves too (the hand can leave the gun). To keep the hand where it is, use Palm, Hand turn and Elbow swing instead.';
+    box.appendChild(jn);
+    if (active !== 'fp') fkVec(box, 'Collarbone', o, 'cl', 2, ['Shrug up / down', 'Forward / back'], false);
+    fkVec(box, 'Shoulder', o, 'sh', 3, ['Raise / lower', 'Forward / back', 'Twist'], false);
+    fkVec(box, 'Elbow', o, 'el', 1, ['Bend more / less'], false);
+    fkVec(box, 'Forearm', o, 'tw', 1, ['Twist'], false);
+    fkVec(box, 'Wrist', o, 'wr', 2, ['Bend', 'Side to side'], false);
+    const fa = document.createElement('div'); fa.className = 'grp'; fa.innerHTML = '<div>Forearm <span class="note">(swings the elbow round, the hand stays put)</span></div>';
+    fa.appendChild(nudge('Elbow swing', () => o.sw || 0, v => { o.sw = +v.toFixed(1); }, 0, 1, 'degrees', [-120, 120])); box.appendChild(fa);
+    vecFields(box, 'Shoulder fit', o, 'sho', [0, 0, 0], 100, 'cm, this key only', 10, 0.2, active === 'fp' ? EYEAX : BODYAX);
+    const sp = spec(); sp.armfit = sp.armfit || {}; const af = sp.armfit[id] = sp.armfit[id] || {};
+    const wh = document.createElement('div'); wh.className = 'grp'; wh.innerHTML = `<div>${id === 'L' ? 'Left' : 'Right'} arm, whole reload <span class="note">(every key in this view)</span></div>`;
+    wh.appendChild(nudge('Elbow swing', () => af.sw || 0, v => { af.sw = +v.toFixed(1); }, 0, 1, 'degrees', [-120, 120])); box.appendChild(wh);
+    vecFields(box, 'Shoulder position', af, 'sho', [0, 0, 0], 100, 'cm, every key', 10, 0.2, active === 'fp' ? EYEAX : BODYAX);
+  } else {
+    const piv = (s.parts[id.slice(2)] || s.extraInfo[id.slice(2)] || {}).pivot;
+    vecFields(box, 'Slide', o, 'd', [0, 0, 0], 1, 'gun pixels', 3, 0.05, GUNAX);
+    vecFields(box, piv ? 'Swing about its hinge' : 'Turn', o, 'r', [0, 0, 0], 1, 'degrees', 45, 1, ROT);
+    vecFields(box, 'Stretch', o, 's', [1, 1, 1], 1, 'times', 0, 0.01, ['Width', 'Height', 'Length']);
+    box.querySelectorAll('.grp:last-child input[type=range]').forEach(r => { r.min = 0.2; r.max = 2.5; });
+  }
+  const n = document.createElement('p'); n.className = 'note';
+  n.textContent = 'Drag a slider to nudge; let go and it re-centres for finer moves. Type in the box for an exact number.'; box.appendChild(n);
+  if (active !== 'fp') {
+    const other = active === 'tp' ? 'ta' : 'tp'; const b = document.createElement('div'); b.className = 'btns';
+    b.innerHTML = `<button id="copyv">Copy this whole reload to “${VIEWS[other]}”</button>`; box.appendChild(b);
+    b.querySelector('button').onclick = () => { snapshot(); data[other] = clone(data[active]); rebake(other); drawAll(); dirty = true; scheduleSave(); setStatus('Copied to ' + VIEWS[other]); };
+  }
+  const rb = document.createElement('div'); rb.className = 'btns';
+  rb.innerHTML = confirmReset ? `<div class="confirm">Put this view back to Claude's version? <button id="rsy">Yes, reset</button><button id="rsn">Keep mine</button></div>` : `<button id="rs">Reset this view to Claude's version</button>`;
+  box.appendChild(rb);
+  if (confirmReset) { $('rsy').onclick = () => { snapshot(); data[active] = flatten(kit.spec, active); confirmReset = false; sel = { track: 'L', i: 0 }; afterJump(); }; $('rsn').onclick = () => { confirmReset = false; inspector(); }; }
+  else $('rs').onclick = () => { confirmReset = true; inspector(); };
+}
+// switch a hand key between on-gun / aim spot / body without moving the hand (uses the solved pose at that key's time)
+function convertHand(s, k, kind, view = active) {
+  const fr = baked[view].frames[Math.min(baked[view].frames.length - 1, Math.round(k[0] * 30))], rig = baked[view].rig;
+  const Ht = fr.ht[s], Rh = E.m4R(Ht), palm = rig.palm(Ht, s), curl = k[1].curl || 0, sw = k[1].sw || 0, sho = k[1].sho;
+  const keep = { ...(k[1].fk ? { fk: clone(k[1].fk) } : {}), ...(k[1].flat ? { flat: k[1].flat } : {}) };
+  const r5 = a => a.map(x => +x.toFixed(4));
+  if (kind === 'gun') {
+    const p = E.m4pt(E.m4inv(fr.gun), palm), Rrel = E.m3mul(E.m3T(fr.gunR), Rh);
+    return { k: 'gun', p: r5(p), fwd: r5(E.col(Rrel, 0)), palm: r5(E.col(Rrel, 2).map(x => -x)), curl, sw, ...(sho ? { sho } : {}), ...keep };
+  }
+  if (kind === 'body') {
+    const p = E.m4pt(rig.place, palm), Rrel = E.m3mul(E.m4R(rig.place), Rh);
+    return { k: 'body', p: r5(p), fwd: r5(E.col(Rrel, 0)), palm: r5(E.col(Rrel, 2).map(x => -x)), curl, sw, ...(sho ? { sho } : {}), ...keep };
+  }
+  const ppx = E.m4pt(E.m4inv(fr.gun), palm), p0 = E.m4pt(rig.G0i, rig.palm0[s]);
+  return { k: 'rest', dpx: r5(E.v3.sub(ppx, p0)), curl, sw, ...(sho ? { sho } : {}), ...keep };
+}
+$('addk').onclick = () => {
+  const id = sel.track; if (id === 'ev') return; const ks = keysOf(id), s = spec(); const tt = Math.round(t * 100) / 100;
+  if (ks.some(k => Math.abs(k[0] - tt) < 0.005)) { setStatus('There is already a key here'); return; }
+  snapshot(); let o;
+  if (id === 'L' || id === 'R') o = { k: 'mid' };   // follows the movement as it is; his changes add on top
+  else {
+    const [a, b, u] = E.track(ks, tt); o = clone(u < 0.5 ? a : b);
+    for (const f of ['d', 'r', 's']) if (a[f] || b[f]) { const def = f === 's' ? [1, 1, 1] : [0, 0, 0]; o[f] = E.v3.lerp(a[f] || def, b[f] || def, u).map(x => +x.toFixed(4)); }
+    if (a.abs && b.abs) o.abs = { grip: E.v3.lerp(a.abs.grip, b.abs.grip, u), fwd: E.v3.lerp(a.abs.fwd, b.abs.fwd, u), up: E.v3.lerp(a.abs.up, b.abs.up, u) };
+  }
+  ks.push([tt, o]); ks.sort((x, y) => x[0] - y[0]); sel.i = ks.findIndex(k => k[0] === tt); changed(); refreshSel();
+};
+$('delk').onclick = () => {
+  const ks = keysOf(sel.track); if (sel.track === 'ev' || ks.length < 2) { setStatus(sel.track === 'ev' ? 'Events can be moved but not deleted' : 'A row needs at least one key'); return; }
+  snapshot(); ks.splice(sel.i, 1); clampSel(); changed(); refreshSel();
+};
+$('solver').onchange = () => { snapshot(); if ($('solver').value === 'natural') spec().solver = 'natural'; else delete spec().solver; changed(); };
+$('dur').onchange = () => { const v = +$('dur').value; if (!(v >= 0.5 && v <= 10)) return; snapshot(); spec().dur = v; if (t > v) t = v; changed(); drawTimeline(); };
+
+// ------------------------------------------------------------------ gun loading
+// Every time one hand has a key the other hand gets one too (Josiah 2026-11-04 06:25), placed exactly where that hand
+// already is at that moment, so nothing moves until he changes it.
+// Every time one hand has a key the other hand gets one too (Josiah 2026-11-04 06:25), placed exactly where that hand
+// already is at that moment, so nothing moves until he changes it.
+// a hand key of the given kind at the hand's exact place between keys a and b (before any of the solver's shifts)
+function rawKey(v, s, tt, a, b, u, mix, kind) {
+  const sp = data[v], rig = baked[v].rig, [ga, gb, gu] = E.track(sp.gun || [[0, {}]], tt), [R, gt] = rig.gun_at(ga, gb, gu), Gm = rig.G(R, gt);
+  const [Ha] = rig.hand_key(s, a, R, gt), [Hb] = rig.hand_key(s, b, R, gt);
+  const Rh = E.slerp(E.m4R(Ha), E.m4R(Hb), u), wr = E.v3.lerp(E.m4t(Ha), E.m4t(Hb), u), Ht = E.m4(wr, Rh), palm = rig.palm(Ht, s);
+  const r5 = x => x.map(y => +y.toFixed(4)), extra = { curl: mix.curl, sw: mix.sw, ...(mix.sho ? { sho: mix.sho } : {}), ...(mix.flat ? { flat: mix.flat } : {}), ...(mix.fk ? { fk: mix.fk } : {}) };
+  if (kind === 'gun') { const Rrel = E.m3mul(E.m3T(R), Rh); return { k: 'gun', p: r5(E.m4pt(E.m4inv(Gm), palm)), fwd: r5(E.col(Rrel, 0)), palm: r5(E.col(Rrel, 2).map(x => -x)), ...extra }; }
+  if (kind === 'body') { const Rrel = E.m3mul(E.m4R(rig.place), Rh); return { k: 'body', p: r5(E.m4pt(rig.place, palm)), fwd: r5(E.col(Rrel, 0)), palm: r5(E.col(Rrel, 2).map(x => -x)), ...extra }; }
+  // on its aim-pose spot: keep the rest key's own turn, written as a full hand direction so it matches exactly
+  const Rrel = E.m3mul(E.m3T(R), Rh), ppx = E.m4pt(E.m4inv(Gm), palm), p0 = E.m4pt(rig.G0i, rig.palm0[s]);
+  return { k: 'rest', dpx: r5(E.v3.sub(ppx, p0)), fwd: r5(E.col(Rrel, 0)), palm: r5(E.col(Rrel, 2).map(x => -x)), ...extra };
+}
+function pairKeys(v) {
+  // a 'mid' key changes nothing by itself: the engine keeps the movement between the real keys and only adds what he
+  // sets on it (Palm moved, Hand turn, fingers, joints), fading in from the key before and out by the next
+  const sp = data[v]; let added = 0;
+  for (const [s, o] of [['R', 'L'], ['L', 'R']]) {
+    const ks = sp[s];
+    for (const tt of sp[o].map(k => k[0])) { if (ks.some(k => Math.abs(k[0] - tt) < 0.005)) continue; ks.push([tt, { k: 'mid' }]); added++; }
+    ks.sort((x, y) => x[0] - y[0]);
+  }
+  return added;
+}
+async function loadGun(g) {
+  if (dirty) await save();
+  setStatus('Loading ' + (NAMES[g] || g) + '…'); playing = false; $('play').textContent = 'Play'; $('play').classList.remove('on');
+  kit = await fetch('kit/g_' + g + '.json').then(r => r.json());
+  if (kit.field && kit.field.data) { try { const bin = Uint8Array.from(atob(kit.field.data), c => c.charCodeAt(0)); kit.field.arr = new Int8Array(await new Response(new Blob([bin]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer()); } catch { kit.field = null; } } gid = g; undo = []; redo = []; syncUndo(); dirty = false; confirmReset = false;
+  let saved = null, where = '';
+  if (db) { try { const d = await db.doc('reloads/' + g).get(); if (d.exists) { saved = JSON.parse(d.data().json); where = 'Your saved version (online)'; } } catch {} }
+  if (!saved && !db) { const l = store.get('reload:' + g); if (l) { try { saved = JSON.parse(l); where = 'Your saved version (this device)'; } catch {} } }
+  if (saved && saved.ta && JSON.stringify(saved.ta) === JSON.stringify(flatten(kit.spec, 'ta', true))) saved.ta = flatten(kit.spec, 'ta');   // untouched old aimed default
+  data = saved && VK.every(v => saved[v]) ? saved : fresh();
+  await buildScenes(); rebake(); for (const v of VK) if (pairKeys(v)) rebake(v); t = 0; sel = { track: 'L', i: 0 };
+  store.set('reload:last', g);
+  drawTimeline(); inspector(); drawAll(); setStatus(where || "Claude's version (not edited yet)");
+}
+$('gun').onchange = () => loadGun($('gun').value);
+window.__data = () => data; window.__S = () => S; window.__kit = () => kit; window.__flatten = flatten; window.__rebake = () => { rebake(); drawAll(); };
+window.__seek = async (g, tt) => { if (g && g !== gid) { $('gun').value = g; await loadGun(g); } if (tt !== undefined) { t = tt; drawAll(); placeHead(); } return spec().dur; };
+addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+  if (e.key === ' ') { e.preventDefault(); $('play').click(); }
+  if ((e.ctrlKey || e.metaKey) && e.key === 'z') { e.preventDefault(); (e.shiftKey ? $('redo') : $('undo')).click(); }
+});
+
+// ------------------------------------------------------------------ start
+(async () => {
+  S = await fetch('kit/static.json').then(r => r.json());
+  P = f32(S.P); J = f32(S.J); Wt = f32(S.W); UV = f32(S.uv);
+  skinTex = await texFrom(S.skin);
+  const list = await fetch('kit/index.json').then(r => r.json());
+  $('gun').innerHTML = list.map(g => `<option value="${g}">${NAMES[g] || g}</option>`).join('');
+  makeViews(); for (const v of VK) size(v);
+  const first = list.includes(store.get('reload:last')) ? store.get('reload:last') : list[0]; $('gun').value = first;
+  active = null; setActiveQuiet('tp');
+  setStatus('Connecting to your saves…');
+  db = await Promise.race([Promise.resolve(window.claude?.use?.('db')).catch(() => null), new Promise(r => setTimeout(() => r(null), 8000))]) || null;
+  await loadGun(first);
+  if (!db) setStatus('Online save unavailable here: saving on this device only', true);
+})();
+function setActiveQuiet(v) { active = v; for (const k of VK) { R3[k].div.classList.toggle('active', k === v); $('tab_' + k).classList.toggle('on', k === v); } $('editing').textContent = 'Editing: ' + VIEWS[v]; }
+</script>

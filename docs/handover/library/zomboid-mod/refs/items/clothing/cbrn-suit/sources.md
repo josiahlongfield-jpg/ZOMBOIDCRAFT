@@ -1,0 +1,11 @@
+# items/clothing/cbrn-suit
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-finnish-soldiers-in-nbc-gear-1961.jpg | [Finnish soldiers in NBC gear, 1961.jpg](https://commons.wikimedia.org/wiki/File:Finnish_soldiers_in_NBC_gear,_1961.jpg) | Finnish Defence Forces | Public domain | Finnish Defence Forces soldiers in nuclear, biological, and chemical (NBC) gear. |
+| 02-cbrn-soldiers-from-the-armed-forces-of-ukraine-take-part-in.jpg | [CBRN Soldiers from the Armed Forces of Ukraine take part in Rapid Trid](https://commons.wikimedia.org/wiki/File:CBRN_Soldiers_from_the_Armed_Forces_of_Ukraine_take_part_in_Rapid_Trident_21_(6854239).jpg) | U.S. Army 81SBCT by Staff Sgt. David Carnahan | Public domain | CBRN soldiers from the 53rd Mechanized Brigade, Armed Forces of Ukraine, decontaminate vehicles in a simulated chemical spill exercise durin |
+| 03-cbrn-soldiers-from-the-armed-forces-of-ukraine-take-part-in.jpg | [CBRN Soldiers from the Armed Forces of Ukraine take part in Rapid Trid](https://commons.wikimedia.org/wiki/File:CBRN_Soldiers_from_the_Armed_Forces_of_Ukraine_take_part_in_Rapid_Trident_21_(6854246).jpg) | U.S. Army 81SBCT by Staff Sgt. David Carnahan | Public domain | CBRN soldiers from the 53rd Mechanized Brigade, Armed Forces of Ukraine, decontaminate vehicles in a simulated chemical spill exercise durin |
+| 04-secureenvironment2019-02.jpg | [SecureEnvironment2019-02.jpg](https://commons.wikimedia.org/wiki/File:SecureEnvironment2019-02.jpg) | Ministry of Defence of the Russian Federation | CC BY 4.0 | На Северном Кавказе завершился первый этап конкурса «Безопасная среда» среди расчетов радиационной, химической и биологической (РХБ) разведк |
+| 05-m50-gas-mask-and-mopp-suit-training-110529-m-kx613-176.jpg | [M50 gas mask and MOPP suit training 110529-M-KX613-176.jpg](https://commons.wikimedia.org/wiki/File:M50_gas_mask_and_MOPP_suit_training_110529-M-KX613-176.jpg) | Lance Cpl. Ammon Carter | Public domain | U.S. Marine Gunnery Sgt. Timothy Parks with Regimental Combat Team 5, pours CS gas into a hot pan in preparation for the Marines to enter th |

@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Choose where you wake up</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&amp;family=Barlow:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0;background:#0b0c0e}
+a{color:#e0c25e}a:hover{color:#fff1b8}
+.cond{font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.12em}
+.row{display:flex;align-items:center;justify-content:space-between;width:100%;padding:7px 12px;box-sizing:border-box;background:transparent;border:1px solid transparent;color:#e8e4da;font-family:'Barlow',sans-serif;font-size:15px;text-align:left;cursor:pointer}
+.row:hover,.row:focus-visible{border-color:rgba(232,228,218,.45);outline:none;background:rgba(232,228,218,.05)}
+.pin{position:absolute;width:20px;height:20px;margin:-10px 0 0 -10px;padding:0;background:transparent;border:0;cursor:pointer}
+.pin i{position:absolute;left:5px;top:5px;width:10px;height:10px;transform:rotate(45deg);box-sizing:border-box}
+.pin:focus-visible{outline:1px solid #f2efe8}
+.btn{font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.12em;font-weight:700;font-size:18px;cursor:pointer;min-height:48px;padding:0 20px}
+.seg{display:inline-block;width:30px;height:5px;margin-right:4px}
+.key{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 5px;box-sizing:border-box;border:1px solid rgba(232,228,218,.55);border-radius:3px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;color:#e8e4da}
+</style>
+</helmet>
+<div style="position: relative; width: 1600px; height: 900px; overflow: hidden; background: #0b0c0e; font-family: 'Barlow', sans-serif; color: #e8e4da">
+  <img src="/_blob/61067495ebb64db9b4cfb6f49582b845" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.35; filter: blur(6px)">
+  <div style="position: absolute; inset: 0; background: linear-gradient(90deg, rgba(8,9,11,0.96) 0%, rgba(8,9,11,0.82) 30%, rgba(8,9,11,0.82) 70%, rgba(8,9,11,0.96) 100%)"></div>
+
+  <header style="position: absolute; left: 50px; top: 30px; right: 50px; display: flex; justify-content: space-between; align-items: flex-end">
+    <div style="display: flex; flex-direction: column; gap: 4px">
+      <span class="cond" style="font-size: 13px; font-weight: 600; color: rgba(232,228,218,0.68)">Grayhaven County · new survivor</span>
+      <h1 class="cond" style="margin: 0; font-size: 40px; font-weight: 700; letter-spacing: 0.06em; color: #f2efe8; line-height: 1">Choose where you wake up</h1>
+    </div>
+    <span style="font-size: 14px; color: rgba(232,228,218,0.68)">You start inside a building with no zombies in it. The streets are another matter.</span>
+  </header>
+
+  <nav aria-label="Places" style="position: absolute; left: 50px; top: 120px; width: 380px; height: 700px; overflow-y: auto; display: flex; flex-direction: column; gap: 2px">
+    <sc-for list="{{groups}}" as="g" hint-placeholder-count="5">
+      <div style="display: flex; align-items: center; gap: 10px; margin: 12px 0 6px">
+        <span class="cond" style="font-size: 13px; font-weight: 600; color: rgba(232,228,218,0.68)">{{g.name}}</span>
+        <div style="flex: 1; height: 1px; background: rgba(232,228,218,0.16)"></div>
+      </div>
+      <sc-for list="{{g.places}}" as="p" hint-placeholder-count="3">
+        <button class="row" type="button" onClick="{{p.pick}}" style="{{p.rowStyle}}">
+          <span>{{p.name}}</span>
+          <span class="cond" style="font-size: 12px; font-weight: 600; color: {{p.dangerColor}}">{{p.dangerWord}}</span>
+        </button>
+      </sc-for>
+    </sc-for>
+  </nav>
+
+  <div style="position: absolute; left: 460px; top: 110px; width: 720px; height: 720px; border: 1px solid rgba(232,228,218,0.18)">
+    <img src="/_blob/8909e945c7a322f718b2f7dedfe2b0b7" alt="Map of Grayhaven County" style="position: absolute; inset: 0; width: 100%; height: 100%">
+    <sc-for list="{{pins}}" as="p" hint-placeholder-count="20">
+      <button class="pin" type="button" aria-label="{{p.name}}" onClick="{{p.pick}}" style="{{p.pos}}"><i style="{{p.mark}}"></i></button>
+    </sc-for>
+    <div style="{{selLabelStyle}}">
+      <span class="cond" style="font-size: 15px; font-weight: 700; color: #f2efe8; text-shadow: 0 1px 3px #000">{{sel.name}}</span>
+    </div>
+    <span class="cond" style="position: absolute; left: 12px; bottom: 10px; font-size: 11px; font-weight: 600; color: rgba(232,228,218,0.5)">Dashed red line: the county fence</span>
+  </div>
+
+  <article aria-label="Selected place" style="position: absolute; left: 1210px; top: 110px; width: 340px; background: rgba(12,13,15,0.96); border: 1px solid rgba(232,228,218,0.18)">
+    <div style="padding: 16px 18px 14px; border-bottom: 1px solid rgba(232,228,218,0.14); display: flex; flex-direction: column; gap: 6px">
+      <span class="cond" style="font-size: 12px; font-weight: 600; color: rgba(232,228,218,0.68)">{{sel.kind}}</span>
+      <h2 class="cond" style="margin: 0; font-size: 30px; font-weight: 700; letter-spacing: 0.05em; color: #f2efe8; line-height: 1">{{sel.name}}</h2>
+    </div>
+    <div style="padding: 16px 18px; display: flex; flex-direction: column; gap: 14px">
+      <p style="margin: 0; font-size: 14px; line-height: 1.55; color: rgba(232,228,218,0.85)">{{sel.note}}</p>
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <span class="cond" style="font-size: 12px; font-weight: 600; color: rgba(232,228,218,0.68)">Danger · {{sel.dangerWord}}</span>
+        <div><sc-for list="{{segs}}" as="s" hint-placeholder-count="5"><span class="seg" style="{{s.style}}"></span></sc-for></div>
+      </div>
+      <div style="display: grid; grid-template-columns: 110px 1fr; gap: 8px 10px">
+        <span class="cond" style="font-size: 12px; font-weight: 600; color: rgba(232,228,218,0.68)">Zombies</span>
+        <span style="font-size: 14px">{{sel.zombies}}</span>
+        <span class="cond" style="font-size: 12px; font-weight: 600; color: rgba(232,228,218,0.68)">You wake in</span>
+        <span style="font-size: 14px">{{sel.wake}}</span>
+        <span class="cond" style="font-size: 12px; font-weight: 600; color: rgba(232,228,218,0.68)">Worth looting</span>
+        <span style="font-size: 14px">{{sel.loot}}</span>
+      </div>
+    </div>
+    <div style="padding: 0 18px 18px; display: flex; flex-direction: column; gap: 10px">
+      <button class="btn" type="button" style="background: #e8e4da; color: #1d1b16; border: 0">Wake up here</button>
+      <button class="btn" type="button" onClick="{{random}}" style="background: transparent; color: #e8e4da; border: 1px solid rgba(232,228,218,0.45)">Pick for me</button>
+    </div>
+  </article>
+
+  <section aria-label="Friends" style="position: absolute; left: 1210px; top: 690px; width: 340px; display: flex; flex-direction: column; gap: 8px">
+    <div style="display: flex; align-items: center; gap: 10px">
+      <span class="cond" style="font-size: 13px; font-weight: 600; color: rgba(232,228,218,0.68)">Friends in this world</span>
+      <div style="flex: 1; height: 1px; background: rgba(232,228,218,0.16)"></div>
+    </div>
+    <button class="row" type="button" style="border-color: rgba(232,228,218,0.18)">
+      <span>Wake up near Sam</span>
+      <span style="font-size: 13px; color: rgba(232,228,218,0.68)">Seabright · day 4</span>
+    </button>
+  </section>
+
+  <div style="position: absolute; left: 50px; bottom: 24px; display: flex; gap: 22px">
+    <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: rgba(232,228,218,0.68)"><span class="key">LMB</span> Choose a place</span>
+    <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: rgba(232,228,218,0.68)"><span class="key">Enter</span> Wake up here</span>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1600,"height":900}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { sel: 'seabright' };
+  }
+  renderVals() {
+    const D = [
+      ['Grayhaven Island', 'gh-cbd', 'Downtown', 'District · Grayhaven Island', 3350, -1250, 5, 'The heart of the island: the tallest towers in the county, the elevated railway overhead, and the densest horde anywhere.', 'Part of the 20,000 on the island', 'An office floor, a hotel room or a flat above a shop', 'The best, if you live to carry it out'],
+      ['Grayhaven Island', 'gh-fin', 'Financial District', 'District · Grayhaven Island', 3450, -700, 5, 'Bank towers, the stock exchange and glass plazas on the south of the island, with the railway threading between them.', 'Part of the 20,000 on the island', 'An office floor or a hotel room', 'Banks, offices, a few gun safes'],
+      ['Grayhaven Island', 'gh-old', 'Old Harbor', 'District · Grayhaven Island', 3550, -2250, 5, 'The old brick waterfront: warehouse lofts, wharves, the customs house and the ferry pier.', 'Part of the 20,000 on the island', 'A warehouse loft or a flat above a bar', 'Warehouses, ship chandlers, bars'],
+      ['Grayhaven', 'gh-mid', 'Midtown', 'District · Grayhaven', 2100, -2550, 4, 'Mid-rise offices, hotels, a convention centre and the theatre row, where the interstates meet.', 'Thousands', 'A hotel room or an office', 'Hotels, theatres, department stores'],
+      ['Grayhaven', 'gh-up', 'Uptown', 'District · Grayhaven', 1900, -3850, 4, 'Apartment towers, department stores, St. Mary’s Medical Center and the university.', 'Thousands', 'A high-rise flat', 'The hospital, the university, big stores'],
+      ['Grayhaven', 'gh-east', 'Eastside', 'District · Grayhaven', 3450, 650, 4, 'The docklands: tenements, dockside bars, a seamen’s mission and the union hall against the Megaport fence.', 'Thousands', 'A tenement flat', 'Bars, pawn shops, the port'],
+      ['Cities', 'riverside', 'Riverside', 'City', -2600, -1950, 3, 'An old mill city on the Calder, with a brick downtown, a courthouse, a hospital and the railway bridge.', 'Hundreds, a few thousand downtown', 'A house or a flat above a shop', 'Hospital, courthouse, gun shop'],
+      ['Cities', 'ashby', 'Ashby', 'City · county seat', -3000, 2300, 3, 'The inland county seat: a compact downtown, Ashby General Hospital, the sheriff’s office and the high school.', 'Hundreds, a few thousand downtown', 'A house or a flat above a shop', 'Sheriff’s office, hospital, school'],
+      ['Suburbs', 'westgate', 'Westgate', 'Suburb of Grayhaven', 900, -1650, 3, 'Row houses, corner stores and churches on a tight grid along the river.', 'Hundreds', 'A row house', 'Corner stores, churches'],
+      ['Suburbs', 'northside', 'Northside', 'Suburb of Grayhaven', 600, -3150, 3, 'Brick walk-ups and the old car plant, with laundromats and diners on every corner.', 'Hundreds', 'A walk-up flat', 'Diners, the car plant'],
+      ['Suburbs', 'southport', 'Southport', 'Suburb of Grayhaven', 2200, 1150, 3, 'Workers’ row houses between the rail yards and the docks.', 'Hundreds', 'A row house', 'Rail yards, docks'],
+      ['Suburbs', 'pinecrest', 'Pinecrest Estates', 'Suburb', 200, -5300, 2, 'Cul-de-sacs and big lawns off the beltway, north of the wall.', 'Hundreds, spread thin', 'A big family house', 'Garages, basements, the odd gun cabinet'],
+      ['Suburbs', 'ashby-hts', 'Ashby Heights', 'Suburb of Ashby', -1800, 3300, 2, 'Newer estates on the hill east of Ashby.', 'Hundreds, spread thin', 'A family house', 'Garages and sheds'],
+      ['Suburbs', 'shadyacres', 'Shady Acres', 'Trailer park', -300, 2950, 2, 'A trailer park by the beltway, under the airport flight path.', 'A few hundred', 'A trailer', 'Not much, but quiet'],
+      ['Towns', 'seabright', 'Seabright', 'Beach town', 3900, 5800, 2, 'A beach town with motels, surf shops, ice-cream parlours and a main street running down to the sand.', 'Hundreds', 'A motel room or a house', 'Motels, the boardwalk, surf shops'],
+      ['Towns', 'kingsbridge', 'Kingsbridge', 'Town', 800, 6400, 2, 'A commuter town south of the airport, with a courthouse square, a mall and a high school.', 'Hundreds', 'A house', 'The mall, the high school'],
+      ['Towns', 'millbrook', 'Millbrook', 'Mill town', -5000, -1300, 2, 'A mill town below the dam, with a textile mill, rows of workers’ houses and a lumber yard.', 'Hundreds', 'A worker’s house', 'Lumber yard, the mill'],
+      ['Towns', 'fairview', 'Fairview', 'Farm town', -5400, 3600, 2, 'The farm valley’s town, with a feed store, a grain elevator, a livestock auction and a fairground.', 'Hundreds', 'A farmhouse or a house in town', 'Feed store, tools, food'],
+      ['Rural', 'capemerrow', 'Cape Merrow', 'Fishing village', 6250, -5150, 1, 'A fishing village on the cape, with boat sheds, net lofts, a chapel and a bait shop.', 'Dozens', 'A cottage', 'Boats, fishing gear'],
+      ['Rural', 'gullharbor', 'Gull Harbor', 'Fishing harbour', 4650, 7500, 1, 'A fishing harbour with trawlers, a cannery and a breakwater.', 'Dozens', 'A cottage', 'The cannery'],
+      ['Rural', 'hollowcreek', 'Hollow Creek', 'Hamlet', -1400, 5400, 1, 'A creekside hamlet with a covered bridge, a church and a general store.', 'Dozens', 'A cottage', 'The general store'],
+      ['Rural', 'dunmore', 'Dunmore', 'Crossroads', -6100, 1300, 1, 'A crossroads at the foot of the mountains, with a church, a gas station and a grain elevator.', 'Dozens', 'A farmhouse', 'The gas station'],
+      ['Rural', 'timberline', 'Timberline', 'Logging hamlet', -7200, 5600, 1, 'A logging hamlet deep in the mountains, with a sawmill and a ranger station.', 'A handful', 'A logging cabin', 'Ranger station, saws and axes']
+    ];
+    const words = ['', 'Low', 'Medium', 'High', 'Very high', 'Extreme'];
+    const colors = ['', '#8fc46a', '#e0c25e', '#d9a33a', '#d0675e', '#d0675e'];
+    const sel = this.state.sel;
+    const places = D.map((d) => ({
+      group: d[0], id: d[1], name: d[2], kind: d[3], x: d[4], z: d[5], danger: d[6], note: d[7], zombies: d[8], wake: d[9], loot: d[10],
+      dangerWord: words[d[6]], dangerColor: colors[d[6]],
+      pick: () => this.setState({ sel: d[1] })
+    }));
+    const px = (v) => (v + 8192) / 16384 * 720;
+    const groupNames = ['Grayhaven Island', 'Grayhaven', 'Cities', 'Suburbs', 'Towns', 'Rural'];
+    const groups = groupNames.map((name) => ({
+      name,
+      places: places.filter((p) => p.group === name).map((p) => Object.assign({}, p, {
+        rowStyle: p.id === sel ? 'border-color: rgba(242,239,232,0.85); background: rgba(232,228,218,0.08)' : ''
+      }))
+    }));
+    const pins = places.map((p) => ({
+      name: p.name, pick: p.pick,
+      pos: 'left: ' + px(p.x).toFixed(1) + 'px; top: ' + px(p.z).toFixed(1) + 'px',
+      mark: p.id === sel
+        ? 'background: #f2efe8; border: 1px solid #0b0c0e; transform: rotate(45deg) scale(1.5); box-shadow: 0 0 12px rgba(242,239,232,0.6)'
+        : 'background: ' + p.dangerColor + '; border: 1px solid rgba(11,12,14,0.9)'
+    }));
+    const s = places.find((p) => p.id === sel) || places[0];
+    const segs = [1, 2, 3, 4, 5].map((i) => ({ style: 'background: ' + (i <= s.danger ? s.dangerColor : 'rgba(232,228,218,0.14)') }));
+    const lx = px(s.x), lz = px(s.z);
+    const selLabelStyle = 'position: absolute; top: ' + (lz - 30).toFixed(1) + 'px; ' + (lx > 560 ? 'right: ' + (720 - lx + 14).toFixed(1) + 'px' : 'left: ' + (lx + 14).toFixed(1) + 'px');
+    const random = () => this.setState({ sel: D[Math.floor(Math.random() * D.length)][1] });
+    return { groups, pins, sel: s, segs, selLabelStyle, random };
+  }
+}
+</script>
+</body>
+</html>

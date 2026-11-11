@@ -1,0 +1,11 @@
+# power/substation-control-house
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 02-lower-230-kv-switchyard-control-house-view-southeast-davis-d.jpg | [Lower 230-KV switchyard control house. View southeast. - Davis Dam, Sw](https://commons.wikimedia.org/wiki/File:Lower_230-KV_switchyard_control_house._View_southeast._-_Davis_Dam,_Switchyards,_Southeast_of_Davis_Dam,_Kingman,_Mohave_County,_AZ_HAER_AZ-77-A-9.tif) | Edwards, Douglas M., creator | Public domain |  |
+| 03-exterior-overview-showing-front-east-end-and-south-side-of-b.jpg | [EXTERIOR OVERVIEW SHOWING FRONT (EAST) END AND SOUTH SIDE OF BUILDING ](https://commons.wikimedia.org/wiki/File:EXTERIOR_OVERVIEW_SHOWING_FRONT_(EAST)_END_AND_SOUTH_SIDE_OF_BUILDING_103,_ROCK_WALL_AND_MATURE_COTTONWOOD_TREES_IN_FOREGROUND,_CONTROL_SUBSTATION_BEHIND_BUILDING_103,_AND_HAER_CAL,14-BISH.V,2C-1.tif) | O'Laughlin, Gregory L. | Public domain |  |
+| 04-termination-of-control-wires-in-the-hvac-room-of-a-power-sub.jpg | [Termination of control wires in the HVAC room of a power substation. (](https://commons.wikimedia.org/wiki/File:Termination_of_control_wires_in_the_HVAC_room_of_a_power_substation._(CS179,_08-01-18)_(43780697672).jpg) | MTA Capital Construction Mega Projects | CC BY 2.0 | Termination of control wires in the HVAC room of a power substation. (CS179, 08-01-18) |
+| 05-maintaining-a-substation-control-room-of-the-future-lirr-pas.jpg | [Maintaining a substation control room of the future LIRR passenger con](https://commons.wikimedia.org/wiki/File:Maintaining_a_substation_control_room_of_the_future_LIRR_passenger_concourse._(CM014B,_1-29-2019)_(46950411281).jpg) | MTA Capital Construction Mega Projects | CC BY 2.0 | Maintaining a substation control room of the future LIRR passenger concourse. (CM014B, 1-29-2019) |
+| 06-second-floor-control-room-looking-northeast-at-control-panel.jpg | [SECOND FLOOR, CONTROL ROOM, LOOKING NORTHEAST AT CONTROL PANELS - Port](https://commons.wikimedia.org/wiki/File:SECOND_FLOOR,_CONTROL_ROOM,_LOOKING_NORTHEAST_AT_CONTROL_PANELS_-_Portland_General_Electric_Company,_Stephens_Substation,_1841_Southeast_Water_Street,_Portland,_Multnomah_HAER_ORE,26-PORT,12-N-12.tif) |  | Public domain |  |

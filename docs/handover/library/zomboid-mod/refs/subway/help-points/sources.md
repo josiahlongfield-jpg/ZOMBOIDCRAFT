@@ -1,0 +1,11 @@
+# subway/help-points
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-emergency-help-point-and-next-sevice-console-mater-hill-busw.jpg | [Emergency Help Point and Next Sevice Console Mater Hill Busway Station](https://commons.wikimedia.org/wiki/File:Emergency_Help_Point_and_Next_Sevice_Console_Mater_Hill_Busway_Station_Stanley_St_South_Brisbane_P1050113.jpg) | John Robert McPherson | CC BY-SA 4.0 | Mater Hill busway station is located in Brisbane, Australia serving the suburb of South Brisbane. It opened on 23 October 2000 when the en:S |
+| 02-emergency-help-point-next-sevice-console-and-tgsis-mater-hil.jpg | [Emergency Help Point, Next Sevice Console and TGSIs Mater Hill Busway ](https://commons.wikimedia.org/wiki/File:Emergency_Help_Point,_Next_Sevice_Console_and_TGSIs_Mater_Hill_Busway_Station_Stanley_St_South_Brisbane_P1050111.jpg) | John Robert McPherson | CC BY-SA 4.0 | Mater Hill busway station is located in Brisbane, Australia serving the suburb of South Brisbane. It opened on 23 October 2000 when the en:S |
+| 03-emergency-help-point-next-sevice-console-and-tgsis-mater-hil.jpg | [Emergency Help Point, Next Sevice Console and TGSIs Mater Hill Busway ](https://commons.wikimedia.org/wiki/File:Emergency_Help_Point,_Next_Sevice_Console_and_TGSIs_Mater_Hill_Busway_Station_Stanley_St_South_Brisbane_P1050112.jpg) | John Robert McPherson | CC BY-SA 4.0 | Mater Hill busway station is located in Brisbane, Australia serving the suburb of South Brisbane. It opened on 23 October 2000 when the en:S |
+| 04-emergency-call-box-at-clearfield-station-may-17.jpg | [Emergency call box at Clearfield station, May 17.jpg](https://commons.wikimedia.org/wiki/File:Emergency_call_box_at_Clearfield_station,_May_17.jpg) | An Errant Knight | CC BY-SA 4.0 | The emergency call box at the Clearfield station in Clearfield, Utah, May 2017 |
+| 05-emergency-call-box-at-south-jordan-station-sep-17.jpg | [Emergency call box at South Jordan station, Sep 17.jpg](https://commons.wikimedia.org/wiki/File:Emergency_call_box_at_South_Jordan_station,_Sep_17.jpg) | An Errant Knight | CC BY-SA 4.0 | Emergency call box at the South Jordan station in South Jordan, Utah, September 2017 |

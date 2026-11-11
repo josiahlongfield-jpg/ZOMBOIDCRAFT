@@ -1,0 +1,201 @@
+{
+ "id": "tarkov_pm",
+ "name": "Makarov PM (kitted)",
+ "anchor": "pistol",
+ "anchorMesh": "pbr_pistol",
+ "calibre": "9x18mm PM",
+ "fp": "operator_tarkov_pm",
+ "sight": "scope_all_belomo_pk_06_LOD0",
+ "reticleMoa": 85,
+ "reload": [
+  3.767,
+  4.867
+ ],
+ "stats": {
+  "damage": 6.0,
+  "hipSpread": 1.6,
+  "aimSpread": 0.5,
+  "recoil": 0.85,
+  "shotNoise": 58.0,
+  "range": 55.0,
+  "magazineSize": 8
+ },
+ "kit": [
+  "sight",
+  "light"
+ ],
+ "rail": {
+  "light": {
+   "bone": "tactical_all_surefire_xc1_LOD0",
+   "at": [
+    -0.0066,
+    -0.006,
+    0.0123
+   ],
+   "dir": [
+    0,
+    -0.9997,
+    -0.0232
+   ],
+   "third": [
+    -0.1261,
+    -0.1055,
+    0.5895
+   ]
+  }
+ },
+ "starter": true,
+ "tarkov": {
+  "base": "5448bd6b4bdc2dfc2f8b4569",
+  "aimPath": "/mod_pistolgrip/mod_tactical/mod_scope",
+  "aimIndex": 0,
+  "kit": [
+   {
+    "path": "",
+    "item": "5448bd6b4bdc2dfc2f8b4569",
+    "bone": "weapon_izhmeh_pm_9x18pm_LOD0",
+    "at": [
+     -0.156826,
+     1.413956,
+     0.017428,
+     0.707107,
+     0.0,
+     0.0,
+     -0.707107
+    ],
+    "bones": [
+     "pm_catch_LOD0",
+     "pm_hammer_LOD0",
+     "pm_trigger_LOD0",
+     "pm_internals_LOD0",
+     "weapon_izhmeh_pm_9x18pm_LOD0",
+     "pm_release_LOD0",
+     "pm_spring_LOD0",
+     "pm_spring_forward_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_magazine",
+    "item": "5448c12b4bdc2d02308b456f",
+    "bone": "mag_pm_izhmeh_9x18pm_8_LOD0",
+    "at": [
+     0.0,
+     -0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "mag_pm_izhmeh_9x18pm_8_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_reciever",
+    "item": "6374a822e629013b9c0645c8",
+    "bone": "reciever_pm_izhmeh_pm_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "reciever_pm_izhmeh_pm_std_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_reciever/mod_sight_rear",
+    "item": "63c6adcfb4ba094317063742",
+    "bone": "sight_rear_pm_izhmeh_pm_std_LOD0",
+    "at": [
+     -0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "sight_rear_pm_izhmeh_pm_std_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_pistolgrip",
+    "item": "637b6d610aef6cfc5e02dd14",
+    "bone": "pistolgrip_pm_gct_pm_tactic_kit_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "pistolgrip_pm_gct_pm_tactic_kit_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_pistolgrip/mod_tactical",
+    "item": "5a7b4900e899ef197b331a2a",
+    "bone": "mount_glock_um_tactical_um3_sight_mount_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "mount_glock_um_tactical_um3_sight_mount_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_pistolgrip/mod_tactical/mod_scope",
+    "item": "57ae0171245977343c27bfcf",
+    "bone": "scope_all_belomo_pk_06_LOD0",
+    "at": [
+     0.000265,
+     -0.000518,
+     -5.9e-05,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "linza_mode_000",
+     "scope_all_belomo_pk_06_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_pistolgrip/mod_tactical/mod_tactical",
+    "item": "5a7b483fe899ef0016170d15",
+    "bone": "tactical_all_surefire_xc1_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     -0.0,
+     -0.0,
+     1.0
+    ],
+    "bones": [
+     "flashlight_glass",
+     "switch_000_LOD0",
+     "tactical_all_surefire_xc1_LOD0"
+    ]
+   }
+  ]
+ }
+}

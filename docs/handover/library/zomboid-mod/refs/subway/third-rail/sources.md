@@ -1,0 +1,11 @@
+# subway/third-rail
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-ngarue-rail-accident-6-july-1923.jpg | [Ōngarue Rail Accident, 6 July 1923.jpg](https://commons.wikimedia.org/wiki/File:%C5%8Cngarue_Rail_Accident,_6_July_1923.jpg) | Archives New Zealand from New Zealand | CC BY-SA 2.0 | Ōngarue Rail Accident, 6 July 1923 In the early hours of 6 July 1923, New Zealand’s first major rail accident claimed the lives of 17 people |
+| 02-ngarue-rail-accident-6-july-1923-cropped.jpg | [Ōngarue Rail Accident, 6 July 1923 (cropped).jpg](https://commons.wikimedia.org/wiki/File:%C5%8Cngarue_Rail_Accident,_6_July_1923_(cropped).jpg) | Archives New Zealand from New Zealand | CC BY-SA 2.0 | Ōngarue Rail Accident, 6 July 1923 In the early hours of 6 July 1923, New Zealand’s first major rail accident claimed the lives of 17 people |
+| 03-ngarue-rail-accident-6-july-1923-2nd-cropped.jpg | [Ōngarue Rail Accident, 6 July 1923 (2nd cropped).jpg](https://commons.wikimedia.org/wiki/File:%C5%8Cngarue_Rail_Accident,_6_July_1923_(2nd_cropped).jpg) | Archives New Zealand from New Zealand | CC BY-SA 2.0 | Ōngarue Rail Accident, 6 July 1923 In the early hours of 6 July 1923, New Zealand’s first major rail accident claimed the lives of 17 people |
+| 04-docklands-light-railway-conductor-rail-239091x.jpg | [Docklands Light Railway - conductor rail 239091x.jpg](https://commons.wikimedia.org/wiki/File:Docklands_Light_Railway_-_conductor_rail_239091x.jpg) | RHaworth | CC BY-SA 4.0 | Support structure (insulating material) and a short length of conductor rail (aluminium with a steel contact surface) as used by the Docklan |
+| 05-installation-of-plate-insulators-and-brackets-for-the-rail-g.jpg | [Installation of plate insulators and brackets for the rail gap of newl](https://commons.wikimedia.org/wiki/File:Installation_of_plate_insulators_and_brackets_for_the_rail_gap_of_newly_installed_rail_in_Harold_Interlocking._(ESA_LIRR,_09-19-2018)_(43916810065).jpg) | MTA Capital Construction Mega Projects | CC BY 2.0 | Installation of plate insulators and brackets for the rail gap of newly installed rail in Harold Interlocking. (ESA/LIRR, 09-19-2018) |

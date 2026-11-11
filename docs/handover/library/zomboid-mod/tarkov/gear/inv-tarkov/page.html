@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tarkov Inventory Copy</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&display=swap">
+<style>
+/* A game screen copied from Tarkov's gear tab: one dark look on purpose. Tokens kept on :root for both schemes. */
+:root{color-scheme:dark;--page:#0b0c0c;--fg:#c7c5b3;--dim:#8a8a80;--hi:#ffffff;--blue:#4f8db5;--ok:#7fbf4d;--warn:#d9b03c;--bad:#c4452f;
+ --f:"Bender","Rajdhani","Arial Narrow",sans-serif;--cell:40px;
+ --bg-default:rgba(127,127,127,.12);--bg-violet:rgba(76,42,85,.55);--bg-blue:rgba(28,65,86,.6);--bg-yellow:rgba(104,102,40,.55);--bg-orange:rgba(80,40,10,.6);--bg-grey:rgba(29,29,29,.6);--bg-black:rgba(0,0,0,.55);--bg-green:rgba(21,45,0,.6);--bg-red:rgba(109,36,24,.6)}
+@media (prefers-color-scheme:light){:root:not([data-theme="light"]){color-scheme:dark}}
+:root[data-theme="dark"]{color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--fg);font-family:var(--f);font-weight:600;font-size:15px;padding:16px 16px 40px}
+.wrap{max-width:1380px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
+h1{margin:0;font:700 clamp(22px,3.4vw,30px) var(--f);letter-spacing:.06em;text-transform:uppercase;color:#e9e6d6}
+.lede{margin:0;color:var(--dim);max-width:90ch;font-weight:500;line-height:1.3}
+.keys{display:flex;flex-wrap:wrap;gap:4px 16px;color:var(--dim);font-weight:500;font-size:14px}.keys b{color:var(--fg);font-weight:700}
+.screen{position:relative;overflow:auto;border:1px solid #000;background:#111 var(--bgimg) center/cover;min-height:820px}
+.inner{position:relative;min-width:1290px;padding:0 14px 14px}
+/* tabs */
+.tabs{display:flex;gap:2px;justify-content:center;padding:8px 0 10px}
+.tab{width:150px;height:29px;border:0;background:var(--tabidle) center/100% 100%;color:#c9c9c0;font:700 13px var(--f);letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer}
+.tab.sel{background-image:var(--tabsel);color:#fff}
+.tab img{width:18px;height:18px}
+.cols{display:grid;grid-template-columns:318px 470px 1fr;gap:16px;align-items:start}
+/* header strips */
+.hdr{height:21px;line-height:21px;padding:0 26px 0 8px;font:700 12px var(--f);letter-spacing:.06em;text-transform:uppercase;color:#d7d7cf;
+ border-style:solid;border-width:0 24px 0 6px;border-image:var(--hpanel) 0 24 0 6 fill stretch;padding:0 2px;width:max-content;min-width:120px;white-space:nowrap}
+.sect{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
+/* equipment slots */
+.eq{display:grid;grid-template-columns:repeat(3,96px);gap:14px 10px}
+.slotw{display:flex;flex-direction:column;gap:2px}
+.slotw .hdr{min-width:96px;max-width:96px;font-size:11px;border-image:var(--hslot) 0 24 0 6 fill stretch}
+.slotw.wide{grid-column:span 3}.slotw.wide .hdr{max-width:none;min-width:150px}
+.slot{position:relative;width:96px;height:96px;background:var(--slotfill) center/100% 100%;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14),0 0 0 1px #000}
+.slotw.wide .slot{width:308px}
+.slot .sil{position:absolute;inset:10px;background:center/contain no-repeat;opacity:.55;pointer-events:none}
+.slot.full .sil{display:none}
+.slot.hot{box-shadow:inset 0 0 0 2px var(--ok),0 0 0 1px #000}.slot.can{box-shadow:inset 0 0 0 1px rgba(127,191,77,.7),0 0 0 1px #000}.slot.no{box-shadow:inset 0 0 0 2px var(--bad),0 0 0 1px #000}
+.slot .it{inset:0;width:auto!important;height:auto!important}
+.slot.sp{width:40px;height:40px}.slot.sp .sil{inset:13px 4px}
+.weight{display:flex;align-items:center;gap:8px;margin-top:8px;font:700 18px var(--f);color:#e6e6dc}
+.weight img{width:17px;height:19px}.weight .lim{color:var(--dim)}.weight.over{color:var(--warn)}.weight.max{color:var(--bad)}
+.wbar{height:4px;background:#1a1a1a;box-shadow:0 0 0 1px #000;margin-top:2px;position:relative}.wbar i{position:absolute;inset:0 auto 0 0;background:#9a9a90}.weight.over+.wbar i{background:var(--warn)}.weight.max+.wbar i{background:var(--bad)}
+.note{color:var(--dim);font-weight:500;font-size:13px;line-height:1.3;max-width:300px}
+/* containers */
+.row{display:flex;gap:10px;align-items:flex-start}
+.grids{display:flex;flex-wrap:wrap;gap:4px;align-items:flex-start;max-width:360px}
+.grid{position:relative;width:calc(var(--w)*var(--cell));height:calc(var(--h)*var(--cell));background:#0d0e0e var(--cellimg) 0 0/var(--cell) var(--cell);box-shadow:0 0 0 1px #000,0 0 0 2px rgba(255,255,255,.08)}
+.none{color:var(--dim);font-weight:500;font-size:14px;align-self:center}
+/* items */
+.it{position:absolute;cursor:grab;user-select:none;touch-action:none;overflow:hidden;
+ border:1px solid rgba(160,160,150,.55);box-shadow:inset 0 0 0 1px rgba(0,0,0,.6)}
+.it .bgc{position:absolute;inset:0;pointer-events:none;background:linear-gradient(var(--tint),var(--tint)),var(--itembgimg) 0 0/var(--cell) var(--cell)}
+.it img{position:absolute;inset:6%;width:88%;height:88%;object-fit:contain;pointer-events:none}
+.it .nm{position:absolute;right:3px;top:1px;left:3px;text-align:right;font:700 11px/1.05 var(--f);color:#fff;text-shadow:0 0 2px #000,0 1px 1px #000;white-space:nowrap;overflow:hidden;pointer-events:none}
+.it .ct{position:absolute;right:2px;bottom:1px;font:700 10px var(--f);color:#fff;text-shadow:0 0 2px #000,0 1px 1px #000;pointer-events:none}
+.it .wt{position:absolute;inset:0;display:grid;place-items:center;font:700 18px var(--f);letter-spacing:.12em;color:rgba(230,230,220,.5);pointer-events:none}
+.it.unk{background:var(--unexfill) center/cover}.it.unk .q{position:absolute;inset:0;background:var(--qimg) center/auto 60% no-repeat;opacity:.9;pointer-events:none}
+.it.dim{opacity:.25}
+.it:focus-visible{outline:2px solid var(--blue);outline-offset:-2px}
+.slot .it{border:0;box-shadow:none}.slot .it .bgc{display:none}
+.it .spin{position:absolute;inset:0;display:grid;place-items:center;background:rgba(0,0,0,.55);pointer-events:none}
+.spin i{width:22px;height:22px;background:var(--examine) center/contain no-repeat;animation:sp 1s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.ghost{position:absolute;pointer-events:none;z-index:5;background:center/100% 100%}
+.ghost.ok{background-image:var(--fadeok);box-shadow:inset 0 0 0 1px var(--ok)}.ghost.bad{background-image:var(--fadebad);box-shadow:inset 0 0 0 1px var(--bad)}
+.drag{position:fixed;z-index:90;pointer-events:none;opacity:.85}
+/* hidden (unsearched) cells */
+.cover{position:absolute;inset:0;background:var(--unsearched) 0 0/var(--cell) var(--cell);background-color:rgba(0,0,0,.6);z-index:3;display:grid;place-items:center}
+.btn{font:700 13px var(--f);letter-spacing:.08em;text-transform:uppercase;color:#ddd;background:#141515;border:1px solid #5a5a55;padding:6px 14px;cursor:pointer}
+.btn:hover{background:#26282a;color:#fff}.btn:focus-visible{outline:2px solid var(--blue)}
+.searching{display:inline-flex;align-items:center;gap:6px;color:#fff;font-size:13px}.searching i{width:16px;height:16px;background:var(--searchimg) center/contain no-repeat;animation:wob .8s ease-in-out infinite alternate}
+@keyframes wob{from{transform:translate(-2px,-1px) rotate(-12deg)}to{transform:translate(2px,1px) rotate(12deg)}}
+.lootbox{background:rgba(0,0,0,.55);box-shadow:0 0 0 1px #000,inset 0 0 0 1px rgba(255,255,255,.08);padding:8px 10px 10px;width:max-content}
+.lhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px}
+/* windows */
+.win{position:absolute;z-index:40;min-width:240px;background:var(--winc) center/100% 100%;background-color:rgba(10,10,10,.9);box-shadow:0 0 0 1px #000,0 0 0 2px rgba(255,255,255,.1),0 10px 30px rgba(0,0,0,.8)}
+.win .wh{display:flex;align-items:center;justify-content:space-between;gap:8px;height:24px;padding:0 6px 0 8px;background:var(--hlong) left/100% 100%;cursor:move;font:700 13px var(--f);letter-spacing:.04em;text-transform:uppercase;color:#fff;touch-action:none}
+.win .wh span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.win .x{width:20px;height:20px;border:0;background:var(--closeimg) center no-repeat;cursor:pointer;flex:none}
+.win .wb{padding:10px}
+.insp{display:grid;grid-template-columns:150px 1fr;gap:12px;width:440px}
+.insp .pic{height:150px;background:#0d0e0e var(--cellimg) 0 0/var(--cell) var(--cell);position:relative;box-shadow:0 0 0 1px #000}
+.insp .pic img{position:absolute;inset:8px;width:calc(100% - 16px);height:calc(100% - 16px);object-fit:contain}
+.insp dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:3px 10px;font-size:14px}
+.insp dt{color:var(--dim);font-weight:500;display:flex;align-items:center;gap:5px}.insp dt img{width:16px;height:16px}
+.insp dd{margin:0;color:#fff;text-align:right}
+.insp p{grid-column:1/-1;margin:0;color:var(--fg);font-weight:500;line-height:1.3}
+/* context menu, tooltip, split */
+.ctx{position:fixed;z-index:95;min-width:150px;background:#0c0d0d;box-shadow:0 0 0 1px #3c3d3a,0 6px 18px rgba(0,0,0,.8);padding:2px 0}
+.ctx button{display:flex;width:100%;align-items:center;gap:8px;border:0;background:transparent;color:#d4d4cc;font:700 13px var(--f);letter-spacing:.06em;text-transform:uppercase;padding:6px 12px;cursor:pointer;text-align:left}
+.ctx button:hover,.ctx button:focus-visible{background:#2b2d2e;color:#fff;outline:0}
+.ctx button:disabled{color:#55554f;cursor:default;background:transparent}
+.tip{position:fixed;z-index:96;pointer-events:none;background:#000;border:1px solid #444;color:#fff;font:700 13px var(--f);padding:3px 7px;max-width:320px}
+.split{display:flex;flex-direction:column;gap:10px;width:260px}
+.split input[type=range]{width:100%;accent-color:var(--blue)}
+.split .n{display:flex;justify-content:space-between;align-items:center;font-size:16px;color:#fff}
+.split .b{display:flex;gap:8px;justify-content:flex-end}
+.flash{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);z-index:80;background:rgba(0,0,0,.85);border:1px solid #555;color:#fff;font:700 14px var(--f);padding:5px 12px;pointer-events:none;opacity:0;transition:opacity .2s}
+.flash.on{opacity:1}
+.zc{color:var(--blue)}
+@media (prefers-reduced-motion:reduce){.spin i,.searching i{animation:none}.flash{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<h1>Tarkov inventory, copied</h1>
+<p class="lede">Tarkov's gear tab rebuilt with its own screen art from your files: the slot silhouettes, cells, headers, windows and tabs are the game's. The layout and controls follow Tarkov. Gear pictures are our renders; other items show Tarkov's colour tiles until their icons are exported.</p>
+</header>
+<div class="keys"><span><b>Drag</b> to move</span><span><b>R</b> while dragging rotates</span><span><b>Right-click</b> for the menu</span><span><b>Double-click</b> opens a container or inspects</span><span><b>Ctrl+click</b> quick move</span><span><b>Alt+click</b> equip</span><span><b>Ctrl+drag</b> a stack to split it</span><span><b>Del</b> discards</span></div>
+<div class="screen" id="screen"><div class="inner" id="inner">
+ <nav class="tabs" id="tabs" aria-label="Character tabs"></nav>
+ <div class="cols">
+  <section aria-label="Gear">
+   <div class="eq" id="eq"></div>
+   <div class="sect" style="margin-top:14px"><div class="hdr">Clothing <span class="zc">· ZomboidCraft</span></div><div class="row" id="clothes"></div></div>
+   <div class="weight" id="weight"></div><div class="wbar" id="wbar"><i></i></div>
+  </section>
+  <section aria-label="Carried" id="mid"></section>
+  <section aria-label="Loot" id="loot"></section>
+ </div>
+ <div class="flash" id="flash" role="status"></div>
+</div></div>
+</div>
+<script>
+const A=/*ASSETS*/null;
+const R=document.documentElement.style;
+[['--bgimg','bg'],['--tabidle','tab_idle'],['--tabsel','tab_sel'],['--slotfill','slotfill'],['--cellimg','cell'],['--unexfill','unexfill'],['--qimg','q'],['--fadeok','fadeok'],['--fadebad','fadebad'],['--unsearched','unsearched'],['--winc','winc'],['--hlong','hlong'],['--closeimg','close'],['--examine','examine'],['--searchimg','search'],['--itembgimg','itembg']].forEach(([v,k])=>R.setProperty(v,`url("${A[k]}")`));
+R.setProperty('--hpanel',`url("${A.hpanel}")`);R.setProperty('--hslot',`url("${A.hslot}")`);
+const CELL=40;
+// Tarkov templates (names, sizes, weights, colours, stacks and resources from Tarkov's item list)
+const T={
+ rig_alpha:{n:'ANA Tactical Alpha chest rig',s:'Alpha',w:4,h:4,kg:1.7,k:'rig',c:'default',img:'rig_alpha',g:[[1,2],[1,2],[1,3],[1,3],[1,3],[1,3],[2,2]],info:'Seven pouches: two 1×2, four 1×3 rifle mag pouches and a 2×2 admin pouch.'},
+ rig_bank:{n:'Spiritus Systems Bank Robber chest rig',s:'Bank Robber',w:3,h:2,kg:.7,k:'rig',c:'default',img:'rig_bankrobber',g:[[1,2],[1,2],[1,2],[1,2]],info:'Four 1×2 pouches.'},
+ rig_tb:{n:'Direct Action Thunderbolt compact chest rig',s:'Thunderbolt',w:3,h:3,kg:.62,k:'rig',c:'default',img:'rig_thunderbolt',g:[[1,2],[1,2],[1,2],[1,2],[1,2],[1,2],[1,2],[1,1],[1,1]],info:'Seven 1×2 pouches and two 1×1.'},
+ bp_trizip:{n:'Camelbak Tri-Zip assault backpack',s:'Tri-Zip',w:5,h:6,kg:2.2,k:'backpack',c:'violet',img:'backpack_trizip',g:[[5,6]],sp:-3,er:-2,info:'One 5×6 main compartment.'},
+ bp_pilgrim:{n:'Pilgrim tourist backpack',s:'Pilgrim',w:5,h:7,kg:3.48,k:'backpack',c:'violet',img:'backpack_pilgrim',g:[[5,7]],sp:-7,er:-4,info:'One 5×7 main compartment. Big, slows you down.'},
+ alpha:{n:'Secure container Alpha',s:'Alpha',w:2,h:2,kg:.6,k:'pouch',c:'violet',img:null,g:[[2,2]],info:'Tarkov\'s secure pouch: keeps what is inside when you die.'},
+ ar_slick:{n:'LBT-6094A Slick Plate Carrier',s:'Slick',w:3,h:3,kg:11.5,k:'armour',c:'blue',img:'armor_slick',cls:6,dur:'105/105',sp:-5,er:-1,info:'Class 6 plates front and back. Zombie bites and scratches stopped on the covered zones.'},
+ ar_6b13:{n:'6B13 assault armor',s:'6B13',w:3,h:4,kg:10.6,k:'armour',c:'blue',img:'armor_6b13',cls:4,dur:'64/64',sp:-1,er:-3,info:'Class 4 front plate, class 2 soft collar, groin and sides.'},
+ hm_exfil:{n:'Team Wendy EXFIL Ballistic Helmet',s:'EXFIL',w:2,h:2,kg:1.18,k:'headwear',c:'default',img:'helmet_team_wendy_exfil',cls:4,dur:'36/36',er:-1,info:'Class 4 crown, nape and ears.'},
+ hs_comtac:{n:'TW EXFIL Peltor ComTac V headset',s:'ComTac V',w:2,h:1,kg:.395,k:'earpiece',c:'default',img:'headset_comtac_5',info:'Louder footsteps and groans, gunfire cut to a safe level.'},
+ fc_bala:{n:'Balaclava',s:'Balaclava',w:1,h:1,kg:.1,k:'face',c:'default',img:'facecover_balaclava'},
+ ey_ess:{n:'ESS Crossbow tactical glasses',s:'Crossbow',w:2,h:1,kg:.03,k:'eyes',c:'default',img:'glasses_ess',cls:1,info:'Class 1 eye protection.'},
+ ab_usec:{n:'Armband (USEC)',s:'USEC',w:1,h:1,kg:.05,k:'armband',c:'blue',img:'armband_usec'},
+ top_usec:{n:'USEC Standard top',s:'Top',w:2,h:2,kg:.9,k:'top',c:'default',img:'tshirt_usec_cryeac',info:'Starting outfit. Clothing is loot like any other item.'},
+ pants_usec:{n:'USEC Standard trousers',s:'Trousers',w:2,h:2,kg:.7,k:'trousers',c:'default',img:'pants_usec_cryeac',info:'Starting outfit.'},
+ pl_esbi:{n:'ESBI level IV ballistic plate (Side)',s:'ESBI IV Side',w:1,h:1,kg:1.15,c:'blue',img:'plate_esbi',cls:6,dur:'30/30'},
+ m4:{n:'Colt M4A1 5.56x45 assault rifle',s:'M4A1',w:5,h:2,kg:3.4,k:'primary',c:'black',wt:'M4A1'},
+ pm:{n:'Makarov PM 9x18PM pistol',s:'PM',w:2,h:1,kg:.73,k:'holster',c:'black',img:'*ico_pm'},
+ dagger:{n:'Combat dagger',s:'Dagger',w:2,h:1,kg:.33,k:'scabbard',c:'black',img:'*ico_dagger'},
+ stanag:{n:'AR-15 5.56x45 HK 30 STANAG polymer 30-round magazine',s:'HK poly',w:1,h:2,kg:.17,c:'yellow',mag:30,ammo:'m855'},
+ pmmag:{n:'PM 9x18PM 8-round magazine',s:'PM 8',w:1,h:1,kg:.06,c:'yellow',mag:8,ammo:'pst'},
+ m855:{n:'5.56x45mm M855',s:'M855',w:1,h:1,kg:.012,c:'yellow',stack:60},
+ pst:{n:'9x18mm PM PST gzh',s:'PST gzh',w:1,h:1,kg:.01,c:'yellow',stack:50},
+ ai2:{n:'AI-2 medkit',s:'AI-2',w:1,h:1,kg:.135,c:'orange',hp:100,use:50},
+ ifak:{n:'IFAK individual first aid kit',s:'IFAK',w:1,h:1,kg:.5,c:'orange',hp:300,use:100},
+ salewa:{n:'Salewa first aid kit',s:'Salewa',w:1,h:2,kg:.6,c:'orange',hp:400,use:100},
+ cms:{n:'CMS surgical kit',s:'CMS',w:2,h:1,kg:.4,c:'orange',hp:3,use:1},
+ tq:{n:'Esmarch tourniquet',s:'Esmarch',w:1,h:1,kg:.132,c:'orange',hp:1,use:1},
+ water:{n:'Bottle of water (0.6L)',s:'Water',w:1,h:2,kg:.65,c:'default',eat:'Drink'},
+ mre:{n:'Iskra ration pack',s:'Iskra',w:1,h:2,kg:1.75,c:'default',eat:'Eat'},
+ stew:{n:'Can of beef stew (Small)',s:'Tushonka',w:1,h:1,kg:.34,c:'default',eat:'Eat',opener:1},
+ opener:{n:'Can opener (ZomboidCraft)',s:'Opener',w:1,h:1,kg:.1,c:'default'},
+ tape:{n:'Duct tape',s:'Duct tape',w:1,h:1,kg:.1,c:'blue'},
+ nails:{n:'Pack of nails',s:'Nails',w:1,h:1,kg:.6,c:'blue'},
+ radio:{n:'Motorola H4855 radio (ZomboidCraft)',s:'H4855',w:1,h:2,kg:.35,c:'blue'},
+ m67:{n:'M67 hand grenade',s:'M67',w:1,h:1,kg:.396,c:'grey'},
+ smoke:{n:'RDG-2B smoke grenade',s:'RDG-2B',w:1,h:2,kg:.6,c:'grey'},
+ torch:{n:'Zenit 2D flashlight',s:'2D',w:1,h:1,kg:.25,c:'blue'},
+};
+const KNOWN=new Set();
+const SLOTS=[['earpiece','Earpiece'],['headwear','Headwear'],['face','Face cover'],['armband','Armband'],['armour','Body armor'],['eyes','Eyewear'],['sling','On sling'],['back','On back'],['holster','Holster'],['scabbard','Scabbard']];
+const SIL={earpiece:'earpiece',headwear:'headwear',face:'face',armband:'armband',armour:'armour',eyes:'eyes',holster:'holster',scabbard:'scabbard',rig:'rig',backpack:'backpack',pouch:'pouch'};
+const slotKind=s=>s==='sling'||s==='back'?'primary':s;
+let uid=0,worn,pockets,special,loot,lootState,wins=[],G={},LOC={},busy={};
+function mk(t,x=0,y=0,rot=0,o={}){const d=T[t];const it={id:++uid,t,x,y,rot:!!rot};
+ if(d.g)it.g=d.g.map(([w,h])=>({w,h,items:[]}));if(d.stack)it.q=o.q||d.stack;if(d.mag!=null)it.am=o.am??d.mag;if(d.hp)it.hp=d.hp;
+ if(o.in)o.in.forEach(([gi,ct,cx,cy,cr,co])=>{const c=mk(ct,cx,cy,cr,co||{});it.g[gi].items.push(c)});return it}
+function init(){uid=0;KNOWN.clear();Object.keys(T).forEach(k=>KNOWN.add(k));['ar_6b13','bp_pilgrim','cms','smoke','salewa','rig_bank'].forEach(k=>KNOWN.delete(k));
+ worn={earpiece:mk('hs_comtac'),headwear:mk('hm_exfil'),face:null,armband:mk('ab_usec'),armour:mk('ar_slick'),eyes:null,sling:mk('m4'),back:null,holster:mk('pm'),scabbard:mk('dagger'),top:mk('top_usec'),trousers:mk('pants_usec'),
+  rig:mk('rig_alpha',0,0,0,{in:[[0,'tq',0,0],[2,'stanag',0,0],[3,'stanag',0,0],[4,'stanag',0,0,0,{am:12}],[6,'ifak',0,0],[6,'pmmag',1,0],[6,'m67',0,1]]}),
+  backpack:mk('bp_trizip',0,0,0,{in:[[0,'mre',0,0],[0,'water',1,0],[0,'cms',2,0],[0,'stew',2,1],[0,'opener',3,1],[0,'tape',0,2],[0,'nails',1,2],[0,'m855',2,2,0,{q:42}],[0,'radio',3,2],[0,'pst',4,0,0,{q:16}]]})};
+ pockets=[0,1,2,3].map(()=>({w:1,h:1,items:[],type:'pocket'}));pockets[0].items.push(mk('pmmag'));pockets[3].items.push(mk('torch'));pockets[1].items.push(mk('ai2'));
+ special=[null,null,null];
+ loot={w:10,h:14,type:'loot',items:[mk('bp_pilgrim',0,0,0,{in:[[0,'water',0,0],[0,'m855',1,0,0,{q:60}]]}),mk('rig_tb',5,0),mk('rig_bank',5,3),mk('ar_6b13',5,5),mk('fc_bala',8,0),mk('ey_ess',8,1),mk('pl_esbi',9,0),mk('pl_esbi',9,2),
+  mk('m67',0,7),mk('m67',1,7),mk('smoke',2,7),mk('salewa',3,7),mk('ifak',4,7),mk('stanag',0,8),mk('stanag',1,8),mk('m855',0,10,0,{q:60}),mk('m855',1,10,0,{q:23}),mk('stew',2,9),mk('water',4,9),mk('cms',5,9)]};
+ loot.items.forEach(i=>i.hid=true);lootState='closed';wins=[];render()}
+const $=s=>document.querySelector(s);const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function sz(it){const d=T[it.t];return it.rot?[d.h,d.w]:[d.w,d.h]}
+function known(it){return KNOWN.has(it.t)}
+function imgOf(d){if(!d.img)return null;return d.img[0]==='*'?A[d.img.slice(1)]:A['i_'+d.img]}
+function countTxt(it){const d=T[it.t];if(d.stack)return it.q;if(d.mag!=null)return it.am+'/'+d.mag;if(d.hp&&d.hp>1)return it.hp+'/'+d.hp;return ''}
+function gridType(key){return G[key].type}
+// ---------- rendering
+function itemEl(it,key,inSlot){const d=T[it.t],[w,h]=sz(it);const e=document.createElement('div');e.className='it';e.tabIndex=0;e.dataset.id=it.id;
+ if(!inSlot){e.style.left=it.x*CELL+'px';e.style.top=it.y*CELL+'px';e.style.width=w*CELL+'px';e.style.height=h*CELL+'px'}
+ if(!known(it)){e.classList.add('unk');e.innerHTML='<span class="q"></span>'}
+ else{const src=imgOf(d);e.innerHTML=`<span class="bgc" style="--tint:var(--bg-${d.c})"></span>`+(src?`<img alt="" src="${src}"${it.rot&&!inSlot?' style="transform:rotate(90deg);inset:auto;width:'+(h*CELL*.88)+'px;height:'+(w*CELL*.88)+'px;left:'+((w-h)*CELL/2+h*CELL*.06)+'px;top:'+((h-w)*CELL/2+w*CELL*.06)+'px"':''}>`:(d.wt?`<span class="wt">${esc(d.wt)}</span>`:''))+(inSlot?'':`<span class="nm">${esc(d.s)}</span><span class="ct">${esc(countTxt(it))}</span>`)}
+ if(busy[it.id])e.insertAdjacentHTML('beforeend','<span class="spin"><i></i></span>');
+ LOC[it.id]=inSlot?{slot:key}:{grid:key};return e}
+function gridEl(grid,key,type,owner){grid.type=type;grid.owner=owner||null;G[key]=grid;const el=document.createElement('div');el.className='grid';el.dataset.g=key;el.style.setProperty('--w',grid.w);el.style.setProperty('--h',grid.h);
+ grid.items.forEach(it=>{if(it.hid)return;el.append(itemEl(it,key))});return el}
+function slotEl(name,label,cls=''){const w=document.createElement('div');w.className='slotw '+cls;w.innerHTML=`<div class="hdr">${esc(label)}</div>`;
+ const s=document.createElement('div');s.className='slot'+(cls.includes('sp')?' sp':'');s.dataset.slot=name;const it=name.startsWith('sp')?special[+name[2]]:worn[name];
+ const sil=SIL[name]||(name.startsWith('sp')?'special':null);if(sil)s.insertAdjacentHTML('beforeend',`<span class="sil" style="background-image:url(${A[sil]})"></span>`);
+ if(it){s.classList.add('full');s.append(itemEl(it,name,true))}w.append(s);return w}
+function containerGrids(it,type){const box=document.createElement('div');box.className='grids';it.g.forEach((g,i)=>box.append(gridEl(g,'c'+it.id+'_'+i,type,it)));return box}
+function render(){G={};LOC={};
+ const tabs=$('#tabs');tabs.innerHTML='';[['overall','Overall'],['gear','Gear'],['health','Health'],['skills','Skills'],['map','Map']].forEach(([k,l])=>{const b=document.createElement('button');b.type='button';b.className='tab'+(k==='gear'?' sel':'');b.innerHTML=`<img alt="" src="${A[k==='gear'?'t_gear_s':'t_'+k]}">${l}`;b.onclick=()=>{if(k!=='gear')flash('Only the Gear tab is in this mock-up')};tabs.append(b)});
+ const eq=$('#eq');eq.innerHTML='';SLOTS.forEach(([k,l])=>eq.append(slotEl(k,l,k==='sling'||k==='back'?'wide':'')));
+ const cl=$('#clothes');cl.innerHTML='';cl.append(slotEl('top','Top'),slotEl('trousers','Trousers'));
+ const mid=$('#mid');mid.innerHTML='';
+ const sec=(label,slot,body)=>{const s=document.createElement('div');s.className='sect';s.innerHTML=`<div class="hdr">${label}</div>`;const r=document.createElement('div');r.className='row';if(slot){const sw=slotEl(slot,'');sw.querySelector('.hdr').remove();r.append(sw)}r.append(body);s.append(r);mid.append(s)};
+ const none=t=>{const n=document.createElement('div');n.className='none';n.textContent=t;return n};
+ sec('Tactical rig','rig',worn.rig?containerGrids(worn.rig,'rig'):none('No rig worn'));
+ const pk=document.createElement('div');pk.className='grids';pockets.forEach((p,i)=>pk.append(gridEl(p,'pk'+i,'pocket')));sec('Pockets',null,pk);
+ sec('Backpack','backpack',worn.backpack?containerGrids(worn.backpack,'backpack'):none('No backpack worn'));
+ const sp=document.createElement('div');sp.className='row';special.forEach((x,i)=>sp.append(slotEl('sp'+i,'','sp')));sp.querySelectorAll('.hdr').forEach(h=>h.remove());sec('Special slots',null,sp);
+ const lo=$('#loot');lo.innerHTML='';const box=document.createElement('div');box.className='lootbox';
+ box.innerHTML=`<div class="lhead"><div class="hdr">Wooden crate</div><span id="lstate"></span></div>`;const ge=gridEl(loot,'loot','loot');
+ if(lootState==='closed'){const c=document.createElement('div');c.className='cover';c.innerHTML='<button class="btn" type="button" id="searchbtn">Search</button>';ge.append(c)}
+ box.append(ge);lo.append(box);
+ lo.insertAdjacentHTML('beforeend',`<p class="note" style="margin-top:10px;max-width:420px">Everything in the crate is hidden until searched, and grey <b>?</b> items are unknown until you examine them, as in Tarkov. Drop ammo onto a magazine to load it, or onto a matching stack to merge.</p>`);
+ if(lootState==='searching')$('#lstate').innerHTML='<span class="searching"><i></i>Searching</span>';
+ const sb=$('#searchbtn');if(sb)sb.onclick=search;
+ // windows
+ document.querySelectorAll('.win').forEach(w=>w.remove());wins=wins.filter(w=>w.type!=='cont'||findItem(w.id));wins.forEach(drawWin);
+ stats()}
+function weight(it){let w=T[it.t].kg*(it.q&&T[it.t].stack?it.q:1);(it.g||[]).forEach(g=>g.items.forEach(x=>w+=weight(x)));if(T[it.t].mag!=null)w+=it.am*T[T[it.t].ammo].kg;return w}
+function stats(){let kg=0;Object.values(worn).forEach(it=>{if(it)kg+=weight(it)});pockets.forEach(p=>p.items.forEach(x=>kg+=weight(x)));special.forEach(x=>{if(x)kg+=weight(x)});
+ const el=$('#weight');el.className='weight'+(kg>=70?' max':kg>=26?' over':'');el.innerHTML=`<img alt="" src="${A.kg}">${kg.toFixed(1)} <span class="lim">/ 26</span>`;
+ el.title=kg>=70?'Overloaded: cannot move fast':kg>=26?'Overweight: stamina drains faster, slower':'';$('#wbar i').style.width=Math.min(100,kg/70*100)+'%'}
+// ---------- model helpers
+function allGrids(){const out=[];const add=(g,k)=>out.push([g,k]);Object.entries(G).forEach(([k,g])=>add(g,k));return out}
+function findItem(id){let r=null;const walk=(it,parent,key)=>{if(r)return;if(it.id===id){r={it,parent,key};return}(it.g||[]).forEach((g,i)=>g.items.forEach(x=>walk(x,g,'c'+it.id+'_'+i)))};
+ Object.entries(worn).forEach(([k,it])=>{if(it)walk(it,null,k)});special.forEach((it,i)=>{if(it)walk(it,null,'sp'+i)});pockets.forEach((p,i)=>p.items.forEach(x=>walk(x,p,'pk'+i)));loot.items.forEach(x=>walk(x,loot,'loot'));return r}
+function detach(id){const f=findItem(id);if(!f)return null;if(f.parent)f.parent.items.splice(f.parent.items.indexOf(f.it),1);else if(f.key.startsWith('sp'))special[+f.key[2]]=null;else worn[f.key]=null;return f}
+function gridOfKey(key){if(G[key])return G[key];if(key==='loot')return loot;if(key.startsWith('pk'))return pockets[+key[2]];const m=key.match(/^c(\d+)_(\d+)$/);if(m){const f=findItem(+m[1]);return f&&f.it.g[+m[2]]}return null}
+function fits(grid,it,x,y,rot){const d=T[it.t];const [w,h]=rot?[d.h,d.w]:[d.w,d.h];if(x<0||y<0||x+w>grid.w||y+h>grid.h)return false;
+ return !grid.items.some(o=>{if(o===it)return false;const[ow,oh]=sz(o);return x<o.x+ow&&o.x<x+w&&y<o.y+oh&&o.y<y+h})}
+function holdReason(grid,it){const d=T[it.t];const type=grid.type;
+ if(grid.owner&&(grid.owner===it||contains(it,grid.owner)))return 'Cannot put a container inside itself';
+ if(type==='loot')return '';
+ if(d.k==='backpack')return 'Backpacks cannot go inside other containers';
+ if(it.g&&it.g.some(g=>g.items.length))return 'Empty it first: a container with items cannot go inside another';
+ if(type==='pouch'&&(d.k||d.cls))return 'The secure container does not take gear or weapons';
+ return ''}
+function contains(it,target){return (it.g||[]).some(g=>g.items.some(x=>x===target||contains(x,target)))}
+function firstFit(grid,it){if(holdReason(grid,it))return null;for(const rot of [it.rot,!it.rot])for(let y=0;y<grid.h;y++)for(let x=0;x<grid.w;x++)if(fits(grid,it,x,y,rot))return{x,y,rot};return null}
+function placeIn(grid,it){const p=firstFit(grid,it);if(!p)return false;Object.assign(it,p);grid.items.push(it);return true}
+function invGrids(){const out=[];if(worn.rig)out.push(...worn.rig.g.map(g=>(g.type='rig',g.owner=worn.rig,g)));pockets.forEach(p=>out.push(p));if(worn.backpack)out.push(...worn.backpack.g.map(g=>(g.type='backpack',g.owner=worn.backpack,g)));return out}
+function slotAccepts(slot,it){const d=T[it.t];if(slot.startsWith('sp'))return false;return d.k===slotKind(slot)}
+// ---------- feedback
+let ft;function flash(t){const f=$('#flash');f.textContent=t;f.classList.add('on');clearTimeout(ft);ft=setTimeout(()=>f.classList.remove('on'),2200)}
+// ---------- search + examine
+function search(){if(lootState!=='closed')return;lootState='searching';render();const order=[...loot.items].sort((a,b)=>a.y-b.y||a.x-b.x);let i=0;
+ const step=()=>{if(i>=order.length){lootState='done';render();return}order[i++].hid=false;render();setTimeout(step,260)};setTimeout(step,500)}
+function examine(it){if(busy[it.id])return;busy[it.id]=1;render();setTimeout(()=>{delete busy[it.id];KNOWN.add(it.t);render();flash('Examined: '+T[it.t].n)},1400)}
+// ---------- actions
+function quickMove(id){const f=findItem(id);if(!f)return;const fromInv=!(f.parent===loot||(f.key&&f.key.startsWith('c')&&isLootSide(f.key)));
+ const it=f.it;detach(id);
+ if(fromInv){if(!placeIn(loot,it)){restore(f);flash('No room in the crate')}}
+ else{if(!invGrids().some(g=>placeIn(g,it))){restore(f);flash('No room in your rig, pockets or backpack')}}
+ render()}
+function isLootSide(key){let k=key;for(let n=0;n<8;n++){const m=k.match(/^c(\d+)_/);if(!m)return k==='loot';const f=findItem(+m[1]);if(!f)return false;if(!f.parent)return false;k=f.key}return false}
+function restore(f){if(f.parent)f.parent.items.push(f.it);else if(f.key.startsWith('sp'))special[+f.key[2]]=f.it;else worn[f.key]=f.it}
+function equip(id){const f=findItem(id);if(!f)return;const it=f.it;if(!known(it)){flash('Examine it first');return}
+ const k=T[it.t].k;if(!k){flash('That is not wearable');return}const slot=k==='primary'?(!worn.sling?'sling':!worn.back?'back':'sling'):k;
+ if(worn[slot]){flash('Take off the '+T[worn[slot].t].s+' first');return}detach(id);worn[slot]=it;it.rot=false;render()}
+function discard(id){const f=findItem(id);if(!f||f.parent===loot)return;const it=f.it;detach(id);if(!placeIn(loot,it)){restore(f);flash('No room in the crate to drop it')}else flash('Discarded '+T[it.t].s);render()}
+function useIt(id){const f=findItem(id);const it=f.it,d=T[it.t];
+ if(d.eat){if(d.opener&&!haveItem('opener')){flash('Needs a can opener (Zomboid rule)');return}detach(id);flash((d.eat==='Drink'?'Drank ':'Ate ')+d.s);render();return}
+ it.hp-=d.use;flash('Used '+d.s);if(it.hp<=0)detach(id);render()}
+function haveItem(t){let r=false;const w=it=>{if(it.t===t)r=true;(it.g||[]).forEach(g=>g.items.forEach(w))};Object.values(worn).forEach(i=>i&&w(i));pockets.forEach(p=>p.items.forEach(w));return r}
+function unload(id){const f=findItem(id);const it=f.it,d=T[it.t];if(!it.am){flash('It is empty');return}const a=mk(d.ammo,0,0,0,{q:it.am});
+ const g=f.parent||null;if(g&&placeIn(g,a)||invGrids().some(x=>placeIn(x,a))||placeIn(loot,a)){it.am=0;render()}else flash('No room for the rounds')}
+function openWin(id){if(wins.some(w=>w.type==='cont'&&w.id===id))return;wins.push({type:'cont',id,x:340,y:120+wins.length*24});render()}
+function inspect(id){const f=findItem(id);if(!known(f.it)){flash('Examine it first');return}wins=wins.filter(w=>!(w.type==='insp'));wins.push({type:'insp',id,x:380,y:150});render()}
+function drawWin(w){const f=findItem(w.id);if(!f&&w.type!=='split')return;const it=f&&f.it,d=it&&T[it.t];const el=document.createElement('div');el.className='win';el.style.left=w.x+'px';el.style.top=w.y+'px';
+ const title=w.type==='split'?'Split':d.n;el.innerHTML=`<div class="wh"><span>${esc(title)}</span><button class="x" type="button" aria-label="Close"></button></div><div class="wb"></div>`;
+ const body=el.querySelector('.wb');
+ if(w.type==='cont')body.append(containerGrids(it,isLootSide(f.key||'')||f.parent===loot?'loot':(f.parent&&f.parent.type)||'backpack'));
+ if(w.type==='insp'){const src=imgOf(d);const cells=d.g?d.g.reduce((a,[x,y])=>a+x*y,0):0;
+  body.innerHTML=`<div class="insp"><div class="pic">${src?`<img alt="" src="${src}">`:''}</div><dl>
+  <dt><img alt="" src="${A.weight}">Weight</dt><dd>${weight(it).toFixed(2)} kg</dd><dt>Size</dt><dd>${d.w}×${d.h}</dd>
+  ${d.cls?`<dt>Armor class</dt><dd>${d.cls}</dd>`:''}${d.dur?`<dt>Durability</dt><dd>${d.dur}</dd>`:''}${cells?`<dt>Capacity</dt><dd>${cells} cells</dd>`:''}
+  ${d.sp?`<dt>Move speed</dt><dd>${d.sp}%</dd>`:''}${d.er?`<dt><img alt="" src="${A.ergo}">Ergonomics</dt><dd>${d.er}</dd>`:''}${d.hp>1?`<dt>Resource</dt><dd>${it.hp}/${d.hp}</dd>`:''}${d.mag!=null?`<dt>Rounds</dt><dd>${it.am}/${d.mag}</dd>`:''}${d.stack?`<dt>Stack</dt><dd>${it.q}/${d.stack}</dd>`:''}
+  </dl>${d.info?`<p>${esc(d.info)}</p>`:''}</div>`}
+ if(w.type==='split'){const max=it.q;body.innerHTML=`<div class="split"><div class="n"><span>${esc(d.s)}</span><b id="sn">${Math.floor(max/2)}</b></div><input type="range" min="1" max="${max-1}" value="${Math.floor(max/2)}" aria-label="Amount to split off"><div class="b"><button class="btn" type="button" data-a="ok">Accept</button><button class="btn" type="button" data-a="no">Cancel</button></div></div>`;
+  const r=body.querySelector('input');r.oninput=()=>body.querySelector('#sn').textContent=r.value;
+  body.querySelector('[data-a=ok]').onclick=()=>{doSplit(w,+r.value)};body.querySelector('[data-a=no]').onclick=()=>{wins=wins.filter(x=>x!==w);render()}}
+ el.querySelector('.x').onclick=()=>{wins=wins.filter(x=>x!==w);render()};
+ const h=el.querySelector('.wh');h.onpointerdown=e=>{if(e.target.closest('.x'))return;const sx=e.clientX-w.x,sy=e.clientY-w.y;h.setPointerCapture(e.pointerId);h.onpointermove=m=>{w.x=m.clientX-sx;w.y=m.clientY-sy;el.style.left=w.x+'px';el.style.top=w.y+'px'};h.onpointerup=()=>{h.onpointermove=null}};
+ $('#inner').append(el)}
+function doSplit(w,n){const f=findItem(w.id);const g=gridOfKey(w.key);if(!f||!g){wins=wins.filter(x=>x!==w);render();return}
+ const it=f.it;const nu=mk(it.t,w.gx,w.gy,w.rot,{q:n});if(!fits(g,nu,w.gx,w.gy,w.rot)||holdReason(g,nu)){flash('No room there');}else{it.q-=n;g.items.push(nu)}wins=wins.filter(x=>x!==w);render()}
+// ---------- context menu
+let ctxEl=null;function closeCtx(){if(ctxEl){ctxEl.remove();ctxEl=null}}
+function menu(id,x,y){closeCtx();const f=findItem(id);if(!f)return;const it=f.it,d=T[it.t];const inSlot=!f.parent;const ops=[];
+ if(!known(it))ops.push(['Examine',()=>examine(it)]);
+ else{ops.push(['Inspect',()=>inspect(id)]);if(it.g)ops.push(['Open',()=>openWin(id)]);
+  if(d.k&&!inSlot)ops.push(['Equip',()=>equip(id)]);if(inSlot)ops.push(['Unequip',()=>quickMove(id)]);
+  if(d.hp)ops.push(['Use',()=>useIt(id)]);if(d.eat)ops.push([d.eat,()=>useIt(id)]);if(d.mag!=null)ops.push(['Unload ammo',()=>unload(id)]);}
+ if(f.parent!==loot)ops.push(['Discard',()=>discard(id)]);
+ ctxEl=document.createElement('div');ctxEl.className='ctx';ctxEl.setAttribute('role','menu');ops.forEach(([l,fn])=>{const b=document.createElement('button');b.type='button';b.setAttribute('role','menuitem');b.textContent=l;b.onclick=()=>{closeCtx();fn()};ctxEl.append(b)});
+ document.body.append(ctxEl);const r=ctxEl.getBoundingClientRect();ctxEl.style.left=Math.min(x,innerWidth-r.width-4)+'px';ctxEl.style.top=Math.min(y,innerHeight-r.height-4)+'px';ctxEl.querySelector('button').focus()}
+document.addEventListener('pointerdown',e=>{if(ctxEl&&!e.target.closest('.ctx'))closeCtx()});
+// ---------- tooltip
+let tipEl=null,tipT,hoverId=null;
+document.addEventListener('pointerover',e=>{const it=e.target.closest('.it');clearTimeout(tipT);if(tipEl){tipEl.remove();tipEl=null}hoverId=it?+it.dataset.id:null;if(!it||drag)return;
+ tipT=setTimeout(()=>{const f=findItem(+it.dataset.id);if(!f||drag)return;tipEl=document.createElement('div');tipEl.className='tip';tipEl.textContent=known(f.it)?T[f.it.t].n:'Unknown item';document.body.append(tipEl);const r=it.getBoundingClientRect();tipEl.style.left=Math.min(r.left,innerWidth-tipEl.offsetWidth-4)+'px';tipEl.style.top=(r.bottom+4)+'px'},450)});
+// ---------- input on items
+const inner=document.getElementById('inner');
+inner.addEventListener('contextmenu',e=>{const it=e.target.closest('.it');if(!it)return;e.preventDefault();menu(+it.dataset.id,e.clientX,e.clientY)});
+inner.addEventListener('dblclick',e=>{const el=e.target.closest('.it');if(!el)return;const f=findItem(+el.dataset.id);if(!f)return;if(!known(f.it))examine(f.it);else if(f.it.g)openWin(f.it.id);else inspect(f.it.id)});
+inner.addEventListener('keydown',e=>{const el=e.target.closest('.it');if(!el)return;if(e.key==='Enter'||e.key==='ContextMenu'){e.preventDefault();const r=el.getBoundingClientRect();menu(+el.dataset.id,r.left+8,r.bottom)}if(e.key==='Delete')discard(+el.dataset.id)});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeCtx();if(wins.length){wins.pop();render()}}if(e.key==='Delete'&&hoverId&&!e.target.closest('.it'))discard(hoverId);if((e.key==='r'||e.key==='R')&&drag){drag.rot=!drag.rot;const[w,h]=dims(drag);drag.ox=Math.min(drag.ox,w-1);drag.oy=Math.min(drag.oy,h-1);styleClone();track(drag.lx,drag.ly)}});
+// ---------- drag and drop
+let drag=null,press=null;
+function dims(dg){const d=T[dg.it.t];return dg.rot?[d.h,d.w]:[d.w,d.h]}
+inner.addEventListener('pointerdown',e=>{if(e.button!==0)return;const el=e.target.closest('.it');if(!el)return;const id=+el.dataset.id;
+ if(e.ctrlKey&&!e.altKey){press={id,el,x:e.clientX,y:e.clientY,ctrl:true,e};}else if(e.altKey){e.preventDefault();equip(id);return}else press={id,el,x:e.clientX,y:e.clientY};
+ const r=el.getBoundingClientRect();press.ox=Math.floor((e.clientX-r.left)/CELL);press.oy=Math.floor((e.clientY-r.top)/CELL);el.setPointerCapture(e.pointerId)});
+document.addEventListener('pointermove',e=>{if(press&&!drag&&Math.hypot(e.clientX-press.x,e.clientY-press.y)>5)startDrag(e);if(drag)track(e.clientX,e.clientY)});
+document.addEventListener('pointerup',e=>{if(drag){drop(e)}else if(press&&press.ctrl){quickMove(press.id)}press=null});
+document.addEventListener('pointercancel',()=>{if(drag)endDrag();press=null});
+function startDrag(e){const f=findItem(press.id);if(!f){press=null;return}const fromSlot=!f.parent;
+ drag={id:press.id,it:f.it,rot:f.it.rot&&!fromSlot,ox:fromSlot?0:press.ox,oy:fromSlot?0:press.oy,split:!!press.ctrl,src:press.el};
+ if(fromSlot){drag.rot=false}const[w,h]=dims(drag);drag.ox=Math.min(drag.ox,w-1);drag.oy=Math.min(drag.oy,h-1);
+ press.el.classList.add('dim');const c=document.createElement('div');c.className='drag';drag.clone=c;document.body.append(c);styleClone();
+ document.querySelectorAll('.slot').forEach(s=>{if(slotAccepts(s.dataset.slot,drag.it))s.classList.add('can')});if(tipEl){tipEl.remove();tipEl=null}}
+function styleClone(){const it=drag.it,d=T[it.t];const[w,h]=dims(drag);const c=drag.clone;c.style.width=w*CELL+'px';c.style.height=h*CELL+'px';
+ const tmp=itemEl(Object.assign({},it,{rot:drag.rot,x:0,y:0}),'_drag');tmp.style.left=tmp.style.top='0px';c.innerHTML='';c.append(tmp);delete LOC[it.id]}
+function clearMarks(){document.querySelectorAll('.ghost').forEach(g=>g.remove());document.querySelectorAll('.slot.hot,.slot.no').forEach(s=>s.classList.remove('hot','no'))}
+function itemAt(grid,cx,cy,except){return grid.items.find(o=>{if(o===except||o.hid)return false;const[ow,oh]=sz(o);return cx>=o.x&&cx<o.x+ow&&cy>=o.y&&cy<o.y+oh})}
+function interact(src,tgt){const a=T[src.t],b=T[tgt.t];if(!known(tgt))return null;
+ if(a.stack&&src.t===tgt.t&&tgt.q<a.stack)return 'merge';if(a.stack&&b.mag!=null&&b.ammo===src.t&&tgt.am<b.mag)return 'load';
+ if(tgt.g&&tgt.g.some(g=>!holdReason(g,src)&&firstFit(g,src)))return 'into';return null}
+function track(x,y){drag.lx=x;drag.ly=y;const[w,h]=dims(drag);drag.clone.style.left=(x-drag.ox*CELL-CELL/2)+'px';drag.clone.style.top=(y-drag.oy*CELL-CELL/2)+'px';clearMarks();drag.tgt=null;
+ const under=document.elementFromPoint(x,y);if(!under)return;const slot=under.closest('.slot');
+ if(slot){const name=slot.dataset.slot;const cur=name.startsWith('sp')?special[+name[2]]:worn[name];let ok=slotAccepts(name,drag.it)&&known(drag.it);
+  if(cur&&cur!==drag.it&&!ok){ok=!!interact(drag.it,cur);if(ok){drag.tgt={into:cur};slot.classList.add('hot');return}}
+  slot.classList.add(ok?'hot':'no');drag.tgt=ok?{slot:name}:null;return}
+ const gEl=under.closest('.grid');if(!gEl)return;const key=gEl.dataset.g;const grid=G[key];const r=gEl.getBoundingClientRect();
+ const pcx=Math.floor((x-r.left)/CELL),pcy=Math.floor((y-r.top)/CELL);const on=itemAt(grid,pcx,pcy,drag.it);
+ if(on){const act=interact(drag.it,on);if(act){const[ow,oh]=sz(on);ghost(gEl,on.x,on.y,ow,oh,true);drag.tgt={item:on,act,key};return}}
+ const gx=Math.floor((x-r.left)/CELL)-drag.ox,gy=Math.floor((y-r.top)/CELL)-drag.oy;
+ const reason=holdReason(grid,drag.it);const ok=!reason&&fits(grid,drag.it,gx,gy,drag.rot);
+ const cx=Math.max(0,Math.min(gx,grid.w-w)),cy=Math.max(0,Math.min(gy,grid.h-h));ghost(gEl,cx,cy,Math.min(w,grid.w),Math.min(h,grid.h),ok);
+ drag.tgt=ok?{key,gx,gy}:{bad:reason}}
+function ghost(gEl,x,y,w,h,ok){const g=document.createElement('div');g.className='ghost '+(ok?'ok':'bad');Object.assign(g.style,{left:x*CELL+'px',top:y*CELL+'px',width:w*CELL+'px',height:h*CELL+'px'});gEl.append(g)}
+function endDrag(){clearMarks();document.querySelectorAll('.slot.can').forEach(s=>s.classList.remove('can'));if(drag.clone)drag.clone.remove();if(drag.src)drag.src.classList.remove('dim');drag=null}
+function drop(){const dg=drag,t=dg.tgt,it=dg.it;endDrag();if(!t){return}
+ if(t.bad){flash(t.bad);return}
+ if(t.item){const tgt=t.item,a=T[it.t];
+  if(t.act==='merge'){const n=Math.min(it.q,a.stack-tgt.q);tgt.q+=n;it.q-=n;if(!it.q)detach(it.id);render();return}
+  if(t.act==='load'){const b=T[tgt.t];const n=Math.min(it.q,b.mag-tgt.am);tgt.am+=n;it.q-=n;if(!it.q)detach(it.id);flash('Loaded '+n+' rounds');render();return}
+  if(t.act==='into'){intoContainer(it,tgt);return}}
+ if(t.into){intoContainer(it,t.into);return}
+ if(t.slot){const name=t.slot;const f=findItem(it.id);const cur=worn[name];
+  if(cur===it)return;
+  detach(it.id);
+  if(cur){worn[name]=null;// swap: old item goes where the new one came from
+   const g=f.parent;if(g&&(fits(g,cur,it.x,it.y,cur.rot)&&!holdReason(g,cur)?(cur.x=it.x,cur.y=it.y,g.items.push(cur),true):placeIn(g,cur))){}else if(!f.parent&&slotAccepts(f.key,cur)){worn[f.key]=cur}else{worn[name]=cur;restore(f);flash('No room to swap');render();return}}
+  worn[name]=it;it.rot=false;render();return}
+ if(t.key){const grid=G[t.key];const f=findItem(it.id);
+  if(dg.split&&T[it.t].stack&&it.q>1&&f.parent){wins=wins.filter(w=>w.type!=='split');wins.push({type:'split',id:it.id,key:t.key,gx:t.gx,gy:t.gy,rot:dg.rot,x:420,y:260});render();return}
+  detach(it.id);it.x=t.gx;it.y=t.gy;it.rot=dg.rot;grid.items.push(it);render()}}
+function intoContainer(it,box){const f=findItem(it.id);detach(it.id);if(box.g.some(g=>placeIn(g,it))){flash('Put in '+T[box.t].s);render()}else{restore(f);flash('No room inside')}}
+init();
+</script>
+</body>
+</html>

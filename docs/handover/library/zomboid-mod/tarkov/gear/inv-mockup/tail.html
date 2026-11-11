@@ -1,0 +1,123 @@
+;
+// Tarkov item templates: name, short label, w x h cells, kg, kind, optional grids / image / extras
+const T={
+ rig_alpha:{n:'ANA Tactical Alpha chest rig',s:'Alpha',w:4,h:4,kg:1.7,k:'rig',img:'rig_alpha',g:[[1,2],[1,2],[1,3],[1,3],[1,3],[1,3],[2,2]]},
+ rig_bank:{n:'Spiritus Systems Bank Robber chest rig',s:'Bank Robber',w:3,h:2,kg:.7,k:'rig',img:'rig_bankrobber',g:[[1,2],[1,2],[1,2],[1,2]]},
+ rig_tb:{n:'Direct Action Thunderbolt compact chest rig',s:'Thunderbolt',w:3,h:3,kg:.62,k:'rig',img:'rig_thunderbolt',g:[[1,2],[1,2],[1,2],[1,2],[1,2],[1,2],[1,2],[1,1],[1,1]]},
+ bp_trizip:{n:'Camelbak Tri-Zip assault backpack',s:'Tri-Zip',w:5,h:6,kg:2.2,k:'backpack',img:'backpack_trizip',g:[[5,6]],sp:-3,tu:-1},
+ bp_pilgrim:{n:'Pilgrim tourist backpack',s:'Pilgrim',w:5,h:7,kg:3.48,k:'backpack',img:'backpack_pilgrim',g:[[5,7]],sp:-7,tu:-4},
+ ar_slick:{n:'LBT-6094A Slick Plate Carrier',s:'Slick',w:3,h:3,kg:11.5,k:'armour',img:'armor_slick',cls:6,sp:-5,tu:-1,info:'Class 6 plates front and back, soft armour sides'},
+ ar_6b13:{n:'6B13 assault armor',s:'6B13',w:3,h:4,kg:10.6,k:'armour',img:'armor_6b13',cls:4,sp:-1,info:'Class 4 front plate, class 2 soft collar, groin and sides'},
+ hm_exfil:{n:'Team Wendy EXFIL Ballistic Helmet',s:'EXFIL',w:2,h:2,kg:1.18,k:'headwear',img:'helmet_team_wendy_exfil',cls:4,tu:-1,info:'Class 4 crown, nape and ears'},
+ hs_comtac:{n:'Peltor ComTac V headset',s:'ComTac V',w:2,h:2,kg:.335,k:'earpiece',img:'headset_comtac_5',info:'Louder footsteps and groans, gunfire cut to a safe level'},
+ fc_bala:{n:'Balaclava',s:'Balaclava',w:1,h:1,kg:.1,k:'face',img:'facecover_balaclava',info:'Warmth, hides your face'},
+ ey_ess:{n:'ESS Crossbow tactical glasses',s:'Crossbow',w:2,h:1,kg:.03,k:'eyes',img:'glasses_ess',info:'Ballistic eye protection, stops blood splash'},
+ ab_usec:{n:'Armband (USEC)',s:'USEC',w:1,h:1,kg:.05,k:'armband',img:'armband_usec',info:'Team colour for co-op'},
+ top_usec:{n:'USEC Standard top',s:'Top',w:2,h:2,kg:.9,k:'top',img:'tshirt_usec_cryeac',info:'Starting outfit'},
+ pants_usec:{n:'USEC Standard trousers',s:'Trousers',w:2,h:2,kg:.7,k:'trousers',img:'pants_usec_cryeac',info:'Starting outfit'},
+ pl_esbi:{n:'ESBI level IV ballistic plate (Side)',s:'ESBI',w:1,h:1,kg:1.15,k:'plate',img:'plate_esbi',cls:6,c:'gear'},
+ m4:{n:'Colt M4A1 5.56x45 assault rifle',s:'M4A1',w:5,h:2,kg:3.4,k:'primary',c:'wpn'},
+ pm:{n:'PM 9x18PM pistol',s:'PM',w:2,h:1,kg:.73,k:'holster',c:'wpn'},
+ dagger:{n:'Combat dagger',s:'Dagger',w:1,h:2,kg:.33,k:'sheath',c:'wpn'},
+ stanag:{n:'5.56x45 STANAG 30-round magazine',s:'STANAG',w:1,h:2,kg:.12,c:'ammo',q:'30/30'},
+ pmmag:{n:'PM 9x18PM 8-round magazine',s:'PM 8',w:1,h:1,kg:.06,c:'ammo',q:'8/8'},
+ ammo556:{n:'5.56x45 M855 ammo',s:'M855',w:1,h:1,kg:.012,c:'ammo',q:'60'},
+ ai2:{n:'AI-2 medkit',s:'AI-2',w:1,h:1,kg:.1,c:'med'},
+ ifak:{n:'IFAK individual first aid kit',s:'IFAK',w:1,h:1,kg:.2,c:'med'},
+ salewa:{n:'Salewa first aid kit',s:'Salewa',w:1,h:2,kg:.6,c:'med'},
+ cms:{n:'CMS surgical kit',s:'CMS',w:2,h:1,kg:.5,c:'med'},
+ tq:{n:'Esmarch tourniquet',s:'Esmarch',w:1,h:1,kg:.08,c:'med'},
+ water:{n:'Bottle of water (0.6L)',s:'Water',w:1,h:2,kg:.6,c:'food'},
+ mre:{n:'Iskra ration pack',s:'Iskra',w:1,h:2,kg:.6,c:'food'},
+ stew:{n:'Can of beef stew (needs a can opener, as in Zomboid)',s:'Stew',w:1,h:1,kg:.5,c:'food'},
+ opener:{n:'Can opener',s:'Opener',w:1,h:1,kg:.1,c:'tool'},
+ tape:{n:'Duct tape',s:'Tape',w:1,h:1,kg:.15,c:'tool'},
+ hammer:{n:'Hammer (for barricading)',s:'Hammer',w:1,h:2,kg:.6,c:'tool'},
+ nails:{n:'Box of nails',s:'Nails',w:1,h:1,kg:.2,c:'tool',q:'100'},
+ radio:{n:'Motorola H4855 radio (command net)',s:'H4855',w:1,h:2,kg:.35,c:'gear'},
+ m67:{n:'M67 hand grenade',s:'M67',w:1,h:1,kg:.4,c:'nade'},
+ smoke:{n:'RDG-2B smoke grenade',s:'RDG-2B',w:1,h:2,kg:.5,c:'nade'},
+ torch:{n:'Flashlight',s:'Torch',w:1,h:1,kg:.2,c:'tool'},
+};
+const SLOTS=[['headwear','Headwear'],['earpiece','Earpiece'],['face','Face cover'],['eyes','Eyewear'],['armband','Armband'],['top','Top'],['armour','Body armour'],['rig','Tactical rig'],['trousers','Trousers'],['backpack','Backpack'],['holster','Holster'],['sheath','Sheath'],['primary','Primary weapon']];
+const CELL=34;let uid=0,worn,pockets,ground;
+function mk(t,x,y,rot,contents){const it={id:++uid,t,rot:!!rot,x,y};const d=T[t];if(d.g)it.g=d.g.map(([w,h])=>({w,h,items:[]}));if(contents)contents.forEach(([gi,ct,cx,cy,cr])=>it.g[gi].items.push(mk(ct,cx,cy,cr)));return it}
+function sz(it){const d=T[it.t];return it.rot?[d.h,d.w]:[d.w,d.h]}
+function init(){uid=0;
+ worn={headwear:mk('hm_exfil'),earpiece:mk('hs_comtac'),armband:mk('ab_usec'),top:mk('top_usec'),trousers:mk('pants_usec'),armour:mk('ar_slick'),
+  rig:mk('rig_alpha',0,0,0,[[2,'stanag',0,0],[3,'stanag',0,0],[4,'stanag',0,0],[0,'tq',0,0],[6,'ifak',0,0],[6,'pmmag',1,0],[6,'m67',0,1]]),
+  backpack:mk('bp_trizip',0,0,0,[[0,'mre',0,0],[0,'water',1,0],[0,'cms',2,0],[0,'stew',2,1],[0,'opener',3,1],[0,'hammer',4,0],[0,'tape',0,2],[0,'nails',1,2],[0,'ammo556',2,2],[0,'radio',3,2]]),
+  holster:mk('pm'),sheath:mk('dagger'),primary:mk('m4')};
+ pockets=[0,1,2,3].map(()=>({w:1,h:1,items:[]}));pockets[0].items.push(mk('pmmag',0,0));pockets[1].items.push(mk('ai2',0,0));pockets[3].items.push(mk('torch',0,0));
+ ground={w:11,h:15,items:[mk('bp_pilgrim',0,0),mk('rig_tb',5,0),mk('rig_bank',5,3),mk('ar_6b13',5,5),mk('fc_bala',0,7),mk('ey_ess',1,7),mk('pl_esbi',3,7),mk('pl_esbi',4,7),mk('m67',0,8),mk('m67',1,8),mk('smoke',2,8),mk('salewa',3,8),mk('ifak',4,8),mk('stanag',0,9),mk('stanag',1,9),mk('ammo556',5,9),mk('stew',6,9),mk('water',7,9)]};
+ render()}
+const $=s=>document.querySelector(s);const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+// grid registry rebuilt every render
+let G={};
+function gridEl(grid,key){G[key]=grid;const el=document.createElement('div');el.className='grid';el.dataset.g=key;el.style.setProperty('--w',grid.w);el.style.setProperty('--h',grid.h);
+ grid.items.forEach(it=>el.append(itemEl(it,key)));return el}
+function itemEl(it,key){const d=T[it.t],[w,h]=sz(it);const e=document.createElement('div');e.className='it';e.tabIndex=0;e.dataset.id=it.id;e.dataset.src=key;
+ e.style.left=it.x*CELL+'px';e.style.top=it.y*CELL+'px';e.style.width=w*CELL+'px';e.style.height=h*CELL+'px';
+ e.style.background=d.img?'linear-gradient(160deg,#3a3e33,#20221b)':'linear-gradient(160deg,var(--c-'+(d.c||'gear')+'),#141510)';
+ e.innerHTML=(d.img&&IMG[d.img]?`<img alt="" src="${IMG[d.img]}">`:'')+`<span class="s">${esc(d.s)}</span>`+(d.q?`<span class="q">${d.q}</span>`:'<span></span>');
+ return e}
+function render(){G={};
+ const eq=$('#eq');eq.innerHTML='';
+ SLOTS.forEach(([k,l])=>{const s=document.createElement('div');s.className='slot'+(k==='primary'?' wide':'')+(worn[k]?' full':'');s.dataset.slot=k;
+  const it=worn[k];s.innerHTML=`<span class="lb">${l}</span>`;
+  if(it){const d=T[it.t];const e=document.createElement('div');e.className='it';e.tabIndex=0;e.dataset.id=it.id;e.dataset.src='slot:'+k;e.style.cssText='inset:0;position:absolute;background:transparent;border:0;box-shadow:none';
+   e.innerHTML=(d.img&&IMG[d.img]?`<img alt="" src="${IMG[d.img]}">`:`<span class="wpn">${esc(d.s)}</span>`)+`<span></span>`;s.append(e);s.insertAdjacentHTML('beforeend',`<span class="nm">${esc(d.s)}</span>`)}
+  eq.append(s)});
+ const c=$('#carried');c.innerHTML='';
+ const pb=document.createElement('div');pb.className='block';pb.innerHTML='<div class="sec">Pockets <span>4 × 1×1</span></div>';const pr=document.createElement('div');pr.className='pockets';pockets.forEach((p,i)=>pr.append(gridEl(p,'pk'+i)));pb.append(pr);c.append(pb);
+ [['rig','Tactical rig'],['backpack','Backpack']].forEach(([k,l])=>{const b=document.createElement('div');b.className='block';const it=worn[k];
+  if(!it){b.innerHTML=`<div class="sec">${l} <span>none worn</span></div><div class="empty">Put a ${k==='rig'?'rig':'backpack'} on to get its ${k==='rig'?'pockets':'grid'}.</div>`;c.append(b);return}
+  const d=T[it.t];const cells=d.g.reduce((a,[w,h])=>a+w*h,0);b.innerHTML=`<div class="sec">${esc(d.n)} <span>${cells} cells</span></div>`;
+  const r=document.createElement('div');r.className='pockets';it.g.forEach((g,i)=>r.append(gridEl(g,k+i)));b.append(r);c.append(b)});
+ const gd=$('#ground');gd.innerHTML='';gd.append(gridEl(ground,'ground'));
+ stats()}
+function weight(it){const d=T[it.t];let w=d.kg;(it.g||[]).forEach(g=>g.items.forEach(x=>w+=weight(x)));return w}
+function stats(){let kg=0,sp=0,tu=0;Object.values(worn).forEach(it=>{if(!it)return;kg+=weight(it);const d=T[it.t];sp+=d.sp||0;tu+=d.tu||0});pockets.forEach(p=>p.items.forEach(x=>kg+=weight(x)));
+ const a=worn.armour?T[worn.armour.t].cls:'none',h=worn.headwear&&T[worn.headwear.t].cls?T[worn.headwear.t].cls:'none';
+ const load=kg<22?'Light':kg<35?'Heavy load':'Overloaded';
+ $('#stats').innerHTML=`<span>Total weight</span><b>${kg.toFixed(1)} kg</b><span>Load moodle</span><b>${load}</b><span>Move speed</span><b>${sp}%</b><span>Turn speed</span><b>${tu}%</b><span>Body armour class</span><b>${a}</b><span>Helmet class</span><b>${h}</b>`;
+ $('#wtape').textContent=kg.toFixed(1)+' kg'}
+// find + remove
+function findById(id){for(const k in worn)if(worn[k]&&worn[k].id==id)return{it:worn[k],from:'slot:'+k};for(const key in G){const g=G[key];const it=g.items.find(x=>x.id==id);if(it)return{it,from:key}}return null}
+function detach(it,from){if(from.startsWith('slot:'))worn[from.slice(5)]=null;else{const g=G[from];g.items=g.items.filter(x=>x!==it)}}
+function contains(it,grid){return (it.g||[]).some(g=>g===grid||g.items.some(x=>contains(x,grid)))}
+function fits(grid,it,x,y,rot){const d=T[it.t];const [w,h]=rot?[d.h,d.w]:[d.w,d.h];if(x<0||y<0||x+w>grid.w||y+h>grid.h)return false;
+ if(contains(it,grid))return false;
+ if(it.g&&grid!==ground){const isPack=Object.entries(G).some(([k,g])=>g===grid&&k.startsWith('backpack'));const empty=it.g.every(g=>!g.items.length);if(!(isPack&&empty))return'nest'}
+ return grid.items.every(o=>{if(o===it)return true;const[ow,oh]=sz(o);return x+w<=o.x||o.x+ow<=x||y+h<=o.y||o.y+oh<=y})}
+// drag
+let drag=null;const flash=t=>{$('#flash').textContent=t};
+document.addEventListener('pointerdown',e=>{const el=e.target.closest('.it');if(!el||e.button!==0)return;const f=findById(el.dataset.id);if(!f)return;e.preventDefault();hideTip();
+ const r=el.getBoundingClientRect();const [w,h]=sz(f.it);const inSlot=f.from.startsWith('slot:');
+ const cl=itemEl(f.it,'');cl.classList.add('drag');cl.style.left=r.left+'px';cl.style.top=r.top+'px';cl.style.width=w*CELL+'px';cl.style.height=h*CELL+'px';cl.style.position='fixed';document.body.append(cl);
+ drag={it:f.it,from:f.from,rot:f.it.rot,el:cl,ox:inSlot?Math.min(e.clientX-r.left,w*CELL/2):e.clientX-r.left,oy:inSlot?Math.min(e.clientY-r.top,h*CELL/2):e.clientY-r.top,target:null};el.style.opacity=.35;move(e)});
+function clearHints(){document.querySelectorAll('.ghost').forEach(g=>g.remove());document.querySelectorAll('.slot.hot,.slot.no').forEach(s=>s.classList.remove('hot','no'))}
+function move(e){if(!drag)return;const d=T[drag.it.t];const[w,h]=drag.rot?[d.h,d.w]:[d.w,d.h];drag.el.style.width=w*CELL+'px';drag.el.style.height=h*CELL+'px';
+ drag.el.style.left=e.clientX-drag.ox+'px';drag.el.style.top=e.clientY-drag.oy+'px';clearHints();drag.target=null;
+ const under=document.elementFromPoint(e.clientX,e.clientY);if(!under)return;
+ const slot=under.closest('.slot');if(slot){const k=slot.dataset.slot;const ok=T[drag.it.t].k===k&&(!worn[k]||worn[k]===drag.it);slot.classList.add(ok?'hot':'no');drag.target=ok?{slot:k}:null;return}
+ const gEl=under.closest('.grid');if(!gEl)return;const grid=G[gEl.dataset.g];const gr=gEl.getBoundingClientRect();
+ const x=Math.round((e.clientX-drag.ox-gr.left)/CELL),y=Math.round((e.clientY-drag.oy-gr.top)/CELL);const ok=fits(grid,drag.it,x,y,drag.rot);
+ const gh=document.createElement('div');gh.className='ghost '+(ok===true?'ok':'bad');gh.style.cssText=`left:${Math.max(0,x)*CELL}px;top:${Math.max(0,y)*CELL}px;width:${Math.min(w,grid.w)*CELL}px;height:${Math.min(h,grid.h)*CELL}px`;gEl.append(gh);
+ drag.target=ok===true?{grid,x,y}:null;drag.why=ok}
+document.addEventListener('pointermove',move);
+document.addEventListener('keydown',e=>{if(drag&&(e.key==='r'||e.key==='R')){drag.rot=!drag.rot;const d=T[drag.it.t];[drag.ox,drag.oy]=[Math.min(drag.oy,(drag.rot?d.h:d.w)*CELL-4),Math.min(drag.ox,(drag.rot?d.w:d.h)*CELL-4)];move(lastE)}});
+let lastE;document.addEventListener('pointermove',e=>lastE=e,true);
+document.addEventListener('pointerup',e=>{if(!drag)return;const t=drag.target,it=drag.it;drag.el.remove();clearHints();
+ if(t){detach(it,drag.from);if(t.slot){it.rot=false;worn[t.slot]=it;flash('Put on '+T[it.t].s+'.')}else{it.x=t.x;it.y=t.y;it.rot=drag.rot;t.grid.items.push(it);if(drag.from.startsWith('slot:'))flash('Took off '+T[it.t].s+(it.g&&it.g.some(g=>g.items.length)?', contents and all.':'.'))}}
+ else if(drag.why==='nest')flash('A rig or pack only goes inside a backpack when it is empty.');
+ drag=null;render()});
+// tooltips
+const tip=document.createElement('div');tip.className='tip';tip.hidden=true;document.body.append(tip);function hideTip(){tip.hidden=true}
+document.addEventListener('pointerover',e=>{const el=e.target.closest('.it');if(!el||drag){hideTip();return}const f=findById(el.dataset.id);if(!f){hideTip();return}const d=T[f.it.t];
+ tip.innerHTML=`<b>${esc(d.n)}</b>${d.w}×${d.h} cells · ${weight(f.it).toFixed(2)} kg${d.cls?' · class '+d.cls:''}${d.g?' · '+d.g.length+' pockets':''}${d.info?'<br>'+esc(d.info):''}`;tip.hidden=false});
+document.addEventListener('pointermove',e=>{if(!tip.hidden){tip.style.left=Math.min(e.clientX+14,innerWidth-300)+'px';tip.style.top=e.clientY+16+'px'}});
+document.addEventListener('pointerout',e=>{if(!e.relatedTarget||!e.relatedTarget.closest||!e.relatedTarget.closest('.it'))hideTip()});
+$('#reset').onclick=()=>{flash('');init()};
+init();
+</script>

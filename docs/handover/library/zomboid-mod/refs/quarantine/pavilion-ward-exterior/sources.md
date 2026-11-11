@@ -1,0 +1,13 @@
+# quarantine/pavilion-ward-exterior
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-sections-ellis-island-contagious-disease-hospital-staff-hous.jpg | [Sections - Ellis Island, Contagious Disease Hospital Staff House, New ](https://commons.wikimedia.org/wiki/File:Sections_-_Ellis_Island,_Contagious_Disease_Hospital_Staff_House,_New_York_Harbor,_New_York,_New_York_County,_NY_HABS_NY-6086-R_(sheet_7_of_9).tif) | Matsov, Alexander, creator | Public domain |  |
+| 02-sections-ellis-island-contagious-disease-hospital-office-bui.jpg | [Sections - Ellis Island, Contagious Disease Hospital Office Building, ](https://commons.wikimedia.org/wiki/File:Sections_-_Ellis_Island,_Contagious_Disease_Hospital_Office_Building,_New_York_Harbor,_New_York,_New_York_County,_NY_HABS_NY-6086-M_(sheet_6_of_9).tif) | Davidson, Paul A., creator | Public domain |  |
+| 03-section-ellis-island-contagious-disease-hospital-measles-war.jpg | [Section - Ellis Island, Contagious Disease Hospital Measles Ward G, Ne](https://commons.wikimedia.org/wiki/File:Section_-_Ellis_Island,_Contagious_Disease_Hospital_Measles_Ward_G,_New_York_Harbor,_New_York,_New_York_County,_NY_HABS_NY-6086-L_(sheet_8_of_10).tif) | Davidson, Paul A., creator | Public domain |  |
+| 04-l-h-pital-de-la-marine-la-maison-des-amis-des-malades-et-le.jpg | [L'Hôpital de la Marine, la maison des amis des malades et le bloc infé](https://commons.wikimedia.org/wiki/File:L%27H%C3%B4pital_de_la_Marine,_la_maison_des_amis_des_malades_et_le_bloc_inf%C3%A9rieur,_secteur_est_de_la_Grosse-%C3%8Ele,_vers_1910_(3530994239).jpg) | BiblioArchives / LibraryArchives | CC BY 2.0 | Title / Titre : Marine Hospital and the house of the friends of the sick and lower block, eastern section of Grosse Île, ca. 1910 / L'Hôpita |
+| 05-q-station-whales-cropped.jpg | [Q Station+whales cropped.jpg](https://commons.wikimedia.org/wiki/File:Q_Station%2Bwhales_cropped.jpg) | Q_Station+whales.jpg: me derivative work: Regi51 (talk) | CC BY 3.0 | Hospital, Boiler House and Wharf at Quarantine Station, with humpback whales passing by, North Head, Sydney |
+| 06-1-quarantine-station.jpg | [(1)Quarantine Station.jpg](https://commons.wikimedia.org/wiki/File:(1)Quarantine_Station.jpg) | Sardaka | CC BY-SA 4.0 | North Head Quarantine Station, Manly, Sydney, seen from Manly ferry |
+| 07-1-quarantine-station001.jpg | [(1)Quarantine Station001.jpg](https://commons.wikimedia.org/wiki/File:(1)Quarantine_Station001.jpg) | Sardaka | CC BY-SA 4.0 | Quarantine Station, North Head, Sydney |

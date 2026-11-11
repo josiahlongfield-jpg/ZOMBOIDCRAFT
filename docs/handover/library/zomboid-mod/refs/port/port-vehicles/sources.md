@@ -1,0 +1,18 @@
+# port/port-vehicles
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-kalmar-drg450-containerstapler-in-bremen-2024.jpg | [Kalmar DRG450 Containerstapler in Bremen (2024).jpg](https://commons.wikimedia.org/wiki/File:Kalmar_DRG450_Containerstapler_in_Bremen_(2024).jpg) | JoachimKohler-HB | CC BY-SA 4.0 | Kalmar reach stacker in Bremen |
+| 02-a-reach-stacker-container-handling-equipment.jpg | [A reach stacker - container handling equipment.jpg](https://commons.wikimedia.org/wiki/File:A_reach_stacker_-_container_handling_equipment.jpg) | TrainLearnGrow | CC BY-SA 4.0 | Reach stackers are used for container handling. They grab containers lengthwise and can easily stack them on a stack of containers – includi |
+| 03-2-reach-stacker-fuer-leer-container.jpg | [2 Reach Stacker fuer Leer Container.jpg](https://commons.wikimedia.org/wiki/File:2_Reach_Stacker_fuer_Leer_Container.jpg) | No machine-readable author provided. Daniel@linsbauer.de~commonswiki assumed (ba | Public domain | 2 Reach Stacker fuer Leer Container,  Author: Daniel Linsbauer(..me..) |
+| 04-straddle-carrier-eurokai-wpahoi-hamburg-p1080589.jpg | [Straddle carrier, Eurokai, WPAhoi, Hamburg (P1080589).jpg](https://commons.wikimedia.org/wiki/File:Straddle_carrier,_Eurokai,_WPAhoi,_Hamburg_(P1080589).jpg) | Matti Blume | CC BY-SA 4.0 | Kalmar straddle carrier at Eurogate Container Terminal Hamburg |
+| 05-straddle-carrier-from-port-of-chittagong-05.jpg | [Straddle carrier from Port of Chittagong (05).JPG](https://commons.wikimedia.org/wiki/File:Straddle_carrier_from_Port_of_Chittagong_(05).JPG) | Moheen Reeyad | CC BY-SA 4.0 | Straddle carrier work at Port of Chittagong. |
+| 06-haydarpasa-istanbul-p1100193.jpg | [Haydarpasa, Istanbul (P1100193).jpg](https://commons.wikimedia.org/wiki/File:Haydarpasa,_Istanbul_(P1100193).jpg) | Matti Blume | CC BY-SA 4.0 | Straddle carriers in the Port of Haydarpasa, seen ffrom the Bosphorus ferry in Istanbul |
+| 07-rm255.jpg | [RM255.jpg](https://commons.wikimedia.org/wiki/File:RM255.jpg) | VERCON2023 | CC BY-SA 4.0 | 4x4 Terminal tractors MOL |
+| 08-rm255-roro.jpg | [RM255 RORO.jpg](https://commons.wikimedia.org/wiki/File:RM255_RORO.jpg) | VERCON2023 | CC BY-SA 4.0 | 4x4 terminal trekker MOL |
+| 09-terberg-terminal-tractor-03.jpg | [Terberg terminal tractor 03.jpg](https://commons.wikimedia.org/wiki/File:Terberg_terminal_tractor_03.jpg) | Bengt Oberger | CC BY-SA 4.0 | Terberg terminal tractor,  Stockholm Nord Container Terminal, Sweden |
+| 10-container-chassis-6021-pictures-taken-in-japan.jpg | [Container chassis----6021【 Pictures taken in Japan 】.jpg](https://commons.wikimedia.org/wiki/File:Container_chassis----6021%E3%80%90_Pictures_taken_in_Japan_%E3%80%91.jpg) | Gazouya-japan | CC BY-SA 4.0 | 40' container trailer |
+| 11-container-chassis-6013-pictures-taken-in-japan.jpg | [Container chassis--6013【 Pictures taken in Japan 】.jpg](https://commons.wikimedia.org/wiki/File:Container_chassis--6013%E3%80%90_Pictures_taken_in_Japan_%E3%80%91.jpg) | Gazouya-japan | CC BY-SA 4.0 | 20' container trailer |
+| 12-krone-box-liner-chassis-for-container-transport-spielvogel-1.jpg | [Krone Box Liner chassis for container transport.Spielvogel 1.JPG](https://commons.wikimedia.org/wiki/File:Krone_Box_Liner_chassis_for_container_transport.Spielvogel_1.JPG) | Spielvogel  For a gallery of some more of my uploaded pictures see: here. All im | CC0 | Krone Box Liner chassis for container transport. With rear extension and height-adjustement. With 2 ride-positions, for all standard tractor |

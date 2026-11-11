@@ -1,0 +1,314 @@
+{
+ "id": "tarkov_val",
+ "name": "AS VAL (kitted)",
+ "anchor": "suppressed_rifle",
+ "anchorMesh": "pbr_suppressed_rifle",
+ "calibre": "9x39mm",
+ "suppressed": true,
+ "fp": "operator_tarkov_val",
+ "sight": "scope_all_eotech_553_LOD0",
+ "reticleMoa": 120,
+ "reload": [
+  2.5,
+  4.267
+ ],
+ "stats": {
+  "damage": 13.0,
+  "hipSpread": 3.0,
+  "aimSpread": 0.5,
+  "recoil": 0.85,
+  "range": 75.0,
+  "fireDelayTicks": 3,
+  "magazineSize": 30,
+  "selectFire": true,
+  "autoRpm": 900.0
+ },
+ "kit": [
+  "sight",
+  "suppressor",
+  "laser",
+  "light",
+  "stock"
+ ],
+ "rail": {
+  "light": {
+   "bone": "tactical_all_zenit_2p_kleh_vis_laser_LOD0",
+   "at": [
+    -0.0001,
+    -0.0235,
+    0.0215
+   ],
+   "dir": [
+    -0.0012,
+    -1,
+    0.0023
+   ],
+   "third": [
+    -0.1318,
+    -0.1125,
+    0.7266
+   ]
+  },
+  "laser": {
+   "bone": "tactical_all_zenit_2p_kleh_vis_laser_LOD0",
+   "at": [
+    0.013,
+    -0.0247,
+    0.0032
+   ],
+   "dir": [
+    -0.0012,
+    -1,
+    0.0023
+   ],
+   "third": [
+    -0.1449,
+    -0.0942,
+    0.7278
+   ]
+  }
+ },
+ "tarkov": {
+  "base": "57c44b372459772d2b39b8ce",
+  "aimPath": "/mod_mount_004/mod_scope",
+  "aimIndex": 0,
+  "kit": [
+   {
+    "path": "",
+    "item": "57c44b372459772d2b39b8ce",
+    "bone": "weapon_tochmash_val_9x39_LOD0",
+    "at": [
+     -0.156171,
+     1.400093,
+     0.018038,
+     0.707107,
+     0.0,
+     0.0,
+     -0.707107
+    ],
+    "bones": [
+     "vss_gasblock_LOD0",
+     "vss_internals_LOD0",
+     "vss_bolt_LOD0",
+     "vss_bolt_rotate_LOD0",
+     "vss_hammer_LOD0",
+     "vss_bolt_spring_LOD0",
+     "vss_bolt_tube_LOD0",
+     "val_mag_release_LOD0",
+     "vss_selector_LOD0",
+     "weapon_tochmash_val_9x39_LOD0",
+     "vss_trigger_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_muzzle",
+    "item": "57c44dd02459772d2e0ae249",
+    "bone": "silencer_vss_tochmash_std_9x39_LOD0",
+    "at": [
+     0.0,
+     -0.0,
+     0.0,
+     -2e-06,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "silencer_vss_tochmash_std_9x39_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_muzzle/mod_sight_rear",
+    "item": "57c44e7b2459772d28133248",
+    "bone": "sight_rear_vss_tochmash_vss_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "sight_rear_vss_tochmash_vss_std_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_muzzle/mod_mount_000",
+    "item": "5a9fc7e6a2750c0032157184",
+    "bone": "mount_vss_zenit_b3_2_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     -0.0,
+     0.0,
+     -0.0,
+     1.0
+    ],
+    "bones": [
+     "mount_vss_zenit_b3_2_LOD0",
+     "mount_vss_zenit_b3_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_muzzle/mod_mount_000/mod_tactical",
+    "item": "560d657b4bdc2da74d8b4572",
+    "bone": "tactical_all_zenit_2p_kleh_vis_laser_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "flashlight_glass",
+     "switch_000_LOD0",
+     "tactical_all_zenit_2p_kleh_vis_laser_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_reciever",
+    "item": "57c44f4f2459772d2c627113",
+    "bone": "reciever_vss_tochmash_vss_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "reciever_vss_tochmash_vss_std_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_magazine",
+    "item": "5a9e81fba2750c00164f6b11",
+    "bone": "mag_vss_tochmash_sr3m130_9x39_30_LOD0",
+    "at": [
+     -0.0,
+     0.0,
+     -0.0,
+     -2e-06,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "mag_vss_tochmash_sr3m130_9x39_30_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_pistol_grip",
+    "item": "5a69a2ed8dc32e000d46d1f1",
+    "bone": "pistolgrip_val_rotor_43_tube_adapter_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "pistolgrip_val_rotor_43_tube_adapter_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_pistol_grip/mod_stock_000",
+    "item": "5d135e83d7ad1a21b83f42d8",
+    "bone": "stock_ar15_magpul_ctr_carbine_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "stock_ar15_magpul_ctr_carbine_LOD0",
+     "stock_ar15_magpul_ctr_rubber_butt_pad_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_charge",
+    "item": "5648ac824bdc2ded0b8b457d",
+    "bone": "charge_ak_zenit_rp1_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "charge_ak_zenit_rp1_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_mount_004",
+    "item": "5c90c3622e221601da359851",
+    "bone": "mount_dovetail_zenit_b13v_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "mount_dovetail_zenit_b13v_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_mount_004/mod_scope",
+    "item": "570fd6c2d2720bc6458b457f",
+    "bone": "scope_all_eotech_553_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     -0.0,
+     1.0
+    ],
+    "bones": [
+     "linza",
+     "scope_all_eotech_553_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_handguard",
+    "item": "6565bb7eb4b12a56eb04b084",
+    "bone": "handguard_vss_tochmash_std_LOD0",
+    "at": [
+     0.0,
+     -0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "handguard_vss_tochmash_std_LOD0"
+    ]
+   }
+  ]
+ }
+}

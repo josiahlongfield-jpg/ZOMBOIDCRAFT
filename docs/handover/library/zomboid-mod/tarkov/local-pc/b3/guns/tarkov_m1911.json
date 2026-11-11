@@ -1,0 +1,371 @@
+{
+ "id": "tarkov_m1911",
+ "name": "Colt M1911A1 .45 ACP (kitted)",
+ "anchor": "pistol",
+ "anchorMesh": "pbr_pistol",
+ "calibre": ".45 ACP",
+ "suppressed": true,
+ "fp": "operator_tarkov_m1911",
+ "sight": "scope_base_trijicon_rmr_LOD0",
+ "reticleMoa": 85,
+ "reload": [
+  3.367,
+  3.567
+ ],
+ "stats": {
+  "damage": 9.0,
+  "hipSpread": 1.4,
+  "aimSpread": 0.45,
+  "recoil": 0.9,
+  "range": 60.0,
+  "magazineSize": 7
+ },
+ "kit": [
+  "sight",
+  "suppressor",
+  "laser",
+  "light"
+ ],
+ "rail": {
+  "laser": {
+   "bone": "tactical_all_surefire_x400_vis_laser_LOD0",
+   "at": [
+    -0.0001,
+    -0.0056,
+    0.0326
+   ],
+   "dir": [
+    0.0029,
+    -0.9998,
+    -0.0217
+   ],
+   "third": [
+    -0.1344,
+    -0.113,
+    0.5926
+   ]
+  },
+  "light": {
+   "bone": "tactical_all_surefire_x400_vis_laser_LOD0",
+   "at": [
+    -0.0001,
+    -0.0351,
+    0.0131
+   ],
+   "dir": [
+    0.0029,
+    -0.9998,
+    -0.0217
+   ],
+   "third": [
+    -0.1344,
+    -0.0935,
+    0.6221
+   ]
+  }
+ },
+ "grip": null,
+ "guard": null,
+ "tarkov": {
+  "base": "5e81c3cbac2bb513793cdc75",
+  "kit": [
+   {
+    "path": "",
+    "item": "5e81c3cbac2bb513793cdc75",
+    "bones": [
+     "weapon_colt_m1911a1_1143x23_LOD0",
+     "mag_release_LOD0",
+     "weapon_spring_LOD0"
+    ],
+    "bone": "weapon_colt_m1911a1_1143x23_LOD0",
+    "at": [
+     -0.156826,
+     1.413993,
+     0.017428,
+     0.707107,
+     -1e-06,
+     -1e-06,
+     -0.707107
+    ]
+   },
+   {
+    "path": "/mod_barrel",
+    "item": "5f3e77f59103d430b93f94c1",
+    "bones": [
+     "barrel_m1911a1_141mm_threaded_1143x23_LOD0"
+    ],
+    "bone": "barrel_m1911a1_141mm_threaded_1143x23_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_barrel/mod_muzzle",
+    "item": "5fc4b97bab884124df0cd5e3",
+    "bones": [
+     "muzzle_all_silencerco_omega_45k_piston_adapter_1143x23_LOD0"
+    ],
+    "bone": "muzzle_all_silencerco_omega_45k_piston_adapter_1143x23_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_barrel/mod_muzzle/mod_muzzle",
+    "item": "5fc4b9b17283c4046c5814d7",
+    "bones": [
+     "silencer_base_silencerco_omega_45k_1143x23_LOD0"
+    ],
+    "bone": "silencer_base_silencerco_omega_45k_1143x23_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_pistol_grip",
+    "item": "5e81c6bf763d9f754677beff",
+    "bones": [
+     "pistolgrip_m1911_colt_m1911a1_std_LOD0"
+    ],
+    "bone": "pistolgrip_m1911_colt_m1911a1_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_reciever",
+    "item": "5e81edc13397a21db957f6a1",
+    "bones": [
+     "reciever_m1911_colt_m1911a1_std_LOD0"
+    ],
+    "bone": "reciever_m1911_colt_m1911a1_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_reciever/mod_sight_rear",
+    "item": "5e81ee4dcb2b95385c177582",
+    "bones": [
+     "sight_rear_m1911_colt_m1911a1_std_LOD0"
+    ],
+    "bone": "sight_rear_m1911_colt_m1911a1_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_reciever/mod_sight_front",
+    "item": "5e81ee213397a21db957f6a6",
+    "bones": [
+     "sight_front_m1911_colt_m1911a1_std_LOD0"
+    ],
+    "bone": "sight_front_m1911_colt_m1911a1_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_magazine",
+    "item": "5e81c4ca763d9f754677befa",
+    "bones": [
+     "mag_m1911_colt_m1911a1_std_1143x23_7_LOD0"
+    ],
+    "bone": "mag_m1911_colt_m1911a1_std_1143x23_7_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_trigger",
+    "item": "5e81c6a2ac2bb513793cdc7f",
+    "bones": [
+     "trigger_m1911_colt_m1911a1_std_LOD0"
+    ],
+    "bone": "trigger_m1911_colt_m1911a1_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_hammer",
+    "item": "5e81c550763d9f754677befd",
+    "bones": [
+     "hammer_m1911_colt_m1911a1_std_LOD0"
+    ],
+    "bone": "hammer_m1911_colt_m1911a1_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_catch",
+    "item": "5e81c539cb2b95385c177553",
+    "bones": [
+     "catch_m1911_colt_m1911a1_std_LOD0"
+    ],
+    "bone": "catch_m1911_colt_m1911a1_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_mount_000",
+    "item": "5ef5d994dfbc9f3c660ded95",
+    "bones": [
+     "mount_m1911_weigand_weig_a_tinny_1911_scope_mount_LOD0"
+    ],
+    "bone": "mount_m1911_weigand_weig_a_tinny_1911_scope_mount_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_mount_000/mod_scope",
+    "item": "5a33b2c9c4a282000c5a9511",
+    "bones": [
+     "mount_all_trijicon_rm33_LOD0"
+    ],
+    "bone": "mount_all_trijicon_rm33_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_mount_000/mod_scope/mod_scope",
+    "item": "5a32aa8bc4a2826c6e06d737",
+    "bones": [
+     "linza",
+     "scope_base_trijicon_rmr_LOD0"
+    ],
+    "bone": "scope_base_trijicon_rmr_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_mount_001",
+    "item": "5ef369b08cef260c0642acaf",
+    "bones": [
+     "mount_m1911_ncstar_1911_trigger_guard_mount_LOD0"
+    ],
+    "bone": "mount_m1911_ncstar_1911_trigger_guard_mount_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_mount_001/mod_tactical",
+    "item": "56def37dd2720bec348b456a",
+    "bones": [
+     "flashlight_glass_LOD0",
+     "switch_000_LOD0",
+     "switch_type_000_LOD0",
+     "tactical_all_surefire_x400_vis_laser_LOD0"
+    ],
+    "bone": "tactical_all_surefire_x400_vis_laser_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     -0.0,
+     0.0,
+     1.0
+    ]
+   }
+  ],
+  "aimPath": "/mod_mount_000/mod_scope/mod_scope",
+  "aimIndex": 0
+ }
+}

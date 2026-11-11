@@ -1,0 +1,988 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Knox County Master Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,500;0,600;0,700;1,500&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f2eee5; --surface:#fbf9f4; --surface-2:#f6f2e9; --ink:#1f2328; --ink-2:#5b5f66; --ink-3:#8a8d92; --line:#ddd6c7;
+  --void:#d9d3c4; --land:#ece6d5; --farm:#e5ddb9; --farm-2:#ddd3a8; --forest:#cfdab9; --knob:#c2d1a7; --knob-ink:#7d9460;
+  --water:#9cc0df; --water-edge:#6b9cc6; --water-ink:#3f73a3; --urban:#d8cfc0;
+  --road-i:#c8442f; --road-i-case:#7a2a1d; --road-us:#e3a72a; --road-us-case:#8d6a1c; --road-ky:#ffffff; --road-ky-case:#8c8473; --road-loc:#8c8473;
+  --rail:#34363a; --mil:#5f6b2c; --mil-fill:rgba(95,107,44,.13); --qz:#c97c12; --fence:#b3261e; --wall:#7d1d17;
+  --city:#7b52d3; --town:#2b2f36; --suburb:#56677c; --port:#2f6fa8; --facility:#b3261e; --halo:#ece6d5;
+  --accent:#7b52d3; --accent-soft:rgba(123,82,211,.12); --on-accent:#ffffff; --ok:#2f7d4f;
+  --shadow:0 1px 2px rgba(40,30,10,.06),0 4px 16px rgba(40,30,10,.06);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#111316; --surface:#181b1f; --surface-2:#1d2125; --ink:#e8e4da; --ink-2:#a8a69d; --ink-3:#7a7a74; --line:#2c3036;
+    --void:#0b0c0e; --land:#1c2023; --farm:#252a20; --farm-2:#2b3124; --forest:#1d281e; --knob:#20301f; --knob-ink:#5c7a4c;
+    --water:#1f3d59; --water-edge:#2f5d86; --water-ink:#86b3dc; --urban:#2a2928;
+    --road-i:#e0634d; --road-i-case:#3a1510; --road-us:#e2b04a; --road-us-case:#3d2e0e; --road-ky:#c9c3b6; --road-ky-case:#0e1012; --road-loc:#7d786d;
+    --rail:#a7a7a2; --mil:#a9b765; --mil-fill:rgba(169,183,101,.10); --qz:#e9a640; --fence:#ea5a50; --wall:#ff7a6e;
+    --city:#b69cff; --town:#e8e4da; --suburb:#9fb0c6; --port:#6aa9e0; --facility:#ff6b5f; --halo:#1c2023;
+    --accent:#b69cff; --accent-soft:rgba(182,156,255,.14); --on-accent:#17121f; --ok:#6cc08e;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#111316; --surface:#181b1f; --surface-2:#1d2125; --ink:#e8e4da; --ink-2:#a8a69d; --ink-3:#7a7a74; --line:#2c3036;
+  --void:#0b0c0e; --land:#1c2023; --farm:#252a20; --farm-2:#2b3124; --forest:#1d281e; --knob:#20301f; --knob-ink:#5c7a4c;
+  --water:#1f3d59; --water-edge:#2f5d86; --water-ink:#86b3dc; --urban:#2a2928;
+  --road-i:#e0634d; --road-i-case:#3a1510; --road-us:#e2b04a; --road-us-case:#3d2e0e; --road-ky:#c9c3b6; --road-ky-case:#0e1012; --road-loc:#7d786d;
+  --rail:#a7a7a2; --mil:#a9b765; --mil-fill:rgba(169,183,101,.10); --qz:#e9a640; --fence:#ea5a50; --wall:#ff7a6e;
+  --city:#b69cff; --town:#e8e4da; --suburb:#9fb0c6; --port:#6aa9e0; --facility:#ff6b5f; --halo:#1c2023;
+  --accent:#b69cff; --accent-soft:rgba(182,156,255,.14); --on-accent:#17121f; --ok:#6cc08e;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 4px 16px rgba(0,0,0,.25);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.55 "IBM Plex Sans",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1240px;margin:0 auto;padding:0 16px}
+header.top{padding:28px 0 14px}
+.eyebrow{font:600 13px/1 "Barlow Condensed",sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+h1{font:700 44px/1.02 "Barlow Condensed",sans-serif;letter-spacing:.01em;margin:8px 0 10px;text-transform:uppercase}
+h2{font:700 26px/1.1 "Barlow Condensed",sans-serif;text-transform:uppercase;letter-spacing:.02em;margin:0 0 12px}
+h3{font:600 17px/1.2 "Barlow Condensed",sans-serif;text-transform:uppercase;letter-spacing:.06em;margin:0 0 8px;color:var(--ink-2)}
+.lede{max-width:760px;color:var(--ink-2);margin:0}
+.lede b{color:var(--ink);font-weight:600}
+.stats{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:18px 0 18px}
+.stat{background:var(--surface);padding:10px 12px}
+.stat b{display:block;font:700 24px/1.1 "Barlow Condensed",sans-serif}
+.stat span{font-size:12px;color:var(--ink-2)}
+.atlas{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:16px;align-items:start}
+.mapwrap{position:relative;background:var(--void);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);aspect-ratio:1/1;max-height:calc(100vh - 32px);width:100%}
+#map{display:block;width:100%;height:100%;touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none}
+#map.panning{cursor:grabbing}
+.editing #map .place{cursor:move}
+.zoomctl{position:absolute;right:10px;top:10px;display:flex;flex-direction:column;gap:6px}
+.zoomctl button,.chip,.btn{font:600 14px/1 "IBM Plex Sans",sans-serif;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;cursor:pointer}
+.zoomctl button{width:34px;height:34px;font-size:18px;box-shadow:var(--shadow)}
+.zoomctl button:hover,.chip:hover,.btn:hover{border-color:var(--ink-3)}
+.scalebar{position:absolute;left:12px;bottom:12px;font:500 11px/1 "IBM Plex Mono",monospace;color:var(--ink);background:color-mix(in srgb,var(--surface) 85%,transparent);padding:6px 8px;border-radius:6px;border:1px solid var(--line)}
+.scalebar i{display:block;height:6px;border:2px solid var(--ink);border-top:0;margin-top:4px}
+.northarrow{position:absolute;left:12px;top:12px;font:700 13px/1 "Barlow Condensed",sans-serif;color:var(--ink);background:color-mix(in srgb,var(--surface) 85%,transparent);border:1px solid var(--line);border-radius:6px;padding:5px 8px;text-align:center}
+.editbanner{position:absolute;left:50%;transform:translateX(-50%);top:10px;background:var(--accent);color:#fff;font:600 12px/1 "IBM Plex Sans",sans-serif;padding:7px 12px;border-radius:999px;display:none;white-space:nowrap}
+.editing .editbanner{display:block}
+.editbanner{color:var(--on-accent)}
+.side{display:flex;flex-direction:column;gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;box-shadow:var(--shadow)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:12.5px;padding:7px 10px;border-radius:999px;display:inline-flex;align-items:center;gap:6px}
+.chip[aria-pressed="false"]{color:var(--ink-3);background:transparent}
+.chip .dot{width:9px;height:9px;border-radius:50%}
+.chip[aria-pressed="false"] .dot{opacity:.35}
+.detail .kind{display:inline-block;font:600 11px/1 "IBM Plex Sans",sans-serif;letter-spacing:.06em;text-transform:uppercase;padding:4px 7px;border-radius:5px;background:var(--accent-soft);color:var(--accent);margin-bottom:8px}
+.detail .kind.new{background:rgba(179,38,30,.12);color:var(--facility)}
+.detail h4{font:700 24px/1.05 "Barlow Condensed",sans-serif;text-transform:uppercase;margin:0 0 6px}
+.detail p{margin:6px 0 0;color:var(--ink-2);font-size:14px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;margin-top:10px;font-size:13px}
+.kv dt{color:var(--ink-3)}
+.kv dd{margin:0;font-family:"IBM Plex Mono",monospace;font-size:12.5px}
+.empty{color:var(--ink-3);font-size:14px;margin:0}
+.btn{padding:9px 12px;font-size:13px}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn:disabled{opacity:.5;cursor:default}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+textarea{width:100%;min-height:70px;resize:vertical;font:14px/1.4 "IBM Plex Sans",sans-serif;color:var(--ink);background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:8px;margin:8px 0}
+.status{font-size:12px;color:var(--ink-3);margin-top:6px}
+.status.ok{color:var(--ok)}
+.legend{display:grid;grid-template-columns:1fr 1fr;gap:6px 10px;font-size:12.5px;color:var(--ink-2)}
+.legend div{display:flex;align-items:center;gap:7px;min-width:0}
+.legend svg{flex:none}
+section.block{margin:34px 0}
+.groups{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+table.places{width:100%;border-collapse:collapse;font-size:13.5px}
+table.places td{padding:7px 6px;border-top:1px solid var(--line);vertical-align:top}
+table.places tr{cursor:pointer}
+table.places tr:hover td{background:var(--surface-2)}
+table.places tr.sel td{background:var(--accent-soft)}
+table.places .nm{font-weight:600;white-space:nowrap}
+table.places .ty{color:var(--ink-2);white-space:nowrap}
+table.places .gr{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-3);text-align:right;white-space:nowrap}
+.tag{display:inline-block;font:600 10px/1 "IBM Plex Sans",sans-serif;text-transform:uppercase;letter-spacing:.06em;padding:3px 5px;border-radius:4px;margin-left:6px;vertical-align:1px}
+.tag.new{background:rgba(179,38,30,.12);color:var(--facility)}
+.tag.moved{background:var(--accent-soft);color:var(--accent)}
+.steps{counter-reset:s;list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.steps li{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;counter-increment:s}
+.steps li::before{content:counter(s);display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font:700 14px/1 "Barlow Condensed",sans-serif;margin-bottom:8px}
+.steps b{display:block;margin-bottom:4px}
+.steps p{margin:0;color:var(--ink-2);font-size:14px}
+.qs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.q{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:10px;padding:14px}
+.q b{display:block;margin-bottom:4px}
+.q p{margin:0;color:var(--ink-2);font-size:14px}
+.q .rec{margin-top:8px;font-size:13px;color:var(--ink)}
+footer{color:var(--ink-3);font-size:12.5px;padding:10px 0 40px}
+/* map layers */
+.void{fill:var(--void)}
+.land{fill:var(--land)}
+.farm{fill:var(--farm)}
+.forest{fill:var(--forest)}
+.knob{fill:var(--knob)}
+.knobhatch{fill:url(#hatchKnob)}
+.farmhatch{fill:url(#hatchFarm)}
+.milarea{fill:var(--mil-fill);stroke:var(--mil);stroke-dasharray:7 4;stroke-width:1.5;vector-effect:non-scaling-stroke}
+.milhatch{fill:url(#hatchMil)}
+.urban{fill:var(--urban)}
+.river{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.river.edge{stroke:var(--water-edge)}
+.river.body{stroke:var(--water)}
+.lake{fill:var(--water);stroke:var(--water-edge);stroke-width:1.2;vector-effect:non-scaling-stroke}
+.grid line{stroke:var(--ink);stroke-opacity:.09;stroke-width:1;vector-effect:non-scaling-stroke}
+.gridlbl{font:600 11px "IBM Plex Mono",monospace;fill:var(--ink-3)}
+.rd{fill:none;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.rd.i.c{stroke:var(--road-i-case);stroke-width:5.5}
+.rd.i.f{stroke:var(--road-i);stroke-width:3.4}
+.rd.us.c{stroke:var(--road-us-case);stroke-width:4.4}
+.rd.us.f{stroke:var(--road-us);stroke-width:2.6}
+.rd.ky.c{stroke:var(--road-ky-case);stroke-width:3.4}
+.rd.ky.f{stroke:var(--road-ky);stroke-width:1.8}
+.rd.loc.f{stroke:var(--road-loc);stroke-width:1.4;stroke-dasharray:5 3}
+.rl{fill:none;vector-effect:non-scaling-stroke;stroke:var(--rail)}
+.rl.a{stroke-width:1.4}
+.rl.b{stroke-width:5;stroke-dasharray:1.2 5}
+.rl.blown{stroke-opacity:.45}
+.fence{fill:none;stroke:var(--fence);stroke-width:2;stroke-dasharray:8 4;vector-effect:non-scaling-stroke}
+.fence2{fill:none;stroke:var(--fence);stroke-width:.8;stroke-opacity:.55;vector-effect:non-scaling-stroke}
+.wall{fill:none;stroke:var(--wall);stroke-width:4;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.walltick{fill:none;stroke:var(--wall);stroke-width:3;stroke-dasharray:2 14;vector-effect:non-scaling-stroke}
+.border{fill:none;stroke:var(--ink);stroke-opacity:.5;stroke-width:1.5;vector-effect:non-scaling-stroke}
+.fill-farm{fill:var(--farm-2);stroke:var(--ink-3);stroke-width:.6}
+.fill-stop{fill:var(--surface);stroke:var(--ink-2);stroke-width:1}
+.lbl text{font-family:"Barlow Condensed",sans-serif;paint-order:stroke;stroke:var(--halo);stroke-width:3.2px;stroke-linejoin:round}
+.lbl .t-city{font-size:17px;font-weight:700;letter-spacing:.06em;fill:var(--ink);text-transform:uppercase}
+.lbl .t-town{font-size:14px;font-weight:700;letter-spacing:.04em;fill:var(--ink);text-transform:uppercase}
+.lbl .t-minor{font-size:12.5px;font-weight:600;fill:var(--ink-2)}
+.lbl .t-mil{font-size:12.5px;font-weight:600;font-style:italic;fill:var(--mil)}
+.minor-lbl{display:none}
+.zoomed .minor-lbl{display:inline}
+.far .lbl .t-city{font-size:13px}
+.far .lbl .t-town{font-size:11px}
+.area-lbl{font-family:"Barlow Condensed",sans-serif;font-weight:600;letter-spacing:.32em;text-transform:uppercase;paint-order:stroke;stroke:var(--halo);stroke-width:3px;stroke-linejoin:round}
+.area-lbl.knobs{fill:var(--knob-ink);font-size:15px}
+.area-lbl.mil{fill:var(--mil);font-size:12px;font-style:italic;letter-spacing:.22em}
+.area-lbl.dist{fill:var(--ink-3);font-size:12px;font-style:italic;letter-spacing:.24em}
+.area-lbl.wall{fill:var(--wall);font-size:11px;letter-spacing:.2em}
+.area-lbl.fence{fill:var(--fence);font-size:11px;letter-spacing:.3em}
+.wlbl{font-family:"Barlow Condensed",sans-serif;font-style:italic;font-weight:500;fill:var(--water-ink);paint-order:stroke;stroke:var(--water);stroke-width:2px}
+.mk-city{fill:var(--city);stroke:#fff;stroke-width:2}
+.mk-town{fill:var(--town);stroke:var(--halo);stroke-width:2}
+.mk-suburb{fill:var(--suburb);stroke:var(--halo);stroke-width:1.6}
+.mk-port{fill:var(--port);stroke:var(--halo);stroke-width:1.6}
+.mk-mil{fill:var(--mil);stroke:var(--halo);stroke-width:1.6}
+.mk-qz{fill:var(--qz);stroke:var(--halo);stroke-width:1.6}
+.mk-fac{fill:var(--facility);stroke:var(--halo);stroke-width:1.6}
+.mk-ring{fill:none;stroke:var(--accent);stroke-width:2.5}
+.mk-ghost{fill:none;stroke:var(--accent);stroke-width:1.5;stroke-dasharray:3 2}
+.ghostline{stroke:var(--accent);stroke-width:1.5;stroke-dasharray:4 3;vector-effect:non-scaling-stroke}
+.cp rect{fill:var(--fence);stroke:var(--halo);stroke-width:1.5}
+.cp path{stroke:#fff;stroke-width:1.6}
+.cp.wallcp rect{fill:var(--wall)}
+.tower{fill:var(--fence);stroke:var(--halo);stroke-width:1}
+.bridge path{fill:none;stroke:var(--ink);stroke-width:1.6}
+.blown path{stroke:var(--fence);stroke-width:2.4;fill:none}
+.blown circle{fill:var(--halo);stroke:var(--fence);stroke-width:1.6}
+.shield text{font:700 9.5px "IBM Plex Sans",sans-serif;text-anchor:middle;dominant-baseline:central}
+.shield.i path{fill:#2b4c9a;stroke:#fff;stroke-width:1.2}
+.shield.i rect{fill:#c8442f}
+.shield.i text{fill:#fff}
+.shield.us path{fill:#fff;stroke:#222;stroke-width:1.2}
+.shield.us text{fill:#111}
+.shield.ky rect{fill:#fff;stroke:#222;stroke-width:1.1}
+.shield.ky text{fill:#111;font-size:8.5px}
+.hit{cursor:pointer}
+.hide-places .lay-places,.hide-roads .lay-roads,.hide-rail .lay-rail,.hide-mil .lay-mil,.hide-fence .lay-fence,.hide-fill .lay-fill,.hide-grid .lay-grid,.hide-terrain .lay-terrain{display:none}
+@media (max-width:980px){
+  .atlas{grid-template-columns:1fr}
+  .stats{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .steps{grid-template-columns:1fr 1fr}
+}
+@media (max-width:640px){
+  h1{font-size:34px}
+  .groups,.qs,.steps{grid-template-columns:1fr}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .mapwrap{max-height:76vh}
+  table.places .ty{white-space:normal}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow">ZomboidCraft · county plan · draft 1</div>
+    <h1>Knox County Master Plan</h1>
+    <p class="lede">One fixed county, the same in every world, with a <b>world border</b> at the edge and the <b>Exclusion Zone fence</b> just inside it. Rivers, highways, towns and military zones are placed by hand here, and the generator builds every building inside them. Drag to pan, scroll or pinch to zoom, and tap anything for details. Switch on <b>Edit</b> to drag places around and leave notes. I'll read your changes straight from this page.</p>
+  </header>
+
+  <div class="stats" id="stats"></div>
+
+  <section class="atlas" id="atlas">
+    <div class="mapwrap" id="mapwrap">
+      <svg id="map" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Map of Knox County">
+        <defs>
+          <pattern id="hatchKnob" data-p="12" patternUnits="userSpaceOnUse" viewBox="0 0 12 12" width="12" height="12">
+            <path d="M2 8 L4.5 4.5 L7 8" fill="none" stroke="var(--knob-ink)" stroke-width="1" stroke-opacity=".5"/>
+          </pattern>
+          <pattern id="hatchFarm" data-p="10" patternUnits="userSpaceOnUse" viewBox="0 0 10 10" width="10" height="10">
+            <path d="M0 10 L10 0" stroke="var(--ink)" stroke-opacity=".05" stroke-width="1"/>
+          </pattern>
+          <pattern id="hatchMil" data-p="9" patternUnits="userSpaceOnUse" viewBox="0 0 9 9" width="9" height="9">
+            <path d="M0 9 L9 0" stroke="var(--mil)" stroke-opacity=".22" stroke-width="1"/>
+          </pattern>
+          <clipPath id="clipWorld"><rect x="-8192" y="-8192" width="16384" height="16384"/></clipPath>
+        </defs>
+        <g id="world"></g>
+      </svg>
+      <div class="northarrow">▲<br>N</div>
+      <div class="editbanner">Edit mode · drag places to move them</div>
+      <div class="zoomctl">
+        <button id="zin" aria-label="Zoom in">+</button>
+        <button id="zout" aria-label="Zoom out">−</button>
+        <button id="zfit" aria-label="Show whole county" style="font-size:13px">⤢</button>
+      </div>
+      <div class="scalebar" id="scalebar"><span></span><i></i></div>
+    </div>
+
+    <aside class="side">
+      <div class="card detail" id="detail">
+        <p class="empty">Tap a town, base or checkpoint on the map for details.</p>
+      </div>
+      <div class="card">
+        <h3>Layers</h3>
+        <div class="chips" id="layers"></div>
+      </div>
+      <div class="card" id="editcard">
+        <h3>Your changes</h3>
+        <div class="row">
+          <button class="btn primary" id="editbtn" aria-pressed="false">Edit: off</button>
+          <button class="btn" id="copybtn">Copy changes</button>
+        </div>
+        <div id="changes" style="margin-top:10px"></div>
+        <label for="gnote" style="display:block;margin-top:10px;font-size:13px;color:var(--ink-2)">General notes for Claude (new places, things to cut, ideas)</label>
+        <textarea id="gnote" placeholder="e.g. Add a ski lodge in the knobs, make Riverside bigger…"></textarea>
+        <div class="row"><button class="btn" id="gsave">Save note</button></div>
+        <div class="status" id="dbstatus">Connecting…</div>
+      </div>
+      <div class="card">
+        <h3>Key</h3>
+        <div class="legend" id="legend"></div>
+      </div>
+    </aside>
+  </section>
+
+  <section class="block">
+    <h2>Every named place</h2>
+    <p class="lede" style="margin-bottom:14px">Each place keeps its type, size and style from the plan. The buildings inside are generated. The <span class="tag new" style="margin:0">new</span> ones are place types the generator doesn't have yet, so they'd be built as part of this work.</p>
+    <div class="groups" id="groups"></div>
+  </section>
+
+  <section class="block">
+    <h2>How it gets built</h2>
+    <ol class="steps">
+      <li><b>The plan becomes data</b><p>Places, roads, rivers, lakes, the Knobs and the military land go into one plan file inside the mod. This page draws from the same data, so what you approve here is what gets generated.</p></li>
+      <li><b>A hard edge</b><p>The world border sits at ±8,192 blocks. A double chain-link Exclusion Zone fence runs just inside it, with watchtowers, and an Army checkpoint wherever a road or railway leaves the county. The bridges over the Ohio are blown.</p></li>
+      <li><b>Terrain follows the plan</b><p>Rivers and lakes are carved where they're drawn. Flat bottomland runs along the Ohio and the Salt, the Knobs rise steep and wooded in the south-west, and the farmland rolls gently in between.</p></li>
+      <li><b>Roads from the plan</b><p>Highways, state roads and the railway follow these lines, with bridges where they cross water. The current road grid only fills in side streets inside towns.</p></li>
+      <li><b>Generated buildings</b><p>Each place runs the existing generators: downtowns, towns, suburbs, ports, farms and bases. Louisville is several downtown districts side by side behind the Blockade wall.</p></li>
+      <li><b>Countryside fill</b><p>Farms, gas stations, diners, churches and trailer lots are spread along the roads and through the farmland. Their spots on this map are a preview, and the generator places the real ones.</p></li>
+    </ol>
+  </section>
+
+  <section class="block">
+    <h2>Your calls</h2>
+    <div class="qs">
+      <div class="q"><b>Is 16 km square the right size?</b><p>That's about an hour's walk edge to edge, close to the size of Zomboid's map. Going to 24 km mostly adds more countryside between the towns.</p><p class="rec">I'd keep 16 km and spend the effort on detail.</p></div>
+      <div class="q"><b>Keep Zomboid's town names?</b><p>Muldraugh, West Point, Riverside, Rosewood, March Ridge and Louisville make it feel like Knox County straight away. We could invent our own instead.</p><p class="rec">I'd keep them, since the goal is Zomboid in Minecraft.</p></div>
+      <div class="q"><b>Where do you start?</b><p>Zomboid lets you pick a starting town. We could do the same, with a choice of Muldraugh, West Point, Riverside, Rosewood or March Ridge, or always start in Muldraugh.</p><p class="rec">I'd offer a choice of starting town.</p></div>
+      <div class="q"><b>Same buildings in every world?</b><p>With a fixed internal seed, every world is the identical county, so you and your friends learn the same streets and I can hand-tune spots. Otherwise the layout stays fixed but the houses reshuffle each world.</p><p class="rec">I'd make every world identical.</p></div>
+    </div>
+  </section>
+  <footer>Coordinates are Minecraft blocks (1 block = 1 m), with x running east and z running south, and 0,0 is the centre of the county. Grid squares are 1,024 blocks, lettered A–P west to east and numbered 1–16 north to south.</footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+const B = 8192, FENCE = 7950;
+const svg = document.getElementById('map');
+const world = document.getElementById('world');
+const wrap = document.getElementById('mapwrap');
+
+/* ---------------- plan data ---------------- */
+const KINDS = {
+  city:{label:'City', mk:'city', order:0},
+  town:{label:'Town', mk:'town', order:1},
+  hamlet:{label:'Hamlet', mk:'town', order:2},
+  suburb:{label:'Suburb', mk:'suburb', order:3},
+  port:{label:'Port', mk:'port', order:4},
+  military:{label:'Military', mk:'mil', order:5},
+  quarantine:{label:'Quarantine zone', mk:'qz', order:6},
+  facility:{label:'Facility', mk:'fac', order:7},
+  landmark:{label:'Landmark', mk:'fac', order:8}
+};
+const P = [
+  // Louisville, behind the Blockade
+  {id:'lou-cbd', name:'Louisville', sub:'Downtown', kind:'city', gen:'DOWNTOWN · metro', x:5900, z:-5600, lp:'t', note:'Glass and stone towers on the riverfront grid, the elevated railway and the subway. The densest horde in the county.'},
+  {id:'lou-old', name:'Old Louisville', kind:'city', gen:'DOWNTOWN · old_city', x:5150, z:-4950, lp:'l', note:'Victorian blocks, brick churches and the old courthouse square, south-west of downtown.'},
+  {id:'lou-mid', name:'Midtown', kind:'city', gen:'DOWNTOWN · city', x:6650, z:-5000, lp:'b', note:'Mid-rise offices, a hospital, the central police precinct, and freight yards to the east.'},
+  {id:'lou-port', name:'Louisville Marine Terminal', kind:'port', gen:'PORT · container', x:4700, z:-5850, lp:'l', note:'Container stacks, gantry cranes and a stranded freighter.'},
+  {id:'lou-docks', name:'Riverfront Docks', kind:'port', gen:'PORT · industrial', x:6900, z:-6600, note:'Grain silos, warehouses and barge moorings under the broken bridges.'},
+  {id:'shively', name:'Shively', kind:'suburb', gen:'SUBURB · old_grid', x:4300, z:-4150, lp:'l', note:'A pre-war grid of small houses and corner stores just inside the wall.'},
+  {id:'okolona', name:'Okolona', kind:'suburb', gen:'SUBURB · estates', x:6950, z:-3900, note:'Cul-de-sacs and strip malls along the Interstate.'},
+  // The south
+  {id:'etown', name:'Elizabethtown', kind:'city', gen:'DOWNTOWN · city', x:3400, z:6600, note:'The southern city: a compact downtown, the county hospital and the I-65 strip.'},
+  {id:'etown-hts', name:'E-town Heights', kind:'suburb', gen:'SUBURB · estates', x:2300, z:6900, lp:'l', note:'Newer estates on the hill west of downtown.'},
+  {id:'glendale', name:'Glendale Trailer Park', kind:'suburb', gen:'SUBURB · trailer_park', x:4600, z:7150, note:'Rows of trailers off the Interstate, close to the southern checkpoint.'},
+  // Towns
+  {id:'muldraugh', name:'Muldraugh', kind:'town', gen:'TOWN · main_street', x:2600, z:-600, note:'The classic Zomboid start: a strip of houses and shops along the highway, gas stations, the railway, and the climb up Muldraugh Hill.'},
+  {id:'muld-trailers', name:'Muldraugh Trailer Park', kind:'suburb', gen:'SUBURB · trailer_park', x:3350, z:-1150, note:'Trailers between the highway and the railway.'},
+  {id:'valley', name:'Valley Station', kind:'suburb', gen:'SUBURB · old_grid', x:3550, z:-3100, lp:'l', note:'The last suburb outside the wall, with a strip mall, a high school and a National Guard staging lot.'},
+  {id:'westpoint', name:'West Point', kind:'town', gen:'DOWNTOWN · old_city', x:-300, z:-5100, lp:'b', note:'An old river town where the Salt meets the Ohio, with a brick main street, flood walls and churches.'},
+  {id:'wp-harbour', name:'West Point Harbour', kind:'port', gen:'PORT · fishing', x:450, z:-5420, note:'Boat ramps, bait shops and a half-sunk ferry.'},
+  {id:'riverside', name:'Riverside', kind:'town', gen:'TOWN · main_street', x:-4400, z:-5000, lp:'b', note:'A quiet river town with a country club, a school and the old bridge road.'},
+  {id:'riverside-docks', name:'Riverside Docks', kind:'port', gen:'PORT · industrial', x:-5300, z:-5200, lp:'l', note:'Gravel barges, a cement works and a fuel depot.'},
+  {id:'brandenburg', name:'Brandenburg', kind:'town', gen:'TOWN · county_seat', x:-7000, z:-5450, lp:'b', note:'A county seat on the bluff above the blown Brandenburg bridge.'},
+  {id:'rosewood', name:'Rosewood', kind:'town', gen:'TOWN · county_seat', x:-2600, z:1600, lp:'l', note:'A courthouse square, the fire station and the road out to the prison.'},
+  {id:'marchridge', name:'March Ridge', kind:'suburb', gen:'SUBURB · estates', x:1400, z:3400, lp:'l', note:'Newer estates with big houses and a country store, right next to the fence of the research facility.'},
+  {id:'vinegrove', name:'Vine Grove', kind:'town', gen:'TOWN · main_street', x:900, z:1900, lp:'t', note:'A small town between Rosewood and Fort Knox, with a diner, churches and a feed mill.'},
+  {id:'fallas', name:'Fallas Lake', kind:'hamlet', gen:'TOWN · hamlet', x:-3700, z:-950, lp:'t', note:'Lake cabins, a marina and a bait-and-tackle shop on the shore.'},
+  {id:'doevalley', name:'Doe Valley', kind:'suburb', gen:'SUBURB · estates', x:-6000, z:-3050, note:'A gated lake community with docks and a golf course.'},
+  {id:'ekron', name:'Ekron', kind:'hamlet', gen:'TOWN · hamlet', x:-7000, z:-1200, note:'A crossroads with a church, a feed store and a grain elevator.'},
+  {id:'echocreek', name:'Echo Creek', kind:'hamlet', gen:'TOWN · hamlet', x:-4600, z:2600, note:'A creekside hamlet in a knob valley, with a covered bridge.'},
+  {id:'irvington', name:'Irvington', kind:'town', gen:'TOWN · mill_town', x:-6200, z:5600, note:'A mill town with a lumber yard, a sawmill and rows of workers’ houses.'},
+  {id:'rineyville', name:'Rineyville', kind:'hamlet', gen:'TOWN · hamlet', x:900, z:6900, lp:'l', note:'A knob hamlet on the back road to Elizabethtown.'},
+  {id:'tobacco', name:'Tobacco Landing', kind:'hamlet', gen:'TOWN · hamlet', x:-2700, z:-6750, note:'The Indiana side of the river: a ferry landing and a few farms. You can only reach it by boat or by swimming.'},
+  // Military and facilities
+  {id:'knox-post', name:'Fort Knox Main Post', kind:'military', gen:'MILITARY · army_base', x:3500, z:1700, note:'Barracks, motor pools, the PX and the armor school. The biggest gun cache in the county.'},
+  {id:'godman', name:'Godman Army Airfield', kind:'facility', isNew:true, gen:'new: airfield', x:4800, z:1200, note:'A runway, hangars, a control tower and crashed transport helicopters.'},
+  {id:'bullion', name:'US Bullion Depository', kind:'landmark', isNew:true, gen:'new: gold vault', x:3750, z:2700, note:'The gold vault: granite walls, a sealed vault door, and soldiers who held it to the end.'},
+  {id:'ranges', name:'Tank Ranges', kind:'facility', isNew:true, gen:'new: firing range', x:5100, z:3700, note:'Open firing ranges with burnt-out armor, berms and observation towers.'},
+  {id:'armor-depot', name:'Armor Depot', kind:'military', gen:'MILITARY · depot', x:3950, z:4300, note:'Vehicle sheds, fuel bladders and parts yards.'},
+  {id:'lab', name:'Knox Research Facility', kind:'facility', isNew:true, gen:'new: research lab', x:1500, z:5150, note:'Hidden in the knobs behind a fence and guard posts: the labs the Knox Event may have started in.'},
+  {id:'prison', name:'Rosewood State Prison', kind:'facility', isNew:true, gen:'new: prison', x:-1600, z:2600, note:'Cell blocks, exercise yards and guard towers. The gates were left open.'},
+  {id:'qz-muld', name:'Muldraugh Quarantine Zone', kind:'quarantine', gen:'MILITARY · quarantine', x:1800, z:-1450, lp:'l', note:'FEMA tents and a field hospital that fell in the first week.'},
+  {id:'qz-wp', name:'West Point Quarantine Zone', kind:'quarantine', gen:'MILITARY · quarantine', x:-1200, z:-4300, lp:'l', note:'A sports-field camp with holding pens and a burn pit.'},
+  {id:'qz-rose', name:'Rosewood Quarantine Zone', kind:'quarantine', gen:'MILITARY · quarantine', x:-1700, z:700, note:'A school turned into a screening station, with a tent city on its playing fields.'},
+  {id:'guard-depot', name:'Meade County Guard Depot', kind:'military', gen:'MILITARY · depot', x:-5600, z:-2300, note:'National Guard trucks and supply crates on the Ekron road.'}
+];
+const PI = {}; P.forEach(p => { p.ox = p.x; p.oz = p.z; PI[p.id] = p; });
+
+const RIVERS = [
+  {id:'ohio', name:'Ohio River', w:280, lbl:[0.18,0.55], pts:[[-8400,-6000],[-7400,-6000],[-6600,-5900],[-5800,-5520],[-5000,-5460],[-4200,-5520],[-3200,-5900],[-2000,-5950],[-900,-5720],[-300,-5620],[500,-5800],[1500,-6200],[2600,-6300],[3600,-6200],[4400,-6250],[5200,-6450],[6000,-6700],[6800,-7000],[7600,-7100],[8400,-7000]]},
+  {id:'salt', name:'Salt River', w:90, lbl:[0.62], pts:[[-200,-5520],[300,-4900],[900,-4400],[1600,-3700],[2400,-3000],[3400,-2300],[4400,-1900],[5200,-2400],[6200,-2500],[7200,-2100],[8400,-1800]]},
+  {id:'rolling', name:'Rolling Fork', w:60, lbl:[0.45], pts:[[1600,-3700],[1300,-2600],[900,-1400],[700,0],[400,1200],[-300,2400],[-700,3600],[-200,4600],[200,5800],[-400,7000],[-600,8400]]},
+  {id:'otter-up', name:'Otter Creek', w:40, lbl:[0.78], pts:[[-3600,-1250],[-3800,400],[-4400,1800],[-4900,2600],[-5400,3400],[-6400,4600],[-7400,5600]]},
+  {id:'otter-dn', name:'Otter Creek', w:40, lbl:[], pts:[[-3500,-5700],[-3700,-4400],[-3900,-3200],[-3700,-1950]]}
+];
+const LAKES = [
+  {id:'fallaslake', name:'Fallas Lake', x:-3600, z:-1600, rx:650, rz:350},
+  {id:'doelake', name:'Doe Valley Lake', x:-6000, z:-3600, rx:700, rz:300}
+];
+const ROADS = [
+  {id:'i65', name:'I-65', cls:'i', shield:'65', sAt:[0.3,0.62,0.88], blownOhio:true, pts:[[6200,-8400],[6080,-7000],[5980,-6200],[6050,-5600],[6100,-4300],[5950,-3200],[5650,-2100],[5500,-900],[5800,500],[6450,2300],[6350,4200],[5400,5600],[4400,6250],[3850,7300],[3600,8400]]},
+  {id:'i264', name:'I-264 Watterson Expressway', cls:'i', shield:'264', sAt:[0.5], pts:['shively',[5000,-3720],[6000,-3660],'okolona']},
+  {id:'us31w', name:'US-31W Dixie Highway', cls:'us', shield:'31W', sAt:[0.2,0.5,0.82], pts:['lou-cbd','lou-old','shively','valley',[3250,-2300],[2850,-1500],'muldraugh',[2950,400],'knox-post','bullion',[3150,4600],'etown',[2850,7600],[2550,8400]]},
+  {id:'us60', name:'US-60', cls:'us', shield:'60', sAt:[0.9], pts:['lou-port','lou-cbd','lou-mid',[7600,-4600],[8400,-4300]]},
+  {id:'ky1638', name:'KY-1638 River Road', cls:'ky', shield:'1638', sAt:[0.3,0.62], pts:['valley',[2600,-3950],[1400,-4600],'westpoint',[-1600,-5250],[-3000,-5150],'riverside',[-5800,-5000],'brandenburg',[-8400,-5350]]},
+  {id:'ky60', name:'KY-60', cls:'ky', shield:'60', sAt:[0.5], pts:['westpoint',[200,-4250],[900,-3050],[1700,-1800],'muldraugh']},
+  {id:'ky44', name:'KY-44', cls:'ky', shield:'44', sAt:[0.18,0.6], pts:['muldraugh',[1400,-250],[600,150],[-600,600],'qz-rose','rosewood',[-3600,2150],'echocreek',[-5400,3800],'irvington',[-7000,6800],[-8400,7450]]},
+  {id:'ky86', name:'KY-86', cls:'ky', shield:'86', sAt:[0.6], pts:['rosewood',[-3200,400],'fallas',[-4450,-1500],[-4300,-2600],[-4300,-3800],'riverside']},
+  {id:'ky79', name:'KY-79', cls:'ky', shield:'79', sAt:[0.3,0.75], pts:['brandenburg',[-7100,-4400],[-6950,-3600],'doevalley',[-6600,-2000],'ekron',[-7350,800],[-7200,3200],'irvington']},
+  {id:'ky144', name:'KY-144', cls:'ky', shield:'144', sAt:[0.5], pts:['ekron',[-6300,-1900],'guard-depot',[-4700,-1100],'fallas']},
+  {id:'ky1500', name:'KY-1500', cls:'ky', shield:'1500', sAt:[0.35], pts:['knox-post',[2200,1950],'vinegrove',[-300,2300],'prison','rosewood']},
+  {id:'ky251', name:'KY-251', cls:'ky', shield:'251', sAt:[0.55], pts:['vinegrove','marchridge',[800,4600],[500,5800],'rineyville','etown-hts','etown']},
+  {id:'ky61', name:'KY-61', cls:'ky', shield:'61', sAt:[0.6], pts:[[5620,-2000],[7000,-1400],[8400,-1000]]},
+  {id:'in135', name:'IN-135 (Brandenburg bridge)', cls:'ky', shield:'135', sAt:[0.8], blownOhio:true, pts:['brandenburg',[-7300,-6600],[-7450,-8400]]},
+  {id:'in111', name:'IN-111 (Indiana shore)', cls:'ky', shield:'111', sAt:[0.3,0.7], pts:[[-7345,-7100],[-5200,-6750],'tobacco',[200,-7150],[3200,-7350],[6110,-7500]]},
+  {id:'labroad', name:'Restricted access road', cls:'loc', pts:['marchridge',[1700,4300],'lab']},
+  {id:'tanktrail', name:'Fort Knox tank trail', cls:'loc', pts:['knox-post','godman',[5500,2300],'ranges','armor-depot',[3200,4500]]},
+  {id:'muldtp', name:'Muldraugh Trailer Park road', cls:'loc', pts:['muldraugh','muld-trailers']},
+  {id:'qzmr', name:'Quarantine access', cls:'loc', pts:['muldraugh','qz-muld']},
+  {id:'qzwp', name:'Quarantine access', cls:'loc', pts:['westpoint','qz-wp']},
+  {id:'docks', name:'Riverfront road', cls:'loc', pts:['lou-cbd','lou-docks']},
+  {id:'wph', name:'Harbour road', cls:'loc', pts:['westpoint','wp-harbour']},
+  {id:'rsd', name:'Docks road', cls:'loc', pts:['riverside','riverside-docks']},
+  {id:'glen', name:'Glendale road', cls:'loc', pts:['etown','glendale']}
+];
+const RAIL = [
+  {id:'lnmain', name:'L&N main line', pts:[[6450,-4700],[5500,-4000],[4600,-3400],[3850,-2750],[3150,-1550],[2800,-450],[3150,700],[3850,1500],[3800,3400],[3650,5200],[3650,6500],[3850,8400]]},
+  {id:'riverbranch', name:'River branch line', pts:[[3850,-2750],[2400,-3750],[1000,-4550],[-200,-5000],[-2000,-5100],[-4300,-4750],[-6000,-4800],[-7150,-5150]]},
+  {id:'loubridge', name:'Louisville rail bridge', blownOhio:true, pts:[[6450,-4700],[6500,-6000],[6600,-8400]]}
+];
+const WALL = [[3950,-6330],[3700,-5300],[3800,-4400],[4450,-3450],[5500,-3100],[6500,-3200],[7500,-3300],[7950,-3380]];
+const MIL_AREAS = [
+  {id:'knox', name:'Fort Knox Military Reservation', lbl:[4600,4850], pts:[[2000,900],[4400,500],[5800,900],[6000,2600],[5900,4800],[4600,5300],[2600,5000],[2100,3200]]}
+];
+const KNOBS = [[-8192,1200],[-6000,1300],[-4000,2000],[-2600,2900],[-1000,3300],[400,3700],[1800,4400],[2400,5600],[2000,7000],[1200,8192],[-8192,8192]];
+const FARM = [
+  [[-8192,-4700],[-3000,-4350],[-2300,-2000],[-2400,600],[-4200,1500],[-8192,1100]],
+  [[-2300,-3900],[400,-3700],[1500,-2400],[2300,-1700],[2000,700],[-200,1300],[-2300,500]],
+  [[6000,2600],[8192,2000],[8192,8192],[4200,8192],[4700,5700],[5900,4800]],
+  [[-8192,-8192],[8192,-8192],[8192,-7350],[-8192,-6450]]
+];
+const FOREST = [
+  [[5800,900],[6100,-2600],[8192,-3350],[8192,2000],[6000,2600]],
+  [[-2300,-3900],[-2300,-2000],[-3000,-4350]]
+];
+const DISTRICTS = [
+  {t:'Indiana', x:-600, z:-7600}, {t:'Western farmland', x:-6300, z:-300}, {t:'Salt River bottoms', x:-700, z:-3000},
+  {t:'Hardin plateau', x:6500, z:6300}, {t:'Bullitt hills', x:7150, z:-500}
+];
+
+/* ---------------- geometry ---------------- */
+const hypot = Math.hypot;
+function pt(v){ if (typeof v === 'string'){ const p = PI[v]; return [p.x, p.z]; } return v; }
+function smooth(raw, n){
+  const pts = raw.map(pt); if (pts.length < 3) return pts;
+  const out = [];
+  for (let i = 0; i < pts.length - 1; i++){
+    const p0 = pts[Math.max(0,i-1)], p1 = pts[i], p2 = pts[i+1], p3 = pts[Math.min(pts.length-1,i+2)];
+    for (let j = 0; j < n; j++){
+      const t = j/n, t2 = t*t, t3 = t2*t;
+      const f = k => 0.5*((2*p1[k]) + (-p0[k]+p2[k])*t + (2*p0[k]-5*p1[k]+4*p2[k]-p3[k])*t2 + (-p0[k]+3*p1[k]-3*p2[k]+p3[k])*t3);
+      out.push([f(0), f(1)]);
+    }
+  }
+  out.push(pts[pts.length-1]);
+  return out;
+}
+function pathD(pts, close){ let d = 'M' + pts.map(p => p[0].toFixed(0) + ' ' + p[1].toFixed(0)).join('L'); return close ? d + 'Z' : d; }
+function lenOf(pts){ let s = 0; for (let i = 1; i < pts.length; i++) s += hypot(pts[i][0]-pts[i-1][0], pts[i][1]-pts[i-1][1]); return s; }
+function along(pts, f){
+  const total = lenOf(pts); let target = total*f, s = 0;
+  for (let i = 1; i < pts.length; i++){
+    const l = hypot(pts[i][0]-pts[i-1][0], pts[i][1]-pts[i-1][1]);
+    if (s + l >= target){ const t = (target - s)/(l||1); return [pts[i-1][0] + (pts[i][0]-pts[i-1][0])*t, pts[i-1][1] + (pts[i][1]-pts[i-1][1])*t, Math.atan2(pts[i][1]-pts[i-1][1], pts[i][0]-pts[i-1][0])]; }
+    s += l;
+  }
+  const a = pts[pts.length-1]; return [a[0], a[1], 0];
+}
+function segX(a, b, c, d){
+  const r1 = b[0]-a[0], r2 = b[1]-a[1], s1 = d[0]-c[0], s2 = d[1]-c[1];
+  const den = r1*s2 - r2*s1; if (Math.abs(den) < 1e-9) return null;
+  const t = ((c[0]-a[0])*s2 - (c[1]-a[1])*s1)/den, u = ((c[0]-a[0])*r2 - (c[1]-a[1])*r1)/den;
+  if (t < 0 || t > 1 || u < 0 || u > 1) return null;
+  return [a[0]+r1*t, a[1]+r2*t, Math.atan2(r2, r1)];
+}
+function crossings(A, Bp){
+  const out = [];
+  for (let i = 1; i < A.length; i++) for (let j = 1; j < Bp.length; j++){
+    const x = segX(A[i-1], A[i], Bp[j-1], Bp[j]); if (x) out.push(x);
+  }
+  return out;
+}
+function inPoly(x, z, poly){
+  let c = false;
+  for (let i = 0, j = poly.length-1; i < poly.length; j = i++){
+    const a = poly[i], b = poly[j];
+    if ((a[1] > z) !== (b[1] > z) && x < (b[0]-a[0])*(z-a[1])/(b[1]-a[1]) + a[0]) c = !c;
+  }
+  return c;
+}
+function distSeg(p, a, b){
+  const dx = b[0]-a[0], dz = b[1]-a[1], l2 = dx*dx + dz*dz;
+  let t = l2 ? ((p[0]-a[0])*dx + (p[1]-a[1])*dz)/l2 : 0; t = Math.max(0, Math.min(1, t));
+  return hypot(p[0]-a[0]-t*dx, p[1]-a[1]-t*dz);
+}
+function distLine(p, pts){ let m = Infinity; for (let i = 1; i < pts.length; i++) m = Math.min(m, distSeg(p, pts[i-1], pts[i])); return m; }
+function rng(seed){ let s = seed >>> 0; return () => { s = (s + 0x6D2B79F5) >>> 0; let t = s; t = Math.imul(t ^ t >>> 15, t | 1); t ^= t + Math.imul(t ^ t >>> 7, t | 61); return ((t ^ t >>> 14) >>> 0)/4294967296; }; }
+const FENCE_LINE = [[-FENCE,-FENCE],[FENCE,-FENCE],[FENCE,FENCE],[-FENCE,FENCE],[-FENCE,-FENCE]];
+const WALL_S = smooth(WALL, 8);
+const RIVER_S = RIVERS.map(r => ({...r, s: smooth(r.pts, 10)}));
+function gridRef(x, z){ const c = 'ABCDEFGHIJKLMNOP'[Math.max(0, Math.min(15, Math.floor((x+B)/1024)))]; return c + (Math.max(0, Math.min(15, Math.floor((z+B)/1024))) + 1); }
+function esc(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function inWater(x, z, pad){
+  for (const r of RIVER_S) if (distLine([x,z], r.s) < r.w/2 + pad) return true;
+  for (const l of LAKES) if (((x-l.x)/(l.rx+pad))**2 + ((z-l.z)/(l.rz+pad))**2 < 1) return true;
+  return false;
+}
+
+/* ---------------- view ---------------- */
+let view = {cx:0, cz:0, w:2*B*1.02}, k = 1;
+function rect(){ return svg.getBoundingClientRect(); }
+function clampView(){
+  const maxW = 2*B*1.06; view.w = Math.max(500, Math.min(maxW, view.w));
+  const lim = B - Math.min(view.w/2, B) + view.w*0.03;
+  view.cx = Math.max(-lim, Math.min(lim, view.cx)); view.cz = Math.max(-lim, Math.min(lim, view.cz));
+}
+function applyView(){
+  clampView();
+  const r = rect(); const asp = (r.height || 1)/(r.width || 1); const h = view.w*asp;
+  svg.setAttribute('viewBox', `${view.cx - view.w/2} ${view.cz - h/2} ${view.w} ${h}`);
+  k = view.w/(r.width || 1);
+  updateScale();
+}
+function toWorld(cx, cy){ const r = rect(); const asp = r.height/r.width; const h = view.w*asp; return [view.cx - view.w/2 + (cx - r.left)*k, view.cz - h/2 + (cy - r.top)*k]; }
+function zoomAt(f, cx, cy){
+  const before = toWorld(cx, cy); view.w *= f; clampView();
+  const r = rect(); k = view.w/r.width; const after = toWorld(cx, cy);
+  view.cx += before[0] - after[0]; view.cz += before[1] - after[1]; applyView();
+}
+function updateScale(){
+  for (const el of world.querySelectorAll('[data-s]')) el.setAttribute('transform', `translate(${el.dataset.x} ${el.dataset.z}) scale(${k})${el.dataset.r ? ' rotate(' + el.dataset.r + ')' : ''}`);
+  for (const el of world.querySelectorAll('[data-w]')) el.setAttribute('stroke-width', Math.max(+el.dataset.w, +el.dataset.min*k));
+  for (const el of world.querySelectorAll('[data-fs]')){ el.setAttribute('font-size', +el.dataset.fs*k); el.setAttribute('letter-spacing', (+el.dataset.ls || 0)*k); }
+  for (const p of svg.querySelectorAll('pattern[data-p]')){ const s = +p.dataset.p*k; p.setAttribute('width', s); p.setAttribute('height', s); }
+  svg.classList.toggle('zoomed', k < 13);
+  svg.classList.toggle('far', k > 30);
+  const sb = document.getElementById('scalebar'); const target = 110*k;
+  const nice = [100,250,500,1000,2000,4000].reduce((a, b) => Math.abs(b-target) < Math.abs(a-target) ? b : a);
+  sb.firstChild.textContent = nice >= 1000 ? (nice/1000) + ' km · ' + nice.toLocaleString() + ' blocks' : nice + ' blocks';
+  sb.querySelector('i').style.width = (nice/k) + 'px';
+}
+
+/* ---------------- edits (shared db) ---------------- */
+const edits = {}; let general = ''; let db = null, canWrite = true;
+let selected = null, editMode = false;
+function applyEdits(){
+  P.forEach(p => { const e = edits[p.id]; if (e && typeof e.x === 'number' && typeof e.z === 'number'){ p.x = e.x; p.z = e.z; } else { p.x = p.ox; p.z = p.oz; } });
+}
+function isMoved(p){ return Math.abs(p.x - p.ox) > 1 || Math.abs(p.z - p.oz) > 1; }
+
+/* ---------------- render ---------------- */
+let fillCache = null;
+function render(){
+  const h = [];
+  // terrain
+  h.push(`<g class="lay-terrain">`);
+  h.push(`<rect class="void" x="-${B*1.2}" y="-${B*1.2}" width="${B*2.4}" height="${B*2.4}"/>`);
+  h.push(`<g clip-path="url(#clipWorld)"><rect class="land" x="-${B}" y="-${B}" width="${2*B}" height="${2*B}"/>`);
+  FOREST.forEach(f => h.push(`<path class="forest" d="${pathD(f, true)}"/>`));
+  FARM.forEach(f => h.push(`<path class="farm" d="${pathD(f, true)}"/><path class="farmhatch" d="${pathD(f, true)}"/>`));
+  const kn = pathD(smooth(KNOBS, 6), true);
+  h.push(`<path class="knob" d="${kn}"/><path class="knobhatch" d="${kn}"/>`);
+  P.forEach(p => { const r = {city:560, town:380, hamlet:200, suburb:320, port:300, military:420, quarantine:220, facility:300, landmark:200}[p.kind]; h.push(`<circle class="urban" cx="${p.x}" cy="${p.z}" r="${r}"/>`); });
+  h.push(`</g></g>`);
+  // military land
+  h.push(`<g class="lay-mil" clip-path="url(#clipWorld)">`);
+  MIL_AREAS.forEach(a => { const d = pathD(smooth(a.pts, 6), true); h.push(`<path class="milarea hit" data-feat="mil:${a.id}" d="${d}"/><path class="milhatch" d="${d}" pointer-events="none"/>`); });
+  h.push(`</g>`);
+  // water
+  h.push(`<g class="lay-terrain" clip-path="url(#clipWorld)">`);
+  RIVER_S.forEach(r => h.push(`<path class="river edge" d="${pathD(r.s)}" data-w="${r.w+30}" data-min="${r.w > 200 ? 6 : r.w > 70 ? 3.6 : 2.6}"/>`));
+  RIVER_S.forEach(r => h.push(`<path class="river body" d="${pathD(r.s)}" data-w="${r.w}" data-min="${r.w > 200 ? 4.6 : r.w > 70 ? 2.4 : 1.6}"/>`));
+  LAKES.forEach(l => h.push(`<ellipse class="lake hit" data-feat="lake:${l.id}" cx="${l.x}" cy="${l.z}" rx="${l.rx}" ry="${l.rz}"/>`));
+  h.push(`</g>`);
+  // grid
+  h.push(`<g class="lay-grid">`);
+  for (let i = -8; i <= 8; i++){ const v = i*1024; h.push(`<line x1="${v}" y1="${-B}" x2="${v}" y2="${B}"/><line x1="${-B}" y1="${v}" x2="${B}" y2="${v}"/>`); }
+  for (let i = 0; i < 16; i++){
+    h.push(`<g data-s data-x="${-B + i*1024 + 512}" data-z="${-B}"><text class="gridlbl" y="14" text-anchor="middle">${'ABCDEFGHIJKLMNOP'[i]}</text></g>`);
+    h.push(`<g data-s data-x="${-B}" data-z="${-B + i*1024 + 512}"><text class="gridlbl" x="6" y="4">${i+1}</text></g>`);
+  }
+  h.push(`<rect class="border" x="-${B}" y="-${B}" width="${2*B}" height="${2*B}"/></g>`);
+
+  // roads geometry
+  const roadsS = ROADS.map(r => ({...r, s: smooth(r.pts, 10)}));
+  const railS = RAIL.map(r => ({...r, s: smooth(r.pts, 10)}));
+
+  // generated fill preview
+  h.push(`<g class="lay-fill">`);
+  fillPreview(roadsS).forEach(f => {
+    if (f.t === 'farm') h.push(`<g data-s data-x="${f.x|0}" data-z="${f.z|0}" data-r="${f.r|0}"><rect class="fill-farm" x="-3" y="-2.2" width="6" height="4.4"/></g>`);
+    else h.push(`<g data-s data-x="${f.x|0}" data-z="${f.z|0}"><circle class="fill-stop" r="2.2"/></g>`);
+  });
+  h.push(`</g>`);
+
+  // roads
+  h.push(`<g class="lay-roads" clip-path="url(#clipWorld)">`);
+  for (const cls of ['loc','ky','us','i']){
+    roadsS.filter(r => r.cls === cls).forEach(r => { if (cls !== 'loc') h.push(`<path class="rd ${cls} c" d="${pathD(r.s)}"/>`); });
+    roadsS.filter(r => r.cls === cls).forEach(r => h.push(`<path class="rd ${cls} f hit" data-feat="road:${r.id}" d="${pathD(r.s)}"/>`));
+  }
+  h.push(`</g>`);
+  // rail
+  h.push(`<g class="lay-rail" clip-path="url(#clipWorld)">`);
+  railS.forEach(r => { const d = pathD(r.s); h.push(`<path class="rl a ${r.blownOhio ? 'blown' : ''} hit" data-feat="rail:${r.id}" d="${d}"/><path class="rl b ${r.blownOhio ? 'blown' : ''}" d="${d}" pointer-events="none"/>`); });
+  h.push(`</g>`);
+
+  // bridges and blown bridges
+  const icons = [];
+  const big = RIVER_S.filter(r => r.w >= 40);
+  [...roadsS.map(r => ({...r, t:'road'})), ...railS.map(r => ({...r, t:'rail'}))].forEach(r => {
+    big.forEach(rv => crossings(r.s, rv.s).forEach(x => {
+      const blown = r.blownOhio && rv.id === 'ohio';
+      icons.push({kind: blown ? 'blown' : 'bridge', x:x[0], z:x[1], ang:x[2], road:r.name, river:rv.name, t:r.t});
+    }));
+  });
+  // checkpoints
+  const cps = [];
+  [...roadsS, ...railS].forEach(r => {
+    if (r.cls === 'loc') return;
+    crossings(r.s, FENCE_LINE).forEach(x => cps.push({x:x[0], z:x[1], on:'fence', road:r.name, rail:!r.cls}));
+    crossings(r.s, WALL_S).forEach(x => cps.push({x:x[0], z:x[1], on:'wall', road:r.name, rail:!r.cls}));
+  });
+  window.__cps = cps; window.__icons = icons;
+  h.push(`<g class="lay-roads">`);
+  icons.filter(i => i.kind === 'bridge').forEach(i => {
+    const deg = i.ang*180/Math.PI;
+    h.push(`<g class="bridge" data-s data-x="${i.x|0}" data-z="${i.z|0}" data-r="${deg.toFixed(0)}"><path d="M-6 -5 Q0 -2.5 6 -5 M-6 5 Q0 2.5 6 5"/></g>`);
+  });
+  h.push(`</g>`);
+
+  // fence, wall
+  h.push(`<g class="lay-fence">`);
+  h.push(`<path class="fence2" d="M${-FENCE+60} ${-FENCE+60}H${FENCE-60}V${FENCE-60}H${-FENCE+60}Z"/>`);
+  h.push(`<path class="fence hit" data-feat="fence" d="M${-FENCE} ${-FENCE}H${FENCE}V${FENCE}H${-FENCE}Z"/>`);
+  const wd = pathD(WALL_S);
+  h.push(`<path class="wall hit" data-feat="wall" d="${wd}"/><path class="walltick" d="${wd}" transform="translate(0 0)"/>`);
+  // watchtowers along fence
+  for (let s = -FENCE + 600; s <= FENCE - 600; s += 1300){
+    [[s,-FENCE],[s,FENCE],[-FENCE,s],[FENCE,s]].forEach(([x,z]) => {
+      if (cps.some(c => c.on === 'fence' && hypot(c.x-x, c.z-z) < 500)) return;
+      if (inWater(x, z, 0)) return;
+      h.push(`<g data-s data-x="${x}" data-z="${z}"><rect class="tower" x="-2.5" y="-2.5" width="5" height="5"/></g>`);
+    });
+  }
+  cps.forEach((c, i) => {
+    h.push(`<g class="cp ${c.on === 'wall' ? 'wallcp' : ''} hit" data-feat="cp:${i}" data-s data-x="${c.x|0}" data-z="${c.z|0}"><rect x="-6" y="-6" width="12" height="12" rx="2"/><path d="M-3.5 0H3.5"/></g>`);
+  });
+  icons.filter(i => i.kind === 'blown').forEach((i, n) => {
+    h.push(`<g class="blown hit" data-feat="blown:${n}" data-s data-x="${i.x|0}" data-z="${i.z|0}"><circle r="7"/><path d="M-4 -4L4 4M4 -4L-4 4"/></g>`);
+  });
+  h.push(`</g>`);
+
+  // area labels
+  h.push(`<g class="lay-terrain" pointer-events="none">`);
+  h.push(`<g data-s data-x="-4600" data-z="5200"><text class="area-lbl knobs" text-anchor="middle">The Knobs</text></g>`);
+  h.push(`<g data-s data-x="-5100" data-z="1560" data-r="16"><text class="area-lbl dist" text-anchor="middle" dy="16">Muldraugh Hill escarpment</text></g>`);
+  DISTRICTS.forEach(d => h.push(`<g data-s data-x="${d.x}" data-z="${d.z}"><text class="area-lbl dist" text-anchor="middle">${esc(d.t)}</text></g>`));
+  RIVER_S.forEach(r => (r.lbl || []).forEach((f, n) => {
+    const s = r.s[0][0] > r.s[r.s.length-1][0] ? r.s.slice().reverse() : r.s;
+    const pid = `rp-${r.id}-${n}`;
+    const a = along(s, Math.max(0, f-0.06)), b = along(s, Math.min(1, f+0.12));
+    // label path: a slice of the river around f
+    const slice = s.filter((p, i) => { const t = i/(s.length-1); return t >= f-0.07 && t <= f+0.14; });
+    if (slice.length < 2) return;
+    h.push(`<path id="${pid}" d="${pathD(slice)}" fill="none"/>`);
+    h.push(`<text class="wlbl" data-fs="12.5" data-ls="2" dy="${r.w > 200 ? 4 : -4}"><textPath href="#${pid}" startOffset="5%">${esc(r.name)}</textPath></text>`);
+  }));
+  LAKES.forEach(l => h.push(`<g data-s data-x="${l.x}" data-z="${l.z}"><text class="wlbl" font-size="11" text-anchor="middle" dy="4">${esc(l.name)}</text></g>`));
+  h.push(`</g>`);
+  h.push(`<g class="lay-mil" pointer-events="none">`);
+  MIL_AREAS.forEach(a => h.push(`<g data-s data-x="${a.lbl[0]}" data-z="${a.lbl[1]}"><text class="area-lbl mil" text-anchor="middle">${esc(a.name)}</text></g>`));
+  h.push(`</g>`);
+  h.push(`<g class="lay-fence" pointer-events="none">`);
+  h.push(`<g data-s data-x="6450" data-z="-3190" data-r="-4"><text class="area-lbl wall" text-anchor="middle" dy="16">Louisville Blockade</text></g>`);
+  h.push(`<g data-s data-x="-2000" data-z="${FENCE}"><text class="area-lbl fence" text-anchor="middle" dy="-8">Exclusion Zone fence</text></g>`);
+  h.push(`<g data-s data-x="${-FENCE}" data-z="-1500" data-r="-90"><text class="area-lbl fence" text-anchor="middle" dy="-8">Exclusion Zone fence</text></g>`);
+  h.push(`</g>`);
+
+  // shields
+  h.push(`<g class="lay-roads" pointer-events="none">`);
+  roadsS.forEach(r => (r.sAt || []).forEach(f => {
+    const a = along(r.s, f);
+    const t = esc(r.shield);
+    if (r.cls === 'i') h.push(`<g class="shield i" data-s data-x="${a[0]|0}" data-z="${a[1]|0}"><path d="M-9 -8 H9 V1 Q9 7 0 10 Q-9 7 -9 1Z"/><rect x="-9" y="-8" width="18" height="4"/><text y="2">${t}</text></g>`);
+    else if (r.cls === 'us') h.push(`<g class="shield us" data-s data-x="${a[0]|0}" data-z="${a[1]|0}"><path d="M-10 -8 H10 Q10 -2 8 2 Q4 9 0 10 Q-4 9 -8 2 Q-10 -2 -10 -8Z"/><text y="0.5">${t}</text></g>`);
+    else if (r.cls === 'ky'){ const w = Math.max(16, t.length*6 + 6); h.push(`<g class="shield ky" data-s data-x="${a[0]|0}" data-z="${a[1]|0}"><rect x="${-w/2}" y="-6.5" width="${w}" height="13" rx="6.5"/><text y="0.5">${t}</text></g>`); }
+  }));
+  h.push(`</g>`);
+
+  // places
+  h.push(`<g class="lay-places">`);
+  P.filter(isMoved).forEach(p => h.push(`<line class="ghostline" x1="${p.ox}" y1="${p.oz}" x2="${p.x}" y2="${p.z}"/><g data-s data-x="${p.ox}" data-z="${p.oz}"><circle class="mk-ghost" r="5"/></g>`));
+  const order = P.slice().sort((a, b) => KINDS[b.kind].order - KINDS[a.kind].order);
+  order.forEach(p => {
+    const mk = KINDS[p.kind].mk;
+    let shape;
+    if (p.kind === 'city') shape = `<circle class="mk-city" r="8"/><circle r="2.6" fill="#fff"/>`;
+    else if (p.kind === 'town') shape = `<circle class="mk-town" r="6"/>`;
+    else if (p.kind === 'hamlet') shape = `<circle class="mk-town" r="4"/>`;
+    else if (p.kind === 'suburb') shape = `<rect class="mk-suburb" x="-4.5" y="-4.5" width="9" height="9" rx="2"/>`;
+    else if (p.kind === 'port') shape = `<rect class="mk-port" x="-5" y="-5" width="10" height="10" transform="rotate(45)"/>`;
+    else if (p.kind === 'military') shape = `<rect class="mk-mil" x="-6" y="-6" width="12" height="12"/><path d="M-3.5 0H3.5M0 -3.5V3.5" stroke="var(--halo)" stroke-width="1.6"/>`;
+    else if (p.kind === 'quarantine') shape = `<path class="mk-qz" d="M0 -7L7 6H-7Z"/>`;
+    else if (p.kind === 'landmark') shape = `<path class="mk-fac" d="M0 -8L2.3 -2.5L8 -2.5L3.4 1.2L5.2 7L0 3.5L-5.2 7L-3.4 1.2L-8 -2.5L-2.3 -2.5Z"/>`;
+    else shape = `<rect class="mk-fac" x="-5.5" y="-5.5" width="11" height="11" rx="1.5"/>`;
+    const cls = p.kind === 'city' ? 't-city' : p.kind === 'town' ? 't-town' : (p.kind === 'military' || p.kind === 'quarantine' || p.kind === 'facility' || p.kind === 'landmark') ? 't-mil' : 't-minor';
+    const minor = !(p.kind === 'city' || p.kind === 'town');
+    const name = esc(p.sub ? p.name : p.name);
+    let tx = 11, ty = 4.5, anchor = 'start';
+    if (p.lp === 'l'){ tx = -11; anchor = 'end'; }
+    if (p.lp === 't'){ tx = 0; ty = -12; anchor = 'middle'; }
+    if (p.lp === 'b'){ tx = 0; ty = 21; anchor = 'middle'; }
+    const sel = selected === p.id ? `<circle class="mk-ring" r="14"/>` : '';
+    h.push(`<g class="place hit lbl" data-id="${p.id}" data-s data-x="${p.x}" data-z="${p.z}">${sel}<circle r="13" fill="transparent"/>${shape}<text class="${cls} ${minor && selected !== p.id ? 'minor-lbl' : ''}" x="${tx}" y="${ty}" text-anchor="${anchor}">${name}</text></g>`);
+  });
+  h.push(`</g>`);
+  world.innerHTML = h.join('');
+  updateScale();
+  stats(roadsS, railS, icons, cps);
+}
+
+function fillPreview(roadsS){
+  const out = []; const r = rng(4242);
+  const nearPlace = (x, z, d) => P.some(p => hypot(p.x-x, p.z-z) < d);
+  const blocked = (x, z) => inPoly(x, z, MIL_AREAS[0].pts) || inWater(x, z, 140) || Math.abs(x) > FENCE-150 || Math.abs(z) > FENCE-150 || inPoly(x, z, [...WALL, [8192,-8192],[3950,-8192]]);
+  // farms
+  for (let gx = -B + 500; gx < B; gx += 820) for (let gz = -B + 500; gz < B; gz += 820){
+    const x = gx + (r()-0.5)*520, z = gz + (r()-0.5)*520, roll = r();
+    if (blocked(x, z) || nearPlace(x, z, 650)) continue;
+    const farm = FARM.some(f => inPoly(x, z, f)), knob = inPoly(x, z, KNOBS);
+    if ((farm && roll < 0.62) || (knob && roll < 0.22) || (!farm && !knob && roll < 0.3)) out.push({t:'farm', x, z, r:(r()-0.5)*50});
+  }
+  // roadside stops
+  roadsS.filter(rd => rd.cls === 'ky' || rd.cls === 'us').forEach(rd => {
+    const L = lenOf(rd.s); let side = 1;
+    for (let s = 600; s < L - 300; s += 900 + r()*700){
+      const a = along(rd.s, s/L); const nx = -Math.sin(a[2])*130*side, nz = Math.cos(a[2])*130*side; side = -side;
+      const x = a[0] + nx, z = a[1] + nz;
+      if (blocked(x, z) || nearPlace(x, z, 700)) continue;
+      out.push({t:'stop', x, z});
+    }
+  });
+  return out;
+}
+
+function stats(roadsS, railS, icons, cps){
+  const hw = roadsS.filter(r => r.cls !== 'loc').reduce((s, r) => s + lenOf(r.s.filter(p => Math.abs(p[0]) <= B && Math.abs(p[1]) <= B)), 0);
+  const items = [
+    ['16.4 km', 'each side, 16,384 blocks'],
+    ['268 km²', 'of fixed, explorable county'],
+    [P.length, 'named places'],
+    ['~63 min', 'to walk edge to edge'],
+    [Math.round(hw/1000) + ' km', 'of highway and state road'],
+    [cps.length, 'Army checkpoints']
+  ];
+  document.getElementById('stats').innerHTML = items.map(i => `<div class="stat"><b>${i[0]}</b><span>${i[1]}</span></div>`).join('');
+}
+
+/* ---------------- detail panel ---------------- */
+const MULD = () => PI['muldraugh'];
+function walkFrom(p){ const m = MULD(); const d = hypot(p.x-m.x, p.z-m.z); return {d, min: Math.round(d/4.3/60)}; }
+function showPlace(p){
+  selected = p.id;
+  const k = KINDS[p.kind]; const w = walkFrom(p); const e = edits[p.id] || {};
+  const moved = isMoved(p);
+  let html = `<span class="kind ${p.isNew ? 'new' : ''}">${esc(k.label)}${p.isNew ? ' · new type' : ''}</span>
+    <h4>${esc(p.sub ? p.name + ' · ' + p.sub : p.name)}</h4>
+    <p>${esc(p.note)}</p>
+    <dl class="kv">
+      <dt>Generator</dt><dd>${esc(p.gen)}</dd>
+      <dt>Grid</dt><dd>${gridRef(p.x, p.z)}</dd>
+      <dt>Coords</dt><dd>x ${Math.round(p.x)} · z ${Math.round(p.z)}${moved ? ' (moved)' : ''}</dd>
+      ${p.id !== 'muldraugh' ? `<dt>From Muldraugh</dt><dd>${(w.d/1000).toFixed(1)} km · ~${w.min} min walk</dd>` : ''}
+    </dl>`;
+  if (editMode){
+    html += `<label for="pnote" style="display:block;margin-top:12px;font-size:13px;color:var(--ink-2)">Note on this place</label>
+      <textarea id="pnote" placeholder="Bigger? Different style? Cut it?">${esc(e.note || '')}</textarea>
+      <div class="row"><button class="btn" id="psave">Save note</button>${moved ? '<button class="btn" id="preset">Put it back</button>' : ''}</div>`;
+  }
+  document.getElementById('detail').innerHTML = html;
+  if (editMode){
+    document.getElementById('psave').onclick = () => saveEdit(p.id, {note: document.getElementById('pnote').value.trim()});
+    const rb = document.getElementById('preset'); if (rb) rb.onclick = () => { p.x = p.ox; p.z = p.oz; saveEdit(p.id, {x:null, z:null}); render(); showPlace(p); };
+  }
+  document.querySelectorAll('table.places tr').forEach(tr => tr.classList.toggle('sel', tr.dataset.id === p.id));
+}
+function showFeature(f){
+  selected = null;
+  const [t, id] = f.split(':');
+  let title = '', kind = '', body = '';
+  if (t === 'road'){ const r = ROADS.find(x => x.id === id); kind = {i:'Interstate', us:'US highway', ky:'State road', loc:'Local road'}[r.cls]; title = r.name; body = r.cls === 'i' ? 'Four lanes with a median, jammed with abandoned cars near the cities.' : r.cls === 'us' ? 'Two to four lanes through every town on the way, lined with gas stations, diners and motels.' : r.cls === 'ky' ? 'A two-lane country road with farms, churches and the odd gas station.' : 'A gravel or service road.'; }
+  else if (t === 'rail'){ const r = RAIL.find(x => x.id === id); kind = 'Railway'; title = r.name; body = r.blownOhio ? 'The bridge into Indiana was dropped by the Army. Freight cars are stranded on the Louisville side.' : 'Freight line with stranded trains, sidings and level crossings.'; }
+  else if (t === 'mil'){ kind = 'Military land'; title = 'Fort Knox Military Reservation'; body = 'Fenced Army land: the main post, the airfield, the gold vault, tank ranges and the armor depot. US-31W runs straight through it.'; }
+  else if (t === 'lake'){ const l = LAKES.find(x => x.id === id); kind = 'Lake'; title = l.name; body = id === 'fallaslake' ? 'A fishing lake with cabins and a marina on the north shore.' : 'A dammed lake ringed by the Doe Valley estates.'; }
+  else if (t === 'fence'){ kind = 'World edge'; title = 'Exclusion Zone fence'; body = 'Two chain-link fences with razor wire, a patrol track between them and watchtowers along the line. The world border sits just beyond it. Every road out ends at an Army checkpoint.'; }
+  else if (t === 'wall'){ kind = 'Military'; title = 'Louisville Blockade'; body = 'A concrete and container wall sealing Louisville off from the rest of the county, with checkpoints where the highways and the railway pass through. Inside is the worst of it.'; }
+  else if (t === 'cp'){ const c = window.__cps[+id]; kind = c.on === 'wall' ? 'Blockade checkpoint' : 'Exclusion Zone checkpoint'; title = c.road; body = c.rail ? 'A rail gate with a derailed train and sandbagged guard posts.' : c.on === 'wall' ? 'A gated gap in the Blockade wall with Humvees, barriers and a holding pen.' : 'An Army checkpoint at the county edge, with concrete barriers, a gate, abandoned queues of cars and a tent camp.'; }
+  else if (t === 'blown'){ const b = window.__icons.filter(i => i.kind === 'blown')[+id]; kind = 'Blown bridge'; title = b.road; body = 'Dropped into the ' + b.river + ' to stop people leaving. The broken spans can be climbed but not crossed.'; }
+  document.getElementById('detail').innerHTML = `<span class="kind">${esc(kind)}</span><h4>${esc(title)}</h4><p>${esc(body)}</p>`;
+  document.querySelectorAll('table.places tr').forEach(tr => tr.classList.remove('sel'));
+}
+
+/* ---------------- interaction ---------------- */
+const ptrs = new Map(); let gesture = null;
+svg.addEventListener('pointerdown', ev => {
+  svg.setPointerCapture(ev.pointerId);
+  ptrs.set(ev.pointerId, {x:ev.clientX, y:ev.clientY});
+  if (ptrs.size === 2){
+    const [a, b] = [...ptrs.values()];
+    gesture = {type:'pinch', d:hypot(a.x-b.x, a.y-b.y), cx:(a.x+b.x)/2, cy:(a.y+b.y)/2}; return;
+  }
+  const placeEl = ev.target.closest('.place');
+  const featEl = ev.target.closest('[data-feat]');
+  if (editMode && placeEl && canWrite){
+    gesture = {type:'drag', id:placeEl.dataset.id, sx:ev.clientX, sy:ev.clientY, moved:false};
+  } else {
+    gesture = {type:'pan', sx:ev.clientX, sy:ev.clientY, cx:view.cx, cz:view.cz, moved:false, place: placeEl && placeEl.dataset.id, feat: featEl && featEl.dataset.feat};
+  }
+});
+let raf = 0;
+svg.addEventListener('pointermove', ev => {
+  if (!ptrs.has(ev.pointerId)) return;
+  ptrs.set(ev.pointerId, {x:ev.clientX, y:ev.clientY});
+  if (!gesture) return;
+  if (gesture.type === 'pinch' && ptrs.size === 2){
+    const [a, b] = [...ptrs.values()]; const d = hypot(a.x-b.x, a.y-b.y);
+    if (d > 0){ zoomAt(gesture.d/d, (a.x+b.x)/2, (a.y+b.y)/2); gesture.d = d; }
+    return;
+  }
+  const dx = ev.clientX - gesture.sx, dy = ev.clientY - gesture.sy;
+  if (Math.abs(dx) + Math.abs(dy) > 4) gesture.moved = true;
+  if (gesture.type === 'pan' && gesture.moved){
+    svg.classList.add('panning');
+    view.cx = gesture.cx - dx*k; view.cz = gesture.cz - dy*k; applyView();
+  } else if (gesture.type === 'drag' && gesture.moved){
+    const p = PI[gesture.id]; const w = toWorld(ev.clientX, ev.clientY);
+    p.x = Math.round(Math.max(-FENCE+200, Math.min(FENCE-200, w[0]))); p.z = Math.round(Math.max(-FENCE+200, Math.min(FENCE-200, w[1])));
+    if (!raf) raf = requestAnimationFrame(() => { raf = 0; render(); });
+  }
+});
+function endPointer(ev){
+  ptrs.delete(ev.pointerId);
+  svg.classList.remove('panning');
+  if (!gesture) return;
+  const g = gesture;
+  if (g.type === 'pinch'){ if (ptrs.size === 0) gesture = null; return; }
+  gesture = null;
+  if (g.type === 'drag'){
+    const p = PI[g.id];
+    if (g.moved){ render(); saveEdit(p.id, {x:p.x, z:p.z}); }
+    showPlace(p); render();
+  } else if (!g.moved){
+    if (g.place){ showPlace(PI[g.place]); render(); }
+    else if (g.feat){ showFeature(g.feat); render(); }
+  }
+}
+svg.addEventListener('pointerup', endPointer);
+svg.addEventListener('pointercancel', endPointer);
+svg.addEventListener('wheel', ev => { ev.preventDefault(); zoomAt(Math.exp(ev.deltaY*0.0015), ev.clientX, ev.clientY); }, {passive:false});
+document.getElementById('zin').onclick = () => { const r = rect(); zoomAt(0.6, r.left + r.width/2, r.top + r.height/2); };
+document.getElementById('zout').onclick = () => { const r = rect(); zoomAt(1/0.6, r.left + r.width/2, r.top + r.height/2); };
+document.getElementById('zfit').onclick = () => { view = {cx:0, cz:0, w:2*B*1.02}; applyView(); };
+window.addEventListener('resize', applyView);
+
+/* layers */
+const LAYERS = [['places','Places','var(--city)'],['roads','Roads','var(--road-i)'],['rail','Railway','var(--rail)'],['mil','Military land','var(--mil)'],['fence','Fence & blockade','var(--fence)'],['fill','Farms & stops','var(--farm-2)'],['terrain','Terrain','var(--knob)'],['grid','Grid','var(--ink-3)']];
+const lay = document.getElementById('layers');
+lay.innerHTML = LAYERS.map(l => `<button class="chip" data-l="${l[0]}" aria-pressed="true"><span class="dot" style="background:${l[2]}"></span>${l[1]}</button>`).join('');
+lay.addEventListener('click', ev => { const b = ev.target.closest('.chip'); if (!b) return; const on = b.getAttribute('aria-pressed') !== 'true'; b.setAttribute('aria-pressed', on); svg.classList.toggle('hide-' + b.dataset.l, !on); });
+
+/* legend */
+const sw = (inner, w = 26) => `<svg width="${w}" height="14" viewBox="0 0 ${w} 14">${inner}</svg>`;
+const LEG = [
+  [sw('<path d="M2 7H24" stroke="var(--road-i-case)" stroke-width="5.5"/><path d="M2 7H24" stroke="var(--road-i)" stroke-width="3.4"/>'), 'Interstate'],
+  [sw('<path d="M2 7H24" stroke="var(--road-us-case)" stroke-width="4.4"/><path d="M2 7H24" stroke="var(--road-us)" stroke-width="2.6"/>'), 'US highway'],
+  [sw('<path d="M2 7H24" stroke="var(--road-ky-case)" stroke-width="3.4"/><path d="M2 7H24" stroke="var(--road-ky)" stroke-width="1.8"/>'), 'State road'],
+  [sw('<path d="M2 7H24" stroke="var(--rail)" stroke-width="1.4"/><path d="M2 7H24" stroke="var(--rail)" stroke-width="5" stroke-dasharray="1.2 5"/>'), 'Railway'],
+  [sw('<path d="M2 7H24" stroke="var(--fence)" stroke-width="2" stroke-dasharray="6 3"/>'), 'Exclusion Zone fence'],
+  [sw('<path d="M2 7H24" stroke="var(--wall)" stroke-width="4"/>'), 'Blockade wall'],
+  [sw('<rect x="7" y="1" width="12" height="12" rx="2" fill="var(--fence)"/><path d="M9.5 7H16.5" stroke="#fff" stroke-width="1.6"/>'), 'Checkpoint'],
+  [sw('<circle cx="13" cy="7" r="6" fill="var(--halo)" stroke="var(--fence)" stroke-width="1.5"/><path d="M10 4L16 10M16 4L10 10" stroke="var(--fence)" stroke-width="2"/>'), 'Blown bridge'],
+  [sw('<circle cx="13" cy="7" r="6" fill="var(--city)" stroke="#fff" stroke-width="1.6"/><circle cx="13" cy="7" r="2" fill="#fff"/>'), 'City district'],
+  [sw('<circle cx="13" cy="7" r="5" fill="var(--town)"/>'), 'Town or hamlet'],
+  [sw('<rect x="8.5" y="2.5" width="9" height="9" rx="2" fill="var(--suburb)"/>'), 'Suburb'],
+  [sw('<rect x="9" y="3" width="8" height="8" fill="var(--port)" transform="rotate(45 13 7)"/>'), 'Port'],
+  [sw('<rect x="7.5" y="1.5" width="11" height="11" fill="var(--mil)"/>'), 'Military site'],
+  [sw('<path d="M13 1L19.5 13H6.5Z" fill="var(--qz)"/>'), 'Quarantine zone'],
+  [sw('<rect x="8" y="2" width="10" height="10" rx="1.5" fill="var(--facility)"/>'), 'Facility (new type)'],
+  [sw('<rect x="1" y="1" width="24" height="12" fill="var(--knob)"/><path d="M6 10L9 5L12 10M15 10L18 5L21 10" fill="none" stroke="var(--knob-ink)"/>'), 'The Knobs (steep hills)'],
+  [sw('<rect x="1" y="1" width="24" height="12" fill="var(--mil-fill)" stroke="var(--mil)" stroke-dasharray="4 2"/>'), 'Military land'],
+  [sw('<rect x="9" y="4" width="8" height="6" fill="var(--farm-2)" stroke="var(--ink-3)" stroke-width=".7"/>'), 'Farm (generated)'],
+  [sw('<circle cx="13" cy="7" r="3" fill="var(--surface)" stroke="var(--ink-2)"/>'), 'Roadside stop (generated)']
+];
+document.getElementById('legend').innerHTML = LEG.map(l => `<div>${l[0]}<span>${l[1]}</span></div>`).join('');
+
+/* places list */
+const GROUPS = [
+  ['Louisville and Elizabethtown', p => ['lou-cbd','lou-old','lou-mid','lou-port','lou-docks','shively','okolona','etown','etown-hts','glendale'].includes(p.id)],
+  ['Towns and villages', p => ['town','hamlet'].includes(p.kind) || ['muld-trailers','valley','marchridge','doevalley','wp-harbour','riverside-docks'].includes(p.id)],
+  ['Fort Knox', p => ['knox-post','godman','bullion','ranges','armor-depot'].includes(p.id)],
+  ['Quarantine, prison and the lab', p => ['lab','prison','qz-muld','qz-wp','qz-rose','guard-depot'].includes(p.id)]
+];
+function renderList(){
+  document.getElementById('groups').innerHTML = GROUPS.map(([title, f]) => {
+    const rows = P.filter(f).map(p => `<tr data-id="${p.id}" class="${selected === p.id ? 'sel' : ''}"><td class="nm">${esc(p.sub ? p.name + ' · ' + p.sub : p.name)}${p.isNew ? '<span class="tag new">new</span>' : ''}${isMoved(p) ? '<span class="tag moved">moved</span>' : ''}${edits[p.id] && edits[p.id].note ? '<span class="tag moved">note</span>' : ''}</td><td class="ty">${esc(p.gen)}</td><td class="gr">${gridRef(p.x, p.z)}</td></tr>`).join('');
+    return `<div class="card"><h3>${esc(title)}</h3><table class="places"><tbody>${rows}</tbody></table></div>`;
+  }).join('');
+}
+document.getElementById('groups').addEventListener('click', ev => {
+  const tr = ev.target.closest('tr'); if (!tr) return;
+  const p = PI[tr.dataset.id];
+  view.cx = p.x; view.cz = p.z; view.w = Math.min(view.w, 4200); applyView();
+  showPlace(p); render();
+  document.getElementById('atlas').scrollIntoView({behavior:'smooth', block:'start'});
+});
+
+/* edit mode + changes */
+const editbtn = document.getElementById('editbtn');
+editbtn.onclick = () => {
+  editMode = !editMode; editbtn.textContent = editMode ? 'Edit: on' : 'Edit: off'; editbtn.setAttribute('aria-pressed', editMode);
+  document.body.classList.toggle('editing', editMode);
+  if (selected) showPlace(PI[selected]);
+};
+function changeLines(){
+  const lines = [];
+  P.forEach(p => {
+    const e = edits[p.id] || {}; const parts = [];
+    if (isMoved(p)) parts.push(`moved from x ${p.ox}, z ${p.oz} to x ${Math.round(p.x)}, z ${Math.round(p.z)} (${gridRef(p.x, p.z)})`);
+    if (e.note) parts.push(`note: "${e.note}"`);
+    if (parts.length) lines.push(`${p.name}${p.sub ? ' ' + p.sub : ''}: ${parts.join('; ')}`);
+  });
+  if (general.trim()) lines.push(`General: ${general.trim()}`);
+  return lines;
+}
+function renderChanges(){
+  const lines = changeLines();
+  document.getElementById('changes').innerHTML = lines.length ? `<ul style="margin:0;padding-left:18px;font-size:13px;color:var(--ink-2)">${lines.map(l => `<li>${esc(l)}</li>`).join('')}</ul>` : `<p class="empty" style="font-size:13px">No changes yet. Switch on Edit, then drag a place or tap one to leave a note.</p>`;
+}
+document.getElementById('copybtn').onclick = async () => {
+  const txt = changeLines().join('\n') || 'No changes.';
+  try { await navigator.clipboard.writeText(txt); setStatus('Copied. Paste it in our chat if you like.', true); } catch(e){ setStatus('Copy failed. Select the list above instead.'); }
+};
+const gnote = document.getElementById('gnote');
+document.getElementById('gsave').onclick = async () => {
+  general = gnote.value;
+  if (!db || !canWrite){ setStatus('Saved in this browser only. Use Copy changes to send it.'); renderChanges(); return; }
+  try { await db.doc('general/notes').set({text: general, at: new Date().toISOString()}); setStatus('Note saved. I can read it from here.', true); }
+  catch(e){ writeFailed(e); }
+  renderChanges();
+};
+function setStatus(t, ok){ const s = document.getElementById('dbstatus'); s.textContent = t; s.classList.toggle('ok', !!ok); }
+function writeFailed(e){
+  if (e && e.code === 'invalid_argument'){ canWrite = false; setStatus('This copy is view-only, so changes stay in your browser. Use Copy changes.'); }
+  else setStatus('Couldn’t save just now. Your change is still shown here; try again in a moment.');
+}
+const chains = {};
+function saveEdit(id, patch){
+  const cur = Object.assign({}, edits[id] || {}, patch);
+  if (cur.x === null){ delete cur.x; delete cur.z; }
+  const empty = cur.x === undefined && !cur.note;
+  if (empty) delete edits[id]; else edits[id] = cur;
+  renderList(); renderChanges();
+  if (!db || !canWrite){ setStatus('Saved in this browser only. Use Copy changes to send it.'); return; }
+  const ref = db.collection('edits').doc(id);
+  const body = {at: new Date().toISOString()}; if (cur.x !== undefined){ body.x = cur.x; body.z = cur.z; } if (cur.note) body.note = cur.note;
+  chains[id] = (chains[id] || Promise.resolve()).then(() => empty ? ref.delete() : ref.set(body)).then(() => setStatus('Saved. I can read your changes from here.', true)).catch(writeFailed);
+}
+
+/* boot */
+renderList(); renderChanges(); render(); applyView();
+(async () => {
+  try { db = window.claude && window.claude.use ? await window.claude.use('db') : null; } catch(e){ db = null; }
+  if (!db){ setStatus('Changes stay in this browser here. Use Copy changes to send them to me.'); return; }
+  setStatus('Connected. Changes you make are saved for me to read.', true);
+  db.collection('edits').onSnapshot(snap => {
+    Object.keys(edits).forEach(k => delete edits[k]);
+    snap.docs.forEach(d => { if (d.exists) edits[d.id] = Object.assign({}, d.data()); });
+    if (gesture && gesture.type === 'drag') return;
+    applyEdits(); render(); renderList(); renderChanges();
+    if (selected && document.activeElement && document.activeElement.id !== 'pnote') showPlace(PI[selected]);
+  }, () => setStatus('Lost the connection, so changes now stay in this browser.'));
+  db.doc('general/notes').onSnapshot(s => {
+    const t = s.exists ? (s.data().text || '') : '';
+    general = t; if (document.activeElement !== gnote) gnote.value = t; renderChanges();
+  }, () => {});
+})();
+})();
+</script>
+</body>
+</html>

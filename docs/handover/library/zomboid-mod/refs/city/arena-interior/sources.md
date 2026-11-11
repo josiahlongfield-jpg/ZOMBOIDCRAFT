@@ -1,0 +1,14 @@
+# city/arena-interior
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-boise-state-vs-new-mexico-lobos-men-s-basketball-taco-bell-a.jpg | [Boise State vs New Mexico Lobos men's basketball, Taco Bell Arena Inte](https://commons.wikimedia.org/wiki/File:Boise_State_vs_New_Mexico_Lobos_men%27s_basketball,_Taco_Bell_Arena_Interior_2013.jpg) | Bsuorangecrush at English Wikipedia | CC BY-SA 3.0 | Interior of ExtraMile Arena in Boise, Idaho during a Boise State men's basketball game vs the New Mexico Lobos on January 16, 2013 with 10,4 |
+| 02-mall-of-asia-arena-basketball-2012.jpg | [Mall of Asia Arena Basketball 2012.jpg](https://commons.wikimedia.org/wiki/File:Mall_of_Asia_Arena_Basketball_2012.jpg) | dann_garcia | CC BY-SA 2.0 | 2012-10-21 19.20.47 |
+| 03-capital-one-arena-interior-2017-04-19.jpg | [Capital One Arena interior 2017-04-19.jpg](https://commons.wikimedia.org/wiki/File:Capital_One_Arena_interior_2017-04-19.jpg) | Daniel Lobo | CC0 | Playoffs |
+| 04-rupp-arena-concourse-entrance.jpg | [Rupp Arena concourse entrance.jpg](https://commons.wikimedia.org/wiki/File:Rupp_Arena_concourse_entrance.jpg) | PCN02WPS | CC BY-SA 4.0 | Entrance to Rupp Arena, in the concourse of the Central Bank Center in Lexington, Kentucky, pictured May 10, 2025 |
+| 05-view-of-wembley-arena-from-the-concourse-of-the-stadium-geog.jpg | [View of Wembley Arena from the concourse of the Stadium - geograph.org](https://commons.wikimedia.org/wiki/File:View_of_Wembley_Arena_from_the_concourse_of_the_Stadium_-_geograph.org.uk_-_4515273.jpg) | Robert Lamb | CC BY-SA 2.0 | View of Wembley Arena from the concourse of the Stadium |
+| 06-view-of-wembley-arena-from-the-concourse-of-the-stadium-2-ge.jpg | [View of Wembley Arena from the concourse of the Stadium ^2 - geograph.](https://commons.wikimedia.org/wiki/File:View_of_Wembley_Arena_from_the_concourse_of_the_Stadium_%5E2_-_geograph.org.uk_-_4515338.jpg) | Robert Lamb | CC BY-SA 2.0 | View of Wembley Arena from the concourse of the Stadium #2 |
+| 07-makeshift-outdoors-locker-room-in-brastad-arena.jpg | [Makeshift outdoors locker room in Brastad Arena.jpg](https://commons.wikimedia.org/wiki/File:Makeshift_outdoors_locker_room_in_Brastad_Arena.jpg) | W.carter | CC BY-SA 4.0 | Makeshift outdoors locker room at one of the soccer fields in Brastad Arena, Brastad, Lysekil Municipality, Sweden. The man who these things |
+| 08-hershey-bears-hockey-club-locker-room-at-hersheypark-arena.jpg | [Hershey Bears Hockey Club locker room at HersheyPark Arena.jpg](https://commons.wikimedia.org/wiki/File:Hershey_Bears_Hockey_Club_locker_room_at_HersheyPark_Arena.jpg) | Bruce C. Cooper (centpacrr) | CC BY 3.0 | Hershey Hockey Club Program locker room at HersheyPark Arena, Hershey, PA  2001-02 season |

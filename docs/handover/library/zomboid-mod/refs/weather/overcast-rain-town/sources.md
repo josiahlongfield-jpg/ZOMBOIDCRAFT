@@ -1,0 +1,12 @@
+# weather/overcast-rain-town
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-town-crier-card-index-dpla-60b9d3a65a1e6ac6b4d4a128fcad911b.jpg | [Town Crier Card Index - DPLA - 60b9d3a65a1e6ac6b4d4a128fcad911b.jpg](https://commons.wikimedia.org/wiki/File:Town_Crier_Card_Index_-_DPLA_-_60b9d3a65a1e6ac6b4d4a128fcad911b.jpg) | Seattle Public Library | Public domain | Transcription of the Town Crier Card Index housed in the Seattle Room collection. This index, created by librarians, provides citations for  |
+| 02-rainy-looking-victoria-square-and-chamberlain-square-birming.jpg | [Rainy looking Victoria Square and Chamberlain Square, Birmingham (3623](https://commons.wikimedia.org/wiki/File:Rainy_looking_Victoria_Square_and_Chamberlain_Square,_Birmingham_(3623324566).jpg) | Elliott Brown from Birmingham, United Kingdom | CC BY 2.0 | A rainy evening going from Victoria Square into Chamberlain Square. That day it was raining. Birmingham Town Hall is Grade I listed. Birming |
+| 03-guildhall-st-edmund-street-weymouth-7211781652.jpg | [Guildhall - St Edmund Street, Weymouth (7211781652).jpg](https://commons.wikimedia.org/wiki/File:Guildhall_-_St_Edmund_Street,_Weymouth_(7211781652).jpg) | Elliott Brown from Birmingham, United Kingdom | CC BY 2.0 | It was such a nice day, that we headed to Weymouth and Portland. Lucky to have blue skys as well after previous rainy days. The harbour in W |
+| 04-cloudy-day-in-beijing-a-sign-of-heavy-rain.jpg | [Cloudy day in Beijing, a sign of heavy rain.jpg](https://commons.wikimedia.org/wiki/File:Cloudy_day_in_Beijing,_a_sign_of_heavy_rain.jpg) | Fumikas Sagisavas | CC0 | Cloudy day in Beijing, a sign of heavy rain |
+| 05-langweerderwielen-langwarder-wielen-d-j-b-18.jpg | [Langweerderwielen (Langwarder Wielen). (d.j.b.) 18.jpg](https://commons.wikimedia.org/wiki/File:Langweerderwielen_(Langwarder_Wielen)._(d.j.b.)_18.jpg) | Dominicus Johannes Bergsma | CC BY-SA 4.0 | Langweerderwielen (a.k.a. Langwarder Wielen). Stormy winds and heavy rain showers on Langweerderwielen lake south of Sneekermeer lake in De  |
+| 06-kirkjufell-iceland-20240714-1631-0713.jpg | [Kirkjufell, Iceland, 20240714 1631 0713.jpg](https://commons.wikimedia.org/wiki/File:Kirkjufell,_Iceland,_20240714_1631_0713.jpg) | Jakub Hałun | CC BY 4.0 | Kirkjufell Mountain, Kirkjufellsfoss waterfall and a rainbow caused by the sun and heavy rain at the same time |

@@ -1,0 +1,13 @@
+# quarantine/checkpoint-fence
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-2020-03-26-quarantine-in-nur-sultan-1.jpg | [2020-03-26 Quarantine in Nur-Sultan-1.jpg](https://commons.wikimedia.org/wiki/File:2020-03-26_Quarantine_in_Nur-Sultan-1.jpg) | Yakov Fedorov | CC BY-SA 4.0 | Quarantine in Nur-Sultan. 2020-03-26 |
+| 02-exercise-allied-spirit-defender-2020-6244719.jpg | [Exercise Allied Spirit - Defender 2020 (6244719).jpg](https://commons.wikimedia.org/wiki/File:Exercise_Allied_Spirit_-_Defender_2020_(6244719).jpg) | U.S. Army photo by Sgt. Raymundo Prado | Public domain | Polish ally soldiers conduct a security halt with U.S. Army Soldiers assigned to Company A, 6th Squadron, 8th Cavalry Regiment, 2nd Armored  |
+| 03-exercise-allied-spirit-defender-2020-6244718.jpg | [Exercise Allied Spirit - Defender 2020 (6244718).jpg](https://commons.wikimedia.org/wiki/File:Exercise_Allied_Spirit_-_Defender_2020_(6244718).jpg) | U.S. Army photo by Sgt. Raymundo Prado | Public domain | Staff Sgt. Austin Collins (left), a U.S. Army Soldier and Team Leader with Company A, 6th Squadron, 8th Cavalry Regiment, 2nd Armored Brigad |
+| 04-a-young-girl-washes-her-hands-in-an-ebola-prevention-checkpo.jpg | [A young girl washes her hands in an Ebola prevention checkpoint suppor](https://commons.wikimedia.org/wiki/File:A_young_girl_washes_her_hands_in_an_Ebola_prevention_checkpoint_supported_by_UK_aid_at_a_Ugandan_border_crossing_point_with_the_DRC,_August_2019_(49423861413).jpg) | DFID - UK Department for International Development | CC BY 2.0 | A young girl washes her hands in an Ebola prevention checkpoint supported by UK aid at a Ugandan border crossing point with the Democratic R |
+| 05-leaving-jerusalem-2853984592.jpg | [Leaving Jerusalem (2853984592).jpg](https://commons.wikimedia.org/wiki/File:Leaving_Jerusalem_(2853984592).jpg) | upyernoz from Haverford, USA | CC BY 2.0 | i went to bethlehem for a few hours. the town is really close to jerusalem--really just 10 km or so. it would probably be a jerusalem suburb |
+| 06-nasa-firms-2024-10-17-olenya.png | [NASA FIRMS 2024-10-17 Olenya.png](https://commons.wikimedia.org/wiki/File:NASA_FIRMS_2024-10-17_Olenya.png) | Imagery from LANCE FIRMS operated by NASA's Earth Science Data and Information S | Public domain | NASA FIRMS imagery 2024-10-17 of Olenya air base. NB. The terrain imagery is older and undated |
+| 07-love-canal-danger-hazardous-area-sign.jpg | [Love Canal - Danger Hazardous Area sign.jpg](https://commons.wikimedia.org/wiki/File:Love_Canal_-_Danger_Hazardous_Area_sign.jpg) |  | Public domain |  |

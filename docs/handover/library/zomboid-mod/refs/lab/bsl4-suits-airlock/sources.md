@@ -1,0 +1,12 @@
+# lab/bsl4-suits-airlock
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-positive-pressure-suit-orange-suit.jpg | [Positive-pressure suit (orange suit).jpg](https://commons.wikimedia.org/wiki/File:Positive-pressure_suit_(orange_suit).jpg) | CDC/ Dr. Scott Smith, Photo credit: James Gathany | Public domain | This 2007 image depicted Centers for Disease Control microbiologists as they were in the process of suiting up in order to access the interi |
+| 02-niaid-integrated-research-facility-positive-pressure-personn.jpg | [NIAID Integrated Research Facility - Positive Pressure Personnel Suit ](https://commons.wikimedia.org/wiki/File:NIAID_Integrated_Research_Facility_-_Positive_Pressure_Personnel_Suit_Inspection.jpg) | National Institute of Allergy and Infectious Diseases | Public domain | Inspection of positive pressure personnel suit at biosafety level 4 (BSL-4) laboratory of the NIAID Integrated Research Facility (IRF) in Fr |
+| 03-niaid-integrated-research-facility-positive-pressure-personn.jpg | [NIAID Integrated Research Facility - Positive Pressure Personnel Suit.](https://commons.wikimedia.org/wiki/File:NIAID_Integrated_Research_Facility_-_Positive_Pressure_Personnel_Suit.jpg) | National Institute of Allergy and Infectious Diseases | Public domain | Scientists working inside positive pressure personnel suit at biosafety level 4 (BSL-4) laboratory of the NIAID Integrated Research Facility |
+| 04-number-of-biosafety-level-4-facilities-by-country.png | [Number-of-biosafety-level-4-facilities-by-country.png](https://commons.wikimedia.org/wiki/File:Number-of-biosafety-level-4-facilities-by-country.png) | MDWiki(from Our World In Data) | CC BY 4.0 | biosafety level 4 facilities by country |
+| 05-niaid-integrated-research-facility-class-iii-biosafety-cabin.jpg | [NIAID Integrated Research Facility - Class III Biosafety Cabinet.jpg](https://commons.wikimedia.org/wiki/File:NIAID_Integrated_Research_Facility_-_Class_III_Biosafety_Cabinet.jpg) | National Institute of Allergy and Infectious Diseases | Public domain | Aerosol control platform inside a Class III Biosafety Cabinet at biosafety level 4 (BSL-4) laboratory of the NIAID Integrated Research Facil |
+| 06-opel-p4-baujahr-1936-heck.jpg | [Opel P4, Baujahr 1936, Heck.JPG](https://commons.wikimedia.org/wiki/File:Opel_P4,_Baujahr_1936,_Heck.JPG) | Lothar Spurzem | CC BY-SA 2.0 de | Opel P4, Baujahr 1936 (Phantasiekennzeichen) |

@@ -1,0 +1,11 @@
+# items/throwables/flashbang
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-m84-stun-grenade-diagram.jpg | [M84 stun grenade diagram.jpg](https://commons.wikimedia.org/wiki/File:M84_stun_grenade_diagram.jpg) | United States Army | Public domain | Diagram of the M84 stun grenade. This version a derivative of government source. |
+| 02-m84-drawing.jpg | [M84 Drawing.jpg](https://commons.wikimedia.org/wiki/File:M84_Drawing.jpg) |  | Public domain |  |
+| 03-us-navy-080102-n-1132m-006-u-s-army-soldiers-attached-to-3rd.jpg | [US Navy 080102-N-1132M-006 U.S. Army Soldiers attached to 3rd Squadron](https://commons.wikimedia.org/wiki/File:US_Navy_080102-N-1132M-006_U.S._Army_Soldiers_attached_to_3rd_Squadron,_2nd_Cavalry_Regiment_patrol_and_search_for_weapons_or_Improvised_Explosive_Devices_(IED)_during_a_clearing_mission.jpg) | U.S. Navy photo by Mass Communication Specialist 1st Class Sean Mulligan | Public domain | SHEIK SA'ID, Iraq (Jan. 2, 2008) U.S. Army Soldiers attached to 3rd Squadron, 2nd Cavalry Regiment patrol and search for weapons or Improvis |
+| 05-us-navy-100817-n-4940h-003-ass-communication-specialist-1st.jpg | [US Navy 100817-N-4940H-003 ass Communication Specialist 1st Class Jame](https://commons.wikimedia.org/wiki/File:US_Navy_100817-N-4940H-003_ass_Communication_Specialist_1st_Class_James_E._Foehl_provides_cover_while_Max_Joseph_tosses_a_flashbang_grenade.jpg) | U.S. Navy photo by Mass Communication Specialist Seaman Martin Carey | Public domain | AZUSA, Calif. (Aug. 17, 2010) Mass Communication Specialist 1st Class James E. Foehl, assigned to Fleet Combat Camera Group Pacific, provide |
+| 06-us-navy-100817-n-4332c-112-mass-communication-specialist-1st.jpg | [US Navy 100817-N-4332C-112 Mass Communication Specialist 1st Class Jam](https://commons.wikimedia.org/wiki/File:US_Navy_100817-N-4332C-112_Mass_Communication_Specialist_1st_Class_James_E._Foehl,_assigned_to_Fleet_Combat_Camera_Group_Pacific,_throws_a_flashbang_grenade_into_a_shoot-house_during_Quick_Shot_2010.jpg) | U.S. Navy photo by Mass Communication Specialist Seaman Martin Carey | Public domain | AZUSA, Calif. (Aug. 17, 2010) Mass Communication Specialist 1st Class James E. Foehl, assigned to Fleet Combat Camera Group Pacific, throws  |

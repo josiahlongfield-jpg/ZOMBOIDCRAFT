@@ -1,0 +1,12 @@
+# military/range-targets-berms
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-competitors-in-the-interallied-confederation-of-reserve-offi.jpg | [Competitors in the Interallied Confederation of Reserve Officers milit](https://commons.wikimedia.org/wiki/File:Competitors_in_the_Interallied_Confederation_of_Reserve_Officers_military_competition_check_their_targets_(6759723).jpg) | U.S. Army USARC by Calvin Reimold | Public domain | Competitors in the Interallied Confederation of Reserve Officers military competition check their targets during the rifle shooting portion, |
+| 02-r-m-military-shooting-range.jpg | [Rømø Military shooting range.jpg](https://commons.wikimedia.org/wiki/File:R%C3%B8m%C3%B8_Military_shooting_range.jpg) | Elgaard | CC BY-SA 4.0 | Rømø Military shooting range |
+| 03-shooting-practice-on-a-miniature-range-art-iwmartld54.jpg | [Shooting Practice on a Miniature Range Art.IWMARTLD54.jpg](https://commons.wikimedia.org/wiki/File:Shooting_Practice_on_a_Miniature_Range_Art.IWMARTLD54.jpg) | Anthony Gross | Public domain | Shooting Practice on a Miniature Range image: Three recruits lie in the foreground shooting at two targets on the far side of the range. Bot |
+| 04-u-s-soldiers-in-2d-cavalry-regiment-perform-familiarization.jpg | [U S Soldiers in 2d Cavalry Regiment perform familiarization berm drill](https://commons.wikimedia.org/wiki/File:U_S_Soldiers_in_2d_Cavalry_Regiment_perform_familiarization_berm_drills_with_M1296_Stryker_infantry_carrier_vehicle_(9672407).jpg) | U.S. Army Reserve photo by Spc. Thomas Madrzak | Public domain | U.S. Army Sgt.1stClass Eric Hernandez, assigned to Bull Troop 1, 2nd Cavalry Regiment, points his rifle down range during blank fire berm dr |
+| 05-riflerangetowercamppendleton.jpg | [RifleRangeTowerCampPendleton.jpg](https://commons.wikimedia.org/wiki/File:RifleRangeTowerCampPendleton.jpg) | PumpkinSky | CC BY-SA 3.0 | Rifle range and range tower at Camp Pendleton in Virginia Beach, Virginia. The Atlantic Ocean is just over the far dune\berm. The Canine(?)  |
+| 06-caninecourseriflerangecamppendleton.jpg | [CanineCourseRifleRangeCampPendleton.jpg](https://commons.wikimedia.org/wiki/File:CanineCourseRifleRangeCampPendleton.jpg) | PumpkinSky | CC BY-SA 3.0 | Canine(?) training course (right) and rifle range targets (distance) at Camp Pendleton in Virginia Beach, Virginia. The Atlantic Ocean is on |

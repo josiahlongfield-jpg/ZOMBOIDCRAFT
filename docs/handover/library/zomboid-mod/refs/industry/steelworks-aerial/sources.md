@@ -1,0 +1,14 @@
+# industry/steelworks-aerial
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-scunthorpe-steelworks-aerial-2022-1-geograph-org-uk-7159469.jpg | [Scunthorpe steelworks, aerial 2022 (1) - geograph.org.uk - 7159469.jpg](https://commons.wikimedia.org/wiki/File:Scunthorpe_steelworks,_aerial_2022_(1)_-_geograph.org.uk_-_7159469.jpg) | Simon Tomson | CC BY-SA 2.0 | Scunthorpe steelworks: aerial 2022 (1) |
+| 02-scunthorpe-steelworks-aerial-2022-3-geograph-org-uk-7159475.jpg | [Scunthorpe steelworks, aerial 2022 (3) - geograph.org.uk - 7159475.jpg](https://commons.wikimedia.org/wiki/File:Scunthorpe_steelworks,_aerial_2022_(3)_-_geograph.org.uk_-_7159475.jpg) | Simon Tomson | CC BY-SA 2.0 | Scunthorpe steelworks: aerial 2022 (3) |
+| 03-scunthorpe-steelworks-aerial-2022-2-geograph-org-uk-7159472.jpg | [Scunthorpe steelworks, aerial 2022 (2) - geograph.org.uk - 7159472.jpg](https://commons.wikimedia.org/wiki/File:Scunthorpe_steelworks,_aerial_2022_(2)_-_geograph.org.uk_-_7159472.jpg) | Simon Tomson | CC BY-SA 2.0 | Scunthorpe steelworks: aerial 2022 (2) |
+| 04-llanwern-steel-works.jpg | [Llanwern Steel works.jpg](https://commons.wikimedia.org/wiki/File:Llanwern_Steel_works.jpg) | M J Richardson | CC BY-SA 2.0 | Llanwern Steel works. An aerial view with long evening shadows of surrounding hedges and hills. The works were the first oxygen-blown integr |
+| 05-former-site-of-u-s-steel-duluth-works-2022-11-26.jpg | [Former site of U.S. Steel Duluth Works 2022-11-26.jpg](https://commons.wikimedia.org/wiki/File:Former_site_of_U.S._Steel_Duluth_Works_2022-11-26.jpg) | Schwerdf | CC BY 4.0 | The former site of U.S. Steel Duluth Works, an integrated steel mill that was once the largest employer in the city of Duluth. |
+| 06-u-s-steel-gary-works-gary-indiana-7238209080.jpg | [U.S. Steel Gary Works, Gary, Indiana (7238209080).jpg](https://commons.wikimedia.org/wiki/File:U.S._Steel_Gary_Works,_Gary,_Indiana_(7238209080).jpg) | Ken Lund from Reno, Nevada, USA | CC BY-SA 2.0 | The Gary Works is a very large steel mill in Gary, Indiana, on the shore of Lake Michigan. For many years, the Gary Works was the world's la |
+| 07-bethlehem-steel-s-burns-harbor-plant-aerial-ca1964.jpg | [Bethlehem Steel's Burns Harbor plant aerial ca1964.jpg](https://commons.wikimedia.org/wiki/File:Bethlehem_Steel%27s_Burns_Harbor_plant_aerial_ca1964.jpg) | Buckyball7 | CC BY-SA 4.0 | Aerial view of the mill area of the Burns Harbor plant circa 1964. The 160" plate mill is in the upper left. |
+| 08-smokestacks-of-the-bethlehem-steel-plant-on-the-shore-of-lak.jpg | [SMOKESTACKS OF THE BETHLEHEM STEEL PLANT ON THE SHORE OF LAKE ERIE JUS](https://commons.wikimedia.org/wiki/File:SMOKESTACKS_OF_THE_BETHLEHEM_STEEL_PLANT_ON_THE_SHORE_OF_LAKE_ERIE_JUST_BELOW_BUFFALO_-_NARA_-_549507.jpg) | George Burns | Public domain |  |

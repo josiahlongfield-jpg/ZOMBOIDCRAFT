@@ -1,0 +1,14 @@
+# quarantine/morgue-historic
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-opo-no-old-cemetery-former-morgue-interior-01.jpg | [Opočno, old cemetery, former morgue interior 01.jpg](https://commons.wikimedia.org/wiki/File:Opo%C4%8Dno,_old_cemetery,_former_morgue_interior_01.jpg) | Czeva | CC BY-SA 4.0 | Interior of the former morgue at the old cemetery in Opočno, Rychnov nad Kněžnou District, Hradec Králové Region, Czechia |
+| 02-vue-int-rieure-de-la-morgue-en-1855.jpg | [Vue intérieure de la Morgue en 1855.jpg](https://commons.wikimedia.org/wiki/File:Vue_int%C3%A9rieure_de_la_Morgue_en_1855.jpg) | Theodor Josef Hubert Hoffbauer | Public domain | A glimpse of the Paris Morgue's interior. The left wall of the entrance hall consisted of a row of windows through which guests could see th |
+| 03-notre-dame-1881.jpg | [Notre-Dame, 1881.jpg](https://commons.wikimedia.org/wiki/File:Notre-Dame,_1881.jpg) | Theodor Josef Hubert Hoffbauer | Public domain | A view of Notre-Dame Cathedral. "During the Revolution, many of the treasures of the cathedral were either destroyed or plundered. Only the  |
+| 04-allegheny-county-mortuary-pittsburgh-2020-06-29.jpg | [Allegheny County Mortuary, Pittsburgh, 2020-06-29.jpg](https://commons.wikimedia.org/wiki/File:Allegheny_County_Mortuary,_Pittsburgh,_2020-06-29.jpg) | Cbaile19 | CC0 | The old Allegheny County Mortuary or Allegheny County Morgue on Fourth Avenue (architect Frederick Osterling) |
+| 05-mortuary-building-geograph-org-uk-8254084.jpg | [Mortuary building - geograph.org.uk - 8254084.jpg](https://commons.wikimedia.org/wiki/File:Mortuary_building_-_geograph.org.uk_-_8254084.jpg) | Bill Nicholls | CC BY-SA 2.0 | Mortuary building |
+| 06-historic-former-mortuary-building-at-sint-willibrorduskerk-c.jpg | [Historic former mortuary building at Sint-Willibrorduskerk cemetery Be](https://commons.wikimedia.org/wiki/File:Historic_former_mortuary_building_at_Sint-Willibrorduskerk_cemetery_Berghem.jpg) | Cro-Cop | CC BY 4.0 | Historic former mortuary building at Sint-Willibrorduskerk cemetery Berghem |
+| 07-long-island-boston-harbor-100708-a-023-300.jpg | [Long Island - Boston Harbor - 100708 - a - 023-300.jpg](https://commons.wikimedia.org/wiki/File:Long_Island_-_Boston_Harbor_-_100708_-_a_-_023-300.jpg) | Massachusetts Dept. of Environmental Protection | CC BY 2.0 | There must be a name for these... the drawers in a morgue where one would store the bodies. Long Island - Boston Harbor, Massachusetts  Octo |
+| 08-ellis-island-hospital-01881.jpg | [Ellis Island hospital (01881).jpg](https://commons.wikimedia.org/wiki/File:Ellis_Island_hospital_(01881).jpg) | Rhododendrites | CC BY-SA 4.0 | The morgue at the Ellis Island Immigrant Hospital, closed since 1930. |

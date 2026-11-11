@@ -1,0 +1,12 @@
+# camp/motor-pool-forest
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-buckingham-army-airfield-motor-pool-of-machine-gun-target-tr.jpg | [Buckingham Army Airfield - motor pool of machine gun target training t](https://commons.wikimedia.org/wiki/File:Buckingham_Army_Airfield_-_motor_pool_of_machine_gun_target_training_trucks_1944.jpg) | United States Army Air Forces | Public domain | Buckingham Army Airfield - motor pool of machine gun turrent training trucks 1944 |
+| 02-specialist-services-a-truck-at-the-motor-pool-of-the-19th-su.jpg | [Specialist services a truck at the motor pool of the 19th Supply and S](https://commons.wikimedia.org/wiki/File:Specialist_services_a_truck_at_the_motor_pool_of_the_19th_Supply_and_Service_Company_at_Phu_Tai.jpg) | SP4 John C. Atkinson | Public domain | SSG Efferson performs maintenance on a 3/4 ton truck at the motor pool of the 19th Supply and Service Company at Phu Tai. NARA 111-CCV-527-C |
+| 03-working-in-motor-pool-at-guantanamo-bay-dvids93896.jpg | [Working in motor pool at Guantanamo Bay DVIDS93896.jpg](https://commons.wikimedia.org/wiki/File:Working_in_motor_pool_at_Guantanamo_Bay_DVIDS93896.jpg) | Spc. Erica Isaacson | Public domain | Army Spc. Jose Passalacqua, a member of the 525th Military Police Battalion, performs preventative maintenance on a Humvee truck in the 525' |
+| 04-motor-pool-dvids117177.jpg | [Motor Pool DVIDS117177.jpg](https://commons.wikimedia.org/wiki/File:Motor_Pool_DVIDS117177.jpg) | Sgt. Sarah Stannard | Public domain | Army Sgt. Jonathan Vasquez, a light wheeled vehicle mechanic with the 525th Military Police Battalion, performs routine maintenance on one o |
+| 05-motor-pool-dvids108333.jpg | [Motor Pool DVIDS108333.jpg](https://commons.wikimedia.org/wiki/File:Motor_Pool_DVIDS108333.jpg) | Spc. Erica Isaacson | Public domain | Specialist Chris Johnson, a light-wheel vehicle mechanic with the 525th Military Police Battalion, power washes the floor of Joint Task Forc |
+| 06-motor-pool-dvids117178.jpg | [Motor Pool DVIDS117178.jpg](https://commons.wikimedia.org/wiki/File:Motor_Pool_DVIDS117178.jpg) | Sgt. Sarah Stannard | Public domain | Army Sgt. Jonathan Vasquez, a light wheeled vehicle mechanic with the 525th Military Police Battalion, performs routine maintenance on one o |

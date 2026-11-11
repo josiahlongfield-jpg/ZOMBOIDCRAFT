@@ -1,0 +1,12 @@
+# items/weapons-attachments/sights/Sight_C79
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-elcan-c79-2.jpg | [ELCAN C79-2.jpg](https://commons.wikimedia.org/wiki/File:ELCAN_C79-2.jpg) | Francis Flinch at English Wikipedia | Public domain | ELCAN C79 3.4x28 sight. C79 3.4x28 sight sdjustment controls. |
+| 02-180908-a-sd031-082-m240-time-image-1-of-6.jpg | [180908-A-SD031-082 - M240 Time (Image 1 of 6).jpg](https://commons.wikimedia.org/wiki/File:180908-A-SD031-082_-_M240_Time_(Image_1_of_6).jpg) | Capt. Joe Legros | Public domain | Sky Soldiers from 1st Battalion, 503rd Infantry Regiment qualified with their M240s in Grafenwoehr, Germany September 8, 2018 during Saber J |
+| 03-180908-a-sd031-216-m240-sky-soldier-fun-image-3-of-6.jpg | [180908-A-SD031-216 - M240 Sky Soldier Fun (Image 3 of 6).jpg](https://commons.wikimedia.org/wiki/File:180908-A-SD031-216_-_M240_Sky_Soldier_Fun_(Image_3_of_6).jpg) | Capt. Joe Legros | Public domain | Sky Soldiers from 1st Battalion, 503rd Infantry Regiment qualified with their M240s in Grafenwoehr, Germany September 8, 2018 during Saber J |
+| 04-180908-a-sd031-139-m240-round-caught-in-the-act-image-2-of-6.jpg | [180908-A-SD031-139 - M240 Round Caught in the Act (Image 2 of 6).jpg](https://commons.wikimedia.org/wiki/File:180908-A-SD031-139_-_M240_Round_Caught_in_the_Act_(Image_2_of_6).jpg) | Capt. Joe Legros | Public domain | Sky Soldiers from 1st Battalion, 503rd Infantry Regiment qualified with their M240s in Grafenwoehr, Germany September 8, 2018 during Saber J |
+| 05-180908-a-sd031-276-m240-sky-soldier-team-image-4-of-6.jpg | [180908-A-SD031-276 - M240 Sky Soldier Team (Image 4 of 6).jpg](https://commons.wikimedia.org/wiki/File:180908-A-SD031-276_-_M240_Sky_Soldier_Team_(Image_4_of_6).jpg) | Capt. Joe Legros | Public domain | Sky Soldiers from 1st Battalion, 503rd Infantry Regiment qualified with their M240s in Grafenwoehr, Germany September 8, 2018 during Saber J |
+| 06-machine-gun-training-dvids187491.jpg | [Machine Gun Training DVIDS187491.jpg](https://commons.wikimedia.org/wiki/File:Machine_Gun_Training_DVIDS187491.jpg) | Spc. David Innes | Public domain | U.S. Army Spc. William Cornett from Golden Colo., of 1st Battalion, 5th Cavalry Regiment, 2nd Brigade Combat Team, 1st Cavalry Division, dis |

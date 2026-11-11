@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Brita Sight Pictures</title>
+<style>
+:root{--bg:#f3f1ea;--card:#fffdf7;--ink:#24231f;--mute:#6d6a60;--line:#d9d4c6;--acc:#7a5a1e;--ok:#2f6b3a;--bad:#9a3a2a;--warn:#8a6a10}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17181a;--card:#202226;--ink:#e9e6dd;--mute:#a19d92;--line:#34363b;--acc:#d9b26a;--ok:#7cc48a;--bad:#e08a78;--warn:#e0c060}}
+:root[data-theme="dark"]{--bg:#17181a;--card:#202226;--ink:#e9e6dd;--mute:#a19d92;--line:#34363b;--acc:#d9b26a;--ok:#7cc48a;--bad:#e08a78;--warn:#e0c060}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
+header{padding:20px 16px 8px;max-width:1280px;margin:auto}h1{font-size:22px;margin:0 0 4px}header p{margin:4px 0;color:var(--mute);max-width:820px}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:8px 16px;max-width:1280px;margin:auto;position:sticky;top:0;background:var(--bg);z-index:5;border-bottom:1px solid var(--line)}
+button{font:inherit;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:6px 12px;border-radius:8px;cursor:pointer}
+button.on{border-color:var(--acc);color:var(--acc);font-weight:600}
+.count{color:var(--mute);margin-left:auto;font-size:14px}
+main{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;padding:14px 16px 40px;max-width:1280px;margin:auto}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:6px}
+.card canvas{width:100%;aspect-ratio:1;border-radius:8px;cursor:zoom-in;background:#000}
+.card h3{font-size:15px;margin:2px 0 0}
+.meta{display:flex;gap:6px;flex-wrap:wrap;font-size:12px}
+.tag{padding:1px 7px;border-radius:99px;border:1px solid var(--line);color:var(--mute)}
+.tag.checked{color:var(--ok);border-color:var(--ok)}.tag.guess{color:var(--warn);border-color:var(--warn);font-weight:600}
+.desc{font-size:13.5px;margin:0}.src{font-size:12px;color:var(--mute);margin:0}
+.verdict{display:flex;gap:6px}.verdict button{flex:1;padding:5px}
+.verdict .ok.on{color:var(--ok);border-color:var(--ok)}.verdict .bad.on{color:var(--bad);border-color:var(--bad)}
+textarea{width:100%;font:inherit;font-size:13px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);padding:6px;min-height:34px;resize:vertical}
+#out{max-width:1280px;margin:0 auto 10px;display:block;width:calc(100% - 32px);min-height:120px}#out[hidden]{display:none}
+#big{position:fixed;inset:0;background:rgba(0,0,0,.82);display:none;align-items:center;justify-content:center;z-index:9;flex-direction:column;gap:8px;padding:16px}
+#big.show{display:flex}#big canvas{width:min(92vw,86vh);aspect-ratio:1;border-radius:10px}#big div{color:#eee;font-size:15px;text-align:center}
+</style></head><body>
+<header><h1>Brita sight pictures</h1>
+<p>All 49 sights the pilot guns can take, as you'd see them when aiming. Each picture is drawn to scale: the man-sized target sits at a range that suits the sight, and every dot, ring and mark has its real size in MOA. Tap a picture to enlarge it.</p>
+<p>The tags say where each reticle comes from. <b>Checked</b> means I looked it up today. <b>Known</b> means it's well documented. <b>Please check</b> means I found no spec and drew my best guess. Mark each one, add notes, then press Copy review and paste it back to me.</p></header>
+<div class="bar"><button id="lit" class="on" type="button">Illumination on</button><button id="copy" type="button">Copy review</button><span class="count" id="count"></span></div>
+<textarea id="out" hidden readonly></textarea>
+<main id="grid"></main>
+<div id="big"><canvas width="1200" height="1200"></canvas><div></div></div>
+<script>
+/*SIGHTS*/
+const KEY='brita-sights-review';let saved={};try{saved=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(saved))}catch(e){}};
+let LIT=true;
+// seeded random so every redraw matches
+function rng(seed){let s=seed>>>0;return()=>{s=(s*1664525+1013904223)>>>0;return s/4294967296}}
+function rangeFor(z){return z<=1?40:z<=2.6?100:z<=3.6?150:z<=4.1?200:z<=6.1?300:z<=8.1?400:z<=12.1?500:z<=14.1?600:z<=20.1?800:1100}
+const PAL={day:{sky0:'#a9c2d6',sky1:'#dfe6e4',g0:'#7d8a52',g1:'#59633a',tree:'#3d4a2c',man:'#3a3527',man2:'#4a4434'},
+  thermal:{sky0:'#151515',sky1:'#262626',g0:'#4a4a4a',g1:'#333',tree:'#3a3a3a',man:'#f4f4f4',man2:'#d8d8d8'},
+  nv:{sky0:'#0d2a10',sky1:'#2a5a2a',g0:'#3f7a3c',g1:'#2a5228',tree:'#1d3d1d',man:'#9ef09a',man2:'#7fd07a'}};
+function drawScene(c,s,size,k,cx,cy){
+  const pal=PAL[s.mode==='thermal'?'thermal':s.mode==='nv'?'nv':'day'], d=rangeFor(s.zoom), H=1.75/d*3438;
+  const hy=cy+(-0.32*H)*k; // horizon a little above the chest
+  let g=c.createLinearGradient(0,0,0,hy);g.addColorStop(0,pal.sky0);g.addColorStop(1,pal.sky1);c.fillStyle=g;c.fillRect(0,0,size,Math.max(0,hy));
+  g=c.createLinearGradient(0,hy,0,size);g.addColorStop(0,pal.g0);g.addColorStop(1,pal.g1);c.fillStyle=g;c.fillRect(0,hy,size,size-hy);
+  // treeline 700 m away, real angular size (12-18 m trees)
+  const R=rng(7),TD=Math.max(700,d*2.4);c.fillStyle=pal.tree;const span=s.fov*60/2+400;
+  for(let x=-span;x<span;){const w=(6+R()*10)/TD*3438,h=(10+R()*8)/TD*3438;c.beginPath();c.ellipse(cx+x*k,hy,w/2*k,h*k,0,Math.PI,0);c.fill();x+=w*(0.6+R()*0.5)}
+  c.fillRect(0,hy-1,size,2);
+  // grass flecks near the bottom (scale with zoom so it reads as texture)
+  const R2=rng(11);c.fillStyle=s.mode==='thermal'?'rgba(255,255,255,.05)':'rgba(0,0,0,.08)';for(let i=0;i<500;i++){const x=R2()*size,y=hy+R2()*(size-hy);c.fillRect(x,y,2,1+R2()*3)}
+  man(c,cx,cy,H,k,pal.man);
+  const d2=d*2,H2=1.75/d2*3438; man(c,cx+H*1.1*k,cy+(-0.32*H+0.32*H2+ (0.62*H-0.62*H2)*0.4)*k,H2,k,pal.man2);
+}
+function man(c,x,y,H,k,col){ // chest at (x,y); 1.75 m tall; MOA units * k
+  const u=H*k/1.75;c.fillStyle=col;
+  c.beginPath();c.arc(x,y-0.42*u,0.11*u,0,7);c.fill();                       // head
+  c.beginPath();c.moveTo(x-0.24*u,y-0.28*u);c.lineTo(x+0.24*u,y-0.28*u);c.lineTo(x+0.19*u,y+0.36*u);c.lineTo(x-0.19*u,y+0.36*u);c.fill(); // torso
+  c.fillRect(x-0.17*u,y+0.36*u,0.14*u,0.95*u);c.fillRect(x+0.03*u,y+0.36*u,0.14*u,0.95*u);   // legs
+  c.fillRect(x-0.32*u,y-0.26*u,0.09*u,0.6*u);c.fillRect(x+0.23*u,y-0.26*u,0.09*u,0.6*u);     // arms
+}
+function colours(s){
+  const ink=s.mode==='thermal'?'#000':s.mode==='nv'?'#061006':'#0c0c0c';
+  return {ink, lit:s.mode==='nv'?'#0b200b':(s.col||RED)};
+}
+function kindOf(s,e){
+  if(e.k) return e.k;
+  if(s.mode==='emit') return 'lit';
+  if(s.mode==='etched-glow' && ['dot','ring','seg','ellipse','tick'].includes(e.t)) return 'lit';
+  return 'ink';
+}
+function drawReticle(c,s,size,k,cx,cy){
+  const C=colours(s), scale=s.id==='Sight_3xEOTech'?1/s.zoom:1, edge=s.fov*60;
+  const P=(x,y)=>[cx+x*scale*k, cy+y*scale*k], L=v=>Math.max(1, v*scale*k);
+  for(const e of s.els){
+    if(e.t==='ghost'||e.t==='frontpost') continue;
+    const kind=kindOf(s,e); let col=C.ink; if(kind==='glow') col='#d8ffcf';
+    if(kind==='lit'){ if(s.mode==='emit' && !LIT) continue; col=LIT?C.lit:C.ink; }
+    c.save(); c.fillStyle=c.strokeStyle=col;
+    if(kind==='lit'&&LIT&&s.mode!=='nv'){c.shadowColor=col;c.shadowBlur=Math.max(2,size*0.012)}
+    const ex=e.x||0, ey=e.y||0;
+    if(e.t==='dot'){const [x,y]=P(ex,ey);c.beginPath();c.arc(x,y,Math.max(1.6,e.r*scale*k),0,7);c.fill()}
+    else if(e.t==='ring'){const [x,y]=P(ex,ey);c.lineWidth=L(e.w);c.beginPath();c.arc(x,y,e.r*scale*k,0,7);c.stroke()}
+    else if(e.t==='ellipse'){const [x,y]=P(0,0);c.lineWidth=L(e.w);c.beginPath();c.ellipse(x,y,e.rx*scale*k,e.ry*scale*k,0,0,7);c.stroke()}
+    else if(e.t==='seg'){const [x,y]=P(0,0);c.lineWidth=L(e.w);for(let i=0;i<4;i++){const a0=(i*90+e.gap/2-90)*Math.PI/180,a1=((i+1)*90-e.gap/2-90)*Math.PI/180;c.beginPath();c.arc(x,y,e.r*scale*k,a0,a1);c.stroke()}}
+    else if(e.t==='tick'){const a=(e.a-90)*Math.PI/180;const [x0,y0]=P(Math.cos(a)*e.r0,Math.sin(a)*e.r0),[x1,y1]=P(Math.cos(a)*e.r1,Math.sin(a)*e.r1);c.lineWidth=L(e.lw);c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke()}
+    else if(e.t==='line'){const [x0,y0]=P(e.x1,e.y1),[x1,y1]=P(e.x2,e.y2);c.lineWidth=L(e.lw);c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke()}
+    else if(e.t==='path'){c.lineWidth=L(e.lw);c.beginPath();e.pts.forEach(([a,b],i)=>{const [x,y]=P(a,b);i?c.lineTo(x,y):c.moveTo(x,y)});c.stroke()}
+    else if(e.t==='poly'){c.beginPath();e.pts.forEach(([a,b],i)=>{const [x,y]=P(a,b);i?c.lineTo(x,y):c.moveTo(x,y)});c.closePath();c.fill()}
+    else if(e.t==='text'){const [x,y]=P(e.x,e.y);c.font=`600 ${Math.max(8,e.size*scale*k)}px system-ui`;c.textAlign='center';c.fillText(e.s,x,y)}
+    else if(e.t==='cross'){
+      const seg=(a,b,w,dx,dy)=>{const [x0,y0]=P(dx*a,dy*a),[x1,y1]=P(dx*b,dy*b);c.lineWidth=L(w);c.beginPath();c.moveTo(x0,y0);c.lineTo(x1,y1);c.stroke()};
+      for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){ if(e.from>e.gap) seg(e.gap,Math.min(e.from,edge),e.lw,dx,dy); if(e.from<edge) seg(e.from,edge,e.thick,dx,dy); }
+    }
+    c.restore();
+  }
+}
+function winPath(c,s,cx,cy,k){
+  const w=s.win.w*k,h=s.win.h*k,x=cx-w/2,y=cy-h/2,sh=s.win.shape;c.beginPath();
+  if(sh==='round'||sh==='tube'){c.ellipse(cx,cy,w/2,h/2,0,0,7)}
+  else if(sh==='rmr'){c.moveTo(x,y+h*0.32);c.lineTo(x+w*0.18,y);c.lineTo(x+w*0.82,y);c.lineTo(x+w,y+h*0.32);c.lineTo(x+w,y+h);c.lineTo(x,y+h);c.closePath()}
+  else if(sh==='hex'){c.moveTo(x+w*0.12,y);c.lineTo(x+w*0.88,y);c.lineTo(x+w,y+h*0.5);c.lineTo(x+w*0.88,y+h);c.lineTo(x+w*0.12,y+h);c.lineTo(x,y+h*0.5);c.closePath()}
+  else if(sh==='kobra'){c.moveTo(x+w*0.1,y);c.lineTo(x+w*0.9,y);c.lineTo(x+w,y+h);c.lineTo(x,y+h);c.closePath()}
+  else if(sh==='rib'){c.rect(x,y,w,h)}
+  else {const r=sh==='rect'?h*0.06:h*0.18;c.roundRect?c.roundRect(x,y,w,h,r):c.rect(x,y,w,h)}
+}
+function draw(cv,s){
+  const c=cv.getContext('2d'),size=cv.width,k=size/(s.fov*60),cx=size/2,cy=size/2;
+  c.save();c.clearRect(0,0,size,size);
+  if(s.win){ // 1x window sight: both eyes open, housing around the window
+    drawScene(c,s,size,k,cx,cy);
+    c.save();c.fillStyle='rgba(0,0,0,.18)';c.fillRect(0,0,size,size);c.restore();
+    const fw=Math.max(6,(s.win.shape==='tube'?70:45)*k);
+    c.save();c.lineWidth=fw*2;c.strokeStyle='#2a2b2d';winPath(c,s,cx,cy,k);c.stroke();c.lineWidth=2;c.strokeStyle='#4a4c50';winPath(c,s,cx,cy,k);c.stroke();c.restore();
+    c.save();winPath(c,s,cx,cy,k);c.clip();drawScene(c,s,size,k,cx,cy);
+    c.fillStyle=s.col===AMBER?'rgba(255,190,90,.06)':'rgba(120,170,255,.07)';c.fillRect(0,0,size,size); // lens tint
+    drawReticle(c,s,size,k,cx,cy);c.restore();
+  } else if(s.mode==='iron'){
+    drawScene(c,s,size,k,cx,cy);
+    const g=s.els.find(e=>e.t==='ghost'),f=s.els.find(e=>e.t==='frontpost');
+    // front post (sharp, far from the eye)
+    c.fillStyle='#141414';c.fillRect(cx-f.w/2*k,cy,f.w*k,size);c.beginPath();c.arc(cx,cy+f.dot*k*0.9,f.dot*k*0.55,0,7);c.fillStyle=LIT?'#9dff7a':'#ddd';if(LIT){c.shadowColor='#9dff7a';c.shadowBlur=8};c.fill();c.shadowBlur=0;
+    // rear ring (blurred: close to the eye)
+    c.save();c.filter='blur('+Math.max(2,size*0.012)+'px)';c.lineWidth=g.w*k;c.strokeStyle='rgba(20,20,20,.92)';c.beginPath();c.arc(cx,cy,(g.r+g.w/2)*k,0,7);c.stroke();
+    c.lineWidth=size;c.strokeStyle='rgba(15,15,15,.8)';c.beginPath();c.arc(cx,cy,(g.r+g.w)*k+size/2,0,7);c.stroke();c.restore();
+  } else { // magnified: round eyepiece
+    const r=size*0.47;
+    c.fillStyle='#000';c.fillRect(0,0,size,size);
+    c.save();c.beginPath();c.arc(cx,cy,r,0,7);c.clip();
+    drawScene(c,s,size,k,cx,cy);
+    if(s.mode==='nv'){const R=rng(3);for(let i=0;i<size*size/90;i++){c.fillStyle=`rgba(200,255,200,${R()*0.18})`;c.fillRect(R()*size,R()*size,1.5,1.5)}}
+    drawReticle(c,s,size,k,cx,cy);
+    const v=c.createRadialGradient(cx,cy,r*0.72,cx,cy,r);v.addColorStop(0,'rgba(0,0,0,0)');v.addColorStop(1,'rgba(0,0,0,.65)');c.fillStyle=v;c.fillRect(0,0,size,size);
+    c.restore();
+    if(s.mode==='thermal'){c.fillStyle='#ccc';c.font=`${size*0.03}px monospace`;c.fillText('WH  3.0x',size*0.36,size*0.1)}
+  }
+  c.restore();
+  inset(c,s,size);
+}
+function extent(s){let m=0;const z=s.id==='Sight_3xEOTech'?1/s.zoom:1;
+  for(const e of s.els){const ex=Math.abs(e.x||0),ey=Math.abs(e.y||0);let v=0;
+    if(e.t==='dot')v=Math.max(ex,ey)+e.r;else if(e.t==='ring'||e.t==='seg')v=e.r+e.w;else if(e.t==='ellipse')v=e.rx;else if(e.t==='tick')v=e.r1;
+    else if(e.t==='poly'||e.t==='path')v=Math.max(...e.pts.map(p=>Math.min(60,Math.max(Math.abs(p[0]),Math.abs(p[1])))));
+    else if(e.t==='line'){const a=Math.max(Math.abs(e.x1),Math.abs(e.y1),Math.abs(e.x2),Math.abs(e.y2));v=a<80?a:Math.min(Math.abs(e.y1),20)}
+    else if(e.t==='text')v=Math.max(Math.abs(e.x),Math.abs(e.y))+e.size;
+    else if(e.t==='frontpost')v=12;
+    m=Math.max(m,v*z)}
+  return m||10}
+function inset(c,s,size){
+  const half=s.mode==='iron'?70:Math.min(Math.max(extent(s)*1.15,14),s.fov*60/2*0.7), ir=size*0.2, ix=size-ir-size*0.03, iy=ir+size*0.07, k2=ir/half;
+  c.save();c.beginPath();c.arc(ix,iy,ir,0,7);c.clip();
+  drawScene(c,s,size,k2,ix,iy);
+  if(s.mode==='iron'){const f=s.els.find(e=>e.t==='frontpost');c.fillStyle='#141414';c.fillRect(ix-f.w/2*k2,iy,f.w*k2,size);c.beginPath();c.arc(ix,iy+f.dot*k2*0.9,f.dot*k2*0.55,0,7);c.fillStyle=LIT?'#9dff7a':'#ddd';c.fill()}
+  else drawReticle(c,s,size,k2,ix,iy);
+  c.restore();
+  c.save();c.lineWidth=Math.max(2,size*0.006);c.strokeStyle='#e8e2d0';c.beginPath();c.arc(ix,iy,ir,0,7);c.stroke();
+  c.fillStyle='#e8e2d0';c.font=`600 ${size*0.032}px system-ui`;c.textAlign='center';c.fillText('close-up x'+(s.fov*60/2/half).toFixed(0),ix,iy+ir+size*0.035);c.restore();
+}
+const grid=document.getElementById('grid'),cards=[];
+S.forEach(s=>{
+  const st=saved[s.id]=saved[s.id]||{};
+  const el=document.createElement('div');el.className='card';
+  const confTxt={checked:'Checked',known:'Known',guess:'Please check'}[s.conf];
+  el.innerHTML=`<canvas width="560" height="560"></canvas><h3></h3><div class="meta"><span class="tag">${s.kind}</span><span class="tag">${s.zoom}x</span><span class="tag">${s.fov}° field</span><span class="tag ${s.conf}">${confTxt}</span></div><p class="desc"></p>${s.src?'<p class="src"></p>':''}<div class="verdict"><button class="ok" type="button">Looks right</button><button class="bad" type="button">Needs change</button></div><textarea placeholder="What should change?"></textarea>`;
+  el.querySelector('h3').textContent=s.name;el.querySelector('.desc').textContent=s.reticle;if(s.src)el.querySelector('.src').textContent='Source: '+s.src;
+  const cv=el.querySelector('canvas'),ok=el.querySelector('.ok'),bad=el.querySelector('.bad'),ta=el.querySelector('textarea');
+  const sync=()=>{ok.classList.toggle('on',st.v==='ok');bad.classList.toggle('on',st.v==='change');count()};
+  ok.onclick=()=>{st.v=st.v==='ok'?'':'ok';save();sync()};bad.onclick=()=>{st.v=st.v==='change'?'':'change';save();sync()};
+  ta.value=st.note||'';ta.oninput=()=>{st.note=ta.value;save();count()};
+  cv.onclick=()=>{const b=document.getElementById('big');draw(b.querySelector('canvas'),s);b.querySelector('div').textContent=s.name+' ('+s.zoom+'x)';b.classList.add('show')};
+  grid.appendChild(el);cards.push([cv,s]);sync();
+});
+document.getElementById('big').onclick=e=>e.currentTarget.classList.remove('show');
+function redraw(){cards.forEach(([cv,s])=>draw(cv,s))}
+function count(){const v=Object.values(saved);document.getElementById('count').textContent=`${v.filter(x=>x.v==='ok').length} right · ${v.filter(x=>x.v==='change').length} to change · ${S.length} sights`}
+document.getElementById('lit').onclick=e=>{LIT=!LIT;e.currentTarget.classList.toggle('on',LIT);e.currentTarget.textContent=LIT?'Illumination on':'Illumination off';redraw()};
+document.getElementById('copy').onclick=()=>{
+  const lines=['Brita sight pictures review:'];S.forEach(s=>{const st=saved[s.id]||{};if(!st.v&&!st.note)return;lines.push(`${s.name} [${s.id}]: ${st.v==='ok'?'right':st.v==='change'?'CHANGE':'(no verdict)'}${st.note?' - '+st.note.trim():''}`)});
+  if(lines.length===1)lines.push('(nothing marked yet)');
+  const out=document.getElementById('out');out.hidden=false;out.value=lines.join('\n');out.select();
+  try{navigator.clipboard.writeText(out.value);document.getElementById('copy').textContent='Copied'}catch(e){}
+  setTimeout(()=>document.getElementById('copy').textContent='Copy review',1500)};
+redraw();count();
+</script></body></html>

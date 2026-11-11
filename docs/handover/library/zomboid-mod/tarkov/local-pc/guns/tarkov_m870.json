@@ -1,0 +1,473 @@
+{
+ "id": "tarkov_m870",
+ "name": "Remington 870 (kitted)",
+ "anchor": "shotgun",
+ "anchorMesh": "pbr_shotgun",
+ "calibre": "12 gauge",
+ "fp": "operator_tarkov_m870",
+ "sight": "scope_all_eotech_xps3_LOD0",
+ "reticleMoa": 152.4,
+ "tube": [
+  0.4,
+  1.133,
+  1.267,
+  0.8
+ ],
+ "stats": {
+  "magazineSize": 4
+ },
+ "kit": [
+  "sight",
+  "light",
+  "foregrip",
+  "stock"
+ ],
+ "rail": {
+  "light": {
+   "bone": "tactical_all_insight_wmx200_LOD0",
+   "at": [
+    0,
+    -0.0594,
+    0.0172
+   ],
+   "dir": [
+    -0.0418,
+    -0.9991,
+    0.0005
+   ],
+   "third": [
+    -0.0875,
+    -0.0501,
+    0.819
+   ]
+  }
+ },
+ "grip": "foregrip_all_magpul_rvg_LOD0",
+ "guard": "handguard_870_fab_defence_pr870_LOD0",
+ "holds": {
+  "handguard_870_fab_defence_pr870_LOD0": {
+   "palm": [
+    0.04972,
+    0.15546,
+    -0.04316,
+    -0.27583,
+    0.391,
+    -0.69462,
+    0.53715
+   ],
+   "fingers": {
+    "Base HumanLDigit11 1": [
+     0.52094,
+     -0.16468,
+     -0.12179,
+     0.82865
+    ],
+    "Base HumanLDigit12 1": [
+     -0.00805,
+     0.13111,
+     0.04622,
+     0.99026
+    ],
+    "Base HumanLDigit13 1": [
+     0.01316,
+     0.01904,
+     0.06424,
+     0.99767
+    ],
+    "Base HumanLDigit21 1": [
+     -0.06841,
+     0.25701,
+     -0.09087,
+     0.95969
+    ],
+    "Base HumanLDigit22": [
+     -0.00104,
+     0.00111,
+     -0.117,
+     0.99313
+    ],
+    "Base HumanLDigit23": [
+     0.00033,
+     0.00192,
+     -0.28502,
+     0.95852
+    ],
+    "Base HumanLDigit31": [
+     -0.16877,
+     0.2358,
+     -0.24713,
+     0.92458
+    ],
+    "Base HumanLDigit32": [
+     -0.01925,
+     0.06842,
+     -0.3339,
+     0.93992
+    ],
+    "Base HumanLDigit33": [
+     -0.15913,
+     -0.01718,
+     -0.4395,
+     0.88387
+    ],
+    "Base HumanLDigit41": [
+     -0.23993,
+     0.21414,
+     -0.38825,
+     0.86362
+    ],
+    "Base HumanLDigit42": [
+     -0.04528,
+     0.02986,
+     -0.36998,
+     0.92745
+    ],
+    "Base HumanLDigit43": [
+     -0.12734,
+     0.05097,
+     -0.35759,
+     0.92375
+    ],
+    "Base HumanLDigit51": [
+     -0.31003,
+     0.15467,
+     -0.4967,
+     0.79577
+    ],
+    "Base HumanLDigit52": [
+     -0.05157,
+     0.01573,
+     -0.36849,
+     0.92807
+    ],
+    "Base HumanLDigit53 1": [
+     -0.13457,
+     0.02282,
+     -0.15495,
+     0.97845
+    ]
+   }
+  },
+  "foregrip_all_magpul_rvg_LOD0": {
+   "palm": [
+    -0.05183,
+    0.07917,
+    0.0838,
+    0.77571,
+    -0.60413,
+    -0.16574,
+    -0.07635
+   ],
+   "fingers": {
+    "Base HumanLDigit11": [
+     0.52554,
+     -0.25615,
+     -0.26483,
+     0.76685
+    ],
+    "Base HumanLDigit12": [
+     0.22225,
+     0.03853,
+     -0.24075,
+     0.94401
+    ],
+    "Base HumanLDigit13": [
+     -0.07184,
+     -0.0014,
+     -0.508,
+     0.85836
+    ],
+    "Base HumanLDigit21": [
+     0.07968,
+     0.13872,
+     -0.43877,
+     0.88424
+    ],
+    "Base HumanLDigit22": [
+     -3e-05,
+     -5e-05,
+     -0.70459,
+     0.70962
+    ],
+    "Base HumanLDigit23": [
+     -3e-05,
+     9e-05,
+     -0.41755,
+     0.90865
+    ],
+    "Base HumanLDigit31": [
+     -0.02454,
+     0.14843,
+     -0.5113,
+     0.84613
+    ],
+    "Base HumanLDigit32": [
+     -1e-05,
+     0,
+     -0.63742,
+     0.77052
+    ],
+    "Base HumanLDigit33": [
+     0,
+     1e-05,
+     -0.45289,
+     0.89157
+    ],
+    "Base HumanLDigit41": [
+     -0.06957,
+     0.14129,
+     -0.55747,
+     0.81512
+    ],
+    "Base HumanLDigit42": [
+     -1e-05,
+     3e-05,
+     -0.59232,
+     0.8057
+    ],
+    "Base HumanLDigit43": [
+     2e-05,
+     -2e-05,
+     -0.47244,
+     0.88136
+    ],
+    "Base HumanLDigit51": [
+     -0.15091,
+     0.1491,
+     -0.57804,
+     0.78795
+    ],
+    "Base HumanLDigit52": [
+     0,
+     7e-05,
+     -0.57428,
+     0.81866
+    ],
+    "Base HumanLDigit53": [
+     3e-05,
+     -8e-05,
+     -0.33979,
+     0.9405
+    ]
+   }
+  }
+ },
+ "tarkov": {
+  "base": "5a7828548dc32e5a9c28b516",
+  "aimPath": "/mod_mount/mod_scope",
+  "aimIndex": 0,
+  "kit": [
+   {
+    "path": "",
+    "item": "5a7828548dc32e5a9c28b516",
+    "bone": "weapon_remington_model_870_12g_LOD0",
+    "at": [
+     -0.156826,
+     1.413956,
+     -0.033768,
+     -0.707107,
+     0.0,
+     -0.0,
+     0.707107
+    ],
+    "bones": [
+     "weapon_remington_model_870_12g_bolt_LOD0",
+     "feeder_LOD0",
+     "patron_12x70_full_LOD0",
+     "weapon_remington_model_870_12g_LOD0",
+     "trigger_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_barrel",
+    "item": "5a787fdfc5856700142fdd9a",
+    "bone": "barrel_870_vent_rib_barrel_cut_off_325mm_LOD0",
+    "at": [
+     -0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "barrel_870_vent_rib_barrel_cut_off_325mm_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_handguard",
+    "item": "5a788031c585673f2b5c1c79",
+    "bone": "handguard_870_fab_defence_pr870_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "handguard_870_fab_defence_pr870_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_handguard/mod_foregrip",
+    "item": "59fc48e086f77463b1118392",
+    "bone": "foregrip_all_magpul_rvg_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     -0.0,
+     1.0
+    ],
+    "bones": [
+     "foregrip_all_magpul_rvg_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_handguard/mod_tactical_000",
+    "item": "626becf9582c3e319310b837",
+    "bone": "tactical_all_insight_wmx200_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "flashlight_glass",
+     "switch_000_LOD0",
+     "tactical_all_insight_wmx200_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_magazine",
+    "item": "5a7882dcc5856700177af662",
+    "bone": "mag_870_remington_magazie_cap_12g_4_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "mag_870_remington_magazie_cap_12g_4_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_stock",
+    "item": "5ae35b315acfc4001714e8b0",
+    "bone": "stock_870_mesa_leo_stock_adapter_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "stock_870_mesa_leo_stock_adapter_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_stock/mod_stock",
+    "item": "56eabf3bd2720b75698b4569",
+    "bone": "stock_ar15_magpul_moe_carbine_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "stock_ar15_magpul_moe_carbine_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_stock/mod_stock/mod_stock",
+    "item": "58d2912286f7744e27117493",
+    "bone": "stock_ar15_magpul_rubber_butt_pad_LOD0",
+    "at": [
+     3.6e-05,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "stock_ar15_magpul_rubber_butt_pad_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_stock/mod_pistol_grip",
+    "item": "55d4b9964bdc2d1d4e8b456e",
+    "bone": "pistolgrip_ar15_colt_a2_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "pistolgrip_ar15_colt_a2_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_mount",
+    "item": "5a78948ec5856700177b1124",
+    "bone": "mount_870_xs_shot_rail_ghost_ring_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "mount_870_xs_shot_rail_ghost_ring_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_mount/mod_scope",
+    "item": "584924ec24597768f12ae244",
+    "bone": "scope_all_eotech_xps3_LOD0",
+    "at": [
+     -0.0,
+     0.0,
+     -0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "linza",
+     "scope_all_eotech_xps3_LOD0"
+    ]
+   }
+  ]
+ }
+}

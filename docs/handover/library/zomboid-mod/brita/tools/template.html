@@ -1,0 +1,148 @@
+<title>Brita Pilot Sound Board</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a range log. One rack per gun, one row per sound slot, a sticky tally bar with Copy picks. */
+:root{
+  --bg:#eceeea; --panel:#f8f9f6; --fg:#1b1f1a; --muted:#5d6559; --line:#cfd4ca;
+  --olive:#4b5a33; --brass:#9a6b16; --brass-soft:#f1e3c4; --ours:#2f5a6b; --ours-soft:#d9e7ec;
+  --display:"Chakra Petch","Arial Narrow",system-ui,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#151815; --panel:#1d211c; --fg:#e4e8df; --muted:#9aa393; --line:#323a30;
+  --olive:#a9bb84; --brass:#e0ae52; --brass-soft:#3a2f18; --ours:#8cc3d6; --ours-soft:#1c3038; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#151815; --panel:#1d211c; --fg:#e4e8df; --muted:#9aa393; --line:#323a30;
+  --olive:#a9bb84; --brass:#e0ae52; --brass-soft:#3a2f18; --ours:#8cc3d6; --ours-soft:#1c3038; color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.45}
+.wrap{max-width:900px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 120px}
+h1{font-family:var(--display);font-weight:700;font-size:2rem;letter-spacing:.02em;margin:0;text-transform:uppercase;text-wrap:balance}
+.lede{color:var(--muted);max-width:64ch;margin:.5rem 0 0}
+.key{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.chip{font-family:var(--mono);font-size:.78rem;padding:4px 9px;border:1px solid var(--line);border-radius:3px;background:var(--panel);color:var(--muted)}
+.chip i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:6px;vertical-align:0}
+.jump{display:flex;gap:6px;flex-wrap:wrap;margin:20px 0 4px}
+.jump a{font-family:var(--display);font-weight:600;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--olive);text-decoration:none;padding:3px 8px;border:1px solid var(--line);border-radius:3px}
+section{margin-top:28px}
+.rack{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;border-bottom:2px solid var(--fg);padding-bottom:6px}
+.rack h2{font-family:var(--display);font-weight:600;font-size:1.2rem;letter-spacing:.04em;text-transform:uppercase;margin:0}
+.rack h2 small{font-family:var(--mono);font-weight:400;font-size:.8rem;color:var(--muted);letter-spacing:0;text-transform:none;margin-left:8px}
+.cat{font-family:var(--mono);font-size:.78rem;color:var(--muted)}
+.seq{font-family:var(--display);font-weight:600;font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;background:transparent;color:var(--fg);border:1px solid var(--fg);border-radius:4px;padding:5px 10px;cursor:pointer}
+.row{display:grid;grid-template-columns:170px minmax(0,1fr);gap:12px;padding:10px 4px;border-bottom:1px solid var(--line);align-items:start}
+.slot{font-weight:500;padding-top:6px}
+.opts{display:flex;flex-wrap:wrap;gap:8px;min-width:0}
+.opt{display:flex;align-items:stretch;border:1px solid var(--line);border-radius:4px;background:var(--panel);min-width:0;max-width:100%}
+.opt.on{border-color:var(--brass);background:var(--brass-soft)}
+.opt.o.on{border-color:var(--ours);background:var(--ours-soft)}
+.play{border:0;background:transparent;color:var(--fg);cursor:pointer;padding:6px 10px;display:flex;align-items:center;gap:8px;font:inherit;min-width:0;text-align:left}
+.play svg{flex:none;width:12px;height:12px;fill:currentColor}
+.play.playing svg{fill:var(--brass)}
+.nm{font-family:var(--mono);font-size:.8rem;overflow-wrap:anywhere}
+.src{font-size:.72rem;color:var(--muted);display:block;font-family:var(--body)}
+.opt.o .src{color:var(--ours)}
+.pick{border:0;border-left:1px solid var(--line);background:transparent;color:var(--muted);cursor:pointer;padding:0 10px;font-family:var(--display);font-weight:600;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase}
+.opt.on .pick{color:var(--fg)}
+button:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+.note{color:var(--muted);font-size:.9rem;max-width:64ch;margin-top:10px}
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--fg);color:var(--bg);padding-bottom:env(safe-area-inset-bottom,0px);z-index:5}
+.bar .in{max-width:900px;margin:0 auto;display:flex;gap:12px;align-items:center;justify-content:space-between;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:12px}
+.bar .sum{font-family:var(--mono);font-size:.85rem;min-width:0}
+.bar button{font-family:var(--display);font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:.9rem;background:var(--brass);color:#1b1f1a;border:0;border-radius:4px;padding:10px 16px;cursor:pointer;white-space:nowrap}
+#out{display:block;width:100%;margin-top:18px;min-height:160px;font-family:var(--mono);font-size:.8rem;padding:10px;border:1px solid var(--line);border-radius:4px;background:var(--panel);color:var(--fg)}
+@media (max-width:560px){.row{grid-template-columns:1fr;gap:6px}.slot{padding-top:0}}
+</style>
+
+<div class="wrap">
+  <h1>Brita pilot sound board</h1>
+  <p class="lede">Every sound the 14 pilot guns can use, side by side with what our guns play now. Tap a sound to hear it, press Pick on the one you want for each slot, then Copy picks and paste the list back to me. Play sequence fires three shots and runs the reload with whatever is picked. Some Arsenal shots have echo slaps baked in that sound like a burst; the ones marked (single) keep the first hit and fade the echo out smoothly.</p>
+  <div class="key">
+    <span class="chip"><i style="background:var(--brass)"></i>Brita or Arsenal sound</span>
+    <span class="chip"><i style="background:var(--ours)"></i>ZomboidCraft now</span>
+    <span class="chip">Shots come from Arsenal's per-calibre set, the one Brita's guns use in Zomboid</span>
+  </div>
+  <p class="note">Zomboid's own vanilla reload sounds (the ones most of these guns borrow there) are locked inside its sound banks, so they aren't on this board. If you want those as a third choice, I'd need one short Remote Control run on your PC to unpack them.</p>
+  <nav class="jump" id="jump"></nav>
+  <div id="racks"></div>
+  <section id="g-extra">
+    <div class="rack"><h2>Attachment sounds<small>shared by every gun</small></h2></div>
+    <div id="extra"></div>
+  </section>
+  <textarea id="out" readonly hidden aria-label="Your picks"></textarea>
+</div>
+<div class="bar"><div class="in">
+  <span class="sum" id="sum"></span>
+  <button id="copy" type="button">Copy picks</button>
+</div></div>
+
+<script>
+const DATA = __DATA__;
+const KEY='brita-pilot-sound-picks';
+let picks={}; try{picks=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(picks))}catch(e){}};
+// v2 put a one-shot fix at the top of some shot slots: keep earlier picks pointing at the same sound.
+try{if(!localStorage.getItem(KEY+'-v2')){DATA.guns.forEach(g=>g.slots.forEach(sl=>{const k=g.name+' / '+sl.slot;if(k in picks&&sl.opts[0]&&sl.opts[0].from==='Arsenal, one-shot fix')picks[k]+=1}));localStorage.setItem(KEY+'-v2','1');save()}}catch(e){}
+const ICON='<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1l9 5-9 5z"/></svg>';
+let cur=null, curBtn=null;
+function stop(){if(cur){cur.pause();cur.currentTime=0} if(curBtn)curBtn.classList.remove('playing'); cur=null;curBtn=null}
+function play(src,btn){stop(); const a=new Audio(src); cur=a; curBtn=btn; if(btn)btn.classList.add('playing'); a.onended=()=>{if(btn)btn.classList.remove('playing')}; a.play().catch(()=>{}); return a}
+function playOnce(src){return new Promise(res=>{const a=new Audio(src);a.onended=res;a.onerror=res;a.play().catch(res)})}
+const slug=s=>s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+function rowFor(key,slot,host){
+  const row=document.createElement('div'); row.className='row';
+  row.innerHTML=`<div class="slot"></div><div class="opts"></div>`;
+  row.querySelector('.slot').textContent=slot.slot;
+  const opts=row.querySelector('.opts');
+  if(!(key in picks)) picks[key]=0;
+  slot.opts.forEach((o,i)=>{
+    const d=document.createElement('div'); d.className='opt'+(o.from==='ZomboidCraft now'?' o':'');
+    d.innerHTML=`<button class="play" type="button">${ICON}<span><span class="nm"></span><span class="src"></span></span></button><button class="pick" type="button">Pick</button>`;
+    d.querySelector('.nm').textContent=o.name; d.querySelector('.src').textContent=o.from;
+    d.querySelector('.play').setAttribute('aria-label','Play '+o.name);
+    d.querySelector('.play').addEventListener('click',e=>play(o.src,e.currentTarget));
+    d.querySelector('.pick').addEventListener('click',()=>{picks[key]=i;save();sync(opts,key);refresh()});
+    opts.appendChild(d);
+  });
+  sync(opts,key); host.appendChild(row);
+}
+function sync(opts,key){[...opts.children].forEach((c,i)=>{const on=picks[key]===i;c.classList.toggle('on',on);c.querySelector('.pick').textContent=on?'Picked':'Pick';c.querySelector('.pick').setAttribute('aria-pressed',on)})}
+const racks=document.getElementById('racks'), jump=document.getElementById('jump');
+DATA.guns.forEach(g=>{
+  const id='g-'+slug(g.name);
+  const a=document.createElement('a');a.href='#'+id;a.textContent=g.name;jump.appendChild(a);
+  const s=document.createElement('section'); s.id=id;
+  s.innerHTML=`<div class="rack"><h2></h2><span style="display:flex;gap:10px;align-items:center"><span class="cat"></span><button class="seq" type="button">Play sequence</button></span></div><div class="rows"></div>`;
+  s.querySelector('h2').innerHTML=''; s.querySelector('h2').append(g.name); const sm=document.createElement('small');sm.textContent=g.cal;s.querySelector('h2').appendChild(sm);
+  s.querySelector('.cat').textContent=g.cat;
+  const rows=s.querySelector('.rows');
+  g.slots.forEach(sl=>rowFor(g.name+' / '+sl.slot,sl,rows));
+  s.querySelector('.seq').addEventListener('click',async e=>{
+    stop(); const b=e.currentTarget; b.disabled=true; b.textContent='Playing…';
+    const get=n=>{const sl=g.slots.find(x=>x.slot===n);return sl&&sl.opts[picks[g.name+' / '+n]]};
+    const shot=get('Shot');
+    if(shot){for(let i=0;i<3;i++){new Audio(shot.src).play().catch(()=>{}); await new Promise(r=>setTimeout(r,g.cat==='Heavy'||g.cat==='Machine guns'?140:420))} await new Promise(r=>setTimeout(r,900))}
+    for(const sl of g.slots){ if(/shot|blast/i.test(sl.slot)) continue; const o=sl.opts[picks[g.name+' / '+sl.slot]]; if(o) await playOnce(o.src) }
+    b.disabled=false; b.textContent='Play sequence';
+  });
+  racks.appendChild(s);
+});
+const ex=document.createElement('a');ex.href='#g-extra';ex.textContent='Attachments';jump.appendChild(ex);
+DATA.extra.forEach(sl=>rowFor('Attachments / '+sl.slot,sl,document.getElementById('extra')));
+function refresh(){
+  const total=Object.keys(picks).length;
+  const ours=Object.entries(picks).filter(([k,i])=>{const [gn,sn]=k.split(' / ');const g=gn==='Attachments'?{slots:DATA.extra}:DATA.guns.find(x=>x.name===gn);const sl=g&&g.slots.find(x=>x.slot===sn);return sl&&sl.opts[i]&&sl.opts[i].from==='ZomboidCraft now'}).length;
+  document.getElementById('sum').textContent=`${total} slots · ${total-ours} Brita/Arsenal · ${ours} ours`;
+}
+document.getElementById('copy').addEventListener('click',()=>{
+  const lines=['Brita pilot sound picks:'];
+  DATA.guns.forEach(g=>{lines.push(g.name+': '+g.slots.map(sl=>{const o=sl.opts[picks[g.name+' / '+sl.slot]];return sl.slot+'='+(o?o.name+(o.from==='ZomboidCraft now'?' (ours)':''):'none')}).join('; '))});
+  lines.push('Attachments: '+DATA.extra.map(sl=>{const o=sl.opts[picks['Attachments / '+sl.slot]];return sl.slot+'='+(o?o.name:'none')}).join('; '));
+  const t=lines.join('\n'), out=document.getElementById('out'), b=document.getElementById('copy');
+  out.value=t; out.hidden=false;
+  const show=()=>{out.focus();out.select();b.textContent='Select and copy below'};
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(()=>{b.textContent='Copied';setTimeout(()=>b.textContent='Copy picks',1600)}).catch(show)} else show();
+});
+refresh();
+</script>

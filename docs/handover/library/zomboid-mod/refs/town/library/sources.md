@@ -1,0 +1,11 @@
+# town/library
+
+Reference photos from Wikimedia Commons (1024 px thumbnails). Free licences only; CC BY / CC BY-SA need credit if ever redistributed. Photos are reference only, not shipped in the mod.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-carnegie-library-bayliss-california.jpg | [Carnegie Library Bayliss California.jpg](https://commons.wikimedia.org/wiki/File:Carnegie_Library_Bayliss_California.jpg) | Papershellpecan | CC BY-SA 4.0 | The library, financed by Andrew Carnegie, is in Bayliss, California, at the junction of County Road 39 and County Road W, and is only open o |
+| 02-carnegie-library-in-dunfermline-fife-scotland-8659191570.jpg | [Carnegie Library in Dunfermline Fife Scotland (8659191570).jpg](https://commons.wikimedia.org/wiki/File:Carnegie_Library_in_Dunfermline_Fife_Scotland_(8659191570).jpg) | Dave Conner from Inverness, Scotland | CC BY 2.0 | 1,000 views on 1st December 2013 The inscription above the door says it all - Andrew Carnegie had his mum lay the memorial stone. Bet she wa |
+| 03-entrance-portico-looking-northwest-gilroy-free-public-librar.jpg | [ENTRANCE PORTICO, LOOKING NORTHWEST - Gilroy Free Public Library, 195 ](https://commons.wikimedia.org/wiki/File:ENTRANCE_PORTICO,_LOOKING_NORTHWEST_-_Gilroy_Free_Public_Library,_195_Fifth_Street,_Gilroy,_Santa_Clara_County,_CA_HABS_CAL,43-GIL,3-3.tif) | Related names:  Weeks, William H | Public domain |  |
+| 04-library-of-congress-interior-book-stack-lccn2005681088.jpg | [Library of Congress. Interior. Book stack LCCN2005681088.jpg](https://commons.wikimedia.org/wiki/File:Library_of_Congress._Interior._Book_stack_LCCN2005681088.jpg) | Miscellaneous Items in High Demand, PPOC, Library of Congress | Public domain | Title: Library of Congress. Interior. Book stack Abstract/medium: 1 photographic print. |
+| 05-interior-stack-house-providence-public-library-l-bodwell-lcc.jpg | [Interior, Stack House-Providence Public Library - L. Bodwell. LCCN2007](https://commons.wikimedia.org/wiki/File:Interior,_Stack_House-Providence_Public_Library_-_L._Bodwell._LCCN2007684761.jpg) | Bodwell, L., photographer | Public domain | Title: Interior, Stack House-Providence Public Library / L. Bodwell. Abstract/medium: 1 photographic print. |

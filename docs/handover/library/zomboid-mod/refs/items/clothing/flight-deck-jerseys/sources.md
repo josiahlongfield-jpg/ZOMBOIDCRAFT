@@ -1,0 +1,9 @@
+# items/clothing/flight-deck-jerseys
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-crew-members-aboard-the-aircraft-carrier-uss-midway-cv-41-wa.jpg | [Crew members aboard the aircraft carrier USS MIDWAY (CV-41) watch from](https://commons.wikimedia.org/wiki/File:Crew_members_aboard_the_aircraft_carrier_USS_MIDWAY_(CV-41)_watch_from_the_flight_deck_as_the_battleship_USS_NEW_JERSEY_(BB-62)_comes_alongside_the_carrier_-_DPLA_-_3d5386ec9d1b6a70b0acb1b32503b804.jpeg) | Department of Defense. American Forces Information Service. Defense Visual Infor | Public domain | The original finding aid described this photograph as: Country: Pacific Ocean(POC) Scene Camera Operator: Unknown Release Status: Released t |
+| 02-coloured-flight-deck-jerseys.jpg | [Coloured flight deck jerseys.jpg](https://commons.wikimedia.org/wiki/File:Coloured_flight_deck_jerseys.jpg) | Photographer's Mate 3rd Class Mark J. Rebilas , USN | Public domain | Gulf of Alaska, 8 June 2004: Admiral Thomas B. Fargo, Commander, U.S. Pacific Command is rendered honors by "rainbow sideboys" on the flight |
+| 03-aircraft-handlers-standby-as-the-e-2-hawkeye-from-vaw-123-sc.jpg | [Aircraft handlers standby as the E-2 Hawkeye, from VAW-123, "screwtops](https://commons.wikimedia.org/wiki/File:Aircraft_handlers_standby_as_the_E-2_Hawkeye,_from_VAW-123,_%22screwtops,%22_makes_its_final_preparations_before_it_is_catapulted_off_the_USS_Theodore_Roosevelt_(CVN-71)._Personnel_in_g_-_DPLA_-_d9ee3c9249c6a62382c4df494448cf87.jpeg) | Department of Defense. American Forces Information Service. Defense Visual Infor | Public domain | The original finding aid described this photograph as: Base: Cvn-71 Country: Atlantic Ocean (AOC) Scene Camera Operator: PHAN Angela Virnig, |

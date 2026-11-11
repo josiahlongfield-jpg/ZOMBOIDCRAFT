@@ -1,0 +1,22 @@
+<!doctype html><html><body style="margin:0;background:#1a1c20"><div id="view" style="width:600px;height:700px"></div>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+<script type="module">
+// Same pose as tpose.html with feet=0 (arms out, heels kept), so the pieces land in the Mixamo bind space of woman.zsk.
+// Out: every mesh, posed, with its original skin (bone names + weights), for adding pieces Mixamo never saw.
+import {load} from './app.js';
+const b64=a=>{ const u=new Uint8Array(a.buffer,a.byteOffset,a.byteLength); let s=''; for(let i=0;i<u.length;i+=32768) s+=String.fromCharCode.apply(null,u.subarray(i,i+32768)); return btoa(s); };
+const A=await load(document.getElementById('view')); window.A=A; const T=A.THREE;
+A.reset();
+for(const [s,sx] of [['l',1],['r',-1]]){ A.aim('upperarm_'+s,'lowerarm_'+s,[sx,0,0]); A.aim('lowerarm_'+s,'hand_'+s,[sx,0,0]);
+  const mid='middle_01_'+s; if(A.B[mid]!==undefined) A.aim('hand_'+s,mid,[sx,0,0]); }
+A.onFrame=null;
+const v=new T.Vector3(); let minY=1e9; const parts=[];
+for(const k in A.meshes){ const m=A.meshes[k]; m.updateMatrixWorld(true); const g=m.geometry,n=g.attributes.position.count,P=new Float32Array(n*3);
+  for(let i=0;i<n;i++){ m.getVertexPosition(i,v); v.applyMatrix4(m.matrixWorld); P.set([v.x,v.y,v.z],i*3); if(k==='body'||k==='shoes') minY=Math.min(minY,v.y);} parts.push([k,m,P]); }
+const out={minY,meshes:[]};
+for(const [k,m,P] of parts){ const g=m.geometry,n=P.length/3; for(let i=0;i<n;i++) P[i*3+1]-=minY;
+  const SI=g.attributes.skinIndex.array, SW=g.attributes.skinWeight.array, names=m.skeleton.bones.map(b=>b.name);
+  out.meshes.push({name:k,mat:m.material.name,n,pos:b64(P),uv:b64(new Float32Array(g.attributes.uv.array)),ix:b64(new Uint32Array(g.index.array)),
+    si:b64(new Uint16Array(SI)),sw:b64(new Float32Array(SW)),bones:names}); }
+window.OUT=JSON.stringify(out); window.DONE=1;
+</script></body></html>

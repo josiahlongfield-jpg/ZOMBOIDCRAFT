@@ -1,0 +1,12 @@
+# industry/bessemer-converter
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-bessemer-process-dmk.jpg | [Bessemer process DMK.jpg](https://commons.wikimedia.org/wiki/File:Bessemer_process_DMK.jpg) | Unknown authorUnknown author | Public domain | Bessemer process DMK (Dniprodzerzhynsk) |
+| 02-bessemer-converter-blowing.jpg | [Bessemer converter Blowing.jpg](https://commons.wikimedia.org/wiki/File:Bessemer_converter_Blowing.jpg) | Borvan53 | Public domain | Bessemer converter blowing |
+| 03-bessemer-converter-l-ngshyttan.jpg | [Bessemer converter Långshyttan.jpg](https://commons.wikimedia.org/wiki/File:Bessemer_converter_L%C3%A5ngshyttan.jpg) | Calle Eklund/V-wolf | CC BY-SA 3.0 | Bessemer converter, Långshyttan, Sweden |
+| 04-southwest-view-of-basic-oxygen-furnace-no-2-on-the-operating.jpg | [SOUTHWEST VIEW OF BASIC OXYGEN FURNACE No. 2 ON THE OPERATING FLOOR OF](https://commons.wikimedia.org/wiki/File:SOUTHWEST_VIEW_OF_BASIC_OXYGEN_FURNACE_No._2_ON_THE_OPERATING_FLOOR_OF_THE_FURNACE_AISLE_IN_THE_BOP_SHOP_-_U.S._Steel_Duquesne_Works,_Basic_Oxygen_Steelmaking_Plant,_Along_HAER_PA,2-DUQU,3B-12.tif) | Stupich, Martin, creator | Public domain | U.S. Steel Corporation; USX Corporation; Dorr-Oliver Company; Pecor [furnace manufacturer]; Wilson-Snyder; Allis-Chalmers; American Air Filt |
+| 05-western-view-of-inverted-basic-oxygen-furnace-no-2-on-the-op.jpg | [WESTERN VIEW OF INVERTED BASIC OXYGEN FURNACE No. 2 ON THE OPERATING F](https://commons.wikimedia.org/wiki/File:WESTERN_VIEW_OF_INVERTED_BASIC_OXYGEN_FURNACE_No._2_ON_THE_OPERATING_FLOOR_OF_THE_FURNACE_AISLE_IN_THE_BOP_SHOP._-_U.S._Steel_Duquesne_Works,_Basic_Oxygen_Steelmaking_Plant,_Along_HAER_PA,2-DUQU,3B-13.tif) | Stupich, Martin, creator | Public domain | U.S. Steel Corporation; USX Corporation; Dorr-Oliver Company; Pecor [furnace manufacturer]; Wilson-Snyder; Allis-Chalmers; American Air Filt |
+| 06-western-view-of-inverted-basic-oxygen-furnace-no-2-on-the-gr.jpg | [WESTERN VIEW OF INVERTED BASIC OXYGEN FURNACE No. 2 ON THE GROUND FLOO](https://commons.wikimedia.org/wiki/File:WESTERN_VIEW_OF_INVERTED_BASIC_OXYGEN_FURNACE_No._2_ON_THE_GROUND_FLOOR_OF_THE_FURNACE_AISLE_IN_THE_BOP_SHOP._-_U.S._Steel_Duquesne_Works,_Basic_Oxygen_Steelmaking_Plant,_Along_HAER_PA,2-DUQU,3B-15.tif) | Stupich, Martin, creator | Public domain | U.S. Steel Corporation; USX Corporation; Dorr-Oliver Company; Pecor [furnace manufacturer]; Wilson-Snyder; Allis-Chalmers; American Air Filt |

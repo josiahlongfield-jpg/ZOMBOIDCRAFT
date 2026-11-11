@@ -1,0 +1,10 @@
+# items/medical/forward_surgical_case
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 02-lithuanian-military-medical-service-welcomes-us-medical-prof.jpg | [Lithuanian Military Medical Service welcomes US medical professionals ](https://commons.wikimedia.org/wiki/File:Lithuanian_Military_Medical_Service_welcomes_US_medical_professionals_to_share_critical_knowledge_(7457505).jpg) | U.S. Army photo by Sgt. April Benson | Public domain | U.S. Army Sgt. 1st Class Elena Chung observes Lithuanian tactical field care on a simulated casualty with a chest and leg injury in Kaunas,  |
+| 03-mcguire-surgical-kit-unveiling-f3252fc8-b262-4cd2-b66c-52356.jpg | [McGuire Surgical Kit Unveiling (f3252fc8-b262-4cd2-b66c-5235640eb5a2).](https://commons.wikimedia.org/wiki/File:McGuire_Surgical_Kit_Unveiling_(f3252fc8-b262-4cd2-b66c-5235640eb5a2).jpg) | Mary O'Neill | Public domain | Surgical tools on display. Event unveiling of the medical kit the belonged to Dr. Hunter McGuire. It is believed to be the surgical kit Dr.  |
+| 04-mcguire-surgical-kit-unveiling-76addfc4-2208-4b27-8748-3215b.jpg | [McGuire Surgical Kit Unveiling (76addfc4-2208-4b27-8748-3215bc2984bd).](https://commons.wikimedia.org/wiki/File:McGuire_Surgical_Kit_Unveiling_(76addfc4-2208-4b27-8748-3215bc2984bd).jpg) | Mary O'Neill | Public domain | A girl taking a picture of a woman standing next to an exhibit case. Event unveiling of the medical kit the belonged to Dr. Hunter McGuire.  |
+| 05-mcguire-surgical-kit-unveiling-f74c8828-9d47-44e9-a2c3-21c08.jpg | [McGuire Surgical Kit Unveiling (f74c8828-9d47-44e9-a2c3-21c08b8cf7bb).](https://commons.wikimedia.org/wiki/File:McGuire_Surgical_Kit_Unveiling_(f74c8828-9d47-44e9-a2c3-21c08b8cf7bb).jpg) | Mary O'Neill | Public domain | A Park Ranger speaking in front of a group of people in a visitor center. Event unveiling of the medical kit the belonged to Dr. Hunter McGu |

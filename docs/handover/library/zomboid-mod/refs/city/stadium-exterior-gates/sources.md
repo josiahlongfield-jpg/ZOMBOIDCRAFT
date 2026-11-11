@@ -1,0 +1,16 @@
+# city/stadium-exterior-gates
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-petrovskiy-football-stadium-in-spb.jpg | [Petrovskiy football stadium in SPB.jpg](https://commons.wikimedia.org/wiki/File:Petrovskiy_football_stadium_in_SPB.jpg) | Florstein (Telegram:WikiPhoto.Space) | CC BY-SA 4.0 | Petrovskiy football stadium in Saint Petersburg |
+| 02-exterior-of-akita-municipal-yabase-football-stadium-20190814.jpg | [Exterior of Akita Municipal Yabase Football Stadium 20190814.jpg](https://commons.wikimedia.org/wiki/File:Exterior_of_Akita_Municipal_Yabase_Football_Stadium_20190814.jpg) | 掬茶 | CC BY 4.0 | 秋田市八橋運動公園球技場 |
+| 03-exterior-of-akita-municipal-yabase-football-stadium-20190114.jpg | [Exterior of Akita Municipal Yabase Football Stadium 20190114.jpg](https://commons.wikimedia.org/wiki/File:Exterior_of_Akita_Municipal_Yabase_Football_Stadium_20190114.jpg) | 掬茶 | CC BY-SA 4.0 | 秋田市八橋運動公園球技場（あきぎんスタジアム）施設外観 |
+| 04-turnstiles-to-the-lansdown-stand-at-ashton-gate-geograph-org.jpg | [Turnstiles to the Lansdown Stand at Ashton Gate - geograph.org.uk - 75](https://commons.wikimedia.org/wiki/File:Turnstiles_to_the_Lansdown_Stand_at_Ashton_Gate_-_geograph.org.uk_-_7570043.jpg) | Steve Daniels | CC BY-SA 2.0 | Turnstiles to the Lansdown Stand at Ashton Gate |
+| 05-hung-ria-stra-e-stadion-tor-02-barna-viktor-2021-j-zsefv-ros.jpg | [Hungária Straße Stadion, Tor 02 'Barna Viktor' 2021 Józsefváros.jpg](https://commons.wikimedia.org/wiki/File:Hung%C3%A1ria_Stra%C3%9Fe_Stadion,_Tor_02_%27Barna_Viktor%27_2021_J%C3%B3zsefv%C3%A1ros.jpg) | Globetrotter19 | CC BY-SA 3.0 | Hidegkuti Nándor Stadion (other names: New Hidegkuti Nándor Stadion, Hungária Boulvard Stadion, MTK /Budapest FC/ Stadion) Barna Viktor (Vik |
+| 06-hung-ria-stra-e-stadion-tor-01-weisz-rich-rd-2021-j-zsefv-ro.jpg | [Hungária Straße Stadion, Tor 01 'Weisz Richárd' 2021 Józsefváros.jpg](https://commons.wikimedia.org/wiki/File:Hung%C3%A1ria_Stra%C3%9Fe_Stadion,_Tor_01_%27Weisz_Rich%C3%A1rd%27_2021_J%C3%B3zsefv%C3%A1ros.jpg) | Globetrotter19 | CC BY-SA 3.0 | Hidegkuti Nándor Stadion (other names: New Hidegkuti Nándor Stadion, Hungária Boulvard Stadion, MTK /Budapest FC/ Stadion) Weisz Richárd (Ri |
+| 07-ticket-windows-hinchcliff-stadium.jpg | [Ticket Windows - Hinchcliff Stadium.jpg](https://commons.wikimedia.org/wiki/File:Ticket_Windows_-_Hinchcliff_Stadium.jpg) | Frank Lazar | CC BY-SA 4.0 | Ticket windows Hinchcliffe stadium,  interior growth of trees and growth in background |
+| 08-e37-perth-stadium-open-day-019.jpg | [E37 Perth Stadium Open Day 019.JPG](https://commons.wikimedia.org/wiki/File:E37_Perth_Stadium_Open_Day_019.JPG) | Evad37 | CC0 | Perth Stadium open day.  Ticket windows near eastern entrance. |
+| 09-northeast-delta-dental-stadium-entrance.png | [Northeast Delta Dental Stadium - entrance.png](https://commons.wikimedia.org/wiki/File:Northeast_Delta_Dental_Stadium_-_entrance.png) | Waz8 | CC0 | Main entrance and ticket windows at Northeast Delta Dental Stadium |
+| 10-car-park-whirley-gig.jpg | [Car park whirley-gig.JPG](https://commons.wikimedia.org/wiki/File:Car_park_whirley-gig.JPG) | Robert Lawton | CC BY-SA 2.5 | Busch Stadium Multi-storey car park Whirley-gig. |

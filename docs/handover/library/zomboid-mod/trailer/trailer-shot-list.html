@@ -1,0 +1,311 @@
+<title>ZomboidCraft Trailer Plan</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one dark kit-screen column, a timeline strip on top, then shot cards in running order */
+:root {
+  --bg: #0b0c0e; --glass: rgba(12,13,15,.96); --edge: rgba(232,228,218,.18);
+  --text: #e8e4da; --bright: #f2efe8; --dim: rgba(232,228,218,.68); --faint: rgba(232,228,218,.30);
+  --good: #8fc46a; --bad: #d0675e; --warn: #d9a33a; --gold: #e0c25e; --rare: #7faedb;
+  --display: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --body: "Barlow", "Segoe UI", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+  color-scheme: dark;
+}
+body { background: var(--bg); color: var(--text); font: 15px/1.55 var(--body); }
+.wrap { max-width: 960px; margin: 0 auto; padding-block: 40px 80px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1 { font: 700 clamp(34px, 6vw, 56px)/1 var(--display); text-transform: uppercase; letter-spacing: .06em; color: var(--bright); margin: 0 0 10px; text-wrap: balance; }
+.lede { color: var(--dim); max-width: 64ch; margin: 0 0 28px; }
+h2 { display: flex; align-items: center; gap: 14px; font: 600 15px var(--display); letter-spacing: .22em; text-transform: uppercase; color: var(--gold); margin: 44px 0 16px; }
+h2::after { content: ""; flex: 1; height: 1px; background: var(--edge); }
+.meta { display: flex; flex-wrap: wrap; gap: 8px 22px; font: 500 13px var(--display); letter-spacing: .14em; text-transform: uppercase; color: var(--dim); margin-bottom: 26px; }
+.meta b { color: var(--bright); font-weight: 600; }
+code, .cmd { font-family: var(--mono); font-size: 12.5px; }
+.cmd { display: block; background: rgba(232,228,218,.05); border: 1px solid var(--edge); padding: 7px 10px; color: var(--bright); white-space: pre-wrap; word-break: break-word; }
+.cmds { display: grid; gap: 4px; }
+/* timeline */
+.timeline { overflow-x: auto; }
+.bar { display: flex; min-width: 640px; height: 46px; border: 1px solid var(--edge); }
+.bar div { display: flex; align-items: flex-end; padding: 4px 6px; font: 600 11px var(--display); letter-spacing: .1em; text-transform: uppercase; color: var(--bg); border-right: 1px solid var(--bg); overflow: hidden; white-space: nowrap; }
+.a1 { background: #c9c0ad; } .a2 { background: #a8bc6e; } .a3 { background: #7faedb; } .a4 { background: #d0675e; } .a5 { background: #e2b84c; }
+.ticks { display: flex; justify-content: space-between; min-width: 640px; font: 12px var(--mono); color: var(--faint); margin-top: 4px; }
+/* shots */
+.shots { display: grid; gap: 14px; }
+.shot { background: var(--glass); border: 1px solid var(--edge); display: grid; grid-template-columns: 92px 1fr; }
+.shot .time { border-right: 1px solid var(--edge); padding: 14px 10px; font: 600 13px var(--mono); color: var(--bright); display: flex; flex-direction: column; gap: 6px; }
+.shot .time span { font: 600 11px var(--display); letter-spacing: .14em; text-transform: uppercase; color: var(--faint); }
+.shot .main { padding: 14px 16px; min-width: 0; display: grid; gap: 10px; }
+.shot h3 { margin: 0; font: 600 21px/1.15 var(--display); letter-spacing: .05em; text-transform: uppercase; color: var(--bright); }
+.shot h3 small { font: 600 12px var(--display); letter-spacing: .16em; color: var(--dim); margin-left: 8px; }
+.shot p { margin: 0; max-width: 72ch; }
+.row { display: grid; grid-template-columns: 84px 1fr; gap: 10px; align-items: start; }
+.row > span { font: 600 11px/1.9 var(--display); letter-spacing: .16em; text-transform: uppercase; color: var(--faint); }
+.row > div { min-width: 0; }
+.card-title { color: var(--gold); font: 600 15px var(--display); letter-spacing: .12em; text-transform: uppercase; }
+.band { height: 3px; }
+.tag { display: inline-block; font: 600 11px var(--display); letter-spacing: .14em; text-transform: uppercase; padding: 1px 6px; border: 1px solid var(--edge); color: var(--dim); }
+.tag.warn { color: var(--warn); border-color: rgba(217,163,58,.5); }
+/* reference table */
+.tbl { overflow-x: auto; border: 1px solid var(--edge); }
+table { border-collapse: collapse; width: 100%; min-width: 620px; }
+th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--edge); vertical-align: top; }
+th { font: 600 12px var(--display); letter-spacing: .16em; text-transform: uppercase; color: var(--faint); }
+td:first-child { white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+ul.list { margin: 0; padding-left: 18px; display: grid; gap: 6px; max-width: 72ch; }
+.grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+.box { background: var(--glass); border: 1px solid var(--edge); padding: 14px 16px; min-width: 0; }
+.box h4 { margin: 0 0 8px; font: 600 14px var(--display); letter-spacing: .16em; text-transform: uppercase; color: var(--bright); }
+@media (max-width: 560px) {
+  .shot { grid-template-columns: 1fr; }
+  .shot .time { border-right: 0; border-bottom: 1px solid var(--edge); flex-direction: row; align-items: baseline; gap: 12px; }
+  .row { grid-template-columns: 1fr; gap: 2px; }
+}
+</style>
+
+<div class="wrap">
+  <h1>ZomboidCraft trailer</h1>
+  <p class="lede">A 75-second teaser built from what is in the playtest jar today. It starts quiet and lonely in the endless night, builds through looting and the first kill, then lets everything loose: the horde, limbs coming off, jets overhead and a last stand on the street. Each shot lists the exact setup commands, where to film it and how to move the camera.</p>
+  <div class="meta"><span>Length <b>1:15</b></span><span>Shots <b>13</b></span><span>Record <b>1440p · 60 fps</b></span><span>Tools <b>OBS or ShadowPlay + Replay Mod</b></span></div>
+
+  <h2>Running order</h2>
+  <div class="timeline">
+    <div class="bar">
+      <div class="a1" style="flex:14">Cold open</div>
+      <div class="a2" style="flex:16">Survive</div>
+      <div class="a3" style="flex:15">First blood</div>
+      <div class="a4" style="flex:22">Everything at once</div>
+      <div class="a5" style="flex:8">Title</div>
+    </div>
+    <div class="ticks"><span>0:00</span><span>0:14</span><span>0:30</span><span>0:45</span><span>1:07</span><span>1:15</span></div>
+  </div>
+
+  <h2>Before you film</h2>
+  <div class="grid2">
+    <div class="box">
+      <h4>Every session</h4>
+      <ul class="list">
+        <li>Use a world with cheats on (all <code>/zc</code> commands need them) on the newest playtest jar.</li>
+        <li>Photon on, with Mie fog turned up a little so the mod's fog shows. Render distance 16 or more for the wide shots.</li>
+        <li>Run <code>/zc cinematic</code>. The HUD and green dots go but the gun stays in your hands, zombies stop noticing you, and you can't be hurt. Chat still shows while you type.</li>
+        <li>Turn the in-game music slider to zero (you'll add your own track) and keep the other sounds up.</li>
+        <li>Press F1 only for shots with no hands at all, such as Replay Mod fly-throughs and empty streets.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Recording</h4>
+      <ul class="list">
+        <li><b>Handheld shots</b> (looting, shooting, the last stand): record live with OBS at 1440p60, CQP 18 to 20, or ShadowPlay at its highest bitrate.</li>
+        <li><b>Sweeping shots</b> (city, horde, Glass Line, carrier): start a Replay Mod recording, play the moment out, then in the replay editor place keyframes and render the camera path at 60 fps.</li>
+        <li>Shoot every shot 3 or 4 times and pick the best take. Aim for 10 s of footage for every 3 s you'll use.</li>
+        <li>Let 2 s run before and after the action so the cuts have room.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>Shot list</h2>
+  <div class="shots">
+
+    <article class="shot">
+      <div class="time">0:00<span>4 s</span></div>
+      <div class="main">
+        <h3>The siren <small>Black screen</small></h3>
+        <p>Black screen. A far-off air-raid siren rises out of the rain. Fade up on the next shot as it peaks.</p>
+        <div class="row"><span>Setup</span><div class="cmds"><code class="cmd">/zc cinematic weather downpour
+/zc event siren</code></div></div>
+        <div class="row"><span>Capture</span><div>Record audio only, standing anywhere outside. Use 4 s of the siren, from the first moment it is clearly audible.</div></div>
+      </div>
+    </article>
+
+    <article class="shot">
+      <div class="time">0:04<span>6 s</span></div>
+      <div class="main">
+        <h3>Grayhaven skyline <small>Replay Mod fly-in</small></h3>
+        <p>A slow push toward the island's towers across the dark water, with scattered neon and lit windows through the rain. Lightning lights up the whole skyline once.</p>
+        <div class="row"><span>Setup</span><div class="cmds"><code class="cmd">/zc goto downtown
+/zc cinematic time midnight
+/zc cinematic weather thunderstorm
+/zc cinematic fly 0.01</code></div></div>
+        <div class="row"><span>Camera</span><div>Fly out over the river arm, 30 to 40 blocks up, facing the towers. Record 60 s of Replay so a flash lands in it, then set two keyframes about 80 blocks apart and render a 6 s straight push in. Hide the hands (F1).</div></div>
+      </div>
+    </article>
+
+    <article class="shot">
+      <div class="time">0:10<span>4 s</span></div>
+      <div class="main">
+        <h3>Waking up <small>Handheld</small></h3>
+        <p>Inside a dim ground-floor room. The camera turns slowly from a boarded window to the door. The title card <i>"The county fell in one night."</i> fades in over it.</p>
+        <div class="row"><span>Setup</span><div class="cmds"><code class="cmd">/zc wakeup
+/zc cinematic smooth on</code></div></div>
+        <div class="row"><span>Capture</span><div>Pick a town in the spawn picker. Look around slowly with the eased mouse on. You only need one steady turn.</div></div>
+      </div>
+    </article>
+
+    <article class="shot">
+      <div class="time">0:14<span>5 s</span></div>
+      <div class="main">
+        <h3>Empty street at night <small>Handheld walk</small></h3>
+        <p>Walking out onto the main street with low ground mist, rain glinting under shop signs, a dead lamp flickering, and two zombies shambling far off.</p>
+        <div class="row"><span>Setup</span><div class="cmds"><code class="cmd">/zc goto town
+/zc cinematic weather rain
+/zc cinematic time night</code></div></div>
+        <div class="row"><span>Capture</span><div>Walk straight down the middle of the road, slowly, with a melee weapon held low. Leave <code>/zc cinematic smooth on</code> running.</div></div>
+      </div>
+    </article>
+
+    <article class="shot">
+      <div class="time">0:19<span>6 s</span></div>
+      <div class="main">
+        <h3>Looting by torchlight <small>Handheld</small></h3>
+        <p>A dark back room, lit only by a gun's torch beam. The beam sweeps across clutter and then lands on a rifle case. Cut on the case opening.</p>
+        <div class="row"><span>Setup</span><div class="cmds"><code class="cmd">/zc cinematic time midnight
+/give @s zomboidcraft:assault_rifle
+/give @s zomboidcraft:weapon_light</code></div></div>
+        <div class="row"><span>Capture</span><div>Fit the light to the rifle in the kit screen (I). Find a shop stockroom or a tower flat with no lights on, then press L for the torch. Move the beam slowly. Most of the frame should stay dark.</div></div>
+      </div>
+    </article>
+
+    <article class="shot">
+      <div class="time">0:25<span>5 s</span></div>
+      <div class="main">
+        <h3>Something in the doorway <small>Handheld</small></h3>
+        <p>The torch swings to a doorway and a zombie is standing right there, frozen. The beam holds on it for one beat. Then hard cut to black.</p>
+        <div class="row"><span>Setup</span><div class="cmds"><code class="cmd">/zc zombie office
+/zc cinematic zombies freeze</code></div></div>
+        <div class="row"><span>Capture</span><div>Spawn it, walk it into the doorway with <code>/zc cinematic zombies normal</code>, then freeze it once it's in place. Line up the shot, then sweep the torch onto it.</div></div>
+      </div>
+    </article>
+
+    <article class="shot">
+      <div class="time">0:30<span>5 s</span></div>
+      <div class="main">
+        <h3>First blood <small>Handheld, aiming down sights</small></h3>
+        <p>On the sights, a lone zombie walks at the camera. One shot takes its leg off at the knee, it stumbles and hops on, and a second shot drops it.</p>
+        <div class="row"><span>Setup</span><div class="cmds"><code class="cmd">/zc cinematic zombies normal
+/zc zombie police walker</code></div></div>
+        <div class="row"><span>Capture</span><div>Use the bolt-action hunting rifle or the revolver, since slow guns read better on camera than automatics. Aim at the knee for the hop. Take several runs.</div></div>
+      </div>
+    </article>
+
+    <article class="shot">
+      <div class="time">0:35<span>4 s</span></div>
+      <div class="main">
+        <h3>Limbs <small>Quick cuts, 1 s each</small></h3>
+        <p>Four quick hits: an arm flying off, a head burst, a legless crawler dragging itself forward, a body falling the way the shot went.</p>
+        <div class="row"><span>Setup</span><div class="cmds"><code class="cmd">/zc zombie hoodie legless
+/zc zombie nurse holed
+/zc zombie soldier hopper</code></div></div>
+        <div class="row"><span>Capture</span><div>A shotgun (the sawn-off or the double-barrel) at close range sends limbs flying furthest. The pump-in and shell eject make good sound cuts too.</div></div>
+      </div>
+    </article>
+
+    <article class="shot">
+      <div class="time">0:39<span>6 s</span></div>
+      <div class="main">
+        <h3>The Glass Line <small>Replay Mod tracking</small></h3>
+        <p>The camera glides alongside the shuttle through the glass tube on the harbour floor, with dark water above, the sunken freighter sliding past and a beam of light on the hull.</p>
+        <div class="row"><span>Setup</span><div class="cmds"><code class="cmd">/zc station glass_mercy
+/zc cinematic time midnight</code></div></div>
+        <div class="row"><span>Camera</span><div>Ride the shuttle from Mercy toward Eastside Quay while Replay records. In the editor, put the camera outside the tube in the water, level with the train, and track it with keyframes. The freighter wreck is past the S-bend.</div></div>
+      </div>
+    </article>
+
+    <article class="shot">
+      <div class="time">0:45<span>7 s</span></div>
+      <div class="main">
+        <h3>The horde comes up the street <small>Replay Mod, low and wide</small></h3>
+        <p>The biggest shot. A street packed kerb to kerb with the dead, all pouring toward the camera through rain and mist. Low angle, slow pull back.</p>
+        <div class="row"><span>Setup</span><div class="cmds"><code class="cmd">/zc goto downtown
+/zc cinematic weather downpour
+/zc cinematic horde 120 40
+/zc cinematic lure 96</code></div></div>
+        <div class="row"><span>Camera</span><div>Stand in the middle of a long straight street, facing down it. Zombies ignore you in cinematic mode, so they flood past and around you. Replay the moment and pull a camera backwards just above head height as they come. <code>/zc perf</code> shows the FPS cost; drop to 80 if Replay stutters.</div></div>
+        <div class="row"><span>Note</span><div><span class="tag warn">FPS</span> 120 zombies is heavy. Replay renders offline, so the final video stays smooth even if the game doesn't.</div></div>
+      </div>
+    </article>
+
+    <article class="shot">
+      <div class="time">0:52<span>4 s</span></div>
+      <div class="main">
+        <h3>Jets overhead <small>Handheld, looking up</small></h3>
+        <p>On the street among the horde, the camera tilts up as a pair of jets rips over the rooftops in the rain, sound arriving with the Doppler roar.</p>
+        <div class="row"><span>Setup</span><div class="cmds"><code class="cmd">/zc event jet</code></div></div>
+        <div class="row"><span>Capture</span><div>Flybys pass overhead about 10 s after the command. A third of jet events bring wingmen, so run it a few times until a pair comes over. <code>/zc event heli</code> gives a helicopter instead.</div></div>
+      </div>
+    </article>
+
+    <article class="shot">
+      <div class="time">0:56<span>11 s</span></div>
+      <div class="main">
+        <h3>Last stand <small>Handheld, the climax</small></h3>
+        <p>Back to the player on a street corner, laser on, firing full auto into the crowd as it closes in. Fast cuts between the muzzle, bodies falling and the crowd getting closer. The final cut is a zombie lunging into the lens.</p>
+        <div class="row"><span>Setup</span><div class="cmds"><code class="cmd">/zc cinematic zombies normal
+/zc cinematic horde 60 24
+/zc cinematic time midnight</code></div></div>
+        <div class="row"><span>Capture</span><div>Assault rifle or SMG on full auto (X), laser on (J). Ghost mode is off here so they really go for you. You can get hurt, so keep <code>/zc heal</code> ready between takes (creative won't work, because zombies ignore creative players). For the lunge, let one get right up close and stop recording on the hit.</div></div>
+      </div>
+    </article>
+
+    <article class="shot">
+      <div class="time">1:07<span>8 s</span></div>
+      <div class="main">
+        <h3>Title <small>Card over a still</small></h3>
+        <p>Silence, then rain only. The word ZOMBOIDCRAFT over a slow push on the empty, rain-soaked street from shot 4, with bodies now lying everywhere. Under it, the last card: <i>"This is how you died."</i></p>
+        <div class="row"><span>Capture</span><div>Go back to the last stand spot afterwards with <code>/zc cinematic zombies freeze</code> and F1 for a calm frame of the corpses. Replay Mod push, 8 s.</div></div>
+      </div>
+    </article>
+  </div>
+
+  <h2>Title cards</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Time</th><th>Card</th><th>Over</th></tr></thead>
+    <tbody>
+      <tr><td>0:10</td><td>The county fell in one night.</td><td>Waking up</td></tr>
+      <tr><td>0:22</td><td>Scavenge.</td><td>Torchlight looting</td></tr>
+      <tr><td>0:33</td><td>Fight.</td><td>First blood</td></tr>
+      <tr><td>0:47</td><td>There are thousands of them.</td><td>The horde</td></tr>
+      <tr><td>1:07</td><td>ZOMBOIDCRAFT</td><td>Title shot</td></tr>
+      <tr><td>1:11</td><td>This is how you died.</td><td>Title shot</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>/zc cinematic</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td><code>/zc cinematic</code></td><td>Clean HUD with the gun still in hand, no green dots, zombies ignore you, you can't be hurt.</td></tr>
+      <tr><td><code>/zc cinematic off</code></td><td>Puts everything back: HUD, zombies, weather, clock and flying speed.</td></tr>
+      <tr><td><code>/zc cinematic hud clean|full</code></td><td>Hide or show the HUD and dots on their own.</td></tr>
+      <tr><td><code>/zc cinematic zombies ghost|freeze|normal</code></td><td>Zombies ignore you (they still come to gunshots), every zombie stands still mid-step, or back to normal.</td></tr>
+      <tr><td><code>/zc cinematic horde [count] [distance]</code></td><td>Spawns a horde up ahead where you're looking (default 40 at 28 blocks) and sends it your way.</td></tr>
+      <tr><td><code>/zc cinematic lure [radius]</code></td><td>Every zombie in range (default 64) walks to you.</td></tr>
+      <tr><td><code>/zc cinematic time dusk|night|midnight|dawn|day|free</code></td><td>Sets the clock and holds it there. <code>free</code> lets it run.</td></tr>
+      <tr><td><code>/zc cinematic weather &lt;kind&gt;|free</code></td><td>Sets the weather and holds it: drizzle, rain, downpour, fog, gale, storm, thunderstorm, severe_storm.</td></tr>
+      <tr><td><code>/zc cinematic fly [speed|normal]</code></td><td>Lets you fly even in survival, slowly (0.015 by default; normal is 0.05) for steady camera moves.</td></tr>
+      <tr><td><code>/zc cinematic smooth on|off</code></td><td>Eased mouse look for smooth handheld pans.</td></tr>
+      <tr><td><code>/zc cinematic help</code></td><td>Lists these in chat.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>Editing</h2>
+  <div class="grid2">
+    <div class="box">
+      <h4>Cut</h4>
+      <ul class="list">
+        <li>DaVinci Resolve (free). Put a 1440p 60 fps timeline down and export at 1440p for YouTube; it gets the better bitrate.</li>
+        <li>Keep the opening slow with long shots. From 0:45 on, cut every 1 to 2 s, on the beat.</li>
+        <li>Drop all sound to silence for one beat right before the title. That moment of silence hits harder than any sound effect.</li>
+        <li>A light teal-and-amber grade suits the neon and wet streets. Don't brighten it: the darkness is the look.</li>
+      </ul>
+    </div>
+    <div class="box">
+      <h4>Sound</h4>
+      <ul class="list">
+        <li>Keep the game's own rain, gunshots and horde groans under the music. They sell it more than the track does.</li>
+        <li>Music: a slow, low drone that builds into a heavy hit at 0:45. Royalty-free sources: YouTube Audio Library, Pixabay Music, or the free tier on Uppbeat.</li>
+        <li>Credit the music in the video description if its licence asks for it.</li>
+      </ul>
+    </div>
+  </div>
+</div>

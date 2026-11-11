@@ -1,0 +1,2054 @@
+<title>Harvestman</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap">
+<style>
+/* Layout: one dark kit-screen column; the stage on top, the controls as key caps under it, then the two forms side by side. */
+:root {
+  --bg: #0b0c0e;
+  --glass: rgba(12, 13, 15, .96);
+  --edge: rgba(232, 228, 218, .18);
+  --edge-strong: rgba(232, 228, 218, .34);
+  --text: #e8e4da;
+  --bright: #f2efe8;
+  --dim: rgba(232, 228, 218, .68);
+  --faint: rgba(232, 228, 218, .30);
+  --bad: #d0675e;
+  --warn: #d9a33a;
+  --gold: #e0c25e;
+  --display: "Barlow Condensed", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --body: "Barlow", "Segoe UI", system-ui, sans-serif;
+  color-scheme: dark;
+}
+html, body { background: var(--bg); color: var(--text); }
+body { font-family: var(--body); font-size: 15px; line-height: 1.5; }
+.wrap { max-width: 1120px; margin: 0 auto; padding-block: 20px 40px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: grid; gap: 18px; }
+.eyebrow { font-family: var(--display); font-weight: 600; letter-spacing: .22em; text-transform: uppercase; font-size: 12px; color: var(--dim); }
+h1 { font-family: var(--display); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; font-size: clamp(34px, 6vw, 52px); line-height: 1; margin: 4px 0 8px; color: var(--bright); text-wrap: balance; }
+.lead { margin: 0; max-width: 64ch; color: var(--dim); }
+.stage { position: relative; border: 1px solid var(--edge); background: #050506; aspect-ratio: 16 / 9; width: 100%; max-width: 100%; overflow: hidden; touch-action: none; cursor: grab; }
+.stage:active { cursor: grabbing; }
+.stage canvas { display: block; width: 100%; height: 100%; }
+.tag { position: absolute; font-family: var(--display); font-weight: 600; letter-spacing: .18em; text-transform: uppercase; font-size: 12px; padding: 3px 8px; background: rgba(5, 5, 6, .72); border: 1px solid var(--edge); color: var(--text); pointer-events: none; white-space: nowrap; }
+.tag.left { left: 10px; top: 10px; }
+.tag.right { right: 10px; top: 10px; }
+.hint { position: absolute; left: 10px; bottom: 8px; font-size: 12px; color: var(--faint); pointer-events: none; }
+.nogl { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; padding: 24px; color: var(--dim); }
+.controls { display: flex; flex-wrap: wrap; gap: 14px 24px; align-items: center; }
+.group { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.group > span { font-family: var(--display); font-weight: 600; letter-spacing: .18em; text-transform: uppercase; font-size: 12px; color: var(--faint); min-width: 52px; }
+.seg { display: flex; border: 1px solid var(--edge); }
+.seg button { font: 600 13px/1 var(--display); letter-spacing: .14em; text-transform: uppercase; color: var(--dim); background: transparent; border: 0; padding: 9px 12px; cursor: pointer; }
+.seg button + button { border-left: 1px solid var(--edge); }
+.seg button[aria-pressed="true"] { background: var(--text); color: var(--bg); }
+.seg button:focus-visible, .toggle:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.toggle { font: 600 13px/1 var(--display); letter-spacing: .14em; text-transform: uppercase; color: var(--dim); background: transparent; border: 1px solid var(--edge); padding: 9px 12px; cursor: pointer; }
+.toggle[aria-pressed="true"] { border-color: var(--edge-strong); color: var(--bright); }
+.section { display: flex; align-items: center; gap: 12px; font-family: var(--display); font-weight: 600; letter-spacing: .2em; text-transform: uppercase; font-size: 13px; color: var(--dim); margin-top: 6px; }
+.section::after { content: ""; flex: 1; height: 1px; background: var(--edge); }
+.forms { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+.card { background: var(--glass); border: 1px solid var(--edge); display: grid; min-width: 0; }
+.card header { padding: 10px 14px; display: flex; justify-content: space-between; align-items: baseline; gap: 10px; border-bottom: 1px solid var(--edge); }
+.card h2 { margin: 0; font-family: var(--display); font-weight: 700; letter-spacing: .14em; text-transform: uppercase; font-size: 20px; color: var(--bright); }
+.card .band { font-family: var(--display); font-weight: 600; letter-spacing: .16em; text-transform: uppercase; font-size: 11px; padding: 2px 7px; }
+.band.hunt { background: #6e2626; color: #f2efe8; }
+.band.feed { background: #b08d3e; color: #1d1b16; }
+.card .body { padding: 12px 14px 14px; display: grid; gap: 10px; }
+.stats { display: flex; gap: 18px; flex-wrap: wrap; font-variant-numeric: tabular-nums; }
+.stat b { display: block; font-family: var(--display); font-weight: 700; font-size: 24px; color: var(--bright); letter-spacing: .04em; line-height: 1.1; }
+.stat small { font-family: var(--display); letter-spacing: .16em; text-transform: uppercase; font-size: 11px; color: var(--faint); }
+.card ul { margin: 0; padding-left: 18px; color: var(--dim); display: grid; gap: 4px; }
+.card li::marker { color: var(--faint); }
+.note { font-size: 13px; color: var(--faint); margin: 0; max-width: 72ch; }
+@media (max-width: 640px) {
+  .stage { aspect-ratio: 1 / 1; }
+  .group > span { min-width: 0; width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) { .seg button { transition: none; } }
+.mind { border: 1px solid var(--edge); border-top: 0; background: var(--glass); padding: 12px 14px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 220px); gap: 10px 20px; align-items: start; }
+.mind[hidden], .group[hidden] { display: none; }
+.mind .now small { display: block; font-family: var(--display); font-weight: 600; letter-spacing: .18em; text-transform: uppercase; font-size: 11px; color: var(--faint); }
+.mind .now b { display: block; font-family: var(--display); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; font-size: 18px; color: var(--bright); margin: 2px 0 2px; }
+.mind .now p { margin: 0; color: var(--dim); font-size: 14px; }
+.needs { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 5px 10px; align-items: center; font-size: 12px; color: var(--dim); }
+.needs .bar { height: 6px; background: rgba(232, 228, 218, .1); }
+.needs .bar i { display: block; height: 100%; width: 0; background: var(--dim); transition: width .3s; }
+.needs .bar i[data-need="hunger"] { background: var(--bad); }
+.needs .bar i[data-need="wary"] { background: var(--warn); }
+@media (max-width: 560px) { .mind { grid-template-columns: minmax(0, 1fr); } }
+</style>
+
+<div class="wrap">
+  <div>
+    <div class="eyebrow">ZomboidCraft · creature preview</div>
+    <h1>Harvestman</h1>
+    <p class="lead">Round 6, from your armoured render, in near-black armour with a bronze tint. From the front the body is a downward arrowhead: long creased blade plates sweep out of a centre keel, jagged spines crown the back, and a beard of shards hangs under the point. A row of blade spines runs along the spine from head to tail, small at the head, tallest mid-back, small again at the tail. Feeding, its scythes go in through the victim's back and out of its chest and drag it up to the mouth, where the beard covers the top of its head, and every red line glows. Each leg has a third joint, an ankle; press Creep to see them move. Press <b>Test room</b> to let it loose in a room: it climbs, hides, drags the body and decides everything for itself, and a tap anywhere in the room makes a noise it can hear.</p>
+  </div>
+
+  <div class="stage" id="stage">
+    <canvas id="view" aria-label="3D view of the Harvestman"></canvas>
+    <div class="tag left" id="tagL">Hunting</div>
+    <div class="tag right" id="tagR">Feeding</div>
+    <div class="hint" id="hint">Drag to turn · scroll or pinch to zoom</div>
+  </div>
+  <div class="mind" id="mind" hidden aria-live="polite">
+    <div class="now"><small>What it's doing</small><b id="mind-act">Looking around</b><p id="mind-why">It has only just come in.</p></div>
+    <div class="needs">
+      <span>Hungry</span><div class="bar"><i data-need="hunger"></i></div>
+      <span>Restless</span><div class="bar"><i data-need="restless"></i></div>
+      <span>Curious</span><div class="bar"><i data-need="curious"></i></div>
+      <span>Wary</span><div class="bar"><i data-need="wary"></i></div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <div class="group"><span>Show</span>
+      <div class="seg" role="group" aria-label="Show">
+        <button id="v-hunt" data-view="hunt" aria-pressed="true">Hunting</button>
+        <button id="v-feed" data-view="feed" aria-pressed="false">Feeding</button>
+        <button id="v-both" data-view="both" aria-pressed="false">Both</button>
+        <button id="v-room" data-view="room" aria-pressed="false">Test room</button>
+      </div>
+    </div>
+    <div class="group" id="roombar" hidden><span>Room</span>
+      <button class="toggle" id="t-follow" aria-pressed="false">Follow it</button>
+      <button class="toggle" id="t-reset">Start over</button>
+    </div>
+    <div class="group"><span>Angle</span>
+      <div class="seg" role="group" aria-label="Angle">
+        <button id="a-q" data-angle="q" aria-pressed="true">¾</button>
+        <button id="a-side" data-angle="side" aria-pressed="false">Side</button>
+        <button id="a-front" data-angle="front" aria-pressed="false">Front</button>
+      </div>
+    </div>
+    <div class="group"><span>Motion</span>
+      <div class="seg" role="group" aria-label="Motion">
+        <button id="m-still" data-motion="still" aria-pressed="false">Still</button>
+        <button id="m-idle" data-motion="idle" aria-pressed="true">Idle</button>
+        <button id="m-walk" data-motion="walk" aria-pressed="false">Creep</button>
+      </div>
+    </div>
+    <div class="group"><span>Light</span>
+      <div class="seg" role="group" aria-label="Light">
+        <button id="l-studio" data-light="studio" aria-pressed="true">Studio</button>
+        <button id="l-torch" data-light="torch" aria-pressed="false">Torch</button>
+      </div>
+      <button class="toggle" id="t-player" aria-pressed="true">Player for scale</button>
+    </div>
+  </div>
+
+  <div class="section">The two forms</div>
+  <div class="forms">
+    <article class="card">
+      <header><h2>Hunting</h2><span class="band hunt">After you</span></header>
+      <div class="body">
+        <div class="stats">
+          <div class="stat"><b id="h-tall">–</b><small>Tall</small></div>
+          <div class="stat"><b id="h-span">–</b><small>Leg span</small></div>
+          <div class="stat"><b id="h-body">–</b><small>Belly off the floor</small></div>
+        </div>
+        <ul>
+          <li>A sleek dart of a body in near-black, bronze-tinted armour: long creased blade plates in a herringbone off a centre keel with a thin red seam, jagged spines crowning the back, a row of blade spines along the spine (small at the head, tallest mid-back, small at the tail) and a beard of shards under the point.</li>
+          <li>Four long armoured legs with three joints each: a thigh up to a capped cog knee high above the body, a shin down to a cog ankle, then a long shingled point. Overlapping blade plates cover every segment.</li>
+          <li>No visible head: the armoured front is its face, closing to a point under the front.</li>
+          <li>Two small scythe arms folded under the head like a mantis's, and red sinew and black cables looping out to the legs.</li>
+        </ul>
+      </div>
+    </article>
+    <article class="card">
+      <header><h2>Feeding</h2><span class="band feed">Gorging</span></header>
+      <div class="body">
+        <div class="stats">
+          <div class="stat"><b id="f-tall">–</b><small>Tall</small></div>
+          <div class="stat"><b id="f-span">–</b><small>Leg span</small></div>
+          <div class="stat"><b id="f-body">–</b><small>Belly off the floor</small></div>
+        </div>
+        <ul>
+          <li>The victim hangs with its back to it, dragged up until its head is right under the point; the beard of shards only drops far enough to cover the top half of its head.</li>
+          <li>The scythe arms do the dragging: the same folded shape, closed up tight, the blades driven in through the victim's back and out of its chest, points down.</li>
+          <li>Every red line, in the legs, the seams and the gaps between the plates, glows and pulses while it feeds.</li>
+          <li>What it leaves behind is a shrivelled grey husk.</li>
+        </ul>
+      </div>
+    </article>
+  </div>
+  <p class="note">Preview only. Sizes are in blocks, and the player is there for scale. Once you're happy with the look, the in-game model and its hit shapes are built from this, the same way as the detailed jets.</p>
+</div>
+
+<script>
+(() => {
+'use strict';
+// ---------------------------------------------------------------- vectors and rotations
+const add = (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
+const sub = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+const mul = (a, s) => [a[0] * s, a[1] * s, a[2] * s];
+const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+const len = a => Math.hypot(a[0], a[1], a[2]);
+const norm = a => { const l = len(a) || 1; return [a[0] / l, a[1] / l, a[2] / l]; };
+const lerp = (a, b, t) => a + (b - a) * t;
+const lerp3 = (a, b, t) => [lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2], b[2], t)];
+const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+const smooth = x => { x = clamp(x, 0, 1); return x * x * (3 - 2 * x); };
+const TAU = Math.PI * 2, Y = [0, 1, 0];
+// 3x3 rotations, row-major; R = Ry(yaw) * Rx(pitch) * Rz(roll)
+const m3mul = (a, b) => { const r = []; for (let i = 0; i < 3; i++) { r[i] = []; for (let j = 0; j < 3; j++) r[i][j] = a[i][0] * b[0][j] + a[i][1] * b[1][j] + a[i][2] * b[2][j]; } return r; };
+const rx = a => { const c = Math.cos(a), s = Math.sin(a); return [[1, 0, 0], [0, c, -s], [0, s, c]]; };
+const ry = a => { const c = Math.cos(a), s = Math.sin(a); return [[c, 0, s], [0, 1, 0], [-s, 0, c]]; };
+const rz = a => { const c = Math.cos(a), s = Math.sin(a); return [[c, -s, 0], [s, c, 0], [0, 0, 1]]; };
+const rot = (yaw, pitch = 0, roll = 0) => m3mul(m3mul(ry(yaw), rx(pitch)), rz(roll));
+const ap = (R, v) => [R[0][0] * v[0] + R[0][1] * v[1] + R[0][2] * v[2], R[1][0] * v[0] + R[1][1] * v[1] + R[1][2] * v[2], R[2][0] * v[0] + R[2][1] * v[1] + R[2][2] * v[2]];
+const cols = (a, b, c) => [[a[0], b[0], c[0]], [a[1], b[1], c[1]], [a[2], b[2], c[2]]];
+const I3 = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
+// a frame: origin + rotation
+const frame = (o, R) => ({ o, R });
+const at = (f, p) => add(f.o, ap(f.R, p));
+const child = (f, p, R) => frame(at(f, p), m3mul(f.R, R));
+const hash = n => { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
+const h3 = (i, j, k) => hash(i * 157.31 + j * 113.97 + k * 271.13);
+function vnoise(x, y, z) {
+  const i = Math.floor(x), j = Math.floor(y), k = Math.floor(z), fx = x - i, fy = y - j, fz = z - k;
+  const u = fx * fx * (3 - 2 * fx), v = fy * fy * (3 - 2 * fy), w = fz * fz * (3 - 2 * fz);
+  return lerp(lerp(lerp(h3(i, j, k), h3(i + 1, j, k), u), lerp(h3(i, j + 1, k), h3(i + 1, j + 1, k), u), v),
+              lerp(lerp(h3(i, j, k + 1), h3(i + 1, j, k + 1), u), lerp(h3(i, j + 1, k + 1), h3(i + 1, j + 1, k + 1), u), v), w);
+}
+const quad = (a, c, b, n) => { const r = []; for (let k = 0; k <= n; k++) { const t = k / n, s = 1 - t; r.push(add(add(mul(a, s * s), mul(c, 2 * s * t)), mul(b, t * t))); } return r; };
+const cubic = (a, b, c, d, n) => { const r = []; for (let k = 0; k <= n; k++) { const t = k / n, s = 1 - t; r.push(add(add(mul(a, s * s * s), mul(b, 3 * s * s * t)), add(mul(c, 3 * s * t * t), mul(d, t * t * t)))); } return r; };
+
+// ---------------------------------------------------------------- materials: colour, metal, roughness, pattern (its fraction varies it), glow
+const MAT = {
+  plate:  { c: [0.12, 0.12, 0.12], metal: 0.85, rough: 0.5, pat: 1, glow: 0 },
+  band:   { c: [0.12, 0.12, 0.12], metal: 0.88, rough: 0.42, pat: 1, glow: 0 },
+  scale:  { c: [0.11, 0.11, 0.11], metal: 0.9, rough: 0.36, pat: 2, glow: 0 },
+  redline:{ c: [0.62, 0.05, 0.04], metal: 0.00, rough: 0.30, pat: 3, glow: 0.07 },
+  hollow: { c: [0.02, 0.006, 0.004], metal: 0.0, rough: 0.6, pat: 0, glow: 0 },
+  steel:  { c: [0.15, 0.15, 0.15], metal: 0.92, rough: 0.33, pat: 2, glow: 0 },
+  dark:   { c: [0.1, 0.1, 0.1], metal: 0.88, rough: 0.42, pat: 2, glow: 0 },
+  chrome: { c: [0.2, 0.2, 0.2], metal: 1.00, rough: 0.12, pat: 0, glow: 0 },
+  sinew:  { c: [0.58, 0.06, 0.05], metal: 0.00, rough: 0.30, pat: 3, glow: 0.10 },
+  sinewD: { c: [0.26, 0.035, 0.03], metal: 0.00, rough: 0.36, pat: 3, glow: 0.05 },
+  core:   { c: [0.15, 0.025, 0.02], metal: 0.00, rough: 0.4, pat: 3, glow: 0.035 },
+  cable:  { c: [0.055, 0.055, 0.055], metal: 0.00, rough: 0.36, pat: 5, glow: 0 },
+  head:   { c: [0.9, 0.4, 0.1], metal: 0.0, rough: 0.5, pat: 4, glow: 1.15 },
+  tooth:  { c: [0.9, 0.5, 0.15], metal: 0.0, rough: 0.4, pat: 4, glow: 0.9 },
+  eye:    { c: [1.00, 0.10, 0.07], metal: 0.00, rough: 0.30, pat: 9, glow: 9 },
+  lens:   { c: [0.08, 0.015, 0.012], metal: 0.30, rough: 0.08, pat: 0, glow: 0.3 },
+  maw:    { c: [0.55, 0.06, 0.05], metal: 0.00, rough: 0.28, pat: 3, glow: 0.22 },
+  skin:   { c: [0.56, 0.57, 0.52], metal: 0.00, rough: 0.62, pat: 8, glow: 0 },
+  shirt:  { c: [0.33, 0.34, 0.37], metal: 0.00, rough: 0.85, pat: 6.6, glow: 0 },
+  jeans:  { c: [0.22, 0.27, 0.38], metal: 0.00, rough: 0.85, pat: 6.1, glow: 0 },
+  shoe:   { c: [0.13, 0.11, 0.10], metal: 0.00, rough: 0.55, pat: 0, glow: 0 },
+  mouth:  { c: [0.10, 0.02, 0.02], metal: 0.00, rough: 0.40, pat: 0, glow: 0 },
+  floor:  { c: [0.17, 0.17, 0.18], metal: 0.00, rough: 0.60, pat: 7, glow: 0 },
+  pShirt: { c: [0.30, 0.33, 0.27], metal: 0.00, rough: 0.90, pat: 6.05, glow: 0 },
+  pPants: { c: [0.2, 0.22, 0.32], metal: 0.00, rough: 0.90, pat: 6.05, glow: 0 },
+  pSkin:  { c: [0.78, 0.58, 0.45], metal: 0.00, rough: 0.80, pat: 0, glow: 0 },
+  pHair:  { c: [0.22, 0.15, 0.09], metal: 0.00, rough: 0.80, pat: 0, glow: 0 },
+};
+const tint = (m, k, pat) => ({ ...m, c: mul(m.c, k), pat: pat == null ? m.pat : pat });
+
+// ---------------------------------------------------------------- meshes: smooth surfaces with a material on every vertex
+// vertex: position, normal, colour, metal, rough, pattern, glow, ao, edge wear
+const VS = 15;
+class Mesh {
+  constructor() { this.chunks = []; this.mat = MAT.plate; this.xf = null; this.scale = 1; this.start(); }
+  start() { this.v = []; this.ix = []; this.chunks.push({ v: this.v, ix: this.ix }); }
+  room(n) { if (this.v.length / VS + n > 65000) this.start(); return this.v.length / VS; }
+  vert(p, n, ao = 1, edge = 0) {
+    if (this.scale !== 1) p = mul(p, this.scale);
+    if (this.xf) { p = at(this.xf, p); n = ap(this.xf.R, n); }
+    const m = this.mat;
+    this.v.push(p[0], p[1], p[2], n[0], n[1], n[2], m.c[0], m.c[1], m.c[2], m.metal, m.rough, m.pat, m.glow, ao, edge);
+  }
+}
+// a grid surface f(u, v, i, j) -> point; normals from the grid unless o.n gives them; wrap joins u round, wrapV joins v round
+function grid(m, nu, nv, f, o = {}) {
+  const wu = !!o.wrap, wv = !!o.wrapV, cu = wu ? nu : nu + 1, cv = wv ? nv : nv + 1, P = new Array(cu * cv);
+  for (let j = 0; j < cv; j++) for (let i = 0; i < cu; i++) P[j * cu + i] = f(i / nu, j / nv, i, j);
+  const id = (i, j) => (wv ? ((j % cv) + cv) % cv : clamp(j, 0, nv)) * cu + (wu ? ((i % cu) + cu) % cu : clamp(i, 0, nu));
+  const base = m.room(cu * cv);
+  for (let j = 0; j < cv; j++) for (let i = 0; i < cu; i++) {
+    let n;
+    if (o.n) n = o.n(i / nu, j / nv, i, j);
+    else {
+      n = cross(sub(P[id(i + 1, j)], P[id(i - 1, j)]), sub(P[id(i, j + 1)], P[id(i, j - 1)]));
+      if (dot(n, n) < 1e-18) { const jj = j === 0 ? 1 : j - 1; n = cross(sub(P[id(i + 1, jj)], P[id(i - 1, jj)]), sub(P[id(i, jj + 1)], P[id(i, jj - 1)])); }
+      n = norm(n); if (o.flip) n = mul(n, -1);
+    }
+    m.vert(P[j * cu + i], n, o.ao ? o.ao(i / nu, j / nv, i, j) : 1, o.edge ? o.edge(i / nu, j / nv, i, j) : 0);
+  }
+  const vi = (i, j) => base + id(i, j);
+  for (let j = 0; j < nv; j++) for (let i = 0; i < nu; i++) {
+    const a = vi(i, j), b = vi(i + 1, j), c = vi(i + 1, j + 1), d = vi(i, j + 1);
+    if (o.flip) m.ix.push(a, c, b, a, d, c); else m.ix.push(a, b, c, a, c, d);
+  }
+}
+// a thick sheet: f(u, v, i, j) -> [point, outward normal]; outer face, inner face (o.matIn), and the four edge walls
+function slab(m, nu, nv, f, t, o = {}) {
+  const wrap = !!o.wrap, cu = wrap ? nu : nu + 1, P = [], Nn = [];
+  for (let j = 0; j <= nv; j++) for (let i = 0; i < cu; i++) { const r = f(i / nu, j / nv, i, j); P.push(r[0]); Nn.push(r[1]); }
+  const id = (i, j) => j * cu + (wrap ? ((i % cu) + cu) % cu : clamp(i, 0, nu));
+  const ic = nu >> 1, jc = nv >> 1;
+  const inv = dot(cross(sub(P[id(ic + 1, jc)], P[id(ic - 1, jc)]), sub(P[id(ic, Math.min(nv, jc + 1))], P[id(ic, Math.max(0, jc - 1))])), Nn[id(ic, jc)]) < 0;
+  const off = (i, j, s) => add(P[id(i, j)], mul(Nn[id(i, j)], s * t / 2));
+  const rim = (i, j) => o.edge === 0 ? 0 : (!wrap && (i === 0 || i === nu)) || j === 0 || j === nv ? 1 : 0;
+  const mOut = m.mat;
+  grid(m, nu, nv, (u, v, i, j) => off(i, j, 1), { wrap, flip: inv, ao: o.ao, edge: (u, v, i, j) => rim(i, j) });
+  m.mat = o.matIn || mOut;
+  grid(m, nu, nv, (u, v, i, j) => off(i, j, -1), { wrap, flip: !inv, ao: o.aoIn || (() => 0.4) });
+  m.mat = mOut;
+  const wall = (n, pick, flip, w) => grid(m, n, 1, (u, v, i, k) => { const q = pick(i); return off(q[0], q[1], 1 - 2 * k); }, { wrap: w, flip, edge: () => (o.edge === 0 ? 0.25 : 1) });
+  wall(nu, i => [i, nv], inv, wrap);
+  wall(nu, i => [i, 0], !inv, wrap);
+  if (!wrap) { wall(nv, j => [0, j], inv, false); wall(nv, j => [nu, j], !inv, false); }
+}
+// a tube along a path: radius r(t along, angle), an optional squashed section [across N, across B]; o.up keeps N toward it
+function tube(m, pts, rad, o = {}) {
+  const K = pts.length, seg = o.seg || 10, sh = o.shape || [1, 1];
+  const T = pts.map((p, k) => norm(sub(pts[Math.min(K - 1, k + 1)], pts[Math.max(0, k - 1)])));
+  const N = [], B = [], S = [0];
+  for (let k = 0; k < K; k++) {
+    if (k) S.push(S[k - 1] + len(sub(pts[k], pts[k - 1])));
+    const ref = o.up || (k ? N[k - 1] : (Math.abs(T[0][1]) < 0.95 ? Y : [1, 0, 0]));
+    let n = sub(ref, mul(T[k], dot(ref, T[k])));
+    if (dot(n, n) < 1e-10) n = k ? N[k - 1] : norm(cross(T[k], Math.abs(T[k][0]) < 0.9 ? [1, 0, 0] : [0, 0, 1]));
+    n = norm(n); N.push(n); B.push(cross(T[k], n));
+  }
+  const L = S[K - 1] || 1, R = typeof rad === 'function' ? rad : () => rad;
+  const ring = (k, th) => { const r = Math.max(1e-4, R(S[k] / L, th)); return add(pts[k], add(mul(N[k], Math.cos(th) * r * sh[0]), mul(B[k], Math.sin(th) * r * sh[1]))); };
+  grid(m, seg, K - 1, (u, v, i, j) => ring(j, u * TAU), { wrap: true, ao: o.ao ? (u, v, i, j) => o.ao(S[j] / L) : null });
+  const cap = (k, s) => {
+    const base = m.room(seg + 1); m.vert(pts[k], mul(T[k], s));
+    for (let i = 0; i < seg; i++) m.vert(ring(k, i / seg * TAU), mul(T[k], s));
+    for (let i = 0; i < seg; i++) { const a = base + 1 + i, b = base + 1 + (i + 1) % seg; if (s > 0) m.ix.push(base, a, b); else m.ix.push(base, b, a); }
+  };
+  if (o.cap0) cap(0, -1);
+  if (o.cap1) cap(K - 1, 1);
+}
+// box faces: +x -x +y -y +z -z, corners TL TR BR BL seen from outside
+const FACES = [
+  [[1, 0, 0], [[.5, .5, .5], [.5, .5, -.5], [.5, -.5, -.5], [.5, -.5, .5]]],
+  [[-1, 0, 0], [[-.5, .5, -.5], [-.5, .5, .5], [-.5, -.5, .5], [-.5, -.5, -.5]]],
+  [[0, 1, 0], [[-.5, .5, -.5], [.5, .5, -.5], [.5, .5, .5], [-.5, .5, .5]]],
+  [[0, -1, 0], [[-.5, -.5, .5], [.5, -.5, .5], [.5, -.5, -.5], [-.5, -.5, -.5]]],
+  [[0, 0, 1], [[-.5, .5, .5], [.5, .5, .5], [.5, -.5, .5], [-.5, -.5, .5]]],
+  [[0, 0, -1], [[.5, .5, -.5], [-.5, .5, -.5], [-.5, -.5, -.5], [.5, -.5, -.5]]],
+];
+function box(m, c, ax, s, edge = 0.5) {
+  for (const [nl, cs] of FACES) {
+    const n = add(add(mul(ax[0], nl[0]), mul(ax[1], nl[1])), mul(ax[2], nl[2])), base = m.room(4);
+    for (const q of cs) m.vert(add(c, add(add(mul(ax[0], q[0] * s[0]), mul(ax[1], q[1] * s[1])), mul(ax[2], q[2] * s[2]))), n, 1, edge);
+    m.ix.push(base, base + 3, base + 2, base, base + 2, base + 1);
+  }
+}
+const AX = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
+function ellipsoid(m, c, ax, r, nu = 16, nv = 10) {
+  const loc = (u, v) => { const th = u * TAU, ph = v * Math.PI; return [Math.sin(ph) * Math.cos(th), Math.cos(ph), Math.sin(ph) * Math.sin(th)]; };
+  const W = l => add(add(mul(ax[0], l[0]), mul(ax[1], l[1])), mul(ax[2], l[2]));
+  grid(m, nu, nv, (u, v) => { const l = loc(u, v); return add(c, W([l[0] * r[0], l[1] * r[1], l[2] * r[2]])); },
+    { wrap: true, n: (u, v) => { const l = loc(u, v); return norm(W([l[0] / r[0], l[1] / r[1], l[2] / r[2]])); } });
+}
+// a ring round ax[2]
+function torus(m, c, ax, R, r, nu = 24, nv = 8) {
+  grid(m, nv, nu, (u, v) => { const a = v * TAU, b = u * TAU, d = add(mul(ax[0], Math.cos(a)), mul(ax[1], Math.sin(a))); return add(c, add(mul(d, R + r * Math.cos(b)), mul(ax[2], r * Math.sin(b)))); }, { wrap: true, wrapV: true, flip: true });
+}
+// a toothed gear on axle ax: teeth, hub, boss and bolt heads
+function gear(m, c, ax, ref, r, th, teeth) {
+  const u = norm(sub(ref, mul(ax, dot(ref, ax)))), w = cross(ax, u), ring = [];
+  for (let k = 0; k < teeth; k++) for (const [f, rr] of [[0, 0.84], [0.17, 1], [0.5, 1], [0.67, 0.84]]) ring.push([(k + f) / teeth * TAU, rr * r]);
+  const P = (a, rr, h) => add(c, add(add(mul(u, Math.cos(a) * rr), mul(w, Math.sin(a) * rr)), mul(ax, h)));
+  const n = ring.length;
+  for (const s of [1, -1]) {
+    const base = m.room(n + 1), nn = mul(ax, s);
+    m.vert(P(0, 0, s * th / 2), nn, 0.8, 0);
+    for (const [a, rr] of ring) m.vert(P(a, rr, s * th / 2), nn, 1, 0.7);
+    for (let i = 0; i < n; i++) { const a = base + 1 + i, b = base + 1 + (i + 1) % n; if (s > 0) m.ix.push(base, a, b); else m.ix.push(base, b, a); }
+  }
+  for (let i = 0; i < n; i++) {
+    const [a0, r0] = ring[i], [a1, r1] = ring[(i + 1) % n], t0 = P(a0, r0, th / 2), t1 = P(a1, r1, th / 2), b0 = P(a0, r0, -th / 2), b1 = P(a1, r1, -th / 2);
+    const nn = norm(cross(sub(t1, t0), ax)), base = m.room(4);
+    m.vert(t0, nn, 1, 1); m.vert(t1, nn, 1, 1); m.vert(b1, nn, 1, 1); m.vert(b0, nn, 1, 1);
+    m.ix.push(base, base + 2, base + 1, base, base + 3, base + 2);
+  }
+  tube(m, [add(c, mul(ax, -th * 0.95)), add(c, mul(ax, th * 0.95))], r * 0.42, { seg: 16, cap0: true, cap1: true });
+  tube(m, [add(c, mul(ax, -th * 1.3)), add(c, mul(ax, th * 1.3))], r * 0.2, { seg: 12, cap0: true, cap1: true });
+  for (const s of [1, -1]) for (let k = 0; k < 6; k++) {
+    const a = k / 6 * TAU + 0.3, q = P(a, r * 0.64, s * th * 0.55);
+    box(m, q, [u, w, ax].map(v => v), [r * 0.13, r * 0.13, th * 0.25], 0.8);
+  }
+}
+// a curved, tapering horn from base along dir, bending toward o.bend
+function spike(m, base, dir, h, r, o = {}) {
+  const tip = add(add(base, mul(dir, h)), mul(o.bend || [0, 0, 0], h * 0.3)), mid = add(base, mul(dir, h * 0.55));
+  tube(m, quad(base, mid, tip, o.n || 6), t => r * Math.pow(1 - t, o.pow || 1.1) + 0.0012, { seg: o.seg || 7, up: o.up, shape: o.shape });
+}
+// a surface from a distance field (surface nets): smooth normals and a little occlusion from the field
+function sdfMesh(m, sdf, lo, hi, res) {
+  const nx = Math.ceil((hi[0] - lo[0]) / res), ny = Math.ceil((hi[1] - lo[1]) / res), nz = Math.ceil((hi[2] - lo[2]) / res);
+  const sx = nx + 1, sy = ny + 1, val = new Float32Array(sx * sy * (nz + 1));
+  const P = (i, j, k) => [lo[0] + i * res, lo[1] + j * res, lo[2] + k * res];
+  for (let k = 0; k <= nz; k++) for (let j = 0; j <= ny; j++) for (let i = 0; i <= nx; i++) val[(k * sy + j) * sx + i] = sdf(P(i, j, k));
+  const V = (i, j, k) => val[(k * sy + j) * sx + i];
+  const C = (i, j, k) => (k * ny + j) * nx + i, vid = new Int32Array(nx * ny * nz).fill(-1), verts = [];
+  const E = [[0, 0, 0, 1, 0, 0], [0, 1, 0, 1, 1, 0], [0, 0, 1, 1, 0, 1], [0, 1, 1, 1, 1, 1], [0, 0, 0, 0, 1, 0], [1, 0, 0, 1, 1, 0], [0, 0, 1, 0, 1, 1], [1, 0, 1, 1, 1, 1], [0, 0, 0, 0, 0, 1], [1, 0, 0, 1, 0, 1], [0, 1, 0, 0, 1, 1], [1, 1, 0, 1, 1, 1]];
+  for (let k = 0; k < nz; k++) for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) {
+    let acc = [0, 0, 0], cnt = 0;
+    for (const e of E) {
+      const a = V(i + e[0], j + e[1], k + e[2]), b = V(i + e[3], j + e[4], k + e[5]);
+      if ((a < 0) !== (b < 0)) { acc = add(acc, lerp3(P(i + e[0], j + e[1], k + e[2]), P(i + e[3], j + e[4], k + e[5]), a / (a - b))); cnt++; }
+    }
+    if (cnt) { vid[C(i, j, k)] = verts.length; verts.push(mul(acc, 1 / cnt)); }
+  }
+  const base = m.room(verts.length), g = res * 0.5;
+  for (const p of verts) {
+    const n = norm([sdf(add(p, [g, 0, 0])) - sdf(sub(p, [g, 0, 0])), sdf(add(p, [0, g, 0])) - sdf(sub(p, [0, g, 0])), sdf(add(p, [0, 0, g])) - sdf(sub(p, [0, 0, g]))]);
+    let occ = 0; for (const [d, w] of [[0.015, 0.5], [0.035, 0.3], [0.07, 0.2]]) occ += w * Math.max(0, d - sdf(add(p, mul(n, d)))) / d;
+    m.vert(p, n, clamp(1 - occ * 1.4, 0.12, 1), 0);
+  }
+  const q4 = (a, b, c, d, flip) => { if (a < 0 || b < 0 || c < 0 || d < 0) return; a += base; b += base; c += base; d += base; if (flip) m.ix.push(a, d, c, a, c, b); else m.ix.push(a, b, c, a, c, d); };
+  for (let k = 1; k < nz; k++) for (let j = 1; j < ny; j++) for (let i = 0; i < nx; i++) { const a = V(i, j, k), b = V(i + 1, j, k); if ((a < 0) !== (b < 0)) q4(vid[C(i, j - 1, k - 1)], vid[C(i, j, k - 1)], vid[C(i, j, k)], vid[C(i, j - 1, k)], !(a < 0)); }
+  for (let k = 1; k < nz; k++) for (let j = 0; j < ny; j++) for (let i = 1; i < nx; i++) { const a = V(i, j, k), b = V(i, j + 1, k); if ((a < 0) !== (b < 0)) q4(vid[C(i - 1, j, k - 1)], vid[C(i - 1, j, k)], vid[C(i, j, k)], vid[C(i, j, k - 1)], !(a < 0)); }
+  for (let k = 0; k < nz; k++) for (let j = 1; j < ny; j++) for (let i = 1; i < nx; i++) { const a = V(i, j, k), b = V(i, j, k + 1); if ((a < 0) !== (b < 0)) q4(vid[C(i - 1, j - 1, k)], vid[C(i, j - 1, k)], vid[C(i, j, k)], vid[C(i - 1, j, k)], !(a < 0)); }
+}
+const sdE = (p, c, r) => { const q = [(p[0] - c[0]) / r[0], (p[1] - c[1]) / r[1], (p[2] - c[2]) / r[2]]; return (Math.hypot(q[0], q[1], q[2]) - 1) * Math.min(r[0], r[1], r[2]); };
+const smin = (a, b, k) => { const h = clamp(0.5 + 0.5 * (b - a) / k, 0, 1); return lerp(b, a, h) - k * h * (1 - h); };
+const smax = (a, b, k) => -smin(-a, -b, k);
+
+// ---------------------------------------------------------------- the creature: a small armoured body slung between four long legs
+// Body frame: +z forward (skull), +y up, +x its left. The armour is drawn at design size and shrunk by BS: s runs from the
+// rear tip (-0.1) to the collar (1), the angle a round it from the ridge (0) to the keel (±PI), positive toward its left.
+const BS = 0.5, SZ0 = -2.45, SZ1 = 1.15;
+// rises from a pointed rear to a peak, then falls off a little toward the collar
+const envR = (s, peak, span, drop) => s < peak ? Math.pow(Math.max(0, 1 - ((peak - s) / span) ** 2), 0.9) : 1 - drop * ((s - peak) / (1 - peak)) ** 2;
+function shellPt(a, s) {
+  const W = 0.92 * envR(s, 0.64, 0.74, 0.22), T = 0.22 + 0.6 * envR(s, 0.6, 0.7, 0.22), B = 0.22 - 0.95 * envR(s, 0.72, 0.82, 0.14);
+  const cy = B + 0.62 * (T - B), z = SZ0 + s * (SZ1 - SZ0), sa = Math.sin(a), ca = Math.cos(a);
+  if (ca >= 0) return [W * Math.sign(sa) * Math.pow(Math.abs(sa), 2 / 2.3), cy + (T - cy) * Math.pow(ca, 2 / 2.3), z];
+  return [W * Math.sign(sa) * Math.pow(Math.abs(sa), 2 / 1.85), cy - (cy - B) * Math.pow(-ca, 2 / 1.85), z];
+}
+function shellOff(a, s, off) {
+  const p = shellPt(a, s), e = 1e-3;
+  let n = cross(sub(shellPt(a, s + e), shellPt(a, s - e)), sub(shellPt(a + e, s), shellPt(a - e, s)));
+  n = len(n) < 1e-12 ? [0, 0, -1] : norm(n);
+  return [add(p, mul(n, off)), n];
+}
+// from here on in blocks
+const FRONT_Y = (shellPt(0, 1)[1] + shellPt(Math.PI, 1)[1]) / 2 * BS;
+const COLLAR = frame([0, FRONT_Y, SZ1 * BS - 0.04], rx(0.3));   // the ringed collars round the skull, tilted down
+const RINGS = [0.37, 0.34, 0.31, 0.285];
+const SK = 1.15, SKULL_AT = [0, -0.33, 0.12], JAW_AT = [0, -0.12 * SK, -0.03 * SK];   // the skull is drawn SK times its modelled size
+const EYES = [[[0.262, 0.07, 0.07], 0.056], [[0.252, -0.045, 0.095], 0.034]];   // big over small, on its left
+const BODY_Y = { hunt: 2.5, feed: 2.41 };
+// four long legs from the upper flanks: a thigh up to a high knee, a shin down to the ankle, a long armoured point
+// round 6: a third joint, an ankle, between the knee and the point (c = ankle to tip)
+// the lower leg is one rigid piece curved smoothly from knee to point: CURVE is how far it turns end to end (radians),
+// plus two slight bends (KINK each) at a third and two thirds of the way down; lc is the straight line from knee to
+// point that the IK works with
+const CURVE = 0.35, KINK = 0.22, KINK_W = 0.08, ARCS = {};
+function legArc(S) {
+  if (ARCS[S]) return ARCS[S];
+  const N = 480, ds = S / N, sm = (s, s0) => smooth((s - s0 + KINK_W) / (2 * KINK_W));
+  const th = s => CURVE * s / S + KINK * (sm(s, S / 3) + sm(s, 2 * S / 3));
+  const P = [[0, 0]], T = [th(0)];
+  for (let k = 1; k <= N; k++) {
+    const t = th((k - 0.5) * ds), q = P[k - 1];
+    P.push([q[0] + Math.cos(t) * ds, q[1] - Math.sin(t) * ds]); T.push(th(k * ds));
+  }
+  const e = P[N];
+  return (ARCS[S] = { P, T, ds, N, lc: Math.hypot(e[0], e[1]), psi: -Math.atan2(e[1], e[0]) });
+}
+const LEGS = [{ s: 0.72, a0: 1.3, a: 1.28, b: 2.15, c: 1.6, restA: 0.74, restR: 1.75 },     // front
+              { s: 0.42, a0: 1.42, a: 1.28, b: 2.2, c: 1.65, restA: 2.36, restR: 1.85 }]    // back
+  // the legs hang from ball joints in sockets on the lower edge of the hull, clear of it (left side; the right mirrors it)
+  .map((L, i) => ({ ...L, hip: i ? [0.55, 0.12, -0.45] : [0.46, -0.08, 0.06], hn: norm([0.7, -0.7, i ? -0.1 : 0.1]), lc: legArc(L.b + L.c).lc }));
+const CORPSE_LEN = 1.54;                                // neck to toes
+// feeding: how far the head bows and the jaw drops, and where a victim's head sits in the mouth (skull space, unscaled)
+const FEED_PITCH = -0.4, FEED_JAW = 1.3;
+const FEED = (() => {
+  const c = Math.cos(FEED_JAW), s = Math.sin(FEED_JAW), jt = [0, -0.1, 0.2];
+  const tip = add([0, -0.12, -0.03], [0, c * jt[1] - s * jt[2], s * jt[1] + c * jt[2]]), upper = [0, -0.21, 0.17];
+  const v = sub(upper, tip), out = norm([0, -v[2], v[1]]), mc = lerp3(upper, tip, 0.5);
+  const z = mul(out, -1), y = norm(sub(Y, mul(z, dot(Y, z)))), x = cross(y, z);
+  return { at: add(mc, mul(out, 0.02)), R: cols(x, y, z) };
+})();
+
+// round 6d body, from Josiah's armoured render: a dart, low at the nose and rising to a tail that ends in a long spine.
+// From the front it reads as a downward arrowhead: long creased blade plates sweep out and forward from a tall centre keel
+// in a herringbone, jagged spines crown the back, and a beard of shards hangs under the point. In blocks.
+// s runs from the tail (0) to the nose (1); a round the body from the keel (0) to the belly (±PI), positive to its left.
+const B7 = { zt: -1.55, zn: 0.95 };
+const b7env = s => s < 0.5 ? Math.pow(Math.max(0, s / 0.5), 0.7) : Math.pow(Math.max(0, 1 - (s - 0.5) / 0.5), 0.85);
+const b7c = s => 0.1 + 0.55 * Math.pow(1 - s, 2.2) - 0.5 * smooth((s - 0.42) / 0.58);   // centre line: up to the tail, down to the nose
+function b7Pt(a, s) {
+  s = clamp(s, 0, 1);
+  const e = b7env(s), W = 0.52 * e, T = 0.26 * e, Bt = 0.22 * e, c = b7c(s), z = lerp(B7.zt, B7.zn, s), sa = Math.sin(a), ca = Math.cos(a);
+  if (ca >= 0) return [W * Math.sign(sa) * Math.pow(Math.abs(sa), 0.75), c + T * Math.pow(ca, 0.7), z];
+  return [W * Math.sign(sa) * Math.pow(Math.abs(sa), 0.8), c - Bt * Math.pow(-ca, 0.85), z];
+}
+function b7Off(a, s, off) {
+  const p = b7Pt(a, s), e = 1e-3, sc = clamp(s, 0.02, 0.98);
+  let n = cross(sub(b7Pt(a, sc + e), b7Pt(a, sc - e)), sub(b7Pt(a + e, sc), b7Pt(a - e, sc)));
+  n = len(n) < 1e-12 ? [0, 1, 0] : norm(n);
+  if (dot(n, sub(p, [0, b7c(sc), lerp(B7.zt, B7.zn, sc)])) < 0) n = mul(n, -1);
+  return [add(p, mul(n, off)), n];
+}
+function buildBody() {
+  const m = new Mesh();
+  // the red inside, ribbed underneath: it shows in the gaps between the plates
+  m.mat = MAT.core;
+  grid(m, 56, 44, (u, v) => { const a = u * TAU - Math.PI, ca = Math.cos(a); return b7Off(a, lerp(0.005, 0.995, v), -0.03 + (ca < -0.3 ? 0.012 * Math.sin(v * 70) * (-ca - 0.3) : 0))[0]; }, { wrap: true, flip: true, ao: () => 0.5 });
+  // a long blade plate along a path on the shell, from its root (v = 0) to its point (v = 1): a fold down its middle, the
+  // point lifted off the shell so it lies over the plate in front
+  const blade = (path, wid, off, lift, id, mat, crease = 0.03) => {
+    m.mat = tint(mat, 0.75 + 0.4 * hash(id + 1), 2 + 0.9 * hash(id + 2));
+    const P = [], N = [], T = [], K = 16;
+    for (let k = 0; k <= K; k++) { const [a, s] = path(k / K), [p, n] = b7Off(a, s, 0); P.push(p); N.push(n); }
+    for (let k = 0; k <= K; k++) T.push(norm(sub(P[Math.min(K, k + 1)], P[Math.max(0, k - 1)])));
+    slab(m, 6, K, (u, v, i, j) => {
+      const hw = wid * (v < 0.22 ? 0.55 + 0.45 * v / 0.22 : Math.pow(1 - (v - 0.22) / 0.78, 1.15)), uu = 2 * u - 1;
+      const n = N[j], side = norm(cross(n, T[j]));
+      return [add(add(P[j], mul(side, uu * hw)), mul(n, off + lift * Math.pow(v, 2.4) + crease * (1 - Math.abs(uu)) * (0.5 + 0.5 * v) + 0.012 * Math.abs(uu) * v)), n];
+    }, 0.012, { ao: (u, v) => 0.4 + 0.6 * smooth(v * 1.4), edge: 0 });
+  };
+  // the herringbone: rows from the tail forward, each side's blade rooted at the keel and swept out and forward; rear
+  // blades sweep out wide toward the flanks, the front ones run long toward the nose. Each row's points lie over the next.
+  const ROWS = 15;
+  for (let r = 0; r < ROWS; r++) {
+    const k = r / (ROWS - 1), sb = 0.06 + 0.82 * k;
+    for (const sd of [-1, 1]) {
+      const id = 1500 + r * 17 + (sd > 0 ? 5 : 0);
+      const A = lerp(2.35, 0.85, k) * (0.94 + 0.12 * hash(id)), Ls = lerp(0.1, 0.26, k), wid = lerp(0.17, 0.25, k);
+      blade(v => [sd * (0.07 + A * Math.pow(v, 0.9)), Math.min(1, sb + Ls * v)], wid, 0.014 + 0.005 * (r % 2), 0.11 + 0.06 * hash(id + 3), id, tint(MAT.scale, 0.85, 2), 0.05);
+      // a shorter blade under it, lower on the flank, so the sides are covered too
+      if (k < 0.9) blade(v => [sd * (1.0 + lerp(1.55, 0.9, k) * v), Math.min(1, sb + 0.03 + Ls * 0.7 * v)], wid * 0.8, 0.006, 0.09, id + 9, tint(MAT.scale, 0.75, 2), 0.035);
+    }
+  }
+  // belly plates: a few long ones under the front, pointing to the nose
+  for (const sd of [-1, 1]) for (let r = 0; r < 4; r++) blade(v => [sd * (2.1 + 0.35 * r - 0.5 * v), 0.42 + 0.12 * r + 0.18 * v], 0.08, 0.004, 0.02, 1700 + r * 3 + (sd > 0 ? 1 : 0), tint(MAT.scale, 0.8, 2), 0.02);
+  // the keel: a tall narrow blade from the nose along the spine to the tail point
+  const kp = [], KN = 40;
+  for (let k = 0; k <= KN; k++) { const s = lerp(0.02, 1.0, k / KN), [p] = b7Off(0, s, 0.02); kp.push(p); }
+  m.mat = tint(MAT.scale, 0.6, 2.4);
+  tube(m, kp, t => 0.015 + 0.1 * Math.pow(Math.sin(Math.PI * clamp(t * 1.05, 0, 1)), 0.6), { seg: 10, up: Y, shape: [1, 0.3] });
+  m.mat = MAT.redline; tube(m, kp.map(p => add(p, [0, 0.1, 0])), t => 0.003 + 0.003 * Math.sin(Math.PI * t), { seg: 6 });
+  // the spine row: blade spines standing up along the keel from the head to the tail, small at the head, tallest mid-back,
+  // small again toward the tail; thin from the front, broad from the side
+  for (let k = 0; k < 15; k++) {
+    const u = k / 14, sk = lerp(0.95, 0.06, u), [p, n] = b7Off(0, sk, 0.06), h = 0.07 + 0.62 * Math.pow(Math.sin(Math.PI * clamp(u * 1.05 - 0.02, 0, 1)), 1.6);
+    m.mat = tint(MAT.scale, 0.8 + 0.25 * hash(k + 2000), 2.4);
+    spike(m, p, norm(add(n, [0, 0.15, -0.45])), h, 0.035 + 0.06 * h, { up: [0, 0, 1], shape: [1, 0.28], bend: [0, 0, -0.25], seg: 8, n: 6, pow: 1.15 });
+  }
+  // the crown of jagged spines on the back, swept up and back, and short ones scattered between the blades
+  for (const sd of [-1, 1]) for (let k = 0; k < 7; k++) {
+    const id = 1800 + k * 7 + (sd > 0 ? 3 : 0), s = 0.1 + 0.42 * hash(id), a = sd * (0.3 + 1.05 * hash(id + 1));
+    const [p, n] = b7Off(a, s, 0.03), L = 0.22 + 0.3 * hash(id + 2) * (1 - 0.4 * Math.abs(a) / 1.35);
+    const dir = norm(add(add(n, [0, 0.7, -0.45]), [sd * 0.35 * (hash(id + 5) - 0.3), 0, 0]));
+    m.mat = tint(MAT.scale, 0.5 + 0.3 * hash(id + 4), 2.4);
+    spike(m, p, dir, L, 0.08 + 0.05 * hash(id + 6), { seg: 6, n: 4, shape: [1, 0.3], up: [1, 0, 0], bend: [sd * 0.15 * hash(id + 8), 0.05, -0.25], pow: 1.25 });
+    if (k % 2 === 0) spike(m, add(p, [sd * 0.05, 0, -0.04]), norm(add(dir, [sd * 0.6, -0.1, 0.1])), L * 0.55, 0.05, { seg: 5, n: 3, shape: [1, 0.35], up: [1, 0, 0], pow: 1.25 });
+  }
+  for (let k = 0; k < 40; k++) {
+    const a = (hash(k + 300) - 0.5) * 4.6, s = 0.08 + 0.85 * hash(k + 340), [p, n] = b7Off(a, s, 0.03);
+    m.mat = tint(MAT.scale, 0.8 + 0.3 * hash(k + 9), 2.3);
+    spike(m, p, norm(add(n, [0, 0.2, -0.3])), 0.05 + 0.08 * hash(k + 380), 0.012 + 0.006 * hash(k + 7), { seg: 5, n: 3 });
+  }
+  m.mat = tint(MAT.scale, 0.85, 2.4);
+  spike(m, b7Pt(0, 0.995), norm([0, -0.9, 0.5]), 0.3, 0.05, { up: [0, 0, 1], shape: [1, 0.5], seg: 8, n: 5 });
+  // ribs and hanging sinew under the belly, black cables along the flanks
+  m.mat = MAT.dark;
+  for (let k = 0; k < 6; k++) {
+    const s = 0.22 + k * 0.09, pts = [];
+    for (let q = 0; q <= 16; q++) pts.push(b7Off(2.6 + (TAU - 5.2) * q / 16, s, -0.01 + 0.015 * Math.sin(Math.PI * q / 16))[0]);
+    tube(m, pts, 0.018, { seg: 7 });
+  }
+  for (let k = 0; k < 10; k++) {
+    m.mat = k % 3 ? MAT.sinewD : MAT.sinew;
+    const a1 = 2.6 + hash(k) * 1.08, s1 = 0.2 + hash(k + 50) * 0.6, a2 = a1 + (hash(k + 90) - 0.5) * 0.9, s2 = clamp(s1 + (hash(k + 130) - 0.5) * 0.25, 0.15, 0.9);
+    const P = b7Off(a1, s1, -0.02)[0], Q = b7Off(a2, s2, -0.02)[0], sg = 0.04 + 0.14 * hash(k + 170);
+    tube(m, quad(P, add(lerp3(P, Q, 0.5), [0, -1.2 * sg, 0]), Q, 10), 0.007 + 0.007 * hash(k + 210), { seg: 6 });
+  }
+  // the hip joints under the belly: an armoured mount comes down from the hull to a socket cup, and the leg's ball turns in it
+  for (const L of LEGS) for (const sd of [-1, 1]) {
+    const hp = [sd * L.hip[0], L.hip[1], L.hip[2]], dn = norm([sd * L.hn[0], L.hn[1], L.hn[2]]);
+    const top = [sd * L.hip[0] * 0.7, L.hip[1] + 0.34, L.hip[2]], ax = norm(sub(hp, top));
+    const t1 = norm(cross(ax, [0, 0, 1])), t2 = cross(ax, t1);
+    m.mat = MAT.dark; tube(m, [top, sub(hp, mul(ax, 0.1))], t => 0.085 - 0.02 * t, { seg: 14 });
+    m.mat = MAT.steel; for (const u of [0.35, 0.6]) torus(m, lerp3(top, hp, u), [t1, t2, ax], 0.075, 0.014, 16, 6);
+    // a shield plate over the mount, in the same scale as the legs
+    m.mat = tint(MAT.scale, 0.9, 2.4);
+    slab(m, 8, 6, (u, v) => {
+      const th = (u - 0.5) * 2.2 + (sd > 0 ? 0 : Math.PI), r = 0.115 + 0.02 * v, c = Math.cos(th), s = Math.sin(th);
+      const p = add(lerp3(top, hp, 0.05 + 0.7 * v), add(mul(t1, r * c), mul(t2, r * s)));
+      return [p, norm(add(mul(t1, c), mul(t2, s)))];
+    }, 0.014, { ao: (u, v) => 0.5 + 0.5 * v });
+    // the socket cup, open toward the leg, and the ball
+    m.mat = MAT.dark; ellipsoid(m, sub(hp, mul(ax, 0.04)), [t1, t2, ax], [0.17, 0.17, 0.12], 16, 10);
+    m.mat = MAT.steel; torus(m, add(hp, mul(ax, 0.02)), [t1, t2, ax], 0.16, 0.024, 20, 6);
+    m.mat = MAT.dark; for (let k = 0; k < 6; k++) { const a = k * TAU / 6, q = add(add(hp, mul(ax, 0.03)), add(mul(t1, 0.16 * Math.cos(a)), mul(t2, 0.16 * Math.sin(a)))); ellipsoid(m, q, AX, [0.022, 0.022, 0.022], 6, 4); }
+    m.mat = MAT.steel; ellipsoid(m, add(hp, mul(dn, 0.02)), AX, [0.115, 0.115, 0.115], 16, 10);
+    m.mat = MAT.redline; torus(m, add(hp, mul(ax, 0.045)), [t1, t2, ax], 0.118, 0.01, 24, 5);
+  }
+  return m;
+}
+
+// the skull: a sculpted distance field, dark as old iron, a broad hollow mouth of long teeth, two red ring eyes on its left
+function skullSDF(p) {
+  let d = sdE(p, [0, 0.06, -0.03], [0.19, 0.2, 0.24]);
+  d = smin(d, sdE(p, [0, -0.05, 0.08], [0.165, 0.12, 0.16]), 0.06);
+  d = smin(d, sdE(p, [0, 0.045, 0.15], [0.17, 0.045, 0.07]), 0.03);
+  for (const s of [-1, 1]) d = smin(d, sdE(p, [s * 0.13, -0.06, 0.1], [0.055, 0.035, 0.07]), 0.03);
+  d = smin(d, sdE(p, [0, -0.13, 0.12], [0.135, 0.06, 0.105]), 0.04);
+  d = smax(d, -sdE(p, [0, -0.2, 0.1], [0.105, 0.055, 0.1]), 0.015);                 // the palate, hollowed out
+  for (const s of [-1, 1]) d = smax(d, -sdE(p, [s * 0.07, -0.005, 0.2], [0.05, 0.048, 0.07]), 0.012);
+  d = smax(d, -sdE(p, [0, -0.085, 0.222], [0.022, 0.04, 0.06]), 0.008);
+  for (const s of [-1, 1]) d = smax(d, -sdE(p, [s * 0.215, -0.03, 0.02], [0.05, 0.07, 0.09]), 0.03);
+  d = smax(d, -sdE(p, [-0.09, 0.17, 0.04], [0.06, 0.03, 0.05]), 0.01);               // a broken patch on the crown
+  return d + 0.006 * (vnoise(p[0] * 34, p[1] * 34, p[2] * 34) - 0.5) + 0.003 * (vnoise(p[0] * 90, p[1] * 90, p[2] * 90) - 0.5);
+}
+function buildSkull() {
+  const m = new Mesh();
+  m.scale = SK;
+  m.mat = MAT.head;
+  sdfMesh(m, skullSDF, [-0.24, -0.23, -0.3], [0.24, 0.29, 0.3], 0.0105);
+  m.mat = MAT.hollow; ellipsoid(m, [0, -0.15, 0.08], AX, [0.1, 0.03, 0.1], 16, 8);   // the black hollow of the mouth
+  for (let k = 0; k < 14; k++) {
+    const f = (k + 0.5) / 14 * 2.7 - 1.35, root = [0.122 * Math.sin(f), -0.17, 0.115 + 0.095 * Math.cos(f)];
+    const L = (0.08 + 0.11 * hash(k + 3)) * (1 - 0.22 * Math.abs(f)), dir = norm([0.2 * (hash(k + 9) - 0.5) + 0.1 * Math.sin(f), -1, 0.12 * Math.cos(f) + 0.1 * (hash(k + 11) - 0.5)]);
+    m.mat = tint(MAT.tooth, 0.85 + 0.2 * hash(k + 20));
+    spike(m, root, dir, L, 0.015 + 0.006 * hash(k + 30), { seg: 6, n: 4, shape: [1, 0.7], up: [Math.sin(f), 0, Math.cos(f)] });
+  }
+  // deep dark sockets and a black throat, so the glow reads as a face
+  m.mat = MAT.hollow;
+  for (const sd of [-1, 1]) ellipsoid(m, [sd * 0.07, -0.005, 0.175], AX, [0.042, 0.04, 0.05], 14, 8);
+  ellipsoid(m, [0, -0.085, 0.2], AX, [0.016, 0.03, 0.03], 8, 6);
+  // cables and sinew from behind the skull into the throat
+  m.mat = MAT.cable;
+  for (let k = 0; k < 5; k++) { const a = k * 1.3; tube(m, quad([0.12 * Math.sin(a), 0.12 * Math.cos(a) - 0.02, -0.2], [0.3 * Math.sin(a + 0.3), 0.3 * Math.cos(a + 0.3), -0.3], [0.34 * Math.sin(a + 0.5), 0.34 * Math.cos(a + 0.5), -0.25], 8), 0.018, { seg: 6 }); }
+  return m;
+}
+// the face: five blade plates closed over the skull like a pointed bud, tips meeting at the snout. Each is hinged at its back
+// edge and peels back when it screams or feeds, showing the glowing skull. Built in skull units, drawn SK times.
+const axisRot = (k, g) => { const c = Math.cos(g), s = Math.sin(g), t = 1 - c, [x, y, z] = k; return [[t * x * x + c, t * x * y - s * z, t * x * z + s * y], [t * x * y + s * z, t * y * y + c, t * y * z - s * x], [t * x * z - s * y, t * y * z + s * x, t * z * z + c]]; };
+const FACE_C = [0, 0.0, 0.03], FACE_PHI1 = 1.8, FACE_OPEN = 1.15;
+const faceDir = (th, ph) => [Math.sin(ph) * Math.sin(th), Math.sin(ph) * Math.cos(th), Math.cos(ph)];
+const faceR = v => 0.34 + 0.2 * v * v;
+const FACE = [[0, 0.92], [1.28, 0.88], [-1.28, 0.88], [2.5, 0.78], [-2.5, 0.78]].map(([th, hw], k) => {
+  const H = add(FACE_C, mul(faceDir(th, FACE_PHI1), faceR(0))), axis = [Math.cos(th), -Math.sin(th), 0];
+  // open whichever way swings the tip out from the snout
+  const tip = add(FACE_C, mul(faceDir(th, 0.15), faceR(1))), out = g => { const q = add(H, ap(axisRot(axis, g), sub(tip, H))); return Math.hypot(q[0], q[1]); };
+  return { th, hw, H, axis, sign: out(0.8) > out(-0.8) ? 1 : -1, k };
+});
+function buildFacePlate(F) {
+  const m = new Mesh(); m.scale = SK;
+  const leaf = (th0, hw, base, lift, ridge, id, mat, v0 = 0, v1 = 1) => {
+    m.mat = tint(mat, 0.82 + 0.3 * hash(id + 1), 2 + 0.9 * hash(id + 2));
+    slab(m, 10, 9, (u, v) => {
+      const vv = lerp(v0, v1, v), w = vv < 0.3 ? 0.85 + 0.15 * vv / 0.3 : 1 - Math.pow((vv - 0.3) / 0.7, 1.4), uu = 2 * u - 1, ph = lerp(FACE_PHI1, 0.06, vv);
+      const d = faceDir(th0 + uu * w * hw / Math.max(0.35, Math.sin(ph)) * 0.8, ph), r = faceR(vv) + base + lift * vv * vv + ridge * Math.pow(1 - Math.abs(uu), 2) * (0.3 + vv);
+      return [sub(add(FACE_C, mul(d, r)), F.H), d];
+    }, 0.016, { ao: (u, v) => 0.45 + 0.55 * smooth(v * 1.3) });
+  };
+  leaf(F.th, F.hw, 0.0, 0.02, 0.025, 1200 + F.k * 7, tint(MAT.scale, 0.72, 2));
+  // a narrower raised plate down its middle and a pair of short spikes, like the keel on its back
+  leaf(F.th, F.hw * 0.42, 0.022, 0.03, 0.035, 1250 + F.k * 7, tint(MAT.scale, 0.9, 2), 0.05, 0.92);
+  m.mat = tint(MAT.scale, 0.95, 2.4);
+  for (const v of [0.3, 0.55]) { const d = faceDir(F.th, lerp(FACE_PHI1, 0.06, v)); spike(m, sub(add(FACE_C, mul(d, faceR(v) + 0.05)), F.H), norm(add(d, [0, 0, 0.9])), 0.07 - 0.02 * v, 0.014, { seg: 5, n: 3, bend: [0, 0, 0.3] }); }
+  // the hinge
+  m.mat = MAT.dark; tube(m, [mul(F.axis, -0.06), mul(F.axis, 0.06)], 0.018, { seg: 10, cap0: true, cap1: true });
+  return m;
+}
+// the jaw: a broad jawbone, lower teeth, a red tongue and a beard of shards
+function buildJaw() {
+  const m = new Mesh();
+  m.scale = SK;
+  m.mat = MAT.head;
+  const pts = [[-0.15, 0.01, -0.02]];
+  for (let k = 0; k <= 16; k++) { const f = -1.5 + 3.0 * k / 16; pts.push([0.14 * Math.sin(f), -0.075 - 0.025 * Math.cos(f), 0.03 + 0.17 * Math.cos(f)]); }
+  pts.push([0.15, 0.01, -0.02]);
+  tube(m, pts, t => 0.018 + 0.013 * Math.sin(Math.PI * t), { seg: 10 });
+  m.mat = MAT.maw; ellipsoid(m, [0, -0.075, 0.08], AX, [0.09, 0.02, 0.1], 14, 8);
+  for (let k = 0; k < 11; k++) {
+    const f = -1.1 + 2.2 * k / 10, root = [0.125 * Math.sin(f), -0.065, 0.03 + 0.155 * Math.cos(f)];
+    m.mat = tint(MAT.tooth, 0.85 + 0.2 * hash(k + 44));
+    spike(m, root, norm([0.1 * (hash(k + 40) - 0.5), 1, 0.1]), 0.04 + 0.055 * hash(k + 41), 0.012, { seg: 5, n: 3 });
+  }
+  for (let k = 0; k < 18; k++) {
+    const f = -1.15 + 2.3 * hash(k + 60), row = k % 3, root = [0.12 * Math.sin(f) * (1 - 0.15 * row), -0.09 - 0.01 * row, 0.03 + 0.15 * Math.cos(f) - 0.03 * row];
+    const Ls = (0.13 + 0.26 * hash(k + 61)) * (1 - 0.35 * Math.abs(f)), dir = norm([0.3 * Math.sin(f) + 0.3 * (hash(k + 62) - 0.5), -1, 0.25 + 0.3 * (hash(k + 63) - 0.5)]);
+    const side = norm(cross(dir, Y)), kink = (hash(k + 64) - 0.5) * 0.06;
+    m.mat = tint(MAT.head, 0.85 + 0.3 * hash(k + 65));
+    tube(m, [root, add(add(root, mul(dir, Ls * 0.35)), mul(side, kink)), add(add(root, mul(dir, Ls * 0.7)), mul(side, -kink * 0.6)), add(root, mul(dir, Ls))],
+      t => (0.014 + 0.01 * hash(k + 66)) * Math.pow(1 - t, 0.9) + 0.001, { seg: 6, shape: [1, 0.6] });
+  }
+  return m;
+}
+// a leg bone along +x from its joint: gear, beam, toothed sleeves, a piston on its +y side, thorns underneath.
+// A shin bows out a little and runs down into a long barbed point.
+// a leg segment sheathed in shingled blade plates: leaf-shaped scales in staggered rings, each tip lying over the base of
+// the ring below so they shed toward the point. kind: 'thigh' (hip to knee, knee cap and piston), 'shin' (cog knee down
+// to the ankle), 'tars' (cog ankle down to a long point)
+// bends a straight leg (built along +x) along the lower-leg path of length S, bowing out toward +y, then turns it so
+// the line from its root to its point lies along +x again
+function curveLeg(m, S) {
+  const A = legArc(S), c0 = Math.cos(A.psi), s0 = Math.sin(A.psi);
+  for (const ch of m.chunks) for (let k = 0; k < ch.v.length; k += VS) {
+    const v = ch.v, x = v[k], y = v[k + 1];
+    // the centre line point and turn at x (straight on past either end), then the offset along its outward normal
+    const u = clamp(x / A.ds, 0, A.N), i0 = Math.min(A.N - 1, Math.floor(u)), f = u - i0, ex = x - u * A.ds;
+    const t = lerp(A.T[i0], A.T[i0 + 1], f), ct = Math.cos(t), st = Math.sin(t);
+    const cx = lerp(A.P[i0][0], A.P[i0 + 1][0], f) + ct * ex, cy = lerp(A.P[i0][1], A.P[i0 + 1][1], f) - st * ex;
+    const px = cx + y * st, py = cy + y * ct;
+    const nx = v[k + 3] * ct + v[k + 4] * st, ny = -v[k + 3] * st + v[k + 4] * ct;
+    v[k] = px * c0 - py * s0; v[k + 1] = px * s0 + py * c0;
+    v[k + 3] = nx * c0 - ny * s0; v[k + 4] = nx * s0 + ny * c0;
+  }
+  return m;
+}
+function buildLeg(Lb, rA, rB, gearR, seed, kind) {
+  const m = new Mesh(), tars = kind === 'tars', thigh = kind === 'thigh', tipAt = tars ? Lb * 0.62 : Lb;
+  const R = x => !tars || x < tipAt ? lerp(rA, rB, clamp(x / tipAt, 0, 1)) : rB * Math.pow(Math.max(0, 1 - (x - tipAt) / (Lb - tipAt)), 0.8) + 0.003;
+  if (!thigh) { m.mat = MAT.dark; gear(m, [0, 0, 0], [0, 0, 1], [1, 0, 0], gearR, 0.1, 14); m.mat = MAT.steel; torus(m, [0, 0, 0], [[1, 0, 0], [0, 1, 0], [0, 0, 1]], gearR * 0.45, 0.025, 14, 6); }
+  m.mat = MAT.dark;
+  const core = []; for (let k = 0; k <= 36; k++) core.push([0.02 + (Lb - 0.02) * k / 36, 0, 0]);
+  tube(m, core, t => R(0.02 + (Lb - 0.02) * t) * 0.92, { seg: 12, cap0: true });
+  // the shingles
+  const x0 = thigh ? 0.14 : gearR * 0.7, x1 = tars ? Lb - 0.2 : Lb - 0.02, Ls = thigh ? 0.44 : 0.4, step = Ls * 0.58;
+  const rows = Math.max(2, Math.round((x1 - x0 - Ls) / step) + 1), N = 4;
+  for (let r = 0; r < rows; r++) {
+    const xs = x0 + r * (x1 - x0 - Ls) / Math.max(1, rows - 1);
+    for (let q = 0; q < N; q++) {
+      const id = seed * 31 + r * 7 + q, th0 = (q + (r % 2) * 0.5) * TAU / N + 0.25 * (hash(id) - 0.5) * 0.4, w = TAU / N * 1.32;
+      const L = Ls * (0.9 + 0.2 * hash(id + 3)), lift = 0.024 + 0.022 * hash(id + 5);
+      m.mat = tint(MAT.scale, 0.8 + 0.35 * hash(id + 1), 2 + 0.9 * hash(id + 2));
+      slab(m, 8, 7, (u, v) => {
+        const hw = v < 0.32 ? 0.82 + 0.18 * v / 0.32 : 1 - Math.pow((v - 0.32) / 0.68, 1.5), uu = 2 * u - 1;
+        const th = th0 + uu * hw * w / 2, x = xs + v * L, rr = R(Math.min(x, Lb - 0.01)) + 0.012 + lift * v * v + 0.016 * Math.pow(1 - Math.abs(uu), 2) * (0.4 + v);
+        const c = Math.cos(th), s = Math.sin(th);
+        return [[x, rr * c, rr * s], norm([-0.25, c, s])];
+      }, 0.011, { ao: (u, v) => 0.4 + 0.6 * smooth(v * 1.3) });
+    }
+  }
+  // red strands running along the seams, black cable down the inside
+  m.mat = MAT.redline;
+  for (const th of [thigh ? 2.1 : -2.1]) {
+    const pts = []; for (let k = 0; k <= 24; k++) { const x = x0 + (x1 - x0 + (tars ? 0.1 : 0)) * k / 24, rr = R(x) + 0.05 + 0.01 * Math.sin(k * 1.3); pts.push([x, rr * Math.cos(th), rr * Math.sin(th)]); }
+    tube(m, pts, 0.0065, { seg: 6 });
+  }
+  if (thigh) {
+    // a domed knee cap over the cog, and a piston with a chrome rod under the thigh
+    m.mat = tint(MAT.scale, 1.05, 2.6);
+    slab(m, 12, 8, (u, v) => {
+      const th = (u - 0.5) * 2.6, ph = v * 1.45, rr = gearR + 0.06;
+      return [[Lb + 0.02 + Math.sin(ph) * rr * 0.75 - 0.18 * (1 - v), Math.cos(th) * (rr * 0.6 + rr * 0.55 * Math.cos(ph)) + 0.02, Math.sin(th) * (rr * 0.75)], norm([Math.sin(ph), Math.cos(th) * Math.cos(ph), Math.sin(th) * 0.6])];
+    }, 0.018, { ao: () => 0.85 });
+    for (let k = 0; k < 4; k++) { m.mat = MAT.dark; box(m, [Lb - 0.12 - k * 0.07, gearR * 0.62 + 0.06, 0], AX, [0.035, 0.05, 0.16 - k * 0.02]); }
+    const py = x => -R(x) - 0.07;
+    m.mat = MAT.dark; tube(m, [[Lb * 0.14, py(Lb * 0.14), 0], [Lb * 0.55, py(Lb * 0.55), 0]], 0.04, { seg: 12, cap0: true, cap1: true });
+    m.mat = MAT.chrome; tube(m, [[Lb * 0.53, py(Lb * 0.55), 0], [Lb * 0.9, py(Lb * 0.9), 0]], 0.02, { seg: 10, cap1: true });
+    m.mat = MAT.dark; box(m, [Lb * 0.9, py(Lb * 0.9) / 2, 0], AX, [0.05, -py(Lb * 0.9), 0.07]);
+    m.mat = MAT.cable; tube(m, quad([0.12, 0.03, rA + 0.04], [Lb * 0.5, -0.12, rA + 0.1], [Lb - 0.1, 0, R(Lb) + 0.05], 12), 0.017, { seg: 7 });
+  } else {
+    m.mat = MAT.cable; tube(m, quad([gearR, -0.02, -rA - 0.03], [Lb * 0.4, -0.12, -rA - 0.07], [Lb * 0.75, -0.03, -R(Lb * 0.75) - 0.04], 12), 0.014, { seg: 7 });
+  }
+  if (tars) {
+    // the bare point, with an ankle ring and a couple of barbs hooked back up
+    m.mat = MAT.dark; torus(m, [x1 + 0.02, 0, 0], [[0, 1, 0], [0, 0, 1], [1, 0, 0]], R(x1 + 0.02) + 0.02, 0.014, 18, 6);
+    m.mat = tint(MAT.steel, 0.9, 2.4); tube(m, [[x1 - 0.02, 0, 0], [Lb, 0, 0]], t => R(lerp(x1 - 0.02, Lb, t)) * 1.02 + 0.002, { seg: 10 });
+    for (let k = 0; k < 3; k++) {
+      const x = x1 + (Lb - x1) * (0.15 + 0.22 * k), r = R(x), th = k * 2.4 + 0.5, c = Math.cos(th), s = Math.sin(th);
+      spike(m, [x, r * c * 0.8, r * s * 0.8], norm([-0.9, c, s]), 0.07 * (1 - 0.15 * k), 0.015, { seg: 5, n: 4, bend: [-0.6, 0, 0] });
+    }
+  }
+  return m;
+}
+// the player, for scale
+function buildPlayer() {
+  const m = new Mesh(), s = 0.9 / 16;
+  m.mat = MAT.pSkin; box(m, [0, 28 * s, 0], AX, [8 * s, 8 * s, 8 * s]);
+  m.mat = MAT.pHair; box(m, [0, 31.2 * s, -0.4 * s], AX, [8.3 * s, 1.8 * s, 8.3 * s]);
+  m.mat = MAT.pShirt; box(m, [0, 18 * s, 0], AX, [8 * s, 12 * s, 4 * s]);
+  for (const sd of [-1, 1]) {
+    m.mat = MAT.pShirt; box(m, [sd * 6 * s, 21 * s, 0], AX, [4 * s, 6 * s, 4 * s]);
+    m.mat = MAT.pSkin; box(m, [sd * 6 * s, 15 * s, 0], AX, [4 * s, 6 * s, 4 * s]);
+    m.mat = MAT.pPants; box(m, [sd * 2 * s, 6 * s, 0], AX, [4 * s, 12 * s, 4 * s]);
+  }
+  return m;
+}
+function buildFloor() {
+  const m = new Mesh();
+  m.mat = MAT.floor;
+  grid(m, 48, 48, (u, v) => [lerp(-34, 34, u), 0, lerp(-34, 34, v)], { flip: true });
+  return m;
+}
+const MESHES = {
+  body: buildBody(), skull: buildSkull(), jaw: buildJaw(),
+  // two joints: the upper leg, a cog knee, then one long shingled section that closes to the point
+  thighF: buildLeg(LEGS[0].a, 0.1, 0.085, 0.15, 11, 'thigh'), lowF: curveLeg(buildLeg(LEGS[0].b + LEGS[0].c, 0.085, 0.055, 0.13, 23, 'tars'), LEGS[0].b + LEGS[0].c),
+  thighR: buildLeg(LEGS[1].a, 0.1, 0.085, 0.15, 37, 'thigh'), lowR: curveLeg(buildLeg(LEGS[1].b + LEGS[1].c, 0.085, 0.055, 0.13, 51, 'tars'), LEGS[1].b + LEGS[1].c),
+  face0: buildFacePlate(FACE[0]), face1: buildFacePlate(FACE[1]), face2: buildFacePlate(FACE[2]), face3: buildFacePlate(FACE[3]), face4: buildFacePlate(FACE[4]),
+  player: buildPlayer(), floor: buildFloor(),
+};
+const FORCE_OPEN = new URLSearchParams(location.hash.slice(1)).get('open');
+
+// two-bone leg (hip to ankle), knee bending up and out, in the vertical plane through hip and foot
+function ikLeg(H, E, a, b, up = Y) {
+  const d = sub(E, H), dy = dot(d, up), h = sub(d, mul(up, dy)), dx = len(h), e1 = dx > 1e-5 ? mul(h, 1 / dx) : norm(cross(up, [0.31, 0.2, 0.93]));
+  const dc = clamp(Math.hypot(dx, dy), Math.abs(a - b) + 0.02, a + b - 0.02);
+  const beta = Math.acos(clamp((a * a + dc * dc - b * b) / (2 * a * dc), -1, 1)), th = Math.atan2(dy, dx) + beta;
+  const K = add(H, add(mul(e1, a * Math.cos(th)), mul(up, a * Math.sin(th))));
+  return { K, E: add(K, mul(norm(sub(E, K)), b)), n: norm(cross(e1, up)) };
+}
+// two-bone leg bent toward a pole: the room uses it with the pole up and out from the body, so knees never fold inward
+function ikPole(H, E, a, b, pole) {
+  const d = sub(E, H), dl = clamp(len(d), Math.abs(a - b) + 0.02, a + b - 0.02), dn = norm(d);
+  const cb = clamp((a * a + dl * dl - b * b) / (2 * a * dl), -1, 1), sb = Math.sqrt(1 - cb * cb);
+  let bp = sub(pole, mul(dn, dot(pole, dn))); bp = len(bp) > 1e-4 ? norm(bp) : norm(cross(dn, [0.3, 0.9, 0.2]));
+  const K = add(H, add(mul(dn, a * cb), mul(bp, a * sb)));
+  return { K, E: add(K, mul(norm(sub(add(H, mul(dn, dl)), K)), b)), n: norm(cross(dn, bp)) };
+}
+function restFoot(ground, s, i, feed) {
+  // feeding, it stands taller on legs drawn in under it
+  const L = LEGS[i], r = L.restR * (feed ? 0.9 : 1);
+  return at(ground, [s * Math.sin(L.restA) * r, 0, Math.cos(L.restA) * r]);
+}
+const sag = (P, Q, d, n = 12) => quad(P, add(lerp3(P, Q, 0.5), [0, -2 * d, 0]), Q, n);
+// the creature's look from its state: o = { x, z, yaw, feeding, t, motion, feet[4] | null, swing }; rigid parts come back
+// as [mesh, frame], the moving bits (cables, arms, the body it feeds on) are built into dyn in world space. The test room
+// passes its own body frame instead (o.frame, o.up: walls and ceilings too), each foot's surface (o.footN, o.footLift),
+// the body it holds (o.victim: head and torso frames) and whether the scythes and the beard grip it (o.grip, o.beardGrip)
+function harvestman(o, dyn) {
+  const T = o.t, feed = o.feeding, live = o.motion !== 'still', walking = o.motion === 'walk';
+  const bob = live ? (walking ? 0.05 * Math.sin(T * 3.4) : 0.03 * Math.sin(T * 1.2)) : 0;
+  const sway = live ? 0.02 * Math.sin(T * 0.8) : 0, beat = live ? Math.sin(T * (feed ? 7.5 : 1.4)) : 0;
+  const up = o.up || Y, grip = o.grip != null ? o.grip : feed, beardGrip = o.beardGrip != null ? o.beardGrip : feed;
+  const body = o.frame ? frame(add(o.frame.o, mul(up, bob)), m3mul(o.frame.R, rot(sway * 0.5, walking ? 0.025 * Math.sin(T * 1.7) : 0, sway)))
+    : frame([o.x, (feed ? BODY_Y.feed : BODY_Y.hunt) + bob, o.z], rot(o.yaw + sway * 0.5, (feed ? 0.0 : 0.1) + (walking ? 0.025 * Math.sin(T * 1.7) : 0), sway));
+  const ground = o.frame ? o.frame : frame([o.x, 0, o.z], rot(o.yaw)), parts = [['body', body]];
+  const collar = child(body, COLLAR.o, COLLAR.R);
+  // the skull twitches now and then while it hunts; feeding, it bows over what it holds and works its jaw
+  let hy = 0, hp = 0, hr = 0;
+  if (live && !feed) { const k = Math.floor(T / 2.1), u = T - k * 2.1, s = u < 0.06 ? u / 0.06 : u < 0.8 ? 1 : Math.max(0, 1 - (u - 0.8) / 0.14); hy = (hash(k) - 0.5) * 0.4 * s; hp = (hash(k + 9) - 0.5) * 0.2 * s; hr = (hash(k + 17) - 0.5) * 0.5 * s; }
+  if (feed) hp = FEED_PITCH + 0.02 * beat;
+  // the face plates: shut while it hunts, peeled back now and then in a scream, and open the whole time it feeds
+  let open = feed ? 1 : 0;
+  open = 0;
+  const scream = 0;
+  if (scream > 0) { hp -= 0.25 * scream; hy *= 1 - scream; hr = (hr * (1 - scream)) + 0.04 * scream * Math.sin(T * 40); }
+  const skull = child(collar, SKULL_AT, rot(hy, hp, hr));
+  const jaw = child(skull, JAW_AT, rx(feed ? FEED_JAW + 0.03 * beat : 0.32 + 0.85 * scream + (live ? 0.08 * Math.sin(T * 2.3) * (1 - scream) : 0)));
+  // round 6c: no visible head; the armoured front is the face, and the skull frame only places what it feeds on
+  // feeding: a body hangs from its mouth by the face, toes dragging, leaning in
+  let head = null, torso = null;
+  const fwd = ap(ground.R, [0, 0, 1]), side = ap(body.R, [1, 0, 0]);
+  if (o.victim) { head = o.victim.head; torso = o.victim.torso; }
+  else if (feed) {
+    // the victim hangs with its back to it, dragged up by the scythes through its chest until its head is right under
+    // the point; the beard only reaches down over the top half of the head, and the body hangs below, toes dragging
+    const hz = norm([0, 0.25, 0.97]), hy = norm([0, 0.97, -0.25]);
+    head = child(body, [0, -0.64, 0.74], cols(cross(hy, hz), hy, hz));
+    const N = at(head, [0, -0.2, -0.04]), sw = o.swing || [0, 0];
+    const tilt = Math.acos(clamp((N[1] - 0.04) / CORPSE_LEN, 0, 1)) + sw[0];
+    const u = norm(add(sub(mul(Y, Math.cos(tilt)), mul(fwd, Math.sin(tilt))), mul(ap(ground.R, [1, 0, 0]), sw[1] * 0.5)));
+    const f = norm(sub(fwd, mul(u, dot(fwd, u))));
+    torso = frame(add(N, mul(u, 0.27)), cols(cross(u, f), u, f));
+  }
+  // the beard: shards hanging under the point; feeding, they reach down and close round the head like teeth
+  for (let k = 0; k < 16; k++) {
+    const id = 1900 + k, a = Math.PI + (hash(id) - 0.5) * 2.6, sb = 0.86 + 0.13 * hash(id + 1), L = 0.12 + 0.18 * hash(id + 3), r = 0.018 + 0.01 * hash(id + 4);
+    const [p0, n0] = b7Off(a, sb, 0), P = at(body, p0), n = ap(body.R, n0);
+    let C, Q;
+    if (beardGrip && head) {
+      const th = (k / 16) * TAU + 0.2, grip = 0.01 * beat;
+      Q = at(head, [Math.sin(th) * (0.155 - grip), 0.01 + 0.04 * hash(id + 5), Math.cos(th) * (0.17 - grip)]);
+      C = add(lerp3(P, Q, 0.5), mul(sub(lerp3(P, Q, 0.5), at(head, [0, 0, 0])), 0.6));
+    } else {
+      const dir = norm(add(ap(body.R, [0, -1, 0.35]), mul(n, 0.4))), tw = live ? 0.02 * Math.sin(T * 3 + k) : 0;
+      Q = add(P, mul(dir, L)); C = add(lerp3(P, Q, 0.5), mul(n, 0.02 + tw));
+    }
+    dyn.mat = tint(MAT.scale, 0.7 + 0.35 * hash(id + 2), 2.4);
+    tube(dyn, quad(P, C, Q, 8), t => r * Math.pow(1 - t, 1.1) + 0.002, { seg: 5, shape: [1, 0.5] });
+  }
+  // two small scythe arms under the front: folded like a mantis while it hunts, feeding they hook into the victim's chest
+  for (const s of [-1, 1]) {
+    const S = at(body, [s * 0.2, -0.28, 0.42]);
+    let E, W, tip;
+    if (grip) {
+      // the same fold, closed up to drag the victim in: the elbow still juts forward, the forearm folds back under it and
+      // the blade drives forward through its back and out of its chest, points down
+      W = at(body, [s * 0.2, -0.96, 0.47]); tip = at(body, [s * 0.13, -1.25, 0.98]);
+      const sw2 = sub(W, S), d2 = len(sw2), dir = mul(sw2, 1 / d2), al = (0.54 * 0.54 - 0.385 * 0.385 + d2 * d2) / (2 * d2);
+      const fp = norm(sub(fwd, mul(dir, dot(fwd, dir))));
+      E = add(add(add(S, mul(dir, al)), mul(fp, Math.sqrt(Math.max(0, 0.54 * 0.54 - al * al)) * 0.97)), mul(side, s * 0.13));
+    } else {
+      const tw = live ? 0.05 * Math.sin(T * 2.6 + s) : 0;
+      E = at(body, [s * 0.3, -0.72, 0.72 + tw]); W = at(body, [s * 0.28, -0.42, 0.96 + tw]); tip = at(body, [s * 0.26, -0.98, 1.12 + tw]);
+    }
+    dyn.mat = MAT.steel; tube(dyn, [S, lerp3(S, E, 0.5), E], 0.034, { seg: 9 });
+    dyn.mat = MAT.dark; gear(dyn, E, mul(side, s), sub(E, S), 0.06, 0.04, 10);
+    dyn.mat = MAT.steel; tube(dyn, [E, lerp3(E, W, 0.5), W], 0.028, { seg: 9 });
+    const ch = sub(tip, W), bul = feed ? norm(sub(Y, mul(norm(ch), dot(Y, norm(ch))))) : norm(sub(W, E));
+    const pn = norm(cross(feed ? bul : sub(W, E), ch)), C = add(lerp3(W, tip, 0.5), mul(bul, feed ? 0.08 : 0.15));
+    dyn.mat = tint(MAT.steel, 1.05, 2.2);
+    tube(dyn, quad(W, C, tip, 12), t => 0.055 * Math.pow(1 - t, 0.8) + 0.002, { seg: 8, up: pn, shape: [0.22, 1] });
+    if (grip && torso) {
+      // the wounds where the blade goes in through the back and comes out of the chest
+      const ax = [ap(torso.R, [1, 0, 0]), ap(torso.R, [0, 1, 0]), ap(torso.R, [0, 0, 1])], bl = quad(W, C, tip, 40);
+      dyn.mat = MAT.maw;
+      for (const zs of [-1, 1]) {
+        let best = null, bd = 1e9;
+        for (const q of bl) { const d = sub(q, torso.o), lz = dot(d, ax[2]); if (Math.abs(lz - zs * 0.115) < bd) { bd = Math.abs(lz - zs * 0.115); best = d; } }
+        ellipsoid(dyn, at(torso, [dot(best, ax[0]), dot(best, ax[1]), zs * 0.113]), ax, zs < 0 ? [0.04, 0.055, 0.012] : [0.045, 0.06, 0.012], 10, 6);
+      }
+    }
+  }
+  // four long legs
+  for (let s = -1; s <= 1; s += 2) for (let i = 0; i < 2; i++) {
+    const L = LEGS[i], li = (s < 0 ? 0 : 2) + i;
+    const H = at(body, [s * L.hip[0], L.hip[1], L.hip[2]]);
+    let F = o.feet ? o.feet[li] : restFoot(ground, s, i, feed);
+    // a foot planted closer to the hip than the folded leg can reach: the point lands further out on the same surface
+    { const dmin = L.lc - L.a + 0.2; if (len(sub(F, H)) < dmin) {
+      const sn = o.footN ? o.footN[li] : up, hh = dot(sub(H, F), sn), Hp = sub(H, mul(sn, hh)), r = Math.sqrt(Math.max(0, dmin * dmin - hh * hh));
+      let dr = sub(F, Hp); if (len(dr) < 1e-3) dr = sub(sub(H, body.o), mul(sn, dot(sub(H, body.o), sn)));
+      F = add(Hp, mul(norm(dr), r));
+    } }
+    // the ankle sits a little in from the point, so the last segment falls steeper than the shin; it tucks in as the
+    // leg lifts and flexes a little all the time, which keeps the legs from moving like stilts
+    // two joints: hip to knee, then one long lower section curving smoothly down to the point
+    const lowL = L.lc;
+    // the knee rises toward the side its foot is on: the thigh is short against the long lower leg, so it always leans back
+    // from the foot, and a knee pushed out over the foot keeps it leaning out from the hull instead of in across it. When
+    // the foot is out level with the hip (reaching to the next wall or the ceiling), that side lines up with the leg itself,
+    // so the knee also leans away from the surface the body is on, which never lines up with it at the same time
+    const ho = sub(H, body.o), fo = sub(F, body.o), fh = sub(fo, mul(up, dot(fo, up)));
+    const out = len(fh) > 0.05 ? norm(fh) : norm(sub(ho, mul(up, dot(ho, up)))), dn = norm(sub(F, H)), p0 = norm(add(mul(up, 0.4), out));
+    const perp = v => sub(v, mul(dn, dot(v, dn)));
+    const ik = ikPole(H, F, L.a, lowL, add(perp(p0), mul(perp(up), 0.6)));
+    const K = ik.K, n = ik.n, P = ik.E;
+    const tx = norm(sub(K, H)), sx = norm(sub(P, K));
+    const thigh = frame(H, cols(tx, cross(n, tx), n)), shin = frame(K, cols(sx, cross(n, sx), n));
+    parts.push([i ? 'thighR' : 'thighF', thigh], [i ? 'lowR' : 'lowF', shin]);
+    // black cables and red sinew sagging from the belly to the leg
+    const B1 = at(body, [s * (L.hip[0] - 0.12), L.hip[1] - 0.22, L.hip[2] + (i ? 0.14 : -0.14)]), B2 = at(body, [s * (L.hip[0] - 0.2), L.hip[1] - 0.32, L.hip[2] + (i ? 0.05 : -0.05)]);
+    dyn.mat = MAT.cable;
+    tube(dyn, sag(B1, at(thigh, [L.a * 0.55, -0.06, 0.05]), 0.18, 14), 0.02, { seg: 8 });
+    tube(dyn, sag(B2, at(shin, [0.35, -0.05, -0.05]), 0.3, 16), 0.017, { seg: 8 });
+    dyn.mat = MAT.sinew;
+    tube(dyn, sag(add(B2, [0, 0.04, 0]), at(thigh, [L.a * 0.8, -0.08, -0.04]), 0.16, 12), 0.012, { seg: 6 });
+  }
+  if (feed && !o.victim) buildCorpse(dyn, head, torso, T, live);
+  return { parts, open, eyes: [], eyeLight: [0, -50, 0], mouth: feed ? null : at(body, [0, -0.3, 0.8]), belly: body.o[1] - 0.4 };
+}
+// the body it feeds on: the face held in its mouth, the head tipped back, hanging from the neck with toes on the floor
+function buildCorpse(m, hf, f, T, live) {
+  const Hd = p => at(hf, p), hax = [ap(hf.R, [1, 0, 0]), ap(hf.R, [0, 1, 0]), ap(hf.R, [0, 0, 1])];
+  m.mat = MAT.skin; ellipsoid(m, Hd([0, 0, 0]), hax, [0.15, 0.185, 0.165], 18, 12);
+  ellipsoid(m, Hd([0, -0.045, 0.16]), hax, [0.028, 0.038, 0.03], 8, 6);
+  m.mat = MAT.mouth; ellipsoid(m, Hd([0, -0.11, 0.135]), hax, [0.048, 0.038, 0.03], 10, 6);
+  const W = p => at(f, p), ax = [ap(f.R, [1, 0, 0]), ap(f.R, [0, 1, 0]), ap(f.R, [0, 0, 1])];
+  m.mat = MAT.skin; tube(m, [Hd([0, -0.1, -0.02]), lerp3(Hd([0, -0.2, -0.03]), W([0, -0.2, 0]), 0.5), W([0, -0.32, 0])], 0.06, { seg: 10 });
+  m.mat = MAT.shirt; tube(m, [W([0, -0.27, 0]), W([0, -0.5, 0.01]), W([0, -0.8, 0.01]), W([0, -1.0, 0])], t => 0.2 - 0.03 * t + 0.03 * Math.sin(Math.PI * t), { seg: 16, up: ax[0], shape: [1, 0.58], cap0: true });
+  m.mat = MAT.jeans; ellipsoid(m, W([0, -1.0, 0]), ax, [0.18, 0.11, 0.11], 14, 8);
+  for (const s of [-1, 1]) {
+    // arms hang toward the floor, whatever angle the body is at
+    const S = W([s * 0.24, -0.36, 0]), sw = live ? 0.04 * Math.sin(T * 1.3 + s) : 0, E = add(S, [sw, -0.32, s * 0.02]), Hn = add(E, [sw * 1.5, -0.3, 0.03]);
+    m.mat = MAT.shirt; ellipsoid(m, S, ax, [0.075, 0.075, 0.075], 10, 6); tube(m, [S, E], t => 0.062 - 0.008 * t, { seg: 10 });
+    m.mat = MAT.skin; tube(m, [E, Hn], t => 0.05 - 0.01 * t, { seg: 10 }); ellipsoid(m, add(Hn, [0, -0.05, 0]), ax, [0.04, 0.065, 0.03], 8, 6);
+    const lt = s < 0 ? -0.1 : 0.02, P = W([s * 0.1, -1.05, 0.02]), K = W([s * 0.11, -1.42, 0.07 + lt * 0.4]), A = W([s * 0.1, -1.76, 0.02 + lt]);
+    m.mat = MAT.jeans; tube(m, [P, lerp3(P, K, 0.5), K], 0.078, { seg: 10 }); tube(m, [K, lerp3(K, A, 0.5), A], t => 0.07 - 0.012 * t, { seg: 10 });
+    m.mat = MAT.shoe; ellipsoid(m, add(A, ap(f.R, [0, -0.04, 0.06])), ax, [0.055, 0.05, 0.12], 10, 6);
+  }
+  // what it drains drips off the jaw and the chin
+  if (live) for (let k = 0; k < 3; k++) {
+    const per = 1.2 + k * 0.33, u = ((T + k * 0.53) % per) / per, src = Hd([[-0.12, -0.15, 0.08], [0.11, -0.15, 0.08], [0, -0.19, 0.05]][k]);
+    const y = src[1] - 9.8 * Math.pow(u * per * 0.55, 2) * 0.5;
+    if (y > 0.02) { m.mat = MAT.maw; ellipsoid(m, [src[0], y, src[2]], AX, [0.014, 0.03, 0.014], 6, 4); }
+  }
+}
+
+// ---------------------------------------------------------------- walking: one leg at a time, each point planted until its rest spot runs ahead
+function makeWalker(home, yaw, feeding) {
+  return { home, yaw0: yaw, feeding, x: home[0], z: home[1], yaw, ang: 0, feet: null, steps: [], swing: [0, 0], swingV: [0, 0], t: 0 };
+}
+function resetWalker(w) { w.x = w.home[0]; w.z = w.home[1]; w.yaw = w.yaw0; w.ang = 0; w.feet = null; w.steps = []; w.swing = [0, 0]; w.swingV = [0, 0]; }
+function stepWalker(w, dt, motion) {
+  w.t += dt;
+  const ground = () => frame([w.x, 0, w.z], rot(w.yaw));
+  const rests = () => { const g = ground(), r = []; for (let s = -1; s <= 1; s += 2) for (let i = 0; i < 2; i++) r.push(restFoot(g, s, i, w.feeding)); return r; };
+  if (!w.feet) { w.feet = rests().map(p => p.slice()); w.steps = w.feet.map(() => null); }
+  if (dt <= 0) return;
+  let vx = 0, vz = 0;
+  if (motion === 'walk') {
+    const R = 1.6, om = 0.24, px = w.x, pz = w.z;
+    w.ang += om * dt;
+    w.x = w.home[0] + R * Math.sin(w.ang); w.z = w.home[1] + R * Math.cos(w.ang) - R;
+    vx = (w.x - px) / dt; vz = (w.z - pz) / dt;
+    w.yaw = Math.atan2(vx, vz);
+  } else if (Math.abs(w.x - w.home[0]) > 1e-3 || Math.abs(w.z - w.home[1]) > 1e-3) resetWalker(w), w.feet = rests().map(p => p.slice()), w.steps = w.feet.map(() => null);
+  const R = rests();
+  let busy = false;
+  for (let i = 0; i < 4; i++) {
+    const st = w.steps[i];
+    if (!st) continue;
+    st.u += dt / st.dur;
+    const u = Math.min(1, st.u), e = smooth(u);
+    w.feet[i] = [lerp(st.from[0], st.to[0], e), Math.pow(Math.sin(Math.PI * u), 0.7) * st.lift, lerp(st.from[2], st.to[2], e)];
+    if (st.u >= 1) { w.feet[i] = st.to.slice(); w.steps[i] = null; } else busy = true;
+  }
+  if (motion === 'walk' && !busy) {
+    let pick = -1, most = 0.5, to = null;
+    for (let i = 0; i < 4; i++) {
+      const target = add(R[i], [vx * 1.2, 0, vz * 1.2]), far = Math.hypot(w.feet[i][0] - target[0], w.feet[i][2] - target[2]);
+      if (far > most) { most = far; pick = i; to = target; }
+    }
+    if (pick >= 0) w.steps[pick] = { from: w.feet[pick].slice(), to: [to[0], 0, to[2]], u: 0, dur: 0.6, lift: 0.9 };
+  }
+  // idle: now and then one leg lifts high and stabs back down where it was
+  if (motion === 'idle') {
+    const k = Math.floor(w.t / 3.1), u = w.t - k * 3.1, li = Math.floor(hash(k * 3.1 + (w.feeding ? 5 : 0)) * 4);
+    for (let i = 0; i < 4; i++) { const r = R[i]; w.feet[i] = [r[0], 0, r[2]]; }
+    if (u < 0.7) { const r = R[li], a = Math.sin(Math.PI * u / 0.7); w.feet[li] = [r[0], 0.8 * Math.pow(a, 0.6), r[2]]; }
+  }
+  // the held body swings like a pendulum behind the movement
+  const acc = motion === 'walk' ? [0.16 - 0.2 * Math.sin(w.t * 3.4), 0.16 * Math.cos(w.t * 1.7)] : [0, 0];
+  for (let k = 0; k < 2; k++) { w.swingV[k] += (-6 * w.swing[k] - 1.2 * w.swingV[k] + acc[k] * 6) * dt; w.swing[k] += w.swingV[k] * dt; }
+  if (motion === 'idle') { w.swing[0] = 0.04 * Math.sin(w.t * 1.3); w.swing[1] = 0.04 * Math.sin(w.t * 1.1 + 1); }
+}
+function pose(w, motion, dyn) {
+  return harvestman({ x: w.x, z: w.z, yaw: w.yaw, feeding: w.feeding, t: w.t, motion, feet: motion === 'still' ? null : w.feet, swing: motion === 'still' ? [0, 0] : w.swing }, dyn);
+}
+
+// ---------------------------------------------------------------- measurements for the cards
+function measure(feeding) {
+  const dyn = new Mesh(), r = harvestman({ x: 0, z: 0, yaw: 0, feeding, t: 0, motion: 'still', feet: null }, dyn);
+  let top = 0, x0 = 1e9, x1 = -1e9, z0 = 1e9, z1 = -1e9;
+  for (const [name, f] of r.parts) for (const ch of MESHES[name].chunks) for (let q = 0; q < ch.v.length; q += VS * 3) {
+    const p = at(f, [ch.v[q], ch.v[q + 1], ch.v[q + 2]]);
+    top = Math.max(top, p[1]); x0 = Math.min(x0, p[0]); x1 = Math.max(x1, p[0]); z0 = Math.min(z0, p[2]); z1 = Math.max(z1, p[2]);
+  }
+  return { top, span: Math.max(x1 - x0, z1 - z0), body: r.belly };
+}
+const fmt = v => v.toFixed(1) + ' blocks';
+for (const [k, f] of [['h', false], ['f', true]]) { const m = measure(f); document.getElementById(k + '-tall').textContent = fmt(m.top); document.getElementById(k + '-span').textContent = fmt(m.span); document.getElementById(k + '-body').textContent = fmt(m.body); }
+
+// ---------------------------------------------------------------- the test room: it roams, climbs, hides, drags a body and hears noises, all on its own
+// Nothing here is keyframed. Its body slides over the room's surfaces, each foot finds a spot on whatever is under it and
+// the joints are solved to reach it; a few needs decide what it wants, and every choice is a destination, a speed and a
+// held pose. The body it drags is a loose chain of points that falls, swings and scrapes the floor by itself.
+const ROOM = { a: [-8, 0, -6], b: [8, 7, 6] };
+const CRATES = [{ a: [4.3, 0, -6], b: [6.4, 1.1, -4.1] }, { a: [-3.2, 0, 3.6], b: [-1.5, 0.85, 5.4] }, { a: [1.2, 0, -1.2], b: [2.3, 0.55, -0.1] }];
+const DOOR = { x0: -1.1, x1: 1.1, y1: 2.5 };          // a doorway in the south wall, where you stand
+const DARK = { p: [-8, 7, -6], r: 6.5 };             // the corner the light never reaches
+const PLAYER_ROOM = [0, 0, 5.3];
+const NAV_H = 2.05;                                  // how far its body keeps off walls and ceilings (it hugs them)
+const STAND_H = 2.5, CLING_SPREAD = 1.85;            // on the floor it stands tall on legs drawn in; on walls it spreads them
+const floorness = c => smooth((c.up[1] - 0.55) / 0.4);
+const NAV_IN = { a: add(ROOM.a, [NAV_H, NAV_H, NAV_H]), b: sub(ROOM.b, [NAV_H, NAV_H, NAV_H]) };
+// the surfaces it walks on, as the planes its body moves over (NAV_H off each one)
+const NAV_FACES = [
+  { name: 'the floor', n: [0, 1, 0], k: 1, v: NAV_IN.a[1] }, { name: 'the ceiling', n: [0, -1, 0], k: 1, v: NAV_IN.b[1] },
+  { name: 'the left wall', n: [1, 0, 0], k: 0, v: NAV_IN.a[0] }, { name: 'the right wall', n: [-1, 0, 0], k: 0, v: NAV_IN.b[0] },
+  { name: 'the back wall', n: [0, 0, 1], k: 2, v: NAV_IN.a[2] }, { name: 'the door wall', n: [0, 0, -1], k: 2, v: NAV_IN.b[2] },
+];
+const onFace = (p, f) => { const F = NAV_FACES[f], q = [0, 1, 2].map(k => clamp(p[k], NAV_IN.a[k], NAV_IN.b[k])); q[F.k] = F.v; return q; };
+// the shortest way over the walls from p on face fp to q on face fq: straight across, over one edge, or over a wall between
+function edgePt(p, fa, q, fb) {
+  const A = NAV_FACES[fa], B = NAV_FACES[fb], j = 3 - A.k - B.k;
+  const dp = Math.abs(p[B.k] - B.v), dq = Math.abs(q[A.k] - A.v), t = dp + dq > 1e-6 ? dp / (dp + dq) : 0.5, e = [0, 0, 0];
+  e[A.k] = A.v; e[B.k] = B.v; e[j] = clamp(lerp(p[j], q[j], t), NAV_IN.a[j], NAV_IN.b[j]);
+  return e;
+}
+function navRoute(p, fp, q, fq) {
+  if (fp === fq) return [{ p: q, f: fq }];
+  if (NAV_FACES[fp].k !== NAV_FACES[fq].k) return [{ p: edgePt(p, fp, q, fq), f: fp }, { p: q, f: fq }];
+  let best = null, bd = 1e9;
+  for (let m = 0; m < 6; m++) {
+    if (NAV_FACES[m].k === NAV_FACES[fp].k) continue;
+    const e1 = edgePt(p, fp, q, m), e2 = edgePt(e1, m, q, fq), d = len(sub(e1, p)) + len(sub(e2, e1)) + len(sub(q, e2));
+    if (d < bd) { bd = d; best = [{ p: e1, f: fp }, { p: e2, f: m }, { p: q, f: fq }]; }
+  }
+  return best;
+}
+// which way is "up" for its body here: the surface under it, blended across the edge as it goes over onto the next
+function navUp(p) {
+  let s = [0, 0, 0];
+  for (const F of NAV_FACES) { const w = smooth(1 - Math.abs(p[F.k] - F.v) / 0.9); if (w > 0) s = add(s, mul(F.n, w)); }
+  return len(s) > 1e-6 ? norm(s) : Y;
+}
+// a ray against the inside of the room and the crates: the spot it hits and that surface's normal
+function castRoom(o, d, maxT) {
+  let bt = maxT, bn = null;
+  for (let k = 0; k < 3; k++) {
+    if (Math.abs(d[k]) < 1e-9) continue;
+    const t = ((d[k] > 0 ? ROOM.b[k] : ROOM.a[k]) - o[k]) / d[k];
+    if (t > 0 && t < bt) { bt = t; bn = [0, 0, 0]; bn[k] = d[k] > 0 ? -1 : 1; }
+  }
+  for (const c of CRATES) {
+    let t0 = -1e9, t1 = 1e9, nk = -1, ns = 0, miss = false;
+    for (let k = 0; k < 3; k++) {
+      if (Math.abs(d[k]) < 1e-9) { if (o[k] < c.a[k] || o[k] > c.b[k]) miss = true; continue; }
+      let ta = (c.a[k] - o[k]) / d[k], tb = (c.b[k] - o[k]) / d[k], s = -1;
+      if (ta > tb) { const x = ta; ta = tb; tb = x; s = 1; }
+      if (ta > t0) { t0 = ta; nk = k; ns = s; }
+      t1 = Math.min(t1, tb);
+    }
+    if (!miss && nk >= 0 && t0 <= t1 && t0 > 0 && t0 < bt) { bt = t0; bn = [0, 0, 0]; bn[nk] = ns; }
+  }
+  return bn ? { p: add(o, mul(d, bt)), n: bn } : null;
+}
+// where a foot lands: along the line from its hip out to its resting spot, or else straight down onto whatever is there
+function footSpot(H, P0, up) {
+  const d = sub(P0, H), L = len(d) || 1;
+  return castRoom(H, mul(d, 1 / L), L * 1.4) || castRoom(add(P0, mul(up, 1.5)), mul(up, -1), 4) || { p: P0, n: up };
+}
+
+// ---------------------------------------------------------------- the body it drags: seven points held together by distances
+// 0 head, 1 neck, 2 hips, 3 knees, 4 feet, 5 and 6 hands
+const KLEN = [[0, 1, 0.2], [1, 2, 0.73], [2, 3, 0.37], [3, 4, 0.34]], KMIN = [[1, 3, 0.8], [2, 4, 0.44], [0, 2, 0.86]], KRAD = [0.15, 0.08, 0.13, 0.08, 0.07, 0.05, 0.05];
+// where it holds a body: the head under the point, back to it, gripped by the beard when it feeds
+const GRIP = (() => { const hy = norm([0, 0.97, -0.25]), hz = norm([0, 0.25, 0.97]), h = [0, -0.64, 0.74]; return { head: h, neck: sub(sub(h, mul(hy, 0.2)), mul(hz, 0.04)) }; })();
+function makeCorpse(p, yaw) {
+  const f = [Math.sin(yaw), 0, Math.cos(yaw)], s = [Math.cos(yaw), 0, -Math.sin(yaw)], y = 0.13;
+  const x = [add(p, add(mul(f, 0.2), [0, 0.02, 0])), p, add(p, mul(f, -0.73)), add(p, mul(f, -1.1)), add(p, mul(f, -1.44)), add(p, add(mul(f, -0.5), mul(s, -0.35))), add(p, add(mul(f, -0.5), mul(s, 0.35)))];
+  for (const q of x) q[1] = y;
+  return { x, o: x.map(q => q.slice()), side: s, pin: 0, husk: 0 };
+}
+function stepCorpse(K, dt, body) {
+  if (dt <= 0) return;
+  const n = 3, h = dt / n;
+  const pinH = body ? at(body, GRIP.head) : null, pinN = body ? at(body, GRIP.neck) : null;
+  for (let sub_ = 0; sub_ < n; sub_++) {
+    for (let i = 0; i < 7; i++) {
+      const x = K.x[i], v = mul(sub(x, K.o[i]), 0.992);
+      K.o[i] = x.slice(); K.x[i] = add(add(x, v), [0, -9.8 * h * h, 0]);
+    }
+    for (let it = 0; it < 6; it++) {
+      for (const [a, b, L] of KLEN) dist(a, b, L, 0);
+      for (const [a, b, L] of KMIN) dist(a, b, L, -1);
+      // hands hang from the shoulders
+      const u = norm(sub(K.x[1], K.x[2])), sd = K.side;
+      for (const [hi, s] of [[5, -1], [6, 1]]) {
+        const S = add(add(K.x[1], mul(u, -0.09)), mul(sd, s * 0.24)), d = sub(K.x[hi], S), l = len(d);
+        if (l > 0.6) K.x[hi] = add(S, mul(d, 0.6 / l));
+      }
+      if (K.pin > 0 && pinH) { K.x[0] = lerp3(K.x[0], pinH, K.pin); K.x[1] = lerp3(K.x[1], pinN, K.pin); }
+      for (let i = 0; i < 7; i++) collide(i);
+    }
+  }
+  // which way its shoulders face: carried along from the last frame, or the creature's when it is held
+  const u = norm(sub(K.x[1], K.x[2]));
+  let s = K.pin > 0.5 && body ? ap(body.R, [1, 0, 0]) : K.side;
+  s = sub(s, mul(u, dot(s, u)));
+  K.side = len(s) > 1e-3 ? norm(s) : norm(cross(u, Y));
+  function dist(a, b, L, mode) {
+    const d = sub(K.x[b], K.x[a]), l = len(d) || 1e-6;
+    if (mode < 0 && l >= L) return;
+    const c = mul(d, (l - L) / l * 0.5);
+    K.x[a] = add(K.x[a], c); K.x[b] = sub(K.x[b], c);
+  }
+  function collide(i) {
+    const r = KRAD[i], x = K.x[i], o = K.o[i];
+    for (let k = 0; k < 3; k++) {
+      const lo = ROOM.a[k] + r, hi = ROOM.b[k] - r;
+      if (x[k] < lo || x[k] > hi) {
+        x[k] = clamp(x[k], lo, hi);
+        // scraping: the other two directions lose most of their speed against the surface
+        for (let j = 0; j < 3; j++) if (j !== k) o[j] = lerp(o[j], x[j], 0.45);
+      }
+    }
+    for (const c of CRATES) {
+      if (x[0] < c.a[0] - r || x[0] > c.b[0] + r || x[1] < c.a[1] - r || x[1] > c.b[1] + r || x[2] < c.a[2] - r || x[2] > c.b[2] + r) continue;
+      let bk = 0, bd = 1e9, bv = 0;
+      for (let k = 0; k < 3; k++) for (const [v, s] of [[c.a[k] - r, -1], [c.b[k] + r, 1]]) { const d = Math.abs(x[k] - v); if (d < bd && !(k === 1 && s < 0)) { bd = d; bk = k; bv = v; } }
+      x[bk] = bv;
+      for (let j = 0; j < 3; j++) if (j !== bk) o[j] = lerp(o[j], x[j], 0.45);
+    }
+  }
+}
+function corpseFrames(K) {
+  const H = K.x[0], N = K.x[1], P = K.x[2], u = norm(sub(N, P)), x = norm(sub(K.side, mul(u, dot(K.side, u)))), f = cross(x, u);
+  const hy = norm(sub(H, N)), hx = norm(sub(x, mul(hy, dot(x, hy)))), hz = cross(hx, hy);
+  return { head: frame(H, cols(hx, hy, hz)), torso: frame(add(N, mul(u, 0.27)), cols(x, u, f)) };
+}
+function drawCorpse(m, K, fr) {
+  const hf = fr.head, f = fr.torso, Hd = p => at(hf, p), W = p => at(f, p);
+  const hax = [ap(hf.R, [1, 0, 0]), ap(hf.R, [0, 1, 0]), ap(hf.R, [0, 0, 1])], ax = [ap(f.R, [1, 0, 0]), ap(f.R, [0, 1, 0]), ap(f.R, [0, 0, 1])];
+  const skin = K.husk ? tint(MAT.skin, 0.72) : MAT.skin;
+  m.mat = skin; ellipsoid(m, Hd([0, 0, 0]), hax, [0.15, 0.185, 0.165], 18, 12);
+  ellipsoid(m, Hd([0, -0.045, 0.16]), hax, [0.028, 0.038, 0.03], 8, 6);
+  m.mat = MAT.mouth; ellipsoid(m, Hd([0, -0.11, 0.135]), hax, [0.048, 0.038, 0.03], 10, 6);
+  m.mat = skin; tube(m, [Hd([0, -0.1, -0.02]), lerp3(Hd([0, -0.2, -0.03]), W([0, -0.2, 0]), 0.5), W([0, -0.32, 0])], 0.06, { seg: 10 });
+  m.mat = MAT.shirt; tube(m, [W([0, -0.27, 0]), W([0, -0.5, 0.01]), W([0, -0.8, 0.01]), W([0, -1.0, 0])], t => (0.2 - 0.03 * t + 0.03 * Math.sin(Math.PI * t)) * (K.husk ? 0.86 : 1), { seg: 16, up: ax[0], shape: [1, 0.58], cap0: true });
+  m.mat = MAT.jeans; ellipsoid(m, W([0, -1.0, 0]), ax, [0.18, 0.11, 0.11], 14, 8);
+  for (const s of [-1, 1]) {
+    const S = W([s * 0.24, -0.36, 0]), Hn = K.x[s < 0 ? 5 : 6], E = add(lerp3(S, Hn, 0.5), [0, -0.05, 0]);
+    m.mat = MAT.shirt; ellipsoid(m, S, ax, [0.075, 0.075, 0.075], 10, 6); tube(m, [S, E], t => 0.062 - 0.008 * t, { seg: 10 });
+    m.mat = skin; tube(m, [E, Hn], t => 0.05 - 0.01 * t, { seg: 10 }); ellipsoid(m, Hn, ax, [0.04, 0.065, 0.03], 8, 6);
+    const P = W([s * 0.1, -1.05, 0.02]), Kn = add(K.x[3], mul(ax[0], s * 0.11)), A = add(K.x[4], mul(ax[0], s * 0.1));
+    m.mat = MAT.jeans; tube(m, [P, lerp3(P, Kn, 0.5), Kn], 0.078, { seg: 10 }); tube(m, [Kn, lerp3(Kn, A, 0.5), A], t => 0.07 - 0.012 * t, { seg: 10 });
+    const leg = norm(sub(A, Kn)), toe = norm(sub(ax[2], mul(leg, dot(ax[2], leg))));
+    m.mat = MAT.shoe; ellipsoid(m, add(A, add(mul(leg, 0.04), mul(toe, 0.06))), [ax[0], leg, toe], [0.055, 0.05, 0.12], 10, 6);
+  }
+}
+
+// ---------------------------------------------------------------- the creature in the room
+const R_ = { seed: 1, t: 0 };
+const rnd = () => hash(R_.seed++ * 1.618 + 0.37);
+const pick = a => a[Math.floor(rnd() * a.length) % a.length];
+function makeRoamer() {
+  return { pos: [-2, NAV_H, -1], face: 0, up: [0, 1, 0], fwd: norm([0.6, 0, 0.8]), vel: [0, 0, 0], spd: 0, turn: 0, route: [], speed: 1.6, look: null,
+    h: NAV_H, hT: NAV_H, pitch: 0.1, tuck: 0, tuckT: 0, rear: 0, rearT: 0, flinch: 0, feet: null, steps: [null, null, null, null], lift: [0, 0, 0, 0],
+    phase: 0, still: 0, fid: 2.5, t: 0, rp: [-2, NAV_H, -1], rv: [0, 0, 0] };
+}
+// its body frame from where it is: up from the surface, nose along its heading, and the body riding on its steps, dipping
+// a little and shifting its weight away from each leg as it lifts
+function roamerFrame(c) {
+  const right = norm(cross(c.up, c.fwd)), fwd = cross(right, c.up), R0 = cols(right, c.up, fwd);
+  let dip = 0, roll = 0, pitch = 0;
+  for (let li = 0; li < 4; li++) { const l = c.lift[li], s = li < 2 ? -1 : 1; dip += l; roll += s * l; if (!(li & 1)) pitch -= l; }
+  const o = add(c.rp, mul(c.up, c.h - NAV_H - 0.03 * dip));
+  return { flat: frame(o, R0), body: frame(o, m3mul(R0, rot(0, c.pitch + 0.035 * pitch, 0.045 * roll))) };
+}
+// turn a heading toward another about the up axis, no faster than rate
+function turnToward(v, want, up, maxA) {
+  const a = Math.acos(clamp(dot(v, want), -1, 1)), s = Math.sign(dot(cross(v, want), up)) || 1, t = Math.min(a, maxA) * s;
+  const side = cross(up, v);
+  return { v: norm(add(mul(v, Math.cos(t)), mul(side, Math.sin(t)))), a: t };
+}
+const STRIDE = 2.2, GAIT_OFF = [0.25, 0, 0.75, 0.5];   // a wave: left rear, left front, right rear, right front
+function moveRoamer(c, dt) {
+  c.t += dt;
+  const e = k => 1 - Math.exp(-dt * k);
+  // steer for the next waypoint; only the last one is slowed for, the edges between walls are rolled over without stopping
+  while (c.route.length && len(sub(c.route[0].p, c.pos)) < 0.03) { c.pos = c.route[0].p.slice(); c.face = c.route[0].f; c.route.shift(); }
+  let dir = null, remain = 0;
+  if (c.route.length) {
+    const d = sub(c.route[0].p, c.pos); dir = norm(d); remain = len(d);
+    for (let i = 1; i < c.route.length; i++) remain += len(sub(c.route[i].p, c.route[i - 1].p));
+  }
+  let want = 0;
+  if (dir && dt > 0) {
+    const fl = sub(dir, mul(c.up, dot(dir, c.up))), al = len(fl) > 1e-3 ? dot(norm(fl), c.fwd) : 1;
+    want = c.speed * Math.pow(clamp((al + 0.15) / 1.15, 0, 1), 1.6);
+    want = Math.min(want, Math.sqrt(2 * 1.5 * remain) + 0.08);
+  }
+  c.spd += clamp(want - c.spd, -2.6 * dt, 1.8 * dt);
+  if (!dir) c.spd = 0;
+  let go = c.spd * dt;
+  while (go > 0 && c.route.length) {
+    const w = c.route[0], d = sub(w.p, c.pos), dl = len(d);
+    if (dl <= go) { c.pos = w.p.slice(); c.face = w.f; c.route.shift(); go -= dl; } else { c.pos = add(c.pos, mul(d, go / dl)); c.face = w.f; go = 0; }
+  }
+  if (!c.route.length) c.spd = Math.min(c.spd, 0.2);
+  c.vel = lerp3(c.vel, dir ? mul(dir, c.spd) : [0, 0, 0], e(6));
+  c.still = c.spd > 0.05 ? 0 : c.still + dt;
+  // the body itself follows its path on a spring, so it rounds the edges between walls instead of snapping round them
+  if (dt > 0) { const w = 9, h = Math.min(dt, 1 / 30); for (let t = 0; t < dt - 1e-9; t += h) { const k = Math.min(h, dt - t); c.rv = add(c.rv, mul(sub(mul(sub(c.pos, c.rp), w * w), mul(c.rv, 2 * w)), k)); c.rp = add(c.rp, mul(c.rv, k)); } }
+  // up follows the surface under it and where its feet are planted
+  let fn = [0, 0, 0];
+  if (c.feet) for (let i = 0; i < 4; i++) if (!c.steps[i]) fn = add(fn, c.feet[i].n);
+  const upT = len(fn) > 0.5 ? norm(add(mul(navUp(c.pos), 0.65), mul(norm(fn), 0.35))) : navUp(c.pos);
+  c.up = norm(lerp3(c.up, upT, e(3.2)));
+  c.fwd = sub(c.fwd, mul(c.up, dot(c.fwd, c.up)));
+  c.fwd = len(c.fwd) > 1e-3 ? norm(c.fwd) : norm(cross(Math.abs(c.up[0]) > 0.7 ? [0, 0, 1] : [1, 0, 0], c.up));
+  // the nose turns smoothly toward where it is going or what it is watching
+  let wf = dir ? dir : c.look ? sub(c.look, c.pos) : null, turn = 0;
+  if (wf && dt > 0) {
+    wf = sub(wf, mul(c.up, dot(wf, c.up)));
+    if (len(wf) > 1e-3) {
+      wf = norm(wf);
+      const a = Math.acos(clamp(dot(c.fwd, wf), -1, 1)), r = turnToward(c.fwd, wf, c.up, Math.min(a * e(3.5), 1.9 * dt));
+      c.fwd = r.v; turn = r.a / dt;
+    }
+  }
+  c.turn = lerp(c.turn, turn, e(8));
+  // the walk's rhythm runs on distance covered and on turning
+  c.phase += dt > 0 ? (c.spd * dt + Math.abs(c.turn) * dt * 1.5) / STRIDE : 0;
+  // height, tuck, rearing up and the jolt of a fright, all eased
+  c.tuck = lerp(c.tuck, c.tuckT, e(2.5)); c.rear = lerp(c.rear, c.rearT, e(4));
+  c.flinch = Math.max(0, c.flinch - dt * 2.4);
+  const jolt = Math.sin(Math.min(1, c.flinch) * Math.PI);
+  const lift_ = ROOMSIM.mind && ROOMSIM.mind.feeding ? 0 : (STAND_H - NAV_H) * floorness(c);
+  c.h = lerp(c.h, c.hT + lift_ - 0.75 * c.tuck + 0.28 * c.rear - 0.28 * jolt, e(5));
+  c.pitch = lerp(c.pitch, 0.1 - 0.42 * c.rear - 0.14 * jolt, e(8));
+}
+// the four feet: each lifts in turn as the rhythm comes round to it and swings to a spot a little ahead of where it rests,
+// tracking that spot as it goes; standing still, any foot left out of place is tidied in one at a time
+function stepFeet(c, dt, fr) {
+  const feeding = ROOMSIM.mind && ROOMSIM.mind.feeding, cyc = (c.spd + 1.5 * Math.abs(c.turn)) / STRIDE, sf = clamp(0.3 + 0.12 * c.spd / 1.8, 0.3, 0.42);
+  const target = li => {
+    const s = li < 2 ? -1 : 1, i = li & 1, L = LEGS[i], r0 = L.restR * lerp(CLING_SPREAD, 1, floorness(c)) * (feeding ? 0.9 : 1),
+      // the lower leg can only fold so far against the thigh, so when the body sinks (tucked in, dipping, crouched) the
+      // feet move out far enough that the points still reach
+      dmin = L.lc - L.a + 0.45, r = Math.max(r0, Math.sqrt(Math.max(0, dmin * dmin - c.h * c.h)) + 0.65);
+    const H = at(fr.body, [s * L.hip[0], L.hip[1], L.hip[2]]);
+    let off = ap(fr.flat.R, [s * Math.sin(L.restA) * r, -c.h, Math.cos(L.restA) * r]);
+    // land ahead by half a stance: along the way it moves, and round the way it turns
+    const st = cyc > 0.02 ? (1 - sf) / (2 * cyc) : 0, ta = clamp(c.turn * st, -0.45, 0.45);
+    if (Math.abs(ta) > 1e-4) { const side = cross(c.up, off), hu = mul(c.up, dot(off, c.up)), flat = sub(off, hu), sd = cross(c.up, flat); off = add(hu, add(mul(flat, Math.cos(ta)), mul(sd, Math.sin(ta)))); }
+    let lead = mul(c.vel, st); if (len(lead) > 0.95) lead = mul(norm(lead), 0.95);
+    const P0 = add(add(fr.flat.o, off), lead);
+    let h = footSpot(H, P0, c.up);
+    // a surface right by the hip (a crate top, the next wall) is closer than the leg folds: drop straight down instead,
+    // and if that is still too close, reach further out until the point lands far enough away
+    const reach = L.lc - L.a + 0.3;
+    if (len(sub(h.p, H)) < reach) { const h2 = castRoom(add(P0, mul(c.up, 1.5)), mul(c.up, -1), 4); if (h2 && len(sub(h2.p, H)) > len(sub(h.p, H))) h = h2; }
+    for (let k = 1; k <= 4 && len(sub(h.p, H)) < reach; k++) {
+      const d = sub(P0, fr.flat.o), dh = norm(sub(d, mul(c.up, dot(d, c.up)))), P1 = add(P0, mul(dh, 0.4 * k));
+      const h3 = castRoom(add(P1, mul(c.up, 1.5)), mul(c.up, -1), 4); if (h3 && len(sub(h3.p, H)) > len(sub(h.p, H))) h = h3;
+    }
+    return h;
+  };
+  const cramped = li => { const s = li < 2 ? -1 : 1, L = LEGS[li & 1]; return len(sub(c.feet[li].p, at(fr.body, [s * L.hip[0], L.hip[1], L.hip[2]]))) < L.lc - L.a + 0.3; };
+  if (!c.feet) { c.feet = [0, 1, 2, 3].map(li => { const h = target(li); return { p: h.p, n: h.n }; }); c.prevPhase = c.phase; }
+  if (dt <= 0) return;
+  let active = 0;
+  for (let i = 0; i < 4; i++) {
+    const st = c.steps[i];
+    if (!st) continue;
+    st.u += dt / st.dur;
+    if (!st.fixed && st.u < 0.85) { const h = target(i); st.p1 = h.p; st.n1 = h.n; }
+    const u = Math.min(1, st.u), e = smooth(u), nm = norm(add(add(st.n0, st.n1), mul(c.up, 2)));
+    c.feet[i] = { p: add(lerp3(st.p0, st.p1, e), mul(nm, Math.pow(Math.sin(Math.PI * u), 0.8) * st.lift)), n: norm(lerp3(st.n0, st.n1, e)) };
+    c.lift[i] = Math.sin(Math.PI * u);
+    if (st.u >= 1) { c.feet[i] = { p: st.p1.slice(), n: st.n1.slice() }; c.steps[i] = null; c.lift[i] = 0; } else active++;
+  }
+  const lift = (i, dur, fixed) => { const h = fixed ? c.feet[i] : target(i); c.steps[i] = { p0: c.feet[i].p.slice(), n0: c.feet[i].n.slice(), p1: h.p.slice(), n1: h.n.slice(), u: 0, dur, lift: fixed ? 0.8 : 0.55 + 0.25 * Math.min(1, c.spd / 1.6), fixed }; active++; };
+  const moving = cyc > 0.05;
+  for (let i = 0; i < 4; i++) {
+    if (c.steps[i] || (c.rear > 0.3 && !(i & 1))) continue;
+    const a = c.prevPhase + GAIT_OFF[i], b = c.phase + GAIT_OFF[i];
+    const due = moving && Math.floor(b) > Math.floor(a), far = len(sub(c.feet[i].p, target(i).p));
+    if ((due && far > 0.15) || far > 2.3 || (cramped(i) && far > 0.3 && !active)) lift(i, clamp(sf / Math.max(cyc, 0.05), 0.26, 0.75), false);
+  }
+  c.prevPhase = c.phase;
+  // standing: tidy the stance one foot at a time, and now and then a leg lifts and stabs back down where it was
+  if (!moving && !active) {
+    let worst = -1, wd = 0.35;
+    for (let i = 0; i < 4; i++) { if (c.rear > 0.3 && !(i & 1)) continue; const d = len(sub(c.feet[i].p, target(i).p)); if (d > wd || (cramped(i) && d > 0.2 && worst < 0)) { wd = Math.max(d, wd); worst = i; } }
+    if (worst >= 0) lift(worst, 0.5, false);
+    else if (c.still > 1.2) { c.fid -= dt; if (c.fid <= 0) { lift(Math.floor(rnd() * 4) % 4, 0.75, true); c.fid = 2.5 + rnd() * 3.5; } }
+  }
+}
+const ROOMSIM = { c: makeRoamer(), k: makeCorpse([3.2, 0, 1.8], 2.2), mind: null, pings: [], frame: null };
+function resetRoom() { R_.seed = 1; ROOMSIM.c = makeRoamer(); ROOMSIM.k = makeCorpse([3.2, 0, 1.8], 2.2); ROOMSIM.mind = makeMind(); ROOMSIM.pings = []; }
+// feet as the rig wants them; when it rears, the front pair are held up and forward instead
+function rigFeet(c, fr) {
+  const feet = c.feet.map(f => f.p), fn = c.feet.map(f => f.n), lift = c.lift.slice();
+  if (c.rear > 0.02) for (const li of [0, 2]) {
+    const s = li < 2 ? -1 : 1, up = at(fr.body, [s * 1.2, 1.5, 2.3]);
+    feet[li] = lerp3(feet[li], up, smooth(c.rear)); lift[li] = Math.max(lift[li], c.rear); fn[li] = norm(lerp3(fn[li], c.up, c.rear));
+  }
+  return { feet, fn, lift };
+}
+
+// ---------------------------------------------------------------- what it wants and what it does about it
+// needs drift over time; when a plan runs out it weighs its options by how it feels and picks one, with some chance in it.
+// A plan is a list of steps: go somewhere, wait, look, tuck in, grab, drag, feed, drop, rear up.
+function makeMind() { return { hunger: 0.62, restless: 0.35, wary: 0.12, curious: 0.4, alert: 0, feeding: false, plan: [], act: 'Looking around', why: 'It has only just come in.', last: '', log: [] }; }
+const navPt = (p, f) => onFace(p, f);
+const floorPt = (x, z) => navPt([x, 0, z], 0);
+const randOn = f => { const F = NAV_FACES[f], p = [0, 1, 2].map(k => lerp(NAV_IN.a[k], NAV_IN.b[k], 0.1 + 0.8 * rnd())); p[F.k] = F.v; return p; };
+const nearestFace = p => { let bf = 0, bd = 1e9; for (let f = 0; f < 6; f++) { const d = Math.abs(p[NAV_FACES[f].k] - NAV_FACES[f].v); if (d < bd) { bd = d; bf = f; } } return bf; };
+// step makers
+const S_go = (p, f, speed, look) => ({ kind: 'go', p, f, speed, look });
+const S_wait = (t, look) => ({ kind: 'wait', t, look });
+const S_face = look => ({ kind: 'face', look });
+const S_tuck = v => ({ kind: 'set', fn: c => { c.tuckT = v; } });
+const S_say = (act, why) => ({ kind: 'set', fn: () => { const m = ROOMSIM.mind; m.act = act; m.why = why; } });
+const S_do = fn => ({ kind: 'set', fn });
+function corpseOnFloor() { const k = ROOMSIM.k; return k.pin === 0 && k.x[1][1] < 0.6; }
+function grabSteps(speedTo) {
+  const c = ROOMSIM.c, k = ROOMSIM.k;
+  // stand so its point is over the head, facing along the body's length
+  const head = k.x[0], neck = k.x[1], along = norm([head[0] - neck[0], 0, head[2] - neck[2]]);
+  const stand = floorPt(head[0] - along[0] * 0.74, head[2] - along[2] * 0.74);
+  return [S_go(stand, 0, speedTo), S_face(add(head, mul(along, 2))), { kind: 'grab', t: 0 }];
+}
+const PLANS = {
+  wander() {
+    const p = randOn(0);
+    return ['Wandering', ROOMSIM.mind.restless > 0.4 ? 'Restless, it picks a spot on the floor and creeps over.' : 'Nothing is pulling at it, so it drifts across the floor.', [S_go(p, 0, 1.6), S_wait(1.2 + rnd() * 2)]];
+  },
+  perch() {
+    const f = pick([2, 3, 4, 5]), p = randOn(f), F = NAV_FACES[f]; p[1] = lerp(NAV_IN.a[1], NAV_IN.b[1], 0.65 + 0.35 * rnd());
+    const p2 = randOn(f); p2[1] = p[1]; p2[F.k] = F.v;
+    return ['Climbing ' + F.name, 'It wants to be up off the floor, where it can see the whole room.', [S_go(p, f, 1.9), S_wait(2 + rnd() * 3, PLAYER_ROOM), S_go(p2, f, 1.0), S_wait(2 + rnd() * 2, PLAYER_ROOM)]];
+  },
+  ceiling() {
+    const a = randOn(1), b = randOn(1);
+    return ['Crossing the ceiling', ROOMSIM.mind.restless > 0.4 ? 'Bored of the floor, it goes up and hangs upside down.' : 'It goes up to hang upside down, out of reach.', [S_go(a, 1, 1.8), S_wait(1.5 + rnd() * 2), S_go(b, 1, 1.1), S_wait(2 + rnd() * 2, PLAYER_ROOM)]];
+  },
+  hide() {
+    // high on the back wall, just out of the corner, so it lies flat to the wall and spreads its legs onto the ceiling and the side wall
+    const p = navPt([NAV_IN.a[0] + 1.0, NAV_IN.b[1] - 0.95, -9], 4);
+    return ['Hiding in the dark corner', 'It feels exposed, so it presses itself into the corner the light never reaches.', [S_go(p, 1, 2.1), S_tuck(1), S_wait(7 + rnd() * 6, PLAYER_ROOM), S_do(m => { ROOMSIM.mind.wary *= 0.4; }), S_tuck(0)]];
+  },
+  listen() {
+    const c = ROOMSIM.c, looks = [0, 1, 2].map(() => add(c.pos, [rnd() * 10 - 5, rnd() * 3 - 1, rnd() * 10 - 5]));
+    return ['Listening', 'It goes still and turns slowly, listening.', [S_wait(1.6, looks[0]), S_wait(1.6, looks[1]), S_wait(1.6, looks[2])]];
+  },
+  feed() {
+    const lair = floorPt(-5.2, -3.3);
+    return ['Fetching the body to feed', ROOMSIM.k.husk ? 'Hungry again, it goes back for the husk to pick at what is left.' : 'Hungry, it goes for the body and drags it back to its corner to feed.', [
+      ...grabSteps(1.7), S_say('Dragging the body away', 'It hauls the body back to the dark corner, where it feels safe to feed.'),
+      S_go(lair, 0, 1.15), S_face(floorPt(0, 0)), { kind: 'feed', t: 9 + rnd() * 4 },
+      S_say('Leaving the husk', 'Fed, it lets the drained body drop.'), { kind: 'drop' }, S_do(() => { const m = ROOMSIM.mind; m.hunger = 0.04; ROOMSIM.k.husk = 1; m.restless = Math.max(m.restless, 0.5); }), S_wait(1.5)]];
+  },
+  stalk() {
+    const c = ROOMSIM.c, P = PLAYER_ROOM, dir = norm([c.pos[0] - P[0], 0, c.pos[2] - P[2]]), near = floorPt(P[0] + dir[0] * 3.4, P[2] + dir[2] * 3.4);
+    const bold = ROOMSIM.mind.curious > 0.42 && ROOMSIM.mind.wary < 0.35;
+    return ['Stalking you', 'Curious about you, it creeps closer, slowly, watching.', [
+      S_go(near, 0, 0.75), S_wait(2 + rnd() * 2, add(P, [0, 1.5, 0])),
+      ...(bold ? [S_say('Rearing up at you', 'Bold enough now, it rears up to see what you do.'), S_do(c2 => { c2.rearT = 1; }), S_wait(2.2, add(P, [0, 1.5, 0])), S_do(c2 => { c2.rearT = 0; })] : []),
+      S_do(() => { const m = ROOMSIM.mind; m.curious *= 0.3; m.wary = Math.min(1, m.wary + 0.45); })]];
+  },
+  leave() {
+    const P = PLAYER_ROOM, drop = floorPt(P[0] + 0.6, P[2] - 4.6);
+    return ['Leaving the body for you', 'It drags the husk out to where you will see it, then backs off.', [
+      ...grabSteps(1.7), S_go(drop, 0, 1.0), { kind: 'drop' }, S_say('Backing away', 'It leaves the body where you will find it.'),
+      S_go(floorPt(drop[0] - 1.5, drop[2] - 3), 0, 0.8, add(P, [0, 1.5, 0])), S_do(() => { ROOMSIM.mind.curious *= 0.3; })]];
+  },
+};
+function choose(m) {
+  const k = ROOMSIM.k, player = state.player;
+  const w = {
+    wander: 0.2 + 0.45 * m.restless, perch: 0.3 + 0.45 * m.restless, ceiling: 0.26 + 0.45 * m.restless,
+    hide: 0.08 + 0.95 * m.wary, listen: 0.18 + 0.25 * (1 - m.restless),
+    feed: corpseOnFloor() ? 1.3 * m.hunger * (k.husk ? 0.6 : 1) : 0,
+    stalk: player ? 0.95 * m.curious * (1 - m.wary) : 0,
+    leave: player && corpseOnFloor() && k.husk && len(sub(k.x[1], PLAYER_ROOM)) > 5.5 ? 0.6 * m.curious : 0,
+  };
+  if (w[m.last] != null) w[m.last] *= 0.25;
+  let tot = 0; for (const a in w) tot += w[a] * w[a];
+  let r = rnd() * tot;
+  for (const a in w) { r -= w[a] * w[a]; if (r <= 0) return a; }
+  return 'wander';
+}
+function startPlan(name) {
+  const m = ROOMSIM.mind, [act, why, steps] = PLANS[name](), c = ROOMSIM.c;
+  // whatever it was holding, it lets go of before doing something else
+  if (ROOMSIM.k.pin > 0) steps.unshift({ kind: 'drop' });
+  c.tuckT = 0; c.rearT = 0; c.hT = NAV_H;
+  m.plan = steps; m.act = act; m.why = why; m.last = name; m.feeding = false;
+  m.log.push(R_.t.toFixed(1) + ' ' + name);
+}
+// a noise: it jumps, looks, and then decides what to make of it from how it feels right now
+function hearNoise(p, n) {
+  const c = ROOMSIM.c, m = ROOMSIM.mind, k = ROOMSIM.k, d = len(sub(p, c.pos));
+  const loud = clamp(1.4 - d / 14, 0.3, 1);
+  c.flinch = Math.max(c.flinch, loud * (0.6 + 0.6 * (1 - m.alert)));
+  m.alert = Math.min(1.5, m.alert + 0.4 * loud);
+  // the same tap lands differently depending on its mood: repeated noise wears thin or puts it on edge
+  m.curious = clamp(m.curious + 0.18 * (1 - m.alert * 0.6), 0, 1); m.wary = clamp(m.wary + 0.14 * m.alert, 0, 1);
+  const where = NAV_FACES[nearestFace(add(p, mul(n, NAV_H)))].name, look = p;
+  if (m.feeding) {
+    if (m.alert < 1.1 || rnd() < 0.6) { c.look = look; m.why = 'It heard you on ' + where + ', glanced over and carried on feeding.'; return; }
+  }
+  const w = {
+    freeze: 0.5 + 0.3 * m.alert, investigate: (m.curious * (1 - m.wary) * 1.3 + m.hunger * 0.3) * (m.alert > 1.2 ? 0.5 : 1),
+    retreat: m.wary * 1.1 + m.alert * 0.45, threat: d < 7 ? 0.45 * (1 - m.wary) + 0.2 * m.alert : 0.05, ignore: 0.12 + 0.3 * (1 - m.alert),
+  };
+  let tot = 0; for (const a in w) tot += w[a]; let r = rnd() * tot, pickA = 'freeze';
+  for (const a in w) { r -= w[a]; if (r <= 0) { pickA = a; break; } }
+  if (pickA === 'ignore') { c.look = look; m.why = 'It heard something on ' + where + ', but it is not interested.'; return; }
+  if (k.pin > 0 && k.pin <= 0.5) k.pin = 0;
+  m.plan = k.pin > 0.5 && pickA !== 'freeze' ? [{ kind: 'drop' }] : [];
+  m.feeding = false; c.tuckT = 0; c.rearT = 0; c.hT = NAV_H;
+  const navAt = navPt(add(p, mul(n, NAV_H)), nearestFace(add(p, mul(n, NAV_H)))), fAt = nearestFace(navAt);
+  if (pickA === 'freeze') { m.act = 'Frozen, listening'; m.why = 'Something made a noise on ' + where + '. It locks still and listens.'; m.plan.push(S_wait(2.5 + rnd() * 2, look)); }
+  else if (pickA === 'investigate') { m.act = 'Going to look'; m.why = 'A noise on ' + where + '. Curious, it creeps over to see what made it.'; m.plan.push(S_face(look), S_wait(0.6, look), S_go(navAt, fAt, 1.2, look), S_tuck(0.35), S_wait(2.5 + rnd() * 2, look), S_tuck(0)); }
+  else if (pickA === 'retreat') { m.act = 'Pulling back'; m.why = 'A noise on ' + where + ' puts it on edge. It backs off into the dark.'; m.plan.push(...PLANS.hide()[2]); m.wary = Math.min(1, m.wary + 0.2); }
+  else if (pickA === 'threat') { m.act = 'Rearing at the noise'; m.why = 'Close by on ' + where + '. It turns on the noise and rears up.'; m.plan.push(S_face(look), S_do(c2 => { c2.rearT = ROOMSIM.c.face === 0 ? 1 : 0.5; }), S_wait(1.8, look), S_do(c2 => { c2.rearT = 0; })); }
+  m.last = pickA;
+  ROOMSIM.c.route = [];
+}
+function runPlan(dt) {
+  const c = ROOMSIM.c, m = ROOMSIM.mind, k = ROOMSIM.k;
+  m.hunger = Math.min(1, m.hunger + dt * 0.007);
+  const moving = len(c.vel) > 0.1;
+  m.restless = clamp(m.restless + dt * (moving ? -0.035 : 0.03), 0, 1);
+  m.wary = Math.max(0, m.wary - dt * 0.012); m.alert = Math.max(0, m.alert - dt * 0.12);
+  m.curious = Math.min(1, m.curious + dt * (state.player ? 0.01 : 0));
+  if (!m.plan.length) startPlan(choose(m));
+  const st = m.plan[0];
+  if (!st.on) {
+    st.on = true; st.age = 0;
+    if (st.kind === 'go') { c.route = navRoute(c.pos, c.face, st.p, st.f); c.speed = st.speed; c.look = st.look || null; }
+    if (st.kind === 'wait' || st.kind === 'face') c.look = st.look || c.look;
+    if (st.kind === 'set') st.fn(c);
+    if (st.kind === 'feed') m.feeding = true;
+    if (st.kind === 'drop') { k.pin = 0; m.feeding = false; c.hT = NAV_H; }
+  }
+  st.age += dt;
+  let done = false;
+  if (st.kind === 'go') done = !c.route.length;
+  else if (st.kind === 'wait') done = st.age >= st.t;
+  else if (st.kind === 'face') { const d = sub(st.look, c.pos), want = norm(sub(d, mul(c.up, dot(d, c.up)))); done = dot(want, c.fwd) > 0.96 || st.age > 2.5; }
+  else if (st.kind === 'set' || st.kind === 'drop') done = true;
+  else if (st.kind === 'grab') {
+    // it dips onto the body, the scythes go in, and it rises with it
+    const u = st.age / 1.7;
+    c.hT = NAV_H - 0.5 * Math.sin(Math.PI * Math.min(1, u));
+    k.pin = smooth((u - 0.25) / 0.5);
+    done = u >= 1;
+  } else if (st.kind === 'feed') { c.hT = 2.41; done = st.age >= st.t; if (done) { c.hT = NAV_H; m.feeding = false; } }
+  if (done) m.plan.shift();
+}
+// one frame of the room
+function stepRoom(dt) {
+  const R = ROOMSIM;
+  if (!R.mind) R.mind = makeMind();
+  R_.t += dt;
+  if (dt > 0) runPlan(dt);
+  moveRoamer(R.c, dt);
+  const fr = roamerFrame(R.c);
+  stepFeet(R.c, dt, fr);
+  stepCorpse(R.k, dt, R.k.pin > 0 ? fr.body : null);
+  for (const p of R.pings) p.age += dt;
+  R.pings = R.pings.filter(p => p.age < 1.4);
+  R.frame = fr;
+}
+function poseRoom(dyn) {
+  const R = ROOMSIM, c = R.c, m = R.mind, fr = R.frame || roamerFrame(c), k = R.k, held = k.pin > 0.5;
+  const rf = rigFeet(c, fr), kf = corpseFrames(k);
+  const r = harvestman({ frame: fr.body, up: c.up, t: c.t, motion: 'idle', feeding: !!(m && m.feeding), feet: rf.feet, footN: rf.fn, footLift: rf.lift,
+    victim: held ? kf : null, grip: held, beardGrip: !!(m && m.feeding) }, dyn);
+  drawCorpse(dyn, k, kf);
+  // where you tapped: a ring spreading over the surface
+  for (const p of R.pings) {
+    const u = p.age / 1.4, t1 = norm(cross(p.n, Math.abs(p.n[1]) > 0.9 ? [1, 0, 0] : Y)), t2 = cross(p.n, t1);
+    dyn.mat = { ...MAT.eye, c: [0.85, 0.88, 0.95], glow: 2.2 * (1 - u) * (1 - u) };
+    torus(dyn, add(p.p, mul(p.n, 0.03)), [t1, t2, p.n], 0.15 + 1.6 * u, 0.018, 28, 4);
+  }
+  return r;
+}
+// a tap on the screen: the ray from the camera through that spot, into the room
+function tapRoom(eye, dir) {
+  let o = eye;
+  const inside = [0, 1, 2].every(k => eye[k] > ROOM.a[k] && eye[k] < ROOM.b[k]);
+  if (!inside) {
+    let t0 = -1e9, t1 = 1e9;
+    for (let k = 0; k < 3; k++) {
+      if (Math.abs(dir[k]) < 1e-9) { if (eye[k] < ROOM.a[k] || eye[k] > ROOM.b[k]) return null; continue; }
+      let ta = (ROOM.a[k] - eye[k]) / dir[k], tb = (ROOM.b[k] - eye[k]) / dir[k]; if (ta > tb) { const x = ta; ta = tb; tb = x; }
+      t0 = Math.max(t0, ta); t1 = Math.min(t1, tb);
+    }
+    if (t0 > t1 || t1 < 0) return null;
+    o = add(eye, mul(dir, Math.max(0, t0) + 0.02));
+  }
+  const h = castRoom(o, dir, 80);
+  if (!h) return null;
+  ROOMSIM.pings.push({ p: h.p, n: h.n, age: 0 });
+  hearNoise(h.p, h.n);
+  return h;
+}
+
+// ---------------------------------------------------------------- the room itself
+// the room keeps its old grey, rusty metal (the creature's own metal is all black)
+const ROOM_STEEL = { ...MAT.steel, c: [0.45, 0.43, 0.4] }, ROOM_DARK = { ...MAT.dark, c: [0.30, 0.29, 0.29] };
+function buildRoom() {
+  const A = ROOM.a, B = ROOM.b, out = { floor: new Mesh(), ceiling: new Mesh(), walls: [], props: new Mesh() };
+  MAT.wall = { c: [0.25, 0.25, 0.26], metal: 0, rough: 0.72, pat: 7.3, glow: 0 };
+  MAT.crate = { c: [0.31, 0.24, 0.17], metal: 0, rough: 0.82, pat: 6, glow: 0 };
+  // darker where surfaces meet
+  const aoAt = p => { let a = 1; for (let k = 0; k < 3; k++) for (const v of [A[k], B[k]]) { const d = Math.abs(p[k] - v); if (d > 0.01) a *= 0.62 + 0.38 * smooth(d / 1.4); } return a; };
+  const sheet = (m, nu, nv, f) => grid(m, nu, nv, f, { ao: (u, v) => aoAt(f(u, v)) });
+  out.floor.mat = MAT.floor; sheet(out.floor, 32, 24, (u, v) => [lerp(A[0], B[0], u), 0, lerp(A[2], B[2], v)]);
+  out.ceiling.mat = MAT.wall; sheet(out.ceiling, 32, 24, (u, v) => [lerp(A[0], B[0], u), B[1], lerp(A[2], B[2], v)]);
+  const wall = (n, pt, build) => { const m = new Mesh(); m.mat = MAT.wall; build(m); out.walls.push({ m, n, pt }); };
+  wall([1, 0, 0], [A[0], 0, 0], m => sheet(m, 24, 12, (u, v) => [A[0], lerp(A[1], B[1], v), lerp(A[2], B[2], u)]));
+  wall([-1, 0, 0], [B[0], 0, 0], m => sheet(m, 24, 12, (u, v) => [B[0], lerp(A[1], B[1], v), lerp(A[2], B[2], u)]));
+  wall([0, 0, 1], [0, 0, A[2]], m => sheet(m, 32, 12, (u, v) => [lerp(A[0], B[0], u), lerp(A[1], B[1], v), A[2]]));
+  wall([0, 0, -1], [0, 0, B[2]], m => {
+    sheet(m, 14, 12, (u, v) => [lerp(A[0], DOOR.x0, u), lerp(A[1], B[1], v), B[2]]);
+    sheet(m, 14, 12, (u, v) => [lerp(DOOR.x1, B[0], u), lerp(A[1], B[1], v), B[2]]);
+    sheet(m, 3, 8, (u, v) => [lerp(DOOR.x0, DOOR.x1, u), lerp(DOOR.y1, B[1], v), B[2]]);
+    // the door frame goes with its wall, so it is left out with it
+    m.mat = ROOM_STEEL;
+    for (const x of [DOOR.x0, DOOR.x1]) box(m, [x, DOOR.y1 / 2, B[2] - 0.06], AX, [0.14, DOOR.y1, 0.2], 0.6);
+    box(m, [0, DOOR.y1 + 0.07, B[2] - 0.06], AX, [2 * DOOR.x1 + 0.28, 0.14, 0.2], 0.6);
+  });
+  const P = out.props;
+  for (const c of CRATES) {
+    const ctr = lerp3(c.a, c.b, 0.5), sz = sub(c.b, c.a);
+    P.mat = MAT.crate; box(P, ctr, AX, sz, 0.8);
+    // dark battens round the edges
+    P.mat = tint(MAT.crate, 0.55);
+    for (const sx of [-1, 1]) for (const sz2 of [-1, 1]) box(P, add(ctr, [sx * (sz[0] / 2 - 0.05), 0, sz2 * (sz[2] / 2 - 0.05)]), AX, [0.12, sz[1] + 0.02, 0.12], 0.6);
+    for (const sy of [-1, 1]) for (const sz2 of [-1, 1]) box(P, add(ctr, [0, sy * (sz[1] / 2 - 0.05), sz2 * (sz[2] / 2 - 0.05)]), AX, [sz[0] + 0.02, 0.12, 0.12], 0.6);
+  }
+  // door frame, pipes along the back wall and a dead strip light
+  P.mat = tint(ROOM_STEEL, 0.8);
+  tube(P, [[A[0] + 0.2, 6.55, A[2] + 0.22], [B[0] - 0.2, 6.55, A[2] + 0.22]], 0.09, { seg: 10 });
+  tube(P, [[A[0] + 0.2, 6.25, A[2] + 0.22], [B[0] - 0.2, 6.25, A[2] + 0.22]], 0.05, { seg: 8 });
+  tube(P, [[B[0] - 0.24, 0, A[2] + 0.24], [B[0] - 0.24, 6.55, A[2] + 0.24]], 0.09, { seg: 10 });
+  for (let x = -7; x <= 7; x += 2) box(P, [x, 6.45, A[2] + 0.1], AX, [0.08, 0.36, 0.2], 0.5);
+  P.mat = ROOM_DARK; box(P, [1.5, B[1] - 0.06, 0.5], AX, [2.4, 0.1, 0.24], 0.5);
+  return out;
+}
+
+// ---------------------------------------------------------------- WebGL drawing
+const canvas = document.getElementById('view'), stage = document.getElementById('stage');
+const gl = canvas.getContext('webgl', { antialias: true, preserveDrawingBuffer: true });
+if (!gl) { const d = document.createElement('div'); d.className = 'nogl'; d.textContent = 'This view needs WebGL, which this browser has turned off.'; stage.appendChild(d); return; }
+const DERIV = !!gl.getExtension('OES_standard_derivatives');
+const HIGHP = '#ifdef GL_FRAGMENT_PRECISION_HIGH\nprecision highp float;\n#else\nprecision mediump float;\n#endif\n';
+function shader(type, src) { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s)); return s; }
+function program(vs, fs) { const p = gl.createProgram(); gl.attachShader(p, shader(gl.VERTEX_SHADER, vs)); gl.attachShader(p, shader(gl.FRAGMENT_SHADER, fs)); gl.linkProgram(p); if (!gl.getProgramParameter(p, gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p)); return p; }
+function locs(p, names) { const o = {}; for (const n of names) { const a = gl.getAttribLocation(p, n); o[n] = a >= 0 ? a : gl.getUniformLocation(p, n); } return o; }
+const BACKDROP = `
+uniform vec2 uRes; uniform vec3 uBg0; uniform vec3 uBg1;
+vec3 backdrop(vec2 sc) { vec2 q = (sc - vec2(0.48, 0.62)) * vec2(uRes.x / uRes.y, 1.0) * 0.85; return mix(uBg0, uBg1, smoothstep(0.0, 1.0, length(q))); }`;
+const NOISE = `
+float h31(vec3 p) { p = fract(p * 0.1031); p += dot(p, p.zyx + 31.32); return fract((p.x + p.y) * p.z); }
+float vn(vec3 x) { vec3 i = floor(x), f = fract(x); f = f * f * (3.0 - 2.0 * f);
+  return mix(mix(mix(h31(i), h31(i + vec3(1.0, 0.0, 0.0)), f.x), mix(h31(i + vec3(0.0, 1.0, 0.0)), h31(i + vec3(1.0, 1.0, 0.0)), f.x), f.y),
+             mix(mix(h31(i + vec3(0.0, 0.0, 1.0)), h31(i + vec3(1.0, 0.0, 1.0)), f.x), mix(h31(i + vec3(0.0, 1.0, 1.0)), h31(i + vec3(1.0, 1.0, 1.0)), f.x), f.y), f.z); }
+float fbm(vec3 p) { float s = 0.0, a = 0.5; for (int k = 0; k < 4; k++) { s += a * vn(p); p = p * 2.03 + 1.7; a *= 0.5; } return s; }
+vec2 cells(vec3 p) { vec3 i = floor(p), f = fract(p); float d = 9.0, r = 0.0;
+  for (int z = -1; z <= 1; z++) for (int y = -1; y <= 1; y++) for (int x = -1; x <= 1; x++) {
+    vec3 g = vec3(float(x), float(y), float(z)), c = i + g, q = g + vec3(h31(c), h31(c + 19.1), h31(c + 47.3)) - f;
+    float e = dot(q, q); if (e < d) { d = e; r = h31(c + 71.7); } }
+  return vec2(sqrt(d), r); }`;
+const prog = program(`
+attribute vec3 aP; attribute vec3 aN; attribute vec3 aC; attribute vec4 aM; attribute vec2 aA;
+uniform mat4 uVP; uniform mat4 uModel;
+varying vec3 vW; varying vec3 vL; varying vec3 vN; varying vec3 vC; varying vec4 vM; varying vec2 vA;
+void main() { vec4 w = uModel * vec4(aP, 1.0); vW = w.xyz; vL = aP; vN = (uModel * vec4(aN, 0.0)).xyz; vC = aC; vM = aM; vA = aA; gl_Position = uVP * w; }`,
+(DERIV ? '#extension GL_OES_standard_derivatives : enable\n#define DERIV 1\n' : '') + HIGHP + `
+varying vec3 vW; varying vec3 vL; varying vec3 vN; varying vec3 vC; varying vec4 vM; varying vec2 vA;
+uniform vec3 uCam; uniform vec3 uKey; uniform vec3 uKeyC; uniform vec3 uRim; uniform vec3 uRimC; uniform vec3 uFill;
+uniform float uTorch; uniform float uGain; uniform vec3 uSpot; uniform vec3 uSpotDir; uniform vec2 uCone;
+uniform sampler2D uShadow; uniform mat4 uLVP; uniform float uShTexel; uniform float uShOn;
+uniform float uFeed; uniform float uPulse; uniform vec3 uEye; uniform vec3 uEyeC;
+uniform vec3 uCenter; uniform float uFogR; uniform vec4 uDark;` + BACKDROP + NOISE + `
+float unpack(vec4 c) { return dot(c, vec4(1.0, 1.0 / 255.0, 1.0 / 65025.0, 1.0 / 16581375.0)); }
+float shadowAt(vec3 N) {
+  if (uShOn < 0.5) return 1.0;
+  vec3 c = (uLVP * vec4(vW + N * 0.025, 1.0)).xyz * 0.5 + 0.5;
+  if (c.x < 0.0 || c.x > 1.0 || c.y < 0.0 || c.y > 1.0 || c.z > 1.0) return 1.0;
+  float s = 0.0;
+  for (int k = 0; k < 12; k++) { float a = float(k) * 2.39996, r = sqrt((float(k) + 0.5) / 12.0);
+    s += step(c.z - 0.0009, unpack(texture2D(uShadow, c.xy + vec2(cos(a), sin(a)) * r * uShTexel * 6.0))); }
+  return s / 12.0;
+}
+void main() {
+  float pid = floor(vM.z + 0.001), pv = vM.z - pid;
+  vec3 alb = vC * vC; float metal = vM.x, rough = vM.y, glow = vM.w, ao = vA.x, edge = vA.y;
+  vec3 N = normalize(vN); if (!gl_FrontFacing) N = -N;
+  vec3 q = vL; float bump = 0.0; vec3 emit = vec3(0.0);
+  if (pid > 0.5 && pid < 1.5) {           // armour plate: holes, rust, blood, worn edges
+    float fw = 0.0;
+#ifdef DERIV
+    fw = length(fwidth(q * 15.0));
+#endif
+    vec2 c = cells(q * 15.0); float hr = 0.1 + 0.11 * c.y;
+    if (c.y < 0.36 && fw < 0.7 && c.x < hr) discard;
+    float rim = c.y < 0.36 ? 1.0 - smoothstep(hr, hr + 0.14, c.x) : 0.0;
+    vec2 c2 = cells(q * 3.0 + 3.7); float rg = c2.x + 0.13 * vn(q * 38.0);
+    if (c2.y < 0.11 && rg < 0.2) discard;
+    rim = max(rim, c2.y < 0.11 ? 1.0 - smoothstep(0.2, 0.3, rg) : 0.0);
+    float n1 = fbm(q * 3.0 + pv * 9.0), rust = smoothstep(0.56, 0.8, n1 + pv * 0.22 - edge * 0.2);
+    vec3 rc = mix(vec3(0.09), vec3(0.13), vn(q * 22.0));           // all black: wear shows as dull patches, not rust
+    float blood = smoothstep(0.6, 0.78, fbm(q * 4.5 + 11.0)) * (1.0 - rust);
+    alb = mix(alb, rc * rc, rust * 0.75);
+    alb = mix(alb, vec3(0.1, 0.01, 0.008), blood * 0.85);
+    metal = mix(metal, 0.15, max(rust, blood)); rough = mix(rough, 0.85, rust); rough = mix(rough, 0.22, blood * 0.7);
+    float scr = smoothstep(0.86, 0.97, vn(q * vec3(55.0, 3.0, 55.0)));
+    alb = mix(alb, vec3(0.2), scr * 0.3 * (1.0 - rust));
+    alb *= 1.0 - 0.6 * rim;
+    alb = mix(alb, vec3(0.16), edge * 0.3 * (1.0 - rust)); rough = mix(rough, 0.3, edge * 0.4);
+    bump = 0.004 * fbm(q * 16.0) - 0.006 * rim + 0.0012 * vn(q * 95.0);
+  } else if (pid > 1.5 && pid < 2.5) {    // steel: streaks along the piece, grime, worn edges
+    float st = vn(q * vec3(3.0, 60.0, 60.0)), rust = smoothstep(0.58, 0.8, fbm(q * 4.0 + pv * 6.0));
+    alb *= 0.82 + 0.36 * st;
+    alb = mix(alb, vec3(0.008), rust * 0.85);
+    alb = mix(alb, vec3(0.005), smoothstep(0.66, 0.8, fbm(q * 6.0 + 4.0)) * 0.7);
+    metal = mix(metal, 0.25, rust); rough = mix(rough, 0.8, rust) * (0.85 + 0.3 * st);
+    alb = mix(alb, vec3(0.16), edge * 0.35);
+    bump = 0.0015 * st + 0.003 * fbm(q * 22.0);
+  } else if (pid > 2.5 && pid < 3.5) {    // wet red sinew, glowing when fed
+    float f1 = vn(q * vec3(10.0, 10.0, 34.0) + vn(q * 5.0) * 2.0), ridge = 1.0 - abs(2.0 * f1 - 1.0);
+    alb = mix(alb * 0.35, alb * 1.35, ridge); rough = mix(0.5, 0.2, ridge);
+    emit += vec3(1.0, 0.06, 0.035) * glow * (1.0 + uFeed * (6.0 + 4.0 * uPulse)) * (0.3 + ridge);
+    bump = 0.007 * ridge;
+  } else if (pid > 3.5 && pid < 4.5) {    // the skull under the face plates: molten, white hot in the cracks, cooler in the hollows
+    float n1 = fbm(q * 6.0), cr = 1.0 - smoothstep(0.0, 0.06, abs(vn(q * 18.0 + n1 * 2.0) - 0.5));
+    alb = vec3(0.35, 0.12, 0.03) * (0.7 + 0.5 * n1);
+    rough = 0.45 + 0.3 * n1; metal = 0.0;
+    float heat = (0.5 + 0.3 * n1 + 0.6 * cr) * (0.12 + 0.88 * ao * ao);
+    emit += mix(vec3(1.0, 0.3, 0.035), vec3(1.0, 0.75, 0.35), cr * 0.85) * glow * heat * (1.0 + 0.25 * uPulse);
+    bump = 0.004 * n1 + 0.0015 * vn(q * 85.0) - 0.003 * cr;
+  } else if (pid > 4.5 && pid < 5.5) {    // rubber hose
+    alb *= 0.8 + 0.4 * vn(q * 30.0);
+  } else if (pid > 5.5 && pid < 6.5) {    // cloth, stained
+    float w = vn(q * 85.0); alb *= 0.82 + 0.3 * w; bump = 0.0015 * w;
+    alb = mix(alb, vec3(0.1, 0.012, 0.01), smoothstep(0.52, 0.75, fbm(q * 4.0 + pv * 9.0)) * pv);
+  } else if (pid > 6.5 && pid < 7.5) {    // dark concrete, damp in patches
+    float n1 = fbm(q * 1.2), n2 = vn(q * 26.0), wet = smoothstep(0.42, 0.7, fbm(q * 0.45 + 5.0));
+    alb *= 0.62 + 0.5 * n1 + 0.16 * n2; alb *= 1.0 - 0.3 * wet;
+    rough = mix(0.78, 0.3, wet);
+    bump = 0.0025 * n2 + 0.002 * fbm(q * 9.0);
+  } else if (pid > 7.5 && pid < 8.5) {    // drained skin
+    float v = fbm(q * 9.0);
+    alb *= 0.78 + 0.32 * v;
+    alb = mix(alb, vec3(0.15, 0.17, 0.2), smoothstep(0.5, 0.53, vn(q * vec3(24.0, 7.0, 24.0))) * 0.35);
+  } else if (pid > 8.5) {                 // eyes
+    emit += alb * glow * (1.0 + uFeed * 0.5);
+  }
+#ifdef DERIV
+  vec3 dpx = dFdx(vW), dpy = dFdy(vW); float dhx = dFdx(bump), dhy = dFdy(bump);
+  vec3 r1 = cross(dpy, N), r2 = cross(N, dpx); float det = dot(dpx, r1);
+  if (abs(det) > 1e-12) N = normalize(abs(det) * N - sign(det) * (dhx * r1 + dhy * r2));
+#endif
+  vec3 V = normalize(uCam - vW);
+  float NdV = max(dot(N, V), 0.0);
+  vec3 F0 = mix(vec3(0.04), alb, metal), dif = alb * (1.0 - metal);
+  float r2s = max(rough * rough, 0.003), sp = 2.0 / r2s - 2.0, nrm = (sp + 8.0) / 25.13;
+  vec3 Fv = F0 + (max(vec3(1.0 - rough), F0) - F0) * pow(1.0 - NdV, 5.0);
+  vec3 te = uEye - vW; float de = dot(te, te);
+  vec3 eyeL = (dif + F0) * uEyeC * max(dot(N, te * inversesqrt(de)), 0.0) / (1.0 + de * 160.0);
+  // studio: key with soft shadow, cool rim behind, fill, and a softbox in the reflections
+  float sh = shadowAt(N);
+  vec3 L = uKey, H = normalize(L + V); float nl = max(dot(N, L), 0.0);
+  vec3 c = (dif * nl + F0 * pow(max(dot(N, H), 0.0), sp) * nrm * nl) * uKeyC * sh;
+  L = uRim; H = normalize(L + V); nl = max(dot(N, L), 0.0);
+  c += (dif * nl * 0.5 + F0 * pow(max(dot(N, H), 0.0), sp) * nrm * nl) * uRimC;
+  vec3 R = reflect(-V, N);
+  vec3 env = mix(vec3(0.01), vec3(0.15), smoothstep(-0.3, 0.9, R.y)) + uKeyC * 0.28 * pow(max(dot(R, uKey), 0.0), 2.0 + 24.0 * (1.0 - rough)) * (0.4 + 0.6 * sh);
+  c += dif * uFill * (0.35 + 0.65 * (0.5 + 0.5 * N.y)) * ao + Fv * env * ao * (1.0 - 0.55 * rough);
+  c += eyeL;
+  // torch from the camera
+  vec3 toP = vW - uSpot; float dist = length(toP); vec3 dir = toP / dist;
+  float cone = smoothstep(uCone.x, uCone.y, dot(dir, uSpotDir));
+  L = -dir; H = normalize(L + V); nl = max(dot(N, L), 0.0);
+  vec3 tc = (dif * nl + F0 * pow(max(dot(N, H), 0.0), sp) * nrm * nl) * vec3(1.3, 1.15, 0.95) * cone * (4.0 * uGain / (1.0 + 0.045 * dist * dist));
+  tc += dif * 0.006 * ao + Fv * 0.012 * ao + eyeL;
+  // the room's dark corner swallows the light, but not what glows
+  float dk = uDark.w > 0.0 ? mix(0.05, 1.0, smoothstep(uDark.w * 0.3, uDark.w, length((vW - uDark.xyz) * vec3(1.0, 0.45, 1.0)))) : 1.0;
+  c = mix(c, tc, uTorch) * mix(dk, 1.0, uTorch * 0.6) + emit;
+  c = (c * (2.51 * c + 0.03)) / (c * (2.43 * c + 0.59) + 0.14);
+  c = pow(clamp(c, 0.0, 1.0), vec3(1.0 / 2.2));
+  float fd = max(0.0, length(vW.xz - uCenter.xz) - uFogR);
+  c = mix(c, backdrop(gl_FragCoord.xy / uRes), 1.0 - exp(-fd * fd * 0.025));
+  gl_FragColor = vec4(c, 1.0);
+}`);
+const L0 = locs(prog, ['aP', 'aN', 'aC', 'aM', 'aA', 'uVP', 'uModel', 'uCam', 'uKey', 'uKeyC', 'uRim', 'uRimC', 'uFill', 'uTorch', 'uGain', 'uSpot', 'uSpotDir', 'uCone',
+  'uShadow', 'uLVP', 'uShTexel', 'uShOn', 'uFeed', 'uPulse', 'uEye', 'uEyeC', 'uCenter', 'uFogR', 'uDark', 'uRes', 'uBg0', 'uBg1']);
+const shProg = program(`
+attribute vec3 aP; uniform mat4 uVP; uniform mat4 uModel;
+void main() { gl_Position = uVP * uModel * vec4(aP, 1.0); }`, HIGHP + `
+vec4 pack(float d) { vec4 e = fract(d * vec4(1.0, 255.0, 65025.0, 16581375.0)); e -= e.yzww * vec4(1.0 / 255.0, 1.0 / 255.0, 1.0 / 255.0, 0.0); return e; }
+void main() { gl_FragColor = pack(gl_FragCoord.z); }`);
+const LS = locs(shProg, ['aP', 'uVP', 'uModel']);
+const bgProg = program(`
+attribute vec2 aP; void main() { gl_Position = vec4(aP, 0.999, 1.0); }`, HIGHP + BACKDROP + `
+float h21(vec2 p) { return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
+void main() { gl_FragColor = vec4(backdrop(gl_FragCoord.xy / uRes) + (h21(gl_FragCoord.xy) - 0.5) / 255.0, 1.0); }`);
+const LB = locs(bgProg, ['aP', 'uRes', 'uBg0', 'uBg1']);
+// glows: soft billboards round the eyes
+const glowProg = program(`
+attribute vec3 aP; attribute vec4 aQ; uniform mat4 uVP; uniform vec3 uR; uniform vec3 uU; varying vec2 vQ; varying float vI;
+void main() { vQ = aQ.xy; vI = aQ.w; gl_Position = uVP * vec4(aP + (uR * aQ.x + uU * aQ.y) * aQ.z, 1.0); }`, HIGHP + `
+varying vec2 vQ; varying float vI;
+void main() { float r = dot(vQ, vQ); if (r > 1.0) discard; gl_FragColor = vec4(vec3(1.0, 0.42, 0.08) * vI * exp(-r * 4.0) * (1.0 - r), 1.0); }`);
+const LG = locs(glowProg, ['aP', 'aQ', 'uVP', 'uR', 'uU']);
+// breath from the mouth and dust in the air: soft points
+const mistProg = program(`
+attribute vec3 aP; attribute float aA; uniform mat4 uVP; uniform vec3 uSpot; uniform vec3 uSpotDir; uniform float uTorch; uniform float uPx; uniform float uSize; varying float vA;
+void main() { vec4 p = uVP * vec4(aP, 1.0); gl_Position = p;
+  float cone = smoothstep(0.85, 0.97, dot(normalize(aP - uSpot), uSpotDir));
+  vA = aA * mix(1.0, 0.25 + 1.2 * cone, uTorch); gl_PointSize = uPx * uSize / max(p.w, 0.5); }`, HIGHP + `
+varying float vA; uniform vec3 uTint;
+void main() { vec2 q = gl_PointCoord - 0.5; float r = dot(q, q) * 4.0; if (r > 1.0) discard; gl_FragColor = vec4(uTint * vA * (1.0 - r) * (1.0 - r), 1.0); }`);
+const LM = locs(mistProg, ['aP', 'aA', 'uVP', 'uSpot', 'uSpotDir', 'uTorch', 'uPx', 'uSize', 'uTint']);
+
+// meshes to the GPU; the moving bits go up again every frame into reused buffers
+function toGPU(mesh, pool, usage) {
+  const out = [];
+  mesh.chunks.forEach((c, i) => {
+    if (!c.ix.length) return;
+    const b = pool && pool[i] ? pool[i] : { vb: gl.createBuffer(), ib: gl.createBuffer() };
+    if (pool) pool[i] = b;
+    gl.bindBuffer(gl.ARRAY_BUFFER, b.vb); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(c.v), usage);
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, b.ib); gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(c.ix), usage);
+    out.push({ vb: b.vb, ib: b.ib, n: c.ix.length });
+  });
+  return out;
+}
+const GPU = {};
+for (const k in MESHES) GPU[k] = toGPU(MESHES[k], null, gl.STATIC_DRAW);
+document.documentElement.dataset.tris = Object.entries(MESHES).map(([k, m]) => k + ':' + m.chunks.reduce((s, c) => s + c.ix.length / 3, 0)).join(' ');
+for (const k in MESHES) MESHES[k].chunks = null;
+const dynPool = { hunt: [], feed: [], room: [] };
+const ROOMM = buildRoom(), ROOMG = { floor: toGPU(ROOMM.floor, null, gl.STATIC_DRAW), ceiling: toGPU(ROOMM.ceiling, null, gl.STATIC_DRAW), props: toGPU(ROOMM.props, null, gl.STATIC_DRAW), walls: ROOMM.walls.map(w => ({ g: toGPU(w.m, null, gl.STATIC_DRAW), n: w.n, pt: w.pt })) };
+const quadBuf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, quadBuf); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+const glowBuf = gl.createBuffer(), mistBuf = gl.createBuffer(), dustBuf = gl.createBuffer();
+const MIST = 46, mistArr = new Float32Array(MIST * 4), DUST = 280, dustArr = new Float32Array(DUST * 4), dustSeed = [];
+for (let i = 0; i < DUST; i++) dustSeed.push([hash(i) * 24 - 12, hash(i + 500) * 4.2 + 0.1, hash(i + 900) * 16 - 8, hash(i + 1300) * 6.28]);
+// the shadow map: depth from the key light, packed into colour
+const SHN = 2048, shTex = gl.createTexture();
+gl.bindTexture(gl.TEXTURE_2D, shTex); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, SHN, SHN, 0, gl.RGBA, gl.UNSIGNED_BYTE, null);
+for (const [p, v] of [[gl.TEXTURE_MIN_FILTER, gl.NEAREST], [gl.TEXTURE_MAG_FILTER, gl.NEAREST], [gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE], [gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE]]) gl.texParameteri(gl.TEXTURE_2D, p, v);
+const shFB = gl.createFramebuffer(), shRB = gl.createRenderbuffer();
+gl.bindFramebuffer(gl.FRAMEBUFFER, shFB); gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, shTex, 0);
+gl.bindRenderbuffer(gl.RENDERBUFFER, shRB); gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, SHN, SHN); gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, shRB);
+const shOK = gl.checkFramebufferStatus(gl.FRAMEBUFFER) === gl.FRAMEBUFFER_COMPLETE;
+gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+// ---------------------------------------------------------------- camera
+function perspective(fovy, aspect, near, far) { const f = 1 / Math.tan(fovy / 2), nf = 1 / (near - far); return [f / aspect, 0, 0, 0, 0, f, 0, 0, 0, 0, (far + near) * nf, -1, 0, 0, 2 * far * near * nf, 0]; }
+function ortho(l, r, b, t, n, f) { return [2 / (r - l), 0, 0, 0, 0, 2 / (t - b), 0, 0, 0, 0, -2 / (f - n), 0, -(r + l) / (r - l), -(t + b) / (t - b), -(f + n) / (f - n), 1]; }
+function lookAt(e, c) { const z = norm(sub(e, c)), x = norm(cross(Y, z)), y = cross(z, x); return [x[0], y[0], z[0], 0, x[1], y[1], z[1], 0, x[2], y[2], z[2], 0, -dot(x, e), -dot(y, e), -dot(z, e), 1]; }
+function m4mul(a, b) { const r = new Array(16); for (let i = 0; i < 4; i++) for (let j = 0; j < 4; j++) { let s = 0; for (let k = 0; k < 4; k++) s += a[k * 4 + j] * b[i * 4 + k]; r[i * 4 + j] = s; } return r; }
+const m4of = f => [f.R[0][0], f.R[1][0], f.R[2][0], 0, f.R[0][1], f.R[1][1], f.R[2][1], 0, f.R[0][2], f.R[1][2], f.R[2][2], 0, f.o[0], f.o[1], f.o[2], 1];
+const I4 = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
+const HOME = { hunt: [-3.9, 0], feed: [3.9, 0] };
+const VIEW = { both: { d: 18, ty: 1.8 }, hunt: { d: 9.6, ty: 1.8 }, feed: { d: 9.6, ty: 1.75 }, room: { d: 22, ty: 2.2 } };
+const ANGLES = { q: { yaw: 0.62, pitch: 0.06 }, side: { yaw: Math.PI / 2, pitch: 0.05 }, front: { yaw: 0, pitch: 0.06 } };
+const cam = { yaw: 0, pitch: 0.1, d: 9.6, t: [0, 1.85, 0], goal: null };
+const state = { view: 'hunt', motion: 'idle', light: 'studio', player: true, angle: 'q', follow: false };
+const walkers = { hunt: makeWalker(HOME.hunt, 0.35, false), feed: makeWalker(HOME.feed, -0.35, true) };
+const heading = () => state.view === 'both' || state.view === 'room' ? 0 : walkers[state.view].yaw;
+function focus() {
+  if (state.view === 'both') return [0, VIEW.both.ty, 0.3];
+  if (state.view === 'room') { const f = ROOMSIM.frame; return state.follow && f ? f.body.o.slice() : [0, VIEW.room.ty, 0]; }
+  const w = walkers[state.view];
+  return [w.x + Math.sin(w.yaw) * 0.45, VIEW[state.view].ty, w.z + Math.cos(w.yaw) * 0.45];
+}
+function fitScale() { const r = canvas.clientWidth / Math.max(1, canvas.clientHeight); return state.view === 'both' || state.view === 'room' ? Math.max(1, 1.5 / r) : Math.max(1, 1.2 / r); }
+function aim(instant) {
+  const A = ANGLES[state.angle];
+  const room = state.view === 'room', d = room && state.follow ? 11 : VIEW[state.view].d;
+  const g = { t: focus(), d: d * fitScale(), yaw: A ? heading() + A.yaw : cam.yaw, pitch: A ? (room ? A.pitch + 0.42 : A.pitch) : cam.pitch };
+  if (instant) { cam.t = g.t; cam.d = g.d; cam.yaw = g.yaw; cam.pitch = g.pitch; cam.goal = null; } else cam.goal = g;
+}
+
+// ---------------------------------------------------------------- controls
+function press(sel, attr, val) { document.querySelectorAll(sel).forEach(b => b.setAttribute('aria-pressed', String(b.dataset[attr] === val))); }
+const pointers = new Map(); let pinch0 = 0, d0 = 0, tap0 = null;
+canvas.addEventListener('pointerdown', e => { canvas.setPointerCapture(e.pointerId); tap0 = pointers.size ? null : { x: e.clientX, y: e.clientY, t: performance.now() }; pointers.set(e.pointerId, [e.clientX, e.clientY]); if (pointers.size === 2) { const [a, b] = [...pointers.values()]; pinch0 = Math.hypot(a[0] - b[0], a[1] - b[1]); d0 = cam.d; } cam.goal = null; });
+canvas.addEventListener('pointermove', e => {
+  if (!pointers.has(e.pointerId)) return;
+  const p = pointers.get(e.pointerId), dx = e.clientX - p[0], dy = e.clientY - p[1]; pointers.set(e.pointerId, [e.clientX, e.clientY]);
+  if (tap0 && Math.hypot(e.clientX - tap0.x, e.clientY - tap0.y) > 7) tap0 = null;
+  if (pointers.size === 1 && (dx || dy) && !tap0) { cam.yaw -= dx * 0.008; cam.pitch = clamp(cam.pitch + dy * 0.006, -0.05, 1.3); if (state.angle) { state.angle = null; press('[data-angle]', 'angle', ''); } }
+  else if (pointers.size === 2) { const [a, b] = [...pointers.values()], q = Math.hypot(a[0] - b[0], a[1] - b[1]); if (pinch0 > 0) cam.d = clamp(d0 * pinch0 / q, 3, 34); }
+});
+const up = e => {
+  if (e.type === 'pointerup' && tap0 && pointers.size === 1 && state.view === 'room' && performance.now() - tap0.t < 450) noiseAt(e.clientX, e.clientY);
+  tap0 = null; pointers.delete(e.pointerId); pinch0 = 0;
+};
+// the ray from the camera through a spot on the screen
+function noiseAt(cx, cy) {
+  const rc = canvas.getBoundingClientRect(), x = (cx - rc.left) / rc.width * 2 - 1, y = 1 - (cy - rc.top) / rc.height * 2;
+  const eye = add(cam.t, [cam.d * Math.cos(cam.pitch) * Math.sin(cam.yaw), cam.d * Math.sin(cam.pitch), cam.d * Math.cos(cam.pitch) * Math.cos(cam.yaw)]);
+  const f = norm(sub(cam.t, eye)), r = norm(cross(f, Y)), u = cross(r, f), tf = Math.tan(0.33), asp = rc.width / Math.max(1, rc.height);
+  tapRoom(eye, norm(add(f, add(mul(r, x * tf * asp), mul(u, y * tf)))));
+}
+canvas.addEventListener('pointerup', up); canvas.addEventListener('pointercancel', up);
+canvas.addEventListener('wheel', e => { e.preventDefault(); cam.d = clamp(cam.d * Math.exp(e.deltaY * 0.0012), 3, 34); if (cam.goal) cam.goal.d = cam.d; }, { passive: false });
+document.querySelectorAll('[data-view]').forEach(b => b.addEventListener('click', () => { state.view = b.dataset.view; press('[data-view]', 'view', state.view); tags(); aim(false); }));
+const tf_ = document.getElementById('t-follow');
+tf_.addEventListener('click', () => { state.follow = !state.follow; tf_.setAttribute('aria-pressed', String(state.follow)); aim(false); });
+document.getElementById('t-reset').addEventListener('click', () => { resetRoom(); aim(false); });
+document.querySelectorAll('[data-angle]').forEach(b => b.addEventListener('click', () => { state.angle = b.dataset.angle; press('[data-angle]', 'angle', state.angle); aim(false); }));
+document.querySelectorAll('[data-motion]').forEach(b => b.addEventListener('click', () => { state.motion = b.dataset.motion; press('[data-motion]', 'motion', state.motion); for (const w of Object.values(walkers)) resetWalker(w); if (state.angle) aim(false); }));
+document.querySelectorAll('[data-light]').forEach(b => b.addEventListener('click', () => { state.light = b.dataset.light; press('[data-light]', 'light', state.light); }));
+const tp = document.getElementById('t-player');
+tp.addEventListener('click', () => { state.player = !state.player; tp.setAttribute('aria-pressed', String(state.player)); });
+function tags() {
+  const room = state.view === 'room';
+  document.getElementById('tagL').hidden = state.view === 'feed' || room; document.getElementById('tagR').hidden = state.view === 'hunt' || room;
+  document.getElementById('mind').hidden = !room; document.getElementById('roombar').hidden = !room;
+  document.getElementById('hint').textContent = room ? 'Tap to make a noise · drag to turn · pinch to zoom' : 'Drag to turn · scroll or pinch to zoom';
+}
+// what it is thinking, under the view
+const MIND_EL = { act: document.getElementById('mind-act'), why: document.getElementById('mind-why'), bars: [...document.querySelectorAll('#mind [data-need]')] };
+let mindShown = '';
+function showMind() {
+  const m = ROOMSIM.mind; if (!m) return;
+  const key = m.act + '|' + m.why;
+  if (key !== mindShown) { MIND_EL.act.textContent = m.act; MIND_EL.why.textContent = m.why; mindShown = key; }
+  for (const b of MIND_EL.bars) b.style.width = Math.round(clamp(m[b.dataset.need], 0, 1) * 100) + '%';
+}
+
+// URL hash for the offline check: #v=hunt&a=side&m=walk&l=torch&t=3.2&yaw=..&pitch=..&d=..
+const H0 = new URLSearchParams(location.hash.slice(1));
+if (H0.get('v')) { state.view = H0.get('v'); press('[data-view]', 'view', state.view); }
+if (H0.get('a')) { state.angle = H0.get('a') === 'free' ? null : H0.get('a'); press('[data-angle]', 'angle', state.angle || ''); }
+if (H0.get('m')) { state.motion = H0.get('m'); press('[data-motion]', 'motion', state.motion); }
+if (H0.get('l')) { state.light = H0.get('l'); press('[data-light]', 'light', state.light); }
+if (H0.get('p') === '0') { state.player = false; tp.setAttribute('aria-pressed', 'false'); }
+if (H0.get('follow') === '1') { state.follow = true; tf_.setAttribute('aria-pressed', 'true'); }
+tags();
+let fitted = false;
+const lockT = H0.get('tx') != null;
+const PLAYER_AT = { both: [0, 0, 2.6, Math.PI], hunt: [-3.2, 0, 0.5, -2.0], feed: [-3.2, 0, 0.5, -2.0] };
+
+// ---------------------------------------------------------------- frame loop
+function resize() {
+  const dpr = Math.min(2, window.devicePixelRatio || 1), w = Math.round(canvas.clientWidth * dpr), h = Math.round(canvas.clientHeight * dpr);
+  if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
+  if (!fitted && canvas.clientWidth > 0) {
+    fitted = true; aim(true);
+    if (H0.get('yaw')) cam.yaw = +H0.get('yaw');
+    if (H0.get('pitch')) cam.pitch = +H0.get('pitch');
+    if (H0.get('d')) cam.d = +H0.get('d');
+    if (lockT) cam.t = [+H0.get('tx'), +H0.get('ty'), +H0.get('tz')];
+  }
+}
+function bindMesh(L, c) {
+  gl.bindBuffer(gl.ARRAY_BUFFER, c.vb); gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, c.ib);
+  const S = VS * 4;
+  gl.vertexAttribPointer(L.aP, 3, gl.FLOAT, false, S, 0);
+  if (L.aN != null) { gl.vertexAttribPointer(L.aN, 3, gl.FLOAT, false, S, 12); gl.vertexAttribPointer(L.aC, 3, gl.FLOAT, false, S, 24); gl.vertexAttribPointer(L.aM, 4, gl.FLOAT, false, S, 36); gl.vertexAttribPointer(L.aA, 2, gl.FLOAT, false, S, 52); }
+}
+const attrs = L => [L.aP, L.aN, L.aC, L.aM, L.aA].filter(a => typeof a === 'number' && a >= 0);
+let tt = 0;
+function draw(dt) {
+  resize();
+  tt += dt;
+  const motion = state.motion;
+  const room = state.view === 'room';
+  if (room) { stepRoom(motion === 'still' ? 0 : dt); showMind(); }
+  else for (const w of Object.values(walkers)) stepWalker(w, motion === 'still' ? 0 : dt, motion);
+  if (cam.goal) {
+    cam.goal.t = focus();
+    const k = dt > 0 ? 1 - Math.exp(-dt * 5) : 1;
+    let dy = cam.goal.yaw - cam.yaw; dy = Math.atan2(Math.sin(dy), Math.cos(dy));
+    cam.t = lerp3(cam.t, cam.goal.t, k); cam.d = lerp(cam.d, cam.goal.d, k); cam.yaw += dy * k; cam.pitch = lerp(cam.pitch, cam.goal.pitch, k);
+    if (Math.abs(cam.d - cam.goal.d) < 0.01 && Math.abs(dy) < 0.002) cam.goal = null;
+  } else if (state.view !== 'both' && !lockT) cam.t = lerp3(cam.t, focus(), dt > 0 ? 1 - Math.exp(-dt * (room ? 2 : 3)) : 1);
+  // the creatures this frame
+  const scene = [];
+  if (room) {
+    const dyn = new Mesh(), r = poseRoom(dyn), m = ROOMSIM.mind;
+    r.dyn = toGPU(dyn, dynPool.room, gl.DYNAMIC_DRAW); r.key = 'room';
+    r.feed = m && m.feeding ? 1 : 0; r.pulse = 0.5 + 0.5 * Math.sin(ROOMSIM.c.t * 7.5);
+    scene.push(r);
+  }
+  for (const key of ['hunt', 'feed']) {
+    if (state.view !== 'both' && state.view !== key) continue;
+    const dyn = new Mesh(), r = pose(walkers[key], motion, dyn), w = walkers[key];
+    r.dyn = toGPU(dyn, dynPool[key], gl.DYNAMIC_DRAW); r.key = key;
+    r.feed = w.feeding ? 1 : 0; r.pulse = motion === 'still' ? 0.5 : 0.5 + 0.5 * Math.sin(w.t * 7.5);
+    scene.push(r);
+  }
+  let player = null;
+  if (state.player) {
+    const pa = PLAYER_AT[state.view];
+    if (room) player = frame(PLAYER_ROOM, rot(Math.PI));
+    else if (state.view === 'both') player = frame([pa[0], 0, pa[2]], rot(pa[3]));
+    else { const w = walkers[state.view], g = frame([w.x, 0, w.z], rot(w.yaw)); player = frame(at(g, [pa[0], 0, pa[2]]), rot(w.yaw + pa[3])); }
+  }
+  // camera and lights: the key comes from over the camera's left shoulder, the rim from behind on the right
+  const eye = add(cam.t, [cam.d * Math.cos(cam.pitch) * Math.sin(cam.yaw), cam.d * Math.sin(cam.pitch), cam.d * Math.cos(cam.pitch) * Math.cos(cam.yaw)]);
+  const aspect = canvas.width / Math.max(1, canvas.height);
+  const VP = m4mul(perspective(0.66, aspect, 0.1, 90), lookAt(eye, cam.t));
+  const fwd = norm(sub(cam.t, eye)), right = norm(cross(fwd, Y)), upv = cross(right, fwd);
+  const fh = norm([fwd[0], 0, fwd[2]]), rh = norm(cross(fh, Y));
+  const key = norm(add(add(mul(rh, -0.55), [0, 0.95, 0]), mul(fh, -0.6))), rim = norm(add(add(mul(rh, 0.7), [0, 0.45, 0]), mul(fh, 0.85)));
+  const torch = state.light === 'torch' ? 1 : 0;
+  const center = room ? [0, 2, 0] : state.view === 'both' ? [0, 1.5, 0] : [walkers[state.view].x, 1.5, walkers[state.view].z];
+  const ext = room ? 12.5 : state.view === 'both' ? 11 : 7.5;
+  const LVP = m4mul(ortho(-ext, ext, -ext, ext, 2, 50), lookAt(add(center, mul(key, 25)), center));
+  const spot = add(add(eye, mul(right, 0.45)), mul(upv, -0.35)), spotDir = norm(sub(add(cam.t, [0, 0.1, 0]), spot));
+  const each = fn => { for (const r of scene) { for (const [name, f] of r.parts) fn(GPU[name], m4of(f), r); fn(r.dyn, I4, r); } if (player) fn(GPU.player, m4of(player), null); if (room) fn(ROOMG.props, I4, null); };
+  // the room: walls and ceiling between the camera and the creature are left out, so you look in
+  const roomParts = room ? [ROOMG.floor, ...(eye[1] < ROOM.b[1] - 0.01 ? [ROOMG.ceiling] : []), ...ROOMG.walls.filter(w => dot(sub(eye, w.pt), w.n) > 0).map(w => w.g)] : [];
+  // shadow pass
+  if (shOK && !torch) {
+    gl.bindFramebuffer(gl.FRAMEBUFFER, shFB); gl.viewport(0, 0, SHN, SHN);
+    gl.clearColor(1, 1, 1, 1); gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    gl.enable(gl.DEPTH_TEST); gl.disable(gl.BLEND); gl.disable(gl.CULL_FACE);
+    gl.useProgram(shProg); gl.enableVertexAttribArray(LS.aP);
+    gl.uniformMatrix4fv(LS.uVP, false, LVP);
+    each((chunks, M) => { gl.uniformMatrix4fv(LS.uModel, false, M); for (const c of chunks) { bindMesh(LS, c); gl.drawElements(gl.TRIANGLES, c.n, gl.UNSIGNED_SHORT, 0); } });
+    gl.disableVertexAttribArray(LS.aP);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+  }
+  gl.viewport(0, 0, canvas.width, canvas.height);
+  const bg0 = torch ? [0.012, 0.012, 0.016] : [0.22, 0.22, 0.235], bg1 = torch ? [0.004, 0.004, 0.006] : [0.03, 0.031, 0.036];
+  gl.clearColor(bg1[0], bg1[1], bg1[2], 1); gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+  // the backdrop
+  gl.disable(gl.DEPTH_TEST); gl.useProgram(bgProg);
+  gl.uniform2f(LB.uRes, canvas.width, canvas.height); gl.uniform3fv(LB.uBg0, bg0); gl.uniform3fv(LB.uBg1, bg1);
+  gl.bindBuffer(gl.ARRAY_BUFFER, quadBuf); gl.enableVertexAttribArray(LB.aP); gl.vertexAttribPointer(LB.aP, 2, gl.FLOAT, false, 8, 0);
+  gl.drawArrays(gl.TRIANGLES, 0, 3); gl.disableVertexAttribArray(LB.aP);
+  // the floor, the creatures, the player
+  gl.enable(gl.DEPTH_TEST); gl.useProgram(prog);
+  for (const a of attrs(L0)) gl.enableVertexAttribArray(a);
+  gl.uniformMatrix4fv(L0.uVP, false, VP); gl.uniform3fv(L0.uCam, eye);
+  const kd = room ? 0.62 : 1;
+  gl.uniform3fv(L0.uKey, key); gl.uniform3fv(L0.uKeyC, mul([2.5, 2.38, 2.2], kd)); gl.uniform3fv(L0.uRim, rim); gl.uniform3fv(L0.uRimC, mul([1.3, 1.45, 1.75], kd)); gl.uniform3fv(L0.uFill, mul([0.2, 0.2, 0.22], kd));
+  gl.uniform4fv(L0.uDark, room ? [DARK.p[0], DARK.p[1], DARK.p[2], DARK.r] : [0, 0, 0, 0]);
+  gl.uniform1f(L0.uTorch, torch); gl.uniform3fv(L0.uSpot, spot); gl.uniform3fv(L0.uSpotDir, spotDir);
+  const wide = state.view === 'both'; gl.uniform2f(L0.uCone, wide ? 0.83 : 0.88, wide ? 0.95 : 0.975); gl.uniform1f(L0.uGain, clamp((1 + 0.045 * cam.d * cam.d) / 4, 1, 4));
+  gl.uniformMatrix4fv(L0.uLVP, false, LVP); gl.uniform1f(L0.uShTexel, 1 / SHN); gl.uniform1f(L0.uShOn, shOK && !torch ? 1 : 0);
+  gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, shTex); gl.uniform1i(L0.uShadow, 0);
+  gl.uniform3fv(L0.uCenter, center); gl.uniform1f(L0.uFogR, room ? 40 : state.view === 'both' ? 9 : 5.5);
+  gl.uniform2f(L0.uRes, canvas.width, canvas.height); gl.uniform3fv(L0.uBg0, bg0); gl.uniform3fv(L0.uBg1, bg1);
+  const setC = r => { gl.uniform1f(L0.uFeed, r ? r.feed : 0); gl.uniform1f(L0.uPulse, r ? r.pulse : 0); gl.uniform3fv(L0.uEye, r ? r.eyeLight : [0, -50, 0]); gl.uniform3fv(L0.uEyeC, r ? [0.05 + 0.9 * r.open, 0.012 + 0.34 * r.open, 0.006 + 0.06 * r.open] : [0, 0, 0]); };
+  setC(null); gl.uniformMatrix4fv(L0.uModel, false, I4);
+  for (const part of room ? roomParts : [GPU.floor]) for (const c of part) { bindMesh(L0, c); gl.drawElements(gl.TRIANGLES, c.n, gl.UNSIGNED_SHORT, 0); }
+  let cur;
+  each((chunks, M, r) => { if (r !== cur) { setC(r); cur = r; } gl.uniformMatrix4fv(L0.uModel, false, M); for (const c of chunks) { bindMesh(L0, c); gl.drawElements(gl.TRIANGLES, c.n, gl.UNSIGNED_SHORT, 0); } });
+  for (const a of attrs(L0)) gl.disableVertexAttribArray(a);
+  // glows, breath and dust, added on top
+  gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE); gl.depthMask(false);
+  const gv = [];
+  for (const r of scene) for (const [p0, rr] of r.eyes) {
+    const p = add(p0, mul(norm(sub(eye, p0)), 0.08));
+    for (const [sz, I] of [[rr * 5.5, 0.2], [rr * 2.2, 0.3]]) for (const [x, y] of [[-1, -1], [1, -1], [1, 1], [-1, -1], [1, 1], [-1, 1]]) gv.push(p[0], p[1], p[2], x, y, sz, I);
+  }
+  if (gv.length) {
+    gl.useProgram(glowProg); gl.uniformMatrix4fv(LG.uVP, false, VP); gl.uniform3fv(LG.uR, right); gl.uniform3fv(LG.uU, upv);
+    gl.bindBuffer(gl.ARRAY_BUFFER, glowBuf); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(gv), gl.DYNAMIC_DRAW);
+    gl.enableVertexAttribArray(LG.aP); gl.vertexAttribPointer(LG.aP, 3, gl.FLOAT, false, 28, 0);
+    gl.enableVertexAttribArray(LG.aQ); gl.vertexAttribPointer(LG.aQ, 4, gl.FLOAT, false, 28, 12);
+    gl.drawArrays(gl.TRIANGLES, 0, gv.length / 7);
+    gl.disableVertexAttribArray(LG.aP); gl.disableVertexAttribArray(LG.aQ);
+  }
+  gl.useProgram(mistProg);
+  gl.uniformMatrix4fv(LM.uVP, false, VP); gl.uniform3fv(LM.uSpot, spot); gl.uniform3fv(LM.uSpotDir, spotDir); gl.uniform1f(LM.uTorch, torch); gl.uniform1f(LM.uPx, canvas.height);
+  const pts = (buf, arr, n, size, tint) => {
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf); gl.bufferData(gl.ARRAY_BUFFER, arr, gl.DYNAMIC_DRAW);
+    gl.enableVertexAttribArray(LM.aP); gl.vertexAttribPointer(LM.aP, 3, gl.FLOAT, false, 16, 0);
+    gl.enableVertexAttribArray(LM.aA); gl.vertexAttribPointer(LM.aA, 1, gl.FLOAT, false, 16, 12);
+    gl.uniform1f(LM.uSize, size); gl.uniform3fv(LM.uTint, tint); gl.drawArrays(gl.POINTS, 0, n);
+    gl.disableVertexAttribArray(LM.aP); gl.disableVertexAttribArray(LM.aA);
+  };
+  for (let i = 0; i < DUST; i++) { const s = dustSeed[i]; dustArr.set([s[0] + 0.25 * Math.sin(tt * 0.13 + s[3]), s[1] + 0.2 * Math.sin(tt * 0.09 + s[3] * 2), s[2] + 0.25 * Math.cos(tt * 0.11 + s[3]), torch ? 0.9 : 0.12], i * 4); }
+  pts(dustBuf, dustArr, DUST, 0.04, [0.86, 0.82, 0.74]);
+  if (torch) for (const r of scene) if (r.mouth) {
+    const m0 = r.mouth;
+    for (let i = 0; i < MIST; i++) { const ph = (tt * 0.25 + i / MIST) % 1, a = hash(i * 1.7) * TAU, rr = 0.03 + ph * 0.45; mistArr.set([m0[0] + Math.cos(a) * rr, m0[1] - ph * 1.3 + 0.05 * Math.sin(tt + i), m0[2] + Math.sin(a) * rr, 0.2 * Math.sin(Math.PI * ph)], i * 4); }
+    pts(mistBuf, mistArr, MIST, 0.22, [0.55, 0.6, 0.66]);
+  }
+  gl.depthMask(true); gl.disable(gl.BLEND);
+}
+// offline check: run the walk forward to a set time, draw once
+const T0 = H0.get('t');
+if (T0 != null) {
+  const tEnd = +T0; let t = 0;
+  if (state.view === 'room') {
+    if (H0.get('act')) { ROOMSIM.mind = makeMind(); startPlan(H0.get('act')); }
+    const nz = H0.get('noise') ? H0.get('noise').split('@') : null;
+    while (t < tEnd) {
+      const dt = Math.min(1 / 30, tEnd - t);
+      if (nz && t <= +nz[1] && t + dt > +nz[1]) { const q = nz[0].split(',').map(Number); ROOMSIM.pings.push({ p: q, n: [0, 1, 0], age: 0 }); hearNoise(q, Y); }
+      stepRoom(dt); t += dt;
+    }
+    showMind(); window.__log = ROOMSIM.mind.log.join(' | ') + ' || pos ' + ROOMSIM.c.pos.map(v => v.toFixed(2)).join(',');
+  } else while (t < tEnd) { const dt = Math.min(1 / 30, tEnd - t); for (const w of Object.values(walkers)) stepWalker(w, state.motion === 'still' ? 0 : dt, state.motion); t += dt; }
+  resize(); draw(0); document.title = 'done';
+  return;
+}
+let last = performance.now();
+const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function loop(now) { const dt = Math.min(0.05, (now - last) / 1000); last = now; draw(reduce && state.motion !== 'walk' && state.view !== 'room' ? 0 : dt); requestAnimationFrame(loop); }
+requestAnimationFrame(loop);
+})();
+</script>

@@ -1,0 +1,12 @@
+# subway/station-map-boards
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-man-at-dundas-subway-station-toronto-2008-05-06.jpg | [Man at Dundas subway station, Toronto, 2008-05-06.jpg](https://commons.wikimedia.org/wiki/File:Man_at_Dundas_subway_station,_Toronto,_2008-05-06.jpg) | Radomianin | CC BY-SA 4.0 | A man with a shopping bag walks along the platform at Dundas subway station in Toronto as a train rushes past. The black-and-white image emp |
+| 02-munich-subway-station-georg-brauchle-ring-april-2017.jpg | [Munich Subway Station Georg-Brauchle-Ring, April 2017.jpg](https://commons.wikimedia.org/wiki/File:Munich_Subway_Station_Georg-Brauchle-Ring,_April_2017.jpg) | Martin Falbisoner | CC BY-SA 4.0 | Metallic chairs on the platform level of Munich subway station Georg-Brauchle-Ring: Dutch angle. |
+| 03-skylight-in-the-abandoned-city-hall-station-32155.jpg | [Skylight in the abandoned City Hall Station (32155).jpg](https://commons.wikimedia.org/wiki/File:Skylight_in_the_abandoned_City_Hall_Station_(32155).jpg) | Rhododendrites | CC BY-SA 4.0 | The defunct City Hall subway station in New York City, closed since 1945. The station has several skylights. Most of them are built into the |
+| 04-platform-and-arrival-display-at-16th-st-mission-station-octo.jpg | [Platform and Arrival Display at 16th St Mission Station, October 2021.](https://commons.wikimedia.org/wiki/File:Platform_and_Arrival_Display_at_16th_St_Mission_Station,_October_2021.jpg) | Scott Feeney | CC BY-SA 4.0 | Image of 16th St Mission BART station platform with train arrival signs. On platform 2 (northbound), a train bound for Berryessa station is  |
+| 05-train-arrival-board-at-osaka-station-osaka-loop-line-platfor.jpg | [Train arrival board at Osaka Station Osaka Loop Line platform =2014-04](https://commons.wikimedia.org/wiki/File:Train_arrival_board_at_Osaka_Station_Osaka_Loop_Line_platform_%3D2014-04-08.jpg) | Wei-Te Wong from Taipei City, Taiwan, Republic of China | CC BY-SA 2.0 | Kishuji Rapid bound for Tennoji at Osaka Station |
+| 06-platform-1-arrivals-screen-at-university-station-20190330153.jpg | [Platform 1 arrivals screen at University Station (20190330153143).jpg](https://commons.wikimedia.org/wiki/File:Platform_1_arrivals_screen_at_University_Station_(20190330153143).jpg) | N509FZ | CC BY-SA 4.0 | A non-stop train... |

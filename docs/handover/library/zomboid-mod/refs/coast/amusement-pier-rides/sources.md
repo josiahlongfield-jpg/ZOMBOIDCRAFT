@@ -1,0 +1,16 @@
+# coast/amusement-pier-rides
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-morey-s-pier-ferris-wheel-night.jpg | [Morey's Pier Ferris Wheel night.JPG](https://commons.wikimedia.org/wiki/File:Morey%27s_Pier_Ferris_Wheel_night.JPG) | Smallbones | CC0 | Ferris Wheel of Morey's Pier on the boardwalk in Wildwood, New Jersey |
+| 02-morey-s-pier-ferris-wheel-2.jpg | [Morey's Pier Ferris Wheel 2.JPG](https://commons.wikimedia.org/wiki/File:Morey%27s_Pier_Ferris_Wheel_2.JPG) | Smallbones | CC0 | Ferris Wheel of Morey's Pier on the boardwalk in Wildwood, New Jersey |
+| 03-ferris-wheel-on-llandudno-pier-2-geograph-org-uk-6960747.jpg | [Ferris wheel on Llandudno Pier (2) - geograph.org.uk - 6960747.jpg](https://commons.wikimedia.org/wiki/File:Ferris_wheel_on_Llandudno_Pier_(2)_-_geograph.org.uk_-_6960747.jpg) | Richard Hoare | CC BY-SA 2.0 | Ferris wheel on Llandudno Pier (2) |
+| 04-usa-santa-monica-beach-and-pier-ca.jpg | [USA Santa Monica Beach and pier CA.jpg](https://commons.wikimedia.org/wiki/File:USA_Santa_Monica_Beach_and_pier_CA.jpg) | Daniel Schwen | CC BY-SA 2.5 | Santa Monica beach and pier, with Santa Monica Mountains in backround - Southern California, USA |
+| 05-los-angeles-california-usa-santa-monica-beach-2012-5301.jpg | [Los Angeles (California, USA), Santa Monica Beach -- 2012 -- 5301.jpg](https://commons.wikimedia.org/wiki/File:Los_Angeles_(California,_USA),_Santa_Monica_Beach_--_2012_--_5301.jpg) | Dietmar Rabich | CC BY-SA 4.0 | Santa Monica Beach, California, USA |
+| 06-aerial-photo-of-santa-monica-pier.jpg | [Aerial Photo of Santa Monica Pier.jpg](https://commons.wikimedia.org/wiki/File:Aerial_Photo_of_Santa_Monica_Pier.jpg) | Jelson25 | Public domain | The Santa Monica Pier seen from an altitude of about 2,000', looking south. |
+| 07-walt-the-tiger-seaside-heights-carousel-nj-2026.jpg | [Walt the tiger, Seaside Heights Carousel, NJ - 2026.jpg](https://commons.wikimedia.org/wiki/File:Walt_the_tiger,_Seaside_Heights_Carousel,_NJ_-_2026.jpg) | Zeete | CC BY-SA 4.0 | Walt the tiger on the Seaside Heights Carousel in Seaside Heights, New Jersey. Several jumping horses behind in the second row. |
+| 08-seaside-heights-carousel-nj-overview-2026.jpg | [Seaside Heights Carousel, NJ - overview, 2026.jpg](https://commons.wikimedia.org/wiki/File:Seaside_Heights_Carousel,_NJ_-_overview,_2026.jpg) | Zeete | CC BY-SA 4.0 | Overview of the Seaside Heights Carousel on the boardwalk in Seaside Heights, New Jersey. |
+| 09-carousel-pavilion-and-museum-seaside-heights-nj-2026.jpg | [Carousel Pavilion and Museum, Seaside Heights, NJ - 2026.jpg](https://commons.wikimedia.org/wiki/File:Carousel_Pavilion_and_Museum,_Seaside_Heights,_NJ_-_2026.jpg) | Zeete | CC BY-SA 4.0 | Seaside Heights Carousel on the boardwalk in Seaside Heights, New Jersey. |
+| 10-giant-ferris-wheel-morey-s-piers-wildwood-nj-night-2012.jpg | [Giant Ferris Wheel (Morey's Piers) Wildwood NJ Night 2012.JPG](https://commons.wikimedia.org/wiki/File:Giant_Ferris_Wheel_(Morey%27s_Piers)_Wildwood_NJ_Night_2012.JPG) | Dplcrnj | CC BY-SA 3.0 | Giant Ferris Wheel (Morey's Piers) Wildwood NJ Night 2012 |

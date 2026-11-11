@@ -1,0 +1,34 @@
+<!doctype html><html><head><style>body{margin:0;background:#dde2e8}</style>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js"}}</script></head><body>
+<script type="module">
+import * as THREE from 'three';
+const J=await (await fetch('chk.json')).json(); const BIN=await (await fetch('chk.bin')).arrayBuffer();
+const R=new THREE.WebGLRenderer({antialias:true}); R.setSize(innerWidth,innerHeight); document.body.appendChild(R.domElement);
+const S=new THREE.Scene(); S.background=new THREE.Color(0xdde2e8);
+S.add(new THREE.HemisphereLight(0xffffff,0x667788,2.2)); const dl=new THREE.DirectionalLight(0xffffff,1.6); dl.position.set(1,2,3); S.add(dl);
+const C=new THREE.PerspectiveCamera(30,innerWidth/innerHeight,0.05,50); C.position.set(0,1,4.6); C.lookAt(0,0.9,0);
+const tl=new THREE.TextureLoader(); const tex={}; for(const [k,f] of Object.entries(J.tex)){ const t=tl.load(f); t.colorSpace=THREE.SRGBColorSpace; t.flipY=false; tex[k]=t; }
+const F=(o,n)=>new Float32Array(BIN,o,n);
+const inv=J.inv.map(m=>new THREE.Matrix4().set(m[0],m[1],m[2],m[3],m[4],m[5],m[6],m[7],m[8],m[9],m[10],m[11],0,0,0,1));
+const G=J.groups.map(g=>{ const geo=new THREE.BufferGeometry(); const P=F(g.p,g.n*3);
+  geo.setAttribute('position',new THREE.BufferAttribute(new Float32Array(P),3)); geo.setAttribute('uv',new THREE.BufferAttribute(F(g.uv,g.n*2),2));
+  geo.setIndex(new THREE.BufferAttribute(new Uint32Array(BIN,g.ix,g.t),1));
+  const mat=new THREE.MeshStandardMaterial({map:tex[g.tex],side:g.flags&1?THREE.DoubleSide:THREE.FrontSide,alphaTest:g.flags&2?0.5:0,transparent:false,roughness:0.8});
+  const m=new THREE.Mesh(geo,mat); S.add(m); return {g,m,P,J:F(g.j,g.n*4),W:F(g.w,g.n*4)}; });
+const ground=new THREE.Mesh(new THREE.CircleGeometry(1.2,48),new THREE.MeshStandardMaterial({color:0xc4ccd6})); ground.rotation.x=-Math.PI/2; S.add(ground);
+window.show=(look,hidden,clip,t,view)=>{
+  const key=look+'|'+(hidden.includes('shoes')?0:1);
+  const c=J.clips[clip]; const fr=Math.min(c.frames-1,Math.floor(t*c.fps)); const nb=J.bones.length;
+  const Q=F(c.q+fr*c.bones*16,c.bones*4), Pp=F(c.p+fr*c.bones*12,c.bones*3);
+  const sk=[]; for(let i=0;i<nb;i++){ let w; if(i<c.bones){ w=new THREE.Matrix4().compose(new THREE.Vector3(Pp[i*3],Pp[i*3+1],Pp[i*3+2]),new THREE.Quaternion(Q[i*4],Q[i*4+1],Q[i*4+2],Q[i*4+3]).normalize(),new THREE.Vector3(1,1,1)); } else w=inv[i].clone().invert(); sk.push(w.multiply(inv[i]).elements); }
+  for(const o of G){ const [nm,lk]=o.g.piece.split('@'); const vis=(nm==='body'||!hidden.includes(nm))&&(!lk||lk.split(',').includes(key)); o.m.visible=vis; if(!vis) continue;
+    const a=o.m.geometry.attributes.position.array, P=o.P, n=o.g.n;
+    for(let v=0;v<n;v++){ let x=0,y=0,z=0; const px=P[v*3],py=P[v*3+1],pz=P[v*3+2];
+      for(let k=0;k<4;k++){ const w=o.W[v*4+k]; if(!w) continue; const e=sk[o.J[v*4+k]];
+        x+=w*(e[0]*px+e[4]*py+e[8]*pz+e[12]); y+=w*(e[1]*px+e[5]*py+e[9]*pz+e[13]); z+=w*(e[2]*px+e[6]*py+e[10]*pz+e[14]); }
+      a[v*3]=x;a[v*3+1]=y;a[v*3+2]=z; }
+    o.m.geometry.attributes.position.needsUpdate=true; o.m.geometry.computeVertexNormals(); }
+  const v=view||'front'; const d=4.6; C.position.set(v==='side'?d:v==='back'?0:0,1,v==='side'?0:v==='back'?-d:d); C.lookAt(0,0.9,0);
+  R.render(S,C); };
+window.READY=1;
+</script></body></html>

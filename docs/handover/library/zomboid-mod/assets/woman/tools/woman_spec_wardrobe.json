@@ -1,0 +1,237 @@
+{
+ "groups": [
+  {
+   "mesh": "body",
+   "piece": "body",
+   "texture": "body",
+   "lods": [
+    1.0,
+    0.3
+   ]
+  },
+  {
+   "mesh": "L_eyes",
+   "piece": "body",
+   "texture": "eyes",
+   "lods": [
+    1.0,
+    1
+   ]
+  },
+  {
+   "mesh": "R_eyes",
+   "piece": "body",
+   "texture": "eyes",
+   "lods": [
+    1.0,
+    1
+   ]
+  },
+  {
+   "mesh": "teeth_upper",
+   "piece": "body",
+   "texture": "teeth",
+   "lods": [
+    1.0,
+    0.3
+   ]
+  },
+  {
+   "mesh": "teeth_lower",
+   "piece": "body",
+   "texture": "teeth",
+   "lods": [
+    1.0,
+    0.3
+   ]
+  },
+  {
+   "mesh": "tongue",
+   "piece": "body",
+   "texture": "teeth",
+   "lods": [
+    1.0,
+    0.3
+   ]
+  },
+  {
+   "mesh": "eyelashes",
+   "piece": "body",
+   "texture": "eyelashes",
+   "both": true,
+   "cutout": true,
+   "lods": [
+    1.0,
+    1
+   ]
+  },
+  {
+   "mesh": "underwear",
+   "piece": "body",
+   "texture": "sock",
+   "both": true,
+   "cutout": true,
+   "push": 0.0015,
+   "lods": [
+    1.0,
+    0.6
+   ]
+  },
+  {
+   "mesh": "_bra",
+   "piece": "bra",
+   "texture": "bra",
+   "both": true,
+   "cutout": true,
+   "push": 0.002,
+   "lods": [
+    1.0,
+    0.5
+   ]
+  },
+  {
+   "mesh": "sock",
+   "piece": "stockings",
+   "texture": "sock",
+   "both": true,
+   "cutout": true,
+   "push": 0.003,
+   "lods": [
+    1.0,
+    0.4
+   ]
+  },
+  {
+   "mesh": "shoes",
+   "piece": "heels",
+   "texture": "sock",
+   "push": 0.001,
+   "lods": [
+    1.0,
+    0.4
+   ]
+  },
+  {
+   "mesh": "blackhair",
+   "piece": "hair",
+   "texture": "blackhair",
+   "both": true,
+   "cutout": true,
+   "lods": [
+    1.0,
+    0.35
+   ]
+  },
+  {
+   "mesh": "shirt",
+   "piece": "sweater",
+   "texture": "shirt",
+   "push": 0.004,
+   "lods": [
+    1.0,
+    0.4
+   ]
+  },
+  {
+   "mesh": "short",
+   "piece": "shorts",
+   "texture": "shirt",
+   "push": 0.004,
+   "lods": [
+    1.0,
+    0.5
+   ],
+   "both": true
+  },
+  {
+   "mesh": "skirt",
+   "piece": "skirt",
+   "texture": "outfit",
+   "push": 0.002,
+   "lods": [
+    1.0,
+    0.5
+   ],
+   "both": true
+  },
+  {
+   "mesh": "Dress",
+   "piece": "dress",
+   "texture": "dress",
+   "push": 0.003,
+   "lods": [
+    1.0,
+    0.5
+   ],
+   "both": true,
+   "cutout": true
+  },
+  {
+   "mesh": "boot",
+   "piece": "boots",
+   "texture": "outfit",
+   "push": 0.003,
+   "lods": [
+    0.6,
+    0.2
+   ]
+  }
+ ],
+ "textures": {
+  "body": {
+   "file": "../woman/page/tex/body.jpg",
+   "size": 4096
+  },
+  "eyes": {
+   "file": "../woman/page/tex/eye_green_basecolor.jpg",
+   "size": 1024
+  },
+  "teeth": {
+   "file": "../woman/page/tex/teeth.jpg",
+   "size": 1024
+  },
+  "eyelashes": {
+   "file": "../woman/page/tex/eyelashes.webp",
+   "size": 1024,
+   "alpha": true
+  },
+  "sock": {
+   "file": "../woman/page/tex/sock.webp",
+   "size": 2048,
+   "alpha": true
+  },
+  "bra": {
+   "file": "../woman/page/tex/bra.webp",
+   "size": 2048,
+   "alpha": true
+  },
+  "blackhair": {
+   "file": "../woman/page/tex/blackhair.webp",
+   "size": 2048,
+   "alpha": true
+  },
+  "shirt": {
+   "file": "../woman/page/tex/shirt.jpg",
+   "size": 2048
+  },
+  "outfit": {
+   "file": "../woman/page/tex/outfit.jpg",
+   "size": 2048
+  },
+  "dress": {
+   "file": "../woman/page/tex/dress.webp",
+   "size": 2048,
+   "alpha": true
+  }
+ },
+ "clips": {
+  "idle": "Breathing_Idle",
+  "walk": "Female_Walk",
+  "run": "Running",
+  "die": "Dying",
+  "aim": "Rifle_Aiming_Idle",
+  "fire": "Firing_Rifle",
+  "rifle_walk": "Walk_With_Rifle",
+  "aim_gun": "Aiming_Gun"
+ }
+}

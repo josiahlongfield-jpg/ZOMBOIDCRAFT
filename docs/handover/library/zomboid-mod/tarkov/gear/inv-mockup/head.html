@@ -1,0 +1,96 @@
+<title>Operator Grid Inventory</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Allerta+Stencil&family=Barlow+Condensed:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&family=Permanent+Marker&display=swap">
+<style>
+/* Layout: one dark game screen, three kit panels (worn gear | carried grids | nearby container). Tarkov cell grids in the field-kit look of the approved v3 inventory. Single dark look on purpose: it is a game screen. */
+:root{
+  color-scheme:dark;
+  --page:#0e0f0d;--fg:#d8d3c2;--dim:#8c887a;--line:#2b2c25;
+  --canvas:#3a3c28;--canvas2:#2f3120;--stitch:rgba(214,196,150,.32);
+  --cellbg:rgba(8,9,6,.62);--cellline:rgba(214,196,150,.12);
+  --brass:#b8924a;--brass-hi:#e2c27a;--ok:#7fbf4d;--bad:#c4452f;
+  --c-ammo:#5e5a2e;--c-med:#5b2a26;--c-food:#4d4430;--c-gear:#2f3f45;--c-wpn:#33352f;--c-tool:#45392b;--c-nade:#3f4a2a;
+  --f-st:"Allerta Stencil","Arial Narrow",sans-serif;--f-b:"Barlow Condensed","Arial Narrow",sans-serif;--f-d:"JetBrains Mono",ui-monospace,monospace;--f-h:"Permanent Marker","Comic Sans MS",cursive;
+  --cell:34px;
+}
+*{box-sizing:border-box}
+body{background:var(--page);color:var(--fg);font-family:var(--f-b);font-size:16px;padding-block:20px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1360px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+h1{font:400 clamp(26px,4vw,38px) var(--f-st);margin:0;letter-spacing:.05em}
+.lede{margin:2px 0 0;color:var(--dim);max-width:78ch;line-height:1.35}
+.tips{display:flex;flex-wrap:wrap;gap:4px 18px;color:var(--dim);font-size:15px}.tips b{color:var(--fg)}
+.screen{position:relative;overflow-x:auto;background:radial-gradient(ellipse at 50% 30%,#22251c,#0a0b09 75%);border-radius:6px;padding:16px;box-shadow:inset 0 0 80px rgba(0,0,0,.8)}
+.hud{display:grid;grid-template-columns:330px minmax(420px,1fr) minmax(300px,.8fr);gap:16px;min-width:1080px}
+.kit{position:relative;border-radius:6px;padding:14px 16px 16px;min-width:0;display:flex;flex-direction:column;gap:10px;
+ background:repeating-linear-gradient(45deg,rgba(255,255,255,.018) 0 2px,transparent 2px 5px),repeating-linear-gradient(-45deg,rgba(0,0,0,.05) 0 2px,transparent 2px 5px),linear-gradient(180deg,var(--canvas),var(--canvas2));
+ box-shadow:0 0 0 3px #1b1610,0 18px 40px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,240,210,.1),inset 0 0 40px rgba(0,0,0,.45)}
+.kit::before{content:"";position:absolute;inset:6px;border:1.5px dashed var(--stitch);border-radius:3px;pointer-events:none}
+.kit.metal{background:repeating-linear-gradient(90deg,rgba(255,255,255,.025) 0 1px,transparent 1px 3px),linear-gradient(180deg,#3a3e40,#26292b)}
+.kh{display:flex;align-items:center;gap:10px;justify-content:space-between}
+.st{font:400 20px var(--f-st);letter-spacing:.14em;text-transform:uppercase;color:rgba(232,222,196,.85);text-shadow:0 1px 0 #000}
+.tape{font:400 14px var(--f-h);color:#1d1b16;background:#cdbf98;padding:2px 10px;transform:rotate(1.5deg);box-shadow:0 2px 3px rgba(0,0,0,.45);white-space:nowrap}
+.sec{font:600 13px var(--f-d);letter-spacing:.08em;text-transform:uppercase;color:var(--brass-hi);display:flex;justify-content:space-between;gap:8px}
+.sec span{color:var(--dim);font-weight:400}
+/* equipment */
+.eq{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.slot{position:relative;aspect-ratio:1;border-radius:4px;background:var(--cellbg);box-shadow:inset 0 3px 6px rgba(0,0,0,.85),0 1px 0 rgba(255,240,210,.06);display:grid;place-items:center;min-width:0}
+.slot.wide{grid-column:span 3;aspect-ratio:3/1}
+.slot .lb{z-index:2;position:absolute;left:5px;top:3px;font:600 10px var(--f-d);letter-spacing:.06em;text-transform:uppercase;color:var(--dim);pointer-events:none}
+.slot img{max-width:80%;max-height:78%;filter:drop-shadow(0 3px 2px rgba(0,0,0,.75));pointer-events:none}
+.slot.full .lb{color:var(--brass-hi)}
+.slot .nm{z-index:2;position:absolute;left:5px;right:5px;bottom:3px;font:500 12px var(--f-b);line-height:1.05;color:var(--fg);text-shadow:0 1px 2px #000;pointer-events:none}
+.slot.hot{box-shadow:inset 0 3px 6px rgba(0,0,0,.85),0 0 0 2px var(--ok)}
+.slot.no{box-shadow:inset 0 3px 6px rgba(0,0,0,.85),0 0 0 2px var(--bad)}
+.stats{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;font:13px var(--f-d);color:var(--dim)}
+.stats b{color:var(--fg);font-weight:700;text-align:right;font-variant-numeric:tabular-nums}
+/* grids */
+.carried{display:flex;flex-direction:column;gap:12px;overflow:auto;max-height:760px;padding-right:4px}
+.block{display:flex;flex-direction:column;gap:6px}
+.pockets{display:flex;flex-wrap:wrap;gap:6px;align-items:flex-start}
+.grid{position:relative;display:grid;grid-template-columns:repeat(var(--w),var(--cell));grid-template-rows:repeat(var(--h),var(--cell));background:var(--cellbg);box-shadow:inset 0 2px 5px rgba(0,0,0,.9),0 0 0 1px rgba(0,0,0,.6);
+ background-image:linear-gradient(var(--cellline) 1px,transparent 1px),linear-gradient(90deg,var(--cellline) 1px,transparent 1px);background-size:var(--cell) var(--cell)}
+.empty{font:14px var(--f-b);color:var(--dim);padding:6px 0}
+.it{position:absolute;border:1px solid rgba(0,0,0,.6);box-shadow:inset 0 0 0 1px rgba(255,240,210,.1);cursor:grab;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;padding:2px 3px;touch-action:none;user-select:none}
+.it .s{white-space:nowrap;overflow:hidden;text-overflow:clip;font:600 10px var(--f-d);color:#efe6cc;text-shadow:0 1px 1px #000;line-height:1.1;text-align:right}
+.it .q{font:700 11px var(--f-d);color:var(--brass-hi);text-shadow:0 1px 1px #000}
+.wpn{position:absolute;inset:22% 8%;display:grid;place-items:center;font:400 22px var(--f-st);letter-spacing:.1em;color:rgba(232,222,196,.75);border:1px dashed rgba(214,196,150,.3);pointer-events:none}
+.it img{position:absolute;inset:8%;width:84%;height:84%;object-fit:contain;pointer-events:none;filter:drop-shadow(0 2px 2px rgba(0,0,0,.8))}
+.it:focus-visible{outline:2px solid var(--brass-hi)}
+.ghost{position:absolute;pointer-events:none;z-index:4}
+.ghost.ok{background:rgba(127,191,77,.35);outline:2px solid var(--ok)}.ghost.bad{background:rgba(196,69,47,.35);outline:2px solid var(--bad)}
+.drag{position:fixed;z-index:50;pointer-events:none;opacity:.9}
+.tip{position:fixed;z-index:60;pointer-events:none;background:#14150f;border:1px solid var(--brass);padding:6px 9px;font:13px var(--f-d);max-width:280px;color:var(--fg);box-shadow:0 6px 18px rgba(0,0,0,.6)}
+.tip b{font:600 15px var(--f-b);display:block;color:var(--brass-hi)}
+.note{font:14px var(--f-b);color:var(--dim);line-height:1.35}
+.btn{font:600 13px var(--f-d);letter-spacing:.06em;text-transform:uppercase;background:#1b1c15;color:var(--fg);border:1px solid var(--brass);padding:5px 10px;cursor:pointer}
+.btn:focus-visible{outline:2px solid var(--brass-hi);outline-offset:2px}
+.flash{font:600 14px var(--f-d);color:var(--brass-hi);min-height:1.2em}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+<div class="wrap">
+<header>
+<h1>Operator kit: Tarkov grids</h1>
+<p class="lede">Mock-up of the inventory with Tarkov's real pocket and pack grids. Every item takes its Tarkov size in cells, and the rig and backpack bring their own exact layouts. The data comes from the real Tarkov item list, and the gear pictures from your Tarkov files.</p>
+</header>
+<div class="tips"><span><b>Drag</b> items between grids</span><span><b>R</b> while dragging rotates</span><span><b>Drag gear</b> onto a worn slot to put it on, and drag it off to take it off. Its contents go with it</span><span><b>Hover</b> for details</span></div>
+<div class="screen"><div class="hud">
+ <section class="kit metal" aria-label="Worn gear">
+  <div class="kh"><span class="st">Operator</span><span class="tape">worn</span></div>
+  <div class="eq" id="eq"></div>
+  <div class="stats" id="stats"></div>
+ </section>
+ <section class="kit" aria-label="Carried">
+  <div class="kh"><span class="st">Carried</span><span class="tape" id="wtape">0 kg</span></div>
+  <div class="carried" id="carried"></div>
+ </section>
+ <section class="kit" aria-label="Nearby">
+  <div class="kh"><span class="st">Weapon crate</span><span class="tape red">nearby</span></div>
+  <div class="block"><div class="sec">Crate <span>11 × 15</span></div><div id="ground"></div></div>
+  <p class="note">Swap in the Bank Robber or Thunderbolt rig to see the pocket layout change, or put on the Pilgrim for a bigger pack. A rig that still holds items carries them with it, as in Tarkov.</p>
+  <div class="flash" id="flash" role="status"></div>
+  <button class="btn" type="button" id="reset">Reset kit</button>
+ </section>
+</div></div>
+</div>
+<script>
+const IMG=

@@ -1,0 +1,170 @@
+{
+ "groups": [
+  {
+   "mesh": "body",
+   "piece": "body",
+   "texture": "body",
+   "lods": [
+    1.0,
+    0.3
+   ]
+  },
+  {
+   "mesh": "L_eyes",
+   "piece": "body",
+   "texture": "eyes",
+   "lods": [
+    1.0,
+    1
+   ]
+  },
+  {
+   "mesh": "R_eyes",
+   "piece": "body",
+   "texture": "eyes",
+   "lods": [
+    1.0,
+    1
+   ]
+  },
+  {
+   "mesh": "teeth_upper",
+   "piece": "body",
+   "texture": "teeth",
+   "lods": [
+    1.0,
+    0.3
+   ]
+  },
+  {
+   "mesh": "teeth_lower",
+   "piece": "body",
+   "texture": "teeth",
+   "lods": [
+    1.0,
+    0.3
+   ]
+  },
+  {
+   "mesh": "tongue",
+   "piece": "body",
+   "texture": "teeth",
+   "lods": [
+    1.0,
+    0.3
+   ]
+  },
+  {
+   "mesh": "eyelashes",
+   "piece": "body",
+   "texture": "eyelashes",
+   "both": true,
+   "cutout": true,
+   "lods": [
+    1.0,
+    1
+   ]
+  },
+  {
+   "mesh": "underwear",
+   "piece": "body",
+   "texture": "sock",
+   "both": true,
+   "cutout": true,
+   "push": 0.0015,
+   "lods": [
+    1.0,
+    0.6
+   ]
+  },
+  {
+   "mesh": "_bra",
+   "piece": "bra",
+   "texture": "bra",
+   "both": true,
+   "cutout": true,
+   "push": 0.002,
+   "lods": [
+    1.0,
+    0.5
+   ]
+  },
+  {
+   "mesh": "sock",
+   "piece": "stockings",
+   "texture": "sock",
+   "both": true,
+   "cutout": true,
+   "push": 0.003,
+   "lods": [
+    1.0,
+    0.4
+   ]
+  },
+  {
+   "mesh": "shoes",
+   "piece": "heels",
+   "texture": "sock",
+   "push": 0.001,
+   "lods": [
+    1.0,
+    0.4
+   ]
+  },
+  {
+   "mesh": "blackhair",
+   "piece": "hair",
+   "texture": "blackhair",
+   "both": true,
+   "cutout": true,
+   "lods": [
+    1.0,
+    0.35
+   ]
+  }
+ ],
+ "textures": {
+  "body": {
+   "file": "../page/tex/body.jpg",
+   "size": 4096
+  },
+  "eyes": {
+   "file": "../page/tex/eye_green_basecolor.jpg",
+   "size": 1024
+  },
+  "teeth": {
+   "file": "../page/tex/teeth.jpg",
+   "size": 1024
+  },
+  "eyelashes": {
+   "file": "../page/tex/eyelashes.webp",
+   "size": 1024,
+   "alpha": true
+  },
+  "sock": {
+   "file": "../page/tex/sock.webp",
+   "size": 2048,
+   "alpha": true
+  },
+  "bra": {
+   "file": "../page/tex/bra.webp",
+   "size": 2048,
+   "alpha": true
+  },
+  "blackhair": {
+   "file": "../page/tex/blackhair.webp",
+   "size": 2048,
+   "alpha": true
+  }
+ },
+ "clips": {
+  "idle": "Breathing_Idle",
+  "walk": "Female_Walk",
+  "run": "Running",
+  "die": "Dying",
+  "aim": "Rifle_Aiming_Idle",
+  "fire": "Firing_Rifle",
+  "rifle_walk": "Walk_With_Rifle",
+  "aim_gun": "Aiming_Gun"
+ }
+}

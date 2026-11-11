@@ -1,0 +1,337 @@
+<title>Reach World Layout</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: survey sheet 02, same plotting-table look as the Reach Atlas. A working map first, the decisions and rules under it. Single deliberate dark look. */
+:root{
+  --ground:#0d1114; --sheet:#141a1f; --line:#25303a; --ink:#dfe6ea; --mute:#8b9aa5;
+  --signal:#d9a441; --cool:#6fb3c8;
+  --display:"Barlow Condensed","Arial Narrow",sans-serif;
+  --body:"IBM Plex Sans",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  color-scheme:dark;
+}
+body{background:var(--ground);color:var(--ink);font:15px/1.55 var(--body)}
+.wrap{max-width:1320px;margin:0 auto;padding-block:28px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:36px}
+h1,h2,h3{font-family:var(--display);font-weight:600;letter-spacing:.02em;text-wrap:balance;margin:0}
+h1{font-size:clamp(34px,6vw,56px);line-height:1}
+h2{font-size:26px}
+h3{font-size:21px}
+p{margin:0}
+.lede{max-width:72ch;color:var(--mute);margin:10px 0 0}
+.lede b{color:var(--ink);font-weight:500}
+.kpis{display:flex;flex-wrap:wrap;gap:10px 28px;font-family:var(--mono);font-size:13px;color:var(--mute);margin-top:16px}
+.kpis span b{color:var(--signal);font-weight:500;font-variant-numeric:tabular-nums}
+.label{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
+.panel{background:var(--sheet);border:1px solid var(--line);border-radius:4px}
+/* map */
+.mapgrid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:0}
+.mapcol{display:grid;grid-template-rows:auto 1fr;min-width:0;border-right:1px solid var(--line)}
+.tools{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+.seg button,.chipbtn,.zoom button{font:500 12.5px var(--mono);color:var(--mute);background:transparent;border:0;padding:6px 13px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--signal);color:var(--ground)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chipbtn{border:1px solid var(--line);border-radius:999px;padding:5px 11px}
+.chipbtn[aria-pressed="true"]{color:var(--ink);border-color:var(--cool)}
+.chipbtn[aria-pressed="true"]::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--cool);margin-right:6px;vertical-align:1px}
+.zoom{margin-left:auto;display:inline-flex;border:1px solid var(--line);border-radius:4px}
+.zoom button{padding:5px 11px}
+.zoom button+button{border-left:1px solid var(--line)}
+button:focus-visible{outline:2px solid var(--cool);outline-offset:2px}
+.stage{position:relative;height:min(76vh,860px);min-height:420px;background:#080b0d;touch-action:none;overflow:hidden}
+.stage canvas{display:block;width:100%;height:100%;cursor:grab}
+.stage canvas.drag{cursor:grabbing}
+.tip{position:absolute;pointer-events:none;background:rgba(13,17,20,.94);border:1px solid var(--line);border-radius:3px;padding:5px 8px;font:12px var(--mono);color:var(--ink);white-space:nowrap;display:none;z-index:2}
+.hint{position:absolute;left:12px;bottom:10px;font:11px var(--mono);color:var(--mute);background:rgba(8,11,13,.7);padding:3px 7px;border-radius:3px}
+.side{display:grid;grid-template-rows:auto 1fr;min-width:0;max-height:calc(min(76vh,860px) + 54px)}
+.detail{padding:16px 18px;border-bottom:1px solid var(--line);display:grid;gap:10px;align-content:start;min-height:220px}
+.detail .src{font-family:var(--mono);font-size:12px;color:var(--cool)}
+.detail dl{display:grid;grid-template-columns:auto 1fr;gap:3px 12px;margin:0;font-family:var(--mono);font-size:12.5px}
+.detail dt{color:var(--mute)} .detail dd{margin:0;font-variant-numeric:tabular-nums}
+.note{font-size:14px;border-left:2px solid var(--signal);padding-left:10px}
+.flow{font-size:13px;color:var(--mute)}
+.list{overflow:auto;padding:8px 0 12px}
+.reg{padding:10px 18px 4px;display:flex;align-items:center;gap:8px}
+.reg i{width:10px;height:10px;border-radius:2px;display:inline-block}
+.item{all:unset;box-sizing:border-box;display:grid;width:100%;padding:6px 18px 6px 36px;cursor:pointer}
+.item b{font-weight:500;font-size:14px}
+.item span{font-family:var(--mono);font-size:11px;color:var(--mute)}
+.item:hover,.item[aria-current="true"]{background:#1b232a}
+.item[aria-current="true"] b{color:var(--signal)}
+.item:focus-visible{outline:2px solid var(--cool);outline-offset:-2px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;padding:10px 14px;border-top:1px solid var(--line);font:11px var(--mono);color:var(--mute)}
+.legend span{display:inline-flex;gap:6px;align-items:center}
+.legend i{width:12px;height:9px;border-radius:2px;display:inline-block}
+@media (max-width:980px){.mapgrid{grid-template-columns:1fr}.mapcol{border-right:0;border-bottom:1px solid var(--line)}.side{max-height:none}.stage{height:62vh}.list{max-height:420px}}
+/* sections */
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:20px}
+.card{padding:18px 20px;display:grid;gap:12px;align-content:start}
+ol.rules{margin:0;padding-left:20px;display:grid;gap:10px}
+ol.rules li::marker{font-family:var(--mono);color:var(--signal)}
+ol.rules b{font-weight:500}
+.orbit{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:0}
+.orbit .stage{height:auto;aspect-ratio:16/10;min-height:0;border-right:1px solid var(--line)}
+.route{display:grid;gap:8px;padding:18px 20px;align-content:start}
+.step{display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:start}
+.step em{font-style:normal;font-family:var(--mono);font-size:12px;color:var(--ground);background:var(--signal);border-radius:50%;width:22px;height:22px;display:grid;place-items:center;margin-top:2px}
+.step b{font-weight:500}
+.step span{display:block;font-size:13px;color:var(--mute)}
+@media (max-width:860px){.orbit{grid-template-columns:1fr}.orbit .stage{border-right:0;border-bottom:1px solid var(--line)}}
+.ask{border-left:3px solid var(--signal)}
+.mono{font-family:var(--mono);font-size:12.5px;color:var(--mute)}
+ul.plain{margin:0;padding-left:18px;display:grid;gap:6px}
+</style>
+<div class="wrap">
+<header>
+  <div class="label">Endless Night · Halo Reach world · layout 03 · 16 km open world · draft for your OK</div>
+  <h1>Reach World Layout</h1>
+  <p class="lede">A <b>brand new 16 km open world</b>, separate from your county world, which stays exactly as it is. Each campaign level sits inside <b>its own real surroundings</b>: the valleys, mountains, bays and coasts that Reach shows past the edge of each mission, taken from the game files and drawn here at true scale. So most of the land between the missions is real Reach scenery, not invented ground. Every mission keeps its full layout, but its invisible walls come out, so you can walk off any mission path into the open land. Gold outlines mark the original playable areas, coloured dots are the missions' own enemy squads, and diamonds are new settlements and bases. Drag to pan, scroll or pinch to zoom, and tap a place for details.</p>
+  <div class="kpis" id="kpis"></div>
+</header>
+
+<section class="panel mapgrid" aria-label="World map">
+  <div class="mapcol">
+    <div class="tools">
+      <div class="chips" role="group" aria-label="Layers">
+        <button class="chipbtn" data-l="blend" aria-pressed="true">Blend bands</button>
+        <button class="chipbtn" data-l="squads" aria-pressed="true">Enemy squads</button>
+        <button class="chipbtn" data-l="ship" aria-pressed="true">Corvette in sky</button>
+        <button class="chipbtn" data-l="labels" aria-pressed="true">Labels</button>
+        <button class="chipbtn" data-l="anniv" aria-pressed="false">Anniversary maps (R3)</button>
+      </div>
+      <div class="zoom"><button id="zin" aria-label="Zoom in">+</button><button id="zout" aria-label="Zoom out">−</button><button id="zfit">Fit</button></div>
+    </div>
+    <div class="stage" id="stage"><canvas id="map" aria-label="Top-down map of the Reach world layout"></canvas><div class="tip" id="tip"></div><div class="hint" id="hint">North is up · 1 block = 1 m</div></div>
+  </div>
+  <aside class="side">
+    <div class="detail" id="detail"></div>
+    <div class="list" id="list"></div>
+  </aside>
+  <div class="legend" style="grid-column:1/-1" id="legend"></div>
+</section>
+
+<section class="two">
+  <div class="panel card">
+    <h2>How it all flows together</h2>
+    <p class="flow">The levels come from different places on Reach, so landmarks won't match exactly. These rules hide the joins so it plays as one world.</p>
+    <ol class="rules">
+      <li><b>Real surroundings first.</b> Each mission sits inside its own far scenery, so the first few kilometres around every mission are exactly what Reach shows from inside it. That scenery was built to be seen from far away, so it gets a detail pass where you walk: ground textures at full resolution, rocks, trees, grass and props taken from the missions.</li>
+      <li><b>No funnelling.</b> Mission invisible walls, kill zones and soft ceilings are removed, and the surrounding landscape gets solid ground, so every mission can be entered and left from any side.</li>
+      <li><b>One ground between.</b> Where two surroundings meet, the land eases from one to the other over about 1.5 km (the faded edges on the map), matching heights so there are no cliffs or steps at a seam.</li>
+      <li><b>Same textures across the seam.</b> Inside the blend band the ground uses the level's own grass, rock, snow or sand textures and fades into the region's textures, which are also taken from the nearest Reach level.</li>
+      <li><b>One sky, one storm.</b> All Halo skyboxes are dropped. The endless rain sky, fog and lightning cover everything, and each level's lighting is matched to the same overcast light.</li>
+      <li><b>One distant horizon.</b> Past the 16 km edge, a single ring of mountains and sea, built from the outer parts of the same Reach scenery, surrounds the world.</li>
+      <li><b>One sea level.</b> Water in Aszod, Boardwalk, Tempest, Forge World and Exodus is set to the world's sea level, and coasts are finished with Forge World cliffs and beaches.</li>
+      <li><b>Roads join up.</b> Each level's road and path exits connect to the world road network: dirt Warthog tracks in the country and New Alexandria highways near the city.</li>
+      <li><b>Hard edges hidden.</b> Where a level ends in a wall or drop, rock outcrops, tree lines and Forerunner pieces from Forge World cover the edge.</li>
+      <li><b>Sitting at the right height.</b> Each level is raised or lowered so its ground meets the region's ground. New Alexandria is about 1 km from the water to the highest tower, taller than a normal Minecraft world (384 blocks), so the new world uses a taller custom height (up to 4,064 blocks).</li>
+    </ol>
+  </div>
+  <div class="panel card">
+    <h2>What fills the rest</h2>
+    <p class="flow">Real Reach landscape (the missions plus their own surroundings) covers about <b id="landkm"></b> km² of the 268 km² world. The rest is new land in the style of the nearest region:</p>
+    <ul class="plain" id="biomes"></ul>
+    <h3 style="margin-top:6px">Settlements, mini bases and activities</h3>
+    <p class="flow">These are spread through the open land (diamonds on the map): UNSC firebases to retake and hold, Covenant forward bases and dig sites to clear, farmsteads and relay outposts, an evacuation port, a shipbreaker camp and survivor holdouts. The PLANS list (base sites, pod drops, Phantom drops, Noble rescues) goes on top. Zomboid zombie hordes roam everywhere, led by the Covenant squads.</p>
+    <ul class="plain" id="kits"></ul>
+    <h3 style="margin-top:6px">Grand designs, a starting list</h3>
+    <p class="flow">Big new structures built to Reach's own look and detail, from its kit pieces and textures. These are starting points for when we brainstorm.</p>
+    <ul class="plain">
+      <li><b style="color:#e0605a;font-weight:500">Covenant excavation spire.</b> A Spire-style tower driven into a glassed crater, with a gravity lift, shield gate and Engineer-run dig pit below. It's a multi-stage assault.</li>
+      <li><b style="color:#e0605a;font-weight:500">Covenant staging ground.</b> A cliff-top Covenant camp: Phantom landing pads, Shade nests, Wraith pens, supply pods and a holo command tent. It keeps being reinforced until you clear it.</li>
+      <li><b style="color:#e0605a;font-weight:500">Downed corvette.</b> A second Covenant corvette crashed across a valley, built from the corvette kit, so the interior can be explored at ground level.</li>
+      <li><b style="color:#e0605a;font-weight:500">Glassing front.</b> A scorched band of glassed ground and melted towns on the edge of the map, with a cruiser overhead. It's the most dangerous area.</li>
+      <li><b style="color:#6fb3c8;font-weight:500">Orbital defence generator.</b> A huge UNSC power complex dug into a mountain. Its reactor halls, cooling towers and maglev freight line power the city's defences, and it's a headline purge objective.</li>
+      <li><b style="color:#6fb3c8;font-weight:500">ONI black site.</b> A hidden base under the mountains, like Sword Base and Halsey's lab: hangar doors in the rock, labs, holding cells and vaults. It's a natural home for the redressed bunkers.</li>
+      <li><b style="color:#6fb3c8;font-weight:500">Firebase network.</b> Ridge-top firebases with Pelican pads, sandbag lines and turrets, linked by Warthog roads. They're the bases you take back and upgrade.</li>
+      <li><b style="color:#6fb3c8;font-weight:500">Spaceport and evac terminal.</b> A civilian spaceport outside New Alexandria with launch gantries, terminal halls and abandoned queues. It holds survivor rescues and a last stand.</li>
+    </ul>
+    <p class="mono">Not placed: Noble Actual is the opening cutscene, and its far scenery is part of the horizon. The Pillar of Autumn's cutscene section is not playable.</p>
+  </div>
+</section>
+
+<section class="panel" aria-labelledby="orbith">
+  <div style="padding:18px 20px 0;display:grid;gap:8px">
+    <div class="label">Orbit · its own dimension</div>
+    <h2 id="orbith">The Long Night of Solace corvette</h2>
+    <p class="flow" style="max-width:80ch">The ship is a separate dimension, like the Nether, so it costs nothing in the overworld. From the ground you see a lightweight model of the hull holding about 1.5 km above the Sabre launch facility. From the ship you look down on Reach's planet, painted with our world map and refreshed when the world changes. The mission's interiors are drawn below at their real positions inside the hull, so they already join from bow to middle. The mission never builds the back half, so Zealot becomes the aft decks.</p>
+  </div>
+  <div class="orbit" style="margin-top:14px;border-top:1px solid var(--line)">
+    <div class="stage" id="ostage"><canvas id="orb" aria-label="Top-down plan of the corvette interiors"></canvas><div class="hint">Corvette plan · true scale · bow to the left</div></div>
+    <div class="route" id="route"></div>
+  </div>
+</section>
+
+<section class="panel card ask">
+  <div class="label">Needs your call</div>
+  <h2>Before the build starts</h2>
+  <ul class="plain">
+    <li><b>Sword Base and The Package are the same valley in the game</b>, once in summer and once in winter. I've put The Package's snowy copy up in the north-east mountains so both are playable. The other option is to keep one valley and put The Package's unique parts in it: Halsey's lab, the ice caves and the snowbound outpost.</li>
+    <li><b>Enemy squads</b> are shown for Long Night of Solace, Winter Contingency and Sword Base. The other missions' squads come off your PC next time it's on, and they'll be drawn the same way.</li>
+    <li><b>Two worlds.</b> At world creation you pick the county world or the Reach world. The county world keeps all its towns, roads, trains, bunkers and landmarks, and nothing in it changes.</li>
+    <li><b>Spots.</b> Any place you want moved: tell me the name and where it should go, for example "put Exodus next to Aszod".</li>
+    <li><b>Choices already in the plan doc</b> that change this map: R1 (where multiplayer maps go), R3 (Anniversary remakes, hidden here as recommended), R13 (roads, flights and whether the old train becomes a Reach maglev), R15 (old landmarks rebuilt inside New Alexandria). R16 and R19 no longer apply now that the county world stays as its own world.</li>
+  </ul>
+</section>
+</div>
+<script>
+const $=s=>document.querySelector(s);
+const REG={city:['New Alexandria coast','#c9a96a','City edge: New Alexandria streets, plazas and highways between Exodus and the towers, with a harbour on the east coast.'],
+  north:['Sword Base valley and highlands','#8fb07a','Highland grass, rock and concrete aprons from Sword Base and the launch facility, joined by one valley road.'],
+  northwest:['Snow country and ridges','#a6b4c2','Alpine snow and rock from The Package at the top of the valley, Nightfall pine ridges to the west.'],
+  west:['Visegrád farms','#b8c46a','Rolling fields, stone walls and farmsteads from Winter Contingency.'],
+  south:['Plains','#d8b86a','Tip of the Spear long grass and rock outcrops, Ridgeline woods in the south-west.'],
+  coast:['Coast and islands','#6fb3c8','Aszod beaches, cliffs and ship-breaking scrap on the south coast, Forge World and Tempest islands offshore.']};
+const KITSTYLE={unsc:['UNSC bases and outposts','#6fb3c8'],cov:['Covenant bases and sites','#e0605a'],farm:['Farms and holdouts','#b8c46a'],city:['City outskirts','#c9a96a'],coast:['Coast camps','#8fb0c8']};
+const BIOME_R={sea:'#0f2433',plains:'#43482b',ridges:'#233a2b',highland:'#3a4a2c',alpine:'#4d555e',city:'#36383b',coast:'#4a4636'};
+const BIOME_O={sea:'#14283a',isle:'#4a4a47',core:'#3b4038',sprawl:'#36402f',mountains:'#4b4d48',forest0:'#2a4a2c',forest1:'#2a4a2c',forest2:'#2a4a2c',farm0:'#4b5a33',farm1:'#4b5a33',farm2:'#4b5a33',marsh:'#33503f','mil-caldwell':'#454c37'};
+const AREA_ORDER=['sea'];const HW=8192;
+const isA=s=>s.src.startsWith('Anniversary');const vis=()=>D.sites.filter(s=>L.anniv||!isA(s));
+let D,imgs={},view={cx:0,cz:0,s:.05},mode='reach',L={blend:true,squads:true,ship:true,labels:true,anniv:false},sel=null,hover=null,fast=false,ft;
+const cv=$('#map'),ctx=cv.getContext('2d'),stage=$('#stage'),tip=$('#tip');
+const PAD={x:1563,z:-1786}, SHIP={x:1563,z:-1786,rot:-25};
+fetch('data.json').then(r=>r.json()).then(d=>{D=d;init()});
+function load(src){if(imgs[src])return imgs[src];const im=new Image();im.onload=()=>req();im.src=src;imgs[src]=im;return im}
+function init(){
+  kpis();
+  D.sites.forEach(s=>load(s.img));D.orbit.forEach(o=>load(o.img));D.patches.forEach(p=>load(p.img));$('#landkm').textContent=D.landkm2;
+  // list
+  list();
+  $('#biomes').innerHTML=Object.values(REG).map(r=>`<li><b style="color:${r[1]};font-weight:500">${r[0]}.</b> ${r[2]}</li>`).join('');
+  const byK={};D.kit.forEach(k=>(byK[k.style]=byK[k.style]||[]).push(k.name));
+  $('#kits').innerHTML=Object.entries(byK).map(([k,v])=>`<li><b style="color:${KITSTYLE[k][1]};font-weight:500">${KITSTYLE[k][0]}:</b> ${v.join(', ')}</li>`).join('');
+  $('#legend').innerHTML=Object.values(REG).map(r=>`<span><i style="background:${r[1]}"></i>${r[0]}</span>`).join('')+`<span><i style="background:none;border:1px solid var(--signal)"></i>Original playable area</span><span><i style="background:#e0605a;border-radius:50%"></i>Covenant squad</span><span><i style="background:#6fb3c8;border-radius:50%"></i>UNSC squad</span><span>◇ squad with vehicles</span><span>◆ settlement or base</span><span style="color:var(--signal)">◎ Beam-up pad</span>`;
+  showDetail(null);fit();route();resize();
+}
+function kpis(){const V=vis(),km2=V.reduce((a,s)=>a+s.km2,0);
+  $('#kpis').innerHTML=`<span>New world <b>16.4 × 16.4 km</b></span><span>Reach places <b>${V.length}</b></span><span>Mission ground <b>${km2.toFixed(1)} km²</b></span><span>Real Reach landscape <b>${D.landkm2} km²</b></span><span>Mission squads mapped <b>${D.squads.length}</b></span><span>County world <b>kept as its own world</b></span><span>In orbit <b>corvette + 2 stations</b></span>`}
+function list(){const L2=$('#list');let h='';
+  for(const r in REG){h+=`<div class="reg label"><i style="background:${REG[r][1]}"></i>${REG[r][0]}</div>`;
+    vis().filter(s=>s.region==r).forEach(s=>{h+=`<button class="item" data-id="${s.id}" aria-current="${s.id===sel}"><b>${s.title}</b><span>${isA(s)?'Anniversary · ':''}${s.old}</span></button>`})}
+  if(!L.anniv)h+=`<p class="mono" style="padding:10px 18px 0">7 Anniversary remakes are hidden. The plan doc recommends leaving them out (R3) because they aren't Reach places. Turn on "Anniversary maps" to see where they would go.</p>`;
+  L2.innerHTML=h;L2.querySelectorAll('.item').forEach(b=>b.onclick=()=>{select(b.dataset.id,true)})}
+function fit(){const r=stage.getBoundingClientRect();view.cx=0;view.cz=0;view.s=Math.min(r.width,r.height)/17400;req()}
+function resize(){const r=stage.getBoundingClientRect(),dp=devicePixelRatio||1;cv.width=r.width*dp;cv.height=r.height*dp;req();drawOrbit()}
+new ResizeObserver(resize).observe(stage);
+let raf=0;function req(){if(!raf)raf=requestAnimationFrame(()=>{raf=0;draw()})}
+function W2S(x,z){const r=cv.width/(devicePixelRatio||1),h=cv.height/(devicePixelRatio||1);return[(x-view.cx)*view.s+r/2,(z-view.cz)*view.s+h/2]}
+function S2W(px,py){const r=cv.width/(devicePixelRatio||1),h=cv.height/(devicePixelRatio||1);return[(px-r/2)/view.s+view.cx,(py-h/2)/view.s+view.cz]}
+function poly(p){ctx.beginPath();p.forEach((q,i)=>i?ctx.lineTo(q[0],q[1]):ctx.moveTo(q[0],q[1]));ctx.closePath()}
+function line(p){ctx.beginPath();p.forEach((q,i)=>i?ctx.lineTo(q[0],q[1]):ctx.moveTo(q[0],q[1]))}
+function draw(){
+  if(!D)return;const dp=devicePixelRatio||1,Wc=cv.width/dp,Hc=cv.height/dp,s=view.s;
+  ctx.setTransform(dp,0,0,dp,0,0);ctx.fillStyle='#080b0d';ctx.fillRect(0,0,Wc,Hc);
+  ctx.setTransform(s*dp,0,0,s*dp,(Wc/2-view.cx*s)*dp,(Hc/2-view.cz*s)*dp);
+  const B=BIOME_R,C=D.world;
+  ctx.save();ctx.beginPath();ctx.rect(-HW,-HW,2*HW,2*HW);ctx.clip();
+  ctx.fillStyle='#34402c';ctx.fillRect(-HW,-HW,2*HW,2*HW);
+  ctx.fillStyle=B.sea;C.areas.forEach(a=>{poly(a.p);ctx.fill()});
+  C.islands.forEach(i=>{ctx.fillStyle=mode=='reach'?'#3b4436':'#47503a';ctx.beginPath();ctx.ellipse(i.x,i.z,i.rx,i.rz,0,0,7);ctx.fill()});
+  ctx.fillStyle=B.sea;C.lakes.forEach(l=>{ctx.beginPath();ctx.ellipse(l.x,l.z,l.rx,l.rz,0,0,7);ctx.fill()});
+  ctx.strokeStyle=B.sea;ctx.lineCap='round';ctx.lineJoin='round';C.rivers.forEach(r=>{ctx.lineWidth=r.w;line(r.p);ctx.stroke()});
+  D.patches.forEach(p=>{const im=imgs[p.img];if(im&&im.naturalWidth)ctx.drawImage(im,p.x-p.size/2,p.z-p.size/2,p.size,p.size)});
+  if(L.roads||mode=='old'){
+    C.roads.forEach(r=>{ctx.strokeStyle=r.cls=='i'?'rgba(225,205,150,.55)':r.cls=='us'?'rgba(225,205,150,.45)':'rgba(210,200,170,.32)';ctx.lineWidth=Math.max(r.cls=='i'?30:r.cls=='loc'?10:18,1.2/s);line(r.p);ctx.stroke()});
+    C.rail.forEach(r=>{ctx.strokeStyle=r.kind=='subway'?'rgba(180,140,220,.5)':'rgba(230,120,90,.6)';ctx.lineWidth=Math.max(14,1.3/s);ctx.setLineDash(r.kind=='subway'?[60,40]:[]);line(r.p);ctx.stroke();ctx.setLineDash([])});
+  }
+  ctx.restore();
+  // fence
+  ctx.strokeStyle='rgba(223,230,234,.25)';ctx.lineWidth=1/s;ctx.strokeRect(-HW,-HW,2*HW,2*HW);
+  if(mode=='reach'){
+    // sites
+    const order=vis().sort((a,b)=>b.w*b.d-a.w*a.d);
+    if(L.blend&&!fast){order.filter(st=>!st.inland).forEach(st=>{const im=imgs[st.img];if(!im.complete||!im.naturalWidth)return;ctx.save();ctx.shadowColor='rgba(217,164,65,.75)';ctx.shadowBlur=Math.min(90,Math.max(4,220*s))*dp;place(st,im);ctx.restore()})}
+    order.forEach(st=>{const im=imgs[st.img];if(!im.complete||!im.naturalWidth)return;place(st,im)});
+    order.forEach(st=>{if(st.id!==sel&&st.id!==hover)return;ctx.save();ctx.translate(st.x,st.z);ctx.rotate(st.rot*Math.PI/180);ctx.strokeStyle=st.id===sel?'#d9a441':'#6fb3c8';ctx.lineWidth=2/s;ctx.strokeRect(-st.w/2,-st.d/2,st.w,st.d);ctx.restore()});
+    if(L.squads){const r=Math.max(9,2.6/s);D.squads.forEach(q=>{ctx.fillStyle=q.side=='cov'?'#e0605a':'#6fb3c8';ctx.strokeStyle='rgba(8,11,13,.9)';ctx.lineWidth=Math.max(2,.8/s);
+      if(q.v){const k=r*1.7;ctx.beginPath();ctx.moveTo(q.x,q.z-k);ctx.lineTo(q.x+k,q.z);ctx.lineTo(q.x,q.z+k);ctx.lineTo(q.x-k,q.z);ctx.closePath();ctx.stroke();ctx.fill()}else{ctx.beginPath();ctx.arc(q.x,q.z,r,0,7);ctx.stroke();ctx.fill()}})}
+    // kit towns
+    D.kit.forEach(k=>{const c=KITSTYLE[k.style][1];const r=Math.max(80,6/s);ctx.fillStyle=c;ctx.beginPath();ctx.moveTo(k.x,k.z-r);ctx.lineTo(k.x+r,k.z);ctx.lineTo(k.x,k.z+r);ctx.lineTo(k.x-r,k.z);ctx.closePath();ctx.globalAlpha=.85;ctx.fill();ctx.globalAlpha=1});
+    // pad
+    ctx.strokeStyle='#d9a441';ctx.lineWidth=2.5/s;[1,.55].forEach(f=>{ctx.beginPath();ctx.arc(PAD.x,PAD.z,Math.max(30,9/s)*f,0,7);ctx.stroke()});
+    if(L.ship){const im=imgs['ov/cv_ext.webp'];if(im&&im.naturalWidth){const o=D.orbit[0];ctx.save();ctx.translate(SHIP.x,SHIP.z);ctx.rotate(SHIP.rot*Math.PI/180);
+      ctx.globalAlpha=.25;ctx.fillStyle='#000';ctx.beginPath();ctx.ellipse(160,120,o.w/2,o.d/2,0,0,7);ctx.fill();
+      ctx.globalAlpha=.82;ctx.drawImage(im,-o.w/2,-o.d/2,o.w,o.d);ctx.globalAlpha=1;ctx.strokeStyle='rgba(167,120,220,.9)';ctx.lineWidth=1.5/s;ctx.setLineDash([8/s,6/s]);ctx.strokeRect(-o.w/2,-o.d/2,o.w,o.d);ctx.setLineDash([]);ctx.restore()}}
+  } else {
+    D.county.places.forEach(p=>{if(p.kind=='substation'||p.kind=='station')return;ctx.fillStyle='rgba(223,230,234,.8)';ctx.beginPath();ctx.arc(p.x,p.z,Math.max(25,3/s),0,7);ctx.fill()});
+  }
+  // labels
+  ctx.setTransform(dp,0,0,dp,0,0);
+  if(L.labels){ctx.textAlign='center';ctx.textBaseline='middle';ctx.lineJoin='round';
+    const lab=(t,x,z,size,col,dy=0)=>{const [a,b]=W2S(x,z);if(a<-80||b<-20||a>Wc+80||b>Hc+20)return;ctx.font=`600 ${size}px "Barlow Condensed",sans-serif`;ctx.lineWidth=3.5;ctx.strokeStyle='rgba(8,11,13,.9)';ctx.strokeText(t,a,b+dy);ctx.fillStyle=col;ctx.fillText(t,a,b+dy)};
+    if(mode=='reach'){
+      vis().forEach(st=>{const big=st.w*st.d>500000;if(!big&&s<.035&&st.id!==sel)return;lab(st.title,st.x,st.z,big?15:13,st.id===sel?'#d9a441':'#dfe6ea',st.ldy||0)});
+      if(s>.05)D.kit.forEach(k=>lab(k.name,k.x,k.z,12,KITSTYLE[k.style][1],16));
+      if(L.ship)lab('Corvette in the sky, ~1.5 km up',SHIP.x,SHIP.z-520,13,'#c9a8f0',-10);
+      lab('Beam-up pad',PAD.x,PAD.z,12,'#d9a441',Math.max(30,9*1)*1+8);
+    } else {
+      D.county.places.forEach(p=>{if(['substation','station'].includes(p.kind))return;const big=['district','city','town','military','port'].includes(p.kind)||p.style.startsWith('PORT:container');if(!big&&s<.09)return;lab(p.name,p.x,p.z,big?14:12,'#dfe6ea',-12)});
+    }
+  }
+  // scale bar
+  const m=[100,250,500,1000,2000,5000].find(v=>v*s>70)||5000;const px=m*s;
+  ctx.fillStyle='rgba(8,11,13,.7)';ctx.fillRect(Wc-px-34,Hc-30,px+22,22);ctx.strokeStyle='#d9a441';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(Wc-px-24,Hc-14);ctx.lineTo(Wc-24,Hc-14);ctx.stroke();
+  ctx.font='11px "IBM Plex Mono",monospace';ctx.fillStyle='#dfe6ea';ctx.textAlign='right';ctx.fillText(m>=1000?m/1000+' km':m+' m',Wc-24,Hc-22);
+}
+function place(st,im){ctx.save();ctx.translate(st.x,st.z);ctx.rotate(st.rot*Math.PI/180);ctx.drawImage(im,-st.w/2,-st.d/2,st.w,st.d);ctx.restore()}
+function hit(px,py){if(mode!='reach')return null;const [x,z]=S2W(px,py);let best=null,ba=1e18;vis().forEach(st=>{const q=st.rot%180==90,hw=(q?st.d:st.w)/2,hd=(q?st.w:st.d)/2;if(Math.abs(x-st.x)<hw&&Math.abs(z-st.z)<hd&&st.w*st.d<ba){best=st;ba=st.w*st.d}});return best}
+function sq(px,py){const [x,z]=S2W(px,py),rr=Math.max(14,7/view.s);let b=null,bd=rr;D.squads.forEach(q=>{const d=Math.hypot(q.x-x,q.z-z);if(d<bd){bd=d;b=q}});return b}
+function fmt(n){return Math.round(n).toLocaleString('en-GB')}
+function showDetail(id){
+  const st=D.sites.find(s=>s.id===id),el=$('#detail');
+  if(!st){el.innerHTML=`<div class="label">Overview</div><h3>${vis().length} Reach places, one world</h3><p class="flow">Winter Contingency's Visegrád valley is in the north-west, with Sword Base's cliff valley to its east and The Package's snowy twin in the north-east mountains. Nightfall and Tip of the Spear sit side by side in the south-west, as they do in the game. New Alexandria wraps its own bay in the east, with Exodus up the coast, and Aszod holds the south coast. The Sabre launch facility is in the middle, under the corvette. Maps that are part of a campaign level stay inside it. Tap a place on the map or in the list.</p>`;return}
+  el.innerHTML=`<div class="label" style="color:${REG[st.region][1]}">${REG[st.region][0]}</div><h3>${st.title}</h3><div class="src">${st.src}</div>
+  <dl><dt>Where</dt><dd>${st.old}</dd><dt>Footprint</dt><dd>${fmt(st.w)} × ${fmt(st.d)} m</dd><dt>Height span</dt><dd>${fmt(st.y1-st.y0)} m</dd><dt>Centre</dt><dd>x ${fmt(st.x)}, z ${fmt(st.z)}</dd></dl>
+  <p class="note">${st.note}</p><p class="flow"><b style="color:var(--ink);font-weight:500">Land around it:</b> ${REG[st.region][2]}</p>`;
+}
+function select(id,fly){sel=id;showDetail(id);document.querySelectorAll('.item').forEach(b=>b.setAttribute('aria-current',b.dataset.id===id?'true':'false'));
+  if(fly&&id){if(mode!='reach')setMode('reach');const st=D.sites.find(s=>s.id===id),r=stage.getBoundingClientRect();const tgt=Math.min(r.width/(st.w*2.6),r.height/(st.d*2.6),1.2);animTo(st.x,st.z,Math.max(tgt,.06))}req()}
+function animTo(x,z,s){const a={...view},t0=performance.now();const step=t=>{const k=Math.min(1,(t-t0)/450),e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;const ls=Math.log(a.s)+(Math.log(s)-Math.log(a.s))*e;view.s=Math.exp(ls);view.cx=a.cx+(x-a.cx)*e;view.cz=a.cz+(z-a.cz)*e;fast=k<1;draw();if(k<1)requestAnimationFrame(step);else{fast=false;req()}};requestAnimationFrame(step)}
+function setMode(m){mode=m;req()}
+
+document.querySelectorAll('.chipbtn').forEach(b=>b.onclick=()=>{L[b.dataset.l]=!L[b.dataset.l];b.setAttribute('aria-pressed',L[b.dataset.l]);if(b.dataset.l=='anniv'){if(!L.anniv&&sel&&isA(D.sites.find(s=>s.id===sel)))select(null);kpis();list()}req()});
+function zoomAt(f,px,py){const [x,z]=S2W(px,py);view.s=Math.min(3,Math.max(.02,view.s*f));const [x2,z2]=S2W(px,py);view.cx+=x-x2;view.cz+=z-z2;settle()}
+function settle(){fast=true;req();clearTimeout(ft);ft=setTimeout(()=>{fast=false;req()},160)}
+$('#zin').onclick=()=>{const r=stage.getBoundingClientRect();zoomAt(1.5,r.width/2,r.height/2)};
+$('#zout').onclick=()=>{const r=stage.getBoundingClientRect();zoomAt(1/1.5,r.width/2,r.height/2)};
+$('#zfit').onclick=fit;
+cv.addEventListener('wheel',e=>{e.preventDefault();const r=cv.getBoundingClientRect();zoomAt(Math.exp(-e.deltaY*.0015),e.clientX-r.left,e.clientY-r.top)},{passive:false});
+const ptrs=new Map();let moved=0,pinch=null;
+cv.addEventListener('pointerdown',e=>{cv.setPointerCapture(e.pointerId);ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY});moved=0;cv.classList.add('drag');if(ptrs.size==2){const [a,b]=[...ptrs.values()];pinch=Math.hypot(a.x-b.x,a.y-b.y)}});
+cv.addEventListener('pointermove',e=>{const r=cv.getBoundingClientRect();
+  if(!ptrs.has(e.pointerId)){const q=L.squads&&sq(e.clientX-r.left,e.clientY-r.top);if(q){tip.style.display='block';tip.textContent=`${q.n.replace(/^sq_/,'')} · ${q.c} ${q.ch.join(', ')}${q.v?' · '+q.v.replace(/_/g,' '):''}`;tip.style.left=(e.clientX-r.left+14)+'px';tip.style.top=(e.clientY-r.top+14)+'px';return}
+    const st=hit(e.clientX-r.left,e.clientY-r.top);const id=st?st.id:null;if(id!==hover){hover=id;req()}
+    if(st){tip.style.display='block';tip.textContent=`${st.title} · ${st.src}`;let tx=e.clientX-r.left+14,ty=e.clientY-r.top+14;if(tx+tip.offsetWidth>r.width)tx=r.width-tip.offsetWidth-4;tip.style.left=tx+'px';tip.style.top=ty+'px'}else tip.style.display='none';return}
+  const p=ptrs.get(e.pointerId),dx=e.clientX-p.x,dy=e.clientY-p.y;p.x=e.clientX;p.y=e.clientY;moved+=Math.abs(dx)+Math.abs(dy);
+  if(ptrs.size==2){const [a,b]=[...ptrs.values()],d=Math.hypot(a.x-b.x,a.y-b.y);if(pinch){zoomAt(d/pinch,(a.x+b.x)/2-r.left,(a.y+b.y)/2-r.top)}pinch=d;return}
+  view.cx-=dx/view.s;view.cz-=dy/view.s;tip.style.display='none';settle()});
+const up=e=>{const r=cv.getBoundingClientRect();if(ptrs.size==1&&moved<6){const st=hit(e.clientX-r.left,e.clientY-r.top);select(st?st.id:null,false)}ptrs.delete(e.pointerId);if(ptrs.size<2)pinch=null;cv.classList.remove('drag')};
+cv.addEventListener('pointerup',up);cv.addEventListener('pointercancel',e=>{ptrs.delete(e.pointerId);pinch=null});
+cv.addEventListener('pointerleave',()=>{tip.style.display='none';if(hover){hover=null;req()}});
+// orbit
+const oc=$('#orb'),ox=oc.getContext('2d');
+function drawOrbit(){if(!D)return;const r=$('#ostage').getBoundingClientRect(),dp=devicePixelRatio||1;oc.width=r.width*dp;oc.height=r.height*dp;
+  const O=D.orbit;let x0=1e9,x1=-1e9,z0=1e9,z1=-1e9;O.forEach(o=>{x0=Math.min(x0,o.x-o.w/2);x1=Math.max(x1,o.x+o.w/2);z0=Math.min(z0,o.z-o.d/2);z1=Math.max(z1,o.z+o.d/2)});
+  const s=Math.min(r.width/(x1-x0+80),r.height/(z1-z0+80)),cx=(x0+x1)/2,cz=(z0+z1)/2;
+  ox.setTransform(dp,0,0,dp,0,0);ox.fillStyle='#05070a';ox.fillRect(0,0,r.width,r.height);
+  for(let i=0;i<90;i++){const a=(i*97.13)%r.width,b=(i*53.71)%r.height;ox.fillStyle='rgba(223,230,234,'+(.15+((i*7)%10)/30)+')';ox.fillRect(a,b,1,1)}
+  ox.setTransform(s*dp,0,0,s*dp,(r.width/2-cx*s)*dp,(r.height/2-cz*s)*dp);
+  O.forEach((o,i)=>{const im=imgs[o.img];if(!im||!im.naturalWidth)return;ox.globalAlpha=i==0?.38:1;ox.drawImage(im,o.x-o.w/2,o.z-o.d/2,o.w,o.d)});ox.globalAlpha=1;
+  const C=id=>O.find(o=>o.id==id);const path=['cv_bridge','cv_hall','cv_hangar','cv_reactor','cv_aft'].map(C);
+  ox.strokeStyle='#d9a441';ox.lineWidth=3/s;ox.setLineDash([10/s,7/s]);ox.beginPath();path.forEach((o,i)=>i?ox.lineTo(o.x,o.z):ox.moveTo(o.x,o.z));ox.stroke();
+  ox.strokeStyle='rgba(111,179,200,.8)';ox.beginPath();ox.moveTo(C('cv_hangar').x,C('cv_hangar').z);ox.lineTo(C('anchor9').x,C('anchor9').z);ox.stroke();ox.setLineDash([]);
+  ox.setTransform(dp,0,0,dp,0,0);ox.textAlign='center';ox.textBaseline='middle';
+  const OFF={cv_bridge:-1,cv_hall:1,cv_hangar:-1,cv_reactor:1,cv_aft:0,anchor9:0,condemned:0};
+  O.forEach((o,i)=>{if(i==0)return;const a=(o.x-cx)*s+r.width/2,b=(o.z-cz)*s+r.height/2+(OFF[o.id]||0)*((o.d/2)*s+12);ox.font='600 14px "Barlow Condensed",sans-serif';ox.lineWidth=3.5;ox.strokeStyle='rgba(5,7,10,.92)';ox.strokeText(o.title,a,b);ox.fillStyle=i<6?'#dfe6ea':'#6fb3c8';ox.fillText(o.title,a,b)});
+  O.forEach(o=>{if(!imgs[o.img].complete)imgs[o.img].addEventListener('load',drawOrbit,{once:true})});
+}
+function route(){const O=D.orbit,C=id=>O.find(o=>o.id==id);const steps=[
+  ['Beam up','From the Sabre launch pad in the north-east highlands, where the mission starts.'],
+  ['Hangar',C('cv_hangar').note],['Reactor room',C('cv_reactor').note],['Long hall',C('cv_hall').note],['Command deck',C('cv_bridge').note],
+  ['Aft decks',C('cv_aft').note],['Anchor 9 and Condemned',C('anchor9').note+' '+C('condemned').note],
+  ['Look down','Every window and the hangar mouth show the planet, painted from our world map.']];
+  $('#route').innerHTML='<div class="label">Walk route, end to end</div>'+steps.map((s,i)=>`<div class="step"><em>${i+1}</em><div><b>${s[0]}</b><span>${s[1]}</span></div></div>`).join('')+`<p class="mono" style="margin-top:6px">Filled with everything the mission shows: the Covenant squads, vehicles and props placed in each section, taken from the mission's own placement data. Gaps between sections are built from the mission's own corridor pieces.</p>`;
+}
+</script>

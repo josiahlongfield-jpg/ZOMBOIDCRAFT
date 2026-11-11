@@ -1,0 +1,12 @@
+# airfield-mil/c130-ramp
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-c-130-dvids1079768.jpg | [C-130 DVIDS1079768.jpg](https://commons.wikimedia.org/wiki/File:C-130_DVIDS1079768.jpg) |  | Public domain | Galena, AK (Aug. 6)--ATM2 Bryan Miller re-stocks a C-130 with flares in case they are needed during a search and rescue flight in the Bering |
+| 02-c-130-3-yokota-tokyo.jpg | [C-130 3 Yokota Tokyo.jpg](https://commons.wikimedia.org/wiki/File:C-130_3_Yokota_Tokyo.jpg) | Morio | CC BY-SA 3.0 |  |
+| 03-c-130-air-drop-110411-f-rh591-224.jpg | [C-130 Air Drop 110411-F-RH591-224.jpg](https://commons.wikimedia.org/wiki/File:C-130_Air_Drop_110411-F-RH591-224.jpg) | Master Sgt. William Greer | Public domain | U.S. Air Force Staff Sgt. Bryson Swank, 774th Expeditionary Airlift Squadron loadmaster, secures parachute rigging, aboard a C-130 Hercules  |
+| 04-u-s-air-force-c-130-hercules-aircraft-sit-on-the-flight-line.jpg | [U.S. Air Force C-130 Hercules aircraft sit on the flight line at Ramst](https://commons.wikimedia.org/wiki/File:U.S._Air_Force_C-130_Hercules_aircraft_sit_on_the_flight_line_at_Ramstein_Air_Base_in_Germany_Sept_140903-F-YC884-465.jpg) | A1C Jordan Castelan | Public domain | U.S. Air Force C-130 Hercules aircraft sit on the flight line at Ramstein Air Base in Germany Sept. 3, 2014, during exercise Steadfast Javel |
+| 05-a-u-s-air-force-c-130-hercules-aircraft-sits-on-the-flight-l.jpg | [A U.S. Air Force C-130 Hercules aircraft sits on the flight line at Ra](https://commons.wikimedia.org/wiki/File:A_U.S._Air_Force_C-130_Hercules_aircraft_sits_on_the_flight_line_at_Ramstein_Air_Base_in_Germany_Sept_140905-F-YC884-137.jpg) | A1C Jordan Castelan | Public domain | A U.S. Air Force C-130 Hercules aircraft sits on the flight line at Ramstein Air Base in Germany Sept. 5, 2014, during exercise Steadfast Ja |
+| 06-c-130-hercules-and-c-130j-super-hercules-units-perform-fligh.jpg | [C-130 Hercules and C-130J Super Hercules units perform flight line ope](https://commons.wikimedia.org/wiki/File:C-130_Hercules_and_C-130J_Super_Hercules_units_perform_flight_line_operations_at_Wunstorf_Air_Base,_Germany_(7866399).jpg) | U.S. Air National Guard photo by Master Sgt. Caila Arahood | Public domain | U.S. Air Force C-130 Hercules and C-130J Super Hercules aircraft are parked on the flight line at Wunstorf Air Base, Germany, June 7, 2023 i |

@@ -1,0 +1,129 @@
+<!doctype html><html><body style="margin:0;background:#222"><canvas id=c width=1280 height=720></canvas>
+<script type=importmap>{"imports":{"three":"./three.js"}}</script>
+<script type=module>
+import * as THREE from 'three';
+import {RoomEnvironment} from './RoomEnvironment.js';
+const R=new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true,preserveDrawingBuffer:true});
+R.outputColorSpace=THREE.SRGBColorSpace; R.toneMapping=THREE.ACESFilmicToneMapping; R.toneMappingExposure=1.3;
+const scene=new THREE.Scene(); scene.background=new THREE.Color(0x2b2f33);
+const pm=new THREE.PMREMGenerator(R); scene.environment=pm.fromScene(new RoomEnvironment(),0.04).texture; scene.environmentIntensity=0.8;
+scene.add(new THREE.HemisphereLight(0xdde6ff,0x554a40,3.2));
+const sun=new THREE.DirectionalLight(0xfff2dd,2.4); sun.position.set(-1,2,-1); scene.add(sun);
+const fill=new THREE.DirectionalLight(0xaaccff,0.8); fill.position.set(1,0.5,1); scene.add(fill);
+const cam=new THREE.PerspectiveCamera(50,1280/720,0.01,50);
+const TL=new THREE.TextureLoader(); const texc={};
+function tex(n,srgb,fy){ if(!n) return null; const k=n+srgb+!!fy; if(!texc[k]){const t=TL.load('data/'+n); t.colorSpace=srgb?THREE.SRGBColorSpace:THREE.NoColorSpace; t.flipY=!!fy; texc[k]=t;} return texc[k]; }
+async function J(f){return (await fetch('data/'+f)).json()}
+async function B(f){return (await fetch('data/'+f)).arrayBuffer()}
+async function geo(h){
+  const b=await B(h.file); const n=h.n; let o=0;
+  const f=(k)=>{const a=new Float32Array(b,o,n*k); o+=n*k*4; return a;};
+  const g=new THREE.BufferGeometry();
+  g.setAttribute('position',new THREE.BufferAttribute(f(3),3));
+  g.setAttribute('normal',new THREE.BufferAttribute(f(3),3));
+  g.setAttribute('uv',new THREE.BufferAttribute(f(2),2));
+  if(h.skin){ const bi=f(4); g.setAttribute('skinIndex',new THREE.BufferAttribute(new Uint16Array(bi),4)); g.setAttribute('skinWeight',new THREE.BufferAttribute(f(4),4)); }
+  const idx=[]; let start=0;
+  for(const c of h.subs){ const a=new Uint32Array(b,o,c); o+=c*4; g.addGroup(start,c,g.groups.length); start+=c; idx.push(a);} 
+  const all=new Uint32Array(start); let p=0; for(const a of idx){all.set(a,p);p+=a.length;} g.setIndex(new THREE.BufferAttribute(all,1));
+  return g;
+}
+function mat(m){
+  if(!m) return new THREE.MeshStandardMaterial({color:0x555555});
+  const nm=(m.name||'').toLowerCase();
+  if(/glass|linza|lens|collimator|reflex/.test(nm)) return new THREE.MeshStandardMaterial({color:0x223322,transparent:true,opacity:0.25,roughness:0.05,metalness:0.2});
+  const c=m._Color?new THREE.Color(m._Color[0],m._Color[1],m._Color[2]):new THREE.Color(1,1,1);
+  if(m.brita) return new THREE.MeshStandardMaterial({map:tex(m._MainTex,true,false),roughness:0.7,metalness:0.1,side:THREE.DoubleSide});
+  if(m.flipY) return new THREE.MeshStandardMaterial({map:tex(m._MainTex,true,true),roughness:0.7,metalness:0.1,side:THREE.DoubleSide});
+  return new THREE.MeshStandardMaterial({map:tex(m._MainTex,true),color:c,roughness:0.5,metalness:0.25});
+}
+async function build(nodes){
+  const objs=[]; const byPath={};
+  for(const n of nodes){
+    const o=new THREE.Object3D(); o.name=n.name; o.position.fromArray(n.p); o.quaternion.fromArray(n.q); o.scale.fromArray(n.s); o.visible=n.active!==false;
+    objs.push(o); if(n.parent>=0) objs[n.parent].add(o);
+    n.obj=o;
+  }
+  for(const n of nodes){ if(n.mesh && !n.mesh.skin){ const g=await geo(n.mesh); const ms=(n.mats||[]).map(mat); const m=new THREE.Mesh(g,ms.length>1?ms:(ms[0]||mat(null))); n.obj.add(m);} }
+  // path map relative to root
+  const root=objs[0];
+  root.traverse(o=>{ let p=[];let x=o; while(x&&x!==root){p.unshift(x.name);x=x.parent;} byPath[p.join('/')]=byPath[p.join('/')]||o; });
+  return {root,byPath,nodes};
+}
+let W,H,A,bind={};
+window.setup=async(variant)=>{
+  W=await build(await J('m4_'+variant+'.json')); scene.add(W.root); window.W=W;
+  W.root.traverse(o=>{bind[o.uuid]=[o.position.clone(),o.quaternion.clone(),o.scale.clone()]});
+  A=await J('anims.json');
+  // hands
+  const hn=await J('hands.json'); const hb=await J('hands_bones.json');
+  const sk=hn.find(n=>n.mesh&&n.mesh.skin);
+  const g=await geo(sk.mesh);
+  const names=hb.bones.map(p=>p.split('/').pop());
+  const byName={}; W.root.traverse(o=>{ if(!byName[o.name]) byName[o.name]=o; });
+  const bones=[],inv=[];
+  names.forEach((nm,i)=>{ let o=byName[nm]; if(!o){o=new THREE.Bone(); W.root.add(o);} bones.push(o);
+     const e=sk.mesh.bind[i]; const M=new THREE.Matrix4().set(e[0],e[1],e[2],e[3],e[4],e[5],e[6],e[7],e[8],e[9],e[10],e[11],e[12],e[13],e[14],e[15]);
+     const S=new THREE.Matrix4().makeScale(-1,1,1); inv.push(S.clone().multiply(M).multiply(S)); });
+  const mats=(sk.mats||[]).map(m=>{const mm=mat(m); mm.roughness=0.8; mm.metalness=0; return mm;});
+  const sm=new THREE.SkinnedMesh(g,mats.length>1?mats:mats[0]);
+  sm.frustumCulled=false;
+  const skel=new THREE.Skeleton(bones,inv); sm.bind(skel,new THREE.Matrix4());
+  scene.add(sm); window.HANDS=sm;
+  return {missing:names.filter(n=>!byName[n]), meshes:W.nodes.filter(n=>n.mesh).length};
+};
+function reset(){ W.root.traverse(o=>{const b=bind[o.uuid]; if(b){o.position.copy(b[0]);o.quaternion.copy(b[1]);o.scale.copy(b[2]);}}); }
+function applyClip(name,frame){
+  const layers=A[name]; if(!layers) return;
+  const best=layers.reduce((a,b)=>b.nb>a.nb?b:a);
+  const use=window.ALLLAYERS?[...layers].sort((a,b)=>a.nb-b.nb):[best];
+  for(const L of use){ const f=Math.min(L.nf-1,Math.max(0,Math.round(frame))); for(const [p,ch] of Object.entries(L.bones)){ const o=W.byPath[p]; if(!o) continue; if(ch.p) o.position.fromArray(ch.p[f]); if(ch.q) o.quaternion.fromArray(ch.q[f]).normalize(); if(ch.s) o.scale.fromArray(ch.s[f]); } }
+}
+
+function findN(n){ let r=null; W.root.traverse(o=>{ if(!r && o.name===n) r=o; }); return r; }
+function setWorldQuat(o,q){ const pq=new THREE.Quaternion(); o.parent.getWorldQuaternion(pq); o.quaternion.copy(pq.invert().multiply(q)); o.updateMatrixWorld(true); }
+function rotateToward(o,from,to){ // rotate bone o (world) so vector from->... aligns
+  const wq=new THREE.Quaternion(); o.getWorldQuaternion(wq);
+  const d=new THREE.Quaternion().setFromUnitVectors(from.clone().normalize(),to.clone().normalize());
+  setWorldQuat(o,d.multiply(wq));
+}
+function ik(side,markerName,poleName,tgt){
+  const U=findN('Base Human'+side+'Upperarm'), E=findN('Base Human'+side+'Forearm1'), P=findN('Base Human'+side+'Palm');
+  const M=findN(markerName), G=findN(poleName); if(!U||!E||!P||!M) return;
+  const v=o=>{const x=new THREE.Vector3(); o.getWorldPosition(x); return x;};
+  const S=v(U), e=v(E), w=v(P), T=tgt?tgt.clone():v(M);
+  const a=e.distanceTo(S), b=w.distanceTo(e);
+  let d=Math.min(T.distanceTo(S), a+b-1e-4);
+  const u=T.clone().sub(S).normalize();
+  let pole=G?v(G).sub(S):e.clone().sub(S);
+  let pv=pole.sub(u.clone().multiplyScalar(pole.dot(u))).normalize();
+  const cosA=(a*a+d*d-b*b)/(2*a*d), sinA=Math.sqrt(Math.max(0,1-cosA*cosA));
+  const e2=S.clone().add(u.clone().multiplyScalar(a*cosA)).add(pv.multiplyScalar(a*sinA));
+  rotateToward(U,e.clone().sub(S),e2.clone().sub(S));
+  const e3=v(E), w3=v(P);
+  rotateToward(E,w3.clone().sub(e3),T.clone().sub(e3));
+  if(window.IKROT!==false){ const mq=new THREE.Quaternion(); M.getWorldQuaternion(mq); setWorldQuat(P,mq); }
+}
+window.pose=(name,frame,base)=>{ reset(); applyClip(base||'m4a1_idle_armed',0); if(name) applyClip(name,frame); W.root.updateMatrixWorld(true);
+  if(window.IK!==false){
+    let lt=null; const mg=W.byPath['Weapon_root/Weapon_root_anim/weapon/mod_magazine'];
+    if(mg){ const d=mg.position.distanceTo(new THREE.Vector3(0,-0.404,-0.012)); if(d>0.03){ const mesh=[]; mg.traverse(o=>{if(o.isMesh) mesh.push(o)}); const bb=new THREE.Box3(); mesh.forEach(o=>bb.expandByObject(o)); lt=bb.isEmpty()?null:bb.getCenter(new THREE.Vector3()); if(lt){ const k=Math.min(1,(d-0.03)/0.05); const L0=new THREE.Vector3(); findN('weapon_L_IK_marker').getWorldPosition(L0); lt=L0.lerp(lt,k);} } }
+    ik('L','weapon_L_IK_marker','Bend_Goal_Left',lt); ik('R','weapon_R_IK_marker','Bend_Goal_Right'); } };
+window.view=(mode,t)=>{
+  if(mode==='fp'){ const c=W.byPath['Camera_animated']; const p=new THREE.Vector3(); c.getWorldPosition(p);
+     const a=new THREE.Vector3(), m=new THREE.Vector3(); W.byPath['Weapon_root/Weapon_root_anim/weapon'].getWorldPosition(a);
+     let mz=null; W.root.traverse(o=>{ if(o.name==='mod_muzzle' && !mz) mz=o; }); mz.getWorldPosition(m);
+     let dir=m.clone().sub(a).normalize(); const cq=new THREE.Quaternion(); c.getWorldQuaternion(cq); if(!window.CAMDIR){ window.CAMDIR=dir.clone(); window.CAMQ0=cq.clone(); } const dq=cq.clone().multiply(window.CAMQ0.clone().invert()); dir=window.CAMDIR.clone().applyQuaternion(dq); const side=new THREE.Vector3().crossVectors(dir,new THREE.Vector3(0,1,0)).normalize(); dir.applyAxisAngle(side,-(window.PITCH||0.16)).applyAxisAngle(new THREE.Vector3(0,1,0),(window.YAW||-0.10));
+     cam.fov=window.FOV||60; cam.updateProjectionMatrix(); cam.position.copy(p); cam.up.set(0,1,0); if(window.TRUECAM){ const f=new THREE.Vector3(0,-1,0).applyQuaternion(cq); const u=new THREE.Vector3(0,0,1).applyQuaternion(cq); const sd=new THREE.Vector3().crossVectors(f,u).normalize(); const tp=window.TPITCH||0; f.applyAxisAngle(sd,tp); u.applyAxisAngle(sd,tp); cam.up.copy(u); dir=f; } cam.lookAt(p.clone().add(dir)); window.DBG={p:p.toArray(),a:a.toArray(),m:m.toArray()}; }
+  else { const r=0.95, a=t||0; cam.fov=38; cam.updateProjectionMatrix(); const bb=new THREE.Box3(); W.root.traverse(o=>{ if(o.isMesh) bb.expandByObject(o); }); const c=bb.getCenter(new THREE.Vector3()); const sz=bb.getSize(new THREE.Vector3()); const rr=Math.max(sz.x,sz.y,sz.z)*1.25;
+     cam.position.set(c.x+Math.cos(a)*rr, c.y+rr*0.18, c.z+Math.sin(a)*rr); cam.lookAt(c); }
+  window.HANDS.visible=(mode==='fp');
+  R.render(scene,cam);
+};
+window.setupStatic=async(f,len)=>{ const W2=await build(await J(f+'.json')); const m=W2.root; const bb=new THREE.Box3().setFromObject(m); const sz=bb.getSize(new THREE.Vector3()); const k=len/Math.max(sz.x,sz.y,sz.z); m.scale.setScalar(k); scene.add(m); window.STATIC=m; return sz.toArray(); };
+window.turnObj=(obj,a,dist)=>{ const bb=new THREE.Box3().setFromObject(obj); const c=bb.getCenter(new THREE.Vector3()); const sz=bb.getSize(new THREE.Vector3()); const rr=Math.max(sz.x,sz.y,sz.z)*(dist||1.25);
+  cam.fov=38; cam.aspect=R.domElement.width/R.domElement.height; cam.updateProjectionMatrix(); cam.position.set(c.x+Math.cos(a)*rr, c.y+rr*0.12, c.z+Math.sin(a)*rr); cam.lookAt(c); if(window.HANDS) window.HANDS.visible=false; R.render(scene,cam); };
+window.gunDir=()=>{ const a=new THREE.Vector3(), m=new THREE.Vector3(); W.byPath['Weapon_root/Weapon_root_anim/weapon'].getWorldPosition(a); let mz=null; W.root.traverse(o=>{ if(o.name==='mod_muzzle'&&!mz) mz=o;}); mz.getWorldPosition(m); return m.sub(a).normalize().toArray(); };
+window.clips=()=>Object.fromEntries(Object.entries(A).map(([k,v])=>[k,v.map(l=>l.nf)]));
+window.ready=true;
+</script></body></html>

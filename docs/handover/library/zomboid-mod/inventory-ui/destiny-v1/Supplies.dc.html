@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Supplies</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&amp;family=Barlow:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0;background:#0b0c0e}
+a{color:#e8e4da}a:hover{color:#ffffff}
+.cond{font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:.06em}
+.key{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 5px;box-sizing:border-box;border:1px solid rgba(232,228,218,.55);border-radius:3px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;color:#e8e4da}
+.hint{display:inline-flex;align-items:center;gap:6px}
+.tab{font-family:'Barlow Condensed',sans-serif;font-size:19px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(232,228,218,.62);text-decoration:none;padding:6px 2px 10px;border-bottom:2px solid transparent}
+.tab:hover{color:#fff}
+.cat{display:flex;justify-content:space-between;align-items:center;width:100%;height:44px;padding:0 14px;box-sizing:border-box;background:transparent;border:1px solid transparent;color:rgba(232,228,218,.78);cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.cat:hover,.cat:focus-visible{border-color:rgba(232,228,218,.4);color:#fff;outline:none}
+.cat.on{background:rgba(232,228,218,.92);color:#121314}
+.tile{position:relative;width:96px;height:96px;padding:0;border:1px solid rgba(232,228,218,.16);cursor:pointer;box-sizing:border-box;overflow:hidden;transition:border-color .12s,box-shadow .12s}
+.tile:hover,.tile:focus-visible{border-color:#fff;box-shadow:0 0 16px rgba(255,255,255,.12);outline:none}
+.tile.on{border:2px solid #e8e4da}
+.tile img{position:absolute;inset:10px;width:calc(100% - 20px);height:calc(100% - 20px);object-fit:contain;pointer-events:none}
+.tile.pix img{inset:18px;width:calc(100% - 36px);height:calc(100% - 36px);image-rendering:pixelated}
+.tile .shine{position:absolute;inset:0;background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,0) 40%);pointer-events:none}
+.tile .count{position:absolute;right:5px;bottom:2px;font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:600;color:#fff;text-shadow:0 1px 2px #000}
+.pip{display:inline-block;width:5px;height:5px;transform:rotate(45deg);margin-right:3px;box-sizing:border-box}
+.bar{position:relative;height:5px;background:rgba(232,228,218,.12)}
+.bar i{position:absolute;left:0;top:0;bottom:0;background:#e8e4da}
+</style>
+</helmet>
+<div style="position: relative; width: 1600px; height: 900px; overflow: hidden; background: #0b0c0e; font-family: 'Barlow', sans-serif; color: #e8e4da">
+  <img src="/_blob/fd16460b46a4117fc5aca08613b33d51" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover">
+  <div style="position: absolute; inset: 0; background: rgba(7,8,9,0.8)"></div>
+  <div style="position: absolute; left: 0; right: 0; top: 0; height: 140px; background: linear-gradient(180deg, rgba(5,6,7,0.8) 0%, rgba(5,6,7,0) 100%)"></div>
+
+  <div style="position: absolute; left: 32px; top: 18px; display: flex; align-items: center; gap: 14px">
+    <div style="width: 46px; height: 46px; border: 1px solid rgba(232,228,218,0.5); display: flex; align-items: center; justify-content: center; background: rgba(20,22,20,0.6)">
+      <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" style="fill: none; stroke: #e8e4da; stroke-width: 1.5"><path d="M12 2.5C7.6 2.5 4 5.8 4 10.1c0 2.6 1.3 4.6 3 5.8V18.5h10v-2.6c1.7-1.2 3-3.2 3-5.8 0-4.3-3.6-7.6-8-7.6z"></path><circle cx="8.8" cy="10.6" r="1.8"></circle><circle cx="15.2" cy="10.6" r="1.8"></circle><path d="M10 21.5v-3M14 21.5v-3"></path></svg>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 2px">
+      <span class="cond" style="font-size: 24px; font-weight: 700; letter-spacing: 0.08em; line-height: 1">Josiah</span>
+      <span style="font-size: 13px; color: rgba(232,228,218,0.68)">Survivor · day 12 · 214 kills</span>
+    </div>
+  </div>
+  <nav aria-label="Kit pages" style="position: absolute; left: 0; right: 0; top: 16px; display: flex; justify-content: center; align-items: center; gap: 30px">
+    <a href="Main.dc.html" class="key" aria-label="Previous page" style="text-decoration: none">Q</a>
+    <a class="tab" href="Main.dc.html">Character</a>
+    <span class="tab" aria-current="page" style="color: #ffffff; border-bottom-color: #e8e4da">Supplies</span>
+    <span class="tab" style="opacity: 0.45">Health</span>
+    <span class="tab" style="opacity: 0.45">Skills</span>
+    <span class="key" style="opacity: 0.35">E</span>
+  </nav>
+
+  <div style="position: absolute; right: 32px; top: 18px; display: flex; gap: 22px" aria-label="Materials on you">
+    <sc-for list="{{mats}}" as="m" hint-placeholder-count="4">
+      <div style="display: flex; align-items: center; gap: 8px">
+        <img src="{{m.img}}" alt="" style="width: 34px; height: 34px; object-fit: contain; {{m.pix}}">
+        <div style="display: flex; flex-direction: column; gap: 1px">
+          <span class="cond" style="font-size: 20px; font-weight: 600; line-height: 1">{{m.n}}</span>
+          <span style="font-size: 11px; color: rgba(232,228,218,0.68)">{{m.name}}</span>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 96px; top: 140px; width: 220px; display: flex; flex-direction: column; gap: 4px">
+    <sc-for list="{{cats}}" as="c" hint-placeholder-count="7">
+      <button class="cat {{c.cls}}" aria-pressed="{{c.pressed}}" onClick="{{c.pick}}"><span>{{c.name}}</span><span style="font-size: 15px; opacity: 0.75">{{c.n}}</span></button>
+    </sc-for>
+  </div>
+
+  <div style="position: absolute; left: 352px; top: 140px; width: 744px; display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: center; gap: 12px">
+      <span class="cond" style="font-size: 15px; font-weight: 600; letter-spacing: 0.18em">{{catTitle}}</span>
+      <span style="flex-grow: 1; height: 1px; background: rgba(232,228,218,0.3)"></span>
+      <span style="font-size: 13px; color: rgba(232,228,218,0.68)">{{catCount}}</span>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 12px">
+      <sc-for list="{{tiles}}" as="t" hint-placeholder-count="14">
+        <button class="tile {{t.cls}}" aria-label="{{t.name}}, {{t.countText}}" onClick="{{t.pick}}" onMouseEnter="{{t.pick}}" onFocus="{{t.pick}}" style="{{t.bg}}">
+          <span class="shine"></span>
+          <img src="{{t.img}}" alt="">
+          <sc-if value="{{t.tiered}}" hint-placeholder-val="{{false}}">
+            <span style="position: absolute; left: 6px; top: 5px; display: inline-flex"><sc-for list="{{t.pips}}" as="p" hint-placeholder-count="5"><span class="pip" style="{{p}}"></span></sc-for></span>
+          </sc-if>
+          <span class="count">{{t.countText}}</span>
+        </button>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 1150px; top: 140px; width: 360px; border: 1px solid rgba(232,228,218,0.16); background: rgba(12,13,15,0.9)">
+    <div style="position: relative; height: 210px; {{sel.bg}}">
+      <img src="{{sel.img}}" alt="" style="position: absolute; inset: 24px; width: calc(100% - 48px); height: calc(100% - 48px); object-fit: contain; {{sel.pix}}">
+      <span class="cond" style="position: absolute; right: 14px; bottom: 8px; font-size: 32px; font-weight: 600; color: #fff; text-shadow: 0 1px 3px #000">{{sel.countText}}</span>
+    </div>
+    <div style="padding: 16px 18px; display: flex; flex-direction: column; gap: 12px">
+      <div style="display: flex; flex-direction: column; gap: 4px">
+        <span class="cond" style="font-size: 30px; font-weight: 700; line-height: 1; letter-spacing: 0.04em">{{sel.name}}</span>
+        <span class="cond" style="font-size: 13px; font-weight: 600; letter-spacing: 0.14em; color: {{sel.rarityText}}">{{sel.rarity}} · {{sel.catName}}</span>
+      </div>
+      <span style="font-size: 14px; line-height: 1.45; color: rgba(232,228,218,0.88)">{{sel.desc}}</span>
+      <div style="display: flex; flex-direction: column; gap: 7px; padding-top: 12px; border-top: 1px solid rgba(232,228,218,0.12)">
+        <sc-for list="{{sel.rows}}" as="r" hint-placeholder-count="3">
+          <div style="display: flex; justify-content: space-between; font-size: 13px"><span style="color: rgba(232,228,218,0.68)">{{r.k}}</span><span>{{r.v}}</span></div>
+        </sc-for>
+      </div>
+      <div style="display: flex; gap: 16px; padding-top: 12px; border-top: 1px solid rgba(232,228,218,0.12); font-size: 12px; color: rgba(232,228,218,0.72)">
+        <span class="hint"><span class="key">LMB</span>{{sel.use}}</span>
+        <span class="hint"><span class="key">RMB</span>Split</span>
+        <span class="hint"><span class="key">X</span>Drop</span>
+      </div>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 352px; top: 744px; width: 1158px; display: flex; flex-direction: column; gap: 12px">
+    <div style="display: flex; align-items: center; gap: 12px">
+      <span class="cond" style="font-size: 15px; font-weight: 600; letter-spacing: 0.18em">Where it's carried</span>
+      <span style="flex-grow: 1; height: 1px; background: rgba(232,228,218,0.3)"></span>
+      <span class="cond" style="font-size: 15px; font-weight: 600; letter-spacing: 0.08em">Load 21.7 / 28 kg</span>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px">
+      <sc-for list="{{stores}}" as="s" hint-placeholder-count="4">
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <div style="display: flex; justify-content: space-between; font-size: 13px"><span>{{s.name}}</span><span style="color: rgba(232,228,218,0.72)">{{s.used}}</span></div>
+          <div class="bar"><i style="{{s.bar}}"></i></div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 32px; right: 32px; bottom: 18px; display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: rgba(232,228,218,0.72)">
+    <span>Everything you carry that isn't worn or in a weapon slot lives here, sorted for you.</span>
+    <div style="display: flex; gap: 22px">
+      <span class="hint"><span class="key">Q</span><span class="key">E</span>Pages</span>
+      <span class="hint"><span class="key">Tab</span>Close</span>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1600,"height":900}}'>
+const RAR = {
+  common: { name: 'Common', text: '#d9d1c0', tile: 'background: linear-gradient(160deg, #5c5850 0%, #34312c 100%)' },
+  uncommon: { name: 'Scarce', text: '#b6c47a', tile: 'background: linear-gradient(160deg, #525d30 0%, #23281a 100%)' },
+  rare: { name: 'Rare', text: '#9fc2ea', tile: 'background: linear-gradient(160deg, #3d5a7d 0%, #1b2636 100%)' }
+};
+const CATS = [['all', 'All'], ['med', 'Medical'], ['food', 'Food & drink'], ['ammo', 'Ammunition'], ['mat', 'Materials'], ['parts', 'Gun parts'], ['tools', 'Tools']];
+const I = (id, name, cat, img, n, kg, desc, where, extra) => Object.assign({ id, name, cat, img, n, kg, desc, where, rarity: 'common' }, extra || {});
+const ITEMS = [
+  I('bandage', 'Bandage', 'med', '/_blob/1eb091bb778db148ebe019720f900d2c', 4, 0.05, 'Binds the worst open wound and stops it bleeding. A bandaged wound heals twice as fast.', 'Fanny pack', { pix: 1 }),
+  I('splint', 'Splint', 'med', '/_blob/47c49a64f6626acdb4c4ac8e9df8bcdf', 1, 0.3, 'Sets a broken limb so it knits three times faster. Craft one from two sticks and a bandage.', 'Rucksack', { pix: 1 }),
+  I('pills', 'Painkillers', 'med', '/_blob/b8c2bdbe21d7dc97727527bfa1921c43', 1, 0.1, 'Twelve tablets. Dulls pain for an hour, so a hurt arm aims steadier.', 'Pockets', { rarity: 'uncommon' }),
+  I('rags', 'Rags', 'med', '/_blob/40590e6f6020fc308af38e82addef6f7', 3, 0.1, 'Torn from a curtain. Boil them first and they work as bandages.', 'Rucksack'),
+  I('spool', 'Thread and Needle', 'med', '/_blob/c540ed1a633277c195acbbc6fddd2489', 1, 0.05, 'Stitch a deep cut closed so it stops bleeding and heals faster. First Aid 3 needed.', 'Rucksack'),
+  I('beans', 'Canned Beans', 'food', '/_blob/51ed66fa0341a805119c392c31c74adf', 2, 0.45, 'Keeps for years. Needs a can opener, or a knife and patience.', 'Rucksack'),
+  I('water', 'Water Bottle', 'food', '/_blob/8e0cd00a122e7e953535d479f1f51013', 1, 0.6, 'About half full. Refill at a tap before the water goes off, or from a rain barrel.', 'Pockets'),
+  I('jerky', 'Beef Jerky', 'food', '/_blob/a1b3b3626e9730dd206252fe71caa287', 3, 0.1, 'Salty and light. Makes you thirsty.', 'Rucksack'),
+  I('ammo9', '9mm Rounds', 'ammo', '/_blob/b5a8553186e3486d8b50d2f4456dfd17', 34, 0.012, 'Fits the service pistol.', 'Plate carrier'),
+  I('ammo308', '.308 Rounds', 'ammo', '/_blob/c8591cd91214ccc410a65784f9b7da90', 27, 0.025, 'Fits the hunting rifle. Loud, and it carries a long way.', 'Plate carrier'),
+  I('ammo556', '5.56 Rounds', 'ammo', '/_blob/b212c0fddfb2ae74b4ac858b8cbb1e0f', 60, 0.012, 'Fits the assault rifle.', 'Rucksack', { rarity: 'uncommon' }),
+  I('shells', '12 Gauge Shells', 'ammo', '/_blob/98e0625c6037d63786b387133726b11f', 14, 0.04, 'Buckshot. Fits the pump shotgun and the double-barrel.', 'Plate carrier'),
+  I('can', 'Ammo Can', 'ammo', '/_blob/fe8c580cb2be49db8ad8dc98f84cb73e', 1, 1.8, 'Holds up to 200 rounds and keeps them dry. Empty right now.', 'Rucksack'),
+  I('scrap', 'Scrap Metal', 'mat', '/_blob/c72df5361df4f7f9f830b44f9b8c339b', 34, 0.15, 'Sheet and offcuts. Barricades, repairs, and the weapon bench all eat it.', 'Rucksack'),
+  I('tape', 'Duct Tape', 'mat', '/_blob/5e46a2b26dbef06d67264191a97622bb', 3, 0.2, 'Fixes a melee handle or holds a bandage in place.', 'Rucksack'),
+  I('nails', 'Nails', 'mat', '/_blob/aa4b7b07e951219ec855c744a19edf76', 48, 0.005, 'Four to a plank when you board up a window.', 'Rucksack', { pix: 1 }),
+  I('powder', 'Gunpowder', 'mat', '/_blob/b2c692a125056cca1246ab592b0f531b', 1, 0.25, '210 g left in the tin. Reload spent cases at a bench.', 'Rucksack', { countText: '210g' }),
+  I('scope', 'Red Dot Sight', 'parts', '/_blob/92a1c638e5a881f5d91ee52977a621c3', 1, 0.2, 'Fits a rifle or carbine rail. Faster to aim than irons, no zoom.', 'Rucksack', { rarity: 'uncommon', tier: 2 }),
+  I('supp', 'Suppressor', 'parts', '/_blob/96758ffeba985067c3e7e05eacb67a30', 1, 0.4, 'Threaded for .308. Cuts noise by more than half. Wears out.', 'Rucksack', { rarity: 'rare', tier: 3 }),
+  I('laser', 'Laser Module', 'parts', '/_blob/ea7ee8a84ff58222ee587f22454cf4ad', 1, 0.1, 'Side rail. Steadier hip-fire. Runs on batteries.', 'Rucksack', { rarity: 'rare', tier: 1 }),
+  I('light', 'Weapon Light', 'parts', '/_blob/b42c38d9a4ac531a9c8f8509a0dcb78f', 1, 0.15, 'Right rail. Lights what you aim at, and shows them where you are.', 'Rucksack', { rarity: 'uncommon', tier: 2 }),
+  I('grip', 'Foregrip', 'parts', '/_blob/e129c69a10b7370507d0eb56a3e5af2a', 1, 0.1, 'Underbarrel. Less muzzle climb when firing fast.', 'Rucksack', { tier: 4 }),
+  I('batteries', 'Batteries', 'tools', '/_blob/865ed622fc2871c90a9bfa03895625ac', 4, 0.03, 'For torches, the laser and radios. Two are half dead.', 'Pockets'),
+  I('matches', 'Matches', 'tools', '/_blob/f15004d2b430fcc979b1660f3e832884', 1, 0.05, 'Twenty-two left. Lights a fire or a stove.', 'Pockets')
+];
+const CAT_NAME = Object.fromEntries(CATS);
+const STORES = [['Pockets', 6, 8], ['Fanny pack', 2, 2], ['Plate carrier', 4, 6], ['Military rucksack', 19, 24]];
+
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { cat: 'all', sel: 'bandage' }; }
+  renderVals() {
+    const cat = this.state.cat;
+    const list = ITEMS.filter(i => cat === 'all' || i.cat === cat);
+    const cats = CATS.map(([id, name]) => ({
+      name, n: id === 'all' ? ITEMS.length : ITEMS.filter(i => i.cat === id).length,
+      cls: id === cat ? 'on' : '', pressed: id === cat ? 'true' : 'false',
+      pick: () => { const first = ITEMS.find(i => id === 'all' || i.cat === id); this.setState({ cat: id, sel: first ? first.id : this.state.sel }); }
+    }));
+    const pips = t => [1, 2, 3, 4, 5].map(i => i <= t ? 'background: #ece7dc' : 'background: transparent; border: 1px solid rgba(236,231,220,0.38)');
+    const countText = i => i.countText || (i.n > 1 ? '×' + i.n : '');
+    const tiles = list.map(i => ({
+      name: i.name, img: i.img, countText: countText(i), bg: RAR[i.rarity].tile,
+      cls: (i.pix ? 'pix ' : '') + (i.id === this.state.sel ? 'on' : ''),
+      tiered: !!i.tier, pips: pips(i.tier || 0),
+      pick: () => this.setState({ sel: i.id })
+    }));
+    const s = ITEMS.find(i => i.id === this.state.sel) || list[0];
+    const total = s.kg * (s.countText ? 1 : s.n);
+    const rows = [
+      { k: 'Weight', v: (s.n > 1 && !s.countText ? (s.kg < 0.1 ? s.kg.toFixed(3) : s.kg.toFixed(2)) + ' kg each · ' + total.toFixed(2) + ' kg' : s.kg.toFixed(2) + ' kg') },
+      { k: 'Carried in', v: s.where }
+    ];
+    if (s.tier) rows.unshift({ k: 'Tier', v: s.tier + ' of 5' });
+    const use = { med: 'Use', food: 'Eat', ammo: 'Load', mat: 'Craft', parts: 'Fit at bench', tools: 'Use' }[s.cat];
+    const sel = {
+      name: s.name, img: s.img, pix: s.pix ? 'image-rendering: pixelated; inset: 60px; width: calc(100% - 120px); height: calc(100% - 120px)' : '',
+      bg: RAR[s.rarity].tile, rarity: RAR[s.rarity].name, rarityText: RAR[s.rarity].text, catName: CAT_NAME[s.cat],
+      countText: countText(s), desc: s.desc, rows, use
+    };
+    const mats = [['scrap', 'Scrap metal'], ['tape', 'Duct tape'], ['nails', 'Nails'], ['powder', 'Gunpowder']].map(([id, name]) => {
+      const i = ITEMS.find(x => x.id === id);
+      return { img: i.img, n: i.countText || i.n, name, pix: i.pix ? 'image-rendering: pixelated; padding: 6px; box-sizing: border-box' : '' };
+    });
+    const stores = STORES.map(([name, used, cap]) => ({ name, used: used + ' / ' + cap + ' slots', bar: 'width: ' + Math.round(used / cap * 100) + '%; background: ' + (used >= cap ? '#d0a03c' : '#e8e4da') }));
+    return {
+      cats, tiles, sel, mats, stores,
+      catTitle: CAT_NAME[cat], catCount: list.length + (list.length === 1 ? ' item' : ' items')
+    };
+  }
+}
+</script>
+</body>
+</html>

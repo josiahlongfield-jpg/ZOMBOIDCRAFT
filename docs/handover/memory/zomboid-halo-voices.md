@@ -1,0 +1,25 @@
+---
+name: zomboid-halo-voices
+description: Where Halo Reach voice audio lives on Josiah's PC (english.fsb) and what each Noble member has; no voice cloning
+metadata:
+  type: reference
+---
+
+VOICES (2026-11-08 09:5x, RC read-only): ALL Reach dialogue is one FMOD bank Content\haloreach\fmod\pc\english.fsb (363 MB, 31,433 Vorbis clips) + name index beside it; .map files only point to clips; vgmstream converts to named WAV. Per Noble: Carter 940 callouts/421 story, Kat 844/358, Jun 1001/187, Emile 864/156, Jorge 834/162; Six grunts/pain (~250 m, ~290 f) + 38/29 lines; Dot 420/76, Halsey 76, Cortana combat set 556. ~134 callout situations, several takes each, plus whispered stealth versions. No voice models/stems; we do NOT clone actors' voices for new lines. Report: additions\halo-reach\noble-voice-search.txt. Not converted yet (asked Josiah).
+
+Related: [[zomboid-halo-maps]], [[zomboid-purge-direction]].
+
+CORTANA (2026-11-08 ~10:00, RC read-only search of 2,311 MCC files): model in Halo 4 (storm_cortana, best; 8 campaign maps m020,m10_crash,m30_cryptum,m40_invasion,m60_rescue,m70_liftoff,m80_delta,m90_sacrifice; hologram fx), Halo 3 (9 campaign maps 005_intro..130_epilogue; 110_hc near-death version), Reach ONLY m60.map (The Package, H3-style), CE a10/b40/c40/d40 (+enhanced in b40/c40), H2A textures/template in shared.pck. ODST and MP maps: effects only. Classic H2 maps compressed, unconfirmed. Full list: additions\halo-reach\cortana-search.txt. Nothing extracted.
+
+CORTANA PICK (Josiah 2026-11-08 10:13): HALO 4 storm_cortana, full body + hologram effects + voice, is the player's AI HELPER for both Spartans and Tarkov operators. RC copying H4 Cortana voice WAVs to additions\halo-4\cortana\voice, Reach Cortana combat set to additions\halo-reach\voice\cortana, and the fullest H4 map (+shared) to additions\halo-4\raw (split >390 MB) for a cloud reader. Preview before any in-game build. Noble clips APPROVED 10:15: convert ALL to additions\halo-reach\voice\<name> + noble_callouts.json (member->situation->takes); dialogue must be BROAD (keep every situation and take). Noble Six never talks (fine).
+DONE 2026-11-08 ~10:4x: 5,753 Noble WAVs (48 kHz mono) + 553 Reach Cortana in additions\halo-reach\voice\<name>\ (combat\<style>\<group>\<situation>\, story\<mission>\); Carter 1358/163 sit, Kat 1199/161, Jun 1185/158, Emile 1018/155, Jorge 993/157. Index voice\noble_callouts.json + manifest back to source. vgmstream in additions\tools. H4 Cortana voice: Wwise has no speaker tags; converting ~1,800 H4 campaign lines, matching her groups against Reach Cortana.
+H4 CORTANA VOICE DONE: additions\halo-4\cortana\voice\ 648 confident lines (632 gameplay/radio + 105 global chatter set incl., 16 cutscene), voice\_review\ 248 likely (m20 Requiem 114, Composer 52 maybe Tillson) for Josiah to listen; cortana_voice.json + README-voice.txt. All 1,879 H4 campaign lines in additions\halo-4\_work\ (970 MB, deletable). Model raw maps additions\halo-4\raw\ (m90_sacrifice fullest, m10_crash calm orb, + shared/campaign, 390 MB parts), tags additions\halo-4\cortana-model-tags.txt. NEXT: H4 model reader (gen3 like Reach), rebuild hologram fx from her textures, preview.
+- 10:4x Josiah confirmed _review group 854346454 (m20 Requiem, 114 clips) is Cortana; moved to mission\m20; confirmed total 762 in 17 groups; 10 review groups left untouched.
+
+H4 CORTANA MODEL (2026-11-08 ~11:30, thread 'Bring Cortana in as AI helper'): Halo 4 reader built ([[zomboid-halo4-format]]); storm_cortana exported (20k tris, 111 bones, A-pose bind, 20 textures) from m90_sacrifice + campaign.map pages. Hologram/rez shader rebuilt in three.js from her own ramp/control/code-flow/scanline/noise textures (my reconstruction, not Halo's shader). Preview video sent; helper role options asked. Files to additions\halo-4\cortana\model. Next: Halo 4 jmad for her real idle/gesture anims.
+Josiah 11:31 sent the official H4 Cortana render as THE LOOK: desaturated steel/navy blue, lit from above with sheen, lighter chest, darker legs, subtle circuits, mostly opaque, black-navy hair. v2 shader matches it (viewer in additions\halo-4\cortana\model, v2 clip). Ref pose = hands behind back.
+Josiah 11:37: eyes must show and head/neck must be the SAME hologram blue as the body (no skin tone). Fixed v3: 40-byte eye vertices (uv@12, normal@16, bones@32/36), head via body ramp.
+Josiah 11:42: hologram must be applied to the WHOLE body in one go, seamless like the reference, and look exactly like it. v4: body+head share one skin shader (textures already match at the neck seam), opaque, front-faced.
+Josiah 11:48: white areas in his ref are just light reflections, drop them; whole body ONE hologram pattern+colour, no visible neck seam. v6: flat base blue for body+head, texture used only as local detail (high-pass), her own normal maps (DXN is SIGNED, decode as int8). Only one Cortana model exists (storm_cortana, no cutscene version: H4 MCC cutscenes are videos). Asked: features differ from in-game?
+
+Cortana hologram look status: [[zomboid-cortana-hologram]].

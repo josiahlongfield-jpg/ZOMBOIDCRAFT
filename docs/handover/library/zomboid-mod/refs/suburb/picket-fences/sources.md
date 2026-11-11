@@ -1,0 +1,14 @@
+# suburb/picket-fences
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-wavy-fence-and-a-wall-bw-version.jpg | [Wavy fence and a wall BW version.jpg](https://commons.wikimedia.org/wiki/File:Wavy_fence_and_a_wall_BW_version.jpg) | W.carter | CC BY-SA 4.0 | Wavy fence in top of a wall in Brastad, Lysekil Municipality, Sweden. Focus stacked from two photos. |
+| 02-classic-picket-fence.jpg | [Classic Picket Fence.JPG](https://commons.wikimedia.org/wiki/File:Classic_Picket_Fence.JPG) | TriviaKing (talk)DWS-Montag Zen | CC BY-SA 3.0 | Classic picket fence in need of some painting and maintenance. |
+| 03-chingford-cricket-club-boundary-picket-fence-chingford-essex.jpg | [Chingford Cricket Club boundary picket fence, Chingford, Essex 2.jpg](https://commons.wikimedia.org/wiki/File:Chingford_Cricket_Club_boundary_picket_fence,_Chingford,_Essex_2.jpg) | Acabashi | CC BY-SA 4.0 | Chingford Cricket Club boundary picket fence, Chingford, Essex.Mobile device view: Wikimedia (2022) makes it difficult to immediately view p |
+| 04-privacy-fence-topped-with-lattice.jpg | [Privacy fence topped with lattice.jpg](https://commons.wikimedia.org/wiki/File:Privacy_fence_topped_with_lattice.jpg) | Privacy Fence | Public domain | Privacy Fence custom built by Nice Fence. |
+| 07-villa-berta-and-its-gated-front-yard-in-el-lim-n-near-los-te.jpg | [Villa Berta and its gated front yard in El Limón near Los Teques, Vene](https://commons.wikimedia.org/wiki/File:Villa_Berta_and_its_gated_front_yard_in_El_Lim%C3%B3n_near_Los_Teques,_Venezuela.jpg) | Wilfredor | CC0 | Villa Berta, a white hillside house with a clay-tile roof and deep veranda in El Limón near Los Teques, Miranda state, Venezuela, seen behin |
+| 09-payne-street-house-dpla-c7d8cc7a9262f3d6a72c32a3f9e46113.jpg | [Payne Street house - DPLA - c7d8cc7a9262f3d6a72c32a3f9e46113.jpg](https://commons.wikimedia.org/wiki/File:Payne_Street_house_-_DPLA_-_c7d8cc7a9262f3d6a72c32a3f9e46113.jpg) | David E. Lucas | Public domain | A view looking south of the house at 1991 Payne Street. A white-haired woman sweeps inside the chain link fenced yard where a poodle looks o |
+| 11-general-view-bell-homestead-brantford-canada-hs85-10-40416-o.jpg | [General view, Bell Homestead, Brantford, Canada (HS85-10-40416) origin](https://commons.wikimedia.org/wiki/File:General_view,_Bell_Homestead,_Brantford,_Canada_(HS85-10-40416)_original.tif) | Walker Studio | Public domain | General view, Bell Homestead, Brantford, Canada. |
+| 12-general-view-bell-homestead-brantford-canada-hs85-10-40416.jpg | [General view, Bell Homestead, Brantford, Canada (HS85-10-40416).jpg](https://commons.wikimedia.org/wiki/File:General_view,_Bell_Homestead,_Brantford,_Canada_(HS85-10-40416).jpg) | Walker Studio | Public domain | General view, Bell Homestead, Brantford, Canada. |

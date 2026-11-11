@@ -1,0 +1,12 @@
+# landscape/mountain-ridge
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-wildcat-d-and-e-mountain-peak-wildcat-ridge-trail-appalachia.jpg | [Wildcat D and E Mountain Peak Wildcat Ridge Trail Appalachian National](https://commons.wikimedia.org/wiki/File:Wildcat_D_and_E_Mountain_Peak_Wildcat_Ridge_Trail_Appalachian_National_Scenic_Trail_view_White_Mountain_National_Forest_Eastern_White_Mountains.jpg) | EgorovaSvetlana | CC BY-SA 4.0 | Wildcat D and E Mountain Peak Wildcat Ridge Trail Appalachian National Scenic Trail view White Mountain National Forest Eastern White Mounta |
+| 02-appalachian-mountains-along-blue-ridge-parkway-north-carolin.jpg | [Appalachian Mountains along Blue Ridge Parkway, North Carolina.JPG](https://commons.wikimedia.org/wiki/File:Appalachian_Mountains_along_Blue_Ridge_Parkway,_North_Carolina.JPG) | MusikAnimal | CC BY-SA 4.0 | View of the Appalachian Mountains of North Carolina with backpackers climbing a hill. |
+| 03-appalachian-front-valley-and-ridge-little-mountain-great-kno.jpg | [Appalachian Front & Valley and Ridge (Little Mountain & Great Knobs & ](https://commons.wikimedia.org/wiki/File:Appalachian_Front_%26_Valley_and_Ridge_(Little_Mountain_%26_Great_Knobs_%26_River_Knobs,_Washington_County,_Virginia,_USA).jpg) | James St. John | CC BY 2.0 | This is an oblique aerial view of the Appalachians in eastern America.  The Appalachian Mountains consist of three physiographic provinces.  |
+| 04-mountain-pine-ridge-forest-reserve.jpg | [Mountain Pine Ridge Forest Reserve.JPG](https://commons.wikimedia.org/wiki/File:Mountain_Pine_Ridge_Forest_Reserve.JPG) | Elelicht | CC BY-SA 3.0 | Pinus hondurensis (Honduras Pine), in the Mountain Pine Ridge Forest Reserve, Belize. |
+| 05-mountain-pine-ridge-cropped.jpg | [Mountain Pine Ridge (cropped).jpg](https://commons.wikimedia.org/wiki/File:Mountain_Pine_Ridge_(cropped).jpg) | tomeppy | CC BY 2.0 | Panorama of the Mountain Pine Ridge Forest Reserve, in the Cayo District of Belize. |
+| 06-mountain-pine-ridge-uploaded-on-november-28-2007-by-tomeppy.jpg | [Mountain Pine Ridge Uploaded on November 28, 2007 by tomeppy (cropped)](https://commons.wikimedia.org/wiki/File:Mountain_Pine_Ridge_Uploaded_on_November_28,_2007_by_tomeppy_(cropped).jpg) | Tom Eppenberger Jr. | CC BY 2.0 | Panorama of the Mountain Pine Ridge Forest Reserve, in the Cayo District of Belize. |

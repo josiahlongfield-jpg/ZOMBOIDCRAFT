@@ -1,0 +1,29 @@
+---
+name: zomboid-npc-models
+description: Josiah's bought 3D character models for spawnable NPCs (dark elf TO BE REMOVED per Josiah 2026-11-06, Master Chief declined), raw-vs-toon preview and renderer
+metadata:
+  type: project
+  modified: 2026-10-29T07:08:08.170Z
+---
+
+**2026-11-06 (world systems doc UxHyNZNfCqGbJFzxXd67VJ, via coordinator):** the dark elf companion is to be removed and won't be used. Later: AI squadmates in Tarkov bodies for solo play; hostile humans use Zomboid bodies. Do NOT remove anything yet and do no more dark elf work; removals get planned with him. The companion systems (brain, trades, occupation) are model-agnostic.
+
+
+Thread "Add 3D characters to the game", 2026-10-29 07:06. Josiah: the models are "just npcs i can command to spawn for now" so he can see them in game, with more use later. He asked for two previews: straight in (no editing) and toon-painted like the guns. He says both are royalty free.
+
+- **Dark elf** (ELF.zip): One glb (THREE.GLTFExporter, 20k tris, one 2k-ish baked colour texture, looks AI-generated, no signs of a game rip). NOT rigged and stands in an A-pose, so walking needs a rig (our ZBody bones or a skinned rig). Preview artifact: https://claude.ai/artifact/9BSczHZAnNq7iyXbUYq5zS. Files: zomboid-mod/assets/dark-elf/ELF.zip, previews/npc-dark-elf-raw-vs-toon.png, characters/npc/render_raw_vs_toon.py (numpy software raster: python3 -I <glb> <out> <title>).
+- **Master Chief** (master-chief-...-halo-infinite...zip, 494 MB, plus a duplicate "... 2.zip"): DECLINED. It's Microsoft's character, and a store's "royalty free" doesn't license the character. Same call as the Halo gun copies in [[zomboid-wave2-guns]]. Offered an original armoured soldier NPC instead. Both zips DELETED 07:10 with Josiah's OK (storage was full).
+
+Related: [[zomboid-bought-assets-plan]], [[zomboid-gun-art-style]], [[zomboid-zbody-tech]].
+
+**In game (2026-10-29 07:55, playtest 0ce1dc1):** `/zc npc <model> [raw|toon|both]` and `/zc npc clear` (src/main/.../npc/Npcs.java, NpcEntity; client npc/NpcAssets, NpcRenderer). tools/npc/pack.py writes assets/zomboidcraft/npc/<id>.znpc (scrambled zlib: mesh + "raw" and "toon" JPEG looks). Toon = per-vertex 3-band shading in colour + inverted-hull ink (INK 6.5 mm). Body drawn double-sided. NPCs only stand and look at players (no rig). Waiting for Josiah's raw/toon verdict; next is rigging.
+**08:03 update:** following the Warthog decision (local-only, [[zomboid-warthog-tech]]), offered Josiah the same for Master Chief and similar models: convert here, he puts the .znpc in config/zomboidcraft/npc on his PC, never in the repo or jar. Asked him to upload the zip once more. NpcAssets still needs a local-folder loader (like CarModels.LOCAL) when it arrives.
+**08:58 companion:** elf rigged (tools/npc/rig.py, rigs/dark_elf.json, pose.py ported to NpcPose.java), follows/waits on G, flees zombies, picks up guns and shoots (NpcBrain). Animated preview https://claude.ai/artifact/XhJ2KiQ7mRbrwN3ghCPFVg. Josiah: "make the animations look natural?" Card offered: Mixamo rig+mocap (recommended), CC0 mocap on our rig, or polish procedural. Awaiting pick.
+**09:02:** Josiah chose Mixamo. Told him: upload "dark elf.obj" from his ELF.zip (storage full, couldn't ship a textured zip; scratch mixamo/glb2obj.py makes one), Standard Skeleton, clips Breathing Idle/Female Walk/Running/Rifle Aiming Idle/Firing Rifle/Rifle Walk/Picking Up Object/Dying, FBX Binary 30fps, first With Skin. Plan: parse FBX, map weights to our mesh by nearest vertex, bake clips into .znpc v3, blend by speed + foot planting.
+**09:02 verdict:** Josiah: Master Chief looks good with NO editing (raw look). Default him to raw. (Local-only file, never in repo/jar.)
+**09:36:** companion + rig fix (rig.py segs can be polylines + rmax; hands sit at x .45-.57, y ~1.03, z -0.10, behind hip line) in playtest 2c62620, jar sent. Mixamo upload file: zomboid-mod/assets/dark-elf/dark_elf_standing.zip (A-pose arms as shipped, legs in 15 deg; scratch mixamo/tpose.py UP LEG args). Josiah found Mixamo markers bad with wide legs. Waiting for his FBX clips.
+**09:40:** elf mesh is ONE welded shell; leg backs don't exist (back skirt is the leg back), so the skirt can't be deleted. Plan: use Mixamo only for skeleton + clips, compute our own weights (skirt follows hips + both thighs). Offered optional skirt removal by mirroring leg fronts.
+**09:47 bodysuit (Josiah "try the body suit idea"):** scratch mixamo/bodysuit.py cuts non-skin tris below y 0.86 outside the leg ellipses (keeps straps/shoes), adds 24-seg skin tubes per leg from measured front-shell slices (skin = r>b+20 & lum>80 texel), texel ~0.97x thigh median. Result = short dress + bare legs. Upload file zomboid-mod/assets/dark-elf/dark_elf_bodysuit.zip (legs in 15). If he likes it, the in-game .znpc should be repacked from this mesh too.
+**10:08:** Final Mixamo upload = zomboid-mod/assets/dark-elf/dark_elf_mixamo.zip: ORIGINAL arms (untouched) + legs slid in by SHEAR 0.29 (tpose.py args "0 0 0.29"), soles flat, toes forward. Josiah liked that leg position. Bodysuit rejected. Advised: finish elf via Mixamo, then buy a properly rigged character with full legs under clothes.
+**10:14:** Josiah: remove the tabard (front panel) up to the knees. Done: scratch mixamo/tabard.py 0.55 makes panel_mask.npy (non-skin, y<0.55, between legs, front), `CUT=mask tpose.py glb out 0 0 0.29`. dark_elf_mixamo.zip updated in place. If in-game .znpc should match, repack with the same cut.
+**10:20:** Back skirt cut to y 0.80 (under backside), front panel kept to knee, NO leg fill (Josiah: "dont worry about filling it in"): `NOTUBE=1 BACKCUT=0.80 KNEE=0.55 bodysuit.py glb bk.npz 1.25` then `tpose.py bk.npz out 0 0 0.29`. dark_elf_mixamo.zip updated. Leg backs are hollow (inside of front shells shows).

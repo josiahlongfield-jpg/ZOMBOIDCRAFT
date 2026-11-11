@@ -1,0 +1,16 @@
+# items/sheaths
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-making-a-knife-sheath-05.jpg | [Making a knife sheath 05.jpg](https://commons.wikimedia.org/wiki/File:Making_a_knife_sheath_05.jpg) | Jomegat | CC BY-SA 3.0 | Photo showing one of the steps involved in making a knife sheath.  This is what it looks like after riveting the sheath closed. |
+| 02-making-a-knife-sheath-03.jpg | [Making a knife sheath 03.jpg](https://commons.wikimedia.org/wiki/File:Making_a_knife_sheath_03.jpg) | Jomegat | CC BY-SA 3.0 | Instructions for making a leather knife sheath.  This photos shows holes being punched for the strap. |
+| 03-making-a-knife-sheath-02.jpg | [Making a knife sheath 02.jpg](https://commons.wikimedia.org/wiki/File:Making_a_knife_sheath_02.jpg) | Jomegat | CC BY-SA 3.0 | Instructions for making a leather knife sheath.  This is step 2. |
+| 04-machete-bolo.jpg | [Machete Bolo.JPG](https://commons.wikimedia.org/wiki/File:Machete_Bolo.JPG) | No machine-readable author provided. McLeod assumed (based on copyright claims). | CC BY-SA 3.0 | Machete Martindale #227 "Bolo" with sheath  Own work |
+| 05-knife-wedong-with-sheath-met-36-25-800ab-002june2014.jpg | [Knife (Wedong) with Sheath MET 36.25.800ab 002june2014.jpg](https://commons.wikimedia.org/wiki/File:Knife_(Wedong)_with_Sheath_MET_36.25.800ab_002june2014.jpg) |  | CC0 | Javanese; Knife (Wedong) with sheath; Knives |
+| 06-gerber-recalls-machetes-with-stitched-sheaths-8968985731.jpg | [Gerber Recalls Machetes with Stitched Sheaths (8968985731).jpg](https://commons.wikimedia.org/wiki/File:Gerber_Recalls_Machetes_with_Stitched_Sheaths_(8968985731).jpg) | US CPSC | CC BY 2.0 | The Bear Grylls Parang machete's blade can cut through the sheath's stitching.  1.usa.gov/ZS5kbI |
+| 07-bayonet-vz-24-czechoslovak-bayonet-with-scabbard-and-frog.jpg | [Bayonet vz. 24 - Czechoslovak bayonet with scabbard and frog.jpg](https://commons.wikimedia.org/wiki/File:Bayonet_vz._24_-_Czechoslovak_bayonet_with_scabbard_and_frog.jpg) | David Beer (Ivoengelik12) | CC BY-SA 4.0 | Czechoslovak bayonet vz. 24 for the vz. 24 rifle, with metal scabbard and leather frog. Manufactured by Československá státní zbrojovka Brno |
+| 08-bayonet-and-scabbard-and-frog-am-696935-3-cropped.jpg | [Bayonet and scabbard and frog (AM 696935-3) (cropped).jpg](https://commons.wikimedia.org/wiki/File:Bayonet_and_scabbard_and_frog_(AM_696935-3)_(cropped).jpg) | Erfurt Royal Arsenal of Saxony | CC BY 4.0 | German S98-05 nA S sawback bayonet with steel scabbard and leather frog and sword knot NOTE- larger muzzle guides than for Kar rifle maker-  |
+| 09-scabbard-bayonet-and-frog-am-696925-1.jpg | [Scabbard, bayonet (and frog) (AM 696925-1).jpg](https://commons.wikimedia.org/wiki/File:Scabbard,_bayonet_(and_frog)_(AM_696925-1).jpg) | Unknown authorUnknown author | CC BY 4.0 | Leather scabbard and frog for German S71-84 Mauser bayonet (possibly WW1) |
+| 10-swords-gim-gold.jpg | [Swords GIM Gold.jpg](https://commons.wikimedia.org/wiki/File:Swords_GIM_Gold.jpg) | Лапоть | CC0 | Gala sword and belt, Germany, 20 c. Damask steel, velvet, gilt, diamonds, enamel, engraving, embossing, carving. Gold, silver, enamel, casti |

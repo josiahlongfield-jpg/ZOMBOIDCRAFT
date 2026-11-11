@@ -1,0 +1,884 @@
+<title>ZomboidCraft Inventory</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Allerta+Stencil&family=Barlow+Condensed:wght@400;500;600;700&family=Pixelify+Sans:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one 16:9 game frame (gear | carried bags | loot) with a weapon bench overlay; notes underneath. Single dark look on purpose: it is a game screen. */
+:root{
+  color-scheme:dark;
+  --page:#121311; --page-fg:#d9d5c7; --page-dim:#8d8a7d; --page-line:#2b2c27;
+  /* skin tokens, overwritten per skin */
+  --panel:#3d4128; --panel-2:#4a4f31; --panel-deep:#2c2f1c; --ink:#e9e0c4; --ink-dim:#b3aa8c;
+  --edge:#1d1f12; --stitch:#a69a6f; --accent:#d9a441; --accent-ink:#1d1a10; --danger:#c8452f; --ok:#8fb35a;
+  --row-hi:rgba(233,224,196,.09); --sel:rgba(217,164,65,.22);
+  --f-head:"Allerta Stencil", "Arial Narrow", sans-serif;
+  --f-body:"Barlow Condensed", "Arial Narrow", sans-serif;
+  --f-data:"JetBrains Mono", ui-monospace, monospace;
+  --radius:2px;
+}
+[data-skin="classic"]{
+  --panel:rgba(22,22,22,.88); --panel-2:rgba(44,44,44,.9); --panel-deep:rgba(10,10,10,.92); --ink:#f0f0f0; --ink-dim:#a4a4a4;
+  --edge:#5a5a5a; --stitch:transparent; --accent:#e8e8e8; --accent-ink:#111; --row-hi:rgba(255,255,255,.07); --sel:rgba(120,160,220,.28);
+  --f-head:"Barlow Condensed", "Arial Narrow", sans-serif; --radius:0;
+}
+[data-skin="blocky"]{
+  --panel:#4b4a46; --panel-2:#5d5c57; --panel-deep:#2e2d2a; --ink:#ecebe4; --ink-dim:#b9b6aa;
+  --edge:#161512; --stitch:transparent; --accent:#b8d65a; --accent-ink:#1a2108; --row-hi:rgba(255,255,255,.08); --sel:rgba(184,214,90,.22);
+  --f-head:"Pixelify Sans", monospace; --f-body:"Pixelify Sans", monospace; --radius:0;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--page);color:var(--page-fg);font-family:var(--f-body);font-size:16px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px}
+.wrap{max-width:1280px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+header.top{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:end;justify-content:space-between}
+header.top h1{font-family:"Allerta Stencil",sans-serif;font-weight:400;font-size:clamp(26px,4vw,38px);margin:0;letter-spacing:.04em;text-wrap:balance}
+header.top p{margin:4px 0 0;color:var(--page-dim);max-width:62ch;line-height:1.35}
+.skins{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.skins span{color:var(--page-dim);font-size:14px;text-transform:uppercase;letter-spacing:.08em;margin-right:4px}
+.skins button{font:600 15px "Barlow Condensed",sans-serif;background:#1e1f1b;color:var(--page-fg);border:1px solid var(--page-line);padding:7px 12px;cursor:pointer;border-radius:3px}
+.skins button[aria-pressed="true"]{background:#d9d5c7;color:#121311;border-color:#d9d5c7}
+.tips{display:flex;flex-wrap:wrap;gap:6px 16px;color:var(--page-dim);font-size:15px}
+.tips b{color:var(--page-fg);font-weight:600}
+
+/* ===== game frame ===== */
+.game{position:relative;aspect-ratio:16/9;min-height:560px;max-width:100%;border:1px solid #000;overflow:hidden;user-select:none;-webkit-user-select:none;
+  background:#0d0f0e;font-family:var(--f-body);color:var(--ink)}
+.world{position:absolute;inset:0;background:
+  linear-gradient(180deg,rgba(10,12,12,.2),rgba(5,6,6,.75)),
+  repeating-linear-gradient(90deg,#1c201e 0 46px,#181b1a 46px 92px),
+  linear-gradient(180deg,#2a302e 0 38%,#1a1d1b 38% 100%);filter:blur(1.5px)}
+.world::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(100deg,transparent 0 9px,rgba(180,200,210,.06) 9px 10px);animation:rain .5s linear infinite}
+@keyframes rain{to{background-position:-12px 40px}}
+@media (prefers-reduced-motion:reduce){.world::after{animation:none}}
+.hud{position:absolute;inset:14px;display:grid;grid-template-columns:minmax(250px,.9fr) 1.15fr 1fr;gap:12px}
+.panel{position:relative;background:var(--panel);border:2px solid var(--edge);border-radius:var(--radius);display:flex;flex-direction:column;min-height:0;min-width:0;box-shadow:0 6px 18px rgba(0,0,0,.45)}
+[data-skin="canvas"] .panel{background:
+  repeating-linear-gradient(0deg,rgba(0,0,0,.05) 0 1px,transparent 1px 3px),
+  repeating-linear-gradient(90deg,rgba(255,255,255,.035) 0 1px,transparent 1px 3px),
+  radial-gradient(ellipse at 30% 20%,rgba(255,240,200,.06),transparent 60%),var(--panel)}
+[data-skin="canvas"] .panel::before{content:"";position:absolute;inset:5px;border:1px dashed var(--stitch);opacity:.45;pointer-events:none}
+[data-skin="blocky"] .panel{border-width:3px;border-color:#77756d #1b1a17 #1b1a17 #77756d}
+.ph{display:flex;align-items:center;gap:8px;padding:10px 12px 8px;border-bottom:1px solid rgba(0,0,0,.35)}
+.ph h2{font-family:var(--f-head);font-weight:400;font-size:19px;letter-spacing:.06em;text-transform:uppercase;margin:0;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ph .stamp{font-family:var(--f-head);font-size:11px;letter-spacing:.12em;color:var(--accent);border:1px solid var(--accent);padding:1px 5px;transform:rotate(-2deg);text-transform:uppercase;white-space:nowrap}
+.tbtn{font:600 14px var(--f-body);background:var(--panel-deep);color:var(--ink);border:1px solid var(--edge);padding:4px 9px;cursor:pointer;border-radius:var(--radius);white-space:nowrap}
+.tbtn:hover,.tbtn:focus-visible{background:var(--accent);color:var(--accent-ink);outline:none}
+
+/* gear panel */
+.gear-body{position:relative;flex:1;min-height:0}
+#charCanvas{position:absolute;inset:0;width:100%;height:100%;cursor:grab;touch-action:none}
+.slots{position:absolute;inset:6px;pointer-events:none;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:repeat(6,auto);align-content:space-between;gap:6px}
+.slot{pointer-events:auto;width:94px;min-height:44px;background:rgba(0,0,0,.42);border:1px solid rgba(233,224,196,.25);border-radius:var(--radius);padding:3px 5px;display:flex;flex-direction:column;gap:1px;cursor:pointer}
+.slot.r{justify-self:end;text-align:right;align-items:flex-end}
+.slot .lbl{font:600 10px var(--f-data);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-dim)}
+.slot .it{display:flex;gap:4px;align-items:center;font-size:13px;line-height:1.05;font-weight:600}
+.slot.r .it{flex-direction:row-reverse}
+.slot .it canvas{flex:none}
+.slot.empty .it{color:var(--ink-dim);font-weight:400;font-style:italic}
+.slot.drop-ok{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent) inset}
+.slot.quick{border-style:dashed}
+.gear-foot{padding:8px 12px 10px;border-top:1px solid rgba(0,0,0,.35);display:flex;flex-direction:column;gap:5px}
+.meter{display:flex;align-items:center;gap:8px;font:12px var(--f-data)}
+.meter .bar{flex:1;height:8px;background:var(--panel-deep);border:1px solid var(--edge);position:relative;overflow:hidden}
+.meter .bar i{position:absolute;inset:0 auto 0 0;background:var(--ok)}
+.meter .bar i.warn{background:var(--accent)}.meter .bar i.bad{background:var(--danger)}
+.moodle{font:600 12px var(--f-data);color:var(--danger);min-height:15px}
+
+/* bags + loot */
+.cols{display:flex;flex:1;min-height:0}
+.tabs{display:flex;flex-direction:column;gap:4px;padding:8px 0 8px 8px;width:56px;flex:none}
+.tab{position:relative;width:48px;height:48px;background:var(--panel-deep);border:1px solid var(--edge);border-radius:var(--radius);display:grid;place-items:center;cursor:pointer;padding:0}
+.tab[aria-selected="true"]{background:var(--panel-2);border-color:var(--accent);box-shadow:-3px 0 0 var(--accent) inset}
+.tab .cap{position:absolute;left:3px;right:3px;bottom:3px;height:3px;background:rgba(0,0,0,.5)}
+.tab .cap i{display:block;height:100%;background:var(--ok)}
+.tab.drop-ok{outline:2px solid var(--accent)}
+.list-wrap{flex:1;min-width:0;display:flex;flex-direction:column;padding:8px 10px 8px 6px}
+.chead{display:flex;align-items:baseline;gap:8px;padding:0 4px 6px;flex-wrap:wrap}
+.chead .nm{font-family:var(--f-head);font-size:16px;letter-spacing:.04em;text-transform:uppercase}
+.chead .wt{font:12px var(--f-data);color:var(--ink-dim);margin-left:auto;white-space:nowrap}
+.chead .red{font:600 11px var(--f-data);color:var(--ok);white-space:nowrap}
+.capbar{height:6px;background:var(--panel-deep);border:1px solid var(--edge);margin:0 4px 6px}
+.capbar i{display:block;height:100%;background:var(--ok)}
+.cols-h{display:grid;grid-template-columns:24px 1fr 76px 46px;gap:6px;padding:3px 6px;font:600 10px var(--f-data);color:var(--ink-dim);letter-spacing:.08em;text-transform:uppercase;border-bottom:1px solid rgba(0,0,0,.4)}
+.list{flex:1;overflow:auto;min-height:0;border:1px solid transparent}
+.list.drop-ok{border-color:var(--accent);background:var(--sel)}
+.row{display:grid;grid-template-columns:24px 1fr 76px 46px;gap:6px;align-items:center;padding:3px 6px;font-size:15px;cursor:grab;border-bottom:1px solid rgba(0,0,0,.18);touch-action:none}
+.row:nth-child(odd){background:var(--row-hi)}
+.row:hover,.row.sel{background:var(--sel)}
+.row .n{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500}
+.row .n small{color:var(--ink-dim);font-weight:400}
+.row .c{font:11px var(--f-data);color:var(--ink-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .w{font:12px var(--f-data);text-align:right}
+.row .cond{display:block;height:2px;background:rgba(0,0,0,.4);margin-top:2px}
+.row .cond i{display:block;height:100%;background:var(--ok)}
+.grid-view{display:flex;flex-wrap:wrap;gap:4px;padding:4px;align-content:flex-start}
+.cell{width:56px;height:56px;background:rgba(0,0,0,.3);border:1px solid rgba(0,0,0,.45);display:grid;place-items:center;position:relative;cursor:grab;touch-action:none}
+.cell:hover{background:var(--sel)}
+.cell b{position:absolute;right:2px;bottom:1px;font:10px var(--f-data);color:var(--ink-dim)}
+.empty-note{padding:18px 10px;color:var(--ink-dim);font-style:italic;font-size:14px;text-align:center}
+.pfoot{display:flex;gap:6px;padding:0 10px 10px 64px;flex-wrap:wrap}
+
+/* drag ghost + menu + toast */
+.ghost{position:fixed;z-index:50;pointer-events:none;background:var(--panel-2);border:1px solid var(--accent);color:var(--ink);font:600 14px var(--f-body);padding:4px 8px;display:flex;gap:6px;align-items:center;box-shadow:0 6px 16px rgba(0,0,0,.5);transform:translate(10px,10px)}
+.menu{position:absolute;z-index:40;min-width:170px;background:var(--panel-deep);border:1px solid var(--edge);box-shadow:0 8px 20px rgba(0,0,0,.6);padding:4px 0}
+.menu button{display:block;width:100%;text-align:left;background:none;border:0;color:var(--ink);font:500 15px var(--f-body);padding:5px 12px;cursor:pointer}
+.menu button:hover,.menu button:focus-visible{background:var(--accent);color:var(--accent-ink);outline:none}
+.menu hr{border:0;border-top:1px solid var(--edge);margin:3px 0}
+.menu .mh{font:600 10px var(--f-data);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-dim);padding:3px 12px 4px}
+.toast{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);z-index:45;background:var(--panel-deep);border:1px solid var(--accent);padding:6px 14px;font:600 14px var(--f-body);color:var(--ink);opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap}
+.toast.on{opacity:1}
+
+/* weapon bench */
+.bench{position:absolute;inset:14px;z-index:30;display:grid;grid-template-columns:1.9fr 1fr;gap:12px}
+.bench .stage{position:relative;overflow:hidden}
+.stage-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 45%,#1f2429,#0b0d10 75%)}
+#gunCanvas{position:absolute;inset:0;width:100%;height:100%;cursor:grab;touch-action:none}
+.sock{position:absolute;transform:translate(-50%,-50%);z-index:3;display:flex;flex-direction:column;align-items:center;gap:2px;pointer-events:auto;cursor:pointer;min-width:96px}
+.sock .dot{width:14px;height:14px;border:2px solid #4dff6e;background:rgba(20,60,30,.6);transform:rotate(45deg)}
+.sock:not(.full) .tag{border-color:rgba(77,255,110,.55)}.sock:not(.full) .tag em{color:#6dff88}
+.sock.full .dot{background:var(--accent);border-color:var(--accent)}
+.sock .tag{background:rgba(0,0,0,.72);border:1px solid rgba(233,224,196,.3);padding:2px 6px;font:600 11px var(--f-data);letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;text-align:center}
+.sock .tag em{display:block;font:500 13px var(--f-body);text-transform:none;letter-spacing:0;color:var(--accent);font-style:normal}
+.sock.fits .dot{animation:pulse .8s ease-in-out infinite alternate;border-color:var(--ok);background:var(--ok)}
+.sock.fits .tag{border-color:var(--ok)}
+.sock.nofit{opacity:.3}
+.sock.drop-ok .tag{background:var(--ok);color:#111}
+@keyframes pulse{to{transform:rotate(45deg) scale(1.35)}}
+@media (prefers-reduced-motion:reduce){.sock.fits .dot{animation:none}}
+.lead{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2}
+.stage-note{position:absolute;left:12px;bottom:10px;font:11px var(--f-data);color:var(--ink-dim);z-index:3}
+.side{display:flex;flex-direction:column;gap:12px;min-height:0}
+.side .panel{flex:none}
+.side .panel.grow{flex:1}
+.stats{padding:6px 12px 10px;display:flex;flex-direction:column;gap:6px}
+.stat{display:grid;grid-template-columns:96px 1fr 58px;gap:8px;align-items:center;font:12px var(--f-data)}
+.stat .sb{height:7px;background:var(--panel-deep);border:1px solid var(--edge);position:relative}
+.stat .sb i{position:absolute;inset:0 auto 0 0;background:var(--ink-dim)}
+.stat .sb s{position:absolute;top:-1px;bottom:-1px;background:var(--ok);text-decoration:none}
+.stat .sb s.neg{background:var(--danger)}
+.stat .v{text-align:right;font-variant-numeric:tabular-nums}
+.stat .v.up{color:var(--ok)}.stat .v.dn{color:var(--danger)}
+.att-list .row{grid-template-columns:24px 1fr 62px}
+.att-list .row .c{text-align:right}
+.att-list .row.dim{opacity:.4}
+.foot-note{font:11px var(--f-data);color:var(--ink-dim);padding:0 12px 10px}
+
+/* notes */
+.notes{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.note{background:#1a1b18;border:1px solid var(--page-line);padding:14px 16px;border-radius:4px;min-width:0}
+.note h3{margin:0 0 6px;font:400 17px "Allerta Stencil",sans-serif;letter-spacing:.04em}
+.note p,.note li{color:#b9b5a6;line-height:1.4;font-size:16px;margin:0}
+.note ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+
+@media (max-width:900px){
+  .game{aspect-ratio:auto;min-height:0}
+  .world{position:fixed}
+  .hud,.bench{position:relative;inset:auto;grid-template-columns:1fr;padding:10px}
+  .gear-body{height:430px;flex:none}
+  .list{max-height:300px}
+  .bench .stage{height:380px}
+  .bench{position:absolute;inset:0;overflow:auto;background:rgba(10,10,10,.92)}
+}
+</style>
+
+<div class="wrap" id="app" data-skin="canvas">
+  <header class="top">
+    <div>
+      <h1>ZomboidCraft Inventory</h1>
+      <p>A working mockup of the agreed layout: your gear on the left, the bags you carry in the middle, and whatever is on the floor or in nearby shelves on the right. The weapon bench opens from the rifle.</p>
+    </div>
+    <div class="skins" role="group" aria-label="Look">
+      <span>Look</span>
+      <button id="skin-canvas" data-skin="canvas" aria-pressed="true">Canvas &amp; stencil</button>
+      <button id="skin-classic" data-skin="classic" aria-pressed="false">Zomboid dark</button>
+      <button id="skin-blocky" data-skin="blocky" aria-pressed="false">Blocky</button>
+    </div>
+  </header>
+  <div class="tips">
+    <span><b>Drag</b> items between bags, the floor and gear slots</span>
+    <span><b>Double-click</b> moves an item to the other side</span>
+    <span><b>Right-click</b> for actions</span>
+    <span><b>Swap bags</b>: try the rucksack on the shelf or the duffel on the floor</span>
+    <span><b>Rifle → Weapon bench</b> to fit attachments</span>
+  </div>
+
+  <div class="game" id="game">
+    <div class="world"></div>
+    <div class="hud" id="hud">
+      <!-- gear -->
+      <section class="panel" aria-label="Gear">
+        <div class="ph"><h2>Survivor</h2><span class="stamp">Day 4</span></div>
+        <div class="gear-body">
+          <canvas id="charCanvas" aria-label="Your character, drag to turn"></canvas>
+          <div class="slots" id="slots"></div>
+        </div>
+        <div class="gear-foot">
+          <div class="meter"><span>LOAD</span><span class="bar"><i id="loadBar"></i></span><span id="loadTxt">0/8</span></div>
+          <div class="moodle" id="moodle"></div>
+        </div>
+      </section>
+      <!-- carried -->
+      <section class="panel" aria-label="Carried bags">
+        <div class="ph"><h2>Carried</h2><button class="tbtn" id="viewBtn">Grid view</button></div>
+        <div class="cols">
+          <div class="tabs" id="ptabs" role="tablist"></div>
+          <div class="list-wrap" id="plist"></div>
+        </div>
+      </section>
+      <!-- loot -->
+      <section class="panel" aria-label="Nearby">
+        <div class="ph"><h2>Nearby</h2><span class="stamp">Gun shop</span></div>
+        <div class="cols">
+          <div class="tabs" id="ltabs" role="tablist"></div>
+          <div class="list-wrap" id="llist"></div>
+        </div>
+        <div class="pfoot"><button class="tbtn" id="lootAll">Loot all</button><button class="tbtn" id="dropAll">Drop all from bag</button></div>
+      </section>
+    </div>
+
+    <div class="bench" id="bench" hidden>
+      <section class="panel stage" aria-label="Weapon bench">
+        <div class="ph"><h2 id="benchTitle">Assault rifle</h2><span class="stamp" id="benchCond">Condition 82%</span><button class="tbtn" id="benchClose">Back to inventory</button></div>
+        <div style="position:relative;flex:1;min-height:0">
+          <div class="stage-bg"></div>
+          <canvas id="gunCanvas" aria-label="The rifle, drag to turn"></canvas>
+          <svg class="lead" id="leads"></svg>
+          <div id="socks"></div>
+          <div class="stage-note">Green shapes are empty sockets. Drag a part onto one to fit it; click a fitted part to take it off. Drag the rifle to turn it.</div>
+        </div>
+      </section>
+      <div class="side">
+        <section class="panel" aria-label="Weapon stats">
+          <div class="ph"><h2>Handling</h2></div>
+          <div class="stats" id="stats"></div>
+          <div class="foot-note">Placeholder numbers. Every value will live in the settings menu.</div>
+        </section>
+        <section class="panel grow" aria-label="Attachments you have">
+          <div class="ph"><h2>Parts on hand</h2></div>
+          <div class="list-wrap" style="padding:6px 10px 10px"><div class="list att-list" id="attList"></div></div>
+        </section>
+      </div>
+    </div>
+
+    <div class="menu" id="menu" hidden role="menu"></div>
+    <div class="toast" id="toast"></div>
+  </div>
+
+  <div class="notes">
+    <div class="note"><h3>How it plays</h3><ul>
+      <li>Capacity is weight, not slot count. Each bag holds a set weight and cuts what its contents weigh on you.</li>
+      <li>Over 8 kg you get Heavy Load: slower, more stamina per swing. Past 12 it gets worse.</li>
+      <li>Bags are real items. Drop one and it lands on the floor with everything inside.</li>
+      <li>Sizes: school backpack 7 kg, hiking pack 18, military rucksack 28 (carries best), fanny pack 2.</li>
+      <li>A duffel holds 24 kg but rides in your other hand, so you can't hold a rifle with both hands until you put it down.</li>
+    </ul></div>
+    <div class="note"><h3>Quick slots</h3><ul>
+      <li>Hands, Back and Belt hold weapons. The hotbar keys swap between them, with a short draw time like Zomboid.</li>
+      <li>Belt takes one-handed weapons only. Back takes long guns and two-handers.</li>
+    </ul></div>
+    <div class="note"><h3>Weapon bench</h3><ul>
+      <li>Sockets: optic, muzzle, under-barrel, magazine and stock. Only parts that fit light up.</li>
+      <li>Only the bare body is solid. Every empty socket shows as a green see-through part with a crosshair, like your reference, and turns solid once something is fitted.</li>
+      <li>An optic removes the iron sights. The parts here are rough shapes; the real models come from the weapons work.</li>
+    </ul></div>
+    <div class="note"><h3>Reused later</h3><p>The Nearby panel is the same piece the shop shelves and the new loot chest screen will use, so everything that opens a container gets this look.</p></div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const RIFLE_MODEL = /*MODEL*/null;
+const RIFLE_TEX = "/*TEX*/";
+
+/* ================= pixel icons ================= */
+const PAL={k:"#17170f",g:"#3c4043",G:"#767c80",w:"#6e4a2a",W:"#9c6b3a",r:"#9e2a1f",R:"#ff4a35",t:"#c9b688",T:"#e6d7ae",o:"#56602f",O:"#7f8a4b",b:"#2f527d",B:"#8fb8dc",y:"#d8b13a",s:"#ece6d2",n:"#5a3c20",c:"#6cc3c8",m:"#c96b26",p:"#b04a6a",e:"#9a9a92",h:"#2a2d1c"};
+const ICONS={
+rifle:["............","............","..k......k..","kgggggggggnn","..kgggggggnn","....kgk.k.nn","....kg....nn","....kk......","............","............","............","............"],
+mag:["............","....kkkk....","....kGGk....","....kggk....","....kggk....","...kggk.....","...kggk.....","..kggk......","..kggk......","..kkkk......","............","............"],
+ammo:["............","............","..kkkkkkkk..","..ktttttTk..","..kyyyyyyk..","..kyyyyyyk..","..ktttttTk..","..kmmmmmmk..","..kkkkkkkk..","............","............","............"],
+bandage:["............","............","...kkkkkk...","..ksssssTk..","..kssrrssk..","..ksrrrrsk..","..kssrrssk..","..ksssssTk..","...kkkkkk...","............","............","............"],
+can:["............","...kkkkkk...","..kGGGGGGk..","..kmmmmmmk..","..kmssssmk..","..kmssssmk..","..kmmmmmmk..","..kGGGGGGk..","...kkkkkk...","............","............","............"],
+bottle:["............",".....kk.....",".....bb.....","....kBBk....","...kBccBk...","...kBccBk...","...kbbbbk...","...kBccBk...","...kBccBk...","....kkkk....","............","............"],
+knife:["............","..........k.",".........ks.","........ksk.",".......ksk..","......ksk...","....kwk.....","...kwk......","..kwk.......","..kk........","............","............"],
+bat:["............","..........kk",".........kWW","........kWWk",".......kWWk.","......kWWk..",".....kWWk...","....kWWk....","...kwk......","..kwk.......","..kk........","............"],
+hammer:["............","....kkkk....","...kGGGGkk..","...kggggk...","....kwk.....","....kwk.....","....kwk.....","....kwk.....","....kwk.....","....kkk.....","............","............"],
+nails:["............","..k..k..k...","..G..G..G...","..G..G..G...","..G..G..G...","..G..G..G...","..e..e..e...","............","............","............","............","............"],
+pack:["............","....kkkk....","...kOOOOk...","..kOooooOk..","..kOooooOk..","..kOOOOOOk..","..kOotToOk..","..kOooooOk..","..kOooooOk..","...kkkkkk...","............","............"],
+rig:["............","..kk....kk..","..kok..kok..","..kookkook..","..koOooOok..","..koOooOok..","..kooooook..","..kOOkkOOk..","..kkk..kkk..","............","............","............"],
+fanny:["............","............","............","kkkkkkkkkkkk","..kOOOOOOk..","..kOooooOk..","..kOooooOk..","...kkkkkk...","............","............","............","............"],
+reddot:["............","............","...kkkkkk...","..kg....gk..","..kg.R..gk..","..kg....gk..","..kgggggg k.","..kkkkkkkk..","............","............","............","............"],
+scope:["............","............","..........kk",".kk.....kkgk","kggkkkkkgggk","kgggggggggGk",".kk.....kkgk","...kk..kk.kk","............","............","............","............"],
+suppressor:["............","............","............","kkkkkkkkkk..","kGgggggggGk.","kgggggggggkk","kGgggggggGk.","kkkkkkkkkk..","............","............","............","............"],
+oilfilter:["............","............","...kkkkkk...","..kbbbbbbk..","..kbsBBsbk..","..kbBssBbk..","..kbbbbbbk..","..kbbbbbbk..","...kGGGGk...","....kggk....","............","............"],
+comp:["............","............","............","..kkkkkk....","..kgkgkgkk..","..kggggggk..","..kgkgkgkk..","..kkkkkk....","............","............","............","............"],
+grip:["............","............","..kkkkkkk...","..kgggggk...","....kgk.....","....kgk.....","....kgk.....","....kgk.....","....kGk.....","....kkk.....","............","............"],
+light:["............","............","............","kkkkkkkkk...","kGgggggggk..","kgggggggkyk.","kGgggggggk..","kkkkkkkkk...","............","............","............","............"],
+drum:["............","....kk......","....kgk.....","...kkkkkk...","..kgggggGk..","..kgGGGgGk..","..kgGkGgGk..","..kgGGGgGk..","..kgggggGk..","...kkkkkk...","............","............"],
+school:["............","....kkkk....","...kbbbbk...","..kbbbbbbk..","..kbBBBBbk..","..kbbbbbbk..","..kbyyyybk..","..kbbbbbbk..","...kkkkkk...","............","............","............"],
+ruck:["...kkkkkk...","..kOOOOOOk..","..kOooooOk..",".kOoooooooOk",".kOoTTTTooOk",".kOoooooooOk",".kOOkkkkOOOk",".kOokOOkoOOk",".kOOOOOOOOOk","..kttttttk..","..kkkkkkkk..","............"],
+duffel:["............","....kkkk....","...k....k...","..kkkkkkkk..",".kbbbbbbbbk.","kbbBbbbbBbbk","kbbbbbbbbbbk","kbbBbbbbBbbk",".kbbbbbbbbk.","..kkkkkkkk..","............","............"],
+tarp:["............","............","..kkkkkkkk..",".kbbBbbBbbk.",".kbBbbBbbBk.",".kbbBbbBbbk.","..kkkkkkkk..","............","............","............","............","............"],
+rope:["............","....kkkk....","...ktTTtk...","..ktk..ktk..","..kTk..kTk..","..ktk..ktk..","...ktTTtk...","....kkkk....","............","............","............","............"],
+stock:["............","............","..kkkkk.....","..kgggggkkkk","..kggggggggk","..kgggggkkkk","..kgggk.....","..kkkkk.....","............","............","............","............"],
+pad:["............","............","....kkkk....","....khhk....","....khhk....","....khhk....","....khhk....","....khhk....","....kkkk....","............","............","............"],
+pills:["............","....kkkk....","....kssk....","...kkkkkk...","...kbbbbk...","...kbssbk...","...kbssbk...","...kbbbbk...","...kkkkkk...","............","............","............"],
+chips:["............","...kkkkkk...","..kyyyyyyk..","..kymrrmyk..","..kyrRRryk..","..kymrrmyk..","..kyyyyyyk..","..kyyyyyyk..","...kkkkkk...","............","............","............"],
+crowbar:["............","........kkk.","........kRk.",".......kRk..","......kRk...",".....kRk....","....kRk.....","...kRk......","..kRk.......","..kkk.......","............","............"],
+shirt:["............","..kk....kk..",".kpkkkkkkpk.","kpppppppppk.","kkpppppppkk.","..kpppppk...","..kpppppk...","..kpppppk...","..kkkkkkk...","............","............","............"],
+jeans:["............","...kkkkkk...","...kbbbbk...","...kbbbbk...","...kbbkbbk..","...kbbkbbk..","...kbbkbbk..","...kbbkbbk..","...kkkkkkk..","............","............","............"],
+boots:["............","............","...kkk......","...knk......","...knk......","...knk......","...knnnk....","...knnnnk...","...kkkkkk...","............","............","............"],
+cap:["............","............","............","....kkkk....","...kooooK...","..koooooook.","..kkkkkkkkkk","............","............","............","............","............"],
+gloves:["............","...k.k.k....","..kn.n.nk...","..knnnnnk...","..knnnnnkk..","..knnnnnnk..","..knnnnk....","...kkkk.....","............","............","............","............"],
+matches:["............","............","..kkkkkkkk..","..krrrrrrk..","..ktttttTk..","..ktttttTk..","..kkkkkkkk..","............","............","............","............","............"],
+};
+const iconCache={};
+function iconURL(name){
+  if(iconCache[name])return iconCache[name];
+  const g=ICONS[name]||ICONS.can, c=document.createElement("canvas");c.width=12;c.height=12;const x=c.getContext("2d");
+  g.forEach((row,y)=>[...row].forEach((ch,i)=>{const col=PAL[ch]||(ch==="K"?PAL.k:null);if(col){x.fillStyle=col;x.fillRect(i,y,1,1);}}));
+  return iconCache[name]=c.toDataURL();
+}
+function icon(name,size=20){const i=document.createElement("img");i.src=iconURL(name);i.width=size;i.height=size;i.alt="";i.style.imageRendering="pixelated";i.style.flex="none";return i;}
+
+/* ================= data ================= */
+const BODY_MAX=8;
+const containers={
+  pockets:{name:"Pockets",icon:"jeans",cap:2,red:0,side:"p",fixed:true},
+  rig:{name:"Plate carrier",icon:"rig",cap:5,red:.15,side:"p",item:"i_rig"},
+  pack:{name:"Hiking backpack",icon:"pack",cap:18,red:.35,side:"p",item:"i_pack"},
+  school:{name:"School backpack",icon:"school",cap:7,red:.15,side:"l",item:"i_school"},
+  ruck:{name:"Military rucksack",icon:"ruck",cap:28,red:.45,side:"l",item:"i_ruck"},
+  duffel:{name:"Duffel bag",icon:"duffel",cap:24,red:.15,side:"l",item:"i_duffel"},
+  fanny:{name:"Fanny pack",icon:"fanny",cap:2,red:.1,side:"l",item:"i_fanny"},
+  floor:{name:"Floor",icon:"boots",cap:999,red:0,side:"l",fixed:true},
+  shelf:{name:"Gun shop shelf",icon:"ammo",cap:40,red:0,side:"l",fixed:true},
+  counter:{name:"Counter",icon:"can",cap:20,red:0,side:"l",fixed:true},
+};
+let uid=0;
+const I=(name,cat,w,ic,where,extra={})=>({id:extra.id||("i"+(uid++)),name,cat,w,icon:ic,where,cond:extra.cond??1,...extra});
+const items=[
+  I("Assault rifle","Firearm",3.0,"rifle","slot:back",{id:"i_rifle",gun:true,twoH:true,cond:.82}),
+  I("Baseball bat","Blunt",1.1,"bat","slot:hand",{weapon:true,twoH:false,cond:.64}),
+  I("Kitchen knife","Blade",.3,"knife","slot:belt",{weapon:true,cond:.9}),
+  I("Hiking backpack","Backpack",1.2,"pack","slot:pack",{id:"i_pack",bag:"pack",bagKind:"back",size:1}),
+  I("School backpack","Backpack",.5,"school","floor",{id:"i_school",bag:"school",bagKind:"back",size:.75}),
+  I("Military rucksack","Backpack",2.2,"ruck","shelf",{id:"i_ruck",bag:"ruck",bagKind:"back",size:1.3}),
+  I("Duffel bag","Hand bag",1,"duffel","floor",{id:"i_duffel",bag:"duffel",bagKind:"hand"}),
+  I("Tarp","Material",1.4,"tarp","duffel"),
+  I("Rope","Material",.8,"rope","duffel"),
+  I("Canned beans","Food",.4,"can","duffel"),
+  I("Canned beans","Food",.4,"can","duffel"),
+  I("Canned beans","Food",.4,"can","duffel"),
+  I("Sledgehammer","Heavy blunt",4.5,"hammer","duffel",{weapon:true,twoH:true}),
+  I("Plate carrier","Vest",2.1,"rig","slot:rig",{id:"i_rig",bag:"rig"}),
+  I("Fanny pack","Bag",.4,"fanny","floor",{id:"i_fanny",bag:"fanny"}),
+  I("Flannel shirt","Clothing",.4,"shirt","slot:torso"),
+  I("Work jeans","Clothing",.6,"jeans","slot:legs"),
+  I("Combat boots","Clothing",1,"boots","slot:feet"),
+  I("Leather gloves","Clothing",.2,"gloves","slot:hands"),
+  I("Bandage","Medical",.1,"bandage","pockets"),
+  I("Matches","Tool",.05,"matches","pockets"),
+  I("Painkillers","Medical",.1,"pills","pockets"),
+  I("30-rd magazine","Magazine",.5,"mag","rig",{part:"magazine",fits:"rifle",cap:30}),
+  I("30-rd magazine","Magazine",.5,"mag","rig",{part:"magazine",fits:"rifle",cap:30}),
+  I("5.56 ammo box","Ammo",.6,"ammo","pack"),
+  I("Canned beans","Food",.4,"can","pack"),
+  I("Canned beans","Food",.4,"can","pack"),
+  I("Water bottle","Drink",1,"bottle","pack"),
+  I("Hammer","Tool",.7,"hammer","pack",{weapon:true}),
+  I("Nails (40)","Material",.4,"nails","pack"),
+  I("Red dot sight","Attachment",.25,"reddot","pack",{part:"optic",fits:"rifle"}),
+  I("Oil filter suppressor","Attachment",.35,"oilfilter","pack",{part:"muzzle",fits:"rifle",cond:.5}),
+  I("Weapon light","Attachment",.2,"light","rig",{part:"under",fits:"rifle"}),
+  I("Crowbar","Blunt",1.5,"crowbar","floor",{weapon:true,cond:.7}),
+  I("Chips","Food",.1,"chips","floor"),
+  I("4x scope","Attachment",.45,"scope","shelf",{part:"optic",fits:"rifle"}),
+  I("Suppressor","Attachment",.5,"suppressor","shelf",{part:"muzzle",fits:"rifle"}),
+  I("Compensator","Attachment",.15,"comp","shelf",{part:"muzzle",fits:"rifle"}),
+  I("Vertical grip","Attachment",.15,"grip","shelf",{part:"under",fits:"rifle"}),
+  I("50-rd drum","Magazine",1.1,"drum","shelf",{part:"magazine",fits:"rifle",cap:50}),
+  I("Padded stock","Attachment",.75,"pad","shelf",{part:"stock",fits:"rifle"}),
+  I("5.56 ammo box","Ammo",.6,"ammo","shelf"),
+  I("5.56 ammo box","Ammo",.6,"ammo","shelf"),
+  I("Water bottle","Drink",1,"bottle","counter"),
+  I("Chips","Food",.1,"chips","counter"),
+];
+// the rifle's fitted parts
+const gun={optic:null,muzzle:null,under:null,magazine:"i_mag0",stock:"i_stock0"};
+items.push(I("Standard stock","Attachment",.6,"stock","gun",{id:"i_stock0",part:"stock",fits:"rifle"}));
+items.push(I("30-rd magazine","Magazine",.5,"mag","gun",{id:"i_mag0",part:"magazine",fits:"rifle",cap:30}));
+
+const SLOTS=[
+  {k:"head",label:"Head",accept:it=>it.cat==="Hat"},
+  {k:"rig",label:"Vest",accept:it=>it.bag==="rig"},
+  {k:"torso",label:"Torso",accept:it=>it.cat==="Clothing"&&it.icon==="shirt"},
+  {k:"pack",label:"Back · bag",accept:it=>it.bagKind==="back"},
+  {k:"hands",label:"Hands",accept:it=>it.icon==="gloves"},
+  {k:"waist",label:"Waist",accept:it=>it.bag==="fanny"},
+  {k:"legs",label:"Legs",accept:it=>it.icon==="jeans"},
+  {k:"hand",label:"In hand",accept:it=>it.weapon||it.gun,quick:true},
+  {k:"feet",label:"Feet",accept:it=>it.icon==="boots"},
+  {k:"back",label:"Back · weapon",accept:it=>it.gun||it.twoH||it.cat==="Blunt",quick:true},
+  {k:"belt",label:"Belt",accept:it=>(it.weapon&&!it.twoH&&it.w<1.2),quick:true},
+  {k:"off",label:"Other hand",accept:it=>it.bagKind==="hand"||(it.weapon&&!it.twoH),quick:true},
+];
+const byId=id=>items.find(i=>i.id===id);
+const inC=c=>items.filter(i=>i.where===c);
+function contentWeight(c){return inC(c).reduce((s,i)=>s+itemWeight(i),0);}
+function itemWeight(it){let w=it.w;if(it.bag)w+=contentWeight(it.bag);if(it.gun)Object.values(gun).forEach(id=>{if(id)w+=byId(id).w;});return w;}
+function carriedOnBody(){
+  let t=0;
+  items.forEach(it=>{
+    if(it.where.startsWith("slot:")){
+      const base=it.w+(it.gun?Object.values(gun).reduce((s,id)=>s+(id?byId(id).w:0),0):0);
+      t+= (it.cat==="Clothing"?base*.3:base);
+      if(it.bag){t+=contentWeight(it.bag)*(1-containers[it.bag].red);}
+    }
+  });
+  t+=contentWeight("pockets");
+  return t;
+}
+function sideOf(cid){const c=containers[cid];if(c.item){const it=byId(c.item);return it.where.startsWith("slot:")?"p":"l";}return c.side;}
+
+/* ================= state + render ================= */
+const state={ptab:"pack",ltab:"shelf",view:"list"};
+const $=s=>document.querySelector(s);
+function fmt(w){return w.toFixed(w<1?2:1);}
+function render(){renderSlots();renderTabs("p");renderTabs("l");renderList("p");renderList("l");renderLoad();if(!$("#bench").hidden)renderBench();updateCharacter();}
+function renderSlots(){
+  const el=$("#slots");el.innerHTML="";
+  SLOTS.forEach((s,i)=>{
+    const d=document.createElement("div");
+    if(s.spacer){d.style.visibility="hidden";el.appendChild(d);return;}
+    const it=items.find(x=>x.where==="slot:"+s.k);
+    d.className="slot"+(i%2?" r":"")+(it?"":" empty")+(s.quick?" quick":"");
+    d.dataset.drop="slot:"+s.k;
+    const l=document.createElement("span");l.className="lbl";l.textContent=s.label;
+    const v=document.createElement("span");v.className="it";
+    if(it){v.appendChild(icon(it.icon,18));const t=document.createElement("span");t.textContent=it.name;v.appendChild(t);d.dataset.item=it.id;d.title=it.name+" · right-click for actions";}
+    else v.textContent="empty";
+    d.append(l,v);el.appendChild(d);
+  });
+}
+function containersOn(side){return Object.keys(containers).filter(c=>sideOf(c)===side);}
+function renderTabs(side){
+  const el=$(side==="p"?"#ptabs":"#ltabs");el.innerHTML="";
+  const list=containersOn(side);
+  const key=side==="p"?"ptab":"ltab";
+  if(!list.includes(state[key]))state[key]=list[0];
+  list.forEach(c=>{
+    const C=containers[c],b=document.createElement("button");
+    b.className="tab";b.setAttribute("role","tab");b.setAttribute("aria-selected",state[key]===c);b.title=C.name;b.dataset.drop="c:"+c;b.id="tab-"+c;
+    b.appendChild(icon(C.icon,28));
+    if(C.cap<999){const cap=document.createElement("span");cap.className="cap";const f=document.createElement("i");const p=Math.min(1,contentWeight(c)/C.cap);f.style.width=(p*100)+"%";f.style.background=p>.9?"var(--danger)":p>.7?"var(--accent)":"var(--ok)";cap.appendChild(f);b.appendChild(cap);}
+    b.onclick=()=>{state[key]=c;render();};
+    el.appendChild(b);
+  });
+}
+function renderList(side){
+  const key=side==="p"?"ptab":"ltab",c=state[key],C=containers[c],el=$(side==="p"?"#plist":"#llist");
+  el.innerHTML="";
+  const h=document.createElement("div");h.className="chead";
+  const nm=document.createElement("span");nm.className="nm";nm.textContent=C.name;h.appendChild(nm);
+  if(C.red){const r=document.createElement("span");r.className="red";r.textContent="−"+Math.round(C.red*100)+"% weight";h.appendChild(r);}
+  const cw=contentWeight(c);
+  const wt=document.createElement("span");wt.className="wt";wt.textContent=C.cap<999?`${fmt(cw)} / ${C.cap} kg`:`${fmt(cw)} kg`;h.appendChild(wt);
+  el.appendChild(h);
+  if(C.cap<999){const b=document.createElement("div");b.className="capbar";const f=document.createElement("i");const p=Math.min(1,cw/C.cap);f.style.width=p*100+"%";f.style.background=p>.9?"var(--danger)":p>.7?"var(--accent)":"var(--ok)";b.appendChild(f);el.appendChild(b);}
+  const list=document.createElement("div");list.className="list";list.dataset.drop="c:"+c;
+  const its=inC(c);
+  if(state.view==="grid"&&side==="p"){
+    const g=document.createElement("div");g.className="grid-view";
+    its.forEach(it=>{const d=document.createElement("div");d.className="cell";d.dataset.item=it.id;d.title=`${it.name} · ${fmt(it.w)} kg`;d.appendChild(icon(it.icon,36));const b=document.createElement("b");b.textContent=fmt(itemWeight(it));d.appendChild(b);g.appendChild(d);});
+    list.appendChild(g);
+  }else{
+    const hd=document.createElement("div");hd.className="cols-h";hd.innerHTML="<span></span><span>Item</span><span>Type</span><span style='text-align:right'>kg</span>";el.appendChild(hd);
+    // stack identical items like Zomboid
+    const groups=[];its.forEach(it=>{const g=groups.find(g=>g.k===it.name+it.cat&&!it.bag&&!it.gun);if(g)g.items.push(it);else groups.push({k:it.name+it.cat,items:[it]});});
+    groups.forEach(g=>{
+      const it=g.items[0],r=document.createElement("div");r.className="row";r.dataset.item=it.id;
+      r.appendChild(icon(it.icon,20));
+      const n=document.createElement("span");n.className="n";n.textContent=it.name;
+      if(g.items.length>1){const s=document.createElement("small");s.textContent=" ×"+g.items.length;n.appendChild(s);}
+      if(it.bag){const s=document.createElement("small");s.textContent=` (${inC(it.bag).length} inside)`;n.appendChild(s);}
+      if(it.cond<1){const cb=document.createElement("span");cb.className="cond";const ci=document.createElement("i");ci.style.width=it.cond*100+"%";ci.style.background=it.cond<.55?"var(--accent)":"var(--ok)";cb.appendChild(ci);n.appendChild(cb);}
+      const cc=document.createElement("span");cc.className="c";cc.textContent=it.cat;
+      const w=document.createElement("span");w.className="w";w.textContent=fmt(g.items.reduce((s,i)=>s+itemWeight(i),0));
+      r.append(n,cc,w);list.appendChild(r);
+    });
+  }
+  if(!its.length){const e=document.createElement("div");e.className="empty-note";e.textContent="Nothing here. Drag items in.";list.appendChild(e);}
+  el.appendChild(list);
+}
+function renderLoad(){
+  const t=carriedOnBody(),p=t/BODY_MAX;
+  $("#loadTxt").textContent=`${fmt(t)} / ${BODY_MAX} kg`;
+  const b=$("#loadBar");b.style.width=Math.min(100,p*100)+"%";b.className=p>1.5?"bad":p>1?"warn":"";
+  $("#moodle").textContent=p>1.5?"HEAVY LOAD ×2: slow, tires fast":p>1?"HEAVY LOAD: slower, more stamina per swing":"";
+}
+
+/* ================= moving items ================= */
+function toast(msg){const t=$("#toast");t.textContent=msg;t.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove("on"),1800);}
+function canPut(it,target){
+  if(target.startsWith("slot:")){const s=SLOTS.find(s=>"slot:"+s.k===target);if(!s||!s.accept(it))return"Doesn't go there";
+    const off=items.find(x=>x.where==="slot:off"),hand=items.find(x=>x.where==="slot:hand");
+    if(target==="slot:hand"&&it.twoH&&off&&off.bagKind==="hand")return`Put the ${off.name.toLowerCase()} down first: the ${it.name.toLowerCase()} needs both hands`;
+    if(target==="slot:off"&&hand&&hand.twoH&&hand!==it)return`Both hands are on the ${hand.name.toLowerCase()}`;if(items.some(x=>x.where===target&&x!==it))return"swap";return true;}
+  const c=target.slice(2),C=containers[c];
+  if(it.bag===c)return"A bag can't go inside itself";
+  if(it.bag&&containers[c].item)return"Bags can't go in bags";
+  if(C.cap<999&&contentWeight(c)+itemWeight(it)>C.cap+1e-6)return`${C.name} is full`;
+  return true;
+}
+function move(it,target){
+  const ok=canPut(it,target);
+  if(ok!==true&&ok!=="swap"){toast(ok);return false;}
+  const from=it.where;
+  if(ok==="swap"){const other=items.find(x=>x.where===target);const back=other.bag?"floor":from.startsWith("slot:")?from:(sideOf("pack")==="p"?"pack":"floor");other.where=back;}
+  // detach from the gun if it was fitted
+  Object.keys(gun).forEach(k=>{if(gun[k]===it.id)gun[k]=null;});
+  it.where=target.startsWith("slot:")?target:target.slice(2);
+  if(it.bag&&!target.startsWith("slot:"))toast(`${it.name} dropped with ${inC(it.bag).length} items inside`);
+  render();return true;
+}
+function otherSide(it){
+  const c=it.where;
+  if(c.startsWith("slot:"))return"c:"+(sideOf("pack")==="p"?"pack":"pockets");
+  if(sideOf(c)==="p")return"c:"+state.ltab;
+  return"c:"+state.ptab;
+}
+
+/* ================= drag (pointer based so it works on touch too) ================= */
+let drag=null;
+function dropTargetAt(x,y){let el=document.elementFromPoint(x,y);while(el&&!el.dataset?.drop)el=el.parentElement;return el;}
+document.addEventListener("pointerdown",e=>{
+  if(e.button!==0)return;
+  const src=e.target.closest("[data-item]");if(!src||e.target.closest(".menu"))return;
+  drag={id:src.dataset.item,x:e.clientX,y:e.clientY,started:false,src};
+});
+document.addEventListener("pointermove",e=>{
+  if(!drag)return;
+  if(!drag.started){if(Math.hypot(e.clientX-drag.x,e.clientY-drag.y)<6)return;drag.started=true;
+    const it=byId(drag.id);const g=document.createElement("div");g.className="ghost";g.appendChild(icon(it.icon,20));g.append(it.name);document.body.appendChild(g);drag.ghost=g;
+    if(it.part)highlightSockets(it);}
+  drag.ghost.style.left=e.clientX+"px";drag.ghost.style.top=e.clientY+"px";
+  document.querySelectorAll(".drop-ok").forEach(n=>n.classList.remove("drop-ok"));
+  const t=dropTargetAt(e.clientX,e.clientY);if(t)t.classList.add("drop-ok");
+});
+document.addEventListener("pointerup",e=>{
+  if(!drag)return;const d=drag;drag=null;
+  document.querySelectorAll(".drop-ok").forEach(n=>n.classList.remove("drop-ok"));
+  clearSocketHighlight();
+  if(!d.started)return;
+  d.ghost.remove();
+  const t=dropTargetAt(e.clientX,e.clientY);if(!t)return;
+  const it=byId(d.id),tgt=t.dataset.drop;
+  if(tgt.startsWith("sock:"))fitPart(it,tgt.slice(5));
+  else if(it.where!==tgt.replace(/^c:/,""))move(it,tgt);
+});
+document.addEventListener("dblclick",e=>{const src=e.target.closest("[data-item]");if(!src||src.closest("#attList"))return;const it=byId(src.dataset.item);move(it,otherSide(it));});
+
+/* ================= context menu ================= */
+const menu=$("#menu");
+document.addEventListener("contextmenu",e=>{
+  const src=e.target.closest("[data-item]");if(!src||!$("#game").contains(src))return;
+  e.preventDefault();const it=byId(src.dataset.item);
+  const acts=[];
+  if(it.gun){acts.push(["Open weapon bench",()=>openBench()]);acts.push(["Unload magazine",()=>{if(gun.magazine){const m=byId(gun.magazine);gun.magazine=null;m.where=sideOf("rig")==="p"?"rig":"pockets";toast("Magazine out");render();}else toast("No magazine in");}]);}
+  if(it.weapon||it.gun){acts.push(["Equip in hands",()=>move(it,"slot:hand")]);if(!it.where.startsWith("slot:back"))acts.push(["Put on back",()=>move(it,"slot:back")]);}
+  if(it.cat==="Food"||it.cat==="Drink")acts.push([it.cat==="Food"?"Eat":"Drink",()=>{items.splice(items.indexOf(it),1);toast(`${it.name}: done`);render();}]);
+  if(it.cat==="Medical")acts.push(["Apply",()=>{items.splice(items.indexOf(it),1);toast("Bandaged");render();}]);
+  if(it.bag)acts.push(["Open",()=>{const s=sideOf(it.bag)==="p"?"ptab":"ltab";state[s]=it.bag;render();}]);
+  if(it.part)acts.push(["Fit to rifle",()=>fitPart(it,it.part)]);
+  const sideNow=it.where.startsWith("slot:")?"p":sideOf(it.where);
+  acts.push(["—"]);
+  if(sideNow==="p")acts.push(["Drop",()=>move(it,"c:floor")]);else acts.push(["Grab",()=>move(it,otherSide(it))]);
+  acts.push(["Inspect",()=>toast(`${it.name} · ${fmt(itemWeight(it))} kg${it.cond<1?" · condition "+Math.round(it.cond*100)+"%":""}`)]);
+  menu.innerHTML="";const mh=document.createElement("div");mh.className="mh";mh.textContent=it.name;menu.appendChild(mh);
+  acts.forEach(([l,f])=>{if(l==="—"){menu.appendChild(document.createElement("hr"));return;}const b=document.createElement("button");b.setAttribute("role","menuitem");b.textContent=l;b.onclick=()=>{menu.hidden=true;f();};menu.appendChild(b);});
+  const g=$("#game").getBoundingClientRect();menu.hidden=false;
+  menu.style.left=Math.min(e.clientX-g.left,g.width-180)+"px";menu.style.top=Math.min(e.clientY-g.top,g.height-menu.offsetHeight-6)+"px";
+  menu.querySelector("button")?.focus();
+});
+document.addEventListener("pointerdown",e=>{if(!e.target.closest(".menu"))menu.hidden=true;},true);
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){menu.hidden=true;if(!$("#bench").hidden)closeBench();}});
+
+/* ================= buttons ================= */
+$("#viewBtn").onclick=()=>{state.view=state.view==="list"?"grid":"list";$("#viewBtn").textContent=state.view==="list"?"Grid view":"List view";render();};
+$("#lootAll").onclick=()=>{const c=state.ltab;let n=0;inC(c).slice().forEach(it=>{for(const t of["c:"+state.ptab,...containersOn("p").map(c=>"c:"+c)]){if(sideOf(t.slice(2))==="p"&&canPut(it,t)===true){it.where=t.slice(2);n++;break;}}});toast(n?`Looted ${n} items`:"No room");render();};
+$("#dropAll").onclick=()=>{const c=state.ptab;inC(c).slice().forEach(it=>it.where="floor");state.ltab="floor";toast("Dropped everything from "+containers[c].name);render();};
+document.querySelectorAll(".skins button").forEach(b=>b.onclick=()=>{$("#app").dataset.skin=b.dataset.skin;document.querySelectorAll(".skins button").forEach(x=>x.setAttribute("aria-pressed",x===b));try{localStorage.setItem("zc-skin",b.dataset.skin)}catch(e){}});
+try{const s=localStorage.getItem("zc-skin");if(s)document.querySelector(`.skins button[data-skin="${s}"]`)?.click();}catch(e){}
+
+/* ================= three.js helpers ================= */
+function noiseTex(hex,amt=18,size=16,seed=1){
+  const c=document.createElement("canvas");c.width=c.height=size;const x=c.getContext("2d");
+  const col=new THREE.Color(hex);let s=seed*9301+49297;const rnd=()=>((s=(s*9301+49297)%233280)/233280);
+  for(let i=0;i<size;i++)for(let j=0;j<size;j++){const d=(rnd()-.5)*amt/255;x.fillStyle=`rgb(${Math.max(0,Math.min(255,(col.r+d)*255))|0},${Math.max(0,Math.min(255,(col.g+d)*255))|0},${Math.max(0,Math.min(255,(col.b+d)*255))|0})`;x.fillRect(i,j,1,1);}
+  const t=new THREE.CanvasTexture(c);t.magFilter=THREE.NearestFilter;t.minFilter=THREE.NearestFilter;return t;
+}
+const matCache={};
+function mat(hex,amt=16,extra={}){const k=hex+amt+JSON.stringify(extra);return matCache[k]||(matCache[k]=new THREE.MeshLambertMaterial({map:noiseTex(hex,amt,16,hex.length+amt),...extra}));}
+function box(from,to,m){const g=new THREE.BoxGeometry(to[0]-from[0],to[1]-from[1],to[2]-from[2]);const mesh=new THREE.Mesh(g,m);mesh.position.set((from[0]+to[0])/2,(from[1]+to[1])/2,(from[2]+to[2])/2);return mesh;}
+function dragRotate(canvas,obj,opts){
+  let down=null;
+  canvas.addEventListener("pointerdown",e=>{down={x:e.clientX,y:e.clientY,ry:obj.rotation.y,rx:obj.rotation.x};canvas.setPointerCapture(e.pointerId);canvas.style.cursor="grabbing";opts.idle=false;});
+  canvas.addEventListener("pointermove",e=>{if(!down)return;obj.rotation.y=down.ry+(e.clientX-down.x)*.012;if(opts.tilt)obj.rotation.x=Math.max(-.6,Math.min(.6,down.rx+(e.clientY-down.y)*.008));});
+  const up=()=>{down=null;canvas.style.cursor="grab";clearTimeout(opts.t);opts.t=setTimeout(()=>opts.idle=true,2500);};
+  canvas.addEventListener("pointerup",up);canvas.addEventListener("pointercancel",up);
+}
+function fit(renderer,camera,canvas){const w=canvas.clientWidth,h=canvas.clientHeight;if(!w||!h)return;if(canvas.width!==Math.floor(w*renderer.getPixelRatio())||canvas.height!==Math.floor(h*renderer.getPixelRatio())){renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}}
+function lights(scene){scene.add(new THREE.HemisphereLight(0xd8dcd0,0x2a2620,.75));const d=new THREE.DirectionalLight(0xfff2dc,.75);d.position.set(5,9,7);scene.add(d);const r=new THREE.DirectionalLight(0x9fb8d0,.35);r.position.set(-6,3,-5);scene.add(r);}
+
+/* ================= character ================= */
+const cv=$("#charCanvas");
+const cr=new THREE.WebGLRenderer({canvas:cv,antialias:false,alpha:true});cr.setPixelRatio(Math.min(2,devicePixelRatio));
+const cs=new THREE.Scene();lights(cs);
+const ccam=new THREE.PerspectiveCamera(30,1,.1,200);ccam.position.set(0,18,92);ccam.lookAt(0,16,0);
+const hero=new THREE.Group();cs.add(hero);
+const part={};
+function buildHero(){
+  const skin=mat("#c79a78",14),shirt=mat("#7d3346",22),plaid=mat("#4d2230",22),jeans=mat("#344a68",20),boot=mat("#3b2a1b",14),hair=mat("#3a2a1c",18),glove=mat("#4b3320",14);
+  // legs
+  hero.add(box([-4,0,-2],[0,3,2],boot),box([0,0,-2],[4,3,2],boot));
+  hero.add(box([-4,3,-2],[0,12,2],jeans),box([0,3,-2],[4,12,2],jeans));
+  // torso
+  hero.add(box([-4,12,-2],[4,24,2],shirt));hero.add(box([-4.05,15,-2.05],[4.05,16,2.05],plaid));hero.add(box([-4.05,19,-2.05],[4.05,20,2.05],plaid));
+  // arms, slightly out
+  const la=new THREE.Group(),ra=new THREE.Group();la.add(box([-2,-12,-2],[2,0,2],shirt),box([-2.05,-12,-2.05],[2.05,-9,2.05],glove));ra.add(box([-2,-12,-2],[2,0,2],shirt),box([-2.05,-12,-2.05],[2.05,-9,2.05],glove));
+  la.position.set(-6,24,0);ra.position.set(6,24,0);la.rotation.z=-.08;ra.rotation.z=.08;hero.add(la,ra);part.ra=ra;
+  // head
+  hero.add(box([-4,24,-4],[4,32,4],skin));hero.add(box([-4.1,29.5,-4.1],[4.1,32.2,4.1],hair));hero.add(box([-4.1,26,-4.1],[4.1,29.5,-3.2],hair));
+  const eye=mat("#1d1d1d",0);hero.add(box([-2.6,27.6,4],[-1.2,28.6,4.05],eye),box([1.2,27.6,4],[2.6,28.6,4.05],eye));
+  // gear groups toggled by inventory state
+  const rig=new THREE.Group(),rigM=mat("#545c33",26),pouch=mat("#666f40",24),strap=mat("#2e3320",10);
+  rig.add(box([-4.4,14,-2.6],[4.4,22.5,2.6],rigM));rig.add(box([-4.5,22.5,-2.5],[-2.2,24.2,2.5],strap),box([2.2,22.5,-2.5],[4.5,24.2,2.5],strap));
+  [-3,-0.9,1.2].forEach(x=>rig.add(box([x,14.4,2.6],[x+1.8,18.2,3.6],pouch)));
+  rig.add(box([-4,19,2.6],[4,21.5,3.2],pouch));part.rig=rig;hero.add(rig);
+  const pack=new THREE.Group(),pk=mat("#4a5531",24),pk2=mat("#3a4326",20),tan=mat("#9b8a5f",18);
+  pack.add(box([-4.5,11,-8.6],[4.5,24.5,-2.2],pk));pack.add(box([-4.7,24.5,-8.4],[4.7,26,-2.4],pk2));
+  pack.add(box([-3.5,12,-9.8],[3.5,18,-8.6],pk2));pack.add(box([-5.6,13,-7.5],[-4.5,21,-3.5],pk2),box([4.5,13,-7.5],[5.6,21,-3.5],pk2));
+  pack.add(box([-4.6,10,-8],[4.6,11.6,-4.8],tan));// bedroll
+  pack.add(box([-4.2,15,-2.25],[-3,24,-2.1],strap),box([3,15,-2.25],[4.2,24,-2.1],strap));
+  part.pack=pack;hero.add(pack);
+  const fanny=new THREE.Group();fanny.add(box([-3,11,2],[3,13.4,3.6],mat("#2f4d6e",20)),box([-4.2,11.8,-2.2],[4.2,12.6,2.2],mat("#1a1a1a",4)));part.fanny=fanny;hero.add(fanny);
+  // rifle on back (simple silhouette), bat in hand, knife on belt
+  const rifleBack=new THREE.Group(),gm=mat("#2f3336",16);
+  rifleBack.add(box([-0.6,-12,-0.6],[0.6,14,0.6],gm),box([-0.9,-15,-1.2],[0.9,-9,1.2],mat("#3a3b30",16)),box([-0.8,2,-0.5],[0.8,4.8,0.5],gm),box([-0.7,-2,0.6],[0.7,1,2.6],gm));
+  rifleBack.position.set(0,18,-3.1);rifleBack.rotation.z=.75;part.rifleBack=rifleBack;hero.add(rifleBack);
+  const handW=new THREE.Group();part.handW=handW;ra.add(handW);part.la=la;
+  const duf=new THREE.Group(),dm=mat("#2c4a70",22);duf.add(box([-1.6,-17.5,-4.5],[1.6,-13.5,4.5],dm),box([-1.7,-17.6,-3.5],[1.7,-13.4,-3.2],mat("#1a1a1a",4)),box([-1.7,-17.6,3.2],[1.7,-13.4,3.5],mat("#1a1a1a",4)),box([-.3,-13.5,-2],[.3,-11,2],mat("#1a1a1a",4)));part.duffel=duf;la.add(duf);
+  const belt=new THREE.Group();belt.add(box([3.9,7,-0.6],[4.6,12,0.6],mat("#2b2016",8)));part.belt=belt;hero.add(belt);
+}
+function handMesh(it){
+  const g=new THREE.Group();
+  if(!it)return g;
+  if(it.icon==="bat"){g.add(box([-.6,-13,-.6],[.6,-10,.6],mat("#6e4a2a",16)));const b=box([-.9,-10,-.9],[.9,8,.9],mat("#a0703f",16));g.add(b);}
+  else if(it.icon==="crowbar"){g.add(box([-.4,-13,-.4],[.4,6,.4],mat("#8c2a20",16)),box([-.4,6,-.4],[.4,6.8,2.4],mat("#8c2a20",16)));}
+  else if(it.gun){g.add(box([-.7,-12,-12],[.7,-10.4,10],mat("#2f3336",16)),box([-.6,-14.5,-1],[.6,-12,1],mat("#25282a",12)),box([-.8,-12.6,7],[.8,-9,14],mat("#3a3b30",16)));}
+  else if(it.icon==="knife"){g.add(box([-.3,-12.6,-.3],[.3,-10.6,.3],mat("#3b2a1b",8)),box([-.15,-10.6,-.5],[.15,-7,.5],mat("#cfd2d4",10)));}
+  else g.add(box([-.5,-13,-.5],[.5,-4,.5],mat("#767c80",16)));
+  return g;
+}
+function updateCharacter(){
+  if(!part.rig)return;
+  const at=k=>items.find(x=>x.where==="slot:"+k);
+  part.rig.visible=!!at("rig");const pk=at("pack");part.pack.visible=!!pk;if(pk){const z=pk.size||1;part.pack.scale.set(z>1?1.08:z<1?.85:1,z,z);part.pack.position.set(0,z>1?-3.5:z<1?3.5:0,0);}
+  const off=at("off");part.duffel.visible=!!(off&&off.bagKind==="hand");part.la.rotation.z=part.duffel.visible?-.18:-.08;part.fanny.visible=!!at("waist");
+  part.rifleBack.visible=!!(at("back")&&at("back").gun);
+  part.belt.visible=!!at("belt");
+  part.handW.clear();const h=at("hand");part.handW.add(handMesh(h));
+  part.ra.rotation.x=h?-.35:0;
+}
+buildHero();
+const heroOpts={idle:true};dragRotate(cv,hero,heroOpts);hero.rotation.y=-.5;
+let lastT=performance.now();
+function loopChar(t){const dt=(t-lastT)/1000;lastT=t;fit(cr,ccam,cv);if(heroOpts.idle&&!matchMedia("(prefers-reduced-motion: reduce)").matches)hero.rotation.y+=dt*.35;cr.render(cs,ccam);if($("#bench").hidden)requestAnimationFrame(loopChar);else charPaused=true;}
+let charPaused=false;requestAnimationFrame(loopChar);
+
+/* ================= weapon bench ================= */
+const SOCKETS=[
+  {k:"optic",label:"Optic",at:[8,10.4,14.3]},
+  {k:"muzzle",label:"Muzzle",at:[8,8.86,-1.9]},
+  {k:"under",label:"Under-barrel",at:[8,7.4,7.2]},
+  {k:"magazine",label:"Magazine",at:[8,4.2,12.2]},
+  {k:"stock",label:"Stock",at:[8,7.8,25.5]},
+];
+const SIGHT_ELEMS=new Set([43,44,45,46,51,52,53,54,55,56,57]);
+const MUZZLE_ELEMS=new Set([48,49,50]);
+const MAG_ELEMS=new Set([58,59,60,61]);
+const STOCK_ELEMS=new Set([9,10,11,12,13,14,15,16,17,18,19]);
+const ghostParts={};let ghostGroup;
+const gv=$("#gunCanvas");
+let gr,gs,gcam,rifle,rifleParts={},attachGroup,gunOpts={idle:true},benchRunning=false;
+function mcModel(model,tex,matFor,partsMap){
+  const root=new THREE.Group();
+  const m=tex?new THREE.MeshLambertMaterial({map:tex,transparent:false,alphaTest:.1}):null;
+  model.elements.forEach((e,idx)=>{
+    const [fx,fy,fz]=e.from,[tx,ty,tz]=e.to;
+    const pos=[],uv=[],ind=[];
+    const F={
+      north:[[tx,ty,fz],[fx,ty,fz],[tx,fy,fz],[fx,fy,fz]],
+      south:[[fx,ty,tz],[tx,ty,tz],[fx,fy,tz],[tx,fy,tz]],
+      east:[[tx,ty,tz],[tx,ty,fz],[tx,fy,tz],[tx,fy,fz]],
+      west:[[fx,ty,fz],[fx,ty,tz],[fx,fy,fz],[fx,fy,tz]],
+      up:[[fx,ty,fz],[tx,ty,fz],[fx,ty,tz],[tx,ty,tz]],
+      down:[[fx,fy,tz],[tx,fy,tz],[fx,fy,fz],[tx,fy,fz]],
+    };
+    Object.entries(e.faces).forEach(([dir,f])=>{
+      const v=F[dir];if(!v)return;const b=pos.length/3;
+      const [u1,v1,u2,v2]=f.uv.map(x=>x/16);
+      const uvs=[[u1,1-v1],[u2,1-v1],[u1,1-v2],[u2,1-v2]];
+      v.forEach((p,i)=>{pos.push(...p);uv.push(...uvs[i]);});
+      ind.push(b,b+2,b+1,b+1,b+2,b+3);
+    });
+    const g=new THREE.BufferGeometry();g.setAttribute("position",new THREE.Float32BufferAttribute(pos,3));g.setAttribute("uv",new THREE.Float32BufferAttribute(uv,2));g.setIndex(ind);g.computeVertexNormals();
+    const mesh=new THREE.Mesh(g,m||matFor(idx));
+    let node=mesh;
+    if(e.rotation){const r=e.rotation,o=r.origin,piv=new THREE.Group();piv.position.set(o[0],o[1],o[2]);mesh.position.set(-o[0],-o[1],-o[2]);piv.add(mesh);const a=THREE.MathUtils.degToRad(r.angle);piv.rotation[r.axis]=a;node=piv;}
+    node.userData.idx=idx;root.add(node);partsMap[idx]=node;
+  });
+  return root;
+}
+function cyl(z1,z2,r,cx,cy,m,sides=true){const g=new THREE.Group();g.add(box([cx-r,cy-r*.42,z1],[cx+r,cy+r*.42,z2],m),box([cx-r*.42,cy-r,z1],[cx+r*.42,cy+r,z2],m),box([cx-r*.78,cy-r*.78,z1],[cx+r*.78,cy+r*.78,z2],m));return g;}
+const GHOST={};
+function ghostMat(k){return GHOST[k]||(GHOST[k]=new THREE.MeshBasicMaterial({color:0x39e05a,transparent:true,opacity:.2,depthWrite:false}));}
+const GHOST_PART={optic:"reddot",muzzle:"suppressor",under:"grip"};
+function ghostOf(k){const g=partMesh({icon:GHOST_PART[k]});g.traverse(o=>{if(o.isMesh)o.material=ghostMat(k);});return g;}
+function crosshair(at,k){const L=1.5,[x,y,z]=at,geo=new THREE.BufferGeometry();geo.setAttribute("position",new THREE.Float32BufferAttribute([x-L,y,z,x+L,y,z,x,y-L,z,x,y+L,z,x,y,z-L,x,y,z+L],3));const m=new THREE.LineBasicMaterial({color:0x4dff6e,transparent:true,opacity:.9,depthTest:false});const l=new THREE.LineSegments(geo,m);l.renderOrder=5;l.userData.k=k;return l;}
+function partMesh(it){
+  const g=new THREE.Group(),dark=mat("#26292b",14),mid=mat("#3c4043",14),lite=mat("#5b6064",12);
+  switch(it.icon){
+    case"reddot":{g.add(box([7.55,9.66,13.3],[8.45,9.92,15.2],mid));g.add(box([7.6,9.92,13.5],[7.78,11.1,14.9],dark),box([8.22,9.92,13.5],[8.4,11.1,14.9],dark),box([7.6,10.95,13.5],[8.4,11.15,14.9],dark),box([7.6,9.92,14.6],[8.4,10.2,15.3],dark));
+      g.add(box([7.78,10.1,13.55],[8.22,10.95,13.6],new THREE.MeshLambertMaterial({color:0x6cc3c8,transparent:true,opacity:.45})));
+      g.add(box([7.96,10.45,14.5],[8.04,10.53,14.56],new THREE.MeshBasicMaterial({color:0xff3322})));g.add(box([8.4,10.2,14],[8.62,10.6,14.4],mid));break;}
+    case"scope":{g.add(cyl(12.3,16.3,.42,8,10.55,dark));g.add(cyl(11.7,12.5,.55,8,10.55,mid));g.add(cyl(16.1,17,.5,8,10.55,mid));g.add(box([7.65,9.66,12.8],[8.35,10.15,13.3],mid),box([7.65,9.66,15.1],[8.35,10.15,15.6],mid));g.add(box([7.5,10.9,13.8],[8.5,11.15,14.6],lite));
+      g.add(box([7.7,10.25,11.68],[8.3,10.85,11.72],new THREE.MeshLambertMaterial({color:0x334a66,transparent:true,opacity:.8})));break;}
+    case"suppressor":{g.add(cyl(-9.2,-.3,.62,8,8.86,dark));g.add(cyl(-9.25,-8.9,.66,8,8.86,mid));g.add(cyl(-1,-.3,.66,8,8.86,mid));break;}
+    case"oilfilter":{g.add(cyl(-1.2,-.3,.3,8,8.86,lite));g.add(cyl(-6.4,-1.2,1.05,8,8.86,mat("#2e5b8c",22)));g.add(cyl(-6.6,-6.3,.7,8,8.86,mid));g.add(box([7.2,8,-5],[8.8,9.7,-2.6],mat("#e8e2d0",10)).translateX(0));break;}
+    case"comp":{g.add(cyl(-3,-.3,.42,8,8.86,dark));[-2.6,-1.9,-1.2].forEach(z=>g.add(box([7.5,9.15,z],[8.5,9.3,z+.35],mat("#0e0e0e",0))));break;}
+    case"grip":{g.add(box([7.6,7.55,6.4],[8.4,7.86,8.1],mid));g.add(box([7.65,4.8,6.7],[8.35,7.55,7.7],dark));g.add(box([7.6,4.6,6.6],[8.4,4.9,7.8],mid));break;}
+    case"light":{g.add(box([7.6,7.5,5.6],[8.4,7.86,7.6],mid));g.add(cyl(4.6,7.6,.4,8,7.05,dark));g.add(box([7.7,6.75,4.55],[8.3,7.35,4.6],new THREE.MeshBasicMaterial({color:0xfff2b0})));break;}
+    case"drum":{g.add(box([7.65,5.6,11.5],[8.35,7.66,13.2],dark));g.add(cyl(10.2,14.2,1.75,8,3.9,dark).rotateY(0));const side=new THREE.Group();side.add(box([7.2,2.2,10.6],[8.8,5.8,13.8],mid));g.add(side);break;}
+    case"pad":{g.add(box([7.42,6.25,25.43],[8.58,9.32,26.2],mat("#1d1d1b",8)));break;}
+    case"stock":break;
+  }
+  return g;
+}
+function initBench(){
+  if(gr)return;
+  gr=new THREE.WebGLRenderer({canvas:gv,antialias:true,alpha:true});gr.setPixelRatio(Math.min(2,devicePixelRatio));
+  gs=new THREE.Scene();lights(gs);
+  gcam=new THREE.PerspectiveCamera(28,1,.1,400);gcam.position.set(52,8,0);gcam.lookAt(0,0,0);
+  const holder=new THREE.Group();gs.add(holder);
+  const tex=new THREE.TextureLoader().load(RIFLE_TEX);tex.magFilter=THREE.NearestFilter;tex.minFilter=THREE.NearestFilter;
+  const inner=new THREE.Group();inner.position.set(-8,-6.4,-11.8);holder.add(inner);
+  rifle=mcModel(RIFLE_MODEL,tex,null,rifleParts);inner.add(rifle);
+  // a see-through copy of the stock and magazine shows those sockets when they're empty
+  const ghostRifle=mcModel(RIFLE_MODEL,null,i=>ghostMat(STOCK_ELEMS.has(i)?"stock":"magazine"),ghostParts);inner.add(ghostRifle);
+  attachGroup=new THREE.Group();inner.add(attachGroup);
+  ghostGroup=new THREE.Group();inner.add(ghostGroup);
+  SOCKETS.forEach(s=>inner.add(crosshair(s.at,s.k)));
+  holder.rotation.y=.35;holder.rotation.x=.05;
+  bench.holder=holder;bench.inner=inner;
+  dragRotate(gv,holder,Object.assign(gunOpts,{tilt:true}));
+}
+const bench={};
+function openBench(){
+  $("#bench").hidden=false;$("#hud").style.visibility="hidden";menu.hidden=true;
+  initBench();renderBench();
+  if(!benchRunning){benchRunning=true;requestAnimationFrame(loopGun);}
+}
+function closeBench(){$("#bench").hidden=true;$("#hud").style.visibility="";benchRunning=false;render();if(charPaused){charPaused=false;lastT=performance.now();requestAnimationFrame(loopChar);}}
+$("#benchClose").onclick=closeBench;
+function renderBench(){
+  // model visibility
+  const fitted=k=>gun[k]&&byId(gun[k]);
+  const magSolid=fitted("magazine")&&byId(gun.magazine).icon==="mag";
+  Object.entries(rifleParts).forEach(([i,n])=>{i=+i;let v=true;if(SIGHT_ELEMS.has(i)&&fitted("optic"))v=false;if(MUZZLE_ELEMS.has(i)&&fitted("muzzle"))v=false;if(MAG_ELEMS.has(i)&&!magSolid)v=false;if(STOCK_ELEMS.has(i)&&!fitted("stock"))v=false;n.visible=v;});
+  Object.entries(ghostParts).forEach(([i,n])=>{i=+i;n.visible=(STOCK_ELEMS.has(i)&&!fitted("stock"))||(MAG_ELEMS.has(i)&&!fitted("magazine"));});
+  ghostGroup.clear();["optic","muzzle","under"].forEach(k=>{if(!fitted(k))ghostGroup.add(ghostOf(k));});
+  attachGroup.clear();
+  Object.keys(gun).forEach(k=>{const it=fitted(k);if(it&&!(k==="magazine"&&it.icon==="mag"))attachGroup.add(partMesh(it));});
+  // sockets
+  const sk=$("#socks");sk.innerHTML="";
+  SOCKETS.forEach(s=>{
+    const it=fitted(s.k),d=document.createElement("div");d.className="sock"+(it?" full":"");d.dataset.drop="sock:"+s.k;d.dataset.sock=s.k;
+    const dot=document.createElement("span");dot.className="dot";
+    const tag=document.createElement("span");tag.className="tag";tag.textContent=s.label;const em=document.createElement("em");em.textContent=it?it.name:"empty";tag.appendChild(em);
+    d.append(dot,tag);d.title=it?"Click to take off":"Drag a part here";
+    d.onclick=()=>{if(it){unfit(s.k);}};
+    sk.appendChild(d);
+  });
+  // parts list
+  const al=$("#attList");al.innerHTML="";
+  const carried=items.filter(i=>i.part&&i.where!=="gun"&&!Object.values(gun).includes(i.id));
+  carried.sort((a,b)=>(sideOf(a.where)==="p"?0:1)-(sideOf(b.where)==="p"?0:1));
+  carried.forEach(it=>{const r=document.createElement("div");r.className="row";r.dataset.item=it.id;r.appendChild(icon(it.icon,20));
+    const n=document.createElement("span");n.className="n";n.textContent=it.name;const sm=document.createElement("small");sm.textContent=" · "+SOCKETS.find(s=>s.k===it.part).label.toLowerCase();n.appendChild(sm);
+    const c=document.createElement("span");c.className="c";c.textContent=sideOf(it.where)==="p"?containers[it.where].name.split(" ").pop():"nearby";r.append(n,c);al.appendChild(r);});
+  if(!carried.length){const e=document.createElement("div");e.className="empty-note";e.textContent="No spare parts in your bags or nearby.";al.appendChild(e);}
+  renderStats();
+  const rf=byId("i_rifle");$("#benchCond").textContent="Condition "+Math.round(rf.cond*100)+"%";
+}
+function fitPart(it,sock){
+  if(!it.part){toast("That isn't a weapon part");return;}
+  if(it.part!==sock){toast(`${it.name} goes on the ${SOCKETS.find(s=>s.k===it.part).label.toLowerCase()}`);return;}
+  if(gun[sock])unfit(sock,true);
+  gun[sock]=it.id;it.where="gun";
+  toast(sock==="optic"?`${it.name} fitted · iron sights removed`:`${it.name} fitted`);
+  if($("#bench").hidden)render();else{renderBench();renderSlots();renderLoad();}
+}
+function unfit(sock,quiet){
+  const it=byId(gun[sock]);if(!it)return;gun[sock]=null;
+  const dest=containersOn("p").find(c=>sideOf(c)==="p"&&contentWeight(c)+it.w<=containers[c].cap)||"floor";
+  it.where=dest;if(!quiet)toast(`${it.name} → ${containers[dest].name}`);
+  renderBench();renderLoad();
+}
+const BASE={ergo:48,recoil:62,noise:80,acc:55,ads:.32,weight:3.0,cap:30};
+const MODS={reddot:{acc:+12,ads:+.04},scope:{acc:+28,ads:+.12,ergo:-6},suppressor:{noise:-52,recoil:-6,ergo:-5},oilfilter:{noise:-38,recoil:-3,ergo:-8},comp:{recoil:-14,noise:+6},grip:{recoil:-9,ergo:+6},light:{ergo:-2},drum:{ergo:-10},pad:{recoil:-7,ergo:-2}};
+function renderStats(){
+  const cur={...BASE};let w=BASE.weight;
+  Object.values(gun).forEach(id=>{if(!id)return;const it=byId(id);w+=it.w;const m=MODS[it.icon]||{};for(const k in m)cur[k]+=m[k];if(it.cap)cur.cap=it.cap;});
+  if(!gun.magazine)cur.cap=0;
+  if(!gun.stock){cur.recoil+=24;cur.acc-=12;cur.ergo+=8;}
+  const rows=[["Accuracy","acc",100,true,""],["Recoil","recoil",100,false,""],["Ergonomics","ergo",100,true,""],["Noise","noise",100,false," bl"],["Aim time","ads",.6,false,"s"]];
+  const el=$("#stats");el.innerHTML="";
+  rows.forEach(([l,k,max,good,u])=>{
+    const v=cur[k],b=BASE[k],d=v-b;
+    const r=document.createElement("div");r.className="stat";
+    const sb=document.createElement("span");sb.className="sb";const i=document.createElement("i");i.style.width=Math.min(b,v)/max*100+"%";sb.appendChild(i);
+    if(Math.abs(d)>1e-6){const s=document.createElement("s");const better=good?d>0:d<0;s.className=better?"":"neg";s.style.left=Math.min(b,v)/max*100+"%";s.style.width=Math.abs(d)/max*100+"%";sb.appendChild(s);}
+    const vv=document.createElement("span");vv.className="v"+(Math.abs(d)>1e-6?((good?d>0:d<0)?" up":" dn"):"");vv.textContent=(k==="ads"?v.toFixed(2):Math.round(v))+u;
+    const lab=document.createElement("span");lab.textContent=l;r.append(lab,sb,vv);el.appendChild(r);
+  });
+  const x=document.createElement("div");x.className="stat";x.innerHTML=`<span>Weight</span><span></span><span class="v">${w.toFixed(2)} kg</span>`;el.appendChild(x);
+  const y=document.createElement("div");y.className="stat";y.innerHTML=`<span>Magazine</span><span></span><span class="v">${cur.cap?cur.cap+" rds":"none"}</span>`;el.appendChild(y);
+  const z=document.createElement("div");z.className="stat";z.innerHTML=`<span>Sight</span><span></span><span class="v">${gun.optic?byId(gun.optic).name.replace(" sight",""):"Irons"}</span>`;el.appendChild(z);
+}
+function highlightSockets(it){document.querySelectorAll(".sock").forEach(s=>s.classList.add(s.dataset.sock===it.part?"fits":"nofit"));Object.entries(GHOST).forEach(([k,m])=>m.opacity=k===it.part?.5:.08);}
+function clearSocketHighlight(){document.querySelectorAll(".sock").forEach(s=>s.classList.remove("fits","nofit"));Object.values(GHOST).forEach(m=>m.opacity=.2);}
+const tmpV=new THREE.Vector3();
+function loopGun(t){
+  if(!benchRunning)return;
+  fit(gr,gcam,gv);
+  if(gunOpts.idle&&!matchMedia("(prefers-reduced-motion: reduce)").matches)bench.holder.rotation.y=.35+Math.sin(t/2600)*.45;
+  gr.render(gs,gcam);
+  // place socket tags: dot sits on the gun, the tag offsets outward
+  const W=gv.clientWidth,H=gv.clientHeight,svg=$("#leads");svg.setAttribute("viewBox",`0 0 ${W} ${H}`);let lines="";
+  const OFF={optic:[0,-70],muzzle:[-30,-62],under:[0,72],magazine:[50,82],stock:[20,-64]};
+  bench.inner.updateMatrixWorld();
+  SOCKETS.forEach(s=>{
+    tmpV.set(...s.at);bench.inner.localToWorld(tmpV);tmpV.project(gcam);
+    const x=(tmpV.x+1)/2*W,y=(1-tmpV.y)/2*H,o=OFF[s.k];
+    const el=document.querySelector(`.sock[data-sock="${s.k}"]`);if(!el)return;
+    const tx=Math.max(56,Math.min(W-56,x+o[0])),ty=Math.max(30,Math.min(H-40,y+o[1]));
+    el.style.left=tx+"px";el.style.top=ty+"px";
+    lines+=`<line x1="${x}" y1="${y}" x2="${tx}" y2="${ty}" stroke="rgba(233,224,196,.45)" stroke-width="1" stroke-dasharray="3 3"/><rect x="${x-2.5}" y="${y-2.5}" width="5" height="5" fill="rgba(233,224,196,.8)"/>`;
+  });
+  svg.innerHTML=lines;
+  requestAnimationFrame(loopGun);
+}
+
+render();
+</script>

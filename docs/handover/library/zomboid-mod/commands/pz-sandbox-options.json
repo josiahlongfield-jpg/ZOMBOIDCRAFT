@@ -1,0 +1,2436 @@
+{
+ "meta": {
+  "source": "https://pindrop.gg/project-zomboid/sandbox-settings",
+  "build": "42.21",
+  "fetched": "2026-10-31",
+  "count": 269,
+  "notes": [
+   "default = the value the game loads by default (its Apocalypse settings, SandboxVars.lua). Presets dropped per Josiah 2026-10-31.",
+   "The page gives only the number of choices for multi-choice options, not the choice names.",
+   "idExactCase false: the page did not print the SandboxVars name; it was read from the page's lowercase search text and recased (prefix ZombieLore./MultiplierConfig., first letter capital), so check the case before relying on it."
+  ]
+ },
+ "options": [
+  {
+   "group": "Zombie population",
+   "sandboxVar": "Zombies",
+   "idExactCase": true,
+   "label": "Zombie Count",
+   "tooltip": "Changing this also sets the \"Population Multiplier\" in Advanced Zombie Options.",
+   "range": "6 choices",
+   "default": "Normal"
+  },
+  {
+   "group": "Zombie population",
+   "sandboxVar": "Distribution",
+   "idExactCase": false,
+   "label": "Zombie Distribution",
+   "tooltip": "How zombies are distributed across the map.",
+   "range": "2 choices",
+   "default": "Urban Focused"
+  },
+  {
+   "group": "Zombie population",
+   "sandboxVar": "ZombieVoronoiNoise",
+   "idExactCase": true,
+   "label": "Voronoi Noise",
+   "tooltip": "Controls whether some randomization is applied to zombie distribution.",
+   "range": "On / Off",
+   "default": "On"
+  },
+  {
+   "group": "Zombie population",
+   "sandboxVar": "ZombieRespawn",
+   "idExactCase": true,
+   "label": "Zombie Respawn",
+   "tooltip": "How frequently new zombies are added to the world.",
+   "range": "4 choices",
+   "default": "None"
+  },
+  {
+   "group": "Zombie population",
+   "sandboxVar": "ZombieMigrate",
+   "idExactCase": true,
+   "label": "Zombie Migration",
+   "tooltip": "Zombie allowed to migrate to empty cells.",
+   "range": "On / Off",
+   "default": "On"
+  },
+  {
+   "group": "Zombie population",
+   "sandboxVar": "ZombieAttractionMultiplier",
+   "idExactCase": true,
+   "label": "Zombie Attraction Multiplier",
+   "tooltip": "General engine loudness to zombies.",
+   "range": "0 – 100",
+   "default": "1"
+  },
+  {
+   "group": "Zombie population",
+   "sandboxVar": "ZombieConfig.PopulationMultiplier",
+   "idExactCase": true,
+   "label": "Population Multiplier",
+   "tooltip": "",
+   "range": "0 – 4",
+   "default": "0.65"
+  },
+  {
+   "group": "Zombie population",
+   "sandboxVar": "ZombieConfig.PopulationStartMultiplier",
+   "idExactCase": true,
+   "label": "Population Start Multiplier",
+   "tooltip": "",
+   "range": "0 – 4",
+   "default": "1"
+  },
+  {
+   "group": "Zombie population",
+   "sandboxVar": "ZombieConfig.PopulationPeakMultiplier",
+   "idExactCase": true,
+   "label": "Population Peak Multiplier",
+   "tooltip": "",
+   "range": "0 – 4",
+   "default": "1.5"
+  },
+  {
+   "group": "Zombie population",
+   "sandboxVar": "ZombieConfig.PopulationPeakDay",
+   "idExactCase": true,
+   "label": "Population Peak Day",
+   "tooltip": "",
+   "range": "1 – 365",
+   "default": "28"
+  },
+  {
+   "group": "Zombie population",
+   "sandboxVar": "ZombieConfig.RespawnHours",
+   "idExactCase": true,
+   "label": "Respawn Hours",
+   "tooltip": "",
+   "range": "0 – 8760",
+   "default": "0"
+  },
+  {
+   "group": "Zombie population",
+   "sandboxVar": "ZombieConfig.RespawnUnseenHours",
+   "idExactCase": true,
+   "label": "Respawn Unseen Hours",
+   "tooltip": "",
+   "range": "0 – 8760",
+   "default": "0"
+  },
+  {
+   "group": "Zombie population",
+   "sandboxVar": "ZombieConfig.RespawnMultiplier",
+   "idExactCase": true,
+   "label": "Respawn Multiplier",
+   "tooltip": "",
+   "range": "0 – 1",
+   "default": "0"
+  },
+  {
+   "group": "Zombie population",
+   "sandboxVar": "ZombieConfig.RedistributeHours",
+   "idExactCase": true,
+   "label": "Redistribute Hours",
+   "tooltip": "",
+   "range": "0 – 8760",
+   "default": "12"
+  },
+  {
+   "group": "Zombie population",
+   "sandboxVar": "ZombieConfig.FollowSoundDistance",
+   "idExactCase": true,
+   "label": "Follow Sound Distance",
+   "tooltip": "",
+   "range": "10 – 1000",
+   "default": "100"
+  },
+  {
+   "group": "Zombie population",
+   "sandboxVar": "ZombieConfig.RallyGroupSize",
+   "idExactCase": true,
+   "label": "Rally Group Size",
+   "tooltip": "",
+   "range": "0 – 1000",
+   "default": "20"
+  },
+  {
+   "group": "Zombie population",
+   "sandboxVar": "ZombieConfig.RallyGroupSizeVariance",
+   "idExactCase": true,
+   "label": "Rally Group Size Variance",
+   "tooltip": "",
+   "range": "0 – 100",
+   "default": "50"
+  },
+  {
+   "group": "Zombie population",
+   "sandboxVar": "ZombieConfig.RallyTravelDistance",
+   "idExactCase": true,
+   "label": "Rally Travel Distance",
+   "tooltip": "",
+   "range": "5 – 50",
+   "default": "20"
+  },
+  {
+   "group": "Zombie population",
+   "sandboxVar": "ZombieConfig.RallyGroupSeparation",
+   "idExactCase": true,
+   "label": "Rally Group Separation",
+   "tooltip": "",
+   "range": "5 – 25",
+   "default": "15"
+  },
+  {
+   "group": "Zombie population",
+   "sandboxVar": "ZombieConfig.RallyGroupRadius",
+   "idExactCase": true,
+   "label": "Rally Group Radius",
+   "tooltip": "",
+   "range": "1 – 10",
+   "default": "3"
+  },
+  {
+   "group": "Zombie population",
+   "sandboxVar": "ZombieConfig.ZombiesCountBeforeDelete",
+   "idExactCase": true,
+   "label": "Zombie count before deletion",
+   "tooltip": "How many zombies can occupy a certain area.",
+   "range": "0 – 5000",
+   "default": "300"
+  },
+  {
+   "group": "Zombie lore",
+   "sandboxVar": "ZombieLore.Speed",
+   "idExactCase": false,
+   "label": "Speed",
+   "tooltip": "How fast zombies move.",
+   "range": "4 choices",
+   "default": "Random"
+  },
+  {
+   "group": "Zombie lore",
+   "sandboxVar": "ZombieLore.SprinterPercentage",
+   "idExactCase": true,
+   "label": "Random Sprinter Amount",
+   "tooltip": "If Random Speed is enabled, this controls what percentage of zombies are Sprinters.\nCheck the \"Advanced\" box below to use a custom percentage.",
+   "range": "0 – 100",
+   "default": "0"
+  },
+  {
+   "group": "Zombie lore",
+   "sandboxVar": "ZombieLore.Strength",
+   "idExactCase": false,
+   "label": "Strength",
+   "tooltip": "The damage zombies inflict per attack.",
+   "range": "4 choices",
+   "default": "Normal"
+  },
+  {
+   "group": "Zombie lore",
+   "sandboxVar": "ZombieLore.Toughness",
+   "idExactCase": false,
+   "label": "Toughness",
+   "tooltip": "The difficulty of killing a zombie.",
+   "range": "4 choices",
+   "default": "Random"
+  },
+  {
+   "group": "Zombie lore",
+   "sandboxVar": "ZombieLore.Transmission",
+   "idExactCase": false,
+   "label": "Transmission",
+   "tooltip": "How the Knox Virus spreads.",
+   "range": "4 choices",
+   "default": "Blood and Saliva"
+  },
+  {
+   "group": "Zombie lore",
+   "sandboxVar": "ZombieLore.Mortality",
+   "idExactCase": false,
+   "label": "Infection Mortality",
+   "tooltip": "How quickly the infection takes effect.",
+   "range": "7 choices",
+   "default": "2-3 Days"
+  },
+  {
+   "group": "Zombie lore",
+   "sandboxVar": "ZombieLore.Reanimate",
+   "idExactCase": false,
+   "label": "Reanimate Time",
+   "tooltip": "How quickly infected corpses rise as zombies.",
+   "range": "6 choices",
+   "default": "0-1 Minutes"
+  },
+  {
+   "group": "Zombie lore",
+   "sandboxVar": "ZombieLore.Cognition",
+   "idExactCase": false,
+   "label": "Cognition",
+   "tooltip": "Zombie intelligence.",
+   "range": "4 choices",
+   "default": "Basic Navigation"
+  },
+  {
+   "group": "Zombie lore",
+   "sandboxVar": "ZombieLore.DoorOpeningPercentage",
+   "idExactCase": true,
+   "label": "Random Door Opening Amount",
+   "tooltip": "",
+   "range": "0 – 100",
+   "default": "0"
+  },
+  {
+   "group": "Zombie lore",
+   "sandboxVar": "ZombieLore.CrawlUnderVehicle",
+   "idExactCase": true,
+   "label": "Crawl Under Vehicle",
+   "tooltip": "How often zombies can crawl under parked vehicles.",
+   "range": "7 choices",
+   "default": "Often"
+  },
+  {
+   "group": "Zombie lore",
+   "sandboxVar": "ZombieLore.Memory",
+   "idExactCase": false,
+   "label": "Memory",
+   "tooltip": "How long zombies remember a player after seeing or hearing them.",
+   "range": "6 choices",
+   "default": "Normal"
+  },
+  {
+   "group": "Zombie lore",
+   "sandboxVar": "ZombieLore.Sight",
+   "idExactCase": false,
+   "label": "Sight",
+   "tooltip": "Zombie vision radius.",
+   "range": "5 choices",
+   "default": "Random between Normal and Poor"
+  },
+  {
+   "group": "Zombie lore",
+   "sandboxVar": "ZombieLore.Hearing",
+   "idExactCase": false,
+   "label": "Hearing",
+   "tooltip": "Zombie hearing radius.",
+   "range": "5 choices",
+   "default": "Random between Normal and Poor"
+  },
+  {
+   "group": "Zombie lore",
+   "sandboxVar": "ZombieLore.SpottedLogic",
+   "idExactCase": true,
+   "label": "New Stealth System",
+   "tooltip": "Activates the new advanced stealth mechanics, which allows you to hide from zombies behind cars, takes traits and weather into account, and much more.",
+   "range": "On / Off",
+   "default": "On"
+  },
+  {
+   "group": "Zombie lore",
+   "sandboxVar": "ZombieLore.ThumpNoChasing",
+   "idExactCase": true,
+   "label": "Environmental Attacks",
+   "tooltip": "If zombies that have not seen/heard player can attack doors and constructions while roaming.",
+   "range": "On / Off",
+   "default": "Off"
+  },
+  {
+   "group": "Zombie lore",
+   "sandboxVar": "ZombieLore.ThumpOnConstruction",
+   "idExactCase": true,
+   "label": "Damage Construction",
+   "tooltip": "If zombies can destroy player constructions and defenses.",
+   "range": "On / Off",
+   "default": "On"
+  },
+  {
+   "group": "Zombie lore",
+   "sandboxVar": "ZombieLore.ActiveOnly",
+   "idExactCase": true,
+   "label": "Day/Night Zombie Speed Effect",
+   "tooltip": "Whether zombies are more \"active\" during the day or night. \n\"Active\" zombies will use the speed set in the \"Speed\" setting. \n\"Inactive\" zombies will be slower, and tend not to give chase.",
+   "range": "3 choices",
+   "default": "Both"
+  },
+  {
+   "group": "Zombie lore",
+   "sandboxVar": "ZombieLore.TriggerHouseAlarm",
+   "idExactCase": true,
+   "label": "Zombie House Alarm Triggering",
+   "tooltip": "If zombies trigger house alarms when breaking through windows or doors.",
+   "range": "On / Off",
+   "default": "On"
+  },
+  {
+   "group": "Zombie lore",
+   "sandboxVar": "ZombieLore.ZombiesDragDown",
+   "idExactCase": true,
+   "label": "Drag Down",
+   "tooltip": "If multiple attacking zombies can drag you down and kill you. \nDependent on zombie strength.",
+   "range": "On / Off",
+   "default": "On"
+  },
+  {
+   "group": "Zombie lore",
+   "sandboxVar": "ZombieLore.ZombiesCrawlersDragDown",
+   "idExactCase": true,
+   "label": "Crawlers Drag Down",
+   "tooltip": "If crawler zombies beside a player contribute to the chance of being dragged down and killed by a group of zombies.",
+   "range": "On / Off",
+   "default": "Off"
+  },
+  {
+   "group": "Zombie lore",
+   "sandboxVar": "ZombieLore.ZombiesFenceLunge",
+   "idExactCase": true,
+   "label": "Zombie Lunge",
+   "tooltip": "If zombies have a chance to lunge at you after climbing\nover a fence or through a window if you're too close.",
+   "range": "On / Off",
+   "default": "On"
+  },
+  {
+   "group": "Zombie lore",
+   "sandboxVar": "ZombieLore.ZombiesArmorFactor",
+   "idExactCase": true,
+   "label": "Zombie Armor Factor",
+   "tooltip": "Serves as a multiplier when determining the effectiveness of armor worn by zombies.",
+   "range": "0 – 100",
+   "default": "2"
+  },
+  {
+   "group": "Zombie lore",
+   "sandboxVar": "ZombieLore.ZombiesMaxDefense",
+   "idExactCase": true,
+   "label": "Maximum Zombie Armor Defense",
+   "tooltip": "The maximum defense percentage that any worn protective garments can provide to a zombie.",
+   "range": "0 – 100",
+   "default": "85"
+  },
+  {
+   "group": "Zombie lore",
+   "sandboxVar": "ZombieLore.ChanceOfAttachedWeapon",
+   "idExactCase": true,
+   "label": "Chance Of Attached Weapon",
+   "tooltip": "Percentage chance of having a random attached weapon.",
+   "range": "0 – 100",
+   "default": "6"
+  },
+  {
+   "group": "Zombie lore",
+   "sandboxVar": "ZombieLore.ZombiesFallDamage",
+   "idExactCase": true,
+   "label": "Zombie Fall Damage Multiplier",
+   "tooltip": "How much damage zombies take when falling from height.",
+   "range": "0 – 100",
+   "default": "1"
+  },
+  {
+   "group": "Zombie lore",
+   "sandboxVar": "ZombieLore.DisableFakeDead",
+   "idExactCase": true,
+   "label": "Fake Dead Zombie Reanimation",
+   "tooltip": "Whether some dead-looking zombies will reanimate and attack the player.",
+   "range": "3 choices",
+   "default": "World Zombies"
+  },
+  {
+   "group": "Zombie lore",
+   "sandboxVar": "ZombieLore.PlayerSpawnZombieRemoval",
+   "idExactCase": true,
+   "label": "Player Spawn Area",
+   "tooltip": "Zombies will not spawn where players spawn.",
+   "range": "4 choices",
+   "default": "Inside the building and around it"
+  },
+  {
+   "group": "Zombie lore",
+   "sandboxVar": "ZombieLore.FenceThumpersRequired",
+   "idExactCase": true,
+   "label": "Zombies To Damage Fences",
+   "tooltip": "How many zombies it takes to damage a tall fence.",
+   "range": "-1 – 100",
+   "default": "25"
+  },
+  {
+   "group": "Zombie lore",
+   "sandboxVar": "ZombieLore.FenceDamageMultiplier",
+   "idExactCase": true,
+   "label": "Fence Damage Multiplier",
+   "tooltip": "How quickly zombies damage tall fences.",
+   "range": "0.009999999776482582 – 100",
+   "default": "1"
+  },
+  {
+   "group": "Time and start",
+   "sandboxVar": "DayLength",
+   "idExactCase": true,
+   "label": "Day Length (in real time)",
+   "tooltip": "",
+   "range": "27 choices",
+   "default": "1 Hour, 30 Minutes"
+  },
+  {
+   "group": "Time and start",
+   "sandboxVar": "StartYear",
+   "idExactCase": true,
+   "label": "Start Year",
+   "tooltip": "",
+   "range": "100 choices",
+   "default": "1"
+  },
+  {
+   "group": "Time and start",
+   "sandboxVar": "StartMonth",
+   "idExactCase": true,
+   "label": "Start Month",
+   "tooltip": "Month in which the game starts.",
+   "range": "12 choices",
+   "default": "July"
+  },
+  {
+   "group": "Time and start",
+   "sandboxVar": "StartDay",
+   "idExactCase": true,
+   "label": "Start Day",
+   "tooltip": "Day of the month in which the games starts.",
+   "range": "31 choices",
+   "default": "9"
+  },
+  {
+   "group": "Time and start",
+   "sandboxVar": "StartTime",
+   "idExactCase": true,
+   "label": "Start Hour",
+   "tooltip": "Hour of the day in which the game starts.",
+   "range": "9 choices",
+   "default": "9 AM"
+  },
+  {
+   "group": "Time and start",
+   "sandboxVar": "DayNightCycle",
+   "idExactCase": true,
+   "label": "Day / Night Cycle",
+   "tooltip": "Whether the time of day changes naturally, or it's always day/night.",
+   "range": "3 choices",
+   "default": "Normal"
+  },
+  {
+   "group": "Time and start",
+   "sandboxVar": "TimeSinceApo",
+   "idExactCase": true,
+   "label": "Months since the Apocalypse",
+   "tooltip": "How long after the end of the world to begin.\nThis will affect starting world erosion and food spoilage.\nDoes not affect the starting date.",
+   "range": "13 choices",
+   "default": "0"
+  },
+  {
+   "group": "Time and start",
+   "sandboxVar": "NightDarkness",
+   "idExactCase": true,
+   "label": "Darkness during night",
+   "tooltip": "The level of ambient lighting at night.",
+   "range": "4 choices",
+   "default": "Normal"
+  },
+  {
+   "group": "Time and start",
+   "sandboxVar": "NightLength",
+   "idExactCase": true,
+   "label": "Length of nights",
+   "tooltip": "The time from dusk to dawn.",
+   "range": "5 choices",
+   "default": "Normal"
+  },
+  {
+   "group": "Water, power and world events",
+   "sandboxVar": "WaterShut",
+   "idExactCase": true,
+   "label": "Water Shutoff",
+   "tooltip": "How long after the default start date (July 9, 1993) that plumbing fixtures (eg. sinks) stop being infinite sources of water.",
+   "range": "9 choices",
+   "default": "0 - 30 Days"
+  },
+  {
+   "group": "Water, power and world events",
+   "sandboxVar": "ElecShut",
+   "idExactCase": true,
+   "label": "Electricity Shutoff",
+   "tooltip": "How long after the default start date (July 9, 1993) that the world's electricity turns off for good.",
+   "range": "9 choices",
+   "default": "14 - 30 Days"
+  },
+  {
+   "group": "Water, power and world events",
+   "sandboxVar": "AlarmDecay",
+   "idExactCase": true,
+   "label": "Alarm Battery Decay",
+   "tooltip": "How long alarm batteries can last for after the power shuts off.",
+   "range": "6 choices",
+   "default": "0 - 30 Days"
+  },
+  {
+   "group": "Water, power and world events",
+   "sandboxVar": "WaterShutModifier",
+   "idExactCase": false,
+   "label": "Water Shutoff (WaterShutModifier)",
+   "tooltip": "How long after the default start date (July 9, 1993) that plumbing fixtures (eg. sinks) stop being infinite sources of water.",
+   "range": "-1 or more",
+   "default": "14"
+  },
+  {
+   "group": "Water, power and world events",
+   "sandboxVar": "ElecShutModifier",
+   "idExactCase": false,
+   "label": "Electricity Shutoff (ElecShutModifier)",
+   "tooltip": "How long after the default start date (July 9, 1993) that the world's electricity turns off for good.",
+   "range": "-1 or more",
+   "default": "14"
+  },
+  {
+   "group": "Water, power and world events",
+   "sandboxVar": "AlarmDecayModifier",
+   "idExactCase": false,
+   "label": "Alarm Battery Decay (AlarmDecayModifier)",
+   "tooltip": "How long alarm batteries can last for after the power shuts off.",
+   "range": "-1 or more",
+   "default": "14"
+  },
+  {
+   "group": "Water, power and world events",
+   "sandboxVar": "Alarm",
+   "idExactCase": false,
+   "label": "House Alarms Frequency",
+   "tooltip": "How likely the player is to activate a house alarm when breaking into a new house.",
+   "range": "6 choices",
+   "default": "Sometimes"
+  },
+  {
+   "group": "Water, power and world events",
+   "sandboxVar": "LockedHouses",
+   "idExactCase": true,
+   "label": "Locked Houses Frequency",
+   "tooltip": "How frequently the doors of homes and buildings will be locked when discovered.",
+   "range": "6 choices",
+   "default": "Very Often"
+  },
+  {
+   "group": "Water, power and world events",
+   "sandboxVar": "Helicopter",
+   "idExactCase": false,
+   "label": "Helicopter",
+   "tooltip": "How regularly a helicopter passes over the Event Zone.",
+   "range": "4 choices",
+   "default": "Once"
+  },
+  {
+   "group": "Water, power and world events",
+   "sandboxVar": "MetaEvent",
+   "idExactCase": true,
+   "label": "Meta Event",
+   "tooltip": "How often zombie-attracting metagame events like distant gunshots will occur.",
+   "range": "3 choices",
+   "default": "Sometimes"
+  },
+  {
+   "group": "Water, power and world events",
+   "sandboxVar": "SleepingEvent",
+   "idExactCase": true,
+   "label": "Sleeping Event",
+   "tooltip": "How often events during the player's sleep, like nightmares, occur.",
+   "range": "3 choices",
+   "default": "Never"
+  },
+  {
+   "group": "Water, power and world events",
+   "sandboxVar": "GeneratorFuelConsumption",
+   "idExactCase": true,
+   "label": "Generator Fuel Consumption",
+   "tooltip": "How much fuel is consumed by generators per in-game hour.",
+   "range": "0 – 100",
+   "default": "0.1"
+  },
+  {
+   "group": "Water, power and world events",
+   "sandboxVar": "GeneratorSpawning",
+   "idExactCase": true,
+   "label": "Generators",
+   "tooltip": "The chance of electrical generators spawning on the map.",
+   "range": "7 choices",
+   "default": "Rare"
+  },
+  {
+   "group": "Water, power and world events",
+   "sandboxVar": "FireSpread",
+   "idExactCase": true,
+   "label": "Fire Spread",
+   "tooltip": "If fires spread when started.",
+   "range": "On / Off",
+   "default": "On"
+  },
+  {
+   "group": "Water, power and world events",
+   "sandboxVar": "AllowExteriorGenerator",
+   "idExactCase": true,
+   "label": "Generator Working in Exterior",
+   "tooltip": "If enabled, generators will work on exterior tiles. \nThis will allow, for example, the powering of gas pumps.",
+   "range": "On / Off",
+   "default": "On"
+  },
+  {
+   "group": "Water, power and world events",
+   "sandboxVar": "SirenShutoffHours",
+   "idExactCase": true,
+   "label": "Siren Shutoff Hours",
+   "tooltip": "How many in-game hours before a wailing siren shuts off.",
+   "range": "0 – 168",
+   "default": "0"
+  },
+  {
+   "group": "Water, power and world events",
+   "sandboxVar": "GeneratorTileRange",
+   "idExactCase": true,
+   "label": "Generator tile range",
+   "tooltip": "",
+   "range": "1 – 100",
+   "default": "20"
+  },
+  {
+   "group": "Water, power and world events",
+   "sandboxVar": "GeneratorVerticalPowerRange",
+   "idExactCase": true,
+   "label": "Generator vertical range",
+   "tooltip": "How many levels both above and below a generator it can provide with electricity.",
+   "range": "1 – 15",
+   "default": "3"
+  },
+  {
+   "group": "Loot",
+   "sandboxVar": "FoodLootNew",
+   "idExactCase": true,
+   "label": "Perishable Food",
+   "tooltip": "Any food that can rot or spoil.",
+   "range": "0 – 4",
+   "default": "0.8"
+  },
+  {
+   "group": "Loot",
+   "sandboxVar": "LiteratureLootNew",
+   "idExactCase": true,
+   "label": "Other Literature",
+   "tooltip": "All other items that can be read, including books, fliers, and newspapers.",
+   "range": "0 – 4",
+   "default": "0.6"
+  },
+  {
+   "group": "Loot",
+   "sandboxVar": "SkillBookLoot",
+   "idExactCase": true,
+   "label": "Skill Books",
+   "tooltip": "Books that provide skill XP multipliers.",
+   "range": "0 – 4",
+   "default": "0.6"
+  },
+  {
+   "group": "Loot",
+   "sandboxVar": "RecipeResourceLoot",
+   "idExactCase": true,
+   "label": "Recipe Resources",
+   "tooltip": "Items that teach recipes.",
+   "range": "0 – 4",
+   "default": "0.6"
+  },
+  {
+   "group": "Loot",
+   "sandboxVar": "MedicalLootNew",
+   "idExactCase": true,
+   "label": "Medical",
+   "tooltip": "Medicine, bandages and first aid tools.",
+   "range": "0 – 4",
+   "default": "0.6"
+  },
+  {
+   "group": "Loot",
+   "sandboxVar": "SurvivalGearsLootNew",
+   "idExactCase": true,
+   "label": "Survival Essentials",
+   "tooltip": "Fishing Rods, Tents, camping gear etc.",
+   "range": "0 – 4",
+   "default": "0.6"
+  },
+  {
+   "group": "Loot",
+   "sandboxVar": "CannedFoodLootNew",
+   "idExactCase": true,
+   "label": "Non-Perishable Food",
+   "tooltip": "Canned and dried food, beverages.",
+   "range": "0 – 4",
+   "default": "0.6"
+  },
+  {
+   "group": "Loot",
+   "sandboxVar": "WeaponLootNew",
+   "idExactCase": true,
+   "label": "Melee Weapons",
+   "tooltip": "Weapons that are not tools in other categories.",
+   "range": "0 – 4",
+   "default": "0.6"
+  },
+  {
+   "group": "Loot",
+   "sandboxVar": "RangedWeaponLootNew",
+   "idExactCase": true,
+   "label": "Ranged Weapons",
+   "tooltip": "Also includes weapon attachments.",
+   "range": "0 – 4",
+   "default": "1.2"
+  },
+  {
+   "group": "Loot",
+   "sandboxVar": "AmmoLootNew",
+   "idExactCase": true,
+   "label": "Ammo",
+   "tooltip": "Loose ammo, boxes and magazines.",
+   "range": "0 – 4",
+   "default": "0.6"
+  },
+  {
+   "group": "Loot",
+   "sandboxVar": "MechanicsLootNew",
+   "idExactCase": true,
+   "label": "Mechanics",
+   "tooltip": "Vehicle parts and the tools needed to install them.",
+   "range": "0 – 4",
+   "default": "0.6"
+  },
+  {
+   "group": "Loot",
+   "sandboxVar": "OtherLootNew",
+   "idExactCase": true,
+   "label": "Other",
+   "tooltip": "Everything else. Also affects foraging for all items in Town/Road zones.",
+   "range": "0 – 4",
+   "default": "0.8"
+  },
+  {
+   "group": "Loot",
+   "sandboxVar": "ClothingLootNew",
+   "idExactCase": true,
+   "label": "Clothing",
+   "tooltip": "All wearable items that are not containers.",
+   "range": "0 – 4",
+   "default": "0.6"
+  },
+  {
+   "group": "Loot",
+   "sandboxVar": "ContainerLootNew",
+   "idExactCase": true,
+   "label": "Bags",
+   "tooltip": "Backpacks and other wearable/equippable containers, eg. cases.",
+   "range": "0 – 4",
+   "default": "0.6"
+  },
+  {
+   "group": "Loot",
+   "sandboxVar": "KeyLootNew",
+   "idExactCase": true,
+   "label": "Keys",
+   "tooltip": "Keys for buildings/cars, key rings, and locks.",
+   "range": "0 – 4",
+   "default": "0.4"
+  },
+  {
+   "group": "Loot",
+   "sandboxVar": "MediaLootNew",
+   "idExactCase": true,
+   "label": "Media",
+   "tooltip": "VHS tapes and CDs.",
+   "range": "0 – 4",
+   "default": "0.6"
+  },
+  {
+   "group": "Loot",
+   "sandboxVar": "MementoLootNew",
+   "idExactCase": true,
+   "label": "Mementos",
+   "tooltip": "Spiffo items, plushies, and other collectible keepsake items eg. Photos.",
+   "range": "0 – 4",
+   "default": "0.6"
+  },
+  {
+   "group": "Loot",
+   "sandboxVar": "CookwareLootNew",
+   "idExactCase": true,
+   "label": "Cooking",
+   "tooltip": "Items that are used in cooking, including those (eg. knives) which can be weapons. Does not include food.\nIncludes both usable and unusable items.",
+   "range": "0 – 4",
+   "default": "0.6"
+  },
+  {
+   "group": "Loot",
+   "sandboxVar": "MaterialLootNew",
+   "idExactCase": true,
+   "label": "Material",
+   "tooltip": "Items and weapons that are used as ingredients for crafting or building.\nThis is a general category that does not include items belonging to other categories such as Cookware or Medical. Does not include Tools.",
+   "range": "0 – 4",
+   "default": "0.6"
+  },
+  {
+   "group": "Loot",
+   "sandboxVar": "FarmingLootNew",
+   "idExactCase": true,
+   "label": "Farming",
+   "tooltip": "Items and weapons which are used in both animal and plant agriculture, such as Seeds, Trowels, or Shovels.",
+   "range": "0 – 4",
+   "default": "0.6"
+  },
+  {
+   "group": "Loot",
+   "sandboxVar": "ToolLootNew",
+   "idExactCase": true,
+   "label": "Tools",
+   "tooltip": "Items and weapons which are Tools but don't fit in other categories such as Mechanics or Farming.",
+   "range": "0 – 4",
+   "default": "0.6"
+  },
+  {
+   "group": "Loot",
+   "sandboxVar": "RollsMultiplier",
+   "idExactCase": true,
+   "label": "Rolls Multiplier [!]",
+   "tooltip": "<BHC> [!] It is recommended that you DO NOT change this. [!] <RGB:1,1,1>\n\n Can be used to adjust the number of rolls made on loot tables when spawning loot. Will not reduce the number of rolls below 1. Can negatively affect performance if set to high values. It is highly recommended that this not be changed.",
+   "range": "0.1 – 100",
+   "default": "1"
+  },
+  {
+   "group": "Loot",
+   "sandboxVar": "LootItemRemovalList",
+   "idExactCase": true,
+   "label": "Loot Item Removal List",
+   "tooltip": "A comma-separated list of item types that won't spawn as ordinary loot.",
+   "range": "text",
+   "default": "(empty)"
+  },
+  {
+   "group": "Loot",
+   "sandboxVar": "RemoveStoryLoot",
+   "idExactCase": true,
+   "label": "Remove Unwanted Story Loot",
+   "tooltip": "If enabled, items on the Loot Item Removal List, or that have their rarity set to 'None', will not spawn in randomised world stories.",
+   "range": "On / Off",
+   "default": "Off"
+  },
+  {
+   "group": "Loot",
+   "sandboxVar": "RemoveZombieLoot",
+   "idExactCase": true,
+   "label": "Remove Unwanted Zombie Loot",
+   "tooltip": "If enabled, items on the Loot Item Removal List, or that have their rarity set to 'None', will not spawn worn by, or attached to, zombies.",
+   "range": "On / Off",
+   "default": "Off"
+  },
+  {
+   "group": "Loot",
+   "sandboxVar": "ZombiePopLootEffect",
+   "idExactCase": true,
+   "label": "Zombie Population Loot Effect",
+   "tooltip": "If greater than 0, the spawn of loot is increased relative to the number of nearby zombies, \nwith the effect multiplied by this number.",
+   "range": "0 – 20",
+   "default": "0"
+  },
+  {
+   "group": "Loot",
+   "sandboxVar": "InsaneLootFactor",
+   "idExactCase": true,
+   "label": "Insanely Rare Loot Factor",
+   "tooltip": "",
+   "range": "0 – 0.2",
+   "default": "0.05"
+  },
+  {
+   "group": "Loot",
+   "sandboxVar": "ExtremeLootFactor",
+   "idExactCase": true,
+   "label": "Extremely Rare Loot Factor",
+   "tooltip": "",
+   "range": "0.05 – 0.6",
+   "default": "0.2"
+  },
+  {
+   "group": "Loot",
+   "sandboxVar": "RareLootFactor",
+   "idExactCase": true,
+   "label": "Rare Loot Factor",
+   "tooltip": "",
+   "range": "0.2 – 1",
+   "default": "0.6"
+  },
+  {
+   "group": "Loot",
+   "sandboxVar": "NormalLootFactor",
+   "idExactCase": true,
+   "label": "Normal Loot Factor",
+   "tooltip": "",
+   "range": "0.6 – 2",
+   "default": "1"
+  },
+  {
+   "group": "Loot",
+   "sandboxVar": "CommonLootFactor",
+   "idExactCase": true,
+   "label": "Common Loot Factor",
+   "tooltip": "",
+   "range": "1 – 3",
+   "default": "2"
+  },
+  {
+   "group": "Loot",
+   "sandboxVar": "AbundantLootFactor",
+   "idExactCase": true,
+   "label": "Abundant Loot Factor",
+   "tooltip": "",
+   "range": "2 – 4",
+   "default": "3"
+  },
+  {
+   "group": "Loot",
+   "sandboxVar": "StarterKit",
+   "idExactCase": true,
+   "label": "Starter Kit",
+   "tooltip": "Spawn with Chips, a Water Bottle, a Small Backpack, a Baseball Bat, and a Hammer.",
+   "range": "On / Off",
+   "default": "Off"
+  },
+  {
+   "group": "Loot",
+   "sandboxVar": "SeenHoursPreventLootRespawn",
+   "idExactCase": true,
+   "label": "Loot Seen Prevent Hours",
+   "tooltip": "When greater than 0, loot will not respawn in zones that have been visited within this number of in-game hours.",
+   "range": "0 or more",
+   "default": "0"
+  },
+  {
+   "group": "Loot",
+   "sandboxVar": "HoursForLootRespawn",
+   "idExactCase": true,
+   "label": "Hours for Loot Respawn",
+   "tooltip": "When greater than 0, after X hours, all containers in towns and trailer parks in the world will respawn loot.\nTo spawn loot a container must have been looted at least once. Loot respawn is not impacted by visibility or subsequent looting.",
+   "range": "0 or more",
+   "default": "0"
+  },
+  {
+   "group": "Loot",
+   "sandboxVar": "MaxItemsForLootRespawn",
+   "idExactCase": true,
+   "label": "Max Items For Loot Respawn",
+   "tooltip": "Containers with a number of items greater, or equal to, this setting will not respawn.",
+   "range": "0 or more",
+   "default": "5"
+  },
+  {
+   "group": "Loot",
+   "sandboxVar": "ConstructionPreventsLootRespawn",
+   "idExactCase": true,
+   "label": "Construction Prevents Loot Respawn",
+   "tooltip": "Items will not respawn in buildings that players have barricaded or built in.",
+   "range": "On / Off",
+   "default": "On"
+  },
+  {
+   "group": "Loot",
+   "sandboxVar": "AnnotatedMapChance",
+   "idExactCase": true,
+   "label": "Annotated Map Chance",
+   "tooltip": "How often a looted map will have notes on it, written by a deceased survivor.",
+   "range": "6 choices",
+   "default": "Sometimes"
+  },
+  {
+   "group": "Loot",
+   "sandboxVar": "SurvivorHouseChance",
+   "idExactCase": true,
+   "label": "Randomized Building Chance",
+   "tooltip": "The chance of finding randomized buildings on the map (eg. burnt out houses, \nones containing loot stashes or dead bodies).",
+   "range": "7 choices",
+   "default": "Rare"
+  },
+  {
+   "group": "Loot",
+   "sandboxVar": "VehicleStoryChance",
+   "idExactCase": true,
+   "label": "Randomized Road Stories Chance",
+   "tooltip": "The chance of road stories (eg. police roadblocks) spawning.",
+   "range": "7 choices",
+   "default": "Rare"
+  },
+  {
+   "group": "Loot",
+   "sandboxVar": "ZoneStoryChance",
+   "idExactCase": true,
+   "label": "Randomized Zone Stories Chance",
+   "tooltip": "The chance of stories specific to map zones (eg. a campsite in a forest) spawning.",
+   "range": "7 choices",
+   "default": "Rare"
+  },
+  {
+   "group": "Loot",
+   "sandboxVar": "MaximumLootedBuildingRooms",
+   "idExactCase": true,
+   "label": "Maximum Looted Building Rooms",
+   "tooltip": "If a building has more than this amount of rooms it will not be looted.",
+   "range": "0 – 200",
+   "default": "50"
+  },
+  {
+   "group": "Loot",
+   "sandboxVar": "MaximumLooted",
+   "idExactCase": true,
+   "label": "Maximum Looted Building Chance",
+   "tooltip": "The chance that any building will already be looted when found.\nCheck the \"Advanced\" box below to use a custom number.",
+   "range": "0 – 200",
+   "default": "25"
+  },
+  {
+   "group": "Loot",
+   "sandboxVar": "DaysUntilMaximumLooted",
+   "idExactCase": true,
+   "label": "Days Until Max Looted Building Chance",
+   "tooltip": "How long it takes for Maximum Looted Building Chance to be reached.",
+   "range": "0 – 3650",
+   "default": "90"
+  },
+  {
+   "group": "Loot",
+   "sandboxVar": "RuralLooted",
+   "idExactCase": true,
+   "label": "Rural Building Looted Chance Multiplier",
+   "tooltip": "The chance that any rural building will already be looted when found.\nCheck the \"Advanced\" box below to use a custom number.",
+   "range": "0 – 2",
+   "default": "0.5"
+  },
+  {
+   "group": "Loot",
+   "sandboxVar": "MaximumDiminishedLoot",
+   "idExactCase": true,
+   "label": "Maximum Diminished Loot Percentage",
+   "tooltip": "The maximum loot that won't spawn when Days Until Maximum Diminished Loot is reached.\nCheck the \"Advanced\" box below to use an exact percentage.",
+   "range": "0 – 100",
+   "default": "20"
+  },
+  {
+   "group": "Loot",
+   "sandboxVar": "DaysUntilMaximumDiminishedLoot",
+   "idExactCase": true,
+   "label": "Days Until Maximum Diminished Loot",
+   "tooltip": "How long it takes for Maximum Diminished Loot Percentage to be reached.",
+   "range": "0 – 3650",
+   "default": "3650"
+  },
+  {
+   "group": "Nature, weather and farming",
+   "sandboxVar": "ClimateCycle",
+   "idExactCase": true,
+   "label": "Climate Cycle",
+   "tooltip": "Whether weather changes or remains at a single state.",
+   "range": "6 choices",
+   "default": "Normal"
+  },
+  {
+   "group": "Nature, weather and farming",
+   "sandboxVar": "FogCycle",
+   "idExactCase": true,
+   "label": "Fog Cycle",
+   "tooltip": "Whether fog occurs naturally, never occurs, or is always present.",
+   "range": "3 choices",
+   "default": "Normal"
+  },
+  {
+   "group": "Nature, weather and farming",
+   "sandboxVar": "Temperature",
+   "idExactCase": false,
+   "label": "Temperature",
+   "tooltip": "The global temperature.",
+   "range": "5 choices",
+   "default": "Normal"
+  },
+  {
+   "group": "Nature, weather and farming",
+   "sandboxVar": "Rain",
+   "idExactCase": false,
+   "label": "Rain",
+   "tooltip": "How often it rains.",
+   "range": "5 choices",
+   "default": "Normal"
+  },
+  {
+   "group": "Nature, weather and farming",
+   "sandboxVar": "ErosionSpeed",
+   "idExactCase": true,
+   "label": "Erosion Speed",
+   "tooltip": "Number of days until the erosion system (which adds vines, long grass,\nnew trees etc. to the world) will reach 100%% growth.",
+   "range": "5 choices",
+   "default": "Slow (200 Days)"
+  },
+  {
+   "group": "Nature, weather and farming",
+   "sandboxVar": "ErosionDays",
+   "idExactCase": true,
+   "label": "Erosion Days",
+   "tooltip": "For a custom Erosion Speed. Zero means use the Erosion Speed option.\nMaximum is 36,500 days (approximately 100 years).",
+   "range": "-1 – 36500",
+   "default": "0"
+  },
+  {
+   "group": "Nature, weather and farming",
+   "sandboxVar": "Farming",
+   "idExactCase": false,
+   "label": "Farming Speed",
+   "tooltip": "The speed of plant growth.",
+   "range": "5 choices",
+   "default": "Normal"
+  },
+  {
+   "group": "Nature, weather and farming",
+   "sandboxVar": "CompostTime",
+   "idExactCase": true,
+   "label": "Compost Time",
+   "tooltip": "How long it takes for food to break down in a composter.",
+   "range": "8 choices",
+   "default": "2 Weeks"
+  },
+  {
+   "group": "Nature, weather and farming",
+   "sandboxVar": "NatureAbundance",
+   "idExactCase": true,
+   "label": "Nature's Abundance",
+   "tooltip": "The abundance of items found in Foraging mode.",
+   "range": "5 choices",
+   "default": "Normal"
+  },
+  {
+   "group": "Nature, weather and farming",
+   "sandboxVar": "PlantResilience",
+   "idExactCase": true,
+   "label": "Plant Resilience",
+   "tooltip": "How much water plants will lose per day, and their ability to avoid disease.",
+   "range": "5 choices",
+   "default": "Normal"
+  },
+  {
+   "group": "Nature, weather and farming",
+   "sandboxVar": "PlantAbundance",
+   "idExactCase": true,
+   "label": "Farming's Abundance",
+   "tooltip": "The yield of plants when harvested.",
+   "range": "5 choices",
+   "default": "Normal"
+  },
+  {
+   "group": "Nature, weather and farming",
+   "sandboxVar": "MaxFogIntensity",
+   "idExactCase": true,
+   "label": "Maximum Fog Intensity",
+   "tooltip": "Maximum intensity of fog.",
+   "range": "4 choices",
+   "default": "Normal"
+  },
+  {
+   "group": "Nature, weather and farming",
+   "sandboxVar": "MaxRainFxIntensity",
+   "idExactCase": true,
+   "label": "Maximum Rain FX Intensity",
+   "tooltip": "Maximum intensity of rain.",
+   "range": "3 choices",
+   "default": "Normal"
+  },
+  {
+   "group": "Nature, weather and farming",
+   "sandboxVar": "EnableSnowOnGround",
+   "idExactCase": true,
+   "label": "Snow on Ground",
+   "tooltip": "If snow will accumulate on the ground. \nIf disabled, snow will still show on vegetation and rooftops.",
+   "range": "On / Off",
+   "default": "On"
+  },
+  {
+   "group": "Nature, weather and farming",
+   "sandboxVar": "FishAbundance",
+   "idExactCase": true,
+   "label": "Fishing Abundance",
+   "tooltip": "The abundance of fish in rivers and lakes.",
+   "range": "5 choices",
+   "default": "Poor"
+  },
+  {
+   "group": "Nature, weather and farming",
+   "sandboxVar": "KillInsideCrops",
+   "idExactCase": true,
+   "label": "Kill Crops Grown Inside",
+   "tooltip": "When enabled, crops and herbs grown inside buildings will die. Does not affect houseplants.",
+   "range": "On / Off",
+   "default": "On"
+  },
+  {
+   "group": "Nature, weather and farming",
+   "sandboxVar": "PlantGrowingSeasons",
+   "idExactCase": true,
+   "label": "Plant Growing Seasons",
+   "tooltip": "When enabled, the growth of plants is affected by seasons.",
+   "range": "On / Off",
+   "default": "On"
+  },
+  {
+   "group": "Nature, weather and farming",
+   "sandboxVar": "PlaceDirtAboveground",
+   "idExactCase": true,
+   "label": "Farms not on Ground Level [!]",
+   "tooltip": "<BHC> [!] It is recommended that you DO NOT change this. Changing this can result in performance issues. [!] <RGB:1,1,1>\n\n When enabled, dirt can be placed, and farming performed on other than the ground level.",
+   "range": "On / Off",
+   "default": "Off"
+  },
+  {
+   "group": "Nature, weather and farming",
+   "sandboxVar": "FarmingSpeedNew",
+   "idExactCase": false,
+   "label": "Farming Speed (FarmingSpeedNew)",
+   "tooltip": "The speed of plant growth.",
+   "range": "0.1 – 100",
+   "default": "1"
+  },
+  {
+   "group": "Nature, weather and farming",
+   "sandboxVar": "FarmingAmountNew",
+   "idExactCase": true,
+   "label": "Farming Abundance",
+   "tooltip": "The abundance of harvested crops.",
+   "range": "0.1 – 10",
+   "default": "1"
+  },
+  {
+   "group": "Nature, weather and farming",
+   "sandboxVar": "ClayLakeChance",
+   "idExactCase": true,
+   "label": "Clay chance - Lake",
+   "tooltip": "Chance to turn a dirt floor into a clay floor. Applies to lakes.",
+   "range": "0 – 1",
+   "default": "0.05"
+  },
+  {
+   "group": "Nature, weather and farming",
+   "sandboxVar": "ClayRiverChance",
+   "idExactCase": true,
+   "label": "Clay chance - River",
+   "tooltip": "Chance to turn a dirt floor into a clay floor. Applies to rivers.",
+   "range": "0 – 1",
+   "default": "0.05"
+  },
+  {
+   "group": "Character, health and food",
+   "sandboxVar": "StatsDecrease",
+   "idExactCase": true,
+   "label": "Stats Decrease",
+   "tooltip": "How fast the player's hunger, thirst, and fatigue will decrease.",
+   "range": "5 choices",
+   "default": "Normal"
+  },
+  {
+   "group": "Character, health and food",
+   "sandboxVar": "Nutrition",
+   "idExactCase": false,
+   "label": "Nutrition System",
+   "tooltip": "Nutritional value of food affects the player's condition. Turning this off will stop the player gaining or losing weight.",
+   "range": "On / Off",
+   "default": "On"
+  },
+  {
+   "group": "Character, health and food",
+   "sandboxVar": "FoodRotSpeed",
+   "idExactCase": true,
+   "label": "Food Spoilage",
+   "tooltip": "How fast that food will spoil, inside or outside of a fridge.",
+   "range": "5 choices",
+   "default": "Normal"
+  },
+  {
+   "group": "Character, health and food",
+   "sandboxVar": "FridgeFactor",
+   "idExactCase": true,
+   "label": "Refrigeration Effectiveness",
+   "tooltip": "How effective a fridge will be at keeping food fresh for longer.",
+   "range": "6 choices",
+   "default": "Normal"
+  },
+  {
+   "group": "Character, health and food",
+   "sandboxVar": "EndRegen",
+   "idExactCase": true,
+   "label": "Endurance Regeneration",
+   "tooltip": "Recovery from being tired after performing actions.",
+   "range": "5 choices",
+   "default": "Normal"
+  },
+  {
+   "group": "Character, health and food",
+   "sandboxVar": "CharacterFreePoints",
+   "idExactCase": true,
+   "label": "Free Trait Points",
+   "tooltip": "Adds free points during character creation.",
+   "range": "-100 – 100",
+   "default": "0"
+  },
+  {
+   "group": "Character, health and food",
+   "sandboxVar": "ConstructionBonusPoints",
+   "idExactCase": true,
+   "label": "Player-built Construction Strength",
+   "tooltip": "Gives player-built constructions extra hit points so they are \nmore resistant to zombie damage.",
+   "range": "5 choices",
+   "default": "Normal"
+  },
+  {
+   "group": "Character, health and food",
+   "sandboxVar": "BoneFracture",
+   "idExactCase": true,
+   "label": "Bone Fracture",
+   "tooltip": "If survivors can get broken limbs from impacts, zombie damage, falls etc.",
+   "range": "On / Off",
+   "default": "On"
+  },
+  {
+   "group": "Character, health and food",
+   "sandboxVar": "InjurySeverity",
+   "idExactCase": true,
+   "label": "Injury Severity",
+   "tooltip": "The impact that injuries have on your body, and their healing time.",
+   "range": "",
+   "default": "2"
+  },
+  {
+   "group": "Character, health and food",
+   "sandboxVar": "HoursForCorpseRemoval",
+   "idExactCase": true,
+   "label": "Time Before Corpse Removal",
+   "tooltip": "How long, in hours, before dead zombie bodies disappear from the world. \nIf 0, maggots will not spawn on corpses.",
+   "range": "-1 or more",
+   "default": "216"
+  },
+  {
+   "group": "Character, health and food",
+   "sandboxVar": "DecayingCorpseHealthImpact",
+   "idExactCase": true,
+   "label": "Decaying Corpse Health Impact",
+   "tooltip": "The impact that nearby decaying bodies has on the player's health and emotions.",
+   "range": "5 choices",
+   "default": "Normal"
+  },
+  {
+   "group": "Character, health and food",
+   "sandboxVar": "ZombieHealthImpact",
+   "idExactCase": true,
+   "label": "Zombie Health Impact",
+   "tooltip": "Whether nearby \"living\" zombies have the same impact on the player's health and emotions.",
+   "range": "On / Off",
+   "default": "Off"
+  },
+  {
+   "group": "Character, health and food",
+   "sandboxVar": "BloodLevel",
+   "idExactCase": true,
+   "label": "Blood Level",
+   "tooltip": "How much blood is sprayed on floors and walls by injuries.",
+   "range": "5 choices",
+   "default": "Normal"
+  },
+  {
+   "group": "Character, health and food",
+   "sandboxVar": "ClothingDegradation",
+   "idExactCase": true,
+   "label": "Clothing Degradation",
+   "tooltip": "How quickly clothing degrades, becomes dirty, and bloodied.",
+   "range": "4 choices",
+   "default": "Normal"
+  },
+  {
+   "group": "Character, health and food",
+   "sandboxVar": "DaysForRottenFoodRemoval",
+   "idExactCase": true,
+   "label": "Rotten Food Removal",
+   "tooltip": "Number of in-game days before rotten food is removed from the map. \n-1 means rotten food is never removed.",
+   "range": "-1 or more",
+   "default": "-1"
+  },
+  {
+   "group": "Character, health and food",
+   "sandboxVar": "AttackBlockMovements",
+   "idExactCase": true,
+   "label": "Melee Movement Disruption",
+   "tooltip": "If melee attacking slows you down.",
+   "range": "On / Off",
+   "default": "On"
+  },
+  {
+   "group": "Character, health and food",
+   "sandboxVar": "AllClothesUnlocked",
+   "idExactCase": true,
+   "label": "All Clothing Unlocked",
+   "tooltip": "Allows you to select from every piece of clothing in the game when customizing your character",
+   "range": "On / Off",
+   "default": "Off"
+  },
+  {
+   "group": "Character, health and food",
+   "sandboxVar": "EnableTaintedWaterText",
+   "idExactCase": true,
+   "label": "Enable 'Tainted Water' tooltip",
+   "tooltip": "If tainted water will show a warning marking it as such.",
+   "range": "On / Off",
+   "default": "On"
+  },
+  {
+   "group": "Character, health and food",
+   "sandboxVar": "MultiHitZombies",
+   "idExactCase": true,
+   "label": "Weapon Multi Hit",
+   "tooltip": "If certain melee weapons will be able to strike multiple zombies in one hit.",
+   "range": "On / Off",
+   "default": "Off"
+  },
+  {
+   "group": "Character, health and food",
+   "sandboxVar": "RearVulnerability",
+   "idExactCase": true,
+   "label": "Rear Vulnerability",
+   "tooltip": "Chance of being bitten when a zombie attacks from behind.",
+   "range": "3 choices",
+   "default": "High"
+  },
+  {
+   "group": "Character, health and food",
+   "sandboxVar": "EnablePoisoning",
+   "idExactCase": true,
+   "label": "Enable Poisoning",
+   "tooltip": "If poison can be added to food.",
+   "range": "3 choices",
+   "default": "True"
+  },
+  {
+   "group": "Character, health and food",
+   "sandboxVar": "MaggotSpawn",
+   "idExactCase": true,
+   "label": "Corpse Maggot Spawn",
+   "tooltip": "If/when maggots can spawn in corpses.",
+   "range": "3 choices",
+   "default": "In and Around Bodies"
+  },
+  {
+   "group": "Character, health and food",
+   "sandboxVar": "NegativeTraitsPenalty",
+   "idExactCase": true,
+   "label": "Negative Traits Penalty",
+   "tooltip": "If there are diminishing returns on bonus trait points provided from selecting multiple negative traits.",
+   "range": "4 choices",
+   "default": "None"
+  },
+  {
+   "group": "Character, health and food",
+   "sandboxVar": "MuscleStrainFactor",
+   "idExactCase": true,
+   "label": "Muscle Strain Factor",
+   "tooltip": "Functions as a multiplier when applying muscle strain from swinging weapons or carrying heavy loads.",
+   "range": "0 – 10",
+   "default": "0.7"
+  },
+  {
+   "group": "Character, health and food",
+   "sandboxVar": "DiscomfortFactor",
+   "idExactCase": true,
+   "label": "Discomfort Factor",
+   "tooltip": "Functions as a multiplier when applying discomfort from worn items.",
+   "range": "0 – 10",
+   "default": "0.8"
+  },
+  {
+   "group": "Character, health and food",
+   "sandboxVar": "WoundInfectionFactor",
+   "idExactCase": true,
+   "label": "Wound Infection Damage Factor",
+   "tooltip": "If greater than zero damage can be taken from serious wound infections.",
+   "range": "0 – 10",
+   "default": "1"
+  },
+  {
+   "group": "Character, health and food",
+   "sandboxVar": "NoBlackClothes",
+   "idExactCase": true,
+   "label": "No Black Clothes",
+   "tooltip": "If true clothing with randomized tints will not be so dark to be virtually black.",
+   "range": "On / Off",
+   "default": "On"
+  },
+  {
+   "group": "Character, health and food",
+   "sandboxVar": "EasyClimbing",
+   "idExactCase": true,
+   "label": "Easy Climbing",
+   "tooltip": "Disables the failure chances when climbing sheet ropes or over walls.",
+   "range": "On / Off",
+   "default": "Off"
+  },
+  {
+   "group": "Skills, XP and reading",
+   "sandboxVar": "MetaKnowledge",
+   "idExactCase": true,
+   "label": "Media List Meta Knowledge",
+   "tooltip": "If a piece of media hasn't been fully seen or read, this setting determines\nwhether it's displayed fully, displayed as \"???\", or hidden completely.",
+   "range": "3 choices",
+   "default": "Completely hidden"
+  },
+  {
+   "group": "Skills, XP and reading",
+   "sandboxVar": "SeeNotLearntRecipe",
+   "idExactCase": true,
+   "label": "See Not Known Recipes",
+   "tooltip": "If true, you will be able to see any recipes that can be done with a station, even if you haven't learnt them yet.",
+   "range": "On / Off",
+   "default": "On"
+  },
+  {
+   "group": "Skills, XP and reading",
+   "sandboxVar": "LevelForMediaXPCutoff",
+   "idExactCase": true,
+   "label": "Maximum Media XP Level",
+   "tooltip": "When a skill is at this level or above, television/VHS/other media\n will not provide XP for it.",
+   "range": "0 – 10",
+   "default": "3"
+  },
+  {
+   "group": "Skills, XP and reading",
+   "sandboxVar": "LevelForDismantleXPCutoff",
+   "idExactCase": true,
+   "label": "Maximum Dismantling XP Level",
+   "tooltip": "When a skill is at this level or above, scrapping furniture does not provide XP for the relevant skill. Does not apply to Electrical.",
+   "range": "0 – 10",
+   "default": "0"
+  },
+  {
+   "group": "Skills, XP and reading",
+   "sandboxVar": "LiteratureCooldown",
+   "idExactCase": true,
+   "label": "Literature Cooldown Days",
+   "tooltip": "Number of days before one can benefit from reading previously read literature items.",
+   "range": "1 – 365",
+   "default": "45"
+  },
+  {
+   "group": "Skills, XP and reading",
+   "sandboxVar": "MinutesPerPage",
+   "idExactCase": true,
+   "label": "Minutes Per Skill Book Page",
+   "tooltip": "The number of in-game minutes it takes to read one page of a skill book.",
+   "range": "0 – 60",
+   "default": "2"
+  },
+  {
+   "group": "Skills, XP and reading",
+   "sandboxVar": "MultiplierConfig.Global",
+   "idExactCase": false,
+   "label": "Global Multiplier",
+   "tooltip": "The rate at which all skills level up.",
+   "range": "0 – 1000",
+   "default": "1"
+  },
+  {
+   "group": "Skills, XP and reading",
+   "sandboxVar": "MultiplierConfig.GlobalToggle",
+   "idExactCase": true,
+   "label": "Use Global Multiplier",
+   "tooltip": "When enabled, all skills will use the Global Multiplier.",
+   "range": "On / Off",
+   "default": "On"
+  },
+  {
+   "group": "Skills, XP and reading",
+   "sandboxVar": "MultiplierConfig.Fitness",
+   "idExactCase": false,
+   "label": "Fitness Multiplier",
+   "tooltip": "Rate at which Fitness skill levels up.",
+   "range": "0 – 1000",
+   "default": "1"
+  },
+  {
+   "group": "Skills, XP and reading",
+   "sandboxVar": "MultiplierConfig.Strength",
+   "idExactCase": false,
+   "label": "Strength Multiplier",
+   "tooltip": "Rate at which Strength skill levels up.",
+   "range": "0 – 1000",
+   "default": "1"
+  },
+  {
+   "group": "Skills, XP and reading",
+   "sandboxVar": "MultiplierConfig.Sprinting",
+   "idExactCase": false,
+   "label": "Sprinting Multiplier",
+   "tooltip": "Rate at which Sprinting skill levels up.",
+   "range": "0 – 1000",
+   "default": "1"
+  },
+  {
+   "group": "Skills, XP and reading",
+   "sandboxVar": "MultiplierConfig.Lightfoot",
+   "idExactCase": false,
+   "label": "Lightfooted Multiplier",
+   "tooltip": "Rate at which Lightfooted skill levels up.",
+   "range": "0 – 1000",
+   "default": "1"
+  },
+  {
+   "group": "Skills, XP and reading",
+   "sandboxVar": "MultiplierConfig.Nimble",
+   "idExactCase": false,
+   "label": "Nimble Multiplier",
+   "tooltip": "Rate at which Nimble skill levels up.",
+   "range": "0 – 1000",
+   "default": "1"
+  },
+  {
+   "group": "Skills, XP and reading",
+   "sandboxVar": "MultiplierConfig.Sneak",
+   "idExactCase": false,
+   "label": "Sneaking Multiplier",
+   "tooltip": "Rate at which Sneaking skill levels up.",
+   "range": "0 – 1000",
+   "default": "1"
+  },
+  {
+   "group": "Skills, XP and reading",
+   "sandboxVar": "MultiplierConfig.Axe",
+   "idExactCase": false,
+   "label": "Axe Multiplier",
+   "tooltip": "Rate at which Axe skill levels up.",
+   "range": "0 – 1000",
+   "default": "1"
+  },
+  {
+   "group": "Skills, XP and reading",
+   "sandboxVar": "MultiplierConfig.Blunt",
+   "idExactCase": false,
+   "label": "Long Blunt Multiplier",
+   "tooltip": "Rate at which Long Blunt skill levels up.",
+   "range": "0 – 1000",
+   "default": "1"
+  },
+  {
+   "group": "Skills, XP and reading",
+   "sandboxVar": "MultiplierConfig.SmallBlunt",
+   "idExactCase": true,
+   "label": "Short Blunt Multiplier",
+   "tooltip": "Rate at which Short Blunt skill levels up.",
+   "range": "0 – 1000",
+   "default": "1"
+  },
+  {
+   "group": "Skills, XP and reading",
+   "sandboxVar": "MultiplierConfig.LongBlade",
+   "idExactCase": true,
+   "label": "Long Blade Multiplier",
+   "tooltip": "Rate at which Long Blade skill levels up.",
+   "range": "0 – 1000",
+   "default": "1"
+  },
+  {
+   "group": "Skills, XP and reading",
+   "sandboxVar": "MultiplierConfig.SmallBlade",
+   "idExactCase": true,
+   "label": "Short Blade Multiplier",
+   "tooltip": "Rate at which Short Blade skill levels up.",
+   "range": "0 – 1000",
+   "default": "1"
+  },
+  {
+   "group": "Skills, XP and reading",
+   "sandboxVar": "MultiplierConfig.Spear",
+   "idExactCase": false,
+   "label": "Spear Multiplier",
+   "tooltip": "Rate at which Spear skill levels up.",
+   "range": "0 – 1000",
+   "default": "1"
+  },
+  {
+   "group": "Skills, XP and reading",
+   "sandboxVar": "MultiplierConfig.Maintenance",
+   "idExactCase": false,
+   "label": "Maintenance Multiplier",
+   "tooltip": "Rate at which Maintenance skill levels up.",
+   "range": "0 – 1000",
+   "default": "1"
+  },
+  {
+   "group": "Skills, XP and reading",
+   "sandboxVar": "MultiplierConfig.Woodwork",
+   "idExactCase": true,
+   "label": "Carpentry Multiplier",
+   "tooltip": "Rate at which Carpentry skill levels up.",
+   "range": "0 – 1000",
+   "default": "1"
+  },
+  {
+   "group": "Skills, XP and reading",
+   "sandboxVar": "MultiplierConfig.Cooking",
+   "idExactCase": false,
+   "label": "Cooking Multiplier",
+   "tooltip": "Rate at which Cooking skill levels up.",
+   "range": "0 – 1000",
+   "default": "1"
+  },
+  {
+   "group": "Skills, XP and reading",
+   "sandboxVar": "MultiplierConfig.Farming",
+   "idExactCase": true,
+   "label": "Agriculture Multiplier",
+   "tooltip": "Rate at which Agriculture skill levels up.",
+   "range": "0 – 1000",
+   "default": "1"
+  },
+  {
+   "group": "Skills, XP and reading",
+   "sandboxVar": "MultiplierConfig.Doctor",
+   "idExactCase": true,
+   "label": "First Aid Multiplier",
+   "tooltip": "Rate at which First Aid skill levels up.",
+   "range": "0 – 1000",
+   "default": "1"
+  },
+  {
+   "group": "Skills, XP and reading",
+   "sandboxVar": "MultiplierConfig.Electricity",
+   "idExactCase": true,
+   "label": "Electrical Multiplier",
+   "tooltip": "Rate at which Electrical skill levels up.",
+   "range": "0 – 1000",
+   "default": "1"
+  },
+  {
+   "group": "Skills, XP and reading",
+   "sandboxVar": "MultiplierConfig.MetalWelding",
+   "idExactCase": true,
+   "label": "Welding Multiplier",
+   "tooltip": "Rate at which Welding skill levels up.",
+   "range": "0 – 1000",
+   "default": "1"
+  },
+  {
+   "group": "Skills, XP and reading",
+   "sandboxVar": "MultiplierConfig.Mechanics",
+   "idExactCase": false,
+   "label": "Mechanics Multiplier",
+   "tooltip": "Rate at which Mechanics skill levels up.",
+   "range": "0 – 1000",
+   "default": "1"
+  },
+  {
+   "group": "Skills, XP and reading",
+   "sandboxVar": "MultiplierConfig.Tailoring",
+   "idExactCase": false,
+   "label": "Tailoring Multiplier",
+   "tooltip": "Rate at which Tailoring skill levels up.",
+   "range": "0 – 1000",
+   "default": "1"
+  },
+  {
+   "group": "Skills, XP and reading",
+   "sandboxVar": "MultiplierConfig.Aiming",
+   "idExactCase": false,
+   "label": "Aiming Multiplier",
+   "tooltip": "Rate at which Aiming skill levels up.",
+   "range": "0 – 1000",
+   "default": "1"
+  },
+  {
+   "group": "Skills, XP and reading",
+   "sandboxVar": "MultiplierConfig.Reloading",
+   "idExactCase": false,
+   "label": "Reloading Multiplier",
+   "tooltip": "Rate at which Reloading skill levels up.",
+   "range": "0 – 1000",
+   "default": "1"
+  },
+  {
+   "group": "Skills, XP and reading",
+   "sandboxVar": "MultiplierConfig.Fishing",
+   "idExactCase": false,
+   "label": "Fishing Multiplier",
+   "tooltip": "Rate at which Fishing skill levels up.",
+   "range": "0 – 1000",
+   "default": "1"
+  },
+  {
+   "group": "Skills, XP and reading",
+   "sandboxVar": "MultiplierConfig.Trapping",
+   "idExactCase": false,
+   "label": "Trapping Multiplier",
+   "tooltip": "Rate at which Trapping skill levels up.",
+   "range": "0 – 1000",
+   "default": "1"
+  },
+  {
+   "group": "Skills, XP and reading",
+   "sandboxVar": "MultiplierConfig.PlantScavenging",
+   "idExactCase": true,
+   "label": "Foraging Multiplier",
+   "tooltip": "Rate at which Foraging skill levels up.",
+   "range": "0 – 1000",
+   "default": "1"
+  },
+  {
+   "group": "Skills, XP and reading",
+   "sandboxVar": "MultiplierConfig.FlintKnapping",
+   "idExactCase": true,
+   "label": "Knapping Multiplier",
+   "tooltip": "Rate at which Knapping skill levels up.",
+   "range": "0 – 1000",
+   "default": "1"
+  },
+  {
+   "group": "Skills, XP and reading",
+   "sandboxVar": "MultiplierConfig.Masonry",
+   "idExactCase": false,
+   "label": "Masonry Multiplier",
+   "tooltip": "Rate at which Masonry skill levels up.",
+   "range": "0 – 1000",
+   "default": "1"
+  },
+  {
+   "group": "Skills, XP and reading",
+   "sandboxVar": "MultiplierConfig.Pottery",
+   "idExactCase": false,
+   "label": "Pottery Multiplier",
+   "tooltip": "Rate at which Pottery skill levels up.",
+   "range": "0 – 1000",
+   "default": "1"
+  },
+  {
+   "group": "Skills, XP and reading",
+   "sandboxVar": "MultiplierConfig.Carving",
+   "idExactCase": false,
+   "label": "Carving Multiplier",
+   "tooltip": "Rate at which Carving skill levels up.",
+   "range": "0 – 1000",
+   "default": "1"
+  },
+  {
+   "group": "Skills, XP and reading",
+   "sandboxVar": "MultiplierConfig.Husbandry",
+   "idExactCase": true,
+   "label": "Animal Care Multiplier",
+   "tooltip": "Rate at which Animal Care skill levels up.",
+   "range": "0 – 1000",
+   "default": "1"
+  },
+  {
+   "group": "Skills, XP and reading",
+   "sandboxVar": "MultiplierConfig.Tracking",
+   "idExactCase": false,
+   "label": "Tracking Multiplier",
+   "tooltip": "Rate at which Tracking skill levels up.",
+   "range": "0 – 1000",
+   "default": "1"
+  },
+  {
+   "group": "Skills, XP and reading",
+   "sandboxVar": "MultiplierConfig.Blacksmith",
+   "idExactCase": false,
+   "label": "Blacksmithing Multiplier",
+   "tooltip": "Rate at which Blacksmithing skill levels up.",
+   "range": "0 – 1000",
+   "default": "1"
+  },
+  {
+   "group": "Skills, XP and reading",
+   "sandboxVar": "MultiplierConfig.Butchering",
+   "idExactCase": false,
+   "label": "Butchering Multiplier",
+   "tooltip": "Rate at which Butchering skill levels up.",
+   "range": "0 – 1000",
+   "default": "1"
+  },
+  {
+   "group": "Skills, XP and reading",
+   "sandboxVar": "MultiplierConfig.Glassmaking",
+   "idExactCase": false,
+   "label": "Glassmaking Multiplier",
+   "tooltip": "Rate at which Glassmaking skill levels up.",
+   "range": "0 – 1000",
+   "default": "1"
+  },
+  {
+   "group": "Vehicles and fuel",
+   "sandboxVar": "EnableVehicles",
+   "idExactCase": true,
+   "label": "Vehicles",
+   "tooltip": "If vehicles will spawn.",
+   "range": "On / Off",
+   "default": "On"
+  },
+  {
+   "group": "Vehicles and fuel",
+   "sandboxVar": "CarSpawnRate",
+   "idExactCase": true,
+   "label": "Vehicle Spawn Rate",
+   "tooltip": "How frequently vehicles can be discovered on the map.",
+   "range": "5 choices",
+   "default": "Low"
+  },
+  {
+   "group": "Vehicles and fuel",
+   "sandboxVar": "VehicleEasyUse",
+   "idExactCase": true,
+   "label": "Easy Use",
+   "tooltip": "Whether found vehicles are locked, need keys to start etc.",
+   "range": "On / Off",
+   "default": "Off"
+  },
+  {
+   "group": "Vehicles and fuel",
+   "sandboxVar": "InitialGas",
+   "idExactCase": true,
+   "label": "Initial Gas",
+   "tooltip": "How full the gas tank of discovered vehicles will be.",
+   "range": "6 choices",
+   "default": "Low"
+  },
+  {
+   "group": "Vehicles and fuel",
+   "sandboxVar": "FuelStationGasInfinite",
+   "idExactCase": true,
+   "label": "Infinite Gas Pumps",
+   "tooltip": "If enabled, gas pumps will never run out of fuel",
+   "range": "On / Off",
+   "default": "Off"
+  },
+  {
+   "group": "Vehicles and fuel",
+   "sandboxVar": "FuelStationGasMin",
+   "idExactCase": true,
+   "label": "Initial Minimum Gas Pump Amount",
+   "tooltip": "The minimum amount of gasoline that can spawn in gas pumps.\nCheck the \"Advanced\" box below to use a custom amount.",
+   "range": "0 – 1",
+   "default": "0"
+  },
+  {
+   "group": "Vehicles and fuel",
+   "sandboxVar": "FuelStationGasMax",
+   "idExactCase": true,
+   "label": "Initial Maximum Gas Pump Amount",
+   "tooltip": "The maximum amount of gasoline that can spawn in gas pumps.\nCheck the \"Advanced\" box below to use a custom amount.",
+   "range": "0 – 1",
+   "default": "0.8"
+  },
+  {
+   "group": "Vehicles and fuel",
+   "sandboxVar": "FuelStationGasEmptyChance",
+   "idExactCase": true,
+   "label": "Initial Gas Pump Empty Chance",
+   "tooltip": "The chance, as a percentage, that individual gas pumps will initially have no fuel.",
+   "range": "0 – 100",
+   "default": "20"
+  },
+  {
+   "group": "Vehicles and fuel",
+   "sandboxVar": "LockedCar",
+   "idExactCase": true,
+   "label": "Locked Vehicle Frequency",
+   "tooltip": "How likely cars will be locked",
+   "range": "6 choices",
+   "default": "Sometimes"
+  },
+  {
+   "group": "Vehicles and fuel",
+   "sandboxVar": "CarGasConsumption",
+   "idExactCase": true,
+   "label": "Gas Consumption",
+   "tooltip": "How gas-hungry vehicles are.",
+   "range": "0 – 100",
+   "default": "1"
+  },
+  {
+   "group": "Vehicles and fuel",
+   "sandboxVar": "CarGeneralCondition",
+   "idExactCase": true,
+   "label": "General Condition",
+   "tooltip": "General condition discovered vehicles will be in.",
+   "range": "5 choices",
+   "default": "Normal"
+  },
+  {
+   "group": "Vehicles and fuel",
+   "sandboxVar": "CarDamageOnImpact",
+   "idExactCase": true,
+   "label": "Car Damage on Impact",
+   "tooltip": "The amount of damage dealt to vehicles that crash.",
+   "range": "5 choices",
+   "default": "Normal"
+  },
+  {
+   "group": "Vehicles and fuel",
+   "sandboxVar": "DamageToPlayerFromHitByACar",
+   "idExactCase": true,
+   "label": "Player Damage From Vehicle Impact",
+   "tooltip": "Damage received by the player from being crashed into.",
+   "range": "",
+   "default": "1"
+  },
+  {
+   "group": "Vehicles and fuel",
+   "sandboxVar": "TrafficJam",
+   "idExactCase": true,
+   "label": "Car Wreck Congestion",
+   "tooltip": "If traffic jams consisting of wrecked cars \nwill appear on main roads.",
+   "range": "On / Off",
+   "default": "On"
+  },
+  {
+   "group": "Vehicles and fuel",
+   "sandboxVar": "CarAlarm",
+   "idExactCase": true,
+   "label": "Vehicle Alarms Frequency",
+   "tooltip": "How frequently discovered vehicles have active alarms.",
+   "range": "6 choices",
+   "default": "Rare"
+  },
+  {
+   "group": "Vehicles and fuel",
+   "sandboxVar": "PlayerDamageFromCrash",
+   "idExactCase": true,
+   "label": "Player Damage from Crash",
+   "tooltip": "If the player can get injured from being in a car accident.",
+   "range": "On / Off",
+   "default": "On"
+  },
+  {
+   "group": "Vehicles and fuel",
+   "sandboxVar": "ChanceHasGas",
+   "idExactCase": true,
+   "label": "Chance Has Gas",
+   "tooltip": "The chance of finding a vehicle with gas in its tank.",
+   "range": "3 choices",
+   "default": "Normal"
+  },
+  {
+   "group": "Vehicles and fuel",
+   "sandboxVar": "RecentlySurvivorVehicles",
+   "idExactCase": true,
+   "label": "Recent Survivor Vehicles",
+   "tooltip": "Whether a player can discover a car that has been cared for\n after the Knox infection struck.",
+   "range": "4 choices",
+   "default": "Low"
+  },
+  {
+   "group": "Vehicles and fuel",
+   "sandboxVar": "SirenEffectsZombies",
+   "idExactCase": true,
+   "label": "Vehicle Sirens Attract Zombies",
+   "tooltip": "If zombies will head towards the sound of vehicle sirens.",
+   "range": "On / Off",
+   "default": "On"
+  },
+  {
+   "group": "Firearms",
+   "sandboxVar": "FirearmUseDamageChance",
+   "idExactCase": true,
+   "label": "Firearms Use Damage Chance",
+   "tooltip": "Replaces Chance-To-Hit mechanics with Chance-To-Damage calculations.  This mode prioritizes player aiming.",
+   "range": "3 choices",
+   "default": "Zombies only"
+  },
+  {
+   "group": "Firearms",
+   "sandboxVar": "FirearmNoiseMultiplier",
+   "idExactCase": true,
+   "label": "Firearm Noise Multiplier",
+   "tooltip": "A multiplier for the distance at which zombies can hear gunshots.",
+   "range": "0.2 – 2",
+   "default": "1"
+  },
+  {
+   "group": "Firearms",
+   "sandboxVar": "FirearmJamMultiplier",
+   "idExactCase": true,
+   "label": "Firearm Jam Multiplier",
+   "tooltip": "Multiplier for firearm jamming chance. 0 disables jamming.",
+   "range": "0 – 10",
+   "default": "1"
+  },
+  {
+   "group": "Firearms",
+   "sandboxVar": "FirearmMoodleMultiplier",
+   "idExactCase": true,
+   "label": "Firearm Moodle Multiplier",
+   "tooltip": "Multiplier for Moodle effects on hit chance. 0 disables Moodle penalty.",
+   "range": "0 – 10",
+   "default": "1"
+  },
+  {
+   "group": "Firearms",
+   "sandboxVar": "FirearmWeatherMultiplier",
+   "idExactCase": true,
+   "label": "Firearm Weather Multiplier",
+   "tooltip": "Multiplier for the effects of weather (wind, rain and fog) on hit chance. 0 disables weather effect.",
+   "range": "0 – 10",
+   "default": "1"
+  },
+  {
+   "group": "Firearms",
+   "sandboxVar": "FirearmHeadGearEffect",
+   "idExactCase": true,
+   "label": "Firearm Headgear Effect",
+   "tooltip": "Enable to have headgear like welding masks affect hit chance",
+   "range": "On / Off",
+   "default": "On"
+  },
+  {
+   "group": "Animals and rats",
+   "sandboxVar": "AnimalStatsModifier",
+   "idExactCase": true,
+   "label": "Stats Reduction Speed",
+   "tooltip": "Speed at which animals stats (hunger, thirst etc.) reduce.",
+   "range": "6 choices",
+   "default": "Normal"
+  },
+  {
+   "group": "Animals and rats",
+   "sandboxVar": "AnimalMetaStatsModifier",
+   "idExactCase": true,
+   "label": "Meta Stats Reduction Speed",
+   "tooltip": "Speed at which animals stats (hunger, thirst etc.) reduce while in meta.",
+   "range": "6 choices",
+   "default": "Normal"
+  },
+  {
+   "group": "Animals and rats",
+   "sandboxVar": "AnimalPregnancyTime",
+   "idExactCase": true,
+   "label": "Pregnancy Time",
+   "tooltip": "How long animals will be pregnant for before giving birth.",
+   "range": "6 choices",
+   "default": "Normal"
+  },
+  {
+   "group": "Animals and rats",
+   "sandboxVar": "AnimalAgeModifier",
+   "idExactCase": true,
+   "label": "Aging Modifier Speed",
+   "tooltip": "Speed at which animals age.",
+   "range": "6 choices",
+   "default": "Normal"
+  },
+  {
+   "group": "Animals and rats",
+   "sandboxVar": "AnimalMilkIncModifier",
+   "idExactCase": true,
+   "label": "Milk Increase Speed",
+   "tooltip": "",
+   "range": "6 choices",
+   "default": "Normal"
+  },
+  {
+   "group": "Animals and rats",
+   "sandboxVar": "AnimalWoolIncModifier",
+   "idExactCase": true,
+   "label": "Wool Increase Speed",
+   "tooltip": "",
+   "range": "6 choices",
+   "default": "Normal"
+  },
+  {
+   "group": "Animals and rats",
+   "sandboxVar": "AnimalRanchChance",
+   "idExactCase": true,
+   "label": "Animal Spawn Chance",
+   "tooltip": "The chance of finding animals in farm.",
+   "range": "7 choices",
+   "default": "Often"
+  },
+  {
+   "group": "Animals and rats",
+   "sandboxVar": "AnimalGrassRegrowTime",
+   "idExactCase": true,
+   "label": "Grass Regrowth time",
+   "tooltip": "The number of hours grass will regrow after being\n eaten by an animal or cut by the player.",
+   "range": "1 – 9999",
+   "default": "240"
+  },
+  {
+   "group": "Animals and rats",
+   "sandboxVar": "AnimalMetaPredator",
+   "idExactCase": true,
+   "label": "Meta Predator",
+   "tooltip": "If a meta (ie. not actually visible in-game) fox may attack \nyour chickens if the hutch's door is left open at night.",
+   "range": "On / Off",
+   "default": "Off"
+  },
+  {
+   "group": "Animals and rats",
+   "sandboxVar": "AnimalMatingSeason",
+   "idExactCase": true,
+   "label": "Breeding Season",
+   "tooltip": "If on, animals will only mate during their breeding season (if any). \nOtherwise they can reproduce/lay eggs all year round.",
+   "range": "On / Off",
+   "default": "On"
+  },
+  {
+   "group": "Animals and rats",
+   "sandboxVar": "AnimalEggHatch",
+   "idExactCase": true,
+   "label": "Egg Hatch Time",
+   "tooltip": "How long before baby animals will hatch from eggs.",
+   "range": "6 choices",
+   "default": "Normal"
+  },
+  {
+   "group": "Animals and rats",
+   "sandboxVar": "AnimalSoundAttractZombies",
+   "idExactCase": true,
+   "label": "Animals Attract Zombies",
+   "tooltip": "If true, animal calls will attract nearby zombies.",
+   "range": "On / Off",
+   "default": "On"
+  },
+  {
+   "group": "Animals and rats",
+   "sandboxVar": "AnimalTrackChance",
+   "idExactCase": true,
+   "label": "Animal Tracks Chance",
+   "tooltip": "The chance of animals leaving tracks.",
+   "range": "6 choices",
+   "default": "Sometimes"
+  },
+  {
+   "group": "Animals and rats",
+   "sandboxVar": "AnimalPathChance",
+   "idExactCase": true,
+   "label": "Animal Paths Chance",
+   "tooltip": "The chance of creating a path for animals to be hunted.",
+   "range": "6 choices",
+   "default": "Sometimes"
+  },
+  {
+   "group": "Animals and rats",
+   "sandboxVar": "MaximumRatIndex",
+   "idExactCase": true,
+   "label": "Maximum Vermin Index",
+   "tooltip": "The frequency and intensity of eg. rats in infested buildings.",
+   "range": "0 – 50",
+   "default": "25"
+  },
+  {
+   "group": "Animals and rats",
+   "sandboxVar": "DaysUntilMaximumRatIndex",
+   "idExactCase": true,
+   "label": "Days Until Maximum Vermin Index",
+   "tooltip": "How long it takes for the Maximum Vermin Index to be reached.",
+   "range": "0 – 365",
+   "default": "90"
+  },
+  {
+   "group": "Map, basements and clean-up",
+   "sandboxVar": "WorldItemRemovalList",
+   "idExactCase": true,
+   "label": "World Item Removal List",
+   "tooltip": "A comma-separated list of item types that will be removed after HoursForWorldItemRemoval hours.",
+   "range": "text",
+   "default": "1 items"
+  },
+  {
+   "group": "Map, basements and clean-up",
+   "sandboxVar": "HoursForWorldItemRemoval",
+   "idExactCase": true,
+   "label": "Hours for Removal List",
+   "tooltip": "Number of hours since an item was dropped on the ground before it is removed. \nItems are removed the next time that part of the map is loaded.  \nZero means items are not removed.",
+   "range": "0 or more",
+   "default": "24"
+  },
+  {
+   "group": "Map, basements and clean-up",
+   "sandboxVar": "ItemRemovalListBlacklistToggle",
+   "idExactCase": true,
+   "label": "Removal List as Whitelist",
+   "tooltip": "If true, any items *not* in WorldItemRemovalList will be removed.",
+   "range": "On / Off",
+   "default": "Off"
+  },
+  {
+   "group": "Map, basements and clean-up",
+   "sandboxVar": "LightBulbLifespan",
+   "idExactCase": true,
+   "label": "Light Bulb Lifespan",
+   "tooltip": "The higher the value, the longer lightbulbs last before breaking. \nIf 0, lightbulbs will never break. \nDoes not affect vehicle headlights.",
+   "range": "0 – 1000",
+   "default": "2"
+  },
+  {
+   "group": "Map, basements and clean-up",
+   "sandboxVar": "BloodSplatLifespanDays",
+   "idExactCase": true,
+   "label": "Blood Splat Lifespan Days",
+   "tooltip": "Number of days before old blood splats are removed.\nRemoval happens when map chunks are loaded.\n0 means they will never disappear.",
+   "range": "0 – 365",
+   "default": "0"
+  },
+  {
+   "group": "Map, basements and clean-up",
+   "sandboxVar": "MaximumFireFuelHours",
+   "idExactCase": true,
+   "label": "Maximum Fire Fuel Hours",
+   "tooltip": "The maximum hours of fuel that can be placed in a campfire, wood stove etc.",
+   "range": "1 – 168",
+   "default": "8"
+  },
+  {
+   "group": "Map, basements and clean-up",
+   "sandboxVar": "Basement.SpawnFrequency",
+   "idExactCase": true,
+   "label": "Basement Spawn Frequency",
+   "tooltip": "How frequently basements spawn at random locations.",
+   "range": "7 choices",
+   "default": "Sometimes"
+  },
+  {
+   "group": "Map, basements and clean-up",
+   "sandboxVar": "Map.AllowMiniMap",
+   "idExactCase": true,
+   "label": "Allow Mini-Map",
+   "tooltip": "If enabled, a mini-map window will be available.",
+   "range": "On / Off",
+   "default": "Off"
+  },
+  {
+   "group": "Map, basements and clean-up",
+   "sandboxVar": "Map.AllowWorldMap",
+   "idExactCase": true,
+   "label": "Allow World Map",
+   "tooltip": "If enabled, the world map can be accessed.",
+   "range": "On / Off",
+   "default": "On"
+  },
+  {
+   "group": "Map, basements and clean-up",
+   "sandboxVar": "Map.MapAllKnown",
+   "idExactCase": true,
+   "label": "All Known On Start",
+   "tooltip": "If enabled, the world map will be completely filled in on starting the game.",
+   "range": "On / Off",
+   "default": "Off"
+  },
+  {
+   "group": "Map, basements and clean-up",
+   "sandboxVar": "Map.MapNeedsLight",
+   "idExactCase": true,
+   "label": "Light Needed To Read Map",
+   "tooltip": "If enabled, maps can't be read unless there's a source of light available.",
+   "range": "On / Off",
+   "default": "On"
+  }
+ ]
+}

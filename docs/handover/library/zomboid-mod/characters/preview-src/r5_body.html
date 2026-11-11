@@ -1,0 +1,83 @@
+
+<div class="wrap">
+  <div>
+    <div class="eyebrow">ZomboidCraft · creature preview</div>
+    <h1>Harvestman</h1>
+    <p class="lead">Rebuilt from your corridor shot: more legs than body. A small armoured body hangs low between four long, thin steel legs whose knees arch high above it, and the head is now a blackened skull with two red ring eyes. Feeding, it holds a corpse's head in its mouth while its scythe arms keep it there. Use the Angle buttons to compare it with your renders.</p>
+  </div>
+
+  <div class="stage" id="stage">
+    <canvas id="view" aria-label="3D view of the Harvestman"></canvas>
+    <div class="tag left" id="tagL">Hunting</div>
+    <div class="tag right" id="tagR">Feeding</div>
+    <div class="hint" id="hint">Drag to turn · scroll or pinch to zoom</div>
+  </div>
+
+  <div class="controls">
+    <div class="group"><span>Show</span>
+      <div class="seg" role="group" aria-label="Show">
+        <button id="v-hunt" data-view="hunt" aria-pressed="true">Hunting</button>
+        <button id="v-feed" data-view="feed" aria-pressed="false">Feeding</button>
+        <button id="v-both" data-view="both" aria-pressed="false">Both</button>
+      </div>
+    </div>
+    <div class="group"><span>Angle</span>
+      <div class="seg" role="group" aria-label="Angle">
+        <button id="a-q" data-angle="q" aria-pressed="true">¾</button>
+        <button id="a-side" data-angle="side" aria-pressed="false">Side</button>
+        <button id="a-front" data-angle="front" aria-pressed="false">Front</button>
+      </div>
+    </div>
+    <div class="group"><span>Motion</span>
+      <div class="seg" role="group" aria-label="Motion">
+        <button id="m-still" data-motion="still" aria-pressed="false">Still</button>
+        <button id="m-idle" data-motion="idle" aria-pressed="true">Idle</button>
+        <button id="m-walk" data-motion="walk" aria-pressed="false">Creep</button>
+      </div>
+    </div>
+    <div class="group"><span>Light</span>
+      <div class="seg" role="group" aria-label="Light">
+        <button id="l-studio" data-light="studio" aria-pressed="true">Studio</button>
+        <button id="l-torch" data-light="torch" aria-pressed="false">Torch</button>
+      </div>
+      <button class="toggle" id="t-player" aria-pressed="true">Player for scale</button>
+    </div>
+  </div>
+
+  <div class="section">The two forms</div>
+  <div class="forms">
+    <article class="card">
+      <header><h2>Hunting</h2><span class="band hunt">After you</span></header>
+      <div class="body">
+        <div class="stats">
+          <div class="stat"><b id="h-tall">–</b><small>Tall</small></div>
+          <div class="stat"><b id="h-span">–</b><small>Leg span</small></div>
+          <div class="stat"><b id="h-body">–</b><small>Belly off the floor</small></div>
+        </div>
+        <ul>
+          <li>A small, tapered body of overlapping jagged plates, rusted and full of holes, with long spines swept back along the ridge and a spike for a tail.</li>
+          <li>Four long steel legs: a short thigh up to a gear knee high above the body, then a long shin with toothed armour and a piston, running down into a barbed point.</li>
+          <li>A blackened skull pushed forward in ringed collars, two red ring eyes stacked on its left, a broad mouth of long teeth.</li>
+          <li>Two small scythe arms folded under the head like a mantis's, and red sinew and black cables looping out to the legs.</li>
+        </ul>
+      </div>
+    </article>
+    <article class="card">
+      <header><h2>Feeding</h2><span class="band feed">Gorging</span></header>
+      <div class="body">
+        <div class="stats">
+          <div class="stat"><b id="f-tall">–</b><small>Tall</small></div>
+          <div class="stat"><b id="f-span">–</b><small>Leg span</small></div>
+          <div class="stat"><b id="f-body">–</b><small>Belly off the floor</small></div>
+        </div>
+        <ul>
+          <li>It bites down over a corpse's head: the face disappears past its teeth and it drains it from the mouth.</li>
+          <li>The scythe arms reach round the body and hook behind its neck, holding the head in the mouth while the toes drag.</li>
+          <li>It lifts its head to feed, and the red inside it glows through the holes and gaps and pulses.</li>
+          <li>What it leaves behind is a shrivelled grey husk.</li>
+        </ul>
+      </div>
+    </article>
+  </div>
+  <p class="note">Preview only. Sizes are in blocks, and the player is there for scale. Once you're happy with the look, the in-game model and its hit shapes are built from this, the same way as the detailed jets.</p>
+</div>

@@ -1,0 +1,9 @@
+# items/military/bunker_blueprints
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-blueprint-diagrams-of-coaling-docktrestle-dl-w-railroad-yard.jpg | [Blueprint diagrams of coaling docktrestle, DL&W Railroad yard, Scranto](https://commons.wikimedia.org/wiki/File:Blueprint_diagrams_of_coaling_docktrestle,_DL%26W_Railroad_yard,_Scranton,_1900-1906._%22Elevation_of_Walls,%22_%22Plan_of_Walls_(8d8b9af7-8899-4464-8636-b7dcdf7910d1).jpg) | Steamtown NHS Museum Collection | Public domain | Blueprint diagrams of coaling dock/trestle, DL&W Railroad yard, Scranton, 1900-1906. "Elevation of Walls," "Plan of Walls," "Section at 0+77 |
+| 02-blueprint-diagrams-of-coaling-docktrestle-dl-w-railroad-yard.jpg | [Blueprint diagrams of coaling docktrestle, DL&W Railroad yard, Scranto](https://commons.wikimedia.org/wiki/File:Blueprint_diagrams_of_coaling_docktrestle,_DL%26W_Railroad_yard,_Scranton,_1900-1906._Construction_details._(8d809f24-0202-40ec-a98c-6e7a57e5b112).jpg) | Steamtown NHS Museum Collection | Public domain | Blueprint diagrams of coaling dock/trestle, DL&W Railroad yard, Scranton, 1900-1906. Construction details, specifications of coal chute slid |
+| 03-blueprint-diagrams-of-coaling-docktrestle-dl-w-railroad-yard.jpg | [Blueprint diagrams of coaling docktrestle, DL&W Railroad yard, Scranto](https://commons.wikimedia.org/wiki/File:Blueprint_diagrams_of_coaling_docktrestle,_DL%26W_Railroad_yard,_Scranton,_1900-1906._%22Elevation_on_Approach.%22_(20603c0c-23b9-4be6-84c9-bf8476f33b63).jpg) | Steamtown NHS Museum Collection | Public domain | Blueprint diagrams of coaling dock/trestle, DL&W Railroad yard, Scranton, 1900-1906. "Elevation on Approach." "Bent 1." "Bent 8." "Bent 16." |

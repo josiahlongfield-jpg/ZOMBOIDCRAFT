@@ -1,0 +1,391 @@
+<title>ZomboidCraft Field Kit HUD</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Allerta+Stencil&family=Barlow+Condensed:wght@400;500;600;700&family=Permanent+Marker&family=Share+Tech+Mono&display=swap">
+<style>
+/* Layout: a 16:9 first-person game frame with the HUD pieces pinned to its edges, and the demo controls under it. One dark look on purpose: it is a game screen. Everything inside the frame is sized in cqw so it scales with the frame. */
+:root{
+  color-scheme:dark;
+  --page:#0d0e0c; --page-fg:#d8d3c2; --page-dim:#8f8a7b; --page-line:#2a2b25;
+  --ink:#e8dfc4; --ink-dim:#a59d82; --pen:#1d1a14; --marker:#26211a; --marker-red:#9c2416;
+  --brass:#b8924a; --brass-hi:#e2c27a;
+  --mild:#b39532; --bad:#b0612a; --severe:#962a1d; --better:#7fae4e;
+  --f-stencil:"Allerta Stencil","Arial Narrow",sans-serif;
+  --f-body:"Barlow Condensed","Arial Narrow",sans-serif;
+  --f-hand:"Permanent Marker","Comic Sans MS",cursive;
+  --f-lcd:"Share Tech Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+body{background:var(--page);color:var(--page-fg);font-family:var(--f-body);font-size:16px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px}
+.wrap{max-width:1320px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+header h1{font:400 clamp(24px,3.6vw,34px) var(--f-stencil);margin:0;letter-spacing:.05em;text-wrap:balance}
+header p{margin:4px 0 0;color:var(--page-dim);max-width:72ch;line-height:1.35}
+
+/* ===== frame ===== */
+.game{position:relative;aspect-ratio:16/9;width:100%;max-width:100%;overflow:hidden;background:#07080a;border-radius:4px;container-type:inline-size;user-select:none;-webkit-user-select:none;color:var(--ink)}
+.bg{position:absolute;inset:0;background-size:cover;background-position:center;filter:brightness(.92) saturate(.95)}
+#rain{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:.35}
+.vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 80% 75% at 50% 45%,transparent 55%,rgba(0,0,0,.45) 100%)}
+.pulse{position:absolute;inset:0;pointer-events:none;opacity:0;background:radial-gradient(ellipse 75% 70% at 50% 50%,transparent 50%,rgba(140,10,0,.55) 100%)}
+.pulse.go{animation:beat 1.1s ease-out}
+@keyframes beat{0%{opacity:0}12%{opacity:1}30%{opacity:.25}45%{opacity:.8}100%{opacity:0}}
+
+/* fading: in fast, out slow */
+.piece{position:absolute;transition:opacity 1s ease,transform 1s ease;opacity:0}
+.piece.on{opacity:1;transition:opacity .25s ease,transform .25s ease}
+
+/* shared bits */
+.tape{display:inline-block;border-style:solid;border-width:.2cqw .5cqw;border-image:var(--tape) 2 5 fill / .2cqw .5cqw stretch;image-rendering:pixelated;padding:.05cqw .6cqw .1cqw;font:400 1.15cqw/1.25 var(--f-hand);color:var(--marker);white-space:nowrap;filter:drop-shadow(0 .12cqw .15cqw rgba(0,0,0,.55))}
+.tape.red{color:var(--marker-red)}
+.stencil{font:400 .72cqw/1 var(--f-stencil);letter-spacing:.12em;text-transform:uppercase;color:rgba(232,223,196,.78);text-shadow:0 0 .08cqw rgba(232,223,196,.35),0 .08cqw .12cqw rgba(0,0,0,.9)}
+
+/* crosshair */
+.cross{position:absolute;left:50%;top:50%;width:1.6cqw;height:1.6cqw;transform:translate(-50%,-50%);pointer-events:none}
+.cross i{position:absolute;background:rgba(240,236,224,.85);box-shadow:0 0 .1cqw rgba(0,0,0,.8)}
+.cross i:nth-child(1){left:0;top:calc(50% - .06cqw);width:.55cqw;height:.12cqw}
+.cross i:nth-child(2){right:0;top:calc(50% - .06cqw);width:.55cqw;height:.12cqw}
+.cross i:nth-child(3){top:0;left:calc(50% - .06cqw);height:.55cqw;width:.12cqw}
+.cross i:nth-child(4){bottom:0;left:calc(50% - .06cqw);height:.55cqw;width:.12cqw}
+.game.aiming .cross{opacity:.25}
+
+/* belt */
+#belt{left:50%;bottom:1.6cqw;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.5cqw}
+#belt.on{transform:translateX(-50%)}
+#belt:not(.on){transform:translate(-50%,.6cqw)}
+.held-name{opacity:0;transition:opacity .6s}
+.held-name.on{opacity:1;transition:opacity .15s}
+.strap{position:relative;display:flex;gap:.55cqw;padding:.55cqw 1.6cqw .35cqw;background:var(--webbing) center/9cqw;image-rendering:pixelated;border-radius:.25cqw;box-shadow:0 .25cqw .5cqw rgba(0,0,0,.55),inset 0 .1cqw 0 rgba(255,255,255,.06),inset 0 -.15cqw 0 rgba(0,0,0,.35)}
+.strap::before,.strap::after{content:"";position:absolute;left:.7cqw;right:.7cqw;height:0;border-top:.1cqw dashed rgba(200,190,150,.35)}
+.strap::before{top:.22cqw}.strap::after{bottom:.22cqw}
+.buckle{position:absolute;top:50%;width:.9cqw;height:2.6cqw;transform:translateY(-50%);border:.22cqw solid var(--brass);border-radius:.2cqw;background:linear-gradient(90deg,transparent 40%,rgba(0,0,0,.4) 40% 60%,transparent 60%);box-shadow:inset 0 0 .2cqw rgba(0,0,0,.6),0 0 .1cqw rgba(226,194,122,.4)}
+.buckle.l{left:.25cqw}.buckle.r{right:.25cqw}
+.bslot{display:flex;flex-direction:column;align-items:center;gap:.25cqw}
+.sock{position:relative;width:3.3cqw;height:3.3cqw;background:var(--slot) center/100% 100%;image-rendering:pixelated;border-radius:.2cqw;display:grid;place-items:center}
+.sock.sel::after{content:"";position:absolute;inset:-.35cqw;background:var(--slotsel) center/100% 100%;image-rendering:pixelated;pointer-events:none}
+.sock img{width:2.4cqw;height:2.4cqw;image-rendering:pixelated;filter:drop-shadow(0 .1cqw .1cqw rgba(0,0,0,.7))}
+.sock canvas{width:2.6cqw;image-rendering:pixelated}
+.sock.empty{background:rgba(0,0,0,.25);outline:.1cqw dashed rgba(232,223,196,.25);outline-offset:-.25cqw}
+.wear{position:absolute;left:.45cqw;right:.45cqw;bottom:.28cqw;height:.18cqw;background:rgba(0,0,0,.6)}
+.wear i{display:block;height:100%}
+.bslot .stencil{font-size:.6cqw}
+.bslot.gone{display:none}
+
+/* moodles */
+#moodles{right:2.1cqw;top:6.6cqw;display:flex;flex-direction:column;gap:.55cqw;align-items:flex-end;opacity:1}
+.moodle{position:relative;display:flex;align-items:center;gap:.6cqw;transition:opacity 1s,transform 1s;opacity:0;transform:translateX(.6cqw)}
+.moodle.gone{display:none}
+.moodle.on{opacity:1;transform:none;transition:opacity .25s,transform .25s}
+.moodle .tape{transition:opacity .8s,transform .8s;opacity:0;transform:translateX(.5cqw)}
+.moodle.named .tape{opacity:1;transform:none;transition:opacity .2s,transform .2s}
+.tile{position:relative;width:2.9cqw;height:2.9cqw;border-radius:.3cqw;display:grid;place-items:center;background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.18),transparent 60%),var(--c);box-shadow:inset 0 0 0 .1cqw rgba(0,0,0,.45),inset 0 -.2cqw .3cqw rgba(0,0,0,.3),0 .15cqw .3cqw rgba(0,0,0,.55)}
+.tile::before{content:"";position:absolute;inset:0;border-radius:inherit;background:var(--canvas) center/6cqw;mix-blend-mode:multiply;opacity:.45}
+.tile canvas{position:relative;width:1.9cqw;height:1.9cqw;image-rendering:pixelated;filter:drop-shadow(0 0 .05cqw rgba(29,26,20,.8))}
+.trend{position:absolute;right:-.55cqw;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:.08cqw;opacity:0;transition:opacity .6s}
+.trend.on{opacity:1}
+.trend i{width:0;height:0;border-left:.3cqw solid transparent;border-right:.3cqw solid transparent}
+.trend.up i{border-bottom:.35cqw solid var(--ink)}
+.trend.down i{border-top:.35cqw solid var(--better)}
+
+/* body */
+#body{left:2.2cqw;bottom:1.8cqw;padding:.6cqw .8cqw .3cqw;background:radial-gradient(ellipse at 50% 45%,rgba(0,0,0,.42),transparent 70%);display:flex;flex-direction:column;align-items:center;gap:.35cqw}
+#body canvas{width:4cqw;image-rendering:pixelated;filter:drop-shadow(0 .15cqw .25cqw rgba(0,0,0,.75))}
+
+/* weapon */
+#weapon{right:2.2cqw;bottom:2cqw;display:flex;flex-direction:column;align-items:flex-end;gap:.35cqw}
+#weapon .rounds{font-size:2cqw;letter-spacing:.04em}
+.pips{display:flex;gap:.14cqw}
+.pips i{width:.55cqw;height:.32cqw;background:rgba(232,223,196,.85);box-shadow:0 .06cqw .08cqw rgba(0,0,0,.8)}
+.pips i.off{background:rgba(0,0,0,.45)}
+
+/* watch */
+#watch{right:2.1cqw;top:1.6cqw;display:flex;flex-direction:column;align-items:center}
+.band{width:3.2cqw;height:.7cqw;background:var(--webbing) center/5cqw;image-rendering:pixelated;box-shadow:inset 0 0 .2cqw rgba(0,0,0,.6)}
+.case{position:relative;padding:.3cqw;border-radius:.45cqw;background:var(--metal) center/7cqw;image-rendering:pixelated;box-shadow:0 .2cqw .4cqw rgba(0,0,0,.6),inset 0 0 0 .08cqw rgba(255,255,255,.12)}
+.lcd{position:relative;width:6.2cqw;padding:.25cqw .4cqw .2cqw;border-radius:.2cqw;background:linear-gradient(160deg,#a9b494,#8b977a);box-shadow:inset 0 .12cqw .25cqw rgba(0,0,0,.45);color:#1f2618;font-family:var(--f-lcd);overflow:hidden}
+.lcd::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.22) 31%,transparent 33%),linear-gradient(70deg,transparent 62%,rgba(255,255,255,.14) 62.5%,transparent 63.5%),linear-gradient(160deg,rgba(255,255,255,.18),transparent 45%);pointer-events:none}
+.lcd .t{font-size:1.75cqw;line-height:1;letter-spacing:.04em;text-shadow:.06cqw .06cqw 0 rgba(31,38,24,.18)}
+.lcd .d{display:flex;justify-content:space-between;font-size:.62cqw;letter-spacing:.08em;opacity:.8}
+
+/* skill-up */
+#skill{left:2.2cqw;top:2cqw;transform:translateX(-1cqw)}
+#skill.on{transform:none}
+#skill .tape{font-size:1.25cqw}
+#skill .tape b{font-weight:400;color:#3c5a1e}
+
+/* grabbed */
+#grab{left:50%;top:calc(50% + 2.6cqw);transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.35cqw}
+#grab.on .tape{animation:shake .18s infinite}
+@keyframes shake{0%,100%{transform:translate(0,0) rotate(-.6deg)}50%{transform:translate(.08cqw,-.05cqw) rotate(.5deg)}}
+#grab .pips i{background:var(--marker-red);width:.6cqw}
+
+.peek-note{position:absolute;left:50%;top:2cqw;transform:translateX(-50%);opacity:0;transition:opacity .3s}
+.peek-note.on{opacity:1}
+
+/* ===== controls ===== */
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.group{border:1px solid var(--page-line);border-radius:6px;padding:10px 12px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.group h2{margin:0;font:400 13px var(--f-stencil);letter-spacing:.12em;text-transform:uppercase;color:var(--page-dim)}
+.btns{display:flex;flex-wrap:wrap;gap:6px}
+button{font:500 15px var(--f-body);color:var(--page-fg);background:#1b1c18;border:1px solid #3a3b33;border-radius:4px;padding:5px 10px;cursor:pointer}
+button:hover{border-color:var(--brass)}
+button:focus-visible{outline:2px solid var(--brass-hi);outline-offset:2px}
+button[aria-pressed="true"]{background:#3a3020;border-color:var(--brass);color:var(--brass-hi)}
+.keys{color:var(--page-dim);font-size:15px;line-height:1.4}
+.keys b{color:var(--page-fg);font-weight:600}
+@media (prefers-reduced-motion:reduce){.piece,.moodle,.moodle .tape{transition:none!important}#grab.on .tape{animation:none}.pulse.go{animation:none}}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Field kit HUD</h1>
+    <p>Mockup for ZomboidCraft. Every piece sits at the edge, uses the game's own textures, and fades out when it has nothing new to say. Bleeding keeps the body and its moodle on screen. Try the buttons below, or press 1 to 5, scroll over the frame, and hold Left Alt to peek.</p>
+  </header>
+
+  <div class="game" id="game" tabindex="0" aria-label="Game view with the HUD">
+    <div class="bg" id="bg"></div>
+    <canvas id="rain"></canvas>
+    <div class="vignette"></div>
+    <div class="pulse" id="pulse"></div>
+    <div class="cross"><i></i><i></i><i></i><i></i></div>
+
+    <div class="piece" id="skill"><span class="tape" id="skillTape">Carpentry <b>3</b></span></div>
+
+    <div class="piece" id="watch" aria-label="Wristwatch">
+      <div class="band"></div>
+      <div class="case"><div class="lcd"><div class="t" id="clock">21:40</div><div class="d"><span id="day">DAY 4</span><span id="ampm">SUN</span></div></div></div>
+      <div class="band"></div>
+    </div>
+
+    <div class="piece on" id="moodles" aria-label="Moodles"></div>
+
+    <div class="piece" id="grab"><span class="tape red">Grabbed! Mash jump or shove (V)</span><div class="pips" id="grabPips"></div></div>
+
+    <div class="piece" id="body" aria-label="Body condition">
+      <canvas id="bodyCv" width="18" height="34"></canvas>
+      <span class="stencil" id="bodyWord">Bleeding</span>
+    </div>
+
+    <div class="piece" id="belt" aria-label="Belt">
+      <span class="tape held-name" id="heldName">Baseball bat</span>
+      <div class="strap" id="strap"><span class="buckle l"></span><span class="buckle r"></span></div>
+    </div>
+
+    <div class="piece" id="weapon" aria-label="Weapon"></div>
+    <div class="peek-note" id="peekNote"><span class="stencil">Peek</span></div>
+  </div>
+
+  <div class="controls">
+    <div class="group"><h2>Body</h2><div class="btns">
+      <button id="bHit">Take a hit</button><button id="bBandage">Bandage a wound</button><button id="bSprint">Sprint</button>
+    </div></div>
+    <div class="group"><h2>Moodles</h2><div class="btns">
+      <button id="bThirst">Get thirstier</button><button id="bDrink">Drink</button><button id="bBadFood">Eat bad food</button><button id="bLoad">Pack more</button>
+    </div></div>
+    <div class="group"><h2>Weapon</h2><div class="btns">
+      <button id="bAim" aria-pressed="false">Aim</button><button id="bFire">Fire</button><button id="bReload">Reload</button>
+    </div></div>
+    <div class="group"><h2>Gear</h2><div class="btns">
+      <button id="bBelt" aria-pressed="true">Belt on</button><button id="bHolster" aria-pressed="true">Holster on</button><button id="bWatchOn" aria-pressed="true">Watch on</button>
+    </div></div>
+    <div class="group"><h2>Events</h2><div class="btns">
+      <button id="bLevel">Level up</button><button id="bGrab">Get grabbed</button>
+    </div></div>
+    <div class="group"><h2>HUD</h2><div class="btns">
+      <button id="bPeek">Peek (hold)</button><button id="bFade" aria-pressed="true">Fading on</button>
+    </div></div>
+  </div>
+  <p class="keys"><b>1-5</b> or scroll over the frame to draw from the belt. <b>Left Alt</b> (hold) peeks. Times shown are the defaults; each one is a setting.</p>
+</div>
+
+<script>
+const A=/*ASSETS*/null;
+const $=s=>document.querySelector(s);
+const game=$("#game");
+$("#bg").style.backgroundImage=`url(${A.backdrop})`;
+game.style.setProperty("--tape",`url(${A.tape})`);
+game.style.setProperty("--webbing",`url(${A.webbing})`);
+game.style.setProperty("--slot",`url(${A.slot})`);
+game.style.setProperty("--slotsel",`url(${A.slot_selected})`);
+game.style.setProperty("--canvas",`url(${A.canvas})`);
+game.style.setProperty("--metal",`url(${A.metal})`);
+
+/* ---------- pixel icons (12x12, # = ink) ---------- */
+const ICON={
+ drop:[".....##.....",".....##.....","....####....","....####....","...######...","..########..","..########..",".####.#####.",".###.######.",".##########.","..########..","...######..."],
+ stomach:["....###.....","...#####....","...######...","....######..",".....######.",".....######.","....#######.","..########..",".#######....",".######.....","..####......","............"],
+ eye:["............","............","............","#..........#",".#........#.","..##....##..","....####....","..#..#..#.#.",".#...#...#..","............","............","............"],
+ blood:[".....##.....","....####....","...######...","..########..","..###..###..","..##....##..","..###..###..","...######...","....####....","#..........#","..#......#..","#...#..#...#"],
+ lungs:[".....##.....",".....##.....","..##.##.##..",".####..####.",".####..####.","#####..#####","#####..#####","#####..#####","#####..#####",".####..####.","..##....##..","............"],
+ pack:["....####....","...#....#...",".##########.",".#........#.",".#.######.#.",".#.#....#.#.",".#.######.#.",".#........#.",".#........#.",".#........#.",".##########.","............"],
+ skull:["............","...######...","..########..",".##########.",".##..##..##.",".##..##..##.",".##########.","..###..###..","...######...","...#.##.#...","............","............"]
+};
+function iconCanvas(map,col){const c=document.createElement("canvas");c.width=c.height=12;const x=c.getContext("2d");x.fillStyle=col||"#1d1a14";map.forEach((r,y)=>[...r].forEach((ch,i)=>{if(ch==="#")x.fillRect(i,y,1,1)}));return c}
+const RIFLE=["................","..#############.","#################","##########.###..","####..####......","###....##.......","##..............","................"];
+
+/* ---------- state ---------- */
+const now=()=>performance.now();
+const S={health:14,wounds:1,plate:true,sel:0,aim:false,rounds:23,grabbed:false,grabLeft:5,fade:true,peek:false,watch:true,beltOn:true,holster:true,day:4,minutes:21*60+40,skillAt:-1e9,heldAt:0};
+const ping={belt:now(),body:now(),weapon:now(),skill:-1e9};
+const ITEMS=[
+ {slot:"Hands",name:"Baseball bat",img:A.baseball_bat,wear:.62,kind:"melee"},
+ {slot:"Hip L",name:"Kitchen knife",img:A.kitchen_knife,wear:.8,kind:"melee",needs:"belt"},
+ {slot:"Hip R",name:"Hammer",img:A.hammer,wear:.95,kind:"melee",needs:"belt"},
+ {slot:"Holster",name:null,needs:"holster"},
+ {slot:"Back",name:"Assault rifle",rifle:true,wear:.82,kind:"gun"}
+];
+const M={
+ thirst:{icon:"drop",names:["","Thirsty","Parched","Dying of thirst"],lvl:1},
+ hunger:{icon:"stomach",names:["","Peckish","Hungry","Starving"],lvl:0},
+ tired:{icon:"eye",names:["","Tired","Very tired","Exhausted"],lvl:0},
+ bleeding:{icon:"blood",names:["","Bleeding","Bleeding","Heavy bleeding"],lvl:2},
+ breath:{icon:"lungs",names:["","Winded","Out of breath","Gasping for air"],lvl:0},
+ load:{icon:"pack",names:["","Heavy load","Very heavy load","Overloaded"],lvl:1},
+ nausea:{icon:"skull",names:["","Queasy","Nauseous","Poisoned"],lvl:0}
+};
+const LEVEL_COL=["","var(--mild)","var(--bad)","var(--severe)"];
+
+/* ---------- moodle tiles ---------- */
+for(const [k,m] of Object.entries(M)){
+  const el=document.createElement("div");el.className="moodle";el.dataset.k=k;
+  el.innerHTML=`<span class="tape"></span><div class="tile"><div class="trend"><i></i><i></i></div></div>`;
+  el.querySelector(".tile").prepend(iconCanvas(ICON[m.icon]));
+  $("#moodles").append(el);m.el=el;m.changed=now();m.trend=0;
+}
+function setMoodle(k,lvl){
+  const m=M[k];lvl=Math.max(0,Math.min(3,lvl));if(lvl===m.lvl)return;
+  const worse=lvl>m.lvl;m.trend=worse?1:-1;
+  if(worse&&lvl>=2)heartbeat();
+  m.lvl=lvl;m.changed=now();
+}
+function heartbeat(){const p=$("#pulse");p.classList.remove("go");void p.offsetWidth;p.classList.add("go")}
+function bleedLevel(){return S.wounds<=0?0:S.wounds>=3?3:2}
+
+/* ---------- belt ---------- */
+function slots(){return ITEMS.map((it,i)=>({it,i})).filter(({it})=>!(it.needs==="belt"&&!S.beltOn)&&!(it.needs==="holster"&&!S.holster))}
+function buildBelt(){
+  const strap=$("#strap");strap.querySelectorAll(".bslot").forEach(n=>n.remove());
+  const list=slots();if(!list.some(s=>s.i===S.sel))S.sel=0;
+  list.forEach(({it,i},n)=>{
+    const b=document.createElement("div");b.className="bslot";
+    const sock=document.createElement("div");sock.className="sock"+(it.name?"":" empty")+(i===S.sel?" sel":"");
+    if(it.img){const im=new Image();im.src=it.img;im.alt="";sock.append(im)}
+    if(it.rifle){const c=iconCanvas(RIFLE,"#2b2c28");c.width=17;const x=c.getContext("2d");x.clearRect(0,0,17,12);x.fillStyle="#3a3b36";RIFLE.forEach((r,y)=>[...r].forEach((ch,j)=>{if(ch==="#")x.fillRect(j,y+2,1,1)}));sock.append(c)}
+    if(it.wear!=null){const w=document.createElement("div");w.className="wear";const col=it.wear>.6?"#9cc46a":it.wear>.3?"#d9a33a":"#c0442c";w.innerHTML=`<i style="width:${it.wear*100}%;background:${col}"></i>`;sock.append(w)}
+    const lab=document.createElement("span");lab.className="stencil";lab.textContent=`${n+1} ${it.slot}`;
+    b.append(sock,lab);b.addEventListener("click",()=>select(i));strap.insertBefore(b,strap.querySelector(".buckle.r"));
+  });
+}
+function held(){return ITEMS[S.sel]}
+function select(i){
+  if(!slots().some(s=>s.i===i))return;
+  if(i===S.sel){ping.belt=now();return}
+  S.sel=i;S.aim=false;$("#bAim").setAttribute("aria-pressed","false");
+  ping.belt=now();ping.weapon=now();S.heldAt=now();buildBelt();drawWeapon();
+}
+function step(d){const l=slots().map(s=>s.i);const k=l.indexOf(S.sel);select(l[(k+d+l.length)%l.length])}
+
+/* ---------- weapon tag ---------- */
+function drawWeapon(){
+  const it=held(),w=$("#weapon");
+  if(!it.name){w.innerHTML="";return}
+  if(it.kind==="gun"){
+    const low=S.rounds<=6,empty=S.rounds===0;
+    w.innerHTML=`${empty?'<span class="tape red">Empty - R</span>':''}<span class="tape rounds ${low?'red':''}">${S.rounds} / 30</span><span class="stencil">5.56 &middot; iron sights</span>`;
+  }else{
+    const n=Math.round(it.wear*10);let pips="";for(let i=0;i<10;i++)pips+=`<i class="${i<n?'':'off'}"></i>`;
+    w.innerHTML=`<span class="tape">${it.name}</span><div class="pips" title="Condition">${pips}</div>`;
+  }
+}
+
+/* ---------- body ---------- */
+function drawBody(){
+  const c=$("#bodyCv"),x=c.getContext("2d");c.width=18;c.height=34;x.clearRect(0,0,18,34);
+  const f=1-S.health/20;
+  const mix=(a,b,t)=>a.map((v,i)=>Math.round(v+(b[i]-v)*t));
+  const base=mix([206,199,178],[156,40,26],Math.min(1,f*1.25));
+  const lit=mix(base,[255,250,235],.18),shade=mix(base,[20,16,12],.28);
+  // Minecraft proportions, one pixel of ink round each part: head 8, body 8x12, arms 4x12, legs 4x12
+  const parts=[["head",5,1,8,8],["body",5,9,8,12],["armL",1,9,4,12],["armR",13,9,4,12],["legL",5,21,4,12],["legR",9,21,4,12]];
+  x.fillStyle="rgba(12,10,8,.9)";
+  for(const[,a,b,w,h]of parts)x.fillRect(a-1,b-1,w+2,h+2);
+  for(const[,a,b,w,h]of parts){
+    x.fillStyle=`rgb(${base})`;x.fillRect(a,b,w,h);
+    x.fillStyle=`rgb(${lit})`;x.fillRect(a,b,1,h);x.fillRect(a,b,w,1);
+    x.fillStyle=`rgb(${shade})`;x.fillRect(a+w-1,b+1,1,h-1);
+  }
+  // seams between the legs and under the head, like stencil gaps
+  x.fillStyle="rgba(12,10,8,.9)";x.fillRect(9,21,0.6,12);
+  if(S.plate){x.fillStyle="rgb(64,68,64)";x.fillRect(6,10,6,6);x.fillStyle="rgb(118,124,118)";x.fillRect(6,10,6,1);x.fillStyle="rgb(40,42,40)";x.fillRect(6,15,6,1)}
+  const marks=[[7,17,1,3],[14,13,1,2],[6,26,1,3],[2,15,1,2]];
+  for(let i=0;i<Math.min(S.wounds,4);i++){const[a,b,w,h]=marks[i];x.fillStyle="#b3140a";x.fillRect(a,b,w,h);x.fillStyle="#6e0b05";x.fillRect(a,b+h,w,1)}
+  $("#bodyWord").textContent=S.wounds>0?(S.wounds>=3?"Heavy bleeding":"Bleeding"):S.health>=18?"Fine":S.health>=12?"Bruised":S.health>=7?"Hurt":"Critical";
+}
+
+/* ---------- loop ---------- */
+const DELAY={belt:4000,body:5000,weapon:3000,skill:4000,mild:6000};
+function show(id,v){$(id).classList.toggle("on",v)}
+function tick(){
+  const t=now(),all=!S.fade||S.peek;
+  M.bleeding.lvl!==bleedLevel()&&setMoodle("bleeding",bleedLevel());
+  show("#belt",all||t-ping.belt<DELAY.belt);
+  $("#heldName").classList.toggle("on",t-S.heldAt<1600&&!!held().name);
+  $("#heldName").textContent=held().name||"Empty hands";
+  show("#body",all||t-ping.body<DELAY.body||S.wounds>0||S.health<10);
+  const gun=held().kind==="gun";
+  show("#weapon",!!held().name&&(all||t-ping.weapon<DELAY.weapon||S.aim||(gun&&S.rounds<=10)));
+  show("#watch",S.watch);
+  show("#skill",t-ping.skill<DELAY.skill);
+  show("#grab",S.grabbed);
+  $("#peekNote").classList.toggle("on",S.peek);
+  for(const m of Object.values(M)){
+    const vis=m.lvl>0&&(all||m.lvl>=2||t-m.changed<DELAY.mild);
+    if(vis){m.hidAt=0;m.el.classList.remove("gone")}else if(!m.hidAt)m.hidAt=t;
+    m.el.classList.toggle("gone",!vis&&t-m.hidAt>1000);
+    m.el.classList.toggle("on",vis);
+    m.el.classList.toggle("named",m.lvl>0&&(t-m.changed<3000||S.peek));
+    m.el.querySelector(".tile").style.setProperty("--c",LEVEL_COL[m.lvl]||"var(--mild)");
+    if(m.lvl>0)m.el.querySelector(".tape").textContent=m.names[m.lvl];
+    const tr=m.el.querySelector(".trend");tr.className="trend "+(m.trend>0?"up":"down")+(t-m.changed<4000&&m.trend?" on":"");
+  }
+  game.classList.toggle("aiming",S.aim);
+}
+setInterval(tick,100);
+setInterval(()=>{S.minutes+=1;if(S.minutes>=1440){S.minutes=0;S.day++}const h=Math.floor(S.minutes/60),mm=S.minutes%60;$("#clock").textContent=`${String(h).padStart(2,"0")}:${String(mm).padStart(2,"0")}`;$("#day").textContent=`DAY ${S.day}`;$("#ampm").textContent=["SUN","MON","TUE","WED","THU","FRI","SAT"].at((S.day-1)%7)},1500);
+
+/* ---------- controls ---------- */
+const on=(id,f)=>$(id).addEventListener("click",f);
+on("#bHit",()=>{S.health=Math.max(1,S.health-3);S.wounds++;ping.body=now();heartbeat();drawBody()});
+on("#bBandage",()=>{if(S.wounds>0)S.wounds--;S.health=Math.min(20,S.health+1);ping.body=now();drawBody()});
+let breathT;on("#bSprint",()=>{setMoodle("breath",Math.min(3,M.breath.lvl+1));clearTimeout(breathT);const rec=()=>{if(M.breath.lvl>0){setMoodle("breath",M.breath.lvl-1);breathT=setTimeout(rec,2600)}};breathT=setTimeout(rec,2600)});
+on("#bThirst",()=>setMoodle("thirst",M.thirst.lvl+1));
+on("#bDrink",()=>setMoodle("thirst",0));
+on("#bBadFood",()=>setMoodle("nausea",M.nausea.lvl+1));
+on("#bLoad",()=>setMoodle("load",M.load.lvl===3?0:M.load.lvl+1));
+on("#bAim",()=>{if(held().kind!=="gun"){select(4)}S.aim=!S.aim;$("#bAim").setAttribute("aria-pressed",String(S.aim));ping.weapon=now()});
+on("#bFire",()=>{if(held().kind!=="gun")select(4);if(S.rounds>0)S.rounds--;ping.weapon=now();drawWeapon()});
+on("#bReload",()=>{if(held().kind!=="gun")select(4);S.rounds=30;ping.weapon=now();drawWeapon()});
+on("#bBelt",()=>{S.beltOn=!S.beltOn;$("#bBelt").setAttribute("aria-pressed",String(S.beltOn));$("#bBelt").textContent=S.beltOn?"Belt on":"Belt off";ping.belt=now();buildBelt();drawWeapon()});
+on("#bHolster",()=>{S.holster=!S.holster;$("#bHolster").setAttribute("aria-pressed",String(S.holster));$("#bHolster").textContent=S.holster?"Holster on":"Holster off";ping.belt=now();buildBelt();drawWeapon()});
+on("#bWatchOn",()=>{S.watch=!S.watch;$("#bWatchOn").setAttribute("aria-pressed",String(S.watch));$("#bWatchOn").textContent=S.watch?"Watch on":"Watch off"});
+const SKILLS=[["Carpentry",3],["Short blunt",2],["Aiming",1],["Sprinting",4],["First aid",2]];let sk=0;
+on("#bLevel",()=>{const [n,l]=SKILLS[sk++%SKILLS.length];$("#skillTape").innerHTML=`${n} <b>${l}</b>`;ping.skill=now()});
+let grabT;on("#bGrab",()=>{S.grabbed=true;S.grabLeft=5;drawPips();heartbeat();clearInterval(grabT);grabT=setInterval(()=>{S.grabLeft--;drawPips();if(S.grabLeft<=0){S.grabbed=false;clearInterval(grabT)}},700)});
+function drawPips(){$("#grabPips").innerHTML="<i></i>".repeat(Math.max(0,S.grabLeft))}
+on("#bFade",()=>{S.fade=!S.fade;$("#bFade").setAttribute("aria-pressed",String(S.fade));$("#bFade").textContent=S.fade?"Fading on":"Fading off"});
+const peekBtn=$("#bPeek");
+["pointerdown"].forEach(e=>peekBtn.addEventListener(e,()=>{S.peek=true}));
+["pointerup","pointerleave","blur"].forEach(e=>peekBtn.addEventListener(e,()=>{S.peek=false}));
+addEventListener("keydown",e=>{if(e.code==="AltLeft"){S.peek=true;e.preventDefault()}if(/^Digit[1-5]$/.test(e.code)){const l=slots().map(s=>s.i);const k=Number(e.code.slice(5))-1;if(k<l.length)select(l[k])}});
+addEventListener("keyup",e=>{if(e.code==="AltLeft")S.peek=false});
+addEventListener("blur",()=>{S.peek=false});
+game.addEventListener("wheel",e=>{e.preventDefault();step(e.deltaY>0?1:-1)},{passive:false});
+
+/* ---------- rain ---------- */
+(function rain(){const c=$("#rain"),x=c.getContext("2d");let drops=[];
+  function size(){c.width=game.clientWidth;c.height=game.clientHeight;drops=Array.from({length:Math.round(c.width/6)},()=>({x:Math.random()*c.width,y:Math.random()*c.height,v:9+Math.random()*7,l:10+Math.random()*14}))}
+  size();addEventListener("resize",size);
+  const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function f(){x.clearRect(0,0,c.width,c.height);x.strokeStyle="rgba(200,212,224,.5)";x.lineWidth=1;x.beginPath();for(const d of drops){x.moveTo(d.x,d.y);x.lineTo(d.x-1.5,d.y+d.l);if(!reduce){d.y+=d.v;d.x-=.25;if(d.y>c.height){d.y=-20;d.x=Math.random()*c.width}}}x.stroke();if(!reduce)requestAnimationFrame(f)}
+  f();})();
+
+buildBelt();drawWeapon();drawBody();tick();
+</script>

@@ -1,0 +1,11 @@
+# characters/gun-hold/pistol-two-hand
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-two-controlled-pairs-ceb-takes-aim-on-pistol-range-150212-m.jpg | [Two controlled pairs, CEB takes aim on pistol range 150212-M-LO802-249](https://commons.wikimedia.org/wiki/File:Two_controlled_pairs,_CEB_takes_aim_on_pistol_range_150212-M-LO802-249.jpg) | Cpl. Chelsea Toombs | Public domain | A Marine with 2nd Combat Engineer Battalion, 2nd Marine Division, gets ready to send rounds down range during a Combat Pistol Marksmanship p |
+| 02-2-rar-soldier-firing-a-m9-pistol-during-rimpac-2018.jpg | [2 RAR soldier firing a M9 pistol during RIMPAC 2018.jpg](https://commons.wikimedia.org/wiki/File:2_RAR_soldier_firing_a_M9_pistol_during_RIMPAC_2018.jpg) | U.S. Marine Corps photo by Lance Cpl. Adam Montera | Public domain | 180629-M-FA245-1002 MARINE CORPS BASE HAWAII (June 29, 2018) Australian soldiers with 2nd Battalion, Royal Australian Regiment, fire M9 pist |
+| 03-2-rar-soldier-firing-a-m9-pistol-during-rimpac-2018-cropped.jpg | [2 RAR soldier firing a M9 pistol during RIMPAC 2018 - cropped.jpg](https://commons.wikimedia.org/wiki/File:2_RAR_soldier_firing_a_M9_pistol_during_RIMPAC_2018_-_cropped.jpg) | U.S. Marine Corps photo by Lance Cpl. Adam Montera | Public domain | 180629-M-FA245-1002 MARINE CORPS BASE HAWAII (June 29, 2018) Australian soldiers with 2nd Battalion, Royal Australian Regiment, fire M9 pist |
+| 04-bsag-soldier-shoots-a-m9.jpg | [BSAG soldier shoots a M9.jpg](https://commons.wikimedia.org/wiki/File:BSAG_soldier_shoots_a_M9.jpg) | Sgt. 1st Class Alex Licea | Public domain | A Belizean soldier assigned to the Belize Special Assignment Group (BSAG) fires his M-9 pistol at a row of mounted steel pop-up plates as pa |
+| 05-united-irishmen-in-training-bm-1851-0901-924.jpg | [United Irishmen in training. (BM 1851,0901.924).jpg](https://commons.wikimedia.org/wiki/File:United_Irishmen_in_training._(BM_1851,0901.924).jpg) | Print made by: James Gillray  Published by: Hannah Humphrey | Public domain | A companion print to BMSat 9228. Outside a country ale-house ruffians are practising their weapons at close range on the effigy of a British |

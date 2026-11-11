@@ -1,0 +1,239 @@
+{
+ "groups": [
+  {
+   "mesh": "Vanilla.Skin",
+   "piece": "body",
+   "texture": "skin",
+   "lods": [
+    1.0,
+    0.35
+   ]
+  },
+  {
+   "mesh": "Vanilla.Mercy_Nails.006",
+   "piece": "body",
+   "texture": "nails",
+   "lods": [
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "mesh": "Face002.GS_Face.002",
+   "piece": "body",
+   "texture": "face",
+   "bone": "mixamorigHead",
+   "lods": [
+    1.0,
+    0.5
+   ]
+  },
+  {
+   "mesh": "Face002.MI_R2T1RebeccaMd10011Eye",
+   "piece": "body",
+   "texture": "eyes",
+   "bone": "mixamorigHead",
+   "lods": [
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "mesh": "Hair.MI_R2T1RebeccaMd10011Hair",
+   "piece": "body",
+   "texture": "hair",
+   "bone": "mixamorigHead",
+   "both": true,
+   "lods": [
+    1.0,
+    0.4
+   ]
+  },
+  {
+   "mesh": "Hair.MI_R2T1RebeccaMd10011Bangs",
+   "piece": "body",
+   "texture": "bangs",
+   "bone": "mixamorigHead",
+   "both": true,
+   "lods": [
+    1.0,
+    0.5
+   ]
+  },
+  {
+   "mesh": "Head_Acc001",
+   "piece": "body",
+   "texture": "down",
+   "bone": "mixamorigHead",
+   "lods": [
+    1.0,
+    1.0
+   ]
+  },
+  {
+   "mesh": "Bra001",
+   "piece": "body",
+   "texture": "up",
+   "push": 0.0015,
+   "lods": [
+    1.0,
+    0.6
+   ]
+  },
+  {
+   "mesh": "Bottom002",
+   "piece": "body",
+   "texture": "down",
+   "push": 0.0015,
+   "lods": [
+    1.0,
+    0.6
+   ]
+  },
+  {
+   "mesh": "Top_1",
+   "piece": "top.jacket",
+   "texture": "up",
+   "both": true,
+   "push": 0.003,
+   "lods": [
+    1.0,
+    0.4
+   ]
+  },
+  {
+   "mesh": "Top_2003",
+   "piece": "top.hoodie",
+   "texture": "up1",
+   "both": true,
+   "push": 0.003,
+   "lods": [
+    1.0,
+    0.4
+   ]
+  },
+  {
+   "mesh": "Gloves",
+   "piece": "gloves",
+   "texture": "gloves",
+   "push": 0.002,
+   "lods": [
+    1.0,
+    0.4
+   ]
+  },
+  {
+   "mesh": "Shoes003",
+   "piece": "shoes",
+   "texture": "down",
+   "push": 0.002,
+   "lods": [
+    1.0,
+    0.5
+   ]
+  },
+  {
+   "mesh": "Pants002.Ot",
+   "piece": "pants",
+   "texture": "pants",
+   "push": 0.002,
+   "lods": [
+    1.0,
+    0.5
+   ]
+  }
+ ],
+ "textures": {
+  "skin": {
+   "file": "textures/rebecca_skin.png",
+   "size": 2048
+  },
+  "nails": {
+   "file": "textures/Nail.002.png",
+   "size": 256
+  },
+  "face": {
+   "file": "textures/T_R2T1RebeccaMd10011Face_D.png",
+   "size": 1024
+  },
+  "eyes": {
+   "file": "textures/T_R2T1RebeccaMd10011Eye_D.png",
+   "size": 512
+  },
+  "hair": {
+   "file": "textures/T_R2T1RebeccaMd10011Hair_D.png",
+   "size": 1024
+  },
+  "bangs": {
+   "file": "textures/T_R2T1RebeccaMd10011Bangs_D.png",
+   "size": 1024
+  },
+  "up": {
+   "file": "textures/T_R2T1RebeccaMd10011Up_D.png",
+   "size": 1024
+  },
+  "down": {
+   "file": "textures/T_R2T1RebeccaMd10011Down_D.png",
+   "size": 1024
+  },
+  "up1": {
+   "file": "textures/T_R2T1RebeccaMd10011Up1_D.png",
+   "size": 1024
+  },
+  "gloves": {
+   "file": "textures/T_R2T1RebeccaMd10011Gloves_D.png",
+   "size": 1024
+  },
+  "pants": {
+   "file": "textures/bp.png",
+   "size": 1024
+  }
+ },
+ "clips": {
+  "idle": "Breathing_Idle",
+  "walk": "Female_Walk",
+  "run": "Running",
+  "die": "Dying",
+  "aim": "Rifle_Aiming_Idle",
+  "fire": "Firing_Rifle",
+  "rifle_walk": "Walk_With_Rifle",
+  "aim_gun": "Aiming_Gun",
+  "walk_start": "Walk_Start",
+  "walk_stop": "Walk_Stop",
+  "rifle_idle": "Rifle_Idle",
+  "rifle_stop": "Rifle_Stop",
+  "fire_walk": "Fire_Walk",
+  "aim_walk": "Aim_Walk",
+  "aim_down": "Aim_Down",
+  "pose": "Pose",
+  "fidget": "Fidget",
+  "draw": "Draw",
+  "holster": "Holster",
+  "die_blast": "Die_Blast",
+  "catwalk": "Catwalk",
+  "catwalk_start": "Catwalk_Start",
+  "catwalk_stop": "Catwalk_Stop",
+  "catwalk_turn": "Catwalk_Turn",
+  "flirty": "Bashful",
+  "happy": "Happy",
+  "nervous": "Nervous",
+  "sad": "Sad",
+  "tired": "Yawn",
+  "aim_up": "Aim_Up",
+  "sit": "Sit",
+  "sleep": "Sleep",
+  "sleep_2": "Sleep_2",
+  "kneel": "Kneel",
+  "kneel_2": "Kneel_2",
+  "kneel_start": "Kneel_Start",
+  "search": "Search",
+  "lookout": "Lookout",
+  "dig": "Dig",
+  "pose_2": "Pose_2",
+  "crouch": "Crouch",
+  "aim_kneel": "Aim_Kneel",
+  "kneel_aim_down": "Kneel_Aim_Down",
+  "kneel_aim_up": "Kneel_Aim_Up",
+  "search_low": "Search_2"
+ }
+}

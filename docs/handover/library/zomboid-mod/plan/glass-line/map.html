@@ -1,0 +1,276 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+@font-face { font-family: BC; src: url(barlow_condensed.ttf); }
+:root {
+  --bg: #0b0c0e; --edge: rgba(232,228,218,.18); --text: #e8e4da; --bright: #f2efe8;
+  --dim: rgba(232,228,218,.68); --faint: rgba(232,228,218,.3);
+  --gold: #e0c25e; --blue: #7faedb; --glass: #9ee3d4; --warn: #d9a33a;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: BC, 'Arial Narrow', sans-serif; }
+.wrap { display: flex; align-items: flex-start; }
+.side { width: 430px; padding: 40px 34px 30px; flex: none; }
+.kicker { font-size: 17px; letter-spacing: .32em; text-transform: uppercase; color: var(--faint); }
+h1 { margin: 6px 0 4px; font-size: 46px; line-height: 1; letter-spacing: .08em; text-transform: uppercase; color: var(--bright); font-weight: normal; }
+.sub { font-size: 18px; color: var(--dim); letter-spacing: .04em; line-height: 1.3; }
+h2 { display: flex; align-items: center; gap: 12px; margin: 28px 0 12px; font-size: 16px; font-weight: normal;
+     letter-spacing: .3em; text-transform: uppercase; color: var(--dim); }
+h2::after { content: ""; flex: 1; height: 1px; background: var(--edge); }
+.stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.stat { border: 1px solid var(--edge); background: rgba(12,13,15,.96); padding: 10px 12px; }
+.stat .v { font-size: 30px; color: var(--bright); letter-spacing: .04em; line-height: 1; }
+.stat .v small { font-size: 17px; color: var(--dim); }
+.stat .l { font-size: 14px; color: var(--dim); letter-spacing: .12em; text-transform: uppercase; margin-top: 5px; }
+.stat.hi { border-color: rgba(158,227,212,.55); }
+.stat.hi .v { color: var(--glass); }
+.key { display: grid; grid-template-columns: 46px 1fr; row-gap: 9px; align-items: center; font-size: 16px; color: var(--dim); letter-spacing: .06em; text-transform: uppercase; }
+.sights { list-style: none; padding: 0; margin: 0; font-size: 16.5px; letter-spacing: .03em; }
+.sights li { display: flex; gap: 10px; padding: 6px 0; border-bottom: 1px solid rgba(232,228,218,.07); color: var(--dim); line-height: 1.25; }
+.sights .n { flex: none; width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--glass); color: var(--glass); font-size: 14px; display: grid; place-items: center; margin-top: 1px; }
+.sights b { color: var(--text); font-weight: normal; text-transform: uppercase; letter-spacing: .08em; }
+.foot { font-size: 14px; color: var(--faint); letter-spacing: .05em; margin-top: 22px; line-height: 1.4; }
+.right { flex: none; }
+.map { position: relative; }
+.map img { display: block; }
+.map svg { position: absolute; left: 0; top: 0; }
+svg text { font-family: BC, sans-serif; text-transform: uppercase; paint-order: stroke; stroke: #0b0c0e; stroke-linejoin: round; }
+.prof { border-top: 1px solid var(--edge); }
+</style></head>
+<body>
+<div class="wrap">
+  <div class="side">
+    <div class="kicker">Grayhaven Subway · plan</div>
+    <h1>The Glass Line</h1>
+    <div class="sub">A glass tube on the floor of the South Arm, from Mercy General on the island to a new stop at Eastside Quay on the mainland. The city's 80s showpiece, and now the one way off the island that isn't a jammed bridge.</div>
+    <h2>Ride</h2>
+    <div class="stats" id="stats"></div>
+    <h2>What you pass</h2>
+    <ol class="sights">
+      <li><span class="n">1</span><span><b>Under the el.</b> The tube leaves the island seawall and dives beneath the el viaduct, its piers going by on both sides.</span></li>
+      <li><span class="n">2</span><span><b>Tug and coal barge</b> sunk at the foot of the island's bank, coal spilled across the bed.</span></li>
+      <li><span class="n">3</span><span><b>Sunk freighter</b> lying beside the tube for its whole length, deck awash, its bridge standing out of the water.</span></li>
+      <li><span class="n">4</span><span><b>Under the highway bridge.</b> Cars and a city bus that went off the jammed bridge lie on the bottom.</span></li>
+      <li><span class="n">5</span><span><b>Eastside Quay.</b> The platform runs along the seawall behind one long glass wall onto the channel.</span></li>
+    </ol>
+    <h2>Key</h2>
+    <div class="key" id="key"></div>
+    <div class="foot" id="foot"></div>
+  </div>
+  <div class="right">
+    <div class="map" id="map"><img id="base" src="base.png"><svg id="svg"></svg></div>
+    <div class="prof"><svg id="prof"></svg></div>
+  </div>
+</div>
+<script src="base.js"></script>
+<script src="tube.js"></script>
+<script>
+const NS = 'http://www.w3.org/2000/svg';
+function el(tag, attrs, parent) {
+  const e = document.createElementNS(NS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  parent.appendChild(e);
+  return e;
+}
+function txt(parent, x, y, s, attrs) {
+  const t = el('text', Object.assign({x, y, 'stroke-width': 4}, attrs || {}), parent);
+  t.textContent = s;
+  return t;
+}
+const mmss = s => Math.floor(s / 60) + ':' + String(Math.round(s % 60)).padStart(2, '0');
+
+document.fonts.load('20px BC').then(draw);
+
+function draw() {
+  const D = window.D, T = window.T;
+  const [X0, Z0] = D.box, sc = D.sc;
+  const P = (x, z) => [(x - X0) / sc, (z - Z0) / sc];
+  const svg = document.getElementById('svg');
+  svg.setAttribute('width', D.w); svg.setAttribute('height', D.h);
+  el('rect', {x: 0, y: 0, width: D.w, height: D.h, fill: 'rgba(11,12,14,.12)'}, svg);
+  const pathOf = pts => pts.map((p, i) => (i ? 'L' : 'M') + P(p[0], p[1]).map(v => v.toFixed(1)).join(' ')).join('');
+  const wet = p => p[1] > -109 && p[1] < 151;
+
+  // the dredged channel along the tube
+  const pts = T.pts;
+  const wetRuns = [];
+  let cur = null;
+  for (let i = 0; i < pts.length; i++) {
+    if (wet(pts[i])) { (cur = cur || []).push(pts[i]); } else if (cur) { wetRuns.push(cur); cur = null; }
+  }
+  if (cur) wetRuns.push(cur);
+  for (const r of wetRuns) el('path', {d: pathOf(r), fill: 'none', stroke: 'rgba(70,130,150,.22)', 'stroke-width': 64, 'stroke-linecap': 'round', 'stroke-linejoin': 'round'}, svg);
+  txt(svg, ...P(3050, 128), 'Dredged channel · 25 deep', {fill: 'rgba(158,227,212,.75)', 'font-size': 15, 'letter-spacing': '.18em', stroke: 'none'});
+  // water names
+  txt(svg, ...P(3560, 0), 'South Arm', {fill: 'rgba(127,174,219,.55)', 'font-size': 30, 'letter-spacing': '.5em', stroke: 'none'});
+  txt(svg, ...P(3560, 32), '260 blocks wide', {fill: 'rgba(127,174,219,.45)', 'font-size': 15, 'letter-spacing': '.3em', stroke: 'none'});
+  txt(svg, ...P(3330, -505), 'Grayhaven Island', {fill: 'rgba(232,228,218,.35)', 'font-size': 26, 'letter-spacing': '.45em', stroke: 'none'});
+  txt(svg, ...P(2880, 420), 'Eastside', {fill: 'rgba(232,228,218,.35)', 'font-size': 26, 'letter-spacing': '.45em', stroke: 'none'});
+
+  // wrecks
+  const g = el('g', {}, svg);
+  const ship = (cx, cz, len, beam, fill) => {
+    const [x, y] = P(cx - len / 2, cz - beam / 2);
+    const w = len / sc, h = beam / sc;
+    el('path', {d: `M${x} ${y} L${x + w * 0.86} ${y} Q${x + w} ${y + h / 2} ${x + w * 0.86} ${y + h} L${x} ${y + h} Z`,
+      fill, stroke: 'rgba(232,228,218,.55)', 'stroke-width': 1.2, transform: `rotate(-4 ${x + w / 2} ${y + h / 2})`}, g);
+  };
+  ship(3150, -28, 150, 24, 'rgba(120,70,50,.55)');
+  el('rect', {x: P(3092, -36)[0], y: P(3092, -36)[1], width: 14 / sc, height: 16 / sc, fill: 'rgba(232,228,218,.5)', transform: `rotate(-4 ${P(3150, -28).join(' ')})`}, g);
+  ship(2924, -58, 22, 8, 'rgba(160,90,60,.6)');
+  ship(2926, -30, 40, 12, 'rgba(70,70,64,.7)');
+  for (const [x, z] of [[3381, 62], [3388, 70], [3396, 78], [3377, 84], [3401, 66], [3386, 54], [3372, 72]]) {
+    el('rect', {x: P(x, z)[0] - 3, y: P(x, z)[1] - 1.5, width: 6, height: 3, fill: 'rgba(232,228,218,.55)'}, g);
+  }
+  el('rect', {x: P(3408, 74)[0] - 6, y: P(3408, 74)[1] - 2, width: 12, height: 4, fill: 'rgba(224,194,94,.6)'}, g);
+
+  // the Glass Line: tunnel on land, glass under the water
+  const full = pathOf(pts.concat([pts[0]]));
+  el('path', {d: full, fill: 'none', stroke: '#0b0c0e', 'stroke-width': 9, 'stroke-linejoin': 'round'}, svg);
+  el('path', {d: full, fill: 'none', stroke: 'var(--glass)', 'stroke-width': 4.5, 'stroke-linejoin': 'round', 'stroke-dasharray': '8 5', opacity: .85}, svg);
+  for (const r of wetRuns) {
+    el('path', {d: pathOf(r), fill: 'none', stroke: 'rgba(158,227,212,.35)', 'stroke-width': 13, 'stroke-linecap': 'round', 'stroke-linejoin': 'round'}, svg);
+    el('path', {d: pathOf(r), fill: 'none', stroke: 'var(--glass)', 'stroke-width': 4.5, 'stroke-linecap': 'round', 'stroke-linejoin': 'round'}, svg);
+  }
+  // the el and the subway as drawn on the city map
+  for (const t of D.tracks) {
+    for (const sg of t.segs) {
+      const d = pathOf(sg.pts);
+      if (t.id === 'loop') {
+        el('path', {d, fill: 'none', stroke: '#0b0c0e', 'stroke-width': 11, 'stroke-linejoin': 'round'}, svg);
+        el('path', {d, fill: 'none', stroke: 'var(--gold)', 'stroke-width': 7, 'stroke-linejoin': 'round'}, svg);
+        el('path', {d, fill: 'none', stroke: '#0b0c0e', 'stroke-width': 2.2, 'stroke-linejoin': 'round'}, svg);
+      } else {
+        el('path', {d, fill: 'none', stroke: '#0b0c0e', 'stroke-width': 10, 'stroke-linejoin': 'round'}, svg);
+        el('path', {d, fill: 'none', stroke: 'var(--blue)', 'stroke-width': 6, 'stroke-linejoin': 'round'}, svg);
+        el('path', {d, fill: 'none', stroke: '#0b0c0e', 'stroke-width': 1.6, 'stroke-dasharray': '7 5', 'stroke-linejoin': 'round'}, svg);
+      }
+    }
+  }
+  txt(svg, ...P(2700, 125), 'El viaduct', {fill: 'var(--gold)', 'font-size': 16, 'letter-spacing': '.2em'});
+  txt(svg, ...P(3412, -150), 'Highway bridge', {fill: 'rgba(232,228,218,.75)', 'font-size': 16, 'letter-spacing': '.2em'});
+
+  txt(svg, ...P(2640, -318), 'Turning loop', {fill: 'rgba(158,227,212,.8)', 'font-size': 15, 'letter-spacing': '.2em'});
+  txt(svg, ...P(3610, 345), 'Turning loop', {fill: 'rgba(158,227,212,.8)', 'font-size': 15, 'letter-spacing': '.2em'});
+
+  // stations
+  const m = T.marks;
+  const stop = (x, z, r, col) => {
+    const [a, b] = P(x, z);
+    el('circle', {cx: a, cy: b, r: r + 3, fill: '#0b0c0e'}, svg);
+    el('circle', {cx: a, cy: b, r, fill: '#f2efe8', stroke: col, 'stroke-width': 3}, svg);
+  };
+  const [ma, mb] = P(2850, -403);
+  stop(2850, -403, 7, 'var(--blue)');
+  el('circle', {cx: ma, cy: mb + 13, r: 6, fill: '#f2efe8', stroke: 'var(--glass)', 'stroke-width': 3}, svg);
+  txt(svg, ...P(3052, -414), 'Mercy General Hospital', {fill: 'var(--bright)', 'font-size': 22, 'letter-spacing': '.08em'});
+  txt(svg, ...P(3052, -392), 'Glass Line platform right below', {fill: 'var(--glass)', 'font-size': 15, 'letter-spacing': '.12em'});
+  txt(svg, ...P(3052, -374), 'one flight of stairs down, y 46', {fill: 'rgba(232,228,218,.6)', 'font-size': 14, 'letter-spacing': '.12em'});
+  const qx = (m.quay_a[0] + m.quay_b[0]) / 2, qz = m.quay_a[1];
+  stop(qx, qz, 9, 'var(--glass)');
+  const [qa, qb] = P(qx, qz);
+  txt(svg, qa - 20, qb + 62, 'Eastside Quay', {fill: 'var(--bright)', 'font-size': 26, 'letter-spacing': '.08em', 'text-anchor': 'middle'});
+  txt(svg, qa - 20, qb + 82, 'New stop · glass wall onto the water', {fill: 'var(--glass)', 'font-size': 14, 'letter-spacing': '.1em', 'text-anchor': 'middle'});
+
+  // sights
+  const sights = [[2985, -2, 26, 10], [2924, -44, -26, 4], [3150, -28, 0, -26], [3392, 72, 0, -28], [qx - 40, qz - 8, 0, -24]];
+  sights.forEach(([x, z, dx, dy], i) => {
+    const [a, b] = P(x, z);
+    el('line', {x1: a, y1: b, x2: a + dx, y2: b + dy, stroke: 'rgba(158,227,212,.7)', 'stroke-width': 1.2}, svg);
+    el('circle', {cx: a + dx, cy: b + dy, r: 11, fill: '#0b0c0e', stroke: 'var(--glass)', 'stroke-width': 1.6}, svg);
+    txt(svg, a + dx, b + dy + 5, String(i + 1), {fill: 'var(--glass)', 'font-size': 15, 'text-anchor': 'middle', stroke: 'none'});
+  });
+
+  // scale bar and north
+  const sb = el('g', {transform: `translate(${D.w - 620} ${D.h - 60})`}, svg);
+  el('rect', {x: -14, y: -26, width: 290, height: 52, fill: 'rgba(12,13,15,.92)', stroke: 'rgba(232,228,218,.18)'}, sb);
+  txt(sb, 0, -6, '200 blocks · north up', {fill: 'var(--text)', 'font-size': 14, 'letter-spacing': '.2em', stroke: 'none'});
+  el('line', {x1: 0, y1: 10, x2: 200 / sc, y2: 10, stroke: 'var(--text)', 'stroke-width': 2}, sb);
+  el('line', {x1: 0, y1: 4, x2: 0, y2: 16, stroke: 'var(--text)', 'stroke-width': 2}, sb);
+  el('line', {x1: 200 / sc, y1: 4, x2: 200 / sc, y2: 16, stroke: 'var(--text)', 'stroke-width': 2}, sb);
+
+  // stats
+  const tm = T.times;
+  const stats = [
+    ['~' + (Math.round(tm.wetLen / 50) * 50) + ' <small>blocks</small>', 'Glass tube under the channel', true],
+    [mmss(tm.tubeT), 'In the tube, each way', true],
+    [mmss(tm.there), 'Mercy to Eastside Quay', false],
+    [mmss(tm.back), 'Quay back to Mercy', false],
+    ['~' + Math.round((tm.there + tm.back + 60) / 30) / 2 + ' <small>min</small>', 'Round trip with both stops', false],
+    ['8–14', 'Blocks of water over the tube', false],
+  ];
+  document.getElementById('stats').innerHTML = stats.map(([v, l, hi]) => `<div class="stat${hi ? ' hi' : ''}"><div class="v">${v}</div><div class="l">${l}</div></div>`).join('');
+  document.getElementById('key').innerHTML = [
+    ['<svg width="40" height="12"><line x1="2" y1="6" x2="38" y2="6" stroke="rgba(158,227,212,.35)" stroke-width="12"/><line x1="2" y1="6" x2="38" y2="6" stroke="#9ee3d4" stroke-width="4.5"/></svg>', 'Glass tube under the water'],
+    ['<svg width="40" height="12"><line x1="2" y1="6" x2="38" y2="6" stroke="#9ee3d4" stroke-width="4.5" stroke-dasharray="8 5"/></svg>', 'Glass Line in tunnel'],
+    ['<svg width="40" height="12"><line x1="2" y1="6" x2="38" y2="6" stroke="#7faedb" stroke-width="6"/><line x1="2" y1="6" x2="38" y2="6" stroke="#0b0c0e" stroke-width="1.6" stroke-dasharray="7 5"/></svg>', 'Subway loop (as built)'],
+    ['<svg width="40" height="12"><line x1="2" y1="6" x2="38" y2="6" stroke="#e0c25e" stroke-width="7"/><line x1="2" y1="6" x2="38" y2="6" stroke="#0b0c0e" stroke-width="2.2"/></svg>', 'El viaduct'],
+    ['<svg width="40" height="14"><rect x="1" y="1" width="38" height="12" fill="rgba(70,130,150,.35)"/></svg>', 'Dredged channel'],
+  ].map(([s, l]) => `<div>${s}</div><div>${l}</div>`).join('');
+  document.getElementById('foot').innerHTML = `Its own train on its own loop, ${tm.lap.toLocaleString()} blocks round, with a turning loop under each end; each trip includes one of them. Times at the subway's 9 blocks a second with the usual speeding up, braking and slower bends, not counting the 30 s at each stop.`;
+
+  drawProfile();
+}
+
+function drawProfile() {
+  const T = window.T, R = T.run;
+  const W = 1280, H = 300, left = 70, right = 30, top = 56, bottom = 40;
+  const svg = document.getElementById('prof');
+  svg.setAttribute('width', W); svg.setAttribute('height', H);
+  const N = R.y.length;
+  const X = k => left + (W - left - right) * k / (N - 1);
+  const yMin = 34, yMax = 70;
+  const Y = y => top + (H - top - bottom) * (yMax - y) / (yMax - yMin);
+  const ex = Math.round(((H - top - bottom) / (yMax - yMin)) / ((W - left - right) / (N * 4)));
+  txt(svg, left, 26, 'The ride, Mercy General to Eastside Quay · side view, heights × ' + ex, {fill: 'var(--dim)', 'font-size': 16, 'letter-spacing': '.2em', stroke: 'none'});
+  const cw = X(1) - X(0) + 0.6;
+  for (let k = 0; k < N; k++) {
+    const x = X(k) - cw / 2;
+    if (R.nat[k] === null) {
+      el('rect', {x, y: Y(66), width: cw, height: Y(yMin) - Y(66), fill: '#2a2a25'}, svg);
+    } else {
+      const floor = Math.min(R.nat[k], R.y[k] - 3);
+      el('rect', {x, y: Y(62), width: cw, height: Y(R.nat[k]) - Y(62), fill: '#13222c'}, svg);
+      el('rect', {x, y: Y(R.nat[k]), width: cw, height: Y(yMin) - Y(R.nat[k]), fill: '#2f2c25'}, svg);
+      if (floor < R.nat[k]) el('rect', {x, y: Y(R.nat[k]), width: cw, height: Y(floor) - Y(R.nat[k]), fill: '#16303a'}, svg);
+      el('rect', {x, y: Y(62) - 1, width: cw, height: 1.5, fill: 'rgba(127,174,219,.7)'}, svg);
+    }
+  }
+  // the tube: glass under the water, a dark tunnel under the land
+  for (let k = 0; k < N; k++) {
+    const x = X(k) - cw / 2, wetK = R.nat[k] !== null;
+    el('rect', {x, y: Y(R.y[k] + 8), width: cw, height: Y(R.y[k] - 2) - Y(R.y[k] + 8),
+      fill: wetK ? 'rgba(158,227,212,.30)' : '#0b0c0e'}, svg);
+  }
+  let top8 = '', bot = '', rail = '';
+  for (let k = 0; k < N; k++) {
+    top8 += (k ? 'L' : 'M') + X(k) + ' ' + Y(R.y[k] + 8);
+    bot += (k ? 'L' : 'M') + X(k) + ' ' + Y(R.y[k] - 2);
+    rail += (k ? 'L' : 'M') + X(k) + ' ' + Y(R.y[k] + 1);
+  }
+  for (const d of [top8, bot]) el('path', {d, fill: 'none', stroke: 'rgba(158,227,212,.6)', 'stroke-width': 1.2}, svg);
+  el('path', {d: rail, fill: 'none', stroke: 'var(--glass)', 'stroke-width': 2}, svg);
+  for (const [y, s] of [[66, 'street 66'], [62, 'water 62'], [46, 'y 46'], [40, 'y 40']]) {
+    txt(svg, left - 8, Y(y) + 5, s, {fill: 'var(--faint)', 'font-size': 13, 'text-anchor': 'end', stroke: 'none'});
+  }
+  const tEnd = R.t[N - 1];
+  for (let s = 30; s < tEnd; s += 30) {
+    const k = R.t.findIndex(t => t >= s);
+    el('line', {x1: X(k), y1: H - bottom + 4, x2: X(k), y2: H - bottom + 12, stroke: 'var(--faint)'}, svg);
+    txt(svg, X(k), H - 10, mmss(s), {fill: 'var(--dim)', 'font-size': 14, 'text-anchor': 'middle', stroke: 'none'});
+  }
+  const at = (x, z) => { let b = 0, bd = 1e9; R.x.forEach((p, k) => { const d = (p[0] - x) ** 2 + (p[1] - z) ** 2; if (d < bd) { bd = d; b = k; } }); return b; };
+  const marks = [[2850, -400, 'Mercy General', 0], [2970, 0, '1 · el', 1], [2948, -40, '2 · barge', 2],
+    [3150, 20, '3 · freighter', 1], [3390, 110, '4 · bridge', 2], [3547, 133, 'past the quay', 1], [3700, 300, 'turning loop', 1], [3547, 121, 'Eastside Quay', 0]];
+  const used = new Set();
+  for (const [x, z, s, row] of marks) {
+    let k = at(x, z);
+    if (s === 'Eastside Quay') k = N - 1;
+    const yy = row === 0 ? top - 8 : row === 1 ? Y(64) - 4 : Y(64) + 14;
+    el('line', {x1: X(k), y1: yy + 4, x2: X(k), y2: Y(R.y[k] + 8), stroke: 'rgba(232,228,218,.3)', 'stroke-dasharray': '2 3'}, svg);
+    txt(svg, X(k), yy, s, {fill: row === 0 ? 'var(--bright)' : 'var(--glass)', 'font-size': row === 0 ? 16 : 14,
+      'text-anchor': k < 20 ? 'start' : k > N - 30 ? 'end' : 'middle', 'letter-spacing': '.08em'});
+  }
+}
+</script>
+</body></html>

@@ -1,0 +1,12 @@
+# subway/drivers-cab
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-controls-of-mbta-cambridge-dorchester-subway-car.jpg | [Controls of MBTA Cambridge-Dorchester subway car.jpg](https://commons.wikimedia.org/wiki/File:Controls_of_MBTA_Cambridge-Dorchester_subway_car.jpg) | David Wilson | CC BY 2.0 | Controls of a Pullman-Standard 1400 series (#5 Cambridge-Dorchester Car) Red Line car in 1967, taken on the rear end of a train at Charles/M |
+| 02-moscow-metro-a-1031-museum-car-cab-control-panel.jpg | [Moscow metro A 1031 museum car cab control panel.jpg](https://commons.wikimedia.org/wiki/File:Moscow_metro_A_1031_museum_car_cab_control_panel.jpg) | Artem Svetlov from Moscow, Russia | CC BY 2.0 | Музейный метровагон А 1031. Выставка подвижного состава и парад поездов к 80-летию Московского метрополитена 15 мая 2015 года. 15 and 16 may |
+| 03-moscow-metro-a-1-museum-car-cab-control-panel.jpg | [Moscow metro A 1 museum car cab control panel.jpg](https://commons.wikimedia.org/wiki/File:Moscow_metro_A_1_museum_car_cab_control_panel.jpg) | Artem Svetlov from Moscow, Russia | CC BY 2.0 | Музейный метровагон А 1. Выставка подвижного состава и парад поездов к 80-летию Московского метрополитена 15 мая 2015 года. 15 and 16 may of |
+| 04-moscow-metro-a-1031-museum-car-cab-interior.jpg | [Moscow metro A 1031 museum car cab interior.jpg](https://commons.wikimedia.org/wiki/File:Moscow_metro_A_1031_museum_car_cab_interior.jpg) | Artem Svetlov from Moscow, Russia | CC BY 2.0 | Музейный метровагон А 1031. Выставка подвижного состава и парад поездов к 80-летию Московского метрополитена 15 мая 2015 года. 15 and 16 may |
+| 05-moscow-metro-a-1-museum-car-cab-switches.jpg | [Moscow metro A 1 museum car cab switches.jpg](https://commons.wikimedia.org/wiki/File:Moscow_metro_A_1_museum_car_cab_switches.jpg) | Artem Svetlov from Moscow, Russia | CC BY 2.0 | Музейный метровагон А 1. Выставка подвижного состава и парад поездов к 80-летию Московского метрополитена 15 мая 2015 года. 15 and 16 may of |
+| 06-moscow-metro-a-1031-museum-car-cab-controller.jpg | [Moscow metro A 1031 museum car cab controller.jpg](https://commons.wikimedia.org/wiki/File:Moscow_metro_A_1031_museum_car_cab_controller.jpg) | Artem Svetlov from Moscow, Russia | CC BY 2.0 | Музейный метровагон А 1031. Выставка подвижного состава и парад поездов к 80-летию Московского метрополитена 15 мая 2015 года. 15 and 16 may |

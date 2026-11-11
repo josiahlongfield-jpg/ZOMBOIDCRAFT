@@ -1,0 +1,251 @@
+{
+ "id": "tarkov_glock17",
+ "name": "Glock 17 (kitted)",
+ "anchor": "pistol",
+ "anchorMesh": "pbr_pistol",
+ "calibre": "9x19mm",
+ "fp": "operator_tarkov_glock17",
+ "sight": "scope_base_trijicon_rmr_LOD0",
+ "reticleMoa": 85,
+ "reload": [
+  2.867,
+  3.367
+ ],
+ "stats": {
+  "damage": 7.0,
+  "hipSpread": 1.4,
+  "aimSpread": 0.45,
+  "recoil": 0.75,
+  "range": 60.0,
+  "magazineSize": 21
+ },
+ "kit": [
+  "sight",
+  "suppressor",
+  "light",
+  "laser"
+ ],
+ "rail": {
+  "light": {
+   "bone": "tactical_all_surefire_x400_vis_laser_LOD0",
+   "at": [
+    -0.0001,
+    -0.0351,
+    0.0131
+   ],
+   "dir": [
+    0,
+    -0.9997,
+    -0.0224
+   ],
+   "third": [
+    -0.1326,
+    -0.0827,
+    0.6131
+   ]
+  },
+  "laser": {
+   "bone": "tactical_all_surefire_x400_vis_laser_LOD0",
+   "at": [
+    -0.0001,
+    -0.0056,
+    0.0326
+   ],
+   "dir": [
+    0,
+    -0.9997,
+    -0.0224
+   ],
+   "third": [
+    -0.1326,
+    -0.1021,
+    0.5835
+   ]
+  }
+ },
+ "tarkov": {
+  "base": "5a7ae0c351dfba0017554310",
+  "aimPath": "/mod_reciever/mod_scope",
+  "aimIndex": 0,
+  "kit": [
+   {
+    "path": "",
+    "item": "5a7ae0c351dfba0017554310",
+    "bone": "weapon_glock_glock_17_gen3_9x19_LOD0",
+    "at": [
+     -0.156826,
+     1.413956,
+     0.017428,
+     0.707107,
+     0.0,
+     0.0,
+     -0.707107
+    ],
+    "bones": [
+     "catch_17_LOD0",
+     "weapon_glock_glock_17_gen3_9x19_LOD0",
+     "release_17_LOD0",
+     "spring_17_LOD0",
+     "trigger_17_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_barrel",
+    "item": "5a6b5e468dc32e001207faf5",
+    "bone": "barrel_glock_double_diamond_114mm_threaded_9x19_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "barrel_glock_double_diamond_114mm_threaded_9x19_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_barrel/mod_muzzle",
+    "item": "5a32a064c4a28200741e22de",
+    "bone": "silencer_all_silencerco_osprey_9_9x19_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "silencer_all_silencerco_osprey_9_9x19_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_pistol_grip",
+    "item": "5a7b4960e899ef197b331a2d",
+    "bone": "pistolgrip_glock_pachmayr_tactical_rubber_grip_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "pistolgrip_glock_pachmayr_tactical_rubber_grip_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_reciever",
+    "item": "5a71e22f8dc32e00094b97f4",
+    "bone": "reciever_glock_zev_tech_hex_rmr_cut_gen_3_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "reciever_glock_zev_tech_hex_rmr_cut_gen_3_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_reciever/mod_sight_rear",
+    "item": "5a71e0fb8dc32e00094b97f2",
+    "bone": "sight_rear_glock_zev_tech_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "sight_rear_glock_zev_tech_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_reciever/mod_sight_front",
+    "item": "5a71e0048dc32e000c52ecc8",
+    "bone": "sight_front_glock_zev_tech_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "sight_front_glock_zev_tech_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_reciever/mod_scope",
+    "item": "5a32aa8bc4a2826c6e06d737",
+    "bone": "scope_base_trijicon_rmr_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "linza",
+     "scope_base_trijicon_rmr_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_magazine",
+    "item": "5a718da68dc32e000d46d264",
+    "bone": "mag_glock_magpul_pmag_21_gl9_9x19_21_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "mag_glock_magpul_pmag_21_gl9_9x19_21_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_tactical",
+    "item": "56def37dd2720bec348b456a",
+    "bone": "tactical_all_surefire_x400_vis_laser_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     -0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "flashlight_glass_LOD0",
+     "switch_000_LOD0",
+     "switch_type_000_LOD0",
+     "tactical_all_surefire_x400_vis_laser_LOD0"
+    ]
+   }
+  ]
+ }
+}

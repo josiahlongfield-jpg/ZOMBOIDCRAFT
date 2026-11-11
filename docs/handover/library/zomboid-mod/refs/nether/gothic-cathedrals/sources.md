@@ -1,0 +1,15 @@
+# nether/gothic-cathedrals
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-wells-cathedral-nave.jpg | [Wells Cathedral Nave.jpg](https://commons.wikimedia.org/wiki/File:Wells_Cathedral_Nave.jpg) | Michael D Beckwith | CC0 | Here is a photograph taken from the nave inside Wells Cathedral.  Located in Wells, Somerset, England, UK. |
+| 02-chester-cathedral-nave.jpg | [Chester Cathedral Nave.jpg](https://commons.wikimedia.org/wiki/File:Chester_Cathedral_Nave.jpg) | Michael D Beckwith | CC0 | Inside the nave of Chester Cathedral, Cheshire, England, UK, looking east to the choir screen |
+| 03-interior-of-gothic-cathedral-seville-spain.jpg | [Interior of Gothic Cathedral - Seville - Spain.jpg](https://commons.wikimedia.org/wiki/File:Interior_of_Gothic_Cathedral_-_Seville_-_Spain.jpg) | Adam Jones, Ph.D. | CC BY-SA 3.0 | Interior of Gothic Cathedral - Seville - Spain. |
+| 04-flying-buttresses-milan-cathedral.jpg | [Flying Buttresses, Milan Cathedral.jpg](https://commons.wikimedia.org/wiki/File:Flying_Buttresses,_Milan_Cathedral.jpg) | Julian Lupyan | CC0 | The ornate flying buttresses of Milan Cathedral, 2025 |
+| 05-amiens-cathedral-gallery-roof-and-buttresses-1980-1.jpg | [Amiens Cathedral gallery roof and buttresses 1980-1.jpg](https://commons.wikimedia.org/wiki/File:Amiens_Cathedral_gallery_roof_and_buttresses_1980-1.jpg) | Acroterion | CC BY-SA 4.0 | The aisle roof and buttresses of Amiens Cathedral in 1980. Duplicated slide. |
+| 06-strasbourg-notre-dame-de-strasbourg-gargoyles-flying-buttres.jpg | [Strasbourg - Notre-Dame de Strasbourg - Gargoyles & flying buttresses ](https://commons.wikimedia.org/wiki/File:Strasbourg_-_Notre-Dame_de_Strasbourg_-_Gargoyles_%26_flying_buttresses_on_the_south_side_of_the_cathedral_06.jpg) | Txllxt TxllxT | CC BY-SA 4.0 | Strasbourg - Notre-Dame de Strasbourg - Gargoyles & flying buttresses on the south side of the cathedral |
+| 07-20231023-augsburg-cathedral-03.jpg | [20231023 Augsburg Cathedral 03.jpg](https://commons.wikimedia.org/wiki/File:20231023_Augsburg_Cathedral_03.jpg) | Flocci Nivis | CC BY 4.0 | An altar with a Madonna and Child statue as Seat of Wisdom in the crypt of the Augsburg Cathedral, Germany. The Romanesque statue dates from |
+| 08-dalziel-brothers-sir-walter-scott-rob-roy-in-the-crypt-of-gl.jpg | [Dalziel Brothers - Sir Walter Scott - Rob Roy in the Crypt of Glasgow ](https://commons.wikimedia.org/wiki/File:Dalziel_Brothers_-_Sir_Walter_Scott_-_Rob_Roy_in_the_Crypt_of_Glasgow_Cathedral.jpg) | One or all of:  George Dalziel (1815-1902) Edward Dalziel (1817-1905) Thomas Dal | Public domain | "Rob Roy in the Crypt of Glasgow Cathedral", by the Dalziel Brothers, after Sir Walter Scott's Rob Roy. "Crypt" is not quite the right word  |
+| 09-malolos-cathedral-crypt-15.jpg | [Malolos Cathedral Crypt 15.jpg](https://commons.wikimedia.org/wiki/File:Malolos_Cathedral_Crypt_15.jpg) | SwarmCheng | CC BY-SA 4.0 | Malolos Cathedral Crypt |

@@ -1,0 +1,97 @@
+
+<div class="wrap">
+  <div>
+    <div class="eyebrow">ZomboidCraft · creature preview</div>
+    <h1>Harvestman</h1>
+    <p class="lead">Round 6, from your armoured render, in near-black armour with a bronze tint. From the front the body is a downward arrowhead: long creased blade plates sweep out of a centre keel, jagged spines crown the back, and a beard of shards hangs under the point. A row of blade spines runs along the spine from head to tail, small at the head, tallest mid-back, small again at the tail. Feeding, its scythes go in through the victim's back and out of its chest and drag it up to the mouth, where the beard covers the top of its head, and every red line glows. Each leg has a third joint, an ankle; press Creep to see them move. Press <b>Test room</b> to let it loose in a room: it climbs, hides, drags the body and decides everything for itself, and a tap anywhere in the room makes a noise it can hear.</p>
+  </div>
+
+  <div class="stage" id="stage">
+    <canvas id="view" aria-label="3D view of the Harvestman"></canvas>
+    <div class="tag left" id="tagL">Hunting</div>
+    <div class="tag right" id="tagR">Feeding</div>
+    <div class="hint" id="hint">Drag to turn · scroll or pinch to zoom</div>
+  </div>
+  <div class="mind" id="mind" hidden aria-live="polite">
+    <div class="now"><small>What it's doing</small><b id="mind-act">Looking around</b><p id="mind-why">It has only just come in.</p></div>
+    <div class="needs">
+      <span>Hungry</span><div class="bar"><i data-need="hunger"></i></div>
+      <span>Restless</span><div class="bar"><i data-need="restless"></i></div>
+      <span>Curious</span><div class="bar"><i data-need="curious"></i></div>
+      <span>Wary</span><div class="bar"><i data-need="wary"></i></div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <div class="group"><span>Show</span>
+      <div class="seg" role="group" aria-label="Show">
+        <button id="v-hunt" data-view="hunt" aria-pressed="true">Hunting</button>
+        <button id="v-feed" data-view="feed" aria-pressed="false">Feeding</button>
+        <button id="v-both" data-view="both" aria-pressed="false">Both</button>
+        <button id="v-room" data-view="room" aria-pressed="false">Test room</button>
+      </div>
+    </div>
+    <div class="group" id="roombar" hidden><span>Room</span>
+      <button class="toggle" id="t-follow" aria-pressed="false">Follow it</button>
+      <button class="toggle" id="t-reset">Start over</button>
+    </div>
+    <div class="group"><span>Angle</span>
+      <div class="seg" role="group" aria-label="Angle">
+        <button id="a-q" data-angle="q" aria-pressed="true">¾</button>
+        <button id="a-side" data-angle="side" aria-pressed="false">Side</button>
+        <button id="a-front" data-angle="front" aria-pressed="false">Front</button>
+      </div>
+    </div>
+    <div class="group"><span>Motion</span>
+      <div class="seg" role="group" aria-label="Motion">
+        <button id="m-still" data-motion="still" aria-pressed="false">Still</button>
+        <button id="m-idle" data-motion="idle" aria-pressed="true">Idle</button>
+        <button id="m-walk" data-motion="walk" aria-pressed="false">Creep</button>
+      </div>
+    </div>
+    <div class="group"><span>Light</span>
+      <div class="seg" role="group" aria-label="Light">
+        <button id="l-studio" data-light="studio" aria-pressed="true">Studio</button>
+        <button id="l-torch" data-light="torch" aria-pressed="false">Torch</button>
+      </div>
+      <button class="toggle" id="t-player" aria-pressed="true">Player for scale</button>
+    </div>
+  </div>
+
+  <div class="section">The two forms</div>
+  <div class="forms">
+    <article class="card">
+      <header><h2>Hunting</h2><span class="band hunt">After you</span></header>
+      <div class="body">
+        <div class="stats">
+          <div class="stat"><b id="h-tall">–</b><small>Tall</small></div>
+          <div class="stat"><b id="h-span">–</b><small>Leg span</small></div>
+          <div class="stat"><b id="h-body">–</b><small>Belly off the floor</small></div>
+        </div>
+        <ul>
+          <li>A sleek dart of a body in near-black, bronze-tinted armour: long creased blade plates in a herringbone off a centre keel with a thin red seam, jagged spines crowning the back, a row of blade spines along the spine (small at the head, tallest mid-back, small at the tail) and a beard of shards under the point.</li>
+          <li>Four long armoured legs with three joints each: a thigh up to a capped cog knee high above the body, a shin down to a cog ankle, then a long shingled point. Overlapping blade plates cover every segment.</li>
+          <li>No visible head: the armoured front is its face, closing to a point under the front.</li>
+          <li>Two small scythe arms folded under the head like a mantis's, and red sinew and black cables looping out to the legs.</li>
+        </ul>
+      </div>
+    </article>
+    <article class="card">
+      <header><h2>Feeding</h2><span class="band feed">Gorging</span></header>
+      <div class="body">
+        <div class="stats">
+          <div class="stat"><b id="f-tall">–</b><small>Tall</small></div>
+          <div class="stat"><b id="f-span">–</b><small>Leg span</small></div>
+          <div class="stat"><b id="f-body">–</b><small>Belly off the floor</small></div>
+        </div>
+        <ul>
+          <li>The victim hangs with its back to it, dragged up until its head is right under the point; the beard of shards only drops far enough to cover the top half of its head.</li>
+          <li>The scythe arms do the dragging: the same folded shape, closed up tight, the blades driven in through the victim's back and out of its chest, points down.</li>
+          <li>Every red line, in the legs, the seams and the gaps between the plates, glows and pulses while it feeds.</li>
+          <li>What it leaves behind is a shrivelled grey husk.</li>
+        </ul>
+      </div>
+    </article>
+  </div>
+  <p class="note">Preview only. Sizes are in blocks, and the player is there for scale. Once you're happy with the look, the in-game model and its hit shapes are built from this, the same way as the detailed jets.</p>
+</div>

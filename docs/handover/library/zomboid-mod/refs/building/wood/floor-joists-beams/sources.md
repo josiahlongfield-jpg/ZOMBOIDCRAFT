@@ -1,0 +1,10 @@
+# building/wood/floor-joists-beams
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-detail-view-of-floor-system-showing-butts-of-logs-resting-on.jpg | [DETAIL VIEW OF FLOOR SYSTEM SHOWING BUTTS OF LOGS RESTING ON SILL, FLO](https://commons.wikimedia.org/wiki/File:DETAIL_VIEW_OF_FLOOR_SYSTEM_SHOWING_BUTTS_OF_LOGS_RESTING_ON_SILL,_FLOOR_JOISTS_RESTING_ON_LEDGER,_AND_SUB-FLOORING_-_John_Engberg_House,_Falkirk,_McLean_County,_ND_HABS_ND,28-FALK,1-8.tif) | Related names:  Fowler, Steve, photographer Johnson, Lon, historian | Public domain |  |
+| 02-detail-view-to-south-southeast-of-floor-system-showing-butts.jpg | [DETAIL VIEW TO SOUTH-SOUTHEAST OF FLOOR SYSTEM SHOWING BUTTS OF LOGS R](https://commons.wikimedia.org/wiki/File:DETAIL_VIEW_TO_SOUTH-SOUTHEAST_OF_FLOOR_SYSTEM_SHOWING_BUTTS_OF_LOGS_RESTING_ON_SILL_AND_FLOOR_JOISTS_RESTING_ON_LEDGER_-_John_Engberg_House,_Falkirk,_McLean_County,_ND_HABS_ND,28-FALK,1-9.tif) | Related names:  Fowler, Steve, photographer Johnson, Lon, historian | Public domain |  |
+| 04-phonograph-works-building-11-with-wooden-beams-supporting-se.jpg | [Phonograph works, Building 11, with wooden beams supporting section of](https://commons.wikimedia.org/wiki/File:Phonograph_works,_Building_11,_with_wooden_beams_supporting_section_of_third_floor._(09cb3423-f9a7-4c1a-9b3c-3409576379a7).jpg) | Unknown authorUnknown author | Public domain | Phonograph works, Building 11, with wooden beams supporting section of third floor. Keywords: west orange; laboratory complex; accidents; fi |
+| 05-phonograph-works-building-11-with-wooden-beams-supporting-se.jpg | [Phonograph works, Building 11, with wooden beams supporting section of](https://commons.wikimedia.org/wiki/File:Phonograph_works,_Building_11,_with_wooden_beams_supporting_section_of_third_floor._(3b6c60e1-7532-4841-b995-82bdc0516da7).jpg) | Unknown authorUnknown author | Public domain | Phonograph works, Building 11, with wooden beams supporting section of third floor. Keywords: west orange; laboratory complex; accidents; fi |

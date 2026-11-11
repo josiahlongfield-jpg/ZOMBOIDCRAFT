@@ -1,0 +1,33 @@
+---
+name: zomboid-zombie-behaviour-plan
+description: ZOMBIE BEHAVIOUR thread (2026-10-31): all 50 Zomboid zombie sandbox settings + migration/rallies/herds, fake dead, outfits by place, search helicopter; plan doc and status
+metadata:
+  type: project
+  modified: 2026-10-31T03:55:35.420Z
+---
+
+Thread "Build Zomboid zombie behaviour" (branch claude/project-thread-w8d2gc), handed PZ review sections 5, 14 (search helicopter) and 20 (Zombie Lore 29 + Zombie Population 21 settings) on 2026-10-31. Harvestman/specials stay with their threads.
+
+Plan doc sent 2026-10-31 ~04:10: https://claude.ai/artifact/97P1rAN54jfpHhCRx7j5m7 ("Zombie behaviour plan"). Zomboid defaults from https://pindrop.gg/project-zomboid/sandbox-settings (B42.21 Apocalypse): Speed Random (sprinter 0%, ours 15 kept), Toughness Random, Sight/Hearing Random Normal-Poor, Memory Normal, Cognition Basic, Drag Down on, Lunge on, Armor 2/85, attached weapon 6%, fake dead World Zombies, fences 25 zombies; population: migration on, peak 1.5 at day 28, redistribute 12 h, follow sound 100, rally 20 (+-50%), travel 20, separation 15, radius 3, delete past 300 (ours folds to records). Helicopter Once (day 6-9).
+
+Plan: config groups zombieLore + zombiePopulation (ZcConfig); 4 waves (lore dials; moving population + herds; outfits/fake dead/under cars; helicopter), video before each merge. Infection settings touch SURVIVAL's SurvivalEvents: tell that thread first.
+
+ANSWERS (Josiah 2026-10-31 04:16, in the doc): count can grow (Zomboid peak 1.5 by day 28, extra arrives as herds from county edges, never inside cleared houses); zombies belted into ~1 in 20 abandoned/wrecked cars YES (ours-only addition); fake dead 1/6 street, 1/10 indoor OK; GO on the 4 waves in order, video before each merge.
+
+Code today: zombie/ (Sight, Noise, ZombieSightGoal, InvestigateNoiseGoal, BashGoal, WayInGoal, WindowClimbGoal, ZombieLook outfits, ZombieSpawner.uniform place outfits), population/ records never move, WorldEvents HELI flybys + AirStrikes HUNT. Related: [[zomboid-population-tech]], [[zomboid-population-direction]], [[zomboid-pz-review]], [[zomboid-match-zomboid-rule]], [[zomboid-hordes-death-base-direction]].
+
+SANDBOX WIRING (COMMANDS, 2026-10-31 05:01): after wave 1 is in playtest, wire each zombieLore/population key in com.zomboidcraft.sandbox SandboxOptions.wires() with .owner("ENTITY") (choice/toggle/number, .sameScale() when values match Zomboid's). 53 settings owned: see /mnt/project-files/zomboid-mod/commands/world-settings.md. Fence crowd now counted along a 4-block stretch (FENCE_BLOWS 120).
+WAVE 1 MERGED 2026-10-31 06:39 (playtest 6e17a758, Josiah 'Merge it'). Next: wave 2.
+WAVE 2 (population settings, herds, rallies, migration) MERGED to playtest 2026-10-31 ~07:50 (merge 1dbef9a8, Josiah "merge it"). Open question to him: show spotted herds on the bare Map? Next: wave 3.
+WAVE 3 (outfits by place PlaceOutfits, fake dead + under-car crawlers LyingInWait, belted drivers BeltedDead; ours settings zc.fakeDeadStreet/Indoor/Combat, zc.beltedDead) MERGED to playtest 2026-10-31 ~09:10 (c0ff8afe, Josiah "merge").
+WAVE 4 (search helicopter world/events/SearchHeli, config searchHeli.*, sandbox "Helicopter"; CarProp searchlight aim) merged to playtest 2026-10-31 ~10:10 (e168d044, jar published); ALL 4 WAVES IN. Herds-on-Map: Josiah 10:13 "no zombies show up on the map" = keep all zombies off the Map. A world past lastDay skips the Once flight.
+
+TRAIT SENSES (SURVIVAL asked 2026-10-31 21:27): hooks for keen_hearing/hard_of_hearing/deaf (client SoundEngineMixin volume), inconspicuous/conspicuous (Sight.range x0.5/x2), graceful/clumsy (footstep noise x0.6/x1.2) via zombie/TraitSenses using survival.character.Traits.has. Ready as /mnt/project-files/zomboid-mod/zombie-behaviour/trait-senses.patch; MERGED to playtest 2026-11-01 03:45 (73d6780a), Josiah ok without video. SURVIVAL swaps B42 numbers later.
+
+DISTRICT TALLY (AUDIO's purge hunt board, 2026-11-06): zombie/population/DistrictDead.share(level, districtId) 0..1 or -1 (unknown until 90% of the district's county places seeded). Population.setPop keeps it in step; walkers from records carry FROM attachment. On branch w8d2gc 699ebad4, CI green, NOT in playtest: AUDIO pings when HuntBoard is in playtest; then add `com.zomboidcraft.gear.HuntBoard.walkers = DistrictDead::share;` in DistrictDead.register, CI, merge to playtest.
+
+POPULATION TOTAL (checked 2026-11-07): default world table total ~908k (seeds 12345/1/987654321), because Budgets.of gives each of 455 mainland DOWNTOWN plan pieces (city 311, old_city 138, metro 6) a full downtown budget; the county plan (12:25 10-27) split cities into pieces after Budgets (10:07). Approved was per downtown, ~135k world. Josiah 2026-11-07 09:14: KEEP 908k "but I want it to feel that way, to be swamped by massive hordes". Offered swarm wave: live cap 300-1500 + countBeforeDelete 800, ~15 herds of 500-1500, loud noise wakes indoor to 64, crowd fx 320 blocks / 8000; rally size stays Zomboid 20. Josiah 09:36: go (harder is fine if the server holds), so all four + bigger rallies: SWARM WAVE built (branch 7 test runs, last ceb57ce2): video swarm-downtown.mp4 sent; CI runner ~600 real, ~50-55 mspt, tuner hits 300 floor but chasing ones never fold. MERGED to playtest 2026-11-07 ~11:40 (26e3cc63; also carried DistrictDead, inert until AUDIO wires HuntBoard). Count tool: scratchpad count/CountDead.java, javac -sourcepath src/main/java, run with -cp out:src/main/resources.
+
+SWITCH (Josiah 2026-11-09 07:51): all future zombie work goes to repo josiahlongfield-jpg/ENDLESS-NIGHT (mod id endlessnight, com.endlessnight), files /mnt/project-files/endless-night/zombies/, Modrinth profile ENDLESS NIGHT. ZOMBOIDCRAFT frozen (no playtest merges). Wait for the repo thread's first green build, then re-apply. Inventory sent: zomboid-mod/zombie-behaviour/INVENTORY-for-endless-night.md. Rules: /mnt/project-files/endless-night/SWITCH.md. DistrictDead->HuntBoard wiring now happens in ENDLESS-NIGHT.
+HOLD (Josiah 2026-11-09 08:27): no pushes anywhere until the move thread finishes prepping ENDLESS-NIGHT; work local/patches only.
+HOLD LIFTED 2026-11-09 09:33: ENDLESS-NIGHT ready (main c1136397d; branch off main, merge to playtest, jar endless-night-playtest.jar). Renamed endlessnight / com.endlessnight / config/endlessnight / commands /en, /enhud. REMOVED there: county world, built-in cars, loot/shops, survival needs, skills+traits, aircraft, trains/lifts, companions, Harvestman, command net (so HuntBoard/DistrictDead wiring, TraitSenses, county outfits/herd roads are moot or stubbed). This thread had nothing unpushed at the switch.

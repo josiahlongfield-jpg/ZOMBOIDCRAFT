@@ -1,0 +1,480 @@
+{
+ "id": "tarkov_m16",
+ "name": "Colt M16A2 (kitted)",
+ "anchor": "assault_rifle",
+ "anchorMesh": "pbr_assault_rifle",
+ "calibre": "5.56mm",
+ "suppressed": true,
+ "fp": "operator_tarkov_m16",
+ "reload": [
+  4.833,
+  5.833
+ ],
+ "stats": {
+  "damage": 12.5,
+  "hipSpread": 3.0,
+  "aimSpread": 0.35,
+  "recoil": 0.85,
+  "range": 125.0,
+  "fireDelayTicks": 3,
+  "magazineSize": 30,
+  "selectFire": false
+ },
+ "kit": [
+  "suppressor",
+  "stock"
+ ],
+ "grip": null,
+ "guard": "handguard_ar15_colt_m16a2_std_LOD0",
+ "holds": {
+  "handguard_ar15_colt_m16a2_std_LOD0": {
+   "part": "handguard_ar15_colt_m16a2_std",
+   "slot": "mod_handguard",
+   "palm": [
+    0.06051,
+    0.10738,
+    -0.08616,
+    -0.19639,
+    0.04142,
+    -0.80609,
+    0.55671
+   ],
+   "fingers": {
+    "Base HumanLDigit11": [
+     0.52585,
+     -0.19393,
+     0.06708,
+     0.82545
+    ],
+    "Base HumanLDigit12": [
+     0.00264,
+     0.09744,
+     -0.10165,
+     0.99003
+    ],
+    "Base HumanLDigit13": [
+     -0.00132,
+     0.01496,
+     0.08936,
+     0.99589
+    ],
+    "Base HumanLDigit21": [
+     0.14091,
+     0.19671,
+     -0.16868,
+     0.95551
+    ],
+    "Base HumanLDigit22": [
+     -2e-05,
+     -6e-05,
+     -0.62966,
+     0.77687
+    ],
+    "Base HumanLDigit23": [
+     -3e-05,
+     9e-05,
+     -0.51097,
+     0.8596
+    ],
+    "Base HumanLDigit31": [
+     0.01743,
+     0.1615,
+     -0.29014,
+     0.9431
+    ],
+    "Base HumanLDigit32": [
+     0.01612,
+     -0.02292,
+     -0.72763,
+     0.6854
+    ],
+    "Base HumanLDigit33": [
+     0,
+     1e-05,
+     -0.36984,
+     0.9291
+    ],
+    "Base HumanLDigit41": [
+     -0.05187,
+     0.15735,
+     -0.33676,
+     0.9269
+    ],
+    "Base HumanLDigit42": [
+     -0.00233,
+     0.00253,
+     -0.73174,
+     0.68157
+    ],
+    "Base HumanLDigit43": [
+     2e-05,
+     -2e-05,
+     -0.37598,
+     0.92663
+    ],
+    "Base HumanLDigit51": [
+     -0.15402,
+     0.14237,
+     -0.30257,
+     0.92976
+    ],
+    "Base HumanLDigit52": [
+     1e-05,
+     7e-05,
+     -0.74949,
+     0.66201
+    ],
+    "Base HumanLDigit53": [
+     3e-05,
+     -8e-05,
+     -0.36759,
+     0.92999
+    ]
+   }
+  },
+  "handguard_ar15_colt_m16a2_std_lower_LOD0": {
+   "part": "handguard_ar15_colt_m16a2_std_lower",
+   "slot": "mod_handguard",
+   "palm": [
+    0.05424,
+    -0.02986,
+    -0.05069,
+    -0.24573,
+    0.26792,
+    -0.77257,
+    0.52055
+   ],
+   "fingers": {
+    "Base HumanLDigit11": [
+     0.69205,
+     -0.17503,
+     0.08585,
+     0.69502
+    ],
+    "Base HumanLDigit12": [
+     -0.03547,
+     0.15757,
+     -0.17976,
+     0.97036
+    ],
+    "Base HumanLDigit13": [
+     -0.05957,
+     0.04769,
+     0.02308,
+     0.99682
+    ],
+    "Base HumanLDigit21": [
+     0.01716,
+     0.31283,
+     0.07878,
+     0.94638
+    ],
+    "Base HumanLDigit22": [
+     -1e-05,
+     -7e-05,
+     -0.36974,
+     0.92914
+    ],
+    "Base HumanLDigit23": [
+     -3e-05,
+     9e-05,
+     -0.43042,
+     0.90263
+    ],
+    "Base HumanLDigit31": [
+     -0.11317,
+     0.25552,
+     -0.19198,
+     0.94077
+    ],
+    "Base HumanLDigit32": [
+     0,
+     0,
+     -0.5346,
+     0.84511
+    ],
+    "Base HumanLDigit33": [
+     0,
+     1e-05,
+     -0.43106,
+     0.90232
+    ],
+    "Base HumanLDigit41": [
+     -0.21428,
+     0.21482,
+     -0.36204,
+     0.8814
+    ],
+    "Base HumanLDigit42": [
+     -1e-05,
+     3e-05,
+     -0.52816,
+     0.84914
+    ],
+    "Base HumanLDigit43": [
+     1e-05,
+     -2e-05,
+     -0.24631,
+     0.96919
+    ],
+    "Base HumanLDigit51": [
+     -0.32535,
+     0.13846,
+     -0.53802,
+     0.76519
+    ],
+    "Base HumanLDigit52": [
+     -0.00245,
+     0.00132,
+     -0.41817,
+     0.90837
+    ],
+    "Base HumanLDigit53": [
+     -0.01366,
+     -0.02581,
+     0.1435,
+     0.98922
+    ]
+   }
+  }
+ },
+ "tarkov": {
+  "base": "m16a2_gun",
+  "kit": [
+   {
+    "path": "",
+    "item": "m16a2_gun",
+    "bones": [
+     "colt_m16a2_hammer_LOD0",
+     "endplate_ar15_colt_a15_std_LOD0",
+     "internals_LOD0",
+     "bolt_carrier_LOD0",
+     "bolt_LOD0",
+     "colt_m16a2_bolt_catch_LOD0",
+     "weapon_colt_m16a2_556x45_LOD0",
+     "colt_m16a2_release_LOD0",
+     "selector_LOD0",
+     "colt_m16a2_trigger_LOD0"
+    ],
+    "bone": "weapon_colt_m16a2_556x45_LOD0",
+    "at": [
+     -0.156826,
+     1.413957,
+     0.017428,
+     -0.707107,
+     0.0,
+     -0.0,
+     0.707107
+    ]
+   },
+   {
+    "path": "/mod_pistol_grip",
+    "item": "55d4b9964bdc2d1d4e8b456e",
+    "bones": [
+     "pistolgrip_ar15_colt_a2_LOD0"
+    ],
+    "bone": "pistolgrip_ar15_colt_a2_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_magazine",
+    "item": "55d4887d4bdc2d962f8b4570",
+    "bones": [
+     "mag_stanag_colt_ar15_std_556x45_30_LOD0"
+    ],
+    "bone": "mag_stanag_colt_ar15_std_556x45_30_LOD0",
+    "at": [
+     -0.0,
+     -0.0,
+     -0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_reciever",
+    "item": "m16a2_upper",
+    "bones": [
+     "reciever_ar15_colt_m16a2_std_LOD0"
+    ],
+    "bone": "reciever_ar15_colt_m16a2_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_reciever/mod_barrel",
+    "item": "m16a2_barrel",
+    "bones": [
+     "barrel_ar15_colt_m16_std_508mm_LOD0",
+     "barrel_ar15_gastube_rifle_LOD0"
+    ],
+    "bone": "barrel_ar15_colt_m16_std_508mm_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     -0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_reciever/mod_barrel/mod_muzzle",
+    "item": "544a38634bdc2d58388b4568",
+    "bones": [
+     "muzzle_ar15_colt_usgi_a2_556x45_LOD0"
+    ],
+    "bone": "muzzle_ar15_colt_usgi_a2_556x45_LOD0",
+    "at": [
+     0.0,
+     -0.0,
+     0.0,
+     0.0,
+     -0.0,
+     -0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_reciever/mod_barrel/mod_muzzle/mod_muzzle",
+    "item": "638612b607dfed1ccb7206ba",
+    "bones": [
+     "silencer_sdqd_griffin_m4sd_k_silencer_556x45_LOD0"
+    ],
+    "bone": "silencer_sdqd_griffin_m4sd_k_silencer_556x45_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     2e-06,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_reciever/mod_barrel/mod_gas_block",
+    "item": "5ae30e795acfc408fb139a0b",
+    "bones": [
+     "gas_block_ar15_colt_m4_front_sight_gas_block_std_LOD0"
+    ],
+    "bone": "gas_block_ar15_colt_m4_front_sight_gas_block_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_reciever/mod_handguard",
+    "item": "m16a2_hg",
+    "bones": [
+     "handguard_ar15_colt_m16a2_std_LOD0",
+     "handguard_ar15_colt_retainers_LOD0"
+    ],
+    "bone": "handguard_ar15_colt_m16a2_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     -0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_reciever/mod_handguard/mod_handguard",
+    "item": "m16a2_hg_lower",
+    "bones": [
+     "handguard_ar15_colt_m16a2_std_lower_LOD0"
+    ],
+    "bone": "handguard_ar15_colt_m16a2_std_lower_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_stock",
+    "item": "m16a2_tube",
+    "bones": [
+     "stock_ar15_colt_a2_tube_LOD0"
+    ],
+    "bone": "stock_ar15_colt_a2_tube_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     -1e-06,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_stock/mod_stock",
+    "item": "m16a2_stock",
+    "bones": [
+     "stock_ar15_colt_a2_std_LOD0"
+    ],
+    "bone": "stock_ar15_colt_a2_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_charge",
+    "item": "55d44fd14bdc2d962f8b456e",
+    "bones": [
+     "charge_ar15_colt_charging_handle_LOD0"
+    ],
+    "bone": "charge_ar15_colt_charging_handle_LOD0",
+    "at": [
+     0.0,
+     -0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   }
+  ],
+  "aimPath": "/mod_reciever",
+  "aimIndex": 0
+ }
+}

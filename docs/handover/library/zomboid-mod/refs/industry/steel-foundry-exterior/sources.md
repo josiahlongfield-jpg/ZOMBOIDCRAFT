@@ -1,0 +1,12 @@
+# industry/steel-foundry-exterior
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-machine-hall-old-bethlehem-steel-mill-bethlehem-pa.jpg | [Machine Hall, Old Bethlehem Steel Mill, Bethlehem, PA.jpg](https://commons.wikimedia.org/wiki/File:Machine_Hall,_Old_Bethlehem_Steel_Mill,_Bethlehem,_PA.jpg) | w_lemay | CC BY-SA 2.0 | In operation from 1857 until 1995, the former Bethlehem Steel Mill started as an ironworks known as the Bethlehem Iron Company, which was fo |
+| 02-machine-hall-old-bethlehem-steel-mill-bethlehem-pa-524031055.jpg | [Machine Hall, Old Bethlehem Steel Mill, Bethlehem, PA - 52403105599.jp](https://commons.wikimedia.org/wiki/File:Machine_Hall,_Old_Bethlehem_Steel_Mill,_Bethlehem,_PA_-_52403105599.jpg) | w_lemay | CC BY-SA 2.0 | In operation from 1857 until 1995, the former Bethlehem Steel Mill started as an ironworks known as the Bethlehem Iron Company, which was fo |
+| 03-machine-hall-old-bethlehem-steel-mill-bethlehem-pa-524023103.jpg | [Machine Hall, Old Bethlehem Steel Mill, Bethlehem, PA - 52402310337.jp](https://commons.wikimedia.org/wiki/File:Machine_Hall,_Old_Bethlehem_Steel_Mill,_Bethlehem,_PA_-_52402310337.jpg) | w_lemay | CC BY-SA 2.0 | In operation from 1857 until 1995, the former Bethlehem Steel Mill started as an ironworks known as the Bethlehem Iron Company, which was fo |
+| 04-bethlehem-steel-pennellb.jpg | [Bethlehem Steel Pennellb.jpg](https://commons.wikimedia.org/wiki/File:Bethlehem_Steel_Pennellb.jpg) | Joseph Pennell | Public domain | Bethlehem Steel works, "Watercolor in sepia brown, white and gray, on buff paper. Signed May '81." |
+| 05-corrigan-mckinney-steel-blast-furnaces-1924.jpg | [Corrigan McKinney Steel blast furnaces 1924.jpg](https://commons.wikimedia.org/wiki/File:Corrigan_McKinney_Steel_blast_furnaces_1924.jpg) | The Plain Dealer, November 30, 1924, p. 84 | Public domain | Blast furnaces of Corrigan, McKinney Steel in Cleveland, Ohio, USA in November 1924. |
+| 06-interior-view-blast-furnace-no-2-close-up-pittsburgh-steel-c.jpg | [INTERIOR VIEW BLAST FURNACE NO. 2 CLOSE-UP. - Pittsburgh Steel Company](https://commons.wikimedia.org/wiki/File:INTERIOR_VIEW_BLAST_FURNACE_NO._2_CLOSE-UP._-_Pittsburgh_Steel_Company,_Monessen_Works,_Blast_Furnace_No._1_and_No._2,_Donner_Avenue,_Monessen,_Westmoreland_County,_PA_HAER_PA,65-MONE,1A-7.tif) | Lowe, Jet, creator | Public domain | Pittsburgh Steel Company |

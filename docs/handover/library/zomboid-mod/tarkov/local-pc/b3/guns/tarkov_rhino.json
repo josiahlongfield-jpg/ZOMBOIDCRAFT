@@ -1,0 +1,105 @@
+{
+ "id": "tarkov_rhino",
+ "name": "Chiappa Rhino 200DS 9x19",
+ "anchor": "pistol",
+ "anchorMesh": "pbr_pistol",
+ "calibre": "9x19mm",
+ "fp": "operator_tarkov_rhino",
+ "reload": [
+  6.733,
+  6.133
+ ],
+ "stats": {
+  "damage": 7.5,
+  "hipSpread": 1.5,
+  "aimSpread": 0.5,
+  "recoil": 0.85,
+  "range": 50.0,
+  "fireDelayTicks": 5,
+  "magazineSize": 6
+ },
+ "kit": [],
+ "grip": null,
+ "guard": null,
+ "tarkov": {
+  "base": "624c2e8614da335f1e034d8c",
+  "kit": [
+   {
+    "path": "",
+    "item": "624c2e8614da335f1e034d8c",
+    "bones": [
+     "rhino_200ds_hammer_LOD0",
+     "rhino_200ds_trigger_LOD0",
+     "weapon_chiappa_rhino_200ds_9x19_LOD0",
+     "rhino_200ds_pin_LOD0",
+     "rhino_200ds_extractor_LOD0",
+     "rhino_200ds_crane_LOD0",
+     "rhino_200ds_crane_stopper_LOD0",
+     "rhino_200ds_cylinder_stopper_LOD0",
+     "rhino_200ds_mag_release_LOD0"
+    ],
+    "bone": "weapon_chiappa_rhino_200ds_9x19_LOD0",
+    "at": [
+     -0.156826,
+     1.413956,
+     0.017428,
+     0.707107,
+     0.0,
+     0.0,
+     -0.707107
+    ]
+   },
+   {
+    "path": "/mod_magazine",
+    "item": "624c3074dbbd335e8e6becf3",
+    "bones": [
+     "mag_rhino_chiappa_rhino_cylinder_9x33r_6_LOD0"
+    ],
+    "bone": "mag_rhino_chiappa_rhino_cylinder_9x33r_6_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     -0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_sight_front",
+    "item": "619f52454c58466fe122843b",
+    "bones": [
+     "sight_front_rhino_chiappa_night_sight_LOD0"
+    ],
+    "bone": "sight_front_rhino_chiappa_night_sight_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_pistol_grip",
+    "item": "619f4bffd25cbd424731fb97",
+    "bones": [
+     "pistolgrip_rhino_chiappa_wood_LOD0"
+    ],
+    "bone": "pistolgrip_rhino_chiappa_wood_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   }
+  ]
+ }
+}

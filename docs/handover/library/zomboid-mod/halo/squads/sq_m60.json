@@ -1,0 +1,9465 @@
+{
+"map": "m60.map",
+"characters": [
+"elite",
+"grunt",
+"jackal",
+"brute",
+"skirmisher",
+"jackal_sniper",
+"hunter",
+"grunt_heavy",
+"brute_captain",
+"spartan_carter",
+"spartan_emile",
+"spartan_jun",
+"elite_general",
+"elite_jetpack",
+"elite_officer",
+"elite_specops",
+"elite_ultra",
+"trooper_pilot",
+"trooper",
+"engineer",
+"trooper_odst",
+"null_cov_flying",
+"null_human_default",
+"null_human_flying",
+"null_cov_default",
+"skirmisher_commando",
+"elite_bob"
+],
+"vehicles": [
+"ghost",
+"wraith",
+"banshee",
+"revenant",
+"phantom",
+"shade",
+"falcon",
+"mongoose",
+"scorpion",
+"security_camera_interior",
+"plasma_turret_mounted",
+"anti_infantry_turret",
+"oni_ext_security_camera",
+"military_truck",
+"bfg",
+"machinegun"
+],
+"weapons": [
+"flak_cannon",
+"plasma_pistol",
+"needler",
+"assault_rifle",
+"plasma_rifle",
+"sniper_rifle",
+"spike_rifle",
+"plasma_repeater",
+"energy_sword",
+"shotgun",
+"needle_rifle",
+"focus_rifle",
+"sniper_rifle_june",
+"dmr",
+"grenade_launcher",
+"spartan_laser",
+"rocket_launcher",
+"concussion_rifle"
+],
+"squads": [
+{
+"name": "special_elite01",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+108.36,
+53.95,
+-229.75
+],
+"halo": [
+-75.37751770019531,
+35.55150604248047,
+17.70024299621582
+],
+"yaw": -3.05
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"elite_bob"
+],
+"weapons": [
+"concussion_rifle"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_initial_troopers",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+-178.77,
+20.74,
+163.76
+],
+"halo": [
+53.726497650146484,
+-58.651161193847656,
+6.805091857910156
+],
+"yaw": -2.492
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+3.077251427657298e-42
+],
+"yaw": 54.16
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+0.0
+],
+"yaw": 0.0
+},
+{
+"kind": "formation",
+"pos": [
+-185.79,
+18.22,
+145.25
+],
+"halo": [
+47.65538787841797,
+-60.95330810546875,
+5.978198051452637
+],
+"yaw": -2.698
+}
+],
+"cells": [
+{
+"count": 3,
+"chars": [
+"trooper_odst"
+],
+"weapons": [
+"assault_rifle"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_security01",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+125.18,
+66.71,
+-386.48
+],
+"halo": [
+-126.79817962646484,
+41.06814956665039,
+21.885709762573242
+],
+"yaw": -2.712
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+3.0828566215145976e-42
+],
+"yaw": -131.485
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+0.0
+],
+"yaw": 0.0
+}
+],
+"cells": [
+{
+"count": 2,
+"chars": [
+"elite_specops"
+],
+"weapons": [
+"plasma_rifle"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_fireteam",
+"points": [],
+"cells": []
+},
+{
+"name": "sq_ice_phantom01",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+1174.99,
+5.96,
+-324.74
+],
+"halo": [
+-106.5423583984375,
+385.4951171875,
+1.955590009689331
+],
+"yaw": -1.859
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+3.088461815371897e-42
+],
+"yaw": -106.542
+},
+{
+"kind": "formation",
+"pos": [
+1132.3,
+-117.03,
+330.37
+],
+"halo": [
+108.3902359008789,
+371.48797607421875,
+-38.395904541015625
+],
+"yaw": 0.0
+}
+],
+"cells": [
+{
+"count": 2,
+"chars": [
+"null_cov_flying"
+],
+"weapons": [],
+"vehicle": "phantom"
+}
+]
+},
+{
+"name": "sq_ice_phantom02",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+1210.16,
+22.27,
+-320.3
+],
+"halo": [
+-105.0859375,
+397.0330505371094,
+7.307106018066406
+],
+"yaw": -1.859
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+3.088461815371897e-42
+],
+"yaw": -105.086
+},
+{
+"kind": "formation",
+"pos": [
+1132.3,
+-117.03,
+330.37
+],
+"halo": [
+108.3902359008789,
+371.48797607421875,
+-38.395904541015625
+],
+"yaw": 0.0
+}
+],
+"cells": [
+{
+"count": 2,
+"chars": [
+"null_cov_flying"
+],
+"weapons": [],
+"vehicle": "phantom"
+}
+]
+},
+{
+"name": "sq_ice_phantom03",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+1058.75,
+6.61,
+-217.16
+],
+"halo": [
+-71.24728393554688,
+347.3604736328125,
+2.1687583923339844
+],
+"yaw": -1.859
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+3.088461815371897e-42
+],
+"yaw": -71.247
+},
+{
+"kind": "formation",
+"pos": [
+1132.3,
+-117.03,
+330.37
+],
+"halo": [
+108.3902359008789,
+371.48797607421875,
+-38.395904541015625
+],
+"yaw": 0.0
+}
+],
+"cells": [
+{
+"count": 2,
+"chars": [
+"null_cov_flying"
+],
+"weapons": [],
+"vehicle": "phantom"
+}
+]
+},
+{
+"name": "sq_ice_phantom04",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+1083.25,
+6.61,
+-209.9
+],
+"halo": [
+-68.86549377441406,
+355.3957824707031,
+2.1687583923339844
+],
+"yaw": -1.859
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+3.088461815371897e-42
+],
+"yaw": -68.865
+},
+{
+"kind": "formation",
+"pos": [
+1083.25,
+6.61,
+-209.9
+],
+"halo": [
+-68.86549377441406,
+355.3957824707031,
+2.1687583923339844
+],
+"yaw": -1.859
+}
+],
+"cells": [
+{
+"count": 2,
+"chars": [
+"null_cov_flying"
+],
+"weapons": [],
+"vehicle": "phantom"
+}
+]
+},
+{
+"name": "sq_ice_phantom05",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+1155.58,
+-39.84,
+13.63
+],
+"halo": [
+4.470477104187012,
+379.1268615722656,
+-13.070490837097168
+],
+"yaw": -1.786
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+3.088461815371897e-42
+],
+"yaw": 4.47
+},
+{
+"kind": "formation",
+"pos": [
+1132.3,
+-117.03,
+330.37
+],
+"halo": [
+108.3902359008789,
+371.48797607421875,
+-38.395904541015625
+],
+"yaw": 0.0
+}
+],
+"cells": [
+{
+"count": 2,
+"chars": [
+"null_cov_flying"
+],
+"weapons": [],
+"vehicle": "phantom"
+}
+]
+},
+{
+"name": "sq_ice_phantom06",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+1195.98,
+-34.7,
+22.46
+],
+"halo": [
+7.369628429412842,
+392.3807373046875,
+-11.383744239807129
+],
+"yaw": -1.786
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+3.088461815371897e-42
+],
+"yaw": 4.47
+},
+{
+"kind": "formation",
+"pos": [
+1132.3,
+-117.03,
+330.37
+],
+"halo": [
+108.3902359008789,
+371.48797607421875,
+-38.395904541015625
+],
+"yaw": 0.0
+}
+],
+"cells": [
+{
+"count": 2,
+"chars": [
+"null_cov_flying"
+],
+"weapons": [],
+"vehicle": "phantom"
+}
+]
+},
+{
+"name": "sq_ice_phantom07",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+1195.98,
+-34.7,
+22.46
+],
+"halo": [
+7.369628429412842,
+392.3807373046875,
+-11.383744239807129
+],
+"yaw": -1.786
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+3.088461815371897e-42
+],
+"yaw": 4.47
+},
+{
+"kind": "formation",
+"pos": [
+1132.3,
+-117.03,
+330.37
+],
+"halo": [
+108.3902359008789,
+371.48797607421875,
+-38.395904541015625
+],
+"yaw": 0.0
+}
+],
+"cells": [
+{
+"count": 2,
+"chars": [
+"null_cov_flying"
+],
+"weapons": [],
+"vehicle": "phantom"
+}
+]
+},
+{
+"name": "sq_motorpool01",
+"points": [
+{
+"kind": "formation",
+"pos": [
+-414.78,
+17.28,
+-34.28
+],
+"halo": [
+-11.247626304626465,
+-136.082763671875,
+5.6685261726379395
+],
+"yaw": -0.926
+}
+],
+"cells": [
+{
+"count": 4,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_motorpool02",
+"points": [
+{
+"kind": "formation",
+"pos": [
+-448.71,
+16.52,
+-46.22
+],
+"halo": [
+-15.16416072845459,
+-147.21600341796875,
+5.418961048126221
+],
+"yaw": -2.912
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"elite"
+],
+"weapons": [
+"plasma_rifle"
+],
+"vehicle": null
+},
+{
+"count": 1,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol"
+],
+"vehicle": null
+},
+{
+"count": 1,
+"chars": [
+"grunt"
+],
+"weapons": [
+"needler"
+],
+"vehicle": null
+},
+{
+"count": 1,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_intro01",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+-287.03,
+13.35,
+50.87
+],
+"halo": [
+16.689069747924805,
+-94.1701889038086,
+4.379023551940918
+],
+"yaw": -0.427
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+3.102474800015145e-42
+],
+"yaw": 18.559
+},
+{
+"kind": "spawn",
+"pos": [
+6.591184237043166e+18,
+0.0,
+0.0
+],
+"halo": [
+4.203895392974451e-45,
+2.1624620200272855e+18,
+0.0
+],
+"yaw": 0.0
+}
+],
+"cells": [
+{
+"count": 2,
+"chars": [
+"grunt_heavy"
+],
+"weapons": [
+"flak_cannon"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_intro02",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+2.34,
+1.49,
+-0.5
+],
+"halo": [
+-0.16352179646492004,
+0.7664123773574829,
+0.4879611134529114
+],
+"yaw": 1.052
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+3.088461815371897e-42
+],
+"yaw": 0.697
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"jackal_sniper"
+],
+"weapons": [
+"focus_rifle"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_depot02",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+-370.45,
+49.34,
+-298.09
+],
+"halo": [
+-97.79850006103516,
+-121.53828430175781,
+16.187341690063477
+],
+"yaw": -0.321
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+3.088461815371897e-42
+],
+"yaw": -98.088
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+0.0
+],
+"yaw": 0.0
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+9.183409485952689e-41,
+0.0,
+0.0
+],
+"yaw": 0.0
+},
+{
+"kind": "formation",
+"pos": [
+-364.8,
+49.57,
+-300.65
+],
+"halo": [
+-98.63728332519531,
+-119.68387603759766,
+16.263708114624023
+],
+"yaw": -0.343
+}
+],
+"cells": [
+{
+"count": 4,
+"chars": [
+"jackal"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_depot04",
+"points": [
+{
+"kind": "formation",
+"pos": [
+-445.61,
+45.83,
+-365.62
+],
+"halo": [
+-119.95547485351562,
+-146.19874572753906,
+15.035934448242188
+],
+"yaw": -1.426
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"elite"
+],
+"weapons": [
+"plasma_rifle"
+],
+"vehicle": null
+},
+{
+"count": 1,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol"
+],
+"vehicle": null
+},
+{
+"count": 1,
+"chars": [
+"grunt"
+],
+"weapons": [
+"needler"
+],
+"vehicle": null
+},
+{
+"count": 1,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_depot05",
+"points": [
+{
+"kind": "formation",
+"pos": [
+-343.78,
+32.0,
+-409.79
+],
+"halo": [
+-134.44522094726562,
+-112.7877197265625,
+10.499667167663574
+],
+"yaw": 0.051
+}
+],
+"cells": [
+{
+"count": 3,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_depot06",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+-367.04,
+43.21,
+-424.11
+],
+"halo": [
+-139.14369201660156,
+-120.41918182373047,
+14.175289154052734
+],
+"yaw": -0.0
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+3.088461815371897e-42
+],
+"yaw": -146.498
+},
+{
+"kind": "formation",
+"pos": [
+-370.75,
+44.42,
+-428.09
+],
+"halo": [
+-140.4492645263672,
+-121.6357421875,
+14.572848320007324
+],
+"yaw": -2.586
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"elite"
+],
+"weapons": [
+"plasma_rifle"
+],
+"vehicle": null
+},
+{
+"count": 1,
+"chars": [
+"elite"
+],
+"weapons": [
+"plasma_rifle",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_depot07",
+"points": [
+{
+"kind": "formation",
+"pos": [
+-348.18,
+48.89,
+-321.81
+],
+"halo": [
+-105.57942962646484,
+-114.23067474365234,
+16.0384578704834
+],
+"yaw": 0.899
+}
+],
+"cells": [
+{
+"count": 4,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_depot08",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+-382.8,
+39.81,
+-372.67
+],
+"halo": [
+-122.26765441894531,
+-125.5892105102539,
+13.061519622802734
+],
+"yaw": -0.742
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+3.088461815371897e-42
+],
+"yaw": -133.419
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"grunt",
+"elite"
+],
+"weapons": [
+"plasma_pistol",
+"plasma_rifle"
+],
+"vehicle": "ghost"
+},
+{
+"count": 1,
+"chars": [
+"grunt",
+"elite"
+],
+"weapons": [
+"plasma_pistol",
+"plasma_rifle"
+],
+"vehicle": "ghost"
+}
+]
+},
+{
+"name": "sq_depot09",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+-0.33,
+1.49,
+2.11
+],
+"halo": [
+0.6911505460739136,
+-0.10988163203001022,
+0.4882049560546875
+],
+"yaw": -2.486
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+3.088461815371897e-42
+],
+"yaw": -0.782
+}
+],
+"cells": [
+{
+"count": 2,
+"chars": [
+"grunt_heavy"
+],
+"weapons": [
+"flak_cannon"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_depot10",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+-38.72,
+36.59,
+-335.15
+],
+"halo": [
+-109.95801544189453,
+-12.703420639038086,
+12.003933906555176
+],
+"yaw": 2.984
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+3.088461815371897e-42
+],
+"yaw": -97.468
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"grunt",
+"elite"
+],
+"weapons": [
+"plasma_pistol",
+"plasma_rifle"
+],
+"vehicle": "ghost"
+}
+]
+},
+{
+"name": "sq_depot11",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+-105.52,
+40.44,
+-369.88
+],
+"halo": [
+-121.35202026367188,
+-34.620155334472656,
+13.266845703125
+],
+"yaw": -2.372
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+3.088461815371897e-42
+],
+"yaw": -117.894
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"grunt",
+"elite"
+],
+"weapons": [
+"plasma_pistol",
+"plasma_rifle"
+],
+"vehicle": "ghost"
+},
+{
+"count": 1,
+"chars": [
+"grunt",
+"elite"
+],
+"weapons": [
+"plasma_pistol",
+"plasma_rifle"
+],
+"vehicle": "ghost"
+}
+]
+},
+{
+"name": "sq_depot12",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+-118.76,
+52.56,
+-491.15
+],
+"halo": [
+-161.1370086669922,
+-38.96408462524414,
+17.244890213012695
+],
+"yaw": -1.506
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+3.088461815371897e-42
+],
+"yaw": -146.101
+},
+{
+"kind": "formation",
+"pos": [
+-116.9,
+52.56,
+-462.68
+],
+"halo": [
+-151.7980194091797,
+-38.3537712097168,
+17.244890213012695
+],
+"yaw": -1.506
+}
+],
+"cells": [
+{
+"count": 2,
+"chars": [
+"null_cov_flying"
+],
+"weapons": [],
+"vehicle": "banshee"
+}
+]
+},
+{
+"name": "sq_gate01",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+66.39,
+41.47,
+-196.82
+],
+"halo": [
+-64.57193756103516,
+21.780014038085938,
+13.605168342590332
+],
+"yaw": -1.574
+},
+{
+"kind": "formation",
+"pos": [
+65.02,
+40.7,
+-189.55
+],
+"halo": [
+-62.1895751953125,
+21.3323917388916,
+13.352054595947266
+],
+"yaw": -1.688
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"elite"
+],
+"weapons": [
+"plasma_rifle"
+],
+"vehicle": "revenant"
+}
+]
+},
+{
+"name": "sq_gate02",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+-83.65,
+22.57,
+-167.64
+],
+"halo": [
+-54.99837112426758,
+-27.442840576171875,
+7.4037604331970215
+],
+"yaw": 0.002
+},
+{
+"kind": "formation",
+"pos": [
+-81.77,
+24.4,
+-161.12
+],
+"halo": [
+-52.86063003540039,
+-26.827409744262695,
+8.00648307800293
+],
+"yaw": 2.096
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"elite"
+],
+"weapons": [
+"plasma_rifle"
+],
+"vehicle": "revenant"
+}
+]
+},
+{
+"name": "sq_gate03",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+-45.6,
+30.29,
+-284.09
+],
+"halo": [
+-93.20548248291016,
+-14.962021827697754,
+9.936511993408203
+],
+"yaw": -3.136
+},
+{
+"kind": "formation",
+"pos": [
+-41.75,
+33.36,
+-299.34
+],
+"halo": [
+-98.21002197265625,
+-13.698290824890137,
+10.946459770202637
+],
+"yaw": 2.935
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"elite"
+],
+"weapons": [
+"plasma_rifle"
+],
+"vehicle": "revenant"
+}
+]
+},
+{
+"name": "sq_base_assault01",
+"points": [
+{
+"kind": "formation",
+"pos": [
+146.6,
+50.29,
+-248.97
+],
+"halo": [
+-81.68418884277344,
+48.095584869384766,
+16.500244140625
+],
+"yaw": -3.07
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"elite"
+],
+"weapons": [
+"plasma_rifle"
+],
+"vehicle": null
+},
+{
+"count": 1,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol"
+],
+"vehicle": null
+},
+{
+"count": 1,
+"chars": [
+"grunt"
+],
+"weapons": [
+"needler"
+],
+"vehicle": null
+},
+{
+"count": 1,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_interior01",
+"points": [
+{
+"kind": "formation",
+"pos": [
+187.79,
+52.73,
+-366.41
+],
+"halo": [
+-120.21339416503906,
+61.61113739013672,
+17.29873275756836
+],
+"yaw": -1.49
+}
+],
+"cells": [
+{
+"count": 2,
+"chars": [
+"jackal"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_interior02",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+203.38,
+55.77,
+-366.28
+],
+"halo": [
+-120.1717529296875,
+66.72491455078125,
+18.29674530029297
+],
+"yaw": -1.541
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+3.088461815371897e-42
+],
+"yaw": -121.339
+},
+{
+"kind": "formation",
+"pos": [
+204.56,
+55.78,
+-366.67
+],
+"halo": [
+-120.29967498779297,
+67.11170196533203,
+18.301584243774414
+],
+"yaw": -1.611
+}
+],
+"cells": [
+{
+"count": 2,
+"chars": [
+"jackal_sniper"
+],
+"weapons": [
+"needle_rifle"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_interior03",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+163.85,
+55.78,
+-369.39
+],
+"halo": [
+-121.18939208984375,
+53.756690979003906,
+18.29985809326172
+],
+"yaw": 1.389
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+3.088461815371897e-42
+],
+"yaw": -122.177
+}
+],
+"cells": [
+{
+"count": 2,
+"chars": [
+"jackal"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_interior04",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+209.12,
+61.89,
+-370.52
+],
+"halo": [
+-121.56322479248047,
+68.60942840576172,
+20.304166793823242
+],
+"yaw": -0.0
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+3.088461815371897e-42
+],
+"yaw": -119.812
+},
+{
+"kind": "formation",
+"pos": [
+211.96,
+61.87,
+-365.75
+],
+"halo": [
+-119.99630737304688,
+69.54129791259766,
+20.29985809326172
+],
+"yaw": -1.566
+}
+],
+"cells": [
+{
+"count": 2,
+"chars": [
+"jackal_sniper"
+],
+"weapons": [
+"needle_rifle"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_interior05",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+163.81,
+61.87,
+-355.59
+],
+"halo": [
+-116.66480255126953,
+53.74269485473633,
+20.29985809326172
+],
+"yaw": 3.122
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"jackal_sniper"
+],
+"weapons": [
+"focus_rifle"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_base_assault02",
+"points": [
+{
+"kind": "formation",
+"pos": [
+116.0,
+53.95,
+-233.42
+],
+"halo": [
+-76.58258056640625,
+38.0565071105957,
+17.70024299621582
+],
+"yaw": -3.07
+}
+],
+"cells": [
+{
+"count": 3,
+"chars": [
+"jackal"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_base_assault03",
+"points": [
+{
+"kind": "formation",
+"pos": [
+175.22,
+50.29,
+-235.21
+],
+"halo": [
+-77.16905212402344,
+57.48577880859375,
+16.500244140625
+],
+"yaw": -3.07
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"elite"
+],
+"weapons": [
+"plasma_rifle"
+],
+"vehicle": null
+},
+{
+"count": 1,
+"chars": [
+"elite"
+],
+"weapons": [
+"plasma_rifle",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_base_assault04",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+177.52,
+45.57,
+-292.78
+],
+"halo": [
+-96.05500030517578,
+58.24131774902344,
+14.950157165527344
+],
+"yaw": 0.011
+},
+{
+"kind": "formation",
+"pos": [
+178.28,
+45.57,
+-294.33
+],
+"halo": [
+-96.5634994506836,
+58.49003601074219,
+14.950157165527344
+],
+"yaw": 0.011
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_base_assault05",
+"points": [
+{
+"kind": "formation",
+"pos": [
+117.74,
+50.29,
+-260.39
+],
+"halo": [
+-85.43067169189453,
+38.62932205200195,
+16.500244140625
+],
+"yaw": 2.242
+}
+],
+"cells": [
+{
+"count": 4,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_base_assault06",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+166.76,
+45.57,
+-293.57
+],
+"halo": [
+-96.31427764892578,
+54.712364196777344,
+14.950160026550293
+],
+"yaw": 0.011
+},
+{
+"kind": "formation",
+"pos": [
+166.76,
+45.57,
+-293.57
+],
+"halo": [
+-96.31427764892578,
+54.712364196777344,
+14.950160026550293
+],
+"yaw": 0.011
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_emile",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+121.93,
+53.95,
+-280.59
+],
+"halo": [
+-92.0564193725586,
+40.003780364990234,
+17.70024299621582
+],
+"yaw": -0.03
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+3.1459150524092143e-42
+],
+"yaw": -62.652
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+0.0
+],
+"yaw": 0.0
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"spartan_emile"
+],
+"weapons": [
+"assault_rifle"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_carter",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+141.47,
+53.95,
+-284.81
+],
+"halo": [
+-93.4417724609375,
+46.41481018066406,
+17.70024299621582
+],
+"yaw": 0.148
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+3.1515202462665136e-42
+],
+"yaw": -64.205
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+0.0
+],
+"yaw": 0.0
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"spartan_carter"
+],
+"weapons": [
+"assault_rifle"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_jun",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+155.01,
+53.95,
+-281.4
+],
+"halo": [
+-92.32352447509766,
+50.856712341308594,
+17.70024299621582
+],
+"yaw": -0.152
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+3.157125440123813e-42
+],
+"yaw": -62.045
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+0.0
+],
+"yaw": 0.0
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"spartan_jun"
+],
+"weapons": [
+"sniper_rifle"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_emile_event",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+-658.46,
+46.77,
+-74.88
+],
+"halo": [
+-24.567445755004883,
+-216.02964782714844,
+15.344182014465332
+],
+"yaw": 0.256
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"spartan_emile"
+],
+"weapons": [
+"assault_rifle"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_carter_event",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+-648.91,
+29.65,
+-12.02
+],
+"halo": [
+-3.9423155784606934,
+-212.8984832763672,
+9.72737979888916
+],
+"yaw": -3.053
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"spartan_carter"
+],
+"weapons": [
+"assault_rifle"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_jun_event",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+-655.58,
+46.77,
+-70.35
+],
+"halo": [
+-23.082263946533203,
+-215.08493041992188,
+15.344182014465332
+],
+"yaw": 0.048
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"spartan_jun"
+],
+"weapons": [
+"sniper_rifle"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_brute_grunt_00",
+"points": [
+{
+"kind": "formation",
+"pos": [
+857.91,
+-336.15,
+-209.38
+],
+"halo": [
+-68.69577026367188,
+281.4659118652344,
+-110.28632354736328
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"brute_captain"
+],
+"weapons": [
+"spike_rifle"
+],
+"vehicle": null
+},
+{
+"count": 3,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_brute_grunt_01",
+"points": [
+{
+"kind": "formation",
+"pos": [
+854.54,
+-339.07,
+-181.15
+],
+"halo": [
+-59.433048248291016,
+280.3602294921875,
+-111.24502563476562
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"brute_captain"
+],
+"weapons": [
+"spike_rifle"
+],
+"vehicle": null
+},
+{
+"count": 3,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_brute_grunt_02",
+"points": [
+{
+"kind": "formation",
+"pos": [
+856.47,
+-339.28,
+-179.56
+],
+"halo": [
+-58.9110107421875,
+280.9945373535156,
+-111.31352233886719
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"brute_captain"
+],
+"weapons": [
+"spike_rifle"
+],
+"vehicle": null
+},
+{
+"count": 3,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_brute_grunt_03",
+"points": [
+{
+"kind": "formation",
+"pos": [
+830.42,
+-336.57,
+-88.81
+],
+"halo": [
+-29.13735008239746,
+272.4467468261719,
+-110.42475128173828
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"brute_captain"
+],
+"weapons": [
+"spike_rifle"
+],
+"vehicle": null
+},
+{
+"count": 3,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_brute_grunt_04",
+"points": [
+{
+"kind": "formation",
+"pos": [
+830.42,
+-336.57,
+-88.81
+],
+"halo": [
+-29.13735008239746,
+272.4467468261719,
+-110.42475128173828
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"brute_captain"
+],
+"weapons": [
+"spike_rifle"
+],
+"vehicle": null
+},
+{
+"count": 3,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_brute_grunt_05",
+"points": [
+{
+"kind": "formation",
+"pos": [
+830.42,
+-336.57,
+-88.81
+],
+"halo": [
+-29.13735008239746,
+272.4467468261719,
+-110.42475128173828
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"brute_captain"
+],
+"weapons": [
+"spike_rifle"
+],
+"vehicle": null
+},
+{
+"count": 3,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_brute_grunt_06",
+"points": [
+{
+"kind": "formation",
+"pos": [
+830.42,
+-336.57,
+-88.81
+],
+"halo": [
+-29.13735008239746,
+272.4467468261719,
+-110.42475128173828
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"brute_captain"
+],
+"weapons": [
+"spike_rifle"
+],
+"vehicle": null
+},
+{
+"count": 3,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_brute_grunt_07",
+"points": [
+{
+"kind": "formation",
+"pos": [
+830.42,
+-336.57,
+-88.81
+],
+"halo": [
+-29.13735008239746,
+272.4467468261719,
+-110.42475128173828
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"brute_captain"
+],
+"weapons": [
+"spike_rifle"
+],
+"vehicle": null
+},
+{
+"count": 3,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_brute_grunt_08",
+"points": [
+{
+"kind": "formation",
+"pos": [
+830.42,
+-336.57,
+-88.81
+],
+"halo": [
+-29.13735008239746,
+272.4467468261719,
+-110.42475128173828
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"brute_captain"
+],
+"weapons": [
+"spike_rifle"
+],
+"vehicle": null
+},
+{
+"count": 3,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_elite_jackal_00",
+"points": [
+{
+"kind": "formation",
+"pos": [
+957.69,
+-352.83,
+-158.18
+],
+"halo": [
+-51.896732330322266,
+314.20123291015625,
+-115.75679779052734
+],
+"yaw": -2.498
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"elite"
+],
+"weapons": [
+"plasma_rifle"
+],
+"vehicle": null
+},
+{
+"count": 2,
+"chars": [
+"jackal"
+],
+"weapons": [
+"plasma_pistol"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_elite_jackal_01",
+"points": [
+{
+"kind": "formation",
+"pos": [
+830.22,
+-337.11,
+-75.17
+],
+"halo": [
+-24.661352157592773,
+272.38092041015625,
+-110.5997543334961
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"elite"
+],
+"weapons": [
+"plasma_rifle"
+],
+"vehicle": null
+},
+{
+"count": 2,
+"chars": [
+"jackal"
+],
+"weapons": [
+"plasma_pistol"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_elite_jackal_02",
+"points": [
+{
+"kind": "formation",
+"pos": [
+830.22,
+-337.11,
+-75.17
+],
+"halo": [
+-24.661352157592773,
+272.38092041015625,
+-110.5997543334961
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"elite"
+],
+"weapons": [
+"plasma_rifle"
+],
+"vehicle": null
+},
+{
+"count": 2,
+"chars": [
+"jackal"
+],
+"weapons": [
+"plasma_pistol"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_elite_jackal_03",
+"points": [
+{
+"kind": "formation",
+"pos": [
+831.72,
+-336.13,
+-121.22
+],
+"halo": [
+-39.771583557128906,
+272.87396240234375,
+-110.27957153320312
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 2,
+"chars": [
+"elite"
+],
+"weapons": [
+"plasma_rifle"
+],
+"vehicle": null
+},
+{
+"count": 2,
+"chars": [
+"jackal"
+],
+"weapons": [
+"plasma_pistol"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_elite_jackal_04",
+"points": [
+{
+"kind": "formation",
+"pos": [
+831.72,
+-336.13,
+-121.22
+],
+"halo": [
+-39.771583557128906,
+272.87396240234375,
+-110.27957153320312
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 2,
+"chars": [
+"elite"
+],
+"weapons": [
+"plasma_rifle"
+],
+"vehicle": null
+},
+{
+"count": 2,
+"chars": [
+"jackal"
+],
+"weapons": [
+"plasma_pistol"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_elite_jackal_05",
+"points": [
+{
+"kind": "formation",
+"pos": [
+831.72,
+-336.13,
+-121.22
+],
+"halo": [
+-39.771583557128906,
+272.87396240234375,
+-110.27957153320312
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 2,
+"chars": [
+"elite"
+],
+"weapons": [
+"plasma_rifle"
+],
+"vehicle": null
+},
+{
+"count": 2,
+"chars": [
+"jackal"
+],
+"weapons": [
+"plasma_pistol"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_elite_jackal_06",
+"points": [
+{
+"kind": "formation",
+"pos": [
+831.72,
+-336.13,
+-121.22
+],
+"halo": [
+-39.771583557128906,
+272.87396240234375,
+-110.27957153320312
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 2,
+"chars": [
+"elite"
+],
+"weapons": [
+"plasma_rifle"
+],
+"vehicle": null
+},
+{
+"count": 2,
+"chars": [
+"jackal"
+],
+"weapons": [
+"plasma_pistol"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_elite_jackal_07",
+"points": [
+{
+"kind": "formation",
+"pos": [
+831.72,
+-336.13,
+-121.22
+],
+"halo": [
+-39.771583557128906,
+272.87396240234375,
+-110.27957153320312
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 2,
+"chars": [
+"elite"
+],
+"weapons": [
+"plasma_rifle"
+],
+"vehicle": null
+},
+{
+"count": 2,
+"chars": [
+"jackal"
+],
+"weapons": [
+"plasma_pistol"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_elite_jackal_08",
+"points": [
+{
+"kind": "formation",
+"pos": [
+831.72,
+-336.13,
+-121.22
+],
+"halo": [
+-39.771583557128906,
+272.87396240234375,
+-110.27957153320312
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 2,
+"chars": [
+"elite"
+],
+"weapons": [
+"plasma_rifle"
+],
+"vehicle": null
+},
+{
+"count": 2,
+"chars": [
+"jackal"
+],
+"weapons": [
+"plasma_pistol"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_security02",
+"points": [
+{
+"kind": "formation",
+"pos": [
+170.67,
+70.1,
+-393.09
+],
+"halo": [
+-128.96810913085938,
+55.994361877441406,
+23.000234603881836
+],
+"yaw": -1.472
+}
+],
+"cells": [
+{
+"count": 3,
+"chars": [
+"jackal"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_security03",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+150.85,
+71.63,
+-415.98
+],
+"halo": [
+-136.47508239746094,
+49.48988342285156,
+23.5003719329834
+],
+"yaw": -1.51
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"elite_general"
+],
+"weapons": [
+null,
+"energy_sword"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_security04",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+143.29,
+70.1,
+-386.14
+],
+"halo": [
+-126.68708801269531,
+47.01154708862305,
+23.0002384185791
+],
+"yaw": -1.674
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+3.17674361862436e-42
+],
+"yaw": -130.822
+}
+],
+"cells": [
+{
+"count": 2,
+"chars": [
+"elite_specops"
+],
+"weapons": [
+"plasma_rifle"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_security05",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+113.79,
+66.75,
+-375.97
+],
+"halo": [
+-123.34943389892578,
+37.33180236816406,
+21.90032386779785
+],
+"yaw": 2.054
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+3.110882590801094e-42
+],
+"yaw": -133.954
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+0.0
+],
+"yaw": 0.0
+}
+],
+"cells": [
+{
+"count": 2,
+"chars": [
+"elite_specops"
+],
+"weapons": [
+"plasma_rifle"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_remaining",
+"points": [],
+"cells": []
+},
+{
+"name": "sq_ice_remaining_veh",
+"points": [],
+"cells": []
+},
+{
+"name": "sq_ice_jack_shield_00",
+"points": [
+{
+"kind": "formation",
+"pos": [
+832.36,
+-337.11,
+-74.37
+],
+"halo": [
+-24.400217056274414,
+273.085205078125,
+-110.5997543334961
+],
+"yaw": 3.14
+}
+],
+"cells": [
+{
+"count": 4,
+"chars": [
+"jackal"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_jack_shield_01",
+"points": [
+{
+"kind": "formation",
+"pos": [
+962.22,
+-353.68,
+-154.85
+],
+"halo": [
+-50.80284881591797,
+315.6905212402344,
+-116.03610229492188
+],
+"yaw": -2.756
+}
+],
+"cells": [
+{
+"count": 4,
+"chars": [
+"jackal"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_jack_shield_02",
+"points": [
+{
+"kind": "formation",
+"pos": [
+962.22,
+-353.68,
+-154.85
+],
+"halo": [
+-50.80284881591797,
+315.6905212402344,
+-116.03610229492188
+],
+"yaw": -2.61
+}
+],
+"cells": [
+{
+"count": 4,
+"chars": [
+"jackal"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_jack_shield_03",
+"points": [
+{
+"kind": "formation",
+"pos": [
+722.9,
+-310.89,
+-224.73
+],
+"halo": [
+-73.72953033447266,
+237.17198181152344,
+-101.99951171875
+],
+"yaw": 0.76
+}
+],
+"cells": [
+{
+"count": 4,
+"chars": [
+"jackal"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_jack_shield_04",
+"points": [
+{
+"kind": "formation",
+"pos": [
+723.92,
+-310.89,
+-223.47
+],
+"halo": [
+-73.3176040649414,
+237.50799560546875,
+-101.99951171875
+],
+"yaw": 0.853
+}
+],
+"cells": [
+{
+"count": 3,
+"chars": [
+"jackal"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_jack_shield_05",
+"points": [
+{
+"kind": "formation",
+"pos": [
+957.69,
+-352.83,
+-158.18
+],
+"halo": [
+-51.896732330322266,
+314.20123291015625,
+-115.75679779052734
+],
+"yaw": -2.498
+}
+],
+"cells": [
+{
+"count": 4,
+"chars": [
+"jackal"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_jack_shield_06",
+"points": [
+{
+"kind": "formation",
+"pos": [
+831.72,
+-336.13,
+-121.22
+],
+"halo": [
+-39.771583557128906,
+272.87396240234375,
+-110.27957153320312
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 4,
+"chars": [
+"jackal"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_jack_shield_07",
+"points": [
+{
+"kind": "formation",
+"pos": [
+831.72,
+-336.13,
+-121.22
+],
+"halo": [
+-39.771583557128906,
+272.87396240234375,
+-110.27957153320312
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 4,
+"chars": [
+"jackal"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_jack_shield_08",
+"points": [
+{
+"kind": "formation",
+"pos": [
+831.72,
+-336.13,
+-121.22
+],
+"halo": [
+-39.771583557128906,
+272.87396240234375,
+-110.27957153320312
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 4,
+"chars": [
+"jackal"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_brute_jackal_00",
+"points": [
+{
+"kind": "formation",
+"pos": [
+830.22,
+-337.11,
+-75.17
+],
+"halo": [
+-24.661352157592773,
+272.38092041015625,
+-110.5997543334961
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"brute_captain"
+],
+"weapons": [
+"spike_rifle"
+],
+"vehicle": null
+},
+{
+"count": 3,
+"chars": [
+"jackal"
+],
+"weapons": [
+"plasma_pistol"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_brute_jackal_01",
+"points": [
+{
+"kind": "formation",
+"pos": [
+726.79,
+-310.89,
+-220.73
+],
+"halo": [
+-72.41641235351562,
+238.44932556152344,
+-101.99951171875
+],
+"yaw": 0.761
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"brute_captain"
+],
+"weapons": [
+"spike_rifle"
+],
+"vehicle": null
+},
+{
+"count": 3,
+"chars": [
+"jackal"
+],
+"weapons": [
+"plasma_pistol"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_brute_jackal_02",
+"points": [
+{
+"kind": "formation",
+"pos": [
+831.72,
+-336.13,
+-121.22
+],
+"halo": [
+-39.771583557128906,
+272.87396240234375,
+-110.27957153320312
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"brute_captain"
+],
+"weapons": [
+"spike_rifle"
+],
+"vehicle": null
+},
+{
+"count": 3,
+"chars": [
+"jackal"
+],
+"weapons": [
+"plasma_pistol"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_brute_jackal_03",
+"points": [
+{
+"kind": "formation",
+"pos": [
+831.72,
+-336.13,
+-121.22
+],
+"halo": [
+-39.771583557128906,
+272.87396240234375,
+-110.27957153320312
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"brute_captain"
+],
+"weapons": [
+"spike_rifle"
+],
+"vehicle": null
+},
+{
+"count": 3,
+"chars": [
+"jackal"
+],
+"weapons": [
+"plasma_pistol"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_brute_jackal_04",
+"points": [
+{
+"kind": "formation",
+"pos": [
+831.72,
+-336.13,
+-121.22
+],
+"halo": [
+-39.771583557128906,
+272.87396240234375,
+-110.27957153320312
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"brute_captain"
+],
+"weapons": [
+"spike_rifle"
+],
+"vehicle": null
+},
+{
+"count": 3,
+"chars": [
+"jackal"
+],
+"weapons": [
+"plasma_pistol"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_brute_jackal_05",
+"points": [
+{
+"kind": "formation",
+"pos": [
+831.72,
+-336.13,
+-121.22
+],
+"halo": [
+-39.771583557128906,
+272.87396240234375,
+-110.27957153320312
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"brute_captain"
+],
+"weapons": [
+"spike_rifle"
+],
+"vehicle": null
+},
+{
+"count": 3,
+"chars": [
+"jackal"
+],
+"weapons": [
+"plasma_pistol"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_brute_jackal_06",
+"points": [
+{
+"kind": "formation",
+"pos": [
+831.72,
+-336.13,
+-121.22
+],
+"halo": [
+-39.771583557128906,
+272.87396240234375,
+-110.27957153320312
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"brute_captain"
+],
+"weapons": [
+"spike_rifle"
+],
+"vehicle": null
+},
+{
+"count": 3,
+"chars": [
+"jackal"
+],
+"weapons": [
+"plasma_pistol"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_brute_jackal_07",
+"points": [
+{
+"kind": "formation",
+"pos": [
+831.72,
+-336.13,
+-121.22
+],
+"halo": [
+-39.771583557128906,
+272.87396240234375,
+-110.27957153320312
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"brute_captain"
+],
+"weapons": [
+"spike_rifle"
+],
+"vehicle": null
+},
+{
+"count": 3,
+"chars": [
+"jackal"
+],
+"weapons": [
+"plasma_pistol"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_brute_jackal_08",
+"points": [
+{
+"kind": "formation",
+"pos": [
+831.72,
+-336.13,
+-121.22
+],
+"halo": [
+-39.771583557128906,
+272.87396240234375,
+-110.27957153320312
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"brute_captain"
+],
+"weapons": [
+"spike_rifle"
+],
+"vehicle": null
+},
+{
+"count": 3,
+"chars": [
+"jackal"
+],
+"weapons": [
+"plasma_pistol"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_hunter_00",
+"points": [
+{
+"kind": "formation",
+"pos": [
+831.72,
+-336.13,
+-121.22
+],
+"halo": [
+-39.771583557128906,
+272.87396240234375,
+-110.27957153320312
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"hunter"
+],
+"weapons": [],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_hunter_01",
+"points": [
+{
+"kind": "formation",
+"pos": [
+831.72,
+-336.13,
+-121.22
+],
+"halo": [
+-39.771583557128906,
+272.87396240234375,
+-110.27957153320312
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"hunter"
+],
+"weapons": [],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_hunter_02",
+"points": [
+{
+"kind": "formation",
+"pos": [
+831.72,
+-336.13,
+-121.22
+],
+"halo": [
+-39.771583557128906,
+272.87396240234375,
+-110.27957153320312
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"hunter"
+],
+"weapons": [],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_hunter_03",
+"points": [
+{
+"kind": "formation",
+"pos": [
+831.72,
+-336.13,
+-121.22
+],
+"halo": [
+-39.771583557128906,
+272.87396240234375,
+-110.27957153320312
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"hunter"
+],
+"weapons": [],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_hunter_04",
+"points": [
+{
+"kind": "formation",
+"pos": [
+831.72,
+-336.13,
+-121.22
+],
+"halo": [
+-39.771583557128906,
+272.87396240234375,
+-110.27957153320312
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"hunter"
+],
+"weapons": [],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_hunter_05",
+"points": [
+{
+"kind": "formation",
+"pos": [
+831.72,
+-336.13,
+-121.22
+],
+"halo": [
+-39.771583557128906,
+272.87396240234375,
+-110.27957153320312
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"hunter"
+],
+"weapons": [],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_jetpack_00",
+"points": [
+{
+"kind": "formation",
+"pos": [
+831.72,
+-336.13,
+-121.22
+],
+"halo": [
+-39.771583557128906,
+272.87396240234375,
+-110.27957153320312
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 3,
+"chars": [
+"elite_jetpack"
+],
+"weapons": [
+"plasma_repeater"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_jetpack_01",
+"points": [
+{
+"kind": "formation",
+"pos": [
+831.72,
+-336.13,
+-121.22
+],
+"halo": [
+-39.771583557128906,
+272.87396240234375,
+-110.27957153320312
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 3,
+"chars": [
+"elite_jetpack"
+],
+"weapons": [
+"plasma_repeater"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_jetpack_02",
+"points": [
+{
+"kind": "formation",
+"pos": [
+831.72,
+-336.13,
+-121.22
+],
+"halo": [
+-39.771583557128906,
+272.87396240234375,
+-110.27957153320312
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 3,
+"chars": [
+"elite_jetpack"
+],
+"weapons": [
+"plasma_repeater"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_jetpack_03",
+"points": [
+{
+"kind": "formation",
+"pos": [
+831.72,
+-336.13,
+-121.22
+],
+"halo": [
+-39.771583557128906,
+272.87396240234375,
+-110.27957153320312
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 3,
+"chars": [
+"elite_jetpack"
+],
+"weapons": [
+"plasma_repeater"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_jetpack_04",
+"points": [
+{
+"kind": "formation",
+"pos": [
+831.72,
+-336.13,
+-121.22
+],
+"halo": [
+-39.771583557128906,
+272.87396240234375,
+-110.27957153320312
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 3,
+"chars": [
+"elite_jetpack"
+],
+"weapons": [
+"plasma_repeater"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_jetpack_05",
+"points": [
+{
+"kind": "formation",
+"pos": [
+831.72,
+-336.13,
+-121.22
+],
+"halo": [
+-39.771583557128906,
+272.87396240234375,
+-110.27957153320312
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 3,
+"chars": [
+"elite_jetpack"
+],
+"weapons": [
+"plasma_repeater"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_jetpack_06",
+"points": [
+{
+"kind": "formation",
+"pos": [
+831.72,
+-336.13,
+-121.22
+],
+"halo": [
+-39.771583557128906,
+272.87396240234375,
+-110.27957153320312
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 3,
+"chars": [
+"elite_jetpack"
+],
+"weapons": [
+"plasma_repeater"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_jetpack_07",
+"points": [
+{
+"kind": "formation",
+"pos": [
+831.72,
+-336.13,
+-121.22
+],
+"halo": [
+-39.771583557128906,
+272.87396240234375,
+-110.27957153320312
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 3,
+"chars": [
+"elite_jetpack"
+],
+"weapons": [
+"plasma_repeater"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_jetpack_08",
+"points": [
+{
+"kind": "formation",
+"pos": [
+831.72,
+-336.13,
+-121.22
+],
+"halo": [
+-39.771583557128906,
+272.87396240234375,
+-110.27957153320312
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 3,
+"chars": [
+"elite_jetpack"
+],
+"weapons": [
+"plasma_repeater"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_elite_grunt_00",
+"points": [
+{
+"kind": "formation",
+"pos": [
+857.91,
+-336.15,
+-209.38
+],
+"halo": [
+-68.69577026367188,
+281.4659118652344,
+-110.28632354736328
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"elite"
+],
+"weapons": [
+"plasma_rifle"
+],
+"vehicle": null
+},
+{
+"count": 1,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol"
+],
+"vehicle": null
+},
+{
+"count": 1,
+"chars": [
+"grunt"
+],
+"weapons": [
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_elite_grunt_01",
+"points": [
+{
+"kind": "formation",
+"pos": [
+857.91,
+-336.15,
+-209.38
+],
+"halo": [
+-68.69577026367188,
+281.4659118652344,
+-110.28632354736328
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"elite"
+],
+"weapons": [
+"plasma_rifle"
+],
+"vehicle": null
+},
+{
+"count": 1,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol"
+],
+"vehicle": null
+},
+{
+"count": 1,
+"chars": [
+"grunt"
+],
+"weapons": [
+"needler"
+],
+"vehicle": null
+},
+{
+"count": 1,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_elite_grunt_02",
+"points": [
+{
+"kind": "formation",
+"pos": [
+857.91,
+-336.15,
+-209.38
+],
+"halo": [
+-68.69577026367188,
+281.4659118652344,
+-110.28632354736328
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"elite"
+],
+"weapons": [
+"plasma_rifle"
+],
+"vehicle": null
+},
+{
+"count": 1,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol"
+],
+"vehicle": null
+},
+{
+"count": 1,
+"chars": [
+"grunt"
+],
+"weapons": [
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_elite_grunt_03",
+"points": [
+{
+"kind": "formation",
+"pos": [
+857.91,
+-336.15,
+-209.38
+],
+"halo": [
+-68.69577026367188,
+281.4659118652344,
+-110.28632354736328
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"elite"
+],
+"weapons": [
+"plasma_rifle"
+],
+"vehicle": null
+},
+{
+"count": 1,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol"
+],
+"vehicle": null
+},
+{
+"count": 1,
+"chars": [
+"grunt"
+],
+"weapons": [
+"needler"
+],
+"vehicle": null
+},
+{
+"count": 1,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_elite_grunt_04",
+"points": [
+{
+"kind": "formation",
+"pos": [
+857.91,
+-336.15,
+-209.38
+],
+"halo": [
+-68.69577026367188,
+281.4659118652344,
+-110.28632354736328
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"elite"
+],
+"weapons": [
+"plasma_rifle"
+],
+"vehicle": null
+},
+{
+"count": 1,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol"
+],
+"vehicle": null
+},
+{
+"count": 1,
+"chars": [
+"grunt"
+],
+"weapons": [
+"needler"
+],
+"vehicle": null
+},
+{
+"count": 1,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_elite_grunt_05",
+"points": [
+{
+"kind": "formation",
+"pos": [
+857.91,
+-336.15,
+-209.38
+],
+"halo": [
+-68.69577026367188,
+281.4659118652344,
+-110.28632354736328
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"elite"
+],
+"weapons": [
+"plasma_rifle"
+],
+"vehicle": null
+},
+{
+"count": 1,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol"
+],
+"vehicle": null
+},
+{
+"count": 1,
+"chars": [
+"grunt"
+],
+"weapons": [
+"needler"
+],
+"vehicle": null
+},
+{
+"count": 1,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_elite_grunt_06",
+"points": [
+{
+"kind": "formation",
+"pos": [
+857.91,
+-336.15,
+-209.38
+],
+"halo": [
+-68.69577026367188,
+281.4659118652344,
+-110.28632354736328
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"elite"
+],
+"weapons": [
+"plasma_rifle"
+],
+"vehicle": null
+},
+{
+"count": 1,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol"
+],
+"vehicle": null
+},
+{
+"count": 1,
+"chars": [
+"grunt"
+],
+"weapons": [
+"needler"
+],
+"vehicle": null
+},
+{
+"count": 1,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_elite_grunt_07",
+"points": [
+{
+"kind": "formation",
+"pos": [
+857.91,
+-336.15,
+-209.38
+],
+"halo": [
+-68.69577026367188,
+281.4659118652344,
+-110.28632354736328
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"elite"
+],
+"weapons": [
+"plasma_rifle"
+],
+"vehicle": null
+},
+{
+"count": 1,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol"
+],
+"vehicle": null
+},
+{
+"count": 1,
+"chars": [
+"grunt"
+],
+"weapons": [
+"needler"
+],
+"vehicle": null
+},
+{
+"count": 1,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_elite_grunt_08",
+"points": [
+{
+"kind": "formation",
+"pos": [
+857.91,
+-336.15,
+-209.38
+],
+"halo": [
+-68.69577026367188,
+281.4659118652344,
+-110.28632354736328
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"elite"
+],
+"weapons": [
+"plasma_rifle"
+],
+"vehicle": null
+},
+{
+"count": 1,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol"
+],
+"vehicle": null
+},
+{
+"count": 1,
+"chars": [
+"grunt"
+],
+"weapons": [
+"needler"
+],
+"vehicle": null
+},
+{
+"count": 1,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_brute_quad_00",
+"points": [
+{
+"kind": "formation",
+"pos": [
+831.72,
+-336.13,
+-121.22
+],
+"halo": [
+-39.771583557128906,
+272.87396240234375,
+-110.27957153320312
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 3,
+"chars": [
+"brute_captain"
+],
+"weapons": [
+"spike_rifle"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_brute_quad_01",
+"points": [
+{
+"kind": "formation",
+"pos": [
+831.72,
+-336.13,
+-121.22
+],
+"halo": [
+-39.771583557128906,
+272.87396240234375,
+-110.27957153320312
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 3,
+"chars": [
+"brute_captain"
+],
+"weapons": [
+"spike_rifle"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_brute_quad_02",
+"points": [
+{
+"kind": "formation",
+"pos": [
+831.72,
+-336.13,
+-121.22
+],
+"halo": [
+-39.771583557128906,
+272.87396240234375,
+-110.27957153320312
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 3,
+"chars": [
+"brute_captain"
+],
+"weapons": [
+"spike_rifle"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_brute_quad_03",
+"points": [
+{
+"kind": "formation",
+"pos": [
+831.72,
+-336.13,
+-121.22
+],
+"halo": [
+-39.771583557128906,
+272.87396240234375,
+-110.27957153320312
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 3,
+"chars": [
+"brute_captain"
+],
+"weapons": [
+"spike_rifle"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_brute_quad_04",
+"points": [
+{
+"kind": "formation",
+"pos": [
+831.72,
+-336.13,
+-121.22
+],
+"halo": [
+-39.771583557128906,
+272.87396240234375,
+-110.27957153320312
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 3,
+"chars": [
+"brute_captain"
+],
+"weapons": [
+"spike_rifle"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_brute_quad_05",
+"points": [
+{
+"kind": "formation",
+"pos": [
+831.72,
+-336.13,
+-121.22
+],
+"halo": [
+-39.771583557128906,
+272.87396240234375,
+-110.27957153320312
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 3,
+"chars": [
+"brute_captain"
+],
+"weapons": [
+"spike_rifle"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_brute_quad_06",
+"points": [
+{
+"kind": "formation",
+"pos": [
+831.72,
+-336.13,
+-121.22
+],
+"halo": [
+-39.771583557128906,
+272.87396240234375,
+-110.27957153320312
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 3,
+"chars": [
+"brute_captain"
+],
+"weapons": [
+"spike_rifle"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_brute_quad_07",
+"points": [
+{
+"kind": "formation",
+"pos": [
+831.72,
+-336.13,
+-121.22
+],
+"halo": [
+-39.771583557128906,
+272.87396240234375,
+-110.27957153320312
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 3,
+"chars": [
+"brute_captain"
+],
+"weapons": [
+"spike_rifle"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_brute_quad_08",
+"points": [
+{
+"kind": "formation",
+"pos": [
+831.72,
+-336.13,
+-121.22
+],
+"halo": [
+-39.771583557128906,
+272.87396240234375,
+-110.27957153320312
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 3,
+"chars": [
+"brute_captain"
+],
+"weapons": [
+"spike_rifle"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_ghost_00",
+"points": [
+{
+"kind": "formation",
+"pos": [
+936.86,
+-297.44,
+240.6
+],
+"halo": [
+78.93672943115234,
+307.3682861328125,
+-97.58390808105469
+],
+"yaw": 0.0
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"grunt",
+"elite"
+],
+"weapons": [
+"plasma_pistol",
+"plasma_rifle"
+],
+"vehicle": "ghost"
+}
+]
+},
+{
+"name": "sq_ice_ghost_01",
+"points": [
+{
+"kind": "formation",
+"pos": [
+936.86,
+-297.44,
+240.6
+],
+"halo": [
+78.93672943115234,
+307.3682861328125,
+-97.58390808105469
+],
+"yaw": 0.0
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"grunt",
+"elite"
+],
+"weapons": [
+"plasma_pistol",
+"plasma_rifle"
+],
+"vehicle": "ghost"
+}
+]
+},
+{
+"name": "sq_ice_ghost_02",
+"points": [
+{
+"kind": "formation",
+"pos": [
+936.86,
+-297.44,
+240.6
+],
+"halo": [
+78.93672943115234,
+307.3682861328125,
+-97.58390808105469
+],
+"yaw": 0.0
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"grunt",
+"elite"
+],
+"weapons": [
+"plasma_pistol",
+"plasma_rifle"
+],
+"vehicle": "ghost"
+}
+]
+},
+{
+"name": "sq_ice_ghost_03",
+"points": [
+{
+"kind": "formation",
+"pos": [
+936.86,
+-297.44,
+240.6
+],
+"halo": [
+78.93672943115234,
+307.3682861328125,
+-97.58390808105469
+],
+"yaw": 0.0
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"grunt",
+"elite"
+],
+"weapons": [
+"plasma_pistol",
+"plasma_rifle"
+],
+"vehicle": "ghost"
+}
+]
+},
+{
+"name": "sq_ice_ghost_04",
+"points": [
+{
+"kind": "formation",
+"pos": [
+936.86,
+-297.44,
+240.6
+],
+"halo": [
+78.93672943115234,
+307.3682861328125,
+-97.58390808105469
+],
+"yaw": 0.0
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"grunt",
+"elite"
+],
+"weapons": [
+"plasma_pistol",
+"plasma_rifle"
+],
+"vehicle": "ghost"
+}
+]
+},
+{
+"name": "sq_ice_ghost_05",
+"points": [
+{
+"kind": "formation",
+"pos": [
+936.86,
+-297.44,
+240.6
+],
+"halo": [
+78.93672943115234,
+307.3682861328125,
+-97.58390808105469
+],
+"yaw": 0.0
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"grunt",
+"elite"
+],
+"weapons": [
+"plasma_pistol",
+"plasma_rifle"
+],
+"vehicle": "ghost"
+}
+]
+},
+{
+"name": "sq_ice_ghost_06",
+"points": [
+{
+"kind": "formation",
+"pos": [
+936.86,
+-297.44,
+240.6
+],
+"halo": [
+78.93672943115234,
+307.3682861328125,
+-97.58390808105469
+],
+"yaw": 0.0
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"grunt",
+"elite"
+],
+"weapons": [
+"plasma_pistol",
+"plasma_rifle"
+],
+"vehicle": "ghost"
+}
+]
+},
+{
+"name": "sq_ice_ghost_07",
+"points": [
+{
+"kind": "formation",
+"pos": [
+936.86,
+-297.44,
+240.6
+],
+"halo": [
+78.93672943115234,
+307.3682861328125,
+-97.58390808105469
+],
+"yaw": 0.0
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"grunt",
+"elite"
+],
+"weapons": [
+"plasma_pistol",
+"plasma_rifle"
+],
+"vehicle": "ghost"
+}
+]
+},
+{
+"name": "sq_ice_wraith_00",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+830.32,
+-337.11,
+-77.87
+],
+"halo": [
+-25.54665756225586,
+272.4161682128906,
+-110.5997543334961
+],
+"yaw": 3.113
+},
+{
+"kind": "formation",
+"pos": [
+936.86,
+-297.44,
+240.6
+],
+"halo": [
+78.93672943115234,
+307.3682861328125,
+-97.58390808105469
+],
+"yaw": 0.0
+}
+],
+"cells": [
+{
+"count": 2,
+"chars": [
+"elite"
+],
+"weapons": [
+"plasma_rifle"
+],
+"vehicle": "wraith"
+}
+]
+},
+{
+"name": "sq_ice_wraith_01",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+959.22,
+-352.92,
+-156.83
+],
+"halo": [
+-51.454349517822266,
+314.7052307128906,
+-115.78753662109375
+],
+"yaw": 1.673
+},
+{
+"kind": "formation",
+"pos": [
+965.32,
+-355.48,
+-150.89
+],
+"halo": [
+-49.50405502319336,
+316.70751953125,
+-116.62647247314453
+],
+"yaw": 0.0
+}
+],
+"cells": [
+{
+"count": 2,
+"chars": [
+"elite"
+],
+"weapons": [
+"plasma_rifle"
+],
+"vehicle": "wraith"
+}
+]
+},
+{
+"name": "sq_ice_wraith_02",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+722.12,
+-310.89,
+-224.9
+],
+"halo": [
+-73.78672790527344,
+236.91754150390625,
+-101.99951171875
+],
+"yaw": -1.827
+},
+{
+"kind": "formation",
+"pos": [
+936.86,
+-297.44,
+240.6
+],
+"halo": [
+78.93672943115234,
+307.3682861328125,
+-97.58390808105469
+],
+"yaw": 0.0
+}
+],
+"cells": [
+{
+"count": 2,
+"chars": [
+"elite"
+],
+"weapons": [
+"plasma_rifle"
+],
+"vehicle": "wraith"
+}
+]
+},
+{
+"name": "sq_test_grunt",
+"points": [
+{
+"kind": "formation",
+"pos": [
+804.5,
+-315.76,
+-266.39
+],
+"halo": [
+-87.39852905273438,
+263.9437255859375,
+-103.59706115722656
+],
+"yaw": -2.839
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"grunt_heavy"
+],
+"weapons": [
+"flak_cannon"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_grunt_quad_00",
+"points": [
+{
+"kind": "formation",
+"pos": [
+857.91,
+-336.15,
+-209.38
+],
+"halo": [
+-68.69577026367188,
+281.4659118652344,
+-110.28632354736328
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 4,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_grunt_quad_01",
+"points": [
+{
+"kind": "formation",
+"pos": [
+857.91,
+-336.15,
+-209.38
+],
+"halo": [
+-68.69577026367188,
+281.4659118652344,
+-110.28632354736328
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 4,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_grunt_quad_02",
+"points": [
+{
+"kind": "formation",
+"pos": [
+857.91,
+-336.15,
+-209.38
+],
+"halo": [
+-68.69577026367188,
+281.4659118652344,
+-110.28632354736328
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 4,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_grunt_quad_03",
+"points": [
+{
+"kind": "formation",
+"pos": [
+857.91,
+-336.15,
+-209.38
+],
+"halo": [
+-68.69577026367188,
+281.4659118652344,
+-110.28632354736328
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 4,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_grunt_quad_04",
+"points": [
+{
+"kind": "formation",
+"pos": [
+857.91,
+-336.15,
+-209.38
+],
+"halo": [
+-68.69577026367188,
+281.4659118652344,
+-110.28632354736328
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 4,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_grunt_quad_05",
+"points": [
+{
+"kind": "formation",
+"pos": [
+857.91,
+-336.15,
+-209.38
+],
+"halo": [
+-68.69577026367188,
+281.4659118652344,
+-110.28632354736328
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 4,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_grunt_quad_06",
+"points": [
+{
+"kind": "formation",
+"pos": [
+857.91,
+-336.15,
+-209.38
+],
+"halo": [
+-68.69577026367188,
+281.4659118652344,
+-110.28632354736328
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 4,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_grunt_quad_07",
+"points": [
+{
+"kind": "formation",
+"pos": [
+857.91,
+-336.15,
+-209.38
+],
+"halo": [
+-68.69577026367188,
+281.4659118652344,
+-110.28632354736328
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 4,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_grunt_quad_08",
+"points": [
+{
+"kind": "formation",
+"pos": [
+857.91,
+-336.15,
+-209.38
+],
+"halo": [
+-68.69577026367188,
+281.4659118652344,
+-110.28632354736328
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 4,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_gate04",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+-49.4,
+23.7,
+-101.56
+],
+"halo": [
+-33.31865310668945,
+-16.208017349243164,
+7.776577472686768
+],
+"yaw": 2.979
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol"
+],
+"vehicle": "shade"
+}
+]
+},
+{
+"name": "sq_gate05",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+-85.24,
+30.48,
+-235.09
+],
+"halo": [
+-77.12771606445312,
+-27.96477508544922,
+10.000638008117676
+],
+"yaw": 0.748
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol"
+],
+"vehicle": "shade"
+}
+]
+},
+{
+"name": "sq_gate08",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+-36.77,
+38.68,
+-222.59
+],
+"halo": [
+-73.02970123291016,
+-12.062832832336426,
+12.691407203674316
+],
+"yaw": -1.4
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"grunt_heavy"
+],
+"weapons": [
+"plasma_pistol"
+],
+"vehicle": "shade"
+}
+]
+},
+{
+"name": "sq_gate09",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+33.18,
+53.65,
+-160.84
+],
+"halo": [
+-52.76798629760742,
+10.886286735534668,
+17.601470947265625
+],
+"yaw": -2.166
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"grunt_heavy"
+],
+"weapons": [
+"plasma_pistol"
+],
+"vehicle": "shade"
+}
+]
+},
+{
+"name": "sq_intro03",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+-296.79,
+14.76,
+43.51
+],
+"halo": [
+14.275405883789062,
+-97.370849609375,
+4.8439130783081055
+],
+"yaw": 0.001
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+3.088461815371897e-42
+],
+"yaw": 23.258
+},
+{
+"kind": "spawn",
+"pos": [
+6.592736313154493e+18,
+0.0,
+0.0
+],
+"halo": [
+2.802596928649634e-45,
+2.1629712313498993e+18,
+0.0
+],
+"yaw": 0.0
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+9.183409485952689e-41,
+1.241550439391788e-42,
+0.0
+],
+"yaw": 0.0
+}
+],
+"cells": [
+{
+"count": 2,
+"chars": [
+"grunt_heavy"
+],
+"weapons": [
+"flak_cannon"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_intro04",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+-352.51,
+13.08,
+20.03
+],
+"halo": [
+6.572875499725342,
+-115.6542739868164,
+4.290426254272461
+],
+"yaw": -0.004
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol"
+],
+"vehicle": "ghost"
+}
+]
+},
+{
+"name": "sq_intro05",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+-272.94,
+13.18,
+46.73
+],
+"halo": [
+15.331470489501953,
+-89.54718780517578,
+4.325430870056152
+],
+"yaw": -0.041
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+3.088461815371897e-42
+],
+"yaw": 17.009
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+0.0
+],
+"yaw": 0.0
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol"
+],
+"vehicle": "ghost"
+}
+]
+},
+{
+"name": "sq_motorpool03a",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+-450.58,
+10.13,
+26.34
+],
+"halo": [
+8.641552925109863,
+-147.82940673828125,
+3.323960781097412
+],
+"yaw": -1.466
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol"
+],
+"vehicle": "shade"
+}
+]
+},
+{
+"name": "sq_motorpool03b",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+-319.63,
+45.68,
+-96.12
+],
+"halo": [
+-31.534921646118164,
+-104.86676025390625,
+14.986480712890625
+],
+"yaw": -0.908
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol"
+],
+"vehicle": "shade"
+}
+]
+},
+{
+"name": "sq_motorpool04",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+-401.23,
+21.85,
+-64.35
+],
+"halo": [
+-21.11290740966797,
+-131.6377716064453,
+7.167052745819092
+],
+"yaw": -0.511
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol"
+],
+"vehicle": "shade"
+}
+]
+},
+{
+"name": "sq_motorpool05",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+-359.1,
+32.49,
+-71.5
+],
+"halo": [
+-23.458131790161133,
+-117.8153305053711,
+10.659360885620117
+],
+"yaw": -0.95
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"grunt",
+"elite"
+],
+"weapons": [
+"plasma_pistol",
+"plasma_rifle"
+],
+"vehicle": "ghost"
+}
+]
+},
+{
+"name": "sq_motorpool06",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+-364.4,
+44.06,
+-149.99
+],
+"halo": [
+-49.20903015136719,
+-119.55223846435547,
+14.456229209899902
+],
+"yaw": 0.336
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"grunt",
+"elite"
+],
+"weapons": [
+"plasma_pistol",
+"plasma_rifle"
+],
+"vehicle": "ghost"
+}
+]
+},
+{
+"name": "sq_motorpool07",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+0.6,
+1.49,
+2.55
+],
+"halo": [
+0.8367062211036682,
+0.1975020468235016,
+0.48820462822914124
+],
+"yaw": -0.001
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+3.1991643940535574e-42
+],
+"yaw": -0.694
+}
+],
+"cells": [
+{
+"count": 2,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_motorpool08",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+-0.94,
+1.49,
+2.05
+],
+"halo": [
+0.6734020709991455,
+-0.30757051706314087,
+0.48796090483665466
+],
+"yaw": 0.182
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+3.1991643940535574e-42
+],
+"yaw": -0.465
+}
+],
+"cells": [
+{
+"count": 2,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_falcon01",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+-715.87,
+19.44,
+13.54
+],
+"halo": [
+4.4434285163879395,
+-234.86666870117188,
+6.377703666687012
+],
+"yaw": 2.973
+},
+{
+"kind": "formation",
+"pos": [
+-704.24,
+27.04,
+99.26
+],
+"halo": [
+32.56600570678711,
+-231.04953002929688,
+8.872934341430664
+],
+"yaw": 0.0
+}
+],
+"cells": [
+{
+"count": 3,
+"chars": [
+"trooper"
+],
+"weapons": [
+null
+],
+"vehicle": "falcon"
+}
+]
+},
+{
+"name": "sq_falcon02",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+-702.9,
+26.6,
+0.9
+],
+"halo": [
+0.29589739441871643,
+-230.61013793945312,
+8.727792739868164
+],
+"yaw": 2.882
+},
+{
+"kind": "formation",
+"pos": [
+-649.32,
+51.3,
+-70.05
+],
+"halo": [
+-22.981292724609375,
+-213.03082275390625,
+16.830854415893555
+],
+"yaw": 0.0
+}
+],
+"cells": [
+{
+"count": 3,
+"chars": [
+"trooper"
+],
+"weapons": [
+null
+],
+"vehicle": "falcon"
+}
+]
+},
+{
+"name": "sq_depot13",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+9.16,
+77.44,
+-461.06
+],
+"halo": [
+-151.26678466796875,
+3.0057132244110107,
+25.40643882751465
+],
+"yaw": -1.365
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+3.088461815371897e-42
+],
+"yaw": -161.676
+},
+{
+"kind": "formation",
+"pos": [
+5.66,
+74.51,
+-477.82
+],
+"halo": [
+-156.76553344726562,
+1.857579231262207,
+24.444496154785156
+],
+"yaw": -1.365
+}
+],
+"cells": [
+{
+"count": 2,
+"chars": [
+"null_cov_flying"
+],
+"weapons": [],
+"vehicle": "banshee"
+}
+]
+},
+{
+"name": "sq_depot14",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+58.18,
+77.76,
+-249.14
+],
+"halo": [
+-81.73983001708984,
+19.08941078186035,
+25.512361526489258
+],
+"yaw": -1.866
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+3.088461815371897e-42
+],
+"yaw": -93.306
+},
+{
+"kind": "formation",
+"pos": [
+63.79,
+77.76,
+-267.58
+],
+"halo": [
+-87.78913116455078,
+20.927350997924805,
+25.512361526489258
+],
+"yaw": -1.866
+}
+],
+"cells": [
+{
+"count": 2,
+"chars": [
+"null_cov_flying"
+],
+"weapons": [],
+"vehicle": "banshee"
+}
+]
+},
+{
+"name": "sq_depot15",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+196.14,
+199.95,
+-382.4
+],
+"halo": [
+-125.45777893066406,
+64.34925842285156,
+65.5987548828125
+],
+"yaw": -2.128
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+3.088461815371897e-42
+],
+"yaw": -136.047
+},
+{
+"kind": "formation",
+"pos": [
+204.17,
+199.95,
+-395.29
+],
+"halo": [
+-129.68936157226562,
+66.98505401611328,
+65.5987548828125
+],
+"yaw": -2.128
+}
+],
+"cells": [
+{
+"count": 2,
+"chars": [
+"null_cov_flying"
+],
+"weapons": [],
+"vehicle": "banshee"
+}
+]
+},
+{
+"name": "sq_gate10",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+265.36,
+110.61,
+-394.89
+],
+"halo": [
+-129.55715942382812,
+87.06175994873047,
+36.28867721557617
+],
+"yaw": -0.16
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"null_cov_flying"
+],
+"weapons": [],
+"vehicle": "banshee"
+}
+]
+},
+{
+"name": "sq_gate11",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+270.89,
+131.14,
+-429.04
+],
+"halo": [
+-140.7613525390625,
+88.87545776367188,
+43.023475646972656
+],
+"yaw": -0.16
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"null_cov_flying"
+],
+"weapons": [],
+"vehicle": "banshee"
+}
+]
+},
+{
+"name": "sq_gate12",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+240.07,
+131.14,
+-434.03
+],
+"halo": [
+-142.3982391357422,
+78.76347351074219,
+43.023475646972656
+],
+"yaw": -0.16
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"null_cov_flying"
+],
+"weapons": [],
+"vehicle": "banshee"
+}
+]
+},
+{
+"name": "sq_interior06",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+165.56,
+62.02,
+-357.23
+],
+"halo": [
+-117.20114135742188,
+54.31667709350586,
+20.346891403198242
+],
+"yaw": 3.142
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+3.088461815371897e-42
+],
+"yaw": -117.137
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+0.0
+],
+"yaw": 0.0
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+9.183409485952689e-41,
+0.0,
+0.0
+],
+"yaw": 0.0
+}
+],
+"cells": [
+{
+"count": 2,
+"chars": [
+"skirmisher"
+],
+"weapons": [
+"plasma_pistol"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_interior07",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+165.49,
+62.27,
+-353.01
+],
+"halo": [
+-115.81834411621094,
+54.29606246948242,
+20.429807662963867
+],
+"yaw": -3.067
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+3.088461815371897e-42
+],
+"yaw": -115.884
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+0.0
+],
+"yaw": 0.0
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+9.183409485952689e-41,
+0.0,
+0.0
+],
+"yaw": 0.0
+}
+],
+"cells": [
+{
+"count": 2,
+"chars": [
+"skirmisher"
+],
+"weapons": [
+"plasma_pistol"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_interior08",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+165.2,
+62.5,
+-350.87
+],
+"halo": [
+-115.11467742919922,
+54.20073318481445,
+20.50589942932129
+],
+"yaw": -3.09
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+3.088461815371897e-42
+],
+"yaw": -115.127
+}
+],
+"cells": [
+{
+"count": 2,
+"chars": [
+"jackal_sniper"
+],
+"weapons": [
+"needle_rifle"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_interior09",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+163.74,
+63.68,
+-345.22
+],
+"halo": [
+-113.2606430053711,
+53.719425201416016,
+20.893627166748047
+],
+"yaw": -3.067
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+3.088461815371897e-42
+],
+"yaw": -113.301
+}
+],
+"cells": [
+{
+"count": 2,
+"chars": [
+"jackal"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_trooper01",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+801.69,
+-314.44,
+-275.43
+],
+"halo": [
+-90.36254119873047,
+263.0216064453125,
+-103.16419982910156
+],
+"yaw": 0.465
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"trooper"
+],
+"weapons": [
+"assault_rifle"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_trooper02",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+796.42,
+-314.45,
+-274.44
+],
+"halo": [
+-90.03887176513672,
+261.2915344238281,
+-103.16444396972656
+],
+"yaw": 0.372
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"trooper"
+],
+"weapons": [
+"assault_rifle"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_trooper03",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+805.89,
+-314.44,
+-279.79
+],
+"halo": [
+-91.79322052001953,
+264.39935302734375,
+-103.16419982910156
+],
+"yaw": 0.088
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"trooper"
+],
+"weapons": [
+"assault_rifle"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_trooper04",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+793.54,
+-314.44,
+-292.39
+],
+"halo": [
+-95.92693328857422,
+260.3492431640625,
+-103.16419982910156
+],
+"yaw": 0.361
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"trooper"
+],
+"weapons": [
+"assault_rifle"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_trooper05",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+794.9,
+-314.44,
+-293.38
+],
+"halo": [
+-96.25191497802734,
+260.79559326171875,
+-103.16419982910156
+],
+"yaw": 0.372
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"trooper"
+],
+"weapons": [
+"assault_rifle"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_trooper06",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+794.9,
+-314.44,
+-293.38
+],
+"halo": [
+-96.25191497802734,
+260.79559326171875,
+-103.16419982910156
+],
+"yaw": 0.372
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"trooper"
+],
+"weapons": [
+"assault_rifle"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_trooper07",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+794.9,
+-314.44,
+-293.38
+],
+"halo": [
+-96.25191497802734,
+260.79559326171875,
+-103.16419982910156
+],
+"yaw": 0.372
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"trooper"
+],
+"weapons": [
+"assault_rifle"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_trooper08",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+794.9,
+-314.44,
+-293.38
+],
+"halo": [
+-96.25191497802734,
+260.79559326171875,
+-103.16419982910156
+],
+"yaw": 0.372
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"trooper"
+],
+"weapons": [
+"assault_rifle"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_trooper09",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+794.9,
+-314.44,
+-293.38
+],
+"halo": [
+-96.25191497802734,
+260.79559326171875,
+-103.16419982910156
+],
+"yaw": 0.372
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"trooper"
+],
+"weapons": [
+"assault_rifle"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_trooper10",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+794.9,
+-314.44,
+-293.38
+],
+"halo": [
+-96.25191497802734,
+260.79559326171875,
+-103.16419982910156
+],
+"yaw": 0.372
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"trooper"
+],
+"weapons": [
+"assault_rifle"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_trooper11",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+794.9,
+-314.44,
+-293.38
+],
+"halo": [
+-96.25191497802734,
+260.79559326171875,
+-103.16419982910156
+],
+"yaw": 0.372
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"trooper"
+],
+"weapons": [
+"assault_rifle"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_trooper12",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+791.75,
+-314.44,
+-297.96
+],
+"halo": [
+-97.75605773925781,
+259.7593994140625,
+-103.16419982910156
+],
+"yaw": 0.372
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"trooper"
+],
+"weapons": [
+"assault_rifle"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_trooper13",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+794.87,
+-314.44,
+-297.74
+],
+"halo": [
+-97.68215942382812,
+260.7835693359375,
+-103.16419982910156
+],
+"yaw": 0.372
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"trooper"
+],
+"weapons": [
+"assault_rifle"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_banshee_00",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+1225.28,
+5.96,
+-309.83
+],
+"halo": [
+-101.65110778808594,
+401.99615478515625,
+1.955590009689331
+],
+"yaw": -1.859
+},
+{
+"kind": "formation",
+"pos": [
+1132.3,
+-117.03,
+330.37
+],
+"halo": [
+108.3902359008789,
+371.48797607421875,
+-38.395904541015625
+],
+"yaw": 0.0
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"null_cov_flying"
+],
+"weapons": [],
+"vehicle": "banshee"
+}
+]
+},
+{
+"name": "sq_ice_banshee_01",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+1210.16,
+22.27,
+-320.3
+],
+"halo": [
+-105.0859375,
+397.0330505371094,
+7.307106018066406
+],
+"yaw": -1.859
+},
+{
+"kind": "formation",
+"pos": [
+1132.3,
+-117.03,
+330.37
+],
+"halo": [
+108.3902359008789,
+371.48797607421875,
+-38.395904541015625
+],
+"yaw": 0.0
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"null_cov_flying"
+],
+"weapons": [],
+"vehicle": "banshee"
+}
+]
+},
+{
+"name": "sq_ice_banshee_02",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+1055.09,
+6.61,
+-204.81
+],
+"halo": [
+-67.1964111328125,
+346.1596984863281,
+2.1687583923339844
+],
+"yaw": -1.859
+},
+{
+"kind": "formation",
+"pos": [
+1132.3,
+-117.03,
+330.37
+],
+"halo": [
+108.3902359008789,
+371.48797607421875,
+-38.395904541015625
+],
+"yaw": 0.0
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"null_cov_flying"
+],
+"weapons": [],
+"vehicle": "banshee"
+}
+]
+},
+{
+"name": "sq_ice_banshee_03",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+1083.25,
+6.61,
+-209.9
+],
+"halo": [
+-68.86549377441406,
+355.3957824707031,
+2.1687583923339844
+],
+"yaw": -1.859
+},
+{
+"kind": "formation",
+"pos": [
+1083.25,
+6.61,
+-209.9
+],
+"halo": [
+-68.86549377441406,
+355.3957824707031,
+2.1687583923339844
+],
+"yaw": -1.859
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"null_cov_flying"
+],
+"weapons": [],
+"vehicle": "banshee"
+}
+]
+},
+{
+"name": "sq_ice_banshee_04",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+1155.58,
+-39.84,
+13.63
+],
+"halo": [
+4.470477104187012,
+379.1268615722656,
+-13.070490837097168
+],
+"yaw": -1.786
+},
+{
+"kind": "formation",
+"pos": [
+1132.3,
+-117.03,
+330.37
+],
+"halo": [
+108.3902359008789,
+371.48797607421875,
+-38.395904541015625
+],
+"yaw": 0.0
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"null_cov_flying"
+],
+"weapons": [],
+"vehicle": "banshee"
+}
+]
+},
+{
+"name": "sq_ice_banshee_05",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+1096.62,
+-56.66,
+-0.21
+],
+"halo": [
+-0.06869661808013916,
+359.7824401855469,
+-18.590667724609375
+],
+"yaw": -1.859
+},
+{
+"kind": "formation",
+"pos": [
+1132.3,
+-117.03,
+330.37
+],
+"halo": [
+108.3902359008789,
+371.48797607421875,
+-38.395904541015625
+],
+"yaw": 0.0
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"null_cov_flying"
+],
+"weapons": [],
+"vehicle": "banshee"
+}
+]
+},
+{
+"name": "sq_ice_elite_skirmisher_00",
+"points": [
+{
+"kind": "formation",
+"pos": [
+725.15,
+-310.23,
+-223.76
+],
+"halo": [
+-73.41172790527344,
+237.910400390625,
+-101.7803955078125
+],
+"yaw": 0.853
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"elite",
+"elite_officer"
+],
+"weapons": [
+"plasma_rifle",
+"plasma_repeater"
+],
+"vehicle": null
+},
+{
+"count": 3,
+"chars": [
+"skirmisher"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_elite_skirmisher_01",
+"points": [
+{
+"kind": "formation",
+"pos": [
+723.92,
+-310.89,
+-223.47
+],
+"halo": [
+-73.3176040649414,
+237.50799560546875,
+-101.99951171875
+],
+"yaw": 0.853
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"elite",
+"elite_officer"
+],
+"weapons": [
+"plasma_rifle",
+"plasma_repeater"
+],
+"vehicle": null
+},
+{
+"count": 2,
+"chars": [
+"skirmisher"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_elite_skirmisher_02",
+"points": [
+{
+"kind": "formation",
+"pos": [
+959.81,
+-352.85,
+-159.9
+],
+"halo": [
+-52.459144592285156,
+314.89715576171875,
+-115.7655029296875
+],
+"yaw": -2.306
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"elite",
+"elite_officer"
+],
+"weapons": [
+"plasma_rifle",
+"plasma_repeater"
+],
+"vehicle": null
+},
+{
+"count": 2,
+"chars": [
+"skirmisher"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_elite_skirmisher_03",
+"points": [
+{
+"kind": "formation",
+"pos": [
+830.22,
+-337.11,
+-75.17
+],
+"halo": [
+-24.661352157592773,
+272.38092041015625,
+-110.5997543334961
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"elite",
+"elite_officer"
+],
+"weapons": [
+"plasma_rifle",
+"plasma_repeater"
+],
+"vehicle": null
+},
+{
+"count": 3,
+"chars": [
+"skirmisher"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_elite_skirmisher_04",
+"points": [
+{
+"kind": "formation",
+"pos": [
+831.72,
+-336.13,
+-121.22
+],
+"halo": [
+-39.771583557128906,
+272.87396240234375,
+-110.27957153320312
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"elite",
+"elite_officer"
+],
+"weapons": [
+"plasma_rifle",
+"plasma_repeater"
+],
+"vehicle": null
+},
+{
+"count": 3,
+"chars": [
+"skirmisher"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_elite_skirmisher_05",
+"points": [
+{
+"kind": "formation",
+"pos": [
+831.72,
+-336.13,
+-121.22
+],
+"halo": [
+-39.771583557128906,
+272.87396240234375,
+-110.27957153320312
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"elite",
+"elite_officer"
+],
+"weapons": [
+"plasma_rifle",
+"plasma_repeater"
+],
+"vehicle": null
+},
+{
+"count": 3,
+"chars": [
+"skirmisher"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_elite_skirmisher_06",
+"points": [
+{
+"kind": "formation",
+"pos": [
+831.72,
+-336.13,
+-121.22
+],
+"halo": [
+-39.771583557128906,
+272.87396240234375,
+-110.27957153320312
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"elite",
+"elite_officer"
+],
+"weapons": [
+"plasma_rifle",
+"plasma_repeater"
+],
+"vehicle": null
+},
+{
+"count": 3,
+"chars": [
+"skirmisher"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_elite_skirmisher_07",
+"points": [
+{
+"kind": "formation",
+"pos": [
+831.72,
+-336.13,
+-121.22
+],
+"halo": [
+-39.771583557128906,
+272.87396240234375,
+-110.27957153320312
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"elite",
+"elite_officer"
+],
+"weapons": [
+"plasma_rifle",
+"plasma_repeater"
+],
+"vehicle": null
+},
+{
+"count": 3,
+"chars": [
+"skirmisher"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_elite_skirmisher_08",
+"points": [
+{
+"kind": "formation",
+"pos": [
+831.72,
+-336.13,
+-121.22
+],
+"halo": [
+-39.771583557128906,
+272.87396240234375,
+-110.27957153320312
+],
+"yaw": -3.138
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"elite",
+"elite_officer"
+],
+"weapons": [
+"plasma_rifle",
+"plasma_repeater"
+],
+"vehicle": null
+},
+{
+"count": 3,
+"chars": [
+"skirmisher"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_depot16",
+"points": [
+{
+"kind": "formation",
+"pos": [
+-402.88,
+44.17,
+-354.5
+],
+"halo": [
+-116.30690002441406,
+-132.178466796875,
+14.492301940917969
+],
+"yaw": -0.821
+}
+],
+"cells": [
+{
+"count": 2,
+"chars": [
+"skirmisher_commando"
+],
+"weapons": [
+"focus_rifle"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_security06",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+116.27,
+75.92,
+-425.07
+],
+"halo": [
+-139.4597625732422,
+38.145599365234375,
+24.90689468383789
+],
+"yaw": 0.018
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"engineer"
+],
+"weapons": [],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_intro08",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+-223.34,
+10.28,
+59.75
+],
+"halo": [
+19.60141372680664,
+-73.27408599853516,
+3.37381649017334
+],
+"yaw": -0.19
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol"
+],
+"vehicle": "shade"
+}
+]
+},
+{
+"name": "sq_intro09",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+-268.36,
+17.55,
+78.38
+],
+"halo": [
+25.715486526489258,
+-88.04578399658203,
+5.75925874710083
+],
+"yaw": -0.537
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol"
+],
+"vehicle": "shade"
+}
+]
+},
+{
+"name": "sq_intro10",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+-271.2,
+11.28,
+72.34
+],
+"halo": [
+23.733379364013672,
+-88.97552490234375,
+3.701185941696167
+],
+"yaw": 2.169
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+3.088461815371897e-42
+],
+"yaw": 32.258
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+0.0
+],
+"yaw": 0.0
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+9.183409485952689e-41,
+1.2289387532128646e-42,
+0.0
+],
+"yaw": 0.0
+},
+{
+"kind": "spawn",
+"pos": [
+NaN,
+NaN,
+0.0
+],
+"halo": [
+0.0,
+NaN,
+NaN
+],
+"yaw": 0.0
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+0.0
+],
+"yaw": 0.0
+}
+],
+"cells": [
+{
+"count": 4,
+"chars": [
+"grunt"
+],
+"weapons": [
+"plasma_pistol",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_motorpool10",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+-361.76,
+43.72,
+-141.67
+],
+"halo": [
+-46.4809455871582,
+-118.6875991821289,
+14.345253944396973
+],
+"yaw": 0.619
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"grunt",
+"elite"
+],
+"weapons": [
+"plasma_pistol",
+"plasma_rifle"
+],
+"vehicle": "ghost"
+}
+]
+},
+{
+"name": "sq_motorpool11",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+-359.08,
+44.67,
+-161.53
+],
+"halo": [
+-52.99424743652344,
+-117.80826568603516,
+14.657118797302246
+],
+"yaw": 0.294
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"grunt",
+"elite"
+],
+"weapons": [
+"plasma_pistol",
+"plasma_rifle"
+],
+"vehicle": "ghost"
+}
+]
+},
+{
+"name": "sq_motorpool12",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+-380.35,
+41.4,
+-173.12
+],
+"halo": [
+-56.799129486083984,
+-124.78763580322266,
+13.581119537353516
+],
+"yaw": 0.0
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"grunt",
+"elite"
+],
+"weapons": [
+"plasma_pistol",
+"plasma_rifle"
+],
+"vehicle": "ghost"
+}
+]
+},
+{
+"name": "sq_depot17",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+-251.71,
+91.76,
+-226.85
+],
+"halo": [
+-74.42617797851562,
+-82.58280181884766,
+30.104244232177734
+],
+"yaw": -2.753
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+3.088461815371897e-42
+],
+"yaw": -65.376
+},
+{
+"kind": "formation",
+"pos": [
+-260.41,
+91.76,
+-213.66
+],
+"halo": [
+-70.09879302978516,
+-85.4372787475586,
+30.104244232177734
+],
+"yaw": -2.154
+}
+],
+"cells": [
+{
+"count": 2,
+"chars": [
+"null_cov_flying"
+],
+"weapons": [],
+"vehicle": "banshee"
+}
+]
+},
+{
+"name": "sq_depot18",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+202.53,
+87.3,
+-552.07
+],
+"halo": [
+-181.1248779296875,
+66.44791412353516,
+28.64145278930664
+],
+"yaw": -1.197
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+3.088461815371897e-42
+],
+"yaw": -194.024
+},
+{
+"kind": "formation",
+"pos": [
+196.11,
+87.3,
+-568.46
+],
+"halo": [
+-186.5030975341797,
+64.3409652709961,
+28.64145278930664
+],
+"yaw": -1.197
+}
+],
+"cells": [
+{
+"count": 2,
+"chars": [
+"null_cov_flying"
+],
+"weapons": [],
+"vehicle": "banshee"
+}
+]
+},
+{
+"name": "sq_wave_1a",
+"points": [
+{
+"kind": "formation",
+"pos": [
+857.91,
+-336.15,
+-209.38
+],
+"halo": [
+-68.69577026367188,
+281.4659118652344,
+-110.28632354736328
+],
+"yaw": -3.138
+}
+],
+"cells": []
+},
+{
+"name": "sq_wave_1b",
+"points": [
+{
+"kind": "formation",
+"pos": [
+857.91,
+-336.15,
+-209.38
+],
+"halo": [
+-68.69577026367188,
+281.4659118652344,
+-110.28632354736328
+],
+"yaw": -3.138
+}
+],
+"cells": []
+},
+{
+"name": "sq_wave_2a",
+"points": [
+{
+"kind": "formation",
+"pos": [
+857.91,
+-336.15,
+-209.38
+],
+"halo": [
+-68.69577026367188,
+281.4659118652344,
+-110.28632354736328
+],
+"yaw": -3.138
+}
+],
+"cells": []
+},
+{
+"name": "sq_wave_2b",
+"points": [
+{
+"kind": "formation",
+"pos": [
+857.91,
+-336.15,
+-209.38
+],
+"halo": [
+-68.69577026367188,
+281.4659118652344,
+-110.28632354736328
+],
+"yaw": -3.138
+}
+],
+"cells": []
+},
+{
+"name": "test_phantom",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+857.32,
+-322.63,
+-137.58
+],
+"halo": [
+-45.13773727416992,
+281.27398681640625,
+-105.85042572021484
+],
+"yaw": -2.947
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+3.110882590801094e-42
+],
+"yaw": -47.609
+},
+{
+"kind": "formation",
+"pos": [
+1132.3,
+-117.03,
+330.37
+],
+"halo": [
+108.3902359008789,
+371.48797607421875,
+-38.395904541015625
+],
+"yaw": 0.0
+}
+],
+"cells": [
+{
+"count": 2,
+"chars": [
+"grunt"
+],
+"weapons": [],
+"vehicle": "phantom"
+}
+]
+},
+{
+"name": "sq_wave_3a",
+"points": [
+{
+"kind": "formation",
+"pos": [
+857.91,
+-336.15,
+-209.38
+],
+"halo": [
+-68.69577026367188,
+281.4659118652344,
+-110.28632354736328
+],
+"yaw": -3.138
+}
+],
+"cells": []
+},
+{
+"name": "sq_wave_3b",
+"points": [
+{
+"kind": "formation",
+"pos": [
+857.91,
+-336.15,
+-209.38
+],
+"halo": [
+-68.69577026367188,
+281.4659118652344,
+-110.28632354736328
+],
+"yaw": -3.138
+}
+],
+"cells": []
+},
+{
+"name": "sq_wave_3c",
+"points": [
+{
+"kind": "formation",
+"pos": [
+857.91,
+-336.15,
+-209.38
+],
+"halo": [
+-68.69577026367188,
+281.4659118652344,
+-110.28632354736328
+],
+"yaw": -3.138
+}
+],
+"cells": []
+},
+{
+"name": "sq_wave_4a",
+"points": [
+{
+"kind": "formation",
+"pos": [
+857.91,
+-336.15,
+-209.38
+],
+"halo": [
+-68.69577026367188,
+281.4659118652344,
+-110.28632354736328
+],
+"yaw": -3.138
+}
+],
+"cells": []
+},
+{
+"name": "sq_wave_4b",
+"points": [
+{
+"kind": "formation",
+"pos": [
+857.91,
+-336.15,
+-209.38
+],
+"halo": [
+-68.69577026367188,
+281.4659118652344,
+-110.28632354736328
+],
+"yaw": -3.138
+}
+],
+"cells": []
+},
+{
+"name": "sq_wave_4c",
+"points": [
+{
+"kind": "formation",
+"pos": [
+857.91,
+-336.15,
+-209.38
+],
+"halo": [
+-68.69577026367188,
+281.4659118652344,
+-110.28632354736328
+],
+"yaw": -3.138
+}
+],
+"cells": []
+},
+{
+"name": "sq_ice_big_boss_general",
+"points": [
+{
+"kind": "formation",
+"pos": [
+723.92,
+-310.89,
+-223.47
+],
+"halo": [
+-73.3176040649414,
+237.50799560546875,
+-101.99951171875
+],
+"yaw": 0.853
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"elite_general"
+],
+"weapons": [
+null,
+"energy_sword"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_big_boss_flak",
+"points": [
+{
+"kind": "formation",
+"pos": [
+723.92,
+-310.89,
+-223.47
+],
+"halo": [
+-73.3176040649414,
+237.50799560546875,
+-101.99951171875
+],
+"yaw": 0.853
+}
+],
+"cells": [
+{
+"count": 2,
+"chars": [
+"grunt_heavy"
+],
+"weapons": [
+"flak_cannon"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_big_boss_skirm",
+"points": [
+{
+"kind": "formation",
+"pos": [
+723.92,
+-310.89,
+-223.47
+],
+"halo": [
+-73.3176040649414,
+237.50799560546875,
+-101.99951171875
+],
+"yaw": 0.853
+}
+],
+"cells": [
+{
+"count": 4,
+"chars": [
+"skirmisher"
+],
+"weapons": [
+"needle_rifle"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_big_boss_3_elite",
+"points": [
+{
+"kind": "formation",
+"pos": [
+723.92,
+-310.89,
+-223.47
+],
+"halo": [
+-73.3176040649414,
+237.50799560546875,
+-101.99951171875
+],
+"yaw": 0.853
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"elite_officer"
+],
+"weapons": [
+"plasma_repeater",
+"plasma_rifle"
+],
+"vehicle": null
+},
+{
+"count": 2,
+"chars": [
+"elite"
+],
+"weapons": [
+"plasma_rifle",
+"needler"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_ice_turret01",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+874.0,
+-334.73,
+-134.51
+],
+"halo": [
+-44.129947662353516,
+286.7453308105469,
+-109.81983947753906
+],
+"yaw": -1.571
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"null_human_default"
+],
+"weapons": [],
+"vehicle": "anti_infantry_turret"
+}
+]
+},
+{
+"name": "sq_ice_turret02",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+787.71,
+-333.08,
+-153.33
+],
+"halo": [
+-50.30440139770508,
+258.43511962890625,
+-109.27864837646484
+],
+"yaw": 1.571
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"null_human_default"
+],
+"weapons": [],
+"vehicle": "anti_infantry_turret"
+}
+]
+},
+{
+"name": "sq_ice_turret03",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+784.87,
+-317.99,
+-202.22
+],
+"halo": [
+-66.34497833251953,
+257.5035400390625,
+-104.32643127441406
+],
+"yaw": 3.124
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"null_human_default"
+],
+"weapons": [],
+"vehicle": "anti_infantry_turret"
+}
+]
+},
+{
+"name": "sq_ice_turret04",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+890.16,
+-337.11,
+-238.79
+],
+"halo": [
+-78.34471893310547,
+292.0457763671875,
+-110.59950256347656
+],
+"yaw": -0.542
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"null_human_default"
+],
+"weapons": [],
+"vehicle": "anti_infantry_turret"
+}
+]
+},
+{
+"name": "sq_ice_engineer_00",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+823.04,
+-316.37,
+-216.1
+],
+"halo": [
+-70.89872741699219,
+270.0250244140625,
+-103.796875
+],
+"yaw": -2.581
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"engineer"
+],
+"weapons": [],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_scorpion01",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+-392.62,
+16.97,
+26.53
+],
+"halo": [
+8.70329761505127,
+-128.8127899169922,
+5.566359519958496
+],
+"yaw": 0.273
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+null
+],
+"weapons": [],
+"vehicle": "scorpion"
+}
+]
+},
+{
+"name": "sq_scorpion02",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+-381.38,
+12.19,
+27.15
+],
+"halo": [
+8.906343460083008,
+-125.1249771118164,
+3.9997830390930176
+],
+"yaw": -2.157
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+null
+],
+"weapons": [],
+"vehicle": "scorpion"
+}
+]
+},
+{
+"name": "sq_depot_bfg01",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+-433.07,
+40.18,
+-365.45
+],
+"halo": [
+-119.8989486694336,
+-142.08251953125,
+13.183832168579102
+],
+"yaw": 1.611
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"null_cov_default"
+],
+"weapons": [],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_depot_bfg02",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+-360.02,
+37.45,
+-432.86
+],
+"halo": [
+-142.0153350830078,
+-118.1165542602539,
+12.288361549377441
+],
+"yaw": 0.118
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"null_cov_default"
+],
+"weapons": [],
+"vehicle": null
+}
+]
+},
+{
+"name": "special_elite02",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+157.73,
+70.1,
+-391.1
+],
+"halo": [
+-128.31431579589844,
+51.74796676635742,
+23.000232696533203
+],
+"yaw": -1.482
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"elite_bob"
+],
+"weapons": [
+"concussion_rifle"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "special_elite03",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+872.19,
+-320.5,
+-39.65
+],
+"halo": [
+-13.007710456848145,
+286.15057373046875,
+-105.14952087402344
+],
+"yaw": -0.0
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"elite_bob"
+],
+"weapons": [
+"concussion_rifle"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "v_guy01",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+827.35,
+-316.05,
+-322.44
+],
+"halo": [
+-105.78665161132812,
+271.4400329589844,
+-103.69194030761719
+],
+"yaw": 1.784
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"elite_general"
+],
+"weapons": [
+null,
+"energy_sword"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "v_guy02",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+827.35,
+-316.05,
+-322.44
+],
+"halo": [
+-105.78665161132812,
+271.4400329589844,
+-103.69194030761719
+],
+"yaw": 1.784
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"elite_general"
+],
+"weapons": [
+null,
+"energy_sword"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "v_guy03",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+827.35,
+-316.05,
+-322.44
+],
+"halo": [
+-105.78665161132812,
+271.4400329589844,
+-103.69194030761719
+],
+"yaw": 1.784
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"elite_general"
+],
+"weapons": [
+null,
+"energy_sword"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "v_guy04",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+827.35,
+-316.05,
+-322.44
+],
+"halo": [
+-105.78665161132812,
+271.4400329589844,
+-103.69194030761719
+],
+"yaw": 1.784
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"elite_general"
+],
+"weapons": [
+null,
+"energy_sword"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "v_guy05",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+827.35,
+-316.05,
+-322.44
+],
+"halo": [
+-105.78665161132812,
+271.4400329589844,
+-103.69194030761719
+],
+"yaw": 1.784
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"elite_general"
+],
+"weapons": [
+null,
+"energy_sword"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "v_guy06",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+827.35,
+-316.05,
+-322.44
+],
+"halo": [
+-105.78665161132812,
+271.4400329589844,
+-103.69194030761719
+],
+"yaw": 1.784
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"elite_general"
+],
+"weapons": [
+null,
+"energy_sword"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "v_guy07",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+827.35,
+-316.05,
+-322.44
+],
+"halo": [
+-105.78665161132812,
+271.4400329589844,
+-103.69194030761719
+],
+"yaw": 1.784
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"elite_general"
+],
+"weapons": [
+null,
+"energy_sword"
+],
+"vehicle": null
+}
+]
+},
+{
+"name": "sq_depot03",
+"points": [
+{
+"kind": "spawn",
+"pos": [
+-248.71,
+40.5,
+-399.61
+],
+"halo": [
+-131.10597229003906,
+-81.59730529785156,
+13.288979530334473
+],
+"yaw": -1.211
+},
+{
+"kind": "spawn",
+"pos": [
+0.0,
+0.0,
+0.0
+],
+"halo": [
+0.0,
+0.0,
+3.088461815371897e-42
+],
+"yaw": -135.232
+}
+],
+"cells": [
+{
+"count": 1,
+"chars": [
+"grunt",
+"elite"
+],
+"weapons": [
+"plasma_pistol",
+"plasma_rifle"
+],
+"vehicle": "ghost"
+},
+{
+"count": 1,
+"chars": [
+"grunt",
+"elite"
+],
+"weapons": [
+"plasma_pistol",
+"plasma_rifle"
+],
+"vehicle": "ghost"
+}
+]
+}
+]
+}

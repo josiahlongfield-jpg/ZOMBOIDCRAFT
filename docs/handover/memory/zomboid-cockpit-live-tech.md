@@ -1,0 +1,10 @@
+---
+name: zomboid-cockpit-live-tech
+description: How live aircraft cockpits work: CockpitDisplays/CockpitPages screens, conformal HUD, CockpitPanel + Su27Panel sharp panel face, offline harness
+metadata:
+  type: project
+---
+
+Client files in client/cars: CockpitPages (Java2D painters per page: adi, engines, tsd, tsd_heli, stores, cni, icaw, flight, tapes, eufd, weapons, hud_jet, hud_flanker; Data record built in CockpitDisplays.data), CockpitDisplays (PAGES per model in .zglow group order, one DynamicTexture per screen, HUD repaint 16 ms, others 125 ms; HUD_GLASS override for jet_gyrfalcon), CockpitPanel + Su27Panel (Su-27 panel face measured from the mesh: origin (0.027,3.155,5.907), right (-1,0,-0.0027), up (0,0.9866,0.1633), 879x550 mm; mask only tris y>=195 mm; layered quads with small lifts; Russian ADI = horizon slides, aircraft banks). CarRenderer submit: `facePanel` then live screens then CockpitGlow.draw skipping live groups and covered tris (a local named `panel` already exists there - name clash broke CI once). CockpitGlow.powered needs battery. FlightHud: in first person, jets show only the aim ring, heli gets helmet IHADSS.
+Bought cockpit textures are ~512 px for the whole cockpit, so accuracy means redrawing faces, not upscaling. Scratch harness was /tmp/claude-0/cp/ (lost with the container). Related: [[zomboid-cockpit-lights-tech]], [[zomboid-flight-direction]].
+AirControls.java (2026-10-27): per-model Rig (stick foot/length, lever pivot/length, collective, Su-27 mesh stick axis+radius). Su-27 stick triangles turned through CarRenderer's steering BitSet/Turn path; F-22 and Apache get drawn boxes (4x1 swatch texture, entityCutout). FlightClient.controls -> AirControls.input records stick; CarArms.grips puts hands on grips in first person. FlightClient.shake adds camera buffet. F-22 UFD groups 5/6 are cropped (CockpitDisplays.CROP) because the ICP box hides part of their glow quads. Offline full-cockpit preview: /tmp/claude-0/cp/full.py (needs h/ harness).

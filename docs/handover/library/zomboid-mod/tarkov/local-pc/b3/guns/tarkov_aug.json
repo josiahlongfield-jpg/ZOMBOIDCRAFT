@@ -1,0 +1,214 @@
+{
+ "id": "tarkov_aug",
+ "name": "Steyr AUG A1 (kitted)",
+ "anchor": "assault_rifle",
+ "anchorMesh": "pbr_assault_rifle",
+ "calibre": "5.56mm",
+ "suppressed": true,
+ "fp": "operator_tarkov_aug",
+ "sight": "scope_aug_steyr_stg77_optic_1,5x_LOD0",
+ "zoom": 1.5,
+ "reload": [
+  3.733,
+  4.967
+ ],
+ "stats": {
+  "damage": 12.0,
+  "hipSpread": 3.0,
+  "aimSpread": 0.35,
+  "recoil": 0.85,
+  "range": 120.0,
+  "fireDelayTicks": 3,
+  "magazineSize": 30,
+  "selectFire": true,
+  "autoRpm": 700.0
+ },
+ "kit": [
+  "sight",
+  "suppressor",
+  "foregrip",
+  "stock"
+ ],
+ "grip": "foregrip_aug_steyr_a1_foregrip_LOD0",
+ "guard": null,
+ "holds": {
+  "foregrip_aug_steyr_a1_foregrip_LOD0": {
+   "part": "foregrip_aug_steyr_a1_foregrip",
+   "slot": "mod_foregrip",
+   "palm": [
+    0.10613,
+    0.02234,
+    -0.07876,
+    0.0891,
+    0.00379,
+    0.96244,
+    -0.25641
+   ],
+   "fingers": {
+    "Base HumanLDigit0": [
+     3e-05,
+     -7e-05,
+     -0.45655,
+     0.8897
+    ]
+   }
+  }
+ },
+ "tarkov": {
+  "base": "62e7c4fba689e8c9c50dfc38",
+  "kit": [
+   {
+    "path": "",
+    "item": "62e7c4fba689e8c9c50dfc38",
+    "bones": [
+     "weapon_steyr_aug_a1_lower_556x45_LOD0",
+     "weapon_steyr_aug_a1_upper_556x45_LOD0",
+     "aug_bolt_carrier_LOD0",
+     "aug_extractor_LOD0",
+     "aug_firing_pin_LOD0",
+     "aug_charge_tube_LOD0",
+     "aug_mag_release_LOD0",
+     "aug_a1_internals_LOD0",
+     "aug_auto_sear_LOD0",
+     "aug_hammer_LOD0",
+     "aug_safety_LOD0",
+     "aug_trigger_LOD0"
+    ],
+    "bone": "weapon_steyr_aug_a1_lower_556x45_LOD0",
+    "at": [
+     -0.156826,
+     1.413956,
+     0.017428,
+     0.707107,
+     0.0,
+     0.0,
+     -0.707107
+    ]
+   },
+   {
+    "path": "/mod_magazine",
+    "item": "62e7c98b550c8218d602cbb4",
+    "bones": [
+     "mag_aug_steyr_std_556x45_30_LOD0"
+    ],
+    "bone": "mag_aug_steyr_std_556x45_30_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_charge",
+    "item": "62e7c880f68e7a0676050c7c",
+    "bones": [
+     "charge_aug_steyr_a1_handle_LOD0"
+    ],
+    "bone": "charge_aug_steyr_a1_handle_LOD0",
+    "at": [
+     -0.0,
+     0.0,
+     0.0,
+     0.0,
+     -2e-06,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_reciever",
+    "item": "62ea7c793043d74a0306e19f",
+    "bones": [
+     "backLens",
+     "linza",
+     "scope_aug_steyr_stg77_optic_1,5x_glass_LOD0",
+     "scope_aug_steyr_stg77_optic_1,5x_LOD0"
+    ],
+    "bone": "scope_aug_steyr_stg77_optic_1,5x_LOD0",
+    "at": [
+     -0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_reciever/mod_barrel",
+    "item": "62e7c7f3c34ea971710c32fc",
+    "bones": [
+     "barrel_aug_steyr_a1_508mm_556x45_LOD0"
+    ],
+    "bone": "barrel_aug_steyr_a1_508mm_556x45_LOD0",
+    "at": [
+     -0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_reciever/mod_barrel/mod_muzzle_000",
+    "item": "630f2872911356c17d06abc5",
+    "bones": [
+     "muzzle_aug_steyr_a1_closed_flash_hider_556x45_LOD0"
+    ],
+    "bone": "muzzle_aug_steyr_a1_closed_flash_hider_556x45_LOD0",
+    "at": [
+     -3e-06,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_reciever/mod_barrel/mod_muzzle_001",
+    "item": "630f2982cdb9e392db0cbcc7",
+    "bones": [
+     "silencer_aug_reflex_suppressor_t4aug_ranger_556x45_LOD0"
+    ],
+    "bone": "silencer_aug_reflex_suppressor_t4aug_ranger_556x45_LOD0",
+    "at": [
+     -3e-06,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   },
+   {
+    "path": "/mod_reciever/mod_barrel/mod_foregrip",
+    "item": "634e61b0767cb15c4601a877",
+    "bones": [
+     "foregrip_aug_steyr_a1_foregrip_LOD0"
+    ],
+    "bone": "foregrip_aug_steyr_a1_foregrip_LOD0",
+    "at": [
+     -0.0,
+     0.0,
+     -0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   }
+  ],
+  "aimPath": "/mod_reciever",
+  "aimIndex": 0
+ }
+}

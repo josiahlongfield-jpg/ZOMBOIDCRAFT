@@ -1,0 +1,12 @@
+# coast/lighthouse-interior-stairs-lens
+
+Reference photos from Wikimedia Commons (1024 px thumbnails), free licences only.
+
+| File | Source | Author | Licence | Description |
+|---|---|---|---|---|
+| 01-spiral-staircase-of-the-kapu-lighthouse-in-kapu-32145805005.jpg | [Spiral staircase of the Kapu Lighthouse in Kapu (32145805005).jpg](https://commons.wikimedia.org/wiki/File:Spiral_staircase_of_the_Kapu_Lighthouse_in_Kapu_(32145805005).jpg) | Venkat Mangudi | CC BY-SA 2.0 | The spiral staircase of the Kapu Lighthouse in Kapu, India. Taken from the bottom of the lighthouse, looking up to the roof. |
+| 02-2015-little-red-lighthouse-annual-tour-06-spiral-staircase-f.jpg | [2015 Little Red Lighthouse annual tour (06) spiral staircase from abov](https://commons.wikimedia.org/wiki/File:2015_Little_Red_Lighthouse_annual_tour_(06)_spiral_staircase_from_above.jpg) | Beyond My Ken | CC BY-SA 4.0 | The New York City Department of Parks and Recreation gives an annual tour of the Little Red Lighthouse on Jeffrey's Hook in Fort Washington  |
+| 03-2015-little-red-lighthouse-annual-tour-05-spiral-staircase-f.jpg | [2015 Little Red Lighthouse annual tour (05) spiral staircase from belo](https://commons.wikimedia.org/wiki/File:2015_Little_Red_Lighthouse_annual_tour_(05)_spiral_staircase_from_below.jpg) | Beyond My Ken | CC BY-SA 4.0 | The New York City Department of Parks and Recreation gives an annual tour of the Little Red Lighthouse on Jeffrey's Hook in Fort Washington  |
+| 04-first-order-fresnel-lens-at-point-reyes-lighthouse.jpg | [First order Fresnel lens at Point Reyes lighthouse.jpg](https://commons.wikimedia.org/wiki/File:First_order_Fresnel_lens_at_Point_Reyes_lighthouse.jpg) | Frank Schulenburg | CC BY-SA 4.0 | First order Fresnel lens at Point Reyes lighthouse after a 15-month restoration project completed in November 2019 |
+| 05-elizabeth-donkin-lighthouse-lens.jpg | [Elizabeth Donkin Lighthouse Lens.jpg](https://commons.wikimedia.org/wiki/File:Elizabeth_Donkin_Lighthouse_Lens.jpg) | Martinvl | CC BY-SA 4.0 | Fourth order Fresnel lense in situ in the Elizabeth Donkin lighthouse, Port Elizabeth, South Africa.  The lighthouse was built in 1903 repla |
+| 06-hyper-radiant-fresnel-lens.jpg | [Hyper-radiant Fresnel Lens.jpg](https://commons.wikimedia.org/wiki/File:Hyper-radiant_Fresnel_Lens.jpg) | Lighthouselover143 | CC BY-SA 4.0 | Panel of a Hyper-radiant Fresnel Lens located in the Santa Marta Lighthouse Museum in Cascais, Portugal. The panel one of three taken from t |

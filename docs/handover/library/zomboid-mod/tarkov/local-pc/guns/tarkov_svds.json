@@ -1,0 +1,326 @@
+{
+ "id": "tarkov_svds",
+ "name": "SVDS (kitted)",
+ "anchor": "battle_rifle",
+ "anchorMesh": "pbr_battle_rifle",
+ "calibre": "7.62x54R",
+ "fp": "operator_tarkov_svds",
+ "sight": "scope_dovetail_belomo_pso_1m2_4x24_LOD0",
+ "zoom": 4.0,
+ "reload": [
+  4.0,
+  5.733
+ ],
+ "stats": {
+  "damage": 24.0,
+  "hipSpread": 3.0,
+  "aimSpread": 0.12,
+  "recoil": 1.9,
+  "range": 220.0,
+  "fireDelayTicks": 5,
+  "magazineSize": 10,
+  "selectFire": false
+ },
+ "kit": [
+  "sight",
+  "laser",
+  "foregrip",
+  "stock"
+ ],
+ "rail": {
+  "laser": {
+   "bone": "tactical_all_morovision_anpeq15_LOD0",
+   "at": [
+    -0.0239,
+    -0.0439,
+    0.0074
+   ],
+   "dir": [
+    -0.0003,
+    -1,
+    0.0059
+   ],
+   "third": [
+    -0.1563,
+    -0.0049,
+    0.8
+   ]
+  }
+ },
+ "grip": "foregrip_keymod_sig_vertical_grip_LOD0",
+ "guard": null,
+ "holds": {
+  "foregrip_keymod_sig_vertical_grip_LOD0": {
+   "palm": [
+    -0.05949,
+    0.09679,
+    0.07945,
+    0.81417,
+    -0.53348,
+    -0.22574,
+    0.03964
+   ],
+   "fingers": {
+    "Base HumanLDigit11": [
+     0.581,
+     -0.18745,
+     0.12654,
+     0.78185
+    ],
+    "Base HumanLDigit12": [
+     -0.23136,
+     0.22879,
+     -0.13283,
+     0.93621
+    ],
+    "Base HumanLDigit": [
+     0.00224,
+     -0.00022,
+     -0.52337,
+     0.8521
+    ]
+   }
+  }
+ },
+ "tarkov": {
+  "base": "5c46fbd72e2216398b5a8c9c",
+  "aimPath": "/mod_mount_002",
+  "aimIndex": 0,
+  "kit": [
+   {
+    "path": "",
+    "item": "5c46fbd72e2216398b5a8c9c",
+    "bone": "weapon_izhmash_svd_s_762x54_LOD0",
+    "at": [
+     -0.156826,
+     1.413956,
+     0.017428,
+     0.707107,
+     -1e-06,
+     -1e-06,
+     -0.707107
+    ],
+    "bones": [
+     "weapon_svd_s_stock_lock_LOD0",
+     "weapon_svd_s_bolt_larva_LOD0",
+     "weapon_svd_s_bolt_LOD0",
+     "weapon_svd_s_hammer_LOD0",
+     "weapon_izhmash_svd_s_762x54_LOD0",
+     "weapon_svd_s_release_LOD0",
+     "weapon_svd_s_selector_LOD0",
+     "weapon_svd_s_trigger_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_pistol_grip",
+    "item": "5c471be12e221602b66cd9ac",
+    "bone": "pistolgrip_svd_s_izhmash_svd_s_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "pistolgrip_svd_s_izhmash_svd_s_std_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_magazine",
+    "item": "5c471c442e221602b542a6f8",
+    "bone": "mag_svd_izhmash_svd_std_762x54_10_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "mag_svd_izhmash_svd_std_762x54_10_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_stock",
+    "item": "5c471b5d2e221602b21d4e14",
+    "bone": "stock_svd_s_izhmash_svd_s_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "stock_svd_s_izhmash_svd_s_std_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_barrel",
+    "item": "5c471cb32e221602b177afaa",
+    "bone": "barrel_svd_izhmash_565mm_762x54_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "barrel_svd_izhmash_565mm_762x54_LOD0",
+     "gasblock_svd_izhmash_svd_s_tube_std_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_barrel/mod_muzzle",
+    "item": "5c471bfc2e221602b21d4e17",
+    "bone": "muzzle_svd_izhmash_svd_s_std_762x54_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "muzzle_svd_izhmash_svd_s_std_762x54_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_barrel/mod_gas_block",
+    "item": "5c471c842e221615214259b5",
+    "bone": "gas_block_svd_izhmash_svd_s_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "gas_block_svd_izhmash_svd_s_std_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_mount_001",
+    "item": "5dfcd0e547101c39625f66f9",
+    "bone": "handguard_svd_sag_chassis_mk_1_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "handguard_svd_sag_chassis_mk_1_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_mount_001/mod_tactical",
+    "item": "544909bb4bdc2d6f028b4577",
+    "bone": "tactical_all_morovision_anpeq15_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "switch_000_LOD0",
+     "tactical_all_morovision_anpeq15_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_mount_001/mod_foregrip",
+    "item": "5fc0f9cbd6fa9c00c571bb90",
+    "bone": "foregrip_keymod_sig_vertical_grip_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "foregrip_keymod_sig_vertical_grip_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_reciever",
+    "item": "5c471bd12e221602b4129c3a",
+    "bone": "reciever_svd_izhmash_svd_s_std_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "reciever_svd_izhmash_svd_s_std_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_mount_002",
+    "item": "5c82343a2e221644f31c0611",
+    "bone": "scope_dovetail_belomo_pso_1m2_4x24_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "backLens",
+     "linza_mode_000",
+     "switch_000",
+     "scope_dovetail_belomo_pso_1m2_4x24_glass_LOD0",
+     "scope_dovetail_belomo_pso_1m2_4x24_LOD0"
+    ]
+   },
+   {
+    "path": "/mod_mount_002/mod_tactical",
+    "item": "57f3a5ae2459772b0e0bf19e",
+    "bone": "tactical_pso_belomo_eyecup_LOD0",
+    "at": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ],
+    "bones": [
+     "tactical_pso_belomo_eyecup_LOD0"
+    ]
+   }
+  ]
+ }
+}
