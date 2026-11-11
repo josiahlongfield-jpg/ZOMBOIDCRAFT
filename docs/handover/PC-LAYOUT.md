@@ -51,6 +51,7 @@ They stay readable in the old project. If a new project needs one, ask Josiah to
 - `C:\Dev\Zomboidcraft-Desktop\additions\halo-reach\world` — endless-night-new-repo
 - `C:\Dev\Zomboidcraft-Desktop\additions\halo-reach\world2` — zomboid-reach-world-tech
 - `C:\Dev\Zomboidcraft-Desktop\additions\halo-reach\world\<map>\` — zomboid-reach-pipeline
+- `C:\Dev\Zomboidcraft-Desktop\additions\handover\` — project-split-handover
 - `C:\Dev\Zomboidcraft-Desktop\additions\haze-test\` — zomboid-photon-lpv-haze
 - `C:\Dev\Zomboidcraft-Desktop\additions\mannequin` — zomboid-mannequin-run
 - `C:\Dev\Zomboidcraft-Desktop\additions\photon` — zomboid-landmark-lighting-tech

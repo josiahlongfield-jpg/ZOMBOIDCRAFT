@@ -1,6 +1,6 @@
 # Cross-check: is everything covered? (ZomboidCraft)
 
-## Memory notes: 366 of 366 copied verbatim into memory/
+## Memory notes: 367 of 367 copied verbatim into memory/
 
 | Note | Copied | Class | Also quoted in |
 |---|---|---|---|
@@ -31,6 +31,7 @@
 | minecraft-gloomy-pack | yes | CORE | PREVIEWS.md |
 | minecraft-zomboid-mod | yes | SHARED | PREVIEWS.md |
 | photon-shader-settings | yes | SHARED |  |
+| project-split-handover | yes | CORE |  |
 | reach-bots-custom-games | yes | BACKGROUND | PREVIEWS.md |
 | tarkov-ammo-counter-direction | yes | SHARED | RULES.md |
 | tarkov-assets-pipeline-tech | yes | SHARED |  |

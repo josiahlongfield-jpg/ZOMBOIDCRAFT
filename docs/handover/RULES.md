@@ -20,6 +20,7 @@ the later date wins; STRICT means he said it must never be broken.
 - CORTANA: Halo 4 storm_cortana, v13 look, idle B, normal voice lines only (cortana_voice_normal.json). Calm meaningful gestures, faces never blank. Pipeline GestureLSM + Audio2Face + rules + fast finger index; MaskedMimic via IsaacLab in WSL2 Ubuntu (installed 2026-11-11). Files additions\halo-4\cortana.
 - Purge direction: Spartans/Tarkov vs Covenant-led hordes; no world loot/survival needs/grid inventory (zomboid-purge-direction.md). Damage: tarkov-covenant-damage-plan.md. No jets, no companions, no Overwatch audio; Reach audio. Forge: grid/armour stand/trophy wall approved.
 
+- PROJECT SPLIT (2026-11-11): handover packs in docs/handover (ENDLESS-NIGHT PR #1, ZOMBOIDCRAFT PR #6), see project-split-handover.md.
 - ENGINE QUESTION (2026-11-11): doc recommends moving to Unreal 5 with a gated trial (m20) first; awaiting his decision (endless-night-unreal-move-scoping.md).
 
 ## Standing rules (Josiah)
@@ -79,6 +80,8 @@ Josiah 2026-11-10 19:37: "always render previews in full detail so i dont accide
 **Why:** a motion-check video from zskview.py (flat colour per triangle) made him think the full-detail Covenant vehicles had been downgraded to blocky models.
 
 **How to apply:** anything shown to him (videos, stills, pages) uses the full-detail renderer with real textures and lighting (e.g. three.js pages like /tmp/claude-0/cov/web/veh.html / hv2.html with the bake textures). Quick check tools (zskview.py etc.) are for your own eyes only. If a cheap render is unavoidable, say plainly that it's not the real look. Related: [[endless-night-covenant-enemies]].
+
+Josiah 2026-11-11 22:33 AEST: "i need the previews viewable here". A PC path alone isn't enough: publish every preview (image/video) as an Artifact page (embed as data URI, keep it light) and link it in the thread. Thread attachments can hit the 24 cap, so don't rely on attached_outputs.
 
 ---
 

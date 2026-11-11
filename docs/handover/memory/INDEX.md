@@ -1,4 +1,4 @@
-# Memory notes for ZomboidCraft (all 366 notes, verbatim)
+# Memory notes for ZomboidCraft (all 367 notes, verbatim)
 
 Every memory note from the old project is copied here unchanged. Class:
 - **CORE**: this project's own work and decisions.
@@ -12,6 +12,7 @@ Every memory note from the old project is copied here unchanged. Class:
 | Note | What it holds |
 |---|---|
 | [minecraft-gloomy-pack](minecraft-gloomy-pack.md) | Josiah's "Medieval Gloom" Minecraft overhaul (PAUSED 2026-10-24) — status, files, setup gotchas |
+| [project-split-handover](project-split-handover.md) | 2026-11-11 project split into ZomboidCraft / Endless Night: Minecraft / Unreal; where the handover packs live (docs/handover PRs) and how they were built |
 | [zomboid-access-tech](zomboid-access-tech.md) | How ZomboidCraft keeps stairs, doorways, ladders and decks walkable (Builders post-passes, walkcheck --why, block surface heights, preview sizes, traps fixed) |
 | [zomboid-air-lights-tech](zomboid-air-lights-tech.md) | Aircraft nav lights and heli searchlight (AirLights), Photon-safe glow rules, and FarFlybys (flybys drawn past render distance) |
 | [zomboid-air-strikes-tech](zomboid-air-strikes-tech.md) | Air strike world events (jet strafe, jet bombing, Apache hunt): AirStrikes.java, path events, low-pass and street-alignment rules, config, sounds |

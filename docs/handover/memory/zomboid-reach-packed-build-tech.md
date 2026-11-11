@@ -21,3 +21,8 @@ Game (commit 6f285fbac on playtest): world/sky_regions.zsk beside land.zrh wins 
 Install set (nothing installed yet as of 2026-11-11 22:00): land.zrh, reach.json, sky_regions.zsk, every .zrv in world\,
 backups first in additions\jar-backups; needs a fresh world/chunks.
 Still to tell other threads after install: Covenant spawn-sites.json and MP placements.json coordinates move by the deltas.
+2026-11-11 22:35 his clock: join previews showed HEIGHT STEPS (missions' ground 60-600 m apart at most joins, 160 m seams = walls).
+Per-mission vertical shifts alone don't fix it (fit leaves 150-300 m). Card asked: A match heights + widen joins [rec],
+B cliffs with ramp roads, C re-pack by height. Nothing installed. Tools: pack/sky/dyfit.py, cams.py; scene.py acc fix (fast).
+22:34 he picked A. Height-aware packer pack/h/hpack2.py (grade 1:3, profiles.json edge heights by bearing) -> hpack_0.33_0.001.json:
+~13x11 km, dy m35 -506, m45 -99, m70 +44, m10 +19, sea missions (m20 m60 m50 m52) fixed. Map on layout page v4; awaiting his OK.
